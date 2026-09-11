@@ -7,10 +7,17 @@
   "scope": "./",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
-  "background_color": "#0a0a09",
-  "theme_color": "#0a0a09",
+  "background_color": "#0b0a09",
+  "theme_color": "#0b0a09",
   "lang": "de",
   "dir": "ltr",
   "categories": ["education", "productivity"],
-  "icons": []
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
 }

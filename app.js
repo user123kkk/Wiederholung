@@ -1,1040 +1,3 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<!-- viewport-fit=cover: erst damit liefert env(safe-area-inset-*) echte Werte
-     und der Inhalt rutscht im App-Modus nicht unter Uhr und Kerbe. -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Adrabic-Wiederholung</title>
-<meta name="apple-mobile-web-app-title" content="Adrabic-Wiederholung">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0a0a09">
-<!-- Sagt dem Browser, dass die Seite dunkel ist: Bedienfelder, Rollbalken und
-     Textfelder kommen dann von selbst in Dunkelfassung statt in Weiss. -->
-<meta name="color-scheme" content="dark">
-<link rel="manifest" href="./manifest.json">
-<script>
-/* 2.20.0: Läuft, BEVOR das erste Bild steht.
-
-   Die gewählte Fassung liegt im Konto und kommt erst mit den Daten aus der
-   Cloud - das dauert einen Moment. Ohne diese Zeilen sähe ein Nutzer mit
-   heller Fassung bei jedem Start zuerst einen schwarzen Bildschirm, der dann
-   umspringt. Das sieht nach einem Fehler aus. Deshalb liegt die Wahl
-   zusätzlich auf dem Gerät selbst; die Cloud bleibt maßgeblich und
-   überschreibt sie, sobald sie da ist. */
-(function () {
-  try {
-    var w = localStorage.getItem("adrabic-thema") || "dunkel";
-    var hell = w === "hell" || (w === "auto" && window.matchMedia &&
-               window.matchMedia("(prefers-color-scheme: light)").matches);
-    document.documentElement.setAttribute("data-thema", hell ? "hell" : "dunkel");
-    var m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.setAttribute("content", hell ? "#f2ece0" : "#0a0a09");
-  } catch (e) {}
-})();
-</script>
-<style>
-  /* ============================================================
-     2.17.0 – Gestaltung
-
-     Drei Regeln, aus denen sich hier alles ableitet:
-
-     1. GOLD IST SELTEN. Vorher trugen Knöpfe, aktive Bereiche, aktive
-        Tabs, Plaketten, Balken und Kalender dieselbe Goldfläche - damit
-        zeigte nichts mehr auf etwas. Jetzt gibt es pro Bildschirm genau
-        EINE gefüllte Goldfläche: die Handlung, die gerade dran ist.
-        Alles andere trägt Gold nur als Schrift, Rand oder Schleier.
-
-     2. JEDE FLÄCHE, DIE MAN ANFASST, IST MINDESTENS 44 PX HOCH. Das ist
-        das Maß, das Apple und Google für einen Fingertipp ansetzen. Vier
-        winzige Textlinks nebeneinander sind der deutlichste Unterschied
-        zwischen "Webseite" und "App".
-
-     3. SCHWEBEN GIBT ES AUF DEM HANDY NICHT. Alle :hover-Regeln stehen
-        jetzt hinter (hover: hover) - sonst bleibt ein Knopf nach dem
-        Tippen hell, bis man woanders hintippt. Stattdessen gibt es eine
-        kurze Rückmeldung beim Drücken (:active).
-     ============================================================ */
-
-  :root {
-    /* ---- 2.18.0: zwei Schriftebenen ----
-       Eine Oberfläche und ein Inhalt sind nicht dasselbe. Knöpfe, Reiter,
-       Plaketten und Hinweise sind Werkzeug - sie sollen aussehen wie das
-       Gerät, auf dem sie laufen, und dafür ist die Systemschrift gemacht.
-       Was gelesen und gelernt wird - Überschriften, das Wort auf der Karte,
-       der Name einer Lektion - ist Inhalt. Der steht in einer Serifenschrift,
-       so wie er in einem Buch stünde.
-
-       Umstellen auf eine einzige Schrift: --font-lesen auf var(--font-ui)
-       setzen. Mehr ist dafür nicht nötig. */
-    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-lesen: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
-
-    /* Grundton: fast schwarz, leicht warm - dieselbe Familie wie die
-       Kreisfläche des Lotus. */
-    --bg: #0a0a09;
-    --card: #151412;
-    /* Zweite Ebene innerhalb einer Karte (Kästen im Kasten). Vorher wurde
-       dafür --bg genommen; auf dunklem Grund verschwinden solche Kästen,
-       wenn sie dieselbe Farbe wie der Hintergrund haben. */
-    --card-2: #1d1b18;
-    --ink: #f4f3ec;
-    --ink-soft: #a3a29a;
-    --ink-faint: #75736c;
-    --accent: #e3c88a;
-    --accent-dark: #c9a961;
-    --accent-ink: #1a1509;
-    --accent-soft: rgba(227, 200, 138, 0.13);
-    --accent-line: rgba(227, 200, 138, 0.30);
-    /* 2.18.0: Die beiden Nebenfarben kommen jetzt aus derselben Welt wie das
-       Gold. Ein Neon-Grün und ein Signal-Korall gehören in eine Messanzeige;
-       was hier gemessen wird, ist etwas anderes. Grünspan und Zinnober sind
-       die Farben, mit denen in Handschriften neben Gold gearbeitet wurde -
-       gedeckt, warm, und sie streiten nicht mit dem Gold. */
-    --green: #6aa588;
-    --green-soft: rgba(106, 165, 136, 0.14);
-    --green-line: rgba(106, 165, 136, 0.38);
-    --red: #c96b52;
-    --red-soft: rgba(201, 107, 82, 0.14);
-    --red-line: rgba(201, 107, 82, 0.38);
-    --border: #2b2823;
-    /* Eine Haarlinie, die heller ist als der Rand - für Kanten, die man
-       sehen soll, ohne dass ein Strich entsteht. */
-    --border-soft: #211f1b;
-
-    --radius: 14px;
-    --radius-sm: 10px;
-    --radius-lg: 18px;
-    /* Ein Schatten, der trägt statt zu leuchten. Der alte war fast doppelt
-       so weich und ließ jede Karte wie einen Aufkleber wirken. */
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.30);
-
-    /* Abstände in einer festen Leiter. Wo vorher 4, 6, 7, 10, 12, 14, 16,
-       18, 20, 22 nebeneinander standen, sind es jetzt Vielfache von 4. */
-    --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
-    --s5: 20px; --s6: 24px; --s7: 32px;
-
-    /* Ränder, die das Gerät selbst freihält: Kerbe, Kamera, Streifen am
-       unteren Rand. Ohne diese Werte klebt der Inhalt im App-Modus unter
-       der Uhr. Sie brauchen viewport-fit=cover im Kopf der Seite. */
-    color-scheme: dark;
-    --glow: radial-gradient(115% 80% at 50% -10%, #241f15 0%, #121009 45%, var(--bg) 78%);
-    --mark: rgba(227, 200, 138, 0.24);
-    --frei: rgba(227, 200, 138, 0.08);
-    --spiegel: rgba(227, 200, 138, 0.13);
-    --backdrop: rgba(0, 0, 0, 0.72);
-    --kal1: rgba(227, 200, 138, 0.22);
-    --kal2: rgba(227, 200, 138, 0.45);
-    --kal3: rgba(227, 200, 138, 0.72);
-
-    --sat: env(safe-area-inset-top, 0px);
-    --sab: env(safe-area-inset-bottom, 0px);
-    --sal: env(safe-area-inset-left, 0px);
-    --sar: env(safe-area-inset-right, 0px);
-  }
-
-  /* ============================================================
-     2.20.0 – die helle Fassung
-
-     Sie ist KEINE Umkehrung der dunklen. Gold auf Weiss ist blass und
-     schlecht lesbar; dasselbe Gold, das auf Schwarz wertvoll wirkt, sieht
-     auf Papier nach vergilbtem Ausdruck aus. Deshalb dreht sich hier nicht
-     die Helligkeit, sondern das Bild: Aus Tinte auf dunklem Grund wird
-     Tinte auf Papier. Der Akzent wird von Blattgold zu Bronze - dieselbe
-     Farbfamilie, aber so dunkel, dass sie auf hellem Grund trägt.
-
-     Gesetzt wird die Fassung über data-thema am <html>-Element. "Automatisch"
-     wird dabei schon im JavaScript aufgelöst, damit die Farben nur an EINER
-     Stelle stehen und nicht doppelt gepflegt werden müssen.
-     ============================================================ */
-  :root[data-thema="hell"] {
-    color-scheme: light;
-    --bg: #f2ece0;
-    --card: #fdfbf6;
-    --card-2: #f6f1e6;
-    --ink: #241f18;
-    --ink-soft: #655d4e;
-    --ink-faint: #8b8273;
-    --accent: #8a6a24;
-    --accent-dark: #6d5217;
-    --accent-ink: #fffdf6;
-    --accent-soft: rgba(138, 106, 36, 0.10);
-    --accent-line: rgba(138, 106, 36, 0.32);
-    --green: #3d7a5c;
-    --green-soft: rgba(61, 122, 92, 0.12);
-    --green-line: rgba(61, 122, 92, 0.38);
-    --red: #a8452e;
-    --red-soft: rgba(168, 69, 46, 0.11);
-    --red-line: rgba(168, 69, 46, 0.36);
-    --border: #ddd3bf;
-    --border-soft: #e7dfcd;
-    --shadow: 0 1px 2px rgba(60, 48, 25, 0.10), 0 8px 24px rgba(60, 48, 25, 0.07);
-    --glow: radial-gradient(115% 80% at 50% -10%, #fbf7ec 0%, #f5efe2 45%, var(--bg) 78%);
-    --mark: rgba(138, 106, 36, 0.20);
-    --frei: rgba(138, 106, 36, 0.07);
-    --spiegel: rgba(138, 106, 36, 0.20);
-    --backdrop: rgba(40, 33, 20, 0.42);
-    --kal1: rgba(138, 106, 36, 0.20);
-    --kal2: rgba(138, 106, 36, 0.42);
-    --kal3: rgba(138, 106, 36, 0.68);
-  }
-  /* Zwei Stellen, an denen die dunkle Fassung mit festen Werten arbeitet und
-     das auf Papier nicht mehr stimmt. */
-  :root[data-thema="hell"] .tab.active { box-shadow: 0 1px 2px rgba(60, 48, 25, 0.12); }
-  :root[data-thema="hell"] .dlg { box-shadow: 0 20px 60px rgba(60, 48, 25, 0.22); }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html {
-    background: var(--bg);
-    /* Sonst vergrößert iOS beim Drehen ins Querformat eigenmächtig die
-       Schrift und das Raster verrutscht. */
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-  }
-
-  body {
-    font-family: var(--font-ui);
-    background: var(--bg);
-    color: var(--ink);
-    font-size: 16px;
-    line-height: 1.5;
-    min-height: 100vh;
-    min-height: 100dvh;
-    /* Kein Gummiband am Rand: im App-Modus sieht man sonst beim Überziehen
-       den nackten Hintergrund hinter der Seite - das verrät sofort, dass
-       hier eine Webseite läuft. */
-    overscroll-behavior-y: none;
-    -webkit-tap-highlight-color: transparent;
-    /* Zahlen in Statistik und Serie sollen untereinander stehen. */
-    font-variant-numeric: tabular-nums;
-  }
-
-  ::selection { background: var(--accent-soft); color: var(--ink); }
-
-  .container {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: calc(var(--s4) + var(--sat)) calc(var(--s4) + var(--sar))
-             calc(var(--s7) + var(--sab)) calc(var(--s4) + var(--sal));
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Lichtebene: position:fixed + inset:0 heisst genau Bildschirmgroesse.
-     Damit ist der Verlauf auf jedem Bildschirm gleich hell, unabhaengig davon
-     wie lang die Seite ist, und er bleibt beim Scrollen stehen. Lag er auf
-     dem body, wurde er ueber die gesamte Inhaltshoehe gezogen und das Licht
-     verschwand nach unten weg. Keine driftenden Leuchtflecken mehr.
-     2.17.0: deutlich zurückgenommen. Ein sichtbarer Farbverlauf ist Zierde;
-     seriös wirkt er erst, wenn man ihn nicht bemerkt. */
-  .bg-glow {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background: var(--glow);
-  }
-
-  h1, h2, h3 { font-family: var(--font-lesen); font-weight: 600; }
-  h1 { font-size: 1.5rem; line-height: 1.25; margin-bottom: var(--s1); }
-  h2 { font-size: 1.12rem; line-height: 1.3; margin-bottom: var(--s3); }
-  h3 { font-size: 1rem; line-height: 1.35; }
-  /* Die Lesefläche: alles, was Stoff ist und nicht Bedienung. */
-  .study-word, .study-answer,
-  .card-row .wort, .leech-row .wort, .lern-inhalt .wort,
-  .set-row .set-name, .lekt-name, .dlg h3 {
-    font-family: var(--font-lesen);
-  }
-  /* Arabisch hat seine eigene Schrift - die Serifenregel darf sie nicht
-     überschreiben, egal an welcher Stelle das Wort steht. */
-  .arabic, .arabic * { font-family: 'UthmanicHafs', 'Amiri', 'Amiri Quran', 'Scheherazade New', 'Noto Naskh Arabic', serif !important; }
-  .subtitle { color: var(--ink-soft); font-size: 0.95rem; margin-bottom: var(--s6); }
-
-  /* ---------- Knöpfe ----------
-     Vier Stufen, mehr gibt es nicht:
-       voll      – die Handlung, die dran ist. Einmal pro Bildschirm.
-       secondary – gleichwertige Alternative daneben (Abbrechen, Zurück).
-       ghost     – Werkzeug am Rand (Umbenennen, Löschen, Auswählen).
-       tiny-link – Verwaltung, die selten gebraucht wird (Backup, Import).
-     Die Stufen unterscheiden sich in der FLÄCHE, nicht in der Größe der
-     Schrift - deshalb bleiben alle gut zu treffen. */
-  button {
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid transparent;
-    border-radius: var(--radius);
-    padding: 11px 18px;
-    min-height: 44px;
-    background: var(--accent);
-    color: var(--accent-ink);
-    /* Kein Wartefenster von 300 ms vor dem Tippen, kein Doppeltipp-Zoom. */
-    touch-action: manipulation;
-    -webkit-user-select: none; user-select: none;
-    -webkit-touch-callout: none;
-    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, transform 0.06s ease;
-  }
-  button:active { transform: scale(0.985); }
-  button:disabled { opacity: 0.5; cursor: default; transform: none; }
-  /* Tastatur-Bedienung bleibt sichtbar, die Maus bekommt keinen Rahmen. */
-  button:focus { outline: none; }
-  button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  button.secondary {
-    background: var(--card-2);
-    color: var(--ink);
-    border-color: var(--border);
-  }
-  button.ghost {
-    background: transparent;
-    color: var(--ink-soft);
-    border-color: transparent;
-    padding: 8px 12px;
-    min-height: 40px;
-    font-size: 0.86rem;
-    font-weight: 500;
-  }
-  button.linklike {
-    background: none;
-    border-color: transparent;
-    color: var(--accent-dark);
-    padding: 8px 8px;
-    min-height: 40px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  /* 2.17.0: aus vier Kleinstlinks werden vier ruhige Chips. Sie stehen im
-     Kopf nebeneinander, tragen keine Fläche und keine Farbe - aber sie sind
-     groß genug, dass man sie trifft, statt danach zu zielen. */
-  button.tiny-link {
-    background: transparent;
-    border: 1px solid var(--border-soft);
-    color: var(--ink-faint);
-    padding: 7px 11px;
-    min-height: 36px;
-    border-radius: 999px;
-    font-size: 0.76rem;
-    font-weight: 500;
-    text-decoration: none;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    button:hover { background: var(--accent-dark); }
-    button.secondary:hover { background: #24211d; border-color: var(--accent-line); }
-    button.ghost:hover { background: var(--accent-soft); color: var(--ink); }
-    button.linklike:hover { background: none; color: var(--accent); }
-    button.tiny-link:hover { color: var(--accent-dark); border-color: var(--accent-line); background: transparent; }
-    button:disabled:hover { background: var(--accent); }
-  }
-
-  /* ---------- Eingabefelder ---------- */
-  input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
-    font: inherit;
-    width: 100%;
-    /* 16 px verhindert, dass iOS beim Hineintippen in das Feld zoomt. */
-    font-size: 16px;
-    padding: 12px 14px;
-    min-height: 46px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--card-2);
-    color: var(--ink);
-    -webkit-appearance: none; appearance: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-  textarea { min-height: 0; line-height: 1.45; }
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--accent-dark);
-    box-shadow: 0 0 0 3px var(--accent-soft);
-  }
-  input::placeholder, textarea::placeholder { color: var(--ink-faint); }
-  label { display: block; font-size: 0.84rem; color: var(--ink-soft); margin-bottom: var(--s1); margin-top: var(--s3); }
-  select {
-    font: inherit; min-height: 40px;
-    background-color: var(--card-2); color: var(--ink);
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    -webkit-appearance: none; appearance: none;
-    background-image: linear-gradient(45deg, transparent 50%, var(--ink-soft) 50%),
-                      linear-gradient(135deg, var(--ink-soft) 50%, transparent 50%);
-    background-position: right 14px center, right 9px center;
-    background-size: 5px 5px, 5px 5px;
-    background-repeat: no-repeat;
-    padding-right: 30px !important;
-  }
-
-  /* ---------- Flächen ---------- */
-  .panel {
-    background: var(--card);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    padding: var(--s5);
-    margin-bottom: var(--s4);
-  }
-  .error-box {
-    background: var(--red-soft);
-    color: var(--red);
-    border-radius: var(--radius);
-    padding: var(--s3) var(--s4);
-    margin-top: var(--s3);
-    font-size: 0.92rem;
-  }
-  .info-box {
-    background: var(--green-soft);
-    color: var(--green);
-    border-radius: var(--radius);
-    padding: var(--s3) var(--s4);
-    margin-top: var(--s3);
-    font-size: 0.92rem;
-  }
-
-  /* ---------- Kopfzeile ---------- */
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--s4);
-    flex-wrap: wrap;
-    gap: var(--s2);
-  }
-  .topbar > div:last-child { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .topbar .who { font-size: 0.86rem; color: var(--ink-faint); }
-  .topbar .who strong { color: var(--ink-soft); font-weight: 600; }
-  .sync-dot { font-size: 0.76rem; color: var(--ink-soft); }
-
-  /* ---------- Bereiche ----------
-     Der aktive Bereich trägt keine Goldfläche mehr, sondern Goldschrift auf
-     eigener Fläche. So bleibt die einzige gefüllte Goldfläche der Knopf,
-     mit dem es weitergeht. */
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--s4); }
-  .pill {
-    background: transparent;
-    color: var(--ink-soft);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 8px 15px;
-    min-height: 38px;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-  .pill.active {
-    background: var(--accent-soft);
-    color: var(--accent);
-    border-color: var(--accent-line);
-    font-weight: 600;
-  }
-  .pill.add { border-style: dashed; color: var(--ink-faint); }
-  @media (hover: hover) and (pointer: fine) {
-    .pill:hover { background: var(--card-2); color: var(--ink); }
-    .pill.active:hover { background: var(--accent-soft); color: var(--accent); }
-  }
-
-  /* ---------- Tabs ----------
-     Aufgebaut wie der Umschalter in iOS und iPadOS: eine ruhige Wanne, in
-     der ein einzelnes Feld erhaben liegt. Vorher war das aktive Feld voll
-     gold - drei Schritte weiter unten auf dem Bildschirm stand dann der
-     ebenso goldene Knopf, und beide sahen gleich wichtig aus. */
-  .tabs {
-    display: flex;
-    gap: 3px;
-    margin-bottom: var(--s4);
-    background: var(--card-2);
-    border-radius: var(--radius);
-    border: 1px solid var(--border-soft);
-    padding: 3px;
-  }
-  .tab {
-    flex: 1;
-    background: transparent;
-    border: 1px solid transparent;
-    color: var(--ink-soft);
-    border-radius: 11px;
-    padding: 10px 6px;
-    min-height: 42px;
-    font-size: 0.92rem;
-    font-weight: 500;
-  }
-  .tab.active {
-    background: var(--card);
-    border-color: var(--border);
-    color: var(--accent);
-    font-weight: 600;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .tab:hover { background: transparent; color: var(--ink); }
-    .tab.active:hover { background: var(--card); color: var(--accent); }
-  }
-
-  /* ---------- Kartenliste ---------- */
-  .card-row {
-    display: flex;
-    align-items: center;
-    gap: var(--s3);
-    padding: var(--s3) 0;
-    border-bottom: 1px solid var(--border-soft);
-  }
-  .card-row:last-child { border-bottom: none; }
-  .card-row.dragging { opacity: 0.5; background: var(--accent-soft); position: relative; z-index: 5; }
-  .drag-handle {
-    cursor: grab; color: var(--ink-faint); font-size: 1.15rem;
-    padding: var(--s2) var(--s1); touch-action: none;
-    -webkit-user-select: none; user-select: none;
-  }
-  .drag-handle:active { cursor: grabbing; color: var(--accent-dark); }
-  .card-row .words { flex: 1; min-width: 0; }
-  /* Die Zeilen im Fortschritt-Tab (.leech-row) sind genauso aufgebaut wie die
-     in der Kartenliste und sollen auch genauso aussehen. Standen sie nicht
-     mit in diesen Regeln, blieb dort das arabische Wort auf Normalgroesse
-     (die Einstellung klein/normal/gross wirkte nicht) und Wort und
-     Uebersetzung klebten aneinander. */
-  .card-row .wort, .leech-row .wort { font-weight: 600; word-break: break-word; }
-  /* 2.1.0: Uebersetzung und Notiz hatten dieselbe Farbe und keinen Abstand -
-     die drei Zeilen lasen sich als ein Block. Jetzt traegt das Wort, dann die
-     Uebersetzung in voller Textfarbe, dann die Notiz gedaempft mit Strich am
-     Rand wie ein Zitat. */
-  .card-row .uebersetzung, .leech-row .uebersetzung { color: var(--ink-soft); font-size: 0.9rem; word-break: break-word; margin-top: 2px; }
-  .card-row .extra-note {
-    color: var(--ink-faint); font-size: 0.82rem; font-style: italic;
-    word-break: break-word; white-space: pre-wrap;
-    margin-top: 6px; padding-left: 9px; border-left: 2px solid var(--border);
-  }
-  /* 2.21.3: Herkunft/Kategorien einer Karte - bewusst schlichter als die
-     Notiz (keine Kursive, kein Strich), das ist Metadatum, kein Karteninhalt. */
-  .card-tags { color: var(--ink-faint); font-size: 0.78rem; margin-top: 4px; word-break: break-word; }
-
-  /* 2.21.5: Eigene Strichsymbole statt Emoji - siehe ICON_PFADE/iconSvg().
-     stroke place currentColor, damit Farbe und Hell/Dunkel-Thema von selbst
-     mitlaufen, ohne dass jede Stelle es einzeln setzen muss. */
-  .icon {
-    display: inline-block; vertical-align: -3px; flex-shrink: 0;
-    fill: none; stroke: currentColor; stroke-width: 1.6;
-    stroke-linecap: round; stroke-linejoin: round;
-  }
-  .card-tags .icon, .set-gruppe-kopf .icon { width: 13px; height: 13px; vertical-align: -2px; margin-right: 1px; }
-  /* Der Merken-Stern: Umriss im Ruhezustand, gefuellt sobald die Karte in
-     "Schwierige Woerter" liegt - genau das "sich in derselben Form
-     ausfuellen" statt zweier verschiedener Emoji-Zeichen. */
-  .icon.star.filled { fill: var(--accent); stroke: var(--accent); }
-  .merk-btn { display: inline-flex; align-items: center; gap: 6px; }
-  /* Pop-Animation: spielt einmalig ab, genau dann, wenn eine Karte NEU in
-     "Schwierige Woerter" abgelegt wird (siehe ui.merkPop) - kein Dauerticken
-     bei jedem Neuzeichnen aus anderem Anlass. cubic-bezier mit Ueberschwung
-     ist bewusst spuerbar - das ist die Rueckmeldung, die vorher der
-     Emoji-Wechsel allein nicht gab. */
-  .icon.star.pop { animation: sternPop .4s cubic-bezier(.34, 1.56, .64, 1); transform-origin: center; }
-  @keyframes sternPop {
-    0%   { transform: scale(0.5); }
-    55%  { transform: scale(1.35); }
-    100% { transform: scale(1); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .icon.star.pop { animation: none; }
-  }
-
-  /* 2.1.0: Fundstellen der Suche. Kein Standard-Gelb des Browsers - das ist
-     auf dunklem Grund grell und macht den Text unlesbar. */
-  mark { background: var(--mark); color: var(--ink); border-radius: 3px; padding: 0 2px; }
-
-  /* 2.1.0: Suchfeld mit Knopf zum Leeren */
-  .search-wrap { position: relative; margin-bottom: var(--s3); }
-  .search-wrap input { padding-right: 48px; }
-  .search-clear {
-    position: absolute; top: 50%; right: 5px; transform: translateY(-50%);
-    background: transparent; border-color: transparent; color: var(--ink-soft);
-    padding: 0; width: 38px; height: 38px; min-height: 38px;
-    font-size: 0.95rem; line-height: 1; border-radius: var(--radius-sm);
-  }
-  .search-clear:active { transform: translateY(-50%) scale(0.94); }
-
-  .badge {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--ink-soft);
-    border-radius: 999px;
-    padding: 3px 9px;
-    font-size: 0.74rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  /* ---------- Abfrage und Übung ---------- */
-  /* 2.18.0: Die Karte, auf die man schaut, bekommt einen doppelten Rahmen -
-     eine Haarlinie in Gold ein Stück innerhalb der Kante. So wurde in
-     Handschriften der Textspiegel abgesetzt: nicht als Verzierung, sondern
-     damit klar ist, wo der Text steht und wo der Rand anfängt. Es ist der
-     einzige Rahmen dieser Art in der App; er gehört der Karte, sonst nichts. */
-  .study-card {
-    text-align: center;
-    padding: var(--s7) var(--s5);
-    position: relative;
-  }
-  .study-card::before {
-    content: "";
-    position: absolute;
-    inset: 7px;
-    border: 1px solid var(--spiegel);
-    border-radius: 12px;
-    pointer-events: none;
-  }
-  .study-word { font-size: 1.75rem; font-weight: 600; line-height: 1.3; word-break: break-word; margin-bottom: var(--s2); }
-  .study-answer {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--accent);
-    word-break: break-word;
-    margin-top: var(--s4);
-    padding-top: var(--s4);
-    border-top: 1px solid var(--border);
-  }
-  .study-extra {
-    margin-top: var(--s3);
-    padding: var(--s3) var(--s4);
-    background: var(--card-2);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    font-size: 0.95rem;
-    color: var(--ink-soft);
-    word-break: break-word;
-    white-space: pre-wrap;
-    text-align: left;
-  }
-  .study-extra a { color: var(--accent-dark); }
-  /* Drei Tasten (B2) muessen auch auf einem schmalen Handy nebeneinander passen:
-     weniger Innenabstand, kleinere Schrift, Zusatzzeile in Kleinschrift. */
-  .grade-row { display: flex; gap: var(--s2); margin-top: var(--s5); scroll-margin-bottom: 18px; }
-  .grade-row button { flex: 1; padding: 12px 4px; min-height: 56px; font-size: 0.98rem; line-height: 1.2; min-width: 0; }
-  .grade-row .sub { display: block; font-size: 0.66rem; font-weight: 400; opacity: 0.75; margin-top: 3px; }
-  /* Die drei Bewertungen sind gleichwertig: dieselbe Fläche, unterschieden
-     nur durch die Farbe des Randes und der Schrift. Vorher waren es drei
-     volle Farbflächen nebeneinander - das sah aus wie eine Ampel und war
-     der unruhigste Fleck der ganzen App. */
-  .grade-row button.btn-known, .grade-row button.btn-almost, .grade-row button.btn-unknown {
-    background: var(--card-2);
-    border-width: 1px;
-    border-style: solid;
-  }
-  .btn-known   { color: var(--green);  border-color: var(--green-line) !important; }
-  .btn-almost  { color: var(--accent); border-color: var(--accent-line) !important; }
-  .btn-unknown { color: var(--red);    border-color: var(--red-line) !important; }
-  @media (hover: hover) and (pointer: fine) {
-    .btn-known:hover   { background: var(--green-soft); }
-    .btn-almost:hover  { background: var(--accent-soft); }
-    .btn-unknown:hover { background: var(--red-soft); }
-  }
-
-  .progress-note { font-size: 0.82rem; color: var(--ink-faint); margin-bottom: var(--s3); letter-spacing: 0.01em; }
-
-  /* Der Bildschirm nach der letzten Karte ist der einzige Moment, in dem die
-     App etwas feiert. Darüber steht jetzt ein Stern aus zwei gedrehten
-     Quadraten - die einfachste Form der Rosette, rein geometrisch, in Gold
-     und klein. Kein Bild, keine Datei: zwei Vierecke in CSS. */
-  .done-box { text-align: center; padding: var(--s7) var(--s5); position: relative; }
-  /* Kein Bild und keine Datei: zwei gekreuzte Balken, einmal gerade und
-     einmal um 45 Grad gedreht, ergeben den achtstrahligen Stern. Wo die
-     Maskentechnik fehlt, wird nichts gezeichnet statt eines goldenen
-     Klotzes - deshalb steht alles in @supports. */
-  @supports (mask: linear-gradient(#000 0 0)) or (-webkit-mask: linear-gradient(#000 0 0)) {
-    .done-box::before, .done-box::after {
-      content: "";
-      width: 26px; height: 26px;
-      background: var(--accent);
-      opacity: 0.5;
-      -webkit-mask:
-        linear-gradient(#000 0 0) center/8px 26px no-repeat,
-        linear-gradient(#000 0 0) center/26px 8px no-repeat;
-      mask:
-        linear-gradient(#000 0 0) center/8px 26px no-repeat,
-        linear-gradient(#000 0 0) center/26px 8px no-repeat;
-    }
-    .done-box::before { display: block; margin: 0 auto var(--s5); }
-    .done-box::after {
-      position: absolute; top: var(--s7); left: 50%; margin-left: -13px;
-      transform: rotate(45deg); pointer-events: none;
-    }
-  }
-  .done-box .emoji { font-size: 2.2rem; margin-bottom: var(--s3); }
-
-  .hint { color: var(--ink-soft); font-size: 0.93rem; padding: var(--s2) 0; }
-  .due-info { font-size: 1.02rem; margin-bottom: var(--s4); }
-  .due-info strong { color: var(--accent); }
-
-  .form-actions { margin-top: var(--s4); display: flex; gap: var(--s2); flex-wrap: wrap; }
-  .bereich-manage-row { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s3); }
-  .bereich-manage-row button.ghost { font-size: 0.82rem; padding: 7px 10px; min-height: 38px; }
-
-  .drill-picker { background: var(--card-2); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: var(--s3) var(--s4) var(--s4); margin-bottom: var(--s3); }
-  .drill-picker select, .select-actionbar select, .dlg select {
-    padding: 9px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);
-    background-color: var(--card); color: var(--ink); font: inherit; font-size: 0.92rem;
-  }
-  .drill-banner { background: var(--accent-soft); border: 1px solid var(--accent-line); color: var(--accent); border-radius: var(--radius); padding: var(--s2) var(--s3); font-size: 0.82rem; margin-bottom: var(--s3); }
-  .select-actionbar { background: var(--card-2); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: var(--s3) var(--s4); margin-bottom: var(--s3); display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; }
-  .drill-picker select option, .select-actionbar select option { background: var(--card); color: var(--ink); }
-  .card-row input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); flex-shrink: 0; }
-
-  /* ---------- Speicherkarten ---------- */
-  /* 2.2.0: Jede Speicherkarte samt ihrer aufgeklappten Kartenliste steckt in
-     einem Block. Gezogen wird der ganze Block - sonst bliebe die Kartenliste
-     beim Sortieren an ihrer alten Stelle liegen. */
-  .set-block.dragging { opacity: 0.6; }
-  .sets-kopf {
-    display: flex; align-items: center; gap: var(--s2); width: 100%;
-    padding: var(--s2) 0; min-height: 40px;
-    background: transparent; border-color: transparent;
-    color: var(--ink); font-weight: 600; text-align: left;
-  }
-  .set-row { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; padding: var(--s3) 0; border-bottom: 1px solid var(--border-soft); }
-  .set-row:last-child { border-bottom: none; }
-  .set-row .set-name { flex: 1; min-width: 0; font-weight: 600; word-break: break-word; }
-  /* 2.11.0: Auf dem Handy kaempften Name, Plakette und zwei Knoepfe in einer
-     Zeile um den Platz - der Name wurde zu einer Buchstabensaeule gequetscht.
-     Ab hier bekommt er eine eigene Zeile ueber den Knoepfen. */
-  @media (max-width: 560px) {
-    .set-row { align-items: flex-start; }
-    .set-row .set-name { flex: 1 0 100%; order: -1; }
-    .set-row .drag-handle, .set-row .lock-anzeige { order: -2; }
-  }
-  .set-cards { background: var(--card-2); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: var(--s1) var(--s3); margin: 0 0 var(--s3); }
-  .set-cards .card-row { padding: var(--s2) 0; }
-  /* 2.3.0: Die drei Arten von Speicherkarten stehen als eigene Abschnitte
-     untereinander. Der Abschnittskopf ist bewusst leise - er ordnet nur, er
-     ist kein Knopf. */
-  .set-gruppe { margin-top: var(--s4); }
-  .set-gruppe:first-of-type { margin-top: 6px; }
-  /* Rubriken. In Handschriften stand der Abschnittstitel in roter oder
-     goldener Tinte, damit das Auge die Gliederung findet, ohne zu lesen.
-     Hier: klein, gesperrt, in gedämpftem Gold. */
-  .set-gruppe-kopf {
-    display: flex; align-items: center; gap: var(--s2);
-    font-size: 0.74rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--accent-dark); opacity: 0.8;
-    padding-top: var(--s2); border-top: 1px solid var(--border-soft);
-  }
-  .set-gruppe:first-of-type .set-gruppe-kopf { border-top: none; padding-top: 0; }
-  .set-art-wahl { padding: 5px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); background-color: var(--card-2); color: var(--ink-soft); font: inherit; font-size: 0.76rem; min-height: 32px; }
-  .set-art-wahl option { background: var(--card); color: var(--ink); }
-  /* Gesperrt heisst tot: ausgegraut, kein Ueben, kein Aufklappen. Nur das
-     Schloss selbst bleibt anfassbar. */
-  .set-block.set-locked .set-name { color: var(--ink-faint); text-decoration: line-through; text-decoration-color: var(--border); }
-  .set-block.set-locked .badge { opacity: 0.5; }
-  .card-row.card-locked .words { opacity: 0.42; }
-  .card-row.card-locked .badge { opacity: 0.5; }
-  /* Umgekehrt: in einem gefuehrten Satz wird hervorgehoben, was freigeschaltet
-     ist - dieselbe Farbe wie bei den Suchtreffern, damit "das darfst du
-     anfassen" ohne Erklaerung lesbar ist. */
-  .card-row.card-frei { background: var(--frei); border-radius: var(--radius-sm); padding-left: var(--s2); padding-right: var(--s2); }
-  .lock-anzeige { font-size: 0.95rem; opacity: 0.75; }
-  .merk-hinweis { background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: var(--radius); padding: var(--s3) var(--s4); margin-bottom: var(--s3); font-size: 0.88rem; }
-  .weiter-hinweis { color: var(--ink-faint); font-size: 0.83rem; text-align: center; padding: var(--s3) 0; margin: 0; letter-spacing: 0.01em; }
-  /* 2.12.0: Die Plakette traegt die Farbe ihres Zustands - dieselbe wie im
-     Balken des Fortschritts. So bedeutet ein Farbton ueberall dasselbe. */
-  .badge.zustand-neu      { color: var(--ink-faint); }
-  .badge.zustand-gesehen  { color: var(--accent-dark); border-color: rgba(201, 169, 97, 0.30); }
-  .badge.zustand-wackelig { color: var(--red); border-color: var(--red-line); }
-  .badge.zustand-solide   { color: var(--accent); border-color: var(--accent-line); }
-  .badge.zustand-fest     { color: var(--green); border-color: var(--green-line); }
-
-  /* 2.16.0: Rahmen statt Hintergrund. Der Kasten, auf den gesprungen wird, hat
-     fast immer selbst einen Hintergrund - die alte Animation endete auf
-     "transparent" und LOESCHTE ihn dabei kurz, statt aufzufallen. */
-  @keyframes aufleuchten {
-    0%   { box-shadow: 0 0 0 2px var(--accent-dark), var(--shadow); }
-    100% { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0), var(--shadow); }
-  }
-  .aufleuchten { animation: aufleuchten 1.4s ease-out; }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-
-  /* ---------- Serie ---------- */
-  .serie-karte {
-    display: flex; align-items: center; gap: var(--s4);
-    background: var(--card-2);
-    border: 1px solid var(--accent-line);
-    border-radius: var(--radius-lg); padding: var(--s4); margin-bottom: var(--s3);
-  }
-  .serie-zahl { display: flex; flex-direction: column; align-items: center; line-height: 1; }
-  .serie-zahl strong { font-size: 2.4rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
-  .arab-ziffer { font-family: 'UthmanicHafs', 'Amiri', serif; color: var(--accent-dark); opacity: 0.7; font-size: 1rem; margin-top: var(--s1); }
-  .gross-zahl .arab-ziffer { margin-inline-start: 6px; font-size: 1.1rem; vertical-align: middle; }
-  .serie-text { flex: 1; font-size: 0.93rem; color: var(--ink); }
-  .serie-klein { font-size: 0.78rem; color: var(--ink-faint); }
-  .serie-beste { text-align: right; font-size: 0.72rem; color: var(--ink-faint); line-height: 1.5; }
-  .serie-beste strong { font-size: 1.15rem; color: var(--ink-soft); }
-
-  /* ---------- Fortschritt ---------- */
-  .heute-bar { height: 10px; background: var(--card-2); border-radius: 999px; overflow: hidden; }
-  .heute-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent-dark), var(--accent)); transition: width 0.3s ease; }
-  .gross-zahl { margin: var(--s1) 0 2px; line-height: 1.3; }
-  .gross-zahl strong { font-size: 1.85rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
-  .gross-zahl span { color: var(--ink-soft); font-size: 0.9rem; }
-  /* Kalenderraster: spaltenweise gefuellt, sieben Zeilen = Wochentage. */
-  .kal { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 3px; margin-top: var(--s2); overflow-x: auto; padding-bottom: var(--s1); }
-  .kal-tag { width: 11px; height: 11px; border-radius: 3px; background: var(--card-2); }
-  .kal-tag.sx { background: transparent; }
-  .kal-tag.s0 { background: var(--card-2); }
-  /* Vier Stufen in der Markenfarbe statt in Gruen - der Kalender ist das
-     groesste Element im Tab und traegt deshalb den Akzent. */
-  .kal-tag.s1 { background: var(--kal1); }
-  .kal-tag.s2 { background: var(--kal2); }
-  .kal-tag.s3 { background: var(--kal3); }
-  .kal-tag.s4 { background: var(--accent); }
-  .kal-tag.heute { outline: 1px solid var(--accent); outline-offset: 1px; }
-  .lekt-leiste { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--s2); margin-top: var(--s2); }
-  .lekt-kachel { background: var(--card-2); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: var(--s2) var(--s3); }
-  .lekt-kachel.zu { opacity: 0.42; }
-  .lekt-kachel.dran { border-color: var(--accent-line); }
-  .lekt-name { font-size: 0.82rem; margin-bottom: 6px; }
-  .lekt-bar { height: 5px; background: var(--border); border-radius: 999px; overflow: hidden; }
-  .lekt-bar span { display: block; height: 100%; background: var(--accent); }
-  .lekt-kachel.sitzt .lekt-bar span { background: var(--green); }
-  .lekt-zahl { font-size: 0.74rem; color: var(--ink-faint); margin-top: var(--s1); }
-
-  /* ---------- Modus „Lernen" ----------
-     2.4.0: Eine Liste zum Mitlesen, keine Abfrage - deshalb keine grossen
-     Bewertungsflaechen, sondern ruhige Zeilen mit einer einzigen Handlung
-     rechts. */
-  .lern-kopf { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s3); flex-wrap: wrap; }
-  .lern-kopf > div:last-child { display: flex; gap: var(--s2); flex-wrap: wrap; }
-  .lern-balken { height: 6px; background: var(--card-2); border-radius: 999px; overflow: hidden; margin-top: var(--s3); }
-  .lern-balken span { display: block; height: 100%; background: var(--green); transition: width 0.25s ease; }
-  /* Ein Raster statt einer Spalte: auf dem Handy eine Karte pro Zeile, auf
-     einem breiten Bildschirm zwei nebeneinander. Ohne zweite Ansicht, ohne
-     Zoomstufen - die Breite entscheidet. */
-  .lern-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--s2); }
-  .lern-karte {
-    display: flex; gap: var(--s3); align-items: flex-start;
-    background: var(--card); border: 1px solid var(--border-soft);
-    border-radius: var(--radius); padding: var(--s3) var(--s4);
-  }
-  .lern-karte.ist-gelernt { opacity: 0.5; }
-  .lern-nr { font-size: 0.72rem; color: var(--ink-faint); min-width: 2ch; text-align: right; padding-top: 3px; flex-shrink: 0; }
-  .lern-inhalt { flex: 1; min-width: 0; }
-  .lern-inhalt .wort { font-weight: 600; word-break: break-word; }
-  .lern-inhalt .uebersetzung { color: var(--ink-soft); font-size: 0.9rem; margin-top: 2px; word-break: break-word; }
-  .lern-notiz-knopf { background: transparent; border-color: transparent; color: var(--ink-faint); font-size: 0.78rem; font-weight: 500; padding: 6px 0; min-height: 32px; }
-  .lern-tat { flex-shrink: 0; }
-  .lern-haken { background: transparent; border: 1px solid var(--green-line); color: var(--green); font-size: 0.84rem; padding: 8px 14px; min-height: 38px; }
-  @media (hover: hover) and (pointer: fine) {
-    .lern-notiz-knopf:hover { background: transparent; color: var(--accent); }
-    .lern-haken:hover { background: var(--green-soft); }
-  }
-  .satz-banner { background: var(--card-2); border: 1px solid var(--border-soft); color: var(--ink-soft); border-radius: var(--radius); padding: var(--s3) var(--s4); font-size: 0.86rem; margin-bottom: var(--s3); }
-  .satz-banner strong { color: var(--accent); }
-
-  /* ---------- Statistik ----------
-     E4/D10: Balken und Saeulen bestehen bewusst aus einfachen div-Elementen
-     statt aus einer Diagramm-Bibliothek - die App soll eine einzige Datei
-     ohne Build-Schritt bleiben. */
-  .stat-kennzahlen { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s5); }
-  .stat-kennzahl { flex: 1; min-width: 92px; background: var(--card-2); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: var(--s3); }
-  .stat-kennzahl .zahl { font-size: 1.3rem; font-weight: 700; color: var(--ink); line-height: 1.2; letter-spacing: -0.01em; }
-  .stat-kennzahl .was { font-size: 0.74rem; color: var(--ink-faint); margin-top: 2px; }
-
-  .stat-block { margin-top: var(--s6); padding-top: var(--s5); border-top: 1px solid var(--border-soft); }
-  .stat-block h3 { font-size: 0.98rem; font-weight: 600; margin-bottom: 2px; }
-  .stat-block .stat-sub { font-size: 0.78rem; color: var(--ink-faint); margin-bottom: var(--s3); }
-
-  .stat-bar { display: flex; height: 16px; border-radius: 999px; overflow: hidden; background: var(--border); }
-  .stat-seg { height: 100%; }
-  .stat-legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); margin-top: var(--s3); font-size: 0.8rem; color: var(--ink-soft); }
-  .stat-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
-  .stat-legend strong { color: var(--ink); }
-
-  .spark { display: flex; align-items: flex-end; gap: 3px; height: 92px; }
-  .spark-fill { flex: 1; background: var(--accent-soft); border: 1px solid var(--accent-line); border-top-left-radius: 4px; border-top-right-radius: 4px; min-height: 2px; }
-  .spark-fill.leer { background: transparent; border-color: var(--border-soft); }
-  .spark-fill.heute { background: var(--accent); border-color: var(--accent); }
-  .spark-reihe { display: flex; gap: 3px; font-size: 0.68rem; color: var(--ink-faint); }
-  .spark-reihe span { flex: 1; text-align: center; }
-  .spark-reihe.oben { margin-bottom: 5px; }
-  .spark-reihe.unten { margin-top: 6px; }
-
-  /* E6: Hinweis auf eine Karte, die immer wieder zurückfällt. Bewusst in Rot
-     und nicht in Gold - es ist keine Auszeichnung, sondern eine Aufforderung,
-     die Karte zu ändern. */
-  .leech-banner {
-    background: var(--red-soft);
-    border: 1px solid var(--red-line);
-    color: var(--red);
-    border-radius: var(--radius);
-    padding: var(--s3) var(--s4);
-    font-size: 0.85rem;
-    margin-top: var(--s3);
-    text-align: left;
-  }
-  .leech-badge {
-    background: transparent;
-    border: 1px solid var(--red-line);
-    color: var(--red);
-    border-radius: 999px;
-    padding: 3px 9px;
-    font-size: 0.74rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .leech-row { display: flex; align-items: center; gap: var(--s2); padding: var(--s3) 0; border-bottom: 1px solid var(--border-soft); }
-  .leech-row:last-of-type { border-bottom: none; }
-  .leech-row .words { flex: 1; min-width: 0; }
-
-  .setup-steps { font-size: 0.92rem; color: var(--ink-soft); }
-  .setup-steps li { margin: var(--s2) 0 var(--s2) 18px; }
-  code { background: var(--card-2); border: 1px solid var(--border-soft); padding: 2px 6px; border-radius: 6px; font-size: 0.85em; word-break: break-all; }
-
-  @font-face {
-    font-family: 'UthmanicHafs';
-    src: url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2') format('woff2'),
-         url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.ttf') format('truetype');
-    font-display: swap;
-  }
-  .arabic {
-    font-family: 'UthmanicHafs', 'Amiri', 'Amiri Quran', 'Scheherazade New', 'Noto Naskh Arabic', serif;
-    direction: rtl;
-    unicode-bidi: plaintext;
-    /* Arabische Schrift trägt hohe Oberlängen und tiefe Unterlängen. Mit der
-       Zeilenhöhe des Fließtextes schneiden sich die Zeilen. */
-    line-height: 1.9;
-  }
-  input.arabic { text-align: right; line-height: 1.6; }
-
-  /* D2 (1.8.0): eigene Dialoge statt alert/confirm/prompt. Die System-Kaesten
-     sind auf dem Handy fremd, zeigen statt eines Titels die Seiten-Adresse,
-     und prompt() wird von manchen Browsern schlicht ignoriert - dann passierte
-     gar nichts und niemand wusste, warum. */
-  .dlg-backdrop {
-    position: fixed; inset: 0; z-index: 100;
-    background: var(--backdrop);
-    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
-    display: flex; align-items: center; justify-content: center;
-    padding: var(--s5);
-    padding-top: calc(var(--s5) + var(--sat));
-    padding-bottom: calc(var(--s5) + var(--sab));
-  }
-  .dlg {
-    background: var(--card); color: var(--ink);
-    border: 1px solid var(--border); border-radius: var(--radius-lg);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-    padding: var(--s5) var(--s5) var(--s4); width: 100%; max-width: 420px; text-align: left;
-    max-height: 100%; overflow-y: auto;
-  }
-  .dlg h3 { font-size: 1.02rem; margin-bottom: var(--s2); }
-  .dlg .dlg-text { color: var(--ink-soft); font-size: 0.94rem; white-space: pre-wrap; word-break: break-word; }
-  .dlg input { margin-top: var(--s3); }
-  .dlg-actions { display: flex; gap: var(--s2); justify-content: flex-end; margin-top: var(--s5); flex-wrap: wrap; }
-  .dlg-actions button.danger { background: var(--red); color: #fff; border-color: var(--red); }
-  @media (hover: hover) and (pointer: fine) {
-    .dlg-actions button.danger:hover { background: #b25c45; }
-  }
-
-  /* E7 (1.8.0): Schriftgroesse fuer Arabisch. Der Faktor haengt an #app.
-     Die Grundgroessen stehen bewusst an jeder Stelle einzeln - ein
-     schlichtes calc(1em * f) in .arabic wuerde sich auf die ELTERN-Groesse
-     beziehen und die 1,7 rem der Lernkarte verschlucken. */
-  .study-word.arabic { font-size: calc(1.75rem * var(--arab-scale, 1)); }
-  .study-answer.arabic { font-size: calc(1.3rem * var(--arab-scale, 1)); }
-  .card-row .wort.arabic, .leech-row .wort.arabic { font-size: calc(1rem * var(--arab-scale, 1)); }
-  input.arabic { font-size: calc(16px * var(--arab-scale, 1)); }
-
-  /* Dreiteiliger Umschalter, benutzt von E7 (Schriftgroesse) und D7 (Suche) */
-  .seg { display: inline-flex; gap: 2px; border: 1px solid var(--border-soft); background: var(--card-2); border-radius: var(--radius); padding: 2px; }
-  .seg button {
-    border-radius: var(--radius-sm); padding: 8px 13px; min-height: 36px;
-    font-size: 0.83rem; font-weight: 500;
-    background: transparent; border-color: transparent; color: var(--ink-soft);
-  }
-  .seg button.active { background: var(--card); border-color: var(--border); color: var(--accent); font-weight: 600; }
-  .seg-row { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; margin-top: var(--s3); }
-  @media (hover: hover) and (pointer: fine) {
-    .seg button:hover { background: transparent; color: var(--ink); }
-    .seg button.active:hover { background: var(--card); color: var(--accent); }
-  }
-
-  /* ---------- Handschrift ---------- */
-  .hw-canvas-wrap { background: var(--card-2); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: var(--s3); margin: var(--s5) 0; }
-  .hw-canvas-wrap canvas {
-    display: block;
-    width: 100%;
-    height: 240px;
-    touch-action: none;
-    background: #fffdf9;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-  }
-  .hw-canvas-wrap.fullscreen {
-    position: fixed;
-    inset: 12px;
-    top: calc(12px + var(--sat));
-    z-index: 50;
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    padding-top: calc(var(--s3) + var(--sat));
-    padding-bottom: calc(var(--s3) + var(--sab));
-  }
-  .hw-canvas-wrap.fullscreen canvas { flex: 1; height: auto; }
-  .hw-toolbar { display: flex; gap: var(--s2); margin-top: var(--s3); flex-wrap: wrap; justify-content: center; }
-
-  /* ============================================================
-     Bildschirmgrößen
-
-     Drei Stufen statt einer. Die App lief bisher auf jedem Gerät in
-     derselben 640-Pixel-Spalte: auf dem iPad stand sie damit als
-     schmaler Streifen in einer leeren Fläche - der sicherste Weg,
-     wie eine Webseite auszusehen.
-     ============================================================ */
-
-  /* Kleines Handy */
-  @media (max-width: 480px) {
-    .container { padding-left: calc(12px + var(--sal)); padding-right: calc(12px + var(--sar)); }
-    .panel { padding: var(--s4); }
-    .study-card { padding: var(--s6) var(--s4); }
-    .study-word { font-size: 1.4rem; }
-    .study-word.arabic { font-size: calc(1.4rem * var(--arab-scale, 1)); }
-    /* Seit 1.7.0 gibt es drei Tabs statt zwei - "Fortschritt" ist das
-       laengste Wort und braucht auf einem 360-px-Handy weniger Polster. */
-    .tab { padding: 10px 4px; font-size: 0.88rem; }
-    .topbar { gap: var(--s1); }
-  }
-
-  /* Tablet und Rechner: mehr Breite, etwas größere Schrift, mehr Luft.
-     Die Karte in der Abfrage wächst am stärksten - sie ist auf einem iPad
-     das, was man ansieht, während alles andere nur danebensteht. */
-  @media (min-width: 768px) {
-    body { font-size: 17px; }
-    .container { max-width: 720px; padding-left: calc(var(--s6) + var(--sal)); padding-right: calc(var(--s6) + var(--sar)); }
-    .panel { padding: var(--s6); }
-    h1 { font-size: 1.7rem; }
-    h2 { font-size: 1.15rem; }
-    .study-card { padding: 56px var(--s7); }
-    .study-word { font-size: 2.1rem; }
-    .study-word.arabic { font-size: calc(2.1rem * var(--arab-scale, 1)); }
-    .study-answer { font-size: 1.5rem; }
-    .study-answer.arabic { font-size: calc(1.5rem * var(--arab-scale, 1)); }
-    .grade-row { gap: var(--s3); }
-    .grade-row button { min-height: 64px; font-size: 1.05rem; }
-    .tab { font-size: 0.98rem; min-height: 46px; }
-    .hw-canvas-wrap canvas { height: 320px; }
-  }
-
-  /* Großes iPad und Desktop */
-  @media (min-width: 1100px) {
-    .container { max-width: 780px; }
-    .lern-raster { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
-  }
-</style>
-</head>
-<body>
-<div class="bg-glow" aria-hidden="true"></div>
-<div class="container" id="app">
-  <div class="panel" style="text-align:center; margin-top:40px">Lädt…</div>
-</div>
-
-<script type="module">
 "use strict";
 
 /* ============================================================
@@ -1053,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "2.21.6";
+const APP_VERSION = "3.0.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -1426,12 +389,62 @@ const SET_ART_ERKLAERUNG = {
 const ICON_PFADE = {
   lektion: '<path d="M12 6.3C10.2 5.1 8 4.4 5.8 4.4c-.7 0-1.3.6-1.3 1.3v11.7c0 .7.6 1.3 1.3 1.3 2.2 0 4.4.7 6.2 1.9 1.8-1.2 4-1.9 6.2-1.9.7 0 1.3-.6 1.3-1.3V5.7c0-.7-.6-1.3-1.3-1.3-2.2 0-4.4.7-6.2 1.9z"/><line x1="12" y1="6.3" x2="12" y2="19.6"/>',
   kategorie: '<path d="M3 11.3V5.6c0-1.1.9-2 2-2h5.6c.5 0 1 .2 1.4.6l8 8c.8.8.8 2 0 2.8l-6.3 6.3c-.8.8-2 .8-2.8 0l-8-8c-.4-.4-.6-.9-.6-1.4z"/><circle cx="7.3" cy="7.3" r="1.1" fill="currentColor" stroke="none"/>',
-  stern: '<path d="M12 17.3 5.8 21l1.6-7L2 9.3l7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/>'
+  stern: '<path d="M12 17.3 5.8 21l1.6-7L2 9.3l7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/>',
+
+  /* ---------- 3.0.0: das erweiterte Zeichenvorrat ----------
+     Alle auf demselben 24er-Raster, alle in currentColor, alle mit derselben
+     Strichstaerke (die steht in der styles.css, nicht hier). Damit ersetzen
+     sie die Emoji, die bis 2.21.6 ueberall verstreut standen und auf jedem
+     Geraet anders aussahen - mal bunt, mal fett, mal gar nicht passend.
+     Die einzige bewusste Ausnahme bleibt die native Art-Auswahl im
+     Autorenmodus: ein <option> kann kein SVG zeichnen. */
+  lernen:      '<path d="M12 3 3 7.5l9 4.5 9-4.5L12 3z"/><path d="M3 12.5 12 17l9-4.5"/><path d="M3 17 12 21.5 21 17"/>',
+  fortschritt: '<path d="M3 20h18"/><path d="M6 20v-6"/><path d="M11 20V8"/><path d="M16 20v-9"/><path d="M21 20V5"/>',
+  verwalten:   '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/>',
+  zahnrad:     '<path d="M4 7h9"/><path d="M17 7h3"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="7" cy="17" r="2.2"/>',
+  chevronUnten:'<path d="M6 9.5 12 15.5 18 9.5"/>',
+  chevronRechts:'<path d="M9 5.5 15.5 12 9 18.5"/>',
+  zurueck:     '<path d="M15 5.5 8.5 12 15 18.5"/>',
+  schliessen:  '<path d="M6.5 6.5l11 11"/><path d="M17.5 6.5l-11 11"/>',
+  plus:        '<path d="M12 5v14"/><path d="M5 12h14"/>',
+  suche:       '<circle cx="11" cy="11" r="7"/><path d="M20.5 20.5 16.2 16.2"/>',
+  haken:       '<path d="M4.5 12.5 9.5 17.5 19.5 6.5"/>',
+  rueckgaengig:'<path d="M8.5 13.5 4 9l4.5-4.5"/><path d="M4 9h11a5 5 0 0 1 0 10h-4.5"/>',
+  ueben:       '<path d="M17 2.5 20.5 6 17 9.5"/><path d="M3.5 12v-2a4 4 0 0 1 4-4h13"/><path d="M7 21.5 3.5 18 7 14.5"/><path d="M20.5 12v2a4 4 0 0 1-4 4h-13"/>',
+  serie:       '<path d="M12 22c3.9 0 7-2.7 7-6.5 0-4-3-6.4-4.1-9.4-.6 2-1.6 3-2.6 3.7C11 8 11 6 9 2.5c0 3.6-4 5.4-4 13C5 19.3 8.1 22 12 22z"/>',
+  sichern:     '<path d="M12 3.5v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20.5h16"/>',
+  einspielen:  '<path d="M12 20.5v-12"/><path d="M7 13.5l5-5 5 5"/><path d="M4 3.5h16"/>',
+  teilen:      '<path d="M12 3v12"/><path d="M8 6.5 12 2.5l4 4"/><path d="M5 13v6.5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V13"/>',
+  stift:       '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14.5 5.5l4 4"/>',
+  muell:       '<path d="M4 7h16"/><path d="M9.5 7V4.5h5V7"/><path d="M6.5 7l1 13h9l1-13"/>',
+  schloss:     '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.8a3.5 3.5 0 0 1 7 0v2.7"/>',
+  vollbild:    '<path d="M4 9.5V4h5.5"/><path d="M20 9.5V4h-5.5"/><path d="M4 14.5V20h5.5"/><path d="M20 14.5V20h-5.5"/>',
+  warnung:     '<path d="M12 3.5 21 20H3z"/><path d="M12 10v4"/><path d="M12 17h.01"/>',
+  offline:     '<path d="M3 3.5 21 21"/><path d="M6.8 9A5.5 5.5 0 0 0 7 20h9.5a4.5 4.5 0 0 0 2.9-1.05"/><path d="M8.3 5.6A6.5 6.5 0 0 1 18.4 11a4.5 4.5 0 0 1 2.3 1.4"/>',
+  griff:       '<circle cx="9" cy="6" r="1.15" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.15" fill="currentColor" stroke="none"/><circle cx="15" cy="6" r="1.15" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.15" fill="currentColor" stroke="none"/>',
+  ordner:      '<path d="M3 7.5a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  karten:      '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3.5h12a2 2 0 0 1 2 2V16"/>',
+  leer:        '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7"/>',
+  fertig:      '<circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/>',
+  konto:       '<circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+  abmelden:    '<path d="M14 4.5H6.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2H14"/><path d="M17 8.5 20.5 12 17 15.5"/><path d="M20.5 12h-10"/>',
+  umkehren:    '<path d="M7 4.5v15"/><path d="M4 16.5 7 19.5 10 16.5"/><path d="M17 19.5v-15"/><path d="M14 7.5 17 4.5 20 7.5"/>',
+  verschieben: '<path d="M4 6.5h9a4 4 0 0 1 4 4v6"/><path d="M13.5 13 17 16.5 20.5 13"/>',
+  hand:        '<path d="M4 19.5h16"/><path d="M6.5 15.5 15 7a2.1 2.1 0 0 1 3 3l-8.5 8.5H6.5z"/>',
+  auswaehlen:  '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/>',
+  marke:       '<path d="M12 2.5c3 4 6.5 5.8 6.5 10a6.5 6.5 0 0 1-13 0c0-4.2 3.5-6 6.5-10z"/><path d="M12 21.5v-6"/>'
 };
+/* Kleines Symbol im Fliesstext (16px, .icon) - der bisherige Aufruf. */
 function iconSvg(name, cls) {
   const key = name === "eigen" ? "stern" : name;
   return '<svg class="icon' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" width="16" height="16" ' +
-    'aria-hidden="true">' + ICON_PFADE[key] + '</svg>';
+    'aria-hidden="true">' + (ICON_PFADE[key] || "") + '</svg>';
+}
+/* Symbol als eigenstaendiges Element (20px, .i) - fuer Knoepfe, Navigation,
+   Leerzustaende. cls nimmt die Groessenklassen i-sm / i-lg / i-xl. */
+function ikon(name, cls) {
+  return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" ' +
+    'aria-hidden="true" focusable="false">' + (ICON_PFADE[name] || "") + '</svg>';
 }
 /* Der Merken-Stern: eigenes Symbol statt ☆/⭐, weil er sich beim Antippen
    sichtbar veraendern soll (Umriss -> gefuellt) statt nur den Emoji-
@@ -1908,7 +921,38 @@ let ui = {
      jedem Start ist es wieder zu, das ist der Normalfall. */
   setsOffen: false,
   setsArtWahl: false,        // 2.5.0: Arten vergeben (nur Autor, eigener Bereich)
+  /* 3.0.0: Das Bereichs-Sheet. Ersetzt die waagerecht scrollende Pill-Reihe
+     ueber dem Lernstoff. Bewusst NICHT gespeichert - beim naechsten Start
+     ist es wieder zu, das ist der Normalfall. */
+  bereichSheet: false,
+  /* 3.0.0: Kurze Rueckmeldung fuer Handlungen, die bisher stumm waren
+     (Backup heruntergeladen, Reihenfolge umgekehrt). { text, bis }.
+     Ausdruecklich NUR fuer Erfolge: Was anhaelt - ein Schreibfehler, eine
+     abgerissene Verbindung - gehoert in ein Banner, das stehen bleibt, nicht
+     in eine Meldung, die von selbst verschwindet. */
+  toast: null,
 };
+
+/* ---------- 3.0.0: Toast ----------
+   Hoechstens einer gleichzeitig; ein neuer verdraengt den alten. Der Timer
+   loest ein render() aus, mehr braucht es nicht - die Meldung steht in ui
+   und verschwindet damit von selbst aus dem naechsten Aufbau. */
+let toastTimer = null;
+function zeigeToast(text) {
+  ui.toast = { text: text };
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastTimer = null;
+    ui.toast = null;
+    render();
+  }, 2600);
+  render();
+}
+function renderToast() {
+  if (!ui.toast) return "";
+  return '<div class="toast-wrap"><div class="toast" role="status" aria-live="polite">' +
+    ikon("fertig", "i-sm") + '<span>' + esc(ui.toast.text) + '</span></div></div>';
+}
 
 /* ---------- Formular-Entwurf ----------
    render() baut das gesamte DOM neu. Ohne diesen Zwischenspeicher waere jede
@@ -2907,12 +1951,21 @@ function statsCards() {
    weiteren sind die Stufe. Eine Karte faellt nie unter Stufe 1 zurueck,
    sobald sie einmal gewusst wurde - deshalb bedeutet Stufe 0 immer entweder
    neu oder gesehen und die Einteilung ist ueberschneidungsfrei. */
+/* 3.0.0: Die Farben kommen jetzt aus EINER Rampe (--stufe-0 bis --stufe-4).
+   Vorher stand hier Grau, Bronze, Zinnober, Gold, Gruenspan nebeneinander -
+   fuenf Farben aus drei verschiedenen Bedeutungswelten. Rot hiess an dieser
+   Stelle "wackelig", woanders in der App "falsch"; Gruen hiess hier "fest",
+   auf dem Bewertungsknopf "gewusst". Mit der Rampe heisst mehr Gold ueberall
+   dasselbe: sitzt besser. Dieselben Werte tragen Kalender, Lektionsbalken
+   und die Plaketten an den Karten.
+   Geaendert ist ausschliesslich das Feld "farbe" - id, label, erklaerung
+   und test sind unveraendert. */
 const KARTEN_ZUSTAENDE = [
-  { id: "neu",      label: "neu",      erklaerung: "noch nie angesehen",             farbe: "var(--ink-soft)",    test: c => istNeueKarte(c) },
-  { id: "gesehen",  label: "gesehen",  erklaerung: "durchgesehen, noch nie gewusst", farbe: "var(--accent-dark)", test: c => !istNeueKarte(c) && (c.maxStufe || 0) === 0 },
-  { id: "wackelig", label: "wackelig", erklaerung: "Stufe 1–2",                      farbe: "var(--red)",         test: c => (c.maxStufe || 0) > 0 && c.stufe <= 2 },
-  { id: "solide",   label: "solide",   erklaerung: "Stufe 3–5",                      farbe: "var(--accent)",      test: c => (c.maxStufe || 0) > 0 && c.stufe >= 3 && c.stufe <= 5 },
-  { id: "fest",     label: "fest",     erklaerung: "Stufe 6+",                       farbe: "var(--green)",       test: c => (c.maxStufe || 0) > 0 && c.stufe >= 6 }
+  { id: "neu",      label: "neu",      erklaerung: "noch nie angesehen",             farbe: "var(--stufe-0)", test: c => istNeueKarte(c) },
+  { id: "gesehen",  label: "gesehen",  erklaerung: "durchgesehen, noch nie gewusst", farbe: "var(--stufe-1)", test: c => !istNeueKarte(c) && (c.maxStufe || 0) === 0 },
+  { id: "wackelig", label: "wackelig", erklaerung: "Stufe 1–2",                      farbe: "var(--stufe-2)", test: c => (c.maxStufe || 0) > 0 && c.stufe <= 2 },
+  { id: "solide",   label: "solide",   erklaerung: "Stufe 3–5",                      farbe: "var(--stufe-3)", test: c => (c.maxStufe || 0) > 0 && c.stufe >= 3 && c.stufe <= 5 },
+  { id: "fest",     label: "fest",     erklaerung: "Stufe 6+",                       farbe: "var(--stufe-4)", test: c => (c.maxStufe || 0) > 0 && c.stufe >= 6 }
 ];
 const STAT_GRUPPEN = KARTEN_ZUSTAENDE;
 /* Der Zustand einer einzelnen Karte. Der erste passende gewinnt; die Tests
@@ -3183,7 +2236,7 @@ async function exportWeitergabe() {
   if (lektionen.length === 0) {
     await dlgAlert('In „' + b.name + '" gibt es noch keine Speicherkarte der Art „Lektion". ' +
       'Ohne Lektionen gäbe es nichts zum Freischalten – wer den Satz einspielt, hätte gar keine Karte zum Lernen.\n\n' +
-      'Leg im Verwalten-Tab unter „⭐ Speicherkarten" mindestens eine Lektion an.', "Noch keine Lektionen");
+      'Leg im Verwalten-Tab unter „Speicherkarten“ mindestens eine Lektion an.', "Noch keine Lektionen");
     return;
   }
   const ohneLektion = b.karten.filter(c => !lektionen.some(s => s.cardIds.indexOf(c.id) !== -1)).length;
@@ -3335,7 +2388,7 @@ async function satzZusammenfuehren(ziel, datei) {
      etwas nicht - etwa ein normales Backup, das auf einen gefuehrten Satz
      trifft. Lieber einmal zu viel gefragt als ein Lernstand weniger. */
   if (d.entfernt.length > ziel.karten.length / 2 && ziel.karten.length > 0) {
-    text = "⚠ Achtung: " + d.entfernt.length + " von " + ziel.karten.length +
+    text = "Achtung: " + d.entfernt.length + " von " + ziel.karten.length +
       " Karten würden wegfallen – samt ihrem Lernstand.\n\nDas passt fast nie. " +
       "Meist stammt die Datei nicht aus derselben Reihe.\n\n" + text;
   }
@@ -3518,6 +2571,7 @@ async function addBereich() {
     patchDoc({ [pfadBereich(b.id)]: bereichFelder(b, bereiche.length - 1) });
   }
   ui.bereichId = b.id;
+  ui.bereichSheet = false;
   ui.session = null;
   ui.editId = null;
   render();
@@ -3525,6 +2579,7 @@ async function addBereich() {
 function selectBereich(bereichId) {
   if (!bereiche.some(b => b.id === bereichId)) return;
   ui.bereichId = bereichId;
+  ui.bereichSheet = false;     // 3.0.0: Das Sheet hat seine Aufgabe erfuellt.
   ui.session = null;
   /* Die Speicherkarte gehoert zu ihrem Bereich - nach einem Wechsel zeigte
      die Durchsicht sonst auf eine Auswahl, die es hier nicht gibt. */
@@ -4436,12 +3491,24 @@ function render() {
         render();
       }, 9000);
     }
-    app.innerHTML = '<div class="panel" style="text-align:center; margin-top:40px">Daten werden geladen…' +
-      (syncError ? '<div class="error-box">' + esc(syncError) + '</div>' : '') +
-      (ladeLangsam && !syncError ? '<p class="hint" style="margin-top:14px">Das dauert länger als sonst. ' +
-        'Prüfe deine Internetverbindung, oder lade die Seite neu.</p>' +
-        '<button class="secondary" data-action="seite-neu-laden" style="margin-top:6px">Neu laden</button>' : '') +
-      '</div>';
+    let laden = '<div class="boot">';
+    laden += '<div class="boot__mark">' + ikon("marke", "i-xl") + '</div>';
+    if (syncError) {
+      /* Blockierend: Ohne Daten gibt es nichts zu zeigen. Also Klartext und
+         ein Weg weiter, statt eines Ladepunkts, der nie aufhoert. */
+      laden += '<div class="empty__titel">Keine Verbindung zu deinen Daten</div>';
+      laden += '<div class="error-box" style="max-width:34ch;text-align:left">' + ikon("warnung", "i-sm") +
+        '<div class="banner__text">' + esc(syncError) + '</div></div>';
+      laden += '<button class="secondary" data-action="seite-neu-laden">Neu laden</button>';
+    } else if (ladeLangsam) {
+      laden += '<p class="boot__text">Das dauert l\u00e4nger als sonst. Pr\u00fcf deine Internetverbindung \u2013 ' +
+        'oder lade die Seite neu.</p>';
+      laden += '<button class="secondary" data-action="seite-neu-laden">Neu laden</button>';
+    } else {
+      laden += '<p class="boot__text">Deine Karten werden geladen\u2026</p>';
+    }
+    laden += '</div>';
+    app.innerHTML = laden;
     return;
   }
   if (ui.askImport) { renderImport(); return; }
@@ -4454,17 +3521,28 @@ function render() {
    soll. Die Begruendung steht im Changelog, nicht auf dem Bildschirm. */
 function renderUmzug() {
   const u = ui.umzug;
-  let html = '<div style="padding-top:32px">';
-  html += '<h1>🌱 Adrabic-Wiederholung</h1>';
-  html += '<div class="panel" style="text-align:center">';
+  let html = '<div class="solo">';
+  html += soloMarke(null);
+  html += '<div class="card" style="text-align:center">';
   if (u.fehler) {
-    html += '<p class="hint" style="padding-top:0">Das hat nicht geklappt. Deine Karten sind unverändert.</p>';
-    html += '<div class="error-box">' + esc(u.fehler) + '</div>';
-    html += '<div class="form-actions" style="justify-content:center"><button data-action="umzug-start">Nochmal versuchen</button></div>';
+    /* Blockierender Fehler: eigener Bildschirm, Klartext, EIN Weg weiter. */
+    html += '<div class="empty__icon">' + ikon("warnung", "i-xl") + '</div>';
+    html += '<div class="empty__titel">Das hat nicht geklappt</div>';
+    html += '<p class="empty__text">Deine Karten sind unver\u00e4ndert geblieben.</p>';
+    html += '<div class="error-box" style="text-align:left">' + ikon("warnung", "i-sm") +
+      '<div class="banner__text">' + esc(u.fehler) + '</div></div>';
+    html += '<button data-action="umzug-start">Nochmal versuchen</button>';
   } else {
-    html += '<p class="hint" style="padding-top:0">Deine Karten werden einmalig umgestellt. Das dauert ein paar Sekunden.</p>';
-    if (u.gesamt > 0) html += '<p class="hint"><strong>' + u.fertig + ' von ' + u.gesamt + '</strong></p>';
-    html += '<p class="hint">Bitte die Seite offen lassen.</p>';
+    /* Bewusst fast textlos. Wer die App benutzt, muss nicht wissen, was ein
+       Datenformat ist - er soll nur sehen, dass etwas laeuft. */
+    html += '<div class="boot__mark" style="margin-bottom:var(--space-5)">' + ikon("karten", "i-xl") + '</div>';
+    html += '<div class="empty__titel">Einen Moment</div>';
+    html += '<p class="empty__text">Deine Karten werden einmalig umgestellt. Bitte die Seite offen lassen.</p>';
+    if (u.gesamt > 0) {
+      const anteil = Math.round((u.fertig / u.gesamt) * 100);
+      html += '<div class="heute-bar"><span style="width:' + anteil + '%"></span></div>';
+      html += '<p class="hint"><strong>' + u.fertig + '</strong> von ' + u.gesamt + '</p>';
+    }
   }
   html += '</div></div>';
   app.innerHTML = html;
@@ -4538,70 +3616,98 @@ async function umzugStarten() {
 }
 
 function renderPendingVerification() {
-  let html = '<div style="padding-top:32px">';
-  html += '<h1>🌱 Adrabic-Wiederholung</h1>';
-  html += '<p class="subtitle">E-Mail bestätigen</p>';
-  html += '<div class="panel">';
-  html += '<p class="hint">Wir haben eine Bestätigungs-E-Mail an <strong>' + esc(currentUser.email) + '</strong> geschickt. Öffne den Link in der E-Mail, um dein Konto freizuschalten.</p>';
+  let html = '<div class="solo">';
+  html += soloMarke("E-Mail best\u00e4tigen");
+  html += '<div class="card">';
+  html += '<p class="hint">Wir haben eine Best\u00e4tigungs-E-Mail an <strong>' + esc(currentUser.email) +
+    '</strong> geschickt. \u00d6ffne den Link darin, um dein Konto freizuschalten.</p>';
+  if (ui.authError) html += '<div class="error-box" style="margin-top:var(--space-4)">' + ikon("warnung", "i-sm") +
+    '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
+  if (ui.authInfo) html += '<div class="info-box" style="margin-top:var(--space-4)">' + ikon("haken", "i-sm") +
+    '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
   html += '<div class="form-actions">';
-  html += '<button data-action="verification-check">Ich habe bestätigt – weiter</button>';
-  html += '<button class="secondary" data-action="resend-verification">E-Mail erneut senden</button>';
+  html += '<button data-action="verification-check">Ich habe best\u00e4tigt</button>';
+  html += '</div>';
+  html += '<div class="form-actions" style="margin-top:var(--space-2)">';
+  html += '<button class="secondary" data-action="resend-verification">Erneut senden</button>';
   html += '<button class="secondary" data-action="logout">Abmelden</button>';
   html += '</div>';
-  if (ui.authError) html += '<div class="error-box">' + esc(ui.authError) + '</div>';
-  if (ui.authInfo) html += '<div class="info-box">' + esc(ui.authInfo) + '</div>';
   html += '</div></div>';
   app.innerHTML = html;
 }
 
+/* Die Wortmarke ueber den Solo-Bildschirmen. Ersetzt das Emoji-Sprout, das
+   auf jedem Geraet anders aussah. */
+function soloMarke(untertitel) {
+  return '<div class="solo-mark">' + ikon("marke", "i-lg") +
+    '<strong>Wiederholung</strong></div>' +
+    (untertitel ? '<h1>' + esc(untertitel) + '</h1>' : '');
+}
+
 function renderSetup() {
   app.innerHTML =
-    '<div style="padding-top:32px"><h1>🌱 Adrabic-Wiederholung</h1>' +
-    '<p class="subtitle">Einmalige Einrichtung nötig</p>' +
-    '<div class="panel"><h2>Firebase-Konfiguration fehlt</h2>' +
-    '<p class="setup-steps">Diese Datei ist noch nicht mit eurem Firebase-Projekt verbunden. So geht\'s:</p>' +
-    '<ol class="setup-steps">' +
+    '<div class="solo">' + soloMarke("Einmalige Einrichtung") +
+    '<div class="card" style="margin-top:var(--space-5)"><h2>Firebase-Konfiguration fehlt</h2>' +
+    '<p class="hint">Diese App ist noch nicht mit einem Firebase-Projekt verbunden. So geht es:</p>' +
+    '<ol class="setup-steps" style="margin-top:var(--space-4)">' +
     '<li>Auf <code>console.firebase.google.com</code> ein Projekt anlegen.</li>' +
-    '<li>Unter <strong>Authentication → Sign-in method</strong> „E-Mail/Passwort" aktivieren.</li>' +
-    '<li>Unter <strong>Firestore Database</strong> eine Datenbank im Produktionsmodus anlegen und die Sicherheitsregeln einfügen.</li>' +
-    '<li>Unter <strong>Projekteinstellungen → Meine Apps</strong> eine Web-App anlegen und die <code>firebaseConfig</code>-Werte kopieren.</li>' +
-    '<li>Die Werte oben in dieser Datei bei <code>firebaseConfig</code> eintragen (Editor genügt).</li>' +
+    '<li>Unter <strong>Authentication \u2192 Sign-in method</strong> \u201eE-Mail/Passwort\u201c aktivieren.</li>' +
+    '<li>Unter <strong>Firestore Database</strong> eine Datenbank im Produktionsmodus anlegen und die Sicherheitsregeln einf\u00fcgen.</li>' +
+    '<li>Unter <strong>Projekteinstellungen \u2192 Meine Apps</strong> eine Web-App anlegen und die <code>firebaseConfig</code>-Werte kopieren.</li>' +
+    '<li>Die Werte oben in der <code>app.js</code> bei <code>firebaseConfig</code> eintragen.</li>' +
     '</ol></div></div>';
 }
 
 function renderAuth() {
   const m = ui.authMode;
-  let html = '<div style="padding-top:32px">';
-  html += '<h1>🌱 Adrabic-Wiederholung</h1>';
-  html += '<p class="subtitle">' + (m === "register" ? "Neues Konto anlegen – einmalig, dann auf jedem Gerät nutzbar."
-    : m === "reset" ? "Passwort zurücksetzen" : "Anmelden und weiterlernen – auf jedem Gerät.") + '</p>';
-  html += '<div class="panel">';
+  let html = '<div class="solo">';
+  html += soloMarke(m === "register" ? "Konto anlegen"
+        : m === "reset" ? "Passwort zur\u00fccksetzen" : "Anmelden");
+  html += '<p class="subtitle" style="margin-bottom:var(--space-6)">' +
+    (m === "register" ? "Einmalig \u2013 danach auf jedem Ger\u00e4t."
+     : m === "reset" ? "Wir schicken dir einen Link zum Neusetzen."
+     : "Weiterlernen, wo du aufgeh\u00f6rt hast.") + '</p>';
+  html += '<div class="card">';
   if (m === "register") {
-    html += '<label for="a-name">Dein Name (wird im Programm angezeigt)</label>';
-    html += '<input type="text" id="a-name" maxlength="40" autocomplete="nickname">';
+    html += '<div class="field"><label for="a-name">Dein Name <span class="opt">\u2013 wird in der App angezeigt</span></label>';
+    html += '<input type="text" id="a-name" maxlength="40" autocomplete="nickname"></div>';
   }
-  html += '<label for="a-email">E-Mail</label>';
-  html += '<input type="email" id="a-email" autocomplete="email">';
+  html += '<div class="field"><label for="a-email">E-Mail</label>';
+  html += '<input type="email" id="a-email" autocomplete="email" inputmode="email"></div>';
   if (m !== "reset") {
-    html += '<label for="a-pass">Passwort' + (m === "register" ? " (mindestens 6 Zeichen)" : "") + '</label>';
-    html += '<input type="password" id="a-pass" autocomplete="' + (m === "register" ? "new-password" : "current-password") + '">';
+    html += '<div class="field"><label for="a-pass">Passwort' +
+      (m === "register" ? ' <span class="opt">\u2013 mindestens 6 Zeichen</span>' : '') + '</label>';
+    html += '<input type="password" id="a-pass" autocomplete="' + (m === "register" ? "new-password" : "current-password") + '"></div>';
   }
-  if (ui.authError) html += '<div class="error-box">' + esc(ui.authError) + '</div>';
-  if (ui.authInfo) html += '<div class="info-box">' + esc(ui.authInfo) + '</div>';
-  html += '<div class="form-actions">';
+  if (ui.authError) html += '<div class="error-box" style="margin:var(--space-4) 0 0">' + ikon("warnung", "i-sm") +
+    '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
+  if (ui.authInfo) html += '<div class="info-box" style="margin:var(--space-4) 0 0">' + ikon("haken", "i-sm") +
+    '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
+
   const busy = ui.authBusy ? " disabled" : "";
+  const laed = ui.authBusy ? " busy" : "";
+  html += '<div class="form-actions">';
   if (m === "login") {
-    html += '<button data-action="login"' + busy + '>Anmelden</button>';
-    html += '<button class="secondary" data-action="mode-register"' + busy + '>Neues Konto</button>';
-    html += '<button class="linklike" data-action="mode-reset"' + busy + '>Passwort vergessen?</button>';
+    html += '<button class="full' + laed + '" data-action="login"' + busy + '>Anmelden</button>';
   } else if (m === "register") {
-    html += '<button data-action="register"' + busy + '>Konto anlegen</button>';
-    html += '<button class="secondary" data-action="mode-login"' + busy + '>Zurück zur Anmeldung</button>';
+    html += '<button class="full' + laed + '" data-action="register"' + busy + '>Konto anlegen</button>';
   } else {
-    html += '<button data-action="reset"' + busy + '>Link zusenden</button>';
-    html += '<button class="secondary" data-action="mode-login"' + busy + '>Zurück zur Anmeldung</button>';
+    html += '<button class="full' + laed + '" data-action="reset"' + busy + '>Link zusenden</button>';
   }
-  html += '</div></div></div>';
+  html += '</div>';
+  html += '</div>';
+
+  /* Die Nebenwege stehen unter der Karte, nicht darin - sie gehoeren nicht
+     zum Formular. */
+  html += '<div class="empty__aktionen" style="margin-top:var(--space-5)">';
+  if (m === "login") {
+    html += '<button class="secondary" data-action="mode-register"' + busy + '>Neues Konto anlegen</button>';
+    html += '<button class="linklike" data-action="mode-reset"' + busy + '>Passwort vergessen?</button>';
+  } else {
+    html += '<button class="linklike" data-action="mode-login"' + busy + '>Zur\u00fcck zur Anmeldung</button>';
+  }
+  html += '</div>';
+  html += '</div>';
   app.innerHTML = html;
 
   const pass = document.getElementById("a-pass");
@@ -4616,111 +3722,273 @@ function renderAuth() {
 
 function renderImport() {
   const profiles = oldLocalProfiles();
-  let html = '<div style="padding-top:32px"><h1>🌱 Adrabic-Wiederholung</h1>';
-  html += '<p class="subtitle">Willkommen, ' + esc(displayName) + '!</p>';
-  html += '<div class="panel"><h2>Alte Karten gefunden</h2>';
-  html += '<p class="hint">Auf diesem Gerät gibt es noch Karten aus der Offline-Version. Sollen sie in dein Konto übernommen werden?</p>';
-  html += '<div class="form-actions">';
+  let html = '<div class="solo">';
+  html += soloMarke("Alte Karten gefunden");
+  html += '<p class="subtitle" style="margin-bottom:var(--space-6)">Willkommen, ' + esc(displayName) + '.</p>';
+  html += '<div class="card">';
+  html += '<p class="hint">Auf diesem Ger\u00e4t liegen noch Karten aus der Offline-Version. ' +
+    'Sollen sie in dein Konto \u00fcbernommen werden?</p>';
+  html += '<div class="form-actions" style="flex-direction:column">';
   for (const p of profiles) {
-    html += '<button data-action="import-old" data-name="' + esc(p) + '">Übernehmen von „' + esc(p) + '"</button>';
+    html += '<button class="full" data-action="import-old" data-name="' + esc(p) + '">\u00dcbernehmen von \u201e' + esc(p) + '\u201c</button>';
   }
-  html += '<button class="secondary" data-action="skip-import">Ohne Import starten</button>';
+  html += '<button class="secondary full" data-action="skip-import">Ohne Import starten</button>';
   html += '</div></div></div>';
   app.innerHTML = html;
 }
 
-function renderMain() {
+/* ============================================================================
+   3.0.0 – DAS GERÜST
+
+   Vier Ebenen, klar getrennt:
+
+     SHELL   AppBar oben, Navigation unten (am Handy) bzw. links (am Desktop).
+             Bleibt stehen, ist Orientierung.
+     VIEW    Der Inhalt. Scrollt. Lesebreite, mittig.
+     MODUS   Abfrage, Übung, Durchsicht. Verdeckt die Shell vollständig und
+             bringt eine eigene, einzeilige Leiste mit. (Das Prinzip stand
+             schon in 2.16.0 als "imModus" im Code - jetzt hat es eine Form.)
+     OVERLAY Dialog, Sheet, Toast.
+
+   Die Navigation ist EIN Block mit drei Knöpfen. Ob daraus eine Leiste unten
+   oder eine Spalte links wird, entscheidet allein die styles.css. Damit ist
+   diese Entscheidung jederzeit umkehrbar, ohne hier etwas anzufassen.
+   ========================================================================= */
+
+/* Die Kopfzeile. zurueck = data-action für den Zurück-Knopf (oder null),
+   titel = fester Text (sonst steht dort der Bereichs-Umschalter). */
+function appBar(cfg) {
+  const c = cfg || {};
+  let html = '<header class="appbar">';
+  if (c.zurueck) {
+    html += '<button class="icon-btn" data-action="' + c.zurueck + '" aria-label="Zurück">' +
+      ikon("zurueck") + '</button>';
+  }
+  if (c.titel) {
+    html += '<div class="appbar__title">' + esc(c.titel) + '</div>';
+  } else {
+    /* Zwei Fassungen desselben Platzes: Am Handy steht hier der Umschalter
+       (die Bereichsliste passt nicht auf den Bildschirm), am Desktop steht
+       sie offen in der Spalte links und hier nur noch der Name der Ansicht.
+       Welche von beiden erscheint, entscheidet allein die styles.css. */
+    html += '<button class="bereich-pill" data-action="bereich-sheet-auf" ' +
+      'aria-haspopup="dialog" aria-label="Bereich wechseln">' +
+      '<span>' + esc(currentBereich().name) + '</span>' + ikon("chevronUnten") + '</button>';
+    html += '<div class="appbar__title appbar__title--ansicht">' + esc(c.ansicht || "") + '</div>';
+  }
+  html += '<div class="appbar__spacer"></div>';
+  if (c.aktion) html += c.aktion;
+  html += '</header>';
+  return html;
+}
+
+/* Die Leiste für einen Modus: raus, wie weit, und die eine Nebenhandlung. */
+function modeBar(cfg) {
+  const c = cfg || {};
   let html = "";
+  if (typeof c.anteil === "number") {
+    const p = Math.max(0, Math.min(100, Math.round(c.anteil * 100)));
+    html += '<div class="modebar__fortschritt" style="width:' + p + '%"></div>';
+  }
+  html += '<div class="modebar">';
+  html += '<button class="icon-btn" data-action="' + esc(c.zu) + '" aria-label="' +
+    esc(c.zuLabel || "Schließen") + '">' + ikon("schliessen") + '</button>';
+  html += '<div class="modebar__mitte">' + (c.mitte || "") + '</div>';
+  html += c.rechts || '<span style="width:var(--ctrl-md);flex:none"></span>';
+  html += '</div>';
+  return html;
+}
+
+/* Die Navigation. Am Handy sind nur .nav__tabs sichtbar; die übrigen Teile
+   blendet die styles.css erst ab 900 px ein, wo aus der Leiste eine Spalte
+   wird und Platz für Marke, Bereiche und Einstellungen ist. */
+function navLeiste() {
+  const tabs = [
+    { id: "lernen", label: "Lernen", icon: "lernen", action: "tab-lernen" },
+    { id: "fortschritt", label: "Fortschritt", icon: "fortschritt", action: "tab-fortschritt" },
+    { id: "verwalten", label: "Verwalten", icon: "verwalten", action: "tab-verwalten" }
+  ];
+  const offen = bereiche ? dueCards().length : 0;
+
+  let html = '<nav class="nav" aria-label="Hauptbereiche">';
+
+  html += '<div class="nav__brand">' + ikon("marke", "i-lg") + '<strong>Wiederholung</strong></div>';
+
+  html += '<div class="nav__bereiche">';
+  html += '<div class="nav-titel">Bereiche</div>';
+  html += '<div class="liste" style="background:transparent;border:0">';
+  (bereiche || []).forEach(b => {
+    const d = dueCardsFor(b).length;
+    html += '<button class="liste-zeile' + (b.id === currentBereich().id && !ui.einstellungen ? " aktiv" : "") +
+      '" data-action="select-bereich" data-bid="' + esc(b.id) + '">' +
+      '<span class="liste-zeile__text">' + esc(b.name) + '</span>' +
+      (d > 0 ? '<span class="badge zustand-gesehen">' + d + '</span>' : '') + '</button>';
+  });
+  html += '<button class="liste-zeile" data-action="add-bereich">' +
+    ikon("plus", "i-sm") + '<span class="liste-zeile__text">Bereich anlegen</span></button>';
+  html += '</div></div>';
+
+  html += '<div class="nav__tabs" role="tablist">';
+  tabs.forEach(t => {
+    const aktiv = !ui.einstellungen && ui.tab === t.id;
+    html += '<button class="nav__tab' + (aktiv ? " active" : "") + '" data-action="' + t.action +
+      '" role="tab" aria-selected="' + (aktiv ? "true" : "false") + '">' +
+      ikon(t.icon, aktiv ? "voll" : "") +
+      '<span>' + t.label + '</span>' +
+      (t.id === "lernen" && offen > 0 ? '<span class="nav__dot" aria-hidden="true"></span>' : '') +
+      '</button>';
+  });
+  html += '</div>';
+
+  html += '<div class="nav__foot">';
+  html += '<button class="liste-zeile' + (ui.einstellungen ? " aktiv" : "") +
+    '" data-action="einstellungen">' + ikon("zahnrad", "i-sm") +
+    '<span class="liste-zeile__text">Einstellungen</span></button>';
+  html += '</div>';
+
+  html += '</nav>';
+  return html;
+}
+
+/* Das Bereichs-Sheet. Ersatz für die waagerecht scrollende Pill-Reihe: Die
+   kostete eine volle Zeile auf dem Bildschirm, den man täglich sieht, und
+   hörte ab vier Bereichen auf, bedienbar zu sein. Hier steht zusätzlich, wie
+   viel in jedem Bereich offen ist - das war vorher nirgends zu sehen. */
+function bereichSheet() {
+  if (!ui.bereichSheet || !bereiche) return "";
+  /* Tippen neben das Blatt schliesst - anders als beim Eingabe-Dialog, wo das
+     eine halb getippte Eingabe kosten koennte. Damit ein Tipp INS Blatt nicht
+     bis zum Hintergrund durchschlaegt, traegt das Blatt selbst eine Handlung,
+     die nichts tut: closest() findet sie zuerst. Kein Inline-JavaScript. */
+  let html = '<div class="dlg-backdrop" data-action="bereich-sheet-zu" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-label="Bereich wählen">';
+  html += '<h3>Bereich</h3>';
+  html += '<div class="sheet-liste"><div class="liste" style="background:transparent;border:0">';
+  bereiche.forEach(b => {
+    const d = dueCardsFor(b).length;
+    const aktiv = b.id === ui.bereichId || (!ui.bereichId && b.id === currentBereich().id);
+    html += '<button class="liste-zeile' + (aktiv ? " aktiv" : "") +
+      '" data-action="select-bereich" data-bid="' + esc(b.id) + '">' +
+      '<span class="liste-zeile__text">' + esc(b.name) + '</span>' +
+      (d > 0 ? '<span class="badge zustand-gesehen">' + d + ' fällig</span>' : '<span class="liste-zeile__wert">fertig</span>') +
+      (aktiv ? ikon("haken", "i-sm") : '') + '</button>';
+  });
+  html += '<button class="liste-zeile" data-action="add-bereich">' +
+    ikon("plus", "i-sm") + '<span class="liste-zeile__text">Bereich anlegen</span></button>';
+  html += '</div></div>';
+  html += '<div class="dlg-actions"><button class="secondary" data-action="bereich-sheet-zu">Schließen</button></div>';
+  html += '</div></div>';
+  return html;
+}
+
+/* ---------- Banner ----------
+   Drei Tiefen für Fehler: blockierend (eigener Bildschirm, siehe der
+   Start-Fehler ganz unten), Banner (bleibt stehen, solange das Problem
+   besteht) und Feld (unter dem Eingabefeld). Ein Banner ist bewusst NICHT
+   wegklickbar: Was anhält, gehört nie in eine Meldung, die verschwindet. */
+function bannerFehler(titel, text) {
+  return '<div class="banner-fehler">' + ikon("warnung", "i-sm") +
+    '<div class="banner__text"><strong>' + esc(titel) + '</strong> ' + text + '</div></div>';
+}
+function bannerInfo(text, leise) {
+  return '<div class="' + (leise ? "banner-info banner-leise" : "banner-info") + '">' +
+    ikon(leise ? "offline" : "warnung", "i-sm") +
+    '<div class="banner__text">' + text + '</div></div>';
+}
+function bannerSchreibfehler() {
+  if (!schreibFehler) return "";
+  return bannerFehler("Nicht gespeichert:",
+    'Änderungen kommen gerade nicht in der Cloud an (' + esc(schreibFehler) + '). ' +
+    'Lade ein Backup herunter, bevor du weiterlernst.');
+}
+
+function renderMain() {
   /* 2.16.0: Im Modus verschwindet die Navigation.
 
      Ueben, Abfrage und Durchsicht sind nichts, woraus man nebenbei
      herausklickt - wer mittendrin den Bereich wechselt oder auf Fortschritt
      tippt, verliert die laufende Runde. Trotzdem standen ueber der Karte
-     drei Reihen: Kopfzeile mit vier Backup-Knoepfen, Bereichsreihe, Tabs.
-     Auf dem Handy ist das der halbe erste Bildschirm - Platz, der der Karte
-     fehlt, und drei Gelegenheiten, aus Versehen abzubrechen.
+     drei Reihen: Kopfzeile, Bereichsreihe, Tabs. Auf dem Handy ist das der
+     halbe erste Bildschirm - Platz, der der Karte fehlt, und drei
+     Gelegenheiten, aus Versehen abzubrechen.
+
+     3.0.0: Aus dem Sonderfall ist eine Ebene geworden. Ein Modus bringt seine
+     eigene, einzeilige Leiste mit (siehe modeBar) - Shell und Modus koennen
+     sich damit nicht mehr ins Gehege kommen.
 
      Sichtbar bleibt eine einzige Ausnahme: die Warnung, dass gerade nicht
-     gespeichert wird. Die darf kein Modus verstecken.
-
-     Zurueck geht es ueber den Knopf IM Modus (Uebung beenden, Session
-     abbrechen, Fertig) - den gibt es in jedem von ihnen. */
+     gespeichert wird. Die darf kein Modus verstecken. */
   const imModus = ui.tab === "lernen" && !!(ui.session || ui.lernSetId) && !ui.einstellungen;
-  if (ui.einstellungen) {
-    /* Eigener Bildschirm: keine Bereichsreihe, keine Reiter. Nur der Weg
-       zurück - wie in den Einstellungen jeder App. */
-    html += '<div class="lern-kopf" style="margin-bottom:var(--s5)">';
-    html += '<h1 style="margin:0">Einstellungen</h1>';
-    html += '<div><button class="secondary" data-action="einstellungen-zu">Fertig</button></div>';
-    html += '</div>';
-  } else if (imModus) {
-    if (schreibFehler) {
-      html += '<p class="hint" style="margin:8px 0 12px; color:var(--red)">⚠ <strong>Nicht gespeichert:</strong> ' +
-        'Änderungen kommen gerade nicht in der Cloud an (' + esc(schreibFehler) + ').</p>';
+
+  /* Erst den Inhalt bauen. Die Modi geben ihre Leiste selbst aus, deshalb
+     muss das Geruest wissen, ob es ueberhaupt eines zeichnen soll. */
+  let inhalt = "";
+  if (ui.einstellungen) inhalt = renderEinstellungen();
+  else inhalt = ui.tab === "lernen" ? renderLernen()
+              : ui.tab === "fortschritt" ? renderFortschritt()
+              : renderVerwalten();
+
+  let html = "";
+  let kopf = "";
+
+  if (!imModus) {
+    /* ---- Meldungen, die ueber allem stehen ---- */
+    if (schreibFehler) kopf += bannerSchreibfehler();
+    if (syncError) {
+      kopf += bannerFehler("Verbindung:", esc(syncError) +
+        ' Die App zeigt weiter den zuletzt geladenen Stand.');
     }
-  } else {
-    html += '<div class="topbar">';
-    html += '<div class="who">Angemeldet: <strong>' + esc(displayName) + '</strong>' +
-      (syncError ? ' <span class="sync-dot">⚠ ' + esc(syncError) + '</span>' : '') + '</div>';
-    if (schreibFehler) {
-      html += '<p class="hint" style="margin:-4px 0 12px; color:var(--red)">⚠ <strong>Nicht gespeichert:</strong> ' +
-        'Änderungen kommen gerade nicht in der Cloud an (' + esc(schreibFehler) + '). ' +
-        'Lade ein Backup herunter, bevor du weiterlernst.</p>';
-    }
-    /* 2.19.0: Ein Knopf statt fünf. Abmelden, drei Backups und der Import
-       standen alle gleichzeitig über dem Lernstoff - fünf Handlungen, die man
-       im Monat vielleicht einmal braucht, auf dem Bildschirm, den man täglich
-       sieht. Sie sind jetzt hinter dem Zahnrad, auf einem eigenen
-       Bildschirm. */
-    html += '<div>';
-    html += '<button class="ghost" data-action="einstellungen" aria-label="Einstellungen" title="Einstellungen, Backup und Import">⚙︎ Einstellungen</button>';
-    html += '</div>';
-    html += '</div>';
 
     /* Einrichtungszustand: Solange AUTOR_UID leer ist, sieht jeder den
        Weitergabe-Knopf. Diese Zeile ist deshalb absichtlich laut - sie darf
        nicht uebersehen werden, denn sie steht sonst irgendwann bei allen. */
     if (autorNochNichtEingerichtet() && currentUser) {
-      html += '<p class="hint" style="margin:-4px 0 12px; color:var(--red)">⚠ <strong>Noch nicht eingerichtet:</strong> ' +
-        'Der Knopf „Backup · zum Weitergeben" ist gerade für <em>alle</em> sichtbar. ' +
-        'Trag deine Nutzernummer in <code>AUTOR_UID</code> oben in der index.html ein: <code>' + esc(currentUser.uid) + '</code></p>';
+      kopf += bannerFehler("Noch nicht eingerichtet:",
+        'Der Knopf „Kartensatz zum Weitergeben“ ist gerade für <em>alle</em> sichtbar. ' +
+        'Trag deine Nutzernummer in <code>AUTOR_UID</code> in der app.js ein: <code>' +
+        esc(currentUser.uid) + '</code>');
     }
 
-    const backupAge = daysSinceLastBackup();
+    /* Auf dem Einstellungs-Bildschirm nicht: dort steht derselbe Hinweis
+       ohnehin in der Sektion "Sichern", und zweimal dasselbe auf einem
+       Bildschirm heisst, dass keins von beiden wichtig ist. */
+    const backupAge = ui.einstellungen ? 0 : daysSinceLastBackup();
     if (backupAge === null || backupAge >= 14) {
-      html += '<p class="hint" style="margin:-4px 0 12px">💾 ' +
-        (backupAge === null ? "Du hast noch nie ein Backup heruntergeladen." : "Dein letztes Backup ist " + backupAge + " Tage her.") +
-        ' <button class="tiny-link" data-action="export-backup" style="padding:0">Jetzt sichern</button></p>';
+      kopf += '<div class="banner-info banner-leise">' + ikon("sichern", "i-sm") +
+        '<div class="banner__text">' +
+        (backupAge === null ? "Du hast noch nie ein Backup heruntergeladen."
+                            : "Dein letztes Backup ist " + backupAge + " Tage her.") +
+        ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
     }
+  } else if (schreibFehler) {
+    kopf += bannerSchreibfehler();
+  }
 
-    html += '<div class="pills">';
-    bereiche.forEach(b => {
-      html += '<button class="pill' + (b.id === ui.bereichId ? " active" : "") + '" data-action="select-bereich" data-bid="' + esc(b.id) + '">' + esc(b.name) + '</button>';
+  /* ---- Geruest ---- */
+  if (imModus) {
+    /* Kein AppBar, keine Navigation. Die Leiste kommt aus dem Modus. */
+    html += '<div class="view view--modus">' + kopf + inhalt + '</div>';
+  } else if (ui.einstellungen) {
+    html += appBar({
+      titel: "Einstellungen",
+      zurueck: "einstellungen-zu",
+      aktion: '<button class="ghost" data-action="einstellungen-zu">Fertig</button>'
     });
-    html += '<button class="pill add" data-action="add-bereich">+ Bereich</button>';
-    html += '</div>';
-
-    html += '<div class="tabs">';
-    html += '<button class="tab' + (ui.tab === "lernen" ? " active" : "") + '" data-action="tab-lernen">Lernen</button>';
-    html += '<button class="tab' + (ui.tab === "fortschritt" ? " active" : "") + '" data-action="tab-fortschritt">Fortschritt</button>';
-    html += '<button class="tab' + (ui.tab === "verwalten" ? " active" : "") + '" data-action="tab-verwalten">Verwalten</button>';
-    html += '</div>';
-  }
-
-
-  if (ui.einstellungen) {
-    html += renderEinstellungen();
+    html += '<div class="view">' + kopf + inhalt + '</div>';
+    html += navLeiste();
   } else {
-    html += ui.tab === "lernen" ? renderLernen()
-          : ui.tab === "fortschritt" ? renderFortschritt()
-          : renderVerwalten();
+    const ansicht = ui.tab === "lernen" ? currentBereich().name
+                  : ui.tab === "fortschritt" ? "Fortschritt" : "Verwalten";
+    html += appBar({ ansicht: ansicht });
+    html += '<div class="view">' + kopf + inhalt + '</div>';
+    html += navLeiste();
   }
+
   /* Das versteckte Dateifeld für den Import. Es steht ausserhalb aller
      Bildschirme, weil zwei Knöpfe es benutzen: der in den Einstellungen und
      der auf dem leeren Startbildschirm. Zwei Felder mit derselben Kennung
      wären ein Fehler, den niemand sieht - der zweite Knopf täte dann nichts. */
   html += '<input type="file" id="import-file-input" accept="application/json" style="display:none">';
-  html += '<p style="text-align:center; font-size:0.72rem; color:var(--ink-soft); opacity:0.6; margin:18px 0 8px">Version ' + APP_VERSION + '</p>';
 
   /* Vor dem Neuaufbau merken, in welchem Feld der Cursor stand - sonst springt
      er bei jedem Tastendruck heraus. Galt bisher nur fuer das Suchfeld. */
@@ -4729,7 +3997,12 @@ function renderMain() {
   const prevSelStart = prevActive && typeof prevActive.selectionStart === "number"
     ? prevActive.selectionStart : null;
 
+  /* Ebene 3 – Overlays. Reihenfolge zaehlt: der Eingabe-Dialog liegt ueber
+     dem Bereichs-Sheet, damit ein „Bereich anlegen“ aus dem Sheet heraus
+     bedienbar bleibt. */
+  html += bereichSheet();
   html += renderDialog();          // D2 – liegt als Overlay ueber allem
+  html += renderToast();
   app.innerHTML = html;
   /* E7: Faktor am Container, damit ihn jede .arabic-Stelle darunter erbt. */
   app.style.setProperty("--arab-scale", String(arabFaktor()));
@@ -4878,25 +4151,41 @@ function renderDurchsicht(set) {
   const fertig = alle.length - offen.length;
   let html = "";
 
-  html += '<div class="panel" id="durchsicht">';
-  html += '<div class="lern-kopf">';
-  html += '<div><h2 style="margin-bottom:2px">' + iconSvg(set.art || "eigen") + ' ' + esc(set.name) + '</h2>';
-  html += '<p class="hint" style="padding:0">' + fertig + ' von ' + alle.length + ' gelernt' +
-    (offen.length > 0 ? ' · noch ' + offen.length : ' · fertig ✓') + '</p></div>';
-  html += '<div>';
-  if (ui.lernLetzte) html += '<button class="ghost" data-action="lern-undo" title="Letztes Abhaken zurücknehmen">↩ Rückgängig</button>';
-  html += '<button class="secondary" data-action="lern-ende">Fertig</button>';
-  html += '</div></div>';
-  /* Der Balken ist die einzige Rueckmeldung in diesem Modus - abgehakt wird
-     ohne Ton, ohne Sprung, ohne Bildschirmwechsel. */
+  /* 3.0.0: Die Durchsicht ist ein Modus wie die Abfrage - also dieselbe
+     einzeilige Leiste oben statt Kopfzeile, Bereichsreihe und Reitern.
+     Der Fortschrittsstrich sitzt darin; der breitere .lern-balken bleibt
+     darunter stehen, weil er hier die einzige Rueckmeldung ueberhaupt ist:
+     abgehakt wird ohne Ton, ohne Sprung, ohne Bildschirmwechsel. */
+  html += modeBar({
+    zu: "lern-ende",
+    zuLabel: "Durchsicht beenden",
+    mitte: fertig + " von " + alle.length + " gelernt",
+    anteil: alle.length ? fertig / alle.length : 0,
+    rechts: ui.lernLetzte
+      ? '<button class="icon-btn" data-action="lern-undo" aria-label="Letztes Abhaken zurücknehmen">' +
+        ikon("rueckgaengig") + '</button>'
+      : null
+  });
+
+  html += '<div id="durchsicht">';
+  html += '<div class="sektion__kopf">';
+  html += '<h2 style="margin:0">' + iconSvg(set.art || "eigen") + ' ' + esc(set.name) + '</h2>';
+  html += '<span class="hint">' + (offen.length > 0 ? 'noch ' + offen.length : 'fertig') + '</span>';
+  html += '</div>';
   html += '<div class="lern-balken"><span style="width:' + (alle.length ? Math.round(fertig / alle.length * 100) : 0) + '%"></span></div>';
   /* 2.7.0: Ist alles abgehakt, ist der Bildschirm sonst nur eine Liste
      abgeblendeter Karten - man weiss nicht, ob man fertig ist. */
+  /* 2.7.0: Ist alles abgehakt, ist der Bildschirm sonst nur eine Liste
+     abgeblendeter Karten - man weiss nicht, ob man fertig ist. */
   if (offen.length === 0) {
-    html += '<p class="hint" style="padding-top:10px">✓ Durchgearbeitet. Jetzt kommt die erste Abfrage – dort verdienen sich die Karten ihre Stufe 1.</p>';
-    html += '<button data-action="start-session" style="margin-top:8px">Abfrage starten</button>';
+    html += '<div class="stapel" style="margin-top:var(--stack)">';
+    html += '<div class="empty__titel">Durchgearbeitet</div>';
+    html += '<p class="empty__text">Jetzt kommt die erste Abfrage – dort verdienen sich die Karten ihre Stufe 1.</p>';
+    html += '<button class="lg full" data-action="start-session">Abfrage starten</button>';
+    html += '</div>';
   } else {
-    html += '<p class="hint" style="padding-top:10px">Geh mit dem Video mit. <strong>Gesehen</strong> stellt die Karte für heute in die Abfrage – gelernt hast du sie erst, wenn du sie dort weißt.</p>';
+    html += '<p class="hint" style="margin-top:var(--space-4)">Geh mit dem Video mit. <strong>Gesehen</strong> ' +
+      'stellt die Karte für heute in die Abfrage – gelernt hast du sie erst, wenn du sie dort weißt.</p>';
   }
   html += '</div>';
 
@@ -4915,7 +4204,7 @@ function renderDurchsicht(set) {
     html += '<div class="uebersetzung">' + esc(c.uebersetzung) + '</div>';
     if (c.extra) {
       html += '<button class="lern-notiz-knopf" data-action="lern-notiz" data-id="' + esc(c.id) + '" aria-expanded="' + (notizOffen ? "true" : "false") + '">' +
-        (notizOffen ? "▾" : "▸") + ' Notiz</button>';
+        ikon(notizOffen ? "chevronUnten" : "chevronRechts", "i-sm") + ' Notiz</button>';
       if (notizOffen) html += '<div class="extra-note">' + renderExtra(c.extra, []) + '</div>';
     }
     html += '</div>';
@@ -4990,19 +4279,19 @@ function renderFaden(b, due) {
   const fehlen = lektionOffeneKarten(b, akt);
   if (fehlen.length === 0 && naechste) {
     /* Kann nur eintreten, wenn die naechste Lektion selbst leer ist. */
-    html += '<p class="due-info">✓ „' + esc(akt.name) + '" sitzt.</p>';
+    html += '<p class="due-info">' + ikon("haken", "i-sm") + ' „' + esc(akt.name) + '“ sitzt.</p>';
     html += '<p class="hint" style="padding:0">„' + esc(naechste.name) + '" ist frei.</p>';
     return html;
   }
-  html += '<p class="due-info">✓ Für heute erledigt.</p>';
+  html += '<p class="due-info">' + ikon("haken", "i-sm") + ' Für heute erledigt.</p>';
   if (naechste) {
     const naechsterTermin = fehlen.map(c => c.nextReview).sort()[0];
-    html += '<p class="hint" style="padding:6px 0 0">🔒 <strong>' + esc(naechste.name) + '</strong> wird frei, ' +
+    html += '<p class="hint" style="padding:6px 0 0">' + ikon("schloss", "i-sm") + ' <strong>' + esc(naechste.name) + '</strong> wird frei, ' +
       'sobald jede Karte aus „' + esc(akt.name) + '" einmal auf Stufe ' + LEKTION_STUFE + ' war.</p>';
     html += '<p class="hint" style="padding:0">Noch ' + fehlen.length + ' Karte' + (fehlen.length === 1 ? '' : 'n') +
       (naechsterTermin ? ' – die nächste ist am ' + fmtDatum(naechsterTermin) + ' dran.' : '.') + '</p>';
   } else {
-    html += '<p class="hint" style="padding:6px 0 0">Alle Lektionen sind durch. 🌙</p>';
+    html += '<p class="hint" style="padding:6px 0 0">Alle Lektionen sind durch.</p>';
   }
   return html;
 }
@@ -5022,9 +4311,10 @@ function fmtDatum(iso) {
 function gemerktHinweis() {
   const n = ui.gemerktRunde.size;
   if (n === 0) return "";
-  return '<div class="merk-hinweis">⭐ Du hast dir ' + n + ' Karte' + (n === 1 ? '' : 'n') +
-    ' gemerkt.<br><button class="secondary" data-action="merk-oeffnen" style="margin-top:8px">In „' +
-    esc(MERK_SET_NAME) + '" ansehen</button></div>';
+  return '<div class="merk-hinweis">' + iconSvg("stern", "star filled") +
+    '<span class="banner__text">Du hast dir ' + n + ' Karte' + (n === 1 ? '' : 'n') +
+    ' gemerkt.</span>' +
+    '<button class="secondary" data-action="merk-oeffnen">Ansehen</button></div>';
 }
 /* Bringt einen dorthin, wo die gemerkten Karten liegen: Verwalten-Tab,
    Speicherkarte aufgeklappt, und sie leuchtet kurz auf - dasselbe Muster wie
@@ -5049,13 +4339,17 @@ function merkSetOeffnen() {
    er bewirkt - gerade Backup und Import sind Handlungen, die man nicht
    rückgängig macht. */
 function renderEinstellungen() {
+  const b = currentBereich();
+  const alter = daysSinceLastBackup();
+  const tage = Object.keys(verlauf).length;
   let html = "";
 
-  /* --- Darstellung --- */
-  html += '<div class="panel">';
-  html += '<h2>Darstellung</h2>';
-  html += '<p class="hint" style="padding-top:0">Dunkel ist die Fassung, für die diese App gebaut ist. Hell ist keine Umkehrung davon, sondern eine eigene: Tinte auf Papier statt Gold auf Schwarz. „Automatisch" folgt der Einstellung des Geräts.</p>';
-  html += '<div class="seg-row" style="margin-top:var(--s2); margin-bottom:var(--s5)">';
+  /* ---------- Darstellung ---------- */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Darstellung</div>';
+  html += '<div class="card">';
+  html += '<div class="field"><label>Helligkeit</label>';
+  html += '<div class="seg-row">';
   html += '<span class="seg" role="group" aria-label="Helligkeit">';
   for (const th of THEMEN) {
     html += '<button class="' + (settings.thema === th.id ? "active" : "") +
@@ -5065,14 +4359,17 @@ function renderEinstellungen() {
   }
   html += '</span>';
   if (settings.thema === "auto") {
-    html += '<span class="hint" style="padding:0">gerade ' + (themaAufgeloest() === "hell" ? "hell" : "dunkel") + '</span>';
+    html += '<span class="hint">gerade ' + (themaAufgeloest() === "hell" ? "hell" : "dunkel") + '</span>';
   }
   html += '</div>';
+  html += '<p class="field__hilfe">Dunkel ist die Fassung, f\u00fcr die diese App gebaut ist. Hell ist keine ' +
+    'Umkehrung davon, sondern eine eigene: Tinte auf Papier statt Gold auf Schwarz.</p></div>';
+
   /* E7: Bewusst drei feste Stufen statt eines Zahlenfeldes - es gibt nichts
      einzustellen, nur auszuprobieren, was man lesen kann. */
-  html += '<p class="hint" style="padding-top:0">Größe der arabischen Schrift – überall in der App. Die Probe daneben ändert sich mit.</p>';
-  html += '<div class="seg-row" style="margin-top:var(--s2)">';
-  html += '<span class="seg" role="group" aria-label="Schriftgröße für Arabisch">';
+  html += '<div class="field"><label>Gr\u00f6\u00dfe der arabischen Schrift</label>';
+  html += '<div class="seg-row">';
+  html += '<span class="seg" role="group" aria-label="Schriftgr\u00f6\u00dfe f\u00fcr Arabisch">';
   for (const st of ARAB_STUFEN) {
     html += '<button class="' + (settings.arabGroesse === st.id ? "active" : "") +
       '" data-action="set-arab-groesse" data-id="' + st.id + '"' +
@@ -5080,108 +4377,179 @@ function renderEinstellungen() {
       '>' + st.label + '</button>';
   }
   html += '</span>';
-  html += '<span class="arabic" lang="ar" dir="rtl" style="font-size:calc(1.2rem * var(--arab-scale,1))">بِسْمِ ٱللَّٰهِ</span>';
+  html += '<span class="arabic" lang="ar" dir="rtl" style="font-size:calc(1.35rem * var(--arab-scale,1))">\u0628\u0650\u0633\u0652\u0645\u0650 \u0671\u0644\u0644\u0651\u0670\u0647\u0650</span>';
   html += '</div>';
-  html += '</div>';
+  html += '<p class="field__hilfe">Gilt \u00fcberall in der App. Die Probe daneben \u00e4ndert sich mit.</p></div>';
+  html += '</div></div>';
 
-  /* --- Sichern --- */
-  const b = currentBereich();
-  const alter = daysSinceLastBackup();
-  html += '<div class="panel">';
-  html += '<h2>Sichern</h2>';
-  html += '<p class="hint" style="padding-top:0">Ein Backup ist eine Datei auf deinem Gerät. Sie hängt an nichts – geht das Konto verloren, ist sie das Einzige, was bleibt.</p>';
-  html += '<p class="hint" style="padding-top:0; color:' + (alter === null || alter >= 14 ? 'var(--accent)' : 'var(--ink-faint)') + '">' +
+  /* ---------- Sichern ---------- */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Sichern</div>';
+  html += '<div class="card">';
+  html += '<p class="hint">Ein Backup ist eine Datei auf deinem Ger\u00e4t. Sie h\u00e4ngt an nichts \u2013 ' +
+    'geht das Konto verloren, ist sie das Einzige, was bleibt.</p>';
+  html += '<div class="' + (alter === null || alter >= 14 ? "banner-info" : "banner-info banner-leise") +
+    '" style="margin:var(--space-4) 0 0">' + ikon("sichern", "i-sm") + '<div class="banner__text">' +
     (alter === null ? "Du hast noch nie ein Backup heruntergeladen."
      : alter === 0 ? "Zuletzt gesichert: heute."
-     : "Zuletzt gesichert vor " + alter + " Tag" + (alter === 1 ? "" : "en") + ".") + '</p>';
-  html += '<div class="form-actions" style="margin-top:var(--s3)">';
-  html += '<button data-action="export-backup">💾 Alles sichern</button>';
-  html += '<button class="secondary" data-action="export-backup-current">Nur „' + esc(b.name) + '"</button>';
+     : "Zuletzt gesichert vor " + alter + " Tag" + (alter === 1 ? "" : "en") + ".") + '</div></div>';
+  html += '<div class="form-actions">';
+  html += '<button data-action="export-backup">' + ikon("sichern", "i-sm") + ' Alles sichern</button>';
+  html += '<button class="secondary" data-action="export-backup-current">Nur \u201e' + esc(b.name) + '\u201c</button>';
   html += '</div>';
   if (istAutor() && !istGefuehrt(b)) {
-    html += '<p class="hint" style="padding-top:var(--s4)">Zum Weitergeben: derselbe Bereich, aber alles auf Stufe 0 und alle Lektionen bis auf die erste zu. Für deinen eigenen Stand ändert sich nichts.</p>';
-    html += '<button class="secondary" data-action="export-weitergabe">📤 Kartensatz zum Weitergeben</button>';
+    html += '<hr class="rule" style="margin:var(--space-5) 0">';
+    html += '<p class="hint">Zum Weitergeben: derselbe Bereich, aber alles auf Stufe 0 und alle ' +
+      'Lektionen bis auf die erste zu. F\u00fcr deinen eigenen Stand \u00e4ndert sich nichts.</p>';
+    html += '<div class="form-actions">';
+    html += '<button class="secondary" data-action="export-weitergabe">' + ikon("teilen", "i-sm") +
+      ' Kartensatz zum Weitergeben</button>';
+    html += '</div>';
   }
-  html += '</div>';
+  html += '</div></div>';
 
-  /* --- Einspielen --- */
-  html += '<div class="panel">';
-  html += '<h2>Einspielen</h2>';
-  html += '<p class="hint" style="padding-top:0">Eine Backup-Datei oder einen Kartensatz laden. Gehört die Datei zu einem Satz, den du schon hast, wird er ergänzt – dein Lernstand bleibt.</p>';
-  html += '<button class="secondary" data-action="import-trigger">📥 Datei auswählen</button>';
+  /* ---------- Einspielen ---------- */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Einspielen</div>';
+  html += '<div class="card">';
+  html += '<p class="hint">Eine Backup-Datei oder einen Kartensatz laden. Geh\u00f6rt die Datei zu einem ' +
+    'Satz, den du schon hast, wird er erg\u00e4nzt \u2013 dein Lernstand bleibt.</p>';
+  html += '<div class="form-actions">';
+  html += '<button class="secondary" data-action="import-trigger">' + ikon("einspielen", "i-sm") +
+    ' Datei ausw\u00e4hlen</button>';
   html += '</div>';
+  html += '</div></div>';
 
-  /* --- Aufzeichnung --- */
-  const tage = Object.keys(verlauf).length;
-  html += '<div class="panel">';
-  html += '<h2>Aufzeichnung</h2>';
-  html += '<p class="hint" style="padding-top:0">Das Tagesprotokoll trägt Kalender, Wochenzahlen und die Serie – aufgezeichnet sind ' +
-    tage + ' Tag' + (tage === 1 ? "" : "e") + '. Löschen betrifft nur die Anzeige: Karten, Stufen und Fälligkeiten bleiben unberührt.</p>';
-  html += '<button class="secondary" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") + '>Verlauf zurücksetzen</button>';
+  /* ---------- Aufzeichnung ---------- */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Aufzeichnung</div>';
+  html += '<div class="card">';
+  html += '<p class="hint">Das Tagesprotokoll tr\u00e4gt Kalender, Wochenzahlen und die Serie \u2013 ' +
+    'aufgezeichnet sind <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
+    'L\u00f6schen betrifft nur die Anzeige: Karten, Stufen und F\u00e4lligkeiten bleiben unber\u00fchrt.</p>';
+  html += '<div class="form-actions">';
+  html += '<button class="secondary" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") +
+    '>Verlauf zur\u00fccksetzen</button>';
   html += '</div>';
+  html += '</div></div>';
 
-  /* --- Konto --- */
-  html += '<div class="panel">';
-  html += '<h2>Konto</h2>';
-  html += '<p class="hint" style="padding-top:0">Angemeldet als <strong style="color:var(--ink)">' + esc(displayName) + '</strong>' +
-    (currentUser && currentUser.email ? ' · ' + esc(currentUser.email) : '') + '</p>';
-  html += '<button class="secondary" data-action="logout">Abmelden</button>';
-  html += '</div>';
+  /* ---------- Konto ---------- */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Konto</div>';
+  html += '<div class="liste">';
+  html += '<div class="liste-zeile">' + ikon("konto", "i-sm") +
+    '<span class="liste-zeile__text">' + esc(displayName) + '</span>' +
+    (currentUser && currentUser.email ? '<span class="liste-zeile__wert">' + esc(currentUser.email) + '</span>' : '') +
+    '</div>';
+  html += '<button class="liste-zeile gefahr" data-action="logout">' + ikon("abmelden", "i-sm") +
+    '<span class="liste-zeile__text">Abmelden</span></button>';
+  html += '</div></div>';
+
+  /* Die Versionsnummer stand bis 2.21.6 klein unter JEDEM Bildschirm. Sie
+     gehoert dorthin, wo man sie sucht, wenn man sie braucht. */
+  html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">' +
+    'Wiederholung ' + APP_VERSION + '</p>';
 
   return html;
 }
 
+/* ---------- 3.0.0: Der Startbildschirm ----------
+   Eine Frage, eine Antwort: Was ist heute dran? Statt einer Folge von
+   Hinweiszeilen und einem Knopf zwischen Kaesten steht hier EIN Stapel - die
+   Zahl gross, die Handlung darunter, und darunter erst das Beiwerk.
+
+   Der Leerzustand ist kein Restfall, sondern ein eigener Bildschirm: Symbol,
+   Satz, EINE Handlung. Es gibt drei davon (gar keine Karten / heute nichts
+   faellig / alles erledigt), und jeder sagt etwas anderes. */
 function renderLernen() {
   const lset = lernSet();
   if (lset) return renderDurchsicht(lset);
   if (ui.session) return renderSession();
+
   const cards = currentCards();
   const due = dueCards();
-  let html = "";
-  html += gemerktHinweis();
-  const serieHeute = serieAktuell();
-  if (serieHeute > 0) {
-    html += '<p class="hint" style="margin-bottom:10px">🔥 <strong>' + serieHeute + '</strong> Tag' + (serieHeute === 1 ? "" : "e") + ' am Stück</p>';
-  }
-  const neuImStapel = due.filter(istNeueKarte).length;
   const b = currentBereich();
-  html += '<div class="panel">';
+  const neuImStapel = due.filter(istNeueKarte).length;
+  let html = "";
+
+  html += gemerktHinweis();
+
+  /* --- Noch gar keine Karten: der allererste Bildschirm nach der Anmeldung.
+     2.11.2: Hier stand einmal nur "leg welche unter Verwalten an" - wer
+     gerade eine Kartensatz-Datei bekommen hatte, las also ausgerechnet die
+     Aufforderung, alles selbst zu tippen. Der Import steht deshalb zuerst
+     und als richtiger Knopf. */
   if (cards.length === 0) {
-    /* 2.11.2: Der allererste Bildschirm nach der Anmeldung. Hier stand nur
-       "leg welche unter Verwalten an" - wer gerade eine Kartensatz-Datei
-       bekommen hat, las also ausgerechnet die Aufforderung, alles selbst zu
-       tippen. Vom Import kein Wort; der versteckte sich als kleiner Link oben
-       rechts zwischen zwei Backup-Knoepfen.
-       Der Import steht deshalb zuerst und als richtiger Knopf - fuer die
-       allermeisten, die hier zum ersten Mal stehen, ist er der Weg. */
-    html += '<p class="hint" style="padding-top:0">Noch keine Karten hier.</p>';
-    html += '<p class="hint" style="padding-top:0">Hast du eine Kartensatz-Datei bekommen? Dann spiel sie jetzt ein – deine Lektionen stehen danach fertig da.</p>';
-    html += '<button data-action="import-trigger">📥 Kartensatz einspielen</button>';
-    html += '<p class="hint" style="padding-top:14px">Oder leg dir eigene Karten an: Tab <strong>Verwalten</strong>. 📝</p>';
-  } else if (istGefuehrt(b)) {
+    html += '<div class="empty">';
+    html += '<div class="empty__icon gold">' + ikon("einspielen", "i-xl") + '</div>';
+    html += '<div class="empty__titel">Noch nichts in \u201e' + esc(b.name) + '\u201c</div>';
+    html += '<p class="empty__text">Hast du eine Kartensatz-Datei bekommen? Spiel sie ein \u2013 ' +
+      'deine Lektionen stehen danach fertig da.</p>';
+    html += '<div class="empty__aktionen">';
+    html += '<button data-action="import-trigger">Kartensatz einspielen</button>';
+    html += '<button class="ghost" data-action="tab-verwalten">Eigene Karten anlegen</button>';
+    html += '</div></div>';
+    return html;
+  }
+
+  /* --- Ein gefuehrter Satz hat seinen eigenen Faden. --- */
+  if (istGefuehrt(b)) {
     html += renderFaden(b, due);
   } else if (due.length === 0) {
-    html += '<p class="hint">🎉 Für heute nichts mehr fällig in „' + esc(b.name) + '". Schau morgen wieder rein!</p>';
+    html += '<div class="empty">';
+    html += '<div class="empty__icon gold">' + ikon("fertig", "i-xl") + '</div>';
+    html += '<div class="empty__titel">F\u00fcr heute durch</div>';
+    html += '<p class="empty__text">In \u201e' + esc(b.name) + '\u201c ist nichts mehr f\u00e4llig. ' +
+      'Der n\u00e4chste Schwung kommt von selbst.</p>';
+    html += '<div class="empty__aktionen">';
+    html += '<button class="secondary" data-action="tab-verwalten">Trotzdem \u00fcben</button>';
+    html += '</div></div>';
   } else {
-    html += '<p class="due-info">Heute fällig: <strong>' + due.length + '</strong> von ' + cards.length + ' Karten' +
-      (neuImStapel > 0 ? ' <span class="badge zustand-neu">' + neuImStapel + ' neu</span>' : '') + '</p>';
-    html += '<button data-action="start-session">Lernsession starten (' + due.length + ')</button>';
+    /* --- Der Stapel. Die eine gefuellte Goldflaeche dieses Bildschirms. --- */
+    html += '<div class="stapel">';
+    html += '<div class="stapel__zahl">' + due.length + '</div>';
+    html += '<div class="stapel__was">' +
+      (due.length === 1 ? 'Karte ist heute f\u00e4llig' : 'Karten sind heute f\u00e4llig') +
+      ' \u00b7 von ' + cards.length + '</div>';
+    html += '<button class="lg full" data-action="start-session">Lernsession starten</button>';
+    if (neuImStapel > 0 || due.length - neuImStapel > 0) {
+      html += '<div class="stapel__meta">';
+      if (due.length - neuImStapel > 0) {
+        html += '<span class="badge zustand-solide">' + (due.length - neuImStapel) + ' Wiederholung' +
+          (due.length - neuImStapel === 1 ? '' : 'en') + '</span>';
+      }
+      if (neuImStapel > 0) html += '<span class="badge zustand-neu">' + neuImStapel + ' neu</span>';
+      html += '</div>';
+    }
+    html += '</div>';
   }
-  /* 2.19.0: Die Schriftgröße stand bis hier unter dem Knopf „Lernsession
-     starten". Sie ist aber nichts, was man beim Lernen tut - man stellt sie
-     einmal ein und nie wieder. Sie steht jetzt in den Einstellungen. */
-  html += '</div>';
 
-  /* A7: Wer drei Bereiche hat und heute nur einen lernt, bekam nie eine Streak
-     und erfuhr nirgends, warum. Jetzt steht es hier. */
+  /* --- Serie. Steht unter dem Stapel, nicht darueber: sie ist Belohnung,
+     nicht Aufgabe. --- */
+  const serieHeute = serieAktuell();
+  if (serieHeute > 0) {
+    html += '<div class="serie-karte" style="margin-top:var(--stack)">';
+    html += '<span class="serie-zahl">' + ikon("serie", "i-lg") +
+      '<strong>' + serieHeute + '</strong></span>';
+    html += '<span class="serie-text">Tag' + (serieHeute === 1 ? "" : "e") + ' am St\u00fcck' +
+      (streak.beste > serieHeute ? '<br><span class="serie-beste">Bester Lauf: <strong>' +
+        streak.beste + '</strong></span>' : '') + '</span>';
+    html += '</div>';
+  }
+
+  /* A7: Wer drei Bereiche hat und heute nur einen lernt, bekam nie eine
+     Streak und erfuhr nirgends, warum. Jetzt steht es hier. */
   const offen = bereicheMitOffenem().filter(x => x.bereich.id !== currentBereich().id);
   if (offen.length > 0) {
-    html += '<p class="hint" style="margin-top:-4px">📌 Noch offene Wiederholungen für die Streak: ' +
-      offen.map(x => esc(x.bereich.name) + ' (' + x.offen + ')').join(", ") +
-      '</p>';
+    html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
+      ikon("lernen", "i-sm") + '<div class="banner__text">Noch offen f\u00fcr die Serie: ' +
+      offen.map(x => '<strong>' + esc(x.bereich.name) + '</strong> (' + x.offen + ')').join(", ") +
+      '</div></div>';
   } else if (due.length === 0 && streak.lastCompletedDate === todayStr()) {
-    html += '<p class="hint" style="margin-top:-4px">✅ Heute ist in allen Bereichen alles erledigt.</p>';
+    html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
+      ikon("haken", "i-sm") + '<div class="banner__text">Heute ist in allen Bereichen alles erledigt.</div></div>';
   }
+
   return html;
 }
 
@@ -5215,7 +4583,7 @@ function fortschrittHeute(cards) {
   const serie = serieAktuell();
   if (serie === 0) {
     html += '<div class="serie-karte">';
-    html += '<div class="serie-zahl"><strong>' + (offenHeute === 0 && getan > 0 ? "✓" : "1") + '</strong></div>';
+    html += '<div class="serie-zahl"><strong>' + (offenHeute === 0 && getan > 0 ? ikon("haken", "i-lg") : "1") + '</strong></div>';
     html += '<div class="serie-text">' +
       (offenHeute === 0 && getan > 0
         ? 'Heute erledigt – morgen beginnt die Serie'
@@ -5243,7 +4611,7 @@ function fortschrittHeute(cards) {
   html += '<p class="stat-sub" style="padding-top:8px">' +
     (ziel === 0
       ? 'Nichts zu tun – schau morgen wieder rein.'
-      : '<strong>' + getan + '</strong> Antwort' + (getan === 1 ? '' : 'en') + (offenHeute > 0 ? ', noch ' + offenHeute + ' Karte' + (offenHeute === 1 ? '' : 'n') + ' offen' : ' – fertig ✓')) +
+      : '<strong>' + getan + '</strong> Antwort' + (getan === 1 ? '' : 'en') + (offenHeute > 0 ? ', noch ' + offenHeute + ' Karte' + (offenHeute === 1 ? '' : 'n') + ' offen' : ' – fertig')) +
     (heute.n > 0 ? ' · ' + heute.n + ' zum ersten Mal gesehen' : '') + '</p>';
   /* 2.13.0: Ein Tab, der nur zusieht, fuehlt sich tot an. Wenn heute noch
      etwas offen ist, gehoert der Weg dorthin hierher - und nicht nur die
@@ -5360,7 +4728,7 @@ function fortschrittLektionen(nurBereich) {
       const fest = karten.filter(c => (c.maxStufe || 0) >= LEKTION_STUFE || istVerbrannt(c)).length;
       const p = karten.length ? Math.round((fest / karten.length) * 100) : 100;
       html += '<div class="lekt-kachel' + (zu ? " zu" : sitzt ? " sitzt" : "") + (dran ? " dran" : "") + '">';
-      html += '<div class="lekt-name">' + (zu ? "🔒 " : sitzt ? "✓ " : "") + esc(st.name) + '</div>';
+      html += '<div class="lekt-name">' + (zu ? ikon("schloss", "i-sm") + " " : sitzt ? ikon("haken", "i-sm") + " " : "") + esc(st.name) + '</div>';
       html += '<div class="lekt-bar"><span style="width:' + (zu ? 0 : p) + '%"></span></div>';
       html += '<div class="lekt-zahl">' + (zu ? karten.length + ' Karten' : fest + ' / ' + karten.length) + '</div>';
       html += '</div>';
@@ -5401,7 +4769,7 @@ function renderFortschritt() {
   const leeches = verbrannteKarten();
   if (leeches.length > 0) {
     html += '<div class="stat-block">';
-    html += '<h3>🔥 Karten, die nicht klappen (' + leeches.length + ')</h3>';
+    html += '<h3>Karten, die nicht klappen (' + leeches.length + ')</h3>';
     html += '<p class="stat-sub">ab ' + LEECH_SCHWELLE + ' Rückfällen – meist liegt es an der Karte, nicht am Gedächtnis</p>';
     leeches.slice(0, 8).forEach(x => {
       html += '<div class="leech-row">';
@@ -5409,8 +4777,8 @@ function renderFortschritt() {
         '<div class="uebersetzung">' + esc(x.card.uebersetzung) +
         (ui.statsScope === "alle" && bereiche.length > 1 ? ' · ' + esc(x.bereich.name) : '') + '</div></div>';
       html += '<span class="leech-badge">' + x.card.rueckfaelle + '×</span>';
-      html += '<button class="ghost" data-action="edit-leech" data-bid="' + esc(x.bereich.id) + '" data-id="' + esc(x.card.id) + '" title="Karte umformulieren oder aufteilen" aria-label="Karte bearbeiten">✏️</button>';
-      html += '<button class="ghost" data-action="reset-leech" data-bid="' + esc(x.bereich.id) + '" data-id="' + esc(x.card.id) + '" title="Zähler auf 0 setzen – die Karte bleibt unverändert" aria-label="Rückfallzähler zurücksetzen">↺</button>';
+      html += '<button class="ghost" data-action="edit-leech" data-bid="' + esc(x.bereich.id) + '" data-id="' + esc(x.card.id) + '" title="Karte umformulieren oder aufteilen" aria-label="Karte bearbeiten">' + ikon("stift", "i-sm") + '</button>';
+      html += '<button class="ghost" data-action="reset-leech" data-bid="' + esc(x.bereich.id) + '" data-id="' + esc(x.card.id) + '" title="Zähler auf 0 setzen – die Karte bleibt unverändert" aria-label="Rückfallzähler zurücksetzen">' + ikon("umkehren", "i-sm") + '</button>';
       html += '</div>';
     });
     if (leeches.length > 8) {
@@ -5443,7 +4811,7 @@ function renderFortschritt() {
   html += '</div>';
   const spitze = tage.slice(1).reduce((a, b) => b.anzahl > a.anzahl ? b : a, tage[1]);
   if (spitze && spitze.anzahl >= 60) {
-    html += '<p class="hint" style="padding-bottom:0">⚠ Am ' + esc(tagKurz(spitze.tag)) + ' stehen ' + spitze.anzahl +
+    html += '<p class="hint" style="padding-bottom:0">' + ikon("warnung", "i-sm") + ' Am ' + esc(tagKurz(spitze.tag)) + ' stehen ' + spitze.anzahl +
       ' Wiederholungen an. An dem Tag wird es voll – plan ihn ein.</p>';
   }
   html += '</div>';
@@ -5452,127 +4820,162 @@ function renderFortschritt() {
   return html;
 }
 
+/* ---------- 3.0.0: Die Buehne ----------
+   Die Abfragekarte war bisher ein Kasten unter Kaesten - dieselbe Flaeche wie
+   ein Hinweis, dieselbe wie das Formular. Jetzt bekommt sie den Bildschirm:
+   oben eine einzeilige Leiste mit Fortschrittsstrich, in der Mitte das Wort,
+   unten die Bewertung dort, wo der Daumen ohnehin liegt.
+
+   Unveraendert bleibt alles, was daran haengt: dieselben data-action-Werte,
+   dieselbe Kennung #sitzung, dieselben Klassen .study-word, .study-answer und
+   .grade-row - auf die greift scrollGradeRowIntoView() zu. */
 function renderSession() {
   const s = ui.session;
+  const gesamt = s.total || (s.drillIds ? s.drillIds.length : 0) || 1;
+
   if (s.queue.length === 0) {
-    let html = '<div class="panel done-box">' +
-      '<div class="emoji">🎉</div>' +
-      '<h2>Session fertig!</h2>' +
-      '<p class="hint">Alle ' + s.total + ' Karten für heute geschafft.' +
-      (streak.lastCompletedDate === todayStr() ? ' 🔥 ' + streak.count + ' Tag' + (streak.count === 1 ? "" : "e") + ' am Stück!' : '') +
+    let html = modeBar({ zu: "end-session", zuLabel: "Zur\u00fcck", mitte: "Fertig", anteil: 1 });
+    html += '<div class="done-box">' +
+      '<div class="emoji">' + ikon("fertig", "i-xl") + '</div>' +
+      '<h2>Geschafft</h2>' +
+      '<p class="hint">Alle ' + gesamt + ' Karten f\u00fcr heute durch.' +
+      (streak.lastCompletedDate === todayStr()
+        ? ' ' + streak.count + ' Tag' + (streak.count === 1 ? "" : "e") + ' am St\u00fcck.'
+        : '') +
       '</p>';
-    if (s.lastAction) {
-      html += '<div style="margin-top:14px"><button class="ghost" data-action="undo-grade">↶ Letzte Bewertung rückgängig machen</button></div>';
-    }
     html += gemerktHinweis();
-    html += '<div style="margin-top:16px"><button data-action="end-session">Zurück</button></div></div>';
+    html += '<div class="empty__aktionen" style="margin-top:var(--space-6)">';
+    html += '<button data-action="end-session">Zur\u00fcck</button>';
+    if (s.lastAction) {
+      html += '<button class="ghost" data-action="undo-grade">' + ikon("rueckgaengig", "i-sm") +
+        ' Letzte Bewertung r\u00fcckg\u00e4ngig</button>';
+    }
+    html += '</div></div>';
     return html;
   }
+
   const card = findCard(s.queue[0]);
   if (!card) {
     s.queue.shift();
     return renderSession();
   }
+
   const remaining = s.queue.length;
   const promptText = s.handwriting ? card.uebersetzung : card.wort;
   const promptArabic = !s.handwriting && istArabisch(promptText);
   const answerText = s.handwriting ? card.wort : card.uebersetzung;
   const answerArabic = s.handwriting && istArabisch(answerText);
-  let html = '<div class="panel study-card" id="sitzung">';
+  const fertig = Math.max(0, gesamt - remaining);
+
+  let html = modeBar({
+    zu: "end-session",
+    zuLabel: s.isDrill ? "\u00dcbung beenden" : "Session abbrechen",
+    mitte: s.isDrill
+      ? "Noch " + remaining + " in dieser Runde"
+      : fertig + " von " + gesamt,
+    anteil: s.isDrill ? null : fertig / gesamt,
+    rechts: s.lastAction
+      ? '<button class="icon-btn" data-action="undo-grade" aria-label="Letzte Bewertung r\u00fcckg\u00e4ngig machen">' +
+        ikon("rueckgaengig") + '</button>'
+      : null
+  });
+
+  html += '<div class="study-card" id="sitzung">';
+
   if (s.isDrill) {
-    html += '<div class="drill-banner">🔁 Übungsmodus (' + esc(s.drillLabel) + ')' +
-      (s.handwriting ? ' · ✍️ Handschrift Deutsch → Arabisch' : '') +
-      ' – dein Fortschritt wird hier nicht verändert</div>';
+    html += '<div class="drill-banner">' + ikon("ueben", "i-sm") + ' \u00dcbungsmodus \u00b7 ' +
+      esc(s.drillLabel) + (s.handwriting ? ' \u00b7 Handschrift' : '') +
+      ' \u2013 dein Fortschritt bleibt unber\u00fchrt</div>';
   }
-  html += '<p class="progress-note">Noch ' + remaining + ' Karte' + (remaining === 1 ? "" : "n") + (s.isDrill ? " in dieser Runde" : " in dieser Session") + '</p>';
+
+  html += '<div class="study-card__mitte">';
   /* D4 (1.8.0): lang und dir sagen dem Browser, dass hier Arabisch steht.
      Er waehlt danach Schrift und Leserichtung; ohne das rutschen Satzzeichen
      in gemischtem Text auf die falsche Seite. */
   html += '<div class="study-word' + (promptArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(promptText) + '</div>';
+
   if (!s.revealed) {
-    if (s.handwriting) {
-      html += renderHandwritingCanvas(false);
-    } else if (s.isDrill) {
-      /* 2.16.0: Im Uebungsmodus kein Knopf mehr zum Aufdecken. Dieselbe
-         Bewegung, die danach weitertraegt, deckt auch auf - Leertaste oder
-         ein Tipp irgendwo auf die Karte. Ein Knopf dazwischen heisst: erst
-         zielen, dann tippen, und bei der naechsten Karte wieder zielen.
-         Im echten Lernen bleibt der Knopf. Dort geht es nach dem Aufdecken
-         mit einer ECHTEN Entscheidung weiter (Nicht / Fast / Sicher), und
-         wer dafuer ohnehin zielen muss, soll nicht aus Versehen aufdecken. */
-      html += '<div style="margin-top:20px"><p class="weiter-hinweis">Leertaste oder tippen – Antwort zeigen</p></div>';
-    } else {
-      html += '<div style="margin-top:20px"><button data-action="reveal">Antwort zeigen</button></div>';
-    }
+    if (s.handwriting) html += renderHandwritingCanvas(false);
   } else {
-    if (s.handwriting) {
-      html += renderHandwritingCanvas(true);
-    }
+    if (s.handwriting) html += renderHandwritingCanvas(true);
     html += '<div class="study-answer' + (answerArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(answerText) + '</div>';
-    /* 2.21.3: siehe kartenTagsHtml oben - gerade beim Wiederholen aus
-       "Schwierige Wörter" heraus war bisher nicht zu sehen, aus welcher
-       Lektion das Wort stammt oder in welchen Kategorien es sonst noch
-       steckt. */
+    /* 2.21.3: Gerade beim Wiederholen aus "Schwierige Woerter" heraus war
+       bisher nicht zu sehen, aus welcher Lektion das Wort stammt. */
     html += kartenTagsHtml(card.id, currentBereich());
     /* E6: erst NACH dem Aufdecken. Vorher waere der Hinweis ein Tipp
        ("Achtung, die kannst du nicht") und wuerde die Bewertung verfaelschen.
        Im Uebungsmodus bleibt er weg, dort zaehlt nichts. */
     if (!s.isDrill && istVerbrannt(card)) {
-      html += '<div class="leech-banner">🔥 Diese Karte ist dir schon <strong>' + card.rueckfaelle +
-        '-mal</strong> wieder entfallen. Formuliere sie im Verwalten-Tab um oder teile sie in zwei Karten – ' +
-        'sonst frisst sie weiter deine Lernzeit. Sobald du Wort oder Übersetzung änderst, beginnt die Zählung von vorn.</div>';
+      html += '<div class="leech-banner">' + ikon("serie", "i-sm") + ' Diese Karte ist dir schon <strong>' +
+        card.rueckfaelle + '-mal</strong> wieder entfallen. Formuliere sie im Verwalten-Tab um oder ' +
+        'teile sie in zwei Karten \u2013 sonst frisst sie weiter deine Lernzeit. Sobald du Wort oder ' +
+        '\u00dcbersetzung \u00e4nderst, beginnt die Z\u00e4hlung von vorn.</div>';
     }
-    if (card.extra) {
+    if (card.extra && s.extraOpen) {
       /* 2.7.0: Die Notiz steht offen da. Vorher klappte sie nach JEDER Karte
          wieder zu - bei 25 Karten also 25 Extra-Tipps fuer etwas, das man
          eigentlich immer sehen will. Wer sie knapp mag, klappt sie zu. */
-      html += '<div style="margin-top:12px"><button class="ghost" data-action="toggle-extra">' +
-        (s.extraOpen ? "▾ Beispiel / Bild verbergen" : "▸ Beispiel / Bild anzeigen") + '</button></div>';
-      if (s.extraOpen) {
-        html += '<div class="study-extra">' + renderExtra(card.extra) + '</div>';
-      }
+      html += '<div class="study-extra">' + renderExtra(card.extra) + '</div>';
     }
-    /* 2.11.0: „Merken" genau dort, wo einem auffaellt, dass eine Karte
-       schwer ist.
-       2.21.0: Jetzt auch im Uebungsmodus. Der Ausschluss galt mit der
-       Begruendung "dort geht es nicht um Fortschritt" - aber gerade beim
-       Durchgehen mehrerer Stufen auf einmal faellt oft erst auf, welche
-       Woerter haengen bleiben, und "Merken" aendert ja nur die
+  }
+  html += '</div>';
+
+  /* ---- Die Aktionszone, unten verankert ---- */
+  html += '<div class="study-aktionen">';
+
+  if (s.revealed) {
+    html += '<div class="study-nebenaktionen">';
+    if (card.extra) {
+      html += '<button class="ghost" data-action="toggle-extra">' +
+        (s.extraOpen ? "Notiz verbergen" : "Notiz anzeigen") + '</button>';
+    }
+    /* 2.11.0/2.21.0: "Merken" genau dort, wo einem auffaellt, dass eine Karte
+       schwer ist - auch im Uebungsmodus, denn es aendert nur die
        Speicherkarte, nie Stufe oder Faelligkeit. */
     {
       const gemerkt = (currentBereich().sets || []).some(x => x.art === "eigen" && x.name === MERK_SET_NAME && x.cardIds.indexOf(card.id) !== -1);
-      /* 2.21.5: Richtiges Symbol statt ☆/⭐-Emoji, siehe sternIcon() oben.
-         justPopped: einmalig lesen und sofort loeschen (Muster wie
-         springZu/lernFokusNach) - sonst wuerde der Stern bei JEDEM
-         Neuzeichnen aus anderem Anlass erneut poppen. */
+      /* 2.21.5: justPopped einmalig lesen und sofort loeschen - sonst wuerde
+         der Stern bei JEDEM Neuzeichnen erneut poppen. */
       const justPopped = ui.merkPop === card.id;
       if (justPopped) ui.merkPop = null;
-      /* 2.14.1: Der Knopf sagt jetzt, WOHIN die Karte gelegt wurde. Vorher
-         hiess er nur "gemerkt" und man wusste nicht, wo sie gelandet ist. */
-      html += '<div style="margin-top:10px"><button class="ghost merk-btn" data-action="karte-merken" data-id="' + esc(card.id) + '" title="' +
-        (gemerkt ? 'Wieder herausnehmen' : 'In „' + esc(MERK_SET_NAME) + '" ablegen, um sie später gezielt zu üben') + '">' +
+      html += '<button class="ghost merk-btn" data-action="karte-merken" data-id="' + esc(card.id) + '" title="' +
+        (gemerkt ? 'Wieder herausnehmen' : 'In \u201e' + esc(MERK_SET_NAME) + '\u201c ablegen, um sie sp\u00e4ter gezielt zu \u00fcben') + '">' +
         sternIcon(gemerkt, justPopped) +
-        (gemerkt ? 'in „' + esc(MERK_SET_NAME) + '"' : "Merken") + '</button></div>';
-    }
-    html += '<div class="grade-row">';
-    if (s.isDrill) {
-      /* 2.15.0: Gar keine Knoepfe mehr. Im Uebungsmodus aendert sich nichts
-         am Fortschritt - es gab nur noch die Wahl, ob die Karte in derselben
-         Runde nochmal drankommt. Das ist keine Entscheidung, die eine
-         Auswahl verdient: Wer die Runde nochmal will, startet sie nochmal.
-         Uebrig bleibt eine einzige Bewegung, und die braucht keinen Knopf. */
-      html += '<p class="weiter-hinweis">Leertaste oder tippen – weiter</p>';
-    } else {
-      html += '<button class="btn-unknown" data-action="grade-unknown" aria-label="Nicht gewusst – zwei Stufen zurück, kommt gleich noch einmal">Nicht<span class="sub">kommt gleich wieder</span></button>';
-      html += '<button class="btn-almost" data-action="grade-almost" aria-label="Fast gewusst – eine Stufe zurück, morgen wieder">Fast<span class="sub">morgen wieder</span></button>';
-      html += '<button class="btn-known" data-action="grade-known" aria-label="Sicher gewusst – eine Stufe weiter">Sicher<span class="sub">in ~' + intervalForStufe(Math.min(card.stufe + 1, MAX_STUFE)) + ' Tagen</span></button>';
+        (gemerkt ? 'Gemerkt' : "Merken") + '</button>';
     }
     html += '</div>';
   }
-  if (s.lastAction) {
-    html += '<div style="margin-top:10px"><button class="ghost" data-action="undo-grade">↶ Letzte Bewertung rückgängig machen</button></div>';
+
+  if (!s.revealed) {
+    if (s.isDrill) {
+      /* 2.16.0: Im Uebungsmodus kein Knopf mehr zum Aufdecken. Dieselbe
+         Bewegung, die danach weitertraegt, deckt auch auf - Leertaste oder
+         ein Tipp irgendwo. Im echten Lernen bleibt der Knopf: dort geht es
+         nach dem Aufdecken mit einer ECHTEN Entscheidung weiter (Nicht /
+         Fast / Sicher), und wer dafuer ohnehin zielen muss, soll nicht aus
+         Versehen aufdecken. */
+      html += '<p class="weiter-hinweis">Leertaste oder tippen \u2013 Antwort zeigen</p>';
+    } else if (!s.handwriting) {
+      /* Bei Handschrift deckt "Fertig" in der Zeichenleiste auf. */
+      html += '<button class="lg full" data-action="reveal">Antwort zeigen</button>';
+    }
+  } else if (s.isDrill) {
+    /* 2.15.0: Gar keine Knoepfe. Im Uebungsmodus aendert sich nichts am
+       Fortschritt - uebrig bleibt eine einzige Bewegung, und die braucht
+       keinen Knopf. Der Hinweis traegt trotzdem .grade-row: auf dieses
+       Element scrollt scrollGradeRowIntoView() nach dem Aufdecken. Steht es
+       nicht da (oder steht es auf display:none), bleibt der Blick haengen. */
+    html += '<div class="grade-row" style="grid-template-columns:1fr">' +
+      '<p class="weiter-hinweis">Leertaste oder tippen \u2013 weiter</p></div>';
+  } else {
+    html += '<div class="grade-row">';
+    html += '<button class="btn-unknown" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 zwei Stufen zur\u00fcck, kommt gleich noch einmal">Nicht<span class="sub">kommt gleich wieder</span></button>';
+    html += '<button class="btn-almost" data-action="grade-almost" aria-label="Fast gewusst \u2013 eine Stufe zur\u00fcck, morgen wieder">Fast<span class="sub">morgen wieder</span></button>';
+    html += '<button class="btn-known" data-action="grade-known" aria-label="Sicher gewusst \u2013 eine Stufe weiter">Sicher<span class="sub">in ~' + intervalForStufe(Math.min(card.stufe + 1, MAX_STUFE)) + ' Tagen</span></button>';
+    html += '</div>';
   }
-  html += '<div style="margin-top:18px"><button class="ghost" data-action="end-session">' + (s.isDrill ? "Übung beenden" : "Session abbrechen") + '</button></div>';
+
+  html += '</div>';
   html += '</div>';
   return html;
 }
@@ -5588,10 +4991,10 @@ function renderHandwritingCanvas(revealed) {
      Nach dem Aufdecken ausgeblendet: dann wird nicht mehr geschrieben,
      sondern verglichen. */
   if (!revealed && hwStrokes.length) {
-    html += '<button class="secondary" data-action="hw-undo" aria-label="Letzten Strich zurücknehmen">↶ Strich zurück</button>';
+    html += '<button class="secondary" data-action="hw-undo" aria-label="Letzten Strich zurücknehmen">' + ikon("rueckgaengig", "i-sm") + ' Strich zurück</button>';
   }
-  html += '<button class="secondary" data-action="hw-clear" aria-label="Ganze Zeichnung löschen">🗑️ Löschen</button>';
-  html += '<button class="secondary" data-action="hw-fullscreen" aria-label="' + (hwFullscreen ? "Zeichenfläche verkleinern" : "Zeichenfläche als Vollbild") + '">' + (hwFullscreen ? "↙ Verkleinern" : "⛶ Vollbild") + '</button>';
+  html += '<button class="secondary" data-action="hw-clear" aria-label="Ganze Zeichnung löschen">' + ikon("muell", "i-sm") + ' Löschen</button>';
+  html += '<button class="secondary" data-action="hw-fullscreen" aria-label="' + (hwFullscreen ? "Zeichenfläche verkleinern" : "Zeichenfläche als Vollbild") + '">' + ikon("vollbild", "i-sm") + (hwFullscreen ? " Verkleinern" : " Vollbild") + '</button>';
   if (!revealed) html += '<button data-action="reveal">Fertig</button>';
   html += '</div></div>';
   return html;
@@ -5850,17 +5253,17 @@ function renderVerwalten() {
       '<br>Die Karten stehen fest. Eigene legst du in einem eigenen Bereich an (oben „+ Bereich").</div>';
     return html + renderVerwaltenListe(cards, gefuehrt);
   }
-  html += '<div class="panel">';
+  html += '<div class="card">';
   html += '<h2>' + (editing ? "Karte bearbeiten" : "Neue Karte") + '</h2>';
-  html += '<label for="f-wort">Wort *</label>';
-  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" value="' + esc(formDraft.wort) + '">';
-  html += '<label for="f-ueb">Übersetzung *</label>';
-  html += '<input type="text" id="f-ueb" value="' + esc(formDraft.ueb) + '">';
-  html += '<label for="f-extra">Optional: Beispielsatz, Bild-Link oder Notiz</label>';
-  html += '<textarea id="f-extra" rows="2">' + esc(formDraft.extra) + '</textarea>';
+  html += '<div class="field"><label for="f-wort">Wort <span class="opt">– Pflicht</span></label>';
+  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" value="' + esc(formDraft.wort) + '"></div>';
+  html += '<div class="field"><label for="f-ueb">Übersetzung <span class="opt">– Pflicht</span></label>';
+  html += '<input type="text" id="f-ueb" value="' + esc(formDraft.ueb) + '"></div>';
+  html += '<div class="field"><label for="f-extra">Beispielsatz, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
+  html += '<textarea id="f-extra" rows="2">' + esc(formDraft.extra) + '</textarea></div>';
   if (editing) {
-    html += '<label for="f-stufe">Wiederholungsstufe</label>';
-    html += '<input type="number" id="f-stufe" min="0" max="' + MAX_STUFE + '" step="1" value="' + editing.stufe + '">';
+    html += '<div class="field"><label for="f-stufe">Wiederholungsstufe</label>';
+    html += '<input type="number" id="f-stufe" min="0" max="' + MAX_STUFE + '" step="1" value="' + editing.stufe + '" inputmode="numeric"></div>';
   }
   html += '<div class="form-actions">';
   html += '<button data-action="submit-card">' + (editing ? "Änderungen speichern" : "Karte hinzufügen") + '</button>';
@@ -5876,11 +5279,11 @@ function renderVerwaltenListe(cards, gefuehrt) {
   html += '<div class="bereich-manage-row">';
   html += '<h2 style="margin-bottom:0">Karten in „' + esc(currentBereich().name) + '" (' + cards.length + ')</h2>';
   html += '<div>';
-  if (cards.length > 0) html += '<button class="ghost" data-action="open-drill" title="Stufen oder Speicherkarten beliebig oft üben">🔁 Üben</button>';
-  if (cards.length > 1 && !gefuehrt) html += '<button class="ghost" data-action="reverse-order" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">🔃 Umkehren</button>';
-  if (cards.length > 0) html += '<button class="ghost" data-action="toggle-select-mode" title="Mehrere Karten auswählen">' + (ui.selectMode ? "✕ Fertig" : "☑️ Auswählen") + '</button>';
-  if (!gefuehrt) html += '<button class="ghost" data-action="rename-bereich" title="Bereich umbenennen">✏️ Umbenennen</button>';
-  html += '<button class="ghost" data-action="delete-bereich" title="Bereich löschen">🗑️ Löschen</button>';
+  if (cards.length > 0) html += '<button class="ghost" data-action="open-drill" title="Stufen oder Speicherkarten beliebig oft üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
+  if (cards.length > 1 && !gefuehrt) html += '<button class="ghost" data-action="reverse-order" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' + ikon("umkehren", "i-sm") + ' Umkehren</button>';
+  if (cards.length > 0) html += '<button class="ghost" data-action="toggle-select-mode" title="Mehrere Karten auswählen">' + (ui.selectMode ? ikon("schliessen", "i-sm") + " Fertig" : ikon("auswaehlen", "i-sm") + " Auswählen") + '</button>';
+  if (!gefuehrt) html += '<button class="ghost" data-action="rename-bereich" title="Bereich umbenennen">' + ikon("stift", "i-sm") + ' Umbenennen</button>';
+  html += '<button class="ghost" data-action="delete-bereich" title="Bereich löschen">' + ikon("muell", "i-sm") + ' Löschen</button>';
   html += '</div></div>';
 
   if (ui.drillOpen) {
@@ -5897,11 +5300,11 @@ function renderVerwaltenListe(cards, gefuehrt) {
        Mehrfachauswahl), das liess sich in einem einzelnen <select> nicht
        mehr sauber unterbringen. */
     if (sets.length > 0) {
-      html += '<div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:10px">';
-      html += '<label style="display:flex; align-items:center; gap:6px; cursor:pointer">' +
-        '<input type="radio" name="drill-mode" value="stufen"' + (ui.drillSource === "stufen" ? " checked" : "") + '> Nach Stufen</label>';
-      html += '<label style="display:flex; align-items:center; gap:6px; cursor:pointer">' +
-        '<input type="radio" name="drill-mode" value="sets"' + (ui.drillSource === "sets" ? " checked" : "") + '> Speicherkarten</label>';
+      html += '<div class="wahl-reihe">';
+      html += '<label class="check-row"><input type="radio" name="drill-mode" value="stufen"' +
+        (ui.drillSource === "stufen" ? " checked" : "") + '><span>Nach Stufen</span></label>';
+      html += '<label class="check-row"><input type="radio" name="drill-mode" value="sets"' +
+        (ui.drillSource === "sets" ? " checked" : "") + '><span>Speicherkarten</span></label>';
       html += '</div>';
     }
     if (ui.drillSource === "sets" && sets.length > 0) {
@@ -5913,7 +5316,7 @@ function renderVerwaltenListe(cards, gefuehrt) {
          Zeile dadurch unnoetig breit, und dieselbe Zahl steht ohnehin schon
          bei der Speicherkarte selbst weiter unten im Verwalten-Tab, links
          vom "🔁 Üben"-Knopf. */
-      html += '<div style="display:flex; flex-direction:column; gap:4px; margin-bottom:10px">';
+      html += '<div class="drill-set-liste">';
       html += sets.map(s => {
         const checked = ui.drillSetIds.has(s.id);
         return '<label style="display:flex; align-items:center; gap:6px; cursor:pointer">' +
@@ -5932,26 +5335,29 @@ function renderVerwaltenListe(cards, gefuehrt) {
       html += 'bis <select id="drill-max">' + stufen.map(s => '<option value="' + s + '"' + (s === stufen[stufen.length - 1] ? " selected" : "") + '>' + s + '</option>').join("") + '</select>';
       html += '</div>';
     }
-    html += '<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">';
+    /* 3.0.0: Die Handschrift-Wahl steht VOR dem Start, nicht darunter. Ein
+       Haken, den man erst unter dem Knopf sieht, ist einer, den man nicht
+       mehr setzt. */
+    html += '<label class="check-row">';
+    html += '<input type="checkbox" id="drill-handwriting">';
+    html += '<span>' + ikon("hand", "i-sm") + ' Handschriftlich üben (Deutsch → Arabisch)</span>';
+    html += '</label>';
+    html += '<div class="form-actions">';
     html += '<button data-action="start-drill">Start</button>';
     html += '<button class="secondary" data-action="close-drill">Abbrechen</button>';
     html += '</div>';
-    html += '<label style="display:flex; align-items:center; gap:6px; margin-top:12px; cursor:pointer; font-size:0.92rem; color:var(--ink)">';
-    html += '<input type="checkbox" id="drill-handwriting" style="width:18px;height:18px">';
-    html += '✍️ Handschriftlich üben (Deutsch → Arabisch)';
-    html += '</label>';
     html += '</div>';
   }
 
   if (ui.selectMode && ui.selectedIds.size > 0) {
     html += '<div class="select-actionbar">';
     html += '<strong>' + ui.selectedIds.size + '</strong> ausgewählt &nbsp;';
-    if (kartenBearbeitbar()) html += '<button class="ghost" data-action="delete-selected">🗑️ Löschen</button>';
+    if (kartenBearbeitbar()) html += '<button class="ghost" data-action="delete-selected">' + ikon("muell", "i-sm") + ' Löschen</button>';
     if (bereiche.length > 1 && kartenBearbeitbar()) {
       html += '<select id="move-target-select">' +
         bereiche.filter(b => b.id !== ui.bereichId).map(b => '<option value="' + esc(b.id) + '">' + esc(b.name) + '</option>').join("") +
         '</select>';
-      html += '<button class="ghost" data-action="move-selected">↪ Verschieben</button>';
+      html += '<button class="ghost" data-action="move-selected">' + ikon("verschieben", "i-sm") + ' Verschieben</button>';
     }
     const sets = currentSets().filter(s => setBearbeitbar(s));
     if (sets.length > 0) {
@@ -5959,9 +5365,9 @@ function renderVerwaltenListe(cards, gefuehrt) {
       html += '<option value="__new__">＋ Neue Speicherkarte</option>';
       html += sets.map(s => '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>').join("");
       html += '</select>';
-      html += '<button class="ghost" data-action="save-to-set" title="Ausgewählte Karten in einer Speicherkarte ablegen">⭐ Speichern</button>';
+      html += '<button class="ghost" data-action="save-to-set" title="Ausgewählte Karten in einer Speicherkarte ablegen">' + ikon("stern", "i-sm") + ' Speichern</button>';
     } else {
-      html += '<button class="ghost" data-action="save-to-new-set" title="Ausgewählte Karten als Speicherkarte ablegen, um sie später gezielt zu üben">⭐ Als Speicherkarte</button>';
+      html += '<button class="ghost" data-action="save-to-new-set" title="Ausgewählte Karten als Speicherkarte ablegen, um sie später gezielt zu üben">' + ikon("stern", "i-sm") + ' Als Speicherkarte</button>';
     }
     html += '</div>';
   }
@@ -5977,11 +5383,11 @@ function renderVerwaltenListe(cards, gefuehrt) {
   if (cards.length === 0 && !ui.searchAll) {
     html += '<p class="hint">Noch keine Karten vorhanden.</p>';
   } else {
-    html += '<div class="search-wrap">';
-    html += '<input type="text" id="f-search" placeholder="🔍 Wort, Übersetzung oder Notiz…" value="' + esc(ui.searchQuery) + '"' +
+    html += '<div class="search-wrap">' + ikon("suche", "i-such");
+    html += '<input type="text" id="f-search" placeholder="Wort, Übersetzung oder Notiz…" value="' + esc(ui.searchQuery) + '"' +
       ' autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">';
     html += '<button class="search-clear" id="f-search-clear" data-action="search-clear" aria-label="Suche leeren"' +
-      (ui.searchQuery ? '' : ' hidden') + '>✕</button>';
+      (ui.searchQuery ? '' : ' hidden') + '>' + ikon("schliessen", "i-sm") + '</button>';
     html += '</div>';
     if (bereiche.length > 1) {
       html += '<div class="seg-row" style="margin:0 0 14px">';
@@ -6037,7 +5443,28 @@ function kartenListeInhalt() {
   }
 
   if (shownCards.length === 0) {
-    html += '<p class="hint">' + (tokens.length ? 'Keine Treffer für „' + esc(ui.searchQuery) + '".' : "Noch keine Karten vorhanden.") + '</p>';
+    /* Zwei verschiedene Leerzustaende, nicht einer: "nichts gefunden" und
+       "noch nichts da" verlangen verschiedene naechste Schritte. */
+    html += '<div class="empty">';
+    if (tokens.length) {
+      html += '<div class="empty__icon">' + ikon("suche", "i-xl") + '</div>';
+      html += '<div class="empty__titel">Keine Treffer</div>';
+      html += '<p class="empty__text">Nichts passt zu \u201e' + esc(ui.searchQuery) + '\u201c.' +
+        (ui.searchAll ? '' : ' Vielleicht liegt das Wort in einem anderen Bereich.') + '</p>';
+      html += '<div class="empty__aktionen"><button class="secondary" data-action="search-clear">Suche leeren</button>';
+      if (!ui.searchAll && bereiche.length > 1) {
+        html += '<button class="ghost" data-action="search-scope" data-scope="alle">In allen Bereichen suchen</button>';
+      }
+      html += '</div>';
+    } else {
+      html += '<div class="empty__icon">' + ikon("karten", "i-xl") + '</div>';
+      html += '<div class="empty__titel">Noch keine Karten</div>';
+      html += '<p class="empty__text">Leg oben deine erste Karte an \u2013 oder spiel einen fertigen ' +
+        'Kartensatz ein.</p>';
+      html += '<div class="empty__aktionen"><button class="secondary" data-action="import-trigger">' +
+        ikon("einspielen", "i-sm") + ' Kartensatz einspielen</button></div>';
+    }
+    html += '</div>';
     return html;
   }
 
@@ -6064,9 +5491,9 @@ function kartenListeInhalt() {
      Ziehen ist ohnehin nur ohne Suche moeglich, deshalb entspricht der
      Ausschnitt dann genau currentCards().slice(start, ...). */
   listenFenster = { start: start, anzahl: seitenKarten.length };
-  if (!bearbeitbar && tokens.length === 0) html += '<p class="hint" style="margin-bottom:10px">🔒 Geführter Kartensatz – die Karten und ihre Reihenfolge stehen fest. Hervorgehoben ist, was freigeschaltet ist.</p>';
-  if (draggable) html += '<p class="hint" style="margin-bottom:10px">↕ Ziehe eine Karte am ⠿-Griff, um die Reihenfolge zu ändern.' +
-    (seiten > 1 ? ' Verschieben über die Seitengrenze hinaus geht nicht – dafür „↪ Verschieben" im Auswahlmodus.' : '') + '</p>';
+  if (!bearbeitbar && tokens.length === 0) html += '<p class="hint" style="margin-bottom:10px">' + ikon("schloss", "i-sm") + ' Geführter Kartensatz – die Karten und ihre Reihenfolge stehen fest. Hervorgehoben ist, was freigeschaltet ist.</p>';
+  if (draggable) html += '<p class="hint" style="margin-bottom:10px">Ziehe eine Karte am Griff, um die Reihenfolge zu ändern.' +
+    (seiten > 1 ? ' Verschieben über die Seitengrenze hinaus geht nicht – dafür „Verschieben“ im Auswahlmodus.' : '') + '</p>';
   if (seiten > 1) html += seitenLeiste(ui.kartenSeite, seiten, shownCards.length);
   for (let i = 0; i < seitenKarten.length; i++) {
     const c = seitenKarten[i];
@@ -6084,8 +5511,8 @@ function kartenListeInhalt() {
       html += '<input type="checkbox" style="pointer-events:none" ' + (checked ? "checked" : "") + '>';
     } else {
       html += '<div class="' + zeilenKlasse + '"' + (draggable ? ' data-cardid="' + esc(c.id) + '"' : '') + '>';
-      if (draggable) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">⠿</span>';
-      else if (ui.selectMode && kartenZu) html += '<span title="Gesperrt – lässt sich nicht auswählen" aria-hidden="true">🔒</span>';
+      if (draggable) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">' + ikon("griff", "i-sm") + '</span>';
+      else if (ui.selectMode && kartenZu) html += '<span class="lock-anzeige" title="Gesperrt – lässt sich nicht auswählen" aria-hidden="true">' + ikon("schloss", "i-sm") + '</span>';
     }
     html += '<div class="words">';
     html += '<div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + markiere(c.wort, tokens) + '</div>';
@@ -6094,17 +5521,17 @@ function kartenListeInhalt() {
     html += kartenTagsHtml(c.id, fremd || bAkt);
     html += '</div>';
     if (fremd) html += '<span class="badge" title="Diese Karte liegt in einem anderen Bereich">' + esc(fremd.name) + '</span>';
-    if (kartenZu && !ui.selectMode) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">🔒</span>';
+    if (kartenZu && !ui.selectMode) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">' + ikon("schloss", "i-sm") + ' </span>';
     html += zustandBadge(c);
     /* E6: In der Liste sichtbar machen, damit beim Durchsehen sofort
        auffaellt, welche Karte umformuliert gehoert. */
-    if (istVerbrannt(c)) html += '<span class="leech-badge" title="' + c.rueckfaelle + '-mal wieder vergessen – umformulieren oder aufteilen">🔥 ' + c.rueckfaelle + '×</span>';
+    if (istVerbrannt(c)) html += '<span class="leech-badge" title="' + c.rueckfaelle + '-mal wieder vergessen – umformulieren oder aufteilen">' + ikon("serie", "i-sm") + ' ' + c.rueckfaelle + '×</span>';
     if (fremd) {
       html += '<button class="ghost" data-action="edit-card-in-bereich" data-bereich="' + esc(fremd.id) + '" data-id="' + esc(c.id) +
-        '" title="In „' + esc(fremd.name) + '" öffnen" aria-label="Karte im Bereich ' + esc(fremd.name) + ' bearbeiten">✏️</button>';
+        '" title="In „' + esc(fremd.name) + '" öffnen" aria-label="Karte im Bereich ' + esc(fremd.name) + ' bearbeiten">' + ikon("stift", "i-sm") + '</button>';
     } else if (!ui.selectMode && bearbeitbar) {
-      html += '<button class="ghost" data-action="edit-card" data-id="' + esc(c.id) + '" title="Bearbeiten" aria-label="Karte bearbeiten">✏️</button>';
-      html += '<button class="ghost" data-action="delete-card" data-id="' + esc(c.id) + '" title="Löschen" aria-label="Karte löschen">🗑️</button>';
+      html += '<button class="ghost" data-action="edit-card" data-id="' + esc(c.id) + '" title="Bearbeiten" aria-label="Karte bearbeiten">' + ikon("stift", "i-sm") + '</button>';
+      html += '<button class="ghost" data-action="delete-card" data-id="' + esc(c.id) + '" title="Löschen" aria-label="Karte löschen">' + ikon("muell", "i-sm") + '</button>';
     }
     html += '</div>';
   }
@@ -6147,20 +5574,20 @@ function renderSetsPanel() {
   const zuAnzahl = gefuehrt ? sets.filter(s => setGesperrt(s, b)).length : 0;
   let html = '<div class="drill-picker" style="margin-bottom:14px">';
   /* 2.2.0: Kopfzeile zum Auf- und Zuklappen. Zu ist der Normalzustand. */
-  html += '<button class="sets-kopf" data-action="toggle-sets" aria-expanded="' + (ui.setsOffen ? "true" : "false") + '">';
-  html += '<span>' + (ui.setsOffen ? "▾" : "▸") + '</span><span>⭐ Speicherkarten</span>';
+  html += '<button class="secondary sets-kopf" data-action="toggle-sets" aria-expanded="' + (ui.setsOffen ? "true" : "false") + '">';
+  html += ikon(ui.setsOffen ? "chevronUnten" : "chevronRechts", "i-sm") + '<span>Speicherkarten</span>';
   html += '<span class="badge">' + sets.length + '</span>';
-  if (zuAnzahl > 0) html += '<span class="badge" title="' + zuAnzahl + ' Lektion(en) noch gesperrt">🔒 ' + zuAnzahl + '</span>';
+  if (zuAnzahl > 0) html += '<span class="badge" title="' + zuAnzahl + ' Lektion(en) noch gesperrt">' + ikon("schloss", "i-sm") + ' ' + zuAnzahl + '</span>';
   html += '</button>';
   if (!ui.setsOffen) { html += '</div>'; return html; }
   if (istAutor() && !gefuehrt) {
     html += '<button class="tiny-link" data-action="toggle-set-art" style="padding:6px 0">' +
-      (ui.setsArtWahl ? "✕ Arten fertig" : "🛠 Arten vergeben") + '</button>';
+      (ui.setsArtWahl ? "Arten fertig" : "Arten vergeben") + '</button>';
   }
 
   if (!gruppen) {
     /* Der Normalfall: eine schlichte Liste, wie vor 2.3.0. */
-    html += '<p class="hint" style="padding:6px 0">Feste Auswahl an Vokabeln, jederzeit beliebig oft übbar. Reihenfolge per ⠿-Griff ändern.</p>';
+    html += '<p class="hint" style="padding:6px 0">Feste Auswahl an Vokabeln, jederzeit beliebig oft übbar. Reihenfolge per Griff ändern.</p>';
     html += '<div class="set-liste" data-gruppe="alle">';
     for (const s of sets) html += setBlock(s, b, frei, gefuehrt);
     html += '</div></div>';
@@ -6191,12 +5618,12 @@ function setBlock(s, b, frei, gefuehrt) {
   const eigenerBesitz = setBearbeitbar(s, b);
   let html = '<div class="set-block' + (zu ? " set-locked" : "") + '" id="set-' + esc(s.id) + '" data-setid="' + esc(s.id) + '">';
   html += '<div class="set-row">';
-  if (eigenerBesitz) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">⠿</span>';
+  if (eigenerBesitz) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">' + ikon("griff", "i-sm") + '</span>';
   /* 2.7.0: Nur noch Anzeige. Freigeschaltet wird durch Lernen, nicht durch
      Tippen - es gibt hier nichts zu entscheiden. */
   if (gefuehrt && s.art === "lektion") {
     html += '<span class="lock-anzeige" title="' +
-      (zu ? 'Wird frei, sobald die Lektion davor sitzt' : 'Freigeschaltet') + '">' + (zu ? "🔒" : "🔓") + '</span>';
+      (zu ? 'Wird frei, sobald die Lektion davor sitzt' : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
   }
   html += '<span class="set-name">' + esc(s.name) + '</span>';
   html += '<span class="badge">' + cards.length + ' Karte' + (cards.length === 1 ? "" : "n") + '</span>';
@@ -6211,10 +5638,10 @@ function setBlock(s, b, frei, gefuehrt) {
   } else if (nurAnzeige) {
     const fest = cards.filter(c => (c.maxStufe || 0) >= LEKTION_STUFE || istVerbrannt(c)).length;
     html += '<span class="badge">' + fest + ' / ' + cards.length + ' sitzen</span>';
-    html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" aria-label="Karten anzeigen" aria-expanded="' + (open ? "true" : "false") + '">' + (open ? "▾" : "▸") + '</button>';
+    html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" aria-label="Karten anzeigen" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
   } else {
-    if (cards.length > 0) html += '<button class="ghost" data-action="drill-set" data-id="' + esc(s.id) + '" title="Diese Auswahl üben">🔁 Üben</button>';
-    html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" title="Karten anzeigen" aria-label="' + (open ? "Karten dieser Speicherkarte verbergen" : "Karten dieser Speicherkarte anzeigen") + '" aria-expanded="' + (open ? "true" : "false") + '">' + (open ? "▾" : "▸") + '</button>';
+    if (cards.length > 0) html += '<button class="ghost" data-action="drill-set" data-id="' + esc(s.id) + '" title="Diese Auswahl üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
+    html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" title="Karten anzeigen" aria-label="' + (open ? "Karten dieser Speicherkarte verbergen" : "Karten dieser Speicherkarte anzeigen") + '" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
   }
   if (zeigtArtWahl(b)) {
     html += '<select class="set-art-wahl" data-action="set-art" data-id="' + esc(s.id) + '" title="Art dieser Speicherkarte" aria-label="Art dieser Speicherkarte">';
@@ -6224,8 +5651,8 @@ function setBlock(s, b, frei, gefuehrt) {
     html += '</select>';
   }
   if (eigenerBesitz) {
-    html += '<button class="ghost" data-action="rename-set" data-id="' + esc(s.id) + '" title="Umbenennen" aria-label="Speicherkarte umbenennen">✏️</button>';
-    html += '<button class="ghost" data-action="delete-set" data-id="' + esc(s.id) + '" title="Speicherkarte löschen (Vokabeln bleiben erhalten)" aria-label="Speicherkarte löschen">🗑️</button>';
+    html += '<button class="ghost" data-action="rename-set" data-id="' + esc(s.id) + '" title="Umbenennen" aria-label="Speicherkarte umbenennen">' + ikon("stift", "i-sm") + '</button>';
+    html += '<button class="ghost" data-action="delete-set" data-id="' + esc(s.id) + '" title="Speicherkarte löschen (Vokabeln bleiben erhalten)" aria-label="Speicherkarte löschen">' + ikon("muell", "i-sm") + '</button>';
   }
   html += '</div>';
   if (open) {
@@ -6233,7 +5660,7 @@ function setBlock(s, b, frei, gefuehrt) {
     if (cards.length === 0) {
       html += '<p class="hint">Keine Karten mehr in dieser Speicherkarte.</p>';
     } else {
-      if (eigenerBesitz && cards.length > 1) html += '<p class="hint" style="padding:6px 0">↕ Ziehe am ⠿-Griff, um die Reihenfolge in dieser Speicherkarte zu ändern. Die Reihenfolge im Bereich bleibt unberührt.</p>';
+      if (eigenerBesitz && cards.length > 1) html += '<p class="hint" style="padding:6px 0">Ziehe am Griff, um die Reihenfolge in dieser Speicherkarte zu ändern. Die Reihenfolge im Bereich bleibt unberührt.</p>';
       for (const c of cards) {
         /* In einer Lektion sind ohnehin alle Karten gleich dran - dort waere
            eine Hervorhebung nur Unruhe. In den Kategorien steht dagegen alles
@@ -6244,12 +5671,12 @@ function setBlock(s, b, frei, gefuehrt) {
           (eigenerBesitz ? ' data-cardid="' + esc(c.id) + '"' : '') + '>';
         /* 2.6.0: Griff zum Sortieren INNERHALB dieser Speicherkarte. Er
            veraendert nur cardIds, nie die Reihenfolge des Bereichs. */
-        if (eigenerBesitz) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">⠿</span>';
+        if (eigenerBesitz) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">' + ikon("griff", "i-sm") + '</span>';
         html += '<div class="words"><div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(c.wort) + '</div>';
         html += '<div class="uebersetzung">' + esc(c.uebersetzung) + '</div>' + kartenTagsHtml(c.id, b, s.id) + '</div>';
-        if (kartenZu) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">🔒</span>';
+        if (kartenZu) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">' + ikon("schloss", "i-sm") + '</span>';
         html += zustandBadge(c);
-        if (eigenerBesitz) html += '<button class="ghost" data-action="remove-from-set" data-set="' + esc(s.id) + '" data-id="' + esc(c.id) + '" title="Aus dieser Speicherkarte entfernen (Karte bleibt im Bereich)" aria-label="Aus dieser Speicherkarte entfernen">✕</button>';
+        if (eigenerBesitz) html += '<button class="ghost" data-action="remove-from-set" data-set="' + esc(s.id) + '" data-id="' + esc(c.id) + '" title="Aus dieser Speicherkarte entfernen (Karte bleibt im Bereich)" aria-label="Aus dieser Speicherkarte entfernen">' + ikon("schliessen", "i-sm") + '</button>';
         html += '</div>';
       }
     }
@@ -6324,7 +5751,7 @@ document.body.addEventListener("click", e => {
      waere sonst genau der Fehlgriff, der die Loesung verraet, bevor man sie
      geschrieben hat. */
   if (s.handwriting && !s.revealed) return;
-  if (e.target.closest("button, a, input, select, textarea, canvas, .hw-toolbar")) return;
+  if (e.target.closest("button, a, input, select, textarea, canvas, .hw-toolbar, .modebar")) return;
   if (!s.revealed) revealAnswer();
   else gradeCard("weiter");
 });
@@ -6691,6 +6118,11 @@ app.addEventListener("click", e => {
     case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; render(); break;
     case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; render(); break;
     case "logout": doLogout(); break;
+    /* 3.0.0: Das Bereichs-Sheet. "nichts" traegt das Blatt selbst, damit ein
+       Tipp hinein nicht bis zum Hintergrund durchschlaegt und schliesst. */
+    case "bereich-sheet-auf": ui.bereichSheet = true; render(); break;
+    case "bereich-sheet-zu": ui.bereichSheet = false; render(); break;
+    case "nichts": break;
     case "seite-neu-laden": location.reload(); break;
     case "einstellungen": ui.einstellungen = true; window.scrollTo(0, 0); render(); break;
     case "einstellungen-zu": ui.einstellungen = false; window.scrollTo(0, 0); render(); break;
@@ -6702,12 +6134,12 @@ app.addEventListener("click", e => {
     case "add-bereich": addBereich(); break;
     case "rename-bereich": renameBereich(); break;
     case "delete-bereich": deleteBereich(); break;
-    case "tab-lernen": ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; render(); break;
-    case "tab-fortschritt": ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; render(); break;
+    case "tab-lernen": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; render(); break;
+    case "tab-fortschritt": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
-    case "tab-verwalten": ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; render(); break;
+    case "tab-verwalten": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;
@@ -6804,9 +6236,15 @@ app.addEventListener("click", e => {
 /* ---------- Start ---------- */
 if (CONFIGURED) {
   initFirebase().catch(e => {
-    app.innerHTML = '<div class="panel" style="margin-top:40px"><h2>Start fehlgeschlagen</h2>' +
-      '<p class="hint">Firebase konnte nicht geladen werden. Bitte Internetverbindung prüfen und die Seite neu laden.</p>' +
-      '<div class="error-box">' + esc(e && e.message ? e.message : String(e)) + '</div></div>';
+    app.innerHTML = '<div class="solo"><div class="empty">' +
+      '<div class="empty__icon">' + ikon("offline", "i-xl") + '</div>' +
+      '<div class="empty__titel">Start fehlgeschlagen</div>' +
+      '<p class="empty__text">Die App konnte ihre Bausteine nicht laden. ' +
+      'Pr\u00fcf deine Internetverbindung und lade die Seite neu.</p>' +
+      '<div class="error-box" style="text-align:left">' + ikon("warnung", "i-sm") +
+      '<div class="banner__text">' + esc(e && e.message ? e.message : String(e)) + '</div></div>' +
+      '<button data-action="seite-neu-laden">Neu laden</button>' +
+      '</div></div>';
   });
 } else {
   render();
@@ -6818,6 +6256,3 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
   });
 }
-</script>
-</body>
-</html>

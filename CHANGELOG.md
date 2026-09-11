@@ -1,3 +1,89 @@
+## 3.0.0 – 12. September 2026 — „Codex"
+
+Eine neue Oberfläche. Der Stoff, die Stufen, die Cloud und die Konten sind
+unverändert geblieben – nachweislich: `initFirebase`, `patchDoc`, `persistAll`,
+`persistCardGrade`, `persistStreak`, `persistSettings`, `gradeCard`,
+`intervalForStufe`, `nextReviewForStufe`, `evaluateStreakForNewDay`, `normCard`,
+`normSet` und `normBereiche` sind Zeichen für Zeichen dieselben wie in 2.21.6.
+
+### Wie es gebaut ist
+
+- **Drei Dateien statt einer.** Gestaltung liegt jetzt in `styles.css`, Ablauf in
+  `app.js`, und in der `index.html` steht nur noch, was vor dem ersten Bild
+  laufen muss. Beide neuen Dateien stehen in der App-Hülle des Service Workers –
+  ohne das startet die App offline zwar, aber ohne Aussehen und ohne Funktion.
+- **Ein Designsystem statt verstreuter Werte.** Farben laufen in drei Schichten:
+  Primitive → Semantik → Komponente. Wer die Palette ändern will, ändert die
+  erste; wer die Bedeutung ändern will, die zweite. Dazu eine Schriftleiter,
+  eine Abstandsleiter, sechs Radien und fünf Elevationsstufen.
+- **Tiefe kommt aus Fläche und Haarlinie, nicht aus Schatten.** Auf warmem
+  Fast-Schwarz ist ein Schatten fast unsichtbar; wer Tiefe nur darüber baut,
+  bekommt flache Kästen mit Aufkleber-Rand. Schatten kommt erst ab Stufe 2 dazu.
+- **Eintrittsbewegungen sind `@keyframes`, keine Transitions.** `render()`
+  ersetzt den kompletten Inhalt von `#app`; auf frisch eingefügten Elementen
+  laufen Transitions nicht. Wer das vergisst, wundert sich, warum nichts
+  passiert.
+
+### Neu
+
+- **Navigation unten am Handy, links am Desktop.** Ein einziger `<nav>`-Block mit
+  drei Knöpfen; welche Form er annimmt, entscheidet allein die `styles.css`.
+  Auf „Lernen" sitzt ein Punkt, wenn heute etwas fällig ist.
+- **Bereichs-Sheet statt Pill-Reihe.** Die waagerecht scrollende Reihe kostete
+  eine volle Zeile auf dem Bildschirm, den man täglich sieht, und hörte ab vier
+  Bereichen auf, bedienbar zu sein. Im Sheet steht zusätzlich, wie viel in jedem
+  Bereich offen ist – das war vorher nirgends zu sehen. Am Desktop steht die
+  Liste offen in der Spalte links.
+- **Die Abfrage ist eine Bühne.** Vollbild, das Wort in der Mitte, die Bewertung
+  unten verankert, wo der Daumen ohnehin liegt, und ein Fortschrittsstrich über
+  allem. Statt Kopfzeile, Bereichsreihe und Reitern eine einzige Zeile.
+  Die Durchsicht bekommt dieselbe Leiste.
+- **Eine Lernstufen-Rampe für alles.** Kalender, Stufenband, Lektionsbalken und
+  Plaketten sprachen bisher drei verschiedene Farbsprachen – Rot hieß im
+  Stufenband „wackelig" und auf dem Bewertungsknopf „falsch". Jetzt heißt mehr
+  Gold überall dasselbe: sitzt besser.
+- **Echte Leerzustände** mit Symbol, Satz und genau einer Handlung – getrennt
+  nach „noch gar nichts da", „heute nichts mehr fällig" und „keine Treffer".
+- **Ladezustand mit Wortmarke** statt eines Textkastens; der 9-Sekunden-Hinweis
+  aus 2.21.1 bleibt unverändert darin.
+- **Fehler in drei Tiefen:** blockierend (eigener Bildschirm mit einem Weg
+  weiter), Banner (bleibt stehen, solange das Problem besteht) und Feld. Was
+  anhält, gehört nie in eine Meldung, die von selbst verschwindet.
+- **Kurze Rückmeldung** für Handlungen, die bisher stumm waren.
+- **Ein App-Symbol.** `manifest.json` hatte bis hierher ein leeres Icons-Feld –
+  installiert wurde die App also ohne eigenes Bild.
+
+### Geändert
+
+- **Emoji vollständig durch SVG ersetzt.** Das Zeichenvorrat-System gibt es seit
+  2.21.5, benutzt hat es nur drei Symbole; der Rest der App stand weiter auf
+  Emoji, die je nach Gerät unterschiedlich fett, bunt oder schlicht fremd
+  aussahen und sich weder färben noch an die Akzentfarbe binden ließen. Jetzt
+  sind es rund dreißig Symbole auf einem Raster, in `currentColor`. Einzige
+  bewusste Ausnahme bleibt die native Art-Auswahl im Autorenmodus: ein
+  `<option>` kann kein SVG zeichnen.
+- **`.panel` ist kein Kasten mehr, sondern Rhythmus.** Vorher war jeder
+  Abschnitt ein Kasten – wenn alles ein Kasten ist, ordnet keiner mehr etwas.
+  Einen Rahmen gibt es nur noch, wenn der Inhalt ein Ding ist.
+- **Einstellungen als gruppierte Liste** statt fünf gestapelter Kästen. Die
+  Versionsnummer steht jetzt dort statt klein unter jedem Bildschirm.
+- **Arabische Wörter in Listen stehen linksbündig** über ihrer Übersetzung. Die
+  Schrift läuft weiter von rechts nach links; nur der Block sitzt an derselben
+  Kante wie alles andere in der Zeile – sonst entsteht ein Zickzack.
+- **Die Handschrift-Wahl im Übungsmodus steht vor dem Start-Knopf**, nicht
+  darunter. Ein Haken, den man erst unter dem Knopf sieht, ist einer, den man
+  nicht mehr setzt.
+- Der Backup-Hinweis erscheint auf dem Einstellungs-Bildschirm nur noch einmal.
+
+### Behoben
+
+- **„Gesehen" in der Durchsicht lief über den Knopfrand hinaus.** Der Knopf war
+  als rundes Symbolfeld gesetzt, trägt aber Text.
+- **Ein Tipp auf die Modusleiste galt im Übungsmodus als „weiter".** Sie steht
+  jetzt auf derselben Ausnahmeliste wie die Zeichenleiste.
+
+---
+
 ## 2.21.6 – 11. September 2026
 
 ### Behoben
