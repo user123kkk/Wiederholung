@@ -2580,6 +2580,9 @@ function selectBereich(bereichId) {
   if (!bereiche.some(b => b.id === bereichId)) return;
   ui.bereichId = bereichId;
   ui.bereichSheet = false;     // 3.0.0: Das Sheet hat seine Aufgabe erfuellt.
+  /* Sonst bleibt der Einstellungs-Bildschirm stehen: Der Bereich wechselt im
+     Hintergrund, aber man sieht es erst nach "Fertig". */
+  ui.einstellungen = false;
   ui.session = null;
   /* Die Speicherkarte gehoert zu ihrem Bereich - nach einem Wechsel zeigte
      die Durchsicht sonst auf eine Auswahl, die es hier nicht gibt. */
