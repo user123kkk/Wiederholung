@@ -1,17 +1,21 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <!-- Hintergrund: Schwarzer Kreis -->
-  <circle cx="256" cy="256" r="240" fill="black" />
+<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hintergrund: Tiefschwarzer Kreis -->
+  <circle cx="500" cy="500" r="500" fill="black" />
   
-  <!-- Lotusblüte: Scharfe Kanten, V-förmige Täler -->
-  <path d="M 256,180 
-           L 265,220 270,235 
-           L 300,210 320,205 
-           L 315,235 325,250 
-           L 360,240 375,245 
-           L 365,270 345,295 300,315 256,320
-           L 256,395 
-           L 256,320 212,315 167,295 147,270 137,245 152,240
-           L 187,250 197,235 192,205 212,210
-           L 242,235 247,220 Z" 
+  <!-- Die Lotusblüte: Organische Kurven mit tiefen Einschnitten -->
+  <path d="M 500,351 
+           C 485,380 455,420 441,467 
+           C 425,435 400,415 379,412 
+           C 375,440 360,480 337,517 
+           C 325,505 310,485 293,477 
+           C 335,595 415,627 500,627 
+           C 585,627 665,595 707,477 
+           C 690,485 675,505 663,517 
+           C 640,480 625,440 621,412 
+           C 600,415 575,435 559,467 
+           C 545,420 515,380 500,351 Z" 
         fill="white" />
+  
+  <!-- Stiel: Hauchdünn (1.6 Einheiten breit) -->
+  <rect x="499.2" y="627" width="1.6" height="150" fill="white" />
 </svg>
