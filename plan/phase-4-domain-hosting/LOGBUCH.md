@@ -118,3 +118,53 @@ Betreiber hat die neue Adresse geprüft und **„alles normal"** bestätigt
 **Nächster Schritt:** API-Key in der Google-Cloud-Konsole auf
 `lernkarte-925c2.web.app` (und `.firebaseapp.com`) einschränken, danach
 Security-Header ausarbeiten und gegen die echte Adresse testen.
+
+### 2026-09-12 — API-Key eingeschränkt, dabei Hinweis auf Missbrauch gefunden
+
+**Geändert:** Keine Repo-Dateien. In der Google-Cloud-Konsole
+(`APIs und Dienste → Anmeldedaten → Browser key (auto created by Firebase)`)
+unter „Anwendungseinschränkungen" → „Websites" eingetragen:
+
+- `https://lernkarte-925c2.web.app/*`
+- `https://lernkarte-925c2.firebaseapp.com/*`
+- `https://adrabic-wiederholung.vercel.app/*`
+
+**Wichtige Korrektur am Plan:** Die drei Nutzer:innen sind entgegen der
+bisherigen Annahme im Plan **nicht** auf GitHub Pages, sondern auf
+**Vercel** (`https://adrabic-wiederholung.vercel.app/`). `../PLAN.md` und
+`AUFTRAG.md` sprechen an mehreren Stellen von „GitHub Pages abschalten" —
+das muss richtig heißen: **Vercel-Deployment abschalten**, sobald alle
+Nutzer:innen auf Firebase Hosting umgestiegen sind. Es gibt kein
+GitHub-Actions-Workflow und keine `CNAME`-Datei im Repo für GitHub Pages;
+die Vercel-Bereitstellung läuft offenbar über eine eigene, hier nicht
+dokumentierte Vercel-Projektverknüpfung. Ist im Repo selbst nicht
+sichtbar/änderbar — nur über das Vercel-Dashboard des Betreibers.
+
+**Sicherheitsfund:** Beim Speichern zeigte Google Cloud eine Warnung
+„Potenzieller Fehler aufgrund aktiver Nutzung" — der (bis dahin völlig
+unbeschränkte) API-Key wurde aktiv für diese Google-Maps-Backends benutzt:
+`directions`, `distance-matrix`, `elevation`, `geocoding`, `places`,
+`static-maps`, `street-view-image`, `timezone`. Die Karteikarten-App nutzt
+**keine** dieser Funktionen — die 25 tatsächlich benötigten APIs
+(Firestore, Auth/Identity Toolkit, Hosting, etc.) enthalten keine
+Maps-Funktion. Das ist ein starkes Indiz, dass der offen im Frontend
+liegende Key von Dritten für fremde Maps-Anfragen missbraucht wurde
+(bekanntes Muster bei unbeschränkten Browser-Keys). Betreiber hat die
+Warnung akzeptiert (Bestätigungstext „AKTUALISIEREN" eingegeben) und
+gespeichert — die Einschränkung ist damit aktiv und unterbindet genau
+diesen Missbrauch.
+
+**Entscheidung:** Kein weiterer Handlungsbedarf zu diesem Fund nötig über
+die jetzt gesetzte Website-Einschränkung hinaus — sie schließt die Lücke.
+Keine Kostenfolgen zu prüfen (Firebase/GCP-Projekt läuft im kostenlosen
+Rahmen, siehe Phase 0/3), aber der Fund gehört dokumentiert, falls später
+Rechnungen oder Kontingent-Warnungen auftauchen.
+
+**Offen:** Bestätigung durch Betreiber, dass nach Wirksamwerden der
+Einschränkung (Google nennt bis zu 5 Minuten Verzögerung) beide Adressen
+(Firebase und Vercel) weiterhin normal funktionieren. Security-Header
+weiterhin offen.
+
+**Nächster Schritt:** Betreiber testet beide Adressen nach Ablauf der
+Wartezeit. Bei Erfolg: `AUFTRAG.md`/`PLAN.md` bezüglich „GitHub Pages" auf
+„Vercel" korrigieren, dann Security-Header (CSP-Hash, HSTS) ausarbeiten.
