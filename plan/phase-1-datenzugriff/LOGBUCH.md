@@ -241,3 +241,30 @@ Browser ausgeliefert, sie wird in der Firebase-Konsole eingespielt.
 **Offen:** siehe oben — die Regeln sind veröffentlicht, aber nicht aktiv.
 
 **Nächster Schritt:** unverändert der abschließende Sicherheits-Durchlauf.
+
+---
+
+### 2026-09-12 — Am Rande aufgefallen: `desktop-icon.png` fehlt in `APP_SHELL`
+
+**Geändert:** nichts an der App. Nur dieser Eintrag.
+
+**Entscheidung:** **Nicht gebaut**, weil es nicht im Plan steht (Grundregel aus
+`../../CLAUDE.md`). Beim Veröffentlichen zeigte sich, dass `main` inzwischen
+fünf Commits weiter ist (Umbenennung auf „Adrabic", neues
+Schreibtisch-Symbol). Dabei ist `desktop-icon.png` dazugekommen. Die Datei wird
+an drei Stellen gebraucht — `index.html:18` (Browser-Tab), `index.html:49`
+(Marke auf dem Startbildschirm) und `manifest.json:17` —, steht aber **nicht**
+in `APP_SHELL` (`sw.js:15 ff.`). Damit fehlt sie beim ersten Start ohne Netz;
+sie landet erst im Zwischenspeicher, nachdem sie einmal online geladen wurde.
+Das ist genau Punkt 3 der Veröffentlichungsliste aus `../../README.md`.
+
+Kein Sicherheitsthema und nicht Sache dieser Phase. Aufgeschrieben statt
+stillschweigend mitgemacht, damit es nicht verloren geht — und damit die
+nächste Session nicht rätselt, ob es Absicht war.
+
+**Offen:** Die Aufnahme in `APP_SHELL`. Gehört zur nächsten Änderung, die
+ohnehin an der App arbeitet, oder in Phase 4 (Hosting), wo die
+Auslieferung sowieso durchgesehen wird.
+
+**Nächster Schritt:** unverändert — Regeln in der Firebase-Konsole einspielen,
+danach der abschließende Sicherheits-Durchlauf.
