@@ -236,3 +236,33 @@ wird der Header auf `Content-Security-Policy` (scharf) umgestellt.
 Betreiber, danach Testlauf mit offener Browser-Konsole (F12) auf beiden
 Adressen. Bei sauberem Ergebnis CSP scharf schalten und Phase 4
 abschließen.
+
+### 2026-09-12 — CSP scharf geschaltet
+
+**Geändert:** `firebase.json:43` — Header-Name von
+`Content-Security-Policy-Report-Only` auf `Content-Security-Policy`
+geändert (Wert unverändert, siehe voriger Eintrag für die Begründung
+jeder einzelnen Direktive).
+
+**Entscheidung:** Betreiber hat nach dem Report-Only-Deploy die App normal
+benutzt (Login, Karten) — keine Auffälligkeiten. Entwicklertools/Konsole
+(F12) waren für den Betreiber zu hohe Hürde; stattdessen Abwägung mit dem
+Betreiber: entweder mehrtägige Beobachtung im Report-Only-Modus, oder
+direkt scharf schalten, gestützt auf die vorher am Code (nicht geraten)
+geprüfte, eng gefasste Positivliste (siehe voriger Eintrag). Betreiber hat
+sich für **sofort scharf schalten** entschieden — Rückweg ist im
+Notfall eine einzelne Zeile in `firebase.json` plus erneuter Deploy,
+das Risiko wurde als vertretbar eingeschätzt.
+
+**Offen:** Betreiber muss nach diesem Deploy noch einmal gründlich
+testen (Login, Karten lernen/bewerten, **Import**, Hell/Dunkel-Umschaltung)
+— diesmal mit echtem Blockierrisiko, nicht nur Beobachten. Bei
+Auffälligkeiten sofort melden, dann wird die betroffene Direktive
+gelockert oder auf Report-Only zurückgestellt.
+
+**Nächster Schritt:** Bei bestätigtem sauberen Testlauf ist Phase 4
+inhaltlich fertig (`AUFTRAG.md`, „Woran diese Phase fertig ist": Punkte
+1–3 erfüllt, Punkt 2 trifft nicht zu wie vermerkt). Dann `AUFTRAG.md` und
+`../PLAN.md` auf `fertig` setzen und mit Phase 5 (Recht) weitermachen —
+dort blockiert offene Frage 3 (Datenschutzerklärung selbst schreiben oder
+Generator).
