@@ -27,14 +27,36 @@ ohne Nachfragen, wo aufgehört wurde.
 ## Wo der Code liegt (wichtig für jede neue Session)
 
 Das Konzept nennt in seiner Kopfzeile `Repo user123kkk/adrabic, Ordner
-wiederholung/`. Dieses Arbeitsverzeichnis ist ein **eigenständiges Repo**
-`user123kkk/Wiederholung`, in dem der Code flach im Wurzelverzeichnis liegt —
-es gibt keinen Unterordner `wiederholung/`.
+wiederholung/`. Das ist überholt. **Maßgeblich ist `user123kkk/Wiederholung`**
+— ein eigenständiges Repo, in dem der Code flach im Wurzelverzeichnis liegt.
 
 Für die Arbeit gilt deshalb: **Repo-Wurzel = der im Konzept gemeinte Ordner
 `wiederholung/`.** Alle Pfadangaben in diesen Plandateien sind relativ zur
-Repo-Wurzel. Ob `adrabic` eine zweite, ältere Kopie enthält, ist hier nicht
-feststellbar und in den offenen Fragen vermerkt (Frage 5).
+Repo-Wurzel.
+
+**Geklärt am 12.09.2026 (vormals offene Frage 5).** Beide Repos wurden
+verglichen:
+
+| | `user123kkk/Wiederholung` | `user123kkk/adrabic` → `wiederholung/` |
+|---|---|---|
+| Version | **3.0.3** | 2.21.4 |
+| Aufbau | `index.html` + `app.js` + `styles.css` getrennt | alles in einer `index.html` (4645+ Zeilen) |
+| Dateien | vollständig inkl. Icons | nur `index.html`, `sw.js`, `manifest.json`, `firestore.rules`, `CHANGELOG.md` |
+| Stand | aktuell | Vorgängerfassung |
+
+Der Umbau in 3.0.0 („Codex"-Redesign) hat Gestaltung und Ablauf in eigene
+Dateien gezogen und das Projekt in dieses Repo verlegt. **In `adrabic` wird
+nicht mehr gearbeitet**; die Kopie dort ist ein Überbleibsel. Damit erklären
+sich auch die Abweichungen, die Phase 0 gefunden hat: Das Konzept wurde gegen
+2.21.4 geschrieben, geprüft wurde 3.0.3.
+
+Ein Punkt bleibt aus dieser Verlegung offen und ist **Phase 4 zugeordnet, nicht
+jetzt zu ändern**: `manifest.json` trägt weiterhin `"id": "/adrabic/wiederholung/"`.
+Das ist kein Fehler — die `id` muss nur eine dauerhaft gleiche Zeichenkette
+sein, kein echter Pfad, und genau deshalb hält sie die Identität bereits
+installierter Apps zusammen. Wer sie ändert, für den gilt die App als **neue**
+App: Installationen auf den Geräten der drei Nutzer würden doppelt erscheinen.
+Die Entscheidung gehört zur Hosting-Frage und damit in Phase 4.
 
 Ebenfalls abweichend: Das Konzept spricht von Version 2.21.x, im Repo steht
 `APP_VERSION = "3.0.3"` (`app.js:19`). Nach Abschnitt 3 des Konzepts ist **der
@@ -135,10 +157,24 @@ hängt, nicht begonnen.
 | 2 | Heißt die öffentliche Seite anders als das Tool, oder liegt beides auf einer Domain? | Phase 6 |
 | 3 | Wird die Datenschutzerklärung selbst geschrieben oder über einen Generator erzeugt? | Phase 5 |
 | 4 | Soll der Weitergabe-Kartensatz (Medina Buch 1) Teil der öffentlichen Seite werden oder privat unter Brüdern bleiben? (ändert Rechtslage und Startseite) | Phase 5, Phase 6 |
-| 5 | Ist `user123kkk/Wiederholung` das maßgebliche Repo, oder gibt es in `user123kkk/adrabic` unter `wiederholung/` eine zweite, abweichende Kopie? | nichts akut — aber zu klären, bevor Änderungen an zwei Stellen auseinanderlaufen |
+| ~~5~~ | ~~Welches Repo ist maßgeblich?~~ | **erledigt 12.09.2026** — siehe „Wo der Code liegt" oben |
 
 Die Phasen 0–3 hängen an keiner offenen Frage und können durchgearbeitet
 werden.
+
+---
+
+## Wie hier gearbeitet und veröffentlicht wird
+
+Festgelegt vom Betreiber am 12.09.2026:
+
+- **Direkt auf `main`, ohne Pull Request.** Committen, pushen, fertig. Kein
+  Branch, kein PR, keine Rückfrage vor dem Veröffentlichen.
+- Bei Änderungen **an der App** zusätzlich die Veröffentlichungsliste aus
+  `../README.md` abarbeiten (`APP_VERSION`, `CACHE_NAME`, `APP_SHELL`,
+  `CHANGELOG.md`). Für reine Plandateien entfällt sie.
+- Eine neue Session findet den Einstieg über `../CLAUDE.md`, das auf diese
+  Datei verweist.
 
 ---
 

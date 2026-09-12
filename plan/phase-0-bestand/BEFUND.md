@@ -231,7 +231,7 @@ stillschweigend korrigiert:
 | `AUTOR_UID` in `index.html` | `app.js:46` (verschoben mit 3.0.0) |
 | „prüfen: Konsolen-Ausgaben" | keine vorhanden |
 | „Passwort zurücksetzen — prüfen, ob erreichbar" | vorhanden und erreichbar |
-| Repo `user123kkk/adrabic`, Ordner `wiederholung/` | Repo `user123kkk/Wiederholung`, flache Ablage. `manifest.json` trägt aber noch `"id": "/adrabic/wiederholung/"` — ein Hinweis darauf, dass die App bisher unter diesem Pfad ausgeliefert wird. → offene Frage 5, und in Phase 4 zu beachten: Ein geänderter Pfad ändert die `id` und damit die Identität der installierten App. |
+| Repo `user123kkk/adrabic`, Ordner `wiederholung/` | Repo `user123kkk/Wiederholung`, flache Ablage. **Nachträglich geklärt (12.09.2026):** `adrabic/wiederholung/` enthält die Vorgängerfassung 2.21.4 mit allem in einer `index.html`; dort wird nicht mehr gearbeitet. Das Konzept wurde gegen 2.21.4 geschrieben — daher alle Abweichungen in dieser Tabelle. `manifest.json` trägt weiterhin `"id": "/adrabic/wiederholung/"`; das **bleibt vorerst so**, weil die `id` die Identität installierter Apps zusammenhält. Entscheidung gehört zu Phase 4. |
 
 ### Was Phase 0 nicht klären konnte
 

@@ -168,3 +168,43 @@ vermerkt.
 in `firestore.rules`, dem schwersten der gefundenen Punkte. Vorher jedoch die
 Rückfrage aus BEFUND 4.2 klären, ob die ausgelieferten Regeln mit der Datei im
 Repo übereinstimmen.
+
+---
+
+### 2026-09-12 — Offene Frage 5 geklärt, Wiedereinstieg für neue Sessions gebaut
+
+**Geändert:**
+- `CLAUDE.md` (neu) — wird von Claude Code beim Start automatisch gelesen.
+  Sagt einer neuen Session, dass „leg los" heißt: `plan/PLAN.md` lesen, dann
+  den `AUFTRAG.md` der nächsten Phase, dann deren `LOGBUCH.md` von hinten —
+  und dort weitermachen, wo „Nächster Schritt" steht.
+- `plan/PLAN.md` — Frage 5 aufgelöst, Abschnitt „Wie hier gearbeitet und
+  veröffentlicht wird" ergänzt.
+- `plan/phase-0-bestand/BEFUND.md` — Abweichungstabelle nachgezogen.
+
+**Entscheidung:**
+
+1. **Frage 5 ist beantwortet: `user123kkk/Wiederholung` ist maßgeblich.**
+   Beide Repos verglichen. `adrabic/wiederholung/` steht auf 2.21.4 mit allem
+   in einer `index.html` und ohne `app.js`/`styles.css`; dieses Repo steht auf
+   3.0.3 mit aufgeteilten Dateien. Der 3.0.0-Umbau hat das Projekt hierher
+   verlegt. Damit erklären sich sämtliche Abweichungen zwischen Konzept und
+   Code: Das Konzept wurde gegen die Vorgängerfassung geschrieben.
+2. **`manifest.json` wird trotzdem nicht angefasst.** Die `id`
+   `/adrabic/wiederholung/` sieht nach einem Überbleibsel aus, ist aber keins,
+   das man nebenbei aufräumt: Die `id` muss nur dauerhaft gleich bleiben, kein
+   echter Pfad sein. Ändert man sie, gilt die App als neue App und erscheint
+   auf den Geräten der drei Nutzer ein zweites Mal. Die Entscheidung hängt an
+   der Hosting-Frage und gehört deshalb in Phase 4 — nicht in eine
+   Aufräumaktion.
+3. **Veröffentlichung ab sofort direkt auf `main`, ohne Pull Request.** Vom
+   Betreiber ausdrücklich so festgelegt. In `CLAUDE.md` und `plan/PLAN.md`
+   festgeschrieben, damit keine spätere Session wieder einen PR anlegt.
+
+**Offen:** Die Fragen 1–4 aus Konzept-Abschnitt 6 bleiben unbeantwortet und
+sperren die Phasen 4–8. Die Phasen 1–3 sind frei.
+
+**Nächster Schritt:** Phase 1 beginnen — `../phase-1-datenzugriff/AUFTRAG.md`,
+zuerst die Feld-Manipulation in `firestore.rules`. Vorher in der
+Firebase-Konsole abgleichen, ob die dort aktiven Regeln der Datei im Repo
+entsprechen (siehe `BEFUND.md`, Abschnitt 4.2).
