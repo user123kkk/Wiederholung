@@ -74,7 +74,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **1** | Datenzugriff härten: `firestore.rules` Feld für Feld, Feld-Manipulation, Import-Prüfung, XSS | `fertig` | [`phase-1-datenzugriff/`](phase-1-datenzugriff/) |
 | **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `fertig` | [`phase-2-konto/`](phase-2-konto/) |
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `fertig` | [`phase-3-hygiene/`](phase-3-hygiene/) |
-| **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `offen` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
+| **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `fertig` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `offen` | [`phase-5-recht/`](phase-5-recht/) |
 | **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `offen` | [`phase-6-startseite/`](phase-6-startseite/) |
 | **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `offen` | [`phase-7-seo/`](phase-7-seo/) |
@@ -205,18 +205,20 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-12 | **Phase 2 fertig.** Konto löschen gebaut (v3.0.5), ein Fehler im ersten Testlauf gefunden und behoben (v3.0.6 — die App legte das gerade gelöschte Nutzerdokument automatisch wieder an), am zweiten Testlauf bestätigt: Auth und Firestore beide nachweislich leer. Durchklick-Test (Registrieren, Bestätigung, Anmelden, Passwort zurücksetzen) ebenfalls durchgeführt. Weiter mit Phase 3. |
 | 2026-09-12 | **Phase 3 fertig** (v3.0.7). Git-Historie und Debug-Reste waren bereits in Phase 0 sauber (kein Fund, hier nicht erneut gesucht). `final_icon_glow_v3.png` (147 KB, nie zur Laufzeit geladen) aus dem Repo entfernt. Firebase-SDK von 10.12.2 auf 10.14.1 gehoben — den letzten Patch-Stand innerhalb derselben Hauptversion; der Sprung auf Hauptversion 12 wird bewusst nicht gemacht (eigenes Migrationsprojekt, sprengt den Rahmen „klein, einmalig"). Key-Einschränkung bleibt wie vorgesehen an Phase 4 übergeben. Weiter mit Phase 4 — dort blockiert offene Frage 1. |
 | 2026-09-12 | **Offene Frage 1 geklärt:** Firebase Hosting, keine eigene Domain vorerst. Phase 4 damit unblockiert; **Phase 4 begonnen** — Hosting-Konfiguration (`firebase.json`, `.firebaserc`) im Repo vorbereitet, das eigentliche Einrichten und Deployen braucht Zugang zur Firebase-Konsole und ist an den Betreiber übergeben. Siehe `phase-4-domain-hosting/LOGBUCH.md`. |
+| 2026-09-12 | **Phase 4 fertig.** Firebase Hosting eingerichtet und live (`lernkarte-925c2.web.app`), API-Key auf die genutzten Domains eingeschränkt (dabei ein Missbrauchsfund mit unbeschränktem Key entdeckt und behoben), Security-Header inklusive scharf geschalteter CSP gesetzt und vom Betreiber im Testlauf bestätigt (Login, Karten, Import, Hell/Dunkel — keine Auffälligkeiten). Eigene Domain bleibt wie entschieden „später". Weiter mit Phase 5 — dort blockiert offene Frage 3. |
 
 ## Wo eine neue Session anfängt
 
-**Weiter in Phase 4** —
-[`phase-4-domain-hosting/AUFTRAG.md`](phase-4-domain-hosting/AUFTRAG.md),
-letzter Eintrag in
-[`phase-4-domain-hosting/LOGBUCH.md`](phase-4-domain-hosting/LOGBUCH.md).
+**Weiter in Phase 5** —
+[`phase-5-recht/AUFTRAG.md`](phase-5-recht/AUFTRAG.md), falls dort schon
+angelegt, sonst zuerst dort ein `AUFTRAG.md`/`LOGBUCH.md` nach dem Muster
+der vorigen Phasen anlegen.
 
-Offene Frage 1 ist geklärt (Firebase Hosting, vorerst ohne eigene Domain).
-Die Repo-seitige Vorbereitung (`firebase.json`, `.firebaserc`) steht. Was
-noch fehlt, hängt an Schritten, die nur der Betreiber selbst in der
-Firebase-Konsole/CLI ausführen kann (Einrichten, erstes Deployment,
-API-Key-Einschränkung) — siehe „Was Du noch tun musst" im letzten
-Logbuch-Eintrag. Eine neue Session prüft zuerst, ob diese Schritte
-inzwischen erledigt sind, bevor sie weitermacht.
+Phase 5 hängt an **offener Frage 3** (`../PLAN.md`, Abschnitt „Offene
+Fragen"): Wird die Datenschutzerklärung selbst geschrieben oder über einen
+Generator erzeugt? Eine neue Session prüft zuerst, ob der Betreiber diese
+Frage inzwischen entschieden hat. Ist sie weiterhin offen, wird Phase 5
+**nicht** begonnen — stattdessen im Logbuch von Phase 5 vermerken, dass sie
+an dieser Frage hängt, und keine andere unblockierte Phase vorziehen, ohne
+das mit dem Betreiber abzustimmen (Phase 5 ist laut Reihenfolge als
+Nächstes dran).

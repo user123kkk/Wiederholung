@@ -1,6 +1,6 @@
 # Phase 4 — Domain und Hosting
 
-Status: `läuft`
+Status: `fertig`
 Gehört zu: [`../PLAN.md`](../PLAN.md)
 Setzt voraus: Phase 3 (`fertig`) · offene Frage 1 aus `../PLAN.md` — **geklärt
 am 12.09.2026: Firebase Hosting, vorerst keine eigene Domain**

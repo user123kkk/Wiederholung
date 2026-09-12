@@ -1,7 +1,7 @@
 # Logbuch Phase 4 — Domain und Hosting
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `läuft`
+Status: `fertig`
 
 ---
 
@@ -289,3 +289,30 @@ Testlaufs nach CSP-scharf-Deploy durch den Betreiber.
 **Nächster Schritt:** Sobald der Betreiber den Testlauf bestätigt (keine
 blockierten Funktionen, keine roten CSP-Meldungen), `AUFTRAG.md` und
 `../PLAN.md` auf `fertig` setzen und mit Phase 5 weitermachen.
+
+### 2026-09-12 — Testlauf bestätigt, Phase 4 fertig
+
+**Geändert:** `AUFTRAG.md:3` Status auf `fertig`. `LOGBUCH.md:4` Status auf
+`fertig`. `../PLAN.md` Statustabelle, Statusverlauf und „Wo eine neue
+Session anfängt" auf Phase 4 `fertig` / Phase 5 als nächste Phase
+nachgezogen.
+
+**Entscheidung:** Betreiber hat den nach dem CSP-scharf-Deploy verlangten
+Testlauf bestätigt (Login, Karten lernen/bewerten, Import,
+Hell/Dunkel-Umschaltung — keine Auffälligkeiten). Damit sind alle vier
+Punkte aus `AUFTRAG.md`, „Woran diese Phase fertig ist" erfüllt (Punkt 2 —
+eigene Domain — trifft wie mehrfach vermerkt derzeit nicht zu, das ist
+keine Lücke, sondern eine bewusste Entscheidung des Betreibers). Phase 4
+ist damit inhaltlich abgeschlossen.
+
+**Offen:** Nichts mehr in Phase 4 selbst. Für später vorgemerkt (siehe
+`../PLAN.md`, Abschnitt „Später"): eigene Domain, App Check. Das
+Vercel-Deployment wird erst abgeschaltet, wenn alle drei Nutzer:innen
+nachweislich auf Firebase Hosting umgestiegen sind — das ist keine
+Aufgabe dieser Phase mehr, sondern eine spätere betriebliche
+Entscheidung des Betreibers.
+
+**Nächster Schritt:** Weiter mit Phase 5 (Recht) — dort blockiert offene
+Frage 3 aus `../PLAN.md` (Datenschutzerklärung selbst schreiben oder über
+einen Generator erzeugen). Eine neue Session prüft zuerst, ob diese Frage
+inzwischen vom Betreiber entschieden wurde.
