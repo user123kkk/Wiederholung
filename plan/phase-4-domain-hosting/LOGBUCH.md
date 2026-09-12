@@ -83,3 +83,38 @@ erneut danach sucht:
 Security-Header (CSP-Hash für das Inline-Skript, HSTS) gegen die echte
 Adresse ausarbeiten und testen, dann Punkt 4 (API-Key-Einschränkung)
 anstoßen.
+
+### 2026-09-12 — Erstes Deployment durchgeführt und bestätigt
+
+**Geändert:** Keine Repo-Dateien. Betreiber hat auf einem Windows-Rechner
+(ThinkPad T490) Node.js, `firebase-tools` installiert, sich per
+`firebase login` angemeldet und mit `firebase deploy --only hosting`
+deployt.
+
+**Entscheidung/Verlauf:** Die App läuft jetzt live unter
+`https://lernkarte-925c2.web.app`. Zwei Stolpersteine unterwegs, beide
+gelöst:
+
+1. Der lokale Ordner auf dem Betreiber-Rechner stand auf dem alten Branch
+   `einstellungen-ausbau` statt `main` — `firebase.json`/`.firebaserc`
+   fehlten deshalb dort trotz vorhandenem Git-Ordner. Gelöst mit
+   `git checkout main && git pull`.
+2. Danach lief `firebase deploy --only hosting` durch: „Deploy complete!",
+   203 Dateien hochgeladen.
+
+Betreiber hat die neue Adresse geprüft und **„alles normal"** bestätigt
+(Anmeldung, Karten lernen — Auftrag Punkt 5 aus `AUFTRAG.md` damit erfüllt).
+
+**Offen:** Weiterhin offen (unverändert gegenüber vorigem Eintrag):
+
+- Security-Header (CSP-Hash, HSTS) — noch nicht ausgearbeitet.
+- API-Key-Einschränkung in der Google-Cloud-Konsole auf die neue Domain
+  (`AUFTRAG.md` Punkt 4) — steht als Nächstes an, braucht wieder den
+  Betreiber selbst in einer fremden Konsole.
+- GitHub Pages abschalten — laut Plan erst nach Schritt 4 (API-Key), damit
+  die drei Nutzer:innen zwischenzeitlich nicht ohne erreichbare Seite
+  dastehen, falls beim Key etwas schiefgeht.
+
+**Nächster Schritt:** API-Key in der Google-Cloud-Konsole auf
+`lernkarte-925c2.web.app` (und `.firebaseapp.com`) einschränken, danach
+Security-Header ausarbeiten und gegen die echte Adresse testen.
