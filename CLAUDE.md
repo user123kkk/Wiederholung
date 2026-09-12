@@ -55,6 +55,24 @@ Auch „geprüft, nichts zu tun" ist ein Eintrag. Sonst prüft die nächste Sess
 dasselbe noch einmal. Eine neue Session muss durch `plan/PLAN.md` plus das
 letzte Logbuch **ohne Nachfragen** weiterarbeiten können — das ist der Zweck.
 
+## Was der Betreiber selbst tun muss
+
+Manches kann ein Agent nicht erledigen: alles, was in einer fremden Konsole
+passiert (Firebase, Google Cloud, Domain, Search Console), und jede
+Entscheidung aus „Offene Fragen" in `plan/PLAN.md`.
+
+**Solche Punkte kommen ans Ende der Antwort, unter eine eigene Überschrift
+„Was Du noch tun musst" — als nummerierte Schritte, nicht als Nebensatz.**
+Jeder Schritt sagt: wo klicken, was einfügen, woran man merkt, dass es
+geklappt hat. Keine Andeutungen, kein „müsste noch eingespielt werden".
+
+Der Grund: Solange so ein Schritt offen ist, ist die Arbeit **nicht** fertig,
+sie sieht nur so aus. Eine Regeldatei im Repo schützt keine einzige Zeile
+Daten, solange sie nicht in der Firebase-Konsole steht.
+
+Derselbe Punkt gehört zusätzlich ins Logbuch unter **Offen** und in
+`plan/PLAN.md` — sonst hält die nächste Session die Phase für erledigt.
+
 ## Wie hier veröffentlicht wird
 
 **Direkt auf `main`, ohne Pull Request.** So will es der Betreiber. Also:

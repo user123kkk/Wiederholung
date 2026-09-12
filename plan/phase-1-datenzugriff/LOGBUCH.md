@@ -268,3 +268,25 @@ Auslieferung sowieso durchgesehen wird.
 
 **Nächster Schritt:** unverändert — Regeln in der Firebase-Konsole einspielen,
 danach der abschließende Sicherheits-Durchlauf.
+
+---
+
+### 2026-09-12 — Offener Punkt für den Betreiber ausgeschrieben
+
+**Geändert:** `../../CLAUDE.md` — neuer Abschnitt „Was der Betreiber selbst tun
+muss". `../PLAN.md` — die Sperre vor dem Abschluss von Phase 1 steht jetzt als
+fünf nummerierte Schritte da, nicht mehr als Absatz.
+
+**Entscheidung:** Auf Ansage des Betreibers. Ein Punkt, den nur ein Mensch
+erledigen kann, wurde bisher zwar genannt, aber im Fließtext — und damit leicht
+zu überlesen. Ab jetzt steht so etwas am Ende der Antwort unter einer eigenen
+Überschrift „Was Du noch tun musst", als nummerierte Schritte mit Ziel und
+Erfolgskontrolle. Das ist kein Stilwunsch: Solange die Regeln nicht in der
+Firebase-Konsole stehen, schützen sie nichts, und die Phase sieht nur fertig
+aus.
+
+**Offen:** unverändert das Einspielen der Regeln in der Firebase-Konsole
+(`../PLAN.md`, Abschnitt „Wo eine neue Session anfängt", Schritte 1–5).
+
+**Nächster Schritt:** unverändert — nach dem Einspielen der abschließende
+Sicherheits-Durchlauf, dann geht Phase 1 auf `fertig`.

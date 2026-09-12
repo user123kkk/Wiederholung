@@ -200,9 +200,25 @@ Phase 1** zuordnet.
 **Eine Sperre davor, und sie kann nur ein Mensch lösen:** Die neuen Regeln
 liegen im Repo, sind aber **nicht aktiv**. Firestore holt sich `firestore.rules`
 nicht aus GitHub — bis jemand sie in der Firebase-Konsole einspielt, gilt weiter
-der alte Satz von 15 Zeilen, und die Daten sind so ungeschützt wie vorher. Der
-Abgleich, den Phase 0 als Vorbedingung notiert hatte (ist die Datei im Repo auch
-die aktive?), gehört in denselben Arbeitsgang.
+der alte Satz von 15 Zeilen, und die Daten sind so ungeschützt wie vorher.
+
+Was dafür zu tun ist, Schritt für Schritt:
+
+1. <https://console.firebase.google.com/project/lernkarte-925c2/firestore/rules>
+   öffnen (Projekt `lernkarte-925c2` → Firestore Database → Reiter **Regeln**).
+2. **Den Text, der dort steht, vorher kopieren und irgendwo sichern.** Das ist
+   der Rückweg, falls etwas klemmt — und zugleich der Abgleich, den Phase 0 als
+   Vorbedingung notiert hatte: Stehen dort die 15 Zeilen aus
+   `phase-0-bestand/BEFUND.md`, Abschnitt 4.2? Wenn **nein**, nicht
+   überschreiben, sondern erst klären, woher die andere Fassung kommt.
+3. Im Editor alles markieren und durch den **vollständigen** Inhalt von
+   [`../firestore.rules`](../firestore.rules) ersetzen — ganze Datei, mit den
+   Kommentaren.
+4. **Veröffentlichen** drücken. Ohne das ändert sich nichts.
+5. Danach in der App gegenprüfen: Karte anlegen, bewerten, bearbeiten, Bereich
+   umbenennen, eine Sicherung einspielen. Kommt dabei „Speichern
+   fehlgeschlagen", sind die Regeln zu streng — dann Schritt 2 zurück und im
+   Logbuch vermerken, welcher Vorgang abgewiesen wurde.
 
 Erst danach ist der Sicherheits-Durchlauf sinnvoll, und erst danach geht
 Phase 1 auf `fertig`.
