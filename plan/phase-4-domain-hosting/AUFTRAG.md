@@ -9,18 +9,18 @@ am 12.09.2026: Firebase Hosting, vorerst keine eigene Domain**
 
 ## Warum an dieser Stelle
 
-Security-Header sind erst mit richtigem Hosting einstellbar: auf GitHub Pages
-kaum. Die Header sind damit keine eigene Aufgabe, sondern eine Folge der
-Hosting-Entscheidung. Alles, was danach kommt (Recht, Startseite, SEO), braucht
-die Adresse, die hier entsteht.
+Security-Header sind erst mit richtigem Hosting einstellbar: auf dem bisher
+genutzten Vercel-Deployment kaum. Die Header sind damit keine eigene Aufgabe,
+sondern eine Folge der Hosting-Entscheidung. Alles, was danach kommt (Recht,
+Startseite, SEO), braucht die Adresse, die hier entsteht.
 
 **Korrektur 12.09.2026:** Die bisherige Annahme, die drei Nutzer:innen liefen
 auf GitHub Pages, war falsch — sie liefen auf **Vercel**
 (`https://adrabic-wiederholung.vercel.app/`). Ändert nichts an der Reihenfolge
-oder Begründung dieser Phase, nur „GitHub Pages abschalten" weiter unten
-muss überall als „Vercel-Deployment abschalten" gelesen werden. Details:
-`LOGBUCH.md`, Eintrag „API-Key eingeschränkt, dabei Hinweis auf Missbrauch
-gefunden".
+oder Begründung dieser Phase. Das Vercel-Deployment wird erst abgeschaltet,
+wenn alle drei Nutzer:innen nachweislich auf Firebase Hosting umgestiegen
+sind. Details: `LOGBUCH.md`, Eintrag „API-Key eingeschränkt, dabei Hinweis
+auf Missbrauch gefunden".
 
 ## Was getan wird
 

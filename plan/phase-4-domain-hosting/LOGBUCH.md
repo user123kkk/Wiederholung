@@ -266,3 +266,26 @@ inhaltlich fertig (`AUFTRAG.md`, „Woran diese Phase fertig ist": Punkte
 `../PLAN.md` auf `fertig` setzen und mit Phase 5 (Recht) weitermachen —
 dort blockiert offene Frage 3 (Datenschutzerklärung selbst schreiben oder
 Generator).
+
+### 2026-09-12 — Geprüft: Bestätigung des Testlaufs steht weiterhin aus
+
+**Geändert:** `AUFTRAG.md` — Formulierung im Abschnitt „Warum an dieser
+Stelle" von „GitHub Pages" durchgehend auf „Vercel" korrigiert (war laut
+vorigem Logbuch-Eintrag als offener Punkt vermerkt); inhaltlich keine
+Änderung, nur die schon dokumentierte Korrektur nachgezogen.
+
+**Entscheidung:** Kein Fortschritt möglich, ohne dem Betreiber
+vorzugreifen — Git-Historie zeigt `firebase.json` mit scharf geschalteter
+CSP bereits committet (Commit „Phase 4: CSP scharf geschaltet"), aber der
+im vorigen Eintrag verlangte gründliche Testlauf (Login, Karten
+lernen/bewerten, Import, Hell/Dunkel) auf der echten Adresse kann nur der
+Betreiber selbst durchführen und bestätigen. Diese Session kann das nicht
+simulieren, ohne die drei echten Nutzer:innen zu gefährden — deshalb wird
+Phase 4 hier **nicht** auf `fertig` gesetzt.
+
+**Offen:** Unverändert gegenüber vorigem Eintrag — Bestätigung des
+Testlaufs nach CSP-scharf-Deploy durch den Betreiber.
+
+**Nächster Schritt:** Sobald der Betreiber den Testlauf bestätigt (keine
+blockierten Funktionen, keine roten CSP-Meldungen), `AUFTRAG.md` und
+`../PLAN.md` auf `fertig` setzen und mit Phase 5 weitermachen.
