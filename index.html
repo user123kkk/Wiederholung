@@ -16,7 +16,10 @@
 <meta name="color-scheme" content="dark">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./icon.svg">
+<!-- Safari kann kein SVG als Homescreen-Symbol - ohne PNG blieb das Symbol
+     beim "Zum Home-Bildschirm" leer bzw. wurde durch einen Seiten-Screenshot
+     ersetzt. 180x180 ist Apples eigene Empfehlung (Retina-Icon). -->
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
 <link rel="stylesheet" href="./styles.css">
 <script>
 /* 2.20.0: Läuft, BEVOR das erste Bild steht.

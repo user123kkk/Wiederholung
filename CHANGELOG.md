@@ -1,3 +1,18 @@
+## 3.0.2 – 12. September 2026
+
+### Behoben
+
+- **Symbol blieb leer, wenn man die App zum Homescreen hinzufügte.** Safari
+  kann kein SVG als `apple-touch-icon` darstellen – ohne PNG bekam iOS beim
+  "Zum Home-Bildschirm" entweder gar kein Symbol oder einen Screenshot der
+  Seite statt der Marke. Jetzt gibt es `apple-touch-icon.png` (180×180,
+  Apples eigene Empfehlung) sowie `icon-192.png` und `icon-512.png` fürs
+  Manifest, alle drei direkt aus `icon.svg` gerendert, damit sie exakt
+  gleich aussehen. Die SVG-Fassung bleibt für Browser-Tab und `purpose:
+  "any maskable"` bestehen, sie kann nur nicht überall verlässlich als
+  Homescreen-Symbol dienen. Alle drei PNGs stehen jetzt auch in `APP_SHELL`
+  (sw.js), sonst würden sie offline fehlen.
+
 ## 3.0.1 – 12. September 2026
 
 ### Geändert
