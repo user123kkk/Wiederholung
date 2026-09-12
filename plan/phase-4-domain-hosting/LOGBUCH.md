@@ -168,3 +168,71 @@ weiterhin offen.
 **Nächster Schritt:** Betreiber testet beide Adressen nach Ablauf der
 Wartezeit. Bei Erfolg: `AUFTRAG.md`/`PLAN.md` bezüglich „GitHub Pages" auf
 „Vercel" korrigieren, dann Security-Header (CSP-Hash, HSTS) ausarbeiten.
+
+### 2026-09-12 — API-Key-Test bestanden, Security-Header vorbereitet (Report-Only)
+
+**Geändert:** `firebase.json` — neuer Header-Block für `**` (alle
+Dateien):
+
+- `Strict-Transport-Security: max-age=31536000; includeSubDomains`
+- `X-Content-Type-Options: nosniff`
+- `X-Frame-Options: DENY`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+- `Content-Security-Policy-Report-Only: …` (siehe Datei für vollen Wert)
+
+**Entscheidung:** Betreiber hat bestätigt: beide Adressen
+(`lernkarte-925c2.web.app`, `adrabic-wiederholung.vercel.app`) laufen nach
+der API-Key-Einschränkung normal (Login, Karten) — Auftrag Punkt 4 aus
+`AUFTRAG.md` damit erledigt, kein Nutzer betroffen.
+
+Für die CSP wurde `app.js` und `index.html` durchgesehen, um die Liste so
+eng wie möglich zu halten, statt zu raten:
+
+- Inline-Skript in `index.html:24–42` (Thema vor dem ersten Bild) — per
+  `sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=` erlaubt statt
+  `'unsafe-inline'`. **Wichtig:** Ändert sich dieser Skriptinhalt
+  zeichengenau, muss der Hash neu berechnet werden (Python-Einzeiler mit
+  `hashlib.sha256`, siehe Session-Verlauf), sonst blockiert die CSP nach
+  der nächsten Änderung dieses Skripts.
+- `script-src` zusätzlich `https://www.gstatic.com` — dorther lädt
+  `app.js:1208–1210` das Firebase-SDK per dynamischem `import()`.
+- `font-src` zusätzlich `https://verses.quran.foundation` — Quran-Schrift
+  in `styles.css`.
+- `img-src 'self' data:` — keine externen Bild-URLs im Code gefunden.
+- `connect-src` auf die drei tatsächlich genutzten Firebase-Endpunkte
+  begrenzt (Firestore, Identity Toolkit, Secure Token, googleapis.com
+  allgemein). Kein `firebasestorage.googleapis.com`, weil das
+  Storage-SDK trotz `storageBucket` in der Konfiguration **nicht**
+  importiert wird (nur `firebase-app`, `firebase-auth`,
+  `firebase-firestore`).
+- Kein `frame-src` nötig — Login läuft nur über
+  `signInWithEmailAndPassword`, kein Google-Popup/Redirect gefunden.
+- `style-src 'self'` ohne `'unsafe-inline'` — keine `style="…"`-Attribute
+  im Code, die zwei Stellen mit `.style.setProperty(...)`
+  (`app.js:3724`, `4187`) sind CSSOM-Zugriffe und fallen **nicht** unter
+  CSP-Style-Einschränkungen (anders als `setAttribute("style", …)`).
+
+**Bewusst als `Content-Security-Policy-Report-Only`, nicht scharf
+geschaltet:** Genau wie im vorigen Eintrag befürchtet — eine falsch
+sitzende CSP reißt im schlimmsten Fall die App für alle drei Nutzer:innen
+ab. Report-Only protokolliert Verstöße nur in der Browser-Konsole,
+blockiert aber nichts. Erst nach einem sauberen Testlauf ohne Meldungen
+wird der Header auf `Content-Security-Policy` (scharf) umgestellt.
+
+**Offen:**
+
+- Deployment dieser Änderung und Testlauf durch den Betreiber
+  (Konsole/DevTools öffnen, alle Funktionen durchklicken, auf rote
+  CSP-Meldungen achten).
+- Danach: bei sauberem Lauf CSP scharf schalten (Header-Name ändern),
+  sonst hier gefundene Lücken in die Liste nachtragen.
+- `AUFTRAG.md`/`../PLAN.md`: „GitHub Pages" durchgehend zu „Vercel"
+  korrigieren (siehe vorheriger Eintrag) — noch nicht gemacht.
+- Punkt 2 aus `AUFTRAG.md` (eigene Domain) bleibt wie besprochen
+  „trifft derzeit nicht zu".
+
+**Nächster Schritt:** `firebase deploy --only hosting` durch den
+Betreiber, danach Testlauf mit offener Browser-Konsole (F12) auf beiden
+Adressen. Bei sauberem Ergebnis CSP scharf schalten und Phase 4
+abschließen.

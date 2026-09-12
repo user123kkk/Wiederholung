@@ -168,6 +168,13 @@ für später vorgemerkt, kein Blocker. Damit ist Phase 4 unblockiert; Details
 und offene Ausführungsschritte stehen in
 [`phase-4-domain-hosting/LOGBUCH.md`](phase-4-domain-hosting/LOGBUCH.md).
 
+**Korrektur 12.09.2026:** Die Formulierung „nicht GitHub Pages" beruhte auf
+einer falschen Annahme — die drei Nutzer:innen liefen tatsächlich auf
+**Vercel** (`adrabic-wiederholung.vercel.app`), nicht auf GitHub Pages. Die
+Entscheidung selbst (Firebase Hosting statt Vercel/Netlify/GitHub Pages)
+bleibt unverändert gültig, nur die bisherige Live-Adresse war eine andere
+als angenommen. Siehe `phase-4-domain-hosting/LOGBUCH.md` für Details.
+
 Die Phasen 0–4 hängen an keiner offenen Frage mehr und können durchgearbeitet
 werden.
 

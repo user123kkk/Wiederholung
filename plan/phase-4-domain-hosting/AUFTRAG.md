@@ -14,6 +14,14 @@ kaum. Die Header sind damit keine eigene Aufgabe, sondern eine Folge der
 Hosting-Entscheidung. Alles, was danach kommt (Recht, Startseite, SEO), braucht
 die Adresse, die hier entsteht.
 
+**Korrektur 12.09.2026:** Die bisherige Annahme, die drei Nutzer:innen liefen
+auf GitHub Pages, war falsch — sie liefen auf **Vercel**
+(`https://adrabic-wiederholung.vercel.app/`). Ändert nichts an der Reihenfolge
+oder Begründung dieser Phase, nur „GitHub Pages abschalten" weiter unten
+muss überall als „Vercel-Deployment abschalten" gelesen werden. Details:
+`LOGBUCH.md`, Eintrag „API-Key eingeschränkt, dabei Hinweis auf Missbrauch
+gefunden".
+
 ## Was getan wird
 
 1. **Hosting einrichten** gemäß der Entscheidung zu offener Frage 1.
