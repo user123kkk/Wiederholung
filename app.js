@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.2";
+const APP_VERSION = "3.0.3";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -911,6 +911,10 @@ let ui = {
   /* 2.19.0: Einstellungen sind ein eigener Bildschirm, kein vierter Reiter.
      Ein Reiter ist ein Ort, an den man oft geht; hierher geht man selten. */
   einstellungen: false,
+  /* 3.0.3: Der Datenschutz-Text. Liegt VOR der Anmeldung im render(), damit er
+     auch ohne Konto lesbar ist - wer noch ueberlegt, ob er sich anmeldet, muss
+     vorher sehen koennen, was dabei gespeichert wird. */
+  datenschutz: false,
   drillOpen: false,           // Auswahl für Übungsmodus sichtbar?
   drillSource: "stufen",      // "stufen" oder "sets" (siehe drillSetIds)
   drillSetIds: new Set(),     // 2.21.0: im "sets"-Modus die angehakten Speicherkarten (mehrere möglich)
@@ -3473,6 +3477,10 @@ function render() {
      Suchtext steht bereits in ui.searchQuery. */
   if (sucheTimer) { clearTimeout(sucheTimer); sucheTimer = null; }
   if (!CONFIGURED) { renderSetup(); return; }
+  /* Vor der Anmeldung: sonst koennte man den Text erst lesen, nachdem man das
+     Konto schon angelegt hat. Der Zustand darunter bleibt stehen - beim
+     Schliessen landet man wieder da, wo man herkam. */
+  if (ui.datenschutz) { renderDatenschutz(); return; }
   if (currentUser === null) { renderAuth(); return; }
   /* C4: E-Mail muss bestätigt sein, bevor der Rest der App zugreifbar ist.
      Ohne das kann sich jeder mit einer erfundenen Adresse registrieren. */
@@ -3709,6 +3717,10 @@ function renderAuth() {
   } else {
     html += '<button class="linklike" data-action="mode-login"' + busy + '>Zur\u00fcck zur Anmeldung</button>';
   }
+  html += '</div>';
+  /* Muss VOR dem Anlegen des Kontos lesbar sein, nicht erst danach. */
+  html += '<div class="empty__aktionen" style="margin-top:var(--space-4)">';
+  html += '<button class="linklike" data-action="datenschutz"' + busy + '>Datenschutz</button>';
   html += '</div>';
   html += '</div>';
   app.innerHTML = html;
@@ -4444,6 +4456,8 @@ function renderEinstellungen() {
     '<span class="liste-zeile__text">' + esc(displayName) + '</span>' +
     (currentUser && currentUser.email ? '<span class="liste-zeile__wert">' + esc(currentUser.email) + '</span>' : '') +
     '</div>';
+  html += '<button class="liste-zeile" data-action="datenschutz">' + ikon("schloss", "i-sm") +
+    '<span class="liste-zeile__text">Datenschutz</span>' + ikon("chevronRechts", "i-sm") + '</button>';
   html += '<button class="liste-zeile gefahr" data-action="logout">' + ikon("abmelden", "i-sm") +
     '<span class="liste-zeile__text">Abmelden</span></button>';
   html += '</div></div>';
@@ -4454,6 +4468,101 @@ function renderEinstellungen() {
     'Wiederholung ' + APP_VERSION + '</p>';
 
   return html;
+}
+
+/* ---------- 3.0.3: Datenschutz ----------
+   Bewusst als Fliesstext in derselben Sprache wie der Rest der App, nicht als
+   Rechtstext-Baustein. Wer das liest, soll danach wissen, was über ihn
+   gespeichert ist - nicht, dass hier jemand eine Pflicht abgehakt hat.
+   Erreichbar aus den Einstellungen UND vom Anmeldebildschirm. */
+function renderDatenschutz() {
+  let html = appBar({
+    titel: "Datenschutz",
+    zurueck: "datenschutz-zu",
+    aktion: '<button class="ghost" data-action="datenschutz-zu">Fertig</button>'
+  });
+  html += '<div class="view">';
+
+  html += '<p class="hint">Was diese App über dich speichert, wo es liegt und wer es sehen kann.</p>';
+
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Dein Konto</div>';
+  html += '<div class="card">';
+  html += '<p class="hint">Deine <strong>E-Mail-Adresse</strong> – nötig, um dich anzumelden und dein ' +
+    'Passwort zurücksetzen zu können – und ob sie bestätigt ist. Das <strong>Passwort</strong> selbst ' +
+    'liegt nirgends im Klartext: darum kümmert sich Firebase Authentication (Google). Auch wer diese ' +
+    'App betreibt, bekommt es nie zu sehen.</p>';
+  html += '</div></div>';
+
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Dein Lernstoff</div>';
+  html += '<div class="card">';
+  html += '<p class="hint">Bereiche, Karten, Kartensätze, Lernstufen, Fälligkeiten, deine Serie, das ' +
+    'Tagesprotokoll und deine Einstellungen. Das liegt in der Firestore-Datenbank (Google), abgelegt ' +
+    'unter deiner Nutzernummer.</p>';
+  html += '</div></div>';
+
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Auf deinem Gerät</div>';
+  html += '<div class="card">';
+  html += '<p class="hint">Die gewählte Helligkeit, damit beim Start kein falsches Bild aufblitzt, und ' +
+    'die App-Dateien selbst, damit sie ohne Internet startet. Beides bleibt auf dem Gerät und wird ' +
+    'nirgendwohin übertragen.</p>';
+  html += '</div></div>';
+
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Wer das sehen kann</div>';
+  html += '<div class="liste">';
+  html += '<div class="liste-zeile">' + ikon("konto", "i-sm") +
+    '<span class="liste-zeile__text">Du selbst</span></div>';
+  html += '<div class="liste-zeile">' + ikon("offline", "i-sm") +
+    '<span class="liste-zeile__text">Google, als Anbieter von Firebase. Die Server können außerhalb ' +
+    'der EU stehen.</span></div>';
+  html += '<div class="liste-zeile">' + ikon("schloss", "i-sm") +
+    '<span class="liste-zeile__text">Wer diese App betreibt, kann über die Firebase-Konsole technisch ' +
+    'auf die gespeicherten Daten zugreifen.</span></div>';
+  html += '</div>';
+  html += '<p class="hint" style="margin-top:var(--space-3)">Andere Nutzer nicht. Die Zugriffsregeln der ' +
+    'Datenbank lassen jedes Konto ausschließlich an die eigenen Daten – nachzulesen in der Datei ' +
+    '<code>firestore.rules</code>.</p>';
+  html += '</div>';
+
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Was nicht passiert</div>';
+  html += '<div class="card">';
+  html += '<p class="hint">Keine Werbung, kein Tracking, keine Analyse-Dienste, keine Weitergabe an ' +
+    'Dritte, keine Cookies, die dich wiedererkennen.</p>';
+  html += '</div></div>';
+
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Fremde Server</div>';
+  html += '<div class="card">';
+  html += '<p class="hint">Zwei Dinge lädt die App beim Start von außen. Dabei erfährt der jeweilige ' +
+    'Server deine IP-Adresse – technisch unvermeidbar, sonst käme die Datei nicht an:</p>';
+  html += '<div class="liste" style="margin-top:var(--space-3)">';
+  html += '<div class="liste-zeile"><span class="liste-zeile__text">Das Firebase-SDK</span>' +
+    '<span class="liste-zeile__wert">gstatic.com</span></div>';
+  html += '<div class="liste-zeile"><span class="liste-zeile__text">Die arabische Koranschrift</span>' +
+    '<span class="liste-zeile__wert">verses.quran.foundation</span></div>';
+  html += '</div>';
+  html += '</div></div>';
+
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Mitnehmen und löschen</div>';
+  html += '<div class="card">';
+  html += '<p class="hint"><strong>Mitnehmen:</strong> Unter Einstellungen → Sichern lädst du alles als ' +
+    'Datei herunter. Die hängt an nichts und bleibt dir, auch ohne Konto.</p>';
+  html += '<p class="hint" style="margin-top:var(--space-3)"><strong>Löschen:</strong> Sag dem Betreiber ' +
+    'Bescheid, dann werden Konto und Inhalte entfernt. Einen Knopf dafür gibt es noch nicht.</p>';
+  html += '</div></div>';
+
+  html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">' +
+    'Diese App wird privat betrieben und von einem kleinen Kreis genutzt. Dieser Text beschreibt ' +
+    'ehrlich, was passiert – er ist keine anwaltlich geprüfte Erklärung.</p>';
+
+  html += '</div>';
+  app.innerHTML = html;
+  window.scrollTo(0, 0);
 }
 
 /* ---------- 3.0.0: Der Startbildschirm ----------
@@ -6129,6 +6238,10 @@ app.addEventListener("click", e => {
     case "seite-neu-laden": location.reload(); break;
     case "einstellungen": ui.einstellungen = true; window.scrollTo(0, 0); render(); break;
     case "einstellungen-zu": ui.einstellungen = false; window.scrollTo(0, 0); render(); break;
+    /* Der Zustand darunter bleibt stehen: wer aus den Einstellungen kam, ist
+       beim Schliessen wieder dort, wer vom Anmeldebildschirm kam, dort. */
+    case "datenschutz": ui.datenschutz = true; render(); break;
+    case "datenschutz-zu": ui.datenschutz = false; window.scrollTo(0, 0); render(); break;
     case "resend-verification": doResendVerification(); break;
     case "verification-check": pruefeBestaetigung(); break;
     case "import-old": importOldProfile(btn.dataset.name); break;

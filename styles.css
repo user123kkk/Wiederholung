@@ -45,19 +45,25 @@
   /* Alter Name, damit nichts bricht, was ihn noch benutzt. */
   --font-lesen: var(--font-text);
 
-  /* ---- Primitive · dunkel ----------------------------------------------- */
-  --ink-900: #0b0a09;
-  --ink-870: #0f0e0c;
-  --ink-850: #080807;
-  --ink-800: #141311;
-  --ink-750: #1c1a17;
-  --ink-700: #24211d;
-  --line-700: #322e28;
-  --line-800: #272420;
-  --line-850: #1c1a17;
+  /* ---- Primitive · dunkel -----------------------------------------------
+     3.1.0: Die Marke ist Creme auf Fast-Schwarz - dieselben zwei Farben wie
+     das Symbol auf TikTok. Gold ist raus. Damit trägt die Fläche, was vorher
+     die Farbe trug: die Stufen heben sich sichtbar voneinander ab, statt alle
+     auf derselben Ebene zu liegen. */
+  --ink-900: #08080a;
+  --ink-870: #0c0c0f;
+  --ink-850: #060607;
+  --ink-800: #17171b;
+  --ink-750: #1f1f25;
+  --ink-700: #27272e;
+  /* Ränder als durchscheinendes Weiß statt als eigener Ton: so bleiben sie
+     auf jeder Fläche gleich stark, egal wie hell die darunter ist. */
+  --line-700: rgba(255, 255, 255, 0.14);
+  --line-800: rgba(255, 255, 255, 0.09);
+  --line-850: rgba(255, 255, 255, 0.065);
   --paper-50: #f5f3ec;
-  --paper-300: #a8a69d;
-  --paper-500: #74716a;
+  --paper-300: #a2a09a;
+  --paper-500: #706e69;
   --gold-300: #eed8a6;
   --gold-400: #e3c88a;
   --gold-500: #c9a961;
@@ -76,20 +82,24 @@
   --text-1: var(--paper-50);
   --text-2: var(--paper-300);
   --text-3: var(--paper-500);
-  --text-on-accent: #1a1509;
+  --text-on-accent: #0a0a0c;
 
   /* ---- Semantik · Linien ------------------------------------------------ */
   --border: var(--line-800);
   --border-strong: var(--line-700);
   --border-subtle: var(--line-850);
 
-  /* ---- Semantik · Akzent ------------------------------------------------ */
-  --accent: var(--gold-400);
-  --accent-hover: var(--gold-300);
-  --accent-press: var(--gold-500);
-  --accent-border: rgba(227, 200, 138, 0.34);
-  --accent-bg: rgba(227, 200, 138, 0.12);
-  --accent-bg-strong: rgba(227, 200, 138, 0.20);
+  /* ---- Semantik · Akzent ------------------------------------------------
+     Creme ist zugleich Textfarbe UND Akzent. Damit Betonung nicht verloren
+     geht, arbeitet der Akzent nie über den Farbton allein: gefüllt (Creme auf
+     Dunkel), als Schleier (--accent-bg) oder mit Unterstreichung. Wo es um
+     einen ZUSTAND geht - Fehler, Erfolg - bleiben Zinnober und Grünspan. */
+  --accent: var(--paper-50);
+  --accent-hover: #ffffff;
+  --accent-press: #dedad1;
+  --accent-border: rgba(245, 243, 236, 0.26);
+  --accent-bg: rgba(245, 243, 236, 0.10);
+  --accent-bg-strong: rgba(245, 243, 236, 0.17);
 
   /* ---- Semantik · Status ------------------------------------------------
      Bewusst nur drei Statusfarben. Gold IST die Aufmerksamkeitsfarbe; eine
@@ -105,17 +115,25 @@
      Die Signatur des Systems. Kalender, Stufenband, Lektionsbalken, Badges
      und Sparkline sprechen dieselbe Sprache: mehr Gold = sitzt besser.
      Vorher hatte jeder dieser Orte seine eigene Skala. */
-  --stufe-0: rgba(227, 200, 138, 0.15);
-  --stufe-1: rgba(227, 200, 138, 0.24);
-  --stufe-2: rgba(227, 200, 138, 0.42);
-  --stufe-3: rgba(227, 200, 138, 0.64);
-  --stufe-4: rgba(227, 200, 138, 0.90);
+  /* Eine Creme-Rampe über die Deckkraft. Das zeigt eine REIHENFOLGE (Stufe 1
+     bis 5) verlässlich - was ein einzelner Farbton nicht kann, ist ARTEN
+     unterscheiden. „Fertig" und „gesperrt" stehen deshalb als Wort da, nicht
+     als Farbe. */
+  --stufe-0: rgba(255, 255, 255, 0.08);
+  --stufe-1: rgba(245, 243, 236, 0.28);
+  --stufe-2: rgba(245, 243, 236, 0.48);
+  --stufe-3: rgba(245, 243, 236, 0.72);
+  --stufe-4: rgba(245, 243, 236, 1);
 
   /* ---- System ------------------------------------------------------------ */
   --focus-ring: var(--accent);
   --backdrop: rgba(0, 0, 0, 0.72);
-  --marker: rgba(227, 200, 138, 0.26);
-  --glow: radial-gradient(120% 76% at 50% -12%, #241f15 0%, #121009 44%, var(--bg) 76%);
+  --marker: rgba(245, 243, 236, 0.22);
+  --glow: radial-gradient(110% 64% at 50% -6%, #1b1b21 0%, #101014 46%, var(--bg) 78%);
+  /* 3.1.0: Die Oberkante einer erhobenen Fläche. Ohne sie sitzt eine Karte
+     nur auf einem helleren Rechteck; mit ihr fängt sie Licht und liegt
+     sichtbar DARÜBER. Kommt überall zusammen mit einem Schatten. */
+  --kante: inset 0 1px 0 rgba(255, 255, 255, 0.055);
   --skeleton: linear-gradient(90deg, var(--surface) 0%, var(--surface-raised) 50%, var(--surface) 100%);
   /* Schein hinter der Marke, dort wo sie allein auftritt (Boot, Anmeldung) -
      nur im Dunkeln: Licht auf warmem Fast-Schwarz. Auf Papier gibt es das
@@ -148,16 +166,16 @@
   --ctrl-lg: 52px;
 
   /* ---- Radius · wächst mit der Fläche ------------------------------------ */
-  --r-xs: 6px;  --r-sm: 10px; --r-md: 14px;
-  --r-lg: 20px; --r-xl: 28px; --r-full: 999px;
+  --r-xs: 6px;  --r-sm: 10px; --r-md: 16px;
+  --r-lg: 22px; --r-xl: 30px; --r-full: 999px;
   --radius: var(--r-md); --radius-sm: var(--r-sm); --radius-lg: var(--r-lg);
 
   /* ---- Elevation ---------------------------------------------------------
      Auf warmem Fast-Schwarz ist ein Schatten fast unsichtbar. Tiefe kommt
      deshalb zuerst aus Flächenton + Haarlinie; Schatten erst ab Stufe 2. */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.40);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.42), 0 1px 3px rgba(0, 0, 0, 0.30);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.50), 0 1px 3px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 20px 56px rgba(0, 0, 0, 0.62), 0 2px 8px rgba(0, 0, 0, 0.42);
   --shadow: var(--shadow-sm);
 
   /* ---- Bewegung ---------------------------------------------------------- */
@@ -226,16 +244,22 @@
   --negative-bg: rgba(168, 69, 46, 0.10);
   --negative-border: rgba(168, 69, 46, 0.36);
 
-  --stufe-0: rgba(138, 106, 36, 0.14);
-  --stufe-1: rgba(138, 106, 36, 0.22);
-  --stufe-2: rgba(138, 106, 36, 0.40);
-  --stufe-3: rgba(138, 106, 36, 0.62);
-  --stufe-4: rgba(138, 106, 36, 0.88);
+  /* Spiegelbild der dunklen Rampe: dort Creme, die aus dem Schwarz auftaucht,
+     hier Tinte, die ins Papier sinkt. Beide Male dieselbe Aussage über die
+     Deckkraft, nicht über den Farbton. */
+  --stufe-0: rgba(36, 31, 24, 0.10);
+  --stufe-1: rgba(36, 31, 24, 0.26);
+  --stufe-2: rgba(36, 31, 24, 0.46);
+  --stufe-3: rgba(36, 31, 24, 0.70);
+  --stufe-4: rgba(36, 31, 24, 1);
 
   --backdrop: rgba(40, 33, 20, 0.42);
   --marker: rgba(138, 106, 36, 0.22);
   --glow: radial-gradient(120% 76% at 50% -12%, #fbf7ec 0%, #f5efe2 44%, var(--bg) 76%);
   --mark-glow: none;
+
+  /* Auf Papier gibt es keine Lichtkante — dort hebt der Schatten allein. */
+  --kante: none;
 
   /* Auf Papier trägt ein Schatten — dort darf er die Arbeit mitmachen. */
   --shadow-sm: 0 1px 2px rgba(60, 48, 25, 0.10);
@@ -522,7 +546,15 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   transition: color var(--dur-fast) var(--ease-out);
 }
 .nav__tab .i { width: 23px; height: 23px; }
-.nav__tab.active { color: var(--accent); }
+/* 3.1.0: Der aktive Reiter bekommt eine eigene Fläche. Vorher unterschied ihn
+   allein die Farbe - jetzt, wo Akzent und Textfarbe dieselbe Creme sind,
+   müsste man zweimal hinsehen. */
+.nav__tab.active {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: var(--r-full);
+  margin: 6px 10px;
+}
 .nav__tab:active .i { transform: scale(0.9); }
 .nav__tab .i { transition: transform var(--dur-instant) var(--ease-out); }
 /* Der einzige Ort, an dem die App von sich aus auf sich zeigt. */
@@ -648,8 +680,10 @@ button {
   display: inline-flex; align-items: center; justify-content: center;
   gap: var(--space-2);
   border: 1px solid transparent;
-  border-radius: var(--r-md);
-  padding: 0 var(--space-5);
+  /* 3.1.0: Vollrund. Der einzige gefüllte Knopf pro Bildschirm ist damit auch
+     an der Form als Handlung zu erkennen, nicht nur an der Fläche. */
+  border-radius: var(--r-full);
+  padding: 0 var(--space-6);
   min-height: var(--ctrl-md);
   background: var(--accent);
   color: var(--text-on-accent);
@@ -938,6 +972,7 @@ input[type="radio"]:checked::before { transform: scale(1); }
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-lg);
   padding: var(--space-5);
+  box-shadow: var(--kante), var(--shadow-sm);
 }
 .card--raised {
   background: var(--surface-raised);
@@ -956,6 +991,7 @@ input[type="radio"]:checked::before { transform: scale(1); }
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-lg);
   overflow: hidden;
+  box-shadow: var(--kante), var(--shadow-sm);
 }
 .liste-zeile {
   display: flex; align-items: center; gap: var(--space-3);

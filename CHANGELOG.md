@@ -1,3 +1,26 @@
+## 3.0.3 – 12. September 2026
+
+### Neu
+
+- **Ein Datenschutz-Bildschirm.** Erreichbar aus den Einstellungen unter
+  „Konto" – und, absichtlich, auch vom Anmeldebildschirm aus: wer noch
+  überlegt, ob er ein Konto anlegt, muss vorher lesen können, was dabei
+  gespeichert wird, nicht erst danach. Deshalb steht die Abfrage in
+  `render()` vor dem Anmeldezweig; der Zustand darunter bleibt stehen, man
+  landet beim Schließen wieder dort, wo man herkam.
+
+  Der Text ist bewusst Fließtext in derselben Sprache wie der Rest der App
+  und kein Baustein-Rechtstext: was gespeichert wird (Konto, Lernstoff,
+  Gerät), wer es sehen kann, was *nicht* passiert (keine Werbung, kein
+  Tracking, keine Analyse), welche zwei fremden Server beim Start die
+  IP-Adresse sehen (`gstatic.com` fürs Firebase-SDK,
+  `verses.quran.foundation` für die Koranschrift), und wie man seine Daten
+  mitnimmt oder löschen lässt. Er ist keine anwaltlich geprüfte Erklärung –
+  das steht auch so darunter. Ein Impressum gibt es bewusst nicht: solange
+  die App privat und unentgeltlich von einem kleinen Kreis genutzt wird,
+  greift §5 DDG nicht, und ein Impressum würde die Wohnanschrift öffentlich
+  ins Netz stellen, ohne dass jemand etwas davon hätte.
+
 ## 3.0.2 – 12. September 2026
 
 ### Behoben
