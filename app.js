@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.3";
+const APP_VERSION = "3.0.4";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -767,10 +767,12 @@ function normSettings(s) {
      Monaten dunkel kennt, soll sie nach einem Update nicht plötzlich weiss
      vorfinden, nur weil das Handy gerade hell steht. */
   const th = s && THEMEN.some(x => x.id === s.thema) ? s.thema : "dunkel";
+  const sl = s && SITZUNGS_LIMITS.some(x => x.id === s.sitzungsLimit) ? s.sitzungsLimit : "alle";
   return {
     arabGroesse: g,
     lastBackup: b,
-    thema: th
+    thema: th,
+    sitzungsLimit: sl
   };
 }
 
@@ -818,7 +820,18 @@ const THEMEN = [
   { id: "hell", label: "Hell" },
   { id: "auto", label: "Automatisch" }
 ];
-let settings = normSettings(null); // { arabGroesse, lastBackup, thema }
+/* 3.0.4: Bremst NICHT den Stoff (das macht seit 2.3.0 das Schloss, siehe
+   dueCardsFor) - bremst nur, wie viele faellige Karten EINE Sitzung zeigt.
+   Wer 80 faellige Karten hat und nur 10 Minuten Zeit, konnte bisher nur
+   mittendrin abbrechen. "Alle" ist Voreinstellung: bestehendes Verhalten
+   bleibt unveraendert, wer nichts einstellt, merkt nichts. */
+const SITZUNGS_LIMITS = [
+  { id: 10, label: "10" },
+  { id: 20, label: "20" },
+  { id: 30, label: "30" },
+  { id: "alle", label: "Alle" }
+];
+let settings = normSettings(null); // { arabGroesse, lastBackup, thema, sitzungsLimit }
 
 /* ---------- 2.20.0: hell und dunkel ----------
    "Automatisch" wird hier aufgelöst und nicht im Stil-Block. Der Grund ist
@@ -1805,6 +1818,52 @@ function doLogout() {
   fb.signOut(auth);
 }
 
+/* 3.0.4: Konto löschen war der einzige im Datenschutztext versprochene, aber
+   nie gebaute Knopf ("sag dem Betreiber Bescheid"). Firebase verlangt fuer
+   deleteUser() ein FRISCHES Login (auth/requires-recent-login) - eine
+   Anmeldung von vor einer Stunde reicht ihm oft schon nicht mehr. Statt das
+   Alter der Sitzung zu pruefen, wird deshalb IMMER neu mit dem Passwort
+   bestaetigt: einfacher, und funktioniert unabhaengig davon, wie lange man
+   schon angemeldet ist. */
+async function kontoLoeschenDaten() {
+  if (!kartenColRef || !bereicheColRef || !userDocRef) return;
+  for (const ref of [kartenColRef, bereicheColRef]) {
+    const treffer = await fb.getDocs(ref);
+    const docs = treffer.docs;
+    for (let i = 0; i < docs.length; i += 400) {
+      const stapel = fb.writeBatch(db);
+      docs.slice(i, i + 400).forEach(d => stapel.delete(d.ref));
+      await stapel.commit();
+    }
+  }
+  await fb.deleteDoc(userDocRef);
+}
+async function doKontoLoeschen() {
+  const bestaetigt = await dlgConfirm(
+    'Konto und alle Karten werden unwiderruflich gelöscht – auch aus der Cloud. ' +
+    'Ein Backup auf dem eigenen Gerät ist danach der einzige Weg, etwas davon zu behalten.',
+    { title: "Konto wirklich löschen?", okLabel: "Weiter", danger: true }
+  );
+  if (!bestaetigt) return;
+  const pass = await dlgPrompt(
+    'Zur Sicherheit: bitte das Passwort noch einmal eingeben.',
+    "", { title: "Passwort bestätigen", okLabel: "Konto löschen", inputType: "password", danger: true }
+  );
+  if (pass === null) return;
+  if (!pass) { await dlgAlert("Ohne Passwort geht das nicht.", "Konto löschen"); return; }
+  try {
+    const cred = fb.EmailAuthProvider.credential(currentUser.email, pass);
+    await fb.reauthenticateWithCredential(currentUser, cred);
+    await kontoLoeschenDaten();
+    await fb.deleteUser(currentUser);
+    /* Kein render() noetig: deleteUser loest onAuthStateChanged(null) aus,
+       das raeumt currentUser/bereiche/settings/etc. selbst auf und zeichnet
+       ueber den bestehenden Auth-Flow neu - genau wie nach signOut(). */
+  } catch (e) {
+    await dlgAlert(authErrorText(e), "Konto löschen");
+  }
+}
+
 /* ---------- Datenzugriff ---------- */
 /* A3 (1.9.0): Der offene Bereich wird ueber seine ID gefunden, nicht mehr
    ueber eine Positionsnummer. Kam von einem zweiten Geraet ein Snapshot
@@ -1901,6 +1960,13 @@ function setArabGroesse(id) {
   if (!ARAB_STUFEN.some(x => x.id === id)) return;
   if (id === settings.arabGroesse) return;
   settings.arabGroesse = id;
+  persistSettings();
+  render();
+}
+function setSitzungsLimit(id) {
+  if (!SITZUNGS_LIMITS.some(x => x.id === id)) return;
+  if (id === settings.sitzungsLimit) return;
+  settings.sitzungsLimit = id;
   persistSettings();
   render();
 }
@@ -3267,8 +3333,15 @@ async function deleteCard(id) {
 
 /* ---------- Lern-Session ---------- */
 function startSession() {
-  const due = dueCards();
+  let due = dueCards();
   if (due.length === 0) return;
+  /* 3.0.4: Die Reihenfolge aus dueCardsFor bleibt erhalten (Wiederholungen
+     vor neuem Stoff) - das Limit schneidet nur am Ende ab, es sortiert
+     nicht um. Wer 80 faellige Karten hat, will bei "10" also die zehn
+     dringendsten, nicht zehn zufaellige. */
+  if (typeof settings.sitzungsLimit === "number" && due.length > settings.sitzungsLimit) {
+    due = due.slice(0, settings.sitzungsLimit);
+  }
   springeNachOben("sitzung");
   /* 2.11.5: Die Durchsicht muss beendet werden, sonst passiert scheinbar
      nichts. renderLernen zeigt die Durchsicht, solange lernSetId gesetzt ist -
@@ -4397,6 +4470,28 @@ function renderEinstellungen() {
   html += '<p class="field__hilfe">Gilt \u00fcberall in der App. Die Probe daneben \u00e4ndert sich mit.</p></div>';
   html += '</div></div>';
 
+  /* ---------- Lernen ----------
+     3.0.4: Bremst nur die EINZELNE Sitzung, nicht den Stoff - das bleibt
+     Aufgabe des Schlosses (siehe dueCardsFor). Wer wenig Zeit hat, muss so
+     nicht mittendrin abbrechen, sondern waehlt vorher, wie viel reinpasst. */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Lernen</div>';
+  html += '<div class="card">';
+  html += '<div class="field"><label>Karten pro Sitzung</label>';
+  html += '<div class="seg-row">';
+  html += '<span class="seg" role="group" aria-label="Karten pro Sitzung">';
+  for (const sl of SITZUNGS_LIMITS) {
+    html += '<button class="' + (settings.sitzungsLimit === sl.id ? "active" : "") +
+      '" data-action="set-sitzungslimit" data-id="' + sl.id + '"' +
+      (settings.sitzungsLimit === sl.id ? ' aria-pressed="true"' : ' aria-pressed="false"') +
+      '>' + sl.label + '</button>';
+  }
+  html += '</span></div>';
+  html += '<p class="field__hilfe">Bei "Alle" zeigt eine Sitzung jede f\u00e4llige Karte auf einmal. Bei ' +
+    'einer Zahl h\u00f6rt sie danach auf \u2013 der Rest bleibt f\u00e4llig und steht in der n\u00e4chsten ' +
+    'Sitzung wieder oben, Wiederholungen zuerst.</p></div>';
+  html += '</div></div>';
+
   /* ---------- Sichern ---------- */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Sichern</div>';
@@ -4461,6 +4556,20 @@ function renderEinstellungen() {
   html += '<button class="liste-zeile gefahr" data-action="logout">' + ikon("abmelden", "i-sm") +
     '<span class="liste-zeile__text">Abmelden</span></button>';
   html += '</div></div>';
+
+  /* Eigene, kleinere Sektion statt derselben Liste wie "Abmelden": zwei so
+     unterschiedlich folgenreiche Aktionen nebeneinander laden zum Vertipper
+     ein. Der Warnsatz steht als eigener Hinweis daneben, nicht nur im
+     Bestaetigungsdialog - wer bis hierher scrollt, soll es vorher schon
+     lesen, nicht erst im Dialog zum ersten Mal. */
+  html += '<div class="sektion">';
+  html += '<div class="liste">';
+  html += '<button class="liste-zeile gefahr" data-action="konto-loeschen">' + ikon("muell", "i-sm") +
+    '<span class="liste-zeile__text">Konto löschen</span></button>';
+  html += '</div>';
+  html += '<p class="hint" style="margin-top:var(--space-3)">Unwiderruflich – Konto und alle Karten sind ' +
+    'danach auch aus der Cloud weg.</p>';
+  html += '</div>';
 
   /* Die Versionsnummer stand bis 2.21.6 klein unter JEDEM Bildschirm. Sie
      gehoert dorthin, wo man sie sucht, wenn man sie braucht. */
@@ -4552,8 +4661,8 @@ function renderDatenschutz() {
   html += '<div class="card">';
   html += '<p class="hint"><strong>Mitnehmen:</strong> Unter Einstellungen → Sichern lädst du alles als ' +
     'Datei herunter. Die hängt an nichts und bleibt dir, auch ohne Konto.</p>';
-  html += '<p class="hint" style="margin-top:var(--space-3)"><strong>Löschen:</strong> Sag dem Betreiber ' +
-    'Bescheid, dann werden Konto und Inhalte entfernt. Einen Knopf dafür gibt es noch nicht.</p>';
+  html += '<p class="hint" style="margin-top:var(--space-3)"><strong>Löschen:</strong> Unter Einstellungen ' +
+    '→ Konto löschen entfernst du dein Konto und alle Karten selbst, sofort und aus der Cloud.</p>';
   html += '</div></div>';
 
   html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">' +
@@ -6180,7 +6289,8 @@ function dlgPrompt(text, defaultValue, opts) {
   const o = opts || {};
   return openDialog({
     kind: "prompt", title: o.title || "Eingabe", text: text,
-    value: defaultValue || "", okLabel: o.okLabel || "Übernehmen"
+    value: defaultValue || "", okLabel: o.okLabel || "Übernehmen",
+    inputType: o.inputType || "text", danger: !!o.danger
   });
 }
 function renderDialog() {
@@ -6193,7 +6303,8 @@ function renderDialog() {
   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
   h += '<div class="dlg-text">' + esc(d.text) + '</div>';
   if (d.kind === "prompt") {
-    h += '<input type="text" id="dlg-input" value="' + esc(d.value) + '">';
+    h += '<input type="' + esc(d.inputType || "text") + '" id="dlg-input" value="' + esc(d.value) + '"' +
+      (d.inputType === "password" ? ' autocomplete="current-password"' : '') + '>';
   }
   h += '<div class="dlg-actions">';
   if (d.kind !== "alert") h += '<button class="secondary" data-action="dlg-cancel">Abbrechen</button>';
@@ -6230,6 +6341,7 @@ app.addEventListener("click", e => {
     case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; render(); break;
     case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; render(); break;
     case "logout": doLogout(); break;
+    case "konto-loeschen": doKontoLoeschen(); break;
     /* 3.0.0: Das Bereichs-Sheet. "nichts" traegt das Blatt selbst, damit ein
        Tipp hinein nicht bis zum Hintergrund durchschlaegt und schliesst. */
     case "bereich-sheet-auf": ui.bereichSheet = true; render(); break;
@@ -6328,6 +6440,9 @@ app.addEventListener("click", e => {
     case "dlg-cancel": if (ui.dialog) closeDialog(dialogResult(ui.dialog, false)); break;
     case "set-arab-groesse": setArabGroesse(btn.dataset.id); break;   // E7
     case "set-thema": setThema(btn.dataset.id); break;
+    case "set-sitzungslimit":
+      setSitzungsLimit(btn.dataset.id === "alle" ? "alle" : Number(btn.dataset.id));
+      break;
     case "hw-undo": hwStrokes.pop(); render(); break;   // D9
     case "hw-clear": hwStrokes = []; render(); break;
     case "hw-fullscreen":

@@ -1,3 +1,33 @@
+## 3.0.4 – 12. September 2026
+
+### Neu
+
+- **Konto löschen.** Der einzige im Datenschutztext versprochene, aber nie
+  gebaute Knopf. Unter Einstellungen → Konto, deutlich von „Abmelden"
+  getrennt (zwei so unterschiedlich folgenreiche Aktionen nebeneinander in
+  derselben Liste laden zum Vertipper ein). Fragt erst nach Bestätigung,
+  dann nach dem Passwort – Firebase verlangt für `deleteUser()` ein
+  frisches Login, und statt das Alter der Sitzung zu prüfen, wird deshalb
+  immer neu bestätigt. Löscht alle Karten- und Bereichs-Dokumente in
+  400er-Stapeln, dann das Nutzerdokument, dann das Konto selbst. Der
+  Datenschutztext verwies bisher aufs „Betreiber Bescheid sagen" – das war
+  nie mehr als ein Platzhalter, jetzt stimmt der Text.
+- **Karten pro Sitzung**, unter Einstellungen → Lernen. Bremst absichtlich
+  NICHT den Lernstoff – das bleibt Aufgabe des Schlosses (gesperrte
+  Lektionen, siehe `dueCardsFor` seit 2.3.0) – sondern nur, wie viele
+  fällige Karten EINE Sitzung zeigt. Voreinstellung „Alle": bestehendes
+  Verhalten bleibt für alle unverändert, die nichts umstellen. Die
+  Reihenfolge (Wiederholungen vor neuem Stoff) bleibt beim Kürzen erhalten.
+
+### Nicht umgesetzt
+
+- Ein Tageslimit für neue Karten wurde erwogen und verworfen: genau dieser
+  Mechanismus existierte bis 2.2.0 und wurde in 2.3.0 durch das Schloss
+  ersetzt (siehe Kommentar bei `dueCardsFor`) – aus gutem Grund, das bremst
+  am Stoff statt an einer Zahl, die nichts über das WARUM sagt. Ihn jetzt
+  wieder einzuführen wäre eine bereits getroffene, begründete Entscheidung
+  rückgängig zu machen, nicht sie zu ergänzen.
+
 ## 3.0.3 – 12. September 2026
 
 ### Neu
