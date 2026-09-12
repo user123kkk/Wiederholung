@@ -749,7 +749,16 @@ button.lg { min-height: var(--ctrl-lg); font-size: 1rem; padding: 0 var(--space-
   button.ghost:hover { background: var(--surface); color: var(--text-1); }
   button.linklike:hover, button.tiny-link:hover { background: var(--accent-bg); }
   button.icon-btn:hover { background: var(--surface); color: var(--text-1); }
-  button.danger:hover { filter: brightness(1.08); }
+  /* 3.0.4-Fix: "background" allein hier ist Pflicht, nicht Geschmackssache -
+     button:hover (zwei Zeilen darueber) hat GENAU dieselbe Spezifitaet wie
+     button.danger und steht spaeter im Text, gewinnt also im Hover jeden
+     Loeschen-Knopf im ganzen Programm (Verlauf/Bereich/Karte/Speicherkarte
+     loeschen, Konto loeschen). Seit --accent-hover reines Weiss ist (3.1.0,
+     vorher ein Goldton), wurde aus "leicht daneben" ein unsichtbarer,
+     weiss-auf-weisser Knopf genau in dem Moment, in dem man ihn anklicken
+     will. filter allein (die alte Zeile) behob nur den Farbton, nicht die
+     Ursache. */
+  button.danger:hover { background: var(--negative); filter: brightness(1.08); }
   button:disabled:hover { background: var(--accent); }
   button.secondary:disabled:hover { background: var(--surface-raised); }
 }
