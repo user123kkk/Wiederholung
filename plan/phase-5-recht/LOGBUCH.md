@@ -100,3 +100,40 @@ Ablauf: Einstellungen → Konto löschen, sofort und selbst.
 Anschrift, Kontakt) einholen — steht am Ende dieser Antwort unter „Was Du
 noch tun musst". Danach: `impressum.html` und `datenschutz.html` bauen,
 Cookie-Prüfung dabei erledigen, vom Login-Bildschirm aus verlinken.
+
+### 2026-09-12 — Neuer Sperrpunkt: möglicherweise minderjährige Betreiberperson
+
+**Geändert:** Keine Dateien. Reine Klärung im Gespräch, bevor Impressum-
+Angaben eingesammelt werden.
+
+**Entscheidung/Sachstand:** Im Gespräch kam heraus, dass das Tool
+„für jemand anderes" gebaut werden soll, und auf Nachfrage wurde als
+Beispiel eine **16-jährige** Person genannt. Ob das die tatsächliche
+Betreiberperson ist, ist noch nicht abschließend geklärt (Formulierung im
+Gespräch war „sagen wir jemand der 16 ist" — als Szenario, nicht
+zwingend als bestätigte Tatsache).
+
+**Warum das ein echter Sperrpunkt ist, nicht nur ein Hinweis:** Ein
+16-Jähriger ist nach §106 BGB nur beschränkt geschäftsfähig. Die im
+Impressum genannte Person ist die rechtlich greifbare Stelle (Abmahnungen,
+DSGVO-Verantwortlicher, im Zweifel Klagen) — diese Rolle setzt praktisch
+volle Geschäftsfähigkeit voraus. Es wurde dem Betreiber mitgeteilt, dass
+hierfür üblicherweise ein Erziehungsberechtigter mit im Impressum stehen
+oder formal als Betreiber auftreten muss. **Diese Session gibt dazu
+ausdrücklich keine Rechtssicherheit** (siehe `AUFTRAG.md`, „Was
+ausdrücklich nicht getan wird") — das muss der Betreiber selbst absichern,
+z. B. mit den Eltern oder einer echten Beratungsstelle.
+
+**Offen:**
+
+1. Ist die tatsächliche Betreiberperson minderjährig — ja oder nein?
+2. Falls ja: Wer steht im Impressum — ein Elternteil (allein oder
+   zusätzlich), oder eine andere volljährige Person, die formal als
+   Betreiber auftritt?
+3. Erst danach: die eigentlichen Impressum-Angaben (Name, Anschrift,
+   Kontakt) der dann feststehenden Person(en) einholen.
+
+**Nächster Schritt:** Diese drei Punkte mit dem Betreiber klären, bevor
+irgendein Name in `impressum.html` landet. Eine neue Session, die diesen
+Eintrag liest, fragt zuerst nach, statt mit unklaren Angaben
+weiterzubauen.
