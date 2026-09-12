@@ -1,9 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Wiederholung">
-  <!-- Maskierbar: alles Wesentliche liegt im inneren Kreis mit 40 % Radius,
-       damit Android nichts davon wegschneidet, wenn es das Symbol in eine
-       eigene Form stanzt. Deckungsgleich mit der Marke in app.js (ikon
-       "marke") und dem Auftritt auf TikTok/Instagram - dieselbe Bluete,
-       nur hier als eigenstaendige, nicht theme-abhaengige Datei. -->
+  <!-- Die Bluete ist keine Handzeichnung: die Umrisspunkte kommen aus einer
+       Kantenverfolgung (Moore-Neighbor-Tracing) ueber final_icon_glow_v3.png,
+       dem tatsaechlichen Marken-Bild (TikTok/Instagram), danach nur leicht
+       vereinfacht (Ramer-Douglas-Peucker). Der duenne Stiel im Original ist
+       auf ~1-3px abgeschnitten und wurde hier auf 7px verstaerkt, damit er
+       nicht wegkippt - das ist die einzige geometrische Abweichung vom
+       Original. Alles Wesentliche liegt innerhalb des inneren Kreises mit
+       40% Radius (Maskierbarkeits-Vorgabe), ohne dass dafuer skaliert werden
+       musste. -->
   <defs>
     <radialGradient id="glow" cx="50%" cy="42%" r="62%">
       <stop offset="0%" stop-color="#1c1a17"/>
@@ -11,13 +15,9 @@
     </radialGradient>
   </defs>
   <rect width="512" height="512" fill="url(#glow)"/>
-  <g transform="translate(12.8,12.8) scale(0.95)" fill="#f5f3ec">
-    <path d="M124,284 C98,256 72,247 68,222 C64,196 120,218 149,245
-             C162,235 162,149 175,102 C184,73 209,149 220,177
-             C230,184 239,68 256,43 C273,68 282,184 292,177
-             C303,149 329,73 337,102 C350,149 350,235 363,245
-             C393,218 448,196 444,222 C439,247 414,256 388,284
-             C346,326 166,326 124,284 Z"/>
-    <path d="M256,322 v126" stroke="#f5f3ec" stroke-width="13" stroke-linecap="round"/>
-  </g>
+  <path fill="#f5f3ec" d="M256,180L271,201L280,224L298,204L322,190L328,217L328,236L326,244L330,245
+    L345,241L362,240L357,269L348,285L335,298L303,314L256,321L209,314L181,301
+    L160,279L153,263L150,246L150,240L167,241L182,245L186,244L184,236L184,217
+    L190,190L214,204L232,224L241,201Z"/>
+  <path stroke="#f5f3ec" stroke-width="7" stroke-linecap="round" d="M256,321L256,395"/>
 </svg>

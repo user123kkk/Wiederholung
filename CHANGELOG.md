@@ -2,13 +2,21 @@
 
 ### Geändert
 
-- **Die Marke ist jetzt die echte Blüte, nicht mehr das Blatt-Symbol.**
-  Bisher zeichnete `ikon("marke")` ein offenes, dünnes Blatt-Icon – frei
-  erfunden, ohne Bezug zum tatsächlichen Zeichen auf TikTok & Co. Jetzt
-  liegt dort dieselbe fünfblättrige Blüte mit Stiel, als gefüllte Fläche
-  statt Umriss. Betroffen: Boot-Bildschirm, die Marke über den
-  Solo-Bildschirmen (Anmelden, Registrieren, Einrichtung) und
-  `icon.svg` (Browser-Tab, Startbildschirm, installierte App).
+- **Die Marke ist jetzt die echte Blüte, nicht mehr das Blatt-Symbol – und
+  nicht mehr von Hand nachgezeichnet.** Bisher zeichnete `ikon("marke")`
+  ein offenes, dünnes Blatt-Icon – frei erfunden, ohne Bezug zum
+  tatsächlichen Zeichen auf TikTok & Co. Der erste Versuch, das zu
+  ersetzen, war ebenfalls von Hand geschätzt und kam der Vorlage nur
+  ungefähr nahe (spitze statt runde Blütenblätter). Die jetzige Kontur
+  stammt stattdessen aus einer Kantenverfolgung über das tatsächliche
+  Markenbild (`final_icon_glow_v3.png`, Moore-Neighbor-Tracing, danach nur
+  leicht vereinfacht) – keine Schätzung mehr, sondern abgepaust. Betroffen:
+  Boot-Bildschirm, die Marke über den Solo-Bildschirmen (Anmelden,
+  Registrieren, Einrichtung) und `icon.svg` (Browser-Tab, Startbildschirm,
+  installierte App). Einzige bewusste Abweichung vom Original: der im
+  Vorbild nur 1–3 px dünne Stiel ist auf 7 px (icon.svg) bzw. sichtbare
+  Strichstärke (App-Icon) verstärkt, sonst würde er bei App-Icon-Größen
+  wegkippen.
 - **In der App bleibt die Blüte `currentColor`, in `icon.svg` wird sie fest
   Creme.** Im Vorbild ist die Blüte cremeweiß auf Schwarz – für die
   App-Instanzen würde das im hellen Thema aber auf fast demselben
@@ -20,8 +28,10 @@
   Boot-Bildschirm und über den Solo-Bildschirmen – nur im Dunkeln, wo
   Licht auf Fast-Schwarz Sinn ergibt. Im hellen Thema `none`.
 - `icon.svg` hat jetzt zusätzlich einen zentrierten Schein-Verlauf statt
-  reiner Fläche, dazu ist die Blüte um 5 % verkleinert, damit die Spitze
-  im maskierbaren Kreis (40 % Radius) sicher Platz hat.
+  reiner Fläche. Die Bildkomposition (Größe/Rand der Blüte im 512er
+  Feld) ist unverändert vom Original übernommen – sie lag von sich aus
+  bereits sicher innerhalb des maskierbaren Kreises (40 % Radius), eine
+  künstliche Vergrößerung dafür hätte nur vom Original abweichen lassen.
 
 ---
 
