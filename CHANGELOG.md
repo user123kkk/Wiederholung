@@ -1,3 +1,46 @@
+## 3.0.4 – 12. September 2026
+
+### Geändert
+
+- **Die Firestore-Regeln prüfen jetzt auch, *was* geschrieben wird – nicht
+  mehr nur, *wer* schreibt.** Bisher stand dort ein einziger Satz: eigenes
+  Konto, angemeldet, E-Mail bestätigt – und danach war jedes Feld frei. Wer
+  die Entwicklerwerkzeuge öffnete, konnte `maxStufe` auf 9999 setzen und
+  damit das Freischalten der nächsten Lektion aushebeln, beliebige neue
+  Felder anlegen, Zahlen als Text schreiben oder unter dem eigenen Konto
+  erfundene Unterpfade als Ablage benutzen. Jetzt hat jedes Dokument eine
+  feste Feldliste mit Art und Grenzen, und es gibt nur noch die zwei
+  Sammlungen, die die App wirklich benutzt (`bereiche`, `karten`).
+
+  Zwei Dinge waren dabei wichtiger als Strenge. Erstens wird nur geprüft,
+  was sich auch ändert: `request.resource.data` ist bei einer Änderung das
+  vollständige Dokument, ein altes Feld aus einer früheren Fassung hätte
+  sonst jeden weiteren Schreibvorgang dieses Kontos blockiert. Zweitens
+  sind die Grenzen großzügiger als die Oberfläche – die Regel soll
+  Missbrauch abwehren, nicht das Formular nachbauen, sonst bricht die
+  nächste kleine Änderung das Speichern beim Nutzer.
+
+  Geprüft mit dem Firestore-Emulator: 62 Fälle, 31-mal normaler Betrieb
+  (anlegen, lernen, bearbeiten, verschieben, löschen, importieren,
+  synchronisieren – auch für ein Konto mit Feldern aus alten Fassungen) und
+  31-mal Missbrauch (fremde Kennung, fehlende E-Mail-Bestätigung, erfundene
+  Felder, falsche Datentypen, erfundene Unterpfade). Alle 62 wie erwartet.
+
+- **Wort, Übersetzung und Notiz haben eine Länge.** Vorher keine: aus dem
+  Eingabefeld kam, was hineinpasste, und aus einer Backup-Datei kam, was
+  darin stand. 1000 Zeichen für Wort und Übersetzung, 5000 für die Notiz –
+  weit über allem, was eine Vokabelkarte braucht, aber weit unter dem, was
+  ein Firestore-Dokument sprengt. Dieselben Zahlen stehen in den Regeln;
+  der Browser prüft für die Bequemlichkeit, die Regel für die Sicherheit.
+
+- **Der Import prüft die Datei, bevor er sie einspielt.** Erst die Größe
+  (höchstens 5 MB, ohne die Datei überhaupt zu lesen), dann die Struktur,
+  dann die Anzahl: bis zu 200 Bereiche und 20.000 Karten auf einmal. Vorher
+  las `readAsText` jede Datei in beliebiger Größe ein, und was danach an
+  Bereichen und Karten herauskam, ging ungezählt in die Cloud. Eine Datei
+  musste dafür nicht böswillig sein – eine versehentlich doppelt
+  zusammengefügte Sicherung reicht.
+
 ## 3.0.3 – 12. September 2026
 
 ### Neu

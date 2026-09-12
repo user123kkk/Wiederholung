@@ -1,15 +1,233 @@
 rules_version = '2';
+
+/* ============================================================
+   ZUGRIFFSREGELN FÜR FIRESTORE
+
+   Diese Datei ist die einzige echte Grenze des Projekts. Alles, was app.js
+   prüft, ist Bedienkomfort: Der Browser gehört dem Nutzer, und wer die
+   Entwicklerwerkzeuge öffnet, schreibt an jeder Prüfung im JavaScript vorbei
+   direkt in die Datenbank. Was hier nicht steht, ist nicht geschützt.
+
+   Bis Phase 1 prüften die Regeln ausschließlich, WER schreibt — nie, WAS.
+   Jetzt gilt beides.
+
+   Drei Leitgedanken, damit spätere Änderungen sie nicht versehentlich
+   aushebeln:
+
+   1. GEPRÜFT WIRD NUR, WAS SICH ÄNDERT. `request.resource.data` ist bei
+      einem Update das VOLLSTÄNDIGE Dokument nach dem Schreiben — also auch
+      Felder, die der Schreibvorgang gar nicht angefasst hat. Würde man es
+      als Ganzes prüfen, blockierte ein altes Feld aus einer früheren Version
+      jeden weiteren Schreibvorgang dieses Kontos. Deshalb läuft jede Prüfung
+      über die Liste der tatsächlich berührten Felder.
+
+   2. DIE REGEL IST GROSSZÜGIGER ALS DIE OBERFLÄCHE. Ein Bereichsname darf in
+      der App 40 Zeichen haben, hier sind 200 erlaubt. Das ist Absicht: Die
+      Regel soll Missbrauch abwehren, nicht die Oberfläche nachbauen. Wären
+      beide Zahlen gleich, bräche jede kleine Änderung an der Oberfläche das
+      Speichern — und zwar erst beim Nutzer, nicht beim Entwickeln.
+
+   3. AUFZÄHLUNGEN STEHEN NICHT HIER. Thema und Schriftgröße werden nicht auf
+      ihre erlaubten Werte festgenagelt, nur auf Art und Länge. Ein
+      unbekannter Wert richtet keinen Schaden an — normSettings() in app.js
+      fällt auf den Standardwert zurück. Ein neues Thema, das die Regeln
+      nicht kennen, würde dagegen das Speichern abweisen.
+
+   Was diese Regeln NICHT leisten können, damit es niemand annimmt:
+
+   - INHALTE VON UNTER-MAPS. `sets` im Bereichsdokument ist eine Map mit den
+     Speicherkarten darin. Firestore-Regeln können die Werte einer Map nicht
+     durchlaufen; prüfbar sind nur Art und Anzahl. Dasselbe gilt für
+     `verlauf` im Nutzerdokument.
+   - STUFE UND HÖCHSTSTUFE. Beide werden auf Ganzzahl 0..MAX_STUFE begrenzt,
+     mehr geht nicht. Ein Deckel "maxStufe darf nur wachsen, wenn stufe
+     wächst" brächte nichts, denn die App selbst lässt die Stufe im
+     Bearbeiten-Formular frei setzen (app.js, renderVerwalten). Wer die
+     nächste Lektion freischalten will, kann das also auch ohne
+     Entwicklerwerkzeuge.
+   - OB EIN BEREICH EXISTIERT. `bereichId` wird nicht gegen die
+     Bereichs-Sammlung geprüft. Ein exists() sähe innerhalb eines Stapels den
+     Stand VOR dem Stapel — persistAll() legt Bereich und Karten in einem
+     Stapel an, die Karten würden also abgewiesen.
+
+   Feste Werte, die mit app.js zusammenhängen müssen:
+     MAX_STUFE = 12   (app.js, Konstante MAX_STUFE)
+   Wird dort etwas geändert, muss es hier mitgeändert werden.
+   ============================================================ */
+
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    /* ---------- Wer darf überhaupt? ----------
+       Unverändert seit der ersten Fassung: eigenes Konto, angemeldet,
+       E-Mail bestätigt. */
+    function eigenesKonto(uid) {
+      return request.auth != null
+             && request.auth.uid == uid
+             && request.auth.token.email_verified == true;
+    }
+
+    /* ---------- Bausteine ---------- */
+    function text(w, max)         { return w is string && w.size() <= max; }
+    function textOderNull(w, max) { return w == null || text(w, max); }
+    function zahl(w, min, max)    { return w is int && w >= min && w <= max; }
+    function zahlOderNull(w, min, max) { return w == null || zahl(w, min, max); }
+    function datum(w)             { return w is string && w.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$'); }
+    function datumOderNull(w)     { return w == null || datum(w); }
+
+    /* Die Felder, die dieser Schreibvorgang tatsächlich anfasst. Beim Anlegen
+       sind das alle; beim Ändern nur die, deren Wert sich unterscheidet. */
+    function beruehrt() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    /* Beim Anlegen eines Dokuments wertet Firestore auch die update-Regel
+       aus. Dort gibt es noch kein `resource`, beruehrt() haette also nichts
+       zu vergleichen. Jede update-Regel fragt deshalb zuerst, ob das
+       Dokument ueberhaupt schon da ist. */
+    function vorhanden() { return resource != null; }
+
+    /* ============================================================
+       users/{uid} — Name, Serie, Einstellungen, Tagesprotokoll
+       ============================================================ */
+
+    /* `bereiche` ist das Altfeld aus der Zeit vor 2.0.0: Damals lagen alle
+       Karten im Nutzerdokument. Seit dem Umzug bleibt es als Sicherheitsnetz
+       liegen (persistAll schreibt mit merge). Es darf deshalb DA SEIN, aber
+       nicht mehr beschrieben werden — löschen ist erlaubt. Sonst wäre es die
+       offene Tür, durch die beliebige Daten ins Nutzerdokument kämen. */
+    function nutzerFelder() {
+      return ['name', 'streak', 'settings', 'schemaVersion', 'verlauf', 'bereiche'];
+    }
+
+    function streakOk(s) {
+      return s is map && s.size() <= 20
+        && (!('count' in s)             || zahlOderNull(s.count, 0, 100000))
+        && (!('beste' in s)             || zahlOderNull(s.beste, 0, 100000))
+        && (!('vorher' in s)            || zahlOderNull(s.vorher, 0, 100000))
+        && (!('sockel' in s)            || zahlOderNull(s.sockel, 0, 100000))
+        && (!('jokerAm' in s)           || datumOderNull(s.jokerAm))
+        && (!('gerissenAm' in s)        || datumOderNull(s.gerissenAm))
+        && (!('sockelBis' in s)         || datumOderNull(s.sockelBis))
+        && (!('lastCompletedDate' in s) || datumOderNull(s.lastCompletedDate))
+        && (!('lastEvaluatedDate' in s) || datumOderNull(s.lastEvaluatedDate));
+    }
+
+    /* Anders als bei der Serie ist hasOnly hier gefahrlos: persistSettings()
+       schreibt das Feld immer als Ganzes neu, ein altes Teilfeld kann also
+       nicht stehenbleiben und den nächsten Schreibvorgang blockieren. */
+    function settingsOk(s) {
+      return s is map
+        && s.keys().hasOnly(['arabGroesse', 'lastBackup', 'thema'])
+        && (!('arabGroesse' in s) || text(s.arabGroesse, 20))
+        && (!('thema' in s)       || text(s.thema, 20))
+        && (!('lastBackup' in s)  || datumOderNull(s.lastBackup));
+    }
+
+    /* VERLAUF_TAGE ist 120; die App räumt Älteres selbst weg
+       (verlaufAufraeumen). 400 lässt Luft für Geräte, die lange nicht
+       aufgeräumt haben. Die Tagesschlüssel selbst sind nicht prüfbar. */
+    function nutzerWerte(d, pruefen) {
+      return (!pruefen.hasAny(['name'])          || text(d.name, 200))
+          && (!pruefen.hasAny(['schemaVersion']) || zahl(d.schemaVersion, 0, 99))
+          && (!pruefen.hasAny(['streak'])        || streakOk(d.streak))
+          && (!pruefen.hasAny(['settings'])      || settingsOk(d.settings))
+          && (!pruefen.hasAny(['verlauf'])       || (d.verlauf is map && d.verlauf.size() <= 400));
+    }
+
     match /users/{uid} {
-      allow read, write: if request.auth != null
-                         && request.auth.uid == uid
-                         && request.auth.token.email_verified == true;
-      match /{document=**} {
-        allow read, write: if request.auth != null
-                           && request.auth.uid == uid
-                           && request.auth.token.email_verified == true;
+      allow read, delete: if eigenesKonto(uid);
+
+      allow create: if eigenesKonto(uid)
+                    && request.resource.data.keys().hasOnly(nutzerFelder())
+                    && !('bereiche' in request.resource.data)
+                    && nutzerWerte(request.resource.data, request.resource.data.keys());
+
+      allow update: if eigenesKonto(uid) && vorhanden()
+                    && beruehrt().hasOnly(nutzerFelder())
+                    && (!beruehrt().hasAny(['bereiche']) || !('bereiche' in request.resource.data))
+                    && nutzerWerte(request.resource.data, beruehrt());
+
+      /* ============================================================
+         users/{uid}/bereiche/{bid} — Name, Reihenfolge, Speicherkarten
+         ============================================================ */
+
+      function bereichFelder() {
+        return ['name', 'order', 'gefuehrt', 'satzId', 'satzVersion', 'sets'];
+      }
+
+      /* `karten` steht bewusst NICHT in der Liste. Seit 2.0.0 liegt jede
+         Karte als eigenes Dokument; bereichFelder() in app.js baut die Map
+         zwar noch, patchDoc() und persistAll() schneiden sie vor dem
+         Schreiben ab. Ein Bereichsdokument mit Karten darin wäre also ein
+         Rückschritt in die 1-MiB-Grenze, an der 2.0.0 gescheitert ist. */
+      function bereichWerte(d, pruefen) {
+        return (!pruefen.hasAny(['name'])        || text(d.name, 200))
+            && (!pruefen.hasAny(['order'])       || d.order is int)
+            && (!pruefen.hasAny(['gefuehrt'])    || d.gefuehrt is bool)
+            && (!pruefen.hasAny(['satzId'])      || textOderNull(d.satzId, 200))
+            && (!pruefen.hasAny(['satzVersion']) || zahlOderNull(d.satzVersion, 0, 100000))
+            && (!pruefen.hasAny(['sets'])        || (d.sets is map && d.sets.size() <= 500));
+      }
+
+      match /bereiche/{bid} {
+        allow read, delete: if eigenesKonto(uid);
+
+        allow create: if eigenesKonto(uid)
+                      && request.resource.data.keys().hasOnly(bereichFelder())
+                      && request.resource.data.keys().hasAll(['name'])
+                      && bereichWerte(request.resource.data, request.resource.data.keys());
+
+        allow update: if eigenesKonto(uid) && vorhanden()
+                      && beruehrt().hasOnly(bereichFelder())
+                      && bereichWerte(request.resource.data, beruehrt());
+      }
+
+      /* ============================================================
+         users/{uid}/karten/{cid} — eine Vokabel
+         ============================================================ */
+
+      function kartenFelder() {
+        return ['wort', 'uebersetzung', 'extra', 'stufe', 'nextReview',
+                'ersteBewertung', 'rueckfaelle', 'quelleId', 'maxStufe',
+                'order', 'bereichId'];
+      }
+
+      /* `order` ist absichtlich unbegrenzt: ordnungVorn() in app.js setzt
+         -Date.now(), um eine neue Karte vorn einzusortieren. Die Zahl sagt
+         nur etwas über die Reihenfolge aus und kann nichts verfälschen. */
+      function kartenWerte(d, pruefen) {
+        return (!pruefen.hasAny(['wort'])           || text(d.wort, 1000))
+            && (!pruefen.hasAny(['uebersetzung'])   || text(d.uebersetzung, 1000))
+            && (!pruefen.hasAny(['extra'])          || textOderNull(d.extra, 5000))
+            && (!pruefen.hasAny(['stufe'])          || zahl(d.stufe, 0, 12))
+            && (!pruefen.hasAny(['maxStufe'])       || zahl(d.maxStufe, 0, 12))
+            && (!pruefen.hasAny(['nextReview'])     || datum(d.nextReview))
+            && (!pruefen.hasAny(['ersteBewertung']) || datumOderNull(d.ersteBewertung))
+            && (!pruefen.hasAny(['rueckfaelle'])    || zahl(d.rueckfaelle, 0, 100000))
+            && (!pruefen.hasAny(['quelleId'])       || textOderNull(d.quelleId, 200))
+            && (!pruefen.hasAny(['order'])          || d.order is int)
+            && (!pruefen.hasAny(['bereichId'])      || text(d.bereichId, 200));
+      }
+
+      match /karten/{cid} {
+        allow read, delete: if eigenesKonto(uid);
+
+        allow create: if eigenesKonto(uid)
+                      && request.resource.data.keys().hasOnly(kartenFelder())
+                      && request.resource.data.keys().hasAll(
+                           ['wort', 'uebersetzung', 'stufe', 'nextReview', 'bereichId'])
+                      && kartenWerte(request.resource.data, request.resource.data.keys());
+
+        allow update: if eigenesKonto(uid) && vorhanden()
+                      && beruehrt().hasOnly(kartenFelder())
+                      && kartenWerte(request.resource.data, beruehrt());
       }
     }
+
+    /* Alles andere: kein match, also kein Zugriff. Das ersetzt das frühere
+       match /{document=**} unter users/{uid} — damit ließ sich unter dem
+       eigenen Konto jeder erfundene Unterpfad anlegen und beliebig füllen.
+       Die App benutzt genau die zwei Sammlungen oben. */
   }
 }

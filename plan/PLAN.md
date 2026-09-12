@@ -71,7 +71,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | Phase | Inhalt | Status | Ordner |
 |---|---|---|---|
 | **0** | Ist-Aufnahme: jeder Punkt aus Konzept-Abschnitt 4 bekommt einen Status am Code | `fertig` → [`BEFUND.md`](phase-0-bestand/BEFUND.md) | [`phase-0-bestand/`](phase-0-bestand/) |
-| **1** | Datenzugriff härten: `firestore.rules` Feld für Feld, Feld-Manipulation, Import-Prüfung, XSS | `offen` — **als Nächstes** | [`phase-1-datenzugriff/`](phase-1-datenzugriff/) |
+| **1** | Datenzugriff härten: `firestore.rules` Feld für Feld, Feld-Manipulation, Import-Prüfung, XSS | `läuft` — Regeln stehen und sind geprüft, **aber noch nicht in der Firebase-Konsole eingespielt** | [`phase-1-datenzugriff/`](phase-1-datenzugriff/) |
 | **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `offen` | [`phase-2-konto/`](phase-2-konto/) |
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `offen` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `offen` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
@@ -184,16 +184,25 @@ Festgelegt vom Betreiber am 12.09.2026:
 |---|---|
 | 2026-09-12 | Plan und Ordnerstruktur für alle Phasen angelegt, Plan selbst gegengeprüft. |
 | 2026-09-12 | **Phase 0 fertig.** Alle 50 Punkte aus Konzept-Abschnitt 4 mit Status und Beleg am Code: 10 × `✅`, 13 × `🔧`, 16 × `⏳`, 11 × `➖`. Kein Produktivcode geändert. |
+| 2026-09-12 | **Phase 1 begonnen, drei von vier Punkten erledigt** (Version 3.0.4). `firestore.rules` prüft jetzt auch, *was* geschrieben wird — Feldliste, Art und Grenzen je Dokument, nur noch die zwei Sammlungen, die die App benutzt. Mit dem Firestore-Emulator geprüft: 62 Fälle (31 × normaler Betrieb, 31 × Missbrauch), alle wie erwartet. Dazu Textgrenzen für Wort/Übersetzung/Notiz und eine Vorprüfung des Imports (Größe, Struktur, Anzahl). XSS lückenlos durchgeprüft: **keine Lücke**, nichts zu ändern. |
 
 ## Wo eine neue Session anfängt
 
-**Als Nächstes: Phase 1** — [`phase-1-datenzugriff/AUFTRAG.md`](phase-1-datenzugriff/AUFTRAG.md).
+**Weiter in Phase 1** — [`phase-1-datenzugriff/AUFTRAG.md`](phase-1-datenzugriff/AUFTRAG.md),
+letzter Eintrag in [`phase-1-datenzugriff/LOGBUCH.md`](phase-1-datenzugriff/LOGBUCH.md).
 
-Vorher zu klären (steht in [`phase-0-bestand/BEFUND.md`](phase-0-bestand/BEFUND.md),
-Abschnitt 4.2): Die Datei `firestore.rules` im Repo ist die *versionierte*
-Fassung. Ob sie auch die *aktive* ist, zeigt nur die Firebase-Konsole — vor der
-ersten Regeländerung abgleichen.
+Von den vier Punkten des Auftrags sind drei erledigt: die Regeln Feld für Feld
+(1), die Feld-Manipulation (2) und die Import-Prüfung (3); Punkt 4 (XSS) ist
+geprüft und ohne Befund. Offen ist der abschließende Sicherheits-Durchlauf, den
+`phase-0-bestand/BEFUND.md` in Abschnitt 4.5 ausdrücklich dem **Ende von
+Phase 1** zuordnet.
 
-Der schwerste Fund von Phase 0 und damit der erste Schritt in Phase 1: Die
-Regeln prüfen heute, *wer* schreibt, aber nie *was*. `maxStufe` steuert das
-Freischalten der nächsten Lektion und ist vom Browser aus frei setzbar.
+**Eine Sperre davor, und sie kann nur ein Mensch lösen:** Die neuen Regeln
+liegen im Repo, sind aber **nicht aktiv**. Firestore holt sich `firestore.rules`
+nicht aus GitHub — bis jemand sie in der Firebase-Konsole einspielt, gilt weiter
+der alte Satz von 15 Zeilen, und die Daten sind so ungeschützt wie vorher. Der
+Abgleich, den Phase 0 als Vorbedingung notiert hatte (ist die Datei im Repo auch
+die aktive?), gehört in denselben Arbeitsgang.
+
+Erst danach ist der Sicherheits-Durchlauf sinnvoll, und erst danach geht
+Phase 1 auf `fertig`.

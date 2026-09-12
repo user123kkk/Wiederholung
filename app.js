@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.3";
+const APP_VERSION = "3.0.4";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -114,6 +114,45 @@ function nextReviewForStufe(stufe) {
 function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
+
+/* ---------- Obergrenzen fuer selbst eingegebenen Text ----------
+   Bis 3.0.3 hatten Wort, Uebersetzung und Notiz KEINE Grenze: normCard machte
+   nur String(...) daraus. Eine Karte mit einem halben Megabyte Text war damit
+   moeglich - nicht boesartig gedacht, aber sie laedt bei jedem Start mit,
+   zaehlt gegen die 1-MiB-Grenze eines Firestore-Dokuments und macht die Liste
+   unbenutzbar.
+
+   Die Zahlen sind bewusst weit: Eine Vokabel ist ein Wort oder ein Satz, kein
+   Absatz; 1000 Zeichen fasst auch einen langen Beispielsatz, und die Notiz
+   nimmt mit 5000 Zeichen jeden Merksatz auf. Wer unter der Grenze bleibt -
+   also jeder normale Gebrauch -, merkt nichts davon.
+
+   Dieselben Zahlen stehen noch einmal in firestore.rules. Sie MUESSEN dort
+   stehen: Was hier geprueft wird, prueft der Browser - und der gehoert dem
+   Nutzer. Wird hier etwas geaendert, dort mitaendern. */
+const MAX_WORT = 1000;     // wort und uebersetzung
+const MAX_EXTRA = 5000;    // Beispielsatz, Bild-Link oder Notiz
+function kuerze(s, max) { return String(s === undefined || s === null ? "" : s).slice(0, max); }
+
+/* ---------- Obergrenzen fuer den Import ----------
+   Der JSON-Import ist der einzige Dateiupload der App. Bis 3.0.3 wurde die
+   Datei ohne jede Vorpruefung eingelesen: readAsText nahm sie in beliebiger
+   Groesse, und was danach an Bereichen und Karten herauskam, ging ungezaehlt
+   in die Cloud. Eine Datei musste dafuer nicht einmal boesartig sein - eine
+   versehentlich doppelt zusammengefuegte Sicherung reicht.
+
+   Geprueft wird in dieser Reihenfolge, jeweils BEVOR etwas geschrieben wird:
+   erst die Dateigroesse (ohne die Datei zu lesen), dann die Struktur, dann
+   die Anzahl. Die Zahlen sind so gewaehlt, dass eine echte Sicherung
+   durchgeht: Der groesste denkbare Kartensatz hier hat einige tausend
+   Karten, und 20.000 Karten als JSON bleiben deutlich unter 5 MB. */
+const IMPORT_MAX_BYTES = 5 * 1024 * 1024;
+const IMPORT_MAX_BEREICHE = 200;
+const IMPORT_MAX_KARTEN = 20000;
+/* Speicherkarten je Bereich. Dieselbe Zahl steht in firestore.rules - ohne
+   sie hier wuerde die Regel eine Datei abweisen, die die App vorher
+   klaglos angenommen hat, und der Nutzer saehe nur "Speichern fehlgeschlagen". */
+const MAX_SETS = 500;
 function shuffled(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -144,9 +183,9 @@ function normCard(c) {
   else if (c.ersteBewertung === undefined && stufe > 0) erste = LEGACY_FIRST_GRADE;
   return {
     id: typeof c.id === "string" && c.id ? c.id : genId(),
-    wort: String(c.wort),
-    uebersetzung: String(c.uebersetzung),
-    extra: typeof c.extra === "string" ? c.extra : "",
+    wort: kuerze(c.wort, MAX_WORT),
+    uebersetzung: kuerze(c.uebersetzung, MAX_WORT),
+    extra: typeof c.extra === "string" ? c.extra.slice(0, MAX_EXTRA) : "",
     stufe: stufe,
     nextReview: /^\d{4}-\d{2}-\d{2}$/.test(c.nextReview) ? c.nextReview : todayStr(),
     ersteBewertung: erste,
@@ -483,6 +522,7 @@ function normBereiche(arr) {
           .map(normCard),
         sets: (Array.isArray(b.sets) ? b.sets : [])
           .filter(s => s && typeof s === "object")
+          .slice(0, MAX_SETS)
           .map(normSet)
       });
     }
@@ -2468,6 +2508,15 @@ async function satzZusammenfuehren(ziel, datei) {
 
 function importBackupFile(file) {
   if (!file) return;
+  /* Zuerst die Groesse - das geht, ohne die Datei anzufassen. Eine 400-MB-
+     Datei einzulesen und erst danach festzustellen, dass sie nicht passt,
+     laesst das Handy vorher stehen. */
+  if (typeof file.size === "number" && file.size > IMPORT_MAX_BYTES) {
+    dlgAlert("Diese Datei ist " + Math.round(file.size / 1024 / 1024) + " MB groß. Eingespielt werden Dateien bis " +
+      Math.round(IMPORT_MAX_BYTES / 1024 / 1024) + " MB.\n\nEine echte Sicherung dieser App ist deutlich kleiner – " +
+      "vermutlich ist es die falsche Datei.", "Datei zu groß");
+    return;
+  }
   const reader = new FileReader();
   reader.onload = async () => {
     let data;
@@ -2479,6 +2528,23 @@ function importBackupFile(file) {
     }
     if (!data || !Array.isArray(data.bereiche)) {
       await dlgAlert("Diese Datei ist keine gültige Lernkarten-Backup-Datei.", "Import nicht möglich");
+      return;
+    }
+    /* Anzahl pruefen, bevor normBereiche den ganzen Bestand aufbaut und
+       bevor irgendetwas geschrieben wird. Gezaehlt wird auf den Rohdaten:
+       Was hier zu gross ist, soll gar nicht erst entstehen. */
+    if (data.bereiche.length > IMPORT_MAX_BEREICHE) {
+      await dlgAlert("Diese Datei enthält " + data.bereiche.length + " Bereiche. Eingespielt werden bis zu " +
+        IMPORT_MAX_BEREICHE + ".", "Import nicht möglich");
+      return;
+    }
+    let kartenGesamt = 0;
+    for (const b of data.bereiche) {
+      if (b && typeof b === "object" && Array.isArray(b.karten)) kartenGesamt += b.karten.length;
+    }
+    if (kartenGesamt > IMPORT_MAX_KARTEN) {
+      await dlgAlert("Diese Datei enthält " + kartenGesamt + " Karten. Eingespielt werden bis zu " +
+        IMPORT_MAX_KARTEN + " auf einmal.", "Import nicht möglich");
       return;
     }
     /* 2.19.0: Eingespielt wird aus den Einstellungen heraus - das Ergebnis
@@ -3155,9 +3221,12 @@ function findeDuplikat(wort, exceptId, cards) {
 }
 async function submitCardForm() {
   if (!kartenBearbeitbar()) { await hinweisGefuehrt("Karten anlegen oder ändern"); return; }
-  const wort = val("f-wort").trim();
-  const ueb = val("f-ueb").trim();
-  const extra = val("f-extra").trim();
+  /* Gekappt wird hier und nicht erst in normCard: Dieses Formular schreibt
+     seine Felder mit einem gezielten Patch direkt in die Cloud, normCard
+     kommt auf diesem Weg gar nicht vor. */
+  const wort = val("f-wort").trim().slice(0, MAX_WORT);
+  const ueb = val("f-ueb").trim().slice(0, MAX_WORT);
+  const extra = val("f-extra").trim().slice(0, MAX_EXTRA);
   if (!wort || !ueb) {
     await dlgAlert("Bitte Wort und Übersetzung ausfüllen.", "Noch unvollständig");
     return;
@@ -5368,11 +5437,11 @@ function renderVerwalten() {
   html += '<div class="card">';
   html += '<h2>' + (editing ? "Karte bearbeiten" : "Neue Karte") + '</h2>';
   html += '<div class="field"><label for="f-wort">Wort <span class="opt">– Pflicht</span></label>';
-  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" value="' + esc(formDraft.wort) + '"></div>';
+  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.wort) + '"></div>';
   html += '<div class="field"><label for="f-ueb">Übersetzung <span class="opt">– Pflicht</span></label>';
-  html += '<input type="text" id="f-ueb" value="' + esc(formDraft.ueb) + '"></div>';
+  html += '<input type="text" id="f-ueb" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.ueb) + '"></div>';
   html += '<div class="field"><label for="f-extra">Beispielsatz, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
-  html += '<textarea id="f-extra" rows="2">' + esc(formDraft.extra) + '</textarea></div>';
+  html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '">' + esc(formDraft.extra) + '</textarea></div>';
   if (editing) {
     html += '<div class="field"><label for="f-stufe">Wiederholungsstufe</label>';
     html += '<input type="number" id="f-stufe" min="0" max="' + MAX_STUFE + '" step="1" value="' + editing.stufe + '" inputmode="numeric"></div>';
