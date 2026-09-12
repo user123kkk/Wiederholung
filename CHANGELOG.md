@@ -1,3 +1,30 @@
+## 3.0.1 – 12. September 2026
+
+### Geändert
+
+- **Die Marke ist jetzt die echte Blüte, nicht mehr das Blatt-Symbol.**
+  Bisher zeichnete `ikon("marke")` ein offenes, dünnes Blatt-Icon – frei
+  erfunden, ohne Bezug zum tatsächlichen Zeichen auf TikTok & Co. Jetzt
+  liegt dort dieselbe fünfblättrige Blüte mit Stiel, als gefüllte Fläche
+  statt Umriss. Betroffen: Boot-Bildschirm, die Marke über den
+  Solo-Bildschirmen (Anmelden, Registrieren, Einrichtung) und
+  `icon.svg` (Browser-Tab, Startbildschirm, installierte App).
+- **In der App bleibt die Blüte `currentColor`, in `icon.svg` wird sie fest
+  Creme.** Im Vorbild ist die Blüte cremeweiß auf Schwarz – für die
+  App-Instanzen würde das im hellen Thema aber auf fast demselben
+  Papierton verschwinden. Dort trägt die Blüte weiterhin die Akzentfarbe
+  (Gold im Dunkeln, Bronze im Hellen), wie das Blatt-Symbol vorher auch.
+  `icon.svg` kennt kein Thema und bleibt darum bei Creme auf
+  Fast-Schwarz, wie im Original.
+- **Neu: `--mark-glow`.** Ein weicher Schein hinter der Marke auf dem
+  Boot-Bildschirm und über den Solo-Bildschirmen – nur im Dunkeln, wo
+  Licht auf Fast-Schwarz Sinn ergibt. Im hellen Thema `none`.
+- `icon.svg` hat jetzt zusätzlich einen zentrierten Schein-Verlauf statt
+  reiner Fläche, dazu ist die Blüte um 5 % verkleinert, damit die Spitze
+  im maskierbaren Kreis (40 % Radius) sicher Platz hat.
+
+---
+
 ## 3.0.0 – 12. September 2026 — „Codex"
 
 Eine neue Oberfläche. Der Stoff, die Stufen, die Cloud und die Konten sind

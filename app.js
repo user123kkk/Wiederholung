@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.0";
+const APP_VERSION = "3.0.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -432,7 +432,7 @@ const ICON_PFADE = {
   verschieben: '<path d="M4 6.5h9a4 4 0 0 1 4 4v6"/><path d="M13.5 13 17 16.5 20.5 13"/>',
   hand:        '<path d="M4 19.5h16"/><path d="M6.5 15.5 15 7a2.1 2.1 0 0 1 3 3l-8.5 8.5H6.5z"/>',
   auswaehlen:  '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/>',
-  marke:       '<path d="M12 2.5c3 4 6.5 5.8 6.5 10a6.5 6.5 0 0 1-13 0c0-4.2 3.5-6 6.5-10z"/><path d="M12 21.5v-6"/>'
+  marke:       '<path fill="currentColor" stroke="none" d="M5.8,13.3 C4.6,12 3.4,11.6 3.2,10.4 C3,9.2 5.6,10.2 7,11.5 C7.6,11 7.6,7 8.2,4.8 C8.6,3.4 9.8,7 10.3,8.3 C10.8,8.6 11.2,3.2 12,2 C12.8,3.2 13.2,8.6 13.7,8.3 C14.2,7 15.4,3.4 15.8,4.8 C16.4,7 16.4,11 17,11.5 C18.4,10.2 21,9.2 20.8,10.4 C20.6,11.6 19.4,12 18.2,13.3 C16.2,15.3 7.8,15.3 5.8,13.3 Z"/><path d="M12 15.1v5.9"/>'
 };
 /* Kleines Symbol im Fliesstext (16px, .icon) - der bisherige Aufruf. */
 function iconSvg(name, cls) {

@@ -117,6 +117,10 @@
   --marker: rgba(227, 200, 138, 0.26);
   --glow: radial-gradient(120% 76% at 50% -12%, #241f15 0%, #121009 44%, var(--bg) 76%);
   --skeleton: linear-gradient(90deg, var(--surface) 0%, var(--surface-raised) 50%, var(--surface) 100%);
+  /* Schein hinter der Marke, dort wo sie allein auftritt (Boot, Anmeldung) -
+     nur im Dunkeln: Licht auf warmem Fast-Schwarz. Auf Papier gibt es das
+     nicht, siehe data-thema="hell" unten. */
+  --mark-glow: drop-shadow(0 0 6px rgba(227, 200, 138, 0.50)) drop-shadow(0 0 16px rgba(227, 200, 138, 0.30));
 
   /* ---- Abstände · die 4er-Leiter ---------------------------------------- */
   --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
@@ -231,6 +235,7 @@
   --backdrop: rgba(40, 33, 20, 0.42);
   --marker: rgba(138, 106, 36, 0.22);
   --glow: radial-gradient(120% 76% at 50% -12%, #fbf7ec 0%, #f5efe2 44%, var(--bg) 76%);
+  --mark-glow: none;
 
   /* Auf Papier trägt ein Schatten — dort darf er die Arbeit mitmachen. */
   --shadow-sm: 0 1px 2px rgba(60, 48, 25, 0.10);
@@ -439,7 +444,7 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   display: flex; align-items: center; gap: var(--space-3);
   margin-bottom: var(--space-7);
 }
-.solo-mark .i { color: var(--accent); }
+.solo-mark .i { color: var(--accent); filter: var(--mark-glow); }
 .solo-mark strong {
   font-family: var(--font-text); font-size: 1.15rem; font-weight: 600;
   letter-spacing: -0.01em;
@@ -1582,7 +1587,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   gap: var(--space-5); padding: var(--space-7);
   text-align: center;
 }
-.boot__mark { color: var(--accent); animation: puls 1.6s var(--ease-in-out) infinite; }
+.boot__mark { color: var(--accent); filter: var(--mark-glow); animation: puls 1.6s var(--ease-in-out) infinite; }
 .boot__text { font-size: 0.875rem; color: var(--text-2); }
 
 /* ---- Fehler -------------------------------------------------------------
