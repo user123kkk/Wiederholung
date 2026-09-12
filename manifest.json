@@ -1,0 +1,23 @@
+{
+  "id": "/adrabic/wiederholung/",
+  "name": "Adrabic-Wiederholung",
+  "short_name": "Adrabic",
+  "description": "Karteikarten mit Wiederholung nach Stufen – für arabische Vokabeln und alles andere, was sitzen soll.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#0b0a09",
+  "theme_color": "#0b0a09",
+  "lang": "de",
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}

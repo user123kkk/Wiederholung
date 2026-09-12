@@ -1,0 +1,1891 @@
+/* ============================================================================
+   ADRABIC-WIEDERHOLUNG — Gestaltung 3.0.0  ("Codex")
+   ============================================================================
+
+   Drei Sätze, aus denen sich alles Weitere ergibt:
+
+   1. GOLD IST DIE HANDLUNG, DIE DRAN IST. Pro Bildschirm genau EINE gefüllte
+      Goldfläche. Alles andere trägt Gold nur als Schrift, Rand oder Schleier.
+      (Regel aus 2.17.0 — sie hat sich bewährt und bleibt.)
+
+   2. HIERARCHIE ENTSTEHT DURCH ABSTAND UND HAARLINIE, NICHT DURCH KÄSTEN.
+      Vorher war jeder Abschnitt ein .panel. Wenn alles ein Kasten ist, ordnet
+      kein Kasten mehr etwas. Ein Kasten gibt es jetzt nur noch, wenn der
+      Inhalt ein DING ist: eine Karte, ein Kartensatz, die Bühne.
+
+   3. BEDIENUNG IST SYSTEMSCHRIFT, STOFF IST SERIFENSCHRIFT.
+      (Regel aus 2.18.0 — bleibt.)
+
+   Aufbau dieser Datei:
+      1  Tokens (Primitive → Semantik)      9  Lernen / Bühne
+      2  Reset & Basis                      10 Durchsicht
+      3  Bewegung                           11 Verwalten
+      4  Gerüst (AppBar, Navigation)        12 Fortschritt
+      5  Typografie                         13 Rückmeldung (leer/lädt/Fehler)
+      6  Knöpfe                             14 Dialog & Sheet
+      7  Formulare                          15 Handschrift
+      8  Flächen & Listen                   16 Arabisch
+                                            17 Breite Bildschirme
+   ========================================================================= */
+
+
+/* ===========================================================================
+   1 · TOKENS
+   ---------------------------------------------------------------------------
+   Drei Schichten: PRIMITIVE (die rohe Palette) → SEMANTIK (Rollen) →
+   Komponenten. Komponenten greifen NIE auf Primitive zu. Wer die Palette
+   ändern will, ändert Schicht 1; wer die Bedeutung ändern will, Schicht 2.
+   ========================================================================= */
+
+:root {
+  /* ---- Schriftfamilien -------------------------------------------------- */
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-text: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+  --font-arabic: 'UthmanicHafs', 'Amiri', 'Amiri Quran', 'Scheherazade New', 'Noto Naskh Arabic', serif;
+  /* Alter Name, damit nichts bricht, was ihn noch benutzt. */
+  --font-lesen: var(--font-text);
+
+  /* ---- Primitive · dunkel ----------------------------------------------- */
+  --ink-900: #0b0a09;
+  --ink-870: #0f0e0c;
+  --ink-850: #080807;
+  --ink-800: #141311;
+  --ink-750: #1c1a17;
+  --ink-700: #24211d;
+  --line-700: #322e28;
+  --line-800: #272420;
+  --line-850: #1c1a17;
+  --paper-50: #f5f3ec;
+  --paper-300: #a8a69d;
+  --paper-500: #74716a;
+  --gold-300: #eed8a6;
+  --gold-400: #e3c88a;
+  --gold-500: #c9a961;
+  --gold-600: #a98a46;
+  --verdigris-400: #6aa588;
+  --cinnabar-400: #c96b52;
+
+  /* ---- Semantik · Flächen ----------------------------------------------- */
+  --bg: var(--ink-900);
+  --bg-sunken: var(--ink-850);
+  --surface: var(--ink-800);
+  --surface-raised: var(--ink-750);
+  --surface-overlay: var(--ink-700);
+
+  /* ---- Semantik · Text -------------------------------------------------- */
+  --text-1: var(--paper-50);
+  --text-2: var(--paper-300);
+  --text-3: var(--paper-500);
+  --text-on-accent: #1a1509;
+
+  /* ---- Semantik · Linien ------------------------------------------------ */
+  --border: var(--line-800);
+  --border-strong: var(--line-700);
+  --border-subtle: var(--line-850);
+
+  /* ---- Semantik · Akzent ------------------------------------------------ */
+  --accent: var(--gold-400);
+  --accent-hover: var(--gold-300);
+  --accent-press: var(--gold-500);
+  --accent-border: rgba(227, 200, 138, 0.34);
+  --accent-bg: rgba(227, 200, 138, 0.12);
+  --accent-bg-strong: rgba(227, 200, 138, 0.20);
+
+  /* ---- Semantik · Status ------------------------------------------------
+     Bewusst nur drei Statusfarben. Gold IST die Aufmerksamkeitsfarbe; eine
+     vierte Farbe für "Warnung" würde Regel 1 brechen. */
+  --positive: var(--verdigris-400);
+  --positive-bg: rgba(106, 165, 136, 0.14);
+  --positive-border: rgba(106, 165, 136, 0.38);
+  --negative: var(--cinnabar-400);
+  --negative-bg: rgba(201, 107, 82, 0.13);
+  --negative-border: rgba(201, 107, 82, 0.38);
+
+  /* ---- Die Lernstufen-Rampe ---------------------------------------------
+     Die Signatur des Systems. Kalender, Stufenband, Lektionsbalken, Badges
+     und Sparkline sprechen dieselbe Sprache: mehr Gold = sitzt besser.
+     Vorher hatte jeder dieser Orte seine eigene Skala. */
+  --stufe-0: rgba(227, 200, 138, 0.15);
+  --stufe-1: rgba(227, 200, 138, 0.24);
+  --stufe-2: rgba(227, 200, 138, 0.42);
+  --stufe-3: rgba(227, 200, 138, 0.64);
+  --stufe-4: rgba(227, 200, 138, 0.90);
+
+  /* ---- System ------------------------------------------------------------ */
+  --focus-ring: var(--accent);
+  --backdrop: rgba(0, 0, 0, 0.72);
+  --marker: rgba(227, 200, 138, 0.26);
+  --glow: radial-gradient(120% 76% at 50% -12%, #241f15 0%, #121009 44%, var(--bg) 76%);
+  --skeleton: linear-gradient(90deg, var(--surface) 0%, var(--surface-raised) 50%, var(--surface) 100%);
+
+  /* ---- Abstände · die 4er-Leiter ---------------------------------------- */
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 20px;  --space-6: 24px;  --space-7: 32px;  --space-8: 40px;
+  --space-9: 48px;  --space-10: 64px;
+  /* Alte Namen — es steht noch reichlich var(--s4) in den Vorlagen. */
+  --s1: var(--space-1); --s2: var(--space-2); --s3: var(--space-3);
+  --s4: var(--space-4); --s5: var(--space-5); --s6: var(--space-6);
+  --s7: var(--space-7);
+
+  /* ---- Layout ------------------------------------------------------------ */
+  --gutter: var(--space-4);
+  --stack: var(--space-6);
+  --stack-tight: var(--space-3);
+  --measure: 680px;
+  --appbar-h: 52px;
+  --nav-h: 58px;
+  --rail-w: 240px;
+  --modebar-h: 48px;
+
+  /* ---- Trefferflächen ---------------------------------------------------- */
+  --tap: 44px;
+  --ctrl-sm: 36px;
+  --ctrl-md: 44px;
+  --ctrl-lg: 52px;
+
+  /* ---- Radius · wächst mit der Fläche ------------------------------------ */
+  --r-xs: 6px;  --r-sm: 10px; --r-md: 14px;
+  --r-lg: 20px; --r-xl: 28px; --r-full: 999px;
+  --radius: var(--r-md); --radius-sm: var(--r-sm); --radius-lg: var(--r-lg);
+
+  /* ---- Elevation ---------------------------------------------------------
+     Auf warmem Fast-Schwarz ist ein Schatten fast unsichtbar. Tiefe kommt
+     deshalb zuerst aus Flächenton + Haarlinie; Schatten erst ab Stufe 2. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.42), 0 1px 3px rgba(0, 0, 0, 0.30);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow: var(--shadow-sm);
+
+  /* ---- Bewegung ---------------------------------------------------------- */
+  --dur-instant: 90ms;
+  --dur-fast: 140ms;
+  --dur-base: 200ms;
+  --dur-slow: 280ms;
+  --ease-out: cubic-bezier(0.20, 0.80, 0.20, 1);
+  --ease-in-out: cubic-bezier(0.40, 0, 0.20, 1);
+  --ease-spring: cubic-bezier(0.34, 1.40, 0.64, 1);
+
+  /* ---- Ebenen ------------------------------------------------------------ */
+  --z-sticky: 10;
+  --z-nav: 20;
+  --z-overlay: 30;
+  --z-sheet: 40;
+  --z-toast: 50;
+  --z-fullscreen: 60;
+
+  /* ---- Ränder, die das Gerät freihält ------------------------------------ */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------------------
+   Die helle Fassung.
+
+   KEINE Umkehrung der dunklen: Gold auf Weiß ist blass. Statt der Helligkeit
+   dreht sich das Bild — aus Tinte auf dunklem Grund wird Tinte auf Papier,
+   aus Blattgold wird Bronze. Gesetzt über data-thema am <html>; "automatisch"
+   wird schon im JavaScript aufgelöst, damit die Farben nur an EINER Stelle
+   stehen. (Prinzip aus 2.20.0 — übernommen, neu sortiert.)
+   ------------------------------------------------------------------------ */
+:root[data-thema="hell"] {
+  color-scheme: light;
+
+  --ink-900: #f2ece0;
+  --ink-870: #f7f2e8;
+  --ink-850: #eae3d3;
+  --ink-800: #fdfbf6;
+  --ink-750: #ffffff;
+  --ink-700: #ffffff;
+  --line-700: #cfc3aa;
+  --line-800: #ddd3bf;
+  --line-850: #e9e1d0;
+  --paper-50: #241f18;
+  --paper-300: #655d4e;
+  --paper-500: #8b8273;
+  --gold-300: #6d5217;
+  --gold-400: #8a6a24;
+  --gold-500: #6d5217;
+  --gold-600: #b39a63;
+  --verdigris-400: #3d7a5c;
+  --cinnabar-400: #a8452e;
+
+  --text-on-accent: #fffdf6;
+  --accent-border: rgba(138, 106, 36, 0.34);
+  --accent-bg: rgba(138, 106, 36, 0.10);
+  --accent-bg-strong: rgba(138, 106, 36, 0.18);
+  --positive-bg: rgba(61, 122, 92, 0.12);
+  --positive-border: rgba(61, 122, 92, 0.38);
+  --negative-bg: rgba(168, 69, 46, 0.10);
+  --negative-border: rgba(168, 69, 46, 0.36);
+
+  --stufe-0: rgba(138, 106, 36, 0.14);
+  --stufe-1: rgba(138, 106, 36, 0.22);
+  --stufe-2: rgba(138, 106, 36, 0.40);
+  --stufe-3: rgba(138, 106, 36, 0.62);
+  --stufe-4: rgba(138, 106, 36, 0.88);
+
+  --backdrop: rgba(40, 33, 20, 0.42);
+  --marker: rgba(138, 106, 36, 0.22);
+  --glow: radial-gradient(120% 76% at 50% -12%, #fbf7ec 0%, #f5efe2 44%, var(--bg) 76%);
+
+  /* Auf Papier trägt ein Schatten — dort darf er die Arbeit mitmachen. */
+  --shadow-sm: 0 1px 2px rgba(60, 48, 25, 0.10);
+  --shadow-md: 0 4px 14px rgba(60, 48, 25, 0.10), 0 1px 3px rgba(60, 48, 25, 0.08);
+  --shadow-lg: 0 18px 50px rgba(60, 48, 25, 0.18), 0 2px 8px rgba(60, 48, 25, 0.10);
+}
+
+
+/* ===========================================================================
+   2 · RESET & BASIS
+   ========================================================================= */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text-1);
+  font-size: 15px;
+  line-height: 1.55;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* Kein Gummiband am Rand: im App-Modus sieht man sonst beim Überziehen den
+     nackten Hintergrund hinter der Seite — das verrät sofort, dass hier eine
+     Webseite läuft. */
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--accent-bg-strong); color: var(--text-1); }
+
+/* Lichtebene. fixed + inset:0 heißt genau Bildschirmgröße — damit ist der
+   Verlauf auf jedem Bildschirm gleich hell, unabhängig von der Seitenlänge,
+   und er bleibt beim Scrollen stehen. */
+.bg-glow {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: var(--glow);
+}
+
+/* Tastatur-Bedienung bleibt sichtbar, die Maus bekommt keinen Rahmen. */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+
+/* Nur für Screenreader. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Icons. Ein Raster (24×24), eine Strichstärke, immer currentColor —
+   gezeichnet wird in ikon() / iconSvg() in der app.js. Nie Emoji und SVG
+   in derselben Zeile. */
+.i, .icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+.i { width: 20px; height: 20px; display: block; }
+.icon { width: 16px; height: 16px; display: inline-block; vertical-align: -3px; }
+.i-sm { width: 16px; height: 16px; }
+.i-lg { width: 24px; height: 24px; }
+.i-xl { width: 34px; height: 34px; stroke-width: 1.3; }
+/* Gefüllte Fassung — aktive Navigation, gesetzter Merken-Stern. */
+.i.voll, .icon.voll, .icon.star.filled {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* Senkrechter Rhythmus kommt vom Container, nicht vom Kind. Damit
+   verschwinden die meisten margin-bottom-Einzelfälle von selbst. */
+.stack > * + * { margin-top: var(--stack); }
+.stack-tight > * + * { margin-top: var(--stack-tight); }
+
+hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
+
+
+/* ===========================================================================
+   3 · BEWEGUNG
+   ---------------------------------------------------------------------------
+   WICHTIG: render() ersetzt den kompletten Inhalt von #app. Auf frisch
+   eingefügten Elementen laufen CSS-TRANSITIONS NICHT — nur @keyframes.
+   Jede Eintrittsbewegung muss deshalb eine Animation sein; Transitions
+   bleiben Zuständen an bestehenden Elementen vorbehalten (Hover, Fokus,
+   Druck). Wer das vergisst, wundert sich, warum "nichts passiert".
+   ========================================================================= */
+
+@keyframes enter-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes enter-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes enter-pop {
+  0%   { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes sheet-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes stern-pop {
+  0%   { transform: scale(1); }
+  55%  { transform: scale(1.32); }
+  100% { transform: scale(1); }
+}
+@keyframes aufleuchten {
+  0%   { background: var(--accent-bg-strong); }
+  100% { background: transparent; }
+}
+@keyframes schimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+@keyframes puls {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+@keyframes dreh { to { transform: rotate(360deg); } }
+
+.anim-rise { animation: enter-rise var(--dur-base) var(--ease-out) both; }
+.anim-fade { animation: enter-fade var(--dur-base) var(--ease-out) both; }
+.aufleuchten { animation: aufleuchten 1.1s var(--ease-out); }
+
+/* Ein Interface, dem man beim Denken zusieht, wirkt langsam. Wer Bewegung
+   abbestellt hat, bekommt das Ergebnis sofort — nicht schneller, sondern
+   gar nicht bewegt. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ===========================================================================
+   4 · GERÜST
+   ---------------------------------------------------------------------------
+   Vier Ebenen: SHELL (AppBar + Navigation, bleibt stehen) · VIEW (Inhalt,
+   scrollt) · MODUS (Abfrage/Durchsicht, verdeckt die Shell) · OVERLAY
+   (Dialog, Sheet, Toast).
+
+   #app ist der Wurzelknoten, in den render() schreibt. AppBar und Navigation
+   liegen darin, sind aber position:fixed — sie hängen also am Bildschirm,
+   nicht an der Breite des Inhalts.
+   ------------------------------------------------------------------------ */
+
+#app, .container {
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Die Inhaltsspalte. Lesebreite, zentriert, mit Luft für AppBar und
+   Navigation — und für alles, was das Gerät selbst freihält. */
+.view {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding:
+    calc(var(--appbar-h) + var(--sat) + var(--space-5))
+    calc(var(--gutter) + var(--sar))
+    calc(var(--nav-h) + var(--sab) + var(--space-8))
+    calc(var(--gutter) + var(--sal));
+  animation: enter-fade var(--dur-fast) var(--ease-out) both;
+}
+
+/* Im Modus gibt es weder AppBar noch Navigation — nur die Modusleiste oben.
+   Der Inhalt bekommt dadurch fast den ganzen Bildschirm. */
+.view--modus {
+  padding-top: calc(var(--modebar-h) + var(--sat));
+  padding-bottom: 0;
+  min-height: 100dvh;
+  display: flex; flex-direction: column;
+}
+.view--modus > .study-card { flex: 1 1 auto; }
+
+/* Bildschirme ohne Shell: Anmeldung, Bestätigung, Umzug, Einrichtung.
+   Sie stehen für sich, mittig, ohne Navigation. */
+.solo {
+  max-width: 440px;
+  margin: 0 auto;
+  padding:
+    calc(var(--sat) + var(--space-9)) calc(var(--gutter) + var(--sar))
+    calc(var(--sab) + var(--space-9)) calc(var(--gutter) + var(--sal));
+  animation: enter-rise var(--dur-slow) var(--ease-out) both;
+}
+.solo-mark {
+  display: flex; align-items: center; gap: var(--space-3);
+  margin-bottom: var(--space-7);
+}
+.solo-mark .i { color: var(--accent); }
+.solo-mark strong {
+  font-family: var(--font-text); font-size: 1.15rem; font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---- AppBar ------------------------------------------------------------- */
+.appbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-nav);
+  height: calc(var(--appbar-h) + var(--sat));
+  padding: var(--sat) calc(var(--gutter) + var(--sar)) 0 calc(var(--gutter) + var(--sal));
+  display: flex; align-items: center; gap: var(--space-2);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid transparent;
+}
+/* Erst wenn etwas darunter durchläuft, bekommt die Leiste eine Kante. */
+.appbar.scrolled { border-bottom-color: var(--border-subtle); }
+.appbar__title {
+  font-family: var(--font-text); font-size: 1.02rem; font-weight: 600;
+  letter-spacing: -0.01em; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis;
+}
+.appbar__spacer { flex: 1 1 auto; }
+/* Am Handy traegt der Umschalter den Bereichsnamen; der Ansichtstitel waere
+   daneben doppelt. Ab 900 px kehrt sich das um. */
+.appbar__title--ansicht { display: none; }
+
+/* Der Bereichs-Umschalter. Ersetzt die waagerecht scrollende Pill-Reihe —
+   die kostete eine volle Zeile auf dem wichtigsten Bildschirm und hörte
+   ab vier Bereichen auf zu funktionieren. */
+.bereich-pill {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  height: 36px; padding: 0 var(--space-2) 0 var(--space-3);
+  max-width: 62vw;
+  background: var(--surface); color: var(--text-1);
+  border: 1px solid var(--border); border-radius: var(--r-full);
+  font: inherit; font-size: 0.875rem; font-weight: 600;
+  cursor: pointer; touch-action: manipulation;
+  transition: background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-instant) var(--ease-out);
+}
+.bereich-pill span {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bereich-pill .i { color: var(--text-3); width: 16px; height: 16px; }
+.bereich-pill:active { transform: scale(0.97); }
+
+/* ---- Navigation ---------------------------------------------------------
+   EIN Block, zwei Erscheinungen: unten am Handy, links am Desktop. Die
+   Position steckt ausschließlich hier — die Entscheidung ist damit jederzeit
+   umkehrbar, ohne Markup oder JavaScript anzufassen. */
+.nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-nav);
+  padding-bottom: var(--sab);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
+  border-top: 1px solid var(--border-subtle);
+}
+.nav__tabs {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+  height: var(--nav-h);
+  padding: 0 calc(var(--sal)) 0 calc(var(--sar));
+}
+.nav__tab {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 3px;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--text-3); font: inherit; font-size: 10.5px; font-weight: 600;
+  letter-spacing: 0.01em;
+  touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.nav__tab .i { width: 23px; height: 23px; }
+.nav__tab.active { color: var(--accent); }
+.nav__tab:active .i { transform: scale(0.9); }
+.nav__tab .i { transition: transform var(--dur-instant) var(--ease-out); }
+/* Der einzige Ort, an dem die App von sich aus auf sich zeigt. */
+.nav__dot {
+  position: absolute; top: 8px; left: 50%; margin-left: 8px;
+  width: 6px; height: 6px; border-radius: var(--r-full);
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+/* Am Handy versteckt, am Desktop ist das der Rail-Inhalt. */
+.nav__brand, .nav__bereiche, .nav__foot { display: none; }
+
+/* ---- Modusleiste (Ebene 2) ---------------------------------------------
+   Abfrage, Übung und Durchsicht sind nichts, woraus man nebenbei
+   herausklickt. Statt AppBar und Navigation steht dort genau eine Zeile:
+   raus, wie weit, und die eine Nebenhandlung. (Prinzip aus 2.16.0.) */
+.modebar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-nav);
+  height: calc(var(--modebar-h) + var(--sat));
+  padding: var(--sat) calc(var(--gutter) + var(--sar)) 0 calc(var(--gutter) + var(--sal));
+  display: flex; align-items: center; gap: var(--space-2);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+}
+.modebar__mitte {
+  flex: 1 1 auto; text-align: center;
+  font-size: 0.8125rem; font-weight: 600; color: var(--text-2);
+}
+.modebar__fortschritt {
+  position: fixed; top: var(--sat); left: 0; z-index: calc(var(--z-nav) + 1);
+  height: 2px; background: var(--accent);
+  transition: width var(--dur-slow) var(--ease-out);
+}
+
+
+/* ===========================================================================
+   5 · TYPOGRAFIE
+   ---------------------------------------------------------------------------
+   Zwei Ebenen: Was BEDIENT wird, steht in der Systemschrift und sieht aus
+   wie das Gerät. Was GELESEN und gelernt wird, steht in einer Serifenschrift,
+   so wie es in einem Buch stünde.
+   ========================================================================= */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-text);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+h1 { font-size: clamp(1.375rem, 2vw + 1.05rem, 1.75rem); }
+h2 { font-size: clamp(1.0625rem, 1.2vw + 0.9rem, 1.25rem); margin-bottom: var(--space-3); }
+h3 { font-size: 1rem; line-height: 1.35; }
+h4 { font-size: 0.9375rem; }
+
+/* Die Lesefläche: alles, was Stoff ist und nicht Bedienung. */
+.study-word, .study-answer,
+.card-row .wort, .leech-row .wort, .lern-inhalt .wort,
+.set-row .set-name, .lekt-name, .dlg h3, .gross-zahl strong,
+.stat-kennzahl .zahl, .serie-zahl strong, .empty__titel {
+  font-family: var(--font-text);
+}
+
+/* Das Augenmaß über einer Sektion. Ordnet, ohne zu rufen. */
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--text-3);
+  margin-bottom: var(--space-2);
+}
+
+.subtitle { color: var(--text-2); font-size: 0.9375rem; }
+
+.hint {
+  color: var(--text-2);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.hint strong { color: var(--text-1); font-weight: 600; }
+
+/* Sektionskopf: Titel links, Nebenhandlung rechts. Ein Muster, überall. */
+.sektion { margin-bottom: var(--space-3); }
+.sektion__kopf {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--space-3); margin-bottom: var(--space-3);
+}
+.sektion__kopf h2, .sektion__kopf h3 { margin: 0; }
+
+mark {
+  background: var(--marker); color: inherit;
+  border-radius: 3px; padding: 0 2px;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  background: var(--surface-raised); color: var(--accent);
+  padding: 2px 5px; border-radius: var(--r-xs);
+  word-break: break-all;
+}
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+
+/* ===========================================================================
+   6 · KNÖPFE
+   ---------------------------------------------------------------------------
+   Fünf Stufen, mehr gibt es nicht:
+     (voll)    – die Handlung, die dran ist. EINE pro Bildschirm.
+     secondary – gleichwertige Alternative daneben (Abbrechen, Zurück).
+     ghost     – Werkzeug am Rand (Umbenennen, Löschen, Auswählen).
+     linklike  – Verwaltung, die selten gebraucht wird.
+     danger    – nur in Bestätigungsdialogen.
+   Die Stufen unterscheiden sich in der FLÄCHE, nicht in der Schriftgröße —
+   deshalb bleiben alle gut zu treffen.
+   ========================================================================= */
+
+button {
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  padding: 0 var(--space-5);
+  min-height: var(--ctrl-md);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  letter-spacing: -0.005em;
+  /* Kein Wartefenster von 300 ms vor dem Tippen, kein Doppeltipp-Zoom. */
+  touch-action: manipulation;
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+  transition: background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              opacity var(--dur-fast) var(--ease-out),
+              transform var(--dur-instant) var(--ease-out);
+}
+button:active { transform: scale(0.985); }
+button:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+button.secondary {
+  background: var(--surface-raised);
+  color: var(--text-1);
+  border-color: var(--border);
+}
+button.ghost {
+  background: transparent;
+  color: var(--text-2);
+  border-color: transparent;
+  padding: 0 var(--space-3);
+  min-height: var(--ctrl-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+}
+button.linklike, button.tiny-link {
+  background: transparent;
+  color: var(--accent);
+  border-color: transparent;
+  padding: 0 var(--space-2);
+  min-height: var(--ctrl-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+}
+button.danger {
+  background: var(--negative);
+  color: #fff;
+  border-color: var(--negative);
+}
+/* Nur Icon. aria-label ist Pflicht — ohne bleibt der Knopf stumm. */
+button.icon-btn {
+  padding: 0; width: var(--ctrl-md); min-width: var(--ctrl-md);
+  background: transparent; color: var(--text-2);
+  border-color: transparent; border-radius: var(--r-full);
+}
+button.icon-btn.on-surface { background: var(--surface); border-color: var(--border); }
+button.full { width: 100%; }
+button.lg { min-height: var(--ctrl-lg); font-size: 1rem; padding: 0 var(--space-6); }
+
+/* Schweben gibt es auf dem Handy nicht — sonst bleibt ein Knopf nach dem
+   Tippen hell, bis man woanders hintippt. */
+@media (hover: hover) and (pointer: fine) {
+  button:hover { background: var(--accent-hover); }
+  button.secondary:hover { background: var(--surface-overlay); border-color: var(--border-strong); }
+  button.ghost:hover { background: var(--surface); color: var(--text-1); }
+  button.linklike:hover, button.tiny-link:hover { background: var(--accent-bg); }
+  button.icon-btn:hover { background: var(--surface); color: var(--text-1); }
+  button.danger:hover { filter: brightness(1.08); }
+  button:disabled:hover { background: var(--accent); }
+  button.secondary:disabled:hover { background: var(--surface-raised); }
+}
+
+/* Ladezustand: Spinner an der Stelle der Schrift, Breite bleibt stehen —
+   sonst springt die Zeile. */
+button.busy { pointer-events: none; position: relative; color: transparent; }
+button.busy::after {
+  content: ""; position: absolute; width: 16px; height: 16px;
+  border: 2px solid currentColor; border-top-color: transparent;
+  border-radius: var(--r-full);
+  color: var(--text-on-accent);
+  animation: dreh 640ms linear infinite;
+}
+button.secondary.busy::after, button.ghost.busy::after { color: var(--text-1); }
+
+.form-actions {
+  display: flex; gap: var(--space-2); flex-wrap: wrap;
+  margin-top: var(--space-4);
+}
+.form-actions > button { flex: 1 1 auto; }
+.form-actions > button.ghost, .form-actions > button.linklike { flex: 0 0 auto; }
+
+/* Segmentierte Umschalter. Nie mehr als drei Segmente. */
+.seg {
+  display: inline-flex; padding: 3px; gap: 2px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+.seg button {
+  background: transparent; color: var(--text-2); border-color: transparent;
+  min-height: 34px; padding: 0 var(--space-4);
+  font-size: 0.8125rem; border-radius: var(--r-sm);
+}
+.seg button.active {
+  background: var(--surface-overlay); color: var(--text-1);
+  box-shadow: var(--shadow-sm);
+}
+.seg-row {
+  display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;
+}
+@media (hover: hover) and (pointer: fine) {
+  .seg button:hover { color: var(--text-1); }
+  .seg button.active:hover { background: var(--surface-overlay); }
+}
+
+/* Pill-Reihe. Bleibt für den Fortschritts-Umschalter erhalten. */
+.pills {
+  display: flex; gap: var(--space-2); flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+.pill {
+  background: var(--surface); color: var(--text-2);
+  border: 1px solid var(--border); border-radius: var(--r-full);
+  min-height: var(--ctrl-sm); padding: 0 var(--space-4);
+  font-size: 0.8125rem; font-weight: 600;
+}
+.pill.active {
+  background: var(--accent-bg); color: var(--accent);
+  border-color: var(--accent-border);
+}
+.pill.add { color: var(--text-3); border-style: dashed; }
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover { color: var(--text-1); border-color: var(--border-strong); }
+  .pill.active:hover { color: var(--accent); }
+}
+
+
+/* ===========================================================================
+   7 · FORMULARE
+   ---------------------------------------------------------------------------
+   Ein Feld pro Zeile, auch am Desktop. Label immer sichtbar — nie ein
+   Platzhalter als Beschriftung: der verschwindet genau dann, wenn man ihn
+   bräuchte.
+   ========================================================================= */
+
+.field + .field { margin-top: var(--space-4); }
+label, .field > label {
+  display: block;
+  font-size: 0.8125rem; font-weight: 600; color: var(--text-2);
+  margin-bottom: var(--space-2);
+}
+label .opt { font-weight: 400; color: var(--text-3); }
+
+input[type="text"], input[type="email"], input[type="password"],
+input[type="number"], input[type="search"], textarea, select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px var(--space-4);
+  font: inherit; font-size: 0.9375rem;
+  color: var(--text-1);
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  -webkit-appearance: none; appearance: none;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+input::placeholder, textarea::placeholder { color: var(--text-3); }
+
+/* Fokus als Ring statt outline: ein outline würde an gerundeten Ecken und
+   in scrollenden Listen abgeschnitten. */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent-border);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+input[aria-invalid="true"], textarea[aria-invalid="true"] {
+  border-color: var(--negative-border);
+  background: var(--negative-bg);
+}
+input:disabled, textarea:disabled, select:disabled {
+  color: var(--text-3); background: var(--bg); cursor: not-allowed;
+}
+
+textarea { min-height: 88px; resize: vertical; line-height: 1.55; }
+
+select {
+  padding-right: var(--space-8);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23a8a69d' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  cursor: pointer;
+}
+:root[data-thema="hell"] select {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23655d4e' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+}
+select option { background: var(--surface); color: var(--text-1); }
+
+.field__hilfe { font-size: 0.75rem; color: var(--text-3); margin-top: var(--space-2); }
+.field__fehler { font-size: 0.75rem; color: var(--negative); margin-top: var(--space-2); }
+
+/* Ankreuzfeld: 22px sichtbar, 44px zu treffen. */
+input[type="checkbox"] {
+  -webkit-appearance: none; appearance: none;
+  width: 22px; height: 22px; flex: none; min-height: 0;
+  border: 1.5px solid var(--border-strong); border-radius: var(--r-xs);
+  background: var(--bg-sunken); cursor: pointer;
+  display: inline-grid; place-content: center;
+  transition: background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+input[type="checkbox"]::before {
+  content: ""; width: 12px; height: 12px; transform: scale(0);
+  background: var(--text-on-accent);
+  clip-path: polygon(14% 47%, 0 60%, 40% 100%, 100% 22%, 86% 10%, 39% 73%);
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+input[type="checkbox"]:checked {
+  background: var(--accent); border-color: var(--accent);
+}
+input[type="checkbox"]:checked::before { transform: scale(1); }
+/* Auswahlknopf: dieselbe Anatomie wie das Ankreuzfeld, nur rund. */
+input[type="radio"] {
+  -webkit-appearance: none; appearance: none;
+  width: 22px; height: 22px; flex: none; min-height: 0;
+  border: 1.5px solid var(--border-strong); border-radius: var(--r-full);
+  background: var(--bg-sunken); cursor: pointer;
+  display: inline-grid; place-content: center;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+input[type="radio"]::before {
+  content: ""; width: 10px; height: 10px; border-radius: var(--r-full);
+  background: var(--accent); transform: scale(0);
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+input[type="radio"]:checked { border-color: var(--accent); }
+input[type="radio"]:checked::before { transform: scale(1); }
+
+.check-row {
+  display: flex; align-items: center; gap: var(--space-3);
+  min-height: var(--tap); cursor: pointer;
+  font-size: 0.875rem; color: var(--text-1); font-weight: 500;
+  margin-bottom: 0;
+}
+.wahl-reihe {
+  display: flex; gap: var(--space-5); flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+/* Suchfeld. */
+.search-wrap { position: relative; }
+.search-wrap .i-such {
+  position: absolute; left: var(--space-4); top: 50%;
+  transform: translateY(-50%); color: var(--text-3); pointer-events: none;
+}
+.search-wrap input {
+  padding-left: var(--space-10);
+  padding-right: var(--space-9);
+  border-radius: var(--r-full);
+}
+.search-clear {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 34px; min-width: 34px; height: 34px; min-height: 34px;
+  padding: 0; border-radius: var(--r-full);
+  background: var(--surface-raised); color: var(--text-2);
+  border-color: transparent;
+}
+
+
+/* ===========================================================================
+   8 · FLÄCHEN & LISTEN
+   ---------------------------------------------------------------------------
+   Kasten nur, wenn der Inhalt ein DING ist. Eine Überschrift mit Text
+   darunter ist kein Ding — die bekommt Abstand, keinen Rahmen.
+   ========================================================================= */
+
+/* .panel war bisher der Universalkasten. Jetzt ist es die flache Sektion:
+   Rhythmus und Haarlinie, kein Rahmen. Alles, was wirklich ein Objekt ist,
+   bekommt zusätzlich .card. */
+.panel {
+  margin-bottom: var(--stack);
+}
+.panel:last-child { margin-bottom: 0; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: var(--space-5);
+}
+.card--raised {
+  background: var(--surface-raised);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.card--accent {
+  background: linear-gradient(180deg, var(--accent-bg) 0%, transparent 62%), var(--surface);
+  border-color: var(--accent-border);
+}
+.card--flush { padding: 0; overflow: hidden; }
+
+/* Haarlinien-getrennte Zeilen statt einzelner Kästen. */
+.liste {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.liste-zeile {
+  display: flex; align-items: center; gap: var(--space-3);
+  min-height: var(--tap);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  width: 100%; text-align: left;
+  background: transparent; color: var(--text-1);
+  border-left: 0; border-right: 0; border-top: 0; border-radius: 0;
+  font-weight: 500; font-size: 0.9375rem;
+}
+.liste-zeile:last-child { border-bottom: 0; }
+.liste-zeile__text { flex: 1 1 auto; min-width: 0; }
+.liste-zeile__wert { color: var(--text-3); font-size: 0.8125rem; font-weight: 500; }
+.liste-zeile .i { color: var(--text-3); }
+.liste-zeile.aktiv { background: var(--accent-bg); color: var(--accent); }
+.liste-zeile.aktiv .i { color: var(--accent); }
+.liste-zeile.gefahr { color: var(--negative); }
+button.liste-zeile:active { transform: none; background: var(--surface-raised); }
+@media (hover: hover) and (pointer: fine) {
+  button.liste-zeile:hover { background: var(--surface-raised); }
+  button.liste-zeile.aktiv:hover { background: var(--accent-bg); }
+}
+
+/* Plaketten. */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.01em;
+  padding: 3px var(--space-2); border-radius: var(--r-xs);
+  background: var(--surface-raised); color: var(--text-2);
+  border: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+/* Die Lernstufen-Rampe: mehr Gold heißt überall dasselbe. */
+.badge.zustand-neu      { background: var(--stufe-0); color: var(--text-2); border-color: transparent; }
+.badge.zustand-gesehen  { background: var(--stufe-1); color: var(--text-1); border-color: transparent; }
+.badge.zustand-wackelig { background: var(--stufe-2); color: var(--text-on-accent); border-color: transparent; }
+.badge.zustand-solide   { background: var(--stufe-3); color: var(--text-on-accent); border-color: transparent; }
+.badge.zustand-fest     { background: var(--stufe-4); color: var(--text-on-accent); border-color: transparent; }
+
+.dot {
+  width: 9px; height: 9px; border-radius: var(--r-full);
+  display: inline-block; flex: none;
+  /* Die unteren Stufen der Rampe sind absichtlich sehr blass. Ohne Ring
+     verschwindet der Punkt in der Fläche und die Legende hat Lücken. */
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+
+/* ===========================================================================
+   9 · LERNEN & DIE BÜHNE
+   ========================================================================= */
+
+/* Die Stapel-Karte: der eine Ort auf dem Startbildschirm, an dem es
+   weitergeht. Gold trägt hier die Handlung. */
+.stapel {
+  background: linear-gradient(180deg, var(--accent-bg) 0%, transparent 58%), var(--surface);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r-lg);
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+  animation: enter-rise var(--dur-slow) var(--ease-out) both;
+}
+.stapel__zahl {
+  font-family: var(--font-text);
+  font-size: clamp(2.75rem, 12vw, 3.75rem);
+  font-weight: 600; line-height: 1;
+  letter-spacing: -0.03em; color: var(--accent);
+}
+.stapel__was {
+  font-size: 0.875rem; color: var(--text-2);
+  margin-top: var(--space-2); margin-bottom: var(--space-5);
+}
+.stapel__meta {
+  display: flex; gap: var(--space-2); justify-content: center;
+  flex-wrap: wrap; margin-top: var(--space-4);
+}
+
+.due-info { font-size: 0.9375rem; color: var(--text-2); margin-bottom: var(--space-4); }
+.due-info strong { color: var(--text-1); font-weight: 600; }
+
+/* ---- Die Bühne ----------------------------------------------------------
+   Die Abfragekarte war bisher ein Kasten unter Kästen. Jetzt bekommt sie
+   den Bildschirm: Das Wort sitzt im oberen Drittel (optisch mittig, nicht
+   mathematisch), die Bewertung ist unten verankert, wo der Daumen ist. */
+.study-card {
+  min-height: calc(100dvh - var(--modebar-h) - var(--sat) - var(--sab));
+  display: flex; flex-direction: column;
+  padding: var(--space-6) 0 0;
+  margin: 0; background: none; border: 0;
+  text-align: center;
+}
+.study-card__mitte {
+  flex: 1 1 auto;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: var(--space-4);
+  padding-bottom: var(--space-8);
+}
+.study-word {
+  font-size: clamp(1.75rem, 7vw, 2.75rem);
+  font-weight: 600; line-height: 1.2; letter-spacing: -0.02em;
+  word-break: break-word;
+}
+.study-answer {
+  font-size: clamp(1.25rem, 4.5vw, 1.75rem);
+  font-weight: 400; line-height: 1.35; color: var(--accent);
+  word-break: break-word;
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
+.study-extra {
+  font-size: 0.9375rem; color: var(--text-2); line-height: 1.6;
+  background: var(--surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md); padding: var(--space-4);
+  text-align: left;
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
+.study-extra img {
+  max-width: 100%; height: auto; border-radius: var(--r-sm);
+  display: block; margin: var(--space-2) 0;
+}
+.study-extra a { word-break: break-all; }
+
+.progress-note {
+  font-size: 0.8125rem; color: var(--text-3);
+}
+.weiter-hinweis {
+  font-size: 0.8125rem; color: var(--text-3);
+  padding: var(--space-4) 0;
+}
+
+/* Bewertung: drei gleichwertige Entscheidungen, keine davon ist die
+   richtige — deshalb GETÖNT statt gefüllt. Die eine dokumentierte Ausnahme
+   von "Gold ist selten". */
+.grade-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
+.grade-row button {
+  flex-direction: column; gap: 2px;
+  min-height: var(--ctrl-lg); padding: var(--space-2);
+  font-size: 0.9375rem;
+  border-radius: var(--r-md);
+}
+.grade-row .sub {
+  font-size: 10.5px; font-weight: 500; opacity: 0.72;
+  letter-spacing: 0; line-height: 1.2;
+}
+.btn-unknown { background: var(--negative-bg); color: var(--negative); border-color: var(--negative-border); }
+.btn-almost  { background: var(--surface-raised); color: var(--text-1); border-color: var(--border); }
+.btn-known   { background: var(--positive-bg); color: var(--positive); border-color: var(--positive-border); }
+@media (hover: hover) and (pointer: fine) {
+  .btn-unknown:hover { background: var(--negative-bg); border-color: var(--negative); }
+  .btn-almost:hover  { background: var(--surface-overlay); border-color: var(--border-strong); }
+  .btn-known:hover   { background: var(--positive-bg); border-color: var(--positive); }
+}
+
+/* Die Aktionszone am unteren Rand der Bühne. */
+.study-aktionen {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  padding-bottom: calc(var(--sab) + var(--space-5));
+}
+.study-nebenaktionen {
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--space-2); flex-wrap: wrap;
+}
+
+.merk-btn { gap: var(--space-2); }
+.merk-btn .icon.star.filled { color: var(--accent); }
+.icon.star.pop { animation: stern-pop 420ms var(--ease-spring); }
+
+.card-tags {
+  display: flex; gap: var(--space-2); flex-wrap: wrap;
+  justify-content: center;
+}
+.card-tags .badge .icon, .set-gruppe-kopf .icon { color: var(--text-3); }
+
+
+
+/* Abschluss. */
+.done-box { text-align: center; padding: var(--space-8) var(--space-5); }
+.done-box .emoji {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 72px; height: 72px; border-radius: var(--r-full);
+  background: var(--accent-bg); color: var(--accent);
+  margin-bottom: var(--space-5);
+  animation: enter-pop var(--dur-slow) var(--ease-spring) both;
+}
+.done-box .emoji .i { width: 34px; height: 34px; }
+.done-box h2 { margin-bottom: var(--space-2); }
+
+.drill-banner, .satz-banner, .leech-banner, .merk-hinweis {
+  font-size: 0.8125rem; line-height: 1.5;
+  border-radius: var(--r-md);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid;
+}
+.drill-banner {
+  background: var(--accent-bg); color: var(--text-2);
+  border-color: var(--accent-border);
+  text-align: center;
+}
+.satz-banner {
+  background: var(--surface); color: var(--text-2);
+  border-color: var(--border-subtle);
+  margin-bottom: var(--stack);
+}
+.satz-banner strong { color: var(--text-1); }
+.leech-banner {
+  background: var(--negative-bg); color: var(--text-2);
+  border-color: var(--negative-border);
+  text-align: left; margin-top: var(--space-4);
+}
+.leech-banner strong { color: var(--negative); }
+.merk-hinweis {
+  background: var(--accent-bg); color: var(--text-2);
+  border-color: var(--accent-border);
+  margin-bottom: var(--space-4);
+  display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;
+}
+
+/* Übungs-Auswahl. */
+.drill-picker {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: var(--space-5);
+  margin-bottom: var(--stack);
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
+.drill-picker select { max-width: 150px; display: inline-block; width: auto; }
+.drill-set-liste {
+  max-height: 240px; overflow-y: auto;
+  border: 1px solid var(--border-subtle); border-radius: var(--r-md);
+  padding: var(--space-2) var(--space-3);
+  margin: var(--space-3) 0;
+}
+
+
+/* ===========================================================================
+   10 · DURCHSICHT ("Lernen")
+   ========================================================================= */
+
+.lern-kopf {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3); margin-bottom: var(--space-4);
+}
+.lern-kopf > div:last-child { display: flex; gap: var(--space-2); flex: none; }
+
+.lern-balken {
+  height: 4px; border-radius: var(--r-full);
+  background: var(--surface-raised); overflow: hidden;
+  margin-bottom: var(--stack);
+}
+.lern-balken span {
+  display: block; height: 100%; background: var(--accent);
+  border-radius: var(--r-full);
+  transition: width var(--dur-slow) var(--ease-out);
+}
+
+.lern-raster {
+  display: grid; gap: var(--space-3);
+  grid-template-columns: 1fr;
+}
+.lern-karte {
+  display: flex; align-items: flex-start; gap: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: var(--space-4);
+  transition: opacity var(--dur-base) var(--ease-out),
+              background var(--dur-base) var(--ease-out);
+}
+.lern-karte.ist-gelernt { opacity: 0.42; background: transparent; }
+.lern-nr {
+  font-size: 0.75rem; font-weight: 600; color: var(--text-3);
+  min-width: 22px; padding-top: 2px; font-variant-numeric: tabular-nums;
+}
+.lern-inhalt { flex: 1 1 auto; min-width: 0; }
+.lern-inhalt .wort { font-size: 1.125rem; line-height: 1.4; word-break: break-word; }
+.lern-inhalt .uebersetzung {
+  font-size: 0.875rem; color: var(--text-2); margin-top: 2px;
+  word-break: break-word;
+}
+.lern-tat { display: flex; align-items: center; gap: var(--space-1); flex: none; }
+.lern-notiz-knopf {
+  background: transparent; border-color: transparent; color: var(--text-3);
+  width: var(--ctrl-sm); min-width: var(--ctrl-sm); min-height: var(--ctrl-sm);
+  padding: 0; border-radius: var(--r-full);
+}
+/* „Gesehen" trägt Text, kein Symbol — also ein richtiger kleiner Knopf,
+   keine runde Fläche. Ein Icon-Knopf mit Beschriftung darin läuft über. */
+.lern-haken {
+  min-height: var(--ctrl-sm); padding: 0 var(--space-3);
+  border-radius: var(--r-full);
+  background: var(--surface-raised); color: var(--text-2);
+  border: 1px solid var(--border);
+  font-size: 0.8125rem; white-space: nowrap;
+}
+.lern-karte.ist-gelernt .lern-haken {
+  background: var(--positive-bg); color: var(--positive);
+  border-color: var(--positive-border);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lern-notiz-knopf:hover { background: var(--surface-raised); color: var(--text-1); }
+  .lern-haken:hover { border-color: var(--accent); color: var(--accent); }
+}
+
+
+/* ===========================================================================
+   11 · VERWALTEN
+   ========================================================================= */
+
+.bereich-manage-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4);
+}
+.bereich-manage-row > div { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+
+.card-row {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface);
+}
+.card-row:last-child { border-bottom: 0; }
+.card-row.dragging {
+  opacity: 0.92; background: var(--surface-overlay);
+  box-shadow: var(--shadow-md); border-radius: var(--r-sm);
+  position: relative; z-index: var(--z-sticky);
+}
+.card-row.card-frei { box-shadow: inset 2px 0 0 var(--accent); }
+.card-row.card-locked .words { opacity: 0.45; }
+
+#karten-liste {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.drag-handle {
+  flex: none; width: 28px; height: var(--tap);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-3); cursor: grab;
+  touch-action: none; -webkit-user-select: none; user-select: none;
+}
+.drag-handle:active { cursor: grabbing; color: var(--accent); }
+
+.words { flex: 1 1 auto; min-width: 0; }
+.card-row .wort, .leech-row .wort {
+  font-size: 1rem; line-height: 1.4; word-break: break-word;
+}
+.card-row .uebersetzung, .leech-row .uebersetzung {
+  font-size: 0.8125rem; color: var(--text-2); word-break: break-word;
+}
+.extra-note {
+  font-size: 0.75rem; color: var(--text-3); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.card-tags-inline { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+
+.select-actionbar {
+  position: sticky; top: calc(var(--appbar-h) + var(--sat));
+  z-index: var(--z-sticky);
+  display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  box-shadow: var(--shadow-md);
+}
+.select-actionbar strong { font-size: 0.875rem; }
+.select-actionbar select { width: auto; min-width: 130px; min-height: var(--ctrl-sm); padding: 6px var(--space-7) 6px var(--space-3); }
+
+/* ---- Speicherkarten ----------------------------------------------------- */
+/* Der Kopf zum Auf- und Zuklappen. Bewusst .secondary: auf dem Verwalten-
+   Bildschirm ist „Karte hinzufügen“ die Handlung, die dran ist — die trägt
+   das Gold. Zwei gefüllte Goldflächen auf einem Bildschirm, und keine zeigt
+   mehr auf etwas. */
+.sets-kopf {
+  width: 100%; justify-content: flex-start;
+  gap: var(--space-3); margin-bottom: var(--space-3);
+  font-size: 0.9375rem;
+}
+.sets-kopf > span:first-of-type { flex: 1 1 auto; text-align: left; }
+.set-liste { display: flex; flex-direction: column; gap: var(--space-2); }
+.set-block {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.set-block.dragging {
+  box-shadow: var(--shadow-md); opacity: 0.92;
+  position: relative; z-index: var(--z-sticky);
+}
+.set-row {
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  min-height: var(--tap);
+}
+.set-row .set-name {
+  flex: 1 1 auto; min-width: 0; font-size: 0.9375rem; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.set-block.set-locked .set-name { opacity: 0.5; }
+.set-cards { border-top: 1px solid var(--border-subtle); background: var(--bg-sunken); }
+.set-cards .card-row { background: transparent; padding-left: var(--space-5); }
+.set-gruppe { margin-top: var(--space-5); }
+.set-gruppe:first-of-type { margin-top: 0; }
+.set-gruppe-kopf {
+  display: flex; align-items: center; gap: var(--space-2);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--text-3);
+  margin-bottom: var(--space-2);
+}
+.set-art-wahl { width: auto; min-width: 120px; min-height: var(--ctrl-sm); padding: 4px var(--space-6) 4px var(--space-2); font-size: 0.8125rem; }
+.lock-anzeige { color: var(--text-3); display: inline-flex; }
+.leech-badge {
+  font-size: 11px; font-weight: 600; padding: 3px var(--space-2);
+  border-radius: var(--r-xs);
+  background: var(--negative-bg); color: var(--negative);
+  border: 1px solid var(--negative-border);
+}
+
+.seiten-leiste {
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--space-3); margin-top: var(--space-4);
+  font-size: 0.8125rem; color: var(--text-2);
+}
+
+
+/* ===========================================================================
+   12 · FORTSCHRITT
+   ---------------------------------------------------------------------------
+   Kein Kachel-Armaturenbrett. Zahlen stehen in Sätzen, Balken sind dünn,
+   und alles Goldene folgt derselben Stufen-Rampe.
+   ========================================================================= */
+
+.stat-block { margin-bottom: var(--stack); }
+.stat-block h3 { margin-bottom: var(--space-1); }
+.stat-block .stat-sub {
+  font-size: 0.75rem; color: var(--text-3); margin-bottom: var(--space-3);
+}
+
+/* Kennzahlen als Zeile, nicht als Kachelraster. */
+.stat-kennzahlen {
+  display: flex; gap: var(--space-5); flex-wrap: wrap;
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--stack);
+}
+.stat-kennzahl { flex: 1 1 auto; min-width: 74px; }
+.stat-kennzahl .zahl {
+  display: block; font-size: 1.625rem; font-weight: 600;
+  line-height: 1.1; letter-spacing: -0.02em; color: var(--text-1);
+}
+.stat-kennzahl .was {
+  display: block; font-size: 0.75rem; color: var(--text-3); margin-top: 2px;
+}
+
+.gross-zahl { display: flex; align-items: baseline; gap: var(--space-2); }
+.gross-zahl strong {
+  font-size: clamp(2rem, 9vw, 2.75rem); font-weight: 600;
+  line-height: 1; letter-spacing: -0.03em; color: var(--accent);
+}
+.gross-zahl span { font-size: 0.875rem; color: var(--text-2); }
+
+.heute-bar {
+  height: 6px; border-radius: var(--r-full);
+  background: var(--surface-raised); overflow: hidden;
+  margin: var(--space-3) 0;
+}
+.heute-bar span {
+  display: block; height: 100%; background: var(--accent);
+  border-radius: var(--r-full);
+  transition: width var(--dur-slow) var(--ease-out);
+}
+
+/* Stufenband. */
+.stat-bar {
+  display: flex; height: 8px; border-radius: var(--r-full);
+  overflow: hidden; background: var(--bg-sunken);
+  margin-bottom: var(--space-3);
+}
+.stat-seg { height: 100%; transition: width var(--dur-slow) var(--ease-out); }
+.stat-legend {
+  display: flex; gap: var(--space-4); flex-wrap: wrap;
+  font-size: 0.75rem; color: var(--text-2);
+}
+.stat-legend > span { display: inline-flex; align-items: center; gap: var(--space-2); }
+.stat-legend strong { color: var(--text-1); font-weight: 600; }
+
+/* Kalender. */
+.kal {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(13px, 1fr));
+  gap: 4px;
+}
+.kal-tag {
+  aspect-ratio: 1; border-radius: 3px;
+  background: var(--surface-raised);
+}
+.kal-tag.sx { background: transparent; }
+.kal-tag.s0 { background: var(--surface-raised); }
+.kal-tag.s1 { background: var(--stufe-1); }
+.kal-tag.s2 { background: var(--stufe-2); }
+.kal-tag.s3 { background: var(--stufe-3); }
+.kal-tag.s4 { background: var(--stufe-4); }
+.kal-tag.heute { box-shadow: 0 0 0 1.5px var(--accent); }
+
+/* Wochenbalken. */
+.spark { display: flex; align-items: flex-end; gap: 3px; height: 56px; }
+.spark-fill {
+  flex: 1 1 0; border-radius: 3px 3px 0 0;
+  background: var(--stufe-2); min-height: 2px;
+}
+.spark-fill.leer { background: var(--surface-raised); }
+.spark-fill.heute { background: var(--accent); }
+.spark-reihe { display: flex; gap: 3px; }
+.spark-reihe span {
+  flex: 1 1 0; text-align: center; font-size: 10px; color: var(--text-3);
+}
+.spark-reihe.oben { margin-bottom: var(--space-2); }
+.spark-reihe.unten { margin-top: var(--space-2); }
+
+/* Lektionen. */
+.lekt-leiste { display: flex; flex-direction: column; gap: var(--space-2); }
+.lekt-kachel {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+}
+.lekt-kachel.zu { opacity: 0.42; }
+.lekt-kachel.dran { border-color: var(--accent-border); background: var(--accent-bg); }
+.lekt-name {
+  flex: 1 1 auto; min-width: 0; font-size: 0.9375rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lekt-bar {
+  flex: 0 0 72px; height: 4px; border-radius: var(--r-full);
+  background: var(--surface-raised); overflow: hidden;
+}
+.lekt-bar span { display: block; height: 100%; background: var(--stufe-3); }
+.lekt-kachel.sitzt .lekt-bar span { background: var(--positive); }
+.lekt-zahl { font-size: 0.75rem; color: var(--text-3); flex: none; font-variant-numeric: tabular-nums; }
+
+/* Serie. */
+.serie-karte {
+  display: flex; align-items: center; gap: var(--space-4);
+  background: var(--surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg); padding: var(--space-5);
+}
+.serie-zahl { display: flex; align-items: baseline; gap: var(--space-2); }
+.serie-zahl strong {
+  font-size: 2.25rem; font-weight: 600; line-height: 1;
+  letter-spacing: -0.03em; color: var(--accent);
+}
+.serie-text { flex: 1 1 auto; font-size: 0.875rem; color: var(--text-2); }
+.serie-klein { font-size: 0.75rem; color: var(--text-3); }
+.serie-beste { font-size: 0.75rem; color: var(--text-3); }
+.serie-beste strong { color: var(--text-2); }
+.arab-ziffer { font-family: var(--font-arabic); }
+
+.leech-row {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.leech-row:last-of-type { border-bottom: 0; }
+.leech-row .words { flex: 1 1 auto; min-width: 0; }
+
+
+/* ===========================================================================
+   13 · RÜCKMELDUNG — leer, lädt, Fehler, Erfolg
+   ---------------------------------------------------------------------------
+   Regel: Was anhält, gehört nie in einen Toast. Ein Toast verschwindet —
+   das Problem nicht.
+   ========================================================================= */
+
+/* ---- Leerzustand -------------------------------------------------------- */
+.empty {
+  text-align: center;
+  padding: var(--space-9) var(--space-5);
+  animation: enter-rise var(--dur-slow) var(--ease-out) both;
+}
+.empty__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border-radius: var(--r-full);
+  background: var(--surface); color: var(--text-3);
+  margin-bottom: var(--space-5);
+}
+.empty__icon.gold { background: var(--accent-bg); color: var(--accent); }
+.empty__titel { font-size: 1.125rem; font-weight: 600; margin-bottom: var(--space-2); }
+.empty__text {
+  font-size: 0.875rem; color: var(--text-2); line-height: 1.55;
+  max-width: 34ch; margin: 0 auto var(--space-5);
+}
+.empty__aktionen {
+  display: flex; flex-direction: column; align-items: center;
+  gap: var(--space-2);
+}
+
+/* ---- Ladezustände -------------------------------------------------------
+   Skelette statt Spinner: Die Seite zeigt schon ihre Form, während der
+   Inhalt kommt. Ein Spinner zeigt nur, dass etwas dauert. */
+.skeleton {
+  background: var(--skeleton);
+  background-size: 200% 100%;
+  animation: schimmer 1.4s linear infinite;
+  border-radius: var(--r-sm);
+}
+.skeleton-zeile {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.skeleton-zeile:last-child { border-bottom: 0; }
+.skeleton-bar { height: 11px; }
+.skeleton-bar.w60 { width: 60%; }
+.skeleton-bar.w35 { width: 35%; margin-top: 7px; }
+
+.boot {
+  min-height: 100dvh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: var(--space-5); padding: var(--space-7);
+  text-align: center;
+}
+.boot__mark { color: var(--accent); animation: puls 1.6s var(--ease-in-out) infinite; }
+.boot__text { font-size: 0.875rem; color: var(--text-2); }
+
+/* ---- Fehler -------------------------------------------------------------
+   Drei Tiefen: blockierend (eigener Bildschirm), Banner (bleibt stehen,
+   solange das Problem besteht), Feld (unter dem Eingabefeld). */
+.error-box, .banner-fehler {
+  display: flex; align-items: flex-start; gap: var(--space-3);
+  background: var(--negative-bg);
+  border: 1px solid var(--negative-border);
+  border-radius: var(--r-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.8125rem; line-height: 1.5;
+  color: var(--text-2);
+  margin-bottom: var(--space-4);
+}
+.error-box .i, .banner-fehler .i { color: var(--negative); margin-top: 1px; }
+.error-box strong, .banner-fehler strong { color: var(--negative); font-weight: 600; }
+
+.info-box, .banner-info {
+  display: flex; align-items: flex-start; gap: var(--space-3);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.8125rem; line-height: 1.5;
+  color: var(--text-2);
+  margin-bottom: var(--space-4);
+}
+.info-box .i, .banner-info .i { color: var(--accent); margin-top: 1px; }
+.info-box strong, .banner-info strong { color: var(--text-1); font-weight: 600; }
+
+.banner-leise {
+  background: var(--surface); border-color: var(--border-subtle);
+  color: var(--text-2);
+}
+.banner-leise .i { color: var(--text-3); }
+.banner__text { flex: 1 1 auto; min-width: 0; }
+
+/* Die Kopfzeile mit Anmeldung und Sync-Zustand. */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3); margin-bottom: var(--space-4);
+}
+.topbar .who { font-size: 0.8125rem; color: var(--text-2); }
+.topbar .who strong { color: var(--text-1); }
+.sync-dot { color: var(--negative); font-size: 0.75rem; }
+
+/* ---- Erfolg: Toast ------------------------------------------------------
+   Nur für umkehrbare Handlungen, immer mit dem Weg zurück. Höchstens einer
+   gleichzeitig, immer ÜBER der Navigation. */
+.toast-wrap {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(var(--nav-h) + var(--sab) + var(--space-4));
+  z-index: var(--z-toast);
+  width: max-content; max-width: calc(100vw - 2 * var(--space-5));
+  pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; gap: var(--space-3);
+  background: var(--surface-overlay); color: var(--text-1);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-full);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-5);
+  box-shadow: var(--shadow-md);
+  font-size: 0.875rem; font-weight: 500;
+  pointer-events: auto;
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
+.toast button { min-height: 32px; padding: 0 var(--space-3); font-size: 0.8125rem; }
+
+.setup-steps { padding-left: var(--space-5); }
+.setup-steps li { margin-bottom: var(--space-3); font-size: 0.875rem; color: var(--text-2); }
+
+
+/* ===========================================================================
+   14 · DIALOG & SHEET
+   ---------------------------------------------------------------------------
+   Eigene Kästen statt alert/confirm/prompt: Die System-Kästen sind auf dem
+   Handy fremd, zeigen statt eines Titels die Seiten-Adresse, und prompt()
+   wird von manchen Browsern schlicht ignoriert. (Grund aus 1.8.0.)
+
+   Am Handy kommt beides von unten, am Desktop steht es mittig.
+   ========================================================================= */
+
+.dlg-backdrop {
+  position: fixed; inset: 0; z-index: var(--z-sheet);
+  background: var(--backdrop);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: enter-fade var(--dur-fast) var(--ease-out) both;
+}
+.dlg {
+  background: var(--surface-overlay); color: var(--text-1);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-6) var(--space-5) calc(var(--space-5) + var(--sab));
+  width: 100%; max-width: 460px; text-align: left;
+  max-height: 88dvh; overflow-y: auto;
+  animation: sheet-up var(--dur-slow) var(--ease-out) both;
+}
+/* Der Griff oben: sagt ohne Worte, dass das hier von unten gekommen ist. */
+.dlg::before {
+  content: ""; display: block; width: 36px; height: 4px;
+  border-radius: var(--r-full); background: var(--border-strong);
+  margin: calc(var(--space-3) * -1) auto var(--space-5);
+}
+.dlg h3 { font-size: 1.0625rem; margin-bottom: var(--space-2); }
+.dlg .dlg-text {
+  color: var(--text-2); font-size: 0.875rem; line-height: 1.55;
+  white-space: pre-wrap; word-break: break-word;
+}
+.dlg input { margin-top: var(--space-4); }
+.dlg-actions {
+  display: flex; gap: var(--space-2); margin-top: var(--space-6);
+}
+.dlg-actions button { flex: 1 1 0; }
+
+/* Das Bereichs-Sheet: dieselbe Hülle, andere Füllung. */
+.sheet-liste { margin: var(--space-4) calc(var(--space-5) * -1) 0; }
+.sheet-liste .liste-zeile { border-radius: 0; padding-left: var(--space-5); padding-right: var(--space-5); }
+
+@media (min-width: 600px) {
+  .dlg-backdrop { align-items: center; padding: var(--space-5); }
+  .dlg {
+    border-radius: var(--r-xl);
+    padding-bottom: var(--space-5);
+    animation: enter-pop var(--dur-base) var(--ease-out) both;
+  }
+  .dlg::before { display: none; }
+  .dlg-actions { justify-content: flex-end; }
+  .dlg-actions button { flex: 0 0 auto; min-width: 110px; }
+}
+
+
+/* ===========================================================================
+   15 · HANDSCHRIFT
+   ========================================================================= */
+
+.hw-canvas-wrap { margin: var(--space-4) 0; }
+.hw-canvas-wrap canvas {
+  width: 100%; height: 200px; display: block;
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  touch-action: none; cursor: crosshair;
+}
+.hw-canvas-wrap.fullscreen {
+  position: fixed; inset: 0; z-index: var(--z-fullscreen);
+  margin: 0; padding: calc(var(--sat) + var(--space-3)) var(--space-3) calc(var(--sab) + var(--space-3));
+  background: var(--bg);
+  display: flex; flex-direction: column; gap: var(--space-3);
+}
+.hw-canvas-wrap.fullscreen canvas { flex: 1 1 auto; height: auto; }
+.hw-toolbar {
+  display: flex; gap: var(--space-2); flex-wrap: wrap;
+  justify-content: center; margin-top: var(--space-3);
+}
+.hw-canvas-wrap.fullscreen .hw-toolbar { margin-top: 0; }
+
+
+/* ===========================================================================
+   16 · ARABISCH
+   ---------------------------------------------------------------------------
+   Arabisch hat seine eigene Schrift — die Serifenregel darf sie nicht
+   überschreiben, egal an welcher Stelle das Wort steht.
+   ========================================================================= */
+
+@font-face {
+  font-family: 'UthmanicHafs';
+  src: url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2') format('woff2'),
+       url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.ttf') format('truetype');
+  font-display: swap;
+}
+
+.arabic, .arabic * { font-family: var(--font-arabic) !important; }
+.arabic {
+  direction: rtl;
+  unicode-bidi: plaintext;
+  /* Arabische Schrift trägt hohe Oberlängen und tiefe Unterlängen. Mit der
+     Zeilenhöhe des Fließtextes schneiden sich die Zeilen. */
+  line-height: 1.9;
+}
+input.arabic, textarea.arabic { text-align: right; line-height: 1.6; }
+
+/* --arab-scale setzt die app.js an #app, damit es jede Stelle darunter erbt. */
+.study-word.arabic   { font-size: calc(clamp(2rem, 9vw, 3.25rem) * var(--arab-scale, 1)); }
+.study-answer.arabic { font-size: calc(clamp(1.5rem, 6vw, 2.25rem) * var(--arab-scale, 1)); }
+/* In Listen steht das arabische Wort ÜBER seiner Übersetzung. Rechtsbündig
+   (die Vorgabe für RTL) entstünde dabei ein Zickzack: Wort rechts,
+   Übersetzung links. Die Schrift läuft weiter von rechts nach links — nur
+   der Block sitzt an derselben Kante wie alles andere in der Zeile.
+   Auf der Bühne gilt das nicht: dort ist ohnehin alles zentriert. */
+.card-row .wort.arabic, .leech-row .wort.arabic,
+.lern-inhalt .wort.arabic {
+  font-size: calc(1.2rem * var(--arab-scale, 1));
+  text-align: left;
+}
+input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px; }
+
+
+/* ===========================================================================
+   17 · BREITE BILDSCHIRME
+   ---------------------------------------------------------------------------
+   Ab 900 px wird aus der unteren Leiste eine Spalte links. Das Markup ist
+   identisch — nur diese Regeln entscheiden darüber. Wer die Navigation
+   wieder oben haben will, ändert genau diesen Abschnitt.
+   ========================================================================= */
+
+@media (max-width: 400px) {
+  :root { --gutter: var(--space-3); }
+  .card, .drill-picker { padding: var(--space-4); }
+  .grade-row { gap: 6px; }
+  .grade-row button { padding: var(--space-2) 4px; font-size: 0.875rem; }
+}
+
+@media (min-width: 600px) {
+  :root { --gutter: var(--space-5); --stack: var(--space-7); }
+  .lern-raster { grid-template-columns: repeat(2, 1fr); }
+  .empty__aktionen { flex-direction: row; justify-content: center; }
+}
+
+@media (min-width: 900px) {
+  :root {
+    --gutter: var(--space-6);
+    --appbar-h: 56px;
+  }
+
+  /* Aus der Leiste unten wird die Spalte links. */
+  .nav {
+    top: 0; bottom: 0; right: auto;
+    width: var(--rail-w);
+    padding: calc(var(--sat) + var(--space-5)) var(--space-3)
+             calc(var(--sab) + var(--space-4)) calc(var(--space-3) + var(--sal));
+    display: flex; flex-direction: column; gap: var(--space-2);
+    border-top: 0; border-right: 1px solid var(--border-subtle);
+    background: var(--bg-sunken);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    overflow-y: auto;
+  }
+  .nav__brand {
+    display: flex; align-items: center; gap: var(--space-3);
+    padding: 0 var(--space-3) var(--space-5);
+    color: var(--accent);
+  }
+  .nav__brand strong {
+    font-family: var(--font-text); font-size: 1.0625rem; font-weight: 600;
+    color: var(--text-1); letter-spacing: -0.01em;
+  }
+  .nav__bereiche { display: block; margin-bottom: var(--space-5); }
+  .nav__foot { display: block; margin-top: auto; padding-top: var(--space-4); }
+
+  .nav__tabs {
+    display: flex; flex-direction: column; gap: 2px;
+    height: auto; padding: 0;
+  }
+  .nav__tab {
+    flex-direction: row; justify-content: flex-start;
+    gap: var(--space-3); padding: 0 var(--space-3);
+    min-height: var(--tap); border-radius: var(--r-sm);
+    font-size: 0.9375rem; letter-spacing: -0.005em;
+    transition: color var(--dur-fast) var(--ease-out),
+                background var(--dur-fast) var(--ease-out);
+  }
+  .nav__tab.active { background: var(--accent-bg); box-shadow: inset 3px 0 0 var(--accent); }
+  .nav__dot { position: static; margin: 0 0 0 auto; }
+
+  .nav-titel {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--text-3);
+    padding: 0 var(--space-3) var(--space-2);
+  }
+
+  /* Inhalt rückt neben die Spalte. */
+  .appbar { left: var(--rail-w); }
+  .view {
+    padding-left: calc(var(--rail-w) + var(--gutter));
+    padding-right: var(--gutter);
+    padding-bottom: calc(var(--space-10) + var(--sab));
+    max-width: calc(var(--measure) + var(--rail-w) + var(--gutter));
+  }
+  .modebar { left: 0; }
+  .toast-wrap { bottom: calc(var(--space-6) + var(--sab)); left: calc(50% + var(--rail-w) / 2); }
+
+  /* Am Desktop stehen die Bereiche offen in der Spalte — das Sheet und der
+     Umschalter in der Kopfzeile werden dort nicht gebraucht. Stattdessen
+     steht hier, wo man gerade ist. */
+  .bereich-pill { display: none; }
+  .appbar__title--ansicht { display: block; }
+
+  .lern-raster { grid-template-columns: repeat(2, 1fr); }
+  .study-card { min-height: calc(100dvh - var(--modebar-h) - var(--sat) - var(--sab)); }
+  .study-card__mitte { padding-bottom: var(--space-9); }
+  .grade-row { max-width: 520px; margin: 0 auto; }
+  .study-aktionen { max-width: 520px; margin: 0 auto; width: 100%; }
+}
+
+@media (min-width: 1200px) {
+  :root { --measure: 720px; }
+  .lern-raster { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Eine Maus bekommt einen Zeiger, ein Finger nicht. */
+@media (hover: none) {
+  .drag-handle { cursor: default; }
+}
