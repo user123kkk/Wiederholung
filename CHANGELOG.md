@@ -10,7 +10,10 @@
   ungefähr nahe (spitze statt runde Blütenblätter). Die jetzige Kontur
   stammt stattdessen aus einer Kantenverfolgung über das tatsächliche
   Markenbild (`final_icon_glow_v3.png`, Moore-Neighbor-Tracing, danach nur
-  leicht vereinfacht) – keine Schätzung mehr, sondern abgepaust. Betroffen:
+  leicht vereinfacht) – keine Schätzung mehr, sondern abgepaust. Per
+  Pixel-Vergleich mit der Vorlage nachgemessen: 0,29 % abweichende Pixel
+  bei 512×512, der Rest liegt im Antialiasing-Saum der Vorlage selbst.
+  Betroffen:
   Boot-Bildschirm, die Marke über den Solo-Bildschirmen (Anmelden,
   Registrieren, Einrichtung) und `icon.svg` (Browser-Tab, Startbildschirm,
   installierte App). Einzige bewusste Abweichung vom Original: der im

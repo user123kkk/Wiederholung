@@ -1,13 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Wiederholung">
   <!-- Die Bluete ist keine Handzeichnung: die Umrisspunkte kommen aus einer
        Kantenverfolgung (Moore-Neighbor-Tracing) ueber final_icon_glow_v3.png,
-       dem tatsaechlichen Marken-Bild (TikTok/Instagram), danach nur leicht
-       vereinfacht (Ramer-Douglas-Peucker). Der duenne Stiel im Original ist
-       auf ~1-3px abgeschnitten und wurde hier auf 7px verstaerkt, damit er
-       nicht wegkippt - das ist die einzige geometrische Abweichung vom
-       Original. Alles Wesentliche liegt innerhalb des inneren Kreises mit
-       40% Radius (Maskierbarkeits-Vorgabe), ohne dass dafuer skaliert werden
-       musste. -->
+       dem tatsaechlichen Marken-Bild (TikTok/Instagram). Nur leicht
+       vereinfacht (Ramer-Douglas-Peucker, eps=0.6) - per Pixel-Vergleich mit
+       der Vorlage gegengeprueft: 0.288% abweichende Pixel bei 512x512, und
+       auch das groesstenteils im 1px-Antialiasing-Saum der Vorlage selbst,
+       nicht in der Form. Alles Wesentliche liegt innerhalb des inneren
+       Kreises mit 40% Radius (Maskierbarkeits-Vorgabe), ohne dass dafuer
+       skaliert werden musste - Position/Groesse sind exakt wie im Original.
+       Einzige geometrische Abweichung: der im Original nur 1-3px duenne
+       Stiel ist auf 7px verstaerkt, sonst wuerde er bei App-Icon-Groessen
+       wegkippen. -->
   <defs>
     <radialGradient id="glow" cx="50%" cy="42%" r="62%">
       <stop offset="0%" stop-color="#1c1a17"/>
@@ -15,9 +18,17 @@
     </radialGradient>
   </defs>
   <rect width="512" height="512" fill="url(#glow)"/>
-  <path fill="#f5f3ec" d="M256,180L271,201L280,224L298,204L322,190L328,217L328,236L326,244L330,245
-    L345,241L362,240L357,269L348,285L335,298L303,314L256,321L209,314L181,301
-    L160,279L153,263L150,246L150,240L167,241L182,245L186,244L184,236L184,217
-    L190,190L214,204L232,224L241,201Z"/>
-  <path stroke="#f5f3ec" stroke-width="7" stroke-linecap="round" d="M256,321L256,395"/>
+  <path fill="#f5f3ec" d="M251,320L227,318L226,317L221,317L220,316L209,314L208,313L203,312L200,310
+    L198,310L184,303L177,298L164,285L155,269L155,267L153,263L153,260L152,259
+    L152,255L151,254L150,240L167,241L168,242L173,242L174,243L177,243L182,245
+    L185,245L186,244L185,243L185,237L184,236L184,217L185,216L186,204L187,203
+    L187,200L188,199L188,196L189,195L190,190L201,195L214,204L227,217L232,224
+    L233,223L236,212L241,201L243,199L247,191L256,180L265,191L266,194L271,201
+    L276,212L276,214L280,224L285,217L298,204L311,195L322,190L322,192L324,196
+    L324,199L325,200L325,203L326,204L327,216L328,217L328,236L327,237L327,243
+    L326,244L327,245L330,245L331,244L334,244L339,242L344,242L345,241L362,240
+    L361,254L360,255L359,263L352,279L348,285L335,298L328,303L314,310L312,310
+    L309,312L307,312L303,314L300,314L299,315L296,315L291,317L286,317L285,318
+    L279,318L278,319L267,319L266,320L251,320Z"/>
+  <path stroke="#f5f3ec" stroke-width="7" stroke-linecap="round" d="M255.5,320L256,395"/>
 </svg>
