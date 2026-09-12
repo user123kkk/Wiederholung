@@ -1,9 +1,9 @@
 # Phase 4 — Domain und Hosting
 
-Status: `offen`
+Status: `läuft`
 Gehört zu: [`../PLAN.md`](../PLAN.md)
-Setzt voraus: Phase 3 (`fertig`) · **offene Frage 1 aus `../PLAN.md` muss
-beantwortet sein** — ohne Hosting-Entscheidung ist diese Phase nicht zu beginnen
+Setzt voraus: Phase 3 (`fertig`) · offene Frage 1 aus `../PLAN.md` — **geklärt
+am 12.09.2026: Firebase Hosting, vorerst keine eigene Domain**
 
 ---
 
@@ -17,7 +17,12 @@ die Adresse, die hier entsteht.
 ## Was getan wird
 
 1. **Hosting einrichten** gemäß der Entscheidung zu offener Frage 1.
-2. **Domain aufschalten**, HTTPS erzwingen und nachweisen.
+2. **Domain aufschalten**, HTTPS erzwingen und nachweisen. Trifft vorerst
+   **nicht zu** — der Betreiber hat sich am 12.09.2026 ausdrücklich gegen eine
+   eigene Domain entschieden, für jetzt reicht die von Firebase vergebene
+   Adresse (`lernkarte-925c2.web.app` / `.firebaseapp.com`). Eine eigene
+   Domain ist für später vorgemerkt (`../PLAN.md`, „Später"). HTTPS erzwingen
+   und nachweisen bleibt bestehen, gilt dann für die Firebase-Adresse.
 3. **Security-Header** setzen, soweit das gewählte Hosting sie erlaubt: CSP,
    HSTS und die üblichen weiteren. Was nicht geht, wird als „geht hier nicht"
    mit Grund festgehalten.

@@ -153,13 +153,22 @@ hängt, nicht begonnen.
 
 | Nr. | Frage | Blockiert |
 |---|---|---|
-| 1 | Domainname und Hosting — bleibt es GitHub Pages oder wird es Firebase Hosting / Netlify / Vercel? (entscheidet über die Security-Header) | Phase 4, dadurch 5–7 |
+| ~~1~~ | ~~Domainname und Hosting — bleibt es GitHub Pages oder wird es Firebase Hosting / Netlify / Vercel?~~ | **erledigt 12.09.2026** — siehe unten |
 | 2 | Heißt die öffentliche Seite anders als das Tool, oder liegt beides auf einer Domain? | Phase 6 |
 | 3 | Wird die Datenschutzerklärung selbst geschrieben oder über einen Generator erzeugt? | Phase 5 |
 | 4 | Soll der Weitergabe-Kartensatz (Medina Buch 1) Teil der öffentlichen Seite werden oder privat unter Brüdern bleiben? (ändert Rechtslage und Startseite) | Phase 5, Phase 6 |
 | ~~5~~ | ~~Welches Repo ist maßgeblich?~~ | **erledigt 12.09.2026** — siehe „Wo der Code liegt" oben |
 
-Die Phasen 0–3 hängen an keiner offenen Frage und können durchgearbeitet
+**Geklärt am 12.09.2026 (vormals offene Frage 1).** Entscheidung des
+Betreibers: **Firebase Hosting**, nicht GitHub Pages, nicht Netlify/Vercel —
+naheliegend, da Firebase für Auth und Datenbank ohnehin schon läuft. **Noch
+keine eigene Domain** — läuft vorerst auf der von Firebase vergebenen Adresse
+(`lernkarte-925c2.web.app` bzw. `.firebaseapp.com`), eine eigene Domain ist
+für später vorgemerkt, kein Blocker. Damit ist Phase 4 unblockiert; Details
+und offene Ausführungsschritte stehen in
+[`phase-4-domain-hosting/LOGBUCH.md`](phase-4-domain-hosting/LOGBUCH.md).
+
+Die Phasen 0–4 hängen an keiner offenen Frage mehr und können durchgearbeitet
 werden.
 
 ---
@@ -188,19 +197,19 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-12 | **Phase 1 fertig.** Regeln in Firebase-Konsole eingespielt, Tests erfolgreich (Karte erstellen/bewerten/bearbeiten, Bereich umbenennen, Import). Abschließender Sicherheits-Durchlauf bestätigt. Weiter mit Phase 2. |
 | 2026-09-12 | **Phase 2 fertig.** Konto löschen gebaut (v3.0.5), ein Fehler im ersten Testlauf gefunden und behoben (v3.0.6 — die App legte das gerade gelöschte Nutzerdokument automatisch wieder an), am zweiten Testlauf bestätigt: Auth und Firestore beide nachweislich leer. Durchklick-Test (Registrieren, Bestätigung, Anmelden, Passwort zurücksetzen) ebenfalls durchgeführt. Weiter mit Phase 3. |
 | 2026-09-12 | **Phase 3 fertig** (v3.0.7). Git-Historie und Debug-Reste waren bereits in Phase 0 sauber (kein Fund, hier nicht erneut gesucht). `final_icon_glow_v3.png` (147 KB, nie zur Laufzeit geladen) aus dem Repo entfernt. Firebase-SDK von 10.12.2 auf 10.14.1 gehoben — den letzten Patch-Stand innerhalb derselben Hauptversion; der Sprung auf Hauptversion 12 wird bewusst nicht gemacht (eigenes Migrationsprojekt, sprengt den Rahmen „klein, einmalig"). Key-Einschränkung bleibt wie vorgesehen an Phase 4 übergeben. Weiter mit Phase 4 — dort blockiert offene Frage 1. |
+| 2026-09-12 | **Offene Frage 1 geklärt:** Firebase Hosting, keine eigene Domain vorerst. Phase 4 damit unblockiert; **Phase 4 begonnen** — Hosting-Konfiguration (`firebase.json`, `.firebaserc`) im Repo vorbereitet, das eigentliche Einrichten und Deployen braucht Zugang zur Firebase-Konsole und ist an den Betreiber übergeben. Siehe `phase-4-domain-hosting/LOGBUCH.md`. |
 
 ## Wo eine neue Session anfängt
 
-**Phase 3 ist fertig.** Phase 4 ist die nächste Phase in der Reihenfolge,
-aber **durch offene Frage 1** blockiert (Domain und Hosting — siehe „Offene
-Fragen" oben). Ohne diese Entscheidung des Betreibers darf Phase 4 nicht
-begonnen werden. Alle Phasen danach (5–9) hängen ihrerseits an Phase 4 oder
-an eigenen offenen Fragen (2–4).
+**Weiter in Phase 4** —
+[`phase-4-domain-hosting/AUFTRAG.md`](phase-4-domain-hosting/AUFTRAG.md),
+letzter Eintrag in
+[`phase-4-domain-hosting/LOGBUCH.md`](phase-4-domain-hosting/LOGBUCH.md).
 
-Das heißt: **Es gibt aktuell keine unblockierte Phase.** Eine neue Session
-prüft zuerst, ob offene Frage 1 seither beantwortet wurde (z. B. ein neuer
-Eintrag unter „Offene Fragen" oder eine Mitteilung des Betreibers). Ist sie
-weiterhin offen, wird das im Logbuch von `phase-4-domain-hosting/` vermerkt
-und nicht einfach erneut geprüft — und beim Betreiber nachgefragt, welche
-Entscheidung zu Frage 1 getroffen wurde, statt eigenmächtig zu bauen oder zu
-warten.
+Offene Frage 1 ist geklärt (Firebase Hosting, vorerst ohne eigene Domain).
+Die Repo-seitige Vorbereitung (`firebase.json`, `.firebaserc`) steht. Was
+noch fehlt, hängt an Schritten, die nur der Betreiber selbst in der
+Firebase-Konsole/CLI ausführen kann (Einrichten, erstes Deployment,
+API-Key-Einschränkung) — siehe „Was Du noch tun musst" im letzten
+Logbuch-Eintrag. Eine neue Session prüft zuerst, ob diese Schritte
+inzwischen erledigt sind, bevor sie weitermacht.

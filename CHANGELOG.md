@@ -7,6 +7,9 @@
 - `final_icon_glow_v3.png` aus dem Repo entfernt – eine Quelldatei der
   Icon-Herleitung, die nie ausgeliefert wurde (nur in einem Kommentar in
   `icon.svg` erwähnt), aber bislang ungeschützt mitveröffentlicht war.
+- `firebase.json` und `.firebaserc` hinzugefügt – Hosting-Konfiguration für
+  den geplanten Umzug von GitHub Pages auf Firebase Hosting (Phase 4).
+  Wirkungslos, bis tatsächlich deployt wird.
 
 ## 3.0.6 – 12. September 2026
 
