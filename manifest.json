@@ -14,9 +14,9 @@
   "categories": ["education", "productivity"],
   "icons": [
     {
-      "src": "./icon.svg",
-      "type": "image/svg+xml",
-      "sizes": "any",
+      "src": "./desktop-icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
       "purpose": "any maskable"
     },
     {
