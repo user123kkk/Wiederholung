@@ -1,6 +1,6 @@
 # Phase 3 — Hygiene
 
-Status: `offen`
+Status: `fertig`
 Gehört zu: [`../PLAN.md`](../PLAN.md)
 Setzt voraus: Phase 0 (`fertig`) — der Befund zu Konzept-Abschnitt 4.1 und 4.5
 
