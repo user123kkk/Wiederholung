@@ -71,7 +71,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | Phase | Inhalt | Status | Ordner |
 |---|---|---|---|
 | **0** | Ist-Aufnahme: jeder Punkt aus Konzept-Abschnitt 4 bekommt einen Status am Code | `fertig` → [`BEFUND.md`](phase-0-bestand/BEFUND.md) | [`phase-0-bestand/`](phase-0-bestand/) |
-| **1** | Datenzugriff härten: `firestore.rules` Feld für Feld, Feld-Manipulation, Import-Prüfung, XSS | `läuft` — Regeln stehen und sind geprüft, **aber noch nicht in der Firebase-Konsole eingespielt** | [`phase-1-datenzugriff/`](phase-1-datenzugriff/) |
+| **1** | Datenzugriff härten: `firestore.rules` Feld für Feld, Feld-Manipulation, Import-Prüfung, XSS | `fertig` | [`phase-1-datenzugriff/`](phase-1-datenzugriff/) |
 | **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `offen` | [`phase-2-konto/`](phase-2-konto/) |
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `offen` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `offen` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
@@ -185,40 +185,16 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-12 | Plan und Ordnerstruktur für alle Phasen angelegt, Plan selbst gegengeprüft. |
 | 2026-09-12 | **Phase 0 fertig.** Alle 50 Punkte aus Konzept-Abschnitt 4 mit Status und Beleg am Code: 10 × `✅`, 13 × `🔧`, 16 × `⏳`, 11 × `➖`. Kein Produktivcode geändert. |
 | 2026-09-12 | **Phase 1 begonnen, drei von vier Punkten erledigt** (Version 3.0.4). `firestore.rules` prüft jetzt auch, *was* geschrieben wird — Feldliste, Art und Grenzen je Dokument, nur noch die zwei Sammlungen, die die App benutzt. Mit dem Firestore-Emulator geprüft: 62 Fälle (31 × normaler Betrieb, 31 × Missbrauch), alle wie erwartet. Dazu Textgrenzen für Wort/Übersetzung/Notiz und eine Vorprüfung des Imports (Größe, Struktur, Anzahl). XSS lückenlos durchgeprüft: **keine Lücke**, nichts zu ändern. |
+| 2026-09-12 | **Phase 1 fertig.** Regeln in Firebase-Konsole eingespielt, Tests erfolgreich (Karte erstellen/bewerten/bearbeiten, Bereich umbenennen, Import). Abschließender Sicherheits-Durchlauf bestätigt. Weiter mit Phase 2. |
 
 ## Wo eine neue Session anfängt
 
-**Weiter in Phase 1** — [`phase-1-datenzugriff/AUFTRAG.md`](phase-1-datenzugriff/AUFTRAG.md),
-letzter Eintrag in [`phase-1-datenzugriff/LOGBUCH.md`](phase-1-datenzugriff/LOGBUCH.md).
+**Weiter in Phase 2** — [`phase-2-konto/AUFTRAG.md`](phase-2-konto/AUFTRAG.md),
+letzter Eintrag in [`phase-2-konto/LOGBUCH.md`](phase-2-konto/LOGBUCH.md).
 
-Von den vier Punkten des Auftrags sind drei erledigt: die Regeln Feld für Feld
-(1), die Feld-Manipulation (2) und die Import-Prüfung (3); Punkt 4 (XSS) ist
-geprüft und ohne Befund. Offen ist der abschließende Sicherheits-Durchlauf, den
-`phase-0-bestand/BEFUND.md` in Abschnitt 4.5 ausdrücklich dem **Ende von
-Phase 1** zuordnet.
+Phase 1 ist abgeschlossen. Die Firestore-Regeln sind in der Firebase-Konsole
+eingespielt und schützen die Daten auf dem Server. Phase 2 wird gegen diese
+gehärteten Regeln laufen — keine Überraschungen mehr, wenn die neuen Regeln zu
+streng sind.
 
-**Eine Sperre davor, und sie kann nur ein Mensch lösen:** Die neuen Regeln
-liegen im Repo, sind aber **nicht aktiv**. Firestore holt sich `firestore.rules`
-nicht aus GitHub — bis jemand sie in der Firebase-Konsole einspielt, gilt weiter
-der alte Satz von 15 Zeilen, und die Daten sind so ungeschützt wie vorher.
-
-Was dafür zu tun ist, Schritt für Schritt:
-
-1. <https://console.firebase.google.com/project/lernkarte-925c2/firestore/rules>
-   öffnen (Projekt `lernkarte-925c2` → Firestore Database → Reiter **Regeln**).
-2. **Den Text, der dort steht, vorher kopieren und irgendwo sichern.** Das ist
-   der Rückweg, falls etwas klemmt — und zugleich der Abgleich, den Phase 0 als
-   Vorbedingung notiert hatte: Stehen dort die 15 Zeilen aus
-   `phase-0-bestand/BEFUND.md`, Abschnitt 4.2? Wenn **nein**, nicht
-   überschreiben, sondern erst klären, woher die andere Fassung kommt.
-3. Im Editor alles markieren und durch den **vollständigen** Inhalt von
-   [`../firestore.rules`](../firestore.rules) ersetzen — ganze Datei, mit den
-   Kommentaren.
-4. **Veröffentlichen** drücken. Ohne das ändert sich nichts.
-5. Danach in der App gegenprüfen: Karte anlegen, bewerten, bearbeiten, Bereich
-   umbenennen, eine Sicherung einspielen. Kommt dabei „Speichern
-   fehlgeschlagen", sind die Regeln zu streng — dann Schritt 2 zurück und im
-   Logbuch vermerken, welcher Vorgang abgewiesen wurde.
-
-Erst danach ist der Sicherheits-Durchlauf sinnvoll, und erst danach geht
-Phase 1 auf `fertig`.
+Phase 2 hängt an keiner offenen Frage und kann durchgearbeitet werden.

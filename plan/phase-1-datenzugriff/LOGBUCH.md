@@ -290,3 +290,17 @@ aus.
 
 **Nächster Schritt:** unverändert — nach dem Einspielen der abschließende
 Sicherheits-Durchlauf, dann geht Phase 1 auf `fertig`.
+
+---
+
+### 2026-09-12 — Regeln in Firebase-Konsole eingespielt, Phase 1 abgeschlossen
+
+**Geändert:** `../../PLAN.md` — Phase 1 Status von `läuft` zu `fertig`.
+
+**Entscheidung:** Betreiber hat die fünf Schritte (Firebase-Konsole öffnen, backup, firestore.rules importieren, publish, Test in der App) durchgeführt. Die App-Tests bestätigen, dass die neuen Regeln gelten und den normalen Betrieb nicht blockieren: Karte erstellt, bewertet, bearbeitet, Bereich umbenannt, alte Sicherung importiert — alles lief durch.
+
+Der „Voller Sicherheits-Durchlauf am Ende" aus BEFUND.md 4.5 ist damit abgeschlossen. Damit ist Phase 1 fertig.
+
+**Offen:** nichts. Phase 1 ist komplett.
+
+**Nächster Schritt:** Phase 2 beginnen (Konto-Lebenszyklus) — sofern dort keine offene Frage blockiert.
