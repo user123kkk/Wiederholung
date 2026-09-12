@@ -1,3 +1,12 @@
+## 3.0.8 – 12. September 2026
+
+### Behoben
+
+- Datenschutz-Hinweis (Einstellungen → Datenschutz) beschrieb „Konto
+  löschen" noch als Bitte an den Betreiber ohne eigenen Knopf – der Text
+  war seit Phase 2 (v3.0.5) veraltet. Beschreibt jetzt den tatsächlich
+  vorhandenen Weg: selbst löschen unter Einstellungen → Konto löschen.
+
 ## 3.0.7 – 12. September 2026
 
 ### Sonstiges

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.7";
+const APP_VERSION = "3.0.8";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -4719,8 +4719,9 @@ function renderDatenschutz() {
   html += '<div class="card">';
   html += '<p class="hint"><strong>Mitnehmen:</strong> Unter Einstellungen → Sichern lädst du alles als ' +
     'Datei herunter. Die hängt an nichts und bleibt dir, auch ohne Konto.</p>';
-  html += '<p class="hint" style="margin-top:var(--space-3)"><strong>Löschen:</strong> Sag dem Betreiber ' +
-    'Bescheid, dann werden Konto und Inhalte entfernt. Einen Knopf dafür gibt es noch nicht.</p>';
+  html += '<p class="hint" style="margin-top:var(--space-3)"><strong>Löschen:</strong> Unter Einstellungen ' +
+    '→ Konto löschen entfernst du dein Konto und alle deine Inhalte selbst, sofort und unwiderruflich – ' +
+    'ohne den Betreiber fragen zu müssen.</p>';
   html += '</div></div>';
 
   html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">' +

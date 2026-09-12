@@ -154,9 +154,9 @@ hängt, nicht begonnen.
 | Nr. | Frage | Blockiert |
 |---|---|---|
 | ~~1~~ | ~~Domainname und Hosting — bleibt es GitHub Pages oder wird es Firebase Hosting / Netlify / Vercel?~~ | **erledigt 12.09.2026** — siehe unten |
-| 2 | Heißt die öffentliche Seite anders als das Tool, oder liegt beides auf einer Domain? | Phase 6 |
-| 3 | Wird die Datenschutzerklärung selbst geschrieben oder über einen Generator erzeugt? | Phase 5 |
-| 4 | Soll der Weitergabe-Kartensatz (Medina Buch 1) Teil der öffentlichen Seite werden oder privat unter Brüdern bleiben? (ändert Rechtslage und Startseite) | Phase 5, Phase 6 |
+| ~~2~~ | ~~Heißt die öffentliche Seite anders als das Tool, oder liegt beides auf einer Domain?~~ | **erledigt 12.09.2026** — siehe unten |
+| ~~3~~ | ~~Wird die Datenschutzerklärung selbst geschrieben oder über einen Generator erzeugt?~~ | **erledigt 12.09.2026** — siehe unten |
+| ~~4~~ | ~~Soll der Weitergabe-Kartensatz (Medina Buch 1) Teil der öffentlichen Seite werden oder privat unter Brüdern bleiben?~~ | **erledigt 12.09.2026** — siehe unten |
 | ~~5~~ | ~~Welches Repo ist maßgeblich?~~ | **erledigt 12.09.2026** — siehe „Wo der Code liegt" oben |
 
 **Geklärt am 12.09.2026 (vormals offene Frage 1).** Entscheidung des
@@ -175,7 +175,30 @@ Entscheidung selbst (Firebase Hosting statt Vercel/Netlify/GitHub Pages)
 bleibt unverändert gültig, nur die bisherige Live-Adresse war eine andere
 als angenommen. Siehe `phase-4-domain-hosting/LOGBUCH.md` für Details.
 
-Die Phasen 0–4 hängen an keiner offenen Frage mehr und können durchgearbeitet
+**Geklärt am 12.09.2026 (vormals offene Frage 2).** Frage war zu abstrakt
+gestellt und musste dem Betreiber konkret vorgelegt werden: Wer über
+Google auf die Seite kommt, sieht **erst eine Werbe-/Erklärseite**
+(Problem → Lösung → Handlungsaufruf, siehe Konzept-Abschnitt 4.7), und
+erst von dort aus geht es zum Login/Registrieren des Tools. Beides liegt
+auf **einer** Domain (`lernkarte-925c2.web.app` bzw. später die eigene
+Domain) — keine zweite, eigens benannte Marketing-Domain. Damit ist Phase
+6 in diesem Punkt unblockiert.
+
+**Geklärt am 12.09.2026 (vormals offene Frage 3).** Weder reiner
+Generator-Text noch komplett freier eigener Text: Die Datenschutzerklärung
+wird **selbst geschrieben, aber nach dem Aufbau, den ein Generator auch
+verlangen würde** (Verantwortlicher, welche Daten, Firebase als
+Auftragsverarbeiter, Rechte der Nutzer:innen, keine Tracking-Cookies) —
+zugeschnitten auf das, was die App tatsächlich tut, statt generischer
+Textbausteine. Damit ist Phase 5 in diesem Punkt unblockiert.
+
+**Geklärt am 12.09.2026 (vormals offene Frage 4).** Der
+Weitergabe-Kartensatz (Medina Buch 1) bleibt **privat unter Brüdern** —
+kein Teil der öffentlichen Seite. Ändert weder die Startseite (Phase 6)
+noch die Rechtstexte (Phase 5) — beide behandeln nur das, was öffentlich
+zugänglich ist.
+
+Die Phasen 0–6 hängen an keiner offenen Frage mehr und können durchgearbeitet
 werden.
 
 ---
@@ -206,19 +229,18 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-12 | **Phase 3 fertig** (v3.0.7). Git-Historie und Debug-Reste waren bereits in Phase 0 sauber (kein Fund, hier nicht erneut gesucht). `final_icon_glow_v3.png` (147 KB, nie zur Laufzeit geladen) aus dem Repo entfernt. Firebase-SDK von 10.12.2 auf 10.14.1 gehoben — den letzten Patch-Stand innerhalb derselben Hauptversion; der Sprung auf Hauptversion 12 wird bewusst nicht gemacht (eigenes Migrationsprojekt, sprengt den Rahmen „klein, einmalig"). Key-Einschränkung bleibt wie vorgesehen an Phase 4 übergeben. Weiter mit Phase 4 — dort blockiert offene Frage 1. |
 | 2026-09-12 | **Offene Frage 1 geklärt:** Firebase Hosting, keine eigene Domain vorerst. Phase 4 damit unblockiert; **Phase 4 begonnen** — Hosting-Konfiguration (`firebase.json`, `.firebaserc`) im Repo vorbereitet, das eigentliche Einrichten und Deployen braucht Zugang zur Firebase-Konsole und ist an den Betreiber übergeben. Siehe `phase-4-domain-hosting/LOGBUCH.md`. |
 | 2026-09-12 | **Phase 4 fertig.** Firebase Hosting eingerichtet und live (`lernkarte-925c2.web.app`), API-Key auf die genutzten Domains eingeschränkt (dabei ein Missbrauchsfund mit unbeschränktem Key entdeckt und behoben), Security-Header inklusive scharf geschalteter CSP gesetzt und vom Betreiber im Testlauf bestätigt (Login, Karten, Import, Hell/Dunkel — keine Auffälligkeiten). Eigene Domain bleibt wie entschieden „später". Weiter mit Phase 5 — dort blockiert offene Frage 3. |
+| 2026-09-12 | **Offene Fragen 2, 3, 4 geklärt** (Betreiber): eine Domain für Werbeseite und Tool, Datenschutzerklärung selbst geschrieben nach Generator-Aufbau, Medina-Kartensatz bleibt privat. Phasen 5 und 6 damit formal unblockiert. **Phase 5 begonnen** (v3.0.8): veralteten Datenschutz-Hinweis korrigiert (Konto-Löschung beschrieb noch den alten Weg vor Phase 2). Offen: Impressum-Angaben (Name, Anschrift, Kontakt) vom Betreiber, danach `impressum.html`/`datenschutz.html` bauen. Phase 6 bewusst noch nicht begonnen, da Reihenfolge 5 vor 6 gilt. |
 
 ## Wo eine neue Session anfängt
 
-**Weiter in Phase 5** —
-[`phase-5-recht/AUFTRAG.md`](phase-5-recht/AUFTRAG.md), falls dort schon
-angelegt, sonst zuerst dort ein `AUFTRAG.md`/`LOGBUCH.md` nach dem Muster
-der vorigen Phasen anlegen.
+**Weiter in Phase 5** — [`phase-5-recht/AUFTRAG.md`](phase-5-recht/AUFTRAG.md),
+letzter Eintrag in [`phase-5-recht/LOGBUCH.md`](phase-5-recht/LOGBUCH.md).
 
-Phase 5 hängt an **offener Frage 3** (`../PLAN.md`, Abschnitt „Offene
-Fragen"): Wird die Datenschutzerklärung selbst geschrieben oder über einen
-Generator erzeugt? Eine neue Session prüft zuerst, ob der Betreiber diese
-Frage inzwischen entschieden hat. Ist sie weiterhin offen, wird Phase 5
-**nicht** begonnen — stattdessen im Logbuch von Phase 5 vermerken, dass sie
-an dieser Frage hängt, und keine andere unblockierte Phase vorziehen, ohne
-das mit dem Betreiber abzustimmen (Phase 5 ist laut Reihenfolge als
-Nächstes dran).
+Alle offenen Fragen (1–5) sind entschieden. Phase 5 ist begonnen
+(v3.0.8): der veraltete Datenschutz-Hinweis wurde korrigiert. Was noch
+fehlt, hängt an einem Punkt, den nur der Betreiber liefern kann — echte
+Impressum-Angaben (Name, Anschrift, Kontakt). Eine neue Session prüft
+zuerst, ob diese Angaben inzwischen vorliegen; wenn ja, `impressum.html`
+und `datenschutz.html` bauen (Cookie-Prüfung dabei erledigen) und vom
+Login-Bildschirm verlinken. Phase 6 ist ebenfalls unblockiert, wird aber
+laut Reihenfolge erst nach Phase 5 begonnen.

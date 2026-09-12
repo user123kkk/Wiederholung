@@ -26,5 +26,28 @@ dasselbe noch einmal.
 
 ## Einträge
 
-_Noch keine. Diese Phase beginnt erst, wenn die in `AUFTRAG.md` genannten
-Voraussetzungen erfüllt sind._
+### 2026-09-12 — Fragen 2 und 4 beantwortet, Phase bewusst noch nicht begonnen
+
+**Geändert:** `AUFTRAG.md:3–4` — Vermerk, dass Fragen 2 und 4 beantwortet
+sind.
+
+**Entscheidung:** Betreiber hat entschieden (Details: `../PLAN.md`,
+Abschnitt „Offene Fragen"):
+
+- **Frage 2:** Eine Domain für beides. Wer die Seite ohne Login aufruft,
+  sieht zuerst die Werbe-/Erklärseite (Problem → Lösung →
+  Handlungsaufruf, Konzept 4.7); von dort geht es zum Login/Registrieren
+  des Tools. Keine zweite, eigens benannte Marketing-Domain.
+- **Frage 4:** Medina-Kartensatz bleibt privat — auf der Startseite kommt
+  er nicht vor.
+
+Damit ist Phase 6 formal unblockiert. **Trotzdem noch nicht begonnen** —
+die Reihenfolge in `../PLAN.md` sieht Phase 5 vor Phase 6 vor (Recht
+bevor die Seite öffentlich beworben wird), und Phase 5 läuft gerade erst
+an. Kein Grund, davon abzuweichen.
+
+**Offen:** Alles aus `AUFTRAG.md`, „Was getan wird" — unverändert, noch
+nichts gebaut.
+
+**Nächster Schritt:** Erst Phase 5 abschließen (Impressum, Datenschutz-
+erklärung, Cookie-Prüfung), dann Phase 6 nach `AUFTRAG.md` beginnen.

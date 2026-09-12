@@ -2,7 +2,8 @@
 
 Status: `offen`
 Gehört zu: [`../PLAN.md`](../PLAN.md)
-Setzt voraus: Phase 4 (`fertig`, Domain) · **offene Fragen 2 und 4 beantwortet**
+Setzt voraus: Phase 4 (`fertig`, Domain) · offene Fragen 2 und 4 — **beide am
+12.09.2026 beantwortet**, siehe `../PLAN.md`
 
 ---
 
