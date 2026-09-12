@@ -73,7 +73,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **0** | Ist-Aufnahme: jeder Punkt aus Konzept-Abschnitt 4 bekommt einen Status am Code | `fertig` → [`BEFUND.md`](phase-0-bestand/BEFUND.md) | [`phase-0-bestand/`](phase-0-bestand/) |
 | **1** | Datenzugriff härten: `firestore.rules` Feld für Feld, Feld-Manipulation, Import-Prüfung, XSS | `fertig` | [`phase-1-datenzugriff/`](phase-1-datenzugriff/) |
 | **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `fertig` | [`phase-2-konto/`](phase-2-konto/) |
-| **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `offen` | [`phase-3-hygiene/`](phase-3-hygiene/) |
+| **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `fertig` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `offen` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `offen` | [`phase-5-recht/`](phase-5-recht/) |
 | **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `offen` | [`phase-6-startseite/`](phase-6-startseite/) |
@@ -187,19 +187,20 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-12 | **Phase 1 begonnen, drei von vier Punkten erledigt** (Version 3.0.4). `firestore.rules` prüft jetzt auch, *was* geschrieben wird — Feldliste, Art und Grenzen je Dokument, nur noch die zwei Sammlungen, die die App benutzt. Mit dem Firestore-Emulator geprüft: 62 Fälle (31 × normaler Betrieb, 31 × Missbrauch), alle wie erwartet. Dazu Textgrenzen für Wort/Übersetzung/Notiz und eine Vorprüfung des Imports (Größe, Struktur, Anzahl). XSS lückenlos durchgeprüft: **keine Lücke**, nichts zu ändern. |
 | 2026-09-12 | **Phase 1 fertig.** Regeln in Firebase-Konsole eingespielt, Tests erfolgreich (Karte erstellen/bewerten/bearbeiten, Bereich umbenennen, Import). Abschließender Sicherheits-Durchlauf bestätigt. Weiter mit Phase 2. |
 | 2026-09-12 | **Phase 2 fertig.** Konto löschen gebaut (v3.0.5), ein Fehler im ersten Testlauf gefunden und behoben (v3.0.6 — die App legte das gerade gelöschte Nutzerdokument automatisch wieder an), am zweiten Testlauf bestätigt: Auth und Firestore beide nachweislich leer. Durchklick-Test (Registrieren, Bestätigung, Anmelden, Passwort zurücksetzen) ebenfalls durchgeführt. Weiter mit Phase 3. |
+| 2026-09-12 | **Phase 3 fertig** (v3.0.7). Git-Historie und Debug-Reste waren bereits in Phase 0 sauber (kein Fund, hier nicht erneut gesucht). `final_icon_glow_v3.png` (147 KB, nie zur Laufzeit geladen) aus dem Repo entfernt. Firebase-SDK von 10.12.2 auf 10.14.1 gehoben — den letzten Patch-Stand innerhalb derselben Hauptversion; der Sprung auf Hauptversion 12 wird bewusst nicht gemacht (eigenes Migrationsprojekt, sprengt den Rahmen „klein, einmalig"). Key-Einschränkung bleibt wie vorgesehen an Phase 4 übergeben. Weiter mit Phase 4 — dort blockiert offene Frage 1. |
 
 ## Wo eine neue Session anfängt
 
-**Weiter in Phase 3** — [`phase-3-hygiene/AUFTRAG.md`](phase-3-hygiene/AUFTRAG.md),
-letzter Eintrag (noch keiner) in [`phase-3-hygiene/LOGBUCH.md`](phase-3-hygiene/LOGBUCH.md).
+**Phase 3 ist fertig.** Phase 4 ist die nächste Phase in der Reihenfolge,
+aber **durch offene Frage 1** blockiert (Domain und Hosting — siehe „Offene
+Fragen" oben). Ohne diese Entscheidung des Betreibers darf Phase 4 nicht
+begonnen werden. Alle Phasen danach (5–9) hängen ihrerseits an Phase 4 oder
+an eigenen offenen Fragen (2–4).
 
-Phase 1 und 2 sind abgeschlossen. Firestore-Regeln stehen in der Konsole,
-Konto-Löschung ist gebaut und an einem Testkonto bestätigt (Auth **und**
-Firestore nachweislich leer, siehe `phase-2-konto/LOGBUCH.md`).
-
-Phase 3 ist klein und einmalig: Git-Historie auf Geheimnisse durchsuchen,
-Debug-Reste entfernen, offen erreichbare Dateien prüfen, Abhängigkeiten
-(Firebase-SDK-Version) aktuell halten. Der Teil, der eine Domain braucht (die
-API-Key-Einschränkung), wird ausdrücklich an Phase 4 übergeben, nicht hier
-erledigt. Phase 3 hängt an keiner offenen Frage und kann durchgearbeitet
-werden.
+Das heißt: **Es gibt aktuell keine unblockierte Phase.** Eine neue Session
+prüft zuerst, ob offene Frage 1 seither beantwortet wurde (z. B. ein neuer
+Eintrag unter „Offene Fragen" oder eine Mitteilung des Betreibers). Ist sie
+weiterhin offen, wird das im Logbuch von `phase-4-domain-hosting/` vermerkt
+und nicht einfach erneut geprüft — und beim Betreiber nachgefragt, welche
+Entscheidung zu Frage 1 getroffen wurde, statt eigenmächtig zu bauen oder zu
+warten.

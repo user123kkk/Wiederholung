@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.6";
+const APP_VERSION = "3.0.7";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -1205,9 +1205,9 @@ function sammlungenStarten() {
 }
 
 async function initFirebase() {
-  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
-  const authMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
-  const fsMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js");
+  const authMod = await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js");
+  const fsMod = await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js");
   fb = { ...authMod, ...fsMod };
 
   const fbApp = initializeApp(firebaseConfig);

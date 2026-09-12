@@ -1,3 +1,13 @@
+## 3.0.7 – 12. September 2026
+
+### Sonstiges
+
+- Firebase-SDK von 10.12.2 auf 10.14.1 gehoben (letzter Patch-Stand innerhalb
+  derselben Hauptversion, ohne API-Änderungen).
+- `final_icon_glow_v3.png` aus dem Repo entfernt – eine Quelldatei der
+  Icon-Herleitung, die nie ausgeliefert wurde (nur in einem Kommentar in
+  `icon.svg` erwähnt), aber bislang ungeschützt mitveröffentlicht war.
+
 ## 3.0.6 – 12. September 2026
 
 ### Behoben
