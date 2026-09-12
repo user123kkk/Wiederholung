@@ -26,5 +26,21 @@ dasselbe noch einmal.
 
 ## Einträge
 
-_Noch keine. Diese Phase beginnt erst, wenn die in `AUFTRAG.md` genannten
-Voraussetzungen erfüllt sind._
+### 2026-09-12 — Geprüft: weiterhin durch offene Fragen 3 und 4 gesperrt
+
+**Geändert:** Keine Dateien. Reine Prüfung nach Phase-4-Abschluss.
+
+**Entscheidung:** Nach `../PLAN.md`, „Wo eine neue Session anfängt" wäre
+Phase 5 als Nächstes dran. `AUFTRAG.md:5–6` verlangt aber offene Fragen 3
+und 4 als beantwortet — beide stehen in `../PLAN.md`, Abschnitt „Offene
+Fragen" weiterhin offen. Auch Phase 6, 7, 8, 9 wurden geprüft: Phase 6
+hängt zusätzlich an offener Frage 2 und 4, Phase 7/8/9 hängen an Phase 6
+(`fertig` vorausgesetzt, ist sie nicht). **Es gibt aktuell keine
+unblockierte Phase.** Diese Session hat deshalb nichts gebaut, sondern die
+Fragen dem Betreiber vorgelegt (siehe Antwort dieser Session).
+
+**Offen:** Fragen 2, 3, 4 aus `../PLAN.md` — ausschließlich vom Betreiber
+zu entscheiden.
+
+**Nächster Schritt:** Sobald Frage 3 (und 4, falls sie Phase 5 betrifft)
+beantwortet ist, Phase 5 nach `AUFTRAG.md` beginnen.
