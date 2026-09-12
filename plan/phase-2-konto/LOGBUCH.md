@@ -1,7 +1,8 @@
 # Logbuch Phase 2 — Konto-Lebenszyklus
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `läuft` — Konto-Löschung gebaut, noch nicht an einem Testkonto geprüft
+Status: `läuft` — Konto-Löschung gebaut, ein Fehler beim ersten Testlauf gefunden
+und behoben, erneuter Test steht noch aus
 
 ---
 
@@ -113,3 +114,100 @@ dasselbe noch einmal.
 (nicht am eigenen echten Konto!) — siehe „Was Du noch tun musst" in
 `../PLAN.md`. Danach diesen Eintrag um das Ergebnis ergänzen und, wenn alles
 passt, Phase 2 auf `fertig` setzen.
+
+---
+
+### 2026-09-12 — Erster Testlauf, Fehler gefunden: Löschung hebt sich selbst auf
+
+**Geändert:**
+- `../../app.js`
+  - `kontoWirdGeloescht` (neue Sperre, deklariert bei den anderen
+    modulweiten Zustandsvariablen nahe `unsubscribeSnapshot`)
+  - `onSnapshot(userDocRef, ...)` — Abbruch am Anfang, wenn die Sperre steht
+  - `persistVerlauf()` — Abbruch vor dem automatischen Neuanlegen
+  - `schreibeInsNutzerdokument()` — Abbruch vor dem automatischen Neuanlegen
+  - `patchDoc()` — Abbruch vor dem automatischen Neuanlegen (dritte Stelle
+    mit demselben Muster, beim Suchen nach `"not-found"` gefunden)
+  - `kontoDatenLoeschen()` — setzt die Sperre und meldet `listenerLoesen()`
+    ab, bevor irgendetwas gelöscht wird
+  - `doKontoLoeschen()` — lädt die Seite neu, wenn die Löschung
+    fehlschlägt, statt mit abgemeldeten Live-Abgleichen weiterlaufen zu
+    lassen
+  - `APP_VERSION` auf `3.0.6`
+- `../../sw.js` — `CACHE_NAME` auf `adrabic-3.0.6`
+- `../../CHANGELOG.md` — Eintrag 3.0.6
+
+**Entscheidung:**
+
+Der Betreiber hat den Testlauf gemacht (Testkonto, Karten angelegt, über den
+neuen Knopf gelöscht) und danach in der Firebase-Konsole nachgesehen: Das
+Konto war weiterhin da. Auf Nachfrage nur „komisch" — kein Fehlerdialog in
+der App, die App selbst zeigte den Anmeldebildschirm (`currentUser` war also
+wirklich `null`).
+
+Das war der entscheidende Hinweis: Wenn die App keinen Fehler gemeldet hat,
+`fb.deleteUser()` also durchgelaufen ist, aber in der Konsole trotzdem noch
+etwas steht, kann das kein Fehlschlag der Löschung selbst sein — es muss
+etwas sein, das **danach** wieder etwas anlegt.
+
+Fündig geworden beim Durchsuchen aller Stellen, die auf ein fehlendes
+Nutzerdokument reagieren (Suche nach `"not-found"` und nach
+`normBereiche(null)`): Drei separate Codepfade legen das Nutzerdokument
+automatisch neu an, sobald sie es nicht finden — Absicht für den Fall
+„frisches Konto, das Dokument existiert noch nicht", aber ununterscheidbar
+vom Fall „das Dokument wurde gerade gelöscht":
+
+1. Der Live-Abgleich auf `userDocRef` (`app.js`, im `onAuthStateChanged`
+   gesetzt) sieht `data === undefined`, hält das für ein neues Konto und
+   ruft `persistAll()` — das schreibt das **komplette** in-memory
+   `bereiche`-Array zurück in die Cloud. Das war der Haupttäter: Diese
+   Zuhör-Funktion lief die ganze Zeit weiter, während `kontoDatenLoeschen()`
+   löschte, und hat auf die eigene Löschung reagiert, noch bevor
+   `deleteUser()` das Konto abgemeldet hat.
+2. `persistVerlauf()` — bei „not-found" wird das Dokument per `setDoc` mit
+   `merge: true` neu angelegt. Ausgelöst würde das durch den 2-Sekunden-
+   Debounce-Timer aus `verlaufSpeichernBald()`, falls kurz vor dem Löschen
+   noch eine Karte bewertet wurde.
+3. `schreibeInsNutzerdokument()` — derselbe „not-found → setDoc mit merge"-
+   Ablauf für Serie und Einstellungen.
+
+Alle drei sind für den Normalbetrieb richtig und bleiben unverändert — das
+Problem war ausschließlich, dass sie während einer **aktiven Löschung**
+nicht wissen konnten, dass das fehlende Dokument Absicht ist. Die Lösung
+ist deshalb eine einzige Sperrvariable `kontoWirdGeloescht`, die alle drei
+Stellen vor ihrem jeweiligen Neuanlegen prüfen, plus das sofortige Abmelden
+der Live-Abgleiche in `kontoDatenLoeschen()` (verhindert Fall 1 bereits an
+der Wurzel, da der Handler danach gar nicht mehr aufgerufen wird — die
+Sperre selbst federt nur noch Fall 2 und 3 ab, falls ein Schreibvorgang
+schon unterwegs war, bevor `listenerLoesen()` griff).
+
+Bewusst **keine** Sperre in `persistAll()` selbst eingebaut: Diese Funktion
+*ist* die Neuanlage-Logik, kein weiterer Aufrufer davon existiert außerhalb
+der drei genannten Stellen (geprüft: `grep -n "persistAll()"`).
+
+**Die Reihenfolge Daten-zuerst-dann-Konto (Eintrag vom 2026-09-12, weiter
+oben) bleibt richtig** — dieser Fehler war kein Grund, sie zu überdenken.
+Er zeigt nur, dass "Daten löschen" mehr bedeutet als ein `deleteDoc()`-Aufruf,
+solange noch etwas anderes zuhört.
+
+**Offen:**
+- **Das verwaiste Testkonto-Dokument muss von Hand aus Firestore.** Weil
+  Schritt 1 oben zugeschlagen hat, bevor `deleteUser()` fertig war, wurde
+  das Testkonto in Authentication vermutlich trotzdem gelöscht (dafür gab es
+  keinen Fehler) — aber das dabei neu angelegte Firestore-Dokument gehört
+  jetzt zu keinem Konto mehr. Genau das Szenario, das die
+  Daten-zuerst-Reihenfolge verhindern sollte, ist über einen Umweg trotzdem
+  eingetreten. Steht unter „Was Du noch tun musst" in `../PLAN.md`.
+- **Der Fix selbst ist ungetestet.** Wieder kein Emulator zur Hand — die
+  Analyse ist gründlich (drei Fundstellen, alle mit `grep` verifiziert,
+  keine vierte gefunden), aber ob die Sperre in der Praxis reicht, zeigt
+  erst der nächste Testlauf.
+- Punkt 1 des Auftrags (Registrierung/Bestätigung/Anmeldung/Reset als
+  dokumentierter Testlauf) weiterhin offen — unklar, ob das beim ersten
+  Testlauf schon mitgemacht wurde oder nur die Löschung.
+
+**Nächster Schritt:** Mit einem **neuen** Testkonto den ganzen Ablauf
+wiederholen (altes Testkonto ist jetzt das verwaiste Dokument, nicht wieder
+verwenden) — danach in der Firebase-Konsole **beide** Stellen prüfen,
+Authentication und Firestore. Vorher das alte verwaiste Dokument in der
+Konsole von Hand löschen (siehe PLAN.md).

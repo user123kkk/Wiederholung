@@ -1,3 +1,20 @@
+## 3.0.6 – 12. September 2026
+
+### Behoben
+
+- **„Konto löschen" hat sich selbst ausgehebelt.** Die Firestore-Daten waren
+  nach dem Löschen kurz weg, tauchten aber gleich wieder auf. Ursache: Ein
+  fehlendes Nutzerdokument bedeutet für die App normalerweise „frisches
+  Konto, erster Start" – an drei Stellen (Live-Abgleich, `persistVerlauf`,
+  `schreibeInsNutzerdokument`) wird dann automatisch ein neues, leeres
+  Dokument angelegt. Genau diese Stellen sprangen auch an, wenn *die
+  Löschung selbst* das Dokument entfernt hat, und schrieben es umgehend
+  wieder hin. Jetzt merkt sich die App während der Löschung, dass sie
+  gerade läuft, meldet zuerst ihre Live-Abgleiche ab und überspringt an den
+  drei Stellen das automatische Neuanlegen.
+- Schlägt die Löschung unterwegs fehl, lädt die Seite jetzt automatisch neu,
+  statt mit abgemeldeten Live-Abgleichen weiterzulaufen.
+
 ## 3.0.5 – 12. September 2026
 
 ### Neu

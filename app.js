@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.5";
+const APP_VERSION = "3.0.6";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -701,6 +701,7 @@ function persistVerlauf() {
       .then(schreibErfolg)
       .catch(async e => {
         if (e && e.code === "not-found") {
+          if (kontoWirdGeloescht) return;
           try {
             await fb.setDoc(userDocRef, { name: displayName, schemaVersion: SCHEMA_VERSION }, { merge: true });
             await fb.updateDoc(userDocRef, new fb.FieldPath("verlauf", t), heute);
@@ -1073,6 +1074,14 @@ let bereicheColRef = null, kartenColRef = null;
 let unsubscribeSnapshot = null, unsubBereicheSnap = null, unsubKartenSnap = null;
 let fb = {}; // Firestore-/Auth-Funktionen nach dem Laden
 
+/* Phase 2: Waehrend die Konto-Loeschung laeuft, darf keine der
+   "not-found -> Dokument neu anlegen"-Stellen mehr anspringen (Snapshot-
+   Handler, schreibeInsNutzerdokument, persistVerlauf). Ohne diese Sperre
+   schreibt die App das geraede geloeschte Nutzerdokument sich selbst
+   wieder hin, weil ein fehlendes Dokument fuer sie sonst "frisches Konto,
+   erster Start" bedeutet. */
+let kontoWirdGeloescht = false;
+
 /* Rohstaende der beiden Sammlungen. Die Anzeige braucht beide, deshalb wird
    erst zusammengesetzt, wenn von jeder mindestens ein Stand da ist - sonst
    blitzte kurz eine Liste ohne Karten auf. */
@@ -1236,6 +1245,7 @@ async function initFirebase() {
       kartenColRef = fb.collection(userDocRef, "karten");
       unsubscribeSnapshot = fb.onSnapshot(userDocRef, snap => {
         if (snap.metadata.hasPendingWrites) return; // eigenes Echo ignorieren
+        if (kontoWirdGeloescht) return; // Konto loeschung: kein automatisches Neuanlegen
         const data = snap.data();
         syncError = null;
         if (!data) {
@@ -1473,7 +1483,7 @@ async function patchDoc(patch) {
   } catch (e) {
     /* Es gibt nichts zu aendern, weil das Dokument (noch) nicht existiert -
        etwa direkt nach dem Anlegen des Kontos. Dann einmal komplett anlegen. */
-    if (e && e.code === "not-found") { persistAll(); return; }
+    if (e && e.code === "not-found") { if (kontoWirdGeloescht) return; persistAll(); return; }
     saveFehler(e);
   }
 }
@@ -1603,6 +1613,7 @@ async function schreibeInsNutzerdokument(patch) {
     schreibErfolg();
   } catch (e) {
     if (e && e.code === "not-found") {
+      if (kontoWirdGeloescht) return;
       try {
         await fb.setDoc(userDocRef, { name: displayName, schemaVersion: SCHEMA_VERSION }, { merge: true });
         await fb.updateDoc(userDocRef, patch);
@@ -1856,6 +1867,13 @@ function doLogout() {
    uid mehr, das passen wuerde. Das waere endgueltig verwaist. */
 async function kontoDatenLoeschen() {
   if (!userDocRef || !bereicheColRef || !kartenColRef) return;
+  /* Erst die Sperre, dann die Live-Listener abmelden - in dieser
+     Reihenfolge kann keine der drei "not-found -> neu anlegen"-Stellen
+     mehr anspringen, weder ueber den Snapshot-Handler noch ueber einen
+     zufaellig noch laufenden Schreibvorgang (z. B. den 2-Sekunden-Timer
+     von verlaufSpeichernBald). */
+  kontoWirdGeloescht = true;
+  listenerLoesen();
   const [bereicheSnap, kartenSnap] = await Promise.all([
     fb.getDocs(bereicheColRef), fb.getDocs(kartenColRef)
   ]);
@@ -1912,6 +1930,12 @@ async function doKontoLoeschen() {
   } catch (e) {
     ui.kontoLoeschenBusy = false; render();
     await dlgAlert(kontoLoeschenFehlerText(e), "Löschen fehlgeschlagen");
+    /* Die Live-Listener wurden in kontoDatenLoeschen() abgemeldet und
+       kontoWirdGeloescht steht noch auf true - beides muss zurueck, sonst
+       bleibt die App nach einem Fehlschlag ohne Cloud-Sync haengen. Ein
+       Neuladen macht das ueber den normalen Anmelde-Weg (onAuthStateChanged)
+       gruendlicher, als es hier von Hand nachzuziehen. */
+    location.reload();
     return;
   }
 }

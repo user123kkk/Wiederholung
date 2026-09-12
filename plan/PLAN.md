@@ -196,35 +196,50 @@ Phase 1 ist abgeschlossen. Die Firestore-Regeln sind in der Firebase-Konsole
 eingespielt und schützen die Daten auf dem Server.
 
 Von den drei Punkten des Auftrags ist einer gebaut: „Konto löschen
-einschließlich Daten" (Version 3.0.5) — Firestore-Daten und Firebase-Auth-Konto
+einschließlich Daten" (Version 3.0.6) — Firestore-Daten und Firebase-Auth-Konto
 werden entfernt, mit Bestätigung durch Eintippen der E-Mail-Adresse und
 automatischem Backup davor. Punkt 3 („Private Seiten hinter dem Login") ist
 geprüft und unverändert in Ordnung. **Offen ist Punkt 1** (Registrierung,
 Bestätigung, Anmeldung, Passwort-Zurücksetzen als dokumentierter Testlauf) und
-**der Test der neuen Lösch-Funktion an einem echten Testkonto** — das kann kein
-Agent stellvertretend tun.
+**ein erneuter Test der Lösch-Funktion** — das kann kein Agent stellvertretend
+tun.
 
-**Eine Sperre davor, und sie kann nur ein Mensch lösen:** Der Code für „Konto
-löschen" ist geschrieben und gegen `firestore.rules` gelesen, aber noch nie
-ausgeführt worden. Getestet werden muss an einem **Testkonto, nicht am eigenen
-echten Konto** — das Löschen ist absichtlich unwiderruflich.
+**Beim ersten Testlauf ist ein Fehler aufgetreten, der jetzt behoben ist** (Version
+3.0.6, siehe `phase-2-konto/LOGBUCH.md`, Eintrag „Erster Testlauf, Fehler
+gefunden"): Die App hat das gerade gelöschte Nutzerdokument automatisch wieder
+angelegt, weil ein fehlendes Dokument für sie sonst „frisches Konto" bedeutet.
+Dabei ist ein **verwaistes Firestore-Dokument** vom Testkonto übrig geblieben —
+das muss zuerst von Hand weg, bevor erneut getestet wird.
+
+**Eine Sperre davor, und sie kann nur ein Mensch lösen:** Getestet werden muss
+an einem **neuen** Testkonto, nicht am eigenen echten Konto — das Löschen ist
+absichtlich unwiderruflich.
 
 Was dafür zu tun ist:
 
-1. Ein neues Testkonto in der App anlegen (eigene E-Mail-Adresse mit einem
-   Trick wie `deinname+test@gmail.com` funktioniert bei den meisten Anbietern
-   und bestätigt trotzdem an dieselbe Inbox).
-2. Damit den Durchklick-Test aus Punkt 1 machen: Registrieren, die
+1. **Aufräumen:** In der Firebase-Konsole unter Firestore Database das
+   verwaiste Dokument des alten Testkontos suchen (`users/` → die Konto-ID
+   vom letzten Test) und von Hand löschen, samt den Unterordnern `bereiche`
+   und `karten` darin (Firestore löscht Unterordner nicht automatisch mit —
+   in der Konsole jedes Unterdokument einzeln markieren oder den ganzen
+   Dokumentbaum über das Papierkorb-Symbol entfernen, je nachdem, was die
+   Konsole gerade anbietet). In Authentication nachsehen, ob das alte
+   Testkonto dort noch auftaucht — falls ja, auch dort löschen.
+2. Ein **neues** Testkonto in der App anlegen (eigene E-Mail-Adresse mit
+   einem Trick wie `deinname+test@gmail.com` funktioniert bei den meisten
+   Anbietern und bestätigt trotzdem an dieselbe Inbox).
+3. Damit den Durchklick-Test aus Punkt 1 machen: Registrieren, die
    Bestätigungsmail abwarten und den Link anklicken, abmelden, wieder
    anmelden, „Passwort zurücksetzen" anstoßen und die Mail prüfen.
-3. Ein oder zwei Karten anlegen, damit beim Löschen wirklich Daten da sind.
-4. In den Einstellungen unter „Konto" auf „Konto endgültig löschen" tippen.
+4. Ein oder zwei Karten anlegen, damit beim Löschen wirklich Daten da sind.
+5. In den Einstellungen unter „Konto" auf „Konto endgültig löschen" tippen.
    Prüfen: Kommt automatisch ein Backup-Download? Wird beim Eintippen der
    falschen E-Mail-Adresse abgebrochen? Löscht die richtige E-Mail-Adresse
    tatsächlich?
-5. Danach in der Firebase-Konsole nachsehen (Authentication **und**
+6. Danach in der Firebase-Konsole nachsehen (Authentication **und**
    Firestore Database → `users/{uid}`): Ist das Konto in Authentication weg?
    Ist das Dokument samt `bereiche`- und `karten`-Unterordnern in Firestore
-   weg?
-6. Ergebnis in `phase-2-konto/LOGBUCH.md` nachtragen — auch wenn etwas nicht
+   weg? **Diesmal beide Stellen wirklich prüfen**, nicht nur ob die App
+   selbst abmeldet.
+7. Ergebnis in `phase-2-konto/LOGBUCH.md` nachtragen — auch wenn etwas nicht
    geklappt hat. Erst danach kann Phase 2 auf `fertig` gehen.
