@@ -72,7 +72,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 |---|---|---|---|
 | **0** | Ist-Aufnahme: jeder Punkt aus Konzept-Abschnitt 4 bekommt einen Status am Code | `fertig` → [`BEFUND.md`](phase-0-bestand/BEFUND.md) | [`phase-0-bestand/`](phase-0-bestand/) |
 | **1** | Datenzugriff härten: `firestore.rules` Feld für Feld, Feld-Manipulation, Import-Prüfung, XSS | `fertig` | [`phase-1-datenzugriff/`](phase-1-datenzugriff/) |
-| **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `offen` | [`phase-2-konto/`](phase-2-konto/) |
+| **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `läuft` | [`phase-2-konto/`](phase-2-konto/) |
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `offen` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `offen` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `offen` | [`phase-5-recht/`](phase-5-recht/) |
@@ -193,8 +193,38 @@ Festgelegt vom Betreiber am 12.09.2026:
 letzter Eintrag in [`phase-2-konto/LOGBUCH.md`](phase-2-konto/LOGBUCH.md).
 
 Phase 1 ist abgeschlossen. Die Firestore-Regeln sind in der Firebase-Konsole
-eingespielt und schützen die Daten auf dem Server. Phase 2 wird gegen diese
-gehärteten Regeln laufen — keine Überraschungen mehr, wenn die neuen Regeln zu
-streng sind.
+eingespielt und schützen die Daten auf dem Server.
 
-Phase 2 hängt an keiner offenen Frage und kann durchgearbeitet werden.
+Von den drei Punkten des Auftrags ist einer gebaut: „Konto löschen
+einschließlich Daten" (Version 3.0.5) — Firestore-Daten und Firebase-Auth-Konto
+werden entfernt, mit Bestätigung durch Eintippen der E-Mail-Adresse und
+automatischem Backup davor. Punkt 3 („Private Seiten hinter dem Login") ist
+geprüft und unverändert in Ordnung. **Offen ist Punkt 1** (Registrierung,
+Bestätigung, Anmeldung, Passwort-Zurücksetzen als dokumentierter Testlauf) und
+**der Test der neuen Lösch-Funktion an einem echten Testkonto** — das kann kein
+Agent stellvertretend tun.
+
+**Eine Sperre davor, und sie kann nur ein Mensch lösen:** Der Code für „Konto
+löschen" ist geschrieben und gegen `firestore.rules` gelesen, aber noch nie
+ausgeführt worden. Getestet werden muss an einem **Testkonto, nicht am eigenen
+echten Konto** — das Löschen ist absichtlich unwiderruflich.
+
+Was dafür zu tun ist:
+
+1. Ein neues Testkonto in der App anlegen (eigene E-Mail-Adresse mit einem
+   Trick wie `deinname+test@gmail.com` funktioniert bei den meisten Anbietern
+   und bestätigt trotzdem an dieselbe Inbox).
+2. Damit den Durchklick-Test aus Punkt 1 machen: Registrieren, die
+   Bestätigungsmail abwarten und den Link anklicken, abmelden, wieder
+   anmelden, „Passwort zurücksetzen" anstoßen und die Mail prüfen.
+3. Ein oder zwei Karten anlegen, damit beim Löschen wirklich Daten da sind.
+4. In den Einstellungen unter „Konto" auf „Konto endgültig löschen" tippen.
+   Prüfen: Kommt automatisch ein Backup-Download? Wird beim Eintippen der
+   falschen E-Mail-Adresse abgebrochen? Löscht die richtige E-Mail-Adresse
+   tatsächlich?
+5. Danach in der Firebase-Konsole nachsehen (Authentication **und**
+   Firestore Database → `users/{uid}`): Ist das Konto in Authentication weg?
+   Ist das Dokument samt `bereiche`- und `karten`-Unterordnern in Firestore
+   weg?
+6. Ergebnis in `phase-2-konto/LOGBUCH.md` nachtragen — auch wenn etwas nicht
+   geklappt hat. Erst danach kann Phase 2 auf `fertig` gehen.

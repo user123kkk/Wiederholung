@@ -1,3 +1,25 @@
+## 3.0.5 – 12. September 2026
+
+### Neu
+
+- **Konto endgültig löschen.** In den Einstellungen unter „Konto" gibt es
+  jetzt einen Weg, das eigene Konto vollständig zu entfernen – Karten,
+  Bereiche und das Nutzerdokument in Firestore ebenso wie das Konto selbst
+  in Firebase Auth. Bisher gab es dafür keinen Weg in der App.
+
+  Zur Sicherheit: Vor der Rückfrage wird automatisch ein Voll-Backup zum
+  Herunterladen angeboten. Bestätigt wird durch Eintippen der eigenen
+  E-Mail-Adresse, nicht durch einen Klick, der sich versehentlich
+  wegtippen ließe. Verlangt Firebase aus Sicherheitsgründen eine frische
+  Anmeldung, wird einmalig nach dem Passwort gefragt.
+
+  Die Reihenfolge beim Löschen ist bewusst: zuerst die Daten in Firestore,
+  danach das Konto in Firebase Auth. Schlägt der zweite Schritt fehl,
+  bleibt ein Konto ohne Daten übrig – anmeldbar und wiederholbar. In der
+  umgekehrten Reihenfolge wäre ein Fehlschlag beim zweiten Schritt ein
+  Datenbestand ohne Konto, das ihn je hätte löschen können – endgültig
+  verwaist.
+
 ## 3.0.4 – 12. September 2026
 
 ### Geändert

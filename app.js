@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.4";
+const APP_VERSION = "3.0.5";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -904,6 +904,7 @@ let ui = {
   authError: null,
   authInfo: null,
   authBusy: false,
+  kontoLoeschenBusy: false,  // Konto-Loeschung laeuft (Phase 2)
   /* A3 (1.9.0): der offene Bereich haengt an seiner ID, nicht mehr an einer
      Positionsnummer - siehe currentBereich(). null = noch keiner gewaehlt,
      dann faellt die App auf den ersten Bereich zurueck. */
@@ -1843,6 +1844,76 @@ async function doReset() {
 }
 function doLogout() {
   fb.signOut(auth);
+}
+
+/* ---------- Konto loeschen (Phase 2) ----------
+   Reihenfolge ist Absicht: erst die Firestore-Daten weg, DANACH das
+   Auth-Konto. Schlaegt der zweite Schritt fehl (z. B. "requires-recent-login"),
+   bleibt ein Konto ohne Daten uebrig - anmeldbar, wiederholbar, harmlos.
+   In der umgekehrten Reihenfolge waere ein Fehlschlag beim zweiten Schritt
+   ein Datenbestand ohne Konto, das ihn je wieder loeschen koennte - die
+   Regeln verlangen ueberall auth.uid == uid, und ohne Konto gibt es kein
+   uid mehr, das passen wuerde. Das waere endgueltig verwaist. */
+async function kontoDatenLoeschen() {
+  if (!userDocRef || !bereicheColRef || !kartenColRef) return;
+  const [bereicheSnap, kartenSnap] = await Promise.all([
+    fb.getDocs(bereicheColRef), fb.getDocs(kartenColRef)
+  ]);
+  const alle = [...bereicheSnap.docs, ...kartenSnap.docs];
+  for (let i = 0; i < alle.length; i += 400) {
+    const stapel = fb.writeBatch(db);
+    alle.slice(i, i + 400).forEach(d => stapel.delete(d.ref));
+    await stapel.commit();
+  }
+  await fb.deleteDoc(userDocRef);
+}
+function kontoLoeschenFehlerText(e) {
+  if (e && e.code === "auth/wrong-password") return "Falsches Passwort – das Konto wurde nicht gelöscht.";
+  if (e && e.code === "auth/too-many-requests") return "Zu viele Versuche – bitte kurz warten und erneut probieren.";
+  if (e && e.code === "auth/network-request-failed") return "Keine Verbindung – bitte Internet prüfen und erneut probieren.";
+  return "Das hat nicht geklappt (" + (e && e.code ? e.code : "unbekannter Fehler") + "). Bitte erneut versuchen.";
+}
+async function kontoAuthLoeschen() {
+  try {
+    await fb.deleteUser(currentUser);
+  } catch (e) {
+    if (!e || e.code !== "auth/requires-recent-login") throw e;
+    const pass = await dlgPrompt(
+      "Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht wird.",
+      "", { title: "Passwort bestätigen", okLabel: "Konto löschen", danger: true, type: "password" });
+    if (!pass) throw e;
+    const zugangsdaten = fb.EmailAuthProvider.credential(currentUser.email, pass);
+    await fb.reauthenticateWithCredential(currentUser, zugangsdaten);
+    await fb.deleteUser(currentUser);
+  }
+}
+async function doKontoLoeschen() {
+  if (!currentUser || ui.kontoLoeschenBusy) return;
+  const email = (currentUser.email || "").trim();
+  exportBackup();
+  const eingabe = await dlgPrompt(
+    "Dein Konto und alle deine Karten, Bereiche und dein Lernstand werden unwiderruflich " +
+    "gelöscht. Das lässt sich nicht rückgängig machen.\n\n" +
+    "Ein Backup wurde gerade zum Herunterladen angeboten – sieh in deinen Downloads nach, " +
+    "dass die Datei wirklich da ist.\n\n" +
+    "Tipp zum Bestätigen deine E-Mail-Adresse ein: " + email,
+    "", { title: "Konto endgültig löschen?", okLabel: "Endgültig löschen", danger: true });
+  if (eingabe === null) return;
+  if (eingabe.trim().toLowerCase() !== email.toLowerCase()) {
+    await dlgAlert("Die E-Mail-Adresse stimmt nicht überein – es wurde nichts gelöscht.", "Abgebrochen");
+    return;
+  }
+  ui.kontoLoeschenBusy = true; render();
+  try {
+    await kontoDatenLoeschen();
+    await kontoAuthLoeschen();
+    /* Erfolg: fb.deleteUser meldet auch ab, onAuthStateChanged raeumt den
+       Rest auf (currentUser wird null, die App zeigt den Anmeldebildschirm). */
+  } catch (e) {
+    ui.kontoLoeschenBusy = false; render();
+    await dlgAlert(kontoLoeschenFehlerText(e), "Löschen fehlgeschlagen");
+    return;
+  }
 }
 
 /* ---------- Datenzugriff ---------- */
@@ -4529,6 +4600,9 @@ function renderEinstellungen() {
     '<span class="liste-zeile__text">Datenschutz</span>' + ikon("chevronRechts", "i-sm") + '</button>';
   html += '<button class="liste-zeile gefahr" data-action="logout">' + ikon("abmelden", "i-sm") +
     '<span class="liste-zeile__text">Abmelden</span></button>';
+  html += '<button class="liste-zeile gefahr" data-action="delete-account"' +
+    (ui.kontoLoeschenBusy ? " disabled" : "") + '>' + ikon("muell", "i-sm") +
+    '<span class="liste-zeile__text">Konto endgültig löschen</span></button>';
   html += '</div></div>';
 
   /* Die Versionsnummer stand bis 2.21.6 klein unter JEDEM Bildschirm. Sie
@@ -6249,7 +6323,7 @@ function dlgPrompt(text, defaultValue, opts) {
   const o = opts || {};
   return openDialog({
     kind: "prompt", title: o.title || "Eingabe", text: text,
-    value: defaultValue || "", okLabel: o.okLabel || "Übernehmen"
+    value: defaultValue || "", okLabel: o.okLabel || "Übernehmen", type: o.type || "text"
   });
 }
 function renderDialog() {
@@ -6262,7 +6336,7 @@ function renderDialog() {
   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
   h += '<div class="dlg-text">' + esc(d.text) + '</div>';
   if (d.kind === "prompt") {
-    h += '<input type="text" id="dlg-input" value="' + esc(d.value) + '">';
+    h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" value="' + esc(d.value) + '">';
   }
   h += '<div class="dlg-actions">';
   if (d.kind !== "alert") h += '<button class="secondary" data-action="dlg-cancel">Abbrechen</button>';
@@ -6299,6 +6373,7 @@ app.addEventListener("click", e => {
     case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; render(); break;
     case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; render(); break;
     case "logout": doLogout(); break;
+    case "delete-account": doKontoLoeschen(); break;
     /* 3.0.0: Das Bereichs-Sheet. "nichts" traegt das Blatt selbst, damit ein
        Tipp hinein nicht bis zum Hintergrund durchschlaegt und schliesst. */
     case "bereich-sheet-auf": ui.bereichSheet = true; render(); break;
