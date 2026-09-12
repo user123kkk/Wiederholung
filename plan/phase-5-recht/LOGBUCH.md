@@ -137,3 +137,52 @@ z. B. mit den Eltern oder einer echten Beratungsstelle.
 irgendein Name in `impressum.html` landet. Eine neue Session, die diesen
 Eintrag liest, fragt zuerst nach, statt mit unklaren Angaben
 weiterzubauen.
+
+### 2026-09-12 — Minderjährigkeit bestätigt, Betreiberperson weiterhin offen; Cookie-Prüfung erledigt
+
+**Geändert:** Keine Code-Dateien. Reine Recherche für die Cookie-Prüfung
+aus `AUFTRAG.md` Punkt 3.
+
+**Entscheidung/Sachstand Impressum:** Betreiber hat bestätigt: Die
+tatsächliche Betreiberperson ist minderjährig (16). Wer stattdessen oder
+zusätzlich im Impressum steht, ist **weiterhin offen** („vielleicht jemand
+anderes" — noch nicht entschieden, wer). Diese Session fragt nicht weiter
+nach, bis der Betreiber das mit den Beteiligten geklärt hat — das ist
+keine Entscheidung, die sich hier herbeireden lässt. Weiterhin keine
+Impressum-Angaben eingesammelt, kein Name irgendwo eingetragen.
+
+**Cookie-Prüfung (unabhängig vom Impressum-Punkt, deshalb jetzt erledigt):**
+Code durchsucht (`app.js`, `index.html`, `firebase.json`) nach
+`document.cookie`, `Set-Cookie` und Drittanbieter-Einbettungen (iframes,
+Fremd-Skripte):
+
+- **Kein einziges `document.cookie` im Code.** Die App setzt keine
+  eigenen Cookies.
+- **Firebase Auth** nutzt ohne eigene `setPersistence()`-Konfiguration
+  (im Code nicht gesetzt, also Standardverhalten) im Web IndexedDB, keine
+  Cookies.
+- **`localStorage`** wird genutzt (Thema/Helligkeit `app.js:890`,
+  altes Backup-Datum `app.js:1020,1032,2301,2341`) — das ist technisch
+  kein Cookie und fällt ohnehin unter „unbedingt technisch erforderlich"
+  (§25 Abs. 2 Nr. 2 TDDDG): die App merkt sich nur, was der Nutzer selbst
+  ausgelöst hat (Helligkeit, Offline-Fähigkeit), nichts zum
+  Wiedererkennen über Sitzungen hinweg zu Tracking-Zwecken.
+- **Keine Drittanbieter-Einbettungen**, die Cookies setzen könnten — kein
+  `<iframe>`, keine Google Fonts, kein Analytics/Werbe-Skript. Die zwei
+  externen Ressourcen (`gstatic.com` fürs SDK, `verses.quran.foundation`
+  für die Schrift, beide bereits im Datenschutz-Hinweis und in der CSP
+  dokumentiert) sind reine Datei-Downloads ohne Cookie-Mechanismus.
+- `firebase.json` setzt selbst keine `Set-Cookie`-Header.
+
+**Ergebnis: Keine nicht-notwendigen Cookies. Kein Cookie-Banner nötig.**
+Auftrag Punkt 3 aus `AUFTRAG.md` damit erfüllt, unabhängig vom noch
+offenen Impressum-Punkt.
+
+**Offen:** Weiterhin: wer im Impressum steht (siehe voriger Eintrag).
+Erst danach `impressum.html`/`datenschutz.html` bauen — die
+Datenschutzerklärung kann das Cookie-Ergebnis aber schon jetzt
+mit-formulieren.
+
+**Nächster Schritt:** Warten, bis der Betreiber die Betreiberperson für
+das Impressum geklärt hat. Keine proaktive Nachfrage mehr in dieser
+Session dazu — der Betreiber meldet sich, wenn geklärt.
