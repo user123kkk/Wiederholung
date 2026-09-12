@@ -72,7 +72,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 |---|---|---|---|
 | **0** | Ist-Aufnahme: jeder Punkt aus Konzept-Abschnitt 4 bekommt einen Status am Code | `fertig` → [`BEFUND.md`](phase-0-bestand/BEFUND.md) | [`phase-0-bestand/`](phase-0-bestand/) |
 | **1** | Datenzugriff härten: `firestore.rules` Feld für Feld, Feld-Manipulation, Import-Prüfung, XSS | `fertig` | [`phase-1-datenzugriff/`](phase-1-datenzugriff/) |
-| **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `läuft` | [`phase-2-konto/`](phase-2-konto/) |
+| **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `fertig` | [`phase-2-konto/`](phase-2-konto/) |
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `offen` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `offen` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `offen` | [`phase-5-recht/`](phase-5-recht/) |
@@ -186,60 +186,20 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-12 | **Phase 0 fertig.** Alle 50 Punkte aus Konzept-Abschnitt 4 mit Status und Beleg am Code: 10 × `✅`, 13 × `🔧`, 16 × `⏳`, 11 × `➖`. Kein Produktivcode geändert. |
 | 2026-09-12 | **Phase 1 begonnen, drei von vier Punkten erledigt** (Version 3.0.4). `firestore.rules` prüft jetzt auch, *was* geschrieben wird — Feldliste, Art und Grenzen je Dokument, nur noch die zwei Sammlungen, die die App benutzt. Mit dem Firestore-Emulator geprüft: 62 Fälle (31 × normaler Betrieb, 31 × Missbrauch), alle wie erwartet. Dazu Textgrenzen für Wort/Übersetzung/Notiz und eine Vorprüfung des Imports (Größe, Struktur, Anzahl). XSS lückenlos durchgeprüft: **keine Lücke**, nichts zu ändern. |
 | 2026-09-12 | **Phase 1 fertig.** Regeln in Firebase-Konsole eingespielt, Tests erfolgreich (Karte erstellen/bewerten/bearbeiten, Bereich umbenennen, Import). Abschließender Sicherheits-Durchlauf bestätigt. Weiter mit Phase 2. |
+| 2026-09-12 | **Phase 2 fertig.** Konto löschen gebaut (v3.0.5), ein Fehler im ersten Testlauf gefunden und behoben (v3.0.6 — die App legte das gerade gelöschte Nutzerdokument automatisch wieder an), am zweiten Testlauf bestätigt: Auth und Firestore beide nachweislich leer. Durchklick-Test (Registrieren, Bestätigung, Anmelden, Passwort zurücksetzen) ebenfalls durchgeführt. Weiter mit Phase 3. |
 
 ## Wo eine neue Session anfängt
 
-**Weiter in Phase 2** — [`phase-2-konto/AUFTRAG.md`](phase-2-konto/AUFTRAG.md),
-letzter Eintrag in [`phase-2-konto/LOGBUCH.md`](phase-2-konto/LOGBUCH.md).
+**Weiter in Phase 3** — [`phase-3-hygiene/AUFTRAG.md`](phase-3-hygiene/AUFTRAG.md),
+letzter Eintrag (noch keiner) in [`phase-3-hygiene/LOGBUCH.md`](phase-3-hygiene/LOGBUCH.md).
 
-Phase 1 ist abgeschlossen. Die Firestore-Regeln sind in der Firebase-Konsole
-eingespielt und schützen die Daten auf dem Server.
+Phase 1 und 2 sind abgeschlossen. Firestore-Regeln stehen in der Konsole,
+Konto-Löschung ist gebaut und an einem Testkonto bestätigt (Auth **und**
+Firestore nachweislich leer, siehe `phase-2-konto/LOGBUCH.md`).
 
-Von den drei Punkten des Auftrags ist einer gebaut: „Konto löschen
-einschließlich Daten" (Version 3.0.6) — Firestore-Daten und Firebase-Auth-Konto
-werden entfernt, mit Bestätigung durch Eintippen der E-Mail-Adresse und
-automatischem Backup davor. Punkt 3 („Private Seiten hinter dem Login") ist
-geprüft und unverändert in Ordnung. **Offen ist Punkt 1** (Registrierung,
-Bestätigung, Anmeldung, Passwort-Zurücksetzen als dokumentierter Testlauf) und
-**ein erneuter Test der Lösch-Funktion** — das kann kein Agent stellvertretend
-tun.
-
-**Beim ersten Testlauf ist ein Fehler aufgetreten, der jetzt behoben ist** (Version
-3.0.6, siehe `phase-2-konto/LOGBUCH.md`, Eintrag „Erster Testlauf, Fehler
-gefunden"): Die App hat das gerade gelöschte Nutzerdokument automatisch wieder
-angelegt, weil ein fehlendes Dokument für sie sonst „frisches Konto" bedeutet.
-Dabei ist ein **verwaistes Firestore-Dokument** vom Testkonto übrig geblieben —
-das muss zuerst von Hand weg, bevor erneut getestet wird.
-
-**Eine Sperre davor, und sie kann nur ein Mensch lösen:** Getestet werden muss
-an einem **neuen** Testkonto, nicht am eigenen echten Konto — das Löschen ist
-absichtlich unwiderruflich.
-
-Was dafür zu tun ist:
-
-1. **Aufräumen:** In der Firebase-Konsole unter Firestore Database das
-   verwaiste Dokument des alten Testkontos suchen (`users/` → die Konto-ID
-   vom letzten Test) und von Hand löschen, samt den Unterordnern `bereiche`
-   und `karten` darin (Firestore löscht Unterordner nicht automatisch mit —
-   in der Konsole jedes Unterdokument einzeln markieren oder den ganzen
-   Dokumentbaum über das Papierkorb-Symbol entfernen, je nachdem, was die
-   Konsole gerade anbietet). In Authentication nachsehen, ob das alte
-   Testkonto dort noch auftaucht — falls ja, auch dort löschen.
-2. Ein **neues** Testkonto in der App anlegen (eigene E-Mail-Adresse mit
-   einem Trick wie `deinname+test@gmail.com` funktioniert bei den meisten
-   Anbietern und bestätigt trotzdem an dieselbe Inbox).
-3. Damit den Durchklick-Test aus Punkt 1 machen: Registrieren, die
-   Bestätigungsmail abwarten und den Link anklicken, abmelden, wieder
-   anmelden, „Passwort zurücksetzen" anstoßen und die Mail prüfen.
-4. Ein oder zwei Karten anlegen, damit beim Löschen wirklich Daten da sind.
-5. In den Einstellungen unter „Konto" auf „Konto endgültig löschen" tippen.
-   Prüfen: Kommt automatisch ein Backup-Download? Wird beim Eintippen der
-   falschen E-Mail-Adresse abgebrochen? Löscht die richtige E-Mail-Adresse
-   tatsächlich?
-6. Danach in der Firebase-Konsole nachsehen (Authentication **und**
-   Firestore Database → `users/{uid}`): Ist das Konto in Authentication weg?
-   Ist das Dokument samt `bereiche`- und `karten`-Unterordnern in Firestore
-   weg? **Diesmal beide Stellen wirklich prüfen**, nicht nur ob die App
-   selbst abmeldet.
-7. Ergebnis in `phase-2-konto/LOGBUCH.md` nachtragen — auch wenn etwas nicht
-   geklappt hat. Erst danach kann Phase 2 auf `fertig` gehen.
+Phase 3 ist klein und einmalig: Git-Historie auf Geheimnisse durchsuchen,
+Debug-Reste entfernen, offen erreichbare Dateien prüfen, Abhängigkeiten
+(Firebase-SDK-Version) aktuell halten. Der Teil, der eine Domain braucht (die
+API-Key-Einschränkung), wird ausdrücklich an Phase 4 übergeben, nicht hier
+erledigt. Phase 3 hängt an keiner offenen Frage und kann durchgearbeitet
+werden.

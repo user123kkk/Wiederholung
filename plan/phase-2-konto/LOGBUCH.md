@@ -1,8 +1,7 @@
 # Logbuch Phase 2 — Konto-Lebenszyklus
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `läuft` — Konto-Löschung gebaut, ein Fehler beim ersten Testlauf gefunden
-und behoben, erneuter Test steht noch aus
+Status: `fertig`
 
 ---
 
@@ -211,3 +210,38 @@ wiederholen (altes Testkonto ist jetzt das verwaiste Dokument, nicht wieder
 verwenden) — danach in der Firebase-Konsole **beide** Stellen prüfen,
 Authentication und Firestore. Vorher das alte verwaiste Dokument in der
 Konsole von Hand löschen (siehe PLAN.md).
+
+---
+
+### 2026-09-12 — Zweiter Testlauf erfolgreich, Phase 2 fertig
+
+**Geändert:** nichts am Code. Nur dieser Eintrag, `../PLAN.md` (Status,
+Statusverlauf, „Wo eine neue Session anfängt").
+
+**Entscheidung:** Der Betreiber hat aufgeräumt (verwaistes Dokument aus dem
+ersten Testlauf von Hand aus Firestore entfernt) und mit einem neuen
+Testkonto den kompletten Ablauf wiederholt:
+
+1. Registrieren, Bestätigungsmail-Link angeklickt, abgemeldet, wieder
+   angemeldet, „Passwort zurücksetzen" angestoßen und die Mail geprüft —
+   auf Nachfrage ausdrücklich bestätigt („ja ja und ja"). Damit ist **Punkt
+   1 des Auftrags** erledigt und mit heutigem Datum dokumentiert.
+2. Karten angelegt, über den neuen Knopf gelöscht, danach in der
+   Firebase-Konsole **beide** Stellen geprüft — Authentication und
+   Firestore Database. Diesmal beide leer. Der Fix aus dem vorigen Eintrag
+   (Sperre `kontoWirdGeloescht`, Listener-Abmeldung vor dem Löschen) hat
+   gehalten.
+
+Damit sind alle drei Punkte des Auftrags erledigt:
+1. Durchklick-Test — geprüft, heute.
+2. Konto löschen — gebaut (v3.0.5), ein Fehler gefunden und behoben
+   (v3.0.6), am Testkonto bestätigt: in Auth und Firestore nachweislich
+   nichts mehr übrig. Die Rückfrage vor dem Löschen (E-Mail eintippen,
+   automatisches Backup) ist Teil derselben Funktion.
+3. Private Seiten hinter dem Login — bereits am 2026-09-12 geprüft und in
+   Ordnung befunden (siehe Eintrag oben), unverändert seither.
+
+**Offen:** nichts mehr in dieser Phase.
+
+**Nächster Schritt:** Phase 3 (Hygiene) beginnen — siehe
+`../phase-3-hygiene/AUFTRAG.md`.
