@@ -1,6 +1,6 @@
 # Phase 5 — Recht
 
-Status: `läuft`
+Status: `fertig`
 Gehört zu: [`../PLAN.md`](../PLAN.md)
 Setzt voraus: Phase 2 (`fertig`, wegen „Konto löschen") · Phase 4 (`fertig`) ·
 offene Fragen 3 und 4 aus `../PLAN.md` — **beide am 12.09.2026 beantwortet**,

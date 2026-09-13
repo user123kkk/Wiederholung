@@ -1,7 +1,7 @@
 # Logbuch Phase 5 — Recht
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `läuft`
+Status: `fertig`
 
 ---
 
@@ -242,3 +242,61 @@ fähige Anschrift, Kontakt-E-Mail (Pflicht), optional Telefon.
 
 **Nächster Schritt:** Sobald diese Angaben vorliegen, `impressum.html`
 und `datenschutz.html` bauen, vom Login-Bildschirm verlinken.
+
+### 2026-09-13 — Impressum und Datenschutzerklärung gebaut, Phase 5 fertig
+
+**Geändert:** `impressum.html` (neu), `datenschutzerklaerung.html` (neu),
+`app.js` (Version 3.0.9; Links zu beiden Seiten im Anmeldebildschirm
+ergänzt), `styles.css` (`a.linklike` ergänzt, damit `<a>`-Links wie die
+bestehenden Link-Buttons aussehen), `sw.js` (`CACHE_NAME` nachgezogen),
+`CHANGELOG.md`.
+
+**Entscheidung:** Angaben des Vaters erhalten: Nauroz Masjeedi,
+Industriestraße 8, 25917 Leck, `masjeedikk@gmail.com`. Beide Seiten als
+eigene, statische Dateien gebaut (keine SPA-Route) — ohne Anmeldung
+lesbar, wie es §5 DDG verlangt, verlinkt vom Anmeldebildschirm neben dem
+bestehenden „Datenschutz"-Kurzhinweis.
+
+Impressum enthält nur, was für ein **privates, nicht-gewerbliches**
+Angebot zutrifft (Name, Anschrift, Kontakt, Haftungs-/Urheberrechts-
+Hinweise) — bewusst **ohne** Steuernummer, Handelsregister, redaktionelle
+Verantwortlichkeit nach §18 Abs.2 MStV oder OS-Streitschlichtungs-Hinweis,
+weil diese Punkte nur für Gewerbebetriebe bzw. redaktionelle/kommerzielle
+Angebote gelten (Konzept-Grundsatz „kein Punkt wird abgearbeitet, nur
+weil er in einer Liste stand").
+
+Datenschutzerklärung ist nach dem Aufbau strukturiert, den ein Generator
+auch verlangen würde (Verantwortlicher, Zwecke, Rechtsgrundlagen,
+Empfänger/Auftragsverarbeitung, Speicherdauer, Betroffenenrechte), aber
+zugeschnitten auf die tatsächlichen Fakten aus dem Code: Firebase
+Hosting/Auth/Firestore, keine Cookies (Ergebnis aus dem vorigen Eintrag),
+Selbstlöschung (Phase 2) und Sicherungs-Export als Umsetzung von Löschung
+und Datenübertragbarkeit.
+
+Inline-Skript (Thema vor dem ersten Bild) in beiden neuen Seiten
+byte-identisch zu dem bereits per CSP-Hash freigegebenen Skript aus
+`index.html` übernommen — geprüft mit einem Python-Hash-Vergleich, exakt
+derselbe `sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=`. Keine
+CSP-Änderung in `firebase.json` nötig.
+
+**Woran diese Phase fertig ist (`AUFTRAG.md`):**
+
+1. Impressum und Datenschutzerklärung erreichbar und inhaltlich
+   deckungsgleich mit dem, was die App tatsächlich tut — erfüllt.
+2. Cookie-Prüfung dokumentiert (voriger Eintrag) — Ergebnis „keine
+   nicht-notwendigen Cookies, kein Banner" — erfüllt.
+3. Entscheidung zu offener Frage 4 (Medina-Kartensatz bleibt privat) im
+   Text abgebildet — die Startseite existiert noch nicht (Phase 6), aber
+   nichts in den Rechtstexten widerspricht dem; erfüllt für den Umfang
+   dieser Phase.
+4. Dieses Logbuch geführt, `../PLAN.md` wird im selben Schritt auf
+   `fertig` gesetzt.
+
+**Offen:** Nichts mehr in Phase 5 selbst. Für später vorgemerkt: Sollte
+sich die Betreiberperson, Anschrift oder E-Mail je ändern, müssen beide
+Seiten von Hand nachgezogen werden — kein automatischer Mechanismus,
+absichtlich, da so selten.
+
+**Nächster Schritt:** Weiter mit Phase 6 (Öffentliche Startseite) — dort
+steht laut `AUFTRAG.md` als Allererstes der verschärfte
+Sicherheits-Durchlauf an, bevor irgendein Startseiten-Inhalt gebaut wird.

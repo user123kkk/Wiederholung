@@ -75,7 +75,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `fertig` | [`phase-2-konto/`](phase-2-konto/) |
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `fertig` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `fertig` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
-| **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `offen` | [`phase-5-recht/`](phase-5-recht/) |
+| **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `fertig` | [`phase-5-recht/`](phase-5-recht/) |
 | **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `offen` | [`phase-6-startseite/`](phase-6-startseite/) |
 | **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `offen` | [`phase-7-seo/`](phase-7-seo/) |
 | **8** | Rückmeldung: Kontakt- und Fehlerformular | `offen` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
@@ -244,17 +244,19 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-12 | **Offene Frage 1 geklärt:** Firebase Hosting, keine eigene Domain vorerst. Phase 4 damit unblockiert; **Phase 4 begonnen** — Hosting-Konfiguration (`firebase.json`, `.firebaserc`) im Repo vorbereitet, das eigentliche Einrichten und Deployen braucht Zugang zur Firebase-Konsole und ist an den Betreiber übergeben. Siehe `phase-4-domain-hosting/LOGBUCH.md`. |
 | 2026-09-12 | **Phase 4 fertig.** Firebase Hosting eingerichtet und live (`lernkarte-925c2.web.app`), API-Key auf die genutzten Domains eingeschränkt (dabei ein Missbrauchsfund mit unbeschränktem Key entdeckt und behoben), Security-Header inklusive scharf geschalteter CSP gesetzt und vom Betreiber im Testlauf bestätigt (Login, Karten, Import, Hell/Dunkel — keine Auffälligkeiten). Eigene Domain bleibt wie entschieden „später". Weiter mit Phase 5 — dort blockiert offene Frage 3. |
 | 2026-09-12 | **Offene Fragen 2, 3, 4 geklärt** (Betreiber): eine Domain für Werbeseite und Tool, Datenschutzerklärung selbst geschrieben nach Generator-Aufbau, Medina-Kartensatz bleibt privat. Phasen 5 und 6 damit formal unblockiert. **Phase 5 begonnen** (v3.0.8): veralteten Datenschutz-Hinweis korrigiert (Konto-Löschung beschrieb noch den alten Weg vor Phase 2). Offen: Impressum-Angaben (Name, Anschrift, Kontakt) vom Betreiber, danach `impressum.html`/`datenschutz.html` bauen. Phase 6 bewusst noch nicht begonnen, da Reihenfolge 5 vor 6 gilt. |
+| 2026-09-13 | Klärung der Impressum-Person: tatsächlicher Betreiber ist 16, im Gespräch zunächst unter eigenem Namen geplant, dann auf **den Vater (Nauroz Masjeedi)** als im Impressum genannte Person geändert — löst Geschäftsfähigkeits- und Adress-Sichtbarkeits-Thema in einem Schritt. Deshalb zusätzlich als „Später"-Punkt festgehalten: ein erneuter, verschärfter Sicherheits-Durchlauf vor Phase 6, weil der Vater jetzt die formale Haftung trägt (siehe Abschnitt „Später" und `phase-6-startseite/AUFTRAG.md`). |
+| 2026-09-13 | **Phase 5 fertig** (v3.0.9). `impressum.html` und `datenschutzerklaerung.html` gebaut mit den Angaben des Vaters, vom Login-Bildschirm verlinkt. Cookie-Prüfung: keine nicht-notwendigen Cookies, kein Banner nötig. Impressum bewusst ohne Steuernummer/Handelsregister (nicht-gewerblich). Weiter mit Phase 6 — dort steht laut Auftrag zuerst der verschärfte Sicherheits-Durchlauf an. |
 
 ## Wo eine neue Session anfängt
 
-**Weiter in Phase 5** — [`phase-5-recht/AUFTRAG.md`](phase-5-recht/AUFTRAG.md),
-letzter Eintrag in [`phase-5-recht/LOGBUCH.md`](phase-5-recht/LOGBUCH.md).
+**Weiter in Phase 6** — [`phase-6-startseite/AUFTRAG.md`](phase-6-startseite/AUFTRAG.md),
+letzter Eintrag in [`phase-6-startseite/LOGBUCH.md`](phase-6-startseite/LOGBUCH.md).
 
-Alle offenen Fragen (1–5) sind entschieden. Phase 5 ist begonnen
-(v3.0.8): der veraltete Datenschutz-Hinweis wurde korrigiert. Was noch
-fehlt, hängt an einem Punkt, den nur der Betreiber liefern kann — echte
-Impressum-Angaben (Name, Anschrift, Kontakt). Eine neue Session prüft
-zuerst, ob diese Angaben inzwischen vorliegen; wenn ja, `impressum.html`
-und `datenschutz.html` bauen (Cookie-Prüfung dabei erledigen) und vom
-Login-Bildschirm verlinken. Phase 6 ist ebenfalls unblockiert, wird aber
-laut Reihenfolge erst nach Phase 5 begonnen.
+Alle offenen Fragen sind entschieden, Phase 5 ist `fertig`. Phase 6
+beginnt laut eigenem `AUFTRAG.md`, Abschnitt „Bevor diese Phase
+inhaltlich beginnt", **nicht** direkt mit der Startseite, sondern mit
+einem erneuten, verschärften Sicherheits-Durchlauf — Hintergrund: Im
+Impressum steht der Vater des tatsächlichen (minderjährigen) Betreibers
+als Verantwortlicher. Eine neue Session macht mit genau diesem
+Sicherheits-Durchlauf weiter, bevor sie irgendeinen Startseiten-Inhalt
+baut.
