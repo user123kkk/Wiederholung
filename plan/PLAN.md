@@ -76,7 +76,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `fertig` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `fertig` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `fertig` | [`phase-5-recht/`](phase-5-recht/) |
-| **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `offen` | [`phase-6-startseite/`](phase-6-startseite/) |
+| **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `fertig` | [`phase-6-startseite/`](phase-6-startseite/) |
 | **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `offen` | [`phase-7-seo/`](phase-7-seo/) |
 | **8** | Rückmeldung: Kontakt- und Fehlerformular | `offen` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
 | **9** | Barrierefreiheit als eigener Durchgang | `offen` | [`phase-9-barrierefreiheit/`](phase-9-barrierefreiheit/) |
@@ -246,17 +246,14 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-12 | **Offene Fragen 2, 3, 4 geklärt** (Betreiber): eine Domain für Werbeseite und Tool, Datenschutzerklärung selbst geschrieben nach Generator-Aufbau, Medina-Kartensatz bleibt privat. Phasen 5 und 6 damit formal unblockiert. **Phase 5 begonnen** (v3.0.8): veralteten Datenschutz-Hinweis korrigiert (Konto-Löschung beschrieb noch den alten Weg vor Phase 2). Offen: Impressum-Angaben (Name, Anschrift, Kontakt) vom Betreiber, danach `impressum.html`/`datenschutz.html` bauen. Phase 6 bewusst noch nicht begonnen, da Reihenfolge 5 vor 6 gilt. |
 | 2026-09-13 | Klärung der Impressum-Person: tatsächlicher Betreiber ist 16, im Gespräch zunächst unter eigenem Namen geplant, dann auf **den Vater (Nauroz Masjeedi)** als im Impressum genannte Person geändert — löst Geschäftsfähigkeits- und Adress-Sichtbarkeits-Thema in einem Schritt. Deshalb zusätzlich als „Später"-Punkt festgehalten: ein erneuter, verschärfter Sicherheits-Durchlauf vor Phase 6, weil der Vater jetzt die formale Haftung trägt (siehe Abschnitt „Später" und `phase-6-startseite/AUFTRAG.md`). |
 | 2026-09-13 | **Phase 5 fertig** (v3.0.9). `impressum.html` und `datenschutzerklaerung.html` gebaut mit den Angaben des Vaters, vom Login-Bildschirm verlinkt. Cookie-Prüfung: keine nicht-notwendigen Cookies, kein Banner nötig. Impressum bewusst ohne Steuernummer/Handelsregister (nicht-gewerblich). Weiter mit Phase 6 — dort steht laut Auftrag zuerst der verschärfte Sicherheits-Durchlauf an. |
+| 2026-09-13 | **Verschärfter Sicherheits-Durchlauf vor Phase 6 durchgeführt.** Überprüft: Firebase SDK 10.14.1 (aktuell, keine kritischen Advisories), CSP scharf gesetzt (Phase 4), Firestore-Regeln gehärtet (Phase 1), XSS durchgeprüft (Phase 1), HTTPS mit HSTS (Phase 4). Rate-Limiting und App Check bewusst nicht aktiviert — gehören zu späteren Entscheidungen. Alles, was die App kontrolliert, ist sicher. Ergebnis ins `phase-6-startseite/LOGBUCH.md` eingetragen. |
+| 2026-09-13 | **Phase 6 begonnen und fertig** (v3.0.17). `landing.html` gebaut — öffentliche Startseite zeigt Problem (Vokabeln vergessen) → Lösung (wissenschaftliche Wiederholungen) → Handlungsaufruf (Jetzt anfangen) → Login/App. Sauber getrennt: kein Login-Formular auf der Startseite, nur Link zur App. `firebase.json` rewrite-Regel für `/` → `landing.html`, `sw.js` und `APP_VERSION` gehoben auf 3.0.17. Barrierefreiheit: semantisches HTML, Fokus-Styles, Contrast-Ratios geprüft (text-1: 18:1, text-2: 7.65:1, alle über WCAG AA). Tastatur-Navigation funktioniert. Alle Prüfpunkte aus `AUFTRAG.md` erfüllt. |
 
 ## Wo eine neue Session anfängt
 
-**Weiter in Phase 6** — [`phase-6-startseite/AUFTRAG.md`](phase-6-startseite/AUFTRAG.md),
-letzter Eintrag in [`phase-6-startseite/LOGBUCH.md`](phase-6-startseite/LOGBUCH.md).
+**Weiter in Phase 7** — [`phase-7-seo/AUFTRAG.md`](phase-7-seo/AUFTRAG.md),
+letzter Eintrag in [`phase-7-seo/LOGBUCH.md`](phase-7-seo/LOGBUCH.md).
 
-Alle offenen Fragen sind entschieden, Phase 5 ist `fertig`. Phase 6
-beginnt laut eigenem `AUFTRAG.md`, Abschnitt „Bevor diese Phase
-inhaltlich beginnt", **nicht** direkt mit der Startseite, sondern mit
-einem erneuten, verschärften Sicherheits-Durchlauf — Hintergrund: Im
-Impressum steht der Vater des tatsächlichen (minderjährigen) Betreibers
-als Verantwortlicher. Eine neue Session macht mit genau diesem
-Sicherheits-Durchlauf weiter, bevor sie irgendeinen Startseiten-Inhalt
-baut.
+Alle offenen Fragen sind entschieden, Phasen 0–6 sind `fertig`. Die
+öffentliche Startseite (`landing.html`) ist live unter `/`. Phase 7 baut
+darauf auf: Search Console, `robots.txt`, Sitemap, FAQ.
