@@ -1,3 +1,12 @@
+## 3.0.13 – 13. September 2026
+
+### Behoben
+
+- `desktop-icon.png` fehlte in `APP_SHELL` (`sw.js`) – seit Phase 1
+  bekannt, aber nie mitgenommen. Die Datei wird für Browser-Tab,
+  Ladebildschirm und `manifest.json` gebraucht und ist jetzt auch beim
+  allerersten Start ohne Internet da.
+
 ## 3.0.12 – 13. September 2026
 
 ### Behoben

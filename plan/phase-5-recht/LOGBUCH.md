@@ -458,3 +458,80 @@ Betreiber.
 
 **Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
 Sicherheits-Durchlauf.
+
+### 2026-09-13 — Auf Bitte des Betreibers: das ganze Repo geprüft, nicht nur diese Session
+
+**Geändert:** `sw.js` (`APP_SHELL` um `./desktop-icon.png` ergänzt),
+Version 3.0.13.
+
+**Anlass:** Betreiber wollte nach den wiederholten Funden nicht nur die
+Änderungen dieser Session, sondern das ganze Repo noch einmal
+durchgesehen haben. Geprüft wurde breiter als sonst in dieser Phase
+üblich — mit der Einschränkung, dass am Lernwerkzeug selbst laut
+`../../CLAUDE.md` nichts geändert wird, nur dokumentiert.
+
+**Gefunden und behoben:**
+
+1. **`desktop-icon.png` fehlte in `APP_SHELL`** — seit Phase 1
+   (`phase-1-datenzugriff/LOGBUCH.md`, Eintrag „Am Rande aufgefallen")
+   bekannt und dort ausdrücklich der „nächsten Änderung, die ohnehin an
+   der App arbeitet" übergeben. Diese Session hat fünfmal an der App
+   gearbeitet (v3.0.8–3.0.12), ohne das mitzunehmen. Jetzt ergänzt: Die
+   Datei wird für den Browser-Tab, die Marke auf dem Ladebildschirm und
+   für `manifest.json` gebraucht und ist jetzt auch beim allerersten
+   Start ohne Internet da, nicht erst nach dem ersten Online-Besuch.
+
+**Geprüft, bewusst nichts geändert:**
+
+2. **`icon.svg`** wird nirgends außer in `APP_SHELL` referenziert (kein
+   `<link>`, kein `manifest.json`-Eintrag). Anders als das in Phase 3
+   entfernte `final_icon_glow_v3.png` ist das hier aber kein Zufallsfund,
+   sondern die dokumentierte, per Kantenverfolgung aus dem echten
+   Marken-Bild nachgebaute Vektor-Vorlage des Icons (Kommentar im File
+   selbst: Moore-Neighbor-Tracing, Ramer-Douglas-Peucker, Pixel-Vergleich
+   gegengeprüft). Das Löschen einer Design-Quelldatei, nur weil sie
+   gerade nicht verlinkt ist, wäre kein Aufräumen mehr, sondern ein
+   Eingriff, der nicht verlangt wurde. Bleibt unangetastet.
+3. **CSP-Restrisiken durchsucht:** keine `on*="…"`-Attribute, keine
+   `javascript:`-Links, keine `<style>`-Blöcke außerhalb der bereits
+   behobenen, keine `<form>`-Elemente (also `form-action` wirkungslos,
+   aber auch harmlos), keine `fetch()`/`XMLHttpRequest`/`WebSocket`-Aufrufe
+   außerhalb dessen, was das Firebase-SDK selbst macht (durch
+   `connect-src` bereits abgedeckt), die einzige externe Schrift
+   (`verses.quran.foundation`) steckt bereits in `font-src`. Der einzige
+   `Blob`/`createObjectURL`-Aufruf (`app.js:2318`, der Sicherungs-Export)
+   löst einen Datei-Download über einen synthetischen Klick aus – das
+   ist keine von der CSP erfasste Netzanfrage.
+4. **`firestore.rules` gegen die tatsächlichen Schreibvorgänge in
+   `app.js` gegengelesen:** Die Feldlisten (`nutzerFelder`,
+   `bereichFelder`, `kartenFelder`) decken sich mit dem, was `app.js`
+   tatsächlich schreibt (`persistAll()`, `patchDoc()`,
+   `persistCardGrade()`). Keine Lücke gefunden.
+5. **Manifest/Icons gegengeprüft:** `desktop-icon.png` ist tatsächlich
+   512×512 wie in `manifest.json` behauptet (per `PIL` nachgemessen) —
+   kein Widerspruch. `firebase.json`, `.firebaserc`, `manifest.json`
+   syntaktisch gültiges JSON.
+
+**Außerhalb des Auftrags gefunden, nicht behoben — reine Beobachtung am
+Lernwerkzeug, das diese Phase nicht anfasst:** In `persistAll()`
+(`app.js:1509–1524`, läuft laut eigenem Kommentar nur beim ersten Anlegen
+des Nutzerdokuments und bei der einmaligen Datenumzugs-Migration) schreibt
+`bereichFelder(b, bi)` zwar auch `gefuehrt`, `satzId` und `satzVersion`
+(`app.js:573–575`), aber die Zeile, die tatsächlich in die Datenbank
+schreibt (`app.js:1518`), nimmt gezielt nur `{name, order, sets}` heraus –
+und `stapel.set(...)` ohne `{merge: true}` ersetzt das ganze
+Bereichsdokument. Träfe dieser Pfad einen **bereits bestehenden**
+geführten Bereich (`gefuehrt: true`, mit `satzId`/`satzVersion`) statt
+eines frischen, würden diese drei Felder in der Datenbank verschwinden.
+Nach Lesen der Aufrufstellen (`app.js:1044, 1256, 1486, 6436`) betrifft
+das nur Erstanlage und den Fall, dass `updateDoc` ein „not-found" meldet,
+also ein zwischenzeitlich verschwundenes Dokument – ein seltener, aber
+nicht unmöglicher Pfad (z. B. wenn zwischen zwei Aktionen etwas am
+Dokument manipuliert wurde). **Nicht geprüft:** ob das in der Praxis je
+aufgetreten ist, und was `normBereiche()` macht, wenn diese Felder beim
+nächsten Laden fehlen. Das zu vertiefen wäre bereits ein Eingriff in die
+Lernlogik selbst – das bleibt hier stehen, für eine Phase, die das
+Lernwerkzeug ausdrücklich anfassen darf, falls es je eine gibt.
+
+**Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
+Sicherheits-Durchlauf.
