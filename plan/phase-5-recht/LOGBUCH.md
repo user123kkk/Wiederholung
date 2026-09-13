@@ -225,3 +225,20 @@ kein Agent übernehmen (externe Anmeldung, ggf. Ausweisprüfung).
 Kontaktdaten. Erst mit vollständigen Angaben `impressum.html` bauen —
 kein Teil-Impressum mit Platzhalter-Adresse veröffentlichen, das wäre
 nutzlos bis irreführend.
+
+### 2026-09-13 — Entscheidung geändert: Vater als Betreiberperson
+
+**Geändert:** Keine Dateien.
+
+**Entscheidung:** Betreiber ist von „16-Jähriger unter eigenem Namen"
+abgerückt und hat sich für **den Vater** als im Impressum genannte
+Person entschieden — löst sowohl den Geschäftsfähigkeits-Sperrpunkt als
+auch den Adress-Sperrpunkt in einem Schritt (ein Erwachsener mit eigener
+Wohnadresse). Beide vorigen Einträge zu diesem Thema bleiben als
+Verlauf stehen, gelten aber als überholt.
+
+**Offen:** Konkrete Angaben des Vaters — vollständiger Name, ladungs-
+fähige Anschrift, Kontakt-E-Mail (Pflicht), optional Telefon.
+
+**Nächster Schritt:** Sobald diese Angaben vorliegen, `impressum.html`
+und `datenschutz.html` bauen, vom Login-Bildschirm verlinken.
