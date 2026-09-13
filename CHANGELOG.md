@@ -1,3 +1,14 @@
+## 3.0.12 – 13. September 2026
+
+### Behoben
+
+- **Impressum und Datenschutzerklärung waren nach der Anmeldung nicht
+  mehr erreichbar** – beide Links standen nur auf dem Anmeldebildschirm.
+  Ein angemeldeter Nutzer hätte sich erst abmelden müssen, um sie zu
+  sehen. §5 DDG verlangt, dass das Impressum jederzeit leicht erreichbar
+  ist. Beide Links stehen jetzt zusätzlich in den Einstellungen, direkt
+  unter „Konto".
+
 ## 3.0.11 – 13. September 2026
 
 ### Behoben

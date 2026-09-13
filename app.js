@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.11";
+const APP_VERSION = "3.0.12";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -4636,6 +4636,15 @@ function renderEinstellungen() {
     (ui.kontoLoeschenBusy ? " disabled" : "") + '>' + ikon("muell", "i-sm") +
     '<span class="liste-zeile__text">Konto endgültig löschen</span></button>';
   html += '</div></div>';
+
+  /* Impressum und Datenschutzerklaerung muessen jederzeit erreichbar sein,
+     nicht nur vor der Anmeldung (Paragraph 5 DDG: "leicht erkennbar,
+     unmittelbar erreichbar"). Ohne diese Zeilen haette ein angemeldeter
+     Nutzer keinen Weg dorthin ausser sich abzumelden. */
+  html += '<div class="empty__aktionen" style="margin-top:var(--space-2)">';
+  html += '<a class="linklike" href="./impressum.html">Impressum</a>';
+  html += '<a class="linklike" href="./datenschutzerklaerung.html">Datenschutzerklärung</a>';
+  html += '</div>';
 
   /* Die Versionsnummer stand bis 2.21.6 klein unter JEDEM Bildschirm. Sie
      gehoert dorthin, wo man sie sucht, wenn man sie braucht. */

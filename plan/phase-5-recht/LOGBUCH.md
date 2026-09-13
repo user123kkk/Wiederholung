@@ -419,3 +419,42 @@ dann sagt jeder der beiden Namen, was dahintersteckt.
 **Nächster Schritt:** Unverändert Phase 6 mit dem verschärften
 Sicherheits-Durchlauf. Die Browser-Prüfung von heute ist dafür die
 Vorlage: erst die echten Header nachstellen, dann messen, nicht lesen.
+
+### 2026-09-13 — Fünfter Fund: nach der Anmeldung unerreichbar (v3.0.12)
+
+**Geändert:** `app.js` (`renderEinstellungen`, Abschnitt „Konto" um die
+beiden Links ergänzt), `sw.js`/`CHANGELOG.md` (Version 3.0.12).
+
+**Anlass:** Betreiber hat zum Vergleich zwei Bildschirmfotos einer
+fremden App (arabily.app) geschickt – dort liegen Datenschutz und
+Impressum im Profilbereich, jederzeit erreichbar. Die Personendaten aus
+diesen Fotos (Name, Anschrift, USt-ID einer fremden Person) sind für
+dieses Projekt irrelevant und wurden nicht übernommen, nur die Beobachtung
+dahinter zählt.
+
+**Der Fund:** Beide neuen Links standen ausschließlich auf dem
+Anmeldebildschirm (`renderAuth`). Ein bereits angemeldeter Nutzer hätte
+sich erst abmelden müssen, um ans Impressum zu kommen – das verstößt
+gegen §5 DDG, der ständige, unmittelbare Erreichbarkeit verlangt, nicht
+nur „irgendwo erreichbar vor der Anmeldung". Behoben: dieselben zwei
+Links stehen jetzt zusätzlich in `renderEinstellungen()`, direkt unter
+„Konto", neben dem bestehenden „Datenschutz"-Hinweis.
+
+**Geprüft, diesmal mit angemeldetem Zustand:** Der Playwright-Testaufbau
+wurde um einen echten Login-Fluss erweitert – der Auth-Stub liefert einen
+bestätigten Nutzer, der Firestore-Stub beantwortet den
+Nutzerdokument-Listener mit „kein Dokument" (führt zu einem frischen,
+leeren Konto) und die Sammlungs-Listener mit leeren Listen. So lässt sich
+der Einstellungsbildschirm ohne echtes Firebase erreichen und
+fotografieren. Ergebnis: beide Links erscheinen, keine Konsolenfehler,
+kein CSP-Verstoß.
+
+**Weiterhin unverändert offen:** Die Namensnähe „Datenschutz" /
+„Datenschutzerklärung" fällt in den Einstellungen jetzt noch mehr auf,
+weil beide Zeilen näher beieinanderstehen als vorher auf dem
+Anmeldebildschirm. Der Vorschlag von vorhin (Hinweis in „Was wird
+gespeichert?" umbenennen) steht unverändert zur Entscheidung durch den
+Betreiber.
+
+**Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
+Sicherheits-Durchlauf.
