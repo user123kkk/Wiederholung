@@ -78,7 +78,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `fertig` | [`phase-5-recht/`](phase-5-recht/) |
 | **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `fertig` | [`phase-6-startseite/`](phase-6-startseite/) |
 | **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `fertig` | [`phase-7-seo/`](phase-7-seo/) |
-| **8** | Rückmeldung: Kontakt- und Fehlerformular | `offen` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
+| **8** | Rückmeldung: Kontakt- und Fehlerformular | `läuft` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
 | **9** | Barrierefreiheit als eigener Durchgang | `offen` | [`phase-9-barrierefreiheit/`](phase-9-barrierefreiheit/) |
 
 Die Folge entspricht dem Vorschlag aus Konzept-Abschnitt 5. Es gibt keinen
@@ -302,44 +302,50 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Erfundener Kartensatz zurückgenommen** (v3.0.22). Der Betreiber hat den Inhalt aus v3.0.21 zurückgewiesen — erfundene arabische Vokabeln, teils mit Quran-Bezug, ungeprüft veröffentlicht: „die 50 karten sin bullshit … würde wenn schon selbst entscheiden was man haben kann“. `start-kartensatz.json` entfernt, `landing.html` auf Fassung A zurückgestellt (Neue legen selbst an). Festgehalten als Lehre in `STRATEGIE.md` 2.1: Ein Einsteiger-Kartensatz bleibt die richtige Idee, aber der Inhalt kommt vom Betreiber, nicht vom Agenten — und die Freigabe muss **vor** dem Schreiben ins Repo stehen, nicht danach. Zusätzlich geprüft und verneint: ein vom Betreiber gemeldeter Start-Fehler der App (Firebase-Laden von gstatic.com schlägt fehl) hängt an keiner Änderung in diesem Strang — `index.html`, `app.js`-Ladepfad und CSP sind seit v3.0.19 unverändert. |
 | 2026-09-13 | **Ladefehler in `sw.js` behoben** (v3.0.23), außerhalb der Landing-Page-Strategie: Der Betreiber meldete, die App bleibe dauerhaft bei „Start fehlgeschlagen“ hängen (Firebase-SDK-Import von gstatic.com schlägt fehl), nur ein Hard-Reload half. Ursache gefunden: Der Service Worker fragte „zuerst Netz, dann eigenen Cache“, aber ohne den Browser-eigenen HTTP-Cache zu umgehen – schlug das Netz einmal fehl, konnte der Browser die Fehlantwort selbst zwischenspeichern, und jeder normale Reload bekam sie erneut, während ein Hard-Reload genau diesen Cache umgeht. Netz-Anfragen laufen jetzt mit `cache: "no-store"`; nur noch echte (`res.ok`) Antworten landen im eigenen Cache. Diese Logik in `sw.js` bestand unverändert seit vor Phase 5 – keine Folge des Landing-Page-Umbaus. |
 | 2026-09-13 | **Selbstheilung bei Startfehler ergänzt** (v3.0.24). Der sw.js-Fix (v3.0.23) allein reichte nicht: Der Betreiber meldete, der Fehler bestehe weiter, obwohl gstatic.com von diesem Geraet aus normal erreichbar war. Manuelles „Websitedaten löschen“ in den Entwicklertools behob es sofort – Ursache war ein lokal feststeckender Service Worker/Cache, den weder Reload noch Neustart der App loeste. Das kann man Nutzer:innen nicht zumuten, also macht `app.js` es jetzt selbst: Schlaegt `initFirebase()` fehl, meldet die App bei erkanntem Online-Zustand einmal pro Sitzung alle Service-Worker-Registrierungen ab, loescht alle eigenen Caches und laedt neu, bevor der Fehlerbildschirm ueberhaupt erscheint. Bewusst nur online: Waehrend einer echten Offline-Phase wuerde das Loeschen des eigenen Caches genau die Offline-Faehigkeit zerstoeren, die er ermoeglichen soll. |
+| 2026-09-13 | **Phase 8 begonnen: Möglichkeiten vorgelegt.** `phase-8-rueckmeldung/MOEGLICHKEITEN.md` neu — vier Wege, wie eine Nachricht ohne eigenen Server ankommt (Firestore-Sammlung · `mailto:`-Link · Drittanbieter-Dienst · Firestore + Cloud Function), mit den Auswirkungen auf CSP, `firestore.rules` und Datenschutzerklärung, Spam-Schutz-Bausteinen (inkl. Bezug auf App Check aus der „Später“-Liste) und einer gekennzeichneten Empfehlung (eigene Firestore-Sammlung). Wie in `AUFTRAG.md` verlangt: vorgelegt, nicht entschieden. Phase 8 damit `läuft`, wartet auf die Wahl des Betreibers. |
 
 ## Wo eine neue Session anfängt
 
-**Beide offenen Stränge hängen an einer Entscheidung des Betreibers.** Das ist
-kein Versehen und keine Ausrede — es steht hier, damit die nächste Session
-nicht dieselbe Sperre noch einmal aufdeckt.
+**Drei offene Stränge, alle hängen an einer Entscheidung des Betreibers.**
+Das ist kein Versehen und keine Ausrede — es steht hier, damit die nächste
+Session nicht dieselbe Sperre noch einmal aufdeckt.
 
 **Strang A — Landing-Page-Strategie** (`läuft`, siehe
 [`landing-page-strategie/LOGBUCH.md`](landing-page-strategie/LOGBUCH.md)).
-[`STRATEGIE.md`](landing-page-strategie/STRATEGIE.md) ist gebaut, soweit sie
-ohne Antworten trägt: Abschnitte 1–2 (Message, Belege, Funnel, die sechs
-Entscheidungen als Vorlagen mit Folgen und Empfehlung), Abschnitt 3 (drei
-fertige Message-Fassungen), 4 (Keywords als Hypothese samt Negativliste und
-Prüfweg), 5 (Seitenstruktur Block für Block), 6 (Änderungsliste gegen den
-heutigen Stand).
+[`STRATEGIE.md`](landing-page-strategie/STRATEGIE.md) steht vollständig.
+Entschieden und umgesetzt: 2.2 *eng anfangen, weit anlegen* · 2.3
+*„wissenschaftlich bewährt" ersetzen* (beide seit v3.0.20/22 live). 2.1
+(womit ein Neuer anfängt) ist auf **Fassung A zurückgestellt** — ein erster
+Versuch mit einem vom Agenten erfundenen Kartensatz (v3.0.21) wurde vom
+Betreiber zu Recht zurückgewiesen (v3.0.22): welcher Wortschatz öffentlich
+steht, ist seine Entscheidung. `landing.html` zeigt seitdem „Dein Stoff,
+nicht unserer" — Neue legen selbst an. Offen bleiben 2.1 (Inhalt, falls der
+Betreiber selbst einen Startkartensatz schreiben will), 2.4 (Marke oder
+Person), 2.5 (Namensabgleich innen „Wiederholung"/außen „Adrabic"), 2.6
+(Wortlaut der Kostenfrage) — **keine davon blockiert etwas**, dieser Strang
+ist im Kern fertig.
 
-**Stand 13.09.2026: alle drei Entscheidungen getroffen, Umbau erledigt**
-(v3.0.21). 2.2 *eng anfangen, weit anlegen* · 2.3 *„wissenschaftlich
-bewährt" ersetzen* · 2.1 *B — eigener Einsteiger-Kartensatz*. `landing.html`
-ist nach `STRATEGIE.md` Abschnitt 5 neu aufgebaut,
-`start-kartensatz.json` (50 Karten, fünf Lektionen) liegt bereit.
+Am selben Tag zusätzlich zwei fundamentale Bugs gefunden und behoben, beide
+**unabhängig von der Landing-Page-Strategie** (schon vor Phase 5 im Code):
+`sw.js` fragte den Browser-eigenen HTTP-Cache statt immer das Netz (v3.0.23),
+und ein feststeckender alter Service Worker/Cache ließ die App dauerhaft bei
+„Start fehlgeschlagen" hängen — dagegen jetzt eine automatische Selbstheilung
+in `app.js` (v3.0.24). Beide Male von einer Nutzermeldung ausgegangen, beide
+Male am selben Tag verifiziert. Kein weiterer Schritt hier offen.
 
-**Was jetzt beim Betreiber liegt, nicht bei einer nächsten Session:** die 50
-Karten gegenlesen (sie sind von einem Agenten geschrieben und gehen erst mit
-dem Deploy live), ein Bildschirmfoto des Handschrift-Felds statt der
-nachgebauten Karte, und deployen. Offen bleiben die Entscheidungen 2.4–2.6
-(Marke oder Person · Namensabgleich innen/außen · Wortlaut der Kostenfrage)
-— sie blockieren nichts.
-
-**Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `offen`).
-Braucht die Klärung: Formulare **in** die App oder als eigene Seite? Und vor
-allem — wie kommt eine Nachricht an, wo die App keinen eigenen Server hat?
-Laut [`phase-8-rueckmeldung/AUFTRAG.md`](phase-8-rueckmeldung/AUFTRAG.md)
-sind die Möglichkeiten **zu Beginn der Phase aufzuschreiben und vorzulegen**,
-nicht selbst zu entscheiden. Das ist die eine Sache, die eine nächste Session
-ohne Rückfrage tun kann: die Möglichkeiten aufschreiben und ins Logbuch von
-Phase 8 legen.
+**Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `läuft`).
+Die in `phase-8-rueckmeldung/AUFTRAG.md` verlangten Möglichkeiten stehen seit
+13.09.2026 in
+[`phase-8-rueckmeldung/MOEGLICHKEITEN.md`](phase-8-rueckmeldung/MOEGLICHKEITEN.md):
+vier Wege, wie eine Nachricht ohne eigenen Server ankommt (Firestore-Sammlung
+· `mailto:`-Link · Drittanbieter-Formular-Dienst · Firestore + Cloud
+Function), mit Spam-Schutz-Bausteinen und einer gekennzeichneten Empfehlung
+(A: eigene Firestore-Sammlung). **Wartet auf die Wahl des Betreibers** —
+danach folgen Umsetzung, Datenschutzerklärung-Ergänzung und eine
+Testnachricht (Fertig-Kriterien in `AUFTRAG.md`).
 
 **Phase 9** (Barrierefreiheit) ist an nichts gesperrt, steht aber bewusst
 zuletzt: Sie soll über den **endgültigen** Bestand laufen, und der Umbau der
-Startseite steht noch aus.
+Startseite (Strang A) ist im Kern jetzt abgeschlossen — eine nächste Session
+könnte Phase 9 beginnen, wenn weder A noch B eine Antwort des Betreibers
+vorliegen hat.
