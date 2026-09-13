@@ -186,3 +186,42 @@ mit-formulieren.
 **Nächster Schritt:** Warten, bis der Betreiber die Betreiberperson für
 das Impressum geklärt hat. Keine proaktive Nachfrage mehr in dieser
 Session dazu — der Betreiber meldet sich, wenn geklärt.
+
+### 2026-09-13 — Betreiberperson entschieden, neuer Sperrpunkt: Adresse
+
+**Geändert:** Keine Dateien. Reine Klärung.
+
+**Entscheidung:** Betreiber hat sich bewusst für das Restrisiko
+entschieden: Der 16-Jährige steht unter eigenem Namen im Impressum, kein
+Elternteil zusätzlich. Damit ist der Sperrpunkt aus dem Eintrag vom
+12.09. beantwortet — diese Session hat die rechtliche Unsicherheit
+erklärt (siehe voriger Eintrag), trifft aber keine Wertung über die
+Entscheidung selbst.
+
+Klargestellt: Für ein **privates, nicht-gewerbliches** Impressum sind
+Steuernummer/USt-IdNr/Handelsregister **nicht** nötig — das gilt nur für
+Gewerbebetriebe (Beispiel Shopify kam vom Betreiber, ist aber ein
+kommerzieller Kontext und hier nicht einschlägig).
+
+**Neuer, vom Betreiber selbst als relevant bestätigter Sperrpunkt:** Die
+im Impressum stehende Anschrift ist öffentlich sichtbar. Die private
+Wohnadresse eines 16-Jährigen öffentlich zu zeigen, ist ein
+Sicherheitsthema, nicht nur eine Formalie — Betreiber hat das bestätigt
+(„das ist relevant, ja"). Drei Wege genannt, wie eine ladungsfähige (also
+nicht: Postfach) Anschrift ohne die private Wohnadresse aussehen kann:
+kommerzieller Geschäftsadress-/Mailbox-Dienst, c/o bei einer
+zustimmenden Institution aus dem Umfeld, oder die Adresse eines
+Elternteils/anderen Erwachsenen. Einrichtung eines solchen Dienstes kann
+kein Agent übernehmen (externe Anmeldung, ggf. Ausweisprüfung).
+
+**Offen:**
+
+1. Welcher der drei Wege (oder ein anderer) wird für die Anschrift
+   gewählt?
+2. Die daraus resultierende ladungsfähige Anschrift.
+3. E-Mail-Adresse für den Kontakt (Pflichtangabe), optional Telefon.
+
+**Nächster Schritt:** Warten auf die konkrete Anschrift und
+Kontaktdaten. Erst mit vollständigen Angaben `impressum.html` bauen —
+kein Teil-Impressum mit Platzhalter-Adresse veröffentlichen, das wäre
+nutzlos bis irreführend.
