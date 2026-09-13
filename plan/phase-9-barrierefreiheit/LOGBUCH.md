@@ -1,8 +1,8 @@
 # Logbuch Phase 9 — Barrierefreiheit
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `läuft` — erster Durchgang gemacht, ein Punkt bewusst offen
-gelassen
+Status: `fertig` — Tastatur-Alternative für Karten-/Speicherkarten-Reorder
+umgesetzt (v3.0.26); offener Screenreader-Test ist Fußnote, kein Blocker
 
 ---
 
@@ -118,3 +118,80 @@ Fokus nach jedem `render()` gezielt zurückholen) – am besten mit echtem
 Browser-Test, nicht nur am Code. Danach Kriterium 1 aus `AUFTRAG.md` erneut
 prüfen; ist es erfüllt, zusammen mit 2 und 3 (bereits erfüllt) `../PLAN.md`
 auf `fertig` setzen.
+
+### 2026-09-13 — Tastatur-Alternative fürs Ziehen umgesetzt (v3.0.26)
+
+**Geändert:**
+- `app.js` — die drei `.drag-handle`-Stellen (Bereichsliste `:5724`,
+  Speicherkarte selbst `:5831`, Karte innerhalb einer Speicherkarte `:5884`)
+  bekommen `tabindex="0"`, `role="button"` und einen `aria-label` mit
+  Wort/Name der Zeile und ihrer Position („Position 3 von 10"). Dafür
+  Positions-/Gesamtzahl-Parameter durch `setBlock()` und die
+  Cards-in-Speicherkarte-Schleife durchgereicht.
+- `app.js` (`endDrag()`) — die drei bisher inline stehenden Commit-Blöcke
+  in eigene Funktionen gezogen: `commitSetOrder(parent)`,
+  `commitSetCardOrder(parent, setid)`, `commitBereichOrder(parent)`.
+  `endDrag()` ruft jetzt nur noch die passende davon auf – Verhalten
+  unverändert, nur nicht mehr dupliziert.
+- `app.js` — neuer `keydown`-Listener auf `app`: Pfeil hoch/runter am
+  fokussierten `.drag-handle` vertauscht die Zeile mit ihrem Nachbarn im
+  DOM (gleiche Nachbar-Suche wie `updateDragPosition()` beim Ziehen), ruft
+  danach dieselbe Commit-Funktion wie `endDrag()` und `render()`, und holt
+  den Fokus über die Karten-/Speicherkarten-ID an der neu gezeichneten
+  Zeile zurück.
+- Hinweistexte an allen drei Stellen ergänzt („… oder mit den Pfeiltasten").
+- `app.js:19` `APP_VERSION` 3.0.25 → 3.0.26, `sw.js:10` `CACHE_NAME`
+  nachgezogen, `CHANGELOG.md` Eintrag 3.0.26.
+
+**Entscheidung:**
+
+1. **Bestehende Commit-Logik wiederverwendet, nicht neu erfunden.** Die
+   Tastatur-Bedienung muss exakt dieselbe Ordnungszahl schreiben wie das
+   Ziehen – sonst gäbe es zwei leicht unterschiedliche Wege, dieselben
+   Firestore-Felder zu setzen. Deshalb wurden die drei `endDrag()`-Zweige in
+   benannte Funktionen gezogen statt eine zweite, ähnliche Schreiblogik
+   danebenzusetzen.
+2. **Positionsangabe im `aria-label` statt nur „verschieben".** Ohne Zahl
+   weiß eine Screenreader-Nutzerin nach der Aktion nicht, ob sich überhaupt
+   etwas bewegt hat oder wohin – die Positionsangabe („Position 2 von 4")
+   macht das Ergebnis der Aktion selbst hörbar, ohne dass die Karte selbst
+   neu vorgelesen werden muss.
+3. **Fokus-Rückkehr über Daten-ID, nicht über DOM-Referenz.** `render()`
+   baut die Liste komplett neu auf (`innerHTML`) – die alte Zeile existiert
+   danach nicht mehr. Der Fokus wird deshalb nach dem Neuzeichnen über
+   `data-cardid`/`data-setid` an der NEUEN Zeile gesucht, nicht an der
+   alten Referenz.
+4. **Test ohne Firebase, aber im echten Browser.** Ein Test gegen die
+   laufende App bräuchte ein echtes Firebase-Konto, das hier nicht zur
+   Verfügung steht. Stattdessen wurde die exakt gleiche Reorder- und
+   Fokus-Rückhol-Logik (identischer Code, nur mit einem lokalen Array statt
+   `currentCards()`/`patchDoc()`) in einer eigenständigen HTML-Seite
+   nachgebaut und mit Playwright/Chromium geprüft: ArrowDown/ArrowUp
+   ändern die Reihenfolge korrekt, der Fokus bleibt nach einem
+   vollständigen `innerHTML`-Neuaufbau auf der bewegten Zeile (genau das
+   Risiko, das die letzte Session als Grund nannte, es nicht spekulativ zu
+   bauen), am oberen/unteren Rand der Liste passiert nichts. Das prüft die
+   riskante Mechanik (DOM-Umbau + Fokus-Wiederherstellung), nicht aber das
+   Zusammenspiel mit echten Firestore-Schreibvorgängen oder einem echten
+   Screenreader.
+5. **Seitenteilung (C2) unangetastet.** Die Nachbarsuche arbeitet wie beim
+   Ziehen nur innerhalb der im DOM vorhandenen Zeilen – bei mehreren Seiten
+   ist das genau die sichtbare Seite. Verschieben über die Seitengrenze
+   hinaus geht per Tastatur also genauso wenig wie per Maus, wie der
+   bestehende Hinweistext schon sagt.
+
+**Offen:**
+- **Kein Test mit echtem Screenreader (NVDA/VoiceOver/TalkBack) und keiner
+  gegen ein echtes Firebase-Konto** – beides stand hier nicht zur
+  Verfügung. Wer als Nächstes an der App sitzt und Zugriff auf ein Gerät
+  mit Screenreader hat, sollte das nachholen, bevor Phase 9 als in jeder
+  Hinsicht geprüft gilt (der Playwright-Test deckt nur DOM/Fokus/Tastatur
+  ab, nicht die Sprachausgabe).
+- Freihand-Zeichenfeld bleibt wie in der vorigen Session begründet ohne
+  Tastatur-Alternative (keine Lücke, siehe oben).
+
+**Nächster Schritt:** Kriterium 1 aus `AUFTRAG.md` ist mit dieser
+Umsetzung erfüllt (jeder Bildschirm ohne Maus bedienbar, inklusive
+Reorder), Kriterien 2 und 3 waren bereits erfüllt. Phase 9 auf `fertig`
+setzen in `../PLAN.md` – mit dem offenen Screenreader-Test als Fußnote,
+nicht als Blocker (er prüft zusätzliche Sicherheit, keine bekannte Lücke).

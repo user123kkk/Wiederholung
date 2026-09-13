@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.25";
+const APP_VERSION = "3.0.26";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -5698,7 +5698,7 @@ function kartenListeInhalt() {
      Ausschnitt dann genau currentCards().slice(start, ...). */
   listenFenster = { start: start, anzahl: seitenKarten.length };
   if (!bearbeitbar && tokens.length === 0) html += '<p class="hint" style="margin-bottom:10px">' + ikon("schloss", "i-sm") + ' Geführter Kartensatz – die Karten und ihre Reihenfolge stehen fest. Hervorgehoben ist, was freigeschaltet ist.</p>';
-  if (draggable) html += '<p class="hint" style="margin-bottom:10px">Ziehe eine Karte am Griff, um die Reihenfolge zu ändern.' +
+  if (draggable) html += '<p class="hint" style="margin-bottom:10px">Ziehe eine Karte am Griff, um die Reihenfolge zu ändern, oder wähle den Griff mit der Tastatur an und nutze die Pfeiltasten.' +
     (seiten > 1 ? ' Verschieben über die Seitengrenze hinaus geht nicht – dafür „Verschieben“ im Auswahlmodus.' : '') + '</p>';
   if (seiten > 1) html += seitenLeiste(ui.kartenSeite, seiten, shownCards.length);
   for (let i = 0; i < seitenKarten.length; i++) {
@@ -5721,7 +5721,7 @@ function kartenListeInhalt() {
       html += '<input type="checkbox" style="pointer-events:none" aria-label="' + esc(c.wort) + ' auswählen" ' + (checked ? "checked" : "") + '>';
     } else {
       html += '<div class="' + zeilenKlasse + '"' + (draggable ? ' data-cardid="' + esc(c.id) + '"' : '') + '>';
-      if (draggable) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">' + ikon("griff", "i-sm") + '</span>';
+      if (draggable) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(c.wort) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + (start + i + 1) + ' von ' + shownCards.length + '">' + ikon("griff", "i-sm") + '</span>';
       else if (ui.selectMode && kartenZu) html += '<span class="lock-anzeige" title="Gesperrt – lässt sich nicht auswählen" aria-hidden="true">' + ikon("schloss", "i-sm") + '</span>';
     }
     html += '<div class="words">';
@@ -5797,9 +5797,9 @@ function renderSetsPanel() {
 
   if (!gruppen) {
     /* Der Normalfall: eine schlichte Liste, wie vor 2.3.0. */
-    html += '<p class="hint" style="padding:6px 0">Feste Auswahl an Vokabeln, jederzeit beliebig oft übbar. Reihenfolge per Griff ändern.</p>';
+    html += '<p class="hint" style="padding:6px 0">Feste Auswahl an Vokabeln, jederzeit beliebig oft übbar. Reihenfolge per Griff ändern, auch mit den Pfeiltasten.</p>';
     html += '<div class="set-liste" data-gruppe="alle">';
-    for (const s of sets) html += setBlock(s, b, frei, gefuehrt);
+    sets.forEach((s, i) => { html += setBlock(s, b, frei, gefuehrt, i + 1, sets.length); });
     html += '</div></div>';
     return html;
   }
@@ -5811,7 +5811,7 @@ function renderSetsPanel() {
       '<span class="badge">' + gruppe.length + '</span></div>';
     html += '<p class="hint" style="padding:4px 0 2px; font-size:0.84rem">' + SET_ART_ERKLAERUNG[art] + '</p>';
     html += '<div class="set-liste" data-gruppe="' + art + '">';
-    for (const s of gruppe) html += setBlock(s, b, frei, gefuehrt);
+    gruppe.forEach((s, i) => { html += setBlock(s, b, frei, gefuehrt, i + 1, gruppe.length); });
     html += '</div></div>';
   }
   html += '</div>';
@@ -5819,7 +5819,7 @@ function renderSetsPanel() {
 }
 
 /* Eine einzelne Speicherkarte samt (optional) aufgeklappter Kartenliste. */
-function setBlock(s, b, frei, gefuehrt) {
+function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
   /* Ein Schloss wirkt nur in einem gefuehrten Satz. In einem eigenen Bereich
      wird es deshalb weder gezeigt noch beachtet. */
   const zu = setGesperrt(s, b);
@@ -5828,7 +5828,7 @@ function setBlock(s, b, frei, gefuehrt) {
   const eigenerBesitz = setBearbeitbar(s, b);
   let html = '<div class="set-block' + (zu ? " set-locked" : "") + '" id="set-' + esc(s.id) + '" data-setid="' + esc(s.id) + '">';
   html += '<div class="set-row">';
-  if (eigenerBesitz) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">' + ikon("griff", "i-sm") + '</span>';
+  if (eigenerBesitz) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(s.name) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + pos + ' von ' + gesamt + '">' + ikon("griff", "i-sm") + '</span>';
   /* 2.7.0: Nur noch Anzeige. Freigeschaltet wird durch Lernen, nicht durch
      Tippen - es gibt hier nichts zu entscheiden. */
   if (gefuehrt && s.art === "lektion") {
@@ -5870,8 +5870,8 @@ function setBlock(s, b, frei, gefuehrt) {
     if (cards.length === 0) {
       html += '<p class="hint">Keine Karten mehr in dieser Speicherkarte.</p>';
     } else {
-      if (eigenerBesitz && cards.length > 1) html += '<p class="hint" style="padding:6px 0">Ziehe am Griff, um die Reihenfolge in dieser Speicherkarte zu ändern. Die Reihenfolge im Bereich bleibt unberührt.</p>';
-      for (const c of cards) {
+      if (eigenerBesitz && cards.length > 1) html += '<p class="hint" style="padding:6px 0">Ziehe am Griff, um die Reihenfolge in dieser Speicherkarte zu ändern, oder nutze am Griff die Pfeiltasten. Die Reihenfolge im Bereich bleibt unberührt.</p>';
+      cards.forEach((c, ci) => {
         /* In einer Lektion sind ohnehin alle Karten gleich dran - dort waere
            eine Hervorhebung nur Unruhe. In den Kategorien steht dagegen alles
            gemischt, und genau dort ist die Frage "was darf ich schon?" echt. */
@@ -5881,14 +5881,14 @@ function setBlock(s, b, frei, gefuehrt) {
           (eigenerBesitz ? ' data-cardid="' + esc(c.id) + '"' : '') + '>';
         /* 2.6.0: Griff zum Sortieren INNERHALB dieser Speicherkarte. Er
            veraendert nur cardIds, nie die Reihenfolge des Bereichs. */
-        if (eigenerBesitz) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">' + ikon("griff", "i-sm") + '</span>';
+        if (eigenerBesitz) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(c.wort) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + (ci + 1) + ' von ' + cards.length + '">' + ikon("griff", "i-sm") + '</span>';
         html += '<div class="words"><div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(c.wort) + '</div>';
         html += '<div class="uebersetzung">' + esc(c.uebersetzung) + '</div>' + kartenTagsHtml(c.id, b, s.id) + '</div>';
         if (kartenZu) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">' + ikon("schloss", "i-sm") + '</span>';
         html += zustandBadge(c);
         if (eigenerBesitz) html += '<button class="ghost" data-action="remove-from-set" data-set="' + esc(s.id) + '" data-id="' + esc(c.id) + '" title="Aus dieser Speicherkarte entfernen (Karte bleibt im Bereich)" aria-label="Aus dieser Speicherkarte entfernen">' + ikon("schliessen", "i-sm") + '</button>';
         html += '</div>';
-      }
+      });
     }
     html += '</div>';
   }
@@ -6004,6 +6004,60 @@ app.addEventListener("pointermove", e => {
   updateDragPosition(e.clientY);
 });
 
+/* 2.2.0: Neue Reihenfolge der Speicherkarten. Sie steckt nur in der
+   Ordnungszahl jedes Sets, die Karten selbst werden nicht angefasst.
+   Von endDrag() UND von der Pfeiltasten-Alternative weiter unten genutzt -
+   beide muessen nach dem Verschieben (per Maus bzw. per Taste) dieselbe
+   Reihenfolge aus demselben DOM-Zustand herausschreiben. */
+function commitSetOrder(parent) {
+  const ids = [...parent.querySelectorAll(".set-block")].map(r => r.dataset.setid);
+  const sets = currentSets();
+  const byId = new Map(sets.map(x => [x.id, x]));
+  const neu = ids.map(id => byId.get(id)).filter(Boolean);
+  /* 2.3.0: Gezogen wird innerhalb einer Gruppe (Kategorien, Lektionen,
+     Eigene). Die neue Reihenfolge ersetzt genau die Plaetze, die diese
+     Gruppe in der Gesamtliste belegt - die anderen Gruppen bleiben, wo sie
+     sind. Vorher wurde die ganze Liste ersetzt; mit Gruppen waeren dabei
+     alle anderen Speicherkarten verschwunden. */
+  const plaetze = [];
+  const inGruppe = new Set(ids);
+  sets.forEach((x, i) => { if (inGruppe.has(x.id)) plaetze.push(i); });
+  if (neu.length > 0 && neu.length === plaetze.length) {
+    plaetze.forEach((pos, i) => { sets[pos] = neu[i]; });
+    const b = currentBereich();
+    const patch = {};
+    sets.forEach((x, i) => { patch[pfadSet(b.id, x.id) + ".order"] = i; });
+    patchDoc(patch);
+  }
+}
+
+/* 2.6.0: Sortieren innerhalb einer Speicherkarte. Beruehrt nur deren
+   cardIds - die Reihenfolge des Bereichs und damit die Nummern der Karten
+   bleiben, wie sie sind. */
+function commitSetCardOrder(parent, setid) {
+  const set = findSet(setid);
+  const neu = [...parent.querySelectorAll(".card-row")].map(r => r.dataset.cardid).filter(Boolean);
+  if (set && neu.length === set.cardIds.length) {
+    set.cardIds = neu;
+    patchDoc({ [pfadSet(currentBereich().id, set.id) + ".cardIds"]: neu });
+  }
+}
+
+/* C2: Neue Reihenfolge innerhalb der sichtbaren Seite (oder der ganzen
+   Liste, wenn es keine Seiten gibt). Ersetzt genau den Ausschnitt
+   listenFenster; die Karten davor und dahinter bleiben, wo sie sind. */
+function commitBereichOrder(parent) {
+  const newOrderIds = [...parent.querySelectorAll(".card-row")].map(r => r.dataset.cardid);
+  const cards = currentCards();
+  const byId = new Map(cards.map(c => [c.id, c]));
+  const reordered = newOrderIds.map(cid => byId.get(cid)).filter(Boolean);
+  if (listenFenster.anzahl > 0 && reordered.length === listenFenster.anzahl) {
+    cards.splice(listenFenster.start, listenFenster.anzahl, ...reordered);
+    /* A4: nur die Ordnungszahlen dieses Bereichs, nichts sonst. */
+    patchDoc(ordnungPatch(currentBereich()));
+  }
+}
+
 function endDrag() {
   if (!dragState) return;
   if (autoScrollRAF) { cancelAnimationFrame(autoScrollRAF); autoScrollRAF = null; }
@@ -6011,65 +6065,61 @@ function endDrag() {
   const parent = row.parentNode;
   row.classList.remove("dragging");
   if (parent && dragState.art === "set") {
-    /* 2.2.0: Neue Reihenfolge der Speicherkarten. Sie steckt nur in der
-       Ordnungszahl jedes Sets, die Karten selbst werden nicht angefasst. */
-    const ids = [...parent.querySelectorAll(".set-block")].map(r => r.dataset.setid);
-    const sets = currentSets();
-    const byId = new Map(sets.map(x => [x.id, x]));
-    const neu = ids.map(id => byId.get(id)).filter(Boolean);
-    /* 2.3.0: Gezogen wird innerhalb einer Gruppe (Kategorien, Lektionen,
-       Eigene). Die neue Reihenfolge ersetzt genau die Plaetze, die diese
-       Gruppe in der Gesamtliste belegt - die anderen Gruppen bleiben, wo sie
-       sind. Vorher wurde die ganze Liste ersetzt; mit Gruppen waeren dabei
-       alle anderen Speicherkarten verschwunden. */
-    const plaetze = [];
-    const inGruppe = new Set(ids);
-    sets.forEach((x, i) => { if (inGruppe.has(x.id)) plaetze.push(i); });
-    if (neu.length > 0 && neu.length === plaetze.length) {
-      plaetze.forEach((pos, i) => { sets[pos] = neu[i]; });
-      const b = currentBereich();
-      const patch = {};
-      sets.forEach((x, i) => { patch[pfadSet(b.id, x.id) + ".order"] = i; });
-      patchDoc(patch);
-    }
-    dragState = null;
-    render();
-    return;
-  }
-  if (parent && dragState.setid) {
-    /* 2.6.0: Sortieren innerhalb einer Speicherkarte. Beruehrt nur deren
-       cardIds - die Reihenfolge des Bereichs und damit die Nummern der
-       Karten bleiben, wie sie sind. */
-    const set = findSet(dragState.setid);
-    const neu = [...parent.querySelectorAll(".card-row")].map(r => r.dataset.cardid).filter(Boolean);
-    if (set && neu.length === set.cardIds.length) {
-      set.cardIds = neu;
-      patchDoc({ [pfadSet(currentBereich().id, set.id) + ".cardIds"]: neu });
-    }
-    dragState = null;
-    render();
-    return;
-  }
-  if (parent) {
-    const newOrderIds = [...parent.querySelectorAll(".card-row")].map(r => r.dataset.cardid);
-    const cards = currentCards();
-    const byId = new Map(cards.map(c => [c.id, c]));
-    const reordered = newOrderIds.map(cid => byId.get(cid)).filter(Boolean);
-    /* C2: Gezogen wurde innerhalb der sichtbaren Seite. Die neue Reihenfolge
-       ersetzt genau diesen Ausschnitt der Gesamtliste; die Karten davor und
-       dahinter bleiben, wo sie sind. Ohne Seiten ist das Fenster die ganze
-       Liste, dann ist es dasselbe wie vorher. */
-    if (listenFenster.anzahl > 0 && reordered.length === listenFenster.anzahl) {
-      cards.splice(listenFenster.start, listenFenster.anzahl, ...reordered);
-      /* A4: nur die Ordnungszahlen dieses Bereichs, nichts sonst. */
-      patchDoc(ordnungPatch(currentBereich()));
-    }
+    commitSetOrder(parent);
+  } else if (parent && dragState.setid) {
+    commitSetCardOrder(parent, dragState.setid);
+  } else if (parent) {
+    commitBereichOrder(parent);
   }
   dragState = null;
   render();
 }
 app.addEventListener("pointerup", endDrag);
 app.addEventListener("pointercancel", endDrag);
+
+/* ---------- Karten sortieren: per Tastatur (Pfeiltasten am Griff) ----------
+   9. Barrierefreiheit: dieselben drei Ziele wie beim Ziehen (Bereich,
+   Speicherkarte, Karten INNERHALB einer Speicherkarte) muessen auch ohne
+   Maus/Touch erreichbar sein (WCAG 2.1.1). Der Griff ist dafuer fokussierbar
+   (siehe HTML-Erzeugung oben, tabindex="0" + role="button"). Pfeil hoch/runter
+   vertauscht die Zeile mit ihrem Nachbarn im DOM - genau wie updateDragPosition
+   es beim Ziehen tut - und ruft danach dieselbe commit-Funktion wie endDrag().
+   Nach dem render() ist die alte Zeile weg; der Fokus wird deshalb ueber die
+   ID der verschobenen Karte/Speicherkarte an der NEUEN Zeile wiedergefunden -
+   sonst spraenge der Fokus bei jeder Verschiebung auf den Seitenanfang. */
+app.addEventListener("keydown", e => {
+  if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+  const handle = e.target.closest(".drag-handle");
+  if (!handle) return;
+  const row = handle.closest(".card-row") || handle.closest(".set-block");
+  if (!row) return;
+  const parent = row.parentNode;
+  if (!parent) return;
+  const art = row.classList.contains("card-row") ? "karte" : "set";
+  const inSet = art === "karte" ? row.closest(".set-cards") : null;
+  const setid = inSet && inSet.closest(".set-block") ? inSet.closest(".set-block").dataset.setid : null;
+  const selektor = art === "set" ? ".set-block" : ".card-row";
+  const geschwister = [...parent.querySelectorAll(selektor)];
+  const idx = geschwister.indexOf(row);
+  const zielIdx = e.key === "ArrowUp" ? idx - 1 : idx + 1;
+  e.preventDefault();
+  if (idx < 0 || zielIdx < 0 || zielIdx >= geschwister.length) return; // schon am Rand - nichts zu tun
+  const ziel = geschwister[zielIdx];
+  if (e.key === "ArrowUp") parent.insertBefore(row, ziel);
+  else parent.insertBefore(row, ziel.nextSibling);
+
+  const fokusId = art === "set" ? row.dataset.setid : row.dataset.cardid;
+  if (art === "set") commitSetOrder(parent);
+  else if (setid) commitSetCardOrder(parent, setid);
+  else commitBereichOrder(parent);
+
+  render();
+  const fokusSelektor = art === "set"
+    ? '.set-block[data-setid="' + CSS.escape(fokusId) + '"] .drag-handle'
+    : '.card-row[data-cardid="' + CSS.escape(fokusId) + '"] .drag-handle';
+  const neuerGriff = document.querySelector(fokusSelektor);
+  if (neuerGriff) neuerGriff.focus();
+});
 
 /* ---------- Allgemeines Rand-Scrollen mit der Maus (PC) ---------- */
 /* Entscheidung des Betreibers, 4. September 2026: Die Seite soll auf dem PC

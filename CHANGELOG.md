@@ -1,3 +1,25 @@
+## 3.0.26 – 13. September 2026
+
+### Hinzugefügt
+
+- **Tastatur-Alternative zum Ziehen: Karten, Karten innerhalb einer
+  Speicherkarte und Speicherkarten selbst lassen sich jetzt auch ohne Maus
+  oder Touch neu ordnen** (WCAG 2.1.1). Der Ziehgriff ist jetzt fokussierbar
+  (`tabindex="0"`, `role="button"`, sprechender `aria-label` mit Wort/Name
+  und Position, z. B. „Position 3 von 10"); Pfeil hoch/runter am Griff
+  vertauscht die Zeile mit ihrem Nachbarn. Alle drei Code-Pfade, die beim
+  Ziehen per Zeigegerät bereits existierten (Bereich, innerhalb einer
+  Speicherkarte, Speicherkarten einer Gruppe), sind dafür in eigene
+  Funktionen gefasst und werden von der Maus- UND der Tastatur-Bedienung
+  gemeinsam genutzt, damit nicht zwei Wege dieselbe Ordnungszahl schreiben.
+  Nach jedem Verschieben behält der Griff der bewegten Zeile den Fokus,
+  über die Karten-/Speicherkarten-ID nach dem Neuzeichnen wiedergefunden –
+  sonst würde der Fokus bei jeder Verschiebung auf den Seitenanfang
+  zurückspringen. In einem eigenständigen Browser-Test (Playwright) mit
+  nachgebauter Listenstruktur verifiziert: Reihenfolge ändert sich korrekt,
+  Fokus bleibt über einen vollständigen DOM-Neuaufbau hinweg erhalten, an
+  den Rändern der Liste passiert nichts.
+
 ## 3.0.25 – 13. September 2026
 
 ### Behoben
