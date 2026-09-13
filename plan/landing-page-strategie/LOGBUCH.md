@@ -197,3 +197,89 @@ Headlines); erst danach der Umbau von `landing.html`.
 genommen und `landing.html` nach der Struktur aus Abschnitt 5 umgebaut —
 inklusive der Sofort-Änderungen aus 6.1 und der Veröffentlichungsliste aus
 `README.md`.
+
+### 2026-09-13 — Zwei Entscheidungen getroffen, unbelegte Behauptung entfernt (v3.0.20)
+
+**Geändert:**
+- `landing.html:9` und `:13` — Meta- und Open-Graph-Beschreibung ohne
+  „wissenschaftlich bewährt", dafür mit „arabische Vokabeln, Grammatik und
+  Quran-Inhalte".
+- `landing.html:8` — `color-scheme` von `dark` auf `light dark`.
+- `landing.html`, Lösungskasten — „Die Lösung: Wissenschaftlich bewährte
+  Wiederholungen … funktioniert wirklich" → „So funktioniert es" plus die
+  Stufenleiter (Stufe 1 morgen, Stufe 4 in sechs Tagen, Stufe 7 in 34 Tagen,
+  nie weiter als 180 Tage).
+- `landing.html`, erstes Kästchen — „Wissenschaftlich / Basiert auf der
+  Forget-Curve" → „Mitschreiben / Das arabische Wort mit dem Finger auf der
+  Karte selbst nachschreiben".
+- `app.js:19` `APP_VERSION` 3.0.19 → 3.0.20, `sw.js:10` `CACHE_NAME`
+  `adrabic-3.0.20`, `CHANGELOG.md` Eintrag 3.0.20. `APP_SHELL` unverändert,
+  es kam keine neue Startdatei dazu.
+- `STRATEGIE.md` — 2.2 und 2.3 als entschieden vermerkt, 2.1 um die Antwort
+  des Betreibers ergänzt, Abschnitt 6.1 und 8 nachgezogen.
+- `../PLAN.md` — Lehrer-/Schülermodus unter „Später" aufgenommen,
+  Statusverlauf und „Wo eine neue Session anfängt" nachgezogen.
+
+**Entscheidung:**
+
+1. **2.2 entschieden: eng anfangen, weit anlegen.** Damit gehört „Arabisch"
+   sichtbar nach oben — in Headline, Seitentitel und Beschreibung. Die
+   Beschreibung trägt es seit v3.0.20; Headline und Seitentitel warten auf
+   2.1, weil sie Teil der Fassung sind.
+
+2. **2.3 entschieden: ersetzen. Am selben Tag ausgeführt.** Die Antwort des
+   Betreibers kam zögernd („ja weg machen anscheinend, weiß nicht"). Sie
+   wurde trotzdem ausgeführt, weil sie **in eine Richtung sicher** ist: Eine
+   Behauptung zu entfernen kann niemandem schaden und ist rückgängig zu
+   machen, falls je eine Quelle auftaucht; sie stehen zu lassen, während die
+   Seite bei Google eingereicht ist und der Vater dafür haftet, kann es sehr
+   wohl. Der Ersatz ist nicht eine schwächere Behauptung, sondern gar keine:
+   die Stufenleiter aus `app.js:89-99`, überprüfbar und ungewöhnlich.
+
+3. **Nur ersetzt, was durch 2.3 gedeckt ist — nicht mehr.** Die
+   Kostenfrage-Formulierung („komplett kostenlos", 6.1 Nr. 4) hängt an
+   Entscheidung 2.6 und ist **nicht** angefasst worden, obwohl sie in
+   derselben Liste steht und obwohl es nur ein Wort ist. Eine Empfehlung des
+   Agenten ist keine Entscheidung des Betreibers. Ebenso unverändert:
+   Headline, Handlungsaufruf, Aufbau, Seitentitel — der Titel trägt keine
+   Behauptung, musste also nicht sofort geändert werden und wird beim Umbau
+   mit der Fassung zusammen nachgezogen.
+
+4. **2.1 ist nicht beantwortet.** Der Betreiber hat mit einer Produktidee
+   geantwortet — Lehrer- und Schülermodus mit Klassenräumen, damit ein Lehrer
+   Kartensätze an seine Schüler weitergeben kann. Die Idee ist ernst zu
+   nehmen und steht jetzt vollständig in `../PLAN.md` unter „Später", mit
+   vier Gründen, warum sie jetzt nicht gebaut wird: sie fasst das
+   Lernwerkzeug an (Konzept-Abschnitt 7), sie beantwortet die
+   Landing-Page-Frage nicht (die fragt nach **heute**, der Lehrermodus
+   braucht Monate), Klassenräume verarbeiten Daten Minderjähriger sichtbar
+   für Dritte (andere Größenordnung als Phase 5, Vater haftet), und sie
+   brechen die Grundannahme der Firestore-Regeln auf, dass jedes Konto nur
+   unter sich selbst liest und schreibt (das ist Phase 1 noch einmal).
+
+5. **Was an der Idee heute schon stimmt, ist festgehalten statt verworfen:**
+   Weitergeben kann die App bereits (`data-action="export-weitergabe"`), als
+   Datei, ohne Klassenraum und ohne neuen Code. Ein Lehrer kann damit heute
+   einen Satz bauen und herumgeben — das ist der Weg, die Idee zu prüfen,
+   bevor irgendetwas gebaut wird. Für die Startseite trägt es trotzdem nicht:
+   Der Schüler bekommt die Datei vom Lehrer, nicht von der Seite.
+
+**Offen:**
+
+- **Entscheidung 2.1 — die einzige, an der der Umbau noch hängt.** A (Neue
+  legen selbst an), B (öffentlicher Einsteiger-Kartensatz), C (Medina Buch 1
+  doch öffentlich).
+- **Entscheidungen 2.4, 2.5, 2.6** (Marke oder Person · Namensabgleich
+  innen/außen · Wortlaut der Kostenfrage) — blockieren nichts, ändern
+  Details. 2.6 hält Nr. 4 aus `STRATEGIE.md` 6.1 auf.
+- **Der Seitentitel trägt weiterhin kein „Arabisch"** („Adrabic – Vokabeln
+  lernen, die hängenbleiben"). Bewusst nicht einzeln geändert: Er gehört zur
+  Fassung und soll einmal gewechselt werden, nicht zweimal — Google zeigt
+  Titeländerungen träge an.
+- **Die Idee Lehrer-/Schülermodus** liegt unter „Später" in `../PLAN.md`. Sie
+  ist damit vermerkt, nicht eingeplant. Wenn sie kommen soll, braucht sie
+  eine eigene Phase und vorher eine Klärung der Datenschutzfrage.
+
+**Nächster Schritt:** Entscheidung 2.1 einholen (A, B oder C). Liegt sie vor,
+wird die passende Fassung aus `STRATEGIE.md` Abschnitt 3 genommen und
+`landing.html` nach Abschnitt 5 umgebaut.

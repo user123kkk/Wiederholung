@@ -1,3 +1,37 @@
+## 3.0.20 – 13. September 2026
+
+### Geändert
+
+- **`landing.html` – die unbelegte Wirkungsbehauptung ist raus.** Die Seite
+  sagte „Wissenschaftlich bewährte Wiederholungen", „Basiert auf der
+  Forget-Curve" und „funktioniert wirklich". Dahinter steht aber ein
+  selbstgebautes Stufensystem (Faktor 1,8, Deckel bei 180 Tagen,
+  `app.js:89-99`) – kein SM-2, kein Anki, keine Studie. Auf einer
+  öffentlich erreichbaren, bei Google eingereichten Seite ist das
+  angreifbar, und im Impressum steht eine dafür verantwortliche Person.
+  Entscheidung des Betreibers: ersetzen, nicht belegen.
+  - Lösungskasten sagt jetzt die Mechanik statt der Wirkung: „Stufe 1 heißt
+    morgen, Stufe 4 in sechs Tagen, Stufe 7 in 34 Tagen … nie weiter als
+    180 Tage." Das ist überprüfbar und sagt dasselbe, ohne etwas zu
+    behaupten.
+  - Das Kästchen „Wissenschaftlich" ist ersetzt durch „Mitschreiben" – das
+    Handschrift-Feld (`app.js:1006ff`, `5189ff`) ist der stärkste Punkt, den
+    die App wirklich hat, und stand bisher nirgends auf der Seite.
+  - Meta- und Open-Graph-Beschreibung ohne „wissenschaftlich bewährt", dafür
+    mit dem Wort „arabische" – das kam im gesamten Seitenkopf bisher nicht
+    vor, obwohl die Suche danach geht.
+
+### Behoben
+
+- `landing.html` – `<meta name="color-scheme">` stand fest auf `dark`, obwohl
+  das Skript darüber auch auf hell schaltet. Bei heller Einstellung hat der
+  Browser Formular- und Systemfarben trotzdem dunkel gezeichnet. Jetzt
+  `light dark`.
+
+Headline, Handlungsaufruf und Aufbau der Seite bleiben unverändert: Der
+Umbau wartet auf eine offene Entscheidung (`plan/landing-page-strategie/STRATEGIE.md`,
+Abschnitt 2.1).
+
 ## 3.0.19 – 13. September 2026
 
 ### Behoben

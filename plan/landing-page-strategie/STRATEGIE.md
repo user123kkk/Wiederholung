@@ -3,7 +3,8 @@
 Anleitung: [`ANLEITUNG.md`](ANLEITUNG.md) · Befund: [`BEFUND.md`](BEFUND.md)
 Logbuch: [`LOGBUCH.md`](LOGBUCH.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
 Angelegt: 13. September 2026
-Status: **Teil 1 steht, Teil 2 wartet auf sechs Entscheidungen**
+Status: **Teil 1 steht. 2.2 und 2.3 sind am 13.09.2026 entschieden,
+2.1 ist weiterhin offen — der Umbau hängt allein daran.**
 
 ---
 
@@ -157,6 +158,27 @@ nur Zeit für eine hast, nimm 2.1.
 | **B** | Ein **eigens gemachter** öffentlicher Einsteiger-Kartensatz | Schließt den Bruch. Kostet Arbeit (Karten schreiben). Kein Urheberrechtsproblem, wenn der Inhalt von dir stammt. |
 | **C** | Medina Buch 1 doch öffentlich | Stärkster Inhalt, stärkste Headline (Fassung C unten). Aber: Entscheidung vom 12.09.2026 wird widerrufen **und** die Urheberrechtsfrage am Buchinhalt muss **vorher** geklärt sein — dein Vater haftet. |
 
+> **Stand 13.09.2026 — beantwortet ist sie noch nicht.** Der Betreiber hat auf
+> diese Frage mit einer **Produktidee** geantwortet, nicht mit A/B/C: die App
+> in einen **Schüler-** und einen **Lehrermodus** aufteilen, mit Klassenräumen,
+> damit ein Lehrer seinen Schülern Kartensätze weitergeben kann.
+>
+> Die Idee ist festgehalten in `../PLAN.md`, Abschnitt „Später" — mit ihren
+> Folgen (sie fasst das Lernwerkzeug an, sie verarbeitet Daten Minderjähriger,
+> sie braucht neue Firestore-Regeln). Sie ist **keine Antwort auf diese
+> Frage**, denn sie beantwortet nicht, was ein Mensch vorfindet, der **heute**
+> über ein Video auf die Seite kommt und sich registriert. Bis zum Lehrermodus
+> vergehen Monate; die Seite ist seit dem 13.09.2026 bei Google eingereicht.
+>
+> **Teilweise wahr ist die Idee heute schon:** Kartensätze weitergeben kann die
+> App bereits (`data-action="export-weitergabe"`), als Datei, ohne Klassenraum
+> und ohne neuen Code. Ein Lehrer kann also heute einen Satz bauen und ihn
+> herumgeben. Das reicht für eine **Zeile auf der Seite**, aber nicht für den
+> Block 7 aus Abschnitt 5 — denn der Schüler bekommt die Datei vom Lehrer, nicht
+> von der Startseite.
+>
+> **Die Frage bleibt also offen und lautet unverändert: A, B oder C?**
+
 **Empfehlung (Empfehlung, keine Antwort): B, mit dem Inhalt aus deinen eigenen
 TikTok-Videos.** Die Begründung ist, dass B drei Probleme auf einmal löst, die
 sonst einzeln Arbeit machen: Der Neue landet nicht im Leeren; der Inhalt ist
@@ -183,6 +205,14 @@ Konkrete (Arabisch, Wörter, Buch), ein Abschnitt weiter unten öffnet das Feld
 („nicht nur Vokabeln — Grammatikregeln, Quran-Verse, alles, was bleiben soll").
 Kostet nichts und nimmt dir später nichts weg.
 
+> **Entschieden am 13.09.2026: eng anfangen, weit anlegen.** Damit steht:
+> „Arabisch" gehört sichtbar in Headline, Seitentitel und Beschreibung; das
+> weitere Feld (Grammatik, Quran-Inhalte) wird weiter unten geöffnet, nicht
+> oben versprochen. Erste Folge bereits umgesetzt (v3.0.20): Die
+> Meta-Beschreibung nennt jetzt „arabische Vokabeln, Grammatik und
+> Quran-Inhalte". Der Seitentitel wird beim Umbau nachgezogen — er trägt
+> keine Behauptung und musste deshalb nicht sofort geändert werden.
+
 ### 2.3 „Wissenschaftlich bewährt" — belegen oder ersetzen? *(Befund 5.4)*
 
 **Das ist die einzige der sechs Fragen, die auch rechtlich drängt.** Auf einer
@@ -199,6 +229,15 @@ Wirkungsbehauptung ohne Beleg, und im Impressum steht dein Vater.
 **Empfehlung: ersetzen, und zwar unabhängig von allen anderen fünf Fragen.**
 Der fertige Austausch steht in Abschnitt 6.1 — drei Stellen in `landing.html`,
 keine Strukturänderung. Das ist der eine Punkt, den ich für dringend halte.
+
+> **Entschieden am 13.09.2026: ersetzen. Am selben Tag ausgeführt (v3.0.20).**
+> Die Entscheidung fiel zögernd („weiß nicht"); ausgeführt wurde sie trotzdem,
+> weil sie in **eine** Richtung sicher ist: Eine Behauptung zu entfernen kann
+> niemandem schaden und ist jederzeit rückgängig zu machen, falls je eine
+> Quelle auftaucht. Sie stehen zu lassen, während die Seite bei Google
+> eingereicht ist und eine Person dafür haftet, kann es sehr wohl.
+> `landing.html` enthält seitdem an keiner Stelle mehr „wissenschaftlich",
+> „Forget-Curve" oder „funktioniert wirklich".
 
 ### 2.4 Marke oder Person? *(Befund 1.1/1.2)*
 
@@ -405,11 +444,13 @@ Blöcke ohne Grund gehören nicht auf die Seite.
 
 ### 6.1 Sofort, unabhängig von allen sechs Entscheidungen
 
-Diese vier Änderungen sind in **jeder** Fassung richtig. Sie sind bewusst
-**noch nicht ausgeführt**: `ANLEITUNG.md` sagt „erst die Strategie, dann die
-HTML", und Nummer 1 ist trotz ihrer Dringlichkeit eine Entscheidung des
-Betreibers (2.3). Sie sind hier als fertiger Austausch aufgeschrieben, damit
-die Ausführung ein Handgriff ist.
+Diese vier Änderungen sind in **jeder** Fassung richtig.
+
+> **Stand 13.09.2026 (v3.0.20): Nummer 1, 2 und 3 sind ausgeführt**, nachdem
+> der Betreiber Entscheidung 2.3 getroffen hat — dazu der Darstellungsfehler
+> mit `color-scheme` unten. **Nummer 4 ist nicht ausgeführt**: Sie hängt an
+> Entscheidung 2.6 (Kostenfrage), und die ist offen. Eine Empfehlung ersetzt
+> keine Entscheidung, auch wenn es nur um ein Wort geht.
 
 | # | Wo | Heute | Neu |
 |---|---|---|---|
@@ -504,11 +545,15 @@ die hinterher zurückgebaut wird:
       (Abschnitt 5)
 - [x] Änderungsliste gegen den heutigen Stand, getrennt nach „sofort" und
       „nach Entscheidung" — **steht** (Abschnitt 6)
-- [ ] **Entscheidung zu den sechs Vorlagen aus Abschnitt 2** — offen, nur vom
-      Betreiber zu treffen
-- [ ] Umbau von `landing.html` — beginnt, sobald 2.1, 2.2 und 2.3 beantwortet
-      sind (2.4–2.6 blockieren den Umbau nicht, sie ändern nur Details)
+- [x] **Entscheidung 2.2** (eng oder weit) — *eng anfangen, weit anlegen*,
+      13.09.2026
+- [x] **Entscheidung 2.3** („wissenschaftlich" belegen oder ersetzen) —
+      *ersetzen*, 13.09.2026, am selben Tag ausgeführt (v3.0.20)
+- [ ] **Entscheidung 2.1** (womit ein Neuer anfängt: A, B oder C) — **offen.
+      Der Umbau hängt allein daran.** Die Antwort vom 13.09.2026 war eine
+      Produktidee (Lehrer-/Schülermodus), keine Wahl zwischen A, B und C.
+- [ ] Entscheidungen 2.4, 2.5, 2.6 — offen, blockieren den Umbau aber nicht
+- [ ] Umbau von `landing.html` — beginnt, sobald 2.1 beantwortet ist
 
-**Mindestens nötig zum Weiterarbeiten sind drei Antworten, nicht sechs:**
-2.1 (womit ein Neuer anfängt), 2.2 (eng oder weit) und 2.3 („wissenschaftlich"
-ersetzen — ja/nein). Damit steht die Fassung, und die HTML kann gebaut werden.
+**Es fehlt genau eine Antwort: 2.1.** Mit ihr steht die Fassung aus Abschnitt 3
+fest, und die Seite kann nach Abschnitt 5 gebaut werden.

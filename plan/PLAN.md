@@ -140,6 +140,34 @@ Kein eigener Ordner, keine Phase. Aus Konzept-Abschnitt 2 und 5:
 - Abo / Bezahlfunktion
 - App Check (Bot-Schutz) — relevant, sobald die Seite öffentlich beworben wird
 - App Store und Play Store
+- **Lehrer- und Schülermodus mit Klassenräumen.** Idee des Betreibers vom
+  13.09.2026, aufgekommen bei der Frage „womit fängt ein Neuer an": Die App
+  in zwei Rollen aufteilen — ein Lehrer legt Kartensätze an und gibt sie
+  seinen Schülern in einem Klassenraum weiter. Der Betreiber kennt Leute mit
+  Schülern, für die das passen würde.
+
+  **Wird jetzt nicht gebaut, und zwar aus vier Gründen, die zusammengehören:**
+  1. Es fasst das **Lernwerkzeug** an — Konzept-Abschnitt 7 und `../CLAUDE.md`
+     schließen das für alle laufenden Phasen aus.
+  2. Es ist **keine Antwort auf die Landing-Page-Frage**. Die lautet: Was
+     findet jemand vor, der **heute** über ein Video kommt und sich
+     registriert? Bis zu einem Lehrermodus vergehen Monate.
+  3. **Klassenräume heißen: Daten von Schülern**, also in aller Regel von
+     Minderjährigen, und zwar über den eigenen Kontostand hinaus sichtbar für
+     eine dritte Person (den Lehrer). Das ist eine andere Größenordnung als
+     alles, was Phase 5 abgedeckt hat — Einwilligung der Eltern,
+     Auftragsverarbeitung, Löschkonzept. Im Impressum haftet der Vater.
+  4. Es braucht **neue Firestore-Regeln**: Heute liest und schreibt jedes
+     Konto ausschließlich unter sich selbst. Geteilte Klassenräume brechen
+     genau diese Annahme auf — das ist Phase 1 noch einmal, nicht ein
+     Zusatzfeld.
+
+  **Was davon heute schon geht, ohne eine Zeile Code:** Kartensätze weitergeben
+  kann die App bereits (`data-action="export-weitergabe"`) — als Datei, ohne
+  Klassenraum. Ein Lehrer kann damit heute einen Satz bauen und ihn
+  herumgeben. Wer die Idee ausprobieren will, probiert sie so aus, bevor
+  irgendetwas gebaut wird.
+
 - **Erneuter, verschärfter Sicherheits-Durchlauf vor Phase 6 (Öffentlich-
   machung).** Grund, festgehalten am 13.09.2026: Im Impressum steht der
   Vater des tatsächlichen Betreibers (16) als Verantwortlicher — er trägt
@@ -269,6 +297,7 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Phase 7 fertig.** Firebase-Caching-Problem mit HTML-Dateien identifiziert und gelöst (Cache-Control-Header mit `max-age=0` in `firebase.json`). Google Search Console Verifikation erfolgreich durchgeführt (HTML-Tag erkannt, Inhaberschaft bestätigt). `sitemap.xml` eingereicht und akzeptiert. Alle Punkte aus `phase-7-seo/AUFTRAG.md` abgehakt. Weiter mit Phase 8. |
 | 2026-09-13 | **Landing-Page-Strategie: Befund vorausgefüllt** (v3.0.19). `landing-page-strategie/BEFUND.md` war leer und sperrte damit die gesamte Strategiearbeit. Jede Frage trägt jetzt einen Zustand: belegt (mit Quelle im Code/Plan), Vermutung, oder offen. Abschnitt 3.1 listet vollständig, was die App wirklich kann — mit Zeilennummern, damit die spätere Seite nichts verspricht, was der Code nicht tut. Drei Widersprüche festgehalten: „wissenschaftlich bewährt" ist unbelegt (haftungsrelevant, weil der Vater im Impressum steht), Medina Buch 1 ist privat (Neue finden also ein leeres Werkzeug), außen „Adrabic" vs. innen „Wiederholung". Es fehlen noch sechs Antworten des Betreibers. Zusätzlich ein grammatisch kaputter Satz auf der Live-Startseite behoben (`landing.html:286`) — nur der Satz, kein Umbau. |
 | 2026-09-13 | **Landing-Page-Strategie: `STRATEGIE.md` gebaut**, zweigeteilt. Fest und unabhängig von offenen Fragen: Kern-Message „Mechanik statt Versprechen" (die Stufenleiter aus dem Code ersetzt die unbelegte Behauptung „wissenschaftlich bewährt"), die drei tragenden Belege (Handschrift-Feld, Lektionen, die nacheinander aufgehen, drei Bewertungen statt zwei), der Funnel und seine Bruchstelle (wer sich registriert, steht vor einem leeren Werkzeug — größter Hebel der ganzen Seite, kein Textproblem), die Seitenstruktur in zwölf Blöcken und die Änderungsliste gegen den heutigen Stand. Abhängig von Entscheidungen und deshalb als **drei fertige Fassungen** hinterlegt: Headline, Handlungsaufruf, Seitentitel, Beschreibung. Keywords als gekennzeichnete Hypothese mit Negativliste und Prüfweg über die Search Console. Kein Produktivcode geändert; der Befund kam unausgefüllt zurück und wurde bewusst nicht vom Agenten ausgefüllt. |
+| 2026-09-13 | **Zwei der drei Entscheidungen getroffen** (v3.0.20). *Eng anfangen, weit anlegen* — „Arabisch" gehört sichtbar nach oben. *„Wissenschaftlich bewährt" ersetzen statt belegen* — am selben Tag ausgeführt: Lösungskasten zeigt jetzt die Stufenleiter statt einer Wirkungsbehauptung, das Kästchen „Wissenschaftlich" ist durch „Mitschreiben" (Handschrift-Feld) ersetzt, Meta- und OG-Beschreibung ohne „wissenschaftlich bewährt" und erstmals mit dem Wort „arabische". Dazu ein Darstellungsfehler behoben (`color-scheme` stand fest auf `dark`). Headline, Handlungsaufruf und Aufbau **unverändert** — sie hängen an der einen noch offenen Entscheidung. Die Antwort auf „womit fängt ein Neuer an" war eine Produktidee (Lehrer-/Schülermodus mit Klassenräumen); sie steht jetzt unter „Später" mit ihren vier Gründen gegen ein Bauen jetzt und ist ausdrücklich **keine** Antwort auf die Landing-Page-Frage. |
 
 ## Wo eine neue Session anfängt
 
@@ -285,12 +314,18 @@ fertige Message-Fassungen), 4 (Keywords als Hypothese samt Negativliste und
 Prüfweg), 5 (Seitenstruktur Block für Block), 6 (Änderungsliste gegen den
 heutigen Stand).
 
-Was eine nächste Session tun kann: **nichts am Text raten.** Es fehlen die
-drei Entscheidungen aus `STRATEGIE.md` 2.1, 2.2 und 2.3. Liegen sie vor →
-die passende Fassung aus Abschnitt 3 nehmen, `landing.html` nach Abschnitt 5
-umbauen, Sofort-Änderungen aus 6.1 mitnehmen, Veröffentlichungsliste aus
-`../README.md` abarbeiten. Liegen sie **nicht** vor → nicht umbauen; der
-Befund wird auch **nicht** vom Agenten ausgefüllt.
+**Stand 13.09.2026: zwei von drei Entscheidungen sind getroffen.** *Eng
+anfangen, weit anlegen* (2.2) und *„wissenschaftlich bewährt" ersetzen*
+(2.3, ausgeführt in v3.0.20). **Es fehlt genau eine: 2.1 — womit fängt
+jemand an, der neu über ein Video kommt und sich registriert? A (er legt
+selbst an), B (öffentlicher Einsteiger-Kartensatz) oder C (Medina Buch 1
+doch öffentlich).**
+
+Was eine nächste Session tun kann: **nichts am Text raten.** Liegt 2.1 vor →
+die passende Fassung aus `STRATEGIE.md` Abschnitt 3 nehmen, `landing.html`
+nach Abschnitt 5 umbauen, Veröffentlichungsliste aus `../README.md`
+abarbeiten. Liegt sie **nicht** vor → nicht umbauen; der Befund wird auch
+**nicht** vom Agenten ausgefüllt.
 
 **Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `offen`).
 Braucht die Klärung: Formulare **in** die App oder als eigene Seite? Und vor
