@@ -123,9 +123,23 @@ Kein eigener Ordner, keine Phase. Aus Konzept-Abschnitt 2 und 5:
 - Abo / Bezahlfunktion
 - App Check (Bot-Schutz) — relevant, sobald die Seite öffentlich beworben wird
 - App Store und Play Store
+- **Erneuter, verschärfter Sicherheits-Durchlauf vor Phase 6 (Öffentlich-
+  machung).** Grund, festgehalten am 13.09.2026: Im Impressum steht der
+  Vater des tatsächlichen Betreibers (16) als Verantwortlicher — er trägt
+  damit die formale Haftung für das, was auf der Seite passiert. Der
+  Betreiber hat ausdrücklich gebeten, das vor der Öffentlichmachung noch
+  einmal zu verschärfen, nicht nur den Stand aus Phase 1 (der deckte nur
+  Firestore-Regeln, Feld-Manipulation, Import, XSS ab) fortzuschreiben.
+  Bevor Phase 6 beginnt: Bestand seit Phase 1 erneut prüfen (Abhängigkeiten
+  aktuell? neue Firebase-Advisories? Rate-Limits auf Auth-Endpunkte
+  sinnvoll, jetzt wo Fremde registrieren können? App Check aus dieser
+  Liste hier gehört in denselben Schritt), Ergebnis im Logbuch von Phase 6
+  vor dem eigentlichen Bau der Startseite festhalten.
 
-Diese Punkte werden in keiner Phase gebaut. Sie stehen hier, damit keine
-Entscheidung getroffen wird, die sie später unmöglich macht.
+Diese Punkte werden in keiner Phase gebaut — außer dem neuen Sicherheits-
+Punkt, der ausdrücklich vor Phase 6 einzuplanen ist. Die übrigen stehen
+hier, damit keine Entscheidung getroffen wird, die sie später unmöglich
+macht.
 
 ---
 

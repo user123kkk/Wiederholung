@@ -51,3 +51,25 @@ nichts gebaut.
 
 **Nächster Schritt:** Erst Phase 5 abschließen (Impressum, Datenschutz-
 erklärung, Cookie-Prüfung), dann Phase 6 nach `AUFTRAG.md` beginnen.
+
+### 2026-09-13 — Verschärfter Sicherheits-Durchlauf jetzt Vorbedingung dieser Phase
+
+**Geändert:** `AUFTRAG.md` — neuer Abschnitt „Bevor diese Phase inhaltlich
+beginnt".
+
+**Entscheidung:** Betreiber hat ausdrücklich darum gebeten, die
+Sicherheit noch einmal zu verschärfen, bevor die Seite öffentlich wird —
+Hintergrund: Im Impressum (Phase 5) steht der Vater des tatsächlichen
+Betreibers als Verantwortlicher und trägt damit die formale Haftung.
+Der bisherige Sicherheits-Durchlauf (Abschluss Phase 1) deckte nur
+Firestore-Regeln/XSS/Import ab, nicht was mit einem öffentlichen,
+unbekannten Nutzerkreis neu dazukommt (z. B. Rate-Limits auf
+Registrierung, App Check). Festgehalten auch in `../PLAN.md`, Abschnitt
+„Später".
+
+**Offen:** Der eigentliche Durchlauf — folgt, sobald diese Phase
+beginnt, als allererster Schritt vor dem Bau der Startseite selbst.
+
+**Nächster Schritt:** Unverändert — erst Phase 5 fertig, dann hier mit
+dem Sicherheits-Durchlauf einsteigen, bevor irgendein Startseiten-Inhalt
+gebaut wird.

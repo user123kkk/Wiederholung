@@ -13,6 +13,19 @@ Braucht die Domain aus Phase 4. Vorher gebaut, wird sie zweimal gebaut. Und sie
 vergrößert die Angriffsfläche — deshalb erst, nachdem die Phasen 1–3
 dichtgemacht haben.
 
+## Bevor diese Phase inhaltlich beginnt
+
+**Erneuter, verschärfter Sicherheits-Durchlauf** — festgelegt am
+13.09.2026, nachdem im Impressum (Phase 5) der Vater des tatsächlichen
+Betreibers als Verantwortlicher steht und damit die formale Haftung
+trägt. Der bisherige Sicherheits-Durchlauf (Abschluss von Phase 1) deckte
+nur Firestore-Regeln, Feld-Manipulation, Import und XSS ab. Vor dem Bau
+der Startseite hier: Stand seit Phase 1 erneut prüfen (Abhängigkeiten,
+neue Firebase-Advisories, Rate-Limits auf Auth-Endpunkte jetzt wo Fremde
+registrieren können, App Check aus `../PLAN.md` „Später" einplanen).
+Ergebnis zuerst in `LOGBUCH.md` festhalten, dann erst mit „Was getan
+wird" unten fortfahren.
+
 ## Was getan wird
 
 Grundlage ist Konzept-Abschnitt 4.7. Der Kerngedanke daraus:
