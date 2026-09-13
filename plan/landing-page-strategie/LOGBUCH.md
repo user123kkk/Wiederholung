@@ -374,3 +374,72 @@ wird die passende Fassung aus `STRATEGIE.md` Abschnitt 3 genommen und
 **Nächster Schritt:** Betreiber liest die 50 Karten gegen, macht ein
 Bildschirmfoto des Handschrift-Felds und deployt. Danach ist der Nebenstrang
 Landing-Page-Strategie abgeschlossen; offen bleiben nur 2.4–2.6.
+
+### 2026-09-13 — Erfundener Kartensatz zurückgenommen, Fehler beim Namen genannt (v3.0.22)
+
+**Geändert:**
+- `start-kartensatz.json` — **gelöscht.** War in v3.0.21 hinzugekommen.
+- `landing.html`, Block „Was passiert, wenn du anfängst" — Download-Knopf
+  und Bezugnahme auf 50 Karten entfernt, Text auf Fassung A zurückgestellt:
+  „Dein Stoff, nicht unserer" — eigene erste Karte anlegen, optional als
+  Lektion 1 markieren.
+- `landing.html`, FAQ-Frage „Ich habe noch keine Karten" — Antwort umformuliert,
+  kein Verweis mehr auf eine Datei, die es nicht mehr gibt. JSON-LD danach
+  automatisiert aus der sichtbaren FAQ neu erzeugt (garantiert Übereinstimmung).
+- `app.js:19` 3.0.21 → 3.0.22, `sw.js:10` `CACHE_NAME` nachgezogen,
+  `CHANGELOG.md` Eintrag 3.0.22.
+- `STRATEGIE.md` — 2.1 in „Grundsatz" (B) und „Inhalt" (offen) aufgeteilt,
+  Abschnitt 8 korrigiert.
+
+**Entscheidung:**
+
+1. **Der Betreiber hat den Kartensatz zurückgewiesen, und das war richtig,
+   nicht nur sein gutes Recht.** Wörtlich: „die 50 karten sin bullshit. würde
+   wenn schon selbst entscheiden was man haben kann, das ging mir bisl zu
+   schnell." Das ist kein Geschmacksurteil, das man aussitzen könnte —
+   **welcher Wortschatz unter seinem Namen auf einer öffentlichen, bei Google
+   eingereichten Seite steht, ist seine Entscheidung.** Der Fehler der
+   letzten Session war nicht die Wahl von B als Prinzip, sondern dass sie
+   B mit **erfundenem** Inhalt gefüllt hat, ohne dass der Betreiber ihn vor
+   der Veröffentlichung gesehen hatte — und ein Teil davon war Vokabular mit
+   Quran-Bezug, wo Genauigkeit erst recht nicht verhandelbar ist. Der letzte
+   Bericht hatte zwar „Betreiber liest die 50 Karten gegen" als Aufgabe
+   benannt, aber die Karten standen zu diesem Zeitpunkt schon im
+   Git-Repository und in der veröffentlichbaren Fassung — der richtige
+   Zeitpunkt für die Freigabe ist **vor** dem Schreiben, nicht danach.
+
+2. **Zurückgebaut auf Fassung A, nicht auf einen Zwischenzustand.** Die
+   Struktur aus Abschnitt 5 der Strategie (Handschrift-Feld, Stufenleiter,
+   drei Bewertungen, Lektionen, „was nicht ist", Rest-Liste, FAQ) bleibt
+   unverändert — das waren Beschreibungen dessen, was die App **tut**, keine
+   erfundenen Inhalte. Nur der eine Block, der auf den erfundenen Kartensatz
+   verwies, ist ausgetauscht.
+
+3. **B bleibt als Grundsatz bestehen, mit einer Einschränkung, die vorher
+   fehlte:** Ein Einsteiger-Kartensatz ist weiterhin die richtige Idee gegen
+   den leeren Anfang — aber der Inhalt kommt vom Betreiber, nicht vom
+   Agenten. Diese Regel steht jetzt ausdrücklich in `STRATEGIE.md` 2.1, damit
+   sie nicht in einer nächsten Session wieder unterlaufen wird.
+
+4. **Der zweite Punkt der Nachricht — die App startet nicht** (Screenshot,
+   „Failed to fetch dynamically imported module … firebase-app.js") — wurde
+   geprüft und ist **keine Folge dieser Änderungen.** `index.html`, `app.js`
+   (abgesehen von `APP_VERSION`) und die CSP in `firebase.json` sind seit
+   v3.0.19 unverändert; `firebase-app.js` wird zur Laufzeit per dynamischem
+   Import von `gstatic.com` geladen, das schlägt bei einem Netzwerkproblem
+   auf dem Gerät des Betreibers fehl. Keine Code-Änderung vorgenommen, weil
+   keine gefunden wurde, die dafür ursächlich wäre.
+
+**Offen:**
+
+- **Der Inhalt eines Einsteiger-Kartensatzes**, falls gewünscht — vom
+  Betreiber selbst zu schreiben oder mindestens wortweise freizugeben, bevor
+  er ins Repo kommt.
+- **Entscheidungen 2.4, 2.5, 2.6** unverändert offen, blockieren nichts.
+- **Der Start-Fehler beim Betreiber** — vermutlich ein lokales
+  Netzwerkproblem (CDN nicht erreichbar), nicht im Repo zu beheben; siehe
+  Chat-Antwort für Prüfschritte.
+
+**Nächster Schritt:** Nichts Offenes von Agenten-Seite in diesem Strang außer
+2.4–2.6. Ein Startkartensatz entsteht erst wieder, wenn der Betreiber Inhalt
+liefert oder ausdrücklich freigibt.

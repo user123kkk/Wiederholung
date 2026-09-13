@@ -1,3 +1,26 @@
+## 3.0.22 – 13. September 2026
+
+### Zurückgenommen
+
+- **`start-kartensatz.json` (v3.0.21) ist wieder raus.** Der Betreiber hat den
+  Inhalt zurückgemeldet: erfundene arabische Vokabeln – teils mit
+  Quran-Bezug – ungeprüft von einem Agenten geschrieben und auf die
+  Startseite gestellt, war zu schnell und nicht seine Entscheidung. Zu Recht:
+  Welcher Wortschatz auf einer öffentlichen Seite unter seinem Namen steht,
+  entscheidet er, nicht ein Agent, und gerade bei religiös bezogenen Wörtern
+  ist die Genauigkeit nicht verhandelbar.
+- `landing.html`, Abschnitt „Was passiert, wenn du anfängst" – der
+  Download-Knopf und die Bezugnahme auf die 50 Karten sind raus. Der Text
+  sagt wieder ehrlich, was heute stimmt: „Dein Stoff, nicht unserer" – man
+  legt die erste Karte selbst an.
+- FAQ-Frage „Ich habe noch keine Karten – wie fange ich an?" umformuliert:
+  keine Verweis mehr auf eine Datei, die es nicht mehr gibt.
+
+Damit ist die Entscheidung „womit fängt ein Neuer an" wieder offen (siehe
+`plan/landing-page-strategie/STRATEGIE.md`, 2.1) – diesmal mit der Vorgabe,
+dass ein eigener Kartensatz, falls gewünscht, vom Betreiber selbst geschrieben
+oder mindestens freigegeben wird, nicht vom Agenten.
+
 ## 3.0.21 – 13. September 2026
 
 ### Neu

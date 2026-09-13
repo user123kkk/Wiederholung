@@ -3,9 +3,10 @@
 Anleitung: [`ANLEITUNG.md`](ANLEITUNG.md) · Befund: [`BEFUND.md`](BEFUND.md)
 Logbuch: [`LOGBUCH.md`](LOGBUCH.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
 Angelegt: 13. September 2026
-Status: **Umgesetzt.** 2.1, 2.2 und 2.3 sind am 13.09.2026 entschieden,
-`landing.html` ist danach umgebaut (v3.0.21). Offen bleiben nur 2.4–2.6,
-die nichts blockieren.
+Status: **2.2 und 2.3 umgesetzt (v3.0.20). 2.1 wieder offen.** Ein erster
+Versuch zu 2.1 (v3.0.21: ein vom Agenten geschriebener Kartensatz) wurde vom
+Betreiber zurückgenommen (v3.0.22) — zu Recht, siehe unten. `landing.html`
+trägt seitdem wieder Fassung A.
 
 ---
 
@@ -179,12 +180,24 @@ nur Zeit für eine hast, nimm 2.1.
 > von der Startseite.
 >
 > **Entschieden am 13.09.2026: B** — „wahrscheinlich eine hinzugefügte, also
-> b". Umgesetzt in v3.0.21 als `start-kartensatz.json`: 50 Karten, fünf
-> Lektionen zu je zehn Wörtern (Pronomen · Menschen · Dinge und Orte · Wörter
-> aus dem Quran · erste Verben), jede mit Aussprache als Notiz. Eigens
-> geschrieben, kein Buchinhalt, also keine Urheberrechtsfrage. Der
-> Lehrer-/Schülermodus bleibt davon unberührt unter „Später" in `../PLAN.md`
-> — B schließt ihn nicht aus, sondern überbrückt die Zeit bis dahin.
+> b". Umgesetzt in v3.0.21 als `start-kartensatz.json`: 50 vom **Agenten
+> erfundene** Karten, teils mit Quran-Bezug.
+>
+> **Zurückgenommen in v3.0.22, noch am selben Tag.** Der Betreiber: „die 50
+> karten sin bullshit. würde wenn schon selbst entscheiden was man haben
+> kann, das ging mir bisl zu schnell." Das ist berechtigt und geht über
+> Geschmack hinaus: **welcher Wortschatz unter seinem Namen auf einer
+> öffentlichen Seite steht, ist seine Entscheidung, keine, die ein Agent für
+> ihn trifft** — erst recht nicht bei Wörtern mit Quran-Bezug, wo Genauigkeit
+> nicht verhandelbar ist. Der Fehler lag nicht in der Wahl von B, sondern
+> darin, B mit **erfundenem** Inhalt zu füllen, statt die Wahl des Inhalts
+> beim Betreiber zu lassen.
+>
+> **B bleibt damit im Grundsatz offen, aber mit einer Einschränkung, die vorher
+> fehlte: Der Inhalt eines Einsteiger-Kartensatzes kommt vom Betreiber selbst
+> (geschrieben oder mindestens Wort für Wort freigegeben), nie vom Agenten.**
+> Bis das vorliegt, gilt A: Der Neue legt seine erste Karte selbst an — das ist
+> seit v3.0.22 wieder der Stand auf der Seite.
 
 **Empfehlung (Empfehlung, keine Antwort): B, mit dem Inhalt aus deinen eigenen
 TikTok-Videos.** Die Begründung ist, dass B drei Probleme auf einmal löst, die
@@ -556,11 +569,19 @@ die hinterher zurückgebaut wird:
       13.09.2026
 - [x] **Entscheidung 2.3** („wissenschaftlich" belegen oder ersetzen) —
       *ersetzen*, 13.09.2026, am selben Tag ausgeführt (v3.0.20)
-- [ ] **Entscheidung 2.1** (womit ein Neuer anfängt: A, B oder C) — **offen.
-      Der Umbau hängt allein daran.** Die Antwort vom 13.09.2026 war eine
-      Produktidee (Lehrer-/Schülermodus), keine Wahl zwischen A, B und C.
-- [ ] Entscheidungen 2.4, 2.5, 2.6 — offen, blockieren den Umbau aber nicht
-- [ ] Umbau von `landing.html` — beginnt, sobald 2.1 beantwortet ist
+- [x] **Entscheidung 2.1, Grundsatz** — *B*, 13.09.2026: ein eigener
+      Einsteiger-Kartensatz, sobald einer vorliegt.
+- [ ] **Entscheidung 2.1, Inhalt** — **offen.** Ein erster, vom Agenten
+      erfundener Inhalt (v3.0.21) wurde vom Betreiber noch am selben Tag
+      zurückgenommen (v3.0.22): „die 50 karten sin bullshit … würde wenn schon
+      selbst entscheiden was man haben kann". Bis ein vom Betreiber
+      geschriebener oder freigegebener Kartensatz vorliegt, zeigt die Seite
+      Fassung A (Neue legen selbst an). **Kein Agent schreibt hier noch einmal
+      Vokabeln, ohne dass der Betreiber sie vorher sieht und freigibt.**
+- [ ] Entscheidungen 2.4, 2.5, 2.6 — offen, blockieren nichts
+- [x] Umbau von `landing.html` auf Fassung A — steht (v3.0.22)
 
-**Es fehlt genau eine Antwort: 2.1.** Mit ihr steht die Fassung aus Abschnitt 3
-fest, und die Seite kann nach Abschnitt 5 gebaut werden.
+**Was jetzt beim Betreiber liegt:** Will er einen eigenen Startkartensatz,
+schreibt er die Wörter selbst (oder schickt sie zum Gegenlesen) — dann baut
+eine Session daraus wieder Fassung B. Ohne das bleibt Fassung A der richtige,
+ehrliche Stand.
