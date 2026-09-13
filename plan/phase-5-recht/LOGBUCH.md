@@ -638,3 +638,58 @@ zeigen auf dieselbe Datei. CSP weiterhin ohne Verstoß (14 statt 13
 
 **Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
 Sicherheits-Durchlauf.
+
+### 2026-09-13 — Datenschutzerklärung präzisiert, anhand einer fremden Vorlage geprüft (v3.0.16)
+
+**Geändert:** `datenschutzerklaerung.html` (Abschnitte 3, 7, 8, 11
+nachgeschärft), `sw.js`/`CHANGELOG.md` (Version 3.0.16).
+
+**Anlass:** Betreiber hat die vollständige Datenschutzerklärung von
+arabily.app eingefügt (17 Abschnitte, mit vollständigen Anschriften,
+konkret zitierten Artikeln, benannter Aufsichtsbehörde). Berechtigter
+Maßstab: unsere Fassung war inhaltlich richtig, aber an mehreren Stellen
+vager formuliert als nötig.
+
+**Per Websuche verifiziert** (nicht geraten): Anschrift des Unabhängigen
+Landeszentrums für Datenschutz Schleswig-Holstein — Holstenstraße 98,
+24103 Kiel. Zuständig, weil der im Impressum genannte Verantwortliche
+seinen Sitz in Leck, Schleswig-Holstein hat.
+
+**Nachgezogen, jeweils mit Begründung:**
+
+1. **§7 Empfänger/Auftragsverarbeitung:** Vorher „Google Ireland Limited
+   bzw. Google LLC" ohne Anschrift, „geeignete Garantien (u. a.
+   EU-Standardvertragsklauseln)" ohne Artikel-Zitat. Jetzt volle
+   Anschriften beider Google-Gesellschaften und explizit Art. 46 Abs. 2
+   lit. c DSGVO als Rechtsgrundlage der US-Übermittlung — genau die
+   Präzision, die die arabily-Vorlage für denselben Sachverhalt zeigt.
+   Ergänzt: Klarstellung, dass es (anders als bei arabily mit
+   RevenueCat/App Stores) hier keine weiteren Auftragsverarbeiter gibt —
+   zutreffend, weil diese App keine Bezahlfunktion hat.
+2. **§11 Beschwerderecht:** Vorher „z. B. beim ULD Schleswig-Holstein"
+   (unverbindlich, ohne Anschrift). Jetzt namentlich und mit Anschrift
+   als die tatsächlich zuständige Behörde benannt, nicht nur als
+   Beispiel — begründet mit dem Sitz des Verantwortlichen.
+3. **§3 Hosting/Server-Logdaten:** Konkrete Liste der verarbeiteten
+   Felder (IP-Adresse, Datum/Uhrzeit, abgerufene Datei, Browser/
+   Betriebssystem) statt der Sammelformulierung „u. a.".
+4. **§8 Fremde Server:** Ergänzt um eine explizite Rechtsgrundlage
+   (Art. 6 Abs. 1 lit. f DSGVO), die vorher fehlte, obwohl jeder andere
+   Abschnitt eine nennt.
+
+**Bewusst NICHT übernommen, weil unzutreffend:** Abo/RevenueCat, Google-/
+Apple-Anmeldung, Community-Veröffentlichung, Push-Benachrichtigungen,
+IONOS-Hosting — alles Funktionen von arabily, die diese App nicht hat.
+Wörtlich kopiert wurde nichts; jeder Absatz wurde gegen den tatsächlichen
+Code dieser App geprüft (siehe frühere Einträge in diesem Logbuch zur
+Cookie-Prüfung und zum Feldabgleich mit `firestore.rules`).
+
+**Geprüft im Browser:** CSP weiterhin ohne Verstoß, Tag-Struktur
+ausgeglichen, neuer externer Link (`datenschutzzentrum.de`) ist eine
+normale Seiten-Navigation und fällt nicht unter die CSP-Beschränkungen
+für Unterressourcen.
+
+**Offen:** Nichts Neues.
+
+**Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
+Sicherheits-Durchlauf.

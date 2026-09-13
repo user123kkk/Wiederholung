@@ -1,3 +1,22 @@
+## 3.0.16 – 13. September 2026
+
+### Geändert
+
+- **Datenschutzerklärung präzisiert** – im Vergleich mit einer fremden,
+  deutlich detaillierteren Vorlage nachgezogen:
+  - Vollständige Anschriften der eingesetzten Auftragsverarbeiter (Google
+    Ireland Limited, Google LLC) statt bloßer Namensnennung.
+  - Konkrete Rechtsgrundlage für die Datenübertragung in die USA benannt
+    (Art. 46 Abs. 2 lit. c DSGVO, EU-Standardvertragsklauseln) statt der
+    vagen Formulierung „geeignete Garantien".
+  - Die zuständige Aufsichtsbehörde für Beschwerden ist jetzt namentlich
+    und mit Anschrift genannt (Unabhängiges Landeszentrum für
+    Datenschutz Schleswig-Holstein, Holstenstraße 98, 24103 Kiel – am
+    Sitz des Verantwortlichen in Leck zuständig), nicht mehr nur als
+    Beispiel.
+  - Hosting-Logdaten und Fremdserver-Abschnitt nennen jetzt konkret, was
+    verarbeitet wird, und je eine eigene Rechtsgrundlage.
+
 ## 3.0.15 – 13. September 2026
 
 ### Geändert
