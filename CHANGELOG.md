@@ -1,3 +1,32 @@
+## 3.0.23 – 13. September 2026
+
+### Behoben
+
+- **`sw.js` – Firebase-SDK-Ladefehler, der die App dauerhaft mit „Start
+  fehlgeschlagen" hängen ließ.** Gemeldet vom Betreiber: Die App startete
+  nicht, in der Konsole stand „Failed to fetch dynamically imported module:
+  https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" – und half sich
+  nur mit einem Hard-Reload (Strg+Umschalt+R), ein normaler Reload blieb
+  dauerhaft dabei.
+
+  Ursache: Der Service Worker fragt bei Firebase-SDK und Quran-Schrift
+  „zuerst Netz, dann eigenen Cache". Schlug das Netz einmal fehl (kurzer
+  Aussetzer beim CDN, Firmen-Proxy o.ä.), konnte der **Browser selbst** diese
+  Fehlantwort in seinem eigenen HTTP-Cache ablegen – unabhängig vom
+  Service-Worker-Cache. Jeder weitere normale Reload fragte dann wieder genau
+  diesen Browser-Cache ab, statt das Netz erneut zu versuchen, und bekam
+  denselben alten Fehler zurück. Nur ein Hard-Reload umgeht diesen
+  Browser-Cache von sich aus – daher half er, und nur er.
+
+  Behoben: Die Netz-Anfrage für Firebase-SDK, Quran-Schrift und die eigenen
+  Dateien läuft jetzt mit `cache: "no-store"`, fragt also wirklich das Netz
+  und nie eine im Browser hinterlegte alte Antwort. Zusätzlich landet nur
+  noch eine echte (`res.ok`) Antwort im eigenen Cache – eine Fehlerantwort
+  dort abzulegen hätte denselben Fehler nur eine Ebene tiefer eingebaut.
+
+  Diese Ursache lag **nicht** im Umbau der Startseite – `sw.js` trug diese
+  Logik seit ihrer Einführung (vor Phase 5) unverändert.
+
 ## 3.0.22 – 13. September 2026
 
 ### Zurückgenommen

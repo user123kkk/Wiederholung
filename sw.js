@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.0.22";
+const CACHE_NAME = "adrabic-3.0.23";
 
 /* 3.0.0: Gestaltung und Ablauf liegen jetzt in eigenen Dateien neben der
    index.html. Beide MUESSEN hier stehen - sonst startet die App offline zwar,
@@ -71,12 +71,35 @@ self.addEventListener("fetch", event => {
   if (!isCacheable(url)) return;         // Auth-/Firestore-Aufrufe durchreichen
 
   /* Zuerst Netz, dann Cache: online sieht man immer sofort die neueste
-     Version, offline greift die zuletzt gespeicherte. */
+     Version, offline greift die zuletzt gespeicherte.
+
+     3.0.23: Das Netz-Fetch fragt bewusst mit cache: "no-store" - also am
+     eigenen HTTP-Cache des Browsers vorbei, nicht nur am Service-Worker-
+     Cache. Ohne das galt: Schlug ein Abruf einmal fehl (kurzer Aussetzer
+     beim CDN, Firmen-Proxy, o.ä.), legte der Browser diese Fehlantwort
+     manchmal selbst in seinen HTTP-Cache - und jeder weitere normale
+     Reload bediente sich wieder aus genau diesem Cache, ohne das Netz
+     erneut zu fragen. Sichtbar wurde das als Adrabic, das dauerhaft mit
+     "Start fehlgeschlagen" haengenblieb, obwohl das Netz laengst wieder
+     ging - nur ein Hard-Reload (Strg+Umschalt+R) umgeht diesen
+     Browser-Cache von sich aus und hat deshalb geholfen. Mit no-store
+     fragt jeder Versuch wirklich das Netz, nicht einen alten Fehler.
+
+     Nur fuer NICHT-Navigations-Anfragen (Skripte, Schriften) - ein Request
+     mit mode "navigate" (der Seitenaufruf selbst) laesst sich so nicht neu
+     bauen (der Modus wuerde dabei stillschweigend auf "same-origin"
+     kippen), und dieser Pfad ist bereits getestet. */
+  const netzAnfrage = req.mode === "navigate" ? req : new Request(req, { cache: "no-store" });
   event.respondWith(
-    fetch(req)
+    fetch(netzAnfrage)
       .then(res => {
-        const copy = res.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+        /* Nur eine ECHTE Antwort landet im eigenen Cache - eine 404/500
+           dort abzulegen wuerde denselben Fehler einbauen, den no-store
+           gerade am Browser-Cache vorbei vermeidet. */
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+        }
         return res;
       })
       .catch(() =>
