@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.10";
+const APP_VERSION = "3.0.11";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -4663,7 +4663,9 @@ function renderDatenschutz() {
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Dein Konto</div>';
   html += '<div class="card">';
-  html += '<p class="hint">Deine <strong>E-Mail-Adresse</strong> – nötig, um dich anzumelden und dein ' +
+  html += '<p class="hint">Der <strong>Name</strong>, den du bei der Anmeldung angibst – er steht ' +
+    'nur zur Begrüßung in der App und muss nicht dein echter sein. Dazu deine ' +
+    '<strong>E-Mail-Adresse</strong> – nötig, um dich anzumelden und dein ' +
     'Passwort zurücksetzen zu können – und ob sie bestätigt ist. Das <strong>Passwort</strong> selbst ' +
     'liegt nirgends im Klartext: darum kümmert sich Firebase Authentication (Google). Auch wer diese ' +
     'App betreibt, bekommt es nie zu sehen.</p>';

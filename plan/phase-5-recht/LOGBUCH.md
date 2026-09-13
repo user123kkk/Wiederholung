@@ -351,3 +351,71 @@ durch die Grundregel, vermerkt statt gebaut.
 **Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
 Sicherheits-Durchlauf. Dieser prüft als Erstes, ob die CSP nach den zwei
 Lockerungen noch trägt.
+
+### 2026-09-13 — Zweite Prüfung, diesmal im echten Browser (v3.0.11)
+
+**Geändert:** `datenschutzerklaerung.html` (§4 um den Namen ergänzt),
+`app.js` (`renderDatenschutz`, Abschnitt „Dein Konto" um den Namen
+ergänzt), `impressum.html` (Haftungs- und Urheberrechtstexte),
+`styles.css` (`a.linklike` ohne `font: inherit`, `h1`-Abstand),
+`sw.js`/`CHANGELOG.md` (Version 3.0.11).
+
+**Wie geprüft wurde — das ist der eigentliche Punkt dieses Eintrags:** Die
+erste Prüfung bestand aus Lesen, und Lesen hat die CSP-Fehler nicht
+gefunden. Diesmal wurde das Repo lokal über einen kleinen Python-Server
+ausgeliefert, der **die Header aus `firebase.json` wörtlich mitschickt**,
+und die Seiten in einem echten Chromium (Playwright) geladen — inklusive
+Anmeldebildschirm, für den die drei Firebase-SDK-Dateien durch Attrappen
+ersetzt wurden, die „niemand angemeldet" melden. Verstöße gegen die CSP
+erscheinen dann als Konsolenfehler, statt erst beim Nutzer aufzufallen.
+Geprüft wurde in beiden Themen (hell/dunkel) und beiden Breiten (375 px,
+1280 px). Ergebnis am Ende: **0 CSP-Verstöße, kein waagerechter Überlauf,
+keine Skriptfehler.** Die Skripte liegen im Scratchpad dieser Session und
+sind bewusst **nicht** ins Repo gewandert — sie gehören nicht zur
+ausgelieferten App; wer sie wieder braucht, baut sie in zehn Minuten neu.
+
+**Gefunden und behoben:**
+
+1. **Inhaltliche Lücke, die schwerste der vier:** Bei der Registrierung
+   ist ein **Name** Pflichtfeld (`app.js:1791`, gespeichert als
+   `displayName` in Auth und als Feld `name` in Firestore, siehe
+   `firestore.rules:100`). Weder der App-Hinweis noch die neue
+   Datenschutzerklärung führten ihn auf. Eine Erklärung, die aufzählt,
+   was gespeichert wird, darf ausgerechnet den Namen nicht auslassen.
+   Beide Texte nennen ihn jetzt — mit dem Zusatz, dass er frei wählbar
+   ist und nicht der echte sein muss, was ja auch stimmt: geprüft wird er
+   nirgends.
+2. **Schriftstärke:** Die neuen Links standen dünner da als der
+   „Datenschutz"-Knopf direkt daneben. Ursache war mein eigenes
+   `font: inherit` in `a.linklike` — die Kurzform setzt `font-weight`
+   mit zurück und nahm der Regel darüber die 600 wieder weg. Im Browser
+   sofort sichtbar, beim Lesen des CSS nicht.
+3. **Sprache:** Beide Rechtstexte sagten „wir", obwohl dort eine einzelne
+   Privatperson steht. Jetzt durchgehend „der Betreiber". Dazu im
+   Urheberrecht ergänzt, dass selbst angelegte Lerninhalte bei den
+   Nutzer:innen bleiben — das war vorher nicht gesagt und ist die Frage,
+   die sich beim Teilen von Karten zuerst stellt.
+4. **Abstand:** Auf der Impressum-Seite klebte die erste Abschnittsmarke
+   an der Überschrift (8 px), weil dort der Einleitungssatz fehlt, der
+   auf der anderen Seite den Abstand hält. Jetzt 24 px auf beiden.
+
+**Geprüft und in Ordnung:** Löschung entfernt tatsächlich erst Firestore,
+dann das Auth-Konto (`app.js:1926–1927`) — die Aussage „sofort und
+unwiderruflich" stimmt. Die Aufzählung des Lernstoffs deckt sich mit den
+Feldern aus `firestore.rules`. Zuständige Aufsichtsbehörde ist das
+Unabhängige Landeszentrum für Datenschutz Schleswig-Holstein — passt zum
+Wohnsitz in Leck. Der Tastatur-Fokusring (`styles.css:313`) gilt
+universell und damit auch für die neuen Links.
+
+**Offen — bewusst nicht selbst entschieden:** Auf dem Anmeldebildschirm
+stehen jetzt drei Links untereinander, zwei davon fast gleich benannt:
+„Datenschutz" (der alltagssprachliche Hinweis aus 3.0.3) und
+„Datenschutzerklärung" (der Rechtstext). Das ist für Fremde verwirrend.
+Eine Umbenennung wäre eine Produktentscheidung des Betreibers, keine
+Fehlerbehebung — deshalb hier vermerkt statt eigenmächtig geändert. Ein
+Vorschlag läge nahe: den Hinweis in „Was wird gespeichert?" umbenennen,
+dann sagt jeder der beiden Namen, was dahintersteckt.
+
+**Nächster Schritt:** Unverändert Phase 6 mit dem verschärften
+Sicherheits-Durchlauf. Die Browser-Prüfung von heute ist dafür die
+Vorlage: erst die echten Header nachstellen, dann messen, nicht lesen.

@@ -1,3 +1,23 @@
+## 3.0.11 – 13. September 2026
+
+### Behoben
+
+- **Datenschutz-Text verschwieg den Namen.** Bei der Registrierung ist ein
+  Name Pflichtfeld (`app.js:1791`), gespeichert in Firebase Auth und als
+  Feld `name` in Firestore. Weder der Hinweis in der App noch die neue
+  Datenschutzerklärung führten ihn auf – in einem Text, der aufzählt, was
+  gespeichert wird, ist das eine Lücke. Beide nennen ihn jetzt, samt der
+  Angabe, dass er frei wählbar ist.
+- Impressum und Datenschutzerklärung sprachen als „wir", obwohl dort eine
+  einzelne Privatperson steht. Jetzt durchgehend „der Betreiber".
+- Die Links „Impressum" und „Datenschutzerklärung" auf dem
+  Anmeldebildschirm standen dünner als der „Datenschutz"-Knopf daneben:
+  `a.linklike` setzte per `font: inherit` die Schriftstärke 600 wieder
+  zurück. Alle drei sind jetzt gleich.
+- Auf der Impressum-Seite klebte die erste Abschnittsmarke an der
+  Überschrift – dort fehlt der Einleitungssatz, der auf der anderen Seite
+  den Abstand hält.
+
 ## 3.0.10 – 13. September 2026
 
 ### Behoben
