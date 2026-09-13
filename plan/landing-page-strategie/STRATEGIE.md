@@ -3,8 +3,9 @@
 Anleitung: [`ANLEITUNG.md`](ANLEITUNG.md) · Befund: [`BEFUND.md`](BEFUND.md)
 Logbuch: [`LOGBUCH.md`](LOGBUCH.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
 Angelegt: 13. September 2026
-Status: **Teil 1 steht. 2.2 und 2.3 sind am 13.09.2026 entschieden,
-2.1 ist weiterhin offen — der Umbau hängt allein daran.**
+Status: **Umgesetzt.** 2.1, 2.2 und 2.3 sind am 13.09.2026 entschieden,
+`landing.html` ist danach umgebaut (v3.0.21). Offen bleiben nur 2.4–2.6,
+die nichts blockieren.
 
 ---
 
@@ -177,7 +178,13 @@ nur Zeit für eine hast, nimm 2.1.
 > Block 7 aus Abschnitt 5 — denn der Schüler bekommt die Datei vom Lehrer, nicht
 > von der Startseite.
 >
-> **Die Frage bleibt also offen und lautet unverändert: A, B oder C?**
+> **Entschieden am 13.09.2026: B** — „wahrscheinlich eine hinzugefügte, also
+> b". Umgesetzt in v3.0.21 als `start-kartensatz.json`: 50 Karten, fünf
+> Lektionen zu je zehn Wörtern (Pronomen · Menschen · Dinge und Orte · Wörter
+> aus dem Quran · erste Verben), jede mit Aussprache als Notiz. Eigens
+> geschrieben, kein Buchinhalt, also keine Urheberrechtsfrage. Der
+> Lehrer-/Schülermodus bleibt davon unberührt unter „Später" in `../PLAN.md`
+> — B schließt ihn nicht aus, sondern überbrückt die Zeit bis dahin.
 
 **Empfehlung (Empfehlung, keine Antwort): B, mit dem Inhalt aus deinen eigenen
 TikTok-Videos.** Die Begründung ist, dass B drei Probleme auf einmal löst, die

@@ -298,6 +298,7 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Landing-Page-Strategie: Befund vorausgefüllt** (v3.0.19). `landing-page-strategie/BEFUND.md` war leer und sperrte damit die gesamte Strategiearbeit. Jede Frage trägt jetzt einen Zustand: belegt (mit Quelle im Code/Plan), Vermutung, oder offen. Abschnitt 3.1 listet vollständig, was die App wirklich kann — mit Zeilennummern, damit die spätere Seite nichts verspricht, was der Code nicht tut. Drei Widersprüche festgehalten: „wissenschaftlich bewährt" ist unbelegt (haftungsrelevant, weil der Vater im Impressum steht), Medina Buch 1 ist privat (Neue finden also ein leeres Werkzeug), außen „Adrabic" vs. innen „Wiederholung". Es fehlen noch sechs Antworten des Betreibers. Zusätzlich ein grammatisch kaputter Satz auf der Live-Startseite behoben (`landing.html:286`) — nur der Satz, kein Umbau. |
 | 2026-09-13 | **Landing-Page-Strategie: `STRATEGIE.md` gebaut**, zweigeteilt. Fest und unabhängig von offenen Fragen: Kern-Message „Mechanik statt Versprechen" (die Stufenleiter aus dem Code ersetzt die unbelegte Behauptung „wissenschaftlich bewährt"), die drei tragenden Belege (Handschrift-Feld, Lektionen, die nacheinander aufgehen, drei Bewertungen statt zwei), der Funnel und seine Bruchstelle (wer sich registriert, steht vor einem leeren Werkzeug — größter Hebel der ganzen Seite, kein Textproblem), die Seitenstruktur in zwölf Blöcken und die Änderungsliste gegen den heutigen Stand. Abhängig von Entscheidungen und deshalb als **drei fertige Fassungen** hinterlegt: Headline, Handlungsaufruf, Seitentitel, Beschreibung. Keywords als gekennzeichnete Hypothese mit Negativliste und Prüfweg über die Search Console. Kein Produktivcode geändert; der Befund kam unausgefüllt zurück und wurde bewusst nicht vom Agenten ausgefüllt. |
 | 2026-09-13 | **Zwei der drei Entscheidungen getroffen** (v3.0.20). *Eng anfangen, weit anlegen* — „Arabisch" gehört sichtbar nach oben. *„Wissenschaftlich bewährt" ersetzen statt belegen* — am selben Tag ausgeführt: Lösungskasten zeigt jetzt die Stufenleiter statt einer Wirkungsbehauptung, das Kästchen „Wissenschaftlich" ist durch „Mitschreiben" (Handschrift-Feld) ersetzt, Meta- und OG-Beschreibung ohne „wissenschaftlich bewährt" und erstmals mit dem Wort „arabische". Dazu ein Darstellungsfehler behoben (`color-scheme` stand fest auf `dark`). Headline, Handlungsaufruf und Aufbau **unverändert** — sie hängen an der einen noch offenen Entscheidung. Die Antwort auf „womit fängt ein Neuer an" war eine Produktidee (Lehrer-/Schülermodus mit Klassenräumen); sie steht jetzt unter „Später" mit ihren vier Gründen gegen ein Bauen jetzt und ist ausdrücklich **keine** Antwort auf die Landing-Page-Frage. |
+| 2026-09-13 | **Entscheidung 2.1 = B, Startseite umgebaut** (v3.0.21). `start-kartensatz.json` neu: 50 Karten in fünf Lektionen (Pronomen · Menschen · Dinge und Orte · Wörter aus dem Quran · erste Verben), eigens geschrieben, kein Buchinhalt — die Entscheidung „Medina Buch 1 bleibt privat" ist damit nicht berührt. Der Satz wurde **vor** der Seite gebaut und gegen den Importpfad geprüft; zwei Lektionsnamen mussten unter 40 Zeichen, sonst hätte `normSet` sie abgeschnitten. `landing.html` danach vollständig nach `STRATEGIE.md` Abschnitt 5 neu aufgebaut. **Dabei ein Fehler gefunden, der seit Phase 6 live war:** Das Hell/Dunkel-Skript der Startseite wich um einen Kommentarblock von dem der anderen Seiten ab, und die CSP erlaubt nur deren Hash — das Skript lief auf der Startseite nie, hell eingestellte Nutzer sahen sie trotzdem dunkel. Behoben ohne Änderung an `firebase.json`. |
 
 ## Wo eine neue Session anfängt
 
@@ -314,18 +315,18 @@ fertige Message-Fassungen), 4 (Keywords als Hypothese samt Negativliste und
 Prüfweg), 5 (Seitenstruktur Block für Block), 6 (Änderungsliste gegen den
 heutigen Stand).
 
-**Stand 13.09.2026: zwei von drei Entscheidungen sind getroffen.** *Eng
-anfangen, weit anlegen* (2.2) und *„wissenschaftlich bewährt" ersetzen*
-(2.3, ausgeführt in v3.0.20). **Es fehlt genau eine: 2.1 — womit fängt
-jemand an, der neu über ein Video kommt und sich registriert? A (er legt
-selbst an), B (öffentlicher Einsteiger-Kartensatz) oder C (Medina Buch 1
-doch öffentlich).**
+**Stand 13.09.2026: alle drei Entscheidungen getroffen, Umbau erledigt**
+(v3.0.21). 2.2 *eng anfangen, weit anlegen* · 2.3 *„wissenschaftlich
+bewährt" ersetzen* · 2.1 *B — eigener Einsteiger-Kartensatz*. `landing.html`
+ist nach `STRATEGIE.md` Abschnitt 5 neu aufgebaut,
+`start-kartensatz.json` (50 Karten, fünf Lektionen) liegt bereit.
 
-Was eine nächste Session tun kann: **nichts am Text raten.** Liegt 2.1 vor →
-die passende Fassung aus `STRATEGIE.md` Abschnitt 3 nehmen, `landing.html`
-nach Abschnitt 5 umbauen, Veröffentlichungsliste aus `../README.md`
-abarbeiten. Liegt sie **nicht** vor → nicht umbauen; der Befund wird auch
-**nicht** vom Agenten ausgefüllt.
+**Was jetzt beim Betreiber liegt, nicht bei einer nächsten Session:** die 50
+Karten gegenlesen (sie sind von einem Agenten geschrieben und gehen erst mit
+dem Deploy live), ein Bildschirmfoto des Handschrift-Felds statt der
+nachgebauten Karte, und deployen. Offen bleiben die Entscheidungen 2.4–2.6
+(Marke oder Person · Namensabgleich innen/außen · Wortlaut der Kostenfrage)
+— sie blockieren nichts.
 
 **Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `offen`).
 Braucht die Klärung: Formulare **in** die App oder als eigene Seite? Und vor

@@ -1,3 +1,48 @@
+## 3.0.21 – 13. September 2026
+
+### Neu
+
+- **Startkartensatz „Arabisch — die ersten 50 Wörter"** (`start-kartensatz.json`)
+  – 50 Karten in fünf Lektionen zu je zehn Wörtern: Pronomen, Menschen, Dinge
+  und Orte, Wörter aus dem Quran, erste Verben. Jede Karte trägt die Aussprache
+  als Notiz. Herunterzuladen auf der Startseite, einzuspielen über
+  „Einstellungen → Kartensatz einspielen".
+
+  Grund: Wer sich bisher registrierte, stand vor einem **leeren** Werkzeug – der
+  einzige vorhandene Kartensatz (Medina Buch 1) ist bewusst privat. Der Satz ist
+  eigens dafür geschrieben, enthält keinen Buchinhalt und löst damit auch keine
+  Urheberrechtsfrage aus.
+
+- **Startseite neu aufgebaut** (`landing.html`) – aus einem Aufmacher mit drei
+  Kästchen wird eine Seite, die zeigt statt behauptet: Handschrift-Feld, die
+  Stufenleiter mit echten Zahlen, „Nicht/Fast/Sicher", Lektionen, ein Abschnitt
+  „Was passiert, wenn du anfängst" mit den drei Schritten und dem Download, ein
+  Abschnitt „Was Adrabic nicht ist", die übrigen Funktionen als Liste, FAQ mit
+  einer neuen Frage („Ich habe noch keine Karten – wie fange ich an?") und ein
+  zweiter Handlungsaufruf am Ende.
+
+### Behoben
+
+- **Das Hell/Dunkel-Skript der Startseite wurde von der eigenen CSP blockiert.**
+  `landing.html` trug eine Fassung des Skripts **ohne** den Kommentarblock, den
+  `index.html`, `impressum.html` und `datenschutzerklaerung.html` haben – und die
+  CSP in `firebase.json` erlaubt genau einen Hash, nämlich deren. Das Skript lief
+  auf der Startseite also nie: Wer hell eingestellt hatte, sah die Startseite
+  trotzdem dunkel und beim Klick auf die App einen Farbsprung. Das Skript ist
+  jetzt Zeichen für Zeichen dasselbe wie in `index.html`, der Hash stimmt wieder.
+  `firebase.json` bleibt unverändert.
+
+### Geändert
+
+- `landing.html` – Seitentitel und Beschreibung tragen jetzt „arabische
+  Vokabeln"; vorher zielten beide auf generische Vokabel-Suchen, und das Wort
+  „Arabisch" kam im ganzen Seitenkopf nicht vor.
+- `FAQPage`-JSON-LD auf die sechs sichtbaren Fragen nachgezogen.
+
+`start-kartensatz.json` steht bewusst **nicht** in `APP_SHELL`: Die Datei wird
+zum Starten der App nicht gebraucht, sie wird einmal heruntergeladen und
+eingespielt.
+
 ## 3.0.20 – 13. September 2026
 
 ### Geändert

@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Adrabic – Vokabeln lernen, die hängenbleiben</title>
+<title>Adrabic — arabische Vokabeln lernen und behalten</title>
 <meta name="theme-color" content="#0b0a09">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="Karteikarten für arabische Vokabeln, Grammatik und Quran-Inhalte. Mit Handschrift-Feld zum Mitschreiben. Kostenlos, offline, ohne Werbung.">
+<meta name="description" content="Karteikarten für Arabisch: 50 Karten zum Anfangen, Handschrift-Feld zum Mitschreiben, Wiederholung in wachsenden Abständen. Kostenlos und offline.">
 <link rel="canonical" href="https://lernkarte-925c2.web.app/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Adrabic – Vokabeln lernen, die hängenbleiben">
-<meta property="og:description" content="Karteikarten für arabische Vokabeln, Grammatik und Quran-Inhalte. Mit Handschrift-Feld zum Mitschreiben. Kostenlos, offline, ohne Werbung.">
+<meta property="og:title" content="Adrabic — arabische Vokabeln lernen und behalten">
+<meta property="og:description" content="Karteikarten für Arabisch: 50 Karten zum Anfangen, Handschrift-Feld zum Mitschreiben, Wiederholung in wachsenden Abständen. Kostenlos und offline.">
 <meta property="og:url" content="https://lernkarte-925c2.web.app/">
 <meta property="og:image" content="https://lernkarte-925c2.web.app/desktop-icon.png">
 <meta property="og:locale" content="de_DE">
@@ -18,6 +18,14 @@
 <link rel="icon" href="./desktop-icon.png" type="image/png">
 <link rel="stylesheet" href="./styles.css">
 <script>
+/* 2.20.0: Läuft, BEVOR das erste Bild steht.
+
+   Die gewählte Fassung liegt im Konto und kommt erst mit den Daten aus der
+   Cloud - das dauert einen Moment. Ohne diese Zeilen sähe ein Nutzer mit
+   heller Fassung bei jedem Start zuerst einen schwarzen Bildschirm, der dann
+   umspringt. Das sieht nach einem Fehler aus. Deshalb liegt die Wahl
+   zusätzlich auf dem Gerät selbst; die Cloud bleibt maßgeblich und
+   überschreibt sie, sobald sie da ist. */
 (function () {
   try {
     var w = localStorage.getItem("adrabic-thema") || "dunkel";
@@ -30,7 +38,10 @@
 })();
 </script>
 <style>
-/* Landing-Page spezifische Stile */
+/* Landing-Page spezifische Stile.
+   Grundsatz aus README.md: Diese Seite bringt keine eigenen Farben und keine
+   eigenen Abstaende mit - sie erbt die Tokens aus styles.css. Keine Bewegung:
+   die Seite hat kein render(), also gibt es auch nichts einzublenden. */
 .landing {
   min-height: 100vh;
   display: flex;
@@ -39,29 +50,36 @@
   color: var(--text-1);
 }
 
-.landing__hero {
-  flex: 1;
+.landing__kopf {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-8) var(--space-5) var(--space-8);
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-5) 0;
+}
+
+.landing__kopf img { width: 40px; height: 40px; }
+
+.landing__wortmarke {
+  font-family: var(--font-text);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.landing__hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-5);
   text-align: center;
 }
 
-.landing__hero-content {
-  max-width: 50rem;
-}
-
-.landing__icon {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto var(--space-5);
-  opacity: 0.9;
-}
+.landing__hero-content { max-width: 46rem; }
 
 .landing__headline {
   font-family: var(--font-ui);
-  font-size: 2.5rem;
+  font-size: 2.1rem;
   font-weight: 600;
   line-height: 1.2;
   margin: 0 0 var(--space-4) 0;
@@ -76,32 +94,20 @@
   margin: 0 0 var(--space-5) 0;
 }
 
-.landing__solution {
+.landing__beweis {
   font-family: var(--font-ui);
-  font-size: 1rem;
-  line-height: 1.6;
-  margin: var(--space-6) 0 var(--space-5) 0;
-  padding: var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
-}
-
-.landing__solution-title {
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: var(--space-2);
-}
-
-.landing__solution-text {
+  font-size: 0.95rem;
   color: var(--text-2);
-  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-3) 0;
+  margin: var(--space-5) 0;
 }
 
 .landing__cta {
   display: inline-block;
-  margin: var(--space-6) auto;
-  padding: var(--space-3) var(--space-5);
+  margin: var(--space-5) auto var(--space-2);
+  padding: var(--space-3) var(--space-6);
   background: var(--accent);
   color: var(--text-on-accent);
   border: none;
@@ -110,74 +116,202 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s;
   text-decoration: none;
 }
 
-.landing__cta:hover,
-.landing__cta:focus {
-  background: var(--accent-hover);
-  transform: scale(1.02);
-  outline: 2px solid transparent;
-}
+.landing__cta:hover { background: var(--accent-hover); }
+.landing__cta:focus { outline: 2px solid var(--accent-hover); outline-offset: 2px; }
+.landing__cta:active { background: var(--accent-press); }
 
-.landing__cta:focus {
-  outline: 2px solid var(--accent-hover);
-  outline-offset: 2px;
-}
-
-.landing__cta:active {
-  background: var(--accent-press);
-  transform: scale(0.99);
-}
-
-.landing__features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: var(--space-4);
-  margin: var(--space-6) 0;
-  max-width: 50rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.landing__feature {
-  padding: var(--space-4);
-  border: 1px solid var(--border-strong);
-  border-radius: 0.375rem;
-}
-
-.landing__feature-icon {
-  font-size: 2rem;
-  margin-bottom: var(--space-2);
-}
-
-.landing__feature-title {
-  font-family: var(--font-ui);
-  font-weight: 600;
-  margin-bottom: var(--space-1);
-  color: var(--accent);
-}
-
-.landing__feature-text {
-  font-size: 0.9rem;
-  color: var(--text-2);
+.landing__cta-hinweis {
+  font-size: 0.85rem;
+  color: var(--text-3);
   margin: 0;
 }
 
-.landing__faq {
-  max-width: 40rem;
-  margin: var(--space-6) auto 0;
-  padding: 0 var(--space-5);
-  text-align: left;
+/* Ein Abschnitt. Bewusst ohne Kasten: Hierarchie entsteht laut styles.css
+   durch Abstand und Haarlinie, nicht durch Rahmen. */
+.landing__block {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5);
+  border-top: 1px solid var(--border-subtle);
 }
+
+.landing__block h2 {
+  font-family: var(--font-ui);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-3) 0;
+}
+
+.landing__block p {
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-2);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.landing__block p:last-child { margin-bottom: 0; }
+
+/* Die Karte mit dem arabischen Wort. Kein Bildschirmfoto, sondern eine
+   Andeutung - sie zeigt die Schreibflaeche, ohne eine Aufnahme vorzutaeuschen,
+   die es nicht gibt. */
+.landing__karte {
+  border: 1px solid var(--border-strong);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  padding: var(--space-5);
+  text-align: center;
+  margin: var(--space-4) 0;
+}
+
+.landing__karte-wort {
+  font-family: var(--font-arabic);
+  font-size: 2.6rem;
+  line-height: 1.6;
+  direction: rtl;
+}
+
+.landing__karte-de {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: var(--text-3);
+  margin-top: var(--space-1);
+}
+
+.landing__karte-flaeche {
+  margin-top: var(--space-4);
+  height: 68px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--text-3);
+}
+
+/* Die Stufenleiter. Sie ersetzt die fruehere Behauptung "wissenschaftlich
+   bewaehrt" - sie zeigt, was der Code tut, statt eine Wirkung zu versprechen. */
+.landing__stufen {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: var(--space-2);
+}
+
+.landing__stufe {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.375rem;
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.landing__stufe-nr {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.landing__stufe-tag {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.landing__knoepfe {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+}
+
+.landing__knoepfe li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-text);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.landing__knoepfe strong {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: var(--text-1);
+  display: inline-block;
+  min-width: 4.5rem;
+}
+
+.landing__schritte {
+  margin: var(--space-4) 0 0;
+  padding-left: var(--space-5);
+  font-family: var(--font-text);
+  line-height: 1.7;
+  color: var(--text-2);
+}
+
+.landing__schritte li { margin-bottom: var(--space-2); }
+
+.landing__laden {
+  display: inline-block;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  border-radius: 0.375rem;
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.landing__laden:hover { background: var(--accent-bg-strong); }
+.landing__laden:focus { outline: 2px solid var(--accent-hover); outline-offset: 2px; }
+
+.landing__nicht, .landing__rest {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-text);
+  line-height: 1.7;
+  color: var(--text-2);
+}
+
+.landing__nicht li, .landing__rest li {
+  padding-left: var(--space-5);
+  position: relative;
+}
+
+.landing__nicht li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--text-3);
+}
+
+.landing__rest li::before {
+  content: "·";
+  position: absolute;
+  left: var(--space-2);
+  color: var(--text-3);
+}
+
+.landing__faq { max-width: 42rem; margin: 0 auto; padding: var(--space-7) var(--space-5); border-top: 1px solid var(--border-subtle); text-align: left; }
 
 .landing__faq-title {
   font-family: var(--font-ui);
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 600;
   margin: 0 0 var(--space-4) 0;
-  text-align: center;
 }
 
 .landing__faq-item {
@@ -194,15 +328,20 @@
   color: var(--text-1);
 }
 
-.landing__faq-item summary:focus {
-  outline: 2px solid var(--accent-hover);
-  outline-offset: 2px;
-}
+.landing__faq-item summary:focus { outline: 2px solid var(--accent-hover); outline-offset: 2px; }
 
 .landing__faq-item p {
-  font-size: 0.9rem;
+  font-family: var(--font-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
   color: var(--text-2);
   margin: var(--space-2) 0 0 0;
+}
+
+.landing__schluss {
+  text-align: center;
+  padding: var(--space-8) var(--space-5);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .landing__footer {
@@ -219,120 +358,189 @@
   border-bottom: 1px solid var(--accent);
 }
 
-.landing__footer a:hover,
-.landing__footer a:focus {
-  text-decoration: underline;
-  outline: none;
-}
-
+.landing__footer a:hover, .landing__footer a:focus { text-decoration: underline; outline: none; }
 
 @media (min-width: 48rem) {
-  .landing__headline {
-    font-size: 3rem;
-  }
-
-  .landing__problem {
-    font-size: 1.5rem;
-  }
+  .landing__headline { font-size: 2.9rem; }
+  .landing__problem { font-size: 1.4rem; }
 }
 </style>
 </head>
 <body>
 <div class="landing">
+
+  <header class="landing__kopf">
+    <img src="./desktop-icon.png" alt="">
+    <span class="landing__wortmarke">Adrabic</span>
+  </header>
+
   <div class="landing__hero">
     <div class="landing__hero-content">
-      <img class="landing__icon" src="./desktop-icon.png" alt="">
-
-      <h1 class="landing__headline">Vokabeln, die hängenbleiben</h1>
+      <h1 class="landing__headline">Was du einmal gelernt hast, sollst du nicht wieder verlieren.</h1>
 
       <p class="landing__problem">
-        Du lernst Wörter, die du brauchst. Drei Wochen später hast du sie wieder vergessen.
-        Nicht, weil du faul bist — sondern weil dein Gehirn genau so funktioniert: Ohne
-        Wiederholung verschwindet Neues schnell wieder.
+        Arabische Vokabeln, Grammatik, Quran-Inhalte — in wachsenden Abständen wiederholt,
+        bis sie sitzen.
       </p>
 
-      <div class="landing__solution">
-        <div class="landing__solution-title">So funktioniert es</div>
-        <p class="landing__solution-text">
-          Jede Karte hat eine Stufe, und die Stufe bestimmt, wann sie wiederkommt: Stufe 1
-          heißt morgen, Stufe 4 in sechs Tagen, Stufe 7 in 34 Tagen. Was sitzt, rückt weiter
-          nach hinten — aber nie weiter als 180 Tage. <strong>Keine Karte verschwindet länger
-          als ein halbes Jahr aus deinem Leben.</strong>
-        </p>
-      </div>
+      <p class="landing__beweis">
+        Jede Karte kommt wieder — spätestens nach einem halben Jahr.
+      </p>
 
-      <a href="./index.html" class="landing__cta">Jetzt anfangen</a>
-
-      <div class="landing__features">
-        <div class="landing__feature">
-          <div class="landing__feature-icon">✍️</div>
-          <div class="landing__feature-title">Mitschreiben</div>
-          <p class="landing__feature-text">
-            Das arabische Wort mit dem Finger auf der Karte selbst nachschreiben
-          </p>
-        </div>
-
-        <div class="landing__feature">
-          <div class="landing__feature-icon">🔄</div>
-          <div class="landing__feature-title">Automatisch</div>
-          <p class="landing__feature-text">
-            Die App bestimmt, wann du was wiederholen sollst
-          </p>
-        </div>
-
-        <div class="landing__feature">
-          <div class="landing__feature-icon">📱</div>
-          <div class="landing__feature-title">Überall verfügbar</div>
-          <p class="landing__feature-text">
-            Auf jedem Gerät dort weitermachen, wo du aufgehört hast — alles wird synchronisiert
-          </p>
-        </div>
-      </div>
+      <a href="./index.html" class="landing__cta">Konto anlegen und anfangen</a>
+      <p class="landing__cta-hinweis">
+        Danach lädst du die 50 Startkarten und spielst sie ein. Dauert eine Minute.
+      </p>
     </div>
   </div>
+
+  <section class="landing__block" aria-labelledby="t-schreiben">
+    <h2 id="t-schreiben">Du schreibst das Wort mit</h2>
+    <p>
+      Arabische Schrift lernt man nicht, indem man sie anschaut. Auf jeder Karte liegt ein
+      Feld, in das du das Wort mit dem Finger nachschreibst — auf dem Handy, auf dem Tablet,
+      auch im Vollbild. Kein Tippen, kein Umschalten der Tastatur.
+    </p>
+    <div class="landing__karte">
+      <div class="landing__karte-wort" lang="ar" dir="rtl">كِتَابٌ</div>
+      <div class="landing__karte-de">ein Buch</div>
+      <div class="landing__karte-flaeche" aria-hidden="true">hier schreibst du mit</div>
+    </div>
+    <p>
+      Die Größe der arabischen Schrift stellst du getrennt vom Rest ein — wer Harakat lesen
+      will, braucht sie größer als deutschen Text.
+    </p>
+  </section>
+
+  <section class="landing__block" aria-labelledby="t-stufen">
+    <h2 id="t-stufen">Wann eine Karte wiederkommt</h2>
+    <p>
+      Jede Karte hat eine Stufe. Was du sicher weißt, steigt eine Stufe und rückt weiter nach
+      hinten. Was nicht sitzt, fällt zurück und kommt schneller wieder.
+    </p>
+    <ul class="landing__stufen">
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 1</span><span class="landing__stufe-tag">morgen</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 2</span><span class="landing__stufe-tag">2 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 3</span><span class="landing__stufe-tag">3 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 4</span><span class="landing__stufe-tag">6 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 5</span><span class="landing__stufe-tag">10 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 6</span><span class="landing__stufe-tag">19 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 7</span><span class="landing__stufe-tag">34 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 8</span><span class="landing__stufe-tag">61 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 9</span><span class="landing__stufe-tag">110 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 10+</span><span class="landing__stufe-tag">180 Tage</span></li>
+    </ul>
+    <p>
+      Nach oben ist bei 180 Tagen Schluss. Andere Programme lassen die Abstände ins Jahrelange
+      wachsen — dann ist die Karte praktisch aus deinem Leben verschwunden. Für Vokabeln, die
+      man mal eben braucht, geht das. Für Grammatik und Quran-Inhalte, die bleiben sollen,
+      nicht.
+    </p>
+  </section>
+
+  <section class="landing__block" aria-labelledby="t-knoepfe">
+    <h2 id="t-knoepfe">Drei Knöpfe statt zwei</h2>
+    <p>
+      „Gewusst" und „nicht gewusst" reicht nicht. Zwischen beidem liegt der Fall, um den es
+      beim Lernen eigentlich geht.
+    </p>
+    <ul class="landing__knoepfe">
+      <li><strong>Nicht</strong> Zwei Stufen zurück — und die Karte kommt in derselben Runde noch einmal.</li>
+      <li><strong>Fast</strong> Eine Stufe zurück, morgen wieder.</li>
+      <li><strong>Sicher</strong> Eine Stufe hoch, längere Pause.</li>
+    </ul>
+  </section>
+
+  <section class="landing__block" aria-labelledby="t-lektion">
+    <h2 id="t-lektion">Lektion für Lektion, nicht alles auf einmal</h2>
+    <p>
+      Ein Kartensatz ist kein Haufen Wörter, sondern ein Weg: Lektion 2 geht erst auf, wenn
+      Lektion 1 wirklich sitzt. Du siehst, wie weit du bist, und du kannst nicht versehentlich
+      in Stoff geraten, für den die Grundlage noch fehlt.
+    </p>
+    <p>
+      Wer selbst einen Satz zusammenstellt, kann ihn weitergeben — eine Datei, ein Import,
+      fertig. Einer baut, alle anderen lernen mit.
+    </p>
+  </section>
+
+  <section class="landing__block" aria-labelledby="t-anfang">
+    <h2 id="t-anfang">Was passiert, wenn du anfängst</h2>
+    <p>
+      Ehrlich gesagt: Adrabic ist erst mal leer. Es ist ein Werkzeug für deinen Stoff, kein
+      fertiger Kurs. Damit du nicht vor einem leeren Bildschirm sitzt, liegt ein Startsatz
+      bereit.
+    </p>
+    <ol class="landing__schritte">
+      <li>Konto anlegen und die E-Mail bestätigen.</li>
+      <li>Die Datei mit den ersten 50 Wörtern herunterladen.</li>
+      <li>In der App unter „Einstellungen → Kartensatz einspielen" auswählen — Lektion 1 ist sofort offen.</li>
+    </ol>
+    <a class="landing__laden" href="./start-kartensatz.json" download>Startkarten herunterladen (50 Wörter)</a>
+    <p style="margin-top:var(--space-4)">
+      Fünf Lektionen zu je zehn Wörtern: Pronomen, Menschen, Dinge und Orte, Wörter, die im
+      Quran oft vorkommen, und die ersten Verben. Danach legst du eigene Karten an — aus
+      deinem Buch, aus deinem Unterricht, aus dem, was du gerade liest.
+    </p>
+  </section>
+
+  <section class="landing__block" aria-labelledby="t-nicht">
+    <h2 id="t-nicht">Was Adrabic nicht ist</h2>
+    <ul class="landing__nicht">
+      <li>Kein Kurs. Es bringt dir kein Arabisch bei, es sorgt dafür, dass du behältst, was du lernst.</li>
+      <li>Kein Lehrer. Es korrigiert dich nicht und erklärt keine Grammatik.</li>
+      <li>Kein Übersetzer. Du bestimmst, was auf der Karte steht.</li>
+      <li>Nichts zum Sprechen. Aussprache übst du woanders.</li>
+    </ul>
+  </section>
+
+  <section class="landing__block" aria-labelledby="t-rest">
+    <h2 id="t-rest">Was sonst noch drin ist</h2>
+    <ul class="landing__rest">
+      <li>Funktioniert offline, lässt sich als App installieren</li>
+      <li>Auf jedem Gerät dort weitermachen, wo du aufgehört hast</li>
+      <li>Üben ohne Auswirkung auf den Plan</li>
+      <li>Karten, die dauerhaft nicht klappen, werden dir benannt</li>
+      <li>Notiz pro Karte, Karten merken, Bewertung rückgängig machen</li>
+      <li>Lernserie und Statistik — gezählt werden nur echte Wiederholungen</li>
+      <li>Sicherung herunterladen, Kartensätze weitergeben</li>
+      <li>Kostenlos, ohne Werbung, ohne Tracking-Cookies</li>
+    </ul>
+  </section>
 
   <section class="landing__faq" aria-labelledby="faq-titel">
     <h2 class="landing__faq-title" id="faq-titel">Häufige Fragen</h2>
 
     <details class="landing__faq-item">
+      <summary>Ich habe noch keine Karten — wie fange ich an?</summary>
+      <p>Du lädst den Startsatz „Arabisch — die ersten 50 Wörter" hier auf der Seite herunter und spielst ihn in der App unter „Einstellungen → Kartensatz einspielen" ein. Danach ist Lektion 1 offen; die nächste geht auf, sobald die erste sitzt.</p>
+    </details>
+    <details class="landing__faq-item">
       <summary>Kostet Adrabic etwas?</summary>
       <p>Nein, die Nutzung ist komplett kostenlos.</p>
     </details>
-
     <details class="landing__faq-item">
       <summary>Funktioniert es nur für Arabisch?</summary>
-      <p>
-        Nein. Adrabic wurde ursprünglich für arabische Vokabeln entwickelt,
-        lässt sich aber genauso für jede andere Sprache oder jeden anderen
-        Lernstoff nutzen, den man sich dauerhaft merken will.
-      </p>
+      <p>Nein. Adrabic wurde ursprünglich für arabische Vokabeln entwickelt, lässt sich aber genauso für jede andere Sprache oder jeden anderen Lernstoff nutzen, den man sich dauerhaft merken will.</p>
     </details>
-
     <details class="landing__faq-item">
       <summary>Brauche ich einen Account?</summary>
-      <p>
-        Ja. So werden deine Karten sicher gespeichert und du findest sie auf
-        jedem Gerät wieder, mit dem du dich anmeldest.
-      </p>
+      <p>Ja. So werden deine Karten sicher gespeichert und du findest sie auf jedem Gerät wieder, mit dem du dich anmeldest.</p>
     </details>
-
     <details class="landing__faq-item">
       <summary>Funktioniert es auch offline?</summary>
-      <p>
-        Ja. Adrabic lässt sich als App installieren und funktioniert auch
-        ohne Internetverbindung. Sobald wieder eine Verbindung besteht, wird
-        alles automatisch synchronisiert.
-      </p>
+      <p>Ja. Adrabic lässt sich als App installieren und funktioniert auch ohne Internetverbindung. Sobald wieder eine Verbindung besteht, wird alles automatisch synchronisiert.</p>
     </details>
-
     <details class="landing__faq-item">
       <summary>Kann ich mein Konto wieder löschen?</summary>
-      <p>
-        Ja, jederzeit direkt in der App — dabei werden auch alle
-        gespeicherten Karten unwiderruflich gelöscht.
-      </p>
+      <p>Ja, jederzeit direkt in der App — dabei werden auch alle gespeicherten Karten unwiderruflich gelöscht.</p>
     </details>
   </section>
+
+  <div class="landing__schluss">
+    <a href="./index.html" class="landing__cta">Konto anlegen und anfangen</a>
+    <p class="landing__cta-hinweis">Kostenlos. Konto jederzeit löschbar, Karten inklusive.</p>
+  </div>
 
   <footer class="landing__footer">
     <p>
@@ -347,6 +555,14 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Ich habe noch keine Karten — wie fange ich an?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Du lädst den Startsatz „Arabisch — die ersten 50 Wörter\" hier auf der Seite herunter und spielst ihn in der App unter „Einstellungen → Kartensatz einspielen\" ein. Danach ist Lektion 1 offen; die nächste geht auf, sobald die erste sitzt."
+      }
+    },
     {
       "@type": "Question",
       "name": "Kostet Adrabic etwas?",

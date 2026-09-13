@@ -283,3 +283,94 @@ inklusive der Sofort-Änderungen aus 6.1 und der Veröffentlichungsliste aus
 **Nächster Schritt:** Entscheidung 2.1 einholen (A, B oder C). Liegt sie vor,
 wird die passende Fassung aus `STRATEGIE.md` Abschnitt 3 genommen und
 `landing.html` nach Abschnitt 5 umgebaut.
+
+### 2026-09-13 — Entscheidung 2.1 = B, Startseite umgebaut, CSP-Fehler gefunden (v3.0.21)
+
+**Geändert:**
+- `start-kartensatz.json` — **neu**. 50 Karten, fünf Lektionen zu je zehn
+  Wörtern, Format wie `exportWeitergabe()` es erzeugt (`app.js:2362ff`):
+  `weitergabe: true`, `gefuehrt: true`, stabile `satzId`
+  („arabisch-erste-50-adrabic"), `satzVersion: 1`, jede Karte mit `quelleId`
+  und `stufe: 0`.
+- `landing.html` — vollständig neu aufgebaut nach `STRATEGIE.md` Abschnitt 5,
+  Fassung B aus Abschnitt 3.
+- `app.js:19` 3.0.20 → 3.0.21, `sw.js:10` `CACHE_NAME` nachgezogen,
+  `CHANGELOG.md` Eintrag 3.0.21.
+- `STRATEGIE.md` — 2.1 als entschieden vermerkt, Kopfstatus auf „umgesetzt".
+
+**Entscheidung:**
+
+1. **2.1 = B.** Ein eigens geschriebener Einsteiger-Kartensatz, kein
+   Buchinhalt. Damit ist die Entscheidung vom 12.09.2026 (Medina Buch 1 bleibt
+   privat) **nicht** berührt und es entsteht keine Urheberrechtsfrage.
+
+2. **Der Satz ist vor der Seite gebaut worden, nicht danach.** Eine Seite, die
+   „50 Karten warten auf dich" sagt, während es die Karten nicht gibt, wäre
+   genau die Zusage ohne Deckung, die Abschnitt 1.1 der Strategie verbietet.
+   Deshalb zuerst die Datei, geprüft gegen den Importpfad
+   (`importBackupFile`, `normBereiche`, `normCard`, `normSet`), dann der Text.
+
+3. **Zwei Lektionsnamen mussten gekürzt werden.** `normSet` schneidet Namen bei
+   40 Zeichen ab (`app.js:500`). „Lektion 4 — Wörter, die im Quran oft
+   vorkommen" (46) wäre beim Empfänger als „…oft vor" angekommen. Jetzt heißen
+   sie „Lektion 4 — Wörter aus dem Quran" und „Lektion 5 — Erste Verben". Beim
+   Prüfen ebenfalls bestätigt: alle 50 Karten liegen in einer Lektion — Karten
+   ohne Lektion blieben beim Empfänger für immer gesperrt (`app.js:2378`).
+
+4. **Der Handlungsaufruf lautet nicht wie in Fassung B hinterlegt.** Dort stand
+   „Mit den ersten 50 Karten anfangen". Der Klick führt aber zur Registrierung,
+   und die Karten kommen erst danach über Herunterladen und Einspielen. Der
+   Knopf heißt deshalb „Konto anlegen und anfangen", mit einer Zeile darunter:
+   „Danach lädst du die 50 Startkarten und spielst sie ein. Dauert eine
+   Minute." Das ist die Regel aus 1.1 — keine Zusage, die der nächste
+   Bildschirm nicht einlöst — angewandt auf die eigene Fassung.
+
+5. **Kein Bildschirmfoto, sondern eine Andeutung.** Block 3 der Struktur
+   verlangt eine Aufnahme des Handschrift-Felds; ein Agent kann keine machen.
+   Statt eines leeren Platzes steht dort eine nachgebaute Karte (arabisches
+   Wort in `--font-arabic`, darunter eine gestrichelte Fläche mit „hier
+   schreibst du mit", `aria-hidden`). Sie gibt sich nicht als Bildschirmfoto
+   aus. Ein echtes Foto ist trotzdem besser und steht als Aufgabe beim
+   Betreiber.
+
+6. **Ein Fehler gefunden, der seit Phase 6 live war: Das Hell/Dunkel-Skript der
+   Startseite wurde von der eigenen CSP blockiert.** Beim Nachrechnen des
+   Skript-Hashes für den Umbau kam heraus, dass `landing.html` eine Fassung
+   **ohne** den Kommentarblock trug, den `index.html`, `impressum.html` und
+   `datenschutzerklaerung.html` haben. Die CSP in `firebase.json` erlaubt genau
+   einen Hash — deren. Folge: Wer hell eingestellt hatte, sah die Startseite
+   trotzdem dunkel und beim Klick in die App einen Farbsprung. Das erklärt
+   rückwirkend, warum dort `color-scheme` fest auf `dark` stand: Das war die
+   Behandlung des Symptoms. Behoben, indem das Skript wieder Zeichen für
+   Zeichen dem aus `index.html` entspricht; `firebase.json` bleibt
+   unangetastet. Geprüft: Hash stimmt wieder mit der CSP überein.
+
+7. **Die Kostenfrage bleibt im alten Wortlaut.** „Nein, die Nutzung ist
+   komplett kostenlos" steht unverändert in der FAQ, obwohl die ganze Seite
+   neu geschrieben wurde und die Änderung ein Wort gekostet hätte. Grund
+   unverändert: Sie hängt an Entscheidung 2.6, und die ist nicht getroffen.
+
+8. **Geprüft vor dem Commit:** JSON-LD und sichtbare FAQ stimmen wörtlich
+   überein (sechs Fragen), Überschriftenfolge h1 → 8 × h2 ohne Sprung, kein
+   `img` ohne `alt`, alle Verweise zeigen auf vorhandene Dateien,
+   `start-kartensatz.json` wird von Firebase Hosting ausgeliefert (steht nicht
+   in der `ignore`-Liste), kein neues JavaScript, keine Bewegung.
+
+**Offen:**
+
+- **Ein echtes Bildschirmfoto des Handschrift-Felds** ersetzt die nachgebaute
+  Karte. Aufgabe des Betreibers, weil nur er die App auf einem Gerät hat.
+- **Die 50 Karten sind ungeprüft von einem Agenten geschrieben.** Sie gehen
+  erst live, wenn der Betreiber deployt — das ist der Prüfschritt. Vokabeln,
+  Übersetzungen und Aussprache gehören durchgelesen, bevor `veroeffentlichen.bat`
+  läuft.
+- **Entscheidungen 2.4, 2.5, 2.6** weiterhin offen, blockieren nichts.
+- **`start-kartensatz.json` steht nicht in `APP_SHELL`.** Bewusst: Die Datei
+  wird zum Starten der App nicht gebraucht. Folge, die jemand kennen sollte:
+  Wer die Startseite offline aufruft, kann den Satz nicht herunterladen.
+- **Der Lehrer-/Schülermodus** bleibt unter „Später" in `../PLAN.md`. B
+  überbrückt die Zeit bis dahin, schließt ihn aber nicht aus.
+
+**Nächster Schritt:** Betreiber liest die 50 Karten gegen, macht ein
+Bildschirmfoto des Handschrift-Felds und deployt. Danach ist der Nebenstrang
+Landing-Page-Strategie abgeschlossen; offen bleiben nur 2.4–2.6.
