@@ -1606,6 +1606,27 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   gap: var(--space-2);
 }
 
+/* Rechtliche Fussnoten (Impressum, Datenschutzerklaerung): bewusst KEINE
+   der fuenf Knopf-Stufen aus Abschnitt 6 - eine sechste Stufe wuerde genau
+   der dort festgelegten Regel widersprechen ("mehr gibt es nicht"). Das
+   hier ist kein Knopf, sondern Fliesstext mit Link, wie eine Fussnote unter
+   der eigentlichen Bedienung: kleiner als jede Knopf-Stufe, gedaempft statt
+   im Akzentton, ohne die Flaeche/den Hover-Schleier eines Knopfes. */
+.rechtsfuss {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline;
+  gap: var(--space-2); margin-top: var(--space-3);
+}
+.rechtsfuss a, .rechtsfuss button {
+  font: inherit; font-size: 0.75rem; font-weight: 500; color: var(--text-3);
+  background: none; border: none; padding: 0; margin: 0; min-height: 0;
+  cursor: pointer; text-decoration: none;
+}
+.rechtsfuss a:hover, .rechtsfuss a:focus-visible,
+.rechtsfuss button:hover, .rechtsfuss button:focus-visible {
+  color: var(--text-2); text-decoration: underline;
+}
+.rechtsfuss__trenner { color: var(--text-3); font-size: 0.75rem; }
+
 /* ---- Ladezustände -------------------------------------------------------
    Skelette statt Spinner: Die Seite zeigt schon ihre Form, während der
    Inhalt kommt. Ein Spinner zeigt nur, dass etwas dauert. */

@@ -1,3 +1,19 @@
+## 3.0.14 – 13. September 2026
+
+### Geändert
+
+- **Impressum, Datenschutz und Datenschutzerklärung sahen aus wie
+  Bedienschritte, nicht wie Fußnoten.** Sie standen in derselben Größe
+  und Akzentfarbe wie „Passwort vergessen?" oder „Abmelden" – dabei sind
+  es Pflichtangaben, keine Handlungen. Neue Klasse `.rechtsfuss`: klein
+  (0.75rem statt 0.8125rem), gedämpft (`--text-3` statt `--accent`), zu
+  einer Zeile zusammengefasst statt einzeln gestapelt. Bewusst **keine**
+  sechste Knopf-Stufe (`styles.css` Abschnitt 6 legt genau fünf fest) –
+  das hier ist Fließtext mit Link, kein Knopf.
+- Auf dem Anmeldebildschirm stehen „Datenschutz", „Impressum" und
+  „Datenschutzerklärung" jetzt in einer Zeile mit Punkt-Trennzeichen
+  statt in drei einzelnen Blöcken.
+
 ## 3.0.13 – 13. September 2026
 
 ### Behoben

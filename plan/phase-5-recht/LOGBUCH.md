@@ -535,3 +535,50 @@ Lernwerkzeug ausdrücklich anfassen darf, falls es je eine gibt.
 
 **Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
 Sicherheits-Durchlauf.
+
+### 2026-09-13 — Optische Hierarchie korrigiert: Fußnote statt Knopf (v3.0.14)
+
+**Geändert:** `styles.css` (neue Klasse `.rechtsfuss` direkt nach
+`.empty__aktionen`), `app.js` (`renderAuth`: „Datenschutz", „Impressum",
+„Datenschutzerklärung" zu einer `.rechtsfuss`-Zeile mit
+Punkt-Trennzeichen zusammengefasst statt drei einzelne
+`.empty__aktionen`-Blöcke; `renderEinstellungen`: die zwei Links am Ende
+ebenfalls `.rechtsfuss` statt `.linklike`), `sw.js`/`CHANGELOG.md`
+(Version 3.0.14).
+
+**Anlass:** Betreiber wollte nicht nur wissen, *dass* die Links da sind,
+sondern *wie* sie wirken — mit dem Vergleich zu professionellen Apps im
+Hinterkopf. Berechtigt: `.linklike` gab den drei Rechtstexten dieselbe
+Größe (0.8125rem) und Akzentfarbe (`--text-1`/Creme) wie „Passwort
+vergessen?" — eine Pflichtangabe stand damit optisch gleichrangig neben
+einer echten Bedienhandlung.
+
+**Entscheidung:** Neue Klasse `.rechtsfuss` (in `styles.css` direkt bei
+`.empty__aktionen` platziert, mit Kommentar, warum das bewusst **keine**
+sechste Knopf-Stufe ist — Abschnitt 6 der Datei legt ausdrücklich fest:
+„Fünf Stufen, mehr gibt es nicht"). Merkmale: kleiner (0.75rem, dieselbe
+Größe wie andere gedämpfte Nebenangaben im Code, z. B. `.lekt-zahl`),
+gedämpfte Farbe (`--text-3` statt Akzent), keine Knopf-Fläche und kein
+Hover-Schleier, stattdessen Unterstreichung bei Hover/Fokus als
+Klickbarkeits-Hinweis. Auf dem Anmeldebildschirm alle drei Fußnoten
+(„Datenschutz", „Impressum", „Datenschutzerklärung") zu einer Zeile mit
+`·`-Trennzeichen zusammengefasst, statt sie wie drei einzelne
+Bedienschritte untereinanderzustapeln — das entspricht dem Muster, das
+der Betreiber am Beispiel einer fremden App gezeigt hatte.
+
+In den Einstellungen bleibt „Datenschutz" als eigene `.liste-zeile` mit
+Symbol und Pfeil stehen (nicht Teil dieser Änderung) — das ist dort ein
+regulärer Listeneintrag wie „Abmelden", passt also in die dortige
+Hierarchie und ist kein Fußnoten-Fall.
+
+**Geprüft im Browser:** CSP weiterhin ohne Verstoß auf allen vier
+Seiten/Breiten. Fokuszustand geprüft (`Tab` auf den ersten Fußnoten-Link):
+Fokusring erscheint, Unterstreichung greift — Bedienung per Tastatur
+bleibt sichtbar.
+
+**Offen:** Nichts Neues. Die schon vorher offene Frage (Umbenennung von
+„Datenschutz" in „Was wird gespeichert?") bleibt unverändert beim
+Betreiber.
+
+**Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
+Sicherheits-Durchlauf.

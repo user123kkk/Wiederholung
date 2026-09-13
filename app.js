@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.13";
+const APP_VERSION = "3.0.14";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -3882,17 +3882,19 @@ function renderAuth() {
     html += '<button class="linklike" data-action="mode-login"' + busy + '>Zur\u00fcck zur Anmeldung</button>';
   }
   html += '</div>';
-  /* Muss VOR dem Anlegen des Kontos lesbar sein, nicht erst danach. */
-  html += '<div class="empty__aktionen" style="margin-top:var(--space-4)">';
-  html += '<button class="linklike" data-action="datenschutz"' + busy + '>Datenschutz</button>';
-  html += '</div>';
-  /* Impressum und die vollstaendige Datenschutzerklaerung sind eigene,
-     statische Seiten (Phase 5) - erreichbar ohne Anmeldung, wie es das
-     Gesetz fuer diese Angaben verlangt. Der Hinweis oben bleibt der
-     nutzerfreundliche Kurztext, das hier der rechtlich vollstaendige Text. */
-  html += '<div class="empty__aktionen" style="margin-top:var(--space-2)">';
-  html += '<a class="linklike" href="./impressum.html">Impressum</a>';
-  html += '<a class="linklike" href="./datenschutzerklaerung.html">Datenschutzerklärung</a>';
+  /* Datenschutz-Hinweis (Kurzfassung, alltagssprachlich), Impressum und
+     Datenschutzerklaerung (Rechtstexte, Phase 5) sind keine Bedienschritte,
+     sondern Fussnoten - deshalb .rechtsfuss statt .linklike: klein,
+     gedaempft, in einer Zeile, statt wie eine weitere Handlung neben
+     "Passwort vergessen?" auszusehen. Muss VOR dem Anlegen des Kontos
+     lesbar sein, nicht erst danach - deshalb schon hier auf dem
+     Anmeldebildschirm. */
+  html += '<div class="rechtsfuss" style="margin-top:var(--space-5)">';
+  html += '<button data-action="datenschutz"' + busy + '>Datenschutz</button>';
+  html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
+  html += '<a href="./impressum.html">Impressum</a>';
+  html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
+  html += '<a href="./datenschutzerklaerung.html">Datenschutzerklärung</a>';
   html += '</div>';
   html += '</div>';
   app.innerHTML = html;
@@ -4639,11 +4641,14 @@ function renderEinstellungen() {
 
   /* Impressum und Datenschutzerklaerung muessen jederzeit erreichbar sein,
      nicht nur vor der Anmeldung (Paragraph 5 DDG: "leicht erkennbar,
-     unmittelbar erreichbar"). Ohne diese Zeilen haette ein angemeldeter
-     Nutzer keinen Weg dorthin ausser sich abzumelden. */
-  html += '<div class="empty__aktionen" style="margin-top:var(--space-2)">';
-  html += '<a class="linklike" href="./impressum.html">Impressum</a>';
-  html += '<a class="linklike" href="./datenschutzerklaerung.html">Datenschutzerklärung</a>';
+     unmittelbar erreichbar"). Ohne diese Zeile haette ein angemeldeter
+     Nutzer keinen Weg dorthin ausser sich abzumelden. .rechtsfuss statt
+     .linklike: Fussnoten, keine weiteren Kontoaktionen neben "Abmelden"
+     und "Konto endgueltig loeschen" oben. */
+  html += '<div class="rechtsfuss" style="margin-top:var(--space-3)">';
+  html += '<a href="./impressum.html">Impressum</a>';
+  html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
+  html += '<a href="./datenschutzerklaerung.html">Datenschutzerklärung</a>';
   html += '</div>';
 
   /* Die Versionsnummer stand bis 2.21.6 klein unter JEDEM Bildschirm. Sie
