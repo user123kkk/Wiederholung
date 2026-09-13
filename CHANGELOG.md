@@ -1,3 +1,20 @@
+## 3.0.17 – 13. September 2026
+
+### Neu
+
+- **Öffentliche Startseite** (`landing.html`) – erste Seite, die Besucher
+  sehen (unter `/`). Zeigt das Problem spürbar (Vokabeln vergessen), dann
+  die Lösung (wissenschaftliche Wiederholungen), danach Handlungsaufruf
+  (Jetzt anfangen). Von der App getrennt – Login erst nach dem Klick auf
+  den Button.
+
+### Geändert
+
+- `firebase.json` – Rewrite-Regel für die öffentliche Startseite: `/`
+  serviert jetzt `landing.html` statt `index.html`.
+- `sw.js` – `landing.html` zur `APP_SHELL` hinzugefügt, damit die
+  Startseite auch offline verfügbar ist.
+
 ## 3.0.16 – 13. September 2026
 
 ### Geändert
