@@ -2,7 +2,7 @@
 
 Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
-Zuletzt geändert: 12. September 2026
+Zuletzt geändert: 13. September 2026
 
 ---
 
@@ -84,6 +84,18 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 Die Folge entspricht dem Vorschlag aus Konzept-Abschnitt 5. Es gibt keinen
 Grund, davon abzuweichen — die Begründung dort trägt, und sie ist unten je
 Phase noch einmal ausgeschrieben.
+
+### Nebenstrang: Landing-Page-Strategie
+
+Kein Phasen-Ordner, keine Nummer — deshalb steht er nicht in der Tabelle
+oben. Die Startseite selbst ist in Phase 6 **gebaut** und `fertig`; der
+Ordner [`landing-page-strategie/`](landing-page-strategie/) klärt, was sie
+**sagt**. Reihenfolge dort: Befund → Strategie → erst dann HTML.
+
+Status: `läuft` — der Befund ist am 13.09.2026 mit allem vorausgefüllt
+worden, was Code und Plan belegen; es fehlen noch **sechs Antworten des
+Betreibers** (Ende von [`BEFUND.md`](landing-page-strategie/BEFUND.md)).
+Solange die fehlen, wird `landing.html` nicht umgebaut.
 
 ### Warum diese Reihenfolge
 
@@ -250,15 +262,33 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Phase 6 begonnen und fertig** (v3.0.17). `landing.html` gebaut — öffentliche Startseite zeigt Problem (Vokabeln vergessen) → Lösung (wissenschaftliche Wiederholungen) → Handlungsaufruf (Jetzt anfangen) → Login/App. Sauber getrennt: kein Login-Formular auf der Startseite, nur Link zur App. `firebase.json` rewrite-Regel für `/` → `landing.html`, `sw.js` und `APP_VERSION` gehoben auf 3.0.17. Barrierefreiheit: semantisches HTML, Fokus-Styles, Contrast-Ratios geprüft (text-1: 18:1, text-2: 7.65:1, alle über WCAG AA). Tastatur-Navigation funktioniert. Alle Prüfpunkte aus `AUFTRAG.md` erfüllt. |
 | 2026-09-13 | **Phase 7 begonnen, Code-Teil fertig** (v3.0.18). `robots.txt`/`sitemap.xml` schließen `/index.html` (Login/App) von der Indexierung aus, zusätzlich `<meta name="robots" content="noindex, nofollow">` dort gesetzt. Kanonische URL, Open-Graph-Angaben je öffentlicher Seite (`landing.html`, `impressum.html`, `datenschutzerklaerung.html`). FAQ-Bereich mit fünf echten Fragen auf der Startseite plus `FAQPage`-JSON-LD. Search Console kann kein Agent einrichten — Phase bleibt auf `läuft`, bis der Betreiber das erledigt hat. Details in `phase-7-seo/LOGBUCH.md`. |
 | 2026-09-13 | **Phase 7 fertig.** Firebase-Caching-Problem mit HTML-Dateien identifiziert und gelöst (Cache-Control-Header mit `max-age=0` in `firebase.json`). Google Search Console Verifikation erfolgreich durchgeführt (HTML-Tag erkannt, Inhaberschaft bestätigt). `sitemap.xml` eingereicht und akzeptiert. Alle Punkte aus `phase-7-seo/AUFTRAG.md` abgehakt. Weiter mit Phase 8. |
+| 2026-09-13 | **Landing-Page-Strategie: Befund vorausgefüllt** (v3.0.19). `landing-page-strategie/BEFUND.md` war leer und sperrte damit die gesamte Strategiearbeit. Jede Frage trägt jetzt einen Zustand: belegt (mit Quelle im Code/Plan), Vermutung, oder offen. Abschnitt 3.1 listet vollständig, was die App wirklich kann — mit Zeilennummern, damit die spätere Seite nichts verspricht, was der Code nicht tut. Drei Widersprüche festgehalten: „wissenschaftlich bewährt" ist unbelegt (haftungsrelevant, weil der Vater im Impressum steht), Medina Buch 1 ist privat (Neue finden also ein leeres Werkzeug), außen „Adrabic" vs. innen „Wiederholung". Es fehlen noch sechs Antworten des Betreibers. Zusätzlich ein grammatisch kaputter Satz auf der Live-Startseite behoben (`landing.html:286`) — nur der Satz, kein Umbau. |
 
 ## Wo eine neue Session anfängt
 
-**Phase 7 fertig** (13.09.2026). Code-Teil (`robots.txt`, Sitemap,
-Meta-/OG-Angaben, FAQ) + Google Search Console Verifikation +
-Sitemap-Einreichung vollständig. Siehe [`phase-7-seo/LOGBUCH.md`](phase-7-seo/LOGBUCH.md).
+**Beide offenen Stränge hängen an einer Entscheidung des Betreibers.** Das ist
+kein Versehen und keine Ausrede — es steht hier, damit die nächste Session
+nicht dieselbe Sperre noch einmal aufdeckt.
 
-**Weiter mit Phase 8** (Rückmeldung: Kontakt- und Fehlerformular) — diese
-Phase ist `offen` und braucht die Klärung: sollen die Formulare in die App
-gebaut werden, oder in eine separate Seite (wie die Startseite in Phase 6)?
-Diese Frage gehört an den Betreiber, bevor Phase 8 beginnt. Siehe auch
-[`phase-8-rueckmeldung/AUFTRAG.md`](phase-8-rueckmeldung/AUFTRAG.md).
+**Strang A — Landing-Page-Strategie** (`läuft`, siehe
+[`landing-page-strategie/LOGBUCH.md`](landing-page-strategie/LOGBUCH.md)).
+Der Befund ist so weit vorausgefüllt, wie Code und Plan es hergeben. Es
+fehlen noch **sechs Antworten**, ausgeschrieben am Ende von
+[`BEFUND.md`](landing-page-strategie/BEFUND.md): TikTok-Kanal · Zielgruppe ·
+womit ein Neuer ohne Kartensatz anfängt · Vokabeltrainer oder
+Talab-al-Ilm-Begleiter · „wissenschaftlich" belegen oder ersetzen · Marke
+oder Person. Liegen sie vor → `STRATEGIE.md` bauen, danach `landing.html`
+umbauen. Liegen sie **nicht** vor → nicht raten, nicht umbauen.
+
+**Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `offen`).
+Braucht die Klärung: Formulare **in** die App oder als eigene Seite? Und vor
+allem — wie kommt eine Nachricht an, wo die App keinen eigenen Server hat?
+Laut [`phase-8-rueckmeldung/AUFTRAG.md`](phase-8-rueckmeldung/AUFTRAG.md)
+sind die Möglichkeiten **zu Beginn der Phase aufzuschreiben und vorzulegen**,
+nicht selbst zu entscheiden. Das ist die eine Sache, die eine nächste Session
+ohne Rückfrage tun kann: die Möglichkeiten aufschreiben und ins Logbuch von
+Phase 8 legen.
+
+**Phase 9** (Barrierefreiheit) ist an nichts gesperrt, steht aber bewusst
+zuletzt: Sie soll über den **endgültigen** Bestand laufen, und der Umbau der
+Startseite steht noch aus.

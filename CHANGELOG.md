@@ -1,3 +1,15 @@
+## 3.0.19 – 13. September 2026
+
+### Behoben
+
+- `landing.html` – ein Satz in der Kachel „Überall verfügbar" war
+  grammatisch kaputt („Nutzer kannst du von überall her weitermachen —
+  synchronisiert") und stand so auf der öffentlichen Startseite. Ersetzt
+  durch „Auf jedem Gerät dort weitermachen, wo du aufgehört hast — alles
+  wird synchronisiert". Reine Textkorrektur, keine Änderung an der
+  Gestaltung oder am Aufbau der Seite: Der Umbau der Startseite wartet
+  bewusst auf die Strategie (`plan/landing-page-strategie/`).
+
 ## 3.0.18 – 13. September 2026
 
 ### Neu
