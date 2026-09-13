@@ -1,3 +1,19 @@
+## 3.0.15 – 13. September 2026
+
+### Geändert
+
+- **Zwei Datenschutz-Texte unter zwei Namen zusammengelegt.** Seit v3.0.3
+  gab es einen eigenen, alltagssprachlichen Bildschirm „Datenschutz" in
+  der App; seit v3.0.9 zusätzlich die vollständige rechtliche
+  „Datenschutzerklärung" als eigene Seite. Beide sagten im Kern dasselbe.
+  Der alltagssprachliche Bildschirm (`renderDatenschutz()`) ist entfernt,
+  sein Inhalt steht jetzt als Abschnitt „Kurz gesagt" oben in
+  `datenschutzerklaerung.html`, vor dem vollständigen Rechtstext. Es gibt
+  jetzt nur noch **einen** Weg dorthin, überall „Datenschutz" genannt.
+- Die Fußzeile auf Anmeldebildschirm und in den Einstellungen zeigt jetzt
+  „Datenschutz · Impressum" statt vorher drei bzw. zwei unterschiedlich
+  benannter Einträge.
+
 ## 3.0.14 – 13. September 2026
 
 ### Geändert

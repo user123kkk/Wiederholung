@@ -582,3 +582,59 @@ Betreiber.
 
 **Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
 Sicherheits-Durchlauf.
+
+### 2026-09-13 — Zwei Datenschutz-Texte zusammengelegt (v3.0.15)
+
+**Geändert:** `datenschutzerklaerung.html` (neuer Abschnitt „Kurz gesagt"
+vor den nummerierten Abschnitten, Titel von „Datenschutzerklärung" auf
+„Datenschutz" verkürzt), `impressum.html` (Linktext angepasst),
+`app.js` (`renderDatenschutz()` und die zugehörigen `ui.datenschutz`-
+Zustände, `data-action`-Fälle und Aufrufstellen vollständig entfernt;
+`renderAuth()` und `renderEinstellungen()` verweisen jetzt beide mit dem
+Wort „Datenschutz" auf `datenschutzerklaerung.html`, statt zusätzlich
+einen eigenen In-App-Bildschirm und ein zweites, anders benanntes Ziel
+„Datenschutzerklärung" zu zeigen), `styles.css` unverändert (`.rechtsfuss`
+bleibt), `sw.js`/`CHANGELOG.md` (Version 3.0.15).
+
+**Anlass:** Betreiber fragte, wofür die Datenschutzerklärung überhaupt
+gebraucht wird, wenn er sie „kaum bei anderen bzw. eigentlich arabily"
+sieht — verwies auf `arabily.app/datenschutz`, wo es nur einen einzigen
+„Datenschutz"-Link gibt, keine zwei verschieden benannten. Berechtigter
+Punkt: Diese App hatte tatsächlich zwei Texte mit fast demselben Inhalt
+unter zwei verschiedenen Namen — „Datenschutz" (seit v3.0.3, alltags-
+sprachlich, nur in der App) und „Datenschutzerklärung" (seit v3.0.9,
+vollständiger Rechtstext, als eigene Seite). Das ist reine Verwirrung,
+keine Rechtsanforderung — nirgends verlangt die DSGVO oder das DDG zwei
+getrennte Texte.
+
+**Entscheidung:** Zusammengelegt, nicht nur umbenannt (Option „nur
+umbenennen" wäre die halbe Lösung gewesen, siehe die Frage, die dem
+Betreiber vorher gestellt wurde). Der alltagssprachliche Inhalt aus
+`renderDatenschutz()` steht jetzt als eigener Abschnitt „Kurz gesagt" am
+Anfang von `datenschutzerklaerung.html`, **vor** den förmlichen,
+nummerierten Abschnitten — wer nur schnell wissen will, was gespeichert
+wird, muss nicht durch 13 Abschnitte scrollen, aber der vollständige
+Rechtstext bleibt direkt darunter in derselben Seite. Ergebnis: **ein**
+Ziel, überall „Datenschutz" genannt, matcht das Muster von arabily
+(„Datenschutz · Impressum" in einer Fußzeile), behält aber zusätzlich die
+Verständlichkeit, die der alte In-App-Bildschirm hatte — arabily hat
+vermutlich nur den Rechtstext, ohne die alltagssprachliche Fassung davor.
+
+`renderDatenschutz()` komplett entfernt (nicht nur die Aufrufe): der
+zugehörige `ui.datenschutz`-Zustand, die render()-Weiche dafür, die
+`data-action="datenschutz"`/`"datenschutz-zu"`-Fälle. Kein totes
+JavaScript zurückgelassen.
+
+**Geprüft im Browser:** Anmeldebildschirm zeigt jetzt „Datenschutz ·
+Impressum" (zwei statt vorher drei Einträge). Einstellungen: die
+„Datenschutz"-Listenzeile aus der Konto-Sektion ist weg (dort stehen nur
+noch echte Kontoaktionen: Testperson-Zeile, Abmelden, Konto endgültig
+löschen), stattdessen dieselbe „Datenschutz · Impressum"-Fußzeile wie auf
+dem Anmeldebildschirm, direkt über der Versionsnummer. Beide Links
+zeigen auf dieselbe Datei. CSP weiterhin ohne Verstoß (14 statt 13
+`.card`-Elemente auf der Datenschutz-Seite, ein neues für „Kurz gesagt").
+
+**Offen:** Nichts Neues.
+
+**Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
+Sicherheits-Durchlauf.
