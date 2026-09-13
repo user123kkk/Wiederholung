@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.23";
+const APP_VERSION = "3.0.24";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -6331,6 +6331,12 @@ app.addEventListener("click", e => {
     case "bereich-sheet-zu": ui.bereichSheet = false; render(); break;
     case "nichts": break;
     case "seite-neu-laden": location.reload(); break;
+    /* Nur im Startfehler-Bildschirm: anders als "seite-neu-laden" räumt
+       dieser Knopf IMMER erst Service Worker und Cache weg, nicht nur
+       einmal pro Sitzung - ein Mensch, der ihn anklickt, hat die
+       automatische Selbstheilung schon hinter sich und darf sie erneut
+       anstoßen, z.B. nachdem er sein Netz repariert hat. */
+    case "start-neu-versuchen": selbstheilung().then(() => location.reload()); break;
     case "einstellungen": ui.einstellungen = true; window.scrollTo(0, 0); render(); break;
     case "einstellungen-zu": ui.einstellungen = false; window.scrollTo(0, 0); render(); break;
     case "resend-verification": doResendVerification(); break;
@@ -6440,18 +6446,58 @@ app.addEventListener("click", e => {
   }
 });
 
+/* ---------- 3.0.24: Selbstheilung bei Startfehler ----------
+   Ursache eines echten Falls: Ein alter Service Worker (oder sein Cache)
+   hing fest und lieferte einen kaputten Stand des Firebase-SDK aus - jeder
+   normale "Neu laden"-Klick landete wieder beim selben Service Worker und
+   damit beim selben Fehler. Geholfen hat erst ein manuelles "Websitedaten
+   l\u00f6schen" in den Entwicklertools. Das kann man niemandem zumuten, der die
+   App nur benutzen will - also macht die App es bei Bedarf selbst.
+
+   Nur EINMAL pro Sitzung (sessionStorage, nicht localStorage: nach einem
+   kompletten Neustart der App darf es erneut versucht werden) und NUR wenn
+   der Browser online zu sein glaubt - sonst w\u00fcrde das L\u00f6schen des eigenen
+   Caches ausgerechnet den Fall verschlimmern, f\u00fcr den er gedacht ist:
+   echtes Offline-Nutzen mit bereits zwischengespeichertem SDK. */
+function kannSelbstheilen() {
+  try { return navigator.onLine && sessionStorage.getItem("adrabic-selbstheilung") !== "1"; }
+  catch (e) { return navigator.onLine; } // sessionStorage blockiert (privater Modus o.\u00e4.) - dann eben ohne die Sperre
+}
+async function selbstheilung() {
+  try { sessionStorage.setItem("adrabic-selbstheilung", "1"); } catch (e) {}
+  try {
+    if ("serviceWorker" in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+    }
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  } catch (e) { /* Aufr\u00e4umen fehlgeschlagen - dann bleibt es beim gew\u00f6hnlichen Fehlerbildschirm */ }
+}
+
+function zeigeStartfehler(e) {
+  app.innerHTML = '<div class="solo"><div class="empty">' +
+    '<div class="empty__icon">' + ikon("offline", "i-xl") + '</div>' +
+    '<div class="empty__titel">Start fehlgeschlagen</div>' +
+    '<p class="empty__text">Die App konnte ihre Bausteine nicht laden. ' +
+    'Pr\u00fcf deine Internetverbindung und lade die Seite neu.</p>' +
+    '<div class="error-box" style="text-align:left">' + ikon("warnung", "i-sm") +
+    '<div class="banner__text">' + esc(e && e.message ? e.message : String(e)) + '</div></div>' +
+    '<button data-action="start-neu-versuchen">Neu laden</button>' +
+    '</div></div>';
+}
+
 /* ---------- Start ---------- */
 if (CONFIGURED) {
-  initFirebase().catch(e => {
-    app.innerHTML = '<div class="solo"><div class="empty">' +
-      '<div class="empty__icon">' + ikon("offline", "i-xl") + '</div>' +
-      '<div class="empty__titel">Start fehlgeschlagen</div>' +
-      '<p class="empty__text">Die App konnte ihre Bausteine nicht laden. ' +
-      'Pr\u00fcf deine Internetverbindung und lade die Seite neu.</p>' +
-      '<div class="error-box" style="text-align:left">' + ikon("warnung", "i-sm") +
-      '<div class="banner__text">' + esc(e && e.message ? e.message : String(e)) + '</div></div>' +
-      '<button data-action="seite-neu-laden">Neu laden</button>' +
-      '</div></div>';
+  initFirebase().catch(async e => {
+    if (kannSelbstheilen()) {
+      await selbstheilung();
+      location.reload();
+      return;
+    }
+    zeigeStartfehler(e);
   });
 } else {
   render();

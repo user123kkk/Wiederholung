@@ -1,3 +1,26 @@
+## 3.0.24 – 13. September 2026
+
+### Neu
+
+- **Selbstheilung bei Startfehler.** Der zuvor gemeldete Ladefehler
+  („Start fehlgeschlagen") lag am Ende an einem lokal feststeckenden Service
+  Worker/Cache – geholfen hat nur ein manuelles „Websitedaten löschen" in den
+  Entwicklertools. Das kann man niemandem zumuten, der die App nur benutzen
+  will.
+
+  Ab jetzt versucht `app.js` das selbst, **einmal pro Sitzung und nur, wenn
+  der Browser online zu sein glaubt**: Startet Firebase nicht, meldet
+  `navigator.serviceWorker` alle Registrierungen ab, löscht alle eigenen
+  Caches und lädt die Seite neu – bevor überhaupt ein Fehlerbildschirm
+  erscheint. Kommt der Fehler danach immer noch, zeigt die App wie bisher
+  „Start fehlgeschlagen", diesmal mit einem Knopf, der bei jedem Klick erneut
+  aufräumt (nicht nur einmal pro Sitzung).
+
+  Bewusst nur bei erkanntem Online-Zustand: Der eigene Cache ist genau das,
+  was echtes Offline-Nutzen erst möglich macht – ihn während einer legitimen
+  Offline-Phase zu löschen, würde den Fall verschlimmern, für den er gedacht
+  ist.
+
 ## 3.0.23 – 13. September 2026
 
 ### Behoben
