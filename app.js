@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.24";
+const APP_VERSION = "3.0.25";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -5714,7 +5714,11 @@ function kartenListeInhalt() {
     if (ui.selectMode && !fremd && !kartenZu) {
       const checked = ui.selectedIds.has(c.id);
       html += '<div class="' + zeilenKlasse + '" data-action="toggle-card-select" data-id="' + esc(c.id) + '" style="cursor:pointer">';
-      html += '<input type="checkbox" style="pointer-events:none" ' + (checked ? "checked" : "") + '>';
+      /* pointer-events:none nimmt der Checkbox nur den Klick per Maus (der
+         landet auf der Zeile) - per Tastatur bleibt sie erreichbar, und
+         Leertaste loest denselben Klick aus, der bis zur Zeile hochblubbert.
+         aria-label macht das Feld auch ohne sichtbaren Text verstaendlich. */
+      html += '<input type="checkbox" style="pointer-events:none" aria-label="' + esc(c.wort) + ' auswählen" ' + (checked ? "checked" : "") + '>';
     } else {
       html += '<div class="' + zeilenKlasse + '"' + (draggable ? ' data-cardid="' + esc(c.id) + '"' : '') + '>';
       if (draggable) html += '<span class="drag-handle" title="Ziehen zum Sortieren" aria-hidden="true">' + ikon("griff", "i-sm") + '</span>';
@@ -6285,9 +6289,12 @@ function renderDialog() {
   let h = '<div class="dlg-backdrop">';
   h += '<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-title">';
   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
-  h += '<div class="dlg-text">' + esc(d.text) + '</div>';
+  h += '<div class="dlg-text" id="dlg-text">' + esc(d.text) + '</div>';
   if (d.kind === "prompt") {
-    h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" value="' + esc(d.value) + '">';
+    /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
+       (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
+       Übersetzung" ...), doppelt zu tippen waere nur eine Fehlerquelle. */
+    h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" aria-labelledby="dlg-text" value="' + esc(d.value) + '">';
   }
   h += '<div class="dlg-actions">';
   if (d.kind !== "alert") h += '<button class="secondary" data-action="dlg-cancel">Abbrechen</button>';
@@ -6309,7 +6316,12 @@ function setupDialog() {
   });
 }
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && ui.dialog) closeDialog(dialogResult(ui.dialog, false));
+  if (e.key !== "Escape") return;
+  if (ui.dialog) { closeDialog(dialogResult(ui.dialog, false)); return; }
+  /* 3.0.25: Das Bereichs-Sheet liess sich per Tastatur bisher nur über den
+     "Fertig"-Knopf schliessen, nicht über Escape wie jeder andere Dialog -
+     eine Inkonsequenz, die auffaellt, sobald man die App ohne Maus bedient. */
+  if (ui.bereichSheet) { ui.bereichSheet = false; render(); }
 });
 
 /* ---------- Event-Delegation ---------- */

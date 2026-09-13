@@ -1,7 +1,8 @@
 # Logbuch Phase 9 — Barrierefreiheit
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `offen` — noch nicht begonnen
+Status: `läuft` — erster Durchgang gemacht, ein Punkt bewusst offen
+gelassen
 
 ---
 
@@ -26,5 +27,94 @@ dasselbe noch einmal.
 
 ## Einträge
 
-_Noch keine. Diese Phase beginnt erst, wenn die in `AUFTRAG.md` genannten
-Voraussetzungen erfüllt sind._
+### 2026-09-13 — Erster Durchgang: Fokus, Beschriftung, Kontrast geprüft und behoben
+
+**Geändert:**
+- `styles.css` — `--paper-500` (dunkel `#706e69`→`#82807a`, hell
+  `#8b8273`→`#6f685c`), `--verdigris-400` (hell `#3d7a5c`→`#3a7357`).
+- `app.js:5717` — Checkbox bei `toggle-card-select` bekommt `aria-label`
+  mit dem Wort der Karte.
+- `app.js` (`renderDialog`) — `.dlg-text` bekommt `id="dlg-text"`,
+  `#dlg-input` referenziert es über `aria-labelledby`.
+- `app.js` (Escape-Handler, vormals nur `ui.dialog`) — schließt jetzt auch
+  `ui.bereichSheet`.
+- `app.js:19` `APP_VERSION` 3.0.24 → 3.0.25, `sw.js:10` `CACHE_NAME`
+  nachgezogen, `CHANGELOG.md` Eintrag 3.0.25.
+
+**Entscheidung:**
+
+1. **Vorgehen: Bestand am Code prüfen, nicht am Bildschirm raten.** Ohne
+   laufenden Browser mit echtem Firebase-Konto lässt sich vieles nicht per
+   Augenschein verifizieren (Fokus-Reihenfolge im echten Rendering,
+   Screenreader-Ausgabe) – aber Kontrastwerte lassen sich exakt nachrechnen
+   (WCAG-Formel, Python-Skript, gegen `--bg` UND `--surface` je Thema), und
+   fehlende `aria-label`/`for`/`alt` lassen sich vollständig durchsuchen.
+   Beides wurde systematisch gemacht, nicht stichprobenartig.
+
+2. **Ausgangslage war besser als erwartet.** Alle `<img>` haben `alt`, jedes
+   reine Icon-Symbol trägt `aria-hidden="true"` (über `ikon()`), praktisch
+   jeder Icon-only-Button hatte schon `aria-label`, jedes Formularfeld bis
+   auf eines hatte ein `<label for>`. Das ist keine Lücke, die diese Phase
+   erst schließt – frühere Sessions (Umstieg von Emoji auf SVG-Icons) haben
+   das schon mitgemacht. Gefunden wurden die vier oben genannten Restfunde.
+
+3. **Kontrast der App selbst war noch nie geprüft** – Phase 6 hatte nur
+   `landing.html` durchgerechnet. Zwei Token lagen unter 4,5:1 (WCAG AA,
+   normaler Text): `--text-3` in beiden Farbthemen (trägt echten Lesetext:
+   Hinweise, Formularhilfe, kleine Beschriftungen – keine reine Deko, für
+   die 3:1 reichen würde) und `--verdigris-400` (positive Zustände) im
+   hellen Thema. Beide Male denselben Farbton beibehalten, nur so viel
+   heller/dunkler gemacht, wie für 4,5:1 nötig ist – keine willkürliche neue
+   Farbe. `--gold-*`-Token sind geprüft und **ungenutzt** (weder in
+   `styles.css` noch in `app.js`/`landing.html`/`index.html` referenziert) –
+   kein Kontrastproblem, weil nirgends angewendet; nicht angefasst, da
+   außerhalb dieser Phase (tote Variablen sind kein Barrierefreiheits-Thema).
+
+4. **`toggle-card-select` funktionierte per Tastatur bereits, unabsichtlich
+   richtig gebaut.** Der Klick-Handler hängt am umschließenden `<div
+   data-action>`, aber die Zeile enthält eine echte `<input
+   type="checkbox">` mit `pointer-events:none` (nur damit die Maus die Zeile
+   trifft, nicht die Box). Ein Tab dorthin plus Leertaste löst trotzdem das
+   native Checkbox-Verhalten **und** ein bubbelndes `click`-Ereignis aus, das
+   der delegierte Listener (`e.target.closest("[data-action]")`) korrekt bis
+   zum Eltern-`div` verfolgt. Geprüft, nicht nur angenommen: Das Verhalten
+   folgt aus der DOM-/Event-Spezifikation (Aktivierung eines Formularelements
+   per Tastatur feuert denselben `click`, den ein Mausklick auch feuern
+   würde). Gefehlt hat nur die Beschriftung für Screenreader – behoben.
+
+5. **Ein Fund bleibt bewusst ungelöst, siehe „Offen".** Er ist zu groß und zu
+   riskant für einen Schritt ohne echten Browser-Test.
+
+**Offen:**
+
+- **Kartenreihenfolge (und Speicherkarten-/Gruppen-Reihenfolge) lässt sich
+  nur per Maus/Touch ziehen, keine Tastatur-Alternative** (`app.js:5975ff`,
+  `pointerdown`/`pointermove`-Handler am `.drag-handle`). Das verstößt gegen
+  WCAG 2.1.1 (Tastaturbedienbarkeit) und gegen Kriterium 1 aus `AUFTRAG.md`
+  („jeder Bildschirm ohne Maus bedienbar"). Nicht in diesem Schritt behoben,
+  weil die Umsetzung nicht trivial ist: Drei **verschiedene** Code-Pfade
+  reagieren auf das Ende einer Ziehbewegung, je nachdem was gezogen wird
+  (Karten im Bereich, Karten innerhalb einer Speicherkarte, Speicherkarten
+  einer Gruppe) – jeder liest die neue Reihenfolge aus dem DOM nach dem
+  Ziehen und schreibt sie über einen eigenen Firestore-Patch. Eine
+  Tastatur-Alternative (z. B. Pfeiltasten verschieben eine fokussierte Zeile
+  um eine Position) müsste alle drei Pfade nachbilden **und** nach jedem
+  `render()` den Fokus auf die verschobene Zeile zurückholen (sonst springt
+  der Fokus bei jeder Verschiebung weg) – das ist ohne einen echten
+  Browser-Test mit Tastatur **und** Screenreader zu riskant, um es
+  „nebenbei" zu bauen. Bewusst nicht spekulativ umgesetzt.
+- **Freihand-Zeichenfeld** (Handschrift-Übung, `canvas`, `pointerdown` bei
+  `app.js:6201`) hat ebenfalls keine Tastatur-Alternative – hier bewusst
+  **keine Lücke**: Zeichnen ist von Natur aus eine Zeige-/Bewegungsaufgabe
+  (wie ein Unterschriften-Feld), eine Tastatur-Alternative gäbe es nur durch
+  Wegnehmen der eigentlichen Funktion. Nicht Teil dieser Phase.
+- Punkte 1–3 aus `AUFTRAG.md` sind mit diesem Durchgang **nicht** vollständig
+  erfüllt (Punkt 1 hängt am offenen Reorder-Fund), Phase bleibt `läuft`.
+
+**Nächster Schritt:** Reorder-Funktion für Karten/Speicherkarten/Gruppen um
+eine Tastatur-Bedienung ergänzen (Pfeiltasten am fokussierten `.drag-handle`
+oder an der Zeile selbst, alle drei Code-Pfade in `endDrag()` nachbilden,
+Fokus nach jedem `render()` gezielt zurückholen) – am besten mit echtem
+Browser-Test, nicht nur am Code. Danach Kriterium 1 aus `AUFTRAG.md` erneut
+prüfen; ist es erfüllt, zusammen mit 2 und 3 (bereits erfüllt) `../PLAN.md`
+auf `fertig` setzen.

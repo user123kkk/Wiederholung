@@ -1,3 +1,33 @@
+## 3.0.25 – 13. September 2026
+
+### Behoben
+
+- **Zwei echte Kontrastverstöße gegen WCAG AA.** `--text-3` (Hinweise,
+  Formularhilfe, kleine Beschriftungen) erreichte auf der jeweils
+  schwächeren Fläche nur 3,51:1 (dunkel, gegen `--surface`) bzw. 3,22:1 (hell,
+  gegen `--bg`) – die Norm verlangt 4,5:1 für normal großen Text. Beide Male
+  denselben Farbton beibehalten, nur die Helligkeit angepasst: dunkel
+  `#706e69` → `#82807a` (jetzt 4,53–5,07:1), hell `#8b8273` → `#6f685c`
+  (jetzt 4,68–5,33:1). Dieselbe Lücke bei `--verdigris-400` (positive
+  Zustände) in der hellen Fassung: 4,31:1 → mit `#3d7a5c` → `#3a7357` jetzt
+  4,73:1. Alle Werte gegen beide Flächen (`--bg` und `--surface`)
+  nachgerechnet, nicht nur behauptet.
+- **Bereichs-Sheet ließ sich nicht mit Escape schließen**, anders als jeder
+  andere Dialog in der App – nur der „Fertig"-Knopf ging. Jetzt schließt
+  Escape auch dieses Sheet.
+- **Eingabefeld im Dialog (`dlg-input`, z. B. beim Umbenennen) hatte keine
+  eigene Beschriftung** – nur der Dialogtitel war für Screenreader verbunden,
+  der eigentliche Hinweistext („Neuer Name für …") nicht. Jetzt per
+  `aria-labelledby` mit diesem Text verbunden.
+- **Checkbox beim Mehrfachauswählen von Karten** (`toggle-card-select`) hatte
+  keine eigene Beschriftung – für Screenreader war nur „Kontrollkästchen"
+  ohne Bezug zu erkennen, welche Karte gemeint ist. Jetzt `aria-label` mit dem
+  Wort der Karte.
+
+Alle vier Funde und Korrekturen sind Teil von Phase 9 (Barrierefreiheit,
+`plan/phase-9-barrierefreiheit/`) – siehe dort für den vollständigen Befund,
+auch zu dem, was diese Version **nicht** löst.
+
 ## 3.0.24 – 13. September 2026
 
 ### Neu

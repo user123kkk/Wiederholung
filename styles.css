@@ -63,7 +63,11 @@
   --line-850: rgba(255, 255, 255, 0.065);
   --paper-50: #f5f3ec;
   --paper-300: #a2a09a;
-  --paper-500: #706e69;
+  /* 3.0.25: von #706e69 aufgehellt (gleicher Farbton, mehr Leuchtkraft) -
+     das alte Grau erreichte auf --surface nur 3,51:1 und lag damit unter den
+     4,5:1, die AA für normalen Text verlangt. --text-3 traegt aber echten
+     Lesetext: Hinweise, Formularhilfe, kleine Beschriftungen. */
+  --paper-500: #82807a;
   --gold-300: #eed8a6;
   --gold-400: #e3c88a;
   --gold-500: #c9a961;
@@ -227,12 +231,15 @@
   --line-850: #e9e1d0;
   --paper-50: #241f18;
   --paper-300: #655d4e;
-  --paper-500: #8b8273;
+  /* 3.0.25: von #8b8273 abgedunkelt - erreichte auf --bg nur 3,22:1, die
+     AA-Grenze für normalen Text liegt bei 4,5:1. Gleicher Farbton. */
+  --paper-500: #6f685c;
   --gold-300: #6d5217;
   --gold-400: #8a6a24;
   --gold-500: #6d5217;
   --gold-600: #b39a63;
-  --verdigris-400: #3d7a5c;
+  /* 3.0.25: von #3d7a5c abgedunkelt - 4,31:1 auf --bg reichte knapp nicht. */
+  --verdigris-400: #3a7357;
   --cinnabar-400: #a8452e;
 
   --text-on-accent: #fffdf6;

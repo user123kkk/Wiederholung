@@ -79,7 +79,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `fertig` | [`phase-6-startseite/`](phase-6-startseite/) |
 | **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `fertig` | [`phase-7-seo/`](phase-7-seo/) |
 | **8** | Rückmeldung: Kontakt- und Fehlerformular | `läuft` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
-| **9** | Barrierefreiheit als eigener Durchgang | `offen` | [`phase-9-barrierefreiheit/`](phase-9-barrierefreiheit/) |
+| **9** | Barrierefreiheit als eigener Durchgang | `läuft` | [`phase-9-barrierefreiheit/`](phase-9-barrierefreiheit/) |
 
 Die Folge entspricht dem Vorschlag aus Konzept-Abschnitt 5. Es gibt keinen
 Grund, davon abzuweichen — die Begründung dort trägt, und sie ist unten je
@@ -303,12 +303,14 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Ladefehler in `sw.js` behoben** (v3.0.23), außerhalb der Landing-Page-Strategie: Der Betreiber meldete, die App bleibe dauerhaft bei „Start fehlgeschlagen“ hängen (Firebase-SDK-Import von gstatic.com schlägt fehl), nur ein Hard-Reload half. Ursache gefunden: Der Service Worker fragte „zuerst Netz, dann eigenen Cache“, aber ohne den Browser-eigenen HTTP-Cache zu umgehen – schlug das Netz einmal fehl, konnte der Browser die Fehlantwort selbst zwischenspeichern, und jeder normale Reload bekam sie erneut, während ein Hard-Reload genau diesen Cache umgeht. Netz-Anfragen laufen jetzt mit `cache: "no-store"`; nur noch echte (`res.ok`) Antworten landen im eigenen Cache. Diese Logik in `sw.js` bestand unverändert seit vor Phase 5 – keine Folge des Landing-Page-Umbaus. |
 | 2026-09-13 | **Selbstheilung bei Startfehler ergänzt** (v3.0.24). Der sw.js-Fix (v3.0.23) allein reichte nicht: Der Betreiber meldete, der Fehler bestehe weiter, obwohl gstatic.com von diesem Geraet aus normal erreichbar war. Manuelles „Websitedaten löschen“ in den Entwicklertools behob es sofort – Ursache war ein lokal feststeckender Service Worker/Cache, den weder Reload noch Neustart der App loeste. Das kann man Nutzer:innen nicht zumuten, also macht `app.js` es jetzt selbst: Schlaegt `initFirebase()` fehl, meldet die App bei erkanntem Online-Zustand einmal pro Sitzung alle Service-Worker-Registrierungen ab, loescht alle eigenen Caches und laedt neu, bevor der Fehlerbildschirm ueberhaupt erscheint. Bewusst nur online: Waehrend einer echten Offline-Phase wuerde das Loeschen des eigenen Caches genau die Offline-Faehigkeit zerstoeren, die er ermoeglichen soll. |
 | 2026-09-13 | **Phase 8 begonnen: Möglichkeiten vorgelegt.** `phase-8-rueckmeldung/MOEGLICHKEITEN.md` neu — vier Wege, wie eine Nachricht ohne eigenen Server ankommt (Firestore-Sammlung · `mailto:`-Link · Drittanbieter-Dienst · Firestore + Cloud Function), mit den Auswirkungen auf CSP, `firestore.rules` und Datenschutzerklärung, Spam-Schutz-Bausteinen (inkl. Bezug auf App Check aus der „Später“-Liste) und einer gekennzeichneten Empfehlung (eigene Firestore-Sammlung). Wie in `AUFTRAG.md` verlangt: vorgelegt, nicht entschieden. Phase 8 damit `läuft`, wartet auf die Wahl des Betreibers. |
+| 2026-09-13 | **Phase 9 begonnen: erster Durchgang** (v3.0.25). Systematisch geprüft statt geraten: Kontrastwerte der App selbst (vorher nie durchgerechnet, nur `landing.html` in Phase 6) gegen die WCAG-Formel, alle `<img>`/Formularfelder/Icon-Buttons auf fehlende Beschriftung durchsucht. Vier echte Funde behoben: zwei Kontrastverstöße (`--text-3` beide Themen, `--verdigris-400` hell), Escape schließt jetzt auch das Bereichs-Sheet, `dlg-input` und die Mehrfachauswahl-Checkbox haben jetzt eine Beschriftung. **Ein Fund bleibt offen:** Karten/Speicherkarten lassen sich nur per Maus/Touch neu ordnen, keine Tastatur-Alternative (WCAG 2.1.1) – nicht spekulativ gebaut, weil drei verschiedene Code-Pfade betroffen sind und ein echter Browser-Test noetig ist, damit der Fokus beim Verschieben nicht verlorengeht. Phase 9 bleibt `läuft`. |
 
 ## Wo eine neue Session anfängt
 
-**Drei offene Stränge, alle hängen an einer Entscheidung des Betreibers.**
-Das ist kein Versehen und keine Ausrede — es steht hier, damit die nächste
-Session nicht dieselbe Sperre noch einmal aufdeckt.
+**Drei offene Stränge.** A und B hängen an einer Entscheidung des
+Betreibers — das steht hier, damit die nächste Session nicht dieselbe Sperre
+noch einmal aufdeckt. **C (Phase 9) hängt an nichts** und ist der Strang,
+den eine nächste Session ohne Rückfrage weiterbringen kann.
 
 **Strang A — Landing-Page-Strategie** (`läuft`, siehe
 [`landing-page-strategie/LOGBUCH.md`](landing-page-strategie/LOGBUCH.md)).
@@ -344,8 +346,14 @@ Function), mit Spam-Schutz-Bausteinen und einer gekennzeichneten Empfehlung
 danach folgen Umsetzung, Datenschutzerklärung-Ergänzung und eine
 Testnachricht (Fertig-Kriterien in `AUFTRAG.md`).
 
-**Phase 9** (Barrierefreiheit) ist an nichts gesperrt, steht aber bewusst
-zuletzt: Sie soll über den **endgültigen** Bestand laufen, und der Umbau der
-Startseite (Strang A) ist im Kern jetzt abgeschlossen — eine nächste Session
-könnte Phase 9 beginnen, wenn weder A noch B eine Antwort des Betreibers
-vorliegen hat.
+**Phase 9** (Barrierefreiheit, `läuft`) — ein erster Durchgang ist gemacht
+(13.09.2026, v3.0.25): Fokus, Beschriftung und Kontrast systematisch geprüft
+(Kontrast der App selbst war vorher nie durchgerechnet, nur der von
+`landing.html` in Phase 6). Vier echte Funde behoben — siehe
+[`phase-9-barrierefreiheit/LOGBUCH.md`](phase-9-barrierefreiheit/LOGBUCH.md).
+**Ein Fund bleibt offen und ist der eigentliche nächste Schritt:**
+Karten/Speicherkarten lassen sich nur per Maus/Touch neu ordnen (Ziehen am
+Griff), es gibt keine Tastatur-Alternative — WCAG-2.1.1-Verstoß, aber die
+Umsetzung berührt drei verschiedene Code-Pfade und braucht echten
+Browser-Test (Fokus darf beim Verschieben nicht verlorengehen). Bewusst nicht
+spekulativ gebaut. Phase 9 wird erst `fertig`, wenn das gelöst ist.
