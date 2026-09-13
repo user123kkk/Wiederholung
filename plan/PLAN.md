@@ -77,7 +77,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `fertig` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `fertig` | [`phase-5-recht/`](phase-5-recht/) |
 | **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `fertig` | [`phase-6-startseite/`](phase-6-startseite/) |
-| **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `läuft` | [`phase-7-seo/`](phase-7-seo/) |
+| **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `fertig` | [`phase-7-seo/`](phase-7-seo/) |
 | **8** | Rückmeldung: Kontakt- und Fehlerformular | `offen` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
 | **9** | Barrierefreiheit als eigener Durchgang | `offen` | [`phase-9-barrierefreiheit/`](phase-9-barrierefreiheit/) |
 
@@ -249,13 +249,16 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Verschärfter Sicherheits-Durchlauf vor Phase 6 durchgeführt.** Überprüft: Firebase SDK 10.14.1 (aktuell, keine kritischen Advisories), CSP scharf gesetzt (Phase 4), Firestore-Regeln gehärtet (Phase 1), XSS durchgeprüft (Phase 1), HTTPS mit HSTS (Phase 4). Rate-Limiting und App Check bewusst nicht aktiviert — gehören zu späteren Entscheidungen. Alles, was die App kontrolliert, ist sicher. Ergebnis ins `phase-6-startseite/LOGBUCH.md` eingetragen. |
 | 2026-09-13 | **Phase 6 begonnen und fertig** (v3.0.17). `landing.html` gebaut — öffentliche Startseite zeigt Problem (Vokabeln vergessen) → Lösung (wissenschaftliche Wiederholungen) → Handlungsaufruf (Jetzt anfangen) → Login/App. Sauber getrennt: kein Login-Formular auf der Startseite, nur Link zur App. `firebase.json` rewrite-Regel für `/` → `landing.html`, `sw.js` und `APP_VERSION` gehoben auf 3.0.17. Barrierefreiheit: semantisches HTML, Fokus-Styles, Contrast-Ratios geprüft (text-1: 18:1, text-2: 7.65:1, alle über WCAG AA). Tastatur-Navigation funktioniert. Alle Prüfpunkte aus `AUFTRAG.md` erfüllt. |
 | 2026-09-13 | **Phase 7 begonnen, Code-Teil fertig** (v3.0.18). `robots.txt`/`sitemap.xml` schließen `/index.html` (Login/App) von der Indexierung aus, zusätzlich `<meta name="robots" content="noindex, nofollow">` dort gesetzt. Kanonische URL, Open-Graph-Angaben je öffentlicher Seite (`landing.html`, `impressum.html`, `datenschutzerklaerung.html`). FAQ-Bereich mit fünf echten Fragen auf der Startseite plus `FAQPage`-JSON-LD. Search Console kann kein Agent einrichten — Phase bleibt auf `läuft`, bis der Betreiber das erledigt hat. Details in `phase-7-seo/LOGBUCH.md`. |
+| 2026-09-13 | **Phase 7 fertig.** Firebase-Caching-Problem mit HTML-Dateien identifiziert und gelöst (Cache-Control-Header mit `max-age=0` in `firebase.json`). Google Search Console Verifikation erfolgreich durchgeführt (HTML-Tag erkannt, Inhaberschaft bestätigt). `sitemap.xml` eingereicht und akzeptiert. Alle Punkte aus `phase-7-seo/AUFTRAG.md` abgehakt. Weiter mit Phase 8. |
 
 ## Wo eine neue Session anfängt
 
-**Phase 7 läuft.** Der Code-Teil (`robots.txt`, Sitemap, Meta-/OG-Angaben,
-FAQ) ist fertig und auf `claude/great-curie-o926jg` gepusht — siehe
-[`phase-7-seo/LOGBUCH.md`](phase-7-seo/LOGBUCH.md). Offen bleibt nur die
-Google Search Console (Betreiber-Aufgabe, siehe letzte Antwort dieser
-Session). Sobald das erledigt und bestätigt ist: Eintrag im Logbuch
-nachtragen, diese Zeile hier auf „Phase 7 fertig, weiter mit Phase 8"
-ändern.
+**Phase 7 fertig** (13.09.2026). Code-Teil (`robots.txt`, Sitemap,
+Meta-/OG-Angaben, FAQ) + Google Search Console Verifikation +
+Sitemap-Einreichung vollständig. Siehe [`phase-7-seo/LOGBUCH.md`](phase-7-seo/LOGBUCH.md).
+
+**Weiter mit Phase 8** (Rückmeldung: Kontakt- und Fehlerformular) — diese
+Phase ist `offen` und braucht die Klärung: sollen die Formulare in die App
+gebaut werden, oder in eine separate Seite (wie die Startseite in Phase 6)?
+Diese Frage gehört an den Betreiber, bevor Phase 8 beginnt. Siehe auch
+[`phase-8-rueckmeldung/AUFTRAG.md`](phase-8-rueckmeldung/AUFTRAG.md).

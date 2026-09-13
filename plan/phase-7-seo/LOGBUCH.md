@@ -79,3 +79,35 @@ und bestätigt hat (siehe „Was Du noch tun musst" in der Antwort dieser
 Session), das Ergebnis hier eintragen und Phase 7 in `../PLAN.md` auf
 `fertig` setzen. Bis dahin: nichts weiter an dieser Phase zu tun, Code-Teil
 ist vollständig.
+
+---
+
+### 2026-09-13 — Google Search Console Verifikation und Sitemap eingereicht
+
+**Geändert:**
+- `firebase.json` — neue Cache-Control-Regel für `**/*.html` mit
+  `max-age=0, must-revalidate` hinzugefügt. Hintergrund: Firebase cache-te
+  `.html`-Dateien aggressiv, weshalb die Verifikations-Meta-Tag trotz
+  erfolgreichem Deploy lange nicht angezeigt wurde. Mit der expliziten
+  No-Cache-Regel werden Änderungen an HTML-Dateien sofort live.
+- Google Search Console — Verifikation erfolgreich durchgeführt:
+  Property-Typ: URL-Präfix (`https://lernkarte-925c2.web.app`)
+  Verifikationsmethode: HTML-Tag (Google hat die `<meta
+  name="google-site-verification">` in `landing.html` gefunden und erkannt)
+  Status: **Inhaberschaft automatisch bestätigt** (grünes Häkchen)
+- Google Search Console — `sitemap.xml` eingereicht und akzeptiert.
+  Google teilt mit: „Sitemap wurde eingereicht. Google verarbeitet die
+  Sitemap in regelmäßigen Abständen und überprüft sie auf Änderungen."
+
+**Entscheidung:** Das Firebase-Caching war das Kernproblem. Nach dem
+Deploy zeigt `git status` die Dateien als "up to date", aber Firebase hatte
+die HTML-Datei lokal gecacht. Die No-Cache-Header-Regel erzwingt jetzt, dass
+jeder Browser-Request die Datei vom Server neuabfragt, statt Cache-Copies
+zu nutzen. Ein `firebase deploy --only hosting` danach (mit `git pull`
+vorher) hat die Änderung ausgerollt, hard-refresh im Browser zeigte die
+Verifikations-Meta-Tag sofort.
+
+**Offen:** nichts mehr für Phase 7.
+
+**Nächster Schritt:** Phase 7 in `../PLAN.md` auf `fertig` setzen,
+weiter mit Phase 8 (Kontakt- und Fehlerformular) beginnen.
