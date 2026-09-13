@@ -28,30 +28,12 @@
   } catch (e) {}
 })();
 </script>
-<style>
-  .rechtsseite {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: var(--space-8) var(--gutter) var(--space-8);
-  }
-  .rechtsseite h1 { font-size: 1.375rem; margin: 0 0 var(--space-2); }
-  .rechtsseite h2 { font-size: 1rem; margin: 0 0 var(--space-2); }
-  .rechtsseite > p.intro { color: var(--text-2); font-size: 0.8125rem; margin: 0 0 var(--space-6); }
-  .rechtsseite .sektion { margin-bottom: var(--space-6); }
-  .rechtsseite .eyebrow { margin-bottom: var(--space-2); }
-  .rechtsseite .card + .card { margin-top: var(--space-3); }
-  .rechtsseite p { margin: 0 0 var(--space-3); }
-  .rechtsseite p:last-child { margin-bottom: 0; }
-  .rechtsseite ul { margin: 0; padding-left: 1.1em; }
-  .rechtsseite li { margin-bottom: var(--space-2); }
-  .rechtsseite li:last-child { margin-bottom: 0; }
-</style>
 </head>
 <body>
 <div class="rechtsseite">
-  <p style="margin-bottom:var(--space-5)"><a class="linklike" href="./index.html">← Zurück</a></p>
+  <p class="rechtsseite__zurueck"><a class="linklike" href="./index.html">← Zurück</a></p>
   <h1>Datenschutzerklärung</h1>
-  <p class="intro">Diese Erklärung beschreibt, welche Daten diese App verarbeitet, wozu, auf
+  <p class="rechtsseite__intro">Diese Erklärung beschreibt, welche Daten diese App verarbeitet, wozu, auf
   welcher Rechtsgrundlage und welche Rechte dabei bestehen. Für eine kurze, alltagssprachliche
   Fassung siehe den Datenschutz-Hinweis in der App selbst (Einstellungen → Datenschutz bzw. auf
   dem Anmeldebildschirm).</p>
@@ -187,7 +169,7 @@
         <li><strong>Beschwerde bei einer Aufsichtsbehörde</strong> (Art. 77 DSGVO), z. B. beim
         Unabhängigen Landeszentrum für Datenschutz Schleswig-Holstein</li>
       </ul>
-      <p style="margin-top:var(--space-3)">Für Auskunfts-, Berichtigungs- oder sonstige Anfragen
+      <p>Für Auskunfts-, Berichtigungs- oder sonstige Anfragen
       genügt eine E-Mail an <a href="mailto:masjeedikk@gmail.com">masjeedikk@gmail.com</a>.</p>
     </div>
   </div>
@@ -211,8 +193,7 @@
     </div>
   </div>
 
-  <p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">
-    Stand: 13. September 2026</p>
+  <p class="hint rechtsseite__fuss">Stand: 13. September 2026</p>
 </div>
 </body>
 </html>

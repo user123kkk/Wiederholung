@@ -28,29 +28,10 @@
   } catch (e) {}
 })();
 </script>
-<style>
-  /* Eigenständige, statische Seite außerhalb der SPA - nutzt dieselben
-     Farb-/Schrift-Tokens aus styles.css, aber ein eigenes, einfaches
-     Layout statt .view (das feste Werte für eine App-Leiste voraussetzt,
-     die es hier nicht gibt). */
-  .rechtsseite {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: var(--space-8) var(--gutter) var(--space-8);
-  }
-  .rechtsseite h1 {
-    font-size: 1.375rem;
-    margin: 0 0 var(--space-6);
-  }
-  .rechtsseite .sektion { margin-bottom: var(--space-6); }
-  .rechtsseite .eyebrow { margin-bottom: var(--space-2); }
-  .rechtsseite p { margin: 0 0 var(--space-3); }
-  .rechtsseite p:last-child { margin-bottom: 0; }
-</style>
 </head>
 <body>
 <div class="rechtsseite">
-  <p style="margin-bottom:var(--space-5)"><a class="linklike" href="./index.html">← Zurück</a></p>
+  <p class="rechtsseite__zurueck"><a class="linklike" href="./index.html">← Zurück</a></p>
   <h1>Impressum</h1>
 
   <div class="sektion">
@@ -113,8 +94,7 @@
     </div>
   </div>
 
-  <p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">
-    Wiederholung</p>
+  <p class="hint rechtsseite__fuss">Wiederholung</p>
 </div>
 </body>
 </html>

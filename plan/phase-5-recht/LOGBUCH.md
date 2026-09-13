@@ -300,3 +300,54 @@ absichtlich, da so selten.
 **Nächster Schritt:** Weiter mit Phase 6 (Öffentliche Startseite) — dort
 steht laut `AUFTRAG.md` als Allererstes der verschärfte
 Sicherheits-Durchlauf an, bevor irgendein Startseiten-Inhalt gebaut wird.
+
+### 2026-09-13 — Eigene Arbeit geprüft: ein selbstgemachter und zwei ältere Fehler
+
+**Geändert:** `styles.css` (neuer Abschnitt 18 „Statische Rechtsseiten"),
+`impressum.html` und `datenschutzerklaerung.html` (Inline-Stile entfernt,
+nutzen jetzt Klassen), `firebase.json` (CSP), `app.js` + `sw.js` +
+`CHANGELOG.md` (Version 3.0.10).
+
+**Anlass:** Betreiber hat vor dem Weitermachen eine Prüfung der eigenen
+Arbeit verlangt. Richtig so — es waren drei echte Fehler da, zwei davon
+älter als diese Phase.
+
+**Fehler 1 (selbst verursacht, 3.0.9):** Beide neuen Rechtsseiten hatten
+ihr Layout in einem `<style>`-Block im Kopf, dazu einzelne
+`style="…"`-Attribute. Die scharfe CSP (`style-src 'self'`) blockiert
+beides. Die Seiten wären auf der Live-Adresse ohne Layout erschienen —
+lesbar, aber randlos über die volle Bildschirmbreite. Behoben: Die
+Regeln liegen jetzt in `styles.css` (Abschnitt 18) und werden als
+ausgelieferte Datei von `'self'` gedeckt. Gegengeprüft: `grep -c
+"style="` auf beiden Seiten ergibt jetzt 0.
+
+**Fehler 2 (aus Phase 4, gravierend):** Die Behauptung dort, es gebe
+keine `style="…"`-Attribute im Code, ist falsch — es sind 81, und
+darunter sind funktionale (alle Fortschrittsbalken, Statistik-Segmente,
+Verlaufsraster). Seit dem Scharfschalten der CSP waren sie blockiert.
+Ausführlich belegt im Nachtrag vom 13.09. in
+`../phase-4-domain-hosting/LOGBUCH.md`.
+
+**Fehler 3 (aus Phase 4):** `img-src 'self' data:` blockiert Bilder, die
+über das Extra-Feld einer Karte eingebunden werden (`renderExtra`,
+`app.js:5292`) — eine bestehende Funktion des Lernwerkzeugs, die die CSP
+stillschweigend abgeschaltet hat.
+
+**Gegengeprüft, in Ordnung:** Der Service Worker holt zuerst aus dem Netz
+und weicht nur bei einer **fehlgeschlagenen Navigation ohne Cache-Treffer**
+auf `index.html` aus (`sw.js:87`) — die neuen Seiten werden also normal
+ausgeliefert und nicht von der App überlagert. Sie stehen bewusst nicht
+in `APP_SHELL`: Sie werden zum Starten der App nicht gebraucht und landen
+beim ersten Aufruf ohnehin im Cache. Weiter geprüft: `node --check` auf
+`app.js` und `sw.js` fehlerfrei, Tag-Struktur beider neuer Seiten
+ausgeglichen, `firebase.json` weiterhin gültiges JSON, die neuen Links
+sind `<a>`-Elemente und damit konform zur Ausschlussliste aus
+`../../README.md`.
+
+**Offen:** `'unsafe-inline'` in `style-src` wieder loszuwerden ginge nur
+über einen Umbau der Render-Funktionen des Lernwerkzeugs — ausgeschlossen
+durch die Grundregel, vermerkt statt gebaut.
+
+**Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
+Sicherheits-Durchlauf. Dieser prüft als Erstes, ob die CSP nach den zwei
+Lockerungen noch trägt.

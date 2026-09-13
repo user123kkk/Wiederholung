@@ -316,3 +316,61 @@ Entscheidung des Betreibers.
 Frage 3 aus `../PLAN.md` (Datenschutzerklärung selbst schreiben oder über
 einen Generator erzeugen). Eine neue Session prüft zuerst, ob diese Frage
 inzwischen vom Betreiber entschieden wurde.
+
+### 2026-09-13 — Nachtrag: Die CSP dieser Phase war an zwei Stellen falsch
+
+**Geändert:** `firebase.json` (CSP: `style-src` um `'unsafe-inline'`,
+`img-src` um `https:` erweitert), Version 3.0.10. Dieser Eintrag steht
+hier und nicht nur in Phase 5, weil der Fehler aus **dieser** Phase
+stammt und ihr Abschluss-Eintrag sonst weiter etwas Falsches belegt.
+
+**Der Fehler:** Der Eintrag vom 12.09. („API-Key-Test bestanden,
+Security-Header vorbereitet") behauptet wörtlich: *„`style-src 'self'`
+ohne `'unsafe-inline'` — keine `style="…"`-Attribute im Code."* Das ist
+nachweislich falsch. `grep -o 'style="' app.js | wc -l` ergibt **81
+Treffer**. Die damalige Prüfung hat offenbar nur nach Attributen im
+statischen Markup von `index.html` gesucht, nicht im HTML, das `app.js`
+zur Laufzeit zusammenbaut — und dort sitzen sie alle.
+
+**Was das real bedeutet hat:** `style-src 'self'` blockiert auch
+`style="…"`-Attribute (CSP rechnet sie unter `style-src-attr`, das
+mangels eigener Angabe auf `style-src` zurückfällt). Betroffen waren
+nicht nur Abstände, sondern **funktionale** Stellen, bei denen der Wert
+erst zur Laufzeit entsteht und deshalb auch mit keinem Hash zu retten
+wäre:
+
+- `app.js:3718, 4362, 4898, 5020` — Füllbreite der Fortschrittsbalken
+  (`heute-bar`, `lern-balken`, `lekt-bar`)
+- `app.js:3978` — Fortschritt in der Modusleiste
+- `app.js:4978, 4984` — Breite **und Farbe** der Statistik-Segmente
+- `app.js:5094` — Balkenhöhen im Verlaufsraster
+- `app.js:5295` — `max-width` des Kartenbildes
+
+Der Betreiber hat nach dem Scharfschalten „Login, Karten" getestet und
+nichts bemerkt — nachvollziehbar: Ein Fortschrittsbalken, der leer
+bleibt, sieht nicht nach Fehler aus, sondern nach „noch nichts gelernt".
+Genau deshalb war der Verzicht auf den Konsolen-Testlauf (F12) teuer:
+Die Konsole hätte jede dieser Blockaden ausgewiesen.
+
+**Zweiter Fund derselben Art:** `img-src 'self' data:` blockiert Bilder
+auf Karten. `renderExtra()` (`app.js:5292–5296`) zeigt eine ins
+Extra-Feld eingetragene Bild-Adresse absichtlich als Bild an — eine
+Funktion des Lernwerkzeugs, die die CSP stillschweigend abgeschaltet
+hat. Das verstößt gegen die Grundregel aus `../../CLAUDE.md`: „Keine
+Funktion des Lernwerkzeugs anfassen."
+
+**Entscheidung:** `style-src` bekommt `'unsafe-inline'`, `img-src`
+bekommt `https:`. Die Alternative — 81 Inline-Stile in Klassen bzw.
+CSS-Variablen umschreiben — hieße, die Render-Funktionen des
+Lernwerkzeugs anzufassen, und ist damit ausgeschlossen. Der Verlust ist
+vertretbar: `'unsafe-inline'` für **Stile** (nicht für Skripte) wiegt
+deutlich leichter, weil ohne `script-src`-Lücke keine Skriptausführung
+daraus folgt; `script-src` bleibt unverändert streng (Hash + gstatic).
+
+**Offen:** Nichts aus dieser Phase. Die verbleibende Härtung
+(`'unsafe-inline'` wieder loswerden) wäre nur über einen Umbau der
+Render-Funktionen zu haben — vermerkt, nicht gebaut.
+
+**Nächster Schritt:** Gehört zum verschärften Sicherheits-Durchlauf vor
+Phase 6: prüfen, ob die CSP nach diesen zwei Lockerungen noch das
+leistet, was sie soll.

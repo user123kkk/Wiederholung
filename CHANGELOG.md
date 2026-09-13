@@ -1,3 +1,24 @@
+## 3.0.10 – 13. September 2026
+
+### Behoben
+
+- **Die CSP aus 3.0.7 hat stillschweigend Teile der App lahmgelegt.** Die
+  Regel `style-src 'self'` blockiert nicht nur `<style>`-Blöcke, sondern
+  auch jedes `style="…"`-Attribut – davon hat `app.js` 81 Stück, darunter
+  **funktionale**: die Füllbreite sämtlicher Fortschrittsbalken
+  (`heute-bar`, `lern-balken`, `lekt-bar`, `modebar__fortschritt`), die
+  Breiten und Farben der Statistik-Segmente und die Balkenhöhen im
+  Verlaufsraster. Die Prüfung in 3.0.7 hatte behauptet, es gebe keine
+  solchen Attribute; das war falsch. `style-src` erlaubt jetzt
+  zusätzlich `'unsafe-inline'`.
+- **Bilder auf Karten wurden blockiert.** Das Extra-Feld einer Karte zeigt
+  eine eingetragene Bild-Adresse als Bild an (`renderExtra`), aber
+  `img-src 'self' data:` ließ nur eigene Bilder zu. `img-src` erlaubt
+  jetzt zusätzlich `https:`.
+- Impressum und Datenschutzerklärung (3.0.9) hatten ihr Layout in einem
+  `<style>`-Block stehen und wären von derselben Regel getroffen worden.
+  Die Regeln liegen jetzt in `styles.css`, Abschnitt 18.
+
 ## 3.0.9 – 13. September 2026
 
 ### Neu

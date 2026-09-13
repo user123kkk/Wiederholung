@@ -1936,3 +1936,37 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 @media (hover: none) {
   .drag-handle { cursor: default; }
 }
+
+/* ===========================================================================
+   18 · STATISCHE RECHTSSEITEN
+   ---------------------------------------------------------------------------
+   Impressum und Datenschutzerklärung sind eigene HTML-Dateien neben der App,
+   ohne Anmeldung lesbar (Phase 5). Sie können `.view` nicht benutzen: das
+   rechnet oben mit einer festen App-Leiste, die es dort nicht gibt.
+
+   Diese Regeln stehen hier und nicht als <style> in den Seiten selbst, weil
+   die CSP `style-src` Inline-Stile blockiert — eine ausgelieferte Datei ist
+   erlaubt, ein Inline-Block nicht.
+   ========================================================================= */
+.rechtsseite {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--gutter);
+}
+.rechtsseite h1 { font-size: 1.375rem; margin: 0 0 var(--space-2); }
+.rechtsseite h2 { font-size: 1rem; margin: 0 0 var(--space-2); }
+.rechtsseite p { margin: 0 0 var(--space-3); }
+.rechtsseite p:last-child { margin-bottom: 0; }
+.rechtsseite ul { margin: 0; padding-left: 1.1em; }
+.rechtsseite li { margin-bottom: var(--space-2); }
+.rechtsseite li:last-child { margin-bottom: 0; }
+.rechtsseite .sektion { margin-bottom: var(--space-6); }
+.rechtsseite .eyebrow { margin-bottom: var(--space-2); }
+
+.rechtsseite__zurueck { margin-bottom: var(--space-5); }
+.rechtsseite__intro { color: var(--text-2); font-size: 0.8125rem; margin-bottom: var(--space-6); }
+.rechtsseite__fuss {
+  text-align: center;
+  color: var(--text-3);
+  margin-top: var(--space-7);
+}
