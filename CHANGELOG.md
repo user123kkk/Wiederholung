@@ -1,3 +1,22 @@
+## 3.0.18 – 13. September 2026
+
+### Neu
+
+- **`robots.txt` und `sitemap.xml`** – schließen den angemeldeten Bereich
+  (`/index.html`, Login/App) von der Suchmaschinen-Indexierung aus, listen
+  die öffentlichen Seiten (`/`, `impressum.html`,
+  `datenschutzerklaerung.html`) für Google auf.
+- **FAQ-Bereich** auf der Startseite (`landing.html`) – fünf echte Fragen zu
+  Kosten, Sprache, Account, Offline-Nutzung und Konto löschen, dazu
+  strukturierte Daten (`FAQPage`-JSON-LD) für die Suche.
+
+### Geändert
+
+- `landing.html`, `impressum.html`, `datenschutzerklaerung.html` – Meta-
+  Beschreibung, Open-Graph-Angaben und kanonische URL je Seite ergänzt.
+- `index.html` – `<meta name="robots" content="noindex, nofollow">`, damit
+  der Login-/App-Bereich zusätzlich zur `robots.txt` nicht indexiert wird.
+
 ## 3.0.17 – 13. September 2026
 
 ### Neu
