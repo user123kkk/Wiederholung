@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.8";
+const APP_VERSION = "3.0.9";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -3885,6 +3885,14 @@ function renderAuth() {
   /* Muss VOR dem Anlegen des Kontos lesbar sein, nicht erst danach. */
   html += '<div class="empty__aktionen" style="margin-top:var(--space-4)">';
   html += '<button class="linklike" data-action="datenschutz"' + busy + '>Datenschutz</button>';
+  html += '</div>';
+  /* Impressum und die vollstaendige Datenschutzerklaerung sind eigene,
+     statische Seiten (Phase 5) - erreichbar ohne Anmeldung, wie es das
+     Gesetz fuer diese Angaben verlangt. Der Hinweis oben bleibt der
+     nutzerfreundliche Kurztext, das hier der rechtlich vollstaendige Text. */
+  html += '<div class="empty__aktionen" style="margin-top:var(--space-2)">';
+  html += '<a class="linklike" href="./impressum.html">Impressum</a>';
+  html += '<a class="linklike" href="./datenschutzerklaerung.html">Datenschutzerklärung</a>';
   html += '</div>';
   html += '</div>';
   app.innerHTML = html;

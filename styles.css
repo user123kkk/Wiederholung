@@ -716,7 +716,7 @@ button.ghost {
   font-weight: 600;
   border-radius: var(--r-sm);
 }
-button.linklike, button.tiny-link {
+button.linklike, button.tiny-link, a.linklike {
   background: transparent;
   color: var(--accent);
   border-color: transparent;
@@ -725,6 +725,12 @@ button.linklike, button.tiny-link {
   font-size: 0.8125rem;
   font-weight: 600;
   border-radius: var(--r-sm);
+}
+/* a.linklike braucht button-Grundmaße nach, die es via UA-Stylesheet nicht hat. */
+a.linklike {
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; text-decoration: none; border: 1px solid transparent;
+  font: inherit; letter-spacing: -0.005em;
 }
 button.danger {
   background: var(--negative);
@@ -747,7 +753,7 @@ button.lg { min-height: var(--ctrl-lg); font-size: 1rem; padding: 0 var(--space-
   button:hover { background: var(--accent-hover); }
   button.secondary:hover { background: var(--surface-overlay); border-color: var(--border-strong); }
   button.ghost:hover { background: var(--surface); color: var(--text-1); }
-  button.linklike:hover, button.tiny-link:hover { background: var(--accent-bg); }
+  button.linklike:hover, button.tiny-link:hover, a.linklike:hover { background: var(--accent-bg); }
   button.icon-btn:hover { background: var(--surface); color: var(--text-1); }
   button.danger:hover { filter: brightness(1.08); }
   button:disabled:hover { background: var(--accent); }

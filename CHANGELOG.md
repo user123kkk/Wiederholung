@@ -1,3 +1,15 @@
+## 3.0.9 – 13. September 2026
+
+### Neu
+
+- **Impressum und Datenschutzerklärung** als eigene, statische Seiten
+  (`impressum.html`, `datenschutzerklaerung.html`) – ohne Anmeldung
+  lesbar, verlinkt vom Anmeldebildschirm. Ergänzt den bisherigen
+  Datenschutz-Hinweis in der App (bleibt als alltagssprachliche
+  Kurzfassung bestehen) um den rechtlich vollständigen Text.
+- `a.linklike` in `styles.css` – damit ein `<a>`-Link genauso aussieht
+  wie die bestehenden Link-Buttons.
+
 ## 3.0.8 – 12. September 2026
 
 ### Behoben

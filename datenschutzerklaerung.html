@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Datenschutzerklärung – Adrabic</title>
+<meta name="theme-color" content="#0b0a09">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="./desktop-icon.png" type="image/png">
+<link rel="stylesheet" href="./styles.css">
+<script>
+/* 2.20.0: Läuft, BEVOR das erste Bild steht.
+
+   Die gewählte Fassung liegt im Konto und kommt erst mit den Daten aus der
+   Cloud - das dauert einen Moment. Ohne diese Zeilen sähe ein Nutzer mit
+   heller Fassung bei jedem Start zuerst einen schwarzen Bildschirm, der dann
+   umspringt. Das sieht nach einem Fehler aus. Deshalb liegt die Wahl
+   zusätzlich auf dem Gerät selbst; die Cloud bleibt maßgeblich und
+   überschreibt sie, sobald sie da ist. */
+(function () {
+  try {
+    var w = localStorage.getItem("adrabic-thema") || "dunkel";
+    var hell = w === "hell" || (w === "auto" && window.matchMedia &&
+               window.matchMedia("(prefers-color-scheme: light)").matches);
+    document.documentElement.setAttribute("data-thema", hell ? "hell" : "dunkel");
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute("content", hell ? "#f2ece0" : "#0b0a09");
+  } catch (e) {}
+})();
+</script>
+<style>
+  .rechtsseite {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: var(--space-8) var(--gutter) var(--space-8);
+  }
+  .rechtsseite h1 { font-size: 1.375rem; margin: 0 0 var(--space-2); }
+  .rechtsseite h2 { font-size: 1rem; margin: 0 0 var(--space-2); }
+  .rechtsseite > p.intro { color: var(--text-2); font-size: 0.8125rem; margin: 0 0 var(--space-6); }
+  .rechtsseite .sektion { margin-bottom: var(--space-6); }
+  .rechtsseite .eyebrow { margin-bottom: var(--space-2); }
+  .rechtsseite .card + .card { margin-top: var(--space-3); }
+  .rechtsseite p { margin: 0 0 var(--space-3); }
+  .rechtsseite p:last-child { margin-bottom: 0; }
+  .rechtsseite ul { margin: 0; padding-left: 1.1em; }
+  .rechtsseite li { margin-bottom: var(--space-2); }
+  .rechtsseite li:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="rechtsseite">
+  <p style="margin-bottom:var(--space-5)"><a class="linklike" href="./index.html">← Zurück</a></p>
+  <h1>Datenschutzerklärung</h1>
+  <p class="intro">Diese Erklärung beschreibt, welche Daten diese App verarbeitet, wozu, auf
+  welcher Rechtsgrundlage und welche Rechte dabei bestehen. Für eine kurze, alltagssprachliche
+  Fassung siehe den Datenschutz-Hinweis in der App selbst (Einstellungen → Datenschutz bzw. auf
+  dem Anmeldebildschirm).</p>
+
+  <div class="sektion">
+    <div class="eyebrow">1. Verantwortlicher</div>
+    <div class="card">
+      <p>Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:</p>
+      <p>Nauroz Masjeedi<br>
+      Industriestraße 8<br>
+      25917 Leck<br>
+      Deutschland<br>
+      E-Mail: <a href="mailto:masjeedikk@gmail.com">masjeedikk@gmail.com</a></p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">2. Allgemeines zur Datenverarbeitung</div>
+    <div class="card">
+      <p class="hint">Diese App wird privat und nicht-gewerblich für einen kleinen, wachsenden
+      Nutzerkreis betrieben. Es findet keine Werbung, kein Tracking und keine Analyse des
+      Nutzungsverhaltens statt. Daten werden nur verarbeitet, soweit es für den Betrieb der App
+      und die von dir angeforderten Funktionen notwendig ist.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">3. Hosting und Server-Logdaten</div>
+    <div class="card">
+      <p class="hint">Die App wird über Firebase Hosting (Google Ireland Limited bzw. Google
+      LLC) ausgeliefert. Beim Aufruf verarbeitet der Hosting-Anbieter technisch bedingt
+      Zugriffsdaten (u. a. IP-Adresse, Datum und Uhrzeit des Zugriffs, abgerufene Datei), um die
+      Seite ausliefern und die Sicherheit des Betriebs gewährleisten zu können. Rechtsgrundlage
+      ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am technisch fehlerfreien und
+      sicheren Betrieb).</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">4. Registrierung und Nutzerkonto</div>
+    <div class="card">
+      <p class="hint">Für ein Konto wird eine <strong>E-Mail-Adresse</strong> und ein
+      <strong>Passwort</strong> benötigt. Die Anmeldung läuft über Firebase Authentication
+      (Google) – das Passwort liegt dabei zu keinem Zeitpunkt im Klartext vor, auch der Betreiber
+      bekommt es nie zu sehen. Zweck ist die eindeutige Zuordnung deiner Lerninhalte zu deinem
+      Konto und die Möglichkeit, dein Passwort zurückzusetzen. Rechtsgrundlage ist Art. 6 Abs. 1
+      lit. b DSGVO (Erfüllung des Nutzungsverhältnisses, das mit der Registrierung entsteht).</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">5. Lerninhalte</div>
+    <div class="card">
+      <p class="hint">Bereiche, Karten, Kartensätze, Lernstufen, Fälligkeiten, deine Lern-Serie,
+      das Tagesprotokoll und deine Einstellungen werden in der Firestore-Datenbank (Google)
+      gespeichert, damit sie über mehrere Geräte hinweg verfügbar sind. Die Zugriffsregeln der
+      Datenbank (<code>firestore.rules</code>) lassen jedes Konto ausschließlich an die eigenen
+      Daten – andere Nutzer:innen können sie nicht einsehen. Rechtsgrundlage ist Art. 6 Abs. 1
+      lit. b DSGVO.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">6. Auf deinem Gerät</div>
+    <div class="card">
+      <p class="hint">Die gewählte Helligkeit (hell/dunkel) und das Datum des letzten Backups
+      werden zusätzlich lokal auf deinem Gerät gespeichert (<code>localStorage</code>), damit die
+      App beim Start sofort die richtige Ansicht zeigt und offline funktioniert. Diese Angaben
+      verlassen dein Gerät nicht.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">7. Empfänger und Auftragsverarbeitung</div>
+    <div class="card">
+      <p class="hint">Für Hosting, Anmeldung und Datenspeicherung wird Firebase, ein Dienst der
+      Google Ireland Limited bzw. Google LLC, als Auftragsverarbeiter eingesetzt. Mit Google
+      besteht ein Auftragsverarbeitungsvertrag auf Grundlage von Art. 28 DSGVO. Eine Verarbeitung
+      kann dabei auch auf Servern außerhalb der EU (z. B. in den USA) stattfinden; Google sichert
+      hierfür geeignete Garantien zu (u. a. EU-Standardvertragsklauseln). Über die Anmeldung und
+      Lerninhalte hinaus werden keine Daten an Dritte weitergegeben, nicht verkauft und nicht für
+      Werbezwecke genutzt.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">8. Fremde Server beim Laden der App</div>
+    <div class="card">
+      <p class="hint">Zwei Dinge lädt die App beim Start von außen; dabei erfährt der jeweilige
+      Server technisch bedingt deine IP-Adresse:</p>
+      <ul>
+        <li>Das Firebase-SDK – von <code>gstatic.com</code> (Google)</li>
+        <li>Die arabische Koranschrift – von <code>verses.quran.foundation</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">9. Cookies</div>
+    <div class="card">
+      <p class="hint">Diese App setzt <strong>keine Cookies</strong>. Die Anmeldung (Firebase
+      Authentication) speichert den angemeldeten Zustand technisch über den Browser-eigenen
+      Speicher (IndexedDB), nicht über Cookies. Die einzige weitere Speicherung im Browser ist
+      der oben unter Punkt 6 genannte, rein technisch notwendige <code>localStorage</code>. Es
+      gibt keine Cookies oder vergleichbaren Technologien zu Analyse-, Marketing- oder
+      Tracking-Zwecken – ein Cookie-Banner ist deshalb nicht erforderlich.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">10. Speicherdauer</div>
+    <div class="card">
+      <p class="hint">Deine Daten werden gespeichert, solange dein Konto besteht. Löschst du dein
+      Konto (Einstellungen → Konto löschen), werden dein Nutzerkonto und alle zugehörigen Inhalte
+      sofort und unwiderruflich entfernt.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">11. Deine Rechte</div>
+    <div class="card">
+      <p>Dir stehen nach der DSGVO folgende Rechte zu:</p>
+      <ul>
+        <li><strong>Auskunft</strong> (Art. 15 DSGVO) über die zu dir gespeicherten Daten</li>
+        <li><strong>Berichtigung</strong> (Art. 16 DSGVO) unrichtiger Daten</li>
+        <li><strong>Löschung</strong> (Art. 17 DSGVO) – in der App unter Einstellungen → Konto
+        löschen sofort selbst möglich, oder auf Anfrage per E-Mail</li>
+        <li><strong>Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO)</li>
+        <li><strong>Datenübertragbarkeit</strong> (Art. 20 DSGVO) – in der App unter Einstellungen
+        → Sichern kannst du alle deine Daten jederzeit selbst als Datei herunterladen</li>
+        <li><strong>Widerspruch</strong> (Art. 21 DSGVO) gegen eine Verarbeitung, die auf
+        berechtigtem Interesse beruht</li>
+        <li><strong>Beschwerde bei einer Aufsichtsbehörde</strong> (Art. 77 DSGVO), z. B. beim
+        Unabhängigen Landeszentrum für Datenschutz Schleswig-Holstein</li>
+      </ul>
+      <p style="margin-top:var(--space-3)">Für Auskunfts-, Berichtigungs- oder sonstige Anfragen
+      genügt eine E-Mail an <a href="mailto:masjeedikk@gmail.com">masjeedikk@gmail.com</a>.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">12. Datensicherheit</div>
+    <div class="card">
+      <p class="hint">Die Übertragung erfolgt verschlüsselt über HTTPS. Die Zugriffsregeln der
+      Datenbank sind so eingestellt, dass jedes Konto ausschließlich an die eigenen Daten kommt.
+      Passwörter werden ausschließlich von Firebase Authentication verwaltet und liegen nirgends
+      im Klartext vor.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">13. Änderungen dieser Erklärung</div>
+    <div class="card">
+      <p class="hint">Ändert sich, was diese App tatsächlich speichert oder verarbeitet, wird
+      diese Erklärung entsprechend angepasst. Es lohnt sich, sie von Zeit zu Zeit erneut zu
+      lesen.</p>
+    </div>
+  </div>
+
+  <p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">
+    Stand: 13. September 2026</p>
+</div>
+</body>
+</html>
