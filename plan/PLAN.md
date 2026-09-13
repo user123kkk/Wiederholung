@@ -92,10 +92,15 @@ oben. Die Startseite selbst ist in Phase 6 **gebaut** und `fertig`; der
 Ordner [`landing-page-strategie/`](landing-page-strategie/) klärt, was sie
 **sagt**. Reihenfolge dort: Befund → Strategie → erst dann HTML.
 
-Status: `läuft` — der Befund ist am 13.09.2026 mit allem vorausgefüllt
-worden, was Code und Plan belegen; es fehlen noch **sechs Antworten des
-Betreibers** (Ende von [`BEFUND.md`](landing-page-strategie/BEFUND.md)).
-Solange die fehlen, wird `landing.html` nicht umgebaut.
+Status: `läuft` — [`STRATEGIE.md`](landing-page-strategie/STRATEGIE.md)
+steht seit dem 13.09.2026, aber **zweigeteilt**: Kern-Message, tragende
+Belege, Funnel und Seitenstruktur sind fertig und hängen an keiner Antwort
+mehr; Headline und Keywords liegen als **drei fertige Fassungen** vor, je
+eine pro möglicher Ausrichtung. Zum Weiterarbeiten fehlen **drei
+Entscheidungen** des Betreibers (`STRATEGIE.md` 2.1, 2.2, 2.3): womit ein
+Neuer ohne Kartensatz anfängt · eng oder weit ausgerichtet · die unbelegte
+Behauptung „wissenschaftlich bewährt" ersetzen. Solange die fehlen, wird
+`landing.html` nicht umgebaut.
 
 ### Warum diese Reihenfolge
 
@@ -263,6 +268,7 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Phase 7 begonnen, Code-Teil fertig** (v3.0.18). `robots.txt`/`sitemap.xml` schließen `/index.html` (Login/App) von der Indexierung aus, zusätzlich `<meta name="robots" content="noindex, nofollow">` dort gesetzt. Kanonische URL, Open-Graph-Angaben je öffentlicher Seite (`landing.html`, `impressum.html`, `datenschutzerklaerung.html`). FAQ-Bereich mit fünf echten Fragen auf der Startseite plus `FAQPage`-JSON-LD. Search Console kann kein Agent einrichten — Phase bleibt auf `läuft`, bis der Betreiber das erledigt hat. Details in `phase-7-seo/LOGBUCH.md`. |
 | 2026-09-13 | **Phase 7 fertig.** Firebase-Caching-Problem mit HTML-Dateien identifiziert und gelöst (Cache-Control-Header mit `max-age=0` in `firebase.json`). Google Search Console Verifikation erfolgreich durchgeführt (HTML-Tag erkannt, Inhaberschaft bestätigt). `sitemap.xml` eingereicht und akzeptiert. Alle Punkte aus `phase-7-seo/AUFTRAG.md` abgehakt. Weiter mit Phase 8. |
 | 2026-09-13 | **Landing-Page-Strategie: Befund vorausgefüllt** (v3.0.19). `landing-page-strategie/BEFUND.md` war leer und sperrte damit die gesamte Strategiearbeit. Jede Frage trägt jetzt einen Zustand: belegt (mit Quelle im Code/Plan), Vermutung, oder offen. Abschnitt 3.1 listet vollständig, was die App wirklich kann — mit Zeilennummern, damit die spätere Seite nichts verspricht, was der Code nicht tut. Drei Widersprüche festgehalten: „wissenschaftlich bewährt" ist unbelegt (haftungsrelevant, weil der Vater im Impressum steht), Medina Buch 1 ist privat (Neue finden also ein leeres Werkzeug), außen „Adrabic" vs. innen „Wiederholung". Es fehlen noch sechs Antworten des Betreibers. Zusätzlich ein grammatisch kaputter Satz auf der Live-Startseite behoben (`landing.html:286`) — nur der Satz, kein Umbau. |
+| 2026-09-13 | **Landing-Page-Strategie: `STRATEGIE.md` gebaut**, zweigeteilt. Fest und unabhängig von offenen Fragen: Kern-Message „Mechanik statt Versprechen" (die Stufenleiter aus dem Code ersetzt die unbelegte Behauptung „wissenschaftlich bewährt"), die drei tragenden Belege (Handschrift-Feld, Lektionen, die nacheinander aufgehen, drei Bewertungen statt zwei), der Funnel und seine Bruchstelle (wer sich registriert, steht vor einem leeren Werkzeug — größter Hebel der ganzen Seite, kein Textproblem), die Seitenstruktur in zwölf Blöcken und die Änderungsliste gegen den heutigen Stand. Abhängig von Entscheidungen und deshalb als **drei fertige Fassungen** hinterlegt: Headline, Handlungsaufruf, Seitentitel, Beschreibung. Keywords als gekennzeichnete Hypothese mit Negativliste und Prüfweg über die Search Console. Kein Produktivcode geändert; der Befund kam unausgefüllt zurück und wurde bewusst nicht vom Agenten ausgefüllt. |
 
 ## Wo eine neue Session anfängt
 
@@ -272,13 +278,19 @@ nicht dieselbe Sperre noch einmal aufdeckt.
 
 **Strang A — Landing-Page-Strategie** (`läuft`, siehe
 [`landing-page-strategie/LOGBUCH.md`](landing-page-strategie/LOGBUCH.md)).
-Der Befund ist so weit vorausgefüllt, wie Code und Plan es hergeben. Es
-fehlen noch **sechs Antworten**, ausgeschrieben am Ende von
-[`BEFUND.md`](landing-page-strategie/BEFUND.md): TikTok-Kanal · Zielgruppe ·
-womit ein Neuer ohne Kartensatz anfängt · Vokabeltrainer oder
-Talab-al-Ilm-Begleiter · „wissenschaftlich" belegen oder ersetzen · Marke
-oder Person. Liegen sie vor → `STRATEGIE.md` bauen, danach `landing.html`
-umbauen. Liegen sie **nicht** vor → nicht raten, nicht umbauen.
+[`STRATEGIE.md`](landing-page-strategie/STRATEGIE.md) ist gebaut, soweit sie
+ohne Antworten trägt: Abschnitte 1–2 (Message, Belege, Funnel, die sechs
+Entscheidungen als Vorlagen mit Folgen und Empfehlung), Abschnitt 3 (drei
+fertige Message-Fassungen), 4 (Keywords als Hypothese samt Negativliste und
+Prüfweg), 5 (Seitenstruktur Block für Block), 6 (Änderungsliste gegen den
+heutigen Stand).
+
+Was eine nächste Session tun kann: **nichts am Text raten.** Es fehlen die
+drei Entscheidungen aus `STRATEGIE.md` 2.1, 2.2 und 2.3. Liegen sie vor →
+die passende Fassung aus Abschnitt 3 nehmen, `landing.html` nach Abschnitt 5
+umbauen, Sofort-Änderungen aus 6.1 mitnehmen, Veröffentlichungsliste aus
+`../README.md` abarbeiten. Liegen sie **nicht** vor → nicht umbauen; der
+Befund wird auch **nicht** vom Agenten ausgefüllt.
 
 **Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `offen`).
 Braucht die Klärung: Formulare **in** die App oder als eigene Seite? Und vor

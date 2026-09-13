@@ -103,3 +103,97 @@ Reihenfolge laut `ANLEITUNG.md`: Befund → Strategie → erst dann HTML.
 **Nächster Schritt:** Die sechs Antworten aus `BEFUND.md` einholen. Liegen
 sie vor, wird daraus `STRATEGIE.md` gebaut (Message, Keywords, Funnel,
 Headlines); erst danach der Umbau von `landing.html`.
+
+### 2026-09-13 — `STRATEGIE.md` gebaut, soweit sie ohne die sechs Antworten trägt
+
+**Geändert:**
+- `plan/landing-page-strategie/STRATEGIE.md` — neu angelegt, 8 Abschnitte.
+- `plan/PLAN.md` — Nebenstrang und Abschnitt „Wo eine neue Session anfängt"
+  auf den neuen Stand gezogen, Statusverlauf ergänzt.
+- Kein Produktivcode. `landing.html` unverändert, deshalb entfällt die
+  Veröffentlichungsliste aus `README.md` (reine Plandateien).
+
+**Entscheidung:**
+
+1. **Der Befund kam unausgefüllt zurück — das wird benannt, nicht
+   überspielt.** Der übergebene Text ist derselbe wie der im Repo: 29 ❓,
+   keine der sechs Antworten. Die Strategie trotzdem zu schreiben, als wären
+   sie da, hätte genau die erfundene Zielgruppe und die geratene Headline
+   produziert, die `ANLEITUNG.md` ausschließt. Sie gar nicht zu schreiben,
+   hätte dagegen den größeren Teil der Arbeit liegen lassen, der von den
+   sechs Antworten gar nicht abhängt.
+
+2. **Also zweigeteilt.** Teil 1 (Abschnitte 1–2) ist fertig und wird durch
+   die Antworten nicht mehr umgeworfen: Kern-Message, die drei tragenden
+   Belege, der Funnel mit seiner Bruchstelle, was messbar ist. Teil 2
+   (Abschnitte 3–4) hängt an den Entscheidungen und steht deshalb als **drei
+   vollständig ausformulierte Fassungen** da, je eine pro Ausrichtung, mit
+   der Bedingung davor. Der Betreiber wählt, die Fassung ist sofort
+   einsetzbar, keine neue Session denkt das noch einmal von vorn.
+
+3. **Die Kern-Message ist „Mechanik statt Versprechen".** Die heutige Seite
+   arbeitet mit Behauptungen („wissenschaftlich bewährt", „funktioniert
+   wirklich"), die austauschbar und im Fall von „wissenschaftlich" durch den
+   Code nicht gedeckt sind. Ersatz ist nicht eine bessere Behauptung, sondern
+   die Stufenleiter selbst: 1 · 2 · 3 · 6 · 10 · 19 · 34 · 61 · 110 · 180
+   Tage, Deckel bei 180 (`app.js:89–99`). Überprüfbar, ungewöhnlich, sagt
+   dasselbe ohne Behauptung.
+
+4. **Drei Belege tragen die Seite, nicht neun Merkmale.** Handschrift-Feld
+   (`app.js:1006ff`, `5189ff`), Lektionen, die nacheinander aufgehen
+   (`app.js:234–269`), und die drei Bewertungen mit „Nicht" = zurück in
+   derselben Runde (`app.js:3509–3516`). Offline, Sync, Statistik, Hell/Dunkel
+   sind austauschbar und gehören in eine Liste weiter unten, nicht in den
+   Aufmacher.
+
+5. **Der größte Hebel ist nicht die Headline, sondern der leere Anfang.**
+   Wer sich registriert, steht vor einem leeren Werkzeug — Medina Buch 1 ist
+   seit 12.09.2026 privat. Das ist kein Textproblem; deshalb steht die Frage
+   „womit fängt ein Neuer an" in Abschnitt 2 an **erster** Stelle, vor
+   Headline und Keywords. Empfehlung dort (ausdrücklich als Empfehlung
+   gekennzeichnet): ein eigens gemachter öffentlicher Einsteiger-Kartensatz
+   aus dem Inhalt der eigenen TikTok-Videos — löst Funnel-Bruch und
+   Urheberrechtsfrage in einem, und Marketing und Produkt sind dabei dasselbe
+   Ding.
+
+6. **Die HTML wird nicht angefasst, auch nicht die „wissenschaftlich"-Stelle.**
+   `ANLEITUNG.md` sagt: erst Strategie, dann HTML. Der Austausch für alle drei
+   Fundstellen steht fertig in Abschnitt 6.1 und ist ein Handgriff — aber
+   „belegen oder ersetzen" ist ausdrücklich eine der sechs Fragen des
+   Betreibers (Befund 5.4), und die trifft kein Agent. Anders als der
+   Satzfehler vom Vormittag ist das keine reine Fehlerbehebung, sondern eine
+   inhaltliche Entscheidung.
+
+7. **Keywords sind als Hypothesen gekennzeichnet, nicht als Wissen.** Es gibt
+   keine Suchdaten. Der Prüfweg steht dabei: Search-Console-Leistungsbericht
+   vier Wochen nach dem Umbau, dann Abschnitt 4 gegen die echten Begriffe
+   austauschen. Festgehalten ist auch die Kernkorrektur: Titel und
+   Beschreibung zielen heute auf generische Vokabel-Suchen, und das Wort
+   „Arabisch" kommt im sichtbaren Seitenkopf überhaupt nicht vor.
+
+**Offen:**
+
+- **Drei Antworten reichen zum Weiterarbeiten**, nicht sechs: 2.1 (womit ein
+  Neuer anfängt), 2.2 (eng oder weit) und 2.3 („wissenschaftlich" ersetzen).
+  Damit steht die Fassung und der Umbau kann beginnen. 2.4–2.6 (Marke oder
+  Person · Namensabgleich innen/außen · Kostenfrage-Wortlaut) blockieren
+  nicht, sie ändern Details.
+- **Die unbelegte Wirkungsbehauptung steht weiterhin live** an drei Stellen
+  in `landing.html` (Lösungskasten, erstes Kästchen, Meta-Beschreibung).
+  Haftungsrelevant, weil der Vater im Impressum steht. Wartet auf ein Ja zu
+  2.3.
+- **Zwei Kleinigkeiten, bei der Durchsicht gefunden, bewusst nicht jetzt
+  gemacht:** `landing.html:8` setzt `color-scheme` fest auf `dark`, obwohl das
+  Skript darüber auch auf hell schalten kann — gehört in denselben Handgriff
+  wie der Umbau. Und die Kopfzeile **in** der App zeigt „Wiederholung"
+  (`app.js:3810`, `3996`, `4648`), während außen „Adrabic" steht; das sind
+  drei Zeichenketten und keine Funktion, aber es fasst App-Dateien an und
+  braucht deshalb einen eigenen Schritt mit eigenem Logbuch-Eintrag.
+- **Der Befund selbst bleibt unverändert.** Er wird erst fortgeschrieben, wenn
+  echte Antworten da sind — ein vom Agenten ausgefüllter Befund wäre wertlos.
+
+**Nächster Schritt:** Die drei Entscheidungen aus `STRATEGIE.md` Abschnitt 2.1,
+2.2 und 2.3 einholen. Liegen sie vor, wird die passende Fassung aus Abschnitt 3
+genommen und `landing.html` nach der Struktur aus Abschnitt 5 umgebaut —
+inklusive der Sofort-Änderungen aus 6.1 und der Veröffentlichungsliste aus
+`README.md`.
