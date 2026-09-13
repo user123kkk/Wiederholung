@@ -10,7 +10,8 @@
       "KONZEPT.md",
       "CLAUDE.md",
       "CHANGELOG.md",
-      "README.md"
+      "README.md",
+      "veroeffentlichen.bat"
     ],
     "headers": [
       {

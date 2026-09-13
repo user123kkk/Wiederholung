@@ -374,3 +374,36 @@ Render-Funktionen zu haben — vermerkt, nicht gebaut.
 **Nächster Schritt:** Gehört zum verschärften Sicherheits-Durchlauf vor
 Phase 6: prüfen, ob die CSP nach diesen zwei Lockerungen noch das
 leistet, was sie soll.
+
+### 2026-09-13 — Nachtrag: `veroeffentlichen.bat` für den Betreiber
+
+**Geändert:** `veroeffentlichen.bat` (neu), `firebase.json` (Ignore-Liste
+um die neue Datei ergänzt), `README.md` (Dateitabelle nachgezogen, dabei
+auch die veraltete Zahl „17" auf „18 Abschnitte" in `styles.css`
+korrigiert — war seit dem heutigen neuen Abschnitt „Statische
+Rechtsseiten" falsch).
+
+**Entscheidung:** Betreiber tippt bei jeder Veröffentlichung von Hand
+dieselben Schritte in eine neu geöffnete Eingabeaufforderung
+(Windows-Taste, `cmd`, dann `git pull` und `firebase deploy --only
+hosting`). Dafür jetzt eine Batch-Datei im Repo-Wurzelverzeichnis: Ein
+Doppelklick wechselt in den eigenen Ordner (`%~dp0`, funktioniert
+unabhängig davon, wohin das Repo auf dem Windows-Rechner geklont wurde),
+wechselt sicherheitshalber auf `main`, zieht die neuesten Änderungen und
+deployt. Bricht bei jedem Fehler sichtbar ab (`if errorlevel 1`), statt
+stillschweigend weiterzumachen, und wartet am Ende auf einen Tastendruck,
+damit das Fenster nicht sofort zufällt. Mit CRLF-Zeilenenden geschrieben
+(Windows-`cmd.exe`-Konvention), nicht mit den LF-Zeilenenden, die der
+Rest des Repos sonst verwendet.
+
+Wird selbst **nicht** mit ausgeliefert (`firebase.json`, Ignore-Liste) —
+sie gehört zum Arbeiten am Repo, nicht zur ausgelieferten App, genau wie
+`README.md` und `CHANGELOG.md`.
+
+**Offen:** Nichts. `firebase login` bleibt einmalig von Hand nötig (läuft
+über eine Browser-Anmeldung, lässt sich nicht sinnvoll in ein
+Doppelklick-Skript packen) — das war aber schon vorher klar und ändert
+sich durch die Batch-Datei nicht.
+
+**Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
+Sicherheits-Durchlauf.

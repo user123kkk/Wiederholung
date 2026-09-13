@@ -9,12 +9,14 @@ synchronisiert über Firebase.
 | Datei | Inhalt |
 |---|---|
 | `index.html` | Gerüst, Kopfdaten, und das eine Skript, das **vor** dem ersten Bild laufen muss (Hell/Dunkel) |
-| `styles.css` | Die gesamte Gestaltung. Aufgebaut in 17 nummerierten Abschnitten, Tokens zuerst |
+| `styles.css` | Die gesamte Gestaltung. Aufgebaut in 18 nummerierten Abschnitten, Tokens zuerst |
 | `app.js` | Die gesamte Funktionalität: Lernlogik, Firebase, Anzeige |
 | `sw.js` | Service Worker. Speichert die App-Hülle, damit sie offline startet |
 | `manifest.json` | Installierbarkeit als App |
 | `icon.svg` | App-Symbol (Browser-Tab, Startbildschirm) |
 | `firestore.rules` | Zugriffsregeln der Datenbank |
+| `impressum.html`, `datenschutzerklaerung.html` | Rechtstexte, ohne Anmeldung erreichbar (Phase 5) |
+| `veroeffentlichen.bat` | Für den Betreiber (Windows): Doppelklick zieht `main`, deployt auf Firebase Hosting. Wird selbst nicht mit ausgeliefert (siehe `firebase.json`) |
 | `CHANGELOG.md` | Was sich wann geändert hat – und warum |
 
 Kein Build-Schritt. Die Dateien werden so ausgeliefert, wie sie hier liegen.
