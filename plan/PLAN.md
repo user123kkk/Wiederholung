@@ -186,19 +186,20 @@ Punkt, der ausdrücklich vor Phase 6 einzuplanen ist. Die übrigen stehen
 hier, damit keine Entscheidung getroffen wird, die sie später unmöglich
 macht.
 
-- **Fünfzehn Beobachtungen am Lernwerkzeug aus einer Nutzungssitzung des
+- **Sechzehn Beobachtungen am Lernwerkzeug aus einer Nutzungssitzung des
   Betreibers (15.09.2026)** — festgehalten in
   [`beobachtungen-lernwerkzeug.md`](beobachtungen-lernwerkzeug.md): u. a.
   Detailansicht für Karten in der Verwalten-Liste, versehentliches
   Verschieben beim Scrollen, verlorene Scroll-Position nach dem Bearbeiten,
   ungewollter Autofokus auf die Tastatur, ein iPad-Layout-Fehler bei
   Lernen/Üben, verlorene Notiz-Formatierung beim Anzeigen, Over-Scrolling,
-  Bildschirm-Verschiebungen beim Scrollen und Speichern, und weitere. Jeder
-  Punkt trägt eine fachliche Einschätzung, aber **keine Entscheidung** — das
-  betrifft ausschließlich das Lernwerkzeug selbst, das laut Abschnitt „Was in
-  keiner Phase passiert" (Punkt 1) in keiner laufenden Phase angefasst wird.
-  Ob und wie viel davon gebaut wird, entscheidet der Betreiber; erst danach
-  wird ggf. eine eigene Phase dafür angelegt.
+  Bildschirm-Verschiebungen beim Scrollen und Speichern, Browser-Zurück-Fehler
+  zwischen App und statischen Seiten, und weitere. Jeder Punkt trägt eine
+  fachliche Einschätzung, aber **keine Entscheidung** — das betrifft
+  ausschließlich das Lernwerkzeug selbst, das laut Abschnitt „Was in keiner
+  Phase passiert" (Punkt 1) in keiner laufenden Phase angefasst wird. Ob und
+  wie viel davon gebaut wird, entscheidet der Betreiber; erst danach wird
+  ggf. eine eigene Phase dafür angelegt.
 
 ---
 

@@ -1,7 +1,7 @@
 # Beobachtungen am Lernwerkzeug — noch nicht entschieden, nicht gebaut
 
 Angelegt: 15. September 2026, aus einer Nutzungssitzung des Betreibers.
-Zuletzt erweitert: 15. September 2026 (Punkte 13–15 hinzugefügt).
+Zuletzt erweitert: 15. September 2026 (Punkte 13–16 hinzugefügt).
 Gehört zu keiner Phase — **Phase 0–9 schließen „Funktion des Lernwerkzeugs
 anfassen" ausdrücklich aus** (`../CLAUDE.md`, `PLAN.md` Abschnitt „Was in
 keiner Phase passiert", Punkt 1). Diese Liste ist deshalb bewusst nur
@@ -205,7 +205,33 @@ Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)*
 entschieden werden, da 3 um eine bewusste Erhaltung nach einem Modal/Dialog
 geht, während 14 um ein unerwartetes Verhalten bei einfachem Navigation geht.
 
-## 15. Bildschirm verschiebt sich / Zoom-Verhalten beim Scrollen und Speichern
+## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal
+
+**Beobachtung:** Navigation zwischen App und statischen Seiten ist fehlerhaft:
+- Von der App (z.B. Fehlerformular in Einstellungen) zur externen Seite
+  (Datenschutzerklärung, Impressum) navigieren
+- Dann Browser-Zurück drücken
+- Ergebnis: Entweder wird das Fehlerformular/die alte App-Seite erneut
+  angezeigt (statt zur vorherigen State zu gehen), oder es wirft:
+  `Failed to fetch dynamically imported module: https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js`
+
+**Einschätzung:** Echter Bug, vermutlich zwei zusammenhängende Probleme:
+1. **Browser-History-Verwirrung:** `index.html` und die statischen Seiten
+   (`datenschutzerklaerung.html`, `impressum.html`) sind technisch verschiedene
+   HTML-Dateien, aber die App selbst manipuliert `window.history` für
+   interne Navigation (ohne Seitenneuladen). Wenn man zur externen Seite
+   springt, geht das über echte Links; Zurück über Browser versucht, die
+   alte App-State wiederherzustellen, statt wirklich eine Seite zu laden —
+   das verwirrt sowohl den Browser als auch Firebase
+2. **Firebase Context:** Wenn Zurück in die App gehen will, ist Firebase
+   eventuell nicht mehr initialisiert (die externe Seite hielt es nicht am
+   Leben), und der Versuch, die alte State zu laden, schlägt fehl
+
+Lösungsraum: `<a>`-Links zwischen App und statischen Seiten müssen echte
+Navigationen sein, nicht manipulierte History; oder die statischen Seiten
+müssen in einen Single-Page-Kontext integriert sein (eine Seite, mehrere
+Views). Heute sind sie separate HTML-Dateien, was der History-Manipulation
+widerspricht.
 
 **Beobachtung:** Der Bildschirm verschiebt sich bzw. der Viewport ändert sich:
 - Beim Scrollen in der Verwalten-Liste verschieben sich die Seitenverhältnisse
@@ -237,7 +263,8 @@ werden, wenn was gebaut wird.
   Verschieben — höchste Priorität, weil Datenänderung ohne Absicht), 4
   (ungewollter Autofokus/Tastatur), 5 (iPad-Layout), 6 (Formatierung geht
   verloren), 13 (Over-Scrolling), 14 (Scroll-Position nicht zurückgesetzt),
-  15 (Viewport-Verschiebung beim Scrollen/Speichern).
+  15 (Viewport-Verschiebung beim Scrollen/Speichern), 16 (History/Firebase-Bug
+  beim Zurück von externen Seiten — auch höhere Priorität, weil App-Fehler).
 - **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1, 3, 10, 14.
 - **Prüffragen, kein bestätigter Fund:** 7, 9.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
