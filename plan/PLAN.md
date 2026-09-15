@@ -2,7 +2,7 @@
 
 Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
-Zuletzt geändert: 13. September 2026
+Zuletzt geändert: 15. September 2026
 
 ---
 
@@ -342,15 +342,21 @@ in `app.js` (v3.0.24). Beide Male von einer Nutzermeldung ausgegangen, beide
 Male am selben Tag verifiziert. Kein weiterer Schritt hier offen.
 
 **Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `läuft`).
-Die in `phase-8-rueckmeldung/AUFTRAG.md` verlangten Möglichkeiten stehen seit
-13.09.2026 in
-[`phase-8-rueckmeldung/MOEGLICHKEITEN.md`](phase-8-rueckmeldung/MOEGLICHKEITEN.md):
-vier Wege, wie eine Nachricht ohne eigenen Server ankommt (Firestore-Sammlung
-· `mailto:`-Link · Drittanbieter-Formular-Dienst · Firestore + Cloud
-Function), mit Spam-Schutz-Bausteinen und einer gekennzeichneten Empfehlung
-(A: eigene Firestore-Sammlung). **Wartet auf die Wahl des Betreibers** —
-danach folgen Umsetzung, Datenschutzerklärung-Ergänzung und eine
-Testnachricht (Fertig-Kriterien in `AUFTRAG.md`).
+Entscheidung gefallen: **Wahl B (`mailto:`-Implementierung)** für beide Formulare (15.09.2026, v3.0.28–30).
+- **Kontaktformular** (v3.0.28): auf `landing.html`, sichere Mailto-Implementierung mit
+  Honeypot und String.fromCharCode-verschlüsselter E-Mail. ✓ Implementiert.
+- **Fehlerformular** (v3.0.29, korrigiert v3.0.30): in Einstellungen → Hilfe, Modal-Dialog,
+  dieselbe Sicherheitsimplementierung wie Kontaktformular. Eigene Überprüfung nach v3.0.29 fand
+  vier echte Fehler (Modal-Knöpfe tot, weil außerhalb der Klick-Delegation; Eintrittsanimation lief
+  ins Leere, da erfundene Keyframes/Token; kaputter Fokus-Ring; nackter `alert()` statt `dlgAlert`)
+  — mit v3.0.30 behoben, Details in `phase-8-rueckmeldung/LOGBUCH.md`. ✓ Implementiert.
+- **Datenschutzerklärung** (v3.0.29): Neue Sektion 10 dokumentiert beide Formulare, gesammelte
+  Felder (Name, E-Mail, Nachricht/Fehlerbeschreibung), Honeypot-Mechanism, Mailto-Ablauf. ✓ Erweitert.
+
+**Fertig-Kriterium 1 ausstehend:** Testnachricht muss nachweislich in adrabic.de@gmail.com ankommen.
+Nächster Schritt: Beide Formulare interaktiv testen (Kontakt auf landing.html, Fehler in der App
+in Einstellungen). Die Mail-Abläufe laufen auf dem Gerät des Testers, nicht im Repo — deshalb muss
+der Betreiber selbst einen Test durchführen und bestätigen, dass Nachrichten ankommen.
 
 **Phase 9** (Barrierefreiheit) ist `fertig` (13.09.2026, v3.0.26). Erster
 Durchgang: Fokus, Beschriftung und Kontrast systematisch geprüft (Kontrast

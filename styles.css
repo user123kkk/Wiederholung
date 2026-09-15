@@ -2008,3 +2008,84 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   color: var(--text-3);
   margin-top: var(--space-7);
 }
+
+/* Fehlerformular-Modal: eigene Ueberlagerung noetig, weil das Formular
+   ausserhalb von #app liegen muss (app.js rendert #app bei jedem Klick
+   komplett neu - ein Dialog darin wuerde sofort wieder verschwinden).
+   Aufbau bewusst wie .dlg-backdrop/.dlg oben (derselbe Bogen von unten aufs
+   Handy, mittig am Desktop, dieselben Tokens und @keyframes), nur mit
+   eigenem Kopf samt Schliessen-Kreuz statt reiner Titelzeile. Felder,
+   Textarea, Beschriftung und Knoepfe brauchen keine eigene Klasse - Abschnitt
+   7 (Formulare) und die globalen button-Regeln gelten hier genauso. */
+.error-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  align-items: flex-end;
+  justify-content: center;
+}
+.error-modal[aria-hidden="false"] { display: flex; }
+
+.error-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--backdrop);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  animation: enter-fade var(--dur-fast) var(--ease-out) both;
+}
+
+.error-modal__dialog {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: 88dvh;
+  overflow-y: auto;
+  background: var(--surface-overlay);
+  color: var(--text-1);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  box-shadow: var(--shadow-lg);
+  animation: sheet-up var(--dur-slow) var(--ease-out) both;
+}
+
+.error-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-5) 0;
+}
+
+.error-modal__title { margin: 0; font-size: 1.0625rem; }
+
+.error-modal__close {
+  background: none;
+  border: none;
+  padding: 0;
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text-2);
+  cursor: pointer;
+}
+.error-modal__close:hover { color: var(--text-1); }
+
+.error-modal__form {
+  padding: var(--space-5) var(--space-5) calc(var(--space-5) + var(--sab));
+}
+
+.error-modal__honeypot { display: none; }
+
+@media (min-width: 600px) {
+  .error-modal { align-items: center; padding: var(--space-5); }
+  .error-modal__dialog {
+    border-radius: var(--r-xl);
+    animation: enter-pop var(--dur-base) var(--ease-out) both;
+  }
+}
