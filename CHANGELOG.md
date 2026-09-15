@@ -1,3 +1,11 @@
+## 3.0.40 – 15. September 2026
+
+### Verbessert
+
+- **Ziehgriff: Doppeltipp-Fenster und visuelle Rückmeldung.**  Die Testrückmeldung zu v3.0.39 deutete darauf hin, dass das Doppeltipp-Verhalten weiterhin schwer zuverlässig zu aktivieren ist — vermutlich, weil der 400ms-Fenster beim Antippen eines 28px-breiten Ziels auf einem Touchscreen zu eng ist. Zwei kleine Verbesserungen: (1) DOPPELTIPP_FENSTER von 400ms auf 600ms erhöht — gibt dem Nutzer mehr Zeit für die zweite Tap ohne gefühltes Verzögern bei der Aktivierung. (2) Visuelle Rückmeldung auf den ersten Tap hinzugefügt: `.drag-handle:active` bekommt jetzt ein halbtransparentes Accent-Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit sofort sichtbar ist, dass die erste Tap registriert wurde — ermutigt zum zweiten Tap. Zusammen sollten diese beiden Änderungen die Zuverlässigkeit des Doppeltipp-Musters erhöhen, ohne die Mechanik selbst zu verändern.
+
+---
+
 ## 3.0.39 – 15. September 2026
 
 ### Behoben

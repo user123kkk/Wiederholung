@@ -109,6 +109,20 @@ markierbar — zuverlässiges Ziehen wog stärker als diese Komfortfunktion,
 die ohnehin selten gebraucht wird (Karteninhalt lässt sich über
 „Bearbeiten" vollständig einsehen).
 
+**Dritte Anpassung 15.09.2026 (v3.0.40):** Die Feedback-Meldung
+„funktuniert selten gut, mal scrollt..., mal wird trotzdem was mackiert"
+deutet darauf hin, dass die Doppeltipp-Aktivierung selbst zu schwierig ist —
+wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten
+Ziel zweimal präzise zu tippen. Zwei Optimierungen: (1) Fenster von 400ms →
+600ms (mehr Zeit für den Benutzer, kein gefühltes Delay). (2) Visuelle
+Rückmeldung auf den ersten Tap: `.drag-handle:active` bekommt jetzt ein
+Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit sofort erkennbar ist,
+dass die erste Tap registriert wurde — ermutigt zum schnellen zweiten Tap.
+Diese Änderungen machen das Doppeltipp-Muster fehlertoleranter, ohne die
+Mechanik selbst zu verändern. Nächster Schritt: Neuer Gerätetest, um zu
+sehen, ob die Zuverlässigkeit mit dem größeren Fenster und der visuellen
+Rückmeldung besser ist.
+
 ## 3. Zurück zur Scroll-Position nach dem Bearbeiten
 
 **Beobachtung:** Nach jedem Bearbeiten einer Karte musste wieder ganz nach

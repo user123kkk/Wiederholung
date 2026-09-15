@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.39";
+const APP_VERSION = "3.0.40";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -5969,7 +5969,7 @@ let autoScrollRAF = null;
 let tippGriff = null;
 let tippZeit = 0;
 let tippResetTimer = null;
-const DOPPELTIPP_FENSTER = 400;
+const DOPPELTIPP_FENSTER = 600;
 
 function updateDragPosition(y) {
   if (!dragState) return;

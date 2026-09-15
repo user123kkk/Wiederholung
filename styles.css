@@ -1396,7 +1396,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   touch-action: manipulation; -webkit-user-select: none; user-select: none;
   -webkit-touch-callout: none;
 }
-.drag-handle:active { cursor: grabbing; color: var(--accent); }
+.drag-handle:active { cursor: grabbing; color: var(--accent); background: rgba(var(--accent-rgb), 0.15); border-radius: var(--r-md); }
 
 .words { flex: 1 1 auto; min-width: 0; }
 .card-row .wort, .leech-row .wort {
