@@ -1,3 +1,11 @@
+## 3.0.39 – 15. September 2026
+
+### Behoben
+
+- **Ziehgriff markierte weiterhin kurz Text (Testrückmeldung 15.09.2026, v3.0.38 nachgebessert).** Ziehen funktionierte bereits, aber ein Finger deckt beim Halten mehr Fläche ab als der 28px breite Griff – reichte er auf den Wort-Text daneben, griff `user-select: none` dort nicht. Jetzt für die ganze Zeile (`.card-row`, `.set-row`) gesperrt, nicht nur den Griff selbst. Kompromiss: Text in der Verwalten-Liste lässt sich nicht mehr per Long-Press markieren, dafür zieht der Griff zuverlässig ohne Aufblitzen.
+
+---
+
 ## 3.0.38 – 15. September 2026
 
 ### Behoben

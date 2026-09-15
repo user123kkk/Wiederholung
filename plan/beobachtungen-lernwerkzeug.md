@@ -96,11 +96,18 @@ Ursache: `touch-action` steuert nur Scroll-/Zoom-Gesten, nicht die native
 Textauswahl bei Long-Press — das vorherige `touch-action: none` hatte
 diese als Nebeneffekt mit unterbunden, `manipulation` nicht mehr.
 `-webkit-touch-callout: none` ergänzt (dasselbe Paar aus `user-select`+
-`touch-callout`, das jeder Button in der App schon trägt). **Noch nicht
-am Gerät bestätigt, ob das reicht** — falls die Markierung weiter auftritt,
-ist das nächste Verdachtsmoment das Zeitfenster selbst (400 ms könnten für
-eine bewusste zweite Berührung knapp sein) oder ein DOM-Neuaufbau zwischen
-den beiden Antippern, der den gemerkten Griff ungültig macht.
+`touch-callout`, das jeder Button in der App schon trägt).
+
+**Zweite Testrückmeldung 15.09.2026 (v3.0.39):** Ziehen funktionierte
+danach, aber Markierung blitzte weiter kurz auf — „nervig". Ursache: Ein
+Finger deckt beim Halten mehr Fläche ab als der 28px breite Griff; reichte
+er auf den Wort-Text daneben, griff `user-select: none` dort nicht (nur
+auf `.drag-handle` selbst gesetzt). Jetzt für die ganze Zeile (`.card-row`,
+`.set-row`) gesperrt statt nur den Griff. Kompromiss bewusst eingegangen:
+Text in der Verwalten-Liste ist dadurch nicht mehr per Long-Press
+markierbar — zuverlässiges Ziehen wog stärker als diese Komfortfunktion,
+die ohnehin selten gebraucht wird (Karteninhalt lässt sich über
+„Bearbeiten" vollständig einsehen).
 
 ## 3. Zurück zur Scroll-Position nach dem Bearbeiten
 

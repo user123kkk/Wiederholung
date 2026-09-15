@@ -1352,6 +1352,14 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--border-subtle);
   background: var(--surface);
+  /* 15.09.2026: Der Ziehgriff ist nur 28px breit, ein Finger deckt beim
+     Halten oft mehr ab und reicht auf den Wort-Text daneben - dort galt
+     user-select:none bisher nicht, das Handy markierte trotzdem kurz
+     (Testrueckmeldung nach v3.0.38). Jetzt fuer die ganze Zeile gesperrt,
+     nicht nur den Griff selbst - Kompromiss: Text in der Liste laesst
+     sich nicht mehr per Long-Press markieren, dafuer zieht der Griff
+     zuverlaessig. */
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .card-row:last-child { border-bottom: 0; }
 .card-row.dragging {
@@ -1450,6 +1458,9 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   display: flex; align-items: center; gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   min-height: var(--tap);
+  /* Gleicher Grund wie bei .card-row: der Ziehgriff einer Speicherkarte
+     sitzt hier genauso schmal neben Text, der sonst markiert wuerde. */
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .set-row .set-name {
   flex: 1 1 auto; min-width: 0; font-size: 0.9375rem; font-weight: 600;
