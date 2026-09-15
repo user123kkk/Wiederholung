@@ -1,3 +1,11 @@
+## 3.0.32 – 15. September 2026
+
+### Behoben
+
+- **Namensabgleich (v3.0.31) hatte eine Stelle übersehen.** Eigene Überprüfung der Arbeit fand: `impressum.html` nennt sich überall „Adrabic" (Titel, Meta-Description, OG-Tags), aber die Fußzeile zeigte weiterhin „Wiederholung" (`rechtsseite__fuss`). Jetzt auf „Adrabic" angeglichen. Geprüft und bestätigt unverändert korrekt: alle übrigen Vorkommen von „Wiederholung" im Repo sind das Fachwort für wiederkehrende Karten, kein Markenname (`manifest.json`, `landing.html` Meta-Beschreibung und Merkmalsliste, `sw.js`-Kommentar).
+
+---
+
 ## 3.0.31 – 15. September 2026
 
 ### Geändert

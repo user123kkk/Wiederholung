@@ -582,3 +582,46 @@ jetzt.
 **Nächster Schritt:** Keiner von Agenten-Seite. 2.4 wartet auf den Betreiber,
 falls er sie überhaupt beantworten will — sie ist keine Voraussetzung für
 irgendetwas anderes.
+
+### 2026-09-15 — Eigene Überprüfung nach v3.0.31: eine übersehene Stelle gefunden (v3.0.32)
+
+**Geändert:**
+- `impressum.html:105` — Fußzeile `<p class="hint rechtsseite__fuss">Wiederholung</p>`
+  → `Adrabic`.
+- `app.js:19` `APP_VERSION` 3.0.31 → 3.0.32, `sw.js:10` `CACHE_NAME`
+  nachgezogen, `CHANGELOG.md` Eintrag 3.0.32.
+
+**Entscheidung:**
+
+1. **Der Namensabgleich aus v3.0.31 wurde gegengeprüft, nicht als erledigt
+   angenommen.** Grep nach „Wiederholung" über `*.html`, `*.json`, `*.js`
+   lief erneut, diesmal breiter als beim ersten Mal (vorher nur `app.js`).
+   Fund: `impressum.html` trägt überall „Adrabic" (Titel, Meta-Description,
+   OG-Tags), aber seine Fußzeile zeigte weiterhin „Wiederholung" — exakt
+   dieselbe Inkonsistenz wie in `app.js`, nur auf einer anderen Seite und
+   deshalb beim ersten Durchgang nicht im Blick.
+
+2. **Alle übrigen Treffer geprüft und als unproblematisch bestätigt, nicht
+   nur übersehen:** `manifest.json` („Karteikarten mit Wiederholung nach
+   Stufen"), `landing.html` (Meta-Beschreibung „Wiederholung in wachsenden
+   Abständen", Merkmalsliste „echte Wiederholungen"), `sw.js`-Kopfkommentar
+   („Service Worker für Adrabic-Wiederholung") — alle vier sind das Fachwort
+   für wiederkehrende Karten, kein Markenname. Zum Vergleich:
+   `datenschutzerklaerung.html` hat an derselben CSS-Stelle
+   (`rechtsseite__fuss`) ein Datum stehen, keinen Markennamen — dort war also
+   nie ein Fund möglich.
+
+3. **Layout-Risiko geprüft, keins gefunden.** `.solo-mark strong` und
+   `.nav__brand strong` haben keine feste Breite oder `overflow: hidden` in
+   `styles.css` — „Adrabic" (7 Zeichen) ist zudem kürzer als „Wiederholung"
+   (12 Zeichen), also eher unkritischer als vorher.
+
+4. **JSON-LD/FAQ-Synchronität aus derselben Änderung nachgeprüft:** Text an
+   beiden Stellen (`landing.html` sichtbare FAQ und `FAQPage`-JSON-LD) exakt
+   identisch, JSON-LD-Block mit `python3 -c "json.loads(...)"` als valides
+   JSON bestätigt. `node -c app.js` und `node -c sw.js` fehlerfrei.
+
+**Offen:** Nichts Neues. Wie zuvor: 2.4 (Marke oder Person) wartet auf den
+Betreiber, blockiert nichts.
+
+**Nächster Schritt:** Keiner von Agenten-Seite an diesem Strang.
