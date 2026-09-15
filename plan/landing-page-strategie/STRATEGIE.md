@@ -3,10 +3,13 @@
 Anleitung: [`ANLEITUNG.md`](ANLEITUNG.md) · Befund: [`BEFUND.md`](BEFUND.md)
 Logbuch: [`LOGBUCH.md`](LOGBUCH.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
 Angelegt: 13. September 2026
-Status: **2.2 und 2.3 umgesetzt (v3.0.20). 2.1 wieder offen.** Ein erster
+Status: **2.2 und 2.3 umgesetzt (v3.0.20). 2.1 auf A (Neue legen selbst an). 
+2.4, 2.5, 2.6 offen, blockieren nichts. C + Lehrer-Konzept später.** Ein erster
 Versuch zu 2.1 (v3.0.21: ein vom Agenten geschriebener Kartensatz) wurde vom
 Betreiber zurückgenommen (v3.0.22) — zu Recht, siehe unten. `landing.html`
-trägt seitdem wieder Fassung A.
+trägt seitdem Fassung A. Der Betreiber bestätigt am 15.09.2026: Fassung A bleibt,
+bis Fassung B oder C mit konkretem Inhalt vorliegt — solange bringt die Seite 
+nichts, und das ist okay.
 
 ---
 

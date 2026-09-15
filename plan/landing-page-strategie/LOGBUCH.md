@@ -501,3 +501,43 @@ Betreiber entweder (a) Wortmaterial für einen eigenen, einfachen
 Einsteigersatz liefert (→ B) oder (b) seinen Medina-Kartensatz fertig hat und
 sagt, ob/wie er auf der Landing Page erscheinen soll (→ C). Weiter mit Strang
 B (Phase 8, Rückmeldeweg).
+
+### 2026-09-15 — Entscheidung 2.1 bestätigt: A bleibt, B+C später mit Lehrer-Konzept
+
+**Geändert:** nur dieses Logbuch und `STRATEGIE.md` Kopfzeile. Kein Produktivcode.
+
+**Entscheidung:**
+
+1. **Fassung A bleibt bestehen.** Der Betreiber: 2.1 = A, weil C später kommt
+   **zusammen** mit dem Lehrer-Konzept — nicht vorher, und nicht ohne das.
+   Medina Buch 1 war rechtlich blockiert, jetzt nicht mehr, aber die Struktur
+   ist selbst beim Betreiber noch offen (YouTube-Playlist, möglicherweise
+   kostenpflichtig — entscheidet, ob es auf der Landing Page landete oder nicht).
+
+2. **Das ist der richtige Abzug.** Fassung B brauchte einen vom Betreiber
+   geschriebenen Kartensatz — nicht geliefert. Fassung C brauchte strukturelle
+   Klarheit — nicht geklärt. Fassung A ist die einzige, die **heute** zutrifft:
+   Neue legen ihre erste Karte selbst an. Das ist nicht ein Provisorium, das
+   wir bedauern, es ist ehrlich und funktioniert.
+
+3. **Die Landing Page bleibt stabil.** A zeigt eine funktionierende App, echte
+   Merkmale (Handschrift, Lektionen, drei Bewertungen), die Stufenleiter
+   statt Behauptungen. Sie bringt nichts, was die Nutzer nicht einlösen
+   können — das ist genau was Phase 6 verlangt hat. Leute, die B oder C
+   warten (Startkartensatz, Medina-Struktur), würden die Seite gar nicht
+   nutzen; die Seite wird besser, wenn es diesen Inhalt wirklich gibt, nicht
+   wenn sie so tut, als gäbe es ihn.
+
+**Offen:**
+
+- Lehrer-Konzept + Medina-Kartensatz bleiben unter „Später" in `../PLAN.md`.
+  Sie sind ein Strang für sich, mit eigenen Entscheidungen zum Bezahlmodell
+  und zur Firestore-Struktur. Nicht hier.
+- 2.4, 2.5, 2.6 — weiterhin offen, blockieren nichts, können später einzeln
+  entschieden werden.
+
+**Nächster Schritt:** Kein nächster Schritt für diesen Strang. Phase 8 fertig,
+Phase 9 fertig, Phasen 0–9 alle durch. Landing-Page-Strategie bleibt `läuft`,
+weil 2.1 auf A gesetzt ist — damit ist dieser **Teil** erledigt. Neuer Inhalt
+(B oder C mit echter Struktur) führt später zu einer neuen Sitzung, nicht
+jetzt.

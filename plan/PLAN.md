@@ -325,27 +325,32 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Ein offener Strang, hängt an einer Entscheidung des Betreibers.**
+**Alle Phasen und beide Stränge stabil — keine Blockaden.**
 Phase 9 (Barrierefreiheit) ist seit v3.0.26 `fertig`. Phase 8 (Rückmeldung)
 ist seit 15.09.2026 (v3.0.30) `fertig` — beide Formulare funktionieren und
-sind rechtskonform. Die Phasen 0–9 sind damit alle durch. **Ohne eine
-Entscheidung unter Strang A kann keine weitere Arbeit ohne Rückfrage
-geschehen.**
+sind rechtskonform. Die Phasen 0–9 sind damit alle durch. Strang A
+(Landing-Page-Strategie): 2.1 auf Fassung A gesetzt (15.09.2026), damit
+stabil. Strang B (Phase 8) erledigt. **Alle offenen Punkte liegen jetzt unter
+„Später" in diesem Dokument** — Lehrer-Konzept + Medina-Kartensatz mit
+Bezahlmodell, die Namensfrage innen/außen, Marke oder Person (2.4/2.5/2.6
+der Strategie). Eine neue Session kann wählen, welcher dieser Punkte als
+nächster drankommt — keine Reihenfolge verbaut, keine Frage blockiert etwas
+anderes mehr.
 
-**Strang A — Landing-Page-Strategie** (`läuft`, siehe
-[`landing-page-strategie/LOGBUCH.md`](landing-page-strategie/LOGBUCH.md)).
-[`STRATEGIE.md`](landing-page-strategie/STRATEGIE.md) steht vollständig.
-Entschieden und umgesetzt: 2.2 *eng anfangen, weit anlegen* · 2.3
-*„wissenschaftlich bewährt" ersetzen* (beide seit v3.0.20/22 live). 2.1
-(womit ein Neuer anfängt) ist auf **Fassung A zurückgestellt** — ein erster
-Versuch mit einem vom Agenten erfundenen Kartensatz (v3.0.21) wurde vom
-Betreiber zu Recht zurückgewiesen (v3.0.22): welcher Wortschatz öffentlich
-steht, ist seine Entscheidung. `landing.html` zeigt seitdem „Dein Stoff,
-nicht unserer" — Neue legen selbst an. Offen bleiben 2.1 (Inhalt, falls der
-Betreiber selbst einen Startkartensatz schreiben will), 2.4 (Marke oder
-Person), 2.5 (Namensabgleich innen „Wiederholung"/außen „Adrabic"), 2.6
-(Wortlaut der Kostenfrage) — **keine davon blockiert etwas**, dieser Strang
-ist im Kern fertig.
+**Strang A — Landing-Page-Strategie — 2.1 gesetzt, alles stabil.**
+[`STRATEGIE.md`](landing-page-strategie/STRATEGIE.md) steht vollständig,
+alle Fassungen A/B/C sind formuliert. Entschieden und umgesetzt: 2.2 *eng
+anfangen, weit anlegen* · 2.3 *„wissenschaftlich bewährt" ersetzen* (beide
+seit v3.0.20 live). 2.1 (womit ein Neuer anfängt): **Fassung A wird
+beibehalten.** Ein erster Versuch mit einem vom Agenten erfundenen Kartensatz
+(v3.0.21) wurde vom Betreiber zu Recht zurückgewiesen (v3.0.22): welcher
+Wortschatz öffentlich steht, ist seine Entscheidung. `landing.html` zeigt
+seit v3.0.22 „Dein Stoff, nicht unserer" — Neue legen ihre erste Karte
+selbst an. Fassung C (Medina Buch 1) kommt später **zusammen mit dem
+Lehrer-Konzept**, wenn die strukturellen Fragen geklärt sind (YouTube-Playlist,
+Bezahlmodell). Offen bleiben 2.4 (Marke oder Person), 2.5 (Namensabgleich
+innen „Wiederholung"/außen „Adrabic"), 2.6 (Wortlaut der Kostenfrage) —
+**keine davon blockiert etwas.**
 
 Am selben Tag zusätzlich zwei fundamentale Bugs gefunden und behoben, beide
 **unabhängig von der Landing-Page-Strategie** (schon vor Phase 5 im Code):
