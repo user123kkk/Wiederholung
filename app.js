@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.33";
+const APP_VERSION = "3.0.34";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -3353,6 +3353,7 @@ async function submitCardForm() {
   /* A4: Was diese eine Karte betrifft, wird gezielt geschrieben - nie mehr
      der ganze Kartenbestand. Der Patch wird waehrend der Aenderung
      mitgefuehrt, damit nur wirklich geaenderte Felder darin landen. */
+  const warEdit = !!ui.editId;
   const patch = {};
   if (ui.editId) {
     const card = findCard(ui.editId);
@@ -3411,9 +3412,14 @@ async function submitCardForm() {
   patchDoc(patch);
   render();
   /* D1: Fokus zurueck ins Wort-Feld, damit man mehrere Vokabeln
-     hintereinander eingeben kann, ohne jedes Mal hineinzutippen. */
-  const wortEl = document.getElementById("f-wort");
-  if (wortEl) wortEl.focus();
+     hintereinander eingeben kann, ohne jedes Mal hineinzutippen.
+     Nur beim Neuanlegen - wer eine bestehende Karte bearbeitet hat, wollte
+     damit nicht automatisch die Tastatur fuer die naechste neue Karte
+     oeffnen (Beobachtung 15.09.2026). */
+  if (!warEdit) {
+    const wortEl = document.getElementById("f-wort");
+    if (wortEl) wortEl.focus();
+  }
 }
 function editCard(id) {
   /* hinweisGefuehrt zeichnet ueber den Dialog selbst neu - wichtig, weil der

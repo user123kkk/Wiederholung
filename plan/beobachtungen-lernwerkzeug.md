@@ -32,7 +32,7 @@ unüblich und schwer zu entdecken (kein sichtbarer Hinweis); ein normaler
 Einfachtipp auf die Zeile (außerhalb der Aktions-Knöpfe) wäre naheliegender
 und konsistenter mit Touch-Konventionen.
 
-## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe)
+## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe) — ⏸ nicht lokalisiert (15.09.2026)
 
 **Beobachtung:** Beim Scrollen mit dem Daumen links (wo die 6 Verschieben-
 Knöpfe sitzen) wurde aus Versehen eine Karte verschoben. Wunsch: Doppeltipp
@@ -49,6 +49,18 @@ das schon existierende Ziehgriff-Muster aus Phase 9 (dort extra für
 Tastatur/Fokus gebaut, aber das Prinzip „bewusstes Fassen vor dem Bewegen"
 passt auch hier).
 
+**Versuch am 15.09.2026, nicht erfolgreich:** Im Code gesucht nach einem
+Muster mit sechs Knöpfen links an einer Karte, die etwas verschieben.
+Geprüft und verworfen: die Kartenzeile in der Verwalten-Liste (Ziehgriff +
+Bearbeiten + Löschen = drei, nicht sechs, und die zwei Buttons sitzen rechts,
+nicht links), die Mehrfachauswahl-Leiste (`select-actionbar`, zwei bis drei
+Buttons), das Speicherkarten-Tag-System (keine Buttons, nur Text). Keine
+Stelle passt eindeutig zu „6 Knöpfe links". Bewusst nicht geraten und am
+falschen Code geändert — bei einem Bug mit Datenverlust-Risiko (ungewollte
+Kartenverschiebung) ist eine falsche Korrektur schlimmer als keine. Braucht
+einen Screenshot oder eine genauere Ortsangabe vom Betreiber, bevor das
+angefasst wird.
+
 ## 3. Zurück zur Scroll-Position nach dem Bearbeiten
 
 **Beobachtung:** Nach jedem Bearbeiten einer Karte musste wieder ganz nach
@@ -62,7 +74,7 @@ Hängt technisch mit Punkt 1 zusammen: Wenn Bearbeiten künftig in einem Modal
 dieser Punkt von selbst — beide Punkte sollten zusammen entschieden werden,
 nicht einzeln.
 
-## 4. Tastatur öffnet sich ungewollt nach dem Speichern
+## 4. Tastatur öffnet sich ungewollt nach dem Speichern — ✅ behoben (v3.0.34)
 
 **Beobachtung:** Nach dem Bearbeiten einer Karte und „Fertig"/Speichern
 öffnet sich sofort die Tastatur für das Feld „Karte anlegen" — auch wenn man
@@ -73,6 +85,14 @@ gar keine neue Karte anlegen wollte.
 beabsichtigt sein dürfte — der Nutzer soll selbst entscheiden, wann er dieses
 Feld antippt. Vermutlich eine einzelne `.focus()`-Zeile im entsprechenden
 Bearbeiten-Abschluss-Pfad.
+
+**Behoben am 15.09.2026 (v3.0.34):** Bestätigt genau wie vermutet.
+`submitCardForm()` (`app.js:3332`) bedient sowohl Neuanlegen als auch
+Bearbeiten und rief am Ende immer `document.getElementById("f-wort").focus()`
+auf (Kommentar „D1": Fokus zurück, damit man mehrere Vokabeln hintereinander
+eintippen kann — sinnvoll nur beim Neuanlegen). Fix: Vor dem Zurücksetzen von
+`ui.editId` in einer Variable `warEdit` gemerkt, der Fokus-Aufruf läuft jetzt
+nur noch, wenn `!warEdit`.
 
 ## 5. Lernen/Üben-Feld auf dem iPad nicht mittig
 
@@ -205,7 +225,7 @@ Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)*
 entschieden werden, da 3 um eine bewusste Erhaltung nach einem Modal/Dialog
 geht, während 14 um ein unerwartetes Verhalten bei einfachem Navigation geht.
 
-## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal
+## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — ⏸ neue Spur, nicht gefixt (15.09.2026)
 
 **Beobachtung:** Navigation zwischen App und statischen Seiten ist fehlerhaft:
 - Von der App (z.B. Fehlerformular in Einstellungen) zur externen Seite
@@ -232,6 +252,34 @@ Navigationen sein, nicht manipulierte History; oder die statischen Seiten
 müssen in einen Single-Page-Kontext integriert sein (eine Seite, mehrere
 Views). Heute sind sie separate HTML-Dateien, was der History-Manipulation
 widerspricht.
+
+**Geprüft am 15.09.2026: Vermutung 1 widerlegt.** `grep` nach
+`history`/`History`/`pushState`/`popstate`/`replaceState` in `app.js` findet
+**nichts** — die App manipuliert `window.history` an keiner Stelle. Die
+Links zu `datenschutzerklaerung.html`/`impressum.html` sind echte `<a href>`,
+echte Navigationen. Vermutung 1 trifft nicht zu.
+
+**Neue Spur, aber nicht verifiziert:** `index.html` lädt `app.js` als
+ES-Modul (`<script type="module">`), das bei jedem echten Seitenladen neu
+läuft und dann `initFirebase()` aufruft (`app.js:1222`, dynamischer Import
+von `gstatic.com` — exakt die Datei aus der gemeldeten Fehlermeldung).
+Schlägt das fehl, greift seit v3.0.24 eine Selbstheilung (Service
+Worker/Caches löschen, neu laden) — aber nur **einmal pro Sitzung**
+(`sessionStorage`-Flag `adrabic-selbstheilung`, bewusst gegen
+Endlosschleifen, siehe `app.js:6657-6659`). Hypothese: Wenn diese
+Selbstheilung schon beim ersten Laden gegriffen hat, zeigt ein zweiter
+Ladefehler (z. B. ausgelöst durch Browser-Zurück, je nach
+Back-Forward-Cache-Verhalten des Browsers) direkt den rohen
+Fehlerbildschirm statt eines erneuten Heilungsversuchs — das passt zur
+gemeldeten Fehlermeldung.
+
+**Nicht gefixt, weil nicht verifizierbar ohne echten Browser.** Anders als
+Punkt 4 ist das kein eindeutig lesbarer Code-Fehler, sondern eine Vermutung
+über Browser-Cache-Verhalten (bfcache) und Timing. Ein blinder Eingriff am
+bestehenden Selbstheilungs-Mechanismus (der bewusst gegen Endlosschleifen
+gebaut ist) ohne Testmöglichkeit wäre riskanter als der jetzige Zustand.
+Bräuchte einen echten Browser-Test (wie bei Phase 9 mit Playwright), bevor
+hier etwas geändert wird.
 
 **Beobachtung:** Der Bildschirm verschiebt sich bzw. der Viewport ändert sich:
 - Beim Scrollen in der Verwalten-Liste verschieben sich die Seitenverhältnisse

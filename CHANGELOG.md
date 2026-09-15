@@ -1,3 +1,13 @@
+## 3.0.34 – 15. September 2026
+
+### Behoben
+
+- **Ungewollter Autofokus nach dem Bearbeiten einer Karte (Beobachtung 4, 15.09.2026).** `submitCardForm()` fokussiert nach dem Speichern das Wort-Feld, damit man beim Neuanlegen mehrere Vokabeln hintereinander eintippen kann – dieser Fokus-Rücksprung lief aber auch nach dem Bearbeiten einer bestehenden Karte, wo er nur die Tastatur ungewollt öffnete. Fokus läuft jetzt nur noch beim Neuanlegen.
+
+Freigegeben vom Betreiber für diesen einen Durchgang (drei markierte Punkte aus `plan/beobachtungen-lernwerkzeug.md`) – die übrigen Beobachtungen bleiben unangetastet, bis eine weitere Freigabe kommt.
+
+---
+
 ## 3.0.33 – 15. September 2026
 
 ### Behoben
