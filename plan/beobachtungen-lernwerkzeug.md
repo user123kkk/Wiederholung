@@ -136,7 +136,7 @@ Browser nicht zuverlässig zu reproduzieren — bräuchte gezielten Test in den
 Breitenbereichen, die ein iPad tatsächlich hat (Hoch- und Querformat sind
 vermutlich unterschiedlich betroffen).
 
-## 6. Formatierung (Absätze) der Notiz wird beim Anzeigen nicht übernommen
+## 6. Formatierung (Absätze) der Notiz wird beim Anzeigen nicht übernommen — ✅ behoben (v3.0.36)
 
 **Beobachtung:** Wird die Notiz einer Karte angezeigt (Popup), erscheint sie
 anders formatiert, als sie eingegeben wurde — Absätze usw. gehen verloren.
@@ -146,6 +146,16 @@ erhält Zeilenumbrüche, die Anzeige nutzt aber vermutlich kein
 `white-space: pre-line`/`pre-wrap` (oder rendert über `textContent` korrekt,
 aber eine andere Stelle im Anzeige-Pfad normalisiert Leerraum weg). Klar
 eingrenzbar, sobald jemand entscheidet, dass das gebaut wird.
+
+**Behoben am 15.09.2026 (v3.0.36):** Bestätigt genau wie vermutet.
+`.study-extra` (`styles.css`) hatte kein `white-space` — jetzt `pre-wrap`.
+Zusätzlicher Fund dabei: Die aufklappbare Notiz im Lernen-Tab
+(`app.js:4419`, Chevron-Knopf bei „Gesehen"-Karten) nutzte dieselbe
+`.extra-note`-Klasse wie die einzeilige Listenvorschau in Verwalten
+(`app.js:5792`, dort korrekt mit `nowrap`+`ellipsis` für die Kurzansicht).
+Für den bewusst aufgeklappten Volltext war `nowrap` falsch. Jetzt eigene
+Klasse `.extra-note-voll` mit `pre-wrap`, die Listenvorschau bleibt
+unverändert bei `.extra-note`.
 
 ## 7. Arabische Schrift bei der Kategorie leicht fehlerhaft
 
@@ -225,7 +235,7 @@ Bug im engeren Sinn, sondern wahrgenommene Ladezeit/Politur — passt eher zu
 
 ---
 
-## 13. Über-Scrolling: weiter nach unten als nötig
+## 13. Über-Scrolling: weiter nach unten als nötig — ⏸ nicht lokalisiert (15.09.2026)
 
 **Beobachtung:** In allen 3 Tabs (Verwalten, Lernen, Üben) kann man weiter
 nach unten scrollen als sinnvoll ist. Beispiel: Bei Lernen, wo es nichts mehr
@@ -236,7 +246,18 @@ zu lernen gibt, kann man bis ganz nach unten scrollen, bis alles leer ist.
 Sollte ein Mindest-`max-height` oder Scroll-Einschränkung geben, so dass die
 letzte sichtbare Zeile der Liste nicht ganz oben landet.
 
-## 14. Scroll-Position wird zwischen Bereichen nicht zurückgesetzt
+**Geprüft am 15.09.2026, nicht behoben:** Mehrere Container mit
+`min-height: 100dvh` gefunden (`.view--modus`, `.boot`, `.study-card` bei
+bestimmten Breiten), teils mit zusätzlichem Padding. Mit `box-sizing:
+border-box` (global gesetzt) sollte das theoretisch kein Overscroll
+verursachen, aber ob und wie stark es in der Praxis dennoch auftritt, hängt
+von der tatsächlich gerenderten Höhe mehrerer verschachtelter Container
+zusammen mit `dvh`-Verhalten bei ein-/ausblendender Adressleiste auf
+Mobilgeräten ab — das lässt sich nicht zuverlässig durch Code-Lesen
+berechnen, nur durch echtes Messen im Browser. Bewusst nicht geraten und
+keine CSS-Werte blind geändert.
+
+## 14. Scroll-Position wird zwischen Bereichen nicht zurückgesetzt — ✅ behoben (v3.0.36)
 
 **Beobachtung:** Wenn man in einem Bereich (z. B. Medina im Verwalten) nach
 unten scrollt und dann zu einem anderen Bereich wechselt (oder ein neues Tab
@@ -248,6 +269,17 @@ Scroll-Position unabhängig speichern und beim Zurückkehren wiederherstellen,
 oder (einfacher) beim Tab-Wechsel oder Bereich-Wechsel nach oben springen.
 Aktuell sieht es aus, wie wenn ein globales Scroll-Memory existiert, das
 nicht neu zurückgesetzt wird.
+
+**Behoben am 15.09.2026 (v3.0.36):** Bestätigt. `selectBereich()` (Zeile
+~2759) und die drei Tab-Wechsel-Aktionen `tab-lernen`/`tab-fortschritt`/
+`tab-verwalten` setzten viele UI-Zustände zurück (Suchfeld, Auswahlmodus,
+Seiten-Index …), aber nie die Scroll-Position — anders als `einstellungen`/
+`einstellungen-zu`, die das schon taten (`window.scrollTo(0, 0)`). Dasselbe
+jetzt an allen vier Stellen ergänzt. Bewusst **kein** `springeNachOben()`
+verwendet — diese bestehende Funktion ist für sanfte Sprünge zu einem
+bestimmten Element innerhalb der Seite gedacht (Üben/Abfrage/Durchsicht),
+nicht für harte Tab-/Bereichswechsel; das direkte `scrollTo(0,0)` ohne
+Animation passt zum bestehenden Einstellungen-Muster.
 
 Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)**
 — beide sind Scroll-Verwaltungs-Probleme, sollten aber nicht zusammen

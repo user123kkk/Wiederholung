@@ -1,3 +1,16 @@
+## 3.0.36 – 15. September 2026
+
+### Behoben
+
+- **Notiz-Formatierung ging beim Anzeigen verloren (Beobachtung 6, 15.09.2026).** `.study-extra` (Popup beim Anzeigen/Lernen einer Karte) hatte kein `white-space` gesetzt – der Browser kollabierte jeden Zeilenumbruch aus der `<textarea>`-Eingabe zu einem Leerzeichen. Jetzt `white-space: pre-wrap`. Zusätzlich gefunden: Die aufklappbare Notiz im Lernen-Tab (Chevron-Knopf bei „Gesehen"-Karten) nutzte dieselbe `.extra-note`-Klasse wie die einzeilige Listenvorschau in Verwalten (dort korrekt mit `nowrap`+`ellipsis`) – für den aufgeklappten Volltext war das falsch. Eigene Klasse `.extra-note-voll` mit `pre-wrap` eingeführt, nur die Listenvorschau behält `nowrap`.
+- **Scroll-Position blieb beim Bereichs- oder Tab-Wechsel stehen (Beobachtung 14, 15.09.2026).** `selectBereich()` sowie die drei Tab-Wechsel (`tab-lernen`, `tab-fortschritt`, `tab-verwalten`) setzten viele UI-Zustände zurück, aber nie die Scroll-Position – anders als `einstellungen`/`einstellungen-zu`, die das schon taten. Wer unten in einem Bereich war und wechselte, landete im neuen Bereich ebenfalls unten. `window.scrollTo(0, 0)` an allen vier Stellen ergänzt, konsistent mit dem bestehenden Einstellungen-Muster (bewusst kein `springeNachOben()` – das ist für sanfte Sprünge zu einem Element gedacht, nicht für harte Tab-Wechsel).
+
+### Geprüft, nicht behoben
+
+- **Over-Scrolling (Beobachtung 13).** Ursache nicht zuverlässig lokalisierbar ohne echten Browser – hängt von tatsächlich gerenderten Höhen mehrerer verschachtelter Container (`min-height: 100dvh` an mehreren Stellen) ab, die sich nicht durch Code-Lesen berechnen lassen. Bewusst nicht geraten.
+
+---
+
 ## 3.0.35 – 15. September 2026
 
 ### Behoben

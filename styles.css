@@ -1126,6 +1126,10 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   background: var(--surface); border: 1px solid var(--border-subtle);
   border-radius: var(--r-md); padding: var(--space-4);
   text-align: left;
+  /* Die Notiz kommt aus einer <textarea> - ohne pre-wrap kollabiert der
+     Browser jeden Zeilenumbruch zu einem Leerzeichen, und Absaetze gehen
+     beim Anzeigen verloren (Beobachtung 15.09.2026). */
+  white-space: pre-wrap;
   animation: enter-rise var(--dur-base) var(--ease-out) both;
 }
 .study-extra img {
@@ -1377,6 +1381,13 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .extra-note {
   font-size: 0.75rem; color: var(--text-3); margin-top: 2px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Aufgeklappte Notiz im Lernen-Tab (Chevron-Knopf) - hier soll der volle
+   Text mit Zeilenumbruechen sichtbar sein, anders als in der einzeiligen
+   Listenvorschau oben. Eigene Klasse statt .extra-note zu ueberladen. */
+.extra-note-voll {
+  font-size: 0.8125rem; color: var(--text-2); margin-top: var(--space-2);
+  white-space: pre-wrap;
 }
 .card-tags-inline { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
 

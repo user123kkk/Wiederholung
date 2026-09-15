@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.35";
+const APP_VERSION = "3.0.36";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -2778,6 +2778,10 @@ function selectBereich(bereichId) {
   ui.drillSource = "stufen";
   ui.drillSetIds = new Set();
   ui.openSetId = null;
+  /* 15.09.2026: Ohne das blieb die Seite auf der Scroll-Position des vorigen
+     Bereichs stehen - wer unten in "Medina" war und zu einem anderen
+     Bereich wechselte, landete dort ebenfalls unten statt oben. */
+  window.scrollTo(0, 0);
   render();
 }
 async function renameBereich() {
@@ -4416,7 +4420,7 @@ function renderDurchsicht(set) {
     if (c.extra) {
       html += '<button class="lern-notiz-knopf" data-action="lern-notiz" data-id="' + esc(c.id) + '" aria-expanded="' + (notizOffen ? "true" : "false") + '">' +
         ikon(notizOffen ? "chevronUnten" : "chevronRechts", "i-sm") + ' Notiz</button>';
-      if (notizOffen) html += '<div class="extra-note">' + renderExtra(c.extra, []) + '</div>';
+      if (notizOffen) html += '<div class="extra-note-voll">' + renderExtra(c.extra, []) + '</div>';
     }
     html += '</div>';
     html += '<div class="lern-tat">';
@@ -6561,12 +6565,15 @@ document.body.addEventListener("click", e => {
     case "add-bereich": addBereich(); break;
     case "rename-bereich": renameBereich(); break;
     case "delete-bereich": deleteBereich(); break;
-    case "tab-lernen": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; render(); break;
-    case "tab-fortschritt": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; render(); break;
+    /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
+       ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
+       stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
+    case "tab-lernen": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-fortschritt": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
-    case "tab-verwalten": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; render(); break;
+    case "tab-verwalten": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;
