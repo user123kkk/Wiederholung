@@ -1,3 +1,11 @@
+## 3.0.38 – 15. September 2026
+
+### Behoben
+
+- **Ziehgriff markierte Text statt zu ziehen (Testrückmeldung 15.09.2026, v3.0.35 nachgebessert).** `touch-action: manipulation` (v3.0.35) erlaubt zwar natives Scrollen, verhindert aber – anders als das vorherige `none` – nicht die native Textauswahl-Geste beim Halten. `-webkit-touch-callout: none` ergänzt, dasselbe Paar aus `user-select`+`touch-callout`, das jeder Button in der App bereits trägt. Noch nicht am Gerät bestätigt.
+
+---
+
 ## 3.0.37 – 15. September 2026
 
 ### Behoben

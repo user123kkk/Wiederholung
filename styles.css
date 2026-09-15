@@ -1379,8 +1379,14 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
      ersten Antipper normal scrollen; das JS aktiviert das Ziehen erst beim
      zweiten Antippen und uebernimmt die Beruehrung dann per
      setPointerCapture - das reicht aus, um den nativen Scroll fuer diesen
-     einen Kontakt zu unterdruecken. */
+     einen Kontakt zu unterdruecken.
+     touch-action steuert aber nur Scroll/Zoom, keine Text-Markierung: Beim
+     Halten nach dem zweiten Antippen startete das Handy trotzdem die
+     native Textauswahl (erster Testlauf 15.09.2026). -webkit-touch-callout
+     dazu ergaenzt - dasselbe Paar aus user-select+touch-callout, das jeder
+     Knopf in der App schon traegt (siehe .btn-aehnliche Basisregel). */
   touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
 }
 .drag-handle:active { cursor: grabbing; color: var(--accent); }
 
