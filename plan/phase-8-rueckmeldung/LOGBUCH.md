@@ -75,3 +75,30 @@ dasselbe noch einmal.
 er mit einer Wahl, wird danach `firestore.rules` (bei A/D) bzw. `landing.html`
 und/oder `app.js` (je nach Wahl) gebaut, die Datenschutzerklärung ergänzt, und
 mit einer Testnachricht geprüft, dass sie ankommt (Fertig-Kriterium 1).
+
+---
+
+### 2026-09-15 — Fehlerformular implementiert
+
+**Geändert:**
+- `index.html` — Modal-Dialog mit Fehlerformular-HTML hinzugefügt (Zeilen 57-81)
+- `styles.css` — Umfangreiche CSS-Stile für `.error-modal` und seine Komponenten hinzugefügt
+- `app.js` — Sektion „Hilfe" in `renderEinstellungen()` hinzugefügt (Zeile 4668-4675) mit Button `data-action="open-error-modal"`. Funktionen `openErrorModal()` und `closeErrorModal()` implementiert (Zeile 6436-6459). DOMContentLoaded-Handler für Formvalidierung und Mailto-Submit (Zeile 6461-6500). Keydown-Handler erweitert für Escape-Taste (Zeile 6424-6431). Event-Delegation um zwei Cases erweitert (Zeile 6570-6571). APP_VERSION auf 3.0.29 erhöht (Zeile 19)
+- `sw.js` — CACHE_NAME auf adrabic-3.0.29 erhöht (Zeile 10)
+- `CHANGELOG.md` — Eintrag für Version 3.0.29 hinzugefügt mit vollständiger Beschreibung
+
+**Entscheidung:**
+
+1. **Fehlerformular folgt demselben Muster wie Kontaktformular.** Beide nutzen sichere Mailto-Implementierung (Wahl B aus MOEGLICHKEITEN.md) mit Honeypot-Feld und verschlüsselter E-Mail-Adresse.
+
+2. **Modal-Dialog statt Seite.** Das Fehlerformular ist in den Einstellungen erreichbar (wo schon ein Konto besteht) und wird als modales Overlay geöffnet, nicht als neue Seite. Das unterscheidet es vom Kontaktformular (das auf landing.html eine Sektion ist) und rechtfertigt den größeren CSS-Aufwand.
+
+3. **Barrierefreie Bedienung.** Modal wird über Backdrop-Klick, Escape-Taste oder Cancel-Button geschlossen. Focus Management: Textarea erhält den Fokus nach dem Öffnen. Form wird auf Close geleert. `aria-hidden` steuert die Sichtbarkeit und das vom Screen-Reader ignorierte Rendering.
+
+4. **Konsistent mit Kontaktformular.** Name und E-Mail sind optional, Fehlerbeschreibung ist erforderlich (wie Nachricht im Kontaktformular). Dasselbe Honeypot-Feld `website`, dieselbe Validierungslogik, dieselbe verschlüsselte Mailto-Adresse.
+
+**Offen:**
+
+- Test mit echtem Fehler: Das Formular wurde gebaut, aber nicht interaktiv getestet — ein echter Fehler sollte ins Mailpostfach laufen, damit bestätigt ist, dass es funktioniert. Das Fertig-Kriterium 2 verlangt das.
+
+**Nächster Schritt:** Beide Formulare (Kontakt + Fehler) mit echten Testnachrichten prüfen. Beim Versenden sollte das Mail-Programm öffnen (oder die Telemetrie in browser console zeigen, dass der mailto:-Link richtig konstruiert wird), und die Nachricht sollte bei adrabic.de@gmail.com ankommen.

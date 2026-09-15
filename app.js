@@ -6472,7 +6472,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const encryptedEmail = "adrabic.de" + "@" + "gmail.com";
       const subject = encodeURIComponent("Fehler gemeldet");
       const body = encodeURIComponent(
         "Name: " + name + "\n" +
@@ -6480,7 +6479,9 @@ document.addEventListener("DOMContentLoaded", () => {
         "Fehler:\n" + description
       );
 
-      window.location.href = "mailto:" + encryptedEmail + "?subject=" + subject + "&body=" + body;
+      window.location.href = "mailto:" +
+        String.fromCharCode(97,100,114,97,98,105,99,46,100,101,64,103,109,97,105,108,46,99,111,109) +
+        "?subject=" + subject + "&body=" + body;
       closeErrorModal();
     });
   }
