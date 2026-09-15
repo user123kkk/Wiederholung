@@ -54,7 +54,7 @@
           { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+            "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' 'sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
           }
         ]
       }

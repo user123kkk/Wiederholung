@@ -152,3 +152,65 @@ mit einer Testnachricht geprüft, dass sie ankommt (Fertig-Kriterium 1).
 **Offen:** Keine
 
 **Nächster Schritt:** Phase 9 ist bereits fertig (13.09.2026). Weiter mit Strang A (Landing-Page-Strategie) — offene Entscheidung 2.1 klären.
+
+---
+
+### 2026-09-15 — Eigene Überprüfung findet kritischen CSP-Bug im Kontaktformular (v3.0.33)
+
+**Geändert:**
+- `firebase.json` — `script-src` in der Content-Security-Policy um den Hash
+  des Kontaktformular-Skripts erweitert (`sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=`).
+- `app.js:19` `APP_VERSION` 3.0.32 → 3.0.33, `sw.js:10` `CACHE_NAME`
+  nachgezogen, `CHANGELOG.md` Eintrag 3.0.33.
+
+**Entscheidung:**
+
+1. **Der vorige Eintrag hat „fertig" gemeldet, gestützt auf die Aussage des
+   Betreibers — ohne selbst gegen die CSP zu prüfen.** Auf Bitte um eine
+   detailliertere Überprüfung wurden alle Inline-`<script>`-Blöcke im Repo
+   gegen die CSP-Whitelist in `firebase.json` durchgerechnet (SHA-256, mit
+   Python und unabhängig mit `openssl dgst` gegengeprüft). Fund:
+   `landing.html` hat zwei Inline-Skripte — Hell/Dunkel-Schalter (Hash in der
+   CSP) und das Kontaktformular aus v3.0.28 (Hash **nicht** in der CSP).
+
+2. **Root Cause in der Git-Historie bestätigt.** `firebase.json` wurde
+   zuletzt in einem Commit vor `v3.0.17` geändert (Cache-Control-Fix), das
+   Kontaktformular kam mit v3.0.28 dazu — die CSP wurde beim Hinzufügen
+   dieses Inline-Skripts nie erweitert. Ohne `'unsafe-inline'` in
+   `script-src` blockiert der Browser jedes Inline-Skript ohne passenden
+   Hash; das `<form id="kontaktform">` hat kein `action`-Attribut, also
+   passierte beim Absenden nichts Sinnvolles — kein Mailto, kein Honeypot,
+   keine Validierung.
+
+3. **Das widerspricht der Bestätigung „funktioniert" aus dem letzten
+   Gespräch — nicht aufgelöst, nur festgehalten.** Mögliche Erklärungen
+   (lokaler Test ohne echte CSP-Header, verzögerter Firebase-Hosting-Deploy,
+   Test am Fehlerformular statt am Kontaktformular) sind nicht geprüft
+   worden, weil sie nicht mehr überprüfbar sind. Wichtig ist der jetzige
+   Zustand: Mit dem ergänzten Hash sollte das Kontaktformular ab dem
+   nächsten Deploy tatsächlich funktionieren, unabhängig davon, was vorher
+   der Fall war.
+
+4. **Das Fehlerformular war nicht betroffen.** Sein Code liegt vollständig
+   in `app.js`, das über `script-src 'self'` bereits erlaubt ist — nur
+   echte Inline-`<script>`-Blöcke ohne `src`-Attribut brauchen einen
+   CSP-Hash.
+
+5. **Weitere Prüfungen bei derselben Durchsicht, alle unauffällig:**
+   `firebase.json` bleibt valides JSON; kein `onclick=`/`onsubmit=` o. Ä. in
+   irgendeiner HTML-Datei (alles läuft über `addEventListener`, passt zur
+   fehlenden `'unsafe-inline'` in `script-src`); beide Mailto-Verschleierungen
+   (`String.fromCharCode(...)`) entschlüsseln zur selben Adresse
+   `adrabic.de@gmail.com`; `desktop-icon.png` existiert.
+
+**Offen:**
+
+- **Eine erneute Testnachricht über das Kontaktformular** wäre angebracht,
+  jetzt wo die CSP korrigiert ist — der vorige Test lief unter unbekannten
+  Bedingungen. Aufgabe des Betreibers, da ein echter Browser gebraucht wird.
+- Phase 8 bleibt `fertig` — der Fund ist ein reiner Bugfix an der
+  Infrastruktur (CSP, aus Phase 4), keine neue Anforderung an Phase 8 selbst.
+
+**Nächster Schritt:** Betreiber deployed und testet das Kontaktformular
+erneut, um zu bestätigen, dass es jetzt tatsächlich eine Mailto-Nachricht
+auslöst.

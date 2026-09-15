@@ -1,3 +1,11 @@
+## 3.0.33 – 15. September 2026
+
+### Behoben
+
+- **Kritisch: Das Kontaktformular auf `landing.html` wurde von der eigenen CSP blockiert.** Das Inline-Skript des Kontaktformulars (Phase 8, v3.0.28) hatte nie einen passenden Eintrag in der `script-src`-Direktive der Content-Security-Policy (`firebase.json`) – die Policy wurde beim Hinzufügen des Formulars nicht erweitert. Ohne `'unsafe-inline'` blockiert der Browser jedes Inline-Skript ohne passenden Hash; da das `<form>` kein `action`-Attribut hat, passierte beim Klick auf „Senden" nichts (nur ein Seiten-Reload) – kein Mailto, kein Honeypot, keine Validierung. Fund bei eigener, detaillierter Überprüfung der Arbeit: Hash mit zwei unabhängigen Methoden (Python `hashlib` und `openssl dgst`) nachgerechnet, Git-Historie bestätigt, dass die CSP zuletzt vor dem Kontaktformular geändert wurde. Fehlt in der `script-src` jetzt der zweite Hash (`sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=`) ergänzt. Das Fehlerformular in den Einstellungen war nicht betroffen, weil sein Code in der externen `app.js` liegt (`script-src 'self'` deckt das bereits ab).
+
+---
+
 ## 3.0.32 – 15. September 2026
 
 ### Behoben
