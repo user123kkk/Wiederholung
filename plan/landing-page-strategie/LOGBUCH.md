@@ -443,3 +443,61 @@ Landing-Page-Strategie abgeschlossen; offen bleiben nur 2.4–2.6.
 **Nächster Schritt:** Nichts Offenes von Agenten-Seite in diesem Strang außer
 2.4–2.6. Ein Startkartensatz entsteht erst wieder, wenn der Betreiber Inhalt
 liefert oder ausdrücklich freigibt.
+
+### 2026-09-15 — Medina-Rechtefrage geklärt, 2.1 bleibt trotzdem offen
+
+**Geändert:** Nur dieses Logbuch. Kein Produktivcode, kein `landing.html`.
+
+**Entscheidung:**
+
+1. **Die Urheberrechtsfrage zu Fassung C ist geklärt.** Der Betreiber: Der
+   Autor von Medina Buch 1 hat die Nutzung für Online-Zwecke ausdrücklich
+   freigegeben, das Werk wird bereits auf YouTube dafür genutzt, vollständige
+   PDFs sind öffentlich verfügbar. Der Rechtegrund, der Fassung C in
+   `STRATEGIE.md` 2.1 bislang blockierte („die Urheberrechtsfrage am
+   Buchinhalt muss vorher geklärt sein"), besteht damit nicht mehr.
+
+2. **Trotzdem keine Fassung gewählt — der eigene Kartensatz ist nicht fertig.**
+   Der Betreiber baut selbst an einem Kartensatz zu Medina Buch 1, der aber an
+   eine eigene YouTube-Playlist gebunden werden soll und möglicherweise Teil
+   eines künftigen Bezahlmodells wird („Premium" für alleine Lernende). Diese
+   Struktur ist nicht zu Ende gedacht — er selbst: „ich weiß jetzt nicht, ob
+   wirklich eine dieser Fassungen mäßig 100 %." Ein Kartensatz ins Repo zu
+   nehmen, dessen Zugriffslogik der Betreiber selbst noch offen hat, wäre
+   dieselbe Reihenfolge-Umkehrung wie am 13.09.2026 (v3.0.21) — nur diesmal
+   nicht erfunden, sondern verfrüht.
+
+3. **Im Gespräch kam eine Lehrer-/Schüler-/Bezahl-Idee erneut auf** — diesmal
+   konkreter: ein Lehrer weist per E-Mail nach, dass er Schüler hat, bekommt
+   dafür das Programm angeboten; ein eigener Kartensatz (an die Playlist
+   gebunden) würde für Alleinlernende ggf. kostenpflichtig. Das ist dieselbe
+   Idee, die bereits am 13.09.2026 unter „Später" in `../PLAN.md` geparkt
+   wurde, jetzt nur weiter ausgesponnen. Nichts davon ist hier geändert oder
+   neu aufgenommen worden — sie bleibt dort geparkt, aus denselben vier
+   Gründen (Lernwerkzeug, Daten Minderjähriger, neue Firestore-Regeln, keine
+   Antwort auf die heutige Frage „womit fängt ein Neuer an").
+
+4. **Fassung A bleibt damit der einzig stimmige Stand — nicht als Notlösung,
+   sondern weil sie heute die einzige ist, die zutrifft.** B scheitert daran,
+   dass kein Wortmaterial geliefert wurde; C daran, dass der vorgesehene
+   Kartensatz strukturell nicht fertig ist. `landing.html` bleibt unverändert.
+
+**Offen:**
+
+- **2.1 — Inhalt** bleibt offen, jetzt mit einer vierten faktischen Option
+  (C ist rechtlich nicht mehr blockiert, aber inhaltlich nicht einsatzbereit).
+  Wird erst wieder relevant, wenn der Betreiber seinen eigenen
+  Medina-Kartensatz fertig hat **und** entschieden hat, wie er ihn anbietet
+  (frei, gebunden an die Playlist, Premium — das entscheidet auch, ob er
+  überhaupt öffentlich auf der Landing Page landet oder nur hinter der
+  Playlist).
+- **Lehrer-/Schüler-/Bezahlmodus** bleibt unter „Später" in `../PLAN.md`,
+  jetzt mit der E-Mail-Nachweis-Idee als zusätzlicher Notiz dort nachzuziehen,
+  falls die Idee weiterverfolgt wird — nicht Teil dieses Strangs.
+- **2.4, 2.5, 2.6** weiterhin offen, blockieren nichts.
+
+**Nächster Schritt:** Kein Schritt von Agenten-Seite an diesem Strang, bis der
+Betreiber entweder (a) Wortmaterial für einen eigenen, einfachen
+Einsteigersatz liefert (→ B) oder (b) seinen Medina-Kartensatz fertig hat und
+sagt, ob/wie er auf der Landing Page erscheinen soll (→ C). Weiter mit Strang
+B (Phase 8, Rückmeldeweg).
