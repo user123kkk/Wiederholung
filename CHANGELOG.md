@@ -1,3 +1,11 @@
+## 3.0.35 – 15. September 2026
+
+### Behoben
+
+- **Versehentliches Verschieben beim Scrollen (Beobachtung 2, 15.09.2026).** Ursache gefunden: Der Ziehgriff hatte `touch-action: none` in `styles.css`, das native Scrollen schon bei der bloßen Berührung unterband – unabhängig davon, ob eine Karte tatsächlich gezogen werden sollte. Beim Scrollen mit dem Daumen über die Kartenliste reichte ein zufälliges Streifen über den Griff, um sofort eine Karte zu verschieben. Fix (auf Vorschlag des Betreibers): Ein Finger zieht jetzt erst beim **zweiten** Antippen desselben Griffs innerhalb von 400ms – der erste Antipper löst nichts aus, die Seite scrollt normal weiter. `touch-action` auf `manipulation` geändert, damit der erste Kontakt nicht mehr blockiert wird; beim aktivierten Ziehen übernimmt `setPointerCapture()` die Kontrolle über den Kontakt. Maus ist unverändert – dort scrollt man mit dem Rad, ein Klick auf den Griff zieht weiterhin sofort. Kernlogik isoliert mit fünf Szenarien durchgerechnet (einzelnes Streifen, bewusster Doppeltipp, zwei verschiedene Griffe, zu langsamer Doppeltipp, Maus).
+
+---
+
 ## 3.0.34 – 15. September 2026
 
 ### Behoben

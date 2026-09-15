@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.34";
+const APP_VERSION = "3.0.35";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -5961,6 +5961,11 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
 /* ---------- Karten sortieren: per Zeigegerät (Maus UND Touch) ---------- */
 let dragState = null;
 let autoScrollRAF = null;
+/* Doppeltipp-Zustand fuers Touch-Ziehen, siehe pointerdown-Handler unten. */
+let tippGriff = null;
+let tippZeit = 0;
+let tippResetTimer = null;
+const DOPPELTIPP_FENSTER = 400;
 
 function updateDragPosition(y) {
   if (!dragState) return;
@@ -6037,6 +6042,25 @@ app.addEventListener("change", e => {
 app.addEventListener("pointerdown", e => {
   const handle = e.target.closest(".drag-handle");
   if (!handle) return;
+  /* 15.09.2026: Auf dem Handy sass der Griff genau dort, wo der Daumen beim
+     Scrollen entlangstreicht - eine blosse Beruehrung reichte, um sofort
+     eine Karte zu verschieben. Deshalb zieht ein Finger erst beim ZWEITEN
+     Antippen desselben Griffs innerhalb von 400ms; der erste Antipper loest
+     nichts aus und laesst die Seite normal weiterscrollen. Maus ist nicht
+     betroffen - dort scrollt man mit dem Rad, nicht durch Beruehren des
+     Griffs, ein Klick zieht deshalb weiterhin sofort. */
+  if (e.pointerType !== "mouse") {
+    const jetzt = Date.now();
+    const zweiterTipp = handle === tippGriff && (jetzt - tippZeit) < DOPPELTIPP_FENSTER;
+    clearTimeout(tippResetTimer);
+    if (!zweiterTipp) {
+      tippGriff = handle;
+      tippZeit = jetzt;
+      tippResetTimer = setTimeout(() => { tippGriff = null; }, DOPPELTIPP_FENSTER);
+      return;
+    }
+    tippGriff = null;
+  }
   /* 2.2.0: Derselbe Griff zieht jetzt zweierlei - eine Karte in der Liste
      oder eine Speicherkarte im Feld darueber. Welches von beidem, entscheidet
      sich hier einmal und steht danach in dragState.art. */

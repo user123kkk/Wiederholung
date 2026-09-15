@@ -32,7 +32,7 @@ unüblich und schwer zu entdecken (kein sichtbarer Hinweis); ein normaler
 Einfachtipp auf die Zeile (außerhalb der Aktions-Knöpfe) wäre naheliegender
 und konsistenter mit Touch-Konventionen.
 
-## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe) — ⏸ nicht lokalisiert (15.09.2026)
+## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe) — ✅ behoben (v3.0.35)
 
 **Beobachtung:** Beim Scrollen mit dem Daumen links (wo die 6 Verschieben-
 Knöpfe sitzen) wurde aus Versehen eine Karte verschoben. Wunsch: Doppeltipp
@@ -49,17 +49,46 @@ das schon existierende Ziehgriff-Muster aus Phase 9 (dort extra für
 Tastatur/Fokus gebaut, aber das Prinzip „bewusstes Fassen vor dem Bewegen"
 passt auch hier).
 
-**Versuch am 15.09.2026, nicht erfolgreich:** Im Code gesucht nach einem
-Muster mit sechs Knöpfen links an einer Karte, die etwas verschieben.
-Geprüft und verworfen: die Kartenzeile in der Verwalten-Liste (Ziehgriff +
-Bearbeiten + Löschen = drei, nicht sechs, und die zwei Buttons sitzen rechts,
-nicht links), die Mehrfachauswahl-Leiste (`select-actionbar`, zwei bis drei
-Buttons), das Speicherkarten-Tag-System (keine Buttons, nur Text). Keine
-Stelle passt eindeutig zu „6 Knöpfe links". Bewusst nicht geraten und am
-falschen Code geändert — bei einem Bug mit Datenverlust-Risiko (ungewollte
-Kartenverschiebung) ist eine falsche Korrektur schlimmer als keine. Braucht
-einen Screenshot oder eine genauere Ortsangabe vom Betreiber, bevor das
-angefasst wird.
+**Erster Versuch am 15.09.2026, nicht erfolgreich:** Im Code gesucht nach
+einem Muster mit sechs Knöpfen links an einer Karte. Geprüft und verworfen:
+die Kartenzeile in der Verwalten-Liste (Ziehgriff + Bearbeiten + Löschen =
+drei, nicht sechs, und die zwei Buttons sitzen rechts, nicht links), die
+Mehrfachauswahl-Leiste, das Speicherkarten-Tag-System. Keine Stelle passte.
+
+**Klargestellt vom Betreiber:** „6 Knöpfe" meinte die **sechs Punkte des
+Ziehgriff-Icons** (`ikon("griff", ...)`, das übliche ⠿-Symbol), nicht sechs
+einzelne Buttons — also doch der Ziehgriff aus Phase 9, wie im ersten
+Versuch schon als Kandidat geprüft, aber wegen der Fehldeutung „Knöpfe"
+verworfen.
+
+**Ursache gefunden und behoben (v3.0.35):** `.drag-handle` hatte in
+`styles.css:1355` `touch-action: none` — das unterbindet natives Scrollen
+schon bei der bloßen Berührung, bevor überhaupt JavaScript läuft
+(`touch-action` wird vom Browser vorab ausgewertet, nicht dynamisch während
+einer laufenden Berührung änderbar). Der `pointerdown`-Handler in `app.js`
+aktivierte das Ziehen außerdem sofort, ohne jede Schwelle. Wer beim Scrollen
+mit dem Daumen über den Griff strich, löste damit garantiert ein Verschieben
+aus.
+
+Auf Vorschlag des Betreibers („doppelklick, beim zweiten klick nicht
+loslassen, dann verschieben") umgesetzt: Ein Finger zieht jetzt erst beim
+**zweiten** Antippen desselben Griffs innerhalb von 400 ms
+(`app.js`, neue Variablen `tippGriff`/`tippZeit`/`tippResetTimer` vor dem
+`pointerdown`-Handler). Der erste Antipper setzt nur den Zeitstempel und
+kehrt zurück, ohne `preventDefault()` — die Seite scrollt normal weiter.
+`touch-action` auf `manipulation` geändert, damit der erste Kontakt nicht
+mehr blockiert; beim zweiten, erkannten Tap übernimmt `setPointerCapture()`
+den Kontakt exklusiv, was das native Scrollen für diese eine Berührung
+zuverlässig unterdrückt. Maus bleibt unverändert (Einzelklick zieht sofort
+weiter) — `e.pointerType === "mouse"` überspringt die Doppeltipp-Prüfung.
+
+Kernlogik isoliert in Node nachgebaut und mit fünf Szenarien durchgerechnet
+(einzelnes Streifen beim Scrollen, bewusster Doppeltipp mit 150 ms Abstand,
+zwei verschiedene Griffe kurz hintereinander, zu langsamer Doppeltipp mit
+500 ms, Maus) — alle verhalten sich wie beabsichtigt. Kein echter
+Touch-Gerätetest möglich in dieser Umgebung; ein Betreiber-Test auf einem
+echten Handy bleibt sinnvoll, ist aber kein Blocker, weil die Ursache
+eindeutig war (anders als bei Punkt 16).
 
 ## 3. Zurück zur Scroll-Position nach dem Bearbeiten
 

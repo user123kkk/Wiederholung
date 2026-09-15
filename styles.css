@@ -1356,7 +1356,14 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   flex: none; width: 28px; height: var(--tap);
   display: flex; align-items: center; justify-content: center;
   color: var(--text-3); cursor: grab;
-  touch-action: none; -webkit-user-select: none; user-select: none;
+  /* 15.09.2026: War "none" - das blockiert natives Scrollen schon bei der
+     blossen Beruehrung, egal was JS danach entscheidet (touch-action wird
+     vom Browser VOR jedem Skript ausgewertet). "manipulation" laesst den
+     ersten Antipper normal scrollen; das JS aktiviert das Ziehen erst beim
+     zweiten Antippen und uebernimmt die Beruehrung dann per
+     setPointerCapture - das reicht aus, um den nativen Scroll fuer diesen
+     einen Kontakt zu unterdruecken. */
+  touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .drag-handle:active { cursor: grabbing; color: var(--accent); }
 
