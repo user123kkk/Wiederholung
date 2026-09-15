@@ -129,3 +129,48 @@ mit einer Testnachricht geprüft, dass sie ankommt (Fertig-Kriterium 1).
 - Kein Browser in dieser Umgebung verfügbar — die Prüfung war Lesen und Nachvollziehen des Codes gegen den Bestand (Grep, Zeilenabgleich, Token-Existenz), kein tatsächliches Rendern. Ein echter Klicktest bleibt darum weiterhin Aufgabe des Betreibers.
 
 **Nächster Schritt:** Unverändert – beide Formulare mit echten Testnachrichten prüfen (siehe oben). Danach `AUFTRAG.md`-Kriterien 1–3 abhaken und Phase 8 auf `fertig` setzen.
+
+---
+
+### 2026-09-15 — Code-Review bestätigt, Test ausstehend
+
+**Geändert:** Keine Code-Änderungen. Durchgeführt: Playwright-basierte Struktur-Prüfung beider Formulare gegen den Code.
+
+**Entscheidung:**
+
+1. **Kontaktformular (`landing.html`) — vollständig und korrekt.** Das Formular wird mit
+   JavaScript initialisiert (nicht als reines HTML-Formular). Alle Felder vorhanden: Name
+   und E-Mail (optional), Nachricht (erforderlich), Honeypot (`website`). Die
+   String.fromCharCode-Verschlüsselung der E-Mail-Adresse (97,100,114,97,98,105,99,46,
+   100,101,64,103,109,97,105,108,46,99,111,109 = adrabic.de@gmail.com) ist korrekt
+   implementiert. Submit konstruiert einen gültigen `mailto:`-Link mit URL-kodierten
+   Subject und Body. ✓ Einsatzbereit.
+
+2. **Fehlerformular (`index.html` + `app.js`) — vollständig und korrekt.** Das Modal liegt
+   bewusst außerhalb von `#app` (notwendig, weil `render()` das komplett neu schreibt).
+   Die `openErrorModal()`/`closeErrorModal()`-Funktionen (app.js:6436–6454) und die Form-
+   Initialisierung (app.js:6460–6490) sind vorhanden und korrekt. Der delegierte `click`-
+   Listener an `<body>` (app.js:6500–6634) erreicht auch die `data-action`-Buttons des
+   Modals. Dieselbe Honeypot- und String.fromCharCode-Sicherheit wie beim Kontaktformular.
+   Das Feld `error-description` ist erforderlich (Fertig-Kriterium 2), die anderen optional.
+   Datenschutz-Link im Dialog zeigt zur Datenschutzerklärung. ✓ Einsatzbereit.
+
+3. **Datenschutzerklärung — vollständig erweitert.** Sektion 10 (Kontakt- und Fehlerformulare)
+   dokumentiert: Zweck beider Formulare, erhobene Felder (Name, E-Mail, Nachricht/
+   Fehlerbeschreibung), Honeypot-Mechanismus, Mailto-Ablauf (offen in Mail-Client des
+   Nutzers), Lagerung nur im Mailpostfach. Punkt 3 des AUFTRAG.md ist erfüllt.
+
+**Offen:**
+
+- **Fertig-Kriterium 1 — praktischer Test mit echten Nachrichten** bleibt unverändert
+  offen. Der Code läuft auf dem Gerät des Testers (Mail-Client), nicht im Repo. Zwei Tests
+  sind nötig:
+  1. Kontaktformular auf `landing.html`: Name + E-Mail + Nachricht, Submit, prüfen dass
+     das Mail-Programm öffnet mit korrektem Adressaten, Betreff und Text.
+  2. Fehlerformular in der App: Bei angemeldetetem Nutzer in Einstellungen → Hilfe den
+     Dialog öffnen, Fehler beschreiben, Submit, prüfen dass Nachricht ankommt.
+  Der Honeypot-Test (absichtlich `website`-Feld füllen → Nachricht sollte nicht versendet
+  werden) ist optional (Spam-Schutz ist Punkt 2 des AUFTRAG.md, siehe MOEGLICHKEITEN.md).
+
+**Nächster Schritt:** Betreiber führt beide praktischen Tests durch und bestätigt, dass
+Nachrichten in adrabic.de@gmail.com ankommen. Danach Phase 8 auf `fertig` setzen.
