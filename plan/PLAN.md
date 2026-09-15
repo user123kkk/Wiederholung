@@ -320,6 +320,7 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Phase 9 begonnen: erster Durchgang** (v3.0.25). Systematisch geprüft statt geraten: Kontrastwerte der App selbst (vorher nie durchgerechnet, nur `landing.html` in Phase 6) gegen die WCAG-Formel, alle `<img>`/Formularfelder/Icon-Buttons auf fehlende Beschriftung durchsucht. Vier echte Funde behoben: zwei Kontrastverstöße (`--text-3` beide Themen, `--verdigris-400` hell), Escape schließt jetzt auch das Bereichs-Sheet, `dlg-input` und die Mehrfachauswahl-Checkbox haben jetzt eine Beschriftung. **Ein Fund bleibt offen:** Karten/Speicherkarten lassen sich nur per Maus/Touch neu ordnen, keine Tastatur-Alternative (WCAG 2.1.1) – nicht spekulativ gebaut, weil drei verschiedene Code-Pfade betroffen sind und ein echter Browser-Test noetig ist, damit der Fokus beim Verschieben nicht verlorengeht. Phase 9 bleibt `läuft`. |
 | 2026-09-13 | **Phase 9 fertig** (v3.0.26). Der letzte offene Fund aus dem ersten Durchgang ist behoben: Karten, Karten innerhalb einer Speicherkarte und Speicherkarten selbst lassen sich jetzt auch mit Pfeiltasten am (jetzt fokussierbaren) Ziehgriff neu ordnen. Die drei Commit-Zweige aus `endDrag()` sind in eigene Funktionen gezogen und werden von Maus- und Tastatur-Bedienung gemeinsam genutzt, damit keine zwei Wege dieselbe Ordnungszahl schreiben. Fokus bleibt nach jedem Neuzeichnen über die Karten-/Speicherkarten-ID auf der bewegten Zeile. Ohne echtes Firebase-Konto geprüft, aber mit einem echten Browser: dieselbe Reorder-/Fokus-Logik in einer eigenständigen Playwright-Testseite nachgebaut – Reihenfolge, Fokus-Erhalt über einen vollständigen DOM-Neuaufbau und Randverhalten bestätigt. Offen bleibt nur ein Test mit echtem Screenreader (kein Blocker, siehe `phase-9-barrierefreiheit/LOGBUCH.md`). Damit sind alle vier Fertig-Kriterien aus `AUFTRAG.md` erfüllt. |
 | 2026-09-15 | **Strang A geklärt, aber nicht entschieden.** Die Urheberrechtsfrage zu Medina Buch 1 (Fassung C) ist weg — der Autor hat die Online-Nutzung freigegeben. Trotzdem bleibt 2.1 offen: Der Betreiber baut selbst an einem Medina-Kartensatz, der aber an eine eigene YouTube-Playlist gebunden werden und teils kostenpflichtig sein soll — Struktur ist beim Betreiber selbst noch nicht fertig gedacht. `landing.html` bleibt auf Fassung A, bis entweder eigenes Wortmaterial (→ B) oder der fertige, entscheidungsklare Medina-Kartensatz (→ C) vorliegt. Details in `landing-page-strategie/LOGBUCH.md`. Weiter mit Strang B (Phase 8). |
+| 2026-09-15 | **Phase 8: echter Bug im Kontaktformular gefunden und behoben** (v3.0.31). Diese Session hatte erstmals einen echten Browser (Playwright + Chromium) zur Verfügung — die letzte Session (v3.0.30) konnte nur Code lesen. Ein Playwright-Test, der das Kontaktformular auf `landing.html` tatsächlich ausfüllt und absendet, deckte auf: Das Skript stand im `<head>` und lief vor dem Formular im `<body>`, brach also sofort über die eigene Wächter-Zeile ab — nie ein `submit`-Listener angehängt, seit v3.0.28. Ein Klick löste nur die native Formular-Weiterleitung aus (Formulardaten offen in der URL, keine Mail). Zweiter, unabhängiger Fund: Die Produktions-CSP hätte das Skript auch bei richtiger Platzierung geblockt — kein Hash dafür in `firebase.json` hinterlegt. Beide behoben (Skript in `DOMContentLoaded`, neuer CSP-Hash ergänzt) und mit einem zweiten lokalen Server, der exakt die Produktions-CSP sendet, verifiziert: Formular öffnet jetzt korrekt den Mail-Handler, Honeypot blockiert Bots weiterhin, leeres Pflichtfeld wird abgefangen. Details in `phase-8-rueckmeldung/LOGBUCH.md`. **Fertig-Kriterium 1 bleibt offen** — eine tatsächliche Mail-Zustellung kann nur der Betreiber auf einem echten Gerät bestätigen. |
 
 ## Wo eine neue Session anfängt
 
@@ -356,9 +357,10 @@ in `app.js` (v3.0.24). Beide Male von einer Nutzermeldung ausgegangen, beide
 Male am selben Tag verifiziert. Kein weiterer Schritt hier offen.
 
 **Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `läuft`).
-Entscheidung gefallen: **Wahl B (`mailto:`-Implementierung)** für beide Formulare (15.09.2026, v3.0.28–30).
+Entscheidung gefallen: **Wahl B (`mailto:`-Implementierung)** für beide Formulare (15.09.2026, v3.0.28–31).
 - **Kontaktformular** (v3.0.28): auf `landing.html`, sichere Mailto-Implementierung mit
-  Honeypot und String.fromCharCode-verschlüsselter E-Mail. ✓ Implementiert.
+  Honeypot und String.fromCharCode-verschlüsselter E-Mail. **War aber bis v3.0.30 faktisch tot**
+  (siehe v3.0.31 unten) — jetzt mit einem echten Browser geprüft und behoben. ✓ Implementiert.
 - **Fehlerformular** (v3.0.29, korrigiert v3.0.30): in Einstellungen → Hilfe, Modal-Dialog,
   dieselbe Sicherheitsimplementierung wie Kontaktformular. Eigene Überprüfung nach v3.0.29 fand
   vier echte Fehler (Modal-Knöpfe tot, weil außerhalb der Klick-Delegation; Eintrittsanimation lief
@@ -366,11 +368,21 @@ Entscheidung gefallen: **Wahl B (`mailto:`-Implementierung)** für beide Formula
   — mit v3.0.30 behoben, Details in `phase-8-rueckmeldung/LOGBUCH.md`. ✓ Implementiert.
 - **Datenschutzerklärung** (v3.0.29): Neue Sektion 10 dokumentiert beide Formulare, gesammelte
   Felder (Name, E-Mail, Nachricht/Fehlerbeschreibung), Honeypot-Mechanism, Mailto-Ablauf. ✓ Erweitert.
+- **Kontaktformular-Bug gefunden und behoben** (v3.0.31, 15.09.2026): Diese Session hatte erstmals
+  einen echten Browser (Playwright + Chromium) zur Verfügung. Ein Test, der das Formular wirklich
+  ausfüllt und absendet, zeigte: Das Skript stand im `<head>`, lief vor dem Formular im `<body>` und
+  brach sofort ab — nie ein `submit`-Listener angehängt, seit v3.0.28. Ein Klick löste nur eine
+  native Formular-Weiterleitung aus (Daten offen in der URL, keine Mail). Zusätzlich fehlte der
+  CSP-Hash für dieses Skript in `firebase.json` — hätte es auch bei richtiger Platzierung geblockt.
+  Beide Ursachen behoben und mit einer lokalen Kopie der Produktions-CSP verifiziert: Formular öffnet
+  jetzt den Mail-Handler korrekt, Honeypot und Pflichtfeld-Prüfung funktionieren weiterhin.
 
 **Fertig-Kriterium 1 ausstehend:** Testnachricht muss nachweislich in adrabic.de@gmail.com ankommen.
 Nächster Schritt: Beide Formulare interaktiv testen (Kontakt auf landing.html, Fehler in der App
 in Einstellungen). Die Mail-Abläufe laufen auf dem Gerät des Testers, nicht im Repo — deshalb muss
-der Betreiber selbst einen Test durchführen und bestätigen, dass Nachrichten ankommen.
+der Betreiber selbst einen Test durchführen und bestätigen, dass Nachrichten ankommen. Das war bis
+v3.0.30 ohnehin zum Scheitern verurteilt (siehe oben) — mit v3.0.31 sollte ein Test erstmals
+tatsächlich eine Mail auslösen.
 
 **Phase 9** (Barrierefreiheit) ist `fertig` (13.09.2026, v3.0.26). Erster
 Durchgang: Fokus, Beschriftung und Kontrast systematisch geprüft (Kontrast

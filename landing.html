@@ -381,10 +381,10 @@
 </style>
 <script>
 /* Kontaktformular: sichere Mailto-Implementierung mit Honeypot und Validierung */
-(function () {
-  if (!document.getElementById('kontaktform')) return;
-
+document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('kontaktform');
+  if (!form) return;
+
   const msgField = document.getElementById('kontakt-nachricht');
   const honeypot = document.querySelector('[name="website"]');
 
@@ -416,7 +416,7 @@
 
     form.reset();
   });
-})();
+});
 </script>
 </head>
 <body>
