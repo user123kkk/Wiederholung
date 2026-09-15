@@ -1,6 +1,7 @@
 # Beobachtungen am Lernwerkzeug — noch nicht entschieden, nicht gebaut
 
 Angelegt: 15. September 2026, aus einer Nutzungssitzung des Betreibers.
+Zuletzt erweitert: 15. September 2026 (Punkte 13–15 hinzugefügt).
 Gehört zu keiner Phase — **Phase 0–9 schließen „Funktion des Lernwerkzeugs
 anfassen" ausdrücklich aus** (`../CLAUDE.md`, `PLAN.md` Abschnitt „Was in
 keiner Phase passiert", Punkt 1). Diese Liste ist deshalb bewusst nur
@@ -175,13 +176,69 @@ Bug im engeren Sinn, sondern wahrgenommene Ladezeit/Politur — passt eher zu
 
 ---
 
+## 13. Über-Scrolling: weiter nach unten als nötig
+
+**Beobachtung:** In allen 3 Tabs (Verwalten, Lernen, Üben) kann man weiter
+nach unten scrollen als sinnvoll ist. Beispiel: Bei Lernen, wo es nichts mehr
+zu lernen gibt, kann man bis ganz nach unten scrollen, bis alles leer ist.
+
+**Einschätzung:** Echter Bug — vermutlich fehlender `overflow: hidden` oder
+ähnliches am Container, der alles über die Viewport-Höhe hinaus erlaubt.
+Sollte ein Mindest-`max-height` oder Scroll-Einschränkung geben, so dass die
+letzte sichtbare Zeile der Liste nicht ganz oben landet.
+
+## 14. Scroll-Position wird zwischen Bereichen nicht zurückgesetzt
+
+**Beobachtung:** Wenn man in einem Bereich (z. B. Medina im Verwalten) nach
+unten scrollt und dann zu einem anderen Bereich wechselt (oder ein neues Tab
+öffnet), befindet man sich dort auch noch auf der gleichen Scroll-Position —
+statt oben zu sein.
+
+**Einschätzung:** Echter Bug/Nicht-Verhalten. Jeder Bereich sollte seine
+Scroll-Position unabhängig speichern und beim Zurückkehren wiederherstellen,
+oder (einfacher) beim Tab-Wechsel oder Bereich-Wechsel nach oben springen.
+Aktuell sieht es aus, wie wenn ein globales Scroll-Memory existiert, das
+nicht neu zurückgesetzt wird.
+
+Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)**
+— beide sind Scroll-Verwaltungs-Probleme, sollten aber nicht zusammen
+entschieden werden, da 3 um eine bewusste Erhaltung nach einem Modal/Dialog
+geht, während 14 um ein unerwartetes Verhalten bei einfachem Navigation geht.
+
+## 15. Bildschirm verschiebt sich / Zoom-Verhalten beim Scrollen und Speichern
+
+**Beobachtung:** Der Bildschirm verschiebt sich bzw. der Viewport ändert sich:
+- Beim Scrollen in der Verwalten-Liste verschieben sich die Seitenverhältnisse
+- Beim Registrieren, wenn man alles eingibt und auf „Fertig" drückt, zoomt der
+  Bildschirm rein
+- Das Ganze lässt sich rauszoomem (also kein echtes Zoom, sondern eine
+  Viewport-/Größen-Verschiebung)
+
+**Einschätzung:** Echter Layout-Bug, vermutlich mehrere Root Causes:
+1. Beim Scrollen: Vermutlich Scrollbar, die sich ein-/auszeigt und dadurch die
+   Breite des sichtbaren Bereichs ändert (auf Desktop sichtbar, auf Handy oft
+   kaum bemerkt) — Standard-Lösung: `scrollbar-gutter: stable` CSS-Property,
+   um Platz zu reservieren
+2. Beim Speichern des Registrierungs-Dialogs: Ein Modal öffnet/schließt sich
+   vielleicht, was den Overflow der Seite ändert — Standard-Lösung:
+   `overflow: hidden` auf `body` während Modal offen, wieder entfernen beim
+   Schließen
+3. Das Rauszoombare deutet auf `viewport`-Meta-Tag-Probleme hin oder fehlenden
+   Touch-Action-Constraints
+
+Alle drei Probleme sind Kombination aus häufigen Bugs — sollten priorisiert
+werden, wenn was gebaut wird.
+
+---
+
 ## Zusammenfassung nach Schweregrad (nur zur Einordnung, keine Entscheidung)
 
 - **Echte Bugs, unabhängig voneinander behebbar:** 2 (versehentliches
   Verschieben — höchste Priorität, weil Datenänderung ohne Absicht), 4
   (ungewollter Autofokus/Tastatur), 5 (iPad-Layout), 6 (Formatierung geht
-  verloren).
-- **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1, 3, 10.
+  verloren), 13 (Over-Scrolling), 14 (Scroll-Position nicht zurückgesetzt),
+  15 (Viewport-Verschiebung beim Scrollen/Speichern).
+- **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1, 3, 10, 14.
 - **Prüffragen, kein bestätigter Fund:** 7, 9.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
 - **Bewusst zurückgestellt:** 11, 12.
