@@ -342,11 +342,14 @@ in `app.js` (v3.0.24). Beide Male von einer Nutzermeldung ausgegangen, beide
 Male am selben Tag verifiziert. Kein weiterer Schritt hier offen.
 
 **Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `läuft`).
-Entscheidung gefallen: **Wahl B (`mailto:`-Implementierung)** für beide Formulare (15.09.2026, v3.0.29).
+Entscheidung gefallen: **Wahl B (`mailto:`-Implementierung)** für beide Formulare (15.09.2026, v3.0.28–30).
 - **Kontaktformular** (v3.0.28): auf `landing.html`, sichere Mailto-Implementierung mit
   Honeypot und String.fromCharCode-verschlüsselter E-Mail. ✓ Implementiert.
-- **Fehlerformular** (v3.0.29): in Einstellungen → Hilfe, Modal-Dialog, dieselbe
-  Sicherheitsimplementierung wie Kontaktformular. ✓ Implementiert.
+- **Fehlerformular** (v3.0.29, korrigiert v3.0.30): in Einstellungen → Hilfe, Modal-Dialog,
+  dieselbe Sicherheitsimplementierung wie Kontaktformular. Eigene Überprüfung nach v3.0.29 fand
+  vier echte Fehler (Modal-Knöpfe tot, weil außerhalb der Klick-Delegation; Eintrittsanimation lief
+  ins Leere, da erfundene Keyframes/Token; kaputter Fokus-Ring; nackter `alert()` statt `dlgAlert`)
+  — mit v3.0.30 behoben, Details in `phase-8-rueckmeldung/LOGBUCH.md`. ✓ Implementiert.
 - **Datenschutzerklärung** (v3.0.29): Neue Sektion 10 dokumentiert beide Formulare, gesammelte
   Felder (Name, E-Mail, Nachricht/Fehlerbeschreibung), Honeypot-Mechanism, Mailto-Ablauf. ✓ Erweitert.
 

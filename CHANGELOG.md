@@ -1,3 +1,17 @@
+## 3.0.30 – 15. September 2026
+
+### Behoben
+
+- **Fehlerformular (v3.0.29) war beim Ausliefern faktisch kaputt, trotz „fertig" gemeldet.** Eigene Überprüfung nach der Umsetzung fand vier echte Fehler:
+  - Die Knöpfe „×" und „Abbrechen" im Modal reagierten nicht: Das Modal liegt bewusst außerhalb von `#app` (das wird bei jedem `render()` komplett neu geschrieben), der eine delegierte Klick-Listener aus `app.js` hing aber an `#app` selbst – ein Klick außerhalb davon erreichte ihn nie. Jetzt hängt der Listener an `<body>`, das bleibt der einzige delegierte Klick-Listener über `data-action` (README.md), erreicht jetzt aber auch Elemente außerhalb von `#app`.
+  - Die Eintrittsbewegung lief ins Leere: `animation: slideUp var(--dur-normal) ...` und `fadeIn` referenzierten ein nie definiertes Duration-Token und zwei nie definierte `@keyframes` – das Modal erschien ohne jede Bewegung. Jetzt dieselben, echten `@keyframes` wie beim bestehenden `.dlg`-System (`enter-fade`, `sheet-up`, `enter-pop`).
+  - Der Fokus-Ring der Eingabefelder war unsichtbar: `rgba(var(--accent-rgb), 0.1)` griff auf ein nie definiertes Token zu. Die eigens gebauten Feld- und Knopf-Stile waren zudem komplett redundant – `input[type=...]`, `textarea` und `button`/`button.secondary` sind längst global gestylt (Abschnitt 7 der `styles.css`) und wurden schlechter neu erfunden statt wiederverwendet.
+  - Die Fehlermeldung bei leerem Pflichtfeld nutzte den nackten Browser-`alert()` – genau das, wofür die App seit 1.8.0 ein eigenes Dialog-System (`dlgAlert`/`ui.dialog`) baut (Systemkästen zeigen auf dem Handy die Seitenadresse statt eines Titels). Jetzt `dlgAlert(...)`.
+  
+  CSS von ca. 170 auf ca. 80 Zeilen reduziert, indem nur noch die Modal-Hülle eigene Regeln bekommt und Felder/Knöpfe/Label die vorhandenen globalen Stile erben. Kein Klick auf den Hintergrund zum Schließen – dieselbe bewusste Entscheidung wie beim bestehenden `.dlg-backdrop` (auf dem Handy zu leicht versehentlich getroffen).
+
+---
+
 ## 3.0.29 – 15. September 2026
 
 ### Hinzugefügt

@@ -54,33 +54,33 @@
   </div></div>
 </div>
 
-<!-- Fehlerformular-Modal -->
+<!-- Fehlerformular-Modal: liegt bewusst ausserhalb von #app, siehe app.js -->
 <div class="error-modal" id="errorModal" aria-hidden="true">
-  <div class="error-modal__backdrop"></div>
-  <div class="error-modal__dialog" role="dialog" aria-labelledby="error-modal-title">
+  <div class="error-modal__backdrop" aria-hidden="true"></div>
+  <div class="error-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="error-modal-title">
     <div class="error-modal__header">
       <h2 class="error-modal__title" id="error-modal-title">Fehler melden</h2>
       <button class="error-modal__close" aria-label="Dialog schließen" data-action="close-error-modal">×</button>
     </div>
     <form class="error-modal__form" id="errorForm">
-      <div class="error-modal__field">
+      <div class="field">
         <label for="error-name">Dein Name (optional)</label>
         <input type="text" id="error-name" name="name" maxlength="100" placeholder="z.B. Sarah">
       </div>
-      <div class="error-modal__field">
+      <div class="field">
         <label for="error-email">Deine E-Mail (optional)</label>
         <input type="email" id="error-email" name="email" maxlength="200" placeholder="z.B. sarah@example.com">
       </div>
-      <div class="error-modal__field">
+      <div class="field">
         <label for="error-description">Fehlerbeschreibung *</label>
         <textarea id="error-description" name="description" required maxlength="5000" placeholder="Was funktioniert nicht? Wann tritt der Fehler auf?"></textarea>
       </div>
       <input type="text" name="website" class="error-modal__honeypot" tabindex="-1" autocomplete="off">
-      <div class="error-modal__actions">
-        <button type="submit" class="error-modal__submit">Fehler melden</button>
-        <button type="button" class="error-modal__cancel" data-action="close-error-modal">Abbrechen</button>
+      <div class="form-actions">
+        <button type="submit">Fehler melden</button>
+        <button type="button" class="secondary" data-action="close-error-modal">Abbrechen</button>
       </div>
-      <p class="error-modal__notice">
+      <p class="hint" style="margin-top:var(--space-3)">
         Deine Daten werden nur zur Beantwortung deiner Anfrage genutzt. Siehe <a href="./datenschutzerklaerung.html">Datenschutzerklärung</a>.
       </p>
     </form>

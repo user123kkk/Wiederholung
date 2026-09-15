@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.29";
+const APP_VERSION = "3.0.30";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -6453,47 +6453,51 @@ function closeErrorModal() {
   if (form) form.reset();
 }
 
-/* Initialisierung des Fehlerformulars */
+/* Initialisierung des Fehlerformulars. Kein Klick auf den Hintergrund zum
+   Schliessen - dieselbe bewusste Entscheidung wie bei .dlg-backdrop (siehe
+   dort): auf dem Handy trifft man ihn beim Scrollen zu leicht, und bei drei
+   Feldern waere mehr verloren als bei einem. */
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("errorForm");
-  if (form) {
-    form.addEventListener("submit", e => {
-      e.preventDefault();
+  if (!form) return;
+  form.addEventListener("submit", e => {
+    e.preventDefault();
 
-      const honeypot = form.querySelector('input[name="website"]').value;
-      if (honeypot) return;
+    const honeypot = form.querySelector('input[name="website"]').value;
+    if (honeypot) return;
 
-      const name = document.getElementById("error-name").value.trim() || "(kein Name)";
-      const email = document.getElementById("error-email").value.trim() || "(keine E-Mail)";
-      const description = document.getElementById("error-description").value.trim();
+    const name = document.getElementById("error-name").value.trim() || "(kein Name)";
+    const email = document.getElementById("error-email").value.trim() || "(keine E-Mail)";
+    const description = document.getElementById("error-description").value.trim();
 
-      if (!description) {
-        alert("Bitte beschreib den Fehler.");
-        return;
-      }
+    if (!description) {
+      dlgAlert("Bitte beschreib den Fehler.");
+      return;
+    }
 
-      const subject = encodeURIComponent("Fehler gemeldet");
-      const body = encodeURIComponent(
-        "Name: " + name + "\n" +
-        "E-Mail: " + email + "\n" +
-        "Fehler:\n" + description
-      );
+    const subject = encodeURIComponent("Fehler gemeldet");
+    const body = encodeURIComponent(
+      "Name: " + name + "\n" +
+      "E-Mail: " + email + "\n" +
+      "Fehler:\n" + description
+    );
 
-      window.location.href = "mailto:" +
-        String.fromCharCode(97,100,114,97,98,105,99,46,100,101,64,103,109,97,105,108,46,99,111,109) +
-        "?subject=" + subject + "&body=" + body;
-      closeErrorModal();
-    });
-  }
-
-  const backdrop = document.querySelector(".error-modal__backdrop");
-  if (backdrop) {
-    backdrop.addEventListener("click", closeErrorModal);
-  }
+    window.location.href = "mailto:" +
+      String.fromCharCode(97,100,114,97,98,105,99,46,100,101,64,103,109,97,105,108,46,99,111,109) +
+      "?subject=" + subject + "&body=" + body;
+    closeErrorModal();
+  });
 });
 
-/* ---------- Event-Delegation ---------- */
-app.addEventListener("click", e => {
+/* ---------- Event-Delegation ----------
+   Bewusst an <body>, nicht an #app: errorModal liegt ausserhalb von #app
+   (das rendert komplett neu, siehe render() - ein Dialog darin wuerde bei
+   jedem Klick verschwinden), ein Klick auf seine data-action-Knoepfe muss
+   die Delegation trotzdem erreichen. Dieselbe Begruendung wie beim
+   body-Listener fuer den Uebungsmodus weiter oben. Bleibt damit der EINE
+   delegierte Klick-Listener ueber data-action (README.md), nur an einem
+   Element, das wirklich alles umschliesst. */
+document.body.addEventListener("click", e => {
   const btn = e.target.closest("[data-action]");
   if (!btn) return;
   switch (btn.dataset.action) {
