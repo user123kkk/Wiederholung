@@ -1,8 +1,9 @@
 # Logbuch Phase 8 — Rückmeldung
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `läuft` — Möglichkeiten vorgelegt, wartet auf Entscheidung des
-Betreibers
+Status: `läuft` — beide Formulare implementiert und mit echtem Browser
+(Playwright) gegen Produktions-CSP geprüft; wartet auf Testnachricht-
+Bestätigung des Betreibers (Fertig-Kriterium 1)
 
 ---
 
@@ -129,3 +130,29 @@ mit einer Testnachricht geprüft, dass sie ankommt (Fertig-Kriterium 1).
 - Kein Browser in dieser Umgebung verfügbar — die Prüfung war Lesen und Nachvollziehen des Codes gegen den Bestand (Grep, Zeilenabgleich, Token-Existenz), kein tatsächliches Rendern. Ein echter Klicktest bleibt darum weiterhin Aufgabe des Betreibers.
 
 **Nächster Schritt:** Unverändert – beide Formulare mit echten Testnachrichten prüfen (siehe oben). Danach `AUFTRAG.md`-Kriterien 1–3 abhaken und Phase 8 auf `fertig` setzen.
+
+---
+
+### 2026-09-15 — Kontaktformular sendete nie eine Mail: echter Bug gefunden und behoben (v3.0.31)
+
+**Geändert:**
+- `landing.html` — Kontaktformular-Skript (vorher Zeile 382–420) von einer beim Parsen sofort ausgeführten IIFE im `<head>` auf einen `document.addEventListener('DOMContentLoaded', ...)`-Handler umgestellt. Sonst unverändert (Honeypot-Logik, Mailto-Aufbau, Feldnamen identisch).
+- `firebase.json` — CSP `script-src` um `'sha256-AYNZ3vegcpBzl5MtFYY8K0M7BTtLY2y59yPIMbkk3bI='` (Hash des geänderten Skripts) ergänzt.
+- `app.js:19` — `APP_VERSION` auf `3.0.31`.
+- `sw.js:10` — `CACHE_NAME` auf `adrabic-3.0.31`. `APP_SHELL` unverändert (keine neuen Dateien).
+- `CHANGELOG.md` — Eintrag 3.0.31.
+
+**Entscheidung:**
+
+1. **Diese Umgebung hat erstmals einen echten Browser (Playwright + vorinstalliertes Chromium).** Die letzte Session (v3.0.30) konnte nur Code lesen, keinen Klick auslösen. Genau deshalb wurde hier ein Playwright-Test gebaut, der das Kontaktformular tatsächlich ausfüllt und „Senden" klickt — als der eine noch offene, nicht-inhaltliche Rest von Phase 8, den kein Betreiber-Entscheid blockiert.
+2. **Fund:** Ein lokaler Server ohne CSP-Header zeigte, dass der Klick eine native GET-Weiterleitung auf `landing.html?name=...&nachricht=...` auslöste — keine Mail, Formulardaten offen in der URL. Ursache: Das Skript stand im `<head>`, lief beim Parsen sofort, fand das Formular (im `<body>`, weiter unten) noch nicht, brach über die eigene Wächter-Zeile ab. Kein `submit`-Listener wurde je angehängt, seit es in v3.0.28 gebaut wurde.
+3. **Zweiter, unabhängiger Fund:** Selbst mit korrekter Platzierung hätte die Produktions-CSP (`firebase.json`) das Skript weiter blockiert — `script-src` enthielt nur den Hash des Hell/Dunkel-Skripts, keinen für das Kontaktformular-Skript. Ein Inline-`<script>` ohne passenden Hash wird von `script-src` ohne `'unsafe-inline'` grundsätzlich verworfen.
+4. **Beide Funde vor der Behebung mit einem zweiten lokalen Server bestätigt, der exakt die Produktions-CSP aus `firebase.json` sendet** (nicht nur die Kopfzeilen-Platzierung geprüft). Danach mit demselben Playwright-Test verifiziert: befülltes Formular löst „Launched external handler for 'mailto:adrabic.de@gmail.com?subject=...&body=...'" aus (korrekt kodiert), Honeypot (per direktem `.value`-Zugriff gesetzt, wie ein simpler Bot es täte, nicht per simulierter Tastatureingabe — die scheitert an `display:none` und ist ein reines Testwerkzeug-Artefakt) blockiert die Absendung weiterhin, leeres Pflichtfeld wird von der nativen `required`-Prüfung des Browsers abgefangen.
+5. **Fehlerformular in `app.js` war davon nicht betroffen** — dessen Aufbau lag schon immer in einem `DOMContentLoaded`-Handler (Zeile 6460), lediglich das Kontaktformular auf `landing.html` hatte den Fehler.
+6. **Kein Browser kann eine tatsächliche E-Mail-Zustellung bei `adrabic.de@gmail.com` bestätigen** — `mailto:`-Links übergeben nur an das lokale Mail-Programm des Geräts, das hier nicht existiert. Das bleibt wie vorgesehen Aufgabe des Betreibers (Fertig-Kriterium 1). Diese Session hat aber den Grund entfernt, warum ein solcher Test bisher zwangsläufig scheitern musste.
+
+**Offen:**
+
+- Fertig-Kriterium 1 (Testnachricht kommt nachweislich bei `adrabic.de@gmail.com` an) — jetzt mit begründetem Vertrauen, dass beide Formulare den Mail-Client tatsächlich öffnen, aber weiterhin nur vom Betreiber selbst auf einem echten Gerät zu bestätigen.
+
+**Nächster Schritt:** Betreiber testet beide Formulare (Kontakt auf `landing.html`, Fehler in der App unter Einstellungen → Hilfe) auf einem echten Gerät: Mail-Programm sollte sich mit vorausgefülltem Betreff/Text öffnen, Nachricht sollte bei `adrabic.de@gmail.com` ankommen. Danach `AUFTRAG.md`-Kriterien 1–3 abhaken und Phase 8 auf `fertig` setzen.

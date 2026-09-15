@@ -1,3 +1,12 @@
+## 3.0.31 – 15. September 2026
+
+### Behoben
+
+- **Kontaktformular auf `landing.html` sendete seit v3.0.28 nie eine E-Mail – lief komplett am eigenen Schutz vorbei.** Das Skript, das Honeypot-Prüfung, Feld-Validierung und die `mailto:`-Konstruktion übernimmt, stand als eigenständige IIFE im `<head>` und wurde beim Laden der Seite sofort ausgeführt – zu einem Zeitpunkt, an dem das Formular im `<body>` (weiter unten im Dokument) noch gar nicht existierte. `document.getElementById('kontaktform')` lieferte `null`, die Funktion brach über die eigene Wächter-Zeile sofort ab, kein `submit`-Listener wurde je angehängt. Ein Klick auf „Senden" löste dadurch nur die native Formular-Absendung aus: eine GET-Weiterleitung auf `landing.html` mit Name, E-Mail und Nachricht offen als URL-Parameter – keine Honeypot-Prüfung, keine Mail, keine Verschlüsselung der Zieladresse. Jetzt hängt der Aufbau in einem `DOMContentLoaded`-Handler, wie es das gleiche Muster in `app.js` beim Fehlerformular schon richtig macht. Gefunden mit einem Playwright-Test gegen einen lokalen Server mit genau der CSP aus `firebase.json` – ohne den wäre der Fehler mangels sichtbarem Symptom (Seite lädt einfach neu) leicht übersehen worden.
+- **Dieselbe CSP verhinderte das Skript zusätzlich, unabhängig vom Platzierungsfehler.** `script-src` in `firebase.json` erlaubte nur den Hash des Hell/Dunkel-Skripts; für das Kontaktformular-Skript fehlte der eigene Hash komplett – ein Inline-`<script>` ohne passenden Hash oder `'unsafe-inline'` wird von der CSP grundsätzlich blockiert. Neuen Hash (`sha256-AYNZ3vegcpBzl5MtFYY8K0M7BTtLY2y59yPIMbkk3bI=`) ergänzt. Mit lokalem Playwright-Test gegen eine Kopie der Produktions-CSP bestätigt: befülltes Formular öffnet jetzt korrekt den externen Mail-Handler mit richtig kodiertem Betreff/Text, Honeypot (per direktem Wertzugriff gesetzt, wie es ein Bot täte) blockiert die Absendung weiterhin wie vorgesehen, leeres Pflichtfeld wird von der nativen `required`-Prüfung abgefangen.
+
+---
+
 ## 3.0.30 – 15. September 2026
 
 ### Behoben
