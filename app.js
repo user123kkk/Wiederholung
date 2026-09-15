@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.30";
+const APP_VERSION = "3.0.31";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -3831,7 +3831,7 @@ function renderPendingVerification() {
    auf jedem Geraet anders aussah. */
 function soloMarke(untertitel) {
   return '<div class="solo-mark">' + ikon("marke", "i-lg") +
-    '<strong>Wiederholung</strong></div>' +
+    '<strong>Adrabic</strong></div>' +
     (untertitel ? '<h1>' + esc(untertitel) + '</h1>' : '');
 }
 
@@ -4017,7 +4017,7 @@ function navLeiste() {
 
   let html = '<nav class="nav" aria-label="Hauptbereiche">';
 
-  html += '<div class="nav__brand">' + ikon("marke", "i-lg") + '<strong>Wiederholung</strong></div>';
+  html += '<div class="nav__brand">' + ikon("marke", "i-lg") + '<strong>Adrabic</strong></div>';
 
   html += '<div class="nav__bereiche">';
   html += '<div class="nav-titel">Bereiche</div>';
@@ -4701,7 +4701,7 @@ function renderEinstellungen() {
   /* Die Versionsnummer stand bis 2.21.6 klein unter JEDEM Bildschirm. Sie
      gehoert dorthin, wo man sie sucht, wenn man sie braucht. */
   html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">' +
-    'Wiederholung ' + APP_VERSION + '</p>';
+    'Adrabic ' + APP_VERSION + '</p>';
 
   return html;
 }

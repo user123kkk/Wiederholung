@@ -348,9 +348,10 @@ Wortschatz öffentlich steht, ist seine Entscheidung. `landing.html` zeigt
 seit v3.0.22 „Dein Stoff, nicht unserer" — Neue legen ihre erste Karte
 selbst an. Fassung C (Medina Buch 1) kommt später **zusammen mit dem
 Lehrer-Konzept**, wenn die strukturellen Fragen geklärt sind (YouTube-Playlist,
-Bezahlmodell). Offen bleiben 2.4 (Marke oder Person), 2.5 (Namensabgleich
-innen „Wiederholung"/außen „Adrabic"), 2.6 (Wortlaut der Kostenfrage) —
-**keine davon blockiert etwas.**
+Bezahlmodell). **2.5 (Namensabgleich) und 2.6 (Kostenfrage-Wortlaut) sind
+seit 15.09.2026 (v3.0.31) umgesetzt.** Offen bleibt nur noch 2.4 (Marke oder
+Person) — eine Identitätsfrage, keine, die ein Agent entscheidet, blockiert
+aber nichts.
 
 Am selben Tag zusätzlich zwei fundamentale Bugs gefunden und behoben, beide
 **unabhängig von der Landing-Page-Strategie** (schon vor Phase 5 im Code):

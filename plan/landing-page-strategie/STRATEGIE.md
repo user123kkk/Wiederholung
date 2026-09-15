@@ -276,30 +276,29 @@ sichtbar bist; die Seite bleibt beim Werkzeug. Falls du die Person doch auf der
 Seite willst, ist die saubere Form „Gemacht von … · Verantwortlich im Sinne des
 DDG: …" — und das gehört dann **vorher** mit deinem Vater besprochen.
 
-### 2.5 Außen „Adrabic", innen „Wiederholung" *(Befund 1.2/7.1)*
+### 2.5 Außen „Adrabic", innen „Wiederholung" *(Befund 1.2/7.1)* — ✅ entschieden
 
 Genauer, als der Befund es hatte: Der Titel der App ist „Adrabic"
-(`index.html`, `manifest.json`), aber die Kopfzeile **in** der App zeigt
-„Wiederholung" (`app.js:3810`, `app.js:3996`), ebenso die Fußzeile mit der
-Versionsnummer (`app.js:4648`). Der Mensch kommt also über „Adrabic" und sieht
+(`index.html`, `manifest.json`), aber die Kopfzeile **in** der App zeigte
+„Wiederholung" (`app.js:3834`, `app.js:4020`), ebenso die Fußzeile mit der
+Versionsnummer (`app.js:4704`). Der Mensch kam also über „Adrabic" und sah
 im ersten Bildschirm „Wiederholung".
 
-**Empfehlung: Kopfzeile auf „Adrabic" ziehen, Versionszeile ebenfalls.** Das
-sind drei Zeichenketten und **keine** Funktion des Lernwerkzeugs — es fällt
-damit nicht unter das Verbot aus Konzept-Abschnitt 7. Trotzdem gehört es
-**nicht** in den Umbau der Startseite, sondern in einen eigenen kleinen
-Schritt mit eigenem Logbuch-Eintrag, weil es die App-Dateien anfasst.
+> **Entschieden und umgesetzt am 15.09.2026 (v3.0.31).** Alle drei Stellen
+> auf „Adrabic" gezogen. Reine Zeichenketten, keine Funktion des
+> Lernwerkzeugs — fiel nicht unter das Verbot aus Konzept-Abschnitt 7.
 
-### 2.6 Wird später etwas kosten? *(Befund 8)*
+### 2.6 Wird später etwas kosten? *(Befund 8)* — ✅ entschieden
 
-Die FAQ sagt heute „Nein, die Nutzung ist **komplett** kostenlos" — ohne
+Die FAQ sagte „Nein, die Nutzung ist **komplett** kostenlos" — ohne
 „derzeit". Ein Abo ist im Plan unter „Später" vermerkt, wird in keiner Phase
 gebaut, ist also nicht ausgeschlossen.
 
-**Empfehlung: Wortlaut entschärfen, ohne etwas anzukündigen.** „Die Nutzung ist
-kostenlos. Es gibt keine Werbung und keine Bezahlfunktion." — wahr, ohne
-Dauerzusage, ohne einen Preis anzudeuten, den es nicht gibt. Kein
-„derzeit"/„noch": Das weckt genau die Frage, die niemand gestellt hat.
+> **Entschieden und umgesetzt am 15.09.2026 (v3.0.31).** Wortlaut entschärft:
+> „Die Nutzung ist kostenlos. Es gibt keine Werbung und keine
+> Bezahlfunktion." — wahr, ohne Dauerzusage, ohne einen Preis anzudeuten,
+> den es nicht gibt. Kein „derzeit"/„noch": weckt keine Frage, die niemand
+> gestellt hat. JSON-LD FAQPage entsprechend nachgezogen.
 
 **Nicht empfehlenswert:** eine Zwischenstufe wie Newsletter oder
 „Benachrichtige mich" (Befund 4.3). Das wäre Erhebung personenbezogener Daten
@@ -581,7 +580,11 @@ die hinterher zurückgebaut wird:
       geschriebener oder freigegebener Kartensatz vorliegt, zeigt die Seite
       Fassung A (Neue legen selbst an). **Kein Agent schreibt hier noch einmal
       Vokabeln, ohne dass der Betreiber sie vorher sieht und freigibt.**
-- [ ] Entscheidungen 2.4, 2.5, 2.6 — offen, blockieren nichts
+- [x] **Entscheidung 2.5** (Namensabgleich innen/außen) — *Adrabic*,
+      15.09.2026, umgesetzt (v3.0.31)
+- [x] **Entscheidung 2.6** (Kostenfrage-Wortlaut) — entschärft,
+      15.09.2026, umgesetzt (v3.0.31)
+- [ ] Entscheidung 2.4 (Marke oder Person) — offen, blockiert nichts
 - [x] Umbau von `landing.html` auf Fassung A — steht (v3.0.22)
 
 **Was jetzt beim Betreiber liegt:** Will er einen eigenen Startkartensatz,

@@ -541,3 +541,44 @@ Phase 9 fertig, Phasen 0–9 alle durch. Landing-Page-Strategie bleibt `läuft`,
 weil 2.1 auf A gesetzt ist — damit ist dieser **Teil** erledigt. Neuer Inhalt
 (B oder C mit echter Struktur) führt später zu einer neuen Sitzung, nicht
 jetzt.
+
+### 2026-09-15 — Entscheidungen 2.5 und 2.6 umgesetzt (v3.0.31)
+
+**Geändert:**
+- `app.js:3834` — `soloMarke()`: `<strong>Wiederholung</strong>` → `<strong>Adrabic</strong>`
+- `app.js:4020` — App-Kopfzeile (`nav__brand`): `<strong>Wiederholung</strong>` → `<strong>Adrabic</strong>`
+- `app.js:4704` — Fußzeile mit Versionsnummer: `'Wiederholung ' + APP_VERSION` → `'Adrabic ' + APP_VERSION`
+- `app.js:19` `APP_VERSION` 3.0.30 → 3.0.31, `sw.js:10` `CACHE_NAME` nachgezogen, `CHANGELOG.md` Eintrag 3.0.31. `APP_SHELL` unverändert, keine neue Startdatei.
+- `landing.html`, FAQ „Kostet Adrabic etwas?" — Antwort und passendes JSON-LD von „Nein, die Nutzung ist komplett kostenlos." auf „Die Nutzung ist kostenlos. Es gibt keine Werbung und keine Bezahlfunktion." geändert.
+
+**Entscheidung:**
+
+1. **2.5 umgesetzt wie in `STRATEGIE.md` empfohlen.** Drei Fundstellen, alle
+   reine Zeichenketten, keine Funktion des Lernwerkzeugs (Begründung dort
+   bereits geprüft und für zulässig befunden). Grep vorher gegen alle
+   Vorkommen von „Wiederholung" in `app.js` laufen lassen: alle anderen
+   Treffer sind das Fachwort für wiederkehrende Karten (`wiederholungen.length`,
+   Kommentare, UI-Text wie „3 Wiederholungen") — bewusst unverändert, das ist
+   Terminologie, kein Markenname.
+
+2. **2.6 umgesetzt wie in `STRATEGIE.md` 6.1 Nr. 4 vorbereitet.** Der Wortlaut
+   „komplett kostenlos" ist raus, ohne dass ein Preis angedeutet wird — die
+   Formulierung wurde bereits bei der Erstellung der Strategie ausformuliert,
+   nur nicht ausgeführt, weil 2.6 damals offen war. Jetzt trifft der Betreiber
+   implizit die Entscheidung, indem er zum „einfach machen" grünes Licht gibt
+   für die bereits vorbereiteten, risikoarmen Punkte.
+
+3. **JSON-LD und sichtbare FAQ synchron gehalten** — Randbedingung aus
+   `STRATEGIE.md` Abschnitt 7, Punkt 4: eine geänderte Antwort muss am
+   Seitenende mitgezogen werden, sonst wertet Google es als irreführend.
+
+**Offen:**
+
+- **2.4 (Marke oder Person)** bewusst nicht angefasst — Identitätsfrage, die
+  der Betreiber selbst entscheidet, keine reine Ausführung wie 2.5/2.6.
+- Landing-Page-Strategie bleibt formal `läuft`: 2.1 auf A, 2.4 offen, 2.5 und
+  2.6 jetzt erledigt. Nichts davon blockiert mehr etwas.
+
+**Nächster Schritt:** Keiner von Agenten-Seite. 2.4 wartet auf den Betreiber,
+falls er sie überhaupt beantworten will — sie ist keine Voraussetzung für
+irgendetwas anderes.

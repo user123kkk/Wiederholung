@@ -1,3 +1,12 @@
+## 3.0.31 – 15. September 2026
+
+### Geändert
+
+- **Namensabgleich innen/außen (Landing-Page-Strategie, Entscheidung 2.5).** Die App zeigte innen an drei Stellen „Wiederholung" (Kopfzeile der Solo-Bildschirme, Kopfzeile der App selbst, Fußzeile mit Versionsnummer), obwohl außen überall „Adrabic" steht (`index.html`, `manifest.json`, Startseite). Alle drei jetzt auf „Adrabic" gezogen – reine Zeichenketten, keine Funktion des Lernwerkzeugs.
+- **Kostenfrage-Wortlaut entschärft (Entscheidung 2.6).** FAQ auf `landing.html`: „Nein, die Nutzung ist komplett kostenlos." → „Die Nutzung ist kostenlos. Es gibt keine Werbung und keine Bezahlfunktion." Kein „derzeit"/„noch", keine Ankündigung – aber auch kein „komplett", das sich bei einem künftigen Angebot (z. B. für Klassenräume) als Dauerzusage erweisen könnte. JSON-LD FAQPage entsprechend nachgezogen, damit sichtbarer Text und strukturierte Daten übereinstimmen.
+
+---
+
 ## 3.0.30 – 15. September 2026
 
 ### Behoben
