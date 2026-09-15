@@ -765,7 +765,11 @@ button.lg { min-height: var(--ctrl-lg); font-size: 1rem; padding: 0 var(--space-
   button.ghost:hover { background: var(--surface); color: var(--text-1); }
   button.linklike:hover, button.tiny-link:hover, a.linklike:hover { background: var(--accent-bg); }
   button.icon-btn:hover { background: var(--surface); color: var(--text-1); }
-  button.danger:hover { filter: brightness(1.08); }
+  /* Fix 3.0.27: background ist Pflicht — button:hover (2 Zeilen darueber)
+     hat dieselbe Spezifität wie button.danger und gewinnt im Hover jeden
+     Gefahr-Knopf (Löschen), seit --accent-hover Weiss ist (sonst Goldton).
+     Filter allein behob nur den Farbton, nicht die weiss-auf-weiss-Unsichtbarkeit. */
+  button.danger:hover { background: var(--negative); filter: brightness(1.08); }
   button:disabled:hover { background: var(--accent); }
   button.secondary:disabled:hover { background: var(--surface-raised); }
 }

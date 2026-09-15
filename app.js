@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.26";
+const APP_VERSION = "3.0.27";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -808,10 +808,12 @@ function normSettings(s) {
      Monaten dunkel kennt, soll sie nach einem Update nicht plötzlich weiss
      vorfinden, nur weil das Handy gerade hell steht. */
   const th = s && THEMEN.some(x => x.id === s.thema) ? s.thema : "dunkel";
+  const sl = s && SITZUNGS_LIMITS.some(x => x.id === s.sitzungsLimit) ? s.sitzungsLimit : "alle";
   return {
     arabGroesse: g,
     lastBackup: b,
-    thema: th
+    thema: th,
+    sitzungsLimit: sl
   };
 }
 
@@ -859,7 +861,17 @@ const THEMEN = [
   { id: "hell", label: "Hell" },
   { id: "auto", label: "Automatisch" }
 ];
-let settings = normSettings(null); // { arabGroesse, lastBackup, thema }
+/* Bremst NUR die einzelne Sitzung, nicht den Stoff selbst (das macht seit
+   2.3.0 das Schloss, siehe dueCardsFor). Wer 80 fällige Karten hat und nur
+   10 Minuten Zeit, konnte bisher nur mittendrin abbrechen. "Alle" ist
+   Voreinstellung: bestehendes Verhalten bleibt unverändert. */
+const SITZUNGS_LIMITS = [
+  { id: 10, label: "10" },
+  { id: 20, label: "20" },
+  { id: 30, label: "30" },
+  { id: "alle", label: "Alle" }
+];
+let settings = normSettings(null); // { arabGroesse, lastBackup, thema, sitzungsLimit }
 
 /* ---------- 2.20.0: hell und dunkel ----------
    "Automatisch" wird hier aufgelöst und nicht im Stil-Block. Der Grund ist
@@ -895,6 +907,13 @@ function setThema(id) {
   if (!THEMEN.some(x => x.id === id)) return;
   settings.thema = id;
   themaAnwenden();
+  persistSettings();
+  render();
+}
+function setSitzungsLimit(id) {
+  if (!SITZUNGS_LIMITS.some(x => x.id === id)) return;
+  if (id === settings.sitzungsLimit) return;
+  settings.sitzungsLimit = id;
   persistSettings();
   render();
 }
@@ -3427,8 +3446,13 @@ async function deleteCard(id) {
 
 /* ---------- Lern-Session ---------- */
 function startSession() {
-  const due = dueCards();
+  let due = dueCards();
   if (due.length === 0) return;
+  /* Sitzungslimit: schneidet am Ende ab, ohne Reihenfolge umzusortieren.
+     Wer 80 fällige hat und "10" wählt, sieht die 10 dringendsten, nicht 10 zufällige. */
+  if (typeof settings.sitzungsLimit === "number" && due.length > settings.sitzungsLimit) {
+    due = due.slice(0, settings.sitzungsLimit);
+  }
   springeNachOben("sitzung");
   /* 2.11.5: Die Durchsicht muss beendet werden, sonst passiert scheinbar
      nichts. renderLernen zeigt die Durchsicht, solange lernSetId gesetzt ist -
@@ -4561,6 +4585,28 @@ function renderEinstellungen() {
   html += '<span class="arabic" lang="ar" dir="rtl" style="font-size:calc(1.35rem * var(--arab-scale,1))">\u0628\u0650\u0633\u0652\u0645\u0650 \u0671\u0644\u0644\u0651\u0670\u0647\u0650</span>';
   html += '</div>';
   html += '<p class="field__hilfe">Gilt \u00fcberall in der App. Die Probe daneben \u00e4ndert sich mit.</p></div>';
+  html += '</div></div>';
+
+  /* ---------- Lernen ----------
+     Bremst NUR die einzelne Sitzung, nicht den Stoff selbst (das macht das
+     Schloss seit 2.3.0, siehe dueCardsFor). Wer wenig Zeit hat, muss so nicht
+     mittendrin abbrechen, sondern w\u00e4hlt vorher, wie viel reinpasst. */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Lernen</div>';
+  html += '<div class="card">';
+  html += '<div class="field"><label>Karten pro Sitzung</label>';
+  html += '<div class="seg-row">';
+  html += '<span class="seg" role="group" aria-label="Karten pro Sitzung">';
+  for (const sl of SITZUNGS_LIMITS) {
+    html += '<button class="' + (settings.sitzungsLimit === sl.id ? "active" : "") +
+      '" data-action="set-sitzungslimit" data-id="' + sl.id + '"' +
+      (settings.sitzungsLimit === sl.id ? ' aria-pressed="true"' : ' aria-pressed="false"') +
+      '>' + sl.label + '</button>';
+  }
+  html += '</span></div>';
+  html += '<p class="field__hilfe">Bei "Alle" zeigt eine Sitzung jede f\u00e4llige Karte auf einmal. Bei ' +
+    'einer Zahl h\u00f6rt sie danach auf \u2013 der Rest bleibt f\u00e4llig und steht in der n\u00e4chsten ' +
+    'Sitzung wieder oben, Wiederholungen zuerst.</p></div>';
   html += '</div></div>';
 
   /* ---------- Sichern ---------- */
@@ -6487,6 +6533,9 @@ app.addEventListener("click", e => {
     case "dlg-cancel": if (ui.dialog) closeDialog(dialogResult(ui.dialog, false)); break;
     case "set-arab-groesse": setArabGroesse(btn.dataset.id); break;   // E7
     case "set-thema": setThema(btn.dataset.id); break;
+    case "set-sitzungslimit":
+      setSitzungsLimit(btn.dataset.id === "alle" ? "alle" : Number(btn.dataset.id));
+      break;
     case "hw-undo": hwStrokes.pop(); render(); break;   // D9
     case "hw-clear": hwStrokes = []; render(); break;
     case "hw-fullscreen":

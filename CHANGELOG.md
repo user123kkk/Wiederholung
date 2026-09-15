@@ -1,3 +1,28 @@
+## 3.0.27 – 15. September 2026
+
+### Hinzugefügt
+
+- **Sitzungslängen-Begrenzung: „Karten pro Sitzung" in Einstellungen →
+  Lernen.** Bei „Alle" zeigt eine Sitzung jede fällige Karte auf einmal
+  (bisheriges Verhalten); bei 10/20/30 stoppt sie danach – die restlichen
+  bleiben fällig und stehen in der nächsten Sitzung wieder oben, Wiederholungen
+  zuerst. Bremst NUR die einzelne Sitzung, nicht den Stoff selbst (das macht
+  seit 2.3.0 das Schloss in `dueCardsFor`). Nötig, weil Nutzer ohne Zeit-Limit
+  mittendrin abbrechen mussten; jetzt können sie vorher festlegen, wie viel
+  reinpasst.
+
+### Behoben
+
+- **Alle „Löschen"-Knöpfe wurden im Hover unsichtbar.** Das Bereich-/Karten-/
+  Speicherkarten-Löschen und das neue „Konto löschen" zeigten weiße Buttons
+  mit weißem Text bei Hover – seitdem `--accent-hover` reines Weiß ist (beim
+  Design-Redesign 3.0.0, vorher Goldton). `button:hover` und `button.danger`
+  haben dieselbe Spezifität, `button:hover` steht später und gewinnt – es setzte
+  nur `filter: brightness(1.08)` ohne `background` erneut, wodurch das weiße
+  `--accent-hover` des übergeordneten `button:hover` einfach stehen blieb.
+  Jetzt `button.danger:hover` mit explizitem `background: var(--negative)`
+  wieder sichtbar.
+
 ## 3.0.26 – 13. September 2026
 
 ### Hinzugefügt
