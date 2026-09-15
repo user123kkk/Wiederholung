@@ -129,3 +129,26 @@ mit einer Testnachricht geprüft, dass sie ankommt (Fertig-Kriterium 1).
 - Kein Browser in dieser Umgebung verfügbar — die Prüfung war Lesen und Nachvollziehen des Codes gegen den Bestand (Grep, Zeilenabgleich, Token-Existenz), kein tatsächliches Rendern. Ein echter Klicktest bleibt darum weiterhin Aufgabe des Betreibers.
 
 **Nächster Schritt:** Unverändert – beide Formulare mit echten Testnachrichten prüfen (siehe oben). Danach `AUFTRAG.md`-Kriterien 1–3 abhaken und Phase 8 auf `fertig` setzen.
+
+---
+
+### 2026-09-15 — Phase 8 fertig: Testnachrichten bekommen
+
+**Geändert:** 
+- Keine Dateien — Testnachrichten sind vom Betreiber versendet und angekommen
+
+**Entscheidung:**
+
+1. **Fertig-Kriterium 1 erfüllt:** Beide Formulare funktionieren, die Testnachrichten sind bei adrabic.de@gmail.com angekommen. Keine weiteren Codeänderungen nötig.
+
+2. **Rechtliche und funktionale Ausreichung bestätigt:** Der Betreiber hat bestätigt, dass das Formular funktioniert und rechtlich/technisch ausreichend ist.
+
+3. **Phase 8 auf `fertig` setzen:** Alle Fertig-Kriterien erfüllt:
+   - ✅ Beide Formulare erreichbar, Testnachricht angekommen
+   - ✅ Spam-Schutz bedacht (Honeypot, verschlüsselte E-Mail)
+   - ✅ Datenschutzerklärung erweitert (Sektion 10)
+   - ✅ Logbuch geführt, PLAN.md aktualisiert
+
+**Offen:** Keine
+
+**Nächster Schritt:** Phase 9 ist bereits fertig (13.09.2026). Weiter mit Strang A (Landing-Page-Strategie) — offene Entscheidung 2.1 klären.

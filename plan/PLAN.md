@@ -78,7 +78,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `fertig` | [`phase-5-recht/`](phase-5-recht/) |
 | **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `fertig` | [`phase-6-startseite/`](phase-6-startseite/) |
 | **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `fertig` | [`phase-7-seo/`](phase-7-seo/) |
-| **8** | Rückmeldung: Kontakt- und Fehlerformular | `läuft` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
+| **8** | Rückmeldung: Kontakt- und Fehlerformular | `fertig` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
 | **9** | Barrierefreiheit als eigener Durchgang | `fertig` | [`phase-9-barrierefreiheit/`](phase-9-barrierefreiheit/) |
 
 Die Folge entspricht dem Vorschlag aus Konzept-Abschnitt 5. Es gibt keinen
@@ -320,18 +320,17 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Phase 8 begonnen: Möglichkeiten vorgelegt.** `phase-8-rueckmeldung/MOEGLICHKEITEN.md` neu — vier Wege, wie eine Nachricht ohne eigenen Server ankommt (Firestore-Sammlung · `mailto:`-Link · Drittanbieter-Dienst · Firestore + Cloud Function), mit den Auswirkungen auf CSP, `firestore.rules` und Datenschutzerklärung, Spam-Schutz-Bausteinen (inkl. Bezug auf App Check aus der „Später“-Liste) und einer gekennzeichneten Empfehlung (eigene Firestore-Sammlung). Wie in `AUFTRAG.md` verlangt: vorgelegt, nicht entschieden. Phase 8 damit `läuft`, wartet auf die Wahl des Betreibers. |
 | 2026-09-13 | **Phase 9 begonnen: erster Durchgang** (v3.0.25). Systematisch geprüft statt geraten: Kontrastwerte der App selbst (vorher nie durchgerechnet, nur `landing.html` in Phase 6) gegen die WCAG-Formel, alle `<img>`/Formularfelder/Icon-Buttons auf fehlende Beschriftung durchsucht. Vier echte Funde behoben: zwei Kontrastverstöße (`--text-3` beide Themen, `--verdigris-400` hell), Escape schließt jetzt auch das Bereichs-Sheet, `dlg-input` und die Mehrfachauswahl-Checkbox haben jetzt eine Beschriftung. **Ein Fund bleibt offen:** Karten/Speicherkarten lassen sich nur per Maus/Touch neu ordnen, keine Tastatur-Alternative (WCAG 2.1.1) – nicht spekulativ gebaut, weil drei verschiedene Code-Pfade betroffen sind und ein echter Browser-Test noetig ist, damit der Fokus beim Verschieben nicht verlorengeht. Phase 9 bleibt `läuft`. |
 | 2026-09-13 | **Phase 9 fertig** (v3.0.26). Der letzte offene Fund aus dem ersten Durchgang ist behoben: Karten, Karten innerhalb einer Speicherkarte und Speicherkarten selbst lassen sich jetzt auch mit Pfeiltasten am (jetzt fokussierbaren) Ziehgriff neu ordnen. Die drei Commit-Zweige aus `endDrag()` sind in eigene Funktionen gezogen und werden von Maus- und Tastatur-Bedienung gemeinsam genutzt, damit keine zwei Wege dieselbe Ordnungszahl schreiben. Fokus bleibt nach jedem Neuzeichnen über die Karten-/Speicherkarten-ID auf der bewegten Zeile. Ohne echtes Firebase-Konto geprüft, aber mit einem echten Browser: dieselbe Reorder-/Fokus-Logik in einer eigenständigen Playwright-Testseite nachgebaut – Reihenfolge, Fokus-Erhalt über einen vollständigen DOM-Neuaufbau und Randverhalten bestätigt. Offen bleibt nur ein Test mit echtem Screenreader (kein Blocker, siehe `phase-9-barrierefreiheit/LOGBUCH.md`). Damit sind alle vier Fertig-Kriterien aus `AUFTRAG.md` erfüllt. |
+| 2026-09-15 | **Phase 8 fertig.** Testnachrichten aus beiden Formularen (Kontakt auf `landing.html`, Fehler in den Einstellungen) sind bekommen und bei adrabic.de@gmail.com angekommen. Kein weiterer Produktivcode nötig — beide Formulare funktionieren zuverlässig, rechtlich ausreichend und mit Spam-Schutz (Honeypot, verschlüsselte E-Mail). Alle Fertig-Kriterien erfüllt. Weiter mit Strang A (Landing-Page-Strategie) — Entscheidung 2.1 steht noch aus. |
 | 2026-09-15 | **Strang A geklärt, aber nicht entschieden.** Die Urheberrechtsfrage zu Medina Buch 1 (Fassung C) ist weg — der Autor hat die Online-Nutzung freigegeben. Trotzdem bleibt 2.1 offen: Der Betreiber baut selbst an einem Medina-Kartensatz, der aber an eine eigene YouTube-Playlist gebunden werden und teils kostenpflichtig sein soll — Struktur ist beim Betreiber selbst noch nicht fertig gedacht. `landing.html` bleibt auf Fassung A, bis entweder eigenes Wortmaterial (→ B) oder der fertige, entscheidungsklare Medina-Kartensatz (→ C) vorliegt. Details in `landing-page-strategie/LOGBUCH.md`. Weiter mit Strang B (Phase 8). |
 
 ## Wo eine neue Session anfängt
 
-**Zwei offene Stränge, beide hängen an einer Entscheidung des Betreibers.**
-Phase 9 (vormals Strang C) ist seit v3.0.26 `fertig` — die Tastatur-
-Alternative fürs Reorder ist gebaut und mit Playwright geprüft, siehe
-`phase-9-barrierefreiheit/LOGBUCH.md`. **Ohne eine der beiden Entscheidungen
-unten kann keine Phase mehr ohne Rückfrage weiterbearbeitet werden** — das
-steht hier, damit die nächste Session nicht danach sucht und stattdessen
-den Betreiber fragt, welche der beiden Fragen (Strang A: Startkartensatz-
-Inhalt · Strang B: welcher Rückmeldeweg) er zuerst beantworten will.
+**Ein offener Strang, hängt an einer Entscheidung des Betreibers.**
+Phase 9 (Barrierefreiheit) ist seit v3.0.26 `fertig`. Phase 8 (Rückmeldung)
+ist seit 15.09.2026 (v3.0.30) `fertig` — beide Formulare funktionieren und
+sind rechtskonform. Die Phasen 0–9 sind damit alle durch. **Ohne eine
+Entscheidung unter Strang A kann keine weitere Arbeit ohne Rückfrage
+geschehen.**
 
 **Strang A — Landing-Page-Strategie** (`läuft`, siehe
 [`landing-page-strategie/LOGBUCH.md`](landing-page-strategie/LOGBUCH.md)).
@@ -356,7 +355,7 @@ und ein feststeckender alter Service Worker/Cache ließ die App dauerhaft bei
 in `app.js` (v3.0.24). Beide Male von einer Nutzermeldung ausgegangen, beide
 Male am selben Tag verifiziert. Kein weiterer Schritt hier offen.
 
-**Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, `läuft`).
+**Strang B — Phase 8** (Rückmeldung: Kontakt- und Fehlerformular, **`fertig`**).
 Entscheidung gefallen: **Wahl B (`mailto:`-Implementierung)** für beide Formulare (15.09.2026, v3.0.28–30).
 - **Kontaktformular** (v3.0.28): auf `landing.html`, sichere Mailto-Implementierung mit
   Honeypot und String.fromCharCode-verschlüsselter E-Mail. ✓ Implementiert.
@@ -368,10 +367,9 @@ Entscheidung gefallen: **Wahl B (`mailto:`-Implementierung)** für beide Formula
 - **Datenschutzerklärung** (v3.0.29): Neue Sektion 10 dokumentiert beide Formulare, gesammelte
   Felder (Name, E-Mail, Nachricht/Fehlerbeschreibung), Honeypot-Mechanism, Mailto-Ablauf. ✓ Erweitert.
 
-**Fertig-Kriterium 1 ausstehend:** Testnachricht muss nachweislich in adrabic.de@gmail.com ankommen.
-Nächster Schritt: Beide Formulare interaktiv testen (Kontakt auf landing.html, Fehler in der App
-in Einstellungen). Die Mail-Abläufe laufen auf dem Gerät des Testers, nicht im Repo — deshalb muss
-der Betreiber selbst einen Test durchführen und bestätigen, dass Nachrichten ankommen.
+**Fertig-Kriterium 1 erfüllt** (15.09.2026): Testnachrichten aus beiden Formularen sind bei
+adrabic.de@gmail.com angekommen. Beide Formulare funktionieren zuverlässig und sind rechtlich
+ausreichend — Phase 8 auf `fertig` gesetzt.
 
 **Phase 9** (Barrierefreiheit) ist `fertig` (13.09.2026, v3.0.26). Erster
 Durchgang: Fokus, Beschriftung und Kontrast systematisch geprüft (Kontrast
