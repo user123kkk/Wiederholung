@@ -1,3 +1,11 @@
+## 3.0.37 – 15. September 2026
+
+### Behoben
+
+- **Viewport-Verschiebung beim Scrollen und beim Registrieren (Beobachtung 15, 15.09.2026).** Zwei getrennte Ursachen für drei gemeldete Symptome: (1) Alle Text-Eingabefelder hatten `font-size: 0.9375rem` (15px) – unter der 16px-Schwelle, ab der iOS Safari beim Fokussieren automatisch ins Feld hineinzoomt und beim Verlassen nicht zuverlässig zurückzoomt. Erklärt „zoomt beim Fertig-Drücken rein" und „lässt sich rauszoomen". Jetzt `1rem` (16px) – hält iOS unter der Schwelle, ohne Zoom für den Nutzer selbst einzuschränken (kein `maximum-scale`, das wäre ein WCAG-1.4.4-Verstoß). (2) `html` reservierte keinen festen Platz für die Scrollbar – beim Scrollen in unterschiedlich langen Listen (Verwalten) blendete sie sich ein/aus und verschob die sichtbare Breite. Jetzt `scrollbar-gutter: stable`.
+
+---
+
 ## 3.0.36 – 15. September 2026
 
 ### Behoben

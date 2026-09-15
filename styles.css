@@ -285,6 +285,13 @@ html {
   background: var(--bg);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* 15.09.2026: Ohne das reserviert der Browser den Platz fuer die
+     Scrollbar erst, wenn eine lange Liste sie tatsaechlich zeigt - beim
+     Scrollen in der Verwalten-Liste (mal laenger, mal kuerzer als der
+     Bildschirm) verschob sich dadurch die sichtbare Breite (Beobachtung
+     15). "stable" reserviert den Platz immer, auf Handys ohne klassische
+     Scrollbar hat es keine Wirkung. */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -859,7 +866,13 @@ input[type="number"], input[type="search"], textarea, select {
   width: 100%;
   min-height: 48px;
   padding: 12px var(--space-4);
-  font: inherit; font-size: 0.9375rem;
+  /* 15.09.2026: War 0.9375rem (15px) - unter der 16px-Schwelle zoomt iOS
+     Safari beim Fokussieren automatisch ins Feld hinein und zoomt beim
+     Verlassen nicht zuverlaessig zurueck (Beobachtung 15: "zoomt beim
+     Fertig-Druecken rein", "laesst sich rauszoomen"). 1rem = 16px haelt
+     iOS unter der Schwelle, ohne dass die App selbst Zoom einschraenken
+     muss - das bliebe sonst dem Nutzer verwehrt (WCAG 1.4.4). */
+  font: inherit; font-size: 1rem;
   color: var(--text-1);
   background: var(--bg-sunken);
   border: 1px solid var(--border);

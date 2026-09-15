@@ -342,6 +342,8 @@ gebaut ist) ohne Testmöglichkeit wäre riskanter als der jetzige Zustand.
 Bräuchte einen echten Browser-Test (wie bei Phase 9 mit Playwright), bevor
 hier etwas geändert wird.
 
+## 15. Viewport-Verschiebung beim Scrollen und beim Registrieren — ✅ behoben (v3.0.37)
+
 **Beobachtung:** Der Bildschirm verschiebt sich bzw. der Viewport ändert sich:
 - Beim Scrollen in der Verwalten-Liste verschieben sich die Seitenverhältnisse
 - Beim Registrieren, wenn man alles eingibt und auf „Fertig" drückt, zoomt der
@@ -363,6 +365,24 @@ hier etwas geändert wird.
 
 Alle drei Probleme sind Kombination aus häufigen Bugs — sollten priorisiert
 werden, wenn was gebaut wird.
+
+**Behoben am 15.09.2026 (v3.0.37), Ursachen anders als vermutet:**
+
+1. **Zoom-Symptome (Punkte 2+3) waren derselbe Bug, kein Modal-Problem.**
+   Alle Text-Eingabefelder (`styles.css:862`) hatten `font-size: 0.9375rem`
+   = 15px — unter der 16px-Schwelle, ab der iOS Safari beim Fokussieren
+   eines Feldes automatisch hineinzoomt und beim Verlassen nicht
+   zuverlässig zurückzoomt. „Fertig drücken" bezieht sich vermutlich auf
+   die Tastatur-Fertig-Taste, nicht auf einen App-Button — der
+   Registrierungsbildschirm (`.solo`) ist ohnehin kein Overlay/Modal,
+   sondern eine normale Ansicht im Dokumentfluss, die
+   `overflow:hidden`-Vermutung traf nicht zu. Jetzt `font-size: 1rem`
+   (16px) für alle Eingabefelder — hält iOS unter der Zoom-Schwelle, ohne
+   dass die App selbst Zoom einschränkt (kein `maximum-scale`, das wäre
+   ein WCAG-1.4.4-Verstoß).
+
+2. **Scrollbar-Vermutung (Punkt 1) bestätigt.** `html` reservierte keinen
+   festen Platz für die Scrollbar. Jetzt `scrollbar-gutter: stable`.
 
 ---
 
