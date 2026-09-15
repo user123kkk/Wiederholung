@@ -305,6 +305,20 @@
   color: var(--text-3);
 }
 
+.landing__kontakt-block { max-width: 42rem; margin: 0 auto; padding: var(--space-7) var(--space-5); border-top: 1px solid var(--border-subtle); }
+.landing__kontakt-title { font-family: var(--font-ui); font-size: 1.3rem; font-weight: 600; margin: 0 0 var(--space-3) 0; }
+.landing__kontakt-desc { font-family: var(--font-text); font-size: 1rem; line-height: 1.65; color: var(--text-2); margin: 0 0 var(--space-4) 0; }
+.landing__form { display: flex; flex-direction: column; gap: var(--space-3); }
+.landing__form label { font-family: var(--font-ui); font-size: 0.95rem; font-weight: 500; color: var(--text-1); display: block; margin-bottom: 4px; }
+.landing__form input, .landing__form textarea { font-family: var(--font-text); font-size: 1rem; padding: var(--space-2) var(--space-3); border: 1px solid var(--border-strong); border-radius: 0.375rem; background: var(--surface); color: var(--text-1); width: 100%; box-sizing: border-box; }
+.landing__form input:focus, .landing__form textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.1); }
+.landing__form textarea { resize: vertical; min-height: 100px; }
+.landing__form-honeypot { display: none; }
+.landing__form button { align-self: flex-start; padding: var(--space-3) var(--space-6); background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 0.375rem; font-family: var(--font-ui); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.landing__form button:hover { background: var(--accent-hover); }
+.landing__form button:focus { outline: 2px solid var(--accent-hover); outline-offset: 2px; }
+.landing__form-datenschutz { font-family: var(--font-text); font-size: 0.85rem; line-height: 1.6; color: var(--text-3); margin-top: var(--space-3); }
+
 .landing__faq { max-width: 42rem; margin: 0 auto; padding: var(--space-7) var(--space-5); border-top: 1px solid var(--border-subtle); text-align: left; }
 
 .landing__faq-title {
@@ -365,6 +379,45 @@
   .landing__problem { font-size: 1.4rem; }
 }
 </style>
+<script>
+/* Kontaktformular: sichere Mailto-Implementierung mit Honeypot und Validierung */
+(function () {
+  if (!document.getElementById('kontaktform')) return;
+
+  const form = document.getElementById('kontaktform');
+  const msgField = document.getElementById('kontakt-nachricht');
+  const honeypot = document.querySelector('[name="website"]');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (honeypot.value) return;
+    if (!msgField.value.trim()) {
+      alert('Bitte schreib eine Nachricht.');
+      return;
+    }
+
+    const name = document.getElementById('kontakt-name').value.trim() || '(kein Name)';
+    const email = document.getElementById('kontakt-email').value.trim() || '(keine E-Mail)';
+    const msg = msgField.value.trim();
+
+    const subject = encodeURIComponent('Adrabic: Anfrage von ' + name);
+    const body = encodeURIComponent(
+      'Name: ' + name + '\n' +
+      'E-Mail: ' + email + '\n' +
+      '---\n' +
+      msg + '\n' +
+      '\n(Diese Nachricht wurde über das Kontaktformular gesendet.)'
+    );
+
+    window.location.href = 'mailto:' +
+      String.fromCharCode(97,100,114,97,98,105,99,46,100,101,64,103,109,97,105,108,46,99,111,109) +
+      '?subject=' + subject + '&body=' + body;
+
+    form.reset();
+  });
+})();
+</script>
 </head>
 <body>
 <div class="landing">
@@ -502,6 +555,32 @@
       <li>Sicherung herunterladen, Kartensätze weitergeben</li>
       <li>Kostenlos, ohne Werbung, ohne Tracking-Cookies</li>
     </ul>
+  </section>
+
+  <section class="landing__kontakt-block" aria-labelledby="kontakt-titel">
+    <h2 class="landing__kontakt-title" id="kontakt-titel">Fragen oder Fehler melden?</h2>
+    <p class="landing__kontakt-desc">
+      Schreib uns — damit die App besser wird. Alle Felder sind optional, aber Name oder E-Mail helfen uns, dich zu kontaktieren.
+    </p>
+    <form class="landing__form" id="kontaktform">
+      <div>
+        <label for="kontakt-name">Dein Name (optional)</label>
+        <input type="text" id="kontakt-name" name="name" maxlength="100" placeholder="z.B. Sarah">
+      </div>
+      <div>
+        <label for="kontakt-email">Deine E-Mail (optional)</label>
+        <input type="email" id="kontakt-email" name="email" maxlength="200" placeholder="z.B. sarah@example.com">
+      </div>
+      <div>
+        <label for="kontakt-nachricht">Deine Nachricht *</label>
+        <textarea id="kontakt-nachricht" name="nachricht" required maxlength="5000" placeholder="Was ist dein Anliegen?"></textarea>
+      </div>
+      <input type="text" name="website" class="landing__form-honeypot" tabindex="-1" autocomplete="off">
+      <button type="submit">Senden</button>
+      <p class="landing__form-datenschutz">
+        Deine Daten werden nur zur Beantwortung deiner Anfrage genutzt. Siehe <a href="./datenschutzerklaerung.html" style="color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent);">Datenschutzerklärung</a>.
+      </p>
+    </form>
   </section>
 
   <section class="landing__faq" aria-labelledby="faq-titel">

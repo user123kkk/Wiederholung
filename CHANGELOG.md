@@ -1,3 +1,11 @@
+## 3.0.28 – 15. September 2026
+
+### Hinzugefügt
+
+- **Kontaktformular auf der Startseite (Phase 8).** Sichere Mailto-Implementierung mit Honeypot-Feld gegen Spam und verschlüsselter E-Mail-Adresse. Feldvalidierung, Nachrichtentext erforderlich, Name und E-Mail optional. Öffnet beim Submit das Mail-Programm mit vorausgefülltem Betreff und Text.
+
+---
+
 ## 3.0.27 – 15. September 2026
 
 ### Hinzugefügt
