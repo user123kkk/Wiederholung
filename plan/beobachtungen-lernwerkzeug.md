@@ -90,6 +90,18 @@ Touch-Gerätetest möglich in dieser Umgebung; ein Betreiber-Test auf einem
 echten Handy bleibt sinnvoll, ist aber kein Blocker, weil die Ursache
 eindeutig war (anders als bei Punkt 16).
 
+**Testrückmeldung 15.09.2026, nachgebessert (v3.0.38):** Am echten Gerät
+markierte das Halten nach dem zweiten Antippen Text, statt zu ziehen.
+Ursache: `touch-action` steuert nur Scroll-/Zoom-Gesten, nicht die native
+Textauswahl bei Long-Press — das vorherige `touch-action: none` hatte
+diese als Nebeneffekt mit unterbunden, `manipulation` nicht mehr.
+`-webkit-touch-callout: none` ergänzt (dasselbe Paar aus `user-select`+
+`touch-callout`, das jeder Button in der App schon trägt). **Noch nicht
+am Gerät bestätigt, ob das reicht** — falls die Markierung weiter auftritt,
+ist das nächste Verdachtsmoment das Zeitfenster selbst (400 ms könnten für
+eine bewusste zweite Berührung knapp sein) oder ein DOM-Neuaufbau zwischen
+den beiden Antippern, der den gemerkten Griff ungültig macht.
+
 ## 3. Zurück zur Scroll-Position nach dem Bearbeiten
 
 **Beobachtung:** Nach jedem Bearbeiten einer Karte musste wieder ganz nach
