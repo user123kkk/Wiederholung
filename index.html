@@ -54,6 +54,39 @@
   </div></div>
 </div>
 
+<!-- Fehlerformular-Modal -->
+<div class="error-modal" id="errorModal" aria-hidden="true">
+  <div class="error-modal__backdrop"></div>
+  <div class="error-modal__dialog" role="dialog" aria-labelledby="error-modal-title">
+    <div class="error-modal__header">
+      <h2 class="error-modal__title" id="error-modal-title">Fehler melden</h2>
+      <button class="error-modal__close" aria-label="Dialog schließen" data-action="close-error-modal">×</button>
+    </div>
+    <form class="error-modal__form" id="errorForm">
+      <div class="error-modal__field">
+        <label for="error-name">Dein Name (optional)</label>
+        <input type="text" id="error-name" name="name" maxlength="100" placeholder="z.B. Sarah">
+      </div>
+      <div class="error-modal__field">
+        <label for="error-email">Deine E-Mail (optional)</label>
+        <input type="email" id="error-email" name="email" maxlength="200" placeholder="z.B. sarah@example.com">
+      </div>
+      <div class="error-modal__field">
+        <label for="error-description">Fehlerbeschreibung *</label>
+        <textarea id="error-description" name="description" required maxlength="5000" placeholder="Was funktioniert nicht? Wann tritt der Fehler auf?"></textarea>
+      </div>
+      <input type="text" name="website" class="error-modal__honeypot" tabindex="-1" autocomplete="off">
+      <div class="error-modal__actions">
+        <button type="submit" class="error-modal__submit">Fehler melden</button>
+        <button type="button" class="error-modal__cancel" data-action="close-error-modal">Abbrechen</button>
+      </div>
+      <p class="error-modal__notice">
+        Deine Daten werden nur zur Beantwortung deiner Anfrage genutzt. Siehe <a href="./datenschutzerklaerung.html">Datenschutzerklärung</a>.
+      </p>
+    </form>
+  </div>
+</div>
+
 <script type="module" src="./app.js"></script>
 </body>
 </html>

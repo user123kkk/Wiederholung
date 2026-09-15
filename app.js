@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.28";
+const APP_VERSION = "3.0.29";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -4660,6 +4660,16 @@ function renderEinstellungen() {
   html += '</div>';
   html += '</div></div>';
 
+  /* ---------- Hilfe ---------- */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Hilfe</div>';
+  html += '<div class="card">';
+  html += '<div class="form-actions">';
+  html += '<button class="secondary" data-action="open-error-modal">' + ikon("warnung", "i-sm") +
+    ' Fehler melden</button>';
+  html += '</div>';
+  html += '</div></div>';
+
   /* ---------- Konto ---------- */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Konto</div>';
@@ -6413,11 +6423,72 @@ function setupDialog() {
 }
 document.addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
+  const errorModal = document.getElementById("errorModal");
+  if (errorModal && errorModal.getAttribute("aria-hidden") === "false") { closeErrorModal(); return; }
   if (ui.dialog) { closeDialog(dialogResult(ui.dialog, false)); return; }
   /* 3.0.25: Das Bereichs-Sheet liess sich per Tastatur bisher nur über den
      "Fertig"-Knopf schliessen, nicht über Escape wie jeder andere Dialog -
      eine Inkonsequenz, die auffaellt, sobald man die App ohne Maus bedient. */
   if (ui.bereichSheet) { ui.bereichSheet = false; render(); }
+});
+
+/* ---------- Fehlerformular-Modal ---------- */
+function openErrorModal() {
+  const modal = document.getElementById("errorModal");
+  if (modal) {
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    const textarea = document.getElementById("error-description");
+    if (textarea) setTimeout(() => textarea.focus(), 100);
+  }
+}
+
+function closeErrorModal() {
+  const modal = document.getElementById("errorModal");
+  if (modal) {
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+  const form = document.getElementById("errorForm");
+  if (form) form.reset();
+}
+
+/* Initialisierung des Fehlerformulars */
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("errorForm");
+  if (form) {
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+
+      const honeypot = form.querySelector('input[name="website"]').value;
+      if (honeypot) return;
+
+      const name = document.getElementById("error-name").value.trim() || "(kein Name)";
+      const email = document.getElementById("error-email").value.trim() || "(keine E-Mail)";
+      const description = document.getElementById("error-description").value.trim();
+
+      if (!description) {
+        alert("Bitte beschreib den Fehler.");
+        return;
+      }
+
+      const encryptedEmail = "adrabic.de" + "@" + "gmail.com";
+      const subject = encodeURIComponent("Fehler gemeldet");
+      const body = encodeURIComponent(
+        "Name: " + name + "\n" +
+        "E-Mail: " + email + "\n" +
+        "Fehler:\n" + description
+      );
+
+      window.location.href = "mailto:" + encryptedEmail + "?subject=" + subject + "&body=" + body;
+      closeErrorModal();
+    });
+  }
+
+  const backdrop = document.querySelector(".error-modal__backdrop");
+  if (backdrop) {
+    backdrop.addEventListener("click", closeErrorModal);
+  }
 });
 
 /* ---------- Event-Delegation ---------- */
@@ -6554,6 +6625,8 @@ app.addEventListener("click", e => {
       if (el) el.click();
       break;
     }
+    case "open-error-modal": openErrorModal(); break;
+    case "close-error-modal": closeErrorModal(); break;
   }
 });
 

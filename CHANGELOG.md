@@ -1,3 +1,11 @@
+## 3.0.29 – 15. September 2026
+
+### Hinzugefügt
+
+- **Fehlerformular in den Einstellungen (Phase 8).** Neue Sektion „Hilfe" in Einstellungen mit Button „Fehler melden". Modal-Dialog mit sicherer Mailto-Implementierung analog zum Kontaktformular: Honeypot-Feld gegen Spam, verschlüsselte E-Mail-Adresse, Feldvalidierung. Name und E-Mail optional, Fehlerbeschreibung erforderlich. Öffnet beim Submit das Mail-Programm mit vorausgefülltem Betreff und Text.
+
+---
+
 ## 3.0.28 – 15. September 2026
 
 ### Hinzugefügt
