@@ -32,7 +32,7 @@ unüblich und schwer zu entdecken (kein sichtbarer Hinweis); ein normaler
 Einfachtipp auf die Zeile (außerhalb der Aktions-Knöpfe) wäre naheliegender
 und konsistenter mit Touch-Konventionen.
 
-## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe) — ✅ behoben (v3.0.35)
+## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe) — 🔧 Geste auf Long-Press umgestellt (v3.0.41)
 
 **Beobachtung:** Beim Scrollen mit dem Daumen links (wo die 6 Verschieben-
 Knöpfe sitzen) wurde aus Versehen eine Karte verschoben. Wunsch: Doppeltipp
@@ -116,12 +116,31 @@ wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten
 Ziel zweimal präzise zu tippen. Zwei Optimierungen: (1) Fenster von 400ms →
 600ms (mehr Zeit für den Benutzer, kein gefühltes Delay). (2) Visuelle
 Rückmeldung auf den ersten Tap: `.drag-handle:active` bekommt jetzt ein
-Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit sofort erkennbar ist,
-dass die erste Tap registriert wurde — ermutigt zum schnellen zweiten Tap.
-Diese Änderungen machen das Doppeltipp-Muster fehlertoleranter, ohne die
-Mechanik selbst zu verändern. Nächster Schritt: Neuer Gerätetest, um zu
-sehen, ob die Zuverlässigkeit mit dem größeren Fenster und der visuellen
-Rückmeldung besser ist.
+Hintergrund, damit sofort erkennbar ist, dass die erste Tap registriert
+wurde — ermutigt zum schnellen zweiten Tap. Diese Änderungen machen das
+Doppeltipp-Muster fehlertoleranter, ohne die Mechanik selbst zu verändern.
+
+**Geste komplett ersetzt, 16.09.2026 (v3.0.41):** Betreiber-Anweisung nach
+vier erfolglosen Anläufen am Doppeltipp: „finde einen anderen Weg fürs
+Verschieben." Das Doppeltipp-Muster selbst war das Problem, nicht die
+Feinjustierung (Fenster, visuelle Rückmeldung) — zwei getrennte, präzise
+Antipper auf ein 28px-Ziel sind für einen Finger grundsätzlich schwer zu
+treffen, egal wie großzügig das Zeitfenster ist. Jetzt **Long-Press** statt
+Doppeltipp: eine einzige, durchgehende Berührung. Griff berühren und 350ms
+stillhalten aktiviert das Ziehen; bewegt sich der Finger währenddessen mehr
+als 10px (das ist Wischen/Scrollen), bricht der Versuch sofort ab, ohne
+dass `preventDefault()` je lief — die Seite scrollt normal weiter, ohne
+Verzögerung oder Ruckeln. Das ist dasselbe Prinzip, das iOS/Android für
+„Liste per Halten neu sortieren" verwenden (Erinnerungen, Mail, Trello) und
+dürfte darum vertrauter sein als ein Doppeltipp. Visuelle Rückmeldung
+während des Haltens: Der Griff färbt sich ein und zeigt eine kurze
+„Aufladen"-Animation, synchron zur 350ms-Haltedauer. Maus unverändert
+(zieht weiterhin sofort per Klick). Nebenbei gefunden: Die visuelle
+Rückmeldung aus v3.0.40 nutzte eine nirgends definierte CSS-Variable
+(`--accent-rgb`) — die Regel griff nie, `.drag-handle:active` hatte also in
+Wirklichkeit gar keinen sichtbaren Hintergrund. Jetzt korrekt mit dem
+vorhandenen Token `--accent-bg-strong`. Nächster Schritt: Gerätetest, ob
+Long-Press zuverlässiger ist als Doppeltipp es je war.
 
 ## 3. Zurück zur Scroll-Position nach dem Bearbeiten
 
@@ -319,7 +338,7 @@ Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)*
 entschieden werden, da 3 um eine bewusste Erhaltung nach einem Modal/Dialog
 geht, während 14 um ein unerwartetes Verhalten bei einfachem Navigation geht.
 
-## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — ⏸ neue Spur, nicht gefixt (15.09.2026)
+## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — 🔧 reproduziert, Kontingent erhöht (v3.0.41)
 
 **Beobachtung:** Navigation zwischen App und statischen Seiten ist fehlerhaft:
 - Von der App (z.B. Fehlerformular in Einstellungen) zur externen Seite
@@ -374,6 +393,37 @@ bestehenden Selbstheilungs-Mechanismus (der bewusst gegen Endlosschleifen
 gebaut ist) ohne Testmöglichkeit wäre riskanter als der jetzige Zustand.
 Bräuchte einen echten Browser-Test (wie bei Phase 9 mit Playwright), bevor
 hier etwas geändert wird.
+
+**Reproduziert auf echtem Gerät, 16.09.2026:** Der Betreiber hat den Fehler
+gezielt nachgestellt — „Impressum" in den Einstellungen öffnen, Browser-
+Zurück, der Ladefehler-Bildschirm erschien wieder. Bestätigt damit die
+Hypothese aus dem vorigen Absatz in ihrem Kern: Der Fehler tritt nach einer
+echten Zurück-Navigation zur App auf, nicht durch eine der bereits
+widerlegten History-Manipulationen.
+
+**Teilverbesserung v3.0.41, Ursache selbst weiter offen.** Ohne Zugriff auf
+Browser-Entwicklertools auf einem echten Gerät lässt sich nicht abschließend
+klären, WARUM `initFirebase()` nach der Zurück-Navigation fehlschlägt (bfcache-
+Verhalten, Ressourcen-Priorisierung des Browsers bei History-Navigation,
+oder etwas Drittes) — das bleibt eine unverifizierte Vermutung, wie zuvor.
+Was sich aber sicher und risikoarm verbessern lässt: Die bestehende
+Selbstheilung (v3.0.24) versucht bisher nur EINMAL pro Sitzung neu zu laden;
+schlägt der automatische Reload-Versuch selbst noch einmal fehl (z. B. durch
+ein kurzzeitig blockiertes Cache-/IndexedDB-Handle direkt nach der
+Navigation), erscheint sofort der rohe Fehlerbildschirm, obwohl ein zweiter
+Versuch die Ursache noch hätte lösen können. Kontingent von 1 auf 2
+automatische Versuche pro Sitzung erhöht (`SELBSTHEILUNG_MAX`, `app.js`) —
+der bestehende Schutz gegen echtes Endlos-Neuladen (dauerhaft offline,
+gstatic.com vom Netzwerk blockiert) bleibt als feste Obergrenze erhalten,
+aber eine zweite, wirklich transiente Störung bekommt jetzt eine echte
+Chance, sich von selbst zu lösen. Das behebt den Bug nicht zwangsläufig
+vollständig (falls der Fehler bei JEDEM Zurück-Navigieren zuverlässig
+auftritt statt nur gelegentlich, würde auch ein zweiter Versuch nichts
+nützen), macht ihn aber seltener sichtbar. Nächster Schritt: erneuter
+Gerätetest mit genau denselben Schritten (Impressum → Zurück) — kommt der
+Fehlerbildschirm weiterhin, braucht es echte Browser-Entwicklertools
+(Netzwerk-Tab, Application-Tab → Back/Forward Cache) auf dem betroffenen
+Gerät, um die tatsächliche Ursache zu sehen statt sie zu vermuten.
 
 ## 15. Viewport-Verschiebung beim Scrollen und beim Registrieren — ✅ behoben (v3.0.37)
 

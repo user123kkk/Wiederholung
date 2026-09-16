@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.40";
+const APP_VERSION = "3.0.41";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -5965,11 +5965,20 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
 /* ---------- Karten sortieren: per Zeigegerät (Maus UND Touch) ---------- */
 let dragState = null;
 let autoScrollRAF = null;
-/* Doppeltipp-Zustand fuers Touch-Ziehen, siehe pointerdown-Handler unten. */
-let tippGriff = null;
-let tippZeit = 0;
-let tippResetTimer = null;
-const DOPPELTIPP_FENSTER = 600;
+/* 16.09.2026: Der Doppeltipp (v3.0.35-40) blieb auf echten Geraeten
+   unzuverlaessig - zwei Antipper auf denselben 28px breiten Griff, innerhalb
+   eines engen Zeitfensters, sind fuer einen Finger zu praezise ("funktioniert
+   selten gut, mal scrollt, mal wird trotzdem was markiert"). Jetzt
+   Long-Press statt Doppeltipp: den Griff kurz halten, OHNE zu wischen,
+   aktiviert das Ziehen - eine einzige, durchgehende Beruehrung statt zwei
+   getrennter. Bewegt sich der Finger vorher mehr als HOLD_TOLERANZ (das ist
+   Wischen/Scrollen), bricht der Versuch ab, ohne dass ueberhaupt
+   preventDefault() lief - die Seite scrollt dann ganz normal weiter. Siehe
+   pointerdown-Handler unten. */
+let holdTimer = null;
+let holdKandidat = null; // { handle, row, art, inSet, pointerId, startX, startY }
+const HOLD_DAUER = 350;     // ms bis Halten das Ziehen aktiviert
+const HOLD_TOLERANZ = 10;   // px Bewegung, die einen Halte-Versuch als Scrollen erkennt und abbricht
 
 function updateDragPosition(y) {
   if (!dragState) return;
@@ -6043,28 +6052,29 @@ app.addEventListener("change", e => {
   setArtAendern(sel.dataset.id, sel.value);
 });
 
+/* Gemeinsamer Aktivierungspunkt fuer Maus (sofort) und Touch/Stift (nach
+   dem Halten) - haelt dragState-Aufbau, setPointerCapture und Rand-Scrollen
+   an einer Stelle, statt sie zweimal zu pflegen. */
+function starteZiehen(handle, row, art, inSet, pointerId, clientY) {
+  dragState = { pointerId: pointerId, row: row, art: art,
+                selektor: art === "set" ? ".set-block" : ".card-row",
+                setid: inSet && inSet.closest(".set-block") ? inSet.closest(".set-block").dataset.setid : null,
+                cardid: row.dataset.cardid, clientY: clientY };
+  handle.setPointerCapture(pointerId);
+  row.classList.add("dragging");
+  if (!autoScrollRAF) autoScrollRAF = requestAnimationFrame(autoScrollTick);
+}
+
+function holdAbbrechen() {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+  if (holdKandidat) holdKandidat.handle.classList.remove("griff-haelt");
+  holdKandidat = null;
+}
+
 app.addEventListener("pointerdown", e => {
   const handle = e.target.closest(".drag-handle");
   if (!handle) return;
-  /* 15.09.2026: Auf dem Handy sass der Griff genau dort, wo der Daumen beim
-     Scrollen entlangstreicht - eine blosse Beruehrung reichte, um sofort
-     eine Karte zu verschieben. Deshalb zieht ein Finger erst beim ZWEITEN
-     Antippen desselben Griffs innerhalb von 400ms; der erste Antipper loest
-     nichts aus und laesst die Seite normal weiterscrollen. Maus ist nicht
-     betroffen - dort scrollt man mit dem Rad, nicht durch Beruehren des
-     Griffs, ein Klick zieht deshalb weiterhin sofort. */
-  if (e.pointerType !== "mouse") {
-    const jetzt = Date.now();
-    const zweiterTipp = handle === tippGriff && (jetzt - tippZeit) < DOPPELTIPP_FENSTER;
-    clearTimeout(tippResetTimer);
-    if (!zweiterTipp) {
-      tippGriff = handle;
-      tippZeit = jetzt;
-      tippResetTimer = setTimeout(() => { tippGriff = null; }, DOPPELTIPP_FENSTER);
-      return;
-    }
-    tippGriff = null;
-  }
   /* 2.2.0: Derselbe Griff zieht jetzt zweierlei - eine Karte in der Liste
      oder eine Speicherkarte im Feld darueber. Welches von beidem, entscheidet
      sich hier einmal und steht danach in dragState.art. */
@@ -6078,17 +6088,38 @@ app.addEventListener("pointerdown", e => {
   /* Liegt die Kartenzeile in einer Speicherkarte, wird deren eigene
      Reihenfolge geaendert, nicht die des Bereichs. */
   const inSet = art === "karte" ? row.closest(".set-cards") : null;
-  e.preventDefault();
-  dragState = { pointerId: e.pointerId, row: row, art: art,
-                selektor: art === "set" ? ".set-block" : ".card-row",
-                setid: inSet && inSet.closest(".set-block") ? inSet.closest(".set-block").dataset.setid : null,
-                cardid: row.dataset.cardid, clientY: e.clientY };
-  handle.setPointerCapture(e.pointerId);
-  row.classList.add("dragging");
-  if (!autoScrollRAF) autoScrollRAF = requestAnimationFrame(autoScrollTick);
+
+  if (e.pointerType === "mouse") {
+    /* Maus hat kein Scroll-Konflikt (man scrollt mit dem Rad, nicht durch
+       Klicken auf den Griff) - ein Klick zieht deshalb weiterhin sofort. */
+    e.preventDefault();
+    starteZiehen(handle, row, art, inSet, e.pointerId, e.clientY);
+    return;
+  }
+
+  /* Touch/Stift: siehe Kommentar bei HOLD_DAUER weiter oben. Bewusst KEIN
+     preventDefault() hier - solange offen ist, ob das ein Scrollversuch
+     oder ein Halten wird, soll der Browser frei entscheiden koennen. */
+  holdAbbrechen();
+  holdKandidat = { handle: handle, row: row, art: art, inSet: inSet,
+                    pointerId: e.pointerId, startX: e.clientX, startY: e.clientY,
+                    lastY: e.clientY };
+  handle.classList.add("griff-haelt");
+  holdTimer = setTimeout(() => {
+    const k = holdKandidat;
+    if (!k) return;
+    holdKandidat = null;
+    k.handle.classList.remove("griff-haelt");
+    starteZiehen(k.handle, k.row, k.art, k.inSet, k.pointerId, k.lastY);
+  }, HOLD_DAUER);
 });
 
 app.addEventListener("pointermove", e => {
+  if (holdKandidat && e.pointerId === holdKandidat.pointerId) {
+    holdKandidat.lastY = e.clientY;
+    const dx = e.clientX - holdKandidat.startX, dy = e.clientY - holdKandidat.startY;
+    if (Math.hypot(dx, dy) > HOLD_TOLERANZ) holdAbbrechen(); // Wischen erkannt - normal weiterscrollen
+  }
   if (!dragState || e.pointerId !== dragState.pointerId) return;
   dragState.clientY = e.clientY;
   updateDragPosition(e.clientY);
@@ -6148,7 +6179,12 @@ function commitBereichOrder(parent) {
   }
 }
 
-function endDrag() {
+function endDrag(e) {
+  /* Ein Loslassen/Abbrechen beendet auch einen noch wartenden Halte-Versuch
+     (derselbe Finger, der den Griff beruehrt hat) - sonst bliebe der Timer
+     stehen und wuerde beim naechsten Griff faelschlich als "schon gehalten"
+     zaehlen. */
+  if (holdKandidat && (!e || e.pointerId === holdKandidat.pointerId)) holdAbbrechen();
   if (!dragState) return;
   if (autoScrollRAF) { cancelAnimationFrame(autoScrollRAF); autoScrollRAF = null; }
   const row = dragState.row;
@@ -6680,17 +6716,38 @@ document.body.addEventListener("click", e => {
    l\u00f6schen" in den Entwicklertools. Das kann man niemandem zumuten, der die
    App nur benutzen will - also macht die App es bei Bedarf selbst.
 
-   Nur EINMAL pro Sitzung (sessionStorage, nicht localStorage: nach einem
-   kompletten Neustart der App darf es erneut versucht werden) und NUR wenn
-   der Browser online zu sein glaubt - sonst w\u00fcrde das L\u00f6schen des eigenen
-   Caches ausgerechnet den Fall verschlimmern, f\u00fcr den er gedacht ist:
-   echtes Offline-Nutzen mit bereits zwischengespeichertem SDK. */
+   NUR wenn der Browser online zu sein glaubt - sonst w\u00fcrde das L\u00f6schen des
+   eigenen Caches ausgerechnet den Fall verschlimmern, f\u00fcr den er gedacht
+   ist: echtes Offline-Nutzen mit bereits zwischengespeichertem SDK.
+
+   16.09.2026 (Beobachtung 16, jetzt reproduziert): "Impressum" in den
+   Einstellungen \u00f6ffnen, dann Browser-Zur\u00fcck - der Ladefehler kam wieder,
+   und zwar SOFORT (kein einziger automatischer Heilungsversuch griff
+   sichtbar). Naheliegendste Erkl\u00e4rung: index.html wird nach einer echten
+   Navigation zu impressum.html und zur\u00fcck ein zweites Mal frisch geladen,
+   `initFirebase()` schl\u00e4gt dabei erneut fehl (z.B. weil der
+   Zur\u00fcck-Navigationspfad Ressourcen im Browser anders/knapper priorisiert
+   als ein normaler erster Aufruf), die EINMALIGE Selbstheilung greift, l\u00e4dt
+   neu - schl\u00e4gt der dynamische Import beim Reload nochmal fehl, ist das
+   Kontingent (bisher: 1) bereits aufgebraucht und der rohe Fehlerbildschirm
+   erscheint, obwohl ein zweiter Versuch die Ursache (z.B. ein kurzzeitig
+   blockiertes IndexedDB/Cache-Handle) durchaus noch h\u00e4tte l\u00f6sen k\u00f6nnen.
+   Kontingent deshalb von 1 auf SELBSTHEILUNG_MAX erh\u00f6ht (Z\u00e4hler statt
+   Ja/Nein-Flag) - h\u00e4lt den Schutz gegen Endlos-Neuladen (echtes Offline,
+   blockiertes gstatic.com) bei einer festen Obergrenze, gibt aber einer
+   zweiten, wirklich transienten St\u00f6rung eine echte Chance. */
+const SELBSTHEILUNG_MAX = 2;
 function kannSelbstheilen() {
-  try { return navigator.onLine && sessionStorage.getItem("adrabic-selbstheilung") !== "1"; }
-  catch (e) { return navigator.onLine; } // sessionStorage blockiert (privater Modus o.\u00e4.) - dann eben ohne die Sperre
+  try {
+    const bisher = parseInt(sessionStorage.getItem("adrabic-selbstheilung") || "0", 10);
+    return navigator.onLine && bisher < SELBSTHEILUNG_MAX;
+  } catch (e) { return navigator.onLine; } // sessionStorage blockiert (privater Modus o.\u00e4.) - dann eben ohne die Sperre
 }
 async function selbstheilung() {
-  try { sessionStorage.setItem("adrabic-selbstheilung", "1"); } catch (e) {}
+  try {
+    const bisher = parseInt(sessionStorage.getItem("adrabic-selbstheilung") || "0", 10);
+    sessionStorage.setItem("adrabic-selbstheilung", String(bisher + 1));
+  } catch (e) {}
   try {
     if ("serviceWorker" in navigator) {
       const regs = await navigator.serviceWorker.getRegistrations();

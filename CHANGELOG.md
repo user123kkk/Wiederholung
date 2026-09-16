@@ -1,3 +1,15 @@
+## 3.0.41 – 16. September 2026
+
+### Geändert
+
+- **Ziehgriff: Doppeltipp durch Long-Press ersetzt (Betreiber-Rückmeldung: „funktuniert selten gut, mal scrollt..., mal wird trotzdem was mackiert").** Nach vier Anläufen mit dem Doppeltipp-Muster (v3.0.35, v3.0.38–40) blieb die Aktivierung unzuverlässig — zwei Antipper auf denselben 28px breiten Griff, innerhalb eines Zeitfensters, sind für einen Finger zu präzise. Komplett andere Geste: Der Griff wird jetzt gehalten (350ms), nicht zweimal angetippt. Eine einzige, durchgehende Berührung statt zwei getrennter. Bewegt sich der Finger währenddessen mehr als 10px (Wischen/Scrollen), bricht der Versuch sofort ab, ohne dass die Seite je blockiert wurde — kein `preventDefault()` lief, das native Scrollen läuft ungehindert weiter. Erst wer wirklich stillhält, aktiviert nach 350ms das Ziehen. Visuelle Rückmeldung während des Haltens: Der Griff färbt sich ein und zeigt eine kurze "Aufladen"-Animation (`@keyframes griff-halten`), damit erkennbar ist, dass die Berührung registriert wurde und Ziehen gleich aktiv wird. Maus unverändert: Ein Klick zieht weiterhin sofort, kein Scroll-Konflikt dort. Nebenbei ein Fund aus der eigenen Überprüfung behoben: Die visuelle Rückmeldung aus v3.0.40 nutzte `rgba(var(--accent-rgb), 0.15)` — `--accent-rgb` existiert im Farbsystem gar nicht, die Regel griff nie. Jetzt der bereits vorhandene Token `--accent-bg-strong` verwendet.
+
+### Verbessert
+
+- **Selbstheilung bei Startfehler: von einem auf zwei automatische Versuche (Beobachtung 16, jetzt reproduziert).** Der Betreiber hat den gemeldeten Fehler gezielt nachgestellt: „Impressum" in den Einstellungen öffnen, dann Browser-Zurück — der Ladefehler-Bildschirm kam wieder. Die bestehende Selbstheilung (v3.0.24) griff nur einmal pro Sitzung; schlägt der automatische Reload-Versuch nach einer Zurück-Navigation ein zweites Mal fehl (z.B. durch ein kurzzeitig blockiertes Cache-/IndexedDB-Handle direkt nach der Navigation), war das Kontingent bereits aufgebraucht und der rohe Fehlerbildschirm erschien, obwohl ein zweiter Versuch die Ursache noch hätte lösen können. Kontingent auf zwei Versuche pro Sitzung erhöht (Zähler statt Ja/Nein-Flag) — der Schutz gegen echtes Endlos-Neuladen (dauerhaft offline, gstatic.com blockiert) bleibt bei einer festen Obergrenze bestehen. Ursache des ursprünglichen Ladefehlers selbst (warum `initFirebase()` nach Zurück-Navigation überhaupt fehlschlägt) bleibt ungeklärt — das lässt sich ohne Browser-Entwicklertools auf einem echten Gerät nicht weiter eingrenzen.
+
+---
+
 ## 3.0.40 – 15. September 2026
 
 ### Verbessert

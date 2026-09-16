@@ -1383,20 +1383,33 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   color: var(--text-3); cursor: grab;
   /* 15.09.2026: War "none" - das blockiert natives Scrollen schon bei der
      blossen Beruehrung, egal was JS danach entscheidet (touch-action wird
-     vom Browser VOR jedem Skript ausgewertet). "manipulation" laesst den
-     ersten Antipper normal scrollen; das JS aktiviert das Ziehen erst beim
-     zweiten Antippen und uebernimmt die Beruehrung dann per
-     setPointerCapture - das reicht aus, um den nativen Scroll fuer diesen
-     einen Kontakt zu unterdruecken.
+     vom Browser VOR jedem Skript ausgewertet). "manipulation" laesst die
+     Beruehrung normal scrollen, solange JS das Ziehen noch nicht aktiviert
+     hat (siehe app.js, Long-Press-Umstellung 16.09.2026); erst beim
+     Aktivieren uebernimmt setPointerCapture die Beruehrung exklusiv - das
+     reicht aus, um natives Scrollen fuer diesen einen Kontakt zu
+     unterdruecken.
      touch-action steuert aber nur Scroll/Zoom, keine Text-Markierung: Beim
-     Halten nach dem zweiten Antippen startete das Handy trotzdem die
-     native Textauswahl (erster Testlauf 15.09.2026). -webkit-touch-callout
-     dazu ergaenzt - dasselbe Paar aus user-select+touch-callout, das jeder
-     Knopf in der App schon traegt (siehe .btn-aehnliche Basisregel). */
+     Halten startete das Handy trotzdem die native Textauswahl (Testlauf
+     15.09.2026). -webkit-touch-callout dazu ergaenzt - dasselbe Paar aus
+     user-select+touch-callout, das jeder Knopf in der App schon traegt
+     (siehe .btn-aehnliche Basisregel). */
   touch-action: manipulation; -webkit-user-select: none; user-select: none;
   -webkit-touch-callout: none;
 }
-.drag-handle:active { cursor: grabbing; color: var(--accent); background: rgba(var(--accent-rgb), 0.15); border-radius: var(--r-md); }
+.drag-handle:active { cursor: grabbing; color: var(--accent); background: var(--accent-bg-strong); border-radius: var(--r-md); }
+/* 16.09.2026: Laeuft waehrend des Long-Press-Haltens (HOLD_DAUER in app.js),
+   damit sichtbar ist, dass die Beruehrung registriert wurde und Ziehen
+   gleich aktiv wird - ein "Aufladen", das bei Loslassen/Wischen vor Ablauf
+   sofort abbricht (die Klasse wird dann von holdAbbrechen() entfernt).
+   Nutzt --accent-bg-strong statt einer eigenen rgba()-Funktion mit
+   erfundener --accent-rgb-Variable (die es im Farbsystem nicht gibt - Fund
+   bei dieser Überprüfung, betraf auch :active oben, dort jetzt korrigiert). */
+@keyframes griff-halten { from { box-shadow: 0 0 0 0 var(--accent-bg-strong); } to { box-shadow: 0 0 0 6px rgba(0, 0, 0, 0); } }
+.drag-handle.griff-haelt {
+  color: var(--accent); background: var(--accent-bg-strong); border-radius: var(--r-md);
+  animation: griff-halten 350ms ease-out;
+}
 
 .words { flex: 1 1 auto; min-width: 0; }
 .card-row .wort, .leech-row .wort {
