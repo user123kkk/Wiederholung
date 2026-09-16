@@ -1,3 +1,19 @@
+## 3.0.45 – 16. September 2026
+
+### Neu
+
+- **Fortschritt-Tab: Wochenvergleich.** Direkt über der Zwölf-Wochen-Übersicht zeigt eine neue Kachel „Diese Woche im Vergleich“ die Gesamtzahl der Antworten dieser Woche (zählt beim Anzeigen von 0 hoch) sowie – sobald es eine Vorwoche mit Daten gibt – die prozentuale Veränderung dazu als farbige Pille (grün bei mehr, rot bei weniger, in denselben Farben wie die Grade-Knöpfe). Bleibt leer, solange in keiner der beiden Wochen etwas eingetragen ist.
+
+---
+
+## 3.0.44 – 16. September 2026
+
+### Verbessert
+
+- **Ladebildschirm: Satelliten-Animation statt Opacity-Blink, kein abruptes Abschneiden mehr.** Der alte `puls`-Blink des Icons ist ersetzt durch drei kleine Punkte (Marken-Gold `#e3c88a`), die auf unterschiedlichen Bahnen und Tempi um ein freigestelltes Blüten-Icon (`flower-isolated.png`, neu – nur für diesen Zweck, **nicht** das Homescreen-Icon) kreisen. Zusätzlich eine Mindestanzeigedauer von 650ms (`BOOT_MIN_MS`), damit der Bildschirm bei sehr schnellem Netz nicht nur aufblitzt, und ein sauberes Ausblenden (280ms) statt des bisherigen harten `innerHTML`-Austauschs, sobald die Daten fertig sind – unabhängig davon, an welcher Stelle der Animation das passiert.
+
+---
+
 ## 3.0.43 – 16. September 2026
 
 ### Verbessert

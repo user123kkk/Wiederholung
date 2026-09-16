@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.43";
+const APP_VERSION = "3.0.45";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -752,6 +752,19 @@ function verlaufSumme(tage) {
   return { w: w, n: nn, gesamt: w + nn };
 }
 
+/* Summe einer 7-Tage-Spanne, um "von" Tagen zurück bis ausschließlich
+   "bis". verlaufSummeSpanne(0,7) ist diese Woche, (7,14) die davor - so
+   lassen sich zwei Wochen vergleichen, ohne verlaufSumme() doppelt zu
+   benutzen und die ältere von der jüngeren Hälfte abzuziehen. */
+function verlaufSummeSpanne(von, bis) {
+  let w = 0, nn = 0;
+  for (let i = von; i < bis; i++) {
+    const e = verlauf[dateInDays(-i)];
+    if (e) { w += e.w || 0; nn += e.n || 0; }
+  }
+  return { w: w, n: nn, gesamt: w + nn };
+}
+
 function normStreak(s) {
   if (!s || typeof s !== "object") {
     return { count: 0, lastCompletedDate: null, lastEvaluatedDate: null,
@@ -853,6 +866,17 @@ let syncError = null;
    den Reset in onAuthStateChanged. */
 let ladeTimer = null;
 let ladeLangsam = false;
+/* E8: Merkt sich, ob GERADE der Ladebildschirm steht - siehe render(). Ohne
+   das trifft der Wechsel zur echten App die Blüten-Animation an einem
+   zufälligen Punkt ihres Zyklus und schneidet sie hart ab; das sah nach
+   einem Fehler aus, nicht nach einem Übergang. */
+let bootAktiv = false;
+let bootStart = null;
+/* Mindestanzeigedauer: Bei sehr schnellem Netz waeren die Daten manchmal
+   da, bevor der Ladebildschirm ueberhaupt richtig zu sehen war - er blitzte
+   nur auf und war weg. Das liest sich nach einem Fehler, nicht nach einem
+   normalen, schnellen Start. Ueblicher Wert fuer Splash-Screens: 500-800ms. */
+const BOOT_MIN_MS = 650;
 let streak = normStreak(null); // { count, lastCompletedDate, lastEvaluatedDate } – nur echte Lernsessions zählen, Üben nicht
 /* Muss VOR dem ersten Aufruf von normSettings stehen - die Funktion prüft
    den gespeicherten Wert gegen diese Liste. */
@@ -3743,6 +3767,27 @@ function wischEnde(e) {
 app.addEventListener("pointerup", wischEnde);
 app.addEventListener("pointercancel", wischEnde);
 
+/* Zählt eine Zahl von 0 hoch, statt sie einfach dastehen zu haben - für
+   "Diese Woche im Vergleich" im Fortschritt-Tab. dataset.countedTo merkt
+   sich den zuletzt angezeigten Wert: ändert er sich nicht (jedes render()
+   ruft das hier erneut auf), läuft die Animation nicht jedesmal neu an. */
+function tickCountups() {
+  document.querySelectorAll("[data-countup]").forEach(el => {
+    const ziel = Number(el.dataset.countup);
+    if (el.dataset.countedTo === String(ziel)) return;
+    el.dataset.countedTo = String(ziel);
+    const strong = el.querySelector("strong");
+    if (!strong) return;
+    const t0 = performance.now(), dauer = 480;
+    function frame(t) {
+      const p = Math.min(1, (t - t0) / dauer);
+      strong.textContent = String(Math.round(ziel * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
 /* ---------- Rendering ---------- */
 function render() {
   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
@@ -3771,8 +3816,11 @@ function render() {
         render();
       }, 9000);
     }
+    if (!bootAktiv) { bootAktiv = true; bootStart = Date.now(); }
     let laden = '<div class="boot">';
-    laden += '<div class="boot__mark">' + ikon("marke", "i-xl") + '</div>';
+    laden += '<div class="boot__mark"><div class="boot__orbit r1"><span></span></div>' +
+      '<div class="boot__orbit r2"><span></span></div><div class="boot__orbit r3"><span></span></div>' +
+      '<img src="./flower-isolated.png" class="i" alt=""></div>';
     if (syncError) {
       /* Blockierend: Ohne Daten gibt es nichts zu zeigen. Also Klartext und
          ein Weg weiter, statt eines Ladepunkts, der nie aufhoert. */
@@ -3790,6 +3838,21 @@ function render() {
     laden += '</div>';
     app.innerHTML = laden;
     return;
+  }
+  /* E8: Der Ladebildschirm verschwindet nicht mehr abrupt - er blendet erst
+     aus (280ms), egal an welchem Punkt seiner Animation die Daten fertig
+     wurden. Ein Ausblenden überdeckt jede Phase gleich gut; ein hartes
+     Abschneiden nicht. */
+  if (bootAktiv) {
+    const rest = BOOT_MIN_MS - (Date.now() - bootStart);
+    if (rest > 0) { setTimeout(render, rest); return; }
+    bootAktiv = false;
+    const bootEl = app.querySelector(".boot");
+    if (bootEl) {
+      bootEl.classList.add("boot--exit");
+      setTimeout(render, 280);
+      return;
+    }
   }
   if (ui.askImport) { renderImport(); return; }
   renderMain();
@@ -4300,6 +4363,7 @@ function renderMain() {
   app.innerHTML = html;
   /* E7: Faktor am Container, damit ihn jede .arabic-Stelle darunter erbt. */
   app.style.setProperty("--arab-scale", String(arabFaktor()));
+  tickCountups();
 
   if (prevActiveId) {
     const again = document.getElementById(prevActiveId);
@@ -4972,6 +5036,35 @@ function fortschrittHeute(cards) {
   return html;
 }
 
+/* Der Wochenvergleich: die einzige Stelle im Fortschritt-Tab, die eine
+   RICHTUNG zeigt statt eines Standes. Bewusst nur diese eine Zahl (Antworten
+   gesamt), nicht drei - sonst ist es wieder ein Kachel-Armaturenbrett
+   (siehe Abschnitt 12 in styles.css). Die Zahl zählt beim Anzeigen von 0
+   hoch (tickCountups()) - das einzige animierte Element hier, und es zeigt
+   etwas Echtes: wie viel diese Woche schon zusammengekommen ist. */
+function fortschrittTrend() {
+  const diese = verlaufSumme(7);
+  const letzte = verlaufSummeSpanne(7, 14);
+  if (diese.gesamt === 0 && letzte.gesamt === 0) return "";
+  let html = '<div class="stat-block">';
+  html += '<h3>Diese Woche im Vergleich</h3>';
+  html += '<div style="display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap">';
+  html += '<p class="gross-zahl" style="margin:0" data-countup="' + diese.gesamt + '"><strong>0</strong>' +
+    '<span>Antworten diese Woche</span></p>';
+  if (letzte.gesamt > 0) {
+    const delta = diese.gesamt - letzte.gesamt;
+    const pct = Math.round((delta / letzte.gesamt) * 100);
+    const richtung = delta > 0 ? "trend-up" : delta < 0 ? "trend-down" : "trend-flat";
+    const pfeil = delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
+    html += '<span class="trend-pill ' + richtung + '">' + pfeil + ' ' + Math.abs(pct) +
+      ' % zur Vorwoche</span>';
+  } else {
+    html += '<span class="trend-pill">Vorwoche war leer</span>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
 /* Die Bewegung: zwoelf Wochen als Kalenderraster. */
 function fortschrittWochen() {
   let html = "";
@@ -5112,6 +5205,7 @@ function renderFortschritt() {
   }
 
   html += fortschrittHeute(cards);
+  html += fortschrittTrend();
   html += fortschrittWochen();
   html += fortschrittStoff(cards);
   html += fortschrittLektionen(nurBereich);
