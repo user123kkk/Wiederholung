@@ -4,6 +4,53 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-16 — Ist-Zustand geprüft: Gerüst/Navigation und leere Zustände bereits weitgehend erledigt
+
+**Geändert:** `styles.css:1386` — `.drag-handle` Breite 28px → `var(--tap)` (44px).
+`app.js:19` und `sw.js:10` — `APP_VERSION`/`CACHE_NAME` auf 3.0.46. `CHANGELOG.md`.
+
+**Entscheidung:** Wie in `AUFTRAG.md` vorgesehen erst der Ist-Zustand geprüft, bevor
+gebaut wird — Ergebnis: **kein Neubau nötig**, der größte Teil des vorgesehenen
+Schritts „Gerüst/Navigation" ist bereits seit 3.0.0/3.1.0 vorhanden und deckt
+`PRINZIPIEN.md` (Video 1) schon ab:
+- **Bottom-Navigation** (`navLeiste()`, `app.js:4162`): drei Tabs, schwebende
+  Blur-Leiste mit Safe-Area, aktiver Tab als eigene Fläche (`.nav__tab.active`,
+  seit 3.1.0) — entspricht „Bottom-Navigation (3–5, schwebend)".
+- **Bottom-Sheet** (`bereichSheet()`, `app.js:4214`) ersetzt die frühere
+  waagerechte Pill-Reihe — entspricht „Bottom-Sheets für Aktionen im Kontext".
+- **Leere Zustände**: nicht ein Restfall, sondern durchgängig eigene Bildschirme
+  mit Icon/Titel/Text/Aktion — „Noch nichts in …" (Bereich leer, `app.js:4898`),
+  „Für heute durch" (nichts fällig, `app.js:4914`), „Keine Treffer"/„Noch keine
+  Karten" (Suche, `app.js:5891`ff), Start-Fehler (`app.js:6984`). Das ist genau
+  der „stärkste Einzelgewinn" aus `PRINZIPIEN.md` — schon umgesetzt.
+- **`landing.html`** ist bereits mobil-first aufgebaut (Basis-Styles ohne
+  Media Query, eine einzige `@media (min-width: 48rem)`-Erweiterung für
+  Desktop) und folgt `STRATEGIE.md` seit dem Umbau in Phase 6/Strang A.
+
+**Einziger echter Fund:** Der Ziehgriff zum Neuordnen (`.drag-handle`) war mit
+28px unter dem 44px-Mindestziel aus Video 1 — in `beobachtungen-lernwerkzeug.md`
+bereits als vermutliche Ursache der Doppeltipp-Unzuverlässigkeit (v3.0.35–40)
+vermerkt, aber nie selbst behoben (nur das Zeitfenster verlängert, v3.0.40).
+Geprüft, dass die Breite nirgends in `app.js` hart verdrahtet ist (Zieh-/
+Long-Press-Logik arbeitet mit Pointer-Events, nicht mit dem 28px-Wert) — reine
+CSS-Änderung auf `var(--tap)`, kein Eingriff in die Gesten-Logik selbst.
+
+**Offen:** Kein weiterer Bau am Gerüst/an der Navigation vorgesehen — würde
+gegen `PRINZIPIEN.md` verstoßen („nur wo es wirklich verbessert, nicht
+reflexhaft ersetzen"). Die verbleibenden AUFTRAG.md-Blöcke „leere Zustände/
+Onboarding" sind wie oben gezeigt im Kern schon abgedeckt; ein eigener
+Onboarding-*Assistent* (über die vorhandenen leeren Zustände hinaus) wäre ein
+erfundenes Feature ohne Beleg in den drei Videos und widerspricht der
+„ruhig, minimal"-Philosophie — deshalb bewusst nicht gebaut.
+
+**Nächster Schritt:** Kein zwingender nächster Block mehr in diesem Strang.
+Falls weitergearbeitet wird: gezielt einzelne Stellen mit `PRINZIPIEN.md`
+abgleichen statt ganze Bereiche neu zu bauen (z. B. Karten-Doppel-Verschachtelung
+oder Typo-Skala am Handy stichprobenartig prüfen) — oder der Strang ruht, bis
+der Betreiber eine konkrete Schwachstelle nennt.
+
+---
+
 ### 2026-09-16 — Design-Tool übersprungen, direkt im Code weiter
 
 **Geändert:** `AUFTRAG.md` — Abschnitt „Vorgehen" umgeschrieben: kein Handoff-Kreislauf

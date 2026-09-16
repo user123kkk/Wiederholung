@@ -1,3 +1,11 @@
+## 3.0.46 – 16. September 2026
+
+### Verbessert
+
+- **Ziehgriff: Tastziel auf 44px verbreitert.** Redesign-Strang „Oberfläche & Mobile-Gestalt": Ist-Zustand von Navigation und leeren Zuständen gegen `PRINZIPIEN.md` (Video 1) geprüft — Bottom-Navigation, Bottom-Sheet und leere Zustände entsprechen bereits den Prinzipien (seit 3.0.0/3.1.0). Einziger offener Fund war der Ziehgriff zum Neuordnen von Karten/Speicherkarten: 28px breit, unter dem 44px-Mindestziel aus Video 1 — schon in `beobachtungen-lernwerkzeug.md` als Ursache für die frühere Doppeltipp-Unzuverlässigkeit vermerkt. Jetzt `var(--tap)` (44px) statt 28px; reine Breitenänderung, kein Eingriff in die Zieh-/Long-Press-Logik.
+
+---
+
 ## 3.0.45 – 16. September 2026
 
 ### Neu

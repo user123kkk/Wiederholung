@@ -1383,7 +1383,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 
 .drag-handle {
-  flex: none; width: 28px; height: var(--tap);
+  flex: none; width: var(--tap); height: var(--tap);
   display: flex; align-items: center; justify-content: center;
   color: var(--text-3); cursor: grab;
   /* 15.09.2026: War "none", dann kurz "manipulation" (v3.0.35) - dabei
