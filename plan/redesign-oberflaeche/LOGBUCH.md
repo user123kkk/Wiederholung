@@ -4,6 +4,31 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-16 — Design-Tool übersprungen, direkt im Code weiter
+
+**Geändert:** `AUFTRAG.md` — Abschnitt „Vorgehen" umgeschrieben: kein Handoff-Kreislauf
+über Claude Design mehr, stattdessen direkte, phasenweise Umsetzung im Repo.
+`CLAUDE-DESIGN-PROMPT.md`/`ANLEITUNG.md` bleiben als Referenz liegen (Design-
+Entscheidungen sind dort sauber gebündelt), werden aber nicht mehr ausgeführt.
+
+**Entscheidung:** Betreiber will den Design-Tool-Umweg nicht gehen („würd am
+liebsten das unterlassen und direkt zum Plan gehen aus den 3 Videos"). Statt eines
+Komplett-Handoffs (der beim Ladebildschirm schon zu ungefragten Zusatz-Features
+führte) jetzt **kleinere, geprüfte Schritte direkt im Code** — Token/Basis →
+Gerüst/Navigation → leere Zustände/Onboarding → `landing.html`, mit Zwischenstand
+nach jedem Block statt einer Riesenänderung auf einmal.
+
+**Offen:** Reihenfolge innerhalb der Schritte ist ein Vorschlag, kein Zwang — die
+nächste Session darf begründet abweichen. `PRINZIPIEN.md` (was passt/was nicht)
+gilt unverändert als Filter.
+
+**Nächster Schritt:** Ist-Zustand von `styles.css`/`index.html`/App-Navigation
+gegen die drei Gestaltungsregeln und `PRINZIPIEN.md` ansehen, dann mit dem ersten
+sichtbaren Block beginnen (vermutlich Navigation/Gerüst, da dort laut Video 1 der
+größte Sprung zwischen Desktop- und Mobile-Gestalt liegt).
+
+---
+
 ### 2026-09-16 — Strang angelegt, Video-Ratschläge gefiltert, Design-Prompt fertig
 
 **Geändert:**
