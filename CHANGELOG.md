@@ -1,3 +1,11 @@
+## 3.0.43 – 16. September 2026
+
+### Verbessert
+
+- **Startfehler nach Browser-Zurück (Beobachtung 16): weitere Rückmeldung „passiert halt eben wieder" — der Fix aus v3.0.42 (zwei statt ein automatischer Reload-Versuch) reichte nicht.** Das ist ein wichtiges Signal: Wenn selbst ein kompletter Neuladen samt Service-Worker-/Cache-Löschung den Fehler nicht behebt, ist es vermutlich kein Cache-Problem, sondern ein echter, einzelner Netzwerk-Aussetzer genau bei diesem einen Abruf. Ein voller Seiten-Reload ist dafür die teuerste mögliche Antwort. Jetzt zwei unabhängige, günstigere Maßnahmen: (1) `initFirebase()` versucht jeden der drei Firebase-Bausteine jetzt bis zu dreimal einzeln nachzuladen (mit 500ms Pause), bevor der teure Reload-Mechanismus überhaupt greift — deutlich schneller und weniger störend, falls es wirklich nur ein kurzer Aussetzer war. (2) Der Fehlerbildschirm zeigt jetzt zusätzlich, wie viele automatische Versuche schon liefen und ob der Browser sich selbst für online hielt — bei einem erneuten Auftreten liefert ein Screenshot davon einen echten Anhaltspunkt statt einer weiteren Vermutung. Die tatsächliche Ursache bleibt weiterhin ungeklärt.
+
+---
+
 ## 3.0.42 – 16. September 2026
 
 ### Behoben

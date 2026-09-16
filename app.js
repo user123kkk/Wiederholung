@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.42";
+const APP_VERSION = "3.0.43";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -1219,10 +1219,35 @@ function sammlungenStarten() {
   }, snapFehler);
 }
 
+/* 16.09.2026: "Failed to fetch dynamically imported module" nach
+   Browser-Zurueck von Impressum/Datenschutz (Beobachtung 16) blieb
+   bestehen, obwohl die Selbstheilung (kompletter Reload samt SW-/Cache-
+   Loeschung) inzwischen zwei automatische Versuche bekommt (v3.0.42) - der
+   Fehler kam laut Rueckmeldung trotzdem wieder. Das bedeutet: Ein voller
+   Neuladen loest es NICHT zuverlaessig, also ist es vermutlich kein
+   Cache-/Service-Worker-Problem, sondern ein tatsaechlicher, einzelner
+   Netzwerk-Haenger genau bei diesem einen Abruf (z.B. weil der Browser
+   Ressourcen waehrend einer Zurueck-Navigation kurzzeitig anders
+   priorisiert). Ein voller Seiten-Reload ist dafuer die teuerste moegliche
+   Antwort - bevor die Selbstheilung ueberhaupt greift, versucht diese
+   Funktion denselben einzelnen Abruf erst noch zweimal, mit kurzer Pause,
+   an genau der Stelle, an der er fehlschlug. Deutlich billiger und
+   schneller als ein Reload, und trifft die Ursache direkter, falls es
+   wirklich nur ein kurzer Haenger war. */
+async function importMitVersuch(url, versuche, wartenMs) {
+  for (let i = 1; i <= versuche; i++) {
+    try { return await import(url); }
+    catch (e) {
+      if (i === versuche) throw e;
+      await new Promise(r => setTimeout(r, wartenMs));
+    }
+  }
+}
+
 async function initFirebase() {
-  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js");
-  const authMod = await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js");
-  const fsMod = await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js");
+  const { initializeApp } = await importMitVersuch("https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js", 3, 500);
+  const authMod = await importMitVersuch("https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js", 3, 500);
+  const fsMod = await importMitVersuch("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js", 3, 500);
   fb = { ...authMod, ...fsMod };
 
   const fbApp = initializeApp(firebaseConfig);
@@ -6795,14 +6820,28 @@ async function selbstheilung() {
   } catch (e) { /* Aufr\u00e4umen fehlgeschlagen - dann bleibt es beim gew\u00f6hnlichen Fehlerbildschirm */ }
 }
 
+/* 16.09.2026: Diagnose-Zeile ergaenzt (Versuche, Online-Status) - die
+   bisherige Fehlermeldung allein ("Failed to fetch dynamically imported
+   module: ...") reichte nicht aus, um die Ursache des wiederkehrenden
+   Ladefehlers nach Browser-Zurueck einzugrenzen. Fuer den naechsten Fall:
+   ein Screenshot dieses Kastens verraet, wie viele automatische Versuche
+   schon liefen und ob der Browser sich selbst fuer online hielt - beides
+   naechster Anhaltspunkt statt einer weiteren Vermutung. */
 function zeigeStartfehler(e) {
+  let diagnose = "";
+  try {
+    const bisher = parseInt(sessionStorage.getItem("adrabic-selbstheilung") || "0", 10);
+    diagnose = bisher + " automatische Versuche \u00b7 online: " + (navigator.onLine ? "ja" : "nein");
+  } catch (err) { /* sessionStorage blockiert - dann eben ohne Diagnosezeile */ }
   app.innerHTML = '<div class="solo"><div class="empty">' +
     '<div class="empty__icon">' + ikon("offline", "i-xl") + '</div>' +
     '<div class="empty__titel">Start fehlgeschlagen</div>' +
     '<p class="empty__text">Die App konnte ihre Bausteine nicht laden. ' +
     'Pr\u00fcf deine Internetverbindung und lade die Seite neu.</p>' +
     '<div class="error-box" style="text-align:left">' + ikon("warnung", "i-sm") +
-    '<div class="banner__text">' + esc(e && e.message ? e.message : String(e)) + '</div></div>' +
+    '<div class="banner__text">' + esc(e && e.message ? e.message : String(e)) +
+    (diagnose ? '<br><span style="opacity:.7">' + esc(diagnose) + '</span>' : '') +
+    '</div></div>' +
     '<button data-action="start-neu-versuchen">Neu laden</button>' +
     '</div></div>';
 }

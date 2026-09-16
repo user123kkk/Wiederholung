@@ -367,7 +367,7 @@ Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)*
 entschieden werden, da 3 um eine bewusste Erhaltung nach einem Modal/Dialog
 geht, während 14 um ein unerwartetes Verhalten bei einfachem Navigation geht.
 
-## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — 🔧 reproduziert, Kontingent erhöht (v3.0.41)
+## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — ⏸ Ursache weiterhin ungeklärt, zwei Abmilderungen versucht (v3.0.41–43)
 
 **Beobachtung:** Navigation zwischen App und statischen Seiten ist fehlerhaft:
 - Von der App (z.B. Fehlerformular in Einstellungen) zur externen Seite
@@ -448,11 +448,41 @@ aber eine zweite, wirklich transiente Störung bekommt jetzt eine echte
 Chance, sich von selbst zu lösen. Das behebt den Bug nicht zwangsläufig
 vollständig (falls der Fehler bei JEDEM Zurück-Navigieren zuverlässig
 auftritt statt nur gelegentlich, würde auch ein zweiter Versuch nichts
-nützen), macht ihn aber seltener sichtbar. Nächster Schritt: erneuter
-Gerätetest mit genau denselben Schritten (Impressum → Zurück) — kommt der
-Fehlerbildschirm weiterhin, braucht es echte Browser-Entwicklertools
-(Netzwerk-Tab, Application-Tab → Back/Forward Cache) auf dem betroffenen
-Gerät, um die tatsächliche Ursache zu sehen statt sie zu vermuten.
+nützen), macht ihn aber seltener sichtbar.
+
+**Testrückmeldung 16.09.2026: „passiert halt eben wieder" — reichte nicht.**
+Wichtiges Signal, kein Fehlschlag zum Ignorieren: Wenn selbst zwei komplette
+Neuladen-Versuche (samt Service-Worker-/Cache-Löschung) den Fehler nicht
+beheben, spricht das GEGEN die Cache-/bfcache-Hypothese aus dem vorigen
+Absatz — ein echter Reload ist keine Zurück-Navigation mehr, unterliegt also
+keiner eventuellen Zurück-spezifischen Ressourcen-Drosselung des Browsers
+mehr, und scheiterte trotzdem. Wahrscheinlicher: ein echter, einzelner
+Netzwerk-Aussetzer genau bei diesem einen Abruf (`import()` von
+`firebase-app.js` von gstatic.com), der auch einen frischen Reload nicht
+automatisch übersteht, weil jeder Reload denselben Abruf ja erneut riskiert.
+
+**Zwei weitere, unabhängige Abmilderungen (v3.0.43), Ursache weiterhin
+ungeklärt:** (1) `initFirebase()` versucht jeden der drei
+Firebase-Bausteine jetzt bis zu dreimal einzeln nachzuladen (500ms Pause
+dazwischen), BEVOR der teure Reload-Mechanismus überhaupt greift — deutlich
+schneller und unauffälliger als ein Reload, falls es wirklich nur ein
+kurzer Aussetzer war. (2) Der Fehlerbildschirm zeigt jetzt zusätzlich, wie
+viele automatische Selbstheilungs-Versuche schon liefen und ob der Browser
+sich selbst für online hielt (`navigator.onLine`) — bewusst NICHT als
+weitere Vermutung gedacht, sondern als Diagnose-Werkzeug: Kommt der Fehler
+ein drittes Mal, liefert ein Screenshot dieser Zeile einen echten,
+verifizierbaren Anhaltspunkt (wie viele Versuche liefen, glaubte der
+Browser, online zu sein) statt einer weiteren Vermutung von hier aus ohne
+Testmöglichkeit.
+
+**Ehrlich offen:** Die tatsächliche Ursache ist nach jetzt zwei
+Interventionsrunden (v3.0.41–43) immer noch nicht bestätigt, nur
+eingegrenzt (kein reines Cache-/bfcache-Problem, da Reload allein nicht
+half). Ohne echte Browser-Entwicklertools (Netzwerk-Tab) auf dem
+betroffenen Gerät bleibt jeder weitere Eingriff am Selbstheilungs-
+Mechanismus selbst eine Vermutung. Nächster Schritt: erneuter Gerätetest;
+kommt der Fehler wieder, den Diagnose-Text aus dem Fehlerbildschirm
+(„X automatische Versuche · online: ja/nein") mitschicken.
 
 ## 15. Viewport-Verschiebung beim Scrollen und beim Registrieren — ✅ behoben (v3.0.37)
 
