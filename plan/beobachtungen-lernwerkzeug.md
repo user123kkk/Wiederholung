@@ -317,7 +317,7 @@ verschiedene Zwecke (Korantext vs. freie Notiz). Nur zu ändern, wenn der
 Betreiber das wirklich einheitlich haben will — technisch möglich, aber
 Geschmacksfrage, keine Fehlerbehebung.
 
-## 9. Ist in der Kartenliste klar, was Übersetzung und was Notiz ist?
+## 9. Ist in der Kartenliste klar, was Übersetzung und was Notiz ist? — geprüft, kein Fund (16.09.2026)
 
 **Beobachtung:** Frage, ob in der Liste wirklich klar erkennbar ist, welches
 Feld Übersetzung und welches Notiz ist.
@@ -327,7 +327,19 @@ Blick in die aktuelle Liste (Label, Schriftgröße, Reihenfolge der Felder), um
 zu beurteilen, ob eine Verwechslungsgefahr wirklich besteht oder nur in
 diesem einen Moment unklar wirkte.
 
-## 10. Formatierung auch in der Liste anzeigen
+**Geprüft am 16.09.2026, `styles.css`:** Drei gleichzeitig wirkende
+Unterscheidungsmerkmale, keine Verwechslungsgefahr gefunden. Wort
+(`.card-row .wort`): eigene Schriftfamilie (`--font-text`, dieselbe wie
+Überschriften/`.dlg h3`), 1rem, hellste Textfarbe (`--text-1`, geerbt vom
+globalen Body-Standard, `styles.css:300`). Übersetzung
+(`.card-row .uebersetzung`): 0.8125rem, mittlere Farbe `--text-2`. Notiz
+(`.extra-note`): 0.75rem, schwächste Farbe `--text-3`, zusätzlich einzeilig
+mit Ellipsis abgeschnitten. Reihenfolge im Markup ist immer Wort →
+Übersetzung → Notiz, nie vertauscht. Damit unterscheiden sich alle drei
+Felder gleichzeitig in Schriftgröße, Farbe und (Wort) Schriftfamilie — eine
+klare dreistufige visuelle Hierarchie, kein Fund. Kein Code geändert.
+
+## 10. Formatierung auch in der Liste anzeigen — durch Punkt 1 abgedeckt (16.09.2026)
 
 **Beobachtung:** Es gab wohl mal die Idee/Funktion, dass Formatierung
 (Absätze usw.) auch in der Listenansicht sichtbar ist. Hängt mit Punkt 1
@@ -336,6 +348,15 @@ zusammen. Unklar, wie wichtig das ist — Einschätzung des Betreibers selbst.
 **Einschätzung:** Kein eigenständiger Punkt, sondern eine Ausbaustufe von
 Punkt 6 (Formatierung wird überhaupt respektiert) plus Punkt 1
 (Detailansicht). Erst relevant, wenn diese beiden geklärt sind.
+
+**Beide Voraussetzungen seit v3.0.36/v3.0.47 erfüllt — bewusst kein
+zusätzlicher Bau.** Punkt 6 (Notiz-Formatierung wird respektiert) ist seit
+v3.0.36 behoben, Punkt 1 (Detailansicht) seit v3.0.47 gebaut: Wer die volle,
+formatierte Notiz sehen will, tippt die Zeile an und sieht sie in
+`cardDetailSheet()` mit `.extra-note-voll` (`pre-wrap`). Die einzeilige
+Listenvorschau (`.extra-note`) bleibt bewusst `nowrap`+Ellipsis — sie ist
+als kompakte Vorschau gedacht, nicht als Volltextanzeige; genau dafür gibt
+es jetzt die Detailansicht. Kein Code geändert.
 
 ## 11. Design-Sachen — bewusst zurückgestellt
 
@@ -586,8 +607,10 @@ werden, wenn was gebaut wird.
   beim Zurück von externen Seiten — auch höhere Priorität, weil App-Fehler).
 - **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1 (✅ v3.0.47),
   3 (✅ v3.0.48, beide auf Freigabe des Betreibers gebaut — am Ende unabhängig
-  voneinander gelöst, siehe dort), 10, 14.
-- **Prüffragen, kein bestätigter Fund:** 7, 9.
+  voneinander gelöst, siehe dort), 10 (✅ 16.09.2026, durch 1+6 abgedeckt, kein
+  eigener Bau nötig), 14.
+- **Prüffragen, kein bestätigter Fund:** 7, 9 (✅ 16.09.2026 geprüft — dreistufige
+  Hierarchie aus Schriftgröße, Farbe und Schriftfamilie, keine Verwechslungsgefahr).
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
 - **Bewusst zurückgestellt:** 11, 12.
 
