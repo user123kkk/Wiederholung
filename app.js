@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.41";
+const APP_VERSION = "3.0.42";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -5971,12 +5971,31 @@ let autoScrollRAF = null;
    selten gut, mal scrollt, mal wird trotzdem was markiert"). Jetzt
    Long-Press statt Doppeltipp: den Griff kurz halten, OHNE zu wischen,
    aktiviert das Ziehen - eine einzige, durchgehende Beruehrung statt zwei
-   getrennter. Bewegt sich der Finger vorher mehr als HOLD_TOLERANZ (das ist
-   Wischen/Scrollen), bricht der Versuch ab, ohne dass ueberhaupt
-   preventDefault() lief - die Seite scrollt dann ganz normal weiter. Siehe
-   pointerdown-Handler unten. */
+   getrennter.
+
+   Zweiter Fund, noch am selben Tag: Mit touch-action "manipulation" (wie
+   zuvor) darf der Browser das Scrollen fuer diese Beruehrung schon auf
+   seinem eigenen Compositor-Thread beginnen, SOBALD sich der Finger bewegt -
+   unabhaengig davon, was JS spaeter entscheidet (genau dafuer ist
+   touch-action da: fluessiges Scrollen ohne auf das Hauptthread-JS warten zu
+   muessen). setPointerCapture() beim Aktivieren des Ziehens kommt dagegen zu
+   spaet - ein einmal beguennstigtes natives Scrollen laesst sich damit nicht
+   zuverlaessig zurueckholen. Ergebnis: Griff und Seite bewegten sich beim
+   Ziehen gleichzeitig ("beim Verschieben scrollt es").
+
+   Deshalb jetzt touch-action wieder "none" auf .drag-handle - das
+   unterbindet natives Scrollen fuer JEDE Beruehrung, die auf dem Griff
+   beginnt, von Anfang an und endgueltig (kein Compositor-Scroll, das man
+   spaeter zurueckerobern muesste). Damit eine Beruehrung, die eigentlich nur
+   ueber den Griff hinwegwischen wollte, trotzdem normal scrollt, holt
+   scrollUebernahme das entgangene native Scrollen manuell per
+   window.scrollBy() nach, sobald HOLD_TOLERANZ ueberschritten ist - siehe
+   pointermove-Handler unten. Das eigene Rand-Scrollen waehrend eines aktiven
+   Zugs (autoScrollTick oben) blieb davon unberuehrt; es war schon immer rein
+   JS-gesteuert, nie nativ. */
 let holdTimer = null;
 let holdKandidat = null; // { handle, row, art, inSet, pointerId, startX, startY }
+let scrollUebernahme = null; // { pointerId, lastY } - manuelles Scrollen, siehe Kommentar oben
 const HOLD_DAUER = 350;     // ms bis Halten das Ziehen aktiviert
 const HOLD_TOLERANZ = 10;   // px Bewegung, die einen Halte-Versuch als Scrollen erkennt und abbricht
 
@@ -6116,9 +6135,22 @@ app.addEventListener("pointerdown", e => {
 
 app.addEventListener("pointermove", e => {
   if (holdKandidat && e.pointerId === holdKandidat.pointerId) {
-    holdKandidat.lastY = e.clientY;
     const dx = e.clientX - holdKandidat.startX, dy = e.clientY - holdKandidat.startY;
-    if (Math.hypot(dx, dy) > HOLD_TOLERANZ) holdAbbrechen(); // Wischen erkannt - normal weiterscrollen
+    if (Math.hypot(dx, dy) > HOLD_TOLERANZ) {
+      /* Wischen erkannt, kein Halten. touch-action:none auf dem Griff hat
+         natives Scrollen fuer diese Beruehrung von Anfang an unterbunden -
+         den seit der Beruehrung entgangenen Weg jetzt in einem Schritt
+         nachholen, ab hier per scrollUebernahme normal weiterverfolgen. */
+      const nachholen = holdKandidat.startY - e.clientY;
+      holdAbbrechen();
+      scrollUebernahme = { pointerId: e.pointerId, lastY: e.clientY };
+      window.scrollBy(0, nachholen);
+      return;
+    }
+    holdKandidat.lastY = e.clientY;
+  } else if (scrollUebernahme && e.pointerId === scrollUebernahme.pointerId) {
+    window.scrollBy(0, scrollUebernahme.lastY - e.clientY);
+    scrollUebernahme.lastY = e.clientY;
   }
   if (!dragState || e.pointerId !== dragState.pointerId) return;
   dragState.clientY = e.clientY;
@@ -6183,8 +6215,11 @@ function endDrag(e) {
   /* Ein Loslassen/Abbrechen beendet auch einen noch wartenden Halte-Versuch
      (derselbe Finger, der den Griff beruehrt hat) - sonst bliebe der Timer
      stehen und wuerde beim naechsten Griff faelschlich als "schon gehalten"
-     zaehlen. */
+     zaehlen. Ebenso eine laufende manuelle Scroll-Uebernahme (siehe
+     pointermove-Handler) - sonst wuerde deren letzter Y-Wert beim naechsten
+     Wischen ueber denselben Griff als Startpunkt missverstanden. */
   if (holdKandidat && (!e || e.pointerId === holdKandidat.pointerId)) holdAbbrechen();
+  if (scrollUebernahme && (!e || e.pointerId === scrollUebernahme.pointerId)) scrollUebernahme = null;
   if (!dragState) return;
   if (autoScrollRAF) { cancelAnimationFrame(autoScrollRAF); autoScrollRAF = null; }
   const row = dragState.row;

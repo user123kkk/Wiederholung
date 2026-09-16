@@ -32,7 +32,7 @@ unüblich und schwer zu entdecken (kein sichtbarer Hinweis); ein normaler
 Einfachtipp auf die Zeile (außerhalb der Aktions-Knöpfe) wäre naheliegender
 und konsistenter mit Touch-Konventionen.
 
-## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe) — 🔧 Geste auf Long-Press umgestellt (v3.0.41)
+## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe) — 🔧 Geste auf Long-Press umgestellt, Scroll-Konflikt behoben (v3.0.42)
 
 **Beobachtung:** Beim Scrollen mit dem Daumen links (wo die 6 Verschieben-
 Knöpfe sitzen) wurde aus Versehen eine Karte verschoben. Wunsch: Doppeltipp
@@ -139,8 +139,37 @@ während des Haltens: Der Griff färbt sich ein und zeigt eine kurze
 Rückmeldung aus v3.0.40 nutzte eine nirgends definierte CSS-Variable
 (`--accent-rgb`) — die Regel griff nie, `.drag-handle:active` hatte also in
 Wirklichkeit gar keinen sichtbaren Hintergrund. Jetzt korrekt mit dem
-vorhandenen Token `--accent-bg-strong`. Nächster Schritt: Gerätetest, ob
-Long-Press zuverlässiger ist als Doppeltipp es je war.
+vorhandenen Token `--accent-bg-strong`.
+
+**Testrückmeldung zu v3.0.41, neue Ursache gefunden und behoben (v3.0.42):**
+Long-Press aktivierte das Ziehen zuverlässig, aber „Problem beim Verschieben
+ist, dass man dabei scrollt" — während des aktiven Ziehens bewegte sich die
+Seite mit. Ursache: `touch-action: manipulation` (seit v3.0.35 unverändert
+mitgeschleppt) erlaubt dem Browser, natives Scrollen für eine Berührung
+schon auf seinem eigenen Compositor-Thread zu beginnen, sobald sich der
+Finger bewegt — unabhängig davon, was JS später entscheidet (genau dafür
+ist touch-action da: flüssiges Scrollen, ohne auf das Haupt-Thread-JS warten
+zu müssen). `setPointerCapture()` beim Aktivieren des Ziehens kam dafür zu
+spät: Ein bereits begünstigtes natives Scrollen lässt sich damit nicht mehr
+zuverlässig zurückholen. Die App hat währenddessen ihr eigenes,
+kontrolliertes Rand-Scrollen laufen (`autoScrollTick`) — beides zusammen
+ergab die gemeldete Doppelbewegung.
+
+Jetzt `touch-action: none` auf `.drag-handle` — natives Scrollen ist für
+jede Berührung, die auf dem Griff beginnt, von Anfang an und endgültig
+unterbunden, kein Compositor-Scroll mehr, den man sich zurückerobern
+müsste. Damit eine Berührung, die nur über den Griff hinwegwischen wollte,
+trotzdem scrollt, holt `app.js` das entgangene Scrollen jetzt manuell per
+`window.scrollBy()` nach, sobald die Bewegung `HOLD_TOLERANZ` (10px)
+überschreitet (neuer Zustand `scrollUebernahme`) — für den Nutzer soll sich
+nichts anders anfühlen, außer dass die Seite beim aktiven Ziehen nicht mehr
+mitwandert. Einzige bekannte Abweichung: Ein Wisch, der exakt auf dem 28px
+breiten Griff beginnt, hat danach kein natives Scroll-„Nachschwingen"
+(Momentum) mehr, weil er komplett von JS statt vom Browser getragen wird —
+scrollt man stattdessen (wie meist) über den restlichen Zeileninhalt,
+bleibt das native Momentum-Scrollen unverändert erhalten. Nächster Schritt:
+Gerätetest, ob sich Aktivierung UND aktives Ziehen jetzt beide zuverlässig
+anfühlen.
 
 ## 3. Zurück zur Scroll-Position nach dem Bearbeiten
 

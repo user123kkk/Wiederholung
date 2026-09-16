@@ -1,3 +1,11 @@
+## 3.0.42 – 16. September 2026
+
+### Behoben
+
+- **Ziehgriff: Seite scrollte während des aktiven Ziehens mit (Testrückmeldung: „Problem beim Verschieben ist, dass man dabei scrollt").** Ursache: `touch-action: manipulation` (seit v3.0.35) erlaubt dem Browser, natives Scrollen für eine Berührung schon auf seinem eigenen Compositor-Thread zu beginnen, sobald sich der Finger bewegt — unabhängig davon, was JS später entscheidet. `setPointerCapture()` beim Aktivieren des Ziehens (Long-Press, v3.0.41) kam dafür zu spät: Ein bereits begünstigtes natives Scrollen ließ sich damit nicht mehr zuverlässig zurückholen. Griff und Seite bewegten sich beim Ziehen gleichzeitig — die eigene, kontrollierte Rand-Scroll-Funktion (`autoScrollTick`) und natives Scrollen kämpften gegeneinander. Jetzt `touch-action: none` auf `.drag-handle` — natives Scrollen ist für jede Berührung, die auf dem Griff beginnt, von Anfang an und endgültig unterbunden. Damit eine Berührung, die nur über den Griff hinwegwischen wollte, trotzdem scrollt, holt `app.js` das entgangene Scrollen jetzt manuell per `window.scrollBy()` nach, sobald die Bewegung `HOLD_TOLERANZ` überschreitet (neuer Zustand `scrollUebernahme`) — der Nutzer merkt vom Wechsel nichts, außer dass ihm beim aktiven Ziehen die Seite nicht mehr aus der Hand rutscht.
+
+---
+
 ## 3.0.41 – 16. September 2026
 
 ### Geändert
