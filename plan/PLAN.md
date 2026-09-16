@@ -102,6 +102,31 @@ Neuer ohne Kartensatz anfängt · eng oder weit ausgerichtet · die unbelegte
 Behauptung „wissenschaftlich bewährt" ersetzen. Solange die fehlen, wird
 `landing.html` nicht umgebaut.
 
+### Nebenstrang: Oberfläche & Mobile-Gestalt
+
+Kein Phasen-Ordner, keine Nummer. Ordner
+[`redesign-oberflaeche/`](redesign-oberflaeche/). Gestaltet die **Außenseite**
+neu — App-Optik **und** `landing.html`, mobil-first — aus einem Guss statt
+gewachsen. Aufgekommen aus drei Videos des Betreibers (Mobile-UI, Wachstum,
+UX-Psychologie); die Ratschläge sind in
+[`PRINZIPIEN.md`](redesign-oberflaeche/PRINZIPIEN.md) gegen `KONZEPT.md` §7 und
+die bestehende Gestalt **gefiltert**, nicht gesammelt. Reihenfolge: gestalten in
+Claude Design ([`CLAUDE-DESIGN-PROMPT.md`](redesign-oberflaeche/CLAUDE-DESIGN-PROMPT.md)
++ [`ANLEITUNG.md`](redesign-oberflaeche/ANLEITUNG.md)) → Handoff zurück → Claude
+Code übernimmt **selektiv**. Status: `läuft` (Design-Phase, noch kein Code).
+**Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 5 unten.
+
+### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
+
+Kein Phasen-Ordner, keine Nummer. Ordner
+[`monetarisierung/`](monetarisierung/). **Es wird nichts gebaut** — nur ein
+Gerüst, damit Geld/Wachstum einen festen Platz haben und nicht jede Session neu
+durchdacht werden (Betreiber-Wunsch). Struktur, Entscheidungspunkte und offene
+Fragen in [`GERUEST.md`](monetarisierung/GERUEST.md). Deckt `KONZEPT.md` §2
+(„Abo/Bezahlung — später, nicht verbauen"). Status: `zurückgestellt` — ruht,
+bis der Betreiber ihn ausdrücklich startet; die Grundfrage „soll überhaupt Geld
+fließen" ist heute im `KONZEPT.md` §1 mit „kein Geldfluss" beantwortet.
+
 ### Warum diese Reihenfolge
 
 Der Leitsatz aus Konzept-Abschnitt 5: **erst dichtmachen, was schon Daten hält
@@ -232,6 +257,7 @@ hängt, nicht begonnen.
 | ~~3~~ | ~~Wird die Datenschutzerklärung selbst geschrieben oder über einen Generator erzeugt?~~ | **erledigt 12.09.2026** — siehe unten |
 | ~~4~~ | ~~Soll der Weitergabe-Kartensatz (Medina Buch 1) Teil der öffentlichen Seite werden oder privat unter Brüdern bleiben?~~ | **erledigt 12.09.2026** — siehe unten |
 | ~~5~~ | ~~Welches Repo ist maßgeblich?~~ | **erledigt 12.09.2026** — siehe „Wo der Code liegt" oben |
+| 6 | Gilt `KONZEPT.md` §7 („App-Funktionen nicht anfassen") weiter, oder darf der Redesign auch die Bedienung ändern? | für Strang `redesign-oberflaeche` **gelockert** (16.09.2026); §7 dauerhaft anpassen bleibt offen — siehe unten |
 
 **Geklärt am 12.09.2026 (vormals offene Frage 1).** Entscheidung des
 Betreibers: **Firebase Hosting**, nicht GitHub Pages, nicht Netlify/Vercel —
@@ -271,6 +297,17 @@ Weitergabe-Kartensatz (Medina Buch 1) bleibt **privat unter Brüdern** —
 kein Teil der öffentlichen Seite. Ändert weder die Startseite (Phase 6)
 noch die Rechtstexte (Phase 5) — beide behandeln nur das, was öffentlich
 zugänglich ist.
+
+**Teil-geklärt am 16.09.2026 (Frage 6).** `KONZEPT.md` §7 sagt: „Keine
+Funktionen des Tools anfassen." Für den Redesign-Strang
+(`redesign-oberflaeche`) hat der Betreiber diese Grenze **bewusst gelockert**:
+Aussehen der App **und** Startseite dürfen neu, und auch Bedienung/Navigation
+darf angefasst werden — **Bedingung:** es bleibt im Rahmen der bestehenden
+ruhigen Gestalt, kein generischer KI-Template-Look. Die **Lernlogik** bleibt
+trotzdem unangetastet (harte Grenze, siehe `redesign-oberflaeche/AUFTRAG.md`).
+Was **nicht** entschieden ist: ob §7 dauerhaft so bleibt oder umgeschrieben
+wird. `KONZEPT.md` wird **nicht** eigenmächtig geändert — das ist Betreiber-Sache.
+Bis dahin gilt die Lockerung nur für diesen einen Strang.
 
 Die Phasen 0–6 hängen an keiner offenen Frage mehr und können durchgearbeitet
 werden.
@@ -322,16 +359,36 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-13 | **Phase 9 fertig** (v3.0.26). Der letzte offene Fund aus dem ersten Durchgang ist behoben: Karten, Karten innerhalb einer Speicherkarte und Speicherkarten selbst lassen sich jetzt auch mit Pfeiltasten am (jetzt fokussierbaren) Ziehgriff neu ordnen. Die drei Commit-Zweige aus `endDrag()` sind in eigene Funktionen gezogen und werden von Maus- und Tastatur-Bedienung gemeinsam genutzt, damit keine zwei Wege dieselbe Ordnungszahl schreiben. Fokus bleibt nach jedem Neuzeichnen über die Karten-/Speicherkarten-ID auf der bewegten Zeile. Ohne echtes Firebase-Konto geprüft, aber mit einem echten Browser: dieselbe Reorder-/Fokus-Logik in einer eigenständigen Playwright-Testseite nachgebaut – Reihenfolge, Fokus-Erhalt über einen vollständigen DOM-Neuaufbau und Randverhalten bestätigt. Offen bleibt nur ein Test mit echtem Screenreader (kein Blocker, siehe `phase-9-barrierefreiheit/LOGBUCH.md`). Damit sind alle vier Fertig-Kriterien aus `AUFTRAG.md` erfüllt. |
 | 2026-09-15 | **Phase 8 fertig.** Testnachrichten aus beiden Formularen (Kontakt auf `landing.html`, Fehler in den Einstellungen) sind bekommen und bei adrabic.de@gmail.com angekommen. Kein weiterer Produktivcode nötig — beide Formulare funktionieren zuverlässig, rechtlich ausreichend und mit Spam-Schutz (Honeypot, verschlüsselte E-Mail). Alle Fertig-Kriterien erfüllt. Weiter mit Strang A (Landing-Page-Strategie) — Entscheidung 2.1 steht noch aus. |
 | 2026-09-15 | **Strang A geklärt, aber nicht entschieden.** Die Urheberrechtsfrage zu Medina Buch 1 (Fassung C) ist weg — der Autor hat die Online-Nutzung freigegeben. Trotzdem bleibt 2.1 offen: Der Betreiber baut selbst an einem Medina-Kartensatz, der aber an eine eigene YouTube-Playlist gebunden werden und teils kostenpflichtig sein soll — Struktur ist beim Betreiber selbst noch nicht fertig gedacht. `landing.html` bleibt auf Fassung A, bis entweder eigenes Wortmaterial (→ B) oder der fertige, entscheidungsklare Medina-Kartensatz (→ C) vorliegt. Details in `landing-page-strategie/LOGBUCH.md`. Weiter mit Strang B (Phase 8). |
+| 2026-09-16 | **Ladebildschirm neu + Fortschritt-Wochenvergleich** (v3.0.44/45, Design-Handoff des Betreibers). Ladebildschirm: Satelliten-Animation statt Opacity-Blink, freigestelltes Icon (`flower-isolated.png`), Mindestanzeige 650ms, sauberes Ausblenden. Fortschritt-Tab: Wochenvergleich mit Hochzähl-Animation. **Selektiv** aus dem Handoff übernommen — Sprachumschalter, Benachrichtigungen und Settings-Umbau bewusst **nicht** (kein Handler/keine Persistenz bzw. Betreiber-Entscheidung „Sprache zu riskant"); der bestehende 9-Sekunden-Lade-Hinweis wurde bewahrt, den ein Komplett-`app.js` stumm entfernt hätte. |
+| 2026-09-16 | **Zwei Nebenstränge angelegt** aus drei neuen Videos des Betreibers: `redesign-oberflaeche` (Oberfläche & Mobile-Gestalt, `läuft` — Design-Prompt fertig, wartet auf Handoff) und `monetarisierung` (Geld/Wachstum, `zurückgestellt` — nur Gerüst). Video-Ratschläge gegen `KONZEPT.md` §7 gefiltert (`redesign-oberflaeche/PRINZIPIEN.md`). §7 für den Redesign gelockert (offene Frage 6). |
 
 ## Wo eine neue Session anfängt
 
-**Alle Phasen und beide Stränge stabil — keine Blockaden.**
+**Aktivster Punkt gerade: der Redesign-Strang.** Er wartet auf den
+Design-Handoff des Betreibers.
+
+**Strang C — Oberfläche & Mobile-Gestalt — `läuft`, wartet auf Handoff.**
+[`redesign-oberflaeche/`](redesign-oberflaeche/) ist angelegt: Video-Ratschläge
+gefiltert ([`PRINZIPIEN.md`](redesign-oberflaeche/PRINZIPIEN.md)), Design-Prompt
+fertig ([`CLAUDE-DESIGN-PROMPT.md`](redesign-oberflaeche/CLAUDE-DESIGN-PROMPT.md)),
+Ablauf beschrieben ([`ANLEITUNG.md`](redesign-oberflaeche/ANLEITUNG.md)). **Nächster
+Schritt:** Der Betreiber gestaltet in Claude Design und gibt den Handoff (ZIP)
+zurück; dann übernimmt Claude Code selektiv (diffen, Altes ablösen,
+Veröffentlichungsliste, committen, pushen). Umfang lockert `KONZEPT.md` §7 (Frage 6),
+Lernlogik bleibt tabu.
+
+**Strang D — Monetarisierung & Wachstum — `zurückgestellt`, nur Gerüst.**
+[`monetarisierung/`](monetarisierung/) steht als Struktur da; es wird nichts
+gebaut, bis der Betreiber ihn startet. Grundfrage „soll Geld fließen" heute im
+`KONZEPT.md` §1 mit „nein" beantwortet.
+
+**Phasen 0–9 und Strang A/B stabil — keine Blockaden.**
 Phase 9 (Barrierefreiheit) ist seit v3.0.26 `fertig`. Phase 8 (Rückmeldung)
 ist seit 15.09.2026 (v3.0.30) `fertig` — beide Formulare funktionieren und
 sind rechtskonform. Die Phasen 0–9 sind damit alle durch. Strang A
 (Landing-Page-Strategie): 2.1 auf Fassung A gesetzt (15.09.2026), damit
-stabil. Strang B (Phase 8) erledigt. **Alle offenen Punkte liegen jetzt unter
-„Später" in diesem Dokument** — Lehrer-Konzept + Medina-Kartensatz mit
+stabil. Strang B (Phase 8) erledigt. **Die restlichen offenen Punkte liegen
+unter „Später" in diesem Dokument** — Lehrer-Konzept + Medina-Kartensatz mit
 Bezahlmodell, die Namensfrage innen/außen, Marke oder Person (2.4/2.5/2.6
 der Strategie). Eine neue Session kann wählen, welcher dieser Punkte als
 nächster drankommt — keine Reihenfolge verbaut, keine Frage blockiert etwas
