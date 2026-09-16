@@ -1357,13 +1357,13 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--border-subtle);
   background: var(--surface);
-  /* 15.09.2026: Der Ziehgriff ist nur 28px breit, ein Finger deckt beim
-     Halten oft mehr ab und reicht auf den Wort-Text daneben - dort galt
-     user-select:none bisher nicht, das Handy markierte trotzdem kurz
-     (Testrueckmeldung nach v3.0.38). Jetzt fuer die ganze Zeile gesperrt,
-     nicht nur den Griff selbst - Kompromiss: Text in der Liste laesst
-     sich nicht mehr per Long-Press markieren, dafuer zieht der Griff
-     zuverlaessig. */
+  /* 15.09.2026: Der Ziehgriff war damals nur 28px breit (seit 16.09.2026:
+     var(--tap), 44px), ein Finger deckt beim Halten oft mehr ab und reicht
+     auf den Wort-Text daneben - dort galt user-select:none bisher nicht,
+     das Handy markierte trotzdem kurz (Testrueckmeldung nach v3.0.38). Jetzt
+     fuer die ganze Zeile gesperrt, nicht nur den Griff selbst - Kompromiss:
+     Text in der Liste laesst sich nicht mehr per Long-Press markieren,
+     dafuer zieht der Griff zuverlaessig. */
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .card-row:last-child { border-bottom: 0; }
