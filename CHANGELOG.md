@@ -1,3 +1,11 @@
+## 3.0.47 – 16. September 2026
+
+### Neu
+
+- **Verwalten: Detailansicht beim Antippen einer Karte.** Beobachtung 1 aus `plan/beobachtungen-lernwerkzeug.md`, auf ausdrückliche Freigabe umgesetzt. Tippen auf eine Kartenzeile (außerhalb von Ziehgriff, Bearbeiten- und Löschen-Knopf) öffnet ein Blatt mit Wort, Übersetzung, vollständiger Notiz (nicht mehr abgeschnitten wie in der Listenvorschau), Zustand und Speicherkarten-Zugehörigkeit, plus einem Knopf direkt ins Bearbeiten-Formular. Reine Lesehülle nach dem bestehenden `.dlg`-Muster (wie das Bereichs-Sheet) — keine zweite Bearbeiten-Logik. Per Escape oder Tippen daneben wieder zu.
+
+---
+
 ## 3.0.46 – 16. September 2026
 
 ### Verbessert

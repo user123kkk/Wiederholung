@@ -1374,6 +1374,10 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 .card-row.card-frei { box-shadow: inset 2px 0 0 var(--accent); }
 .card-row.card-locked .words { opacity: 0.45; }
+/* 16.09.2026: Tap-Rueckmeldung fuer die Zeile selbst (Detailansicht,
+   Beobachtung 1) - ohne das war beim Antippen kein Unterschied zu sehen,
+   der native Tap-Highlight ist global abgeschaltet (Zeile ~309). */
+.card-row[data-action="card-detail"]:active { background: var(--surface-raised); }
 
 #karten-liste {
   border: 1px solid var(--border-subtle);

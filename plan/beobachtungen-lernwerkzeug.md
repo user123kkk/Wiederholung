@@ -16,7 +16,7 @@ App schon passt). Die Einschätzung ersetzt keine Entscheidung.
 
 ---
 
-## 1. Karte in der Verwalten-Liste antippen → Detailansicht
+## 1. Karte in der Verwalten-Liste antippen → Detailansicht — ✅ gebaut (v3.0.47)
 
 **Beobachtung:** In „Verwalten" die Kartenliste unten — eine Karte antippen,
 um sie genauer anzusehen (z. B. weil die Notiz zu lang für die Zeile ist),
@@ -31,6 +31,40 @@ Doppelklick/Doppeltipp ist als Geste für „Detail öffnen" auf Touch-Geräten
 unüblich und schwer zu entdecken (kein sichtbarer Hinweis); ein normaler
 Einfachtipp auf die Zeile (außerhalb der Aktions-Knöpfe) wäre naheliegender
 und konsistenter mit Touch-Konventionen.
+
+**Gebaut am 16.09.2026 (v3.0.47), auf ausdrückliche Freigabe des Betreibers**
+(„nimm einen Punkt und mach"), genau wie hier eingeschätzt: Einfachtipp auf
+die Zeile (`.card-row`, außerhalb von Ziehgriff/Bearbeiten/Löschen — die
+haben als eigene `data-action`-Elemente Vorrang über `closest()`) öffnet ein
+neues Blatt (`cardDetailSheet()`, `app.js`) nach dem bestehenden
+`.dlg`-Muster von `bereichSheet()` — Wort, Übersetzung, volle Notiz
+(`.extra-note-voll`, `pre-wrap` statt der abgeschnittenen Listenvorschau),
+Zustand, Speicherkarten-Zugehörigkeit, plus ein Knopf direkt ins bestehende
+Bearbeiten-Formular. Rein lesend, keine zweite Bearbeiten-Logik. Nur für
+Karten im offenen Bereich (`findCard()` deckt nur `currentBereich()` ab) —
+Treffer aus anderen Bereichen (`fremd`) bleiben ohne die neue Aktion, deren
+eigener Bearbeiten-Knopf ist unverändert. Escape schließt wie beim
+Bereichs-Sheet (Phase 9); `ui.cardDetailId` wird beim Tab- und
+Bereichswechsel zurückgesetzt, damit kein Geisterzustand übrig bleibt.
+
+**Geprüft, kein Konflikt mit dem Ziehgriff:** Ein Loslassen nach echtem
+Ziehen (oder nach aktiviertem, aber bewegungslosem Halten) ruft `endDrag()`
+auf, das synchron `render()` ausführt und damit den ursprünglichen
+Ziel-Knoten aus dem DOM entfernt, **bevor** der Browser den nachfolgenden
+synthetischen Klick auslösen würde — der erreicht damit den
+Zeilen-Listener nicht mehr. Ein kurzer Tipp auf den Griff **unterhalb**
+der Halteschwelle (kein Ziehen ausgelöst) öffnet dagegen jetzt die
+Detailansicht, weil `closest()` vom Griff (kein eigenes `data-action`) zur
+Zeile hochläuft — bewusst kein Bug, sondern eine zusätzliche, harmlose
+Tipp-Fläche.
+
+**Noch offen (bewusst nicht mitgebaut):** Punkt 3 (Scroll-Position nach
+Bearbeiten) hängt technisch nicht mehr an diesem Punkt, weil die
+Detailansicht ein Overlay ist und die Liste nicht verlässt — das
+Bearbeiten-Formular selbst bleibt aber weiterhin ein Sprung an den
+Seitenanfang, unverändert. Punkt 10 (Formatierung auch in der Listenvorschau)
+bleibt ebenfalls offen, das ist die einzeilige `.extra-note`-Vorschau, extra
+unverändert gelassen (Ellipsis-Kurzform bleibt so, wie sie ist).
 
 ## 2. Versehentliches Verschieben beim Scrollen (die 6 Knöpfe) — 🔧 Geste auf Long-Press umgestellt, Scroll-Konflikt behoben (v3.0.42)
 
@@ -536,7 +570,8 @@ werden, wenn was gebaut wird.
   verloren), 13 (Over-Scrolling), 14 (Scroll-Position nicht zurückgesetzt),
   15 (Viewport-Verschiebung beim Scrollen/Speichern), 16 (History/Firebase-Bug
   beim Zurück von externen Seiten — auch höhere Priorität, weil App-Fehler).
-- **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1, 3, 10, 14.
+- **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1 (✅ v3.0.47,
+  auf Freigabe des Betreibers gebaut — siehe dort für den Stand von 3/10), 3, 10, 14.
 - **Prüffragen, kein bestätigter Fund:** 7, 9.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
 - **Bewusst zurückgestellt:** 11, 12.

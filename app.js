@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.46";
+const APP_VERSION = "3.0.47";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -957,6 +957,11 @@ let ui = {
   statsScope: "alle",        // "alle" = alle Bereiche zusammen, "bereich" = nur der offene
   session: null,
   editId: null,
+  /* 16.09.2026: Die Detailansicht einer Karte in Verwalten (Beobachtung 1) -
+     eine Karten-ID, oder null = geschlossen. Eigenes Feld statt Wiederverwendung
+     von editId: Ansehen und Bearbeiten sind unterschiedliche Handlungen, die
+     Ansicht soll nicht ungefragt in den Bearbeiten-Modus wechseln. */
+  cardDetailId: null,
   askImport: false,          // alte lokale Daten anbieten
   searchQuery: "",           // Suchtext im Verwalten-Tab (nicht gespeichert, nur UI-Zustand)
   searchAll: false,          // D7: false = nur dieser Bereich, true = alle Bereiche
@@ -2818,6 +2823,7 @@ function selectBereich(bereichId) {
   ui.lernSetId = null;
   ui.lernLetzte = null;
   ui.editId = null;
+  ui.cardDetailId = null;
   resetFormDraft();
   ui.searchQuery = "";
   ui.kartenSeite = 0;
@@ -4238,6 +4244,33 @@ function bereichSheet() {
   return html;
 }
 
+/* 16.09.2026 (Beobachtung 1): Detailansicht einer Karte aus der Verwalten-
+   Liste - fuer Notizen, die in der einzeiligen Vorschau abgeschnitten sind.
+   Gleiche Huelle wie bereichSheet() (dasselbe .dlg-Muster), nur mit anderem
+   Inhalt. Rein lesend; Bearbeiten bleibt ein eigener Knopf, der zum
+   bestehenden Bearbeiten-Formular fuehrt - keine zweite Bearbeiten-Logik. */
+function cardDetailSheet() {
+  if (!ui.cardDetailId) return "";
+  const c = findCard(ui.cardDetailId);
+  if (!c) return "";
+  const b = currentBereich();
+  let html = '<div class="dlg-backdrop" data-action="card-detail-zu" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="card-detail-titel">';
+  html += '<h3 id="card-detail-titel"' + (istArabisch(c.wort) ? ' class="arabic" lang="ar" dir="rtl"' : '') + '>' + esc(c.wort) + '</h3>';
+  html += '<p class="dlg-text" style="margin-bottom:var(--space-3)">' + esc(c.uebersetzung) + '</p>';
+  if (c.extra) html += '<div class="extra-note-voll" style="margin-bottom:var(--space-4)">' + renderExtra(c.extra, []) + '</div>';
+  html += '<div style="margin-bottom:var(--space-2)">' + zustandBadge(c) + '</div>';
+  html += kartenTagsHtml(c.id, b);
+  html += '<div class="dlg-actions">';
+  if (kartenBearbeitbar(b)) {
+    html += '<button data-action="card-detail-bearbeiten" data-id="' + esc(c.id) + '">' +
+      ikon("stift", "i-sm") + ' Bearbeiten</button>';
+  }
+  html += '<button class="secondary" data-action="card-detail-zu">Schließen</button>';
+  html += '</div></div></div>';
+  return html;
+}
+
 /* ---------- Banner ----------
    Drei Tiefen für Fehler: blockierend (eigener Bildschirm, siehe der
    Start-Fehler ganz unten), Banner (bleibt stehen, solange das Problem
@@ -4358,6 +4391,7 @@ function renderMain() {
      dem Bereichs-Sheet, damit ein „Bereich anlegen“ aus dem Sheet heraus
      bedienbar bleibt. */
   html += bereichSheet();
+  html += cardDetailSheet();
   html += renderDialog();          // D2 – liegt als Overlay ueber allem
   html += renderToast();
   app.innerHTML = html;
@@ -5959,7 +5993,14 @@ function kartenListeInhalt() {
          aria-label macht das Feld auch ohne sichtbaren Text verstaendlich. */
       html += '<input type="checkbox" style="pointer-events:none" aria-label="' + esc(c.wort) + ' auswählen" ' + (checked ? "checked" : "") + '>';
     } else {
-      html += '<div class="' + zeilenKlasse + '"' + (draggable ? ' data-cardid="' + esc(c.id) + '"' : '') + '>';
+      /* 16.09.2026 (Beobachtung 1): Tippen auf die Zeile oeffnet die
+         Detailansicht - reicht die einzeilige Vorschau nicht (lange Notiz),
+         muss man nicht erst "Bearbeiten" oeffnen, um mehr zu sehen. Nur fuer
+         Karten im offenen Bereich (findCard() findet sonst nichts); Ziehgriff,
+         Bearbeiten- und Loeschen-Knopf liegen als eigene data-action-Elemente
+         DARIN und haben Vorrang (closest() findet das naechste zuerst). */
+      html += '<div class="' + zeilenKlasse + '"' + (draggable ? ' data-cardid="' + esc(c.id) + '"' : '') +
+        (!fremd ? ' data-action="card-detail" data-id="' + esc(c.id) + '" style="cursor:pointer"' : '') + '>';
       if (draggable) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(c.wort) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + (start + i + 1) + ' von ' + shownCards.length + '">' + ikon("griff", "i-sm") + '</span>';
       else if (ui.selectMode && kartenZu) html += '<span class="lock-anzeige" title="Gesperrt – lässt sich nicht auswählen" aria-hidden="true">' + ikon("schloss", "i-sm") + '</span>';
     }
@@ -6708,6 +6749,7 @@ document.addEventListener("keydown", e => {
      "Fertig"-Knopf schliessen, nicht über Escape wie jeder andere Dialog -
      eine Inkonsequenz, die auffaellt, sobald man die App ohne Maus bedient. */
   if (ui.bereichSheet) { ui.bereichSheet = false; render(); }
+  if (ui.cardDetailId) { ui.cardDetailId = null; render(); }
 });
 
 /* ---------- Fehlerformular-Modal ---------- */
@@ -6791,6 +6833,9 @@ document.body.addEventListener("click", e => {
        Tipp hinein nicht bis zum Hintergrund durchschlaegt und schliesst. */
     case "bereich-sheet-auf": ui.bereichSheet = true; render(); break;
     case "bereich-sheet-zu": ui.bereichSheet = false; render(); break;
+    case "card-detail": ui.cardDetailId = btn.dataset.id; render(); break;
+    case "card-detail-zu": ui.cardDetailId = null; render(); break;
+    case "card-detail-bearbeiten": ui.cardDetailId = null; editCard(btn.dataset.id); break;
     case "nichts": break;
     case "seite-neu-laden": location.reload(); break;
     /* Nur im Startfehler-Bildschirm: anders als "seite-neu-laden" räumt
@@ -6812,12 +6857,12 @@ document.body.addEventListener("click", e => {
     /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
        ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
        stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
-    case "tab-lernen": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
-    case "tab-fortschritt": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-lernen": ui.einstellungen = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-fortschritt": ui.einstellungen = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
-    case "tab-verwalten": ui.einstellungen = false; ui.bereichSheet = false; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
+    case "tab-verwalten": ui.einstellungen = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;
