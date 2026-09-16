@@ -1,4 +1,8 @@
-## 3.0.49 – 16. September 2026
+## 3.0.50 – 16. September 2026
+
+### Verbessert (ungeprüfter Verdachts-Fix)
+
+- **Over-Scrolling: `dvh` durch `svh` ersetzt.** Beobachtung 13 aus `plan/beobachtungen-lernwerkzeug.md`. Verdacht: `100dvh` folgt live der tatsächlich sichtbaren Höhe und wächst, sobald die Werkzeugleiste des mobilen Browsers beim Scrollen einklappt — dadurch taucht während des Scrollens zusätzlicher Leerraum auf, den es beim Laden der Seite noch nicht gab. `100svh` (kleinstmögliche Höhe, Leiste immer eingerechnet) bleibt beim Scrollen konstant. Betrifft `body`, `.view--modus`, `.study-card` (beide Stellen) und `.boot`. **Nicht am echten Gerät bestätigt** — auf ausdrücklichen Wunsch des Betreibers als Versuch umgesetzt, per Git jederzeit rückgängig zu machen, falls es die Sache nicht löst oder etwas anderes verschiebt.
 
 ### Verbessert
 

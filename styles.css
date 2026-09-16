@@ -301,7 +301,14 @@ body {
   font-size: 15px;
   line-height: 1.55;
   min-height: 100vh;
-  min-height: 100dvh;
+  /* Beobachtung 13 (16.09.2026, Verdachts-Fix - noch nicht am Geraet
+     bestaetigt): "dvh" folgt live der sichtbaren Hoehe und waechst, wenn die
+     Werkzeugleiste des mobilen Browsers beim Scrollen einklappt - genau
+     WAEHREND des Scrollens wird dann mehr leerer Platz sichtbar, als beim
+     Start da war ("man kann weiter scrollen, als sinnvoll ist"). "svh" ist
+     die kleinstmoegliche Hoehe (Leiste immer eingerechnet) und bleibt beim
+     Scrollen konstant - kein nachtraeglich auftauchender Leerraum. */
+  min-height: 100svh;
   /* Kein Gummiband am Rand: im App-Modus sieht man sonst beim Überziehen den
      nackten Hintergrund hinter der Seite — das verrät sofort, dass hier eine
      Webseite läuft. */
@@ -463,7 +470,7 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 .view--modus {
   padding-top: calc(var(--modebar-h) + var(--sat));
   padding-bottom: 0;
-  min-height: 100dvh;
+  min-height: 100svh;   /* Beobachtung 13, siehe Begruendung bei body */
   display: flex; flex-direction: column;
 }
 .view--modus > .study-card { flex: 1 1 auto; }
@@ -1111,7 +1118,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    den Bildschirm: Das Wort sitzt im oberen Drittel (optisch mittig, nicht
    mathematisch), die Bewertung ist unten verankert, wo der Daumen ist. */
 .study-card {
-  min-height: calc(100dvh - var(--modebar-h) - var(--sat) - var(--sab));
+  min-height: calc(100svh - var(--modebar-h) - var(--sat) - var(--sab));   /* Beobachtung 13 */
   display: flex; flex-direction: column;
   padding: var(--space-6) 0 0;
   margin: 0; background: none; border: 0;
@@ -1748,7 +1755,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .skeleton-bar.w35 { width: 35%; margin-top: 7px; }
 
 .boot {
-  min-height: 100dvh;
+  min-height: 100svh;   /* Beobachtung 13 */
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: var(--space-5); padding: var(--space-7);
@@ -2066,7 +2073,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   .appbar__title--ansicht { display: block; }
 
   .lern-raster { grid-template-columns: repeat(2, 1fr); }
-  .study-card { min-height: calc(100dvh - var(--modebar-h) - var(--sat) - var(--sab)); }
+  .study-card { min-height: calc(100svh - var(--modebar-h) - var(--sat) - var(--sab)); }   /* Beobachtung 13 */
   .study-card__mitte { padding-bottom: var(--space-9); }
   .grade-row { max-width: 520px; margin: 0 auto; }
   .study-aktionen { max-width: 520px; margin: 0 auto; width: 100%; }

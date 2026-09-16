@@ -408,7 +408,7 @@ Bug im engeren Sinn, sondern wahrgenommene Ladezeit/Politur — passt eher zu
 
 ---
 
-## 13. Über-Scrolling: weiter nach unten als nötig — ⏸ nicht lokalisiert (15.09.2026)
+## 13. Über-Scrolling: weiter nach unten als nötig — 🔧 Verdachts-Fix versucht, unbestätigt (v3.0.50)
 
 **Beobachtung:** In allen 3 Tabs (Verwalten, Lernen, Üben) kann man weiter
 nach unten scrollen als sinnvoll ist. Beispiel: Bei Lernen, wo es nichts mehr
@@ -429,6 +429,32 @@ zusammen mit `dvh`-Verhalten bei ein-/ausblendender Adressleiste auf
 Mobilgeräten ab — das lässt sich nicht zuverlässig durch Code-Lesen
 berechnen, nur durch echtes Messen im Browser. Bewusst nicht geraten und
 keine CSS-Werte blind geändert.
+
+**16.09.2026: doch versucht, auf ausdrücklichen Wunsch des Betreibers
+("checke halt nicht, lass machen") — als Verdachts-Fix, nicht als
+bestätigte Lösung.** Konkrete Theorie: `dvh` bildet die AKTUELL sichtbare
+Höhe ab und wächst, sobald die Werkzeugleiste des mobilen Browsers beim
+Scrollen einklappt. Startet die Seite mit sichtbarer Leiste (kleineres
+`dvh`) und die Leiste klappt WÄHREND des Scrollens ein, wächst jeder
+`min-height: 100dvh`-Container in diesem Moment nach — es taucht mehr
+leerer Raum auf, als beim Laden da war, und genau das liest sich wie „man
+kann weiter scrollen, als sinnvoll ist". `svh` (kleinstmögliche Höhe, Leiste
+immer mit eingerechnet) bleibt beim Scrollen konstant, kein nachträglich
+wachsender Leerraum. Alle fünf Fundstellen aus dem 15.09.-Durchgang
+(`body`, `.view--modus`, `.study-card` × 2 Breiten, `.boot`) umgestellt
+(v3.0.50). Die zwei `max-height: 88dvh` an `.dlg` (Bottom-Sheet/Dialog)
+bewusst nicht angefasst — dort ist `dvh` eine Obergrenze, kein
+Scroll-Boden, ein anderer Fall.
+
+**Ausdrücklich unbestätigt.** Anders als bei Beobachtung 7 (dort ergab die
+Code-Prüfung selbst schon Gewissheit) bleibt das hier eine Theorie ohne
+Messung an einem echten Gerät mit ein-/ausklappender Werkzeugleiste — in
+keiner hier verfügbaren Umgebung nachstellbar (auch ein hier laufender
+Headless-Chromium ist kein mobiles Safari mit dynamischer Toolbar). Falls
+das Over-Scrolling weiterhin auftritt oder sich etwas anderes verschiebt
+(z. B. der Ladebildschirm, `.boot`, jetzt `svh` statt `dvh`): einfach
+rückgängig machbar (dieser eine Commit), kein Rückbau an mehreren Stellen
+nötig.
 
 ## 14. Scroll-Position wird zwischen Bereichen nicht zurückgesetzt — ✅ behoben (v3.0.36)
 
@@ -625,7 +651,8 @@ werden, wenn was gebaut wird.
 - **Echte Bugs, unabhängig voneinander behebbar:** 2 (versehentliches
   Verschieben — höchste Priorität, weil Datenänderung ohne Absicht), 4
   (ungewollter Autofokus/Tastatur), 5 (iPad-Layout), 6 (Formatierung geht
-  verloren), 13 (Over-Scrolling), 14 (Scroll-Position nicht zurückgesetzt),
+  verloren), 13 (Over-Scrolling — 🔧 Verdachts-Fix v3.0.50, unbestätigt),
+  14 (Scroll-Position nicht zurückgesetzt),
   15 (Viewport-Verschiebung beim Scrollen/Speichern), 16 (History/Firebase-Bug
   beim Zurück von externen Seiten — auch höhere Priorität, weil App-Fehler).
 - **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1 (✅ v3.0.47),
