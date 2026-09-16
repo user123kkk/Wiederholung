@@ -1116,7 +1116,12 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   padding: var(--space-6) 0 0;
   margin: 0; background: none; border: 0;
   text-align: center;
+  border-radius: var(--r-lg);
+  /* Wischen zum Bewerten: waagerecht behaelt JS, senkrecht bleibt dem
+     Browser - siehe die Achsen-Sperre in app.js. */
+  touch-action: pan-y;
 }
+.study-card.wird-gezogen { cursor: grabbing; }
 .study-card__mitte {
   flex: 1 1 auto;
   display: flex; flex-direction: column; justify-content: center;
