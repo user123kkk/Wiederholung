@@ -18,6 +18,18 @@
 <!-- Sagt dem Browser, dass die Seite dunkel ist: Bedienfelder, Rollbalken und
      Textfelder kommen dann von selbst in Dunkelfassung statt in Weiss. -->
 <meta name="color-scheme" content="dark">
+<!-- Beobachtung 16 (16.09.2026, Verdachts-Fix, unbestätigt): initFirebase()
+     laedt sein SDK erst als dynamischer Import spaeter im Skript - die
+     Verbindung zu gstatic.com beginnt also erst dann aufzubauen. Nach einer
+     echten Browser-Zurueck-Navigation (bestaetigt: kein bfcache, echtes
+     Neuladen) priorisiert der Browser neue Verbindungen mitunter anders als
+     bei einem gewoehnlichen ersten Aufruf - preconnect baut TCP/TLS zu
+     gstatic.com schon waehrend des HTML-Parsens auf, parallel zu Skript und
+     Stylesheet, statt erst beim dynamischen Import. Reine Verbindungs-
+     Vorbereitung, kein Laden einer Ressource - CSP erlaubt gstatic.com
+     ohnehin bereits (script-src/connect-src, firebase.json). -->
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.gstatic.com">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./desktop-icon.png" type="image/png">
 <!-- Safari kann kein SVG als Homescreen-Symbol - ohne PNG blieb das Symbol

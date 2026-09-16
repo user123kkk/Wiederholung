@@ -485,7 +485,7 @@ Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)*
 entschieden werden, da 3 um eine bewusste Erhaltung nach einem Modal/Dialog
 geht, während 14 um ein unerwartetes Verhalten bei einfachem Navigation geht.
 
-## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — ⏸ Ursache weiterhin ungeklärt, zwei Abmilderungen versucht (v3.0.41–43)
+## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — ⏸ Ursache weiterhin ungeklärt, drei Abmilderungen versucht (v3.0.41–43, 51)
 
 **Beobachtung:** Navigation zwischen App und statischen Seiten ist fehlerhaft:
 - Von der App (z.B. Fehlerformular in Einstellungen) zur externen Seite
@@ -602,6 +602,35 @@ Mechanismus selbst eine Vermutung. Nächster Schritt: erneuter Gerätetest;
 kommt der Fehler wieder, den Diagnose-Text aus dem Fehlerbildschirm
 („X automatische Versuche · online: ja/nein") mitschicken.
 
+**16.09.2026, dritter Versuch (v3.0.51), auf Wunsch des Betreibers
+("checke halt nicht, lass machen") — wieder als Verdachts-Fix, nicht als
+bestätigte Lösung.** Erst geprüft, ob ein `pageshow`-Listener (Standard-
+Werkzeug gegen bfcache-Probleme) etwas bringen würde - Fehlschluss
+verworfen: Da der Fehlerbildschirm bei jedem gemeldeten Fall neu aufgebaut
+wurde, MUSS das Skript neu ausgeführt worden sein (bei einer echten
+bfcache-Wiederherstellung läuft `<script type="module">` gar nicht erneut,
+das Skript würde also gar nicht bis zum `initFirebase()`-Aufruf am Ende
+kommen). bfcache scheidet damit als Erklärung endgültig aus, nicht nur als
+Vermutung - es ist ein echtes, neues Nachladen von `index.html`.
+
+Stattdessen: `initFirebase()` startet die Verbindung zu `gstatic.com`
+bisher erst mitten im Skript, beim dynamischen Import selbst - vorher
+existiert dafür keine vorbereitete Verbindung. `<link rel="preconnect">`
+(+ `dns-prefetch` als Rückfalloption für Browser ohne Preconnect-
+Unterstützung) in `index.html` baut TCP/TLS zu `gstatic.com` schon
+während des HTML-Parsens auf, parallel zu Stylesheet und Hauptskript,
+statt erst Zeilen später. Reine Verbindungs-Vorbereitung ohne
+Verhaltensänderung an Selbstheilung/Retry-Logik - kann die Chance
+erhöhen, dass der ohnehin schon dreifach wiederholte Import
+(`importMitVersuch`) gleich beim ersten Versuch durchkommt, behebt aber
+nichts, falls die eigentliche Ursache woanders liegt (z. B. echte
+Bandbreiten-/DNS-Drosselung durch den Browser bei einer
+Zurück-Navigation, die auch eine vorbereitete Verbindung nicht umgeht).
+
+**Weiterhin ausdrücklich unbestätigt**, wie bei Beobachtung 13 - kein
+Gerätetest in dieser Umgebung möglich. Trivial rückgängig zu machen (ein
+`<link>`-Paar), keine Logik geändert.
+
 ## 15. Viewport-Verschiebung beim Scrollen und beim Registrieren — ✅ behoben (v3.0.37)
 
 **Beobachtung:** Der Bildschirm verschiebt sich bzw. der Viewport ändert sich:
@@ -654,7 +683,8 @@ werden, wenn was gebaut wird.
   verloren), 13 (Over-Scrolling — 🔧 Verdachts-Fix v3.0.50, unbestätigt),
   14 (Scroll-Position nicht zurückgesetzt),
   15 (Viewport-Verschiebung beim Scrollen/Speichern), 16 (History/Firebase-Bug
-  beim Zurück von externen Seiten — auch höhere Priorität, weil App-Fehler).
+  beim Zurück von externen Seiten — auch höhere Priorität, weil App-Fehler;
+  🔧 dritter Verdachts-Fix v3.0.51, unbestätigt).
 - **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1 (✅ v3.0.47),
   3 (✅ v3.0.48, beide auf Freigabe des Betreibers gebaut — am Ende unabhängig
   voneinander gelöst, siehe dort), 10 (✅ 16.09.2026, durch 1+6 abgedeckt, kein

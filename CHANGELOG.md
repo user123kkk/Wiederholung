@@ -1,3 +1,11 @@
+## 3.0.51 – 16. September 2026
+
+### Verbessert (ungeprüfter Verdachts-Fix)
+
+- **Browser-Zurück-Ladefehler: `preconnect` zu gstatic.com ergänzt.** Beobachtung 16 aus `plan/beobachtungen-lernwerkzeug.md`. `initFirebase()` startet die Verbindung zu `gstatic.com` bisher erst beim dynamischen Import, mitten im Skript — bestätigt reproduziert wurde der Fehler nach einer echten Browser-Zurück-Navigation (kein bfcache, echtes Neuladen, also priorisiert der Browser die neue Verbindung womöglich anders als beim ersten Aufruf). `<link rel="preconnect">`/`dns-prefetch` in `index.html` bauen die Verbindung schon beim HTML-Parsen auf, parallel statt erst danach. **Nicht bestätigt** — reine Verbindungs-Vorbereitung, kein Verhaltensänderung an der bestehenden Selbstheilung/Retry-Logik, trivial rückgängig zu machen.
+
+---
+
 ## 3.0.50 – 16. September 2026
 
 ### Verbessert (ungeprüfter Verdachts-Fix)
