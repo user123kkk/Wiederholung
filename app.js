@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.47";
+const APP_VERSION = "3.0.48";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -1050,6 +1050,14 @@ function renderToast() {
    zum Beispiel ein Datensatz, der aus der Cloud hereinkommt. */
 let formDraft = { wort: "", ueb: "", extra: "" };
 function resetFormDraft() { formDraft = { wort: "", ueb: "", extra: "" }; }
+
+/* 16.09.2026 (Beobachtung 3): Wohin nach dem Bearbeiten einer Karte
+   zurueckgesprungen wird. editCard() springt zum Formular an den
+   Seitenanfang - ohne diese Merker blieb man nach dem Speichern/Abbrechen
+   dort stehen und musste erneut zur naechsten Karte herunterscrollen. Nur
+   fuer Bearbeiten (bestehende Karte) gesetzt, nicht fuers Neuanlegen: Dort
+   ist der Seitenanfang der richtige Ort fuer die naechste Eingabe (D1). */
+let editRueckkehrY = null;
 
 /* ---------- Handschrift-Canvas-Zustand (bleibt über Re-Renders erhalten,
    da render() das DOM inkl. Canvas bei jeder Aktion neu aufbaut) ---------- */
@@ -2353,6 +2361,13 @@ function editCardInBereich(bereichId, cardId) {
   ui.selectMode = false;
   ui.selectedIds = new Set();
   editCard(cardId);
+  /* Beobachtung 3 gilt nur fuer den Sprung INNERHALB von Verwalten. editCard()
+     setzt ui.tab hier oben schon auf "verwalten", bevor es selbst pruefen
+     kann, ob man wirklich schon dort war - der Sprung aus dem
+     Fortschritts-Tab hat also faelschlich eine Rueckkehrposition gesetzt.
+     Wieder loeschen: Zurueck zum Fortschritts-Tab regelt bereits
+     springeZu()/window.scrollTo(0,0) beim naechsten Tab-Wechsel. */
+  editRueckkehrY = null;
 }
 
 const LAST_BACKUP_KEY = "adrabic-last-backup";
@@ -3478,19 +3493,32 @@ async function submitCardForm() {
   if (!warEdit) {
     const wortEl = document.getElementById("f-wort");
     if (wortEl) wortEl.focus();
+  } else if (editRueckkehrY !== null) {
+    /* Beobachtung 3: zurueck an die Stelle, von der aus bearbeitet wurde -
+       sonst steht man nach dem Speichern am Seitenanfang und muss erneut
+       zur naechsten Karte herunterscrollen. */
+    window.scrollTo(0, editRueckkehrY);
+    editRueckkehrY = null;
   }
 }
 function editCard(id) {
   /* hinweisGefuehrt zeichnet ueber den Dialog selbst neu - wichtig, weil der
      Sprung aus dem Fortschritts-Tab schon den Bereich gewechselt hat. */
   if (!kartenBearbeitbar()) { hinweisGefuehrt("Karten ändern"); return; }
+  /* Nur merken, wenn der Sprung wirklich innerhalb von Verwalten passiert -
+     aus dem Fortschritts-Tab (editCardInBereich) war man vorher woanders,
+     dorthin gibt es nichts sinnvoll zurueckzuspringen. */
+  editRueckkehrY = ui.tab === "verwalten" ? window.scrollY : null;
   ui.editId = id;
   const c = findCard(id);
   formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra } : { wort: "", ueb: "", extra: "" };
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
-function cancelEdit() { ui.editId = null; resetFormDraft(); render(); }
+function cancelEdit() {
+  ui.editId = null; resetFormDraft(); render();
+  if (editRueckkehrY !== null) { window.scrollTo(0, editRueckkehrY); editRueckkehrY = null; }
+}
 async function deleteCard(id) {
   const card = findCard(id);
   if (!card) return;

@@ -205,7 +205,7 @@ bleibt das native Momentum-Scrollen unverändert erhalten. Nächster Schritt:
 Gerätetest, ob sich Aktivierung UND aktives Ziehen jetzt beide zuverlässig
 anfühlen.
 
-## 3. Zurück zur Scroll-Position nach dem Bearbeiten
+## 3. Zurück zur Scroll-Position nach dem Bearbeiten — ✅ gebaut (v3.0.48)
 
 **Beobachtung:** Nach jedem Bearbeiten einer Karte musste wieder ganz nach
 unten gescrollt werden, um zur nächsten Karte zu kommen. Wunsch: ein
@@ -217,6 +217,20 @@ Hängt technisch mit Punkt 1 zusammen: Wenn Bearbeiten künftig in einem Modal
 über der Liste passiert (statt die Liste selbst zu verlassen), löst sich
 dieser Punkt von selbst — beide Punkte sollten zusammen entschieden werden,
 nicht einzeln.
+
+**Anders gelöst als vermutet, gebaut am 16.09.2026 (v3.0.48):** Punkt 1 wurde
+bewusst NICHT als Modal für das Bearbeiten gebaut (nur fürs reine Ansehen,
+siehe dort) — das Bearbeiten-Formular bleibt die bestehende Inline-Ansicht
+am Seitenanfang, ein Umbau auf ein Bearbeiten-Modal wäre ein deutlich
+größerer, riskanterer Eingriff in ein gut eingespieltes Formular gewesen.
+Stattdessen einfacher: `editCard()` merkt sich `window.scrollY` in einer
+neuen Variable `editRueckkehrY` (nur wenn der Sprung innerhalb von Verwalten
+passiert), `submitCardForm()` und `cancelEdit()` springen beim Bearbeiten
+einer bestehenden Karte dorthin zurück. Neuanlegen bleibt unverändert (Fokus
+im Wort-Feld, D1). Der Sprung aus dem Fortschritts-Tab (`editCardInBereich`)
+setzt `editRueckkehrY` danach ausdrücklich wieder auf `null` zurück — sonst
+hätte `editCard()` durch die dort schon vorgezogene `ui.tab = "verwalten"`-
+Zuweisung fälschlich die alte Fortschritt-Scrollposition gemerkt.
 
 ## 4. Tastatur öffnet sich ungewollt nach dem Speichern — ✅ behoben (v3.0.34)
 
@@ -570,8 +584,9 @@ werden, wenn was gebaut wird.
   verloren), 13 (Over-Scrolling), 14 (Scroll-Position nicht zurückgesetzt),
   15 (Viewport-Verschiebung beim Scrollen/Speichern), 16 (History/Firebase-Bug
   beim Zurück von externen Seiten — auch höhere Priorität, weil App-Fehler).
-- **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1 (✅ v3.0.47,
-  auf Freigabe des Betreibers gebaut — siehe dort für den Stand von 3/10), 3, 10, 14.
+- **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1 (✅ v3.0.47),
+  3 (✅ v3.0.48, beide auf Freigabe des Betreibers gebaut — am Ende unabhängig
+  voneinander gelöst, siehe dort), 10, 14.
 - **Prüffragen, kein bestätigter Fund:** 7, 9.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
 - **Bewusst zurückgestellt:** 11, 12.

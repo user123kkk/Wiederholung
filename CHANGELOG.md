@@ -1,3 +1,11 @@
+## 3.0.48 – 16. September 2026
+
+### Verbessert
+
+- **Verwalten: Scroll-Position nach dem Bearbeiten bleibt erhalten.** Beobachtung 3 aus `plan/beobachtungen-lernwerkzeug.md`. Bisher sprang die Seite beim Bearbeiten einer Karte an den Anfang (damit das Formular sichtbar ist) und blieb dort auch nach „Speichern"/„Abbrechen" stehen — wer weiter unten in der Liste war, musste erneut dorthin scrollen. Jetzt merkt sich `editCard()` die Position vor dem Sprung und `submitCardForm()`/`cancelEdit()` springen beim Bearbeiten einer bestehenden Karte dorthin zurück. Gilt nur fürs Bearbeiten, nicht fürs Neuanlegen (dort bleibt der Fokus wie gehabt im Wort-Feld oben) und nicht für den Sprung aus dem Fortschritts-Tab (`editCardInBereich`) — der hatte vorher ohnehin keine sinnvolle Position in Verwalten.
+
+---
+
 ## 3.0.47 – 16. September 2026
 
 ### Neu
