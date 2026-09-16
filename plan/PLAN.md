@@ -110,11 +110,13 @@ neu — App-Optik **und** `landing.html`, mobil-first — aus einem Guss statt
 gewachsen. Aufgekommen aus drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie); die Ratschläge sind in
 [`PRINZIPIEN.md`](redesign-oberflaeche/PRINZIPIEN.md) gegen `KONZEPT.md` §7 und
-die bestehende Gestalt **gefiltert**, nicht gesammelt. Reihenfolge: gestalten in
-Claude Design ([`CLAUDE-DESIGN-PROMPT.md`](redesign-oberflaeche/CLAUDE-DESIGN-PROMPT.md)
-+ [`ANLEITUNG.md`](redesign-oberflaeche/ANLEITUNG.md)) → Handoff zurück → Claude
-Code übernimmt **selektiv**. Status: `läuft` (Design-Phase, noch kein Code).
-**Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 5 unten.
+die bestehende Gestalt **gefiltert**, nicht gesammelt. **Umgesetzt wird direkt im
+Code**, phasenweise mit Zwischenstand nach jedem Block (Token/Basis → Gerüst/
+Navigation → leere Zustände/Onboarding → `landing.html`) — der ursprünglich
+vorgesehene Umweg über Claude Design (Prompt + Handoff-ZIP) ist auf
+Betreiber-Entscheidung übersprungen; `CLAUDE-DESIGN-PROMPT.md`/`ANLEITUNG.md`
+bleiben nur als Referenz liegen. Status: `läuft`, Code hat begonnen.
+**Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 6 unten.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
 
@@ -361,20 +363,21 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-15 | **Strang A geklärt, aber nicht entschieden.** Die Urheberrechtsfrage zu Medina Buch 1 (Fassung C) ist weg — der Autor hat die Online-Nutzung freigegeben. Trotzdem bleibt 2.1 offen: Der Betreiber baut selbst an einem Medina-Kartensatz, der aber an eine eigene YouTube-Playlist gebunden werden und teils kostenpflichtig sein soll — Struktur ist beim Betreiber selbst noch nicht fertig gedacht. `landing.html` bleibt auf Fassung A, bis entweder eigenes Wortmaterial (→ B) oder der fertige, entscheidungsklare Medina-Kartensatz (→ C) vorliegt. Details in `landing-page-strategie/LOGBUCH.md`. Weiter mit Strang B (Phase 8). |
 | 2026-09-16 | **Ladebildschirm neu + Fortschritt-Wochenvergleich** (v3.0.44/45, Design-Handoff des Betreibers). Ladebildschirm: Satelliten-Animation statt Opacity-Blink, freigestelltes Icon (`flower-isolated.png`), Mindestanzeige 650ms, sauberes Ausblenden. Fortschritt-Tab: Wochenvergleich mit Hochzähl-Animation. **Selektiv** aus dem Handoff übernommen — Sprachumschalter, Benachrichtigungen und Settings-Umbau bewusst **nicht** (kein Handler/keine Persistenz bzw. Betreiber-Entscheidung „Sprache zu riskant"); der bestehende 9-Sekunden-Lade-Hinweis wurde bewahrt, den ein Komplett-`app.js` stumm entfernt hätte. |
 | 2026-09-16 | **Zwei Nebenstränge angelegt** aus drei neuen Videos des Betreibers: `redesign-oberflaeche` (Oberfläche & Mobile-Gestalt, `läuft` — Design-Prompt fertig, wartet auf Handoff) und `monetarisierung` (Geld/Wachstum, `zurückgestellt` — nur Gerüst). Video-Ratschläge gegen `KONZEPT.md` §7 gefiltert (`redesign-oberflaeche/PRINZIPIEN.md`). §7 für den Redesign gelockert (offene Frage 6). |
+| 2026-09-16 | **Redesign: Design-Tool-Umweg übersprungen.** Betreiber will nicht über Claude Design gehen, sondern direkt im Repo umsetzen lassen. `redesign-oberflaeche/AUFTRAG.md` entsprechend umgeschrieben: phasenweise direkt am Code (Token/Basis → Gerüst/Navigation → leere Zustände/Onboarding → `landing.html`), Zwischenstand nach jedem Block statt einer Riesenänderung. `CLAUDE-DESIGN-PROMPT.md`/`ANLEITUNG.md` bleiben nur als Referenz. `PRINZIPIEN.md` (Filter) gilt unverändert. |
 
 ## Wo eine neue Session anfängt
 
-**Aktivster Punkt gerade: der Redesign-Strang.** Er wartet auf den
-Design-Handoff des Betreibers.
+**Aktivster Punkt gerade: der Redesign-Strang.** Direkt im Code, kein
+Design-Tool-Umweg mehr.
 
-**Strang C — Oberfläche & Mobile-Gestalt — `läuft`, wartet auf Handoff.**
+**Strang C — Oberfläche & Mobile-Gestalt — `läuft`, Code direkt.**
 [`redesign-oberflaeche/`](redesign-oberflaeche/) ist angelegt: Video-Ratschläge
-gefiltert ([`PRINZIPIEN.md`](redesign-oberflaeche/PRINZIPIEN.md)), Design-Prompt
-fertig ([`CLAUDE-DESIGN-PROMPT.md`](redesign-oberflaeche/CLAUDE-DESIGN-PROMPT.md)),
-Ablauf beschrieben ([`ANLEITUNG.md`](redesign-oberflaeche/ANLEITUNG.md)). **Nächster
-Schritt:** Der Betreiber gestaltet in Claude Design und gibt den Handoff (ZIP)
-zurück; dann übernimmt Claude Code selektiv (diffen, Altes ablösen,
-Veröffentlichungsliste, committen, pushen). Umfang lockert `KONZEPT.md` §7 (Frage 6),
+gefiltert ([`PRINZIPIEN.md`](redesign-oberflaeche/PRINZIPIEN.md)),
+`AUFTRAG.md` beschreibt die Schrittfolge. **Nächster Schritt:** Ist-Zustand von
+`styles.css`/`index.html`/Navigation gegen die drei Gestaltungsregeln und
+`PRINZIPIEN.md` ansehen, dann mit dem ersten Block beginnen (Vorschlag:
+Gerüst/Navigation, siehe `LOGBUCH.md`). Nach jedem sichtbaren Zwischenstand:
+Veröffentlichungsliste, committen, pushen. Umfang lockert `KONZEPT.md` §7 (Frage 6),
 Lernlogik bleibt tabu.
 
 **Strang D — Monetarisierung & Wachstum — `zurückgestellt`, nur Gerüst.**

@@ -1,7 +1,8 @@
 # Auftrag: Oberfläche & Mobile-Gestalt
 
-**Status:** läuft (Design-Phase, noch kein Code)
-**Angelegt:** 16. September 2026
+**Status:** läuft — Code direkt, **kein** Umweg über Claude Design
+**Angelegt:** 16. September 2026 · **Entscheidung 16.09.2026:** Design-Tool
+übersprungen, direkt in diesem Repo umgesetzt.
 **Grundlage:** die drei Videos des Betreibers (Mobile-UI, Wachstum, UX-Psychologie),
 gefiltert gegen `KONZEPT.md` §7 und die bestehende Gestalt der App.
 
@@ -42,17 +43,30 @@ ruhigen Gestalt passt und **kein generischer KI-Template-Look** entsteht.
 - Keine erfundenen Features aus den Videos (Kalender, Aufgaben, Notiz-Vorlagen o.ä.).
   Die App ist ein Karteikarten-Werkzeug, kein Notion-Klon.
 
-## Vorgehen (Strategie vor Code, wie bei `landing-page-strategie`)
+## Vorgehen — direkt im Code (Design-Tool übersprungen)
 
-1. **`PRINZIPIEN.md`** hält fest, welcher Video-Ratschlag auf **diese** App passt und
-   welcher nicht — mit Begründung. Das ist der Filter, kein Katalog zum Abarbeiten.
-2. **`CLAUDE-DESIGN-PROMPT.md`** ist der fertige Prompt für Claude Design. Der
-   Betreiber gestaltet damit im Design-Werkzeug (Ablauf: `ANLEITUNG.md`).
-3. Der Betreiber schickt den Handoff (ZIP) zurück. Claude Code **übernimmt selektiv**
-   — klar benannte Blöcke, keine stillen Zusatz-Features, keine entfernten Funktionen
-   ohne Vermerk (Lehre aus dem ersten Handoff, siehe `LOGBUCH.md`).
-4. Übernahme nach der Veröffentlichungsliste (`README.md`): `APP_VERSION` +
-   `CACHE_NAME` hoch, neue Startdateien in `APP_SHELL`, `CHANGELOG.md`.
+`CLAUDE-DESIGN-PROMPT.md` und `ANLEITUNG.md` beschreiben den ursprünglich
+vorgesehenen Weg über Claude Design — der Betreiber hat sich dagegen entschieden
+(„würd am liebsten das unterlassen und direkt zum Plan gehen"). **Beide Dateien
+bleiben als Referenz stehen** (der Prompt-Text listet die Design-Entscheidungen
+sauber auf, nützlich als Checkliste), werden aber **nicht mehr ausgeführt**.
+
+Stattdessen:
+
+1. **`PRINZIPIEN.md`** ist weiter der Filter — was aus den drei Videos passt und
+   was nicht, mit Begründung. Gilt unverändert.
+2. **Direkt am Code arbeiten**, phasenweise, mit Zwischenständen statt einer
+   Riesenänderung:
+   - Zuerst **Token/Basis** (`styles.css` Abschnitt 1–3), falls sich seit der
+     letzten Prüfung etwas verschoben hat — sonst überspringen.
+   - Dann **Gerüst/Navigation** (App-Bar, Bottom-Nav/-Sheets falls sinnvoll).
+   - Dann **leere Zustände** (Erststart, Kein-Treffer) und **Onboarding**.
+   - Dann **`landing.html`** mobil-first, aufbauend auf `STRATEGIE.md`.
+   - Nach jedem Block: **im Browser/Handy-Ansicht angesehen**, bevor der nächste
+     beginnt — nicht blind alles auf einmal umbauen.
+3. Nach jedem sichtbaren Zwischenstand: Veröffentlichungsliste (`README.md`) —
+   `APP_VERSION` + `CACHE_NAME` hoch, neue Startdateien in `APP_SHELL`,
+   `CHANGELOG.md`, Logbuch-Eintrag.
 
 ## Fertig, wenn
 
