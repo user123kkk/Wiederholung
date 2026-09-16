@@ -286,7 +286,7 @@ Für den bewusst aufgeklappten Volltext war `nowrap` falsch. Jetzt eigene
 Klasse `.extra-note-voll` mit `pre-wrap`, die Listenvorschau bleibt
 unverändert bei `.extra-note`.
 
-## 7. Arabische Schrift bei der Kategorie leicht fehlerhaft
+## 7. Arabische Schrift bei der Kategorie leicht fehlerhaft — ✅ Ursache gefunden und behoben (v3.0.49)
 
 **Beobachtung:** Die arabische Schrift (z. B. bei der Kategorie-Anzeige eines
 Worts) sieht „bisl verbuggt" aus, nicht sauber. Vermutung des Betreibers
@@ -298,6 +298,29 @@ Browser-eigene Arabisch-Renderer-Eigenheit) oder ein behebbarer
 CSS-/Font-Ladefehler. Realistisch: eher niedrige Priorität, wie der Betreiber
 selbst vermutet — aber ein Screenshot würde reichen, um das sicher
 einzuordnen, statt zu raten.
+
+**Ursache doch ohne Screenshot gefunden, 16.09.2026, beim Prüfen von Punkt
+9:** Wort, Übersetzung und Notiz bekommen bei arabischem Text automatisch
+eine eigene Schriftart und `dir="rtl"` (`istArabisch()`/`schriftAttr()`,
+`app.js`) — Kategorie-/Lektions-/Speicherkarten-**Namen** dagegen nirgends.
+Eine arabisch benannte Kategorie lief also immer in der normalen
+lateinischen Schrift und von links nach rechts mit, statt in der dafür
+vorgesehenen arabischen Schrift von rechts nach links — genau das erklärt
+„bisl verbuggt" (falsche Schriftart plus falsche Richtung für arabischen
+Text, keine Ligaturen/Kerning-Grenze).
+
+**Behoben (v3.0.49), bewusst nicht überall:** Die zwei Stellen ergänzt, an
+denen ein Kategorie-/Lektions-/Speicherkarten-**Name** direkt als Text zu
+sehen ist — `kartenTagsHtml()` (Tag-Zeile unter einem Wort, z. B.
+„Schwierige Wörter") und `setBlock()` (Name der Speicherkarte in Verwalten).
+**Nicht** mitgezogen: `<option>`-Elemente (Verschieben-/Speichern-Auswahl),
+Bereichs-Sheet/-Pill (das sind **Bereichs**namen, nicht Kategorien — andere
+Ebene, gleicher Fund wäre aber übertragbar) und die Export-/Backup-Texte.
+Bewusst kleiner Schnitt statt einer Sammel-Änderung an zehn Stellen auf
+einmal — die übrigen Stellen sind derselbe Fund, aber nicht das, was
+gemeldet wurde, und bräuchten für `<option>` ohnehin eine andere Lösung
+(kein `class`/`dir` auf Options-Text ohne Weiteres wirksam in jedem
+Browser).
 
 ## 8. Notiz-Schriftart weicht von Wort-Schriftart ab (Ya mit/ohne Punkte)
 
@@ -609,8 +632,10 @@ werden, wenn was gebaut wird.
   3 (✅ v3.0.48, beide auf Freigabe des Betreibers gebaut — am Ende unabhängig
   voneinander gelöst, siehe dort), 10 (✅ 16.09.2026, durch 1+6 abgedeckt, kein
   eigener Bau nötig), 14.
-- **Prüffragen, kein bestätigter Fund:** 7, 9 (✅ 16.09.2026 geprüft — dreistufige
-  Hierarchie aus Schriftgröße, Farbe und Schriftfamilie, keine Verwechslungsgefahr).
+- **Prüffragen:** 9 (✅ 16.09.2026 geprüft — dreistufige Hierarchie aus
+  Schriftgröße, Farbe und Schriftfamilie, keine Verwechslungsgefahr).
+  7 stellte sich beim Prüfen als echter, jetzt behobener Fund heraus (✅
+  v3.0.49) — siehe dort.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
 - **Bewusst zurückgestellt:** 11, 12.
 

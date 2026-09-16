@@ -1,3 +1,11 @@
+## 3.0.49 – 16. September 2026
+
+### Verbessert
+
+- **Arabische Kategorie-/Lektionsnamen: eigene Schrift und Richtung nachgetragen.** Beobachtung 7 aus `plan/beobachtungen-lernwerkzeug.md`. Anders als Wort/Übersetzung/Notiz liefen Namen von Kategorien, Lektionen und eigenen Speicherkarten bisher immer in der normalen Schrift und Leserichtung mit, auch wenn sie arabisch benannt waren — dadurch sah arabischer Text an diesen Stellen "verbuggt" aus. Jetzt bekommen sie automatisch dieselbe Sonderbehandlung wie Wort/Übersetzung (eigene Schriftart, `dir="rtl"`), wenn der Name arabische Zeichen enthält: in der Karten-Tag-Zeile (`kartenTagsHtml()`, z. B. „Schwierige Wörter") und im Namen einer Speicherkarte in Verwalten (`setBlock()`). Rein textabhängig erkannt, kein neues Feld — betrifft nur Namen, die tatsächlich arabisch geschrieben sind.
+
+---
+
 ## 3.0.48 – 16. September 2026
 
 ### Verbessert

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.48";
+const APP_VERSION = "3.0.49";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -2082,7 +2082,15 @@ function kartenTagsHtml(cardId, b, ausschluss) {
   if (!inMerkliste) return "";
   const sets = setsFuerKarte(cardId, b).filter(s => !ausschluss || s.id !== ausschluss);
   if (sets.length === 0) return "";
-  return '<div class="card-tags">' + sets.map(s => iconSvg(s.art || "eigen") + ' ' + esc(s.name)).join(' · ') + '</div>';
+  /* Beobachtung 7 (16.09.2026): Eine arabisch benannte Kategorie/Lektion sah
+     hier "bisl verbuggt" aus - der Name lief ohne eigene Schrift/Richtung
+     mit, wie jeder andere Text. schriftAttr() (oben definiert, bisher
+     nirgends genutzt) traegt class="arabic"+dir="rtl" pro Zeile nach, damit
+     eine gemischte Liste (manche Namen arabisch, manche nicht) jede Zeile
+     fuer sich richtig setzt statt eine Richtung fuer alle zu erzwingen. */
+  return '<div class="card-tags">' + sets.map(s =>
+    '<span' + schriftAttr(s.name) + '>' + iconSvg(s.art || "eigen") + ' ' + esc(s.name) + '</span>'
+  ).join(' · ') + '</div>';
 }
 /* ---------- Was ist heute fällig? ----------
    Wer 500 Vokabeln auf einmal bekommt, hat ohne Bremse am ersten Tag 500
@@ -6143,7 +6151,11 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
     html += '<span class="lock-anzeige" title="' +
       (zu ? 'Wird frei, sobald die Lektion davor sitzt' : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
   }
-  html += '<span class="set-name">' + esc(s.name) + '</span>';
+  /* Beobachtung 7: derselbe Fund wie bei kartenTagsHtml() - ein arabisch
+     benannter Kategorie-/Lektionsname lief hier bisher ohne eigene Schrift/
+     Richtung mit. Klasse muss mit "set-name" zusammen in einem class-Attribut
+     stehen, deshalb hier die im Repo uebliche Ternary-Form statt schriftAttr(). */
+  html += '<span class="set-name' + (istArabisch(s.name) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(s.name) + '</span>';
   html += '<span class="badge">' + cards.length + ' Karte' + (cards.length === 1 ? "" : "n") + '</span>';
   /* 2.11.0: In einem gefuehrten Satz stehen an einer LEKTION keine Knoepfe
      mehr. Vorher stand dieselbe Lektion an zwei Orten und wollte an beiden
