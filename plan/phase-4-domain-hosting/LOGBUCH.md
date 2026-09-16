@@ -407,3 +407,29 @@ sich durch die Batch-Datei nicht.
 
 **Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
 Sicherheits-Durchlauf.
+
+### 2026-09-16 — CSP: Sourcemap-Anfragen an gstatic.com nicht mehr blockiert
+
+**Geändert:** `firebase.json:57` — `connect-src` um `https://www.gstatic.com`
+ergänzt.
+
+**Entscheidung:** Nutzerrückmeldung mit Browser-Konsole (im Rahmen des
+Redesign-Stranges eingeholt) zeigte drei rote CSP-Fehler: `firebase-app.js.map`,
+`firebase-auth.js.map`, `firebase-firestore.js.map` von `gstatic.com` wurden von
+`connect-src` blockiert. Kein echter Bug — Sourcemaps sind rein für die
+DevTools-Konsole (lesbare Stack-Traces statt minifiziertem Code), die App selbst
+lief im selben Test bereits normal (Leerzustand + Navigation sichtbar). Trotzdem
+behoben: unnötiges Rot in der Konsole verdeckt bei künftiger Fehlersuche echte
+Fehler. `script-src` erlaubte `gstatic.com` schon (für die Firebase-SDK-Skripte
+selbst); `connect-src` fehlte dafür.
+
+**Offen:** Der ursprüngliche Anlass — App blieb auf einem Gerät angeblich
+dauerhaft am statischen Ladebildschirm hängen — ist **nicht geklärt**. Der
+Nachtest zeigte die App normal laufend, keine reproduzierbare Fehlermeldung
+dazu in der Konsole. Möglich: einmaliger alter Service-Worker/Cache auf dem
+ersten Gerät. Kein Code-Fund, der das erklärt. Bei erneutem Auftreten: Konsole
+genau aus der hängenden Sitzung nötig, nicht aus einem Nachtest.
+
+**Nächster Schritt:** Unverändert Phase 6 abgeschlossen; kein weiterer Schritt
+hier offen. Bei erneuter Meldung „Ladebildschirm hängt" zuerst prüfen, ob sie
+sich reproduzieren lässt, bevor spekulativ am Boot-Code weitergebaut wird.
