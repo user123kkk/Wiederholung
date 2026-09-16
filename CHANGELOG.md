@@ -1,3 +1,11 @@
+## 3.0.45 – 16. September 2026
+
+### Neu
+
+- **Fortschritt-Tab: Wochenvergleich.** Direkt über der Zwölf-Wochen-Übersicht zeigt eine neue Kachel „Diese Woche im Vergleich“ die Gesamtzahl der Antworten dieser Woche (zählt beim Anzeigen von 0 hoch) sowie – sobald es eine Vorwoche mit Daten gibt – die prozentuale Veränderung dazu als farbige Pille (grün bei mehr, rot bei weniger, in denselben Farben wie die Grade-Knöpfe). Bleibt leer, solange in keiner der beiden Wochen etwas eingetragen ist.
+
+---
+
 ## 3.0.44 – 16. September 2026
 
 ### Verbessert

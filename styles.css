@@ -1556,6 +1556,18 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 .gross-zahl span { font-size: 0.875rem; color: var(--text-2); }
 
+/* Wochenvergleich: getönt wie die Grade-Knöpfe (Abschnitt 9) - dieselbe
+   Farbsprache für "besser"/"schlechter", keine neue Farbe erfunden. */
+.trend-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.8125rem; font-weight: 600;
+  padding: 4px var(--space-3); border-radius: var(--r-full);
+  background: var(--surface-raised); color: var(--text-2);
+  border: 1px solid var(--border);
+}
+.trend-pill.trend-up { background: var(--positive-bg); color: var(--positive); border-color: var(--positive-border); }
+.trend-pill.trend-down { background: var(--negative-bg); color: var(--negative); border-color: var(--negative-border); }
+
 .heute-bar {
   height: 6px; border-radius: var(--r-full);
   background: var(--surface-raised); overflow: hidden;
