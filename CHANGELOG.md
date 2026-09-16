@@ -1,3 +1,11 @@
+## 3.0.44 – 16. September 2026
+
+### Verbessert
+
+- **Ladebildschirm: Satelliten-Animation statt Opacity-Blink, kein abruptes Abschneiden mehr.** Der alte `puls`-Blink des Icons ist ersetzt durch drei kleine Punkte (Marken-Gold `#e3c88a`), die auf unterschiedlichen Bahnen und Tempi um ein freigestelltes Blüten-Icon (`flower-isolated.png`, neu – nur für diesen Zweck, **nicht** das Homescreen-Icon) kreisen. Zusätzlich eine Mindestanzeigedauer von 650ms (`BOOT_MIN_MS`), damit der Bildschirm bei sehr schnellem Netz nicht nur aufblitzt, und ein sauberes Ausblenden (280ms) statt des bisherigen harten `innerHTML`-Austauschs, sobald die Daten fertig sind – unabhängig davon, an welcher Stelle der Animation das passiert.
+
+---
+
 ## 3.0.43 – 16. September 2026
 
 ### Verbessert

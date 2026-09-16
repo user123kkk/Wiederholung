@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.0.43";
+const CACHE_NAME = "adrabic-3.0.44";
 
 /* 3.0.0: Gestaltung und Ablauf liegen jetzt in eigenen Dateien neben der
    index.html. Beide MUESSEN hier stehen - sonst startet die App offline zwar,
@@ -21,6 +21,7 @@ const APP_SHELL = [
   "./manifest.json",
   "./icon.svg",
   "./desktop-icon.png",
+  "./flower-isolated.png",
   "./apple-touch-icon.png",
   "./icon-192.png",
   "./icon-512.png"

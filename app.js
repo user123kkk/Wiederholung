@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.43";
+const APP_VERSION = "3.0.44";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -853,6 +853,17 @@ let syncError = null;
    den Reset in onAuthStateChanged. */
 let ladeTimer = null;
 let ladeLangsam = false;
+/* E8: Merkt sich, ob GERADE der Ladebildschirm steht - siehe render(). Ohne
+   das trifft der Wechsel zur echten App die Blüten-Animation an einem
+   zufälligen Punkt ihres Zyklus und schneidet sie hart ab; das sah nach
+   einem Fehler aus, nicht nach einem Übergang. */
+let bootAktiv = false;
+let bootStart = null;
+/* Mindestanzeigedauer: Bei sehr schnellem Netz waeren die Daten manchmal
+   da, bevor der Ladebildschirm ueberhaupt richtig zu sehen war - er blitzte
+   nur auf und war weg. Das liest sich nach einem Fehler, nicht nach einem
+   normalen, schnellen Start. Ueblicher Wert fuer Splash-Screens: 500-800ms. */
+const BOOT_MIN_MS = 650;
 let streak = normStreak(null); // { count, lastCompletedDate, lastEvaluatedDate } – nur echte Lernsessions zählen, Üben nicht
 /* Muss VOR dem ersten Aufruf von normSettings stehen - die Funktion prüft
    den gespeicherten Wert gegen diese Liste. */
@@ -3771,8 +3782,11 @@ function render() {
         render();
       }, 9000);
     }
+    if (!bootAktiv) { bootAktiv = true; bootStart = Date.now(); }
     let laden = '<div class="boot">';
-    laden += '<div class="boot__mark">' + ikon("marke", "i-xl") + '</div>';
+    laden += '<div class="boot__mark"><div class="boot__orbit r1"><span></span></div>' +
+      '<div class="boot__orbit r2"><span></span></div><div class="boot__orbit r3"><span></span></div>' +
+      '<img src="./flower-isolated.png" class="i" alt=""></div>';
     if (syncError) {
       /* Blockierend: Ohne Daten gibt es nichts zu zeigen. Also Klartext und
          ein Weg weiter, statt eines Ladepunkts, der nie aufhoert. */
@@ -3790,6 +3804,21 @@ function render() {
     laden += '</div>';
     app.innerHTML = laden;
     return;
+  }
+  /* E8: Der Ladebildschirm verschwindet nicht mehr abrupt - er blendet erst
+     aus (280ms), egal an welchem Punkt seiner Animation die Daten fertig
+     wurden. Ein Ausblenden überdeckt jede Phase gleich gut; ein hartes
+     Abschneiden nicht. */
+  if (bootAktiv) {
+    const rest = BOOT_MIN_MS - (Date.now() - bootStart);
+    if (rest > 0) { setTimeout(render, rest); return; }
+    bootAktiv = false;
+    const bootEl = app.querySelector(".boot");
+    if (bootEl) {
+      bootEl.classList.add("boot--exit");
+      setTimeout(render, 280);
+      return;
+    }
   }
   if (ui.askImport) { renderImport(); return; }
   renderMain();
