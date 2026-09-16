@@ -2071,6 +2071,10 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
      steht hier, wo man gerade ist. */
   .bereich-pill { display: none; }
   .appbar__title--ansicht { display: block; }
+  /* Einstellungen fuehrt am Desktop weiterhin nur ueber die Rail-Zeile
+     (.nav__foot) - das Zahnrad in der Kopfzeile ist die Handy-Notloesung
+     dafuer, dass .nav__foot unter 900px ausgeblendet ist. */
+  .appbar__einstellungen { display: none; }
 
   .lern-raster { grid-template-columns: repeat(2, 1fr); }
   .study-card { min-height: calc(100svh - var(--modebar-h) - var(--sat) - var(--sab)); }   /* Beobachtung 13 */

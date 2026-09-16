@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.0.51";
+const APP_VERSION = "3.0.52";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -4405,7 +4405,19 @@ function renderMain() {
   } else {
     const ansicht = ui.tab === "lernen" ? currentBereich().name
                   : ui.tab === "fortschritt" ? "Fortschritt" : "Verwalten";
-    html += appBar({ ansicht: ansicht });
+    /* 16.09.2026 (Testrueckmeldung): Einstellungen war auf dem Handy
+       ueberhaupt nicht mehr erreichbar - der einzige Knopf dafuer steckt in
+       .nav__foot, und das blendet styles.css unter 900px komplett aus (das
+       ist die Desktop-Spalte). Ohne eigenen Reiter (bewusst seit 2.19.0,
+       "hierher geht man selten") bekommt die Kopfzeile jetzt zusaetzlich ein
+       Zahnrad - am Desktop per CSS wieder ausgeblendet, dort fuehrt weiterhin
+       nur die Rail-Zeile aus navLeiste() hin, damit es dort nicht doppelt
+       steht. */
+    html += appBar({
+      ansicht: ansicht,
+      aktion: '<button class="icon-btn appbar__einstellungen" data-action="einstellungen" aria-label="Einstellungen">' +
+        ikon("zahnrad", "i-sm") + '</button>'
+    });
     html += '<div class="view">' + kopf + inhalt + '</div>';
     html += navLeiste();
   }

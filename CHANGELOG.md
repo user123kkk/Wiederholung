@@ -1,4 +1,8 @@
-## 3.0.51 – 16. September 2026
+## 3.0.52 – 16. September 2026
+
+### Behoben
+
+- **Einstellungen auf dem Handy nicht mehr erreichbar.** Testrückmeldung: Der einzige Knopf zu Einstellungen steckte in `.nav__foot` (der Desktop-Spalte, `styles.css` blendet sie unter 900px komplett aus) — auf dem Handy gab es damit gar keinen Weg mehr dorthin. Kopfzeile bekommt jetzt zusätzlich ein Zahnrad-Symbol, nur auf dem Handy sichtbar (`.appbar__einstellungen`, am Desktop weiterhin ausgeblendet, dort führt unverändert nur die Rail-Zeile hin, damit es dort nicht doppelt steht). Kein neuer Reiter — das bleibt bewusst so (2.19.0: „hierher geht man selten").
 
 ### Verbessert (ungeprüfter Verdachts-Fix)
 
