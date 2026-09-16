@@ -3689,6 +3689,60 @@ document.addEventListener("keydown", e => {
   }
 });
 
+/* ---------- Wischen zum Bewerten (Anki/Quizlet-Muster) ----------
+   Zusaetzlich zu den drei Knoepfen: Karte nach rechts ziehen wertet "Sicher",
+   nach links "Nicht" - dieselben beiden Extreme, die auch Pfeiltasten links/
+   rechts ausloesen. "Fast" hat keine Wischrichtung und bleibt Knopf-only.
+   Achsen-Sperre mit 8px Totzone: Erst wenn die Bewegung eindeutig waagerecht
+   ist, wird der Zeiger eingefangen und vertikales Scrollen (z.B. bei einer
+   langen Notiz) unterbunden - ist sie senkrecht, passiert gar nichts und der
+   Finger scrollt ganz normal weiter. */
+let wischStart = null;
+app.addEventListener("pointerdown", e => {
+  const karte = e.target.closest("#sitzung");
+  if (!karte || !ui.session || !ui.session.revealed || ui.session.isDrill) return;
+  if (e.target.closest("button, a, canvas, input, textarea")) return;
+  wischStart = { x: e.clientX, y: e.clientY, karte, breite: karte.getBoundingClientRect().width, id: e.pointerId, erfasst: false };
+});
+app.addEventListener("pointermove", e => {
+  if (!wischStart || e.pointerId !== wischStart.id) return;
+  const dx = e.clientX - wischStart.x, dy = e.clientY - wischStart.y;
+  if (!wischStart.erfasst) {
+    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+    if (Math.abs(dy) > Math.abs(dx)) { wischStart = null; return; } // senkrecht: normales Scrollen
+    wischStart.erfasst = true;
+    wischStart.karte.setPointerCapture(e.pointerId);
+    wischStart.karte.classList.add("wird-gezogen");
+  }
+  e.preventDefault();
+  const rot = Math.max(-10, Math.min(10, dx / 14));
+  wischStart.karte.style.transform = "translateX(" + dx + "px) rotate(" + rot + "deg)";
+  const anteil = Math.min(1, Math.abs(dx) / (wischStart.breite * 0.32));
+  wischStart.karte.style.boxShadow = anteil < 0.06 ? "" :
+    "inset 0 0 0 2px " + (dx > 0 ? "var(--positive-border)" : "var(--negative-border)");
+});
+function wischEnde(e) {
+  if (!wischStart || e.pointerId !== wischStart.id) return;
+  const { karte, x, breite, erfasst } = wischStart;
+  wischStart = null;
+  if (!erfasst) return;
+  const dx = e.clientX - x;
+  const schwelle = Math.min(120, breite * 0.3);
+  karte.classList.remove("wird-gezogen");
+  karte.style.boxShadow = "";
+  if (Math.abs(dx) >= schwelle) {
+    const rechts = dx > 0;
+    karte.style.transition = "transform 220ms var(--ease-out)";
+    karte.style.transform = "translateX(" + (rechts ? "130%" : "-130%") + ") rotate(" + (rechts ? 12 : -12) + "deg)";
+    setTimeout(() => (rechts ? gradeKnown() : gradeUnknown()), 180);
+  } else {
+    karte.style.transition = "transform 220ms var(--ease-spring)";
+    karte.style.transform = "";
+  }
+}
+app.addEventListener("pointerup", wischEnde);
+app.addEventListener("pointercancel", wischEnde);
+
 /* ---------- Rendering ---------- */
 function render() {
   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
