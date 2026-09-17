@@ -68,7 +68,9 @@
      das Symbol auf TikTok. Gold ist raus. Damit trägt die Fläche, was vorher
      die Farbe trug: die Stufen heben sich sichtbar voneinander ab, statt alle
      auf derselben Ebene zu liegen. */
-  --ink-900: #08080a;
+  /* 17.09.2026, offene Frage 12: von #08080a aufgehellt - Betreiber-
+     Entscheidung, ein erster Schritt, kein Bruch mit "Fast-Schwarz". */
+  --ink-900: #0e0e12;
   --ink-870: #0c0c0f;
   --ink-850: #060607;
   --ink-800: #17171b;
@@ -117,7 +119,11 @@
      Dunkel), als Schleier (--accent-bg) oder mit Unterstreichung. Wo es um
      einen ZUSTAND geht - Fehler, Erfolg - bleiben Zinnober und Grünspan. */
   --accent: var(--paper-50);
-  --accent-hover: #ffffff;
+  /* 17.09.2026, offene Frage 12: kein reines Weiss mehr, sondern eine
+     leichte Aufhellung des jeweiligen Akzents - color-mix statt fixem Hex,
+     damit es in beiden Themen automatisch stimmt (hell: dunkle Tinte wird
+     etwas heller, nicht ploetzlich weiss). */
+  --accent-hover: color-mix(in srgb, var(--accent) 85%, white 15%);
   --accent-press: #dedad1;
   --accent-border: rgba(245, 243, 236, 0.26);
   --accent-bg: rgba(245, 243, 236, 0.10);

@@ -1,3 +1,9 @@
+## 3.4.4 – 17. September 2026
+
+### Geändert (offene Frage 12: Farben)
+
+**Der Hintergrund im dunklen Thema ist etwas heller, der Knopf-Hover kein reines Weiß mehr.** Zwei Bilder aus der Bildersammlung des Betreibers rieten davon ab; der Betreiber hat für einen ersten Schritt zugestimmt. `--ink-900` (Hintergrund im Dunkeln) ging von `#08080a` auf `#0e0e12` — eine spürbare, aber bewusst kleine Aufhellung, die „Creme auf Fast-Schwarz" als Marke nicht aufgibt. `--accent-hover` (Knopf beim Überfahren mit der Maus) ist nicht mehr fest `#ffffff`, sondern eine leichte Aufhellung des jeweiligen Akzents (`color-mix`) — dadurch stimmt es automatisch auch im hellen Thema, wo der Knopf-Hover vorher unbemerkt auf reines Weiß sprang, obwohl der Knopf dort dunkel ist.
+
 ## 3.4.3 – 17. September 2026
 
 ### Geändert (Block 10: Sichtbare Wahl statt Klappliste)
