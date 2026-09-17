@@ -2232,6 +2232,25 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
      dafuer, dass .nav__foot unter 900px ausgeblendet ist. */
   .appbar__einstellungen { display: none; }
 
+  /* 3.2.1 (Betreiber-Meldung vom iPad: "der Bildschirm beim Lernen ist nach
+     rechts verschoben, nicht mittig"). Stimmt, und zwar hier: Die Regel
+     .view oben rueckt den Inhalt um die Spaltenbreite nach rechts, damit er
+     neben der Spalte steht. Im MODUS gibt es die Spalte aber gar nicht - der
+     Modus verdeckt die ganze Shell, deshalb steht zwei Zeilen darueber auch
+     .modebar { left: 0 }. Der Einzug blieb trotzdem stehen, und die Buehne
+     sass um die halbe Spaltenbreite (120px) rechts von der Mitte.
+
+     .view--modus setzt in Abschnitt 4 nur padding-top und -bottom; alles
+     andere kommt aus .view, und die .view-Regel hier steht spaeter in der
+     Datei, gewinnt also. Deshalb muss die Ruecknahme hier stehen, nicht
+     oben. */
+  .view--modus {
+    padding-left: calc(var(--gutter) + var(--sal));
+    padding-right: calc(var(--gutter) + var(--sar));
+    padding-bottom: 0;
+    max-width: var(--measure);
+  }
+
   .lern-raster { grid-template-columns: repeat(2, 1fr); }
   .study-card { min-height: calc(100svh - var(--modebar-h) - var(--sat) - var(--sab)); }   /* Beobachtung 13 */
   .study-card__mitte { padding-bottom: var(--space-9); }

@@ -1,3 +1,21 @@
+## 3.2.1 – 17. September 2026
+
+### Behoben
+
+- **Die Lernbühne saß auf dem iPad nach rechts verschoben, nicht mittig.** Gemeldet vom Betreiber. Ab 900px Breite wird aus der unteren Leiste eine Spalte links, und `.view` rückt den Inhalt um die Spaltenbreite (240px) nach rechts, damit er daneben steht. **Im Modus — Abfrage, Übung, Durchsicht — gibt es diese Spalte aber gar nicht:** der Modus verdeckt die ganze Shell, deshalb steht in derselben Regelgruppe auch `.modebar { left: 0 }`. Nur der Einzug des Inhalts blieb stehen. Ergebnis: Die Bühne saß um die halbe Spaltenbreite, 120px, rechts von der Mitte. Am Handy fällt das nie auf, weil die Regel dort nicht greift — deshalb ist es bis zu dieser Meldung niemandem aufgefallen. `.view--modus` nimmt den Einzug jetzt zurück; die Rücknahme muss im 900px-Block stehen, weil die `.view`-Regel dort später in der Datei steht und sonst gewinnt.
+
+### Verbessert
+
+- **„0 von 11" auf der ersten Karte.** Richtig gezählt (null erledigt), aber gelesen wie „Karte 0" — und eine Null als erste Zahl eines Ablaufs liest sich wie Stillstand (Video 3, Ziel-Gradient). Die Zeile zählt jetzt die Karte, auf der man steht: „Karte 1 von 11". Dieselbe Information, nie null. Der Fortschrittsstrich darunter bleibt bei `fertig/gesamt` — der *soll* bei null anfangen.
+- **Die drei Bewertungsknöpfe stehen wieder gleich da.** „kommt gleich wieder" war die einzige der drei Unterzeilen, die am Handy umbrach. Jetzt „gleich wieder" neben „morgen wieder" und „in ~N Tagen". Die ausführliche Fassung bleibt im `aria-label` für die Sprachausgabe.
+
+### Arbeitsmittel
+
+- Der Probelauf deckt jetzt auch **die Bühne** ab (mit und ohne aufgedeckte Antwort) und läuft zusätzlich in **iPad-Breite** (1194×834) — genau der Fall, in dem der Versatz oben entstand.
+- Neue Messung: Sitzt der Inhalt im Modus mittig? Gemessen wird gegen den **Body**, nicht gegen das Fenster — `html` trägt `scrollbar-gutter: stable` (Beobachtung 15), und im Desktop-Chromium sind das 15px Reserve, die es auf einem Gerät ohne klassische Scrollbar nicht gibt. Gegen das Fenster gemessen meldete die Prüfung dauerhaft 7px Versatz, den kein iPhone und kein iPad je zeigt.
+
+---
+
 ## 3.2.0 – 17. September 2026
 
 ### Geändert (Einstellungen und Fortschritt neu aufgebaut)

@@ -1,6 +1,6 @@
 # Auftrag: Oberfläche & Mobile-Gestalt
 
-**Status:** läuft — Blöcke 1–2 `fertig` (v3.1.0, v3.2.0), Block 3 ist als Nächstes dran
+**Status:** läuft — Blöcke 1–2 `fertig`, Block 3 `läuft` (v3.2.1)
 **Angelegt:** 16. September 2026 · **Neu gefasst:** 17. September 2026
 **Grundlage:** die drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie), gefiltert in [`PRINZIPIEN.md`](PRINZIPIEN.md).
@@ -60,7 +60,7 @@ nachziehen, committen, pushen. Nicht zwei Blöcke auf einmal.
 |---|---|---|---|
 | 1 | **Fundament** | `fertig` (v3.1.0) | Vier Sätze statt drei · Schriftskala `--fs-*`, Wurzel 17px · Satz 2 als CSS durchgesetzt · Trefferflächen · Stilprobe-Seite |
 | 2 | **Einstellungen & Fortschritt** | `fertig` (v3.2.0) | Beide waren Stapel aus sechs bzw. neun Blöcken. Jetzt Listen mit Stand rechts; Erklärungen im Blatt oder auf einer Unterseite. `.stat-block` ist eine Fläche. Neu: `probelauf.mjs` |
-| 3 | **Bühne & Bewertung** | `offen` — als Nächstes | Abfrage-Ansicht: Daumenreichweite, Übergänge zwischen Karten, Rückmeldung nach dem Bewerten |
+| 3 | **Bühne & Bewertung** | `läuft` (v3.2.1) | Erledigt: Mittigkeit ab 900px (war 120px versetzt), Zähler „Karte 1 von 11", gleiche Knopfzeile. Offen: Übergänge zwischen zwei Karten, Gesten |
 | 4 | **`landing.html`** | `offen` | Mobil-first schärfen auf Grundlage von [`../landing-page-strategie/STRATEGIE.md`](../landing-page-strategie/STRATEGIE.md); Reziprozität und Goal-Gradient aus Video 3 |
 | 5 | **Erststart** | `offen` | Der Weg von „Konto angelegt" bis zur ersten eigenen Karte. Nie bei 0 % anfangen (Video 3), aber **kein** erfundener Assistent |
 

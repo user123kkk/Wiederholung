@@ -4,6 +4,58 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Bühne mittig, Block 3 angefangen (v3.2.1)
+
+**Geändert:** `styles.css` — `.view--modus` nimmt im 900px-Block den
+Spalten-Einzug zurück (`padding-left/right`, `padding-bottom`, `max-width`).
+`app.js` — Zähler der Modusleiste zählt die laufende Karte statt der
+erledigten; Unterzeile von „Nicht" gekürzt. `probelauf.mjs` — zwei Bühnen-
+Bildschirme, zwei iPad-breite Bildschirme, Mittigkeits-Messung.
+`app.js:19`/`sw.js:10` auf 3.2.1. `CHANGELOG.md`.
+
+**Entscheidung:** Der Betreiber hat die Vorschau auf dem iPad geöffnet und
+gemeldet, die Lernansicht sitze nach rechts verschoben. Der Fund war
+eindeutig: Ab 900px rückt `.view` den Inhalt um `--rail-w` (240px) nach
+rechts, damit er neben der Spalte steht — aber **im Modus gibt es die Spalte
+nicht**, der Modus verdeckt die ganze Shell. Dass in derselben Regelgruppe
+schon `.modebar { left: 0 }` steht, zeigt, dass das beim Schreiben von 3.0.0
+mitgedacht war; nur der Einzug des Inhalts wurde vergessen. Die Bühne saß
+dadurch 120px rechts von der Mitte. **Am Handy greift die Regel nicht, also
+konnte es kein Handy-Test finden** — und die Vorschau am iPad hat in der
+ersten Stunde etwas gefunden, das drei Sessions am Schreibtisch nicht fanden.
+
+Daraus zwei Konsequenzen für den Probelauf, beide eingebaut: Er läuft jetzt
+zusätzlich in iPad-Breite, und er misst, ob der Inhalt im Modus mittig sitzt.
+Beim Einbauen der Messung selbst noch eine Falle: Gegen `window.innerWidth`
+gemessen meldete sie konstant 7px Versatz. Das war die Scrollbar-Reserve aus
+`scrollbar-gutter: stable` — im Desktop-Chromium real, auf iPhone und iPad
+nicht existent. Gemessen wird deshalb gegen den Body; das ist der Platz, der
+wirklich zum Auslegen da ist. Hätte ich das nicht nachgerechnet, wäre die
+Prüfung ab sofort dauerhaft rot gewesen und damit wertlos.
+
+Zwei kleinere Funde von der Bühne selbst, beide aus dem Bild: Die Leiste sagte
+auf der ersten Karte „0 von 11" — richtig gezählt, aber gelesen wie „Karte 0"
+(Video 3: eine Null am Anfang liest sich wie Stillstand). Zählt jetzt die
+Karte, auf der man steht. Und „kommt gleich wieder" war die einzige der drei
+Unterzeilen unter den Bewertungsknöpfen, die umbrach — die drei standen
+sichtbar ungleich da.
+
+**Offen:**
+- Block 3 ist damit **angefangen, nicht fertig**: geprüft sind Zähler,
+  Knopfzeile und Mittigkeit. Nicht geprüft sind die Gesten (Wischen zum
+  Bewerten, Long-Press) und die Übergänge zwischen zwei Karten — beides kann
+  ein Standbild nicht zeigen und der Probelauf nicht auslösen.
+- Die Vorschau als Artefakt hat keine Quran-Schrift (fremde Herkunft, von dort
+  gesperrt). Arabische Typografie lässt sich dort **nicht** beurteilen.
+- Blöcke 4 (`landing.html`) und 5 (Erststart) stehen noch.
+
+**Nächster Schritt:** Block 3 zu Ende — die Übergänge zwischen zwei Karten und
+das Verhalten nach dem Bewerten ansehen. Dafür muss der Probelauf mehrere
+Bewertungen hintereinander klicken können; bisher hält er nach dem Aufdecken
+an.
+
+---
+
 ### 2026-09-17 — Block 2: Einstellungen und Fortschritt neu aufgebaut (v3.2.0)
 
 **Geändert:**

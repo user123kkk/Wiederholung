@@ -163,7 +163,16 @@ const BILDER = [
   { name: "07-einst-wahl",        weg: ['[data-action="einstellungen"]', '[data-action="wahl-sheet"][data-id="limit"]'] },
   { name: "08-einst-sichern",     weg: ['[data-action="einstellungen"]', '[data-action="einst-seite"][data-id="sichern"]'] },
   { name: "09-einst-verlauf",     weg: ['[data-action="einstellungen"]', '[data-action="einst-seite"][data-id="verlauf"]'] },
-  { name: "10-verwalten",         weg: ['[data-action="tab-verwalten"]'] }
+  { name: "10-verwalten",         weg: ['[data-action="tab-verwalten"]'] },
+  /* Die Buehne braucht eine laufende Sitzung - darum ein eigener Eintrag mit
+     Klick auf "Lernsession starten". */
+  { name: "11-buehne",            weg: ['[data-action="start-session"]'] },
+  /* Breit: hier wird aus der unteren Leiste eine Spalte links (ab 900px).
+     Genau dort sass die Buehne bis 3.2.1 um die halbe Spaltenbreite rechts
+     von der Mitte - am Handy faellt das nie auf. */
+  { name: "12-buehne-antwort",    weg: ['[data-action="start-session"]', '[data-action="reveal"]'] },
+  { name: "12-breit-lernen",      weg: [], breite: 1194, hoehe: 834 },
+  { name: "13-breit-buehne",      weg: ['[data-action="start-session"]'], breite: 1194, hoehe: 834 }
 ];
 
 const browser = await chromium.launch({ executablePath: process.env.PROBE_CHROMIUM || "/opt/pw-browsers/chromium" });
@@ -190,6 +199,7 @@ await seite.route("**/firebasejs/**", route => {
 });
 
 for (const bild of BILDER) {
+  await seite.setViewportSize({ width: bild.breite || 390, height: bild.hoehe || 844 });
   await seite.goto(BASIS + "/index.html", { waitUntil: "load" });
   try {
     await seite.waitForSelector(".nav__tabs", { timeout: 10000 });
@@ -235,6 +245,30 @@ for (const bild of BILDER) {
       console.log("   Luft unter dem letzten Element: " + platz.rest +
                   "px (Navigation " + platz.navH + "px)");
     }
+  }
+  /* Mittigkeit: im Modus (Abfrage/Uebung/Durchsicht) gibt es keine Spalte
+     links, der Inhalt gehoert also in die Fensetermitte. Genau das war auf
+     dem iPad kaputt und im Bild nur schwer zu sehen. */
+  const mitte = await seite.evaluate(() => {
+    const v = document.querySelector(".view--modus");
+    if (!v) return null;
+    const r = v.getBoundingClientRect();
+    /* Gemessen wird gegen den BODY, nicht gegen das Fenster. html traegt
+       scrollbar-gutter: stable (Beobachtung 15); im Desktop-Chromium sind
+       das 15px Reserve rechts, die der Body nicht mehr hat. Gegen das
+       Fenster gemessen meldete die Pruefung deshalb dauerhaft 7px Versatz,
+       den es auf einem Geraet ohne klassische Scrollbar - also auf iPhone
+       und iPad, um die es hier geht - gar nicht gibt. Der Body ist der
+       Platz, der wirklich zum Auslegen da ist. */
+    const bb = document.body.getBoundingClientRect();
+    return Math.round((r.left + r.right) / 2 - (bb.left + bb.right) / 2);
+  });
+  if (mitte !== null && Math.abs(mitte) > 2) {
+    console.log("   ⚠ Buehne sitzt " + Math.abs(mitte) + "px " +
+                (mitte > 0 ? "rechts" : "links") + " von der Fenstermitte");
+    fehler.push(bild.name + ": Buehne nicht mittig (" + mitte + "px)");
+  } else if (mitte !== null) {
+    console.log("   Buehne mittig");
   }
   console.log("✓", bild.name);
 }

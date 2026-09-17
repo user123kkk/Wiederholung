@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.2.0";
+const APP_VERSION = "3.2.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -5587,9 +5587,16 @@ function renderSession() {
   let html = modeBar({
     zu: "end-session",
     zuLabel: s.isDrill ? "\u00dcbung beenden" : "Session abbrechen",
+    /* 3.2.1: Stand bis hier "0 von 11" auf der ERSTEN Karte - richtig
+       gezaehlt (null erledigt), aber gelesen wie "Karte 0". Video 3, Ziel-
+       Gradient: eine Null als erste Zahl eines Ablaufs liest sich wie
+       Stillstand. Jetzt zaehlt die Zeile die Karte, auf der man steht - das
+       ist dieselbe Information, nur nie null. Der Fortschrittsstrich
+       darunter bleibt unveraendert bei fertig/gesamt; er soll bei null
+       anfangen, er ist ja der Balken. */
     mitte: s.isDrill
       ? "Noch " + remaining + " in dieser Runde"
-      : fertig + " von " + gesamt,
+      : "Karte " + Math.min(fertig + 1, gesamt) + " von " + gesamt,
     anteil: s.isDrill ? null : fertig / gesamt,
     rechts: s.lastAction
       ? '<button class="icon-btn" data-action="undo-grade" aria-label="Letzte Bewertung r\u00fcckg\u00e4ngig machen">' +
@@ -5686,7 +5693,12 @@ function renderSession() {
       '<p class="weiter-hinweis">Leertaste oder tippen \u2013 weiter</p></div>';
   } else {
     html += '<div class="grade-row">';
-    html += '<button class="btn-unknown" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 zwei Stufen zur\u00fcck, kommt gleich noch einmal">Nicht<span class="sub">kommt gleich wieder</span></button>';
+    /* 3.2.1: "kommt gleich wieder" war die einzige der drei Unterzeilen, die
+       am Handy auf zwei Zeilen umbrach - die drei Knoepfe standen damit
+       sichtbar ungleich da. "gleich wieder" sagt dasselbe und reiht sich
+       neben "morgen wieder" und "in ~N Tagen" ein. Die Vorlesefassung im
+       aria-label bleibt ausfuehrlich. */
+    html += '<button class="btn-unknown" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 zwei Stufen zur\u00fcck, kommt gleich noch einmal">Nicht<span class="sub">gleich wieder</span></button>';
     html += '<button class="btn-almost" data-action="grade-almost" aria-label="Fast gewusst \u2013 eine Stufe zur\u00fcck, morgen wieder">Fast<span class="sub">morgen wieder</span></button>';
     html += '<button class="btn-known" data-action="grade-known" aria-label="Sicher gewusst \u2013 eine Stufe weiter">Sicher<span class="sub">in ~' + intervalForStufe(Math.min(card.stufe + 1, MAX_STUFE)) + ' Tagen</span></button>';
     html += '</div>';
