@@ -4,6 +4,102 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Bildersammlung (108 Bilder) ausgewertet, Block 7 fertig: Anmeldeformular (v3.4.0)
+
+**Geändert:**
+- Neu: `plan/redesign-oberflaeche/BILDER-BEFUND.md` — eine Zeile pro Bild, mit
+  Urteil und Beleg.
+- `app.js:956–962` — `ui.authEingabe` und `ui.authPassSichtbar`.
+- `app.js:1347` (`onAuthStateChanged`) — beide werden bei jeder
+  Anmeldeänderung geleert.
+- `app.js:4132` — neue Funktion `authEingabenMerken()`, am Anfang von
+  `renderAuth()` aufgerufen.
+- `app.js:4166–4172` — Passwortfeld in `.feld-mit-knopf` mit Auge-Knopf
+  (`data-action="passwort-zeigen"`, `aria-pressed`, `aria-label`).
+- `app.js:4221` — Werte nach `app.innerHTML = html` per `.value`
+  zurückgesetzt (nicht als Attribut, damit das Passwort nicht im Markup steht).
+- `app.js:7228` — `case "passwort-zeigen"` im einen delegierten Listener.
+- `app.js:474–475` — Symbole `auge`, `augeZu` im vorhandenen Linienstil.
+- `styles.css:1011–1018` — `.feld-mit-knopf`.
+- `app.js:19` / `sw.js:10` → 3.4.0. `CHANGELOG.md`.
+- `AUFTRAG.md` — Blöcke 7–10 in die Tabelle, 8–10 ausführlich beschrieben.
+- `plan/PLAN.md` — Strang-Status, offene Fragen 12 und 13, Statusverlauf,
+  „Wo eine neue Session anfängt".
+- `.claude/launch.json` (neu, nicht ausgeliefert) — lokaler Server
+  `python -m http.server 8099` für die Browser-Vorschau.
+
+**Entscheidung:** Der Betreiber hat 108 Bilder aus TikTok geliefert
+(„hauptsache alle 108 bilder … abgehakt"). Alle wurden einzeln angesehen. 11
+davon sind byte-gleich dieselbe Werbeseite (per `md5sum` geprüft), bleiben
+aber in der Liste, damit die Zählung mit dem Ordner übereinstimmt.
+Ergebnis: 59 ✅ belegt schon da · 12 ➖ passen nicht · 24 ▫️ kein Tipp ·
+3 🟡 Betreiberfrage · 8 📋 in neue Blöcke · 2 🔨 sofort gebaut. Summe 108.
+
+**Warum gerade Block 7 sofort gebaut wurde und nicht Block 8:** Block 7 ließ
+sich **ohne Anmeldung** im Browser prüfen — der Anmeldebildschirm ist das
+Einzige, was ohne Konto erreichbar ist, und `probelauf.mjs` läuft auf diesem
+Rechner nicht (`playwright` nicht installiert). Block 8 braucht eine
+Anmeldung zum Prüfen; blind bauen widerspricht der Regel „nach jeder
+Gestaltungsänderung prüfen". Außerdem war Block 7 ein **echter Fehler**,
+kein Geschmack: Beim Lesen von `doLogin()` fiel auf, dass `render()` während
+des Wartens aufgerufen wird und `renderAuth()` die Felder leer neu zeichnet.
+
+**Nachweis vorher (live, v3.3.2, lokaler Server, ohne Serveranfrage):**
+E-Mail getippt → „Neues Konto anlegen" → Feld leer. E-Mail + Passwort
+getippt, ohne Namen „Konto anlegen" → Meldung „Bitte einen Namen eingeben."
+und **beide Felder leer**. (Bewusst über den Namens-Fehler getestet, der
+lokal geprüft wird — kein Anmeldeversuch mit erfundenen Daten gegen das
+echte Firebase.)
+
+**Nachweis nachher (v3.4.0, Service-Worker und Cache vorher gelöscht):**
+- Wechsel zu Registrieren: E-Mail und Passwort stehen noch da.
+- Namens-Fehler: beide stehen noch da, Meldung erscheint.
+- Auge: Feld wird `type="text"`, Beschriftung „Passwort verbergen", Wert bleibt.
+- Zurück zu Anmelden: E-Mail steht, Passwort bleibt sichtbar (Zustand bleibt,
+  das ist gewollt — wer es gerade sehen wollte, will es weiter sehen).
+- `#app.innerHTML` enthält das Passwort **nicht**.
+- Auge-Knopf 44 × 44 px, sitzt im 48 px hohen Feld rechts (gemessen bei
+  375 px Breite). Keine Fehler in der Konsole.
+
+**Weshalb das Passwort überhaupt im Speicher gehalten wird:** Sonst wäre es
+nach jeder Fehlermeldung weg — genau der Fehler. Es liegt nur in `ui` (nie in
+`localStorage`), und `onAuthStateChanged` leert es bei jedem An- und Abmelden.
+Ohne das Leeren stünde nach dem Abmelden das alte Passwort wieder im Feld.
+
+**Bewusst nicht gebaut, obwohl auf den Bildern:**
+- „Passwort vergessen?" direkt ans Feld (Bild 21): Die Stelle unter der Karte
+  ist eine dokumentierte Entscheidung (`app.js:4192`). Nicht umgeworfen.
+- Google-/Apple-Anmeldung (Bild 22): braucht Konsole + Datenschutztext →
+  offene Frage 13.
+- Kein reines Schwarz/Weiß (Bild 27, 68): Markenfrage → offene Frage 12.
+- Platzhalter-Gerüst beim Laden (Bild 63): siehe Befund, passt nicht.
+- Portfolio-Karussell (Bild 48–56): richtet sich an Jobsuchende.
+
+**Nebenfunde, nur vermerkt:**
+- `--skeleton` (`styles.css:160`) ist definiert, aber nirgends benutzt.
+- Der Rückfall-Knopftext „Ja, weiter" in `dlgConfirm` (`app.js:7097`) wird von
+  keinem Aufruf mehr erreicht — alle geben `okLabel` mit.
+- `input[aria-invalid]` und `.field__fehler` (`styles.css:985, 1020`) sind
+  gestaltet, aber nie gesetzt → wird in Block 9 benutzt.
+
+**Offen:**
+- **Am echten Handy nicht angesehen.** Geprüft nur im eingebauten Browser mit
+  Handy-Breite. Betreiber: Anmeldeseite öffnen, Auge antippen.
+- **Veröffentlichung auf Firebase Hosting** macht der Betreiber
+  (`veroeffentlichen.bat`) — der Push auf `main` allein bringt 3.4.0 nicht auf
+  die Live-Seite.
+- Offene Fragen 12 (Farben) und 13 (Google-Anmeldung) in `plan/PLAN.md`.
+- Werkzeugleiste Verwalten und Smart Defaults — unverändert offen (siehe
+  Eintrag Block 6), durch Bild 2, 98, 104 nur bestätigt.
+
+**Nächster Schritt:** Block 8 laut `AUFTRAG.md` — in der Speicherfunktion für
+Karten (`app.js:3466` ff.) nach `patchDoc(patch); render();` die vorhandene
+`zeigeToast()` aufrufen („Karte gespeichert" / „Änderung gespeichert"), dann
+prüfen. Vorher klären, womit geprüft wird: `npm install playwright` +
+`probelauf.mjs`, oder Betreiber schaut am Handy.
+
+---
+
 ### 2026-09-17 — Block 5 fertig: Erststart als Fortschritt gerahmt (v3.3.2)
 
 **Geändert:** `app.js` — `soloMarke()` nimmt einen optionalen `schritt`-Text

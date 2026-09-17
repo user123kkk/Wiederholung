@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.3.2";
+const APP_VERSION = "3.4.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -471,6 +471,8 @@ const ICON_PFADE = {
   verschieben: '<path d="M4 6.5h9a4 4 0 0 1 4 4v6"/><path d="M13.5 13 17 16.5 20.5 13"/>',
   hand:        '<path d="M4 19.5h16"/><path d="M6.5 15.5 15 7a2.1 2.1 0 0 1 3 3l-8.5 8.5H6.5z"/>',
   auswaehlen:  '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/>',
+  auge:        '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+  augeZu:      '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 20 20 4"/>',
   marke:       '<path fill="currentColor" stroke="none" d="M11.53,15.02L9.3,14.84L9.21,14.74L8.74,14.74L8.65,14.65L7.63,14.47L7.53,14.37L7.07,14.28L6.79,14.09L6.6,14.09L5.3,13.44L4.65,12.98L3.44,11.77L2.6,10.28L2.6,10.09L2.42,9.72L2.42,9.44L2.33,9.35L2.33,8.98L2.23,8.88L2.14,7.58L3.72,7.67L3.81,7.77L4.28,7.77L4.37,7.86L4.65,7.86L5.12,8.05L5.4,8.05L5.49,7.95L5.4,7.86L5.4,7.3L5.3,7.21L5.3,5.44L5.4,5.35L5.49,4.23L5.58,4.14L5.58,3.86L5.67,3.77L5.67,3.49L5.77,3.4L5.86,2.93L6.88,3.4L8.09,4.23L9.3,5.44L9.77,6.09L9.86,6L10.14,4.98L10.6,3.95L10.79,3.77L11.16,3.02L12,2L12.84,3.02L12.93,3.3L13.4,3.95L13.86,4.98L13.86,5.16L14.23,6.09L14.7,5.44L15.91,4.23L17.12,3.4L18.14,2.93L18.14,3.12L18.33,3.49L18.33,3.77L18.42,3.86L18.42,4.14L18.51,4.23L18.6,5.35L18.7,5.44L18.7,7.21L18.6,7.3L18.6,7.86L18.51,7.95L18.6,8.05L18.88,8.05L18.98,7.95L19.26,7.95L19.72,7.77L20.19,7.77L20.28,7.67L21.86,7.58L21.77,8.88L21.67,8.98L21.58,9.72L20.93,11.21L20.56,11.77L19.35,12.98L18.7,13.44L17.4,14.09L17.21,14.09L16.93,14.28L16.74,14.28L16.37,14.47L16.09,14.47L16,14.56L15.72,14.56L15.26,14.74L14.79,14.74L14.7,14.84L14.14,14.84L14.05,14.93L13.02,14.93L12.93,15.02L11.53,15.02Z"/><path d="M11.95,15.02L12,22"/>'
 };
 /* Kleines Symbol im Fliesstext (16px, .icon) - der bisherige Aufruf. */
@@ -951,6 +953,13 @@ let ui = {
   authError: null,
   authInfo: null,
   authBusy: false,
+  /* 3.4.0: Was im Anmeldeformular schon getippt ist. render() ersetzt den
+     ganzen Inhalt von #app - ohne diesen Zwischenspeicher waren E-Mail und
+     Passwort nach jeder Fehlermeldung und jedem Wechsel Anmelden/Konto
+     anlegen leer. Liegt nur im Speicher, nie auf der Platte; wird bei jeder
+     Anmeldeaenderung geleert (onAuthStateChanged). */
+  authEingabe: { name: "", email: "", pass: "" },
+  authPassSichtbar: false,
   kontoLoeschenBusy: false,  // Konto-Loeschung laeuft (Phase 2)
   /* A3 (1.9.0): der offene Bereich haengt an seiner ID, nicht mehr an einer
      Positionsnummer - siehe currentBereich(). null = noch keiner gewaehlt,
@@ -1335,6 +1344,8 @@ async function initFirebase() {
     cloudDocExists = false;
     ui.session = null;
     ui.editId = null;
+    ui.authEingabe = { name: "", email: "", pass: "" };
+    ui.authPassSichtbar = false;
     ui.askImport = false;
     ui.umzug = null;
     ui.einstellungen = false;
@@ -4114,8 +4125,24 @@ function renderSetup() {
     '</ol></div></div>';
 }
 
+/* 3.4.0: Liest, was gerade in den Anmeldefeldern steht, bevor render() sie
+   ersetzt. Ein Feld, das es im aktuellen Modus nicht gibt (Name beim
+   Anmelden, Passwort beim Zuruecksetzen), laesst seinen alten Wert stehen -
+   so ist er nach dem Zurueckwechseln wieder da. */
+function authEingabenMerken() {
+  const e = ui.authEingabe;
+  const name = document.getElementById("a-name");
+  const email = document.getElementById("a-email");
+  const pass = document.getElementById("a-pass");
+  if (name) e.name = name.value;
+  if (email) e.email = email.value;
+  if (pass) e.pass = pass.value;
+}
+
 function renderAuth() {
+  authEingabenMerken();
   const m = ui.authMode;
+  const sichtbar = ui.authPassSichtbar;
   let html = '<div class="solo">';
   html += soloMarke(m === "register" ? "Konto anlegen"
         : m === "reset" ? "Passwort zur\u00fccksetzen" : "Anmelden",
@@ -4134,7 +4161,15 @@ function renderAuth() {
   if (m !== "reset") {
     html += '<div class="field"><label for="a-pass">Passwort' +
       (m === "register" ? ' <span class="opt">\u2013 mindestens 6 Zeichen</span>' : '') + '</label>';
-    html += '<input type="password" id="a-pass" autocomplete="' + (m === "register" ? "new-password" : "current-password") + '"></div>';
+    /* 3.4.0: Das Auge steht IM Feld, rechts - dort sucht man es (Bild 24 der
+       Sammlung). Passwoerter vertippt man am Handy leicht, ohne es zu sehen. */
+    html += '<div class="feld-mit-knopf">';
+    html += '<input type="' + (sichtbar ? "text" : "password") + '" id="a-pass" autocomplete="' +
+      (m === "register" ? "new-password" : "current-password") + '" autocapitalize="off" spellcheck="false">';
+    html += '<button type="button" class="icon-btn" data-action="passwort-zeigen" aria-pressed="' + (sichtbar ? "true" : "false") +
+      '" aria-label="' + (sichtbar ? "Passwort verbergen" : "Passwort anzeigen") + '">' +
+      ikon(sichtbar ? "augeZu" : "auge") + '</button>';
+    html += '</div></div>';
   }
   if (ui.authError) html += '<div class="error-box" style="margin:var(--space-4) 0 0">' + ikon("warnung", "i-sm") +
     '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
@@ -4180,6 +4215,14 @@ function renderAuth() {
   html += '</div>';
   html += '</div>';
   app.innerHTML = html;
+
+  /* Werte per Eigenschaft zurueck, nicht als value-Attribut ins HTML: ein
+     Passwort gehoert nicht in den Markup-Text. */
+  const zurueck = { "a-name": ui.authEingabe.name, "a-email": ui.authEingabe.email, "a-pass": ui.authEingabe.pass };
+  for (const id in zurueck) {
+    const feld = document.getElementById(id);
+    if (feld && zurueck[id]) feld.value = zurueck[id];
+  }
 
   const pass = document.getElementById("a-pass");
   if (pass) pass.addEventListener("keydown", e => {
@@ -7182,6 +7225,7 @@ document.body.addEventListener("click", e => {
     case "mode-login": ui.authMode = "login"; ui.authError = null; ui.authInfo = null; render(); break;
     case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; render(); break;
     case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; render(); break;
+    case "passwort-zeigen": ui.authPassSichtbar = !ui.authPassSichtbar; render(); break;
     case "logout": doLogout(); break;
     case "delete-account": doKontoLoeschen(); break;
     /* 3.0.0: Das Bereichs-Sheet. "nichts" traegt das Blatt selbst, damit ein

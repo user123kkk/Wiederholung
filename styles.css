@@ -1004,6 +1004,18 @@ select {
 }
 select option { background: var(--surface); color: var(--text-1); }
 
+/* 3.4.0: Feld mit einem Knopf rechts darin (Passwort anzeigen). Der Knopf
+   liegt ueber dem Feld, nicht daneben - das Feld behaelt die volle Breite,
+   und das Polster rechts haelt den Text vom Knopf fern. Kein zweiter Kasten:
+   der Knopf ist durchsichtig (Satz 2). */
+.feld-mit-knopf { position: relative; }
+.feld-mit-knopf input { padding-right: calc(var(--ctrl-md) + var(--space-2)); }
+.feld-mit-knopf button.icon-btn {
+  position: absolute; top: 50%; right: 2px;
+  transform: translateY(-50%);
+}
+.feld-mit-knopf button.icon-btn:active { transform: translateY(-50%) scale(0.94); }
+
 .field__hilfe { font-size: var(--fs-xs); color: var(--text-3); margin-top: var(--space-2); }
 .field__fehler { font-size: var(--fs-xs); color: var(--negative); margin-top: var(--space-2); }
 

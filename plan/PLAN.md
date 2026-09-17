@@ -2,7 +2,7 @@
 
 Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
-Zuletzt geändert: 15. September 2026
+Zuletzt geändert: 17. September 2026
 
 ---
 
@@ -119,7 +119,10 @@ die beiden Dateien dazu sind am 17.09. entfernt worden, nachdem die
 Design-Entscheidungen in `styles.css` und `README.md` stehen. Geprüft wird an
 [`stilprobe.html`](redesign-oberflaeche/stilprobe.html) — ohne sie kommt niemand
 ohne Firebase-Anmeldung an der Oberfläche vorbei.
-Status: alle sechs Blöcke `fertig` (v3.1.0–3.3.2), Strang ruht.
+Status: Blöcke 1–7 `fertig` (v3.1.0–3.4.0), **Blöcke 8–10 offen** — neu
+aufgenommen am 17.09.2026 aus der Bildersammlung des Betreibers (108 Bilder,
+alle einzeln geprüft in
+[`BILDER-BEFUND.md`](redesign-oberflaeche/BILDER-BEFUND.md)).
 **Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 6 unten.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
@@ -264,6 +267,8 @@ hängt, nicht begonnen.
 | ~~4~~ | ~~Soll der Weitergabe-Kartensatz (Medina Buch 1) Teil der öffentlichen Seite werden oder privat unter Brüdern bleiben?~~ | **erledigt 12.09.2026** — siehe unten |
 | ~~5~~ | ~~Welches Repo ist maßgeblich?~~ | **erledigt 12.09.2026** — siehe „Wo der Code liegt" oben |
 | 6 | Gilt `KONZEPT.md` §7 („App-Funktionen nicht anfassen") weiter, oder darf der Redesign auch die Bedienung ändern? | für Strang `redesign-oberflaeche` **gelockert** (16.09.2026); §7 dauerhaft anpassen bleibt offen — siehe unten |
+| 12 | **Farben:** Soll der Hintergrund heller werden als fast reines Schwarz (`#08080a`), und soll der Knopf beim Überfahren mit der Maus nicht mehr reines Weiß (`#ffffff`) werden? Zwei Bilder der Sammlung (27, 68) raten davon ab; „Creme auf Fast-Schwarz" ist aber die gewählte Marke. | nichts — Blöcke 8–10 laufen unabhängig. Nur eine Farbänderung wartet darauf. |
+| 13 | **Anmelden mit Google (oder Apple)?** Bild 22 der Sammlung empfiehlt es. Dafür muss in der Firebase-Konsole ein Anbieter eingeschaltet **und** die Datenschutzerklärung ergänzt werden (Daten gehen dann auch an Google/Apple). | nichts — wird ohne Entscheidung nicht gebaut |
 
 **Geklärt am 12.09.2026 (vormals offene Frage 1).** Entscheidung des
 Betreibers: **Firebase Hosting**, nicht GitHub Pages, nicht Netlify/Vercel —
@@ -314,6 +319,14 @@ trotzdem unangetastet (harte Grenze, siehe `redesign-oberflaeche/AUFTRAG.md`).
 Was **nicht** entschieden ist: ob §7 dauerhaft so bleibt oder umgeschrieben
 wird. `KONZEPT.md` wird **nicht** eigenmächtig geändert — das ist Betreiber-Sache.
 Bis dahin gilt die Lockerung nur für diesen einen Strang.
+
+**Neu am 17.09.2026 (Fragen 12 und 13).** Beide kommen aus der Bildersammlung
+(`redesign-oberflaeche/BILDER-BEFUND.md`, Bild 22, 27, 68). Hinweis zu den
+Nummern: 7–11 sind in dieser Tabelle nicht vergeben; die Nummern 12 und 13 sind
+gewählt, damit sie mit keiner Frage aus anderen Plandateien verwechselt werden.
+Zu 12 aus dem Befund: Die Schrift ist schon gedämpft (`#f5f3ec`, nicht reines
+Weiß). Betroffen wären nur `--ink-900` (`styles.css:71`) und `--accent-hover`
+(`styles.css:120`). Das ändert das Markenbild — deshalb Betreiber-Sache.
 
 Die Phasen 0–6 hängen an keiner offenen Frage mehr und können durchgearbeitet
 werden.
@@ -383,11 +396,23 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-17 | **Block 4 fertig: `landing.html`** (v3.2.3). Die Seite führte seit 3.1.0 eine eigene Schriftskala, eigene Radien und eine eigene Knopfform — damit war die AUFTRAG-Bedingung „App und Startseite teilen EINE Sprache" nicht erfüllt. Jetzt alles über die Token; Schlagzeile und Titel in der Serifenschrift (Satz 4, Markenentscheidung, rücknehmbar); Hauptknopf vollrund wie in der App; `100vh` → `100svh`. Stufenleiter von Kachelraster auf eine Spalte mit Balken — sie ist eine Reihenfolge, im Zickzack sah man das Wachsen der Abstände nicht. **Echter Fehler gefunden:** Das Kontaktformular hatte keinen sichtbaren Fokusrahmen (`rgba(var(--accent-rgb), …)` — die Variable gibt es nicht, der `box-shadow` war ungültig, darüber stand `outline: none`). Derselbe Fehler war in `styles.css` schon behoben, diese Stelle blieb stehen. |
 | 2026-09-17 | **Video-1-Nachlese** (v3.3.0, v3.3.1). Betreiber: „es gibt so viel, das ich in den Videos gesehen habe, hier nicht sehe." Genommen wurden die zwei Punkte, die Video 1 wörtlich nennt und die auf jedem Bildschirm sichtbar sind: **die Navigationsleiste schwebt** („nowadays typically floating") und **das Karten-Formular ist ein Blatt** statt einer festen Abteilung auf dem Verwalten-Bildschirm, den man zum Ansehen aufruft. Einen schwebenden Plus-Knopf bewusst NICHT dazugebaut — die Handlung steht schon als einziger gefüllter Knopf da. Nebenbei: `tickCountups` ignorierte `prefers-reduced-motion` (CSS respektierte es, dieses JavaScript nicht). Im Logbuch steht jetzt die ehrliche Liste dessen, was aus den Videos bewusst NICHT gebaut ist. |
 | 2026-09-17 | **Block 5 fertig, Strang C komplett** (v3.3.2). Registrierung und E-Mail-Bestätigung tragen „Schritt 1/2 von 2" (`.eyebrow`, kein neues Bauteil — Video 3: nie bei 0% anfangen, aber kein erfundener Assistent). Echter Fund: `landing.html` verspricht „Danach legst du direkt deine erste Karte an", aber die Bestätigungsseite nahm darauf keinen Bezug — das Versprechen verschwand genau dort. Ein Satz haelt es jetzt fest. Bewusst nicht angefasst: die E-Mail-Bestätigung selbst (Sicherheit/Recht, außerhalb der Lockerung) und der leere Erststart-Bildschirm (derselbe Code läuft auch für einen n-ten leeren Bereich, eine Erststart-Formulierung wäre dort falsch). Alle sechs Blöcke aus `redesign-oberflaeche/AUFTRAG.md` sind jetzt durch; der Strang ruht. |
+| 2026-09-17 | **Bildersammlung ausgewertet, Block 7 fertig** (v3.4.0). Betreiber lieferte 108 Bilder (11 Karussells, davon 11-mal dieselbe Werbeseite). Jedes Bild einzeln gegen den Code geprüft → `redesign-oberflaeche/BILDER-BEFUND.md`: 59 schon umgesetzt (mit Zeile belegt), 12 passen nicht (mit Grund), 24 ohne Tipp, 3 Betreiberfragen (neu: offene Fragen 12, 13), 8 in neue Blöcke 8–10. **Echter Fehler gefunden und behoben:** Im Anmeldeformular wurden E-Mail und Passwort nach jeder Fehlermeldung und bei jedem Wechsel Anmelden/Registrieren gelöscht — live im Browser nachgewiesen. Dazu das Passwort-Auge. **Zweiter Fund, noch nicht gebaut:** die fertige Kurzmeldung `zeigeToast()` wird seit 3.0.0 nirgends aufgerufen → Block 8. |
 
 ## Wo eine neue Session anfängt
 
-**Aktivster Punkt gerade: der Redesign-Strang.** Direkt im Code, kein
-Design-Tool-Umweg mehr.
+**Aktivster Punkt gerade: der Redesign-Strang, Block 8.** Direkt im Code.
+
+**Stand 17.09.2026 (neu):** Der Betreiber hat 108 Bilder mit Design-Tipps
+(TikTok, @ux_snacks) gesammelt. Alle sind angesehen und gegen den Code
+geprüft: [`redesign-oberflaeche/BILDER-BEFUND.md`](redesign-oberflaeche/BILDER-BEFUND.md)
+— eine Zeile pro Bild, mit Urteil und Beleg. **Den Bilderordner nicht noch
+einmal durchgehen.** Daraus: Block 7 (Anmeldeformular) ist gebaut und
+veröffentlicht (v3.4.0). **Als Nächstes Block 8** (Rückmeldung nach dem
+Speichern), danach 9 und 10 — Einzelheiten und „fertig, wenn" in
+[`redesign-oberflaeche/AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md).
+Zwei Punkte liegen beim Betreiber (offene Fragen 12 und 13).
+
+**Frühere Lage (vor den Bildern):**
 
 **Strang C — Oberfläche & Mobile-Gestalt — alle sechs Blöcke `fertig`
 (v3.1.0–3.3.2). Ruht.**

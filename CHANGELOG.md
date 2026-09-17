@@ -1,3 +1,15 @@
+## 3.4.0 – 17. September 2026
+
+### Behoben (Block 7: Anmeldeformular)
+
+**Was man eingetippt hat, bleibt stehen.** Bisher waren E-Mail und Passwort leer, sobald eine Fehlermeldung kam („E-Mail oder Passwort ist falsch", „Bitte einen Namen eingeben") oder man zwischen „Anmelden", „Neues Konto anlegen" und „Passwort vergessen?" wechselte. Der Grund: Jede Meldung baut den Bildschirm neu auf, und der neue Bildschirm kannte die alten Eingaben nicht. Wer sich einmal vertippte, musste alles neu schreiben. Jetzt merkt sich die App die Eingaben, solange man auf diesem Bildschirm ist. Sie liegen nur im Arbeitsspeicher, nie auf dem Gerät gespeichert, und werden bei jedem An- oder Abmelden geleert. Das Passwort wird nicht ins HTML geschrieben.
+
+### Neu
+
+**Passwort anzeigen.** Im Passwortfeld steht rechts ein Auge. Antippen zeigt das Passwort im Klartext, nochmal antippen verbirgt es wieder. Am Handy vertippt man sich bei verdeckten Passwörtern leicht. Der Knopf ist 44 × 44 px groß (so groß wie jeder andere Knopf) und hat für Bildschirmleser die Beschriftung „Passwort anzeigen" bzw. „Passwort verbergen".
+
+Grundlage: die Bildersammlung des Betreibers (108 Bilder), ausgewertet in `plan/redesign-oberflaeche/BILDER-BEFUND.md`. Beide Punkte stehen dort als Bild 23 und 24.
+
 ## 3.3.2 – 17. September 2026
 
 ### Geändert (Block 5: Erststart)
