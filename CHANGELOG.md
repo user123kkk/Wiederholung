@@ -1,3 +1,9 @@
+## 3.4.7 – 17. September 2026
+
+### Behoben (Google/Apple-Knöpfe riesig statt kompakt)
+
+**Auf dem echten Gerät waren die neuen Google-/Apple-Logos übergroß und haben die Knöpfe auf zwei Zeilen gesprengt.** Ursache: Die Logos hatten in v3.4.6 nur eine CSS-Klasse (`.oauth-logo`) zur Größenangabe, keine feste Breite/Höhe direkt am `<svg>`. Ohne geladenes CSS – etwa durch eine noch nicht aktualisierte `styles.css` im Browser-Cache – rendert ein SVG mit `viewBox` aber ohne eigene Maße in der Browser-Standardgröße, deutlich größer als gedacht. Jetzt tragen beide Logos `width`/`height` und ein `style`-Attribut direkt am Element, unabhängig vom CSS-Ladezustand.
+
 ## 3.4.6 – 17. September 2026
 
 ### Neu (offene Frage 13: Anmeldung mit Google und Apple)

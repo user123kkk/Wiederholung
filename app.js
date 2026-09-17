@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.4.6";
+const APP_VERSION = "3.4.7";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -492,13 +492,13 @@ function ikon(name, cls) {
    wiederzuerkennen. Apple bleibt einfarbig (currentColor), so wie der
    Anbieter sein Zeichen selbst vorschreibt. */
 const OAUTH_LOGOS = {
-  google: '<svg class="oauth-logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+  google: '<svg class="oauth-logo" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:20px;height:20px;flex:0 0 auto;display:block">' +
     '<path fill="#4285F4" stroke="none" d="M23.52 12.27c0-.82-.07-1.6-.2-2.36H12v4.46h6.47c-.28 1.5-1.13 2.77-2.4 3.62v3h3.88c2.27-2.09 3.57-5.17 3.57-8.72z"/>' +
     '<path fill="#34A853" stroke="none" d="M12 24c3.24 0 5.96-1.07 7.95-2.91l-3.88-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.95H1.27v3.1C3.25 21.3 7.31 24 12 24z"/>' +
     '<path fill="#FBBC05" stroke="none" d="M5.27 14.29A7.2 7.2 0 0 1 4.89 12c0-.8.14-1.57.38-2.29v-3.1H1.27A11.98 11.98 0 0 0 0 12c0 1.93.46 3.76 1.27 5.39l4-3.1z"/>' +
     '<path fill="#EA4335" stroke="none" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.7 1.27 6.61l4 3.1C6.22 6.86 8.87 4.75 12 4.75z"/>' +
     '</svg>',
-  apple: '<svg class="oauth-logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+  apple: '<svg class="oauth-logo" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:20px;height:20px;flex:0 0 auto;display:block">' +
     '<path fill="currentColor" stroke="none" d="M16.36 1.43c0 1.14-.42 2.2-1.24 3.05-.87.9-2.13 1.63-3.34 1.51-.15-1.16.44-2.34 1.19-3.11.83-.87 2.23-1.5 3.36-1.45.02.17.03.34.03.5zM20.5 17.2c-.42.98-.62 1.42-1.16 2.29-.75 1.21-1.81 2.72-3.12 2.73-1.17.02-1.47-.76-3.06-.75-1.58.01-1.92.76-3.09.74-1.31-.02-2.31-1.38-3.06-2.59-2.1-3.4-2.32-7.39-1.02-9.52.92-1.51 2.38-2.4 3.75-2.4 1.39 0 2.27.77 3.42.77 1.12 0 1.8-.77 3.42-.77 1.22 0 2.51.67 3.43 1.82-3.02 1.66-2.53 5.98.49 7.68z"/>' +
     '</svg>'
 };

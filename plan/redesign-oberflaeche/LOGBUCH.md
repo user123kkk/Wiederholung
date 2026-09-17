@@ -4,6 +4,36 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Google-/Apple-Knöpfe: Logo-Größe fest statt nur per CSS (v3.4.7)
+
+**Geändert:** `app.js:19` `APP_VERSION` auf `3.4.7`; `app.js` (`OAUTH_LOGOS`)
+beide `<svg>` bekommen `width="20" height="20"` und `style="width:20px;
+height:20px;flex:0 0 auto;display:block"` direkt am Element; `sw.js`
+`CACHE_NAME` auf `adrabic-3.4.7`; `CHANGELOG.md` neuer Eintrag.
+
+**Entscheidung:** Nach dem `firebase deploy` von v3.4.6 zeigte der Betreiber
+einen Screenshot vom echten Gerät: Beide Logos riesig, Text auf zwei Zeilen
+gesprengt. Ursache war nicht die Bedienung, sondern die reine
+CSS-Klassen-Lösung aus v3.4.6 (`.oauth-logo { width:18px; height:18px }`
+nur in `styles.css`) — ein `<svg viewBox="0 0 24 24">` ohne eigene
+`width`/`height` rendert ohne dieses CSS in der Browser-Standardgröße
+(deutlich größer als 20px), und genau dieses Zusammenspiel aus Cache
+(Service Worker, Browser-HTTP-Cache) und getrennt ausgelieferten Dateien
+(`app.js` vs. `styles.css`) hatte in dieser Sitzung bereits zweimal zu
+"neue Version geladen, aber CSS noch alt" geführt. Fix: Größe direkt am
+Element, unabhängig vom CSS-Ladezustand — robuster als ein zweiter
+Cache-Fix-Versuch.
+
+**Offen:** keins — am lokalen Server (`http://localhost:8099`) geprüft,
+Icons zeigen sich in der vorgesehenen kompakten Größe.
+
+**Nächster Schritt:** Betreiber muss `veröffentlichen.bat` erneut laufen
+lassen (bzw. `firebase deploy` aus dem Projektordner), damit v3.4.7 live
+geht. Danach am echten Gerät erneut prüfen, ob die Knöpfe jetzt kompakt
+sind.
+
+---
+
 ### 2026-09-17 — Frage 13 umgesetzt: Anmeldung mit Google und Apple (v3.4.6)
 
 **Geändert:**
