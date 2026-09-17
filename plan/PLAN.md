@@ -2,7 +2,7 @@
 
 Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
-Zuletzt geändert: 17. September 2026
+Zuletzt geändert: 17. September 2026 (Block 10 verifiziert)
 
 ---
 
@@ -119,10 +119,12 @@ die beiden Dateien dazu sind am 17.09. entfernt worden, nachdem die
 Design-Entscheidungen in `styles.css` und `README.md` stehen. Geprüft wird an
 [`stilprobe.html`](redesign-oberflaeche/stilprobe.html) — ohne sie kommt niemand
 ohne Firebase-Anmeldung an der Oberfläche vorbei.
-Status: Blöcke 1–7 `fertig` (v3.1.0–3.4.0), **Blöcke 8–10 offen** — neu
-aufgenommen am 17.09.2026 aus der Bildersammlung des Betreibers (108 Bilder,
-alle einzeln geprüft in
-[`BILDER-BEFUND.md`](redesign-oberflaeche/BILDER-BEFUND.md)).
+Status: **Blöcke 1–10 fertig** (v3.1.0–3.4.3), alle am echten Handy
+verifiziert. Blöcke 8–10 kamen am 17.09.2026 aus der Bildersammlung des
+Betreibers (108 Bilder, alle einzeln geprüft in
+[`BILDER-BEFUND.md`](redesign-oberflaeche/BILDER-BEFUND.md)). Der Strang
+ruht, bis eine neue Schwachstelle genannt wird oder offene Fragen 12/13
+entschieden sind.
 **Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 6 unten.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
@@ -400,34 +402,29 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Aktivster Punkt gerade: der Redesign-Strang, Block 10 — Betreiber-Test am
-echten Handy steht aus.** Direkt im Code.
+**Stand 17.09.2026: Redesign-Strang komplett durch.** Block 10 (Sichtbare
+Wahl statt Klappliste, v3.4.3) ist am echten Handy bestätigt („passt") —
+Stufenbereich beim Üben (Chip-Reihe, zwei Tipps markieren den Bereich) und
+Art der Speicherkarte (Auswahl-Blatt statt Klappliste je Zeile) funktionieren
+wie vorgesehen. Damit sind **alle zehn Blöcke** aus
+[`redesign-oberflaeche/AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md) `fertig`
+und am echten Handy verifiziert; der Strang **ruht**.
 
-**Stand 17.09.2026:** Blöcke 8 und 9 sind am echten Handy bestätigt. **Block 10**
-(Sichtbare Wahl statt Klappliste, v3.4.3) ist gebaut: der Stufenbereich beim
-Üben ist jetzt eine Chip-Reihe (erster Tipp wählt eine Stufe, zweiter spannt
-den Bereich dazwischen auf) statt zweier `<select>` „von"/„bis"; die Art einer
-Speicherkarte zeigt nur noch einen Knopf mit der aktuellen Art, der ein
-Auswahl-Blatt öffnet (wie bei „Helligkeit"), statt einer Klappliste in jeder
-Zeile. Im Browser nur ohne Konsolenfehler geladen — **beide Bildschirme selbst
-sind ungeprüft**, beide liegen im Verwalten-Tab und brauchen ein angemeldetes
-Konto. Diesmal zusätzlich versucht, `probelauf.mjs` lauffähig zu machen
-(`playwright`/Chromium ließen sich installieren), aber der Browser-Start
-scheitert an dieser Umgebung selbst (`chrome.exe: Permission denied`) — dabei
-nebenbei einen Windows-Pfadfehler in `probelauf.mjs` gefunden (nicht
-behoben, nur notiert, siehe `redesign-oberflaeche/LOGBUCH.md`).
+**Es gibt aktuell keinen aktiven, unblockierten Codepunkt mehr.** Was noch
+offen ist, hängt an Betreiber-Entscheidungen, nicht an Bau-Arbeit:
 
-**Betreiber-Test am echten Handy noch offen:** (1) Verwalten → Üben öffnen,
-eine Stufe antippen, eine zweite — prüfen, dass der Bereich dazwischen markiert
-ist und „Start" die richtigen Karten übt. (2) Bei „Arten vergeben" eine
-Speicherkarte antippen, im Blatt eine andere Art wählen — prüfen, dass die
-Zeile draußen die neue Art zeigt und die Gruppierung stimmt.
+- Offene Frage 12 (Farben: Hintergrund heller, Knopf-Hover nicht mehr reines
+  Weiß?) und Frage 13 (Anmelden mit Google/Apple?) — siehe Tabelle oben.
+- Strang A, Punkt 2.4 (Marke oder Person) — Identitätsfrage.
+- „Später"-Punkte: Lehrer-/Schülermodus mit Klassenräumen, eigene
+  Domain-Erweiterung, Abo/Bezahlfunktion, App Check, App-/Play-Store.
 
-Danach ist Block 10 die letzte offene Position aus `BILDER-BEFUND.md`, und der
-Redesign-Strang ruht wieder — Einzelheiten in
-[`redesign-oberflaeche/AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md).
-Zwei Betreiber-Entscheidungen offen (offene Fragen 12 und 13), blockieren
-aber nichts hier.
+Eine neue Session prüft zuerst, ob der Betreiber inzwischen eine dieser
+Fragen beantwortet oder eine neue Schwachstelle genannt hat (z. B. über
+`beobachtungen-lernwerkzeug.md`, dort stehen weiterhin unentschiedene Punkte
+1, 3, 9, 10 sowie ungeteste Verdachts-Fixe 5, 13, 16). Ohne neue Vorgabe gibt
+es nichts zu bauen — das ist kein übersehener Schritt, sondern der
+plangemäße Ruhezustand nach Abschluss aller Phasen und des Redesign-Strangs.
 
 **Frühere Lage (vor den Bildern):**
 
@@ -521,4 +518,5 @@ mangels Gerät nicht zur Verfügung.
 | 2026-09-17 | **Redesign Block 9 gebaut: Fehler am Feld statt im Dialog** (v3.4.2). Leeres Wort/Übersetzung im Karten-Formular und fehlender Name bei der Registrierung färben jetzt das betroffene Feld rot, zeigen „Bitte ausfüllen" darunter und holen den Fokus dorthin — kein Dialogfenster mehr zum Wegtippen. Die Gestaltung (`aria-invalid`, `.field__fehler`) gab es seit Block 1, wurde aber nirgends benutzt. Fehler verschwindet beim Tippen ohne vollen Re-Render (direkte DOM-Änderung, damit Fokus/Cursor nicht springen). Server-Fehler (falsches Passwort etc.) bleiben bewusst im allgemeinen Kasten. Im Browser geprüft: Registrierung ohne Namen — Fehler am Feld, Fokus dort, verschwindet beim Tippen, E-Mail/Passwort blieben stehen. Karten-Formular zunächst nur per Code-Review geprüft, nicht im Browser (braucht ein angemeldetes Konto). |
 | 2026-09-17 | **Block 9 am echten Handy verifiziert.** Betreiber hat das Karten-Formular angemeldet getestet ("passt. weiter") — rotes Feld, Fokus-Sprung und Verschwinden beim Tippen bestätigt. Block 9 damit fertig. Weiter mit Block 10. |
 | 2026-09-17 | **Redesign Block 10 gebaut: Sichtbare Wahl statt Klappliste** (v3.4.3). Stufenbereich beim Üben: zwei `<select>` "von"/"bis" ersetzt durch eine Chip-Reihe je verfügbarer Stufe — erster Tipp wählt eine Stufe, zweiter spannt den Bereich dazwischen auf. Art der Speicherkarte: `<select>` mit drei `<option>` in jeder Zeile ersetzt durch einen Knopf, der nur die aktuelle Art zeigt und ein Auswahl-Blatt öffnet (dasselbe Muster wie bei „Helligkeit"). Kein Schieberegler mit zwei Griffen (Auftrag warnt davor, Ziehgesten-Ärger) und kein Chip-Trio pro Zeile (hätte die Liste voll gemacht). Syntax geprüft, im Browser ohne Konsolenfehler geladen. Versucht, `probelauf.mjs` (Firebase-Attrappen) lauffähig zu machen, um die login-pflichtigen Bildschirme selbst zu sehen — `playwright`/Chromium ließen sich diesmal installieren, aber der Browser-Start scheitert an dieser Umgebung selbst (`chrome.exe: Permission denied`). Dabei nebenbei einen Windows-Pfadfehler in `probelauf.mjs` gefunden (nicht behoben, nur notiert: `.pathname` statt `fileURLToPath()`). Betreiber-Test am echten Handy steht noch aus.
+| 2026-09-17 | **Block 10 am echten Handy verifiziert.** Beide Prüfpunkte (Stufenbereich beim Üben, Art der Speicherkarte) vom Betreiber bestätigt („passt"). Damit sind alle zehn Blöcke des Redesign-Strangs `fertig`; der Strang ruht, bis eine neue Schwachstelle genannt wird oder offene Fragen 12/13 entschieden sind. |
 | 2026-09-15 | **Beobachtungen zum Lernwerkzeug: Versuchte Verbesserung des Ziehgriff-Doppeltipp-Verhaltens (v3.0.40).** Testrückmeldung zu v3.0.39 deutete darauf hin, dass die Aktivierung der Ziehgriff-Doppeltipp-Geste weiterhin schwierig ist — wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten Touchscreen-Ziel zuverlässig zweimal zu tippen. Zwei Optimierungen ohne Mechanic-Änderung: (1) `DOPPELTIPP_FENSTER` von 400ms → 600ms für mehr Zeit. (2) Visuelle Rückmeldung auf `.drag-handle:active` mit Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit erkennbar ist, dass die erste Tap registriert wurde. Beide Änderungen sollen die Fehlertoleranz erhöhen. Nächster Schritt: Gerätetest zur Prüfung der Zuverlässigkeit. Alle fünf Beobachtungen 2, 4, 6, 14, 15 vom Code her bereits behoben oder verbessert; offen bleiben drei Punkte, die Gerätetests brauchen (5: iPad-Layout, 13: Over-Scrolling, 16: Browser-Zurück), und mehrere UX-Punkte, die Betreiber-Entscheidungen brauchen (1, 3, 9, 10). Details in `beobachtungen-lernwerkzeug.md`.

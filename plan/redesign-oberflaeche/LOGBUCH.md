@@ -4,6 +4,23 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 10 am echten Handy verifiziert
+
+**Geändert:** keine Code-Datei — reine Verifikation.
+**Entscheidung:** Betreiber hat beide offenen Prüfpunkte aus dem vorigen
+Eintrag am echten Handy, angemeldet, durchgeführt: Stufenbereich beim Üben
+(zwei Tipps markieren den Bereich, „Start" übt die richtigen Karten) und Art
+der Speicherkarte (Blatt öffnet, neue Art erscheint in der Zeile, Gruppierung
+stimmt). Rückmeldung: „passt". Damit ist Block 10 fertig — als letzte
+Position aus `BILDER-BEFUND.md` und aus `AUFTRAG.md`.
+**Offen:** nichts an Block 10. Offene Fragen 12 (Farben) und 13
+(Google-/Apple-Anmeldung) bleiben unverändert Betreiber-Entscheidungen, die
+nichts blockieren.
+**Nächster Schritt:** keiner hier — der Redesign-Strang ruht, bis der
+Betreiber eine neue Schwachstelle nennt oder Frage 12/13 entscheidet.
+
+---
+
 ### 2026-09-17 — Block 10 gebaut: Sichtbare Wahl statt Klappliste (v3.4.3)
 
 **Geändert:**
