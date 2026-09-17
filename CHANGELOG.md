@@ -1,3 +1,25 @@
+## 3.3.1 – 17. September 2026
+
+### Geändert
+
+**Das Karten-Formular liegt jetzt in einem Blatt, nicht mehr fest oben auf dem Verwalten-Bildschirm.** Bis 3.3.0 standen dort drei Felder, eine Überschrift und ein Knopf — dauerhaft, auf dem Bildschirm, den man aufruft, um seine Karten **anzusehen**. Auf dem Handy füllte das die erste Bildschirmseite komplett: Von der Liste und vom Suchfeld war beim Ankommen nichts zu sehen. Video 1 nennt genau diesen Fall — *„the settings is just settings and the notes editor is just a notes editor. We don't throw in clutter"* — und die Antwort darauf: Wer etwas anlegen will, bekommt dafür ein Blatt, keine zweite Abteilung auf einer Seite, die einem anderen Zweck dient.
+
+Übrig bleibt der eine Knopf „Karte hinzufügen" — die Handlung, die auf diesem Bildschirm dran ist (Satz 1). Er öffnet dasselbe Formular von unten. Beim **Bearbeiten** einer Karte kommt dasselbe Blatt, vorausgefüllt; der Sprung nach oben entfällt, die Liste bleibt stehen, wo man sie verlassen hat.
+
+Beim **Anlegen** bleibt das Blatt nach dem Speichern offen und der Fokus springt zurück ins Wort-Feld — unverändert seit D1, und genau der Sinn, den Video 1 einem Blatt gibt: im Zusammenhang bleiben, statt für jede Karte hin und her zu wechseln. Beim Bearbeiten schließt es, denn dort ist die Sache erledigt.
+
+Tippen neben das Blatt schließt es **nicht**. Anders als bei einer Liste kostet das hier eine halb getippte Karte — dieselbe Entscheidung wie beim Eingabe-Dialog.
+
+### Verbessert
+
+- **Der leere Verwalten-Bildschirm zeigt jetzt auf die Handlung, statt sie zu beschreiben.** Er sagte „Leg **oben** deine erste Karte an" — das stimmte, solange das Formular oben klebte. Jetzt steht dort ein Knopf „Erste Karte anlegen".
+- **Der Zieh-Hinweis über der Kartenliste ist von drei Zeilen auf eine gekürzt.** Dieselbe Sorte Erklärungswand, die in den Einstellungen gemeldet wurde. Der Griff ist sichtbar, das Ziehen erklärt sich beim ersten Versuch, und die Tastatur-Fassung steht ohnehin im `aria-label` jedes Griffs, wo sie hingehört. Der Satz zur Seitengrenze erscheint nur noch, wenn es überhaupt mehrere Seiten gibt.
+- Die Knöpfe im Blatt heißen „Hinzufügen" und „Speichern" statt „Karte hinzufügen" und „Änderungen speichern": `.dlg-actions` macht beide gleich breit, die langen Fassungen brachen um. Worum es geht, steht als Überschrift über dem Blatt.
+
+**Unverändert:** die Kennungen `f-wort`, `f-ueb`, `f-extra`, `f-stufe` (`app.js` liest sie direkt, siehe `README.md`), die Prüfung auf Duplikate, der gezielte Schreibvorgang pro Karte und das Verhalten in geführten Kartensätzen (dort gab es nie ein Formular).
+
+---
+
 ## 3.3.0 – 17. September 2026
 
 ### Geändert

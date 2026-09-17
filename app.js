@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.3.0";
+const APP_VERSION = "3.3.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -970,6 +970,13 @@ let ui = {
      Die kommen als Blatt von unten, mit der Erklaerung dort, wo entschieden
      wird. null = zu. */
   wahlSheet: null,           // "thema" | "arab" | "limit"
+  /* 3.3.1: Das Karten-Formular liegt jetzt in einem Blatt, nicht mehr fest
+     oben auf dem Verwalten-Bildschirm. Video 1: "the settings is just
+     settings and the notes editor is just a notes editor - we don't throw in
+     clutter"; wer etwas anlegen will, bekommt ein Blatt, keine zweite
+     Abteilung auf einer Seite, die zum Ansehen da ist. Offen ist das Blatt,
+     wenn hier true steht ODER ui.editId gesetzt ist. */
+  karteSheet: false,
   statsScope: "alle",        // "alle" = alle Bereiche zusammen, "bereich" = nur der offene
   session: null,
   editId: null,
@@ -3498,6 +3505,9 @@ async function submitCardForm() {
       }
     }
     ui.editId = null;
+    /* Beim Bearbeiten ist die Sache erledigt - das Blatt geht zu. Beim
+       Anlegen bleibt es offen (siehe unten, D1). */
+    ui.karteSheet = false;
   } else {
     const neu = {
       id: genId(),
@@ -3524,8 +3534,12 @@ async function submitCardForm() {
      damit nicht automatisch die Tastatur fuer die naechste neue Karte
      oeffnen (Beobachtung 15.09.2026). */
   if (!warEdit) {
-    const wortEl = document.getElementById("f-wort");
-    if (wortEl) wortEl.focus();
+    /* D1, unveraendert: Das Blatt bleibt offen und der Fokus springt zurueck
+       ins Wort-Feld, damit man mehrere Vokabeln hintereinander eingeben
+       kann. Video 1 beschreibt genau das als den Sinn eines Blattes - man
+       bleibt im Zusammenhang, statt fuer jede Karte hin und her zu
+       wechseln. */
+    fokusInsWortfeld();
   } else if (editRueckkehrY !== null) {
     /* Beobachtung 3: zurueck an die Stelle, von der aus bearbeitet wurde -
        sonst steht man nach dem Speichern am Seitenanfang und muss erneut
@@ -3543,13 +3557,23 @@ function editCard(id) {
      dorthin gibt es nichts sinnvoll zurueckzuspringen. */
   editRueckkehrY = ui.tab === "verwalten" ? window.scrollY : null;
   ui.editId = id;
+  ui.karteSheet = true;
   const c = findCard(id);
   formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra } : { wort: "", ueb: "", extra: "" };
   render();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  /* 3.3.1: Kein Sprung mehr nach oben. Das Formular kam bis dahin oben auf
+     der Seite - jetzt kommt es von unten, und die Liste bleibt genau dort
+     stehen, wo man sie verlassen hat. */
+  fokusInsWortfeld();
+}
+/* Ein Ort fuer den Fokus ins erste Feld. Nach render() steht das Markup neu
+   da, der Fokus muss also jedes Mal neu gesetzt werden. */
+function fokusInsWortfeld() {
+  const el = document.getElementById("f-wort");
+  if (el) el.focus();
 }
 function cancelEdit() {
-  ui.editId = null; resetFormDraft(); render();
+  ui.editId = null; ui.karteSheet = false; resetFormDraft(); render();
   if (editRueckkehrY !== null) { window.scrollTo(0, editRueckkehrY); editRueckkehrY = null; }
 }
 async function deleteCard(id) {
@@ -4343,6 +4367,42 @@ function cardDetailSheet() {
   return html;
 }
 
+/* Das Karten-Blatt. Dieselbe Huelle wie das Bereichs-Sheet und das
+   Wahl-Blatt (.dlg), nur mit dem Formular darin. Die Kennungen f-wort,
+   f-ueb, f-extra und f-stufe bleiben unveraendert - app.js liest sie
+   direkt (siehe README, "Wenn du am Markup arbeitest").
+
+   Tippen neben das Blatt schliesst NICHT: Anders als bei einer Liste
+   kostet das hier eine halb getippte Karte. Dieselbe Entscheidung wie beim
+   Eingabe-Dialog (renderDialog). */
+function karteSheet() {
+  const editing = ui.editId ? findCard(ui.editId) : null;
+  if (!ui.karteSheet && !editing) return "";
+  if (istGefuehrt(currentBereich())) return "";
+
+  let html = '<div class="dlg-backdrop" data-action="nichts" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="karte-sheet-titel">';
+  html += '<h3 id="karte-sheet-titel">' + (editing ? "Karte bearbeiten" : "Neue Karte") + '</h3>';
+  html += '<div class="field"><label for="f-wort">Wort <span class="opt">– Pflicht</span></label>';
+  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.wort) + '"></div>';
+  html += '<div class="field"><label for="f-ueb">Übersetzung <span class="opt">– Pflicht</span></label>';
+  html += '<input type="text" id="f-ueb" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.ueb) + '"></div>';
+  html += '<div class="field"><label for="f-extra">Beispielsatz, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
+  html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '">' + esc(formDraft.extra) + '</textarea></div>';
+  if (editing) {
+    html += '<div class="field"><label for="f-stufe">Wiederholungsstufe</label>';
+    html += '<input type="number" id="f-stufe" min="0" max="' + MAX_STUFE + '" step="1" value="' + editing.stufe + '" inputmode="numeric"></div>';
+  }
+  html += '<div class="dlg-actions">';
+  /* Kurze Beschriftungen: .dlg-actions macht beide Knoepfe gleich breit, und
+     "Karte hinzufuegen" brach dabei auf zwei Zeilen um. Worum es geht, steht
+     als Ueberschrift ueber dem Blatt - der Knopf muss es nicht wiederholen. */
+  html += '<button data-action="submit-card">' + (editing ? "Speichern" : "Hinzufügen") + '</button>';
+  html += '<button class="secondary" data-action="karte-sheet-zu">' + (editing ? "Abbrechen" : "Fertig") + '</button>';
+  html += '</div></div></div>';
+  return html;
+}
+
 /* ---------- Banner ----------
    Drei Tiefen für Fehler: blockierend (eigener Bildschirm, siehe der
    Start-Fehler ganz unten), Banner (bleibt stehen, solange das Problem
@@ -4487,6 +4547,7 @@ function renderMain() {
      bedienbar bleibt. */
   html += bereichSheet();
   html += wahlSheet();
+  html += karteSheet();
   html += cardDetailSheet();
   html += renderDialog();          // D2 – liegt als Overlay ueber allem
   html += renderToast();
@@ -6000,21 +6061,17 @@ function renderVerwalten() {
       '<br>Die Karten stehen fest. Eigene legst du in einem eigenen Bereich an (oben „+ Bereich").</div>';
     return html + renderVerwaltenListe(cards, gefuehrt);
   }
-  html += '<div class="card">';
-  html += '<h2>' + (editing ? "Karte bearbeiten" : "Neue Karte") + '</h2>';
-  html += '<div class="field"><label for="f-wort">Wort <span class="opt">– Pflicht</span></label>';
-  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.wort) + '"></div>';
-  html += '<div class="field"><label for="f-ueb">Übersetzung <span class="opt">– Pflicht</span></label>';
-  html += '<input type="text" id="f-ueb" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.ueb) + '"></div>';
-  html += '<div class="field"><label for="f-extra">Beispielsatz, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
-  html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '">' + esc(formDraft.extra) + '</textarea></div>';
-  if (editing) {
-    html += '<div class="field"><label for="f-stufe">Wiederholungsstufe</label>';
-    html += '<input type="number" id="f-stufe" min="0" max="' + MAX_STUFE + '" step="1" value="' + editing.stufe + '" inputmode="numeric"></div>';
-  }
-  html += '<div class="form-actions">';
-  html += '<button data-action="submit-card">' + (editing ? "Änderungen speichern" : "Karte hinzufügen") + '</button>';
-  if (editing) html += '<button class="secondary" data-action="cancel-edit">Abbrechen</button>';html += '</div></div>';
+  /* 3.3.1: Hier stand bis 3.3.0 das ganze Formular - drei Felder, eine
+     Ueberschrift und ein Knopf, dauerhaft, auf dem Bildschirm, den man
+     aufruft, um seine Karten ANZUSEHEN. Auf dem Handy fuellte es die erste
+     Bildschirmseite komplett; von der Liste war beim Ankommen nichts zu
+     sehen. Video 1 nennt genau das: ein Bildschirm macht eine Sache, und
+     wer etwas anlegen will, bekommt dafuer ein Blatt. Uebrig bleibt der
+     eine Knopf - die Handlung, die auf diesem Bildschirm dran ist
+     (Satz 1). */
+  html += '<button class="lg full" data-action="karte-neu">' +
+    ikon("plus", "i-sm") + ' Karte hinzuf\u00fcgen</button>';
+  html += '<div style="height:var(--stack)"></div>';
   return html + renderVerwaltenListe(cards, gefuehrt);
 }
 
@@ -6206,10 +6263,17 @@ function kartenListeInhalt() {
     } else {
       html += '<div class="empty__icon">' + ikon("karten", "i-xl") + '</div>';
       html += '<div class="empty__titel">Noch keine Karten</div>';
-      html += '<p class="empty__text">Leg oben deine erste Karte an \u2013 oder spiel einen fertigen ' +
-        'Kartensatz ein.</p>';
-      html += '<div class="empty__aktionen"><button class="secondary" data-action="import-trigger">' +
-        ikon("einspielen", "i-sm") + ' Kartensatz einspielen</button></div>';
+      /* 3.3.1: Stand "Leg OBEN deine erste Karte an" - das stimmte, solange
+         das Formular oben auf der Seite klebte. Jetzt steht die Handlung
+         hier, wo der leere Zustand sie ohnehin braucht (Video 1: ein leerer
+         Bildschirm zeigt auf die eine Handlung, statt sie zu beschreiben). */
+      html += '<p class="empty__text">Fang mit einer eigenen Karte an \u2013 oder spiel einen ' +
+        'fertigen Kartensatz ein.</p>';
+      html += '<div class="empty__aktionen">';
+      html += '<button data-action="karte-neu">' + ikon("plus", "i-sm") + ' Erste Karte anlegen</button>';
+      html += '<button class="secondary" data-action="import-trigger">' +
+        ikon("einspielen", "i-sm") + ' Kartensatz einspielen</button>';
+      html += '</div>';
     }
     html += '</div>';
     return html;
@@ -6239,8 +6303,15 @@ function kartenListeInhalt() {
      Ausschnitt dann genau currentCards().slice(start, ...). */
   listenFenster = { start: start, anzahl: seitenKarten.length };
   if (!bearbeitbar && tokens.length === 0) html += '<p class="hint" style="margin-bottom:10px">' + ikon("schloss", "i-sm") + ' Geführter Kartensatz – die Karten und ihre Reihenfolge stehen fest. Hervorgehoben ist, was freigeschaltet ist.</p>';
-  if (draggable) html += '<p class="hint" style="margin-bottom:10px">Ziehe eine Karte am Griff, um die Reihenfolge zu ändern, oder wähle den Griff mit der Tastatur an und nutze die Pfeiltasten.' +
-    (seiten > 1 ? ' Verschieben über die Seitengrenze hinaus geht nicht – dafür „Verschieben“ im Auswahlmodus.' : '') + '</p>';
+  /* 3.3.1: Stand als drei Zeilen Anleitung dauerhaft ueber der Liste -
+     dieselbe Sorte Erklaerungswand, die der Betreiber in den Einstellungen
+     gemeldet hat. Der Griff ist sichtbar, das Ziehen erklaert sich beim
+     ersten Versuch; die Tastatur-Fassung steht ohnehin im aria-label jedes
+     Griffs, wo sie hingehoert. Uebrig bleibt eine Zeile - und der Satz zur
+     Seitengrenze nur dann, wenn es ueberhaupt mehrere Seiten gibt, denn nur
+     dann kann man in die Grenze laufen. */
+  if (draggable) html += '<p class="hint" style="margin-bottom:10px">Am Griff ziehen ändert die Reihenfolge.' +
+    (seiten > 1 ? ' Über die Seitengrenze hinaus geht das nicht – dafür „Verschieben“ im Auswahlmodus.' : '') + '</p>';
   if (seiten > 1) html += seitenLeiste(ui.kartenSeite, seiten, shownCards.length);
   for (let i = 0; i < seitenKarten.length; i++) {
     const c = seitenKarten[i];
@@ -7142,12 +7213,12 @@ document.body.addEventListener("click", e => {
     /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
        ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
        stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
-    case "tab-lernen": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
-    case "tab-fortschritt": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-lernen": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-fortschritt": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
-    case "tab-verwalten": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
+    case "tab-verwalten": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;
@@ -7163,6 +7234,10 @@ document.body.addEventListener("click", e => {
     case "undo-grade": undoLastGrade(); break;
     case "end-session": endSession(); break;
     case "submit-card": submitCardForm(); break;
+    case "karte-neu":
+      ui.editId = null; resetFormDraft(); ui.karteSheet = true;
+      render(); fokusInsWortfeld(); break;
+    case "karte-sheet-zu": cancelEdit(); break;
     case "edit-card": editCard(btn.dataset.id); break;
     /* D7: Sprung in den fremden Bereich. Nutzt dieselbe Funktion wie der
        Fortschritts-Tab - dort wechselt sie schon seit 1.7.0 den Bereich,

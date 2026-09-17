@@ -164,6 +164,9 @@ const BILDER = [
   { name: "08-einst-sichern",     weg: ['[data-action="einstellungen"]', '[data-action="einst-seite"][data-id="sichern"]'] },
   { name: "09-einst-verlauf",     weg: ['[data-action="einstellungen"]', '[data-action="einst-seite"][data-id="verlauf"]'] },
   { name: "10-verwalten",         weg: ['[data-action="tab-verwalten"]'] },
+  /* Das Karten-Blatt: seit 3.3.1 liegt das Formular nicht mehr fest oben
+     auf dem Verwalten-Bildschirm. */
+  { name: "10b-karte-blatt",      weg: ['[data-action="tab-verwalten"]', '[data-action="karte-neu"]'] },
   /* Die Buehne braucht eine laufende Sitzung - darum ein eigener Eintrag mit
      Klick auf "Lernsession starten". */
   { name: "11-buehne",            weg: ['[data-action="start-session"]'] },
