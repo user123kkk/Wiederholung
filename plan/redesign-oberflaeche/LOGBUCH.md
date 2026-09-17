@@ -4,6 +4,42 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — TikTok-Hinweis zur Onboarding-Reihenfolge nachgeprüft: Reihenfolge bleibt
+
+**Geändert:** keine Code-Datei — reine Prüfung, ergänzt den Eintrag darunter.
+
+**Entscheidung:** Der Eintrag darunter beruhte nur auf dem transkribierten
+Text und war unvollständig. Der Betreiber hat danach die Bildschirmfotos aus
+demselben Video nachgereicht: gezeigt werden Beispiele aus fremden Apps
+(u. a. Fahrdienst, Ernährungs-Tracker, Diktier-Tastatur), die alle erst eine
+Frage stellen oder etwas Konkretes abfragen, bevor der Konto-Anlegen-Bildschirm
+kommt — nie umgekehrt, plus eine (nicht nachprüfbare) Funnel-Grafik des
+Video-Autors zur eigenen App.
+
+Damit war klar: der Mechanismus dahinter deckt sich mit einer bereits
+bestehenden, aber bisher nicht umgesetzten Linie aus diesem Strang selbst —
+`PRINZIPIEN.md:46` (IKEA-/Endowment-Effekt: „Erste eigene Karte vor dem Konto
+anlegen lassen") und der Landingpage-Text „Dein Stoff, nicht unserer"
+(Fassung A, `landing-page-strategie/STRATEGIE.md`). Nachgesehen im Code: Die
+App hält dieses Versprechen technisch nicht ein. „Konto anlegen" ist Schritt 1
+von 2 (`app.js:4245-4247`), die erste Karte kommt laut Text erst danach
+(`app.js:4182`: „Danach geht es gleich weiter zu deiner ersten Karte."), als
+leerer Zustand mit eigenem Knopf (`app.js:6505`).
+
+Vorschlag war, die erste Karte (Wort + Übersetzung, bestehendes
+`formDraft`-Feld) vor „Konto anlegen" zu stellen — ohne neue Firestore-Regeln,
+da geschrieben weiterhin erst nach der Anmeldung wird, der Entwurf davor rein
+lokal bliebe. **Betreiber-Entscheidung: nein, aktuelle Reihenfolge bleibt.**
+Kein Bau.
+
+**Offen:** Der Widerspruch zwischen Landingpage-Versprechen („Dein Stoff,
+nicht unserer") und tatsächlichem Ablauf (Konto vor erster Karte) bleibt
+damit bestehen — bewusst, auf Betreiber-Entscheidung, nicht übersehen.
+**Nächster Schritt:** keiner hier. Käme dieselbe Frage später wieder auf, gilt
+diese Entscheidung als bereits getroffen, nicht erneut zu prüfen.
+
+---
+
 ### 2026-09-17 — TikTok-Hinweis zur Onboarding-Reihenfolge geprüft: trifft nicht zu
 
 **Geändert:** keine Code-Datei — reine Prüfung.
