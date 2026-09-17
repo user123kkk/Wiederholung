@@ -4,6 +4,35 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — TikTok-Hinweis zur Onboarding-Reihenfolge geprüft: trifft nicht zu
+
+**Geändert:** keine Code-Datei — reine Prüfung.
+**Entscheidung:** Betreiber hat ein TikTok-Video eingebracht (Transkript,
+Reihe „Mistakes from building 4 apps", Punkt 5/10). Kernaussage: den
+Anmeldebildschirm hinter das Onboarding stellen statt davor — im Video hat
+das Vertauschen die Sign-up-Konversion um 40 % erhöht, weil ein Konto nach
+bereits investierter Zeit im Onboarding klein wirkt.
+
+Geprüft gegen den bestehenden Flow: `landing.html` (Problem → Lösung,
+Konzept-Abschnitt 4.7) steht bereits **vor** der Registrierung — Entscheidung
+vom 12.09.2026 (`PLAN.md`, vormals offene Frage 2). Der Knopf „Konto anlegen
+und anfangen" (`landing.html:508`, `landing.html:681`) führt von dort zu
+`index.html`/Registrierung, nicht umgekehrt. Der im Video beschriebene Fehler
+(Sign-up-Bildschirm vor dem Onboarding) liegt hier also nicht vor.
+
+Eine interaktive In-App-Tour vor der Kontoanlage gibt es nicht, nur die
+statische Landingpage — das nachzubauen wäre keine Umstellung der
+Reihenfolge, sondern eine neue Funktion (Demo-/Gastmodus ohne Konto). Das
+liefe gegen die in Phase 1 gehärteten Firestore-Regeln (jedes Konto liest und
+schreibt ausschließlich unter sich selbst) und damit über das hinaus, was
+dieser Strang an der Hülle ändern darf (`AUFTRAG.md`: keine erfundenen
+Features aus Videos).
+**Offen:** nichts — der Punkt trifft nicht zu, kein Bau nötig.
+**Nächster Schritt:** keiner hier — der Strang bleibt im Ruhezustand wie im
+Eintrag darunter festgehalten.
+
+---
+
 ### 2026-09-17 — Block 10 am echten Handy verifiziert
 
 **Geändert:** keine Code-Datei — reine Verifikation.
