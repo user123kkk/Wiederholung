@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.4.5";
+const APP_VERSION = "3.4.6";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -486,6 +486,22 @@ function ikon(name, cls) {
   return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" ' +
     'aria-hidden="true" focusable="false">' + (ICON_PFADE[name] || "") + '</svg>';
 }
+/* Marken-Logos fuer die Anmeldeknoepfe (offene Frage 13). Anders als die
+   uebrigen Symbole (ICON_PFADE, eine Farbe = currentColor) tragen diese ihre
+   eigenen Markenfarben fest - ein Google-"G" in Knopf-Textfarbe waere nicht
+   wiederzuerkennen. Apple bleibt einfarbig (currentColor), so wie der
+   Anbieter sein Zeichen selbst vorschreibt. */
+const OAUTH_LOGOS = {
+  google: '<svg class="oauth-logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+    '<path fill="#4285F4" stroke="none" d="M23.52 12.27c0-.82-.07-1.6-.2-2.36H12v4.46h6.47c-.28 1.5-1.13 2.77-2.4 3.62v3h3.88c2.27-2.09 3.57-5.17 3.57-8.72z"/>' +
+    '<path fill="#34A853" stroke="none" d="M12 24c3.24 0 5.96-1.07 7.95-2.91l-3.88-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.95H1.27v3.1C3.25 21.3 7.31 24 12 24z"/>' +
+    '<path fill="#FBBC05" stroke="none" d="M5.27 14.29A7.2 7.2 0 0 1 4.89 12c0-.8.14-1.57.38-2.29v-3.1H1.27A11.98 11.98 0 0 0 0 12c0 1.93.46 3.76 1.27 5.39l4-3.1z"/>' +
+    '<path fill="#EA4335" stroke="none" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.7 1.27 6.61l4 3.1C6.22 6.86 8.87 4.75 12 4.75z"/>' +
+    '</svg>',
+  apple: '<svg class="oauth-logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+    '<path fill="currentColor" stroke="none" d="M16.36 1.43c0 1.14-.42 2.2-1.24 3.05-.87.9-2.13 1.63-3.34 1.51-.15-1.16.44-2.34 1.19-3.11.83-.87 2.23-1.5 3.36-1.45.02.17.03.34.03.5zM20.5 17.2c-.42.98-.62 1.42-1.16 2.29-.75 1.21-1.81 2.72-3.12 2.73-1.17.02-1.47-.76-3.06-.75-1.58.01-1.92.76-3.09.74-1.31-.02-2.31-1.38-3.06-2.59-2.1-3.4-2.32-7.39-1.02-9.52.92-1.51 2.38-2.4 3.75-2.4 1.39 0 2.27.77 3.42.77 1.12 0 1.8-.77 3.42-.77 1.22 0 2.51.67 3.43 1.82-3.02 1.66-2.53 5.98.49 7.68z"/>' +
+    '</svg>'
+};
 /* Der Merken-Stern: eigenes Symbol statt ☆/⭐, weil er sich beim Antippen
    sichtbar veraendern soll (Umriss -> gefuellt) statt nur den Emoji-
    Zeichencode zu tauschen. pop=true spielt einmalig die Pop-Animation ab -
@@ -1919,7 +1935,11 @@ const AUTH_ERRORS = {
   "auth/weak-password": "Passwort zu schwach – mindestens 6 Zeichen.",
   "auth/missing-password": "Bitte ein Passwort eingeben.",
   "auth/too-many-requests": "Zu viele Versuche – bitte kurz warten und erneut probieren.",
-  "auth/network-request-failed": "Keine Verbindung – bitte Internet prüfen."
+  "auth/network-request-failed": "Keine Verbindung – bitte Internet prüfen.",
+  "auth/popup-closed-by-user": "Fenster wurde geschlossen, bevor die Anmeldung fertig war.",
+  "auth/cancelled-popup-request": "Es lief schon ein Anmeldefenster – bitte noch einmal versuchen.",
+  "auth/account-exists-with-different-credential": "Zu dieser E-Mail gibt es schon ein Konto mit einer anderen Anmeldeart (z. B. E-Mail/Passwort). Bitte darüber anmelden.",
+  "auth/unauthorized-domain": "Diese Adresse ist für die Anmeldung nicht freigeschaltet."
 };
 function authErrorText(e) {
   return (e && AUTH_ERRORS[e.code]) || "Das hat nicht geklappt (" + (e && e.code ? e.code : "unbekannter Fehler") + ").";
@@ -1937,6 +1957,35 @@ async function doLogin() {
     await fb.signInWithEmailAndPassword(auth, email, pass);
   } catch (e) {
     ui.authError = authErrorText(e);
+  }
+  ui.authBusy = false;
+  render();
+}
+/* Offene Frage 13 (plan/PLAN.md): Google und Apple als zusaetzliche
+   Anmeldearten. Beide laufen ueber dasselbe Popup-Verfahren von Firebase
+   Authentication - E-Mail-Bestaetigung entfaellt hier, da der jeweilige
+   Anbieter die E-Mail bereits bestaetigt hat (emailVerified kommt so vom
+   Anbieter). Ein Abbruch (Fenster zugemacht) ist kein Fehler, den man dem
+   Benutzer als Problem zeigen muss - AUTH_ERRORS deckt den Fall ruhig ab. */
+async function doGoogleLogin() {
+  ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+  try {
+    await fb.signInWithPopup(auth, new fb.GoogleAuthProvider());
+  } catch (e) {
+    if (e && e.code !== "auth/popup-closed-by-user") ui.authError = authErrorText(e);
+  }
+  ui.authBusy = false;
+  render();
+}
+async function doAppleLogin() {
+  ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+  try {
+    const provider = new fb.OAuthProvider("apple.com");
+    provider.addScope("email");
+    provider.addScope("name");
+    await fb.signInWithPopup(auth, provider);
+  } catch (e) {
+    if (e && e.code !== "auth/popup-closed-by-user") ui.authError = authErrorText(e);
   }
   ui.authBusy = false;
   render();
@@ -4289,6 +4338,22 @@ function renderAuth() {
     html += '<button class="full' + laed + '" data-action="reset"' + busy + '>Link zusenden</button>';
   }
   html += '</div>';
+
+  /* Offene Frage 13: Google/Apple als zusaetzliche Anmeldearten, nur dort
+     sinnvoll, wo tatsaechlich ein Konto entsteht bzw. man sich anmeldet -
+     beim Zuruecksetzen (m === "reset") gibt es kein Passwort, das ein
+     Anbieter ersetzen koennte. Bewusst .secondary statt eines gefuellten
+     Knopfs: Es bleibt bei EINER gefuellten Flaeche pro Bildschirm
+     (styles.css Abschnitt 6), das ist weiterhin "Anmelden"/"Konto anlegen". */
+  if (m !== "reset") {
+    html += '<div class="auth-trenner"><span>oder</span></div>';
+    html += '<div class="auth-anbieter">';
+    html += '<button type="button" class="secondary full' + laed + '" data-action="google-login"' + busy + '>' +
+      OAUTH_LOGOS.google + '<span>Mit Google anmelden</span></button>';
+    html += '<button type="button" class="secondary full' + laed + '" data-action="apple-login"' + busy + '>' +
+      OAUTH_LOGOS.apple + '<span>Mit Apple anmelden</span></button>';
+    html += '</div>';
+  }
   html += '</div>';
 
   /* Die Nebenwege stehen unter der Karte, nicht darin - sie gehoeren nicht
@@ -7395,6 +7460,8 @@ document.body.addEventListener("click", e => {
     case "login": doLogin(); break;
     case "register": doRegister(); break;
     case "reset": doReset(); break;
+    case "google-login": doGoogleLogin(); break;
+    case "apple-login": doAppleLogin(); break;
     case "mode-login": ui.authMode = "login"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
     case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
     case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;

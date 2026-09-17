@@ -270,7 +270,7 @@ hängt, nicht begonnen.
 | ~~5~~ | ~~Welches Repo ist maßgeblich?~~ | **erledigt 12.09.2026** — siehe „Wo der Code liegt" oben |
 | 6 | Gilt `KONZEPT.md` §7 („App-Funktionen nicht anfassen") weiter, oder darf der Redesign auch die Bedienung ändern? | für Strang `redesign-oberflaeche` **gelockert** (16.09.2026); §7 dauerhaft anpassen bleibt offen — siehe unten |
 | ~~12~~ | ~~Farben: Hintergrund heller, Knopf-Hover kein reines Weiß mehr?~~ | **erledigt 17.09.2026 (v3.4.4)** — siehe unten |
-| 13 | **Anmelden mit Google (oder Apple)?** Bild 22 der Sammlung empfiehlt es. Dafür muss in der Firebase-Konsole ein Anbieter eingeschaltet **und** die Datenschutzerklärung ergänzt werden (Daten gehen dann auch an Google/Apple). | nichts — wird ohne Entscheidung nicht gebaut |
+| ~~13~~ | ~~Anmelden mit Google (oder Apple)?~~ | **erledigt 17.09.2026** — siehe unten |
 
 **Geklärt am 12.09.2026 (vormals offene Frage 1).** Entscheidung des
 Betreibers: **Firebase Hosting**, nicht GitHub Pages, nicht Netlify/Vercel —
@@ -340,8 +340,18 @@ reines Weiß, und dadurch automatisch auch im hellen Thema richtig (dort
 sprang der Knopf-Hover vorher unbemerkt auf reines Weiß, obwohl der Knopf
 dort dunkel ist — ein Nebenbefund, kein eigener Auftrag). Im Browser mit
 `getComputedStyle` geprüft: Hover-Hintergrund liegt bei ca. `rgb(246,245,239)`,
-nicht bei `rgb(255,255,255)`. Frage 13 (Google-/Apple-Anmeldung) bleibt auf
-Betreiber-Wunsch zurückgestellt.
+nicht bei `rgb(255,255,255)`.
+
+**Geklärt am 17.09.2026 (Frage 13, v3.4.6).** Betreiber: „google und ja"
+(Google und Apple, umsetzen). Anmeldebildschirm hat jetzt zusätzlich zu
+E-Mail/Passwort zwei Knöpfe „Mit Google anmelden" / „Mit Apple anmelden"
+über Firebase-Authentication-Popup, dieselbe Datenbank und dieselben
+Zugriffsregeln wie bisher. Details siehe
+[`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md),
+Eintrag vom 17.09.2026, und `CHANGELOG.md` 3.4.6. **Vom Code allein nicht
+erledigt:** In der Firebase-Konsole müssen die beiden Anbieter erst
+eingeschaltet werden (Betreiber-Aufgabe, siehe Logbuch-Eintrag) – ohne
+diesen Schritt zeigen die neuen Knöpfe nur eine Fehlermeldung.
 
 Die Phasen 0–6 hängen an keiner offenen Frage mehr und können durchgearbeitet
 werden.

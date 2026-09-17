@@ -1,3 +1,11 @@
+## 3.4.6 – 17. September 2026
+
+### Neu (offene Frage 13: Anmeldung mit Google und Apple)
+
+**Auf dem Anmelde- und Registrieren-Bildschirm stehen jetzt zwei weitere Knöpfe: „Mit Google anmelden" und „Mit Apple anmelden", getrennt durch eine Linie von E-Mail und Passwort.** Beide laufen über dasselbe Firebase-Authentication-Popup-Verfahren wie die bestehende E-Mail-Anmeldung – dieselbe Datenbank, dieselben Zugriffsregeln, dasselbe Nutzerkonto (`users/{uid}`). Ein Konto, das über Google oder Apple entsteht, braucht keine zusätzliche Bestätigungs-E-Mail: Beide Anbieter haben die E-Mail-Adresse bereits selbst bestätigt, das übernimmt Firebase automatisch. Bricht jemand das Anmeldefenster ab, erscheint keine Fehlermeldung – das ist kein Fehler, sondern ein bewusster Rückzieher. Betrifft nur den Anmeldebildschirm; an Lernlogik, Datenbank-Regeln oder bestehenden E-Mail-Konten ändert sich nichts.
+
+**Voraussetzung, die nur der Betreiber selbst erledigen kann:** In der Firebase-Konsole müssen die Anbieter Google und Apple unter Authentication → Sign-in method erst eingeschaltet werden – ohne das zeigen die neuen Knöpfe nur eine Fehlermeldung. Für Apple zusätzlich ein Apple-Developer-Konto samt Service-ID/Key (siehe `plan/redesign-oberflaeche/LOGBUCH.md`, Eintrag vom 17.09.2026).
+
 ## 3.4.5 – 17. September 2026
 
 ### Behoben (Schreibfehler nach veraltetem Anmelde-Ausweis)

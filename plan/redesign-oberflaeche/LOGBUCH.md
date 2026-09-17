@@ -4,6 +4,91 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Frage 13 umgesetzt: Anmeldung mit Google und Apple (v3.4.6)
+
+**Geändert:**
+- `app.js:19` `APP_VERSION` auf `3.4.6`.
+- `app.js` (`OAUTH_LOGOS`, direkt nach `ikon()`) neue Marken-Logos für die
+  beiden Knöpfe.
+- `app.js` (`AUTH_ERRORS`) neue Fehlertexte für abgebrochenes
+  Anmeldefenster, doppeltes Popup, Konto mit anderer Anmeldeart,
+  nicht freigeschaltete Domain.
+- `app.js` (`doGoogleLogin`, `doAppleLogin`, direkt nach `doLogin`) neue
+  Funktionen über `fb.signInWithPopup` / `fb.GoogleAuthProvider` /
+  `fb.OAuthProvider("apple.com")`.
+- `app.js` (`renderAuth`) zwei neue Knöpfe unter einer Trennlinie „oder“,
+  nur bei `m !== "reset"` (Anmelden/Konto anlegen, nicht beim
+  Passwort-Zurücksetzen).
+- `app.js` (Klick-Delegation) zwei neue `data-action`-Fälle:
+  `google-login`, `apple-login`.
+- `styles.css` (nach `.form-actions`) `.auth-trenner`, `.auth-anbieter`,
+  `.oauth-logo` — eigene Klasse für die Logos statt `.i`, weil deren
+  `fill:none`/`stroke:currentColor` das mehrfarbige Google-Zeichen
+  unkenntlich und das einfarbige Apple-Zeichen unsichtbar gemacht hätte.
+- `sw.js` `CACHE_NAME` auf `adrabic-3.4.6`.
+- `CHANGELOG.md` neuer Eintrag 3.4.6.
+- `datenschutzerklaerung.html` Abschnitt 4 (neuer Absatz zu Google/Apple),
+  Abschnitt 7 (Empfänger, ergänzt um die beiden Anbieter), Datum am Fuß auf
+  17.09.2026.
+- `plan/PLAN.md` Frage 13 als erledigt markiert.
+
+**Entscheidung:** Betreiber-Antwort auf die Rückfrage zu Frage 13: „google
+und ja“ — beide Anbieter, nicht nur Google. Beide laufen über
+`signInWithPopup`, nicht über einen Redirect: Popup lässt die App-Seite im
+Hintergrund unverändert bestehen (kein Neuladen, kein Verlust eines
+unfertigen Formularfelds), Redirect wäre nur nötig, wenn Popups technisch
+blockiert würden (z. B. eingebettete Webview) — dafür gibt es hier keinen
+Hinweis. Ein abgebrochenes Popup (`auth/popup-closed-by-user`) zeigt bewusst
+keinen Fehler, da ein Zurückweichen keine Störung ist. E-Mail-Bestätigung
+entfällt für beide Anbieter, weil Firebase deren eigene Bestätigung bereits
+in `email_verified` überträgt — dieselbe Firestore-Regel
+(`firestore.rules:67`) prüft das anbieterunabhängig, keine Regeländerung
+nötig. Kein neues Firestore-Feld, kein neuer Rechtstext-Abschnitt, dieselbe
+`users/{uid}`-Struktur wie bei E-Mail/Passwort.
+
+**Offen:** Ohne die Firebase-Konsolen-Einstellung (siehe unten, Betreiber-
+Aufgabe) zeigen beide Knöpfe nur eine Fehlermeldung — das ist kein Bug,
+sondern der erwartete Zustand, bis der Betreiber den jeweiligen Anbieter
+einschaltet. Apple zusätzlich: ohne Apple-Developer-Konto lässt sich der
+Anbieter in der Firebase-Konsole gar nicht erst konfigurieren.
+
+**Was der Betreiber noch tun muss:**
+1. **Google:** In der [Firebase-Konsole](https://console.firebase.google.com/)
+   → Projekt „lernkarte-925c2“ → *Authentication* → Reiter *Sign-in method*
+   → *Google* anklicken → *Aktivieren* umlegen → Projekt-Support-E-Mail
+   auswählen (steht meist schon da) → *Speichern*. Kein weiterer Account
+   nötig, das ist derselbe Google-Account wie die Firebase-Konsole selbst.
+   Woran man merkt, dass es geklappt hat: Der Google-Knopf auf der
+   Anmeldeseite öffnet ein echtes Google-Auswahlfenster statt der Meldung
+   „Das hat nicht geklappt (auth/operation-not-allowed)“.
+2. **Apple (nur falls gewünscht — deutlich aufwendiger als Google):**
+   Braucht ein [Apple-Developer-Konto](https://developer.apple.com/) (99 $/Jahr).
+   Darin: *Certificates, Identifiers & Profiles* → *Identifiers* → eine
+   *Services ID* anlegen (z. B. `com.adrabic.wiederholung.signin`), darin
+   *Sign in with Apple* aktivieren und als Rückkehr-Adresse die von der
+   Firebase-Konsole angezeigte URL eintragen (Format
+   `https://lernkarte-925c2.firebaseapp.com/__/auth/handler`). Dazu einen
+   *Key* mit aktiviertem „Sign in with Apple“ erzeugen und herunterladen
+   (nur einmal möglich). In der Firebase-Konsole → *Authentication* →
+   *Sign-in method* → *Apple* → *Aktivieren* → Services-ID, Team-ID,
+   Key-ID und den Inhalt der heruntergeladenen Schlüsseldatei eintragen →
+   *Speichern*. Woran man merkt, dass es geklappt hat: Der Apple-Knopf
+   öffnet ein echtes Apple-Anmeldefenster statt derselben Fehlermeldung wie
+   oben.
+3. Nach jedem der beiden Schritte einmal in einem privaten
+   Browserfenster `https://lernkarte-925c2.web.app/` öffnen und den
+   jeweiligen Knopf ausprobieren, bevor die Änderung als abgeschlossen
+   gilt.
+
+**Nächster Schritt:** keiner hier, solange der Betreiber die Konsolen-
+Schritte nicht zurückmeldet. Danach: einmal am echten Gerät mit einem
+frischen Google- bzw. Apple-Konto durchklicken (Bild 22 der Sammlung
+betraf nur Google — Apple war Betreiber-Zusatzwunsch aus diesem Gespräch,
+in `BILDER-BEFUND.md` nicht referenziert, deshalb hier gesondert
+vermerkt).
+
+---
+
 ### 2026-09-17 — TikTok-Hinweis zur Onboarding-Reihenfolge nachgeprüft: Reihenfolge bleibt
 
 **Geändert:** keine Code-Datei — reine Prüfung, ergänzt den Eintrag darunter.
