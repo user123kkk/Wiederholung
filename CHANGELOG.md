@@ -1,3 +1,22 @@
+## 3.3.0 – 17. September 2026
+
+### Geändert
+
+**Die Navigationsleiste schwebt.** Video 1 beschreibt die heutige mobile Navigation ausdrücklich so — *„nowadays typically floating"* — und der Unterschied ist nicht Schmuck: Eine Leiste, die an der Unterkante klebt, gehört optisch zum **Gerät**; eine, die darüber liegt, gehört zur **App**, und der Inhalt läuft sichtbar darunter durch. Das war die Stelle, an der die App auf jedem einzelnen Bildschirm am deutlichsten anders aussah als das, was der Betreiber im Video gesehen hat.
+
+Die Leiste liegt jetzt mit `--space-3` Abstand zu allen drei Kanten, ist vollrund, trägt einen Rand und einen Schatten und hebt sich mit einer kräftigeren Fläche ab — sie schneidet den Inhalt nicht mehr ab, also muss sie sich selbst abheben. Der Inhalt bekommt entsprechend mehr Luft nach unten, und der Toast rückt mit. Die Fassung als Spalte links (ab 900px) nimmt alles davon zurück: Dort ist die Navigation kein schwebendes Ding, sondern der Rand des Fensters.
+
+### Behoben
+
+- **Die Zähl-Animation im Fortschritt ignorierte `prefers-reduced-motion`.** Die `styles.css` setzt für abbestellte Bewegung jede Animation auf 0,01 ms — das greift aber nur bei CSS. Die Zahl unter „Diese Woche im Vergleich" zählt in JavaScript hoch und lief deshalb als **einzige** Bewegung der App weiter, auch für Leute, die das ausdrücklich abgestellt haben. Gefunden, weil der Probelauf an genau dieser Stelle hängenblieb: Die wachsende Zahl ändert die Seitenhöhe, und der Browser hielt kein Element mehr für „stabil".
+
+### Arbeitsmittel
+
+- Der Probelauf läuft jetzt mit abbestellter Bewegung (`reducedMotion`). Ein Standbild kann eine Animation ohnehin nicht zeigen, und solange etwas läuft, wartet jeder Klick ins Leere.
+- Er klickt außerdem direkt im DOM statt über den Zeiger. Grund: Vor einem echten Klick prüft der Browser-Treiber, ob das Element sichtbar, unbewegt und unverdeckt ist, und scrollt es dafür ins Bild — die feste AppBar verdeckt es danach zuverlässig. Die App hört ohnehin auf **einen** delegierten Klick-Listener am `body`. Was dieser Weg nicht mehr prüft: ob ein Element im echten Gebrauch erreichbar ist. Dafür ist der Probelauf auch nicht da — er zeigt Gestalt.
+
+---
+
 ## 3.2.3 – 17. September 2026
 
 ### Behoben

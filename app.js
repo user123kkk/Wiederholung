@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.2.3";
+const APP_VERSION = "3.3.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -3839,12 +3839,23 @@ app.addEventListener("pointercancel", wischEnde);
    sich den zuletzt angezeigten Wert: ändert er sich nicht (jedes render()
    ruft das hier erneut auf), läuft die Animation nicht jedesmal neu an. */
 function tickCountups() {
+  /* 3.3.0: Wer Bewegung abbestellt hat, bekam sie hier trotzdem. Die
+     styles.css setzt fuer prefers-reduced-motion jede Animation auf 0,01ms
+     (Abschnitt 3) - das greift aber nur bei CSS. Diese Zahl zaehlt in
+     JavaScript hoch und lief deshalb als einzige Bewegung der App weiter.
+     Gefunden, weil der Probelauf an dieser Stelle haengenblieb: Die
+     waehrend des Zaehlens wachsende Zahl aendert die Seitenhoehe, und der
+     Browser hielt kein Element mehr fuer "stabil". */
+  let ruhig = false;
+  try { ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
+  catch (e) {}
   document.querySelectorAll("[data-countup]").forEach(el => {
     const ziel = Number(el.dataset.countup);
     if (el.dataset.countedTo === String(ziel)) return;
     el.dataset.countedTo = String(ziel);
     const strong = el.querySelector("strong");
     if (!strong) return;
+    if (ruhig) { strong.textContent = String(ziel); return; }
     const t0 = performance.now(), dauer = 480;
     function frame(t) {
       const p = Math.min(1, (t - t0) / dauer);

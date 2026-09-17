@@ -513,7 +513,10 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   padding:
     calc(var(--appbar-h) + var(--sat) + var(--space-5))
     calc(var(--gutter) + var(--sar))
-    calc(var(--nav-h) + var(--sab) + var(--space-8))
+    /* Leiste + ihr Abstand zur Unterkante + Luft, damit das letzte Element
+       nicht direkt an ihr klebt. Seit 3.3.0 schwebt sie, der Abstand zur
+       Unterkante zaehlt also mit. */
+    calc(var(--nav-h) + var(--sab) + var(--space-3) + var(--space-7))
     calc(var(--gutter) + var(--sal));
   animation: enter-fade var(--dur-fast) var(--ease-out) both;
 }
@@ -598,18 +601,38 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
    EIN Block, zwei Erscheinungen: unten am Handy, links am Desktop. Die
    Position steckt ausschließlich hier — die Entscheidung ist damit jederzeit
    umkehrbar, ohne Markup oder JavaScript anzufassen. */
+/* 3.3.0: Die Leiste schwebt. Video 1 beschreibt die heutige mobile Navigation
+   ausdruecklich so ("nowadays typically floating"), und der Unterschied ist
+   nicht Schmuck: Eine Leiste, die an der Unterkante klebt, gehoert optisch
+   zum Geraet - eine, die darueber liegt, gehoert zur App und laesst den
+   Inhalt sichtbar darunter durchlaufen. Das ist zugleich die Stelle, an der
+   die App am deutlichsten anders aussah als das, was der Betreiber im Video
+   gesehen hat.
+
+   Die Fassung als Spalte links (Abschnitt 17, ab 900px) nimmt alles davon
+   wieder zurueck - dort ist die Navigation kein schwebendes Ding, sondern
+   eine Wand. */
 .nav {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-nav);
-  padding-bottom: var(--sab);
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
-  -webkit-backdrop-filter: saturate(180%) blur(16px);
-  backdrop-filter: saturate(180%) blur(16px);
-  border-top: 1px solid var(--border-subtle);
+  position: fixed; z-index: var(--z-nav);
+  left: calc(var(--space-3) + var(--sal));
+  right: calc(var(--space-3) + var(--sar));
+  bottom: calc(var(--space-3) + var(--sab));
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  /* Kraeftiger als die alte Leiste: Sie liegt jetzt UEBER dem Inhalt statt
+     ihn abzuschneiden, und muss sich deshalb selbst abheben. */
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: var(--kante), var(--shadow-lg);
+  /* Der aktive Reiter ist eine eigene Flaeche mit Rundung - ohne das
+     liefe er an den Ecken ueber die Rundung der Leiste hinaus. */
+  overflow: hidden;
 }
 .nav__tabs {
   display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
   height: var(--nav-h);
-  padding: 0 calc(var(--sal)) 0 calc(var(--sar));
+  padding: 0;
 }
 .nav__tab {
   position: relative;
@@ -638,7 +661,9 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   position: absolute; top: 8px; left: 50%; margin-left: 8px;
   width: 6px; height: 6px; border-radius: var(--r-full);
   background: var(--accent);
-  box-shadow: 0 0 0 2px var(--bg);
+  /* Der Ring trennt den Punkt vom Symbol darunter. Seit die Leiste schwebt,
+     liegt er auf --surface, nicht mehr auf --bg. */
+  box-shadow: 0 0 0 2px var(--surface);
 }
 /* Am Handy versteckt, am Desktop ist das der Rail-Inhalt. */
 .nav__brand, .nav__bereiche, .nav__foot { display: none; }
@@ -2007,7 +2032,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    gleichzeitig, immer ÜBER der Navigation. */
 .toast-wrap {
   position: fixed; left: 50%; transform: translateX(-50%);
-  bottom: calc(var(--nav-h) + var(--sab) + var(--space-4));
+  bottom: calc(var(--nav-h) + var(--sab) + var(--space-3) + var(--space-4));
   z-index: var(--z-toast);
   width: max-content; max-width: calc(100vw - 2 * var(--space-5));
   pointer-events: none;
@@ -2183,9 +2208,12 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
     --appbar-h: 56px;
   }
 
-  /* Aus der Leiste unten wird die Spalte links. */
+  /* Aus der schwebenden Leiste wird die Spalte links. Alles, was sie
+     schweben laesst, wird hier zurueckgenommen - eine Spalte ist kein
+     Ding, das ueber dem Inhalt liegt, sondern der Rand des Fensters. */
   .nav {
-    top: 0; bottom: 0; right: auto;
+    top: 0; bottom: 0; right: auto; left: 0;
+    border-radius: 0; box-shadow: none; overflow: visible;
     width: var(--rail-w);
     padding: calc(var(--sat) + var(--space-5)) var(--space-3)
              calc(var(--sab) + var(--space-4)) calc(var(--space-3) + var(--sal));

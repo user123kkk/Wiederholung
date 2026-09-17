@@ -190,7 +190,15 @@ const browser = await chromium.launch({ executablePath: process.env.PROBE_CHROMI
    alten Stand oder bleibt im Ladebildschirm haengen. */
 const kontext = await browser.newContext({
   viewport: { width: 390, height: 844 }, deviceScaleFactor: 2,
-  serviceWorkers: "block"
+  serviceWorkers: "block",
+  /* Bewegung aus. Zwei Gruende: Ein Standbild kann eine Animation ohnehin
+     nicht zeigen, und solange etwas laeuft, haelt der Browser kein Element
+     fuer "stabil" und jeder Klick wartet ins Leere. Die App nimmt die
+     Einstellung ernst (styles.css Abschnitt 3 und tickCountups) - der
+     Probelauf sieht damit denselben Bildschirm wie jemand, der Bewegung
+     abbestellt hat, und das ist fuer eine Pruefung der Gestalt genau
+     richtig. */
+  reducedMotion: "reduce"
 });
 const seite = await kontext.newPage();
 
@@ -217,8 +225,24 @@ for (const bild of BILDER) {
     continue;
   }
   for (const klick of bild.weg) {
-    await seite.click(klick, { timeout: 5000 });
-    await seite.waitForTimeout(200);
+    /* Direkter DOM-Klick statt seite.click(). Grund: Playwright prueft vor
+       einem echten Klick, ob das Element sichtbar, unbewegt und nicht
+       verdeckt ist - und scrollt es dafuer ins Bild. Beides geht hier
+       schief: Die AppBar liegt fest oben und verdeckt danach genau das
+       Element, und solange irgendeine Bewegung laeuft, gilt nichts als
+       "stabil". Die App hoert ohnehin auf EINEN delegierten Klick-Listener
+       am body (siehe README), ein synthetischer Klick kommt dort genauso an.
+       Was dieser Weg NICHT mehr prueft: ob ein Element im echten Gebrauch
+       ueberhaupt erreichbar ist. Dafuer ist der Probelauf auch nicht da -
+       er zeigt Gestalt. */
+    const da = await seite.$(klick);
+    if (!da) {
+      console.log("✗", bild.name, "- nicht gefunden:", klick);
+      fehler.push(bild.name + ": " + klick + " fehlt");
+      break;
+    }
+    await da.evaluate(el => el.click());
+    await seite.waitForTimeout(250);
   }
   await seite.waitForTimeout(250);
   await seite.screenshot({ path: ZIEL + bild.name + ".png", fullPage: true });
