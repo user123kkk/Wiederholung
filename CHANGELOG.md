@@ -1,3 +1,9 @@
+## 3.4.8 – 17. September 2026
+
+### Behoben (Google/Apple-Login schlug mit auth/internal-error fehl)
+
+**Beide neuen Anmelde-Knöpfe zeigten „Das hat nicht geklappt (auth/internal-error)" – Google, obwohl in der Firebase-Konsole aktiviert, und Apple, obwohl dort noch gar nicht eingerichtet.** Ursache war die scharf geschaltete Content-Security-Policy aus Phase 4 (12. September): Sie erlaubte bewusst kein `frame-src`, weil es zu dem Zeitpunkt noch keinen Popup-Login gab. Firebase Authentication braucht für `signInWithPopup` aber ein verstecktes Hilfs-Iframe auf der eigenen `authDomain`, das die Kommunikation zwischen Hauptfenster und Anmelde-Popup übernimmt – unabhängig vom gewählten Anbieter, weshalb Google und Apple identisch fehlschlugen. Die CSP erlaubt dieses eine Iframe jetzt gezielt (`frame-src https://lernkarte-925c2.firebaseapp.com`), sonst unverändert streng.
+
 ## 3.4.7 – 17. September 2026
 
 ### Behoben (Google/Apple-Knöpfe riesig statt kompakt)

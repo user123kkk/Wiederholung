@@ -433,3 +433,46 @@ genau aus der hängenden Sitzung nötig, nicht aus einem Nachtest.
 **Nächster Schritt:** Unverändert Phase 6 abgeschlossen; kein weiterer Schritt
 hier offen. Bei erneuter Meldung „Ladebildschirm hängt" zuerst prüfen, ob sie
 sich reproduzieren lässt, bevor spekulativ am Boot-Code weitergebaut wird.
+
+### 2026-09-17 — CSP: `frame-src` für Google-/Apple-Anmeldung ergänzt (v3.4.8)
+
+**Geändert:** `firebase.json:57` — neue Direktive
+`frame-src https://lernkarte-925c2.firebaseapp.com;` in die
+Content-Security-Policy eingefügt. `app.js:19` `APP_VERSION` auf `3.4.8`,
+`sw.js` `CACHE_NAME` auf `adrabic-3.4.8`, `CHANGELOG.md` neuer Eintrag.
+
+**Entscheidung:** Nachdem offene Frage 13 (Google-/Apple-Anmeldung, siehe
+`redesign-oberflaeche/LOGBUCH.md`) umgesetzt und der Google-Anbieter in der
+Firebase-Konsole aktiviert war, zeigten **beide** Knöpfe (Google **und**
+Apple, obwohl Apple noch gar nicht in der Konsole aktiviert war) denselben
+Fehler „Das hat nicht geklappt (auth/internal-error)". Das gleiche
+Fehlerbild bei zwei unterschiedlich konfigurierten Anbietern deutete auf
+eine gemeinsame Ursache unterhalb der Provider-Ebene hin, nicht auf ein
+Konsolen-Problem.
+
+Fund beim Nachlesen dieses Logbuchs (Eintrag „CSP scharf geschaltet"): Die
+CSP wurde am 12.09.2026 ausdrücklich **ohne** `frame-src` gebaut, mit der
+Begründung „Login läuft nur über `signInWithEmailAndPassword`, kein
+Google-Popup/Redirect gefunden" — zu dem Zeitpunkt stimmte das noch.
+`fb.signInWithPopup` (neu seit Frage 13) öffnet zwar ein echtes Popup-Fenster
+für die eigentliche Anmeldung (davon ist CSP `frame-src` nicht betroffen),
+lädt aber zusätzlich ein **verstecktes iframe** auf der eigenen Seite
+(`https://<authDomain>/__/auth/iframe`) für die Kommunikation zwischen
+Haupt-Tab und Popup — das ist ein feststehender Teil des Firebase-Auth-JS-SDK
+für **jeden** Popup-basierten Anbieter, weshalb Google und Apple identisch
+fehlschlugen. Ohne erlaubten `frame-src` blockiert die (seit 12.09.2026
+scharf geschaltete) CSP dieses iframe, das SDK bricht mit `auth/internal-error`
+ab, bevor überhaupt eine Anbieter-spezifische Anfrage rausgeht.
+
+Behoben durch Erlauben von `frame-src` für exakt die `authDomain` aus
+`app.js:10` (`lernkarte-925c2.firebaseapp.com`) — keine zusätzliche Domain,
+kein `'self'` nötig, da kein eigenes Iframe auf der Seite verwendet wird.
+
+**Offen:** Bestätigung durch den Betreiber nach erneutem `firebase deploy`,
+dass Google-Login jetzt durchläuft. Apple bleibt zusätzlich blockiert, bis
+der Anbieter in der Firebase-Konsole eingerichtet ist (separater Schritt,
+siehe `redesign-oberflaeche/LOGBUCH.md`).
+
+**Nächster Schritt:** Betreiber deployt erneut und testet „Mit Google
+anmelden" an einem echten Konto. Bei Erfolg ist diese Phase-4-Nacharbeit
+abgeschlossen; kein weiterer CSP-Punkt hier offen.
