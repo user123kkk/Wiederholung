@@ -59,15 +59,12 @@ schlägt fehl, kein `node_modules/`). Der Code-Pfad ist aber identisch zum
 geprüften Namensfeld (dieselbe Render-Logik, dieselben CSS-Klassen, derselbe
 Lösch-Mechanismus beim Tippen) — nur eben nicht am echten Formular gesehen.
 
-**Offen:** Betreiber-Test am echten Handy, angemeldet: leere Karte anlegen
-(nur Wort oder nur Übersetzung ausfüllen) und prüfen, dass das rote Feld samt
-„Bitte ausfüllen" erscheint, der Fokus dorthin springt und die Meldung beim
-Tippen verschwindet. Erst danach gilt Block 9 als wirklich fertig, nicht nur
-„im Code fertig".
+**Verifikation am echten Handy:** Betreiber hat das Karten-Formular angemeldet
+getestet ("passt. weiter") — rotes Feld, „Bitte ausfüllen", Fokus-Sprung und
+Verschwinden beim Tippen funktionieren wie vorgesehen. **Block 9 ist damit
+✅ fertig und verifiziert**, nicht nur „im Code fertig".
 
-**Nächster Schritt:** Block 10 (Sichtbare Wahl statt Klappliste) — oder, falls
-der Betreiber den Handy-Test von Block 9 zuerst zurückmeldet, dessen Ergebnis
-eintragen.
+**Nächster Schritt:** Block 10 (Sichtbare Wahl statt Klappliste).
 
 ---
 

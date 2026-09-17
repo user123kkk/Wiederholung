@@ -1,6 +1,6 @@
 # Auftrag: Oberfläche & Mobile-Gestalt
 
-**Status:** Blöcke 1–9 `fertig` (v3.1.0–3.4.2), Block 9 am echten Handy noch nicht bestätigt. **Nächster: Block 10.** Blöcke 8–10 kommen aus der Bildersammlung des Betreibers (17.09.2026), siehe [`BILDER-BEFUND.md`](BILDER-BEFUND.md).
+**Status:** Blöcke 1–9 `fertig` (v3.1.0–3.4.2), alle am echten Handy verifiziert. **Nächster: Block 10.** Blöcke 8–10 kommen aus der Bildersammlung des Betreibers (17.09.2026), siehe [`BILDER-BEFUND.md`](BILDER-BEFUND.md).
 **Angelegt:** 16. September 2026 · **Neu gefasst:** 17. September 2026
 **Grundlage:** die drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie), gefiltert in [`PRINZIPIEN.md`](PRINZIPIEN.md).
@@ -66,7 +66,7 @@ nachziehen, committen, pushen. Nicht zwei Blöcke auf einmal.
 | 6 | **Video-1-Nachlese** | `fertig` (v3.3.0–3.3.1) | Zwei Punkte, die Video 1 wörtlich nennt und die auf jedem Bildschirm sichtbar sind: die Navigationsleiste schwebt · das Karten-Formular ist ein Blatt statt einer festen Abteilung auf dem Verwalten-Bildschirm |
 | 7 | **Anmeldeformular** | `fertig` (v3.4.0) | Eingaben bleiben nach Fehlermeldung und Moduswechsel stehen (war kaputt) · Auge zum Anzeigen des Passworts. Bild 23, 24 |
 | 8 | **Rückmeldung nach dem Speichern** | `fertig` (v3.4.1) | `zeigeToast()` wird jetzt aufgerufen. Am echten Handy verifiziert. Bild 37, 105, 106 |
-| 9 | **Fehler am Feld statt im Dialog** | `fertig, ungeprüft am Handy` (v3.4.2) | Leeres Karten-Formular und fehlender Name melden sich direkt am Feld. Bild 44, 61, 93 |
+| 9 | **Fehler am Feld statt im Dialog** | `fertig` (v3.4.2) | Leeres Karten-Formular und fehlender Name melden sich direkt am Feld. Bild 44, 61, 93 |
 | 10 | **Sichtbare Wahl statt Klappliste** | `offen` | Stufen „von/bis" beim Üben und „Art der Speicherkarte". Bild 9, 13, 14, 64, 72 |
 
 ## Blöcke 8–10 im Einzelnen
