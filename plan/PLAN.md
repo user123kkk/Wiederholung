@@ -400,17 +400,19 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Aktivster Punkt gerade: der Redesign-Strang, Block 8.** Direkt im Code.
+**Aktivster Punkt gerade: der Redesign-Strang, Block 9.** Direkt im Code.
 
-**Stand 17.09.2026 (neu):** Der Betreiber hat 108 Bilder mit Design-Tipps
-(TikTok, @ux_snacks) gesammelt. Alle sind angesehen und gegen den Code
-geprüft: [`redesign-oberflaeche/BILDER-BEFUND.md`](redesign-oberflaeche/BILDER-BEFUND.md)
-— eine Zeile pro Bild, mit Urteil und Beleg. **Den Bilderordner nicht noch
-einmal durchgehen.** Daraus: Block 7 (Anmeldeformular) ist gebaut und
-veröffentlicht (v3.4.0). **Als Nächstes Block 8** (Rückmeldung nach dem
-Speichern), danach 9 und 10 — Einzelheiten und „fertig, wenn" in
+**Stand 17.09.2026:** Block 8 (Rückmeldung nach dem Speichern, v3.4.1) ist 
+gebaut und veröffentlicht. Die Toast-Funktion `zeigeToast()` wird jetzt 
+aufgerufen, wenn eine Karte gespeichert wird — „Karte gespeichert" beim 
+Anlegen, „Änderung gespeichert" beim Bearbeiten. Noch ausstehend: 
+**Betreiber-Test am echten Handy** — ob Position und Sichtbarkeit der 
+Meldung stimmen. Falls ja, Block 8 abgehakt; sonst Position überprüfen.
+
+**Danach: Block 9** (Fehler am Feld statt Dialog) und **Block 10** 
+(Sichtbare Wahl statt Klappliste) — Einzelheiten und „fertig, wenn" in
 [`redesign-oberflaeche/AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md).
-Zwei Punkte liegen beim Betreiber (offene Fragen 12 und 13).
+Zwei Betreiber-Entscheidungen offen (offene Fragen 12 und 13).
 
 **Frühere Lage (vor den Bildern):**
 
@@ -499,4 +501,5 @@ Fokus-Erhalt geprüft. Details in
 [`phase-9-barrierefreiheit/LOGBUCH.md`](phase-9-barrierefreiheit/LOGBUCH.md).
 Einzig offen, aber kein Blocker: ein Test mit echtem Screenreader stand
 mangels Gerät nicht zur Verfügung.
+| 2026-09-17 | **Redesign Block 8 fertig: Toast nach dem Speichern** (v3.4.1). Die vorhandene `zeigeToast()`-Funktion wird jetzt aufgerufen, sobald eine Karte gespeichert wird — „Karte gespeichert" beim Anlegen, „Änderung gespeichert" beim Bearbeiten. Die Meldung mit Checkmark-Icon steht unten rechts ca. 2,6 Sekunden lang sichtbar (`aria-live="polite"` für Bildschirmleser). Toast-Infrastruktur existierte seit 3.0.0, wurde aber nie aufgerufen; Block 8 ist der erste echte Use-Case. Nächster Schritt: Betreiber-Test am echten Handy zur Verifikation von Position und Sichtbarkeit.
 | 2026-09-15 | **Beobachtungen zum Lernwerkzeug: Versuchte Verbesserung des Ziehgriff-Doppeltipp-Verhaltens (v3.0.40).** Testrückmeldung zu v3.0.39 deutete darauf hin, dass die Aktivierung der Ziehgriff-Doppeltipp-Geste weiterhin schwierig ist — wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten Touchscreen-Ziel zuverlässig zweimal zu tippen. Zwei Optimierungen ohne Mechanic-Änderung: (1) `DOPPELTIPP_FENSTER` von 400ms → 600ms für mehr Zeit. (2) Visuelle Rückmeldung auf `.drag-handle:active` mit Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit erkennbar ist, dass die erste Tap registriert wurde. Beide Änderungen sollen die Fehlertoleranz erhöhen. Nächster Schritt: Gerätetest zur Prüfung der Zuverlässigkeit. Alle fünf Beobachtungen 2, 4, 6, 14, 15 vom Code her bereits behoben oder verbessert; offen bleiben drei Punkte, die Gerätetests brauchen (5: iPad-Layout, 13: Over-Scrolling, 16: Browser-Zurück), und mehrere UX-Punkte, die Betreiber-Entscheidungen brauchen (1, 3, 9, 10). Details in `beobachtungen-lernwerkzeug.md`.
