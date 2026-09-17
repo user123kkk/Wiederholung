@@ -4,6 +4,25 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 8 fertig: Rückmeldung nach dem Speichern (v3.4.1)
+
+**Geändert:**
+- `app.js:3540–3543` — nach `patchDoc(patch);` zwei Zeilen hinzugefügt: die Variable `toastText` enthält „Karte gespeichert" oder „Änderung gespeichert" (je nachdem, ob `warEdit`); `zeigeToast(toastText)` wird unmittelbar danach aufgerufen.
+- `app.js:19` / `sw.js:10` → 3.4.1
+- `CHANGELOG.md` — neue Sektion 3.4.1
+
+**Entscheidung:** Die Toast-Funktion war längst vorhanden (`zeigeToast()` ab 3.0.0, gerendert über `renderToast()`, gestaltet in `styles.css`). Sie wurde nur nie aufgerufen. Block 8 des Auftrags verlangt, sie bei **Speichern-Handlungen** einzusetzen, die sonst stumm bleiben — das trifft genau auf das Karten-Speichern zu (da die Karte sonst keine sichtbare Reaktion gibt). Orts-Änderungen und Speicherkarten-Aktionen bleiben offen wie im Auftrag, weil dort schon sichtbar etwas passiert (Karte verschwindet, Karte wechselt Bereich).
+
+**Textangabe:** Im Auftrag: „Karte gespeichert" beim Anlegen, „Änderung gespeichert" beim Bearbeiten. Umgesetzt genau so, über die vorhandene `warEdit`-Unterscheidung (siehe `app.js:3481`).
+
+**Offen:**
+- **Am echten Handy noch nicht angesehen.** Der Browser-Preview zeigt keine echte Firebase-Umgebung; zum Prüfen braucht man ein Konto und eine echte Karte. `probelauf.mjs` könnte das, aber Playwright ist auf diesem Rechner nicht installiert.
+- **Betreiber prüft am Handy** — Karte anlegen oder bearbeiten, unten rechts sollte die Meldung 2–3 Sekunden sichtbar sein.
+
+**Nächster Schritt:** Falls Betreiber-Test bestätigt, dass die Toast-Meldung richtig sitzt, ist Block 8 fertig. Sonst: Position (Z-Index über dem Blatt, Position unten rechts) überprüfen. Dann weiter mit Block 9 (Fehler am Feld statt Dialog).
+
+---
+
 ### 2026-09-17 — Bildersammlung (108 Bilder) ausgewertet, Block 7 fertig: Anmeldeformular (v3.4.0)
 
 **Geändert:**

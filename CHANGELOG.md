@@ -1,3 +1,11 @@
+## 3.4.1 – 17. September 2026
+
+### Neu (Block 8: Rückmeldung nach dem Speichern)
+
+**Wer eine Karte speichert, sieht eine kurze Bestätigung.** Bisher verschwand das Karten-Formular nach dem Speichern einfach — ob die Karte tatsächlich gespeichert wurde oder ob etwas schiefging, sagte die App nicht. Das lässt sich gerade noch in einem lokalen Test erkennen, aber auf schwacher Internetverbindung braucht man eine Rückmeldung, um zu wissen, ob Speichern geklappt hat. Die Meldung „Karte gespeichert" oder „Änderung gespeichert" (je nachdem, ob neu oder bearbeitet) steht kurz unten rechts auf dem Bildschirm und verschwindet automatisch nach ca. 2,5 Sekunden. Für Bildschirmleser: `aria-live="polite"`, damit die Meldung vorgelesen wird, ohne den Fokus zu unterbrechen.
+
+Die Toast-Funktion `zeigeToast()` existierte bereits seit 3.0.0, wurde aber nie aufgerufen — jetzt ist die erste echte Stelle gefunden, wo sie Sinn macht.
+
 ## 3.4.0 – 17. September 2026
 
 ### Behoben (Block 7: Anmeldeformular)

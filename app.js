@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.4.0";
+const APP_VERSION = "3.4.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -3538,6 +3538,8 @@ async function submitCardForm() {
   }
   resetFormDraft();
   patchDoc(patch);
+  const toastText = warEdit ? "Änderung gespeichert" : "Karte gespeichert";
+  zeigeToast(toastText);
   render();
   /* D1: Fokus zurueck ins Wort-Feld, damit man mehrere Vokabeln
      hintereinander eingeben kann, ohne jedes Mal hineinzutippen.
