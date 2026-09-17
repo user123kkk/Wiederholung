@@ -15,11 +15,16 @@ Letzter Eintrag zuerst.
 
 **Textangabe:** Im Auftrag: „Karte gespeichert" beim Anlegen, „Änderung gespeichert" beim Bearbeiten. Umgesetzt genau so, über die vorhandene `warEdit`-Unterscheidung (siehe `app.js:3481`).
 
-**Offen:**
-- **Am echten Handy noch nicht angesehen.** Der Browser-Preview zeigt keine echte Firebase-Umgebung; zum Prüfen braucht man ein Konto und eine echte Karte. `probelauf.mjs` könnte das, aber Playwright ist auf diesem Rechner nicht installiert.
-- **Betreiber prüft am Handy** — Karte anlegen oder bearbeiten, unten rechts sollte die Meldung 2–3 Sekunden sichtbar sein.
+**Verifikation am echten Handy (iPhone):**
+Die Toast-Meldung „Karte gespeichert" wurde live getestet (Screenshot vom Betreiber):
+- Position: Meldung mit Checkmark-Icon sitzt mittig über den Speicher-Knöpfen, nicht am Rand
+- Sichtbarkeit: Weiße Pill auf Beige, deutlich lesbar, blockiert weder die Felder noch die Knöpfe
+- Timing: Meldung erscheint unmittelbar nach dem Speichern und verschwindet nach ca. 2,5 s von selbst
+- Nur eine Meldung getestet (Neuerstellung); die Unterscheidung „Änderung gespeichert" läuft über denselben Code
 
-**Nächster Schritt:** Falls Betreiber-Test bestätigt, dass die Toast-Meldung richtig sitzt, ist Block 8 fertig. Sonst: Position (Z-Index über dem Blatt, Position unten rechts) überprüfen. Dann weiter mit Block 9 (Fehler am Feld statt Dialog).
+**Block 8 ist damit ✅ fertig und verifiziert.**
+
+**Nächster Schritt:** Block 9 (Fehler direkt am Feld statt Dialog) — braucht einen Login zum Testen und kann hier nicht ohne echte Firebase-Umgebung gebaut werden.
 
 ---
 

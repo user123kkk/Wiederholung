@@ -65,7 +65,7 @@ nachziehen, committen, pushen. Nicht zwei Blöcke auf einmal.
 | 5 | **Erststart** | `fertig` (v3.3.2) | Registrierung und E-Mail-Bestätigung als „Schritt 1/2 von 2" gerahmt (`.eyebrow`, kein neues Bauteil) · Versprechen von `landing.html` auf der Bestätigungsseite eingelöst · `.empty__icon.gold` → `.betont` |
 | 6 | **Video-1-Nachlese** | `fertig` (v3.3.0–3.3.1) | Zwei Punkte, die Video 1 wörtlich nennt und die auf jedem Bildschirm sichtbar sind: die Navigationsleiste schwebt · das Karten-Formular ist ein Blatt statt einer festen Abteilung auf dem Verwalten-Bildschirm |
 | 7 | **Anmeldeformular** | `fertig` (v3.4.0) | Eingaben bleiben nach Fehlermeldung und Moduswechsel stehen (war kaputt) · Auge zum Anzeigen des Passworts. Bild 23, 24 |
-| 8 | **Rückmeldung nach dem Speichern** | `offen` — **als Nächstes** | Die fertige Kurzmeldung `zeigeToast()` wird nie aufgerufen. Bild 37, 105, 106 |
+| 8 | **Rückmeldung nach dem Speichern** | `fertig` (v3.4.1) | `zeigeToast()` wird jetzt aufgerufen. Am echten Handy verifiziert. Bild 37, 105, 106 |
 | 9 | **Fehler am Feld statt im Dialog** | `offen` | Leeres Karten-Formular und fehlender Name melden sich direkt am Feld. Bild 44, 61, 93 |
 | 10 | **Sichtbare Wahl statt Klappliste** | `offen` | Stufen „von/bis" beim Üben und „Art der Speicherkarte". Bild 9, 13, 14, 64, 72 |
 
