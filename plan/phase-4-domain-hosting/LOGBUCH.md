@@ -506,3 +506,64 @@ Anmelde-Knopf) statt erneut zu raten – das war beide Male der schnellere
 Weg zur echten Ursache.
 
 **Nächster Schritt:** Betreiber deployt, testet „Mit Google anmelden".
+
+### 2026-09-18 — Tatsächliche Ursache für anhaltenden auth/internal-error: 304 aktualisiert CSP nicht (v3.4.10)
+
+**Geändert:** `index.html:2` und `landing.html:2` — neue Kommentarzeile
+`csp-build: 3.4.10` (wirkungslos für den Browser, reine Merkzeile). `app.js:19`
+`APP_VERSION` auf `3.4.10`, `sw.js` `CACHE_NAME` auf `adrabic-3.4.10`,
+`CHANGELOG.md` neuer Eintrag.
+
+**Entscheidung:** Nach dem apis.google.com-Fix (v3.4.9) meldete der Betreiber
+denselben Fehler weiterhin — auch nach erneutem Deploy, nach Warten, in einem
+neuen Fenster, auf seinem eigenen Gerät. Direkt nachgeprüft (eigener Browser,
+mehrere frische Tabs): Ein `fetch(url, {cache:"no-store"})` auf `/`,
+`/index.html` und `/landing.html` zeigte **immer** die korrekte, neue CSP
+(inkl. `apis.google.com`) — der Server liefert sie zuverlässig aus. Eine
+echte Seiten-**Navigation** zu genau denselben URLs zeigte trotzdem **immer**
+die alte, blockierende CSP, reproduzierbar über mehrere komplett neue Tabs
+hinweg (nicht durch einen einzelnen Tab-Cache erklärbar) und laut Betreiber
+auch auf einem völlig separaten Gerät/Netzwerk.
+
+Der Unterschied zwischen beiden Anfragen erklärt es: `sw.js` erzwingt
+`cache: "no-store"` nur für Nicht-Navigations-Anfragen (Skripte, Schriften) —
+bewusst so gebaut (siehe Kommentar dort), weil sich eine Navigations-Anfrage
+technisch nicht so umbauen lässt. Eine normale Navigation nutzt also das
+gewöhnliche HTTP-Cache-Verhalten: Der Browser (bzw. ein zwischengeschalteter
+Knoten) fragt bei einer bereits gecachten Seite nur noch bedingt nach („hat
+sich die Datei geändert, mein gespeicherter Stand hat diesen Fingerabdruck
+[ETag]?"). Da sich am **Datei-Inhalt** von `index.html`/`landing.html` bei den
+letzten beiden Fixes (3.4.8, 3.4.9) nichts geändert hatte — nur an
+`firebase.json`, einer reinen Server-Konfigurationsdatei, die keinen eigenen
+Fingerabdruck im ausgelieferten Dokument hinterlässt — blieb der Fingerabdruck
+gleich, der Server antwortete „unverändert" (304 Not Modified), und ein
+304 aktualisiert nach HTTP-Spezifikation die beim Client gespeicherten
+Antwort-Header (worunter auch die Content-Security-Policy fällt) nicht
+zuverlässig mit. Jeder, der die Seite vor 3.4.8 schon einmal besucht hatte,
+saß dadurch dauerhaft auf der alten CSP fest — unabhängig von Deploys,
+Wartezeit, neuen Tabs oder sogar dem Gerät, weil das reine Serververhalten
+(304 statt frischem 200) und nicht ein bestimmter Client die Ursache war.
+
+Die vorherigen beiden Einträge (CSP `frame-src`, dann `apis.google.com`)
+waren inhaltlich beide richtig und nötig — nur wurde die Korrektur bei
+bereits cachenden Besucher:innen nie sichtbar, solange sich außer
+`firebase.json` nichts änderte. Der jetzige Fix ist keine dritte
+CSP-Korrektur, sondern behebt das strukturelle Problem: Eine Merkzeile in
+den beiden HTML-Einstiegsdateien, die bei jeder künftigen reinen
+`firebase.json`-Änderung mitgezählt werden muss (siehe Kommentar dort),
+erzwingt einen neuen Fingerabdruck und damit einen echten frischen Abruf
+statt eines 304.
+
+**Offen:** Für Besucher:innen, die die Seite mit der 3.4.8/3.4.9-CSP schon
+gecacht hatten, hilft dieser Fix erst ab dem nächsten Besuch nach diesem
+Deploy (dann ändert sich der Fingerabdruck wirklich, kein 304 mehr möglich).
+Kein manuelles Cache-Leeren mehr nötig — das war vorher der einzige
+Workaround.
+
+**Nächster Schritt:** Betreiber deployt, lädt die Seite einmal ganz normal
+neu (kein Hard-Reload nötig) und testet „Mit Google anmelden" erneut. Diese
+Lehre gilt für **jede künftige reine `firebase.json`-Änderung**: Ohne
+begleitende Inhaltsänderung in `index.html`/`landing.html` (die `csp-build`-
+Zeile mitzählen) bleiben bereits cachende Besucher:innen sonst wieder auf
+dem alten Stand hängen, unsichtbar für alle Tests mit einem frischen Browser
+oder `curl`/`fetch` ohne Cache.

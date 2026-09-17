@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<!-- csp-build: 3.4.10 -- reine Merkzeile ohne Wirkung im Browser. Aendert sich
+     ausschliesslich firebase.json (z.B. die Content-Security-Policy), aendert
+     sich sonst KEIN Datei-Byte hier - Firebase Hosting liefert dann fuer schon
+     cachende Clients per bedingtem GET ein 304 zurueck, und ein 304 aktualisiert
+     die im Browser gespeicherten Header (u.a. die CSP) nicht zuverlaessig. Diese
+     Zeile bei jeder reinen Header-Aenderung mithochzaehlen erzwingt einen neuen
+     ETag und damit einen echten frischen 200 statt eines 304 mit alten Headern. -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">

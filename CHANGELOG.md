@@ -1,3 +1,9 @@
+## 3.4.10 – 18. September 2026
+
+### Behoben (auth/internal-error blieb trotz korrekter CSP – 304 mit alten Headern)
+
+**Der Fehler blieb, obwohl der Server längst die richtige Content-Security-Policy auslieferte.** Grund: `index.html` und `landing.html` selbst hatten sich bei den letzten beiden Fixes kein einziges Byte geändert – nur `firebase.json` (die Header-Konfiguration). Browser, die die Seite schon einmal geladen hatten, fragen bei jedem weiteren Aufruf nur „hat sich was geändert?" (bedingtes GET). Da die Datei selbst gleich blieb, antwortete der Server „nein, nichts Neues" (304) – und ein 304 aktualisiert die im Browser gespeicherte Content-Security-Policy nicht zuverlässig, selbst wenn sie sich serverseitig geändert hat. Ergebnis: Jeder, der die Seite vorher schon besucht hatte, blieb auf der alten, blockierenden Regel hängen, egal wie oft neu geladen oder deployt wurde – nur ein echter Cache-Leerung half, und das ist niemandem zuzumuten. Jetzt tragen `index.html` und `landing.html` eine Merkzeile (`csp-build`), die bei jeder reinen `firebase.json`-Änderung mitgezählt wird und dadurch einen echten frischen Abruf erzwingt.
+
 ## 3.4.9 – 17. September 2026
 
 ### Behoben (auth/internal-error blieb: apis.google.com fehlte in der CSP)
