@@ -4,6 +4,67 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 5 fertig: Erststart als Fortschritt gerahmt (v3.3.2)
+
+**Geändert:** `app.js` — `soloMarke()` nimmt einen optionalen `schritt`-Text
+für ein `.eyebrow` über der Überschrift; Registrierung zeigt „Schritt 1 von 2
+· Konto", die Bestätigungsseite „Schritt 2 von 2 · Bestätigen" plus einen
+Satz, der das Versprechen von `landing.html` aufgreift. `.empty__icon.gold`
+→ `.empty__icon.betont` (styles.css + zwei Fundstellen in app.js).
+`probelauf.mjs` — Firebase-Auth-Stub simuliert drei Anmeldezustände über
+`?probe=`, zwei neue Bildschirme (Registrierung, Bestätigung).
+`app.js:19`/`sw.js:10` auf 3.3.2. `CHANGELOG.md`.
+
+**Entscheidung:** `AUFTRAG.md` verlangt für Block 5 „nie bei 0 % anfangen
+(Video 3), aber **kein** erfundener Assistent". Das ist eine enge Vorgabe —
+sie schließt eine Fortschrittsleiste, einen Einrichtungs-Wizard oder
+zusätzliche Bildschirme aus. Was bleibt, ist **Rahmung mit vorhandenen
+Mitteln**: `.eyebrow` gibt es seit 3.0.0 über jeder Sektion, dieselbe Rolle
+funktioniert über einer `<h1>` auf einem Solo-Bildschirm genauso. Kein neues
+Bauteil, keine neue Logik — zwei Wörter mehr Text auf zwei Bildschirmen, die
+es ohnehin schon gibt.
+
+Der zweite Fund war kein Gestaltungsproblem, sondern eine **gebrochene
+Zusage**: `landing.html` verspricht „Danach legst du direkt deine erste Karte
+an" — aber der erste Bildschirm nach der Registrierung ist eine
+E-Mail-Bestätigung ohne jeden Bezug zu diesem Versprechen. Wer dort wartet,
+hat keinen Grund mehr zu glauben, dass die Zusage noch gilt. Ein Satz genügt,
+um sie am Leben zu halten.
+
+**Bewusst nicht angefasst:** die E-Mail-Bestätigung selbst (Sicherheits-/
+Rechtsentscheidung aus Phase 1/2, außerhalb dessen, was dieser Strang
+lockert — `KONZEPT.md` §7) und der leere Erststart-Bildschirm („Noch nichts
+in „Bereich""). Letzterer lief kurz als Kandidat mit, weil er wie eine
+0-%-Situation aussieht — aber derselbe Code zeigt sich auch, wenn eine
+erfahrene Nutzerin einen weiteren leeren Bereich anlegt. Eine
+Erststart-Formulierung dort wäre für den zweiten, viel häufigeren Fall
+falsch. **Konkreter Beleg statt Bauchgefühl:** Der Code-Pfad ist identisch
+für beide Fälle (`cards.length === 0` in `renderLernen()`), es gibt kein
+Signal, das „erstes Konto" von „n-ter leerer Bereich" unterscheidet.
+
+**Geprüft:** Probelauf zeigt jetzt auch die beiden Bildschirme vor der
+Anmeldung. Der Firebase-Auth-Stub liest `?probe=register` (kein Konto) bzw.
+`?probe=bestaetigen` (Konto ohne verifizierte E-Mail) aus der URL — eine
+Datei für drei Zustände statt drei Dateien.
+
+**Offen:**
+- Damit sind alle sechs Blöcke aus `AUFTRAG.md` durch. Der Strang
+  „Oberfläche & Mobile-Gestalt" ruht, bis der Betreiber eine konkrete
+  Schwachstelle nennt oder Feld 4 (`landing.html`, Marke: Serifen-Schlagzeile)
+  bestätigt.
+- Die Werkzeugleiste auf Verwalten (fünf Handlungen gleichzeitig) und Smart
+  Defaults (Video 3) stehen weiter auf der Nachlese-Liste aus dem 2026-09-17-
+  Eintrag zu Block 6 — nicht angefangen.
+- `KONZEPT.md` §7 unverändert; die Lockerung gilt weiter nur für diesen
+  Strang.
+
+**Nächster Schritt:** Keiner zwingend. Falls weitergearbeitet wird: die
+Werkzeugleiste auf Verwalten gegen Video 1 prüfen („Aktionen kommen und gehen
+mit dem Zusammenhang") oder Smart Defaults für die Einstellungen/Formulare
+umsetzen (Video 3, als „passt" eingestuft, noch nicht gebaut).
+
+---
+
 ### 2026-09-17 — Block 6: die zwei sichtbarsten Video-1-Punkte (v3.3.0, v3.3.1)
 
 **Geändert:** `styles.css` — `.nav` schwebt (Abschnitt 4), Rücknahme in

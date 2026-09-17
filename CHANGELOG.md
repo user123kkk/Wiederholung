@@ -1,3 +1,28 @@
+## 3.3.2 – 17. September 2026
+
+### Geändert (Block 5: Erststart)
+
+**Der Weg von „Konto anlegen" bis zur ersten eigenen Karte ist jetzt als Fortschritt gerahmt, nicht als offenes Ende.** Video 3 (Ziel-Gradient): Wer weiß, wie viele Schritte noch kommen, erlebt Warten als einen von zwei Schritten, nicht als Sackgasse. Betroffen sind die beiden Bildschirme, die zwischen „Konto anlegen und anfangen" auf `landing.html` und der ersten eigenen Karte liegen:
+
+- **Registrierung** trägt jetzt „Schritt 1 von 2 · Konto" über der Überschrift.
+- **E-Mail bestätigen** trägt „Schritt 2 von 2 · Bestätigen".
+
+Kein neues Bauteil: Beide nutzen `.eyebrow`, dieselbe Rolle wie über jeder Sektion in der App — kein erfundener Assistent, keine Fortschrittsleiste, kein Onboarding-Wizard. `PRINZIPIEN.md` schließt genau das aus.
+
+**Das Versprechen von `landing.html` hält jetzt bis zur Bestätigungsseite durch.** Dort steht *„Danach legst du direkt deine erste Karte an"* — und dann kam als Nächstes eine Wartezeile ohne jeden Bezug dazu. Das Versprechen verschwand genau dort, wo es am meisten zählt. Ein Satz auf dem Bestätigungs-Bildschirm hält es fest: „Danach geht es gleich weiter zu deiner ersten Karte." Er sagt nichts Neues zu — er erinnert nur an das, was schon zugesagt war.
+
+**Bewusst nicht angefasst:** die E-Mail-Bestätigung selbst. Sie ist eine Sicherheits-/Rechtsentscheidung aus Phase 1/2, kein Gestaltungsdetail, und dieser Strang lockert nur Aussehen und Bedienung, nicht Datenzugriff (`KONZEPT.md` §7). Der leere Erststart-Bildschirm („Noch nichts in „Bereich"") blieb ebenfalls unverändert: Derselbe Code läuft auch, wenn eine erfahrene Nutzerin einen weiteren, leeren Bereich anlegt — eine Erststart-Formulierung dort wäre für den zweiten Fall falsch.
+
+### Verbessert
+
+- **`.empty__icon.gold` heißt jetzt `.empty__icon.betont`.** Gold ist seit 3.1.0 raus; der Klassenname behauptete eine Farbe, die es im System nicht mehr gibt. Zwei Fundstellen (Erststart, „Für heute durch"), reine Umbenennung, keine sichtbare Änderung.
+
+### Arbeitsmittel
+
+- Der Probelauf deckt jetzt auch den Weg **vor** der Anmeldung ab: Registrierungsformular und Bestätigungsseite, über einen Anmeldezustand, den der Firebase-Auth-Stub per `?probe=`-Parameter simuliert (kein Konto / Konto ohne bestätigte E-Mail / normal angemeldet) — ohne zwei separate Stub-Dateien zu pflegen.
+
+---
+
 ## 3.3.1 – 17. September 2026
 
 ### Geändert

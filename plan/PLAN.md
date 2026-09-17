@@ -119,7 +119,7 @@ die beiden Dateien dazu sind am 17.09. entfernt worden, nachdem die
 Design-Entscheidungen in `styles.css` und `README.md` stehen. Geprüft wird an
 [`stilprobe.html`](redesign-oberflaeche/stilprobe.html) — ohne sie kommt niemand
 ohne Firebase-Anmeldung an der Oberfläche vorbei.
-Status: `läuft`, Blöcke 1–4 und 6 `fertig` (v3.1.0–3.3.1).
+Status: alle sechs Blöcke `fertig` (v3.1.0–3.3.2), Strang ruht.
 **Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 6 unten.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
@@ -382,49 +382,29 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-17 | **Block 3 fertig: Übergänge auf der Bühne** (v3.2.2). Befund: Es gab gar keinen eigenen Übergang — `.view` blendete bei jeder Handlung den ganzen Bildschirm auf, also auch beim bloßen Aufdecken der Antwort, das Wort eingeschlossen. Jetzt bewegt sich nur das Neue: neue Karte → Wort wandert ein; Aufdecken → nur Antwort und Bewertungszeile. Möglich durch eine Klasse `zugedeckt`, weil `render()` sonst nicht unterscheidbar macht, ob dieselbe Karte aufgedeckt oder eine neue gekommen ist. Rückmeldung nach dem Bewerten und Gesten bewusst nicht angefasst. |
 | 2026-09-17 | **Block 4 fertig: `landing.html`** (v3.2.3). Die Seite führte seit 3.1.0 eine eigene Schriftskala, eigene Radien und eine eigene Knopfform — damit war die AUFTRAG-Bedingung „App und Startseite teilen EINE Sprache" nicht erfüllt. Jetzt alles über die Token; Schlagzeile und Titel in der Serifenschrift (Satz 4, Markenentscheidung, rücknehmbar); Hauptknopf vollrund wie in der App; `100vh` → `100svh`. Stufenleiter von Kachelraster auf eine Spalte mit Balken — sie ist eine Reihenfolge, im Zickzack sah man das Wachsen der Abstände nicht. **Echter Fehler gefunden:** Das Kontaktformular hatte keinen sichtbaren Fokusrahmen (`rgba(var(--accent-rgb), …)` — die Variable gibt es nicht, der `box-shadow` war ungültig, darüber stand `outline: none`). Derselbe Fehler war in `styles.css` schon behoben, diese Stelle blieb stehen. |
 | 2026-09-17 | **Video-1-Nachlese** (v3.3.0, v3.3.1). Betreiber: „es gibt so viel, das ich in den Videos gesehen habe, hier nicht sehe." Genommen wurden die zwei Punkte, die Video 1 wörtlich nennt und die auf jedem Bildschirm sichtbar sind: **die Navigationsleiste schwebt** („nowadays typically floating") und **das Karten-Formular ist ein Blatt** statt einer festen Abteilung auf dem Verwalten-Bildschirm, den man zum Ansehen aufruft. Einen schwebenden Plus-Knopf bewusst NICHT dazugebaut — die Handlung steht schon als einziger gefüllter Knopf da. Nebenbei: `tickCountups` ignorierte `prefers-reduced-motion` (CSS respektierte es, dieses JavaScript nicht). Im Logbuch steht jetzt die ehrliche Liste dessen, was aus den Videos bewusst NICHT gebaut ist. |
+| 2026-09-17 | **Block 5 fertig, Strang C komplett** (v3.3.2). Registrierung und E-Mail-Bestätigung tragen „Schritt 1/2 von 2" (`.eyebrow`, kein neues Bauteil — Video 3: nie bei 0% anfangen, aber kein erfundener Assistent). Echter Fund: `landing.html` verspricht „Danach legst du direkt deine erste Karte an", aber die Bestätigungsseite nahm darauf keinen Bezug — das Versprechen verschwand genau dort. Ein Satz haelt es jetzt fest. Bewusst nicht angefasst: die E-Mail-Bestätigung selbst (Sicherheit/Recht, außerhalb der Lockerung) und der leere Erststart-Bildschirm (derselbe Code läuft auch für einen n-ten leeren Bereich, eine Erststart-Formulierung wäre dort falsch). Alle sechs Blöcke aus `redesign-oberflaeche/AUFTRAG.md` sind jetzt durch; der Strang ruht. |
 
 ## Wo eine neue Session anfängt
 
 **Aktivster Punkt gerade: der Redesign-Strang.** Direkt im Code, kein
 Design-Tool-Umweg mehr.
 
-**Strang C — Oberfläche & Mobile-Gestalt — `läuft`, Blöcke 1–4 und 6 fertig (v3.1.0–3.3.1).**
-[`redesign-oberflaeche/`](redesign-oberflaeche/) ist am 17.09.2026 **neu
-gefasst**: Der Eintrag vom 16.09. (»kein Neubau nötig«) war das Ergebnis eines
-Maßstabs, der nicht mehr stimmte — der Kopf der `styles.css` führte drei
-Gestaltungssätze, die der Code an zwei von drei Stellen längst nicht mehr
-befolgte (Gold als Handlungsfarbe seit 3.1.0 raus; Kästen-Verbot gegen 19
-`.card`-Stellen in `app.js`). **Das war das »Verbot«, an dem der Strang hing.**
-Der Betreiber hat den Reset freigegeben; es stehen jetzt vier Sätze, alle vom
-Code gedeckt.
+**Strang C — Oberfläche & Mobile-Gestalt — alle sechs Blöcke `fertig`
+(v3.1.0–3.3.2). Ruht.**
+[`redesign-oberflaeche/`](redesign-oberflaeche/) hat mit Block 5 (Erststart,
+v3.3.2) den letzten offenen Punkt aus `AUFTRAG.md` geschlossen: Registrierung
+und E-Mail-Bestätigung tragen jetzt „Schritt 1/2 von 2" (Video 3,
+Ziel-Gradient — kein neues Bauteil, `.eyebrow` gab es schon), und die
+Bestätigungsseite löst das Versprechen von `landing.html` ein („Danach legst
+du direkt deine erste Karte an"), das dort vorher spurlos verschwand.
 
-**Block 1 (Fundament) ist `fertig`, v3.1.0:** Schriftskala `--fs-micro …
---fs-2xl` mit 17px-Wurzel (Video 1: am Handy wird die Schrift größer, nicht
-kleiner), 82 verstreute Schriftgrößen auf Token umgestellt, Satz 2 als CSS
-durchgesetzt (`.card` in `.card` verliert automatisch Fläche und Polsterung),
-Trefferflächen nachgezogen.
-
-**Block 2 (Einstellungen & Fortschritt) ist `fertig`, v3.2.0:** Beide
-Bildschirme waren Stapel — sechs bzw. neun Blöcke untereinander, jeder mit
-Überschrift und Erklärungsabsatz. Jetzt Listen mit dem Stand rechts; der
-Erklärungstext ist nicht gekürzt, sondern verlegt: ins Blatt (zwei bis vier
-Antworten) oder auf eine eigene Unterseite (Handlung). Beim Fortschritt bleibt
-auf dem Reiter, was ein **Stand** ist; was eine **Liste** ist, wurde eine Seite.
-`.stat-block` ist seit dem Reset eine Fläche statt einer randlosen Textwand.
-
-**Geprüft wird jetzt an zwei Werkzeugen unter `plan/redesign-oberflaeche/`**,
-beide nicht ausgeliefert: [`probelauf.mjs`](redesign-oberflaeche/probelauf.mjs)
-legt Firebase-Attrappen unter und lichtet zehn Bildschirme der **echten** App
-ab (misst dabei auch, ob Inhalt hinter der Navigationsleiste verschwindet), und
-[`stilprobe.html`](redesign-oberflaeche/stilprobe.html) zeigt die Bausteine
-einzeln. Ohne beides ist die App für einen Agenten unsichtbar — `index.html`
-braucht Firebase von `gstatic.com` und bleibt sonst im Ladebildschirm.
-
-**Nächster Schritt: Block 5 — Erststart.** Blöcke 1–4 und 6 sind durch (v3.1.0–3.3.1). Die fünf Blöcke mit Status
-stehen in [`AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md). Dabei gilt die
-Lehre aus dem 16.09.: **ein Befund »ist schon da« muss belegt sein** — an der
-Datei, an der Zeile, am Messwert. `PRINZIPIEN.md` bleibt der Filter, Lernlogik
-bleibt tabu.
+**Der Strang ist damit nicht abgeschlossen, sondern ruht** — im Logbuch
+stehen bewusst offene Punkte, die kein Block-Ziel waren, sondern beim Bauen
+auffielen: die Werkzeugleiste auf Verwalten zeigt fünf Handlungen
+gleichzeitig (Video 1: Aktionen sollen mit dem Zusammenhang kommen und
+gehen), und Smart Defaults aus Video 3 sind als „passt" eingestuft, aber
+nirgends umgesetzt. Eine neue Session kann hier weitermachen oder warten, bis
+der Betreiber eine konkrete Schwachstelle nennt.
 
 **Strang D — Monetarisierung & Wachstum — `zurückgestellt`, nur Gerüst.**
 [`monetarisierung/`](monetarisierung/) steht als Struktur da; es wird nichts

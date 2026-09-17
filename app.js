@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.3.1";
+const APP_VERSION = "3.3.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -4062,10 +4062,15 @@ async function umzugStarten() {
 
 function renderPendingVerification() {
   let html = '<div class="solo">';
-  html += soloMarke("E-Mail best\u00e4tigen");
+  html += soloMarke("E-Mail best\u00e4tigen", "Schritt 2 von 2 \u00b7 Best\u00e4tigen");
   html += '<div class="card">';
   html += '<p class="hint">Wir haben eine Best\u00e4tigungs-E-Mail an <strong>' + esc(currentUser.email) +
     '</strong> geschickt. \u00d6ffne den Link darin, um dein Konto freizuschalten.</p>';
+  /* 3.3.2: landing.html verspricht "Danach legst du direkt deine erste
+     Karte an" - und dann kommt erstmal diese Wartezeile. Ohne diesen Satz
+     verschwindet das Versprechen genau dort, wo es am meisten zaehlt. Der
+     Satz sagt nichts Neues zu, er haelt nur fest, was schon zugesagt war. */
+  html += '<p class="hint" style="margin-top:var(--space-3)">Danach geht es gleich weiter zu deiner ersten Karte.</p>';
   if (ui.authError) html += '<div class="error-box" style="margin-top:var(--space-4)">' + ikon("warnung", "i-sm") +
     '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
   if (ui.authInfo) html += '<div class="info-box" style="margin-top:var(--space-4)">' + ikon("haken", "i-sm") +
@@ -4083,9 +4088,15 @@ function renderPendingVerification() {
 
 /* Die Wortmarke ueber den Solo-Bildschirmen. Ersetzt das Emoji-Sprout, das
    auf jedem Geraet anders aussah. */
-function soloMarke(untertitel) {
+/* 3.3.2: schritt ist optional und zeigt "Schritt 1 von 2" etc. ueber der
+   Ueberschrift - Video 3, Ziel-Gradient: Wer weiss, wie viele Schritte noch
+   kommen, erlebt das Warten auf die Bestaetigungsmail als einen von zwei
+   Schritten, nicht als offenes Ende. Kein neues Bauteil - .eyebrow gibt es
+   schon, dieselbe Rolle wie ueber jeder Sektion. */
+function soloMarke(untertitel, schritt) {
   return '<div class="solo-mark">' + ikon("marke", "i-lg") +
     '<strong>Adrabic</strong></div>' +
+    (schritt ? '<div class="eyebrow">' + esc(schritt) + '</div>' : '') +
     (untertitel ? '<h1>' + esc(untertitel) + '</h1>' : '');
 }
 
@@ -4107,7 +4118,8 @@ function renderAuth() {
   const m = ui.authMode;
   let html = '<div class="solo">';
   html += soloMarke(m === "register" ? "Konto anlegen"
-        : m === "reset" ? "Passwort zur\u00fccksetzen" : "Anmelden");
+        : m === "reset" ? "Passwort zur\u00fccksetzen" : "Anmelden",
+        m === "register" ? "Schritt 1 von 2 \u00b7 Konto" : null);
   html += '<p class="subtitle" style="margin-bottom:var(--space-6)">' +
     (m === "register" ? "Einmalig \u2013 danach auf jedem Ger\u00e4t."
      : m === "reset" ? "Wir schicken dir einen Link zum Neusetzen."
@@ -5170,7 +5182,7 @@ function renderLernen() {
      und als richtiger Knopf. */
   if (cards.length === 0) {
     html += '<div class="empty">';
-    html += '<div class="empty__icon gold">' + ikon("einspielen", "i-xl") + '</div>';
+    html += '<div class="empty__icon betont">' + ikon("einspielen", "i-xl") + '</div>';
     html += '<div class="empty__titel">Noch nichts in \u201e' + esc(b.name) + '\u201c</div>';
     html += '<p class="empty__text">Hast du eine Kartensatz-Datei bekommen? Spiel sie ein \u2013 ' +
       'deine Lektionen stehen danach fertig da.</p>';
@@ -5186,7 +5198,7 @@ function renderLernen() {
     html += renderFaden(b, due);
   } else if (due.length === 0) {
     html += '<div class="empty">';
-    html += '<div class="empty__icon gold">' + ikon("fertig", "i-xl") + '</div>';
+    html += '<div class="empty__icon betont">' + ikon("fertig", "i-xl") + '</div>';
     html += '<div class="empty__titel">F\u00fcr heute durch</div>';
     html += '<p class="empty__text">In \u201e' + esc(b.name) + '\u201c ist nichts mehr f\u00e4llig. ' +
       'Der n\u00e4chste Schwung kommt von selbst.</p>';

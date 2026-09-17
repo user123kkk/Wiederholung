@@ -1901,7 +1901,11 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   background: var(--surface); color: var(--text-3);
   margin-bottom: var(--space-5);
 }
-.empty__icon.gold { background: var(--accent-bg); color: var(--accent); }
+/* 3.3.2: hiess .gold - Gold ist seit 3.1.0 raus, der Name behauptete eine
+   Farbe, die es im System nicht mehr gibt. Die Rolle ist unveraendert: der
+   hervorgehobene Leerzustand (Erststart, "fuer heute durch"), betont statt
+   gedaempft. */
+.empty__icon.betont { background: var(--accent-bg); color: var(--accent); }
 .empty__titel { font-size: var(--fs-lg); font-weight: 600; margin-bottom: var(--space-2); }
 .empty__text {
   font-size: var(--fs-sm); color: var(--text-2); line-height: 1.55;

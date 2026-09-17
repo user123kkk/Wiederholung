@@ -96,11 +96,26 @@ const BEREICHE = [
    was schreibt, ist bewusst ein No-op: der Probelauf soll nichts tun koennen.  */
 const STUB_APP = `export function initializeApp(){ return { name: "probe" }; }`;
 
+/* Drei Anmeldezustaende ueber einen Query-Parameter (?probe=...), damit
+   derselbe statische Stub fuer den normalen Probelauf (immer angemeldet,
+   immer bestaetigt) UND fuer Block 5 (Erststart: noch kein Konto / Konto
+   ohne bestaetigte Mail) reicht - ohne zwei Dateien zu pflegen.
+     kein Parameter     -> angemeldet und bestaetigt (der normale Fall)
+     ?probe=register     -> kein Konto: renderAuth() zeigt das Formular
+     ?probe=bestaetigen -> Konto da, E-Mail noch nicht bestaetigt */
 const STUB_AUTH = `
+function probeZustand() {
+  try { return new URLSearchParams(location.search).get("probe") || ""; }
+  catch (e) { return ""; }
+}
 export function getAuth(){ return { currentUser: null }; }
 export function onAuthStateChanged(a, cb){
-  setTimeout(() => cb({ uid: "probe-uid", email: "ahmad@example.com",
-                        displayName: "Ahmad", emailVerified: true }), 0);
+  const p = probeZustand();
+  setTimeout(() => {
+    if (p === "register") { cb(null); return; }
+    cb({ uid: "probe-uid", email: "ahmad@example.com", displayName: "Ahmad",
+         emailVerified: p !== "bestaetigen" });
+  }, 0);
   return () => {};
 }
 export function signOut(){ return Promise.resolve(); }
@@ -167,6 +182,11 @@ const BILDER = [
   /* Das Karten-Blatt: seit 3.3.1 liegt das Formular nicht mehr fest oben
      auf dem Verwalten-Bildschirm. */
   { name: "10b-karte-blatt",      weg: ['[data-action="tab-verwalten"]', '[data-action="karte-neu"]'] },
+  /* Block 5: Erststart. Die Attrappe liefert immer fertige Daten (siehe
+     Kopf dieser Datei) - fuer den Anmelde-/Bestaetigungs-Weg selbst reicht
+     das aus, denn der laeuft VOR dem Laden der Bereiche. */
+  { name: "14-anmelden-registrieren", weg: ['[data-action="mode-register"]'], vorAnmeldung: "register" },
+  { name: "15-bestaetigen",           weg: [], vorAnmeldung: "bestaetigen" },
   /* Die Buehne braucht eine laufende Sitzung - darum ein eigener Eintrag mit
      Klick auf "Lernsession starten". */
   { name: "11-buehne",            weg: ['[data-action="start-session"]'] },
@@ -218,13 +238,18 @@ await seite.route("**/firebasejs/**", route => {
 
 for (const bild of BILDER) {
   await seite.setViewportSize({ width: bild.breite || 390, height: bild.hoehe || 844 });
-  await seite.goto(BASIS + "/index.html", { waitUntil: "load" });
+  const ziel = BASIS + "/index.html" + (bild.vorAnmeldung ? "?probe=" + bild.vorAnmeldung : "");
+  await seite.goto(ziel, { waitUntil: "load" });
+  /* Bildschirme vor der Anmeldung warten auf .solo (dort gibt es keine
+     .nav__tabs); alle anderen auf das Geruest der angemeldeten App. */
+  const wartet = bild.vorAnmeldung ? ".solo" : ".nav__tabs";
+  const anzeige = bild.vorAnmeldung ? "Anmelde-Bildschirm" : "App";
   try {
-    await seite.waitForSelector(".nav__tabs", { timeout: 10000 });
+    await seite.waitForSelector(wartet, { timeout: 10000 });
   } catch (e) {
-    console.log("✗", bild.name, "- App kam nicht hoch. Sichtbar war:");
+    console.log("✗", bild.name, "-", anzeige, "kam nicht. Sichtbar war:");
     console.log("   " + (await seite.innerText("body")).slice(0, 300).replace(/\n+/g, " | "));
-    fehler.push("Start haengt bei " + bild.name);
+    fehler.push(anzeige + " haengt bei " + bild.name);
     continue;
   }
   for (const klick of bild.weg) {

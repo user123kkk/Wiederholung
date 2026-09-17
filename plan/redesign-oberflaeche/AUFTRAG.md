@@ -1,6 +1,6 @@
 # Auftrag: Oberfläche & Mobile-Gestalt
 
-**Status:** läuft — Blöcke 1–4 und 6 `fertig` (v3.1.0–3.3.1), Block 5 ist als Nächstes dran
+**Status:** alle sechs Blöcke `fertig` (v3.1.0–3.3.2). Strang ruht, bis der Betreiber eine konkrete Schwachstelle nennt.
 **Angelegt:** 16. September 2026 · **Neu gefasst:** 17. September 2026
 **Grundlage:** die drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie), gefiltert in [`PRINZIPIEN.md`](PRINZIPIEN.md).
@@ -62,7 +62,7 @@ nachziehen, committen, pushen. Nicht zwei Blöcke auf einmal.
 | 2 | **Einstellungen & Fortschritt** | `fertig` (v3.2.0) | Beide waren Stapel aus sechs bzw. neun Blöcken. Jetzt Listen mit Stand rechts; Erklärungen im Blatt oder auf einer Unterseite. `.stat-block` ist eine Fläche. Neu: `probelauf.mjs` |
 | 3 | **Bühne & Bewertung** | `fertig` (v3.2.1–3.2.2) | Mittigkeit ab 900px (war 120px versetzt) · Zähler „Karte 1 von 11" · gleiche Knopfzeile · eigener Übergang für Kartenwechsel statt Blende über allem. Gesten bewusst nicht angefasst (`PRINZIPIEN.md`) |
 | 4 | **`landing.html`** | `fertig` (v3.2.3) | Schriftgrößen und Radien auf die Token der App · Schlagzeile und Titel in der Serifenschrift · Hauptknopf wie App-Knöpfe · Stufenleiter von Kachelraster auf eine Spalte mit Balken · fehlender Fokusrahmen im Kontaktformular behoben |
-| 5 | **Erststart** | `offen` — als Nächstes | Der Weg von „Konto angelegt" bis zur ersten eigenen Karte. Nie bei 0 % anfangen (Video 3), aber **kein** erfundener Assistent |
+| 5 | **Erststart** | `fertig` (v3.3.2) | Registrierung und E-Mail-Bestätigung als „Schritt 1/2 von 2" gerahmt (`.eyebrow`, kein neues Bauteil) · Versprechen von `landing.html` auf der Bestätigungsseite eingelöst · `.empty__icon.gold` → `.betont` |
 | 6 | **Video-1-Nachlese** | `fertig` (v3.3.0–3.3.1) | Zwei Punkte, die Video 1 wörtlich nennt und die auf jedem Bildschirm sichtbar sind: die Navigationsleiste schwebt · das Karten-Formular ist ein Blatt statt einer festen Abteilung auf dem Verwalten-Bildschirm |
 
 ## Wie geprüft wird
