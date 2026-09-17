@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.4.4";
+const APP_VERSION = "3.4.5";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -1224,6 +1224,25 @@ function ausweisErneuernUndNeuLaden() {
     .catch(() => { render(); });
   return true;
 }
+/* 17.09.2026: derselbe veraltete Ausweis trifft auch das SCHREIBEN, nicht nur
+   das Laden - saveFehler() zeigte dafuer bisher nur den rohen Fehlercode und
+   den Rat, ein Backup herunterzuladen, ohne je den Ausweis zu erneuern. Ein
+   Neuladen wie beim Lesen ist hier aber die falsche Medizin: Es wuerde eine
+   noch nicht gespeicherte Karte im offenen Formular mitreissen. Deshalb nur
+   der Ausweis-Refresh, ohne reload - die naechsten Schreibversuche nutzen ihn
+   automatisch, weil Firebase Auth und Firestore denselben Ausweis-Cache
+   teilen. Eigener Merker, unabhaengig vom Lese-Merker: Je nachdem, was zuerst
+   ausgeloest wird (ein Listener oder ein Schreibvorgang), soll trotzdem genau
+   einmal erneuert werden. */
+const TOKEN_ERNEUERT_SCHREIBEN_KEY = "adrabic-token-erneuert-schreiben";
+function ausweisErneuernFuerSchreiben() {
+  let schonVersucht = false;
+  try { schonVersucht = sessionStorage.getItem(TOKEN_ERNEUERT_SCHREIBEN_KEY) === "1"; } catch (e) {}
+  if (schonVersucht || !currentUser || !currentUser.emailVerified) return false;
+  try { sessionStorage.setItem(TOKEN_ERNEUERT_SCHREIBEN_KEY, "1"); } catch (e) {}
+  currentUser.getIdToken(true).catch(() => {});
+  return true;
+}
 function snapFehler(err) {
   if (err && err.code === "permission-denied") {
     if (ausweisErneuernUndNeuLaden()) {
@@ -1443,8 +1462,14 @@ let saveWarned = false;
    entgegen und schickt sie los, sobald die Verbindung wieder steht. Hier
    landen nur echte Ablehnungen (fehlende Rechte, kaputte Daten). */
 let schreibFehler = null;
+let schreibFehlerAusweisErneuert = false;
 function saveFehler(e) {
   schreibFehler = (e && e.code) ? e.code : "unbekannter Fehler";
+  if (schreibFehler === "permission-denied" && ausweisErneuernFuerSchreiben()) {
+    schreibFehlerAusweisErneuert = true;
+    render();
+    return;
+  }
   if (saveWarned) { render(); return; }
   saveWarned = true;
   dlgAlert("Speichern in der Cloud fehlgeschlagen (" + schreibFehler + "). Änderungen werden erneut versucht, sobald die Verbindung steht.", "Cloud nicht erreichbar");
@@ -4570,6 +4595,10 @@ function bannerInfo(text, leise) {
 }
 function bannerSchreibfehler() {
   if (!schreibFehler) return "";
+  if (schreibFehler === "permission-denied" && schreibFehlerAusweisErneuert) {
+    return bannerFehler("Kurz nicht gespeichert:",
+      'Die Anmeldung war veraltet und wurde gerade erneuert. Versuch die letzte Änderung noch einmal zu speichern.');
+  }
   return bannerFehler("Nicht gespeichert:",
     'Änderungen kommen gerade nicht in der Cloud an (' + esc(schreibFehler) + '). ' +
     'Lade ein Backup herunter, bevor du weiterlernst.');

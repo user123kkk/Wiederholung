@@ -1,3 +1,9 @@
+## 3.4.5 – 17. September 2026
+
+### Behoben (Schreibfehler nach veraltetem Anmelde-Ausweis)
+
+**"Nicht gespeichert: … (permission-denied)" konnte auch bei einem völlig gesunden Konto erscheinen.** Die Sicherheitsregeln verlangen eine bestätigte E-Mail, geprüft wird das aber am Anmelde-Ausweis (ID-Token) im Browser, nicht direkt am Konto — wer sich anmeldet und danach den Bestätigungs-Link anklickt, hat bis zu eine Stunde lang einen Ausweis, der die Bestätigung noch nicht kennt. Für das *Laden* der Karten gab es dafür schon eine automatische Erneuerung (seit 2.11.4/v2.x). Für das *Speichern* fehlte dieselbe Behandlung komplett — die App zeigte nur den rohen Fehlercode und riet, ein Backup herunterzuladen, ohne den Ausweis je zu erneuern. Jetzt holt sich die App bei „permission-denied" auch beim Schreiben einmal je Sitzung einen frischen Ausweis (ohne Neuladen der Seite, damit eine gerade eingetippte Karte nicht verloren geht) und zeigt eine ruhigere Meldung: „Die Anmeldung war veraltet und wurde gerade erneuert. Versuch die letzte Änderung noch einmal zu speichern."
+
 ## 3.4.4 – 17. September 2026
 
 ### Geändert (offene Frage 12: Farben)
