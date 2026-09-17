@@ -1,3 +1,28 @@
+## 3.2.3 – 17. September 2026
+
+### Behoben
+
+- **Das Kontaktformular hatte keinen sichtbaren Fokusrahmen.** In `landing.html` stand `box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.1)`. Die Variable `--accent-rgb` gibt es im Farbsystem nicht — der ganze `box-shadow` war damit ungültig und wurde verworfen. Zusammen mit dem `outline: none` darüber hieß das: Wer sich mit der Tastatur durch das Formular bewegt, sieht nicht, wo er steht. **Derselbe Fehler war in `styles.css` schon einmal gefunden und behoben worden** (siehe den Kommentar bei `.drag-handle`); diese zweite Stelle blieb stehen. Jetzt `:focus-visible` mit `--focus-ring`, wie überall sonst.
+
+- **Und dieselbe Sache noch einmal in der Fußzeile.** `.landing__footer a:focus` setzte `outline: none` und ersetzte ihn durch eine Unterstreichung — die der Link ohnehin schon als Unterkante trägt. Der Tastatur-Fokus auf Impressum und Datenschutz war damit praktisch unsichtbar. Gefunden, weil der erste Fund Anlass war, im **ganzen Repo** nach dem Muster zu suchen statt nur an der Fundstelle zu bleiben.
+
+### Geändert (Startseite spricht dieselbe Sprache wie die App)
+
+`AUFTRAG.md` verlangt, dass App und `landing.html` **eine** sichtbare Sprache teilen. Seit dem Schriftwechsel in 3.1.0 taten sie das nicht mehr: Die Startseite führte fünfzehn eigene Schriftgrößen in `rem`, eigene Radien und eine eigene Knopfform.
+
+- **Schriftgrößen** laufen jetzt über `--fs-micro … --fs-2xl`, **Radien** über `--r-*`. Keine eigene Skala mehr.
+- **Die Schlagzeile und alle Abschnittstitel stehen in der Serifenschrift.** Satz 4 trennt Bedienung (Systemschrift) von Stoff (Serifenschrift) — eine Schlagzeile ist Stoff, und in der App stehen `h1` bis `h4` ebenfalls in der Serifenschrift. Solange hier die Systemschrift stand, las sich die Startseite wie eine fremde Seite *vor* der App statt wie ihre Vorderseite. Dazu `clamp()` statt eines festen Wertes: 2,1rem sind auf 390px Breite vier Zeilen Schlagzeile.
+- **Der Hauptknopf ist vollrund und mindestens `--ctrl-lg` hoch** — wie jeder gefüllte Knopf der App seit 3.1.0. Vorher war der wichtigste Knopf der ganzen Seite der einzige, der nicht aussah wie die App, in die er führt.
+- **`100vh` → `100svh`.** Dieselbe Begründung wie in 3.0.50 (Beobachtung 13): `vh` wächst, wenn die Werkzeugleiste des mobilen Browsers einklappt, und lässt beim Scrollen Leerraum auftauchen. Die Startseite war die letzte Stelle mit `vh`.
+
+### Verbessert
+
+- **Die Stufenleiter zeigt jetzt, was sie behauptet.** Sie war ein Kachelraster (zwei Spalten am Handy) — ein Abschnitt, der in *zwei* Richtungen läuft, genau wovor Video 1 warnt. Schlimmer: Das ist eine **Reihenfolge**. Im Zickzack gelesen (1,2 / 3,4 / 5,6) sieht man die Sache nicht, um die es geht — dass die Abstände wachsen. Jetzt eine Spalte, und ein Balken pro Stufe macht das Wachsen sichtbar. Der Text sagt „in wachsenden Abständen"; jetzt zeigt es die Seite auch.
+- **Die drei Bewertungsknöpfe in der Erklärung stehen in zwei sauberen Spalten.** Vorher hielt ein `inline-block` mit `min-width` nur die *erste* Zeile auf Abstand — brach die Erklärung um, fing die zweite Zeile wieder ganz links an, unter der Beschriftung.
+- **Der Vorspann unter der Schlagzeile atmet richtig.** Zeilenhöhe 1,6 stammte aus der Zeit, als dort 1rem stand; bei 22px reißt das die Zeilen auseinander. Große Schrift braucht weniger Durchschuss.
+
+---
+
 ## 3.2.2 – 17. September 2026
 
 ### Verbessert

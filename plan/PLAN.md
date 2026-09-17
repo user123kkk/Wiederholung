@@ -119,7 +119,7 @@ die beiden Dateien dazu sind am 17.09. entfernt worden, nachdem die
 Design-Entscheidungen in `styles.css` und `README.md` stehen. Geprüft wird an
 [`stilprobe.html`](redesign-oberflaeche/stilprobe.html) — ohne sie kommt niemand
 ohne Firebase-Anmeldung an der Oberfläche vorbei.
-Status: `läuft`, Blöcke 1–3 `fertig` (v3.1.0–3.2.2).
+Status: `läuft`, Blöcke 1–4 `fertig` (v3.1.0–3.2.3).
 **Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 6 unten.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
@@ -380,13 +380,14 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-17 | **Redesign Block 2: Einstellungen und Fortschritt** (v3.2.0). Betreiber-Rückmeldung: „unter jedem Bereich ist 10 Zeilen Erklärung", „Fortschritttab ist auch ein Chaosladen". Beide Bildschirme waren Stapel (sechs bzw. neun Blöcke untereinander). Jetzt Listen mit Stand rechts; die Erklärungen sind nicht gekürzt, sondern verlegt — ins Wahl-Blatt oder auf eine eigene Unterseite. Fortschritt: vier Blöcke auf dem Reiter, Listen (Lektionen, Leeches, 7 Tage) als Seiten dahinter. `.stat-block` ist jetzt eine Fläche. Neu: `probelauf.mjs` — lichtet mit Firebase-Attrappen zehn Bildschirme der echten App ab und misst den Platz unter der Navigationsleiste; fand sofort einen Kasten-im-Kasten, der im Code nicht zu sehen war. **Am echten Handy weiterhin nicht angesehen.** |
 | 2026-09-17 | **Bühne mittig, Block 3 angefangen** (v3.2.1). Betreiber hat die Vorschau am iPad geöffnet: Lernansicht saß 120px rechts von der Mitte. Ab 900px rückt `.view` den Inhalt um die Spaltenbreite ein — im Modus gibt es die Spalte aber nicht (`.modebar { left: 0 }` stand schon da, der Einzug wurde vergessen). Am Handy greift die Regel nicht, also konnte kein Handy-Test das finden. Dazu: Zähler sagt „Karte 1 von 11" statt „0 von 11", Unterzeile von „Nicht" bricht nicht mehr um. Probelauf läuft jetzt auch in iPad-Breite und misst Mittigkeit (gegen den Body, nicht das Fenster — `scrollbar-gutter` täuschte sonst 7px vor). |
 | 2026-09-17 | **Block 3 fertig: Übergänge auf der Bühne** (v3.2.2). Befund: Es gab gar keinen eigenen Übergang — `.view` blendete bei jeder Handlung den ganzen Bildschirm auf, also auch beim bloßen Aufdecken der Antwort, das Wort eingeschlossen. Jetzt bewegt sich nur das Neue: neue Karte → Wort wandert ein; Aufdecken → nur Antwort und Bewertungszeile. Möglich durch eine Klasse `zugedeckt`, weil `render()` sonst nicht unterscheidbar macht, ob dieselbe Karte aufgedeckt oder eine neue gekommen ist. Rückmeldung nach dem Bewerten und Gesten bewusst nicht angefasst. |
+| 2026-09-17 | **Block 4 fertig: `landing.html`** (v3.2.3). Die Seite führte seit 3.1.0 eine eigene Schriftskala, eigene Radien und eine eigene Knopfform — damit war die AUFTRAG-Bedingung „App und Startseite teilen EINE Sprache" nicht erfüllt. Jetzt alles über die Token; Schlagzeile und Titel in der Serifenschrift (Satz 4, Markenentscheidung, rücknehmbar); Hauptknopf vollrund wie in der App; `100vh` → `100svh`. Stufenleiter von Kachelraster auf eine Spalte mit Balken — sie ist eine Reihenfolge, im Zickzack sah man das Wachsen der Abstände nicht. **Echter Fehler gefunden:** Das Kontaktformular hatte keinen sichtbaren Fokusrahmen (`rgba(var(--accent-rgb), …)` — die Variable gibt es nicht, der `box-shadow` war ungültig, darüber stand `outline: none`). Derselbe Fehler war in `styles.css` schon behoben, diese Stelle blieb stehen. |
 
 ## Wo eine neue Session anfängt
 
 **Aktivster Punkt gerade: der Redesign-Strang.** Direkt im Code, kein
 Design-Tool-Umweg mehr.
 
-**Strang C — Oberfläche & Mobile-Gestalt — `läuft`, Blöcke 1–3 fertig (v3.1.0–3.2.2).**
+**Strang C — Oberfläche & Mobile-Gestalt — `läuft`, Blöcke 1–4 fertig (v3.1.0–3.2.3).**
 [`redesign-oberflaeche/`](redesign-oberflaeche/) ist am 17.09.2026 **neu
 gefasst**: Der Eintrag vom 16.09. (»kein Neubau nötig«) war das Ergebnis eines
 Maßstabs, der nicht mehr stimmte — der Kopf der `styles.css` führte drei
@@ -418,7 +419,7 @@ ab (misst dabei auch, ob Inhalt hinter der Navigationsleiste verschwindet), und
 einzeln. Ohne beides ist die App für einen Agenten unsichtbar — `index.html`
 braucht Firebase von `gstatic.com` und bleibt sonst im Ladebildschirm.
 
-**Nächster Schritt: Block 4 — `landing.html`.** Blöcke 1–3 sind durch (v3.1.0–3.2.2). Die fünf Blöcke mit Status
+**Nächster Schritt: Block 5 — Erststart.** Blöcke 1–4 sind durch (v3.1.0–3.2.3). Die fünf Blöcke mit Status
 stehen in [`AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md). Dabei gilt die
 Lehre aus dem 16.09.: **ein Befund »ist schon da« muss belegt sein** — an der
 Datei, an der Zeile, am Messwert. `PRINZIPIEN.md` bleibt der Filter, Lernlogik

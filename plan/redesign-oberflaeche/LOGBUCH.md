@@ -4,6 +4,56 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 4 fertig: landing.html spricht dieselbe Sprache (v3.2.3)
+
+**Geändert:** `landing.html` — fünfzehn eigene Schriftgrößen auf `--fs-*`,
+Radien auf `--r-*`, Schlagzeile und Abschnittstitel in die Serifenschrift mit
+`clamp()`, Hauptknopf vollrund mit `--ctrl-lg`, `100vh` → `100svh`,
+Stufenleiter von Kachelraster auf eine Spalte mit Balken, Knopf-Erklärung als
+Raster, Zeilenhöhe des Vorspanns, Fokusrahmen im Kontaktformular repariert,
+Geräteränder am Kontaktblock. `app.js:19`/`sw.js:10` auf 3.2.3. `CHANGELOG.md`.
+
+**Entscheidung:** `AUFTRAG.md` verlangt für „fertig", dass App und Startseite
+**eine** sichtbare Sprache teilen. Seit 3.1.0 taten sie das nicht mehr — die
+Seite führte ihre eigene Skala und ihre eigene Knopfform. Der Kommentar oben
+in ihrem `<style>` behauptete sogar das Gegenteil („bringt keine eigenen
+Farben und keine eigenen Abstände mit"); für Schriftgrößen, Radien und
+Knopfform stimmte das nie.
+
+Die einzige Entscheidung, die über bloßes Angleichen hinausgeht, ist die
+**Serifenschrift für die Schlagzeile**. Begründung: Satz 4 trennt Bedienung
+von Stoff, eine Schlagzeile ist Stoff, und in der App stehen h1–h4 in der
+Serifenschrift. Die Startseite las sich vorher wie eine fremde Seite *vor*
+der App statt wie ihre Vorderseite. **Das ist eine sichtbare Markenentscheidung
+— der Betreiber kann sie zurücknehmen, dann steht hier, warum.**
+
+**Der beste Fund war ein Fehler, kein Geschmack:** Das Kontaktformular hatte
+gar keinen sichtbaren Fokusrahmen. `rgba(var(--accent-rgb), 0.1)` — die
+Variable gibt es nicht, der ganze `box-shadow` war ungültig, und darüber stand
+`outline: none`. Wer mit der Tastatur durch das Formular geht, sah nicht, wo
+er steht. Genau dieser Fehler war in `styles.css` schon einmal gefunden und
+behoben worden (Kommentar bei `.drag-handle`); die zweite Stelle blieb stehen.
+**Lehre: Wenn ein Fund ein Muster ist, im ganzen Repo danach suchen, nicht nur
+an der Fundstelle.**
+
+Die Stufenleiter ist der Fall, in dem Video 1 wirklich etwas beiträgt: Sie war
+ein Kachelraster, also ein Abschnitt in zwei Richtungen. Sie ist aber eine
+**Reihenfolge** — im Zickzack gelesen sieht man nicht, dass die Abstände
+wachsen. Eine Spalte plus Balken zeigt es. Der Balken ist kein Schmuck: er
+stellt dieselbe Zahl dar, die daneben steht.
+
+**Offen:**
+- **Nicht am Gerät geprüft** — geprüft ist Chromium bei 390px und 1194px,
+  ohne waagerechtes Scrollen, ohne Seitenfehler.
+- Die **Serifen-Schlagzeile** ist eine Markenentscheidung, keine Korrektur.
+- Block 5 (Erststart) steht noch.
+
+**Nächster Schritt:** Block 5 — der Weg von „Konto angelegt" bis zur ersten
+eigenen Karte. Zuerst ansehen, was heute passiert: Der Probelauf startet immer
+mit fertigen Daten, für diesen Block braucht er eine Attrappe **ohne** Karten.
+
+---
+
 ### 2026-09-17 — Block 3 fertig: Übergänge auf der Bühne (v3.2.2)
 
 **Geändert:** `styles.css` Abschnitt 9 — `.view--modus { animation: none }`

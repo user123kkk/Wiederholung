@@ -43,7 +43,11 @@
    eigenen Abstaende mit - sie erbt die Tokens aus styles.css. Keine Bewegung:
    die Seite hat kein render(), also gibt es auch nichts einzublenden. */
 .landing {
-  min-height: 100vh;
+  /* svh statt vh: dieselbe Begruendung wie in styles.css (Beobachtung 13,
+     v3.0.50). vh waechst, wenn die Werkzeugleiste des mobilen Browsers beim
+     Scrollen einklappt - dann taucht Leerraum auf, den es beim Laden nicht
+     gab. Die Startseite war die letzte Stelle, an der noch vh stand. */
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
@@ -62,7 +66,7 @@
 
 .landing__wortmarke {
   font-family: var(--font-text);
-  font-size: 1.15rem;
+  font-size: var(--fs-lg);
   font-weight: 600;
   letter-spacing: 0.01em;
 }
@@ -77,9 +81,16 @@
 
 .landing__hero-content { max-width: 46rem; }
 
+/* 3.2.3: Serifenschrift statt Systemschrift. Satz 4 der styles.css trennt
+   BEDIENUNG (Systemschrift) von STOFF (Serifenschrift) - eine Schlagzeile
+   ist Stoff, und in der App stehen h1 bis h4 ebenfalls in der
+   Serifenschrift. Solange hier die Systemschrift stand, las sich die
+   Startseite wie eine fremde Seite vor der App statt wie ihre Vorderseite.
+   Dazu clamp() statt eines festen Wertes: 2,1rem sind auf einem 390px
+   breiten Bildschirm vier Zeilen Schlagzeile. */
 .landing__headline {
-  font-family: var(--font-ui);
-  font-size: 2.1rem;
+  font-family: var(--font-text);
+  font-size: clamp(1.75rem, 6.5vw, 2.4rem);
   font-weight: 600;
   line-height: 1.2;
   margin: 0 0 var(--space-4) 0;
@@ -88,15 +99,17 @@
 
 .landing__problem {
   font-family: var(--font-text);
-  font-size: 1.25rem;
-  line-height: 1.6;
+  font-size: var(--fs-xl);
+  /* 1.6 stammt aus der Zeit, als hier 1rem stand. Bei 22px reisst das die
+     Zeilen auseinander; grosse Schrift braucht WENIGER Durchschuss. */
+  line-height: 1.45;
   color: var(--text-2);
   margin: 0 0 var(--space-5) 0;
 }
 
 .landing__beweis {
   font-family: var(--font-ui);
-  font-size: 0.95rem;
+  font-size: var(--fs-md);
   color: var(--text-2);
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
@@ -104,16 +117,21 @@
   margin: var(--space-5) 0;
 }
 
+/* 3.2.3: Vollrund und mindestens --ctrl-lg hoch - genau wie jeder gefuellte
+   Knopf in der App seit 3.1.0 (styles.css Abschnitt 6). Vorher war der
+   wichtigste Knopf der ganzen Seite der einzige, der nicht aussah wie die
+   App, in die er fuehrt. */
 .landing__cta {
-  display: inline-block;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--ctrl-lg);
   margin: var(--space-5) auto var(--space-2);
-  padding: var(--space-3) var(--space-6);
+  padding: 0 var(--space-7);
   background: var(--accent);
   color: var(--text-on-accent);
   border: none;
-  border-radius: 0.375rem;
+  border-radius: var(--r-full);
   font-family: var(--font-ui);
-  font-size: 1rem;
+  font-size: var(--fs-base);
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
@@ -125,7 +143,7 @@
 .landing__cta:active { background: var(--accent-press); }
 
 .landing__cta-hinweis {
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
   color: var(--text-3);
   margin: 0;
 }
@@ -140,15 +158,15 @@
 }
 
 .landing__block h2 {
-  font-family: var(--font-ui);
-  font-size: 1.3rem;
+  font-family: var(--font-text);
+  font-size: var(--fs-xl);
   font-weight: 600;
   margin: 0 0 var(--space-3) 0;
 }
 
 .landing__block p {
   font-family: var(--font-text);
-  font-size: 1rem;
+  font-size: var(--fs-base);
   line-height: 1.65;
   color: var(--text-2);
   margin: 0 0 var(--space-3) 0;
@@ -161,7 +179,7 @@
    die es nicht gibt. */
 .landing__karte {
   border: 1px solid var(--border-strong);
-  border-radius: 0.5rem;
+  border-radius: var(--r-sm);
   background: var(--surface);
   padding: var(--space-5);
   text-align: center;
@@ -177,7 +195,7 @@
 
 .landing__karte-de {
   font-family: var(--font-ui);
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
   color: var(--text-3);
   margin-top: var(--space-1);
 }
@@ -186,46 +204,66 @@
   margin-top: var(--space-4);
   height: 68px;
   border: 1px dashed var(--border-strong);
-  border-radius: 0.375rem;
+  border-radius: var(--r-xs);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-ui);
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   color: var(--text-3);
 }
 
 /* Die Stufenleiter. Sie ersetzt die fruehere Behauptung "wissenschaftlich
    bewaehrt" - sie zeigt, was der Code tut, statt eine Wirkung zu versprechen. */
+/* 3.2.3: War ein Kachelraster (auto-fit, 2 Spalten am Handy) und damit ein
+   Abschnitt, der in ZWEI Richtungen laeuft - genau das, wovor Video 1 warnt
+   und was in styles.css Abschnitt 12 als "kein Kachel-Armaturenbrett" steht.
+   Schlimmer noch: Das hier IST eine Reihenfolge. Im Zickzack gelesen
+   (1,2 / 3,4 / 5,6) sieht man die Sache nicht, um die es geht - dass die
+   Abstaende wachsen. Eine Spalte, und der Balken macht das Wachsen sichtbar:
+   der Text sagt "in wachsenden Abstaenden", jetzt zeigt es die Seite auch.
+   Die Balkenbreite steht am <li>, weil sie zu diesem einen Wert gehoert. */
 .landing__stufen {
   list-style: none;
   padding: 0;
   margin: var(--space-4) 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
-  gap: var(--space-2);
+  display: flex;
+  flex-direction: column;
 }
 
 .landing__stufe {
-  border: 1px solid var(--border-subtle);
-  border-radius: 0.375rem;
-  padding: var(--space-2) var(--space-3);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  display: grid;
+  grid-template-columns: 5rem 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.landing__stufe:last-child { border-bottom: 0; }
+
+.landing__stufe-balken {
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--accent);
+  opacity: 0.55;
+  min-width: 3px;
 }
 
 .landing__stufe-nr {
   font-family: var(--font-ui);
-  font-size: 0.75rem;
+  font-size: var(--fs-xs);
   color: var(--text-3);
 }
 
 .landing__stufe-tag {
   font-family: var(--font-ui);
-  font-size: 0.95rem;
+  font-size: var(--fs-md);
   font-weight: 600;
   color: var(--text-1);
+  /* Damit die Zahlen untereinander stehen und der Sprung sichtbar wird. */
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  min-width: 5rem;
 }
 
 .landing__knoepfe {
@@ -234,7 +272,14 @@
   margin: var(--space-4) 0 0;
 }
 
+/* 3.2.3: Vorher ein inline-block mit min-width. Das haelt nur die ERSTE
+   Zeile auf Abstand - bricht die Erklaerung um, faengt die zweite Zeile
+   wieder ganz links an, unter der Beschriftung. Als Raster stehen beide
+   Spalten sauber, egal wie lang der Text wird. */
 .landing__knoepfe li {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: var(--space-3);
   padding: var(--space-3) 0;
   border-top: 1px solid var(--border-subtle);
   font-family: var(--font-text);
@@ -244,10 +289,8 @@
 
 .landing__knoepfe strong {
   font-family: var(--font-ui);
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
   color: var(--text-1);
-  display: inline-block;
-  min-width: 4.5rem;
 }
 
 .landing__schritte {
@@ -266,10 +309,10 @@
   padding: var(--space-3) var(--space-5);
   border: 1px solid var(--accent-border);
   background: var(--accent-bg);
-  border-radius: 0.375rem;
+  border-radius: var(--r-xs);
   color: var(--text-1);
   font-family: var(--font-ui);
-  font-size: 0.95rem;
+  font-size: var(--fs-md);
   font-weight: 600;
   text-decoration: none;
 }
@@ -305,32 +348,42 @@
   color: var(--text-3);
 }
 
-.landing__kontakt-block { max-width: 42rem; margin: 0 auto; padding: var(--space-7) var(--space-5); border-top: 1px solid var(--border-subtle); }
-.landing__kontakt-title { font-family: var(--font-ui); font-size: 1.3rem; font-weight: 600; margin: 0 0 var(--space-3) 0; }
-.landing__kontakt-desc { font-family: var(--font-text); font-size: 1rem; line-height: 1.65; color: var(--text-2); margin: 0 0 var(--space-4) 0; }
+.landing__kontakt-block { max-width: 42rem; margin: 0 auto; padding: var(--space-7) calc(var(--space-5) + var(--sar)) var(--space-7) calc(var(--space-5) + var(--sal)); border-top: 1px solid var(--border-subtle); }
+.landing__kontakt-title { font-family: var(--font-text); font-size: var(--fs-xl); font-weight: 600; margin: 0 0 var(--space-3) 0; }
+.landing__kontakt-desc { font-family: var(--font-text); font-size: var(--fs-base); line-height: 1.65; color: var(--text-2); margin: 0 0 var(--space-4) 0; }
 .landing__form { display: flex; flex-direction: column; gap: var(--space-3); }
-.landing__form label { font-family: var(--font-ui); font-size: 0.95rem; font-weight: 500; color: var(--text-1); display: block; margin-bottom: 4px; }
-.landing__form input, .landing__form textarea { font-family: var(--font-text); font-size: 1rem; padding: var(--space-2) var(--space-3); border: 1px solid var(--border-strong); border-radius: 0.375rem; background: var(--surface); color: var(--text-1); width: 100%; box-sizing: border-box; }
-.landing__form input:focus, .landing__form textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.1); }
+.landing__form label { font-family: var(--font-ui); font-size: var(--fs-md); font-weight: 500; color: var(--text-1); display: block; margin-bottom: 4px; }
+.landing__form input, .landing__form textarea { font-family: var(--font-text); font-size: var(--fs-base); padding: var(--space-2) var(--space-3); border: 1px solid var(--border-strong); border-radius: var(--r-xs); background: var(--surface); color: var(--text-1); width: 100%; box-sizing: border-box; }
+/* 3.2.3: Hier stand "rgba(var(--accent-rgb), 0.1)". Die Variable gibt es im
+   Farbsystem nicht - der ganze box-shadow war damit ungueltig und wurde
+   verworfen. Zusammen mit dem "outline: none" darueber hiess das: Wer sich
+   mit der Tastatur durch das Kontaktformular bewegt, sieht NICHT, wo er
+   steht. Derselbe Fehler war in styles.css schon einmal gefunden und
+   behoben worden (siehe Kommentar bei .drag-handle), diese Stelle blieb
+   stehen. */
+.landing__form input:focus-visible, .landing__form textarea:focus-visible {
+  outline: 2px solid var(--focus-ring); outline-offset: 2px;
+  border-color: var(--accent);
+}
 .landing__form textarea { resize: vertical; min-height: 100px; }
 .landing__form-honeypot { display: none; }
-.landing__form button { align-self: flex-start; padding: var(--space-3) var(--space-6); background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 0.375rem; font-family: var(--font-ui); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.landing__form button { align-self: flex-start; min-height: var(--ctrl-md); padding: 0 var(--space-6); background: var(--accent); color: var(--text-on-accent); border: none; border-radius: var(--r-full); font-family: var(--font-ui); font-size: var(--fs-base); font-weight: 600; cursor: pointer; transition: background 0.2s; }
 .landing__form button:hover { background: var(--accent-hover); }
 .landing__form button:focus { outline: 2px solid var(--accent-hover); outline-offset: 2px; }
-.landing__form-datenschutz { font-family: var(--font-text); font-size: 0.85rem; line-height: 1.6; color: var(--text-3); margin-top: var(--space-3); }
+.landing__form-datenschutz { font-family: var(--font-text); font-size: var(--fs-sm); line-height: 1.6; color: var(--text-3); margin-top: var(--space-3); }
 
 .landing__faq { max-width: 42rem; margin: 0 auto; padding: var(--space-7) var(--space-5); border-top: 1px solid var(--border-subtle); text-align: left; }
 
 .landing__faq-title {
-  font-family: var(--font-ui);
-  font-size: 1.3rem;
+  font-family: var(--font-text);
+  font-size: var(--fs-xl);
   font-weight: 600;
   margin: 0 0 var(--space-4) 0;
 }
 
 .landing__faq-item {
   border: 1px solid var(--border-subtle);
-  border-radius: 0.375rem;
+  border-radius: var(--r-xs);
   margin-bottom: var(--space-2);
   padding: var(--space-3) var(--space-4);
 }
@@ -346,7 +399,7 @@
 
 .landing__faq-item p {
   font-family: var(--font-text);
-  font-size: 0.95rem;
+  font-size: var(--fs-md);
   line-height: 1.6;
   color: var(--text-2);
   margin: var(--space-2) 0 0 0;
@@ -362,7 +415,7 @@
   padding: var(--space-5);
   border-top: 1px solid var(--border-subtle);
   text-align: center;
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
   color: var(--text-2);
 }
 
@@ -372,11 +425,23 @@
   border-bottom: 1px solid var(--accent);
 }
 
-.landing__footer a:hover, .landing__footer a:focus { text-decoration: underline; outline: none; }
+/* 3.2.3: Stand vorher "outline: none" - damit war der Tastatur-Fokus auf
+   Impressum und Datenschutz unsichtbar, denn der Link traegt ohnehin schon
+   eine Unterkante, die Unterstreichung faellt also gar nicht auf. Derselbe
+   Fehlertyp wie beim Kontaktformular weiter oben; beim Nachsehen im ganzen
+   Repo gefunden. Hover bleibt wie gehabt, der Fokus bekommt einen Ring. */
+.landing__footer a:hover { text-decoration: underline; }
+.landing__footer a:focus-visible {
+  outline: 2px solid var(--focus-ring); outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
 
 @media (min-width: 48rem) {
+  /* Die Schlagzeile skaliert am Handy ueber clamp() mit; ab hier bekommt sie
+     einen festen, groesseren Wert, weil breite Bildschirme sonst bei der
+     clamp()-Obergrenze stehen bleiben. */
   .landing__headline { font-size: 2.9rem; }
-  .landing__problem { font-size: 1.4rem; }
+  .landing__problem { font-size: 1.5rem; }
 }
 </style>
 <script>
@@ -472,16 +537,16 @@
       hinten. Was nicht sitzt, fällt zurück und kommt schneller wieder.
     </p>
     <ul class="landing__stufen">
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 1</span><span class="landing__stufe-tag">morgen</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 2</span><span class="landing__stufe-tag">2 Tage</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 3</span><span class="landing__stufe-tag">3 Tage</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 4</span><span class="landing__stufe-tag">6 Tage</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 5</span><span class="landing__stufe-tag">10 Tage</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 6</span><span class="landing__stufe-tag">19 Tage</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 7</span><span class="landing__stufe-tag">34 Tage</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 8</span><span class="landing__stufe-tag">61 Tage</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 9</span><span class="landing__stufe-tag">110 Tage</span></li>
-        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 10+</span><span class="landing__stufe-tag">180 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 1</span><span class="landing__stufe-balken" style="width:0.6%" aria-hidden="true"></span><span class="landing__stufe-tag">morgen</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 2</span><span class="landing__stufe-balken" style="width:1.1%" aria-hidden="true"></span><span class="landing__stufe-tag">2 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 3</span><span class="landing__stufe-balken" style="width:1.7%" aria-hidden="true"></span><span class="landing__stufe-tag">3 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 4</span><span class="landing__stufe-balken" style="width:3.3%" aria-hidden="true"></span><span class="landing__stufe-tag">6 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 5</span><span class="landing__stufe-balken" style="width:5.6%" aria-hidden="true"></span><span class="landing__stufe-tag">10 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 6</span><span class="landing__stufe-balken" style="width:10.6%" aria-hidden="true"></span><span class="landing__stufe-tag">19 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 7</span><span class="landing__stufe-balken" style="width:18.9%" aria-hidden="true"></span><span class="landing__stufe-tag">34 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 8</span><span class="landing__stufe-balken" style="width:33.9%" aria-hidden="true"></span><span class="landing__stufe-tag">61 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 9</span><span class="landing__stufe-balken" style="width:61.1%" aria-hidden="true"></span><span class="landing__stufe-tag">110 Tage</span></li>
+        <li class="landing__stufe"><span class="landing__stufe-nr">Stufe 10+</span><span class="landing__stufe-balken" style="width:100.0%" aria-hidden="true"></span><span class="landing__stufe-tag">180 Tage</span></li>
     </ul>
     <p>
       Nach oben ist bei 180 Tagen Schluss. Andere Programme lassen die Abstände ins Jahrelange
