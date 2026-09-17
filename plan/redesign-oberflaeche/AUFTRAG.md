@@ -1,6 +1,6 @@
 # Auftrag: Oberfläche & Mobile-Gestalt
 
-**Status:** läuft — Block 1 `fertig` (v3.1.0), Block 2 ist als Nächstes dran
+**Status:** läuft — Blöcke 1–2 `fertig` (v3.1.0, v3.2.0), Block 3 ist als Nächstes dran
 **Angelegt:** 16. September 2026 · **Neu gefasst:** 17. September 2026
 **Grundlage:** die drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie), gefiltert in [`PRINZIPIEN.md`](PRINZIPIEN.md).
@@ -59,18 +59,28 @@ nachziehen, committen, pushen. Nicht zwei Blöcke auf einmal.
 | # | Block | Status | Was darin steckt |
 |---|---|---|---|
 | 1 | **Fundament** | `fertig` (v3.1.0) | Vier Sätze statt drei · Schriftskala `--fs-*`, Wurzel 17px · Satz 2 als CSS durchgesetzt · Trefferflächen · Stilprobe-Seite |
-| 2 | **Startbildschirm** | `offen` — als Nächstes | Der Bildschirm, den man täglich sieht. Gegen Video 1 prüfen: eine Scroll-Richtung pro Abschnitt, ein Ding pro Bildschirm, wo läuft die App in zwei Richtungen zugleich |
-| 3 | **Bühne & Bewertung** | `offen` | Abfrage-Ansicht: Daumenreichweite, Übergänge zwischen Karten, Rückmeldung nach dem Bewerten |
+| 2 | **Einstellungen & Fortschritt** | `fertig` (v3.2.0) | Beide waren Stapel aus sechs bzw. neun Blöcken. Jetzt Listen mit Stand rechts; Erklärungen im Blatt oder auf einer Unterseite. `.stat-block` ist eine Fläche. Neu: `probelauf.mjs` |
+| 3 | **Bühne & Bewertung** | `offen` — als Nächstes | Abfrage-Ansicht: Daumenreichweite, Übergänge zwischen Karten, Rückmeldung nach dem Bewerten |
 | 4 | **`landing.html`** | `offen` | Mobil-first schärfen auf Grundlage von [`../landing-page-strategie/STRATEGIE.md`](../landing-page-strategie/STRATEGIE.md); Reziprozität und Goal-Gradient aus Video 3 |
 | 5 | **Erststart** | `offen` | Der Weg von „Konto angelegt" bis zur ersten eigenen Karte. Nie bei 0 % anfangen (Video 3), aber **kein** erfundener Assistent |
 
 ## Wie geprüft wird
 
-`plan/redesign-oberflaeche/stilprobe.html` zeigt alle Bausteine aus
-`styles.css` ohne Anmeldung — die echte App kommt ohne Firebase nicht über den
-Ladebildschirm hinaus, ein Agent gestaltet sonst blind. Öffnen mit
-`python3 -m http.server` im Wurzelverzeichnis, dann
-`/plan/redesign-oberflaeche/stilprobe.html`.
+**Zwei Werkzeuge, beide unter `plan/`, beide nicht ausgeliefert.** Ohne sie ist
+die App für einen Agenten unsichtbar: `index.html` lädt Firebase von
+`gstatic.com`, und wo das gesperrt ist, kommt man nie über „Start
+fehlgeschlagen" hinaus.
+
+1. **`probelauf.mjs`** — das wichtigere. Legt Attrappen für die drei
+   Firebase-Module unter und lichtet zehn Bildschirme der **echten** App ab.
+   Misst zusätzlich an jedem Bildschirm den Platz unter dem letzten Element
+   gegen die Höhe der Navigationsleiste. Aufruf im Wurzelverzeichnis:
+   `python3 -m http.server 8099 &` und `node plan/redesign-oberflaeche/probelauf.mjs`.
+   Bilder landen in `.probelauf/` (nicht eingecheckt). **Vor und nach jeder
+   Gestaltungsänderung laufen lassen.**
+2. **`stilprobe.html`** — die Bausteine einzeln nebeneinander, gut für
+   Token, Schriftleiter und Knopf-Stufen. Öffnen über denselben Server unter
+   `/plan/redesign-oberflaeche/stilprobe.html`.
 
 Die Probe definiert **selbst keine Farben, Größen oder Abstände**. Was dort
 hässlich aussieht, wird in `styles.css` geändert, nicht in der Probe — sonst

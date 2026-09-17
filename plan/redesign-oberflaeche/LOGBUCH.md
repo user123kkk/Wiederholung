@@ -4,6 +4,77 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 2: Einstellungen und Fortschritt neu aufgebaut (v3.2.0)
+
+**Geändert:**
+- `app.js` — `renderEinstellungen()` komplett neu (Liste statt sechs Kästen),
+  neu: `einstZeile()`, `labelVon()`, `einstFuss()`, `renderEinstellungenSeite()`,
+  `WAHLEN`, `wahlSheet()`, `SEITEN_TITEL`. `renderFortschritt()` neu (vier
+  Blöcke + „Genauer ansehen"), neu: `renderFortschrittSeite()`. `ui.seite` und
+  `ui.wahlSheet` ergänzt; fünf Handlungen (`einst-seite`, `fort-seite`,
+  `seite-zu`, `wahl-sheet`, `wahl-sheet-zu`); Gerüst in `renderMain()` um zwei
+  Zweige für Unterseiten erweitert.
+- `styles.css` — `.stat-block` ist eine Fläche; `.liste-zeile` 52px mit
+  Winkel-Behandlung; `.stat-legend` einspaltig; `.gross-zahl` umbruchfähig;
+  `.serie-karte` mit Fuge; `.sektion` 12→20px.
+- Neu: `plan/redesign-oberflaeche/probelauf.mjs` (+ `.gitignore`-Eintrag für
+  die erzeugten Bilder). `app.js:19`/`sw.js:10` auf 3.2.0. `CHANGELOG.md`.
+
+**Entscheidung:** Der Betreiber hat beide Bildschirme als „chaotisch" bzw.
+„Chaosladen" gemeldet und auf die Erklärungstexte gezeigt. Die Ursache war
+nicht der Text, sondern die **Form**: beide Bildschirme waren Stapel — sechs
+bzw. neun Blöcke untereinander, jeder mit Überschrift und Absatz, alles
+gleichzeitig sichtbar, obwohl man immer nur wegen einer Sache herkommt. Video 1
+kennt genau dieses Muster und die Antwort darauf: ein Bildschirm macht eine
+Sache; wer etwas Zusätzliches zeigen will, nimmt eine neue **Seite**, keine
+neue Zeile.
+
+Also: Übersicht = Zeilen mit Stand rechts, kein erklärender Text. Der Text ist
+**nicht gelöscht**, er steht jetzt dort, wo entschieden wird — im Blatt (zwei
+bis vier Antworten) oder auf der Unterseite (Handlung). Das war die Bedingung,
+unter der ich das gemacht habe: Was erklärt werden muss, wird nicht weggekürzt,
+sondern verlegt. Beim Fortschritt dieselbe Trennung: Was ein **Stand** ist,
+bleibt auf dem Reiter; was eine **Liste** ist, wird eine Seite.
+
+`.stat-block` als Fläche war der Rest des alten Kästen-Verbots. Vier randlose
+Überschriften mit Text darunter ergeben eine Textwand — nach dem Reset von
+3.1.0 darf die Fläche gruppieren, und die Sperre aus Abschnitt 8 verhindert,
+dass daraus Polsterung auf Polsterung wird.
+
+**Geprüft — und das ist der eigentliche Fortschritt dieser Session:** Neu ist
+`probelauf.mjs`. Bis jetzt war die App für einen Agenten unsichtbar: `index.html`
+lädt Firebase von `gstatic.com`, und wo das gesperrt ist, kommt man nie über
+„Start fehlgeschlagen" hinaus. Das Skript legt Attrappen für die drei
+Firebase-Module unter und lichtet zehn Bildschirme der **echten** App ab —
+dieselben `render()`-Funktionen, dieselben Handler. Es hat sich sofort
+ausgezahlt: Der Kasten-im-Kasten auf der Leech-Seite (`.card--flush` um eine
+`.liste`) war im Code nicht zu sehen, im Bild sofort. Ebenso, dass Serie und
+„Heute" ohne Fuge aneinanderstießen und die Stufen-Legende als Fließband
+umbrach.
+
+Zusätzlich misst der Probelauf an jedem Bildschirm den Platz unter dem letzten
+Element gegen die Höhe der Navigationsleiste (aktuell 104px gegen 65px). Der
+Grund steht im Skript: Ein Vollseiten-Bild zeigt eine `position:fixed`-Leiste
+an einer erfundenen Stelle — ich habe genau deshalb zwischendurch einen
+Überlappungs-Fehler vermutet, den es nicht gab. Eine Zahl lügt da nicht.
+
+**Offen:**
+- **Am echten Handy weiterhin nicht angesehen** — geprüft ist Chromium bei
+  390×844 mit erfundenen Daten. Gesten (Wischen, Long-Press) und Safe-Area
+  kann nur der Betreiber beurteilen.
+- Der Probelauf deckt **Gestalt** ab, nicht Verhalten: Er klickt sich durch
+  und prüft auf Konsolenfehler, aber er ist kein Test der Lernlogik.
+- Block 3 (Bühne/Bewertung), 4 (`landing.html`) und 5 (Erststart) stehen noch.
+- `KONZEPT.md` §7 unverändert — die Lockerung gilt weiter nur für diesen Strang.
+
+**Nächster Schritt:** Block 3 — die Bühne (Abfrage/Bewertung). Das ist der
+Bildschirm, auf dem die meiste Zeit verbracht wird, und der einzige, den ich
+noch nicht gegen Video 1 geprüft habe. Vorgehen wie hier: erst im Probelauf
+ansehen (der Bildschirm fehlt dort noch, weil er eine laufende Sitzung
+braucht), dann belegen, dann ändern.
+
+---
+
 ### 2026-09-17 — Regel-Reset und Block 1: Fundament (v3.1.0)
 
 **Geändert:**

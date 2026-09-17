@@ -715,7 +715,7 @@ h4 { font-size: var(--fs-base); }
 .hint strong { color: var(--text-1); font-weight: 600; }
 
 /* Sektionskopf: Titel links, Nebenhandlung rechts. Ein Muster, überall. */
-.sektion { margin-bottom: var(--space-3); }
+.sektion { margin-bottom: var(--space-5); }
 .sektion__kopf {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: var(--space-3); margin-bottom: var(--space-3);
@@ -1145,6 +1145,18 @@ input[type="radio"]:checked::before { transform: scale(1); }
   font-weight: 500; font-size: var(--fs-md);
 }
 .liste-zeile:last-child { border-bottom: 0; }
+/* 3.2.0: Eine Zeile, die auf eine Unterseite fuehrt, endet mit einem Winkel.
+   Er ist bewusst schwaecher als das fuehrende Symbol - er sagt "hier geht es
+   weiter", nicht "sieh mich an". Mehr Hoehe als --tap, weil in dieser Zeile
+   drei Dinge nebeneinander stehen (Symbol, Text, Stand) und 44px bei 17px
+   Schrift eng werden. */
+.liste-zeile { min-height: 52px; }
+.liste-zeile > .icon:last-child { color: var(--text-3); opacity: 0.55; margin-left: calc(var(--space-1) * -1); }
+.liste-zeile > .icon:first-child { color: var(--text-2); }
+.liste-zeile.aktiv > .icon:first-child { color: var(--accent); }
+.liste-zeile.gefahr > .icon:first-child { color: var(--negative); }
+/* Der Stand rechts darf die Beschriftung nicht verdraengen. */
+.liste-zeile__wert { max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .liste-zeile__text { flex: 1 1 auto; min-width: 0; }
 .liste-zeile__wert { color: var(--text-3); font-size: var(--fs-xs); font-weight: 500; }
 .liste-zeile .i { color: var(--text-3); }
@@ -1642,8 +1654,28 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    derselben Stufen-Rampe.
    ========================================================================= */
 
-.stat-block { margin-bottom: var(--stack); }
+/* 3.2.0: Ein Block ist eine Flaeche. Vorher waren es vier bis sechs
+   Ueberschriften mit Text darunter, ohne Huelle - untereinander gelesen ergab
+   das eine Textwand, in der man die Grenze zwischen "Heute" und "Diese Woche"
+   suchen musste. Genau das verbot Satz 2 in seiner alten Fassung; nach dem
+   Reset gilt: die Flaeche darf gruppieren, nur nicht doppelt. Die Sperre in
+   Abschnitt 8 stellt sicher, dass ein .stat-block in einer .card keine
+   zweite Polsterung bekommt. */
+.stat-block {
+  margin-bottom: var(--stack);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: var(--space-5);
+  box-shadow: var(--kante), var(--shadow-sm);
+}
+.card .stat-block, .liste .stat-block {
+  background: none; border: 0; border-radius: 0; box-shadow: none; padding: 0;
+}
 .stat-block h3 { margin-bottom: var(--space-1); }
+/* Der eine Knopf in einem Block steht unten und mit Abstand zur Zahl
+   darueber - vorher klebte er am Text. */
+.stat-block > button { margin-top: var(--space-4); }
 .stat-block .stat-sub {
   font-size: var(--fs-xs); color: var(--text-3); margin-bottom: var(--space-3);
 }
@@ -1665,7 +1697,15 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   display: block; font-size: var(--fs-xs); color: var(--text-3); margin-top: 2px;
 }
 
-.gross-zahl { display: flex; align-items: baseline; gap: var(--space-2); }
+/* 3.2.0: Die Beschriftung bekommt eine eigene Zeile. Vorher lief sie hinter
+   der Zahl weiter und brach mitten im Satz um - die zweite Zeile stand dann
+   unter der Zahl eingerueckt und sah aus wie ein Fehler. Die arabische
+   Ziffer bleibt neben der Zahl, sie IST die Zahl. */
+.gross-zahl {
+  display: flex; align-items: baseline; gap: var(--space-2);
+  flex-wrap: wrap; row-gap: var(--space-1);
+}
+.gross-zahl > span:not(.arab-ziffer) { flex: 1 1 100%; }
 .gross-zahl strong {
   font-size: clamp(2rem, 9vw, 2.75rem); font-weight: 600;
   line-height: 1; letter-spacing: -0.03em; color: var(--accent);
@@ -1706,7 +1746,13 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   display: flex; gap: var(--space-4); flex-wrap: wrap;
   font-size: var(--fs-xs); color: var(--text-2);
 }
-.stat-legend > span { display: inline-flex; align-items: center; gap: var(--space-2); }
+/* 3.2.0: Eine Zeile pro Stufe. Als Fliessband umgebrochen standen mal zwei,
+   mal eine Stufe nebeneinander - die Rampe hat aber eine Reihenfolge, und die
+   liest man nur untereinander. Video 1: pro Abschnitt EINE Richtung. */
+.stat-legend > span {
+  display: flex; align-items: center; gap: var(--space-2);
+  width: 100%;
+}
 .stat-legend strong { color: var(--text-1); font-weight: 600; }
 
 /* Kalender. */
@@ -1768,6 +1814,11 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   display: flex; align-items: center; gap: var(--space-4);
   background: var(--surface); border: 1px solid var(--border-subtle);
   border-radius: var(--r-lg); padding: var(--space-5);
+  /* 3.2.0: Seit .stat-block selbst eine Flaeche ist, stiessen Serie und
+     "Heute" ohne Fuge aneinander und sahen aus wie ein Kasten mit einem
+     Strich darin. Gleiche Luft wie zwischen allen Bloecken. */
+  margin-bottom: var(--stack);
+  box-shadow: var(--kante), var(--shadow-sm);
 }
 .serie-zahl { display: flex; align-items: baseline; gap: var(--space-2); }
 .serie-zahl strong {

@@ -1,3 +1,38 @@
+## 3.2.0 – 17. September 2026
+
+### Geändert (Einstellungen und Fortschritt neu aufgebaut)
+
+Rückmeldung des Betreibers: „In den Einstellungen ist alles so chaotisch, unter jedem Bereich ist 10 Zeilen Erklärung. Fortschritttab ist auch ein Chaosladen." Beides stimmte, und beides hatte dieselbe Ursache: Die zwei Bildschirme waren **Stapel** — sechs bzw. neun Blöcke untereinander, jeder mit Überschrift und erklärendem Absatz, alle gleichzeitig sichtbar. Video 1 sagt dazu zwei Dinge: *ein Bildschirm macht eine Sache*, und *wer etwas Zusätzliches zeigen will, nimmt keine neue Zeile, sondern eine neue Seite*.
+
+**Einstellungen sind jetzt eine Liste.** Jede Zeile nennt links, worum es geht, und rechts den aktuellen Stand — „Helligkeit · Dunkel", „Karten pro Sitzung · 20", „Sichern · vor 3 Tg.". Auf der Übersicht steht **kein** erklärender Text mehr; wer nichts ändern will, ist in drei Sekunden durch. Gelöscht ist nichts davon: Die Erklärung steht jetzt dort, wo entschieden wird.
+
+- **Kleine Entscheidungen** (Helligkeit, arabische Schriftgröße, Karten pro Sitzung) kommen als Blatt von unten, mit den Antworten als Zeilen, einem Haken bei der aktuellen und der Erklärung darunter. Bei der Schriftgröße steht die Leseprobe gleich im Blatt und ändert sich mit.
+- **Handlungen** (Sichern, Einspielen, Aufzeichnung) haben eine eigene Seite mit Zurück-Pfeil. Dort ist der erklärende Text richtig aufgehoben: Wer die Seite geöffnet hat, will wissen, was passiert, bevor er tippt.
+
+**Der Fortschritt zeigt vier Blöcke statt neun.** Auf dem Reiter bleibt, was die Frage „wie stehe ich gerade da" beantwortet: Serie, Heute, die letzten Wochen, der Stoff. Alles, was eine **Liste** ist, ist eine eigene Seite hinter einer Zeile unter „Genauer ansehen" — Lektionen, Karten die nicht klappen, die nächsten sieben Tage. Eine Zeile erscheint nur, wenn es dahinter auch etwas gibt; eine Zeile, die auf einen leeren Bildschirm führt, ist schlechter als keine. Keine dieser Funktionen hat ihre Logik geändert, sie stehen nur woanders.
+
+**Ein Block ist jetzt eine Fläche.** `.stat-block` war randlos — vier Überschriften mit Text darunter ergaben eine Textwand, in der man die Grenze zwischen „Heute" und „Diese Woche" suchen musste. Genau das verbot Satz 2 in seiner alten Fassung („keine Kästen"); nach dem Reset von 3.1.0 darf die Fläche gruppieren, nur nicht doppelt. Der Serienriss-Hinweis, der sich bisher mit drei Inline-Korrekturen wieder flach gemacht hat, ist jetzt das, was er inhaltlich ist.
+
+### Verbessert
+
+- **Zeilen mit Ziel** tragen einen Winkel am Ende, schwächer als das führende Symbol, und sind 52px hoch statt 44 — bei 17px Schrift stehen dort drei Dinge nebeneinander.
+- **Die Stufen-Legende** steht untereinander statt als Fließband. Die Rampe hat eine Reihenfolge, und die liest man nur in einer Spalte (Video 1: pro Abschnitt eine Richtung).
+- **Große Zahlen** („22 von 24 Karten saßen schon…") setzen die Beschriftung auf eine eigene Zeile. Vorher brach der Satz mitten im Wort um und die zweite Zeile stand unter der Zahl eingerückt.
+- **Serie und „Heute"** haben wieder eine Fuge; seit beide Flächen sind, stießen sie ohne Abstand aneinander.
+- Die Beschriftungen der arabischen Schriftgrößen sind großgeschrieben („Normal" statt „normal") — sie stehen jetzt als Stand neben „Dunkel" und „20", nicht mehr als Knöpfe in einer Segmentreihe.
+- Ein Reiterwechsel oder ein Sprung in die Kartenverwaltung verlässt auch eine offene Unterseite. Ohne das trüge die Kopfzeile den Titel der Seite, aus der man gerade kommt.
+
+### Behoben
+
+- **Kasten im Kasten auf der Leech-Seite.** Beim Bauen selbst hineingelaufen: `.card.card--flush` um eine `.liste` ergibt zwei sichtbar gerundete Kästen ineinander. Die `.liste` ist bereits eine Fläche. Gefunden im Probelauf (siehe unten) — im Code war es nicht zu sehen.
+
+### Neu (Arbeitsmittel, wird nicht ausgeliefert)
+
+- **`plan/redesign-oberflaeche/probelauf.mjs`.** `index.html` braucht Firebase von `gstatic.com`; wo das nicht erreichbar ist, bleibt die App bei „Start fehlgeschlagen" stehen und jede Gestaltungsänderung wäre ungeprüft. Das Skript fängt die drei Firebase-Module ab, liefert Attrappen mit erfundenen Daten und lichtet dann zehn Bildschirme der **echten** App ab — dieselben `render()`-Funktionen, dieselben Handler, dieselbe `styles.css`. Es schreibt nichts.
+  Zusätzlich misst es an jedem Bildschirm, wie viel Platz unter dem letzten Element bleibt, und meldet es als Fehler, wenn weniger als die Höhe der Navigationsleiste übrig ist. Ein Bild kann das verschleiern (eine `position:fixed`-Leiste wandert im Vollseiten-Bild an eine erfundene Stelle), eine Zahl nicht.
+
+---
+
 ## 3.1.0 – 17. September 2026
 
 ### Geändert (Gestaltung, Grundlagen)

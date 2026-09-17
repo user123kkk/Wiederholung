@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.1.0";
+const APP_VERSION = "3.2.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -802,10 +802,13 @@ function normStreak(s) {
 /* E7 (1.8.0): drei feste Stufen statt eines Zahlenfeldes. Fatha, Kasra und
    Sukuun sind bei 1,7 rem auf dem Handy kaum auseinanderzuhalten - und genau
    die entscheiden, ob richtig gelesen wird. */
+/* 3.2.0: Beschriftungen gross geschrieben. Sie standen frueher als Knoepfe
+   in einer Segmentreihe nebeneinander, wo Kleinschreibung passte; jetzt
+   stehen sie als Stand rechts in einer Zeile neben "Dunkel" und "20". */
 const ARAB_STUFEN = [
-  { id: "klein",  label: "klein",  faktor: 0.85 },
-  { id: "normal", label: "normal", faktor: 1 },
-  { id: "gross",  label: "groß",   faktor: 1.3 }
+  { id: "klein",  label: "Klein",  faktor: 0.85 },
+  { id: "normal", label: "Normal", faktor: 1 },
+  { id: "gross",  label: "Groß",   faktor: 1.3 }
 ];
 function arabFaktor() {
   const st = ARAB_STUFEN.find(x => x.id === settings.arabGroesse);
@@ -954,6 +957,19 @@ let ui = {
      dann faellt die App auf den ersten Bereich zurueck. */
   bereichId: null,
   tab: "lernen",             // "lernen" | "fortschritt" | "verwalten"
+  /* 3.2.0: Unterseiten. Einstellungen und Fortschritt waren Stapel aus sechs
+     bzw. neun Bloecken untereinander - jeder mit Ueberschrift und ein paar
+     Zeilen Erklaerung, alle gleichzeitig sichtbar. Video 1: ein Bildschirm
+     macht EINE Sache; wer etwas Neues zeigen will, nimmt keine neue Zeile,
+     sondern eine neue Seite. Beide Bildschirme sind jetzt eine Liste von
+     Zeilen, und was frueher darunter stand, steht auf der Seite dahinter.
+     null = die Uebersicht selbst. */
+  seite: null,               // "sichern" | "einspielen" | "verlauf" | "lektionen" | "leeches" | "vorschau"
+  /* Die drei kleinen Entscheidungen (Helligkeit, Schriftgroesse, Karten pro
+     Sitzung) brauchen keine eigene Seite - sie haben zwei bis vier Antworten.
+     Die kommen als Blatt von unten, mit der Erklaerung dort, wo entschieden
+     wird. null = zu. */
+  wahlSheet: null,           // "thema" | "arab" | "limit"
   statsScope: "alle",        // "alle" = alle Bereiche zusammen, "bereich" = nur der offene
   session: null,
   editId: null,
@@ -2362,6 +2378,9 @@ function resetRueckfaelle(bereichId, cardId) {
 function editCardInBereich(bereichId, cardId) {
   if (!bereiche.some(x => x.id === bereichId)) return;
   ui.bereichId = bereichId;
+  /* 3.2.0: Ein Reiterwechsel verlaesst auch eine offene Unterseite - sonst
+     traegt die Kopfzeile den Titel der Seite, aus der man gerade kommt. */
+  ui.seite = null;
   ui.tab = "verwalten";
   ui.session = null;
   ui.searchQuery = "";
@@ -3266,6 +3285,9 @@ function startDrillWithCards(cards, label, handwriting) {
     drillLabel: label
   };
   ui.drillOpen = false;
+  /* 3.2.0: Ein Reiterwechsel verlaesst auch eine offene Unterseite - sonst
+     traegt die Kopfzeile den Titel der Seite, aus der man gerade kommt. */
+  ui.seite = null;
   ui.tab = "lernen";
   render();
 }
@@ -3317,6 +3339,9 @@ async function startLernen(setId) {
   ui.session = null;
   ui.drillOpen = false;
   ui.selectMode = false;
+  /* 3.2.0: Ein Reiterwechsel verlaesst auch eine offene Unterseite - sonst
+     traegt die Kopfzeile den Titel der Seite, aus der man gerade kommt. */
+  ui.seite = null;
   ui.tab = "lernen";
   ui.lernFokusNach = "__start__";
   render();
@@ -4395,11 +4420,22 @@ function renderMain() {
     /* Kein AppBar, keine Navigation. Die Leiste kommt aus dem Modus. */
     html += '<div class="view view--modus">' + kopf + inhalt + '</div>';
   } else if (ui.einstellungen) {
-    html += appBar({
-      titel: "Einstellungen",
-      zurueck: "einstellungen-zu",
-      aktion: '<button class="ghost" data-action="einstellungen-zu">Fertig</button>'
-    });
+    /* 3.2.0: Eine offene Unterseite traegt ihren eigenen Titel und fuehrt
+       zurueck zur Uebersicht, nicht aus den Einstellungen heraus. Sonst
+       verliert man mit einem Tipp zwei Ebenen auf einmal. */
+    html += ui.seite
+      ? appBar({ titel: SEITEN_TITEL[ui.seite] || "Einstellungen", zurueck: "seite-zu" })
+      : appBar({
+          titel: "Einstellungen",
+          zurueck: "einstellungen-zu",
+          aktion: '<button class="ghost" data-action="einstellungen-zu">Fertig</button>'
+        });
+    html += '<div class="view">' + kopf + inhalt + '</div>';
+    html += navLeiste();
+  } else if (ui.seite) {
+    /* Unterseite eines Reiters (gerade nur Fortschritt). Die Navigation
+       bleibt stehen - man ist weiter in diesem Reiter, eine Ebene tiefer. */
+    html += appBar({ titel: SEITEN_TITEL[ui.seite] || "", zurueck: "seite-zu" });
     html += '<div class="view">' + kopf + inhalt + '</div>';
     html += navLeiste();
   } else {
@@ -4439,6 +4475,7 @@ function renderMain() {
      dem Bereichs-Sheet, damit ein „Bereich anlegen“ aus dem Sheet heraus
      bedienbar bleibt. */
   html += bereichSheet();
+  html += wahlSheet();
   html += cardDetailSheet();
   html += renderDialog();          // D2 – liegt als Overlay ueber allem
   html += renderToast();
@@ -4765,6 +4802,9 @@ function merkSetOeffnen() {
   if (!set) { render(); return; }
   ui.session = null;
   ui.lernSetId = null;
+  /* 3.2.0: Ein Reiterwechsel verlaesst auch eine offene Unterseite - sonst
+     traegt die Kopfzeile den Titel der Seite, aus der man gerade kommt. */
+  ui.seite = null;
   ui.tab = "verwalten";
   ui.setsOffen = true;
   ui.openSetId = set.id;
@@ -4778,131 +4818,91 @@ function merkSetOeffnen() {
    eigenen Daten, dann das Konto. Jeder Abschnitt sagt in einem Satz, was
    er bewirkt - gerade Backup und Import sind Handlungen, die man nicht
    rückgängig macht. */
+/* ============================================================================
+   EINSTELLUNGEN — 3.2.0: eine Liste, keine Wand
+
+   Vorher: sechs Sektionen untereinander, jede ein Kasten mit Ueberschrift und
+   drei bis fuenf Zeilen Erklaerung. Alles gleichzeitig sichtbar, obwohl man
+   immer nur wegen EINER Sache herkommt. Rueckmeldung des Betreibers: "unter
+   jedem Bereich ist 10 Zeilen Erklaerung".
+
+   Jetzt (Video 1, "ein Bildschirm macht eine Sache"):
+     - Die Uebersicht ist eine Liste von Zeilen. Jede Zeile nennt links, worum
+       es geht, und rechts den aktuellen Stand. Kein erklaerender Text.
+     - Die Erklaerung ist nicht geloescht - sie steht dort, wo entschieden
+       wird: im Blatt (kleine Wahl) oder auf der Unterseite (Handlung).
+     - Wer nichts aendern will, scrollt an allem in drei Sekunden vorbei.
+   ========================================================================= */
+
+/* Die Titel der Unterseiten. Eine Stelle, damit Kopfzeile und Zeile nicht
+   auseinanderlaufen. */
+const SEITEN_TITEL = {
+  sichern: "Sichern",
+  einspielen: "Einspielen",
+  verlauf: "Aufzeichnung",
+  lektionen: "Lektionen",
+  leeches: "Karten, die nicht klappen",
+  vorschau: "Die n\u00e4chsten 7 Tage"
+};
+
+/* Eine Zeile der Uebersicht: Symbol, Beschriftung, aktueller Stand, Pfeil. */
+function einstZeile(cfg) {
+  return '<button class="liste-zeile" data-action="' + cfg.action + '"' +
+    (cfg.id ? ' data-id="' + esc(cfg.id) + '"' : '') + '>' +
+    ikon(cfg.icon, "i-sm") +
+    '<span class="liste-zeile__text">' + esc(cfg.text) + '</span>' +
+    (cfg.wert ? '<span class="liste-zeile__wert">' + esc(cfg.wert) + '</span>' : '') +
+    ikon("chevronRechts", "i-sm") + '</button>';
+}
+
+function labelVon(liste, id, ersatz) {
+  const t = liste.find(x => x.id === id);
+  return t ? t.label : ersatz;
+}
+
 function renderEinstellungen() {
-  const b = currentBereich();
+  if (ui.seite) return renderEinstellungenSeite(ui.seite);
+
   const alter = daysSinceLastBackup();
   const tage = Object.keys(verlauf).length;
   let html = "";
 
-  /* ---------- Darstellung ---------- */
+  /* ---------- Darstellung und Lernen: drei kleine Entscheidungen ---------- */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Darstellung</div>';
-  html += '<div class="card">';
-  html += '<div class="field"><label>Helligkeit</label>';
-  html += '<div class="seg-row">';
-  html += '<span class="seg" role="group" aria-label="Helligkeit">';
-  for (const th of THEMEN) {
-    html += '<button class="' + (settings.thema === th.id ? "active" : "") +
-      '" data-action="set-thema" data-id="' + th.id + '"' +
-      (settings.thema === th.id ? ' aria-pressed="true"' : ' aria-pressed="false"') +
-      '>' + th.label + '</button>';
-  }
-  html += '</span>';
-  if (settings.thema === "auto") {
-    html += '<span class="hint">gerade ' + (themaAufgeloest() === "hell" ? "hell" : "dunkel") + '</span>';
-  }
-  html += '</div>';
-  html += '<p class="field__hilfe">Dunkel ist die Fassung, f\u00fcr die diese App gebaut ist. Hell ist keine ' +
-    'Umkehrung davon, sondern eine eigene: Tinte auf Papier statt Gold auf Schwarz.</p></div>';
-
-  /* E7: Bewusst drei feste Stufen statt eines Zahlenfeldes - es gibt nichts
-     einzustellen, nur auszuprobieren, was man lesen kann. */
-  html += '<div class="field"><label>Gr\u00f6\u00dfe der arabischen Schrift</label>';
-  html += '<div class="seg-row">';
-  html += '<span class="seg" role="group" aria-label="Schriftgr\u00f6\u00dfe f\u00fcr Arabisch">';
-  for (const st of ARAB_STUFEN) {
-    html += '<button class="' + (settings.arabGroesse === st.id ? "active" : "") +
-      '" data-action="set-arab-groesse" data-id="' + st.id + '"' +
-      (settings.arabGroesse === st.id ? ' aria-pressed="true"' : ' aria-pressed="false"') +
-      '>' + st.label + '</button>';
-  }
-  html += '</span>';
-  html += '<span class="arabic" lang="ar" dir="rtl" style="font-size:calc(1.35rem * var(--arab-scale,1))">\u0628\u0650\u0633\u0652\u0645\u0650 \u0671\u0644\u0644\u0651\u0670\u0647\u0650</span>';
-  html += '</div>';
-  html += '<p class="field__hilfe">Gilt \u00fcberall in der App. Die Probe daneben \u00e4ndert sich mit.</p></div>';
+  html += '<div class="liste">';
+  html += einstZeile({ action: "wahl-sheet", id: "thema", icon: "leer", text: "Helligkeit",
+    wert: labelVon(THEMEN, settings.thema, "Dunkel") });
+  html += einstZeile({ action: "wahl-sheet", id: "arab", icon: "karten", text: "Arabische Schrift",
+    wert: labelVon(ARAB_STUFEN, settings.arabGroesse, "Normal") });
   html += '</div></div>';
 
-  /* ---------- Lernen ----------
-     Bremst NUR die einzelne Sitzung, nicht den Stoff selbst (das macht das
-     Schloss seit 2.3.0, siehe dueCardsFor). Wer wenig Zeit hat, muss so nicht
-     mittendrin abbrechen, sondern w\u00e4hlt vorher, wie viel reinpasst. */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Lernen</div>';
-  html += '<div class="card">';
-  html += '<div class="field"><label>Karten pro Sitzung</label>';
-  html += '<div class="seg-row">';
-  html += '<span class="seg" role="group" aria-label="Karten pro Sitzung">';
-  for (const sl of SITZUNGS_LIMITS) {
-    html += '<button class="' + (settings.sitzungsLimit === sl.id ? "active" : "") +
-      '" data-action="set-sitzungslimit" data-id="' + sl.id + '"' +
-      (settings.sitzungsLimit === sl.id ? ' aria-pressed="true"' : ' aria-pressed="false"') +
-      '>' + sl.label + '</button>';
-  }
-  html += '</span></div>';
-  html += '<p class="field__hilfe">Bei "Alle" zeigt eine Sitzung jede f\u00e4llige Karte auf einmal. Bei ' +
-    'einer Zahl h\u00f6rt sie danach auf \u2013 der Rest bleibt f\u00e4llig und steht in der n\u00e4chsten ' +
-    'Sitzung wieder oben, Wiederholungen zuerst.</p></div>';
+  html += '<div class="liste">';
+  html += einstZeile({ action: "wahl-sheet", id: "limit", icon: "lernen", text: "Karten pro Sitzung",
+    wert: labelVon(SITZUNGS_LIMITS, settings.sitzungsLimit, "Alle") });
   html += '</div></div>';
 
-  /* ---------- Sichern ---------- */
+  /* ---------- Daten: drei Handlungen, jede auf eigener Seite ----------
+     Sichern, Einspielen und Verlauf standen bisher als drei Kaesten
+     untereinander, zusammen ueber 15 Zeilen Text auf einem Bildschirm, den
+     man wegen einer einzigen Sache aufruft. */
   html += '<div class="sektion">';
-  html += '<div class="eyebrow">Sichern</div>';
-  html += '<div class="card">';
-  html += '<p class="hint">Ein Backup ist eine Datei auf deinem Ger\u00e4t. Sie h\u00e4ngt an nichts \u2013 ' +
-    'geht das Konto verloren, ist sie das Einzige, was bleibt.</p>';
-  html += '<div class="' + (alter === null || alter >= 14 ? "banner-info" : "banner-info banner-leise") +
-    '" style="margin:var(--space-4) 0 0">' + ikon("sichern", "i-sm") + '<div class="banner__text">' +
-    (alter === null ? "Du hast noch nie ein Backup heruntergeladen."
-     : alter === 0 ? "Zuletzt gesichert: heute."
-     : "Zuletzt gesichert vor " + alter + " Tag" + (alter === 1 ? "" : "en") + ".") + '</div></div>';
-  html += '<div class="form-actions">';
-  html += '<button data-action="export-backup">' + ikon("sichern", "i-sm") + ' Alles sichern</button>';
-  html += '<button class="secondary" data-action="export-backup-current">Nur \u201e' + esc(b.name) + '\u201c</button>';
-  html += '</div>';
-  if (istAutor() && !istGefuehrt(b)) {
-    html += '<hr class="rule" style="margin:var(--space-5) 0">';
-    html += '<p class="hint">Zum Weitergeben: derselbe Bereich, aber alles auf Stufe 0 und alle ' +
-      'Lektionen bis auf die erste zu. F\u00fcr deinen eigenen Stand \u00e4ndert sich nichts.</p>';
-    html += '<div class="form-actions">';
-    html += '<button class="secondary" data-action="export-weitergabe">' + ikon("teilen", "i-sm") +
-      ' Kartensatz zum Weitergeben</button>';
-    html += '</div>';
-  }
-  html += '</div></div>';
-
-  /* ---------- Einspielen ---------- */
-  html += '<div class="sektion">';
-  html += '<div class="eyebrow">Einspielen</div>';
-  html += '<div class="card">';
-  html += '<p class="hint">Eine Backup-Datei oder einen Kartensatz laden. Geh\u00f6rt die Datei zu einem ' +
-    'Satz, den du schon hast, wird er erg\u00e4nzt \u2013 dein Lernstand bleibt.</p>';
-  html += '<div class="form-actions">';
-  html += '<button class="secondary" data-action="import-trigger">' + ikon("einspielen", "i-sm") +
-    ' Datei ausw\u00e4hlen</button>';
-  html += '</div>';
-  html += '</div></div>';
-
-  /* ---------- Aufzeichnung ---------- */
-  html += '<div class="sektion">';
-  html += '<div class="eyebrow">Aufzeichnung</div>';
-  html += '<div class="card">';
-  html += '<p class="hint">Das Tagesprotokoll tr\u00e4gt Kalender, Wochenzahlen und die Serie \u2013 ' +
-    'aufgezeichnet sind <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
-    'L\u00f6schen betrifft nur die Anzeige: Karten, Stufen und F\u00e4lligkeiten bleiben unber\u00fchrt.</p>';
-  html += '<div class="form-actions">';
-  html += '<button class="secondary" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") +
-    '>Verlauf zur\u00fccksetzen</button>';
-  html += '</div>';
+  html += '<div class="eyebrow">Daten</div>';
+  html += '<div class="liste">';
+  html += einstZeile({ action: "einst-seite", id: "sichern", icon: "sichern", text: "Sichern",
+    wert: alter === null ? "noch nie" : alter === 0 ? "heute" : "vor " + alter + " Tg." });
+  html += einstZeile({ action: "einst-seite", id: "einspielen", icon: "einspielen", text: "Einspielen" });
+  html += einstZeile({ action: "einst-seite", id: "verlauf", icon: "fortschritt", text: "Aufzeichnung",
+    wert: tage + " Tag" + (tage === 1 ? "" : "e") });
   html += '</div></div>';
 
   /* ---------- Hilfe ---------- */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Hilfe</div>';
-  html += '<div class="card">';
-  html += '<div class="form-actions">';
-  html += '<button class="secondary" data-action="open-error-modal">' + ikon("warnung", "i-sm") +
-    ' Fehler melden</button>';
-  html += '</div>';
+  html += '<div class="liste">';
+  html += einstZeile({ action: "open-error-modal", icon: "warnung", text: "Fehler melden" });
   html += '</div></div>';
 
   /* ---------- Konto ---------- */
@@ -4920,24 +4920,144 @@ function renderEinstellungen() {
     '<span class="liste-zeile__text">Konto endgültig löschen</span></button>';
   html += '</div></div>';
 
-  /* Datenschutz und Impressum muessen jederzeit erreichbar sein, nicht nur
-     vor der Anmeldung (Paragraph 5 DDG: "leicht erkennbar, unmittelbar
-     erreichbar"). Ohne diese Zeile haette ein angemeldeter Nutzer keinen
-     Weg dorthin ausser sich abzumelden. .rechtsfuss statt .liste-zeile/
-     .linklike: Fussnoten, keine Kontoaktion wie "Abmelden" oben. Ein
-     einziger Datenschutz-Text statt zweier verschieden benannter, siehe
-     renderAuth(). */
-  html += '<div class="rechtsfuss" style="margin-top:var(--space-3)">';
+  html += einstFuss();
+  return html;
+}
+
+/* Datenschutz und Impressum muessen jederzeit erreichbar sein, nicht nur vor
+   der Anmeldung (Paragraph 5 DDG: "leicht erkennbar, unmittelbar erreichbar").
+   Ohne diese Zeile haette ein angemeldeter Nutzer keinen Weg dorthin ausser
+   sich abzumelden. .rechtsfuss statt .liste-zeile: Fussnoten, keine
+   Kontoaktion wie "Abmelden" darueber. Die Versionsnummer steht daneben -
+   dort sucht man sie, wenn man sie braucht. */
+function einstFuss() {
+  let html = '<div class="rechtsfuss" style="margin-top:var(--space-6)">';
   html += '<a href="./datenschutzerklaerung.html">Datenschutz</a>';
   html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
   html += '<a href="./impressum.html">Impressum</a>';
   html += '</div>';
-
-  /* Die Versionsnummer stand bis 2.21.6 klein unter JEDEM Bildschirm. Sie
-     gehoert dorthin, wo man sie sucht, wenn man sie braucht. */
-  html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-7)">' +
+  html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-4)">' +
     'Adrabic ' + APP_VERSION + '</p>';
+  return html;
+}
 
+/* ---------- Die Unterseiten ----------
+   Jede macht genau eine Sache, und hier ist der Text richtig aufgehoben: Wer
+   diese Seite geoeffnet hat, will wissen, was passiert, bevor er tippt. */
+function renderEinstellungenSeite(id) {
+  const b = currentBereich();
+  let html = "";
+
+  if (id === "sichern") {
+    const alter = daysSinceLastBackup();
+    html += '<div class="card">';
+    html += '<p class="hint">Ein Backup ist eine Datei auf deinem Gerät. Sie hängt an nichts – ' +
+      'geht das Konto verloren, ist sie das Einzige, was bleibt.</p>';
+    html += '<div class="' + (alter === null || alter >= 14 ? "banner-info" : "banner-info banner-leise") +
+      '" style="margin:var(--space-4) 0 0">' + ikon("sichern", "i-sm") + '<div class="banner__text">' +
+      (alter === null ? "Du hast noch nie ein Backup heruntergeladen."
+       : alter === 0 ? "Zuletzt gesichert: heute."
+       : "Zuletzt gesichert vor " + alter + " Tag" + (alter === 1 ? "" : "en") + ".") + '</div></div>';
+    html += '<div class="form-actions">';
+    html += '<button data-action="export-backup">' + ikon("sichern", "i-sm") + ' Alles sichern</button>';
+    html += '<button class="secondary" data-action="export-backup-current">Nur „' + esc(b.name) + '“</button>';
+    html += '</div>';
+    html += '</div>';
+    if (istAutor() && !istGefuehrt(b)) {
+      html += '<div class="card" style="margin-top:var(--stack)">';
+      html += '<h3>Zum Weitergeben</h3>';
+      html += '<p class="hint">Derselbe Bereich, aber alles auf Stufe 0 und alle Lektionen bis auf ' +
+        'die erste zu. Für deinen eigenen Stand ändert sich nichts.</p>';
+      html += '<div class="form-actions">';
+      html += '<button class="secondary" data-action="export-weitergabe">' + ikon("teilen", "i-sm") +
+        ' Kartensatz zum Weitergeben</button>';
+      html += '</div></div>';
+    }
+    return html;
+  }
+
+  if (id === "einspielen") {
+    html += '<div class="card">';
+    html += '<p class="hint">Eine Backup-Datei oder einen Kartensatz laden. Gehört die Datei zu einem ' +
+      'Satz, den du schon hast, wird er ergänzt – dein Lernstand bleibt.</p>';
+    html += '<div class="form-actions">';
+    html += '<button data-action="import-trigger">' + ikon("einspielen", "i-sm") +
+      ' Datei auswählen</button>';
+    html += '</div></div>';
+    return html;
+  }
+
+  if (id === "verlauf") {
+    const tage = Object.keys(verlauf).length;
+    html += '<div class="card">';
+    html += '<p class="hint">Das Tagesprotokoll trägt Kalender, Wochenzahlen und die Serie – ' +
+      'aufgezeichnet sind <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
+      'Löschen betrifft nur die Anzeige: Karten, Stufen und Fälligkeiten bleiben unberührt.</p>';
+    html += '<div class="form-actions">';
+    html += '<button class="secondary" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") +
+      '>Verlauf zurücksetzen</button>';
+    html += '</div></div>';
+    return html;
+  }
+
+  return '<p class="hint">Diese Seite gibt es nicht.</p>';
+}
+
+/* ---------- Das Wahl-Blatt ----------
+   Fuer Entscheidungen mit zwei bis vier Antworten. Kommt von unten, laesst
+   den Bildschirm dahinter stehen und traegt die Erklaerung genau dort, wo
+   entschieden wird - statt dauerhaft unter einer Einstellung, die man
+   einmal setzt und danach nie wieder ansieht. */
+const WAHLEN = {
+  thema: {
+    titel: "Helligkeit", action: "set-thema",
+    liste: () => THEMEN, wert: () => settings.thema,
+    hilfe: 'Dunkel ist die Fassung, für die diese App gebaut ist. Hell ist keine ' +
+           'Umkehrung davon, sondern eine eigene: Tinte auf Papier statt Creme auf Schwarz.'
+  },
+  arab: {
+    titel: "Arabische Schrift", action: "set-arab-groesse",
+    liste: () => ARAB_STUFEN, wert: () => settings.arabGroesse,
+    hilfe: 'Gilt überall in der App. Es gibt nichts einzustellen, nur auszuprobieren, ' +
+           'was du lesen kannst.',
+    probe: true
+  },
+  limit: {
+    titel: "Karten pro Sitzung", action: "set-sitzungslimit",
+    liste: () => SITZUNGS_LIMITS, wert: () => settings.sitzungsLimit,
+    hilfe: 'Bei „Alle“ zeigt eine Sitzung jede fällige Karte auf einmal. Bei einer ' +
+           'Zahl hört sie danach auf – der Rest bleibt fällig und steht in der nächsten ' +
+           'Sitzung wieder oben, Wiederholungen zuerst. Bremst nur die Sitzung, nicht den Stoff.'
+  }
+};
+
+function wahlSheet() {
+  if (!ui.wahlSheet) return "";
+  const w = WAHLEN[ui.wahlSheet];
+  if (!w) return "";
+  const aktiv = w.wert();
+  let html = '<div class="dlg-backdrop" data-action="wahl-sheet-zu" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-label="' + esc(w.titel) + '">';
+  html += '<h3>' + esc(w.titel) + '</h3>';
+  if (w.probe) {
+    html += '<p class="arabic" lang="ar" dir="rtl" style="font-size:calc(1.6rem * var(--arab-scale,1));' +
+      'text-align:center;margin-top:var(--space-3)">بِسْمِ ٱللّٰهِ</p>';
+  }
+  html += '<div class="sheet-liste"><div class="liste" style="background:transparent;border:0">';
+  w.liste().forEach(o => {
+    const ist = o.id === aktiv;
+    html += '<button class="liste-zeile' + (ist ? " aktiv" : "") + '" data-action="' + w.action +
+      '" data-id="' + esc(o.id) + '">' +
+      '<span class="liste-zeile__text">' + esc(o.label) + '</span>' +
+      (ist ? ikon("haken", "i-sm") : '') + '</button>';
+  });
+  html += '</div></div>';
+  if (ui.wahlSheet === "thema" && settings.thema === "auto") {
+    html += '<p class="field__hilfe">Gerade ' + (themaAufgeloest() === "hell" ? "hell" : "dunkel") + '.</p>';
+  }
+  html += '<p class="field__hilfe" style="margin-top:var(--space-4)">' + w.hilfe + '</p>';
+  html += '<div class="dlg-actions"><button class="secondary" data-action="wahl-sheet-zu">Fertig</button></div>';
+  html += '</div></div>';
   return html;
 }
 
@@ -5095,8 +5215,12 @@ function fortschrittHeute(cards) {
     html += '</div>';
   }
   if (streakRissZurueckliegtInTagen()) {
-    html += '<div class="stat-block" style="border-top:none; padding-top:0; margin-top:10px">';
-    html += '<p class="stat-sub" style="padding:0 0 8px">Die Serie stand bei <strong>' + streak.vorher +
+    /* 3.2.0: War ein .stat-block mit drei Inline-Korrekturen, die den Block
+       gleich wieder flach machten - seit .stat-block eine Flaeche ist, waere
+       das ein Kasten, der nur so tut. Es ist inhaltlich auch keiner: ein
+       Hinweis mit einer Handlung. */
+    html += '<div class="stat-block">';
+    html += '<p class="stat-sub">Die Serie stand bei <strong>' + streak.vorher +
       '</strong> und ist ' + fmtDatum(streak.gerissenAm) + ' gerissen.</p>';
     html += '<button class="secondary" data-action="streak-fortsetzen">Serie fortsetzen</button>';
     html += '</div>';
@@ -5105,7 +5229,7 @@ function fortschrittHeute(cards) {
   html += '<div class="stat-block">';
   html += '<h3>Heute</h3>';
   html += '<div class="heute-bar" role="img" aria-label="' + getan + ' von ' + ziel + ' erledigt"><span style="width:' + anteil + '%"></span></div>';
-  html += '<p class="stat-sub" style="padding-top:8px">' +
+  html += '<p class="stat-sub">' +
     (ziel === 0
       ? 'Nichts zu tun – schau morgen wieder rein.'
       : '<strong>' + getan + '</strong> Antwort' + (getan === 1 ? '' : 'en') + (offenHeute > 0 ? ', noch ' + offenHeute + ' Karte' + (offenHeute === 1 ? '' : 'n') + ' offen' : ' – fertig')) +
@@ -5173,7 +5297,7 @@ function fortschrittWochen() {
   html += '<p class="stat-sub">' + w12.gesamt + ' Antworten · ' + w12.n + ' Karten zum ersten Mal gesehen</p>';
   html += renderKalender(wochen * 7);
   if (w12.gesamt === 0) {
-    html += '<p class="stat-sub" style="padding-top:8px">Noch nichts aufgezeichnet – ab dem ersten gelernten Tag füllt sich das Raster.</p>';
+    html += '<p class="stat-sub" style="margin-top:var(--space-3)">Noch nichts aufgezeichnet – ab dem ersten gelernten Tag füllt sich das Raster.</p>';
   }
   /* 2.19.0: „Verlauf zurücksetzen" stand mitten in der Anzeige, die es
      löscht. Es steht jetzt bei den anderen Daten-Handlungen in den
@@ -5203,11 +5327,11 @@ function fortschrittStoff(cards) {
      bleibt er weg. */
   const belegt = gruppen.filter(g => g.anzahl > 0);
   if (belegt.length < 2) {
-    html += '<p class="stat-sub" style="padding-top:6px">Alle ' + gesamt + ' Karten sind gerade <strong>' +
+    html += '<p class="stat-sub">Alle ' + gesamt + ' Karten sind gerade <strong>' +
       esc(belegt.length ? belegt[0].label : "neu") + '</strong>.</p>';
     return html + '</div>';
   }
-  html += '<p class="stat-sub" style="padding-top:6px">Wie fest es gerade sitzt:</p>';
+  html += '<p class="stat-sub" style="margin-top:var(--space-4)">Wie fest es gerade sitzt:</p>';
   html += '<div class="stat-bar" role="img" aria-label="' +
     esc(gruppen.map(g => g.anzahl + " " + g.label).join(", ")) + '">';
   gruppen.forEach(g => {
@@ -5269,36 +5393,105 @@ function fortschrittLektionen(nurBereich) {
    steht fuer sich und laesst sich einzeln lesen und aendern. Vorher war das
    eine Funktion von 188 Zeilen, in die vier Veroeffentlichungen nacheinander
    etwas hineingeschrieben hatten. */
+/* ============================================================================
+   FORTSCHRITT — 3.2.0: vier Bloecke statt neun
+
+   Vorher standen neun Bloecke untereinander: Serie, Heute, Wochenvergleich,
+   Kalender, Stoff, Lektionen, verbrannte Karten, Sieben-Tage-Vorschau - jeder
+   mit Ueberschrift und erklaerender Unterzeile. Rueckmeldung des Betreibers:
+   "Chaosladen". Video 1: ein Bildschirm macht eine Sache, und wer etwas
+   Zusaetzliches zeigen will, nimmt eine neue Seite statt einer neuen Zeile.
+
+   Auf dem Tab bleibt jetzt nur, was die Frage "wie stehe ich gerade da"
+   beantwortet - Serie, heute, die letzten Wochen, der Stoff. Alles, was eine
+   LISTE ist (Lektionen, Karten die nicht klappen, die naechsten sieben Tage),
+   ist eine eigene Seite hinter einer Zeile. Nichts ist geloescht, nichts hat
+   seine Logik geaendert: dieselben Funktionen, ein anderer Ort.
+   ========================================================================= */
+
 function renderFortschritt() {
+  if (ui.seite) return renderFortschrittSeite(ui.seite);
+
   const cards = statsCards();
   const nurBereich = ui.statsScope === "bereich";
   let html = "";
 
-  html += '<div class="pills" style="margin-bottom:12px">';
+  html += '<div class="pills" style="margin-bottom:var(--space-4)">';
   html += '<button class="pill' + (nurBereich ? "" : " active") + '" data-action="stats-scope" data-scope="alle">Alle Bereiche</button>';
   html += '<button class="pill' + (nurBereich ? " active" : "") + '" data-action="stats-scope" data-scope="bereich">Nur „' + esc(currentBereich().name) + '"</button>';
   html += '</div>';
 
-  html += '<div class="panel">';
   if (cards.length === 0) {
-    html += '<p class="hint">Noch keine Karten – sobald du welche anlegst und bewertest, steht hier dein Fortschritt.</p>';
+    html += '<div class="empty">';
+    html += '<div class="empty__icon">' + ikon("fortschritt", "i-xl") + '</div>';
+    html += '<div class="empty__titel">Noch nichts zu zeigen</div>';
+    html += '<div class="empty__text">Sobald du Karten anlegst und bewertest, steht hier, wie du dastehst.</div>';
+    html += '<div class="empty__aktionen"><button data-action="tab-verwalten">Karten anlegen</button></div>';
     html += '</div>';
     return html;
   }
 
+  /* Der Stand: vier Bloecke, von "heute" nach "insgesamt". */
   html += fortschrittHeute(cards);
   html += fortschrittTrend();
   html += fortschrittWochen();
   html += fortschrittStoff(cards);
-  html += fortschrittLektionen(nurBereich);
 
-/* --- E6: verbrannte Karten --- */
+  /* Was eine Liste ist, wird eine Seite. Eine Zeile erscheint nur, wenn es
+     dahinter auch etwas gibt - eine Zeile, die auf einen leeren Bildschirm
+     fuehrt, ist schlechter als keine Zeile. */
   const leeches = verbrannteKarten();
-  if (leeches.length > 0) {
-    html += '<div class="stat-block">';
-    html += '<h3>Karten, die nicht klappen (' + leeches.length + ')</h3>';
-    html += '<p class="stat-sub">ab ' + LEECH_SCHWELLE + ' Rückfällen – meist liegt es an der Karte, nicht am Gedächtnis</p>';
-    leeches.slice(0, 8).forEach(x => {
+  const lekF = lektionenVon(currentBereich());
+  const tage7 = vorschau7(cards);
+  const hatVorschau = !tage7.every(x => x.anzahl === 0);
+  const zeigtLektionen = nurBereich && lekF.length > 0;
+
+  if (zeigtLektionen || leeches.length > 0 || hatVorschau) {
+    html += '<div class="sektion" style="margin-top:var(--stack)">';
+    html += '<div class="eyebrow">Genauer ansehen</div>';
+    html += '<div class="liste">';
+    if (zeigtLektionen) {
+      const fertig = lekF.filter(x => lektionSitzt(currentBereich(), x)).length;
+      html += einstZeile({ action: "fort-seite", id: "lektionen", icon: "ordner", text: "Lektionen",
+        wert: fertig + " von " + lekF.length });
+    }
+    if (leeches.length > 0) {
+      html += einstZeile({ action: "fort-seite", id: "leeches", icon: "warnung",
+        text: "Karten, die nicht klappen", wert: String(leeches.length) });
+    }
+    if (hatVorschau) {
+      const summe = tage7.reduce((a, x) => a + x.anzahl, 0);
+      html += einstZeile({ action: "fort-seite", id: "vorschau", icon: "serie",
+        text: "Die nächsten 7 Tage", wert: summe + " Karten" });
+    }
+    html += '</div></div>';
+  }
+
+  return html;
+}
+
+/* ---------- Die Unterseiten des Fortschritts ---------- */
+function renderFortschrittSeite(id) {
+  const cards = statsCards();
+
+  if (id === "lektionen") return fortschrittLektionen(true);
+
+  if (id === "leeches") {
+    const leeches = verbrannteKarten();
+    let html = '<p class="hint" style="margin-bottom:var(--space-5)">Ab ' + LEECH_SCHWELLE +
+      ' Rückfällen. Meist liegt es an der Karte, nicht am Gedächtnis – zu viel auf ' +
+      'einmal, zu ähnlich zu einer anderen, oder die Übersetzung passt nicht ganz. ' +
+      'Nimm dir erst die obersten vor.</p>';
+    if (leeches.length === 0) {
+      return '<div class="empty"><div class="empty__icon">' + ikon("fertig", "i-xl") + '</div>' +
+        '<div class="empty__titel">Keine dabei</div>' +
+        '<div class="empty__text">Gerade hängt keine Karte fest.</div></div>';
+    }
+    /* Nur EINE Flaeche (Satz 2). Der erste Versuch hier war
+       .card.card--flush um eine .liste - das ergab zwei sichtbar
+       gerundete Kaesten ineinander. Die .liste ist bereits eine Flaeche. */
+    html += '<div class="liste">';
+    leeches.forEach(x => {
       html += '<div class="leech-row">';
       html += '<div class="words"><div class="wort' + (istArabisch(x.card.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(x.card.wort) + '</div>' +
         '<div class="uebersetzung">' + esc(x.card.uebersetzung) +
@@ -5308,43 +5501,40 @@ function renderFortschritt() {
       html += '<button class="ghost" data-action="reset-leech" data-bid="' + esc(x.bereich.id) + '" data-id="' + esc(x.card.id) + '" title="Zähler auf 0 setzen – die Karte bleibt unverändert" aria-label="Rückfallzähler zurücksetzen">' + ikon("umkehren", "i-sm") + '</button>';
       html += '</div>';
     });
-    if (leeches.length > 8) {
-      html += '<p class="hint" style="padding-bottom:0">… und ' + (leeches.length - 8) + ' weitere. Nimm dir erst die obersten vor.</p>';
-    }
     html += '</div>';
+    return html;
   }
 
-  /* --- Vorschau auf die nächsten sieben Tage ---
-     2.13.0: Sieben leere Balken sagen nichts und sehen aus, als fehle etwas.
-     Solange in der ganzen Woche nichts ansteht, bleibt der Block weg. */
-  const tage = vorschau7(cards);
-  if (tage.every(x => x.anzahl === 0)) return html + '</div>';
-  const maxTag = Math.max(1, ...tage.map(x => x.anzahl));
-  html += '<div class="stat-block">';
-  html += '<h3>Die nächsten 7 Tage</h3>';
-  html += '<p class="stat-sub">nur Wiederholungen – noch nie bewertete Karten stehen hier nicht drin</p>';
-  html += '<div class="spark-reihe oben">';
-  tage.forEach(x => { html += '<span>' + (x.anzahl > 0 ? x.anzahl : "") + '</span>'; });
-  html += '</div>';
-  html += '<div class="spark">';
-  tage.forEach((x, i) => {
-    const h = x.anzahl === 0 ? 2 : Math.max(4, Math.round((x.anzahl / maxTag) * 100));
-    html += '<div class="spark-fill' + (x.anzahl === 0 ? " leer" : "") + (i === 0 ? " heute" : "") +
-      '" style="height:' + h + '%" title="' + esc(tagKurz(x.tag) + ": " + x.anzahl + " Wiederholungen") + '"></div>';
-  });
-  html += '</div>';
-  html += '<div class="spark-reihe unten">';
-  tage.forEach(x => { html += '<span>' + esc(x.label) + '</span>'; });
-  html += '</div>';
-  const spitze = tage.slice(1).reduce((a, b) => b.anzahl > a.anzahl ? b : a, tage[1]);
-  if (spitze && spitze.anzahl >= 60) {
-    html += '<p class="hint" style="padding-bottom:0">' + ikon("warnung", "i-sm") + ' Am ' + esc(tagKurz(spitze.tag)) + ' stehen ' + spitze.anzahl +
-      ' Wiederholungen an. An dem Tag wird es voll – plan ihn ein.</p>';
+  if (id === "vorschau") {
+    const tage = vorschau7(cards);
+    const maxTag = Math.max(1, ...tage.map(x => x.anzahl));
+    let html = '<p class="hint" style="margin-bottom:var(--space-5)">Nur Wiederholungen – noch nie ' +
+      'bewertete Karten stehen hier nicht drin, die kommen erst, wenn du sie freischaltest.</p>';
+    html += '<div class="card">';
+    html += '<div class="spark-reihe oben">';
+    tage.forEach(x => { html += '<span>' + (x.anzahl > 0 ? x.anzahl : "") + '</span>'; });
+    html += '</div>';
+    html += '<div class="spark">';
+    tage.forEach((x, i) => {
+      const h = x.anzahl === 0 ? 2 : Math.max(4, Math.round((x.anzahl / maxTag) * 100));
+      html += '<div class="spark-fill' + (x.anzahl === 0 ? " leer" : "") + (i === 0 ? " heute" : "") +
+        '" style="height:' + h + '%" title="' + esc(tagKurz(x.tag) + ": " + x.anzahl + " Wiederholungen") + '"></div>';
+    });
+    html += '</div>';
+    html += '<div class="spark-reihe unten">';
+    tage.forEach(x => { html += '<span>' + esc(x.label) + '</span>'; });
+    html += '</div>';
+    html += '</div>';
+    const spitze = tage.slice(1).reduce((a, b) => b.anzahl > a.anzahl ? b : a, tage[1]);
+    if (spitze && spitze.anzahl >= 60) {
+      html += '<div class="banner-info" style="margin-top:var(--space-5)">' + ikon("warnung", "i-sm") +
+        '<div class="banner__text">Am ' + esc(tagKurz(spitze.tag)) + ' stehen ' + spitze.anzahl +
+        ' Wiederholungen an. An dem Tag wird es voll – plan ihn ein.</div></div>';
+    }
+    return html;
   }
-  html += '</div>';
 
-  html += '</div>';
-  return html;
+  return '<p class="hint">Diese Seite gibt es nicht.</p>';
 }
 
 /* ---------- 3.0.0: Die Buehne ----------
@@ -6896,8 +7086,21 @@ document.body.addEventListener("click", e => {
        automatische Selbstheilung schon hinter sich und darf sie erneut
        anstoßen, z.B. nachdem er sein Netz repariert hat. */
     case "start-neu-versuchen": selbstheilung().then(() => location.reload()); break;
-    case "einstellungen": ui.einstellungen = true; window.scrollTo(0, 0); render(); break;
-    case "einstellungen-zu": ui.einstellungen = false; window.scrollTo(0, 0); render(); break;
+    case "einstellungen": ui.einstellungen = true; ui.seite = null; window.scrollTo(0, 0); render(); break;
+    case "einstellungen-zu": ui.einstellungen = false; ui.seite = null; window.scrollTo(0, 0); render(); break;
+
+    /* 3.2.0 - Unterseiten und Wahl-Blatt. Beide Seiten-Handlungen tun
+       dasselbe; sie heissen nur verschieden, damit im Markup lesbar bleibt,
+       aus welchem Bildschirm die Zeile kommt. */
+    case "einst-seite":
+    case "fort-seite":
+      ui.seite = btn.dataset.id || null; window.scrollTo(0, 0); render(); break;
+    case "seite-zu":
+      ui.seite = null; window.scrollTo(0, 0); render(); break;
+    case "wahl-sheet":
+      ui.wahlSheet = btn.dataset.id || null; render(); break;
+    case "wahl-sheet-zu":
+      ui.wahlSheet = null; render(); break;
     case "resend-verification": doResendVerification(); break;
     case "verification-check": pruefeBestaetigung(); break;
     case "import-old": importOldProfile(btn.dataset.name); break;
@@ -6909,12 +7112,12 @@ document.body.addEventListener("click", e => {
     /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
        ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
        stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
-    case "tab-lernen": ui.einstellungen = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
-    case "tab-fortschritt": ui.einstellungen = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-lernen": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-fortschritt": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
-    case "tab-verwalten": ui.einstellungen = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
+    case "tab-verwalten": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;
