@@ -1242,6 +1242,23 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   touch-action: pan-y;
 }
 .study-card.wird-gezogen { cursor: grabbing; }
+
+/* ---- Der Wechsel von Karte zu Karte -------------------------------------
+   3.2.2. Vorher trug .view (Abschnitt 4) eine Blende, die bei JEDER Handlung
+   lief - also auch beim blossen Aufdecken der Antwort. Der ganze Bildschirm
+   blendete auf, das Wort eingeschlossen, obwohl sich nur darunter etwas
+   ergaenzt hatte. Das las sich wie ein Sprung, nicht wie eine Antwort.
+
+   Jetzt bewegt sich genau das, was neu ist:
+     neue Karte  -> das Wort wandert ein (.zugedeckt, von app.js gesetzt)
+     Aufdecken   -> nur Antwort, Notiz und Bewertungszeile wandern ein,
+                    das Wort bleibt stehen, weil es stehen geblieben IST.
+   Beides sind @keyframes, keine Transitions - render() ersetzt das Markup,
+   auf frischen Elementen laufen Transitions nicht (Abschnitt 3). */
+.view--modus { animation: none; }
+.study-card.zugedeckt .study-word {
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
 .study-card__mitte {
   flex: 1 1 auto;
   display: flex; flex-direction: column; justify-content: center;

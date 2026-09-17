@@ -1,3 +1,24 @@
+## 3.2.2 – 17. September 2026
+
+### Verbessert
+
+**Der Wechsel von Karte zu Karte bewegt jetzt das, was sich wirklich ändert.** Bisher trug `.view` eine Blende, die bei *jeder* Handlung lief — also auch beim bloßen Aufdecken der Antwort. Der ganze Bildschirm blendete auf, das Wort eingeschlossen, obwohl sich nur darunter etwas ergänzt hatte. Das las sich wie ein Sprung, nicht wie eine Antwort.
+
+Jetzt bewegt sich genau das Neue:
+
+- **Neue Karte** → das Wort wandert ein.
+- **Aufdecken** → nur Antwort, Notiz und Bewertungszeile wandern ein; das Wort bleibt stehen, weil es stehen geblieben *ist*.
+
+Möglich wird die Unterscheidung durch eine Klasse `zugedeckt` auf `.study-card`, die `app.js` setzt, solange die Antwort verborgen ist. Ohne sie lässt sich der Fall gar nicht trennen: `render()` baut den Bildschirm bei jeder Handlung neu auf, eine Eintrittsbewegung auf `.study-word` liefe deshalb auch beim Aufdecken noch einmal — das Wort hätte gezuckt, obwohl es unverändert dasteht.
+
+Wer Bewegung abbestellt hat (`prefers-reduced-motion`), bekommt wie bisher gar keine — das gilt global und unverändert.
+
+### Arbeitsmittel
+
+- Der Probelauf klickt jetzt **drei Bewertungen hintereinander** durch (Sicher → Fast → Nicht) und liest danach den Zustand der Bühne aus: Steht dort eine neue, zugedeckte Karte, und was sagt der Zähler? Ein Bild allein hätte nicht gezeigt, wenn ein Klickpfad ins Leere läuft und der Bildschirm nur zufällig noch richtig aussieht. Gemessen: nach Sicher, Fast und Nicht steht „Karte 3 von 11" — richtig, denn „Nicht" hängt die Karte wieder an die Schlange an und zählt nicht als erledigt.
+
+---
+
 ## 3.2.1 – 17. September 2026
 
 ### Behoben

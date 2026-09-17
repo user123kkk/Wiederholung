@@ -171,6 +171,13 @@ const BILDER = [
      Genau dort sass die Buehne bis 3.2.1 um die halbe Spaltenbreite rechts
      von der Mitte - am Handy faellt das nie auf. */
   { name: "12-buehne-antwort",    weg: ['[data-action="start-session"]', '[data-action="reveal"]'] },
+  /* Drei Karten durchbewerten. Prueft nicht die Lernlogik, sondern dass der
+     Ablauf durchlaeuft: jede der drei Bewertungen fuehrt auf eine neue,
+     wieder zugedeckte Karte, und der Zaehler oben zaehlt mit. */
+  { name: "12b-buehne-nach-drei", weg: ['[data-action="start-session"]',
+      '[data-action="reveal"]', '[data-action="grade-known"]',
+      '[data-action="reveal"]', '[data-action="grade-almost"]',
+      '[data-action="reveal"]', '[data-action="grade-unknown"]'] },
   { name: "12-breit-lernen",      weg: [], breite: 1194, hoehe: 834 },
   { name: "13-breit-buehne",      weg: ['[data-action="start-session"]'], breite: 1194, hoehe: 834 }
 ];
@@ -246,6 +253,19 @@ for (const bild of BILDER) {
                   "px (Navigation " + platz.navH + "px)");
     }
   }
+  /* Der Zustand der Buehne: steht dort eine neue, zugedeckte Karte, und was
+     sagt der Zaehler? Sonst merkt niemand, wenn ein Klickpfad ins Leere
+     laeuft und das Bild nur zufaellig noch richtig aussieht. */
+  const buehne = await seite.evaluate(() => {
+    const k = document.querySelector(".study-card");
+    if (!k) return null;
+    const m = document.querySelector(".modebar__mitte");
+    return { zugedeckt: k.classList.contains("zugedeckt"),
+             zaehler: m ? m.textContent.trim() : "" };
+  });
+  if (buehne) console.log("   Buehne: " + buehne.zaehler +
+                          (buehne.zugedeckt ? " (zugedeckt)" : " (aufgedeckt)"));
+
   /* Mittigkeit: im Modus (Abfrage/Uebung/Durchsicht) gibt es keine Spalte
      links, der Inhalt gehoert also in die Fensetermitte. Genau das war auf
      dem iPad kaputt und im Bild nur schwer zu sehen. */

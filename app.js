@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.2.1";
+const APP_VERSION = "3.2.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -5604,7 +5604,14 @@ function renderSession() {
       : null
   });
 
-  html += '<div class="study-card" id="sitzung">';
+  /* 3.2.2: "zugedeckt" heisst: die Antwort ist noch verborgen, hier steht
+     also eine NEUE Karte. Nur dann soll das Wort einwandern (styles.css
+     Abschnitt 9). Ohne diese Unterscheidung laesst sich der Fall nicht
+     trennen: render() baut den Bildschirm bei jeder Handlung neu auf, eine
+     Eintrittsbewegung auf .study-word liefe deshalb auch beim blossen
+     Aufdecken noch einmal - das Wort haette gezuckt, obwohl es sich gar
+     nicht geaendert hat. */
+  html += '<div class="study-card' + (s.revealed ? '' : ' zugedeckt') + '" id="sitzung">';
 
   if (s.isDrill) {
     html += '<div class="drill-banner">' + ikon("ueben", "i-sm") + ' \u00dcbungsmodus \u00b7 ' +

@@ -4,6 +4,54 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 3 fertig: Übergänge auf der Bühne (v3.2.2)
+
+**Geändert:** `styles.css` Abschnitt 9 — `.view--modus { animation: none }`
+und `.study-card.zugedeckt .study-word` mit `enter-rise`. `app.js` — die
+Bühne trägt `zugedeckt`, solange die Antwort verborgen ist.
+`probelauf.mjs` — klickt drei Bewertungen durch und liest danach den Zustand
+der Bühne aus. `app.js:19`/`sw.js:10` auf 3.2.2. `CHANGELOG.md`.
+
+**Entscheidung:** Der letzte offene Punkt von Block 3 waren die Übergänge.
+Befund: Es gab gar keinen eigenen — `.view` blendete bei **jeder** Handlung
+den ganzen Bildschirm auf, weil `render()` das Markup jedes Mal ersetzt. Beim
+Aufdecken der Antwort hieß das: Das Wort blendete mit auf, obwohl es sich
+nicht geändert hatte. Video 1 sagt zu Übergängen, sie sollen die Richtung der
+Handlung tragen; eine Blende über allem trägt gar nichts.
+
+Die Trennung braucht eine Markierung im Markup, sonst geht sie nicht: Weil
+`render()` alles neu baut, kann CSS nicht wissen, ob dieselbe Karte nur
+aufgedeckt wurde oder eine neue gekommen ist. `zugedeckt` sagt es — und es
+fällt mit „neue Karte" zusammen, weil eine frische Karte immer verdeckt
+beginnt. Kein neuer Zustand, nur ein sichtbar gemachter.
+
+**Bewusst nicht gebaut:** eine Rückmeldung nach dem Bewerten (Haken, Farbblitz,
+Zähl-Animation). Der Fortschrittsstrich in der Modusleiste rückt bereits vor,
+und die nächste Karte kommt — das ist die Rückmeldung. Etwas Zusätzliches
+wäre gegen die ruhige Gestalt und steht in keinem der drei Videos.
+**Ebenfalls nicht angefasst: die Gesten.** `PRINZIPIEN.md` sagt „keine neuen
+Gesten ohne echten Gewinn", und genau Wischen und Long-Press waren in
+v3.0.35–42 die wackeligen Stellen.
+
+**Geprüft:** Probelauf über drei Bewertungen (Sicher → Fast → Nicht). Danach
+steht „Karte 3 von 11" und die Bühne ist wieder zugedeckt — richtig, denn
+„Nicht" hängt die Karte wieder an und zählt nicht als erledigt. Keine
+Seitenfehler.
+
+**Offen:**
+- **Die Bewegung selbst ist nicht am Gerät geprüft.** Ein Standbild zeigt
+  keine Animation; der Probelauf kann nur den Zustand davor und danach lesen.
+  Ob der Wechsel sich gut anfühlt, kann nur der Betreiber sagen.
+- Gesten (Wischen, Long-Press) bleiben ungeprüft — siehe oben, bewusst.
+- Blöcke 4 (`landing.html`) und 5 (Erststart) stehen noch.
+
+**Nächster Schritt:** Block 4 — `landing.html` mobil-first, auf Grundlage von
+`../landing-page-strategie/STRATEGIE.md`. Die Seite hat eigene Stile neben den
+Token aus `styles.css`; erster Schritt ist zu prüfen, wo sie seit dem
+Schriftwechsel in 3.1.0 nicht mehr mitgezogen ist.
+
+---
+
 ### 2026-09-17 — Bühne mittig, Block 3 angefangen (v3.2.1)
 
 **Geändert:** `styles.css` — `.view--modus` nimmt im 900px-Block den
