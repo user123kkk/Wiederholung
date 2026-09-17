@@ -1,3 +1,9 @@
+## 3.4.9 – 17. September 2026
+
+### Behoben (auth/internal-error blieb: apis.google.com fehlte in der CSP)
+
+**Der `frame-src`-Fix aus 3.4.8 reichte nicht.** Direkt am Browser geprüft (Konsole): Firebase Authentication lädt beim Google-Login zusätzlich das Skript `https://apis.google.com/js/api.js` – von `script-src` blockiert, da dort nur `gstatic.com` erlaubt war. `script-src`, `connect-src` und `frame-src` erlauben jetzt zusätzlich `https://apis.google.com`.
+
 ## 3.4.8 – 17. September 2026
 
 ### Behoben (Google/Apple-Login schlug mit auth/internal-error fehl)

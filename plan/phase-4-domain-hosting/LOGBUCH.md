@@ -476,3 +476,33 @@ siehe `redesign-oberflaeche/LOGBUCH.md`).
 **Nächster Schritt:** Betreiber deployt erneut und testet „Mit Google
 anmelden" an einem echten Konto. Bei Erfolg ist diese Phase-4-Nacharbeit
 abgeschlossen; kein weiterer CSP-Punkt hier offen.
+
+### 2026-09-17 — CSP: `apis.google.com` fehlte noch (v3.4.9)
+
+**Geändert:** `firebase.json:57` — `script-src`, `connect-src` und
+`frame-src` um `https://apis.google.com` ergänzt. `app.js:19`
+`APP_VERSION` auf `3.4.9`, `sw.js` `CACHE_NAME` auf `adrabic-3.4.9`,
+`CHANGELOG.md` neuer Eintrag.
+
+**Entscheidung:** Der `frame-src`-Fix von eben reichte nicht – derselbe
+Fehler blieb. Direkt an der live deployten Seite geprüft (eigener
+Browser, Konsole nach Klick auf „Mit Google anmelden"): ein einziger
+CSP-Fehler, klar benannt: `Loading the script
+'https://apis.google.com/js/api.js?onload=...' violates ... script-src`.
+Firebase Authentication lädt das Google-API-Loader-Skript (`gapi`)
+zusätzlich zum in 3.4.8 schon erlaubten Auth-Iframe – ein zweiter, vorher
+übersehener Bestandteil desselben Popup-Mechanismus. Da `gapi` selbst
+wiederum eigene Iframes zur internen Kommunikation nachlädt, wurde
+`apis.google.com` vorsorglich auch in `frame-src` und `connect-src`
+aufgenommen, nicht nur in `script-src` (wo der gemeldete Fehler auftrat).
+
+**Offen:** Bestätigung durch den Betreiber, dass der Google-Login nach
+diesem Deploy tatsächlich durchläuft (bisherige Versuche scheiterten
+zweimal an unterschiedlichen, nacheinander aufgedeckten CSP-Lücken –
+`frame-src` fehlend, dann `apis.google.com` fehlend). Sollte nach diesem
+Deploy noch ein dritter CSP-Fehler auftreten: direkt in der
+Browser-Konsole nachsehen (`F12 → Console`, nach Klick auf den
+Anmelde-Knopf) statt erneut zu raten – das war beide Male der schnellere
+Weg zur echten Ursache.
+
+**Nächster Schritt:** Betreiber deployt, testet „Mit Google anmelden".
