@@ -1,3 +1,11 @@
+## 3.4.2 – 17. September 2026
+
+### Geändert (Block 9: Fehler am Feld statt im Dialog)
+
+**Ein leeres Pflichtfeld meldet sich direkt am Feld, nicht mehr in einem Dialog zum Wegtippen.** Wer beim Anlegen einer Karte Wort oder Übersetzung leer lässt, bekam bisher ein Dialogfenster („Bitte Wort und Übersetzung ausfüllen") und musste danach selbst suchen, welches der beiden Felder fehlt. Jetzt färbt sich genau das leere Feld rot, darunter steht „Bitte ausfüllen", und der Fokus springt direkt dorthin. Sobald man zu tippen anfängt, verschwindet die Meldung wieder. Dieselbe Behandlung bekommt der fehlende Name beim Registrieren — vorher stand „Bitte einen Namen eingeben" im allgemeinen Fehlerkasten unter dem Formular, jetzt direkt am Namensfeld. Fehler von Firebase selbst (z. B. „E-Mail oder Passwort ist falsch") bleiben weiterhin im Kasten, da sie kein einzelnes Feld betreffen.
+
+Für Bildschirmleser: `aria-invalid="true"` und `aria-describedby` verbinden Feld und Fehlermeldung, wie es die Gestaltung (`input[aria-invalid="true"]`, `.field__fehler`) seit Block 1 schon vorsieht — bisher wurde sie nirgends benutzt.
+
 ## 3.4.1 – 17. September 2026
 
 ### Neu (Block 8: Rückmeldung nach dem Speichern)

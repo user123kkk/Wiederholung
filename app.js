@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.4.1";
+const APP_VERSION = "3.4.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -960,6 +960,9 @@ let ui = {
      Anmeldeaenderung geleert (onAuthStateChanged). */
   authEingabe: { name: "", email: "", pass: "" },
   authPassSichtbar: false,
+  /* 9 (17.09.2026): fehlender Name beim Registrieren steht direkt am Feld,
+     nicht im allgemeinen Fehlerkasten - siehe doRegister/renderAuth. */
+  authFeldFehler: null,
   kontoLoeschenBusy: false,  // Konto-Loeschung laeuft (Phase 2)
   /* A3 (1.9.0): der offene Bereich haengt an seiner ID, nicht mehr an einer
      Positionsnummer - siehe currentBereich(). null = noch keiner gewaehlt,
@@ -986,6 +989,9 @@ let ui = {
      Abteilung auf einer Seite, die zum Ansehen da ist. Offen ist das Blatt,
      wenn hier true steht ODER ui.editId gesetzt ist. */
   karteSheet: false,
+  /* 9 (17.09.2026): leeres Pflichtfeld beim Kartenformular meldet sich direkt
+     am Feld, nicht im Dialog - siehe submitCardForm/karteSheet(). */
+  karteFeldFehler: null,
   statsScope: "alle",        // "alle" = alle Bereiche zusammen, "bereich" = nur der offene
   session: null,
   editId: null,
@@ -1081,7 +1087,7 @@ function renderToast() {
    halb getippte Vokabel weg, sobald irgendetwas anderes ein render() ausloest -
    zum Beispiel ein Datensatz, der aus der Cloud hereinkommt. */
 let formDraft = { wort: "", ueb: "", extra: "" };
-function resetFormDraft() { formDraft = { wort: "", ueb: "", extra: "" }; }
+function resetFormDraft() { formDraft = { wort: "", ueb: "", extra: "" }; ui.karteFeldFehler = null; }
 
 /* 16.09.2026 (Beobachtung 3): Wohin nach dem Bearbeiten einer Karte
    zurueckgesprungen wird. editCard() springt zum Formular an den
@@ -1345,6 +1351,7 @@ async function initFirebase() {
     ui.session = null;
     ui.editId = null;
     ui.authEingabe = { name: "", email: "", pass: "" };
+    ui.authFeldFehler = null;
     ui.authPassSichtbar = false;
     ui.askImport = false;
     ui.umzug = null;
@@ -1903,7 +1910,16 @@ async function doRegister() {
   const email = val("a-email").trim();
   const pass = val("a-pass");
   ui.authError = null; ui.authInfo = null;
-  if (!name) { ui.authError = "Bitte einen Namen eingeben."; render(); return; }
+  if (!name) {
+    /* 9: fehlender Name meldet sich direkt am Feld, nicht im Kasten darunter -
+       der Fehler betrifft genau ein Feld, anders als eine Serverantwort. */
+    ui.authFeldFehler = { name: true };
+    render();
+    const el = document.getElementById("a-name");
+    if (el) el.focus();
+    return;
+  }
+  ui.authFeldFehler = null;
   ui.authBusy = true; render();
   try {
     const cred = await fb.createUserWithEmailAndPassword(auth, email, pass);
@@ -3463,9 +3479,14 @@ async function submitCardForm() {
   const ueb = val("f-ueb").trim().slice(0, MAX_WORT);
   const extra = val("f-extra").trim().slice(0, MAX_EXTRA);
   if (!wort || !ueb) {
-    await dlgAlert("Bitte Wort und Übersetzung ausfüllen.", "Noch unvollständig");
+    /* 9: Dialog wegtippen und selbst suchen, welches Feld fehlt, ist zwei
+       Schritte zu viel - der Fehler steht jetzt direkt am leeren Feld. */
+    ui.karteFeldFehler = { wort: !wort, ueb: !ueb };
+    render();
+    fokusInsErstesFehlerfeld();
     return;
   }
+  ui.karteFeldFehler = null;
   /* D6: Der Entwurf haelt den getippten Text fest, waehrend der Dialog offen
      ist - beim Abbrechen bleibt die Eingabe also stehen. */
   const dup = findeDuplikat(wort, ui.editId || null);
@@ -3571,6 +3592,7 @@ function editCard(id) {
   editRueckkehrY = ui.tab === "verwalten" ? window.scrollY : null;
   ui.editId = id;
   ui.karteSheet = true;
+  ui.karteFeldFehler = null;
   const c = findCard(id);
   formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra } : { wort: "", ueb: "", extra: "" };
   render();
@@ -3583,6 +3605,14 @@ function editCard(id) {
    da, der Fokus muss also jedes Mal neu gesetzt werden. */
 function fokusInsWortfeld() {
   const el = document.getElementById("f-wort");
+  if (el) el.focus();
+}
+/* 9: nach einer fehlgeschlagenen Pruefung ins erste leere Pflichtfeld,
+   nicht immer ins Wort-Feld - sonst landet der Fokus am falschen Feld,
+   wenn nur die Uebersetzung fehlt. */
+function fokusInsErstesFehlerfeld() {
+  const id = (ui.karteFeldFehler && ui.karteFeldFehler.wort) ? "f-wort" : "f-ueb";
+  const el = document.getElementById(id);
   if (el) el.focus();
 }
 function cancelEdit() {
@@ -4155,8 +4185,12 @@ function renderAuth() {
      : "Weiterlernen, wo du aufgeh\u00f6rt hast.") + '</p>';
   html += '<div class="card">';
   if (m === "register") {
+    const nameFehler = !!(ui.authFeldFehler && ui.authFeldFehler.name);
     html += '<div class="field"><label for="a-name">Dein Name <span class="opt">\u2013 wird in der App angezeigt</span></label>';
-    html += '<input type="text" id="a-name" maxlength="40" autocomplete="nickname"></div>';
+    html += '<input type="text" id="a-name" maxlength="40" autocomplete="nickname"' +
+      (nameFehler ? ' aria-invalid="true" aria-describedby="a-name-fehler"' : '') + '>';
+    if (nameFehler) html += '<div class="field__fehler" id="a-name-fehler">Bitte ausf\u00fcllen</div>';
+    html += '</div>';
   }
   html += '<div class="field"><label for="a-email">E-Mail</label>';
   html += '<input type="email" id="a-email" autocomplete="email" inputmode="email"></div>';
@@ -4233,6 +4267,18 @@ function renderAuth() {
   const email = document.getElementById("a-email");
   if (email && m === "reset") email.addEventListener("keydown", e => {
     if (e.key === "Enter") doReset();
+  });
+  const name = document.getElementById("a-name");
+  /* 9: Fehler verschwindet, sobald man tippt - ohne render(), wie beim
+     Kartenformular. */
+  if (name) name.addEventListener("input", () => {
+    if (ui.authFeldFehler && ui.authFeldFehler.name) {
+      ui.authFeldFehler.name = false;
+      name.removeAttribute("aria-invalid");
+      name.removeAttribute("aria-describedby");
+      const fehlerEl = document.getElementById("a-name-fehler");
+      if (fehlerEl) fehlerEl.remove();
+    }
   });
 }
 
@@ -4437,13 +4483,20 @@ function karteSheet() {
   if (!ui.karteSheet && !editing) return "";
   if (istGefuehrt(currentBereich())) return "";
 
+  const fehler = ui.karteFeldFehler || {};
   let html = '<div class="dlg-backdrop" data-action="nichts" role="presentation">';
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="karte-sheet-titel">';
   html += '<h3 id="karte-sheet-titel">' + (editing ? "Karte bearbeiten" : "Neue Karte") + '</h3>';
   html += '<div class="field"><label for="f-wort">Wort <span class="opt">– Pflicht</span></label>';
-  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.wort) + '"></div>';
+  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.wort) + '"' +
+    (fehler.wort ? ' aria-invalid="true" aria-describedby="f-wort-fehler"' : '') + '>';
+  if (fehler.wort) html += '<div class="field__fehler" id="f-wort-fehler">Bitte ausfüllen</div>';
+  html += '</div>';
   html += '<div class="field"><label for="f-ueb">Übersetzung <span class="opt">– Pflicht</span></label>';
-  html += '<input type="text" id="f-ueb" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.ueb) + '"></div>';
+  html += '<input type="text" id="f-ueb" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.ueb) + '"' +
+    (fehler.ueb ? ' aria-invalid="true" aria-describedby="f-ueb-fehler"' : '') + '>';
+  if (fehler.ueb) html += '<div class="field__fehler" id="f-ueb-fehler">Bitte ausfüllen</div>';
+  html += '</div>';
   html += '<div class="field"><label for="f-extra">Beispielsatz, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
   html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '">' + esc(formDraft.extra) + '</textarea></div>';
   if (editing) {
@@ -4693,7 +4746,18 @@ function renderMain() {
        dazwischen nichts loeschen kann. */
     [["f-wort", "wort"], ["f-ueb", "ueb"], ["f-extra", "extra"]].forEach(([id, key]) => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener("input", e => { formDraft[key] = e.target.value; });
+      if (el) el.addEventListener("input", e => {
+        formDraft[key] = e.target.value;
+        /* 9: Fehler verschwindet, sobald man tippt - ohne render(), damit
+           Fokus und Schreibfluss nicht unterbrochen werden. */
+        if (ui.karteFeldFehler && ui.karteFeldFehler[key]) {
+          ui.karteFeldFehler[key] = false;
+          el.removeAttribute("aria-invalid");
+          el.removeAttribute("aria-describedby");
+          const fehlerEl = document.getElementById(id + "-fehler");
+          if (fehlerEl) fehlerEl.remove();
+        }
+      });
     });
     /* 2.21.0: ersetzt den alten Einzel-Listener auf <select id="drill-source">
        - jetzt ein Radiopaar fuer den Modus plus beliebig viele Checkboxen
@@ -7224,9 +7288,9 @@ document.body.addEventListener("click", e => {
     case "login": doLogin(); break;
     case "register": doRegister(); break;
     case "reset": doReset(); break;
-    case "mode-login": ui.authMode = "login"; ui.authError = null; ui.authInfo = null; render(); break;
-    case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; render(); break;
-    case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; render(); break;
+    case "mode-login": ui.authMode = "login"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
+    case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
+    case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
     case "passwort-zeigen": ui.authPassSichtbar = !ui.authPassSichtbar; render(); break;
     case "logout": doLogout(); break;
     case "delete-account": doKontoLoeschen(); break;

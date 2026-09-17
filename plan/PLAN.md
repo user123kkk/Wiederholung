@@ -400,19 +400,26 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Aktivster Punkt gerade: der Redesign-Strang, Block 9.** Direkt im Code.
+**Aktivster Punkt gerade: der Redesign-Strang, Block 10.** Direkt im Code.
 
-**Stand 17.09.2026:** Block 8 (Rückmeldung nach dem Speichern, v3.4.1) ist 
-gebaut und veröffentlicht. Die Toast-Funktion `zeigeToast()` wird jetzt 
-aufgerufen, wenn eine Karte gespeichert wird — „Karte gespeichert" beim 
-Anlegen, „Änderung gespeichert" beim Bearbeiten. Noch ausstehend: 
-**Betreiber-Test am echten Handy** — ob Position und Sichtbarkeit der 
-Meldung stimmen. Falls ja, Block 8 abgehakt; sonst Position überprüfen.
+**Stand 17.09.2026:** Block 8 (Rückmeldung nach dem Speichern, v3.4.1) ist am
+echten Handy bestätigt. **Block 9** (Fehler am Feld statt Dialog, v3.4.2) ist
+gebaut: leeres Wort/Übersetzung im Karten-Formular und fehlender Name bei der
+Registrierung melden sich jetzt direkt am Feld (rot, „Bitte ausfüllen",
+Fokus springt dorthin, verschwindet beim Tippen) statt in einem Dialog oder
+im allgemeinen Fehlerkasten. Im Browser geprüft nur die Registrierung (ohne
+Konto erreichbar) — das **Karten-Formular selbst ist ungeprüft**, weil es ein
+angemeldetes Konto braucht und `probelauf.mjs` (Firebase-Attrappen) hier ohne
+installiertes `playwright` nicht läuft. **Betreiber-Test am echten Handy noch
+offen:** leere Karte anlegen (nur Wort oder nur Übersetzung ausfüllen), prüfen
+ob das Feld rot wird, der Fokus dorthin springt und die Meldung beim Tippen
+verschwindet.
 
-**Danach: Block 9** (Fehler am Feld statt Dialog) und **Block 10** 
-(Sichtbare Wahl statt Klappliste) — Einzelheiten und „fertig, wenn" in
+**Danach: Block 10** (Sichtbare Wahl statt Klappliste) — Einzelheiten und
+„fertig, wenn" in
 [`redesign-oberflaeche/AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md).
-Zwei Betreiber-Entscheidungen offen (offene Fragen 12 und 13).
+Zwei Betreiber-Entscheidungen offen (offene Fragen 12 und 13), blockieren
+aber nichts hier.
 
 **Frühere Lage (vor den Bildern):**
 
@@ -501,5 +508,7 @@ Fokus-Erhalt geprüft. Details in
 [`phase-9-barrierefreiheit/LOGBUCH.md`](phase-9-barrierefreiheit/LOGBUCH.md).
 Einzig offen, aber kein Blocker: ein Test mit echtem Screenreader stand
 mangels Gerät nicht zur Verfügung.
-| 2026-09-17 | **Redesign Block 8 fertig: Toast nach dem Speichern** (v3.4.1). Die vorhandene `zeigeToast()`-Funktion wird jetzt aufgerufen, sobald eine Karte gespeichert wird — „Karte gespeichert" beim Anlegen, „Änderung gespeichert" beim Bearbeiten. Die Meldung mit Checkmark-Icon steht unten rechts ca. 2,6 Sekunden lang sichtbar (`aria-live="polite"` für Bildschirmleser). Toast-Infrastruktur existierte seit 3.0.0, wurde aber nie aufgerufen; Block 8 ist der erste echte Use-Case. Nächster Schritt: Betreiber-Test am echten Handy zur Verifikation von Position und Sichtbarkeit.
+| 2026-09-17 | **Redesign Block 8 fertig: Toast nach dem Speichern** (v3.4.1). Die vorhandene `zeigeToast()`-Funktion wird jetzt aufgerufen, sobald eine Karte gespeichert wird — „Karte gespeichert" beim Anlegen, „Änderung gespeichert" beim Bearbeiten. Die Meldung mit Checkmark-Icon steht unten rechts ca. 2,6 Sekunden lang sichtbar (`aria-live="polite"` für Bildschirmleser). Toast-Infrastruktur existierte seit 3.0.0, wurde aber nie aufgerufen; Block 8 ist der erste echte Use-Case. Nächster Schritt: Betreiber-Test am echten Handy zur Verifikation von Position und Sichtbarkeit. |
+| 2026-09-17 | **Block 8 am echten Handy verifiziert.** Position, Sichtbarkeit und Timing bestätigt (Screenshot). Weiter mit Block 9. |
+| 2026-09-17 | **Redesign Block 9 gebaut: Fehler am Feld statt im Dialog** (v3.4.2). Leeres Wort/Übersetzung im Karten-Formular und fehlender Name bei der Registrierung färben jetzt das betroffene Feld rot, zeigen „Bitte ausfüllen" darunter und holen den Fokus dorthin — kein Dialogfenster mehr zum Wegtippen. Die Gestaltung (`aria-invalid`, `.field__fehler`) gab es seit Block 1, wurde aber nirgends benutzt. Fehler verschwindet beim Tippen ohne vollen Re-Render (direkte DOM-Änderung, damit Fokus/Cursor nicht springen). Server-Fehler (falsches Passwort etc.) bleiben bewusst im allgemeinen Kasten. Im Browser geprüft: Registrierung ohne Namen — Fehler am Feld, Fokus dort, verschwindet beim Tippen, E-Mail/Passwort blieben stehen. **Karten-Formular selbst ungeprüft** — braucht ein angemeldetes Konto, `probelauf.mjs` bräuchte `playwright` (hier nicht installiert). Betreiber-Test am echten Handy steht noch aus, siehe `redesign-oberflaeche/LOGBUCH.md`.
 | 2026-09-15 | **Beobachtungen zum Lernwerkzeug: Versuchte Verbesserung des Ziehgriff-Doppeltipp-Verhaltens (v3.0.40).** Testrückmeldung zu v3.0.39 deutete darauf hin, dass die Aktivierung der Ziehgriff-Doppeltipp-Geste weiterhin schwierig ist — wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten Touchscreen-Ziel zuverlässig zweimal zu tippen. Zwei Optimierungen ohne Mechanic-Änderung: (1) `DOPPELTIPP_FENSTER` von 400ms → 600ms für mehr Zeit. (2) Visuelle Rückmeldung auf `.drag-handle:active` mit Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit erkennbar ist, dass die erste Tap registriert wurde. Beide Änderungen sollen die Fehlertoleranz erhöhen. Nächster Schritt: Gerätetest zur Prüfung der Zuverlässigkeit. Alle fünf Beobachtungen 2, 4, 6, 14, 15 vom Code her bereits behoben oder verbessert; offen bleiben drei Punkte, die Gerätetests brauchen (5: iPad-Layout, 13: Over-Scrolling, 16: Browser-Zurück), und mehrere UX-Punkte, die Betreiber-Entscheidungen brauchen (1, 3, 9, 10). Details in `beobachtungen-lernwerkzeug.md`.

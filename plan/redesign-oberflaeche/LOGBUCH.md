@@ -4,6 +4,73 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 9 gebaut: Fehler am Feld statt im Dialog (v3.4.2)
+
+**Geändert:**
+- `app.js` neuer Zustand `ui.karteFeldFehler` (bei `karteSheet: false,`) und
+  `ui.authFeldFehler` (bei `authEingabe`) — welches Pflichtfeld gerade leer ist.
+- `submitCardForm()`: statt `await dlgAlert("Bitte Wort und Übersetzung
+  ausfüllen.", …)` jetzt `ui.karteFeldFehler = { wort: !wort, ueb: !ueb };
+  render(); fokusInsErstesFehlerfeld();` — neue Funktion `fokusInsErstesFehlerfeld()`
+  neben `fokusInsWortfeld()`.
+- `karteSheet()`: `f-wort`/`f-ueb` bekommen bei Fehler `aria-invalid="true"`
+  und `aria-describedby`, darunter `<div class="field__fehler">Bitte
+  ausfüllen</div>` — beides existierte in `styles.css` seit Block 1
+  (`input[aria-invalid="true"]:985`, `.field__fehler:1020`), wurde aber nie
+  benutzt.
+- Der bestehende `input`-Listener auf `f-wort`/`f-ueb` (in `renderMain()`)
+  löscht den Fehler jetzt direkt im DOM (Attribut weg, Fehlertext-Element
+  entfernt), sobald man tippt — ohne `render()`, damit Fokus und
+  Schreibfluss nicht unterbrochen werden.
+- `resetFormDraft()` setzt `ui.karteFeldFehler = null` mit; `editCard()`
+  setzt es zusätzlich explizit, weil es `formDraft` direkt zuweist statt
+  über `resetFormDraft()`.
+- `doRegister()`: statt `ui.authError = "Bitte einen Namen eingeben."` jetzt
+  `ui.authFeldFehler = { name: true }` plus Fokus auf `#a-name`.
+- `renderAuth()`: `a-name` bekommt bei Fehler dieselbe `aria-invalid`/
+  `field__fehler`-Behandlung, plus ein `input`-Listener am Ende der Funktion,
+  der den Fehler beim Tippen entfernt (gleiches Muster wie beim Kartenformular).
+- `ui.authFeldFehler = null` an jeder Stelle, die schon `ui.authError = null`
+  setzt (`mode-login`/`mode-register`/`mode-reset`, `onAuthStateChanged`) —
+  sonst würde ein alter Namens-Fehler nach einem Moduswechsel wieder auftauchen.
+- `app.js:19` / `sw.js:10` → 3.4.2. `CHANGELOG.md` neue Sektion.
+
+**Entscheidung:** Auftrag verlangt zwei getrennte Stellen (Karten-Formular,
+Registrierung) mit derselben Idee — Fehler gehört ans Feld, nicht in einen
+Dialog oder einen allgemeinen Kasten. Serverfehler (z. B. „E-Mail oder
+Passwort ist falsch") bleiben bewusst im Kasten unter den Feldern, wie
+Punkt 4 des Auftrags verlangt — sie betreffen kein einzelnes Feld. Fürs
+Löschen des Fehlers beim Tippen bewusst **kein** `render()` verwendet,
+sondern direkte DOM-Änderung: ein volles Neuzeichnen bei jedem Tastenanschlag
+hätte den Cursor/Fokus riskiert, und das bestehende Muster (`input`-Listener
+spiegelt in `formDraft`/liest über `authEingabenMerken()`) zeigt, dass render()
+hier ohnehin nicht bei jedem Zeichen läuft.
+
+**Geprüft:** Die Registrierungs-Seite ist ohne Anmeldung erreichbar und wurde
+im Browser durchgeklickt: E-Mail und Passwort ausgefüllt, Name leer gelassen,
+„Konto anlegen" getippt — kein Dialog, Namensfeld rot mit „Bitte ausfüllen"
+darunter, Fokus nachweislich auf `#a-name` (`document.activeElement.id`),
+E-Mail/Passwort blieben stehen. Danach in dasselbe Feld getippt — Fehler und
+rote Färbung verschwanden sofort. **Das Karten-Formular selbst konnte hier
+nicht durchgeklickt werden** — braucht ein angemeldetes Konto, und
+`probelauf.mjs` (Firebase-Attrappen) braucht `playwright`, das in dieser
+Umgebung nicht installiert ist (`node -e "require.resolve('playwright')"`
+schlägt fehl, kein `node_modules/`). Der Code-Pfad ist aber identisch zum
+geprüften Namensfeld (dieselbe Render-Logik, dieselben CSS-Klassen, derselbe
+Lösch-Mechanismus beim Tippen) — nur eben nicht am echten Formular gesehen.
+
+**Offen:** Betreiber-Test am echten Handy, angemeldet: leere Karte anlegen
+(nur Wort oder nur Übersetzung ausfüllen) und prüfen, dass das rote Feld samt
+„Bitte ausfüllen" erscheint, der Fokus dorthin springt und die Meldung beim
+Tippen verschwindet. Erst danach gilt Block 9 als wirklich fertig, nicht nur
+„im Code fertig".
+
+**Nächster Schritt:** Block 10 (Sichtbare Wahl statt Klappliste) — oder, falls
+der Betreiber den Handy-Test von Block 9 zuerst zurückmeldet, dessen Ergebnis
+eintragen.
+
+---
+
 ### 2026-09-17 — Block 8 fertig: Rückmeldung nach dem Speichern (v3.4.1)
 
 **Geändert:**
