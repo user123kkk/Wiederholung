@@ -4,6 +4,65 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 6: die zwei sichtbarsten Video-1-Punkte (v3.3.0, v3.3.1)
+
+**Geändert:** `styles.css` — `.nav` schwebt (Abschnitt 4), Rücknahme in
+Abschnitt 17, `.view` und `.toast-wrap` ziehen nach. `app.js` — `tickCountups`
+achtet auf `prefers-reduced-motion`; `karteSheet()` neu, `renderVerwalten()`
+ohne Formular, `ui.karteSheet`, Handlungen `karte-neu`/`karte-sheet-zu`, leerer
+Zustand mit Handlung, Zieh-Hinweis gekürzt. `probelauf.mjs` — läuft mit
+abbestellter Bewegung, klickt direkt im DOM, ein Bildschirm mehr.
+`app.js:19`/`sw.js:10` auf 3.3.1. `CHANGELOG.md`.
+
+**Entscheidung:** Der Betreiber hat die Vorschau gesehen und gesagt, es gebe
+„so viel, das ich in den Videos gesehen habe, hier nicht sehe". Statt breit zu
+raten habe ich die beiden Punkte genommen, die Video 1 **wörtlich** nennt und
+die auf jedem Bildschirm sichtbar sind:
+
+1. **Die Leiste schwebt** („nowadays typically floating"). Der Unterschied ist
+   nicht Schmuck: Eine Leiste an der Unterkante gehört optisch zum *Gerät*,
+   eine schwebende zur *App*, und der Inhalt läuft sichtbar darunter durch.
+2. **Das Karten-Formular ist ein Blatt** („the notes editor is just a notes
+   editor — we don't throw in clutter"). Es stand fest oben auf dem
+   Bildschirm, den man zum *Ansehen* aufruft, und füllte am Handy die erste
+   Seite komplett. Von Liste und Suchfeld war beim Ankommen nichts zu sehen.
+
+Beim zweiten Punkt war die Versuchung, gleich einen schwebenden Plus-Knopf
+dazuzubauen, wie ihn das Video zeigt. **Nicht gemacht:** Die Handlung steht
+schon als einziger gefüllter Knopf oben auf dem Bildschirm; ein zweiter Ort
+für dieselbe Sache wäre ein erfundenes Feature und bräche Satz 1.
+
+**Zwei Funde nebenbei, beide echt:**
+- `tickCountups` ignorierte `prefers-reduced-motion`. Die `styles.css` setzt
+  für abbestellte Bewegung jede Animation auf 0,01 ms — das greift nur bei
+  CSS. Diese Zahl zählt in JavaScript hoch und lief als **einzige** Bewegung
+  der App weiter. Gefunden, weil der Probelauf dort hängenblieb: Die wachsende
+  Zahl ändert die Seitenhöhe, und der Browser hielt kein Element mehr für
+  „stabil".
+- Der leere Verwalten-Bildschirm sagte „Leg **oben** deine erste Karte an" —
+  eine Anweisung, die ab 3.3.1 ins Leere zeigte. Solche Sätze veralten
+  unbemerkt; jetzt steht dort ein Knopf statt einer Ortsangabe.
+
+**Offen — und das ist die ehrliche Liste dessen, was aus den Videos NICHT
+gebaut ist:**
+- **Wischen zum Zurückgehen** und **Long-Press mit Vorschau** (Video 1).
+  `PRINZIPIEN.md` sagt „keine neuen Gesten ohne echten Gewinn", und genau
+  Wischen und Long-Press waren in v3.0.35–42 die wackeligen Stellen.
+- **Smart Defaults** (Video 3) — als „passt" eingestuft, aber nirgends
+  umgesetzt. Kandidat für den nächsten Durchgang.
+- **Verlustaversion, Countdown, Anker-Preise** (Video 3) — bewusst verworfen,
+  siehe `PRINZIPIEN.md`. Markenfremd.
+- **Stack-Wechsel und Bezahlung** (Video 2) — verworfen bzw. Gerüst.
+- Die Werkzeugleiste auf dem Verwalten-Bildschirm zeigt fünf Handlungen
+  gleichzeitig (Üben, Umkehren, Auswählen, Umbenennen, Löschen). Video 1:
+  Handlungen kommen und gehen mit dem Zusammenhang. Noch nicht angefasst.
+- Block 5 (Erststart) steht weiter aus.
+
+**Nächster Schritt:** Block 5 — Erststart. Dafür braucht der Probelauf eine
+Attrappe **ohne** Karten; bisher startet er immer mit fertigen Daten.
+
+---
+
 ### 2026-09-17 — Block 4 fertig: landing.html spricht dieselbe Sprache (v3.2.3)
 
 **Geändert:** `landing.html` — fünfzehn eigene Schriftgrößen auf `--fs-*`,

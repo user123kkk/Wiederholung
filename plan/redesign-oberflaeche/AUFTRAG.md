@@ -1,6 +1,6 @@
 # Auftrag: Oberfläche & Mobile-Gestalt
 
-**Status:** läuft — Blöcke 1–4 `fertig` (v3.1.0–3.2.3), Block 5 ist als Nächstes dran
+**Status:** läuft — Blöcke 1–4 und 6 `fertig` (v3.1.0–3.3.1), Block 5 ist als Nächstes dran
 **Angelegt:** 16. September 2026 · **Neu gefasst:** 17. September 2026
 **Grundlage:** die drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie), gefiltert in [`PRINZIPIEN.md`](PRINZIPIEN.md).
@@ -63,6 +63,7 @@ nachziehen, committen, pushen. Nicht zwei Blöcke auf einmal.
 | 3 | **Bühne & Bewertung** | `fertig` (v3.2.1–3.2.2) | Mittigkeit ab 900px (war 120px versetzt) · Zähler „Karte 1 von 11" · gleiche Knopfzeile · eigener Übergang für Kartenwechsel statt Blende über allem. Gesten bewusst nicht angefasst (`PRINZIPIEN.md`) |
 | 4 | **`landing.html`** | `fertig` (v3.2.3) | Schriftgrößen und Radien auf die Token der App · Schlagzeile und Titel in der Serifenschrift · Hauptknopf wie App-Knöpfe · Stufenleiter von Kachelraster auf eine Spalte mit Balken · fehlender Fokusrahmen im Kontaktformular behoben |
 | 5 | **Erststart** | `offen` — als Nächstes | Der Weg von „Konto angelegt" bis zur ersten eigenen Karte. Nie bei 0 % anfangen (Video 3), aber **kein** erfundener Assistent |
+| 6 | **Video-1-Nachlese** | `fertig` (v3.3.0–3.3.1) | Zwei Punkte, die Video 1 wörtlich nennt und die auf jedem Bildschirm sichtbar sind: die Navigationsleiste schwebt · das Karten-Formular ist ein Blatt statt einer festen Abteilung auf dem Verwalten-Bildschirm |
 
 ## Wie geprüft wird
 
