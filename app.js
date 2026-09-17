@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.4.2";
+const APP_VERSION = "3.4.3";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 const app = document.getElementById("app");
@@ -407,7 +407,6 @@ const LIEGENGEBLIEBEN_TAGE = 14;
 function istLiegengeblieben(c) {
   return !istNeueKarte(c) && c.nextReview < dateInDays(-LIEGENGEBLIEBEN_TAGE);
 }
-const SET_ART_ZEICHEN = { kategorie: "\u{1F4DA}", lektion: "\u{1F4D6}", eigen: "\u2B50" };
 const SET_ART_TITEL = { kategorie: "Kategorien", lektion: "Lektionen", eigen: "Eigene" };
 const SET_ART_ERKLAERUNG = {
   kategorie: "Sammelmappen quer durch den Stoff. Sie sind immer offen und schalten selbst nichts frei.",
@@ -421,10 +420,10 @@ const SET_ART_ERKLAERUNG = {
    Knoepfen wie ein Fremdkoerper, der von woanders hineinkopiert wurde.
    Ein SVG-Symbol uebernimmt stattdessen currentColor und macht Hell/Dunkel
    automatisch mit.
-   GRENZE: <option> innerhalb eines <select> rendert nur Text, kein SVG -
-   in der nativen Art-Auswahl (siehe zeigtArtWahl weiter unten) bleibt
-   deshalb bewusst das Emoji aus SET_ART_ZEICHEN stehen. Das ist die einzige
-   verbleibende Stelle. */
+   10 (17.09.2026): Die fruehere Grenze hier ("<option> rendert kein SVG,
+   deshalb bleibt bei der Art-Auswahl ein Emoji stehen") ist mit dem
+   Auswahl-Blatt fuer die Speicherkarten-Art weggefallen (SET_ART_ZEICHEN
+   entfernt) - dort steht jetzt wie ueberall sonst das SVG-Symbol. */
 const ICON_PFADE = {
   lektion: '<path d="M12 6.3C10.2 5.1 8 4.4 5.8 4.4c-.7 0-1.3.6-1.3 1.3v11.7c0 .7.6 1.3 1.3 1.3 2.2 0 4.4.7 6.2 1.9 1.8-1.2 4-1.9 6.2-1.9.7 0 1.3-.6 1.3-1.3V5.7c0-.7-.6-1.3-1.3-1.3-2.2 0-4.4.7-6.2 1.9z"/><line x1="12" y1="6.3" x2="12" y2="19.6"/>',
   kategorie: '<path d="M3 11.3V5.6c0-1.1.9-2 2-2h5.6c.5 0 1 .2 1.4.6l8 8c.8.8.8 2 0 2.8l-6.3 6.3c-.8.8-2 .8-2.8 0l-8-8c-.4-.4-.6-.9-.6-1.4z"/><circle cx="7.3" cy="7.3" r="1.1" fill="currentColor" stroke="none"/>',
@@ -982,6 +981,11 @@ let ui = {
      Die kommen als Blatt von unten, mit der Erklaerung dort, wo entschieden
      wird. null = zu. */
   wahlSheet: null,           // "thema" | "arab" | "limit"
+  /* 10 (17.09.2026): dieselbe Idee wie wahlSheet, aber pro Speicherkarte statt
+     global - die ID der Speicherkarte, deren Art gerade gewaehlt wird, oder
+     null = zu. Eigenes Feld statt Wiederverwendung von wahlSheet: die Art
+     haengt an einer bestimmten Zeile, nicht an einer app-weiten Einstellung. */
+  setArtSheetId: null,
   /* 3.3.1: Das Karten-Formular liegt jetzt in einem Blatt, nicht mehr fest
      oben auf dem Verwalten-Bildschirm. Video 1: "the settings is just
      settings and the notes editor is just a notes editor - we don't throw in
@@ -1042,6 +1046,13 @@ let ui = {
   drillOpen: false,           // Auswahl für Übungsmodus sichtbar?
   drillSource: "stufen",      // "stufen" oder "sets" (siehe drillSetIds)
   drillSetIds: new Set(),     // 2.21.0: im "sets"-Modus die angehakten Speicherkarten (mehrere möglich)
+  /* 10 (17.09.2026): der Stufenbereich als Chip-Reihe statt zweier
+     Klapplisten - von/bis stehen direkt hier, nicht mehr in zwei <select>.
+     drillAnker ist der erste angetippte Wert des laufenden Zwei-Tipp-Vorgangs;
+     null = der naechste Tipp startet eine neue Auswahl. Siehe waehleStufe(). */
+  drillVon: null,
+  drillBis: null,
+  drillAnker: null,
   openSetId: null,            // Speicherkarte, deren Kartenliste aufgeklappt ist
   /* 2.2.0: Das Feld mit den Speicherkarten ist beim Start zugeklappt. Es
      wuchs sonst mit jeder neuen Speicherkarte weiter nach unten und schob
@@ -2908,7 +2919,11 @@ function selectBereich(bereichId) {
   ui.drillOpen = false;
   ui.drillSource = "stufen";
   ui.drillSetIds = new Set();
+  ui.drillVon = null;
+  ui.drillBis = null;
+  ui.drillAnker = null;
   ui.openSetId = null;
+  ui.setArtSheetId = null;
   /* 15.09.2026: Ohne das blieb die Seite auf der Scroll-Position des vorigen
      Bereichs stehen - wer unten in "Medina" war und zu einem anderen
      Bereich wechselte, landete dort ebenfalls unten statt oben. */
@@ -3209,6 +3224,7 @@ async function deleteSet(id) {
   sets.splice(idx, 1);
   if (ui.openSetId === id) ui.openSetId = null;
   if (ui.lernSetId === id) { ui.lernSetId = null; ui.lernLetzte = null; }
+  if (ui.setArtSheetId === id) ui.setArtSheetId = null;
   ui.drillSetIds.delete(id);   // 2.21.0: eine geloeschte Speicherkarte bleibt sonst angehakt haengen
   patchDoc({ [pfadSet(currentBereich().id, id)]: LOESCHEN });
   render();
@@ -3254,10 +3270,35 @@ function openDrillPicker(source) {
     ui.drillSource = "stufen";
     ui.drillSetIds = new Set();
   }
+  setzeVollenStufenBereich();
   /* 2.16.0: Der Auswahlkasten oeffnet sich ganz oben in der Werkzeugleiste -
      der Knopf dafuer steht aber in der Speicherkarte, oft mehrere Bildschirme
      weiter unten. Wer ihn dort drueckte, sah gar nichts passieren. */
   springeZu("drill-box");
+  render();
+}
+/* 10: Vorbelegung wie frueher bei den zwei <select> - der ganze verfuegbare
+   Bereich ist zu Beginn markiert, nicht nur eine Stufe. */
+function setzeVollenStufenBereich() {
+  const stufen = availableStufen();
+  ui.drillVon = stufen.length ? stufen[0] : null;
+  ui.drillBis = stufen.length ? stufen[stufen.length - 1] : null;
+  ui.drillAnker = null;
+}
+/* 10: Erster Tipp auf einen Chip beginnt eine neue Auswahl (nur diese eine
+   Stufe), der zweite Tipp spannt den Bereich zwischen beiden auf - danach
+   startet der naechste Tipp wieder neu. Die Reihenfolge der beiden Tipps
+   spielt keine Rolle, min/max richten sich selbst aus. */
+function waehleStufe(s) {
+  if (ui.drillAnker === null) {
+    ui.drillAnker = s;
+    ui.drillVon = s;
+    ui.drillBis = s;
+  } else {
+    ui.drillVon = Math.min(ui.drillAnker, s);
+    ui.drillBis = Math.max(ui.drillAnker, s);
+    ui.drillAnker = null;
+  }
   render();
 }
 async function startDrill(min, max, handwriting) {
@@ -4657,6 +4698,7 @@ function renderMain() {
      bedienbar bleibt. */
   html += bereichSheet();
   html += wahlSheet();
+  html += setArtSheet();
   html += karteSheet();
   html += cardDetailSheet();
   html += renderDialog();          // D2 – liegt als Overlay ueber allem
@@ -4765,6 +4807,9 @@ function renderMain() {
     document.querySelectorAll('input[name="drill-mode"]').forEach(el => {
       el.addEventListener("change", e => {
         ui.drillSource = e.target.value;
+        /* 10: wie vorher bei den zwei <select> - "Nach Stufen" beginnt
+           jedesmal wieder beim vollen Bereich, keine Reste vom letzten Mal. */
+        if (ui.drillSource === "stufen") setzeVollenStufenBereich();
         render();
       });
     });
@@ -5250,6 +5295,31 @@ function wahlSheet() {
   }
   html += '<p class="field__hilfe" style="margin-top:var(--space-4)">' + w.hilfe + '</p>';
   html += '<div class="dlg-actions"><button class="secondary" data-action="wahl-sheet-zu">Fertig</button></div>';
+  html += '</div></div>';
+  return html;
+}
+
+/* 10: dasselbe Blatt-Muster wie wahlSheet(), aber pro Speicherkarte statt
+   app-weit - siehe ui.setArtSheetId. Waehlen aendert sofort (wie bei
+   Helligkeit), das Blatt bleibt bis "Fertig" offen. */
+function setArtSheet() {
+  const set = ui.setArtSheetId ? findSet(ui.setArtSheetId) : null;
+  if (!set) return "";
+  const aktiv = set.art || "eigen";
+  let html = '<div class="dlg-backdrop" data-action="set-art-sheet-zu" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-label="Art von ' + esc(set.name) + '">';
+  html += '<h3>Art von „' + esc(set.name) + '“</h3>';
+  html += '<div class="sheet-liste"><div class="liste" style="background:transparent;border:0">';
+  SET_ARTEN.forEach(a => {
+    const ist = a === aktiv;
+    html += '<button class="liste-zeile' + (ist ? " aktiv" : "") + '" data-action="set-art-waehlen" data-id="' + a + '">' +
+      ikon(a === "eigen" ? "stern" : a, "i-sm") +
+      '<span class="liste-zeile__text">' + esc(SET_ART_TITEL[a]) + '</span>' +
+      (ist ? ikon("haken", "i-sm") : '') + '</button>';
+  });
+  html += '</div></div>';
+  html += '<p class="field__hilfe" style="margin-top:var(--space-4)">' + esc(SET_ART_ERKLAERUNG[aktiv]) + '</p>';
+  html += '<div class="dlg-actions"><button class="secondary" data-action="set-art-sheet-zu">Fertig</button></div>';
   html += '</div></div>';
   return html;
 }
@@ -6255,10 +6325,22 @@ function renderVerwaltenListe(cards, gefuehrt) {
         (gewaehlteSets.length > 1 ? " insgesamt (zusammen, ohne Dopplungen)" : "") + '</p>';
     }
     if (ui.drillSource !== "sets" || sets.length === 0) {
-      html += '<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px">';
-      html += 'von <select id="drill-min">' + stufen.map(s => '<option value="' + s + '">' + s + '</option>').join("") + '</select>';
-      html += 'bis <select id="drill-max">' + stufen.map(s => '<option value="' + s + '"' + (s === stufen[stufen.length - 1] ? " selected" : "") + '>' + s + '</option>').join("") + '</select>';
+      /* 10: Chips statt "von"/"bis"-Klapplisten - bei 2-5 Stufen sieht man
+         gleich alle auf einmal (Bild 9, 72). Erster Tipp waehlt eine Stufe,
+         der zweite spannt den Bereich dazwischen auf (waehleStufe()). Bis zu
+         MAX_STUFE+1 Chips duerfen umbrechen, keine erzwungene Einzelzeile. */
+      html += '<p class="hint" style="padding-top:0">Anfang antippen, dann Ende</p>';
+      html += '<div class="stufe-chips" role="group" aria-label="Stufenbereich">';
+      html += stufen.map(s => {
+        const aktiv = ui.drillVon !== null && s >= ui.drillVon && s <= ui.drillBis;
+        return '<button type="button" class="stufe-chip' + (aktiv ? " aktiv" : "") +
+          '" data-action="stufe-chip" data-stufe="' + s + '" aria-pressed="' + (aktiv ? "true" : "false") +
+          '" aria-label="Stufe ' + s + '">' + s + '</button>';
+      }).join("");
       html += '</div>';
+      html += '<p class="hint" style="padding:0 0 10px">' +
+        (ui.drillVon === null ? "Keine Stufe verfügbar" :
+         ui.drillVon === ui.drillBis ? ("Stufe " + ui.drillVon) : ("Stufe " + ui.drillVon + "–" + ui.drillBis)) + '</p>';
     }
     /* 3.0.0: Die Handschrift-Wahl steht VOR dem Start, nicht darunter. Ein
        Haken, den man erst unter dem Knopf sieht, ist einer, den man nicht
@@ -6598,11 +6680,13 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
     html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" title="Karten anzeigen" aria-label="' + (open ? "Karten dieser Speicherkarte verbergen" : "Karten dieser Speicherkarte anzeigen") + '" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
   }
   if (zeigtArtWahl(b)) {
-    html += '<select class="set-art-wahl" data-action="set-art" data-id="' + esc(s.id) + '" title="Art dieser Speicherkarte" aria-label="Art dieser Speicherkarte">';
-    for (const a of SET_ARTEN) {
-      html += '<option value="' + a + '"' + ((s.art || "eigen") === a ? " selected" : "") + '>' + SET_ART_ZEICHEN[a] + ' ' + SET_ART_TITEL[a] + '</option>';
-    }
-    html += '</select>';
+    /* 10: Blatt statt Klappliste - drei Chips in jeder Zeile machten die
+       Liste voll (Satz "weniger Inhalt am Handy"), also nur ein Knopf mit
+       der aktuellen Art, der das Auswahl-Blatt oeffnet (wie bei Helligkeit). */
+    const art = s.art || "eigen";
+    html += '<button class="ghost" data-action="set-art-sheet-auf" data-id="' + esc(s.id) +
+      '" title="Art dieser Speicherkarte" aria-label="Art dieser Speicherkarte: ' + esc(SET_ART_TITEL[art]) + '">' +
+      ikon(art === "eigen" ? "stern" : art, "i-sm") + ' ' + esc(SET_ART_TITEL[art]) + '</button>';
   }
   if (eigenerBesitz) {
     html += '<button class="ghost" data-action="rename-set" data-id="' + esc(s.id) + '" title="Umbenennen" aria-label="Speicherkarte umbenennen">' + ikon("stift", "i-sm") + '</button>';
@@ -6741,12 +6825,6 @@ document.body.addEventListener("click", e => {
   if (e.target.closest("button, a, input, select, textarea, canvas, .hw-toolbar, .modebar")) return;
   if (!s.revealed) revealAnswer();
   else gradeCard("weiter");
-});
-
-app.addEventListener("change", e => {
-  const sel = e.target.closest('select[data-action="set-art"]');
-  if (!sel) return;
-  setArtAendern(sel.dataset.id, sel.value);
 });
 
 /* Gemeinsamer Aktivierungspunkt fuer Maus (sofort) und Touch/Stift (nach
@@ -7324,6 +7402,12 @@ document.body.addEventListener("click", e => {
       ui.wahlSheet = btn.dataset.id || null; render(); break;
     case "wahl-sheet-zu":
       ui.wahlSheet = null; render(); break;
+    case "set-art-sheet-auf":
+      ui.setArtSheetId = btn.dataset.id || null; render(); break;
+    case "set-art-sheet-zu":
+      ui.setArtSheetId = null; render(); break;
+    case "set-art-waehlen":
+      setArtAendern(ui.setArtSheetId, btn.dataset.id); break;
     case "resend-verification": doResendVerification(); break;
     case "verification-check": pruefeBestaetigung(); break;
     case "import-old": importOldProfile(btn.dataset.name); break;
@@ -7335,12 +7419,12 @@ document.body.addEventListener("click", e => {
     /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
        ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
        stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
-    case "tab-lernen": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
-    case "tab-fortschritt": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-lernen": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-fortschritt": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
-    case "tab-verwalten": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
+    case "tab-verwalten": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;
@@ -7394,14 +7478,14 @@ document.body.addEventListener("click", e => {
         startDrillFromSets([...ui.drillSetIds], hw);
         break;
       }
-      const minEl = document.getElementById("drill-min");
-      const maxEl = document.getElementById("drill-max");
-      if (minEl && maxEl) {
-        const a = parseInt(minEl.value, 10), b = parseInt(maxEl.value, 10);
-        startDrill(Math.min(a, b), Math.max(a, b), hw);
+      /* 10: von/bis kommen jetzt aus den Chips (ui.drillVon/drillBis) statt
+         aus zwei <select>-Elementen. */
+      if (ui.drillVon !== null && ui.drillBis !== null) {
+        startDrill(Math.min(ui.drillVon, ui.drillBis), Math.max(ui.drillVon, ui.drillBis), hw);
       }
       break;
     }
+    case "stufe-chip": waehleStufe(parseInt(btn.dataset.stufe, 10)); break;
     case "save-to-new-set": saveSelectedToSet("__new__"); break;
     case "save-to-set": {
       const sel = document.getElementById("save-set-select");

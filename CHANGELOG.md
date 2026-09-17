@@ -1,3 +1,11 @@
+## 3.4.3 – 17. September 2026
+
+### Geändert (Block 10: Sichtbare Wahl statt Klappliste)
+
+**Zwei Klapplisten sind Chips bzw. einem Auswahl-Blatt gewichen.** Beim Üben nach Stufen standen bisher zwei `<select>`-Felder „von" und „bis" nebeneinander. Jetzt steht jede verfügbare Stufe als eigener Chip da – Antippen der ersten Stufe wählt sie allein aus, Antippen einer zweiten spannt den Bereich dazwischen auf (Reihenfolge der beiden Tipps ist egal). Die Art einer Speicherkarte (Kategorie/Lektion/Eigen) stand bisher als Klappliste in jeder einzelnen Zeile und machte die Liste voll. Jetzt zeigt die Zeile nur die aktuelle Art als Knopf, der ein Auswahl-Blatt öffnet – dasselbe Muster wie bei „Helligkeit" in den Einstellungen.
+
+Beide Stellen betreffen nur die Bedienung, nicht die Lernlogik: Welche Karten geübt werden bzw. welche Art eine Speicherkarte hat, bleibt exakt dieselbe Berechnung wie vorher.
+
 ## 3.4.2 – 17. September 2026
 
 ### Geändert (Block 9: Fehler am Feld statt im Dialog)

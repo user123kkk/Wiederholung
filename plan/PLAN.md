@@ -400,17 +400,31 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Aktivster Punkt gerade: der Redesign-Strang, Block 10.** Direkt im Code.
+**Aktivster Punkt gerade: der Redesign-Strang, Block 10 — Betreiber-Test am
+echten Handy steht aus.** Direkt im Code.
 
-**Stand 17.09.2026:** Blöcke 8 und 9 sind am echten Handy bestätigt. **Block 9**
-(Fehler am Feld statt Dialog, v3.4.2): leeres Wort/Übersetzung im
-Karten-Formular und fehlender Name bei der Registrierung melden sich jetzt
-direkt am Feld (rot, „Bitte ausfüllen", Fokus springt dorthin, verschwindet
-beim Tippen) statt in einem Dialog oder im allgemeinen Fehlerkasten. Betreiber
-hat das Karten-Formular angemeldet getestet und bestätigt.
+**Stand 17.09.2026:** Blöcke 8 und 9 sind am echten Handy bestätigt. **Block 10**
+(Sichtbare Wahl statt Klappliste, v3.4.3) ist gebaut: der Stufenbereich beim
+Üben ist jetzt eine Chip-Reihe (erster Tipp wählt eine Stufe, zweiter spannt
+den Bereich dazwischen auf) statt zweier `<select>` „von"/„bis"; die Art einer
+Speicherkarte zeigt nur noch einen Knopf mit der aktuellen Art, der ein
+Auswahl-Blatt öffnet (wie bei „Helligkeit"), statt einer Klappliste in jeder
+Zeile. Im Browser nur ohne Konsolenfehler geladen — **beide Bildschirme selbst
+sind ungeprüft**, beide liegen im Verwalten-Tab und brauchen ein angemeldetes
+Konto. Diesmal zusätzlich versucht, `probelauf.mjs` lauffähig zu machen
+(`playwright`/Chromium ließen sich installieren), aber der Browser-Start
+scheitert an dieser Umgebung selbst (`chrome.exe: Permission denied`) — dabei
+nebenbei einen Windows-Pfadfehler in `probelauf.mjs` gefunden (nicht
+behoben, nur notiert, siehe `redesign-oberflaeche/LOGBUCH.md`).
 
-**Jetzt dran: Block 10** (Sichtbare Wahl statt Klappliste) — Einzelheiten und
-„fertig, wenn" in
+**Betreiber-Test am echten Handy noch offen:** (1) Verwalten → Üben öffnen,
+eine Stufe antippen, eine zweite — prüfen, dass der Bereich dazwischen markiert
+ist und „Start" die richtigen Karten übt. (2) Bei „Arten vergeben" eine
+Speicherkarte antippen, im Blatt eine andere Art wählen — prüfen, dass die
+Zeile draußen die neue Art zeigt und die Gruppierung stimmt.
+
+Danach ist Block 10 die letzte offene Position aus `BILDER-BEFUND.md`, und der
+Redesign-Strang ruht wieder — Einzelheiten in
 [`redesign-oberflaeche/AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md).
 Zwei Betreiber-Entscheidungen offen (offene Fragen 12 und 13), blockieren
 aber nichts hier.
@@ -505,5 +519,6 @@ mangels Gerät nicht zur Verfügung.
 | 2026-09-17 | **Redesign Block 8 fertig: Toast nach dem Speichern** (v3.4.1). Die vorhandene `zeigeToast()`-Funktion wird jetzt aufgerufen, sobald eine Karte gespeichert wird — „Karte gespeichert" beim Anlegen, „Änderung gespeichert" beim Bearbeiten. Die Meldung mit Checkmark-Icon steht unten rechts ca. 2,6 Sekunden lang sichtbar (`aria-live="polite"` für Bildschirmleser). Toast-Infrastruktur existierte seit 3.0.0, wurde aber nie aufgerufen; Block 8 ist der erste echte Use-Case. Nächster Schritt: Betreiber-Test am echten Handy zur Verifikation von Position und Sichtbarkeit. |
 | 2026-09-17 | **Block 8 am echten Handy verifiziert.** Position, Sichtbarkeit und Timing bestätigt (Screenshot). Weiter mit Block 9. |
 | 2026-09-17 | **Redesign Block 9 gebaut: Fehler am Feld statt im Dialog** (v3.4.2). Leeres Wort/Übersetzung im Karten-Formular und fehlender Name bei der Registrierung färben jetzt das betroffene Feld rot, zeigen „Bitte ausfüllen" darunter und holen den Fokus dorthin — kein Dialogfenster mehr zum Wegtippen. Die Gestaltung (`aria-invalid`, `.field__fehler`) gab es seit Block 1, wurde aber nirgends benutzt. Fehler verschwindet beim Tippen ohne vollen Re-Render (direkte DOM-Änderung, damit Fokus/Cursor nicht springen). Server-Fehler (falsches Passwort etc.) bleiben bewusst im allgemeinen Kasten. Im Browser geprüft: Registrierung ohne Namen — Fehler am Feld, Fokus dort, verschwindet beim Tippen, E-Mail/Passwort blieben stehen. Karten-Formular zunächst nur per Code-Review geprüft, nicht im Browser (braucht ein angemeldetes Konto). |
-| 2026-09-17 | **Block 9 am echten Handy verifiziert.** Betreiber hat das Karten-Formular angemeldet getestet ("passt. weiter") — rotes Feld, Fokus-Sprung und Verschwinden beim Tippen bestätigt. Block 9 damit fertig. Weiter mit Block 10.
+| 2026-09-17 | **Block 9 am echten Handy verifiziert.** Betreiber hat das Karten-Formular angemeldet getestet ("passt. weiter") — rotes Feld, Fokus-Sprung und Verschwinden beim Tippen bestätigt. Block 9 damit fertig. Weiter mit Block 10. |
+| 2026-09-17 | **Redesign Block 10 gebaut: Sichtbare Wahl statt Klappliste** (v3.4.3). Stufenbereich beim Üben: zwei `<select>` "von"/"bis" ersetzt durch eine Chip-Reihe je verfügbarer Stufe — erster Tipp wählt eine Stufe, zweiter spannt den Bereich dazwischen auf. Art der Speicherkarte: `<select>` mit drei `<option>` in jeder Zeile ersetzt durch einen Knopf, der nur die aktuelle Art zeigt und ein Auswahl-Blatt öffnet (dasselbe Muster wie bei „Helligkeit"). Kein Schieberegler mit zwei Griffen (Auftrag warnt davor, Ziehgesten-Ärger) und kein Chip-Trio pro Zeile (hätte die Liste voll gemacht). Syntax geprüft, im Browser ohne Konsolenfehler geladen. Versucht, `probelauf.mjs` (Firebase-Attrappen) lauffähig zu machen, um die login-pflichtigen Bildschirme selbst zu sehen — `playwright`/Chromium ließen sich diesmal installieren, aber der Browser-Start scheitert an dieser Umgebung selbst (`chrome.exe: Permission denied`). Dabei nebenbei einen Windows-Pfadfehler in `probelauf.mjs` gefunden (nicht behoben, nur notiert: `.pathname` statt `fileURLToPath()`). Betreiber-Test am echten Handy steht noch aus.
 | 2026-09-15 | **Beobachtungen zum Lernwerkzeug: Versuchte Verbesserung des Ziehgriff-Doppeltipp-Verhaltens (v3.0.40).** Testrückmeldung zu v3.0.39 deutete darauf hin, dass die Aktivierung der Ziehgriff-Doppeltipp-Geste weiterhin schwierig ist — wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten Touchscreen-Ziel zuverlässig zweimal zu tippen. Zwei Optimierungen ohne Mechanic-Änderung: (1) `DOPPELTIPP_FENSTER` von 400ms → 600ms für mehr Zeit. (2) Visuelle Rückmeldung auf `.drag-handle:active` mit Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit erkennbar ist, dass die erste Tap registriert wurde. Beide Änderungen sollen die Fehlertoleranz erhöhen. Nächster Schritt: Gerätetest zur Prüfung der Zuverlässigkeit. Alle fünf Beobachtungen 2, 4, 6, 14, 15 vom Code her bereits behoben oder verbessert; offen bleiben drei Punkte, die Gerätetests brauchen (5: iPad-Layout, 13: Over-Scrolling, 16: Browser-Zurück), und mehrere UX-Punkte, die Betreiber-Entscheidungen brauchen (1, 3, 9, 10). Details in `beobachtungen-lernwerkzeug.md`.

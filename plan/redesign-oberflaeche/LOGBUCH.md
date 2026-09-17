@@ -4,6 +4,108 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Block 10 gebaut: Sichtbare Wahl statt Klappliste (v3.4.3)
+
+**Geändert:**
+- **Stufenbereich beim Üben** (`app.js`):
+  - `ui` neue Felder `drillVon`, `drillBis`, `drillAnker` (bei `drillSetIds`) —
+    der Bereich steht jetzt direkt im Zustand statt in zwei `<select>`.
+  - `setzeVollenStufenBereich()` (neu, bei `openDrillPicker()`): setzt von/bis
+    auf den vollen verfügbaren Bereich — dieselbe Vorbelegung, die die zwei
+    `<select>` vorher automatisch hatten (kein "selected" auf "von", "selected"
+    auf die letzte Option bei "bis").
+  - `waehleStufe(s)` (neu): erster Tipp wählt eine einzelne Stufe, zweiter
+    spannt den Bereich zum ersten auf (Reihenfolge egal, `Math.min`/`max`).
+    Danach beginnt der nächste Tipp wieder neu (`drillAnker` zurück auf `null`).
+  - `renderVerwaltenListe()`: die zwei `<select id="drill-min/max">` sind durch
+    `<div class="stufe-chips">` mit einem `<button data-action="stufe-chip">`
+    je verfügbarer Stufe ersetzt, plus eine Zeile "Anfang antippen, dann Ende"
+    und eine Zeile mit dem aktuell gewählten Bereich.
+  - `case "start-drill"`: liest jetzt `ui.drillVon`/`ui.drillBis` statt
+    `document.getElementById("drill-min/max").value`.
+  - Radio "Nach Stufen" (`input[name="drill-mode"]` change-Listener): ruft
+    `setzeVollenStufenBereich()`, wenn in den Stufen-Modus gewechselt wird —
+    dieselbe "immer wieder voller Bereich"-Vorbelegung wie früher bei jedem
+    Neuzeichnen der `<select>`.
+  - `selectBereich()`: `drillVon`/`drillBis`/`drillAnker` mit zurückgesetzt
+    (wie die übrigen `drill*`-Felder), sonst könnte ein Bereichswechsel einen
+    Stufenbereich stehen lassen, den es im neuen Bereich gar nicht gibt.
+  - `styles.css`: `.drill-picker select { … }` (tot, keine `<select>` mehr in
+    diesem Kasten) entfernt, `.stufe-chips`/`.stufe-chip`/`.stufe-chip.aktiv`
+    neu — eigene Klasse statt `.pill`, weil `.pill` bei `--ctrl-sm` (36px)
+    bleibt (seltene Handlung, Fortschritts-Umschalter) und hier Satz 3
+    (Trefferfläche mindestens `--tap`, 44px) gilt, weil öfter und gezielter
+    angetippt wird.
+- **Art der Speicherkarte** (`app.js`):
+  - `ui` neues Feld `setArtSheetId` (bei `wahlSheet`) — die ID der
+    Speicherkarte, deren Art gerade gewählt wird, oder `null` = zu. Eigenes
+    Feld statt Wiederverwendung von `wahlSheet`: die Art hängt an einer
+    bestimmten Zeile, nicht an einer app-weiten Einstellung wie Helligkeit.
+  - `setArtSheet()` (neu, neben `wahlSheet()`): dasselbe Blatt-Muster — Titel,
+    Zeilen mit Haken bei der aktiven Art, Erklärungstext, "Fertig". In
+    `renderMain()` neben `wahlSheet()` eingehängt.
+  - `setBlock()`: `<select class="set-art-wahl">` mit drei `<option>` ersetzt
+    durch einen `<button class="ghost" data-action="set-art-sheet-auf">`, der
+    nur die aktuelle Art zeigt und das Blatt öffnet — drei Chips in jeder
+    Zeile hätten die Liste voll gemacht (Satz "weniger Inhalt am Handy").
+  - Drei neue Fälle im Klick-Schalter: `set-art-sheet-auf` (öffnen),
+    `set-art-sheet-zu` (schließen), `set-art-waehlen` (wählt sofort, Blatt
+    bleibt offen bis "Fertig" — wie bei Helligkeit/Schriftgröße/Sitzungslimit).
+  - Der globale `app.addEventListener("change", …)`-Listener für
+    `select[data-action="set-art"]` ist komplett entfernt (keine `<select>`
+    mehr, die er bedienen müsste).
+  - `SET_ART_ZEICHEN` (Emoji nur fürs `<option>`) entfernt, dazugehöriger
+    Kommentar bei `ICON_PFADE` angepasst — die Grenze "`<option>` kann kein
+    SVG" galt nur für die alte native Auswahl und fällt mit ihr weg. Jetzt
+    steht überall dasselbe SVG-Symbol wie an den anderen Art-Stellen
+    (`set-gruppe-kopf`).
+  - `styles.css`: `.set-art-wahl` (tot) entfernt.
+- `app.js:19` / `sw.js:10` → 3.4.3. `CHANGELOG.md` neue Sektion.
+
+**Entscheidung:** Beide Stellen aus dem Auftrag folgen demselben Prinzip –
+bei wenigen Möglichkeiten sieht man lieber gleich alle. Beim Stufenbereich
+wurden bewusst **Chips mit Zwei-Tipp-Bereich** gebaut, kein Schieberegler mit
+zwei Griffen (Bild 14 der Sammlung) – der Auftrag warnt ausdrücklich davor
+("am Handy fummelig, und die App hatte mit Ziehgesten schon Ärger"). Bis zu
+13 Chips (`MAX_STUFE = 12` + Stufe 0) dürfen umbrechen, keine erzwungene
+Einzelzeile – tatsächlich zeigen `availableStufen()` aber nur die Stufen, die
+im geübten Bereich wirklich vorkommen, meist deutlich weniger als 13. Bei der
+Speicherkarten-Art wurde bewusst **kein** Chip-Trio pro Zeile gebaut (der
+Auftrag warnt davor: "drei Chips pro Zeile machen die Liste voll"), sondern
+das vorhandene Auswahl-Blatt-Muster wiederverwendet.
+
+**Geprüft:** `node --check app.js` (Syntax), Seite im Browser neu geladen
+(`http://localhost:8099/index.html`) – keine Konsolenfehler. **Beide
+Bildschirme selbst sind ungeprüft** – beide liegen im Verwalten-Tab und
+brauchen ein angemeldetes Konto. Versucht wurde diesmal zusätzlich, das
+Prüf-Werkzeug `probelauf.mjs` (Firebase-Attrappen) lauffähig zu machen:
+`npm install playwright` und `npx playwright install chromium` liefen in
+dieser Umgebung durch (anders als noch bei Block 9 vermutet), aber der
+eigentliche Browser-Start scheitert an der Umgebung selbst – `chrome.exe`
+lässt sich hier nicht ausführen (`Permission denied`, auch mit versuchtem
+Sandbox-Bypass). **Für künftige Sessions festgehalten:** `probelauf.mjs`
+selbst hat nebenbei einen Windows-Bug gefunden (nicht behoben, nur lokal in
+einer Kopie umgangen) – `new URL(...).pathname` liefert unter Windows einen
+Pfad mit führendem Schrägstrich vor dem Laufwerksbuchstaben
+(`/C:/Users/...`), `mkdirSync` scheitert daran. Fix wäre `fileURLToPath()`
+statt `.pathname`, nicht eingecheckt, da es nichts genutzt hätte (der
+Browser-Start scheitert ohnehin an der Umgebung, nicht am Pfad-Bug). Alle
+Testartefakte (`node_modules/`, Testkopie des Skripts) wieder entfernt.
+
+**Offen:** Betreiber-Test am echten Handy, angemeldet: (1) Verwalten → Üben
+öffnen, eine Stufe antippen, eine zweite antippen, prüfen dass der Bereich
+dazwischen markiert ist und "Start" die richtigen Karten übt. (2) Bei
+"Arten vergeben" eine Speicherkarte antippen, im Blatt eine andere Art wählen,
+prüfen dass die Zeile draußen die neue Art zeigt und die Karten wie erwartet
+gruppiert werden.
+
+**Nächster Schritt:** Betreiber-Test von Block 10 abwarten. Danach ist Block
+10 die letzte offene Position aus `BILDER-BEFUND.md`; der Redesign-Strang
+ruht wieder, bis der Betreiber eine neue Schwachstelle nennt oder die offenen
+Fragen 12/13 (Farben, Google-Anmeldung) entscheidet.
+
+---
+
 ### 2026-09-17 — Block 9 gebaut: Fehler am Feld statt im Dialog (v3.4.2)
 
 **Geändert:**
