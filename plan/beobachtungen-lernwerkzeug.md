@@ -2,6 +2,9 @@
 
 Angelegt: 15. September 2026, aus einer Nutzungssitzung des Betreibers.
 Zuletzt erweitert: 15. September 2026 (Punkte 13–16 hinzugefügt).
+Zuletzt abgeglichen: 17. September 2026 — Punkt 5 war bereits über den
+Redesign-Strang (Block 3, v3.2.1) behoben, ohne dass diese Liste das
+vermerkt hatte.
 Gehört zu keiner Phase — **Phase 0–9 schließen „Funktion des Lernwerkzeugs
 anfassen" ausdrücklich aus** (`../CLAUDE.md`, `PLAN.md` Abschnitt „Was in
 keiner Phase passiert", Punkt 1). Diese Liste ist deshalb bewusst nur
@@ -252,7 +255,7 @@ eintippen kann — sinnvoll nur beim Neuanlegen). Fix: Vor dem Zurücksetzen von
 `ui.editId` in einer Variable `warEdit` gemerkt, der Fokus-Aufruf läuft jetzt
 nur noch, wenn `!warEdit`.
 
-## 5. Lernen/Üben-Feld auf dem iPad nicht mittig
+## 5. Lernen/Üben-Feld auf dem iPad nicht mittig — ✅ behoben (v3.2.1, außerhalb dieser Liste)
 
 **Beobachtung:** Auf dem iPad ist das Eingabefeld bei Lernen/Üben nicht
 zentriert, sondern nach rechts verschoben — zusammen mit dem
@@ -264,6 +267,19 @@ Telefon/Desktop nicht auffällt. Ohne echtes Gerät oder iPad-Emulation im
 Browser nicht zuverlässig zu reproduzieren — bräuchte gezielten Test in den
 Breitenbereichen, die ein iPad tatsächlich hat (Hoch- und Querformat sind
 vermutlich unterschiedlich betroffen).
+
+**Nachträglich als behoben erkannt (17.09.2026), beim Abgleich dieser Liste
+gegen den Code.** Genau dieser Bug ist derselbe, den der Betreiber am
+17.09.2026 unabhängig von dieser Liste am echten iPad gemeldet hat
+("der Bildschirm beim Lernen ist nach rechts verschoben, nicht mittig") und
+der im Redesign-Strang, Block 3, als eigener Fund behoben wurde (v3.2.1,
+`styles.css:2324–2341`, Kommentar „3.2.1"): Ab 900px rückt `.view` den
+Inhalt um die Spaltenbreite (120px) ein, damit er neben der Desktop-Spalte
+steht — im Modus (Lernen/Üben) gibt es diese Spalte aber nicht, `.view--modus`
+nahm den Einzug bisher nicht zurück. Jetzt tut sie das. Diese Liste war seit
+15.09.2026 nicht mit dem Redesign-Strang abgeglichen worden, deshalb stand
+Punkt 5 hier fälschlich weiter als offen — reine Nachdokumentation, kein
+neuer Codeschritt nötig.
 
 ## 6. Formatierung (Absätze) der Notiz wird beim Anzeigen nicht übernommen — ✅ behoben (v3.0.36)
 
@@ -679,7 +695,8 @@ werden, wenn was gebaut wird.
 
 - **Echte Bugs, unabhängig voneinander behebbar:** 2 (versehentliches
   Verschieben — höchste Priorität, weil Datenänderung ohne Absicht), 4
-  (ungewollter Autofokus/Tastatur), 5 (iPad-Layout), 6 (Formatierung geht
+  (ungewollter Autofokus/Tastatur), 5 (✅ v3.2.1, siehe dort — über den
+  Redesign-Strang behoben, nicht über diese Liste), 6 (Formatierung geht
   verloren), 13 (Over-Scrolling — 🔧 Verdachts-Fix v3.0.50, unbestätigt),
   14 (Scroll-Position nicht zurückgesetzt),
   15 (Viewport-Verschiebung beim Scrollen/Speichern), 16 (History/Firebase-Bug
