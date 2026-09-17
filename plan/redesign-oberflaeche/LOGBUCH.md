@@ -4,6 +4,83 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-17 — Regel-Reset und Block 1: Fundament (v3.1.0)
+
+**Geändert:**
+- `styles.css` — Kopf komplett neu (vier Sätze statt drei); neue Token-Schicht
+  `--fs-micro … --fs-2xl` in Abschnitt 1; `html { font-size: 106.25% }` und
+  `body { font-size: var(--fs-base) }` in Abschnitt 2; 82 verstreute
+  Schriftgrößen auf Token umgestellt; Überschriften-Leiter h1–h4 neu gesetzt;
+  `--appbar-h` 52→56px, `--nav-h` 58→64px, `.bereich-pill` 36px→`var(--tap)`,
+  `.nav__tab .i` 23→25px; Abschnitt 8 mit neuem Doktrin-Text und der
+  Verschachtelungs-Sperre; Abschnitt 12 Kommentar umgeschrieben; fünf
+  veraltete Gold-Kommentare korrigiert.
+- Neu: `plan/redesign-oberflaeche/stilprobe.html` — Arbeitsmittel, nicht in `APP_SHELL`.
+- `app.js:19` / `sw.js:10` auf 3.1.0. `CHANGELOG.md`. `README.md` (Abschnitt
+  „Wenn du an der Gestaltung arbeitest" neu). `AUFTRAG.md` neu gefasst.
+- Gelöscht: `CLAUDE-DESIGN-PROMPT.md`, `ANLEITUNG.md` — beschrieben den am
+  16.09. verworfenen Weg über Claude Design. Die Design-Entscheidungen, um
+  derentwillen sie stehenbleiben sollten, stehen jetzt in `styles.css` (vier
+  Sätze, Token) und `README.md`. Wer sie doch braucht: `git show 307368c --
+  plan/redesign-oberflaeche/`.
+
+**Entscheidung:** Der Betreiber hat gemeldet, die Gestaltung werde „nicht
+eingehalten" und vermutet ein Verbot, das er selbst eingeführt hat. Das stimmt,
+und es ließ sich benennen: Der Kopf der `styles.css` führte drei Sätze, die der
+Code an zwei von drei Stellen nicht mehr befolgte — Gold war seit 3.1.0 raus,
+und das Kästen-Verbot stand gegen 19 `.card`-Stellen in `app.js` (gegen zweimal
+`.panel`). **Der Eintrag vom 16.09. „kein Neubau nötig" ist genau daran
+entstanden:** Wer an diesen Sätzen misst, misst an einer App, die es nicht gibt,
+und kommt jedes Mal auf „passt schon". Der Betreiber hat den Reset freigegeben
+(„Ich erlaube dir fürs erste alles"). Vier Sätze stehen jetzt, alle vier vom
+Code gedeckt.
+
+Der sichtbarste Teil ist Satz 3. Die Wurzel stand auf der Browser-Voreinstellung
+16px, der `body` mit 15px sogar darunter — die Bedienung war also kleiner als
+jeder Lesetext, den eine rem-Angabe erzeugt. Video 1 sagt das Gegenteil: iOS
+basiert auf 17px, macOS auf 13px; am kleineren Bildschirm wird die Schrift
+größer, nicht kleiner. Jetzt 17px Wurzel, alles über acht Token. In Prozent
+gesetzt, nicht in px, damit eine im Browser eingestellte größere Schrift
+durchschlägt. Die Abstände bleiben px — sie sollen sich **nicht** mitvergrößern,
+sonst wird aus einer größeren Schrift nur eine leerere Seite.
+
+Satz 2 steht als CSS, nicht nur als Satz: `.card` in `.card` verliert
+automatisch Fläche, Rahmen und Polsterung. Der Grund ist messbar, nicht
+ästhetisch — zwei Flächen ineinander kosten auf 390px Bildschirm 80px Inhalt.
+Damit kann die Regel nicht mehr aus Versehen gebrochen werden, und man muss sie
+auch nicht mehr glauben: die Stilprobe enthält eine absichtlich falsch
+verschachtelte Karte als laufende Prüfung.
+
+**Nebenbefund, mitgenommen:** Eingabefelder erben jetzt 17px. Ab 16px hört iOS
+auf, beim Antippen eines Feldes hineinzuzoomen — das passierte bisher bei jedem
+Formular der App und stand in keiner Beobachtungsliste.
+
+**Geprüft:** Klammern-Bilanz der `styles.css` (504/504). Stilprobe in Chromium
+bei 390×844 angesehen, alle Bausteine gerendert. Kontrast gemessen: alle
+geprüften Textrollen ≥ 4,5:1, die schwächste Plakette (`zustand-wackelig`) bei
+4,53:1 — Phase 9 bleibt gehalten, die Werte sind durch die größere Schrift
+strikt besser als vorher. Zwei Nachbesserungen aus dem Augenschein: `h2` lag nach
+dem Wechsel nur 1px über `h3` (Leiter neu gesetzt), und die erste entschärfte
+Gruppe in einer Karte klebte am Absatz darüber (`margin-top`).
+
+**Offen:**
+- **Am echten Handy nicht angesehen.** Geprüft wurde in Chromium bei 390px —
+  Safe-Area, iOS-Schriftglättung und die tatsächliche Wirkung der 17px-Basis
+  in der Hand kann nur der Betreiber beurteilen. Steht als Punkt 1 unter
+  „Was Du noch tun musst".
+- `KONZEPT.md` §7 steht formal weiter auf „App-Funktionen nicht anfassen". Die
+  Lockerung gilt nur für diesen Strang und ist eine Betreiber-Entscheidung;
+  §7 wird **nicht** eigenmächtig umgeschrieben.
+- Die Blöcke 2–5 (`AUFTRAG.md`) sind beschrieben, aber nicht angefangen.
+
+**Nächster Schritt:** Block 2 — Startbildschirm. Konkret: die Ansicht `lernen`
+in `app.js` gegen Video 1 prüfen und dabei **belegen statt behaupten** — an
+welcher Stelle läuft ein Abschnitt in zwei Richtungen zugleich, wo steht mehr
+als eine Sache auf einem Bildschirm, wo sitzt die Handlung außerhalb der
+Daumenreichweite. Ergebnis in die Stilprobe, dann in den Code.
+
+---
+
 ### 2026-09-16 — Ist-Zustand geprüft: Gerüst/Navigation und leere Zustände bereits weitgehend erledigt
 
 **Geändert:** `styles.css:1386` — `.drag-handle` Breite 28px → `var(--tap)` (44px).

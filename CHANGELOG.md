@@ -1,3 +1,32 @@
+## 3.1.0 – 17. September 2026
+
+### Geändert (Gestaltung, Grundlagen)
+
+**Reset der Gestaltungsregeln.** Die drei Sätze im Kopf der `styles.css` standen seit 3.0.0 und stimmten an zwei Stellen nicht mehr mit dem Code überein: Satz 1 sprach von Gold als Handlungsfarbe, obwohl Gold seit dem Design-Stand 3.1.0 raus ist (Akzent ist Creme `#f5f3ec`), und Satz 2 verbot Kästen, während `.card` längst der meistbenutzte Baustein war — 19 Stellen in `app.js` gegen zweimal `.panel`. Eine Regel, die der Code nicht befolgt, ordnet nichts; sie sorgt nur dafür, dass die nächste Session gegen den eigenen Bestand gestaltet. Der Betreiber hat den Reset ausdrücklich freigegeben. Jetzt stehen **vier Sätze**, und sie decken sich mit dem Code:
+
+1. Eine Handlung pro Bildschirm — genau eine gefüllte Akzentfläche.
+2. Eine Fläche darf gruppieren, aber nie eine Fläche in einer Fläche.
+3. Die Schrift schrumpft am Handy nicht.
+4. Bedienung ist Systemschrift, Stoff ist Serifenschrift.
+
+**Satz 3: die Schrift ist größer geworden.** Die Wurzel steht jetzt auf `106.25%` (17px statt 16px — dieselbe Basis, die iOS für seine eigene Oberfläche benutzt), und der `body` lag mit 15px sogar noch darunter. Die Bedienung stand also kleiner da als jeder Lesetext, den eine rem-Angabe erzeugt. Beides jetzt 17px. Alle 82 verstreuten Schriftgrößen in `styles.css` sind durch acht Token ersetzt (`--fs-micro` bis `--fs-2xl`); die kleinsten Werte — 10px im Kalenderkopf, 10,5px unter den Navigations-Symbolen, 11px in Plaketten und Augenmaß — liegen jetzt bei mindestens 11,7px, echter Lesetext bei mindestens 13,8px. Die Überschriften-Leiter ist mitgezogen, weil `h3` nach dem Wechsel exakt auf der Größe des Fließtextes lag und damit nichts mehr ordnete. Die Abstände bleiben absichtlich in px: eine größere Schrift soll keine leerere Seite ergeben.
+
+*Nebenwirkung, die zählt:* Eingabefelder erben jetzt 17px. Ab 16px hört iOS auf, beim Antippen eines Feldes in die Seite hineinzuzoomen — das passierte bisher bei jedem Formular.
+
+**Satz 2 steht als Code, nicht nur als Satz.** Eine `.card` oder `.liste` innerhalb einer `.card` verliert automatisch Fläche, Rahmen, Rundung, Schatten und Polsterung und wird zu einer Gruppe mit Haarlinien-Fuge. Polsterung auf Polsterung kostet am Handy auf jeder Seite `--space-5`; von 390px Bildschirm bleiben dann 310px Inhalt. Wer verschachtelt, bekommt jetzt automatisch das, was er eigentlich gemeint hat. `.card--flush` ist ausgenommen, weil sie in der Regel eine `.liste` umschließt, die ihre Kanten braucht.
+
+### Verbessert
+
+- **Trefferfläche des Bereichs-Umschalters.** `.bereich-pill` war 36px hoch und lag damit unter `--tap` (44px) — es ist der meistbenutzte Knopf der App, er steht auf jedem Bildschirm oben links. Jetzt 44px. (Derselbe Fund wie beim Ziehgriff in 3.0.46, nur an der anderen Stelle.)
+- **AppBar und Navigation wachsen mit.** 52 → 56px und 58 → 64px. Eine 52px-Leiste mit einem 44px-Knopf darin hat 4px Luft und sieht aus wie ein Fehler. Navigations-Symbole 23 → 25px.
+- **Veraltete Kommentare bereinigt.** Fünf Stellen in `styles.css` erklärten Regeln noch über Gold („mehr Gold = sitzt besser", „Gold trägt hier die Handlung"). Gold ist seit 3.1.0 raus; die Rampe arbeitet über Deckkraft, die Handlung über den Akzent.
+
+### Neu (Arbeitsmittel, wird nicht ausgeliefert)
+
+- **`plan/redesign-oberflaeche/stilprobe.html`.** Die echte App lässt sich ohne Firebase-Anmeldung nicht ansehen — wer an der Gestaltung arbeitet, sieht sonst nur den Ladebildschirm und gestaltet blind. Die Stilprobe zeigt alle Bausteine aus `styles.css` mit erfundenem Inhalt nebeneinander, inklusive eines absichtlich falsch verschachtelten Kastens als Prüfung für Satz 2. Sie definiert selbst keine Farben, Größen oder Abstände und steht bewusst **nicht** in `APP_SHELL`.
+
+---
+
 ## 3.0.52 – 16. September 2026
 
 ### Behoben

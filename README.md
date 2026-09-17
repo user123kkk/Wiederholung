@@ -32,22 +32,40 @@ Kein Build-Schritt. Die Dateien werden so ausgeliefert, wie sie hier liegen.
 
 ## Wenn du an der Gestaltung arbeitest
 
-Die `styles.css` beginnt mit drei Sätzen, aus denen sich alles Weitere ergibt:
+Die `styles.css` beginnt mit vier Sätzen, aus denen sich alles Weitere ergibt
+(neu gesetzt am 17.09.2026 — die alten drei stimmten nicht mehr mit dem Code
+überein):
 
-1. **Gold ist die Handlung, die dran ist.** Eine gefüllte Goldfläche pro
-   Bildschirm. Alles andere trägt Gold nur als Schrift, Rand oder Schleier.
-2. **Hierarchie entsteht durch Abstand und Haarlinie, nicht durch Kästen.**
-   Einen Rahmen bekommt nur, was ein Ding ist – eine Karte, ein Kartensatz,
-   die Bühne.
-3. **Bedienung ist Systemschrift, Stoff ist Serifenschrift.**
+1. **Eine Handlung pro Bildschirm.** Genau eine gefüllte Akzentfläche (Creme
+   auf Fast-Schwarz). Alles andere trägt den Akzent nur als Schrift, Rand oder
+   Schleier.
+2. **Eine Fläche darf gruppieren – aber nie eine Fläche in einer Fläche.**
+   Am Handy ist die Fläche das Gruppierungsmittel; Weißraum gibt es dort nicht
+   genug. Die Grenze ist Polsterung auf Polsterung. `styles.css` setzt das
+   selbst durch: eine `.card` in einer `.card` verliert automatisch Fläche,
+   Rahmen und Polsterung.
+3. **Die Schrift schrumpft am Handy nicht.** Wurzel 17px, Größen kommen aus
+   `--fs-micro … --fs-2xl`, nichts Lesbares unter `--fs-xs`, Trefferflächen
+   mindestens `--tap`. Keine neue Größe erfinden – wer eine braucht, die es
+   nicht gibt, hat meist die falsche Rolle gewählt.
+4. **Bedienung ist Systemschrift, Stoff ist Serifenschrift.**
 
-Zwei Dinge, die leicht zu übersehen sind:
+Drei Dinge, die leicht zu übersehen sind:
 
 - **Eintrittsbewegungen müssen `@keyframes` sein, keine Transitions.**
   `render()` ersetzt den kompletten Inhalt von `#app`; auf frisch eingefügten
   Elementen laufen Transitions nicht.
 - **Ob die Navigation unten oder links steht, entscheidet allein Abschnitt 17
   der `styles.css`.** Das Markup ist in beiden Fällen dasselbe.
+- **Die Abstände (`--space-*`) sind absichtlich px, nicht rem.** Sie sollen
+  sich nicht mitvergrößern, wenn jemand die Schrift größer stellt – sonst wird
+  aus einer größeren Schrift eine leerere Seite.
+
+**Ansehen, ohne sich anzumelden:** `plan/redesign-oberflaeche/stilprobe.html`
+zeigt alle Bausteine aus `styles.css` nebeneinander mit erfundenem Inhalt.
+Die Datei wird nicht ausgeliefert (steht nicht in `APP_SHELL`) und definiert
+selbst keine Farben oder Größen – was dort hässlich aussieht, wird in
+`styles.css` geändert, nicht dort.
 
 ## Wenn du am Markup arbeitest
 

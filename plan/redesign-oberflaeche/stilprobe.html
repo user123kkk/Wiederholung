@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de" data-thema="dunkel">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Stilprobe — Adrabic</title>
+<!--
+  ARBEITSMITTEL, KEINE AUSGELIEFERTE SEITE.
+
+  Liegt bewusst unter plan/ und steht NICHT in APP_SHELL (sw.js). Grund: die
+  echte App laesst sich ohne Firebase-Anmeldung nicht ansehen - ein Agent (und
+  der Betreiber am Handy) sieht sonst nur den Ladebildschirm und gestaltet
+  blind. Hier stehen dieselben Klassen aus styles.css mit erfundenem Inhalt
+  nebeneinander.
+
+  Regel: Diese Datei definiert KEINE eigenen Farben, Groessen oder Abstaende.
+  Wenn hier etwas haesslich aussieht, ist styles.css zu aendern, nicht diese
+  Datei. Sonst luegt die Probe.
+
+  Oeffnen: python3 -m http.server im Wurzelverzeichnis, dann
+  /plan/redesign-oberflaeche/stilprobe.html
+-->
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  /* Nur Geruest fuer die Probe selbst - nichts, was Gestalt behauptet. */
+  /* z-index wie #app in index.html: .bg-glow liegt auf Ebene 0 und wuerde
+     den Inhalt sonst verdecken, weil es im Markup danach kommt. */
+  .probe { position: relative; z-index: 1;
+           max-width: var(--measure); margin: 0 auto;
+           padding: var(--space-6) var(--gutter) var(--space-10); }
+  .probe__kopf { display: flex; gap: var(--space-2); align-items: center;
+                 margin-bottom: var(--space-6); }
+  .probe__rahmen { border-top: 1px solid var(--border-strong);
+                   margin-top: var(--space-9); padding-top: var(--space-5); }
+  .probe__was { font-size: var(--fs-micro); letter-spacing: 0.07em;
+                text-transform: uppercase; color: var(--text-3);
+                margin-bottom: var(--space-4); }
+  .probe__buehne { position: relative; border: 1px solid var(--border);
+                   border-radius: var(--r-lg); overflow: hidden;
+                   background: var(--bg); }
+  .probe__buehne .appbar, .probe__buehne .nav { position: sticky; }
+  .probe__buehne .nav { bottom: 0; }
+  .probe__buehne .view { padding-top: var(--space-5); padding-bottom: var(--space-6); }
+</style>
+</head>
+<body>
+<div class="bg-glow" aria-hidden="true"></div>
+
+<div class="probe">
+
+  <div class="probe__kopf">
+    <h1 style="flex:1 1 auto">Stilprobe</h1>
+    <button class="secondary" id="thema">Hell / Dunkel</button>
+  </div>
+  <p class="hint">Alles hier kommt aus <code>styles.css</code>. Inhalt erfunden.</p>
+
+  <!-- ================================================================== -->
+  <div class="probe__rahmen">
+    <div class="probe__was">Schriftleiter (Satz 3)</div>
+    <h1>H1 — Was du einmal gelernt hast</h1>
+    <h2>H2 — Heute faellig</h2>
+    <h3>H3 — Lektion 4</h3>
+    <h4>H4 — Nebenueberschrift</h4>
+    <p style="margin-top:var(--space-3)">Fliesstext, <code>--fs-base</code>: 17px. Das ist die Basis, in der bedient und gelesen wird. Ein kleinerer Bildschirm bekommt weniger Inhalt, nicht kleineren.</p>
+    <p class="subtitle" style="margin-top:var(--space-3)">Subtitle, <code>--fs-md</code></p>
+    <p class="hint" style="margin-top:var(--space-3)">Hinweis, <code>--fs-sm</code> — die Groesse fuer Erklaerungen unter einem Titel.</p>
+    <div class="field__hilfe">Formularhilfe, <code>--fs-xs</code> — kleinste Groesse fuer echten Lesetext.</div>
+    <div class="eyebrow" style="margin-top:var(--space-3)">Augenmass, --fs-micro</div>
+  </div>
+
+  <!-- ================================================================== -->
+  <div class="probe__rahmen">
+    <div class="probe__was">Knoepfe — fuenf Stufen, EINE gefuellte pro Bildschirm (Satz 1)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center">
+      <button>Weiter lernen</button>
+      <button class="secondary">Abbrechen</button>
+      <button class="ghost">Umbenennen</button>
+      <button class="linklike">Konto loeschen</button>
+      <button class="danger">Endgueltig loeschen</button>
+      <button disabled>Gesperrt</button>
+    </div>
+    <div style="margin-top:var(--space-4)">
+      <button class="lg full">Grosser Knopf ueber die volle Breite</button>
+    </div>
+  </div>
+
+  <!-- ================================================================== -->
+  <div class="probe__rahmen">
+    <div class="probe__was">Flaechen — und Satz 2: keine Flaeche in einer Flaeche</div>
+
+    <div class="card" style="margin-bottom:var(--space-5)">
+      <h3>Eine Karte</h3>
+      <p class="hint">Gruppiert Inhalt, der zusammengehoert. Am Handy ist die Flaeche das Gruppierungsmittel — Weissraum gibt es dort nicht genug.</p>
+    </div>
+
+    <div class="card card--accent" style="margin-bottom:var(--space-5)">
+      <h3>Karte mit Akzent</h3>
+      <p class="hint">Traegt den Akzent als Schleier, nicht als Fuellung.</p>
+    </div>
+
+    <div class="card">
+      <h3>Verschachtelt (absichtlich falsch)</h3>
+      <p class="hint">Die beiden Bloecke darunter stehen im Markup als <code>.card</code> in einer <code>.card</code>. Sie duerfen hier NICHT als eigene Kaesten erscheinen — styles.css entschaerft sie automatisch zu Gruppen mit Fuge.</p>
+      <div class="card">
+        <strong>Erste Gruppe</strong>
+        <p class="hint">Keine eigene Flaeche, keine zweite Polsterung.</p>
+      </div>
+      <div class="card">
+        <strong>Zweite Gruppe</strong>
+        <p class="hint">Getrennt durch Haarlinie und Abstand.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================== -->
+  <div class="probe__rahmen">
+    <div class="probe__was">Liste und Plaketten</div>
+    <div class="liste">
+      <button class="liste-zeile aktiv"><span class="liste-zeile__text">Medina Buch 1</span><span class="badge zustand-gesehen">12</span></button>
+      <button class="liste-zeile"><span class="liste-zeile__text">Grammatik</span><span class="liste-zeile__wert">3 offen</span></button>
+      <button class="liste-zeile"><span class="liste-zeile__text">Quran-Wortschatz</span></button>
+      <button class="liste-zeile gefahr"><span class="liste-zeile__text">Bereich loeschen</span></button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-4)">
+      <span class="badge zustand-neu">neu</span>
+      <span class="badge zustand-gesehen">gesehen</span>
+      <span class="badge zustand-wackelig">wackelig</span>
+      <span class="badge zustand-solide">solide</span>
+      <span class="badge zustand-fest">sitzt</span>
+    </div>
+  </div>
+
+  <!-- ================================================================== -->
+  <div class="probe__rahmen">
+    <div class="probe__was">Formular</div>
+    <div class="field"><label for="p1">Arabisches Wort</label>
+      <input type="text" id="p1" class="arabic" dir="rtl" lang="ar" value="&#1603;&#1616;&#1578;&#1614;&#1575;&#1576;"></div>
+    <div class="field"><label for="p2">Uebersetzung</label>
+      <input type="text" id="p2" value="Buch">
+      <div class="field__hilfe">Kurz halten. Was auf die Rueckseite soll, kommt ins Notizfeld.</div></div>
+    <div class="field"><label for="p3">Notiz</label><textarea id="p3" rows="2">Plural: kutub</textarea></div>
+  </div>
+
+  <!-- ================================================================== -->
+  <div class="probe__rahmen">
+    <div class="probe__was">Startbildschirm — Geruest im Ganzen</div>
+    <div class="probe__buehne">
+      <header class="appbar">
+        <button class="bereich-pill"><span>Medina Buch 1</span></button>
+        <div class="appbar__spacer"></div>
+        <button class="icon-btn" aria-label="Einstellungen">&#9881;</button>
+      </header>
+      <div class="view">
+        <div class="stapel">
+          <div class="stapel__zahl">12</div>
+          <div class="stapel__was">Karten sind heute faellig</div>
+          <button class="lg">Sitzung starten</button>
+          <div class="stapel__meta">
+            <span class="badge zustand-neu">4 neu</span>
+            <span class="badge zustand-wackelig">8 Wiederholung</span>
+          </div>
+        </div>
+        <div class="sektion" style="margin-top:var(--stack)">
+          <div class="sektion__kopf"><h2>Lektionen</h2><button class="linklike">Alle</button></div>
+        </div>
+        <div class="liste">
+          <button class="liste-zeile"><span class="liste-zeile__text">Lektion 3</span><span class="liste-zeile__wert">sitzt</span></button>
+          <button class="liste-zeile"><span class="liste-zeile__text">Lektion 4</span><span class="badge zustand-gesehen">12</span></button>
+        </div>
+      </div>
+      <nav class="nav">
+        <div class="nav__tabs">
+          <button class="nav__tab active"><span>Lernen</span></button>
+          <button class="nav__tab"><span>Fortschritt</span></button>
+          <button class="nav__tab"><span>Verwalten</span></button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ================================================================== -->
+  <div class="probe__rahmen">
+    <div class="probe__was">Leerer Zustand</div>
+    <div class="empty">
+      <div class="empty__icon">&#10022;</div>
+      <div class="empty__titel">Fuer heute durch</div>
+      <div class="empty__text">Alle faelligen Karten sind bewertet. Die naechsten kommen morgen.</div>
+      <div class="empty__aktionen"><button class="secondary">Trotzdem ueben</button></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById("thema").addEventListener("click", function () {
+    var r = document.documentElement;
+    r.setAttribute("data-thema", r.getAttribute("data-thema") === "hell" ? "dunkel" : "hell");
+  });
+</script>
+</body>
+</html>

@@ -1,20 +1,37 @@
 /* ============================================================================
-   ADRABIC-WIEDERHOLUNG — Gestaltung 3.0.0  ("Codex")
+   ADRABIC-WIEDERHOLUNG — Gestaltung 3.2.0  ("Hand")
    ============================================================================
 
-   Drei Sätze, aus denen sich alles Weitere ergibt:
+   RESET 17.09.2026. Die alten drei Sätze standen seit 3.0.0 und stimmten
+   zweimal nicht mehr mit dem Code überein: Satz 1 sprach von Gold, das seit
+   3.1.0 raus ist, und Satz 2 verbot Kästen, während .card längst der
+   meistbenutzte Baustein war (19 Stellen in app.js gegen 2-mal .panel).
+   Eine Regel, die der Code nicht befolgt, ordnet nichts — sie bremst nur.
+   Der Betreiber hat den Reset ausdrücklich freigegeben.
 
-   1. GOLD IST DIE HANDLUNG, DIE DRAN IST. Pro Bildschirm genau EINE gefüllte
-      Goldfläche. Alles andere trägt Gold nur als Schrift, Rand oder Schleier.
-      (Regel aus 2.17.0 — sie hat sich bewährt und bleibt.)
+   VIER SÄTZE, aus denen sich alles Weitere ergibt:
 
-   2. HIERARCHIE ENTSTEHT DURCH ABSTAND UND HAARLINIE, NICHT DURCH KÄSTEN.
-      Vorher war jeder Abschnitt ein .panel. Wenn alles ein Kasten ist, ordnet
-      kein Kasten mehr etwas. Ein Kasten gibt es jetzt nur noch, wenn der
-      Inhalt ein DING ist: eine Karte, ein Kartensatz, die Bühne.
+   1. EINE HANDLUNG PRO BILDSCHIRM. Genau EINE gefüllte Akzentfläche (Creme
+      auf Fast-Schwarz). Alles andere trägt den Akzent nur als Schrift, Rand
+      oder Schleier. (Substanz der alten Regel 1, ohne das tote Gold.)
 
-   3. BEDIENUNG IST SYSTEMSCHRIFT, STOFF IST SERIFENSCHRIFT.
-      (Regel aus 2.18.0 — bleibt.)
+   2. EINE FLÄCHE DARF GRUPPIEREN — ABER NIE EINE FLÄCHE IN EINER FLÄCHE.
+      Das ersetzt das alte Kästen-Verbot. Auf dem Handy fehlt der Weißraum,
+      mit dem man auf dem Desktop gruppiert; dort ist die Fläche das
+      Gruppierungsmittel. Die Grenze ist nicht „kein Kasten", sondern
+      „kein Kasten im Kasten" — Polsterung auf Polsterung frisst genau die
+      Breite, die am Handy knapp ist. Wer zwei Ebenen braucht, nimmt innen
+      Haarlinie und Abstand, nicht eine zweite Fläche.
+
+   3. DIE SCHRIFT SCHRUMPFT AM HANDY NICHT. Basis 17px (wie iOS), nichts,
+      was gelesen werden soll, unter --fs-xs; Trefferflächen mindestens
+      --tap. Der kleinere Bildschirm bekommt WENIGER Inhalt, nicht kleineren.
+      Nebenwirkung, die zählt: ab 16px hört iOS auf, beim Tippen in ein
+      Eingabefeld hineinzuzoomen.
+
+   4. BEDIENUNG IST SYSTEMSCHRIFT, STOFF IST SERIFENSCHRIFT.
+      (Regel aus 2.18.0 — die einzige der alten drei, die den Reset
+      unverändert übersteht.)
 
    Aufbau dieser Datei:
       1  Tokens (Primitive → Semantik)      9  Lernen / Bühne
@@ -26,6 +43,7 @@
       7  Formulare                          15 Handschrift
       8  Flächen & Listen                   16 Arabisch
                                             17 Breite Bildschirme
+                                            18 Statische Rechtsseiten
    ========================================================================= */
 
 
@@ -106,7 +124,8 @@
   --accent-bg-strong: rgba(245, 243, 236, 0.17);
 
   /* ---- Semantik · Status ------------------------------------------------
-     Bewusst nur drei Statusfarben. Gold IST die Aufmerksamkeitsfarbe; eine
+     Bewusst nur drei Statusfarben. Der Akzent (Creme) IST die Aufmerksamkeits-
+     farbe; eine
      vierte Farbe für "Warnung" würde Regel 1 brechen. */
   --positive: var(--verdigris-400);
   --positive-bg: rgba(106, 165, 136, 0.14);
@@ -117,7 +136,7 @@
 
   /* ---- Die Lernstufen-Rampe ---------------------------------------------
      Die Signatur des Systems. Kalender, Stufenband, Lektionsbalken, Badges
-     und Sparkline sprechen dieselbe Sprache: mehr Gold = sitzt besser.
+     und Sparkline sprechen dieselbe Sprache: mehr Deckkraft = sitzt besser.
      Vorher hatte jeder dieser Orte seine eigene Skala. */
   /* Eine Creme-Rampe über die Deckkraft. Das zeigt eine REIHENFOLGE (Stufe 1
      bis 5) verlässlich - was ein einzelner Farbton nicht kann, ist ARTEN
@@ -144,6 +163,30 @@
      nicht, siehe data-thema="hell" unten. */
   --mark-glow: drop-shadow(0 0 6px rgba(227, 200, 138, 0.50)) drop-shadow(0 0 16px rgba(227, 200, 138, 0.30));
 
+  /* ---- Schriftgrößen · Satz 3 -------------------------------------------
+     Die Wurzel steht auf 17px (siehe html unten), NICHT der body — nur so
+     rechnen alle rem-Angaben in dieser Datei mit. Die Abstände sind absichtlich
+     px: sie sollen sich NICHT mitvergrößern, sonst wird aus einer größeren
+     Schrift eine leerere Seite.
+
+       --fs-micro  nur Beschriftung unter einem Icon, Plakette, Kalenderkopf.
+                   Nichts, was ein Satz ist. Untere Grenze der ganzen App.
+       --fs-xs     kleinste Größe für echten Lesetext (Formularhilfe, Fußnote).
+       --fs-sm     Sekundärtext: Hinweise, Erklärungen unter einem Titel.
+       --fs-base   Bedienung und Fließtext. Der Normalfall.
+       --fs-lg …   Titel und Zahlen.
+
+     Wer eine Größe braucht, die hier nicht steht, hat meistens keine neue
+     Größe gebraucht, sondern die falsche Rolle gewählt. */
+  --fs-micro: 0.6875rem;  /* 11.7px */
+  --fs-xs:    0.8125rem;  /* 13.8px */
+  --fs-sm:    0.875rem;   /* 14.9px */
+  --fs-md:    0.9375rem;  /* 15.9px */
+  --fs-base:  1rem;       /* 17px   */
+  --fs-lg:    1.125rem;   /* 19.1px */
+  --fs-xl:    1.3125rem;  /* 22.3px */
+  --fs-2xl:   1.625rem;   /* 27.6px */
+
   /* ---- Abstände · die 4er-Leiter ---------------------------------------- */
   --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
   --space-5: 20px;  --space-6: 24px;  --space-7: 32px;  --space-8: 40px;
@@ -158,8 +201,11 @@
   --stack: var(--space-6);
   --stack-tight: var(--space-3);
   --measure: 680px;
-  --appbar-h: 52px;
-  --nav-h: 58px;
+  /* Beide nach dem Schriftwechsel angehoben: eine 52px-Leiste mit einem
+     44px-Knopf darin hat 4px Luft oben und unten - das sieht aus wie ein
+     Fehler, nicht wie eine Entscheidung. */
+  --appbar-h: 56px;
+  --nav-h: 64px;
   --rail-w: 240px;
   --modebar-h: 48px;
 
@@ -283,6 +329,11 @@
 
 html {
   background: var(--bg);
+  /* Satz 3: 17px Wurzel statt der Browser-Voreinstellung 16px — dieselbe
+     Basis, die iOS für seine eigene Oberfläche benutzt. In Prozent, damit
+     eine im Browser eingestellte größere Schrift weiter durchschlägt; ein
+     fester px-Wert würde sie überschreiben. */
+  font-size: 106.25%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   /* 15.09.2026: Ohne das reserviert der Browser den Platz fuer die
@@ -298,7 +349,9 @@ body {
   font-family: var(--font-ui);
   background: var(--bg);
   color: var(--text-1);
-  font-size: 15px;
+  /* War 15px und damit unter der Wurzel — die Bedienung stand also kleiner da
+     als der Lesetext, den rem-Angaben erzeugen. Jetzt beides 17px. */
+  font-size: var(--fs-base);
   line-height: 1.55;
   min-height: 100vh;
   /* Beobachtung 13 (16.09.2026, Verdachts-Fix - noch nicht am Geraet
@@ -491,7 +544,7 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 }
 .solo-mark .i { color: var(--accent); filter: var(--mark-glow); }
 .solo-mark strong {
-  font-family: var(--font-text); font-size: 1.15rem; font-weight: 600;
+  font-family: var(--font-text); font-size: var(--fs-lg); font-weight: 600;
   letter-spacing: -0.01em;
 }
 
@@ -509,7 +562,7 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 /* Erst wenn etwas darunter durchläuft, bekommt die Leiste eine Kante. */
 .appbar.scrolled { border-bottom-color: var(--border-subtle); }
 .appbar__title {
-  font-family: var(--font-text); font-size: 1.02rem; font-weight: 600;
+  font-family: var(--font-text); font-size: var(--fs-base); font-weight: 600;
   letter-spacing: -0.01em; white-space: nowrap; overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -523,11 +576,13 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
    ab vier Bereichen auf zu funktionieren. */
 .bereich-pill {
   display: inline-flex; align-items: center; gap: var(--space-2);
-  height: 36px; padding: 0 var(--space-2) 0 var(--space-3);
+  /* War 36px und damit unter --tap (Satz 3). Es ist der meistbenutzte Knopf
+     der App - er steht auf jedem Bildschirm oben links. */
+  height: var(--tap); padding: 0 var(--space-3) 0 var(--space-4);
   max-width: 62vw;
   background: var(--surface); color: var(--text-1);
   border: 1px solid var(--border); border-radius: var(--r-full);
-  font: inherit; font-size: 0.875rem; font-weight: 600;
+  font: inherit; font-size: var(--fs-sm); font-weight: 600;
   cursor: pointer; touch-action: manipulation;
   transition: background var(--dur-fast) var(--ease-out),
               border-color var(--dur-fast) var(--ease-out),
@@ -561,12 +616,12 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; gap: 3px;
   background: none; border: 0; padding: 0; cursor: pointer;
-  color: var(--text-3); font: inherit; font-size: 10.5px; font-weight: 600;
-  letter-spacing: 0.01em;
+  color: var(--text-3); font: inherit; font-size: var(--fs-micro); font-weight: 600;
+  letter-spacing: 0.005em;
   touch-action: manipulation; -webkit-user-select: none; user-select: none;
   transition: color var(--dur-fast) var(--ease-out);
 }
-.nav__tab .i { width: 23px; height: 23px; }
+.nav__tab .i { width: 25px; height: 25px; }
 /* 3.1.0: Der aktive Reiter bekommt eine eigene Fläche. Vorher unterschied ihn
    allein die Farbe - jetzt, wo Akzent und Textfarbe dieselbe Creme sind,
    müsste man zweimal hinsehen. */
@@ -603,7 +658,7 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 }
 .modebar__mitte {
   flex: 1 1 auto; text-align: center;
-  font-size: 0.8125rem; font-weight: 600; color: var(--text-2);
+  font-size: var(--fs-xs); font-weight: 600; color: var(--text-2);
 }
 .modebar__fortschritt {
   position: fixed; top: var(--sat); left: 0; z-index: calc(var(--z-nav) + 1);
@@ -626,10 +681,13 @@ h1, h2, h3, h4 {
   letter-spacing: -0.015em;
   line-height: 1.25;
 }
-h1 { font-size: clamp(1.375rem, 2vw + 1.05rem, 1.75rem); }
-h2 { font-size: clamp(1.0625rem, 1.2vw + 0.9rem, 1.25rem); margin-bottom: var(--space-3); }
-h3 { font-size: 1rem; line-height: 1.35; }
-h4 { font-size: 0.9375rem; }
+/* Vier Stufen, jede sichtbar eine Stufe über der nächsten. Nach dem Wechsel
+   der Wurzel auf 17px lag h3 exakt auf der Größe des Fließtextes und ordnete
+   damit nichts mehr; die ganze Leiter ist deshalb neu gesetzt. */
+h1 { font-size: clamp(1.5rem, 2vw + 1.05rem, 2rem); }
+h2 { font-size: clamp(1.3125rem, 1.2vw + 0.9rem, 1.4375rem); margin-bottom: var(--space-3); }
+h3 { font-size: var(--fs-lg); line-height: 1.35; }
+h4 { font-size: var(--fs-base); }
 
 /* Die Lesefläche: alles, was Stoff ist und nicht Bedienung. */
 .study-word, .study-answer,
@@ -642,16 +700,16 @@ h4 { font-size: 0.9375rem; }
 /* Das Augenmaß über einer Sektion. Ordnet, ohne zu rufen. */
 .eyebrow {
   font-family: var(--font-ui);
-  font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: 0.07em;
   text-transform: uppercase; color: var(--text-3);
   margin-bottom: var(--space-2);
 }
 
-.subtitle { color: var(--text-2); font-size: 0.9375rem; }
+.subtitle { color: var(--text-2); font-size: var(--fs-md); }
 
 .hint {
   color: var(--text-2);
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   line-height: 1.5;
 }
 .hint strong { color: var(--text-1); font-weight: 600; }
@@ -696,7 +754,7 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
 button {
   font: inherit;
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: var(--fs-md);
   cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
   gap: var(--space-2);
@@ -733,7 +791,7 @@ button.ghost {
   border-color: transparent;
   padding: 0 var(--space-3);
   min-height: var(--ctrl-sm);
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   font-weight: 600;
   border-radius: var(--r-sm);
 }
@@ -743,7 +801,7 @@ button.linklike, button.tiny-link, a.linklike {
   border-color: transparent;
   padding: 0 var(--space-2);
   min-height: var(--ctrl-sm);
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   font-weight: 600;
   border-radius: var(--r-sm);
 }
@@ -769,7 +827,7 @@ button.icon-btn {
 }
 button.icon-btn.on-surface { background: var(--surface); border-color: var(--border); }
 button.full { width: 100%; }
-button.lg { min-height: var(--ctrl-lg); font-size: 1rem; padding: 0 var(--space-6); }
+button.lg { min-height: var(--ctrl-lg); font-size: var(--fs-base); padding: 0 var(--space-6); }
 
 /* Schweben gibt es auf dem Handy nicht — sonst bleibt ein Knopf nach dem
    Tippen hell, bis man woanders hintippt. */
@@ -816,7 +874,7 @@ button.secondary.busy::after, button.ghost.busy::after { color: var(--text-1); }
 .seg button {
   background: transparent; color: var(--text-2); border-color: transparent;
   min-height: 34px; padding: 0 var(--space-4);
-  font-size: 0.8125rem; border-radius: var(--r-sm);
+  font-size: var(--fs-xs); border-radius: var(--r-sm);
 }
 .seg button.active {
   background: var(--surface-overlay); color: var(--text-1);
@@ -839,7 +897,7 @@ button.secondary.busy::after, button.ghost.busy::after { color: var(--text-1); }
   background: var(--surface); color: var(--text-2);
   border: 1px solid var(--border); border-radius: var(--r-full);
   min-height: var(--ctrl-sm); padding: 0 var(--space-4);
-  font-size: 0.8125rem; font-weight: 600;
+  font-size: var(--fs-xs); font-weight: 600;
 }
 .pill.active {
   background: var(--accent-bg); color: var(--accent);
@@ -863,7 +921,7 @@ button.secondary.busy::after, button.ghost.busy::after { color: var(--text-1); }
 .field + .field { margin-top: var(--space-4); }
 label, .field > label {
   display: block;
-  font-size: 0.8125rem; font-weight: 600; color: var(--text-2);
+  font-size: var(--fs-xs); font-weight: 600; color: var(--text-2);
   margin-bottom: var(--space-2);
 }
 label .opt { font-weight: 400; color: var(--text-3); }
@@ -879,7 +937,7 @@ input[type="number"], input[type="search"], textarea, select {
      Fertig-Druecken rein", "laesst sich rauszoomen"). 1rem = 16px haelt
      iOS unter der Schwelle, ohne dass die App selbst Zoom einschraenken
      muss - das bliebe sonst dem Nutzer verwehrt (WCAG 1.4.4). */
-  font: inherit; font-size: 1rem;
+  font: inherit; font-size: var(--fs-base);
   color: var(--text-1);
   background: var(--bg-sunken);
   border: 1px solid var(--border);
@@ -921,8 +979,8 @@ select {
 }
 select option { background: var(--surface); color: var(--text-1); }
 
-.field__hilfe { font-size: 0.75rem; color: var(--text-3); margin-top: var(--space-2); }
-.field__fehler { font-size: 0.75rem; color: var(--negative); margin-top: var(--space-2); }
+.field__hilfe { font-size: var(--fs-xs); color: var(--text-3); margin-top: var(--space-2); }
+.field__fehler { font-size: var(--fs-xs); color: var(--negative); margin-top: var(--space-2); }
 
 /* Ankreuzfeld: 22px sichtbar, 44px zu treffen. */
 input[type="checkbox"] {
@@ -964,7 +1022,7 @@ input[type="radio"]:checked::before { transform: scale(1); }
 .check-row {
   display: flex; align-items: center; gap: var(--space-3);
   min-height: var(--tap); cursor: pointer;
-  font-size: 0.875rem; color: var(--text-1); font-weight: 500;
+  font-size: var(--fs-sm); color: var(--text-1); font-weight: 500;
   margin-bottom: 0;
 }
 .wahl-reihe {
@@ -995,8 +1053,22 @@ input[type="radio"]:checked::before { transform: scale(1); }
 /* ===========================================================================
    8 · FLÄCHEN & LISTEN
    ---------------------------------------------------------------------------
-   Kasten nur, wenn der Inhalt ein DING ist. Eine Überschrift mit Text
-   darunter ist kein Ding — die bekommt Abstand, keinen Rahmen.
+   Satz 2. Eine Fläche darf gruppieren — aber nie eine Fläche in einer Fläche.
+
+   Das alte „Kasten nur, wenn der Inhalt ein DING ist" ist raus. Es hat nie
+   gegolten: .card stand zum Zeitpunkt des Resets an 19 Stellen in app.js,
+   .panel an zweien. Am Handy fehlt der Weißraum, mit dem man auf dem Desktop
+   gruppiert — dort IST die Fläche das Gruppierungsmittel.
+
+   Was bleibt, ist die Grenze, die wirklich weh tut: Polsterung auf
+   Polsterung. Zwei Flächen ineinander kosten am Handy 2 × --space-5 Breite
+   auf jeder Seite; von 390px Bildschirm bleiben dann 310px Inhalt. Wer
+   innerhalb einer Fläche noch eine Ebene braucht, nimmt Haarlinie und
+   Abstand (.liste, .sektion), nicht eine zweite Fläche.
+
+   Die Regel steht unten als CSS, nicht nur als Satz: eine .card in einer
+   .card verliert Fläche, Rahmen und Polsterung automatisch. Damit kann man
+   sie nicht mehr aus Versehen brechen.
    ========================================================================= */
 
 /* .panel war bisher der Universalkasten. Jetzt ist es die flache Sektion:
@@ -1025,6 +1097,35 @@ input[type="radio"]:checked::before { transform: scale(1); }
 }
 .card--flush { padding: 0; overflow: hidden; }
 
+/* ---- Satz 2, als Code ---------------------------------------------------
+   Eine Fläche in einer Fläche wird zur Gruppe ohne eigene Hülle: sie behält
+   ihren Abstand nach unten, gibt aber Fläche, Rahmen, Rundung, Schatten und
+   Polsterung ab. Wer .card verschachtelt, bekommt also automatisch das,
+   was er eigentlich gemeint hat — Gruppierung durch Abstand.
+
+   .card--flush ist ausgenommen: die trägt selbst keine Polsterung und
+   umschließt in der Regel eine .liste, die ihre Kanten braucht. */
+.card:not(.card--flush) .card,
+.card:not(.card--flush) .liste {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+/* Die erste entschärfte Gruppe braucht Luft zum Text darüber - ohne sie klebt
+   ihre Überschrift am vorangehenden Absatz. */
+.card:not(.card--flush) > .card:first-of-type,
+.card:not(.card--flush) > .liste:first-of-type { margin-top: var(--space-4); }
+/* Mehrere so entschärfte Gruppen hintereinander brauchen eine sichtbare
+   Fuge, sonst laufen sie zu einem Block zusammen. */
+.card:not(.card--flush) .card + .card,
+.card:not(.card--flush) .liste + .liste {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
+}
+
 /* Haarlinien-getrennte Zeilen statt einzelner Kästen. */
 .liste {
   background: var(--surface);
@@ -1041,11 +1142,11 @@ input[type="radio"]:checked::before { transform: scale(1); }
   width: 100%; text-align: left;
   background: transparent; color: var(--text-1);
   border-left: 0; border-right: 0; border-top: 0; border-radius: 0;
-  font-weight: 500; font-size: 0.9375rem;
+  font-weight: 500; font-size: var(--fs-md);
 }
 .liste-zeile:last-child { border-bottom: 0; }
 .liste-zeile__text { flex: 1 1 auto; min-width: 0; }
-.liste-zeile__wert { color: var(--text-3); font-size: 0.8125rem; font-weight: 500; }
+.liste-zeile__wert { color: var(--text-3); font-size: var(--fs-xs); font-weight: 500; }
 .liste-zeile .i { color: var(--text-3); }
 .liste-zeile.aktiv { background: var(--accent-bg); color: var(--accent); }
 .liste-zeile.aktiv .i { color: var(--accent); }
@@ -1059,13 +1160,13 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 /* Plaketten. */
 .badge {
   display: inline-flex; align-items: center; gap: 4px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.01em;
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: 0.01em;
   padding: 3px var(--space-2); border-radius: var(--r-xs);
   background: var(--surface-raised); color: var(--text-2);
   border: 1px solid var(--border-subtle);
   white-space: nowrap;
 }
-/* Die Lernstufen-Rampe: mehr Gold heißt überall dasselbe. */
+/* Die Lernstufen-Rampe: mehr Deckkraft heißt überall dasselbe. */
 .badge.zustand-neu      { background: var(--stufe-0); color: var(--text-2); border-color: transparent; }
 .badge.zustand-gesehen  { background: var(--stufe-1); color: var(--text-1); border-color: transparent; }
 .badge.zustand-wackelig { background: var(--stufe-2); color: var(--text-on-accent); border-color: transparent; }
@@ -1086,7 +1187,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    ========================================================================= */
 
 /* Die Stapel-Karte: der eine Ort auf dem Startbildschirm, an dem es
-   weitergeht. Gold trägt hier die Handlung. */
+   weitergeht. Der Akzent trägt hier die Handlung (Satz 1). */
 .stapel {
   background: linear-gradient(180deg, var(--accent-bg) 0%, transparent 58%), var(--surface);
   border: 1px solid var(--accent-border);
@@ -1102,7 +1203,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   letter-spacing: -0.03em; color: var(--accent);
 }
 .stapel__was {
-  font-size: 0.875rem; color: var(--text-2);
+  font-size: var(--fs-sm); color: var(--text-2);
   margin-top: var(--space-2); margin-bottom: var(--space-5);
 }
 .stapel__meta {
@@ -1110,7 +1211,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   flex-wrap: wrap; margin-top: var(--space-4);
 }
 
-.due-info { font-size: 0.9375rem; color: var(--text-2); margin-bottom: var(--space-4); }
+.due-info { font-size: var(--fs-md); color: var(--text-2); margin-bottom: var(--space-4); }
 .due-info strong { color: var(--text-1); font-weight: 600; }
 
 /* ---- Die Bühne ----------------------------------------------------------
@@ -1147,7 +1248,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   animation: enter-rise var(--dur-base) var(--ease-out) both;
 }
 .study-extra {
-  font-size: 0.9375rem; color: var(--text-2); line-height: 1.6;
+  font-size: var(--fs-md); color: var(--text-2); line-height: 1.6;
   background: var(--surface); border: 1px solid var(--border-subtle);
   border-radius: var(--r-md); padding: var(--space-4);
   text-align: left;
@@ -1164,16 +1265,16 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .study-extra a { word-break: break-all; }
 
 .progress-note {
-  font-size: 0.8125rem; color: var(--text-3);
+  font-size: var(--fs-xs); color: var(--text-3);
 }
 .weiter-hinweis {
-  font-size: 0.8125rem; color: var(--text-3);
+  font-size: var(--fs-xs); color: var(--text-3);
   padding: var(--space-4) 0;
 }
 
 /* Bewertung: drei gleichwertige Entscheidungen, keine davon ist die
    richtige — deshalb GETÖNT statt gefüllt. Die eine dokumentierte Ausnahme
-   von "Gold ist selten". */
+   von Satz 1 ("eine gefüllte Akzentfläche pro Bildschirm"). */
 .grade-row {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
@@ -1183,11 +1284,11 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .grade-row button {
   flex-direction: column; gap: 2px;
   min-height: var(--ctrl-lg); padding: var(--space-2);
-  font-size: 0.9375rem;
+  font-size: var(--fs-md);
   border-radius: var(--r-md);
 }
 .grade-row .sub {
-  font-size: 10.5px; font-weight: 500; opacity: 0.72;
+  font-size: var(--fs-micro); font-weight: 500; opacity: 0.72;
   letter-spacing: 0; line-height: 1.2;
 }
 .btn-unknown { background: var(--negative-bg); color: var(--negative); border-color: var(--negative-border); }
@@ -1234,7 +1335,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .done-box h2 { margin-bottom: var(--space-2); }
 
 .drill-banner, .satz-banner, .leech-banner, .merk-hinweis {
-  font-size: 0.8125rem; line-height: 1.5;
+  font-size: var(--fs-xs); line-height: 1.5;
   border-radius: var(--r-md);
   padding: var(--space-3) var(--space-4);
   border: 1px solid;
@@ -1315,13 +1416,13 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 .lern-karte.ist-gelernt { opacity: 0.42; background: transparent; }
 .lern-nr {
-  font-size: 0.75rem; font-weight: 600; color: var(--text-3);
+  font-size: var(--fs-xs); font-weight: 600; color: var(--text-3);
   min-width: 22px; padding-top: 2px; font-variant-numeric: tabular-nums;
 }
 .lern-inhalt { flex: 1 1 auto; min-width: 0; }
-.lern-inhalt .wort { font-size: 1.125rem; line-height: 1.4; word-break: break-word; }
+.lern-inhalt .wort { font-size: var(--fs-lg); line-height: 1.4; word-break: break-word; }
 .lern-inhalt .uebersetzung {
-  font-size: 0.875rem; color: var(--text-2); margin-top: 2px;
+  font-size: var(--fs-sm); color: var(--text-2); margin-top: 2px;
   word-break: break-word;
 }
 .lern-tat { display: flex; align-items: center; gap: var(--space-1); flex: none; }
@@ -1337,7 +1438,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   border-radius: var(--r-full);
   background: var(--surface-raised); color: var(--text-2);
   border: 1px solid var(--border);
-  font-size: 0.8125rem; white-space: nowrap;
+  font-size: var(--fs-xs); white-space: nowrap;
 }
 .lern-karte.ist-gelernt .lern-haken {
   background: var(--positive-bg); color: var(--positive);
@@ -1437,20 +1538,20 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 
 .words { flex: 1 1 auto; min-width: 0; }
 .card-row .wort, .leech-row .wort {
-  font-size: 1rem; line-height: 1.4; word-break: break-word;
+  font-size: var(--fs-base); line-height: 1.4; word-break: break-word;
 }
 .card-row .uebersetzung, .leech-row .uebersetzung {
-  font-size: 0.8125rem; color: var(--text-2); word-break: break-word;
+  font-size: var(--fs-xs); color: var(--text-2); word-break: break-word;
 }
 .extra-note {
-  font-size: 0.75rem; color: var(--text-3); margin-top: 2px;
+  font-size: var(--fs-xs); color: var(--text-3); margin-top: 2px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 /* Aufgeklappte Notiz im Lernen-Tab (Chevron-Knopf) - hier soll der volle
    Text mit Zeilenumbruechen sichtbar sein, anders als in der einzeiligen
    Listenvorschau oben. Eigene Klasse statt .extra-note zu ueberladen. */
 .extra-note-voll {
-  font-size: 0.8125rem; color: var(--text-2); margin-top: var(--space-2);
+  font-size: var(--fs-xs); color: var(--text-2); margin-top: var(--space-2);
   white-space: pre-wrap;
 }
 .card-tags-inline { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
@@ -1466,18 +1567,18 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   margin-bottom: var(--space-3);
   box-shadow: var(--shadow-md);
 }
-.select-actionbar strong { font-size: 0.875rem; }
+.select-actionbar strong { font-size: var(--fs-sm); }
 .select-actionbar select { width: auto; min-width: 130px; min-height: var(--ctrl-sm); padding: 6px var(--space-7) 6px var(--space-3); }
 
 /* ---- Speicherkarten ----------------------------------------------------- */
 /* Der Kopf zum Auf- und Zuklappen. Bewusst .secondary: auf dem Verwalten-
    Bildschirm ist „Karte hinzufügen“ die Handlung, die dran ist — die trägt
-   das Gold. Zwei gefüllte Goldflächen auf einem Bildschirm, und keine zeigt
-   mehr auf etwas. */
+   den Akzent. Zwei gefüllte Akzentflächen auf einem Bildschirm, und keine
+   zeigt mehr auf etwas (Satz 1). */
 .sets-kopf {
   width: 100%; justify-content: flex-start;
   gap: var(--space-3); margin-bottom: var(--space-3);
-  font-size: 0.9375rem;
+  font-size: var(--fs-md);
 }
 .sets-kopf > span:first-of-type { flex: 1 1 auto; text-align: left; }
 .set-liste { display: flex; flex-direction: column; gap: var(--space-2); }
@@ -1500,7 +1601,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .set-row .set-name {
-  flex: 1 1 auto; min-width: 0; font-size: 0.9375rem; font-weight: 600;
+  flex: 1 1 auto; min-width: 0; font-size: var(--fs-md); font-weight: 600;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .set-block.set-locked .set-name { opacity: 0.5; }
@@ -1510,14 +1611,14 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .set-gruppe:first-of-type { margin-top: 0; }
 .set-gruppe-kopf {
   display: flex; align-items: center; gap: var(--space-2);
-  font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: 0.07em;
   text-transform: uppercase; color: var(--text-3);
   margin-bottom: var(--space-2);
 }
-.set-art-wahl { width: auto; min-width: 120px; min-height: var(--ctrl-sm); padding: 4px var(--space-6) 4px var(--space-2); font-size: 0.8125rem; }
+.set-art-wahl { width: auto; min-width: 120px; min-height: var(--ctrl-sm); padding: 4px var(--space-6) 4px var(--space-2); font-size: var(--fs-xs); }
 .lock-anzeige { color: var(--text-3); display: inline-flex; }
 .leech-badge {
-  font-size: 11px; font-weight: 600; padding: 3px var(--space-2);
+  font-size: var(--fs-micro); font-weight: 600; padding: 3px var(--space-2);
   border-radius: var(--r-xs);
   background: var(--negative-bg); color: var(--negative);
   border: 1px solid var(--negative-border);
@@ -1526,21 +1627,25 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .seiten-leiste {
   display: flex; align-items: center; justify-content: center;
   gap: var(--space-3); margin-top: var(--space-4);
-  font-size: 0.8125rem; color: var(--text-2);
+  font-size: var(--fs-xs); color: var(--text-2);
 }
 
 
 /* ===========================================================================
    12 · FORTSCHRITT
    ---------------------------------------------------------------------------
-   Kein Kachel-Armaturenbrett. Zahlen stehen in Sätzen, Balken sind dünn,
-   und alles Goldene folgt derselben Stufen-Rampe.
+   Kein Kachel-Armaturenbrett — das bleibt, ist aber nach dem Reset kein
+   Flächen-Verbot mehr (Satz 2 erlaubt Flächen), sondern eine Aussage über die
+   Richtung: Video 1, „pro Abschnitt eine Scroll-Richtung". Ein Kachelraster
+   läuft in zwei Richtungen zugleich und ist genau deshalb am Handy falsch.
+   Zahlen stehen in Sätzen, Balken sind dünn, und alles Betonte folgt
+   derselben Stufen-Rampe.
    ========================================================================= */
 
 .stat-block { margin-bottom: var(--stack); }
 .stat-block h3 { margin-bottom: var(--space-1); }
 .stat-block .stat-sub {
-  font-size: 0.75rem; color: var(--text-3); margin-bottom: var(--space-3);
+  font-size: var(--fs-xs); color: var(--text-3); margin-bottom: var(--space-3);
 }
 
 /* Kennzahlen als Zeile, nicht als Kachelraster. */
@@ -1553,11 +1658,11 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 .stat-kennzahl { flex: 1 1 auto; min-width: 74px; }
 .stat-kennzahl .zahl {
-  display: block; font-size: 1.625rem; font-weight: 600;
+  display: block; font-size: var(--fs-2xl); font-weight: 600;
   line-height: 1.1; letter-spacing: -0.02em; color: var(--text-1);
 }
 .stat-kennzahl .was {
-  display: block; font-size: 0.75rem; color: var(--text-3); margin-top: 2px;
+  display: block; font-size: var(--fs-xs); color: var(--text-3); margin-top: 2px;
 }
 
 .gross-zahl { display: flex; align-items: baseline; gap: var(--space-2); }
@@ -1565,13 +1670,13 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   font-size: clamp(2rem, 9vw, 2.75rem); font-weight: 600;
   line-height: 1; letter-spacing: -0.03em; color: var(--accent);
 }
-.gross-zahl span { font-size: 0.875rem; color: var(--text-2); }
+.gross-zahl span { font-size: var(--fs-sm); color: var(--text-2); }
 
 /* Wochenvergleich: getönt wie die Grade-Knöpfe (Abschnitt 9) - dieselbe
    Farbsprache für "besser"/"schlechter", keine neue Farbe erfunden. */
 .trend-pill {
   display: inline-flex; align-items: center; gap: 4px;
-  font-size: 0.8125rem; font-weight: 600;
+  font-size: var(--fs-xs); font-weight: 600;
   padding: 4px var(--space-3); border-radius: var(--r-full);
   background: var(--surface-raised); color: var(--text-2);
   border: 1px solid var(--border);
@@ -1599,7 +1704,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .stat-seg { height: 100%; transition: width var(--dur-slow) var(--ease-out); }
 .stat-legend {
   display: flex; gap: var(--space-4); flex-wrap: wrap;
-  font-size: 0.75rem; color: var(--text-2);
+  font-size: var(--fs-xs); color: var(--text-2);
 }
 .stat-legend > span { display: inline-flex; align-items: center; gap: var(--space-2); }
 .stat-legend strong { color: var(--text-1); font-weight: 600; }
@@ -1631,7 +1736,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .spark-fill.heute { background: var(--accent); }
 .spark-reihe { display: flex; gap: 3px; }
 .spark-reihe span {
-  flex: 1 1 0; text-align: center; font-size: 10px; color: var(--text-3);
+  flex: 1 1 0; text-align: center; font-size: var(--fs-micro); color: var(--text-3);
 }
 .spark-reihe.oben { margin-bottom: var(--space-2); }
 .spark-reihe.unten { margin-top: var(--space-2); }
@@ -1647,7 +1752,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .lekt-kachel.zu { opacity: 0.42; }
 .lekt-kachel.dran { border-color: var(--accent-border); background: var(--accent-bg); }
 .lekt-name {
-  flex: 1 1 auto; min-width: 0; font-size: 0.9375rem;
+  flex: 1 1 auto; min-width: 0; font-size: var(--fs-md);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .lekt-bar {
@@ -1656,7 +1761,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 .lekt-bar span { display: block; height: 100%; background: var(--stufe-3); }
 .lekt-kachel.sitzt .lekt-bar span { background: var(--positive); }
-.lekt-zahl { font-size: 0.75rem; color: var(--text-3); flex: none; font-variant-numeric: tabular-nums; }
+.lekt-zahl { font-size: var(--fs-xs); color: var(--text-3); flex: none; font-variant-numeric: tabular-nums; }
 
 /* Serie. */
 .serie-karte {
@@ -1669,9 +1774,9 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   font-size: 2.25rem; font-weight: 600; line-height: 1;
   letter-spacing: -0.03em; color: var(--accent);
 }
-.serie-text { flex: 1 1 auto; font-size: 0.875rem; color: var(--text-2); }
-.serie-klein { font-size: 0.75rem; color: var(--text-3); }
-.serie-beste { font-size: 0.75rem; color: var(--text-3); }
+.serie-text { flex: 1 1 auto; font-size: var(--fs-sm); color: var(--text-2); }
+.serie-klein { font-size: var(--fs-xs); color: var(--text-3); }
+.serie-beste { font-size: var(--fs-xs); color: var(--text-3); }
 .serie-beste strong { color: var(--text-2); }
 .arab-ziffer { font-family: var(--font-arabic); }
 
@@ -1704,9 +1809,9 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   margin-bottom: var(--space-5);
 }
 .empty__icon.gold { background: var(--accent-bg); color: var(--accent); }
-.empty__titel { font-size: 1.125rem; font-weight: 600; margin-bottom: var(--space-2); }
+.empty__titel { font-size: var(--fs-lg); font-weight: 600; margin-bottom: var(--space-2); }
 .empty__text {
-  font-size: 0.875rem; color: var(--text-2); line-height: 1.55;
+  font-size: var(--fs-sm); color: var(--text-2); line-height: 1.55;
   max-width: 34ch; margin: 0 auto var(--space-5);
 }
 .empty__aktionen {
@@ -1725,7 +1830,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   gap: var(--space-2); margin-top: var(--space-3);
 }
 .rechtsfuss a, .rechtsfuss button {
-  font: inherit; font-size: 0.75rem; font-weight: 500; color: var(--text-3);
+  font: inherit; font-size: var(--fs-xs); font-weight: 500; color: var(--text-3);
   background: none; border: none; padding: 0; margin: 0; min-height: 0;
   cursor: pointer; text-decoration: none;
 }
@@ -1733,7 +1838,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .rechtsfuss button:hover, .rechtsfuss button:focus-visible {
   color: var(--text-2); text-decoration: underline;
 }
-.rechtsfuss__trenner { color: var(--text-3); font-size: 0.75rem; }
+.rechtsfuss__trenner { color: var(--text-3); font-size: var(--fs-xs); }
 
 /* ---- Ladezustände -------------------------------------------------------
    Skelette statt Spinner: Die Seite zeigt schon ihre Form, während der
@@ -1782,7 +1887,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 @keyframes bootSpin { to { transform: rotate(360deg); } }
 @keyframes bootSpinRev { to { transform: rotate(-360deg); } }
 .boot--exit { opacity: 0; transform: scale(.96); transition: opacity .28s ease, transform .28s ease; }
-.boot__text { font-size: 0.875rem; color: var(--text-2); }
+.boot__text { font-size: var(--fs-sm); color: var(--text-2); }
 
 /* ---- Fehler -------------------------------------------------------------
    Drei Tiefen: blockierend (eigener Bildschirm), Banner (bleibt stehen,
@@ -1793,7 +1898,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   border: 1px solid var(--negative-border);
   border-radius: var(--r-md);
   padding: var(--space-3) var(--space-4);
-  font-size: 0.8125rem; line-height: 1.5;
+  font-size: var(--fs-xs); line-height: 1.5;
   color: var(--text-2);
   margin-bottom: var(--space-4);
 }
@@ -1806,7 +1911,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   border: 1px solid var(--accent-border);
   border-radius: var(--r-md);
   padding: var(--space-3) var(--space-4);
-  font-size: 0.8125rem; line-height: 1.5;
+  font-size: var(--fs-xs); line-height: 1.5;
   color: var(--text-2);
   margin-bottom: var(--space-4);
 }
@@ -1825,9 +1930,9 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   display: flex; align-items: center; justify-content: space-between;
   gap: var(--space-3); margin-bottom: var(--space-4);
 }
-.topbar .who { font-size: 0.8125rem; color: var(--text-2); }
+.topbar .who { font-size: var(--fs-xs); color: var(--text-2); }
 .topbar .who strong { color: var(--text-1); }
-.sync-dot { color: var(--negative); font-size: 0.75rem; }
+.sync-dot { color: var(--negative); font-size: var(--fs-xs); }
 
 /* ---- Erfolg: Toast ------------------------------------------------------
    Nur für umkehrbare Handlungen, immer mit dem Weg zurück. Höchstens einer
@@ -1846,14 +1951,14 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   border-radius: var(--r-full);
   padding: var(--space-2) var(--space-3) var(--space-2) var(--space-5);
   box-shadow: var(--shadow-md);
-  font-size: 0.875rem; font-weight: 500;
+  font-size: var(--fs-sm); font-weight: 500;
   pointer-events: auto;
   animation: enter-rise var(--dur-base) var(--ease-out) both;
 }
-.toast button { min-height: 32px; padding: 0 var(--space-3); font-size: 0.8125rem; }
+.toast button { min-height: 32px; padding: 0 var(--space-3); font-size: var(--fs-xs); }
 
 .setup-steps { padding-left: var(--space-5); }
-.setup-steps li { margin-bottom: var(--space-3); font-size: 0.875rem; color: var(--text-2); }
+.setup-steps li { margin-bottom: var(--space-3); font-size: var(--fs-sm); color: var(--text-2); }
 
 
 /* ===========================================================================
@@ -1889,9 +1994,9 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   border-radius: var(--r-full); background: var(--border-strong);
   margin: calc(var(--space-3) * -1) auto var(--space-5);
 }
-.dlg h3 { font-size: 1.0625rem; margin-bottom: var(--space-2); }
+.dlg h3 { font-size: var(--fs-lg); margin-bottom: var(--space-2); }
 .dlg .dlg-text {
-  color: var(--text-2); font-size: 0.875rem; line-height: 1.55;
+  color: var(--text-2); font-size: var(--fs-sm); line-height: 1.55;
   white-space: pre-wrap; word-break: break-word;
 }
 .dlg input { margin-top: var(--space-4); }
@@ -1995,7 +2100,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   :root { --gutter: var(--space-3); }
   .card, .drill-picker { padding: var(--space-4); }
   .grade-row { gap: 6px; }
-  .grade-row button { padding: var(--space-2) 4px; font-size: 0.875rem; }
+  .grade-row button { padding: var(--space-2) 4px; font-size: var(--fs-sm); }
 }
 
 @media (min-width: 600px) {
@@ -2028,7 +2133,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
     color: var(--accent);
   }
   .nav__brand strong {
-    font-family: var(--font-text); font-size: 1.0625rem; font-weight: 600;
+    font-family: var(--font-text); font-size: var(--fs-lg); font-weight: 600;
     color: var(--text-1); letter-spacing: -0.01em;
   }
   .nav__bereiche { display: block; margin-bottom: var(--space-5); }
@@ -2042,7 +2147,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
     flex-direction: row; justify-content: flex-start;
     gap: var(--space-3); padding: 0 var(--space-3);
     min-height: var(--tap); border-radius: var(--r-sm);
-    font-size: 0.9375rem; letter-spacing: -0.005em;
+    font-size: var(--fs-md); letter-spacing: -0.005em;
     transition: color var(--dur-fast) var(--ease-out),
                 background var(--dur-fast) var(--ease-out);
   }
@@ -2050,7 +2155,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   .nav__dot { position: static; margin: 0 0 0 auto; }
 
   .nav-titel {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+    font-size: var(--fs-micro); font-weight: 600; letter-spacing: 0.07em;
     text-transform: uppercase; color: var(--text-3);
     padding: 0 var(--space-3) var(--space-2);
   }
@@ -2112,8 +2217,8 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 /* space-6 statt space-2: Auf der Impressum-Seite folgt direkt die erste
    Abschnittsmarke, ohne Einleitungssatz dazwischen — mit space-2 klebte sie
    an der Überschrift. */
-.rechtsseite h1 { font-size: 1.375rem; margin: 0 0 var(--space-6); }
-.rechtsseite h2 { font-size: 1rem; margin: 0 0 var(--space-2); }
+.rechtsseite h1 { font-size: var(--fs-xl); margin: 0 0 var(--space-6); }
+.rechtsseite h2 { font-size: var(--fs-base); margin: 0 0 var(--space-2); }
 .rechtsseite p { margin: 0 0 var(--space-3); }
 .rechtsseite p:last-child { margin-bottom: 0; }
 .rechtsseite ul { margin: 0; padding-left: 1.1em; }
@@ -2123,7 +2228,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .rechtsseite .eyebrow { margin-bottom: var(--space-2); }
 
 .rechtsseite__zurueck { margin-bottom: var(--space-5); }
-.rechtsseite__intro { color: var(--text-2); font-size: 0.8125rem; margin-bottom: var(--space-6); }
+.rechtsseite__intro { color: var(--text-2); font-size: var(--fs-xs); margin-bottom: var(--space-6); }
 .rechtsseite__fuss {
   text-align: center;
   color: var(--text-3);
@@ -2179,7 +2284,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   padding: var(--space-6) var(--space-5) 0;
 }
 
-.error-modal__title { margin: 0; font-size: 1.0625rem; }
+.error-modal__title { margin: 0; font-size: var(--fs-lg); }
 
 .error-modal__close {
   background: none;
@@ -2190,7 +2295,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: var(--fs-xl);
   line-height: 1;
   color: var(--text-2);
   cursor: pointer;

@@ -111,11 +111,15 @@ gewachsen. Aufgekommen aus drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie); die Ratschläge sind in
 [`PRINZIPIEN.md`](redesign-oberflaeche/PRINZIPIEN.md) gegen `KONZEPT.md` §7 und
 die bestehende Gestalt **gefiltert**, nicht gesammelt. **Umgesetzt wird direkt im
-Code**, phasenweise mit Zwischenstand nach jedem Block (Token/Basis → Gerüst/
-Navigation → leere Zustände/Onboarding → `landing.html`) — der ursprünglich
-vorgesehene Umweg über Claude Design (Prompt + Handoff-ZIP) ist auf
-Betreiber-Entscheidung übersprungen; `CLAUDE-DESIGN-PROMPT.md`/`ANLEITUNG.md`
-bleiben nur als Referenz liegen. Status: `läuft`, Code hat begonnen.
+Code**, in fünf Blöcken mit Zwischenstand nach jedem — Fundament → Startbildschirm
+→ Bühne/Bewertung → `landing.html` → Erststart; die Liste mit Status steht in
+[`AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md). Der ursprünglich vorgesehene
+Umweg über Claude Design ist auf Betreiber-Entscheidung übersprungen (16.09.);
+die beiden Dateien dazu sind am 17.09. entfernt worden, nachdem die
+Design-Entscheidungen in `styles.css` und `README.md` stehen. Geprüft wird an
+[`stilprobe.html`](redesign-oberflaeche/stilprobe.html) — ohne sie kommt niemand
+ohne Firebase-Anmeldung an der Oberfläche vorbei.
+Status: `läuft`, Block 1 `fertig` (v3.1.0).
 **Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 6 unten.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
@@ -372,21 +376,37 @@ Festgelegt vom Betreiber am 12.09.2026:
 | 2026-09-16 | **Beobachtung 13: Verdachts-Fix versucht, ausdrücklich unbestätigt** (v3.0.50), auf Wunsch des Betreibers trotz fehlender Geräte-Verifikation umgesetzt. `min-height: 100dvh` → `100svh` an fünf Stellen (`body`, `.view--modus`, `.study-card` × 2, `.boot`) — Theorie: `dvh` wächst live, wenn die Browser-Werkzeugleiste beim Scrollen einklappt, und erzeugt dadurch scheinbar aus dem Nichts auftauchenden Scrollraum; `svh` bleibt konstant. Kein Test in dieser Umgebung möglich (kein mobiles Safari mit dynamischer Toolbar), daher als einzelner, leicht rückgängig zu machender Commit umgesetzt. Details in `beobachtungen-lernwerkzeug.md` Punkt 13. |
 | 2026-09-16 | **Beobachtung 16: dritter Verdachts-Fix, ausdrücklich unbestätigt** (v3.0.51). Bei der Prüfung zuerst eine bfcache-Erklärung endgültig ausgeschlossen (nicht nur vermutet): Der Fehlerbildschirm wird bei jedem gemeldeten Fall neu aufgebaut, was ein echtes Neu-Ausführen des Modul-Skripts voraussetzt — bei einer bfcache-Wiederherstellung liefe das Skript gar nicht erneut. Stattdessen `<link rel="preconnect"/dns-prefetch">` zu `gstatic.com` in `index.html` ergänzt, damit die Verbindung schon beim HTML-Parsen aufgebaut wird statt erst beim dynamischen Import mitten im Skript. Keine Logik geändert, trivial rückgängig zu machen. Details in `beobachtungen-lernwerkzeug.md` Punkt 16. |
 | 2026-09-16 | **Echter Regressions-Fund per Testrückmeldung: Einstellungen auf dem Handy unerreichbar, behoben** (v3.0.52). Anders als 5/13/16 hier klar am Code beweisbar, kein Verdacht: Der einzige `data-action="einstellungen"`-Knopf im ganzen Repo steckte in `.nav__foot`, das `styles.css` unter 900px vollständig ausblendet — auf dem Handy gab es also nachweislich keinen Weg dorthin. Zahnrad-Symbol in der Kopfzeile ergänzt, nur mobil sichtbar (`.appbar__einstellungen`, am Desktop per Media Query wieder ausgeblendet, damit es dort nicht doppelt zur Rail-Zeile steht). Die zweite gemeldete Beobachtung („Tabs verschoben, Lernen oben gesetzt") bleibt offen — zu vage, um sie vom Code her sicher zuzuordnen, siehe Rückfrage an den Betreiber. |
+| 2026-09-17 | **Redesign: Regel-Reset und Block 1** (v3.1.0). Die drei Gestaltungssätze im Kopf der `styles.css` stimmten nicht mehr mit dem Code überein und ließen jede Prüfung auf »passt schon« hinauslaufen — der Betreiber hat den Reset freigegeben. Vier Sätze statt drei; Schriftskala als Token mit 17px-Wurzel (vorher `body` 15px unter einer 16px-Wurzel); Verschachtelungs-Verbot als CSS statt als Satz; Trefferflächen (`.bereich-pill` 36→44px). Neu: `redesign-oberflaeche/stilprobe.html` (Arbeitsmittel, nicht ausgeliefert). Gelöscht: `CLAUDE-DESIGN-PROMPT.md`, `ANLEITUNG.md` (beschrieben den verworfenen Design-Tool-Weg). Nebenbefund: Eingabefelder erben jetzt 17px, damit zoomt iOS beim Antippen nicht mehr hinein. **Am echten Handy noch nicht angesehen.** |
 
 ## Wo eine neue Session anfängt
 
 **Aktivster Punkt gerade: der Redesign-Strang.** Direkt im Code, kein
 Design-Tool-Umweg mehr.
 
-**Strang C — Oberfläche & Mobile-Gestalt — `läuft`, Code direkt.**
-[`redesign-oberflaeche/`](redesign-oberflaeche/) ist angelegt: Video-Ratschläge
-gefiltert ([`PRINZIPIEN.md`](redesign-oberflaeche/PRINZIPIEN.md)),
-`AUFTRAG.md` beschreibt die Schrittfolge. **Nächster Schritt:** Ist-Zustand von
-`styles.css`/`index.html`/Navigation gegen die drei Gestaltungsregeln und
-`PRINZIPIEN.md` ansehen, dann mit dem ersten Block beginnen (Vorschlag:
-Gerüst/Navigation, siehe `LOGBUCH.md`). Nach jedem sichtbaren Zwischenstand:
-Veröffentlichungsliste, committen, pushen. Umfang lockert `KONZEPT.md` §7 (Frage 6),
-Lernlogik bleibt tabu.
+**Strang C — Oberfläche & Mobile-Gestalt — `läuft`, Block 1 fertig (v3.1.0).**
+[`redesign-oberflaeche/`](redesign-oberflaeche/) ist am 17.09.2026 **neu
+gefasst**: Der Eintrag vom 16.09. (»kein Neubau nötig«) war das Ergebnis eines
+Maßstabs, der nicht mehr stimmte — der Kopf der `styles.css` führte drei
+Gestaltungssätze, die der Code an zwei von drei Stellen längst nicht mehr
+befolgte (Gold als Handlungsfarbe seit 3.1.0 raus; Kästen-Verbot gegen 19
+`.card`-Stellen in `app.js`). **Das war das »Verbot«, an dem der Strang hing.**
+Der Betreiber hat den Reset freigegeben; es stehen jetzt vier Sätze, alle vom
+Code gedeckt.
+
+**Block 1 (Fundament) ist `fertig`, v3.1.0:** Schriftskala `--fs-micro …
+--fs-2xl` mit 17px-Wurzel (Video 1: am Handy wird die Schrift größer, nicht
+kleiner), 82 verstreute Schriftgrößen auf Token umgestellt, Satz 2 als CSS
+durchgesetzt (`.card` in `.card` verliert automatisch Fläche und Polsterung),
+Trefferflächen nachgezogen. Neu als Arbeitsmittel:
+[`stilprobe.html`](redesign-oberflaeche/stilprobe.html) — zeigt alle Bausteine
+aus `styles.css` ohne Firebase-Anmeldung, weil die echte App sonst nicht
+ansehbar ist und ein Agent blind gestaltet. Nicht in `APP_SHELL`.
+
+**Nächster Schritt: Block 2 — Startbildschirm.** Die fünf Blöcke mit Status
+stehen in [`AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md). Dabei gilt die
+Lehre aus dem 16.09.: **ein Befund »ist schon da« muss belegt sein** — an der
+Datei, an der Zeile, am Messwert. `PRINZIPIEN.md` bleibt der Filter, Lernlogik
+bleibt tabu.
 
 **Strang D — Monetarisierung & Wachstum — `zurückgestellt`, nur Gerüst.**
 [`monetarisierung/`](monetarisierung/) steht als Struktur da; es wird nichts
