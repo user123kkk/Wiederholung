@@ -26,6 +26,50 @@ dasselbe noch einmal.
 
 ## Einträge
 
+### 2026-09-18 — Zweites Symptom derselben Ursache: „permission-denied" beim Speichern (Farbe/Thema) auf adrabic.web.app
+
+**Geändert:** Nichts am Code — geprüft, nicht gebaut.
+
+**Entscheidung:** Betreiber meldet per Screenshot: Beim Umschalten der Farbe
+(Einstellungen → Helligkeit) erscheint der Dialog „Cloud nicht erreichbar —
+Speichern in der Cloud fehlgeschlagen (permission-denied)" auf
+`adrabic.web.app`. Geprüft, ob das ein echter Regel- oder Code-Fehler ist:
+
+- `firestore.rules:121,123` erlaubt das Feld `thema` in `settings` bereits
+  (`s.keys().hasOnly([..., 'thema'])`, `text(s.thema, 20)`) — seit 2.20.0
+  unverändert, keine Regel-Lücke.
+- `app.js:1521-1531` (`saveFehler`) behandelt `permission-denied` schon
+  robust: erster Versuch erneuert automatisch den Ausweis
+  (`ausweisErneuernFuerSchreiben`, einmal pro Sitzung) und lädt neu, ohne den
+  Dialog zu zeigen; erst wenn das schon versucht wurde, kommt die
+  Fehlermeldung — und Firestore selbst verwirft nichts, der Schreibversuch
+  wird automatisch wiederholt, sobald es klappt (Kommentar Zeile 1515-1518).
+  Das ist bereits die robusteste sinnvolle Behandlung auf Code-Seite.
+
+Damit ist dasselbe Muster wie beim Eintrag oben (Login-Blockade
+`auth/requests-from-referer-...-are-blocked`): Der Browser-Key in der
+Google-Cloud-Konsole lässt `adrabic.web.app` weiterhin nicht in seiner
+Website-Liste zu. Identity Toolkit (Login) meldet das mit einem eigenen,
+sprechenden Fehlercode; die Firestore-Client-Bibliothek meldet denselben
+403-Block vom Google-Rand aus generisch als `permission-denied` — deshalb
+zwei unterschiedliche Fehlertexte für dieselbe fehlende Freigabe. Der
+Betreiber hat recht, dass das an mehreren Stellen auftauchen kann: **jeder**
+Firestore- oder Auth-Aufruf von `adrabic.web.app` aus ist betroffen, nicht
+nur die Farbe — Farbe war nur die zuerst bemerkte.
+
+**Offen:** Weiterhin dieselbe eine Freigabe wie im Eintrag vom 18.09. oben —
+der Betreiber muss sie in der Google-Cloud-Konsole selbst setzen, kein Agent
+hat dorthin Zugriff.
+
+**Nächster Schritt:** Nach dem Eintragen (Google-Cloud-Konsole → APIs und
+Dienste → Anmeldedaten → Browser-Key → Website-Einschränkung →
+`https://adrabic.web.app/*` hinzufügen, genau mit `https://` und
+abschließendem `/*`): harter Reload, dann Farbe umschalten und irgendeine
+andere Änderung speichern (Karte anlegen o. Ä.) testen. Danach hier
+vermerken, ob beide Fehlerbilder (Login und Speichern) verschwunden sind.
+
+---
+
 ### 2026-09-18 — Anmeldung auf adrabic.web.app blockiert: Browser-Key-Freigabe war doch nicht erledigt
 
 **Geändert:** Nichts am Code — reine Korrektur der Dokumentation.
