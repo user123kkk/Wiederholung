@@ -785,7 +785,9 @@ gescrolltem Inhalt.
 2. **v3.6.3** — `--vv-gap` über `window.visualViewport` gegen Adressleisten-Dynamik. Scheidet aus: Standalone-PWA hat keine Browser-Toolbar.
 3. Geprüft und ausgeschlossen: Margin-Symmetrie auf `.nav__tab.active`, Icon-Varianten `.i.voll`, `body`-Höhe (schon `100svh`), Containing-Block durch Transform/Filter auf einem `.nav`-Elternelement.
 
-**v3.6.4 — Debug-Overlay statt vierter Vermutung.** `?debug=nav` in der URL zeigt Live-Messwerte (`innerHeight`, `visualViewport`, `.nav`-Position, `--sab`). **Nächster Schritt liegt beim Betreiber:** `https://adrabic.web.app/?debug=nav` öffnen, zwischen Lernen/Fortschritt wechseln, Screenshots der Zahlen schicken — erst damit lässt sich die Ursache eingrenzen.
+**v3.6.4/3.6.5 — Debug-Overlay** (später auch per 7× Tap auf die Versionsnummer aktivierbar, da die installierte App mit eigener `start_url` startet und den URL-Parameter verliert).
+
+**v3.6.6 — Ursache gefunden, mit Messwerten belegt.** `window.innerHeight` liefert in der Home-Bildschirm-App unterschiedliche Werte für denselben Bildschirm: 848px bei nicht-scrollbarem Inhalt, 896px bei scrollbarem — 48px Differenz. `visualViewport` zeigt denselben falschen Wert. Fix: größten je gemessenen Wert als Referenz nehmen. Betreiber-Test am echten Handy steht aus.
 
 ---
 
