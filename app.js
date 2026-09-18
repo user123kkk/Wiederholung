@@ -2838,7 +2838,7 @@ async function teileLektionLink() {
 
   const link = location.origin + location.pathname + "#teilen=" + fragment;
   render();
-  await dlgAlert(link, "Link zum Teilen – kopieren und verschicken");
+  zeigeTeileLink(link);
 }
 
 /* Wird schon beim Laden der Seite aufgerufen (siehe ausstehenderTeilLink),
@@ -2900,6 +2900,19 @@ async function linkEinloesenStart() {
   }
   ausstehenderTeilLink = { kompr: fragment.slice(0, punkt) === "gz", codiert: fragment.slice(punkt + 1) };
   await teilLinkPruefenUndVerarbeiten();
+}
+
+/* Zeigt den geteilten Link mit Copy-Button und Feedback. */
+async function zeigeTeileLink(link) {
+  await new Promise(resolve => {
+    ui.dialog = {
+      kind: "link-share",
+      title: "Link zum Teilen",
+      link: link,
+      resolve: resolve
+    };
+    render();
+  });
 }
 
 /* ---------- 2.5.0: Nachschub für einen vorhandenen Kartensatz ----------
@@ -7663,7 +7676,14 @@ function renderDialog() {
   let h = '<div class="dlg-backdrop">';
   h += '<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-title">';
   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
-  h += '<div class="dlg-text" id="dlg-text">' + esc(d.text) + '</div>';
+
+  if (d.kind === "link-share") {
+    h += '<p class="dlg-text" id="dlg-text">Klick „Kopieren" oder wähle den Link:</p>';
+    h += '<code style="display:block; word-break:break-all; padding:var(--space-3); background:var(--surface-raised); border-radius:var(--r-sm); font-size:0.9em; overflow-y:auto; max-height:120px">' + esc(d.link) + '</code>';
+  } else {
+    h += '<div class="dlg-text" id="dlg-text">' + esc(d.text) + '</div>';
+  }
+
   if (d.kind === "prompt") {
     /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
        (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
@@ -7671,8 +7691,13 @@ function renderDialog() {
     h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" aria-labelledby="dlg-text" value="' + esc(d.value) + '">';
   }
   h += '<div class="dlg-actions">';
-  if (d.kind !== "alert") h += '<button class="secondary" data-action="dlg-cancel">Abbrechen</button>';
-  h += '<button' + (d.danger ? ' class="danger"' : '') + ' data-action="dlg-ok">' + esc(d.okLabel) + '</button>';
+  if (d.kind === "link-share") {
+    h += '<button class="secondary" data-action="dlg-ok">Fertig</button>';
+    h += '<button data-action="link-copy-clipboard">Kopieren</button>';
+  } else {
+    if (d.kind !== "alert") h += '<button class="secondary" data-action="dlg-cancel">Abbrechen</button>';
+    h += '<button' + (d.danger ? ' class="danger"' : '') + ' data-action="dlg-ok">' + esc(d.okLabel) + '</button>';
+  }
   h += '</div></div></div>';
   return h;
 }
@@ -7919,6 +7944,21 @@ document.body.addEventListener("click", e => {
     case "remove-from-set": removeCardFromSet(btn.dataset.set, btn.dataset.id); break;
     case "dlg-ok": if (ui.dialog) closeDialog(dialogResult(ui.dialog, true)); break;
     case "dlg-cancel": if (ui.dialog) closeDialog(dialogResult(ui.dialog, false)); break;
+    case "link-copy-clipboard":
+      if (ui.dialog && ui.dialog.link) {
+        navigator.clipboard.writeText(ui.dialog.link).then(() => {
+          btn.textContent = "✓ Kopiert!";
+          btn.disabled = true;
+          setTimeout(() => {
+            btn.textContent = "Kopieren";
+            btn.disabled = false;
+            render();
+          }, 2000);
+        }).catch(() => {
+          dlgAlert("Konnte nicht in die Zwischenablage kopieren.", "Fehler");
+        });
+      }
+      break;
     case "set-arab-groesse": setArabGroesse(btn.dataset.id); break;   // E7
     case "set-thema": setThema(btn.dataset.id); break;
     case "set-sitzungslimit":
