@@ -106,6 +106,13 @@
   </div>
 </div>
 
-<script type="module" src="./app.js"></script>
+<!-- Versions-Query zwingt jeden Browser, der die Seite frisch laedt (siehe
+     Cache-Control fuer .html: max-age=0), app.js NEU zu holen statt aus dem
+     eigenen 1-Stunden-HTTP-Cache zu bedienen (Cache-Control fuer .js:
+     max-age=3600, siehe firebase.json). Bei jeder Veroeffentlichung MUSS
+     dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
+     die die App innerhalb der letzten Stunde offen hatten, an der alten
+     app.js fest, auch nach einem Reload. -->
+<script type="module" src="./app.js?v=3.6.2"></script>
 </body>
 </html>

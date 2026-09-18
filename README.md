@@ -26,9 +26,17 @@ Kein Build-Schritt. Die Dateien werden so ausgeliefert, wie sie hier liegen.
 1. `APP_VERSION` in `app.js` hochzählen.
 2. **Denselben Wert** als `CACHE_NAME` in `sw.js` eintragen. Ohne das behalten
    Nutzer:innen die alten Dateien im Cache.
-3. Neue Dateien, die zum Starten gebraucht werden, in `APP_SHELL` in `sw.js`
+3. **Denselben Wert** auch im Versions-Query von `<script src="./app.js?v=…">`
+   in `index.html` eintragen. Ohne das bleibt `app.js` bis zu eine Stunde lang
+   im normalen HTTP-Cache des Browsers hängen (`Cache-Control: max-age=3600`
+   in `firebase.json`) – selbst ein normaler Reload holt dann noch die alte
+   Datei, weil nur `index.html` selbst immer frisch geladen wird, nicht die
+   Skripte, die sie einbindet. Gefunden 18.09.2026: ein Syntaxfehler in
+   `app.js` blieb dadurch bis zu einer Stunde lang live, obwohl der Server
+   längst die reparierte Version auslieferte.
+4. Neue Dateien, die zum Starten gebraucht werden, in `APP_SHELL` in `sw.js`
    aufnehmen.
-4. Eintrag in `CHANGELOG.md`.
+5. Eintrag in `CHANGELOG.md`.
 
 ## Wenn du an der Gestaltung arbeitest
 

@@ -8,6 +8,8 @@
 
 **Wie es passieren konnte, ohne aufzufallen:** `node --check` wurde bei der vorherigen Änderung (v3.6.0/3.6.1) nicht ausgeführt — reiner Code-Review sah den fehlerhaften Text nicht zuverlässig, weil typografische und normale Anführungszeichen im Editor kaum zu unterscheiden sind. **Lehre für künftige Sessions:** Nach jeder `app.js`-Änderung `node --check app.js` laufen lassen, bevor committed wird — kostet eine Sekunde, verhindert genau diesen Ausfall.
 
+**Zweiter, unabhängiger Fund beim Nachprüfen des Deploys:** Der Fix allein reichte nicht. Obwohl der Server nach dem Deploy bereits die reparierte `app.js` auslieferte, bekamen Browser mit offener Seite oder kürzlichem Besuch weiterhin die alte, kaputte Version – auch nach normalem Reload. Ursache: `app.js` hat `Cache-Control: max-age=3600` (`firebase.json`), aber `index.html` band es ohne jede Versionierung ein (`<script src="./app.js">`) – der Browser fragt den Server für dieses Skript bis zu eine Stunde lang gar nicht erst neu an, selbst wenn die HTML-Seite selbst (die `max-age=0` hat) frisch geladen wird. **Fix:** `index.html` bindet `app.js` jetzt mit Versions-Query ein (`app.js?v=3.6.2`) – bei jeder künftigen `APP_VERSION`-Änderung muss dieser Wert mitgezogen werden (neuer Schritt in `README.md`), sonst wiederholt sich genau dieser Ausfall bei jedem künftigen Bugfix.
+
 
 
 ### Geändert (Bereichs-Pill: feste statt textabhängiger Breite)
