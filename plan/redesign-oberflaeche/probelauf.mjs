@@ -32,9 +32,14 @@
 
 import { chromium } from "playwright";
 import { mkdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 const BASIS = process.env.PROBE_URL || "http://localhost:8099";
-const ZIEL = new URL("./.probelauf/", import.meta.url).pathname;
+/* 18.09.2026: .pathname liefert unter Windows "C:\C:\..." (ein fuehrender
+   Schraegstrich vor dem Laufwerksbuchstaben, den Windows-Pfade nicht haben) -
+   fileURLToPath() macht daraus einen echten, plattformrichtigen Pfad. Unter
+   Linux/Mac aendert sich dadurch nichts. */
+const ZIEL = fileURLToPath(new URL("./.probelauf/", import.meta.url));
 mkdirSync(ZIEL, { recursive: true });
 
 /* ---- Erfundene Daten ------------------------------------------------------

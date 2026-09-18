@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.4.12";
+const APP_VERSION = "3.5.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -474,6 +474,9 @@ const ICON_PFADE = {
   konto:       '<circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
   abmelden:    '<path d="M14 4.5H6.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2H14"/><path d="M17 8.5 20.5 12 17 15.5"/><path d="M20.5 12h-10"/>',
   umkehren:    '<path d="M7 4.5v15"/><path d="M4 16.5 7 19.5 10 16.5"/><path d="M17 19.5v-15"/><path d="M14 7.5 17 4.5 20 7.5"/>',
+  /* 18.09.2026: Werkzeugleiste Verwalten, "Mehr"-Blatt - drei waagerechte
+     Punkte, das uebliche Kebab-Symbol fuer eingeklappte Handlungen. */
+  mehr:        '<circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>',
   verschieben: '<path d="M4 6.5h9a4 4 0 0 1 4 4v6"/><path d="M13.5 13 17 16.5 20.5 13"/>',
   hand:        '<path d="M4 19.5h16"/><path d="M6.5 15.5 15 7a2.1 2.1 0 0 1 3 3l-8.5 8.5H6.5z"/>',
   auswaehlen:  '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/>',
@@ -1077,6 +1080,12 @@ let ui = {
   drillBis: null,
   drillAnker: null,
   openSetId: null,            // Speicherkarte, deren Kartenliste aufgeklappt ist
+  /* 18.09.2026, Smart Defaults (Video 3, PRINZIPIEN.md: "passt"): Wer schon
+     einmal in einer Sitzung Karten in eine bestehende Speicherkarte gelegt
+     hat, will beim naechsten Mal meist dieselbe wieder treffen - "＋ Neue
+     Speicherkarte" war bisher IMMER die Vorauswahl, obwohl das der seltenere
+     Fall ist. Nur Session-Zustand, bewusst nicht gespeichert (wie openSetId). */
+  zuletztSetId: null,
   /* 2.2.0: Das Feld mit den Speicherkarten ist beim Start zugeklappt. Es
      wuchs sonst mit jeder neuen Speicherkarte weiter nach unten und schob
      Suchfeld und Kartenliste aus dem Bild. Bewusst NICHT gespeichert: nach
@@ -1087,6 +1096,12 @@ let ui = {
      ueber dem Lernstoff. Bewusst NICHT gespeichert - beim naechsten Start
      ist es wieder zu, das ist der Normalfall. */
   bereichSheet: false,
+  /* Nachlese Video 1 (18.09.2026): die Werkzeugleiste in Verwalten zeigte
+     bisher bis zu fünf Handlungen dauerhaft auf einmal. "Üben" bleibt sichtbar
+     (die Handlung, für die man diesen Bildschirm meist aufruft); die drei
+     seltenen/gefährlichen (Umkehren, Umbenennen, Löschen) und "Auswählen"
+     stehen jetzt in diesem Blatt, das nur bei Bedarf kommt. */
+  bereichMehr: false,
   /* 3.0.0: Kurze Rueckmeldung fuer Handlungen, die bisher stumm waren
      (Backup heruntergeladen, Reihenfolge umgekehrt). { text, bis }.
      Ausdruecklich NUR fuer Erfolge: Was anhaelt - ein Schreibfehler, eine
@@ -3272,6 +3287,7 @@ async function saveSelectedToSet(targetId) {
   ui.selectedIds = new Set();
   ui.selectMode = false;
   ui.openSetId = set.id;
+  ui.zuletztSetId = set.id;
   const b = currentBereich();
   patchDoc(neu
     ? { [pfadSet(b.id, set.id)]: setFelder(set, currentSets().length - 1) }
@@ -4599,6 +4615,39 @@ function bereichSheet() {
   return html;
 }
 
+/* 18.09.2026, Video-1-Nachlese: die vier selteneren Handlungen aus der
+   Werkzeugleiste in Verwalten (Auswaehlen, Umkehren, Umbenennen, Loeschen) -
+   vorher alle dauerhaft nebeneinander, jetzt in einem Blatt, das nur kommt,
+   wenn man "Mehr" antippt. Gleiche Huelle wie bereichSheet(). Bedingungen
+   je Zeile unveraendert aus der alten Werkzeugleiste uebernommen. */
+function bereichMehrSheet() {
+  if (!ui.bereichMehr) return "";
+  const cards = currentCards();
+  const gefuehrt = istGefuehrt(currentBereich());
+  let html = '<div class="dlg-backdrop" data-action="bereich-mehr-zu" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-label="Weitere Handlungen">';
+  html += '<h3>Weitere Handlungen</h3>';
+  html += '<div class="sheet-liste"><div class="liste" style="background:transparent;border:0">';
+  if (cards.length > 0) {
+    html += '<button class="liste-zeile" data-action="bereich-mehr-auswaehlen">' +
+      ikon("auswaehlen", "i-sm") + '<span class="liste-zeile__text">Mehrere Karten auswählen</span></button>';
+  }
+  if (cards.length > 1 && !gefuehrt) {
+    html += '<button class="liste-zeile" data-action="bereich-mehr-umkehren" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' +
+      ikon("umkehren", "i-sm") + '<span class="liste-zeile__text">Reihenfolge umkehren</span></button>';
+  }
+  if (!gefuehrt) {
+    html += '<button class="liste-zeile" data-action="bereich-mehr-umbenennen" title="Bereich umbenennen">' +
+      ikon("stift", "i-sm") + '<span class="liste-zeile__text">Bereich umbenennen</span></button>';
+  }
+  html += '<button class="liste-zeile gefahr" data-action="bereich-mehr-loeschen" title="Bereich löschen">' +
+    ikon("muell", "i-sm") + '<span class="liste-zeile__text">Bereich löschen</span></button>';
+  html += '</div></div>';
+  html += '<div class="dlg-actions"><button class="secondary" data-action="bereich-mehr-zu">Schließen</button></div>';
+  html += '</div></div>';
+  return html;
+}
+
 /* 16.09.2026 (Beobachtung 1): Detailansicht einer Karte aus der Verwalten-
    Liste - fuer Notizen, die in der einzeiligen Vorschau abgeschnitten sind.
    Gleiche Huelle wie bereichSheet() (dasselbe .dlg-Muster), nur mit anderem
@@ -4816,6 +4865,7 @@ function renderMain() {
      dem Bereichs-Sheet, damit ein „Bereich anlegen“ aus dem Sheet heraus
      bedienbar bleibt. */
   html += bereichSheet();
+  html += bereichMehrSheet();
   html += wahlSheet();
   html += setArtSheet();
   html += karteSheet();
@@ -6393,11 +6443,17 @@ function renderVerwaltenListe(cards, gefuehrt) {
   html += '<div class="bereich-manage-row">';
   html += '<h2 style="margin-bottom:0">Karten in „' + esc(currentBereich().name) + '" (' + cards.length + ')</h2>';
   html += '<div>';
-  if (cards.length > 0) html += '<button class="ghost" data-action="open-drill" title="Stufen oder Speicherkarten beliebig oft üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
-  if (cards.length > 1 && !gefuehrt) html += '<button class="ghost" data-action="reverse-order" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' + ikon("umkehren", "i-sm") + ' Umkehren</button>';
-  if (cards.length > 0) html += '<button class="ghost" data-action="toggle-select-mode" title="Mehrere Karten auswählen">' + (ui.selectMode ? ikon("schliessen", "i-sm") + " Fertig" : ikon("auswaehlen", "i-sm") + " Auswählen") + '</button>';
-  if (!gefuehrt) html += '<button class="ghost" data-action="rename-bereich" title="Bereich umbenennen">' + ikon("stift", "i-sm") + ' Umbenennen</button>';
-  html += '<button class="ghost" data-action="delete-bereich" title="Bereich löschen">' + ikon("muell", "i-sm") + ' Löschen</button>';
+  if (ui.selectMode) {
+    /* Mitten in der Mehrfachauswahl bleibt "Fertig" an Ort und Stelle -
+       ein Sprung ins Blatt waere hier eine unnoetige zweite Handlung. */
+    html += '<button class="ghost" data-action="toggle-select-mode" title="Mehrfachauswahl beenden">' + ikon("schliessen", "i-sm") + ' Fertig</button>';
+  } else {
+    if (cards.length > 0) html += '<button class="ghost" data-action="open-drill" title="Stufen oder Speicherkarten beliebig oft üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
+    /* Löschen gilt fuer den Bereich selbst, nicht fuer seine Karten - deshalb
+       steht der Mehr-Knopf unconditional da, genau wie "Löschen" es vorher war.
+       Was genau im Blatt steht, entscheidet weiterhin jede Zeile fuer sich. */
+    html += '<button class="ghost" data-action="bereich-mehr-auf" title="Weitere Handlungen für diesen Bereich" aria-label="Weitere Handlungen für diesen Bereich" aria-haspopup="dialog">' + ikon("mehr", "i-sm") + ' Mehr</button>';
+  }
   html += '</div></div>';
 
   if (ui.drillOpen) {
@@ -6487,9 +6543,13 @@ function renderVerwaltenListe(cards, gefuehrt) {
     }
     const sets = currentSets().filter(s => setBearbeitbar(s));
     if (sets.length > 0) {
+      /* Smart Default: die zuletzt in DIESER Sitzung benutzte Speicherkarte
+         vorausgewaehlt, falls sie noch existiert und bearbeitbar ist - sonst
+         bleibt "Neue Speicherkarte" die Vorauswahl, wie bisher. */
+      const vorgabe = ui.zuletztSetId && sets.some(s => s.id === ui.zuletztSetId) ? ui.zuletztSetId : "__new__";
       html += '<select id="save-set-select">';
-      html += '<option value="__new__">＋ Neue Speicherkarte</option>';
-      html += sets.map(s => '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>').join("");
+      html += '<option value="__new__"' + (vorgabe === "__new__" ? " selected" : "") + '>＋ Neue Speicherkarte</option>';
+      html += sets.map(s => '<option value="' + esc(s.id) + '"' + (vorgabe === s.id ? " selected" : "") + '>' + esc(s.name) + '</option>').join("");
       html += '</select>';
       html += '<button class="ghost" data-action="save-to-set" title="Ausgewählte Karten in einer Speicherkarte ablegen">' + ikon("stern", "i-sm") + ' Speichern</button>';
     } else {
@@ -7410,6 +7470,7 @@ document.addEventListener("keydown", e => {
      "Fertig"-Knopf schliessen, nicht über Escape wie jeder andere Dialog -
      eine Inkonsequenz, die auffaellt, sobald man die App ohne Maus bedient. */
   if (ui.bereichSheet) { ui.bereichSheet = false; render(); }
+  if (ui.bereichMehr) { ui.bereichMehr = false; render(); }
   if (ui.cardDetailId) { ui.cardDetailId = null; render(); }
 });
 
@@ -7537,15 +7598,25 @@ document.body.addEventListener("click", e => {
     case "add-bereich": addBereich(); break;
     case "rename-bereich": renameBereich(); break;
     case "delete-bereich": deleteBereich(); break;
+    case "bereich-mehr-auf": ui.bereichMehr = true; render(); break;
+    case "bereich-mehr-zu": ui.bereichMehr = false; render(); break;
+    /* Jede Zeile im Blatt schliesst es zuerst, bevor sie die eigentliche
+       Handlung ausloest - Umbenennen/Loeschen zeigen ihrerseits einen
+       eigenen Dialog (D2), der sonst ueber dem gerade erst geschlossenen
+       Blatt haengen wuerde. */
+    case "bereich-mehr-auswaehlen": ui.bereichMehr = false; toggleSelectMode(); break;
+    case "bereich-mehr-umkehren": ui.bereichMehr = false; reverseOrder(); break;
+    case "bereich-mehr-umbenennen": ui.bereichMehr = false; renameBereich(); break;
+    case "bereich-mehr-loeschen": ui.bereichMehr = false; deleteBereich(); break;
     /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
        ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
        stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
-    case "tab-lernen": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
-    case "tab-fortschritt": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-lernen": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-fortschritt": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
-    case "tab-verwalten": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
+    case "tab-verwalten": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;

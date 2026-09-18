@@ -1,6 +1,6 @@
 # Auftrag: Oberfläche & Mobile-Gestalt
 
-**Status:** Blöcke 1–10 `fertig` (v3.1.0–3.4.3), **alle am echten Handy verifiziert.** Blöcke 8–10 kommen aus der Bildersammlung des Betreibers (17.09.2026), siehe [`BILDER-BEFUND.md`](BILDER-BEFUND.md). Der Strang ruht, bis eine neue Schwachstelle genannt wird oder offene Fragen 12/13 entschieden sind.
+**Status:** Blöcke 1–10 `fertig` (v3.1.0–3.4.3), **alle am echten Handy verifiziert.** Blöcke 8–10 kommen aus der Bildersammlung des Betreibers (17.09.2026), siehe [`BILDER-BEFUND.md`](BILDER-BEFUND.md). Offene Frage 6 ist seit 18.09.2026 dauerhaft geklärt (§7-Lockerung gilt grundsätzlich). Am 18.09.2026 zusätzlich die zwei liegen gebliebenen Nachlese-Punkte gebaut (v3.5.0): Werkzeugleiste Verwalten (Video 1) und Smart Default beim Speichern in eine Speicherkarte (Video 3) — **Betreiber-Test am Handy steht noch aus**, siehe `LOGBUCH.md`.
 **Angelegt:** 16. September 2026 · **Neu gefasst:** 17. September 2026
 **Grundlage:** die drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie), gefiltert in [`PRINZIPIEN.md`](PRINZIPIEN.md).

@@ -4,6 +4,62 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-18 — Werkzeugleiste Verwalten aufgeräumt + Smart Default beim Speichern (v3.5.0)
+
+**Geändert:**
+- `app.js`: neues `mehr`-Icon (`ICON_PFADE`, drei Punkte). `ui.bereichMehr`
+  (neuer UI-Zustand, nicht gespeichert) und `ui.zuletztSetId` (neuer
+  UI-Zustand, nicht gespeichert) ergänzt.
+- `renderVerwaltenListe()`: Werkzeugleiste zeigt jetzt nur noch „Üben" +
+  „Mehr" (bzw. „Fertig" während der Mehrfachauswahl) statt bis zu fünf
+  Knöpfen dauerhaft.
+- Neue Funktion `bereichMehrSheet()` (gleiche `.dlg`-Hülle wie
+  `bereichSheet()`) mit den vier verlegten Handlungen: Auswählen, Umkehren,
+  Umbenennen, Löschen ("gefahr"-Zeile) — Bedingungen je Zeile 1:1 aus der
+  alten Werkzeugleiste übernommen, nichts entfernt.
+- Neue `data-action`-Fälle `bereich-mehr-auf/-zu/-auswaehlen/-umkehren/
+  -umbenennen/-loeschen`; Escape und alle drei Tab-Wechsel setzen
+  `ui.bereichMehr` jetzt mit zurück (gleiches Muster wie `bereichSheet`).
+- `saveSelectedToSet()`: merkt sich beim Ablegen in eine bestehende
+  Speicherkarte `ui.zuletztSetId`. Das `save-set-select`-Dropdown wählt diese
+  Speicherkarte jetzt vor (statt immer „＋ Neue Speicherkarte"), sofern sie
+  im aktuellen Bereich noch existiert und bearbeitbar ist.
+- `plan/redesign-oberflaeche/probelauf.mjs:37`: `.pathname` durch
+  `fileURLToPath()` ersetzt — der am 17.09. gefundene, damals nicht
+  behobene Windows-Pfadfehler (`mkdir 'C:\C:\...'`). Kein ausgeliefertes
+  Werkzeug, aber ein echter, unabhängiger Fund beim Versuch, diese Änderung
+  zu prüfen.
+- `app.js` `APP_VERSION`, `sw.js` `CACHE_NAME` → `3.5.0`, `CHANGELOG.md`.
+
+**Entscheidung:** Beide Punkte kamen aus der Video-1-Nachlese
+(Werkzeugleiste) und `PRINZIPIEN.md` (Smart Defaults) — als „ansteht" auf
+Nachfrage genannt, vom Betreiber mit „beide" freigegeben. Bewusst zusammen
+in einem Durchgang statt zwei Blöcken: beide Änderungen sind klein,
+unabhängig voneinander und berühren dieselbe Datei/denselben Bildschirm
+(Verwalten). Bei „Mehr" wurde bewusst keine der fünf Handlungen entfernt,
+nur "Üben" (die haeufigste, warum man den Bildschirm aufruft) sichtbar
+gelassen — das ist die durch Video 1 verlangte Kontext-Abhaengigkeit, keine
+Funktionsaenderung, und faellt damit unter die am 18.09. dauerhaft
+gelockerte Grenze aus `KONZEPT.md` §7 (offene Frage 6).
+
+**Offen:** **Kein Gerätetest möglich.** Ein Versuch, `probelauf.mjs` in
+dieser Umgebung laufen zu lassen (Playwright + Chromium lokal installiert,
+lokaler Server gestartet), scheiterte nach dem Pfadfix an `spawn UNKNOWN`
+beim Start von `chrome.exe` — dieselbe Grundschranke wie am 17.09.
+(„Permission denied"), nur mit anderer Fehlermeldung. Beide Änderungen sind
+deshalb nur per Code-Review geprüft (Syntax mit `node --check`, Bedingungen
+Zeile für Zeile mit der alten Werkzeugleiste abgeglichen, bestehende
+`.dlg`/`.liste-zeile`/`gefahr`-Klassen wiederverwendet statt neuer CSS).
+Betreiber-Test am echten Handy steht noch aus: „Mehr" öffnen/schließen
+(auch per Escape), jede der vier Zeilen einmal antippen, danach beim
+Ablegen einer Auswahl in eine zuvor benutzte Speicherkarte prüfen, ob sie
+vorausgewählt ist.
+
+**Nächster Schritt:** Betreiber-Test am Handy (siehe „Offen"). Ohne
+Rückmeldung kein weiterer Schritt an diesem Punkt.
+
+---
+
 ### 2026-09-18 — Apple-Login ausdrücklich auf „way later" gestellt, kein Code geändert
 
 **Geändert:** Nichts am Code — `APPLE_LOGIN_BEREIT = false` (`app.js:28`)

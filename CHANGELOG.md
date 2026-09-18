@@ -1,3 +1,13 @@
+## 3.5.0 – 18. September 2026
+
+### Geändert (Werkzeugleiste Verwalten aufgeräumt, Smart Default beim Speichern)
+
+**Die Werkzeugleiste im Verwalten-Tab zeigte bisher bis zu fünf Handlungen dauerhaft nebeneinander** (Üben, Umkehren, Auswählen, Umbenennen, Löschen) – genau der Punkt, den Video 1 der Redesign-Grundlage ("Aktionen kommen und gehen mit dem Zusammenhang") schon länger als offen auf der Nachlese-Liste stehen hatte. Jetzt bleibt nur „Üben" direkt sichtbar; die vier selteneren/gefährlicheren Handlungen stecken in einem neuen „Mehr"-Blatt (gleiche Hülle wie das bestehende Bereichs-Sheet). Während der Mehrfachauswahl steht an derselben Stelle weiterhin „Fertig". Keine Handlung wurde entfernt, nur umsortiert.
+
+**Beim Ablegen ausgewählter Karten in einer Speicherkarte war „＋ Neue Speicherkarte" immer die Vorauswahl** – auch wenn schon Speicherkarten existierten, obwohl die häufigste Handlung ist, weiter in die zuletzt benutzte abzulegen (Smart Defaults, Video 3, in `PRINZIPIEN.md` als „passt" eingestuft, bisher nirgends umgesetzt). Die Auswahlliste merkt sich jetzt innerhalb der Sitzung, welche Speicherkarte zuletzt benutzt wurde, und schlägt sie beim nächsten Mal direkt vor.
+
+Details, Begründung und Betreiber-Entscheidung (offene Frage 6, dauerhaft) in `plan/redesign-oberflaeche/LOGBUCH.md`.
+
 ### Neu (zweite Adresse: adrabic.web.app)
 
 **Die App ist jetzt zusätzlich unter `https://adrabic.web.app/` erreichbar**, neben der bisherigen `lernkarte-925c2.web.app`. Reine Hosting-Konfiguration (`firebase.json`), keine Code-Änderung – deshalb ohne eigene Versionsnummer hier vermerkt. Details und offene Betreiber-Schritte (Authorized Domains, API-Key-Freigabe) in `plan/phase-4-domain-hosting/LOGBUCH.md`, Eintrag 18.09.2026.
