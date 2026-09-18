@@ -1,4 +1,12 @@
-## 3.6.3 – 18. September 2026
+## 3.6.4 – 18. September 2026
+
+### Diagnose (Beobachtung 18, dritter Anlauf): Debug-Overlay statt weiterer Vermutungen
+
+**Der v3.6.3-Fix (`--vv-gap` über `window.visualViewport`) hat das Springen der Navigationsleiste nicht behoben.** Betreiber hat es an einer frisch neu installierten Home-Bildschirm-App (`display: standalone`, garantiert aktueller Code) erneut bestätigt. Damit sind zwei Theorien der Reihe nach widerlegt: (1) Bereichs-Pill-Breite (v3.6.1, falsches Element), (2) mobile Adressleisten-Dynamik über `visualViewport` (v3.6.3) – Letzteres scheidet zusätzlich aus, weil eine Standalone-PWA gar keine Browser-Toolbar hat, die ein-/ausklappen könnte.
+
+**Statt einer vierten Vermutung:** Ein Debug-Overlay, nur sichtbar mit `?debug=nav` am Ende der URL (kein Knopf, keine UI-Erwähnung, für normale Nutzer nicht auffindbar) zeigt die tatsächlichen Zahlen live an – `window.innerHeight`, `visualViewport.height`, `.nav`s tatsächliche Position (`getBoundingClientRect()`), `--sab`, Scroll-Position. Zweck: eine echte Diagnose anhand von Messwerten statt weiterer Screenshot-Interpretation. **Wird entfernt, sobald die Ursache gefunden ist – kein dauerhaftes Feature.**
+
+
 
 ### Behoben (Beobachtung 18, zweiter Anlauf): Navigationsleiste springt vertikal auf dem Handy
 

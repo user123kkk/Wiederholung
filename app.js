@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.3";
+const APP_VERSION = "3.6.4";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -7654,6 +7654,50 @@ if (window.visualViewport) {
   window.visualViewport.addEventListener("scroll", syncViewportGap);
 }
 syncViewportGap();
+
+/* 18.09.2026, Beobachtung 18, dritter Anlauf: Die ersten beiden Fixe
+   (Bereichs-Pill-Breite, dann --vv-gap ueber visualViewport) haben das
+   Springen NICHT beendet - der Betreiber hat es an einer zum Home-Bildschirm
+   hinzugefuegten PWA (display:standalone, KEIN Safari-Chrome) mit
+   garantiert aktuellem Code erneut bestaetigt. Damit sind beide bisherigen
+   Theorien widerlegt und es fehlen echte Zahlen statt weiterer Vermutungen.
+   Debug-Overlay, NUR mit ?debug=nav in der URL sichtbar (fuer normale
+   Nutzer nicht auffindbar, kein Knopf, keine Erwaehnung in der UI) - zeigt
+   die tatsaechlichen Werte von .nav, damit sich die Ursache an echten Zahlen
+   statt an Screenshots festmachen laesst. Wird entfernt, sobald das
+   Problem geklaert ist - kein dauerhaftes Feature. */
+if (new URLSearchParams(location.search).get("debug") === "nav") {
+  const box = document.createElement("div");
+  box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;" +
+    "background:rgba(0,0,0,0.85);color:#0f0;font:11px monospace;padding:8px;" +
+    "white-space:pre-wrap;pointer-events:none;";
+  document.body.appendChild(box);
+  function updateDebugBox() {
+    const nav = document.querySelector(".nav");
+    const navRect = nav ? nav.getBoundingClientRect() : null;
+    const vv = window.visualViewport;
+    const cs = getComputedStyle(document.documentElement);
+    box.textContent =
+      "innerHeight: " + window.innerHeight + "\n" +
+      "vv.height: " + (vv ? vv.height : "n/a") + "\n" +
+      "vv.offsetTop: " + (vv ? vv.offsetTop : "n/a") + "\n" +
+      "--vv-gap: " + cs.getPropertyValue("--vv-gap") + "\n" +
+      "--sab: " + cs.getPropertyValue("--sab") + "\n" +
+      "nav.top: " + (navRect ? navRect.top.toFixed(1) : "n/a") + "\n" +
+      "nav.bottom: " + (navRect ? navRect.bottom.toFixed(1) : "n/a") + "\n" +
+      "nav.height: " + (navRect ? navRect.height.toFixed(1) : "n/a") + "\n" +
+      "docEl.scrollHeight: " + document.documentElement.scrollHeight + "\n" +
+      "docEl.clientHeight: " + document.documentElement.clientHeight + "\n" +
+      "body.scrollHeight: " + document.body.scrollHeight + "\n" +
+      "scrollY: " + window.scrollY + "\n" +
+      "ui.tab: " + (typeof ui !== "undefined" ? ui.tab : "n/a");
+  }
+  updateDebugBox();
+  window.addEventListener("resize", updateDebugBox);
+  window.addEventListener("scroll", updateDebugBox);
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", updateDebugBox);
+  setInterval(updateDebugBox, 500);
+}
 
 /* ---------- D2 (1.8.0): eigene Dialoge ----------
    alert/confirm/prompt halten das ganze Programm an und liefern ihr Ergebnis

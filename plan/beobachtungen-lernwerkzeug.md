@@ -848,6 +848,25 @@ active`, Icon-Varianten `.i.voll`) — beide zeigten keinen Versatz.
 unbestätigt** — kein Gerät mit echter Toolbar-Dynamik in dieser Umgebung
 verfügbar. Betreiber-Test am echten Handy steht aus.
 
+**Dritter Anlauf (18.09.2026, v3.6.4): v3.6.3-Fix hat nicht geholfen, UND
+die zugrundeliegende Theorie ist strukturell ausgeschlossen.** Betreiber
+hat mit einer frisch neu installierten Home-Bildschirm-App (`display:
+standalone`, garantiert aktueller Code — vom Home-Bildschirm gelöscht und
+neu hinzugefügt) erneut denselben Sprung bestätigt. Damit scheidet die
+`visualViewport`/Adressleisten-Theorie aus: **Standalone-PWAs haben gar
+keine Browser-Toolbar, die ein-/ausklappen könnte.** Zusätzlich geprüft
+und ausgeschlossen: `body`s `min-height` (schon `100svh` seit Beobachtung
+13, nicht das aktuelle `100vh`), sowie ein `transform`/`filter`/`contain`
+auf einem Elternelement von `.nav`, das einen neuen Containing-Block für
+`position: fixed` erzeugen könnte (keins gefunden). Statt einer vierten
+Vermutung: Debug-Overlay eingebaut (`?debug=nav` in der URL, siehe
+`CHANGELOG.md` 3.6.4), das die tatsächlichen Werte live anzeigt. **Nächster
+Schritt liegt beim Betreiber:** die URL mit `?debug=nav` öffnen (z. B.
+`https://adrabic.web.app/?debug=nav`, dann zum Home-Bildschirm hinzufügen
+oder im Safari-Tab lassen), zwischen Lernen und Fortschritt wechseln,
+Screenshots der grünen Zahlen in beiden Zuständen schicken. Erst mit
+diesen Werten lässt sich die Ursache eingrenzen, ohne weiter zu raten.
+
 ---
 
 **Nächster Schritt:** Liegt beim Betreiber — welche Punkte überhaupt
