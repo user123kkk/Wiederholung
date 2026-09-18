@@ -4,6 +4,45 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-18 — Knopf-Druckgefühl: scharf rein, federnd zurück (v3.5.3)
+
+**Geändert:** `styles.css:805-811` — `button`-Basisregel: `transform`-Transition
+von `var(--dur-instant) var(--ease-out)` auf `var(--dur-fast) var(--ease-spring)`
+umgestellt (Rückweg). `button:active` bekommt eine eigene, kürzere Transition
+(`var(--dur-instant) var(--ease-out)`) und einen deutlicheren Skalierungswert
+(`scale(0.96)` statt `scale(0.985)`).
+
+**Entscheidung:** Betreiber-Wunsch nach „Apple-Stil" bei Bewegung, aber
+ausdrücklich **ohne** jedes Mal ein Referenzvideo schicken zu müssen — ich
+soll aus bekannten Bewegungsprinzipien selbst passende Stellen auswählen und
+verfeinern (kein externes Tool/keine Website nötig, reines Trainingswissen
+zu Federkurven/Timing). Erster Kandidat: das global genutzte Knopf-Druck-
+Feedback, weil es überall gleich wirkt und die vorhandene, aber kaum genutzte
+`--ease-spring`-Kurve (`styles.css:244`) schon bereitstand. CSS erlaubt
+unterschiedliche Kurven für Hin- und Rückweg, wenn die Zielregel (`:active`
+bzw. die Basisregel) eine eigene `transition` trägt — deshalb zwei getrennte
+Deklarationen statt einer. Mit einer Playwright-Instanz gegen den echten
+`index.html`-Login-Bildschirm geprüft (`getComputedStyle` während eines
+echten `mousedown`): Druck ergibt `scale(0.9646)`, Basis-Transition zeigt
+korrekt die Spring-Kurve für den Rückweg. `prefers-reduced-motion` bleibt
+über den bestehenden Killswitch (`styles.css:484-491`) automatisch abgedeckt,
+keine neue Sonderbehandlung nötig.
+
+**Offen:** Das ist bewusst nur EIN Punkt aus „da gäbe es ziemlich viel zu
+ersetzen" (Betreiber-Zitat). Weitere Kandidaten für dieselbe Behandlung,
+noch nicht angefasst: Sheet-/Dialog-Öffnen (`sheet-up`, `enter-pop` laufen
+aktuell nur mit `--ease-out`/`--ease-spring` gemischt, nicht konsequent),
+`.bereich-pill:active` (eigene, unveränderte `scale(0.97)`-Regel mit
+`--ease-out` statt Spring), Icon-Knöpfe (`feld-mit-knopf button.icon-btn`).
+Kein Betreiber-Test am echten Handy für diese Änderung — reine
+Desktop-/Emulator-Prüfung.
+
+**Nächster Schritt:** Auf Betreiber-Hinweis eine der offenen Stellen oben
+aufgreifen, oder warten, bis eine konkrete Stelle genannt wird, die sich
+„nicht nach Apple" anfühlt.
+
+---
+
 ### 2026-09-18 — Werkzeugleiste Verwalten aufgeräumt + Smart Default beim Speichern (v3.5.0)
 
 **Geändert:**

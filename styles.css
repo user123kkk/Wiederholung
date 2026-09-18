@@ -806,9 +806,12 @@ button {
               border-color var(--dur-fast) var(--ease-out),
               color var(--dur-fast) var(--ease-out),
               opacity var(--dur-fast) var(--ease-out),
-              transform var(--dur-instant) var(--ease-out);
+              transform var(--dur-fast) var(--ease-spring);
 }
-button:active { transform: scale(0.985); }
+/* Scharf rein, federnd zurück: der Rückweg läuft über die transition oben
+   (--ease-spring), der Weg rein braucht eine eigene, kürzere Kurve — sonst
+   fühlt sich der Druck selbst schon behäbig an. */
+button:active { transform: scale(0.96); transition: transform var(--dur-instant) var(--ease-out); }
 button:disabled { opacity: 0.45; cursor: default; transform: none; }
 
 button.secondary {

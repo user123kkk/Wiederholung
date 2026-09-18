@@ -1,3 +1,9 @@
+## 3.5.3 – 18. September 2026
+
+### Geändert (Knopf-Druckgefühl: scharf rein, federnd zurück)
+
+**Erster Schritt einer laufenden Bewegungs-Verfeinerung** (Betreiber-Wunsch nach „Apple-Stil" bei Animationen, ohne dafür Referenzvideos schicken zu müssen). Jeder Knopf reagierte bisher kaum spürbar auf Druck (`scale(0.985)`) und lief in beide Richtungen mit derselben Kurve (`--ease-out`) – das Gegenteil vom federnden, tastbaren Gefühl, das gemeint war. Jetzt: beim Drücken scale(0.96) mit kurzer, scharfer `--ease-out`-Kurve, beim Loslassen Rückkehr über die bereits vorhandene, aber kaum genutzte `--ease-spring`-Kurve (`styles.css:244`) mit leichtem Überschwingen. Betrifft `button:active` global (`styles.css:785-811`) – reine CSS-Token-Nutzung, keine neue Mechanik, `prefers-reduced-motion` greift unverändert über den bestehenden Killswitch. Weitere Stellen folgen einzeln, nicht als Gesamt-Umbau.
+
 ## 3.5.2 – 18. September 2026
 
 ### Geändert (Kartensatz-Weitergabe für alle geöffnet)
