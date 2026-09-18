@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.5.2";
+const APP_VERSION = "3.5.3";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -887,6 +887,13 @@ let syncError = null;
    den Reset in onAuthStateChanged. */
 let ladeTimer = null;
 let ladeLangsam = false;
+/* Lehrer-Modus, Kernablauf (siehe plan/lehrer-modus/GERUEST.md, Abschnitt J):
+   Ein per Link geteilter Kartensatz steckt komplett im URL-Fragment, nicht
+   in der Datenbank - deshalb wird er schon beim Laden der Seite ausgelesen,
+   lange bevor ein Nutzer eingeloggt ist. Verarbeitet wird er erst, sobald
+   bereiche geladen sind (siehe teilLinkPruefen in initFirebase). null,
+   sobald erledigt oder abgelehnt - sonst fragt jeder Re-Render erneut. */
+let ausstehenderTeilLink = leseTeilLinkAusHash();
 /* E8: Merkt sich, ob GERADE der Ladebildschirm steht - siehe render(). Ohne
    das trifft der Wechsel zur echten App die Blüten-Animation an einem
    zufälligen Punkt ihres Zyklus und schneidet sie hart ab; das sah nach
@@ -1333,6 +1340,11 @@ function datenZusammenbauen() {
   ladeLangsam = false;
   evaluateStreakForNewDay();
   render();
+  /* Lehrer-Modus, Kernablauf: erst hier ist bereiche wirklich geladen (nicht
+     schon nach sammlungenStarten()) - verarbeiteImportDaten() braucht das.
+     Die Funktion selbst sorgt dafuer, dass sie trotz mehrerer
+     Schnappschuesse nur einmal wirklich etwas tut. */
+  teilLinkPruefenUndVerarbeiten();
 }
 
 function sammlungenStarten() {
@@ -2738,102 +2750,156 @@ async function exportWeitergabe() {
   render();
 }
 
-/* ---------- ENTWURF, NICHT SCHARF GESCHALTET (18.09.2026) ----------
-   Komfortversion aus plan/lehrer-modus/GERUEST.md, Abschnitt H: Lektion per
-   Code teilen statt Datei hin- und herschicken, OHNE dass der Sender
-   irgendetwas ueber den Empfaenger erfaehrt (kein Log, kein Zaehler, keine
-   Rueckmeldung).
+/* ---------- Lehrer-Modus, Kernablauf: Lektion per Link teilen ----------
+   plan/lehrer-modus/GERUEST.md, Abschnitt J. Ersetzt den fruehreren
+   Firestore-Code-Entwurf (Abschnitt H/I): Statt eines Codes, der auf einen
+   Datenbank-Eintrag zeigt, steckt der ganze Lektionsinhalt komprimiert IM
+   LINK SELBST (URL-Fragment, alles nach "#"). Damit gibt es keine neue
+   Firestore-Sammlung, keinen Lesezugriff ueber Kontogrenzen hinweg - nichts,
+   was serverseitig gespeichert wuerde. Strukturell derselbe Fall wie der
+   laengst unbedenkliche Datei-Export (exportWeitergabe), nur per Link statt
+   Datei. Bewusste Entscheidung des Betreibers, dokumentiert in GERUEST.md:
+   dafuer gibt es KEINEN Widerruf (ein verschickter Link funktioniert wie
+   eine verschickte Datei fuer immer) und eine Laengengrenze.
 
-   WARUM DAS HEUTE NICHT FUNKTIONIERT UND DAS AUCH SO BLEIBEN SOLL: Das
-   braucht eine neue Firestore-Regel fuer die Sammlung "geteilteLektionen"
-   (Lesezugriff fuer jeden mit dem richtigen Code) UND ein neues Feld
-   "teilCode" in bereichFelder() der Regeln - keins von beidem ist in
-   firestore.rules eingetragen. Ohne Regel schlaegt jeder Schreib-/
-   Lesevorgang hier mit "permission-denied" fehl. Das ist Absicht: die
-   Betreiber-Entscheidung zur Minderjaehrigen-Frage (offene Frage 5 im
-   Geruest) steht noch aus. Der Code ist vorbereitet, aber inert, bis die
-   Regel bewusst nachgezogen wird - siehe GERUEST.md Abschnitt H fuer den
-   genauen Regel-Entwurf. */
-function genTeilCode() {
-  /* Absichtlich kryptographisch zufaellig, nicht genId(): der Code ist hier
-     die einzige Zugriffsschranke (wer ihn kennt, kann lesen), nicht nur eine
-     Dokument-Nummer. Math.random() waere fuer diesen Zweck zu schwach. */
-  const ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"; // ohne 0/O/1/I - keine Verwechslung
-  const bytes = new Uint8Array(10);
-  crypto.getRandomValues(bytes);
-  let code = "";
-  for (const b of bytes) code += ALPHABET[b % ALPHABET.length];
-  return code.slice(0, 5) + "-" + code.slice(5);
+   Das Fragment (nicht die Query-String!) ist Absicht: Alles nach "#" geht
+   nie an einen Server - taucht also auch nicht in Zugriffs-Logs von Firebase
+   Hosting auf. Ein Query-Parameter waere dafuer der falsche Ort gewesen. */
+const TEIL_LINK_MAX_ZEICHEN = 4000; // grosszuegig unter praktischen Grenzen von Messenger-Links
+
+function bytesZuBase64Url(bytes) {
+  let bin = "";
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
-async function teileLektionCode() {
+function base64UrlZuBytes(str) {
+  let s = str.replace(/-/g, "+").replace(/_/g, "/");
+  while (s.length % 4) s += "=";
+  const bin = atob(s);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+/* CompressionStream/DecompressionStream sind eine eingebaute Browser-API
+   (kein neues Abhaengigkeits-Paket, siehe README.md "kein Build-Schritt").
+   Wo sie fehlt (aeltere Browser), wird unkomprimiert codiert - der Link
+   wird dann laenger und stoesst frueher an TEIL_LINK_MAX_ZEICHEN, funktioniert
+   aber weiterhin. */
+async function komprimiere(text) {
+  const roh = new TextEncoder().encode(text);
+  if (typeof CompressionStream === "undefined") return { kompr: false, bytes: roh };
+  const cs = new CompressionStream("gzip");
+  const writer = cs.writable.getWriter();
+  writer.write(roh);
+  writer.close();
+  const buf = await new Response(cs.readable).arrayBuffer();
+  return { kompr: true, bytes: new Uint8Array(buf) };
+}
+async function dekomprimiere(bytes, warKomprimiert) {
+  if (!warKomprimiert) return new TextDecoder().decode(bytes);
+  const ds = new DecompressionStream("gzip");
+  const writer = ds.writable.getWriter();
+  writer.write(bytes);
+  writer.close();
+  const buf = await new Response(ds.readable).arrayBuffer();
+  return new TextDecoder().decode(buf);
+}
+
+async function teileLektionLink() {
   const b = currentBereich();
   if (!(await weitergabeMoeglich(b))) return;
-  if (b.teilCode) {
-    await dlgAlert('„' + b.name + '" wird schon über den Code ' + b.teilCode + ' geteilt. ' +
-      'Erst „Teilen beenden“, dann neu teilen.', "Schon aktiv");
-    return;
-  }
+  const lektionen = lektionenVon(b);
+  const ohneLektion = b.karten.filter(c => !lektionen.some(s => s.cardIds.indexOf(c.id) !== -1)).length;
+  const eigeneAnzahl = (b.sets || []).filter(s => (s.art || "eigen") === "eigen").length;
   const version = (b.satzVersion || 0) + 1;
   const ok = await dlgConfirm(
-    'Erzeugt einen Code, über den jede:r mit dem Code diese Lektion in die eigene App übernehmen kann - ' +
-    'ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.',
-    { title: "Per Code teilen (Entwurf)", okLabel: "Code erzeugen" });
+    b.karten.length + ' Karten, ' + lektionen.length + ' Lektionen. Nur „' + lektionen[0].name + '" ist offen, der Rest kommt gesperrt an.' +
+    (ohneLektion > 0 ? '\n\nAchtung: ' + ohneLektion + ' Karte(n) liegen in keiner Lektion. Die bleiben beim Empfänger für immer gesperrt.' : '') +
+    (eigeneAnzahl > 0 ? '\n\n' + eigeneAnzahl + ' eigene Speicherkarte(n) bleiben zu Hause – weitergegeben werden nur Kategorien und Lektionen.' : '') +
+    '\n\nDer Link trägt den ganzen Inhalt in sich – es gibt keinen Widerruf, genau wie bei einer verschickten Datei.' +
+    '\n\nDas wird Veröffentlichung Nr. ' + version + '.',
+    { title: "Link zum Teilen erzeugen", okLabel: "Link erzeugen" });
   if (!ok) return;
 
   if (!b.satzId) b.satzId = slugName(b.name) + "-" + genId();
   b.satzVersion = version;
-  const code = genTeilCode();
-  b.teilCode = code;
-  patchDoc({
-    [pfadBereich(b.id) + ".satzId"]: b.satzId,
-    [pfadBereich(b.id) + ".satzVersion"]: version,
-    [pfadBereich(b.id) + ".teilCode"]: code
-  });
-  try {
-    await fb.setDoc(fb.doc(db, "geteilteLektionen", code), {
-      ownerUid: currentUser.uid,
-      erstelltAm: new Date().toISOString(),
-      inhalt: { bereiche: [baueWeitergabeBereich(b, version)] }
-    });
-  } catch (e) {
-    /* Erwarteter Fall, solange die Regel fehlt (siehe Kommentar oben) -
-       das Bereichsfeld bleibt trotzdem gesetzt; naechster Versuch nach der
-       Regel-Freischaltung braucht dann nur "Teilen beenden" + neu erzeugen. */
+  patchDoc({ [pfadBereich(b.id) + ".satzId"]: b.satzId, [pfadBereich(b.id) + ".satzVersion"]: version });
+
+  const json = JSON.stringify({ bereiche: [baueWeitergabeBereich(b, version)] });
+  const { kompr, bytes } = await komprimiere(json);
+  const fragment = (kompr ? "gz" : "raw") + "." + bytesZuBase64Url(bytes);
+
+  if (fragment.length > TEIL_LINK_MAX_ZEICHEN) {
+    render();
+    await dlgAlert('„' + b.name + '" ist mit ' + b.karten.length + ' Karten zu groß für einen Link. ' +
+      'Nutz stattdessen „Kartensatz zum Weitergeben" (Datei) weiter oben.', "Zu groß für einen Link");
+    return;
   }
+
+  const link = location.origin + location.pathname + "#teilen=" + fragment;
   render();
-  await dlgAlert("Code: " + code, "Teilen eingerichtet");
+  await dlgAlert(link, "Link zum Teilen – kopieren und verschicken");
 }
-async function beendeTeilenCode() {
-  const b = currentBereich();
-  if (!b.teilCode) return;
-  const code = b.teilCode;
-  const ok = await dlgConfirm("Der Code " + code + " funktioniert danach nicht mehr.",
-    { title: "Teilen beenden?", okLabel: "Beenden", danger: true });
+
+/* Wird schon beim Laden der Seite aufgerufen (siehe ausstehenderTeilLink),
+   lange bevor bereiche geladen sind - deshalb nur PARSEN, nicht verarbeiten.
+   Kein console.log/Fehlerdialog hier: eine falsch kopierte oder alte URL
+   ist ein Normalfall, kein Grund, den Start zu unterbrechen. */
+function leseTeilLinkAusHash() {
+  const h = location.hash || "";
+  const marker = "#teilen=";
+  if (!h.startsWith(marker)) return null;
+  const fragment = h.slice(marker.length);
+  const punkt = fragment.indexOf(".");
+  if (punkt < 0) return null;
+  const art = fragment.slice(0, punkt);
+  if (art !== "gz" && art !== "raw") return null;
+  return { kompr: art === "gz", codiert: fragment.slice(punkt + 1) };
+}
+/* Verarbeitet einen beim Start gefundenen Teilen-Link genau einmal, sobald
+   ein Konto eingeloggt UND bereiche geladen sind (verarbeiteImportDaten
+   braucht beides). Aufgerufen aus dem onSnapshot-Erfolgspfad in
+   initFirebase(). Raeumt den Hash danach weg, damit ein Neuladen oder
+   Zurueck-Navigieren nicht denselben Import wiederholt. */
+async function teilLinkPruefenUndVerarbeiten() {
+  if (!ausstehenderTeilLink) return;
+  const eintrag = ausstehenderTeilLink;
+  ausstehenderTeilLink = null; // sofort loeschen: kein zweiter Aufruf durch einen weiteren Re-Render
+  history.replaceState(null, "", location.pathname + location.search);
+  let json;
+  try {
+    json = await dekomprimiere(base64UrlZuBytes(eintrag.codiert), eintrag.kompr);
+  } catch (e) {
+    await dlgAlert("Dieser Teilen-Link lässt sich nicht lesen (beschädigt oder unvollständig kopiert).", "Link ungültig");
+    return;
+  }
+  let data;
+  try { data = JSON.parse(json); } catch (e) {
+    await dlgAlert("Dieser Teilen-Link lässt sich nicht lesen (beschädigt oder unvollständig kopiert).", "Link ungültig");
+    return;
+  }
+  const ok = await dlgConfirm("Über einen Link wurde dir eine Lektion angeboten. Jetzt in dein Konto übernehmen?",
+    { title: "Geteilte Lektion", okLabel: "Übernehmen" });
   if (!ok) return;
-  b.teilCode = null;
-  patchDoc({ [pfadBereich(b.id) + ".teilCode"]: fb.deleteField() });
-  try { await fb.deleteDoc(fb.doc(db, "geteilteLektionen", code)); } catch (e) {}
-  render();
+  await verarbeiteImportDaten(data);
 }
-async function codeEinloesenStart() {
-  const code = await dlgPrompt("Code eingeben (von der Person, die geteilt hat):", "",
-    { title: "Code einlösen", okLabel: "Einlösen" });
-  if (!code || !code.trim()) return;
-  await codeEinloesen(code.trim().toUpperCase());
-}
-async function codeEinloesen(code) {
-  let snap;
-  try {
-    snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code));
-  } catch (e) {
-    await dlgAlert("Konnte den Code nicht prüfen: " + (e && e.message ? e.message : e), "Fehler");
+/* Rueckweg fuer den Fall, dass ein Link nicht direkt angetippt wurde
+   (siehe Hinweis am Knopf "Link einlösen" in renderEinstellungenSeite). */
+async function linkEinloesenStart() {
+  const eingabe = await dlgPrompt("Kompletten Link (oder nur den Teil nach „#teilen=“) einfügen:", "",
+    { title: "Link einlösen", okLabel: "Einlösen" });
+  if (!eingabe || !eingabe.trim()) return;
+  const text = eingabe.trim();
+  const marker = "#teilen=";
+  const idx = text.indexOf(marker);
+  const fragment = idx >= 0 ? text.slice(idx + marker.length) : text;
+  const punkt = fragment.indexOf(".");
+  if (punkt < 0 || (fragment.slice(0, punkt) !== "gz" && fragment.slice(0, punkt) !== "raw")) {
+    await dlgAlert("Das sieht nicht wie ein gültiger Teilen-Link aus.", "Nicht erkannt");
     return;
   }
-  if (!snap.exists()) {
-    await dlgAlert("Diesen Code gibt es nicht (mehr). Prüf die Schreibweise, oder frag noch einmal nach.", "Code ungültig");
-    return;
-  }
-  await verarbeiteImportDaten(snap.data().inhalt);
+  ausstehenderTeilLink = { kompr: fragment.slice(0, punkt) === "gz", codiert: fragment.slice(punkt + 1) };
+  await teilLinkPruefenUndVerarbeiten();
 }
 
 /* ---------- 2.5.0: Nachschub für einen vorhandenen Kartensatz ----------
@@ -3005,12 +3071,12 @@ async function satzZusammenfuehren(ziel, datei) {
   return d;
 }
 
-/* Herausgezogen aus importBackupFile(), damit der Code-Entwurf aus
-   lehrer-modus/GERUEST.md (codeEinloesen(), Abschnitt H) denselben Weg
-   nimmt wie ein Datei-Import - dieselben Grenzen, dieselbe
+/* Herausgezogen aus importBackupFile(), damit der Link-Entwurf aus
+   lehrer-modus/GERUEST.md (teilLinkPruefenUndVerarbeiten(), Abschnitt J)
+   denselben Weg nimmt wie ein Datei-Import - dieselben Grenzen, dieselbe
    Zusammenfuehrungs-Logik, keine zweite, moeglicherweise abweichende
    Fassung. `data` hat die Form {bereiche: [...]}, egal ob sie aus einer
-   Datei oder aus einem geteilten Firestore-Dokument kommt. */
+   Datei oder aus einem per Link geteilten Fragment kommt. */
 async function verarbeiteImportDaten(data) {
   if (!data || !Array.isArray(data.bereiche)) {
     await dlgAlert("Das ist kein gültiger Lernkarten-Bestand.", "Import nicht möglich");
@@ -5517,28 +5583,18 @@ function renderEinstellungenSeite(id) {
         ' Kartensatz zum Weitergeben</button>';
       html += '</div></div>';
 
-      /* ENTWURF, NICHT SCHARF GESCHALTET - siehe Kommentar über
-         teileLektionCode() in app.js und plan/lehrer-modus/GERUEST.md,
-         Abschnitt H. Der Knopf ist absichtlich sichtbar (damit sich das
-         Zusammenspiel mit der Oberfläche schon prüfen lässt), das Erzeugen
-         schlägt aber ohne die noch fehlende Firestore-Regel fehl. */
+      /* Lehrer-Modus, Kernablauf - siehe teileLektionLink() in app.js und
+         plan/lehrer-modus/GERUEST.md, Abschnitt J. Anders als der frühere
+         Code-Entwurf braucht das keine neue Firestore-Regel und funktioniert
+         schon heute. */
       html += '<div class="card" style="margin-top:var(--stack)">';
-      html += '<h3>Per Code teilen <span class="badge">Entwurf</span></h3>';
-      if (b.teilCode) {
-        html += '<p class="hint">Aktiver Code: <strong>' + esc(b.teilCode) + '</strong>. ' +
-          'Jede:r mit diesem Code kann die Lektion übernehmen, ohne dass du davon erfährst.</p>';
-        html += '<div class="form-actions">';
-        html += '<button class="secondary danger" data-action="beende-teilen-code">Teilen beenden</button>';
-        html += '</div>';
-      } else {
-        html += '<p class="hint">Noch nicht freigeschaltet: braucht erst eine neue Firestore-Regel, ' +
-          'siehe plan/lehrer-modus/GERUEST.md. Der Knopf erzeugt bis dahin nur einen Fehler.</p>';
-        html += '<div class="form-actions">';
-        html += '<button class="secondary" data-action="teile-lektion-code">' + ikon("teilen", "i-sm") +
-          ' Code erzeugen</button>';
-        html += '</div>';
-      }
-      html += '</div>';
+      html += '<h3>Per Link teilen</h3>';
+      html += '<p class="hint">Der Link trägt die Lektion in sich – kein Konto beim Empfänger nötig, ' +
+        'um ihn zu öffnen, aber zum Übernehmen schon. Kein Widerruf möglich, genau wie bei einer Datei.</p>';
+      html += '<div class="form-actions">';
+      html += '<button class="secondary" data-action="teile-lektion-link">' + ikon("teilen", "i-sm") +
+        ' Link erzeugen</button>';
+      html += '</div></div>';
     }
     return html;
   }
@@ -5552,13 +5608,16 @@ function renderEinstellungenSeite(id) {
       ' Datei auswählen</button>';
     html += '</div></div>';
 
-    /* ENTWURF, NICHT SCHARF GESCHALTET - siehe teileLektionCode() oben. */
+    /* Normalfall: ein angetippter Teilen-Link öffnet die Seite direkt mit
+       dem Fragment und fragt von selbst (siehe teilLinkPruefenUndVerarbeiten).
+       Dieser Knopf ist der Rückweg, falls der Link woanders ankam, z.B.
+       kopiert statt angetippt. */
     html += '<div class="card" style="margin-top:var(--stack)">';
-    html += '<h3>Code einlösen <span class="badge">Entwurf</span></h3>';
-    html += '<p class="hint">Noch nicht freigeschaltet, siehe plan/lehrer-modus/GERUEST.md.</p>';
+    html += '<h3>Link einlösen</h3>';
+    html += '<p class="hint">Falls ein geteilter Link nicht von selbst gefragt hat: hier einfügen.</p>';
     html += '<div class="form-actions">';
-    html += '<button class="secondary" data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
-      ' Code eingeben</button>';
+    html += '<button class="secondary" data-action="link-einloesen-start">' + ikon("einspielen", "i-sm") +
+      ' Link einfügen</button>';
     html += '</div></div>';
     return html;
   }
@@ -7874,9 +7933,8 @@ document.body.addEventListener("click", e => {
     case "export-backup": exportBackup(false); break;
     case "export-backup-current": exportBackup(true); break;
     case "export-weitergabe": exportWeitergabe(); break;
-    case "teile-lektion-code": teileLektionCode(); break;          // Entwurf, siehe GERUEST.md H
-    case "beende-teilen-code": beendeTeilenCode(); break;
-    case "code-einloesen-start": codeEinloesenStart(); break;
+    case "teile-lektion-link": teileLektionLink(); break;          // GERUEST.md Abschnitt J
+    case "link-einloesen-start": linkEinloesenStart(); break;
     case "streak-fortsetzen": streakFortsetzen(); break;
     case "verlauf-reset": verlaufZuruecksetzen(); break;
     case "karte-merken": karteMerken(btn.dataset.id); break;

@@ -369,7 +369,17 @@ solange sicher und rechtlich nicht gefährlich" — gewählt: **ganzen Code
 widerrufen reicht**, kein Kicken einzelner Personen. Volle Anonymität
 bleibt erhalten, kein Widerspruch mehr offen.
 
-## I · Umgesetzt (vorbereitet, nicht scharf geschaltet): Code-Entwurf in app.js
+## I · ABGELÖST (18.09.2026) — Firestore-Code-Entwurf, siehe Abschnitt J
+
+**Dieser Abschnitt ist historisch, der beschriebene Code existiert nicht
+mehr in `app.js`.** Betreiber-Einwand: „ich will das so machen dass C5
+garnicht nötig ist" — das ließ sich lösen, siehe Abschnitt J unten. Der
+Firestore-Ansatz hier (`geteilteLektionen`-Sammlung, `teilCode`-Feld) wurde
+komplett durch das Link-Modell ersetzt, das ohne jede neue Firestore-Regel
+auskommt. Stehen gelassen als Aufzeichnung, warum der ursprüngliche Weg
+nicht der beste war — nicht als Anleitung zum Nachbauen.
+
+## I (alt) · Umgesetzt (vorbereitet, nicht scharf geschaltet): Code-Entwurf in app.js
 
 Auf Betreiber-Wunsch technisch vorbereitet, damit es startklar ist, sobald
 Frage 5 geklärt ist — **funktioniert heute absichtlich nicht**, siehe
@@ -431,4 +441,71 @@ match /geteilteLektionen/{code} {
 
 Veröffentlicht als Teil von **v3.5.2** zusammen mit der geöffneten
 Weitergabe (Abschnitt G) — derselbe Versionssprung, weil der Entwurfscode
-inert ist und nichts an der Nutzung der bestehenden Funktionen ändert.
+inert war und nichts an der Nutzung der bestehenden Funktionen änderte.
+**Inzwischen durch Abschnitt J ersetzt, dieser Code ist aus `app.js`
+entfernt.**
+
+## J · Umgesetzt und LIVE (v3.5.3, 18.09.2026): Lektion per Link teilen
+
+Betreiber-Vorgabe: „ich will das so machen dass C5 garnicht nötig ist" —
+und hat recht behalten. Der Unterschied zu H/I: Statt eines Codes, der auf
+einen Datenbank-Eintrag *verweist*, trägt der Link den **ganzen
+Lektionsinhalt komprimiert in sich selbst** (im URL-Fragment, alles nach
+`#`). Damit gibt es **keine neue Firestore-Sammlung, keinen Lesezugriff
+über Kontogrenzen hinweg — strukturell derselbe Fall wie der längst
+unbedenkliche Datei-Export**, nur per Link statt Datei. Frage 5 hat hier
+buchstäblich nichts, woran sie andocken könnte: es wird nichts
+gespeichert, das ein fremdes Konto lesen könnte.
+
+**Wichtig, bevor das als „C5 endgültig erledigt" gelesen wird:** Das gilt
+für **diesen konkreten Mechanismus** (Link mit eingebettetem Inhalt), nicht
+für die Idee „Komfortversion" im Allgemeinen. Sollte je wieder eine Variante
+mit serverseitiger Speicherung gebaut werden (z. B. weil Widerruf oder sehr
+große Kartensätze gebraucht werden), gilt die Sperre aus Frage 5 dafür
+unverändert.
+
+**Technische Absicherung, damit die Kernaussage stimmt:**
+- Das **Fragment**, nicht ein Query-Parameter — alles nach `#` wird vom
+  Browser **nie an einen Server geschickt**, taucht also auch nicht in
+  Firebase-Hosting-Zugriffs-Logs auf. Ein `?teilen=...` wäre hier der
+  falsche, undichtere Ort gewesen.
+- Komprimiert mit der eingebauten `CompressionStream`/`DecompressionStream`-
+  Browser-API (kein neues Abhängigkeits-Paket — README.md verlangt „kein
+  Build-Schritt"), base64url-codiert. Getestet im Browser (Round-Trip,
+  auch mit arabischem Text): 40 Karten → 1041 Zeichen Fragment, 100 Karten
+  → 2103, 150 Karten → 3097, 200 Karten → 4027. Deshalb
+  `TEIL_LINK_MAX_ZEICHEN = 4000` — deckt bequem jede „unter Freunden"-Lektion,
+  darüber kommt eine Meldung, die auf den Datei-Export verweist statt
+  kaputtzugehen.
+
+**Was das kostet, damit die Entscheidung mit offenen Augen getroffen ist:**
+- **Kein Widerruf möglich.** Ohne Datenbank-Eintrag gibt's nichts zu
+  löschen — ein einmal verschickter Link funktioniert für immer, genau wie
+  eine einmal verschickte Datei heute schon (dieselbe Grenze gilt dort
+  längst, niemand hat sie je als Problem gemeldet).
+- **Größenbegrenzung** bei sehr großen Kartensätzen (siehe Zahlen oben) —
+  mit klarer Meldung statt stillem Scheitern.
+
+**Umgesetzt in `app.js`:**
+- `teileLektionLink()` ersetzt `teileLektionCode()` — baut den Link,
+  zeigt ihn in einem Dialog zum Kopieren.
+- `leseTeilLinkAusHash()` liest `location.hash` **schon beim Laden der
+  Seite** (Modul-Top-Level, vor jedem Login) und merkt sich einen Fund in
+  `ausstehenderTeilLink`.
+- `teilLinkPruefenUndVerarbeiten()` verarbeitet den Fund **erst**, sobald
+  `bereiche` wirklich geladen ist (Aufruf am Ende von `datenZusammenbauen()`,
+  nicht schon nach `sammlungenStarten()` — dort ist `bereiche` noch `null`).
+  Fragt per Dialog nach, bevor irgendetwas importiert wird; räumt den Hash
+  danach weg (`history.replaceState`), damit ein Neuladen nicht doppelt
+  importiert.
+- `linkEinloesenStart()` als Rückweg, falls ein Link nicht direkt angetippt
+  wurde (z. B. manuell weitergegeben) — Einstellungen → Einspielen →
+  „Link einlösen".
+- `baueWeitergabeBereich()` und `verarbeiteImportDaten()` (aus G/I) werden
+  unverändert weiterverwendet — Link-Weg und Datei-Weg erzeugen/verarbeiten
+  exakt denselben Inhalt, inklusive der bestehenden Nachschub-Erkennung
+  über `satzId` (derselbe Kartensatz, neue Version → aktualisiert den
+  vorhandenen Bereich beim Empfänger, statt einen zweiten anzulegen).
+
+**Keine Änderung an `firestore.rules` nötig oder vorgenommen** — der ganze
+Punkt dieses Entwurfs.

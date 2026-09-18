@@ -1,3 +1,9 @@
+## 3.5.3 – 18. September 2026
+
+### Neu (Lektion per Link teilen – live, nicht mehr nur Entwurf)
+
+**Ersetzt den Code-Entwurf aus 3.5.2 komplett**, der eine neue Firestore-Regel gebraucht hätte. Stattdessen trägt ein geteilter Link den ganzen Lektionsinhalt komprimiert in sich selbst (URL-Fragment, alles nach `#` – das geht nie an einen Server, taucht also auch nicht in Zugriffs-Logs auf). Damit entfällt jede neue Firestore-Sammlung und jeder Lesezugriff über Kontogrenzen hinweg: strukturell derselbe, längst unbedenkliche Fall wie der bestehende Datei-Export, nur per Link statt Datei. Ein angetippter Link fragt beim Öffnen von selbst „Lektion übernehmen?"; alternativ gibt es „Link einlösen" in Einstellungen → Einspielen zum manuellen Einfügen. Kein Widerruf möglich (wie bei einer verschickten Datei auch nicht), und eine Größengrenze für sehr große Kartensätze mit klarer Meldung statt stillem Scheitern. Details, Architekturbegründung und die zugehörige Entscheidung zur Minderjährigen-Frage in `plan/lehrer-modus/GERUEST.md`, Abschnitt J.
+
 ## 3.5.2 – 18. September 2026
 
 ### Geändert (Kartensatz-Weitergabe für alle geöffnet)
