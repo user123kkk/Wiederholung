@@ -4,6 +4,49 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-18 — Nach erfolgreichem Login: hängende Ladekreise behoben, Apple-Knopf ausgeblendet (v3.4.11)
+
+**Geändert:**
+- `app.js` (nach `doGoogleLogin`/`doAppleLogin`) neuer `pageshow`-Listener,
+  setzt `ui.authBusy` zurück, wenn `event.persisted` true ist.
+- `app.js:21` neue Konstante `APPLE_LOGIN_BEREIT = false`.
+- `app.js` (`renderAuth`) Apple-Knopf nur noch gerendert, wenn
+  `APPLE_LOGIN_BEREIT` true ist.
+- `app.js:19` `APP_VERSION` auf `3.4.11`, `sw.js` `CACHE_NAME` auf
+  `adrabic-3.4.11`, `CHANGELOG.md` neuer Eintrag.
+
+**Entscheidung:** Der Google-Login lief nach dem CSP-Fix von gestern
+(v3.4.10) erfolgreich durch — vom Betreiber am eigenen Handy bestätigt
+(Screenshot). Zwei Rückmeldungen dabei:
+
+1. Klickt man Google, dann per Zurück-Knopf ohne fertige Anmeldung zur App
+   zurück, drehen sich **alle** Anmelde-Knöpfe endlos weiter. Ursache: Auf
+   manchen Geräten (u. a. iOS/Safari, laut Screenshot vermutlich hier der
+   Fall) kann Firebase keinen echten Popup öffnen und weicht auf eine
+   Vollbild-Weiterleitung aus; ein Zurück von dort stellt die App oft aus
+   dem bfcache wieder her — dem eingefrorenen Stand von vor der
+   Weiterleitung, `ui.authBusy` weiterhin `true`, weil das Promise aus
+   `signInWithPopup` nie zu Ende lief (die Seite wurde verlassen, nicht nur
+   in den Hintergrund gelegt). `pageshow`/`event.persisted` ist der
+   Standard-Weg, genau diesen Fall zu erkennen.
+2. Betreiber fragte, warum der Apple-Knopf überhaupt sichtbar ist, wenn er
+   nur zu einer Fehlermeldung führt — Apple braucht zusätzlich ein
+   kostenpflichtiges Apple-Developer-Konto (99$/Jahr), das noch nicht
+   eingerichtet ist. Statt den Code zu entfernen (der frühere
+   Betreiber-Wunsch „google und ja" bezog sich auf beide Anbieter im
+   Prinzip, nur die Apple-Einrichtung selbst steht noch aus): ein Flag
+   blendet den Knopf aus, bis Apple tatsächlich aktiv ist — kein Verlust,
+   kein Nacharbeiten nötig, sobald es so weit ist.
+
+**Offen:** Apple-Anmeldung bleibt vollständig zurückgestellt, bis der
+Betreiber das Apple-Developer-Konto einrichtet (siehe Eintrag vom
+17.09.2026 weiter unten für die genauen Schritte). `APPLE_LOGIN_BEREIT`
+dann auf `true` setzen — Firebase-Konsolen-Einrichtung UND dieses Flag
+gehören zusammen, sonst bleibt der Knopf trotz aktivem Anbieter unsichtbar.
+
+**Nächster Schritt:** Google-Login gilt als abgeschlossen getestet. Kein
+weiterer Schritt hier offen, bis der Betreiber Apple aktiv einrichten will.
+
 ### 2026-09-17 — Google-/Apple-Knöpfe: Logo-Größe fest statt nur per CSS (v3.4.7)
 
 **Geändert:** `app.js:19` `APP_VERSION` auf `3.4.7`; `app.js` (`OAUTH_LOGOS`)

@@ -16,9 +16,16 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.4.10";
+const APP_VERSION = "3.4.11";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
+/* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
+   Apple-Developer-Konto (99$/Jahr) und die Einrichtung in der
+   Firebase-Konsole - beides steht auf Betreiber-Wunsch noch aus (18.09.2026).
+   Bis dahin bleibt der Knopf ausgeblendet statt auf eine Fehlermeldung zu
+   fuehren, die niemand einordnen kann. Google ist bereits eingerichtet und
+   bleibt an. Auf true stellen, sobald Apple in der Firebase-Konsole aktiv ist. */
+const APPLE_LOGIN_BEREIT = false;
 const app = document.getElementById("app");
 
 /* ---------- Wer darf Kartensätze weitergeben? ----------
@@ -1990,6 +1997,22 @@ async function doAppleLogin() {
   ui.authBusy = false;
   render();
 }
+/* Beobachtung des Betreibers (18.09.2026): Auf manchen Geraeten/Browsern
+   oeffnet Firebase fuer Google/Apple statt eines echten Popups eine
+   Vollbild-Weiterleitung (uebliches Verhalten, wenn Popups technisch nicht
+   moeglich sind, z.B. Safari/iOS). Geht jemand von dort per Zurueck-Knopf
+   zur App zurueck, OHNE die Anmeldung abzuschliessen, stellt der Browser die
+   Seite oft aus dem bfcache wieder her - also GENAU den eingefrorenen
+   Zwischenstand von vorhin, inklusive ui.authBusy=true und den ewig
+   drehenden Ladekreisen, weil das Promise aus signInWithPopup nie zu Ende
+   lief (die Seite wurde ja verlassen, nicht nur in den Hintergrund gelegt).
+   event.persisted erkennt genau diesen Fall. */
+window.addEventListener("pageshow", e => {
+  if (e.persisted && ui.authBusy) {
+    ui.authBusy = false;
+    render();
+  }
+});
 async function doRegister() {
   const name = val("a-name").trim().slice(0, 40);
   const email = val("a-email").trim();
@@ -4350,8 +4373,10 @@ function renderAuth() {
     html += '<div class="auth-anbieter">';
     html += '<button type="button" class="secondary full' + laed + '" data-action="google-login"' + busy + '>' +
       OAUTH_LOGOS.google + '<span>Mit Google anmelden</span></button>';
-    html += '<button type="button" class="secondary full' + laed + '" data-action="apple-login"' + busy + '>' +
-      OAUTH_LOGOS.apple + '<span>Mit Apple anmelden</span></button>';
+    if (APPLE_LOGIN_BEREIT) {
+      html += '<button type="button" class="secondary full' + laed + '" data-action="apple-login"' + busy + '>' +
+        OAUTH_LOGOS.apple + '<span>Mit Apple anmelden</span></button>';
+    }
     html += '</div>';
   }
   html += '</div>';

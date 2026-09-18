@@ -1,3 +1,11 @@
+## 3.4.11 – 18. September 2026
+
+### Behoben (Ladekreise blieben nach abgebrochener Google/Apple-Anmeldung hängen) + Apple-Knopf vorerst ausgeblendet
+
+**Ging jemand nach Klick auf „Mit Google anmelden" per Zurück-Knopf zur App zurück, ohne die Anmeldung abzuschließen, drehten sich alle Anmelde-Knöpfe endlos weiter.** Ursache: Auf manchen Browsern/Geräten öffnet Firebase statt eines echten Popup-Fensters eine Vollbild-Weiterleitung. Kehrt man von dort per Zurück-Knopf um, stellt der Browser die Seite oft aus seinem Zwischenspeicher (bfcache) wieder her – mit genau dem eingefrorenen Zustand von vorhin, Ladekreise inklusive, weil das ursprüngliche Versprechen (Promise) nie zu Ende lief. Ein neuer Erkennungs-Listener (`pageshow` mit `event.persisted`) setzt den Ladezustand jetzt zurück, sobald das passiert.
+
+**Der „Mit Apple anmelden"-Knopf ist bis auf Weiteres ausgeblendet.** Er führte nur zu einer Fehlermeldung, da Apple-Anmeldung zusätzlich ein kostenpflichtiges Apple-Developer-Konto braucht, das noch nicht eingerichtet ist. Der Code bleibt vollständig erhalten – ein einziges Flag (`APPLE_LOGIN_BEREIT` in `app.js`) schaltet den Knopf wieder ein, sobald Apple in der Firebase-Konsole aktiv ist.
+
 ## 3.4.10 – 18. September 2026
 
 ### Behoben (auth/internal-error blieb trotz korrekter CSP – 304 mit alten Headern)

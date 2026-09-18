@@ -344,14 +344,26 @@ nicht bei `rgb(255,255,255)`.
 
 **Geklärt am 17.09.2026 (Frage 13, v3.4.6).** Betreiber: „google und ja"
 (Google und Apple, umsetzen). Anmeldebildschirm hat jetzt zusätzlich zu
-E-Mail/Passwort zwei Knöpfe „Mit Google anmelden" / „Mit Apple anmelden"
-über Firebase-Authentication-Popup, dieselbe Datenbank und dieselben
+E-Mail/Passwort einen Knopf „Mit Google anmelden" über
+Firebase-Authentication-Popup, dieselbe Datenbank und dieselben
 Zugriffsregeln wie bisher. Details siehe
 [`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md),
-Eintrag vom 17.09.2026, und `CHANGELOG.md` 3.4.6. **Vom Code allein nicht
-erledigt:** In der Firebase-Konsole müssen die beiden Anbieter erst
-eingeschaltet werden (Betreiber-Aufgabe, siehe Logbuch-Eintrag) – ohne
-diesen Schritt zeigen die neuen Knöpfe nur eine Fehlermeldung.
+Einträge vom 17. und 18.09.2026, und `CHANGELOG.md` ab 3.4.6.
+
+**Google-Login seit 18.09.2026 (v3.4.10/3.4.11) am echten Gerät bestätigt
+funktionierend.** Bis dahin brauchte es drei Nachbesserungen, alle in der
+Content-Security-Policy aus Phase 4 (`firebase.json`), die vor dem
+Popup-Login gebaut wurde und dafür zu eng war: fehlendes `frame-src` fürs
+Firebase-Auth-Iframe, fehlendes `apis.google.com` fürs Google-API-Skript,
+und — die eigentliche Ursache für die anhaltende Fehlermeldung trotz
+korrigierter Regel — bereits cachende Browser aktualisierten die
+gespeicherte CSP wegen unveränderter Datei-Fingerabdrücke (ETags) nicht,
+siehe `phase-4-domain-hosting/LOGBUCH.md`, Eintrag 18.09.2026.
+
+**Apple bleibt zurückgestellt, Knopf seit v3.4.11 ausgeblendet** (Flag
+`APPLE_LOGIN_BEREIT` in `app.js`) – Apple braucht zusätzlich ein
+kostenpflichtiges Apple-Developer-Konto (99$/Jahr), das der Betreiber noch
+nicht eingerichtet hat. Code ist fertig, nur nicht sichtbar/aktiv.
 
 Die Phasen 0–6 hängen an keiner offenen Frage mehr und können durchgearbeitet
 werden.
