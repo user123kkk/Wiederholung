@@ -203,3 +203,25 @@ tatsächlichen Rechtsquelle) wird **kein** Code für das Teilen von Lektionen
 geschrieben, auch nicht für den kleinen ersten Baustein, weil der laut C4
 schon eine neue Firestore-Regel bräuchte, die fremden Zugriff auf eigene
 Daten ermöglicht — genau der Kern von Frage 5.
+
+**Korrektur/Vereinfachung (18.09.2026):** Betreiber-Einwand zu Recht — der
+In-App-Link (C4) ist **Komfort, nicht Voraussetzung**. Das eigentliche
+Bedürfnis „am Ende der Lektion ein Backup/Kartensatz freigeben" deckt der
+**bestehende Datei-Export** (`data-action="export-weitergabe"`) schon
+vollständig ab: Lehrperson exportiert, verschickt die Datei auf beliebigem
+Weg (WhatsApp, Mail, …), Empfänger importiert sie in sein eigenes Konto.
+**Kein neuer Code, keine neue Firestore-Regel, kein geteilter Datensatz in
+der Datenbank** — die App gewährt dabei zu keinem Zeitpunkt einem Konto
+Zugriff auf ein anderes. Damit stellt sich Frage 5 in dieser Minimalform
+**nicht**, weil kein Konto-übergreifender Zugriff entsteht — vergleichbar
+mit dem Versenden einer PDF-Datei.
+
+**Damit zerfällt A0 in zwei echt unterschiedliche Stufen:**
+1. **Minimalversion — heute nutzbar, kein Bauauftrag nötig.** Datei-Export
+   reicht für „Lehrer gibt Lektion am Ende weiter". Kein Code, keine
+   Rechtsfrage in der bisher diskutierten Form.
+2. **Komfortversion — der In-App-Link aus C4.** Bräuchte neuen Code, neue
+   Firestore-Regel, und genau deshalb weiterhin echten Rechtsrat (Frage 5),
+   *bevor* daran gebaut wird. Bleibt Ausbaustufe, kein akuter Blocker mehr
+   für „irgendetwas freigeben können" — nur für die komfortablere Variante
+   davon.
