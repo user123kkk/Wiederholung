@@ -1,3 +1,9 @@
+## 3.6.6 – 18. September 2026
+
+**Beobachtung 18, echte Ursache gefunden (mit Messwerten, nicht Vermutung):** Debug-Overlay zeigte: `window.innerHeight` liefert in der Home-Bildschirm-App unterschiedliche Werte für denselben Bildschirm – 848px bei nicht-scrollbarem Inhalt ("Lernen"), 896px bei scrollbarem Inhalt ("Fortschritt"), 48px Differenz. `visualViewport.height` zeigt denselben falschen Wert, mein v3.6.3-Fix konnte das also nicht erfassen. `.nav` positionierte sich relativ zum jeweils gemeldeten (manchmal zu kleinen) Wert – daher der Sprung.
+
+Fix: `syncViewportGap()` merkt sich jetzt den größten in der Sitzung gemessenen Viewport-Wert als Referenz, statt dem aktuellen (potenziell falschen) zu vertrauen – der zu kleine Wert kommt nur fälschlich vor, nie der größere.
+
 ## 3.6.5 – 18. September 2026
 
 Debug-Overlay (Beobachtung 18) auch ohne URL-Parameter aktivierbar: 7× auf die Versionsnummer in Einstellungen tippen. Grund: eine installierte Home-Bildschirm-App startet immer mit ihrer eigenen `start_url`, `?debug=nav` ging dabei verloren.

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.5";
+const APP_VERSION = "3.6.6";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5099,6 +5099,9 @@ function renderMain() {
   app.innerHTML = html;
   /* E7: Faktor am Container, damit ihn jede .arabic-Stelle darunter erbt. */
   app.style.setProperty("--arab-scale", String(arabFaktor()));
+  /* Beobachtung 18: Tab-Wechsel kann den Scroll-/Layoutzustand aendern,
+     ohne ein resize-Event auszuloesen - hier zur Sicherheit erneut syncen. */
+  if (typeof syncViewportGap === "function") syncViewportGap();
   tickCountups();
 
   if (prevActiveId) {
@@ -7630,19 +7633,28 @@ window.addEventListener("resize", () => {
   drawStrokes(ctx, canvas);
 });
 
-/* Beobachtung 18 (18.09.2026): --vv-gap gleicht Safaris/Chromes ein-/
-   ausklappende Adressleiste aus, die "position: fixed" durcheinanderbringt.
-   Reicht laut Betreiber-Test allein nicht - siehe beobachtungen-
-   lernwerkzeug.md Punkt 18 fuer den Stand der Diagnose. */
+/* Beobachtung 18 (18.09.2026), mit Messwerten belegt: window.innerHeight
+   selbst liefert in der Home-Bildschirm-App unterschiedliche Werte, je
+   nachdem ob der aktuelle Bildschirminhalt scrollbar ist oder nicht (z.B.
+   848px bei "Lernen" ohne Scroll, 896px bei "Fortschritt" mit Scroll -
+   derselbe Bildschirm, 48px Differenz). visualViewport zeigt denselben
+   falschen Wert, ein Vergleich der beiden bringt also nichts. Fix: den
+   groessten je in dieser Sitzung gemessenen Wert als verlaessliche
+   Referenz nehmen - der kleinere, falsche Wert kommt nur vor, nie der
+   groessere, korrekte. */
+let maxViewportHeight = 0;
 function syncViewportGap() {
   const vv = window.visualViewport;
-  const gap = vv ? Math.max(0, window.innerHeight - (vv.height + vv.offsetTop)) : 0;
+  const h = vv ? vv.height : window.innerHeight;
+  maxViewportHeight = Math.max(maxViewportHeight, h, window.innerHeight);
+  const gap = Math.max(0, maxViewportHeight - h);
   document.documentElement.style.setProperty("--vv-gap", gap + "px");
 }
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", syncViewportGap);
   window.visualViewport.addEventListener("scroll", syncViewportGap);
 }
+window.addEventListener("resize", syncViewportGap);
 syncViewportGap();
 
 /* Beobachtung 18: Messwerkzeug fuer die noch ungeklaerte springende Nav-
