@@ -828,6 +828,26 @@ in `CHANGELOG.md` 3.6.1. Betreiber-Test am echten Handy steht aus — erst
 danach gilt dieser, seit sechs Meldungen offene Punkt als wirklich
 geklärt.
 
+**Korrektur (18.09.2026, v3.6.3): Der v3.6.1-Fix war am falschen Element.**
+Betreiber lieferte zwei Screenshots mit eindeutigem Beweis, nachdem der
+Bereichs-Pill-Fix live war und das Problem nicht löste — der Nutzer meinte
+von Anfang an die **untere Navigationsleiste** (Lernen/Fortschritt/
+Verwalten), nicht die Bereichs-Pill oben. Screenshot-Vergleich zeigt: Bei
+kurzem Inhalt ("Für heute durch") sitzt die Leiste sichtbar höher, bei
+langem/gescrolltem Inhalt fast am Bildschirmrand — die ganze Leiste
+springt, nicht ein einzelner Button. Ursache: mobile Adressleisten
+(Safari/Chrome) klappen beim Scrollen ein/aus, `.nav` ist `position: fixed`
+und bezieht sich dabei nicht zuverlässig auf denselben sichtbaren
+Ausschnitt. Vor diesem Fund zwei eigene Theorien durchgerechnet und mit
+einer isolierten Testseite widerlegt (Margin-Symmetrie bei `.nav__tab.
+active`, Icon-Varianten `.i.voll`) — beide zeigten keinen Versatz.
+
+**Fix:** `syncViewportGap()` (`app.js`) synchronisiert `--vv-gap` über
+`window.visualViewport`, `.nav`s `bottom` bezieht diesen Wert jetzt ein
+(`styles.css`). Details in `CHANGELOG.md` 3.6.3. **Ausdrücklich
+unbestätigt** — kein Gerät mit echter Toolbar-Dynamik in dieser Umgebung
+verfügbar. Betreiber-Test am echten Handy steht aus.
+
 ---
 
 **Nächster Schritt:** Liegt beim Betreiber — welche Punkte überhaupt

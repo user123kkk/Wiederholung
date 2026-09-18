@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.2";
+const APP_VERSION = "3.6.3";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -7629,6 +7629,31 @@ window.addEventListener("resize", () => {
   sizeCanvas(canvas, ctx);
   drawStrokes(ctx, canvas);
 });
+
+/* 18.09.2026 (Beobachtung 18, zweiter Anlauf): Die schwebende Navigation
+   (.nav, position: fixed) sass auf dem Handy je nach Bildschirminhalt
+   unterschiedlich hoch - mit Screenshots belegt (kurzer Inhalt ohne Scroll
+   vs. langer, gescrollter Inhalt). Ursache: Safaris/Chromes Adressleiste
+   klappt beim Scrollen ein und aus, und "position: fixed" bezieht sich
+   dabei nicht zuverlaessig auf denselben Bildschirmausschnitt - env(safe-
+   area-inset-bottom) allein loest das nicht, weil es die Toolbar nicht
+   kennt. Die verlaessliche Groesse dafuer ist window.visualViewport, die
+   den tatsaechlich sichtbaren Bereich meldet. --vv-gap haelt fest, um wie
+   viel der sichtbare Bereich unten kleiner ist als der Layout-Viewport;
+   .nav zieht diesen Betrag zusaetzlich zu env(safe-area-inset-bottom) mit
+   ein (siehe styles.css). Auf documentElement statt auf #app gesetzt, weil
+   #app bei jedem render() komplett neu aufgebaut wird - die Variable soll
+   das ueberleben. */
+function syncViewportGap() {
+  const vv = window.visualViewport;
+  const gap = vv ? Math.max(0, window.innerHeight - (vv.height + vv.offsetTop)) : 0;
+  document.documentElement.style.setProperty("--vv-gap", gap + "px");
+}
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", syncViewportGap);
+  window.visualViewport.addEventListener("scroll", syncViewportGap);
+}
+syncViewportGap();
 
 /* ---------- D2 (1.8.0): eigene Dialoge ----------
    alert/confirm/prompt halten das ganze Programm an und liefern ihr Ergebnis

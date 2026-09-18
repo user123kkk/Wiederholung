@@ -1,4 +1,18 @@
-## 3.6.2 – 18. September 2026
+## 3.6.3 – 18. September 2026
+
+### Behoben (Beobachtung 18, zweiter Anlauf): Navigationsleiste springt vertikal auf dem Handy
+
+**Der erste Fix (v3.6.1, feste Breite der Bereichs-Pill) hatte das falsche Element behoben.** Betreiber lieferte zwei Screenshots mit eindeutigem, gemessenem Unterschied: Bei kurzem Bildschirminhalt (leere "Für heute durch"-Meldung) sitzt die untere Navigationsleiste sichtbar höher, mit deutlichem Abstand zum unteren Bildschirmrand; bei langem, gescrolltem Inhalt sitzt sie fast am Rand. Es ist die **ganze Leiste**, die springt, nicht ein einzelner Button.
+
+**Ursache:** `.nav` ist `position: fixed`, mit `bottom` berechnet aus `env(safe-area-inset-bottom)`. Mobile Browser (Safari iOS, Chrome Android) klappen die Adressleiste beim Scrollen ein und aus – dabei bezieht sich `position: fixed` nicht zuverlässig auf denselben sichtbaren Bildschirmausschnitt. `env(safe-area-inset-bottom)` allein löst das nicht, weil es nur den Geräte-Notch/Home-Indicator kennt, nicht die Browser-Toolbar.
+
+**Fix:** Neue Funktion `syncViewportGap()` (`app.js`) misst über `window.visualViewport` den tatsächlich sichtbaren Bereich und hält die Differenz zum Layout-Viewport in der CSS-Variable `--vv-gap` fest, aktualisiert bei jedem `visualViewport`-`resize`/`scroll`-Event. `.nav`s `bottom` bezieht diesen Wert jetzt zusätzlich mit ein (`styles.css`). Auf `documentElement` gesetzt (nicht `#app`), damit die Variable jeden `render()`-Neuaufbau übersteht.
+
+**Zwei vorherige Theorien geprüft und verworfen, bevor dieser Fund kam:** (1) `margin` auf `.nav__tab.active` – durchgerechnet: symmetrisches Margin verschiebt bei zentriertem Inhalt rechnerisch nichts. (2) Unterschiedliche Icon-Variante (gefüllt/Outline) beim aktiven Tab – `.i.voll` ändert nur `fill`, nicht die SVG-Geometrie. Beide mit einer isolierten Testseite (identisches Markup/CSS, ohne Login) durchgemessen: kein Versatz zwischen den drei Tab-Zuständen gefunden. Erst die vom Betreiber gelieferten Screenshots zeigten den echten Fehlerort.
+
+**Ausdrücklich unbestätigt:** Kein Gerätetest mit echter iOS/Android-Toolbar-Dynamik in dieser Umgebung möglich. Betreiber-Test am echten Handy steht aus.
+
+
 
 ### Kritischer Fix: App startete gar nicht mehr (JavaScript-Syntaxfehler)
 
