@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.5.0";
+const APP_VERSION = "3.5.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1430,7 +1430,24 @@ async function initFirebase() {
       bereicheColRef = fb.collection(userDocRef, "bereiche");
       kartenColRef = fb.collection(userDocRef, "karten");
       unsubscribeSnapshot = fb.onSnapshot(userDocRef, snap => {
-        if (snap.metadata.hasPendingWrites) return; // eigenes Echo ignorieren
+        /* 18.09.2026, Serie "aendert sich unberechenbar": Diese Zeile sollte
+           nur das Echo der EIGENEN, in dieser Sitzung schon verarbeiteten
+           Schreibaktion ignorieren (sonst wuerde jede eigene Aenderung den
+           Handler doppelt durchlaufen). Sie blockte bisher aber auch die
+           ALLERERSTE Momentaufnahme nach einem Neustart, wenn zu diesem
+           Zeitpunkt noch ein ungesendeter Schreibvorgang vom letzten Mal in
+           Firestores eigenem Offline-Speicher lag (z.B. App im Flugmodus
+           geschlossen, bevor der heutige Lerntag den Server erreichte).
+           Ergebnis: verlauf/streak blieben auf ihrem frisch zurueckgesetzten
+           Leerzustand haengen (serieAktuell() zeigte 0/Standard), bis der
+           Schreibvorgang irgendwann online ging und ein zweiter, "sauberer"
+           Schnappschuss nachkam - die Serie schien sich von selbst zu
+           aendern, ohne dass am Kartenbestand etwas geschah. cloudDocExists
+           ist erst NACH der ersten wirklich verarbeiteten Momentaufnahme
+           dieser Sitzung wahr; solange es falsch ist, gibt es nichts
+           Frischeres zu schuetzen, also wird auch eine noch ausstehende
+           Momentaufnahme diesmal verarbeitet statt verworfen. */
+        if (snap.metadata.hasPendingWrites && cloudDocExists) return; // eigenes Echo ignorieren
         if (kontoWirdGeloescht) return; // Konto loeschung: kein automatisches Neuanlegen
         const data = snap.data();
         syncError = null;

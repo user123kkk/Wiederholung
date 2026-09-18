@@ -691,6 +691,66 @@ werden, wenn was gebaut wird.
 
 ---
 
+## 17. Serie ändert sich unberechenbar — ✅ Ursache gefunden und behoben (18.09.2026)
+
+**Beobachtung:** Betreiber, ohne genauere Angabe: „meine Streak ändert sich
+ständig... da muss was sicher dahinter", auf Nachfrage nach dem genauen
+Muster: „ehrlich ka, da ist unberechenbar hab ich das gefühl. mach was
+starkes daraus."
+
+**Anders als die übrigen Punkte hier: Das ist echte Lernlogik** (Serie/Streak
+steht in `AUFTRAG.md` des Redesign-Strangs als harte, dauerhaft ausgenommene
+Grenze — „auch bei vollem Umbau"). Nur auf diese ausdrückliche Freigabe hin
+angefasst, nicht von selbst.
+
+**Ursache gefunden, ohne Screenshot/Reproduktion — direkt im Code beweisbar:**
+Der Firestore-Listener auf das Nutzerdokument (`app.js`, `onAuthStateChanged`
+→ `onSnapshot`) begann mit `if (snap.metadata.hasPendingWrites) return;` —
+gedacht, um das Echo der EIGENEN, gerade selbst ausgelösten Schreibaktion zu
+ignorieren (Kommentar „eigenes Echo ignorieren"). Das blockte aber auch die
+ALLERERSTE Momentaufnahme nach einem Neustart der App, wenn zu diesem
+Zeitpunkt noch ein ungesendeter Schreibvorgang aus der letzten Sitzung in
+Firestores eigenem Offline-Speicher lag (z. B.: App im Flugmodus oder mit
+schlechtem Netz geschlossen, kurz nachdem heute die erste Karte bewertet
+wurde — genau der Moment, der die Serie um einen Tag verlängert). `verlauf`
+und `streak` blieben dann auf ihrem frisch zurückgesetzten Leerzustand
+stehen (`serieAktuell()` zeigt dann 0 bzw. den alten Stand), bis der
+Schreibvorgang online ging und eine zweite, „saubere" Momentaufnahme
+nachkam — für den Nutzer sieht das aus, als würde sich die Serie von selbst
+ändern, ohne dass am Kartenbestand etwas passiert wäre.
+
+**Behoben:** Bedingung auf `if (snap.metadata.hasPendingWrites &&
+cloudDocExists) return;` erweitert. `cloudDocExists` ist erst NACH der
+ersten wirklich verarbeiteten Momentaufnahme dieser Sitzung wahr (startet
+`false`, wird bei jedem Neustart zurückgesetzt) — solange es falsch ist,
+gibt es nichts Frischeres im Speicher zu schützen, also wird auch eine noch
+ausstehende Momentaufnahme diesmal verarbeitet statt verworfen. Die
+eigentliche Echo-Unterdrückung (mitten in einer laufenden Sitzung, nach dem
+ersten echten Laden) bleibt unverändert erhalten.
+
+**Bewusst nicht angefasst:** die eigentliche Streak-Mathematik
+(`serieAktuell()`, `evaluateStreakForNewDay()`, Sockel/Joker) — dort war
+beim Durchlesen kein Fehler zu finden, nur diese eine Ladelücke davor. Eine
+zweite, spekulative Idee (leere `{w:0,n:0}`-Tageseinträge könnten theoretisch
+fälschlich als „gelernter Tag" zählen) wurde geprüft und verworfen: Beide
+Aufrufer von `verlaufZaehle()` erhöhen den Zähler synchron, bevor irgendwas
+gespeichert wird — ein solcher Leereintrag entsteht im heutigen Code
+nachweislich nicht.
+
+**Offen:** **Kein Gerätetest möglich** (kein Firebase-Login in dieser
+Umgebung, kein Weg, einen echten Offline/Online-Wechsel nachzustellen).
+Geprüft nur per Code-Review und `node --check`. Ob das Gefühl „unberechenbar"
+damit vollständig behoben ist oder ob es noch eine zweite Ursache gibt,
+zeigt sich erst nach ein paar Tagen echter Nutzung.
+
+**Nächster Schritt:** Beobachten, ob die Serie über die nächsten Tage/eine
+Woche stabil bleibt (besonders nach Nutzung mit schwachem Netz). Wenn sie
+weiter unerwartet wechselt: möglichst genau notieren, WANN (direkt nach dem
+Öffnen? nach einem Ortswechsel/Netzwechsel? nach einem zweiten Gerät?) —
+das würde die verbleibenden Kandidaten (z. B. `verlaufSpeichernBald()`s
+2-Sekunden-Verzögerung bei WEITEREN Bewertungen desselben Tages, die verloren
+gehen kann, wenn die Seite currentUser vorher schließt) eingrenzen.
+
 ## Zusammenfassung nach Schweregrad (nur zur Einordnung, keine Entscheidung)
 
 - **Echte Bugs, unabhängig voneinander behebbar:** 2 (versehentliches

@@ -1,3 +1,9 @@
+## 3.5.1 – 18. September 2026
+
+### Behoben (Serie/Streak zeigte nach dem Neustart manchmal einen falschen, sich selbst korrigierenden Wert)
+
+**Auf Betreiber-Meldung „meine Streak ändert sich ständig, unberechenbar"**: Der Firestore-Listener auf das Nutzerdokument ignorierte bisher jede Momentaufnahme mit einem noch nicht bestätigten Schreibvorgang (`hasPendingWrites`) – gedacht, um das Echo der eigenen, gerade selbst ausgelösten Änderung zu überspringen. Das blockte aber auch die allererste Momentaufnahme nach einem Neustart, wenn zu diesem Zeitpunkt noch ein ungesendeter Schreibvorgang aus der letzten Sitzung im Offline-Speicher lag (z. B. App bei schlechtem Netz geschlossen, kurz nach der ersten Kartenbewertung des Tages) – Serie und Verlauf blieben dann auf ihrem leeren Startwert stehen, bis der Schreibvorgang online ging und sich die Zahl scheinbar von selbst korrigierte. Die Bedingung greift jetzt nur noch, wenn in dieser Sitzung schon einmal echte Daten geladen wurden (`cloudDocExists`) – die eigentliche Streak-Berechnung selbst blieb unverändert. Details, inklusive einer geprüften und verworfenen zweiten Theorie, in `plan/beobachtungen-lernwerkzeug.md`, Punkt 17.
+
 ## 3.5.0 – 18. September 2026
 
 ### Geändert (Werkzeugleiste Verwalten aufgeräumt, Smart Default beim Speichern)
