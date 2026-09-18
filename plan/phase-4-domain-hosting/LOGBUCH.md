@@ -26,6 +26,34 @@ dasselbe noch einmal.
 
 ## Einträge
 
+### 2026-09-18 — Anmeldung auf adrabic.web.app blockiert: Browser-Key-Freigabe war doch nicht erledigt
+
+**Geändert:** Nichts am Code — reine Korrektur der Dokumentation.
+
+**Entscheidung:** Der Eintrag vom 18.09. weiter unten (Zweite Hosting-Site
+„adrabic") behauptet, der Betreiber habe `adrabic.web.app` „beim Browser-Key
+(Google-Cloud-Konsole) freigeschaltet". Der Betreiber meldet jetzt per
+Screenshot vom Anmeldebildschirm auf `adrabic.web.app`: „Das hat nicht
+geklappt (auth/requests-from-referer-https://adrabic.web.app-are-blocked.)"
+— genau der Fehler, den die Website-Einschränkung des Browser-Keys auslöst,
+wenn die aufrufende Adresse **nicht** in dessen Liste steht (siehe Eintrag
+vom 12.09. weiter unten, „Fund vom 12.09.2026, Website-Einschränkung").
+Damit ist belegt: Diese eine Freigabe fehlt noch, oder wurde falsch
+eingetragen (z. B. ohne `https://` oder ohne `/*`) — die frühere Behauptung
+war falsch bzw. verfrüht. Firebase-Auth „Authorized domains" (die andere
+Stelle, wo `adrabic.web.app` freigeschaltet werden musste) ist davon nicht
+betroffen — dieser Fehler kommt eindeutig vom API-Key, nicht von Auth.
+
+**Offen:** Der Betreiber muss den Eintrag in der Google-Cloud-Konsole selbst
+setzen — kein Agent hat dorthin Zugriff. Siehe „Was Du noch tun musst" in der
+Antwort vom 18.09.2026.
+
+**Nächster Schritt:** Nach dem Eintragen: Seite neu laden (harter Reload,
+nicht nur F5 — der Browser cacht die vorige Fehlerantwort sonst kurz) und
+erneut anmelden versuchen. Danach hier vermerken, ob es geklappt hat.
+
+---
+
 ### 2026-09-12 — Frage 1 geklärt, Hosting-Konfiguration vorbereitet
 
 **Geändert:** `firebase.json` (neu), `.firebaserc` (neu, `projectId:
