@@ -126,3 +126,49 @@ kleineren Entscheidung: ob dieser Drei-Punkte-Weg für Adrabic reicht, oder
 ob der Betreiber mehr will (z. B. echte Eltern-Einwilligung statt
 Selbstauskunft). Ändert nichts an B.5 (Datenschutzerklärung muss ergänzt
 werden) — macht den Umfang davon nur kleiner.
+
+**Ausdrückliche Grenze (18.09.2026, Betreiber-Anweisung):** Der Agent gibt
+zu Frage 5 **keine Rechtsberatung** und entscheidet sie nicht — nur
+Beobachtung, was vergleichbare Apps tun, kein „das reicht bei euch auch".
+Der Betreiber will hier „rechtlich sicher sein, dass nichts geschieht" und
+hat den Agenten ausdrücklich gebeten, nur zu warnen, nicht zu empfehlen.
+**Frage 5 bleibt deshalb eine harte Sperre**, bis echter anwaltlicher Rat
+(Fachanwalt Datenschutz/Jugendschutz) eingeholt wurde — nicht, weil der
+Weg aus D falsch wäre, sondern weil das niemand ohne Anwalt final
+entscheiden sollte, solange im Impressum eine reale Person (der Vater des
+Betreibers) dafür haftet.
+
+## E · Entscheidungen aus der Session vom 18.09.2026
+
+Fragen aus C, durchgegangen — einige entschieden, einige bewusst weiter
+offen (kein erzwungenes „irgendwas eintragen"):
+
+- **C1 (Lehrer-Kriterium): entschieden.** Selbsterklärt reicht — wer eine
+  Lektion anlegt und teilt, ist damit „Lehrer" dieser Lektion. Kein
+  Einladungscode, keine Prüfung.
+- **C4 (Teilen-Mechanismus): entschieden, für den Kernablauf A0.** Ein
+  In-App-Link/Code statt nur Datei-Export — Empfänger übernimmt die
+  Lektion direkt ins eigene Konto. Braucht neuen Code und eine neue
+  Firestore-Regel für den geteilten Datensatz (noch nicht entworfen).
+- **C3 (Chat): entschieden.** Im ersten Baustein **nichts** — kein Chat,
+  keine Nachrichten. Bleibt, falls überhaupt, Teil der späteren
+  Ausbaustufe.
+- **C2 (Mit-Admin-Rechte): bewusst weiter offen.** Betreiber hat ehrlich
+  gesagt, dazu noch keine Meinung zu haben — wird nicht erzwungen.
+  Mitgenommener Designhinweis: nicht nach jeder Lektion einen „ganzen
+  Bereich" an Mit-Admins übergeben (Sorge um Übersichtlichkeit/Kapazität)
+  — spricht für einzelne, klar abgegrenzte geteilte Lektionen statt eines
+  wachsenden gemeinsamen Bereichs. Einen Raum löschen, wenn alle
+  einverstanden sind und er nicht mehr gebraucht wird: unstrittig, „geht".
+- **C5 (Minderjährige): nicht entschieden, harte Sperre.** Siehe Kasten
+  oben — braucht echten Rechtsrat, keine Agenten-Empfehlung.
+- **C6 (Zeitpunkt): entschieden.** Fragen jetzt weiter klären (auch über
+  mehrere Sessions), der eigentliche Bau wartet weiter — kein konkreter
+  Starttermin.
+
+**Damit ist der Kernablauf (A0) inhaltlich fast entscheidungsreif** — bis
+auf Frage 5. Ohne eine Antwort darauf (bzw. eine Einschätzung von einer
+tatsächlichen Rechtsquelle) wird **kein** Code für das Teilen von Lektionen
+geschrieben, auch nicht für den kleinen ersten Baustein, weil der laut C4
+schon eine neue Firestore-Regel bräuchte, die fremden Zugriff auf eigene
+Daten ermöglicht — genau der Kern von Frage 5.
