@@ -4,6 +4,28 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-18 — Apple-Login ausdrücklich auf „way later" gestellt, kein Code geändert
+
+**Geändert:** Nichts am Code — `APPLE_LOGIN_BEREIT = false` (`app.js:28`)
+bleibt unverändert, Knopf bleibt hinter dem Flag versteckt.
+
+**Entscheidung:** Betreiber auf Nachfrage („warum ist Apple-Anmeldung
+überhaupt da"): **„apple für way later"** — also nicht zurückziehen/löschen,
+aber auch keine Eile, das Apple-Developer-Konto einzurichten. Der fertige,
+aber inaktive Code (`doAppleLogin()`, Icon, Knopf-Markup hinter dem Flag)
+bleibt deshalb bewusst liegen statt entfernt zu werden — genau das
+Bereitschafts-Muster, das beim Bauen in v3.4.11 schon vorgesehen war.
+
+**Offen:** Apple-Developer-Konto (99$/Jahr) und Provider-Einrichtung in der
+Firebase-Konsole bleiben Betreiber-Aufgabe, ohne Zeitdruck. Siehe
+`../PLAN.md`, offene Frage 13.
+
+**Nächster Schritt:** Keiner an diesem Punkt. Erst wenn der Betreiber das
+Apple-Developer-Konto anlegt und den Provider in Firebase aktiviert, reicht
+`APPLE_LOGIN_BEREIT = true` in `app.js:28` — kein weiterer Code nötig.
+
+---
+
 ### 2026-09-18 — Nach erfolgreichem Login: hängende Ladekreise behoben, Apple-Knopf ausgeblendet (v3.4.11)
 
 **Geändert:**
