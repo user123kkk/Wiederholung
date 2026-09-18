@@ -567,3 +567,51 @@ begleitende Inhaltsänderung in `index.html`/`landing.html` (die `csp-build`-
 Zeile mitzählen) bleiben bereits cachende Besucher:innen sonst wieder auf
 dem alten Stand hängen, unsichtbar für alle Tests mit einem frischen Browser
 oder `curl`/`fetch` ohne Cache.
+
+### 2026-09-18 — Zweite Hosting-Site „adrabic" angelegt (Namens-Umzug, Betreiber-Wunsch)
+
+**Geändert:** `firebase.json` — `hosting` von einem einzelnen Objekt auf ein
+Array mit zwei Einträgen umgebaut, je einer mit `"site": "lernkarte-925c2"`
+und `"site": "adrabic"`. Beide Einträge sind inhaltlich identisch (dieselben
+Rewrites, Cache-Header, CSP) — nur der Name der Ziel-Site unterscheidet sich.
+Kein Eintrag in `.firebaserc` nötig, da `"site"` direkt im Hosting-Eintrag
+steht statt über einen Ziel-Alias (`target`) aufgelöst zu werden.
+
+**Entscheidung:** Der Betreiber wollte weg vom technischen Namen
+`lernkarte-925c2` hin zu `adrabic` — auf Vercel lief die App vorher schon
+unter diesem Namen. Die Firebase-Projekt-ID selbst (`lernkarte-925c2`) lässt
+sich nicht umbenennen, aber Firebase Hosting erlaubt mehrere „Sites" pro
+Projekt, jede mit eigenem Namen und eigener `<name>.web.app`-Adresse. Der
+Betreiber hat `firebase hosting:sites:create adrabic` selbst ausgeführt
+(Terminal-Ausgabe bestätigt: „Site adrabic has been created ... Site URL:
+https://adrabic.web.app") — der Name war noch frei.
+
+Bewusst **beide** Sites im `firebase.json` behalten (Array), nicht nur auf
+`adrabic` umgestellt: `lernkarte-925c2.web.app` könnte schon irgendwo
+verlinkt sein (Bookmarks, alte Testläufe); mit dem Array bleiben beide bei
+jedem `firebase deploy` gleichzeitig aktuell, ohne zwei getrennte
+Deploy-Befehle. `authDomain` in `app.js:10`
+(`lernkarte-925c2.firebaseapp.com`) bleibt unverändert — Firebase-Anmeldung
+hängt nicht am Hosting-Namen, sondern an dieser separaten, projektgebundenen
+Adresse. Deshalb war **keine** CSP-Änderung nötig (die `frame-src`-Regel von
+gestern gilt unverändert weiter).
+
+**Offen — Betreiber-Aufgabe, sonst funktioniert `adrabic.web.app` nur
+teilweise:**
+1. Firebase-Konsole → Authentication → Settings → **Authorized domains** →
+   `adrabic.web.app` hinzufügen. Ohne das: `auth/unauthorized-domain` bei
+   jedem Anmeldeversuch von dort aus.
+2. Google-Cloud-Konsole → APIs und Dienste → Anmeldedaten → der Browser-Key
+   (aus dem Fund vom 12.09.2026, Website-Einschränkung) →
+   `https://adrabic.web.app/*` zur Liste der erlaubten Websites hinzufügen.
+   Ohne das: Firestore/Auth-Aufrufe von `adrabic.web.app` aus werden vom
+   Key selbst blockiert, unabhängig von Firebase-Regeln oder CSP.
+3. Search Console/Sitemap (Phase 7) **nicht** jetzt nötig — nur relevant,
+   falls `adrabic.web.app` die neue öffentlich beworbene Adresse werden
+   soll (dann eigene Property, `robots.txt`/`sitemap.xml` auf die neue
+   Domain anpassen). Bis dahin unverändert auf `lernkarte-925c2.web.app`
+   verweisend, kein Fehlerzustand.
+
+**Nächster Schritt:** Betreiber führt `firebase deploy` aus (deployt jetzt
+automatisch auf beide Sites), erledigt die zwei Punkte oben in den externen
+Konsolen, testet Login und Kartenzugriff unter `https://adrabic.web.app/`.

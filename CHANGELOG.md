@@ -1,3 +1,7 @@
+### Neu (zweite Adresse: adrabic.web.app)
+
+**Die App ist jetzt zusätzlich unter `https://adrabic.web.app/` erreichbar**, neben der bisherigen `lernkarte-925c2.web.app`. Reine Hosting-Konfiguration (`firebase.json`), keine Code-Änderung – deshalb ohne eigene Versionsnummer hier vermerkt. Details und offene Betreiber-Schritte (Authorized Domains, API-Key-Freigabe) in `plan/phase-4-domain-hosting/LOGBUCH.md`, Eintrag 18.09.2026.
+
 ## 3.4.11 – 18. September 2026
 
 ### Behoben (Ladekreise blieben nach abgebrochener Google/Apple-Anmeldung hängen) + Apple-Knopf vorerst ausgeblendet

@@ -1,63 +1,128 @@
 {
-  "hosting": {
-    "public": ".",
-    "rewrites": [
-      {
-        "source": "/",
-        "destination": "/landing.html"
-      }
-    ],
-    "ignore": [
-      "firebase.json",
-      ".firebaserc",
-      "**/.*",
-      "node_modules/**",
-      "plan/**",
-      "KONZEPT.md",
-      "CLAUDE.md",
-      "CHANGELOG.md",
-      "README.md",
-      "veroeffentlichen.bat"
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(js|css)",
-        "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=3600" }
-        ]
-      },
-      {
-        "source": "**/*.@(png|jpg|jpeg|svg|webp|ico)",
-        "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=604800" }
-        ]
-      },
-      {
-        "source": "sw.js",
-        "headers": [
-          { "key": "Cache-Control", "value": "no-cache" }
-        ]
-      },
-      {
-        "source": "**/*.html",
-        "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
-        ]
-      },
-      {
-        "source": "**",
-        "headers": [
-          { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
-          { "key": "X-Content-Type-Options", "value": "nosniff" },
-          { "key": "X-Frame-Options", "value": "DENY" },
-          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-          { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-          {
-            "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' 'sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://apis.google.com; frame-src https://lernkarte-925c2.firebaseapp.com https://apis.google.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
-          }
-        ]
-      }
-    ]
-  }
+  "hosting": [
+    {
+      "site": "lernkarte-925c2",
+      "public": ".",
+      "rewrites": [
+        {
+          "source": "/",
+          "destination": "/landing.html"
+        }
+      ],
+      "ignore": [
+        "firebase.json",
+        ".firebaserc",
+        "**/.*",
+        "node_modules/**",
+        "plan/**",
+        "KONZEPT.md",
+        "CLAUDE.md",
+        "CHANGELOG.md",
+        "README.md",
+        "veroeffentlichen.bat"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css)",
+          "headers": [
+            { "key": "Cache-Control", "value": "public, max-age=3600" }
+          ]
+        },
+        {
+          "source": "**/*.@(png|jpg|jpeg|svg|webp|ico)",
+          "headers": [
+            { "key": "Cache-Control", "value": "public, max-age=604800" }
+          ]
+        },
+        {
+          "source": "sw.js",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "**/*.html",
+          "headers": [
+            { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+          ]
+        },
+        {
+          "source": "**",
+          "headers": [
+            { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
+            { "key": "X-Content-Type-Options", "value": "nosniff" },
+            { "key": "X-Frame-Options", "value": "DENY" },
+            { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+            { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' 'sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://apis.google.com; frame-src https://lernkarte-925c2.firebaseapp.com https://apis.google.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "site": "adrabic",
+      "public": ".",
+      "rewrites": [
+        {
+          "source": "/",
+          "destination": "/landing.html"
+        }
+      ],
+      "ignore": [
+        "firebase.json",
+        ".firebaserc",
+        "**/.*",
+        "node_modules/**",
+        "plan/**",
+        "KONZEPT.md",
+        "CLAUDE.md",
+        "CHANGELOG.md",
+        "README.md",
+        "veroeffentlichen.bat"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css)",
+          "headers": [
+            { "key": "Cache-Control", "value": "public, max-age=3600" }
+          ]
+        },
+        {
+          "source": "**/*.@(png|jpg|jpeg|svg|webp|ico)",
+          "headers": [
+            { "key": "Cache-Control", "value": "public, max-age=604800" }
+          ]
+        },
+        {
+          "source": "sw.js",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "**/*.html",
+          "headers": [
+            { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+          ]
+        },
+        {
+          "source": "**",
+          "headers": [
+            { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
+            { "key": "X-Content-Type-Options", "value": "nosniff" },
+            { "key": "X-Frame-Options", "value": "DENY" },
+            { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+            { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' 'sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://apis.google.com; frame-src https://lernkarte-925c2.firebaseapp.com https://apis.google.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
