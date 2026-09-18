@@ -460,16 +460,25 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Stand 18.09.2026, Abend: Lehrer-Gerüst-Nebenstrang bis zu einer echten
-Sperre durchgearbeitet, App bei v3.5.4.** Der Kernablauf aus
-[`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md) ist inzwischen zweimal
-gebaut: Die Minimalversion (Datei-Export für alle Konten geöffnet, v3.5.2,
-Abschnitt G) und die Komfortversion als Link-Mechanismus, live seit v3.5.3
-(Abschnitt J) — Lektionsinhalt steckt komprimiert im URL-Fragment, keine
-neue Firestore-Sammlung, kein kontoübergreifender Lesezugriff, daher keine
-Berührung mit der weiterhin gesperrten Minderjährigen-Frage (C5/Frage 5 im
-Gerüst). v3.5.4 zieht nur eine liegen gebliebene Bedienungs-Politur am
-Kopieren-Dialog nach (Abschnitt J, Nachtrag).
+**Stand 18.09.2026, Abend: v3.6.0 — Code-basiertes Teilen ist gebaut und getestet,
+Firestore-Regeln sind deployed.** Der Kern-Ablauf aus
+[`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md) ist inzwischen dreimal
+durchgearbeitet:
+
+1. **Minimalversion** (v3.5.2, Abschnitt G): Datei-Export für alle Konten
+2. **Link-Mechanismus** (v3.5.3, Abschnitt J): Lektion komprimiert im URL-Fragment
+   — keine neue Firestore-Sammlung, daher Frage 5 (Minderjährige) strukturell umgangen
+3. **Code-Mechanismus** (v3.6.0, Abschnitte H/I nachgeholt): 10-stelliger 
+   kryptographisch sicherer Code, Lektion in Firestore `geteilteLektionen/{code}`,
+   Widerruf möglich — skaliert bis 3000+ Karten ohne URL-Fragment-Limits
+
+v3.6.0 wurde nach ausdrücklicher Betreiber-Rückmeldung „ich will es seriös haben, 
+ehrlich kein Bock auf 1500-irgendwas Link" aus Link-Teilen zurück zu Code-Teilen 
+(Architektur H aus dem Gerüst, v3.5.2 vorbereitet, jetzt scharf gestellt). 
+Veröffentlichungs-Schritte (`APP_VERSION`, `CACHE_NAME`, `APP_SHELL`, 
+`CHANGELOG.md`) durchgeführt. **Firestore-Regeln wurden am 18.09.2026, 18:15 Uhr 
+vom Betreiber deployed** (`firebase deploy --only "firestore:rules"` erfolgreich, 
+neue Sammlung `geteilteLektionen/{code}` live).
 
 Frühere Stände (Redesign-Strang, Google-Login, Umzug auf `adrabic.web.app`)
 bleiben unverändert `fertig`, siehe „Frühere Lage" unten.

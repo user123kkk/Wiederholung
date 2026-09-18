@@ -566,3 +566,15 @@ Regel sperrt Fremdzugriff nicht, dass es keine Rückmeldungen gibt — die App
 gibt sie schlicht nicht. Für die echte Freigabe (z. B. mit Elterneinwilligung)
 braucht es immer noch echten Rechtsrat — diese Änderung ist reine Technik-
 Verbesserung des schon akzeptierten Modells.
+
+**Nachgetragen (18.09.2026, 18:15 Uhr): Firestore-Regeln live deployed.**
+Der Code stand seit dem `51cb5a0`-Commit im Repo, war aber ohne den
+`firebase deploy`-Schritt tot (`permission-denied` bei jedem Versuch). Fehlte
+zusätzlich: `firebase.json` hatte gar keinen `firestore`-Eintrag, nur
+`hosting` — der Deploy-Befehl lief ins Leere, bis
+`{"firestore": {"rules": "firestore.rules"}}` ergänzt wurde. Danach lief
+`firebase deploy --only "firestore:rules"` (Anführungszeichen nötig, da
+PowerShell den Doppelpunkt sonst als Parameter-Trenner liest) erfolgreich
+durch: `+ firestore: released rules firestore.rules to cloud.firestore`.
+Code-basiertes Teilen ist damit **end-to-end scharf**, nicht mehr nur
+Code-Review-Stand.
