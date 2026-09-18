@@ -22,23 +22,28 @@ angetastet — sie wird an kleineren Karten verwendet, wo der Effekt nicht
 gemeldet wurde, und ist ein geteiltes Systemmuster. Mit Playwright
 gegengeprüft (Screenshot der isolierten `.stapel`-Kachel).
 
-**Offen:** Zweiter Punkt aus derselben Rückmeldung, noch nicht angefasst:
-Die Navigationsleiste (Lernen/Fortschritt/Verwalten) wirkt auf
-Betreiber-Screenshots je nach Reiter unterschiedlich hoch/positioniert —
-auf „Lernen" schwebt sie mit sichtbarem Abstand nach unten, auf
-„Fortschritt"/„Verwalten" wirkt sie eher am unteren Rand angeklebt. Sehr
-wahrscheinlich dasselbe bekannte, bisher unbestätigte Phänomen wie
-Beobachtung 13 (dynamische Safari-Symbolleiste, die beim Scrollen ein-/
-ausklappt und dabei `position: fixed`-Elemente verschiebt) — aber auch
-plausibel ein reiner Aufnahme-Zeitpunkt-Unterschied (Screenshot nach
-Scrollen vs. direkt nach Tab-Wechsel), kein Code-Fehler. Bewusst NICHT
-blind gepatcht, bevor das unterschieden ist — siehe Rückfrage an den
-Betreiber im Chat.
+**Zweiter Punkt geprüft, kein Fehler:** Die Navigationsleiste wirkte auf
+Betreiber-Screenshots je nach Reiter unterschiedlich — auf „Lernen"
+freischwebend mit Abstand, auf „Fortschritt"/„Verwalten" eher angeklebt.
+Betreiber bestätigt: kein Scrollen vorher, tritt sofort beim Tab-Wechsel
+auf — die Beobachtung-13-Theorie (dynamische Safari-Symbolleiste) damit
+ausgeschlossen. Mit zwei Playwright-Testseiten nachgebaut (kurzer Inhalt
+wie „Lernen" vs. eine 15 Zeilen lange Liste wie „Verwalten", identisches
+`.nav`-Markup): **`.nav`-Position ist in beiden Fällen pixelgleich**
+(`getBoundingClientRect`: top/bottom/height identisch). Der Unterschied
+ist rein optisch — der Weichzeichner (`backdrop-filter: blur(20px)`,
+`styles.css:634`) zeigt bei einer Liste direkt dahinter sichtbar
+durchscheinenden Text (z. B. „Karte 14" unter dem „Lernen"-Reiter), was
+die Leiste flacher/angeklebt wirken lässt; über leerem Hintergrund liest
+sie sich klar freischwebend. Screenshots beider Fälle im Chat belegt.
 
-**Nächster Schritt:** Antwort abwarten, ob der Unterschied auch OHNE
-vorheriges Scrollen auftritt. Falls ja: `.nav`-Positionierung
-(`styles.css:621-637`) genauer untersuchen. Falls nein: kein Fehler,
-Eintrag hier als „geprüft, nichts zu tun" schließen.
+**Offen:** Keine Entscheidung getroffen, ob die Nav-Deckkraft deswegen
+erhöht werden soll (weniger Durchscheinen, aber auch weniger „Glas") —
+wartet auf Betreiber-Rückmeldung, ob der jetzt erklärte Effekt so bleiben
+darf oder abgeschwächt werden soll.
+
+**Nächster Schritt:** Bei Bedarf `--surface 82%` in `styles.css:633`
+anheben (z. B. auf 90–92%), sonst Punkt als erledigt schließen.
 
 ---
 
