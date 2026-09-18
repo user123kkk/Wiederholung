@@ -1,3 +1,7 @@
+## 3.6.7 – 18. September 2026
+
+**Beobachtung 18: Vorzeichenfehler im v3.6.6-Fix korrigiert.** Betreiber-Test zeigte: `.nav` rutschte mit dem Fix noch weiter nach oben statt sich zu korrigieren (`nav.top` 736 → 688). Ursache: `--vv-gap` wurde addiert statt subtrahiert – bei zu kleinem `innerHeight` muss `bottom` kleiner werden, nicht größer, damit die Leiste in den ungemeldeten Rest des Bildschirms hineinreicht. Diagnose selbst war richtig (mit Messwerten belegt), nur die Formel falsch herum.
+
 ## 3.6.6 – 18. September 2026
 
 **Beobachtung 18, echte Ursache gefunden (mit Messwerten, nicht Vermutung):** Debug-Overlay zeigte: `window.innerHeight` liefert in der Home-Bildschirm-App unterschiedliche Werte für denselben Bildschirm – 848px bei nicht-scrollbarem Inhalt ("Lernen"), 896px bei scrollbarem Inhalt ("Fortschritt"), 48px Differenz. `visualViewport.height` zeigt denselben falschen Wert, mein v3.6.3-Fix konnte das also nicht erfassen. `.nav` positionierte sich relativ zum jeweils gemeldeten (manchmal zu kleinen) Wert – daher der Sprung.

@@ -627,11 +627,14 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   position: fixed; z-index: var(--z-nav);
   left: calc(var(--space-3) + var(--sal));
   right: calc(var(--space-3) + var(--sar));
-  /* --vv-gap (app.js, syncViewportGap): gleicht aus, dass die Adressleiste
-     mobiler Browser beim Scrollen ein-/ausklappt und "position: fixed"
-     sich dabei nicht zuverlaessig auf denselben Bildschirmausschnitt
-     bezieht (Beobachtung 18, zweiter Anlauf). 0px ohne JS (Fallback). */
-  bottom: calc(var(--vv-gap, 0px) + var(--space-3) + var(--sab));
+  /* --vv-gap (app.js, syncViewportGap): window.innerHeight liefert in der
+     Home-Bildschirm-App bei manchen Bildschirmen einen zu KLEINEN Wert -
+     dann muss bottom kleiner werden (die Leiste "reicht weiter nach unten"
+     in den ungemeldeten Rest des Bildschirms hinein), deshalb MINUS, nicht
+     PLUS. Mit Messwerten belegt: erster Versuch (Beobachtung 18, dritter
+     Anlauf) hatte das Vorzeichen vertauscht und den Sprung verschlimmert.
+     0px ohne JS (Fallback). */
+  bottom: calc(var(--space-3) + var(--sab) - var(--vv-gap, 0px));
   border-radius: var(--r-xl);
   border: 1px solid var(--border);
   /* Kraeftiger als die alte Leiste: Sie liegt jetzt UEBER dem Inhalt statt
