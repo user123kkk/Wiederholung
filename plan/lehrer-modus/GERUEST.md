@@ -76,3 +76,28 @@ haftet der Vater des Betreibers), und bricht die heutige Firestore-Grundannahme
 Solange Frage 1 (und in ihrer Konsequenz 5) offen ist, bleibt dieser Strang
 `zurückgestellt` — wie bei `monetarisierung/GERUEST.md` gilt: kein Bau, bis
 der Betreiber einen Punkt ausdrücklich startet.
+
+## D · Wie vergleichbare Apps Frage 5 lösen (Quizlet, Kahoot, Google
+    Classroom) — Betreiber-Einwand vom 18.09.2026: „viele Apps kriegen das
+    hin", zu Recht. Kein Sonderfall, den Adrabic allein lösen müsste:
+
+1. **Alterserklärung statt Alterskontrolle.** Bei Registrierung eine
+   Selbstauskunft („Ich bin mindestens 16" bzw. das jeweils geltende
+   Mindestalter für Einwilligung ohne Eltern, DSGVO Art. 8 in DE = 16). Die
+   App muss das nicht überprüfen, nur einholen — anerkannte Praxis, kein
+   Graubereich.
+2. **Verantwortung geht vertraglich an den Raumbesitzer.** Nutzungsbedingungen
+   sagen sinngemäß: „Wer minderjährige Mitglieder in einen Raum aufnimmt,
+   ist selbst für eine gültige Einwilligung verantwortlich." Adrabic holt
+   sie nicht ein, dokumentiert aber in der Datenschutzerklärung, dass die
+   Funktion existiert und was sie speichert.
+3. **Datensparsamkeit statt breiter Zugriff.** Ein Raum speichert nur
+   Mitgliedschaft + geteilte Kartensätze — nicht automatisch den privaten
+   Lernfortschritt jedes Mitglieds. Das verkleinert auch B.2
+   (Firestore-Regeln) spürbar gegenüber der ersten Einschätzung.
+
+Damit verschiebt sich Frage 5 von „ob überhaupt lösbar" zu einer konkreten,
+kleineren Entscheidung: ob dieser Drei-Punkte-Weg für Adrabic reicht, oder
+ob der Betreiber mehr will (z. B. echte Eltern-Einwilligung statt
+Selbstauskunft). Ändert nichts an B.5 (Datenschutzerklärung muss ergänzt
+werden) — macht den Umfang davon nur kleiner.
