@@ -1,3 +1,13 @@
+## 3.5.4 – 18. September 2026
+
+### Geändert (Blätter wegwischen + zwei echte Funde beim Nachprüfen)
+
+**Betreiber-Rückmeldung:** Das Helligkeits-Blatt in den Einstellungen ließ sich nur über „Fertig" schließen, nicht durch Wegwischen wie ein natives Blatt – und ausdrücklich mit der Bitte, das nicht nur an diesem einen Beispiel zu beheben. Beim Nachprüfen bestätigt: Der Griff oben an jedem Blatt (`.dlg::before`) war seit jeher rein optisch, ohne Funktion. Jetzt lässt sich am Griffbereich (obere ~28px) nach unten wegwischen – erkannt über dasselbe `data-action`, das der Hintergrund schon trägt: alle Blätter, die per Hintergrund-Klick schließen (Bereichs-Sheet, „Mehr"-Blatt, Karten-Detail, Helligkeit, Kartenart), reagieren jetzt auch aufs Wegwischen. Karten-Formular und Eingabe-Dialoge bleiben bewusst ausgenommen – dieselbe Begründung wie beim fehlenden Hintergrund-Klick dort (`app.js`, `renderDialog`): eine angefangene Eingabe wäre sonst zu leicht aus Versehen weg.
+
+**Zwei zusätzliche Funde beim genaueren Hinsehen, nicht nur das genannte Beispiel:** (1) Helligkeits- und Kartenart-Blatt ließen sich per Tastatur nicht mit Escape schließen, nur über „Fertig" oder Hintergrund-Klick – dieselbe Inkonsequenz, die für das Bereichs-Sheet schon am 13.09. behoben wurde (v3.0.25), hier aber bei zwei jüngeren Blättern (Block 10, v3.4.3) erneut aufgetreten. (2) Die Bereichs-Pille oben links – der meistbenutzte Knopf der App – hatte noch dieselbe unrunde, symmetrische Druck-Kurve wie alle Knöpfe vor v3.5.3; jetzt scharf rein, federnd zurück wie der Rest.
+
+Mit einer eigenständigen Playwright-Testseite (Struktur wie das echte `.dlg`-Muster, ohne Firebase-Login) gegen drei Fälle geprüft: großer Wisch vom Griff schließt, kleiner Wisch nicht, ein Wisch aus dem Inhalt (nicht vom Griff) löst nichts aus. Kein Gerätetest – reine Desktop-/Emulator-Prüfung.
+
 ## 3.5.3 – 18. September 2026
 
 ### Geändert (Knopf-Druckgefühl: scharf rein, federnd zurück)

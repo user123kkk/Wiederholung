@@ -4,6 +4,54 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-18 — Blätter wegwischen, zwei echte Funde beim Nachprüfen (v3.5.4)
+
+**Geändert:**
+- `app.js`, `document.addEventListener("keydown", ...)`: `ui.wahlSheet` und
+  `ui.setArtSheetId` schließen jetzt auch über Escape (waren vergessen,
+  dieselbe Lücke wie beim Bereichs-Sheet vor v3.0.25).
+- `app.js`, neuer Block nach `wischEnde`/`pointerup`/`pointercancel`
+  (Kartenschwung): `sheetWisch`, drei neue delegierte Pointer-Listener an
+  `app` (`pointerdown`/`pointermove`/`pointerup`/`pointercancel`). Zieht man
+  vom Griffbereich (obere ~28px eines `.dlg`) nach unten, folgt das Blatt dem
+  Finger; ab 90px Zug schließt es (200ms raus, danach `backdrop.click()` —
+  dieselbe Schließ-Aktion wie ein echter Hintergrund-Klick, kein zweiter
+  Aktions-Pfad neben dem einen delegierten Klick-Listener aus der README).
+  Erkennung, ob ein Blatt überhaupt wegwischbar ist, über
+  `backdrop.dataset.action` — fehlt es oder ist es `"nichts"`
+  (Karten-Formular, `renderDialog`), passiert nichts.
+- `styles.css:596-608` (`.bereich-pill`): Druck-Transition auf dasselbe
+  Muster wie `button:active` (v3.5.3) umgestellt — scharfe `--ease-out` beim
+  Reindrücken, `--ease-spring` beim Loslassen. War beim ersten Durchgang
+  übersehen, weil die Pille eine eigene, spezifischere Regel als der
+  generische `button`-Selektor trägt.
+
+**Entscheidung:** Betreiber-Rückmeldung zum ersten Schritt (v3.5.3) war
+ausdrücklich: nicht nur das genannte Beispiel (Helligkeits-Blatt) ausbessern,
+sondern wirklich nachsehen, wo die App sich noch „nicht clean" anfühlt.
+Beim Nachsehen zwei zusätzliche, nicht genannte Funde entdeckt statt nur den
+einen Punkt zu patchen: die fehlende Escape-Behandlung und die
+inkonsistente Bereichs-Pille (Letztere stand schon als „offen" im
+vorherigen Logbuch-Eintrag). Bewusst nach demselben Prinzip wie der
+Kartenschwung gebaut (eigener `pointerdown/move/up`-Block, keine zweite
+Delegation) und bewusst nur für Blätter aktiviert, die schon per
+Hintergrund-Klick schließen — die Form-Blätter haben diesen Schutz mit
+gutem Grund (Eingabe-Verlust beim Verwischen) und bleiben unangetastet.
+
+**Offen:** Kein Gerätetest — geprüft mit einer eigenständigen
+Playwright-Testseite (dasselbe `.dlg`-Markup/CSS nachgebaut, ohne
+Firebase-Login, da Blätter wie Helligkeit nur nach Anmeldung erreichbar
+sind) gegen drei Fälle: großer Wisch vom Griff schließt, kleiner Wisch
+nicht, Wisch aus dem Inhalt (nicht vom Griff) löst nichts aus. Echtes
+Touch-Gerät stand nicht zur Verfügung.
+
+**Nächster Schritt:** Betreiber-Test am echten Handy (Wegwischen UND
+normales Scrollen/Tippen im Blattinhalt dürfen sich nicht in die Quere
+kommen). Weitere „nicht clean"-Stellen, falls welche auffallen, einzeln
+nachreichen statt in einem Rutsch.
+
+---
+
 ### 2026-09-18 — Knopf-Druckgefühl: scharf rein, federnd zurück (v3.5.3)
 
 **Geändert:** `styles.css:805-811` — `button`-Basisregel: `transform`-Transition

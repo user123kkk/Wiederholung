@@ -595,13 +595,16 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   cursor: pointer; touch-action: manipulation;
   transition: background var(--dur-fast) var(--ease-out),
               border-color var(--dur-fast) var(--ease-out),
-              transform var(--dur-instant) var(--ease-out);
+              transform var(--dur-fast) var(--ease-spring);
 }
 .bereich-pill span {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .bereich-pill .i { color: var(--text-3); width: 16px; height: 16px; }
-.bereich-pill:active { transform: scale(0.97); }
+/* Gleiches Muster wie bei button:active oben: scharf rein, federnd zurück -
+   dieser Knopf steht auf jedem Bildschirm oben links und war beim
+   Druckgefühl bisher nicht auf demselben Stand. */
+.bereich-pill:active { transform: scale(0.97); transition: transform var(--dur-instant) var(--ease-out); }
 
 /* ---- Navigation ---------------------------------------------------------
    EIN Block, zwei Erscheinungen: unten am Handy, links am Desktop. Die

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.5.3";
+const APP_VERSION = "3.5.4";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4205,6 +4205,59 @@ function wischEnde(e) {
 app.addEventListener("pointerup", wischEnde);
 app.addEventListener("pointercancel", wischEnde);
 
+/* Der Griff oben an jedem Blatt (.dlg::before, styles.css) zeigt seit jeher
+   an, dass hier von unten etwas gekommen ist - bisher rein optisch, ohne
+   dass sich daran tatsächlich etwas wegziehen ließ. Nachgebaut nach
+   demselben Muster wie der Kartenschwung oben: nur Blätter, deren Hinter-
+   grund schon per Klick schliesst (bereich-sheet, bereich-mehr, card-
+   detail, wahl-sheet, set-art-sheet), reagieren auch aufs Wegwischen -
+   erkannt am selben data-action, den der Hintergrund trägt. Das Karten-
+   Formular und die Eingabe-Dialoge (renderDialog) haben absichtlich keinen
+   Hintergrund-Klick (siehe dort: eine angefangene Eingabe wäre sonst zu
+   leicht aus Versehen weg) und bleiben deshalb genauso absichtlich vom
+   Wegwischen ausgenommen. */
+let sheetWisch = null;
+app.addEventListener("pointerdown", e => {
+  const dlg = e.target.closest(".dlg");
+  if (!dlg) return;
+  if (e.target.closest("button, a, input, textarea, select")) return;
+  const griffzone = dlg.getBoundingClientRect().top + 28; // Griff + etwas Luft
+  if (e.clientY > griffzone) return;
+  const backdrop = dlg.closest(".dlg-backdrop");
+  const action = backdrop && backdrop.dataset.action;
+  if (!action || action === "nichts") return;
+  sheetWisch = { y: e.clientY, dlg, backdrop, id: e.pointerId, erfasst: false };
+});
+app.addEventListener("pointermove", e => {
+  if (!sheetWisch || e.pointerId !== sheetWisch.id) return;
+  const dy = e.clientY - sheetWisch.y;
+  if (!sheetWisch.erfasst) {
+    if (dy < 6) return;
+    sheetWisch.erfasst = true;
+    sheetWisch.dlg.setPointerCapture(e.pointerId);
+    sheetWisch.dlg.style.transition = "none";
+  }
+  e.preventDefault();
+  sheetWisch.dlg.style.transform = "translateY(" + Math.max(0, dy) + "px)";
+});
+function sheetWischEnde(e) {
+  if (!sheetWisch || e.pointerId !== sheetWisch.id) return;
+  const { dlg, backdrop, y, erfasst } = sheetWisch;
+  sheetWisch = null;
+  if (!erfasst) return;
+  const dy = Math.max(0, e.clientY - y);
+  if (dy >= 90) {
+    dlg.style.transition = "transform 200ms var(--ease-out)";
+    dlg.style.transform = "translateY(100%)";
+    setTimeout(() => backdrop.click(), 160);
+  } else {
+    dlg.style.transition = "transform var(--dur-fast) var(--ease-spring)";
+    dlg.style.transform = "";
+  }
+}
+app.addEventListener("pointerup", sheetWischEnde);
+app.addEventListener("pointercancel", sheetWischEnde);
+
 /* Zählt eine Zahl von 0 hoch, statt sie einfach dastehen zu haben - für
    "Diese Woche im Vergleich" im Fortschritt-Tab. dataset.countedTo merkt
    sich den zuletzt angezeigten Wert: ändert er sich nicht (jedes render()
@@ -7641,6 +7694,12 @@ document.addEventListener("keydown", e => {
   if (ui.bereichSheet) { ui.bereichSheet = false; render(); }
   if (ui.bereichMehr) { ui.bereichMehr = false; render(); }
   if (ui.cardDetailId) { ui.cardDetailId = null; render(); }
+  /* 18.09.2026: dieselbe Inkonsequenz wie beim Bereichs-Sheet oben, hier bei
+     zwei jüngeren Blättern (Helligkeit/Kartenart, Block 10, v3.4.3) wieder
+     eingeschlichen - Escape schloss sie nicht, nur "Fertig" oder ein Klick
+     auf den Hintergrund. */
+  if (ui.wahlSheet) { ui.wahlSheet = null; render(); }
+  if (ui.setArtSheetId) { ui.setArtSheetId = null; render(); }
 });
 
 /* ---------- Fehlerformular-Modal ---------- */
