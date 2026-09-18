@@ -72,11 +72,11 @@ jede Regel-Änderung **nicht automatisch aktiv** — `firebase.json` hat keinen
 GitHub"). Der Betreiber muss sie manuell in der Firebase-Konsole einspielen,
 genau wie beim ersten Mal in Phase 1.
 
-**Nächster Schritt:** Betreiber spielt die neue `firestore.rules` in der
-Firebase-Konsole ein (Firestore Database → Regeln → Inhalt ersetzen →
-Publish). Danach alle drei betroffenen Einstellungen testen — Farbe,
-Schriftgröße, Sitzungslimit — nicht nur die zuerst gemeldete Farbe. Ergebnis
-hier vermerken.
+**Nächster Schritt:** ~~Betreiber spielt die neue `firestore.rules` in der
+Firebase-Konsole ein~~ — erledigt. Betreiber hat die Regel in der
+Firebase-Konsole veröffentlicht, danach in der App die Farbe umgeschaltet:
+läuft wieder, „Cloud nicht erreichbar" kommt nicht mehr. Kein weiterer
+Schritt offen.
 
 ---
 
