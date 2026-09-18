@@ -218,5 +218,12 @@ Der Agent soll diese Fragen in `plan/PLAN.md` sammeln und **nicht selbst beantwo
 ## 7. Was dieses Dokument ausdrücklich nicht will
 
 - Keine Punkte abarbeiten, nur weil sie in einer Liste standen. Drei der fünf Videos zielen auf Server-Apps mit eigener Datenbank und eigenem API — dieses Projekt ist etwas anderes.
-- Keine Funktionen des Tools anfassen. Es geht um Fundament, Recht und Außenseite, nicht um die App selbst.
+- Funktionen des Tools bleiben tabu — mit einer dauerhaften Ausnahme, vom
+  Betreiber am 18.09.2026 entschieden (vormals offene Frage 6 in
+  `plan/PLAN.md`): Bedienung und Optik dürfen für **Design- und
+  Verbesserungszwecke** angefasst werden, solange es echte Verbesserung ist
+  und **nichts komplett verändert** — keine Neuerfindung einer Funktion,
+  kein Ersatz einer Mechanik durch eine andere. Die Lernlogik selbst (was
+  gelernt, geübt und wie bewertet wird) bleibt davon ausgenommen und damit
+  weiterhin tabu.
 - Keine Phase überspringen, weil sie klein aussieht. Auch „trifft nicht zu" wird aufgeschrieben — sonst prüft die nächste Session es erneut.

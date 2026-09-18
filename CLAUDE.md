@@ -29,8 +29,11 @@ steht: ins Logbuch schreiben, nicht bauen.
 
 Weiter gilt durchgehend (Konzept-Abschnitt 7):
 
-- Keine Funktion des Lernwerkzeugs anfassen. Es geht um Fundament, Recht und
-  Außenseite.
+- Keine Funktion des Lernwerkzeugs anfassen — mit einer dauerhaften Ausnahme
+  seit 18.09.2026 (Betreiber-Entscheidung, `KONZEPT.md` §7,
+  `plan/PLAN.md` offene Frage 6): Bedienung/Optik dürfen für **Design- und
+  Verbesserungszwecke** angefasst werden, solange nichts komplett verändert
+  wird. Die Lernlogik selbst bleibt tabu.
 - Nichts wieder einbauen, was bewusst entfernt wurde. **Der Code ist
   maßgeblich, nicht ältere Dokumente** — auch nicht `KONZEPT.md`, wo es vom
   Code abweicht.
