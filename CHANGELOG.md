@@ -1,3 +1,17 @@
+## 3.6.0 – 18. September 2026
+
+### Geändert (Code-basiertes Teilen – Rückfall von Link-Teilen, wegen Skalierbarkeit)
+
+**Die Version 3.5.3 führte Link-basiertes Teilen ein, bei dem der ganze Kartensatz im URL-Fragment komprimiert mitgegeben wird.** Diese Architektur stößt ab ca. 1000–1500 Karten an ihre Grenze (URLs sind in der Praxis auf 2000–8000 Zeichen begrenzt, abhängig von Browser und Messenger); für größere Sätze funktioniert das Teilen dann gar nicht mehr, weil die Größenwarnung allein das Problem nicht löst – der Fragment muss kürzer werden, nicht nur die Warnung prägnanter.
+
+**Jetzt zurück zu Code-basiertem Teilen (Abschnitt H aus `plan/lehrer-modus/GERUEST.md`, vorbereitet in 3.5.2):** Der Sender erzeugt einen kurzen, kryptographisch sicheren 10-stelligen Code (z. B. `2AKB3-DQMN7`), und die Lektion wird in Firestore unter diesem Code gespeichert. Der Code ist die einzige Zugriffsschranke – wer ihn kennt, kann lesen. Das skaliert bis 3000+ Karten ohne Größenlimit und ist strukturell nicht invasiv: keine langen URLs, keine Fragment-Garbage im Browser-Verlauf, keine Abhängigkeit von Link-Fähigkeiten in Messengern. Ein neuer Versuch mit demselben Code durch eine andere Person wirkt sich nicht aus (jeder Zugriff ist individuell, nur der Code wird geteilt). Widerruf ist anders als beim Link-Fragment möglich – der Sender kann den Code jederzeit per Klick wieder löschen.
+
+**Abhängigkeiten:** Neue Firestore-Sammlung `geteilteLektionen/{code}` mit Regel in `firestore.rules` (ownerUid prüfung, inhalt muss map sein). Außerdem Rückkehr zur beständigen Zustandsverwaltung über `teilCode` im Bereichsdokument statt ephemerer URL-Teile – dient der Verwaltung von aktiven Codes, damit nicht aus Versehen mehrere Codes für denselben Bereich entstehen.
+
+**UI:** Beide Knöpfe nutzen jetzt denselben Dialog-Typ `code-share` mit Copy-Button und Rückmeldung (von 3.5.4 borrowed). Alte Link-URLs mit `#teilen=` zeigen eine deprecation notice, Link-Teilen ist nicht mehr aktiv.
+
+**Hintergrund:** Skalierbarkeit ist ein Prinzip dieses Werkzeugs (PRINZIPIEN.md, Video 6 „für viele für immer"); bis zur vorigen Version war der Lehrer-Modus an dieser Stelle als nicht skalierbar aufgefallen. Die Wahl eines anderen Mechanismus ist kein Rückschritt, sondern eine Korrektur auf Basis echter Datengrenzen.
+
 ## 3.5.4 – 18. September 2026
 
 ### Geändert (Link-Teilen-Dialog: Kopieren mit Rückmeldung)

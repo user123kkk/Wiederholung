@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.5.4";
+const APP_VERSION = "3.6.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -893,7 +893,8 @@ let ladeLangsam = false;
    lange bevor ein Nutzer eingeloggt ist. Verarbeitet wird er erst, sobald
    bereiche geladen sind (siehe teilLinkPruefen in initFirebase). null,
    sobald erledigt oder abgelehnt - sonst fragt jeder Re-Render erneut. */
-let ausstehenderTeilLink = leseTeilLinkAusHash();
+/* Wird nicht mehr benoetigt: Code-basiertes Teilen hat keine URL-Fragment-Links */
+// let ausstehenderTeilLink = leseTeilLinkAusHash();
 /* E8: Merkt sich, ob GERADE der Ladebildschirm steht - siehe render(). Ohne
    das trifft der Wechsel zur echten App die Blüten-Animation an einem
    zufälligen Punkt ihres Zyklus und schneidet sie hart ab; das sah nach
@@ -2805,116 +2806,121 @@ async function dekomprimiere(bytes, warKomprimiert) {
   return new TextDecoder().decode(buf);
 }
 
-async function teileLektionLink() {
+function genTeilCode() {
+  /* Absichtlich kryptographisch zufaellig, nicht genId(): der Code ist hier
+     die einzige Zugriffsschranke (wer ihn kennt, kann lesen), nicht nur eine
+     Dokument-Nummer. Math.random() waere fuer diesen Zweck zu schwach. */
+  const ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"; // ohne 0/O/1/I - keine Verwechslung
+  const bytes = new Uint8Array(10);
+  crypto.getRandomValues(bytes);
+  let code = "";
+  for (const b of bytes) code += ALPHABET[b % ALPHABET.length];
+  return code.slice(0, 5) + "-" + code.slice(5);
+}
+
+async function teileLektionCode() {
   const b = currentBereich();
   if (!(await weitergabeMoeglich(b))) return;
-  const lektionen = lektionenVon(b);
-  const ohneLektion = b.karten.filter(c => !lektionen.some(s => s.cardIds.indexOf(c.id) !== -1)).length;
-  const eigeneAnzahl = (b.sets || []).filter(s => (s.art || "eigen") === "eigen").length;
+  if (b.teilCode) {
+    await dlgAlert('„' + b.name + '" wird schon über den Code ' + b.teilCode + ' geteilt. ' +
+      'Erst „Teilen beenden", dann neu teilen.', "Schon aktiv");
+    return;
+  }
   const version = (b.satzVersion || 0) + 1;
   const ok = await dlgConfirm(
-    b.karten.length + ' Karten, ' + lektionen.length + ' Lektionen. Nur „' + lektionen[0].name + '" ist offen, der Rest kommt gesperrt an.' +
-    (ohneLektion > 0 ? '\n\nAchtung: ' + ohneLektion + ' Karte(n) liegen in keiner Lektion. Die bleiben beim Empfänger für immer gesperrt.' : '') +
-    (eigeneAnzahl > 0 ? '\n\n' + eigeneAnzahl + ' eigene Speicherkarte(n) bleiben zu Hause – weitergegeben werden nur Kategorien und Lektionen.' : '') +
-    '\n\nDer Link trägt den ganzen Inhalt in sich – es gibt keinen Widerruf, genau wie bei einer verschickten Datei.' +
-    '\n\nDas wird Veröffentlichung Nr. ' + version + '.',
-    { title: "Link zum Teilen erzeugen", okLabel: "Link erzeugen" });
+    'Erzeugt einen Code, über den jede:r mit dem Code diese Lektion in die eigene App übernehmen kann - ' +
+    'ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.',
+    { title: "Per Code teilen", okLabel: "Code erzeugen" });
   if (!ok) return;
 
   if (!b.satzId) b.satzId = slugName(b.name) + "-" + genId();
   b.satzVersion = version;
-  patchDoc({ [pfadBereich(b.id) + ".satzId"]: b.satzId, [pfadBereich(b.id) + ".satzVersion"]: version });
-
-  const json = JSON.stringify({ bereiche: [baueWeitergabeBereich(b, version)] });
-  const { kompr, bytes } = await komprimiere(json);
-  const fragment = (kompr ? "gz" : "raw") + "." + bytesZuBase64Url(bytes);
-
-  if (fragment.length > TEIL_LINK_MAX_ZEICHEN) {
-    render();
-    const ok = await dlgConfirm(
-      '„' + b.name + '" mit ' + b.karten.length + ' Karten ergibt einen Link mit ' + fragment.length + ' Zeichen. ' +
-      'Das funktioniert, wird aber in Messengern schwer zu kopieren. Trotzdem teilen?',
-      { title: "Link wird sehr lang", okLabel: "Trotzdem teilen" });
-    if (!ok) return;
-  }
-
-  const link = location.origin + location.pathname + "#teilen=" + fragment;
-  render();
-  zeigeTeileLink(link);
-}
-
-/* Wird schon beim Laden der Seite aufgerufen (siehe ausstehenderTeilLink),
-   lange bevor bereiche geladen sind - deshalb nur PARSEN, nicht verarbeiten.
-   Kein console.log/Fehlerdialog hier: eine falsch kopierte oder alte URL
-   ist ein Normalfall, kein Grund, den Start zu unterbrechen. */
-function leseTeilLinkAusHash() {
-  const h = location.hash || "";
-  const marker = "#teilen=";
-  if (!h.startsWith(marker)) return null;
-  const fragment = h.slice(marker.length);
-  const punkt = fragment.indexOf(".");
-  if (punkt < 0) return null;
-  const art = fragment.slice(0, punkt);
-  if (art !== "gz" && art !== "raw") return null;
-  return { kompr: art === "gz", codiert: fragment.slice(punkt + 1) };
-}
-/* Verarbeitet einen beim Start gefundenen Teilen-Link genau einmal, sobald
-   ein Konto eingeloggt UND bereiche geladen sind (verarbeiteImportDaten
-   braucht beides). Aufgerufen aus dem onSnapshot-Erfolgspfad in
-   initFirebase(). Raeumt den Hash danach weg, damit ein Neuladen oder
-   Zurueck-Navigieren nicht denselben Import wiederholt. */
-async function teilLinkPruefenUndVerarbeiten() {
-  if (!ausstehenderTeilLink) return;
-  const eintrag = ausstehenderTeilLink;
-  ausstehenderTeilLink = null; // sofort loeschen: kein zweiter Aufruf durch einen weiteren Re-Render
-  history.replaceState(null, "", location.pathname + location.search);
-  let json;
+  const code = genTeilCode();
+  b.teilCode = code;
+  patchDoc({
+    [pfadBereich(b.id) + ".satzId"]: b.satzId,
+    [pfadBereich(b.id) + ".satzVersion"]: version,
+    [pfadBereich(b.id) + ".teilCode"]: code
+  });
   try {
-    json = await dekomprimiere(base64UrlZuBytes(eintrag.codiert), eintrag.kompr);
+    await fb.setDoc(fb.doc(db, "geteilteLektionen", code), {
+      ownerUid: currentUser.uid,
+      erstelltAm: new Date().toISOString(),
+      inhalt: { bereiche: [baueWeitergabeBereich(b, version)] }
+    });
   } catch (e) {
-    await dlgAlert("Dieser Teilen-Link lässt sich nicht lesen (beschädigt oder unvollständig kopiert).", "Link ungültig");
+    await dlgAlert("Fehler beim Speichern des Codes: " + (e && e.message ? e.message : e), "Fehler");
     return;
   }
-  let data;
-  try { data = JSON.parse(json); } catch (e) {
-    await dlgAlert("Dieser Teilen-Link lässt sich nicht lesen (beschädigt oder unvollständig kopiert).", "Link ungültig");
+  render();
+  zeigeTeileCode(code);
+}
+
+async function beendeTeilenCode() {
+  const b = currentBereich();
+  if (!b.teilCode) return;
+  const code = b.teilCode;
+  const ok = await dlgConfirm("Der Code " + code + " funktioniert danach nicht mehr.",
+    { title: "Teilen beenden?", okLabel: "Beenden", danger: true });
+  if (!ok) return;
+  b.teilCode = null;
+  patchDoc({ [pfadBereich(b.id) + ".teilCode"]: fb.deleteField() });
+  try { await fb.deleteDoc(fb.doc(db, "geteilteLektionen", code)); } catch (e) {}
+  render();
+}
+
+async function codeEinloesenStart() {
+  const code = await dlgPrompt("Code eingeben (von der Person, die geteilt hat):", "",
+    { title: "Code einlösen", okLabel: "Einlösen" });
+  if (!code || !code.trim()) return;
+  await codeEinloesen(code.trim().toUpperCase());
+}
+
+async function codeEinloesen(code) {
+  let snap;
+  try {
+    snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code));
+  } catch (e) {
+    await dlgAlert("Konnte den Code nicht prüfen: " + (e && e.message ? e.message : e), "Fehler");
     return;
   }
-  const ok = await dlgConfirm("Über einen Link wurde dir eine Lektion angeboten. Jetzt in dein Konto übernehmen?",
+  if (!snap.exists()) {
+    await dlgAlert("Diesen Code gibt es nicht (mehr). Prüf die Schreibweise, oder frag noch einmal nach.", "Code ungültig");
+    return;
+  }
+  const ok = await dlgConfirm("Über einen Code wurde dir eine Lektion angeboten. Jetzt in dein Konto übernehmen?",
     { title: "Geteilte Lektion", okLabel: "Übernehmen" });
   if (!ok) return;
-  await verarbeiteImportDaten(data);
-}
-/* Rueckweg fuer den Fall, dass ein Link nicht direkt angetippt wurde
-   (siehe Hinweis am Knopf "Link einlösen" in renderEinstellungenSeite). */
-async function linkEinloesenStart() {
-  const eingabe = await dlgPrompt("Kompletten Link (oder nur den Teil nach „#teilen=“) einfügen:", "",
-    { title: "Link einlösen", okLabel: "Einlösen" });
-  if (!eingabe || !eingabe.trim()) return;
-  const text = eingabe.trim();
-  const marker = "#teilen=";
-  const idx = text.indexOf(marker);
-  const fragment = idx >= 0 ? text.slice(idx + marker.length) : text;
-  const punkt = fragment.indexOf(".");
-  if (punkt < 0 || (fragment.slice(0, punkt) !== "gz" && fragment.slice(0, punkt) !== "raw")) {
-    await dlgAlert("Das sieht nicht wie ein gültiger Teilen-Link aus.", "Nicht erkannt");
-    return;
-  }
-  ausstehenderTeilLink = { kompr: fragment.slice(0, punkt) === "gz", codiert: fragment.slice(punkt + 1) };
-  await teilLinkPruefenUndVerarbeiten();
+  await verarbeiteImportDaten(snap.data().inhalt);
 }
 
-/* Zeigt den geteilten Link mit Copy-Button und Feedback. */
-async function zeigeTeileLink(link) {
+/* Zeigt den erzeugten Code mit Copy-Button und Feedback. */
+async function zeigeTeileCode(code) {
   await new Promise(resolve => {
     ui.dialog = {
-      kind: "link-share",
-      title: "Link zum Teilen",
-      link: link,
+      kind: “code-share”,
+      title: “Code zum Teilen”,
+      code: code,
       resolve: resolve
     };
     render();
   });
+}
+
+/* ---------- Deprecated: Link-basiertes Teilen (v3.5.x) - wird nicht mehr genutzt ----------
+   Falls noch URLs mit #teilen= im Umlauf sind, diese Funktionen als Stubs beibehalten.
+   Der Code-basierte Ansatz ist skalierbar (bis 3000+ Karten) und nicht invasiv. */
+
+async function teileLektionLink() {
+  await dlgAlert(“Link-basiertes Teilen ist nicht mehr verfügbar. “ +
+    “Bitte nutze stattdessen das neue Code-System – klick 'Per Code teilen' in den Einstellungen.”,
+    “Link-System depreciert”);
+}
+
+async function linkEinloesenStart() {
+  await dlgAlert(“Link-basiertes Teilen ist nicht mehr verfügbar. “ +
+    “Bitte frag die Person, die dir die Lektion zeigen will, nach einem aktuellen Code.”,
+    “Link-System depreciert”);
 }
 
 /* ---------- 2.5.0: Nachschub für einen vorhandenen Kartensatz ----------
@@ -5598,18 +5604,26 @@ function renderEinstellungenSeite(id) {
         ' Kartensatz zum Weitergeben</button>';
       html += '</div></div>';
 
-      /* Lehrer-Modus, Kernablauf - siehe teileLektionLink() in app.js und
-         plan/lehrer-modus/GERUEST.md, Abschnitt J. Anders als der frühere
-         Code-Entwurf braucht das keine neue Firestore-Regel und funktioniert
-         schon heute. */
+      /* Lehrer-Modus, Kernablauf - siehe teileLektionCode() in app.js und
+         plan/lehrer-modus/GERUEST.md, Abschnitt H. Code-basiertes Teilen skaliert
+         bis 3000+ Karten und ist nicht invasiv – kein URL-Fragment, nur kurze Codes. */
       html += '<div class="card" style="margin-top:var(--stack)">';
-      html += '<h3>Per Link teilen</h3>';
-      html += '<p class="hint">Der Link trägt die Lektion in sich – kein Konto beim Empfänger nötig, ' +
-        'um ihn zu öffnen, aber zum Übernehmen schon. Kein Widerruf möglich, genau wie bei einer Datei.</p>';
-      html += '<div class="form-actions">';
-      html += '<button class="secondary" data-action="teile-lektion-link">' + ikon("teilen", "i-sm") +
-        ' Link erzeugen</button>';
-      html += '</div></div>';
+      html += '<h3>Per Code teilen</h3>';
+      if (b.teilCode) {
+        html += '<p class="hint">Aktiver Code: <strong>' + esc(b.teilCode) + '</strong>. ' +
+          'Jede:r mit diesem Code kann die Lektion übernehmen, ohne dass du davon erfährst.</p>';
+        html += '<div class="form-actions">';
+        html += '<button class="secondary danger" data-action="beende-teilen-code">Teilen beenden</button>';
+        html += '</div>';
+      } else {
+        html += '<p class="hint">Erzeugt einen kurzen Code, über den jede:r mit dem Code diese Lektion ' +
+          'in die eigene App übernehmen kann – ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.</p>';
+        html += '<div class="form-actions">';
+        html += '<button class="secondary" data-action="teile-lektion-code">' + ikon("teilen", "i-sm") +
+          ' Code erzeugen</button>';
+        html += '</div>';
+      }
+      html += '</div>';
     }
     return html;
   }
@@ -5623,16 +5637,12 @@ function renderEinstellungenSeite(id) {
       ' Datei auswählen</button>';
     html += '</div></div>';
 
-    /* Normalfall: ein angetippter Teilen-Link öffnet die Seite direkt mit
-       dem Fragment und fragt von selbst (siehe teilLinkPruefenUndVerarbeiten).
-       Dieser Knopf ist der Rückweg, falls der Link woanders ankam, z.B.
-       kopiert statt angetippt. */
     html += '<div class="card" style="margin-top:var(--stack)">';
-    html += '<h3>Link einlösen</h3>';
-    html += '<p class="hint">Falls ein geteilter Link nicht von selbst gefragt hat: hier einfügen.</p>';
+    html += '<h3>Code einlösen</h3>';
+    html += '<p class="hint">Der Code einer geteilten Lektion – einfach eingeben und Lektion übernehmen.</p>';
     html += '<div class="form-actions">';
-    html += '<button class="secondary" data-action="link-einloesen-start">' + ikon("einspielen", "i-sm") +
-      ' Link einfügen</button>';
+    html += '<button class="secondary" data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
+      ' Code eingeben</button>';
     html += '</div></div>';
     return html;
   }
@@ -7679,9 +7689,9 @@ function renderDialog() {
   h += '<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-title">';
   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
 
-  if (d.kind === "link-share") {
-    h += '<p class="dlg-text" id="dlg-text">Klick „Kopieren" oder wähle den Link:</p>';
-    h += '<code style="display:block; word-break:break-all; padding:var(--space-3); background:var(--surface-raised); border-radius:var(--r-sm); font-size:0.9em; overflow-y:auto; max-height:120px">' + esc(d.link) + '</code>';
+  if (d.kind === "code-share") {
+    h += '<p class="dlg-text" id="dlg-text">Klick „Kopieren" oder wähle den Code:</p>';
+    h += '<code style="display:block; word-break:break-all; padding:var(--space-3); background:var(--surface-raised); border-radius:var(--r-sm); font-size:0.9em; overflow-y:auto; max-height:120px; text-align:center; letter-spacing:2px; font-weight:bold">' + esc(d.code) + '</code>';
   } else {
     h += '<div class="dlg-text" id="dlg-text">' + esc(d.text) + '</div>';
   }
@@ -7693,9 +7703,9 @@ function renderDialog() {
     h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" aria-labelledby="dlg-text" value="' + esc(d.value) + '">';
   }
   h += '<div class="dlg-actions">';
-  if (d.kind === "link-share") {
+  if (d.kind === "code-share") {
     h += '<button class="secondary" data-action="dlg-ok">Fertig</button>';
-    h += '<button data-action="link-copy-clipboard">Kopieren</button>';
+    h += '<button data-action="code-copy-clipboard">Kopieren</button>';
   } else {
     if (d.kind !== "alert") h += '<button class="secondary" data-action="dlg-cancel">Abbrechen</button>';
     h += '<button' + (d.danger ? ' class="danger"' : '') + ' data-action="dlg-ok">' + esc(d.okLabel) + '</button>';
@@ -7946,6 +7956,21 @@ document.body.addEventListener("click", e => {
     case "remove-from-set": removeCardFromSet(btn.dataset.set, btn.dataset.id); break;
     case "dlg-ok": if (ui.dialog) closeDialog(dialogResult(ui.dialog, true)); break;
     case "dlg-cancel": if (ui.dialog) closeDialog(dialogResult(ui.dialog, false)); break;
+    case "code-copy-clipboard":
+      if (ui.dialog && ui.dialog.code) {
+        navigator.clipboard.writeText(ui.dialog.code).then(() => {
+          btn.textContent = "✓ Kopiert!";
+          btn.disabled = true;
+          setTimeout(() => {
+            btn.textContent = "Kopieren";
+            btn.disabled = false;
+            render();
+          }, 2000);
+        }).catch(() => {
+          dlgAlert("Konnte nicht in die Zwischenablage kopieren.", "Fehler");
+        });
+      }
+      break;
     case "link-copy-clipboard":
       if (ui.dialog && ui.dialog.link) {
         navigator.clipboard.writeText(ui.dialog.link).then(() => {
@@ -7975,8 +8000,11 @@ document.body.addEventListener("click", e => {
     case "export-backup": exportBackup(false); break;
     case "export-backup-current": exportBackup(true); break;
     case "export-weitergabe": exportWeitergabe(); break;
-    case "teile-lektion-link": teileLektionLink(); break;          // GERUEST.md Abschnitt J
-    case "link-einloesen-start": linkEinloesenStart(); break;
+    case "teile-lektion-code": teileLektionCode(); break;          // GERUEST.md Abschnitt H
+    case "beende-teilen-code": beendeTeilenCode(); break;
+    case "code-einloesen-start": codeEinloesenStart(); break;
+    case "teile-lektion-link": teileLektionLink(); break;          // GERUEST.md Abschnitt J (deprecated)
+    case "link-einloesen-start": linkEinloesenStart(); break;      // deprecated
     case "streak-fortsetzen": streakFortsetzen(); break;
     case "verlauf-reset": verlaufZuruecksetzen(); break;
     case "karte-merken": karteMerken(btn.dataset.id); break;

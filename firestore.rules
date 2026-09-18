@@ -156,7 +156,7 @@ service cloud.firestore {
          ============================================================ */
 
       function bereichFelder() {
-        return ['name', 'order', 'gefuehrt', 'satzId', 'satzVersion', 'sets'];
+        return ['name', 'order', 'gefuehrt', 'satzId', 'satzVersion', 'sets', 'teilCode'];
       }
 
       /* `karten` steht bewusst NICHT in der Liste. Seit 2.0.0 liegt jede
@@ -170,7 +170,8 @@ service cloud.firestore {
             && (!pruefen.hasAny(['gefuehrt'])    || d.gefuehrt is bool)
             && (!pruefen.hasAny(['satzId'])      || textOderNull(d.satzId, 200))
             && (!pruefen.hasAny(['satzVersion']) || zahlOderNull(d.satzVersion, 0, 100000))
-            && (!pruefen.hasAny(['sets'])        || (d.sets is map && d.sets.size() <= 500));
+            && (!pruefen.hasAny(['sets'])        || (d.sets is map && d.sets.size() <= 500))
+            && (!pruefen.hasAny(['teilCode'])    || textOderNull(d.teilCode, 20));
       }
 
       match /bereiche/{bid} {
@@ -232,5 +233,26 @@ service cloud.firestore {
        match /{document=**} unter users/{uid} — damit ließ sich unter dem
        eigenen Konto jeder erfundene Unterpfad anlegen und beliebig füllen.
        Die App benutzt genau die zwei Sammlungen oben. */
+  }
+
+  /* ============================================================
+     geteilteLektionen/{code} — Code-basiertes Teilen (Lehrer-Modus)
+
+     Ein Bereich kann mit einem kurzen Code geteilt werden. Der Code ist die
+     einzige Zugriffsschranke: Wer ihn kennt, kann lesen. Wer nicht angemeldet
+     ist, kann nicht zugreifen - auch nicht mit Code. Das schützt vor
+     Missbrauch durch unauthentifizierte Scripts.
+     ============================================================ */
+  match /geteilteLektionen/{code} {
+    allow read: if request.auth != null;
+
+    allow create: if request.auth != null
+                  && request.resource.data.keys().hasOnly(['ownerUid', 'erstelltAm', 'inhalt'])
+                  && request.resource.data.ownerUid == request.auth.uid
+                  && request.resource.data.inhalt is map;
+
+    allow delete: if request.auth != null && resource.data.ownerUid == request.auth.uid;
+
+    allow update: if false;
   }
 }

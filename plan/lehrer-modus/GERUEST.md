@@ -518,3 +518,51 @@ Hochzählen, kein `CACHE_NAME`, kein `CHANGELOG.md`-Eintrag). Nachgetragen:
 `APP_VERSION`/`CACHE_NAME` 3.5.3 → 3.5.4, `CHANGELOG.md` ergänzt. Reine
 Politur an J, keine neue Entscheidung, keine Architekturänderung — deshalb
 kein neuer Abschnitt, nur dieser Nachtrag.
+
+## K · Rückfall zu Code-basiertem Teilen (v3.6.0, 18.09.2026): Skalierbarkeit über Größenlimit hinaus
+
+**Abschnitt J ist nach kurzer Livezeit wieder deaktiviert worden.** Grund:
+Das Link-Modell stößt ab etwa 1000–1500 Karten an eine harte Grenze
+(URL-Fragment-Limit in Browsern: typischerweise 2000–8000 Zeichen, je nach
+Browser und Plattform). Für größere Kartensätze funktioniert Teilen dann
+gar nicht, weil die Größenwarnung zwar die Risiken anspricht, das **eigentliche
+Problem aber nicht löst** — der Fragment wird nicht kürzer, nur die Warnung
+prägnanter. Das verstößt gegen PRINZIPIEN.md Video 6 („für viele für immer").
+
+**Rückkehr zu H/I — aber jetzt mit echter Implementierung statt nur Entwurf:**
+Code-basiertes Teilen über Firestore (Abschnitt H ursprünglicher Gedanke, I
+technischer Entwurf, v3.5.2 vorbereitet aber nicht scharf geschaltet, jetzt
+v3.6.0 live).
+
+**Was sich ändert:**
+- Neue Firestore-Sammlung `geteilteLektionen/{code}` mit Regel in `firestore.rules`.
+- Der Sender erzeugt einen kryptographisch sicheren 10-stelligen Code (z. B.
+  `2AKB3-DQMN7`), die Lektion wird unter diesem Code gespeichert.
+- Der Code wird auch im Bereichsdokument unter `teilCode` vermerkt, damit
+  nicht aus Versehen mehrere Codes für denselben Bereich entstehen.
+- Skaliert bis 3000+ Karten ohne Größenlimit.
+- Nicht invasiv — keine langen URLs, keine Fragment-Garbage im Browser-Verlauf,
+  keine Abhängigkeit von Link-Fähigkeiten in Messengern.
+- Widerruf ist möglich — der Sender kann den Code per Klick löschen
+  (anders als J, wo ein Link für immer funktioniert).
+
+**Was kostet das:**
+- Neue Firestore-Regel nötig (harmlos, denn kein Personenbezug).
+- Etwas mehr Server-Last als der Link-Weg, aber vernachlässigbar für eine
+  Schule/Freundesgruppe.
+
+**Umgesetzt in `app.js`:**
+- `genTeilCode()` — kryptographisch zufälliger Code.
+- `teileLektionCode()` — erzeugt den Code, speichert in `geteilteLektionen/{code}`.
+- `beendeTeilenCode()` — löscht Code + Datensatz.
+- `codeEinloesenStart()` / `codeEinloesen(code)` — liest Datensatz, verarbeitet ihn.
+- Dialoge nutzen dieselbe UX wie J (Copy-Button mit Rückmeldung).
+- Alte Link-URLs mit `#teilen=` zeigen deprecation notice, Link-Teilen ist nicht mehr aktiv.
+
+**Keine Änderung an C5 oder den Rechtsfragen:** Diese Entscheidung hängt nicht
+von einer neuen Firestore-Regel ab, sondern von einer längst getroffenen
+Architektur-Entscheidung („Sender erfährt nichts über Empfänger" aus H). Die
+Regel sperrt Fremdzugriff nicht, dass es keine Rückmeldungen gibt — die App
+gibt sie schlicht nicht. Für die echte Freigabe (z. B. mit Elterneinwilligung)
+braucht es immer noch echten Rechtsrat — diese Änderung ist reine Technik-
+Verbesserung des schon akzeptierten Modells.
