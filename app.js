@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.4";
+const APP_VERSION = "3.6.5";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5567,8 +5567,8 @@ function einstFuss() {
   html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
   html += '<a href="./impressum.html">Impressum</a>';
   html += '</div>';
-  html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-4)">' +
-    'Adrabic ' + APP_VERSION + '</p>';
+  html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-4)" ' +
+    'data-action="debug-version-tap">Adrabic ' + APP_VERSION + '</p>';
   return html;
 }
 
@@ -7646,10 +7646,15 @@ if (window.visualViewport) {
 syncViewportGap();
 
 /* Beobachtung 18: Messwerkzeug fuer die noch ungeklaerte springende Nav-
-   Leiste, nur mit ?debug=nav sichtbar. Wird entfernt, sobald die Ursache
-   gefunden ist. */
-if (new URLSearchParams(location.search).get("debug") === "nav") {
+   Leiste. Eine als Home-Bildschirm-App installierte PWA startet immer mit
+   der eigenen start_url, ein ?debug=nav in der Adresse geht beim Start
+   verloren - deshalb zusaetzlich per localStorage (7x Tap auf die
+   Versionsnummer unten in Einstellungen, siehe debugVersionTap()) und ohne
+   Reload aktivierbar. Wird entfernt, sobald die Ursache gefunden ist. */
+function zeigeNavDebugOverlay() {
+  if (document.getElementById("nav-debug-box")) return;
   const box = document.createElement("div");
+  box.id = "nav-debug-box";
   box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;" +
     "background:rgba(0,0,0,0.85);color:#0f0;font:11px monospace;padding:8px;" +
     "white-space:pre-wrap;pointer-events:none;";
@@ -7679,6 +7684,23 @@ if (new URLSearchParams(location.search).get("debug") === "nav") {
   window.addEventListener("scroll", updateDebugBox);
   if (window.visualViewport) window.visualViewport.addEventListener("resize", updateDebugBox);
   setInterval(updateDebugBox, 500);
+}
+if (new URLSearchParams(location.search).get("debug") === "nav" ||
+    localStorage.getItem("debugNav") === "1") {
+  zeigeNavDebugOverlay();
+}
+/* Siebenmal auf die Versionsnummer tippen (einstFuss()) aktiviert das
+   Overlay dauerhaft (localStorage), unabhaengig von der Start-URL. */
+let debugTapCount = 0, debugTapTimer = null;
+function debugVersionTap() {
+  debugTapCount++;
+  clearTimeout(debugTapTimer);
+  debugTapTimer = setTimeout(() => { debugTapCount = 0; }, 2000);
+  if (debugTapCount >= 7) {
+    debugTapCount = 0;
+    localStorage.setItem("debugNav", "1");
+    zeigeNavDebugOverlay();
+  }
 }
 
 /* ---------- D2 (1.8.0): eigene Dialoge ----------
@@ -7906,6 +7928,7 @@ document.body.addEventListener("click", e => {
       ui.setArtSheetId = null; render(); break;
     case "set-art-waehlen":
       setArtAendern(ui.setArtSheetId, btn.dataset.id); break;
+    case "debug-version-tap": debugVersionTap(); break;
     case "resend-verification": doResendVerification(); break;
     case "verification-check": pruefeBestaetigung(); break;
     case "import-old": importOldProfile(btn.dataset.name); break;

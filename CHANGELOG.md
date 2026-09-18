@@ -1,3 +1,7 @@
+## 3.6.5 – 18. September 2026
+
+Debug-Overlay (Beobachtung 18) auch ohne URL-Parameter aktivierbar: 7× auf die Versionsnummer in Einstellungen tippen. Grund: eine installierte Home-Bildschirm-App startet immer mit ihrer eigenen `start_url`, `?debug=nav` ging dabei verloren.
+
 ## 3.6.1 – 3.6.4 – 18. September 2026
 
 ### Kritischer Fix + laufende Diagnose einer springenden Navigationsleiste
