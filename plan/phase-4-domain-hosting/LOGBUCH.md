@@ -26,7 +26,32 @@ dasselbe noch einmal.
 
 ## Einträge
 
-### 2026-09-18 — Zweites Symptom derselben Ursache: „permission-denied" beim Speichern (Farbe/Thema) auf adrabic.web.app
+### 2026-09-18 — Korrektur: „permission-denied" beim Farbumschalten war NICHT der Browser-Key
+
+**Geändert:** Nichts hier — die eigentliche Änderung (`firestore.rules`) und
+der volle Befund stehen jetzt in
+[`phase-1-datenzugriff/LOGBUCH.md`](../phase-1-datenzugriff/LOGBUCH.md)
+(Eintrag „Echte Ursache: `sitzungsLimit` fehlt seit v3.0.27 in
+`firestore.rules`"), weil es ein Datenzugriffs-/Regel-Thema ist, kein
+Hosting-Thema.
+
+**Entscheidung:** Der Eintrag direkt unten (gleicher Tag) hatte den Fehler
+voreilig derselben Browser-Key-Freigabe zugeschrieben wie den Login-Fehler
+weiter unten in diesem Logbuch. Gemeinsam mit dem Betreiber Schritt für
+Schritt geprüft und **widerlegt**: Website-Einschränkung enthält
+`https://adrabic.web.app/*`, „Cloud Firestore API" ist erlaubt, der
+Regel-Text in der Firebase-Konsole ist zeichengleich mit dem Repo-Stand,
+Ab-/Wieder-Anmelden half nicht. Der entscheidende Test war: Kartenspeichern
+funktionierte, nur das Einstellungs-Dokument nicht — das führte zum echten
+Fund in Phase 1.
+
+**Offen:** Nichts hier — siehe Phase-1-Logbuch.
+
+**Nächster Schritt:** Siehe Phase-1-Logbuch.
+
+---
+
+### 2026-09-18 — Zweites Symptom derselben Ursache (Vermutung, siehe Korrektur oben): „permission-denied" beim Speichern (Farbe/Thema) auf adrabic.web.app
 
 **Geändert:** Nichts am Code — geprüft, nicht gebaut.
 

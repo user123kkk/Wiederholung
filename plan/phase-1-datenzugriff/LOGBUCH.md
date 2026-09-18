@@ -26,6 +26,60 @@ dasselbe noch einmal.
 
 ## Einträge
 
+### 2026-09-18 — Echte Ursache: `sitzungsLimit` fehlt seit v3.0.27 in `firestore.rules` — jeder Einstellungs-Speichervorgang schlug fehl
+
+**Geändert:** [`firestore.rules`](../../firestore.rules), `settingsOk()`
+(vormals Zeile 119-125): `sitzungsLimit` zur erlaubten Feldliste hinzugefügt,
+Wert geprüft als Zahl 1–100000 **oder** der String `"alle"` (Firestore-Regeln
+kennen keine Vereinigungstypen, daher zwei Bedingungen mit `||`).
+
+**Entscheidung:** Betreiber meldete „Cloud nicht erreichbar
+(permission-denied)" beim Umschalten der Farbe auf `adrabic.web.app`.
+Erst falsch vermutet (siehe korrigierter Eintrag in
+`phase-4-domain-hosting/LOGBUCH.md`), dass die Browser-Key-Website-
+Einschränkung fehlt — gemeinsam mit dem Betreiber widerlegt: Website-Liste
+enthält `https://adrabic.web.app/*`, „Cloud Firestore API" ist im Key
+erlaubt, der Regel-Text in der Firebase-Konsole ist zeichengleich mit dem
+Repo-Stand, Ab-/Wieder-Anmelden (frischer Ausweis) half nicht.
+
+Entscheidender Eingrenzungs-Test: Eine Karte bearbeiten und speichern
+funktionierte, das Einstellungs-Dokument weiterhin nicht. Das grenzt den
+Fehler auf `users/{uid}`, Feld `settings`, ein — nicht auf Anmeldung oder
+Verbindung allgemein.
+
+Fund: `normSettings()` in [`app.js:844-861`](../../app.js#L844) baut seit
+**v3.0.27 (15.09.2026, „Sitzungslängen-Begrenzung")** ein viertes Feld
+`sitzungsLimit` in das Einstellungs-Objekt (Zahl 10/20/30 oder der String
+`"alle"`, siehe `SITZUNGS_LIMITS`). `persistSettings()` schreibt das
+`settings`-Objekt bei jeder Änderung **vollständig** neu, nicht nur das
+geänderte Teilfeld (Kommentar bei `settingsOk` in `firestore.rules`:
+„schreibt das Feld immer als Ganzes neu" — bewusst so, damit kein Altfeld
+liegen bleibt). Die Regel selbst kannte zu dem Zeitpunkt aber nur die drei
+Felder aus der Zeit vor v3.0.27 (`arabGroesse`, `lastBackup`, `thema`) —
+`sitzungsLimit` wurde bei der Einführung am 15.09. nicht in
+`firestore.rules` nachgezogen. Seitdem lehnt `settingsOk()` das komplette
+`settings`-Objekt ab, sobald es das unbekannte vierte Feld enthält — und das
+ist bei jedem Speichervorgang der Fall, nicht nur beim Farbumschalten:
+Schriftgröße und das Sitzungslimit selbst sind genauso betroffen. Der Fehler
+besteht seit v3.0.27 (15.09.2026), also seit drei Tagen, unabhängig von
+`adrabic.web.app` — er wäre auf `lernkarte-925c2.web.app` genauso
+aufgetreten, ist dort nur nicht bemerkt worden.
+
+**Offen:** `firestore.rules` liegt jetzt korrigiert im Repo, ist aber wie
+jede Regel-Änderung **nicht automatisch aktiv** — `firebase.json` hat keinen
+`firestore`-Abschnitt, ein `firebase deploy` spielt Regeln also nie ein
+(siehe Eintrag unten, „Firestore holt sich firestore.rules nicht aus
+GitHub"). Der Betreiber muss sie manuell in der Firebase-Konsole einspielen,
+genau wie beim ersten Mal in Phase 1.
+
+**Nächster Schritt:** Betreiber spielt die neue `firestore.rules` in der
+Firebase-Konsole ein (Firestore Database → Regeln → Inhalt ersetzen →
+Publish). Danach alle drei betroffenen Einstellungen testen — Farbe,
+Schriftgröße, Sitzungslimit — nicht nur die zuerst gemeldete Farbe. Ergebnis
+hier vermerken.
+
+---
+
 ### 2026-09-12 — Punkt 4 (XSS): jede Einsetzung geprüft, nichts zu tun
 
 **Geändert:** nichts. Reine Prüfung.

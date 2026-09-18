@@ -118,10 +118,13 @@ service cloud.firestore {
        nicht stehenbleiben und den nächsten Schreibvorgang blockieren. */
     function settingsOk(s) {
       return s is map
-        && s.keys().hasOnly(['arabGroesse', 'lastBackup', 'thema'])
-        && (!('arabGroesse' in s) || text(s.arabGroesse, 20))
-        && (!('thema' in s)       || text(s.thema, 20))
-        && (!('lastBackup' in s)  || datumOderNull(s.lastBackup));
+        && s.keys().hasOnly(['arabGroesse', 'lastBackup', 'thema', 'sitzungsLimit'])
+        && (!('arabGroesse' in s)   || text(s.arabGroesse, 20))
+        && (!('thema' in s)         || text(s.thema, 20))
+        && (!('lastBackup' in s)    || datumOderNull(s.lastBackup))
+        /* sitzungsLimit ist entweder eine Zahl (10/20/30 in der Oberflaeche)
+           oder der String "alle" - siehe SITZUNGS_LIMITS in app.js. */
+        && (!('sitzungsLimit' in s) || s.sitzungsLimit == 'alle' || zahl(s.sitzungsLimit, 1, 100000));
     }
 
     /* VERLAUF_TAGE ist 120; die App räumt Älteres selbst weg
