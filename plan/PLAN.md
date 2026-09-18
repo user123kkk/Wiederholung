@@ -2,7 +2,7 @@
 
 Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
-Zuletzt geändert: 17. September 2026 (Block 10 verifiziert)
+Zuletzt geändert: 18. September 2026 (Google-Login bestätigt, Umzug auf adrabic.web.app)
 
 ---
 
@@ -437,7 +437,8 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Stand 17.09.2026: Redesign-Strang komplett durch.** Block 10 (Sichtbare
+**Stand 18.09.2026: Redesign-Strang komplett durch, Frage 12 und 13 beide
+geklärt, Umzug auf `adrabic.web.app` abgeschlossen.** Block 10 (Sichtbare
 Wahl statt Klappliste, v3.4.3) ist am echten Handy bestätigt („passt") —
 Stufenbereich beim Üben (Chip-Reihe, zwei Tipps markieren den Bereich) und
 Art der Speicherkarte (Auswahl-Blatt statt Klappliste je Zeile) funktionieren
@@ -445,14 +446,23 @@ wie vorgesehen. Damit sind **alle zehn Blöcke** aus
 [`redesign-oberflaeche/AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md) `fertig`
 und am echten Handy verifiziert; der Strang **ruht**.
 
+Seit dem letzten Stand zusätzlich abgeschlossen: Google-Login (Frage 13) ist
+seit v3.4.10/3.4.11 am echten Gerät bestätigt funktionierend, Apple bleibt
+absichtlich hinter einem Flag versteckt (fehlendes Apple-Developer-Konto).
+Die App läuft jetzt kanonisch unter **`https://adrabic.web.app`** (zweite
+Firebase-Hosting-Site, v3.4.12) statt `lernkarte-925c2.web.app` — Search
+Console, `robots.txt`/`sitemap.xml` und alle kanonischen/OG-Angaben sind
+umgezogen und vom Betreiber bestätigt. Phase 4 und Phase 7 bleiben `fertig`.
+
 **Es gibt aktuell keinen aktiven, unblockierten Codepunkt mehr.** Was noch
 offen ist, hängt an Betreiber-Entscheidungen, nicht an Bau-Arbeit:
 
-- Offene Frage 12 (Farben: Hintergrund heller, Knopf-Hover nicht mehr reines
-  Weiß?) und Frage 13 (Anmelden mit Google/Apple?) — siehe Tabelle oben.
 - Strang A, Punkt 2.4 (Marke oder Person) — Identitätsfrage.
 - „Später"-Punkte: Lehrer-/Schülermodus mit Klassenräumen, eigene
   Domain-Erweiterung, Abo/Bezahlfunktion, App Check, App-/Play-Store.
+- Alte Firebase-Hosting-Site `lernkarte-925c2.web.app` könnte irgendwann
+  abgeschaltet werden, sobald `adrabic.web.app` sich etabliert hat — kein
+  Blocker, reine Aufräumfrage für später.
 
 Eine neue Session prüft zuerst, ob der Betreiber inzwischen eine dieser
 Fragen beantwortet oder eine neue Schwachstelle genannt hat (z. B. über
@@ -556,4 +566,6 @@ mangels Gerät nicht zur Verfügung.
 | 2026-09-17 | **Echter Fund, unabhängig von jeder Phase: Schreibfehler nach veraltetem Anmelde-Ausweis behoben** (v3.4.5). Betreiber meldete "Nicht gespeichert: … (permission-denied)". Ursache: Die Sicherheitsregeln prüfen die bestätigte E-Mail am ID-Token, nicht direkt am Konto — bis zu eine Stunde nach dem Bestätigen kann der Ausweis im Browser veraltet sein. Fürs Laden gab es dafür seit 2.11.4 schon eine automatische Erneuerung, fürs Schreiben fehlte dieselbe Behandlung. Jetzt erneuert `saveFehler()` bei `permission-denied` einmal je Sitzung den Ausweis (ohne Reload, um ein offenes Formular nicht zu verlieren) und zeigt eine ruhigere Meldung statt der Backup-Warnung. Betrifft Datenzugriff/Auth (Phase-1-Themenkreis), keine Lernwerkzeug-Funktion im engeren Sinn. |
 | 2026-09-17 | **Offene Frage 12 geklärt und umgesetzt** (v3.4.4). Betreiber: „ja fürs erste" für die Farbänderung, Frage 13 (Google/Apple) bleibt zurückgestellt. `--ink-900` (dunkler Hintergrund) `#08080a` → `#0e0e12`; `--accent-hover` von festem `#ffffff` auf `color-mix(in srgb, var(--accent) 85%, white 15%)` — dabei einen Nebenbefund korrigiert (heller Thema sprang beim Knopf-Hover unbemerkt auf reines Weiß). Im Browser geprüft (`getComputedStyle`, Screenshot). |
 | 2026-09-17 | **Block 10 am echten Handy verifiziert.** Beide Prüfpunkte (Stufenbereich beim Üben, Art der Speicherkarte) vom Betreiber bestätigt („passt"). Damit sind alle zehn Blöcke des Redesign-Strangs `fertig`; der Strang ruht, bis eine neue Schwachstelle genannt wird oder offene Fragen 12/13 entschieden sind. |
+| 2026-09-17/18 | **Offene Frage 13 umgesetzt und am Gerät bestätigt** (v3.4.6–3.4.11). Google-Anmeldung über Firebase-Auth-Popup ergänzt (v3.4.6), Apple-Knopf hinter Flag `APPLE_LOGIN_BEREIT` versteckt, da ein kostenpflichtiges Apple-Developer-Konto fehlt (v3.4.11). Drei CSP-Nachbesserungen bis der Google-Login wirklich durchlief: fehlendes `frame-src` (v3.4.8), fehlendes `apis.google.com` in `script-src`/`connect-src`/`frame-src` (v3.4.9), und die eigentliche Ursache für die anhaltende Fehlermeldung trotz korrigierter CSP — ein `304 Not Modified` aktualisiert beim Browser gespeicherte Antwort-Header nicht, weshalb bereits cachende Besucher:innen auf der alten CSP festsaßen; behoben mit einer Merkzeile (`csp-build`) in `index.html`/`landing.html`, die bei reinen `firebase.json`-Änderungen einen neuen Datei-Fingerabdruck erzwingt (v3.4.10). Seit 18.09.2026 am echten Gerät bestätigt funktionierend. Details in `phase-4-domain-hosting/LOGBUCH.md` und `redesign-oberflaeche/LOGBUCH.md`. |
+| 2026-09-18 | **Zweite Hosting-Site „adrabic" angelegt und zur kanonischen Adresse gemacht.** Betreiber wollte weg vom technischen Namen `lernkarte-925c2` hin zu `adrabic` (wie zuvor auf Vercel). `firebase.json` liefert jetzt beide Firebase-Hosting-Sites gleichzeitig aus (`lernkarte-925c2` und `adrabic`, identische Konfiguration); `authDomain`/`projectId` in `app.js` bleiben unverändert, da an die Firebase-Projekt-ID gebunden, nicht an den Hosting-Namen. Betreiber hat `adrabic.web.app` selbst als Authorized Domain (Firebase Auth) und beim Browser-Key (Google-Cloud-Konsole) freigeschaltet. Danach kanonische Adresse überall auf `adrabic.web.app` umgestellt (v3.4.12): `robots.txt`, `sitemap.xml`, `<link rel="canonical">`/`og:url` in `landing.html`/`impressum.html`/`datenschutzerklaerung.html`. Neue Google-Search-Console-Property für `https://adrabic.web.app` angelegt, verifiziert (dieselbe `google-site-verification`-Meta-Tag, kontogebunden statt pro Property) und `sitemap.xml` dort eingereicht; alte Property `lernkarte-925c2.web.app` entfernt. Phase 4 und Phase 7 bleiben `fertig` — kein neuer Blocker, nur die kanonische Adresse hat sich geändert. Details in `phase-4-domain-hosting/LOGBUCH.md` und `phase-7-seo/LOGBUCH.md`. |
 | 2026-09-15 | **Beobachtungen zum Lernwerkzeug: Versuchte Verbesserung des Ziehgriff-Doppeltipp-Verhaltens (v3.0.40).** Testrückmeldung zu v3.0.39 deutete darauf hin, dass die Aktivierung der Ziehgriff-Doppeltipp-Geste weiterhin schwierig ist — wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten Touchscreen-Ziel zuverlässig zweimal zu tippen. Zwei Optimierungen ohne Mechanic-Änderung: (1) `DOPPELTIPP_FENSTER` von 400ms → 600ms für mehr Zeit. (2) Visuelle Rückmeldung auf `.drag-handle:active` mit Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit erkennbar ist, dass die erste Tap registriert wurde. Beide Änderungen sollen die Fehlertoleranz erhöhen. Nächster Schritt: Gerätetest zur Prüfung der Zuverlässigkeit. Alle fünf Beobachtungen 2, 4, 6, 14, 15 vom Code her bereits behoben oder verbessert; offen bleiben drei Punkte, die Gerätetests brauchen (5: iPad-Layout, 13: Over-Scrolling, 16: Browser-Zurück), und mehrere UX-Punkte, die Betreiber-Entscheidungen brauchen (1, 3, 9, 10). Details in `beobachtungen-lernwerkzeug.md`.
