@@ -773,99 +773,19 @@ gehen kann, wenn die Seite currentUser vorher schließt) eingrenzen.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
 - **Bewusst zurückgestellt:** 11, 12.
 
-## 18. Bereichs-Auswahl-Zeile („Balken mit den 3 Bereichen") — seit mind. 6 Meldungen nie verstanden oder behoben ⚠️ PRIORITÄT
+## 18. Untere Navigationsleiste springt vertikal auf dem Handy — seit mind. 6 Meldungen ungelöst ⚠️ PRIORITÄT · UNGELÖST
 
-**Beobachtung, so gemeldet (18.09.2026):** „diese zeile mit 3 Bereichen ist
-immer noch [unklar/instabil] und es ändert sich mit jedem Bereich." Dazu
-Screenshots von der Bereichs-Auswahl (Pill oben, z. B. „Bayna Yadayk 1" /
-„Medina 1") in den Tabs Verwalten, Lernen und Fortschritt.
+Betreiber nutzt eine zum Home-Bildschirm hinzugefügte PWA (`display:
+standalone`, kein Safari-Chrome, keine Browser-Toolbar). Screenshots
+zeigen: Bei kurzem Inhalt sitzt `.nav` sichtbar höher als bei langem/
+gescrolltem Inhalt.
 
-**Wichtig, vom Betreiber ausdrücklich nachgetragen:** Das hier ist **kein
-neuer Fund** — der Betreiber hat diesen Bug nach eigener Aussage **schon
-mindestens sechsmal erklärt**, ohne dass er je verstanden oder behoben
-wurde. Das ist damit der mit Abstand am längsten unbehandelte Punkt in
-dieser ganzen Liste und sollte beim nächsten Antasten **zuerst** geklärt
-werden — nicht als eine Beobachtung unter vielen.
+**Drei Anläufe, keiner hat die Ursache getroffen:**
+1. **v3.6.1** — Bereichs-Pill feste Breite gemacht. Falsches Element (Betreiber meinte die untere Nav-Leiste, nicht die Pille oben).
+2. **v3.6.3** — `--vv-gap` über `window.visualViewport` gegen Adressleisten-Dynamik. Scheidet aus: Standalone-PWA hat keine Browser-Toolbar.
+3. Geprüft und ausgeschlossen: Margin-Symmetrie auf `.nav__tab.active`, Icon-Varianten `.i.voll`, `body`-Höhe (schon `100svh`), Containing-Block durch Transform/Filter auf einem `.nav`-Elternelement.
 
-**Warum es bisher wohl nie ankam:** Alle bisherigen Versuche (auch der
-heutige) haben nur eine sehr allgemeine Formulierung („ändert sich",
-„unbeben/instabil") ohne festen Ablauf zum Nachstellen. Genau das Muster,
-das in dieser Liste sonst zu unbestätigten Vermutungen führt (siehe Punkt
-13, 16) — nur dass es hier schon sechsmal wiederholt wurde, ohne dass
-jemand die fehlenden Angaben gezielt nachgefragt hat.
-
-**Was für eine echte Klärung fehlt (konkret, nicht allgemein):**
-1. Auf welchem Screen/Tab genau (Verwalten/Lernen/Fortschritt — oder allen
-   dreien wie auf den Screenshots)?
-2. Was genau ändert sich an der Zeile — der angezeigte Bereichsname, die
-   Reihenfolge der Bereiche in der Auswahl, eine Zahl daneben, das Layout/die
-   Position auf dem Bildschirm?
-3. Passiert es sofort beim Antippen/Wechseln, oder erst nach einer Weile,
-   nach Reload, nach App-Neustart?
-4. Ist es bei jedem Bereichswechsel gleich, oder nur bei bestimmten
-   Bereichen (z. B. nur bei „Medina 1", nicht bei „Bayna Yadayk 1")?
-5. Am besten: ein kurzes Bildschirm-Video, das den Wechsel von einem Bereich
-   zum anderen zeigt, in dem Moment, in dem es „sich ändert".
-
-**Nächster Schritt:** Bevor irgendetwas am Code versucht wird, diese fünf
-Fragen konkret beantworten lassen (ggf. Video). Erst mit einer festen,
-nachstellbaren Beschreibung wie bei den anderen echten Bugs dieser Liste
-weitermachen — sonst wiederholt sich genau das, was schon sechsmal
-passiert ist.
-
-**Nachgetragen (18.09.2026, v3.6.1): Betreiber hat trotz fehlendem Video
-geantwortet, ausdrücklich ohne weitere Rückfragen — direkt Verdachts-Fix
-versucht.** Antworten: alle drei Tabs betroffen (1); „beides" — Name und
-Position ändern sich (2); beim Wechseln zwischen Bereichen (3); Ausmaß
-unterschiedlich, „je nachdem wie voll" (4, vermutlich: wie lang der Name
-ist); kein Video (5). Passt zusammen mit einem echten Code-Befund: die
-Bereichs-Pill (`.bereich-pill`, `styles.css`) hatte nur `max-width`, keine
-feste Breite — sie wuchs/schrumpfte mit der Textlänge des Bereichsnamens.
-Fix: feste Breite `min(62vw, 220px)` statt textabhängig. **Ausdrücklich
-unbestätigt** wie 13/16 — kein Gerätetest möglich (kein Firebase-Konto in
-dieser Umgebung), nur Code-Review und fehlerfreier Preview-Load. Details
-in `CHANGELOG.md` 3.6.1. Betreiber-Test am echten Handy steht aus — erst
-danach gilt dieser, seit sechs Meldungen offene Punkt als wirklich
-geklärt.
-
-**Korrektur (18.09.2026, v3.6.3): Der v3.6.1-Fix war am falschen Element.**
-Betreiber lieferte zwei Screenshots mit eindeutigem Beweis, nachdem der
-Bereichs-Pill-Fix live war und das Problem nicht löste — der Nutzer meinte
-von Anfang an die **untere Navigationsleiste** (Lernen/Fortschritt/
-Verwalten), nicht die Bereichs-Pill oben. Screenshot-Vergleich zeigt: Bei
-kurzem Inhalt ("Für heute durch") sitzt die Leiste sichtbar höher, bei
-langem/gescrolltem Inhalt fast am Bildschirmrand — die ganze Leiste
-springt, nicht ein einzelner Button. Ursache: mobile Adressleisten
-(Safari/Chrome) klappen beim Scrollen ein/aus, `.nav` ist `position: fixed`
-und bezieht sich dabei nicht zuverlässig auf denselben sichtbaren
-Ausschnitt. Vor diesem Fund zwei eigene Theorien durchgerechnet und mit
-einer isolierten Testseite widerlegt (Margin-Symmetrie bei `.nav__tab.
-active`, Icon-Varianten `.i.voll`) — beide zeigten keinen Versatz.
-
-**Fix:** `syncViewportGap()` (`app.js`) synchronisiert `--vv-gap` über
-`window.visualViewport`, `.nav`s `bottom` bezieht diesen Wert jetzt ein
-(`styles.css`). Details in `CHANGELOG.md` 3.6.3. **Ausdrücklich
-unbestätigt** — kein Gerät mit echter Toolbar-Dynamik in dieser Umgebung
-verfügbar. Betreiber-Test am echten Handy steht aus.
-
-**Dritter Anlauf (18.09.2026, v3.6.4): v3.6.3-Fix hat nicht geholfen, UND
-die zugrundeliegende Theorie ist strukturell ausgeschlossen.** Betreiber
-hat mit einer frisch neu installierten Home-Bildschirm-App (`display:
-standalone`, garantiert aktueller Code — vom Home-Bildschirm gelöscht und
-neu hinzugefügt) erneut denselben Sprung bestätigt. Damit scheidet die
-`visualViewport`/Adressleisten-Theorie aus: **Standalone-PWAs haben gar
-keine Browser-Toolbar, die ein-/ausklappen könnte.** Zusätzlich geprüft
-und ausgeschlossen: `body`s `min-height` (schon `100svh` seit Beobachtung
-13, nicht das aktuelle `100vh`), sowie ein `transform`/`filter`/`contain`
-auf einem Elternelement von `.nav`, das einen neuen Containing-Block für
-`position: fixed` erzeugen könnte (keins gefunden). Statt einer vierten
-Vermutung: Debug-Overlay eingebaut (`?debug=nav` in der URL, siehe
-`CHANGELOG.md` 3.6.4), das die tatsächlichen Werte live anzeigt. **Nächster
-Schritt liegt beim Betreiber:** die URL mit `?debug=nav` öffnen (z. B.
-`https://adrabic.web.app/?debug=nav`, dann zum Home-Bildschirm hinzufügen
-oder im Safari-Tab lassen), zwischen Lernen und Fortschritt wechseln,
-Screenshots der grünen Zahlen in beiden Zuständen schicken. Erst mit
-diesen Werten lässt sich die Ursache eingrenzen, ohne weiter zu raten.
+**v3.6.4 — Debug-Overlay statt vierter Vermutung.** `?debug=nav` in der URL zeigt Live-Messwerte (`innerHeight`, `visualViewport`, `.nav`-Position, `--sab`). **Nächster Schritt liegt beim Betreiber:** `https://adrabic.web.app/?debug=nav` öffnen, zwischen Lernen/Fortschritt wechseln, Screenshots der Zahlen schicken — erst damit lässt sich die Ursache eingrenzen.
 
 ---
 

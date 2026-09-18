@@ -1,50 +1,10 @@
-## 3.6.4 – 18. September 2026
+## 3.6.1 – 3.6.4 – 18. September 2026
 
-### Diagnose (Beobachtung 18, dritter Anlauf): Debug-Overlay statt weiterer Vermutungen
+### Kritischer Fix + laufende Diagnose einer springenden Navigationsleiste
 
-**Der v3.6.3-Fix (`--vv-gap` über `window.visualViewport`) hat das Springen der Navigationsleiste nicht behoben.** Betreiber hat es an einer frisch neu installierten Home-Bildschirm-App (`display: standalone`, garantiert aktueller Code) erneut bestätigt. Damit sind zwei Theorien der Reihe nach widerlegt: (1) Bereichs-Pill-Breite (v3.6.1, falsches Element), (2) mobile Adressleisten-Dynamik über `visualViewport` (v3.6.3) – Letzteres scheidet zusätzlich aus, weil eine Standalone-PWA gar keine Browser-Toolbar hat, die ein-/ausklappen könnte.
+**Kritisch, behoben:** App startete nach v3.6.0 gar nicht mehr (`SyntaxError` durch typografische statt normale Anführungszeichen in `app.js`, drei Stellen). Zusätzlich fehlte Cache-Busting für `app.js` – Browser hielten die kaputte Version bis zu eine Stunde im Cache fest. `index.html` bindet `app.js` jetzt mit Versions-Query ein (`?v=…`), muss künftig bei jeder Version mitgezogen werden (siehe `README.md`).
 
-**Statt einer vierten Vermutung:** Ein Debug-Overlay, nur sichtbar mit `?debug=nav` am Ende der URL (kein Knopf, keine UI-Erwähnung, für normale Nutzer nicht auffindbar) zeigt die tatsächlichen Zahlen live an – `window.innerHeight`, `visualViewport.height`, `.nav`s tatsächliche Position (`getBoundingClientRect()`), `--sab`, Scroll-Position. Zweck: eine echte Diagnose anhand von Messwerten statt weiterer Screenshot-Interpretation. **Wird entfernt, sobald die Ursache gefunden ist – kein dauerhaftes Feature.**
-
-
-
-### Behoben (Beobachtung 18, zweiter Anlauf): Navigationsleiste springt vertikal auf dem Handy
-
-**Der erste Fix (v3.6.1, feste Breite der Bereichs-Pill) hatte das falsche Element behoben.** Betreiber lieferte zwei Screenshots mit eindeutigem, gemessenem Unterschied: Bei kurzem Bildschirminhalt (leere "Für heute durch"-Meldung) sitzt die untere Navigationsleiste sichtbar höher, mit deutlichem Abstand zum unteren Bildschirmrand; bei langem, gescrolltem Inhalt sitzt sie fast am Rand. Es ist die **ganze Leiste**, die springt, nicht ein einzelner Button.
-
-**Ursache:** `.nav` ist `position: fixed`, mit `bottom` berechnet aus `env(safe-area-inset-bottom)`. Mobile Browser (Safari iOS, Chrome Android) klappen die Adressleiste beim Scrollen ein und aus – dabei bezieht sich `position: fixed` nicht zuverlässig auf denselben sichtbaren Bildschirmausschnitt. `env(safe-area-inset-bottom)` allein löst das nicht, weil es nur den Geräte-Notch/Home-Indicator kennt, nicht die Browser-Toolbar.
-
-**Fix:** Neue Funktion `syncViewportGap()` (`app.js`) misst über `window.visualViewport` den tatsächlich sichtbaren Bereich und hält die Differenz zum Layout-Viewport in der CSS-Variable `--vv-gap` fest, aktualisiert bei jedem `visualViewport`-`resize`/`scroll`-Event. `.nav`s `bottom` bezieht diesen Wert jetzt zusätzlich mit ein (`styles.css`). Auf `documentElement` gesetzt (nicht `#app`), damit die Variable jeden `render()`-Neuaufbau übersteht.
-
-**Zwei vorherige Theorien geprüft und verworfen, bevor dieser Fund kam:** (1) `margin` auf `.nav__tab.active` – durchgerechnet: symmetrisches Margin verschiebt bei zentriertem Inhalt rechnerisch nichts. (2) Unterschiedliche Icon-Variante (gefüllt/Outline) beim aktiven Tab – `.i.voll` ändert nur `fill`, nicht die SVG-Geometrie. Beide mit einer isolierten Testseite (identisches Markup/CSS, ohne Login) durchgemessen: kein Versatz zwischen den drei Tab-Zuständen gefunden. Erst die vom Betreiber gelieferten Screenshots zeigten den echten Fehlerort.
-
-**Ausdrücklich unbestätigt:** Kein Gerätetest mit echter iOS/Android-Toolbar-Dynamik in dieser Umgebung möglich. Betreiber-Test am echten Handy steht aus.
-
-
-
-### Kritischer Fix: App startete gar nicht mehr (JavaScript-Syntaxfehler)
-
-**Betreiber-Meldung: „Die Seite öffnet sich nicht, weder Handy noch PC."** Ursache: `app.js` enthielt seit dem Code-Teilen-Umbau (v3.6.0, Commit `51cb5a0`) an drei Stellen typografische Anführungszeichen (" " ‘ ’) als String-Begrenzer statt echter JavaScript-Anführungszeichen (`"`) — vermutlich beim automatischen Einfügen durch den Agenten in einer früheren Session entstanden. Das ist kein gültiges JavaScript: `SyntaxError: Invalid or unexpected token`. Das gesamte Skript brach beim Parsen ab, die App blieb dauerhaft am Ladebildschirm hängen, live nachvollzogen auf `adrabic.web.app`.
-
-**Betroffen:** `zeigeTeileCode()`, `teileLektionLink()`, `linkEinloesenStart()` (Zeilen 2901–2923). Alle drei mit `node --check app.js` gefunden und auf normale Anführungszeichen zurückgesetzt; danach syntaktisch sauber verifiziert.
-
-**Wie es passieren konnte, ohne aufzufallen:** `node --check` wurde bei der vorherigen Änderung (v3.6.0/3.6.1) nicht ausgeführt — reiner Code-Review sah den fehlerhaften Text nicht zuverlässig, weil typografische und normale Anführungszeichen im Editor kaum zu unterscheiden sind. **Lehre für künftige Sessions:** Nach jeder `app.js`-Änderung `node --check app.js` laufen lassen, bevor committed wird — kostet eine Sekunde, verhindert genau diesen Ausfall.
-
-**Zweiter, unabhängiger Fund beim Nachprüfen des Deploys:** Der Fix allein reichte nicht. Obwohl der Server nach dem Deploy bereits die reparierte `app.js` auslieferte, bekamen Browser mit offener Seite oder kürzlichem Besuch weiterhin die alte, kaputte Version – auch nach normalem Reload. Ursache: `app.js` hat `Cache-Control: max-age=3600` (`firebase.json`), aber `index.html` band es ohne jede Versionierung ein (`<script src="./app.js">`) – der Browser fragt den Server für dieses Skript bis zu eine Stunde lang gar nicht erst neu an, selbst wenn die HTML-Seite selbst (die `max-age=0` hat) frisch geladen wird. **Fix:** `index.html` bindet `app.js` jetzt mit Versions-Query ein (`app.js?v=3.6.2`) – bei jeder künftigen `APP_VERSION`-Änderung muss dieser Wert mitgezogen werden (neuer Schritt in `README.md`), sonst wiederholt sich genau dieser Ausfall bei jedem künftigen Bugfix.
-
-
-
-### Geändert (Bereichs-Pill: feste statt textabhängiger Breite)
-
-**Betreiber-Meldung, wiederholt (mind. 6× seit längerem, nie mit genug Detail zum Nachstellen):** „Der Balken mit den Bereichs-Knöpfen verschiebt sich." Beim erneuten, konkreten Nachfragen (`plan/beobachtungen-lernwerkzeug.md`, Punkt 18): betrifft alle drei Tabs (Verwalten/Lernen/Fortschritt), passiert beim Wechseln zwischen Bereichen, Ausmaß unterschiedlich je nach Bereichsname-Länge.
-
-**Ursache gefunden:** Die Bereichs-Pill in der AppBar (`.bereich-pill`, mobil sichtbar) hatte nur eine `max-width`, keine feste Breite – sie wuchs/schrumpfte mit der Länge des jeweiligen Bereichsnamens. Wechselt man z. B. von „Bayna Yadayk 1" zu „Medina 1", ändert sich die Pillenbreite sichtbar, was wie ein springender Balken wirkt.
-
-**Fix:** Feste Breite `min(62vw, 220px)` statt textabhängiger Breite. Kurze Namen lassen jetzt links Luft in der Pille, statt dass die Pille selbst schrumpft. Reine CSS-Änderung, keine Logik betroffen.
-
-**Ausdrücklich unbestätigter Verdachts-Fix** (wie Beobachtung 13/16): Kein Gerätetest möglich in dieser Umgebung, nur Code-Review und fehlerfreier Preview-Load. Betreiber-Test am echten Handy steht aus.
-
-
+**Noch ungelöst: Navigationsleiste springt vertikal auf dem Handy.** Drei Anläufe, keiner hat die Ursache getroffen: (1) Bereichs-Pill-Breite fest gemacht – falsches Element. (2) `visualViewport`-Sync gegen Adressleisten-Dynamik – scheidet aus, weil Betreiber es als Standalone-Home-Bildschirm-App nutzt (keine Browser-Toolbar). Geprüft und ausgeschlossen: `body`-Höhe (schon korrekt), Containing-Block durch Transform/Filter auf einem Elternelement. Debug-Overlay (`?debug=nav` in der URL) eingebaut, um die nächste Diagnose auf echte Messwerte statt Screenshots zu stützen. Details in `plan/beobachtungen-lernwerkzeug.md` Punkt 18.
 
 ### Geändert (Code-basiertes Teilen – Rückfall von Link-Teilen, wegen Skalierbarkeit)
 

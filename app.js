@@ -7630,20 +7630,10 @@ window.addEventListener("resize", () => {
   drawStrokes(ctx, canvas);
 });
 
-/* 18.09.2026 (Beobachtung 18, zweiter Anlauf): Die schwebende Navigation
-   (.nav, position: fixed) sass auf dem Handy je nach Bildschirminhalt
-   unterschiedlich hoch - mit Screenshots belegt (kurzer Inhalt ohne Scroll
-   vs. langer, gescrollter Inhalt). Ursache: Safaris/Chromes Adressleiste
-   klappt beim Scrollen ein und aus, und "position: fixed" bezieht sich
-   dabei nicht zuverlaessig auf denselben Bildschirmausschnitt - env(safe-
-   area-inset-bottom) allein loest das nicht, weil es die Toolbar nicht
-   kennt. Die verlaessliche Groesse dafuer ist window.visualViewport, die
-   den tatsaechlich sichtbaren Bereich meldet. --vv-gap haelt fest, um wie
-   viel der sichtbare Bereich unten kleiner ist als der Layout-Viewport;
-   .nav zieht diesen Betrag zusaetzlich zu env(safe-area-inset-bottom) mit
-   ein (siehe styles.css). Auf documentElement statt auf #app gesetzt, weil
-   #app bei jedem render() komplett neu aufgebaut wird - die Variable soll
-   das ueberleben. */
+/* Beobachtung 18 (18.09.2026): --vv-gap gleicht Safaris/Chromes ein-/
+   ausklappende Adressleiste aus, die "position: fixed" durcheinanderbringt.
+   Reicht laut Betreiber-Test allein nicht - siehe beobachtungen-
+   lernwerkzeug.md Punkt 18 fuer den Stand der Diagnose. */
 function syncViewportGap() {
   const vv = window.visualViewport;
   const gap = vv ? Math.max(0, window.innerHeight - (vv.height + vv.offsetTop)) : 0;
@@ -7655,17 +7645,9 @@ if (window.visualViewport) {
 }
 syncViewportGap();
 
-/* 18.09.2026, Beobachtung 18, dritter Anlauf: Die ersten beiden Fixe
-   (Bereichs-Pill-Breite, dann --vv-gap ueber visualViewport) haben das
-   Springen NICHT beendet - der Betreiber hat es an einer zum Home-Bildschirm
-   hinzugefuegten PWA (display:standalone, KEIN Safari-Chrome) mit
-   garantiert aktuellem Code erneut bestaetigt. Damit sind beide bisherigen
-   Theorien widerlegt und es fehlen echte Zahlen statt weiterer Vermutungen.
-   Debug-Overlay, NUR mit ?debug=nav in der URL sichtbar (fuer normale
-   Nutzer nicht auffindbar, kein Knopf, keine Erwaehnung in der UI) - zeigt
-   die tatsaechlichen Werte von .nav, damit sich die Ursache an echten Zahlen
-   statt an Screenshots festmachen laesst. Wird entfernt, sobald das
-   Problem geklaert ist - kein dauerhaftes Feature. */
+/* Beobachtung 18: Messwerkzeug fuer die noch ungeklaerte springende Nav-
+   Leiste, nur mit ?debug=nav sichtbar. Wird entfernt, sobald die Ursache
+   gefunden ist. */
 if (new URLSearchParams(location.search).get("debug") === "nav") {
   const box = document.createElement("div");
   box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;" +
