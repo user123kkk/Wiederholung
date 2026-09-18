@@ -184,13 +184,18 @@ offen (kein erzwungenes „irgendwas eintragen"):
 - **C3 (Chat): entschieden.** Im ersten Baustein **nichts** — kein Chat,
   keine Nachrichten. Bleibt, falls überhaupt, Teil der späteren
   Ausbaustufe.
-- **C2 (Mit-Admin-Rechte): bewusst weiter offen.** Betreiber hat ehrlich
-  gesagt, dazu noch keine Meinung zu haben — wird nicht erzwungen.
-  Mitgenommener Designhinweis: nicht nach jeder Lektion einen „ganzen
-  Bereich" an Mit-Admins übergeben (Sorge um Übersichtlichkeit/Kapazität)
-  — spricht für einzelne, klar abgegrenzte geteilte Lektionen statt eines
-  wachsenden gemeinsamen Bereichs. Einen Raum löschen, wenn alle
-  einverstanden sind und er nicht mehr gebraucht wird: unstrittig, „geht".
+- **C2 (Mit-Admin-Rechte): weiter offen, aber Grundmodell jetzt geklärt
+  (18.09.2026).** Kein Mit-Admin-Konzept mehr nötig — nur der Ersteller
+  braucht zwei einfache Rechte: **einzelnen Zugang sperren** („kicken",
+  z. B. weil jemand Ärger macht) und **ganzen Raum löschen** (z. B. weil
+  die einmalige Aktion unter Freunden vorbei ist). Beides geht **ohne
+  Namen oder sonstige Empfängerdaten**: statt eines einzigen geteilten
+  Codes für alle bekommt **jeder Empfänger einen eigenen individuellen
+  Code/Link**. Der Ersteller kann einen einzelnen Code sperren (kickt
+  genau diese Person, ohne zu wissen, wer sie ist) oder alle Codes auf
+  einmal ungültig machen (Raum löschen). Es gibt keine Mitgliederliste,
+  keine sichtbaren Namen, keine Rollen — nur Codes mit Status
+  gültig/gesperrt.
 - **C5 (Minderjährige): nicht entschieden, harte Sperre.** Siehe Kasten
   oben — braucht echten Rechtsrat, keine Agenten-Empfehlung.
 - **C6 (Zeitpunkt): entschieden.** Fragen jetzt weiter klären (auch über
@@ -225,3 +230,15 @@ mit dem Versenden einer PDF-Datei.
    *bevor* daran gebaut wird. Bleibt Ausbaustufe, kein akuter Blocker mehr
    für „irgendetwas freigeben können" — nur für die komfortablere Variante
    davon.
+
+**Präzisierung (18.09.2026, nach dem Individualcode-Modell aus C2):** Die
+Komfortversion ist mit dem Individualcode-Modell **datensparsamer als
+zunächst gedacht** — kein Mitgliederverzeichnis, keine Namen, nur anonyme
+Zugangscodes mit Status gültig/gesperrt. Das macht Frage 5 kleiner, aber
+**löst sie nicht auf**: Es bräuchte weiterhin eine neue Firestore-Regel, die
+jemand ohne Kontobesitz-Nachweis lesend auf einen fremden Datensatz
+zugreifen lässt (nur eben ohne Personendaten zu speichern). Ob „kein
+gespeicherter Name, aber technischer Zugriff über Kontogrenzen hinweg"
+rechtlich unproblematisch genug ist, ist wieder die Sorte Frage, die nicht
+der Agent, sondern echter Rechtsrat beantwortet — die Einschätzung wurde
+nur leichter zu beantworten, nicht überflüssig.
