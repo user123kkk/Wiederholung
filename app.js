@@ -2831,9 +2831,11 @@ async function teileLektionLink() {
 
   if (fragment.length > TEIL_LINK_MAX_ZEICHEN) {
     render();
-    await dlgAlert('„' + b.name + '" ist mit ' + b.karten.length + ' Karten zu groß für einen Link. ' +
-      'Nutz stattdessen „Kartensatz zum Weitergeben" (Datei) weiter oben.', "Zu groß für einen Link");
-    return;
+    const ok = await dlgConfirm(
+      '„' + b.name + '" mit ' + b.karten.length + ' Karten ergibt einen Link mit ' + fragment.length + ' Zeichen. ' +
+      'Das funktioniert, wird aber in Messengern schwer zu kopieren. Trotzdem teilen?',
+      { title: "Link wird sehr lang", okLabel: "Trotzdem teilen" });
+    if (!ok) return;
   }
 
   const link = location.origin + location.pathname + "#teilen=" + fragment;
