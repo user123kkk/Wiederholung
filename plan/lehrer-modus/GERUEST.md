@@ -242,3 +242,32 @@ gespeicherter Name, aber technischer Zugriff über Kontogrenzen hinweg"
 rechtlich unproblematisch genug ist, ist wieder die Sorte Frage, die nicht
 der Agent, sondern echter Rechtsrat beantwortet — die Einschätzung wurde
 nur leichter zu beantworten, nicht überflüssig.
+
+## F · Vorschläge des Agenten (18.09.2026, auf Bitte des Betreibers)
+
+Eigene Ideen, ausdrücklich als Vorschläge markiert — nichts davon ist
+entschieden, nichts davon hebt die Sperre bei Frage 5 auf:
+
+1. **Code-Format: kurz und mündlich teilbar, nicht nur ein Link.** Ähnlich
+   Kahoots PIN — ein 6-8-stelliger Code, den man auch am Handy vorlesen
+   oder abtippen kann, zusätzlich zu einem Link/QR-Code für Komfort. Passt
+   zur „unter Freunden"-Situation besser als eine lange UUID.
+2. **Codes laufen automatisch ab** (Vorschlag: 30 Tage, konfigurierbar).
+   Reduziert die Angriffs-/Exposure-Fläche unabhängig von der Rechtsfrage
+   — ein alter, vergessener Code liegt nicht auf unbestimmte Zeit offen.
+   Guter Sicherheits-Default, unabhängig von C5.
+3. **Einmal-Import statt Dauerzugriff.** Ein Code erzeugt beim Einlösen
+   eine **Kopie** im Konto des Empfängers, keine laufende Verbindung zum
+   Original. Kein Live-Sync, keine fortlaufende Leseberechtigung nach dem
+   Import — der technische Zugriff endet mit dem einmaligen Kopiervorgang.
+   Kleinere Angriffsfläche als ein dauerhaft gültiger Lesezugriff.
+4. **Zähler statt Liste.** Falls der Ersteller irgendeine Rückmeldung will
+   („wurde das überhaupt benutzt?"), reicht ein simpler Zähler
+   („3× eingelöst") — keine Namen, keine Zeitstempel pro Person, kein
+   Identitätsbezug. Deckt das Bedürfnis nach Feedback, ohne die
+   Datensparsamkeit aus C2 aufzugeben.
+
+Alle vier Punkte verkleinern nur die technische Angriffsfläche und passen
+zum bisherigen Individualcode-Modell — sie ändern nichts an der Sperre bei
+Frage 5, die weiterhin echten Rechtsrat braucht, bevor die Firestore-Regel
+für den kontoübergreifenden Zugriff scharf geschaltet wird.
