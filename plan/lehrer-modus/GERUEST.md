@@ -304,3 +304,62 @@ den alten Zustand gedacht). Veröffentlicht als **v3.5.2** — `APP_VERSION`,
 Das ist die Minimalversion (Datei-Export), nicht der Individualcode-/
 In-App-Link-Teil aus C4/C2/F. Die Komfortversion bleibt weiterhin gesperrt,
 bis Frage 5 mit echtem Rechtsrat geklärt ist.
+
+## H · Neuer Architekturvorschlag: Sender erfährt nichts über Empfänger
+    (18.09.2026, Betreiber-Vorgabe)
+
+Betreiber-Anforderung, wörtlich: die Komfortversion soll dem **Gebenden
+jedes Recht nehmen, auch nur irgendetwas über den Gegenüber zu erfahren** —
+keine Liste, kein Zähler mit Zeitbezug, keine Rückmeldung, wer wann
+gelesen/importiert hat. Das ist eine strengere Vorgabe als der bisherige
+Vorschlag F.4 (Zähler) und ersetzt ihn.
+
+**Architektur, die das leistet:**
+- Die Lektion liegt unter einem Code/Link in einem eigenen, dafür
+  vorgesehenen Bereich der Datenbank (nicht im normalen Konto-Datensatz
+  des Senders).
+- Der Empfänger **liest** darüber — schreibt dabei **nichts** zurück, das
+  beim Sender ankommt. Keine Bestätigung, kein Log, kein Zähler.
+- Der Empfänger legt sich anschließend selbst eine **Kopie** in sein
+  eigenes Konto an, über die ganz normalen, schon bestehenden
+  Zugriffsrechte auf das eigene Konto — dafür ist keine neue Regel nötig,
+  das kann jedes Konto heute schon mit sich selbst.
+- Die einzige **neue** Firestore-Regel: irgendjemand mit dem richtigen
+  (schwer erratbaren) Code darf den geteilten Lektion-Datensatz **lesen**.
+  Mehr nicht — kein Schreibzugriff für Fremde, keine Identifizierung.
+
+**Warum das die Einschätzung zu Frage 5 verändert, nicht nur verkleinert:**
+Wenn der Sender nichts über den Empfänger erfährt — nicht mal anonymisiert
+— dann verarbeitet diese Funktion an keiner Stelle personenbezogene Daten
+eines Dritten gegenüber einer anderen Person. Es ist näher an „eine Datei
+unter einem schwer erratbaren Link veröffentlichen" als an „ein Lehrer
+sammelt Schülerdaten". Geteilt wird nur der **Lektionsinhalt** (Vokabeln,
+Übersetzungen) — keine Personendaten von irgendjemandem. Das ist ein
+strukturell anderer Fall als das, was Frage 5 ursprünglich befürchtete.
+
+**Was trotzdem offen bleibt:**
+- Es ist weiterhin eine **neue** Firestore-Regel nötig, die Lesezugriff
+  über Kontogrenzen hinweg erlaubt (wenn auch nur auf reinen
+  Lektionsinhalt, ohne Personenbezug). Das ist der Teil, den Phase 1
+  (`plan/phase-1-datenzugriff/`) bisher ausdrücklich ausschließt — „jedes
+  Konto liest nur bei sich selbst". Diese Annahme würde erstmals
+  durchbrochen, auch wenn der Bruch selbst harmlos aussieht.
+- Ob „kein Personenbezug beim Empfänger, aber technischer Fremdzugriff auf
+  einen Datensatz" für Adrabics Fall tatsächlich unproblematisch ist,
+  bleibt die Art Einschätzung, die der Agent nicht abschließend trifft —
+  siehe Grenze bei Frage 5. Der Unterschied: diese Einschätzung dürfte für
+  jeden mit Rechtskompetenz **deutlich schneller** zu treffen sein als die
+  vorherige Variante, weil kein Personenbezug mehr im Spiel ist.
+- Rate-Limiting/Erraten von Codes: ein Code muss lang/zufällig genug sein,
+  dass er nicht einfach durchprobiert werden kann (technische Detailfrage,
+  noch nicht entworfen).
+
+**Damit ist H der aktuell bevorzugte Entwurf für die Komfortversion** —
+ersetzt den Individualcode-Vorschlag aus C2/F dort, wo er einen Zähler
+oder Kick-Mechanismus vorsah, die dem Sender irgendeine Rückmeldung geben
+würden. Ein Kick/Sperren einzelner Zugänge (aus C2) ist mit „Sender erfährt
+nichts" nur noch eingeschränkt vereinbar — allenfalls „ganzen Code
+ungültig machen" (kompletter Widerruf), nicht „einzelne Person kicken",
+weil Letzteres voraussetzen würde, einzelne Zugänge unterscheidbar zu
+machen. Offen, ob das für den Betreiber wichtig genug ist, um diesen
+Widerspruch aufzulösen.
