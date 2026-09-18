@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de" data-thema="dunkel">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bühne</title>
+<!-- Wird nur von glas-vergleich.html per <iframe> eingebettet, mit
+     schmalem Rahmen (< 900px), damit styles.css wirklich die Handy-Ansicht
+     der Nav ausliefert statt der Desktop-Spalte ab 900px. Kein eigener
+     Aufruf vorgesehen. -->
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  html, body { height: 100%; margin: 0; }
+  #app { position: relative; height: 100%; overflow: hidden; }
+  .view { position: absolute; inset: 0; padding: 72px var(--space-4) 96px; overflow: hidden; }
+  .marke { text-align: center; margin: var(--space-6) 0; font-size: 40px; }
+
+  /* ============ B: gedaempft ============ */
+  body.var-b .nav {
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+  }
+  body.var-b .card, body.var-b .dlg { border-radius: var(--r-md); }
+  body.var-b .bg-glow { opacity: 0.35; }
+
+  /* ============ C: eigenstaendiger ============ */
+  body.var-c .nav {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    border-radius: 0; border-width: 1px 0 0 0;
+    background: var(--surface);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    box-shadow: none;
+  }
+  body.var-c .appbar { border-radius: 0; }
+  body.var-c .card { border-radius: var(--r-sm); box-shadow: none; }
+  body.var-c .dlg { border-radius: var(--r-sm) var(--r-sm) 0 0; }
+  body.var-c .bg-glow { display: none; }
+  body.var-c .marke { filter: none !important; }
+  body.var-c .bereich-pill,
+  body.var-c button.lg,
+  body.var-c button:not(.icon-btn):not(.ghost):not(.linklike) { border-radius: var(--r-sm); }
+</style>
+</head>
+<body>
+<div class="bg-glow" aria-hidden="true" style="position:fixed;inset:0;background:var(--glow)"></div>
+<div id="app">
+  <header class="appbar">
+    <button class="bereich-pill"><span>Medina Buch 1</span></button>
+    <div class="appbar__spacer"></div>
+    <button class="icon-btn" aria-label="Einstellungen">&#9881;</button>
+  </header>
+  <div class="view">
+    <div class="marke" style="filter:var(--mark-glow)">&#10022;</div>
+    <div class="card" style="margin-bottom:var(--space-4)">
+      <h3>12 Karten fällig</h3>
+      <p class="hint">Heute dran.</p>
+      <button class="lg full" style="margin-top:var(--space-3)">Sitzung starten</button>
+    </div>
+    <div class="liste">
+      <button class="liste-zeile"><span class="liste-zeile__text">Lektion 3</span><span class="liste-zeile__wert">sitzt</span></button>
+      <button class="liste-zeile"><span class="liste-zeile__text">Lektion 4</span><span class="badge zustand-gesehen">12</span></button>
+    </div>
+  </div>
+  <nav class="nav"><div class="nav__tabs">
+    <button class="nav__tab active"><span>Lernen</span></button>
+    <button class="nav__tab"><span>Fortschritt</span></button>
+    <button class="nav__tab"><span>Verwalten</span></button>
+  </div></nav>
+</div>
+<script>
+  var v = new URLSearchParams(location.search).get("v") || "a";
+  if (v !== "a") document.body.classList.add("var-" + v);
+  if (new URLSearchParams(location.search).get("thema") === "hell") {
+    document.documentElement.setAttribute("data-thema", "hell");
+  }
+</script>
+</body>
+</html>

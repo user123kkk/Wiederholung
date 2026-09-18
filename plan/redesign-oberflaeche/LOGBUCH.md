@@ -4,6 +4,45 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-18 — Vergleichsseite: „sieht bisl KI-Slop aus"
+
+**Geändert:** Zwei neue Arbeitsmittel, kein Produktivcode:
+`glas-vergleich.html` (Übersicht, drei Spalten) und
+`glas-vergleich-buehne.html` (eine Handy-Bühne, per `?v=a/b/c` in drei
+Varianten). Beide unter `plan/`, nicht in `APP_SHELL`, keine Versionsnummer
+nötig.
+
+**Entscheidung:** Betreiber-Rückmeldung „dunkel und hell sieht bisl KI slop
+aus, weiß nicht warum" — drei konkrete, technisch benennbare Ursachen
+identifiziert statt vage zu bleiben: (1) schwebende Nav mit starkem
+`backdrop-filter: blur/saturate` — der Glasmorphismus-Look aus v0/Framer
+AI/Galileo-Vorlagen, (2) durchgehend vollrunde Formen (`--r-full`,
+`--r-xl` 30px) ohne eine einzige scharfe Kante, (3) weicher Radial-Glow im
+Hintergrund + Leuchtschatten hinter der Marke — dieselbe „soft glow"-
+Ästhetik wie in KI-generierten Landingpage-Mockups. Auf Betreiber-Wahl
+(„erstmal nur zeigen, nichts ändern") drei Varianten gebaut statt sofort
+im echten Code zu drehen: A (Ist-Zustand), B (gedämpft — gleiche
+Formsprache, weniger Glas/Glow/Rundung), C (eigenständiger — feste Nav-
+Zeile statt Schweben, kein Glow, kleinerer Kartenradius).
+
+**Echter Fund beim Bauen:** Die erste Fassung zeigte alle drei Varianten
+in einer gemeinsamen Seite bei voller Fensterbreite — dabei schaltete
+`styles.css` ab 900px auf die Desktop-Sidebar-Nav um, unbeabsichtigt, weil
+die Seite selbst breiter als 900px ist. Gelöst über drei `<iframe>`s mit
+je eigenem schmalem Rahmen (< 900px), damit jede Spalte unabhängig
+tatsächlich die schwebende Handy-Nav zeigt, um die es geht. Mit Playwright
+in beiden Themen geprüft (Screenshots), Theme-Umschalter synchronisiert
+alle drei Frames.
+
+**Offen:** Keine Entscheidung getroffen — wartet auf Betreiber-Rückmeldung,
+welche Spalte (oder Mischung) weiterverfolgt wird.
+
+**Nächster Schritt:** Nach Rückmeldung die gewählte Richtung in `styles.css`
+umsetzen (nicht in den Vergleichsdateien), mit Playwright/am Handy prüfen,
+Version/Cache/Changelog nachziehen.
+
+---
+
 ### 2026-09-18 — Blätter wegwischen, zwei echte Funde beim Nachprüfen (v3.5.4)
 
 **Geändert:**

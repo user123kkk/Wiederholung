@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de" data-thema="dunkel">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vergleich — weg vom Glas-Look</title>
+<!--
+  ARBEITSMITTEL, KEINE AUSGELIEFERTE SEITE. Liegt unter plan/, nicht in
+  APP_SHELL (sw.js), wird nicht ausgeliefert.
+
+  Anders als stilprobe.html (die die WAHRHEIT von styles.css zeigt) zeigt
+  diese Seite bewusst ERFUNDENE Varianten nebeneinander, die es in
+  styles.css noch nicht gibt - zum Gegenpruefen, bevor irgendetwas echten
+  Code aendert. Betreiber-Anlass (18.09.2026): "dunkel version und hell
+  version sieht bisl ki slop aus" - drei konkrete Verdaechtige benannt:
+
+    1. Schwebende Nav mit starkem Weichzeichner (backdrop-filter blur/
+       saturate) - der Glasmorphismus-Look, den generative Design-Tools
+       (v0, Framer AI, Galileo) standardmaessig ausspucken.
+    2. Alles vollrund (--r-full Knoepfe, --r-xl 30px Karten) - keine
+       einzige scharfe Kante irgendwo.
+    3. Weicher Radial-Glow im Hintergrund + Leucht-Schatten hinter der
+       Marke - dieselbe "soft glow"-Aesthetik wie in KI-generierten
+       Landingpage-Mockups.
+
+  Drei Spalten: A = Ist-Zustand (1:1 aus styles.css). B = gedaempft (dieselbe
+  Formsprache, weniger Glas/Glow/Rundung). C = eigenstaendiger (schaerfere
+  Kanten, kein Glas, kein Glow).
+
+  TECHNIK: jede Spalte ist ein eigenes <iframe> auf glas-vergleich-buehne.html
+  mit schmalem Rahmen (< 900px) - nicht direkt eingebettet, weil styles.css
+  ab 900px auf die Desktop-Nav (linke Spalte statt schwebende Leiste)
+  umschaltet. Ohne eigenen Frame pro Variante wuerde diese Seite hier bei
+  typischer Fensterbreite versehentlich die Desktop-Ansicht zeigen, nicht
+  die schwebende Handy-Nav, um die es beim Vergleich geht.
+
+  Keine der drei Ueberschreibungen (in glas-vergleich-buehne.html) ist in
+  styles.css uebernommen - erst nach Rueckmeldung entscheiden, welche
+  Richtung (oder Mischung) weiterverfolgt wird.
+
+  Oeffnen: python3 -m http.server im Wurzelverzeichnis, dann
+  /plan/redesign-oberflaeche/glas-vergleich.html
+-->
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  body { padding: var(--space-6) var(--gutter) var(--space-10); }
+  .kopf { max-width: 1400px; margin: 0 auto var(--space-7); }
+  .kopf p { color: var(--text-2); max-width: var(--measure); }
+  .spalten {
+    display: grid; grid-template-columns: repeat(3, minmax(300px, 1fr));
+    gap: var(--space-6); max-width: 1400px; margin: 0 auto;
+    align-items: start;
+  }
+  @media (max-width: 980px) { .spalten { grid-template-columns: 1fr; max-width: 460px; } }
+  .spalte__kopf { margin-bottom: var(--space-3); }
+  .spalte__label { font-size: var(--fs-micro); letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-3); }
+  .spalte__titel { font-size: var(--fs-lg); margin: 2px 0 var(--space-1); }
+  .spalte__was { font-size: var(--fs-sm); color: var(--text-2); line-height: 1.5; }
+  .buehne-rahmen {
+    border: 1px solid var(--border); border-radius: var(--r-lg);
+    overflow: hidden; background: var(--bg);
+  }
+  .buehne-rahmen iframe {
+    display: block; width: 100%; height: 620px; border: 0;
+  }
+  .hinweis {
+    max-width: 1400px; margin: var(--space-7) auto 0;
+    padding-top: var(--space-5); border-top: 1px solid var(--border-strong);
+    font-size: var(--fs-sm); color: var(--text-2); line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="kopf">
+  <div style="display:flex; gap: var(--space-3); align-items:center; margin-bottom: var(--space-3)">
+    <h1 style="flex:1 1 auto">Weg vom Glas-Look — drei Varianten</h1>
+    <button class="secondary" id="thema">Hell / Dunkel</button>
+  </div>
+  <p>Jede Spalte ist ein eigenes, schmales Fenster (&lt; 900px) auf dieselbe echte Handy-Ansicht aus <code>styles.css</code> — nur mit probeweise überschriebenen Tokens. Nichts davon ist in <code>styles.css</code> übernommen. Inhalt erfunden.</p>
+</div>
+
+<div class="spalten">
+
+  <div>
+    <div class="spalte__kopf">
+      <div class="spalte__label">A · Ist-Zustand</div>
+      <div class="spalte__titel">Unverändert</div>
+      <div class="spalte__was">Schwebende Nav mit starkem Weichzeichner, 30px-Kartenradius, Leucht-Glow hinter der Marke.</div>
+    </div>
+    <div class="buehne-rahmen"><iframe id="f-a" src="glas-vergleich-buehne.html?v=a" title="Variante A"></iframe></div>
+  </div>
+
+  <div>
+    <div class="spalte__kopf">
+      <div class="spalte__label">B · Gedämpft</div>
+      <div class="spalte__titel">Dieselbe Formsprache, zurückgedreht</div>
+      <div class="spalte__was">Nav bleibt schwebend, aber weniger Glas. Kartenradius kleiner (16 statt 30px). Hintergrund-Glow schwächer.</div>
+    </div>
+    <div class="buehne-rahmen"><iframe id="f-b" src="glas-vergleich-buehne.html?v=b" title="Variante B"></iframe></div>
+  </div>
+
+  <div>
+    <div class="spalte__kopf">
+      <div class="spalte__label">C · Eigenständiger</div>
+      <div class="spalte__titel">Kein Glas, kein Glow</div>
+      <div class="spalte__was">Nav ist eine echte Zeile mit Fläche, nicht schwebend. Kleiner Kartenradius (10px). Kein Hintergrund-Glow, kein Leuchtschatten.</div>
+    </div>
+    <div class="buehne-rahmen"><iframe id="f-c" src="glas-vergleich-buehne.html?v=c" title="Variante C"></iframe></div>
+  </div>
+
+</div>
+
+<div class="hinweis">
+  <strong>Nichts hiervon ist in <code>styles.css</code> übernommen.</strong>
+  Das ist nur zum Gegenprüfen. Sag, welche Spalte am ehesten trifft (auch
+  eine Mischung aus zweien ist möglich, z. B. Kartenradius von C mit der
+  schwebenden Nav von B) — dann setze ich genau das im echten Code um und
+  prüfe wieder mit Playwright/am Handy nach.
+</div>
+
+<script>
+  document.getElementById("thema").addEventListener("click", function () {
+    var r = document.documentElement;
+    var neu = r.getAttribute("data-thema") === "hell" ? "dunkel" : "hell";
+    r.setAttribute("data-thema", neu);
+    ["f-a", "f-b", "f-c"].forEach(function (id) {
+      var f = document.getElementById(id);
+      var url = new URL(f.src);
+      url.searchParams.set("thema", neu);
+      f.src = url.toString();
+    });
+  });
+</script>
+</body>
+</html>
