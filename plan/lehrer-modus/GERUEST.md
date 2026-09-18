@@ -174,6 +174,13 @@ offen (kein erzwungenes „irgendwas eintragen"):
   In-App-Link/Code statt nur Datei-Export — Empfänger übernimmt die
   Lektion direkt ins eigene Konto. Braucht neuen Code und eine neue
   Firestore-Regel für den geteilten Datensatz (noch nicht entworfen).
+  **Präzisiert (18.09.2026): Empfänger braucht dafür sein bestehendes
+  Adrabic-Konto** — kein separates „Klassenraum-Konto", keine neue
+  Registrierung nur fürs Teilen. Betreiber hat dieser Richtung
+  ausdrücklich zugestimmt („ok dann machen wir das"). Grund: die
+  Altersangabe ist dann schon durch die normale Registrierung erledigt
+  (siehe Kahoot/Quizlet-Vergleich unten), statt neu beim Teilen gestellt
+  zu werden.
 - **C3 (Chat): entschieden.** Im ersten Baustein **nichts** — kein Chat,
   keine Nachrichten. Bleibt, falls überhaupt, Teil der späteren
   Ausbaustufe.
