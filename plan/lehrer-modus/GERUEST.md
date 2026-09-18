@@ -363,3 +363,72 @@ ungültig machen" (kompletter Widerruf), nicht „einzelne Person kicken",
 weil Letzteres voraussetzen würde, einzelne Zugänge unterscheidbar zu
 machen. Offen, ob das für den Betreiber wichtig genug ist, um diesen
 Widerspruch aufzulösen.
+
+**Entschieden (18.09.2026):** Betreiber „was auch immer am besten ist,
+solange sicher und rechtlich nicht gefährlich" — gewählt: **ganzen Code
+widerrufen reicht**, kein Kicken einzelner Personen. Volle Anonymität
+bleibt erhalten, kein Widerspruch mehr offen.
+
+## I · Umgesetzt (vorbereitet, nicht scharf geschaltet): Code-Entwurf in app.js
+
+Auf Betreiber-Wunsch technisch vorbereitet, damit es startklar ist, sobald
+Frage 5 geklärt ist — **funktioniert heute absichtlich nicht**, siehe
+Kommentarblock „ENTWURF, NICHT SCHARF GESCHALTET" direkt über
+`teileLektionCode()` in `app.js`.
+
+- `baueWeitergabeBereich(b, version)` — Inhalt-Baustein aus
+  `exportWeitergabe()` herausgezogen, damit Datei-Export und Code-Teilen
+  exakt denselben Inhalt erzeugen (keine zweite, abweichende Fassung).
+- `verarbeiteImportDaten(data)` — ebenso aus `importBackupFile()`
+  herausgezogen, damit Datei-Import und Code-Einlösen dieselbe
+  Zusammenführungs-Logik und dieselben Größengrenzen (`IMPORT_MAX_*`)
+  benutzen.
+- `genTeilCode()` — **kryptographisch zufälliger** Code (`crypto.getRandomValues`,
+  nicht `genId()`/`Math.random()`), zehn Zeichen aus einem Alphabet ohne
+  0/O/1/I, Format `XXXXX-XXXXX`. Der Code ist hier die einzige
+  Zugriffsschranke, deshalb die höhere Sorgfalt als bei normalen
+  Dokument-Nummern.
+- `teileLektionCode()` — legt `geteilteLektionen/{code}` an (Felder:
+  `ownerUid`, `erstelltAm`, `inhalt`) und trägt den Code am Bereich selbst
+  ein (`teilCode`, neues Feld). Zeigt danach nur den Code — keine
+  Rückmeldung wird je vom Server zum Sender zurückgeschickt.
+- `beendeTeilenCode()` — löscht den `geteilteLektionen`-Datensatz und das
+  `teilCode`-Feld. Das ist der einzige Widerruf: ganz oder gar nicht,
+  passend zur obigen Entscheidung.
+- `codeEinloesenStart()` / `codeEinloesen(code)` — liest den Datensatz,
+  reicht ihn an `verarbeiteImportDaten()` weiter. Kein Schreibzugriff auf
+  den geteilten Datensatz, also kein Signal an den Sender.
+- Oberfläche: neue Karten „Per Code teilen" (Einstellungen → Sichern) und
+  „Code einlösen" (Einstellungen → Einspielen), beide mit **Entwurf**-Plakette
+  sichtbar markiert, damit niemand denkt, es sei fertig.
+
+**Warum das heute nichts kaputt machen kann:** `firestore.rules` ist
+**nicht** angefasst — weder das neue Feld `teilCode` in `bereichFelder()`
+noch die Sammlung `geteilteLektionen` sind dort eingetragen. Jeder Versuch,
+den Entwurf zu benutzen, scheitert serverseitig mit `permission-denied`.
+Der exakte Regel-Entwurf, der das freischalten würde, folgt unten — bewusst
+nur hier notiert, nicht in `firestore.rules` übernommen, damit ein
+versehentliches `firebase deploy` nichts scharf schaltet, was noch nicht
+freigegeben ist.
+
+**Regel-Entwurf für später** (in `firestore.rules` einzutragen, sobald
+Frage 5 geklärt ist):
+
+```
+// In bereichFelder(): 'teilCode' ergänzen
+// In bereichWerte(): (!pruefen.hasAny(['teilCode']) || textOderNull(d.teilCode, 20))
+
+match /geteilteLektionen/{code} {
+  allow read: if request.auth != null;
+  allow create: if request.auth != null
+                && request.resource.data.keys().hasOnly(['ownerUid', 'erstelltAm', 'inhalt'])
+                && request.resource.data.ownerUid == request.auth.uid
+                && request.resource.data.inhalt is map;
+  allow delete: if request.auth != null && resource.data.ownerUid == request.auth.uid;
+  allow update: if false; // Inhalt ist unveränderlich - nur neu erstellen oder löschen
+}
+```
+
+Veröffentlicht als Teil von **v3.5.2** zusammen mit der geöffneten
+Weitergabe (Abschnitt G) — derselbe Versionssprung, weil der Entwurfscode
+inert ist und nichts an der Nutzung der bestehenden Funktionen ändert.

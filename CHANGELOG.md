@@ -4,6 +4,10 @@
 
 **„Kartensatz zum Weitergeben" war bisher an eine feste Nutzernummer (den Betreiber) gebunden.** Die ursprüngliche Sorge dahinter – aus Versehen geteilte halbfertige Sätze, und Kennungs-Kollisionen, wenn mehrere Leute denselben `satzId` exportieren – ist inzwischen an anderer Stelle separat abgedeckt: ein Bestätigungsdialog zeigt vor jedem Export genau, was rausgeht, und ein geführter (importierter) Bereich lässt sich ohnehin nicht weitergeben, nur ein frisch selbst angelegter mit neuer, zufälliger Kennung. Auf Betreiber-Entscheidung ist die Funktion jetzt für jedes Konto sichtbar, nicht nur für eines – kostenlos, mit einem möglichen späteren Bezahl-Baustein als offenem Punkt in `plan/monetarisierung/GERUEST.md`. Details und die Verbindung zur Lehrer-/Klassenraum-Idee in `plan/lehrer-modus/GERUEST.md`.
 
+### Vorbereitet, nicht aktiv (Komfort-Entwurf: Lektion per Code teilen)
+
+**Zwei neue, mit „Entwurf" gekennzeichnete Karten** in den Einstellungen (Sichern → „Per Code teilen", Einspielen → „Code einlösen") bereiten die Komfortversion aus `plan/lehrer-modus/GERUEST.md` (Abschnitt H/I) vor: eine Lektion über einen Code teilen, ohne dass der Sender je erfährt, wer oder ob sie eingelöst wurde. **Funktioniert absichtlich noch nicht** – `firestore.rules` ist unverändert, jeder Versuch schlägt mit `permission-denied` fehl, bis die dort dokumentierte neue Regel bewusst nachgezogen wird (offene Rechtsfrage zu Minderjährigen, siehe Gerüst). Code-seitig vorbereitet: `baueWeitergabeBereich()` und `verarbeiteImportDaten()` aus dem bestehenden Datei-Export/-Import herausgezogen, damit beide Wege exakt denselben Inhalt erzeugen bzw. gleich verarbeiten.
+
 ## 3.5.1 – 18. September 2026
 
 ### Behoben (Serie/Streak zeigte nach dem Neustart manchmal einen falschen, sich selbst korrigierenden Wert)

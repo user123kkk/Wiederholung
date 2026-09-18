@@ -2639,21 +2639,78 @@ function exportBackup(onlyCurrent) {
    sind, lassen sich nicht nachruesten - und ohne sie kann ein spaeteres
    Update den vorhandenen Satz nicht wiedererkennen und legt stattdessen
    einen zweiten Bereich mit allem doppelt an. */
-async function exportWeitergabe() {
-  if (!istAutor()) return;   // Sicherung, falls der Knopf doch je woanders auftaucht
-  const b = currentBereich();
+/* Prueft, ob b ueberhaupt weitergebbar ist, und zeigt sonst eine erklaerende
+   Meldung. Gemeinsam fuer den Datei-Export und den Code-Entwurf (H),
+   damit beide Wege dieselben Bedingungen stellen. */
+async function weitergabeMoeglich(b) {
   if (istGefuehrt(b)) {
     await dlgAlert('„' + b.name + '" ist selbst ein geführter Satz. Weitergeben kann ihn nur, wer ihn zusammengestellt hat.',
       "Nicht möglich");
-    return;
+    return false;
   }
-  const lektionen = lektionenVon(b);
-  if (lektionen.length === 0) {
+  if (lektionenVon(b).length === 0) {
     await dlgAlert('In „' + b.name + '" gibt es noch keine Speicherkarte der Art „Lektion". ' +
       'Ohne Lektionen gäbe es nichts zum Freischalten – wer den Satz einspielt, hätte gar keine Karte zum Lernen.\n\n' +
       'Leg im Verwalten-Tab unter „Speicherkarten“ mindestens eine Lektion an.', "Noch keine Lektionen");
-    return;
+    return false;
   }
+  return true;
+}
+
+/* Baut den weitergebbaren Inhalt eines Bereichs - ohne Lernstand, ohne
+   eigene Speicherkarten, alle Lektionen bis auf die erste gesperrt (siehe
+   Kommentar ueber exportWeitergabe). Herausgezogen aus exportWeitergabe(),
+   damit der Code-Entwurf aus lehrer-modus/GERUEST.md (Abschnitt H) denselben
+   Inhalt erzeugt wie der bestehende Datei-Export, statt einer zweiten,
+   moeglicherweise abweichenden Fassung. */
+function baueWeitergabeBereich(b, version) {
+  const karten = b.karten.map(c => ({
+    id: c.id,
+    quelleId: c.quelleId || c.id,
+    wort: c.wort,
+    uebersetzung: c.uebersetzung,
+    extra: c.extra,
+    stufe: 0
+  }));
+  const sets = (b.sets || []).filter(s => s.art === "kategorie" || s.art === "lektion").map(s => ({
+    id: s.id,
+    quelleId: s.quelleId || s.id,
+    name: s.name,
+    art: s.art,
+    cardIds: s.cardIds.slice()
+  }));
+  return {
+    id: b.id, name: b.name,
+    gefuehrt: true, satzId: b.satzId, satzVersion: version,
+    karten: karten, sets: sets
+  };
+}
+
+/* ---------- 2.3.0: Backup zum Weitergeben ----------
+   Der Unterschied zu einem normalen Backup faellt hier, beim ERZEUGEN der
+   Datei - nicht beim Einspielen. Das ist Absicht: So gibt es keinen
+   Import-Knopf, mit dem man aus Versehen den eigenen Lernstand auf Null
+   setzen kann. Der Import liest schlicht, was in der Datei steht.
+
+   In die Datei kommt:
+     - jede Karte mit Stufe 0, ohne Erstbewertung, ohne Rueckfaelle
+       (nextReview wird weggelassen; normCard setzt beim Einspielen den
+       Tag des Imports ein, nicht meinen Tag hier)
+     - die Speicherkarten mit ihrer Art
+     - alle Lektionen gesperrt, ausser der ersten
+     - die Markierung "gefuehrt" - daran haengt der Schreibschutz
+     - Kennung und laufende Nummer des Satzes, sowie eine Herkunfts-Nummer
+       an jeder Karte und jeder Speicherkarte
+
+   Die letzten beiden Punkte tun heute noch nichts. Sie muessen trotzdem
+   schon in der allerersten Datei stehen, denn Dateien, die einmal draussen
+   sind, lassen sich nicht nachruesten - und ohne sie kann ein spaeteres
+   Update den vorhandenen Satz nicht wiedererkennen und legt stattdessen
+   einen zweiten Bereich mit allem doppelt an. */
+async function exportWeitergabe() {
+  const b = currentBereich();
+  if (!(await weitergabeMoeglich(b))) return;
+  const lektionen = lektionenVon(b);
   const ohneLektion = b.karten.filter(c => !lektionen.some(s => s.cardIds.indexOf(c.id) !== -1)).length;
   const eigeneAnzahl = (b.sets || []).filter(s => (s.art || "eigen") === "eigen").length;
   const version = (b.satzVersion || 0) + 1;
@@ -2671,41 +2728,112 @@ async function exportWeitergabe() {
   b.satzVersion = version;
   patchDoc({ [pfadBereich(b.id) + ".satzId"]: b.satzId, [pfadBereich(b.id) + ".satzVersion"]: version });
 
-  const karten = b.karten.map(c => ({
-    id: c.id,
-    quelleId: c.quelleId || c.id,
-    wort: c.wort,
-    uebersetzung: c.uebersetzung,
-    extra: c.extra,
-    stufe: 0
-  }));
-  /* Eigene Speicherkarten bleiben zu Hause. "Meine schwierigen Wörter" ist
-     eine persoenliche Merkliste - sie in den Satz zu legen hiesse, jedem
-     Empfaenger meine Schwaechen als Lernstoff mitzugeben. Weitergegeben werden
-     nur Kategorien und Lektionen. */
-  /* 2.12.1: Ohne "gesperrt". Welche Lektion offen ist, rechnet der Empfaenger
-     seit 2.7.0 selbst aus (Lektion 1 immer, danach je nachdem, was sitzt) -
-     ein mitgeschicktes Schloss haette nur so ausgesehen, als wuerde es
-     etwas entscheiden. */
-  const sets = (b.sets || []).filter(s => s.art === "kategorie" || s.art === "lektion").map(s => ({
-    id: s.id,
-    quelleId: s.quelleId || s.id,
-    name: s.name,
-    art: s.art,
-    cardIds: s.cardIds.slice()
-  }));
   dateiSpeichern({
     exportedAt: new Date().toISOString(),
     profil: displayName,
     weitergabe: true,
     satz: { id: b.satzId, version: version, name: b.name },
-    bereiche: [{
-      id: b.id, name: b.name,
-      gefuehrt: true, satzId: b.satzId, satzVersion: version,
-      karten: karten, sets: sets
-    }]
+    bereiche: [baueWeitergabeBereich(b, version)]
   }, "kartensatz-" + slugName(b.name) + "-v" + version + ".json");
   render();
+}
+
+/* ---------- ENTWURF, NICHT SCHARF GESCHALTET (18.09.2026) ----------
+   Komfortversion aus plan/lehrer-modus/GERUEST.md, Abschnitt H: Lektion per
+   Code teilen statt Datei hin- und herschicken, OHNE dass der Sender
+   irgendetwas ueber den Empfaenger erfaehrt (kein Log, kein Zaehler, keine
+   Rueckmeldung).
+
+   WARUM DAS HEUTE NICHT FUNKTIONIERT UND DAS AUCH SO BLEIBEN SOLL: Das
+   braucht eine neue Firestore-Regel fuer die Sammlung "geteilteLektionen"
+   (Lesezugriff fuer jeden mit dem richtigen Code) UND ein neues Feld
+   "teilCode" in bereichFelder() der Regeln - keins von beidem ist in
+   firestore.rules eingetragen. Ohne Regel schlaegt jeder Schreib-/
+   Lesevorgang hier mit "permission-denied" fehl. Das ist Absicht: die
+   Betreiber-Entscheidung zur Minderjaehrigen-Frage (offene Frage 5 im
+   Geruest) steht noch aus. Der Code ist vorbereitet, aber inert, bis die
+   Regel bewusst nachgezogen wird - siehe GERUEST.md Abschnitt H fuer den
+   genauen Regel-Entwurf. */
+function genTeilCode() {
+  /* Absichtlich kryptographisch zufaellig, nicht genId(): der Code ist hier
+     die einzige Zugriffsschranke (wer ihn kennt, kann lesen), nicht nur eine
+     Dokument-Nummer. Math.random() waere fuer diesen Zweck zu schwach. */
+  const ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"; // ohne 0/O/1/I - keine Verwechslung
+  const bytes = new Uint8Array(10);
+  crypto.getRandomValues(bytes);
+  let code = "";
+  for (const b of bytes) code += ALPHABET[b % ALPHABET.length];
+  return code.slice(0, 5) + "-" + code.slice(5);
+}
+async function teileLektionCode() {
+  const b = currentBereich();
+  if (!(await weitergabeMoeglich(b))) return;
+  if (b.teilCode) {
+    await dlgAlert('„' + b.name + '" wird schon über den Code ' + b.teilCode + ' geteilt. ' +
+      'Erst „Teilen beenden“, dann neu teilen.', "Schon aktiv");
+    return;
+  }
+  const version = (b.satzVersion || 0) + 1;
+  const ok = await dlgConfirm(
+    'Erzeugt einen Code, über den jede:r mit dem Code diese Lektion in die eigene App übernehmen kann - ' +
+    'ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.',
+    { title: "Per Code teilen (Entwurf)", okLabel: "Code erzeugen" });
+  if (!ok) return;
+
+  if (!b.satzId) b.satzId = slugName(b.name) + "-" + genId();
+  b.satzVersion = version;
+  const code = genTeilCode();
+  b.teilCode = code;
+  patchDoc({
+    [pfadBereich(b.id) + ".satzId"]: b.satzId,
+    [pfadBereich(b.id) + ".satzVersion"]: version,
+    [pfadBereich(b.id) + ".teilCode"]: code
+  });
+  try {
+    await fb.setDoc(fb.doc(db, "geteilteLektionen", code), {
+      ownerUid: currentUser.uid,
+      erstelltAm: new Date().toISOString(),
+      inhalt: { bereiche: [baueWeitergabeBereich(b, version)] }
+    });
+  } catch (e) {
+    /* Erwarteter Fall, solange die Regel fehlt (siehe Kommentar oben) -
+       das Bereichsfeld bleibt trotzdem gesetzt; naechster Versuch nach der
+       Regel-Freischaltung braucht dann nur "Teilen beenden" + neu erzeugen. */
+  }
+  render();
+  await dlgAlert("Code: " + code, "Teilen eingerichtet");
+}
+async function beendeTeilenCode() {
+  const b = currentBereich();
+  if (!b.teilCode) return;
+  const code = b.teilCode;
+  const ok = await dlgConfirm("Der Code " + code + " funktioniert danach nicht mehr.",
+    { title: "Teilen beenden?", okLabel: "Beenden", danger: true });
+  if (!ok) return;
+  b.teilCode = null;
+  patchDoc({ [pfadBereich(b.id) + ".teilCode"]: fb.deleteField() });
+  try { await fb.deleteDoc(fb.doc(db, "geteilteLektionen", code)); } catch (e) {}
+  render();
+}
+async function codeEinloesenStart() {
+  const code = await dlgPrompt("Code eingeben (von der Person, die geteilt hat):", "",
+    { title: "Code einlösen", okLabel: "Einlösen" });
+  if (!code || !code.trim()) return;
+  await codeEinloesen(code.trim().toUpperCase());
+}
+async function codeEinloesen(code) {
+  let snap;
+  try {
+    snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code));
+  } catch (e) {
+    await dlgAlert("Konnte den Code nicht prüfen: " + (e && e.message ? e.message : e), "Fehler");
+    return;
+  }
+  if (!snap.exists()) {
+    await dlgAlert("Diesen Code gibt es nicht (mehr). Prüf die Schreibweise, oder frag noch einmal nach.", "Code ungültig");
+    return;
+  }
+  await verarbeiteImportDaten(snap.data().inhalt);
 }
 
 /* ---------- 2.5.0: Nachschub für einen vorhandenen Kartensatz ----------
@@ -2877,6 +3005,114 @@ async function satzZusammenfuehren(ziel, datei) {
   return d;
 }
 
+/* Herausgezogen aus importBackupFile(), damit der Code-Entwurf aus
+   lehrer-modus/GERUEST.md (codeEinloesen(), Abschnitt H) denselben Weg
+   nimmt wie ein Datei-Import - dieselben Grenzen, dieselbe
+   Zusammenfuehrungs-Logik, keine zweite, moeglicherweise abweichende
+   Fassung. `data` hat die Form {bereiche: [...]}, egal ob sie aus einer
+   Datei oder aus einem geteilten Firestore-Dokument kommt. */
+async function verarbeiteImportDaten(data) {
+  if (!data || !Array.isArray(data.bereiche)) {
+    await dlgAlert("Das ist kein gültiger Lernkarten-Bestand.", "Import nicht möglich");
+    return;
+  }
+  /* Anzahl pruefen, bevor normBereiche den ganzen Bestand aufbaut und
+     bevor irgendetwas geschrieben wird. Gezaehlt wird auf den Rohdaten:
+     Was hier zu gross ist, soll gar nicht erst entstehen. */
+  if (data.bereiche.length > IMPORT_MAX_BEREICHE) {
+    await dlgAlert("Das enthält " + data.bereiche.length + " Bereiche. Eingespielt werden bis zu " +
+      IMPORT_MAX_BEREICHE + ".", "Import nicht möglich");
+    return;
+  }
+  let kartenGesamt = 0;
+  for (const b of data.bereiche) {
+    if (b && typeof b === "object" && Array.isArray(b.karten)) kartenGesamt += b.karten.length;
+  }
+  if (kartenGesamt > IMPORT_MAX_KARTEN) {
+    await dlgAlert("Das enthält " + kartenGesamt + " Karten. Eingespielt werden bis zu " +
+      IMPORT_MAX_KARTEN + " auf einmal.", "Import nicht möglich");
+    return;
+  }
+  /* 2.19.0: Eingespielt wird aus den Einstellungen heraus - das Ergebnis
+     steht aber in den Bereichen. Ohne diese Zeile bliebe man auf dem
+     Einstellungs-Bildschirm stehen und saehe von 120 neuen Karten nichts. */
+  ui.einstellungen = false;
+  const imported = normBereiche(data.bereiche);
+
+  /* 2.5.0: Erst pruefen, was davon Nachschub für einen schon vorhandenen
+     Satz ist. Nur der Rest wird als neuer Bereich angelegt. */
+  const anzulegen = [];
+  const berichte = [];
+  for (const b of imported) {
+    /* 2.11.5: Zusammengefuehrt wird nur, was auch als Kartensatz gedacht
+       war. Ein gewoehnliches Backup traegt zwar dieselbe Kennung - es ist
+       aber der Arbeitsstand des Autors samt seiner eigenen Speicherkarten,
+       und die haben im Satz eines anderen nichts verloren. Es entsteht dann
+       wie bei jeder normalen Datei ein eigener Bereich. */
+    const ziel = (b.satzId && b.gefuehrt) ? bereiche.find(x => x.satzId === b.satzId && istGefuehrt(x)) : null;
+    if (!ziel) { anzulegen.push(b); continue; }
+    const bericht = await satzZusammenfuehren(ziel, b);
+    if (bericht) berichte.push({ name: ziel.name, bericht: bericht });
+  }
+  if (anzulegen.length === 0) {
+    render();
+    if (berichte.length > 0) {
+      const r = berichte[0].bericht;
+      await dlgAlert('„' + berichte[0].name + '" ist aktualisiert: ' +
+        r.neu.length + ' Karte(n) dazu, ' + r.aktualisiert.length + ' berichtigt, ' + r.entfernt.length + ' weggefallen. ' +
+        'Dein Lernstand ist unverändert.', "Kartensatz aktualisiert");
+    }
+    return;
+  }
+  imported.length = 0;
+  for (const b of anzulegen) imported.push(b);
+
+  /* A4: Die eingespielten Bereiche kommen als eigene Feldpfade dazu.
+     Vorhandene Bereiche werden dabei nicht angefasst - frueher wurde das
+     ganze Dokument neu geschrieben, ein Import konnte also Karten
+     ueberbuegeln, die inzwischen auf einem anderen Geraet entstanden waren. */
+  const patch = {};
+  for (const b of imported) {
+    let name = b.name;
+    if (bereiche.some(x => x.name === name)) {
+      let n = 2;
+      while (bereiche.some(x => x.name === name + " (" + n + ")")) n++;
+      name = name + " (" + n + ")";
+    }
+    /* 2.2.0: Jede importierte Karte bekommt eine NEUE Nummer.
+       Seit dem Umbau in 2.0.0 liegt jede Karte als eigener Datensatz unter
+       ihrer Nummer. Behielt der Import die Nummern aus der Datei bei und
+       gab es diese Karten im Konto noch, ueberschrieb der Import sie und zog
+       sie in den neuen Bereich hinueber - der alte Bereich blieb leer
+       zurueck. Genau das passierte beim zweiten Import derselben Datei.
+       Mit neuen Nummern kann das nicht mehr vorkommen. Die Verweise in den
+       Speicherkarten werden mit umgeschrieben, sonst zeigten sie ins Leere. */
+    const vergeben = new Set();
+    const frisch = () => { let x = genId(); while (vergeben.has(x)) x = genId(); vergeben.add(x); return x; };
+    const nummernTausch = new Map();
+    b.karten.forEach(c => { const altId = c.id; c.id = frisch(); nummernTausch.set(altId, c.id); });
+    (b.sets || []).forEach(st => {
+      st.id = frisch();
+      st.cardIds = st.cardIds.map(x => nummernTausch.get(x)).filter(Boolean);
+    });
+    const neu = {
+      id: genId(), name: name,
+      /* 2.3.0: Schreibschutz, Kennung und Nummer kommen aus der Datei. Ein
+         normales Backup hat sie nicht - dann entsteht wie bisher ein ganz
+         gewoehnlicher, frei bearbeitbarer Bereich. */
+      gefuehrt: b.gefuehrt === true,
+      satzId: b.satzId || null,
+      satzVersion: b.satzVersion || 0,
+      karten: b.karten, sets: b.sets || []
+    };
+    bereiche.push(neu);
+    patch[pfadBereich(neu.id)] = bereichFelder(neu, bereiche.length - 1);
+  }
+  patchDoc(patch);
+  render();
+  dlgAlert(imported.length + " Bereich(e) mit insgesamt " + imported.reduce((sum, b) => sum + b.karten.length, 0) + " Karte(n) importiert.", "Import fertig");
+}
+
 function importBackupFile(file) {
   if (!file) return;
   /* Zuerst die Groesse - das geht, ohne die Datei anzufassen. Eine 400-MB-
@@ -2901,101 +3137,7 @@ function importBackupFile(file) {
       await dlgAlert("Diese Datei ist keine gültige Lernkarten-Backup-Datei.", "Import nicht möglich");
       return;
     }
-    /* Anzahl pruefen, bevor normBereiche den ganzen Bestand aufbaut und
-       bevor irgendetwas geschrieben wird. Gezaehlt wird auf den Rohdaten:
-       Was hier zu gross ist, soll gar nicht erst entstehen. */
-    if (data.bereiche.length > IMPORT_MAX_BEREICHE) {
-      await dlgAlert("Diese Datei enthält " + data.bereiche.length + " Bereiche. Eingespielt werden bis zu " +
-        IMPORT_MAX_BEREICHE + ".", "Import nicht möglich");
-      return;
-    }
-    let kartenGesamt = 0;
-    for (const b of data.bereiche) {
-      if (b && typeof b === "object" && Array.isArray(b.karten)) kartenGesamt += b.karten.length;
-    }
-    if (kartenGesamt > IMPORT_MAX_KARTEN) {
-      await dlgAlert("Diese Datei enthält " + kartenGesamt + " Karten. Eingespielt werden bis zu " +
-        IMPORT_MAX_KARTEN + " auf einmal.", "Import nicht möglich");
-      return;
-    }
-    /* 2.19.0: Eingespielt wird aus den Einstellungen heraus - das Ergebnis
-       steht aber in den Bereichen. Ohne diese Zeile bliebe man auf dem
-       Einstellungs-Bildschirm stehen und saehe von 120 neuen Karten nichts. */
-    ui.einstellungen = false;
-    const imported = normBereiche(data.bereiche);
-
-    /* 2.5.0: Erst pruefen, was davon Nachschub für einen schon vorhandenen
-       Satz ist. Nur der Rest wird als neuer Bereich angelegt. */
-    const anzulegen = [];
-    const berichte = [];
-    for (const b of imported) {
-      /* 2.11.5: Zusammengefuehrt wird nur, was auch als Kartensatz gedacht
-         war. Ein gewoehnliches Backup traegt zwar dieselbe Kennung - es ist
-         aber der Arbeitsstand des Autors samt seiner eigenen Speicherkarten,
-         und die haben im Satz eines anderen nichts verloren. Es entsteht dann
-         wie bei jeder normalen Datei ein eigener Bereich. */
-      const ziel = (b.satzId && b.gefuehrt) ? bereiche.find(x => x.satzId === b.satzId && istGefuehrt(x)) : null;
-      if (!ziel) { anzulegen.push(b); continue; }
-      const bericht = await satzZusammenfuehren(ziel, b);
-      if (bericht) berichte.push({ name: ziel.name, bericht: bericht });
-    }
-    if (anzulegen.length === 0) {
-      render();
-      if (berichte.length > 0) {
-        const r = berichte[0].bericht;
-        await dlgAlert('„' + berichte[0].name + '" ist aktualisiert: ' +
-          r.neu.length + ' Karte(n) dazu, ' + r.aktualisiert.length + ' berichtigt, ' + r.entfernt.length + ' weggefallen. ' +
-          'Dein Lernstand ist unverändert.', "Kartensatz aktualisiert");
-      }
-      return;
-    }
-    imported.length = 0;
-    for (const b of anzulegen) imported.push(b);
-
-    /* A4: Die eingespielten Bereiche kommen als eigene Feldpfade dazu.
-       Vorhandene Bereiche werden dabei nicht angefasst - frueher wurde das
-       ganze Dokument neu geschrieben, ein Import konnte also Karten
-       ueberbuegeln, die inzwischen auf einem anderen Geraet entstanden waren. */
-    const patch = {};
-    for (const b of imported) {
-      let name = b.name;
-      if (bereiche.some(x => x.name === name)) {
-        let n = 2;
-        while (bereiche.some(x => x.name === name + " (" + n + ")")) n++;
-        name = name + " (" + n + ")";
-      }
-      /* 2.2.0: Jede importierte Karte bekommt eine NEUE Nummer.
-         Seit dem Umbau in 2.0.0 liegt jede Karte als eigener Datensatz unter
-         ihrer Nummer. Behielt der Import die Nummern aus der Datei bei und
-         gab es diese Karten im Konto noch, ueberschrieb der Import sie und zog
-         sie in den neuen Bereich hinueber - der alte Bereich blieb leer
-         zurueck. Genau das passierte beim zweiten Import derselben Datei.
-         Mit neuen Nummern kann das nicht mehr vorkommen. Die Verweise in den
-         Speicherkarten werden mit umgeschrieben, sonst zeigten sie ins Leere. */
-      const vergeben = new Set();
-      const frisch = () => { let x = genId(); while (vergeben.has(x)) x = genId(); vergeben.add(x); return x; };
-      const nummernTausch = new Map();
-      b.karten.forEach(c => { const altId = c.id; c.id = frisch(); nummernTausch.set(altId, c.id); });
-      (b.sets || []).forEach(st => {
-        st.id = frisch();
-        st.cardIds = st.cardIds.map(x => nummernTausch.get(x)).filter(Boolean);
-      });
-      const neu = {
-        id: genId(), name: name,
-        /* 2.3.0: Schreibschutz, Kennung und Nummer kommen aus der Datei. Ein
-           normales Backup hat sie nicht - dann entsteht wie bisher ein ganz
-           gewoehnlicher, frei bearbeitbarer Bereich. */
-        gefuehrt: b.gefuehrt === true,
-        satzId: b.satzId || null,
-        satzVersion: b.satzVersion || 0,
-        karten: b.karten, sets: b.sets || []
-      };
-      bereiche.push(neu);
-      patch[pfadBereich(neu.id)] = bereichFelder(neu, bereiche.length - 1);
-    }
-    patchDoc(patch);
-    render();
-    dlgAlert(imported.length + " Bereich(e) mit insgesamt " + imported.reduce((sum, b) => sum + b.karten.length, 0) + " Karte(n) importiert.", "Import fertig");
+    await verarbeiteImportDaten(data);
   };
   reader.readAsText(file);
 }
@@ -5365,7 +5507,7 @@ function renderEinstellungenSeite(id) {
     html += '<button class="secondary" data-action="export-backup-current">Nur „' + esc(b.name) + '“</button>';
     html += '</div>';
     html += '</div>';
-    if (istAutor() && !istGefuehrt(b)) {
+    if (!istGefuehrt(b)) {
       html += '<div class="card" style="margin-top:var(--stack)">';
       html += '<h3>Zum Weitergeben</h3>';
       html += '<p class="hint">Derselbe Bereich, aber alles auf Stufe 0 und alle Lektionen bis auf ' +
@@ -5374,6 +5516,29 @@ function renderEinstellungenSeite(id) {
       html += '<button class="secondary" data-action="export-weitergabe">' + ikon("teilen", "i-sm") +
         ' Kartensatz zum Weitergeben</button>';
       html += '</div></div>';
+
+      /* ENTWURF, NICHT SCHARF GESCHALTET - siehe Kommentar über
+         teileLektionCode() in app.js und plan/lehrer-modus/GERUEST.md,
+         Abschnitt H. Der Knopf ist absichtlich sichtbar (damit sich das
+         Zusammenspiel mit der Oberfläche schon prüfen lässt), das Erzeugen
+         schlägt aber ohne die noch fehlende Firestore-Regel fehl. */
+      html += '<div class="card" style="margin-top:var(--stack)">';
+      html += '<h3>Per Code teilen <span class="badge">Entwurf</span></h3>';
+      if (b.teilCode) {
+        html += '<p class="hint">Aktiver Code: <strong>' + esc(b.teilCode) + '</strong>. ' +
+          'Jede:r mit diesem Code kann die Lektion übernehmen, ohne dass du davon erfährst.</p>';
+        html += '<div class="form-actions">';
+        html += '<button class="secondary danger" data-action="beende-teilen-code">Teilen beenden</button>';
+        html += '</div>';
+      } else {
+        html += '<p class="hint">Noch nicht freigeschaltet: braucht erst eine neue Firestore-Regel, ' +
+          'siehe plan/lehrer-modus/GERUEST.md. Der Knopf erzeugt bis dahin nur einen Fehler.</p>';
+        html += '<div class="form-actions">';
+        html += '<button class="secondary" data-action="teile-lektion-code">' + ikon("teilen", "i-sm") +
+          ' Code erzeugen</button>';
+        html += '</div>';
+      }
+      html += '</div>';
     }
     return html;
   }
@@ -5385,6 +5550,15 @@ function renderEinstellungenSeite(id) {
     html += '<div class="form-actions">';
     html += '<button data-action="import-trigger">' + ikon("einspielen", "i-sm") +
       ' Datei auswählen</button>';
+    html += '</div></div>';
+
+    /* ENTWURF, NICHT SCHARF GESCHALTET - siehe teileLektionCode() oben. */
+    html += '<div class="card" style="margin-top:var(--stack)">';
+    html += '<h3>Code einlösen <span class="badge">Entwurf</span></h3>';
+    html += '<p class="hint">Noch nicht freigeschaltet, siehe plan/lehrer-modus/GERUEST.md.</p>';
+    html += '<div class="form-actions">';
+    html += '<button class="secondary" data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
+      ' Code eingeben</button>';
     html += '</div></div>';
     return html;
   }
@@ -7700,6 +7874,9 @@ document.body.addEventListener("click", e => {
     case "export-backup": exportBackup(false); break;
     case "export-backup-current": exportBackup(true); break;
     case "export-weitergabe": exportWeitergabe(); break;
+    case "teile-lektion-code": teileLektionCode(); break;          // Entwurf, siehe GERUEST.md H
+    case "beende-teilen-code": beendeTeilenCode(); break;
+    case "code-einloesen-start": codeEinloesenStart(); break;
     case "streak-fortsetzen": streakFortsetzen(); break;
     case "verlauf-reset": verlaufZuruecksetzen(); break;
     case "karte-merken": karteMerken(btn.dataset.id); break;
