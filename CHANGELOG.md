@@ -1,3 +1,9 @@
+## 3.5.5 – 18. September 2026
+
+### Geändert (Stapel-Kachel: kein Verlauf mehr)
+
+**Betreiber-Präzisierung zur vorherigen Rückmeldung:** Nicht die Nav, nicht die Rundungen, nicht der Hintergrund-Schein waren gemeint – sondern konkret die große Kachel oben auf dem Startbildschirm ("X Karten sind heute fällig"), die von hell nach dunkel verläuft. Bei ihrer Größe (die größte Fläche auf dem Startbildschirm) fiel der Verlauf besonders auf. `.stapel` (`styles.css:1273`) ist jetzt eine flache Fläche – der helle Rand trägt den Akzent weiterhin, ohne den Verlaufs-Schein. Betreiber bestätigt: der Rest der App (Nav, Rundungen) gefällt so, wie er ist – ausdrücklich nicht verändert.
+
 ## 3.5.4 – 18. September 2026
 
 ### Geändert (Blätter wegwischen + zwei echte Funde beim Nachprüfen)

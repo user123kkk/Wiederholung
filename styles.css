@@ -1271,7 +1271,11 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 /* Die Stapel-Karte: der eine Ort auf dem Startbildschirm, an dem es
    weitergeht. Der Akzent trägt hier die Handlung (Satz 1). */
 .stapel {
-  background: linear-gradient(180deg, var(--accent-bg) 0%, transparent 58%), var(--surface);
+  /* 18.09.2026: der Verlauf (hell oben, dunkel unten) stand hier auf der
+     groessten Karte des Startbildschirms besonders auffaellig - Betreiber-
+     Rueckmeldung "sieht bisl KI slop aus". Flaeche jetzt eben, der Rand
+     traegt den Akzent allein weiter. */
+  background: var(--surface);
   border: 1px solid var(--accent-border);
   border-radius: var(--r-lg);
   padding: var(--space-6) var(--space-5);

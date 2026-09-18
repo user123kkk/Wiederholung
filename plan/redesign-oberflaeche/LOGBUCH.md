@@ -4,6 +4,44 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-18 — Präzisierung: Stapel-Kachel ohne Verlauf (v3.5.5)
+
+**Geändert:** `styles.css:1273-1278` (`.stapel`): Hintergrund von
+`linear-gradient(180deg, var(--accent-bg) 0%, transparent 58%), var(--surface)`
+auf schlicht `var(--surface)`. Rand (`border-color: var(--accent-border)`)
+bleibt, trägt den Akzent jetzt allein.
+
+**Entscheidung:** Die Vergleichsseite (vorheriger Eintrag) hatte das
+falsche Ziel getroffen — Betreiber-Rückmeldung zu den drei Varianten:
+„das davor ist vieeeel besser" (Nav-Glas, Rundungen, Hintergrund-Glow
+bleiben unverändert, wie sie sind, ausdrücklich nicht antasten). Gemeint
+war konkret nur die Stapel-Kachel oben auf dem Startbildschirm, deren
+Verlauf (hell oben, dunkel unten) bei ihrer Größe am meisten auffiel.
+`.card--accent` (dieselbe Verlaufs-Formel, styles.css:1164) bewusst NICHT
+angetastet — sie wird an kleineren Karten verwendet, wo der Effekt nicht
+gemeldet wurde, und ist ein geteiltes Systemmuster. Mit Playwright
+gegengeprüft (Screenshot der isolierten `.stapel`-Kachel).
+
+**Offen:** Zweiter Punkt aus derselben Rückmeldung, noch nicht angefasst:
+Die Navigationsleiste (Lernen/Fortschritt/Verwalten) wirkt auf
+Betreiber-Screenshots je nach Reiter unterschiedlich hoch/positioniert —
+auf „Lernen" schwebt sie mit sichtbarem Abstand nach unten, auf
+„Fortschritt"/„Verwalten" wirkt sie eher am unteren Rand angeklebt. Sehr
+wahrscheinlich dasselbe bekannte, bisher unbestätigte Phänomen wie
+Beobachtung 13 (dynamische Safari-Symbolleiste, die beim Scrollen ein-/
+ausklappt und dabei `position: fixed`-Elemente verschiebt) — aber auch
+plausibel ein reiner Aufnahme-Zeitpunkt-Unterschied (Screenshot nach
+Scrollen vs. direkt nach Tab-Wechsel), kein Code-Fehler. Bewusst NICHT
+blind gepatcht, bevor das unterschieden ist — siehe Rückfrage an den
+Betreiber im Chat.
+
+**Nächster Schritt:** Antwort abwarten, ob der Unterschied auch OHNE
+vorheriges Scrollen auftritt. Falls ja: `.nav`-Positionierung
+(`styles.css:621-637`) genauer untersuchen. Falls nein: kein Fehler,
+Eintrag hier als „geprüft, nichts zu tun" schließen.
+
+---
+
 ### 2026-09-18 — Vergleichsseite: „sieht bisl KI-Slop aus"
 
 **Geändert:** Zwei neue Arbeitsmittel, kein Produktivcode:
