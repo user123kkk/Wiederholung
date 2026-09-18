@@ -271,3 +271,36 @@ Alle vier Punkte verkleinern nur die technische Angriffsfläche und passen
 zum bisherigen Individualcode-Modell — sie ändern nichts an der Sperre bei
 Frage 5, die weiterhin echten Rechtsrat braucht, bevor die Firestore-Regel
 für den kontoübergreifenden Zugriff scharf geschaltet wird.
+
+## G · Umgesetzt: Weitergabe-Knopf für alle geöffnet (v3.5.2, 18.09.2026)
+
+Bei der Recherche kam auf, dass die bestehende Minimalversion
+(`export-weitergabe`, Abschnitt A0.1) bisher an eine feste `AUTOR_UID`
+gebunden war — sichtbar nur für den Betreiber selbst, mit dokumentierter
+Absicht dahinter (Unfallschutz + Kennungs-Kollisionen, siehe `app.js`,
+Kommentar über `istAutor()`). Betreiber-Entscheidung: **jetzt für alle
+Konten öffnen, kostenlos**, mit dem Gedanken, dass ein späteres
+Bezahl-Modell dafür denkbar ist ([`monetarisierung/GERUEST.md`](../monetarisierung/GERUEST.md),
+Punkt A.2 — „Abo für Zusatzfunktionen").
+
+**Warum das sicher genug war, um es sofort umzusetzen** (kein Bauauftrag,
+keine neue Firestore-Regel, keine Berührung mit Frage 5):
+- Die Sorge „aus Versehen geteilt" ist durch den bestehenden
+  Bestätigungsdialog in `exportWeitergabe()` abgedeckt (zeigt Kartenzahl,
+  Lektionen, gesperrte Karten, bevor die Datei entsteht).
+- Die Sorge „Kennungs-Kollision bei satzId" ist durch die
+  `istGefuehrt`-Prüfung dort separat abgedeckt: ein importierter Bereich
+  lässt sich gar nicht weitergeben, nur ein frisch selbst angelegter mit
+  neuer Kennung.
+- Es bleibt reiner **Datei-Export** — kein neuer Firestore-Zugriff über
+  Kontogrenzen hinweg, also nichts, was Frage 5 berührt.
+
+`istAutor()` gibt jetzt immer `true` zurück, `AUTOR_UID` und der zugehörige
+Einrichtungs-Hinweisbanner in `renderMain()` sind entfernt (waren nur für
+den alten Zustand gedacht). Veröffentlicht als **v3.5.2** — `APP_VERSION`,
+`CACHE_NAME`, `CHANGELOG.md` nach der Liste aus `README.md` nachgezogen.
+
+**Wichtig, damit es nicht mit dem Rest dieses Dokuments verwechselt wird:**
+Das ist die Minimalversion (Datei-Export), nicht der Individualcode-/
+In-App-Link-Teil aus C4/C2/F. Die Komfortversion bleibt weiterhin gesperrt,
+bis Frage 5 mit echtem Rechtsrat geklärt ist.

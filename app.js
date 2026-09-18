@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.5.1";
+const APP_VERSION = "3.5.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -29,33 +29,24 @@ const APPLE_LOGIN_BEREIT = false;
 const app = document.getElementById("app");
 
 /* ---------- Wer darf Kartensätze weitergeben? ----------
-   "Backup zum Weitergeben" ist ein Werkzeug fuer den, der den Kartensatz
-   zusammenstellt, nicht fuer die, die ihn benutzen. Waere der Knopf fuer alle
-   da, kaemen frueher oder spaeter halbfertige Saetze mit fremden Kennungen in
-   Umlauf - und die Update-Erkennung haette zwei verschiedene Saetze mit
-   derselben Kennung vor sich.
+   Bis 3.5.1 war "Backup zum Weitergeben" an eine feste Nutzernummer (den
+   Betreiber) gebunden - aus Sorge vor zwei Dingen: aus Versehen geteilte
+   halbfertige Saetze, und Kennungs-Kollisionen, wenn mehrere Leute
+   denselben satzId exportieren.
 
-   Hier steht die Nutzernummer des Autors. Sie kommt von Firebase, ist eine
-   zufaellige Zeichenfolge und verraet nichts ueber die Person - anders als
-   eine E-Mail-Adresse, die in einem oeffentlichen Repo von Spam-Sammlern
-   gelesen wuerde.
+   Seit 3.5.2 offen fuer jeden (Betreiber-Entscheidung 18.09.2026): beide
+   Sorgen sind separat abgedeckt, nicht durch diese Sperre. Versehentliches
+   Teilen faengt der Bestaetigungsdialog in exportWeitergabe() ab, der genau
+   zeigt, was rausgeht, bevor die Datei entsteht. Kennungs-Kollisionen
+   verhindert exportWeitergabe() selbst: ein geführter (importierter)
+   Bereich laesst sich gar nicht weitergeben (siehe istGefuehrt-Pruefung
+   dort) - nur ein frisch selbst angelegter Bereich, der beim ersten Export
+   eine neue, zufaellige Kennung bekommt.
 
-   SOLANGE HIER NICHTS STEHT, sieht JEDER den Knopf. Dann zeigt die App oben
-   eine Zeile mit der eigenen Nummer zum Abschreiben - das ist der
-   Einrichtungszustand, siehe renderMain().
-
-   Was das leistet und was nicht: Wer nur in der App klickt, findet nichts.
-   Wer ein zweites Konto anlegt, kommt nicht weiter, denn die Nummer stimmt
-   dann nicht. Wer aber die index.html selbst oeffnet und liest, sieht diese
-   Stelle - und daran kann keine Seite etwas aendern, die im Browser des
-   Lesers laeuft. Ihr Zweck ist, dass niemand VERSEHENTLICH etwas in Umlauf
-   bringt, nicht dass etwas geheim bleibt. */
-const AUTOR_UID = "pitcQCAowlSOMjCvJ4xKSnuGVXi1";
-function istAutor() {
-  if (!AUTOR_UID) return true;              // noch nicht eingerichtet
-  return !!(currentUser && currentUser.uid === AUTOR_UID);
-}
-function autorNochNichtEingerichtet() { return !AUTOR_UID; }
+   Moeglicher spaeterer Bezahl-Baustein (siehe plan/monetarisierung/
+   GERUEST.md): wird erst gebaut, wenn der Betreiber diesen Strang
+   startet - heute kostenlos fuer alle. */
+function istAutor() { return true; }
 
 /* ---------- XSS-Schutz ---------- */
 function esc(s) {
@@ -4797,19 +4788,6 @@ function renderMain() {
         ' Die App zeigt weiter den zuletzt geladenen Stand.');
     }
 
-    /* Einrichtungszustand: Solange AUTOR_UID leer ist, sieht jeder den
-       Weitergabe-Knopf. Diese Zeile ist deshalb absichtlich laut - sie darf
-       nicht uebersehen werden, denn sie steht sonst irgendwann bei allen. */
-    if (autorNochNichtEingerichtet() && currentUser) {
-      kopf += bannerFehler("Noch nicht eingerichtet:",
-        'Der Knopf „Kartensatz zum Weitergeben“ ist gerade für <em>alle</em> sichtbar. ' +
-        'Trag deine Nutzernummer in <code>AUTOR_UID</code> in der app.js ein: <code>' +
-        esc(currentUser.uid) + '</code>');
-    }
-
-    /* Auf dem Einstellungs-Bildschirm nicht: dort steht derselbe Hinweis
-       ohnehin in der Sektion "Sichern", und zweimal dasselbe auf einem
-       Bildschirm heisst, dass keins von beiden wichtig ist. */
     const backupAge = ui.einstellungen ? 0 : daysSinceLastBackup();
     if (backupAge === null || backupAge >= 14) {
       kopf += '<div class="banner-info banner-leise">' + ikon("sichern", "i-sm") +

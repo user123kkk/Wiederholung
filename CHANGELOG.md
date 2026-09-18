@@ -1,3 +1,9 @@
+## 3.5.2 – 18. September 2026
+
+### Geändert (Kartensatz-Weitergabe für alle geöffnet)
+
+**„Kartensatz zum Weitergeben" war bisher an eine feste Nutzernummer (den Betreiber) gebunden.** Die ursprüngliche Sorge dahinter – aus Versehen geteilte halbfertige Sätze, und Kennungs-Kollisionen, wenn mehrere Leute denselben `satzId` exportieren – ist inzwischen an anderer Stelle separat abgedeckt: ein Bestätigungsdialog zeigt vor jedem Export genau, was rausgeht, und ein geführter (importierter) Bereich lässt sich ohnehin nicht weitergeben, nur ein frisch selbst angelegter mit neuer, zufälliger Kennung. Auf Betreiber-Entscheidung ist die Funktion jetzt für jedes Konto sichtbar, nicht nur für eines – kostenlos, mit einem möglichen späteren Bezahl-Baustein als offenem Punkt in `plan/monetarisierung/GERUEST.md`. Details und die Verbindung zur Lehrer-/Klassenraum-Idee in `plan/lehrer-modus/GERUEST.md`.
+
 ## 3.5.1 – 18. September 2026
 
 ### Behoben (Serie/Streak zeigte nach dem Neustart manchmal einen falschen, sich selbst korrigierenden Wert)
