@@ -773,6 +773,48 @@ gehen kann, wenn die Seite currentUser vorher schließt) eingrenzen.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
 - **Bewusst zurückgestellt:** 11, 12.
 
+## 18. Bereichs-Auswahl-Zeile („Balken mit den 3 Bereichen") — seit mind. 6 Meldungen nie verstanden oder behoben ⚠️ PRIORITÄT
+
+**Beobachtung, so gemeldet (18.09.2026):** „diese zeile mit 3 Bereichen ist
+immer noch [unklar/instabil] und es ändert sich mit jedem Bereich." Dazu
+Screenshots von der Bereichs-Auswahl (Pill oben, z. B. „Bayna Yadayk 1" /
+„Medina 1") in den Tabs Verwalten, Lernen und Fortschritt.
+
+**Wichtig, vom Betreiber ausdrücklich nachgetragen:** Das hier ist **kein
+neuer Fund** — der Betreiber hat diesen Bug nach eigener Aussage **schon
+mindestens sechsmal erklärt**, ohne dass er je verstanden oder behoben
+wurde. Das ist damit der mit Abstand am längsten unbehandelte Punkt in
+dieser ganzen Liste und sollte beim nächsten Antasten **zuerst** geklärt
+werden — nicht als eine Beobachtung unter vielen.
+
+**Warum es bisher wohl nie ankam:** Alle bisherigen Versuche (auch der
+heutige) haben nur eine sehr allgemeine Formulierung („ändert sich",
+„unbeben/instabil") ohne festen Ablauf zum Nachstellen. Genau das Muster,
+das in dieser Liste sonst zu unbestätigten Vermutungen führt (siehe Punkt
+13, 16) — nur dass es hier schon sechsmal wiederholt wurde, ohne dass
+jemand die fehlenden Angaben gezielt nachgefragt hat.
+
+**Was für eine echte Klärung fehlt (konkret, nicht allgemein):**
+1. Auf welchem Screen/Tab genau (Verwalten/Lernen/Fortschritt — oder allen
+   dreien wie auf den Screenshots)?
+2. Was genau ändert sich an der Zeile — der angezeigte Bereichsname, die
+   Reihenfolge der Bereiche in der Auswahl, eine Zahl daneben, das Layout/die
+   Position auf dem Bildschirm?
+3. Passiert es sofort beim Antippen/Wechseln, oder erst nach einer Weile,
+   nach Reload, nach App-Neustart?
+4. Ist es bei jedem Bereichswechsel gleich, oder nur bei bestimmten
+   Bereichen (z. B. nur bei „Medina 1", nicht bei „Bayna Yadayk 1")?
+5. Am besten: ein kurzes Bildschirm-Video, das den Wechsel von einem Bereich
+   zum anderen zeigt, in dem Moment, in dem es „sich ändert".
+
+**Nächster Schritt:** Bevor irgendetwas am Code versucht wird, diese fünf
+Fragen konkret beantworten lassen (ggf. Video). Erst mit einer festen,
+nachstellbaren Beschreibung wie bei den anderen echten Bugs dieser Liste
+weitermachen — sonst wiederholt sich genau das, was schon sechsmal
+passiert ist.
+
+---
+
 **Nächster Schritt:** Liegt beim Betreiber — welche Punkte überhaupt
 angegangen werden sollen, und ob dafür eine neue Phase/ein neuer Strang
 aufgemacht wird (analog zur Landing-Page-Strategie). Bis dahin bleibt diese
