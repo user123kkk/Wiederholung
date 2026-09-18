@@ -14,7 +14,32 @@ haftet der Vater des Betreibers), und bricht die heutige Firestore-Grundannahme
 
 ---
 
-## A · Grundidee (Stand 18.09.2026, Betreiber-Skizze)
+## A0 · Kernablauf zuerst, Rest später (Präzisierung 18.09.2026)
+
+Betreiber-Klarstellung: **wer welchen Fortschritt hat, ist erstmal
+irrelevant.** Kern ist nicht Klassenraum-Verwaltung, sondern ein einfacherer
+Ablauf: Jemand, der Freunde/Bekannte unterrichtet, will ihnen das Werkzeug
+zum Wiederholen anbieten können — gibt beim Lehren die Inhalte ein (eine
+Lektion) und **teilt sie am Ende** (der Lektion, einer Einheit — offen wie
+genau). Das Gerüst unten (Rollen, Mit-Admins, Mitgliederverwaltung, Chat)
+ist die **Ausbaustufe**, nicht der Einstieg. Der Einstieg wäre eher:
+
+- Lehrperson legt einen Kartensatz/eine Lektion an (kann sie heute schon —
+  normale Kartenpflege).
+- Am Ende ein Teilen-Schritt, der über den bestehenden Datei-Export
+  hinausgeht — z. B. ein Link/Code, über den die Empfänger die Lektion in
+  ihr eigenes Konto übernehmen, ohne dass dafür schon ein vollwertiger
+  „Klassenraum" mit Mitgliederliste existieren muss.
+- Fortschritts-Einsicht des Lehrers je Schüler, Rollen, Chat — **bewusst
+  zurückgestellt**, kein Teil des ersten Wurfs. Kann später aus demselben
+  Grundgerüst wachsen, ist aber nicht Voraussetzung dafür, dass „das System
+  erstmal steht" (Betreiber-Formulierung).
+
+Der Rest dieses Dokuments (A–D) bleibt als **Ausbau-Horizont** stehen, nur
+jetzt erkennbar als zweiter Schritt, nicht als das, was zuerst gebaut würde,
+sobald der Betreiber den Strang startet.
+
+## A · Grundidee, Ausbaustufe (Stand 18.09.2026, Betreiber-Skizze)
 
 - Ein Konto kann einen oder mehrere **Klassenräume** anlegen und wird damit
   automatisch dessen Besitzer — **keine geprüfte „ist wirklich Lehrer"-Instanz**.
