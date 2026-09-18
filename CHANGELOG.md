@@ -1,4 +1,14 @@
-## 3.6.1 – 18. September 2026
+## 3.6.2 – 18. September 2026
+
+### Kritischer Fix: App startete gar nicht mehr (JavaScript-Syntaxfehler)
+
+**Betreiber-Meldung: „Die Seite öffnet sich nicht, weder Handy noch PC."** Ursache: `app.js` enthielt seit dem Code-Teilen-Umbau (v3.6.0, Commit `51cb5a0`) an drei Stellen typografische Anführungszeichen (" " ‘ ’) als String-Begrenzer statt echter JavaScript-Anführungszeichen (`"`) — vermutlich beim automatischen Einfügen durch den Agenten in einer früheren Session entstanden. Das ist kein gültiges JavaScript: `SyntaxError: Invalid or unexpected token`. Das gesamte Skript brach beim Parsen ab, die App blieb dauerhaft am Ladebildschirm hängen, live nachvollzogen auf `adrabic.web.app`.
+
+**Betroffen:** `zeigeTeileCode()`, `teileLektionLink()`, `linkEinloesenStart()` (Zeilen 2901–2923). Alle drei mit `node --check app.js` gefunden und auf normale Anführungszeichen zurückgesetzt; danach syntaktisch sauber verifiziert.
+
+**Wie es passieren konnte, ohne aufzufallen:** `node --check` wurde bei der vorherigen Änderung (v3.6.0/3.6.1) nicht ausgeführt — reiner Code-Review sah den fehlerhaften Text nicht zuverlässig, weil typografische und normale Anführungszeichen im Editor kaum zu unterscheiden sind. **Lehre für künftige Sessions:** Nach jeder `app.js`-Änderung `node --check app.js` laufen lassen, bevor committed wird — kostet eine Sekunde, verhindert genau diesen Ausfall.
+
+
 
 ### Geändert (Bereichs-Pill: feste statt textabhängiger Breite)
 

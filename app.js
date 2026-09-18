@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.1";
+const APP_VERSION = "3.6.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2898,8 +2898,8 @@ async function codeEinloesen(code) {
 async function zeigeTeileCode(code) {
   await new Promise(resolve => {
     ui.dialog = {
-      kind: “code-share”,
-      title: “Code zum Teilen”,
+      kind: "code-share",
+      title: "Code zum Teilen",
       code: code,
       resolve: resolve
     };
@@ -2912,15 +2912,15 @@ async function zeigeTeileCode(code) {
    Der Code-basierte Ansatz ist skalierbar (bis 3000+ Karten) und nicht invasiv. */
 
 async function teileLektionLink() {
-  await dlgAlert(“Link-basiertes Teilen ist nicht mehr verfügbar. “ +
-    “Bitte nutze stattdessen das neue Code-System – klick 'Per Code teilen' in den Einstellungen.”,
-    “Link-System depreciert”);
+  await dlgAlert("Link-basiertes Teilen ist nicht mehr verfügbar. " +
+    "Bitte nutze stattdessen das neue Code-System – klick 'Per Code teilen' in den Einstellungen.",
+    "Link-System depreciert");
 }
 
 async function linkEinloesenStart() {
-  await dlgAlert(“Link-basiertes Teilen ist nicht mehr verfügbar. “ +
-    “Bitte frag die Person, die dir die Lektion zeigen will, nach einem aktuellen Code.”,
-    “Link-System depreciert”);
+  await dlgAlert("Link-basiertes Teilen ist nicht mehr verfügbar. " +
+    "Bitte frag die Person, die dir die Lektion zeigen will, nach einem aktuellen Code.",
+    "Link-System depreciert");
 }
 
 /* ---------- 2.5.0: Nachschub für einen vorhandenen Kartensatz ----------
