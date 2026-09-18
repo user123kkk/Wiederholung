@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /index.html
 
-Sitemap: https://lernkarte-925c2.web.app/sitemap.xml
+Sitemap: https://adrabic.web.app/sitemap.xml

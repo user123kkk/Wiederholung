@@ -111,3 +111,50 @@ Verifikations-Meta-Tag sofort.
 
 **Nächster Schritt:** Phase 7 in `../PLAN.md` auf `fertig` setzen,
 weiter mit Phase 8 (Kontakt- und Fehlerformular) beginnen.
+
+### 2026-09-18 — Kanonische Adresse auf adrabic.web.app umgestellt (v3.4.12)
+
+**Geändert:** `robots.txt` (Sitemap-Zeile), `sitemap.xml` (alle drei
+`<loc>`), `landing.html`/`impressum.html`/`datenschutzerklaerung.html`
+(`<link rel="canonical">` und `<meta property="og:url">`, bei `landing.html`
+zusätzlich `og:image`) — überall `lernkarte-925c2.web.app` durch
+`adrabic.web.app` ersetzt. `app.js:19` `APP_VERSION` auf `3.4.12`, `sw.js`
+`CACHE_NAME` auf `adrabic-3.4.12`, `CHANGELOG.md` neuer Eintrag.
+
+**Entscheidung:** Betreiber hat am 18.09.2026 eine zweite Firebase-Hosting-
+Site `adrabic` angelegt (siehe `phase-4-domain-hosting/LOGBUCH.md`,
+Eintrag 18.09.2026) und in der Firebase-Authentication-Konsole selbstständig
+`adrabic.web.app` als Authorized Domain hinzugefügt. Mit „search console,
+achte auf alles" beauftragt, jede Stelle zu finden, an der die alte Adresse
+noch als *die* kanonische Adresse eingetragen war. Gefunden über
+`grep -ri "lernkarte-925c2|web\.app|firebaseapp\.com|vercel\.app"` im ganzen
+Repo — fünf Fundstellen in ausgelieferten Dateien (oben), der Rest waren
+Plandateien/Changelog (reine Dokumentation, unverändert richtig) oder
+projektgebundene, absichtlich unveränderte Werte (`app.js` `firebaseConfig`:
+`authDomain`/`projectId`/`storageBucket` hängen an der Firebase-Projekt-ID,
+nicht am Hosting-Namen; `.firebaserc` ebenso).
+
+**Wichtig, nicht automatisch miterledigt:** Die vorhandene
+`google-site-verification`-Meta-Tag (`index.html:19`, `landing.html:20`,
+Wert `z3bPZyU2P8njPDycALXFagDf96zwxJPurvHRPghaUv8`) verifiziert laut Eintrag
+vom 13.09.2026 die **alte** Search-Console-Property
+`https://lernkarte-925c2.web.app` (Property-Typ URL-Präfix — jede
+`*.web.app`-Subdomain zählt bei Google als eigener, getrennt zu
+verifizierender Standort, weil `web.app` auf der Public Suffix List steht).
+Diese eine Meta-Tag deckt `adrabic.web.app` **nicht** mit ab. Ohne eine neue
+Property samt neuer Verifikation sieht Google Search Console für die neue
+Adresse nichts — die Sitemap-Angabe in `robots.txt` allein reicht dafür
+nicht.
+
+**Offen:** Neue Search-Console-Property für `https://adrabic.web.app`
+anlegen und verifizieren ist **Betreiber-Aufgabe** (fremde Konsole, siehe
+unten). Die alte Property (`lernkarte-925c2.web.app`) bleibt bestehen und
+zeigt weiterhin (jetzt veraltete) Daten zur alten Adresse — kann später
+gelöscht werden, sobald `adrabic.web.app` etabliert ist, ist aber kein
+Blocker.
+
+**Nächster Schritt:** Betreiber deployt (`firebase deploy`, bespielt jetzt
+beide Sites, siehe `phase-4-domain-hosting/LOGBUCH.md`) und richtet die neue
+Search-Console-Property ein (Schritte unten in der Antwort an den
+Betreiber). Danach `sitemap.xml` dort einreichen, genau wie am 13.09.2026
+für die alte Adresse.
