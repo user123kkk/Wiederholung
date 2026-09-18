@@ -127,6 +127,30 @@ ob der Betreiber mehr will (z. B. echte Eltern-Einwilligung statt
 Selbstauskunft). Ändert nichts an B.5 (Datenschutzerklärung muss ergänzt
 werden) — macht den Umfang davon nur kleiner.
 
+**Nachrecherchiert (18.09.2026):** zwei tatsächlich unterschiedliche Muster,
+keine reine AGB-Formulierungsfrage:
+
+- **Kahoot vermeidet das Problem architektonisch.** Schüler brauchen **kein
+  Konto**, keine E-Mail — Beitritt nur über Spiel-PIN + freien Spitznamen.
+  Nur die Lehrperson hat ein echtes Konto, personenbezogene Schülerdaten
+  fallen praktisch nicht an ([Kahoot Trust Center](https://trust.kahoot.com/teachers/),
+  [Player identifier](https://support.kahoot.com/hc/en-us/articles/360036178314-Player-identifier)).
+- **Quizlet baut die volle Compliance-Maschinerie**, weil Schüler dort
+  echte, dauerhafte Konten mit eigenem Lernfortschritt haben: unter 13
+  (länderabhängig unter 16) ein „Child Account" mit Eltern-E-Mail, Eltern
+  müssen per Bestätigungsmail zustimmen, bevor Kinder Kartensätze
+  bearbeiten dürfen, und können jederzeit reinschauen/löschen
+  ([Quizlet ToS](https://quizlet.com/tos), [Quizlet Privacy Policy](https://quizlet.com/privacy)).
+
+Für A0 relevant: Wenn der Empfänger einer geteilten Lektion **kein neues
+Konto** braucht, sondern sie in sein **bestehendes** Adrabic-Konto übernimmt
+(dort schon bei der eigenen Registrierung eine Altersangabe gemacht hat),
+entfällt ein Teil der Frage „neue Einwilligung fürs Teilen" — die Altersfrage
+wäre dann schon durch die normale Registrierung abgedeckt, nicht neu beim
+Teilen gestellt. **Das ist ein Architektur-Hinweis, keine Freigabe** — ob
+das für Adrabics konkrete Haftungslage reicht, ist weiterhin nicht vom
+Agenten zu entscheiden, siehe Grenze unten.
+
 **Ausdrückliche Grenze (18.09.2026, Betreiber-Anweisung):** Der Agent gibt
 zu Frage 5 **keine Rechtsberatung** und entscheidet sie nicht — nur
 Beobachtung, was vergleichbare Apps tun, kein „das reicht bei euch auch".
