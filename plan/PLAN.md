@@ -460,25 +460,29 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Stand 18.09.2026, Abend: v3.6.0 — Code-basiertes Teilen ist gebaut und getestet,
-Firestore-Regeln sind deployed.** Der Kern-Ablauf aus
-[`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md) ist inzwischen dreimal
-durchgearbeitet:
+**Stand 18.09.2026, Nacht: App bei v3.6.8, alles Bekannte gelöst.** Zwei
+unabhängige Stränge liefen heute:
 
-1. **Minimalversion** (v3.5.2, Abschnitt G): Datei-Export für alle Konten
-2. **Link-Mechanismus** (v3.5.3, Abschnitt J): Lektion komprimiert im URL-Fragment
-   — keine neue Firestore-Sammlung, daher Frage 5 (Minderjährige) strukturell umgangen
-3. **Code-Mechanismus** (v3.6.0, Abschnitte H/I nachgeholt): 10-stelliger 
-   kryptographisch sicherer Code, Lektion in Firestore `geteilteLektionen/{code}`,
-   Widerruf möglich — skaliert bis 3000+ Karten ohne URL-Fragment-Limits
+**1. Code-basiertes Teilen** (Lehrer-Gerüst) fertig gebaut und deployed:
+10-stelliger Code, Lektion in Firestore `geteilteLektionen/{code}`, Widerruf
+möglich, skaliert bis 3000+ Karten. Firestore-Regeln vom Betreiber live
+deployed. Details siehe Git-Historie ab Commit `51cb5a0`.
 
-v3.6.0 wurde nach ausdrücklicher Betreiber-Rückmeldung „ich will es seriös haben, 
-ehrlich kein Bock auf 1500-irgendwas Link" aus Link-Teilen zurück zu Code-Teilen 
-(Architektur H aus dem Gerüst, v3.5.2 vorbereitet, jetzt scharf gestellt). 
-Veröffentlichungs-Schritte (`APP_VERSION`, `CACHE_NAME`, `APP_SHELL`, 
-`CHANGELOG.md`) durchgeführt. **Firestore-Regeln wurden am 18.09.2026, 18:15 Uhr 
-vom Betreiber deployed** (`firebase deploy --only "firestore:rules"` erfolgreich, 
-neue Sammlung `geteilteLektionen/{code}` live).
+**2. Beobachtung 18 (Nav-Leiste springt auf dem Handy) — nach sechs
+erfolglosen Meldungen endlich gelöst und am echten Handy bestätigt.**
+Ursache: `window.innerHeight` liefert in der Home-Bildschirm-App
+unterschiedliche Werte für denselben Bildschirm, je nachdem ob der aktuelle
+Tab scrollbar ist. Fix in `app.js`/`styles.css` (`syncViewportGap`,
+`--vv-gap`). Ein Debug-Overlay bleibt im Code (7× Tap auf die Versionsnummer
+in Einstellungen) für künftige ähnliche Fälle. Nebenfund dabei behoben:
+Hochzähl-Animation im Fortschritt-Tab lief bei jedem Tab-Besuch neu.
+Details in `beobachtungen-lernwerkzeug.md` Punkt 18.
+
+**Betreiber kündigt als Nächstes an:** ca. acht Produktideen aus TikTok-
+Videos, die in einem **neuen Chat** besprochen werden sollen — manche davon
+vermutlich am aktuellen Stand nicht umsetzbar. Eine neue Session liest diese
+Ideen dort, prüft sie gegen `KONZEPT.md` §7 und die „Später"-Liste unten,
+bevor irgendetwas gebaut wird.
 
 Frühere Stände (Redesign-Strang, Google-Login, Umzug auf `adrabic.web.app`)
 bleiben unverändert `fertig`, siehe „Frühere Lage" unten.
@@ -623,5 +627,5 @@ mangels Gerät nicht zur Verfügung.
 | 2026-09-18 | **Frage 5 für den Kernablauf umgangen, nicht beantwortet — Komfortversion live (v3.5.3).** Betreiber: „ich will das so machen dass C5 garnicht nötig ist", dazu ein direkter Hinweis, dass die Sperre technisch nur eine Datei im Repo ist, die der Agent selbst entfernen könnte — Agent hat das bestätigt (ja, könnte er) und ausdrücklich abgelehnt, es deswegen zu tun: die Sperre ist eine bewusste Entscheidung, kein technisches Hindernis. Stattdessen strukturelle Lösung gefunden: Der Firestore-Code-Entwurf aus H/I (v3.5.2) ist komplett ersetzt durch ein Link-Modell (Abschnitt J) — der Lektionsinhalt steckt komprimiert direkt im URL-**Fragment** (alles nach „#", geht nie an einen Server, keine Zugriffs-Logs), nicht in einer Datenbank. Damit gibt es keine neue Firestore-Sammlung und keinen kontoübergreifenden Lesezugriff mehr — Frage 5 hat strukturell nichts, woran sie andocken könnte, weil nichts gespeichert wird, das ein fremdes Konto lesen könnte. Ausdrücklich nur für DIESEN Mechanismus geklärt, nicht die Komfortversion-Idee grundsätzlich — eine künftige Variante mit Server-Speicherung bräuchte die Sperre weiterhin. Im Browser getestet (Kompressions-Rundlauf mit arabischem Text, auch mit Mengengerüst 40/100/150/200 Karten → Fragment-Länge), Rundlauf fehlerfrei; `TEIL_LINK_MAX_ZEICHEN = 4000` danach kalibriert. `firestore.rules` bleibt unverändert — der ganze Punkt des Entwurfs. `APP_VERSION`/`CACHE_NAME` → 3.5.3, `CHANGELOG.md` ergänzt. Details in `lehrer-modus/GERUEST.md`, Abschnitt J (I ist als abgelöst markiert, nicht gelöscht). |
 | 2026-09-18 | **„Leg los" geprüft: letzter Commit war ohne Veröffentlichungs-Schritt eingecheckt, nachgezogen (v3.5.4).** `PLAN.md` sagte „kein aktiver Codepunkt", aber `git log` zeigte einen Commit nach dem 3.5.3-Stand (Link-Teilen-Dialog: eigener „link-share"-Dialogtyp mit Kopieren-Knopf und Kopiert-Rückmeldung statt einfachem Text-Hinweis), der `app.js` änderte, ohne `APP_VERSION`/`CACHE_NAME` hochzuzählen oder `CHANGELOG.md` zu ergänzen — Verstoß gegen die eigene Veröffentlichungsliste aus `README.md`/`../CLAUDE.md`. Nach Regel 2 (Code ist maßgeblich, nicht ältere Plandateien) galt das als der tatsächliche nächste Schritt, nicht Warten auf eine neue Betreiber-Vorgabe. Nachgetragen: `APP_VERSION`/`CACHE_NAME` 3.5.3 → 3.5.4, `CHANGELOG.md`-Eintrag, Nachtrag in `lehrer-modus/GERUEST.md` unter Abschnitt J. Keine neue Funktion, keine Architekturänderung — reine Bedienungs-Politur am bereits entschiedenen Link-Mechanismus. |
 | 2026-09-18 | **Kritischer Fund: App startete gar nicht mehr, behoben (v3.6.2).** Betreiber-Meldung „Seite öffnet sich nicht, weder Handy noch PC" — sofort auf `adrabic.web.app` nachvollzogen: `Uncaught SyntaxError: Invalid or unexpected token`. Ursache: `app.js` enthielt seit v3.6.0 (Commit `51cb5a0`, Code-Teilen-Umbau) an drei Stellen typografische statt normale Anführungszeichen als String-Begrenzer (`zeigeTeileCode`, `teileLektionLink`, `linkEinloesenStart`) — ungültiges JavaScript, das gesamte Skript brach beim Parsen ab. Mit `node --check app.js` gefunden und behoben, danach syntaktisch verifiziert. Lehre: `node --check` künftig nach jeder `app.js`-Änderung vor dem Commit, nicht nur Code-Review. **Zweiter Fund beim Nachprüfen:** Betreiber meldete "immer noch kaputt" nach dem Deploy — Server lieferte bereits die reparierte Datei, aber `index.html` band `app.js` ohne Versionierung ein, während `app.js` selbst `max-age=3600` trägt. Browser mit kürzlichem Besuch bekamen bis zu eine Stunde lang die alte Datei, auch nach Reload. Fix: `index.html` bindet jetzt `app.js?v=3.6.2` ein, README.md-Veröffentlichungsliste um diesen Schritt erweitert (Punkt 3, muss künftig bei jeder Version mitgezogen werden). |
-| 2026-09-18 | **Beobachtung 18 (Nav-Leiste springt auf dem Handy), Ursache gefunden (v3.6.1–3.6.6).** Nach zwei erfolglosen Anläufen (Bereichs-Pill, `visualViewport`-Sync) lieferte ein Debug-Overlay die Messwerte: `window.innerHeight` liefert in der Home-Bildschirm-App unterschiedliche Werte für denselben Bildschirm, je nachdem ob der Tab-Inhalt scrollbar ist (848 vs. 896px). Fix: größten je gemessenen Viewport-Wert als Referenz nehmen. Betreiber-Test am echten Handy steht aus. Details in `beobachtungen-lernwerkzeug.md` Punkt 18. |
+| 2026-09-18 | **Beobachtung 18 (Nav-Leiste springt auf dem Handy) GELÖST, am echten Handy bestätigt (v3.6.1–3.6.7).** Nach zwei erfolglosen Anläufen lieferte ein Debug-Overlay die Messwerte: `window.innerHeight` liefert in der Home-Bildschirm-App unterschiedliche Werte für denselben Bildschirm, je nachdem ob der Tab-Inhalt scrollbar ist (848 vs. 896px). v3.6.6 hatte einen Vorzeichenfehler (addiert statt subtrahiert), v3.6.7 korrigiert — Betreiber-Test zeigt jetzt identisches `nav.bottom` in allen drei Tabs. Details in `beobachtungen-lernwerkzeug.md` Punkt 18. Nebenfund dabei behoben (v3.6.8): Hochzähl-Animation lief bei jedem Tab-Besuch neu, DOM-Neuaufbau löschte ihren Merker. |
 | 2026-09-15 | **Beobachtungen zum Lernwerkzeug: Versuchte Verbesserung des Ziehgriff-Doppeltipp-Verhaltens (v3.0.40).** Testrückmeldung zu v3.0.39 deutete darauf hin, dass die Aktivierung der Ziehgriff-Doppeltipp-Geste weiterhin schwierig ist — wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten Touchscreen-Ziel zuverlässig zweimal zu tippen. Zwei Optimierungen ohne Mechanic-Änderung: (1) `DOPPELTIPP_FENSTER` von 400ms → 600ms für mehr Zeit. (2) Visuelle Rückmeldung auf `.drag-handle:active` mit Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit erkennbar ist, dass die erste Tap registriert wurde. Beide Änderungen sollen die Fehlertoleranz erhöhen. Nächster Schritt: Gerätetest zur Prüfung der Zuverlässigkeit. Alle fünf Beobachtungen 2, 4, 6, 14, 15 vom Code her bereits behoben oder verbessert; offen bleiben drei Punkte, die Gerätetests brauchen (5: iPad-Layout, 13: Over-Scrolling, 16: Browser-Zurück), und mehrere UX-Punkte, die Betreiber-Entscheidungen brauchen (1, 3, 9, 10). Details in `beobachtungen-lernwerkzeug.md`.

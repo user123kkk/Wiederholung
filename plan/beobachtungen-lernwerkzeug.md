@@ -773,7 +773,7 @@ gehen kann, wenn die Seite currentUser vorher schließt) eingrenzen.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
 - **Bewusst zurückgestellt:** 11, 12.
 
-## 18. Untere Navigationsleiste springt vertikal auf dem Handy — seit mind. 6 Meldungen ungelöst ⚠️ PRIORITÄT · UNGELÖST
+## 18. Untere Navigationsleiste springt vertikal auf dem Handy — GELÖST (v3.6.7)
 
 Betreiber nutzt eine zum Home-Bildschirm hinzugefügte PWA (`display:
 standalone`, kein Safari-Chrome, keine Browser-Toolbar). Screenshots
@@ -787,7 +787,11 @@ gescrolltem Inhalt.
 
 **v3.6.4/3.6.5 — Debug-Overlay** (später auch per 7× Tap auf die Versionsnummer aktivierbar, da die installierte App mit eigener `start_url` startet und den URL-Parameter verliert).
 
-**v3.6.6 — Ursache gefunden, mit Messwerten belegt.** `window.innerHeight` liefert in der Home-Bildschirm-App unterschiedliche Werte für denselben Bildschirm: 848px bei nicht-scrollbarem Inhalt, 896px bei scrollbarem — 48px Differenz. `visualViewport` zeigt denselben falschen Wert. Fix: größten je gemessenen Wert als Referenz nehmen. Betreiber-Test am echten Handy steht aus.
+**v3.6.6 — Ursache gefunden, mit Messwerten belegt.** `window.innerHeight` liefert in der Home-Bildschirm-App unterschiedliche Werte für denselben Bildschirm: 848px bei nicht-scrollbarem Inhalt, 896px bei scrollbarem — 48px Differenz. `visualViewport` zeigt denselben falschen Wert. Fix: größten je gemessenen Wert als Referenz nehmen.
+
+**v3.6.7 — Vorzeichenfehler korrigiert.** Erster Versuch addierte `--vv-gap` zu `bottom`, richtig ist subtrahieren (bei zu kleinem `innerHeight` muss die Leiste näher an den Rand, nicht weiter weg). **Am echten Handy bestätigt:** `nav.bottom` zeigt jetzt in allen drei Tabs identisch 850 — Sprung ist weg.
+
+**Nebenfund beim Testen, ebenfalls behoben (v3.6.8):** Die Hochzähl-Animation ("Diese Woche im Vergleich") lief bei jedem Tab-Besuch neu von 0, weil ihr Merker im DOM stand und bei jedem `render()` verloren ging. Bestand schon vorher, unabhängig von Beobachtung 18. Jetzt in einer Modul-Variable, übersteht render()-Aufrufe.
 
 ---
 
