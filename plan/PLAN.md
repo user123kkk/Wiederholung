@@ -168,6 +168,16 @@ Der Leitsatz aus Konzept-Abschnitt 5: **erst dichtmachen, was schon Daten hält
   angefasst wird (Icon-Umbau, neue Startseite), wird dort schon richtig
   gemacht, statt es hier nachzuziehen.
 
+### Nebenstrang: Lehrer-/Schülermodus (Gerüst)
+
+Kein Phasen-Ordner, keine Nummer. Ordner
+[`lehrer-modus/`](lehrer-modus/). **Es wird nichts gebaut** — nur ein Gerüst,
+Betreiber-Wunsch vom 18.09.2026: „ein Gerüst, das immer weiter ausgebreitet
+werden kann." Erste Skizze (Rollen pro Klassenraum, Mit-Admins, evtl. Chat)
+in [`GERUEST.md`](lehrer-modus/GERUEST.md). Status: `zurückgestellt` — die
+vier Gründe aus „Später" unten gelten weiter, allen voran die Datenschutzfrage
+bei Minderjährigen.
+
 ### Später — vermerkt, damit nichts verbaut wird
 
 Kein eigener Ordner, keine Phase. Aus Konzept-Abschnitt 2 und 5:
@@ -203,6 +213,11 @@ Kein eigener Ordner, keine Phase. Aus Konzept-Abschnitt 2 und 5:
   Klassenraum. Ein Lehrer kann damit heute einen Satz bauen und ihn
   herumgeben. Wer die Idee ausprobieren will, probiert sie so aus, bevor
   irgendetwas gebaut wird.
+
+  **Erste Skizze als Gerüst festgehalten (18.09.2026):**
+  [`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md) — Rollen pro
+  Klassenraum, Mit-Admins mit konfigurierbaren Rechten, evtl. Chat vom
+  Admin an den Raum. Reine Sammlung offener Fragen, kein Bauauftrag.
 
 - **Erneuter, verschärfter Sicherheits-Durchlauf vor Phase 6 (Öffentlich-
   machung).** Grund, festgehalten am 13.09.2026: Im Impressum steht der
@@ -581,4 +596,5 @@ mangels Gerät nicht zur Verfügung.
 | 2026-09-18 | **Redesign: Werkzeugleiste Verwalten + Smart Default beim Speichern gebaut (v3.5.0).** Die zwei liegen gebliebenen Nachlese-Punkte aus `redesign-oberflaeche/LOGBUCH.md` — beide auf Betreiber-Freigabe „beide". Werkzeugleiste zeigt jetzt nur „Üben" + „Mehr" statt fünf Knöpfen dauerhaft (Video 1); das „Mehr"-Blatt trägt Auswählen/Umkehren/Umbenennen/Löschen unverändert in ihren alten Bedingungen. `save-set-select` schlägt jetzt die zuletzt benutzte Speicherkarte vor statt immer „＋ Neue" (Smart Defaults, Video 3). Nebenbei `probelauf.mjs` von einem Windows-Pfadfehler befreit (`.pathname` → `fileURLToPath()`) — Versuch, damit zu prüfen, scheiterte am `chrome.exe`-Start in dieser Umgebung (`spawn UNKNOWN`), also nur Code-Review, kein Gerätetest. Betreiber-Test am Handy steht aus. |
 | 2026-09-18 | **Offene Frage 6 dauerhaft geklärt.** Betreiber: §7-Lockerung gilt ab jetzt nicht mehr nur für den Redesign-Strang, sondern grundsätzlich — Bedienung/Optik dürfen für Design-/Verbesserungszwecke angefasst werden, solange nichts komplett verändert wird; die Lernlogik bleibt ausgenommen. `KONZEPT.md` §7 und `../CLAUDE.md` entsprechend umgeschrieben. Kein Produktivcode geändert, reine Regel-/Plandatei-Änderung. |
 | 2026-09-18 | **Session per „leg los" geprüft, nichts zu bauen gefunden.** `PLAN.md` („Wo eine neue Session anfängt"), `beobachtungen-lernwerkzeug.md` und die stray Datei `KONZEPT-website-reife (...).md` (Duplikat des alten Konzepts, nicht Teil der ausgelieferten Dateien, keine neuen Vorgaben) gegengeprüft. Bestätigt: aktueller Ruhezustand ist echt — jeder verbleibende Punkt hängt an einer Betreiber-Entscheidung (Strang A 2.4, Später-Punkte, Frage 6 dauerhaft) oder an einem Gerätetest, den nur der Betreiber machen kann (Beobachtung 2: Ziehgriff-Aktivierung/aktives Ziehen nach v3.0.42 zuverlässig?; Beobachtung 13: Over-Scrolling-Fix v3.0.50 bestätigt?; Beobachtung 16: History/Firebase-Fehler nach v3.0.51 noch reproduzierbar?). Kein Code geändert. |
+| 2026-09-18 | **Lehrer-/Klassenraum-Idee als Gerüst festgehalten, nichts gebaut.** Betreiber wollte über den „Später"-Punkt aus `PLAN.md` sprechen (Astra-AI-Klassenräume als Vorbild), stellte klar: eigene Idee ist nicht bindend, soll als **erweiterbares Gerüst** dokumentiert werden — Rollen/Einstellungen pro Klassenraum, Admin je Raum, evtl. Chat, in dem der Admin schreibt. Neuer Ordner [`lehrer-modus/`](lehrer-modus/) mit [`GERUEST.md`](lehrer-modus/GERUEST.md) nach Vorbild von `monetarisierung/GERUEST.md` — Fragen statt Antworten, kein Bauauftrag. Grund fürs Nicht-Bauen bleibt unverändert (Lernwerkzeug-Tabu, Minderjährigen-Daten, Firestore-Regeln müssten neu). Reine Plandatei-Arbeit, kein Produktivcode geändert. |
 | 2026-09-15 | **Beobachtungen zum Lernwerkzeug: Versuchte Verbesserung des Ziehgriff-Doppeltipp-Verhaltens (v3.0.40).** Testrückmeldung zu v3.0.39 deutete darauf hin, dass die Aktivierung der Ziehgriff-Doppeltipp-Geste weiterhin schwierig ist — wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten Touchscreen-Ziel zuverlässig zweimal zu tippen. Zwei Optimierungen ohne Mechanic-Änderung: (1) `DOPPELTIPP_FENSTER` von 400ms → 600ms für mehr Zeit. (2) Visuelle Rückmeldung auf `.drag-handle:active` mit Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit erkennbar ist, dass die erste Tap registriert wurde. Beide Änderungen sollen die Fehlertoleranz erhöhen. Nächster Schritt: Gerätetest zur Prüfung der Zuverlässigkeit. Alle fünf Beobachtungen 2, 4, 6, 14, 15 vom Code her bereits behoben oder verbessert; offen bleiben drei Punkte, die Gerätetests brauchen (5: iPad-Layout, 13: Over-Scrolling, 16: Browser-Zurück), und mehrere UX-Punkte, die Betreiber-Entscheidungen brauchen (1, 3, 9, 10). Details in `beobachtungen-lernwerkzeug.md`.
