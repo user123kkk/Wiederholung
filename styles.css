@@ -588,7 +588,12 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   /* War 36px und damit unter --tap (Satz 3). Es ist der meistbenutzte Knopf
      der App - er steht auf jedem Bildschirm oben links. */
   height: var(--tap); padding: 0 var(--space-3) 0 var(--space-4);
-  max-width: 62vw;
+  /* 18.09.2026 (Beobachtung 18): feste statt textabhängiger Breite. Vorher
+     nur max-width - die Pille wuchs/schrumpfte mit der Länge des
+     Bereichsnamens, was beim Bereichswechsel wie ein springender Balken
+     wirkte (seit mehreren Meldungen unverstanden). Jetzt immer gleich breit,
+     kurze Namen lassen links Luft statt die Pille zu verkleinern. */
+  width: min(62vw, 220px); max-width: 62vw;
   background: var(--surface); color: var(--text-1);
   border: 1px solid var(--border); border-radius: var(--r-full);
   font: inherit; font-size: var(--fs-sm); font-weight: 600;

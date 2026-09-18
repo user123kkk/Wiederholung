@@ -813,6 +813,21 @@ nachstellbaren Beschreibung wie bei den anderen echten Bugs dieser Liste
 weitermachen — sonst wiederholt sich genau das, was schon sechsmal
 passiert ist.
 
+**Nachgetragen (18.09.2026, v3.6.1): Betreiber hat trotz fehlendem Video
+geantwortet, ausdrücklich ohne weitere Rückfragen — direkt Verdachts-Fix
+versucht.** Antworten: alle drei Tabs betroffen (1); „beides" — Name und
+Position ändern sich (2); beim Wechseln zwischen Bereichen (3); Ausmaß
+unterschiedlich, „je nachdem wie voll" (4, vermutlich: wie lang der Name
+ist); kein Video (5). Passt zusammen mit einem echten Code-Befund: die
+Bereichs-Pill (`.bereich-pill`, `styles.css`) hatte nur `max-width`, keine
+feste Breite — sie wuchs/schrumpfte mit der Textlänge des Bereichsnamens.
+Fix: feste Breite `min(62vw, 220px)` statt textabhängig. **Ausdrücklich
+unbestätigt** wie 13/16 — kein Gerätetest möglich (kein Firebase-Konto in
+dieser Umgebung), nur Code-Review und fehlerfreier Preview-Load. Details
+in `CHANGELOG.md` 3.6.1. Betreiber-Test am echten Handy steht aus — erst
+danach gilt dieser, seit sechs Meldungen offene Punkt als wirklich
+geklärt.
+
 ---
 
 **Nächster Schritt:** Liegt beim Betreiber — welche Punkte überhaupt

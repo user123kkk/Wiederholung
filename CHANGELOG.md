@@ -1,4 +1,16 @@
-## 3.6.0 – 18. September 2026
+## 3.6.1 – 18. September 2026
+
+### Geändert (Bereichs-Pill: feste statt textabhängiger Breite)
+
+**Betreiber-Meldung, wiederholt (mind. 6× seit längerem, nie mit genug Detail zum Nachstellen):** „Der Balken mit den Bereichs-Knöpfen verschiebt sich." Beim erneuten, konkreten Nachfragen (`plan/beobachtungen-lernwerkzeug.md`, Punkt 18): betrifft alle drei Tabs (Verwalten/Lernen/Fortschritt), passiert beim Wechseln zwischen Bereichen, Ausmaß unterschiedlich je nach Bereichsname-Länge.
+
+**Ursache gefunden:** Die Bereichs-Pill in der AppBar (`.bereich-pill`, mobil sichtbar) hatte nur eine `max-width`, keine feste Breite – sie wuchs/schrumpfte mit der Länge des jeweiligen Bereichsnamens. Wechselt man z. B. von „Bayna Yadayk 1" zu „Medina 1", ändert sich die Pillenbreite sichtbar, was wie ein springender Balken wirkt.
+
+**Fix:** Feste Breite `min(62vw, 220px)` statt textabhängiger Breite. Kurze Namen lassen jetzt links Luft in der Pille, statt dass die Pille selbst schrumpft. Reine CSS-Änderung, keine Logik betroffen.
+
+**Ausdrücklich unbestätigter Verdachts-Fix** (wie Beobachtung 13/16): Kein Gerätetest möglich in dieser Umgebung, nur Code-Review und fehlerfreier Preview-Load. Betreiber-Test am echten Handy steht aus.
+
+
 
 ### Geändert (Code-basiertes Teilen – Rückfall von Link-Teilen, wegen Skalierbarkeit)
 
