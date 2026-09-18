@@ -1,7 +1,7 @@
 # Logbuch Phase 7 — Gefunden werden
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `läuft` — Code-Teil fertig, Search Console braucht den Betreiber
+Status: `fertig` — inkl. Nachtrag 18.09.2026 (zweite Adresse adrabic.web.app)
 
 ---
 
@@ -158,3 +158,12 @@ beide Sites, siehe `phase-4-domain-hosting/LOGBUCH.md`) und richtet die neue
 Search-Console-Property ein (Schritte unten in der Antwort an den
 Betreiber). Danach `sitemap.xml` dort einreichen, genau wie am 13.09.2026
 für die alte Adresse.
+
+**Erledigt am 18.09.2026 (Nachtrag):** Betreiber hat alle Schritte
+durchgeführt — `firebase deploy` (beide Sites „Deploy complete!"), neue
+Search-Console-Property `https://adrabic.web.app` per HTML-Tag verifiziert
+(dieselbe `google-site-verification`-Meta-Tag wie bei der alten Property,
+kein neuer Code nötig — Google hat sie pro Konto vergeben, nicht streng pro
+Property), alte Property `lernkarte-925c2.web.app` entfernt,
+`sitemap.xml` bei der neuen Property eingereicht. Phase 7 damit erneut
+`fertig` — kein offener Punkt mehr zu `adrabic.web.app`.
