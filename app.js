@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.7";
+const APP_VERSION = "3.6.8";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4293,9 +4293,15 @@ app.addEventListener("pointerup", wischEnde);
 app.addEventListener("pointercancel", wischEnde);
 
 /* Zählt eine Zahl von 0 hoch, statt sie einfach dastehen zu haben - für
-   "Diese Woche im Vergleich" im Fortschritt-Tab. dataset.countedTo merkt
+   "Diese Woche im Vergleich" im Fortschritt-Tab. countupLetzterWert merkt
    sich den zuletzt angezeigten Wert: ändert er sich nicht (jedes render()
-   ruft das hier erneut auf), läuft die Animation nicht jedesmal neu an. */
+   ruft das hier erneut auf), läuft die Animation nicht jedesmal neu an.
+   Fund 18.09.2026: Der Merker stand vorher im DOM (dataset.countedTo) -
+   aber app.innerHTML = html baut bei JEDEM render() (auch beim bloßen
+   Tab-Wechsel weg und zurück) das Element neu, der Merker ging also jedes
+   Mal verloren und die Zahl zählte immer wieder von 0 hoch. Jetzt in einer
+   Variable, die render()-Aufrufe übersteht. */
+let countupLetzterWert = null;
 function tickCountups() {
   /* 3.3.0: Wer Bewegung abbestellt hat, bekam sie hier trotzdem. Die
      styles.css setzt fuer prefers-reduced-motion jede Animation auf 0,01ms
@@ -4309,10 +4315,10 @@ function tickCountups() {
   catch (e) {}
   document.querySelectorAll("[data-countup]").forEach(el => {
     const ziel = Number(el.dataset.countup);
-    if (el.dataset.countedTo === String(ziel)) return;
-    el.dataset.countedTo = String(ziel);
     const strong = el.querySelector("strong");
     if (!strong) return;
+    if (countupLetzterWert === ziel) { strong.textContent = String(ziel); return; }
+    countupLetzterWert = ziel;
     if (ruhig) { strong.textContent = String(ziel); return; }
     const t0 = performance.now(), dauer = 480;
     function frame(t) {

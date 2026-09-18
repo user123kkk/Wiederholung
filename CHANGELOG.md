@@ -1,3 +1,7 @@
+## 3.6.8 – 18. September 2026
+
+**Behoben: Hochzähl-Animation lief bei jedem Tab-Besuch neu von 0.** Der "schon gezählt"-Merker stand im DOM (`dataset.countedTo`), aber `app.innerHTML = html` baut bei jedem `render()` das komplette Element neu – der Merker ging bei jedem Tab-Wechsel verloren. Jetzt in einer Variable, die render()-Aufrufe übersteht. War schon immer so, nicht neu durch die Beobachtung-18-Fixes.
+
 ## 3.6.7 – 18. September 2026
 
 **Beobachtung 18: Vorzeichenfehler im v3.6.6-Fix korrigiert.** Betreiber-Test zeigte: `.nav` rutschte mit dem Fix noch weiter nach oben statt sich zu korrigieren (`nav.top` 736 → 688). Ursache: `--vv-gap` wurde addiert statt subtrahiert – bei zu kleinem `innerHeight` muss `bottom` kleiner werden, nicht größer, damit die Leiste in den ungemeldeten Rest des Bildschirms hineinreicht. Diagnose selbst war richtig (mit Messwerten belegt), nur die Formel falsch herum.
