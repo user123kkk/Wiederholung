@@ -509,3 +509,12 @@ unverändert.
 
 **Keine Änderung an `firestore.rules` nötig oder vorgenommen** — der ganze
 Punkt dieses Entwurfs.
+
+**Nachgezogen (v3.5.4, 18.09.2026): Bedienungs-Politur am Kopieren-Schritt.**
+Der Commit, der den Link-Teilen-Dialog auf einen eigenen Dialog-Typ mit
+Kopieren-Knopf und Kopiert-Rückmeldung umgestellt hat, war ohne den
+Veröffentlichungs-Schritt aus `README.md` eingecheckt (kein `APP_VERSION`-
+Hochzählen, kein `CACHE_NAME`, kein `CHANGELOG.md`-Eintrag). Nachgetragen:
+`APP_VERSION`/`CACHE_NAME` 3.5.3 → 3.5.4, `CHANGELOG.md` ergänzt. Reine
+Politur an J, keine neue Entscheidung, keine Architekturänderung — deshalb
+kein neuer Abschnitt, nur dieser Nachtrag.

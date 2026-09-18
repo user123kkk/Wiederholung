@@ -1,3 +1,9 @@
+## 3.5.4 – 18. September 2026
+
+### Geändert (Link-Teilen-Dialog: Kopieren mit Rückmeldung)
+
+**Der Link aus „Lektion per Link teilen" (3.5.3) erschien bisher in einem einfachen Text-Hinweis** ohne eigenen Kopieren-Knopf – man musste den Link von Hand markieren. Jetzt zeigt ein eigener Dialog-Typ (`link-share`) den Link in einem umbruchfähigen Code-Block mit einem „Kopieren"-Knopf, der nach erfolgreichem Kopieren kurz „✓ Kopiert!" anzeigt und danach zurückspringt; schlägt das Kopieren fehl (z. B. Berechtigung verweigert), erscheint stattdessen eine Fehlermeldung, der Link bleibt zum manuellen Markieren stehen. Reine Bedienungs-Politur am neuen Mechanismus aus 3.5.3, keine Änderung an dessen Architektur oder Sicherheitseigenschaften.
+
 ## 3.5.3 – 18. September 2026
 
 ### Neu (Lektion per Link teilen – live, nicht mehr nur Entwurf)

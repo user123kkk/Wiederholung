@@ -460,29 +460,32 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Stand 18.09.2026: Redesign-Strang komplett durch, Frage 12 und 13 beide
-geklärt, Umzug auf `adrabic.web.app` abgeschlossen.** Block 10 (Sichtbare
-Wahl statt Klappliste, v3.4.3) ist am echten Handy bestätigt („passt") —
-Stufenbereich beim Üben (Chip-Reihe, zwei Tipps markieren den Bereich) und
-Art der Speicherkarte (Auswahl-Blatt statt Klappliste je Zeile) funktionieren
-wie vorgesehen. Damit sind **alle zehn Blöcke** aus
-[`redesign-oberflaeche/AUFTRAG.md`](redesign-oberflaeche/AUFTRAG.md) `fertig`
-und am echten Handy verifiziert; der Strang **ruht**.
+**Stand 18.09.2026, Abend: Lehrer-Gerüst-Nebenstrang bis zu einer echten
+Sperre durchgearbeitet, App bei v3.5.4.** Der Kernablauf aus
+[`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md) ist inzwischen zweimal
+gebaut: Die Minimalversion (Datei-Export für alle Konten geöffnet, v3.5.2,
+Abschnitt G) und die Komfortversion als Link-Mechanismus, live seit v3.5.3
+(Abschnitt J) — Lektionsinhalt steckt komprimiert im URL-Fragment, keine
+neue Firestore-Sammlung, kein kontoübergreifender Lesezugriff, daher keine
+Berührung mit der weiterhin gesperrten Minderjährigen-Frage (C5/Frage 5 im
+Gerüst). v3.5.4 zieht nur eine liegen gebliebene Bedienungs-Politur am
+Kopieren-Dialog nach (Abschnitt J, Nachtrag).
 
-Seit dem letzten Stand zusätzlich abgeschlossen: Google-Login (Frage 13) ist
-seit v3.4.10/3.4.11 am echten Gerät bestätigt funktionierend, Apple bleibt
-absichtlich hinter einem Flag versteckt (fehlendes Apple-Developer-Konto).
-Die App läuft jetzt kanonisch unter **`https://adrabic.web.app`** (zweite
-Firebase-Hosting-Site, v3.4.12) statt `lernkarte-925c2.web.app` — Search
-Console, `robots.txt`/`sitemap.xml` und alle kanonischen/OG-Angaben sind
-umgezogen und vom Betreiber bestätigt. Phase 4 und Phase 7 bleiben `fertig`.
+Frühere Stände (Redesign-Strang, Google-Login, Umzug auf `adrabic.web.app`)
+bleiben unverändert `fertig`, siehe „Frühere Lage" unten.
 
 **Es gibt aktuell keinen aktiven, unblockierten Codepunkt mehr.** Was noch
 offen ist, hängt an Betreiber-Entscheidungen, nicht an Bau-Arbeit:
 
+- **Lehrer-Gerüst, Frage 5/C5 (Minderjährige) für eine künftige
+  server-gestützte Komfortversion** — harte Sperre, braucht echten
+  anwaltlichen Rat, keine Agenten-Einschätzung. Der heute live Link-
+  Mechanismus (v3.5.3) umgeht das strukturell, löst die Grundfrage aber
+  nicht für andere Varianten (z. B. mit Widerruf, siehe Gerüst Abschnitt J).
 - Strang A, Punkt 2.4 (Marke oder Person) — Identitätsfrage.
-- „Später"-Punkte: Lehrer-/Schülermodus mit Klassenräumen, eigene
-  Domain-Erweiterung, Abo/Bezahlfunktion, App Check, App-/Play-Store.
+- „Später"-Punkte: Lehrer-/Schülermodus mit Klassenräumen (Ausbaustufe A–D
+  im Gerüst), eigene Domain-Erweiterung, Abo/Bezahlfunktion, App Check,
+  App-/Play-Store.
 - Alte Firebase-Hosting-Site `lernkarte-925c2.web.app` könnte irgendwann
   abgeschaltet werden, sobald `adrabic.web.app` sich etabliert hat — kein
   Blocker, reine Aufräumfrage für später.
@@ -490,9 +493,15 @@ offen ist, hängt an Betreiber-Entscheidungen, nicht an Bau-Arbeit:
 Eine neue Session prüft zuerst, ob der Betreiber inzwischen eine dieser
 Fragen beantwortet oder eine neue Schwachstelle genannt hat (z. B. über
 `beobachtungen-lernwerkzeug.md`, dort stehen weiterhin unentschiedene Punkte
-1, 3, 9, 10 sowie ungeteste Verdachts-Fixe 5, 13, 16). Ohne neue Vorgabe gibt
-es nichts zu bauen — das ist kein übersehener Schritt, sondern der
-plangemäße Ruhezustand nach Abschluss aller Phasen und des Redesign-Strangs.
+1, 3, 9, 10 sowie ungeteste Verdachts-Fixe 5, 13, 16) — **und prüft `git log`
+gegen den hier dokumentierten Stand**, nicht nur diese Datei: Am 18.09.2026
+lag zwischen dem zuletzt dokumentierten Stand und `HEAD` ein Commit, der
+ohne den Veröffentlichungs-Schritt aus `README.md` eingecheckt war (siehe
+Logbuch-Eintrag „„Leg los" geprüft" weiter unten) — genau die Sorte Lücke,
+die eine neue Session zuerst schließt, bevor sie auf eine neue Vorgabe
+wartet. Ohne neue Vorgabe UND ohne eine solche Lücke gibt es nichts zu
+bauen — das ist kein übersehener Schritt, sondern der plangemäße
+Ruhezustand nach Abschluss aller Phasen und des Redesign-Strangs.
 
 **Frühere Lage (vor den Bildern):**
 
@@ -602,4 +611,5 @@ mangels Gerät nicht zur Verfügung.
 | 2026-09-18 | **Erster echter Code-Schritt aus dem Lehrer-Gerüst: Weitergabe-Knopf für alle Konten geöffnet (v3.5.2).** Beim Nachdenken über „wer darf Lektionen weitergeben" fiel auf, dass die bestehende Minimalversion (`export-weitergabe`) bisher an eine feste `AUTOR_UID` gebunden war — nur für den Betreiber sichtbar, mit dokumentierter Absicht (Unfallschutz, Kennungs-Kollisionen). Beide Sorgen sind separat abgedeckt (Bestätigungsdialog in `exportWeitergabe()`, `istGefuehrt`-Prüfung verhindert Re-Export importierter Sätze) — deshalb ohne Risiko sofort umsetzbar, keine neue Firestore-Regel, keine Berührung mit der weiterhin gesperrten Frage 5. `istAutor()` gibt jetzt immer `true` zurück, `AUTOR_UID` und der zugehörige Einrichtungs-Banner in `renderMain()` sind entfernt. Betreiber verbindet das mit der ruhenden `monetarisierung/GERUEST.md` (Punkt A.2, Abo für Zusatzfunktionen) als möglichem späteren Bezahl-Baustein — heute kostenlos, kein Bauauftrag für die Bezahlschranke. Veröffentlicht nach `README.md`-Liste: `APP_VERSION`/`CACHE_NAME` → 3.5.2, `CHANGELOG.md` ergänzt. Details in `lehrer-modus/GERUEST.md`, Abschnitt G. |
 | 2026-09-18 | **Komfortversion technisch vorbereitet, ausdrücklich nicht scharf geschaltet (noch v3.5.2).** Betreiber-Vorgabe für die Komfortversion: Sender darf „keine Chance haben, auch nur irgendetwas über den Gegenüber zu erfahren" — dafür Architektur H entworfen (Lektion liegt unter einem Code, Empfänger liest und kopiert in eigenes Konto, keine Rückmeldung an den Sender je). Widerspruch zu C2 (Kick einzelner Zugänge) aufgelöst: Betreiber wählt „ganzer Code widerrufen reicht", volle Anonymität bleibt. Code dafür in `app.js` geschrieben (`teileLektionCode`, `beendeTeilenCode`, `codeEinloesenStart/codeEinloesen`, `genTeilCode` mit `crypto.getRandomValues`) und in der Oberfläche sichtbar als mit „Entwurf" gekennzeichnete Karten — funktioniert aber absichtlich nicht: `firestore.rules` ist unverändert, jeder Versuch scheitert mit `permission-denied`, bis die im Gerüst dokumentierte neue Regel bewusst nachgezogen wird. Dabei zwei bestehende Funktionen sauber aufgeteilt (`baueWeitergabeBereich`, `verarbeiteImportDaten`), damit Datei- und Code-Weg denselben Inhalt erzeugen/verarbeiten statt einer zweiten, abweichenden Fassung. Im Browser geprüft: Login-Bildschirm lädt fehlerfrei, keine neuen Konsolenfehler — vollständiges Durchklicken der neuen Knöpfe bräuchte ein echtes Konto, nicht in dieser Umgebung möglich. Details, inklusive Regel-Entwurf für später, in `lehrer-modus/GERUEST.md`, Abschnitt H/I. |
 | 2026-09-18 | **Frage 5 für den Kernablauf umgangen, nicht beantwortet — Komfortversion live (v3.5.3).** Betreiber: „ich will das so machen dass C5 garnicht nötig ist", dazu ein direkter Hinweis, dass die Sperre technisch nur eine Datei im Repo ist, die der Agent selbst entfernen könnte — Agent hat das bestätigt (ja, könnte er) und ausdrücklich abgelehnt, es deswegen zu tun: die Sperre ist eine bewusste Entscheidung, kein technisches Hindernis. Stattdessen strukturelle Lösung gefunden: Der Firestore-Code-Entwurf aus H/I (v3.5.2) ist komplett ersetzt durch ein Link-Modell (Abschnitt J) — der Lektionsinhalt steckt komprimiert direkt im URL-**Fragment** (alles nach „#", geht nie an einen Server, keine Zugriffs-Logs), nicht in einer Datenbank. Damit gibt es keine neue Firestore-Sammlung und keinen kontoübergreifenden Lesezugriff mehr — Frage 5 hat strukturell nichts, woran sie andocken könnte, weil nichts gespeichert wird, das ein fremdes Konto lesen könnte. Ausdrücklich nur für DIESEN Mechanismus geklärt, nicht die Komfortversion-Idee grundsätzlich — eine künftige Variante mit Server-Speicherung bräuchte die Sperre weiterhin. Im Browser getestet (Kompressions-Rundlauf mit arabischem Text, auch mit Mengengerüst 40/100/150/200 Karten → Fragment-Länge), Rundlauf fehlerfrei; `TEIL_LINK_MAX_ZEICHEN = 4000` danach kalibriert. `firestore.rules` bleibt unverändert — der ganze Punkt des Entwurfs. `APP_VERSION`/`CACHE_NAME` → 3.5.3, `CHANGELOG.md` ergänzt. Details in `lehrer-modus/GERUEST.md`, Abschnitt J (I ist als abgelöst markiert, nicht gelöscht). |
+| 2026-09-18 | **„Leg los" geprüft: letzter Commit war ohne Veröffentlichungs-Schritt eingecheckt, nachgezogen (v3.5.4).** `PLAN.md` sagte „kein aktiver Codepunkt", aber `git log` zeigte einen Commit nach dem 3.5.3-Stand (Link-Teilen-Dialog: eigener „link-share"-Dialogtyp mit Kopieren-Knopf und Kopiert-Rückmeldung statt einfachem Text-Hinweis), der `app.js` änderte, ohne `APP_VERSION`/`CACHE_NAME` hochzuzählen oder `CHANGELOG.md` zu ergänzen — Verstoß gegen die eigene Veröffentlichungsliste aus `README.md`/`../CLAUDE.md`. Nach Regel 2 (Code ist maßgeblich, nicht ältere Plandateien) galt das als der tatsächliche nächste Schritt, nicht Warten auf eine neue Betreiber-Vorgabe. Nachgetragen: `APP_VERSION`/`CACHE_NAME` 3.5.3 → 3.5.4, `CHANGELOG.md`-Eintrag, Nachtrag in `lehrer-modus/GERUEST.md` unter Abschnitt J. Keine neue Funktion, keine Architekturänderung — reine Bedienungs-Politur am bereits entschiedenen Link-Mechanismus. |
 | 2026-09-15 | **Beobachtungen zum Lernwerkzeug: Versuchte Verbesserung des Ziehgriff-Doppeltipp-Verhaltens (v3.0.40).** Testrückmeldung zu v3.0.39 deutete darauf hin, dass die Aktivierung der Ziehgriff-Doppeltipp-Geste weiterhin schwierig ist — wahrscheinlich weil der 400ms-Fenster zu eng ist, um auf einem 28px-breiten Touchscreen-Ziel zuverlässig zweimal zu tippen. Zwei Optimierungen ohne Mechanic-Änderung: (1) `DOPPELTIPP_FENSTER` von 400ms → 600ms für mehr Zeit. (2) Visuelle Rückmeldung auf `.drag-handle:active` mit Hintergrund (`rgba(var(--accent-rgb), 0.15)`), damit erkennbar ist, dass die erste Tap registriert wurde. Beide Änderungen sollen die Fehlertoleranz erhöhen. Nächster Schritt: Gerätetest zur Prüfung der Zuverlässigkeit. Alle fünf Beobachtungen 2, 4, 6, 14, 15 vom Code her bereits behoben oder verbessert; offen bleiben drei Punkte, die Gerätetests brauchen (5: iPad-Layout, 13: Over-Scrolling, 16: Browser-Zurück), und mehrere UX-Punkte, die Betreiber-Entscheidungen brauchen (1, 3, 9, 10). Details in `beobachtungen-lernwerkzeug.md`.
