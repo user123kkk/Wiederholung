@@ -1,3 +1,9 @@
+## 3.6.14 – 19. September 2026
+
+**Navigationsleiste sitzt jetzt in der Home-Bildschirm-App (iPhone/iPad, Hochformat) immer an derselben Stelle – auch beim ersten Öffnen und beim Tabwechsel.** Betreiber-Screenshots zeigten zwei Fehler des Ansatzes aus 3.6.6/3.6.7: (1) Beim Öffnen saß die Leiste ~48 px zu hoch, weil der größere `innerHeight`-Wert (896 statt 848) noch nie gemessen worden war – die Referenz „größter je gemessener Wert" kannte er erst nach einem Besuch in einem scrollbaren Tab. (2) Bei jedem Tabwechsel sprang die Leiste kurz, weil sich `innerHeight` erst NACH dem Neuzeichnen ändert und die Korrektur nachhinkte.
+
+Jetzt wird sie dort von oben verankert, mit der festen Gerätehöhe aus `screen.*` (`html.ref-hoehe`, `styles.css`; `syncViewportGap` in `app.js`). Diese Höhe hängt nicht vom Inhalt ab und ändert sich nie – die Leiste bewegt sich nicht mehr. Nur iOS-Home-Bildschirm-App (`navigator.standalone`), nur Hochformat; alles andere behält das bisherige Verhalten. Im Probelauf mit iPhone-Attrappe (414×896, Höhe 848/896 wechselnd): vorher 836 → 884, jetzt konstant 884.
+
 ## 3.6.13 – 19. September 2026
 
 **Gesamtprüfung „Reibungsfreiheit": 19 gemeldete Unsauberkeiten, der Großteil behoben** (Belege und Messwerte: `plan/beobachtungen-lernwerkzeug.md`, Beobachtung 19).

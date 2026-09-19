@@ -676,6 +676,15 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
      liefe er an den Ecken ueber die Rundung der Leiste hinaus. */
   overflow: hidden;
 }
+/* 3.6.14: Home-Bildschirm-App auf iOS (app.js, syncViewportGap): feste Hoehe des
+   Geraets statt schwankendem innerHeight. Die Leiste haengt von OBEN, damit
+   sie beim Tabwechsel nicht mehr springt. 2px = die beiden Randlinien. */
+@media (max-width: 899.98px) {
+  html.ref-hoehe .nav {
+    bottom: auto;
+    top: calc(var(--ref-h) - var(--nav-h) - 2px - var(--space-3) - var(--sab));
+  }
+}
 .nav__tabs {
   display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
   height: var(--nav-h);

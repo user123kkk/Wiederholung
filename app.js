@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.13";
+const APP_VERSION = "3.6.14";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -7830,6 +7830,30 @@ window.addEventListener("resize", () => {
 const VV_GAP_MAX = 100;
 let maxViewportHeight = 0, maxViewportBreite = 0;
 function syncViewportGap() {
+  /* 3.6.14: Home-Bildschirm-App auf dem iPhone/iPad (nur dort gibt es
+     navigator.standalone). Die Hoehe des Geraetes steht fest in screen.* -
+     dort NICHT aus innerHeight ableiten, das schwankt (848/896, je nachdem ob
+     der Inhalt scrollbar ist) und zwar erst NACH dem Neuzeichnen. Zwei
+     Folgen des alten Ansatzes, beide am Geraet gesehen: Beim ersten Oeffnen
+     sass die Leiste zu hoch (der groessere Wert war noch nie gemessen), und
+     bei jedem Tabwechsel sprang sie kurz, bis das resize-Ereignis nachkam.
+     Jetzt verankert styles.css (html.ref-hoehe) die Leiste von OBEN mit dieser
+     festen Hoehe - sie bewegt sich nicht mehr. Nur im Hochformat und nur, wenn
+     innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
+     viel kleiner) bleibt der Zustand, wie er ist. */
+  const root = document.documentElement;
+  if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
+    const ref = Math.max(screen.width, screen.height);
+    const diff = ref - window.innerHeight;
+    if (diff >= 0 && diff <= VV_GAP_MAX) {
+      root.style.setProperty("--ref-h", ref + "px");
+      root.style.setProperty("--vv-gap", "0px");
+      root.classList.add("ref-hoehe");
+      return;
+    }
+    if (diff > VV_GAP_MAX && root.classList.contains("ref-hoehe")) return;
+  }
+  root.classList.remove("ref-hoehe");
   const vv = window.visualViewport;
   const h = vv ? vv.height : window.innerHeight;
   const b = window.innerWidth;
@@ -7844,6 +7868,7 @@ if (window.visualViewport) {
   window.visualViewport.addEventListener("scroll", syncViewportGap);
 }
 window.addEventListener("resize", syncViewportGap);
+window.addEventListener("orientationchange", syncViewportGap);
 syncViewportGap();
 
 /* 3.6.13: Das Debug-Overlay aus 3.6.4/3.6.5 (Beobachtung 18) ist entfernt -

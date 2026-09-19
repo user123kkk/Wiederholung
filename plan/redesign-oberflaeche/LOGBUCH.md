@@ -4,6 +4,18 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — Nav-Leiste: beim Öffnen zu hoch, beim Tabwechsel Springen (v3.6.14)
+
+**Geändert:** `app.js` `syncViewportGap` (Zweig für `navigator.standalone` + Hochformat: `--ref-h` aus `screen.*`, Klasse `ref-hoehe`, `orientationchange`), `styles.css` (`html.ref-hoehe .nav { top: … }` unter 900 px), Version 3.6.14 in `app.js`/`sw.js`/`index.html`, `CHANGELOG.md`, Beobachtung 18 nachgetragen.
+
+**Entscheidung:** Der „größter gemessener Wert"-Ansatz aus 3.6.6/3.6.7 war nur nach dem Besuch eines scrollbaren Tabs richtig und hinkte dem Neuzeichnen hinterher. Statt weiter aus `innerHeight` zu rechnen, wird in der iOS-App eine feste Größe benutzt und die Leiste von oben verankert – dann ist es egal, was `innerHeight` gerade meldet. Nicht angewandt außerhalb iOS-Standalone (Android meldet in `screen.height` Leisten mit, das wäre falsch) und nicht im Querformat.
+
+**Offen:** Gerätetest am iPhone: Leiste beim Öffnen und in allen Tabs gleich, kein Springen beim Wechsel, Querformat. Im Probelauf nur mit Attrappe (`navigator.standalone`, `screen` 414×896) belegt.
+
+**Nächster Schritt:** Betreiber prüft v3.6.14 in der Home-Bildschirm-App.
+
+---
+
 ### 2026-09-19 — Gesamtprüfung „Reibungsfreiheit", Fixes (v3.6.13)
 
 **Geändert:** `app.js` — Debug-Overlay und `debug-version-tap` entfernt, `localStorage debugNav` wird gelöscht; `syncViewportGap` (Breitenwechsel setzt zurück, Abweichung >100 px = echter Wechsel); toter Aufruf `teilLinkPruefenUndVerarbeiten` aus `datenZusammenbauen` entfernt, dort Vergleich vorher/nachher (kein `render()` bei unverändertem Stand); `renderMain` mit Ansicht-/Overlay-Schlüssel (Klassen `still-ansicht`/`still-overlay` auf `#app`), `huelleBehalten()` für `.appbar`/`.nav`, `syncAppbarKante()`, Klasse `blatt-offen` auf `<html>`, Fokus in neues Blatt; Toast ohne `render()` beim Ablauf, oben bei offenem Blatt; Escape schließt alle Blätter; `wischBewertung`-Sperre; `tabSchonAktiv()`; Auslaufen nach Griff-Scrollen (`scrollAuslaufen`); Randscrollen ignoriert Nav/Kopfzeile. `styles.css` — `enter-view`, Still-Regeln, `.toast-wrap--oben`, `html.blatt-offen`, neuer Abschnitt 19 (Trefferflächen). `sw.js` — 4-s-Zeitlimit für Netz zuerst, `CACHE_NAME` 3.6.13. `index.html` (`?v=`), `manifest.json`, alle vier HTML-Seiten (`theme-color`), `CHANGELOG.md`.

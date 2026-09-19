@@ -791,6 +791,8 @@ gescrolltem Inhalt.
 
 **v3.6.7 — Vorzeichenfehler korrigiert.** Erster Versuch addierte `--vv-gap` zu `bottom`, richtig ist subtrahieren (bei zu kleinem `innerHeight` muss die Leiste näher an den Rand, nicht weiter weg). **Am echten Handy bestätigt:** `nav.bottom` zeigt jetzt in allen drei Tabs identisch 850 — Sprung ist weg.
 
+**v3.6.14 — Nachtrag, weil „gelöst" zu früh war (19.09.2026).** Betreiber-Screenshots (iPhone, Home-Bildschirm-App): Beim Öffnen sitzt die Leiste bei y≈1603 (px im Screenshot), nach dem ersten Wechsel zu Fortschritt bei 1698 – dieselben 48 CSS-px wie oben. Der „größte gemessene Wert" fehlt beim ersten Öffnen, und beim Tabwechsel läuft `innerHeight` dem Neuzeichnen hinterher (kurzes Springen). Fix: in der iOS-App feste Höhe aus `screen.*`, Leiste von oben verankert, unabhängig von `innerHeight`. Am Gerät gegenzuprüfen.
+
 **Nebenfund beim Testen, ebenfalls behoben (v3.6.8):** Die Hochzähl-Animation ("Diese Woche im Vergleich") lief bei jedem Tab-Besuch neu von 0, weil ihr Merker im DOM stand und bei jedem `render()` verloren ging. Bestand schon vorher, unabhängig von Beobachtung 18. Jetzt in einer Modul-Variable, übersteht render()-Aufrufe.
 
 ## 19. Gesamtprüfung „Reibungsfreiheit" (19.09.2026) — 19 Funde, 16 behoben in v3.6.13, 3 bewusst offen
