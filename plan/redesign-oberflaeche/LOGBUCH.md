@@ -4,6 +4,24 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — „Cleaner fühlen": Verwalten, Wegwischen, Seitenwechsel (v3.7.1)
+
+**Anlass:** Betreiber-Wunsch, die App ruhiger wirken zu lassen — Icons und Animationen, ausdrücklich auch Seitenwechsel und „wie bei iOS Fenster runterwischen". Nachgelesen: `BILDER-BEFUND.md` (Icons Bild 79–86 schon ✅, zu Animationen steht in den 108 Bildern und im Ideen-Backlog nichts) — die Änderungen kommen aus dem Ist-Zustand, nicht aus einem Video.
+
+**Geändert:** `app.js`: Kartenzeile in `kartenListeInhalt()` ohne Stift/Mülleimer; `cardDetailSheet()` + Aktion `card-detail-loeschen`; Escape-Logik zu `schliesseObersteEbene()` herausgezogen, `blattWischen()` (Touch, ~115 Zeilen inkl. Kommentar); Richtung des Seitenwechsels in `render()` (`data-richtung` am `#app`, `letzteTiefe`/`letzterReiter`). `styles.css`: `enter-vor`/`enter-zurueck`, `#app[data-richtung]`, `#app{overflow-x:clip}`, `.dlg{overscroll-behavior:contain}`, `.dlg-nebenweg`, `button:active` 0,975, `.arab-ziffer` in Serie/„Dein Stoff" 1,5 rem gedämpft. Version 3.7.1.
+
+**Entscheidung:**
+- Stift/Mülleimer raus, Antippen der Zeile bleibt der Weg (gab es schon, Beobachtung 1). Löschen bekommt im Detail-Blatt einen leisen Knopf (kein `danger`: das ist laut Gestaltungsregel Bestätigungsdialogen vorbehalten). Bei Karten aus einem anderen Bereich (Suche „alle Bereiche") bleibt der Stift, weil dort kein Detail-Blatt öffnet.
+- Wegwischen ist die eine neue Geste, die `PRINZIPIEN.md` sonst meidet: hier vom Betreiber ausdrücklich verlangt; deshalb eng gefasst (ein Finger, Blatt oben, nicht über Eingabefeldern, 10 px senkrecht, 90 px oder 0,55 px/ms). Kein Rand-Wischen zum Zurückgehen — das kollidiert mit dem Zurück-Wischen des Browsers.
+- Seitenwechsel bewusst klein (20 px, halbe Deckkraft): größere Bewegung würde die Ruhe wieder zerstören.
+- Die arabische Ziffer bleibt (Markenzeichen aus dem Trainer), nur in sinnvoller Größe. Im Probelauf zeigt die Schrift sie als Ziffer im Kreis (Vers-Zeichen der Schrift) — am Gerät gegenprüfen.
+
+**Geprüft:** Playwright + CDP-Touch gegen die echte App: Richtung bei Reiter/Einstellungen/Unterseite hin und zurück, keine Querleiste, Blatt: 25 px federt zurück, 220 px und schnelle 70 px schließen, Wischen nach oben nichts, Detail-Blatt wegwischbar, Löschen fragt nach und löscht; 19 von 19. Lehrer-Durchlauf weiter 34 von 34. Probelauf ohne Konsolenfehler. **Nicht geprüft:** echtes iPhone (Gefühl des Wegwischens, iOS-Gummiband), Home-Bildschirm-App.
+
+**Offen:** Betreiber-Test am Handy. Nicht gebaut: Dropdown-Sheets im Fehlermeldungs-Modal (`#errorModal`) wischen noch nicht weg (eigene Hülle); Austrittsbewegung beim normalen Schließen (Knopf/Escape) — Blätter verschwinden dort weiterhin ohne Ausfahren (Beobachtung 19).
+
+**Nächster Schritt:** Rückmeldung des Betreibers vom Handy abwarten; danach ggf. Austrittsbewegung für Knopf/Escape.
+
 ### 2026-09-19 — Nav-Leiste: beim Öffnen zu hoch, beim Tabwechsel Springen (v3.6.14)
 
 **Geändert:** `app.js` `syncViewportGap` (Zweig für `navigator.standalone` + Hochformat: `--ref-h` aus `screen.*`, Klasse `ref-hoehe`, `orientationchange`), `styles.css` (`html.ref-hoehe .nav { top: … }` unter 900 px), Version 3.6.14 in `app.js`/`sw.js`/`index.html`, `CHANGELOG.md`, Beobachtung 18 nachgetragen.

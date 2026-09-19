@@ -1,3 +1,14 @@
+## 3.7.1 – 19. September 2026
+
+**Ruhiger: weniger Symbole in Verwalten, Blätter lassen sich wegwischen, Seitenwechsel mit Richtung.** Nach Betreiber-Wunsch „die App cleaner fühlen lassen" (Rückblick auf die Icon-/Bewegungs-Tipps der TikTok-Sammlung, `plan/redesign-oberflaeche/BILDER-BEFUND.md`).
+
+- **Verwalten:** Stift und Mülleimer sind aus jeder Kartenzeile verschwunden (bei 24 Karten 48 Symbole weniger). Zeile antippen öffnet wie bisher das Detail-Blatt; dort stehen jetzt „Bearbeiten" und leise darunter „Karte löschen" (mit der bekannten Rückfrage). Ziehgriff und Stufen-Badge bleiben.
+- **Blätter wegwischen (wie in iOS):** Jedes Blatt und jeder Dialog folgt dem Finger, wenn man es oben nach unten zieht; weit (90 px) oder schnell genug schließt es, sonst federt es zurück. Nur mit einem Finger, nur wenn das Blatt oben steht, nie über Eingabefeldern, waagerecht/nach oben gibt die Geste auf. Wirkt wie Escape (ein Eingabe-Dialog gilt als abgebrochen, ein halb getipptes Karten-Formular bleibt als Entwurf). Bei „Bewegung reduzieren" ohne Ausfahren.
+- **Seitenwechsel mit Richtung:** Tiefer hinein (Einstellungen, Unterseite, Runde) kommt der Inhalt leicht von rechts, zurück von links; zwischen den Reitern in Richtung des Reiters. 20 px und aus halber Deckkraft, damit es ein Wechsel bleibt und kein Wischen wird.
+- **Antippen:** Knöpfe drücken sich etwas deutlicher ein (0,975 statt 0,985).
+- **Fortschritt:** Die arabische Ziffer neben Serie und „Dein Stoff" stand in Begleittext-Größe und wirkte wie ein verirrtes Symbol; jetzt 1,5 rem, gedämpft.
+- Nicht geändert: Lernlogik, Speicherwege, Rückfragen.
+
 ## 3.7.0 – 19. September 2026
 
 **„Lehrer gibt frei": Beim Teilen per Code entscheidet die teilende Person, wann die nächste Lektion aufgeht.** Betreiber-Freigabe vom 19.09.2026 (`plan/lehrer-modus/GERUEST.md`, Abschnitte L und M), einschließlich der Änderung an der Freischalt-Berechnung – die einzige Ausnahme von „Lernlogik tabu", nur für diese eine Berechnung.

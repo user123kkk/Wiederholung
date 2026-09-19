@@ -450,6 +450,18 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 /* 3.6.13: Seitenwechsel. Der alte Inhalt ist sofort weg; ein Einblenden aus
    volligem Nichts liest sich als Aufblitzen, aus halber Deckkraft als Wechsel. */
 @keyframes enter-view { from { opacity: 0.45; } to { opacity: 1; } }
+/* 3.7.1: Seitenwechsel mit Richtung (app.js, render(): data-richtung am #app).
+   Tiefer hinein kommt der Inhalt von rechts, zurueck von links - kurz (20 px)
+   und aus halber Deckkraft, damit es nach Wechsel aussieht und nicht nach
+   Wischen. Bei "Bewegung reduzieren" ist die Dauer ohnehin auf null gesetzt. */
+@keyframes enter-vor {
+  from { opacity: 0.45; transform: translateX(20px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes enter-zurueck {
+  from { opacity: 0.45; transform: translateX(-20px); }
+  to   { opacity: 1; transform: none; }
+}
 @keyframes enter-rise {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
@@ -555,6 +567,9 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
     calc(var(--gutter) + var(--sal));
   animation: enter-view var(--dur-fast) var(--ease-out) both;
 }
+#app { overflow-x: clip; }   /* die 20 px Einschub sollen keine Querleiste erzeugen */
+#app[data-richtung="vor"] .view { animation: enter-vor var(--dur-base) var(--ease-out) both; }
+#app[data-richtung="zurueck"] .view { animation: enter-zurueck var(--dur-base) var(--ease-out) both; }
 
 /* Im Modus gibt es weder AppBar noch Navigation — nur die Modusleiste oben.
    Der Inhalt bekommt dadurch fast den ganzen Bildschirm. */
@@ -858,7 +873,7 @@ button {
               opacity var(--dur-fast) var(--ease-out),
               transform var(--dur-instant) var(--ease-out);
 }
-button:active { transform: scale(0.985); }
+button:active { transform: scale(0.975); }
 button:disabled { opacity: 0.45; cursor: default; transform: none; }
 
 button.secondary {
@@ -1982,7 +1997,13 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .serie-klein { font-size: var(--fs-xs); color: var(--text-3); }
 .serie-beste { font-size: var(--fs-xs); color: var(--text-3); }
 .serie-beste strong { color: var(--text-2); }
+/* 3.7.1: Die arabische Ziffer stand in der Schriftgroesse des Begleittexts
+   neben der grossen Zahl und las sich wie ein verirrtes Symbol. Jetzt ein
+   ruhiges Echo der Zahl: gleiche Hoehe wie ein Zwischentitel, gedaempft. */
 .arab-ziffer { font-family: var(--font-arabic); }
+.serie-zahl .arab-ziffer, .gross-zahl .arab-ziffer {
+  font-size: 1.5rem; line-height: 1; color: var(--text-3);
+}
 
 .leech-row {
   display: flex; align-items: center; gap: var(--space-3);
@@ -2200,8 +2221,12 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   padding: var(--space-6) var(--space-5) calc(var(--space-5) + var(--sab));
   width: 100%; max-width: 460px; text-align: left;
   max-height: 88dvh; overflow-y: auto;
+  /* 3.7.1: Das Blatt laesst sich nach unten wegwischen (app.js, blattWischen);
+     das Ende seines Inhalts darf dabei nicht die Seite dahinter mitziehen. */
+  overscroll-behavior: contain;
   animation: sheet-up var(--dur-slow) var(--ease-out) both;
 }
+.dlg-nebenweg { display: flex; justify-content: center; margin-top: var(--space-3); }
 /* Der Griff oben: sagt ohne Worte, dass das hier von unten gekommen ist. */
 .dlg::before {
   content: ""; display: block; width: 36px; height: 4px;

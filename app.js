@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.7.0";
+const APP_VERSION = "3.7.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5113,7 +5113,14 @@ function cardDetailSheet() {
       ikon("stift", "i-sm") + ' Bearbeiten</button>';
   }
   html += '<button class="secondary" data-action="card-detail-zu">Schließen</button>';
-  html += '</div></div></div>';
+  html += '</div>';
+  /* Leise, unter den Hauptknoepfen: Loeschen ist selten und hat ohnehin eine
+     eigene Rueckfrage. Kein "danger" - der ist Bestaetigungsdialogen vorbehalten. */
+  if (kartenBearbeitbar(b)) {
+    html += '<div class="dlg-nebenweg"><button class="ghost" data-action="card-detail-loeschen" data-id="' + esc(c.id) + '">' +
+      ikon("muell", "i-sm") + ' Karte löschen</button></div>';
+  }
+  html += '</div></div>';
   return html;
 }
 
@@ -5186,6 +5193,7 @@ function bannerSchreibfehler() {
 }
 
 let letzterAnsichtSchluessel = null, letzterOverlaySchluessel = null;
+let letzteTiefe = 0, letzterReiter = 0;
 /* Setzt die alte Huelle (Kopfzeile/Leiste) anstelle der frisch gebauten ein und
    uebergibt ihr deren Inhalt. Gibt es die neue Huelle nicht (Modus), bleibt es
    beim Neuaufbau. */
@@ -5355,6 +5363,18 @@ function renderMain() {
   letzterOverlaySchluessel = overlaySchluessel;
   app.classList.toggle("still-ansicht", !ansichtNeu);
   app.classList.toggle("still-overlay", !overlayNeu);
+  /* 3.7.1: Richtung des Seitenwechsels. Tiefer hinein (Einstellungen, Unterseite,
+     Runde) kommt der Inhalt von rechts, zurueck von links; zwischen den drei
+     Reitern schiebt er in Richtung des Reiters. styles.css liest das Attribut. */
+  const tiefe = (ui.einstellungen ? 1 : 0) + (ui.seite ? 1 : 0) + (imModus ? 1 : 0);
+  const reiter = ["lernen", "fortschritt", "verwalten"].indexOf(ui.tab);
+  let richtung = "";
+  if (ansichtNeu && warAnsicht) {
+    if (tiefe !== letzteTiefe) richtung = tiefe > letzteTiefe ? "vor" : "zurueck";
+    else if (reiter !== letzterReiter) richtung = reiter > letzterReiter ? "vor" : "zurueck";
+  }
+  letzteTiefe = tiefe; letzterReiter = reiter;
+  if (richtung) app.dataset.richtung = richtung; else delete app.dataset.richtung;
 
   /* Kopfzeile und Leiste tragen einen Weichzeichner (backdrop-filter). Ein neu
      eingesetztes Element mit Weichzeichner blitzt beim ersten Bild oft ohne
@@ -7331,10 +7351,11 @@ function kartenListeInhalt() {
     if (fremd) {
       html += '<button class="ghost" data-action="edit-card-in-bereich" data-bereich="' + esc(fremd.id) + '" data-id="' + esc(c.id) +
         '" title="In „' + esc(fremd.name) + '" öffnen" aria-label="Karte im Bereich ' + esc(fremd.name) + ' bearbeiten">' + ikon("stift", "i-sm") + '</button>';
-    } else if (!ui.selectMode && bearbeitbar) {
-      html += '<button class="ghost" data-action="edit-card" data-id="' + esc(c.id) + '" title="Bearbeiten" aria-label="Karte bearbeiten">' + ikon("stift", "i-sm") + '</button>';
-      html += '<button class="ghost" data-action="delete-card" data-id="' + esc(c.id) + '" title="Löschen" aria-label="Karte löschen">' + ikon("muell", "i-sm") + '</button>';
     }
+    /* 3.7.1: Bearbeiten und Loeschen sind aus der Zeile in das Detail-Blatt
+       gewandert (Zeile antippen). 24 Karten trugen vorher 48 Symbole, die
+       niemand gleichzeitig braucht. Die Aktionen selbst und ihre Bestaetigung
+       (deleteCard) sind unveraendert. */
     html += '</div>';
   }
   /* Zweite Leiste unten: nach 100 Zeilen ist die obere aus dem Bild. */
@@ -8168,23 +8189,101 @@ function setupDialog() {
     }
   });
 }
-document.addEventListener("keydown", e => {
-  if (e.key !== "Escape") return;
-  const errorModal = document.getElementById("errorModal");
-  if (errorModal && errorModal.getAttribute("aria-hidden") === "false") { closeErrorModal(); return; }
-  if (ui.dialog) { closeDialog(dialogResult(ui.dialog, false)); return; }
+/* 3.7.1: Das oberste offene Blatt bzw. der oberste Dialog schliesst sich - fuer
+   Escape und fuer das Wegwischen nach unten (blattWischen). Gibt an, ob etwas
+   zu schliessen war. */
+function schliesseObersteEbene() {
+  if (ui.dialog) { closeDialog(dialogResult(ui.dialog, false)); return true; }
   /* 3.0.25: Das Bereichs-Sheet liess sich per Tastatur bisher nur über den
      "Fertig"-Knopf schliessen, nicht über Escape wie jeder andere Dialog -
      eine Inkonsequenz, die auffaellt, sobald man die App ohne Maus bedient. */
   /* 3.6.13: Auch Karten-, Wahl- und Speicherkarten-Blatt, und nur EIN
      Neuzeichnen - vorher lief render() je offenem Blatt einzeln. */
-  if (ui.setArtSheetId) { ui.setArtSheetId = null; render(); return; }
-  if (ui.wahlSheet) { ui.wahlSheet = null; render(); return; }
-  if (ui.karteSheet || ui.editId) { cancelEdit(); return; }
-  if (ui.bereichMehr) { ui.bereichMehr = false; render(); return; }
-  if (ui.cardDetailId) { ui.cardDetailId = null; render(); return; }
-  if (ui.bereichSheet) { ui.bereichSheet = false; render(); return; }
+  if (ui.setArtSheetId) { ui.setArtSheetId = null; render(); return true; }
+  if (ui.wahlSheet) { ui.wahlSheet = null; render(); return true; }
+  if (ui.karteSheet || ui.editId) { cancelEdit(); return true; }
+  if (ui.bereichMehr) { ui.bereichMehr = false; render(); return true; }
+  if (ui.cardDetailId) { ui.cardDetailId = null; render(); return true; }
+  if (ui.bereichSheet) { ui.bereichSheet = false; render(); return true; }
+  return false;
+}
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  const errorModal = document.getElementById("errorModal");
+  if (errorModal && errorModal.getAttribute("aria-hidden") === "false") { closeErrorModal(); return; }
+  schliesseObersteEbene();
 });
+
+/* ---------- 3.7.1: Blatt nach unten wegwischen (wie in iOS) ----------
+   Ein Blatt (.dlg) folgt dem Finger, wenn man es am oberen Rand nach unten
+   zieht; weit genug oder schnell genug -> es faehrt weg und schliesst wie mit
+   Escape, sonst federt es zurueck. Regeln, damit es keine neue Unzuverlaessig-
+   keit einfuehrt (PRINZIPIEN.md warnt vor neuen Gesten):
+     - nur bei EINEM Finger und nur, wenn das Blatt oben steht (scrollTop 0) -
+       ein lang gescrollter Inhalt wird nie versehentlich weggezogen;
+     - nicht ueber Eingabefeldern;
+     - erst nach 10 px eindeutig senkrechter Bewegung nach unten; waagerecht
+       oder nach oben gibt die Geste sofort auf;
+     - wie Escape: ein Eingabe-Dialog gilt als abgebrochen, ein halb getipptes
+       Karten-Formular bleibt als Entwurf erhalten (cancelEdit). */
+(function blattWischen() {
+  const WEG_PX = 90, WEG_TEMPO = 0.55;   // px, px pro ms
+  let g = null;
+  const reduziert = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function zurueck() {
+    if (!g) return;
+    const { dlg, huelle } = g;
+    g = null;
+    dlg.style.transition = "transform 220ms var(--ease-out)";
+    dlg.style.transform = "translateY(0)";
+    if (huelle) { huelle.style.transition = "opacity 220ms"; huelle.style.opacity = ""; }
+    setTimeout(() => {
+      dlg.style.transition = ""; dlg.style.transform = ""; dlg.style.animation = "";
+      if (huelle) huelle.style.transition = "";
+    }, 240);
+  }
+  document.addEventListener("touchstart", e => {
+    g = null;
+    if (e.touches.length !== 1 || !e.target.closest) return;
+    const dlg = e.target.closest(".dlg");
+    if (!dlg || e.target.closest("input, textarea, select") || dlg.scrollTop > 0) return;
+    const t = e.touches[0];
+    g = { dlg, huelle: dlg.parentElement, x: t.clientX, y: t.clientY, zeit: Date.now(), aktiv: false, dy: 0 };
+  }, { passive: true });
+  document.addEventListener("touchmove", e => {
+    if (!g) return;
+    const t = e.touches[0];
+    const dx = t.clientX - g.x, dy = t.clientY - g.y;
+    if (!g.aktiv) {
+      if (Math.abs(dx) > 10 || dy < -10) { g = null; return; }
+      if (dy < 10) return;
+      if (g.dlg.scrollTop > 0) { g = null; return; }
+      g.aktiv = true;
+      g.dlg.style.animation = "none";
+      g.dlg.style.transition = "none";
+    }
+    if (e.cancelable) e.preventDefault();
+    g.dy = Math.max(0, dy);
+    g.dlg.style.transform = "translateY(" + g.dy + "px)";
+    if (g.huelle) g.huelle.style.opacity = String(Math.max(0.2, 1 - g.dy / (g.dlg.offsetHeight * 1.2)));
+  }, { passive: false });
+  function ende() {
+    if (!g) return;
+    if (!g.aktiv) { g = null; return; }
+    const tempo = g.dy / Math.max(1, Date.now() - g.zeit);
+    if (g.dy < WEG_PX && tempo < WEG_TEMPO) { zurueck(); return; }
+    const { dlg, huelle } = g;
+    g = null;
+    const schliessen = () => { if (!schliesseObersteEbene()) render(); };
+    if (reduziert()) { schliessen(); return; }
+    dlg.style.transition = "transform 200ms var(--ease-out)";
+    dlg.style.transform = "translateY(105%)";
+    if (huelle) { huelle.style.transition = "opacity 200ms"; huelle.style.opacity = "0"; }
+    setTimeout(schliessen, 190);
+  }
+  document.addEventListener("touchend", ende, { passive: true });
+  document.addEventListener("touchcancel", zurueck, { passive: true });
+})();
 
 /* ---------- Fehlerformular-Modal ---------- */
 function openErrorModal() {
@@ -8286,6 +8385,7 @@ document.body.addEventListener("click", e => {
     case "card-detail": ui.cardDetailId = btn.dataset.id; render(); break;
     case "card-detail-zu": ui.cardDetailId = null; render(); break;
     case "card-detail-bearbeiten": ui.cardDetailId = null; editCard(btn.dataset.id); break;
+    case "card-detail-loeschen": ui.cardDetailId = null; render(); deleteCard(btn.dataset.id); break;
     case "nichts": break;
     case "seite-neu-laden": location.reload(); break;
     /* Nur im Startfehler-Bildschirm: anders als "seite-neu-laden" räumt
