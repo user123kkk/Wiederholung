@@ -227,6 +227,9 @@ Kein eigener Ordner, keine Phase. Aus Konzept-Abschnitt 2 und 5:
   [`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md) — Rollen pro
   Klassenraum, Mit-Admins mit konfigurierbaren Rechten, evtl. Chat vom
   Admin an den Raum. Reine Sammlung offener Fragen, kein Bauauftrag.
+  **19.09.2026:** Abschnitt L im Gerüst — zwei Freischalt-Arten („Fortschritt"
+  wie heute beim Betreiber, „Lehrer gibt frei" per Klick, ohne Empfängerdaten).
+  Betreiber-Wunsch, nicht entschieden, nichts gebaut.
 
 - **Erneuter, verschärfter Sicherheits-Durchlauf vor Phase 6 (Öffentlich-
   machung).** Grund, festgehalten am 13.09.2026: Im Impressum steht der

@@ -578,3 +578,28 @@ PowerShell den Doppelpunkt sonst als Parameter-Trenner liest) erfolgreich
 durch: `+ firestore: released rules firestore.rules to cloud.firestore`.
 Code-basiertes Teilen ist damit **end-to-end scharf**, nicht mehr nur
 Code-Review-Stand.
+
+---
+
+## L · Zwei Freischalt-Arten: „Fortschritt" (Betreiber) und „Lehrer gibt frei" (19.09.2026, Betreiber-Wunsch, NICHT entschieden, nichts gebaut)
+
+**Anlass:** Betreiber-Frage, ob „Per Code teilen" die Eigenschaften von „Kartensatz zum Weitergeben" übernehmen soll. Präzisiert: gemeint ist das **Sperren und Freigeben von Lektionen**. Der Betreiber will, dass sich sein Weitergeben (später verkaufbar, z. B. Medina Buch 1) vom Weitergeben eines Lehrers **unterscheidet**.
+
+**Ist-Stand (Code, `app.js` ~232–330):** Ein weitergegebener Satz ist „geführt" (`gefuehrt: true`). Dort gilt für jeden Empfänger dieselbe Regel, berechnet und nicht gespeichert: Lektion 1 ist offen, Lektion N sobald in Lektion N-1 jede Karte schon einmal auf Stufe `LEKTION_STUFE` (=1) war (`offeneLektionIds`). Das gilt heute **gleich** für Datei-Export und Code-Teilen — ein Lehrer hat keinen anderen Weg. Das ist genau die Logik des Betreibers.
+
+**Vorschlag (Agent, unentschieden):** Die Freischalt-Art wird eine Eigenschaft des geteilten Satzes, mit zwei Werten:
+1. **„Fortschritt"** (Standard, wie heute): die Lernenden schalten sich selbst frei. Passt für Selbstlerner und für den späteren Verkauf.
+2. **„Lehrer gibt frei":** der Lehrer entscheidet per Klick „nächste Lektion freigeben". Der Takt ist der Unterricht, nicht der einzelne Lernstand.
+
+**Ohne Empfängerdaten machbar:** Der Lehrer speichert im geteilten Datensatz (`geteilteLektionen/{code}`) nur eine Zahl „offen bis Lektion N". Die Empfänger-App liest sie mit. Niemand muss sich melden, der Lehrer erfährt weiter nichts über die Lernenden — das Modell aus H bleibt.
+
+**Was dafür anders werden müsste (Gründe, warum es jetzt nicht nebenbei geht):**
+- **Dauerhafte Verbindung.** Code-Einlösen ist heute ein **einmaliger Import** (`verarbeiteImportDaten`), danach besteht keine Verbindung zum Datensatz. Für „Lehrer gibt frei" müsste der Empfänger den Code im Bereich behalten und den Datensatz weiter lesen (offline: zuletzt bekannter Stand).
+- **Lernlogik.** `offeneLektionIds()` bekäme einen zweiten Weg. Das ist Lernlogik und braucht die ausdrückliche Betreiber-Freigabe (`CLAUDE.md`, Grundregel).
+- **Nicht das Alte wieder einbauen.** Bis 2.6.0 gab es ein von Hand gesetztes „gesperrt" beim Empfänger; 2.7.0 hat es bewusst durch die Berechnung ersetzt („eine Entscheidung, die niemand treffen will"). Hier entschiede der **Lehrer**, nicht der Lernende — verwandt, aber nicht dasselbe. Trotzdem ausdrücklich prüfen, bevor gebaut wird.
+- **Frage 5 (Minderjährige)** bleibt harte Sperre; am Kernablauf ändert sich dadurch nichts.
+
+**Offen (Betreiber entscheidet):** (a) Soll „Lehrer gibt frei" überhaupt kommen, oder reicht vorerst die Datei? (b) Nur Lehrer-Klick, oder Lehrer-Klick **und** Fortschritt? Empfehlung: nur Lehrer-Klick, sonst zwei Regeln auf einmal. (c) Kann der Lehrer eine Lektion wieder zumachen? Empfehlung: nein, „einmal offen bleibt offen" wie in 2.7.0. (d) Wie hängt das an einem späteren Verkauf — Freischalt-Art und Bezahlung sind getrennte Fragen (`plan/monetarisierung/GERUEST.md`).
+
+**Nächster Schritt:** Antwort des Betreibers auf (a). Bis dahin nichts bauen.
+
