@@ -472,6 +472,15 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
+**AKTUELL (19.09.2026): Bauauftrag „Lehrer gibt frei" — freigegeben, nichts gebaut.**
+Der Betreiber hat am 19.09.2026 in einer Session ausdrücklich gesagt: „ja soll
+gehen" (Bau-Freigabe, einschließlich der Änderung an `offeneLektionIds()`).
+Das ist **die** nächste Arbeit bei „leg los". Auftrag, Entscheidungen und
+Bauschritte: [`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md), Abschnitt L
+und **Abschnitt M (Bauauftrag)**. Eigenes Logbuch dafür:
+`plan/lehrer-modus/LOGBUCH.md` (anlegen, Format aus `CLAUDE.md`). Der Rest
+dieses Abschnitts ist älterer Stand.
+
 **Stand 18.09.2026, Nacht: App bei v3.6.8, alles Bekannte gelöst.** Zwei
 unabhängige Stränge liefen heute:
 

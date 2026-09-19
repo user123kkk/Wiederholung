@@ -605,3 +605,27 @@ Code-Review-Stand.
 
 **Nächster Schritt:** Bau planen und freigeben lassen: dauerhafte Verbindung zum Code-Datensatz, Feld „offen bis Lektion N", Knopf „Nächste Lektion freigeben" beim Lehrer, Änderung an `offeneLektionIds()` (Lernlogik, dafür braucht es die ausdrückliche Bau-Freigabe des Betreibers), Firestore-Regel für das Schreiben durch den Ersteller (danach `firebase deploy --only "firestore:rules"` durch den Betreiber).
 
+---
+
+## M · Bauauftrag „Lehrer gibt frei" (19.09.2026, Betreiber-Freigabe „ja soll gehen")
+
+**Freigabe:** Der Betreiber hat den Bau ausdrücklich freigegeben, auch die Änderung an der Freischalt-Berechnung (`offeneLektionIds`, `app.js` ~290). Das ist die eine Ausnahme von „Lernlogik tabu" (`CLAUDE.md`) — nur für diese Berechnung, sonst nichts an der Lernlogik anfassen. Entscheidungen aus Abschnitt L gelten: nur Lehrer-Klick entscheidet (kein Fortschritt daneben), einmal offen bleibt offen, Lehrer erfährt nichts über Empfänger.
+
+**Schon gelesen (Stand 19.09.2026, nicht neu suchen):**
+- `firestore.rules` `geteilteLektionen/{code}`: `get` für bestätigte Konten, **kein** `list`; `create` nur mit Feldern `ownerUid`, `erstelltAm`, `inhalt`; `update: if false`; `delete` nur der Ersteller.
+- `app.js`: `teileLektionCode()` (~2830) legt den Datensatz an; `beendeTeilenCode()` löscht; `codeEinloesen(code)` (~2905) liest **einmal** und ruft `verarbeiteImportDaten(inhalt)`; `baueWeitergabeBereich()` (~2702) baut den Inhalt (Karten mit `stufe: 0`, Sets nur `kategorie`/`lektion`); Bereichsfeld `teilCode` beim Sender.
+- Freischaltung: `offeneLektionIds(b)` → `setGesperrt` / `freieIdsFor` / `aktuelleLektion` / `naechsteLektion`; gilt nur bei `b.gefuehrt`. `LEKTION_STUFE = 1`.
+
+**Bauschritte (Vorschlag, in dieser Reihenfolge, jeder für sich prüfbar):**
+1. **Regel** (`firestore.rules`): im Datensatz ein Feld `freigabe` (Modus + Zahl „offen bis Lektion N"). Neu: `update` nur für den Ersteller und nur, wenn ausschließlich `freigabe` berührt wird und N nur **wächst** (einmal offen bleibt offen). Inhalt bleibt unveränderlich. Dafür `create` um `freigabe` (optional) erweitern.
+2. **Sender:** beim „Per Code teilen" die Wahl „Fortschritt" (Standard) / „Lehrer gibt frei" anbieten; bei „Lehrer" wird `freigabe` mit N=1 angelegt. In der Teilen-Karte ein Knopf „Nächste Lektion freigeben" (zeigt „Freigegeben: Lektion 3 von 12"), schreibt N+1.
+3. **Empfänger:** beim Einlösen den Code am Bereich merken (neues Feld, z. B. `lehrerCode`, in `bereichFelder()` **und** in der Regel `bereichFelder()`/`bereichWerte()` aufnehmen, sonst wird das Speichern abgewiesen) und `freigabe` mit `getDoc` beim Start und beim Wechsel in den Bereich lesen (kein Dauer-Listener nötig, wenige Lesevorgänge). Offline: zuletzt bekannter Stand, in den Bereich gespeichert.
+4. **Berechnung:** `offeneLektionIds(b)`: hat der Bereich einen Lehrer-Stand, sind die ersten N Lektionen offen (statt der Fortschritts-Regel); sonst unverändert. Ein Aktualisieren der Datei (`verarbeiteImportDaten`) darf den Lehrer-Stand nicht löschen.
+5. **Anzeigetexte:** wo heute „schließt sich, sobald …" (Fortschritts-Logik) steht, bei Lehrer-Sätzen „Dein:e Lehrer:in schaltet die nächste Lektion frei". `grep` nach `naechsteLektion`/`Sperre`-Texten.
+6. **Prüfen:** Probelauf wie in Beobachtung 19 (Playwright + Firebase-Attrappe `fbstub.js`, liegt im Scratchpad der Vor-Session, ggf. neu bauen): Lehrer gibt Lektion 2 frei → Empfänger sieht sie; N sinkt nie; ein Satz ohne Lehrer-Stand verhält sich exakt wie vorher (Regressionstest der Fortschritts-Logik!).
+7. **Veröffentlichen** nach `README.md`-Liste (`APP_VERSION`, `CACHE_NAME`, `?v=`, `CHANGELOG.md`), direkt auf `main`.
+
+**Was der Betreiber selbst tun muss (nach dem Bau, ans Ende der Antwort unter „Was Du noch tun musst"):** `firebase deploy --only "firestore:rules"` (ohne das ist die Regel tot, siehe Abschnitt K, Nachtrag) und `veroeffentlichen.bat`. Ohne die Regel schlägt „Nächste Lektion freigeben" mit `permission-denied` fehl.
+
+**Achtung:** Ein Schreibfehler in `firestore.rules` sperrt die ganze App. Die Datei vor dem Deploy auf Klammern und Funktionsnamen gegenlesen; wer kann, prüft sie mit dem Firebase-Emulator (`firebase emulators:start --only firestore`), sonst besonders sorgfältig lesen.
+
