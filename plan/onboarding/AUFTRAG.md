@@ -108,7 +108,8 @@ Struktur, Reihenfolge und Technik.
 | Nr. | Frage | Empfehlung des Agenten |
 |---|---|---|
 | E1 | Umfang: **A** nur Einstellungen anwenden · **B** auch die erste Karte schon vor der Anmeldung anlegen | A. B berührt das Kartenformular und braucht eine Zwischenspeicherung samt Prüfung; das ist ein eigener, größerer Block und erst nach A sinnvoll |
-| E2 | Welche Kandidaten aus 4 kommen hinein | 1, 3 und 4; 2 nur, wenn du den Wenn-dann-Satz mittragen willst |
+| E2 | Welche Kandidaten aus 4 kommen hinein | **Entschieden 19.09.: nur Kandidat 2, der Wenn-dann-Satz.** 1, 3 und 4 wurden nicht gewählt und bleiben draußen, bis der Betreiber sie nachfordert. Damit ist der Strang ein Einstieg zum **Dranbleiben** (wann komme ich zurück), nicht zur Einrichtung |
+| E1 | (Antwort war „weiß nicht, ob stetigs in sowas behandelt werden oder persönliches") | **Lesart des Agenten, unbestätigt:** Frage war, ob ein solcher Einstieg Stetigkeit/Dranbleiben oder Persönliches behandelt. Gewählter Baustein spricht für Stetigkeit. E1 A/B bleibt offen; bei nur einem Wenn-dann-Satz stellt sich B (erste Karte vorher) ohnehin nicht |
 | E3 | Wortlaut und Ton, besonders alles mit religiösem Bezug | du schreibst oder gibst frei |
 | E4 | Datenschutz: Rechtsprüfung der Zwischenspeicherung | vor dem Veröffentlichen, durch eine echte Person |
 

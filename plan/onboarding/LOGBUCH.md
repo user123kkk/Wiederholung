@@ -4,6 +4,16 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-19 — E2 entschieden: nur der Wenn-dann-Satz; E1 offen
+
+**Geändert:** `AUFTRAG.md` Abschnitt 6 (Zeilen E1/E2). Kein App-Code.
+**Entscheidung:** Betreiber wählte von vier Bausteinen nur den Wenn-dann-Satz. Zeit pro Tag, Schriftprobe und die drei Mechanik-Bildschirme wurden **nicht** gewählt und deshalb nicht aufgenommen. Zu E1 schrieb er „weis nicht ob stetigs in sowas behandelt werden oder persönliches, ka" — als Frage gelesen, ob ein solcher Einstieg Stetigkeit oder Persönliches behandelt. Das ist eine Lesart, keine Bestätigung.
+**Folge:** Der Strang ist damit ein Einstieg zum Dranbleiben. Das passt zur App: Abstände wachsen nur, wenn man an den Fälligkeitstagen wiederkommt (`STRATEGIE.md` 1.1). Belegt ist dafür nur Gollwitzer & Sheeran 2006 (Ziele allgemein, nicht Sprachenlernen) — auf dem Bildschirm steht davon nichts als Behauptung.
+**Offen:** (1) Wortlaut und Anker der Situationen (E3) — Vorschlag an den Betreiber, **nicht** geschrieben: feste Tagesabläufe als Anker, etwa der Gebetsablauf; ob und wie, entscheidet er. (2) E1 bestätigen. (3) E4 Datenschutz-Rechtsprüfung — beim Wenn-dann-Satz ohne Speicherung eventuell gar nicht nötig, sonst ja.
+**Nächster Schritt:** Betreiber beantwortet die zwei Rückfragen (Lesart E1, Anker E3). Dann Block 1.
+
+---
+
 ### 2026-09-19 — Strang angelegt, Konzept geschrieben, nichts gebaut
 
 **Geändert:** neu `plan/onboarding/AUFTRAG.md` und dieses Logbuch; `plan/PLAN.md` (Nebenstrang + Statusverlauf). Kein App-Code, keine Versionsnummer.
