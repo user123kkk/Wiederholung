@@ -4,6 +4,48 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — Hick's Law (TikTok-Idee 6 von 8) gegen alle Bildschirme geprüft, nichts zu bauen
+
+**Geändert:** nichts am Code, keine Versionsnummer. Nur dieses Logbuch und der
+Backlog-Eintrag im Gedächtnis des Assistenten.
+**Geprüft** (Betreiber: „Hick's Law recherchieren und implementieren"), die fünf
+Regeln aus dem Video gegen den Code, Stand v3.6.8:
+
+| Regel | Ergebnis | Beleg |
+|---|---|---|
+| 1. Unpassende Optionen nicht zeigen | erfüllt | Karten-Formular: „Wiederholungsstufe" nur beim Bearbeiten (`app.js:4950`); „Notiz anzeigen" nur wenn die Karte eine hat (`6353`); „Rückgängig" nur wenn es etwas rückgängig zu machen gibt (`6260`, `6295`); „Üben" nur bei mind. einer Karte (`6713`) |
+| 2. Keine gleich wichtigen Knöpfe nebeneinander | erfüllt | jeder Bildschirm hat genau einen gefüllten Knopf, der Rest `secondary`/`ghost`: Lernen `5825`, Durchgelaufen `5816`, Verwalten `6694`, Karten-Blatt `4958`, Anmeldung (Bild 4 in `BILDER-BEFUND.md`) |
+| 3. Erweitertes ausblenden | erfüllt | „Mehr" statt vier Dauerknöpfen (v3.5.0, `4866`); Üben-Auswahl klappt erst auf Antippen auf (`6721`); Einstellungen in drei Gruppen (Block 2) |
+| 4. Hauptknopf optisch stärker | erfüllt | `class="lg full"` an `5825`, `6385`, `6694` |
+| 5. Eine Hauptaktion je Bildschirm | erfüllt | Lernen → „Lernsession starten"; Session → „Antwort zeigen", danach die drei Bewertungen (eine echte Dreifach-Entscheidung, erst nach dem Aufdecken); Verwalten → „Karte hinzufügen"; Fortschritt → „Weiter lernen" nur wenn etwas offen ist (`5934`) |
+
+**Entscheidung:** Es wird nichts gebaut. Die Regeln sind seit dem Redesign
+(v3.1–3.5) Gestaltungsgrundlage (`PRINZIPIEN.md`, `BILDER-BEFUND.md` Bild 2 und
+98), nicht erst jetzt entdeckt. Etwas trotzdem umzubauen, nur damit es als
+„umgesetzt" dasteht, verstieße gegen „Kein Punkt wird abgearbeitet, nur weil er
+in einer Liste stand" (`CLAUDE.md`).
+**Zur Recherche (aus Fachwissen, keine Quellen in dieser Session abgerufen):**
+Hick–Hyman (1952): Entscheidungszeit wächst mit dem *Logarithmus* der Zahl
+*gleich wahrscheinlicher* Alternativen. Zwei Einschränkungen, die das Video
+weglässt: (a) es geht um Reaktionszeit, ein direkter Beleg für „schlechtere
+Retention" folgt daraus nicht; (b) gruppierte oder vertraute Listen flachen die
+Kurve ab, und zu tiefes Verstecken kostet Auffindbarkeit. Letzteres ist das
+Risiko bei „Mehr" (v3.5.0) — die Handlungen dahinter (Auswählen, Umkehren,
+Umbenennen, Löschen) sind selten genug, dass es passt.
+**Am ehesten noch angreifbar (bewusst NICHT gebaut, kein Beschwerdepunkt):**
+(1) Verwalten zeigt „nur dieser Bereich / alle Bereiche" (`6840`) dauerhaft,
+sobald es mehr als einen Bereich gibt — könnte erst bei Suchtext erscheinen.
+Hängt aber daran, dass Tippen nur `#karten-liste` neu zeichnet (`6825ff`, die
+Kommentare dort erklären warum) — ein Umbau berührt die Suche und ist damit
+Lernwerkzeug-nah. (2) Die Auswahl-Leiste bei Mehrfachauswahl (`6796ff`) zeigt bis
+zu fünf Bedienelemente. Beides erst angehen, wenn der Betreiber am Handy eine
+konkrete Stelle nennt, an der er zögert.
+**Offen:** nichts.
+**Nächster Schritt:** Nächste Idee aus dem Backlog aufgreifen (Betreiber wählt);
+Backlog liegt im Gedächtnis `produkt-ideen-backlog`, nicht im Repo.
+
+---
+
 ### 2026-09-18 — Werkzeugleiste Verwalten aufgeräumt + Smart Default beim Speichern (v3.5.0)
 
 **Geändert:**
