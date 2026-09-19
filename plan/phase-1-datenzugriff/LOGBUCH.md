@@ -26,6 +26,50 @@ dasselbe noch einmal.
 
 ## Einträge
 
+### 2026-09-19 — Sicherheits-Checkliste (TikTok-Idee 7 von 8): Regel für geteilte Lektionen stand außerhalb des Dokumentbaums
+
+**Anlass:** Betreiber, „Sicherheits-Checkliste recherchieren und umsetzen". Zehn Punkte aus dem Video, jeder gegen den Ist-Stand geprüft — gelesen oder live abgerufen, nicht angenommen.
+
+**Geändert (nichts davon ist live, beides braucht einen Deploy — siehe Offen):**
+- `firestore.rules`: Block `geteilteLektionen/{code}` **in** `match /databases/{database}/documents` verschoben, `read` → nur `get`, Bedingung bestätigte E-Mail, Codeformat `^[2-9A-HJ-NP-Z]{5}-[2-9A-HJ-NP-Z]{5}$` beim Anlegen, feste Form des Inhalts. Neue Hilfsfunktion `angemeldetBestaetigt()`. Kompiliert (`firebase deploy --only firestore:rules --dry-run`, nichts deployt).
+- `firebase.json`: `firestore.rules`, `**/*.md`, `**/*.bat` in die `ignore`-Liste **beider** Hosting-Sites. Dry-Run des Hostings sauber.
+- `plan/phase-1-datenzugriff/regeln-pruefung.mjs`: 14 neue Fälle T01–T14 (76 statt 62). **Nicht gelaufen** — kein Java, kein Emulator; steht im Kommentar dort.
+
+**Die zehn Punkte:**
+
+| # | Punkt | Stand | Beleg |
+|---|---|---|---|
+| 1 | HTTPS erzwungen | ✅ | live: `http://adrabic.web.app/` → 301 → https; `Strict-Transport-Security` im Live-Header |
+| 2 | Passwörter gehasht | ✅ delegiert | Anmeldung über Firebase Auth; die App speichert nie ein Passwort |
+| 3 | Bot-Schutz bei Anmeldung | ⏳ bewusst später | kein App Check (`PLAN.md` „Später", Phase 8 entschied Honeypot statt App Check). Neu gemildert: Schreiben nach `geteilteLektionen` braucht jetzt bestätigte E-Mail (s. u.) |
+| 4 | Sitzungen laufen ab | ⚠️ Firebase-Standard | aus Fachwissen, nicht in der Doku nachgelesen: ID-Token ~1 h, Refresh-Token bleibt bis Widerruf; keine Inaktivitäts-Abmeldung in der App, kein „überall abmelden" im Client-SDK. Nichts gebaut — für ein Vokabelkonto Betreiber-Abwägung |
+| 5 | CSRF-Schutz | ➖ trifft nicht zu | kein Cookie, kein eigener Server; Token geht per Header aus dem SDK |
+| 6 | Reset-Links laufen ab, einmalig | ✅ delegiert | `sendPasswordResetEmail` (`app.js` ~2129), Firebase-Standard. Genaue Laufzeit nicht abgerufen |
+| 7 | Eingeschränkter Schlüssel statt Master-Key | ✅ mit Vorbehalt | Web-Key ist per Design öffentlich (einziger Treffer im HEAD-Scan auf Schlüssel/Geheimnisse); Website-Einschränkung laut `phase-4-domain-hosting/LOGBUCH.md` seit 12.09. aktiv, `adrabic.web.app` am 18.09. nachgetragen — Betreiber-Angabe, von hier nicht prüfbar. **Die eigentliche Schranke sind die Regeln, und da war der Fund unten** |
+| 8 | Logs ohne Geheimnisse | ✅ | `grep console.` in `app.js`: kein Treffer |
+| 9 | Billing-Alerts | ❓ nirgends dokumentiert | Google Cloud → Budgets & Alerts, nur der Betreiber kann das prüfen |
+| 10 | Backups | ⚠️ nur nutzerseitig | Export-Datei + Erinnerung nach 14 Tagen (`app.js` Kopfzeile). Serverseitige Firestore-Sicherung/Wiederherstellung: nirgends dokumentiert → Betreiber |
+
+**Funde, die die Checkliste nicht kannte (nach Schwere):**
+1. **Die Regel für geteilte Lektionen war wirkungslos.** Angehängt am 18.09. (Commit `51cb5a0`), aber *hinter* der Klammer, die `match /databases/{database}/documents` schließt (Klammertiefe 1 statt 2 — nachgezählt). Firestore-Dokumentregeln gelten relativ zu `/databases/(default)/documents/…`; ein Block daneben trifft keinen echten Pfad → Standard „alles verboten" → „Code erzeugen" hätte live mit `permission-denied` scheitern müssen. Der Regel-Entwurf in `lehrer-modus/GERUEST.md` nennt die Verschachtelung nicht; das ist vermutlich die Quelle. Die 62 Testfälle aus Phase 1 stammen aus der Zeit davor und decken die Sammlung nicht ab. **Nicht bewiesen** (kein Emulator, kein Testkonto — Konten anlegen ist mir untersagt); wahrscheinlich, aber nur der Regel-Simulator der Konsole oder ein echter Versuch entscheidet.
+2. **`allow read` hieß auch `list`.** Jedes angemeldete Konto hätte alle geteilten Lektionen samt Codes abfragen können; der Code wäre keine Schranke gewesen. Die App listet die Sammlung nie (`getDoc`/`setDoc`/`deleteDoc` — geprüft, `app.js` 2856/2878/2892).
+3. **Unbestätigte Konten durften in `geteilteLektionen` schreiben** (nur `request.auth != null`), mit beliebiger Dokument-ID.
+4. **`firestore.rules` und `KONZEPT-website-reife (….md)` wurden öffentlich ausgeliefert** (live abgerufen: 200; `KONZEPT.md`/`plan/**` waren dagegen 404). Der Dateiname der zweiten sagt selbst, dass sie nicht dazugehört.
+5. **Das GitHub-Repo ist öffentlich** (`visibility: public`, `raw.githubusercontent.com/…/plan/PLAN.md` ohne Login → 200). Damit ist auch alles lesbar, was die `ignore`-Liste auf der Website versteckt — die Ignore-Änderung oben schützt also nur vor einem *zweiten* Weg, nicht vor dem ersten. **Nicht angefasst:** `plan/PLAN.md` (u. a. Zeilen 205, 224, 423) hält fest, dass der tatsächliche Betreiber minderjährig ist und dass im Impressum stellvertretend ein Elternteil steht. Ob das öffentlich stehen darf, ist keine Einschätzung für einen Agenten (Rechts-/Familienfrage, siehe Gedächtnisnotiz „no legal advice") — nur Warnung: es steht dort, es ist ohne Login lesbar, und ein Löschen im letzten Stand entfernt es nicht aus der Git-Historie.
+
+**Nebenfund, NICHT gebaut (Datenweg, nicht Teil dieses Auftrags):** `teileLektionCode()` (`app.js` ~2836–2866) trägt `b.teilCode` und den Firestore-Patch **vor** dem `setDoc` ein. Scheitert das `setDoc` (z. B. genau an Fund 1, oder offline), bleibt am Bereich ein Code stehen, den es nicht gibt; die App sagt danach „wird schon geteilt … erst ‚Teilen beenden‘". Saubere Lösung: `teilCode` erst nach erfolgreichem `setDoc` setzen. Solange die Regeln stimmen, tritt es selten auf.
+
+**Entscheidung:** Alles, was rein in Konfiguration und Regeln liegt und dem dokumentierten Zweck (Code = einzige Schranke) entspricht, ist umgesetzt. Nicht umgesetzt: App Check (bewusst später), Sitzungsablauf (Abwägung), Billing/Backups (Konsole), Sichtbarkeit des Repos (Betreiber + Rat).
+
+**Offen — alles am Betreiber, und die Phase ist erst danach fertig:**
+1. **Regeln deployen** (`veroeffentlichen.bat` deployt nur Hosting!): `firebase deploy --only firestore:rules`, oder Konsole → Firestore → Regeln → Inhalt von `firestore.rules` einfügen → Veröffentlichen. Danach im Regel-Simulator prüfen (Schritte in der Antwort vom 19.09.).
+2. **Hosting deployen** (`veroeffentlichen.bat`), damit die Ignore-Liste greift; danach ist `…/firestore.rules` 404.
+3. **Code-Teilen einmal echt testen** (zwei Konten).
+4. **Repo-Sichtbarkeit entscheiden** und Billing-Alert/Backups in der Konsole prüfen.
+**Nächster Schritt:** Betreiber führt 1–4 aus; danach nächste Idee (Feedback-Board, Firestore-Kosten, Signup nach Onboarding, Widgets).
+
+---
+
 ### 2026-09-18 — Echte Ursache: `sitzungsLimit` fehlt seit v3.0.27 in `firestore.rules` — jeder Einstellungs-Speichervorgang schlug fehl
 
 **Geändert:** [`firestore.rules`](../../firestore.rules), `settingsOk()`

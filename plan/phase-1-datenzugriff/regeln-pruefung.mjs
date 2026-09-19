@@ -20,6 +20,8 @@
        --project wiederholung-test "node regeln-pruefung.mjs"
 
    Erwartet: "62 von 62 Pruefungen wie erwartet."
+   (Nachtrag 19.09.2026: unten 14 weitere Faelle T01-T14 zu geteilteLektionen,
+   noch NICHT gelaufen - dann 76 von 76. Siehe Kommentar an der Stelle.)
 
    Beim Lesen der Emulator-Ausgabe nicht erschrecken: abgewiesene Faelle
    melden oft zusaetzlich "evaluation error". Das ist normal. Die Regelsprache
@@ -30,7 +32,7 @@
    ============================================================ */
 
 import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
-import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, writeBatch, deleteField } from "firebase/firestore";
+import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField } from "firebase/firestore";
 import { readFileSync } from "fs";
 
 const UID = "nutzer-eins";
@@ -174,6 +176,36 @@ await pruefe("M28 Erfundene Sammlung ganz oben", "nein", () => setDoc(doc(db, "a
 await pruefe("M29 Tiefer Unterpfad unter einer Karte", "nein", () => setDoc(doc(db, "users", UID, "karten", "c1", "mehr", "y"), { a: 1 }));
 await pruefe("M30 Name ueberlang im Nutzerdokument", "nein", () => updateDoc(u(), { name: "a".repeat(201) }));
 await pruefe("M31 Tagesprotokoll als Text", "nein", () => updateDoc(u(), { verlauf: "alles" }));
+
+/* ================= NACHTRAG 19.09.2026: geteilteLektionen =================
+   ACHTUNG: Diese 14 Faelle sind NICHT gelaufen - beim Schreiben stand weder
+   Java noch der Emulator zur Verfuegung. Geprueft ist nur, dass die Regeln
+   kompilieren (firebase deploy --only firestore:rules --dry-run). Beim ersten
+   Lauf mit Emulator zaehlt: 76 von 76. Weicht ein Fall ab, ist er
+   wahrscheinlich hier falsch geschrieben, nicht die Regel - zuerst pruefen.
+
+   Warum es sie gibt: die Sammlung kam am 18.09. dazu, nach den 62 Faellen
+   oben. Ihre Regel stand ausserhalb von /databases/{database}/documents und
+   traf damit keinen Pfad; ein Test wie T01 haette das sofort gezeigt. */
+const CODE = "AB2CD-EF3GH";
+const gl = (d, c = CODE) => doc(d, "geteilteLektionen", c);
+const glInhalt = { bereiche: [{ id: "b1", name: "Medina 1", gefuehrt: true, karten: [], sets: [] }] };
+const glDaten = (extra = {}) => ({ ownerUid: UID, erstelltAm: "2026-09-19T10:00:00.000Z", inhalt: glInhalt, ...extra });
+
+await pruefe("T01 Code anlegen (bestaetigt, eigene uid)", "ja", () => setDoc(gl(db), glDaten()));
+await pruefe("T02 Code einzeln lesen (anderes Konto)", "ja", () => getDoc(gl(dbFremd)));
+await pruefe("T03 Sammlung AUFLISTEN (anderes Konto)", "nein", () => getDocs(collection(dbFremd, "geteilteLektionen")));
+await pruefe("T04 Sammlung auflisten (Besitzer selbst)", "nein", () => getDocs(collection(db, "geteilteLektionen")));
+await pruefe("T05 Lesen ohne Anmeldung", "nein", () => getDoc(gl(dbAnon)));
+await pruefe("T06 Anlegen mit unbestaetigter E-Mail", "nein", () => setDoc(gl(dbUnbes, "ZZ2ZZ-ZZ3ZZ"), glDaten()));
+await pruefe("T07 Anlegen mit fremder ownerUid", "nein", () => setDoc(gl(db, "CD2EF-GH3JK"), glDaten({ ownerUid: FREMD })));
+await pruefe("T08 Code im falschen Format (klein, zu kurz)", "nein", () => setDoc(gl(db, "abc"), glDaten()));
+await pruefe("T09 Code mit verwechselbarem Zeichen (0/O/1/I)", "nein", () => setDoc(gl(db, "0O1I2-EF3GH"), glDaten()));
+await pruefe("T10 Erfundenes Feld im Dokument", "nein", () => setDoc(gl(db, "EF2GH-JK3LM"), glDaten({ admin: true })));
+await pruefe("T11 Inhalt ohne bereiche-Liste", "nein", () => setDoc(gl(db, "GH2JK-LM3NP"), glDaten({ inhalt: { anderes: 1 } })));
+await pruefe("T12 Fremdes Konto loescht den Code", "nein", () => deleteDoc(gl(dbFremd)));
+await pruefe("T13 Update des Inhalts (auch Besitzer)", "nein", () => updateDoc(gl(db), { erstelltAm: "2026-09-20T10:00:00.000Z" }));
+await pruefe("T14 Besitzer loescht seinen Code", "ja", () => deleteDoc(gl(db)));
 
 console.log("\n" + ok + " von " + (ok + fehl) + " Pruefungen wie erwartet.");
 if (fehler.length) { console.log("\nABWEICHUNGEN:"); fehler.forEach(f => console.log("  " + f)); }

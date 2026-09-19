@@ -229,30 +229,64 @@ service cloud.firestore {
       }
     }
 
+    /* ============================================================
+       geteilteLektionen/{code} — Code-basiertes Teilen (Lehrer-Modus)
+
+       Ein Bereich kann mit einem Code geteilt werden. Der Code ist die
+       einzige Zugriffsschranke: Wer ihn kennt, kann EINZELN lesen. Er hat
+       10 Zeichen aus 32 (crypto.getRandomValues, genTeilCode() in app.js),
+       das sind rund 2^50 Moeglichkeiten - raten lohnt nicht, solange man die
+       Sammlung nicht AUFLISTEN kann.
+
+       19.09.2026, zwei Korrekturen an der Fassung vom 18.09.:
+
+       1. LAGE. Der Block stand hinter der Klammer, die `match /databases/
+          {database}/documents` schliesst - also NEBEN dem Dokumentbaum statt
+          darin. Jede Dokumentregel gilt relativ zu /databases/(default)/
+          documents/..., ein Block daneben trifft nie einen echten Pfad. Ergebnis:
+          "Code erzeugen" waere serverseitig mit permission-denied abgewiesen
+          worden (Standard: alles verboten). Jetzt steht er hier, im Baum.
+
+       2. `read` STATT `get`. `read` heisst get UND list. Mit list konnte jedes
+          angemeldete Konto ALLE geteilten Lektionen samt Codes abfragen - der
+          Code waere keine Schranke gewesen. Die App listet diese Sammlung nie
+          auf (nur getDoc/setDoc/deleteDoc), also faellt list ersatzlos weg.
+
+       Dazu, weil ein Konto ohne bestaetigte E-Mail die App ohnehin nicht
+       benutzen kann (renderPendingVerification), die Regel es aber nicht
+       wusste: bestaetigte E-Mail wie bei eigenesKonto(), Format des Codes und
+       Form des Inhalts beim Anlegen. Sonst haette jedes frisch registrierte
+       Wegwerf-Konto beliebig viele beliebig benannte Dokumente ablegen koennen.
+       Das Format gilt nur beim ANLEGEN; gelesen wird jeder Code, der da ist.
+       ============================================================ */
+    function angemeldetBestaetigt() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /geteilteLektionen/{code} {
+      allow get: if angemeldetBestaetigt();
+      /* bewusst KEIN list - siehe oben, Punkt 2 */
+
+      allow create: if angemeldetBestaetigt()
+                    && code.matches('^[2-9A-HJ-NP-Z]{5}-[2-9A-HJ-NP-Z]{5}$')
+                    && request.resource.data.keys().hasOnly(['ownerUid', 'erstelltAm', 'inhalt'])
+                    && request.resource.data.keys().hasAll(['ownerUid', 'erstelltAm', 'inhalt'])
+                    && request.resource.data.ownerUid == request.auth.uid
+                    && text(request.resource.data.erstelltAm, 40)
+                    && request.resource.data.inhalt is map
+                    && request.resource.data.inhalt.keys().hasOnly(['bereiche'])
+                    && request.resource.data.inhalt.bereiche is list
+                    && request.resource.data.inhalt.bereiche.size() == 1;
+
+      allow delete: if angemeldetBestaetigt() && resource.data.ownerUid == request.auth.uid;
+
+      /* Der Inhalt ist unveraenderlich: neu erzeugen oder loeschen. */
+      allow update: if false;
+    }
+
     /* Alles andere: kein match, also kein Zugriff. Das ersetzt das frühere
        match /{document=**} unter users/{uid} — damit ließ sich unter dem
        eigenen Konto jeder erfundene Unterpfad anlegen und beliebig füllen.
        Die App benutzt genau die zwei Sammlungen oben. */
-  }
-
-  /* ============================================================
-     geteilteLektionen/{code} — Code-basiertes Teilen (Lehrer-Modus)
-
-     Ein Bereich kann mit einem kurzen Code geteilt werden. Der Code ist die
-     einzige Zugriffsschranke: Wer ihn kennt, kann lesen. Wer nicht angemeldet
-     ist, kann nicht zugreifen - auch nicht mit Code. Das schützt vor
-     Missbrauch durch unauthentifizierte Scripts.
-     ============================================================ */
-  match /geteilteLektionen/{code} {
-    allow read: if request.auth != null;
-
-    allow create: if request.auth != null
-                  && request.resource.data.keys().hasOnly(['ownerUid', 'erstelltAm', 'inhalt'])
-                  && request.resource.data.ownerUid == request.auth.uid
-                  && request.resource.data.inhalt is map;
-
-    allow delete: if request.auth != null && resource.data.ownerUid == request.auth.uid;
-
-    allow update: if false;
   }
 }

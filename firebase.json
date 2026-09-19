@@ -22,7 +22,10 @@
         "CLAUDE.md",
         "CHANGELOG.md",
         "README.md",
-        "veroeffentlichen.bat"
+        "veroeffentlichen.bat",
+        "firestore.rules",
+        "**/*.md",
+        "**/*.bat"
       ],
       "headers": [
         {
@@ -84,7 +87,10 @@
         "CLAUDE.md",
         "CHANGELOG.md",
         "README.md",
-        "veroeffentlichen.bat"
+        "veroeffentlichen.bat",
+        "firestore.rules",
+        "**/*.md",
+        "**/*.bat"
       ],
       "headers": [
         {

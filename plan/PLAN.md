@@ -491,7 +491,16 @@ bleiben unverändert `fertig`, siehe „Frühere Lage" unten.
 (Reihenfolge nach Betreiber-Wahl; Backlog im Gedächtnis des Assistenten, nicht
 im Repo). Erledigt: Hick's Law (Nr. 6, schon umgesetzt, nichts gebaut),
 Offline-Zustand (Nr. 2, v3.6.9, Anzeige gebaut) und leere Startzustände
-(Nr. 5, v3.6.10, kürzester Weg zur ersten Karte). Beide mit Begründung in
+(Nr. 5, v3.6.10/3.6.11, kürzester Weg zur ersten Karte, Hauptknopf umgekehrt)
+und Sicherheits-Checkliste (Nr. 7, Eintrag in `phase-1-datenzugriff/LOGBUCH.md`).
+**Wichtig aus Nr. 7 — braucht den Betreiber, sonst wirkt nichts:** (1) `firestore.rules`
+deployen (nicht Teil von `veroeffentlichen.bat`!): die Regel für `geteilteLektionen`
+stand außerhalb des Dokumentbaums, Code-Teilen war vermutlich live abgewiesen und
+die Sammlung ließ sich auflisten; (2) Hosting deployen, damit `firestore.rules` und
+eine interne Konzeptdatei nicht mehr öffentlich ausgeliefert werden; (3) Code-Teilen
+mit zwei Konten testen; (4) das GitHub-Repo ist **öffentlich** — Sichtbarkeit
+entscheiden (Alter des Betreibers steht in `plan/`), Billing-Alert und Backups in der
+Konsole prüfen. Beide mit Begründung in
 [`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md).
 **Entschieden in v3.6.11:** Auf dem leeren Lernen-Bildschirm ist „Erste Karte
 anlegen" der gefüllte Knopf (Begründung im Logbuch: Zusage-Kette Startseite →
