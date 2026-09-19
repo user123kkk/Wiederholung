@@ -601,5 +601,7 @@ Code-Review-Stand.
 
 **Offen (Betreiber entscheidet):** (a) Soll „Lehrer gibt frei" überhaupt kommen, oder reicht vorerst die Datei? (b) Nur Lehrer-Klick, oder Lehrer-Klick **und** Fortschritt? Empfehlung: nur Lehrer-Klick, sonst zwei Regeln auf einmal. (c) Kann der Lehrer eine Lektion wieder zumachen? Empfehlung: nein, „einmal offen bleibt offen" wie in 2.7.0. (d) Wie hängt das an einem späteren Verkauf — Freischalt-Art und Bezahlung sind getrennte Fragen (`plan/monetarisierung/GERUEST.md`).
 
-**Nächster Schritt:** Antwort des Betreibers auf (a). Bis dahin nichts bauen.
+**Entschieden am 19.09.2026 (Betreiber):** (a) **Ja, „Lehrer gibt frei" kommt.** (b)–(c) vom Betreiber nicht selbst entschieden; als Standard gilt die Agenten-Empfehlung (nur Lehrer-Klick, einmal offen bleibt offen), jederzeit änderbar.
+
+**Nächster Schritt:** Bau planen und freigeben lassen: dauerhafte Verbindung zum Code-Datensatz, Feld „offen bis Lektion N", Knopf „Nächste Lektion freigeben" beim Lehrer, Änderung an `offeneLektionIds()` (Lernlogik, dafür braucht es die ausdrückliche Bau-Freigabe des Betreibers), Firestore-Regel für das Schreiben durch den Ersteller (danach `firebase deploy --only "firestore:rules"` durch den Betreiber).
 
