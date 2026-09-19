@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.14";
+const APP_VERSION = "3.7.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -278,11 +278,27 @@ function lektionOffeneKarten(b, set) {
   return set.cardIds.map(id => byId.get(id)).filter(c => c && karteZaehltFuerLektion(c));
 }
 function lektionSitzt(b, set) { return lektionOffeneKarten(b, set).length === 0; }
+/* ---------- 3.7.0: „Lehrer gibt frei" ----------
+   plan/lehrer-modus/GERUEST.md, Abschnitte L und M. Wurde ein Satz ueber einen
+   Code uebernommen, dessen Ersteller die Freischaltung selbst in der Hand
+   behaelt, traegt der Bereich `lehrerCode` (der Code) und `lehrerOffenBis`
+   (zuletzt bekannter Stand: die ersten N Lektionen sind offen). Dann - und nur
+   dann - entscheidet allein der Lehrer-Stand; der Lernfortschritt schaltet
+   nichts frei. Ohne Lehrer-Code gilt unveraendert die Regel darunter.
+   Bewusst keine Rueckgabe an den Lehrer: er erfaehrt nie etwas ueber den
+   Lernenden, die App liest nur seine Zahl. */
+function lehrerGesteuert(b) { return !!(b && b.gefuehrt && b.lehrerCode); }
+
 /* Die Nummern der offenen Lektionen. Sobald eine nicht sitzt, ist Schluss -
    die Reihenfolge der Liste ist der Weg. */
 function offeneLektionIds(b) {
   const lek = lektionenVon(b);
   const offen = new Set();
+  if (lehrerGesteuert(b)) {
+    const n = Math.max(1, b.lehrerOffenBis || 1);
+    for (let i = 0; i < lek.length && i < n; i++) offen.add(lek[i].id);
+    return offen;
+  }
   for (let i = 0; i < lek.length; i++) {
     if (i > 0 && !lektionSitzt(b, lek[i - 1])) break;
     offen.add(lek[i].id);
@@ -523,6 +539,16 @@ function normSet(s) {
     cardIds: (Array.isArray(s.cardIds) ? s.cardIds : []).filter(x => typeof x === "string" && x)
   };
 }
+/* Lehrer-Bindung eines Bereichs (siehe lehrerGesteuert): nur mit gueltigem
+   Code-Format und ganzzahligem Stand, sonst gar nicht. Gibt ein Objekt zum
+   Einstreuen zurueck, damit Bereiche ohne Bindung keine leeren Felder tragen. */
+const TEIL_CODE_FORMAT = /^[2-9A-HJ-NP-Z]{5}-[2-9A-HJ-NP-Z]{5}$/;
+const LEHRER_STAND_MAX = 1000;   // wie in firestore.rules
+function normLehrerBindung(b) {
+  if (!b || typeof b.lehrerCode !== "string" || !TEIL_CODE_FORMAT.test(b.lehrerCode)) return {};
+  const n = Number.isInteger(b.lehrerOffenBis) ? b.lehrerOffenBis : 1;
+  return { lehrerCode: b.lehrerCode, lehrerOffenBis: Math.min(LEHRER_STAND_MAX, Math.max(1, n)) };
+}
 function normBereiche(arr) {
   const out = [];
   if (Array.isArray(arr)) {
@@ -535,6 +561,7 @@ function normBereiche(arr) {
         gefuehrt: b.gefuehrt === true,
         satzId: typeof b.satzId === "string" && b.satzId ? b.satzId : null,
         satzVersion: Number.isInteger(b.satzVersion) && b.satzVersion > 0 ? b.satzVersion : 0,
+        ...normLehrerBindung(b),
         karten: (Array.isArray(b.karten) ? b.karten : [])
           .filter(c => c && typeof c === "object" && c.wort != null && c.uebersetzung != null)
           .map(normCard),
@@ -586,13 +613,23 @@ function bereichFelder(b, order) {
   (Array.isArray(b.sets) ? b.sets : []).forEach((st, si) => {
     setsMap[st.id] = setFelder(st, si);
   });
-  return {
+  const felder = {
     name: b.name, order: order,
     gefuehrt: !!b.gefuehrt,
     satzId: b.satzId || null,
     satzVersion: b.satzVersion || 0,
     karten: kartenMap, sets: setsMap
   };
+  /* Ein Vollschreiben ersetzt das Dokument - was hier fehlt, ist danach weg.
+     Deshalb gehoeren die Felder des Code-Teilens dazu, sobald sie gesetzt sind:
+     sonst loeschte z. B. ein Update des Kartensatzes die Lehrer-Bindung. */
+  if (b.teilCode) felder.teilCode = b.teilCode;
+  if (Number.isInteger(b.teilFreigabe)) felder.teilFreigabe = b.teilFreigabe;
+  if (b.lehrerCode) {
+    felder.lehrerCode = b.lehrerCode;
+    felder.lehrerOffenBis = Math.max(1, b.lehrerOffenBis || 1);
+  }
+  return felder;
 }
 function bereicheMapToArray(mapObj) {
   const ids = Object.keys(mapObj || {});
@@ -1342,6 +1379,12 @@ function bereicheAusSammlungen(bDocs, kDocs) {
       gefuehrt: b.gefuehrt === true,
       satzId: typeof b.satzId === "string" && b.satzId ? b.satzId : null,
       satzVersion: Number.isInteger(b.satzVersion) ? b.satzVersion : 0,
+      /* Code-Teilen (Sender) und Lehrer-Bindung (Empfaenger). Bis 3.7.0 wurde
+         teilCode hier nicht mitgeladen: Nach einem Neustart sah der Sender
+         seinen aktiven Code nicht mehr und konnte ihn nicht beenden. */
+      teilCode: typeof b.teilCode === "string" && b.teilCode ? b.teilCode : null,
+      teilFreigabe: Number.isInteger(b.teilFreigabe) ? b.teilFreigabe : null,
+      ...normLehrerBindung(b),
       karten: karten, sets: sets,
       order: Number.isFinite(b.order) ? b.order : 0
     };
@@ -1368,6 +1411,9 @@ function datenZusammenbauen() {
   if (vorher !== null && !brauchteRender &&
       JSON.stringify([bereiche, streak, ui.bereichId]) === vorher) return;
   render();
+  /* 3.7.0: Nach dem ersten Aufbau (Start) den Lehrer-Stand nachholen.
+     Danach nur noch ueber Bereichswechsel und Rueckkehr in die App. */
+  if (vorher === null) lehrerStaendeAktualisieren();
 }
 
 function sammlungenStarten() {
@@ -2841,7 +2887,12 @@ function genTeilCode() {
   return code.slice(0, 5) + "-" + code.slice(5);
 }
 
-async function teileLektionCode() {
+/* modus "lehrer": der Ersteller schaltet die Lektionen selbst frei (GERUEST.md,
+   Abschnitt M). Im Datensatz steht dann `freigabe: { offenBis: N }`; beim
+   Sender spiegelt `teilFreigabe` denselben Stand, damit die Anzeige ohne
+   Netz auskommt. Ohne modus: wie bisher, die Lernenden schalten sich per
+   Fortschritt selbst frei. */
+async function teileLektionCode(modus) {
   const b = currentBereich();
   if (!(await weitergabeMoeglich(b))) return;
   if (b.teilCode) {
@@ -2849,34 +2900,71 @@ async function teileLektionCode() {
       'Erst „Teilen beenden", dann neu teilen.', "Schon aktiv");
     return;
   }
+  const lehrer = modus === "lehrer";
   const version = (b.satzVersion || 0) + 1;
   const ok = await dlgConfirm(
     'Erzeugt einen Code, über den jede:r mit dem Code diese Lektion in die eigene App übernehmen kann - ' +
-    'ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.',
-    { title: "Per Code teilen", okLabel: "Code erzeugen" });
+    'ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.' +
+    (lehrer
+      ? '\n\nDu schaltest die Lektionen selbst frei: Zu Beginn ist nur „' + lektionenVon(b)[0].name +
+        '" offen, die nächste gibst du mit einem Klick frei. Freigegebenes bleibt offen.'
+      : '\n\nDie Lernenden schalten die Lektionen durch ihren Lernfortschritt selbst frei.'),
+    { title: lehrer ? "Per Code teilen – du gibst frei" : "Per Code teilen", okLabel: "Code erzeugen" });
   if (!ok) return;
 
   if (!b.satzId) b.satzId = slugName(b.name) + "-" + genId();
   b.satzVersion = version;
   const code = genTeilCode();
   b.teilCode = code;
-  patchDoc({
+  b.teilFreigabe = lehrer ? 1 : null;
+  const patch = {
     [pfadBereich(b.id) + ".satzId"]: b.satzId,
     [pfadBereich(b.id) + ".satzVersion"]: version,
     [pfadBereich(b.id) + ".teilCode"]: code
-  });
+  };
+  if (lehrer) patch[pfadBereich(b.id) + ".teilFreigabe"] = 1;
+  patchDoc(patch);
+  const datensatz = {
+    ownerUid: currentUser.uid,
+    erstelltAm: new Date().toISOString(),
+    inhalt: { bereiche: [baueWeitergabeBereich(b, version)] }
+  };
+  if (lehrer) datensatz.freigabe = { offenBis: 1 };
   try {
-    await fb.setDoc(fb.doc(db, "geteilteLektionen", code), {
-      ownerUid: currentUser.uid,
-      erstelltAm: new Date().toISOString(),
-      inhalt: { bereiche: [baueWeitergabeBereich(b, version)] }
-    });
+    await fb.setDoc(fb.doc(db, "geteilteLektionen", code), datensatz);
   } catch (e) {
     await dlgAlert("Fehler beim Speichern des Codes: " + (e && e.message ? e.message : e), "Fehler");
     return;
   }
   render();
   zeigeTeileCode(code);
+}
+
+/* „Nächste Lektion freigeben": hebt den Stand im Datensatz um eins. Die Regel
+   in firestore.rules erlaubt nur dem Ersteller, nur dieses Feld und nur nach
+   oben - hier wird zusaetzlich nichts ueber die Anzahl der Lektionen hinaus
+   freigegeben. Zuerst der Server, dann erst die eigene Anzeige: schlaegt das
+   Schreiben fehl (Regel nicht deployed, kein Netz), soll die Anzeige nicht
+   behaupten, es sei freigegeben. */
+async function lehrerFreigeben() {
+  const b = currentBereich();
+  if (!b.teilCode || !Number.isInteger(b.teilFreigabe)) return;
+  const gesamt = lektionenVon(b).length;
+  if (b.teilFreigabe >= gesamt) return;
+  const neu = b.teilFreigabe + 1;
+  const lek = lektionenVon(b)[neu - 1];
+  const ok = await dlgConfirm('„' + lek.name + '" jetzt für alle mit dem Code freigeben? ' +
+    'Das lässt sich nicht wieder zumachen.', { title: "Nächste Lektion freigeben", okLabel: "Freigeben" });
+  if (!ok) return;
+  try {
+    await fb.updateDoc(fb.doc(db, "geteilteLektionen", b.teilCode), { freigabe: { offenBis: neu } });
+  } catch (e) {
+    await dlgAlert("Freigeben hat nicht geklappt: " + (e && e.message ? e.message : e), "Fehler");
+    return;
+  }
+  b.teilFreigabe = neu;
+  patchDoc({ [pfadBereich(b.id) + ".teilFreigabe"]: neu });
+  render();
 }
 
 async function beendeTeilenCode() {
@@ -2887,7 +2975,11 @@ async function beendeTeilenCode() {
     { title: "Teilen beenden?", okLabel: "Beenden", danger: true });
   if (!ok) return;
   b.teilCode = null;
-  patchDoc({ [pfadBereich(b.id) + ".teilCode"]: fb.deleteField() });
+  b.teilFreigabe = null;
+  patchDoc({
+    [pfadBereich(b.id) + ".teilCode"]: LOESCHEN,
+    [pfadBereich(b.id) + ".teilFreigabe"]: LOESCHEN
+  });
   try { await fb.deleteDoc(fb.doc(db, "geteilteLektionen", code)); } catch (e) {}
   render();
 }
@@ -2911,10 +3003,51 @@ async function codeEinloesen(code) {
     await dlgAlert("Diesen Code gibt es nicht (mehr). Prüf die Schreibweise, oder frag noch einmal nach.", "Code ungültig");
     return;
   }
-  const ok = await dlgConfirm("Über einen Code wurde dir eine Lektion angeboten. Jetzt in dein Konto übernehmen?",
+  const daten = snap.data();
+  const stand = daten.freigabe && Number.isInteger(daten.freigabe.offenBis) ? daten.freigabe.offenBis : null;
+  const ok = await dlgConfirm("Über einen Code wurde dir eine Lektion angeboten. Jetzt in dein Konto übernehmen?" +
+    (stand !== null ? "\n\nDie Lektionen schaltet dein:e Lehrer:in frei – sie sind nicht vom Lernfortschritt abhängig." : ""),
     { title: "Geteilte Lektion", okLabel: "Übernehmen" });
   if (!ok) return;
-  await verarbeiteImportDaten(snap.data().inhalt);
+  /* „Lehrer gibt frei": Code und Stand wandern mit in den Bereich. Der Inhalt
+     wird nur kopiert, damit der Datensatz selbst unveraendert bleibt. */
+  const inhalt = daten.inhalt;
+  if (stand !== null && inhalt && Array.isArray(inhalt.bereiche)) {
+    inhalt.bereiche = inhalt.bereiche.map(x => (x && typeof x === "object")
+      ? { ...x, lehrerCode: code, lehrerOffenBis: stand } : x);
+  }
+  await verarbeiteImportDaten(inhalt);
+}
+
+/* Holt den Freigabe-Stand einer Lehrer-Lektion nach. Ein einzelnes getDoc -
+   kein Dauer-Listener, damit es wenige Lesevorgaenge bleiben. Aufgerufen beim
+   Start und beim Wechsel in den Bereich (hoechstens einmal pro Minute und
+   Bereich). Nicht erreichbar, Code beendet, Fehler: der zuletzt bekannte Stand
+   bleibt, es wird nichts gemeldet. Der Stand steigt nur, sinkt nie. */
+const LEHRER_ABFRAGE_ABSTAND_MS = 60000;
+const lehrerLetzteAbfrage = new Map();
+async function lehrerStandAktualisieren(b) {
+  if (!lehrerGesteuert(b) || !fb || !db || offline) return;
+  const jetzt = Date.now();
+  const zuletzt = lehrerLetzteAbfrage.get(b.id);
+  if (zuletzt && jetzt - zuletzt < LEHRER_ABFRAGE_ABSTAND_MS) return;
+  lehrerLetzteAbfrage.set(b.id, jetzt);
+  const code = b.lehrerCode;
+  let snap;
+  try { snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code)); } catch (e) { return; }
+  if (!snap.exists()) return;
+  const fg = snap.data().freigabe;
+  const n = fg && Number.isInteger(fg.offenBis) ? Math.min(LEHRER_STAND_MAX, fg.offenBis) : 0;
+  /* Der Bereich kann waehrend des Wartens neu aufgebaut worden sein - frisch suchen. */
+  const bb = bereiche && bereiche.find(x => x.id === b.id);
+  if (!bb || bb.lehrerCode !== code || n <= (bb.lehrerOffenBis || 1)) return;
+  bb.lehrerOffenBis = n;
+  patchDoc({ [pfadBereich(bb.id) + ".lehrerOffenBis"]: n });
+  render();
+}
+function lehrerStaendeAktualisieren() {
+  if (!bereiche) return;
+  for (const b of bereiche) lehrerStandAktualisieren(b);
 }
 
 /* Zeigt den erzeugten Code mit Copy-Button und Feedback. */
@@ -3020,6 +3153,18 @@ async function satzZusammenfuehren(ziel, datei) {
   const neueLektionen = d.neueSets.filter(s => s.art === "lektion").length;
   let text = "Ausgabe Nr. " + (datei.satzVersion || 1) + " von „" + datei.name + "\".\n\n";
   const zeilen = [];
+  /* 3.7.0: Kommt die Datei ueber einen Lehrer-Code, wird die Bindung
+     uebernommen bzw. der Stand angehoben - auch wenn sich am Inhalt nichts
+     aendert (z. B. derselbe Code, weil der Lehrer inzwischen mehr freigegeben
+     hat). Der Stand sinkt nie: einmal offen bleibt offen. */
+  const lehrerWechsel = !!datei.lehrerCode &&
+    (ziel.lehrerCode !== datei.lehrerCode || (ziel.lehrerOffenBis || 0) < (datei.lehrerOffenBis || 1));
+  const neuerLehrer = !!datei.lehrerCode && ziel.lehrerCode !== datei.lehrerCode;
+  const lehrerUebernehmen = () => {
+    ziel.lehrerOffenBis = Math.max(datei.lehrerOffenBis || 1,
+      ziel.lehrerCode === datei.lehrerCode ? (ziel.lehrerOffenBis || 1) : 1);
+    ziel.lehrerCode = datei.lehrerCode;
+  };
   if (d.neu.length) zeilen.push("• " + d.neu.length + " Karte(n) kommen dazu" + (neueLektionen ? " (" + neueLektionen + " neue Lektion(en), gesperrt)" : ""));
   if (d.aktualisiert.length) zeilen.push("• " + d.aktualisiert.length + " Karte(n) werden im Text berichtigt");
   if (d.entfernt.length) zeilen.push("• " + d.entfernt.length + " Karte(n) fallen weg");
@@ -3027,10 +3172,25 @@ async function satzZusammenfuehren(ziel, datei) {
   /* 2.11.5: Aendert sich nichts, gibt es auch nichts zu bestaetigen. Vorher
      stand da ein "Übernehmen" fuer einen Vorgang ohne Wirkung. */
   if (zeilen.length === 0 && (datei.satzVersion || 1) <= (ziel.satzVersion || 0)) {
+    if (lehrerWechsel) {
+      lehrerUebernehmen();
+      patchDoc({
+        [pfadBereich(ziel.id) + ".lehrerCode"]: ziel.lehrerCode,
+        [pfadBereich(ziel.id) + ".lehrerOffenBis"]: ziel.lehrerOffenBis
+      });
+      render();
+      await dlgAlert('„' + datei.name + '" kennst du schon. ' + (neuerLehrer
+        ? 'Neu: Dein:e Lehrer:in schaltet die Lektionen frei – jetzt sind ' + ziel.lehrerOffenBis + ' offen.'
+        : 'Dein:e Lehrer:in hat weitere Lektionen freigegeben – jetzt sind ' + ziel.lehrerOffenBis + ' offen.'),
+        "Freigabe übernommen");
+      return null;
+    }
     await dlgAlert('Diese Ausgabe von „' + datei.name + '" hast du schon (Nr. ' + (ziel.satzVersion || 0) + '). Am Inhalt ändert sich nichts.',
       "Nichts zu tun");
     return null;
   }
+  if (neuerLehrer) zeilen.push("• Dein:e Lehrer:in schaltet die Lektionen frei (statt deines Lernfortschritts)");
+  else if (lehrerWechsel) zeilen.push("• Dein:e Lehrer:in hat weitere Lektionen freigegeben");
   if (zeilen.length === 0) zeilen.push("• Am Inhalt ändert sich nichts.");
   text += zeilen.join("\n");
   text += "\n\nDein Lernstand und die von dir freigeschalteten Lektionen bleiben.";
@@ -3047,6 +3207,7 @@ async function satzZusammenfuehren(ziel, datei) {
   }
   const ok = await dlgConfirm(text, { title: "Kartensatz aktualisieren?", okLabel: "Übernehmen" });
   if (!ok) return null;
+  if (lehrerWechsel) lehrerUebernehmen();
 
   /* 1. Karten: vorhandene behalten (mit Fortschritt), fehlende anlegen,
         weggefallene loeschen. Die Reihenfolge kommt aus der Datei. */
@@ -3213,6 +3374,9 @@ async function verarbeiteImportDaten(data) {
       gefuehrt: b.gefuehrt === true,
       satzId: b.satzId || null,
       satzVersion: b.satzVersion || 0,
+      /* 3.7.0: kommt der Satz ueber einen Code mit „Lehrer gibt frei", steht
+         die Bindung schon am Bereich (siehe codeEinloesen). */
+      ...(b.gefuehrt === true ? normLehrerBindung(b) : {}),
       karten: b.karten, sets: b.sets || []
     };
     bereiche.push(neu);
@@ -3272,6 +3436,7 @@ async function addBereich() {
 function selectBereich(bereichId) {
   if (!bereiche.some(b => b.id === bereichId)) return;
   ui.bereichId = bereichId;
+  lehrerStandAktualisieren(bereiche.find(b => b.id === bereichId));
   ui.bereichSheet = false;     // 3.0.0: Das Sheet hat seine Aufgabe erfuellt.
   /* Sonst bleibt der Einstellungs-Bildschirm stehen: Der Bereich wechselt im
      Hintergrund, aber man sieht es erst nach "Fertig". */
@@ -3695,7 +3860,9 @@ async function startDrillFromSets(setIds, handwriting) {
   }
   const gesperrt = gewaehlt.find(s => setGesperrt(s));
   if (gesperrt) {
-    await dlgAlert('„' + gesperrt.name + '" ist noch gesperrt. Schalte sie erst frei – dann kannst du sie auch üben.', "Noch gesperrt");
+    await dlgAlert(lehrerGesteuert(currentBereich())
+      ? '„' + gesperrt.name + '" ist noch gesperrt. Dein:e Lehrer:in schaltet sie frei.'
+      : '„' + gesperrt.name + '" ist noch gesperrt. Schalte sie erst frei – dann kannst du sie auch üben.', "Noch gesperrt");
     return;
   }
   const frei = freieIdsFor(currentBereich());
@@ -3773,7 +3940,9 @@ async function startLernen(setId) {
   const set = findSet(setId);
   if (!set || !istGefuehrt(currentBereich())) return;
   if (setGesperrt(set)) {
-    await dlgAlert('„' + set.name + '" wird frei, sobald die Lektion davor sitzt.', "Noch nicht dran");
+    await dlgAlert(lehrerGesteuert(currentBereich())
+      ? '„' + set.name + '" schaltet dein:e Lehrer:in frei.'
+      : '„' + set.name + '" wird frei, sobald die Lektion davor sitzt.', "Noch nicht dran");
     return;
   }
   if (lernKarten(set).length === 0) {
@@ -5499,6 +5668,16 @@ function renderFaden(b, due) {
   }
 
   /* 3. Heute fertig. Was jetzt zaehlt, ist der Weg zur naechsten Lektion. */
+  /* 3.7.0: Bei „Lehrer gibt frei" haengt die naechste Lektion nicht am
+     Fortschritt - also auch kein Zaehlen von Karten und Terminen. */
+  if (lehrerGesteuert(b)) {
+    html += '<p class="due-info">' + ikon("haken", "i-sm") + ' Für heute erledigt.</p>';
+    html += naechste
+      ? '<p class="hint" style="padding:6px 0 0">' + ikon("schloss", "i-sm") + ' <strong>' + esc(naechste.name) +
+        '</strong> schaltet dein:e Lehrer:in frei.</p>'
+      : '<p class="hint" style="padding:6px 0 0">Alle Lektionen sind freigegeben.</p>';
+    return html;
+  }
   const fehlen = lektionOffeneKarten(b, akt);
   if (fehlen.length === 0 && naechste) {
     /* Kann nur eintreten, wenn die naechste Lektion selbst leer ist. */
@@ -5727,19 +5906,34 @@ function renderEinstellungenSeite(id) {
       if (b.teilCode) {
         html += '<p class="hint">Aktiver Code: <strong>' + esc(b.teilCode) + '</strong>. ' +
           'Jede:r mit diesem Code kann die Lektion übernehmen, ohne dass du davon erfährst.</p>';
-        html += '<div class="form-actions">';
-        const offlineTxt = offline ? ' title="Zum Beenden brauchst du eine Verbindung"' : '';
+        const offlineTxt = offline ? ' title="Dafür brauchst du eine Verbindung"' : '';
         const offlineAttr = offline ? ' disabled' : '';
+        /* „Lehrer gibt frei": Stand und Knopf fuer die naechste Lektion. */
+        if (Number.isInteger(b.teilFreigabe)) {
+          const gesamt = lektionenVon(b).length;
+          html += '<p class="hint">Du gibst die Lektionen frei. Freigegeben: Lektion ' +
+            Math.min(b.teilFreigabe, gesamt) + ' von ' + gesamt + '.</p>';
+          if (b.teilFreigabe < gesamt) {
+            html += '<div class="form-actions">';
+            html += '<button' + offlineAttr + offlineTxt + ' data-action="lehrer-freigeben">Nächste Lektion freigeben</button>';
+            html += '</div>';
+          }
+        }
+        html += '<div class="form-actions">';
         html += '<button class="secondary danger"' + offlineAttr + offlineTxt + ' data-action="beende-teilen-code">Teilen beenden</button>';
         html += '</div>';
       } else {
         html += '<p class="hint">Erzeugt einen kurzen Code, über den jede:r mit dem Code diese Lektion ' +
           'in die eigene App übernehmen kann – ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.</p>';
+        html += '<p class="hint">Du wählst, wie die Lektionen aufgehen: durch den Lernfortschritt der Lernenden – ' +
+          'oder erst, wenn du sie freigibst.</p>';
         html += '<div class="form-actions">';
         const offlineTxt = offline ? ' title="Zum Teilen brauchst du eine Verbindung"' : '';
         const offlineAttr = offline ? ' disabled' : '';
         html += '<button class="secondary"' + offlineAttr + offlineTxt + ' data-action="teile-lektion-code">' + ikon("teilen", "i-sm") +
-          ' Code erzeugen</button>';
+          ' Code – Fortschritt schaltet frei</button>';
+        html += '<button class="secondary"' + offlineAttr + offlineTxt + ' data-action="teile-lektion-code-lehrer">' + ikon("teilen", "i-sm") +
+          ' Code – ich gebe frei</button>';
         html += '</div>';
       }
       html += '</div>';
@@ -7231,7 +7425,7 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
      Tippen - es gibt hier nichts zu entscheiden. */
   if (gefuehrt && s.art === "lektion") {
     html += '<span class="lock-anzeige" title="' +
-      (zu ? 'Wird frei, sobald die Lektion davor sitzt' : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
+      (zu ? (lehrerGesteuert(b) ? 'Wird von deiner Lehrperson freigeschaltet' : 'Wird frei, sobald die Lektion davor sitzt') : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
   }
   /* Beobachtung 7: derselbe Fund wie bei kartenTagsHtml() - ein arabisch
      benannter Kategorie-/Lektionsname lief hier bisher ohne eigene Schrift/
@@ -8273,6 +8467,8 @@ document.body.addEventListener("click", e => {
     case "export-backup-current": exportBackup(true); break;
     case "export-weitergabe": exportWeitergabe(); break;
     case "teile-lektion-code": teileLektionCode(); break;          // GERUEST.md Abschnitt H
+    case "teile-lektion-code-lehrer": teileLektionCode("lehrer"); break;   // Abschnitt M
+    case "lehrer-freigeben": lehrerFreigeben(); break;
     case "beende-teilen-code": beendeTeilenCode(); break;
     case "code-einloesen-start": codeEinloesenStart(); break;
     case "teile-lektion-link": teileLektionLink(); break;          // GERUEST.md Abschnitt J (deprecated)
@@ -8398,11 +8594,18 @@ if (CONFIGURED) {
 function verbindungGewechselt(istOffline) {
   offline = istOffline;
   if (!currentUser || !bereiche) return;
+  if (!istOffline) lehrerStaendeAktualisieren();   // 3.7.0: Netz wieder da -> Lehrer-Stand nachholen
   if (ui.session || ui.lernSetId) return;
   render();
 }
 window.addEventListener("offline", () => verbindungGewechselt(true));
 window.addEventListener("online", () => verbindungGewechselt(false));
+/* 3.7.0: Wer die App lange offen liess, hat die Freigabe des Lehrers sonst
+   erst nach einem Neustart. Beim Zurueckkehren wird nachgeschaut (hoechstens
+   einmal pro Minute und Bereich, siehe lehrerStandAktualisieren). */
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && currentUser && bereiche) lehrerStaendeAktualisieren();
+});
 
 /* ---------- Offline-Fähigkeit: Service Worker registrieren ---------- */
 if ("serviceWorker" in navigator) {

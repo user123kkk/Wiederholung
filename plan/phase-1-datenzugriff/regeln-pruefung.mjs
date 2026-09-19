@@ -211,6 +211,48 @@ await pruefe("T12 Fremdes Konto loescht den Code", "nein", () => deleteDoc(gl(db
 await pruefe("T13 Update des Inhalts (auch Besitzer)", "nein", () => updateDoc(gl(db), { erstelltAm: "2026-09-20T10:00:00.000Z" }));
 await pruefe("T14 Besitzer loescht seinen Code", "ja", () => deleteDoc(gl(db)));
 
+/* ================= NACHTRAG 19.09.2026 (2): "Lehrer gibt frei" =================
+   Neu in firestore.rules: `freigabe: { offenBis: N }` am geteilten Datensatz
+   (nur beim Anlegen, danach nur vom Ersteller und nur nach oben), sowie die
+   Bereichsfelder teilFreigabe / lehrerCode / lehrerOffenBis. Siehe
+   plan/lehrer-modus/GERUEST.md, Abschnitt M. */
+const LC = "JK2LM-NP3QR";
+await pruefe("L01 Lehrer-Code anlegen (freigabe.offenBis 1)", "ja", () => setDoc(gl(db, LC), glDaten({ freigabe: { offenBis: 1 } })));
+await pruefe("L02 Empfaenger liest Lehrer-Code (anderes Konto)", "ja", () => getDoc(gl(dbFremd, LC)));
+await pruefe("L03 Besitzer hebt Freigabe 1 -> 2", "ja", () => updateDoc(gl(db, LC), { freigabe: { offenBis: 2 } }));
+await pruefe("L04 Besitzer senkt Freigabe 2 -> 1", "nein", () => updateDoc(gl(db, LC), { freigabe: { offenBis: 1 } }));
+await pruefe("L05 Freigabe unveraendert (2 -> 2)", "nein", () => updateDoc(gl(db, LC), { freigabe: { offenBis: 2 } }));
+await pruefe("L06 Fremdes Konto hebt Freigabe", "nein", () => updateDoc(gl(dbFremd, LC), { freigabe: { offenBis: 9 } }));
+await pruefe("L07 Unbestaetigtes Konto (Besitzer-uid) hebt Freigabe", "nein", () => updateDoc(gl(dbUnbes, LC), { freigabe: { offenBis: 3 } }));
+await pruefe("L08 Besitzer aendert Inhalt zusammen mit Freigabe", "nein", () => updateDoc(gl(db, LC), { freigabe: { offenBis: 3 }, inhalt: { bereiche: [] } }));
+await pruefe("L09 Besitzer setzt fremde ownerUid", "nein", () => updateDoc(gl(db, LC), { freigabe: { offenBis: 3 }, ownerUid: FREMD }));
+await pruefe("L10 Freigabe mit Extra-Feld", "nein", () => updateDoc(gl(db, LC), { freigabe: { offenBis: 3, modus: "x" } }));
+await pruefe("L11 Freigabe auf 1001 (ueber Grenze)", "nein", () => updateDoc(gl(db, LC), { freigabe: { offenBis: 1001 } }));
+await pruefe("L12 Freigabe als Text", "nein", () => updateDoc(gl(db, LC), { freigabe: { offenBis: "5" } }));
+await pruefe("L13 Freigabe loeschen", "nein", () => updateDoc(gl(db, LC), { freigabe: deleteField() }));
+await pruefe("L14 Besitzer hebt Freigabe 2 -> 3 (ohne Nebenfeld)", "ja", () => updateDoc(gl(db, LC), { freigabe: { offenBis: 3 } }));
+await pruefe("L15 Gewoehnlicher Code bekommt nachtraeglich Freigabe", "nein", async () => {
+  await setDoc(gl(db, "MN2PQ-RS3TU"), glDaten());
+  return updateDoc(gl(db, "MN2PQ-RS3TU"), { freigabe: { offenBis: 1 } });
+});
+await pruefe("L16 Anlegen mit offenBis 0", "nein", () => setDoc(gl(db, "PQ2RS-TU3VW"), glDaten({ freigabe: { offenBis: 0 } })));
+await pruefe("L17 Anlegen mit Freigabe als Zahl statt Map", "nein", () => setDoc(gl(db, "QR2ST-UV3WX"), glDaten({ freigabe: 1 })));
+await pruefe("L18 Anlegen mit Freigabe + Extra-Feld", "nein", () => setDoc(gl(db, "RS2TU-VW3XY"), glDaten({ freigabe: { offenBis: 1, x: 1 } })));
+await pruefe("L19 Besitzer loescht Lehrer-Code", "ja", () => deleteDoc(gl(db, LC)));
+
+/* Bereichsfelder (Sender: teilCode/teilFreigabe, Empfaenger: lehrerCode/lehrerOffenBis) */
+await pruefe("L20 Sender: teilCode + teilFreigabe am Bereich", "ja", () => updateDoc(b("b1"), { teilCode: LC, teilFreigabe: 1 }));
+await pruefe("L21 Sender: teilFreigabe erhoehen", "ja", () => updateDoc(b("b1"), { teilFreigabe: 2 }));
+await pruefe("L22 Sender: Teilen beenden (Felder loeschen)", "ja", () => updateDoc(b("b1"), { teilCode: deleteField(), teilFreigabe: deleteField() }));
+await pruefe("L23 Empfaenger: lehrerCode + lehrerOffenBis", "ja", () => updateDoc(b("b1"), { lehrerCode: LC, lehrerOffenBis: 2 }));
+await pruefe("L24 Empfaenger: Stand nachziehen", "ja", () => updateDoc(b("b1"), { lehrerOffenBis: 3 }));
+await pruefe("L25 Empfaenger: Bereich komplett neu mit Lehrer-Bindung", "ja", () => setDoc(b("b2"), { ...bereich("Medina 1"), gefuehrt: true, lehrerCode: LC, lehrerOffenBis: 2 }));
+await pruefe("L26 lehrerOffenBis als Text", "nein", () => updateDoc(b("b1"), { lehrerOffenBis: "3" }));
+await pruefe("L27 lehrerOffenBis 1001", "nein", () => updateDoc(b("b1"), { lehrerOffenBis: 1001 }));
+await pruefe("L28 lehrerCode 21 Zeichen", "nein", () => updateDoc(b("b1"), { lehrerCode: "A".repeat(21) }));
+await pruefe("L29 teilFreigabe negativ", "nein", () => updateDoc(b("b1"), { teilFreigabe: -1 }));
+await pruefe("L30 erfundenes Bereichsfeld weiterhin abgewiesen", "nein", () => updateDoc(b("b1"), { lehrerModus: "x" }));
+
 console.log("\n" + ok + " von " + (ok + fehl) + " Pruefungen wie erwartet.");
 if (fehler.length) { console.log("\nABWEICHUNGEN:"); fehler.forEach(f => console.log("  " + f)); }
 await env.cleanup();

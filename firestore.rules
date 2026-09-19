@@ -156,7 +156,8 @@ service cloud.firestore {
          ============================================================ */
 
       function bereichFelder() {
-        return ['name', 'order', 'gefuehrt', 'satzId', 'satzVersion', 'sets', 'teilCode'];
+        return ['name', 'order', 'gefuehrt', 'satzId', 'satzVersion', 'sets', 'teilCode',
+                'teilFreigabe', 'lehrerCode', 'lehrerOffenBis'];
       }
 
       /* `karten` steht bewusst NICHT in der Liste. Seit 2.0.0 liegt jede
@@ -171,7 +172,18 @@ service cloud.firestore {
             && (!pruefen.hasAny(['satzId'])      || textOderNull(d.satzId, 200))
             && (!pruefen.hasAny(['satzVersion']) || zahlOderNull(d.satzVersion, 0, 100000))
             && (!pruefen.hasAny(['sets'])        || (d.sets is map && d.sets.size() <= 500))
-            && (!pruefen.hasAny(['teilCode'])    || textOderNull(d.teilCode, 20));
+            /* Die vier Felder unten sind alle loeschbar (Teilen beenden). Ein
+               geloeschtes Feld steht in `pruefen`, fehlt aber in `d` - ohne die
+               'in'-Abfrage lief der Zugriff ins Leere und die Regel lehnte das
+               Loeschen ab. */
+            && (!pruefen.hasAny(['teilCode'])    || !('teilCode' in d) || textOderNull(d.teilCode, 20))
+            /* „Lehrer gibt frei" (19.09.2026): teilFreigabe beim Ersteller
+               spiegelt den Stand im geteilten Datensatz, lehrerCode und
+               lehrerOffenBis beim Empfaenger sind Code und zuletzt bekannter
+               Stand. 1000 wie beim Datensatz selbst. */
+            && (!pruefen.hasAny(['teilFreigabe'])   || !('teilFreigabe' in d)   || zahlOderNull(d.teilFreigabe, 0, 1000))
+            && (!pruefen.hasAny(['lehrerCode'])     || !('lehrerCode' in d)     || textOderNull(d.lehrerCode, 20))
+            && (!pruefen.hasAny(['lehrerOffenBis']) || !('lehrerOffenBis' in d) || zahlOderNull(d.lehrerOffenBis, 0, 1000));
       }
 
       match /bereiche/{bid} {
@@ -263,25 +275,43 @@ service cloud.firestore {
       return request.auth != null && request.auth.token.email_verified == true;
     }
 
+    /* „Lehrer gibt frei" (19.09.2026): Ein Datensatz kann beim ANLEGEN ein
+       Feld `freigabe: { offenBis: N }` tragen - die ersten N Lektionen sind
+       dann offen, die Empfaenger-Apps lesen die Zahl mit. Nur der Ersteller
+       darf sie spaeter aendern, nur dieses Feld, nur nach oben. Ohne
+       `freigabe` (gewoehnlicher Code) bleibt der Datensatz unveraenderlich. */
+    function freigabeOk(f) {
+      return f is map && f.keys().hasOnly(['offenBis']) && zahl(f.offenBis, 1, 1000);
+    }
+
     match /geteilteLektionen/{code} {
       allow get: if angemeldetBestaetigt();
       /* bewusst KEIN list - siehe oben, Punkt 2 */
 
       allow create: if angemeldetBestaetigt()
                     && code.matches('^[2-9A-HJ-NP-Z]{5}-[2-9A-HJ-NP-Z]{5}$')
-                    && request.resource.data.keys().hasOnly(['ownerUid', 'erstelltAm', 'inhalt'])
+                    && request.resource.data.keys().hasOnly(['ownerUid', 'erstelltAm', 'inhalt', 'freigabe'])
                     && request.resource.data.keys().hasAll(['ownerUid', 'erstelltAm', 'inhalt'])
                     && request.resource.data.ownerUid == request.auth.uid
                     && text(request.resource.data.erstelltAm, 40)
                     && request.resource.data.inhalt is map
                     && request.resource.data.inhalt.keys().hasOnly(['bereiche'])
                     && request.resource.data.inhalt.bereiche is list
-                    && request.resource.data.inhalt.bereiche.size() == 1;
+                    && request.resource.data.inhalt.bereiche.size() == 1
+                    && (!('freigabe' in request.resource.data) || freigabeOk(request.resource.data.freigabe));
 
       allow delete: if angemeldetBestaetigt() && resource.data.ownerUid == request.auth.uid;
 
-      /* Der Inhalt ist unveraenderlich: neu erzeugen oder loeschen. */
-      allow update: if false;
+      /* Der Inhalt ist unveraenderlich: neu erzeugen oder loeschen. Einzige
+         Ausnahme ist der Freigabe-Stand eines Lehrer-Datensatzes - er kann nur
+         wachsen (einmal offen bleibt offen), und ein gewoehnlicher Code kann
+         nachtraeglich nicht zu einem Lehrer-Code werden. */
+      allow update: if angemeldetBestaetigt() && vorhanden()
+                    && resource.data.ownerUid == request.auth.uid
+                    && 'freigabe' in resource.data
+                    && beruehrt().hasOnly(['freigabe'])
+                    && freigabeOk(request.resource.data.freigabe)
+                    && request.resource.data.freigabe.offenBis > resource.data.freigabe.offenBis;
     }
 
     /* Alles andere: kein match, also kein Zugriff. Das ersetzt das frühere

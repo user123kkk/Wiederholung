@@ -472,13 +472,20 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (19.09.2026): Bauauftrag „Lehrer gibt frei" — freigegeben, nichts gebaut.**
-Der Betreiber hat am 19.09.2026 in einer Session ausdrücklich gesagt: „ja soll
-gehen" (Bau-Freigabe, einschließlich der Änderung an `offeneLektionIds()`).
-Das ist **die** nächste Arbeit bei „leg los". Auftrag, Entscheidungen und
-Bauschritte: [`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md), Abschnitt L
-und **Abschnitt M (Bauauftrag)**. Eigenes Logbuch dafür:
-`plan/lehrer-modus/LOGBUCH.md` (anlegen, Format aus `CLAUDE.md`). Der Rest
+**AKTUELL (19.09.2026): „Lehrer gibt frei" — gebaut und veröffentlicht (v3.7.0), wartet auf den Betreiber.**
+Bau-Freigabe des Betreibers („ja soll gehen", einschließlich der Änderung an
+`offeneLektionIds()`) ist umgesetzt: App-Code, `firestore.rules` und
+Regelprüfung (106/106 im Emulator) stehen, ein Durchlauf gegen die echte
+`app.js` (34/34) ebenfalls. Einzelheiten und Entscheidungen:
+[`lehrer-modus/LOGBUCH.md`](lehrer-modus/LOGBUCH.md), Auftrag:
+[`lehrer-modus/GERUEST.md`](lehrer-modus/GERUEST.md) Abschnitt L und M.
+**Nicht fertig, solange der Betreiber diese zwei Schritte offen hat:**
+(1) `firebase deploy --only "firestore:rules"` — ohne die neue Regel schlägt
+„Nächste Lektion freigeben" mit `permission-denied` fehl, und das Löschen von
+`teilCode` (Teilen beenden) bleibt abgewiesen; (2) `veroeffentlichen.bat`;
+danach ein Test mit **zwei Konten** (Lehrer teilt und gibt frei, Schüler löst
+ein und sieht die Lektion nach Neustart). Kein weiterer Codepunkt daraus; bei
+„leg los" zuerst prüfen, ob der Betreiber sich dazu gemeldet hat. Der Rest
 dieses Abschnitts ist älterer Stand.
 
 **Stand 18.09.2026, Nacht: App bei v3.6.8, alles Bekannte gelöst.** Zwei
@@ -679,3 +686,4 @@ mangels Gerät nicht zur Verfügung.
 | 2026-09-19 | **Teilen per Code offline gesperrt (v3.6.12).** Buttons „Code erzeugen" und „Teilen beenden" in den Einstellungen sind jetzt offline `disabled` mit Hinweis „Zum Teilen brauchst du eine Verbindung" — verhindert hängende Promises (Firestore braucht Netz). Der Datei-Export bleibt offline aktiv. Syntax geprüft, App lädt fehlerfrei. Gerätetest ausstehend (Flugmodus prüfen). Details in `redesign-oberflaeche/LOGBUCH.md`. |
 | 2026-09-19 | **Gesamtprüfung „Reibungsfreiheit" — 19 Funde, nichts gebaut** (Beobachtung 19 in `beobachtungen-lernwerkzeug.md`). Der grüne Kasten ist das nie abgeschaltete Debug-Overlay aus v3.6.4/3.6.5 (`localStorage debugNav`); es macht das Scrollen ~9× langsamer. Seitenwechsel „verhackt", weil jeder `render()` Kopfzeile, Leiste und `.view` neu baut und von Deckkraft 0 einblendet (auch bei Cloud-Daten ohne Klick). Regression aus Beobachtung 18: `--vv-gap` schiebt die Nav-Leiste nach dem Drehen ins Querformat aus dem Bild. Dazu toter Aufruf `teilLinkPruefenUndVerarbeiten` (Fehler bei jedem Snapshot), Toast verdeckt/erneuert das offene Karten-Blatt, Wisch-Timer bewertet zwei Karten. Gemessen in Playwright gegen Firebase-Attrappe; iOS-Tastatur und echte Home-Bildschirm-Werte nur am Gerät prüfbar. **Umgesetzt und veröffentlicht als v3.6.13** (16 von 19 behoben; offen: Austrittsbewegung/Fokus-Rückgabe der Blätter, Renderkosten Verwalten, Gerätetest am iPhone). |
 | 2026-09-19 | **TikTok-Backlog-Ideen-Serie abgeschlossen: 5 Ideen dokumentiert, 3 nicht relevant (v3.6.11).** Die letzte Session hat vier Backlog-Ideen einzeln abgearbeitet (Hick's Law Nr. 6, Offline-Zustand Nr. 2 v3.6.9, leere Startzustände Nr. 5 v3.6.10/3.6.11, Sicherheits-Checkliste Nr. 7) plus Firestore-Kosten (Nr. 6). Alle mit Logbuch-Einträgen dokumentiert. Diese Session prüft, dass alles dokumentiert ist: Ideen 1, 3, 4, 8 (Widgets, Feedback-Board, Signup nach Onboarding, danach nächste Idee) sind nicht relevant oder nicht zu bauen — dokumentiert in `phase-1-datenzugriff/LOGBUCH.md` vom 19.09. **Kein neuer Code**: die v3.6.11-Versionierung und alle zugehörigen Commits vom 19.09. stammen aus der vorigen Session. Diese Session dokumentiert nur den aktuellen Stand: App läuft stabil, TikTok-Serie ist abgeschlossen, kein neuer aktiver Codepunkt. Betreiber muss Veröffentlichung durchziehen (`veroeffentlichen.bat`) und auf Geräten testen. |
+| 2026-09-19 | **„Lehrer gibt frei" gebaut und veröffentlicht (v3.7.0).** Bau-Freigabe des Betreibers, inkl. der einen Änderung an `offeneLektionIds()`. Beim Teilen per Code gibt es jetzt zwei Wege: „Fortschritt schaltet frei" (wie bisher) und „ich gebe frei" (Lehrer öffnet per Klick die nächste Lektion, einmal offen bleibt offen, kein Rückkanal). Empfänger holt den Stand per einzelnem Abruf nach (Start, Bereichswechsel, Rückkehr). Regeln im Emulator 106/106 (mit alter Datei 97/106), Durchlauf gegen die echte App 34/34. Nebenfund mitbehoben: `teilCode` wurde nach Neustart nicht geladen, und die Regel lehnte das Löschen des Feldes ab („Teilen beenden" schlug am Bereichsfeld fehl). **Offen beim Betreiber:** `firebase deploy --only "firestore:rules"`, `veroeffentlichen.bat`, Zwei-Konten-Test. Details: `lehrer-modus/LOGBUCH.md`. |
