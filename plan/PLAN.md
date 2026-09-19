@@ -495,8 +495,9 @@ Offline-Zustand (Nr. 2, v3.6.9, Anzeige gebaut) und leere Startzustände
 und Sicherheits-Checkliste (Nr. 7, Eintrag in `phase-1-datenzugriff/LOGBUCH.md`).
 **Wichtig aus Nr. 7 — braucht den Betreiber, sonst wirkt nichts:** (1) `firestore.rules`
 deployen (nicht Teil von `veroeffentlichen.bat`!): die Regel für `geteilteLektionen`
-stand außerhalb des Dokumentbaums, Code-Teilen war vermutlich live abgewiesen und
-die Sammlung ließ sich auflisten; (2) Hosting deployen, damit `firestore.rules` und
+stand außerhalb des Dokumentbaums — im Emulator bewiesen: jede Teilen-Handlung wird
+mit der alten Datei abgewiesen (für die Repo-Datei; die deployte ist nicht geprüft) —
+und die Sammlung ließ sich auflisten; (2) Hosting deployen, damit `firestore.rules` und
 eine interne Konzeptdatei nicht mehr öffentlich ausgeliefert werden; (3) Code-Teilen
 mit zwei Konten testen; (4) das GitHub-Repo ist **öffentlich** — Sichtbarkeit
 entscheiden (Alter des Betreibers steht in `plan/`), Billing-Alert und Backups in der

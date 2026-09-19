@@ -21,7 +21,7 @@
 
    Erwartet: "62 von 62 Pruefungen wie erwartet."
    (Nachtrag 19.09.2026: unten 14 weitere Faelle T01-T14 zu geteilteLektionen,
-   noch NICHT gelaufen - dann 76 von 76. Siehe Kommentar an der Stelle.)
+   gelaufen am 19.09.2026: 76 von 76. Siehe Kommentar an der Stelle.)
 
    Beim Lesen der Emulator-Ausgabe nicht erschrecken: abgewiesene Faelle
    melden oft zusaetzlich "evaluation error". Das ist normal. Die Regelsprache
@@ -53,7 +53,7 @@ async function pruefe(name, erwartet, fn) {
 
 const env = await initializeTestEnvironment({
   projectId: "wiederholung-test",
-  firestore: { host: "127.0.0.1", port: 8085, rules: readFileSync("/home/user/Wiederholung/firestore.rules", "utf8") }
+  firestore: { host: "127.0.0.1", port: 8085, rules: readFileSync(process.env.RULES_FILE || "/home/user/Wiederholung/firestore.rules", "utf8") }
 });
 
 const db      = env.authenticatedContext(UID, { email_verified: true }).firestore();
@@ -178,11 +178,15 @@ await pruefe("M30 Name ueberlang im Nutzerdokument", "nein", () => updateDoc(u()
 await pruefe("M31 Tagesprotokoll als Text", "nein", () => updateDoc(u(), { verlauf: "alles" }));
 
 /* ================= NACHTRAG 19.09.2026: geteilteLektionen =================
-   ACHTUNG: Diese 14 Faelle sind NICHT gelaufen - beim Schreiben stand weder
-   Java noch der Emulator zur Verfuegung. Geprueft ist nur, dass die Regeln
-   kompilieren (firebase deploy --only firestore:rules --dry-run). Beim ersten
-   Lauf mit Emulator zaehlt: 76 von 76. Weicht ein Fall ab, ist er
-   wahrscheinlich hier falsch geschrieben, nicht die Regel - zuerst pruefen.
+   GELAUFEN am 19.09.2026 (Windows, Emulator, Java 21): 76 von 76 gegen die
+   neue firestore.rules. Gegen die ALTE Datei (Stand 77900d1, Block ausserhalb
+   von /documents) fielen genau T01, T02 und T14 durch - jede legitime
+   Teilen-Handlung wurde mit "No matching allow statements" abgewiesen.
+   Gegenprobe: mit wieder eingebautem `read` statt `get` und ohne
+   E-Mail-Bestaetigung beim Anlegen fallen T03, T04 und T06 durch - die Faelle
+   schlagen also wirklich an.
+   Auf Windows: RULES_FILE=<Pfad zur firestore.rules> setzen, Java 11+ im PATH
+   (der Emulator braucht es), sonst wie oben.
 
    Warum es sie gibt: die Sammlung kam am 18.09. dazu, nach den 62 Faellen
    oben. Ihre Regel stand ausserhalb von /databases/{database}/documents und
