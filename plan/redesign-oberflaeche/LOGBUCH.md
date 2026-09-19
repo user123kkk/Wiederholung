@@ -4,6 +4,18 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — Teilen per Code offline gesperrt (v3.6.12)
+
+**Geändert:** `app.js` (Zeile ~5640–5655) zwei Buttons: `disabled` + `title="Zum Teilen brauchst du eine Verbindung"` wenn `offline`. `sw.js` `CACHE_NAME`, `index.html` `app.js?v=`, `CHANGELOG.md`, `APP_VERSION` → 3.6.12.
+
+**Entscheidung:** Offline-Warnung aus v3.6.9 ist sichtbar, aber die Buttons „Code erzeugen" und „Teilen beenden" waren trotzdem aktiv und führten zu hängenden Promises (Firestore-Zugriff braucht Netz). Jetzt beide Buttons `disabled` mit Hinweis — verhindert verwirrende States. Der Datei-Export („Kartensatz zum Weitergeben") bleibt aktiv, der braucht kein Netz.
+
+**Offen:** Gerätetest — Flugmodus aktivieren und prüfen, dass die Buttons grau sind.
+
+**Nächster Schritt:** Onboarding vor Anmeldung (`index.html` zeigt Intro vor Login, nur beim allerersten Besuch).
+
+---
+
 ### 2026-09-19 — Session: Stand dokumentiert, Ruhezustand bestätigt
 
 **Geändert:** Dokumentation in `plan/PLAN.md` Statusverlauf aktualisiert. Kein Produktivcode geändert.
