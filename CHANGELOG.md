@@ -1,3 +1,9 @@
+## 3.6.10 – 19. September 2026
+
+**Leere Startbildschirme: ein Tipp weniger bis zur ersten Karte.** „Eigene Karten anlegen" (Lernen, wenn noch nichts da ist) und „Karten anlegen" (Fortschritt, wenn noch nichts da ist) schickten nur in den Verwalten-Reiter – dort musste man noch einmal „Karte hinzufügen" tippen. Beide öffnen jetzt direkt das Karten-Blatt. Nach dem Hinzufügen bleibt das Blatt offen (mehrere Karten hintereinander), und „Fertig" führt zurück auf den Stapel, der die neue Karte schon zeigt. Ein geführter Satz hat kein Blatt und behält den alten Weg.
+
+Nichts an Lernlogik, Speichern oder Reihenfolge der Knöpfe geändert.
+
 ## 3.6.9 – 19. September 2026
 
 **Neu: Die App sagt jetzt, wenn sie offline ist.** Bisher lief sie offline stumm weiter (Service Worker + Firestore-Cache) – wer im Zug lernte, erfuhr nirgends, ob seine Antworten ankommen. Jetzt steht oben eine leise Zeile (kein Fehler-Rot): Lernen und Karten bearbeiten geht weiter, Änderungen werden auf dem Gerät gespeichert und übertragen, sobald die Verbindung zurück ist – und dass Teilen per Code eine Verbindung braucht. Sie verschwindet von selbst beim Wiederverbinden. Fehlt Firestore der dauerhafte Speicher (Fallback), sagt der Text ehrlich, dass die App bis dahin offen bleiben soll.

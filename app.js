@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.9";
+const APP_VERSION = "3.6.10";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5818,7 +5818,12 @@ function renderLernen() {
       'deine Lektionen stehen danach fertig da.</p>';
     html += '<div class="empty__aktionen">';
     html += '<button data-action="import-trigger">Kartensatz einspielen</button>';
-    html += '<button class="ghost" data-action="tab-verwalten">Eigene Karten anlegen</button>';
+    /* 3.6.10: Der Knopf sagt "anlegen" und schickte nur nach Verwalten - dort
+       noch einmal "Karte hinzufuegen" tippen. Jetzt oeffnet er das Blatt
+       selbst (ein Tipp weniger); "Fertig" fuehrt zurueck auf den Stapel, der
+       dann schon die erste Karte zeigt. Ein gefuehrter Satz hat kein Blatt
+       (karteSheet() gibt dort "" zurueck), er behaelt den alten Weg. */
+    html += '<button class="ghost" data-action="' + (istGefuehrt(b) ? 'tab-verwalten' : 'karte-neu') + '">Eigene Karten anlegen</button>';
     html += '</div></div>';
     return html;
   }
@@ -6140,7 +6145,10 @@ function renderFortschritt() {
     html += '<div class="empty__icon">' + ikon("fortschritt", "i-xl") + '</div>';
     html += '<div class="empty__titel">Noch nichts zu zeigen</div>';
     html += '<div class="empty__text">Sobald du Karten anlegst und bewertest, steht hier, wie du dastehst.</div>';
-    html += '<div class="empty__aktionen"><button data-action="tab-verwalten">Karten anlegen</button></div>';
+    /* 3.6.10: wie auf dem Lernen-Bildschirm - das Blatt direkt oeffnen statt
+       einen Reiter weiterzuschicken. */
+    html += '<div class="empty__aktionen"><button data-action="' +
+      (istGefuehrt(currentBereich()) ? 'tab-verwalten' : 'karte-neu') + '">Karten anlegen</button></div>';
     html += '</div>';
     return html;
   }

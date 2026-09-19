@@ -4,6 +4,24 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — Leere Startzustände (TikTok-Idee 5 von 8, v3.6.10)
+
+**Geändert:** `app.js` — `renderLernen()` (leerer Bereich, Zeile ~5826) und `renderFortschritt()` (leer, ~6151): der Anlegen-Knopf trägt `data-action="karte-neu"` statt `tab-verwalten` (bei `istGefuehrt` bleibt der alte Weg). `APP_VERSION`/`CACHE_NAME`/`index.html`-`?v=` → 3.6.10, `CHANGELOG.md`.
+**Bestand der leeren Zustände (geprüft, nicht angenommen):**
+| Ort | Stand | Urteil |
+|---|---|---|
+| Lernen, Bereich ohne Karten (`5813`) | „Kartensatz einspielen" gefüllt, „Eigene Karten anlegen" ghost → schickte nach Verwalten | **geändert**: öffnet jetzt das Blatt, 1 Tipp statt 2 |
+| Fortschritt ohne Karten (`6138`) | ein Knopf „Karten anlegen" → Verwalten | **geändert**, gleicher Grund |
+| Verwalten, Bereich ohne Karten | ein gefüllter Knopf „Karte hinzufügen" + Hinweis „Noch keine Karten vorhanden." | passt — **Verdacht am Anfang war falsch:** die Box mit „Erste Karte anlegen" (`6916ff`) erscheint nur bei „alle Bereiche" ohne Treffer, nicht im leeren Bereich; es gibt keine doppelten Knöpfe |
+| Verwalten, Suche ohne Treffer | „Suche leeren" + „In allen Bereichen suchen" | passt |
+| „Für heute durch" (`5830`) | „Trotzdem üben" → Verwalten | nicht angefasst: Beschriftung und Ziel passen nicht ganz zusammen (man landet in Verwalten und muss dort „Üben" tippen), aber das berührt den Üben-Ablauf → nur vermerkt |
+**Entscheidung:** Die Kernidee des Videos („Not sure where to start? → Vorschläge") entspricht hier einem **Einsteigersatz**. Der ist per `landing-page-strategie/STRATEGIE.md` 2.1 entschieden: Stand **A** (Neue legen selbst an); ein vom Agenten geschriebener Satz wurde am 13.09. vom Betreiber verworfen (v3.0.22), **Inhalt kommt nur vom Betreiber**. Deshalb nicht gebaut und nicht wieder aufgemacht. Gebaut wurde nur, was ohne Inhalt geht: der kürzeste Weg zur ersten eigenen Karte.
+**Offen (Betreiber-Entscheidung, blockiert nichts):** Welche Handlung ist auf dem leeren Lernen-Bildschirm die **eine** gefüllte? Heute „Kartensatz einspielen" (Entscheidung 2.11.2, gedacht für Leute, die eine Datei bekommen haben). Wer aus einem Video kommt, hat keine Datei — `landing.html` verspricht ihm „Danach legst du direkt deine erste Karte an", und der gefüllte Knopf öffnet für ihn eine Dateiauswahl. Wechsel wäre eine Umkehr der zwei Knöpfe (eine Zeile), aber eine Produktentscheidung.
+**Nicht geprüft:** Die Oberfläche selbst (Firebase-Anmeldung nötig), nur `node --check`. Veröffentlichung steht aus (`veroeffentlichen.bat`).
+**Nächster Schritt:** Betreiber: veröffentlichen, mit einem **neuen leeren Bereich** am Handy prüfen (Lernen → „Eigene Karten anlegen" → Blatt geht auf → eine Karte → „Fertig" → Stapel zeigt „1 Karte"). Danach nächste Idee.
+
+---
+
 ### 2026-09-19 — Offline-Zustand sichtbar gemacht (TikTok-Idee 2 von 8, v3.6.9)
 
 **Geändert:**
