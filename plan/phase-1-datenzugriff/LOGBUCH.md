@@ -26,6 +26,52 @@ dasselbe noch einmal.
 
 ## Einträge
 
+### 2026-09-19 — Firestore-Kosten (TikTok-Idee 6 von 8): geprüft, nichts zu bauen
+
+**Geändert:** Nur diese Dokumentation. Kein Code, keine Version.
+**Vorgehen:** Statische Zählung im Code (`app.js`), keine Emulator-Messung —
+der Emulator rechnet nicht ab und liefert keine Lesezähler; eine Messung dort
+würde nur die Rechnung unten wiederholen. Preise und Freikontingent stammen aus
+dem Gedächtnis, vor jeder Entscheidung in der Google-Cloud-Konsole gegenprüfen
+(Freikontingent zuletzt bekannt: 50.000 Lesevorgänge, 20.000 Schreib- und
+20.000 Löschvorgänge pro Tag und Projekt).
+
+**Befund — Lesen:**
+- Beim Start laufen drei Listener: Nutzerdokument (`app.js:1446`), `bereiche`
+  (`:1368`) und `karten` (`:1372`), beide als ganze Sammlung ohne Filter.
+- Persistenter Cache ist an (`:1412`). Kommt dasselbe Gerät innerhalb von etwa
+  30 Minuten wieder, zahlt man nur geänderte Dokumente; danach zählt die
+  Abfrage wie neu: **eine Lesung pro Karte und Bereich bei jedem
+  „kalten“ Start.** Also grob (Karten + Bereiche + 1) Lesevorgänge pro
+  Nutzer:in und Tag, unabhängig davon, wie viel gelernt wird.
+- Rechenbeispiel (Faustwerte): 500 Karten → ~500/Tag und Person. Das
+  Freikontingent reicht dann für ~100 täglich aktive Personen, bei 2.000 Karten
+  für ~25. Darüber etwa 0,06 USD je 100.000 Lesungen (US-Preis, nachprüfen):
+  1.000 Personen à 500 Karten ≈ 8 USD im Monat.
+- Selten und ohne Belang: `:1717` (Bereich löschen, liest dessen Karten),
+  `:2159` (Konto löschen, liest alles), `:2892` (einmal je Codeeingabe).
+
+**Befund — Schreiben:** Bereits sparsam gebaut. Bewerten schreibt genau ein
+Kartendokument (`persistCardGrade`, `:1757`), der Tagesverlauf wird auf zwei
+Sekunden entprellt und schreibt nur den heutigen Tag (`:697–735`). Eine
+Lernrunde mit 50 Karten ≈ 55 Schreibvorgänge; das Freikontingent trägt ~360
+solcher Runden am Tag.
+
+**Entscheidung:** Nichts bauen. Die Struktur ist bereits so, wie das Video
+rät (gezielte Einzeldokument-Schreibvorgänge, Cache an). Die Empfehlung
+„Daten duplizieren“ spart hier nichts: es gibt keine Abfrage, die Dokumente
+mehrerer Nutzer:innen einsammelt. Der einzige echte Hebel wäre, Karten nicht
+bei jedem kalten Start komplett zu laden (z. B. nur Fälliges) — das ändert die
+Lernlogik und ist ausdrücklich tabu (`CLAUDE.md`), außerdem erst bei
+dreistelliger Nutzerzahl relevant.
+
+**Offen (Betreiber):** Billing-Budget mit E-Mail-Alarm in der Google-Cloud-
+Konsole setzen (schützt gegen genau diesen Kostenpunkt) und dort im Bereich
+„Nutzung“ die tatsächlichen Lesevorgänge pro Tag ansehen — das ist die einzige
+echte Messung. Gilt zusammen mit dem Punkt aus dem Sicherheits-Eintrag.
+**Nächster Schritt:** Erst wieder anfassen, wenn die Konsole täglich mehr als
+etwa 30.000 Lesevorgänge zeigt.
+
 ### 2026-09-19 — Sicherheits-Checkliste (TikTok-Idee 7 von 8): Regel für geteilte Lektionen stand außerhalb des Dokumentbaums
 
 **Anlass:** Betreiber, „Sicherheits-Checkliste recherchieren und umsetzen". Zehn Punkte aus dem Video, jeder gegen den Ist-Stand geprüft — gelesen oder live abgerufen, nicht angenommen.
