@@ -4,6 +4,25 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — Session: Stand dokumentiert, Ruhezustand bestätigt
+
+**Geändert:** Dokumentation in `plan/PLAN.md` Statusverlauf aktualisiert. Kein Produktivcode geändert.
+
+**Befund:** `git log` gegen den hier dokumentierten Stand geprüft. Alle Commits vom 19.09. (v3.6.9–v3.6.11) stammen aus der vorigen Session und sind bereits dokumentiert:
+- v3.6.9: Offline-Zustand sichtbar gemacht
+- v3.6.10: Leere Startzustände (Anlegen-Knopf direkt öffnen)
+- v3.6.11: Leerer Lernen-Bildschirm (Hauptknopf umgekehrt — „Erste Karte anlegen" gefüllt)
+
+Zusätzlich dokumentiert in `phase-1-datenzugriff/LOGBUCH.md` (19.09.): TikTok-Ideen 1, 3, 4, 8 sind nicht relevant; Serie damit abgeschlossen (5 Ideen gebaut/dokumentiert: Hick's Law, Offline, Empty State, Sicherheits-Checkliste, Firestore-Kosten; 3 nicht relevant).
+
+**Entscheidung:** Kein neuer Codepunkt aktiv. Alles Offene hängt an Betreiber-Entscheidungen/Tests (Veröffentlichung, Flugmodus-Test für Offline, Teilen-Code-Sperre offline). Ruhezustand bleibt gültig.
+
+**Offen:** Betreiber muss `veroeffentlichen.bat` durchziehen und am echten Handy prüfen (leerer Bereich mit drei Knöpfen).
+
+**Nächster Schritt:** Betreiber: veröffentlichen und testen, danach neue Vorgaben oder Geräte-Befunde.
+
+---
+
 ### 2026-09-19 — Leerer Lernen-Bildschirm: Hauptknopf umgekehrt, Code ergänzt (v3.6.11)
 
 **Anlass:** Betreiber auf meine offene Frage im v3.6.10-Eintrag unten („welche Handlung ist die gefüllte?"): „denk hier gut nach". Ich hatte die Frage zurückgereicht, obwohl sich aus den Plandateien eine Antwort ableiten ließ.
