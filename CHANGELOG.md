@@ -1,3 +1,11 @@
+## 3.6.11 – 19. September 2026
+
+**Leerer Lernen-Bildschirm: die erste eigene Karte ist jetzt der Hauptknopf, nicht der Import.** Die Kette davor sagt einem Neuen zu: Startseite „Danach legst du direkt deine erste Karte an", Bestätigungsseite „Danach geht es gleich weiter zu deiner ersten Karte". Der erste Bildschirm zeigte aber als gefüllten Knopf „Kartensatz einspielen" – für jemanden ohne Datei eine Dateiauswahl als Sackgasse. Jetzt: **„Erste Karte anlegen"** (gefüllt, öffnet das Blatt), darunter „Datei einspielen" und „Code eingeben" als leisere, aber echte Knöpfe. Der Code stand bisher nur in den Einstellungen – wer ihn bekommen hat, fand vom ersten Bildschirm keinen Weg dorthin.
+
+Ein geführter Satz ohne Karten hat kein Blatt und behält den Import als Hauptknopf (plus Code).
+
+Nichts an Lernlogik, Speichern oder dem Einspielen selbst geändert.
+
 ## 3.6.10 – 19. September 2026
 
 **Leere Startbildschirme: ein Tipp weniger bis zur ersten Karte.** „Eigene Karten anlegen" (Lernen, wenn noch nichts da ist) und „Karten anlegen" (Fortschritt, wenn noch nichts da ist) schickten nur in den Verwalten-Reiter – dort musste man noch einmal „Karte hinzufügen" tippen. Beide öffnen jetzt direkt das Karten-Blatt. Nach dem Hinzufügen bleibt das Blatt offen (mehrere Karten hintereinander), und „Fertig" führt zurück auf den Stapel, der die neue Karte schon zeigt. Ein geführter Satz hat kein Blatt und behält den alten Weg.

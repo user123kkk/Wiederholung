@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.10";
+const APP_VERSION = "3.6.11";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5808,22 +5808,39 @@ function renderLernen() {
   /* --- Noch gar keine Karten: der allererste Bildschirm nach der Anmeldung.
      2.11.2: Hier stand einmal nur "leg welche unter Verwalten an" - wer
      gerade eine Kartensatz-Datei bekommen hatte, las also ausgerechnet die
-     Aufforderung, alles selbst zu tippen. Der Import steht deshalb zuerst
-     und als richtiger Knopf. */
+     Aufforderung, alles selbst zu tippen. Der Import wurde deshalb zum
+     richtigen Knopf und stand ZUERST, als gefuellter.
+
+     3.6.10: Die Reihenfolge ist umgekehrt, der richtige Knopf bleibt. Grund:
+     Die Kette davor sagt einem Neuen etwas anderes zu - landing.html "Danach
+     legst du direkt deine erste Karte an" (Fassung A: "Dein Stoff, nicht
+     unserer"), die Bestaetigungsseite "Danach geht es gleich weiter zu deiner
+     ersten Karte". Der gefuellte Knopf oeffnete stattdessen eine
+     Dateiauswahl, fuer jemanden ohne Datei eine Sackgasse. Die 2.11.2-
+     Beschwerde (nur "tipp alles selbst" zu lesen) bleibt behoben: Datei UND
+     Code stehen auf demselben Bildschirm als echte Knoepfe. Den Code gab es
+     zu 2.11.2 noch nicht; er stand bisher nur in den Einstellungen.
+
+     Ein gefuehrter Satz hat kein Karten-Blatt (karteSheet() gibt dort ""
+     zurueck) - dort gibt es nichts anzulegen, also bleibt der Import vorn. */
   if (cards.length === 0) {
+    const kannAnlegen = !istGefuehrt(b);
     html += '<div class="empty">';
-    html += '<div class="empty__icon betont">' + ikon("einspielen", "i-xl") + '</div>';
-    html += '<div class="empty__titel">Noch nichts in \u201e' + esc(b.name) + '\u201c</div>';
-    html += '<p class="empty__text">Hast du eine Kartensatz-Datei bekommen? Spiel sie ein \u2013 ' +
-      'deine Lektionen stehen danach fertig da.</p>';
+    html += '<div class="empty__icon betont">' + ikon(kannAnlegen ? "karten" : "einspielen", "i-xl") + '</div>';
+    html += '<div class="empty__titel">Noch nichts in „' + esc(b.name) + '“</div>';
+    html += '<p class="empty__text">' + (kannAnlegen
+      ? 'Fang mit einem Wort an – aus deinem Buch, deinem Unterricht, was gerade ansteht. ' +
+        'Hast du von jemandem eine Datei oder einen Code bekommen, findest du beides darunter.'
+      : 'Hast du eine Kartensatz-Datei oder einen Code bekommen? Spiel sie ein – ' +
+        'deine Lektionen stehen danach fertig da.') + '</p>';
     html += '<div class="empty__aktionen">';
-    html += '<button data-action="import-trigger">Kartensatz einspielen</button>';
-    /* 3.6.10: Der Knopf sagt "anlegen" und schickte nur nach Verwalten - dort
-       noch einmal "Karte hinzufuegen" tippen. Jetzt oeffnet er das Blatt
-       selbst (ein Tipp weniger); "Fertig" fuehrt zurueck auf den Stapel, der
-       dann schon die erste Karte zeigt. Ein gefuehrter Satz hat kein Blatt
-       (karteSheet() gibt dort "" zurueck), er behaelt den alten Weg. */
-    html += '<button class="ghost" data-action="' + (istGefuehrt(b) ? 'tab-verwalten' : 'karte-neu') + '">Eigene Karten anlegen</button>';
+    if (kannAnlegen) {
+      html += '<button data-action="karte-neu">' + ikon("plus", "i-sm") + ' Erste Karte anlegen</button>';
+      html += '<button class="secondary" data-action="import-trigger">Datei einspielen</button>';
+    } else {
+      html += '<button data-action="import-trigger">Kartensatz einspielen</button>';
+    }
+    html += '<button class="ghost" data-action="code-einloesen-start">Code eingeben</button>';
     html += '</div></div>';
     return html;
   }

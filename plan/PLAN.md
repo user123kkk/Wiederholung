@@ -493,8 +493,10 @@ im Repo). Erledigt: Hick's Law (Nr. 6, schon umgesetzt, nichts gebaut),
 Offline-Zustand (Nr. 2, v3.6.9, Anzeige gebaut) und leere Startzustände
 (Nr. 5, v3.6.10, kürzester Weg zur ersten Karte). Beide mit Begründung in
 [`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md).
-**Offen aus v3.6.10:** Betreiber entscheidet, welche Handlung auf dem leeren
-Lernen-Bildschirm die gefüllte ist (Einspielen oder Anlegen) — Details im Logbuch.
+**Entschieden in v3.6.11:** Auf dem leeren Lernen-Bildschirm ist „Erste Karte
+anlegen" der gefüllte Knopf (Begründung im Logbuch: Zusage-Kette Startseite →
+Bestätigung → erster Bildschirm); Datei und Code stehen als leisere Knöpfe daneben.
+Rücknahme wäre ein einzelner Revert.
 **Offen aus v3.6.9:** Betreiber muss veröffentlichen (`veroeffentlichen.bat`) und
 im Flugmodus am Handy prüfen; Entscheidung über eine Sperre „Teilen per Code"
 offline (Nebenfund im Logbuch).

@@ -4,6 +4,22 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — Leerer Lernen-Bildschirm: Hauptknopf umgekehrt, Code ergänzt (v3.6.11)
+
+**Anlass:** Betreiber auf meine offene Frage im v3.6.10-Eintrag unten („welche Handlung ist die gefüllte?"): „denk hier gut nach". Ich hatte die Frage zurückgereicht, obwohl sich aus den Plandateien eine Antwort ableiten ließ.
+**Geändert:** `app.js` `renderLernen()`, Zweig `cards.length === 0` (~5813–5848): kein gefüllter „Kartensatz einspielen" mehr, sondern gefüllt „Erste Karte anlegen" (`karte-neu`), `secondary` „Datei einspielen" (`import-trigger`), `ghost` „Code eingeben" (`code-einloesen-start`, bisher nur in Einstellungen → Einspielen, `~5670`). Text und Symbol angepasst. Version/Cache/`?v=` → 3.6.11, `CHANGELOG.md`.
+**Herleitung (Belege, nicht Bauchgefühl):**
+1. Die Zusage-Kette an einen Neuen: `landing.html:511–514` („Danach legst du direkt deine erste Karte an"), `landing.html:591ff` („erst mal leer … Dein Stoff, nicht unserer" = Fassung A), Bestätigungsseite `app.js` `renderPendingVerification` (v3.3.2, „Danach geht es gleich weiter zu deiner ersten Karte"). Der erste Bildschirm brach sie.
+2. Der Import-vor-Anlegen-Entscheid (2.11.2) ist **älter** als Startseite (v3.0.20, 13.09.) und Code-Teilen (v3.6.x). Seine eigentliche Beschwerde — ein Datei-Empfänger las nur „tipp alles selbst" — bleibt behoben, weil Datei **und** Code als echte Knöpfe auf demselben Bildschirm stehen. Geändert ist nur, welcher gefüllt ist.
+3. Wer einen **Code** bekam, fand vom ersten Bildschirm keinen Weg: der Text fragte nur nach einer Datei. Das war eine echte Lücke, unabhängig von der Hierarchiefrage.
+4. Hick: drei Knöpfe sind kein Problem (1 gefüllt, 1 secondary, 1 ghost, Regel 2 erfüllt); das Problem war die **falsche** Gewichtung plus Sackgasse, nicht die Zahl.
+**Gegenargument, bewusst abgewogen:** Es gibt keine Nutzungszahlen, welche Gruppe häufiger ankommt. Für die Neuen aus Videos/Startseite spricht die dokumentierte Zusage; für Datei-Empfänger spricht nur die alte, vor der Startseite getroffene Annahme. Bei einem Irrtum kostet es die Datei-/Code-Empfänger einen Tipp mehr auf einem ohnehin sichtbaren Knopf — der umgekehrte Irrtum kostete Neue eine Sackgasse. Rücknahme: eine Zeile, `git revert` dieses Commits.
+**Nicht geändert:** Verwalten (leer), Fortschritt (leer), „Für heute durch" — siehe Tabelle im Eintrag unten. `landing.html` nicht angefasst (sie sagt bereits das Richtige).
+**Offen:** Die alte Landingzeile 583 („eine Datei, ein Import, fertig") spricht vom Weitergeben per Datei; das Teilen läuft inzwischen auch per Code. Textfrage für die Startseite, nicht gebaut (Landing-Umbau ist laut `PLAN.md` an Betreiber-Entscheidungen gebunden). Echtgerät-Test und Veröffentlichung stehen aus.
+**Nächster Schritt:** Betreiber: veröffentlichen, mit einem neuen leeren Bereich am Handy prüfen — drei Knöpfe sichtbar, „Erste Karte anlegen" gefüllt, „Code eingeben" öffnet die Eingabe. Danach nächste Idee.
+
+---
+
 ### 2026-09-19 — Leere Startzustände (TikTok-Idee 5 von 8, v3.6.10)
 
 **Geändert:** `app.js` — `renderLernen()` (leerer Bereich, Zeile ~5826) und `renderFortschritt()` (leer, ~6151): der Anlegen-Knopf trägt `data-action="karte-neu"` statt `tab-verwalten` (bei `istGefuehrt` bleibt der alte Weg). `APP_VERSION`/`CACHE_NAME`/`index.html`-`?v=` → 3.6.10, `CHANGELOG.md`.
@@ -16,7 +32,7 @@ Letzter Eintrag zuerst.
 | Verwalten, Suche ohne Treffer | „Suche leeren" + „In allen Bereichen suchen" | passt |
 | „Für heute durch" (`5830`) | „Trotzdem üben" → Verwalten | nicht angefasst: Beschriftung und Ziel passen nicht ganz zusammen (man landet in Verwalten und muss dort „Üben" tippen), aber das berührt den Üben-Ablauf → nur vermerkt |
 **Entscheidung:** Die Kernidee des Videos („Not sure where to start? → Vorschläge") entspricht hier einem **Einsteigersatz**. Der ist per `landing-page-strategie/STRATEGIE.md` 2.1 entschieden: Stand **A** (Neue legen selbst an); ein vom Agenten geschriebener Satz wurde am 13.09. vom Betreiber verworfen (v3.0.22), **Inhalt kommt nur vom Betreiber**. Deshalb nicht gebaut und nicht wieder aufgemacht. Gebaut wurde nur, was ohne Inhalt geht: der kürzeste Weg zur ersten eigenen Karte.
-**Offen (Betreiber-Entscheidung, blockiert nichts):** Welche Handlung ist auf dem leeren Lernen-Bildschirm die **eine** gefüllte? Heute „Kartensatz einspielen" (Entscheidung 2.11.2, gedacht für Leute, die eine Datei bekommen haben). Wer aus einem Video kommt, hat keine Datei — `landing.html` verspricht ihm „Danach legst du direkt deine erste Karte an", und der gefüllte Knopf öffnet für ihn eine Dateiauswahl. Wechsel wäre eine Umkehr der zwei Knöpfe (eine Zeile), aber eine Produktentscheidung.
+**Offen (nachträglich erledigt in v3.6.11, siehe Eintrag darüber):** Welche Handlung ist auf dem leeren Lernen-Bildschirm die **eine** gefüllte? Heute „Kartensatz einspielen" (Entscheidung 2.11.2, gedacht für Leute, die eine Datei bekommen haben). Wer aus einem Video kommt, hat keine Datei — `landing.html` verspricht ihm „Danach legst du direkt deine erste Karte an", und der gefüllte Knopf öffnet für ihn eine Dateiauswahl. Wechsel wäre eine Umkehr der zwei Knöpfe (eine Zeile), aber eine Produktentscheidung.
 **Nicht geprüft:** Die Oberfläche selbst (Firebase-Anmeldung nötig), nur `node --check`. Veröffentlichung steht aus (`veroeffentlichen.bat`).
 **Nächster Schritt:** Betreiber: veröffentlichen, mit einem **neuen leeren Bereich** am Handy prüfen (Lernen → „Eigene Karten anlegen" → Blatt geht auf → eine Karte → „Fertig" → Stapel zeigt „1 Karte"). Danach nächste Idee.
 
