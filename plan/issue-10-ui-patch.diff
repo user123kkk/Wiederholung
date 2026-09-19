@@ -1,0 +1,11 @@
+diff --git a/app.js b/app.js
+--- a/app.js
++++ b/app.js
+@@
+-      html += '<p class="hint">Derselbe Bereich, aber alles auf Stufe 0 und alle Lektionen bis auf ' +
+-        'die erste zu. Für deinen eigenen Stand ändert sich nichts.</p>';
++      html += '<p class="hint">Derselbe Bereich als Datei: alles auf Stufe 0 und alle Lektionen bis auf ' +
++        'die erste zu. Für deinen eigenen Stand ändert sich nichts. Die Datei kannst du unabhängig vom Konto weitergeben.</p>';
+@@
+-        ' Kartensatz zum Weitergeben</button>';
++        ' Datei zum Weitergeben</button>';
