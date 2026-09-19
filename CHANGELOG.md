@@ -1,3 +1,9 @@
+## 3.6.12 – 19. September 2026
+
+**Teilen per Code offline jetzt gesperrt.** Die Buttons „Code erzeugen" und „Teilen beenden" waren früher offline aktiviert, führten aber zu hängenden Promises (Firestore-Zugriff braucht Netz). Jetzt `disabled` mit dem Hinweis „Zum Teilen brauchst du eine Verbindung" – konsistent mit der Offline-Warnung aus v3.6.9. Das Speichern der Codes lokal (in `teilCode`) geht trotzdem weiter, sobald Netz zurück ist.
+
+Der Datei-Export („Kartensatz zum Weitergeben") bleibt aktiv offline – der braucht kein Netz, nur lokale Daten.
+
 ## 3.6.11 – 19. September 2026
 
 **Leerer Lernen-Bildschirm: die erste eigene Karte ist jetzt der Hauptknopf, nicht der Import.** Die Kette davor sagt einem Neuen zu: Startseite „Danach legst du direkt deine erste Karte an", Bestätigungsseite „Danach geht es gleich weiter zu deiner ersten Karte". Der erste Bildschirm zeigte aber als gefüllten Knopf „Kartensatz einspielen" – für jemanden ohne Datei eine Dateiauswahl als Sackgasse. Jetzt: **„Erste Karte anlegen"** (gefüllt, öffnet das Blatt), darunter „Datei einspielen" und „Code eingeben" als leisere, aber echte Knöpfe. Der Code stand bisher nur in den Einstellungen – wer ihn bekommen hat, fand vom ersten Bildschirm keinen Weg dorthin.

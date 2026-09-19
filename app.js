@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.11";
+const APP_VERSION = "3.6.12";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5642,13 +5642,17 @@ function renderEinstellungenSeite(id) {
         html += '<p class="hint">Aktiver Code: <strong>' + esc(b.teilCode) + '</strong>. ' +
           'Jede:r mit diesem Code kann die Lektion übernehmen, ohne dass du davon erfährst.</p>';
         html += '<div class="form-actions">';
-        html += '<button class="secondary danger" data-action="beende-teilen-code">Teilen beenden</button>';
+        const offlineTxt = offline ? ' title="Zum Beenden brauchst du eine Verbindung"' : '';
+        const offlineAttr = offline ? ' disabled' : '';
+        html += '<button class="secondary danger"' + offlineAttr + offlineTxt + ' data-action="beende-teilen-code">Teilen beenden</button>';
         html += '</div>';
       } else {
         html += '<p class="hint">Erzeugt einen kurzen Code, über den jede:r mit dem Code diese Lektion ' +
           'in die eigene App übernehmen kann – ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.</p>';
         html += '<div class="form-actions">';
-        html += '<button class="secondary" data-action="teile-lektion-code">' + ikon("teilen", "i-sm") +
+        const offlineTxt = offline ? ' title="Zum Teilen brauchst du eine Verbindung"' : '';
+        const offlineAttr = offline ? ' disabled' : '';
+        html += '<button class="secondary"' + offlineAttr + offlineTxt + ' data-action="teile-lektion-code">' + ikon("teilen", "i-sm") +
           ' Code erzeugen</button>';
         html += '</div>';
       }
