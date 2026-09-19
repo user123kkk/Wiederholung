@@ -388,6 +388,10 @@ body {
   background: var(--glow);
 }
 
+/* 3.6.13: Solange ein Blatt oder Dialog offen ist, scrollt die Seite dahinter
+   nicht mit (render() setzt die Klasse). */
+html.blatt-offen, html.blatt-offen body { overflow: hidden; }
+
 /* Tastatur-Bedienung bleibt sichtbar, die Maus bekommt keinen Rahmen. */
 :focus { outline: none; }
 :focus-visible {
@@ -443,6 +447,9 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
    ========================================================================= */
 
 @keyframes enter-fade { from { opacity: 0; } to { opacity: 1; } }
+/* 3.6.13: Seitenwechsel. Der alte Inhalt ist sofort weg; ein Einblenden aus
+   volligem Nichts liest sich als Aufblitzen, aus halber Deckkraft als Wechsel. */
+@keyframes enter-view { from { opacity: 0.45; } to { opacity: 1; } }
 @keyframes enter-rise {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
@@ -473,6 +480,28 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   50%      { opacity: 1; }
 }
 @keyframes dreh { to { transform: rotate(360deg); } }
+
+/* 3.6.13: Eintritt nur, wenn wirklich etwas Neues erscheint. render() setzt
+   auf #app die Klasse still-ansicht, wenn derselbe Bildschirm (Seite bzw.
+   Karte in der Runde) noch einmal gezeichnet wird - Cloud-Stand, Tipp auf den
+   aktiven Tab, Umschalter. still-overlay entsprechend fuer Blaetter, Dialoge
+   und Meldung. Ohne das blendete jedes Neuzeichnen die ganze Seite von
+   Deckkraft 0 auf 1 ein. Bewusst nur die Eintritts-Animationen: endlos
+   laufende (Ladekreis, Schimmer) bleiben unberuehrt. */
+#app.still-ansicht .view,
+#app.still-ansicht .stapel,
+#app.still-ansicht .empty,
+#app.still-ansicht .drill-picker,
+#app.still-ansicht .done-box .emoji,
+#app.still-ansicht .anim-rise,
+#app.still-ansicht .anim-fade,
+#app.still-ansicht .study-card.zugedeckt .study-word,
+#app.still-ansicht .study-answer,
+#app.still-ansicht .study-extra,
+#app.still-ansicht .grade-row,
+#app.still-overlay .dlg-backdrop,
+#app.still-overlay .dlg,
+#app.still-overlay .toast { animation: none; }
 
 .anim-rise { animation: enter-rise var(--dur-base) var(--ease-out) both; }
 .anim-fade { animation: enter-fade var(--dur-base) var(--ease-out) both; }
@@ -524,7 +553,7 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
        Unterkante zaehlt also mit. */
     calc(var(--nav-h) + var(--sab) + var(--space-3) + var(--space-7))
     calc(var(--gutter) + var(--sal));
-  animation: enter-fade var(--dur-fast) var(--ease-out) both;
+  animation: enter-view var(--dur-fast) var(--ease-out) both;
 }
 
 /* Im Modus gibt es weder AppBar noch Navigation — nur die Modusleiste oben.
@@ -2122,8 +2151,14 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   padding: var(--space-2) var(--space-3) var(--space-2) var(--space-5);
   box-shadow: var(--shadow-md);
   font-size: var(--fs-sm); font-weight: 500;
-  pointer-events: auto;
+  /* 3.6.13: Die Meldung hat keinen Knopf - sie soll Taps nicht abfangen. */
+  pointer-events: none;
   animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
+/* Bei offenem Blatt steht sie oben; unten lag sie auf dem Formular. */
+.toast-wrap--oben {
+  bottom: auto;
+  top: calc(var(--sat) + var(--space-4));
 }
 .toast button { min-height: 32px; padding: 0 var(--space-3); font-size: var(--fs-xs); }
 
@@ -2507,3 +2542,22 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
     animation: enter-pop var(--dur-base) var(--ease-out) both;
   }
 }
+
+/* ===========================================================================
+   19 · TREFFERFLAECHEN
+   ---------------------------------------------------------------------------
+   3.6.13. Satz 3 verlangt mindestens --tap (44px). Etliche kleine Knoepfe
+   (--ctrl-sm = 36px, Links 21px) blieben darunter. Statt sie zu vergroessern
+   und das Bild zu verschieben, wird nur die BERUEHRBARE Flaeche groesser: ein
+   unsichtbares Rechteck ueber dem Element. Nebeneinander liegende Knoepfe
+   (Bearbeiten/Loeschen) wachsen nur nach oben und unten, damit sich ihre
+   Flaechen nicht ueberlappen.
+   ========================================================================= */
+button.ghost, button.linklike, button.tiny-link, a.linklike, .pill,
+.lern-notiz-knopf, .lern-haken, .rechtsfuss a, .seg button { position: relative; }
+button.ghost::after, button.linklike::after, button.tiny-link::after, a.linklike::after,
+.pill::after, .lern-notiz-knopf::after, .lern-haken::after, .seg button::after, .search-clear::after {
+  content: ""; position: absolute; inset: -4px 0;
+}
+.rechtsfuss a::after { content: ""; position: absolute; inset: -12px -6px; }
+.search-clear::after { inset: -5px; }

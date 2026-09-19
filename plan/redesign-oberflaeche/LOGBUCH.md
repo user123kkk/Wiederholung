@@ -4,6 +4,18 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — Gesamtprüfung „Reibungsfreiheit", Fixes (v3.6.13)
+
+**Geändert:** `app.js` — Debug-Overlay und `debug-version-tap` entfernt, `localStorage debugNav` wird gelöscht; `syncViewportGap` (Breitenwechsel setzt zurück, Abweichung >100 px = echter Wechsel); toter Aufruf `teilLinkPruefenUndVerarbeiten` aus `datenZusammenbauen` entfernt, dort Vergleich vorher/nachher (kein `render()` bei unverändertem Stand); `renderMain` mit Ansicht-/Overlay-Schlüssel (Klassen `still-ansicht`/`still-overlay` auf `#app`), `huelleBehalten()` für `.appbar`/`.nav`, `syncAppbarKante()`, Klasse `blatt-offen` auf `<html>`, Fokus in neues Blatt; Toast ohne `render()` beim Ablauf, oben bei offenem Blatt; Escape schließt alle Blätter; `wischBewertung`-Sperre; `tabSchonAktiv()`; Auslaufen nach Griff-Scrollen (`scrollAuslaufen`); Randscrollen ignoriert Nav/Kopfzeile. `styles.css` — `enter-view`, Still-Regeln, `.toast-wrap--oben`, `html.blatt-offen`, neuer Abschnitt 19 (Trefferflächen). `sw.js` — 4-s-Zeitlimit für Netz zuerst, `CACHE_NAME` 3.6.13. `index.html` (`?v=`), `manifest.json`, alle vier HTML-Seiten (`theme-color`), `CHANGELOG.md`.
+
+**Entscheidung:** Ursachen behoben statt Symptome: das Blinken kam nicht vom Nav-Fix, sondern von Eintrittsanimationen, die bei jedem Neuzeichnen liefen; der Nav-Fix machte es durch die erzwungene Höhenmessung nur auffälliger. Kopfzeile/Leiste bleiben als DOM-Element (Weichzeichner blitzt sonst auf iOS neu auf). Trefferflächen per unsichtbarem `::after`, damit sich kein Bild verschiebt. Der Seitenwechsel blendet aus 0,45 statt 0 Deckkraft ein (bewusst: alter Inhalt ist sofort weg).
+
+**Offen:** Austrittsbewegung der Blätter und Fokus-Rückgabe; Renderkosten Verwalten (2356 Elemente bei 200 Karten); **Gerätetest am iPhone** (Tastatur bei Toast-Ablauf, Nav-Höhe 850 in allen Tabs, Ssheet + Tastatur). Im Probelauf (Playwright/Chromium mit Firebase-Attrappe) nachgemessen, siehe Beobachtung 19.
+
+**Nächster Schritt:** Betreiber prüft v3.6.13 am Handy (Home-Bildschirm-App, einmal Querformat), meldet, was noch hakt.
+
+---
+
 ### 2026-09-19 — Teilen per Code offline gesperrt (v3.6.12)
 
 **Geändert:** `app.js` (Zeile ~5640–5655) zwei Buttons: `disabled` + `title="Zum Teilen brauchst du eine Verbindung"` wenn `offline`. `sw.js` `CACHE_NAME`, `index.html` `app.js?v=`, `CHANGELOG.md`, `APP_VERSION` → 3.6.12.

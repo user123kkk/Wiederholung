@@ -793,6 +793,154 @@ gescrolltem Inhalt.
 
 **Nebenfund beim Testen, ebenfalls behoben (v3.6.8):** Die Hochzähl-Animation ("Diese Woche im Vergleich") lief bei jedem Tab-Besuch neu von 0, weil ihr Merker im DOM stand und bei jedem `render()` verloren ging. Bestand schon vorher, unabhängig von Beobachtung 18. Jetzt in einer Modul-Variable, übersteht render()-Aufrufe.
 
+## 19. Gesamtprüfung „Reibungsfreiheit" (19.09.2026) — 19 Funde, 16 behoben in v3.6.13, 3 bewusst offen
+
+**Anlass:** Betreiber meldet: grüner Kasten oben links steht noch immer; der
+Seitenwechsel ist seit dem Nav-Fix (Beobachtung 18) „verbuggt, nicht smooth".
+Auftrag: die ganze App nach unsauberen Stellen absuchen, so viele wie möglich.
+
+**Methode:** Die echte `app.js`/`styles.css` liefen unverändert in Playwright/
+Chromium (Handy-Größe 390×844, auch 320×568, 768×1024, 1280×800) gegen eine
+Firebase-Attrappe im Speicher (Konto, 3 Bereiche, Karten). Gemessen wurde mit
+`MutationObserver`, `getAnimations()`, CDP-Profiler und `Performance.getMetrics`.
+Die Prüfwerkzeuge liegen im Scratchpad der Session (`fbstub.js`, `probe.mjs`,
+`t1`–`t15.mjs`), nicht im Repo. **Nicht prüfbar ohne echtes Gerät:** iOS-
+Tastatur, echte `visualViewport`-Werte der Home-Bildschirm-App, Bildwiederholrate.
+„gemessen" = im Probelauf reproduziert; „Code" = nur aus dem Quelltext gelesen.
+
+**A · Der grüne Kasten und das Scrollen**
+1. **gemessen — Der grüne Kasten ist das Debug-Overlay aus v3.6.4/3.6.5**
+   (`zeigeNavDebugOverlay`, `app.js:7721`). Es bleibt über `localStorage`
+   `debugNav=1` **für immer an**, wird von keiner Version je abgeschaltet
+   (7× Tap auf die Versionsnummer setzt es, nichts löscht es) und wurde nach der
+   Lösung von Beobachtung 18 nicht entfernt, obwohl der Kommentar es zusagt
+   (`app.js:7720`). Es liegt mit z-index 99999 über Kopfzeile und Bereichs-Pille
+   (390×185 px). **Schlimmer: es macht das Scrollen ~9× langsamer.** Bei jedem
+   `scroll`-Ereignis liest es `getBoundingClientRect`/`getComputedStyle` und
+   schreibt Text — 90 Scroll-Frames = 121 erzwungene Layouts + Style-Neuberechnungen,
+   Bildzeit bei 4× gedrosselter CPU **≈250 ms mit, ≈28 ms ohne** Overlay.
+   Dazu ein `setInterval` alle 500 ms, das nie endet (`app.js:7753`).
+
+**B · Seitenwechsel**
+2. **gemessen — Jeder `render()` baut ganz `#app` neu:** Kopfzeile und
+   Navigationsleiste werden zerstört und neu erzeugt, `.view` blendet von
+   Deckkraft **0** auf 1 (`styles.css:527`, `enter-fade`), dazu `enter-rise` auf
+   Karten/Stapel. Die Eintrittsanimationen sind für „neue Seite" gedacht, laufen
+   aber bei **jedem** Neuzeichnen. Gemessen bei: Tab-Wechsel, **erneutem Tippen
+   auf den schon aktiven Tab**, Öffnen des Bereichs-Blatts (der ganze Hintergrund
+   blinkt mit) und **Cloud-Daten ohne jeden Klick** (fremde Änderung → Blinken).
+   Das ist das „verhackt" beim Wechsel. Die aktive Reiter-Fläche kann nie
+   gleiten, weil das Element jedes Mal neu ist.
+3. **gemessen — Ein Bewerten = 2 Neuaufbauten** im selben Takt (Bewerten +
+   Snapshot-Echo von `persistCardGrade`); drei getrennte Snapshot-Listener
+   (`app.js:1368/1372/1446`) rufen je `render()`. Nicht sichtbar doppelt, aber
+   doppelte Arbeit pro Antwort.
+4. **gemessen — Regression aus Beobachtung 18: Die Nav-Leiste verschwindet
+   nach dem Drehen.** `maxViewportHeight` (`app.js:7700`) merkt sich den größten
+   je gemessenen Wert und wird nie zurückgesetzt. 390×844 → Querformat 844×390:
+   `--vv-gap` = 454 px, die Leiste sitzt bei y=766 in einem 390 px hohen Fenster —
+   **komplett außerhalb, nicht erreichbar.** Gleiches am Desktop bei Fenstern
+   <900 px Breite, die man niedriger zieht (560 px → 284 px Lücke). Erst zurück
+   im Hochformat ist sie wieder da. Die Portrait-Lösung selbst stimmt.
+   Der Toast (`styles.css:2112`) kennt `--vv-gap` nicht und sitzt anders als die Leiste.
+5. **Code — Tab-Wechsel scrollt vor dem Neuzeichnen nach oben**
+   (`window.scrollTo(0,0)` vor `render()`, `app.js:8020–8025`): erst Sprung,
+   dann Blinken. Auf den aktiven Tab tippen springt ebenfalls nach oben und
+   verwirft Suche/Auswahl.
+
+**C · Blätter, Dialoge, Toast**
+6. **gemessen — Der Toast verdeckt das Notiz-Feld des offenen Karten-Blatts**
+   (Toast-Fläche 105–285 × 711–752 px liegt auf `#f-extra`, `pointer-events:auto`)
+   für 2,6 s — Tippen aufs Feld geht ins Leere.
+7. **gemessen — Der Toast-Timer zeichnet das offene Blatt neu, während man
+   tippt:** 2,6 s nach „Hinzufügen" ist `#f-wort` ein **anderes Element**
+   (Markierung weg, Fokus per Skript zurückgesetzt). Auf iOS öffnet ein Skript-
+   Fokus die Tastatur nicht wieder → sie dürfte mitten im Wort zugehen; eine
+   arabische Eingabemethode (IME) wird unterbrochen. (Am Gerät bestätigen.)
+   Dasselbe passiert bei jedem Cloud-Snapshot, der bei offenem Blatt eintrifft;
+   das Blatt spielt dabei `sheet-up` neu ab.
+8. **gemessen — Die Seite hinter einem offenen Blatt scrollt mit** (kein
+   Scroll-Lock, `body` bleibt scrollbar).
+9. **Code — Blätter haben keine Austrittsbewegung** (sie verschwinden abrupt),
+   keinen Fokus-Fang und keine Fokus-Rückgabe trotz `aria-modal`. Escape schließt
+   Bereichs-, Mehr- und Detail-Blatt, aber **nicht** Karten-, Wahl- und
+   Speicherkarten-Blatt (`app.js:7869–7880`); zwei getrennte `render()` hintereinander.
+
+**D · Fehler in der Konsole**
+10. **gemessen — `ReferenceError: teilLinkPruefenUndVerarbeiten is not defined`
+    bei JEDEM Daten-Snapshot** (`app.js:1357`, aufgerufen in
+    `datenZusammenbauen()`). Rest des Link-Teilens, das mit v3.6.0 durch Code-
+    Teilen ersetzt wurde; die Funktion gibt es nicht mehr. Der Aufruf steht nach
+    `render()`, die Oberfläche merkt es nicht — aber jeder Snapshot wirft, das
+    verdeckt echte Fehler in Konsole/Fehlerprotokoll.
+
+**E · Lernen**
+11. **gemessen — Wischen + zweite Eingabe innerhalb 180 ms bewertet zwei Karten,
+    die zweite ungesehen.** `wischEnde` löst die Bewertung per `setTimeout(…,180)`
+    aus (`app.js:4296`) ohne Sperre; der Bewertungs-Knopf/die Taste bleibt in der
+    Zeit aktiv. Probelauf: 1 Wischen + Taste „3" → Schreibvorgänge auf `k0_0` **und**
+    `k0_5`.
+
+**F · Verwalten und Größe**
+12. **Code (Kommentar im Quelltext bestätigt es) — Der Ziehgriff links in jeder
+    Zeile hat `touch-action:none` und holt das Scrollen per `scrollBy` nach**
+    (`app.js:7382–7400`) — ohne Schwung/Auslaufen. Mit dem Daumen über die
+    Griffspalte zu scrollen ruckelt.
+13. **gemessen — Schwer zu zeichnen:** Verwalten = **2356 Elemente** bei 200
+    Karten/Bereich; Tab-Eintritt ≈70 ms Style+Layout, je 1 Long-Task
+    (114–153 ms ohne Drosselung) bei Fortschritt und Verwalten, Tippen in der
+    Suche bei 3000 Karten 1 Long-Task (62 ms). Auf dem Handy mehrfach so lang.
+    Nur Größenordnung — Headless-Chromium rasterisiert per Software.
+
+**G · Bedienbarkeit**
+14. **gemessen — Ziele unter der eigenen 44-px-Regel (`--tap`, Satz 3):**
+    „Jetzt sichern" 95×36, Fortschritt „Alle Bereiche/Nur …" 36, „Üben"/„Mehr" 36,
+    Such-Bereichs-Umschalter 34, Such-Leeren 34×34, **Bearbeiten und Löschen
+    nebeneinander je 42×36**, „Fertig" 62×36, Anmelde-Links „Passwort vergessen" 36,
+    **Datenschutz/Impressum-Links nur 21 px hoch** (Einstellungen und Anmeldung).
+15. **Code — `.appbar.scrolled` wird von keinem Skript gesetzt** (`styles.css:572`):
+    die versprochene Kante unter der Kopfleiste erscheint nie, Inhalt läuft
+    unscharf darunter durch.
+
+**H · Start und Gerät**
+16. **Code — Service Worker: Netz zuerst, ohne Zeitlimit, `cache:"no-store"`**
+    (`sw.js:93`). Jeder Start wartet auf das Netz für `app.js`/`styles.css`/Bilder;
+    bei schlechtem Netz hängt der Start am Lade-Kreisel, statt sofort aus dem
+    Cache zu kommen. Kein Ausweichen nach z. B. 3 s.
+17. **Code — Farbnaht:** `theme-color`/`background_color` = `#0b0a09`
+    (`index.html:24`, `manifest.json`), aber die Seite ist seit 17.09. `#0e0e12`
+    (`--ink-900`). Auf Android sichtbarer Farbsprung an Statusleiste/Startbild.
+18. **Code — Icons mit `"any maskable"` in einer Angabe:** maskable-Symbole
+    brauchen Sicherheitsrand; so kann Android das Symbol beschneiden.
+19. **Code — Zwei Neuaufbauten für einen Escape-Druck** und `visualViewport`-
+    Reaktion auf Tastatur/Pinch-Zoom: dort wächst `--vv-gap` ebenfalls (die
+    Leiste rutscht weg); ob das auf dem Gerät stört, ungeklärt.
+
+**Umgesetzt in v3.6.13 (am selben Tag, Betreiber-Freigabe „alle fixen, push main"):**
+Punkte 1–8, 10, 11, 12, 14–19. Im Probelauf gegen denselben Stand nachgemessen:
+Nav-Leiste wird nicht mehr neu erzeugt, erneutes Tippen auf den aktiven Tab
+zeichnet nichts neu, Cloud-Stand/Sheet-Öffnen blinken nicht mehr (`.view`-
+Deckkraft bleibt 1), Drehen ins Querformat lässt die Leiste sichtbar
+(`--vv-gap` 0 statt 454), Bewerten = 1 Neuaufbau, Feld `#f-wort` bleibt beim
+Toast-Ablauf dasselbe Element, Toast liegt oben (y=16) und verdeckt kein
+Formularfeld, Seite hinter Blatt scrollt nicht, Wischen + Taste = 1
+Schreibvorgang, kein Overlay/keine Seitenfehler mehr. Zusätzlich: Klick-Durchlauf
+über alle sichtbaren Knöpfe ohne Seitenfehler.
+**Bewusst offen:** Punkt 9 zur Hälfte (Austrittsbewegung der Blätter, Fokus-
+Rückgabe beim Schließen), Punkt 13 (Renderkosten der Verwalten-Liste — ein Umbau
+wäre ein eigener Strang), und alles, was nur am echten iPhone prüfbar ist
+(Tastatur bleibt beim Toast-Ablauf offen? Nav-Höhe in der Home-Bildschirm-App
+unverändert 850 in allen Tabs?). **Beides am Gerät gegenprüfen.**
+
+**Ursprüngliche Empfehlung (Stand vor dem Bau):** ① Overlay samt Aktivierung
+entfernen und `debugNav` einmalig aus `localStorage` löschen (Punkt 1, löst „grüner
+Kasten" und den größten Teil des zähen Scrollens). ② Toten Aufruf in
+`app.js:1357` entfernen (10). ③ `maxViewportHeight` beim Drehen/Breitenwechsel
+zurücksetzen (4). ④ Eintrittsanimation nur bei echtem Seitenwechsel abspielen
+(Klasse nur dann setzen) und Kopfzeile/Leiste nicht bei jedem Snapshot ersetzen
+(2, 3, 5, 7). ⑤ Toast außerhalb des Blatts und ohne `render()` (6, 7). ⑥ Sperre
+für den Wisch-Timer (11). ⑦ Ziele auf 44 px (14).
+
 ---
 
 **Nächster Schritt:** Liegt beim Betreiber — welche Punkte überhaupt

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.12";
+const APP_VERSION = "3.6.13";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -963,7 +963,7 @@ function themaAnwenden() {
      Skript im Kopf der Seite, damit beim Start nichts umspringt. */
   try { localStorage.setItem("adrabic-thema", settings.thema); } catch (e) {}
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", t === "hell" ? "#f2ece0" : "#0a0a09");
+  if (meta) meta.setAttribute("content", t === "hell" ? "#f2ece0" : "#0e0e12");
 }
 function setThema(id) {
   if (!THEMEN.some(x => x.id === id)) return;
@@ -1129,13 +1129,22 @@ function zeigeToast(text) {
   toastTimer = setTimeout(() => {
     toastTimer = null;
     ui.toast = null;
-    render();
+    /* 3.6.13: Kein render() mehr. Es baute ein offenes Karten-Blatt mitten im
+       Tippen neu (das Eingabefeld war danach ein anderes Element, auf iOS geht
+       dabei die Tastatur zu). Die Meldung wird direkt aus dem Bild genommen. */
+    const el = app.querySelector(".toast-wrap");
+    if (el) el.remove();
+    letzterOverlaySchluessel = null;
   }, 2600);
   render();
 }
 function renderToast() {
   if (!ui.toast) return "";
-  return '<div class="toast-wrap"><div class="toast" role="status" aria-live="polite">' +
+  /* Bei offenem Blatt steht die Meldung oben - unten lag sie auf dem Formular
+     und fing die Taps darauf ab. */
+  const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.setArtSheetId ||
+    ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog);
+  return '<div class="toast-wrap' + (blattOffen ? ' toast-wrap--oben' : '') + '"><div class="toast" role="status" aria-live="polite">' +
     ikon("fertig", "i-sm") + '<span>' + esc(ui.toast.text) + '</span></div></div>';
 }
 
@@ -1342,6 +1351,13 @@ function bereicheAusSammlungen(bDocs, kDocs) {
 
 function datenZusammenbauen() {
   if (rohBereiche === null || rohKarten === null) return;
+  /* 3.6.13: Stand vor und nach dem Zusammenbauen vergleichen. Jede eigene
+     Aenderung kommt als Echo aus Firestore zurueck (Bewerten, Karte anlegen) -
+     und zwei getrennte Sammlungen melden je einen Stand. Vorher zeichnete jeder
+     davon die ganze Seite neu, obwohl sich nichts geaendert hatte (ein Bewerten
+     = zwei Neuaufbauten). Unveraendert und ohne Fehleranzeige: kein render(). */
+  const vorher = bereiche === null ? null : JSON.stringify([bereiche, streak, ui.bereichId]);
+  const brauchteRender = !!syncError || ladeLangsam || !!ui.umzug;
   bereiche = bereicheAusSammlungen(rohBereiche, rohKarten);
   /* A3: nur zuruecksetzen, wenn der offene Bereich wirklich weg ist. */
   if (!bereiche.some(b => b.id === ui.bereichId)) ui.bereichId = bereiche[0].id;
@@ -1349,12 +1365,9 @@ function datenZusammenbauen() {
   if (ladeTimer) { clearTimeout(ladeTimer); ladeTimer = null; }
   ladeLangsam = false;
   evaluateStreakForNewDay();
+  if (vorher !== null && !brauchteRender &&
+      JSON.stringify([bereiche, streak, ui.bereichId]) === vorher) return;
   render();
-  /* Lehrer-Modus, Kernablauf: erst hier ist bereiche wirklich geladen (nicht
-     schon nach sammlungenStarten()) - verarbeiteImportDaten() braucht das.
-     Die Funktion selbst sorgt dafuer, dass sie trotz mehrerer
-     Schnappschuesse nur einmal wirklich etwas tut. */
-  teilLinkPruefenUndVerarbeiten();
 }
 
 function sammlungenStarten() {
@@ -4135,6 +4148,7 @@ function toggleExtra() {
 function gradeCard(kind) {
   const s = ui.session;
   if (!s || s.queue.length === 0) return;
+  if (wischBewertung) return;   // ein Wischen bewertet gerade, siehe wischEnde()
   /* card kann fehlen, wenn die Karte auf einem anderen Geraet geloescht wurde,
      waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
   const card = findCard(s.queue[0]);
@@ -4257,9 +4271,10 @@ document.addEventListener("keydown", e => {
    langen Notiz) unterbunden - ist sie senkrecht, passiert gar nichts und der
    Finger scrollt ganz normal weiter. */
 let wischStart = null;
+let wischBewertung = false;
 app.addEventListener("pointerdown", e => {
   const karte = e.target.closest("#sitzung");
-  if (!karte || !ui.session || !ui.session.revealed || ui.session.isDrill) return;
+  if (!karte || !ui.session || !ui.session.revealed || ui.session.isDrill || wischBewertung) return;
   if (e.target.closest("button, a, canvas, input, textarea")) return;
   wischStart = { x: e.clientX, y: e.clientY, karte, breite: karte.getBoundingClientRect().width, id: e.pointerId, erfasst: false };
 });
@@ -4293,7 +4308,12 @@ function wischEnde(e) {
     const rechts = dx > 0;
     karte.style.transition = "transform 220ms var(--ease-out)";
     karte.style.transform = "translateX(" + (rechts ? "130%" : "-130%") + ") rotate(" + (rechts ? 12 : -12) + "deg)";
-    setTimeout(() => (rechts ? gradeKnown() : gradeUnknown()), 180);
+    /* 3.6.13: Bis die Bewertung ausgeloest ist, gilt sie als laufend - jede
+       weitere Eingabe (Knopf, Taste, zweites Wischen) wird in gradeCard
+       verworfen. Sonst bewertete ein zweiter Tipp innerhalb dieser 180 ms auch
+       die NAECHSTE Karte, ungesehen. */
+    wischBewertung = true;
+    setTimeout(() => { wischBewertung = false; rechts ? gradeKnown() : gradeUnknown(); }, 180);
   } else {
     karte.style.transition = "transform 220ms var(--ease-spring)";
     karte.style.transform = "";
@@ -4996,6 +5016,26 @@ function bannerSchreibfehler() {
     'Lade ein Backup herunter, bevor du weiterlernst.');
 }
 
+let letzterAnsichtSchluessel = null, letzterOverlaySchluessel = null;
+/* Setzt die alte Huelle (Kopfzeile/Leiste) anstelle der frisch gebauten ein und
+   uebergibt ihr deren Inhalt. Gibt es die neue Huelle nicht (Modus), bleibt es
+   beim Neuaufbau. */
+function huelleBehalten(alt, auswahl) {
+  if (!alt) return;
+  const neu = app.querySelector(auswahl);
+  if (!neu) return;
+  alt.className = neu.className;
+  alt.replaceChildren(...neu.childNodes);
+  neu.replaceWith(alt);
+}
+/* Die Kante unter der Kopfleiste erscheint, sobald etwas darunter durchlaeuft
+   (styles.css: .appbar.scrolled) - bisher setzte sie nie ein Skript. */
+function syncAppbarKante() {
+  const bar = document.querySelector(".appbar");
+  if (bar) bar.classList.toggle("scrolled", window.scrollY > 4);
+}
+window.addEventListener("scroll", syncAppbarKante, { passive: true });
+
 function renderMain() {
   /* 2.16.0: Im Modus verschwindet die Navigation.
 
@@ -5122,7 +5162,53 @@ function renderMain() {
   html += cardDetailSheet();
   html += renderDialog();          // D2 – liegt als Overlay ueber allem
   html += renderToast();
+
+  /* 3.6.13: Eintrittsbewegung nur, wenn wirklich etwas Neues erscheint.
+     Vorher liefen die Einblendungen bei JEDEM Neuzeichnen - auch bei einem
+     Cloud-Stand ohne Klick, beim Tippen auf den aktiven Tab oder beim Oeffnen
+     eines Blatts (dann blinkte der ganze Hintergrund von Deckkraft 0 auf 1).
+     Zwei Schluessel: der "Bildschirm" (welche Seite, welche Karte in der
+     Runde) und die "Ueberlagerung" (welche Blaetter/Dialoge offen sind).
+     Aendert sich der Schluessel nicht, setzt #app die Klasse still-ansicht bzw.
+     still-overlay, und styles.css schaltet die Einblendungen dort ab. */
+  const sess = ui.session;
+  const ansichtSchluessel = [ui.einstellungen ? "e" : "", ui.seite || "", ui.tab, imModus ? "m" : "",
+    imModus && sess ? (sess.queue && sess.queue[0]) + "|" + sess.revealed + "|" + (sess.extraOpen ? 1 : 0) : "",
+    imModus ? (ui.lernSetId || "") : ""].join("/");
+  const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.setArtSheetId,
+    ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : ""].join("/");
+  /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
+     kein .view - dann ist alles neu. */
+  const warAnsicht = !!app.querySelector(":scope > .view");
+  const ansichtNeu = !warAnsicht || ansichtSchluessel !== letzterAnsichtSchluessel;
+  const overlayNeu = !warAnsicht || overlaySchluessel !== letzterOverlaySchluessel;
+  letzterAnsichtSchluessel = ansichtSchluessel;
+  letzterOverlaySchluessel = overlaySchluessel;
+  app.classList.toggle("still-ansicht", !ansichtNeu);
+  app.classList.toggle("still-overlay", !overlayNeu);
+
+  /* Kopfzeile und Leiste tragen einen Weichzeichner (backdrop-filter). Ein neu
+     eingesetztes Element mit Weichzeichner blitzt beim ersten Bild oft ohne
+     ihn auf - besonders auf iOS. Deshalb bleiben die beiden Huellen stehen, nur
+     ihr Inhalt wird ersetzt. */
+  const altBar = app.querySelector(":scope > .appbar");
+  const altNav = app.querySelector(":scope > .nav");
   app.innerHTML = html;
+  huelleBehalten(altBar, ":scope > .appbar");
+  huelleBehalten(altNav, ":scope > .nav");
+  document.documentElement.classList.toggle("blatt-offen",
+    !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog));
+  syncAppbarKante();
+  /* Ein neu geoeffnetes Blatt nimmt den Fokus mit (aria-modal ohne Fokus hiess:
+     Screenreader und Tab-Taste blieben hinter dem Blatt). Auf den Rahmen, nicht
+     in ein Feld - so oeffnet sich auf dem Handy keine Tastatur ungefragt. */
+  if (overlayNeu) {
+    const blatt = app.querySelector(".dlg");
+    if (blatt && !blatt.contains(document.activeElement)) {
+      blatt.setAttribute("tabindex", "-1");
+      blatt.focus({ preventScroll: true });
+    }
+  }
   /* E7: Faktor am Container, damit ihn jede .arabic-Stelle darunter erbt. */
   app.style.setProperty("--arab-scale", String(arabFaktor()));
   /* Beobachtung 18: Tab-Wechsel kann den Scroll-/Layoutzustand aendern,
@@ -5596,8 +5682,8 @@ function einstFuss() {
   html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
   html += '<a href="./impressum.html">Impressum</a>';
   html += '</div>';
-  html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-4)" ' +
-    'data-action="debug-version-tap">Adrabic ' + APP_VERSION + '</p>';
+  html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-4)">' +
+    'Adrabic ' + APP_VERSION + '</p>';
   return html;
 }
 
@@ -7389,13 +7475,19 @@ app.addEventListener("pointermove", e => {
          nachholen, ab hier per scrollUebernahme normal weiterverfolgen. */
       const nachholen = holdKandidat.startY - e.clientY;
       holdAbbrechen();
-      scrollUebernahme = { pointerId: e.pointerId, lastY: e.clientY };
+      scrollUebernahme = { pointerId: e.pointerId, lastY: e.clientY, lastT: performance.now(), v: 0 };
       window.scrollBy(0, nachholen);
       return;
     }
     holdKandidat.lastY = e.clientY;
   } else if (scrollUebernahme && e.pointerId === scrollUebernahme.pointerId) {
-    window.scrollBy(0, scrollUebernahme.lastY - e.clientY);
+    const jetzt = performance.now();
+    const dy = scrollUebernahme.lastY - e.clientY;
+    window.scrollBy(0, dy);
+    /* Geschwindigkeit (px/ms), geglaettet - fuer das Auslaufen nach dem Loslassen. */
+    const dt = Math.max(1, jetzt - scrollUebernahme.lastT);
+    scrollUebernahme.v = 0.6 * (dy / dt) + 0.4 * scrollUebernahme.v;
+    scrollUebernahme.lastT = jetzt;
     scrollUebernahme.lastY = e.clientY;
   }
   if (!dragState || e.pointerId !== dragState.pointerId) return;
@@ -7457,6 +7549,24 @@ function commitBereichOrder(parent) {
   }
 }
 
+/* Auslaufen nach dem Scrollen ueber den Ziehgriff (siehe endDrag). Jeder neue
+   Fingerkontakt beendet es sofort. */
+let auslaufRAF = null;
+function scrollAuslaufen(v) {
+  if (auslaufRAF) cancelAnimationFrame(auslaufRAF);
+  let letzte = performance.now();
+  function tick(t) {
+    const dt = Math.min(48, t - letzte); letzte = t;
+    window.scrollBy(0, v * dt);
+    v *= Math.pow(0.995, dt);
+    if (Math.abs(v) > 0.02) auslaufRAF = requestAnimationFrame(tick); else auslaufRAF = null;
+  }
+  auslaufRAF = requestAnimationFrame(tick);
+}
+window.addEventListener("pointerdown", () => {
+  if (auslaufRAF) { cancelAnimationFrame(auslaufRAF); auslaufRAF = null; }
+}, { capture: true, passive: true });
+
 function endDrag(e) {
   /* Ein Loslassen/Abbrechen beendet auch einen noch wartenden Halte-Versuch
      (derselbe Finger, der den Griff beruehrt hat) - sonst bliebe der Timer
@@ -7465,7 +7575,15 @@ function endDrag(e) {
      pointermove-Handler) - sonst wuerde deren letzter Y-Wert beim naechsten
      Wischen ueber denselben Griff als Startpunkt missverstanden. */
   if (holdKandidat && (!e || e.pointerId === holdKandidat.pointerId)) holdAbbrechen();
-  if (scrollUebernahme && (!e || e.pointerId === scrollUebernahme.pointerId)) scrollUebernahme = null;
+  if (scrollUebernahme && (!e || e.pointerId === scrollUebernahme.pointerId)) {
+    /* 3.6.13: Das Scrollen ueber den Ziehgriff lief ohne Schwung - der Finger
+       hob ab, die Seite stand. Jetzt laeuft sie mit der zuletzt gemessenen
+       Geschwindigkeit aus, wie natives Scrollen. */
+    const v = scrollUebernahme.v;
+    const still = performance.now() - scrollUebernahme.lastT > 80;   // Finger lag zuletzt still
+    scrollUebernahme = null;
+    if (!still && Math.abs(v) > 0.15) scrollAuslaufen(v);
+  }
   if (!dragState) return;
   if (autoScrollRAF) { cancelAnimationFrame(autoScrollRAF); autoScrollRAF = null; }
   const row = dragState.row;
@@ -7541,7 +7659,11 @@ app.addEventListener("keydown", e => {
 let edgeScrollMouseY = null;
 document.addEventListener("pointermove", e => {
   if (e.pointerType !== "mouse") return;
-  edgeScrollMouseY = e.clientY;
+  /* 3.6.13: Steht die Maus auf der Navigationsleiste oder der Kopfzeile, wird
+     nicht gescrollt. In einem schmalen Fenster (<900px) liegt die Leiste am
+     unteren Rand - wer einen Tab antippte, sah die Seite unter der Maus
+     wegrutschen. */
+  edgeScrollMouseY = e.target && e.target.closest && e.target.closest(".nav, .appbar, .modebar") ? null : e.clientY;
 });
 /* Verlaesst die Maus das Fenster (Tab-Wechsel, zweiter Bildschirm), kommen
    keine neuen pointermove-Ereignisse mehr - ohne dieses Zuruecksetzen wuerde
@@ -7697,11 +7819,23 @@ window.addEventListener("resize", () => {
    groessten je in dieser Sitzung gemessenen Wert als verlaessliche
    Referenz nehmen - der kleinere, falsche Wert kommt nur vor, nie der
    groessere, korrekte. */
-let maxViewportHeight = 0;
+/* 3.6.13: Die Referenz darf nicht ewig gelten. Vorher wurde der groesste je
+   gemessene Wert nie zurueckgesetzt: nach dem Drehen ins Querformat (390 statt
+   844 Pixel Hoehe) war die "Luecke" 454px, und die Leiste sass ausserhalb des
+   Bildschirms. Zwei Regeln:
+   - Aendert sich die BREITE (Drehen, Fenster ziehen), beginnt die Messung neu.
+   - Der bekannte Fehler liegt bei rund 50px. Eine groessere Abweichung ist
+     keine falsche Messung, sondern ein echter Wechsel (Tastatur, Zoom,
+     niedrigeres Fenster) - dann gilt der aktuelle Wert, keine Luecke. */
+const VV_GAP_MAX = 100;
+let maxViewportHeight = 0, maxViewportBreite = 0;
 function syncViewportGap() {
   const vv = window.visualViewport;
   const h = vv ? vv.height : window.innerHeight;
+  const b = window.innerWidth;
+  if (b !== maxViewportBreite) { maxViewportBreite = b; maxViewportHeight = 0; }
   maxViewportHeight = Math.max(maxViewportHeight, h, window.innerHeight);
+  if (maxViewportHeight - h > VV_GAP_MAX) maxViewportHeight = Math.max(h, window.innerHeight);
   const gap = Math.max(0, maxViewportHeight - h);
   document.documentElement.style.setProperty("--vv-gap", gap + "px");
 }
@@ -7712,63 +7846,12 @@ if (window.visualViewport) {
 window.addEventListener("resize", syncViewportGap);
 syncViewportGap();
 
-/* Beobachtung 18: Messwerkzeug fuer die noch ungeklaerte springende Nav-
-   Leiste. Eine als Home-Bildschirm-App installierte PWA startet immer mit
-   der eigenen start_url, ein ?debug=nav in der Adresse geht beim Start
-   verloren - deshalb zusaetzlich per localStorage (7x Tap auf die
-   Versionsnummer unten in Einstellungen, siehe debugVersionTap()) und ohne
-   Reload aktivierbar. Wird entfernt, sobald die Ursache gefunden ist. */
-function zeigeNavDebugOverlay() {
-  if (document.getElementById("nav-debug-box")) return;
-  const box = document.createElement("div");
-  box.id = "nav-debug-box";
-  box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;" +
-    "background:rgba(0,0,0,0.85);color:#0f0;font:11px monospace;padding:8px;" +
-    "white-space:pre-wrap;pointer-events:none;";
-  document.body.appendChild(box);
-  function updateDebugBox() {
-    const nav = document.querySelector(".nav");
-    const navRect = nav ? nav.getBoundingClientRect() : null;
-    const vv = window.visualViewport;
-    const cs = getComputedStyle(document.documentElement);
-    box.textContent =
-      "innerHeight: " + window.innerHeight + "\n" +
-      "vv.height: " + (vv ? vv.height : "n/a") + "\n" +
-      "vv.offsetTop: " + (vv ? vv.offsetTop : "n/a") + "\n" +
-      "--vv-gap: " + cs.getPropertyValue("--vv-gap") + "\n" +
-      "--sab: " + cs.getPropertyValue("--sab") + "\n" +
-      "nav.top: " + (navRect ? navRect.top.toFixed(1) : "n/a") + "\n" +
-      "nav.bottom: " + (navRect ? navRect.bottom.toFixed(1) : "n/a") + "\n" +
-      "nav.height: " + (navRect ? navRect.height.toFixed(1) : "n/a") + "\n" +
-      "docEl.scrollHeight: " + document.documentElement.scrollHeight + "\n" +
-      "docEl.clientHeight: " + document.documentElement.clientHeight + "\n" +
-      "body.scrollHeight: " + document.body.scrollHeight + "\n" +
-      "scrollY: " + window.scrollY + "\n" +
-      "ui.tab: " + (typeof ui !== "undefined" ? ui.tab : "n/a");
-  }
-  updateDebugBox();
-  window.addEventListener("resize", updateDebugBox);
-  window.addEventListener("scroll", updateDebugBox);
-  if (window.visualViewport) window.visualViewport.addEventListener("resize", updateDebugBox);
-  setInterval(updateDebugBox, 500);
-}
-if (new URLSearchParams(location.search).get("debug") === "nav" ||
-    localStorage.getItem("debugNav") === "1") {
-  zeigeNavDebugOverlay();
-}
-/* Siebenmal auf die Versionsnummer tippen (einstFuss()) aktiviert das
-   Overlay dauerhaft (localStorage), unabhaengig von der Start-URL. */
-let debugTapCount = 0, debugTapTimer = null;
-function debugVersionTap() {
-  debugTapCount++;
-  clearTimeout(debugTapTimer);
-  debugTapTimer = setTimeout(() => { debugTapCount = 0; }, 2000);
-  if (debugTapCount >= 7) {
-    debugTapCount = 0;
-    localStorage.setItem("debugNav", "1");
-    zeigeNavDebugOverlay();
-  }
-}
+/* 3.6.13: Das Debug-Overlay aus 3.6.4/3.6.5 (Beobachtung 18) ist entfernt -
+   die Ursache ist seit 3.6.7 gefunden. Wer es je per 7x-Tap eingeschaltet
+   hatte, behielt es ueber localStorage fuer immer: ein gruener Kasten ueber
+   der Kopfzeile, der bei jedem Scroll-Ereignis ein Layout erzwang (Scrollen
+   ca. 9x langsamer). Der Schluessel wird einmalig geloescht. */
+try { localStorage.removeItem("debugNav"); } catch (e) {}
 
 /* ---------- D2 (1.8.0): eigene Dialoge ----------
    alert/confirm/prompt halten das ganze Programm an und liefern ihr Ergebnis
@@ -7874,9 +7957,14 @@ document.addEventListener("keydown", e => {
   /* 3.0.25: Das Bereichs-Sheet liess sich per Tastatur bisher nur über den
      "Fertig"-Knopf schliessen, nicht über Escape wie jeder andere Dialog -
      eine Inkonsequenz, die auffaellt, sobald man die App ohne Maus bedient. */
-  if (ui.bereichSheet) { ui.bereichSheet = false; render(); }
-  if (ui.bereichMehr) { ui.bereichMehr = false; render(); }
-  if (ui.cardDetailId) { ui.cardDetailId = null; render(); }
+  /* 3.6.13: Auch Karten-, Wahl- und Speicherkarten-Blatt, und nur EIN
+     Neuzeichnen - vorher lief render() je offenem Blatt einzeln. */
+  if (ui.setArtSheetId) { ui.setArtSheetId = null; render(); return; }
+  if (ui.wahlSheet) { ui.wahlSheet = null; render(); return; }
+  if (ui.karteSheet || ui.editId) { cancelEdit(); return; }
+  if (ui.bereichMehr) { ui.bereichMehr = false; render(); return; }
+  if (ui.cardDetailId) { ui.cardDetailId = null; render(); return; }
+  if (ui.bereichSheet) { ui.bereichSheet = false; render(); return; }
 });
 
 /* ---------- Fehlerformular-Modal ---------- */
@@ -7944,6 +8032,19 @@ document.addEventListener("DOMContentLoaded", () => {
    body-Listener fuer den Uebungsmodus weiter oben. Bleibt damit der EINE
    delegierte Klick-Listener ueber data-action (README.md), nur an einem
    Element, das wirklich alles umschliesst. */
+/* 3.6.13: Ein Tipp auf den Tab, in dem man schon ist, zeichnete bisher alles neu
+   (Blinken), sprang nach oben und verwarf Suche und Auswahl. Jetzt scrollt er
+   sanft nach oben - wie in jeder anderen App. Gilt nur, wenn nichts darueber
+   liegt (Einstellungen, Unterseite, Blatt, laufende Runde). */
+function tabSchonAktiv(id) {
+  return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
+    !ui.wahlSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
+    !ui.bereichMehr && !ui.cardDetailId && !ui.dialog;
+}
+function nachObenBlaettern() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 document.body.addEventListener("click", e => {
   const btn = e.target.closest("[data-action]");
   if (!btn) return;
@@ -7995,7 +8096,6 @@ document.body.addEventListener("click", e => {
       ui.setArtSheetId = null; render(); break;
     case "set-art-waehlen":
       setArtAendern(ui.setArtSheetId, btn.dataset.id); break;
-    case "debug-version-tap": debugVersionTap(); break;
     case "resend-verification": doResendVerification(); break;
     case "verification-check": pruefeBestaetigung(); break;
     case "import-old": importOldProfile(btn.dataset.name); break;
@@ -8017,12 +8117,18 @@ document.body.addEventListener("click", e => {
     /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
        ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
        stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
-    case "tab-lernen": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
-    case "tab-fortschritt": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-lernen":
+      if (tabSchonAktiv("lernen")) { nachObenBlaettern(); break; }
+      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+    case "tab-fortschritt":
+      if (tabSchonAktiv("fortschritt")) { nachObenBlaettern(); break; }
+      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
-    case "tab-verwalten": ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
+    case "tab-verwalten":
+      if (tabSchonAktiv("verwalten")) { nachObenBlaettern(); break; }
+      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;

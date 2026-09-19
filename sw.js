@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.6.12";
+const CACHE_NAME = "adrabic-3.6.13";
 
 /* 3.0.0: Gestaltung und Ablauf liegen jetzt in eigenen Dateien neben der
    index.html. Beide MUESSEN hier stehen - sonst startet die App offline zwar,
@@ -60,6 +60,9 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
+/* Wie lange eine Datei aufs Netz warten darf, bevor der Cache einspringt. */
+const NETZ_ZEITLIMIT_MS = 4000;
+
 function isCacheable(url) {
   return url.origin === self.location.origin || CACHEABLE_ORIGINS.includes(url.origin);
 }
@@ -91,28 +94,42 @@ self.addEventListener("fetch", event => {
      bauen (der Modus wuerde dabei stillschweigend auf "same-origin"
      kippen), und dieser Pfad ist bereits getestet. */
   const netzAnfrage = req.mode === "navigate" ? req : new Request(req, { cache: "no-store" });
-  event.respondWith(
-    fetch(netzAnfrage)
-      .then(res => {
-        /* Nur eine ECHTE Antwort landet im eigenen Cache - eine 404/500
-           dort abzulegen wuerde denselben Fehler einbauen, den no-store
-           gerade am Browser-Cache vorbei vermeidet. */
-        if (res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
-        }
-        return res;
-      })
-      .catch(() =>
-        caches.match(req).then(cached => {
-          if (cached) return cached;
-          /* Nur beim Aufruf der Seite selbst auf index.html ausweichen.
-             Früher galt das für JEDE fehlgeschlagene Anfrage – dann bekam
-             der Browser für eine fehlende JavaScript-Datei HTML zurück und
-             stürzte mit einem unverständlichen Syntaxfehler ab. */
-          if (req.mode === "navigate") return caches.match("./index.html");
-          return Response.error();
-        })
-      )
-  );
+  event.respondWith((async () => {
+    /* 3.6.13: Zeitlimit. Vorher wartete jede Datei so lange aufs Netz, wie der
+       Browser eben wartet - bei schwachem Empfang ("Lie-Fi", Verbindung da,
+       aber nichts kommt an) blieb die App am Ladekreisel haengen, obwohl alles
+       im Cache lag. Antwortet das Netz nicht binnen NETZ_ZEITLIMIT_MS und
+       liegt die Datei im Cache, gilt der Cache; die Netz-Antwort wird trotzdem
+       abgewartet und aktualisiert ihn fuer den naechsten Start. */
+    const netz = fetch(netzAnfrage).then(res => {
+      /* Nur eine ECHTE Antwort landet im eigenen Cache - eine 404/500
+         dort abzulegen wuerde denselben Fehler einbauen, den no-store
+         gerade am Browser-Cache vorbei vermeidet. */
+      if (res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+      }
+      return res;
+    });
+    const netzOderNichts = netz.catch(() => null);
+    event.waitUntil(netzOderNichts);
+    const zeitlimit = new Promise(ok => setTimeout(() => ok(undefined), NETZ_ZEITLIMIT_MS));
+    const erste = await Promise.race([netzOderNichts, zeitlimit]);
+    if (erste) return erste;                       // Netz war rechtzeitig da
+    const cached = await caches.match(req);
+    if (cached) return cached;                     // Netz fehlt oder ist zu langsam
+    if (erste === undefined) {                     // zu langsam, aber kein Cache: weiter warten
+      const spaet = await netzOderNichts;
+      if (spaet) return spaet;
+    }
+    /* Nur beim Aufruf der Seite selbst auf index.html ausweichen.
+       Früher galt das für JEDE fehlgeschlagene Anfrage – dann bekam
+       der Browser für eine fehlende JavaScript-Datei HTML zurück und
+       stürzte mit einem unverständlichen Syntaxfehler ab. */
+    if (req.mode === "navigate") {
+      const index = await caches.match("./index.html");
+      if (index) return index;
+    }
+    return Response.error();
+  })());
 });

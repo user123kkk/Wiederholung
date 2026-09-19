@@ -1,3 +1,24 @@
+## 3.6.13 – 19. September 2026
+
+**Gesamtprüfung „Reibungsfreiheit": 19 gemeldete Unsauberkeiten, der Großteil behoben** (Belege und Messwerte: `plan/beobachtungen-lernwerkzeug.md`, Beobachtung 19).
+
+- **Grüner Kasten weg.** Das Debug-Overlay aus 3.6.4/3.6.5 blieb über `localStorage` für immer an, deckte die Kopfzeile ab und erzwang bei jedem Scroll-Ereignis ein Layout – Scrollen war dadurch etwa 9× langsamer. Entfernt, der Merker wird einmalig gelöscht, der 7×-Tap auf die Versionsnummer tut nichts mehr.
+- **Seitenwechsel ohne Blinken.** Eintrittsbewegungen laufen nur noch, wenn wirklich etwas Neues erscheint (andere Seite, andere Karte, neues Blatt). Cloud-Stand ohne Klick, Tipp auf den aktiven Tab und Umschalter zeichnen still. Kopfzeile und Navigationsleiste bleiben als Element stehen (nur der Inhalt wird getauscht), damit ihr Weichzeichner nicht neu aufblitzt. Der Seitenwechsel blendet aus halber statt aus voller Durchsichtigkeit ein.
+- **Navigationsleiste im Querformat wieder da.** Der Nav-Fix aus 3.6.6/3.6.7 (`--vv-gap`) merkte sich die größte je gemessene Höhe und setzte sie nie zurück – nach dem Drehen saß die Leiste außerhalb des Bildschirms. Jetzt: Breitenwechsel setzt die Messung zurück, und nur Abweichungen bis 100 px gelten als der bekannte Messfehler.
+- **Fehler bei jedem Daten-Stand behoben:** `teilLinkPruefenUndVerarbeiten` gab es nicht mehr, wurde aber bei jedem Snapshot aufgerufen.
+- **Ein Bewerten = ein Neuaufbau** (vorher zwei): Snapshots, die nichts ändern, zeichnen nicht neu.
+- **Meldung („Karte gespeichert")** steht bei offenem Blatt oben statt auf dem Formular, fängt keine Taps ab, und ihr Ablauf baut das Blatt nicht mehr neu (das Eingabefeld war danach ein anderes Element).
+- **Blätter:** Seite dahinter scrollt nicht mehr mit; ein neu geöffnetes Blatt nimmt den Fokus mit; Escape schließt auch Karten-, Wahl- und Speicherkarten-Blatt, mit einem Neuzeichnen.
+- **Wischen zum Bewerten:** ein zweiter Tipp innerhalb der 180 ms bewertete die nächste Karte ungesehen – gesperrt.
+- **Tab, in dem man schon ist:** scrollt sanft nach oben statt alles neu zu zeichnen.
+- **Ziehgriff:** Scrollen über den Griff läuft jetzt mit Schwung aus.
+- **Trefferflächen:** kleine Knöpfe und die Rechtslinks haben eine unsichtbar auf 44 px vergrößerte Berührfläche (Aussehen unverändert).
+- **Kopfzeile** bekommt beim Scrollen ihre Kante (`.scrolled` wurde nie gesetzt). Maus-Randscrollen ignoriert die Navigationsleiste.
+- **Service Worker:** antwortet das Netz nicht binnen 4 s und liegt die Datei im Cache, gilt der Cache (vorher hing der Start bei schwachem Netz).
+- **Farben:** `theme-color`/`background_color` jetzt `#0e0e12` wie die Seite (vorher `#0b0a09`, in der App `#0a0a09`); Manifest-Symbole nur noch `any`.
+
+Nicht geändert: Austrittsbewegung der Blätter, Fokus-Rückgabe beim Schließen, Renderkosten der Verwalten-Liste (2356 Elemente bei 200 Karten) – siehe Beobachtung 19.
+
 ## 3.6.12 – 19. September 2026
 
 **Teilen per Code offline jetzt gesperrt.** Die Buttons „Code erzeugen" und „Teilen beenden" waren früher offline aktiviert, führten aber zu hängenden Promises (Firestore-Zugriff braucht Netz). Jetzt `disabled` mit dem Hinweis „Zum Teilen brauchst du eine Verbindung" – konsistent mit der Offline-Warnung aus v3.6.9. Das Speichern der Codes lokal (in `teilCode`) geht trotzdem weiter, sobald Netz zurück ist.
