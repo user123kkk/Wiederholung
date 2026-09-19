@@ -1,7 +1,7 @@
 # Logbuch Phase 1 — Datenzugriff härten
 
 Auftrag: [`AUFTRAG.md`](AUFTRAG.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
-Status: `läuft`
+Status: `fertig`
 
 ---
 
@@ -25,6 +25,24 @@ dasselbe noch einmal.
 ---
 
 ## Einträge
+
+### 2026-09-19 — Feedback-Board, Signup nach Onboarding, Widgets (TikTok-Ideen 3–5 von 8): keine für Wiederholung relevant
+
+**Geändert:** Nur Dokumentation.
+
+**Befund:**
+
+- **Feedback-Board (TikTok-Idee 3):** Öffentliches Board mit Feature-Voting. Für Amy/Ellie/Luna gedacht. Für Wiederholung: würde einen neuen Server/Datenbankmodell brauchen und ist nicht im Plan. Nicht relevant.
+
+- **Signup nach Onboarding (TikTok-Idee 8):** Sign-up als letzter Schritt statt erster (52% → 93% Conversion). Für Fitness-Apps (wie Amy). Für Wiederholung: Firestore-Auth kommt vor dem Lernen — die App braucht ein verifizierbares Konto für Firestore-Zugriff. Onboarding kann nicht vorher laufen. Nicht relevant.
+
+- **Widgets (TikTok-Idee 1):** Home-Screen-Widgets für tägliche Gewohnheiten (Amy, Ellie, Luna). Für Wiederholung: PWA, kein nativer Code für Widgets. Nicht relevant.
+
+**Entscheidung:** Keine für Wiederholung bauen — alle drei passen nicht in die Architektur oder den Plan.
+
+**Offen:** nichts. TikTok-Ideen-Serie ist abgeschlossen (8 Ideen geprüft, 5 dokumentiert: Hick's Law, Empty State, Offline-Feeling, Sicherheits-Checkliste, Firestore-Kosten).
+
+**Nächster Schritt:** Phase 2 beginnen (Konto-Lebenszyklus) — sofern dort keine offene Frage blockiert (siehe `../PLAN.md`).
 
 ### 2026-09-19 — Firestore-Kosten (TikTok-Idee 6 von 8): geprüft, nichts zu bauen
 
