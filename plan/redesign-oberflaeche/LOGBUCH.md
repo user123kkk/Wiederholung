@@ -4,6 +4,24 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-19 — Offline-Zustand sichtbar gemacht (TikTok-Idee 2 von 8, v3.6.9)
+
+**Geändert:**
+- `app.js`: neue Zustände `offline`, `offlineCacheAktiv` (Zeile ~890); `offlineCacheAktiv = true` nach erfolgreichem `persistentLocalCache()` in `initFirebase`; in `renderMain()` leise Meldungszeile per `bannerInfo(…, true)`, wenn `offline`; neue `verbindungGewechselt()` mit `online`/`offline`-Listenern vor dem Service-Worker-Block; `zeigeStartfehler()` sagt offline „lädt von selbst neu" und lädt einmalig bei `online` neu.
+- `sw.js` `CACHE_NAME` → `adrabic-3.6.9`; `index.html` `app.js?v=3.6.9`; `CHANGELOG.md`.
+**Befund (vor dem Bauen):** Die App *kann* offline (Service Worker cached die Hülle inkl. Firebase-SDK von gstatic; Firestore mit `persistentLocalCache`; Schreiben offline ist laut Kommentar `app.js:1520` ausdrücklich kein Fehlerfall). Sie *zeigte* es aber nirgends. `bannerInfo(text, leise)` mit Offline-Symbol war seit 3.0.0 definiert und wurde nie aufgerufen — wie `zeigeToast()` (Bild 105) ein fertiger, nie angeschlossener Baustein.
+**Entscheidung — was vom Video übernommen wurde und was nicht:**
+- übernommen: (a) sagen, was weiter geht, (b) sagen, dass nichts verloren geht, (d) sagen, was eingeschränkt ist (Teilen per Code).
+- **trifft nicht zu:** (c) Auto-Retry mit Countdown („Rechecking in 18s") — Firestore verbindet sich selbst wieder, und die App hat keinen eigenen Server, dessen Ausfall man abwarten müsste. Ein Countdown wäre erfunden. Stattdessen nur beim Start-Fehler-Bildschirm ein Auto-Neuladen bei `online`.
+- Kein Sheet, sondern eine Zeile: leise wie die Backup-Erinnerung; ein Blatt wäre für einen Nicht-Fehler zu laut (Hick: nichts Zusätzliches, was keine Entscheidung braucht).
+- Nur der Offline-Fall wird behauptet: `navigator.onLine` ist bei „true" unzuverlässig (Captive-Portal), bei „false" nicht.
+- Kein Neuzeichnen mitten in einer Runde (Handschrift-Canvas würde geleert), und nicht vor dem Laden der Daten.
+**Nebenfund, NICHT gebaut (Datenweg, kein Bedienungs-Thema):** `teileLektionCode` (`app.js:2856`) `await`et `fb.setDoc(...)`. Offline löst dieses Promise erst bei Server-Bestätigung auf — „Code erzeugen" bleibt offline ohne Rückmeldung hängen, `b.teilCode` ist aber schon lokal gesetzt. `codeEinloesen` (`~2882`) zeigt offline die rohe Firestore-Fehlermeldung. Der Banner warnt jetzt davor; die Sperre („Zum Teilen brauchst du eine Verbindung", bevor etwas geschrieben wird) wäre eine eigene, kleine Änderung — Betreiber entscheidet.
+**Offen:** Echtgerät-Test steht aus. Es ließ sich hier nur `node --check` ausführen; die Oberfläche hängt an der Firebase-Anmeldung, ohne die man nicht zu `renderMain()` kommt. Und: der Push allein bringt 3.6.9 **nicht** auf die Live-Seite (siehe `README.md`, `veroeffentlichen.bat`).
+**Nächster Schritt:** Betreiber: veröffentlichen, am Handy Flugmodus testen; danach entscheidet er über die Teilen-Sperre. Dann nächste Idee aus dem Backlog.
+
+---
+
 ### 2026-09-19 — Hick's Law (TikTok-Idee 6 von 8) gegen alle Bildschirme geprüft, nichts zu bauen
 
 **Geändert:** nichts am Code, keine Versionsnummer. Nur dieses Logbuch und der

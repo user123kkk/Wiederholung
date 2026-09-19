@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.6.8";
+const APP_VERSION = "3.6.9";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -881,6 +881,15 @@ let displayName = "";
 let bereiche = null;         // Array [{name, karten:[]}] – null solange Cloud-Daten noch nicht geladen
 let cloudDocExists = false;
 let syncError = null;
+/* 3.6.9: Offline war bisher unsichtbar - die App laeuft dann weiter (Service
+   Worker + Firestore-Cache), aber wer im Zug lernt, erfuhr nirgends, ob seine
+   Antworten ankommen. `offline` folgt nur den Browser-Ereignissen; navigator.
+   onLine meldet "offline" zuverlaessig, "online" dagegen auch im Captive-
+   Portal - deshalb wird nur der Offline-Fall behauptet. `offlineCacheAktiv`
+   sagt, ob Firestore seinen dauerhaften Speicher bekommen hat (sonst liegen
+   ungesendete Aenderungen nur im Arbeitsspeicher, siehe initFirebase). */
+let offline = typeof navigator !== "undefined" && navigator.onLine === false;
+let offlineCacheAktiv = false;
 /* 2.21.1: Hinweis + Neu-laden-Knopf, falls "Daten werden geladen…" sehr
    lange steht (z.B. schlechtes WLAN). Der Timer laeuft nur einmal an, bis
    die Daten da sind oder sich der Nutzer neu anmeldet - siehe render() und
@@ -1401,6 +1410,7 @@ async function initFirebase() {
   auth = fb.getAuth(fbApp);
   try {
     db = fb.initializeFirestore(fbApp, { localCache: fb.persistentLocalCache() });
+    offlineCacheAktiv = true;
   } catch (e) {
     db = fb.getFirestore(fbApp); // Fallback ohne Offline-Cache
   }
@@ -5022,6 +5032,16 @@ function renderMain() {
       kopf += bannerFehler("Verbindung:", esc(syncError) +
         ' Die App zeigt weiter den zuletzt geladenen Stand.');
     }
+    /* 3.6.9: Leise, nicht rot - Offline ist kein Fehler. Der Text sagt, was
+       weiter geht, wohin die Antworten gehen und was NICHT geht (Teilen per
+       Code braucht den Server). Faellt weg, sobald die Verbindung zurueck ist. */
+    if (offline) {
+      kopf += bannerInfo('<strong>Offline.</strong> Lernen und Karten bearbeiten geht weiter. ' +
+        (offlineCacheAktiv
+          ? 'Änderungen werden auf diesem Gerät gespeichert und übertragen, sobald du wieder online bist.'
+          : 'Änderungen werden übertragen, sobald du wieder online bist – schließ die App bis dahin nicht.') +
+        ' Teilen per Code braucht eine Verbindung.', true);
+    }
 
     const backupAge = ui.einstellungen ? 0 : daysSinceLastBackup();
     if (backupAge === null || backupAge >= 14) {
@@ -8180,13 +8200,20 @@ function zeigeStartfehler(e) {
     '<div class="empty__icon">' + ikon("offline", "i-xl") + '</div>' +
     '<div class="empty__titel">Start fehlgeschlagen</div>' +
     '<p class="empty__text">Die App konnte ihre Bausteine nicht laden. ' +
-    'Pr\u00fcf deine Internetverbindung und lade die Seite neu.</p>' +
+    (navigator.onLine
+      ? 'Pr\u00fcf deine Internetverbindung und lade die Seite neu.'
+      : 'Du bist offline \u2013 sobald die Verbindung wieder da ist, l\u00e4dt die App von selbst neu.') + '</p>' +
     '<div class="error-box" style="text-align:left">' + ikon("warnung", "i-sm") +
     '<div class="banner__text">' + esc(e && e.message ? e.message : String(e)) +
     (diagnose ? '<br><span style="opacity:.7">' + esc(diagnose) + '</span>' : '') +
     '</div></div>' +
     '<button data-action="start-neu-versuchen">Neu laden</button>' +
     '</div></div>';
+  /* 3.6.9: Wer den Fehler offline sieht, soll nicht selbst neu laden muessen,
+     wenn das Netz zurueckkommt. Einmalig, und nur aus dem Offline-Zustand
+     heraus - das Ereignis feuert nur beim Wechsel, ein Neuladen-Kreislauf
+     ist damit ausgeschlossen. */
+  if (!navigator.onLine) window.addEventListener("online", () => location.reload(), { once: true });
 }
 
 /* ---------- Start ---------- */
@@ -8202,6 +8229,20 @@ if (CONFIGURED) {
 } else {
   render();
 }
+
+/* 3.6.9: Verbindungswechsel. Neu gezeichnet wird nur, wo der Hinweis
+   ueberhaupt steht: nicht vor dem Laden der Daten und nicht mitten in einer
+   Runde (dort gibt es die Meldungszeile nicht, und ein Neuzeichnen wuerde eine
+   halbe Handschrift-Zeichnung loeschen). Nach der Runde stimmt der Stand
+   ohnehin wieder. */
+function verbindungGewechselt(istOffline) {
+  offline = istOffline;
+  if (!currentUser || !bereiche) return;
+  if (ui.session || ui.lernSetId) return;
+  render();
+}
+window.addEventListener("offline", () => verbindungGewechselt(true));
+window.addEventListener("online", () => verbindungGewechselt(false));
 
 /* ---------- Offline-Fähigkeit: Service Worker registrieren ---------- */
 if ("serviceWorker" in navigator) {

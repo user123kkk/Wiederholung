@@ -1,3 +1,11 @@
+## 3.6.9 – 19. September 2026
+
+**Neu: Die App sagt jetzt, wenn sie offline ist.** Bisher lief sie offline stumm weiter (Service Worker + Firestore-Cache) – wer im Zug lernte, erfuhr nirgends, ob seine Antworten ankommen. Jetzt steht oben eine leise Zeile (kein Fehler-Rot): Lernen und Karten bearbeiten geht weiter, Änderungen werden auf dem Gerät gespeichert und übertragen, sobald die Verbindung zurück ist – und dass Teilen per Code eine Verbindung braucht. Sie verschwindet von selbst beim Wiederverbinden. Fehlt Firestore der dauerhafte Speicher (Fallback), sagt der Text ehrlich, dass die App bis dahin offen bleiben soll.
+
+**Start ohne Netz:** Der Fehlerbildschirm „Start fehlgeschlagen" sagt offline, dass die App von selbst neu lädt, sobald die Verbindung wieder da ist – und tut es dann auch (einmalig, kein Neuladen-Kreislauf).
+
+Nichts an Lernlogik, Speichern oder Firestore geändert – nur Anzeige. Mitten in einer Lernrunde wird bei Verbindungswechsel nicht neu gezeichnet (Handschrift-Zeichnung bliebe sonst nicht erhalten).
+
 ## 3.6.8 – 18. September 2026
 
 **Behoben: Hochzähl-Animation lief bei jedem Tab-Besuch neu von 0.** Der "schon gezählt"-Merker stand im DOM (`dataset.countedTo`), aber `app.innerHTML = html` baut bei jedem `render()` das komplette Element neu – der Merker ging bei jedem Tab-Wechsel verloren. Jetzt in einer Variable, die render()-Aufrufe übersteht. War schon immer so, nicht neu durch die Beobachtung-18-Fixes.

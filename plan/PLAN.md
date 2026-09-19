@@ -487,6 +487,15 @@ bevor irgendetwas gebaut wird.
 Frühere Stände (Redesign-Strang, Google-Login, Umzug auf `adrabic.web.app`)
 bleiben unverändert `fertig`, siehe „Frühere Lage" unten.
 
+**19.09.2026 — Backlog-Ideen aus TikTok werden einzeln abgearbeitet**
+(Reihenfolge nach Betreiber-Wahl; Backlog im Gedächtnis des Assistenten, nicht
+im Repo). Erledigt: Hick's Law (Nr. 6, schon umgesetzt, nichts gebaut) und
+Offline-Zustand (Nr. 2, v3.6.9, Anzeige gebaut). Beide mit Begründung in
+[`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md).
+**Offen aus v3.6.9:** Betreiber muss veröffentlichen (`veroeffentlichen.bat`) und
+im Flugmodus am Handy prüfen; Entscheidung über eine Sperre „Teilen per Code"
+offline (Nebenfund im Logbuch).
+
 **Es gibt aktuell keinen aktiven, unblockierten Codepunkt mehr.** Was noch
 offen ist, hängt an Betreiber-Entscheidungen, nicht an Bau-Arbeit:
 
