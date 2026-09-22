@@ -1,3 +1,18 @@
+## 4.0.0 – 22. September 2026
+
+**Neues Gestaltungs-Gerüst: ruhig, flach, eine Schrift – im Stil von iOS, in den Farben des Lotus-Symbols.** Der Betreiber war mit der Oberfläche insgesamt unzufrieden (Glanz und Schein auf jeder Fläche, Pillen-Knöpfe überall, Serifen-Überschriften neben Systemschrift, alles sah gleich aus, Text an Rundungen abgeschnitten) und hat alle bisherigen Gestaltungsregeln ausdrücklich freigegeben.
+
+- **`styles.css` neu geschrieben** (von 2700 auf rund 1200 Zeilen). Neue Regeln oben in der Datei und in `README.md`. Die bestehenden Klassennamen bleiben gültig; `app.js` wurde nur dort angefasst, wo sich die Anordnung ändert (unten).
+- **Farben aus dem Symbol:** dunkel = Elfenbein `#f4f2ec` auf Schwarz, hell = Tinte auf warmem Papier. Kein Gold, keine Verläufe, kein `--sheen`, kein Hintergrund-Schein mehr (`.bg-glow` entfernt).
+- **Eine Schrift:** Systemschrift überall, Überschriften nicht mehr in Serifen.
+- **Navigation wie iOS:** Tab-Leiste unten über die volle Breite statt schwebender Pille (verdeckte vorher den letzten Inhalt), Kopfleiste mit Bereichsnamen als Titel mit Pfeil statt Pille. Ab 900px Seitenleiste wie iPadOS.
+- **Bewegung:** Seitenwechsel und Blätter mit der iOS-Blattkurve, Blätter kommen ganz von unten; Knöpfe geben beim Tippen nach.
+- **Verwalten aufgeräumt:** großer Titel „Karten" mit Zahl, rechts Üben / ⋯ / runder Plus-Knopf (statt eines bildschirmbreiten Knopfes). Speicherkarten als eine Listenzeile, jede Speicherkarte zeigt ihre Werkzeuge erst aufgeklappt (vorher bis zu fünf Knöpfe pro Zeile). **Sortier-Griffe** stehen nur noch im neuen Modus „Reihenfolge ändern" (⋯-Blatt) statt an jeder Zeile.
+- **Lernen:** „Lernen starten" statt „Lernsession starten"; Wiederholungen/neu als eine ruhige Zeile statt zweier Plaketten; der nächste Schritt im geführten Satz steht in einer eigenen Karte.
+- Kein Aufblitzen der ganzen Abfragekarte mehr beim Sprung dorthin (`.aufleuchten`).
+
+Lernlogik unverändert. Geprüft mit Beispieldaten (Probelauf-Attrappen) am Handy-Format und breit, hell und dunkel, ohne Konsolenfehler.
+
 ## 3.7.6 – 22. September 2026
 
 **Anmelden im Flugmodus hing endlos; Knopf-Glanz gedämpft; Google-Knopf im gesperrten Zustand kein grauer Fleck mehr.** Betreiber-Test am echten Handy im Flugmodus zeigte drei echte Probleme (Block 14, `plan/redesign-oberflaeche`):

@@ -40,40 +40,38 @@ Kein Build-Schritt. Die Dateien werden so ausgeliefert, wie sie hier liegen.
 
 ## Wenn du an der Gestaltung arbeitest
 
-Die `styles.css` beginnt mit vier Sätzen, aus denen sich alles Weitere ergibt
-(neu gesetzt am 17.09.2026 — die alten drei stimmten nicht mehr mit dem Code
-überein):
+Seit 4.0.0 (22.09.2026) gilt ein neues Gerüst. Vorbild sind die Apple Human
+Interface Guidelines, die Farbwelt kommt aus dem Symbol: **Elfenbein-Lotus auf
+Schwarz**. Die Regeln stehen oben in `styles.css`, hier die Kurzfassung:
 
-1. **Eine Handlung pro Bildschirm.** Genau eine gefüllte Akzentfläche (Creme
-   auf Fast-Schwarz). Alles andere trägt den Akzent nur als Schrift, Rand oder
-   Schleier.
-2. **Eine Fläche darf gruppieren – aber nie eine Fläche in einer Fläche.**
-   Am Handy ist die Fläche das Gruppierungsmittel; Weißraum gibt es dort nicht
-   genug. Die Grenze ist Polsterung auf Polsterung. `styles.css` setzt das
-   selbst durch: eine `.card` in einer `.card` verliert automatisch Fläche,
-   Rahmen und Polsterung.
-3. **Die Schrift schrumpft am Handy nicht.** Wurzel 17px, Größen kommen aus
-   `--fs-micro … --fs-2xl`, nichts Lesbares unter `--fs-xs`, Trefferflächen
-   mindestens `--tap`. Keine neue Größe erfinden – wer eine braucht, die es
-   nicht gibt, hat meist die falsche Rolle gewählt.
-4. **Bedienung ist Systemschrift, Stoff ist Serifenschrift.**
+1. **Eine Schrift** – die Systemschrift (SF auf Apple, Segoe auf Windows).
+   Arabisch hat seine eigene. Keine Serifen, keine Verlaufsschrift.
+2. **Einfarbig wie das Symbol.** Dunkel (Voreinstellung) = Elfenbein auf
+   Schwarz, hell = schwarze Tinte auf warmem Papier. Gefüllt heißt „die
+   Handlung", halbfetter Text in voller Farbe heißt „antippbar". Grün/Rot/Orange
+   nur für Zustände (gewusst, nicht gewusst, Warnung).
+3. **Flächen statt Effekte.** Grauer Grund, Gruppen als Flächen, Zeilen darin
+   mit eingerückter Haarlinie (iOS „inset grouped"). Kein Schein, kein Glanz,
+   keine Schatten auf Karten.
+4. **Radien:** 10px Bedienelemente, 12px Gruppen, 14px Blätter. Vollrund nur
+   für kleine Plaketten und runde Symbolknöpfe.
+5. **Größen nur aus den Tokens** (`--fs-*`, `--space-*`). Trefferfläche ≥ 44px.
+6. **Bewegung** kurz und weich, ohne Hüpfen: `--ease-sheet` (die iOS-Blattkurve)
+   für Seitenwechsel und Blätter, `--ease-spring` nur für kleine Bestätigungen.
 
 Drei Dinge, die leicht zu übersehen sind:
 
 - **Eintrittsbewegungen müssen `@keyframes` sein, keine Transitions.**
   `render()` ersetzt den kompletten Inhalt von `#app`; auf frisch eingefügten
   Elementen laufen Transitions nicht.
-- **Ob die Navigation unten oder links steht, entscheidet allein Abschnitt 17
-  der `styles.css`.** Das Markup ist in beiden Fällen dasselbe.
-- **Die Abstände (`--space-*`) sind absichtlich px, nicht rem.** Sie sollen
-  sich nicht mitvergrößern, wenn jemand die Schrift größer stellt – sonst wird
-  aus einer größeren Schrift eine leerere Seite.
+- **Ob die Navigation unten oder links steht, entscheidet allein der letzte
+  Abschnitt der `styles.css`** (ab 900px Seitenleiste). Das Markup ist dasselbe.
+- **Farben nur über die Tokens in Abschnitt 1.** Wer eine Farbe ändern will,
+  ändert sie dort – einmal für hell (`:root`), einmal für dunkel
+  (`:root[data-thema="dunkel"]`).
 
-**Ansehen, ohne sich anzumelden:** `plan/redesign-oberflaeche/stilprobe.html`
-zeigt alle Bausteine aus `styles.css` nebeneinander mit erfundenem Inhalt.
-Die Datei wird nicht ausgeliefert (steht nicht in `APP_SHELL`) und definiert
-selbst keine Farben oder Größen – was dort hässlich aussieht, wird in
-`styles.css` geändert, nicht dort.
+**Ansehen ohne Anmeldung:** `plan/redesign-oberflaeche/probelauf.mjs` startet die
+echte App mit erfundenen Daten.
 
 ## Wenn du am Markup arbeitest
 
