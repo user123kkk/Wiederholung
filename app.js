@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.8.1";
+const APP_VERSION = "3.8.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4476,10 +4476,20 @@ function wischEnde(e) {
 app.addEventListener("pointerup", wischEnde);
 app.addEventListener("pointercancel", wischEnde);
 
-/* ---------- Wischen zwischen den Reitern (Block 15, 22.09.2026) ----------
+/* ---------- Wischen zwischen den Reitern (Block 15, neu gefasst Block 17) ----------
 
-   Betreiber: "vielleicht waere es logisch, dass man zwischen den tabs wischen
-   kann, auch hier waere eine animation, saubere ueberleitung noetig".
+   Betreiber zu Block 15: "und das wischen ist sehr unangenehm und schwer,
+   will wirklich was fluessiges."
+
+   Die erste Fassung daempfte die Bewegung auf 42% der Fingerbewegung
+   (REITER_WIDERSTAND) - der Inhalt blieb sichtbar hinter dem Finger zurueck,
+   und genau DAS liest sich als "schwer". Diese Fassung folgt stattdessen dem
+   erprobten Muster, das in dieser Datei bereits zweimal funktioniert -
+   Karte-wegwischen zum Bewerten (wischEnde, oben) und Blatt-wegwischen nach
+   unten (blattWischen, weiter unten): 1:1 an den Finger gebunden, kein
+   Nachlaufen, kein Widerstand ausser am echten Rand, und ein Tempo-Kriterium
+   zusaetzlich zur Weite - ein kurzer, schneller Wisch schaltet genauso um wie
+   ein langer, langsamer.
 
    Es ist dieselbe Bewegung, die die drei Reiter ohnehin haben (links -> Mitte
    -> rechts, siehe enter-vor/enter-zurueck und der gleitende Anzeiger in der
@@ -4495,17 +4505,23 @@ app.addEventListener("pointercancel", wischEnde);
    - Nicht am Ziehgriff und nicht in einem Eingabefeld.
    - Nicht in den Einstellungen und nicht auf einer Unterseite: von dort
      fuehrt "zurueck", nicht "seitwaerts".
+   - Nicht, waehrend der vorige Wechsel noch ausschwingt (reiterWischAktiv) -
+     sonst ueberlagern sich zwei Uebergaenge.
 
-   Bis der Weg eindeutig waagerecht ist (12px und deutlich mehr quer als
+   Bis der Weg eindeutig waagerecht ist (10px und deutlich mehr quer als
    hoch), wird nichts angefasst - senkrechtes Scrollen hat Vorrang. */
 const REITER_FOLGE = ["lernen", "fortschritt", "verwalten"];
-const REITER_WEG_PX = 64;      /* so weit muss der Finger, damit es umschaltet */
-const REITER_WIDERSTAND = 0.42; /* der Inhalt folgt gedaempft, nicht 1:1 */
+const REITER_WEG_PX = 64;       /* Weite, ab der ein langsamer Wisch reicht */
+const REITER_TEMPO_MIN = 0.5;   /* px/ms - Fling-Schwelle, wie WEG_TEMPO bei blattWischen */
+const REITER_FLING_MIN = 24;    /* Mindestweite, damit ein Tippler nicht als Fling zaehlt */
 let reiterWisch = null;
+let reiterWischAktiv = false;
+let reiterWischFrame = null;
 
 function reiterWischMoeglich(e) {
   if (e.pointerType === "mouse") return false;
   if (window.innerWidth >= 900) return false;
+  if (reiterWischAktiv) return false;                 /* voriger Wechsel schwingt noch aus */
   if (!bereiche || ui.einstellungen || ui.seite) return false;
   if (ui.session || ui.lernSetId) return false;       /* Modus */
   if (document.documentElement.classList.contains("blatt-offen")) return false;
@@ -4522,60 +4538,88 @@ app.addEventListener("pointerdown", e => {
   if (!reiterWischMoeglich(e)) return;
   const ansicht = app.querySelector(":scope > .view");
   if (!ansicht) return;
-  reiterWisch = { x: e.clientX, y: e.clientY, id: e.pointerId, ansicht, erfasst: false };
+  reiterWisch = { x: e.clientX, y: e.clientY, id: e.pointerId, ansicht,
+    zeit: performance.now(), erfasst: false, dx: 0 };
 }, { passive: true });
 
 app.addEventListener("pointermove", e => {
   if (!reiterWisch || e.pointerId !== reiterWisch.id) return;
   const dx = e.clientX - reiterWisch.x, dy = e.clientY - reiterWisch.y;
   if (!reiterWisch.erfasst) {
-    if (Math.abs(dx) < 12) return;
-    /* Der Faktor 1.4 statt eines einfachen Vergleichs: ein Daumen zieht beim
+    if (Math.abs(dx) < 10) return;
+    /* Der Faktor 1.3 statt eines einfachen Vergleichs: ein Daumen zieht beim
        Scrollen fast nie exakt senkrecht. Ohne ihn faengt jedes zweite
        Scrollen an, seitwaerts zu wackeln. */
-    if (Math.abs(dx) < Math.abs(dy) * 1.4) { reiterWisch = null; return; }
+    if (Math.abs(dx) < Math.abs(dy) * 1.3) { reiterWisch = null; return; }
     reiterWisch.erfasst = true;
     reiterWisch.ansicht.style.animation = "none";
     reiterWisch.ansicht.style.transition = "none";
     reiterWisch.ansicht.classList.add("wischt");
+    try { reiterWisch.ansicht.setPointerCapture(e.pointerId); } catch (err) {}
   }
-  /* An den beiden Enden der Reihe gibt es nichts, wohin gewischt werden
-     koennte. Statt zu blockieren gibt der Inhalt nur ein Viertel so weit nach
-     - dieselbe Rueckmeldung, die ein Handy am Listenende gibt: es geht, aber
-     da ist nichts. */
-  const i = REITER_FOLGE.indexOf(ui.tab);
-  const rand = (dx < 0 && i === REITER_FOLGE.length - 1) || (dx > 0 && i === 0);
-  const weg = dx * REITER_WIDERSTAND * (rand ? 0.25 : 1);
-  reiterWisch.ansicht.style.transform = "translateX(" + weg.toFixed(1) + "px)";
-}, { passive: true });
+  reiterWisch.dx = dx;
+  /* rAF buendelt die Anzeige auf eine Aktualisierung je Bild - ein Handy
+     liefert pointermove oft haeufiger, als der Bildschirm zeichnet, und ohne
+     das schrieb jedes einzelne Ereignis sofort einen neuen Stil. Auf einem
+     aelteren Geraet (Betreiber testet u.a. am iPhone 11) ist genau das ein
+     Ruckeln, das sich als "schwer" anfuehlt. */
+  if (reiterWischFrame) return;
+  reiterWischFrame = requestAnimationFrame(() => {
+    reiterWischFrame = null;
+    if (!reiterWisch) return;
+    const i = REITER_FOLGE.indexOf(ui.tab);
+    const amRand = (reiterWisch.dx < 0 && i === REITER_FOLGE.length - 1) ||
+                   (reiterWisch.dx > 0 && i === 0);
+    /* Ueberall sonst 1:1 - der Inhalt haengt direkt am Finger, wie beim
+       Karten- und Blatt-Wischen. Nur am echten Rand (kein Ziel dahinter)
+       bremst eine elastische Naeherung, wie ein Anschlag mit Polster statt
+       einer harten Wand. */
+    const weg = amRand ? reiterWisch.dx * 0.3 : reiterWisch.dx;
+    reiterWisch.ansicht.style.transform = "translateX(" + weg.toFixed(1) + "px)";
+  });
+});
 
 function reiterWischEnde(e) {
   if (!reiterWisch || e.pointerId !== reiterWisch.id) return;
-  const { ansicht, x, erfasst } = reiterWisch;
+  const { ansicht, zeit, erfasst, dx } = reiterWisch;
   reiterWisch = null;
+  if (reiterWischFrame) { cancelAnimationFrame(reiterWischFrame); reiterWischFrame = null; }
   if (!erfasst) return;
-  const dx = e.clientX - x;
+
   const i = REITER_FOLGE.indexOf(ui.tab);
-  const ziel = Math.abs(dx) >= REITER_WEG_PX ? REITER_FOLGE[i + (dx < 0 ? 1 : -1)] : null;
-  if (ziel) {
-    /* Umschalten laeuft ueber den Knopf in der Leiste, nicht ueber eine
-       zweite Kopie der Zustands-Ruecksetzungen: "tab-lernen" & Co. raeumen
-       Suche, Auswahlmodus, offene Blaetter und die Scrollposition mit auf.
-       Zwei Fassungen davon waeren zwei Fassungen, die auseinanderlaufen. */
-    const knopf = document.querySelector('.nav__tab[data-action="tab-' + ziel + '"]');
-    /* Das alte .view wird von render() ohnehin ersetzt - es bekommt keine
-       Ausblendbewegung mehr, sondern verschwindet, waehrend das neue mit
-       enter-vor/enter-zurueck hereinkommt (styles.css, Abschnitt 3). */
-    if (knopf) { knopf.click(); return; }
+  const amRand = (dx < 0 && i === REITER_FOLGE.length - 1) || (dx > 0 && i === 0);
+  const dauer = Math.max(1, performance.now() - zeit);
+  const tempo = Math.abs(dx) / dauer;   /* px/ms, wie bei blattWischen */
+  const weitGenug = Math.abs(dx) >= REITER_WEG_PX;
+  const fling = Math.abs(dx) >= REITER_FLING_MIN && tempo >= REITER_TEMPO_MIN;
+  const zielTab = !amRand && (weitGenug || fling) ? REITER_FOLGE[i + (dx < 0 ? 1 : -1)] : null;
+  const knopf = zielTab ? document.querySelector('.nav__tab[data-action="tab-' + zielTab + '"]') : null;
+
+  if (knopf) {
+    /* Wie beim Karten- und Blatt-Wischen: Nichts verschwindet mitten in der
+       Bewegung. Die Ansicht fliegt in derselben Richtung ganz aus dem Bild,
+       ERST danach kommt der eigentliche Wechsel (derselbe Knopf, dieselben
+       Aufraeumarbeiten wie ein Tipp auf die Leiste). Ohne diesen Schritt
+       waere der Uebergang ein Schnitt mitten im Ziehen - genau das macht
+       eine Geste billig statt fluessig. */
+    reiterWischAktiv = true;
+    reiterWischKlickSperre = true;
+    ansicht.style.transition = "transform 200ms var(--ease-out)";
+    ansicht.style.transform = "translateX(" + (dx < 0 ? "-100%" : "100%") + ")";
+    setTimeout(() => {
+      reiterWischKlickSperre = false;
+      reiterWischAktiv = false;
+      knopf.click();
+    }, 190);
+    return;
   }
-  /* Nicht weit genug: zurueck an seinen Platz. Hier laeuft eine echte
-     Transition, weil das Element steht - es wurde nicht neu eingesetzt. */
+
+  /* Nicht weit/schnell genug, oder am Rand angekommen: zurueckfedern - mit
+     demselben Schwung (ease-spring), den auch eine abgebrochene
+     Karten-Bewertung bekommt, statt eines schlichten Abbremsens. */
   reiterWischKlickSperre = true;
-  /* Kommt wider Erwarten kein Klick (Zeile ohne data-action, Wischen im
-     leeren Raum), darf die Sperre nicht bis zum naechsten echten Tipp
-     liegen bleiben. */
   setTimeout(() => { reiterWischKlickSperre = false; }, 400);
-  ansicht.style.transition = "transform var(--dur-base) var(--ease-out)";
+  ansicht.style.transition = "transform 260ms var(--ease-spring)";
   ansicht.style.transform = "";
   setTimeout(() => {
     ansicht.style.transition = "";
@@ -4588,7 +4632,7 @@ function reiterWischEnde(e) {
        22.09.2026 gemessen. Diese Ansicht ist laengst eingetreten, sie hat
        keine Eintrittsbewegung mehr noetig. */
     ansicht.style.removeProperty("transform");
-  }, 220);
+  }, 260);
 }
 app.addEventListener("pointerup", reiterWischEnde);
 app.addEventListener("pointercancel", reiterWischEnde);
@@ -4596,12 +4640,12 @@ app.addEventListener("pointercancel", reiterWischEnde);
 /* Nach einem Wischen KEIN Klick.
 
    Die Kartenzeilen in Verwalten tragen selbst data-action="card-detail" -
-   ein Wischen, das auf einer Zeile beginnt und nicht weit genug kommt,
-   federt zwar zurueck, der Browser schickt hinterher aber trotzdem ein
-   click-Ereignis an dieselbe Zeile. Ohne diese Sperre haette sich nach jedem
-   zu kurzen Wischversuch das Kartenblatt geoeffnet. (Beim geglueckten
-   Wechsel stellt sich die Frage nicht: render() haengt das Element vorher
-   aus dem Dokument, der Klick erreicht den Listener am body nie.)
+   ein Wischen, das auf einer Zeile beginnt, haette sonst nach dem Loslassen
+   (ob es zum Wechsel reicht oder zurueckfedert) zusaetzlich das Kartenblatt
+   geoeffnet, weil der Browser nach dem pointerup noch einen eigenen
+   click schickt. Bei einem geglueckten Wechsel liegt diese Zeile ausserdem
+   bis zu 190ms lang noch im Dokument (Ausflug-Animation, siehe oben) - ohne
+   die Sperre koennte der Klick genau dort landen.
 
    In der Erfassungsphase (capture), damit die Sperre VOR den beiden
    delegierten Klick-Listenern am body greift. */
@@ -8477,7 +8521,11 @@ document.addEventListener("keydown", e => {
     if (!g) return;
     const { dlg, huelle } = g;
     g = null;
-    dlg.style.transition = "transform 220ms var(--ease-out)";
+    /* Block 17: ease-out -> ease-spring, wie das Zurueckfedern beim
+       Karten-Bewerten (wischEnde oben) und beim Wischen zwischen den
+       Reitern (reiterWischEnde) - ein abgebrochener Zug soll ueberall
+       gleich klingen, nicht nur an zwei von drei Stellen. */
+    dlg.style.transition = "transform 220ms var(--ease-spring)";
     dlg.style.transform = "translateY(0)";
     if (huelle) { huelle.style.transition = "opacity 220ms"; huelle.style.opacity = ""; }
     setTimeout(() => {

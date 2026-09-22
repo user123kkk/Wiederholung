@@ -1,3 +1,17 @@
+## 3.8.2 – 22. September 2026
+
+**Das Wischen zwischen den Reitern neu gefasst — folgt jetzt 1:1 dem Finger** (Block 17, `plan/redesign-oberflaeche`). Betreiber zu Block 15: „das wischen ist sehr unangenehm und schwer, will wirklich was flüssiges".
+
+- **Ursache gefunden:** Die erste Fassung dämpfte die Bewegung auf 42 % der Fingerbewegung (`REITER_WIDERSTAND`) — der Inhalt blieb sichtbar hinter dem Finger zurück. Genau zwei andere Wisch-Gesten dieser App (Karte zum Bewerten wegwischen, Blatt nach unten wegwischen) machen das nicht — sie folgen 1:1. Die Reiter-Geste ist jetzt an dasselbe, bereits bewährte Muster angeglichen.
+- **1:1-Verfolgung.** Der Inhalt hängt direkt am Finger, kein Nachlaufen. Nur am echten Rand (erster/letzter Reiter, kein Ziel dahinter) bremst eine mildere elastische Näherung (0.3 statt vorher 0.105 – die alte Randbremse war so steif, dass sie sich wie eine Wand anfühlte).
+- **Tempo zusätzlich zur Weite.** Ein kurzer, schneller Wisch (Fling) schaltet jetzt genauso um wie ein langer, langsamer – wie beim Wegwischen eines Blattes (`blattWischen`, dieselbe Größenordnung: 0.5 px/ms).
+- **Bündelung über `requestAnimationFrame`** statt einer Stiländerung pro Zeigerereignis – auf einem älteren Gerät (Betreiber testet u. a. am iPhone 11) macht das den Unterschied zwischen ruckelig und weich.
+- **Kontinuierlicher Übergang statt Schnitt:** Reicht der Wisch, fliegt die Ansicht erst ganz in dieselbe Richtung aus dem Bild – genau wie eine bewertete Karte oder ein weggewischtes Blatt –, danach erst kommt der eigentliche Reiterwechsel. Vorher wurde die Ansicht mitten im Ziehen abrupt durch die neue ersetzt.
+- **Zurückfedern mit demselben Schwung** (`ease-spring`) wie eine abgebrochene Kartenbewertung, statt eines schlichten Abbremsens.
+- **Am gleichen Zug**: Das Zurückfedern beim Wegwischen eines Blattes nach unten lief noch mit der alten, schlichteren Federung (`ease-out`) – jetzt ebenfalls `ease-spring`, damit ein abgebrochener Zug überall in der App gleich klingt.
+
+Keine Lernlogik angefasst. Geprüft gegen die echte `app.js` mit nachgestellten Zeiger-Ereignissen (1:1-Verfolgung nachgemessen, Fling mit 30px/20ms ausgelöst, langsamer Wisch unter der Schwelle federt zurück, Rand-Widerstand nachgemessen, laufender Wechsel blockiert einen zweiten, Klick-Sperre während der Ausflug-Animation verhindert ein versehentlich geöffnetes Kartenblatt), keine neuen Konsolenfehler.
+
 ## 3.8.1 – 22. September 2026
 
 **Die Bildschirmtastatur verdeckt kein Blatt mehr; eine doppelte Zahl im Fortschritt ist raus** (Block 16, `plan/redesign-oberflaeche`).

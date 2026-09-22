@@ -4,6 +4,113 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Block 17: Wischen zwischen den Reitern neu gefasst (v3.8.2)
+
+**Anlass:** „und das wischen ist sehr unangenehm und schwer, will wirklich was
+flüssiges. denk selbst auch a andere stellen."
+
+**Diagnose:** Block 15 hatte die Bewegung des Inhalts während des Ziehens auf
+`REITER_WIDERSTAND = 0.42` gedämpft — der Finger legt 100px zurück, der
+Bildschirm bewegt sich nur 42px. Das ist die technische Ursache für „schwer":
+der Inhalt hängt spürbar hinter dem Finger zurück, wie durch ein zähes
+Medium gezogen. Zwei andere Wisch-Gesten in derselben Datei — Karte
+wegwischen zum Bewerten (`wischEnde`, `app.js` seit Langem) und Blatt nach
+unten wegwischen (`blattWischen`) — machen genau das **nicht**: beide folgen
+dem Finger 1:1 (`translateX(dx)` ohne Faktor), und beide haben zusätzlich ein
+Tempo-Kriterium (ein schneller, kurzer Wisch reicht genauso wie ein langer,
+langsamer). Diese zwei Muster sind offenkundig bewährt — nichts an ihnen
+wurde je moniert. Die Reiter-Geste ist jetzt an dasselbe Muster angeglichen,
+statt eine dritte, eigene (schlechtere) Physik zu haben.
+
+**Geändert (`app.js`, Abschnitt „Wischen zwischen den Reitern", komplett neu
+geschrieben):**
+
+- `REITER_WIDERSTAND` entfernt. Normale Bewegung ist jetzt 1:1
+  (`weg = dx`), nur am Rand (erster/letzter Reiter) bremst `dx * 0.3` — die
+  alte Randbremse war `0.42 * 0.25 = 0.105`, also fast eine Wand; auf dem
+  Start-Reiter „Lernen" (dem Reiter, den man nach jedem Neustart sieht)
+  hätte fast jeder erste Versuch genau diese Wand getroffen.
+- Neu `REITER_TEMPO_MIN = 0.5` (px/ms, Größenordnung wie `blattWischen`s
+  `WEG_TEMPO = 0.55`) und `REITER_FLING_MIN = 24` (Mindestweite, damit ein
+  Tippler nicht als Fling zählt). `reiterWischEnde()` schaltet um, wenn die
+  Weite ODER das Tempo reicht.
+- `pointermove` bündelt die Stiländerung über `requestAnimationFrame`
+  (`reiterWischFrame`) statt bei jedem Ereignis sofort zu schreiben — auf
+  einem Gerät, das Zeigerereignisse häufiger liefert, als es zeichnet
+  (nicht ungewöhnlich bei Touch-Sampling), ist das der Unterschied zwischen
+  ruckelig und weich. `setPointerCapture()` auf der Ansicht ergänzt (wie
+  `wischStart.karte.setPointerCapture()` beim Karten-Wischen) für
+  zuverlässige Ereignisse, auch wenn der Finger die Ansicht verlässt.
+- **Kontinuierlicher Ausgang statt Schnitt:** Reicht der Wisch, fliegt die
+  Ansicht zunächst per echter CSS-Transition (200ms `ease-out`) ganz in
+  dieselbe Richtung hinaus (`translateX(±100%)`) — dieselbe Idee wie die
+  Karte, die bis 130% ihrer Breite hinausfliegt, oder das Blatt, das bis
+  105% seiner Höhe hinausfährt. Erst danach (`setTimeout`, 190ms — dieselben
+  Zahlen wie bei `blattWischen`) löst ein programmatischer Klick auf den
+  passenden Reiter-Knopf den eigentlichen Wechsel aus — denselben Weg wie
+  ein Tipp auf die Leiste, mit allen Aufräumarbeiten (Suche, Auswahlmodus,
+  Scrollposition), keine zweite Kopie davon.
+- Neu `reiterWischAktiv`: blockiert einen zweiten Wisch, solange der erste
+  noch ausschwingt (die 190ms zwischen Loslassen und dem echten Wechsel) —
+  ohne das könnten sich zwei Übergänge überlagern.
+- Zurückfedern (Weite und Tempo reichen nicht, oder Rand erreicht) jetzt mit
+  `ease-spring` (260ms) statt `ease-out` — derselbe Schwung wie beim
+  abgebrochenen Karten-Wisch.
+- Die Klick-Sperre (`reiterWischKlickSperre`) deckt jetzt auch die neue
+  Ausflug-Phase ab: Eine Kartenzeile, auf der der Wisch begann, liegt bis zu
+  190ms nach dem Loslassen noch im Dokument (statt sofort durch `render()`
+  ersetzt zu werden) — ohne die Sperre hätte der Browser-eigene Klick nach
+  dem Loslassen dort das Kartenblatt geöffnet.
+
+**Zusätzlich, dieselbe Sitzung — Konsistenz an einer weiteren Stelle**
+(„denk selbst auch an andere Stellen"): `blattWischen`s `zurueck()` (Blatt
+nach unten wegwischen, unter der Schwelle) lief noch mit `ease-out` — die
+einzige der drei Wisch-Gesten, deren Zurückfedern nicht denselben Schwung
+trägt wie die anderen beiden. Auf `ease-spring` (220ms) umgestellt, damit ein
+abgebrochener Zug überall in der App gleich klingt. Nichts an der
+Distanz-/Tempo-Schwelle selbst geändert.
+
+**Geprüft:** Derselbe Probelauf-Aufbau wie in Block 15/16 (Firebase-Attrappen
+über eine Import-Map, Wegwerf-`probe.html`, danach gelöscht), 414×896.
+
+- **1:1-Verfolgung nachgemessen:** dx = -70 → Transform -70; dx = -90 →
+  Transform -90 (exakt, kein Faktor mehr).
+- **Fling:** 30px Weg in ~20ms (weit über der Tempo-Schwelle, unter der
+  Weite-Schwelle) hat den Reiter gewechselt.
+- **Langsamer, kurzer Wisch** (70px über ~350ms, deutlich unter beiden
+  Schwellen) ist zurückgefedert, Übergangsdauer 0.26s bestätigt.
+- **Rand-Widerstand:** auf „Lernen" (erster Reiter) nach rechts gezogen,
+  dx = 110 → Transform 33 (= 110 × 0.3), kein Wechsel, wie erwartet.
+- **Senkrechtes Scrollen** (298→296px waagerecht, 300→380px senkrecht) hat
+  die Geste gar nicht erst ausgelöst (`transform: none`, keine `.wischt`-
+  Klasse).
+- **Klick-Sperre während der Ausflug-Phase:** Wisch, der auf einer
+  Kartenzeile beginnt und zum Wechsel reicht (samt eines synthetisch
+  nachgeschickten `click`-Ereignisses, wie es der Browser nach einem
+  `pointerup` verschickt) — kein Kartenblatt hat sich geöffnet, der
+  Reiterwechsel hat trotzdem stattgefunden. Ein **normaler Tipp** auf
+  dieselbe Zeile öffnet das Blatt weiterhin zuverlässig.
+- **Zwei Wische kurz hintereinander:** der zweite (30ms nach dem ersten,
+  noch während dessen 190ms-Ausflug) wurde ignoriert (`reiterWischAktiv`) —
+  am Ende steht der Reiter, den der erste Wisch angesteuert hat, nicht
+  irgendein Zwischenstand.
+- **Sheet-Zurückfedern:** `ease-spring` per `getComputedStyle` bestätigt
+  (`cubic-bezier(0.34, 1.4, 0.64, 1)`), ein Wisch unter der Schwelle bleibt
+  offen, einer über der Tempo-Schwelle schließt weiterhin.
+- `node --check app.js` sauber, keine neuen Konsolenfehler (die bekannte
+  Service-Worker-Meldung stand schon vorher da).
+
+**Offen:** Braucht den Gerätetest — vor allem, ob sich die 1:1-Verfolgung auf
+einem echten Bildschirm jetzt tatsächlich „flüssig" statt „schwer" anfühlt,
+und ob die beiden Schwellen (64px Weite, 0.5 px/ms Tempo) am Daumen richtig
+kalibriert sind. Unverändert offen aus Block 15/16: Aufräum-Durchgang (toter
+Code), Frage zur Schrift-Regel, Frage zur großen Zahl in „Dein Stoff".
+
+**Nächster Schritt:** Rückmeldung zu v3.8.2 am echten Gerät abwarten,
+insbesondere zum Wischen. Danach der Aufräum-Durchgang.
+
+---
+
 ### 2026-09-22 — Block 16: Tastatur verdeckt das Blatt; doppelte Zahl im Fortschritt (v3.8.1)
 
 **Anlass:** Zwei Rückfragen des Betreibers zu v3.8.0. (1) „ist der block dein

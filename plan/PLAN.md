@@ -503,7 +503,17 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (22.09.2026, spät): App bei v3.8.1 — Block 16 nachgeschoben.** Zwei
+**AKTUELL (22.09.2026, spät): App bei v3.8.2 — Block 17, das Wischen neu
+gefasst.** Betreiber-Rückmeldung zu Block 15: „das wischen ist sehr
+unangenehm und schwer, will wirklich was flüssiges". Ursache war eine zu
+starke Dämpfung der Bewegung (Finger legt 100px zurück, Bildschirm bewegt
+sich nur 42px) — jetzt 1:1-Verfolgung wie die beiden anderen, bereits
+bewährten Wisch-Gesten der App (Karte bewerten, Blatt wegwischen), plus
+Tempo-Kriterium für kurze, schnelle Wische. Einzelheiten im Logbuch,
+Eintrag „Block 17". **Bei „leg los" zuerst prüfen, ob der Betreiber sich zu
+v3.8.2 gemeldet hat**, insbesondere zum Wischgefühl selbst.
+
+**Vorheriger Stand: v3.8.1 — Block 16 nachgeschoben.** Zwei
 Rückfragen des Betreibers zu v3.8.0: (1) Screenshot vom iPhone 11, auf dem die
 Bildschirmtastatur das Karten-Blatt verdeckt und die Speichern-Knöpfe
 unerreichbar macht — behoben (`syncTastatur()`, `--tastatur`, gilt für alle
