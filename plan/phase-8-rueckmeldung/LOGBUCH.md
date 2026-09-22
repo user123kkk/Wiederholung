@@ -214,3 +214,25 @@ mit einer Testnachricht geprüft, dass sie ankommt (Fertig-Kriterium 1).
 **Nächster Schritt:** Betreiber deployed und testet das Kontaktformular
 erneut, um zu bestätigen, dass es jetzt tatsächlich eine Mailto-Nachricht
 auslöst.
+
+### 2026-09-23 — Kontaktformular weg, weil `landing.html` gelöscht wurde
+
+**Anlass:** Betreiber wollte `landing.html` löschen, um sie neu zu machen
+(`phase-6-startseite/LOGBUCH.md`), unabhängig von Phase 8.
+
+**Geändert:** Nichts hier am Formular-Code selbst (`app.js` unverändert) —
+das Kontaktformular lag im **Markup von `landing.html`**, das jetzt
+gelöscht ist. `datenschutzerklaerung.html` Abschnitt 11 entsprechend
+angepasst (nur noch das Fehlerformular beschrieben).
+
+**Entscheidung:** Phase 8 bleibt `fertig` für das, was sie war — das
+Fehlerformular in der App ist unverändert vorhanden und funktioniert. Das
+Kontaktformular auf der Startseite ist damit aber **faktisch nicht mehr
+erreichbar**, bis die neue Landing-Page es (in welcher Form auch immer)
+wieder aufnimmt. Kein Ersatz gebaut — das wäre eine Vorwegnahme der
+Landing-Page-Entscheidung, die dem Betreiber gehört.
+
+**Offen:** Ob/wie ein Kontaktweg auf der künftigen neuen Startseite wieder
+auftaucht, entscheidet sich beim Neubau, nicht hier.
+
+**Nächster Schritt:** Keiner, bis die neue Landing-Page ansteht.

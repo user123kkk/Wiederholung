@@ -186,3 +186,43 @@ getestet.
 formal „fertig" setzen (wenn alle Prüfpunkte aus `AUFTRAG.md` abgedeckt
 sind) oder noch einen Punkt adressieren (z. B. zusätzliche Tests oder
 Responsive-Design-Verbesserungen).
+
+### 2026-09-23 — `landing.html` auf Betreiber-Wunsch gelöscht, Phase auf `zurückgestellt`
+
+**Anlass:** Betreiber: „die will ich neu machen daher kannst du die
+vorhandene löschen? ... musst ned drauf eingehen und mich überzeugen." —
+ausdrücklich ohne Rückfrage gewollt, keine Begründung verlangt.
+
+**Geändert:** `landing.html` gelöscht (`git rm`). Referenzen bereinigt,
+damit nichts kaputt zeigt oder rechtlich falsch behauptet:
+- `firebase.json`: beide `rewrites`-Blöcke („/" → `/landing.html") entfernt.
+  Firebase Hosting liefert ohne eigene Rewrite-Regel automatisch
+  `index.html` an der Wurzel aus — das genügt als Übergang, bis eine neue
+  Seite da ist.
+- `sw.js`: `landing.html` aus `APP_SHELL` entfernt (sonst versucht der
+  Service Worker beim Installieren eine nicht mehr vorhandene Datei zu
+  cachen).
+- `datenschutzerklaerung.html` Abschnitt 11: von „Kontakt- und
+  Fehlerformulare" (Plural) auf „Fehlerformular" (Singular) reduziert — das
+  Kontaktformular gab es nur auf der jetzt gelöschten Seite.
+- `plan/PLAN.md`: Phase-Status auf `zurückgestellt` gesetzt, Nebenstrang-
+  Blurb aktualisiert.
+
+**Bewusst NICHT angefasst:** `robots.txt`/`sitemap.xml` listen weiterhin
+„/" als crawlbare, indexierte Adresse — das ist jetzt der Login-Bildschirm,
+nicht mehr eine Marketing-Seite. Das dem Betreiber nicht von sich aus
+auszureden war ausdrücklich nicht verlangt; **zur Kenntnis, keine
+Empfehlung**: sobald die neue Seite entsteht, lohnt ein Blick, ob „/" für
+Suchmaschinen wieder das zeigt, was gefunden werden soll.
+
+**`STRATEGIE.md`/`BEFUND.md`/`ANLEITUNG.md` (landing-page-strategie/)
+bleiben unverändert stehen** — reine Vorarbeit (Message, Belege, Funnel,
+drei Headline-Fassungen), keine Datei, die etwas Falsches behauptet. Ob sie
+beim Neubau wiederverwendet wird, ist Betreiber-Sache.
+
+**Offen:** Alles — die Seite existiert nicht mehr, Neubau ist ein eigener,
+künftiger Auftrag. Betreiber prüft vorher selbst eine Anleitung zu
+Onboarding, das laut Ankündigung eher zuerst drankommt.
+
+**Nächster Schritt:** Warten, ob der Betreiber Onboarding oder die
+Landing-Page zuerst startet.

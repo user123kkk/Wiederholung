@@ -76,7 +76,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `fertig` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `fertig` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
 | **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `fertig` | [`phase-5-recht/`](phase-5-recht/) |
-| **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `fertig` | [`phase-6-startseite/`](phase-6-startseite/) |
+| **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `zurückgestellt` (23.09.: `landing.html` auf Betreiber-Wunsch gelöscht, wird neu gemacht) | [`phase-6-startseite/`](phase-6-startseite/) |
 | **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `fertig` | [`phase-7-seo/`](phase-7-seo/) |
 | **8** | Rückmeldung: Kontakt- und Fehlerformular | `fertig` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
 | **9** | Barrierefreiheit als eigener Durchgang | `fertig` | [`phase-9-barrierefreiheit/`](phase-9-barrierefreiheit/) |
@@ -88,19 +88,30 @@ Phase noch einmal ausgeschrieben.
 ### Nebenstrang: Landing-Page-Strategie
 
 Kein Phasen-Ordner, keine Nummer — deshalb steht er nicht in der Tabelle
-oben. Die Startseite selbst ist in Phase 6 **gebaut** und `fertig`; der
-Ordner [`landing-page-strategie/`](landing-page-strategie/) klärt, was sie
-**sagt**. Reihenfolge dort: Befund → Strategie → erst dann HTML.
+oben. Der Ordner [`landing-page-strategie/`](landing-page-strategie/) klärt,
+was die Startseite **sagt**. Reihenfolge dort: Befund → Strategie → erst
+dann HTML.
 
-Status: `läuft` — [`STRATEGIE.md`](landing-page-strategie/STRATEGIE.md)
-steht seit dem 13.09.2026, aber **zweigeteilt**: Kern-Message, tragende
-Belege, Funnel und Seitenstruktur sind fertig und hängen an keiner Antwort
-mehr; Headline und Keywords liegen als **drei fertige Fassungen** vor, je
-eine pro möglicher Ausrichtung. Zum Weiterarbeiten fehlen **drei
-Entscheidungen** des Betreibers (`STRATEGIE.md` 2.1, 2.2, 2.3): womit ein
-Neuer ohne Kartensatz anfängt · eng oder weit ausgerichtet · die unbelegte
-Behauptung „wissenschaftlich bewährt" ersetzen. Solange die fehlen, wird
-`landing.html` nicht umgebaut.
+**23.09.2026 — `landing.html` auf Betreiber-Wunsch gelöscht, wird komplett
+neu gemacht.** Betreiber: „die will ich neu machen daher kannst du die
+vorhandene löschen?" — ausdrücklich ohne Begründung verlangt, keine
+Rückfrage gewollt. Datei entfernt, alle Referenzen darauf bereinigt
+(`firebase.json`-Rewrites entfernt — „/" liefert jetzt per Firebase-Hosting-
+Standard direkt `index.html` aus, `sw.js` APP_SHELL bereinigt,
+`datenschutzerklaerung.html` Abschnitt 11 auf das verbleibende
+Fehlerformular reduziert, das Kontaktformular gab es nur auf der jetzt
+gelöschten Seite). Details: `phase-6-startseite/LOGBUCH.md`,
+`phase-8-rueckmeldung/LOGBUCH.md`. **`STRATEGIE.md` bleibt unverändert
+stehen** — Kern-Message, Belege, Funnel, drei Headline-Fassungen sind
+weiterhin gültige Vorarbeit, falls beim Neubau darauf zurückgegriffen werden
+soll; ob das so ist, entscheidet der Betreiber, wenn er tatsächlich mit der
+neuen Seite anfängt. Status daher `zurückgestellt`, nicht `läuft` — es gibt
+aktuell keine Datei, die weitergebaut wird.
+
+**Betreiber-Ankündigung (23.09.2026):** Nächster großer Schritt ist wohl
+eher `onboarding/` als die Landing-Page-Strategie („glaub onboarding") —
+Betreiber sieht sich dafür zunächst selbst eine Anleitung an, bevor es
+weitergeht. Keine Session-Aktion nötig, bis er sich meldet.
 
 ### Nebenstrang: Oberfläche & Mobile-Gestalt
 

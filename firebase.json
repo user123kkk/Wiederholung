@@ -6,12 +6,6 @@
     {
       "site": "lernkarte-925c2",
       "public": ".",
-      "rewrites": [
-        {
-          "source": "/",
-          "destination": "/landing.html"
-        }
-      ],
       "ignore": [
         "firebase.json",
         ".firebaserc",
@@ -71,12 +65,6 @@
     {
       "site": "adrabic",
       "public": ".",
-      "rewrites": [
-        {
-          "source": "/",
-          "destination": "/landing.html"
-        }
-      ],
       "ignore": [
         "firebase.json",
         ".firebaserc",
