@@ -35,19 +35,20 @@ Direkt-Baus mitten in einer Session mit fünf anderen Themen.
 ## Vorgeschlagenes Modell (Vorschlag, keine Entscheidung — siehe „Offen")
 
 - **Neue Sammlung `feedback/{id}`:** `text` (Titel, kurz), `beschreibung`
-  (optional, länger), `erstelltVon` (uid, NICHT öffentlich angezeigt —
-  nur zur Missbrauchs-Eindämmung: ein Konto kann eigene Einträge löschen),
-  `erstelltAm`, `votes` (Zahl), `status` (`offen`/`geplant`/`umgesetzt`/
-  `abgelehnt` — vom Betreiber gepflegt, macht das Board zu einer Konversation
-  statt einer toten Liste, genau der Punkt aus dem Video).
+  (optional, länger), `erstelltAm`, `votes` (Zahl), `status` (`offen`/
+  `geplant`/`umgesetzt`/`abgelehnt` — vom Betreiber gepflegt, macht das Board
+  zu einer Konversation statt einer toten Liste, genau der Punkt aus dem Video).
+  **Keine `erstelltVon`-uid gespeichert.** Damit entsteht gar keine Datenspur,
+  wer welchen Vorschlag eingereicht hat — niemand kann auf Nutzerdaten der
+  anderen zugreifen, keine rechtlichen Fragen entstehen („wer hat das gepostet,
+  dürfen wir ihn kontaktieren?"). Strukturelle Lösung statt Trick.
 - **Sammlung `feedback/{id}/votes/{uid}`:** ein Dokument pro Konto und
   Eintrag, verhindert Mehrfach-Voten über die Regeln selbst (Existenzprüfung),
-  nicht über Anwendungslogik.
+  nicht über Anwendungslogik. Wird nicht sichtbar gemacht.
 - **Sichtbar ist nur `text`/`beschreibung`/`votes`/`status`/`erstelltAm`.**
-  Kein Name, keine E-Mail, kein Kontobezug wird angezeigt — das Konto dient
-  nur der Regel „ein Vote pro Konto" und „eigene Einträge löschen", nicht der
-  Zuordnung nach außen. Löst denselben Vorsichtsgrund wie beim Lehrer-Gerüst
-  strukturell, ohne den Kern der Idee (öffentliche Liste, Voting) zu verlieren.
+  Keine uid, kein Name, keine E-Mail. Löst dieselbe Linie wie das Lehrer-Gerüst
+  konsequent um: „nicht invasiv", keine Daten-Sammlung über Nutzer:innen,
+  ohne den Kern (öffentliche Liste, Voting) zu verlieren.
 - **Anlegen erfordert ein bestätigtes Konto** (`request.auth != null &&
   request.auth.token.email_verified == true`, wie überall sonst in
   `firestore.rules`) — kein anonymes Posten, damit Spam/Missbrauch dieselbe
