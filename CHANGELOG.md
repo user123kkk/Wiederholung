@@ -1,3 +1,16 @@
+## 3.7.6 – 22. September 2026
+
+**Anmelden im Flugmodus hing endlos; Knopf-Glanz gedämpft; Google-Knopf im gesperrten Zustand kein grauer Fleck mehr.** Betreiber-Test am echten Handy im Flugmodus zeigte drei echte Probleme (Block 14, `plan/redesign-oberflaeche`):
+
+- **Zeitlimit für Anmelde-Aktionen:** `doLogin`, `doRegister`, `doReset`, `pruefeBestaetigung`, `doResendVerification` liefen ohne Netz unbegrenzt weiter ("lädt alles die ganze Zeit") – Firebase Auth wirft `network-request-failed` nicht in jeder Netz-Ausfall-Art (z. B. WLAN mit Router, aber ohne Internet) schnell genug. Neue Hilfsfunktion `mitZeitlimit()` (`app.js`) bricht nach 12s selbst ab und zeigt dieselbe "Keine Verbindung"-Meldung wie ein echter Netzfehler. Bewusst **nicht** an Google/Apple-Anmeldung (`signInWithPopup`) angewendet – die wartet auf eine echte Person in einem fremden Fenster, ein Zeitlimit dort würde eine laufende, gültige Anmeldung abbrechen.
+- **Knopf-Glanz aus 3.7.5 gedämpft:** Rückmeldung "sieht nach zu viel aus" – die Lichtkante auf dem gefüllten Knopf war mit 0.5 Deckkraft/10px Schatten zu kräftig und wirkte wie ein Bildfehler statt Tiefe. Jetzt deutlich leiser (0.22 Deckkraft/6px).
+- **Google-Knopf im gesperrten Zustand:** `button:disabled` arbeitet über `opacity`, und eine weiße Fläche wird darüber auf dunklem Grund zu einem verwaschenen Grau statt hell und gedämpft zu bleiben (genau das zeigte der Screenshot). Eigene, solide Deckkraft nur für diesen Knopf.
+- **E-Mail-Bestätigung:** Hinweis auf den Spam-Ordner steht jetzt dauerhaft auf der Bestätigen-Seite selbst, nicht mehr nur in der flüchtigen Meldung direkt nach dem Registrieren – wer die App zwischendurch schließt, sah den Hinweis vorher gar nicht mehr.
+
+**Geprüft, kein Fehler:** Die Fehlermeldungen für ungültige E-Mail / E-Mail schon vergeben (`auth/invalid-email`, `auth/email-already-in-use`) waren schon vorhanden (`AUTH_ERRORS`, `app.js`) – im Flugmodus konnten sie nur nicht ausgelöst werden, weil die Anfrage nie bei Firebase ankam. Der violette Balken am rechten Bildschirmrand in den Screenshots kommt aus keiner Zeile dieser App (keine violette Farbe im gesamten Code) – vermutlich eine Safari-Erweiterung oder System-UI, siehe Logbuch.
+
+**Offen, außerhalb von Code lösbar:** Bestätigungsmails landen im Spam, weil sie über die generische `firebaseapp.com`-Absenderadresse laufen – eine Sache der Firebase-Konsole (E-Mail-Vorlagen/Absendername), nicht des Codes. "lernkarte" beim Google-Anmelden kommt von der Firebase-Projekt-ID (`lernkarte-925c2`) – nicht änderbar ohne vollständige Projekt-Migration, siehe Logbuch.
+
 ## 3.7.5 – 22. September 2026
 
 **Sichtbarer Tiefe-Durchgang über Schrift, Fortschritt, Einstellungen, Verwalten und den Google-Knopf** (Block 13, `plan/redesign-oberflaeche`). Rückmeldung zu Block 12: eine reine Hover-Konsistenz-Korrektur „sieht gleich aus" – zu Recht, sie war auch nur dafür gedacht. Dieser Durchgang bringt echte, sichtbare Veränderung, ohne die vier Sätze der Gestaltung zu brechen (keine neue Farbe, keine zweite Fläche in einer Fläche, ein gefüllter Knopf pro Bildschirm):

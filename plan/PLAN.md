@@ -148,7 +148,15 @@ Lichtschein auf allen erhobenen Flächen (`--sheen`), Lichtkante+Schatten auf
 dem einen gefüllten Knopf pro Bildschirm, Verlauf auf großen Kennzahlen und
 dem Heute-Balken, Icon-Chips in Einstellungen, markenkonformer heller
 Google-Knopf, kräftigere Überschriften — alles ohne neue Farbe, ohne zweite
-Fläche in einer Fläche, ohne Eingriff in die Lernlogik.
+Fläche in einer Fläche, ohne Eingriff in die Lernlogik. **Betreiber-Test am
+Handy (Flugmodus)** fand drei echte Fehler, als **Block 14** behoben
+(v3.7.6): endloses Laden bei Netzausfall (neue `mitZeitlimit()`-Funktion,
+bewusst nicht bei Google/Apple-Anmeldung), zu kräftiger Knopf-Glanz aus
+Block 13 gedämpft, Google-Knopf im gesperrten Zustand kein verwaschenes
+Grau mehr. Zwei Punkte geklärt (E-Mail-Fehlermeldungen waren schon da;
+„lernkarte" in der Google-URL ist die nicht änderbare Firebase-Projekt-ID)
+und zwei offen (violetter Balken vermutlich Browser-Erweiterung; Spam-
+Zustellung braucht einen Firebase-Konsolen-Schritt, siehe `LOGBUCH.md`).
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
 

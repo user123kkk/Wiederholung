@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.7.5";
+const APP_VERSION = "3.7.6";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2073,6 +2073,23 @@ const AUTH_ERRORS = {
 function authErrorText(e) {
   return (e && AUTH_ERRORS[e.code]) || "Das hat nicht geklappt (" + (e && e.code ? e.code : "unbekannter Fehler") + ").";
 }
+/* 22.09.2026 (Block 14, plan/redesign-oberflaeche): Betreiber-Meldung vom
+   Handy im Flugmodus - der Anmelden-Knopf drehte sich unbegrenzt weiter,
+   "laedt alles die ganze zeit". Firebase Auth wirft "network-request-failed"
+   normalerweise selbst, aber offenbar nicht zuverlaessig schnell genug bei
+   jedem Netz-Ausfall (Flugmodus statt "kein Signal" scheint der Unterschied
+   zu sein - kein DNS-Fehler, nur Stille). Jeder Auth-Aufruf laeuft ab jetzt
+   gegen ein eigenes Zeitlimit; laeuft das ab, bekommt der Nutzer dieselbe
+   Meldung wie bei einem echten network-request-failed, statt endlos zu
+   warten. 12s, nicht kuerzer: ein echter, langsamer Serverwechsel soll nicht
+   faelschlich als "offline" gemeldet werden. */
+function mitZeitlimit(versprechen) {
+  let timer;
+  const limit = new Promise((_, reject) => {
+    timer = setTimeout(() => reject({ code: "auth/network-request-failed" }), 12000);
+  });
+  return Promise.race([versprechen, limit]).finally(() => clearTimeout(timer));
+}
 function val(id) {
   const el = document.getElementById(id);
   return el ? el.value : "";
@@ -2083,7 +2100,7 @@ async function doLogin() {
   const pass = val("a-pass");
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
-    await fb.signInWithEmailAndPassword(auth, email, pass);
+    await mitZeitlimit(fb.signInWithEmailAndPassword(auth, email, pass));
   } catch (e) {
     ui.authError = authErrorText(e);
   }
@@ -2096,6 +2113,13 @@ async function doLogin() {
    Anbieter die E-Mail bereits bestaetigt hat (emailVerified kommt so vom
    Anbieter). Ein Abbruch (Fenster zugemacht) ist kein Fehler, den man dem
    Benutzer als Problem zeigen muss - AUTH_ERRORS deckt den Fall ruhig ab. */
+/* Bewusst OHNE mitZeitlimit(): signInWithPopup wartet auf eine echte Person
+   in einem fremden Fenster (Passwort tippen, 2FA) - das kann laenger als
+   12s dauern, ohne dass etwas haengt. Ein Zeitlimit wuerde hier eine
+   laufende, gueltige Anmeldung abbrechen. Haengt das Popup/die Weiterleitung
+   selbst (kein Netz, siehe mitZeitlimit-Kommentar bei doLogin), federt der
+   pageshow/persisted-Handler unten den Fall ab, in dem jemand zurueckgeht,
+   ohne fertig zu sein. */
 async function doGoogleLogin() {
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
@@ -2152,12 +2176,12 @@ async function doRegister() {
   ui.authFeldFehler = null;
   ui.authBusy = true; render();
   try {
-    const cred = await fb.createUserWithEmailAndPassword(auth, email, pass);
+    const cred = await mitZeitlimit(fb.createUserWithEmailAndPassword(auth, email, pass));
     displayName = name;
-    await fb.updateProfile(cred.user, { displayName: name });
+    await mitZeitlimit(fb.updateProfile(cred.user, { displayName: name }));
     /* C4: Nach der Registrierung eine Bestätigungs-E-Mail schicken. Die App
        sperrt sich selbst, bis emailVerified wahr ist (siehe renderAuth). */
-    await fb.sendEmailVerification(cred.user);
+    await mitZeitlimit(fb.sendEmailVerification(cred.user));
     ui.authInfo = "Konto erstellt! Bitte E-Mail bestätigen – schau in deinem Posteingang (und Spam) nach.";
   } catch (e) {
     ui.authError = authErrorText(e);
@@ -2173,9 +2197,9 @@ async function pruefeBestaetigung() {
   if (!currentUser) return;
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
-    await currentUser.reload();
+    await mitZeitlimit(currentUser.reload());
     if (currentUser.emailVerified) {
-      await currentUser.getIdToken(true);
+      await mitZeitlimit(currentUser.getIdToken(true));
       location.reload();
       return;
     }
@@ -2190,7 +2214,7 @@ async function doResendVerification() {
   if (!currentUser) return;
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
-    await fb.sendEmailVerification(currentUser);
+    await mitZeitlimit(fb.sendEmailVerification(currentUser));
     ui.authInfo = "Verifikations-E-Mail wurde verschickt – bitte Posteingang (und Spam) prüfen.";
   } catch (e) {
     ui.authError = "Fehler beim Versand: " + (e && e.code ? e.code : String(e));
@@ -2202,7 +2226,7 @@ async function doReset() {
   const email = val("a-email").trim();
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
-    await fb.sendPasswordResetEmail(auth, email);
+    await mitZeitlimit(fb.sendPasswordResetEmail(auth, email));
     ui.authInfo = "E-Mail zum Zurücksetzen wurde verschickt – bitte Posteingang (und Spam) prüfen.";
   } catch (e) {
     ui.authError = authErrorText(e);
@@ -4666,6 +4690,13 @@ function renderPendingVerification() {
   html += '<div class="card">';
   html += '<p class="hint">Wir haben eine Best\u00e4tigungs-E-Mail an <strong>' + esc(currentUser.email) +
     '</strong> geschickt. \u00d6ffne den Link darin, um dein Konto freizuschalten.</p>';
+  /* 22.09.2026 (Block 14): Vorher stand der Spam-Hinweis nur in den
+     fluechtigen ui.authInfo/toast-Meldungen direkt nach dem Registrieren
+     bzw. "Erneut senden" - wer die App zwischendurch schliesst und die
+     Bestaetigung spaeter fortsetzt, landet hier ohne jede Meldung und ohne
+     diesen Hinweis. Jetzt fest auf dieser Seite, nicht nur im fluechtigen
+     Toast. */
+  html += '<p class="hint" style="margin-top:var(--space-3)">Kommt nichts an: kurz im Spam-/Werbe-Ordner nachsehen \u2013 Best\u00e4tigungsmails landen dort leicht, wenn man den Absender noch nicht kennt.</p>';
   /* 3.3.2: landing.html verspricht "Danach legst du direkt deine erste
      Karte an" - und dann kommt erstmal diese Wartezeile. Ohne diesen Satz
      verschwindet das Versprechen genau dort, wo es am meisten zaehlt. Der

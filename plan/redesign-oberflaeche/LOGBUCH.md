@@ -4,6 +4,109 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Block 14: Anmeldung im Flugmodus geprüft, drei echte Fehler behoben (v3.7.6)
+
+**Anlass:** Betreiber hat Block 13 am echten iPhone getestet (Flugmodus,
+17:53 Uhr) und zwei Screenshots geschickt: Verwalten-Liste und Anmelde-
+Bildschirm. Rückmeldung: „es sieht einfach nach viel zu viel aus irgendwie
+… wenn man auf google drückt steht dort oben bei url oder so irgendwas mit
+lernkarte und wenn man abbricht lädt alles die ganze zeit. schau darauf
+dass auch angezeigt wird dass ungültige email, email existiert oder sowas
+und auch dass die bestätigungsemail dings besser verläuft, unter anderem
+nicht immer im spam ordner landet. die knöpfe sind komisch."
+
+**Einordnung — warum das hier und nicht in Phase 2 läuft:** Die Anmelde-
+Formulare sind kein Teil der Lernlogik (Wiederholungsalgorithmus,
+Fälligkeit, Datenmodell) — sie sind Bedienung, genau wie Block 9 dieses
+Strangs schon einmal Fehlermeldungen in denselben Formularen ans Feld statt
+in einen Dialog gebracht hat. Bleibt innerhalb der Lockerung von
+`KONZEPT.md` §7 für diesen Strang.
+
+**Geprüft, jeweils mit Befund:**
+1. **„lädt alles die ganze zeit"** → echter Fehler, behoben. `doLogin`,
+   `doRegister`, `doReset`, `pruefeBestaetigung`, `doResendVerification`
+   hatten kein eigenes Zeitlimit — Firebase Auth wirft
+   `network-request-failed` nicht bei jeder Art von Netzausfall schnell
+   genug (ein WLAN mit Router, aber ohne Internet, lässt `fetch()`
+   typischerweise viel laenger haengen als ein sofortiger DNS-Fehler).
+   Neue Funktion `mitZeitlimit()` (`app.js`, nach `authErrorText`) bricht
+   nach 12s selbst ab. **Bewusst nicht** an `doGoogleLogin`/`doAppleLogin`
+   (`signInWithPopup`) angewendet — die warten auf eine echte Person in
+   einem fremden Fenster, ein Zeitlimit dort würde eine laufende, gültige
+   Anmeldung abwürgen. Für den Fall, dass das Popup/die Weiterleitung
+   selbst haengt, gibt es schon den `pageshow`/`persisted`-Handler von
+   18.09.2026.
+2. **„ungültige email, email existiert"** → **kein Fehler, schon vorhanden.**
+   `AUTH_ERRORS` (`app.js:2058`) deckt `auth/invalid-email` und
+   `auth/email-already-in-use` bereits mit genau den passenden deutschen
+   Meldungen ab. Im Flugmodus konnten sie nur nicht auftreten, weil die
+   Anfrage Firebase nie erreichte — network-request-failed (jetzt via
+   Zeitlimit) kam zuerst. Nach Punkt 1 sollte das jetzt sichtbar werden,
+   sobald wirklich eine Verbindung besteht.
+3. **„knöpfe sind komisch" / „sieht nach zu viel aus"** → zwei Ursachen
+   gefunden. Erstens: der Knopf-Glanz aus Block 13 (`box-shadow` mit 0.5
+   Deckkraft/10px Schatten) war zu kräftig, wirkte am echten Bildschirm wie
+   ein Darstellungsfehler statt Tiefe — auf 0.22/6px dedämpft. Zweitens:
+   `button:disabled` arbeitet über `opacity`, und eine WEISSE Fläche
+   (Google-Knopf) wird dabei auf dunklem Grund zu einem verwaschenen Grau
+   statt hell und gedämpft zu bleiben — genau der Fleck im zweiten
+   Screenshot. Eigener, solider `:disabled`-Zustand nur für den Google-
+   Knopf (`#f1f3f4`-Fläche, `#9aa0a6`-Text, `opacity:1`).
+4. **„irgendwas mit lernkarte" bei der URL** → **kein Fehler, nicht
+   änderbar ohne großen Eingriff.** `firebaseConfig.projectId` in `app.js:11`
+   lautet `lernkarte-925c2` — das ist die Firebase-Projekt-ID, die Google
+   beim Anmelde-Popup/der Weiterleitung als Ziel-Adresse zeigt
+   (`lernkarte-925c2.firebaseapp.com`). Eine Projekt-ID lässt sich nach dem
+   Anlegen nicht mehr umbenennen; das würde ein komplett neues Firebase-
+   Projekt und eine Datenmigration aller drei Konten bedeuten — deutlich
+   größerer Eingriff als dieser Block. **Nicht begonnen, offene
+   Entscheidung des Betreibers**, siehe unten. Was ohne Neuanlage geht: der
+   in Googles eigenem Anmelde-Fenster gezeigte App-Name/Support-Kontakt
+   lässt sich über die Google Cloud Console (OAuth-Zustimmungsbildschirm)
+   ändern, unabhängig von der Projekt-ID — Konsole, nicht Code.
+5. **Violetter Balken am rechten Bildschirmrand (beide Screenshots)** →
+   geprüft, stammt aus keiner Zeile dieser App: `grep -i "purple\|violet"`
+   über `styles.css`/`app.js`/`index.html` findet nichts, die Farbpalette
+   der App kennt kein Violett (nur Creme, Verdigris-Grün, Zinnober-Rot,
+   Grautöne). Vermutlich eine Safari-Erweiterung oder System-Geste-
+   Anzeige (iOS zeigt Aehnliches beim Randwischen). **Nicht behoben**,
+   weil vermutlich nichts an dieser App zu beheben ist — Betreiber-Rück-
+   frage: Erscheint der Balken auch auf anderen Webseiten im selben
+   Browser?
+6. **„bestätigungsemail … nicht immer im spam ordner"** → teils Code, teils
+   nicht. Im Code ergänzt: der Spam-Hinweis stand bisher nur in der
+   flüchtigen `ui.authInfo`-Meldung direkt nach dem Registrieren bzw.
+   „Erneut senden" — schließt man die App dazwischen, ist er weg. Jetzt
+   fest auf der Bestätigen-Seite selbst (`renderPendingVerification`,
+   `app.js`). **Die eigentliche Ursache liegt aber außerhalb des Codes:**
+   Firebase verschickt Bestätigungs-/Reset-Mails standardmäßig über eine
+   generische `firebaseapp.com`-Absenderadresse ohne eigene Domain-
+   Reputation — das ist ein klassischer Spam-Auslöser. Behebbar nur in der
+   Firebase-Konsole (E-Mail-Vorlagen: Absendername, Antwortadresse; im
+   Idealfall eine eigene Absender-Domain mit SPF/DKIM). Siehe „Was Du noch
+   tun musst" im Chat-Protokoll dieser Session.
+
+**Geändert:** `app.js` (`mitZeitlimit()`, fünf Aufrufstellen, Spam-Hinweis
+auf der Bestätigen-Seite), `styles.css` (Knopf-Glanz gedämpft, eigener
+`:disabled`-Zustand für den Google-Knopf), `plan/redesign-oberflaeche/
+stilprobe.html` (gesperrter Google-Knopf als Baustein ergänzt).
+
+**Offen:**
+- Projekt-ID-Migration (Punkt 4) — Betreiber-Entscheidung, vermutlich den
+  Aufwand nicht wert für 3 Nutzer:innen, aber nicht meine Entscheidung.
+- Violetter Balken (Punkt 5) — Rückfrage an Betreiber siehe oben.
+- E-Mail-Zustellung (Punkt 6) — Firebase-Konsole, Schritte im Chat.
+- Betreiber-Test am Handy MIT echtem Netz steht noch aus (Zeitlimit lässt
+  sich im Flugmodus nicht von einer echten Fehlermeldung unterscheiden,
+  wenn beide nach spätestens 12s erscheinen — sieht aber gleich aus).
+
+**Nächster Schritt:** Betreiber-Rückmeldung zu Block 14 abwarten — diesmal
+mit echtem Netz testen, damit sich Zeitlimit-Fall und Fehlermeldungs-Fall
+unterscheiden lassen. Bei Gelegenheit die Rückfrage zum violetten Balken
+klären.
+
+---
+
 ### 2026-09-22 — Sichtbarer Tiefe-Durchgang, Block 13 gebaut (v3.7.5)
 
 **Anlass:** Rückmeldung des Betreibers auf Block 12: „sieht kam anders aus
