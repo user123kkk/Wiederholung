@@ -1,3 +1,16 @@
+## 3.8.1 – 22. September 2026
+
+**Die Bildschirmtastatur verdeckt kein Blatt mehr; eine doppelte Zahl im Fortschritt ist raus** (Block 16, `plan/redesign-oberflaeche`).
+
+**Tastatur (Betreiber-Screenshot, iPhone 11).** Beim Anlegen einer Karte schob sich die Tastatur über das Blatt: vom Formular war noch das erste Feld zu sehen, „Übersetzung" stand halb unter der Tastaturkante, die Knöpfe „Hinzufügen"/„Fertig" waren gar nicht erreichbar. Ursache ist eine Eigenheit von iOS – die Tastatur verkleinert nur den **sichtbaren** Bereich (`visualViewport`), nicht das Layout. Ein Element mit `position:fixed` hängt aber am Layout, für den Browser stand das Blatt also weiterhin korrekt „unten am Bildschirm"; dieses Unten lag nur hinter der Tastatur. `dvh` hilft dabei nicht, die Einheit folgt dem Ein- und Ausklappen der Browserleisten, nicht der Tastatur.
+
+- Neue Funktion `syncTastatur()` (`app.js`, am vorhandenen `visualViewport`-Hörer) misst die verdeckte Höhe und gibt sie als `--tastatur` weiter. Eine Schwelle von 120px trennt die Tastatur von der ein- und ausfahrenden Adressleiste (rund 50–90px) – sonst würde das Blatt bei jedem Scrollen wackeln.
+- `styles.css`: Die Überlagerung bekommt `padding-bottom: var(--tastatur)`, das Blatt setzt sich also über die Tastatur. Bewusst Polsterung und kein höher gesetzter Boden – die Verdunkelung soll weiterhin den ganzen Bildschirm decken, sonst blitzt beim Ein- und Ausfahren der Tastatur ein heller Streifen auf. Das Blatt begrenzt sich auf `min(88dvh, 100%)` und scrollt in sich selbst, wenn der Platz nicht reicht.
+- Gilt für **alle** Blätter und Dialoge (Karte anlegen, Bereich wählen, Karten-Detail, Auswahl-Blätter, Eingabe-Dialoge) und zusätzlich für das Fehlerformular, das eine eigene Überlagerung hat.
+- Das Feld, in dem gerade getippt wird, wird in die Mitte des verbleibenden Platzes gescrollt – iOS übernimmt das nur für gewöhnliche Seiten zuverlässig, nicht für ein Feld in einem `position:fixed`-Blatt.
+
+**Fortschritt, „Dein Stoff": „Diese Woche N neue dazu." ist raus.** Dieselbe Zählung („Karten zum ersten Mal gesehen") stand schon zweimal weiter oben auf demselben Bildschirm – in „Heute" für heute und in „Die letzten X Wochen" für den ganzen Zeitraum. Drei Zeitfenster derselben Zahl in drei Blöcken, und ausgerechnet der Block, der gar nichts mit Zeit zu tun hat („eine Zahl, die nie zurückgeht"), trug den dritten.
+
 ## 3.8.0 – 22. September 2026
 
 **Ruhe und Fluss** (Block 15, `plan/redesign-oberflaeche`). Zusammenhängende Rückmeldung des Betreibers zu 3.7.6 mit Screenshot: Verwalten „unübersichtlich", Tabwechsel „sieht billig aus", „jede Seite ist gefühlt ein hard reset", „nicht jeder Button muss extra nochmal umrundet sein oder einen Glanz tragen", „es soll zu meinem Icon passen". Alles in diesem Durchgang, ohne die bestehende Gestalt zu ersetzen – der Komplett-Neuaufbau vom Vortag (4.0.0) bleibt zurückgenommen.

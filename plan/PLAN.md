@@ -503,7 +503,16 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (22.09.2026, Abend): App bei v3.8.0 — Block 15 „Ruhe und Fluss"
+**AKTUELL (22.09.2026, spät): App bei v3.8.1 — Block 16 nachgeschoben.** Zwei
+Rückfragen des Betreibers zu v3.8.0: (1) Screenshot vom iPhone 11, auf dem die
+Bildschirmtastatur das Karten-Blatt verdeckt und die Speichern-Knöpfe
+unerreichbar macht — behoben (`syncTastatur()`, `--tastatur`, gilt für alle
+Blätter und Dialoge). (2) „wiederholt sich da ned was" bei „Dein Stoff" — ja,
+zweimal; eine Zeile ist raus, für die zweite Stelle liegt eine **offene Frage
+beim Betreiber** (Einzelheiten im Logbuch, Eintrag „Block 16"). Beides braucht
+den Gerätetest.
+
+**Vorheriger Stand: v3.8.0 — Block 15 „Ruhe und Fluss"
 gebaut, Betreiber-Test am echten Handy steht aus.** Der Betreiber hat zu
 v3.7.6 eine lange, zusammenhängende Rückmeldung mit Screenshot geschickt
 (Verwalten „unübersichtlich", Tabwechsel „sieht billig aus", „jede Seite ist

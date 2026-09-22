@@ -2471,11 +2471,23 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    Am Handy kommt beides von unten, am Desktop steht es mittig.
    ========================================================================= */
 
+/* 22.09.2026 (Block 16): Der Boden der Ueberlagerung liegt ueber der
+   Bildschirmtastatur, nicht darunter. --tastatur kommt aus app.js
+   (syncTastatur) und ist 0, solange keine Tastatur offen ist - ohne
+   Tastatur aendert sich hier also gar nichts. Warum das noetig ist, steht
+   ausfuehrlich bei syncTastatur(): position:fixed haengt am Layout, und die
+   iOS-Tastatur verkleinert nur den sichtbaren Bereich. */
 .dlg-backdrop {
   position: fixed; inset: 0; z-index: var(--z-sheet);
   background: var(--backdrop);
   -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
   display: flex; align-items: flex-end; justify-content: center;
+  /* Bewusst Polsterung und nicht ein hoeher gesetzter Boden: Die Verdunkelung
+     soll weiterhin den GANZEN Bildschirm decken - die Tastatur faehrt ein
+     und aus, und in dem Vierteltakt, in dem sie unterwegs ist, waere sonst
+     ein heller Streifen der Seite dahinter zu sehen. align-items:flex-end
+     setzt das Blatt auf die Innenkante, also ueber die Tastatur. */
+  padding-bottom: var(--tastatur, 0px);
   animation: enter-fade var(--dur-fast) var(--ease-out) both;
 }
 .dlg {
@@ -2485,7 +2497,12 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   box-shadow: var(--shadow-lg);
   padding: var(--space-6) var(--space-5) calc(var(--space-5) + var(--sab));
   width: 100%; max-width: 460px; text-align: left;
-  max-height: 88dvh; overflow-y: auto;
+  /* Block 16: 100% ist die Hoehe der Ueberlagerung - und die endet seit
+     dieser Fassung ueber der Tastatur. Ohne Tastatur sind beide Werte
+     gleich und es gilt wie bisher 88dvh; mit Tastatur gewinnt der kleinere
+     und das Blatt nutzt genau den Platz, der uebrig ist. Es scrollt dann in
+     sich selbst (overflow-y unten), statt hinter die Tastatur zu laufen. */
+  max-height: min(88dvh, 100%); overflow-y: auto;
   /* 3.7.1: Das Blatt laesst sich nach unten wegwischen (app.js, blattWischen);
      das Ende seines Inhalts darf dabei nicht die Seite dahinter mitziehen. */
   overscroll-behavior: contain;
@@ -2780,6 +2797,9 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   z-index: var(--z-overlay);
   align-items: flex-end;
   justify-content: center;
+  /* Block 16: siehe .dlg-backdrop - auch hier tippt jemand in Felder, und
+     auch hier laege das Blatt sonst hinter der Tastatur. */
+  padding-bottom: var(--tastatur, 0px);
 }
 .error-modal[aria-hidden="false"] { display: flex; }
 
@@ -2796,7 +2816,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   position: relative;
   width: 100%;
   max-width: 460px;
-  max-height: 88dvh;
+  max-height: min(88dvh, 100%);   /* Block 16, siehe .dlg */
   overflow-y: auto;
   background: var(--surface-overlay);
   color: var(--text-1);

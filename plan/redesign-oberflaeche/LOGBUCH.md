@@ -4,6 +4,122 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Block 16: Tastatur verdeckt das Blatt; doppelte Zahl im Fortschritt (v3.8.1)
+
+**Anlass:** Zwei Rückfragen des Betreibers zu v3.8.0. (1) „ist der block dein
+stoff gut so? wiederholt sich da ned was?" (2) Screenshot vom iPhone 11: beim
+Anlegen einer Karte steht die Tastatur über dem Blatt, „Übersetzung – Pflicht"
+ist halb abgeschnitten, die Knöpfe sind nicht erreichbar. Dazu „und sonst nach
+allem überprüfen".
+
+**Geändert:**
+
+- `app.js`: neu `TASTATUR_MIN`, `tastaturSprung`, `syncTastatur()`; Aufruf am
+  Anfang von `syncViewportGap()` (dort hängen die `visualViewport`-Hörer schon).
+- `styles.css` Abschnitt 14: `.dlg-backdrop` bekommt
+  `padding-bottom: var(--tastatur, 0px)`, `.dlg` `max-height: min(88dvh, 100%)`;
+  dasselbe für `.error-modal`/`.error-modal__dialog`.
+- `app.js` `fortschrittStoff()`: Zeile „Diese Woche N neue dazu." entfernt.
+- `APP_VERSION`, `CACHE_NAME`, `index.html` `?v=` → 3.8.1, `CHANGELOG.md`.
+
+**Entscheidung — Tastatur:**
+
+Die Ursache ist nicht die Höhe des Blattes, sondern eine Eigenheit von iOS:
+Die Tastatur verkleinert nur den **sichtbaren** Bereich (`visualViewport`),
+nicht das Layout. `position:fixed` hängt aber am Layout — für den Browser
+stand das Blatt weiterhin korrekt „unten am Bildschirm", nur liegt dieses
+Unten hinter der Tastatur. `dvh` hilft ausdrücklich NICHT: die Einheit folgt
+dem Ein- und Ausklappen der Browserleisten, nicht der Tastatur. Es bleibt
+also nur, selbst zu messen.
+
+Drei Einzelentscheidungen dabei:
+
+1. **Polsterung statt höher gesetztem Boden.** `inset: 0 0 var(--tastatur) 0`
+   wäre kürzer, verkleinert aber die Verdunkelung mit. Die Tastatur fährt über
+   rund eine Viertelsekunde ein und aus; in dieser Zeit wäre unten ein heller
+   Streifen der Seite dahinter zu sehen. Mit `padding-bottom` deckt die
+   Verdunkelung weiter den ganzen Bildschirm, und `align-items: flex-end`
+   setzt das Blatt trotzdem auf die Innenkante.
+2. **Schwelle 120px.** Auf dem iPhone fährt die Adressleiste beim Scrollen
+   ein und aus, das sind rund 50–90px Differenz zwischen `innerHeight` und
+   `visualViewport.height`. Ohne Schwelle würde jedes Scrollen das Blatt
+   verschieben. Keine Tastatur heißt deshalb die Zahl 0, nicht „ein bisschen".
+3. **Sprung zum Feld ohne `behavior: "smooth"` und mit 80ms Verzögerung.**
+   Die Tastatur meldet MEHRERE `resize`-Ereignisse, während sie einfährt. Wer
+   beim ersten misst, scrollt auf einen Stand, den es gleich nicht mehr gibt;
+   und eine weiche Bewegung würde von jedem weiteren Ereignis abgebrochen.
+   `requestAnimationFrame` wäre hier zusätzlich unzuverlässig — der Browser
+   hält es an, solange die Seite nicht sichtbar ist (im Probelauf gemessen,
+   siehe unten).
+
+**Entscheidung — „Dein Stoff":**
+
+Der Betreiber hat recht, und es sind genau genommen **zwei** Dinge:
+
+1. **„Diese Woche N neue dazu."** — dieselbe Zählung steht zweimal weiter
+   oben: „Heute … · N zum ersten Mal gesehen" und „Die letzten X Wochen: N
+   Antworten · N Karten zum ersten Mal gesehen". Drei Zeitfenster derselben
+   Zahl in drei Blöcken. Der Block hier hat als einziger gar nichts mit Zeit
+   zu tun („Der Stand: eine Zahl, die nie zurueckgeht", Kommentar über der
+   Funktion). **Entfernt.**
+2. **Die große Zahl ist rechnerisch die Summe der drei rechten
+   Balkenabschnitte.** `gesessen` prüft `maxStufe >= LEKTION_STUFE` (= 1);
+   „wackelig", „solide" und „fest" prüfen alle drei `maxStufe > 0`
+   (`KARTEN_ZUSTAENDE`, `app.js`). „neu" und „gesehen" haben beide
+   `maxStufe === 0`. Bei echten Daten gilt deshalb immer:
+   `gesessen = wackelig + solide + fest`. Die Überschrift-Zahl sagt also
+   dasselbe wie der Balken direkt darunter, nur gröber.
+   **Nicht geändert, bewusst:** Eine Zusammenfassung über einer Aufschlüsselung
+   ist ein gängiges und nützliches Muster, und die Zahl steht mit Begründung
+   dort („eine Zahl, die nie zurückgeht" — der Balken kann pro Abschnitt
+   fallen, diese Summe nicht). Ob sie trotzdem weg soll, ist eine
+   Gestaltungsentscheidung des Betreibers; dem Agenten steht sie nicht zu,
+   weil sie eine dokumentierte frühere Entscheidung umkehren würde. **Frage
+   liegt beim Betreiber.**
+   (Im Probelauf zeigt die Attrappe 22 statt der erwarteten 18 — ihre
+   Testdaten haben Karten mit `maxStufe > 0` ohne `ersteBewertung`, was in
+   echten Daten nicht vorkommt. Die Identität oben gilt davon unberührt.)
+
+**Geprüft:** Derselbe Probelauf-Aufbau wie bei Block 15 (Firebase-Attrappen
+über eine Import-Map, Wegwerf-`probe.html`, danach gelöscht), diesmal auf
+414×896 (iPhone 11). Die Tastatur wurde nachgestellt, indem
+`visualViewport.height` überschrieben und `resize` ausgelöst wurde:
+
+- 336px Tastatur → `--tastatur: 336px`, Blattunterkante genau auf der
+  Tastaturkante, letzter Knopf („Fertig") bei 555px sichtbar, kein Scrollen
+  nötig.
+- 496px Tastatur → Blatt auf 399px verkürzt und scrollt in sich
+  (`scrollHeight` 512).
+- Tastatur wieder zu → `--tastatur: 0px`, alles wie vorher.
+- Feld unten angetippt, dann Tastatur → das Blatt scrollt um 93px, das Feld
+  steht mittig; die Seite dahinter bewegt sich nicht (`window.scrollY` 0).
+- Verdunkelung deckt weiterhin 0–896, also den ganzen Bildschirm.
+
+Dazu die Sichtung aller Punkte aus Block 15 gegengeprüft: pro Bildschirm genau
+ein Knopf mit Lichtkante, Reiter-Anzeiger folgt (`--tab-i` 0/1/2, in den
+Einstellungen `data-reiter="aus"` und Deckkraft 0), Wischen in beide
+Richtungen und an beiden Enden, Hinweiszeile mit 16px Polsterung,
+Speicherkarten-Name 107px statt 0px, helle Fassung unverändert (eigene
+Farbleiter, ebenfalls genau ein Knopf mit Lichtkante). `node --check app.js`
+sauber, keine neuen Konsolenfehler.
+
+**Offen:**
+
+- **Beides braucht den Gerätetest.** Die Tastatur wurde nachgestellt, nicht
+  echt geöffnet — Höhe, Einfahr-Animation und das Verhalten beim Wechsel
+  zwischen zwei Feldern kann nur ein echtes iPhone zeigen.
+- **Offene Frage an den Betreiber:** soll die große Zahl in „Dein Stoff"
+  bleiben (siehe Entscheidung 2 oben)?
+- Aus Block 15 unverändert offen: Aufräum-Durchgang (toter Code) und die
+  Frage, ob die Schrift-Regel (Stoff in Serifen, Bedienung in Systemschrift)
+  so bleiben soll.
+
+**Nächster Schritt:** Rückmeldung zu v3.8.1 am echten Gerät abwarten — vor
+allem, ob das Karten-Blatt mit offener Tastatur jetzt vollständig bedienbar
+ist. Danach der Aufräum-Durchgang.
+
+---
+
 ### 2026-09-22 — Block 15 „Ruhe und Fluss": Rückmeldung des Betreibers abgearbeitet (v3.8.0)
 
 **Anlass:** Betreiber-Screenshot vom Verwalten-Tab (iPhone, 18:57) plus eine

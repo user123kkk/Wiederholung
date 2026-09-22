@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.8.0";
+const APP_VERSION = "3.8.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -6503,8 +6503,14 @@ function fortschrittStoff(cards) {
   html += '<p class="gross-zahl"><strong>' + gesessen + '</strong>' +
     '<span class="arab-ziffer" lang="ar" dir="rtl">' + arabZahl(gesessen) + '</span>' +
     ' <span>von ' + gesamt + ' Karten saßen schon mindestens einmal</span></p>';
-  const woche = verlaufSumme(7);
-  if (woche.n > 0) html += '<p class="stat-sub">Diese Woche ' + woche.n + ' neue dazu.</p>';
+  /* 22.09.2026 (Block 16): Hier stand "Diese Woche N neue dazu." - dieselbe
+     Zaehlung ("Karten zum ersten Mal gesehen") steht schon zweimal weiter
+     oben auf demselben Bildschirm: in "Heute" fuer heute und in "Die letzten
+     X Wochen" fuer den ganzen Zeitraum. Drei Zeitfenster derselben Zahl in
+     drei Bloecken - und der einzige davon, der ueberhaupt nichts mit Zeit zu
+     tun hat, war ausgerechnet dieser hier ("Der Stand: eine Zahl, die nie
+     zurueckgeht", siehe Kopf dieser Funktion). Betreiber am 22.09.2026:
+     "wiederholt sich da ned was?" - ja, genau das. Raus. */
   /* 2.13.0: Ein Balken aus einer einzigen Farbe verteilt nichts - er sieht
      nur aus, als waere er kaputt. Solange alle Karten im selben Zustand sind,
      bleibt er weg. */
@@ -8234,6 +8240,7 @@ function syncViewportGap() {
      innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
      viel kleiner) bleibt der Zustand, wie er ist. */
   const root = document.documentElement;
+  syncTastatur();
   if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
     const ref = Math.max(screen.width, screen.height);
     const diff = ref - window.innerHeight;
@@ -8255,6 +8262,65 @@ function syncViewportGap() {
   const gap = Math.max(0, maxViewportHeight - h);
   document.documentElement.style.setProperty("--vv-gap", gap + "px");
 }
+/* 22.09.2026 (Block 16): Wie hoch die Bildschirmtastatur gerade ist.
+
+   Der Anlass ist ein Betreiber-Screenshot vom iPhone 11: Beim Anlegen einer
+   Karte schiebt sich die Tastatur ueber das Blatt - vom Formular sieht man
+   noch das erste Feld, "Uebersetzung" steht halb unter der Tastaturkante,
+   und die Speichern-Knoepfe sind gar nicht mehr erreichbar.
+
+   Die Ursache ist eine Eigenheit von iOS: Die Tastatur verkleinert nur den
+   SICHTBAREN Bereich (window.visualViewport), nicht das Layout. Ein Element
+   mit position:fixed haengt aber am Layout - fuer den Browser steht das
+   Blatt also weiterhin korrekt "unten am Bildschirm", nur liegt dieses Unten
+   inzwischen hinter der Tastatur. Auch dvh hilft nicht: die Einheit folgt
+   dem Ein- und Ausklappen der Browserleisten, nicht der Tastatur.
+
+   Also selbst messen und als Zahl weitergeben; styles.css (Abschnitt 14)
+   zieht den Boden der Ueberlagerung um genau diesen Betrag hoch.
+
+   Die Schwelle von 120px trennt die Tastatur von der ein- und ausfahrenden
+   Adressleiste: die ist auf dem iPhone rund 50-90px hoch und darf das Blatt
+   NICHT verschieben, sonst wackelt es beim Scrollen. Keine Tastatur ist die
+   Zahl 0, nicht "ein bisschen". */
+const TASTATUR_MIN = 120;
+let tastaturSprung = null;
+function syncTastatur() {
+  const vv = window.visualViewport;
+  let hoch = 0;
+  if (vv) {
+    const verdeckt = window.innerHeight - vv.height - vv.offsetTop;
+    if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
+  }
+  document.documentElement.style.setProperty("--tastatur", hoch + "px");
+  /* Das Feld, in dem gerade getippt wird, muss sichtbar bleiben. Das Blatt
+     ist jetzt kuerzer, also kann sein Inhalt unter seiner eigenen Unterkante
+     liegen - es scrollt selbst (overflow-y:auto), aber von allein scrollt es
+     nicht dorthin, wo der Cursor steht. iOS uebernimmt das nur fuer normale
+     Seiten zuverlaessig, nicht fuer ein Feld in einem position:fixed-Blatt. */
+  if (hoch > 0) {
+    const feld = document.activeElement;
+    if (feld && feld.closest && feld.closest(".dlg")) {
+      /* Kurze Verzoegerung statt requestAnimationFrame: Die Tastatur faehrt
+         ueber rund eine Viertelsekunde ein und meldet dabei MEHRERE
+         resize-Ereignisse. Wer beim ersten davon misst, scrollt auf einen
+         Stand, den es gleich nicht mehr gibt. 80ms sind spaet genug, dass
+         das Blatt seine neue Hoehe hat, und frueh genug, dass es nicht
+         nachtraeglich ruckt. (rAF waere hier ausserdem unzuverlaessig: der
+         Browser haelt es an, solange die Seite nicht sichtbar ist.) */
+      clearTimeout(tastaturSprung);
+      tastaturSprung = setTimeout(() => {
+        /* Ohne "smooth": Das Blatt ist gerade erst auf seine neue Hoehe
+           gesprungen, ein weiches Nachfahren danach sieht aus wie ein
+           zweiter, verspaeteter Ruck. Und mehrere resize-Ereignisse
+           hintereinander wuerden eine laufende weiche Bewegung ohnehin
+           immer wieder abbrechen. */
+        try { feld.scrollIntoView({ block: "center" }); } catch (e) {}
+      }, 80);
+    }
+  }
+}
+
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", syncViewportGap);
   window.visualViewport.addEventListener("scroll", syncViewportGap);
