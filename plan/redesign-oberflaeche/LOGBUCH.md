@@ -4,6 +4,97 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Block 17-Nachlese: leerer Bereich nicht wischbar, heller Modus zu weiß (v3.8.3)
+
+**Anlass:** Betreiber-Rückmeldung zu v3.8.2, mehrere Punkte in einer Nachricht.
+Zwei davon sind echte, reproduzierbare Funde und in dieser Version behoben;
+der Rest der Nachricht (Firestore-Regel-Deploy, die große Zahl in „Dein
+Stoff", der Übergang zwischen den Reitern, Rückmeldungs-Formular, Karten pro
+Sitzung, Ladebildschirm) ist unten unter „Offen" bzw. per `AskUserQuestion`
+an den Betreiber zurückgegeben — keine Vermutung geraten.
+
+**Geändert:**
+
+- `styles.css:591–611` (`.view`): `min-height: 100svh` ergänzt.
+- `styles.css` Tokens, heller Modus: `--ink-750`/`--ink-700` von `#ffffff`
+  auf `#fffdf7`/`#fffcf4`.
+- `APP_VERSION`/`CACHE_NAME`/`index.html?v=` → 3.8.3, `CHANGELOG.md` ergänzt.
+
+**Befund 1 — Wischen in einem leeren Bereich wechselte nicht den Tab.**
+Betreiber: legt man einen Bereich ohne Karten an und wischt in Verwalten in
+der leeren Fläche unter „Noch keine Karten vorhanden", passiert nichts.
+Ursache gefunden: `.view` hatte kein `min-height` — bei wenig Inhalt endete
+`#app` weit oberhalb des Bildschirmrands, der Rest der sichtbar leeren
+Fläche war schon `body` (dieselbe `--bg`-Farbe, daher optisch nicht zu
+unterscheiden). Der Wisch-Listener (`app.js`, `reiterWisch`) hängt aber an
+`#app`, nicht an `body` — ein Wisch dort landete nie im Listener.
+`.view--modus` hatte dieses `min-height: 100svh` schon länger
+(Beobachtung 13); der normalen `.view` fehlte es. Nachgezogen. Reiner
+CSS-Fix, keine JS-Änderung nötig.
+
+**Befund 2 — heller Modus „komplett weiß".** Betreiber: „der helle Modus
+gefällt mir nicht, ist nicht angepasst und komplett weiß irgendwie."
+Geprüft: Die Palette ist im hellen Modus durchgehend warmes Papier
+(`--ink-900: #f2ece0` usw.) — außer den beiden obersten Erhebungsstufen
+(`--ink-750`/`--ink-700`, sprich `.surface-raised`/`.surface-overlay`:
+Kartenblätter, Dialoge, Overlays), die reines `#ffffff` trugen. Gerade an
+den am meisten sichtbaren erhobenen Flächen kippte die Stimmung von „Papier"
+auf „Webseite". Auf ein warmes Beinahe-Weiß geändert, Stufenfolge (höher =
+heller) bleibt erhalten. Im Browser an `stilprobe.html` geprüft (Hell/Dunkel-
+Umschalter dort), Wahl-Blatt und Karten zeigen jetzt sichtbar warmes statt
+reines Weiß.
+
+**Geprüft:** `node --check app.js` (nur Versionsbump betroffen),
+`stilprobe.html` im Browser (hell + dunkel, keine Regression im Dunkelmodus
+da dort nichts geändert wurde). Der Wisch-Fix selbst ist nicht am echten
+Gerät geprüft (braucht Login) — reiner, in sich verständlicher CSS-Fix nach
+demselben Muster, das an anderer Stelle (`.view--modus`) schon funktioniert.
+
+**Befund, aber keine Änderung — „Karten pro Sitzung" ist NICHT entfernt.**
+Betreiber war unsicher, ob diese Einstellung „mal rausgenommen" wurde. Am
+Code geprüft: Sie existiert, voll funktionsfähig
+(`settings.sitzungsLimit`, `app.js:899–904, 1031–1032, 4214–4215,
+6016–6017, 6206–6207`; Einstellungen → „Karten pro Sitzung" mit den Stufen
+10/20/50/Alle). Keine Baustelle.
+
+**Korrektur einer früheren Einschätzung — Feedback-Board.** Der Eintrag vom
+19.09. (`phase-1-datenzugriff/LOGBUCH.md`) hatte die TikTok-Idee 3
+(öffentliches Feedback-Board mit Abstimmen) mit der Begründung „würde einen
+neuen Server/Datenbankmodell brauchen" verworfen. Das war ungenau: Firestore
+ist längst da, ein Board bräuchte eine neue Sammlung + Regeln + Oberfläche,
+keinen neuen Server. Damit ist die Idee technisch machbar — aber neu und mit
+echtem Gewicht: **öffentlich sichtbarer Nutzer-Text** ist eine andere
+Kategorie als das heutige private Mailto-Formular (Phase 8), mit denselben
+Vorsichtsgründen wie beim Lehrer-Gerüst (Minderjährigen-Frage, Vater haftet
+im Impressum) — nicht verboten, aber nicht ohne Umfangs-Entscheidung des
+Betreibers gebaut. Per `AskUserQuestion` zurückgegeben, nicht spekulativ
+angefangen.
+
+**Offen, an den Betreiber zurückgegeben (nicht geraten):**
+1. Die große Zahl in „Dein Stoff" (Block 16, s. dort) — behalten oder
+   entfernen, reine Gestaltungsentscheidung.
+2. Kurzer dunkler Übergang beim Wischen zwischen den Reitern — Betreiber
+   unsicher, ob Störung oder Absicht („hat vielleicht seinen Nutzen").
+3. Ladebildschirm (`.boot`, `app.js render()` bei `bereiche === null`) —
+   Betreiber will ihn „komplett raus", aber er ist funktional nötig, solange
+   noch keine Daten da sind (ohne ihn: leerer/undefinierter Bildschirm statt
+   eines Zustands). Braucht Klärung, was genau stört, bevor etwas entfernt
+   wird, das seit v3.0.24 auch die Selbstheilung nach hängendem
+   Service-Worker/Cache trägt.
+4. Feedback-Board vs. verbessertes privates Formular vs. vorerst nur
+   Idee — siehe Korrektur oben.
+5. `firebase deploy --only "firestore:rules"` — unverändert offen seit
+   v3.7.0 (Lehrer-Gerüst „Lehrer gibt frei"), s. `lehrer-modus/LOGBUCH.md`.
+   Reine Konsolen-/CLI-Handlung des Betreibers, siehe `../../CLAUDE.md`
+   „Was der Betreiber selbst tun muss" — nicht vom Agenten ausgeführt, obwohl
+   die Firebase-CLI in dieser Umgebung technisch angemeldet wäre (production-
+   Deploy, schwer rückgängig zu machen, betrifft echte Nutzerdaten).
+
+**Nächster Schritt:** Auf die fünf `AskUserQuestion`-Antworten warten, dann
+gezielt genau das bauen, was entschieden wurde — nicht mehr.
+
+---
+
 ### 2026-09-22 — Block 17: Wischen zwischen den Reitern neu gefasst (v3.8.2)
 
 **Anlass:** „und das wischen ist sehr unangenehm und schwer, will wirklich was

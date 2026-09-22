@@ -503,7 +503,16 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (22.09.2026, spät): App bei v3.8.2 — Block 17, das Wischen neu
+**AKTUELL (22.09.2026, noch später): App bei v3.8.3 — zwei Funde aus der
+Rückmeldung zu v3.8.2 behoben (leerer Bereich nicht wischbar, heller Modus zu
+weiß), fünf weitere Punkte per `AskUserQuestion` an den Betreiber
+zurückgegeben statt geraten. Einzelheiten:
+[`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md), Eintrag
+„Block 17-Nachlese". **Bei „leg los" zuerst prüfen, ob die fünf offenen
+Punkte (große Zahl „Dein Stoff", Wisch-Übergang, Ladebildschirm,
+Feedback-Board-Umfang, Firestore-Regel-Deploy) inzwischen beantwortet sind.**
+
+**Vorheriger Stand (22.09.2026, spät): App bei v3.8.2 — Block 17, das Wischen neu
 gefasst.** Betreiber-Rückmeldung zu Block 15: „das wischen ist sehr
 unangenehm und schwer, will wirklich was flüssiges". Ursache war eine zu
 starke Dämpfung der Bewegung (Finger legt 100px zurück, Bildschirm bewegt

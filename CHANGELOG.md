@@ -1,3 +1,10 @@
+## 3.8.3 – 22. September 2026
+
+**Zwei echte Funde aus der Betreiber-Rückmeldung zu 3.8.2, beide reine Gestaltung/`styles.css`.**
+
+- **Wischen in einem leeren Bereich (Verwalten) wechselte nicht den Tab.** Legt man einen Bereich ohne Karten an, ist der Bildschirm sehr kurz — `.view` (und damit `#app`) endete dort, wo der Text „Noch keine Karten vorhanden" endet, lange vor dem unteren Bildschirmrand. Der Rest der sichtbar leeren Fläche war schon `body`, nicht mehr `#app` — genau dort hängt aber der Wisch-Listener (`app.js`, `reiterWisch`), der nur auf `#app` selbst lauscht. `.view` bekommt jetzt `min-height: 100svh`, wie `.view--modus` es schon länger hat — ein kurzer Bildschirm ist jetzt trotzdem auf ganzer Höhe wischbar.
+- **Heller Modus: die beiden obersten erhobenen Flächen (Karten im Blatt, Dialoge, Overlays) waren reines Bildschirm-Weiß**, während der Rest der Palette durchgehend warmes Papier ist. Betreiber: „der helle Modus gefällt mir nicht, ist nicht angepasst und komplett weiß irgendwie." `--ink-750`/`--ink-700` sind jetzt ein warmes Beinahe-Weiß (`#fffdf7`/`#fffcf4`) statt `#ffffff` — die Stufenfolge (höher = heller) bleibt, nur ohne den reinen Weiß-Sprung am oberen Ende.
+
 ## 3.8.2 – 22. September 2026
 
 **Das Wischen zwischen den Reitern neu gefasst — folgt jetzt 1:1 dem Finger** (Block 17, `plan/redesign-oberflaeche`). Betreiber zu Block 15: „das wischen ist sehr unangenehm und schwer, will wirklich was flüssiges".
