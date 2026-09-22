@@ -119,8 +119,7 @@ die beiden Dateien dazu sind am 17.09. entfernt worden, nachdem die
 Design-Entscheidungen in `styles.css` und `README.md` stehen. Geprüft wird an
 [`stilprobe.html`](redesign-oberflaeche/stilprobe.html) — ohne sie kommt niemand
 ohne Firebase-Anmeldung an der Oberfläche vorbei.
-**22.09.2026, v4.0.0: Gestaltung komplett neu aufgesetzt** (iOS-Stil, Farben aus dem Lotus-Symbol, Regeln in `styles.css`/`README.md`; Betreiber-Freigabe aller alten Gestaltungsregeln) – Handy-Test steht aus, siehe Logbuch.
-Status davor: **Blöcke 1–10 fertig** (v3.1.0–3.4.3), alle am echten Handy
+Status: **Blöcke 1–10 fertig** (v3.1.0–3.4.3), alle am echten Handy
 verifiziert. Blöcke 8–10 kamen am 17.09.2026 aus der Bildersammlung des
 Betreibers (108 Bilder, alle einzeln geprüft in
 [`BILDER-BEFUND.md`](redesign-oberflaeche/BILDER-BEFUND.md)). Der Strang

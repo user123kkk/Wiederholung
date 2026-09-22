@@ -4,37 +4,6 @@ Letzter Eintrag zuerst.
 
 ---
 
-### 2026-09-22 — Gestaltung 4.0: neues Gerüst im iOS-Stil, Farben aus dem Lotus-Symbol (v4.0.0)
-
-**Geändert:**
-- `styles.css` komplett neu (alle Klassennamen erhalten; Regeln im Dateikopf).
-- `app.js`: `renderVerwalten()` (Seitenkopf mit Werkzeugen), `renderVerwaltenListe()`
-  (alte Werkzeugzeile entfernt), `kartenListeInhalt()` (`.liste-karten`-Hülle,
-  Griffe nur bei `ui.sortMode`), `renderSetsPanel()`/`setBlock()` (Kopf als
-  Listenzeile, Werkzeuge erst aufgeklappt), `bereichMehrSheet()` (neue Zeile
-  „Reihenfolge ändern"), Aktionen `bereich-mehr-sortieren`/`toggle-sort-mode`,
-  neues Feld `ui.sortMode`; `renderLernen()` (Stapel-Meta als Textzeile,
-  Faden in `.card.faden`); `themaAnwenden()` neue theme-color-Werte.
-- `index.html`, `landing.html`, `manifest.json`: theme-color, `.bg-glow` raus.
-- `README.md` Gestaltungsabschnitt ersetzt; `CHANGELOG.md`; Version 4.0.0.
-
-**Entscheidung:** Betreiber hat alle Repo-Regeln zur Gestaltung ausdrücklich
-freigegeben („ich erlaube dir alle Regeln aus dem repo zu ignorieren") und
-will ein verlässliches Gerüst im Apple-Stil, das zum Lotus-Symbol passt. Daher
-kein weiterer Flicken auf „Satz 1–4", sondern Neuaufbau: Systemschrift,
-einfarbig Elfenbein/Schwarz (hell: Tinte/Papier), flache Flächen,
-iOS-Tab-Leiste, iOS-Blattkurve. Blau als Systemfarbe wurde erst gebaut und auf
-Betreiber-Hinweis („soll zur Lotusblüte passen") durch die Symbolfarben ersetzt.
-Sortier-Griffe in einen eigenen Modus, weil sie an jeder Zeile den
-Verwalten-Bildschirm „voll" machten – Ziehen selbst ist unverändert.
-
-**Offen:** Test am echten Handy (iOS-Home-Bildschirm-App: Tab-Leiste unten,
-`html.ref-hoehe`). `stilprobe.html` nutzt noch alte Klassen/Serifen-Beispiele
-und ist nicht nachgezogen – der Probelauf zeigt die echte App.
-
-**Nächster Schritt:** Betreiber-Rückmeldung vom Handy abwarten; danach ggf.
-Fortschritt-Tab (viele Blöcke untereinander) inhaltlich straffen.
-
 ### 2026-09-22 — Block 14: Anmeldung im Flugmodus geprüft, drei echte Fehler behoben (v3.7.6)
 
 **Anlass:** Betreiber hat Block 13 am echten iPhone getestet (Flugmodus,

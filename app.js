@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "4.0.0";
+const APP_VERSION = "3.7.6";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1017,7 +1017,7 @@ function themaAnwenden() {
      Skript im Kopf der Seite, damit beim Start nichts umspringt. */
   try { localStorage.setItem("adrabic-thema", settings.thema); } catch (e) {}
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", t === "hell" ? "#f4f2ed" : "#0b0b0c");
+  if (meta) meta.setAttribute("content", t === "hell" ? "#f2ece0" : "#0e0e12");
 }
 function setThema(id) {
   if (!THEMEN.some(x => x.id === id)) return;
@@ -1099,7 +1099,6 @@ let ui = {
   umzug: null,               // C1: { laeuft, fertig, gesamt, fehler } waehrend des Datenumzugs
   dialog: null,              // D2: { kind, title, text, value, okLabel, danger, resolve }
   selectMode: false,          // Mehrfachauswahl im Verwalten-Tab aktiv?
-  sortMode: false,            // 4.0: Sortier-Griffe nur in diesem Modus sichtbar
   selectedIds: new Set(),     // ausgewählte Karten-IDs
   /* 2.4.0: Der Modus "Lernen" - eine Durchsicht statt einer Abfrage.
      lernSetId = die Speicherkarte, die gerade durchgegangen wird (oder null).
@@ -5075,10 +5074,6 @@ function bereichMehrSheet() {
     html += '<button class="liste-zeile" data-action="bereich-mehr-auswaehlen">' +
       ikon("auswaehlen", "i-sm") + '<span class="liste-zeile__text">Mehrere Karten auswählen</span></button>';
   }
-  if ((cards.length > 1 || currentSets().length > 1) && !gefuehrt) {
-    html += '<button class="liste-zeile" data-action="bereich-mehr-sortieren">' +
-      ikon("griff", "i-sm") + '<span class="liste-zeile__text">Reihenfolge ändern</span></button>';
-  }
   if (cards.length > 1 && !gefuehrt) {
     html += '<button class="liste-zeile" data-action="bereich-mehr-umkehren" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' +
       ikon("umkehren", "i-sm") + '<span class="liste-zeile__text">Reihenfolge umkehren</span></button>';
@@ -6155,7 +6150,7 @@ function renderLernen() {
 
   /* --- Ein gefuehrter Satz hat seinen eigenen Faden. --- */
   if (istGefuehrt(b)) {
-    html += '<div class="card faden">' + renderFaden(b, due) + '</div>';
+    html += renderFaden(b, due);
   } else if (due.length === 0) {
     html += '<div class="empty">';
     html += '<div class="empty__icon betont">' + ikon("fertig", "i-xl") + '</div>';
@@ -6172,12 +6167,15 @@ function renderLernen() {
     html += '<div class="stapel__was">' +
       (due.length === 1 ? 'Karte ist heute f\u00e4llig' : 'Karten sind heute f\u00e4llig') +
       ' \u00b7 von ' + cards.length + '</div>';
-    html += '<button class="lg full" data-action="start-session">Lernen starten</button>';
+    html += '<button class="lg full" data-action="start-session">Lernsession starten</button>';
     if (neuImStapel > 0 || due.length - neuImStapel > 0) {
-      const teile = [];
-      if (due.length - neuImStapel > 0) teile.push((due.length - neuImStapel) + ' Wiederholung' + (due.length - neuImStapel === 1 ? '' : 'en'));
-      if (neuImStapel > 0) teile.push(neuImStapel + ' neu');
-      html += '<div class="stapel__meta hint">' + teile.join(' · ') + '</div>';
+      html += '<div class="stapel__meta">';
+      if (due.length - neuImStapel > 0) {
+        html += '<span class="badge zustand-solide">' + (due.length - neuImStapel) + ' Wiederholung' +
+          (due.length - neuImStapel === 1 ? '' : 'en') + '</span>';
+      }
+      if (neuImStapel > 0) html += '<span class="badge zustand-neu">' + neuImStapel + ' neu</span>';
+      html += '</div>';
     }
     html += '</div>';
   }
@@ -7025,26 +7023,25 @@ function renderVerwalten() {
      Formular waere schlechter als keins - es sieht aus, als waere etwas
      kaputt. Stattdessen steht hier in zwei Zeilen, was Sache ist.
      2.7.0: Kein Hinweis mehr aufs Freischalten - das passiert von selbst. */
-  /* 4.0: Seitenkopf wie in iOS - grosser Titel, rechts die Werkzeuge.
-     Der gefuellte Plus-Knopf ist die Handlung dieses Bildschirms. */
-  html += '<div class="seitenkopf"><h1>Karten <span class="seitenkopf__zahl">' + cards.length + '</span></h1>';
-  html += '<div class="seitenkopf__tools">';
-  if (ui.selectMode) {
-    html += '<button class="ghost" data-action="toggle-select-mode">Fertig</button>';
-  } else if (ui.sortMode) {
-    html += '<button class="ghost" data-action="toggle-sort-mode">Fertig</button>';
-  } else {
-    if (cards.length > 0) html += '<button class="ghost" data-action="open-drill" title="Stufen oder Speicherkarten beliebig oft üben">Üben</button>';
-    html += '<button class="icon-btn grau" data-action="bereich-mehr-auf" aria-label="Weitere Handlungen für diesen Bereich" aria-haspopup="dialog">' + ikon("mehr", "i-sm") + '</button>';
-    if (!gefuehrt) html += '<button class="icon-btn voll" data-action="karte-neu" aria-label="Karte hinzufügen" title="Karte hinzufügen">' + ikon("plus") + '</button>';
-  }
-  html += '</div></div>';
   if (gefuehrt) {
     const lekt = lektionenVon(bAkt);
     const offen = lekt.filter(x => !setGesperrt(x, bAkt)).length;
-    html += '<div class="satz-banner">' + ikon("schloss", "i-sm") + ' Geführter Kartensatz · <strong>' +
-      offen + ' von ' + lekt.length + '</strong> Lektionen frei. Eigene Karten legst du in einem eigenen Bereich an.</div>';
+    html += '<div class="satz-banner"><strong>' + esc(bAkt.name) + '</strong> · ' +
+      offen + ' von ' + lekt.length + ' Lektionen frei' +
+      '<br>Die Karten stehen fest. Eigene legst du in einem eigenen Bereich an (oben „+ Bereich").</div>';
+    return html + renderVerwaltenListe(cards, gefuehrt);
   }
+  /* 3.3.1: Hier stand bis 3.3.0 das ganze Formular - drei Felder, eine
+     Ueberschrift und ein Knopf, dauerhaft, auf dem Bildschirm, den man
+     aufruft, um seine Karten ANZUSEHEN. Auf dem Handy fuellte es die erste
+     Bildschirmseite komplett; von der Liste war beim Ankommen nichts zu
+     sehen. Video 1 nennt genau das: ein Bildschirm macht eine Sache, und
+     wer etwas anlegen will, bekommt dafuer ein Blatt. Uebrig bleibt der
+     eine Knopf - die Handlung, die auf diesem Bildschirm dran ist
+     (Satz 1). */
+  html += '<button class="lg full" data-action="karte-neu">' +
+    ikon("plus", "i-sm") + ' Karte hinzuf\u00fcgen</button>';
+  html += '<div style="height:var(--stack)"></div>';
   return html + renderVerwaltenListe(cards, gefuehrt);
 }
 
@@ -7053,6 +7050,21 @@ function renderVerwalten() {
    Formular hat, hier unten aber genau dasselbe zeigt. */
 function renderVerwaltenListe(cards, gefuehrt) {
   let html = '<div class="panel">';
+  html += '<div class="bereich-manage-row">';
+  html += '<h2 style="margin-bottom:0">Karten in „' + esc(currentBereich().name) + '" (' + cards.length + ')</h2>';
+  html += '<div>';
+  if (ui.selectMode) {
+    /* Mitten in der Mehrfachauswahl bleibt "Fertig" an Ort und Stelle -
+       ein Sprung ins Blatt waere hier eine unnoetige zweite Handlung. */
+    html += '<button class="ghost" data-action="toggle-select-mode" title="Mehrfachauswahl beenden">' + ikon("schliessen", "i-sm") + ' Fertig</button>';
+  } else {
+    if (cards.length > 0) html += '<button class="ghost" data-action="open-drill" title="Stufen oder Speicherkarten beliebig oft üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
+    /* Löschen gilt fuer den Bereich selbst, nicht fuer seine Karten - deshalb
+       steht der Mehr-Knopf unconditional da, genau wie "Löschen" es vorher war.
+       Was genau im Blatt steht, entscheidet weiterhin jede Zeile fuer sich. */
+    html += '<button class="ghost" data-action="bereich-mehr-auf" title="Weitere Handlungen für diesen Bereich" aria-label="Weitere Handlungen für diesen Bereich" aria-haspopup="dialog">' + ikon("mehr", "i-sm") + ' Mehr</button>';
+  }
+  html += '</div></div>';
 
   if (ui.drillOpen) {
     const stufen = availableStufen();
@@ -7062,7 +7074,7 @@ function renderVerwaltenListe(cards, gefuehrt) {
        mitkommen duerfen. */
     const freiDrill = freieIdsFor(currentBereich());
     html += '<div class="drill-picker" id="drill-box">';
-    html += '<h3>Üben</h3><p class="hint">Beliebig oft, ohne dass sich der Lernstand ändert.</p>';
+    html += '<p class="hint" style="padding-top:0">Was üben? (Fortschritt bleibt dabei unverändert)</p>';
     /* 2.21.0: Radioknoepfe statt Dropdown - "Nach Stufen" und "Speicherkarten"
        sind jetzt zwei unterschiedlich bediente Modi (Stufenbereich vs.
        Mehrfachauswahl), das liess sich in einem einzelnen <select> nicht
@@ -7260,7 +7272,7 @@ function kartenListeInhalt() {
   }
 
   if (tokens.length) {
-    html += '<p class="hint">' +
+    html += '<p class="hint" style="margin-bottom:10px">' +
       (ungefaehr ? 'Keine genauen Treffer – ähnlich geschrieben: ' : '') +
       shownCards.length + (shownCards.length === 1 ? ' Karte' : ' Karten') + '</p>';
   }
@@ -7268,7 +7280,7 @@ function kartenListeInhalt() {
   const bAkt = currentBereich();
   const freiIds = freieIdsFor(bAkt);
   const bearbeitbar = kartenBearbeitbar(bAkt);
-  const draggable = tokens.length === 0 && !ui.selectMode && ui.sortMode && bearbeitbar;
+  const draggable = tokens.length === 0 && !ui.selectMode && bearbeitbar;
   /* C2: Seiten erst ab SEITEN_SCHWELLE. Darunter ist shownCards die ganze
      Liste und es erscheint keine Seitenleiste. */
   const seiten = shownCards.length > SEITEN_SCHWELLE ? Math.ceil(shownCards.length / SEITE_GROESSE) : 1;
@@ -7282,7 +7294,7 @@ function kartenListeInhalt() {
      Ziehen ist ohnehin nur ohne Suche moeglich, deshalb entspricht der
      Ausschnitt dann genau currentCards().slice(start, ...). */
   listenFenster = { start: start, anzahl: seitenKarten.length };
-
+  if (!bearbeitbar && tokens.length === 0) html += '<p class="hint" style="margin-bottom:10px">' + ikon("schloss", "i-sm") + ' Geführter Kartensatz – die Karten und ihre Reihenfolge stehen fest. Hervorgehoben ist, was freigeschaltet ist.</p>';
   /* 3.3.1: Stand als drei Zeilen Anleitung dauerhaft ueber der Liste -
      dieselbe Sorte Erklaerungswand, die der Betreiber in den Einstellungen
      gemeldet hat. Der Griff ist sichtbar, das Ziehen erklaert sich beim
@@ -7290,10 +7302,9 @@ function kartenListeInhalt() {
      Griffs, wo sie hingehoert. Uebrig bleibt eine Zeile - und der Satz zur
      Seitengrenze nur dann, wenn es ueberhaupt mehrere Seiten gibt, denn nur
      dann kann man in die Grenze laufen. */
-  if (draggable) html += '<p class="hint">Griff halten und ziehen.' +
+  if (draggable) html += '<p class="hint" style="margin-bottom:10px">Am Griff ziehen ändert die Reihenfolge.' +
     (seiten > 1 ? ' Über die Seitengrenze hinaus geht das nicht – dafür „Verschieben“ im Auswahlmodus.' : '') + '</p>';
   if (seiten > 1) html += seitenLeiste(ui.kartenSeite, seiten, shownCards.length);
-  html += '<div class="liste-karten">';
   for (let i = 0; i < seitenKarten.length; i++) {
     const c = seitenKarten[i];
     const fremd = fremdeBereiche.get(c.id) || null;
@@ -7346,7 +7357,6 @@ function kartenListeInhalt() {
        (deleteCard) sind unveraendert. */
     html += '</div>';
   }
-  html += '</div>';
   /* Zweite Leiste unten: nach 100 Zeilen ist die obere aus dem Bild. */
   if (seiten > 1) html += seitenLeiste(ui.kartenSeite, seiten, shownCards.length);
   return html;
@@ -7384,27 +7394,25 @@ function renderSetsPanel() {
   const gefuehrt = istGefuehrt(b);
   const gruppen = zeigtGruppen(b);
   const zuAnzahl = gefuehrt ? sets.filter(s => setGesperrt(s, b)).length : 0;
-  let html = '<div class="sets-bereich">';
-  /* 4.0: Kopf als Listenzeile - antippen klappt auf. Zu ist der Normalzustand. */
-  html += '<div class="liste"><button class="liste-zeile sets-kopf" data-action="toggle-sets" aria-expanded="' + (ui.setsOffen ? "true" : "false") + '">';
-  html += ikon("stern", "i-sm") + '<span class="liste-zeile__text">Speicherkarten</span>';
-  if (zuAnzahl > 0) html += '<span class="liste-zeile__wert">' + zuAnzahl + ' gesperrt ·</span>';
+  let html = '<div class="drill-picker" style="margin-bottom:14px">';
+  /* 2.2.0: Kopfzeile zum Auf- und Zuklappen. Zu ist der Normalzustand. */
+  html += '<button class="secondary sets-kopf" data-action="toggle-sets" aria-expanded="' + (ui.setsOffen ? "true" : "false") + '">';
+  html += ikon(ui.setsOffen ? "chevronUnten" : "chevronRechts", "i-sm") + '<span>Speicherkarten</span>';
   html += '<span class="badge">' + sets.length + '</span>';
-  html += ikon(ui.setsOffen ? "chevronUnten" : "chevronRechts", "i-sm");
-  html += '</button></div>';
+  if (zuAnzahl > 0) html += '<span class="badge" title="' + zuAnzahl + ' Lektion(en) noch gesperrt">' + ikon("schloss", "i-sm") + ' ' + zuAnzahl + '</span>';
+  html += '</button>';
   if (!ui.setsOffen) { html += '</div>'; return html; }
-  html += '<div class="sets-inhalt">';
   if (istAutor() && !gefuehrt) {
-    html += '<button class="tiny-link" data-action="toggle-set-art">' +
+    html += '<button class="tiny-link" data-action="toggle-set-art" style="padding:6px 0">' +
       (ui.setsArtWahl ? "Arten fertig" : "Arten vergeben") + '</button>';
   }
 
   if (!gruppen) {
     /* Der Normalfall: eine schlichte Liste, wie vor 2.3.0. */
-    html += '<p class="hint">Feste Auswahl an Vokabeln, jederzeit beliebig oft übbar.</p>';
+    html += '<p class="hint" style="padding:6px 0">Feste Auswahl an Vokabeln, jederzeit beliebig oft übbar. Reihenfolge per Griff ändern, auch mit den Pfeiltasten.</p>';
     html += '<div class="set-liste" data-gruppe="alle">';
     sets.forEach((s, i) => { html += setBlock(s, b, frei, gefuehrt, i + 1, sets.length); });
-    html += '</div></div></div>';
+    html += '</div></div>';
     return html;
   }
   for (const art of SET_ARTEN_ANZEIGE) {
@@ -7413,12 +7421,12 @@ function renderSetsPanel() {
     html += '<div class="set-gruppe">';
     html += '<div class="set-gruppe-kopf">' + iconSvg(art) + ' ' + SET_ART_TITEL[art] +
       '<span class="badge">' + gruppe.length + '</span></div>';
-    html += '<p class="hint">' + SET_ART_ERKLAERUNG[art] + '</p>';
+    html += '<p class="hint" style="padding:4px 0 2px; font-size:0.84rem">' + SET_ART_ERKLAERUNG[art] + '</p>';
     html += '<div class="set-liste" data-gruppe="' + art + '">';
     gruppe.forEach((s, i) => { html += setBlock(s, b, frei, gefuehrt, i + 1, gruppe.length); });
     html += '</div></div>';
   }
-  html += '</div></div>';
+  html += '</div>';
   return html;
 }
 
@@ -7432,45 +7440,55 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
   const eigenerBesitz = setBearbeitbar(s, b);
   let html = '<div class="set-block' + (zu ? " set-locked" : "") + '" id="set-' + esc(s.id) + '" data-setid="' + esc(s.id) + '">';
   html += '<div class="set-row">';
-  if (eigenerBesitz && ui.sortMode) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(s.name) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + pos + ' von ' + gesamt + '">' + ikon("griff", "i-sm") + '</span>';
-  /* 4.0: Die ganze Zeile klappt auf. Die Werkzeuge (Üben, Art, Umbenennen,
-     Löschen) stehen erst im aufgeklappten Zustand da - vorher trug jede
-     Zeile bis zu fünf Knöpfe gleichzeitig. */
+  if (eigenerBesitz) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(s.name) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + pos + ' von ' + gesamt + '">' + ikon("griff", "i-sm") + '</span>';
+  /* 2.7.0: Nur noch Anzeige. Freigeschaltet wird durch Lernen, nicht durch
+     Tippen - es gibt hier nichts zu entscheiden. */
+  if (gefuehrt && s.art === "lektion") {
+    html += '<span class="lock-anzeige" title="' +
+      (zu ? (lehrerGesteuert(b) ? 'Wird von deiner Lehrperson freigeschaltet' : 'Wird frei, sobald die Lektion davor sitzt') : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
+  }
+  /* Beobachtung 7: derselbe Fund wie bei kartenTagsHtml() - ein arabisch
+     benannter Kategorie-/Lektionsname lief hier bisher ohne eigene Schrift/
+     Richtung mit. Klasse muss mit "set-name" zusammen in einem class-Attribut
+     stehen, deshalb hier die im Repo uebliche Ternary-Form statt schriftAttr(). */
+  html += '<span class="set-name' + (istArabisch(s.name) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(s.name) + '</span>';
+  html += '<span class="badge">' + cards.length + ' Karte' + (cards.length === 1 ? "" : "n") + '</span>';
+  /* 2.11.0: In einem gefuehrten Satz stehen an einer LEKTION keine Knoepfe
+     mehr. Vorher stand dieselbe Lektion an zwei Orten und wollte an beiden
+     etwas: der Lernen-Tab fuehrte einen hindurch, und hier lag nochmal ein
+     eigener Weg daneben. Man wusste nicht, welcher der richtige ist.
+     Jetzt gilt: gelernt wird im Lernen-Tab, hier wird nachgeschaut. */
   const nurAnzeige = gefuehrt && s.art === "lektion";
-  const nameHtml = '<span class="set-name' + (istArabisch(s.name) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(s.name) + '</span>';
-  let wert;
-  if (zu) wert = ikon("schloss", "i-sm") + ' gesperrt';
-  else if (nurAnzeige) {
-    const fest = cards.filter(c => (c.maxStufe || 0) >= LEKTION_STUFE || istVerbrannt(c)).length;
-    wert = fest + ' / ' + cards.length + ' sitzen';
-  } else wert = cards.length + ' Karte' + (cards.length === 1 ? "" : "n");
   if (zu) {
-    html += '<span class="set-auf set-auf--zu">' + nameHtml + '</span>';
+    html += '<span class="badge">gesperrt</span>';
+  } else if (nurAnzeige) {
+    const fest = cards.filter(c => (c.maxStufe || 0) >= LEKTION_STUFE || istVerbrannt(c)).length;
+    html += '<span class="badge">' + fest + ' / ' + cards.length + ' sitzen</span>';
+    html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" aria-label="Karten anzeigen" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
   } else {
-    html += '<button class="set-auf" data-action="toggle-set-open" data-id="' + esc(s.id) + '" aria-expanded="' + (open ? "true" : "false") + '">' + nameHtml + '</button>';
+    if (cards.length > 0) html += '<button class="ghost" data-action="drill-set" data-id="' + esc(s.id) + '" title="Diese Auswahl üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
+    html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" title="Karten anzeigen" aria-label="' + (open ? "Karten dieser Speicherkarte verbergen" : "Karten dieser Speicherkarte anzeigen") + '" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
   }
-  html += '<span class="badge">' + wert + '</span>';
-  if (!zu) html += '<button class="icon-btn set-chev" data-action="toggle-set-open" data-id="' + esc(s.id) + '" aria-hidden="true" tabindex="-1">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
+  if (zeigtArtWahl(b)) {
+    /* 10: Blatt statt Klappliste - drei Chips in jeder Zeile machten die
+       Liste voll (Satz "weniger Inhalt am Handy"), also nur ein Knopf mit
+       der aktuellen Art, der das Auswahl-Blatt oeffnet (wie bei Helligkeit). */
+    const art = s.art || "eigen";
+    html += '<button class="ghost" data-action="set-art-sheet-auf" data-id="' + esc(s.id) +
+      '" title="Art dieser Speicherkarte" aria-label="Art dieser Speicherkarte: ' + esc(SET_ART_TITEL[art]) + '">' +
+      ikon(art === "eigen" ? "stern" : art, "i-sm") + ' ' + esc(SET_ART_TITEL[art]) + '</button>';
+  }
+  if (eigenerBesitz) {
+    html += '<button class="ghost" data-action="rename-set" data-id="' + esc(s.id) + '" title="Umbenennen" aria-label="Speicherkarte umbenennen">' + ikon("stift", "i-sm") + '</button>';
+    html += '<button class="ghost" data-action="delete-set" data-id="' + esc(s.id) + '" title="Speicherkarte löschen (Vokabeln bleiben erhalten)" aria-label="Speicherkarte löschen">' + ikon("muell", "i-sm") + '</button>';
+  }
   html += '</div>';
-  if (open && (!nurAnzeige || zeigtArtWahl(b))) {
-    html += '<div class="set-aktionen">';
-    if (!nurAnzeige && cards.length > 0) html += '<button class="ghost" data-action="drill-set" data-id="' + esc(s.id) + '">' + ikon("ueben", "i-sm") + ' Üben</button>';
-    if (zeigtArtWahl(b)) {
-      const art = s.art || "eigen";
-      html += '<button class="ghost" data-action="set-art-sheet-auf" data-id="' + esc(s.id) + '" aria-label="Art dieser Speicherkarte: ' + esc(SET_ART_TITEL[art]) + '">' + esc(SET_ART_TITEL[art]) + '</button>';
-    }
-    if (eigenerBesitz) {
-      html += '<button class="ghost" data-action="rename-set" data-id="' + esc(s.id) + '">Umbenennen</button>';
-      html += '<button class="ghost gefahr" data-action="delete-set" data-id="' + esc(s.id) + '" title="Speicherkarte löschen (Vokabeln bleiben erhalten)">Löschen</button>';
-    }
-    html += '</div>';
-  }
   if (open) {
     html += '<div class="set-cards">';
     if (cards.length === 0) {
       html += '<p class="hint">Keine Karten mehr in dieser Speicherkarte.</p>';
     } else {
-
+      if (eigenerBesitz && cards.length > 1) html += '<p class="hint" style="padding:6px 0">Ziehe am Griff, um die Reihenfolge in dieser Speicherkarte zu ändern, oder nutze am Griff die Pfeiltasten. Die Reihenfolge im Bereich bleibt unberührt.</p>';
       cards.forEach((c, ci) => {
         /* In einer Lektion sind ohnehin alle Karten gleich dran - dort waere
            eine Hervorhebung nur Unruhe. In den Kategorien steht dagegen alles
@@ -7481,7 +7499,7 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
           (eigenerBesitz ? ' data-cardid="' + esc(c.id) + '"' : '') + '>';
         /* 2.6.0: Griff zum Sortieren INNERHALB dieser Speicherkarte. Er
            veraendert nur cardIds, nie die Reihenfolge des Bereichs. */
-        if (eigenerBesitz && ui.sortMode) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(c.wort) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + (ci + 1) + ' von ' + cards.length + '">' + ikon("griff", "i-sm") + '</span>';
+        if (eigenerBesitz) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(c.wort) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + (ci + 1) + ' von ' + cards.length + '">' + ikon("griff", "i-sm") + '</span>';
         html += '<div class="words"><div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(c.wort) + '</div>';
         html += '<div class="uebersetzung">' + esc(c.uebersetzung) + '</div>' + kartenTagsHtml(c.id, b, s.id) + '</div>';
         if (kartenZu) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">' + ikon("schloss", "i-sm") + '</span>';
@@ -8410,9 +8428,7 @@ document.body.addEventListener("click", e => {
        Handlung ausloest - Umbenennen/Loeschen zeigen ihrerseits einen
        eigenen Dialog (D2), der sonst ueber dem gerade erst geschlossenen
        Blatt haengen wuerde. */
-    case "bereich-mehr-auswaehlen": ui.bereichMehr = false; ui.sortMode = false; toggleSelectMode(); break;
-    case "bereich-mehr-sortieren": ui.bereichMehr = false; ui.selectMode = false; ui.sortMode = true; ui.searchQuery = ""; render(); break;
-    case "toggle-sort-mode": ui.sortMode = !ui.sortMode; render(); break;
+    case "bereich-mehr-auswaehlen": ui.bereichMehr = false; toggleSelectMode(); break;
     case "bereich-mehr-umkehren": ui.bereichMehr = false; reverseOrder(); break;
     case "bereich-mehr-umbenennen": ui.bereichMehr = false; renameBereich(); break;
     case "bereich-mehr-loeschen": ui.bereichMehr = false; deleteBereich(); break;
