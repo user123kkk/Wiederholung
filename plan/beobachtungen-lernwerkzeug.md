@@ -945,6 +945,60 @@ für den Wisch-Timer (11). ⑦ Ziele auf 44 px (14).
 
 ---
 
+## 20. Quran-Ayat auswendig lernen — Reihenfolge statt Zufallsprinzip (neue Idee, 23.09.2026)
+
+**Beobachtung:** Betreiber-Idee, ausdrücklich „ohne in die Umsetzung zu
+gehen": Verse (Ayat) des Quran auswendig lernen ist anders als Vokabeln
+lernen. Die heutige Lernlogik zeigt fällige Karten in der Reihenfolge, die
+sich aus Fälligkeit/Algorithmus ergibt — für Ayat will man aber die
+**Reihenfolge im Text**, nicht zufällig durcheinander. Gegenprobe des
+Betreibers, mit der eigenen Unsicherheit benannt: manche Leute lernen Ayat
+gerade so, dass man ihnen eine beliebige Ayah nennt und sie die davor/danach
+rezitieren können — das wäre dann doch kein reines Sequenz-Lernen. Betreiber
+selbst: „damit kenn ich mich ned aus."
+
+**Einschätzung:** Kein Bug, ein echter Unterschied im Lernziel. Die
+Wiederholung nach Stufen (worauf diese App aufbaut) optimiert dafür, WANN
+eine Karte wieder drankommt, nicht in welcher Reihenfolge mehrere fällige
+Karten gezeigt werden — für Vokabeln beliebig, für einen fortlaufenden Text
+nicht. Eine „Reihenfolge halten"-Option wäre kein kleiner Zusatz, sondern
+eine zweite Lern-Betriebsart neben der heutigen (fasst die Lernlogik selbst
+an, `../CLAUDE.md` § 7 schließt das für laufende Phasen aus). Die zweite,
+vom Betreiber selbst genannte Variante (beliebige Ayah → Vor-/Nachbarvers)
+ist fachlich als aktiver Abruf über den Kontext eine dritte, wieder andere
+Anforderung. Beides bräuchte, falls verfolgt, ein eigenes Konzept wie
+`onboarding/` oder `lehrer-modus/` — kein Punkt für „nimm einen und mach."
+
+**Nächster Schritt:** Keiner. Notiert für den Fall, dass der Betreiber das
+später vertiefen will — dann eigener Nebenstrang, kein Direktbau.
+
+## 21. Karten-Formular: „Notiz"-Feld trägt auch Grammatik, aber ist nicht als solches erkennbar (23.09.2026)
+
+**Beobachtung:** Betreiber nutzt das Feld `extra` (Formular-Beschriftung:
+„Beispielsatz, Bild-Link oder Notiz") auch für grammatische Hinweise zu
+einer Karte. Vermutung: Wer eine Karten-App primär für Vokabeln erwartet,
+kommt nicht unbedingt darauf, dass genau dieses eine Feld auch für Grammatik
+gedacht sein kann — die Beschriftung nennt drei Beispiele, Grammatik ist
+keines davon.
+
+**Einschätzung:** Kein Bug, eine Formulierungsfrage. Betrifft nur die
+Feldbeschriftung in `app.js` (`karteSheet()`, Label bei `f-extra`), keine
+Lernlogik — läge damit unter der seit 18.09.2026 dauerhaften Lockerung aus
+`../CLAUDE.md` § 7 (Bedienung/Optik für Design-/Verbesserungszwecke).
+Kleinstmöglicher Schritt wäre, „Grammatik" als viertes Beispiel in die
+Beschriftung aufzunehmen („Beispielsatz, Grammatik, Bild-Link oder Notiz").
+Nicht gebaut — der Betreiber hat das als offenen Punkt benannt, „wo man was
+machen könnte passend", keine Entscheidung getroffen, wie prominent das sein
+soll (Label-Wort reicht, oder soll das Feld sichtbar in „Notiz" und
+„Grammatik" aufgeteilt werden — Letzteres wäre keine Formulierungsfrage mehr,
+sondern ein neues Datenfeld mit allem, was das an `firestore.rules` und
+Anzeige nach sich zieht).
+
+**Nächster Schritt:** Betreiber entscheidet Umfang (Label-Wort vs. eigenes
+Feld), dann bauen.
+
+---
+
 **Nächster Schritt:** Liegt beim Betreiber — welche Punkte überhaupt
 angegangen werden sollen, und ob dafür eine neue Phase/ein neuer Strang
 aufgemacht wird (analog zur Landing-Page-Strategie). Bis dahin bleibt diese

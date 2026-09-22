@@ -21,6 +21,23 @@ synchronisiert über Firebase.
 
 Kein Build-Schritt. Die Dateien werden so ausgeliefert, wie sie hier liegen.
 
+**Deshalb auch bewusst kein `.env`.** `firebaseConfig` (u. a. `apiKey`) steht
+offen in `app.js` – das ist bei Firebase-Web-Apps so vorgesehen, kein
+übersehenes Geheimnis: Ohne Build-Schritt landet jeder Wert aus einer
+`.env`-Datei ohnehin unverändert im an den Browser ausgelieferten `app.js`
+(view-source zeigt ihn genauso). Eine `.env` würde hier also nichts
+verstecken, nur eine zweite Datei erfinden, die genauso öffentlich wirkt.
+Der eigentliche Schutz liegt an zwei anderen Stellen: `firestore.rules`
+(wer welche Daten lesen/schreiben darf – s. u.) und die
+Website-Einschränkung des Browser-Keys in der Google-Cloud-Konsole
+(nur `adrabic.web.app`/`lernkarte-925c2.web.app` dürfen den Key benutzen,
+siehe `plan/phase-4-domain-hosting/LOGBUCH.md` – dort auch ein
+dokumentierter Fund vom 12.09.2026: der zunächst unbeschränkte Key wurde
+tatsächlich von Dritten für fremde Maps-Anfragen missbraucht, seit der
+Einschränkung nicht mehr). Ein echtes Geheimnis (z. B. ein Firebase-Admin-
+Service-Account-Schlüssel) gehört **nicht** hierher – aber dieses Projekt
+hat keinen Server, der so einen Schlüssel bräuchte.
+
 ## Bei jeder Veröffentlichung
 
 1. `APP_VERSION` in `app.js` hochzählen.

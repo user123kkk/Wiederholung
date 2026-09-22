@@ -85,7 +85,7 @@
   <div class="sektion">
     <div class="eyebrow">3. Hosting und Server-Logdaten</div>
     <div class="card">
-      <p class="hint">Die App wird über Firebase Hosting ausgeliefert (Anbieter siehe Punkt 7).
+      <p class="hint">Die App wird über Firebase Hosting ausgeliefert (Anbieter siehe Punkt 8).
       Beim Aufruf verarbeitet der Hosting-Anbieter technisch bedingt Zugriffsdaten, insbesondere:</p>
       <ul>
         <li>IP-Adresse</li>
@@ -130,13 +130,39 @@
       das Tagesprotokoll und deine Einstellungen werden in der Firestore-Datenbank (Google)
       gespeichert, damit sie über mehrere Geräte hinweg verfügbar sind. Die Zugriffsregeln der
       Datenbank (<code>firestore.rules</code>) lassen jedes Konto ausschließlich an die eigenen
-      Daten – andere Nutzer:innen können sie nicht einsehen. Rechtsgrundlage ist Art. 6 Abs. 1
-      lit. b DSGVO.</p>
+      Daten – andere Nutzer:innen können sie nicht einsehen. (Ausnahme: das Feedback-Board,
+      siehe Punkt 6 – dort ist Sichtbarkeit für alle angemeldeten Konten gerade der Zweck.)
+      Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.</p>
     </div>
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">6. Auf deinem Gerät</div>
+    <div class="eyebrow">6. Feedback-Board</div>
+    <div class="card">
+      <p class="hint">In den Einstellungen gibt es ein Feedback-Board: Du kannst Vorschläge
+      einreichen und für die Vorschläge anderer abstimmen. Gespeichert werden dabei der von dir
+      eingegebene Titel, eine optionale Beschreibung, der Zeitpunkt und ein Status (offen /
+      geplant / umgesetzt / abgelehnt). <strong>Ein Vorschlag wird ohne Bezug zu deinem Konto
+      gespeichert</strong> – anders als bei den Lerninhalten oben lässt sich aus dem Datensatz
+      nicht ablesen, wer ihn eingereicht hat, auch der Betreiber kann das nicht einsehen.</p>
+      <p class="hint" style="margin-top:var(--space-3)">Sichtbar sind alle Vorschläge samt Titel,
+      Beschreibung, Stimmenzahl und Status für <strong>jedes angemeldete, bestätigte Konto</strong>
+      – das ist der Zweck des Boards. Ob du selbst für einen Vorschlag abgestimmt hast, ist nur
+      für dich selbst sichtbar. Gib deshalb im Titel oder in der Beschreibung keine Angaben, an
+      denen dich jemand erkennen könnte, wenn du das nicht möchtest.</p>
+      <p class="hint" style="margin-top:var(--space-3)"><strong>Löschung:</strong> Weil kein
+      Vorschlag mit einem Konto verknüpft gespeichert wird, kann diese App – strukturell, nicht
+      aus Unwillen – nicht feststellen, welcher Vorschlag von dir stammt. Ein Löschen einzelner
+      eigener Vorschläge auf Zuruf ist deshalb nicht möglich; Vorschläge werden vom Betreiber
+      entfernt, wenn sie umgesetzt, abgelehnt oder unangemessen sind. Möchtest du einen eigenen
+      Vorschlag entfernt haben, hilft nur eine möglichst genaue Beschreibung seines Wortlauts an
+      die Kontaktadresse unten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch
+      aktives Einreichen bzw. Abstimmen).</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">7. Auf deinem Gerät</div>
     <div class="card">
       <p class="hint">Die gewählte Helligkeit (hell/dunkel) und das Datum des letzten Backups
       werden zusätzlich lokal auf deinem Gerät gespeichert (<code>localStorage</code>), damit die
@@ -146,7 +172,7 @@
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">7. Empfänger und Auftragsverarbeitung</div>
+    <div class="eyebrow">8. Empfänger und Auftragsverarbeitung</div>
     <div class="card">
       <p class="hint">Für Hosting, Anmeldung und Datenspeicherung wird Firebase eingesetzt, ein
       Dienst der Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland) bzw. der
@@ -164,12 +190,12 @@
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">8. Fremde Server beim Laden der App</div>
+    <div class="eyebrow">9. Fremde Server beim Laden der App</div>
     <div class="card">
       <p class="hint">Zwei Dinge lädt die App beim Start von außen; dabei erfährt der jeweilige
       Server technisch bedingt deine IP-Adresse:</p>
       <ul>
-        <li>Das Firebase-SDK – von <code>gstatic.com</code> (Google, Anschrift siehe Punkt 7)</li>
+        <li>Das Firebase-SDK – von <code>gstatic.com</code> (Google, Anschrift siehe Punkt 8)</li>
         <li>Die arabische Koranschrift – von <code>verses.quran.foundation</code></li>
       </ul>
       <p class="hint" style="margin-top:var(--space-3)">Beide Male ausschließlich zur
@@ -180,19 +206,19 @@
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">9. Cookies</div>
+    <div class="eyebrow">10. Cookies</div>
     <div class="card">
       <p class="hint">Diese App setzt <strong>keine Cookies</strong>. Die Anmeldung (Firebase
       Authentication) speichert den angemeldeten Zustand technisch über den Browser-eigenen
       Speicher (IndexedDB), nicht über Cookies. Die einzige weitere Speicherung im Browser ist
-      der oben unter Punkt 6 genannte, rein technisch notwendige <code>localStorage</code>. Es
+      der oben unter Punkt 7 genannte, rein technisch notwendige <code>localStorage</code>. Es
       gibt keine Cookies oder vergleichbaren Technologien zu Analyse-, Marketing- oder
       Tracking-Zwecken – ein Cookie-Banner ist deshalb nicht erforderlich.</p>
     </div>
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">10. Kontakt- und Fehlerformulare</div>
+    <div class="eyebrow">11. Kontakt- und Fehlerformulare</div>
     <div class="card">
       <p class="hint">Auf der Startseite (landing.html) gibt es ein Kontaktformular; in den Einstellungen der App ein Fehlerformular. Beide sind optional und erlauben dir, eine Nachricht zu schreiben.</p>
       <p class="hint">Beiden Formularen ist gemeinsam:</p>
@@ -207,25 +233,29 @@
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">11. Speicherdauer</div>
+    <div class="eyebrow">12. Speicherdauer</div>
     <div class="card">
       <p class="hint">Deine Daten werden gespeichert, solange dein Konto besteht. Löschst du dein
       Konto (Einstellungen → Konto löschen), werden dein Nutzerkonto und alle zugehörigen Inhalte
       sofort und unwiderruflich entfernt. Formular-Nachrichten werden von dieser App nicht
       gespeichert – sie landen ausschließlich in deinem E-Mail-Programm bzw. im Postfach des
-      Betreibers.</p>
+      Betreibers. Feedback-Board-Vorschläge (Punkt 6) sind davon unabhängig, da sie nicht an ein
+      Konto geknüpft sind – sie bleiben bestehen, bis der Betreiber sie entfernt (umgesetzt,
+      abgelehnt oder unangemessen), auch wenn das einreichende Konto längst gelöscht ist.</p>
     </div>
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">12. Deine Rechte</div>
+    <div class="eyebrow">13. Deine Rechte</div>
     <div class="card">
       <p>Dir stehen nach der DSGVO folgende Rechte zu:</p>
       <ul>
         <li><strong>Auskunft</strong> (Art. 15 DSGVO) über die zu dir gespeicherten Daten</li>
         <li><strong>Berichtigung</strong> (Art. 16 DSGVO) unrichtiger Daten</li>
         <li><strong>Löschung</strong> (Art. 17 DSGVO) – in der App unter Einstellungen → Konto
-        löschen sofort selbst möglich, oder auf Anfrage per E-Mail</li>
+        löschen sofort selbst möglich, oder auf Anfrage per E-Mail. Ausnahme: einzelne
+        Feedback-Board-Vorschläge (Punkt 6) lassen sich mangels Kontobezug nicht gezielt
+        zuordnen – siehe dort</li>
         <li><strong>Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO)</li>
         <li><strong>Datenübertragbarkeit</strong> (Art. 20 DSGVO) – in der App unter Einstellungen
         → Sichern kannst du alle deine Daten jederzeit selbst als Datei herunterladen</li>
@@ -243,7 +273,7 @@
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">13. Datensicherheit</div>
+    <div class="eyebrow">14. Datensicherheit</div>
     <div class="card">
       <p class="hint">Die Übertragung erfolgt verschlüsselt über HTTPS. Die Zugriffsregeln der
       Datenbank sind so eingestellt, dass jedes Konto ausschließlich an die eigenen Daten kommt.
@@ -253,7 +283,7 @@
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">14. Änderungen dieser Erklärung</div>
+    <div class="eyebrow">15. Änderungen dieser Erklärung</div>
     <div class="card">
       <p class="hint">Ändert sich, was diese App tatsächlich speichert oder verarbeitet, wird
       diese Erklärung entsprechend angepasst. Es lohnt sich, sie von Zeit zu Zeit erneut zu
@@ -261,7 +291,7 @@
     </div>
   </div>
 
-  <p class="hint rechtsseite__fuss">Stand: 17. September 2026</p>
+  <p class="hint rechtsseite__fuss">Stand: 23. September 2026</p>
 </div>
 </body>
 </html>
