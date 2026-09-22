@@ -70,28 +70,53 @@ im Impressum) — nicht verboten, aber nicht ohne Umfangs-Entscheidung des
 Betreibers gebaut. Per `AskUserQuestion` zurückgegeben, nicht spekulativ
 angefangen.
 
-**Offen, an den Betreiber zurückgegeben (nicht geraten):**
-1. Die große Zahl in „Dein Stoff" (Block 16, s. dort) — behalten oder
-   entfernen, reine Gestaltungsentscheidung.
-2. Kurzer dunkler Übergang beim Wischen zwischen den Reitern — Betreiber
-   unsicher, ob Störung oder Absicht („hat vielleicht seinen Nutzen").
-3. Ladebildschirm (`.boot`, `app.js render()` bei `bereiche === null`) —
-   Betreiber will ihn „komplett raus", aber er ist funktional nötig, solange
-   noch keine Daten da sind (ohne ihn: leerer/undefinierter Bildschirm statt
-   eines Zustands). Braucht Klärung, was genau stört, bevor etwas entfernt
-   wird, das seit v3.0.24 auch die Selbstheilung nach hängendem
-   Service-Worker/Cache trägt.
-4. Feedback-Board vs. verbessertes privates Formular vs. vorerst nur
-   Idee — siehe Korrektur oben.
-5. `firebase deploy --only "firestore:rules"` — unverändert offen seit
+**Antworten per `AskUserQuestion` eingeholt, noch am 22.09.2026:**
+
+1. **Die große Zahl in „Dein Stoff" bleibt.** Betreiber: „mag es eigentlich."
+   **Neuer, ANDERER Fund dabei:** Er mag die Aufschlüsselung darunter („0
+   neu, 0 gesehen, 3 wackelig …") nicht, weiß aber selbst nicht, was daran
+   stört oder was stattdessen stehen soll. **Nicht gebaut** — das wäre reines
+   Raten ohne einen konkreten Ansatzpunkt. Bleibt als eigener, unentschiedener
+   Punkt stehen, bis eine genauere Beschreibung oder ein Beispiel kommt (was
+   genau: Wortwahl, Anordnung, dass es fünf Werte sind, etwas anderes?).
+2. **Wisch-Übergang: bleibt.** Betreiber: soll flüssig sein, aber ausdrücklich
+   **nicht** um den Preis, dass man beim Ziehen bereits die Hälfte des
+   nächsten Tabs sieht — „sonst was Besseres finden, sonst dabei belassen."
+   Ein Nebeneinander-Rendern beider Tabs (die einzige Art, ein echtes Vorschau-
+   Durchscheinen zu bauen) wäre ein größerer Umbau ohne klaren Nutzen laut
+   dieser Vorgabe selbst — deshalb **nichts geändert**, der kurze dunkle
+   Moment (Hintergrundfarbe zwischen Ausflug- und Einflug-Animation) bleibt.
+3. **Ladebildschirm: nichts entfernt.** Betreiber bestätigt, dass er
+   technisch nötig ist, sagt aber auch, er habe früher (vermutlich außerhalb
+   dieses geordneten Arbeitsablaufs) „viel rumgespielt" und wisse nicht mehr,
+   was im Code steht — und will ihn **bei Gelegenheit von Grund auf neu
+   bauen**, nicht flicken. Für diese Session heißt das: nichts angefasst.
+   **Für künftige Sessions festgehalten:** Wenn der Betreiber den
+   Ladebildschirm (`.boot`, `app.js` um `render()`/`bereiche === null`,
+   `styles.css`) das nächste Mal anspricht, ist das als **Neubau von Grund
+   auf** zu verstehen, nicht als Anpassung des Bestehenden — er hat das
+   ausdrücklich so angekündigt.
+4. **Feedback-Board: öffentliches Board mit Voting**, nicht nur ein
+   verbessertes privates Formular. Umfang damit entschieden, Bauentscheidungen
+   offen — eigener Nebenstrang [`feedback-board/`](../feedback-board/)
+   angelegt, Modell-Vorschlag und vier offene Detailfragen in
+   [`feedback-board/AUFTRAG.md`](../feedback-board/AUFTRAG.md). Bewusst nicht
+   in derselben Session mitgebaut — ein neues, öffentlich sichtbares
+   Datenmodell verdient einen eigenen, testbaren Block, keinen Nebensatz
+   zwischen zwei CSS-Fixes.
+5. **`firebase deploy --only "firestore:rules"`** — weiterhin offen seit
    v3.7.0 (Lehrer-Gerüst „Lehrer gibt frei"), s. `lehrer-modus/LOGBUCH.md`.
    Reine Konsolen-/CLI-Handlung des Betreibers, siehe `../../CLAUDE.md`
    „Was der Betreiber selbst tun muss" — nicht vom Agenten ausgeführt, obwohl
    die Firebase-CLI in dieser Umgebung technisch angemeldet wäre (production-
-   Deploy, schwer rückgängig zu machen, betrifft echte Nutzerdaten).
+   Deploy, schwer rückgängig zu machen, betrifft echte Nutzerdaten). Genaue
+   Schritte in der Antwort an den Betreiber, nicht nur hier.
 
-**Nächster Schritt:** Auf die fünf `AskUserQuestion`-Antworten warten, dann
-gezielt genau das bauen, was entschieden wurde — nicht mehr.
+**Nächster Schritt:** `feedback-board/AUFTRAG.md` — eine der vier
+Bauentscheidungen klären, danach `firestore.rules` + Oberfläche in einem
+eigenen Block bauen. Daneben weiter unentschieden: Aufschlüsselung „Dein
+Stoff" (braucht ein konkreteres Feedback), Ladebildschirm-Neubau (Betreiber
+kündigt „demnächst" an, kein Termin).
 
 ---
 

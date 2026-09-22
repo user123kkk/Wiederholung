@@ -178,6 +178,19 @@ als Gesamtprojekt und nicht als Funktionsliste. Konzept, Belege und offene
 Entscheidungen E1–E4 in [`AUFTRAG.md`](onboarding/AUFTRAG.md). Status:
 `Konzept`, gebaut wird erst nach Freigabe von Umfang, Fragen und Wortlaut.
 
+### Nebenstrang: Feedback-Board
+
+Kein Phasen-Ordner, keine Nummer. Ordner
+[`feedback-board/`](feedback-board/). Öffentliches Board mit Vorschlägen und
+Voting, TikTok-Anstoß. Frühere Einschätzung vom 19.09.2026 („nicht relevant,
+bräuchte neuen Server") war ungenau — korrigiert, siehe
+[`AUFTRAG.md`](feedback-board/AUFTRAG.md). Am 22.09.2026 per
+`AskUserQuestion` entschieden: **öffentliches Board mit Voting**, nicht nur
+ein verbessertes privates Formular. Status: `Konzept` — Modell-Vorschlag
+(Sammlung, Sichtbarkeit ohne Kontobezug, Moderation) steht, vier
+Bauentscheidungen (Platz im Tab-Aufbau, Verhältnis zu „Fehler melden",
+Datenschutzerklärung, Missbrauchs-Vorprüfung) sind offen. Nichts gebaut.
+
 ### Warum diese Reihenfolge
 
 Der Leitsatz aus Konzept-Abschnitt 5: **erst dichtmachen, was schon Daten hält
@@ -505,12 +518,19 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 **AKTUELL (22.09.2026, noch später): App bei v3.8.3 — zwei Funde aus der
 Rückmeldung zu v3.8.2 behoben (leerer Bereich nicht wischbar, heller Modus zu
-weiß), fünf weitere Punkte per `AskUserQuestion` an den Betreiber
-zurückgegeben statt geraten. Einzelheiten:
+weiß). Fünf weitere Punkte per `AskUserQuestion` geklärt: große Zahl „Dein
+Stoff" bleibt (aber neuer, unentschiedener Fund: die Aufschlüsselung darunter
+gefällt dem Betreiber nicht, ohne konkreten Ansatzpunkt), Wisch-Übergang
+bleibt (kein Vorschau-Umbau ohne klaren Nutzen), Ladebildschirm bleibt
+unangetastet (Betreiber will ihn künftig von Grund auf neu bauen, nicht
+flicken), Feedback-Board-Umfang entschieden (öffentlich, mit Voting — neuer
+Nebenstrang [`feedback-board/`](feedback-board/), noch nichts gebaut).
+Firestore-Regel-Deploy weiterhin offen, siehe unten. Einzelheiten:
 [`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md), Eintrag
-„Block 17-Nachlese". **Bei „leg los" zuerst prüfen, ob die fünf offenen
-Punkte (große Zahl „Dein Stoff", Wisch-Übergang, Ladebildschirm,
-Feedback-Board-Umfang, Firestore-Regel-Deploy) inzwischen beantwortet sind.**
+„Block 17-Nachlese". **Bei „leg los" zuerst prüfen: hat der Betreiber
+`firebase deploy --only "firestore:rules"` ausgeführt, eine der vier
+Feedback-Board-Fragen beantwortet, oder etwas Konkreteres zur „Dein
+Stoff"-Aufschlüsselung gesagt?**
 
 **Vorheriger Stand (22.09.2026, spät): App bei v3.8.2 — Block 17, das Wischen neu
 gefasst.** Betreiber-Rückmeldung zu Block 15: „das wischen ist sehr
