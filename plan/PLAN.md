@@ -531,7 +531,20 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (23.09.2026, später): Punkt 21 gebaut (v3.8.5), Premium-Feature-
+**AKTUELL (23.09.2026, noch später): Feedback-Board-Löschtext entschärft
+(v3.8.6) — Prinzip „nur versprechen, was rechtlich nötig ist" jetzt explizit.**
+Betreiber wollte möglichst wenig persönliche Betriebspflicht: die Zusage,
+Löschwünsche per Wortlaut-Abgleich per E-Mail zu bearbeiten, war eine
+selbst erfundene Zusatzpflicht, keine rechtlich nötige — der allgemeine
+Rechte-Abschnitt der Datenschutzerklärung deckt das ohnehin ab, und
+§§ 8-10 DDG verlangen ausdrücklich keine laufende Überwachungspflicht für
+nutzergenerierte Inhalte. Text entsprechend entschärft, kein Rechtsverlust.
+Details: [`phase-5-recht/LOGBUCH.md`](phase-5-recht/LOGBUCH.md), Eintrag
+„Feedback-Board-Löschtext entschärft". **Bei „leg los" prüfen: hat der
+Betreiber weitere Stellen im Tool genannt, wo ähnliche unnötige
+Zusatzversprechen stehen?**
+
+**Vorheriger Stand (23.09.2026, später): Punkt 21 gebaut (v3.8.5), Premium-Feature-
 Kandidaten gesammelt.** Betreiber wollte „erst an Feld 21 rangehen" — Label
 von `f-extra` (`app.js`, `karteSheet()`) um „Grammatik" erweitert, kleinst-
 möglicher Schritt, kein neues Datenfeld. Dazu auf Betreiber-Wunsch drei

@@ -747,3 +747,50 @@ eintragen, Missbrauchs-Vorprüfung) stehen unverändert in
 **Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
 Sicherheits-Durchlauf — bleibt der nächste unblockierte Punkt, falls der
 Betreiber die öffentliche Bewerbung der Seite angeht.
+
+### 2026-09-23 — Feedback-Board-Löschtext entschärft: kein Rechtsverlust, weniger Betriebspflicht (v3.8.6)
+
+**Anlass:** Betreiber, zum gestern neu geschriebenen Abschnitt 6: „ich hab
+kein bock kontaktiert zu werden u etwas zu löschen... ich möchte wirklich
+etwas wo ich wenig mit zu tun hab... solange es rechtlich absolut sicher
+ist." Ausdrücklicher Auftrag, dasselbe Prinzip über „alle Punkte, Konzepte,
+Aussagen im Tool" zu prüfen — Vorbild „große Firmen mit Abteilungen, wo die
+oberen nichts erreicht".
+
+**Geändert:** `datenschutzerklaerung.html` Abschnitt 6 (Löschungs-Absatz)
+und Abschnitt 12 (Speicherdauer, Feedback-Board-Satz).
+
+**Entscheidung:** Der ursprüngliche Text (gestern, 22.09.) versprach: „hilft
+nur eine möglichst genaue Beschreibung seines Wortlauts an die
+Kontaktadresse" — das war eine von mir selbst erfundene Zusatzpflicht, keine
+rechtlich nötige. Geprüft, ob sie sich streichen lässt, ohne dass echte
+Nutzerrechte verloren gehen:
+
+1. **Der allgemeine Rechte-Abschnitt (Punkt 13) deckt jede echte DSGVO-
+   Anfrage bereits ab** — der ist unabhängig vom Feedback-Board da und bleibt
+   unverändert bestehen. Eine feedback-board-spezifische Extra-Zusage war
+   doppelt, nicht zusätzlich schützend.
+2. **§§ 8–10 DDG (Host-Provider-Privileg) verlangen ausdrücklich KEINE
+   laufende Überwachungspflicht** für von Nutzer:innen stammende Inhalte —
+   nur Tätigwerden nach konkretem Hinweis auf einen Rechtsverstoß. Genau das
+   steht schon im Impressum („Haftung für Inhalte"), wurde aber im
+   Datenschutztext nicht genutzt. Jetzt ausdrücklich referenziert.
+3. Damit lässt sich ehrlich schreiben: **individuelle Löschung auf Zuruf wird
+   nicht angeboten** (strukturell durch die Anonymität ohnehin nicht sauber
+   möglich, siehe gestriger Eintrag), ohne eine Ersatzpflicht zu erfinden, die
+   den Betreiber zum manuellen Wortlaut-Abgleich-Dienst macht.
+
+Damit ist ein durchgängiges Prinzip erfüllt, nicht nur ein Textfeld
+angepasst: **die App verspricht nur, was rechtlich nötig ist — nicht mehr**,
+Kulanz-Zusatzversprechen (wie die Wortlaut-Suche) sind eine bewusste
+Entscheidung, keine automatische Höflichkeit. Sonstige Stellen im Tool
+geprüft (Grep über alle `.html`-Dateien nach „Betreiber kontaktiert/prüft/
+entfernt/reagiert"): keine weitere Fundstelle mit einer ähnlich unnötigen
+Zusatzzusage. Die Kontakt-/Fehlerformulare (Phase 8) sind die einzige andere
+Stelle mit „Betreiber kontaktieren" — dort ist es der NUTZER, der den
+Betreiber kontaktiert (opt-in, keine Pflicht des Betreibers), kein
+vergleichbarer Fall.
+
+**Offen:** Nichts Neues.
+
+**Nächster Schritt:** Unverändert Phase 6.

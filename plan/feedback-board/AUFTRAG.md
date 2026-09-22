@@ -89,11 +89,16 @@ Einstellungen → Konto → „Konto-ID" in der App zeigt sie an, solange
    nebeneinander** (Einstellungen → Hilfe). Ein Fehlerbericht mit Kontaktweg
    passt schlecht in eine öffentliche, hochvotbare Liste — unterschiedliche
    Zwecke, unterschiedliche Bauteile.
-3. **Datenschutzerklärung — bewusst noch NICHT geändert.** Braucht einen
-   eigenen Blick auf Abschnitt 10 (Kontakt-/Fehlerformular), sobald das Board
-   tatsächlich live Text von Nutzer:innen sammelt — nicht nebenbei in dieser
-   Session erledigt, damit der Rechtstext nicht unter Zeitdruck entsteht.
-   **Blockiert eine echte Veröffentlichung, nicht den Code-Stand.**
+3. **Datenschutzerklärung — erledigt am 23.09.2026.** Neuer Abschnitt 6
+   „Feedback-Board", siehe `phase-5-recht/LOGBUCH.md`. **23.09.2026,
+   Nachtrag:** Betreiber wollte ausdrücklich möglichst wenig persönliche
+   Betriebspflicht („wie große Firmen, wo die oberen nichts erreicht") —
+   der ursprüngliche Text versprach eine bespoke „kontaktier uns mit dem
+   genauen Wortlaut"-Löschhilfe, die es rechtlich gar nicht braucht: der
+   allgemeine Rechte-Abschnitt (Punkt 13) deckt jede echte DSGVO-Anfrage
+   ohnehin ab, und §§ 8–10 DDG (Host-Provider-Privileg, siehe Impressum)
+   verlangen ausdrücklich KEINE laufende Überwachungspflicht — nur Tätigwerden
+   bei konkretem Hinweis. Text entsprechend entschärft, kein Rechtsverlust.
 4. **Missbrauchs-Vorprüfung — bewusst vertagt.** Heute: nur „Betreiber kann
    löschen" (reaktiv). Bei drei Nutzer:innen kein akutes Problem; wird erst
    relevant, wenn das Board öffentlich beworben wird — dann gemeinsam mit

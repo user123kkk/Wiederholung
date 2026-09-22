@@ -1,3 +1,7 @@
+## 3.8.6 – 23. September 2026
+
+**Datenschutzerklärung, Abschnitt 6 (Feedback-Board): unnötig aufwendiges Löschversprechen entfernt.** Betreiber-Wunsch: möglichst wenig persönliche Betriebspflicht, solange es rechtlich sicher bleibt. Der Text versprach bisher, dass man den Betreiber mit dem genauen Wortlaut eines eigenen Vorschlags kontaktieren könne, um ihn löschen zu lassen – das ist rechtlich gar nicht nötig: Der allgemeine Rechte-Abschnitt (Punkt 13) deckt jede echte Anfrage ohnehin ab, und §§ 8–10 DDG (Host-Provider-Privileg, siehe Impressum) verlangen ausdrücklich keine laufende Überwachungspflicht für nutzergenerierte Inhalte – nur Tätigwerden bei konkretem Hinweis. Text entsprechend entschärft (Abschnitte 6 und 12), kein Rechtsverlust für Nutzer:innen.
+
 ## 3.8.5 – 23. September 2026
 
 **Karten-Formular: Feld für Beispielsatz/Notiz nennt jetzt auch Grammatik.** Betreiber nutzt das Feld (`f-extra`) schon länger auch für grammatische Hinweise – die Beschriftung „Beispielsatz, Bild-Link oder Notiz" nannte das aber nicht, wer eine Karten-App primär für Vokabeln erwartet, kommt nicht unbedingt selbst darauf. Jetzt: „Beispielsatz, Grammatik, Bild-Link oder Notiz". Reine Textänderung, kein neues Datenfeld.
