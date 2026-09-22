@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.8.4";
+const APP_VERSION = "3.8.5";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -146,7 +146,7 @@ function genId() {
    stehen: Was hier geprueft wird, prueft der Browser - und der gehoert dem
    Nutzer. Wird hier etwas geaendert, dort mitaendern. */
 const MAX_WORT = 1000;     // wort und uebersetzung
-const MAX_EXTRA = 5000;    // Beispielsatz, Bild-Link oder Notiz
+const MAX_EXTRA = 5000;    // Beispielsatz, Grammatik, Bild-Link oder Notiz
 function kuerze(s, max) { return String(s === undefined || s === null ? "" : s).slice(0, max); }
 
 /* ---------- Obergrenzen fuer den Import ----------
@@ -5337,7 +5337,7 @@ function karteSheet() {
     (fehler.ueb ? ' aria-invalid="true" aria-describedby="f-ueb-fehler"' : '') + '>';
   if (fehler.ueb) html += '<div class="field__fehler" id="f-ueb-fehler">Bitte ausfüllen</div>';
   html += '</div>';
-  html += '<div class="field"><label for="f-extra">Beispielsatz, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
+  html += '<div class="field"><label for="f-extra">Beispielsatz, Grammatik, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
   html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '">' + esc(formDraft.extra) + '</textarea></div>';
   if (editing) {
     html += '<div class="field"><label for="f-stufe">Wiederholungsstufe</label>';

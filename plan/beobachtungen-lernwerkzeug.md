@@ -970,9 +970,13 @@ Anforderung. Beides bräuchte, falls verfolgt, ein eigenes Konzept wie
 `onboarding/` oder `lehrer-modus/` — kein Punkt für „nimm einen und mach."
 
 **Nächster Schritt:** Keiner. Notiert für den Fall, dass der Betreiber das
-später vertiefen will — dann eigener Nebenstrang, kein Direktbau.
+später vertiefen will — dann eigener Nebenstrang, kein Direktbau. Zusätzlich
+als möglicher Premium-Feature-Kandidat in
+[`monetarisierung/GERUEST.md`](monetarisierung/GERUEST.md) Abschnitt A
+verlinkt (Betreiber-Wunsch 23.09.2026) — ändert nichts an „nicht gebaut",
+nur ein zweiter Ort, an dem die Idee nicht verloren geht.
 
-## 21. Karten-Formular: „Notiz"-Feld trägt auch Grammatik, aber ist nicht als solches erkennbar (23.09.2026)
+## 21. Karten-Formular: „Notiz"-Feld trägt auch Grammatik, aber ist nicht als solches erkennbar — ✅ Label-Wort ergänzt (23.09.2026)
 
 **Beobachtung:** Betreiber nutzt das Feld `extra` (Formular-Beschriftung:
 „Beispielsatz, Bild-Link oder Notiz") auch für grammatische Hinweise zu
@@ -994,8 +998,19 @@ soll (Label-Wort reicht, oder soll das Feld sichtbar in „Notiz" und
 sondern ein neues Datenfeld mit allem, was das an `firestore.rules` und
 Anzeige nach sich zieht).
 
-**Nächster Schritt:** Betreiber entscheidet Umfang (Label-Wort vs. eigenes
-Feld), dann bauen.
+**Gebaut am 23.09.2026:** Betreiber wollte „erst an Feld 21 rangehen" —
+ohne weitere Angabe zwischen Label-Wort und eigenem Feld gewählt der
+**kleinstmögliche Schritt**: Beschriftung von `f-extra` in `app.js`
+(`karteSheet()`, Zeile bei `f-extra`) und der zugehörige Kommentar bei
+`MAX_EXTRA` von „Beispielsatz, Bild-Link oder Notiz" auf „Beispielsatz,
+**Grammatik**, Bild-Link oder Notiz" erweitert. Reine Textänderung, keine
+Datenstruktur, keine `firestore.rules` betroffen. Ein eigenes Grammatik-Feld
+(sichtbar getrennt von der Notiz) bleibt möglich, falls das Label allein
+nicht reicht — dann bitte ausdrücklich sagen, das ist ein größerer Schritt
+mit neuem Datenfeld.
+
+**Nächster Schritt:** Keiner, außer der Betreiber meldet, dass das
+Label-Wort nicht reicht.
 
 ---
 

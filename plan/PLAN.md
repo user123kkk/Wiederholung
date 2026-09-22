@@ -531,8 +531,19 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (23.09.2026): Sicherheits-/Rechts-Durchsicht nach dem Feedback-
-Board.** Betreiber-Anstoß (TikTok-Video zu `.env`-Dateien) genutzt, um
+**AKTUELL (23.09.2026, später): Punkt 21 gebaut (v3.8.5), Premium-Feature-
+Kandidaten gesammelt.** Betreiber wollte „erst an Feld 21 rangehen" — Label
+von `f-extra` (`app.js`, `karteSheet()`) um „Grammatik" erweitert, kleinst-
+möglicher Schritt, kein neues Datenfeld. Dazu auf Betreiber-Wunsch drei
+konkrete Kandidaten für eine spätere Premium-/Zusatz-Stufe in
+[`monetarisierung/GERUEST.md`](monetarisierung/GERUEST.md) Abschnitt A
+gesammelt (Code-Teilen, Quran-Ayat in Reihenfolge, kosmetische Anpassung —
+Letztere ausdrücklich ohne eigenes Konzept, nur als Richtung benannt).
+**Nichts davon gebaut außer der Label-Änderung** — reine Sammlung, damit die
+Ideen nicht verloren gehen. `APP_VERSION`/`CACHE_NAME`/`CHANGELOG.md` → 3.8.5.
+
+**Vorheriger Stand (23.09.2026): Sicherheits-/Rechts-Durchsicht nach dem
+Feedback-Board.** Betreiber-Anstoß (TikTok-Video zu `.env`-Dateien) genutzt, um
 gezielt nachzuprüfen: `.env` passt nicht auf dieses Projekt (kein
 Build-Schritt, Firebase-`apiKey` ist bei Web-Apps ohnehin öffentlich
 vorgesehen, echter Schutz liegt in `firestore.rules` + Browser-Key-

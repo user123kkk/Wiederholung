@@ -12,6 +12,36 @@ gebaut. Wenn der Betreiber einen Punkt starten will, wird daraus ein eigener Auf
    entschieden ist, ist alles Weitere hier blockiert.
 2. **Abo für Zusatzfunktionen** — würde voraussetzen, dass es Funktionen gibt, die ein
    Abo rechtfertigen, ohne das Werkzeug für die jetzigen Nutzer zu verschlechtern. Offen.
+
+   **Konkrete Kandidaten, vom Betreiber genannt (23.09.2026) — nur gesammelt, nichts
+   entschieden, nichts gebaut:**
+
+   - **Code-Teilen / Lehrer-Gerüst.** Heute kostenlos für alle offen (v3.5.2,
+     Betreiber-Entscheidung), von Anfang an mit dem Gedanken versehen, dass ein
+     Bezahl-Modell dafür später denkbar ist —
+     [`lehrer-modus/GERUEST.md`](../lehrer-modus/GERUEST.md), Abschnitt G.
+     Bliebe das kostenlose Kernstück bestehen und nur eine Ausbaustufe (Rollen,
+     Mitgliederverwaltung, Chat — Abschnitte A0/E dort) hinter ein Abo? Nicht
+     entschieden.
+   - **Quran-Ayat in Reihenfolge lernen.** Eigene Lern-Betriebsart neben der
+     heutigen Wiederholung nach Stufen, siehe
+     [`../beobachtungen-lernwerkzeug.md`](../beobachtungen-lernwerkzeug.md),
+     Punkt 20. Fasst die Lernlogik an — bräuchte bei Verfolgung ohnehin ein
+     eigenes Konzept, unabhängig von der Bezahlfrage.
+   - **Kosmetische Anpassung des Erscheinungsbilds** — vom Betreiber nur als
+     Richtung benannt, ausdrücklich noch ohne eigenes Konzept: Farbvarianten
+     oder Muster, mit denen man die Oberfläche für sich persönlich gestalten
+     kann. Erster Anstoß kam aus einer Beobachtung bei „Arabily" (einer
+     anderen App, siehe auch `phase-5-recht/LOGBUCH.md` zu Funktionen, die
+     von dort NICHT übernommen wurden) und einem Vergleich mit Minecrafts
+     Rüstungsverzierung (Netherit-Rüstung + verschiedene Erze/Muster ergeben
+     unterschiedlich aussehende Verzierungen) — beides ausdrücklich nur als
+     Ausgangspunkt, nicht als Vorlage: Betreiber will „sogar was anderes".
+     Stünde im Spannungsfeld mit Satz 1 der Gestaltungsregeln
+     (`styles.css`: „genau eine gefüllte Akzentfläche") — wie sich
+     personalisierbare Farbigkeit damit verträgt, ist eine offene
+     Gestaltungsfrage, kein Premium-Feature-Zuschnitt, der sich heute schon
+     bauen ließe.
 3. **Einmalkauf / „Pay what you want"** — leichter mit dem ruhigen Ton der App vereinbar
    als eine Abo-Schranke. Offen.
 4. **Lehrer-Konzept** — steht in `plan/PLAN.md` unter „Später" (YouTube-Playlist,

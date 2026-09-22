@@ -1,3 +1,9 @@
+## 3.8.5 – 23. September 2026
+
+**Karten-Formular: Feld für Beispielsatz/Notiz nennt jetzt auch Grammatik.** Betreiber nutzt das Feld (`f-extra`) schon länger auch für grammatische Hinweise – die Beschriftung „Beispielsatz, Bild-Link oder Notiz" nannte das aber nicht, wer eine Karten-App primär für Vokabeln erwartet, kommt nicht unbedingt selbst darauf. Jetzt: „Beispielsatz, Grammatik, Bild-Link oder Notiz". Reine Textänderung, kein neues Datenfeld.
+
+Dazu: `datenschutzerklaerung.html` um einen Abschnitt zum neuen Feedback-Board ergänzt (Sichtbarkeit für alle Konten statt nur das eigene, keine gezielte Löschung einzelner Vorschläge möglich) – eine echte Lücke, die seit v3.8.4 bestand. `README.md` erklärt jetzt, warum dieses Projekt bewusst kein `.env` für den Firebase-Schlüssel verwendet.
+
 ## 3.8.4 – 22. September 2026
 
 **Neu: Feedback-Board unter Einstellungen → Hilfe → „Ideen & Vorschläge"** (`plan/feedback-board/AUFTRAG.md`). Betreiber-Anstoß: ein TikTok-Erfahrungsbericht, dass ein öffentliches Board mit Abstimmen mehr echte Rückmeldung bringt als E-Mails. Steht **neben** „Fehler melden", ersetzt es nicht — ein Fehlerbericht mit Kontaktweg passt schlecht in eine öffentliche, hochvotbare Liste.
