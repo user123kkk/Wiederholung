@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.8.3";
+const APP_VERSION = "3.8.4";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -472,6 +472,8 @@ const ICON_PFADE = {
   verwalten:   '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/>',
   zahnrad:     '<path d="M4 7h9"/><path d="M17 7h3"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="7" cy="17" r="2.2"/>',
   chevronUnten:'<path d="M6 9.5 12 15.5 18 9.5"/>',
+  /* 22.09.2026: Feedback-Board, Abstimm-Knopf - Spiegelbild von chevronUnten. */
+  pfeilHoch:   '<path d="M6 14.5 12 8.5 18 14.5"/>',
   chevronRechts:'<path d="M9 5.5 15.5 12 9 18.5"/>',
   zurueck:     '<path d="M15 5.5 8.5 12 15 18.5"/>',
   schliessen:  '<path d="M6.5 6.5l11 11"/><path d="M17.5 6.5l-11 11"/>',
@@ -944,6 +946,14 @@ let syncError = null;
    ungesendete Aenderungen nur im Arbeitsspeicher, siehe initFirebase). */
 let offline = typeof navigator !== "undefined" && navigator.onLine === false;
 let offlineCacheAktiv = false;
+/* Feedback-Board (22.09.2026, plan/feedback-board/AUFTRAG.md): oeffentliche
+   Sammlung "feedback", losgeloest vom eigenen Konto wie geteilteLektionen.
+   null = noch nicht geladen (Seite wurde noch nicht geoeffnet). */
+let feedbackListe = null;
+let feedbackEigeneVotes = new Set();  // ids, fuer die die eigene Stimme bestaetigt geladen wurde
+let feedbackLaedt = false;
+let feedbackFehler = null;
+let feedbackFormFehler = false;
 /* 2.21.1: Hinweis + Neu-laden-Knopf, falls "Daten werden geladen…" sehr
    lange steht (z.B. schlechtes WLAN). Der Timer laeuft nur einmal an, bis
    die Daten da sind oder sich der Nutzer neu anmeldet - siehe render() und
@@ -1506,6 +1516,9 @@ async function initFirebase() {
     verlauf = {};
     verlaufEigene = new Set();
     cloudDocExists = false;
+    feedbackListe = null;
+    feedbackEigeneVotes = new Set();
+    feedbackFehler = null;
     ui.session = null;
     ui.editId = null;
     ui.authEingabe = { name: "", email: "", pass: "" };
@@ -5975,7 +5988,8 @@ const SEITEN_TITEL = {
   verlauf: "Aufzeichnung",
   lektionen: "Lektionen",
   leeches: "Karten, die nicht klappen",
-  vorschau: "Die n\u00e4chsten 7 Tage"
+  vorschau: "Die n\u00e4chsten 7 Tage",
+  feedback: "Ideen & Vorschl\u00e4ge"
 };
 
 /* Eine Zeile der Uebersicht: Symbol, Beschriftung, aktueller Stand, Pfeil. */
@@ -6035,6 +6049,11 @@ function renderEinstellungen() {
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Hilfe</div>';
   html += '<div class="liste">';
+  /* 22.09.2026: Ideen & Vorschlaege steht NEBEN Fehler melden, ersetzt es
+     nicht - ein Fehlerbericht ("Login geht nicht", mit Kontaktweg) passt
+     schlecht in eine oeffentliche, hochvotbare Liste. Siehe
+     plan/feedback-board/AUFTRAG.md. */
+  html += einstZeile({ action: "einst-seite", id: "feedback", icon: "stern", text: "Ideen & Vorschläge" });
   html += einstZeile({ action: "open-error-modal", icon: "warnung", text: "Fehler melden" });
   html += '</div></div>';
 
@@ -6180,7 +6199,193 @@ function renderEinstellungenSeite(id) {
     return html;
   }
 
+  if (id === "feedback") return renderFeedbackSeite();
+
   return '<p class="hint">Diese Seite gibt es nicht.</p>';
+}
+
+/* ---------- Feedback-Board ----------
+   Oeffentliche Liste mit Vorschlaegen und Abstimmen (plan/feedback-board/
+   AUFTRAG.md). Bewusst KEINE Konto-Kennung am Vorschlag - niemand sieht, wer
+   was vorgeschlagen hat, auch der Betreiber nicht (siehe firestore.rules).
+   Deshalb auch kein "eigenen Vorschlag loeschen": das ist der Preis fuer
+   echte Anonymitaet, nur Moderation kann Eintraege entfernen. */
+function renderFeedbackSeite() {
+  if (feedbackListe === null && !feedbackLaedt) feedbackLaden();
+
+  let html = '<div class="card">';
+  html += '<p class="hint">Was soll dazukommen, was soll sich ändern? Alle sehen die Liste, ' +
+    'niemand sieht, von wem ein Vorschlag stammt.</p>';
+  html += '<div class="field"><label for="fb-text">Kurz gesagt <span class="opt">– Pflicht</span></label>';
+  html += '<input type="text" id="fb-text" maxlength="100" placeholder="z.B. Dunkler Modus im Widget"' +
+    (feedbackFormFehler ? ' aria-invalid="true" aria-describedby="fb-text-fehler"' : '') + '>';
+  if (feedbackFormFehler) html += '<div class="field__fehler" id="fb-text-fehler">Bitte ausfüllen</div>';
+  html += '</div>';
+  html += '<div class="field"><label for="fb-beschreibung">Genauer <span class="opt">– optional</span></label>';
+  html += '<textarea id="fb-beschreibung" rows="2" maxlength="500"></textarea></div>';
+  html += '<div class="form-actions">';
+  html += '<button data-action="feedback-submit"' + (feedbackLaedt ? ' disabled' : '') + '>' +
+    ikon("plus", "i-sm") + ' Vorschlag einreichen</button>';
+  html += '</div></div>';
+
+  if (feedbackFehler) {
+    html += '<div class="error-box" style="margin-top:var(--stack-tight)">' + ikon("warnung", "i-sm") +
+      '<div class="banner__text">' + esc(feedbackFehler) + '</div></div>';
+  } else if (feedbackLaedt && feedbackListe === null) {
+    html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Lädt…</p>';
+  } else if (feedbackListe && feedbackListe.length === 0) {
+    html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Noch keine Vorschläge – sei der oder die Erste.</p>';
+  } else if (feedbackListe) {
+    /* KEIN .liste als Rahmen darum: .liste traegt selbst eine Flaeche
+       (Hintergrund, Rand, Schatten - styles.css:1429), und jeder Eintrag
+       ist ebenfalls ein .card - das waere genau die "Flaeche in einer
+       Flaeche", die Satz 2 der Gestaltungsregeln verbietet. Stattdessen
+       einzelne Karten mit Abstand dazwischen, wie auch sonst in der App. */
+    html += '<div style="display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--stack)">';
+    html += feedbackListe.map(feedbackZeile).join("");
+    html += '</div>';
+  }
+  return html;
+}
+
+function feedbackZeile(e) {
+  const abgestimmt = feedbackEigeneVotes.has(e.id);
+  const statusLabel = FEEDBACK_STATUS.find(s => s.id === e.status);
+  let html = '<div class="card" style="display:flex;gap:var(--space-4);align-items:flex-start">';
+  html += '<button class="pill' + (abgestimmt ? ' active' : '') + '" style="flex:none;flex-direction:column;height:auto;padding:var(--space-2) var(--space-3)"' +
+    ' data-action="' + (abgestimmt ? "feedback-unvote" : "feedback-vote") + '" data-id="' + esc(e.id) + '"' +
+    ' aria-pressed="' + (abgestimmt ? "true" : "false") + '" aria-label="' + (abgestimmt ? "Stimme zurückziehen" : "Dafür stimmen") + '">' +
+    ikon("pfeilHoch", "i-sm") + '<span>' + Math.max(0, e.votes || 0) + '</span></button>';
+  html += '<div style="flex:1 1 auto;min-width:0">';
+  html += '<div style="display:flex;gap:var(--space-2);align-items:baseline;flex-wrap:wrap">';
+  html += '<strong>' + esc(e.text) + '</strong>';
+  if (statusLabel && statusLabel.id !== "offen") {
+    html += '<span class="badge' + (statusLabel.id === "umgesetzt" ? " positiv" : statusLabel.id === "abgelehnt" ? " negativ" : "") + '">' +
+      esc(statusLabel.label) + '</span>';
+  }
+  html += '</div>';
+  if (e.beschreibung) html += '<p class="hint" style="margin-top:2px">' + esc(e.beschreibung) + '</p>';
+  if (istBetreiber()) {
+    html += '<div style="display:flex;gap:var(--space-2);flex-wrap:wrap;margin-top:var(--space-2)">';
+    FEEDBACK_STATUS.forEach(s => {
+      if (s.id === e.status) return;
+      html += '<button class="ghost" data-action="feedback-status" data-id="' + esc(e.id) +
+        '" data-status="' + s.id + '">→ ' + esc(s.label) + '</button>';
+    });
+    html += '<button class="ghost" data-action="feedback-delete" data-id="' + esc(e.id) + '">' +
+      ikon("muell", "i-sm") + ' Löschen</button>';
+    html += '</div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+const FEEDBACK_STATUS = [
+  { id: "offen", label: "Offen" },
+  { id: "geplant", label: "Geplant" },
+  { id: "umgesetzt", label: "Umgesetzt" },
+  { id: "abgelehnt", label: "Abgelehnt" }
+];
+
+async function feedbackLaden() {
+  if (feedbackLaedt) return;
+  feedbackLaedt = true;
+  feedbackFehler = null;
+  render();
+  try {
+    const snap = await fb.getDocs(fb.collection(db, "feedback"));
+    const liste = [];
+    snap.forEach(d => liste.push(Object.assign({ id: d.id }, d.data())));
+    liste.sort((a, b) => (b.votes || 0) - (a.votes || 0) || String(b.erstelltAm || "").localeCompare(String(a.erstelltAm || "")));
+    /* Eigene Stimmen: ein get() je Eintrag statt list auf der Unter-Sammlung -
+       firestore.rules erlaubt dort bewusst kein list, sonst waeren ueber die
+       Dokument-IDs (= Konto-Kennungen) alle Stimmenden sichtbar. Bei der
+       kleinen Groessenordnung dieses Boards unproblematisch. */
+    const eigene = new Set();
+    await Promise.all(liste.map(async e => {
+      try {
+        const v = await fb.getDoc(fb.doc(db, "feedback", e.id, "votes", currentUser.uid));
+        if (v.exists()) eigene.add(e.id);
+      } catch (err) { /* eigene Stimme einzeln nicht ladbar - zeigt dann "nicht abgestimmt" */ }
+    }));
+    feedbackListe = liste;
+    feedbackEigeneVotes = eigene;
+  } catch (e) {
+    feedbackFehler = "Liste konnte nicht geladen werden: " + (e && e.message ? e.message : String(e));
+  }
+  feedbackLaedt = false;
+  render();
+}
+
+async function feedbackEinreichen() {
+  const feldText = document.getElementById("fb-text");
+  const feldBeschr = document.getElementById("fb-beschreibung");
+  const text = feldText ? feldText.value.trim() : "";
+  if (!text) { feedbackFormFehler = true; render(); return; }
+  feedbackFormFehler = false;
+  const beschreibung = feldBeschr ? feldBeschr.value.trim() : "";
+  const neu = {
+    text: text.slice(0, 100),
+    erstelltAm: new Date().toISOString(),
+    votes: 0,
+    status: "offen"
+  };
+  if (beschreibung) neu.beschreibung = beschreibung.slice(0, 500);
+  try {
+    await fb.addDoc(fb.collection(db, "feedback"), neu);
+    feedbackListe = null;
+    render();
+    await feedbackLaden();
+  } catch (e) {
+    dlgAlert("Konnte nicht gespeichert werden: " + (e && e.message ? e.message : e));
+  }
+}
+
+async function feedbackAbstimmen(id, will) {
+  const eintrag = feedbackListe && feedbackListe.find(e => e.id === id);
+  if (!eintrag) return;
+  const vorher = eintrag.votes || 0;
+  /* Optimistisch: sofort zeigen, bei Fehler zurueckdrehen - dieselbe
+     Grundidee wie ueberall sonst in der App (kein Warten auf die Cloud, bevor
+     sich etwas in der Oberflaeche ruehrt). */
+  eintrag.votes = vorher + (will ? 1 : -1);
+  if (will) feedbackEigeneVotes.add(id); else feedbackEigeneVotes.delete(id);
+  render();
+  try {
+    const batch = fb.writeBatch(db);
+    const stimmDoc = fb.doc(db, "feedback", id, "votes", currentUser.uid);
+    const feedDoc = fb.doc(db, "feedback", id);
+    if (will) { batch.set(stimmDoc, {}); batch.update(feedDoc, { votes: fb.increment(1) }); }
+    else { batch.delete(stimmDoc); batch.update(feedDoc, { votes: fb.increment(-1) }); }
+    await batch.commit();
+  } catch (e) {
+    eintrag.votes = vorher;
+    if (will) feedbackEigeneVotes.delete(id); else feedbackEigeneVotes.add(id);
+    render();
+  }
+}
+
+async function feedbackStatusAendern(id, status) {
+  try {
+    await fb.updateDoc(fb.doc(db, "feedback", id), { status: status });
+    const e = feedbackListe && feedbackListe.find(x => x.id === id);
+    if (e) e.status = status;
+    render();
+  } catch (e) {
+    dlgAlert("Konnte Status nicht ändern: " + (e && e.message ? e.message : e));
+  }
+}
+
+async function feedbackLoeschen(id) {
+  const ok = await dlgConfirm("Diesen Vorschlag endgültig löschen?", { danger: true, okLabel: "Löschen" });
+  if (!ok) return;
+  try {
+    await fb.deleteDoc(fb.doc(db, "feedback", id));
+    if (feedbackListe) feedbackListe = feedbackListe.filter(e => e.id !== id);
+    render();
+  } catch (e) {
+    dlgAlert("Konnte nicht gelöscht werden: " + (e && e.message ? e.message : e));
+  }
 }
 
 /* ---------- Das Wahl-Blatt ----------
@@ -8874,6 +9079,11 @@ document.body.addEventListener("click", e => {
     }
     case "open-error-modal": openErrorModal(); break;
     case "close-error-modal": closeErrorModal(); break;
+    case "feedback-submit": feedbackEinreichen(); break;
+    case "feedback-vote": feedbackAbstimmen(btn.dataset.id, true); break;
+    case "feedback-unvote": feedbackAbstimmen(btn.dataset.id, false); break;
+    case "feedback-status": feedbackStatusAendern(btn.dataset.id, btn.dataset.status); break;
+    case "feedback-delete": feedbackLoeschen(btn.dataset.id); break;
   }
 });
 

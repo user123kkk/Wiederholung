@@ -27,12 +27,31 @@ Board ist eine andere Kategorie — **von Nutzer:innen geschriebener Text, für
 alle sichtbar**, dazu neu: eine Firestore-Sammlung, die nicht mehr „jedes
 Konto liest/schreibt nur bei sich selbst" ist (dieselbe Grundannahme, die
 beim Lehrer-Gerüst zur Sperre führte — hier aber harmloser: es geht um
-Produktideen, nicht um Daten von Minderjährigen). Trotzdem: Wer im Impressum
-haftet (der Vater des Betreibers, 16), haftet auch für das, was auf einem
-öffentlichen Board steht. Deshalb ein eigener, kurzer Auftrag statt eines
-Direkt-Baus mitten in einer Session mit fünf anderen Themen.
+Produktideen, nicht um Daten von Minderjährigen). Wer im Impressum haftet,
+haftet auch für das, was auf einem öffentlichen Board steht (der Betreiber
+selbst ist volljährig, siehe Korrektur vom 22.09.2026 in `../PLAN.md`; das
+Tool läuft trotzdem unter dem Namen einer anderen Person im Impressum).
+Deshalb ein eigener, kurzer Auftrag statt eines Direkt-Baus mitten in einer
+Session mit fünf anderen Themen.
 
-## Vorgeschlagenes Modell (Vorschlag, keine Entscheidung — siehe „Offen")
+## Status: gebaut (v3.8.4, 22.09.2026)
+
+Gebaut und gegen den echten Firestore-Emulator geprüft — 132 von 132
+Prüfungen, davon 26 neu für dieses Board (`plan/phase-1-datenzugriff/
+regeln-pruefung.mjs`, F01–F26). Details, inklusive eines dabei gefundenen und
+behobenen echten Regel-Fehlers, im Logbuch: `redesign-oberflaeche/LOGBUCH.md`.
+Die vier „Offen"-Punkte unten sind damit beantwortet (1, 2) bzw. bewusst
+vertagt (3, 4) — siehe dort für die Begründung je Punkt.
+
+**Nicht fertig, solange der Betreiber diesen einen Schritt offen hat:** In
+`firestore.rules`, Funktion `istFeedbackModerator()`, steht der Platzhalter
+`'HIER-DEINE-KONTO-ID-EINTRAGEN'`. Solange er dort steht, kann **niemand**
+Einträge löschen oder ihren Status ändern (sicherer Standard, kein
+Versehen). Vor dem Deploy einmal durch die echte Konto-ID ersetzen —
+Einstellungen → Konto → „Konto-ID" in der App zeigt sie an, solange
+`BETREIBER_UIDS` in `app.js` noch leer ist.
+
+## Modell (wie gebaut)
 
 - **Neue Sammlung `feedback/{id}`:** `text` (Titel, kurz), `beschreibung`
   (optional, länger), `erstelltAm`, `votes` (Zahl), `status` (`offen`/
@@ -53,28 +72,34 @@ Direkt-Baus mitten in einer Session mit fünf anderen Themen.
   request.auth.token.email_verified == true`, wie überall sonst in
   `firestore.rules`) — kein anonymes Posten, damit Spam/Missbrauch dieselbe
   Hürde hat wie der Rest der App.
-- **Moderation:** Löschen eigener Einträge für jedes Konto; Status ändern
-  und fremde Einträge löschen nur für den Betreiber (`AUTOR_UID`-Muster gibt
-  es nicht mehr seit v3.5.2 — braucht eine neue, einfache Lösung, z. B. eine
-  feste UID-Liste in den Regeln, wie an anderer Stelle im Lehrer-Gerüst
-  diskutiert).
+- **Moderation:** NUR der Betreiber kann Status ändern und Einträge löschen
+  (`istFeedbackModerator()` in `firestore.rules`, feste Konto-ID-Liste —
+  `AUTOR_UID`-Muster gibt es nicht mehr seit v3.5.2, das ist eine neue,
+  eigene Liste). **Kein „eigenen Eintrag löschen"** — ohne gespeicherte uid
+  lässt sich „eigen" nicht nachweisen, das ist der Preis für die echte
+  Anonymität oben, keine vergessene Funktion.
 
-## Offen — Bauentscheidungen, noch nicht getroffen
+## Offen — inzwischen entschieden bzw. bewusst vertagt
 
-1. **Wo im Tab-Aufbau?** Eigener vierter Reiter (bricht die Drei-Reiter-Logik
-   von `REITER_FOLGE`, `app.js`) oder ein Unterpunkt in Einstellungen (wie
-   heute „Fehler melden")?
-2. **Ersetzt das Board „Fehler melden", oder stehen beide nebeneinander?**
-   Ein Fehlerbericht („Login geht nicht") passt schlecht in eine öffentliche,
-   hochvotbare Liste — beides parallel wäre naheliegend, aber das ist eine
-   Gestaltungsentscheidung.
-3. **Datenschutzerklärung:** Abschnitt 10 (Kontakt-/Fehlerformular) müsste um
-   das Board erweitert werden, sobald es Text von Nutzer:innen dauerhaft und
-   öffentlich speichert statt einer einmaligen E-Mail.
-4. **Text-Länge/Moderation gegen Missbrauch** (Beleidigungen, Spam-Links) —
-   reicht „Betreiber kann löschen", oder braucht es eine Vorprüfung?
+1. **Wo im Tab-Aufbau? Entschieden: Einstellungen, wie „Fehler melden".**
+   Kein vierter Reiter — das hätte `REITER_FOLGE` (app.js) und das
+   Drei-Reiter-Wischen aus Block 17 angefasst, für eine Funktion, die nicht
+   zum täglichen Lernablauf gehört.
+2. **Ersetzt das Board „Fehler melden"? Entschieden: nein, beide stehen
+   nebeneinander** (Einstellungen → Hilfe). Ein Fehlerbericht mit Kontaktweg
+   passt schlecht in eine öffentliche, hochvotbare Liste — unterschiedliche
+   Zwecke, unterschiedliche Bauteile.
+3. **Datenschutzerklärung — bewusst noch NICHT geändert.** Braucht einen
+   eigenen Blick auf Abschnitt 10 (Kontakt-/Fehlerformular), sobald das Board
+   tatsächlich live Text von Nutzer:innen sammelt — nicht nebenbei in dieser
+   Session erledigt, damit der Rechtstext nicht unter Zeitdruck entsteht.
+   **Blockiert eine echte Veröffentlichung, nicht den Code-Stand.**
+4. **Missbrauchs-Vorprüfung — bewusst vertagt.** Heute: nur „Betreiber kann
+   löschen" (reaktiv). Bei drei Nutzer:innen kein akutes Problem; wird erst
+   relevant, wenn das Board öffentlich beworben wird — dann gemeinsam mit
+   Punkt 3 klären, nicht vorher spekulativ bauen.
 
-**Nächster Schritt:** Eine der vier Fragen oben mit dem Betreiber klären
-(oder alle vier auf einmal), danach `firestore.rules` + Oberfläche in einem
-eigenen, testbaren Block bauen — nicht nebenbei in einer Session mit anderen
-Themen.
+**Nächster Schritt:** Betreiber trägt die eigene Konto-ID in
+`istFeedbackModerator()` ein und deployt (siehe „Was Du noch tun musst" in
+der Session-Antwort), testet am echten Gerät. Danach, vor einer echten
+Bewerbung des Boards: Punkt 3 und 4 oben klären.

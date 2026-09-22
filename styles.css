@@ -1497,6 +1497,11 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .badge.zustand-wackelig { background: var(--stufe-2); color: var(--text-on-accent); border-color: transparent; }
 .badge.zustand-solide   { background: var(--stufe-3); color: var(--text-on-accent); border-color: transparent; }
 .badge.zustand-fest     { background: var(--stufe-4); color: var(--text-on-accent); border-color: transparent; }
+/* 22.09.2026: Feedback-Board-Status "umgesetzt"/"abgelehnt" - dieselben zwei
+   Statusfarben, die es schon gibt (Satz 1: nur drei Statusfarben insgesamt).
+   "geplant" bekommt bewusst keine eigene Farbe, nur das neutrale .badge. */
+.badge.positiv { background: var(--positive-bg); color: var(--positive); border-color: var(--positive-border); }
+.badge.negativ { background: var(--negative-bg); color: var(--negative); border-color: var(--negative-border); }
 
 .dot {
   width: 9px; height: 9px; border-radius: var(--r-full);

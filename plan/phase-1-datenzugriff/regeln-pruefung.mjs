@@ -32,11 +32,16 @@
    ============================================================ */
 
 import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
-import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField } from "firebase/firestore";
+import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField, increment } from "firebase/firestore";
 import { readFileSync } from "fs";
 
 const UID = "nutzer-eins";
 const FREMD = "nutzer-zwei";
+/* Feedback-Board (Nachtrag 22.09.2026): fuer F22/F23 (Moderations-Faelle)
+   wird der Platzhalter 'HIER-DEINE-KONTO-ID-EINTRAGEN' in firestore.rules
+   testweise durch diese Kennung ersetzt, siehe RULES_TEXT weiter unten -
+   die echte, deployte Regel bleibt davon unberuehrt. */
+const MOD = "moderator-konto";
 
 let ok = 0, fehl = 0;
 const fehler = [];
@@ -51,15 +56,19 @@ async function pruefe(name, erwartet, fn) {
   }
 }
 
+const RULES_TEXT = readFileSync(process.env.RULES_FILE || "/home/user/Wiederholung/firestore.rules", "utf8")
+  .replace("HIER-DEINE-KONTO-ID-EINTRAGEN", MOD);
+
 const env = await initializeTestEnvironment({
   projectId: "wiederholung-test",
-  firestore: { host: "127.0.0.1", port: 8085, rules: readFileSync(process.env.RULES_FILE || "/home/user/Wiederholung/firestore.rules", "utf8") }
+  firestore: { host: "127.0.0.1", port: 8085, rules: RULES_TEXT }
 });
 
 const db      = env.authenticatedContext(UID, { email_verified: true }).firestore();
 const dbUnbes = env.authenticatedContext(UID, { email_verified: false }).firestore();
 const dbFremd = env.authenticatedContext(FREMD, { email_verified: true }).firestore();
 const dbAnon  = env.unauthenticatedContext().firestore();
+const dbMod   = env.authenticatedContext(MOD, { email_verified: true }).firestore();
 
 const u  = (d = db) => doc(d, "users", UID);
 const b  = (bid, d = db) => doc(d, "users", UID, "bereiche", bid);
@@ -252,6 +261,78 @@ await pruefe("L27 lehrerOffenBis 1001", "nein", () => updateDoc(b("b1"), { lehre
 await pruefe("L28 lehrerCode 21 Zeichen", "nein", () => updateDoc(b("b1"), { lehrerCode: "A".repeat(21) }));
 await pruefe("L29 teilFreigabe negativ", "nein", () => updateDoc(b("b1"), { teilFreigabe: -1 }));
 await pruefe("L30 erfundenes Bereichsfeld weiterhin abgewiesen", "nein", () => updateDoc(b("b1"), { lehrerModus: "x" }));
+
+/* ================= NACHTRAG 22.09.2026: feedback/{id} (Feedback-Board) =================
+   GELAUFEN am 22.09.2026 (Windows, Emulator, Microsoft OpenJDK 21 - vorher
+   fehlte Java in dieser Arbeitsumgebung komplett, extra fuer diese Pruefung
+   installiert): 132 von 132, F01-F26 eingeschlossen. F25/F26 (Moderations-
+   Faelle) laufen gegen eine KOPIE der Regel, in der der Platzhalter
+   'HIER-DEINE-KONTO-ID-EINTRAGEN' durch die Konstante MOD ersetzt ist (siehe
+   RULES_TEXT oben) - die echte, deployte Regel hat weiterhin den Platzhalter
+   und laesst bis zum Eintragen der echten Konto-ID NIEMANDEN moderieren.
+   Beim Schreiben ein echter Fehler gefunden und VOR dem ersten Testlauf
+   behoben: feedbackWerte() hatte in der ersten Fassung KEINE Klammern um die
+   einzelnen (!pruefen.hasAny(...) || Pruefung)-Paare - && bindet staerker als
+   || in dieser Regelsprache, das haette die Feldpruefung fast wirkungslos
+   gemacht (siehe firestore.rules-Kommentar an der Stelle). Gefunden beim
+   Gegenlesen gegen das Muster der uebrigen *Werte()-Funktionen in dieser
+   Datei (die alle Klammern setzen), nicht durch den Emulator - die fehlerhafte
+   Fassung wurde deshalb nie tatsaechlich gegen den Emulator gelaufen, es laesst
+   sich also nicht behaupten, der Testlauf haette sie durchgelassen. Durchgerechnet
+   (nicht getestet): sie haette es vermutlich NICHT getan - bei F12 (Text
+   ueberlang) waere die Kette am Ende bei "|| d.status in [...]" gelandet, und
+   da status beim Anlegen immer 'offen' ist, waere das Gesamtergebnis "wahr"
+   gewesen, obwohl der Text zu lang war. Der jetzt gelaufene Testfall F12 haette
+   diese fehlerhafte Fassung also erwischt (er erwartet "nein", geprueft mit
+   assertFails). Lehre: Klammern bei gemischten &&/||-Ketten sind hier kein
+   Stil, sondern Korrektheit - der Vergleich mit dem etablierten Muster ist
+   Pflicht, nicht Kuer. */
+const fb1 = (id, d = db) => doc(d, "feedback", id);
+const fbv = (id, uid, d = db) => doc(d, "feedback", id, "votes", uid);
+const feedbackDaten = (extra = {}) => ({
+  text: "Dunkler Modus im Widget", erstelltAm: "2026-09-22T10:00:00.000Z", votes: 0, status: "offen", ...extra
+});
+
+await pruefe("F01 Vorschlag anlegen (bestaetigt)", "ja", () => setDoc(fb1("e1"), feedbackDaten()));
+await pruefe("F02 Liste lesen (fremdes Konto)", "ja", () => getDocs(collection(dbFremd, "feedback")));
+await pruefe("F03 Abstimmen: Stimm-Dokument + votes+1 im selben Stapel", "ja", async () => {
+  const st = writeBatch(db);
+  st.set(fbv("e1", UID), {});
+  st.update(fb1("e1"), { votes: increment(1) });
+  return st.commit();
+});
+await pruefe("F04 Eigene Stimme lesen", "ja", () => getDoc(fbv("e1", UID)));
+await pruefe("F05 Stimme zurueckziehen: Stimm-Dokument loeschen + votes-1", "ja", async () => {
+  const st = writeBatch(db);
+  st.delete(fbv("e1", UID));
+  st.update(fb1("e1"), { votes: increment(-1) });
+  return st.commit();
+});
+await pruefe("F06 Vorschlag ohne Beschreibung (optional weggelassen)", "ja", () => setDoc(fb1("e2"), feedbackDaten()));
+await pruefe("F07 Vorschlag mit Beschreibung", "ja", () => setDoc(fb1("e3"), feedbackDaten({ beschreibung: "Genauer erklaert." })));
+
+await pruefe("F08 Erfundene Konto-Kennung im Dokument", "nein", () => setDoc(fb1("e4"), feedbackDaten({ erstelltVon: UID })));
+await pruefe("F09 Ohne Text anlegen", "nein", () => setDoc(fb1("e5"), { erstelltAm: "2026-09-22T10:00:00.000Z", votes: 0, status: "offen" }));
+await pruefe("F10 votes ungleich 0 beim Anlegen", "nein", () => setDoc(fb1("e6"), feedbackDaten({ votes: 5 })));
+await pruefe("F11 status ungleich 'offen' beim Anlegen", "nein", () => setDoc(fb1("e7"), feedbackDaten({ status: "umgesetzt" })));
+await pruefe("F12 Text ueberlang (101 Zeichen)", "nein", () => setDoc(fb1("e8"), feedbackDaten({ text: "a".repeat(101) })));
+await pruefe("F13 Beschreibung ueberlang (501 Zeichen)", "nein", () => setDoc(fb1("e9"), feedbackDaten({ beschreibung: "a".repeat(501) })));
+await pruefe("F14 Ohne Anmeldung anlegen", "nein", () => setDoc(fb1("e10", dbAnon), feedbackDaten()));
+await pruefe("F15 Unbestaetigtes Konto legt an", "nein", () => setDoc(fb1("e11", dbUnbes), feedbackDaten()));
+
+await pruefe("F16 Zaehler um mehr als 1 erhoehen", "nein", () => updateDoc(fb1("e1"), { votes: 100 }));
+await pruefe("F17 votes UND status gleichzeitig aendern", "nein", () => updateDoc(fb1("e1"), { votes: increment(1), status: "geplant" }));
+await pruefe("F18 Nicht-Moderator aendert status", "nein", () => updateDoc(fb1("e1"), { status: "geplant" }));
+await pruefe("F19 Nicht-Moderator loescht Eintrag", "nein", () => deleteDoc(fb1("e1")));
+await pruefe("F20 Status auf erfundenen Wert", "nein", () => updateDoc(doc(dbMod, "feedback", "e1"), { status: "dringend" }));
+
+await pruefe("F21 Fremdes Konto liest fremde Stimme", "nein", () => getDoc(fbv("e2", UID, dbFremd)));
+await pruefe("F22 Fremdes Konto legt Stimme unter falscher uid an", "nein", () => setDoc(fbv("e2", UID, dbFremd), {}));
+await pruefe("F23 Stimmen-Unterordner auflisten", "nein", () => getDocs(collection(db, "feedback", "e2", "votes")));
+await pruefe("F24 Stimm-Dokument mit Inhalt statt leer", "nein", () => setDoc(fbv("e2", UID), { markierung: true }));
+
+await pruefe("F25 Moderator aendert status", "ja", () => updateDoc(doc(dbMod, "feedback", "e1"), { status: "geplant" }));
+await pruefe("F26 Moderator loescht Eintrag", "ja", () => deleteDoc(doc(dbMod, "feedback", "e2")));
 
 console.log("\n" + ok + " von " + (ok + fehl) + " Pruefungen wie erwartet.");
 if (fehler.length) { console.log("\nABWEICHUNGEN:"); fehler.forEach(f => console.log("  " + f)); }

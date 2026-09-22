@@ -1,3 +1,13 @@
+## 3.8.4 – 22. September 2026
+
+**Neu: Feedback-Board unter Einstellungen → Hilfe → „Ideen & Vorschläge"** (`plan/feedback-board/AUFTRAG.md`). Betreiber-Anstoß: ein TikTok-Erfahrungsbericht, dass ein öffentliches Board mit Abstimmen mehr echte Rückmeldung bringt als E-Mails. Steht **neben** „Fehler melden", ersetzt es nicht — ein Fehlerbericht mit Kontaktweg passt schlecht in eine öffentliche, hochvotbare Liste.
+
+- **Vorschläge einreichen, alle sehen die Liste, sortiert nach Stimmen.** Betreiber kann den Status setzen (Offen/Geplant/Umgesetzt/Abgelehnt) und Einträge löschen.
+- **Bewusst keine Konto-Kennung am Vorschlag** — Betreiber-Vorgabe: „niemand kann auf die Daten der anderen zugreifen". Ohne gespeicherte uid gibt es strukturell nichts zu lesen, auch mit Entwicklerwerkzeugen nicht. Konsequenz: nur die Moderation kann Einträge löschen oder ihren Status ändern, nicht die einreichende Person selbst — der Preis für echte Anonymität.
+- **Abstimmen** legt ein leeres, nur selbst lesbares Dokument unter `feedback/{id}/votes/{eigeneUid}` an (Existenz = „hat abgestimmt") und erhöht/senkt einen Zähler auf dem Feedback-Dokument um genau 1, beides in einem Stapelschreibvorgang. Ehrlich dokumentiert in `firestore.rules`: die beiden Schreibvorgänge sind nicht kryptografisch aneinander gebunden — bewusst in Kauf genommenes, geringes Risiko (aufgeblähter Zähler bei Entwicklerwerkzeug-Missbrauch, kein Zugriff auf fremde Daten).
+- **Neue `firestore.rules`**, gegen den echten Firestore-Emulator geprüft (Java 21 eigens für diese Sitzung installiert, vorher nicht vorhanden): 132 von 132 Prüfungen, davon 26 neu für das Feedback-Board. Dabei einen echten Fehler in der ersten Fassung gefunden und vor dem ersten Testlauf behoben (fehlende Klammern um `||`/`&&`-Paare in `feedbackWerte()`, hätte die Feldprüfung beim Anlegen fast wirkungslos gemacht).
+- **Moderation läuft über eine Konto-ID-Liste in `firestore.rules`** (Platzhalter, muss vor dem Deploy durch die echte Konto-ID ersetzt werden — siehe „Was Du noch tun musst").
+
 ## 3.8.3 – 22. September 2026
 
 **Zwei echte Funde aus der Betreiber-Rückmeldung zu 3.8.2, beide reine Gestaltung/`styles.css`.**

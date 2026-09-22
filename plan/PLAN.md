@@ -186,10 +186,15 @@ Voting, TikTok-Anstoß. Frühere Einschätzung vom 19.09.2026 („nicht relevant
 bräuchte neuen Server") war ungenau — korrigiert, siehe
 [`AUFTRAG.md`](feedback-board/AUFTRAG.md). Am 22.09.2026 per
 `AskUserQuestion` entschieden: **öffentliches Board mit Voting**, nicht nur
-ein verbessertes privates Formular. Status: `Konzept` — Modell-Vorschlag
-(Sammlung, Sichtbarkeit ohne Kontobezug, Moderation) steht, vier
-Bauentscheidungen (Platz im Tab-Aufbau, Verhältnis zu „Fehler melden",
-Datenschutzerklärung, Missbrauchs-Vorprüfung) sind offen. Nichts gebaut.
+ein verbessertes privates Formular. **Status: gebaut (v3.8.4)** — steht neben
+„Fehler melden" in Einstellungen, keine Konto-Kennung am Vorschlag,
+Abstimmen per Zählfeld + eigener Stimm-Unterammlung, Moderation nur für die
+Konto-ID in `istFeedbackModerator()` (Platzhalter, Betreiber muss die eigene
+eintragen). Gegen den Firestore-Emulator geprüft (Java eigens installiert):
+132/132, davon 26 neu. Details:
+[`feedback-board/LOGBUCH.md`](feedback-board/LOGBUCH.md). Offen: Betreiber
+muss Konto-ID eintragen + deployen + am Gerät testen; Datenschutzerklärung
+und Missbrauchs-Vorprüfung bewusst vertagt (`AUFTRAG.md`, Punkte 3/4).
 
 ### Warum diese Reihenfolge
 
@@ -526,21 +531,35 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (22.09.2026, noch später): App bei v3.8.3 — zwei Funde aus der
-Rückmeldung zu v3.8.2 behoben (leerer Bereich nicht wischbar, heller Modus zu
-weiß). Fünf weitere Punkte per `AskUserQuestion` geklärt: große Zahl „Dein
-Stoff" bleibt (aber neuer, unentschiedener Fund: die Aufschlüsselung darunter
-gefällt dem Betreiber nicht, ohne konkreten Ansatzpunkt), Wisch-Übergang
-bleibt (kein Vorschau-Umbau ohne klaren Nutzen), Ladebildschirm bleibt
-unangetastet (Betreiber will ihn künftig von Grund auf neu bauen, nicht
-flicken), Feedback-Board-Umfang entschieden (öffentlich, mit Voting — neuer
-Nebenstrang [`feedback-board/`](feedback-board/), noch nichts gebaut).
-Firestore-Regel-Deploy weiterhin offen, siehe unten. Einzelheiten:
+**AKTUELL (22.09.2026, spätnachts): App bei v3.8.4 — Feedback-Board gebaut**
+(Einstellungen → Hilfe → „Ideen & Vorschläge", neben „Fehler melden").
+Öffentliche Liste mit Vorschlägen und Abstimmen, ohne gespeicherte
+Konto-Kennung (Betreiber-Vorgabe: „niemand kann auf die Daten der anderen
+zugreifen"). Neue `firestore.rules` gegen den echten Firestore-Emulator
+geprüft — Java eigens für diese Sitzung installiert (vorher nicht vorhanden):
+**132 von 132 Prüfungen**, davon 26 neu. Details, inklusive eines dabei
+gefundenen und behobenen echten Regel-Fehlers (fehlende Klammern in einer
+`&&`/`||`-Kette):
+[`feedback-board/LOGBUCH.md`](feedback-board/LOGBUCH.md).
+**Nicht fertig, solange der Betreiber diese Schritte offen hat:** (1) eigene
+Konto-ID in `istFeedbackModerator()` (`firestore.rules`) eintragen — ohne das
+kann niemand moderieren; (2) `firebase deploy --only "firestore:rules"` (gilt
+weiterhin auch für die seit v3.7.0 offene Lehrer-Gerüst-Regel); (3)
+`veroeffentlichen.bat`; (4) Gerätetest mit echtem Konto.
+**Bei „leg los" zuerst prüfen, ob der Betreiber sich dazu gemeldet hat.**
+Der Rest dieses Abschnitts ist älterer Stand.
+
+**Vorheriger Stand (22.09.2026, noch später): App bei v3.8.3** — zwei Funde
+aus der Rückmeldung zu v3.8.2 behoben (leerer Bereich nicht wischbar, heller
+Modus zu weiß). Fünf weitere Punkte per `AskUserQuestion` geklärt: große
+Zahl „Dein Stoff" bleibt (aber neuer, unentschiedener Fund: die
+Aufschlüsselung darunter gefällt dem Betreiber nicht, ohne konkreten
+Ansatzpunkt), Wisch-Übergang bleibt (kein Vorschau-Umbau ohne klaren
+Nutzen), Ladebildschirm bleibt unangetastet (Betreiber will ihn künftig von
+Grund auf neu bauen, nicht flicken), Feedback-Board-Umfang entschieden
+(öffentlich, mit Voting — seither gebaut, siehe oben). Einzelheiten:
 [`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md), Eintrag
-„Block 17-Nachlese". **Bei „leg los" zuerst prüfen: hat der Betreiber
-`firebase deploy --only "firestore:rules"` ausgeführt, eine der vier
-Feedback-Board-Fragen beantwortet, oder etwas Konkreteres zur „Dein
-Stoff"-Aufschlüsselung gesagt?**
+„Block 17-Nachlese".
 
 **Vorheriger Stand (22.09.2026, spät): App bei v3.8.2 — Block 17, das Wischen neu
 gefasst.** Betreiber-Rückmeldung zu Block 15: „das wischen ist sehr
