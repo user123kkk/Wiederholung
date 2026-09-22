@@ -81,6 +81,37 @@ schon einmal abgedeckt hat. Der gleitende Wechsel-Indikator war die einzige
 echte Lücke — als Block 11 gebaut, siehe oben und `LOGBUCH.md` (22.09.2026,
 v3.7.3).
 
+## Eigene UX-Sichtung, 22.09.2026 (kein Video — Betreiber-Auftrag „verbessere Design, Animationen, UX-Methoden, wirklich alles, in jedem Tab")
+
+Anders als bei den vier Videos oben gibt es hier keine Quelle zum Filtern —
+der Betreiber hat ausdrücklich „mach was du willst … alles was online
+besprochen wird über UI/UX" gesagt. Damit das trotzdem der Belegpflicht
+dieses Strangs folgt (`AUFTRAG.md`: „ist schon da" muss an Datei/Zeile
+belegt sein), wurde die App gegen eine Reihe bekannter UX-Gesetze geprüft
+(Hick, Fitts, Jakob, Miller, Doherty-Schwelle, Peak-End,
+Ästhetik-Usability-Effekt) statt gegen ein Video. Die App selbst wurde dabei
+live angesehen (`stilprobe.html`) und der Code durchsucht (`styles.css`,
+`app.js`), nicht nur die Prinzipien abstrakt abgehakt.
+
+**Befund vorweg:** Die App ist nach elf Blöcken (17.–22.09.2026) ungewöhnlich
+durchgearbeitet — die meisten Standard-Punkte, die eine erste Sichtung sonst
+findet, sind hier schon gebaut. Eine Liste voller „passt, weil noch nicht
+gemacht" wäre deshalb erfunden. Was folgt, ist die ehrliche Gegenprobe:
+wenig neue Treffer, jeder davon belegt.
+
+| Geprüft | Urteil | Beleg |
+|---|---|---|
+| Fitts'sches Gesetz — Trefferflächen, Abstand benachbarter Knöpfe | **passt schon** | `--tap: 44px` durchgesetzt (`styles.css:219`), `.dlg-actions button { flex: 1 1 0 }` verhindert schmale Knöpfe (`styles.css:2259`) |
+| Hick'sches Gesetz — Klapplisten durch sichtbare Wahl ersetzen | **passt schon** | Block 10 (Stufen-Chips, Speicherkarten-Art-Blatt); Einstellungen als Zeilen statt Kästen seit Block 2 |
+| Hick'sches Gesetz — Verwalten-Zeile: Aktionen aus der Liste ins Detail-Blatt | **passt schon** | Block 6/„3.7.1-Nachlese": Stift/Mülleimer pro Zeile entfernt, liegen im Detail-Blatt |
+| Jakob'sches Gesetz — Hover-Rückmeldung auf jeder klickbaren Zeile (Desktop-Spalte, `styles.css` Abschnitt 17) | **Lücke gefunden → behoben** | `.card-row[data-action="card-detail"]` hatte `cursor:pointer` (`app.js:7303`) und `:active`, aber kein `:hover` — jeder andere Zeilentyp (`.liste-zeile`, `.pill`, `.seg`, `.stufe-chip`, `.btn-unknown/almost/known`) hatte es schon. Nachgezogen, gleiche `@media (hover: hover) and (pointer: fine)`-Absicherung. **Block 12, v3.7.4.** |
+| Jakob'sches Gesetz — dieselbe Prüfung für `.set-row`, `.lekt-kachel`, `.leech-row` | **trifft nicht zu** | `.set-row` und `.leech-row` sind selbst nicht klickbar — nur ihre `.ghost`-Knöpfe darin, die schon Hover haben (`styles.css:945`). `.lekt-kachel` hat gar keine `data-action`, reine Anzeige — ihr fehlt zu Recht kein Hover, ein Hover dort wäre eine erfundene Interaktion. |
+| Doherty-Schwelle — Rückmeldung unter ~400ms nach einer Handlung | **passt schon** | Toast, Feld-Fehler, Skelett-artige Sofort-Reaktionen (`:active`-Zustände) überall vorhanden; kein Vorgang ohne sichtbare Reaktion offen (Block 8/9 haben genau das geschlossen) |
+| Ästhetik-Usability-Effekt / „Glass"-Tiefe | **passt schon, anders benannt** | `backdrop-filter: blur()` liegt schon auf Kopfzeile, Navigationsleiste und jedem Sheet/Dialog (`styles.css:623,699,766,2226,2535`), dazu `--kante` als Oberkanten-Licht auf jeder erhobenen Fläche (`styles.css:165`). Eine zusätzliche, davon losgelöste „Liquid Glass"-Schicht (großflächige Transparenz/Sättigung auf Karten und Listen) wurde geprüft und verworfen: Sie widerspräche Satz 2 der Gestaltungsregeln (Flächen trennen Inhalt klar, keine durchscheinenden Ebenen übereinander) und der expliziten Linie „kein Kachel-Armaturenbrett". Die App hat die Wirkung von Glas (Licht, Tiefe, Unschärfe an der richtigen Stelle) bereits, ohne den Bruch mit der ruhigen Fläche. |
+| Peak-End-Regel / Zählanimation bei großen Kennzahlen (Fortschritt, Startbildschirm) | **geprüft, nicht gebaut** | Wäre reine Zier ohne Funktionsgewinn und ginge gegen eine hart erarbeitete Regel dieses Strangs: `render()` ersetzt `#app` bei jedem Snapshot komplett, und `#app.still-ansicht` verhindert seit 3.6.13 ausdrücklich, dass unveränderte Ansichten erneut animieren (`styles.css:508–528`). Eine Zählanimation bräuchte eigene Zustandsverfolgung über Neuaufbauten hinweg, um nicht bei jedem Snapshot neu loszuzählen — genau die Fehlerklasse, die Block „Seitenwechsel ohne Blinken" (3.6.13) mühsam behoben hat. Kein belegter Nutzen rechtfertigt das Risiko. |
+| Skelett-Ladezustände (`.skeleton`, `styles.css:2089`) | **totes CSS, bewusst nicht verdrahtet** | Vollständig gestaltet, aber `grep -i skeleton app.js` findet keinen einzigen Aufruf. Grund: Es gibt genau eine Ladelücke in der App — der Boot-Bildschirm, bevor der erste Firestore-Snapshot da ist (`app.js:4508–4542`) — und die hat schon einen eigenen, markenbewussten Ladezustand (`.boot`, Blüten-Symbol mit Orbit-Animation). Jede Ansicht danach zeichnet aus bereits geladenen Daten; ein Skelett dafür würde ein Problem lösen, das nicht existiert. Nicht entfernt (könnte für einen echten künftigen Anwendungsfall stehen bleiben), aber auch nicht künstlich verdrahtet, nur damit „es benutzt wird". |
+| Renderkosten der Verwalten-Liste bei großen Kartenmengen | **bekannt, absichtlich nicht in Block 12** | Schon in 3.6.13 vermerkt: 2356 DOM-Elemente bei 200 Karten, seither nicht angefasst. Eine Virtualisierung wäre ein echter Beitrag zu „Animationen fühlen sich flüssiger an" (Scroll-Ruckeln bei großen Sätzen), ist aber ein Eingriff mit hohem Streuschaden — Ziehen-zum-Sortieren, Mehrfachauswahl und Suche hängen alle an der heutigen, vollständigen DOM-Liste. Das verdient einen eigenen, einzeln geprüften Block, nicht eine Zeile nebenbei in Block 12. Vorschlag für einen möglichen Block 13, siehe `AUFTRAG.md`. |
+
 ## Kurzfassung
 
 - **Übernehmen:** ruhige mobile Gestalt, leere Zustände, Smart Defaults,

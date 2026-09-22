@@ -132,6 +132,15 @@ Indikator beim Tab-Wechsel vom Betreiber freigegeben und als **Block 11**
 gebaut (v3.7.3); zentraler CTA-Knopf in der Leiste bewusst nicht übernommen
 (erfundenes Bauteil ohne Bedarf). Betreiber-Test am Handy steht noch aus.
 **Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 6 unten.
+**Noch am 22.09.2026:** Betreiber-Auftrag „verbessere Design, Animationen,
+UX-Methoden — wirklich alles, in jedem Tab", ohne Video-Quelle diesmal
+(„mach was du willst"). Gegen anerkannte UX-Gesetze statt gegen ein Video
+geprüft (`PRINZIPIEN.md`, „Eigene UX-Sichtung"): Die App erwies sich nach elf
+Blöcken als bereits sehr durchgearbeitet — ein echter, belegter Fund (Hover-
+Rückmeldung fehlte in der Verwalten-Liste), als **Block 12** gebaut (v3.7.4).
+Eine größere, bewusst zurückgestellte Baustelle (Renderkosten der Verwalten-
+Liste bei vielen Karten) als möglicher Block 13 in `AUFTRAG.md` vorgeschlagen,
+nicht begonnen.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
 

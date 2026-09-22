@@ -4,6 +4,65 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Eigene UX-Sichtung (kein Video) + Block 12 gebaut (v3.7.4)
+
+**Anlass:** Betreiber-Auftrag im Chat: „verbessere mein adrabic bzw
+wiederholungstool. design, animationen, liquid glass/andere coole sachen,
+methoden wie hicks law und so, wirklich alles, in jedem tab, einstellung
+unterteilung alles." Auf Nachfrage (Vorgehen einzeln in Blöcken wie bisher
+vs. ein großer Durchlauf; wie weit „Liquid Glass" gehen soll) antwortete der
+Betreiber: „mach was du willst, bitte nicht nur sachen die ich erwähnt habe,
+alles was online besprochen wird über UI/UX, alles" — Vorgehen in Blöcken
+bestätigt, Design-Entscheidung an den Agenten delegiert.
+
+**Geprüft:** Da keine Video-Quelle vorlag, wurde die App stattdessen gegen
+anerkannte UX-Gesetze (Hick, Fitts, Jakob, Miller, Doherty-Schwelle,
+Peak-End-Regel, Ästhetik-Usability-Effekt) durchgesehen — live in
+`stilprobe.html` (Bausteine, Farben, Bewegung) und im Code (`styles.css`
+2611 Zeilen in 18 Abschnitten, `app.js` 8682 Zeilen). Einzelurteile mit
+Beleg an Datei/Zeile in `PRINZIPIEN.md`, neuer Abschnitt „Eigene
+UX-Sichtung 22.09.2026".
+
+**Geändert:**
+- `styles.css:1683 ff.` — `.card-row[data-action="card-detail"]` (Verwalten-
+  Liste) bekommt einen `:hover`-Zustand, geschützt mit derselben
+  `@media (hover: hover) and (pointer: fine)`-Absicherung wie jede andere
+  klickbare Zeile der App.
+- `index.html:116` — Versions-Abfrage von `app.js` war noch auf 3.7.2 stehen
+  geblieben, obwohl `app.js`/`sw.js` schon bei 3.7.3 waren (Lücke aus der
+  letzten Veröffentlichung, 2df2d22). Mitkorrigiert.
+- `app.js:19`, `sw.js:10`, `index.html:116` → 3.7.4. `CHANGELOG.md` ergänzt.
+
+**Entscheidung:** Die App ist nach elf vorherigen Blöcken bereits
+ungewöhnlich durchgearbeitet — Hover-Absicherung, direktionale
+Übergänge, Weichzeichner/Transparenz an Kopfzeile/Navigation/Sheets,
+Feder-Einschwingen, reduzierte Bewegung, Gesten-Verlässlichkeit sind
+längst vorhanden. Statt eine Liste künstlich aufzufüllen, wurde nur
+gebaut, was durch einen echten Fund belegt war (Hover-Lücke in Verwalten).
+Zwei weitere Punkte wurden geprüft und **bewusst nicht gebaut**, mit
+Begründung in `PRINZIPIEN.md`: eine Zählanimation für große Kennzahlen
+(reine Zier, hohes Risiko gegen die hart erarbeitete
+„keine Animation auf unveränderten Ansichten"-Regel aus 3.6.13) und eine
+flächendeckende „Liquid Glass"-Schicht auf Karten/Listen (widerspricht
+Satz 2 der Gestaltungsregeln und der Linie „kein Kachel-Armaturenbrett" —
+die App hat die Glas-Wirkung an Kopfzeile/Navigation/Sheets bereits, ohne
+den Bruch mit der ruhigen Fläche).
+
+**Offen:** Ein größerer, echter Fund (Renderkosten der Verwalten-Liste bei
+vielen Karten, seit 3.6.13 bekannt) wurde bewusst **nicht** in Block 12
+gepackt — zu hoher Streuschaden (Sortieren, Mehrfachauswahl, Suche hängen
+an der heutigen DOM-Liste) für einen Nebenpunkt. Als möglicher Block 13 in
+`AUFTRAG.md` vorgeschlagen, nicht begonnen, nicht freigegeben.
+Betreiber-Test am Desktop (Maus-Hover in der Verwalten-Liste, Spalten-
+Ansicht ab 900px) steht noch aus.
+
+**Nächster Schritt:** Betreiber-Rückmeldung zu Block 12 abwarten (reicht am
+Rechner, kein Handytest nötig). Danach entscheiden: weiter mit einem
+selbst gefundenen Block 13/14 (siehe Vorschlag oben) oder auf neue
+Beobachtungen/Wünsche warten.
+
+---
+
 ### 2026-09-22 — Viertes Video geprüft (Bottom Navigation, uxpeak) + Block 11 gebaut (v3.7.3)
 
 **Anlass:** Betreiber brachte ein YouTube-Video (uxpeak, „How to Design a Great

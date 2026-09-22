@@ -1,3 +1,9 @@
+## 3.7.4 – 22. September 2026
+
+**Verwalten-Kartenliste bekommt am Desktop eine Hover-Rückmeldung.** Jede Zeile trägt seit Langem `cursor:pointer` und öffnet per Klick das Detail-Blatt (`app.js:7303`), aber anders als jeder andere klickbare Zeilentyp der App (`.liste-zeile`, `.pill`, `.seg`, `.stufe-chip`, …) zeigte sie vor dem Klick keine Reaktion – nur beim Tippen selbst (`:active`). Nachgezogen mit derselben, bereits überall genutzten `@media (hover: hover) and (pointer: fine)`-Absicherung, betrifft also nur echte Mauszeiger, keine Touch-Geräte. Erster Fund einer eigenen UX-Sichtung (`plan/redesign-oberflaeche/PRINZIPIEN.md`, „Eigene UX-Sichtung 22.09.2026") – Block 12 des Nebenstrangs `redesign-oberflaeche`.
+
+Außerdem: `index.html` hatte die Versions-Abfrage von `app.js` noch auf 3.7.2 stehen, obwohl `app.js`/`sw.js` schon bei 3.7.3 waren (Lücke aus der letzten Veröffentlichung) – jetzt wieder synchron.
+
 ## 3.7.3 – 22. September 2026
 
 **Die aktive Fläche der Navigationsleiste gleitet jetzt in Wechselrichtung ein**, statt hart umzuschalten – kleine, in sich geschlossene Ergänzung nach einem Video-Vergleich (`plan/redesign-oberflaeche/PRINZIPIEN.md`, „Video 4"). Nur die Bottom-Nav betroffen, keine Lernlogik.

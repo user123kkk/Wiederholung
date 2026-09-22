@@ -1681,6 +1681,15 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    Beobachtung 1) - ohne das war beim Antippen kein Unterschied zu sehen,
    der native Tap-Highlight ist global abgeschaltet (Zeile ~309). */
 .card-row[data-action="card-detail"]:active { background: var(--surface-raised); }
+/* 22.09.2026 (Block 12, plan/redesign-oberflaeche): Die Zeile traegt
+   cursor:pointer (app.js) und eine data-action, aber vor dieser Ergaenzung
+   keinerlei Hover-Rueckmeldung - jeder andere klickbare Zeilentyp der App
+   (.liste-zeile, .pill, .seg, .stufe-chip, ...) hat schon einen mit
+   @media (hover: hover) geschuetzten Hover-Zustand. Auf der Desktop-Spalte
+   (>=900px, Abschnitt 17) blieb ausgerechnet Verwalten davon ausgenommen. */
+@media (hover: hover) and (pointer: fine) {
+  .card-row[data-action="card-detail"]:hover { background: var(--surface-raised); }
+}
 
 #karten-liste {
   border: 1px solid var(--border-subtle);
