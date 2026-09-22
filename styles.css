@@ -674,7 +674,10 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   height: calc(var(--appbar-h) + var(--sat));
   padding: var(--sat) calc(var(--gutter) + var(--sar)) 0 calc(var(--gutter) + var(--sal));
   display: flex; align-items: center; gap: var(--space-2);
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  /* 23.09.2026: wie bei .nav (dieselbe Begruendung dort) von 82% auf 95% -
+     derselbe Bauteil soll nicht unterschiedlich hell aussehen, je nachdem
+     ob gerade Inhalt oder eine leere Flaeche direkt darunter durchscheint. */
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid transparent;
@@ -755,8 +758,16 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
      Linie muss sie nur abschliessen, nicht zeichnen. */
   border: 1px solid var(--border-subtle);
   /* Kraeftiger als die alte Leiste: Sie liegt jetzt UEBER dem Inhalt statt
-     ihn abzuschneiden, und muss sich deshalb selbst abheben. */
-  background: color-mix(in srgb, var(--surface) 82%, transparent);
+     ihn abzuschneiden, und muss sich deshalb selbst abheben.
+     23.09.2026: von 82% auf 95% erhoeht. Betreiber-Fund (Screenshot): auf
+     einer leeren Seite (nichts zum Durchscheinen hinter der Leiste) blieb
+     die Leiste sichtbar dunkler als auf einer vollen Seite (Karten scheinen
+     durch den Weichzeichner heller durch) - derselbe Bauteil sah, je nach
+     Bildschirm, wie zwei verschiedene Grautoene aus (nachgemessen: ~rgb(25)
+     leer gegen ~rgb(48) ueber Karten). Bei 95% traegt der feste Flaechenton
+     den Hauptanteil der Farbe, der Weichzeichner bleibt fuer die Kanten und
+     etwas Sog, schlaegt aber nicht mehr so stark auf den Gesamtton durch. */
+  background: color-mix(in srgb, var(--surface) 95%, transparent);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
   box-shadow: var(--kante), var(--shadow-lg);
@@ -854,7 +865,8 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   height: calc(var(--modebar-h) + var(--sat));
   padding: var(--sat) calc(var(--gutter) + var(--sar)) 0 calc(var(--gutter) + var(--sal));
   display: flex; align-items: center; gap: var(--space-2);
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  /* 23.09.2026: gleicher Grund wie bei .nav/.appbar - 86% auf 95%. */
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   backdrop-filter: saturate(180%) blur(14px);
 }

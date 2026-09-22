@@ -80,3 +80,67 @@ gebaut. Wenn der Betreiber einen Punkt starten will, wird daraus ein eigener Auf
    Bezahl-/Wachstumsauftritt)
 
 Solange 1 „nein/unklar" ist, bleibt dieser ganze Strang `zurückgestellt`.
+
+## E · Was einer „fertigen", wachstums-/geldreifen App noch fehlt (Sammlung, 23.09.2026)
+
+Betreiber-Auftrag: „schauen was noch fehlt für eine App... wirklich alles
+was gut ist bzw. profitabel, Paywalls auch wichtig so, aber noch nicht
+einsetzbar." Reine Bestandsaufnahme — **nichts hier wird gebaut**, bis ein
+Punkt ausdrücklich gestartet wird (wie überall in diesem Gerüst). Jeder
+Punkt sagt auch, was schon da ist, damit nichts doppelt gebaut wird.
+
+1. **Onboarding — existiert schon als eigener Strang, wartet auf Betreiber.**
+   [`../onboarding/AUFTRAG.md`](../onboarding/AUFTRAG.md), Fragen E1/E3/E4
+   offen. Kein neuer Punkt, nur die Erinnerung, dass er nicht vergessen ist.
+2. **Nutzungsbedingungen (AGB) + Widerrufsbelehrung.** Fehlen komplett — heute
+   nur Impressum + Datenschutz (Phase 5, `fertig` für eine **kostenlose**
+   App). Sobald irgendein Weg aus Abschnitt A startet (auch „Pay what you
+   want"), braucht es beides, dazu die Datenschutzerklärung um
+   Zahlungsdaten ergänzt (steht schon unter B, hier nur verknüpft).
+3. **Zahlungsanbindung — konkretisiert.** Drei Wege, die zum „kein eigener
+   Server"-Grundsatz passen, mit wachsendem Aufwand:
+   - **Spenden-/PWYW-Link** (z. B. Ko-fi, PayPal.me) — kein Code, kein
+     neuer Baustein, sofort machbar, verkauft aber keine Funktion.
+   - **Stripe Checkout (gehostete Seite)** — kein eigener Server nötig,
+     Stripe übernimmt PCI-Pflichten; die App bräuchte nur einen Knopf, der
+     zur Stripe-Seite verlinkt, und einen Weg zurück, der den Kauf
+     freischaltet (das „Freischalten" selbst braucht wieder eine Instanz,
+     die dem Konto vertrauenswürdig ein Merkmal setzt — siehe nächster
+     Punkt).
+   - **Freischalt-Problem, unabhängig vom Zahlungsweg:** Ohne eigenen
+     Server kann `firestore.rules` nicht selbst prüfen, ob wirklich bezahlt
+     wurde — das bräuchte entweder eine Firebase Cloud Function (Stripe-
+     Webhook schreibt ein Feld, das die Regeln lesen) oder eine manuelle
+     Pflege durch den Betreiber (kleine Nutzerzahl, macht das am Anfang
+     vertretbar, skaliert aber nicht). Echte Architekturentscheidung, kein
+     Detail.
+4. **Weiterempfehlung/Referral — kein Konzept, nur die Beobachtung, dass es
+   fehlt.** Bewusst OHNE Tracking-Zwang zu denken (Datenschutz-Grundsatz
+   „kein Tracking" bleibt): z. B. ein einfacher Teilen-Link auf `landing.html`
+   mit einer eigenen Ankunftsseite („von X eingeladen"), ohne
+   Empfänger-Kennung zu speichern — ähnlich nicht-invasiv wie das
+   Link-Teilen im Lehrer-Gerüst. Nichts entschieden.
+5. **Offene Spannung: keine Nutzungszahlen, keine datengestützten
+   Entscheidungen.** Die App verarbeitet bewusst keine Analyse-Daten
+   (Datenschutz Punkt 2/10). Das ist eine bewusste, dokumentierte
+   Entscheidung — hier nur als Spannung festgehalten, nicht als Empfehlung,
+   sie zu kippen: Ohne jede Zahl lässt sich schwer sagen, welches Feature
+   (z. B. Feedback-Board, Lehrer-Gerüst) tatsächlich genutzt wird. Eine
+   privatsphärefreundliche Zwischenlösung (z. B. ein einzelner, aggregierter
+   Zähler pro Bildschirm ohne Personenbezug, kein Cookie, keine IDs) wäre
+   technisch denkbar, ist aber selbst eine Abwägung, die nur der Betreiber
+   treffen kann.
+6. **App-/Play-Store — bewusst weiterhin zurückgestellt**, siehe
+   `../PLAN.md` Abschnitt „Später". Vorteil des heutigen PWA-Wegs: keine
+   15–30 % Store-Gebühr auf einen späteren Verkauf — ein Grund, der für
+   „vorerst web-only bleiben" spricht, nicht nur Trägheit.
+7. **Erinnerungen/Push-Benachrichtigungen — bewusst NICHT erneut
+   vorgeschlagen.** Bereits am 16.09.2026 geprüft und abgelehnt
+   (`../PLAN.md`). Bliebe das auch für eine Bezahlversion so, oder wäre das
+   ein denkbarer Bezahl-Anreiz („Serie-Erinnerung nur im Abo")? Nicht vom
+   Agenten zu entscheiden — nur als Frage notiert, falls Abschnitt A jemals
+   startet.
+
+**Nächster Schritt:** Keiner. Wenn der Betreiber einen der sieben Punkte
+vertiefen will, wird daraus wie überall in diesem Gerüst ein eigener
+Auftrag.

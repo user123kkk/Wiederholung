@@ -4,6 +4,52 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 — Schwebende Leisten: heller ueber Karten als ueber leerem Hintergrund (v3.8.7)
+
+**Anlass:** Betreiber-Screenshots (drei Stück, Fortschritt voll / Lernen leer
+/ Verwalten leer mit gelber Markierung um die Navigationsleiste): „unten bei
+den 3 Knöpfen und Rahmen unterhalb ist eine klare Differenz der Farben...
+bei Tabs die voll sind ned."
+
+**Geändert:** `styles.css` — `.nav` (Zeile ~759), `.appbar` (Zeile ~677),
+`.modebar` (Zeile ~868): `color-mix(in srgb, var(--surface|--bg) 82–86%,
+transparent)` → einheitlich `95%`.
+
+**Diagnose, mit echten Pixelwerten belegt statt vermutet:** Alle drei
+schwebenden Leisten sind halbtransparent mit `backdrop-filter: blur(...)`
+(Block 15, „muss sich selbst abheben"). Der Weichzeichner verwischt, was
+HINTER der Leiste liegt, und dieses Ergebnis fließt mit dem transparenten
+Anteil (18%/14%) in die sichtbare Farbe ein. Screenshots direkt vermessen
+(Python/Pillow, `images/4.png` voll vs. `images/6.webp` leer): Die
+Navigationsleiste lag über einer Karte bei RGB(48,47,45), über leerem
+Hintergrund bei RGB(25,23,21) — fast der doppelte Helligkeitswert für
+denselben Bauteil, je nachdem was gerade darunter lag. Das ist keine
+Einbildung, sondern ein messbarer, aus dem CSS erklärbarer Effekt.
+
+**Entscheidung:** Statt den Weichzeichner-Effekt ganz zu opfern (der macht
+die Leisten weiterhin lebendig/„floating"), den festen Flächenanteil von
+82–86 % auf 95 % angehoben. Damit dominiert `--surface`/`--bg` das
+Ergebnis, der Blur bleibt für Kanten/Tiefe, kann aber nicht mehr so stark
+auf den Gesamtton durchschlagen. Alle drei Stellen mit demselben Muster
+(`.nav`, `.appbar`, `.modebar`) gleich behandelt, nicht nur die eine aus dem
+Screenshot — derselbe Mechanismus gilt für alle drei.
+
+**Geprüft:** Ursache durch direktes Pixel-Sampling der eingesandten
+Screenshots verifiziert (nicht nur am Code vermutet). Die neue CSS-Regel
+selbst nicht am Gerät nachgeprüft — Verifikation über `stilprobe.html`
+scheiterte an der Browser-Automatisierung in dieser Umgebung (`.nav` ist
+dort `position:fixed`, verhält sich in der Schaufenster-Seite anders als im
+normalen Scroll-Fluss). Rechnerisch/CSS-logisch ist der Fix eindeutig
+(höherer Opak-Anteil reduziert zwangsläufig den Einfluss des Hintergrunds),
+aber ein Betreiber-Test am echten Gerät steht aus.
+
+**Offen:** Gerätetest, ob 95 % das richtige Maß ist (evtl. noch spürbarer
+Unterschied, evtl. zu wenig „Glas"-Gefühl übrig).
+
+**Nächster Schritt:** Betreiber-Rückmeldung am echten Gerät abwarten.
+
+---
+
 ### 2026-09-22 — Block 17-Nachlese: leerer Bereich nicht wischbar, heller Modus zu weiß (v3.8.3)
 
 **Anlass:** Betreiber-Rückmeldung zu v3.8.2, mehrere Punkte in einer Nachricht.

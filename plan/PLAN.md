@@ -531,7 +531,26 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (23.09.2026, noch später): Feedback-Board-Löschtext entschärft
+**AKTUELL (23.09.2026, spätnachts): Schwebende Leisten farblich vereinheitlicht
+(v3.8.7), App-Vollständigkeits-/Wachstums-Checkliste angelegt.** Betreiber-
+Screenshots zeigten `.nav` über Karten sichtbar heller als über leerem
+Hintergrund — mit Python/Pillow direkt aus den Screenshots vermessen
+(RGB 48 vs. RGB 25, fast doppelt so dunkel für denselben Bauteil). Ursache:
+`backdrop-filter: blur` auf halbtransparenten Leisten reagiert auf das, was
+dahinter liegt. `.nav`/`.appbar`/`.modebar` von 82–86 % auf 95 % festen
+Flächenanteil angehoben. **Nicht am Gerät geprüft**, nur rechnerisch/optisch
+eindeutig — Betreiber-Test steht aus. Details:
+[`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md).
+Zusätzlich auf Betreiber-Wunsch („was fehlt noch für eine App, wirklich
+alles was gut bzw. profitabel ist") eine Sammlung in
+[`monetarisierung/GERUEST.md`](monetarisierung/GERUEST.md) Abschnitt E
+angelegt: AGB/Widerrufsbelehrung, Zahlungsanbindung konkretisiert
+(PWYW-Link/Stripe Checkout/Freischalt-Problem ohne Server), Referral ohne
+Tracking, Spannung „keine Nutzungszahlen vs. datengestützte Entscheidungen",
+Store-Frage und Push-Erinnerungen als bewusst zurückgestellt bestätigt.
+**Nichts davon gebaut, reine Bestandsaufnahme.**
+
+**Vorheriger Stand (23.09.2026, noch später): Feedback-Board-Löschtext entschärft
 (v3.8.6) — Prinzip „nur versprechen, was rechtlich nötig ist" jetzt explizit.**
 Betreiber wollte möglichst wenig persönliche Betriebspflicht: die Zusage,
 Löschwünsche per Wortlaut-Abgleich per E-Mail zu bearbeiten, war eine
