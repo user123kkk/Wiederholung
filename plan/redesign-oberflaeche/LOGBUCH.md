@@ -64,6 +64,19 @@ in einen Dialog gebracht hat. Bleibt innerhalb der Lockerung von
    in Googles eigenem Anmelde-Fenster gezeigte App-Name/Support-Kontakt
    lässt sich über die Google Cloud Console (OAuth-Zustimmungsbildschirm)
    ändern, unabhängig von der Projekt-ID — Konsole, nicht Code.
+   **Nachtrag, noch in derselben Prüfung:** Der erste Textentwurf dieses
+   Punkts (auch im Commit von v3.7.6) sagte „nicht änderbar ohne
+   vollständige Projekt-Migration" — das ist zu stark formuliert.
+   `phase-4-domain-hosting/LOGBUCH.md` (18.09.2026) und `PLAN.md` Zeile 698
+   halten fest, dass eine frühere Session genau diese Frage schon geprüft
+   und `authDomain` bewusst NICHT auf `adrabic.web.app` umgestellt hat, mit
+   der Begründung „an die Firebase-Projekt-ID gebunden, nicht an den
+   Hosting-Namen". Ob das (a) technisch zutrifft oder (b) nur ohne
+   zusätzliche Firebase-Konsolen-Einrichtung (ein eigener Auth-Domain-Eintrag
+   für `adrabic.web.app`) zutrifft, wurde damals nicht weiter belegt. Diese
+   Session hat die frühere Entscheidung übernommen statt sie zu wiederholen
+   oder zu widerlegen — Betreiber-Rückfrage im Chat, ob das erneut geprüft
+   werden soll.
 5. **Violetter Balken am rechten Bildschirmrand (beide Screenshots)** →
    geprüft, stammt aus keiner Zeile dieser App: `grep -i "purple\|violet"`
    über `styles.css`/`app.js`/`index.html` findet nichts, die Farbpalette
