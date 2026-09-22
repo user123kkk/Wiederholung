@@ -531,7 +531,24 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (22.09.2026, spätnachts): App bei v3.8.4 — Feedback-Board gebaut**
+**AKTUELL (23.09.2026): Sicherheits-/Rechts-Durchsicht nach dem Feedback-
+Board.** Betreiber-Anstoß (TikTok-Video zu `.env`-Dateien) genutzt, um
+gezielt nachzuprüfen: `.env` passt nicht auf dieses Projekt (kein
+Build-Schritt, Firebase-`apiKey` ist bei Web-Apps ohnehin öffentlich
+vorgesehen, echter Schutz liegt in `firestore.rules` + Browser-Key-
+Einschränkung, beides vorhanden) — jetzt in `README.md` dokumentiert, damit
+die Frage nicht erneut aufkommt. Dabei eine echte Lücke gefunden und
+geschlossen: `datenschutzerklaerung.html` behauptete noch pauschal, andere
+Nutzer:innen könnten keine fremden Daten einsehen — stimmt seit dem
+Feedback-Board nicht mehr uneingeschränkt, neuer Abschnitt 6 dort. Details:
+[`phase-5-recht/LOGBUCH.md`](phase-5-recht/LOGBUCH.md), Eintrag „Sicherheits-
+/Rechts-Durchsicht nach Feedback-Board". Zwei neue, ausdrücklich nicht
+gebaute Ideen notiert:
+[`beobachtungen-lernwerkzeug.md`](beobachtungen-lernwerkzeug.md) Punkte 20
+(Quran-Ayat in Reihenfolge statt Zufallsprinzip) und 21 (Grammatik-Hinweise
+im Notiz-Feld nicht erkennbar).
+
+**Vorheriger Stand (22.09.2026, spätnachts): App bei v3.8.4 — Feedback-Board gebaut**
 (Einstellungen → Hilfe → „Ideen & Vorschläge", neben „Fehler melden").
 Öffentliche Liste mit Vorschlägen und Abstimmen, ohne gespeicherte
 Konto-Kennung (Betreiber-Vorgabe: „niemand kann auf die Daten der anderen

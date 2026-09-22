@@ -693,3 +693,57 @@ für Unterressourcen.
 
 **Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
 Sicherheits-Durchlauf.
+
+### 2026-09-23 — Sicherheits-/Rechts-Durchsicht nach Feedback-Board, eine echte Lücke gefunden und geschlossen
+
+**Anlass:** Betreiber, ausgelöst durch ein TikTok-Video über `.env`-Dateien
+für API-Schlüssel: „überprüfen ob das sinnvoll ist... achte auf jede Lücke
+einschließlich Datenschutzerklärung und Impressum."
+
+**Geändert:** `datenschutzerklaerung.html` (neuer Abschnitt 6 „Feedback-
+Board", Abschnitte 7–15 umnummeriert inkl. zweier dabei sonst falsch
+gebliebener interner Verweise), `README.md` (neuer Absatz, warum bewusst
+kein `.env`), `security-review`-Skill über die Session-Änderungen laufen
+lassen (0 Funde).
+
+**Entscheidung — `.env`/API-Key:** Das Video empfiehlt generell sinnvolle
+Praxis (Secrets nicht ins Repo), passt aber nicht auf dieses Projekt: Ohne
+Build-Schritt (bewusste Architekturentscheidung, `README.md`) landet jeder
+`.env`-Wert ohnehin unverändert im an den Browser ausgelieferten `app.js` —
+eine `.env` würde nichts verstecken. Der Firebase-`apiKey` ist bei Web-Apps
+ohnehin öffentlich vorgesehen (Google-eigene Aussage); der tatsächliche
+Schutz liegt in `firestore.rules` und der Website-Einschränkung des
+Browser-Keys in der Google-Cloud-Konsole — beides bereits vorhanden
+(`phase-4-domain-hosting/LOGBUCH.md`, dort auch ein echter, damals
+behobener Missbrauchsfund vom 12.09.2026 dokumentiert). Git-Historie und
+aktuelle Dateien auf echte Geheimnisse geprüft (`.env`-Dateien,
+Service-Account-Schlüssel, Zugangsdaten) — nichts gefunden.
+
+**Entscheidung — Datenschutzerklärung, echte Lücke:** Abschnitt 5 behauptete
+pauschal „andere Nutzer:innen können [Lerninhalte] nicht einsehen" — seit
+dem Feedback-Board (v3.8.4, `plan/feedback-board/`) stimmt das nicht mehr
+uneingeschränkt: das Board macht Vorschläge für alle angemeldeten Konten
+sichtbar, ausdrücklich anders als die private Lerninhalte-Regel. Neuer
+Abschnitt 6 dokumentiert das Feedback-Board vollständig (was gespeichert
+wird, wer es sieht, warum eine gezielte Löschung einzelner Vorschläge
+strukturell nicht möglich ist), mit eigener Rechtsgrundlage (Art. 6 Abs. 1
+lit. a DSGVO — Einwilligung durch aktives Einreichen/Abstimmen, anders als
+die übrigen Abschnitte, die auf lit. b/f beruhen).
+
+**Impressum:** geprüft, keine Änderung nötig — „Haftung für Inhalte" ist
+bereits generisch genug (§§ 8–10 DDG, „fremde Informationen"), um auch
+nutzergenerierte Feedback-Board-Inhalte abzudecken, ohne Anpassung.
+
+**Geprüft:** `security-review`-Skill über die Session-Änderungen (Firestore-
+Regeln, `app.js`-Feedback-Code) — keine neuen Funde über das hinaus, was
+beim Bauen selbst schon gegengelesen wurde (u. a. konsequentes `esc()` bei
+jeder Ausgabe von Nutzertext im Feedback-Board).
+
+**Offen:** Nichts Neues zu dieser Durchsicht. Die aus dem Feedback-Board-Bau
+bereits bekannten offenen Punkte (Konto-ID in `istFeedbackModerator()`
+eintragen, Missbrauchs-Vorprüfung) stehen unverändert in
+`plan/feedback-board/AUFTRAG.md`.
+
+**Nächster Schritt:** Unverändert Phase 6, beginnend mit dem verschärften
+Sicherheits-Durchlauf — bleibt der nächste unblockierte Punkt, falls der
+Betreiber die öffentliche Bewerbung der Seite angeht.
