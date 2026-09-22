@@ -49,6 +49,38 @@ Zeitdruck** (`KONZEPT.md` §1).
 
 ---
 
+## Video 4 — Bottom Navigation (uxpeak, „Top UI/UX Design Tips — How to Design a
+Great Bottom Mobile Navigation Bar", 22.09.2026 vom Betreiber gebracht)
+
+Geprüft gegen den heutigen Stand der Navigationsleiste (`app.js:4942`
+`navLeiste()`, `styles.css` ab Zeile 670) — die schon aus **Video 1** dieses
+Strangs entstand (v3.1.0, v3.3.0/3.3.1). Deckt sich deshalb an vielen Stellen
+mit dem, was schon gebaut ist.
+
+| Prinzip | Urteil | Für diese App |
+|---|---|---|
+| 3–5 Tabs, max. 6 | **schon umgesetzt** | 3 Tabs (Lernen, Fortschritt, Verwalten), `app.js:4943–4947`. |
+| Schlechte Kandidaten (Hilfe, Abmelden, Rechtliches) draußen halten | **schon umgesetzt** | Keiner davon steht in der Leiste; Einstellungen/Abmelden liegen woanders. |
+| Kein Logo/Zurück-Knopf aus der Kopfzeile in der Bottom-Nav | **schon umgesetzt** | `.nav__brand` (Logo) ist unter 900px per CSS ausgeblendet (`styles.css:740`), nur am Handy relevant. |
+| Sichere Zone/Home-Indicator respektieren, Leiste schwebt darüber | **schon umgesetzt** | `bottom: calc(var(--space-3) + var(--sab) - var(--vv-gap,0px))`, eigene Kommentarspur zu iOS-Messfehlern (`styles.css:670–702`). War genau der Punkt aus Video 1 („Navigationsleiste schwebt", Block 6). |
+| Trefferfläche ≥ 44×44px | **schon umgesetzt** | `--nav-h: 64px` (`styles.css:214`) über drei gleich breite Spalten — deutlich über 44px. |
+| Aktiv/Inaktiv mit mind. zwei visuellen Änderungen | **schon umgesetzt, übertroffen** | Aktiver Tab: gefülltes statt umrissenes Icon + Akzentfarbe + eigene Pillenfläche (`app.js:4973`, `styles.css:722–727`) — drei Änderungen statt der geforderten zwei. |
+| Ein Icon-Stil außer im aktiven Zustand | **schon umgesetzt** | `ikon(t.icon, aktiv ? "voll" : "")` — Umriss normal, gefüllt nur aktiv (`app.js:4973`), exakt der Video-Tipp. |
+| Kurze einzeilige Beschriftung | **schon umgesetzt** | „Lernen", „Fortschritt", „Verwalten" — je ein Wort. |
+| Icon 24px, Beschriftung 10–12px | **schon umgesetzt** | Icon 25px (`styles.css:718`), Label `--fs-micro` = 11,7px (`styles.css:187`) — beides im empfohlenen Bereich. |
+| Wenige, ruhige Farben statt bunter Tabs | **schon umgesetzt** | Nur `--text-3` (inaktiv) und `--accent` (aktiv) — kein Tab hat eine eigene Farbe. |
+| Sichtbare Trennung zur Fläche darunter (Rand/Schatten) | **schon umgesetzt** | `border: 1px solid var(--border)` + `box-shadow: var(--kante), var(--shadow-lg)` + Weichzeichner-Hintergrund (`styles.css:683–689`). |
+| Tipp-Rückmeldung (Micro-Interaction beim Antippen) | **schon umgesetzt** | `.nav__tab:active .i { transform: scale(0.9) }` (`styles.css:728–729`). |
+| Benachrichtigungspunkt für Fälliges | **schon umgesetzt, bewusst ruhiger** | Ein reiner Punkt ohne Zahl (`.nav__dot`, `app.js:4975`) statt Zähler — passt zur Linie „keine Countdown-/Zahlen-Dringlichkeit" oben (Video 3, Verlustaversion). Nicht ändern. |
+| Gleitender Indikator beim Tab-Wechsel (statt Hart-Umschalten) | **passt, gebaut (Block 11, v3.7.3)** | Betreiber-Entscheidung 22.09.2026: bauen. Aktive Fläche bekommt beim Tab-Wechsel `data-glide="vor"`/`"zurueck"` (`app.js:4942` ff., Richtung aus dem noch nicht aktualisierten `letzterReiter`) und eine kleine `@keyframes`-Eintrittsbewegung (`styles.css`, `nav-glide-vor`/`nav-glide-zurueck`, 10px) — folgt demselben Muster wie `enter-vor`/`enter-zurueck` für den Seitenwechsel. |
+| Zentraler CTA-Knopf in der Leiste (z. B. „Anlegen") | **passt nicht (bewusst)** | Die App hat schon einen Weg zum Anlegen (Knopf „Karte anlegen" auf Verwalten, `app.js:7003`), erreichbar in einem Tipp. Ein vierter, hervorgehobener Nav-Knopf wäre ein **erfundenes Bauteil** ohne echten Bedarf — widerspricht der Drei-Tab-Ruhe dieser App (`PRINZIPIEN.md` Kopf: „bewusst ruhig und minimal"). |
+
+**Fazit:** Diese Video-Ideen sind zum größten Teil schon am 17.–19.09.2026
+umgesetzt, weil Video 1 im selben Strang dieselbe Quelle (Bottom-Nav-Design)
+schon einmal abgedeckt hat. Der gleitende Wechsel-Indikator war die einzige
+echte Lücke — als Block 11 gebaut, siehe oben und `LOGBUCH.md` (22.09.2026,
+v3.7.3).
+
 ## Kurzfassung
 
 - **Übernehmen:** ruhige mobile Gestalt, leere Zustände, Smart Defaults,

@@ -1,3 +1,13 @@
+## 3.7.3 – 22. September 2026
+
+**Die aktive Fläche der Navigationsleiste gleitet jetzt in Wechselrichtung ein**, statt hart umzuschalten – kleine, in sich geschlossene Ergänzung nach einem Video-Vergleich (`plan/redesign-oberflaeche/PRINZIPIEN.md`, „Video 4"). Nur die Bottom-Nav betroffen, keine Lernlogik.
+
+## 3.7.2 – 19. September 2026
+
+**„Kartensatz zum Weitergeben" (Datei) ist aus den Einstellungen raus.** Derselbe Inhalt – Stufe 0, nur die erste Lektion offen, eigener Stand bleibt – läuft über „Per Code teilen" → „Code – Fortschritt schaltet frei". Vor dem Erzeugen steht jetzt dieselbe Rückfrage wie früher bei der Datei (Karten/Lektionen, Karten ohne Lektion, eigene Speicherkarten, Veröffentlichungsnummer). Einspielen einer alten Weitergabe-Datei bleibt unter Einspielen.
+
+Nichts an Lernlogik oder am Lehrer-Weg („Code erzeugen" / selbst freigeben) geändert.
+
 ## 3.7.1 – 19. September 2026
 
 **Ruhiger: weniger Symbole in Verwalten, Blätter lassen sich wegwischen, Seitenwechsel mit Richtung.** Nach Betreiber-Wunsch „die App cleaner fühlen lassen" (Rückblick auf die Icon-/Bewegungs-Tipps der TikTok-Sammlung, `plan/redesign-oberflaeche/BILDER-BEFUND.md`).

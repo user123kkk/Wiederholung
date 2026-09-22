@@ -167,7 +167,8 @@ await sA.waitForSelector(".nav__tabs", { timeout: 10000 }); await sA.waitForTime
 await klick(sA, '[data-action="einstellungen"]');
 await klick(sA, '[data-action="einst-seite"][data-id="sichern"]');
 let t = await text(sA);
-pruefe("beide Code-Knöpfe sichtbar", t.includes("Code – Fortschritt schaltet frei") && t.includes("Code – ich gebe frei"));
+pruefe("kein Datei-Weitergeben mehr", !t.includes("Kartensatz zum Weitergeben") && !t.includes("Zum Weitergeben"));
+pruefe("beide Code-Knöpfe sichtbar", t.includes("Code – Fortschritt schaltet frei") && t.includes("Code erzeugen"));
 await klick(sA, '[data-action="teile-lektion-code-lehrer"]');
 t = await text(sA);
 pruefe("Bestätigung erklärt Lehrer-Freigabe", t.includes("Du schaltest die Lektionen selbst frei"), t.slice(0, 200));

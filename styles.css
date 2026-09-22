@@ -470,6 +470,18 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   0%   { opacity: 0; transform: scale(0.96); }
   100% { opacity: 1; transform: none; }
 }
+/* 3.8.0 (Video 4, plan/redesign-oberflaeche/PRINZIPIEN.md): die aktive
+   Flaeche der Bottom-Nav gleitet in Wechselrichtung ein, statt hart
+   umzuschalten - gleiches Prinzip wie enter-vor/enter-zurueck, nur kleiner
+   (10px), weil die Flaeche selbst klein ist. */
+@keyframes nav-glide-vor {
+  from { opacity: 0; transform: translateX(10px) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes nav-glide-zurueck {
+  from { opacity: 0; transform: translateX(-10px) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
 @keyframes sheet-up {
   from { transform: translateY(16px); opacity: 0; }
   to   { transform: none; opacity: 1; }
@@ -725,6 +737,8 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   border-radius: var(--r-full);
   margin: 6px 10px;
 }
+.nav__tab.active[data-glide="vor"] { animation: nav-glide-vor var(--dur-base) var(--ease-out) both; }
+.nav__tab.active[data-glide="zurueck"] { animation: nav-glide-zurueck var(--dur-base) var(--ease-out) both; }
 .nav__tab:active .i { transform: scale(0.9); }
 .nav__tab .i { transition: transform var(--dur-instant) var(--ease-out); }
 /* Der einzige Ort, an dem die App von sich aus auf sich zeigt. */

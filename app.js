@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.7.1";
+const APP_VERSION = "3.7.3";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -36,17 +36,34 @@ const app = document.getElementById("app");
 
    Seit 3.5.2 offen fuer jeden (Betreiber-Entscheidung 18.09.2026): beide
    Sorgen sind separat abgedeckt, nicht durch diese Sperre. Versehentliches
-   Teilen faengt der Bestaetigungsdialog in exportWeitergabe() ab, der genau
-   zeigt, was rausgeht, bevor die Datei entsteht. Kennungs-Kollisionen
-   verhindert exportWeitergabe() selbst: ein geführter (importierter)
-   Bereich laesst sich gar nicht weitergeben (siehe istGefuehrt-Pruefung
-   dort) - nur ein frisch selbst angelegter Bereich, der beim ersten Export
-   eine neue, zufaellige Kennung bekommt.
+   Teilen faengt der Bestaetigungsdialog in teileLektionCode() ab, der genau
+   zeigt, was rausgeht, bevor der Code entsteht. Kennungs-Kollisionen
+   verhindert weitergabeMoeglich(): ein gefuehrter (importierter) Bereich
+   laesst sich gar nicht weitergeben - nur ein frisch selbst angelegter
+   Bereich, der beim ersten Teilen eine neue, zufaellige Kennung bekommt.
 
    Moeglicher spaeterer Bezahl-Baustein (siehe plan/monetarisierung/
    GERUEST.md): wird erst gebaut, wenn der Betreiber diesen Strang
    startet - heute kostenlos fuer alle. */
 function istAutor() { return true; }
+
+/* 3.7.2: Die FORTSCHRITTS-Weitergabe ("Code - Fortschritt schaltet frei") ist
+   die Weitergabe des Betreibers - spaeter vielleicht verkaufbar (Medina Buch 1).
+   Der Datei-Knopf "Kartensatz zum Weitergeben" ist dafuer entfernt: er erzeugte
+   denselben Inhalt (Stufe 0, nur erste Lektion offen) wie dieser Code-Weg.
+   Einspielen alter Dateien bleibt. Alle anderen sehen nur EINEN Weg:
+   "Code erzeugen" mit Freigabe durch die teilende Person. Betreiber-Entscheidung
+   vom 19.09.2026.
+   Bewusst NICHT istAutor(): Das steuert, ob man Lektionen ueberhaupt anlegen
+   kann - ein Lehrer braucht das, sonst hat er nichts zu teilen.
+   Reine Sichtbarkeit, KEIN Sicherheitsmerkmal: Die Regeln in firestore.rules
+   sind fuer alle Konten gleich.
+   Solange BETREIBER_UIDS leer ist (Einrichtung), sehen alle alles, und unter
+   Einstellungen -> Konto steht die eigene Konto-ID zum Eintragen. */
+const BETREIBER_UIDS = [];
+function istBetreiber() {
+  return BETREIBER_UIDS.length === 0 || !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);
+}
 
 /* ---------- XSS-Schutz ---------- */
 function esc(s) {
@@ -2700,30 +2717,9 @@ function exportBackup(onlyCurrent) {
   }
   render();
 }
-/* ---------- 2.3.0: Backup zum Weitergeben ----------
-   Der Unterschied zu einem normalen Backup faellt hier, beim ERZEUGEN der
-   Datei - nicht beim Einspielen. Das ist Absicht: So gibt es keinen
-   Import-Knopf, mit dem man aus Versehen den eigenen Lernstand auf Null
-   setzen kann. Der Import liest schlicht, was in der Datei steht.
-
-   In die Datei kommt:
-     - jede Karte mit Stufe 0, ohne Erstbewertung, ohne Rueckfaelle
-       (nextReview wird weggelassen; normCard setzt beim Einspielen den
-       Tag des Imports ein, nicht meinen Tag hier)
-     - die Speicherkarten mit ihrer Art
-     - alle Lektionen gesperrt, ausser der ersten
-     - die Markierung "gefuehrt" - daran haengt der Schreibschutz
-     - Kennung und laufende Nummer des Satzes, sowie eine Herkunfts-Nummer
-       an jeder Karte und jeder Speicherkarte
-
-   Die letzten beiden Punkte tun heute noch nichts. Sie muessen trotzdem
-   schon in der allerersten Datei stehen, denn Dateien, die einmal draussen
-   sind, lassen sich nicht nachruesten - und ohne sie kann ein spaeteres
-   Update den vorhandenen Satz nicht wiedererkennen und legt stattdessen
-   einen zweiten Bereich mit allem doppelt an. */
 /* Prueft, ob b ueberhaupt weitergebbar ist, und zeigt sonst eine erklaerende
-   Meldung. Gemeinsam fuer den Datei-Export und den Code-Entwurf (H),
-   damit beide Wege dieselben Bedingungen stellen. */
+   Meldung. Gemeinsam fuer jedes Teilen (Code, und frueher der Datei-Export),
+   damit alle Wege dieselben Bedingungen stellen. */
 async function weitergabeMoeglich(b) {
   if (istGefuehrt(b)) {
     await dlgAlert('„' + b.name + '" ist selbst ein geführter Satz. Weitergeben kann ihn nur, wer ihn zusammengestellt hat.',
@@ -2740,11 +2736,9 @@ async function weitergabeMoeglich(b) {
 }
 
 /* Baut den weitergebbaren Inhalt eines Bereichs - ohne Lernstand, ohne
-   eigene Speicherkarten, alle Lektionen bis auf die erste gesperrt (siehe
-   Kommentar ueber exportWeitergabe). Herausgezogen aus exportWeitergabe(),
-   damit der Code-Entwurf aus lehrer-modus/GERUEST.md (Abschnitt H) denselben
-   Inhalt erzeugt wie der bestehende Datei-Export, statt einer zweiten,
-   moeglicherweise abweichenden Fassung. */
+   eigene Speicherkarten, alle Lektionen bis auf die erste gesperrt.
+   Derselbe Baustein fuer Code-Teilen und fuer das Einspielen aelterer
+   Weitergabe-Dateien. */
 function baueWeitergabeBereich(b, version) {
   const karten = b.karten.map(c => ({
     id: c.id,
@@ -2768,56 +2762,28 @@ function baueWeitergabeBereich(b, version) {
   };
 }
 
-/* ---------- 2.3.0: Backup zum Weitergeben ----------
-   Der Unterschied zu einem normalen Backup faellt hier, beim ERZEUGEN der
-   Datei - nicht beim Einspielen. Das ist Absicht: So gibt es keinen
-   Import-Knopf, mit dem man aus Versehen den eigenen Lernstand auf Null
-   setzen kann. Der Import liest schlicht, was in der Datei steht.
-
-   In die Datei kommt:
-     - jede Karte mit Stufe 0, ohne Erstbewertung, ohne Rueckfaelle
-       (nextReview wird weggelassen; normCard setzt beim Einspielen den
-       Tag des Imports ein, nicht meinen Tag hier)
-     - die Speicherkarten mit ihrer Art
-     - alle Lektionen gesperrt, ausser der ersten
-     - die Markierung "gefuehrt" - daran haengt der Schreibschutz
-     - Kennung und laufende Nummer des Satzes, sowie eine Herkunfts-Nummer
-       an jeder Karte und jeder Speicherkarte
-
-   Die letzten beiden Punkte tun heute noch nichts. Sie muessen trotzdem
-   schon in der allerersten Datei stehen, denn Dateien, die einmal draussen
-   sind, lassen sich nicht nachruesten - und ohne sie kann ein spaeteres
-   Update den vorhandenen Satz nicht wiedererkennen und legt stattdessen
-   einen zweiten Bereich mit allem doppelt an. */
-async function exportWeitergabe() {
-  const b = currentBereich();
-  if (!(await weitergabeMoeglich(b))) return;
+/* Text vor dem Teilen: was rausgeht, was zu Hause bleibt, welche Lektion
+   offen ankommt. Kam bis 3.7.1 vom Datei-Knopf "Kartensatz zum Weitergeben"
+   und gilt jetzt fuer den Code-Weg (derselbe Inhalt). */
+function weitergabeBestaetigung(b, version, modus) {
   const lektionen = lektionenVon(b);
   const ohneLektion = b.karten.filter(c => !lektionen.some(s => s.cardIds.indexOf(c.id) !== -1)).length;
   const eigeneAnzahl = (b.sets || []).filter(s => (s.art || "eigen") === "eigen").length;
-  const version = (b.satzVersion || 0) + 1;
-  const ok = await dlgConfirm(
-    b.karten.length + ' Karten, ' + lektionen.length + ' Lektionen. Nur „' + lektionen[0].name + '" ist offen, der Rest kommt gesperrt an.' +
-    (ohneLektion > 0 ? '\n\nAchtung: ' + ohneLektion + ' Karte(n) liegen in keiner Lektion. Die bleiben beim Empfänger für immer gesperrt.' : '') +
-    (eigeneAnzahl > 0 ? '\n\n' + eigeneAnzahl + ' eigene Speicherkarte(n) bleiben zu Hause – weitergegeben werden nur Kategorien und Lektionen.' : '') +
-    '\n\nDas wird Veröffentlichung Nr. ' + version + '.',
-    { title: "Backup zum Weitergeben", okLabel: "Datei erzeugen" });
-  if (!ok) return;
-
-  /* Die Kennung entsteht beim ersten Mal und bleibt danach. Sie ist das
-     einzige, woran ein Update spaeter den Satz wiedererkennt. */
-  if (!b.satzId) b.satzId = slugName(b.name) + "-" + genId();
-  b.satzVersion = version;
-  patchDoc({ [pfadBereich(b.id) + ".satzId"]: b.satzId, [pfadBereich(b.id) + ".satzVersion"]: version });
-
-  dateiSpeichern({
-    exportedAt: new Date().toISOString(),
-    profil: displayName,
-    weitergabe: true,
-    satz: { id: b.satzId, version: version, name: b.name },
-    bereiche: [baueWeitergabeBereich(b, version)]
-  }, "kartensatz-" + slugName(b.name) + "-v" + version + ".json");
-  render();
+  let txt = b.karten.length + ' Karten, ' + lektionen.length + ' Lektionen. Nur „' + lektionen[0].name + '" ist offen, der Rest kommt gesperrt an.';
+  if (ohneLektion > 0) {
+    txt += '\n\nAchtung: ' + ohneLektion + ' Karte(n) liegen in keiner Lektion. Die bleiben beim Empfänger für immer gesperrt.';
+  }
+  if (eigeneAnzahl > 0) {
+    txt += '\n\n' + eigeneAnzahl + ' eigene Speicherkarte(n) bleiben zu Hause – weitergegeben werden nur Kategorien und Lektionen.';
+  }
+  if (modus === "lehrer") {
+    txt += '\n\nDu schaltest die Lektionen selbst frei, mit einem Klick. Was du freigibst, bleibt offen.';
+  } else {
+    txt += '\n\nDie Lektionen schalten sich durch den Lernfortschritt selbst frei.';
+  }
+  txt += '\n\nDu siehst nicht, wer den Code benutzt. Du kannst das Teilen jederzeit beenden.';
+  txt += '\n\nDas wird Veröffentlichung Nr. ' + version + '.';
+  return txt;
 }
 
 /* ---------- Lehrer-Modus, Kernablauf: Lektion per Link teilen ----------
@@ -2826,9 +2792,9 @@ async function exportWeitergabe() {
    Datenbank-Eintrag zeigt, steckt der ganze Lektionsinhalt komprimiert IM
    LINK SELBST (URL-Fragment, alles nach "#"). Damit gibt es keine neue
    Firestore-Sammlung, keinen Lesezugriff ueber Kontogrenzen hinweg - nichts,
-   was serverseitig gespeichert wuerde. Strukturell derselbe Fall wie der
-   laengst unbedenkliche Datei-Export (exportWeitergabe), nur per Link statt
-   Datei. Bewusste Entscheidung des Betreibers, dokumentiert in GERUEST.md:
+   was serverseitig gespeichert wuerde. Strukturell derselbe Fall wie das
+   Code-Teilen (baueWeitergabeBereich), nur per Link statt Datensatz.
+   Bewusste Entscheidung des Betreibers, dokumentiert in GERUEST.md:
    dafuer gibt es KEINEN Widerruf (ein verschickter Link funktioniert wie
    eine verschickte Datei fuer immer) und eine Laengengrenze.
 
@@ -2903,13 +2869,8 @@ async function teileLektionCode(modus) {
   const lehrer = modus === "lehrer";
   const version = (b.satzVersion || 0) + 1;
   const ok = await dlgConfirm(
-    'Erzeugt einen Code, über den jede:r mit dem Code diese Lektion in die eigene App übernehmen kann - ' +
-    'ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.' +
-    (lehrer
-      ? '\n\nDu schaltest die Lektionen selbst frei: Zu Beginn ist nur „' + lektionenVon(b)[0].name +
-        '" offen, die nächste gibst du mit einem Klick frei. Freigegebenes bleibt offen.'
-      : '\n\nDie Lernenden schalten die Lektionen durch ihren Lernfortschritt selbst frei.'),
-    { title: lehrer ? "Per Code teilen – du gibst frei" : "Per Code teilen", okLabel: "Code erzeugen" });
+    weitergabeBestaetigung(b, version, lehrer ? "lehrer" : "fortschritt"),
+    { title: "Code erzeugen", okLabel: "Code erzeugen" });
   if (!ok) return;
 
   if (!b.satzId) b.satzId = slugName(b.name) + "-" + genId();
@@ -3005,8 +2966,8 @@ async function codeEinloesen(code) {
   }
   const daten = snap.data();
   const stand = daten.freigabe && Number.isInteger(daten.freigabe.offenBis) ? daten.freigabe.offenBis : null;
-  const ok = await dlgConfirm("Über einen Code wurde dir eine Lektion angeboten. Jetzt in dein Konto übernehmen?" +
-    (stand !== null ? "\n\nDie Lektionen schaltet dein:e Lehrer:in frei – sie sind nicht vom Lernfortschritt abhängig." : ""),
+  const ok = await dlgConfirm("Mit diesem Code bekommst du neue Lektionen in dein Konto. Übernehmen?" +
+    (stand !== null ? "\n\nDie nächsten Lektionen schaltet dein:e Lehrer:in nach und nach frei." : ""),
     { title: "Geteilte Lektion", okLabel: "Übernehmen" });
   if (!ok) return;
   /* „Lehrer gibt frei": Code und Stand wandern mit in den Bereich. Der Inhalt
@@ -4985,6 +4946,13 @@ function navLeiste() {
     { id: "verwalten", label: "Verwalten", icon: "verwalten", action: "tab-verwalten" }
   ];
   const offen = bereiche ? dueCards().length : 0;
+  /* 3.8.0 (Video 4, PRINZIPIEN.md): Gleitrichtung der aktiven Flaeche. Dieser
+     Aufruf liegt vor der render()-Stelle, die letzterReiter aktualisiert -
+     hier steht also noch der VORHERIGE Reiter, kein eigener Zustand noetig. */
+  const reiterIndex = tabs.findIndex(t => t.id === ui.tab);
+  const glide = (!ui.einstellungen && reiterIndex >= 0 && letzterReiter >= 0 && letzterReiter !== reiterIndex)
+    ? (reiterIndex > letzterReiter ? "vor" : "zurueck")
+    : "";
 
   let html = '<nav class="nav" aria-label="Hauptbereiche">';
 
@@ -5008,7 +4976,8 @@ function navLeiste() {
   tabs.forEach(t => {
     const aktiv = !ui.einstellungen && ui.tab === t.id;
     html += '<button class="nav__tab' + (aktiv ? " active" : "") + '" data-action="' + t.action +
-      '" role="tab" aria-selected="' + (aktiv ? "true" : "false") + '">' +
+      '" role="tab" aria-selected="' + (aktiv ? "true" : "false") + '"' +
+      (aktiv && glide ? ' data-glide="' + glide + '"' : '') + '>' +
       ikon(t.icon, aktiv ? "voll" : "") +
       '<span>' + t.label + '</span>' +
       (t.id === "lernen" && offen > 0 ? '<span class="nav__dot" aria-hidden="true"></span>' : '') +
@@ -5858,6 +5827,11 @@ function renderEinstellungen() {
     '<span class="liste-zeile__text">' + esc(displayName) + '</span>' +
     (currentUser && currentUser.email ? '<span class="liste-zeile__wert">' + esc(currentUser.email) + '</span>' : '') +
     '</div>';
+  if (BETREIBER_UIDS.length === 0 && currentUser) {
+    html += '<div class="liste-zeile">' + ikon("konto", "i-sm") +
+      '<span class="liste-zeile__text">Konto-ID</span>' +
+      '<span class="liste-zeile__wert" style="font-size:var(--fs-xs);word-break:break-all;user-select:all">' + esc(currentUser.uid) + '</span></div>';
+  }
   html += '<button class="liste-zeile gefahr" data-action="logout">' + ikon("abmelden", "i-sm") +
     '<span class="liste-zeile__text">Abmelden</span></button>';
   html += '<button class="liste-zeile gefahr" data-action="delete-account"' +
@@ -5909,30 +5883,22 @@ function renderEinstellungenSeite(id) {
     html += '</div>';
     html += '</div>';
     if (!istGefuehrt(b)) {
-      html += '<div class="card" style="margin-top:var(--stack)">';
-      html += '<h3>Zum Weitergeben</h3>';
-      html += '<p class="hint">Derselbe Bereich, aber alles auf Stufe 0 und alle Lektionen bis auf ' +
-        'die erste zu. Für deinen eigenen Stand ändert sich nichts.</p>';
-      html += '<div class="form-actions">';
-      html += '<button class="secondary" data-action="export-weitergabe">' + ikon("teilen", "i-sm") +
-        ' Kartensatz zum Weitergeben</button>';
-      html += '</div></div>';
-
       /* Lehrer-Modus, Kernablauf - siehe teileLektionCode() in app.js und
          plan/lehrer-modus/GERUEST.md, Abschnitt H. Code-basiertes Teilen skaliert
-         bis 3000+ Karten und ist nicht invasiv – kein URL-Fragment, nur kurze Codes. */
+         bis 3000+ Karten und ist nicht invasiv – kein URL-Fragment, nur kurze Codes.
+         Der Datei-Knopf "Kartensatz zum Weitergeben" ist seit 3.7.2 weg: derselbe
+         Inhalt laeuft ueber "Code – Fortschritt schaltet frei". */
       html += '<div class="card" style="margin-top:var(--stack)">';
       html += '<h3>Per Code teilen</h3>';
       if (b.teilCode) {
-        html += '<p class="hint">Aktiver Code: <strong>' + esc(b.teilCode) + '</strong>. ' +
-          'Jede:r mit diesem Code kann die Lektion übernehmen, ohne dass du davon erfährst.</p>';
+        html += '<p class="hint">Dein Code: <strong>' + esc(b.teilCode) + '</strong><br>' +
+          'Wer ihn in der App eingibt, bekommt deine Lektionen. Du siehst nicht, wer.</p>';
         const offlineTxt = offline ? ' title="Dafür brauchst du eine Verbindung"' : '';
         const offlineAttr = offline ? ' disabled' : '';
         /* „Lehrer gibt frei": Stand und Knopf fuer die naechste Lektion. */
         if (Number.isInteger(b.teilFreigabe)) {
           const gesamt = lektionenVon(b).length;
-          html += '<p class="hint">Du gibst die Lektionen frei. Freigegeben: Lektion ' +
-            Math.min(b.teilFreigabe, gesamt) + ' von ' + gesamt + '.</p>';
+          html += '<p class="hint">Freigegeben: Lektion ' + Math.min(b.teilFreigabe, gesamt) + ' von ' + gesamt + '.</p>';
           if (b.teilFreigabe < gesamt) {
             html += '<div class="form-actions">';
             html += '<button' + offlineAttr + offlineTxt + ' data-action="lehrer-freigeben">Nächste Lektion freigeben</button>';
@@ -5940,20 +5906,22 @@ function renderEinstellungenSeite(id) {
           }
         }
         html += '<div class="form-actions">';
-        html += '<button class="secondary danger"' + offlineAttr + offlineTxt + ' data-action="beende-teilen-code">Teilen beenden</button>';
+        html += '<button class="ghost"' + offlineAttr + offlineTxt + ' data-action="beende-teilen-code">Teilen beenden</button>';
         html += '</div>';
       } else {
-        html += '<p class="hint">Erzeugt einen kurzen Code, über den jede:r mit dem Code diese Lektion ' +
-          'in die eigene App übernehmen kann – ohne dass du erfährst, wer oder wie oft. Du kannst das Teilen jederzeit beenden.</p>';
-        html += '<p class="hint">Du wählst, wie die Lektionen aufgehen: durch den Lernfortschritt der Lernenden – ' +
-          'oder erst, wenn du sie freigibst.</p>';
+        html += '<p class="hint">Du bekommst einen Code. Wer ihn in der App eingibt, bekommt denselben Bereich – alles auf Stufe 0, dein eigener Stand bleibt. Du siehst nicht, wer ihn benutzt.</p>';
         html += '<div class="form-actions">';
         const offlineTxt = offline ? ' title="Zum Teilen brauchst du eine Verbindung"' : '';
         const offlineAttr = offline ? ' disabled' : '';
-        html += '<button class="secondary"' + offlineAttr + offlineTxt + ' data-action="teile-lektion-code">' + ikon("teilen", "i-sm") +
-          ' Code – Fortschritt schaltet frei</button>';
-        html += '<button class="secondary"' + offlineAttr + offlineTxt + ' data-action="teile-lektion-code-lehrer">' + ikon("teilen", "i-sm") +
-          ' Code – ich gebe frei</button>';
+        /* Ein Weg fuer alle: Code, Freigabe durch die teilende Person. */
+        html += '<button' + offlineAttr + offlineTxt + ' data-action="teile-lektion-code-lehrer">' + ikon("teilen", "i-sm") +
+          ' Code erzeugen</button>';
+        /* Nur der Betreiber: die Fortschritts-Variante (früher der Datei-Knopf
+           „Kartensatz zum Weitergeben"): erste Lektion offen, Rest per Lernen. */
+        if (istBetreiber()) {
+          html += '<button class="secondary"' + offlineAttr + offlineTxt + ' data-action="teile-lektion-code">' +
+            'Code – Fortschritt schaltet frei</button>';
+        }
         html += '</div>';
       }
       html += '</div>';
@@ -5972,7 +5940,7 @@ function renderEinstellungenSeite(id) {
 
     html += '<div class="card" style="margin-top:var(--stack)">';
     html += '<h3>Code einlösen</h3>';
-    html += '<p class="hint">Der Code einer geteilten Lektion – einfach eingeben und Lektion übernehmen.</p>';
+    html += '<p class="hint">Hast du einen Code bekommen? Gib ihn hier ein.</p>';
     html += '<div class="form-actions">';
     html += '<button class="secondary" data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
       ' Code eingeben</button>';
@@ -8565,7 +8533,6 @@ document.body.addEventListener("click", e => {
       break;
     case "export-backup": exportBackup(false); break;
     case "export-backup-current": exportBackup(true); break;
-    case "export-weitergabe": exportWeitergabe(); break;
     case "teile-lektion-code": teileLektionCode(); break;          // GERUEST.md Abschnitt H
     case "teile-lektion-code-lehrer": teileLektionCode("lehrer"); break;   // Abschnitt M
     case "lehrer-freigeben": lehrerFreigeben(); break;

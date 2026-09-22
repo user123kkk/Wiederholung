@@ -3,6 +3,19 @@
 Fortlaufend, neuester Eintrag zuerst. Format aus `../../CLAUDE.md`.
 Grundlage: [`GERUEST.md`](GERUEST.md), Abschnitte L und M.
 
+### 2026-09-19 — Datei-„Zum Weitergeben" aus der App genommen (v3.7.2)
+
+**Geändert:**
+- `app.js`: Karte „Zum Weitergeben" / Knopf `export-weitergabe` entfernt; Funktion `exportWeitergabe()` und der Klick-Fall dazu weg. Inhalt und Warnungen leben in `weitergabeBestaetigung()` und werden von `teileLektionCode()` genutzt (Fortschritt und Lehrer). `baueWeitergabeBereich()` bleibt (Code-Teilen + Einspielen alter Dateien). Überschrift der Code-Karte wieder „Per Code teilen". `APP_VERSION` 3.7.2.
+- `sw.js` `CACHE_NAME`, `index.html` `?v=` → 3.7.2, `CHANGELOG.md`.
+- `plan/lehrer-modus/probelauf-lehrer.mjs`: prüft, dass der Datei-Knopf fehlt; zweiter Knopf heißt im aktuellen Stand „Code erzeugen".
+
+**Entscheidung:** Datei-Export und „Code – Fortschritt schaltet frei" erzeugten denselben Satz (Stufe 0, erste Lektion offen, eigener Stand unberührt). Der Datei-Weg ist fürs Erste überflüssig; die sinnvollen Rückfragen (Karten ohne Lektion, eigene Speicherkarten, Veröffentlichungsnummer) gehören vor den Code, nicht in eine zweite Karte. Import einer schon erzeugten Datei bleibt unter Einspielen.
+
+**Offen:** Datei-Export später wieder anbieten, falls ein Offline-Weg ohne Firestore gebraucht wird – Funktion ist nicht gelöscht im Sinne des Formats (`baueWeitergabeBereich` steht), nur der Knopf. Betreiber muss weiterhin `firestore.rules` deployen und `veroeffentlichen.bat` (aus dem vorigen Eintrag).
+
+**Nächster Schritt:** Auf Zwei-Konten-Test und Regel-Deploy warten; kein weiterer Codepunkt aus diesem Auftrag.
+
 ### 2026-09-19 — „Lehrer gibt frei" gebaut und veröffentlicht (v3.7.0)
 
 **Geändert:**

@@ -1,6 +1,6 @@
 # Auftrag: Oberfläche & Mobile-Gestalt
 
-**Status:** Blöcke 1–10 `fertig` (v3.1.0–3.4.3), **alle am echten Handy verifiziert.** Blöcke 8–10 kommen aus der Bildersammlung des Betreibers (17.09.2026), siehe [`BILDER-BEFUND.md`](BILDER-BEFUND.md). Offene Frage 6 ist seit 18.09.2026 dauerhaft geklärt (§7-Lockerung gilt grundsätzlich). Am 18.09.2026 zusätzlich die zwei liegen gebliebenen Nachlese-Punkte gebaut (v3.5.0): Werkzeugleiste Verwalten (Video 1) und Smart Default beim Speichern in eine Speicherkarte (Video 3) — **Betreiber-Test am Handy steht noch aus**, siehe `LOGBUCH.md`.
+**Status:** Blöcke 1–10 `fertig` (v3.1.0–3.4.3), **alle am echten Handy verifiziert.** Blöcke 8–10 kommen aus der Bildersammlung des Betreibers (17.09.2026), siehe [`BILDER-BEFUND.md`](BILDER-BEFUND.md). Offene Frage 6 ist seit 18.09.2026 dauerhaft geklärt (§7-Lockerung gilt grundsätzlich). Am 18.09.2026 zusätzlich die zwei liegen gebliebenen Nachlese-Punkte gebaut (v3.5.0): Werkzeugleiste Verwalten (Video 1) und Smart Default beim Speichern in eine Speicherkarte (Video 3) — **Betreiber-Test am Handy steht noch aus**, siehe `LOGBUCH.md`. Block 11 (v3.7.3, 22.09.2026) aus einem vierten Video: Gleit-Indikator beim Tab-Wechsel — **Betreiber-Test am Handy steht noch aus**.
 **Angelegt:** 16. September 2026 · **Neu gefasst:** 17. September 2026
 **Grundlage:** die drei Videos des Betreibers (Mobile-UI, Wachstum,
 UX-Psychologie), gefiltert in [`PRINZIPIEN.md`](PRINZIPIEN.md).
@@ -68,6 +68,7 @@ nachziehen, committen, pushen. Nicht zwei Blöcke auf einmal.
 | 8 | **Rückmeldung nach dem Speichern** | `fertig` (v3.4.1) | `zeigeToast()` wird jetzt aufgerufen. Am echten Handy verifiziert. Bild 37, 105, 106 |
 | 9 | **Fehler am Feld statt im Dialog** | `fertig` (v3.4.2) | Leeres Karten-Formular und fehlender Name melden sich direkt am Feld. Bild 44, 61, 93 |
 | 10 | **Sichtbare Wahl statt Klappliste** | `fertig` (v3.4.3) | Stufen „von/bis" beim Üben und „Art der Speicherkarte". Bild 9, 13, 14, 64, 72 |
+| 11 | **Gleit-Indikator beim Tab-Wechsel** | `fertig` (v3.7.3) | Aus viertem Video (Bottom Navigation, uxpeak, `PRINZIPIEN.md`): aktive Fläche der `.nav__tabs` gleitet beim Wechsel statt hart umzuschalten. |
 
 ## Blöcke 8–10 im Einzelnen
 

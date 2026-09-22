@@ -124,7 +124,13 @@ verifiziert. Blöcke 8–10 kamen am 17.09.2026 aus der Bildersammlung des
 Betreibers (108 Bilder, alle einzeln geprüft in
 [`BILDER-BEFUND.md`](redesign-oberflaeche/BILDER-BEFUND.md)). Der Strang
 ruht, bis eine neue Schwachstelle genannt wird oder offene Fragen 12/13
-entschieden sind.
+entschieden sind. **22.09.2026:** viertes Video (Bottom Navigation, uxpeak)
+gegen den Stand geprüft — elf von zwölf Punkten schon umgesetzt (kam aus
+demselben Thema wie Video 1). Zwei Fundstellen in
+[`PRINZIPIEN.md`](redesign-oberflaeche/PRINZIPIEN.md) vermerkt: Gleit-
+Indikator beim Tab-Wechsel vom Betreiber freigegeben und als **Block 11**
+gebaut (v3.7.3); zentraler CTA-Knopf in der Leiste bewusst nicht übernommen
+(erfundenes Bauteil ohne Bedarf). Betreiber-Test am Handy steht noch aus.
 **Umfang lockert `KONZEPT.md` §7 bewusst** — siehe offene Frage 6 unten.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
@@ -472,7 +478,7 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (19.09.2026): „Lehrer gibt frei" — gebaut und veröffentlicht (v3.7.0), wartet auf den Betreiber.**
+**AKTUELL (19.09.2026): „Lehrer gibt frei" wartet auf den Betreiber; Datei-Weitergeben ist raus (v3.7.2).**
 Bau-Freigabe des Betreibers („ja soll gehen", einschließlich der Änderung an
 `offeneLektionIds()`) ist umgesetzt: App-Code, `firestore.rules` und
 Regelprüfung (106/106 im Emulator) stehen, ein Durchlauf gegen die echte
@@ -687,3 +693,4 @@ mangels Gerät nicht zur Verfügung.
 | 2026-09-19 | **Gesamtprüfung „Reibungsfreiheit" — 19 Funde, nichts gebaut** (Beobachtung 19 in `beobachtungen-lernwerkzeug.md`). Der grüne Kasten ist das nie abgeschaltete Debug-Overlay aus v3.6.4/3.6.5 (`localStorage debugNav`); es macht das Scrollen ~9× langsamer. Seitenwechsel „verhackt", weil jeder `render()` Kopfzeile, Leiste und `.view` neu baut und von Deckkraft 0 einblendet (auch bei Cloud-Daten ohne Klick). Regression aus Beobachtung 18: `--vv-gap` schiebt die Nav-Leiste nach dem Drehen ins Querformat aus dem Bild. Dazu toter Aufruf `teilLinkPruefenUndVerarbeiten` (Fehler bei jedem Snapshot), Toast verdeckt/erneuert das offene Karten-Blatt, Wisch-Timer bewertet zwei Karten. Gemessen in Playwright gegen Firebase-Attrappe; iOS-Tastatur und echte Home-Bildschirm-Werte nur am Gerät prüfbar. **Umgesetzt und veröffentlicht als v3.6.13** (16 von 19 behoben; offen: Austrittsbewegung/Fokus-Rückgabe der Blätter, Renderkosten Verwalten, Gerätetest am iPhone). |
 | 2026-09-19 | **TikTok-Backlog-Ideen-Serie abgeschlossen: 5 Ideen dokumentiert, 3 nicht relevant (v3.6.11).** Die letzte Session hat vier Backlog-Ideen einzeln abgearbeitet (Hick's Law Nr. 6, Offline-Zustand Nr. 2 v3.6.9, leere Startzustände Nr. 5 v3.6.10/3.6.11, Sicherheits-Checkliste Nr. 7) plus Firestore-Kosten (Nr. 6). Alle mit Logbuch-Einträgen dokumentiert. Diese Session prüft, dass alles dokumentiert ist: Ideen 1, 3, 4, 8 (Widgets, Feedback-Board, Signup nach Onboarding, danach nächste Idee) sind nicht relevant oder nicht zu bauen — dokumentiert in `phase-1-datenzugriff/LOGBUCH.md` vom 19.09. **Kein neuer Code**: die v3.6.11-Versionierung und alle zugehörigen Commits vom 19.09. stammen aus der vorigen Session. Diese Session dokumentiert nur den aktuellen Stand: App läuft stabil, TikTok-Serie ist abgeschlossen, kein neuer aktiver Codepunkt. Betreiber muss Veröffentlichung durchziehen (`veroeffentlichen.bat`) und auf Geräten testen. |
 | 2026-09-19 | **„Lehrer gibt frei" gebaut und veröffentlicht (v3.7.0).** Bau-Freigabe des Betreibers, inkl. der einen Änderung an `offeneLektionIds()`. Beim Teilen per Code gibt es jetzt zwei Wege: „Fortschritt schaltet frei" (wie bisher) und „ich gebe frei" (Lehrer öffnet per Klick die nächste Lektion, einmal offen bleibt offen, kein Rückkanal). Empfänger holt den Stand per einzelnem Abruf nach (Start, Bereichswechsel, Rückkehr). Regeln im Emulator 106/106 (mit alter Datei 97/106), Durchlauf gegen die echte App 34/34. Nebenfund mitbehoben: `teilCode` wurde nach Neustart nicht geladen, und die Regel lehnte das Löschen des Feldes ab („Teilen beenden" schlug am Bereichsfeld fehl). **Offen beim Betreiber:** `firebase deploy --only "firestore:rules"`, `veroeffentlichen.bat`, Zwei-Konten-Test. Details: `lehrer-modus/LOGBUCH.md`. |
+| 2026-09-19 | **Datei-„Zum Weitergeben" aus der App (v3.7.2).** Betreiber: derselbe Inhalt wie „Code – Fortschritt schaltet frei". Warnungen (Karten ohne Lektion, eigene Speicherkarten, Veröffentlichungsnummer) stehen jetzt vor dem Code-Erzeugen. Knopf und `exportWeitergabe()` entfernt; Einspielen alter Dateien bleibt. Details: `lehrer-modus/LOGBUCH.md`. |

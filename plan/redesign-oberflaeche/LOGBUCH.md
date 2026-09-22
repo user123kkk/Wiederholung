@@ -4,6 +4,78 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Viertes Video geprüft (Bottom Navigation, uxpeak) + Block 11 gebaut (v3.7.3)
+
+**Anlass:** Betreiber brachte ein YouTube-Video (uxpeak, „How to Design a Great
+Bottom Mobile Navigation Bar", 23:45 Min.) mit dem Wunsch, die Ideen ins Tool
+zu übernehmen. Transkript per Untertitel geladen, ~40 Bildschirmfotos aus dem
+Video gegen den heutigen Stand von `navLeiste()` (`app.js:4942`) und der
+`.nav`-Gestaltung (`styles.css:670` ff.) geprüft — Einzelurteile in
+`PRINZIPIEN.md`, Abschnitt „Video 4".
+
+**Geändert:** Nur `PRINZIPIEN.md` (neuer Abschnitt „Video 4 — Bottom
+Navigation"). Kein Produktivcode angefasst.
+
+**Entscheidung:** Von zwölf geprüften Punkten sind **elf schon umgesetzt** —
+die heutige Navigationsleiste entstand aus **Video 1** desselben Strangs
+(gleiches Thema, andere Quelle) und deckt sich fast eins zu eins: 3 Tabs,
+schwebend über der sicheren Zone, ≥44px Trefferfläche, Aktiv-Zustand mit drei
+statt geforderten zwei visuellen Änderungen, ein Icon-Stil außer im aktiven
+Tab, kurze einzeilige Labels, Icon/Label-Größen im empfohlenen Bereich, ruhige
+Ein-Akzent-Farbe, sichtbare Trennung per Rand/Schatten, Tipp-Rückmeldung per
+Skalierung. Ein Punkt (Benachrichtigungspunkt ohne Zahl) ist eine **bewusste**
+Abweichung von der Video-Empfehlung, keine Lücke — passt zur bestehenden
+Linie gegen Zahlen-Dringlichkeit (Video 3, Verlustaversion).
+
+**Zwei echte Fundstellen, eine davon zur Entscheidung vorgelegt:**
+1. Kein gleitender Übergang der Pillenfläche beim Tab-Wechsel (bis dahin:
+   Hart-Umschalten beim Neuaufbau). Betreiber-Entscheidung noch am selben
+   Tag: **bauen** (Block 11).
+2. Kein zentraler CTA-Knopf in der Leiste — bewusst **nicht** übernommen:
+   die App hat schon einen Anlegen-Weg, ein vierter Nav-Knopf wäre ein
+   erfundenes Bauteil ohne belegten Bedarf. Bleibt liegen.
+
+**Block 11 — Gleit-Indikator beim Tab-Wechsel (v3.7.3):**
+
+**Geändert:** `app.js`: `navLeiste()` (`app.js:4942` ff.) berechnet
+`reiterIndex` aus `ui.tab` und vergleicht mit dem modul-weiten `letzterReiter`
+— der Wert ist an dieser Stelle noch der VORHERIGE, weil `render()` ihn erst
+nach dem Aufbau von `html` (der `navLeiste()` einschließt) aktualisiert; kein
+neuer Zustand nötig. Ergebnis ist `data-glide="vor"`/`"zurueck"` am aktiven
+`.nav__tab`. `styles.css`: zwei neue `@keyframes` (`nav-glide-vor`,
+`nav-glide-zurueck`, 10px Versatz + Skalierung, analog zu `enter-vor`/
+`enter-zurueck` aus 3.7.1, nur kleiner) plus zwei Regeln, die sie an
+`.nav__tab.active[data-glide=…]` hängen. `APP_VERSION`/`CACHE_NAME` → 3.7.3,
+`CHANGELOG.md`.
+
+**Entscheidung:** Reine `@keyframes`-Lösung, keine `transition` — Abschnitt 3
+in `styles.css` hält ausdrücklich fest, dass `render()` bei jedem Zeichnen
+den kompletten Leisten-Inhalt neu einsetzt (`huelleBehalten()` behält nur die
+äußere `.nav`-Hülle, nicht ihre Kinder) und Transitions auf frisch
+eingefügten Elementen deshalb nicht laufen. Der bestehende `letzterReiter`
+aus der Seitenwechsel-Logik wird nur *gelesen*, nicht verändert — kein
+Duplikat-Zustand, keine Kollision mit der `data-richtung`-Logik am `#app`.
+
+**Geprüft:** `node --check app.js` fehlerfrei. Der projekteigene
+`probelauf.mjs` (Playwright) ließ sich in dieser Umgebung nicht starten
+(„spawn UNKNOWN" beim Chromium-Start unter Git Bash/Windows — Infrastruktur-
+Problem, nicht am Code) trotz frisch installiertem Chromium
+(`npx playwright install chromium`) und korrektem `PROBE_CHROMIUM`-Pfad.
+Ersatzweise über den eingebauten Browser gegen `python -m http.server 8099`
+geprüft: Seite lädt, Anmeldeformular erscheint fehlerfrei, keine Konsolenfehler
+aus `app.js`/`styles.css`. Die Leiste selbst (hinter der Anmeldung) **nicht**
+am Bildschirm gesehen — dafür fehlt ein Firebase-Zugang in dieser Umgebung.
+
+**Offen:** Gerätetest durch den Betreiber — Tab wechseln (alle drei
+Richtungen: Lernen↔Fortschritt↔Verwalten) und sehen, dass die aktive Fläche
+kurz aus der Wechselrichtung einschwingt statt hart umzuschalten; mit
+„Bewegung reduzieren" (Systemeinstellung) darf nichts mehr gleiten.
+
+**Nächster Schritt:** Betreiber prüft v3.7.3 am Handy, dann committen/pushen
+(direkt auf `main`, ohne PR, wie in `CLAUDE.md` festgelegt).
+
+---
+
 ### 2026-09-19 — „Cleaner fühlen": Verwalten, Wegwischen, Seitenwechsel (v3.7.1)
 
 **Anlass:** Betreiber-Wunsch, die App ruhiger wirken zu lassen — Icons und Animationen, ausdrücklich auch Seitenwechsel und „wie bei iOS Fenster runterwischen". Nachgelesen: `BILDER-BEFUND.md` (Icons Bild 79–86 schon ✅, zu Animationen steht in den 108 Bildern und im Ideen-Backlog nichts) — die Änderungen kommen aus dem Ist-Zustand, nicht aus einem Video.

@@ -609,7 +609,7 @@ Code-Review-Stand.
 
 ## M · Bauauftrag „Lehrer gibt frei" (19.09.2026, Betreiber-Freigabe „ja soll gehen")
 
-**Stand 19.09.2026: gebaut und veröffentlicht als v3.7.0** — Schritte 1–7 erledigt, Ergebnis, Abweichungen und Offenes in [`LOGBUCH.md`](LOGBUCH.md). Nicht fertig, bis der Betreiber `firestore.rules` deployt hat (siehe unten „Was der Betreiber selbst tun muss"). Abweichung vom Vorschlag: statt eines Auswahldialogs zwei Knöpfe; Modus = Vorhandensein von `freigabe` (kein eigenes Modus-Feld).
+**Stand 19.09.2026: gebaut und veröffentlicht als v3.7.0** — Schritte 1–7 erledigt, Ergebnis, Abweichungen und Offenes in [`LOGBUCH.md`](LOGBUCH.md). Nicht fertig, bis der Betreiber `firestore.rules` deployt hat (siehe unten „Was der Betreiber selbst tun muss"). Abweichung vom Vorschlag: statt eines Auswahldialogs zwei Knöpfe; Modus = Vorhandensein von `freigabe` (kein eigenes Modus-Feld). **Nachtrag 3.7.2:** der Datei-Knopf „Kartensatz zum Weitergeben" ist aus der Oberfläche — Inhalt und Warnungen sitzen in „Code – Fortschritt schaltet frei"; Einspielen alter Dateien bleibt.
 
 **Freigabe:** Der Betreiber hat den Bau ausdrücklich freigegeben, auch die Änderung an der Freischalt-Berechnung (`offeneLektionIds`, `app.js` ~290). Das ist die eine Ausnahme von „Lernlogik tabu" (`CLAUDE.md`) — nur für diese Berechnung, sonst nichts an der Lernlogik anfassen. Entscheidungen aus Abschnitt L gelten: nur Lehrer-Klick entscheidet (kein Fortschritt daneben), einmal offen bleibt offen, Lehrer erfährt nichts über Empfänger.
 
