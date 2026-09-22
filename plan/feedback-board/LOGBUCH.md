@@ -4,6 +4,88 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 — Endlosschleife beim Laden gefunden und behoben, Doppel-Einreichen verhindert (v3.9.1)
+
+**Anlass:** Betreiber-Meldung mit Screenshot: das Formular unter „Ideen &
+Vorschläge" flackert, beide Textfelder lassen sich kaum antippen, darunter
+steht dauerhaft „Lädt…". Dazu ein zweiter, offener Auftrag ohne Rückfragen:
+das ganze Tool auf Fehler/Bugs/Sicherheitslücken durchsehen und beheben.
+
+**Geändert:** `app.js` — `renderFeedbackSeite()` (Lade-Anstoß um
+`!feedbackFehler` ergänzt), `feedbackLaden()`/Fehlerzweig (Knopf „Erneut
+versuchen", neuer `data-action="feedback-retry"`), `feedbackEinreichen()`
+(neuer Busy-Zustand `feedbackEinreichtWird`), Reset in `onAuthStateChanged`.
+
+**Ursache (echter Fund):** `renderFeedbackSeite()` prüfte nur
+`feedbackListe === null && !feedbackLaedt`, um automatisch nachzuladen.
+Schlägt das Laden fehl (z. B. weil `firestore.rules` für `feedback` noch
+nicht deployt ist — genau der Zustand, solange der Betreiber „Was Du noch
+tun musst" aus der vorigen Session noch nicht erledigt hat), setzt
+`feedbackLaden()` `feedbackFehler` und `feedbackLaedt = false` — und exakt
+dann wurde die Bedingung oben **wieder wahr** und `feedbackLaden()` sofort
+erneut aufgerufen. Jeder Versuch löst zwei volle Neuaufbauten von `#app`
+aus (`render()` beim Start und am Ende von `feedbackLaden()`) — das
+zerstört und ersetzt dabei auch die gerade fokussierten Eingabefelder unter
+der Bildschirmtastatur. Bei einem schnell fehlschlagenden Aufruf
+(`permission-denied` kommt zügig zurück) entsteht daraus eine so schnelle
+Wiederholung, dass es als Flackern wahrgenommen wird und der Nutzer nie
+über „Lädt…" hinauskommt — unabhängig vom Tippen selbst, rein durch den
+Ladeversuch angetrieben.
+
+**Fix:** Nach einem Fehlschlag wird **nicht mehr automatisch** erneut
+versucht — nur noch über einen expliziten „Erneut versuchen"-Knopf. Das
+beendet die Schleife strukturell, unabhängig davon, ob die eigentliche
+Ursache (fehlender Deploy) behoben ist oder nicht.
+
+**Nebenfund beim Gegenlesen:** Der „Vorschlag einreichen"-Knopf war
+während des eigentlichen Schreibvorgangs (`addDoc`) nicht gesperrt — ein
+schneller Doppel-Tipp (naheliegend bei einem Knopf ohne sichtbare
+Rückmeldung) hätte denselben Vorschlag zweimal angelegt. Eigener
+Busy-Zustand ergänzt, gleiches Muster wie `ui.kontoLoeschenBusy`
+(`button.busy`, per CSS bereits vorhanden, wird bisher nur bei Anmelden/
+Registrieren/Zurücksetzen benutzt).
+
+**Sicherheits-/Fehlerdurchsicht (Betreiber-Auftrag, „wie ein Hacker"),
+diese Runde:**
+- `firestore.rules` komplett neu gegengelesen (alle drei Sammlungen). Keine
+  neuen Funde über das hinaus, was bereits in `firestore.rules` selbst
+  dokumentiert ist (bewusst in Kauf genommene Lücken sind als solche
+  markiert, nicht übersehen).
+- Fehlerformular-`mailto:`-Aufbau geprüft: `encodeURIComponent()` läuft
+  über den **gesamten zusammengesetzten** Body-Text (Name + E-Mail +
+  Beschreibung als eine Einheit) — ein Nutzer, der `&`, `?` oder Zeilen-
+  umbrüche in Name/E-Mail eingibt, kann damit keine zusätzlichen
+  Mailto-Parameter (z. B. `bcc=`) einschleusen, das würde alles selbst mit
+  kodiert. Kein Fund.
+- Auth-E-Mail-Versand (`sendEmailVerification`, `sendPasswordResetEmail`)
+  geprüft: kein eigenes `actionCodeSettings`/`continueUrl` gesetzt — damit
+  kein Open-Redirect-Risiko über eine manipulierbare Rücksprungadresse,
+  Firebase zeigt seine eigene Standardseite. Kein Fund.
+- `esc()`-Abdeckung an mehreren Rendering-Stellen stichprobenartig
+  nachverfolgt (u. a. `kartenListeInhalt()`, Feedback-Board, Import-Pfad
+  `verarbeiteImportDaten`) — konsequent verwendet, keine neue Lücke
+  gefunden.
+- Handschrift-Aufnahme (`hwStrokes`) geprüft: reine Koordinatenzahlen aus
+  Zeigerereignissen, keine Nutzertext-Einspeisung, keine Angriffsfläche.
+
+**Offen/bewusst nicht angefasst:**
+- Die Ursache des Ladefehlers selbst (fehlender Deploy) bleibt beim
+  Betreiber — siehe frühere „Was Du noch tun musst".
+- Betreiber-Kommentar „Beschreibung bei hell/dunkel muss nicht so krass
+  sein" — Ziel-Element nicht eindeutig zu bestimmen (`.opt`-Stil geprüft,
+  unauffällig). Nicht geraten, festgehalten statt blind geändert.
+- Eine erschöpfende Sicherheitsprüfung „des gesamten Tools" ist keine
+  endliche Aufgabe; diese Runde deckt die Stellen mit dem größten
+  realistischen Risiko ab (neue Schreibpfade, Formulare, Auth), nicht
+  jede Zeile.
+
+**Geprüft:** `node --check app.js` sauber. Nicht am echten Gerät/Konto
+geprüft (der eigentliche Ladefehler braucht den ausstehenden Firestore-
+Regel-Deploy, um überhaupt reproduzierbar zu sein).
+
+**Nächster Schritt:** Betreiber deployt `firestore.rules` (weiterhin
+ausstehend), testet danach Formular + Abstimmen ohne Flackern.
+
 ### 2026-09-22 — Gebaut, gegen den Emulator geprüft (v3.8.4)
 
 **Geändert:**

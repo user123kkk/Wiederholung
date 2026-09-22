@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.0";
+const APP_VERSION = "3.9.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -952,6 +952,11 @@ let offlineCacheAktiv = false;
 let feedbackListe = null;
 let feedbackEigeneVotes = new Set();  // ids, fuer die die eigene Stimme bestaetigt geladen wurde
 let feedbackLaedt = false;
+/* 23.09.2026, echter Fund: der Einreichen-Knopf war waehrend addDoc() nicht
+   gesperrt - ein schneller Doppel-Tipp (leicht bei einem eigenstaendigen
+   Knopf ohne sichtbare Rueckmeldung) konnte denselben Vorschlag zweimal
+   anlegen. Eigener Busy-Zustand, gleiches Muster wie ui.kontoLoeschenBusy. */
+let feedbackEinreichtWird = false;
 let feedbackFehler = null;
 let feedbackFormFehler = false;
 /* 2.21.1: Hinweis + Neu-laden-Knopf, falls "Daten werden geladen…" sehr
@@ -1519,6 +1524,7 @@ async function initFirebase() {
     feedbackListe = null;
     feedbackEigeneVotes = new Set();
     feedbackFehler = null;
+    feedbackEinreichtWird = false;
     ui.session = null;
     ui.editId = null;
     ui.authEingabe = { name: "", email: "", pass: "" };
@@ -6211,7 +6217,20 @@ function renderEinstellungenSeite(id) {
    Deshalb auch kein "eigenen Vorschlag loeschen": das ist der Preis fuer
    echte Anonymitaet, nur Moderation kann Eintraege entfernen. */
 function renderFeedbackSeite() {
-  if (feedbackListe === null && !feedbackLaedt) feedbackLaden();
+  /* 23.09.2026, echter Fund (Betreiber-Meldung: Formular flackert, "Laedt"
+     stand dauerhaft da): OHNE !feedbackFehler haengt sich das hier auf, sobald
+     das Laden einmal fehlschlaegt (z.B. firestore.rules fuer "feedback" noch
+     nicht deployt - genau der Fall, wenn der Betreiber das vor dem Deploy
+     ausprobiert). feedbackLaden() setzt feedbackFehler und feedbackLaedt=false
+     im Fehlerfall; ohne diese Zeile wurde GENAU DANN die Bedingung unten
+     wieder wahr und feedbackLaden() sofort erneut aufgerufen - ein
+     Endlosschleifen-Versuch, der bei jedem fehlgeschlagenen Rueckruf einen
+     kompletten Neubau von #app ausloest (render() zweimal pro Versuch) und
+     dabei die gerade getippten Eingabefelder unter der Handy-Tastatur
+     zerstoert und neu aufbaut - das ist das gemeldete Flackern. Jetzt: nach
+     einem Fehlschlag wird NICHT automatisch erneut versucht, nur noch ueber
+     den expliziten "Erneut versuchen"-Knopf unten. */
+  if (feedbackListe === null && !feedbackLaedt && !feedbackFehler) feedbackLaden();
 
   let html = '<div class="card">';
   html += '<p class="hint">Was soll dazukommen, was soll sich ändern? Alle sehen die Liste, ' +
@@ -6224,13 +6243,17 @@ function renderFeedbackSeite() {
   html += '<div class="field"><label for="fb-beschreibung">Genauer <span class="opt">– optional</span></label>';
   html += '<textarea id="fb-beschreibung" rows="2" maxlength="500"></textarea></div>';
   html += '<div class="form-actions">';
-  html += '<button data-action="feedback-submit"' + (feedbackLaedt ? ' disabled' : '') + '>' +
+  html += '<button class="' + (feedbackEinreichtWird ? "busy" : "") + '" data-action="feedback-submit"' +
+    (feedbackEinreichtWird ? ' disabled' : '') + '>' +
     ikon("plus", "i-sm") + ' Vorschlag einreichen</button>';
   html += '</div></div>';
 
   if (feedbackFehler) {
     html += '<div class="error-box" style="margin-top:var(--stack-tight)">' + ikon("warnung", "i-sm") +
       '<div class="banner__text">' + esc(feedbackFehler) + '</div></div>';
+    html += '<div class="form-actions" style="margin-top:var(--space-3)">';
+    html += '<button class="secondary" data-action="feedback-retry">Erneut versuchen</button>';
+    html += '</div>';
   } else if (feedbackLaedt && feedbackListe === null) {
     html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Lädt…</p>';
   } else if (feedbackListe && feedbackListe.length === 0) {
@@ -6318,6 +6341,7 @@ async function feedbackLaden() {
 }
 
 async function feedbackEinreichen() {
+  if (feedbackEinreichtWird) return;   // Doppel-Tipp waehrend addDoc() laeuft
   const feldText = document.getElementById("fb-text");
   const feldBeschr = document.getElementById("fb-beschreibung");
   const text = feldText ? feldText.value.trim() : "";
@@ -6331,13 +6355,18 @@ async function feedbackEinreichen() {
     status: "offen"
   };
   if (beschreibung) neu.beschreibung = beschreibung.slice(0, 500);
+  feedbackEinreichtWird = true;
+  render();
   try {
     await fb.addDoc(fb.collection(db, "feedback"), neu);
     feedbackListe = null;
+    feedbackEinreichtWird = false;
     render();
     await feedbackLaden();
   } catch (e) {
+    feedbackEinreichtWird = false;
     dlgAlert("Konnte nicht gespeichert werden: " + (e && e.message ? e.message : e));
+    render();
   }
 }
 
@@ -9080,6 +9109,7 @@ document.body.addEventListener("click", e => {
     case "open-error-modal": openErrorModal(); break;
     case "close-error-modal": closeErrorModal(); break;
     case "feedback-submit": feedbackEinreichen(); break;
+    case "feedback-retry": feedbackFehler = null; feedbackLaden(); break;
     case "feedback-vote": feedbackAbstimmen(btn.dataset.id, true); break;
     case "feedback-unvote": feedbackAbstimmen(btn.dataset.id, false); break;
     case "feedback-status": feedbackStatusAendern(btn.dataset.id, btn.dataset.status); break;

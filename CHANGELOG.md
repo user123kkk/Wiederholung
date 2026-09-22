@@ -1,3 +1,11 @@
+## 3.9.1 – 23. September 2026
+
+**Echter Fund: Feedback-Board flackerte und blieb dauerhaft bei „Lädt…" hängen.** Betreiber-Meldung mit Screenshot. Ursache: Schlägt das Nachladen der Liste einmal fehl, hat sich die Seite selbst sofort wieder ins Laden geschickt – ein Endlosschleifen-Versuch, der bei jedem Anlauf die gerade fokussierten Eingabefelder unter der Bildschirmtastatur zerstört und neu aufbaut (daher das Flackern und die kaum antippbaren Felder). Betroffen ist genau der Zustand, solange die neuen `firestore.rules` für das Board noch nicht deployt sind. Jetzt: kein automatischer erneuter Versuch mehr nach einem Fehlschlag, stattdessen ein „Erneut versuchen"-Knopf.
+
+**Nebenfund:** „Vorschlag einreichen" ließ sich während des Speicherns doppelt antippen – jetzt gesperrt mit sichtbarer Ladeanimation (gleiches Muster wie beim Anmelden).
+
+Dazu eine erste Sicherheits-/Fehlerdurchsicht auf ausdrücklichen Betreiber-Wunsch: `firestore.rules` komplett neu gegengelesen, das Mailto-Formular auf Injektionsrisiken geprüft (keins – `encodeURIComponent` läuft über den gesamten Text), Auth-E-Mail-Versand auf Open-Redirect geprüft (keiner – kein eigenes `continueUrl`), `esc()`-Abdeckung stichprobenartig nachverfolgt. Keine weiteren Funde in dieser Runde.
+
 ## 3.9.0 – 23. September 2026
 
 **`landing.html` auf Betreiber-Wunsch entfernt — wird komplett neu gemacht.** Kein Ersatz gebaut, reine Bereinigung: `firebase.json` liefert „/" jetzt per Firebase-Hosting-Standard direkt als `index.html` aus (die eigene Rewrite-Regel dorthin ist raus), `sw.js` cacht die Datei nicht mehr, `datenschutzerklaerung.html` beschreibt nur noch das verbleibende Fehlerformular in der App (das Kontaktformular lag auf der jetzt gelöschten Seite). `robots.txt`/`sitemap.xml` unverändert – „/" bleibt vorerst indexierbar, zeigt bis zur neuen Seite aber den Login-Bildschirm statt einer Marketing-Seite.
