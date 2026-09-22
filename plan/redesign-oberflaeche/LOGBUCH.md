@@ -4,6 +4,22 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Gestaltung 4.0 gebaut und auf Wunsch zurückgenommen
+
+**Geändert:** nichts bleibend. Commit 7dd7ebd (v4.0.0: kompletter Neuaufbau
+`styles.css` im iOS-Stil, einfarbig Elfenbein/Schwarz, Verwalten umgebaut,
+Sortiermodus) wurde mit 7d5620d vollständig zurückgenommen. Stand ist wieder 3.7.6.
+
+**Entscheidung:** Betreiber: „das davor war besser, zurücksetzen". Ein
+Komplett-Neuaufbau der Optik ist also NICHT gewollt – der bestehende Stil
+(Creme auf Fast-Schwarz, Serifen-Überschriften, schwebende Leiste) bleibt die Basis.
+
+**Offen:** Was genau den Betreiber vorher unzufrieden gemacht hat (Verwalten „voll",
+Text an Rundungen abgeschnitten, „alles sieht gleich aus") ist damit nicht gelöst –
+künftig nur gezielt und in kleinen Schritten innerhalb des bestehenden Stils.
+
+**Nächster Schritt:** Auf konkrete Betreiber-Meldung warten; nichts auf Verdacht umbauen.
+
 ### 2026-09-22 — Block 14: Anmeldung im Flugmodus geprüft, drei echte Fehler behoben (v3.7.6)
 
 **Anlass:** Betreiber hat Block 13 am echten iPhone getestet (Flugmodus,
