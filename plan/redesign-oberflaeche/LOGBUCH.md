@@ -109,6 +109,19 @@ stilprobe.html` (gesperrter Google-Knopf als Baustein ergänzt).
   Aufwand nicht wert für 3 Nutzer:innen, aber nicht meine Entscheidung.
 - Violetter Balken (Punkt 5) — Rückfrage an Betreiber siehe oben.
 - E-Mail-Zustellung (Punkt 6) — Firebase-Konsole, Schritte im Chat.
+  **Nachtrag 22.09.2026:** Betreiber hat den Absendernamen „Adrabic" schon
+  gesetzt, beim Speichern von Betreff/Text kam aber die Firebase-eigene
+  Meldung „Aktualisierungen von E-Mail-Vorlagen sind für dieses Projekt
+  derzeit nicht verfügbar. Wenden Sie sich an Firebase-Support." —
+  projektspezifisch, nicht durch Recherche geklärt (evtl. Spark- statt
+  Blaze-Abrechnung, evtl. ein Firebase-seitiger Rollout-Zustand; nicht
+  bestätigt). **Kein Code-Fund, keine weitere Aktion von hier aus möglich.**
+  Betreiber muss entweder den Firebase-Support kontaktieren (Link in der
+  Meldung) oder auf „Domain anpassen"/eine eigene Domain warten (siehe
+  Punkt oben) — das würde denselben Weg über eine eigene Domain nehmen,
+  der ohnehin schon aus Phase 4 als „später" offensteht. Absendername
+  „Adrabic" allein (ohne Betreff/Text-Änderung) ist offenbar noch
+  speicherbar gewesen, nur die volle Vorlage nicht.
 - Betreiber-Test am Handy MIT echtem Netz steht noch aus (Zeitlimit lässt
   sich im Flugmodus nicht von einer echten Fehlermeldung unterscheiden,
   wenn beide nach spätestens 12s erscheinen — sieht aber gleich aus).
