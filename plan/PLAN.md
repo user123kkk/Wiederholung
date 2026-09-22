@@ -282,6 +282,16 @@ Kein eigener Ordner, keine Phase. Aus Konzept-Abschnitt 2 und 5:
   Betreiber hat ausdrücklich gebeten, das vor der Öffentlichmachung noch
   einmal zu verschärfen, nicht nur den Stand aus Phase 1 (der deckte nur
   Firestore-Regeln, Feld-Manipulation, Import, XSS ab) fortzuschreiben.
+  **Korrektur 22.09.2026:** Der Betreiber (die Person, mit der diese
+  Sessions arbeiten) ist **18, nicht minderjährig** — die Altersangabe „16"
+  oben war falsch bzw. veraltet. Das Tool läuft weiterhin unter dem Namen
+  **einer anderen Person** im Impressum, die die formale Haftung trägt; wer
+  das genau ist (weiterhin der Vater, oder jemand anderes), ist hier nicht
+  neu bestätigt worden — nur die Minderjährigkeit des Betreibers selbst ist
+  vom Tisch. Für Entscheidungen, die an „Betreiber ist minderjährig"
+  hingen (z. B. Lehrer-Gerüst Frage 5/C5 unten), gilt trotzdem weiter
+  Vorsicht, weil die im Impressum genannte Person unverändert haftet — nur
+  die Begründung „das ist ein Kind, das da haftet" trifft so nicht mehr zu.
   Bevor Phase 6 beginnt: Bestand seit Phase 1 erneut prüfen (Abhängigkeiten
   aktuell? neue Firebase-Advisories? Rate-Limits auf Auth-Endpunkte
   sinnvoll, jetzt wo Fremde registrieren können? App Check aus dieser
