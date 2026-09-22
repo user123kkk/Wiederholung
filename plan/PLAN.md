@@ -139,8 +139,16 @@ geprüft (`PRINZIPIEN.md`, „Eigene UX-Sichtung"): Die App erwies sich nach elf
 Blöcken als bereits sehr durchgearbeitet — ein echter, belegter Fund (Hover-
 Rückmeldung fehlte in der Verwalten-Liste), als **Block 12** gebaut (v3.7.4).
 Eine größere, bewusst zurückgestellte Baustelle (Renderkosten der Verwalten-
-Liste bei vielen Karten) als möglicher Block 13 in `AUFTRAG.md` vorgeschlagen,
-nicht begonnen.
+Liste bei vielen Karten) als möglichen künftigen Block in `AUFTRAG.md`
+vorgeschlagen, nicht begonnen. **Rückmeldung zu Block 12:** „sieht gleich
+aus" — zu Recht, eine Hover-Korrektur ist kaum sichtbar. Betreiber-Auftrag
+präzisiert: Schrift, Fortschritt, Einstellungen, Verwalten, Google-Knopf
+sichtbar verbessern, „mach was du willst". Als **Block 13** gebaut (v3.7.5):
+Lichtschein auf allen erhobenen Flächen (`--sheen`), Lichtkante+Schatten auf
+dem einen gefüllten Knopf pro Bildschirm, Verlauf auf großen Kennzahlen und
+dem Heute-Balken, Icon-Chips in Einstellungen, markenkonformer heller
+Google-Knopf, kräftigere Überschriften — alles ohne neue Farbe, ohne zweite
+Fläche in einer Fläche, ohne Eingriff in die Lernlogik.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
 

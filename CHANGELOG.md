@@ -1,3 +1,16 @@
+## 3.7.5 – 22. September 2026
+
+**Sichtbarer Tiefe-Durchgang über Schrift, Fortschritt, Einstellungen, Verwalten und den Google-Knopf** (Block 13, `plan/redesign-oberflaeche`). Rückmeldung zu Block 12: eine reine Hover-Konsistenz-Korrektur „sieht gleich aus" – zu Recht, sie war auch nur dafür gedacht. Dieser Durchgang bringt echte, sichtbare Veränderung, ohne die vier Sätze der Gestaltung zu brechen (keine neue Farbe, keine zweite Fläche in einer Fläche, ein gefüllter Knopf pro Bildschirm):
+
+- **Neuer Token `--sheen`** (`styles.css`): ein weicher Lichtschein von oben, liegt zusätzlich zur Flächenfarbe auf jeder erhobenen Fläche (`.card`, `.liste`, `#karten-liste`, `.stat-block`, `.serie-karte`, `.lekt-kachel`) – dieselbe Tiefe, die Kopfzeile/Navigation/Sheets durch `backdrop-filter` schon haben, jetzt auch dort, wo kein Weichzeichner möglich ist.
+- **Der eine gefüllte Knopf pro Bildschirm** bekommt eine Lichtkante und einen weichen Schatten in der Akzentfarbe – vorher flache Fläche ohne Tiefe. Die stillen Stufen (secondary/ghost/danger) bleiben bewusst flach.
+- **Fortschritt:** große Kennzahlen (`.gross-zahl`, `.serie-zahl`) mit Verlauf statt Flachfarbe; „Heute"-Balken mit Verlauf statt Flachfarbe. Keine neue Farbe – nur derselbe Akzent, nicht mehr flach.
+- **Einstellungen:** das führende Symbol jeder Zeile bekommt eine eigene, gedämpfte Fläche (Icon-Chip) statt nur eine Strichfarbe zu sein – keine zweite Fläche im Sinne von Satz 2, der Chip sitzt innerhalb der bestehenden Zeile.
+- **Google-Anmeldeknopf:** lief bisher als gewöhnlicher `.secondary`-Knopf mit. Jetzt eine helle Fläche nach Googles eigenen Branding-Vorgaben (offizielle Farben, echtes mehrfarbiges „G") – dadurch auch von selbst erkennbar am dunklen Grund, statt in der Knopf-Stufenleiter unterzugehen.
+- **Überschriften** (h1–h4) von Schriftschnitt 600 auf 700 – bei der dünneren Serifenschrift wirkte 600 auf Handy-Größen eher hell als betont.
+
+Nichts an Lernlogik geändert. Geprüft in `stilprobe.html`, hell und dunkel, keine Konsolenfehler. Details, inklusive der bewusst nicht übernommenen Punkte, in `plan/redesign-oberflaeche/LOGBUCH.md`.
+
 ## 3.7.4 – 22. September 2026
 
 **Verwalten-Kartenliste bekommt am Desktop eine Hover-Rückmeldung.** Jede Zeile trägt seit Langem `cursor:pointer` und öffnet per Klick das Detail-Blatt (`app.js:7303`), aber anders als jeder andere klickbare Zeilentyp der App (`.liste-zeile`, `.pill`, `.seg`, `.stufe-chip`, …) zeigte sie vor dem Klick keine Reaktion – nur beim Tippen selbst (`:active`). Nachgezogen mit derselben, bereits überall genutzten `@media (hover: hover) and (pointer: fine)`-Absicherung, betrifft also nur echte Mauszeiger, keine Touch-Geräte. Erster Fund einer eigenen UX-Sichtung (`plan/redesign-oberflaeche/PRINZIPIEN.md`, „Eigene UX-Sichtung 22.09.2026") – Block 12 des Nebenstrangs `redesign-oberflaeche`.

@@ -163,6 +163,14 @@
      nur auf einem helleren Rechteck; mit ihr fängt sie Licht und liegt
      sichtbar DARÜBER. Kommt überall zusammen mit einem Schatten. */
   --kante: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  /* 22.09.2026 (Block 13, plan/redesign-oberflaeche): dieselbe Idee wie
+     --kante (Licht faellt von oben auf eine erhobene Flaeche), aber als
+     Flaechen-Verlauf statt als 1px-Kante - macht die Tiefe sichtbar, die
+     --kante bisher nur andeutete. Liegt IMMER zusaetzlich zur normalen
+     Flaechenfarbe (background: var(--sheen), var(--surface)), nie allein -
+     sonst waere die Flaeche stellenweise durchsichtig. */
+  --sheen: radial-gradient(140% 100% at 50% -12%, rgba(255, 255, 255, 0.07), transparent 60%);
+  --sheen-strong: radial-gradient(140% 100% at 50% -18%, rgba(255, 255, 255, 0.12), transparent 55%);
   --skeleton: linear-gradient(90deg, var(--surface) 0%, var(--surface-raised) 50%, var(--surface) 100%);
   /* Schein hinter der Marke, dort wo sie allein auftritt (Boot, Anmeldung) -
      nur im Dunkeln: Licht auf warmem Fast-Schwarz. Auf Papier gibt es das
@@ -787,7 +795,10 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 
 h1, h2, h3, h4 {
   font-family: var(--font-text);
-  font-weight: 600;
+  /* 22.09.2026 (Block 13): 600 -> 700. Bei einer Serifenschrift (dünnere
+     Grundstriche als eine Systemschrift) wirkte 600 auf den kleinen
+     Handy-Größen eher hell als betont - kaum Abstand zum Fließtext daneben. */
+  font-weight: 700;
   letter-spacing: -0.015em;
   line-height: 1.25;
 }
@@ -877,6 +888,13 @@ button {
   background: var(--accent);
   color: var(--text-on-accent);
   letter-spacing: -0.005em;
+  /* 22.09.2026 (Block 13): der eine gefuellte Knopf pro Bildschirm (Satz 1)
+     bekommt eine eigene Lichtkante plus einen weichen Schatten in der
+     Akzentfarbe selbst - vorher flache Flaeche ohne jede Tiefe, obwohl
+     Karten und Listen laengst --kante tragen. Nur am gefuellten Knopf: die
+     stillen Stufen (secondary/ghost/linklike) bleiben absichtlich flach,
+     sonst wetteifern zwei Flaechen um Aufmerksamkeit (Satz 1). */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 10px rgba(0, 0, 0, 0.22);
   /* Kein Wartefenster von 300 ms vor dem Tippen, kein Doppeltipp-Zoom. */
   touch-action: manipulation;
   -webkit-user-select: none; user-select: none;
@@ -885,8 +903,11 @@ button {
               border-color var(--dur-fast) var(--ease-out),
               color var(--dur-fast) var(--ease-out),
               opacity var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
               transform var(--dur-instant) var(--ease-out);
 }
+button.secondary, button.danger { box-shadow: none; }
+button:active { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 4px rgba(0, 0, 0, 0.18); }
 button:active { transform: scale(0.975); }
 button:disabled { opacity: 0.45; cursor: default; transform: none; }
 
@@ -995,6 +1016,23 @@ button.secondary.busy::after, button.ghost.busy::after { color: var(--text-1); }
    je Pfad, das Icon-Grundraster (.i, fill:none/stroke:currentColor) wuerde
    Google mehrfarbig unkenntlich machen und Apple unsichtbar. */
 .oauth-logo { width: 18px; height: 18px; display: block; flex: 0 0 auto; }
+/* 22.09.2026 (Block 13): Der Google-Knopf lief bisher als gewoehnlicher
+   .secondary-Knopf mit - stand also neben "Abbrechen" und "Zurueck" in
+   genau derselben Flaeche, obwohl er auf eine fremde Marke mit eigenen
+   Vorgaben zeigt. Google selbst schreibt einen hellen Knopf mit dem echten
+   mehrfarbigen "G" vor (kein eigenes Markenfarbe-Rezept, sondern Googles
+   eigenes: https://developers.google.com/identity/branding-guidelines) -
+   genau das macht ihn nebenbei am dunklen Grund sofort erkennbar, statt in
+   der Knopf-Stufenleiter unterzugehen. Selektor ueber data-action, kein
+   Markup-Umbau (README: Klassen frei austauschbar, data-action bleibt). */
+button[data-action="google-login"] {
+  background: #fff; color: #3c4043; border-color: #dadce0;
+  box-shadow: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  button[data-action="google-login"]:hover { background: #f7f8f8; border-color: #dadce0; }
+}
+button[data-action="google-login"]:active { background: #eee; }
 
 /* Segmentierte Umschalter. Nie mehr als drei Segmente. */
 .seg {
@@ -1223,7 +1261,12 @@ input[type="radio"]:checked::before { transform: scale(1); }
 .panel:last-child { margin-bottom: 0; }
 
 .card {
-  background: var(--surface);
+  /* 22.09.2026 (Block 13): --sheen legt einen weichen Lichtschein von oben
+     UEBER die normale Flaechenfarbe - dieselbe Tiefe, die Kopfzeile,
+     Navigation und Sheets schon durch backdrop-filter tragen, jetzt auch auf
+     der flachen Flaeche, die kein blur() haben kann (sie liegt selbst im
+     Hintergrund, es gibt nichts, das durchscheinen koennte). */
+  background: var(--sheen), var(--surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-lg);
   padding: var(--space-5);
@@ -1271,7 +1314,7 @@ input[type="radio"]:checked::before { transform: scale(1); }
 
 /* Haarlinien-getrennte Zeilen statt einzelner Kästen. */
 .liste {
-  background: var(--surface);
+  background: var(--sheen), var(--surface);   /* Block 13, siehe .card */
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-lg);
   overflow: hidden;
@@ -1295,9 +1338,23 @@ input[type="radio"]:checked::before { transform: scale(1); }
    Schrift eng werden. */
 .liste-zeile { min-height: 52px; }
 .liste-zeile > .icon:last-child { color: var(--text-3); opacity: 0.55; margin-left: calc(var(--space-1) * -1); }
-.liste-zeile > .icon:first-child { color: var(--text-2); }
-.liste-zeile.aktiv > .icon:first-child { color: var(--accent); }
-.liste-zeile.gefahr > .icon:first-child { color: var(--negative); }
+/* 22.09.2026 (Block 13): Das fuehrende Symbol bekommt eine eigene, gedaempfte
+   Flaeche (ein "Icon-Chip") statt nur eine Strichfarbe zu sein - macht eine
+   lange Einstellungen-Liste auf einen Blick unterscheidbar statt gleich-
+   foermig grau. Keine zweite Flaeche im Sinne von Satz 2 (die Zeile selbst
+   bekommt dadurch keinen Kasten) - der Chip sitzt INNERHALB der bestehenden
+   Zeile, wie ein Icon in iOS-Einstellungen. .liste-zeile ist bereits ein
+   Flex-Container (align-items:center) - vertical-align der SVG spielt daher
+   keine Rolle mehr. */
+.liste-zeile > .icon:first-child {
+  color: var(--text-2);
+  width: 30px; height: 30px; padding: 7px; box-sizing: border-box;
+  background: var(--surface-raised);
+  border-radius: var(--r-sm);
+  flex: none;
+}
+.liste-zeile.aktiv > .icon:first-child { color: var(--accent); background: var(--accent-bg); }
+.liste-zeile.gefahr > .icon:first-child { color: var(--negative); background: var(--negative-bg); }
 /* Der Stand rechts darf die Beschriftung nicht verdraengen. */
 .liste-zeile__wert { max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .liste-zeile__text { flex: 1 1 auto; min-width: 0; }
@@ -1695,7 +1752,8 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-lg);
   overflow: hidden;
-  background: var(--surface);
+  background: var(--sheen), var(--surface);   /* Block 13, siehe .card */
+  box-shadow: var(--kante), var(--shadow-sm);
 }
 
 .drag-handle {
@@ -1854,7 +1912,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    zweite Polsterung bekommt. */
 .stat-block {
   margin-bottom: var(--stack);
-  background: var(--surface);
+  background: var(--sheen), var(--surface);   /* Block 13, siehe .card */
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-lg);
   padding: var(--space-5);
@@ -1899,7 +1957,15 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .gross-zahl > span:not(.arab-ziffer) { flex: 1 1 100%; }
 .gross-zahl strong {
   font-size: clamp(2rem, 9vw, 2.75rem); font-weight: 600;
-  line-height: 1; letter-spacing: -0.03em; color: var(--accent);
+  line-height: 1; letter-spacing: -0.03em;
+  /* 22.09.2026 (Block 13): Verlauf statt Flachfarbe auf der groessten Zahl
+     eines Bildschirms - dieselbe einzelne Akzentfarbe (Satz 1: keine neue
+     Farbe), nur nicht mehr flach. color bleibt als Rueckfallwert stehen,
+     falls background-clip:text irgendwo fehlschlaegt. */
+  color: var(--accent);
+  background: linear-gradient(180deg, var(--paper-50), var(--paper-300));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .gross-zahl span { font-size: var(--fs-sm); color: var(--text-2); }
 
@@ -1920,8 +1986,12 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   background: var(--surface-raised); overflow: hidden;
   margin: var(--space-3) 0;
 }
+/* 22.09.2026 (Block 13): Verlauf statt Flachfarbe - dieselbe Idee wie
+   --sheen (Licht von oben), hier waagerecht: der Balken wirkt gefuellt statt
+   aufgeklebt. Nur EIN Farbton (--accent), keine neue Farbe - siehe Satz 1. */
 .heute-bar span {
-  display: block; height: 100%; background: var(--accent);
+  display: block; height: 100%;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, transparent), var(--accent));
   border-radius: var(--r-full);
   transition: width var(--dur-slow) var(--ease-out);
 }
@@ -1983,7 +2053,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .lekt-kachel {
   display: flex; align-items: center; gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  background: var(--surface); border: 1px solid var(--border-subtle);
+  background: var(--sheen), var(--surface); border: 1px solid var(--border-subtle);   /* Block 13, siehe .card */
   border-radius: var(--r-md);
 }
 .lekt-kachel.zu { opacity: 0.42; }
@@ -2003,7 +2073,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 /* Serie. */
 .serie-karte {
   display: flex; align-items: center; gap: var(--space-4);
-  background: var(--surface); border: 1px solid var(--border-subtle);
+  background: var(--sheen), var(--surface); border: 1px solid var(--border-subtle);   /* Block 13, siehe .card */
   border-radius: var(--r-lg); padding: var(--space-5);
   /* 3.2.0: Seit .stat-block selbst eine Flaeche ist, stiessen Serie und
      "Heute" ohne Fuge aneinander und sahen aus wie ein Kasten mit einem
@@ -2014,7 +2084,11 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .serie-zahl { display: flex; align-items: baseline; gap: var(--space-2); }
 .serie-zahl strong {
   font-size: 2.25rem; font-weight: 600; line-height: 1;
-  letter-spacing: -0.03em; color: var(--accent);
+  letter-spacing: -0.03em;
+  color: var(--accent);   /* Rueckfallwert, siehe .gross-zahl strong (Block 13) */
+  background: linear-gradient(180deg, var(--paper-50), var(--paper-300));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .serie-text { flex: 1 1 auto; font-size: var(--fs-sm); color: var(--text-2); }
 .serie-klein { font-size: var(--fs-xs); color: var(--text-3); }

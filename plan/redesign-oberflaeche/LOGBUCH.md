@@ -4,6 +4,76 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Sichtbarer Tiefe-Durchgang, Block 13 gebaut (v3.7.5)
+
+**Anlass:** Rückmeldung des Betreibers auf Block 12: „sieht kam anders aus
+matter of fact es sieht gleich aus irgendwie. schau mal was du alles tun
+kann. sei es de schrift, fortschritt einstellung, verwalten, google
+anmelden knopf alles." Zu Recht — Block 12 war eine reine Hover-Konsistenz-
+Korrektur, am Bildschirm kaum zu sehen. Der Auftrag war damit nicht „mehr
+vom selben", sondern: echte, sichtbare Veränderung liefern, an den konkret
+genannten Stellen.
+
+**Geändert (alles `styles.css`, außer wo vermerkt):**
+- Neuer Token `--sheen` / `--sheen-strong`: weicher Lichtschein von oben,
+  liegt zusätzlich zur Flächenfarbe (`background: var(--sheen), var(--surface)`)
+  auf `.card`, `.liste`, `#karten-liste`, `.stat-block`, `.serie-karte`,
+  `.lekt-kachel`. Dieselbe Tiefe, die Kopfzeile/Navigation/Sheets schon durch
+  `backdrop-filter` haben, jetzt auch auf Flächen, die selbst im Hintergrund
+  liegen (kein Weichzeichner ohne etwas dahinter Durchscheinendes).
+- Der eine gefüllte Knopf pro Bildschirm (`button`, ohne `.secondary`/
+  `.ghost`/`.linklike`/`.danger`) bekommt `box-shadow: inset 0 1px 0
+  rgba(255,255,255,.5), 0 3px 10px rgba(0,0,0,.22)` — Lichtkante plus
+  Schatten in der Akzentfarbe selbst. Beim Drücken abgeflacht. Die stillen
+  Stufen bleiben bewusst flach (Satz 1: nur eine Handlung sticht hervor).
+- Fortschritt: `.gross-zahl strong`, `.serie-zahl strong` (die großen
+  Kennzahlen) mit `linear-gradient` + `background-clip:text` statt
+  Flachfarbe — `color` bleibt als echter Rückfallwert stehen. `.heute-bar
+  span` mit Verlauf statt Flachfarbe. Bewusst NICHT angefasst: `.stat-
+  kennzahl .zahl` (kleinere Nebenzahlen, Gradient dort hätte den Effekt an
+  den großen Zahlen verwässert) und `.lekt-bar`/`.stat-seg` (echte
+  Zustandsfarben, keine Zier).
+- Einstellungen: `.liste-zeile > .icon:first-child` bekommt eine eigene,
+  gedämpfte Fläche (30×30px, `--surface-raised`, gerundet) statt nur eine
+  Strichfarbe zu sein — ein Icon-Chip innerhalb der bestehenden Zeile, keine
+  zweite Fläche im Sinne von Satz 2 (die Zeile selbst bleibt eine Zeile).
+  `.aktiv`/`.gefahr` färben den Chip statt nur das Symbol.
+- Google-Anmeldeknopf: lief bisher als `.secondary` mit, dieselbe Fläche wie
+  „Abbrechen"/„Zurück". Jetzt `button[data-action="google-login"]` mit
+  Googles eigenen Branding-Farben (weiße Fläche, `#3c4043`-Text,
+  `#dadce0`-Rand — https://developers.google.com/identity/branding-guidelines,
+  nicht selbst erfunden) — dadurch auch von selbst am dunklen Grund
+  erkennbar. Selektor über `data-action`, kein Markup-Umbau. In `stilprobe.
+  html` einen Baustein dafür ergänzt (gab es dort bisher nicht).
+- Überschriften (`h1`–`h4`): Schriftschnitt 600 → 700. Bei der dünneren
+  Serifenschrift wirkte 600 auf Handy-Größen eher hell als betont, kaum
+  Abstand zum Fließtext.
+
+**Geprüft:** `stilprobe.html` Zeile für Zeile durchgesehen, hell UND dunkel
+(Umschalter oben rechts), Screenshots aller Abschnitte. Konsole ohne Fehler.
+`button[data-action="google-login"]` per injiziertem Testelement plus echtem
+Maus-Hover geprüft (Fläche bleibt weiß, Hover dunkelt nur minimal ab —
+Googles eigene Vorgabe, kein Fehler).
+
+**Entscheidung:** Alle Änderungen bleiben innerhalb der vier Sätze der
+Gestaltung (keine neue Farbe außer Googles eigener Markenfarbe an genau
+einer, fremdmarkierten Stelle; keine Fläche in einer Fläche; ein gefüllter
+Knopf pro Bildschirm bleibt der einzige mit Lichtkante). Kein Eingriff in
+Lernlogik — reine `styles.css`-Änderungen plus ein Selektor-Hook über
+`data-action`, kein `app.js`-Umbau.
+
+**Offen:** Betreiber-Test steht noch aus — reicht am Bildschirm (hell/dunkel
+durchschalten, Fortschritt/Einstellungen/Verwalten ansehen, den Google-Knopf
+im echten Anmeldebildschirm prüfen), kein Handytest nötig für diesen Block.
+Der zurückgestellte Punkt aus Block 12 (Verwalten-Liste-Performance bei
+vielen Karten) bleibt unverändert offen.
+
+**Nächster Schritt:** Betreiber-Rückmeldung zu Block 13 abwarten. Trifft sie
+den Ton, den der Betreiber wollte? Wenn nicht: genauer benennen, was noch
+fehlt, statt erneut zu raten.
+
+---
+
 ### 2026-09-22 — Eigene UX-Sichtung (kein Video) + Block 12 gebaut (v3.7.4)
 
 **Anlass:** Betreiber-Auftrag im Chat: „verbessere mein adrabic bzw
