@@ -4,6 +4,177 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-22 — Block 15 „Ruhe und Fluss": Rückmeldung des Betreibers abgearbeitet (v3.8.0)
+
+**Anlass:** Betreiber-Screenshot vom Verwalten-Tab (iPhone, 18:57) plus eine
+lange, zusammenhängende Rückmeldung. Wörtlich zitiert, weil der genaue
+Wortlaut mehrfach die Ursache verrät: „das tool stört mich. das verwalten tab
+sieht so unübersichtlich aus, smoothe animationen nicht vorhanden … nicht jeder
+button muss extra nochmal umrundet sein oder einen glanz tragen. karten in x (x
+karten) unnötig, man hat den bereich ja schließlich ausgewählt. an der stelle
+‚Am griff ziehen ändert die reihenfolge' bei Am sieht man die hälfte nicht …
+tabs hin und her wechseln sieht billig aus … die knöpfe für die bereiche unten
+sehen goofy aus im sinne von der balken alles. jedes seite ist gefühlt ein hard
+reset … es soll zu meinem icon passen … villeicht wäre es logisc dass man
+zwischen den tabs wischen kann."
+
+**Einordnung:** Alles davon ist Bedienung und Optik, kein Eingriff in die
+Lernlogik — bleibt innerhalb der §7-Lockerung für diesen Strang. Der
+Komplett-Neuaufbau vom selben Tag (4.0.0) bleibt zurückgenommen; hier wird
+ausschließlich im bestehenden Stil nachgezogen, wie im Eintrag darunter
+festgehalten.
+
+**Geändert:**
+
+- `styles.css` Abschnitt 2 (Token): `--ink-900/870/850/800/750/700` vom
+  blaustichigen auf ein warmes Anthrazit umgestellt, `--glow` auf die
+  Farbwerte aus `icon.svg` (`#1c1a17` → `#0b0a09`). `--sheen`/`--sheen-strong`
+  von 0.07/0.12 auf 0.035/0.06 halbiert.
+- `index.html`, `landing.html`, `manifest.json`: `theme-color` /
+  `background_color` `#0e0e12` → `#111010` (an vier Stellen, inkl. dem
+  Inline-Skript, das die Farbe beim Themenwechsel setzt).
+- `styles.css` Abschnitt 3 (Bewegung): `enter-vor`/`enter-zurueck` 20px/0.45 →
+  26px/0.6, Dauer `--dur-base` → `--dur-slow`. `nav-glide-vor`/`-zurueck`
+  entfernt (ersetzt, siehe unten).
+- `styles.css` Abschnitt 4: `.nav::before` neu (gleitender Reiter-Anzeiger),
+  `.nav` Rahmen `--border` → `--border-subtle`, `.nav__tab.active` trägt nur
+  noch die Farbe. `.view` bekommt `touch-action: pan-y pinch-zoom` und
+  `.view.wischt`. Im Desktop-Block `.nav::before { display: none }`.
+- `styles.css` Knopf-Abschnitt: Sammelregel, die Lichtkante und Schatten von
+  jedem nicht gefüllten Knopf wieder abräumt.
+- `styles.css` Abschnitt 11: `.sets-panel`/`.sets-panel.offen` neu,
+  `.sets-kopf`-Beschriftung in der Serifenschrift, `.set-row` mit
+  `flex-wrap`, `.set-name` `flex: 1 1 6rem; min-width: 6rem`,
+  `#karten-liste > .liste-hinweis/.seiten-leiste`, `.seiten-leiste` ohne
+  `margin-top`, `.bereich-manage-row--nur-aktionen`.
+- `styles.css` Abschnitt 12: `.stat-legend .legende-erklaerung` (zweite Zeile).
+- `app.js` `renderVerwaltenListe()`: `<h2>Karten in …</h2>` entfernt.
+- `app.js` `kartenListeInhalt()`, `seitenLeiste()`, `renderSetsPanel()`,
+  `fortschrittStoff()`, `navLeiste()`: Klassen statt Inline-Stile, `data-glide`
+  raus, Legenden-Erklärung als eigenes Element.
+- `app.js` `renderMain()`: setzt `--tab-i` und `data-reiter` auf der
+  erhaltenen `.nav`, direkt nach `huelleBehalten()`.
+- `app.js` neu nach dem Wisch-Bewerten: `REITER_FOLGE`,
+  `reiterWischMoeglich()`, die drei Zeiger-Listener, `reiterWischEnde()` und
+  die Klick-Sperre.
+- `app.js` `APP_VERSION`, `sw.js` `CACHE_NAME`, `index.html`
+  `app.js?v=` → 3.8.0; `CHANGELOG.md`.
+
+**Entscheidung — warum diese Lösungen und nicht andere:**
+
+1. **„Am" halb abgeschnitten.** Nicht der Text war zu lang: `#karten-liste`
+   hat `--r-lg` und `overflow:hidden`, aber keine Polsterung — die bringen die
+   Kartenzeilen selbst mit. Alles andere darin (Hinweiszeile, Blätterleiste)
+   trug nur ein inline gesetztes `margin-bottom` und lief damit ohne jeden
+   Seitenabstand in die Rundung. Die Klasse `.liste-hinweis` gibt beiden
+   dieselbe Polsterung wie einer Zeile und trennt sie mit derselben Haarlinie,
+   damit sie als Kopf bzw. Fuß der Liste liest.
+2. **Der gleitende Anzeiger.** Block 11 konnte gar nicht gleiten: `render()`
+   ersetzt die Leiste samt Reitern, und auf frisch eingesetztem Markup läuft
+   keine Transition (Abschnitt 3 von `styles.css` sagt das selbst). Was
+   bleibt, ist die `.nav` — sie überlebt den Neuaufbau, weil `huelleBehalten()`
+   sie wegen des Weichzeichners stehen lässt. Der Anzeiger hängt deshalb als
+   `::before` an ihr und wird über eine einzige Zahl gesteuert (`--tab-i`).
+   Breite genau ein Drittel, Luft über `padding` + `background-clip` statt über
+   eine kleinere Breite — sonst wäre der Weg pro Schritt kürzer als der
+   Abstand der Reiter und der Anzeiger liefe aus dem Tritt.
+3. **Der Glanz.** Die Ursache war eine Lücke in Block 13: die Lichtkante stand
+   in der Grundregel für `button` und wurde nur für `.secondary`/`.danger`
+   zurückgenommen. Damit trug sie auch `.nav__tab` und `.liste-zeile` — also
+   genau die „Knöpfe unten" und jede Einstellungszeile. Nach der Korrektur im
+   Browser nachgemessen: pro Bildschirm bleibt genau ein Knopf mit
+   Lichtkante, und der hat `background: rgb(245,243,236)` — der gefüllte.
+4. **Wischen.** Bewusst eng eingegrenzt (kein Mauszeiger, unter 900px, nicht
+   im Modus, nicht bei offenem Blatt, nicht am Ziehgriff/Eingabefeld), damit
+   es keiner bestehenden Geste in die Quere kommt. Umgeschaltet wird über den
+   Knopf in der Leiste, nicht über eine zweite Kopie der Zustands-
+   Rücksetzungen — zwei Fassungen davon wären zwei Fassungen, die
+   auseinanderlaufen.
+5. **Farbton.** Kein „neues Design", sondern ein Abgleich mit einer Datei, die
+   schon im Repo liegt: `icon.svg` führt den warmen Verlauf, den die App nicht
+   hatte. Helligkeit jeder Stufe bleibt praktisch gleich.
+
+**Im Probelauf gefundene und mitbehobene Fehler** (alle drei Bestand, kein
+neuer Schaden — sie fallen nur in derselben Ecke auf, die gemeldet wurde):
+
+- **Speicherkarten ohne Namen.** `.set-row` trug bis zu sechs Elemente nach
+  dem Namen; auf 375px war der Name als einziges nachgiebiges Element
+  **gemessene 0px** breit. Die Liste zeigte Reihen aus „6 Karten / Üben /
+  Pfeil / Stift / Mülleimer" ohne jeden Namen.
+- **Eintrittsbewegung lief doppelt.** Federte ein zu kurzes Wischen zurück,
+  gab der Aufräum-Timer die CSS-Animation wieder frei — und weil `#app` noch
+  sein `data-richtung` trug, glitt dieselbe Seite eine Viertelsekunde später
+  ein zweites Mal herein. `animation:none` bleibt jetzt stehen. (Nur mit dem
+  neuen Wischen erreichbar, deshalb erst hier aufgefallen.)
+- **Klick nach dem Wischen.** Kartenzeilen tragen selbst
+  `data-action="card-detail"`; ein zu kurzes Wischen auf einer Zeile hätte
+  danach das Kartenblatt geöffnet. Ein Capture-Listener sperrt den einen
+  nachfolgenden Klick. Nachgeprüft, dass ein normales Tippen weiterhin öffnet.
+
+**Geprüft:** Probelauf gegen die echte `app.js` mit Firebase-Attrappen. Der
+vorhandene `probelauf.mjs` ließ sich nicht benutzen — Playwright kann in dieser
+Umgebung keinen Browser starten (`browserType.launch: spawn UNKNOWN`, auch mit
+gesetztem `PROBE_CHROMIUM`). Stattdessen dieselben Attrappen über eine
+Import-Map in einer Wegwerf-`probe.html` im Wurzelverzeichnis, danach gelöscht
+(`git status` sauber). Durchgespielt: alle drei Reiter, Einstellungen,
+Speicherkarten auf/zu, Anmeldebildschirm, Abfrage mit Wisch-Bewertung, 375px
+und 1100px. Wischen in beide Richtungen, an beiden Enden der Reihe, zu kurzer
+Versuch, senkrechtes Scrollen. `node --check app.js` sauber. Keine neuen
+Konsolenfehler (die vorhandene Meldung „unknown error … fetching the script"
+ist die Service-Worker-Registrierung und stand schon vorher da).
+
+**Offen:**
+
+- **Betreiber-Test am echten Handy steht aus** — besonders das Wischen: Ob die
+  Schwelle (64px Weg, Richtungsfaktor 1.4) sich am Daumen richtig anfühlt,
+  lässt sich mit synthetischen Zeiger-Ereignissen nicht beurteilen. Zweiter
+  Punkt: ob der warme Farbton auf einem OLED-Bildschirm so wirkt wie am
+  Monitor.
+- **Zwei Punkte aus der Rückmeldung bewusst nicht in diesem Block**, siehe
+  eigener Eintrag darunter: die Frage nach totem Code im Repo und die
+  „deutschen Schriften variieren" über die Kartenliste hinaus.
+
+**Nächster Schritt:** Rückmeldung des Betreibers zu v3.8.0 am echten Gerät
+abwarten. Danach erst der Aufräum-Durchgang (toter Code), nicht davor — ein
+Aufräumen mitten in einer laufenden Gestaltungsrückmeldung macht den Diff
+unlesbar.
+
+---
+
+### 2026-09-22 — Zwei Punkte der Rückmeldung geprüft, bewusst nicht gebaut
+
+**Geändert:** nichts. Eintrag, damit die nächste Session nicht dasselbe noch
+einmal prüft.
+
+**1. „im repo ist bestimmt soviel müll angesaugt wie z.b. tote codes".**
+Vermutlich richtig — `plan/PLAN.md` (19.09.2026, Beobachtung 19) hält schon
+einen toten Aufruf fest (`teilLinkPruefenUndVerarbeiten`), und `app.js` ist auf
+451 KB gewachsen. Trotzdem in diesem Block nicht angefasst, aus zwei Gründen:
+Ein Aufräum-Durchgang gehört nicht in denselben Commit wie eine
+Gestaltungsänderung, an der der Betreiber gerade etwas beurteilen soll — die
+beiden Diffs wären nicht mehr auseinanderzuhalten, und wenn nach dem
+Gerätetest etwas nicht stimmt, wäre nicht klar, woran es liegt. Und „toter
+Code" ist in dieser Datei nicht immer tot: viele Funktionen werden
+ausschließlich über `data-action` aus Zeichenketten heraus erreicht, ein reines
+`grep` nach dem Namen findet sie nicht. Ein solcher Durchgang braucht die
+`data-action`-Tabelle als Liste der erreichbaren Einstiegspunkte — das ist ein
+eigener Block, kein Nebenbei.
+
+**2. „die deutschen schriften varieren".** Zum Teil ist das Absicht und in
+`styles.css` Abschnitt 5 begründet: Was **gelesen und gelernt** wird, steht in
+der Serifenschrift, was **bedient** wird, in der Systemschrift. In der
+Kartenliste heißt das, dass ein deutsches Kartenwort („3 Zeichen für Nomen") in
+Serifen steht und die Übersetzung darunter nicht — das ist der Regel nach
+richtig und wurde deshalb nicht geändert. Eine echte Abweichung war dagegen
+„Speicherkarten": im Blickfeld eine Überschrift, aber in der Systemschrift
+gesetzt, nur weil es zufällig die Beschriftung eines Knopfes ist. Das ist in
+Block 15 korrigiert. Ob die Regel selbst dem Betreiber gefällt, ist eine Frage
+an ihn — nicht eine, die ein Agent für ihn entscheidet.
+
+**Nächster Schritt:** siehe Eintrag darüber.
+
+---
+
 ### 2026-09-22 — Gestaltung 4.0 gebaut und auf Wunsch zurückgenommen
 
 **Geändert:** nichts bleibend. Commit 7dd7ebd (v4.0.0: kompletter Neuaufbau

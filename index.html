@@ -21,7 +21,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0e0e12">
+<meta name="theme-color" content="#111010">
 <!-- Sagt dem Browser, dass die Seite dunkel ist: Bedienfelder, Rollbalken und
      Textfelder kommen dann von selbst in Dunkelfassung statt in Weiss. -->
 <meta name="color-scheme" content="dark">
@@ -60,7 +60,7 @@
                window.matchMedia("(prefers-color-scheme: light)").matches);
     document.documentElement.setAttribute("data-thema", hell ? "hell" : "dunkel");
     var m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.setAttribute("content", hell ? "#f2ece0" : "#0e0e12");
+    if (m) m.setAttribute("content", hell ? "#f2ece0" : "#111010");
   } catch (e) {}
 })();
 </script>
@@ -113,6 +113,6 @@
      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
      die die App innerhalb der letzten Stunde offen hatten, an der alten
      app.js fest, auch nach einem Reload. -->
-<script type="module" src="./app.js?v=3.7.6"></script>
+<script type="module" src="./app.js?v=3.8.0"></script>
 </body>
 </html>

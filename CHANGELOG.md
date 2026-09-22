@@ -1,3 +1,27 @@
+## 3.8.0 – 22. September 2026
+
+**Ruhe und Fluss** (Block 15, `plan/redesign-oberflaeche`). Zusammenhängende Rückmeldung des Betreibers zu 3.7.6 mit Screenshot: Verwalten „unübersichtlich", Tabwechsel „sieht billig aus", „jede Seite ist gefühlt ein hard reset", „nicht jeder Button muss extra nochmal umrundet sein oder einen Glanz tragen", „es soll zu meinem Icon passen". Alles in diesem Durchgang, ohne die bestehende Gestalt zu ersetzen – der Komplett-Neuaufbau vom Vortag (4.0.0) bleibt zurückgenommen.
+
+**Verwalten entrümpelt**
+- Die Überschrift „Karten in „Bereich" (17)" ist weg. Der Bereichsname steht schon oben im Umschalter, die Zahl gleich darunter – sie sagte nichts, was nicht zweimal danebenstand. Die zwei Nebenhandlungen (Üben, Mehr) stehen jetzt rechtsbündig für sich.
+- **Abgeschnittener Text im Listenkasten behoben.** `#karten-liste` hat Rundung und `overflow:hidden`, aber keine Polsterung; die Hinweiszeilen darin trugen nur ein inline gesetztes `margin-bottom` und liefen ohne Seitenabstand in die Rundung – vom Satz „Am Griff ziehen ändert die Reihenfolge." war am Handy das erste Wort halb abgeschnitten. Neue Klasse `.liste-hinweis` gibt Hinweiszeile und Seiten-Blätterleiste dieselbe Polsterung wie einer Kartenzeile.
+- **Speicherkarten:** der Kasten kommt erst, wenn er etwas umschließt. Zugeklappt – dem Normalfall – stand ein Kasten mit Rahmen und Polsterung um einen einzigen Knopf, der selbst schon einen Rahmen hat. Aufgeklappt gibt der Kopf seine eigene Umrandung ab, weil er dann die Kopfzeile des Kastens ist.
+- **Speicherkarten-Zeilen zeigen wieder ihren Namen.** Eine Zeile trägt bis zu sechs Dinge nach dem Namen (Kartenzahl, Üben, Aufklappen, Art, Umbenennen, Löschen); auf 375px passte das nicht, und weil der Name als einziges nachgeben konnte, war er gemessene **0px breit** – die Liste stand als Reihen ohne Namen da. Jetzt bricht um, was hinten steht.
+
+**Glanz nur noch dort, wo Material ist.** 3.7.5 hatte Lichtkante und Schatten in der Grundregel für `button` gesetzt und nur für `.secondary`/`.danger` wieder abgeräumt. Übersehen waren alle durchsichtigen Knöpfe: `.ghost`, `.linklike`/`.tiny-link`, `.icon-btn` (Zahnrad), `.pill`, **`.nav__tab`** (die drei Knöpfe der unteren Leiste) und **`.liste-zeile`** (jede Zeile in den Einstellungen). Auf durchsichtigem Grund steht eine Lichtkante nicht auf Material, sondern auf nichts – sie sieht aus wie ein vergessener Rahmen. Nachgemessen: jetzt trägt sie genau **ein** Knopf pro Bildschirm, nämlich der gefüllte. Dazu ist `--sheen` von 0.07/0.12 auf 0.035/0.06 halbiert.
+
+**Die untere Leiste gleitet wirklich.** Block 11 (3.7.3) ließ die aktive Fläche in Wechselrichtung *einblenden* – eine `@keyframes`-Lösung, weil `render()` die Leiste neu einsetzt und auf frischem Markup keine Transition läuft. Der Anzeiger ist jetzt ein `::before` der `.nav` selbst, und die `.nav` ist das eine Element, das den Neuaufbau überlebt – dadurch gleitet er über eine echte CSS-Transition von einem Reiter zum nächsten. Der Rahmen der Leiste ist von `--border` auf `--border-subtle` zurückgenommen.
+
+**Wischen zwischen den Reitern.** Links/rechts wischen wechselt zwischen Lernen, Fortschritt und Verwalten; der Inhalt folgt dem Finger gedämpft und federt zurück, wenn der Weg nicht reicht. Nur Finger/Stift, nur unter 900px, nicht im Modus (dort bewertet ein Wischen eine Karte), nicht bei offenem Blatt, nicht am Ziehgriff und nicht in einem Eingabefeld. Nach einem Wischen wird der nachfolgende Klick unterdrückt – sonst hätte sich nach jedem zu kurzen Versuch auf einer Kartenzeile das Kartenblatt geöffnet.
+
+**Seitenwechsel länger und aus höherer Deckkraft** (26px statt 20px, 280ms statt 200ms). Eine Bewegung, die nach 200ms und 20px vorbei ist, liest sich nicht als Weg, sondern als Austausch – genau der „hard reset"-Eindruck.
+
+**Farbton an das Symbol angeglichen.** `icon.svg` legt hinter die Blüte einen warmen Verlauf (`#1c1a17` → `#0b0a09`); die App stand daneben auf einem leicht blauen Grau (`#0e0e12`/`#17171b`). Auf dem Homescreen sah man zwei verschiedene Schwarztöne nebeneinander. Die ganze Tonleiter ist jetzt warm, bei praktisch gleicher Helligkeit jeder Stufe – ein Farbton-, kein Kontrastwechsel. `theme-color` in `index.html`, `landing.html` und `manifest.json` mitgezogen.
+
+**Fortschritt, „Dein Stoff":** die Erklärung jeder Stufe stand in Klammern hinter dem Wort in derselben Zeile – fünf Zeilen, die jede für sich umbrachen, eine Wand aus Klammern. Jetzt Zahl und Wort oben, Erklärung als zweite, leisere Zeile darunter. „Speicherkarten" steht in der Serifenschrift, wie jede andere Überschrift auch – es war als einzige Überschrift in der Systemschrift gesetzt, weil es zufällig ein Knopf ist.
+
+Keine Lernlogik angefasst. Geprüft mit einem Probelauf gegen die echte `app.js` (Firebase-Attrappen über eine Import-Map, Handy- und Desktop-Breite): Wischen in beide Richtungen, an beiden Enden der Reihe, zu kurzer Versuch, senkrechtes Scrollen, Tippen auf eine Kartenzeile, Wischen zum Bewerten in der Abfrage – alles wie erwartet, keine neuen Konsolenfehler.
+
 ## 3.7.6 – 22. September 2026
 
 **Anmelden im Flugmodus hing endlos; Knopf-Glanz gedämpft; Google-Knopf im gesperrten Zustand kein grauer Fleck mehr.** Betreiber-Test am echten Handy im Flugmodus zeigte drei echte Probleme (Block 14, `plan/redesign-oberflaeche`):

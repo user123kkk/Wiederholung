@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.7.6";
+const APP_VERSION = "3.8.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4476,6 +4476,143 @@ function wischEnde(e) {
 app.addEventListener("pointerup", wischEnde);
 app.addEventListener("pointercancel", wischEnde);
 
+/* ---------- Wischen zwischen den Reitern (Block 15, 22.09.2026) ----------
+
+   Betreiber: "vielleicht waere es logisch, dass man zwischen den tabs wischen
+   kann, auch hier waere eine animation, saubere ueberleitung noetig".
+
+   Es ist dieselbe Bewegung, die die drei Reiter ohnehin haben (links -> Mitte
+   -> rechts, siehe enter-vor/enter-zurueck und der gleitende Anzeiger in der
+   Leiste) - nur mit dem Finger statt mit einem Tipp auf die Leiste.
+
+   Bewusste Grenzen, damit es keiner bestehenden Geste in die Quere kommt:
+   - NUR Finger/Stift, nie Maus. Am Desktop (ab 900px) ist die Navigation
+     ohnehin eine Spalte links, dort gibt es nichts zu wischen.
+   - Nicht im Modus (Abfrage/Uebung/Durchsicht): dort bewertet ein Wischen
+     bereits eine Karte (wischStart oben).
+   - Nicht, solange ein Blatt oder Dialog offen ist - die schliessen sich
+     selbst per Wischen nach unten.
+   - Nicht am Ziehgriff und nicht in einem Eingabefeld.
+   - Nicht in den Einstellungen und nicht auf einer Unterseite: von dort
+     fuehrt "zurueck", nicht "seitwaerts".
+
+   Bis der Weg eindeutig waagerecht ist (12px und deutlich mehr quer als
+   hoch), wird nichts angefasst - senkrechtes Scrollen hat Vorrang. */
+const REITER_FOLGE = ["lernen", "fortschritt", "verwalten"];
+const REITER_WEG_PX = 64;      /* so weit muss der Finger, damit es umschaltet */
+const REITER_WIDERSTAND = 0.42; /* der Inhalt folgt gedaempft, nicht 1:1 */
+let reiterWisch = null;
+
+function reiterWischMoeglich(e) {
+  if (e.pointerType === "mouse") return false;
+  if (window.innerWidth >= 900) return false;
+  if (!bereiche || ui.einstellungen || ui.seite) return false;
+  if (ui.session || ui.lernSetId) return false;       /* Modus */
+  if (document.documentElement.classList.contains("blatt-offen")) return false;
+  if (dragState) return false;                         /* Karte wird gerade sortiert */
+  if (REITER_FOLGE.indexOf(ui.tab) < 0) return false;
+  const t = e.target;
+  if (!t || !t.closest) return false;
+  if (t.closest(".drag-handle, input, textarea, select, .dlg, .nav, .modebar, canvas")) return false;
+  return true;
+}
+
+app.addEventListener("pointerdown", e => {
+  reiterWisch = null;
+  if (!reiterWischMoeglich(e)) return;
+  const ansicht = app.querySelector(":scope > .view");
+  if (!ansicht) return;
+  reiterWisch = { x: e.clientX, y: e.clientY, id: e.pointerId, ansicht, erfasst: false };
+}, { passive: true });
+
+app.addEventListener("pointermove", e => {
+  if (!reiterWisch || e.pointerId !== reiterWisch.id) return;
+  const dx = e.clientX - reiterWisch.x, dy = e.clientY - reiterWisch.y;
+  if (!reiterWisch.erfasst) {
+    if (Math.abs(dx) < 12) return;
+    /* Der Faktor 1.4 statt eines einfachen Vergleichs: ein Daumen zieht beim
+       Scrollen fast nie exakt senkrecht. Ohne ihn faengt jedes zweite
+       Scrollen an, seitwaerts zu wackeln. */
+    if (Math.abs(dx) < Math.abs(dy) * 1.4) { reiterWisch = null; return; }
+    reiterWisch.erfasst = true;
+    reiterWisch.ansicht.style.animation = "none";
+    reiterWisch.ansicht.style.transition = "none";
+    reiterWisch.ansicht.classList.add("wischt");
+  }
+  /* An den beiden Enden der Reihe gibt es nichts, wohin gewischt werden
+     koennte. Statt zu blockieren gibt der Inhalt nur ein Viertel so weit nach
+     - dieselbe Rueckmeldung, die ein Handy am Listenende gibt: es geht, aber
+     da ist nichts. */
+  const i = REITER_FOLGE.indexOf(ui.tab);
+  const rand = (dx < 0 && i === REITER_FOLGE.length - 1) || (dx > 0 && i === 0);
+  const weg = dx * REITER_WIDERSTAND * (rand ? 0.25 : 1);
+  reiterWisch.ansicht.style.transform = "translateX(" + weg.toFixed(1) + "px)";
+}, { passive: true });
+
+function reiterWischEnde(e) {
+  if (!reiterWisch || e.pointerId !== reiterWisch.id) return;
+  const { ansicht, x, erfasst } = reiterWisch;
+  reiterWisch = null;
+  if (!erfasst) return;
+  const dx = e.clientX - x;
+  const i = REITER_FOLGE.indexOf(ui.tab);
+  const ziel = Math.abs(dx) >= REITER_WEG_PX ? REITER_FOLGE[i + (dx < 0 ? 1 : -1)] : null;
+  if (ziel) {
+    /* Umschalten laeuft ueber den Knopf in der Leiste, nicht ueber eine
+       zweite Kopie der Zustands-Ruecksetzungen: "tab-lernen" & Co. raeumen
+       Suche, Auswahlmodus, offene Blaetter und die Scrollposition mit auf.
+       Zwei Fassungen davon waeren zwei Fassungen, die auseinanderlaufen. */
+    const knopf = document.querySelector('.nav__tab[data-action="tab-' + ziel + '"]');
+    /* Das alte .view wird von render() ohnehin ersetzt - es bekommt keine
+       Ausblendbewegung mehr, sondern verschwindet, waehrend das neue mit
+       enter-vor/enter-zurueck hereinkommt (styles.css, Abschnitt 3). */
+    if (knopf) { knopf.click(); return; }
+  }
+  /* Nicht weit genug: zurueck an seinen Platz. Hier laeuft eine echte
+     Transition, weil das Element steht - es wurde nicht neu eingesetzt. */
+  reiterWischKlickSperre = true;
+  /* Kommt wider Erwarten kein Klick (Zeile ohne data-action, Wischen im
+     leeren Raum), darf die Sperre nicht bis zum naechsten echten Tipp
+     liegen bleiben. */
+  setTimeout(() => { reiterWischKlickSperre = false; }, 400);
+  ansicht.style.transition = "transform var(--dur-base) var(--ease-out)";
+  ansicht.style.transform = "";
+  setTimeout(() => {
+    ansicht.style.transition = "";
+    ansicht.classList.remove("wischt");
+    /* animation:none bleibt ABSICHTLICH stehen. Ein "" an dieser Stelle gibt
+       die CSS-Regel wieder frei - und weil #app noch sein data-richtung vom
+       letzten Wechsel traegt, faengt enter-vor/enter-zurueck dann von vorn an:
+       Die Seite, die eben zurueckgefedert ist, waere ein Viertel Sekunde
+       spaeter nochmal von der Seite hereingeglitten. Im Probelauf am
+       22.09.2026 gemessen. Diese Ansicht ist laengst eingetreten, sie hat
+       keine Eintrittsbewegung mehr noetig. */
+    ansicht.style.removeProperty("transform");
+  }, 220);
+}
+app.addEventListener("pointerup", reiterWischEnde);
+app.addEventListener("pointercancel", reiterWischEnde);
+
+/* Nach einem Wischen KEIN Klick.
+
+   Die Kartenzeilen in Verwalten tragen selbst data-action="card-detail" -
+   ein Wischen, das auf einer Zeile beginnt und nicht weit genug kommt,
+   federt zwar zurueck, der Browser schickt hinterher aber trotzdem ein
+   click-Ereignis an dieselbe Zeile. Ohne diese Sperre haette sich nach jedem
+   zu kurzen Wischversuch das Kartenblatt geoeffnet. (Beim geglueckten
+   Wechsel stellt sich die Frage nicht: render() haengt das Element vorher
+   aus dem Dokument, der Klick erreicht den Listener am body nie.)
+
+   In der Erfassungsphase (capture), damit die Sperre VOR den beiden
+   delegierten Klick-Listenern am body greift. */
+let reiterWischKlickSperre = false;
+app.addEventListener("click", e => {
+  if (!reiterWischKlickSperre) return;
+  reiterWischKlickSperre = false;
+  e.stopPropagation();
+  e.preventDefault();
+}, true);
+
 /* Zählt eine Zahl von 0 hoch, statt sie einfach dastehen zu haben - für
    "Diese Woche im Vergleich" im Fortschritt-Tab. countupLetzterWert merkt
    sich den zuletzt angezeigten Wert: ändert er sich nicht (jedes render()
@@ -4977,13 +5114,6 @@ function navLeiste() {
     { id: "verwalten", label: "Verwalten", icon: "verwalten", action: "tab-verwalten" }
   ];
   const offen = bereiche ? dueCards().length : 0;
-  /* 3.8.0 (Video 4, PRINZIPIEN.md): Gleitrichtung der aktiven Flaeche. Dieser
-     Aufruf liegt vor der render()-Stelle, die letzterReiter aktualisiert -
-     hier steht also noch der VORHERIGE Reiter, kein eigener Zustand noetig. */
-  const reiterIndex = tabs.findIndex(t => t.id === ui.tab);
-  const glide = (!ui.einstellungen && reiterIndex >= 0 && letzterReiter >= 0 && letzterReiter !== reiterIndex)
-    ? (reiterIndex > letzterReiter ? "vor" : "zurueck")
-    : "";
 
   let html = '<nav class="nav" aria-label="Hauptbereiche">';
 
@@ -5007,8 +5137,7 @@ function navLeiste() {
   tabs.forEach(t => {
     const aktiv = !ui.einstellungen && ui.tab === t.id;
     html += '<button class="nav__tab' + (aktiv ? " active" : "") + '" data-action="' + t.action +
-      '" role="tab" aria-selected="' + (aktiv ? "true" : "false") + '"' +
-      (aktiv && glide ? ' data-glide="' + glide + '"' : '') + '>' +
+      '" role="tab" aria-selected="' + (aktiv ? "true" : "false") + '">' +
       ikon(t.icon, aktiv ? "voll" : "") +
       '<span>' + t.label + '</span>' +
       (t.id === "lernen" && offen > 0 ? '<span class="nav__dot" aria-hidden="true"></span>' : '') +
@@ -5385,6 +5514,21 @@ function renderMain() {
   app.innerHTML = html;
   huelleBehalten(altBar, ":scope > .appbar");
   huelleBehalten(altNav, ":scope > .nav");
+  /* 22.09.2026 (Block 15): Der gleitende Reiter-Anzeiger. Er ist ein
+     ::before der .nav, und die .nav ist das eine Element, das den Neuaufbau
+     ueberlebt (huelleBehalten, direkt darueber) - nur deshalb kann auf ihm
+     ueberhaupt eine CSS-Transition laufen. Gesteuert wird er allein ueber
+     die Zahl --tab-i; gesetzt wird sie HIER, nach huelleBehalten, weil das
+     nur className und Kinder uebernimmt, nicht den style-Eintrag. */
+  const navEl = app.querySelector(":scope > .nav");
+  if (navEl) {
+    const reiterJetzt = ui.einstellungen ? -1 : ["lernen", "fortschritt", "verwalten"].indexOf(ui.tab);
+    if (reiterJetzt >= 0) navEl.style.setProperty("--tab-i", String(reiterJetzt));
+    /* Ohne aktiven Reiter (Einstellungen, Unterseite) bleibt der Anzeiger
+       stehen, wo er war, und wird ausgeblendet - er soll nicht an den Rand
+       springen und beim Zurueckkommen wieder heranfahren. */
+    navEl.dataset.reiter = reiterJetzt >= 0 ? String(reiterJetzt) : "aus";
+  }
   document.documentElement.classList.toggle("blatt-offen",
     !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog));
   syncAppbarKante();
@@ -6382,8 +6526,17 @@ function fortschrittStoff(cards) {
   html += '</div>';
   html += '<div class="stat-legend">';
   gruppen.forEach(g => {
-    html += '<span><span class="dot" style="background:' + g.farbe + '"></span><strong>' + g.anzahl + '</strong> ' +
-      esc(g.label) + ' <span style="opacity:0.7">(' + esc(g.erklaerung) + ')</span></span>';
+    /* 22.09.2026 (Block 15): Die Erklaerung stand in Klammern HINTER dem
+       Label in derselben Zeile. Bei fuenf Stufen ergab das fuenf Zeilen, die
+       jede fuer sich umbrachen - eine Textwand aus lauter Klammern, in der
+       weder die Zahl noch das Wort zuerst ins Auge faellt (Betreiber: "bei
+       dein stoff ... das auge wird muede"). Dieselbe Information, aber als
+       zweite, leisere Zeile unter der ersten: oben Zahl und Wort, darunter
+       die Erklaerung. Keine Klammern mehr, die braucht es nicht, wenn die
+       Zeile ohnehin getrennt steht. */
+    html += '<span><span class="dot" style="background:' + g.farbe + '"></span>' +
+      '<strong>' + g.anzahl + '</strong> ' + esc(g.label) +
+      '<em class="legende-erklaerung">' + esc(g.erklaerung) + '</em></span>';
   });
   html += '</div>';
   html += '</div>';
@@ -7050,8 +7203,14 @@ function renderVerwalten() {
    Formular hat, hier unten aber genau dasselbe zeigt. */
 function renderVerwaltenListe(cards, gefuehrt) {
   let html = '<div class="panel">';
-  html += '<div class="bereich-manage-row">';
-  html += '<h2 style="margin-bottom:0">Karten in „' + esc(currentBereich().name) + '" (' + cards.length + ')</h2>';
+  /* 22.09.2026 (Block 15): Hier stand eine <h2> "Karten in „Medina 1" (17)".
+     Betreiber: "karten in x (x karten) unnoetig, man hat den bereich ja
+     schliesslich ausgewaehlt". Stimmt zweimal: Der Bereichsname steht schon
+     oben im Umschalter der Kopfzeile, und die Zahl steht ohnehin gleich
+     darunter, sobald gesucht oder geblaettert wird. Uebrig bleibt die Reihe
+     mit den zwei Nebenhandlungen - rechtsbuendig, weil links nichts mehr
+     steht, wogegen sie sich ausrichten muessten. */
+  html += '<div class="bereich-manage-row bereich-manage-row--nur-aktionen">';
   html += '<div>';
   if (ui.selectMode) {
     /* Mitten in der Mehrfachauswahl bleibt "Fertig" an Ort und Stelle -
@@ -7272,7 +7431,7 @@ function kartenListeInhalt() {
   }
 
   if (tokens.length) {
-    html += '<p class="hint" style="margin-bottom:10px">' +
+    html += '<p class="hint liste-hinweis">' +
       (ungefaehr ? 'Keine genauen Treffer – ähnlich geschrieben: ' : '') +
       shownCards.length + (shownCards.length === 1 ? ' Karte' : ' Karten') + '</p>';
   }
@@ -7294,7 +7453,7 @@ function kartenListeInhalt() {
      Ziehen ist ohnehin nur ohne Suche moeglich, deshalb entspricht der
      Ausschnitt dann genau currentCards().slice(start, ...). */
   listenFenster = { start: start, anzahl: seitenKarten.length };
-  if (!bearbeitbar && tokens.length === 0) html += '<p class="hint" style="margin-bottom:10px">' + ikon("schloss", "i-sm") + ' Geführter Kartensatz – die Karten und ihre Reihenfolge stehen fest. Hervorgehoben ist, was freigeschaltet ist.</p>';
+  if (!bearbeitbar && tokens.length === 0) html += '<p class="hint liste-hinweis">' + ikon("schloss", "i-sm") + ' Geführter Kartensatz – die Karten und ihre Reihenfolge stehen fest. Hervorgehoben ist, was freigeschaltet ist.</p>';
   /* 3.3.1: Stand als drei Zeilen Anleitung dauerhaft ueber der Liste -
      dieselbe Sorte Erklaerungswand, die der Betreiber in den Einstellungen
      gemeldet hat. Der Griff ist sichtbar, das Ziehen erklaert sich beim
@@ -7302,7 +7461,15 @@ function kartenListeInhalt() {
      Griffs, wo sie hingehoert. Uebrig bleibt eine Zeile - und der Satz zur
      Seitengrenze nur dann, wenn es ueberhaupt mehrere Seiten gibt, denn nur
      dann kann man in die Grenze laufen. */
-  if (draggable) html += '<p class="hint" style="margin-bottom:10px">Am Griff ziehen ändert die Reihenfolge.' +
+  /* 22.09.2026 (Block 15): Diese Zeile steht IM Kasten #karten-liste, und der
+     hat eine Rundung von --r-lg und overflow:hidden, aber keine Polsterung -
+     die Rundung schnitt dem ersten Wort die linke Haelfte ab ("Am" war am
+     Handy nur halb zu sehen, Betreiber-Screenshot 22.09.2026). Nicht der Text
+     war zu lang, ihm fehlte die Polsterung. .liste-hinweis (styles.css)
+     bringt sie mit und trennt die Zeile mit einer Haarlinie von der ersten
+     Karte, damit sie als Kopf der Liste liest und nicht als deren erste
+     Zeile. */
+  if (draggable) html += '<p class="hint liste-hinweis">Am Griff ziehen ändert die Reihenfolge.' +
     (seiten > 1 ? ' Über die Seitengrenze hinaus geht das nicht – dafür „Verschieben“ im Auswahlmodus.' : '') + '</p>';
   if (seiten > 1) html += seitenLeiste(ui.kartenSeite, seiten, shownCards.length);
   for (let i = 0; i < seitenKarten.length; i++) {
@@ -7371,7 +7538,11 @@ function zeichneKartenListe() {
 
 /* C2: Blaettern zwischen den Seiten der Kartenliste. */
 function seitenLeiste(seite, seiten, gesamt) {
-  let h = '<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:12px 0">';
+  /* Block 15: Die Leiste steht IM Kasten #karten-liste (Rundung,
+     overflow:hidden, keine Polsterung) - inline gesetzt lief sie genau wie
+     die Hinweiszeile darueber in die Rundung. Jetzt ueber .seiten-leiste,
+     die dieselbe Polsterung und Haarlinie mitbringt. */
+  let h = '<div class="seiten-leiste">';
   h += '<button class="ghost" data-action="seite-zurueck"' + (seite === 0 ? ' disabled' : '') + ' aria-label="Vorherige Seite">‹ Zurück</button>';
   h += '<span class="hint" style="padding:0">Seite ' + (seite + 1) + ' von ' + seiten + ' · ' + gesamt + ' Karten</span>';
   h += '<button class="ghost" data-action="seite-vor"' + (seite === seiten - 1 ? ' disabled' : '') + ' aria-label="Nächste Seite">Weiter ›</button>';
@@ -7394,7 +7565,14 @@ function renderSetsPanel() {
   const gefuehrt = istGefuehrt(b);
   const gruppen = zeigtGruppen(b);
   const zuAnzahl = gefuehrt ? sets.filter(s => setGesperrt(s, b)).length : 0;
-  let html = '<div class="drill-picker" style="margin-bottom:14px">';
+  /* 22.09.2026 (Block 15): War immer ein .drill-picker - ein Kasten mit
+     Rahmen und Polsterung. Zugeklappt (der Normalfall) enthielt dieser Kasten
+     genau EIN Element: einen Knopf, der selbst schon einen Rahmen hat. Im
+     Screenshot des Betreibers ist das die grosse leere Flaeche oben auf dem
+     Verwalten-Bildschirm; seine Worte dazu: "nicht jeder button muss extra
+     nochmal umrundet sein". Der Kasten kommt jetzt erst, wenn er etwas zu
+     umschliessen hat (aufgeklappt). */
+  let html = '<div class="sets-panel' + (ui.setsOffen ? " offen" : "") + '">';
   /* 2.2.0: Kopfzeile zum Auf- und Zuklappen. Zu ist der Normalzustand. */
   html += '<button class="secondary sets-kopf" data-action="toggle-sets" aria-expanded="' + (ui.setsOffen ? "true" : "false") + '">';
   html += ikon(ui.setsOffen ? "chevronUnten" : "chevronRechts", "i-sm") + '<span>Speicherkarten</span>';

@@ -503,6 +503,33 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
+**AKTUELL (22.09.2026, Abend): App bei v3.8.0 — Block 15 „Ruhe und Fluss"
+gebaut, Betreiber-Test am echten Handy steht aus.** Der Betreiber hat zu
+v3.7.6 eine lange, zusammenhängende Rückmeldung mit Screenshot geschickt
+(Verwalten „unübersichtlich", Tabwechsel „sieht billig aus", „jede Seite ist
+gefühlt ein hard reset", „nicht jeder Button muss … einen Glanz tragen", „es
+soll zu meinem Icon passen", „zwischen den Tabs wischen"). Alles davon ist in
+v3.8.0 abgearbeitet, Einzelheiten und Begründungen in
+[`redesign-oberflaeche/LOGBUCH.md`](redesign-oberflaeche/LOGBUCH.md), Eintrag
+vom 22.09.2026 („Block 15"). **Bei „leg los" zuerst prüfen, ob der Betreiber
+sich zu v3.8.0 am Gerät gemeldet hat** — besonders zum Wischen (Schwelle 64px)
+und zum warmen Farbton auf OLED. Erst danach der nächste Block.
+
+**Zwei Punkte aus derselben Rückmeldung sind bewusst noch offen** (eigener
+Logbuch-Eintrag vom 22.09.2026, „Zwei Punkte der Rückmeldung geprüft"):
+(1) **Aufräumen/toter Code** — eigener Block, erst NACH der Gerätemeldung,
+weil ein Aufräum-Diff sonst mit dem Gestaltungs-Diff verschmilzt; braucht die
+`data-action`-Tabelle als Liste erreichbarer Einstiegspunkte, ein reines
+`grep` nach Funktionsnamen reicht bei dieser Datei nicht. (2) **„die deutschen
+Schriften variieren"** — teils Absicht (`styles.css` Abschnitt 5: Stoff in
+Serifen, Bedienung in Systemschrift); ob der Betreiber diese Regel selbst
+ändern will, ist seine Entscheidung, nicht die eines Agenten.
+
+**Ebenfalls unverändert offen: „Gestaltung 4.0 ist zurückgenommen.** Ein
+Komplett-Neuaufbau der Optik ist NICHT gewollt (Betreiber am 22.09.2026: „das
+davor war besser, zurücksetzen"). Weitergearbeitet wird ausschließlich in
+kleinen Schritten innerhalb des bestehenden Stils.
+
 **AKTUELL (19.09.2026): „Lehrer gibt frei" wartet auf den Betreiber; Datei-Weitergeben ist raus (v3.7.2).**
 Bau-Freigabe des Betreibers („ja soll gehen", einschließlich der Änderung an
 `offeneLektionIds()`) ist umgesetzt: App-Code, `firestore.rules` und

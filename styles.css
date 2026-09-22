@@ -70,12 +70,19 @@
      auf derselben Ebene zu liegen. */
   /* 17.09.2026, offene Frage 12: von #08080a aufgehellt - Betreiber-
      Entscheidung, ein erster Schritt, kein Bruch mit "Fast-Schwarz". */
-  --ink-900: #0e0e12;
-  --ink-870: #0c0c0f;
-  --ink-850: #060607;
-  --ink-800: #17171b;
-  --ink-750: #1f1f25;
-  --ink-700: #27272e;
+  /* 22.09.2026 (Block 15): derselbe Helligkeitsverlauf, aber WARM statt
+     blaustichig. Grund ist das Marken-Symbol selbst: icon.svg legt hinter die
+     Bluete einen Verlauf von #1c1a17 nach #0b0a09 - warmes Anthrazit. Die App
+     stand daneben auf #0e0e12/#17171b, also auf einem leicht blauen Grau. Auf
+     dem Handy sieht man das nebeneinander (App-Icon auf dem Homescreen, App
+     darunter) als zwei verschiedene Schwarztoene. Die Helligkeit jeder Stufe
+     bleibt praktisch gleich - es ist ein Farbton-, kein Kontrastwechsel. */
+  --ink-900: #111010;
+  --ink-870: #0e0d0c;
+  --ink-850: #070606;
+  --ink-800: #1a1917;
+  --ink-750: #232220;
+  --ink-700: #2b2a27;
   /* Ränder als durchscheinendes Weiß statt als eigener Ton: so bleiben sie
      auf jeder Fläche gleich stark, egal wie hell die darunter ist. */
   --line-700: rgba(255, 255, 255, 0.14);
@@ -158,7 +165,9 @@
   --focus-ring: var(--accent);
   --backdrop: rgba(0, 0, 0, 0.72);
   --marker: rgba(245, 243, 236, 0.22);
-  --glow: radial-gradient(110% 64% at 50% -6%, #1b1b21 0%, #101014 46%, var(--bg) 78%);
+  /* Block 15: Farbwerte aus icon.svg (Verlauf "glow" dort: #1c1a17 -> #0b0a09),
+     damit der Schein hinter dem Inhalt derselbe ist wie der hinter der Bluete. */
+  --glow: radial-gradient(110% 64% at 50% -6%, #1c1a17 0%, #131211 46%, var(--bg) 78%);
   /* 3.1.0: Die Oberkante einer erhobenen Fläche. Ohne sie sitzt eine Karte
      nur auf einem helleren Rechteck; mit ihr fängt sie Licht und liegt
      sichtbar DARÜBER. Kommt überall zusammen mit einem Schatten. */
@@ -168,9 +177,15 @@
      Flaechen-Verlauf statt als 1px-Kante - macht die Tiefe sichtbar, die
      --kante bisher nur andeutete. Liegt IMMER zusaetzlich zur normalen
      Flaechenfarbe (background: var(--sheen), var(--surface)), nie allein -
-     sonst waere die Flaeche stellenweise durchsichtig. */
-  --sheen: radial-gradient(140% 100% at 50% -12%, rgba(255, 255, 255, 0.07), transparent 60%);
-  --sheen-strong: radial-gradient(140% 100% at 50% -18%, rgba(255, 255, 255, 0.12), transparent 55%);
+     sonst waere die Flaeche stellenweise durchsichtig.
+
+     22.09.2026 (Block 15): von 0.07/0.12 auf 0.035/0.06 halbiert. Betreiber
+     zu Block 13: "nicht jeder button muss extra nochmal umrundet sein oder
+     einen glanz tragen". Der Schein bleibt - er macht den Unterschied
+     zwischen "Flaeche" und "hellerem Rechteck" -, aber er soll die Flaeche
+     anheben und nicht selbst auffallen. */
+  --sheen: radial-gradient(140% 100% at 50% -12%, rgba(255, 255, 255, 0.035), transparent 60%);
+  --sheen-strong: radial-gradient(140% 100% at 50% -18%, rgba(255, 255, 255, 0.06), transparent 55%);
   --skeleton: linear-gradient(90deg, var(--surface) 0%, var(--surface-raised) 50%, var(--surface) 100%);
   /* Schein hinter der Marke, dort wo sie allein auftritt (Boot, Anmeldung) -
      nur im Dunkeln: Licht auf warmem Fast-Schwarz. Auf Papier gibt es das
@@ -462,12 +477,19 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
    Tiefer hinein kommt der Inhalt von rechts, zurueck von links - kurz (20 px)
    und aus halber Deckkraft, damit es nach Wechsel aussieht und nicht nach
    Wischen. Bei "Bewegung reduzieren" ist die Dauer ohnehin auf null gesetzt. */
+/* 22.09.2026 (Block 15): von 20px/0.45 auf 26px/0.6, und die Dauer unten von
+   --dur-base auf --dur-slow. Betreiber: "tabs hin und her wechseln sieht
+   billig aus ... jede Seite ist gefuehlt ein hard reset". Beides kam aus
+   derselben Ecke: Eine Bewegung, die nach 200ms und 20px vorbei ist, ist zu
+   kurz, um als Weg gelesen zu werden - man sieht nur, dass der Inhalt
+   ausgetauscht wurde. Laenger UND aus hoeherer Deckkraft heraus: der Inhalt
+   kommt sichtbar von der Seite, statt aufzublitzen. */
 @keyframes enter-vor {
-  from { opacity: 0.45; transform: translateX(20px); }
+  from { opacity: 0.6; transform: translateX(26px); }
   to   { opacity: 1; transform: none; }
 }
 @keyframes enter-zurueck {
-  from { opacity: 0.45; transform: translateX(-20px); }
+  from { opacity: 0.6; transform: translateX(-26px); }
   to   { opacity: 1; transform: none; }
 }
 @keyframes enter-rise {
@@ -478,18 +500,10 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   0%   { opacity: 0; transform: scale(0.96); }
   100% { opacity: 1; transform: none; }
 }
-/* 3.8.0 (Video 4, plan/redesign-oberflaeche/PRINZIPIEN.md): die aktive
-   Flaeche der Bottom-Nav gleitet in Wechselrichtung ein, statt hart
-   umzuschalten - gleiches Prinzip wie enter-vor/enter-zurueck, nur kleiner
-   (10px), weil die Flaeche selbst klein ist. */
-@keyframes nav-glide-vor {
-  from { opacity: 0; transform: translateX(10px) scale(0.94); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes nav-glide-zurueck {
-  from { opacity: 0; transform: translateX(-10px) scale(0.94); }
-  to   { opacity: 1; transform: none; }
-}
+/* Block 11 (v3.7.3) hatte hier nav-glide-vor/-zurueck: die aktive Flaeche der
+   Bottom-Nav blendete in Wechselrichtung EIN. Block 15 ersetzt das durch
+   einen Anzeiger, der wirklich gleitet (.nav::before, Abschnitt 4) - die
+   Absicht aus Video 4 bleibt, die Keyframes werden nicht mehr gebraucht. */
 @keyframes sheet-up {
   from { transform: translateY(16px); opacity: 0; }
   to   { transform: none; opacity: 1; }
@@ -586,10 +600,24 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
     calc(var(--nav-h) + var(--sab) + var(--space-3) + var(--space-7))
     calc(var(--gutter) + var(--sal));
   animation: enter-view var(--dur-fast) var(--ease-out) both;
+  /* 22.09.2026 (Block 15): Wischen zwischen den Reitern (app.js,
+     reiterWisch). pan-y sagt dem Browser, dass waagerechte Fingerbewegungen
+     ihn nichts angehen - er soll senkrecht scrollen und sonst nichts. Ohne
+     das kaempfen native Geste und Skript um dieselbe Bewegung. pinch-zoom
+     bleibt ausdruecklich stehen: die Seite erlaubt Zoomen (kein
+     user-scalable=no im viewport-meta), und das ist Barrierefreiheit - ein
+     blosses "pan-y" haette es mit abgeschaltet. */
+  touch-action: pan-y pinch-zoom;
+}
+/* Waehrend des Wischens: kein Text markieren, und die Bewegung laeuft auf
+   dem Compositor statt bei jedem Bild neu im Layout. */
+.view.wischt {
+  will-change: transform;
+  -webkit-user-select: none; user-select: none;
 }
 #app { overflow-x: clip; }   /* die 20 px Einschub sollen keine Querleiste erzeugen */
-#app[data-richtung="vor"] .view { animation: enter-vor var(--dur-base) var(--ease-out) both; }
-#app[data-richtung="zurueck"] .view { animation: enter-zurueck var(--dur-base) var(--ease-out) both; }
+#app[data-richtung="vor"] .view { animation: enter-vor var(--dur-slow) var(--ease-out) both; }
+#app[data-richtung="zurueck"] .view { animation: enter-zurueck var(--dur-slow) var(--ease-out) both; }
 
 /* Im Modus gibt es weder AppBar noch Navigation — nur die Modusleiste oben.
    Der Inhalt bekommt dadurch fast den ganzen Bildschirm. */
@@ -700,7 +728,13 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
      0px ohne JS (Fallback). */
   bottom: calc(var(--space-3) + var(--sab) - var(--vv-gap, 0px));
   border-radius: var(--r-xl);
-  border: 1px solid var(--border);
+  /* 22.09.2026 (Block 15): --border -> --border-subtle. Betreiber: "die
+     knoepfe fuer die bereiche unten sehen goofy aus, im sinne von der balken
+     alles". Ein Teil davon war die doppelte Umrandung - kraeftige Linie um
+     die Leiste, darin nochmal eine gefuellte Flaeche um den aktiven Reiter.
+     Die Leiste hebt sich ohnehin durch Weichzeichner und Schatten ab; die
+     Linie muss sie nur abschliessen, nicht zeichnen. */
+  border: 1px solid var(--border-subtle);
   /* Kraeftiger als die alte Leiste: Sie liegt jetzt UEBER dem Inhalt statt
      ihn abzuschneiden, und muss sich deshalb selbst abheben. */
   background: color-mix(in srgb, var(--surface) 82%, transparent);
@@ -711,6 +745,42 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
      liefe er an den Ecken ueber die Rundung der Leiste hinaus. */
   overflow: hidden;
 }
+
+/* ---- Der gleitende Reiter-Anzeiger (Block 15, 22.09.2026) ---------------
+   Block 11 (v3.7.3) liess die aktive Flaeche beim Wechsel EINBLENDEN
+   (nav-glide-vor/-zurueck, 10px Versatz). Das war eine @keyframes-Loesung,
+   weil render() die Leiste samt Reitern neu einsetzt und auf frischem Markup
+   keine Transition laeuft - eine Flaeche, die an der neuen Stelle aufpoppt,
+   nicht eine, die hinuebergleitet. Betreiber: "tabs hin und her wechseln
+   sieht billig aus".
+
+   Jetzt gleitet wirklich etwas: Der Anzeiger ist ein ::before der .nav
+   SELBST, und die .nav ist das eine Element, das render() nicht ersetzt
+   (app.js, huelleBehalten - urspruenglich wegen des Weichzeichners). Sie
+   ueberlebt den Neuaufbau, also laeuft auf ihr auch eine Transition.
+   Gesteuert wird sie allein ueber die Zahl --tab-i (0/1/2), die renderMain()
+   nach huelleBehalten() setzt.
+
+   Breite ist genau ein Drittel, damit translateX(100%) exakt eine
+   Reiterbreite weit springt; die Luft ringsum macht padding + 
+   background-clip, nicht eine kleinere Breite - sonst waere der Weg pro
+   Schritt kuerzer als der Abstand der Reiter und der Anzeiger liefe aus dem
+   Tritt. */
+.nav::before {
+  content: ""; position: absolute; z-index: 0;
+  top: 0; bottom: 0; left: 0; width: calc(100% / 3);
+  padding: 7px var(--space-2); box-sizing: border-box;
+  background: var(--accent-bg); background-clip: content-box;
+  border-radius: var(--r-full);
+  transform: translateX(calc(var(--tab-i, 0) * 100%));
+  transition: transform var(--dur-slow) var(--ease-out),
+              opacity var(--dur-fast) linear;
+  pointer-events: none;
+}
+/* Einstellungen und Unterseiten haben keinen aktiven Reiter - dann bleibt der
+   Anzeiger stehen, wo er war, und wird unsichtbar statt an den Rand zu
+   springen. */
+.nav[data-reiter="aus"]::before { opacity: 0; }
 /* 3.6.14: Home-Bildschirm-App auf iOS (app.js, syncViewportGap): feste Hoehe des
    Geraets statt schwankendem innerHeight. Die Leiste haengt von OBEN, damit
    sie beim Tabwechsel nicht mehr springt. 2px = die beiden Randlinien. */
@@ -726,7 +796,7 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   padding: 0;
 }
 .nav__tab {
-  position: relative;
+  position: relative; z-index: 1;
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; gap: 3px;
   background: none; border: 0; padding: 0; cursor: pointer;
@@ -738,15 +808,10 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 .nav__tab .i { width: 25px; height: 25px; }
 /* 3.1.0: Der aktive Reiter bekommt eine eigene Fläche. Vorher unterschied ihn
    allein die Farbe - jetzt, wo Akzent und Textfarbe dieselbe Creme sind,
-   müsste man zweimal hinsehen. */
-.nav__tab.active {
-  color: var(--accent);
-  background: var(--accent-bg);
-  border-radius: var(--r-full);
-  margin: 6px 10px;
-}
-.nav__tab.active[data-glide="vor"] { animation: nav-glide-vor var(--dur-base) var(--ease-out) both; }
-.nav__tab.active[data-glide="zurueck"] { animation: nav-glide-zurueck var(--dur-base) var(--ease-out) both; }
+   müsste man zweimal hinsehen.
+   Block 15: Die Fläche kommt jetzt von .nav::before (sie gleitet), der Reiter
+   selbst trägt nur noch die Farbe. */
+.nav__tab.active { color: var(--accent); }
 .nav__tab:active .i { transform: scale(0.9); }
 .nav__tab .i { transition: transform var(--dur-instant) var(--ease-out); }
 /* Der einzige Ort, an dem die App von sich aus auf sich zeigt. */
@@ -956,6 +1021,27 @@ button.icon-btn {
   border-color: transparent; border-radius: var(--r-full);
 }
 button.icon-btn.on-surface { background: var(--surface); border-color: var(--border); }
+
+/* 22.09.2026 (Block 15): Lichtkante und Schatten gehoeren dem GEFUELLTEN
+   Knopf - er ist ein Stueck Material, das ueber der Flaeche liegt. Block 13
+   hat sie in der Grundregel fuer `button` gesetzt und nur fuer .secondary und
+   .danger wieder abgeraeumt. Uebersehen wurden dabei alle durchsichtigen
+   Knoepfe: .ghost (Ueben, Mehr, Umbenennen, Loeschen, jeder Pfeil in einer
+   Zeile), .linklike/.tiny-link und .icon-btn (das Zahnrad oben rechts). Auf
+   einer durchsichtigen Flaeche steht eine Lichtkante aber nicht auf
+   Material, sondern auf nichts - sie sieht aus wie ein Rahmen, den jemand
+   vergessen hat. Genau das hat der Betreiber am 22.09.2026 gemeldet: "nicht
+   jeder button muss extra nochmal umrundet sein oder einen glanz tragen".
+   :active mit abgeraeumt, sonst kommt beim Antippen zurueck, was hier weg
+   soll. */
+.ghost, .linklike, .tiny-link, .icon-btn, .pill, .nav__tab, .liste-zeile,
+.bereich-pill, .stufe-chip, .check-row, .seg button, .search-clear,
+.lekt-kachel, .sets-kopf, .kal-tag, .set-row button, .card-row button,
+.ghost:active, .linklike:active, .tiny-link:active, .icon-btn:active,
+.pill:active, .nav__tab:active, .liste-zeile:active, .bereich-pill:active,
+.stufe-chip:active, .seg button:active, .search-clear:active {
+  box-shadow: none;
+}
 button.full { width: 100%; }
 button.lg { min-height: var(--ctrl-lg); font-size: var(--fs-base); padding: 0 var(--space-6); }
 
@@ -1719,6 +1805,10 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4);
 }
 .bereich-manage-row > div { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+/* Block 15: Seit die Ueberschrift "Karten in ... (N)" weg ist, steht links
+   nichts mehr - die zwei Nebenhandlungen ruecken nach rechts, statt als
+   linksbuendige Knopfreihe wie eine Hauptsache auszusehen. */
+.bereich-manage-row--nur-aktionen { justify-content: flex-end; margin-bottom: var(--space-3); }
 
 .card-row {
   display: flex; align-items: center; gap: var(--space-3);
@@ -1762,6 +1852,25 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   overflow: hidden;
   background: var(--sheen), var(--surface);   /* Block 13, siehe .card */
   box-shadow: var(--kante), var(--shadow-sm);
+}
+/* 22.09.2026 (Block 15): Der Kasten hat Rundung und overflow:hidden, aber
+   keine eigene Polsterung - die Zeilen bringen ihre selbst mit (.card-row).
+   Alles andere, was darin steht, hatte bisher nur ein inline gesetztes
+   margin-bottom und lief damit ohne jeden Seitenabstand in die Rundung: Vom
+   Satz "Am Griff ziehen aendert die Reihenfolge." war am Handy das erste
+   Wort halb abgeschnitten (Betreiber-Screenshot 22.09.2026). Diese Klasse
+   gibt jedem Nicht-Zeilen-Inhalt dieselbe Polsterung wie einer Kartenzeile
+   und trennt ihn mit derselben Haarlinie - er liest sich damit als Kopf
+   bzw. Fuss der Liste statt als deren erste Zeile. */
+#karten-liste > .liste-hinweis,
+#karten-liste > .seiten-leiste {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+#karten-liste > .seiten-leiste:last-child {
+  border-bottom: 0;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .drag-handle {
@@ -1845,12 +1954,42 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    Bildschirm ist „Karte hinzufügen“ die Handlung, die dran ist — die trägt
    den Akzent. Zwei gefüllte Akzentflächen auf einem Bildschirm, und keine
    zeigt mehr auf etwas (Satz 1). */
+/* 22.09.2026 (Block 15): Der Kasten kommt erst, wenn er etwas umschliesst.
+   Zugeklappt - dem Normalfall - stand hier ein .drill-picker (Rahmen,
+   Polsterung, --r-lg) um einen einzigen Knopf, der selbst schon einen Rahmen
+   hat. Das war die grosse leere Flaeche oben im Verwalten-Screenshot des
+   Betreibers. */
+.sets-panel { margin-bottom: var(--space-4); }
+.sets-panel.offen {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--stack);
+}
+/* Aufgeklappt ist der Kopf die Kopfzeile DES Kastens - dann braucht er keine
+   eigene Umrandung mehr (Betreiber: "nicht jeder button muss extra nochmal
+   umrundet sein"). Zugeklappt steht er fuer sich und behaelt sie. */
+.sets-panel.offen .sets-kopf {
+  margin-bottom: var(--space-3);
+  background: none; border-color: transparent; padding-left: 0; padding-right: 0;
+}
+
 .sets-kopf {
   width: 100%; justify-content: flex-start;
-  gap: var(--space-3); margin-bottom: var(--space-3);
+  gap: var(--space-3); margin-bottom: 0;
   font-size: var(--fs-md);
 }
-.sets-kopf > span:first-of-type { flex: 1 1 auto; text-align: left; }
+/* Block 15: "Speicherkarten" ist im Blickfeld eine Ueberschrift, war aber als
+   Knopfbeschriftung in der Systemschrift gesetzt, waehrend jede echte
+   Ueberschrift daneben ("Dein Stoff", "Heute") in der Serifenschrift steht.
+   Betreiber: "die deutschen schriften varieren". Dieselbe Rolle, dieselbe
+   Schrift - der Knopf bleibt ein Knopf, seine Beschriftung wird Ueberschrift. */
+.sets-kopf > span:first-of-type {
+  flex: 1 1 auto; text-align: left;
+  font-family: var(--font-text); font-weight: 700;
+  font-size: var(--fs-lg); letter-spacing: -0.015em;
+}
 .set-liste { display: flex; flex-direction: column; gap: var(--space-2); }
 .set-block {
   background: var(--surface);
@@ -1864,6 +2003,17 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 .set-row {
   display: flex; align-items: center; gap: var(--space-2);
+  /* 22.09.2026 (Block 15): flex-wrap. Eine Zeile traegt bis zu sechs Dinge
+     nach dem Namen (Kartenzahl, Ueben, Aufklappen, Art, Umbenennen,
+     Loeschen). Auf einem 375px-Bildschirm brauchen die zusammen mehr als die
+     Zeile breit ist - und weil der Name als einziges "flex: 1 1 auto;
+     min-width: 0" traegt, gab GENAU ER nach: im Probelauf 22.09.2026
+     gemessen 0px breit. Die Speicherkarten standen als Reihen ohne Namen da.
+     Jetzt bricht stattdessen um, was hinten steht; der Name behaelt seine
+     6rem und bleibt lesbar. (Bestand seit der Zeile selbst, kein neuer
+     Fehler - er faellt nur in derselben Ecke auf, die der Betreiber
+     "unuebersichtlich" genannt hat.) */
+  flex-wrap: wrap; row-gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   min-height: var(--tap);
   /* Gleicher Grund wie bei .card-row: der Ziehgriff einer Speicherkarte
@@ -1871,7 +2021,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .set-row .set-name {
-  flex: 1 1 auto; min-width: 0; font-size: var(--fs-md); font-weight: 600;
+  flex: 1 1 6rem; min-width: 6rem; font-size: var(--fs-md); font-weight: 600;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .set-block.set-locked .set-name { opacity: 0.5; }
@@ -1895,9 +2045,10 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 
 .seiten-leiste {
   display: flex; align-items: center; justify-content: center;
-  gap: var(--space-3); margin-top: var(--space-4);
+  gap: var(--space-3); flex-wrap: wrap;
   font-size: var(--fs-xs); color: var(--text-2);
 }
+.seiten-leiste .hint { padding: 0; }
 
 
 /* ===========================================================================
@@ -2020,9 +2171,18 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
    liest man nur untereinander. Video 1: pro Abschnitt EINE Richtung. */
 .stat-legend > span {
   display: flex; align-items: center; gap: var(--space-2);
-  width: 100%;
+  width: 100%; flex-wrap: wrap;
 }
 .stat-legend strong { color: var(--text-1); font-weight: 600; }
+/* Block 15: zweite Zeile derselben Stufe. flex-basis:100% erzwingt den
+   Umbruch, der Einzug haelt sie unter dem Wort statt unter dem Punkt. */
+.stat-legend .legende-erklaerung {
+  flex: 0 0 100%;
+  padding-left: calc(9px + var(--space-2));
+  margin-top: 2px;
+  font-style: normal; font-size: var(--fs-micro); color: var(--text-3);
+  line-height: 1.4;
+}
 
 /* Kalender. */
 .kal {
@@ -2442,7 +2602,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 
 @media (max-width: 400px) {
   :root { --gutter: var(--space-3); }
-  .card, .drill-picker { padding: var(--space-4); }
+  .card, .drill-picker, .sets-panel.offen { padding: var(--space-4); }
   .grade-row { gap: 6px; }
   .grade-row button { padding: var(--space-2) 4px; font-size: var(--fs-sm); }
 }
@@ -2499,6 +2659,10 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
                 background var(--dur-fast) var(--ease-out);
   }
   .nav__tab.active { background: var(--accent-bg); box-shadow: inset 3px 0 0 var(--accent); }
+  /* Block 15: Der gleitende Anzeiger gehoert zur schwebenden Handy-Leiste.
+     In der Spalte links ist die Navigation eine Wand, kein Balken - dort
+     markiert weiterhin die Zeile selbst, welcher Reiter offen ist. */
+  .nav::before { display: none; }
   .nav__dot { position: static; margin: 0 0 0 auto; }
 
   .nav-titel {
