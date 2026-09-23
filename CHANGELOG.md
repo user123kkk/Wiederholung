@@ -1,3 +1,18 @@
+## 3.9.11 - 23. September 2026
+
+**Die Schriftprobe wechselt jetzt weich statt zu springen.** Der Bildschirm "Kannst du das gut lesen?" ist die staerkste Stelle des ganzen Einstiegs: Die Wirkung der Antwort IST die Anzeige. Bisher sprang die Schrift hart auf die neue Groesse - man fand den Unterschied vor, statt ihn zu sehen.
+
+Zwei Aenderungen dafuer:
+
+- **Der Bildschirm wird beim Groessenwechsel nicht mehr neu gezeichnet.** `render()` ersetzt den kompletten Inhalt von `#app`; auf frisch eingefuegten Elementen laufen CSS-Transitions nicht (`styles.css` Abschnitt 3). Der Klick-Zweig setzt den neuen Wert deshalb am vorhandenen Element und fuehrt Markierung und `aria-pressed` von Hand mit. Faellt das erwartete Markup weg, faellt er auf `render()` zurueck.
+- **Die Groesse kommt als `transform: scale()`, nicht als `font-size`.** transform aendert die Layouthoehe nicht - die Probeflaeche bleibt beim Wechsel ruhig stehen. Mit `font-size` wuerde die Zeile mitwachsen und alles darunter verschieben.
+
+**Ehrlich zum Pruefstand:** Ob der Wechsel wirklich weich laeuft, liess sich hier **nicht messen**. Die Vorschau der Arbeitsumgebung ist ein verborgenes Dokument (`document.visibilityState === "hidden"`), und darin laufen Transitions nicht weiter. Gemessen ist: Das Element bleibt dasselbe, der neue Wert steht daran, Markierung und `aria-pressed` wandern mit, die Antwort landet im Zwischenspeicher. Der weiche Verlauf selbst gehoert in den Geraetetest.
+
+**Dabei ein eigener Irrtum korrigiert.** Ein erster Erklaerungsversuch fuer das eingefrorene Verhalten lautete: "Chrome aktualisiert eine Eigenschaft mit Transition nicht, wenn ihr Wert an einer nicht registrierten CSS-Variablen haengt." Das stand kurzzeitig als gemessene Tatsache im Quelltext und war falsch - Ursache war allein das verborgene Dokument. Der Kommentar ist berichtigt, damit die naechste Sitzung nicht auf einer erfundenen Regel aufbaut.
+
+**Ausserdem:** Alle 153 offenen Fragen aus `plan/onboarding/BETREIBER-FRAGEN.md` und `BETREIBER-FRAGEN-2.md` sind auf Betreiber-Auftrag ("mach alles du") beantwortet - nachzulesen in `plan/onboarding/ENTSCHIEDEN.md`, je Frage mit Antwort und Grundlage. 152 davon bestaetigen den gebauten Stand oder lehnen eine Erweiterung ab; die einzige, die eine Aenderung verlangte, ist der weiche Groessenwechsel oben. Neun Punkte bleiben ausdruecklich offen, weil ein Agent sie nicht entscheiden darf, ohne im Namen des Betreibers zu sprechen - alles mit religioesem Gehalt und die Rechtsfrage.
+
 ## 3.9.10 - 23. September 2026
 
 **Der Einstieg bekommt seinen Abschluss.** Zwei Teile, die in v3.9.9 noch als Luecke markiert waren, sind jetzt gebaut - beide auf dem leeren Lernen-Bildschirm, beide nur einmal:

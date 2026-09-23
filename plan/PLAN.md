@@ -299,9 +299,17 @@ ersten Karte. Dabei ein echter Grammatikfehler gefunden und behoben (der
 gespeicherte Satz war kein deutscher Satz). Dazu
 [`onboarding/BETREIBER-FRAGEN-2.md`](onboarding/BETREIBER-FRAGEN-2.md) — 66
 Fragen zu Person, religiösem Rahmen, Zielgruppe und Zweck, diesmal fast ohne
-Vorgaben, weil der Agent das nicht raten kann. Status:
-`gebaut auf dem Zweig, wartet auf Betreiber-Antworten (Teil 2), die
-Rechtsprüfung und den Gerätetest; nichts ausgeliefert`.
+Vorgaben, weil der Agent das nicht raten kann. **v3.9.11 (23.09.2026):** Auf Betreiber-Auftrag „mach alles du" sind alle
+153 Fragen aus beiden Fragendateien vom Agenten beantwortet —
+[`onboarding/ENTSCHIEDEN.md`](onboarding/ENTSCHIEDEN.md), je mit Grundlage
+und mit einem Wort umkehrbar. **152 davon bestätigen den gebauten Stand**;
+die einzige Code-Folge war der weiche Wechsel der Schriftprobe. Neun Punkte
+bleiben offen, weil sie religiösen oder rechtlichen Gehalt haben — dort
+gilt unverändert: der Agent schreibt nichts. Wichtig für künftige
+Sitzungen: Die Fragendateien liegen unter `plan/` und werden **nicht
+ausgeliefert**; der gebaute Einstieg stellt **drei** Fragen. Status:
+`inhaltlich fertig auf dem Zweig, wartet auf Gerätetest und
+Rechtsprüfung; nichts ausgeliefert`.
 
 ### Nebenstrang: Feedback-Board
 

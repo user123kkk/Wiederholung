@@ -2682,7 +2682,26 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   background: var(--surface-raised);
   border: 1px solid var(--border);
 }
-.einstieg-probe .study-word { margin: 0; }
+/* Der weiche Groessenwechsel (3.9.11). Zwei Dinge daran sind bewusst so:
+
+   1. Eine TRANSITION, keine Animation. Die Regel aus Abschnitt 3 ("Eintritte
+      sind @keyframes") gilt fuer neu eingefuegte Elemente. Hier aendert ein
+      bestehendes Element seinen Zustand - app.js zeichnet diesen Bildschirm
+      beim Groessenwechsel absichtlich NICHT neu, sondern setzt den neuen Wert
+      am vorhandenen Element.
+   2. transform statt font-size: transform aendert die Layouthoehe nicht, die
+      Probeflaeche bleibt beim Wechsel also ruhig stehen. Mit font-size wuerde
+      die Zeile mitwachsen und alles darunter verschieben.
+
+   Am Geraet zu pruefen: Ob der Wechsel wirklich weich laeuft, liess sich in
+   der Arbeitsumgebung nicht messen - die dortige Vorschau ist ein verborgenes
+   Dokument (visibilityState "hidden"), und darin laufen Transitions nicht
+   weiter. Gemessen ist nur, dass der richtige Wert gesetzt wird. */
+.einstieg-probe .study-word {
+  margin: 0;
+  transform-origin: center;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
 
 /* Die Beispielkarte in S2. Als <button>, weil sie eine Handlung ist: ein Tipp
    deckt auf. Sie sieht aus wie die Probefläche, damit klar bleibt, dass es

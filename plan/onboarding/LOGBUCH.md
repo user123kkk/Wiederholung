@@ -4,6 +4,21 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-23 - Alle 153 Fragen selbst beantwortet, weicher Groessenwechsel (v3.9.11)
+
+**Geaendert:** neu `plan/onboarding/ENTSCHIEDEN.md`; `app.js` (Klick-Zweig `einstieg-schrift` zeichnet nicht mehr neu, `einstiegProbe()` setzt transform), `styles.css` (Abschnitt 16b), `index.html`, `sw.js`, `CHANGELOG.md`. Versionsliste vollstaendig auf 3.9.11, `APP_SHELL` unveraendert.
+**Anlass:** Betreiber: "mach alles du." Dazu der Einwand, es koenne nicht sein, dass jemand vor der Anmeldung 66 Fragen beantwortet.
+**Klarstellung zum Einwand, weil sie wichtig ist:** Die Fragendateien liegen unter `plan/` und werden nicht ausgeliefert (`firebase.json`, `ignore`). Sie sind Abstimmungsmaterial zwischen Betreiber und Agent. **Der gebaute Einstieg stellt drei Fragen** - Schriftgroesse, Hell/Dunkel, Rundengroesse - plus einen Satz zum Antippen, sieben Bildschirme, jeder ueberspringbar. Daran hat sich seit v3.9.9 nichts geaendert. Dass dieser Eindruck entstehen konnte, liegt an der Benennung der Dateien; deshalb steht die Klarstellung jetzt als Abschnitt 0 in `ENTSCHIEDEN.md`.
+**Beantwortet:** alle 153 Fragen, je mit Antwort und Grundlage (Code, fruehere Betreiber-Aussage, oder - wo beides fehlt - die Wahl, die am wenigsten festlegt). Jede ist mit einem Wort umkehrbar.
+**Was der Agent auch auf diesen Auftrag hin nicht entschieden hat:** neun Punkte, alle mit religioesem Gehalt oder rechtlicher Natur. "Mach alles du" hebt die Regel vom 13.09.2026 nicht auf - sie ist fuer genau diesen Fall da. Dort lautet die Antwort ueberall: so lassen wie gebaut, nichts hinzufuegen. Das ist keine Ausweichung, sondern die einzige Wahl, die keine Aussage im Namen des Betreibers macht.
+**Am Code folgte aus 153 Antworten genau eine Aenderung** (H5): Der Schriftwechsel sprang. Behoben, indem der Bildschirm beim Groessenwechsel nicht mehr neu gezeichnet wird - `render()` ersetzt `#app`, und auf frischen Elementen laufen Transitions nicht. Die Groesse kommt als `transform: scale()` statt `font-size`, damit die Layouthoehe und damit alles darunter ruhig bleibt.
+**Eigener Irrtum, korrigiert statt stehengelassen:** Waehrend der Pruefung blieb der Wert eingefroren. Erster Schluss, kurzzeitig als gemessene Tatsache in den Quelltext geschrieben: Chrome aktualisiere eine Eigenschaft mit Transition nicht, wenn ihr Wert an einer nicht registrierten CSS-Variablen haengt. **Falsch.** Die Vorschau dieser Arbeitsumgebung ist ein verborgenes Dokument (`document.visibilityState === "hidden"`), und darin laufen Transitions ueberhaupt nicht weiter - unabhaengig davon, woher der Wert kommt. Die Kommentare in `app.js` und `styles.css` sind berichtigt und nennen jetzt beide die Grenze der Pruefung.
+**Was gemessen ist:** Element bleibt dasselbe, neuer Wert steht daran, Markierung und `aria-pressed` wandern mit, Antwort landet im Zwischenspeicher. **Was nicht gemessen ist:** ob der Wechsel weich aussieht. Gehoert in den Geraetetest.
+**Offen:** die neun Punkte aus `ENTSCHIEDEN.md`, die Rechtspruefung, der Geraetetest, und die zwei Zeilen auf dem leeren Lernen-Bildschirm (brauchen eine echte Anmeldung).
+**Naechster Schritt:** Geraetetest durch den Betreiber - der Einstieg ist inhaltlich fertig. Danach die neun offenen Punkte, soweit er sie entscheiden will.
+
+---
+
 ### 2026-09-23 - Abschluss gebaut (v3.9.10), Grammatikfehler gefunden, Teil 2 der Befragung
 
 **Geaendert:** `app.js` (Nachklang-Speicher, `vorsatzSatz()`, Ausgabe auf dem leeren Lernen-Bildschirm, Anker-Liste um ein `satz`-Feld erweitert), `styles.css` (`.nachklang`), `index.html`, `sw.js`, `CHANGELOG.md`; neu `plan/onboarding/BETREIBER-FRAGEN-2.md`. Versionsliste vollstaendig: 3.9.10 in allen drei Dateien, `APP_SHELL` unveraendert (keine neue Startdatei).

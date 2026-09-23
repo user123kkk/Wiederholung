@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.10";
+const APP_VERSION = "3.9.11";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4905,8 +4905,20 @@ function vorsatzSatz(e) {
 function einstiegProbe(groesse) {
   const st = ARAB_STUFEN.find(x => x.id === groesse);
   const faktor = st ? st.faktor : 1;
-  return '<div class="einstieg-probe" style="--arab-scale:' + faktor + '">' +
-    '<div class="study-word arabic" lang="ar" dir="rtl">' + esc(EINSTIEG_BEISPIEL.arab) + '</div>' +
+  /* Die Groesse steht als transform am Element, nicht als font-size. Zwei
+     Gruende:
+       1. transform aendert die Layouthoehe nicht - die Probeflaeche bleibt
+          beim Wechsel ruhig stehen, statt zu springen.
+       2. Der Wert kommt unmittelbar aus app.js. Eine CSS-Variable waere hier
+          zwar denkbar, bringt aber nichts ausser einer Indirektion mehr.
+     Der Wechsel selbst ist eine Transition (styles.css Abschnitt 16b) und
+     kein @keyframes - das ist die Ausnahme von der Regel in Abschnitt 3, weil
+     hier ein BESTEHENDES Element seinen Zustand aendert. Damit das trifft,
+     zeichnet der Klick-Zweig "einstieg-schrift" diesen Bildschirm bewusst
+     NICHT neu. */
+  return '<div class="einstieg-probe">' +
+    '<div class="study-word arabic" lang="ar" dir="rtl" ' +
+    'style="transform:scale(' + faktor + ')">' + esc(EINSTIEG_BEISPIEL.arab) + '</div>' +
     '</div>';
 }
 
@@ -9459,10 +9471,40 @@ document.body.addEventListener("click", e => {
     case "einstieg-bewerten":
       if (ui.einstieg) { ui.einstieg.bewertet = btn.dataset.id || "Fast"; render(); }
       break;
-    case "einstieg-schrift":
-      einstiegAntwortenSichern({ arabGroesse: btn.dataset.id });
-      render();
+    /* 3.9.11: NICHT neu zeichnen. render() ersetzt den kompletten Inhalt von
+       #app - die Probe waere ein neues Element, und auf frisch eingefuegten
+       Elementen laufen CSS-Transitions nicht (styles.css Abschnitt 3). Die
+       Schrift spraenge also hart auf die neue Groesse. Genau dieser Wechsel
+       IST aber die Einloesung dieses Bildschirms: Man soll den Unterschied
+       sehen, nicht vorfinden. Deshalb hier von Hand am bestehenden Element
+       gearbeitet - dann greift die Transition in styles.css Abschnitt 16b.
+
+       NICHT VERIFIZIERT (23.09.2026): Die Vorschau in dieser Arbeitsumgebung
+       meldet document.visibilityState === "hidden"; in einem verborgenen
+       Dokument laufen Transitions nicht weiter, der Endwert wird erst beim
+       Sichtbarwerden gesetzt. Gemessen ist deshalb nur, dass der richtige
+       Wert am Element steht und dass er ohne Transition sofort greift. Ob
+       der Wechsel weich aussieht, muss am Geraet geprueft werden. */
+    case "einstieg-schrift": {
+      const id = btn.dataset.id;
+      const stufe = ARAB_STUFEN.find(x => x.id === id);
+      if (!stufe) break;
+      einstiegAntwortenSichern({ arabGroesse: id });
+      const probe = app.querySelector(".einstieg-probe .study-word");
+      if (probe) probe.style.transform = "scale(" + stufe.faktor + ")";
+      /* Der gewaehlte Zustand muss mitwandern, sonst steht die Markierung auf
+         der alten Antwort. aria-pressed mitfuehren, nicht nur die Klasse. */
+      const reihe = btn.closest(".seg");
+      if (reihe) {
+        reihe.querySelectorAll("button").forEach(b => {
+          const an = b === btn;
+          b.classList.toggle("active", an);
+          b.setAttribute("aria-pressed", an ? "true" : "false");
+        });
+      }
+      if (!probe || !reihe) render();   // Notnagel, falls das Markup sich aendert
       break;
+    }
     /* Das Thema ist die eine Antwort, die sofort und dauerhaft wirkt, weil
        setThema() den vorhandenen Schluessel "adrabic-thema" schreibt - auch
        ohne Konto. Kein zweiter Speicherort dafuer. */
