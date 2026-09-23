@@ -274,10 +274,21 @@ zurückspiegeln, erst fragen wenn beantwortbar. **Vier ausdrücklich
 abgelehnt** — Länge als Mittel der Verlustaversion, „Fragen, die die App
 verkaufen" (die Umkehrung von P1), die folgenlose Bekenntnis-Frage und die
 30-Tage-Zusage. Wo beide Videos sich widersprechen, gewinnt Video 1; die
-Auflösung steht in `VIDEO-BEFUND-2.md` §4. Status:
-`Umfang, Fragen und Wortlaut entschieden — Bau wartet auf ein Wort des
-Betreibers, weil ein Bau auf main zugleich Veröffentlichung ist und F5
-(Rechtsprüfung) davor liegt`.
+Auflösung steht in `VIDEO-BEFUND-2.md` §4. **Gebaut am 23.09.2026 (v3.9.9), auf dem Arbeitszweig, nicht auf `main`.**
+Sieben Bildschirme vor dem Anmeldeformular: Problem benennen, Beispielkarte
+umdrehen und bewerten, Schriftgröße an dieser Karte, hell/dunkel,
+Rundengröße, kurzer Abschluss, Wenn-dann-Satz mit den fünf Gebetszeiten und
+einem freien Feld. Antworten liegen bis zur Registrierung im `localStorage`
+und werden **nur** auf ein Konto ohne Cloud-Dokument angewendet (P7); die
+Lernlogik ist nicht angefasst. Im Browser über alle Bildschirme geprüft,
+hell und dunkel, 1024 px und 375 px. **Zwei geplante Teile fehlen noch und
+sind als Lücke markiert:** die Wiederkehr des Wenn-dann-Satzes nach der
+Anmeldung und der Satz am leeren Lernen-Bildschirm („Fertig. Jetzt deine
+erste eigene Karte."). **Korrektur einer früheren Annahme in dieser Datei:**
+Ein Push auf `main` veröffentlicht hier nichts — ausgeliefert wird manuell
+über `veroeffentlichen.bat`. Status:
+`gebaut auf dem Zweig, wartet auf Betreiber-Sicht, F5 (Rechtsprüfung) und
+den Gerätetest; nichts ausgeliefert`.
 
 ### Nebenstrang: Feedback-Board
 

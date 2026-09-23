@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.8";
+const APP_VERSION = "3.9.9";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1019,6 +1019,82 @@ const SITZUNGS_LIMITS = [
 ];
 let settings = normSettings(null); // { arabGroesse, lastBackup, thema, sitzungsLimit }
 
+/* ---------- Einstieg vor der Anmeldung (3.9.9) ----------------------------
+   Plan: plan/onboarding/ - AUFTRAG.md, FRAGENKATALOG.md (Pruefungen P1-P7,
+   neun Stationen), WORTLAUT.md (jeder Satz hier steht dort), PSYCHOLOGIE.md
+   (was belegt ist), BESTAND.md (warum es hier und nicht anderswo einhakt).
+
+   Drei Dinge, die den Aufbau erklaeren:
+
+   1. Die Antworten liegen im localStorage, NICHT in `settings`. Grund steht
+      in BESTAND.md 3: onAuthStateChanged setzt settings unbedingt zurueck
+      (normSettings(null) weiter unten in dieser Datei) - was nur im
+      Arbeitsspeicher stuende, waere beim Anmelden weg, also genau dann, wenn
+      es gebraucht wird.
+   2. Angewendet wird erst NACH dem ersten Blick in die Cloud, und nur wenn
+      dort kein Dokument liegt (cloudDocExists === false). Wer sich auf einem
+      neuen Geraet in ein BESTEHENDES Konto einloggt, darf keine Einstellung
+      ueberschrieben bekommen (Pruefung P7).
+   3. Das Thema ist die Ausnahme: setThema() schreibt "adrabic-thema" schon
+      heute ohne Konto, und das Kopfskript in index.html liest es vor dem
+      ersten Zeichnen. Die Frage wirkt dort also sofort und braucht keinen
+      eigenen Zwischenspeicher. */
+const EINSTIEG_KEY = "adrabic-einstieg";            // "fertig" = schon gesehen
+const EINSTIEG_ANTWORT_KEY = "adrabic-einstieg-antworten";
+
+/* Die Beispielkarte aus S2. Ein einzelnes Wort, bewusst ohne religiösen
+   Gehalt: der Einstieg zeigt die Mechanik, nicht den Stoff. Der Betreiber
+   tauscht es aus, sobald er ein Wort aus Medina Buch 1 nennt (WORTLAUT.md
+   Abschnitt 5, Punkt 2) - dann aendert sich hier genau diese eine Zeile. */
+const EINSTIEG_BEISPIEL = { arab: "كِتَابٌ", de: "Buch" };
+
+/* Anker fuer den Wenn-dann-Satz (S7). Fuenf Gebete plus ein freies Feld -
+   Betreiber am 23.09.2026: "glaub die 6 dings reichen, 5 gebete und das
+   extra". Warum Gebetszeiten: ein Wenn-dann-Satz wirkt nur, wenn die
+   Situation zuverlaessig eintritt und erkennbar ist (Gollwitzer & Sheeran
+   2006, siehe PSYCHOLOGIE.md 1.1). Fuenf feste taegliche Punkte sind genau
+   das. Sie stehen hier als TAGESZEITEN, nicht als religiöse Aussage. */
+const EINSTIEG_ANKER = [
+  { id: "fajr",    label: "nach dem Fajr-Gebet" },
+  { id: "dhuhr",   label: "nach dem Dhuhr-Gebet" },
+  { id: "asr",     label: "nach dem Asr-Gebet" },
+  { id: "maghrib", label: "nach dem Maghrib-Gebet" },
+  { id: "isha",    label: "nach dem Ischa-Gebet" },
+  { id: "eigen",   label: "eigene Situation …" }
+];
+
+function einstiegGesehen() {
+  try { return localStorage.getItem(EINSTIEG_KEY) === "fertig"; } catch (e) { return true; }
+}
+/* Faellt localStorage aus (privates Fenster, gesperrte Website-Daten), gilt
+   der Einstieg als gesehen. Lieber gar kein Einstieg als einer, der bei
+   jedem Oeffnen wiederkommt und nichts behalten kann. */
+function einstiegAbschliessen() {
+  try { localStorage.setItem(EINSTIEG_KEY, "fertig"); } catch (e) {}
+}
+function einstiegAntwortenSichern(patch) {
+  let alt = {};
+  try { alt = JSON.parse(localStorage.getItem(EINSTIEG_ANTWORT_KEY)) || {}; } catch (e) { alt = {}; }
+  const neu = Object.assign(alt, patch);
+  try { localStorage.setItem(EINSTIEG_ANTWORT_KEY, JSON.stringify(neu)); } catch (e) {}
+  return neu;
+}
+function einstiegAntworten() {
+  try { return JSON.parse(localStorage.getItem(EINSTIEG_ANTWORT_KEY)) || {}; } catch (e) { return {}; }
+}
+/* Wird genau einmal aufgerufen: beim ersten Schnappschuss eines Kontos, das
+   noch kein Cloud-Dokument hat. Danach ist der Zwischenspeicher weg - er hat
+   seinen Zweck erfuellt und hat auf dem Geraet nichts mehr verloren
+   (Datensparsamkeit, Pruefung P6). */
+function einstiegAnwenden() {
+  const a = einstiegAntworten();
+  if (a.arabGroesse && ARAB_STUFEN.some(x => x.id === a.arabGroesse)) settings.arabGroesse = a.arabGroesse;
+  if (a.sitzungsLimit !== undefined && SITZUNGS_LIMITS.some(x => x.id === a.sitzungsLimit)) {
+    settings.sitzungsLimit = a.sitzungsLimit;
+  }
+  try { localStorage.removeItem(EINSTIEG_ANTWORT_KEY); } catch (e) {}
+}
+
 /* ---------- 2.20.0: hell und dunkel ----------
    "Automatisch" wird hier aufgelöst und nicht im Stil-Block. Der Grund ist
    Pflege: Sonst stünden dieselben zwanzig Farben zweimal da - einmal für
@@ -1077,6 +1153,11 @@ let ui = {
      Anmeldeaenderung geleert (onAuthStateChanged). */
   authEingabe: { name: "", email: "", pass: "" },
   authPassSichtbar: false,
+  /* Der Einstieg vor der Anmeldung (3.9.9). null = laeuft nicht. Sonst der
+     Stand der neun Stationen aus plan/onboarding/FRAGENKATALOG.md 2.
+     Absichtlich NUR im Arbeitsspeicher: was behalten werden muss, steht im
+     localStorage (siehe einstiegAntwortenSichern). */
+  einstieg: null,            // { schritt, aufgedeckt, bewertet, anker, ankerFrei }
   /* 9 (17.09.2026): fehlender Name beim Registrieren steht direkt am Feld,
      nicht im allgemeinen Fehlerkasten - siehe doRegister/renderAuth. */
   authFeldFehler: null,
@@ -1599,6 +1680,12 @@ async function initFirebase() {
           cloudDocExists = false;
           bereiche = normBereiche(null);
           streak = normStreak(null);
+          /* 3.9.9, Pruefung P7: Nur hier - es gibt kein Cloud-Dokument, das
+             Konto ist also frisch. Wer sich auf einem neuen Geraet in ein
+             BESTEHENDES Konto einloggt, laeuft in den Zweig darunter und
+             bekommt nichts ueberschrieben. persistAll() weiter unten
+             schreibt die uebernommenen Werte gleich mit hoch. */
+          einstiegAnwenden();
           ui.askImport = oldLocalProfiles().length > 0;
           if (!ui.askImport) persistAll(); // leeres Startdokument anlegen
           evaluateStreakForNewDay();
@@ -4749,6 +4836,221 @@ function tickCountups() {
   });
 }
 
+/* ---------- Der Einstieg vor der Anmeldung (3.9.9) ------------------------
+   Sieben Bildschirme, danach uebernimmt renderAuth(). Jeder Satz hier steht
+   wortgleich in plan/onboarding/WORTLAUT.md; wer ihn aendert, aendert ihn
+   dort mit, sonst weiss die naechste Sitzung nicht mehr, was abgestimmt war.
+
+   Was hier bewusst NICHT steht (plan/onboarding/FRAGENKATALOG.md, Pruefung
+   P4, und PSYCHOLOGIE.md Abschnitt 4): keine Zahl ueber Wirkung, keine
+   Studie, kein Versprechen ueber eine Frist, kein Zaehler "Schritt 3 von 7",
+   kein Ausrufezeichen. Ueberspringen steht auf jedem Bildschirm gleichrangig
+   neben dem Weiter-Knopf, nicht kleiner und nicht grau. */
+const EINSTIEG_LETZTER = 6;
+
+function ankerLabel(id) {
+  const o = EINSTIEG_ANKER.find(x => x.id === id);
+  return o ? o.label : "";
+}
+
+function einstiegProbe(groesse) {
+  const st = ARAB_STUFEN.find(x => x.id === groesse);
+  const faktor = st ? st.faktor : 1;
+  return '<div class="einstieg-probe" style="--arab-scale:' + faktor + '">' +
+    '<div class="study-word arabic" lang="ar" dir="rtl">' + esc(EINSTIEG_BEISPIEL.arab) + '</div>' +
+    '</div>';
+}
+
+/* Eine Reihe kurzer Antworten - dieselbe Bauform wie die Wahl-Blaetter in den
+   Einstellungen (.seg), damit der Einstieg kein Fremdkoerper ist und man
+   dieselbe Bedienung spaeter wiedererkennt. */
+function einstiegSeg(liste, aktiv, action, label) {
+  let h = '<div class="seg-row" style="justify-content:center; margin-top:var(--space-5)">';
+  h += '<span class="seg" role="group" aria-label="' + esc(label) + '">';
+  h += liste.map(o =>
+    '<button data-action="' + action + '" data-id="' + esc(String(o.id)) + '"' +
+    (String(o.id) === String(aktiv) ? ' class="active" aria-pressed="true"' : ' aria-pressed="false"') +
+    '>' + esc(o.label) + '</button>').join("");
+  h += '</span></div>';
+  return h;
+}
+
+function einstiegFuss(weiterLabel, weiterAktion) {
+  let h = '<div class="form-actions" style="margin-top:var(--space-6)">';
+  h += '<button class="full" data-action="' + (weiterAktion || "einstieg-weiter") + '">' + esc(weiterLabel) + '</button>';
+  h += '</div>';
+  /* Gleichrangig, nicht versteckt: im Bilddurchgang zu Video 1 stand bei
+     Grammarly "Skip personalization" als gleichwertiger Text neben dem
+     Weiter-Knopf. Ein grau abgesetzter Ausstieg waere ein dark pattern
+     (PSYCHOLOGIE.md Abschnitt 4). */
+  h += '<div class="empty__aktionen" style="margin-top:var(--space-4)">';
+  h += '<button class="linklike" data-action="einstieg-ueberspringen">Überspringen</button>';
+  h += '</div>';
+  return h;
+}
+
+function renderEinstieg() {
+  const e = ui.einstieg;
+  const a = einstiegAntworten();
+  const groesse = a.arabGroesse || settings.arabGroesse;
+  const limit = a.sitzungsLimit !== undefined ? a.sitzungsLimit : settings.sitzungsLimit;
+
+  let html = '<div class="solo">';
+  html += soloMarke(null);
+  html += '<div class="einstieg anim-rise">';
+
+  if (e.schritt === 0) {
+    /* S1. Betreiber am 23.09.2026: "das problem soll schmerzhaft benannt
+       werden ja." Daher der harte Einstieg - aber ohne Wirkungsbehauptung:
+       Was hier steht, ist der Grund, warum es Karteikarten ueberhaupt gibt,
+       kein Versprechen ueber diese App. Der letzte Absatz beschreibt reine
+       Mechanik (wachsende Abstaende), keine Wirkung. */
+    html += '<h1>Du hast es gelernt. Und es ist weg.</h1>';
+    html += '<p class="subtitle">Die Wörter von letzter Woche. Die Lektion von letztem Monat. ' +
+      'Nicht, weil du zu langsam bist – sondern weil du sie nie wieder gesehen hast.</p>';
+    html += '<p class="hint">Adrabic bringt dir jedes Wort zurück. In wachsenden Abständen, ' +
+      'so lange, bis es sitzt.</p>';
+    html += einstiegFuss("Zeig mir das");
+
+  } else if (e.schritt === 1) {
+    /* S2. Die Hauptfunktion vor dem Konto ausprobieren - das einzige Muster,
+       das in beiden ausgewerteten Videos unabhaengig voneinander vorkam
+       (Alma, Prayer Lock). Es ist eine Anzeige, kein Lernlauf: nichts wird
+       gespeichert, keine Stufe, kein Verlauf, kein Eingriff in die Lernlogik
+       (Pruefung P5). */
+    html += '<h1>Probier eine Karte.</h1>';
+    if (!e.aufgedeckt) {
+      html += '<p class="subtitle">Tipp die Karte an, um sie umzudrehen.</p>';
+      html += '<button class="einstieg-karte" data-action="einstieg-aufdecken" ' +
+        'aria-label="Beispielkarte umdrehen">' + einstiegProbe(groesse) + '</button>';
+      /* Auch hier ein Ausstieg: "Ueberspringen steht auf JEDEM Bildschirm"
+         (WORTLAUT.md Abschnitt 1, Regel 6). Beim Bauen fehlte er zuerst in
+         genau diesem Zustand - dem einzigen ohne Weiter-Knopf. */
+      html += '<div class="empty__aktionen" style="margin-top:var(--space-5)">';
+      html += '<button class="linklike" data-action="einstieg-ueberspringen">Überspringen</button>';
+      html += '</div>';
+    } else {
+      html += '<div class="einstieg-karte einstieg-karte--offen">' + einstiegProbe(groesse) +
+        '<div class="einstieg-karte__loesung">' + esc(EINSTIEG_BEISPIEL.de) + '</div></div>';
+      if (e.bewertet === null) {
+        html += '<p class="subtitle" style="margin-top:var(--space-5)">Wie sicher war das?</p>';
+        html += '<div class="einstieg-bewertung">';
+        html += ["Nicht", "Fast", "Sicher"].map(l =>
+          '<button class="secondary" data-action="einstieg-bewerten" data-id="' + esc(l) + '">' + l + '</button>').join("");
+        html += '</div>';
+      } else {
+        html += '<p class="hint" style="margin-top:var(--space-5)">' +
+          '„Nicht“ bringt die Karte gleich wieder. „Sicher“ legt sie länger weg. ' +
+          'Mehr ist es nicht.</p>';
+        html += einstiegFuss("Weiter");
+      }
+    }
+
+  } else if (e.schritt === 2) {
+    /* S3. Die Probe aendert sich im selben Bildschirm - die staerkste Form
+       der Einloesung (Pruefung P2), weil die Wirkung die Anzeige selbst IST
+       und nicht auf einem spaeteren Bildschirm behauptet werden muss.
+       Abweichung von WORTLAUT.md: Dort stand "kein Weiter-Knopf". Beim Bauen
+       zeigte sich, dass ein Tipp, der sofort weiterspringt, die Probe genau
+       in dem Moment wegnimmt, in dem man sie ansehen will. Der Knopf bleibt
+       also - die Wahl wirkt sofort, das Weitergehen entscheidet der Mensch. */
+    html += '<h1>Kannst du das gut lesen?</h1>';
+    html += einstiegProbe(groesse);
+    html += einstiegSeg(ARAB_STUFEN, groesse, "einstieg-schrift", "Schriftgröße");
+    html += '<p class="hint">Änderbar in den Einstellungen.</p>';
+    html += einstiegFuss("Weiter");
+
+  } else if (e.schritt === 3) {
+    /* S4. Das Thema wirkt sofort auf die ganze Oberflaeche und braucht keinen
+       eigenen Zwischenspeicher: setThema() schreibt "adrabic-thema" auch ohne
+       Konto (BESTAND.md Abschnitt 5). */
+    html += '<h1>Hell oder dunkel?</h1>';
+    html += einstiegProbe(groesse);
+    html += einstiegSeg(THEMEN, settings.thema, "einstieg-thema", "Helligkeit");
+    html += '<p class="hint">Automatisch richtet sich nach deinem Gerät.</p>';
+    html += einstiegFuss("Weiter");
+
+  } else if (e.schritt === 4) {
+    /* S5. Steht NACH dem Probelauf, nicht davor: "20 Karten" ist ohne Gefuehl
+       fuer eine einzelne Karte eine Zahl ohne Mass (Pruefung P3). */
+    html += '<h1>Wie lang soll eine Runde sein?</h1>';
+    html += '<p class="subtitle">Eine Runde ist das, was du an einem Tag durchgehst.</p>';
+    html += einstiegSeg(SITZUNGS_LIMITS, limit, "einstieg-runde", "Karten pro Runde");
+    html += '<p class="hint">Änderbar in den Einstellungen.</p>';
+    html += einstiegFuss("Weiter");
+
+  } else if (e.schritt === 5) {
+    /* S6. Kurzer Abschluss - und bewusst NUR fuer die Rundengroesse. Schrift
+       und Thema haben sich bereits selbst gezeigt; sie hier zu wiederholen
+       waere Fuellmaterial (Entscheidung F2, FRAGENKATALOG.md Abschnitt 9). */
+    const lbl = labelVon(SITZUNGS_LIMITS, limit, "Alle");
+    html += '<h1>Passt das so?</h1>';
+    html += '<p class="subtitle">Eine Runde endet nach ' +
+      (String(limit) === "alle" ? "allen fälligen Karten" : esc(lbl) + " Karten") +
+      '. Schrift und Aussehen hast du gerade eingestellt.</p>';
+    html += '<div class="form-actions" style="margin-top:var(--space-6)">';
+    html += '<button class="full" data-action="einstieg-weiter">Passt</button>';
+    html += '</div>';
+    html += '<div class="empty__aktionen" style="margin-top:var(--space-4)">';
+    html += '<button class="secondary" data-action="einstieg-zurueck">Noch mal ändern</button>';
+    html += '<button class="linklike" data-action="einstieg-ueberspringen">Überspringen</button>';
+    html += '</div>';
+
+  } else {
+    /* S7. Der einzige Baustein mit einem echten Beleg (Gollwitzer & Sheeran
+       2006) - und der Beleg steht in PSYCHOLOGIE.md, nicht auf dem
+       Bildschirm. Der Satz behauptet keine Wirkung; er beschreibt, was ein
+       fester Punkt am Tag leistet. Die fuenf Gebetszeiten stehen hier als
+       TAGESZEITEN: zuverlaessig, taeglich, unuebersehbar - genau das, was ein
+       Wenn-dann-Satz als Ausloeser braucht. */
+    const frei = e.anker === "eigen";
+    html += '<h1>Wann kommst du zurück?</h1>';
+    html += '<p class="subtitle">Ein fester Punkt am Tag hält besser als ein guter Vorsatz.</p>';
+    html += '<p class="einstieg-satz">Wenn ich <strong>' +
+      (frei ? (e.ankerFrei ? esc(e.ankerFrei) : "…")
+            : (e.anker ? esc(ankerLabel(e.anker)) : "…")) +
+      '</strong>, dann mache ich eine Runde.</p>';
+    html += '<div class="einstieg-anker">';
+    html += EINSTIEG_ANKER.map(o =>
+      '<button class="secondary full' + (e.anker === o.id ? " aktiv" : "") + '" ' +
+      'data-action="einstieg-anker" data-id="' + esc(o.id) + '" ' +
+      'aria-pressed="' + (e.anker === o.id ? "true" : "false") + '">' + esc(o.label) + '</button>').join("");
+    html += '</div>';
+    if (frei) {
+      html += '<div class="field" style="margin-top:var(--space-4)">';
+      html += '<label for="einstieg-frei">Deine Situation</label>';
+      html += '<input type="text" id="einstieg-frei" maxlength="60" autocomplete="off" ' +
+        'placeholder="zum Beispiel: mein Frühstück fertig habe">';
+      html += '</div>';
+    }
+    html += einstiegFuss("Konto anlegen", "einstieg-fertig");
+  }
+
+  html += '</div></div>';
+  app.innerHTML = html;
+  app.style.setProperty("--arab-scale", String(arabFaktor()));
+
+  const feld = document.getElementById("einstieg-frei");
+  if (feld) {
+    if (ui.einstieg.ankerFrei) feld.value = ui.einstieg.ankerFrei;
+    /* Nicht bei jedem Tastendruck neu zeichnen - render() ersetzt #app, der
+       Fokus waere jedes Mal weg. Der Satz oben wird deshalb erst beim
+       Verlassen des Feldes nachgezogen. */
+    feld.addEventListener("change", () => { ui.einstieg.ankerFrei = feld.value.trim(); render(); });
+  }
+}
+
+/* Beendet den Einstieg und uebergibt an renderAuth() - Station S8. Der Merker
+   bleibt danach stehen, auch nach einer Abmeldung (Entscheidung F7): wer sich
+   abmeldet, ist kein Neuling. */
+function einstiegBeenden() {
+  einstiegAbschliessen();
+  ui.einstieg = null;
+  ui.authMode = "register";
+  window.scrollTo(0, 0);
+  render();
+}
+
 /* ---------- Rendering ---------- */
 function render() {
   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
@@ -4756,6 +5058,14 @@ function render() {
      Suchtext steht bereits in ui.searchQuery. */
   if (sucheTimer) { clearTimeout(sucheTimer); sucheTimer = null; }
   if (!CONFIGURED) { renderSetup(); return; }
+  /* 3.9.9: Der Einstieg liegt VOR dem Anmeldeformular und nur dort - ein
+     angemeldetes Konto kommt nie hierher, weil currentUser dann nicht null
+     ist. Laeuft er gerade, ersetzt er renderAuth(); die Station S8 (Konto)
+     ist renderAuth() selbst. Reihenfolge und Begruendung: BESTAND.md 1. */
+  if (currentUser === null && ui.einstieg === null && !einstiegGesehen()) {
+    ui.einstieg = { schritt: 0, aufgedeckt: false, bewertet: null, anker: null, ankerFrei: "" };
+  }
+  if (currentUser === null && ui.einstieg) { renderEinstieg(); return; }
   if (currentUser === null) { renderAuth(); return; }
   /* C4: E-Mail muss bestätigt sein, bevor der Rest der App zugreifbar ist.
      Ohne das kann sich jeder mit einer erfundenen Adresse registrieren. */
@@ -9042,6 +9352,68 @@ document.body.addEventListener("click", e => {
     case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
     case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
     case "passwort-zeigen": ui.authPassSichtbar = !ui.authPassSichtbar; render(); break;
+    /* ---- Einstieg vor der Anmeldung (3.9.9) ----
+       Alle Handlungen laufen ueber denselben delegierten Listener wie der
+       Rest der App (README.md: EIN Klick-Listener ueber data-action). */
+    case "einstieg-weiter":
+      if (ui.einstieg) {
+        ui.einstieg.schritt = Math.min(EINSTIEG_LETZTER, ui.einstieg.schritt + 1);
+        window.scrollTo(0, 0);
+        render();
+      }
+      break;
+    case "einstieg-zurueck":
+      if (ui.einstieg) {
+        ui.einstieg.schritt = Math.max(0, ui.einstieg.schritt - 1);
+        window.scrollTo(0, 0);
+        render();
+      }
+      break;
+    /* Ueberspringen heisst: nichts anwenden. Der Zwischenspeicher wird
+       weggeraeumt, nicht stehen gelassen - wer abbricht, hat nichts
+       entschieden (Datensparsamkeit, Pruefung P6). */
+    case "einstieg-ueberspringen":
+      try { localStorage.removeItem(EINSTIEG_ANTWORT_KEY); } catch (err) {}
+      einstiegBeenden();
+      break;
+    case "einstieg-aufdecken":
+      if (ui.einstieg) { ui.einstieg.aufgedeckt = true; render(); }
+      break;
+    /* Die Bewertung im Probelauf wird NICHT gespeichert und beruehrt die
+       Lernlogik nicht (Pruefung P5). Sie zeigt nur, dass es drei Antworten
+       gibt - und schaltet den erklaerenden Satz frei. */
+    case "einstieg-bewerten":
+      if (ui.einstieg) { ui.einstieg.bewertet = btn.dataset.id || "Fast"; render(); }
+      break;
+    case "einstieg-schrift":
+      einstiegAntwortenSichern({ arabGroesse: btn.dataset.id });
+      render();
+      break;
+    /* Das Thema ist die eine Antwort, die sofort und dauerhaft wirkt, weil
+       setThema() den vorhandenen Schluessel "adrabic-thema" schreibt - auch
+       ohne Konto. Kein zweiter Speicherort dafuer. */
+    case "einstieg-thema":
+      setThema(btn.dataset.id);
+      break;
+    case "einstieg-runde": {
+      const roh = btn.dataset.id;
+      const wert = roh === "alle" ? "alle" : Number(roh);
+      einstiegAntwortenSichern({ sitzungsLimit: wert });
+      render();
+      break;
+    }
+    case "einstieg-anker":
+      if (ui.einstieg) {
+        ui.einstieg.anker = ui.einstieg.anker === btn.dataset.id ? null : btn.dataset.id;
+        render();
+      }
+      break;
+    /* Der Wenn-dann-Satz hat bewusst KEINEN Speicherort in der Cloud: Er ist
+       ein Vorsatz des Menschen, kein Einstellwert der App. Gespeichert wird
+       nur, was danach auch etwas tut. */
+    case "einstieg-fertig":
+      einstiegBeenden();
+      break;
     case "logout": doLogout(); break;
     case "delete-account": doKontoLoeschen(); break;
     /* 3.0.0: Das Bereichs-Sheet. "nichts" traegt das Blatt selbst, damit ein

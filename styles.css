@@ -2646,6 +2646,91 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 
 
 /* ===========================================================================
+   16b · EINSTIEG VOR DER ANMELDUNG
+   ---------------------------------------------------------------------------
+   Sieben Bildschirme vor dem Anmeldeformular (app.js, renderEinstieg).
+   Liegt in .solo — dieselbe schmale Spalte wie Anmelden und Einrichtung —
+   und erbt von dort Rand, Breite und Eintrittsbewegung. Es gibt hier
+   ABSICHTLICH fast keine eigenen Regeln: Segmentreihen (.seg), Knöpfe,
+   Felder und Abstände kommen aus den Abschnitten davor. Neu ist nur, was es
+   sonst nirgends gibt — die Probefläche und die Ankerliste.
+
+   Bewegung: eine pro Bildschirm (.anim-rise auf dem ganzen Block), nicht
+   eine je Element. 150–250 ms, --dur-base. Die Regel steht in
+   plan/onboarding/FRAGENKATALOG.md Abschnitt 11.
+   ========================================================================= */
+
+.einstieg h1 {
+  font-size: clamp(1.5rem, 4.5vw + 0.5rem, 2rem);
+  line-height: 1.25;
+  margin-bottom: var(--space-4);
+}
+.einstieg .subtitle { margin-bottom: var(--space-4); }
+.einstieg .hint { padding-top: 0; }
+
+/* Die Probefläche. Kein Kasten im Kasten (styles.css Abschnitt 6): eine
+   ruhige, leicht abgesetzte Fläche, auf der das arabische Wort steht und
+   seine Größe sichtbar wechselt. Die feste Mindesthöhe verhindert, dass der
+   Bildschirm springt, wenn man von Klein auf Groß tippt — ein Sprung wäre
+   genau die Bewegung, die hier nichts bedeutet. */
+.einstieg-probe {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 132px;
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+}
+.einstieg-probe .study-word { margin: 0; }
+
+/* Die Beispielkarte in S2. Als <button>, weil sie eine Handlung ist: ein Tipp
+   deckt auf. Sie sieht aus wie die Probefläche, damit klar bleibt, dass es
+   dasselbe Wort ist — nur mit Lösung darunter. */
+.einstieg-karte {
+  display: block; width: 100%;
+  height: auto; min-height: 0;
+  margin-top: var(--space-5);
+  padding: 0;
+  background: none; border: 0; box-shadow: none;
+  text-align: inherit;
+  cursor: pointer;
+}
+.einstieg-karte .einstieg-probe { margin-top: 0; }
+.einstieg-karte--offen { cursor: default; }
+.einstieg-karte__loesung {
+  margin-top: var(--space-3);
+  text-align: center;
+  font-size: var(--fs-lg);
+  color: var(--text-2);
+  animation: enter-fade var(--dur-base) var(--ease-out) both;
+}
+.einstieg-bewertung {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2); margin-top: var(--space-3);
+}
+
+/* Der Wenn-dann-Satz. Steht ÜBER der Auswahl, nicht darunter: man soll sehen,
+   in welchen Satz die Wahl eingesetzt wird, bevor man wählt. */
+.einstieg-satz {
+  margin: var(--space-5) 0 var(--space-4);
+  font-size: var(--fs-md);
+  color: var(--text-2);
+  line-height: 1.6;
+}
+.einstieg-satz strong { color: var(--text-1); font-weight: 600; }
+
+.einstieg-anker { display: flex; flex-direction: column; gap: var(--space-2); }
+/* Gewählt heißt: Rahmen und Schrift in der Akzentfarbe — dieselbe Sprache wie
+   .seg button.active, nur für eine Spalte statt eine Reihe. Keine gefüllte
+   Fläche: die bleibt dem einen Hauptknopf pro Bildschirm vorbehalten. */
+.einstieg-anker button.aktiv {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+/* ===========================================================================
    17 · BREITE BILDSCHIRME
    ---------------------------------------------------------------------------
    Ab 900 px wird aus der unteren Leiste eine Spalte links. Das Markup ist

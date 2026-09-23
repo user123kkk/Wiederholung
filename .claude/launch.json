@@ -4,8 +4,8 @@
     {
       "name": "wiederholung",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8099"],
-      "port": 8099
+      "runtimeArgs": ["-m", "http.server", "5173"],
+      "port": 5173
     }
   ]
 }

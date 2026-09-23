@@ -1,7 +1,8 @@
 # Wortlaut des Einstiegs — jeder Bildschirm, Wort für Wort
 
-Angelegt: 23. September 2026 · Status: **geschrieben auf Betreiber-Freigabe,
-noch nicht gebaut**
+Angelegt: 23. September 2026 · Status: **gebaut in v3.9.9.** Abweichungen, die
+sich erst beim Bauen zeigten, stehen in Abschnitt 6 — dieses Dokument und der
+Code stimmen überein.
 Gehört zu: [`FRAGENKATALOG.md`](FRAGENKATALOG.md) (Umfang, Stationen) ·
 [`PSYCHOLOGIE.md`](PSYCHOLOGIE.md) (was belegt ist) ·
 [`BESTAND.md`](BESTAND.md) (wo es im Code einhakt)
@@ -38,8 +39,8 @@ war:
 - **Keine Ermahnung, kein Appell.** Ein Einstieg, der belehrt, ist kein
   Einstieg.
 
-Der Betreiber prüft die Schreibweise der Gebetsnamen (Abschnitt 5, Punkt 1) —
-das ist der eine Punkt, an dem eine falsche Entscheidung sichtbar wäre.
+Die Umschrift der Gebetsnamen steht in Abschnitt 3 und ist in einer Zeile
+änderbar — der eine Punkt, an dem eine falsche Entscheidung sichtbar wäre.
 
 ---
 
@@ -66,13 +67,24 @@ bestehenden delegierten Klick-Listener (`app.js:4707`), **kein neuer Listener**
 
 ### S1 · Zeigen, nicht sagen
 
-> **H** Arabisch, Karte für Karte.
-> **T** Sieh dir kurz an, wie es läuft. Anmelden kommt später.
-> **K** Ansehen `data-action="einstieg-weiter"`
+> **H** Du hast es gelernt. Und es ist weg.
+> **T** Die Wörter von letzter Woche. Die Lektion von letztem Monat. Nicht,
+> weil du zu langsam bist – sondern weil du sie nie wieder gesehen hast.
+> **T** Adrabic bringt dir jedes Wort zurück. In wachsenden Abständen, so
+> lange, bis es sitzt.
+> **K** Zeig mir das `data-action="einstieg-weiter"`
 > **K** Überspringen `data-action="einstieg-ueberspringen"`
 
-Kein Wort über Funktionen (Video §3.1). „Anmelden kommt später" nimmt die
-häufigste Sorge vorweg, ohne etwas zu versprechen.
+**Geändert am 23.09.2026 auf Betreiber-Wunsch:** „das problem soll schmerzhaft
+benannt werden ja." Die frühere Fassung („Arabisch, Karte für Karte. — Sieh dir
+kurz an, wie es läuft.") zeigte nur und benannte nichts; Video 2 verlangt
+Problem **und** Lösung in den ersten Bildschirmen
+([`VIDEO-BEFUND-2.md`](VIDEO-BEFUND-2.md) §6).
+
+**Warum das trotzdem P4 besteht:** Der erste Absatz behauptet nichts über
+**diese App** — er benennt den Grund, warum es Karteikarten überhaupt gibt.
+Der zweite beschreibt reine Mechanik (wachsende Abstände, `app.js`), keine
+Wirkung. Es steht kein Zeitraum darin, keine Zahl und kein Versprechen.
 
 ### S2 · Eine Karte, einmal ausprobiert
 
@@ -93,9 +105,9 @@ häufigste Sorge vorweg, ohne etwas zu versprechen.
 > Mehr ist es nicht.
 > **K** Weiter
 
-**Inhalt der Beispielkarte:** Ein einzelnes Wort aus dem Stoff, den der
-Betreiber ohnehin benutzt (Medina Buch 1, erste Lektion). **Der Agent legt das
-Wort nicht selbst fest** — siehe Abschnitt 5, Punkt 2.
+**Inhalt der Beispielkarte:** im Code steht كِتَابٌ („Buch") als Platzhalter —
+ein Wort ohne religiösen Gehalt, weil der Einstieg die Mechanik zeigt und nicht
+den Stoff. Ersetzbar in einer Zeile, siehe Abschnitt 5, Punkt 1.
 
 „Mehr ist es nicht." ist bewusst so knapp: Es ist die einzige Stelle, an der
 die App ihre eigene Einfachheit behauptet, und sie ist nachprüfbar wahr.
@@ -109,14 +121,14 @@ die App ihre eigene Einfachheit behauptet, und sie ist nachprüfbar wahr.
 > **A** Schriftgröße wählen. Die Probe darüber ändert sich sofort.
 
 Die Probe ändert sich **im selben Bildschirm** — stärkste Form der Einlösung
-(`FRAGENKATALOG.md` §9, F2). Deshalb kein „Weiter"-Knopf, der die Wahl
-bestätigt: Die Wahl **ist** die Bestätigung; getippt, gesehen, weiter.
+(`FRAGENKATALOG.md` §9, F2). **Ein „Weiter"-Knopf steht trotzdem darunter**;
+warum, steht in Abschnitt 6 a.
 
 ### S4 · Aussehen
 
 > **H** Hell oder dunkel?
 > **K** Dunkel · **K** Hell · **K** Automatisch `data-action="einstieg-thema"`
-> **T** Automatisch richtet sich nach deinem Handy.
+> **T** Automatisch richtet sich nach deinem Gerät.
 
 Ruft direkt `setThema()` (`app.js:1052`) auf. Kein neuer Speicher nötig
 (`BESTAND.md` §5).
@@ -156,28 +168,31 @@ Mechanismus nennt — und er nennt ihn ohne Zahl, ohne Studie, ohne „belegt".
 Beleg steht in [`PSYCHOLOGIE.md`](PSYCHOLOGIE.md) §1.1, nicht auf dem
 Bildschirm.
 
-**Wo der Satz wieder auftaucht:** einmal, direkt nach der Anmeldung, als stille
-Zeile über dem Lernen-Bildschirm. Ohne Wiederholung fiele B1 durch P2.
+**Noch nicht gebaut:** Der Satz sollte nach der Anmeldung einmal als stille
+Zeile über dem Lernen-Bildschirm wiederkehren. In v3.9.9 ist er **nur** im
+Einstieg zu sehen. Damit besteht B1 die Prüfung P2 heute nur halb — die Wahl
+wirkt im Satz darüber sofort, aber sie kommt danach nicht wieder. Bewusst
+offengelassen, weil jede Wiederkehr ein Feld in den Einstellungen bräuchte und
+damit die Rechtsfrage F5 vergrößert. Nächste Ausbaustufe, nicht vergessen.
 
 ### S8 · Konto
 
-Der bestehende `renderAuth()` (`app.js:4997`), unverändert bis auf die
-Kopfzeile:
-
-> **eyebrow** Schritt 2 von 2 · Konto
-
-`soloMarke()` kann das bereits (`app.js:4962`); heute steht dort „Schritt 1 von
-2 · Konto". Aus S1–S7 wird damit rückwirkend Schritt 1. Kein neues Bauteil.
+Der bestehende `renderAuth()`, **völlig unverändert**. Die Kopfzeile bleibt
+„Schritt 1 von 2 · Konto" — warum die ursprünglich geplante Umnummerierung
+falsch gewesen wäre, steht in Abschnitt 6 b. Der Einstieg setzt beim Übergang
+nur `ui.authMode = "register"`, damit man direkt im richtigen Formular landet.
 
 ### S9 · Erste eigene Karte
 
-Der bestehende leere Lernen-Bildschirm mit „Erste Karte anlegen"
-(`app.js:6660`), unverändert. Darüber, einmalig:
+Der bestehende leere Lernen-Bildschirm mit „Erste Karte anlegen", unverändert.
+**In v3.9.9 ist hier nichts hinzugefügt worden** — der geplante Satz „Fertig.
+Jetzt deine erste eigene Karte." fehlt noch.
 
-> **T** Fertig. Jetzt deine erste eigene Karte.
-
-Mehr nicht. Nach `PSYCHOLOGIE.md` §1.2 zählt hier der **Abschluss**, nicht die
-Begleitung — wer jetzt noch erklärt, steht im Weg.
+Das ist die wichtigste offene Lücke des Strangs: Nach `PSYCHOLOGIE.md` §1.2
+zählt der **Abschluss**, nicht der Anfang — ein Einstieg, der jemanden ohne
+erste eigene Karte stehen lässt, verschenkt genau den Teil, für den es Belege
+gibt. Gehört in die nächste Ausbaustufe, zusammen mit der Wiederkehr des
+Wenn-dann-Satzes.
 
 ---
 
@@ -187,14 +202,24 @@ Fünf feste Anker plus ein freies Feld. Nicht mehr — der Betreiber hat die
 Obergrenze selbst benannt („man kann ja schlecht 20 auswahlen haben"), und
 jeder weitere Anker macht die Wahl zur Suche.
 
+**Endstand nach der Betreiber-Antwort vom 23.09.2026** („glaub die 6 dings
+reichen, 5 gebete und das extra"): alle fünf Gebete plus ein freies Feld. Der
+weltliche Anker „wenn ich heimkomme" aus der ersten Fassung ist dafür
+entfallen — wer ihn braucht, schreibt ihn ins freie Feld.
+
 | # | Anker | Warum dieser |
 |---|---|---|
-| 1 | nach dem **Fajr**-Gebet | frühester fester Punkt des Tages |
-| 2 | nach dem **Dhuhr**-Gebet | Mitte des Tages |
-| 3 | nach dem **ʿAsr**-Gebet | Nachmittag |
-| 4 | nach dem **ʿIshāʾ**-Gebet | Abschluss des Tages |
-| 5 | wenn ich heimkomme | für alle, denen ein Gebet als Anker nicht passt |
-| 6 | *eigene Situation …* | freies Textfeld |
+| 1 | nach dem Fajr-Gebet | frühester fester Punkt des Tages |
+| 2 | nach dem Dhuhr-Gebet | Mitte des Tages |
+| 3 | nach dem Asr-Gebet | Nachmittag |
+| 4 | nach dem Maghrib-Gebet | Abend |
+| 5 | nach dem Ischa-Gebet | Abschluss des Tages |
+| 6 | *eigene Situation …* | freies Textfeld, bis 60 Zeichen |
+
+**Schreibweise:** ohne Sonderzeichen — Fajr · Dhuhr · Asr · Maghrib · Ischa.
+Der Betreiber hat die Frage nach der Umschrift offengelassen; gewählt wurde die
+Fassung, die auf jedem Gerät gleich aussieht und die niemand falsch tippt. Eine
+Zeile Antwort ändert das in `EINSTIEG_ANKER` (`app.js`).
 
 **Warum Gebetszeiten hier fachlich die besten Anker sind** — und das ist kein
 frommer Zusatz, sondern der Grund, warum sie in dieser Liste stehen: Ein
@@ -208,10 +233,9 @@ einteilt, braucht einen weltlichen Anker; und Punkt 6 fängt alles übrige. Der
 Beleg spricht ohnehin dafür, dass ein **selbst formulierter** Satz am stärksten
 wirkt.
 
-**Maghrib fehlt bewusst** — fünf Gebete plus zwei weitere Einträge wären sieben
-Optionen, und zwischen ʿAsr und ʿIshāʾ liegt der Tagesabschluss bereits
-abgedeckt. Wenn der Betreiber Maghrib statt ʿIshāʾ will, ist das ein Tausch,
-keine Erweiterung.
+**Punkt 6 ist nicht Beiwerk.** Wer im Schichtdienst steht oder den Tag anders
+einteilt, trägt seine eigene Situation ein — und der Beleg spricht ohnehin
+dafür, dass ein **selbst formulierter** Satz am stärksten wirkt.
 
 ---
 
@@ -232,11 +256,36 @@ keine Erweiterung.
 
 ## 5. Was der Betreiber noch prüfen muss
 
-1. **Schreibweise der Gebetsnamen.** Oben steht: Fajr · Dhuhr · ʿAsr · ʿIshāʾ.
-   Denkbar wären auch Fadschr/Zuhr/Asr/Ischa oder eine Fassung ohne
-   Sonderzeichen. **Eine Zeile Antwort genügt**, dann steht es so im Code.
-2. **Das Wort auf der Beispielkarte in S2.** Ein einzelnes Wort aus Medina
-   Buch 1, Lektion 1, mit deutscher Bedeutung. Der Agent legt es nicht fest —
-   es ist Lehrstoff, und die Lehre vom 13.09.2026 (erfundener Kartensatz) gilt
-   genau dafür.
-3. **Maghrib statt ʿIshāʾ?** Nur falls gewünscht; sonst bleibt es wie oben.
+1. **Das Wort auf der Beispielkarte in S2.** Im Code steht كِتَابٌ („Buch") als
+   **Platzhalter** — ein Wort ohne religiösen Gehalt, weil der Einstieg die
+   Mechanik zeigt und nicht den Stoff. Der Betreiber antwortete „keine ahnung
+   ig"; damit der Bau nicht stehen bleibt, ist ein neutrales Wort gewählt
+   worden. Ein Wort aus Medina Buch 1, Lektion 1 ersetzt es jederzeit — es
+   ändert sich genau eine Zeile (`EINSTIEG_BEISPIEL` in `app.js`).
+2. **Die Umschrift der Gebetsnamen** (Abschnitt 3) — gewählt ist die Fassung
+   ohne Sonderzeichen. Änderbar in einer Zeile.
+3. **Die Rechtsprüfung** der Zwischenspeicherung (F5). Betrifft die zwei neuen
+   `localStorage`-Schlüssel, nicht `adrabic-thema`.
+
+---
+
+## 6. Abweichungen, die sich erst beim Bauen zeigten
+
+Beide sind im Code umgesetzt und hier nachgetragen, damit Dokument und Code
+nicht auseinanderlaufen.
+
+**a) S3 behält einen „Weiter"-Knopf.** Oben stand: „kein Weiter-Knopf, die Wahl
+ist die Bestätigung". Am laufenden Bildschirm zeigte sich, dass ein Tipp, der
+sofort weiterspringt, die Schriftprobe genau in dem Moment wegnimmt, in dem man
+sie ansehen will — die Einlösung fiele damit weg, also genau das, wofür der
+Bildschirm da ist. Die Wahl wirkt weiterhin sofort; das Weitergehen entscheidet
+der Mensch.
+
+**b) Die Kopfzeile des Anmeldeformulars bleibt „Schritt 1 von 2 · Konto".**
+Oben stand, sie werde zu „Schritt 2 von 2". Das war falsch: Die beiden Schritte
+zählen **Konto anlegen → E-Mail bestätigen**
+(`renderPendingVerification()` trägt „Schritt 2 von 2 · Bestätigen"). Hätte man
+sie umnummeriert, stünden im Ablauf zwei Bildschirme mit „Schritt 2 von 2", und
+für alle, die den Einstieg überspringen oder schon gesehen haben, wäre die
+Zählung schlicht falsch. Der Einstieg zählt nicht mit — er hat aus gutem Grund
+gar keinen Zähler (Abschnitt 1, Regel 4).
