@@ -56,7 +56,7 @@
             { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' 'sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://apis.google.com; frame-src https://lernkarte-925c2.firebaseapp.com https://apis.google.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+              "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' 'sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=' 'sha256-+kgbNJPbflpXFm9lacyASAWVq9Ake21SDCF2vjlryGI=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://apis.google.com; frame-src https://lernkarte-925c2.firebaseapp.com https://apis.google.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
             }
           ]
         }
@@ -115,7 +115,7 @@
             { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' 'sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://apis.google.com; frame-src https://lernkarte-925c2.firebaseapp.com https://apis.google.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+              "value": "default-src 'self'; script-src 'self' 'sha256-uMYZgplEG1pNykFnYiO85iPRMRQOOE38Fk8UwfWoP8w=' 'sha256-68CssCcg1qYn8qNvv9rmLETZEvxAlnPhDuObep5Bv+E=' 'sha256-+kgbNJPbflpXFm9lacyASAWVq9Ake21SDCF2vjlryGI=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://verses.quran.foundation; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://apis.google.com; frame-src https://lernkarte-925c2.firebaseapp.com https://apis.google.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
             }
           ]
         }

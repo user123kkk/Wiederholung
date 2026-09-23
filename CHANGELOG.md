@@ -1,3 +1,13 @@
+## 3.9.12 - 23. September 2026
+
+**Echter Fehler gefunden und behoben: CSP blockierte das Theme-Vorlaufskript seit vor v3.9.8 - unabhaengig vom Onboarding.** Beim Pruefen der frisch veroeffentlichten Seite (adrabic.web.app) meldete die Konsole einen blockierten Inline-Script-Verstoss gegen `Content-Security-Policy`. Nachgemessen (sha256 des `<script>`-Blocks in `index.html` vs. der Hashes in `firebase.json`): Das Kopfskript, das die Theme-Wahl (`adrabic-thema`) vor dem ersten Bild aus dem `localStorage` liest, hat seit mindestens v3.9.8 - also vor jeder Aenderung dieser Session - einen anderen Hash als die beiden in `firebase.json` hinterlegten. Bestaetigt per `git show a626498:index.html` gegen dieselbe `firebase.json`: derselbe Fehlschlag, also kein Onboarding-Fehler, sondern ein bereits laenger live stehender Bug.
+
+**Folge in der Praxis:** Das Skript lief nicht. Wer im hellen Modus war, sah beim Start kurz die dunkle Standardfarbe, bis `app.js` geladen hatte und die Cloud-Einstellung griff - genau der Sprung, den das Skript laut seinem eigenen Kommentar verhindern sollte (`index.html`, 2.20.0). Die eigentliche App blieb unberuehrt, weil nur dieses eine Vorlaufskript betroffen war.
+
+**Behoben:** `firebase.json`, beide Hosting-Ziele (`lernkarte-925c2` und `adrabic`) - der fehlende Hash `sha256-+kgbNJPbflpXFm9lacyASAWVq9Ake21SDCF2vjlryGI=` ist der `script-src`-Direktive hinzugefuegt, nicht `'unsafe-inline'` verwendet. Kein Code in `index.html` oder `app.js` geaendert - das Skript selbst war immer korrekt, nur die Erlaubnisliste veraltet.
+
+**Wirkt erst nach dem naechsten `veroeffentlichen.bat`**, da `firebase.json` reine Deploy-Konfiguration ist und nicht ueber den Versions-Query im Browser aktualisiert wird.
+
 ## 3.9.11 - 23. September 2026
 
 **Die Schriftprobe wechselt jetzt weich statt zu springen.** Der Bildschirm "Kannst du das gut lesen?" ist die staerkste Stelle des ganzen Einstiegs: Die Wirkung der Antwort IST die Anzeige. Bisher sprang die Schrift hart auf die neue Groesse - man fand den Unterschied vor, statt ihn zu sehen.
