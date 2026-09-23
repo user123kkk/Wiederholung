@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.2";
+const APP_VERSION = "3.9.3";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5405,6 +5405,28 @@ function bannerSchreibfehler() {
 
 let letzterAnsichtSchluessel = null, letzterOverlaySchluessel = null;
 let letzteTiefe = 0, letzterReiter = 0;
+/* Beobachtung 19/9: Blaetter gaben den Fokus beim Schliessen nirgends
+   zurueck. overlayOffenVorher merkt sich zwischen zwei render()-Aufrufen,
+   ob gerade ein Blatt/Dialog offen war - nur beim Wechsel offen->zu wird
+   ueberhaupt etwas zurueckgegeben. sheetOeffnerSel traegt einen Selektor
+   fuers oeffnende Element (siehe fokusSchluessel unten), keine Elementreferenz -
+   die waere nach dem naechsten render() ohnehin verwaist. */
+let overlayOffenVorher = false, sheetOeffnerSel = null;
+/* Liefert einen Selektor, der dasselbe Element nach einem Neuaufbau wieder
+   findet: id, wenn vorhanden, sonst data-action(+data-id) - fast jeder
+   Knopf in dieser App traegt eines von beiden. Kein Treffer moeglich (z.B.
+   Fokus lag auf body): null, dann bleibt der Fokus beim Schliessen einfach
+   stehen, wie bisher. */
+function fokusSchluessel(el) {
+  if (!el || el === document.body || !el.tagName) return null;
+  if (el.id) return "#" + CSS.escape(el.id);
+  if (el.dataset && el.dataset.action) {
+    let sel = '[data-action="' + CSS.escape(el.dataset.action) + '"]';
+    if (el.dataset.id) sel += '[data-id="' + CSS.escape(el.dataset.id) + '"]';
+    return sel;
+  }
+  return null;
+}
 /* Setzt die alte Huelle (Kopfzeile/Leiste) anstelle der frisch gebauten ein und
    uebergibt ihr deren Inhalt. Gibt es die neue Huelle nicht (Modus), bleibt es
    beim Neuaufbau. */
@@ -5611,9 +5633,13 @@ function renderMain() {
        springen und beim Zurueckkommen wieder heranfahren. */
     navEl.dataset.reiter = reiterJetzt >= 0 ? String(reiterJetzt) : "aus";
   }
-  document.documentElement.classList.toggle("blatt-offen",
-    !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog));
+  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog);
+  document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
   syncAppbarKante();
+  /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
+     das ist im selben render()-Aufruf noch der eben angeklickte Oeffner
+     (prevActive, oben schon fuers Eingabefeld-Halten berechnet). */
+  if (overlayIstOffen && !overlayOffenVorher) sheetOeffnerSel = fokusSchluessel(prevActive);
   /* Ein neu geoeffnetes Blatt nimmt den Fokus mit (aria-modal ohne Fokus hiess:
      Screenreader und Tab-Taste blieben hinter dem Blatt). Auf den Rahmen, nicht
      in ein Feld - so oeffnet sich auf dem Handy keine Tastatur ungefragt. */
@@ -5624,6 +5650,17 @@ function renderMain() {
       blatt.focus({ preventScroll: true });
     }
   }
+  /* Beobachtung 19/9: Beim Wechsel offen->zu den Fokus zurueckgeben, statt
+     ihn im Nichts (body) stehen zu lassen - genau die fehlende Haelfte, die
+     schliesseObersteEbene()/closeDialog() nicht selbst wissen koennen, weil
+     bei ihnen zum Schliesszeitpunkt schon der Oeffner-Selektor gebraucht wird,
+     den erst DIESER render()-Durchlauf (nach dem Neuaufbau) wieder auflösen kann. */
+  if (!overlayIstOffen && overlayOffenVorher && sheetOeffnerSel) {
+    const oeffner = document.querySelector(sheetOeffnerSel);
+    if (oeffner && typeof oeffner.focus === "function") oeffner.focus({ preventScroll: true });
+  }
+  if (!overlayIstOffen) sheetOeffnerSel = null;
+  overlayOffenVorher = overlayIstOffen;
   /* E7: Faktor am Container, damit ihn jede .arabic-Stelle darunter erbt. */
   app.style.setProperty("--arab-scale", String(arabFaktor()));
   /* Beobachtung 18: Tab-Wechsel kann den Scroll-/Layoutzustand aendern,
@@ -8676,12 +8713,31 @@ function openDialog(cfg) {
     });
   });
 }
+/* Beobachtung 19/9: Blaetter verschwanden bisher abrupt (nur beim Wegwischen
+   gab es die Bewegung unten in blattWischen). Dieselbe Bewegung jetzt auch
+   fuer Escape, Hintergrund-Tipp und die "Fertig"/"Schliessen"-Knoepfe -
+   dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
+   ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
+   (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
+function spielAustrittsAnimation(dlg, huelle, danach) {
+  const reduziert = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!dlg || reduziert || dlg.dataset.schliesst) { danach(); return; }
+  dlg.dataset.schliesst = "1";
+  dlg.style.transition = "transform 200ms var(--ease-out)";
+  dlg.style.transform = "translateY(105%)";
+  if (huelle) { huelle.style.transition = "opacity 200ms"; huelle.style.opacity = "0"; }
+  setTimeout(danach, 190);
+}
 function closeDialog(result) {
   const d = ui.dialog;
   if (!d) return;
-  ui.dialog = null;
-  render();
-  d.resolve(result);
+  const dlg = app.querySelector(".dlg");
+  const huelle = dlg && dlg.parentElement && dlg.parentElement.classList.contains("dlg-backdrop") ? dlg.parentElement : null;
+  spielAustrittsAnimation(dlg, huelle, () => {
+    ui.dialog = null;
+    render();
+    d.resolve(result);
+  });
 }
 /* Ergebnis je nach Art: prompt liefert Text oder null, confirm true/false,
    alert nichts. Damit verhalten sie sich wie ihre Vorbilder und die
@@ -8764,12 +8820,21 @@ function schliesseObersteEbene() {
      eine Inkonsequenz, die auffaellt, sobald man die App ohne Maus bedient. */
   /* 3.6.13: Auch Karten-, Wahl- und Speicherkarten-Blatt, und nur EIN
      Neuzeichnen - vorher lief render() je offenem Blatt einzeln. */
-  if (ui.setArtSheetId) { ui.setArtSheetId = null; render(); return true; }
-  if (ui.wahlSheet) { ui.wahlSheet = null; render(); return true; }
-  if (ui.karteSheet || ui.editId) { cancelEdit(); return true; }
-  if (ui.bereichMehr) { ui.bereichMehr = false; render(); return true; }
-  if (ui.cardDetailId) { ui.cardDetailId = null; render(); return true; }
-  if (ui.bereichSheet) { ui.bereichSheet = false; render(); return true; }
+  /* Beobachtung 19/9: schliesst jetzt animiert (spielAustrittsAnimation) -
+     dieselbe Funktion traegt auch die "-zu"-Knoepfe im zentralen
+     Klick-Verteiler, die dafuer hierher umgeleitet wurden statt die
+     Zustandsaenderung zu verdoppeln. */
+  const schliesse = setzeZustand => {
+    const dlg = app.querySelector(".dlg");
+    const huelle = dlg && dlg.parentElement && dlg.parentElement.classList.contains("dlg-backdrop") ? dlg.parentElement : null;
+    spielAustrittsAnimation(dlg, huelle, setzeZustand);
+  };
+  if (ui.setArtSheetId) { schliesse(() => { ui.setArtSheetId = null; render(); }); return true; }
+  if (ui.wahlSheet) { schliesse(() => { ui.wahlSheet = null; render(); }); return true; }
+  if (ui.karteSheet || ui.editId) { schliesse(cancelEdit); return true; }
+  if (ui.bereichMehr) { schliesse(() => { ui.bereichMehr = false; render(); }); return true; }
+  if (ui.cardDetailId) { schliesse(() => { ui.cardDetailId = null; render(); }); return true; }
+  if (ui.bereichSheet) { schliesse(() => { ui.bereichSheet = false; render(); }); return true; }
   return false;
 }
 document.addEventListener("keydown", e => {
@@ -8777,6 +8842,24 @@ document.addEventListener("keydown", e => {
   const errorModal = document.getElementById("errorModal");
   if (errorModal && errorModal.getAttribute("aria-hidden") === "false") { closeErrorModal(); return; }
   schliesseObersteEbene();
+});
+
+/* Beobachtung 19/9: kein Fokus-Fang - Tab konnte aus einem offenen Blatt
+   heraus in die (fuer Maus/Touch bereits unerreichbare) Seite dahinter
+   wandern, obwohl aria-modal="true" genau das verspricht. Greift nur, wenn
+   der Fokus schon IM Blatt steht - ein noch nicht hineingesprungener Fokus
+   (z.B. der erste Tab direkt nach dem Oeffnen) wird nicht angefasst. */
+document.addEventListener("keydown", e => {
+  if (e.key !== "Tab") return;
+  const dlg = document.querySelector(".dlg");
+  if (!dlg || !dlg.contains(document.activeElement)) return;
+  const fokussierbar = [...dlg.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )].filter(el => el.offsetParent !== null);
+  if (fokussierbar.length === 0) return;
+  const erster = fokussierbar[0], letzter = fokussierbar[fokussierbar.length - 1];
+  if (e.shiftKey && document.activeElement === erster) { e.preventDefault(); letzter.focus(); }
+  else if (!e.shiftKey && document.activeElement === letzter) { e.preventDefault(); erster.focus(); }
 });
 
 /* ---------- 3.7.1: Blatt nach unten wegwischen (wie in iOS) ----------
@@ -8794,7 +8877,6 @@ document.addEventListener("keydown", e => {
 (function blattWischen() {
   const WEG_PX = 90, WEG_TEMPO = 0.55;   // px, px pro ms
   let g = null;
-  const reduziert = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   function zurueck() {
     if (!g) return;
     const { dlg, huelle } = g;
@@ -8843,12 +8925,11 @@ document.addEventListener("keydown", e => {
     if (g.dy < WEG_PX && tempo < WEG_TEMPO) { zurueck(); return; }
     const { dlg, huelle } = g;
     g = null;
-    const schliessen = () => { if (!schliesseObersteEbene()) render(); };
-    if (reduziert()) { schliessen(); return; }
-    dlg.style.transition = "transform 200ms var(--ease-out)";
-    dlg.style.transform = "translateY(105%)";
-    if (huelle) { huelle.style.transition = "opacity 200ms"; huelle.style.opacity = "0"; }
-    setTimeout(schliessen, 190);
+    /* Beobachtung 19/9: dieselbe Bewegung wie bei Escape/Knopf jetzt aus
+       spielAustrittsAnimation - dataset.schliesst verhindert, dass
+       schliesseObersteEbene() gleich danach ein zweites Mal (verzoegernd)
+       animiert, die Bewegung ist ja schon unterwegs. */
+    spielAustrittsAnimation(dlg, huelle, () => { if (!schliesseObersteEbene()) render(); });
   }
   document.addEventListener("touchend", ende, { passive: true });
   document.addEventListener("touchcancel", zurueck, { passive: true });
@@ -8950,9 +9031,9 @@ document.body.addEventListener("click", e => {
     /* 3.0.0: Das Bereichs-Sheet. "nichts" traegt das Blatt selbst, damit ein
        Tipp hinein nicht bis zum Hintergrund durchschlaegt und schliesst. */
     case "bereich-sheet-auf": ui.bereichSheet = true; render(); break;
-    case "bereich-sheet-zu": ui.bereichSheet = false; render(); break;
+    case "bereich-sheet-zu": schliesseObersteEbene(); break;
     case "card-detail": ui.cardDetailId = btn.dataset.id; render(); break;
-    case "card-detail-zu": ui.cardDetailId = null; render(); break;
+    case "card-detail-zu": schliesseObersteEbene(); break;
     case "card-detail-bearbeiten": ui.cardDetailId = null; editCard(btn.dataset.id); break;
     case "card-detail-loeschen": ui.cardDetailId = null; render(); deleteCard(btn.dataset.id); break;
     case "nichts": break;
@@ -8977,11 +9058,11 @@ document.body.addEventListener("click", e => {
     case "wahl-sheet":
       ui.wahlSheet = btn.dataset.id || null; render(); break;
     case "wahl-sheet-zu":
-      ui.wahlSheet = null; render(); break;
+      schliesseObersteEbene(); break;
     case "set-art-sheet-auf":
       ui.setArtSheetId = btn.dataset.id || null; render(); break;
     case "set-art-sheet-zu":
-      ui.setArtSheetId = null; render(); break;
+      schliesseObersteEbene(); break;
     case "set-art-waehlen":
       setArtAendern(ui.setArtSheetId, btn.dataset.id); break;
     case "resend-verification": doResendVerification(); break;
@@ -8993,7 +9074,7 @@ document.body.addEventListener("click", e => {
     case "rename-bereich": renameBereich(); break;
     case "delete-bereich": deleteBereich(); break;
     case "bereich-mehr-auf": ui.bereichMehr = true; render(); break;
-    case "bereich-mehr-zu": ui.bereichMehr = false; render(); break;
+    case "bereich-mehr-zu": schliesseObersteEbene(); break;
     /* Jede Zeile im Blatt schliesst es zuerst, bevor sie die eigentliche
        Handlung ausloest - Umbenennen/Loeschen zeigen ihrerseits einen
        eigenen Dialog (D2), der sonst ueber dem gerade erst geschlossenen
@@ -9035,7 +9116,7 @@ document.body.addEventListener("click", e => {
     case "karte-neu":
       ui.editId = null; resetFormDraft(); ui.karteSheet = true;
       render(); fokusInsWortfeld(); break;
-    case "karte-sheet-zu": cancelEdit(); break;
+    case "karte-sheet-zu": schliesseObersteEbene(); break;
     case "edit-card": editCard(btn.dataset.id); break;
     /* D7: Sprung in den fremden Bereich. Nutzt dieselbe Funktion wie der
        Fortschritts-Tab - dort wechselt sie schon seit 1.7.0 den Bereich,

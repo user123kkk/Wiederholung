@@ -4,6 +4,77 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 — Beobachtung 19/9 (zweite Hälfte): Austrittsbewegung, Fokus-Fang, Fokus-Rückgabe bei Blättern (v3.9.3)
+
+**Anlass:** Betreiber-Freigabe „mach A" für die in `beobachtungen-lernwerkzeug.md`
+als Kategorie A eingestuften, noch offenen echten Bugs. Aus dieser Kategorie
+gebaut: der einzige Punkt, der ohne Gerätetest vollständig fertig zu stellen und
+mit dem vorhandenen Playwright-Probelauf überprüfbar war. Punkt 13
+(Über-Scrolling) und 16 (Firebase-Fehler nach Browser-Zurück) bleiben unangetastet
+— beide haben schon mehrere unbestätigte Verdachtsfixe hinter sich, ein weiterer
+ohne Testmöglichkeit wäre wieder nur eine Vermutung. Punkt 19/13 (Renderkosten der
+Verwalten-Liste) ist in `AUFTRAG.md` ausdrücklich als eigener, größerer Schritt
+markiert, der eine gesonderte Freigabe braucht — nicht durch „mach A" gedeckt.
+
+**Geändert:** `app.js`
+- Neu: `spielAustrittsAnimation()` (bei `closeDialog`) — gemeinsame Funktion für
+  die Austrittsbewegung (200ms `translateY(105%)`, dieselbe wie beim bestehenden
+  Wegwischen). `dataset.schliesst` verhindert eine zweite, verzögernde Animation,
+  wenn das Wegwischen (`blattWischen`/`ende()`) die Bewegung schon selbst
+  gestartet hat — `ende()` ruft jetzt dieselbe Funktion statt einer eigenen Kopie.
+- `closeDialog()` und `schliesseObersteEbene()` schließen jetzt animiert, nicht
+  mehr abrupt.
+- Die expliziten „-zu"-Knöpfe im zentralen Klick-Verteiler
+  (`bereich-sheet-zu`, `card-detail-zu`, `wahl-sheet-zu`, `set-art-sheet-zu`,
+  `bereich-mehr-zu`, `karte-sheet-zu`) rufen jetzt `schliesseObersteEbene()`
+  statt die Zustandsänderung zu verdoppeln — dieselbe Stelle wie Escape, und
+  damit automatisch mit derselben Animation.
+- Neuer Tab-Fokusfang (eigener `keydown`-Listener): Tab bleibt innerhalb eines
+  offenen `.dlg`, solange der Fokus schon darin steht — vorher konnte Tab in die
+  dahinterliegende, für Maus/Touch unerreichbare Seite springen, ein Widerspruch
+  zu `aria-modal="true"`.
+- Fokus-Rückgabe: `render()` merkt sich beim Öffnen eines Blatts (`prevActive`,
+  ohnehin schon für die Cursor-Erhaltung berechnet) über einen neuen Selektor-
+  Helfer `fokusSchluessel()` (id, sonst `data-action`+`data-id`), wer den Fokus
+  hatte, und gibt ihn beim Schließen zurück (`sheetOeffnerSel`,
+  `overlayOffenVorher`). Kein Treffer möglich (z. B. Auslöser war kein
+  fokussierbares Element) → Fokus bleibt wie bisher stehen, kein Absturz.
+
+**Geprüft:** Eigenes Playwright-Skript gegen dieselbe Firebase-Attrappe wie
+`probelauf.mjs`, mit **echter** Bewegung (`reducedMotion: "no-preference"`,
+`probelauf.mjs` selbst schaltet Bewegung für Screenshots ab): Fokus liegt nach
+dem Öffnen im Blatt, Tab vom letzten Element springt zum ersten zurück, Escape
+setzt sofort `dataset.schliesst`+die 105%-Transform, das Blatt verschwindet
+danach aus dem DOM, der Fokus kehrt zum öffnenden Knopf zurück. Zusätzlich
+geprüft: Schließen über den „Fertig"/„Abbrechen"-Knopf und über den
+Hintergrund-Tipp (kein Auslöser mit `id`) — beides animiert, kein Absturz. Der
+vollständige `probelauf.mjs` (alle 18 Bildschirme) läuft unverändert durch, keine
+neuen Konsolen-/Seitenfehler.
+
+**Entscheidung:** Bewusst NICHT angefasst: die Tab-Wechsel-Sammelreset-Stellen
+(`tab-lernen`/`tab-fortschritt`/`tab-verwalten`/`einstellungen-zu` usw.), die
+nebenbei auch offene Blätter schließen — dort bleibt das Schließen instant, wie
+bisher. Ein offenes Blatt bei einem Tab-Wechsel ist ein Randfall, und die
+Animation dort einzubauen hätte bedeutet, den Tab-Wechsel selbst um 190ms zu
+verzögern — ein größerer Eingriff als der gemeldete Punkt verlangt. Ebenso
+unangetastet: `card-detail-bearbeiten`/`-loeschen` und die vier
+`bereich-mehr-*`-Handlungszeilen — die schließen ihr Blatt, um sofort ein neues
+zu öffnen (Bearbeiten-Formular bzw. Bestätigungsdialog), eine Verzögerung davor
+wäre nur störend.
+
+**Offen:** Kein Gerätetest möglich (kein Firebase-Login in dieser Umgebung) — ob
+sich die Bewegung auf einem echten Bildschirm genauso rund anfühlt wie im
+Playwright-Probelauf, zeigt sich erst dort. Kategorie A ist damit nicht
+abgeschlossen: Punkt 13, 16 und 19/13 bleiben wie oben beschrieben liegen.
+
+**Nächster Schritt:** Betreiber-Test am Gerät (Blatt öffnen, mit Tab durchgehen,
+mit Escape/Knopf schließen, prüfen ob die Bewegung ruckelt oder der Fokus
+sichtbar zum richtigen Knopf zurückspringt). Danach: Betreiber entscheidet, ob
+zu Punkt 13/16 trotz fehlender Testmöglichkeit ein weiterer Versuch gewünscht ist,
+oder ob Punkt 19/13 (Renderkosten) als eigener, größerer Schritt freigegeben wird.
+
+---
+
 ### 2026-09-23 — Schwebende Leisten: heller ueber Karten als ueber leerem Hintergrund (v3.8.7)
 
 **Anlass:** Betreiber-Screenshots (drei Stück, Fortschritt voll / Lernen leer

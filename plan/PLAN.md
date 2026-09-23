@@ -168,6 +168,16 @@ Grau mehr. Zwei Punkte geklärt (E-Mail-Fehlermeldungen waren schon da;
 „lernkarte" in der Google-URL ist die nicht änderbare Firebase-Projekt-ID)
 und zwei offen (violetter Balken vermutlich Browser-Erweiterung; Spam-
 Zustellung braucht einen Firebase-Konsolen-Schritt, siehe `LOGBUCH.md`).
+**23.09.2026 (v3.9.3):** Betreiber-Freigabe „mach A" für Kategorie A aus
+`beobachtungen-lernwerkzeug.md` (echte, noch offene Bugs). Umgesetzt: Blätter
+(`.dlg`) schließen jetzt animiert statt abrupt, halten den Fokus per Tab
+(Fokus-Fang) und geben ihn beim Schließen an den öffnenden Knopf zurück —
+die zweite Hälfte von Punkt 19/9. Weiterhin offen, unverändert: Punkt 13
+(Über-Scrolling), Punkt 16 (Firebase-Fehler nach Browser-Zurück) — beide ohne
+Gerätetest nicht weiter belegbar — und Punkt 19/13 (Renderkosten der
+Verwalten-Liste), das laut `redesign-oberflaeche/AUFTRAG.md` eine eigene,
+größere Freigabe braucht. Details: `redesign-oberflaeche/LOGBUCH.md`,
+`CHANGELOG.md` 3.9.3.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
 

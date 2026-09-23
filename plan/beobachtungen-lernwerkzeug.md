@@ -867,6 +867,15 @@ Tastatur, echte `visualViewport`-Werte der Home-Bildschirm-App, Bildwiederholrat
    keinen Fokus-Fang und keine Fokus-Rückgabe trotz `aria-modal`. Escape schließt
    Bereichs-, Mehr- und Detail-Blatt, aber **nicht** Karten-, Wahl- und
    Speicherkarten-Blatt (`app.js:7869–7880`); zwei getrennte `render()` hintereinander.
+   **✅ Zweite Hälfte behoben (v3.9.3, 23.09.2026):** Austrittsbewegung (dieselbe
+   wie beim Wegwischen, jetzt auch bei Escape/Hintergrund-Tipp/Knopf, geteilte
+   Funktion `spielAustrittsAnimation`), Fokus-Fang per Tab (`.dlg` haelt den
+   Fokus, solange es offen ist) und Fokus-Rückgabe an den öffnenden Knopf beim
+   Schließen (`sheetOeffnerSel`/`fokusSchluessel` in `render()`). Mit Playwright
+   gegen eine Firebase-Attrappe geprüft (Öffnen/Schließen/Tab-Fang/Timing);
+   **kein Gerätetest** — ob sich die Bewegung auf einem echten Bildschirm
+   genauso anfühlt, ist offen. Details: `CHANGELOG.md` 3.9.3,
+   `redesign-oberflaeche/LOGBUCH.md`.
 
 **D · Fehler in der Konsole**
 10. **gemessen — `ReferenceError: teilLinkPruefenUndVerarbeiten is not defined`
@@ -929,7 +938,8 @@ Formularfeld, Seite hinter Blatt scrollt nicht, Wischen + Taste = 1
 Schreibvorgang, kein Overlay/keine Seitenfehler mehr. Zusätzlich: Klick-Durchlauf
 über alle sichtbaren Knöpfe ohne Seitenfehler.
 **Bewusst offen:** Punkt 9 zur Hälfte (Austrittsbewegung der Blätter, Fokus-
-Rückgabe beim Schließen), Punkt 13 (Renderkosten der Verwalten-Liste — ein Umbau
+Rückgabe beim Schließen) — **✅ nachgeholt in v3.9.3, 23.09.2026, siehe dort**.
+Weiterhin offen: Punkt 13 (Renderkosten der Verwalten-Liste — ein Umbau
 wäre ein eigener Strang), und alles, was nur am echten iPhone prüfbar ist
 (Tastatur bleibt beim Toast-Ablauf offen? Nav-Höhe in der Home-Bildschirm-App
 unverändert 850 in allen Tabs?). **Beides am Gerät gegenprüfen.**
