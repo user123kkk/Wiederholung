@@ -311,6 +311,25 @@ ausgeliefert**; der gebaute Einstieg stellt **drei** Fragen. Status:
 `inhaltlich fertig auf dem Zweig, wartet auf Gerätetest und
 Rechtsprüfung; nichts ausgeliefert`.
 
+**v3.10.0 (23.09.2026, abends): Neubau nach Video 3.** Der Betreiber
+bewertete den Einstieg aus v3.9.9–3.9.12 als „schlechter als erwartet". Die
+Diagnose steht in
+[`onboarding/NEUAUFBAU-3.md`](onboarding/NEUAUFBAU-3.md) §2: Er war ein
+Einstellungs-Assistent, und das Wort auf der Probekarte war fast unsichtbar.
+
+Neu gebaut nach der Bildsprache von Duolingo, Cal AI und Ladder: acht
+Bildschirme mit Ziel, Hürden samt Antwort, Probekarte, Schrift, Runde, Anker
+und Plan mit echten Wiederholungstagen. Das Konto heißt danach „Plan
+speichern".
+
+Die Prüfregeln P1–P7 sind teils gelockert; die harten Grenzen bleiben:
+- keine erfundene Zahl
+- Lernlogik unberührt
+- keine neuen Speicherorte
+
+Status: `auf main, wartet auf veroeffentlichen.bat, Gerätetest, J1 und die
+Prüfung des Wortlauts „Den Quran verstehen"`.
+
 ### Nebenstrang: Feedback-Board
 
 Kein Phasen-Ordner, keine Nummer. Ordner
@@ -664,7 +683,42 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**NEUESTER STAND (23.09.2026, dieselbe Session, danach): veröffentlicht
+**AKTUELL (23.09.2026, abends): Einstieg nach Video 3 neu gebaut (v3.10.0),
+auf `main`, noch nicht ausgeliefert.**
+
+Der Betreiber sagte: „onboarding ist schlechter als erwartet … du hast die
+videos anscheinend nicht verstanden". Darauf folgte Video 3 (Rok Bozic:
+Duolingo, Cal AI, Ladder). Es ist vollständig ausgewertet: das ganze
+Transkript und rund 490 Bilder.
+
+Der Einstieg hat jetzt acht Bildschirme:
+- Willkommen mit umdrehender Karte und „Ich habe schon ein Konto"
+- Ziel, mit Echo
+- Hürden, mit Antwort direkt unter der Wahl
+- Probekarte
+- Schrift und Runde, vorausgewählt aus den Hürden
+- Anker
+- Plan mit den echten Wiederholungstagen
+
+Danach heißt das Konto „Plan speichern". Dabei behoben: Das Wort auf der
+Probekarte war seit 3.9.9 fast unsichtbar.
+
+Alles Weitere steht in
+[`onboarding/NEUAUFBAU-3.md`](onboarding/NEUAUFBAU-3.md) und
+`onboarding/LOGBUCH.md`.
+
+**Bei „leg los" zuerst prüfen:**
+1. Hat der Betreiber `veroeffentlichen.bat` ausgeführt und am Gerät getestet?
+2. Hat er den Wortlaut „Den Quran verstehen" geprüft (`NEUAUFBAU-3.md` §8)?
+3. Liegt J1 vor?
+
+Ohne neue Vorgabe ist der nächste mögliche Schritt die Start-Liste nach der
+Anmeldung (`NEUAUFBAU-3.md` §6). Sie braucht eine Freigabe, weil sie das
+Lernwerkzeug berührt.
+
+---
+
+**Vorheriger Stand (23.09.2026, dieselbe Session, davor): veröffentlicht
 (`veroeffentlichen.bat` durch den Betreiber ausgeführt).** Gerätetest und
 J1-Rechtsprüfung macht der Betreiber selbst, „heut noch" bzw. „am Ende" —
 keine Session-Aktion nötig, bis er sich meldet. Auf Rückfrage, woran

@@ -1,5 +1,10 @@
 # Wortlaut des Einstiegs — jeder Bildschirm, Wort für Wort
 
+> **Überholt seit v3.10.0 (23.09.2026).** Der gebaute Einstieg folgt jetzt
+> [`NEUAUFBAU-3.md`](NEUAUFBAU-3.md) (Video 3). Diese Datei bleibt als
+> Herleitung stehen. Weiter gültig sind §0 (Freigabe der Gebetszeiten als
+> Anker) und §3 (Ankerliste); der Wortlaut in §2 ist ersetzt.
+
 Angelegt: 23. September 2026 · Status: **gebaut in v3.9.9.** Abweichungen, die
 sich erst beim Bauen zeigten, stehen in Abschnitt 6 — dieses Dokument und der
 Code stimmen überein.

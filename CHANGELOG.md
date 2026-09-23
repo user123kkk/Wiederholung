@@ -1,3 +1,49 @@
+## 3.10.0 - 23. September 2026
+
+**Der Einstieg vor der Anmeldung ist neu gebaut.** Er folgt dem dritten
+Betreiber-Video (Rok Bozic: die Onboardings von Duolingo, Cal AI und Ladder,
+Bild für Bild ausgewertet). Plan und Wortlaut: `plan/onboarding/NEUAUFBAU-3.md`.
+
+Der alte Einstieg war im Kern ein Einstellungs-Assistent: vier von sieben
+Bildschirmen fragten Einstellungen ab. Der neue baut auf, wofür man die App
+braucht, und endet mit einem Plan:
+
+1. **Willkommen.** Eine Karte dreht sich um, darunter wächst die Leiste der
+   echten Abstände (1, 2, 3, 6, 10, 19 Tage). Neu ist dort „Ich habe schon ein
+   Konto": Wer auf einem neuen Gerät sein Konto öffnen will, landet nicht mehr
+   im Registrieren.
+2. **Wofür lernst du Arabisch?** Mehrfachwahl. Die App antwortet: kein
+   fertiger Kurs, sondern deine Wörter aus deinem Stoff.
+3. **Was hat dich bisher gebremst?** Jede gewählte Hürde bekommt direkt
+   darunter eine Antwort, die nur sagt, was die App wirklich tut.
+4. **Probier eine Karte.** Nach der Bewertung steht genau da, was die
+   Lernlogik mit einer neuen Karte tut.
+5. **Schrift** und **6. Runde.** Die Werte sind aus den Hürden vorausgewählt,
+   mit Begründung. Die Serie wird erklärt: Ein ausgelassener Tag reißt sie
+   nicht.
+7. **Wann machst du deine Runde?** Die Gebetszeiten tragen jetzt
+   Tageszeit-Zeichen.
+8. **Dein Plan steht.** Vier Kacheln und eine Leiter mit den Kalendertagen,
+   an denen ein Wort von heute wiederkommt. Die Tage sind aus
+   `intervalForStufe()` gerechnet, nicht geschätzt. Danach heißt das Konto
+   „Plan speichern".
+
+Oben stehen Zurück und ein dünner Fortschrittsbalken. Antworten werden an
+Ort und Stelle umgeschaltet, deshalb fliegt der Bildschirm nicht bei jedem
+Tipp neu ein, und der Tastaturfokus bleibt.
+
+**Behoben:** Das arabische Wort auf der Probekarte war vor dem Umdrehen fast
+unsichtbar. Die Karte ist ein Knopf und erbte die dunkle Schriftfarbe des
+gefüllten Knopfes. Das bestand seit 3.9.9.
+
+**Entfallen:** die Frage Hell/Dunkel. Sie verdiente ihren Platz nicht und
+hielt ohne Konto ohnehin nur bis zum nächsten Laden. Sie bleibt in den
+Einstellungen.
+
+**Unverändert:** Die Lernlogik ist nicht angefasst. Es gibt keine neuen
+Speicherorte: Ziel und Hürden bleiben nur im Arbeitsspeicher, und im
+`localStorage` stehen dieselben drei Schlüssel wie bisher.
+
 ## 3.9.12 - 23. September 2026
 
 **Echter Fehler gefunden und behoben: CSP blockierte das Theme-Vorlaufskript seit vor v3.9.8 - unabhaengig vom Onboarding.** Beim Pruefen der frisch veroeffentlichten Seite (adrabic.web.app) meldete die Konsole einen blockierten Inline-Script-Verstoss gegen `Content-Security-Policy`. Nachgemessen (sha256 des `<script>`-Blocks in `index.html` vs. der Hashes in `firebase.json`): Das Kopfskript, das die Theme-Wahl (`adrabic-thema`) vor dem ersten Bild aus dem `localStorage` liest, hat seit mindestens v3.9.8 - also vor jeder Aenderung dieser Session - einen anderen Hash als die beiden in `firebase.json` hinterlegten. Bestaetigt per `git show a626498:index.html` gegen dieselbe `firebase.json`: derselbe Fehlschlag, also kein Onboarding-Fehler, sondern ein bereits laenger live stehender Bug.

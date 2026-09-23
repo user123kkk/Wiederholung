@@ -4,6 +4,115 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-23 (dieselbe Session, später) — Video 3 ausgewertet, Einstieg neu gebaut (v3.10.0)
+
+**Geändert:**
+- `app.js`:
+  - Konstanten `EINSTIEG_ANKER` (mit Zeichen), `EINSTIEG_ZIELE`,
+    `EINSTIEG_HUERDEN`, `EINSTIEG_RUNDEN` (~1061–1110)
+  - neun neue Symbole in `ICON_PFADE`
+  - `ui.authAusEinstieg`
+  - `renderEinstieg()` samt Helfern neu (~4930–5430)
+  - Startzustand in `render()`
+  - Klick-Zweige `einstieg-*` (~9750–9900): neu `einstieg-konto`,
+    `einstieg-ziel`, `einstieg-huerde`; entfernt `einstieg-thema`
+  - `renderAuth()` mit „Plan speichern"
+  - Nachklang-Text
+- `styles.css`: Abschnitt 16b neu
+- neu `plan/onboarding/NEUAUFBAU-3.md`
+- `WORTLAUT.md`: Hinweis „überholt"
+- `index.html`, `sw.js`, `CHANGELOG.md`: Versionsliste vollständig auf
+  3.10.0. `APP_SHELL` ist unverändert, weil es keine neue Startdatei gibt.
+
+**Anlass:** Der Betreiber sagte: „onboarding ist schlechter als erwartet …
+du hast die videos anscheinend nicht verstanden". Danach kam Video 3 (Rok
+Bozic: Duolingo, Cal AI, Ladder; 1:07:32) mit dessen Prompt, dazu der
+Hinweis: „ja nicht blind übernehmen aber sehr hilfreich".
+
+**Auswertung:**
+- das Transkript vollständig
+- 300 Bilder über das ganze Video
+- rund 190 Bilder in 1024 px für sechs Abschnitte
+
+Ergebnis und Tabelle der drei Vorbilder stehen in `NEUAUFBAU-3.md` §1. Der
+erste Versuch mit `--detail transcript` wurde vom Betreiber abgebrochen, weil
+er ausdrücklich mehr Bilder wollte.
+
+**Befund zum alten Einstieg (am Bildschirm gemessen, `NEUAUFBAU-3.md` §2):**
+1. Er war ein Einstellungs-Assistent: vier von sieben Bildschirmen fragten
+   Einstellungen ab, es gab keinen Plan und keine Antwort der App auf eine
+   Antwort.
+2. **Das Wort auf der Probekarte war fast unsichtbar.** Die Karte ist ein
+   `<button>`, erbte `--text-on-accent` und stand damit dunkel auf dunkel.
+   Behoben.
+3. Die Hell/Dunkel-Wahl hielt nur bis zum nächsten Laden, weil
+   `themaAnwenden()` beim Start ohne Konto auf „dunkel" zurücksetzt.
+4. „Ich habe schon ein Konto" fehlte.
+5. Jeder Tipp ließ den ganzen Bildschirm neu einfliegen, und der
+   Tastaturfokus ging verloren.
+6. Die Prüfregeln P1–P7 hatte der Agent selbst aufgestellt. „Kein Zähler"
+   berief sich auf die Notiz „nicht invasiv" vom 18.09., und die betraf das
+   Teilen-System, nicht den Einstieg.
+
+**Entscheidung:** Der Neubau folgt der Bildsprache, die alle drei Vorbilder
+teilen: Zurück und Balken oben, große Überschrift, Antwortzeilen, ein Knopf.
+Dazu kommen die stärksten Einzelstellen: Demo zuerst, Einwände mit sofortiger
+Antwort, Plan mit konkretem Datum, Konto als „Plan speichern".
+
+**Übertragen auf eine App ohne Geldfluss:**
+- **Kasse:** Das Konto tritt an ihre Stelle.
+- **Mitteilungen:** Der Anker ist der Ersatz.
+- **Präzision:** Die echten Wiederholungstage aus `intervalForStufe()`
+  ersetzen erfundene Zahlen.
+- **Serie:** Die bestehende Serie mit ihrer Kulanzregel steht jetzt dort, wo
+  Duolingo ein Serien-Ziel verlangt.
+
+Acht Bildschirme, danach das Konto. Die Frage Hell/Dunkel ist entfallen, siehe
+Begründung oben; sie bleibt in den Einstellungen. Was bewusst nicht übernommen
+ist, steht mit Grund in `NEUAUFBAU-3.md` §7: Kasse, Bitte um Bewertung, ATT,
+erfundene Quoten, Serien-Ziel ohne Funktion, Maskottchen.
+
+**Harte Grenzen gehalten:**
+- Die Lernlogik ist nicht angefasst; sie wird nur gelesen.
+- Es gibt keine neuen Speicherorte: Ziel und Hürden stehen nur im
+  Arbeitsspeicher. Damit ist J1 im Umfang unverändert.
+- Es gibt keine Zahl ohne Grundlage.
+
+**Geprüft im Browser** (lokaler Server, 375 px und 1024 px, hell und dunkel):
+- alle acht Bildschirme
+- Vorauswahl aus den Hürden samt Speichern bei „Weiter"
+  (`{"arabGroesse":"gross","sitzungsLimit":10}`)
+- Zurück mit erhaltener Auswahl und Laufrichtung
+- „Überspringen" (räumt alles weg, führt ins Registrieren)
+- „Ich habe schon ein Konto" (führt ins Anmelden, ohne Nachklang)
+- „Plan speichern" (Titel, Satz, Merker, Nachklang)
+- Tastatur: Leertaste und Enter schalten um, der Fokus bleibt
+- kein waagerechter Überlauf
+- die Plan-Tage stimmen mit der Formel überein: Do 24.9., Sa 26.9., Di 29.9.,
+  um den 5.10., um den 15.10.
+
+Die Konsole zeigt nur die bekannten Ladefehler des Firebase-SDK in der
+Sandbox.
+
+**Nicht geprüft:**
+- echtes Konto und Firebase-Anmeldung
+- das echte Gerät
+- `prefers-reduced-motion` (nur per CSS-Regel abgesichert)
+
+**Offen:**
+1. Gerätetest (Betreiber)
+2. J1
+3. **Wortlaut „Den Quran verstehen" und „… aus dem Quran"**: vom Agenten
+   geschrieben, religiöser Bezug, Betreiber prüft
+4. Vorschlag Start-Liste nach der Anmeldung (Ladder), der das Lernwerkzeug
+   berührt und eine Freigabe braucht
+5. Beobachtung Theme-Rücksetzung ohne Konto (Punkt 3 oben), nicht behoben
+
+**Nächster Schritt:** Der Betreiber führt `veroeffentlichen.bat` aus und
+testet am Gerät.
+
+---
+
 ### 2026-09-23 (dieselbe Session) — Veröffentlicht; S1-Zusatzsatz geprüft, bereits erledigt
 
 **Geändert:** `plan/onboarding/VIDEO-BEFUND-2.md` §6 (Erledigt-Vermerk). Kein

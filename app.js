@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.12";
+const APP_VERSION = "3.10.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -508,6 +508,18 @@ const ICON_PFADE = {
   auswaehlen:  '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/>',
   auge:        '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
   augeZu:      '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 20 20 4"/>',
+  /* 3.10.0: Einstieg (plan/onboarding/NEUAUFBAU-3.md). Tageszeiten fuer die
+     Gebets-Anker, dazu Uhr, Frage, Sprechblase und Tafel fuer Ziel und
+     Huerden. Dasselbe 24er-Raster, dieselbe Strichstaerke wie oben. */
+  sonne:       '<circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/>',
+  sonneAuf:    '<path d="M3 19h18"/><path d="M7 19a5 5 0 0 1 10 0"/><path d="M12 3.5v6"/><path d="M9.5 6 12 3.5 14.5 6"/>',
+  sonneTief:   '<path d="M4 19.5h16"/><path d="M8 19.5a4 4 0 0 1 8 0"/><path d="M12 9.5v2.2M5.3 13.2l1.6 1.2M18.7 13.2l-1.6 1.2M8.2 10.4l1 1.8M15.8 10.4l-1 1.8"/>',
+  sonneUnter:  '<path d="M3 19h18"/><path d="M7 19a5 5 0 0 1 10 0"/><path d="M12 3.5v6"/><path d="M9.5 7 12 9.5 14.5 7"/>',
+  mond:        '<path d="M19.5 14.5A7.5 7.5 0 1 1 9.5 4.5a6 6 0 0 0 10 10z"/>',
+  uhr:         '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  frage:       '<circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-1 .8-1 1.5v.6"/><path d="M12 16.6h.01"/>',
+  sprechen:    '<path d="M4.5 5.5h15a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-4.5 3.5v-3.5h-1a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"/>',
+  tafel:       '<rect x="3.5" y="4" width="17" height="11" rx="1.5"/><path d="M12 15v5"/><path d="M8 20h8"/>',
   marke:       '<path fill="currentColor" stroke="none" d="M11.53,15.02L9.3,14.84L9.21,14.74L8.74,14.74L8.65,14.65L7.63,14.47L7.53,14.37L7.07,14.28L6.79,14.09L6.6,14.09L5.3,13.44L4.65,12.98L3.44,11.77L2.6,10.28L2.6,10.09L2.42,9.72L2.42,9.44L2.33,9.35L2.33,8.98L2.23,8.88L2.14,7.58L3.72,7.67L3.81,7.77L4.28,7.77L4.37,7.86L4.65,7.86L5.12,8.05L5.4,8.05L5.49,7.95L5.4,7.86L5.4,7.3L5.3,7.21L5.3,5.44L5.4,5.35L5.49,4.23L5.58,4.14L5.58,3.86L5.67,3.77L5.67,3.49L5.77,3.4L5.86,2.93L6.88,3.4L8.09,4.23L9.3,5.44L9.77,6.09L9.86,6L10.14,4.98L10.6,3.95L10.79,3.77L11.16,3.02L12,2L12.84,3.02L12.93,3.3L13.4,3.95L13.86,4.98L13.86,5.16L14.23,6.09L14.7,5.44L15.91,4.23L17.12,3.4L18.14,2.93L18.14,3.12L18.33,3.49L18.33,3.77L18.42,3.86L18.42,4.14L18.51,4.23L18.6,5.35L18.7,5.44L18.7,7.21L18.6,7.3L18.6,7.86L18.51,7.95L18.6,8.05L18.88,8.05L18.98,7.95L19.26,7.95L19.72,7.77L20.19,7.77L20.28,7.67L21.86,7.58L21.77,8.88L21.67,8.98L21.58,9.72L20.93,11.21L20.56,11.77L19.35,12.98L18.7,13.44L17.4,14.09L17.21,14.09L16.93,14.28L16.74,14.28L16.37,14.47L16.09,14.47L16,14.56L15.72,14.56L15.26,14.74L14.79,14.74L14.7,14.84L14.14,14.84L14.05,14.93L13.02,14.93L12.93,15.02L11.53,15.02Z"/><path d="M11.95,15.02L12,22"/>'
 };
 /* Kleines Symbol im Fliesstext (16px, .icon) - der bisherige Aufruf. */
@@ -1058,13 +1070,52 @@ const EINSTIEG_BEISPIEL = { arab: "كِتَابٌ", de: "Buch" };
    klingt. Beides getrennt, weil ein Knopf kurz sein muss und ein Satz richtig:
    "Wenn ich nach dem Maghrib-Gebet, dann mache ich eine Runde" ist kein
    deutscher Satz. Gefunden beim Probelauf am 23.09.2026. */
+/* 3.10.0: icon = Tageszeit-Zeichen (Sonnenaufgang bis Mond), keine
+   religioesen Symbole. */
 const EINSTIEG_ANKER = [
-  { id: "fajr",    label: "nach dem Fajr-Gebet",    satz: "Nach dem Fajr-Gebet" },
-  { id: "dhuhr",   label: "nach dem Dhuhr-Gebet",   satz: "Nach dem Dhuhr-Gebet" },
-  { id: "asr",     label: "nach dem Asr-Gebet",     satz: "Nach dem Asr-Gebet" },
-  { id: "maghrib", label: "nach dem Maghrib-Gebet", satz: "Nach dem Maghrib-Gebet" },
-  { id: "isha",    label: "nach dem Ischa-Gebet",   satz: "Nach dem Ischa-Gebet" },
-  { id: "eigen",   label: "eigene Situation …" }
+  { id: "fajr",    label: "nach dem Fajr-Gebet",    satz: "Nach dem Fajr-Gebet",    icon: "sonneAuf" },
+  { id: "dhuhr",   label: "nach dem Dhuhr-Gebet",   satz: "Nach dem Dhuhr-Gebet",   icon: "sonne" },
+  { id: "asr",     label: "nach dem Asr-Gebet",     satz: "Nach dem Asr-Gebet",     icon: "sonneTief" },
+  { id: "maghrib", label: "nach dem Maghrib-Gebet", satz: "Nach dem Maghrib-Gebet", icon: "sonneUnter" },
+  { id: "isha",    label: "nach dem Ischa-Gebet",   satz: "Nach dem Ischa-Gebet",   icon: "mond" },
+  { id: "eigen",   label: "eigene Situation …",                                      icon: "stift" }
+];
+
+/* 3.10.0 (plan/onboarding/NEUAUFBAU-3.md): Ziel und Huerden. Beide Antworten
+   bleiben NUR im Arbeitsspeicher (ui.einstieg) - kein localStorage, keine
+   Cloud. Sie wirken im Einstieg selbst (Echo, Vorauswahl, Plan) und sind
+   danach weg. Grund: "Den Quran verstehen" ist eine Angabe mit religioesem
+   Bezug, die gehoert nirgends gespeichert - und die laufende Rechtspruefung
+   (J1) bleibt damit genau so gross wie vorher. */
+const EINSTIEG_ZIELE = [
+  { id: "quran",  label: "Den Quran verstehen",            kurz: "Quran verstehen", quelle: "dem Quran",                   icon: "lektion" },
+  { id: "kurs",   label: "Für meinen Kurs oder mein Buch", kurz: "Kurs und Buch",   quelle: "deinem Kurs oder Buch",       icon: "tafel" },
+  { id: "msa",    label: "Hocharabisch lesen und sprechen", kurz: "Hocharabisch",   quelle: "dem, was du liest und hörst", icon: "sprechen" },
+  { id: "anders", label: "Etwas anderes",                  kurz: "eigenes Ziel",    quelle: "dem, was du gerade lernst",   icon: "mehr" }
+];
+/* Jede Antwort auf eine Huerde nennt nur, was die App TATSAECHLICH tut - die
+   Abstaende stehen in intervalForStufe(), die Serien-Regel in serieAktuell(),
+   die kleinste Rundengroesse in SITZUNGS_LIMITS. Keine Wirkungszusage. */
+const EINSTIEG_HUERDEN = [
+  { id: "vergessen", label: "Ich vergesse Wörter schnell wieder", icon: "ueben",
+    echo: "Deshalb kommt jedes Wort wieder: morgen, dann nach 2 und 3 Tagen, dann nach rund einer Woche – jedes Mal später, solange du es weißt." },
+  { id: "wann", label: "Ich weiß nicht, was ich wann wiederholen soll", icon: "frage",
+    echo: "Das rechnet Adrabic für dich aus. Du siehst jeden Tag nur, was fällig ist." },
+  { id: "dran", label: "Ich bleibe nicht dran", icon: "serie",
+    echo: "Gleich legst du einen festen Zeitpunkt am Tag fest. Und ein ausgelassener Tag reißt deine Serie nicht." },
+  { id: "zeit", label: "Mir fehlt die Zeit", icon: "uhr",
+    echo: "Deine Runde darf klein sein – ab 10 Karten. Das stellen wir gleich so ein." },
+  { id: "schrift", label: "Die arabische Schrift ist noch mühsam", icon: "auge",
+    echo: "Du stellst die Schrift gleich so groß, wie du sie brauchst." }
+];
+/* Dieselben Werte wie SITZUNGS_LIMITS, nur mit einer Einordnung rechts -
+   Duolingo ("5 min / Casual"), hier in Karten statt Minuten, weil die App
+   Karten zaehlt und keine Zeit misst. */
+const EINSTIEG_RUNDEN = [
+  { id: 10,     label: "10 Karten",     stufe: "kurz" },
+  { id: 20,     label: "20 Karten",     stufe: "normal" },
+  { id: 30,     label: "30 Karten",     stufe: "gründlich" },
+  { id: "alle", label: "Alle fälligen", stufe: "ohne Grenze" }
 ];
 
 function einstiegGesehen() {
@@ -1086,7 +1137,8 @@ function einstiegAntwortenSichern(patch) {
 /* 3.9.10 - der Nachklang: was nach der Anmeldung EINMAL wiederkommt. Zwei
    Zeilen, beide auf dem leeren Lernen-Bildschirm:
 
-     - "Fertig. Jetzt deine erste eigene Karte."  (Station S9)
+     - "Dein Plan steht. Jetzt deine erste eigene Karte."  (Station S9;
+       bis 3.9.12 "Fertig. ...")
      - der Wenn-dann-Satz, so wie man ihn im Einstieg gewaehlt hat (S7)
 
    Warum ueberhaupt: Nach PSYCHOLOGIE.md 1.2 zaehlt der ABSCHLUSS, nicht der
@@ -1189,11 +1241,15 @@ let ui = {
      Anmeldeaenderung geleert (onAuthStateChanged). */
   authEingabe: { name: "", email: "", pass: "" },
   authPassSichtbar: false,
-  /* Der Einstieg vor der Anmeldung (3.9.9). null = laeuft nicht. Sonst der
-     Stand der neun Stationen aus plan/onboarding/FRAGENKATALOG.md 2.
-     Absichtlich NUR im Arbeitsspeicher: was behalten werden muss, steht im
-     localStorage (siehe einstiegAntwortenSichern). */
-  einstieg: null,            // { schritt, aufgedeckt, bewertet, anker, ankerFrei }
+  /* Der Einstieg vor der Anmeldung (3.9.9, neu aufgebaut 3.10.0). null =
+     laeuft nicht. Sonst der Stand der acht Bildschirme aus
+     plan/onboarding/NEUAUFBAU-3.md. Absichtlich NUR im Arbeitsspeicher: was
+     behalten werden muss, steht im localStorage (einstiegAntwortenSichern);
+     Ziel und Huerden werden nirgends gespeichert. */
+  einstieg: null,            // { schritt, aufgedeckt, bewertet, ziele, huerden, anker, ankerFrei, gezeigt, richtung, balkenVorher }
+  /* 3.10.0: true, wenn das Anmeldeformular direkt aus dem Einstieg kommt -
+     dann heisst es "Plan speichern" statt "Konto anlegen". */
+  authAusEinstieg: false,
   /* 9 (17.09.2026): fehlender Name beim Registrieren steht direkt am Feld,
      nicht im allgemeinen Fehlerkasten - siehe doRegister/renderAuth. */
   authFeldFehler: null,
@@ -4872,17 +4928,26 @@ function tickCountups() {
   });
 }
 
-/* ---------- Der Einstieg vor der Anmeldung (3.9.9) ------------------------
-   Sieben Bildschirme, danach uebernimmt renderAuth(). Jeder Satz hier steht
-   wortgleich in plan/onboarding/WORTLAUT.md; wer ihn aendert, aendert ihn
-   dort mit, sonst weiss die naechste Sitzung nicht mehr, was abgestimmt war.
+/* ---------- Der Einstieg vor der Anmeldung (3.10.0) -----------------------
+   Acht Bildschirme, danach uebernimmt renderAuth(). Neu aufgebaut nach dem
+   dritten Betreiber-Video (Rok Bozic: Duolingo, Cal AI, Ladder). Plan,
+   Begruendung und jeder Satz: plan/onboarding/NEUAUFBAU-3.md - wer hier
+   etwas aendert, aendert es dort mit.
 
-   Was hier bewusst NICHT steht (plan/onboarding/FRAGENKATALOG.md, Pruefung
-   P4, und PSYCHOLOGIE.md Abschnitt 4): keine Zahl ueber Wirkung, keine
-   Studie, kein Versprechen ueber eine Frist, kein Zaehler "Schritt 3 von 7",
-   kein Ausrufezeichen. Ueberspringen steht auf jedem Bildschirm gleichrangig
-   neben dem Weiter-Knopf, nicht kleiner und nicht grau. */
-const EINSTIEG_LETZTER = 6;
+     0 Willkommen  Marke + Glaube: das Problem, und wie Adrabic arbeitet
+     1 Ziel        Einordnung + erstes kleines Ja; Echo "kein fertiger Kurs"
+     2 Huerden     Einwaende einsammeln, jeden sofort beantworten
+     3 Karte       erster Wert: eine Karte umdrehen und bewerten
+     4 Schrift     Einstellung mit sofort sichtbarer Wirkung
+     5 Runde       das taegliche Mass; die Serie erklaert
+     6 Anker       die Rueckkehr vorbereiten: Wenn-dann-Satz
+     7 Plan        alles zusammen + die echten Wiederholungstage -> Konto
+
+   Was bleibt (NEUAUFBAU-3.md Abschnitt 5): keine erfundene Zahl, keine
+   Wirkungszusage. Jede Angabe ueber Abstaende kommt aus intervalForStufe() -
+   gerechnet, nicht abgeschrieben. Ueberspringen auf jedem Fragebildschirm.
+   Kein Ausrufezeichen. Die Lernlogik wird nirgends beruehrt. */
+const EINSTIEG_LETZTER = 7;
 
 function ankerLabel(id) {
   const o = EINSTIEG_ANKER.find(x => x.id === id);
@@ -4900,6 +4965,100 @@ function vorsatzSatz(e) {
   }
   const o = EINSTIEG_ANKER.find(x => x.id === e.anker);
   return o && o.satz ? o.satz + " mache ich eine Runde." : "";
+}
+function einstiegSatzHtml(e) {
+  const satz = vorsatzSatz(e);
+  return satz ? '<strong>' + esc(satz) + '</strong>' : 'Wenn ich …, mache ich eine Runde.';
+}
+
+/* Was auf Bildschirm 4 und 5 angezeigt wird: die eigene Wahl, sonst die
+   Vorauswahl aus den Huerden, sonst die Voreinstellung der App. */
+function einstiegGroesse(e) {
+  const a = einstiegAntworten();
+  if (a.arabGroesse) return a.arabGroesse;
+  return e.huerden.includes("schrift") ? "gross" : settings.arabGroesse;
+}
+function einstiegLimit(e) {
+  const a = einstiegAntworten();
+  if (a.sitzungsLimit !== undefined) return a.sitzungsLimit;
+  return e.huerden.includes("zeit") ? 10 : settings.sitzungsLimit;
+}
+/* Eine Vorauswahl gilt, sobald man sie gesehen und mit "Weiter" bestaetigt
+   hat - dann wird sie gespeichert wie ein Tipp. Ohne das stuende "schon auf
+   Gross gestellt" da, und nach der Anmeldung waere es wieder Normal. */
+function einstiegSchrittSichern(e) {
+  const a = einstiegAntworten();
+  if (e.schritt === 4 && !a.arabGroesse && e.huerden.includes("schrift")) {
+    einstiegAntwortenSichern({ arabGroesse: "gross" });
+  }
+  if (e.schritt === 5 && a.sitzungsLimit === undefined && e.huerden.includes("zeit")) {
+    einstiegAntwortenSichern({ sitzungsLimit: 10 });
+  }
+}
+
+/* ---- Die Wiederholungstage, aus der echten Formel ------------------------
+   Ein heute angelegtes Wort, das man jedes Mal weiss ("Sicher"), steigt je
+   Bewertung eine Stufe; der Abstand zur naechsten Wiederholung ist
+   intervalForStufe(stufe): 1, 2, 3, 6, 10, 19 ... Tage. nextReviewForStufe()
+   streut um bis zu 15 Prozent (B4) - bei 1, 2 und 3 Tagen rundet das immer
+   auf 0, erst ab 6 Tagen verschiebt es um einen Tag. Deshalb stehen die
+   ersten Tage als genaues Datum da und die spaeteren mit "um den". */
+const EINSTIEG_WOCHENTAGE = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+function einstiegTag(n) {
+  const d = logicalToday();
+  d.setDate(d.getDate() + n);
+  return d;
+}
+function einstiegDatum(d) { return d.getDate() + "." + (d.getMonth() + 1) + "."; }
+function einstiegExakt(stufe) { return intervalForStufe(stufe) * 0.15 < 0.5; }
+
+/* Die waagerechte Leiste: ein Punkt je Wiederholung, der Abstand dazwischen
+   waechst mit der Wurzel der Tage - linear waere der erste Abschnitt
+   unsichtbar schmal. */
+function einstiegLeiste(spaeter) {
+  const iv = [1, 2, 3, 4, 5, 6].map(intervalForStufe);
+  let h = '<div class="einstieg-leiste' + (spaeter ? ' einstieg-leiste--spaeter' : '') + '" role="img" ' +
+    'aria-label="Abstände zwischen den Wiederholungen: ' + iv.join(", ") + ' Tage">';
+  h += '<span class="einstieg-leiste__start"></span>';
+  iv.forEach((t, i) => {
+    h += '<span class="einstieg-leiste__stueck" style="--w:' + Math.sqrt(t).toFixed(2) + ';--i:' + i + '">' +
+      '<span class="einstieg-leiste__zahl">' + t + '</span></span>';
+  });
+  h += '</div>';
+  h += '<p class="einstieg-leiste__legende">Tage bis zur nächsten Wiederholung – wenn du das Wort jedes Mal weißt.</p>';
+  return h;
+}
+
+/* Die senkrechte Leiter auf dem Plan: dieselben Stufen mit Kalendertagen. */
+function einstiegLeiter() {
+  const rungen = 6;
+  let summe = 0;
+  let h = '<ol class="einstieg-leiter">';
+  for (let i = 0; i < rungen; i++) {
+    let wann, was, abstand = 0;
+    if (i === 0) {
+      wann = "heute";
+      was = "zum ersten Mal";
+    } else {
+      const t = intervalForStufe(i);
+      summe += t;
+      const d = einstiegTag(summe);
+      const exakt = einstiegExakt(i);
+      const datum = EINSTIEG_WOCHENTAGE[d.getDay()] + " " + einstiegDatum(d);
+      wann = i === 1 ? "morgen, " + datum : (exakt ? datum : "um den " + einstiegDatum(d));
+      was = "nach " + (exakt ? "" : "rund ") + t + (t === 1 ? " Tag" : " Tagen");
+      abstand = Math.round(Math.sqrt(t) * 9);
+    }
+    h += '<li style="--i:' + (i + 4) + ';--abstand:' + abstand + 'px">' +
+      '<span class="einstieg-leiter__wann">' + esc(wann) + '</span>' +
+      '<span class="einstieg-leiter__was">' + esc(was) + '</span></li>';
+  }
+  h += '<li class="einstieg-leiter__ende" style="--i:' + (rungen + 4) + ';--abstand:' +
+    Math.round(Math.sqrt(intervalForStufe(rungen)) * 9) + 'px">' +
+    '<span class="einstieg-leiter__wann">danach immer seltener</span>' +
+    '<span class="einstieg-leiter__was">spätestens alle sechs Monate</span></li>';
+  h += '</ol>';
+  return h;
 }
 
 function einstiegProbe(groesse) {
@@ -4922,6 +5081,20 @@ function einstiegProbe(groesse) {
     '</div>';
 }
 
+/* Die Karte auf dem ersten Bildschirm: sie dreht sich einmal um und zeigt,
+   was hinten steht - darunter waechst die Leiste der Abstaende. Das ist die
+   "Demo" (Cal AI) ohne Video: die App in Aktion, bevor irgendetwas gefragt
+   wird. Reine Anzeige; wer Bewegung abbestellt hat, sieht die Vorderseite. */
+function einstiegHero() {
+  return '<div class="einstieg-hero">' +
+    '<div class="einstieg-hero__karte" aria-hidden="true"><div class="einstieg-hero__dreh">' +
+      '<div class="einstieg-hero__seite"><span class="arabic" lang="ar" dir="rtl">' + esc(EINSTIEG_BEISPIEL.arab) + '</span></div>' +
+      '<div class="einstieg-hero__seite einstieg-hero__seite--hinten">' + esc(EINSTIEG_BEISPIEL.de) + '</div>' +
+    '</div></div>' +
+    einstiegLeiste(true) +
+  '</div>';
+}
+
 /* Eine Reihe kurzer Antworten - dieselbe Bauform wie die Wahl-Blaetter in den
    Einstellungen (.seg), damit der Einstieg kein Fremdkoerper ist und man
    dieselbe Bedienung spaeter wiedererkennt. */
@@ -4936,182 +5109,324 @@ function einstiegSeg(liste, aktiv, action, label) {
   return h;
 }
 
-function einstiegFuss(weiterLabel, weiterAktion) {
-  let h = '<div class="form-actions" style="margin-top:var(--space-6)">';
+/* Eine Antwortzeile ueber die ganze Breite - die Bauform, die Duolingo, Cal AI
+   und Ladder gemeinsam haben: Zeichen links, Text, Haken rechts. */
+function einstiegOption(action, o, aktiv, rechts) {
+  return '<button type="button" class="einstieg-option' + (aktiv ? ' aktiv' : '') + '" ' +
+    'data-action="' + action + '" data-id="' + esc(String(o.id)) + '" aria-pressed="' + (aktiv ? "true" : "false") + '">' +
+    (o.icon ? '<span class="einstieg-option__ikon">' + ikon(o.icon, "i-sm") + '</span>' : '') +
+    '<span class="einstieg-option__text">' + esc(o.label) + '</span>' +
+    (rechts ? '<span class="einstieg-option__rechts">' + esc(rechts) + '</span>' : '') +
+    '<span class="einstieg-option__haken">' + ikon("haken", "i-sm") + '</span>' +
+    '</button>';
+}
+/* Wahl an Ort und Stelle umschalten, ohne Neuzeichnen: render() ersetzt #app,
+   dann waere der Fokus weg (Tastatur) und jede Antwort liesse den Bildschirm
+   neu einfliegen. */
+function einstiegOptionZustand(btn, an) {
+  btn.classList.toggle("aktiv", an);
+  btn.setAttribute("aria-pressed", an ? "true" : "false");
+}
+function einstiegEinzelwahl(btn, an) {
+  const gruppe = btn.closest(".einstieg-wahl");
+  if (gruppe) gruppe.querySelectorAll(".einstieg-option").forEach(b => einstiegOptionZustand(b, false));
+  einstiegOptionZustand(btn, an !== false);
+}
+/* Ein Echo erscheint mit Bewegung, wenn es neu ist; aendert sich nur sein
+   Text, bleibt es stehen. */
+function einstiegEchoSetzen(platz, text) {
+  if (!text) { platz.innerHTML = ""; return; }
+  const p = platz.querySelector(".einstieg-echo");
+  if (p) p.textContent = text;
+  else platz.innerHTML = '<p class="einstieg-echo">' + esc(text) + '</p>';
+}
+
+/* Das Echo auf dem Ziel-Bildschirm. Ladder: "Einordnung vor Erklaerung" -
+   hier: Adrabic ist kein fertiger Kurs, sondern das System fuer die Woerter,
+   die man ohnehin gerade lernt. Das nimmt den groessten Bruch vorweg: Wer
+   sich anmeldet, steht vor einer leeren App (landing-page-strategie/
+   STRATEGIE.md). */
+function einstiegZielEchoText(e) {
+  if (!e.ziele.length) return "";
+  const quellen = EINSTIEG_ZIELE.filter(z => e.ziele.includes(z.id)).map(z => z.quelle);
+  const liste = quellen.length === 1 ? quellen[0]
+    : quellen.slice(0, -1).join(", ") + " und " + quellen[quellen.length - 1];
+  return "Adrabic ist kein fertiger Kurs. Du legst die Wörter an, die du gerade lernst – aus " + liste +
+    ". Adrabic sorgt dafür, dass sie wiederkommen.";
+}
+function einstiegHuerdeZeile(hd, aktiv) {
+  return '<div class="einstieg-option-rahmen">' +
+    einstiegOption("einstieg-huerde", hd, aktiv) +
+    '<div class="einstieg-echo-platz" aria-live="polite">' +
+      (aktiv ? '<p class="einstieg-echo">' + esc(hd.echo) + '</p>' : '') +
+    '</div></div>';
+}
+/* Was nach dem Bewerten der Probekarte gesagt wird - genau das, was die
+   Lernlogik mit einer NEUEN Karte tut (app.js, Bewerten: known/almost/else):
+   Sicher -> Stufe 1, morgen; Fast -> morgen; Nicht -> heute noch einmal. */
+function einstiegBewertungEcho(b) {
+  let h;
+  if (b === "Sicher") {
+    h = '<p class="einstieg-echo">Dann kommt sie morgen wieder. Weißt du sie dann noch: nach 2 Tagen, ' +
+      'nach 3, nach rund 6, nach rund 10 – jedes Mal später.</p>' + einstiegLeiste(false);
+  } else if (b === "Fast") {
+    h = '<p class="einstieg-echo">Dann kommt sie morgen noch einmal. Danach geht es in wachsenden Abständen weiter.</p>';
+  } else {
+    h = '<p class="einstieg-echo">Dann kommt sie in dieser Runde gleich noch einmal – so lange, bis du sie weißt.</p>';
+  }
+  return h + '<p class="hint einstieg-nachsatz">So rechnet Adrabic mit jeder deiner Karten.</p>';
+}
+function einstiegFreiFeld() {
+  return '<div class="field einstieg-frei">' +
+    '<label for="einstieg-frei">Deine Situation</label>' +
+    '<input type="text" id="einstieg-frei" maxlength="60" autocomplete="off" ' +
+    'placeholder="zum Beispiel: mein Frühstück fertig habe"></div>';
+}
+/* Kein Neuzeichnen beim Tippen - render() ersetzt #app, der Fokus waere bei
+   jedem Buchstaben weg. Der Satz darueber zieht direkt mit. */
+function einstiegFreiVerbinden() {
+  const feld = document.getElementById("einstieg-frei");
+  if (!feld || feld.dataset.verbunden) return;
+  feld.dataset.verbunden = "1";
+  if (ui.einstieg && ui.einstieg.ankerFrei) feld.value = ui.einstieg.ankerFrei;
+  feld.addEventListener("input", () => {
+    if (!ui.einstieg) return;
+    ui.einstieg.ankerFrei = feld.value.trim();
+    const s = document.getElementById("einstieg-satz");
+    if (s) s.innerHTML = einstiegSatzHtml(ui.einstieg);
+  });
+}
+
+/* Oben: Zurueck und ein duenner Balken - bei allen drei Vorbildern gleich.
+   Keine Zahl ("Schritt 3 von 7"), nur die Strecke. Der Balken waechst von
+   seinem letzten Stand aus, nicht von null. */
+function einstiegKopf(e) {
+  const bis = e.schritt / EINSTIEG_LETZTER;
+  const von = typeof e.balkenVorher === "number" ? e.balkenVorher : bis;
+  return '<div class="einstieg-kopf">' +
+    '<button type="button" class="ghost einstieg-kopf__zurueck" data-action="einstieg-zurueck" aria-label="Zurück">' +
+      ikon("zurueck") + '</button>' +
+    '<div class="einstieg-fortschritt" role="progressbar" aria-label="Fortschritt" aria-valuemin="0" ' +
+      'aria-valuemax="' + EINSTIEG_LETZTER + '" aria-valuenow="' + e.schritt + '">' +
+      '<span style="--von:' + von.toFixed(3) + ';--bis:' + bis.toFixed(3) + '"></span></div>' +
+  '</div>';
+}
+
+function einstiegFuss(weiterLabel, weiterAktion, ohneAusstieg) {
+  let h = '<div class="form-actions einstieg-aktion">';
   h += '<button class="full" data-action="' + (weiterAktion || "einstieg-weiter") + '">' + esc(weiterLabel) + '</button>';
   h += '</div>';
+  if (ohneAusstieg) return h;
   /* Gleichrangig, nicht versteckt: im Bilddurchgang zu Video 1 stand bei
      Grammarly "Skip personalization" als gleichwertiger Text neben dem
      Weiter-Knopf. Ein grau abgesetzter Ausstieg waere ein dark pattern
      (PSYCHOLOGIE.md Abschnitt 4). */
-  h += '<div class="empty__aktionen" style="margin-top:var(--space-4)">';
+  h += '<div class="empty__aktionen einstieg-neben">';
   h += '<button class="linklike" data-action="einstieg-ueberspringen">Überspringen</button>';
   h += '</div>';
   return h;
 }
 
+function einstiegKachel(titel, wert, i) {
+  return '<div class="einstieg-kachel" style="--i:' + i + '">' +
+    '<span class="einstieg-kachel__titel">' + esc(titel) + '</span>' +
+    '<span class="einstieg-kachel__wert">' + esc(wert) + '</span></div>';
+}
+
 function renderEinstieg() {
   const e = ui.einstieg;
-  const a = einstiegAntworten();
-  const groesse = a.arabGroesse || settings.arabGroesse;
-  const limit = a.sitzungsLimit !== undefined ? a.sitzungsLimit : settings.sitzungsLimit;
+  const neu = e.gezeigt !== e.schritt;
+  const richtung = e.gezeigt === -1 ? "start" : (e.richtung === "zurueck" ? "zurueck" : "vor");
+  e.gezeigt = e.schritt;
 
-  let html = '<div class="solo">';
-  html += soloMarke(null);
-  html += '<div class="einstieg anim-rise">';
+  let html = '<div class="solo einstieg-solo">';
+  html += e.schritt === 0 ? soloMarke(null) : einstiegKopf(e);
+  html += '<div class="einstieg' + (neu ? ' einstieg--neu einstieg--' + richtung : '') + '">';
 
   if (e.schritt === 0) {
-    /* S1. Betreiber am 23.09.2026: "das problem soll schmerzhaft benannt
-       werden ja." Daher der harte Einstieg - aber ohne Wirkungsbehauptung:
-       Was hier steht, ist der Grund, warum es Karteikarten ueberhaupt gibt,
-       kein Versprechen ueber diese App. Der letzte Absatz beschreibt reine
-       Mechanik (wachsende Abstaende), keine Wirkung. */
+    /* Marke + Glaube. Ueberschrift und erster Absatz sind der Wortlaut, den
+       der Betreiber am 23.09.2026 wollte ("das problem soll schmerzhaft
+       benannt werden"). Neu: die Karte darunter zeigt die App in Aktion,
+       bevor gefragt wird (Cal AI: Demo zuerst). "Ich habe schon ein Konto"
+       wie bei Duolingo - vorher musste, wer schon ein Konto hat, erst
+       ueberspringen und landete dann im Registrieren-Formular. */
     html += '<h1>Du hast es gelernt. Und es ist weg.</h1>';
     html += '<p class="subtitle">Die Wörter von letzter Woche. Die Lektion von letztem Monat. ' +
       'Nicht, weil du zu langsam bist – sondern weil du sie nie wieder gesehen hast.</p>';
-    html += '<p class="hint">Adrabic bringt dir jedes Wort zurück. In wachsenden Abständen, ' +
+    html += einstiegHero();
+    html += '<p class="hint einstieg-hero__text">Adrabic bringt dir jedes Wort zurück. In wachsenden Abständen, ' +
       'so lange, bis es sitzt.</p>';
-    html += einstiegFuss("Zeig mir das");
+    html += '<div class="form-actions einstieg-aktion"><button class="full" data-action="einstieg-weiter">Meinen Plan erstellen</button></div>';
+    html += '<div class="empty__aktionen einstieg-neben">' +
+      '<button class="linklike" data-action="einstieg-konto">Ich habe schon ein Konto</button></div>';
 
   } else if (e.schritt === 1) {
-    /* S2. Die Hauptfunktion vor dem Konto ausprobieren - das einzige Muster,
-       das in beiden ausgewerteten Videos unabhaengig voneinander vorkam
-       (Alma, Prayer Lock). Es ist eine Anzeige, kein Lernlauf: nichts wird
-       gespeichert, keine Stufe, kein Verlauf, kein Eingriff in die Lernlogik
-       (Pruefung P5). */
+    /* Ziel. "Eine Frage nach dem Ziel fragt selten nur nach dem Ziel"
+       (Video 3, 38:47): sie ist das erste kleine Ja, und sie liefert den
+       Satz fuer den Plan. Mehrfachwahl, weil die meisten mehr als einen
+       Grund haben (Video 1, Headspace). */
+    html += '<h1 id="einstieg-frage">Wofür lernst du Arabisch?</h1>';
+    html += '<p class="subtitle">Wähl alles, was passt.</p>';
+    html += '<div class="einstieg-wahl" role="group" aria-labelledby="einstieg-frage">';
+    html += EINSTIEG_ZIELE.map(z => einstiegOption("einstieg-ziel", z, e.ziele.includes(z.id))).join("");
+    html += '</div>';
+    html += '<div class="einstieg-echo-platz" id="einstieg-ziel-echo" aria-live="polite">' +
+      (einstiegZielEchoText(e) ? '<p class="einstieg-echo">' + esc(einstiegZielEchoText(e)) + '</p>' : '') + '</div>';
+    html += einstiegFuss("Weiter");
+
+  } else if (e.schritt === 2) {
+    /* Huerden. Einwaende einsammeln und jeden sofort beantworten - direkt
+       unter der gewaehlten Zeile (Tan AI, vom Videomacher als bester Einfall
+       des ganzen Ablaufs gelobt). Zwei Antworten wirken weiter: "Schrift"
+       stellt Bildschirm 4 auf Gross, "Zeit" Bildschirm 5 auf 10 Karten. */
+    html += '<h1 id="einstieg-frage">Was hat dich bisher gebremst?</h1>';
+    html += '<p class="subtitle">Wähl alles, was stimmt.</p>';
+    html += '<div class="einstieg-wahl" role="group" aria-labelledby="einstieg-frage">';
+    html += EINSTIEG_HUERDEN.map(hd => einstiegHuerdeZeile(hd, e.huerden.includes(hd.id))).join("");
+    html += '</div>';
+    html += einstiegFuss("Weiter");
+
+  } else if (e.schritt === 3) {
+    /* Die Hauptfunktion vor dem Konto ausprobieren - in allen drei
+       ausgewerteten Quellen (Alma, Prayer Lock, Duolingos 2-Minuten-Lektion).
+       Es ist eine Anzeige, kein Lernlauf: nichts wird gespeichert, keine
+       Stufe, kein Verlauf, kein Eingriff in die Lernlogik. */
+    const groesse = einstiegGroesse(e);
     html += '<h1>Probier eine Karte.</h1>';
     if (!e.aufgedeckt) {
-      html += '<p class="subtitle">Tipp die Karte an, um sie umzudrehen.</p>';
+      html += '<p class="subtitle">' + (e.huerden.includes("vergessen")
+        ? 'So arbeitet Adrabic gegen das Vergessen. Tipp die Karte an, um sie umzudrehen.'
+        : 'Tipp die Karte an, um sie umzudrehen.') + '</p>';
       html += '<button class="einstieg-karte" data-action="einstieg-aufdecken" ' +
         'aria-label="Beispielkarte umdrehen">' + einstiegProbe(groesse) + '</button>';
-      /* Auch hier ein Ausstieg: "Ueberspringen steht auf JEDEM Bildschirm"
-         (WORTLAUT.md Abschnitt 1, Regel 6). Beim Bauen fehlte er zuerst in
-         genau diesem Zustand - dem einzigen ohne Weiter-Knopf. */
-      html += '<div class="empty__aktionen" style="margin-top:var(--space-5)">';
+      html += '<div class="empty__aktionen einstieg-neben" style="margin-top:var(--space-5)">';
       html += '<button class="linklike" data-action="einstieg-ueberspringen">Überspringen</button>';
       html += '</div>';
     } else {
       html += '<div class="einstieg-karte einstieg-karte--offen">' + einstiegProbe(groesse) +
         '<div class="einstieg-karte__loesung">' + esc(EINSTIEG_BEISPIEL.de) + '</div></div>';
       if (e.bewertet === null) {
-        html += '<p class="subtitle" style="margin-top:var(--space-5)">Wie sicher war das?</p>';
+        html += '<p class="subtitle einstieg-frage-klein">Wie sicher warst du?</p>';
         html += '<div class="einstieg-bewertung">';
         html += ["Nicht", "Fast", "Sicher"].map(l =>
           '<button class="secondary" data-action="einstieg-bewerten" data-id="' + esc(l) + '">' + l + '</button>').join("");
         html += '</div>';
+        html += '<div class="empty__aktionen einstieg-neben">' +
+          '<button class="linklike" data-action="einstieg-ueberspringen">Überspringen</button></div>';
       } else {
-        html += '<p class="hint" style="margin-top:var(--space-5)">' +
-          '„Nicht“ bringt die Karte gleich wieder. „Sicher“ legt sie länger weg. ' +
-          'Mehr ist es nicht.</p>';
+        html += '<div class="einstieg-antwort" aria-live="polite">' + einstiegBewertungEcho(e.bewertet) + '</div>';
         html += einstiegFuss("Weiter");
       }
     }
 
-  } else if (e.schritt === 2) {
-    /* S3. Die Probe aendert sich im selben Bildschirm - die staerkste Form
-       der Einloesung (Pruefung P2), weil die Wirkung die Anzeige selbst IST
-       und nicht auf einem spaeteren Bildschirm behauptet werden muss.
-       Abweichung von WORTLAUT.md: Dort stand "kein Weiter-Knopf". Beim Bauen
-       zeigte sich, dass ein Tipp, der sofort weiterspringt, die Probe genau
-       in dem Moment wegnimmt, in dem man sie ansehen will. Der Knopf bleibt
-       also - die Wahl wirkt sofort, das Weitergehen entscheidet der Mensch. */
+  } else if (e.schritt === 4) {
+    /* Die Probe aendert sich im selben Bildschirm - die staerkste Form der
+       Einloesung, weil die Wirkung die Anzeige selbst IST. */
+    const groesse = einstiegGroesse(e);
+    const vorausgewaehlt = !einstiegAntworten().arabGroesse && e.huerden.includes("schrift");
     html += '<h1>Kannst du das gut lesen?</h1>';
+    html += '<p class="subtitle">Tipp auf eine Größe – die Karte ändert sich sofort.</p>';
     html += einstiegProbe(groesse);
     html += einstiegSeg(ARAB_STUFEN, groesse, "einstieg-schrift", "Schriftgröße");
-    html += '<p class="hint">Änderbar in den Einstellungen.</p>';
-    html += einstiegFuss("Weiter");
-
-  } else if (e.schritt === 3) {
-    /* S4. Das Thema wirkt sofort auf die ganze Oberflaeche und braucht keinen
-       eigenen Zwischenspeicher: setThema() schreibt "adrabic-thema" auch ohne
-       Konto (BESTAND.md Abschnitt 5). */
-    html += '<h1>Hell oder dunkel?</h1>';
-    html += einstiegProbe(groesse);
-    html += einstiegSeg(THEMEN, settings.thema, "einstieg-thema", "Helligkeit");
-    html += '<p class="hint">Automatisch richtet sich nach deinem Gerät.</p>';
-    html += einstiegFuss("Weiter");
-
-  } else if (e.schritt === 4) {
-    /* S5. Steht NACH dem Probelauf, nicht davor: "20 Karten" ist ohne Gefuehl
-       fuer eine einzelne Karte eine Zahl ohne Mass (Pruefung P3). */
-    html += '<h1>Wie lang soll eine Runde sein?</h1>';
-    html += '<p class="subtitle">Eine Runde ist das, was du an einem Tag durchgehst.</p>';
-    html += einstiegSeg(SITZUNGS_LIMITS, limit, "einstieg-runde", "Karten pro Runde");
-    html += '<p class="hint">Änderbar in den Einstellungen.</p>';
+    if (vorausgewaehlt) {
+      html += '<p class="einstieg-echo einstieg-vorauswahl">Weil dir die Schrift noch Mühe macht: schon auf Groß gestellt.</p>';
+    }
+    html += '<p class="hint einstieg-nachsatz">Änderbar in den Einstellungen.</p>';
     html += einstiegFuss("Weiter");
 
   } else if (e.schritt === 5) {
-    /* S6. Kurzer Abschluss - und bewusst NUR fuer die Rundengroesse. Schrift
-       und Thema haben sich bereits selbst gezeigt; sie hier zu wiederholen
-       waere Fuellmaterial (Entscheidung F2, FRAGENKATALOG.md Abschnitt 9). */
-    const lbl = labelVon(SITZUNGS_LIMITS, limit, "Alle");
-    html += '<h1>Passt das so?</h1>';
-    html += '<p class="subtitle">Eine Runde endet nach ' +
-      (String(limit) === "alle" ? "allen fälligen Karten" : esc(lbl) + " Karten") +
-      '. Schrift und Aussehen hast du gerade eingestellt.</p>';
-    html += '<div class="form-actions" style="margin-top:var(--space-6)">';
-    html += '<button class="full" data-action="einstieg-weiter">Passt</button>';
+    /* Das taegliche Mass (Duolingo: "5 min / Casual"). Steht NACH der
+       Probekarte: "20 Karten" ist ohne Gefuehl fuer eine Karte eine Zahl ohne
+       Mass. Darunter die Serie - es gibt sie in der App (serieAktuell), und
+       ihre Kulanzregel beantwortet die Angst vor dem ersten verpassten Tag. */
+    const limit = einstiegLimit(e);
+    const vorausgewaehlt = einstiegAntworten().sitzungsLimit === undefined && e.huerden.includes("zeit");
+    html += '<h1 id="einstieg-frage">Wie groß soll deine tägliche Runde sein?</h1>';
+    html += '<p class="subtitle">Eine Runde ist das, was du an einem Tag durchgehst – zuerst Wiederholungen, dann Neues.</p>';
+    html += '<div class="einstieg-wahl" role="group" aria-labelledby="einstieg-frage">';
+    html += EINSTIEG_RUNDEN.map(r => einstiegOption("einstieg-runde", r, String(r.id) === String(limit), r.stufe)).join("");
     html += '</div>';
-    html += '<div class="empty__aktionen" style="margin-top:var(--space-4)">';
-    html += '<button class="secondary" data-action="einstieg-zurueck">Noch mal ändern</button>';
-    html += '<button class="linklike" data-action="einstieg-ueberspringen">Überspringen</button>';
+    if (vorausgewaehlt) {
+      html += '<p class="einstieg-echo einstieg-vorauswahl">Weil dir die Zeit fehlt: schon auf 10 gestellt.</p>';
+    }
+    html += '<p class="hint einstieg-serie">' + ikon("serie", "i-sm") +
+      '<span>Jeder Tag mit einer Runde zählt für deine Serie. Ein ausgelassener Tag reißt sie nicht.</span></p>';
+    html += einstiegFuss("Weiter");
+
+  } else if (e.schritt === 6) {
+    /* Die Rueckkehr vorbereiten, bevor der Einstieg endet (Video 3, Lehre 7).
+       Duolingo fragt hier nach Mitteilungen - die gibt es in dieser App
+       nicht. Der Wenn-dann-Satz ist der Ersatz mit dem einzigen echten Beleg
+       (Gollwitzer & Sheeran 2006, PSYCHOLOGIE.md 1.1). */
+    const frei = e.anker === "eigen";
+    html += '<h1 id="einstieg-frage">Wann machst du deine Runde?</h1>';
+    html += '<p class="subtitle">' + (e.huerden.includes("dran")
+      ? 'Du hast gesagt, du bleibst schwer dran – dafür ist dieser Schritt da. ' : '') +
+      'Ein fester Punkt am Tag hält besser als ein guter Vorsatz.</p>';
+    html += '<p class="einstieg-satz" id="einstieg-satz">' + einstiegSatzHtml(e) + '</p>';
+    html += '<div class="einstieg-wahl" role="group" aria-labelledby="einstieg-frage">';
+    html += EINSTIEG_ANKER.map(o => einstiegOption("einstieg-anker", o, e.anker === o.id)).join("");
     html += '</div>';
+    html += '<div id="einstieg-frei-platz">' + (frei ? einstiegFreiFeld() : '') + '</div>';
+    html += einstiegFuss("Weiter");
 
   } else {
-    /* S7. Der einzige Baustein mit einem echten Beleg (Gollwitzer & Sheeran
-       2006) - und der Beleg steht in PSYCHOLOGIE.md, nicht auf dem
-       Bildschirm. Der Satz behauptet keine Wirkung; er beschreibt, was ein
-       fester Punkt am Tag leistet. Die fuenf Gebetszeiten stehen hier als
-       TAGESZEITEN: zuverlaessig, taeglich, unuebersehbar - genau das, was ein
-       Wenn-dann-Satz als Ausloeser braucht. */
-    const frei = e.anker === "eigen";
-    html += '<h1>Wann kommst du zurück?</h1>';
-    html += '<p class="subtitle">Ein fester Punkt am Tag hält besser als ein guter Vorsatz.</p>';
-    /* Der Satz steht UEBER der Auswahl: man soll sehen, in welchen Satz die
-       Wahl eingesetzt wird, bevor man waehlt. Solange nichts gewaehlt ist,
-       steht die Luecke als Auslassung da, nicht als leere Zeile. */
+    /* Der Plan - der "erste Wertmoment" (Tan AI): Man sieht ein Ergebnis,
+       nicht nur Fragen. Cal AI zeigt hier "6,3 kg bis 14. April"; die
+       ehrliche Entsprechung hier sind die echten Tage, an denen ein Wort von
+       heute wiederkommt. Danach das Konto - als "Plan speichern", so wie
+       Cal AI "Save your progress" vor die Kasse setzt. Es gibt keine Kasse:
+       das Konto ist hier der Abschluss. */
+    const groesse = einstiegGroesse(e);
+    const limit = einstiegLimit(e);
     const satz = vorsatzSatz(e);
-    html += '<p class="einstieg-satz">' +
-      (satz ? '<strong>' + esc(satz) + '</strong>'
-            : 'Wenn ich …, mache ich eine Runde.') + '</p>';
-    html += '<div class="einstieg-anker">';
-    html += EINSTIEG_ANKER.map(o =>
-      '<button class="secondary full' + (e.anker === o.id ? " aktiv" : "") + '" ' +
-      'data-action="einstieg-anker" data-id="' + esc(o.id) + '" ' +
-      'aria-pressed="' + (e.anker === o.id ? "true" : "false") + '">' + esc(o.label) + '</button>').join("");
+    const zeitpunkt = e.anker === "eigen"
+      ? (e.ankerFrei ? "wenn ich " + e.ankerFrei : "noch offen")
+      : (e.anker ? ankerLabel(e.anker) : "noch offen");
+    const ziel = EINSTIEG_ZIELE.filter(z => e.ziele.includes(z.id)).map(z => z.kurz).join(", ") || "deine eigenen Wörter";
+    html += '<div class="einstieg-plan-haken" aria-hidden="true">' + ikon("fertig", "i-lg") + '</div>';
+    html += '<h1>Dein Plan steht.</h1>';
+    html += '<p class="subtitle">Aus deinen Antworten. Schrift und Runde kannst du jederzeit in den Einstellungen ändern.</p>';
+    if (satz) html += '<p class="einstieg-satz einstieg-satz--plan"><strong>' + esc(satz) + '</strong></p>';
+    html += '<div class="einstieg-kacheln">';
+    html += einstiegKachel("Runde", String(limit) === "alle" ? "alle fälligen Karten" : "bis zu " + limit + " Karten", 0);
+    html += einstiegKachel("Zeitpunkt", zeitpunkt, 1);
+    html += einstiegKachel("Schrift", labelVon(ARAB_STUFEN, groesse, "Normal"), 2);
+    html += einstiegKachel("Ziel", ziel, 3);
     html += '</div>';
-    if (frei) {
-      html += '<div class="field" style="margin-top:var(--space-4)">';
-      html += '<label for="einstieg-frei">Deine Situation</label>';
-      html += '<input type="text" id="einstieg-frei" maxlength="60" autocomplete="off" ' +
-        'placeholder="zum Beispiel: mein Frühstück fertig habe">';
-      html += '</div>';
-    }
-    html += einstiegFuss("Konto anlegen", "einstieg-fertig");
+    html += '<h2 class="einstieg-zwischentitel">So kommt ein Wort zurück, das du heute anlegst</h2>';
+    html += einstiegLeiter();
+    html += '<p class="hint einstieg-nachsatz">Wenn du es jedes Mal weißt. Sonst kommt es früher wieder.</p>';
+    html += einstiegFuss("Plan speichern", "einstieg-fertig", true);
+    html += '<p class="einstieg-vertrauen">Kostenlos. Keine Werbung, kein Tracking.</p>';
   }
 
   html += '</div></div>';
   app.innerHTML = html;
   app.style.setProperty("--arab-scale", String(arabFaktor()));
-
-  const feld = document.getElementById("einstieg-frei");
-  if (feld) {
-    if (ui.einstieg.ankerFrei) feld.value = ui.einstieg.ankerFrei;
-    /* Nicht bei jedem Tastendruck neu zeichnen - render() ersetzt #app, der
-       Fokus waere jedes Mal weg. Der Satz oben wird deshalb erst beim
-       Verlassen des Feldes nachgezogen. */
-    feld.addEventListener("change", () => { ui.einstieg.ankerFrei = feld.value.trim(); render(); });
+  e.balkenVorher = e.schritt / EINSTIEG_LETZTER;
+  einstiegFreiVerbinden();
+  /* Neuer Bildschirm: Fokus auf die Ueberschrift, damit ein Bildschirmleser
+     ihn ansagt - statt auf dem body stehen zu bleiben, wo der gedrueckte
+     Knopf eben verschwunden ist. */
+  if (neu && e.schritt > 0) {
+    const h = app.querySelector(".einstieg h1");
+    if (h) {
+      h.setAttribute("tabindex", "-1");
+      try { h.focus({ preventScroll: true }); } catch (err) {}
+    }
   }
 }
 
-/* Beendet den Einstieg und uebergibt an renderAuth() - Station S8. Der Merker
-   bleibt danach stehen, auch nach einer Abmeldung (Entscheidung F7): wer sich
-   abmeldet, ist kein Neuling. */
+/* Beendet den Einstieg und uebergibt an renderAuth() - als "Plan speichern".
+   Der Merker bleibt danach stehen, auch nach einer Abmeldung (Entscheidung
+   F7): wer sich abmeldet, ist kein Neuling. */
 function einstiegBeenden(satz) {
   einstiegAbschliessen();
   nachklangSetzen(satz || "");
   ui.einstieg = null;
   ui.authMode = "register";
+  ui.authAusEinstieg = true;
   window.scrollTo(0, 0);
   render();
 }
@@ -5128,7 +5443,8 @@ function render() {
      ist. Laeuft er gerade, ersetzt er renderAuth(); die Station S8 (Konto)
      ist renderAuth() selbst. Reihenfolge und Begruendung: BESTAND.md 1. */
   if (currentUser === null && ui.einstieg === null && !einstiegGesehen()) {
-    ui.einstieg = { schritt: 0, aufgedeckt: false, bewertet: null, anker: null, ankerFrei: "" };
+    ui.einstieg = { schritt: 0, aufgedeckt: false, bewertet: null, ziele: [], huerden: [],
+      anker: null, ankerFrei: "", gezeigt: -1, richtung: "vor", balkenVorher: 0 };
   }
   if (currentUser === null && ui.einstieg) { renderEinstieg(); return; }
   if (currentUser === null) { renderAuth(); return; }
@@ -5373,14 +5689,24 @@ function renderAuth() {
   authEingabenMerken();
   const m = ui.authMode;
   const sichtbar = ui.authPassSichtbar;
+  /* 3.10.0: Wer direkt aus dem Einstieg kommt, legt kein abstraktes Konto
+     an, sondern speichert den Plan, den er gerade gesehen hat (Cal AI:
+     "Save your progress"). Derselbe Knopf, dasselbe Formular - nur die
+     Ueberschrift sagt, wozu. */
+  const ausEinstieg = m === "register" && ui.authAusEinstieg;
   let html = '<div class="solo">';
-  html += soloMarke(m === "register" ? "Konto anlegen"
+  html += soloMarke(m === "register" ? (ausEinstieg ? "Plan speichern" : "Konto anlegen")
         : m === "reset" ? "Passwort zur\u00fccksetzen" : "Anmelden",
         m === "register" ? "Schritt 1 von 2 \u00b7 Konto" : null);
   html += '<p class="subtitle" style="margin-bottom:var(--space-6)">' +
-    (m === "register" ? "Einmalig \u2013 danach auf jedem Ger\u00e4t."
+    (m === "register" ? (ausEinstieg ? "Kostenlos. Einmal anlegen \u2013 dann ist dein Plan gespeichert."
+                                     : "Einmalig \u2013 danach auf jedem Ger\u00e4t.")
      : m === "reset" ? "Wir schicken dir einen Link zum Neusetzen."
      : "Weiterlernen, wo du aufgeh\u00f6rt hast.") + '</p>';
+  if (ausEinstieg) {
+    const nk = nachklangLesen();
+    if (nk && nk.satz) html += '<p class="einstieg-satz einstieg-satz--konto"><strong>' + esc(nk.satz) + '</strong></p>';
+  }
   html += '<div class="card">';
   if (m === "register") {
     const nameFehler = !!(ui.authFeldFehler && ui.authFeldFehler.name);
@@ -7032,7 +7358,7 @@ function renderLernen() {
     const nk = nachklangLesen();
     if (nk && kannAnlegen) {
       html += '<div class="nachklang anim-rise">';
-      html += '<p class="nachklang__fertig">Fertig. Jetzt deine erste eigene Karte.</p>';
+      html += '<p class="nachklang__fertig">Dein Plan steht. Jetzt deine erste eigene Karte.</p>';
       if (nk.satz) html += '<p class="nachklang__satz">' + esc(nk.satz) + '</p>';
       html += '</div>';
     }
@@ -9431,11 +9757,13 @@ document.body.addEventListener("click", e => {
     case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
     case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
     case "passwort-zeigen": ui.authPassSichtbar = !ui.authPassSichtbar; render(); break;
-    /* ---- Einstieg vor der Anmeldung (3.9.9) ----
+    /* ---- Einstieg vor der Anmeldung (3.9.9, neu aufgebaut 3.10.0) ----
        Alle Handlungen laufen ueber denselben delegierten Listener wie der
        Rest der App (README.md: EIN Klick-Listener ueber data-action). */
     case "einstieg-weiter":
       if (ui.einstieg) {
+        einstiegSchrittSichern(ui.einstieg);
+        ui.einstieg.richtung = "vor";
         ui.einstieg.schritt = Math.min(EINSTIEG_LETZTER, ui.einstieg.schritt + 1);
         window.scrollTo(0, 0);
         render();
@@ -9443,6 +9771,7 @@ document.body.addEventListener("click", e => {
       break;
     case "einstieg-zurueck":
       if (ui.einstieg) {
+        ui.einstieg.richtung = "zurueck";
         ui.einstieg.schritt = Math.max(0, ui.einstieg.schritt - 1);
         window.scrollTo(0, 0);
         render();
@@ -9462,12 +9791,51 @@ document.body.addEventListener("click", e => {
       window.scrollTo(0, 0);
       render();
       break;
+    /* 3.10.0: wie Ueberspringen, aber ins Anmelden statt ins Registrieren -
+       Duolingos "I already have an account" auf dem ersten Bildschirm. Wer
+       auf einem neuen Geraet sein bestehendes Konto oeffnen will, musste
+       vorher erst ueberspringen und dann im Formular umschalten. */
+    case "einstieg-konto":
+      try { localStorage.removeItem(EINSTIEG_ANTWORT_KEY); } catch (err) {}
+      nachklangLoeschen();
+      einstiegAbschliessen();
+      ui.einstieg = null;
+      ui.authMode = "login";
+      window.scrollTo(0, 0);
+      render();
+      break;
+    /* Ziel und Huerden: an Ort und Stelle, ohne Neuzeichnen (Fokus bleibt,
+       nur das neue Echo bewegt sich). Nichts davon wird gespeichert. */
+    case "einstieg-ziel": {
+      const e = ui.einstieg;
+      if (!e) break;
+      const id = btn.dataset.id;
+      const an = !e.ziele.includes(id);
+      e.ziele = an ? e.ziele.concat(id) : e.ziele.filter(x => x !== id);
+      einstiegOptionZustand(btn, an);
+      const platz = document.getElementById("einstieg-ziel-echo");
+      if (platz) einstiegEchoSetzen(platz, einstiegZielEchoText(e));
+      break;
+    }
+    case "einstieg-huerde": {
+      const e = ui.einstieg;
+      if (!e) break;
+      const id = btn.dataset.id;
+      const an = !e.huerden.includes(id);
+      e.huerden = an ? e.huerden.concat(id) : e.huerden.filter(x => x !== id);
+      einstiegOptionZustand(btn, an);
+      const rahmen = btn.closest(".einstieg-option-rahmen");
+      const platz = rahmen && rahmen.querySelector(".einstieg-echo-platz");
+      const hd = EINSTIEG_HUERDEN.find(x => x.id === id);
+      if (platz) einstiegEchoSetzen(platz, an && hd ? hd.echo : "");
+      break;
+    }
     case "einstieg-aufdecken":
       if (ui.einstieg) { ui.einstieg.aufgedeckt = true; render(); }
       break;
     /* Die Bewertung im Probelauf wird NICHT gespeichert und beruehrt die
-       Lernlogik nicht (Pruefung P5). Sie zeigt nur, dass es drei Antworten
-       gibt - und schaltet den erklaerenden Satz frei. */
+       Lernlogik nicht (Pruefung P5). Sie zeigt, was die App mit dieser
+       Antwort bei einer echten Karte tun wuerde. */
     case "einstieg-bewerten":
       if (ui.einstieg) { ui.einstieg.bewertet = btn.dataset.id || "Fast"; render(); }
       break;
@@ -9502,28 +9870,41 @@ document.body.addEventListener("click", e => {
           b.setAttribute("aria-pressed", an ? "true" : "false");
         });
       }
+      /* "Schon auf Gross gestellt" stimmt nach eigener Wahl nicht mehr. */
+      const hinweis = app.querySelector(".einstieg-vorauswahl");
+      if (hinweis) hinweis.remove();
       if (!probe || !reihe) render();   // Notnagel, falls das Markup sich aendert
       break;
     }
-    /* Das Thema ist die eine Antwort, die sofort und dauerhaft wirkt, weil
-       setThema() den vorhandenen Schluessel "adrabic-thema" schreibt - auch
-       ohne Konto. Kein zweiter Speicherort dafuer. */
-    case "einstieg-thema":
-      setThema(btn.dataset.id);
-      break;
     case "einstieg-runde": {
       const roh = btn.dataset.id;
       const wert = roh === "alle" ? "alle" : Number(roh);
       einstiegAntwortenSichern({ sitzungsLimit: wert });
-      render();
+      einstiegEinzelwahl(btn, true);
+      const hinweis = app.querySelector(".einstieg-vorauswahl");
+      if (hinweis) hinweis.remove();
       break;
     }
-    case "einstieg-anker":
-      if (ui.einstieg) {
-        ui.einstieg.anker = ui.einstieg.anker === btn.dataset.id ? null : btn.dataset.id;
-        render();
+    case "einstieg-anker": {
+      const e = ui.einstieg;
+      if (!e) break;
+      e.anker = e.anker === btn.dataset.id ? null : btn.dataset.id;
+      einstiegEinzelwahl(btn, e.anker !== null);
+      const satzZeile = document.getElementById("einstieg-satz");
+      if (satzZeile) satzZeile.innerHTML = einstiegSatzHtml(e);
+      const platz = document.getElementById("einstieg-frei-platz");
+      if (platz) {
+        if (e.anker === "eigen" && !document.getElementById("einstieg-frei")) {
+          platz.innerHTML = einstiegFreiFeld();
+          einstiegFreiVerbinden();
+          const feld = document.getElementById("einstieg-frei");
+          if (feld) feld.focus();
+        } else if (e.anker !== "eigen") {
+          platz.innerHTML = "";
+        }
       }
       break;
+    }
     /* Der Wenn-dann-Satz hat bewusst KEINEN Speicherort in der Cloud: Er ist
        ein Vorsatz des Menschen, kein Einstellwert der App. Gespeichert wird
        nur, was danach auch etwas tut. */

@@ -2648,31 +2648,250 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 /* ===========================================================================
    16b · EINSTIEG VOR DER ANMELDUNG
    ---------------------------------------------------------------------------
-   Sieben Bildschirme vor dem Anmeldeformular (app.js, renderEinstieg).
-   Liegt in .solo — dieselbe schmale Spalte wie Anmelden und Einrichtung —
-   und erbt von dort Rand, Breite und Eintrittsbewegung. Es gibt hier
-   ABSICHTLICH fast keine eigenen Regeln: Segmentreihen (.seg), Knöpfe,
-   Felder und Abstände kommen aus den Abschnitten davor. Neu ist nur, was es
-   sonst nirgends gibt — die Probefläche und die Ankerliste.
+   Acht Bildschirme vor dem Anmeldeformular (app.js, renderEinstieg).
+   3.10.0: neu aufgebaut nach dem dritten Betreiber-Video
+   (plan/onboarding/NEUAUFBAU-3.md). Übernommen ist die Bildsprache, die bei
+   Duolingo, Cal AI und Ladder gleich ist: Zurück und ein dünner Balken oben,
+   eine große Überschrift, Antwortzeilen über die ganze Breite, EIN gefüllter
+   Knopf unten, der Ausstieg als Textknopf darunter.
 
-   Bewegung: eine pro Bildschirm (.anim-rise auf dem ganzen Block), nicht
-   eine je Element. 150–250 ms, --dur-base. Die Regel steht in
-   plan/onboarding/FRAGENKATALOG.md Abschnitt 11.
+   Gebaut mit den Tokens dieser Datei. Keine neue Farbe. Kein Kasten im
+   Kasten (Satz 2): Die Antwortzeile ist die Fläche, ihr Zeichen trägt nur
+   eine Haarlinie. Der Haken im gewählten Zustand ist ein Kästchen-Zustand,
+   keine zweite Handlung.
+
+   Bewegung: Der Bildschirm kommt in Laufrichtung (vor/zurück). Was gerade
+   entsteht – ein Echo, die Kacheln, die Leiter –, kommt gestaffelt. Keine
+   Dauerbewegung. Bei prefers-reduced-motion steht alles sofort da.
    ========================================================================= */
+
+/* Die Eintrittsbewegung von .solo gehört hier dem inneren Block. Sonst liefe
+   sie bei jedem Neuzeichnen desselben Bildschirms erneut (Karte umdrehen,
+   bewerten). */
+.solo.einstieg-solo { animation: none; }
+.einstieg--start   { animation: enter-rise var(--dur-slow) var(--ease-out) both; }
+.einstieg--vor     { animation: enter-vor var(--dur-slow) var(--ease-out) both; }
+.einstieg--zurueck { animation: enter-zurueck var(--dur-slow) var(--ease-out) both; }
 
 .einstieg h1 {
   font-size: clamp(1.5rem, 4.5vw + 0.5rem, 2rem);
   line-height: 1.25;
   margin-bottom: var(--space-4);
 }
+/* Die Überschrift bekommt beim Bildschirmwechsel den Fokus (für
+   Bildschirmleser) – ein Rahmen darum wäre nur Lärm. */
+.einstieg h1:focus { outline: none; }
 .einstieg .subtitle { margin-bottom: var(--space-4); }
 .einstieg .hint { padding-top: 0; }
+.einstieg-aktion { margin-top: var(--space-6); }
+.einstieg-neben { margin-top: var(--space-4); }
+.einstieg-nachsatz { margin-top: var(--space-3); }
 
-/* Die Probefläche. Kein Kasten im Kasten (styles.css Abschnitt 6): eine
-   ruhige, leicht abgesetzte Fläche, auf der das arabische Wort steht und
-   seine Größe sichtbar wechselt. Die feste Mindesthöhe verhindert, dass der
-   Bildschirm springt, wenn man von Klein auf Groß tippt — ein Sprung wäre
-   genau die Bewegung, die hier nichts bedeutet. */
+/* ---- Kopf: Zurück + Fortschritt ---------------------------------------- */
+.einstieg-kopf {
+  display: flex; align-items: center; gap: var(--space-2);
+  margin: calc(-1 * var(--space-5)) 0 var(--space-6);
+}
+.einstieg-kopf__zurueck {
+  flex: 0 0 auto;
+  width: var(--tap); min-height: var(--tap);
+  padding: 0;
+  margin-left: calc(-1 * var(--space-3));
+}
+.einstieg-fortschritt {
+  flex: 1 1 auto;
+  height: 4px;
+  border-radius: var(--r-full);
+  background: var(--stufe-0);
+  overflow: hidden;
+}
+/* Wächst von seinem letzten Stand aus (--von) auf den neuen (--bis) – nicht
+   jedes Mal von null. scaleX statt width: kein Layout, nur Zeichnen. */
+.einstieg-fortschritt span {
+  display: block; height: 100%;
+  border-radius: inherit;
+  background: var(--stufe-3);
+  transform-origin: left center;
+  transform: scaleX(var(--bis));
+  animation: einstieg-fuellen var(--dur-slow) var(--ease-out) both;
+}
+@keyframes einstieg-fuellen {
+  from { transform: scaleX(var(--von)); }
+  to   { transform: scaleX(var(--bis)); }
+}
+
+/* ---- Antwortzeilen ------------------------------------------------------ */
+.einstieg-wahl {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+.einstieg-option {
+  width: 100%; min-height: 56px;
+  justify-content: flex-start; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--r-md);
+  background: var(--sheen), var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  box-shadow: none;
+  font-size: var(--fs-base); font-weight: 500; line-height: 1.35;
+  text-align: left;
+}
+.einstieg-option__ikon {
+  flex: 0 0 auto;
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.einstieg-option__text { flex: 1 1 auto; }
+.einstieg-option__rechts {
+  flex: 0 0 auto;
+  color: var(--text-3);
+  font-size: var(--fs-sm); font-weight: 500;
+}
+.einstieg-option__haken {
+  flex: 0 0 auto;
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--border-strong);
+  color: transparent;
+}
+.einstieg-option__haken .i { width: 13px; height: 13px; stroke-width: 3; }
+.einstieg-option.aktiv {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+.einstieg-option.aktiv .einstieg-option__ikon { color: var(--accent); border-color: var(--accent-border); }
+.einstieg-option.aktiv .einstieg-option__rechts { color: var(--text-2); }
+.einstieg-option.aktiv .einstieg-option__haken {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  animation: einstieg-haken var(--dur-base) var(--ease-spring) both;
+}
+@keyframes einstieg-haken {
+  from { transform: scale(0.55); }
+  to   { transform: none; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .einstieg-option:hover { background: var(--sheen), var(--surface-raised); border-color: var(--border-strong); }
+  .einstieg-option.aktiv:hover { background: var(--accent-bg-strong); border-color: var(--accent-border); }
+}
+
+/* ---- Echo: die Antwort der App auf eine Antwort -------------------------
+   Steht direkt unter der gewählten Zeile (Hürden) bzw. unter der Liste (Ziel).
+   Eine Linie links genügt – keine Fläche, es ist eine Stimme, kein Kasten. */
+.einstieg-echo {
+  margin: var(--space-2) 0 var(--space-1);
+  padding: 2px 0 2px var(--space-3);
+  border-left: 2px solid var(--accent-border);
+  color: var(--text-2);
+  font-size: var(--fs-sm); line-height: 1.55;
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
+.einstieg-option-rahmen .einstieg-echo { margin-left: var(--space-4); }
+.einstieg-echo-platz:empty { display: none; }
+.einstieg-vorauswahl { margin-top: var(--space-4); }
+
+/* ---- Bildschirm 1: die Karte, die sich umdreht --------------------------- */
+.einstieg-hero { margin: var(--space-6) 0 var(--space-4); }
+.einstieg-hero__karte { perspective: 1000px; }
+.einstieg-hero__dreh {
+  position: relative; height: 128px;
+  transform-style: preserve-3d;
+  animation: einstieg-dreh 720ms var(--ease-in-out) 1000ms both;
+}
+.einstieg-hero__seite {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  border-radius: var(--radius-lg);
+  background: var(--sheen), var(--surface-raised);
+  border: 1px solid var(--border);
+  box-shadow: var(--kante), var(--shadow-md);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.einstieg-hero__seite .arabic { font-size: 2.6rem; line-height: 1.6; }
+.einstieg-hero__seite--hinten {
+  transform: rotateY(180deg);
+  font-family: var(--font-text); font-size: var(--fs-2xl); font-weight: 600;
+  color: var(--text-1);
+}
+@keyframes einstieg-dreh {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(180deg); }
+}
+.einstieg-hero__text { margin-top: var(--space-2); }
+
+/* ---- Die Leiste der Abstände (Bildschirm 1 und nach "Sicher") -----------
+   Ein Punkt je Wiederholung; die Strecke dazwischen wächst mit der Wurzel
+   der Tage (app.js setzt --w). Links nach rechts gestaffelt. */
+.einstieg-leiste {
+  display: flex; align-items: flex-end;
+  margin-top: var(--space-5);
+  padding-top: 18px;
+}
+.einstieg-leiste__start {
+  flex: 0 0 auto;
+  width: 10px; height: 10px;
+  margin-bottom: 1px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.einstieg-leiste__stueck {
+  position: relative;
+  flex: var(--w) 1 0;
+  height: 12px;
+}
+.einstieg-leiste__stueck::before {
+  content: ""; position: absolute;
+  left: 0; right: 5px; top: 5px; height: 2px;
+  background: var(--stufe-2);
+  transform-origin: left center;
+  animation: einstieg-wachsen 240ms var(--ease-out) both;
+  animation-delay: calc(var(--i) * 110ms);
+}
+.einstieg-leiste__stueck::after {
+  content: ""; position: absolute;
+  right: -5px; top: 1px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--stufe-4);
+  animation: enter-pop 200ms var(--ease-out) both;
+  animation-delay: calc(var(--i) * 110ms + 160ms);
+}
+.einstieg-leiste__zahl {
+  position: absolute; bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--fs-micro); font-weight: 600;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  animation: enter-fade 200ms var(--ease-out) both;
+  animation-delay: calc(var(--i) * 110ms + 120ms);
+}
+/* Auf Bildschirm 1 erst, nachdem die Karte sich umgedreht hat. */
+.einstieg-leiste--spaeter .einstieg-leiste__stueck::before { animation-delay: calc(1800ms + var(--i) * 110ms); }
+.einstieg-leiste--spaeter .einstieg-leiste__stueck::after  { animation-delay: calc(1960ms + var(--i) * 110ms); }
+.einstieg-leiste--spaeter .einstieg-leiste__zahl           { animation-delay: calc(1920ms + var(--i) * 110ms); }
+@keyframes einstieg-wachsen {
+  from { transform: scaleX(0); }
+  to   { transform: none; }
+}
+.einstieg-leiste__legende {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-xs); color: var(--text-3);
+}
+
+/* ---- Die Probefläche (Bildschirm 4 und 5) --------------------------------
+   Kein Kasten im Kasten (Abschnitt 6): eine ruhige, leicht abgesetzte Fläche,
+   auf der das arabische Wort steht und seine Größe sichtbar wechselt. Die
+   feste Mindesthöhe verhindert, dass der Bildschirm springt, wenn man von
+   Klein auf Groß tippt. */
 .einstieg-probe {
   display: flex; align-items: center; justify-content: center;
   min-height: 132px;
@@ -2703,41 +2922,147 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   transition: transform var(--dur-slow) var(--ease-out);
 }
 
-/* Die Beispielkarte in S2. Als <button>, weil sie eine Handlung ist: ein Tipp
-   deckt auf. Sie sieht aus wie die Probefläche, damit klar bleibt, dass es
-   dasselbe Wort ist — nur mit Lösung darunter. */
+/* Die Beispielkarte (Bildschirm 3). Als <button>, weil sie eine Handlung
+   ist: ein Tipp deckt auf. Sie sieht aus wie die Probefläche, damit klar
+   bleibt, dass es dasselbe Wort ist — nur mit Lösung darunter. */
+/* 3.10.0: color gesetzt. Ein <button> erbt aus Abschnitt 6 --text-on-accent
+   (Fast-Schwarz, gedacht fuer den gefuellten Knopf) - das Wort stand damit
+   seit 3.9.9 dunkel auf der dunklen Probeflaeche und war vor dem Umdrehen
+   kaum zu sehen. Nach dem Umdrehen ist die Karte ein <div>, dort fiel es
+   nicht auf. */
 .einstieg-karte {
   display: block; width: 100%;
   height: auto; min-height: 0;
   margin-top: var(--space-5);
   padding: 0;
   background: none; border: 0; box-shadow: none;
+  color: var(--text-1);
   text-align: inherit;
   cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .einstieg-karte:hover { background: none; }
+  .einstieg-karte:hover .einstieg-probe { border-color: var(--border-strong); }
 }
 .einstieg-karte .einstieg-probe { margin-top: 0; }
 .einstieg-karte--offen { cursor: default; }
 .einstieg-karte__loesung {
   margin-top: var(--space-3);
   text-align: center;
-  font-size: var(--fs-lg);
-  color: var(--text-2);
-  animation: enter-fade var(--dur-base) var(--ease-out) both;
+  font-family: var(--font-text);
+  font-size: var(--fs-xl);
+  color: var(--text-1);
+  animation: enter-rise var(--dur-slow) var(--ease-out) both;
 }
+.einstieg-frage-klein { margin: var(--space-5) 0 0; }
 .einstieg-bewertung {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2); margin-top: var(--space-3);
 }
+.einstieg-antwort { margin-top: var(--space-5); }
 
-/* Der Wenn-dann-Satz. Steht ÜBER der Auswahl, nicht darunter: man soll sehen,
-   in welchen Satz die Wahl eingesetzt wird, bevor man wählt. */
+/* ---- Bildschirm 5: die Serie ------------------------------------------- */
+.einstieg-serie {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.einstieg-serie .i { flex: 0 0 auto; margin-top: 3px; color: var(--text-2); }
+
+/* ---- Der Wenn-dann-Satz --------------------------------------------------
+   Steht ÜBER der Auswahl, nicht darunter: man soll sehen, in welchen Satz
+   die Wahl eingesetzt wird, bevor man wählt. */
 .einstieg-satz {
-  margin: var(--space-5) 0 var(--space-4);
+  margin: var(--space-5) 0 var(--space-2);
   font-size: var(--fs-md);
   color: var(--text-2);
   line-height: 1.6;
 }
 .einstieg-satz strong { color: var(--text-1); font-weight: 600; }
+.einstieg-satz--plan { margin: 0 0 var(--space-2); font-family: var(--font-text); font-size: var(--fs-lg); }
+.einstieg-satz--konto { margin: calc(-1 * var(--space-4)) 0 var(--space-5); }
+.einstieg-frei { margin-top: var(--space-4); }
+
+/* ---- Bildschirm 8: der Plan --------------------------------------------- */
+.einstieg-plan-haken { color: var(--accent); margin-bottom: var(--space-3); }
+.einstieg--neu .einstieg-plan-haken { animation: enter-pop var(--dur-slow) var(--ease-spring) both; }
+/* Vier Kacheln, jede eine eigene Fläche – direkt auf der Seite, nicht in
+   einer weiteren (Satz 2). Tan AI zeigte hier ein 2×2-Raster; die Werte
+   kommen aus den Antworten. */
+.einstieg-kacheln {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.einstieg-kachel {
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--r-md);
+  background: var(--sheen), var(--surface);
+  border: 1px solid var(--border-subtle);
+}
+.einstieg-kachel__titel { display: block; font-size: var(--fs-xs); color: var(--text-3); }
+.einstieg-kachel__wert {
+  display: block; margin-top: 2px;
+  font-size: var(--fs-md); font-weight: 600; line-height: 1.35;
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+.einstieg-zwischentitel { font-size: var(--fs-lg); margin: var(--space-7) 0 0; }
+
+/* Die Leiter: dieselben Stufen wie die Leiste, mit Kalendertagen. Der Abstand
+   zwischen den Sprossen wächst mit (app.js setzt --abstand) – man sieht, dass
+   ein Wort immer seltener kommt, bevor man die Zahlen liest. */
+.einstieg-leiter {
+  list-style: none;
+  position: relative;
+  margin: var(--space-4) 0 var(--space-2);
+  padding: 0 0 0 26px;
+}
+.einstieg-leiter::before {
+  content: ""; position: absolute;
+  left: 6px; top: 10px; bottom: 10px; width: 2px;
+  border-radius: 1px;
+  background: var(--stufe-1);
+}
+.einstieg-leiter li {
+  position: relative;
+  margin-top: var(--abstand, 0);
+  min-height: 24px;
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  column-gap: var(--space-2);
+}
+.einstieg-leiter li::before {
+  content: ""; position: absolute;
+  left: -26px; top: 5px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--stufe-4);
+}
+.einstieg-leiter li:first-child::before { background: var(--accent); }
+.einstieg-leiter .einstieg-leiter__ende::before { border-style: dashed; border-color: var(--stufe-2); }
+.einstieg-leiter__wann { font-weight: 600; color: var(--text-1); }
+.einstieg-leiter__was { font-size: var(--fs-sm); color: var(--text-3); }
+.einstieg-leiter__ende .einstieg-leiter__wann { color: var(--text-2); }
+.einstieg--neu .einstieg-kachel,
+.einstieg--neu .einstieg-leiter li {
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+  animation-delay: calc(var(--i) * 70ms + 120ms);
+}
+.einstieg-vertrauen {
+  margin: var(--space-3) 0 0;
+  text-align: center;
+  font-size: var(--fs-xs); color: var(--text-3);
+}
+
+/* Bewegung abbestellt: Die Dauer setzt Abschnitt 3 schon auf null – die
+   Verzögerungen blieben aber stehen, und alles erschiene erst später. Die
+   Karte auf Bildschirm 1 dreht sich dann gar nicht und zeigt das Wort. */
+@media (prefers-reduced-motion: reduce) {
+  .einstieg *, .einstieg *::before, .einstieg *::after,
+  .einstieg-kopf * { animation-delay: 0s !important; }
+  .einstieg-hero__dreh { animation: none !important; }
+}
 
 /* Der Nachklang auf dem leeren Lernen-Bildschirm (app.js, renderLernen).
    Bewusst KEIN Kasten und keine Fläche: er gehört zum Bildschirm, nicht auf
@@ -2754,16 +3079,6 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .nachklang__satz {
   margin: var(--space-2) 0 0;
   font-size: var(--fs-sm); color: var(--text-2); line-height: 1.6;
-}
-
-.einstieg-anker { display: flex; flex-direction: column; gap: var(--space-2); }
-/* Gewählt heißt: Rahmen und Schrift in der Akzentfarbe — dieselbe Sprache wie
-   .seg button.active, nur für eine Spalte statt eine Reihe. Keine gefüllte
-   Fläche: die bleibt dem einen Hauptknopf pro Bildschirm vorbehalten. */
-.einstieg-anker button.aktiv {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-bg);
 }
 
 /* ===========================================================================
