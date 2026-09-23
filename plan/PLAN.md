@@ -190,9 +190,11 @@ Ob das die einzige Ursache der ursprünglichen Meldung war, bleibt ohne
 Gerätetest offen. Punkt 13 (Über-Scrolling) noch einmal durchgesehen —
 kein weiterer Fund, der bestehende `svh`-Fix deckt den Mechanismus bereits
 vollständig ab, kein Code geändert. Details: `beobachtungen-lernwerkzeug.md`
-Punkt 13/16, `CHANGELOG.md` 3.9.4. **Kategorie A ist damit vollständig
-durchgearbeitet** — jeder Punkt gebaut, geprüft-erledigt, oder mit
-Begründung als ohne Gerätetest nicht weiter belegbar dokumentiert.
+Punkt 13/16, `CHANGELOG.md` 3.9.4. **Betreiber-Test am Gerät (23.09.2026):
+„jo klappt"** — beide Fixes (Punkt 13 und 16) am echten Gerät bestätigt.
+**Kategorie A ist damit vollständig durchgearbeitet und am Gerät bestätigt**
+— jeder Punkt gebaut und bestätigt, geprüft-erledigt, oder mit Begründung als
+ohne Gerätetest nicht weiter belegbar dokumentiert.
 Details: `CHANGELOG.md` 3.9.3.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)

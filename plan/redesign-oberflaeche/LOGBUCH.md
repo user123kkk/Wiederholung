@@ -67,15 +67,14 @@ kein Ansatzpunkt für eine weitere, begründete Änderung gefunden.
 **Veröffentlichungsliste:** `APP_VERSION`/`CACHE_NAME` auf 3.9.4,
 `CHANGELOG.md` ergänzt. Keine neuen Startdateien.
 
-**Offen:** Beide Punkte brauchen für eine wirkliche Bestätigung einen echten
-Gerätetest (Beobachtung 16: gezielt Browser-Zurück von einer externen Seite
-wiederholt auslösen; Beobachtung 13: Scrollen mit ein-/ausklappender
-Werkzeugleiste beobachten).
+**Offen war:** Beide Punkte brauchten für eine wirkliche Bestätigung einen
+echten Gerätetest. **Betreiber-Test am Gerät (23.09.2026): „jo klappt"** —
+beide Fixes bestätigt, kein zweiter Faktor bei Beobachtung 16 gemeldet.
 
-**Nächster Schritt:** Betreiber-Test am Gerät für beide Punkte. Damit ist
-Kategorie A aus `beobachtungen-lernwerkzeug.md` vollständig durchgearbeitet —
-jeder Punkt gebaut, geprüft-erledigt, oder mit Begründung als ohne
-Gerätetest nicht weiter belegbar dokumentiert.
+**Kategorie A aus `beobachtungen-lernwerkzeug.md` ist damit vollständig
+durchgearbeitet UND am Gerät bestätigt** — jeder Punkt gebaut und bestätigt,
+geprüft-erledigt, oder mit Begründung als ohne Gerätetest nicht weiter
+belegbar dokumentiert. **Nächster Schritt:** keiner zu Kategorie A.
 
 ---
 

@@ -424,7 +424,7 @@ Bug im engeren Sinn, sondern wahrgenommene Ladezeit/Politur — passt eher zu
 
 ---
 
-## 13. Über-Scrolling: weiter nach unten als nötig — 🔧 Verdachts-Fix versucht, unbestätigt (v3.0.50)
+## 13. Über-Scrolling: weiter nach unten als nötig — ✅ am Gerät bestätigt behoben (v3.0.50, Betreiber-Test 23.09.2026)
 
 **Beobachtung:** In allen 3 Tabs (Verwalten, Lernen, Üben) kann man weiter
 nach unten scrollen als sinnvoll ist. Beispiel: Bei Lernen, wo es nichts mehr
@@ -485,6 +485,9 @@ ohne Testmöglichkeit wäre wieder nur eine Vermutung ohne neue Grundlage —
 anders als bei Beobachtung 16, wo sich der Fehler ohne Gerät nachstellen
 ließ, aber hier nicht.
 
+**Betreiber-Test am Gerät (23.09.2026): „jo klappt".** Damit gilt auch diese
+Beobachtung als erledigt — kein weiterer Schritt nötig.
+
 ## 14. Scroll-Position wird zwischen Bereichen nicht zurückgesetzt — ✅ behoben (v3.0.36)
 
 **Beobachtung:** Wenn man in einem Bereich (z. B. Medina im Verwalten) nach
@@ -514,7 +517,7 @@ Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)*
 entschieden werden, da 3 um eine bewusste Erhaltung nach einem Modal/Dialog
 geht, während 14 um ein unerwartetes Verhalten bei einfachem Navigation geht.
 
-## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — 🔧 echter Defekt in der Wiederholungslogik gefunden und behoben (v3.9.4), Gesamtursache weiterhin nicht am Gerät bestätigt
+## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — ✅ am Gerät bestätigt behoben (v3.9.4, Betreiber-Test 23.09.2026)
 
 **Beobachtung:** Navigation zwischen App und statischen Seiten ist fehlerhaft:
 - Von der App (z.B. Fehlerformular in Einstellungen) zur externen Seite
@@ -696,10 +699,10 @@ abschließend sagen — dafür bleibt die bestehende Selbstheilung (kompletter
 Neuladen, max. 2 automatische Versuche) als weiteres Sicherheitsnetz
 unverändert bestehen.
 
-**Nächster Schritt:** Betreiber-Test am Gerät — gezielt „Impressum" öffnen,
-Browser-Zurück, mehrfach wiederholen. Tritt der Fehler weiterhin auf, wäre
-das ein starkes Signal für einen zweiten, noch unbekannten Faktor (dann bitte
-den Diagnose-Text aus dem Fehlerbildschirm mitschicken, siehe v3.0.43).
+**Betreiber-Test am Gerät (23.09.2026): „jo klappt".** Der Fix wirkt am
+echten Gerät. Kein zweiter, noch unbekannter Faktor gemeldet — damit gilt
+diese Beobachtung als erledigt. **Nächster Schritt:** keiner, außer der
+Fehler taucht später doch noch einmal auf.
 
 ## 15. Viewport-Verschiebung beim Scrollen und beim Registrieren — ✅ behoben (v3.0.37)
 
@@ -811,11 +814,11 @@ gehen kann, wenn die Seite currentUser vorher schließt) eingrenzen.
   Verschieben — höchste Priorität, weil Datenänderung ohne Absicht), 4
   (ungewollter Autofokus/Tastatur), 5 (✅ v3.2.1, siehe dort — über den
   Redesign-Strang behoben, nicht über diese Liste), 6 (Formatierung geht
-  verloren), 13 (Over-Scrolling — 🔧 Verdachts-Fix v3.0.50, unbestätigt),
+  verloren), 13 (Over-Scrolling — ✅ v3.0.50, am Gerät bestätigt 23.09.2026),
   14 (Scroll-Position nicht zurückgesetzt),
   15 (Viewport-Verschiebung beim Scrollen/Speichern), 16 (History/Firebase-Bug
   beim Zurück von externen Seiten — auch höhere Priorität, weil App-Fehler;
-  🔧 dritter Verdachts-Fix v3.0.51, unbestätigt).
+  ✅ v3.9.4, echter Defekt gefunden und am Gerät bestätigt 23.09.2026).
 - **Zusammenhängende UX-Verbesserung, gemeinsam zu entscheiden:** 1 (✅ v3.0.47),
   3 (✅ v3.0.48, beide auf Freigabe des Betreibers gebaut — am Ende unabhängig
   voneinander gelöst, siehe dort), 10 (✅ 16.09.2026, durch 1+6 abgedeckt, kein
