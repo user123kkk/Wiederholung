@@ -575,8 +575,26 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (23.09.2026, sehr spät): Grammatik-Feld steht (v3.9.7), Betreiber
-benennt Onboarding als nächstes Ziel.** Zwischen dem vorigen Eintrag unten
+**AKTUELL (23.09.2026, sehr spät): Grammatik-Feld wieder entfernt (v3.9.8).**
+Wenige Stunden nach dem Bau (v3.9.7, siehe unten) fragte der Betreiber selbst
+„fürs Erste entfernen? Hick's Law und so." Drei Optionen vorgelegt (Lassen/
+Verstecken/Entfernen), Betreiber wählte **Entfernen**. Zurück auf Stand
+v3.8.5 (Grammatik-Hinweis nur als Label-Wort im `extra`-Feld) — kein eigenes
+`grammatik`-Feld mehr in `normCard`, Cloud, Formular, Weitergabe, Abgleich,
+Suche, `firestore.rules`. `APP_VERSION`/`CACHE_NAME`/Versions-Query/
+`CHANGELOG.md` → 3.9.8. Details: `beobachtungen-lernwerkzeug.md` Punkt 21.
+**Falls das Thema wieder aufkommt** (z. B. sobald Konjugationsthemen wie
+3. Person/Plural im Kartenbestand ankommen): neu aufrollen, nicht
+stillschweigend wieder einbauen.
+
+**Onboarding bleibt das von Betreiber benannte nächste Ziel** — daran ändert
+diese Rücknahme nichts, siehe Eintrag darunter und
+[`onboarding/AUFTRAG.md`](onboarding/AUFTRAG.md) Abschnitt 0.
+
+---
+
+**Vorheriger Stand (23.09.2026, sehr spät): Grammatik-Feld gebaut (v3.9.7),
+Betreiber benennt Onboarding als nächstes Ziel.** Zwischen dem vorigen Eintrag unten
 (v3.9.2) und jetzt liegen v3.9.3–v3.9.7 (Kategorie-A-Bugs am Gerät bestätigt,
 `importMitVersuch()`-Cache-Defekt behoben, Versions-Query-Lücke geschlossen,
 Ladekreis-Fix, eigenes Grammatik-Feld) — Details dazu stehen in den jeweiligen

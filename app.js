@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.7";
+const APP_VERSION = "3.9.8";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -140,15 +140,13 @@ function genId() {
    Die Zahlen sind bewusst weit: Eine Vokabel ist ein Wort oder ein Satz, kein
    Absatz; 1000 Zeichen fasst auch einen langen Beispielsatz, und die Notiz
    nimmt mit 5000 Zeichen jeden Merksatz auf. Wer unter der Grenze bleibt -
-   also jeder normale Gebrauch -, merkt nichts davon. Grammatik ist bewusst
-   knapper (200) - ein Schlagwort wie "Perfekt, 3. Pers. Sg. m.", kein Satz.
+   also jeder normale Gebrauch -, merkt nichts davon.
 
    Dieselben Zahlen stehen noch einmal in firestore.rules. Sie MUESSEN dort
    stehen: Was hier geprueft wird, prueft der Browser - und der gehoert dem
    Nutzer. Wird hier etwas geaendert, dort mitaendern. */
-const MAX_WORT = 1000;      // wort und uebersetzung
-const MAX_EXTRA = 5000;     // Beispielsatz, Bild-Link oder Notiz
-const MAX_GRAMMATIK = 200;  // Beobachtung 21: eigenes Feld seit 23.09.2026
+const MAX_WORT = 1000;     // wort und uebersetzung
+const MAX_EXTRA = 5000;    // Beispielsatz, Grammatik, Bild-Link oder Notiz
 function kuerze(s, max) { return String(s === undefined || s === null ? "" : s).slice(0, max); }
 
 /* ---------- Obergrenzen fuer den Import ----------
@@ -203,7 +201,6 @@ function normCard(c) {
     wort: kuerze(c.wort, MAX_WORT),
     uebersetzung: kuerze(c.uebersetzung, MAX_WORT),
     extra: typeof c.extra === "string" ? c.extra.slice(0, MAX_EXTRA) : "",
-    grammatik: typeof c.grammatik === "string" ? c.grammatik.slice(0, MAX_GRAMMATIK) : "",
     stufe: stufe,
     nextReview: /^\d{4}-\d{2}-\d{2}$/.test(c.nextReview) ? c.nextReview : todayStr(),
     ersteBewertung: erste,
@@ -608,7 +605,7 @@ function normBereiche(arr) {
    die Liste nicht an zwei Stellen auseinanderlaufen. */
 function kartenFelder(c, order) {
   return {
-    wort: c.wort, uebersetzung: c.uebersetzung, extra: c.extra, grammatik: c.grammatik || "",
+    wort: c.wort, uebersetzung: c.uebersetzung, extra: c.extra,
     stufe: c.stufe, nextReview: c.nextReview,
     ersteBewertung: c.ersteBewertung === undefined ? null : c.ersteBewertung,
     rueckfaelle: c.rueckfaelle || 0,
@@ -660,7 +657,7 @@ function bereicheMapToArray(mapObj) {
     const kartenMap = b.karten && typeof b.karten === "object" ? b.karten : {};
     const karten = Object.keys(kartenMap).map(cid => {
       const c = kartenMap[cid] || {};
-      return { card: normCard({ id: cid, wort: c.wort, uebersetzung: c.uebersetzung, extra: c.extra, grammatik: c.grammatik, stufe: c.stufe, nextReview: c.nextReview, ersteBewertung: c.ersteBewertung, rueckfaelle: c.rueckfaelle, quelleId: c.quelleId, maxStufe: c.maxStufe }), order: Number.isFinite(c.order) ? c.order : 0 };
+      return { card: normCard({ id: cid, wort: c.wort, uebersetzung: c.uebersetzung, extra: c.extra, stufe: c.stufe, nextReview: c.nextReview, ersteBewertung: c.ersteBewertung, rueckfaelle: c.rueckfaelle, quelleId: c.quelleId, maxStufe: c.maxStufe }), order: Number.isFinite(c.order) ? c.order : 0 };
     }).sort((x, y) => x.order - y.order).map(x => x.card);
     const setsMap = b.sets && typeof b.sets === "object" ? b.sets : {};
     const sets = Object.keys(setsMap).map(sid => {
@@ -1239,8 +1236,8 @@ function renderToast() {
    render() baut das gesamte DOM neu. Ohne diesen Zwischenspeicher waere jede
    halb getippte Vokabel weg, sobald irgendetwas anderes ein render() ausloest -
    zum Beispiel ein Datensatz, der aus der Cloud hereinkommt. */
-let formDraft = { wort: "", ueb: "", grammatik: "", extra: "" };
-function resetFormDraft() { formDraft = { wort: "", ueb: "", grammatik: "", extra: "" }; ui.karteFeldFehler = null; }
+let formDraft = { wort: "", ueb: "", extra: "" };
+function resetFormDraft() { formDraft = { wort: "", ueb: "", extra: "" }; ui.karteFeldFehler = null; }
 
 /* 16.09.2026 (Beobachtung 3): Wohin nach dem Bearbeiten einer Karte
    zurueckgesprungen wird. editCard() springt zum Formular an den
@@ -2827,7 +2824,6 @@ function baueWeitergabeBereich(b, version) {
     wort: c.wort,
     uebersetzung: c.uebersetzung,
     extra: c.extra,
-    grammatik: c.grammatik,
     stufe: 0
   }));
   const sets = (b.sets || []).filter(s => s.art === "kategorie" || s.art === "lektion").map(s => ({
@@ -3162,7 +3158,7 @@ function satzUnterschied(ziel, datei) {
     const vorhanden = zielNachQuelle.get(q) || zielNachQuelle.get("w:" + c.wort);
     if (!vorhanden) { neu.push(c); continue; }
     gesehen.add(vorhanden.id);
-    if (vorhanden.wort !== c.wort || vorhanden.uebersetzung !== c.uebersetzung || vorhanden.extra !== c.extra || vorhanden.grammatik !== c.grammatik) {
+    if (vorhanden.wort !== c.wort || vorhanden.uebersetzung !== c.uebersetzung || vorhanden.extra !== c.extra) {
       aktualisiert.push(c);
     }
   }
@@ -3267,10 +3263,9 @@ async function satzZusammenfuehren(ziel, datei) {
       lokal.wort = c.wort;
       lokal.uebersetzung = c.uebersetzung;
       lokal.extra = c.extra;
-      lokal.grammatik = c.grammatik;
       /* stufe, nextReview, ersteBewertung, rueckfaelle bleiben, wie sie sind */
     } else {
-      lokal = normCard({ id: frisch(), wort: c.wort, uebersetzung: c.uebersetzung, extra: c.extra, grammatik: c.grammatik, stufe: 0, quelleId: q });
+      lokal = normCard({ id: frisch(), wort: c.wort, uebersetzung: c.uebersetzung, extra: c.extra, stufe: 0, quelleId: q });
       lokal.nextReview = todayStr();
     }
     dateiZuLokal.set(c.id, lokal);
@@ -4104,7 +4099,6 @@ async function submitCardForm() {
      kommt auf diesem Weg gar nicht vor. */
   const wort = val("f-wort").trim().slice(0, MAX_WORT);
   const ueb = val("f-ueb").trim().slice(0, MAX_WORT);
-  const grammatik = val("f-grammatik").trim().slice(0, MAX_GRAMMATIK);
   const extra = val("f-extra").trim().slice(0, MAX_EXTRA);
   if (!wort || !ueb) {
     /* 9: Dialog wegtippen und selbst suchen, welches Feld fehlt, ist zwei
@@ -4143,11 +4137,9 @@ async function submitCardForm() {
       }
       card.wort = wort;
       card.uebersetzung = ueb;
-      card.grammatik = grammatik;
       card.extra = extra;
       patch[pfad + ".wort"] = wort;
       patch[pfad + ".uebersetzung"] = ueb;
-      patch[pfad + ".grammatik"] = grammatik;
       patch[pfad + ".extra"] = extra;
       const stufeEl = document.getElementById("f-stufe");
       if (stufeEl) {
@@ -4175,7 +4167,6 @@ async function submitCardForm() {
       id: genId(),
       wort: wort,
       uebersetzung: ueb,
-      grammatik: grammatik,
       extra: extra,
       stufe: 0,
       nextReview: todayStr(),
@@ -4225,7 +4216,7 @@ function editCard(id) {
   ui.karteSheet = true;
   ui.karteFeldFehler = null;
   const c = findCard(id);
-  formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, grammatik: c.grammatik, extra: c.extra } : { wort: "", ueb: "", grammatik: "", extra: "" };
+  formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra } : { wort: "", ueb: "", extra: "" };
   render();
   /* 3.3.1: Kein Sprung mehr nach oben. Das Formular kam bis dahin oben auf
      der Seite - jetzt kommt es von unten, und die Liste bleibt genau dort
@@ -5340,7 +5331,6 @@ function cardDetailSheet() {
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="card-detail-titel">';
   html += '<h3 id="card-detail-titel"' + (istArabisch(c.wort) ? ' class="arabic" lang="ar" dir="rtl"' : '') + '>' + esc(c.wort) + '</h3>';
   html += '<p class="dlg-text" style="margin-bottom:var(--space-3)">' + esc(c.uebersetzung) + '</p>';
-  if (c.grammatik) html += '<p class="hint" style="margin-bottom:var(--space-3)"><strong>Grammatik:</strong> ' + esc(c.grammatik) + '</p>';
   if (c.extra) html += '<div class="extra-note-voll" style="margin-bottom:var(--space-4)">' + renderExtra(c.extra, []) + '</div>';
   html += '<div style="margin-bottom:var(--space-2)">' + zustandBadge(c) + '</div>';
   html += kartenTagsHtml(c.id, b);
@@ -5363,8 +5353,8 @@ function cardDetailSheet() {
 
 /* Das Karten-Blatt. Dieselbe Huelle wie das Bereichs-Sheet und das
    Wahl-Blatt (.dlg), nur mit dem Formular darin. Die Kennungen f-wort,
-   f-ueb, f-grammatik, f-extra und f-stufe bleiben unveraendert - app.js
-   liest sie direkt (siehe README, "Wenn du am Markup arbeitest").
+   f-ueb, f-extra und f-stufe bleiben unveraendert - app.js liest sie
+   direkt (siehe README, "Wenn du am Markup arbeitest").
 
    Tippen neben das Blatt schliesst NICHT: Anders als bei einer Liste
    kostet das hier eine halb getippte Karte. Dieselbe Entscheidung wie beim
@@ -5388,9 +5378,7 @@ function karteSheet() {
     (fehler.ueb ? ' aria-invalid="true" aria-describedby="f-ueb-fehler"' : '') + '>';
   if (fehler.ueb) html += '<div class="field__fehler" id="f-ueb-fehler">Bitte ausfüllen</div>';
   html += '</div>';
-  html += '<div class="field"><label for="f-grammatik">Grammatik <span class="opt">– optional</span></label>';
-  html += '<input type="text" id="f-grammatik" maxlength="' + MAX_GRAMMATIK + '" placeholder="z. B. Perfekt, 3. Person" value="' + esc(formDraft.grammatik) + '"></div>';
-  html += '<div class="field"><label for="f-extra">Beispielsatz, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
+  html += '<div class="field"><label for="f-extra">Beispielsatz, Grammatik, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
   html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '">' + esc(formDraft.extra) + '</textarea></div>';
   if (editing) {
     html += '<div class="field"><label for="f-stufe">Wiederholungsstufe</label>';
@@ -5766,7 +5754,7 @@ function renderMain() {
   if (ui.dialog) setupDialog();     // D2
 
   if (ui.tab === "verwalten") {
-    ["f-wort", "f-ueb", "f-grammatik"].forEach(id => {
+    ["f-wort", "f-ueb"].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener("keydown", e => {
         if (e.key === "Enter") submitCardForm();
@@ -5774,7 +5762,7 @@ function renderMain() {
     });
     /* Jede Eingabe sofort in den Entwurf spiegeln, damit ein render()
        dazwischen nichts loeschen kann. */
-    [["f-wort", "wort"], ["f-ueb", "ueb"], ["f-grammatik", "grammatik"], ["f-extra", "extra"]].forEach(([id, key]) => {
+    [["f-wort", "wort"], ["f-ueb", "ueb"], ["f-extra", "extra"]].forEach(([id, key]) => {
       const el = document.getElementById(id);
       if (el) el.addEventListener("input", e => {
         formDraft[key] = e.target.value;
@@ -5905,7 +5893,6 @@ function renderDurchsicht(set) {
     html += '<div class="lern-inhalt">';
     html += '<div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(c.wort) + '</div>';
     html += '<div class="uebersetzung">' + esc(c.uebersetzung) + '</div>';
-    if (c.grammatik) html += '<div class="hint">' + esc(c.grammatik) + '</div>';
     if (c.extra) {
       html += '<button class="lern-notiz-knopf" data-action="lern-notiz" data-id="' + esc(c.id) + '" aria-expanded="' + (notizOffen ? "true" : "false") + '">' +
         ikon(notizOffen ? "chevronUnten" : "chevronRechts", "i-sm") + ' Notiz</button>';
@@ -7219,7 +7206,6 @@ function renderSession() {
   } else {
     if (s.handwriting) html += renderHandwritingCanvas(true);
     html += '<div class="study-answer' + (answerArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(answerText) + '</div>';
-    if (card.grammatik) html += '<div class="hint">' + esc(card.grammatik) + '</div>';
     /* 2.21.3: Gerade beim Wiederholen aus "Schwierige Woerter" heraus war
        bisher nicht zu sehen, aus welcher Lektion das Wort stammt. */
     html += kartenTagsHtml(card.id, currentBereich());
@@ -7497,7 +7483,7 @@ function abstand(a, b, max) {
 /* Punktzahl einer ganzen Karte. Fehlt auch nur eines der Suchwoerter in
    allen drei Feldern, ist die Karte kein Treffer. */
 function kartenPunkte(c, tokens, ungefaehr) {
-  const felder = [suchFeld(c.wort), suchFeld(c.uebersetzung), suchFeld(c.grammatik), suchFeld(c.extra)];
+  const felder = [suchFeld(c.wort), suchFeld(c.uebersetzung), suchFeld(c.extra)];
   let summe = 0;
   for (const t of tokens) {
     let beste = 0;
@@ -7734,7 +7720,7 @@ function renderVerwaltenListe(cards, gefuehrt) {
     html += '<p class="hint">Noch keine Karten vorhanden.</p>';
   } else {
     html += '<div class="search-wrap">' + ikon("suche", "i-such");
-    html += '<input type="text" id="f-search" placeholder="Wort, Übersetzung, Grammatik oder Notiz…" value="' + esc(ui.searchQuery) + '"' +
+    html += '<input type="text" id="f-search" placeholder="Wort, Übersetzung oder Notiz…" value="' + esc(ui.searchQuery) + '"' +
       ' autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">';
     html += '<button class="search-clear" id="f-search-clear" data-action="search-clear" aria-label="Suche leeren"' +
       (ui.searchQuery ? '' : ' hidden') + '>' + ikon("schliessen", "i-sm") + '</button>';
@@ -7900,7 +7886,6 @@ function kartenListeInhalt() {
     html += '<div class="words">';
     html += '<div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + markiere(c.wort, tokens) + '</div>';
     html += '<div class="uebersetzung">' + markiere(c.uebersetzung, tokens) + '</div>';
-    if (c.grammatik) html += '<div class="extra-note">' + markiere(c.grammatik, tokens) + '</div>';
     if (c.extra) html += '<div class="extra-note">' + renderExtra(c.extra, tokens) + '</div>';
     html += kartenTagsHtml(c.id, fremd || bAkt);
     html += '</div>';

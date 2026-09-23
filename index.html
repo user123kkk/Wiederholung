@@ -25,16 +25,16 @@
 <!-- Sagt dem Browser, dass die Seite dunkel ist: Bedienfelder, Rollbalken und
      Textfelder kommen dann von selbst in Dunkelfassung statt in Weiss. -->
 <meta name="color-scheme" content="dark">
-<!-- Beobachtung 16 (16.09.2026): initFirebase() laedt sein SDK erst als
-     dynamischer Import spaeter im Skript - preconnect baut TCP/TLS zu
+<!-- Beobachtung 16 (16.09.2026, Verdachts-Fix, unbestätigt): initFirebase()
+     laedt sein SDK erst als dynamischer Import spaeter im Skript - die
+     Verbindung zu gstatic.com beginnt also erst dann aufzubauen. Nach einer
+     echten Browser-Zurueck-Navigation (bestaetigt: kein bfcache, echtes
+     Neuladen) priorisiert der Browser neue Verbindungen mitunter anders als
+     bei einem gewoehnlichen ersten Aufruf - preconnect baut TCP/TLS zu
      gstatic.com schon waehrend des HTML-Parsens auf, parallel zu Skript und
      Stylesheet, statt erst beim dynamischen Import. Reine Verbindungs-
      Vorbereitung, kein Laden einer Ressource - CSP erlaubt gstatic.com
-     ohnehin bereits (script-src/connect-src, firebase.json). Die eigentliche
-     Fehlerursache (fehlgeschlagener import() derselben URL cacht sich im
-     Modul-Register des Browsers, siehe app.js importMitVersuch()) ist seit
-     v3.9.4 behoben und am Geraet bestaetigt - preconnect bleibt trotzdem
-     stehen, schadet nicht und spart in jedem Fall eine winzige Verzoegerung. -->
+     ohnehin bereits (script-src/connect-src, firebase.json). -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://www.gstatic.com">
 <link rel="manifest" href="./manifest.json">
@@ -128,6 +128,6 @@
      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
      die die App innerhalb der letzten Stunde offen hatten, an der alten
      app.js fest, auch nach einem Reload. -->
-<script type="module" src="./app.js?v=3.9.7"></script>
+<script type="module" src="./app.js?v=3.9.8"></script>
 </body>
 </html>

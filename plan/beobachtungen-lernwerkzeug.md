@@ -1100,7 +1100,7 @@ nötig, kein Direktbau) — nur die Formulierung „Reihenfolge-Modus" statt
 „Quran-Ayat-Modus" ist jetzt die treffendere, falls ein Konzept dafür
 angefangen wird.
 
-## 21. Karten-Formular: „Notiz"-Feld trägt auch Grammatik, aber ist nicht als solches erkennbar — ✅ eigenes Feld gebaut (v3.9.7)
+## 21. Karten-Formular: „Notiz"-Feld trägt auch Grammatik, aber ist nicht als solches erkennbar — eigenes Feld gebaut (v3.9.7), wieder entfernt (v3.9.8)
 
 **Beobachtung:** Betreiber nutzt das Feld `extra` (Formular-Beschriftung:
 „Beispielsatz, Bild-Link oder Notiz") auch für grammatische Hinweise zu
@@ -1174,10 +1174,31 @@ bereits geprüften, strukturgleichen `extra`-Regel.
 Anlegen zeigt weiterhin nur Wort/Übersetzung — Grammatik ist dafür nicht
 relevant genug, um die Meldung zu verlängern.
 
-**Nächster Schritt:** Betreiber-Test am Gerät, besonders: `firestore.rules`
-wirklich gegen echte Schreibvorgänge prüfen (kann nur der Betreiber, da kein
-Emulator hier verfügbar), und ob die Platzierung/Sichtbarkeit so passt oder
-nachjustiert werden soll.
+**Wieder entfernt am 23.09.2026 (v3.9.8), noch am selben Abend.** Betreiber-
+Rückfrage in derselben Session: „Grammatik-Feld fürs Erste entfernen? Hick's
+Law und so." Gegen die Feld-Prüfung gehalten (0 von 136 echten Karten nutzten
+es, kein Geräte-Test hatte bereits stattgefunden) und dem Betreiber drei
+Optionen vorgelegt (Lassen/Verstecken/Entfernen) — er wählte **Entfernen**.
+Zurück auf den Stand von v3.8.5: Grammatik-Hinweise wieder im Label des
+`extra`-Felds, kein eigenes `grammatik`-Feld mehr in `normCard`, Cloud-
+Schreiben/-Lesen, Formular, Weitergabe-Format, Abgleich/Zusammenführen, Suche
+oder `firestore.rules`. `APP_VERSION`/`CACHE_NAME`/Versions-Query/
+`CHANGELOG.md` → 3.9.8. Betrifft nur diese eine Karten-App-Funktion — keine
+Auswirkung auf die anderen offenen Punkte in diesem Dokument.
+
+**Warum kein Widerspruch zur Einschätzung „kein Bug" oben:** Das Feld war
+technisch korrekt gebaut; die Rücknahme ist eine reine Produktentscheidung
+(Formularlänge/Aufmerksamkeit), keine Fehlerkorrektur. Hick's Law (mehr
+Auswahlmöglichkeiten kosten Entscheidungszeit) passt genau genommen eher auf
+exklusive Auswahl als auf ein einzelnes optionales Textfeld — trotzdem war es
+die ausdrückliche Betreiber-Entscheidung, nicht unwidersprochen übernommen
+(siehe Session-Antwort).
+
+**Nächster Schritt:** Keiner. Falls Grammatik-Hinweise später doch wieder
+wichtig werden — z. B. sobald Konjugationsthemen (3. Person, Plural) im
+Kartenbestand ankommen — diesen Punkt neu aufrollen, nicht stillschweigend
+wieder einbauen (`../CLAUDE.md`: „Nichts wieder einbauen, was bewusst
+entfernt wurde").
 
 ---
 
