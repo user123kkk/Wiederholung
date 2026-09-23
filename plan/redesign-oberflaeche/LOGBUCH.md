@@ -4,6 +4,52 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 — Beobachtung 12 (leerer Bildschirm vor dem Lade-Indikator) behoben (v3.9.6)
+
+**Anlass:** Weiterarbeit nach Abschluss von Kategorie A („weiter" nach
+bestätigtem Gerätetest) — Beobachtung 12 aus der ersten Beobachtungsrunde
+(15.09.2026) war bewusst als „passt eher zu später" zurückgestellt, fällt
+aber unter die seit 18.09.2026 dauerhafte Lockerung (Design-/
+Verbesserungsarbeit an Bedienung/Optik, Lernlogik unangetastet) und ist
+klein, konkret und risikoarm genug für „nimm einen Punkt und mach".
+
+**Geändert:** `index.html` — das statische Boot-Markup in `#app` bekommt
+jetzt dieselben drei `.boot__orbit`-Ringe, dasselbe Symbol
+(`flower-isolated.png` statt bisher `desktop-icon.png`) und denselben Text
+(„Deine Karten werden geladen…"), die `render()` (`app.js`) für den
+identischen Ladezustand ohnehin schon baut. Keine neue Animation — die
+`@keyframes bootSpin`/`bootSpinRev` gab es bereits in `styles.css`, nur ihr
+erstes Erscheinen wandert von „nach dem Laden von app.js" auf „steht schon
+im HTML".
+
+**Geprüft:** Mit Playwright bei komplett blockiertem `app.js` (kein
+JavaScript läuft) bestätigt: Ring, Symbol und Text erscheinen sofort, die
+Rotation ist innerhalb von 400ms messbar in Bewegung (Transform-Matrix
+ändert sich). Voller `probelauf.mjs`-Durchlauf (18 Bildschirme) unverändert
+fehlerfrei.
+
+**Entscheidung:** Bewusst 1:1 das bestehende Markup übernommen, keine neue
+Gestaltung erfunden — genau die „nichts komplett verändern"-Grenze aus
+`../../CLAUDE.md` §7. Nebenfund dabei behoben: das alte statische Symbol
+(`desktop-icon.png`) wich vom JS-Symbol (`flower-isolated.png`) ab, hätte
+also ohnehin einen sichtbaren Sprung beim Übernehmen durch `render()`
+gegeben.
+
+**Veröffentlichungsliste:** `APP_VERSION`/`CACHE_NAME`/`index.html`-Query auf
+3.9.6, `CHANGELOG.md` ergänzt. `flower-isolated.png` war schon vorher in
+`APP_SHELL` (`sw.js`), keine neue Startdatei nötig.
+
+**Offen:** Kein Gerätetest — die reine CSS-Animation braucht keinen, aber ob
+sich der Übergang beim tatsächlichen Laden (mit echtem Netzwerk statt
+Playwright-Attrappe) wirklich nahtlos anfühlt, zeigt sich erst am Gerät.
+
+**Nächster Schritt:** Keiner zu diesem Punkt, außer Rückmeldung vom
+Betreiber. Aus Kategorie B/„Design-Sachen" bleiben noch offen: Punkt 21
+(eigenes Grammatik-Feld, falls das Label allein nicht reicht) und Punkt 11
+(„Design-Sachen", vom Betreiber selbst nie konkretisiert).
+
+---
+
 ### 2026-09-23 — Beobachtung 16 (Firebase-Fehler nach Browser-Zurück): echter Defekt gefunden und behoben (v3.9.4); Beobachtung 13 erneut durchgesehen
 
 **Anlass:** Rückfrage des Betreibers, ob Kategorie A wirklich komplett ist,

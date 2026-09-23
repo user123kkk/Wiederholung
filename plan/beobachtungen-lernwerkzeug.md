@@ -405,7 +405,7 @@ es jetzt die Detailansicht. Kein Code geändert.
 vorgesehen — nur als Platzhalter vermerkt, damit klar ist, dass diese
 Kategorie existiert und bewusst nicht in dieser Liste steckt.
 
-## 12. Kurzer weißer/leerer Bildschirm vor dem Lade-Indikator
+## 12. Kurzer weißer/leerer Bildschirm vor dem Lade-Indikator — ✅ behoben (v3.9.6)
 
 **Beobachtung:** Beim Öffnen der App ist der Bildschirm oft noch kurz leer,
 bevor überhaupt der Lade-Indikator erscheint. Wunsch: das so gut wie möglich
@@ -421,6 +421,19 @@ bestehenden Grundsatz aus `../CLAUDE.md`, dass Eintrittsbewegungen
 `@keyframes` sein müssen. Technisch machbar, ohne neue Abhängigkeiten. Kein
 Bug im engeren Sinn, sondern wahrgenommene Ladezeit/Politur — passt eher zu
 „später", ähnlich wie Punkt 11.
+
+**Gebaut am 23.09.2026 (v3.9.6), genau wie hier eingeschätzt.** `render()`
+(`app.js`) baute den drehenden Ladekreis (`.boot__orbit`, drei Ringe) bisher
+erst nach dem Laden/Ausführen von `app.js` — bis dahin stand nur das stille
+Symbol da. `index.html` zeigt jetzt von der ersten Zeichnung an dasselbe
+Markup wie `render()` für denselben Zustand (Ringe, Symbol
+`flower-isolated.png`, Text „Deine Karten werden geladen…"), rein über die
+schon vorhandenen `@keyframes bootSpin`/`bootSpinRev` — keine neue Animation
+erfunden, nur ihr erstes Erscheinen vorgezogen. Mit Playwright bei komplett
+blockiertem `app.js` geprüft: Ring dreht sich messbar, ganz ohne JavaScript.
+Nebenfund dabei: Das alte statische Symbol (`desktop-icon.png`) wich von dem
+ab, das `render()` zeigt (`flower-isolated.png`) — jetzt vereinheitlicht,
+kein Symbolwechsel mehr beim Übernehmen durch `render()`.
 
 ---
 

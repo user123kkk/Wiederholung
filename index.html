@@ -68,9 +68,24 @@
 <body>
 <div class="bg-glow" aria-hidden="true"></div>
 <div class="container" id="app">
+  <!-- Beobachtung 12: bis hierhin ist app.js noch nicht gelaufen (Modul-
+       Skripte werden erst nach dem Parsen ausgefuehrt) - ohne dieses Markup
+       stand vorher nur das stille Symbol da, der drehende Ring kam
+       Sekundenbruchteile spaeter erst per JS dazu ("kurz leerer Bildschirm
+       vor dem Lade-Indikator"). Jetzt exakt dasselbe Markup, das render()
+       (app.js) fuer denselben Zustand baut - reines CSS (@keyframes bootSpin/
+       bootSpinRev, styles.css), dreht also schon, bevor ueberhaupt ein
+       Skript gelaufen ist. Loest render() danach ab, ist die Animation
+       bereits in Bewegung, kein Sprung/Aufblitzen. Bei einer Aenderung an
+       diesem Zustand in app.js MUSS dieses Markup mitgezogen werden. -->
   <div class="boot"><div class="boot__mark">
-    <img class="i i-xl" src="./desktop-icon.png" alt="" aria-hidden="true">
-  </div></div>
+    <div class="boot__orbit r1"><span></span></div>
+    <div class="boot__orbit r2"><span></span></div>
+    <div class="boot__orbit r3"><span></span></div>
+    <img src="./flower-isolated.png" class="i" alt="">
+  </div>
+  <p class="boot__text">Deine Karten werden geladen…</p>
+  </div>
 </div>
 
 <!-- Fehlerformular-Modal: liegt bewusst ausserhalb von #app, siehe app.js -->
@@ -113,6 +128,6 @@
      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
      die die App innerhalb der letzten Stunde offen hatten, an der alten
      app.js fest, auch nach einem Reload. -->
-<script type="module" src="./app.js?v=3.9.5"></script>
+<script type="module" src="./app.js?v=3.9.6"></script>
 </body>
 </html>
