@@ -219,8 +219,23 @@ Entscheidungen E1–E4 in [`AUFTRAG.md`](onboarding/AUFTRAG.md) — Stand
 aber als Neustart** — bisheriges Konzept deckt laut Betreiber „die
 Effektivität nie ab", eigene YouTube-Quellen sollen einfließen (noch nicht
 ausgewertet), Animationen sollen eine Rolle spielen. Details:
-`onboarding/AUFTRAG.md` Abschnitt 0. Status: `Konzept wird neu aufgesetzt`,
-gebaut wird erst nach Freigabe von Umfang, Fragen und Wortlaut.
+`onboarding/AUFTRAG.md` Abschnitt 0. **23.09.2026, noch am selben Tag: erste
+Betreiber-Quelle ausgewertet** (Mobbin, „1000+ Onboarding-Flows") — Befund in
+[`onboarding/VIDEO-BEFUND.md`](onboarding/VIDEO-BEFUND.md), getrennt nach
+Verteilung, Einzelfall-Zahl und Muster; keine Video-Zahl trägt eine
+Entscheidung oder kommt auf den Bildschirm (`STRATEGIE.md` 1.1). Daraus
+entstanden: [`onboarding/FRAGENKATALOG.md`](onboarding/FRAGENKATALOG.md) —
+sieben Prüfungen, die eine Frage bestehen muss, **neun Stationen** als
+Reihenfolge (zeigen → Handlung ohne Konto → Lesbarkeit → Aussehen →
+Rundengröße → Einlösung → Wenn-dann-Satz → Konto → erste eigene Karte) und
+139 Fragen mit Ziel und Prüfergebnis: 3 sofort verwendbar, 11 mit kleinem
+Bau, 24 hinter fremden Sperren, 101 abgelehnt mit Begründung. Die vom
+Betreiber erbetene „Million Fragen" wurde **nicht** geliefert und der Grund
+aufgeschrieben (die App hat drei Einstellungen, `app.js:891`; mehr Fragen
+hieße Dekoration). Wichtigster Fund: ohne einen Bildschirm, der zeigt, **was
+die Antworten bewirkt haben**, ist jeder Einstieg ein Fragebogen. Status:
+`Katalog liegt vor, wartet auf Betreiber-Entscheidung F1/F2`, gebaut wird
+weiterhin nichts.
 
 ### Nebenstrang: Feedback-Board
 
