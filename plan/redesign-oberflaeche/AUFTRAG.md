@@ -198,15 +198,56 @@ Die Probe definiert **selbst keine Farben, Größen oder Abstände**. Was dort
 hässlich aussieht, wird in `styles.css` geändert, nicht in der Probe — sonst
 lügt sie. Neue Bausteine gehören dort ergänzt, sobald es sie gibt.
 
-## Vorschlag für einen möglichen Block 13 (nicht beauftragt, nicht begonnen)
+## Block „Renderkosten der Verwalten-Liste" — geprüft, keine Virtualisierung nötig (23.09.2026)
 
 Aus der UX-Sichtung vom 22.09.2026 (`PRINZIPIEN.md`): **Renderkosten der
 Verwalten-Liste bei großen Kartenmengen** (2356 DOM-Elemente bei 200 Karten,
-seit 3.6.13 bekannt und unangetastet). Eine Virtualisierung würde Scroll-
-Ruckeln beheben, hängt aber an Ziehen-zum-Sortieren, Mehrfachauswahl und
-Suche — echter Eingriff mit eigenem Prüf- und Handytest-Bedarf, kein
-Nebenpunkt. Wird nicht begonnen, bevor der Betreiber das ausdrücklich
-freigibt.
+seit 3.6.13 bekannt). Stand hier bewusst als „kein Nebenpunkt" mit eigenem
+Prüf- und Handytest-Bedarf, nicht zu beginnen ohne ausdrückliche Freigabe.
+
+**Betreiber-Freigabe am 23.09.2026** („mach A" für Kategorie A aus
+`beobachtungen-lernwerkzeug.md`, dann ausdrücklich „mach einfach" auf
+Rückfrage). Vor dem Bau einer Virtualisierung erst nachgemessen, ob das
+Problem in der beschriebenen Form heute noch besteht — und es besteht
+**nicht mehr**: `SEITEN_SCHWELLE`/`SEITE_GROESSE` (`app.js:922-923`, Seiten
+zu 100 Karten ab 150 insgesamt) kamen mit v3.6.9, **vor** der Messung in
+v3.6.13 — die 2356 Elemente wurden also mit bereits aktiver Seitenteilung
+gemessen, vermutlich mit einer anderen Testkonfiguration (z. B. `searchAll`
+über mehrere Bereiche, oder einer damals noch nicht seitenteilenden
+Zwischenfassung). Mit Playwright gegen dieselbe Firebase-Attrappe wie
+`probelauf.mjs` frisch nachgemessen (390×844, ohne Drosselung):
+
+| Karten insgesamt | gerenderte `.card-row` | Elemente unter `#app` | Long-Task |
+|---|---|---|---|
+| 200 | 100 (Seite 1) | 1445 | 63 ms |
+| 5000 | 100 (Seite 1) | 1445 (unverändert) | 85 ms |
+
+Die Seitenteilung deckelt die DOM-Größe **strukturell unabhängig von der
+Gesamtkartenzahl** — 25× mehr Karten (200 → 5000) ändern die tatsächlich
+gerenderte Elementzahl nicht, nur das Filtern/Sortieren der Gesamtliste vor
+dem Abschneiden kostet minimal mehr (63 → 85 ms). Das ist weit von dem
+Bereich entfernt, in dem eine Virtualisierung (die genau dieses DOM-Problem
+löst) einen Unterschied machen würde — sie hätte hier faktisch nichts mehr
+zu beheben. Zusätzlich geprüft: die zwei anderen unbegrenzten Listen im
+Fortschritt-Tab (Leeches, Lektionen) sind durch ihre fachliche Natur schon
+klein (Leeches nur ab `LEECH_SCHWELLE` Rückfällen, Lektionen nur, so viele
+wie händisch angelegt) — dort bräuchte es keine Seitenteilung.
+
+Die **Fortschritt-Übersicht** selbst (Serie, Kalender, Wochenvergleich) ist
+kein DOM-Problem (nur 90 Elemente unter `#app`), sondern reine
+Rechenkosten über die volle Kartenliste (`statsCards()` u. ä.) — bei 3000
+Karten gemessen 20–72 ms je Tab-/Seitenwechsel, spürbar, aber kein
+Long-Task-Ausreißer und ein anderes Problem als „zu viele DOM-Elemente".
+Eine Zwischenspeicherung dieser Berechnung wäre möglich, ist aber ein
+eigener, kleinerer Punkt und nicht das, was hier als „Renderkosten der
+Verwalten-Liste" gemeldet war — nicht mitgebaut, um den Rahmen dieser
+Prüfung nicht zu sprengen.
+
+**Ergebnis: kein Code geändert, keine Virtualisierung gebaut.** Der
+ursprüngliche Fund war real (v3.6.13), ist aber durch die noch am selben Tag
+eingeführte Seitenteilung bereits erledigt — die Beobachtungsliste war seit
+19.09. nicht mehr gegen den Code abgeglichen worden. Details, Messwerte und
+Testskript-Beschreibung: `LOGBUCH.md`, Eintrag 23.09.2026.
 
 ## Fertig, wenn
 

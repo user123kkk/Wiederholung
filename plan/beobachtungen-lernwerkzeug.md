@@ -902,6 +902,24 @@ Tastatur, echte `visualViewport`-Werte der Home-Bildschirm-App, Bildwiederholrat
     (114–153 ms ohne Drosselung) bei Fortschritt und Verwalten, Tippen in der
     Suche bei 3000 Karten 1 Long-Task (62 ms). Auf dem Handy mehrfach so lang.
     Nur Größenordnung — Headless-Chromium rasterisiert per Software.
+    **✅ Nachgemessen und geprüft (23.09.2026, Betreiber-Freigabe „mach A" →
+    „mach einfach"):** Die Seitenteilung (`SEITEN_SCHWELLE`/`SEITE_GROESSE`,
+    `app.js:922-923`) kam mit v3.6.9 — **vor** dieser Messung in v3.6.13 — und
+    deckelt die Verwalten-Liste strukturell auf ~100 gerenderte Zeilen,
+    unabhängig von der Gesamtkartenzahl. Frisch gemessen: 200 Karten → 1445
+    Elemente/63 ms, 5000 Karten → **unverändert** 1445 Elemente/85 ms. Eine
+    Virtualisierung (dafür gedacht, DOM-Größe zu deckeln) hätte hier nichts
+    mehr zu tun — genau das leistet die Seitenteilung bereits. Warum die
+    2356 damals trotz schon aktiver Seitenteilung gemessen wurden, ist nicht
+    mehr rekonstruierbar (vermutlich andere Testkonfiguration), aber ohne
+    Belang, da der heutige Code nachweislich nicht so hoch geht. Leeches/
+    Lektionen im Fortschritt-Tab sind fachlich klein und brauchen keine
+    Seitenteilung. Die Fortschritt-**Übersicht** selbst ist kein DOM-Problem
+    (nur 90 Elemente), sondern reine Rechenkosten über die volle Kartenliste
+    (20–72 ms bei 3000 Karten gemessen) — ein anderer, kleinerer Punkt als
+    der hier gemeldete, nicht mitgebaut. **Kein Code geändert** — der Fund
+    war real, ist aber bereits durch v3.6.9 erledigt. Details, Messwerte und
+    Testaufbau: `redesign-oberflaeche/AUFTRAG.md`, `redesign-oberflaeche/LOGBUCH.md`.
 
 **G · Bedienbarkeit**
 14. **gemessen — Ziele unter der eigenen 44-px-Regel (`--tap`, Satz 3):**
@@ -939,8 +957,9 @@ Schreibvorgang, kein Overlay/keine Seitenfehler mehr. Zusätzlich: Klick-Durchla
 über alle sichtbaren Knöpfe ohne Seitenfehler.
 **Bewusst offen:** Punkt 9 zur Hälfte (Austrittsbewegung der Blätter, Fokus-
 Rückgabe beim Schließen) — **✅ nachgeholt in v3.9.3, 23.09.2026, siehe dort**.
-Weiterhin offen: Punkt 13 (Renderkosten der Verwalten-Liste — ein Umbau
-wäre ein eigener Strang), und alles, was nur am echten iPhone prüfbar ist
+Punkt 13 (Renderkosten der Verwalten-Liste) — **✅ am 23.09.2026 nachgemessen,
+bereits durch v3.6.9 (Seitenteilung) erledigt, kein weiterer Bau nötig, siehe
+dort**. Weiterhin offen: alles, was nur am echten iPhone prüfbar ist
 (Tastatur bleibt beim Toast-Ablauf offen? Nav-Höhe in der Home-Bildschirm-App
 unverändert 850 in allen Tabs?). **Beides am Gerät gegenprüfen.**
 

@@ -4,6 +4,61 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 — Punkt 19/13 (Renderkosten Verwalten-Liste) nachgemessen: bereits erledigt, keine Virtualisierung gebaut
+
+**Anlass:** Rückfrage des Betreibers, ob Kategorie A wirklich vollständig
+bearbeitet ist — zu Recht, denn Punkt 19/13 war zuvor als „kein Nebenpunkt,
+eigene Freigabe nötig" liegen gelassen worden. Antwort darauf: „mach
+einfach". Vor dem Bau der in `AUFTRAG.md` skizzierten Virtualisierung erst
+nachgemessen, ob das Problem in der 19.09.-Form heute noch besteht.
+
+**Geprüft, kein Code geändert:** Eigenes Playwright-Messskript (gleicher
+Firebase-Attrappen-Aufbau wie `probelauf.mjs`, aber mit `Performance`-CDP-
+Metriken statt Screenshots) gegen den unveränderten Stand:
+
+- **200 Karten** (die Größenordnung aus der 19.09.-Messung): 100 gerenderte
+  `.card-row`, **1445 Elemente** unter `#app`, Long-Task **63 ms**.
+- **5000 Karten** (25× so viele): ebenfalls 100 gerenderte `.card-row`,
+  **unverändert 1445 Elemente**, Long-Task 85 ms.
+
+Die 25-fache Kartenmenge ändert die tatsächlich gerenderte DOM-Größe **nicht** —
+`SEITEN_SCHWELLE`/`SEITE_GROESSE` (`app.js:922-923`) deckeln sie strukturell
+auf ~100 Zeilen. Diese Seitenteilung kam mit **v3.6.9**, nachweislich vor der
+Gesamtprüfung in **v3.6.13**, die die 2356 Elemente maß — die Zahl von damals
+war also entweder mit einer anderen Testkonfiguration oder einem
+Zwischenstand entstanden, jedenfalls nicht reproduzierbar mit dem heutigen
+Code bei vergleichbarer Kartenzahl. Zusätzlich geprüft: Leeches- und
+Lektionen-Listen im Fortschritt-Tab sind fachlich klein (Leeches nur ab
+`LEECH_SCHWELLE`, Lektionen nur so viele wie händisch angelegt) und brauchen
+keine Seitenteilung. Die Fortschritt-**Übersicht** selbst kostet nicht viele
+DOM-Elemente (90), sondern Rechenzeit über die volle Kartenliste — bei 3000
+Karten gemessen 20–72 ms je Wechsel, ein anderer, kleinerer Punkt als der
+hier gemeldete DOM-Fund, nicht mitgebaut.
+
+**Entscheidung:** Keine Virtualisierung gebaut — sie würde ein DOM-Größen-
+Problem lösen, das laut Messung nicht mehr besteht. Ein Umbau dieser
+Größenordnung ohne belegten Bedarf wäre genau die Art unbelegter
+Funktionsänderung, die `../../CLAUDE.md` ausschließt. `AUFTRAG.md` von
+„nicht beauftragt, nicht begonnen" auf „geprüft, keine Virtualisierung
+nötig" mit den Messwerten umgeschrieben; `beobachtungen-lernwerkzeug.md`
+Punkt 19/13 entsprechend markiert.
+
+**Offen:** Die Fortschritt-Übersicht-Rechenkosten (20–72 ms bei 3000 Karten)
+sind ein eigener, kleinerer, nicht gemeldeter Punkt — z. B. über
+Zwischenspeicherung der Statistik-Berechnung zu verbessern, falls das
+irgendwann spürbar wird. Nicht angefasst, weil außerhalb dessen, was
+gemeldet war.
+
+**Nächster Schritt:** Keiner zu diesem Punkt. Kategorie A aus
+`beobachtungen-lernwerkzeug.md` ist damit durchgearbeitet: Punkt 9 (zweite
+Hälfte, siehe Eintrag unten) und Punkt 19/13 gebaut bzw. geprüft-erledigt;
+Punkt 13 (Über-Scrolling) und 16 (Firebase-Fehler nach Browser-Zurück)
+bleiben bewusst unangetastet, weil jeder weitere Eingriff ohne echten
+Gerätetest wieder nur eine Vermutung wäre — anders als hier, wo eine
+Messung ohne Gerät möglich und aussagekräftig war.
+
+---
+
 ### 2026-09-23 — Beobachtung 19/9 (zweite Hälfte): Austrittsbewegung, Fokus-Fang, Fokus-Rückgabe bei Blättern (v3.9.3)
 
 **Anlass:** Betreiber-Freigabe „mach A" für die in `beobachtungen-lernwerkzeug.md`

@@ -172,12 +172,17 @@ Zustellung braucht einen Firebase-Konsolen-Schritt, siehe `LOGBUCH.md`).
 `beobachtungen-lernwerkzeug.md` (echte, noch offene Bugs). Umgesetzt: Blätter
 (`.dlg`) schließen jetzt animiert statt abrupt, halten den Fokus per Tab
 (Fokus-Fang) und geben ihn beim Schließen an den öffnenden Knopf zurück —
-die zweite Hälfte von Punkt 19/9. Weiterhin offen, unverändert: Punkt 13
+die zweite Hälfte von Punkt 19/9. **Rückfrage des Betreibers, ob Kategorie A
+wirklich vollständig bearbeitet ist, dann „mach einfach":** Punkt 19/13
+(Renderkosten der Verwalten-Liste) daraufhin nachgemessen statt ungeprüft als
+„eigene Freigabe nötig" liegen zu lassen — Ergebnis: bereits durch die
+Seitenteilung aus v3.6.9 erledigt (1445 DOM-Elemente unverändert bei 200 wie
+bei 5000 Karten), **keine Virtualisierung gebaut**, kein Code geändert.
+Details und Messwerte: `redesign-oberflaeche/AUFTRAG.md`,
+`redesign-oberflaeche/LOGBUCH.md`. Weiterhin offen, unverändert: Punkt 13
 (Über-Scrolling), Punkt 16 (Firebase-Fehler nach Browser-Zurück) — beide ohne
-Gerätetest nicht weiter belegbar — und Punkt 19/13 (Renderkosten der
-Verwalten-Liste), das laut `redesign-oberflaeche/AUFTRAG.md` eine eigene,
-größere Freigabe braucht. Details: `redesign-oberflaeche/LOGBUCH.md`,
-`CHANGELOG.md` 3.9.3.
+Gerätetest nicht weiter belegbar, siehe `beobachtungen-lernwerkzeug.md`.
+Details: `CHANGELOG.md` 3.9.3.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
 
