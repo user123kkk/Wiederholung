@@ -4,6 +4,94 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-23 (dieselbe Session) — TikTok-Link ausgewertet, kein Fund
+
+**Geändert:** dieser Eintrag. Kein App-Code, keine neue Datei — für einen
+60-Sekunden-Werbeclip eines einzelnen Erstellers wäre ein eigenes
+`VIDEO-BEFUND-3.md` wie bei den zwei ausführlichen Videos unangemessen.
+**Anlass:** Betreiber schickte spontan `https://vm.tiktok.com/ZGdQbgvxL/`
+("spontan tiktok fotos"), auf Rückfrage per `AskUserQuestion`: „Auswerten wie
+die Videos."
+**Quelle:** TikTok, @teobuildsapps, „5 Mobile App Onboarding Screens with
+Examples" (Post-ID 7685733065120894239). `/watch`-Skill scheitert an
+TikToks `/photo/`-URL-Typ (yt-dlp: „Unsupported URL" — kein bekannter
+Foto-Post-Extraktor); stattdessen über den Browser geöffnet, Bildunterschrift
+gelesen, Video bis zum Captcha-Schieberegler angesehen. **Der Schieberegler
+selbst wurde nicht bedient** — Bot-Prüfungen umgehen ist ausgeschlossen; die
+Bildunterschrift lieferte den vollen Inhalt ohnehin bereits wörtlich.
+**Inhalt — fünf Punkte, Einzelfall eines App-Vermarkters, keine Studie:**
+1. Fragebogen zu Problem/Ziel, personalisiert, harte Fragen zuletzt.
+2. Demo-Bildschirm: Hauptfunktion sofort ausprobieren lassen.
+3. Beweis-Bildschirm: „echte Zahlen" über Ergebnisse („80 % sahen in 2 Wochen
+   eine Veränderung").
+4. Auszahlungs-Bildschirm: aus den Antworten berechnetes Ergebnis zeigen.
+5. Paywall, zuletzt.
+Dazu ein Produktplatz für ein Design-Werkzeug (Sleek) — reine Werbung, kein
+Bauprinzip, nicht ausgewertet.
+**Abgleich gegen den gebauten Stand — nichts Neues:** Punkt 1 entspricht P1/P2
+(bereits gebaut, S3–S6). **Punkt 2 ist eine dritte, unabhängige Quelle für
+F3** (Probelauf ohne Konto, nach Alma und Prayer Lock) — vermerkt, trägt aber
+nichts Neues zur Entscheidung bei, die schon zweifach belegt war; ein
+Werbeclip ohne jede Methodik erhöht die Belastbarkeit nicht
+(`AUFTRAG.md` §3). Punkt 3 ist exakt das Muster, das bei Speak/BitePal/Prayer
+Lock schon abgelehnt wurde (Wirkungsbehauptung ohne Beleg, P4,
+`STRATEGIE.md` „Mechanik statt Versprechen") — hier aus demselben Grund
+abgelehnt. Punkt 4 ist P2 (Einlösung), bereits gebaut. Punkt 5 entfällt,
+`KONZEPT.md` §1: kein Geldfluss.
+**Ergebnis: kein neuer Punkt, kein Code geändert.**
+**Nächster Schritt:** keiner aus diesem Fund. Unverändert offen: J1
+Rechtsprüfung, Gerätetest.
+
+---
+
+### 2026-09-23 (neue Session) — Neun Punkte beantwortet, Video-Tipps gegengeprüft
+
+**Geändert:** `plan/onboarding/ENTSCHIEDEN.md` (Betreiber-Antwort zu den neun
+Punkten eingetragen); dieser Eintrag. Kein App-Code.
+**Anlass, wörtlich:** „zu den 8 oder 9 offenen sachen meine antwort: alles gut
+eigentlich also willst du zu allem eig ne und 8 hal ja checkst du also eig
+passt so fürs erste. überprüfe du die 2 yt videos zu onboarding und baue bzw
+gehe ihren tips nach, sehr wichtig."
+**Die neun Punkte aus `ENTSCHIEDEN.md`:** nein zu 1–7 und 9 (nichts
+hinzufügen, gebauter Stand bleibt); Punkt 8 (K7, „fehlt etwas, das in keiner
+Frage vorkam") an den Agenten delegiert. **Ausnahme bei J1 (Punkt 1):** ein
+„nein" auf „soll dazu jetzt etwas gesagt werden" ist keine Aussage zur
+Rechtsfrage selbst — J1 bleibt unverändert offen und eine echte Voraussetzung
+vor jedem `veroeffentlichen.bat`. Details je Punkt in `ENTSCHIEDEN.md`.
+**K7-Prüfung („die 2 yt videos"):** Es gibt keine neuen Videos — gemeint sind
+die zwei bereits ausgewerteten (`VIDEO-BEFUND.md`, Mobbin/1000+ Flows;
+`VIDEO-BEFUND-2.md`, Prayer Lock/Mau Baron). Beide noch einmal Punkt für
+Punkt gegen den **gebauten** Stand (v3.9.12, nicht nur gegen die Absicht)
+geprüft: lokalen Server gestartet (`python -m http.server`, `.claude/
+launch.json` nennt 5173, hier 5188 genutzt, da 5173 von einer anderen Sitzung
+belegt war), alle neun Stationen im Browser durchgeklickt (S1 Problem → S2
+Probelauf mit Umdrehen/Bewerten → S3 Schriftgröße mit sofortigem
+Größenwechsel → S4 Hell/Dunkel → S5 Rundengröße → S6 Abschluss → S7
+Wenn-dann-Satz mit Anker „Fajr", Satz kam grammatisch korrekt: „Nach dem
+Fajr-Gebet mache ich eine Runde."). Kein horizontales Scrollen
+(`scrollWidth === clientWidth`), keine neuen Konsolenfehler (die eine
+Meldung „unknown error fetching the script" ist der erwartete
+Firebase-SDK-Ladeversuch ohne Internet in dieser Umgebung, betrifft nur die
+Kontoerstellung nach S7, nicht den Einstieg). **Ergebnis: kein offener
+Tipp gefunden.** Jeder verwertbare Punkt aus beiden Videos ist bereits
+umgesetzt oder mit Begründung abgelehnt, siehe `ENTSCHIEDEN.md` Punkt 8 für
+die Liste. Kein App-Code geändert — es gab nichts nachzuholen.
+**Offen, ungeklärt:** Die Bemerkung „es macht kein sinn dass mein schlecht
+ist plötzlich" (vermutlich „mein Einstieg") ließ sich an keiner Stelle
+reproduzieren — lokaler Test zeigt keinen Fehler, kein Bruch. Einzige
+bekannte, dem Zeitpunkt nach passende Auffälligkeit ist der CSP-Fund aus
+v3.9.12 (Theme-Vorlaufskript seit v3.9.8 blockiert, kurzer Farb-Flash beim
+Start) — der wurde als **gering** eingestuft und war laut eigenem Commit
+„nicht durch das Onboarding verursacht". Ob das gemeint war oder etwas
+anderes, ist im Chat nachgefragt, nicht hier entschieden. Ebenso ungeklärt:
+ein per Chat mitgeschickter TikTok-Link („spontan tiktok fotos") — noch nicht
+ausgewertet, hängt an derselben Rückfrage.
+**Nächster Schritt:** liegt beim Betreiber — Antwort auf die Rückfrage
+(„mein schlecht", TikTok-Link). Bis dahin unverändert: J1 Rechtsprüfung,
+Gerätetest.
+
+---
+
 ### 2026-09-23 - Auf main gemerged, Geraetetest ausdruecklich abgelehnt
 
 **Geaendert:** Branch `claude/onboarding-question-list-5b7124` per Fast-Forward auf `main` gepusht (7448b5e..2ff7e1b). Kein neuer Code, reiner Git-Vorgang.

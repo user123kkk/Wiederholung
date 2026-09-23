@@ -327,4 +327,39 @@ darf, ohne im Namen des Betreibers zu sprechen:
 8. **K7** — ob etwas fehlt, das in keiner Frage vorkam.
 9. **F1** — ein eigenes Wort für die Beispielkarte, falls gewünscht.
 
+### Betreiber-Antwort, 23.09.2026 (später am Tag)
+
+Wörtlich: „alles gut eigentlich also willst du zu allem eig ne und 8 hal ja
+checkst du also eig passt so fürs erste."
+
+Gelesen als: **nein zu 1–7 und 9** (nichts hinzufügen, nichts ändern — der
+gebaute Stand bleibt), **8 (K7) an den Agenten delegiert** („du checkst").
+
+- **1 (J1):** „nein" heißt hier **nicht** „Rechtsprüfung entfällt" — das ist
+  eine Auslegung, die dem Agenten nicht zusteht. Gelesen als „jetzt keine
+  weitere Wortmeldung dazu". **J1 bleibt eine echte Voraussetzung vor jedem
+  `veroeffentlichen.bat`**, unverändert offen, bis eine echte Person geprüft
+  hat.
+- **2 (B2), 4 (B10), 5 (A6/I5), 6 (A8), 7 (G6), 9 (F1):** nein — keine
+  Selbstverortung, kein Zwecksatz, keine persönliche Notiz, nichts verborgen,
+  keine Wortliste, kein eigenes Beispielwort. Code bleibt wie gebaut
+  (`كِتَابٌ` / „Buch" als Platzhalter, siehe `app.js:1049`).
+- **3 (B9):** nein — keine Ansage zum Ändern, die Blume bleibt Zeichen wie
+  bisher.
+- **8 (K7) — Agenten-Prüfung durchgeführt.** Beide ausgewerteten Videos
+  (`VIDEO-BEFUND.md`, `VIDEO-BEFUND-2.md`) noch einmal gegen den **gebauten**
+  Stand (v3.9.12) geprüft, nicht nur gegen die Absicht: alle neun Stationen im
+  Browser durchgeklickt (lokaler Server, ohne Firebase-Netzwerk — das betrifft
+  nur die Kontoerstellung danach, nicht den Einstieg selbst). Ergebnis: **kein
+  Fund.** Jeder verwertbare Punkt aus beiden Videos ist entweder bereits gebaut
+  (Probelauf S2, sofortige Einlösung in S3, Überspringen auf jedem Bildschirm,
+  Mehrfachauswahl entfällt hier mangels Bedarf, kein künstlicher Fortschritt)
+  oder ausdrücklich mit Begründung abgelehnt (`FRAGENKATALOG.md`,
+  `VIDEO-BEFUND-2.md` §5) oder bewusst offen gelassen, bis der Betreiber den
+  längeren S1-Satz aus `VIDEO-BEFUND-2.md` §6 ausdrücklich will (weiterhin
+  **nicht** gebaut — das ist keine neue Entscheidung, nur bestätigt). Keine
+  Lücke gefunden, die „in keiner Frage vorkam". Details und der Klick-Test:
+  [`LOGBUCH.md`](LOGBUCH.md), Eintrag „Neun Punkte beantwortet, Video-Tipps
+  gegengeprüft".
+
 Keiner dieser Punkte hält den Einstieg auf. Er läuft so, wie er gebaut ist.

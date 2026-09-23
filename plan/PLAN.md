@@ -664,7 +664,26 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (23.09.2026, sehr spät): Grammatik-Feld wieder entfernt (v3.9.8).**
+**AKTUELLSTER STAND (23.09.2026, neue Session): neun offene Punkte
+beantwortet, Video-Tipps gegengeprüft, kein Fund.** Betreiber-Antwort auf die
+neun Punkte aus `onboarding/ENTSCHIEDEN.md`: nein zu 1–7 und 9 (gebauter Stand
+bleibt, J1-Rechtsprüfung bleibt trotzdem offen), Punkt 8 (K7) an den Agenten
+delegiert. Beide ausgewerteten YouTube-Videos noch einmal gegen den gebauten
+Stand (v3.9.12) geprüft, nicht nur gegen die Absicht — lokaler Klick-Test
+durch alle neun Stationen, kein offener Tipp gefunden. **Rückfrage „mein
+schlecht ist plötzlich" geklärt:** Betreiber meinte nichts Bestimmtes
+(„ka was du meinst ... alles gut"), kein Fehler gemeldet. **Spontan
+geschickter TikTok-Link ausgewertet** (`@teobuildsapps`, „5 Mobile App
+Onboarding Screens") — ebenfalls kein neuer Punkt, siehe
+`onboarding/LOGBUCH.md`, Eintrag „TikTok-Link ausgewertet, kein Fund". Damit
+ist dieser Strang für den Moment durch: **Reine Warteposition auf J1
+(Rechtsprüfung) und den Gerätetest**, beides beim Betreiber. Details:
+[`onboarding/LOGBUCH.md`](onboarding/LOGBUCH.md), Einträge „Neun Punkte
+beantwortet, Video-Tipps gegengeprüft" und „TikTok-Link ausgewertet".
+
+---
+
+**Vorheriger Stand (23.09.2026, sehr spät): Grammatik-Feld wieder entfernt (v3.9.8).**
 Wenige Stunden nach dem Bau (v3.9.7, siehe unten) fragte der Betreiber selbst
 „fürs Erste entfernen? Hick's Law und so." Drei Optionen vorgelegt (Lassen/
 Verstecken/Entfernen), Betreiber wählte **Entfernen**. Zurück auf Stand
