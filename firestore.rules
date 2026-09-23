@@ -204,7 +204,7 @@ service cloud.firestore {
          ============================================================ */
 
       function kartenFelder() {
-        return ['wort', 'uebersetzung', 'extra', 'stufe', 'nextReview',
+        return ['wort', 'uebersetzung', 'extra', 'grammatik', 'stufe', 'nextReview',
                 'ersteBewertung', 'rueckfaelle', 'quelleId', 'maxStufe',
                 'order', 'bereichId'];
       }
@@ -216,6 +216,9 @@ service cloud.firestore {
         return (!pruefen.hasAny(['wort'])           || text(d.wort, 1000))
             && (!pruefen.hasAny(['uebersetzung'])   || text(d.uebersetzung, 1000))
             && (!pruefen.hasAny(['extra'])          || textOderNull(d.extra, 5000))
+            /* Beobachtung 21 (23.09.2026): eigenes Feld statt nur Label im
+               "extra"-Text - MAX_GRAMMATIK in app.js, dieselbe Zahl. */
+            && (!pruefen.hasAny(['grammatik'])      || textOderNull(d.grammatik, 200))
             && (!pruefen.hasAny(['stufe'])          || zahl(d.stufe, 0, 12))
             && (!pruefen.hasAny(['maxStufe'])       || zahl(d.maxStufe, 0, 12))
             && (!pruefen.hasAny(['nextReview'])     || datum(d.nextReview))

@@ -397,13 +397,25 @@ Listenvorschau (`.extra-note`) bleibt bewusst `nowrap`+Ellipsis — sie ist
 als kompakte Vorschau gedacht, nicht als Volltextanzeige; genau dafür gibt
 es jetzt die Detailansicht. Kein Code geändert.
 
-## 11. Design-Sachen — bewusst zurückgestellt
+## 11. Design-Sachen — geschlossen, veraltet und nicht mehr rekonstruierbar (23.09.2026)
 
 **Beobachtung:** Der Betreiber selbst: „wären Design-Sachen für wann anders."
 
 **Einschätzung:** Nicht weiter ausgeführt, wie vom Betreiber selbst
 vorgesehen — nur als Platzhalter vermerkt, damit klar ist, dass diese
 Kategorie existiert und bewusst nicht in dieser Liste steckt.
+
+**Geschlossen am 23.09.2026, „trifft nicht mehr zu" statt weiter offen
+gelassen:** Auf Nachfrage der Betreiber selbst: „mag veraltet sein, weiß
+selbst ned was damit gemeint ist." Der Platzhalter von 15.09.2026 trug nie
+mehr Inhalt als den einen zitierten Satz — ohne dass der Betreiber sich
+heute noch erinnert, was gemeint war, lässt sich daraus nichts mehr
+ableiten, und ein Nachbau würde nur raten. Der Redesign-Strang
+(`redesign-oberflaeche/`) hat seit 16.09.2026 ohnehin einen eigenen, viel
+konkreteren Auftrag für genau diese Art Arbeit — „Design-Sachen" als eigener
+Punkt hier ist damit überholt, nicht nur vage. Kein Bau, keine weitere
+Nachfrage nötig; taucht der Betreiber später mit einer konkreten Erinnerung
+wieder auf, ist das ein neuer Punkt, kein Wiederaufgreifen von hier.
 
 ## 12. Kurzer weißer/leerer Bildschirm vor dem Lade-Indikator — ✅ behoben (v3.9.6)
 
@@ -841,7 +853,9 @@ gehen kann, wenn die Seite currentUser vorher schließt) eingrenzen.
   7 stellte sich beim Prüfen als echter, jetzt behobener Fund heraus (✅
   v3.0.49) — siehe dort.
 - **Vermutlich kein Bug, sondern Design-Entscheidung:** 8.
-- **Bewusst zurückgestellt:** 11, 12.
+- **Bewusst zurückgestellt, dann geschlossen:** 11 (✅ 23.09.2026, veraltet,
+  Betreiber erinnert sich selbst nicht mehr — „trifft nicht mehr zu"),
+  12 (✅ v3.9.6, gebaut).
 
 ## 18. Untere Navigationsleiste springt vertikal auf dem Handy — GELÖST (v3.6.7)
 
@@ -1075,7 +1089,7 @@ als möglicher Premium-Feature-Kandidat in
 verlinkt (Betreiber-Wunsch 23.09.2026) — ändert nichts an „nicht gebaut",
 nur ein zweiter Ort, an dem die Idee nicht verloren geht.
 
-## 21. Karten-Formular: „Notiz"-Feld trägt auch Grammatik, aber ist nicht als solches erkennbar — ✅ Label-Wort ergänzt (23.09.2026)
+## 21. Karten-Formular: „Notiz"-Feld trägt auch Grammatik, aber ist nicht als solches erkennbar — ✅ eigenes Feld gebaut (v3.9.7)
 
 **Beobachtung:** Betreiber nutzt das Feld `extra` (Formular-Beschriftung:
 „Beispielsatz, Bild-Link oder Notiz") auch für grammatische Hinweise zu
@@ -1110,6 +1124,49 @@ mit neuem Datenfeld.
 
 **Nächster Schritt:** Keiner, außer der Betreiber meldet, dass das
 Label-Wort nicht reicht.
+
+**Zweite Hälfte gebaut am 23.09.2026 (v3.9.7).** Betreiber-Freigabe „ja damit
+gerne" auf ausdrückliche Rückfrage, mit „hab kaum Ideen" (Gestaltung liegt
+bei dieser Session). Jetzt ein eigenes Feld `grammatik` (max. 200 Zeichen —
+bewusst ein Schlagwort, kein Satz, anders als die 5000 Zeichen der Notiz):
+- Eigenes Eingabefeld im Karten-Formular zwischen Übersetzung und Notiz,
+  Label „Grammatik" mit Platzhalter „z. B. Perfekt, 3. Person". Die
+  Notiz-Beschriftung ist entsprechend wieder auf „Beispielsatz, Bild-Link
+  oder Notiz" zurückgesetzt — Grammatik hat jetzt einen eigenen Ort, muss
+  nicht mehr im selben Label mit aufgezählt werden.
+- Sichtbar an allen Stellen, an denen die Notiz auch sichtbar ist: kompakte
+  Vorschauzeile in der Verwalten-Liste (gleiche Optik wie `.extra-note`),
+  Detailansicht (als eigene „Grammatik:"-Zeile), Lernen-Tab-Raster (immer
+  sichtbar, nicht hinter dem Notiz-Chevron), Übungsmodus (erst nach dem
+  Aufdecken, neben der Übersetzung — damit nichts vor der aktiven
+  Erinnerung verrät).
+- Durchsuchbar wie Wort/Übersetzung/Notiz (`suchFeld`), mitgeführt in
+  Weitergabe-Dateien (`baueWeitergabeBereich`) und beim Abgleich/
+  Zusammenführen aktualisierter Kartensätze (`satzUnterschied`,
+  `satzZusammenfuehren`) — an denselben Stellen wie `extra`, damit nichts
+  auseinanderläuft.
+- `firestore.rules`: `grammatik` in `kartenFelder()` und `kartenWerte()`
+  ergänzt, `textOderNull(d.grammatik, 200)` — dieselbe Zahl wie
+  `MAX_GRAMMATIK` in `app.js`.
+
+**Geprüft:** Mit Playwright end-to-end gegen eine Firebase-Attrappe mit
+echtem Schreiben/Lesen (nicht nur feste Testdaten): Karte mit Grammatik
+anlegen → erscheint in Liste, Detailansicht, Suche → Bearbeiten-Formular
+zeigt den vorhandenen Wert vor → Ändern und erneut speichern → neuer Wert
+erscheint. Voller `probelauf.mjs`-Durchlauf unverändert fehlerfrei.
+**Nicht geprüft:** `firestore.rules` lief mangels Firestore-Emulator in
+dieser Umgebung nicht gegen einen echten Testlauf (wie beim Feedback-Board,
+das eigens Java dafür brauchte) — nur sorgfältiger Codevergleich mit der
+bereits geprüften, strukturgleichen `extra`-Regel.
+
+**Entscheidung, wo Grammatik NICHT erscheint:** Duplikat-Warnung beim
+Anlegen zeigt weiterhin nur Wort/Übersetzung — Grammatik ist dafür nicht
+relevant genug, um die Meldung zu verlängern.
+
+**Nächster Schritt:** Betreiber-Test am Gerät, besonders: `firestore.rules`
+wirklich gegen echte Schreibvorgänge prüfen (kann nur der Betreiber, da kein
+Emulator hier verfügbar), und ob die Platzierung/Sichtbarkeit so passt oder
+nachjustiert werden soll.
 
 ---
 

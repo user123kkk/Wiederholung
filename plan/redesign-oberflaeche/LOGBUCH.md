@@ -4,6 +4,79 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 — Beobachtung 21 (eigenes Grammatik-Feld) gebaut (v3.9.7); Punkt 11 geschlossen
+
+**Anlass:** Rückfrage nach Abschluss von Beobachtung 12, welche der beiden
+verbleibenden Design-Punkte (11, 21) angegangen werden sollen. Betreiber:
+Punkt 11 „mag veraltet sein, weiß selbst ned was damit gemeint ist" — Punkt
+21 „hab kaum Ideen aber ja damit gerne" (Gestaltung liegt bei dieser
+Session).
+
+**Punkt 11 geschlossen, nicht gebaut.** Ohne dass der Betreiber sich erinnert,
+was mit „Design-Sachen" (15.09.2026) gemeint war, lässt sich daraus nichts
+mehr ableiten — ein Nachbau wäre reines Raten. Als „trifft nicht mehr zu"
+dokumentiert (`beobachtungen-lernwerkzeug.md`), nicht stillschweigend
+weggelassen.
+
+**Punkt 21, zweite Hälfte gebaut:** Aus dem `extra`-Feld (Beispielsatz/
+Bild-Link/Notiz, das seit v3.8.5 auch Grammatik per Label-Wort trug) wird
+Grammatik ein **eigenes Feld** (`grammatik`, `app.js`, `MAX_GRAMMATIK = 200`).
+Betroffene Stellen — dieselben, an denen `extra` schon stand, damit nichts
+auseinanderläuft:
+- `normCard()`, `kartenFelder()` (Cloud-Schreiben), `bereicheMapToArray()`
+  (Cloud-Lesen), `formDraft`/`resetFormDraft()`, `submitCardForm()`
+  (Lesen aus `#f-grammatik`, Patch-Pfad `.grammatik`), `editCard()`
+  (Formular-Vorbelegung).
+- Weitergabe/Sync: `baueWeitergabeBereich()`, `satzUnterschied()`
+  (Änderungserkennung), `satzZusammenfuehren()` (Merge beim
+  Aktualisieren eines geteilten Kartensatzes).
+- Anzeige: `karteSheet()` (neues Eingabefeld zwischen Übersetzung und
+  Notiz, Notiz-Label zurück auf „Beispielsatz, Bild-Link oder Notiz"),
+  `cardDetailSheet()` (eigene „Grammatik:"-Zeile), Verwalten-Liste
+  (kompakte Vorschauzeile, gleiche Optik wie `.extra-note`, **anders als
+  Beobachtung 10 hier bewusst mitgezogen** — sonst wäre ein Suchtreffer
+  nur in der Grammatik unsichtbar in der Liste), Lernen-Tab-Raster (immer
+  sichtbar), Übungsmodus (erst nach dem Aufdecken, neben der Übersetzung —
+  damit die aktive Erinnerung nicht durch vorzeitig sichtbare Grammatik
+  unterlaufen wird).
+- Suche: `suchFeld(c.grammatik)` ergänzt, Suchfeld-Platzhalter nennt
+  „Grammatik" jetzt auch.
+- `firestore.rules`: `grammatik` in `kartenFelder()`/`kartenWerte()`,
+  `textOderNull(d.grammatik, 200)` — dieselbe Zahl wie `app.js`.
+
+**Geprüft:** Eigenes Playwright-Skript gegen eine Firebase-Attrappe, die
+`setDoc`/`updateDoc` tatsächlich in ein In-Memory-Objekt schreibt (nicht nur
+feste Testdaten liefert) — Karte mit Grammatik anlegen, Anzeige in Liste/
+Detail/Lernen-Raster, Suche nach dem Grammatik-Begriff, erneutes Öffnen im
+Bearbeiten-Formular (Wert korrekt vorbelegt), Ändern und erneutes Speichern:
+alle sechs Prüfungen grün. Voller `probelauf.mjs`-Durchlauf (18 Bildschirme)
+unverändert fehlerfrei.
+
+**Bewusst nicht geprüft:** `firestore.rules` gegen einen echten
+Firestore-Emulator — der bräuchte wie beim Feedback-Board (siehe
+`feedback-board/LOGBUCH.md`, dort eigens Java installiert) einen frischen
+Aufwand, hier nicht wiederholt. Stattdessen sorgfältiger Codevergleich: die
+neue Zeile in `kartenWerte()` ist strukturell identisch mit der bereits
+geprüften `extra`-Regel, nur mit anderem Feldnamen und anderer Zahl.
+
+**Entscheidung:** Duplikat-Warnung beim Anlegen (gleiches Wort schon
+vorhanden) zeigt weiterhin nur Wort/Übersetzung, nicht auch Grammatik — dort
+nicht relevant genug für eine längere Meldung.
+
+**Offen:** `firestore.rules`-Änderung ist unbestätigt gegen echtes
+Firestore-Verhalten (nur Codevergleich). Ob Platzierung und Sichtbarkeit
+(Liste, Lernen-Raster, Übungsmodus) so passen, zeigt sich erst am Gerät.
+
+**Veröffentlichungsliste:** `APP_VERSION`/`CACHE_NAME`/`index.html`-Query auf
+3.9.7, `CHANGELOG.md` ergänzt. Keine neuen Startdateien.
+
+**Nächster Schritt:** Betreiber-Test am Gerät — vor allem eine Karte mit
+Grammatik wirklich in Firestore anlegen und prüfen, dass die Regel den
+Schreibvorgang nicht ablehnt (das ist der einzige Teil, den diese Sitzung
+nicht selbst prüfen konnte).
+
+---
+
 ### 2026-09-23 — Beobachtung 12 (leerer Bildschirm vor dem Lade-Indikator) behoben (v3.9.6)
 
 **Anlass:** Weiterarbeit nach Abschluss von Kategorie A („weiter" nach
