@@ -37,11 +37,11 @@ import { readFileSync } from "fs";
 
 const UID = "nutzer-eins";
 const FREMD = "nutzer-zwei";
-/* Feedback-Board (Nachtrag 22.09.2026): fuer F22/F23 (Moderations-Faelle)
-   wird der Platzhalter 'HIER-DEINE-KONTO-ID-EINTRAGEN' in firestore.rules
-   testweise durch diese Kennung ersetzt, siehe RULES_TEXT weiter unten -
-   die echte, deployte Regel bleibt davon unberuehrt. */
-const MOD = "moderator-konto";
+/* Feedback-Board: die Betreiber-Konto-ID steht seit 23.09.2026 direkt in
+   firestore.rules (istFeedbackModerator()), kein Platzhalter mehr. F22/F23
+   (Moderations-Faelle) testen deshalb direkt gegen diese echte Kennung -
+   RULES_FILE wird unveraendert eingelesen, keine Ersetzung mehr noetig. */
+const MOD = "pitcQCAowlSOMjCvJ4xKSnuGVXi1";
 
 let ok = 0, fehl = 0;
 const fehler = [];
@@ -56,8 +56,7 @@ async function pruefe(name, erwartet, fn) {
   }
 }
 
-const RULES_TEXT = readFileSync(process.env.RULES_FILE || "/home/user/Wiederholung/firestore.rules", "utf8")
-  .replace("HIER-DEINE-KONTO-ID-EINTRAGEN", MOD);
+const RULES_TEXT = readFileSync(process.env.RULES_FILE || "/home/user/Wiederholung/firestore.rules", "utf8");
 
 const env = await initializeTestEnvironment({
   projectId: "wiederholung-test",
@@ -265,11 +264,12 @@ await pruefe("L30 erfundenes Bereichsfeld weiterhin abgewiesen", "nein", () => u
 /* ================= NACHTRAG 22.09.2026: feedback/{id} (Feedback-Board) =================
    GELAUFEN am 22.09.2026 (Windows, Emulator, Microsoft OpenJDK 21 - vorher
    fehlte Java in dieser Arbeitsumgebung komplett, extra fuer diese Pruefung
-   installiert): 132 von 132, F01-F26 eingeschlossen. F25/F26 (Moderations-
-   Faelle) laufen gegen eine KOPIE der Regel, in der der Platzhalter
-   'HIER-DEINE-KONTO-ID-EINTRAGEN' durch die Konstante MOD ersetzt ist (siehe
-   RULES_TEXT oben) - die echte, deployte Regel hat weiterhin den Platzhalter
-   und laesst bis zum Eintragen der echten Konto-ID NIEMANDEN moderieren.
+   installiert): 132 von 132, F01-F26 eingeschlossen. Damals liefen F25/F26
+   (Moderations-Faelle) noch gegen eine Kopie der Regel mit einer Test-UID
+   anstelle des Platzhalters. NACHTRAG 23.09.2026: Betreiber hat seine echte
+   Konto-ID eingetragen (istFeedbackModerator() in firestore.rules) - MOD
+   oben ist jetzt diese echte ID, F25/F26 testen seither direkt gegen die
+   tatsaechlich deployte Regel, keine Ersetzung mehr noetig.
    Beim Schreiben ein echter Fehler gefunden und VOR dem ersten Testlauf
    behoben: feedbackWerte() hatte in der ersten Fassung KEINE Klammern um die
    einzelnen (!pruefen.hasAny(...) || Pruefung)-Paare - && bindet staerker als

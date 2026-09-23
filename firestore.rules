@@ -357,16 +357,12 @@ service cloud.firestore {
        Zaehler, kein Zugriff auf fremde Daten, kein finanzieller oder
        rechtlicher Schaden. Bewusst in Kauf genommen. */
 
-    /* Platzhalter — leer, bis der Betreiber seine eigene Konto-ID eintraegt
-       (App: Einstellungen -> Konto -> "Konto-ID", oder Firebase-Konsole ->
-       Authentication). Anders als BETREIBER_UIDS in app.js (dort: leer =
-       ALLE duerfen, reine Sichtbarkeit ohne Sicherheitswirkung) ist das hier
-       eine echte Berechtigung — Loeschen fremder Eintraege, Status aendern.
-       Deshalb der sichere Standard: der Platzhalter-Text trifft nie auf eine
-       echte Konto-ID, also darf mit dieser Liste NIEMAND moderieren, bis sie
-       durch die echte ID ersetzt ist. */
+    /* Konto-ID des Betreibers, eingetragen 23.09.2026. Anders als
+       BETREIBER_UIDS in app.js (dort: leer = ALLE duerfen, reine
+       Sichtbarkeit ohne Sicherheitswirkung) ist das hier eine echte
+       Berechtigung — Loeschen fremder Eintraege, Status aendern. */
     function istFeedbackModerator() {
-      return request.auth != null && request.auth.uid in ['HIER-DEINE-KONTO-ID-EINTRAGEN'];
+      return request.auth != null && request.auth.uid in ['pitcQCAowlSOMjCvJ4xKSnuGVXi1'];
     }
 
     function feedbackFelder() { return ['text', 'beschreibung', 'erstelltAm', 'votes', 'status']; }
