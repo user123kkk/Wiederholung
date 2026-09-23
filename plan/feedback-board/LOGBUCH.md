@@ -4,6 +4,29 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 (spät nachts) — Beobachtung: Vorschlagsliste lädt sehr lange, funktioniert aber
+
+**Geändert:** nichts, reine Beobachtung.
+
+**Entscheidung:** keine — Betreiber-Meldung nur eingetragen, damit sie nicht
+verloren geht. Wortlaut sinngemäß: die Liste unter „Ideen & Vorschläge"
+braucht sehr lange zum Laden, kommt aber an (kein Hänger wie bei v3.9.1/
+v3.9.2, kein „Lädt…" ohne Ende). Ob das derselbe 9-Sekunden-Bereich ist, den
+`feedbackLaden()` schon mit „Das dauert länger als sonst" abfängt (v3.9.2),
+oder eine eigene, echte Performance-Frage (z. B. Menge an Vorschlägen,
+fehlender Index, `orderBy`/`limit` in `feedbackLaden()`), ist nicht geprüft.
+
+**Offen:** Ursache ungeklärt — braucht zuerst eine echte Messung (wie lange
+genau, wie viele Einträge in `feedback/` zu dem Zeitpunkt), bevor irgendwas
+geändert wird. Kein Code angefasst.
+
+**Nächster Schritt:** Betreiber fragen, wie lange „lange" genau ist (spürbar
+langsam vs. mehrere Sekunden vs. erst nach dem 9s-Timeout), und wie viele
+Vorschläge zu dem Zeitpunkt in der Liste standen. Erst dann entscheiden, ob
+`feedbackLaden()` eine Grenze (`limit()`) oder einen Index braucht.
+
+---
+
 ### 2026-09-23 — Zweiter Ladehänger: Zeitlimit + Erneut-versuchen-Knopf bei echtem Netz-Hänger (v3.9.2)
 
 **Anlass:** Neue Betreiber-Meldung mit Screenshot, direkt im Anschluss an den

@@ -214,8 +214,13 @@ Kein Phasen-Ordner, keine Nummer. Ordner [`onboarding/`](onboarding/). Ein
 kurzer, geführter Einstieg für Neue **vor** dem Anmeldeformular, der auf die
 erste eigene Karte hinarbeitet. Betreiber-Wunsch vom 19.09.2026, ausdrücklich
 als Gesamtprojekt und nicht als Funktionsliste. Konzept, Belege und offene
-Entscheidungen E1–E4 in [`AUFTRAG.md`](onboarding/AUFTRAG.md). Status:
-`Konzept`, gebaut wird erst nach Freigabe von Umfang, Fragen und Wortlaut.
+Entscheidungen E1–E4 in [`AUFTRAG.md`](onboarding/AUFTRAG.md) — Stand
+19.09.2026. **23.09.2026: Betreiber benennt Onboarding als nächstes Ziel,
+aber als Neustart** — bisheriges Konzept deckt laut Betreiber „die
+Effektivität nie ab", eigene YouTube-Quellen sollen einfließen (noch nicht
+ausgewertet), Animationen sollen eine Rolle spielen. Details:
+`onboarding/AUFTRAG.md` Abschnitt 0. Status: `Konzept wird neu aufgesetzt`,
+gebaut wird erst nach Freigabe von Umfang, Fragen und Wortlaut.
 
 ### Nebenstrang: Feedback-Board
 
@@ -570,7 +575,51 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (23.09.2026, sehr spät): zweiter Feedback-Board-Ladehänger
+**AKTUELL (23.09.2026, sehr spät): Grammatik-Feld steht (v3.9.7), Betreiber
+benennt Onboarding als nächstes Ziel.** Zwischen dem vorigen Eintrag unten
+(v3.9.2) und jetzt liegen v3.9.3–v3.9.7 (Kategorie-A-Bugs am Gerät bestätigt,
+`importMitVersuch()`-Cache-Defekt behoben, Versions-Query-Lücke geschlossen,
+Ladekreis-Fix, eigenes Grammatik-Feld) — Details dazu stehen in den jeweiligen
+Logbüchern und `CHANGELOG.md`, hier nicht einzeln nachgetragen.
+
+Aus einer reinen Rückfrage-/Review-Runde (kein Code-Auftrag) kamen drei neue
+Punkte:
+- **Grammatik-Feld (v3.9.7) gegen echte Nutzerdaten geprüft** (Betreiber-
+  Export, 136 Karten): Feld bei 0 von 136 Karten befüllt, also noch keine
+  bestehenden Daten, die bei einer späteren Entscheidung „Freitext reicht
+  nicht" umgestellt werden müssten. Betreiber-Gerätetest (`firestore.rules`
+  gegen echtes Schreiben) steht weiter aus — siehe
+  `beobachtungen-lernwerkzeug.md` Punkt 21.
+- **Feedback-Board:** neue Beobachtung „Vorschlagsliste lädt sehr lange,
+  funktioniert aber" — nicht gemessen, nicht behoben. Details:
+  [`feedback-board/LOGBUCH.md`](feedback-board/LOGBUCH.md).
+- **Reihenfolge-Modus (bisher „Quran-Ayat-Modus"):** Betreiber verallgemeinert
+  selbst auf Gedichte/jeden fortlaufenden Text, Kern bleibt „chronologisch
+  statt zufällig". Ausdrücklich weiter keine Entscheidung, kein Bau — Details:
+  `beobachtungen-lernwerkzeug.md` Punkt 20.
+- **Onboarding ist das von Betreiber benannte nächste Ziel**, aber als
+  **Neustart**, nicht Fortsetzung der Fragen E1–E4: bisheriges Konzept deckt
+  laut Betreiber „die Effektivität nie ab". Betreiber bringt eigene
+  YouTube-Quellen mit (der `/watch`-Skill lief bei ihm nicht zuverlässig,
+  Quellen liegen noch nicht ausgewertet vor), Animationen sollen eine Rolle
+  spielen (Stichworte „Higgsfield", „Flutter" — Inspiration, keine
+  Technologie-Entscheidung, diese App bleibt Build-frei). Ankündigung:
+  vermutlich neue Session/neuer Chat dafür. Details:
+  [`onboarding/AUFTRAG.md`](onboarding/AUFTRAG.md) Abschnitt 0.
+- Eine Betreiber-Bemerkung („das Tool ist auch für andere, die denken sie
+  missen was, glaub entfernen oder so") blieb inhaltlich unklar — nicht
+  gedeutet, nicht dokumentiert als Entscheidung. Bei Gelegenheit nachfragen,
+  was gemeint war.
+
+**Bei „leg los" zuerst prüfen: Hat der Betreiber die angekündigten
+YouTube-Quellen für Onboarding mitgebracht?** Wenn ja: `onboarding/AUFTRAG.md`
+komplett neu aufziehen (Abschnitt 0 dort), nicht an E1–E4 weiterarbeiten.
+Wenn nein: nächste unblockierte Sache nehmen (z. B. Betreiber-Gerätetest von
+v3.9.7 abfragen, oder Feedback-Board-Ladezeit messen lassen).
+
+---
+
+**Vorheriger Stand (23.09.2026, sehr spät): zweiter Feedback-Board-Ladehänger
 gefunden und behoben (v3.9.2).** Neue Betreiber-Meldung mit Screenshot,
 direkt im Anschluss an den Endlosschleifen-Fix (v3.9.1, siehe unten): auf
 einem Konto blieb „Ideen & Vorschläge" dauerhaft bei „Lädt…", obwohl auf

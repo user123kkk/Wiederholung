@@ -1,7 +1,37 @@
 # Auftrag: Einstieg vor der Anmeldung
 
-Angelegt: 19. September 2026 · Status: `Konzept, wartet auf Betreiber-Entscheidungen`
+Angelegt: 19. September 2026 · Status: `Konzept wird auf Betreiber-Wunsch neu
+aufgesetzt (23.09.2026) — nächstes Ziel, wartet auf Betreiber-Quellen`
 Gesamtplan: [`../PLAN.md`](../PLAN.md) · Nebenstrang, keine Phasennummer
+
+---
+
+## 0. Neustart des Konzepts (23.09.2026, spät nachts)
+
+Betreiber-Einschätzung zum bisherigen Stand (Abschnitte 1–8 unten, Stand
+19.09.): **Die bisher eingetragenen Fragen (E1–E4) und Kandidaten decken die
+Effektivität nie ab.** Ausdrücklicher Wunsch: **von Grund auf neu anfangen**,
+nicht an E1–E4 weiterbauen. Betreiber hat eigene, aus seiner Sicht gute
+YouTube-Quellen zum Thema Onboarding, die noch nicht eingearbeitet sind —
+`/watch`-Skill lief bei ihm nicht zuverlässig, Quellen liegen also noch nicht
+als geprüfte Belege vor wie in Abschnitt 3.
+
+**Animationen spielen laut Betreiber eine Rolle.** Genannte Stichworte:
+„Higgsfield" (KI-Werkzeug für Video-/Animationsgenerierung) und „Flutter"
+(Googles Mobile-App-Framework, das für performante native Animationen bekannt
+ist). Beides sind **Referenz-/Inspirationsnennungen des Betreibers, keine
+Technologie-Entscheidung** — diese App hat keinen Build-Schritt und bleibt
+bei reinem HTML/CSS/JS (`../../CLAUDE.md`); Flutter würde einen kompletten
+Neuaufbau bedeuten und ist damit nicht gemeint. Zu klären, sobald die
+YouTube-Quellen da sind: was genau an Animation/Bewegung diese Quellen zeigen,
+und was davon mit `@keyframes` (README.md-Vorgabe) umsetzbar ist.
+
+**Betreiber kündigt an, wahrscheinlich in einer neuen Session/neuem Chat mit
+den Quellen weiterzumachen.** Für die nächste Session, die diesen Strang
+aufnimmt: Abschnitte 1–8 unten sind der **alte** Stand (19.09., E2 auf
+Kandidat 2 „Wenn-dann-Satz" eingeengt) — nicht stillschweigend fortsetzen.
+Erst prüfen, ob der Betreiber die angekündigten Quellen mitgebracht hat; wenn
+ja, Konzept ab Abschnitt 3 (Belege) neu aufziehen, nicht nur ergänzen.
 
 ---
 

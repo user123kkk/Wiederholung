@@ -1089,6 +1089,17 @@ als möglicher Premium-Feature-Kandidat in
 verlinkt (Betreiber-Wunsch 23.09.2026) — ändert nichts an „nicht gebaut",
 nur ein zweiter Ort, an dem die Idee nicht verloren geht.
 
+**Nachtrag 23.09.2026 (spät nachts):** Betreiber verallgemeinert die Idee
+selbst — nicht nur Quran-Ayat, auch **Gedichte auswendig lernen** brauchen
+dieselbe Betriebsart. Aus Betreiber-Sicht ist der **Kern „chronologische
+statt zufällige Reihenfolge"**, unabhängig vom Inhalt (Ayat, Gedicht, jeder
+fortlaufende Text). Ausdrücklich weiterhin **keine Entscheidung** — Betreiber
+selbst: „ist wichtiges Thema, daher will ich nicht voreilig sein." Ändert
+nichts an der Einschätzung oben (zweite Lern-Betriebsart, eigenes Konzept
+nötig, kein Direktbau) — nur die Formulierung „Reihenfolge-Modus" statt
+„Quran-Ayat-Modus" ist jetzt die treffendere, falls ein Konzept dafür
+angefangen wird.
+
 ## 21. Karten-Formular: „Notiz"-Feld trägt auch Grammatik, aber ist nicht als solches erkennbar — ✅ eigenes Feld gebaut (v3.9.7)
 
 **Beobachtung:** Betreiber nutzt das Feld `extra` (Formular-Beschriftung:

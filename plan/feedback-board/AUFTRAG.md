@@ -102,8 +102,13 @@ deployte Regel ohne die `feedback`-Sammlung, das Board lädt dann mit
    löschen" (reaktiv). Bei drei Nutzer:innen kein akutes Problem; wird erst
    relevant, wenn das Board öffentlich beworben wird — dann gemeinsam mit
    Punkt 3 klären, nicht vorher spekulativ bauen.
+5. **Neu, 23.09.2026 (spät nachts) — Vorschlagsliste lädt sehr lange.**
+   Betreiber-Beobachtung, funktioniert aber (kein Hänger). Ursache ungeklärt,
+   nicht gemessen. Details: `LOGBUCH.md`, Eintrag „Beobachtung: Vorschlagsliste
+   lädt sehr lange".
 
 **Nächster Schritt:** Betreiber trägt die eigene Konto-ID in
 `istFeedbackModerator()` ein und deployt (siehe „Was Du noch tun musst" in
 der Session-Antwort), testet am echten Gerät. Danach, vor einer echten
-Bewerbung des Boards: Punkt 3 und 4 oben klären.
+Bewerbung des Boards: Punkt 3 und 4 oben klären. Punkt 5 (Ladezeit) erst
+messen, dann entscheiden.
