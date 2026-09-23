@@ -233,9 +233,20 @@ Bau, 24 hinter fremden Sperren, 101 abgelehnt mit Begründung. Die vom
 Betreiber erbetene „Million Fragen" wurde **nicht** geliefert und der Grund
 aufgeschrieben (die App hat drei Einstellungen, `app.js:891`; mehr Fragen
 hieße Dekoration). Wichtigster Fund: ohne einen Bildschirm, der zeigt, **was
-die Antworten bewirkt haben**, ist jeder Einstieg ein Fragebogen. Status:
-`Katalog liegt vor, wartet auf Betreiber-Entscheidung F1/F2`, gebaut wird
-weiterhin nichts.
+die Antworten bewirkt haben**, ist jeder Einstieg ein Fragebogen. **Noch am 23.09.2026, zweiter Durchgang:** Video mit 70 Bildern
+nachgeprüft — drei App-Namen aus den Untertiteln waren falsch (BitePal,
+Alma, Houzz), korrigiert; drei Funde kamen erst im Bild dazu
+(Mehrfachauswahl ist die Regel, „Überspringen" steht sichtbar daneben, die
+Antwort wird im **selben** Bildschirm kommentiert). Dazu Block 1
+(Bestandsaufnahme, kein Code) vorgezogen:
+[`onboarding/BESTAND.md`](onboarding/BESTAND.md). Wichtigster Befund am
+Code: `onAuthStateChanged` setzt `settings` unbedingt zurück
+(`app.js:1551`), Antworten müssen also in den `localStorage` und dürfen
+erst nach dem Cloud-Dokument angewendet werden; `cloudDocExists`
+(`app.js:1607`) ist bereits die Unterscheidung „neues vs. bestehendes
+Konto". Status:
+`Katalog und Bestandsaufnahme liegen vor, wartet auf Betreiber-Entscheidung F1/F2`,
+gebaut wird weiterhin nichts.
 
 ### Nebenstrang: Feedback-Board
 
