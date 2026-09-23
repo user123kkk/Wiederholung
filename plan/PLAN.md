@@ -286,9 +286,15 @@ sind als Lücke markiert:** die Wiederkehr des Wenn-dann-Satzes nach der
 Anmeldung und der Satz am leeren Lernen-Bildschirm („Fertig. Jetzt deine
 erste eigene Karte."). **Korrektur einer früheren Annahme in dieser Datei:**
 Ein Push auf `main` veröffentlicht hier nichts — ausgeliefert wird manuell
-über `veroeffentlichen.bat`. Status:
-`gebaut auf dem Zweig, wartet auf Betreiber-Sicht, F5 (Rechtsprüfung) und
-den Gerätetest; nichts ausgeliefert`.
+über `veroeffentlichen.bat`. **Missverständnis geklärt (23.09.2026):** Die „1 Million Fragen" waren
+**Fragen an den Betreiber** gemeint, nicht an die Nutzer:innen. Daraufhin
+[`onboarding/BETREIBER-FRAGEN.md`](onboarding/BETREIBER-FRAGEN.md) — 87
+Fragen in zwölf Blöcken, jede mit Vorgabe, sodass Schweigen eine gültige
+Antwort ist. `FRAGENKATALOG.md` bleibt stehen und trägt die Klarstellung als
+Kasten: Es besteht zu 90 % aus begründeten Ablehnungen und verhindert
+doppelte Arbeit. Status:
+`gebaut auf dem Zweig, wartet auf Betreiber-Antworten, F5 (Rechtsprüfung)
+und den Gerätetest; nichts ausgeliefert`.
 
 ### Nebenstrang: Feedback-Board
 

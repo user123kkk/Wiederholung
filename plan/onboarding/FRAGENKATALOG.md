@@ -13,9 +13,26 @@ Gehört zu: [`AUFTRAG.md`](AUFTRAG.md) · Belege aus dem Video:
 
 ## 0. Zum Auftrag „eine Million Fragen"
 
-Der Auftrag lautete: eine kugelsichere Liste mit **einer Million** Fragen für
-das Onboarding, sinnvoll geordnet. Diese Liste wird hier **nicht** geliefert,
-und zwar nicht aus Bequemlichkeit:
+> **Klarstellung vom 23.09.2026 — dieses Dokument beantwortet die falsche
+> Frage.** Der Betreiber meinte mit „1 Million Fragen" **Fragen an ihn
+> selbst**, damit der Einstieg auf ihn zugeschnitten wird — nicht Fragen, die
+> Nutzer:innen auf dem Bildschirm beantworten. Diese Befragung steht seit
+> heute in [`BETREIBER-FRAGEN.md`](BETREIBER-FRAGEN.md).
+>
+> **Warum dieses Dokument trotzdem stehen bleibt:** Es ist zu 90 % eine Liste
+> von Ablehnungen mit Begründung — 101 Fragen, die **nicht** in den Einstieg
+> kommen, und warum. Das ist unabhängig davon nützlich, wer die Fragen stellt:
+> ohne diese Liste schlägt die nächste Sitzung dieselben Fragen wieder vor.
+> Die sieben Prüfungen P1–P7 in Abschnitt 1 sind außerdem die Messlatte, an
+> der auch die Antworten aus `BETREIBER-FRAGEN.md` gemessen werden.
+>
+> Was unten über „den Auftrag" steht, ist also die **damalige Lesart**. Sie
+> wird nicht rückwirkend geglättet — das wäre gegen `../../CLAUDE.md`
+> („trifft nicht zu" wird mit Begründung aufgeschrieben, nicht weggelassen).
+
+Der Auftrag wurde damals gelesen als: eine kugelsichere Liste mit **einer
+Million** Fragen für das Onboarding, sinnvoll geordnet. Diese Liste wird hier
+**nicht** geliefert, und zwar nicht aus Bequemlichkeit:
 
 1. **Eine Million Fragen ließe sich nur durch Aufblähen erzeugen** — Varianten
    derselben Frage, Fragen ohne Ziel, Fragen für Funktionen, die es nicht gibt.
