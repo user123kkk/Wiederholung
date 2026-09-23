@@ -1,3 +1,18 @@
+## 3.9.10 - 23. September 2026
+
+**Der Einstieg bekommt seinen Abschluss.** Zwei Teile, die in v3.9.9 noch als Luecke markiert waren, sind jetzt gebaut - beide auf dem leeren Lernen-Bildschirm, beide nur einmal:
+
+- **"Fertig. Jetzt deine erste eigene Karte."** Nach `plan/onboarding/PSYCHOLOGIE.md` Abschnitt 1.2 (Norton, Mochon & Ariely 2012) zaehlt der **Abschluss**, nicht der Anfang: Der Effekt, auf den der ganze Einstieg zulaeuft, tritt nur bei erfolgreichem Abschluss ein. Ein Einstieg, der jemanden ohne erste eigene Karte stehen laesst, verschenkt genau den Teil, fuer den es einen Beleg gibt.
+- **Der Wenn-dann-Satz kommt wieder.** Wer im Einstieg "Nach dem Maghrib-Gebet" gewaehlt hat, liest darunter "Nach dem Maghrib-Gebet mache ich eine Runde." Ohne diese Wiederkehr bestand der Satz die Pruefung P2 (Einloesung) nur halb - man waehlte ihn einmal und sah ihn nie wieder.
+
+Beides steht ueber dem leeren Zustand, nicht darin: Es ist der Abschluss des Einstiegs, keine weitere Handlung. Kein Kasten, keine Flaeche - eine Linie links in der Akzentfarbe genuegt. **Verschwindet dauerhaft, sobald die erste Karte steht**, und erscheint nicht fuer jemanden, der den Einstieg uebersprungen hat: Wer abbricht, hat nichts gewaehlt, und ihm danach "Fertig." hinzuschreiben waere gelogen.
+
+**Gespeichert wird der Satz im `localStorage` (`adrabic-einstieg-nachklang`), nicht in der Cloud.** Er ist ein Vorsatz des Menschen, kein Einstellwert der App. In der Cloud braeuchte er ein Feld in `firestore.rules` und wuerde die offene Rechtsfrage zur Zwischenspeicherung groesser machen. Geraetelokal reicht: Der Satz erscheint dort, wo er gefasst wurde.
+
+**Grammatikfehler aus v3.9.9 behoben.** Der Satz lautete "Wenn ich nach dem Maghrib-Gebet, dann mache ich eine Runde." - kein deutscher Satz. Ursache: Knopfbeschriftung und Satzbaustein waren dasselbe Feld. Jetzt getrennt (`label` fuer den Knopf, `satz` fuer den Satz), mit zwei Bauformen, weil eine Gebetszeit ein Zeitpunkt ist und die eigene Situation ein Nebensatz: "Nach dem Fajr-Gebet mache ich eine Runde." gegenueber "Wenn ich mein Fruehstueck fertig habe, mache ich eine Runde." Gefunden beim Probelauf im Browser, nicht durch Nachdenken.
+
+**Geprueft:** Der Durchlauf bis zum Ende, im Browser, mit gewaehltem Anker - der Satz steht danach korrekt im `localStorage`. **Nicht geprueft:** die beiden neuen Zeilen auf dem leeren Lernen-Bildschirm selbst; dafuer braucht es eine echte Firebase-Anmeldung mit einem frischen Konto. Das steht als offener Punkt im Logbuch.
+
 ## 3.9.9 – 23. September 2026
 
 **Einstieg vor der Anmeldung (Nebenstrang `plan/onboarding/`, Blöcke 1–3).** Wer die App zum ersten Mal auf einem Gerät öffnet, sieht jetzt sieben kurze Bildschirme, bevor das Anmeldeformular kommt — und keinen davon ein zweites Mal. Der Ablauf: das Problem benennen → eine Beispielkarte umdrehen und bewerten → Schriftgröße an genau dieser Karte einstellen → hell oder dunkel → wie lang eine Runde sein soll → ein kurzer Abschluss → ein Wenn-dann-Satz („Wenn ich nach dem Asr-Gebet …, dann mache ich eine Runde"). Danach übernimmt der bestehende `renderAuth()`.

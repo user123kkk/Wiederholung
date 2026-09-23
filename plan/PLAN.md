@@ -292,9 +292,16 @@ Ein Push auf `main` veröffentlicht hier nichts — ausgeliefert wird manuell
 Fragen in zwölf Blöcken, jede mit Vorgabe, sodass Schweigen eine gültige
 Antwort ist. `FRAGENKATALOG.md` bleibt stehen und trägt die Klarstellung als
 Kasten: Es besteht zu 90 % aus begründeten Ablehnungen und verhindert
-doppelte Arbeit. Status:
-`gebaut auf dem Zweig, wartet auf Betreiber-Antworten, F5 (Rechtsprüfung)
-und den Gerätetest; nichts ausgeliefert`.
+doppelte Arbeit. **v3.9.10 (23.09.2026):** Der Einstieg hat jetzt seinen Abschluss — „Fertig.
+Jetzt deine erste eigene Karte." und die Wiederkehr des Wenn-dann-Satzes auf
+dem leeren Lernen-Bildschirm, beide gerätelokal, beide verschwinden mit der
+ersten Karte. Dabei ein echter Grammatikfehler gefunden und behoben (der
+gespeicherte Satz war kein deutscher Satz). Dazu
+[`onboarding/BETREIBER-FRAGEN-2.md`](onboarding/BETREIBER-FRAGEN-2.md) — 66
+Fragen zu Person, religiösem Rahmen, Zielgruppe und Zweck, diesmal fast ohne
+Vorgaben, weil der Agent das nicht raten kann. Status:
+`gebaut auf dem Zweig, wartet auf Betreiber-Antworten (Teil 2), die
+Rechtsprüfung und den Gerätetest; nichts ausgeliefert`.
 
 ### Nebenstrang: Feedback-Board
 

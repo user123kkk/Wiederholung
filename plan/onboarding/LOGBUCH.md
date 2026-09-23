@@ -4,6 +4,20 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-23 - Abschluss gebaut (v3.9.10), Grammatikfehler gefunden, Teil 2 der Befragung
+
+**Geaendert:** `app.js` (Nachklang-Speicher, `vorsatzSatz()`, Ausgabe auf dem leeren Lernen-Bildschirm, Anker-Liste um ein `satz`-Feld erweitert), `styles.css` (`.nachklang`), `index.html`, `sw.js`, `CHANGELOG.md`; neu `plan/onboarding/BETREIBER-FRAGEN-2.md`. Versionsliste vollstaendig: 3.9.10 in allen drei Dateien, `APP_SHELL` unveraendert (keine neue Startdatei).
+**Betreiber-Antworten dieser Runde:** C1 "von mir aus ja" - Platzhalter كِتَابٌ bleibt vorerst. F1 **ja** (Satz am leeren Lernen-Bildschirm). E6 **ja** (Wenn-dann-Satz kommt wieder). J1 **ja, wird geprueft**. L1 **warten** - nicht auf `main`.
+**Gebaut, beide vorher als Luecke markiert:** "Fertig. Jetzt deine erste eigene Karte." und die Wiederkehr des Vorsatzes. Damit besteht B1 erstmals die Pruefung P2 vollstaendig, und der Strang hat den Abschluss, auf den `PSYCHOLOGIE.md` Abschnitt 1.2 hinweist. Beides verschwindet dauerhaft, sobald die erste Karte steht, und erscheint **nicht** nach einem Ueberspringen - wer abbricht, hat nichts gewaehlt.
+**Entscheidung gegen die Cloud:** Der Vorsatz liegt im `localStorage` (`adrabic-einstieg-nachklang`). Er ist ein Vorsatz des Menschen, kein Einstellwert; in der Cloud braeuchte er ein Feld in `firestore.rules` und wuerde die laufende Rechtspruefung (J1) vergroessern, statt in sie hineinzupassen.
+**Echter Fehler beim Probelauf gefunden und behoben:** Der gespeicherte Satz lautete "Wenn ich nach dem Maghrib-Gebet, dann mache ich eine Runde." - grammatisch kaputt. Ursache: Knopfbeschriftung und Satzbaustein waren dasselbe Feld. Getrennt in `label` und `satz`, zwei Bauformen (Zeitpunkt gegenueber Nebensatz). **Das ist der Wert des Probelaufs:** Am Bildschirm sichtbar, beim Schreiben nicht.
+**Zur Rechtsfrage (J1):** Der Betreiber fragte "ich schaetze ja, korrekt?". Antwort im Chat: ja, pruefen lassen - und zwar von einer echten Person. Der Agent gibt dazu keine Einschaetzung ab, auch keine beruhigende; das ist die Linie seit dem 13.09.2026 und sie gilt hier unveraendert.
+**Teil 2 der Befragung geschrieben.** Betreiber: "stell mir alle moeglichen Fragen damit du weisst was ins Onboarding kommt, wer ich bin, Salafi, wofuer die App ... da hast du 100 Sachen fuer den normalen User." Teil 1 fragte aus der Sicht des Bildschirms (Knoepfe, Ablaeufe) - das war wieder zu eng. `BETREIBER-FRAGEN-2.md` fragt nach dem, was darueber liegt: wer dahintersteht, der religioese Rahmen, fuer wen, wofuer, was die App **nicht** sein soll, der Stoff, der Ton, Verbreitung, und die Grenzen fuer den Agenten selbst. **66 Fragen, und diesmal fast ohne Vorgaben** - wer der Betreiber ist und wofuer die App da ist, kann der Agent nicht raten; jede Vorgabe waere erfunden. Am Ende steht eine Liste dessen, was aus frueheren Antworten schon bekannt ist, damit er sich nicht wiederholt.
+**Offen:** (1) Die beiden neuen Zeilen auf dem leeren Lernen-Bildschirm sind **nicht am laufenden Konto geprueft** - dafuer braucht es eine echte Firebase-Anmeldung mit frischem Konto. (2) Die 66 Fragen aus Teil 2, soweit der Betreiber sie beantworten will. (3) J1 Rechtspruefung. (4) Geraetetest.
+**Naechster Schritt:** Betreiber beantwortet aus Teil 2, was ihm wichtig ist - besonders Block B (religioeser Rahmen) und Block D (wofuer die App da ist). Danach wird der Wortlaut daran nachgezogen; erst dann lohnt der Geraetetest.
+
+---
+
 ### 2026-09-23 — Missverständnis geklärt: die Million Fragen war an den Betreiber gerichtet
 
 **Geändert:** neu `plan/onboarding/BETREIBER-FRAGEN.md`; `plan/onboarding/FRAGENKATALOG.md` (Klarstellung als Kasten in Abschnitt 0); `plan/PLAN.md`. Kein App-Code.

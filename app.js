@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.9";
+const APP_VERSION = "3.9.10";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1054,12 +1054,16 @@ const EINSTIEG_BEISPIEL = { arab: "كِتَابٌ", de: "Buch" };
    Situation zuverlaessig eintritt und erkennbar ist (Gollwitzer & Sheeran
    2006, siehe PSYCHOLOGIE.md 1.1). Fuenf feste taegliche Punkte sind genau
    das. Sie stehen hier als TAGESZEITEN, nicht als religiöse Aussage. */
+/* label = was auf dem Knopf steht. satz = wie derselbe Anker im fertigen Satz
+   klingt. Beides getrennt, weil ein Knopf kurz sein muss und ein Satz richtig:
+   "Wenn ich nach dem Maghrib-Gebet, dann mache ich eine Runde" ist kein
+   deutscher Satz. Gefunden beim Probelauf am 23.09.2026. */
 const EINSTIEG_ANKER = [
-  { id: "fajr",    label: "nach dem Fajr-Gebet" },
-  { id: "dhuhr",   label: "nach dem Dhuhr-Gebet" },
-  { id: "asr",     label: "nach dem Asr-Gebet" },
-  { id: "maghrib", label: "nach dem Maghrib-Gebet" },
-  { id: "isha",    label: "nach dem Ischa-Gebet" },
+  { id: "fajr",    label: "nach dem Fajr-Gebet",    satz: "Nach dem Fajr-Gebet" },
+  { id: "dhuhr",   label: "nach dem Dhuhr-Gebet",   satz: "Nach dem Dhuhr-Gebet" },
+  { id: "asr",     label: "nach dem Asr-Gebet",     satz: "Nach dem Asr-Gebet" },
+  { id: "maghrib", label: "nach dem Maghrib-Gebet", satz: "Nach dem Maghrib-Gebet" },
+  { id: "isha",    label: "nach dem Ischa-Gebet",   satz: "Nach dem Ischa-Gebet" },
   { id: "eigen",   label: "eigene Situation …" }
 ];
 
@@ -1079,6 +1083,38 @@ function einstiegAntwortenSichern(patch) {
   try { localStorage.setItem(EINSTIEG_ANTWORT_KEY, JSON.stringify(neu)); } catch (e) {}
   return neu;
 }
+/* 3.9.10 - der Nachklang: was nach der Anmeldung EINMAL wiederkommt. Zwei
+   Zeilen, beide auf dem leeren Lernen-Bildschirm:
+
+     - "Fertig. Jetzt deine erste eigene Karte."  (Station S9)
+     - der Wenn-dann-Satz, so wie man ihn im Einstieg gewaehlt hat (S7)
+
+   Warum ueberhaupt: Nach PSYCHOLOGIE.md 1.2 zaehlt der ABSCHLUSS, nicht der
+   Anfang - ein Einstieg, der jemanden ohne erste eigene Karte stehen laesst,
+   verschenkt den einzigen belegten Teil. Und ein Wenn-dann-Satz, den man
+   einmal waehlt und nie wiedersieht, besteht die Pruefung P2 nur halb.
+
+   Warum im localStorage und NICHT in der Cloud: Der Satz ist ein Vorsatz des
+   Menschen, kein Einstellwert der App. Er ginge sonst in das Nutzerdokument,
+   braeuchte ein Feld in firestore.rules und wuerde die offene Rechtsfrage
+   (F5/J1) groesser machen. Geraetelokal reicht: der Satz erscheint dort, wo
+   er gefasst wurde. */
+const EINSTIEG_NACHKLANG_KEY = "adrabic-einstieg-nachklang";
+
+function nachklangSetzen(satz) {
+  try {
+    localStorage.setItem(EINSTIEG_NACHKLANG_KEY, JSON.stringify({ satz: satz || "" }));
+  } catch (e) {}
+}
+function nachklangLesen() {
+  try { return JSON.parse(localStorage.getItem(EINSTIEG_NACHKLANG_KEY)); } catch (e) { return null; }
+}
+/* Faellt weg, sobald die erste eigene Karte steht - dann hat er seinen Zweck
+   erfuellt. Ein Hinweis, der nach getaner Arbeit stehen bleibt, ist Deko. */
+function nachklangLoeschen() {
+  try { localStorage.removeItem(EINSTIEG_NACHKLANG_KEY); } catch (e) {}
+}
+
 function einstiegAntworten() {
   try { return JSON.parse(localStorage.getItem(EINSTIEG_ANTWORT_KEY)) || {}; } catch (e) { return {}; }
 }
@@ -4852,6 +4888,19 @@ function ankerLabel(id) {
   const o = EINSTIEG_ANKER.find(x => x.id === id);
   return o ? o.label : "";
 }
+/* Der fertige Vorsatz. Zwei Bauformen, weil eine Gebetszeit ein Zeitpunkt ist
+   und die eigene Situation ein Nebensatz:
+     "Nach dem Fajr-Gebet mache ich eine Runde."
+     "Wenn ich mein Fruehstueck fertig habe, mache ich eine Runde."
+   Leer, solange nichts gewaehlt ist. */
+function vorsatzSatz(e) {
+  if (!e || !e.anker) return "";
+  if (e.anker === "eigen") {
+    return e.ankerFrei ? "Wenn ich " + e.ankerFrei + ", mache ich eine Runde." : "";
+  }
+  const o = EINSTIEG_ANKER.find(x => x.id === e.anker);
+  return o && o.satz ? o.satz + " mache ich eine Runde." : "";
+}
 
 function einstiegProbe(groesse) {
   const st = ARAB_STUFEN.find(x => x.id === groesse);
@@ -5006,10 +5055,13 @@ function renderEinstieg() {
     const frei = e.anker === "eigen";
     html += '<h1>Wann kommst du zurück?</h1>';
     html += '<p class="subtitle">Ein fester Punkt am Tag hält besser als ein guter Vorsatz.</p>';
-    html += '<p class="einstieg-satz">Wenn ich <strong>' +
-      (frei ? (e.ankerFrei ? esc(e.ankerFrei) : "…")
-            : (e.anker ? esc(ankerLabel(e.anker)) : "…")) +
-      '</strong>, dann mache ich eine Runde.</p>';
+    /* Der Satz steht UEBER der Auswahl: man soll sehen, in welchen Satz die
+       Wahl eingesetzt wird, bevor man waehlt. Solange nichts gewaehlt ist,
+       steht die Luecke als Auslassung da, nicht als leere Zeile. */
+    const satz = vorsatzSatz(e);
+    html += '<p class="einstieg-satz">' +
+      (satz ? '<strong>' + esc(satz) + '</strong>'
+            : 'Wenn ich …, mache ich eine Runde.') + '</p>';
     html += '<div class="einstieg-anker">';
     html += EINSTIEG_ANKER.map(o =>
       '<button class="secondary full' + (e.anker === o.id ? " aktiv" : "") + '" ' +
@@ -5043,8 +5095,9 @@ function renderEinstieg() {
 /* Beendet den Einstieg und uebergibt an renderAuth() - Station S8. Der Merker
    bleibt danach stehen, auch nach einer Abmeldung (Entscheidung F7): wer sich
    abmeldet, ist kein Neuling. */
-function einstiegBeenden() {
+function einstiegBeenden(satz) {
   einstiegAbschliessen();
+  nachklangSetzen(satz || "");
   ui.einstieg = null;
   ui.authMode = "register";
   window.scrollTo(0, 0);
@@ -6955,8 +7008,22 @@ function renderLernen() {
 
      Ein gefuehrter Satz hat kein Karten-Blatt (karteSheet() gibt dort ""
      zurueck) - dort gibt es nichts anzulegen, also bleibt der Import vorn. */
+  /* Der Nachklang gilt nur, solange es noch keine eigene Karte gibt. Sobald
+     eine da ist, ist er erledigt - und zwar dauerhaft, nicht nur versteckt. */
+  if (cards.length > 0) nachklangLoeschen();
   if (cards.length === 0) {
     const kannAnlegen = !istGefuehrt(b);
+    /* 3.9.10: Der Nachklang des Einstiegs - genau hier und nirgends sonst.
+       Steht UEBER dem leeren Zustand, nicht darin: Es ist der Abschluss des
+       Einstiegs, keine weitere Handlung. Verschwindet von selbst, sobald die
+       erste Karte steht (siehe nachklangLoeschen weiter unten). */
+    const nk = nachklangLesen();
+    if (nk && kannAnlegen) {
+      html += '<div class="nachklang anim-rise">';
+      html += '<p class="nachklang__fertig">Fertig. Jetzt deine erste eigene Karte.</p>';
+      if (nk.satz) html += '<p class="nachklang__satz">' + esc(nk.satz) + '</p>';
+      html += '</div>';
+    }
     html += '<div class="empty">';
     html += '<div class="empty__icon betont">' + ikon(kannAnlegen ? "karten" : "einspielen", "i-xl") + '</div>';
     html += '<div class="empty__titel">Noch nichts in „' + esc(b.name) + '“</div>';
@@ -9372,9 +9439,16 @@ document.body.addEventListener("click", e => {
     /* Ueberspringen heisst: nichts anwenden. Der Zwischenspeicher wird
        weggeraeumt, nicht stehen gelassen - wer abbricht, hat nichts
        entschieden (Datensparsamkeit, Pruefung P6). */
+    /* Ueberspringen heisst auch: kein Nachklang. Wer abbricht, hat nichts
+       gewaehlt - ihm danach "Fertig." hinzuschreiben waere gelogen. */
     case "einstieg-ueberspringen":
       try { localStorage.removeItem(EINSTIEG_ANTWORT_KEY); } catch (err) {}
-      einstiegBeenden();
+      nachklangLoeschen();
+      einstiegAbschliessen();
+      ui.einstieg = null;
+      ui.authMode = "register";
+      window.scrollTo(0, 0);
+      render();
       break;
     case "einstieg-aufdecken":
       if (ui.einstieg) { ui.einstieg.aufgedeckt = true; render(); }
@@ -9412,7 +9486,7 @@ document.body.addEventListener("click", e => {
        ein Vorsatz des Menschen, kein Einstellwert der App. Gespeichert wird
        nur, was danach auch etwas tut. */
     case "einstieg-fertig":
-      einstiegBeenden();
+      einstiegBeenden(vorsatzSatz(ui.einstieg));
       break;
     case "logout": doLogout(); break;
     case "delete-account": doKontoLoeschen(); break;
