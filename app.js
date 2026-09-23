@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.1";
+const APP_VERSION = "3.9.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -959,6 +959,21 @@ let feedbackLaedt = false;
 let feedbackEinreichtWird = false;
 let feedbackFehler = null;
 let feedbackFormFehler = false;
+/* 23.09.2026, zweiter echter Fund (Betreiber-Meldung, neuer Screenshot:
+   "Lädt…" bleibt auf einem anderen Konto dauerhaft stehen, obwohl auf einem
+   dritten Konto derselbe Vorschlag kurz zuvor erfolgreich abgeschickt wurde -
+   also kein Regel-/Deploy-Fehler, der sofort mit feedbackFehler beantwortet
+   wuerde, sondern ein echter Haenger: das Netz-Versprechen von getDocs()
+   loest nie auf UND lehnt nie ab (z.B. sehr schlechtes Netz). Der Fix vom
+   selben Tag (Endlosschleife) deckt nur den Fall "Antwort kommt, ist aber ein
+   Fehler" ab - nicht diesen. Gleiches Muster wie ladeTimer/ladeLangsam beim
+   Start (render(), 2.21.1), nur fuers Feedback-Board uebernommen:
+   feedbackLadeToken macht jeden Versuch einzeln erkennbar, damit ein spaet
+   doch noch eintreffendes Ergebnis eines laengst aufgegebenen Versuchs den
+   Zustand eines inzwischen neu gestarteten Versuchs nicht mehr ueberschreibt. */
+let feedbackLadeTimer = null;
+let feedbackLadeLangsam = false;
+let feedbackLadeToken = 0;
 /* 2.21.1: Hinweis + Neu-laden-Knopf, falls "Daten werden geladen…" sehr
    lange steht (z.B. schlechtes WLAN). Der Timer laeuft nur einmal an, bis
    die Daten da sind oder sich der Nutzer neu anmeldet - siehe render() und
@@ -1525,6 +1540,10 @@ async function initFirebase() {
     feedbackEigeneVotes = new Set();
     feedbackFehler = null;
     feedbackEinreichtWird = false;
+    if (feedbackLadeTimer) { clearTimeout(feedbackLadeTimer); feedbackLadeTimer = null; }
+    feedbackLadeLangsam = false;
+    feedbackLaedt = false;
+    feedbackLadeToken++;   // ein noch laufender Versuch des vorigen Kontos zaehlt nicht mehr
     ui.session = null;
     ui.editId = null;
     ui.authEingabe = { name: "", email: "", pass: "" };
@@ -6254,6 +6273,14 @@ function renderFeedbackSeite() {
     html += '<div class="form-actions" style="margin-top:var(--space-3)">';
     html += '<button class="secondary" data-action="feedback-retry">Erneut versuchen</button>';
     html += '</div>';
+  } else if (feedbackLadeLangsam && feedbackLaedt && feedbackListe === null) {
+    /* Nach 9s ohne Antwort (siehe feedbackLaden()): nicht laenger nur warten -
+       derselbe Ausweg wie beim Start-Ladebildschirm (render(), ladeLangsam). */
+    html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Das dauert länger als sonst. ' +
+      'Prüf deine Internetverbindung.</p>';
+    html += '<div class="form-actions" style="margin-top:var(--space-3)">';
+    html += '<button class="secondary" data-action="feedback-retry">Erneut versuchen</button>';
+    html += '</div>';
   } else if (feedbackLaedt && feedbackListe === null) {
     html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Lädt…</p>';
   } else if (feedbackListe && feedbackListe.length === 0) {
@@ -6311,9 +6338,22 @@ const FEEDBACK_STATUS = [
 ];
 
 async function feedbackLaden() {
-  if (feedbackLaedt) return;
+  /* Kein "if (feedbackLaedt) return" mehr: ein Aufruf hier heisst jetzt immer
+     "neuer Versuch, alten aufgeben" - siehe Kommentar bei feedbackLadeToken
+     oben. Der einzige Ort, der einen bereits laufenden Versuch NICHT durch
+     einen zweiten ueberlagern soll (der stille Erst-Aufruf beim Oeffnen der
+     Seite), prueft feedbackLaedt schon selbst, bevor er hierher ruft
+     (renderFeedbackSeite()). */
+  const meinToken = ++feedbackLadeToken;
   feedbackLaedt = true;
   feedbackFehler = null;
+  feedbackLadeLangsam = false;
+  if (feedbackLadeTimer) clearTimeout(feedbackLadeTimer);
+  feedbackLadeTimer = setTimeout(() => {
+    if (meinToken !== feedbackLadeToken) return;   // laengst ueberholt
+    feedbackLadeLangsam = true;
+    render();
+  }, 9000);
   render();
   try {
     const snap = await fb.getDocs(fb.collection(db, "feedback"));
@@ -6331,12 +6371,16 @@ async function feedbackLaden() {
         if (v.exists()) eigene.add(e.id);
       } catch (err) { /* eigene Stimme einzeln nicht ladbar - zeigt dann "nicht abgestimmt" */ }
     }));
+    if (meinToken !== feedbackLadeToken) return;    // ein neuerer Versuch laeuft laengst
     feedbackListe = liste;
     feedbackEigeneVotes = eigene;
   } catch (e) {
+    if (meinToken !== feedbackLadeToken) return;
     feedbackFehler = "Liste konnte nicht geladen werden: " + (e && e.message ? e.message : String(e));
   }
+  if (feedbackLadeTimer) { clearTimeout(feedbackLadeTimer); feedbackLadeTimer = null; }
   feedbackLaedt = false;
+  feedbackLadeLangsam = false;
   render();
 }
 

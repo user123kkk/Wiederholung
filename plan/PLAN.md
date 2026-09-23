@@ -542,33 +542,46 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (23.09.2026, sehr spät): `landing.html` gelöscht (v3.9.0),
-Feedback-Board-Endlosschleife gefunden und behoben (v3.9.1), erste
-Sicherheits-/Fehlerdurchsicht.** Betreiber wollte `landing.html` ohne
-Rückfrage gelöscht haben (wird neu gemacht) — Referenzen bereinigt
-(`firebase.json`-Rewrite raus, `sw.js`-Cache, Datenschutz Abschnitt 11 nur
-noch Fehlerformular). Nächster großer Schritt laut Betreiber vermutlich
-`onboarding/` statt Landing-Page. Details:
+**AKTUELL (23.09.2026, sehr spät): zweiter Feedback-Board-Ladehänger
+gefunden und behoben (v3.9.2).** Neue Betreiber-Meldung mit Screenshot,
+direkt im Anschluss an den Endlosschleifen-Fix (v3.9.1, siehe unten): auf
+einem Konto blieb „Ideen & Vorschläge" dauerhaft bei „Lädt…", obwohl auf
+einem anderen Konto kurz zuvor erfolgreich ein Vorschlag eingereicht wurde
+— also kein Regel-/Deploy-Fehler mehr (der hätte sofort die Fehlermeldung
+aus 3.9.1 gezeigt), sondern ein echter Netz-Hänger: die Firestore-Antwort
+kam nie an, weder als Erfolg noch als Fehler, ohne Zeitlimit wartete die
+Seite ewig. Fix nach demselben, bereits bewährten Muster wie der
+Start-Ladebildschirm seit 2.21.1: nach 9s ohne Antwort erscheint „Das
+dauert länger als sonst" mit „Erneut versuchen" — ein spät doch noch
+eintreffendes Ergebnis des aufgegebenen Versuchs wird über eine laufende
+Nummer (`feedbackLadeToken`) erkannt und verworfen. Dabei auf Betreiber-
+Auftrag („Ladefähigkeiten im gesamten Tool verbessern, gleich aufweisende
+Mängel") das übrige Werkzeug durchgesehen: Feedback-Board war die einzige
+Stelle mit einer unbegrenzt wartenden Lade-Anzeige ohne Zeitlimit, kein
+weiterer Fund. Details: [`feedback-board/LOGBUCH.md`](feedback-board/LOGBUCH.md).
+
+**Vorheriger Fund (v3.9.1):** Feedback-Formular flackerte und blieb
+dauerhaft bei „Lädt…" hängen. Ursache: ein fehlgeschlagener Ladeversuch
+löste sich selbst sofort wieder aus (Endlosschleife), zerstörte dabei bei
+jedem Anlauf die fokussierten Eingabefelder — das war das Flackern.
+Behoben: kein automatischer Wiederholungsversuch mehr nach einem
+Fehlschlag, stattdessen ein „Erneut versuchen"-Knopf. Nebenfund: „Vorschlag
+einreichen" ließ sich während des Speicherns doppelt antippen, jetzt
+gesperrt. Dazu eine erste Sicherheitsdurchsicht auf Betreiber-Auftrag („wie
+ein Hacker") — `firestore.rules`, Mailto-Formular (Injektion), Auth-E-Mails
+(Open-Redirect), `esc()`-Abdeckung geprüft, keine Funde.
+
+**Davor:** `landing.html` auf Betreiber-Wunsch gelöscht (v3.9.0, wird neu
+gemacht), Referenzen bereinigt (`firebase.json`-Rewrite raus, `sw.js`-Cache,
+Datenschutz Abschnitt 11 nur noch Fehlerformular). Nächster großer Schritt
+laut Betreiber vermutlich `onboarding/` statt Landing-Page. Details:
 [`phase-6-startseite/LOGBUCH.md`](phase-6-startseite/LOGBUCH.md).
 
-**Danach ein echter, ernster Fund:** Betreiber-Screenshot zeigte das
-Feedback-Formular flackernd und dauerhaft bei „Lädt…" hängend. Ursache: ein
-fehlgeschlagener Ladeversuch löste sich selbst sofort wieder aus (Endlos-
-schleife), zerstörte dabei bei jedem Anlauf die fokussierten Eingabefelder
-— das war das Flackern. Behoben: kein automatischer Wiederholungsversuch
-mehr nach einem Fehlschlag, stattdessen ein „Erneut versuchen"-Knopf.
-Nebenfund beim Gegenlesen: „Vorschlag einreichen" ließ sich während des
-Speicherns doppelt antippen, jetzt gesperrt. Dazu eine erste Sicherheits-
-durchsicht auf Betreiber-Auftrag („wie ein Hacker") — `firestore.rules`,
-Mailto-Formular (Injektion), Auth-E-Mails (Open-Redirect), `esc()`-
-Abdeckung geprüft, keine neuen Funde. Details:
-[`feedback-board/LOGBUCH.md`](feedback-board/LOGBUCH.md).
-
-**Bei „leg los" zuerst prüfen: hat der Betreiber `firestore.rules`
-mittlerweile deployt (das würde den eigentlichen Ladefehler beheben, nicht
-nur die Endlosschleife drumherum), und hat er sich zu Onboarding vs.
-Landing-Page geäußert?** Die Sicherheitsdurchsicht ist nicht erschöpfend —
-bei Gelegenheit fortsetzen, wenn der Betreiber das ausdrücklich will.
+**Bei „leg los" zuerst prüfen: hat der Betreiber getestet, ob „Erneut
+versuchen" nach 9s tatsächlich erscheint und einen neuen Versuch auslöst,
+und hat er sich zu Onboarding vs. Landing-Page geäußert?** Die
+Sicherheitsdurchsicht ist nicht erschöpfend — bei Gelegenheit fortsetzen,
+wenn der Betreiber das ausdrücklich will.
 
 **Vorheriger Stand (23.09.2026, spätnachts): Schwebende Leisten farblich vereinheitlicht
 (v3.8.7), App-Vollständigkeits-/Wachstums-Checkliste angelegt.** Betreiber-

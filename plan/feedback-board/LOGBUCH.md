@@ -4,6 +4,80 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 — Zweiter Ladehänger: Zeitlimit + Erneut-versuchen-Knopf bei echtem Netz-Hänger (v3.9.2)
+
+**Anlass:** Neue Betreiber-Meldung mit Screenshot, direkt im Anschluss an den
+Fix von v3.9.1 (siehe Eintrag darunter). Wortlaut: „habe auf einem anderen
+Account bereits einen Vorschlag gepostet, auf diesem Account lädt aber
+alles" — plus der Auftrag, Ladefähigkeiten im gesamten Werkzeug an allen
+Stellen mit gleich aufweisenden Mängeln zu verbessern. Der Screenshot zeigt
+exakt dasselbe Bild wie beim vorigen Fund: „Ideen & Vorschläge", darunter
+dauerhaft „Lädt…", keine Fehlermeldung.
+
+**Warum der v3.9.1-Fix das nicht abdeckt:** Der vorige Fix beendete die
+Endlosschleife für den Fall „Abfrage schlägt fehl" (z. B. Regel noch nicht
+deployt) — danach steht die Fehlermeldung mit „Erneut versuchen". Hier aber
+lag laut Meldung schon ein erfolgreich eingereichter Vorschlag auf einem
+anderen Konto vor — die Regeln sind also erreichbar. Der einzige verbleibende
+Fall, der zu dauerhaftem „Lädt…" ohne jede Fehlermeldung führt: das
+`getDocs()`-Versprechen löst **nie** auf und lehnt **nie** ab (echter
+Netz-Hänger, nicht dasselbe wie ein schneller Fehler). Ohne Zeitlimit wartet
+`feedbackLaden()` darauf für immer — `feedbackLaedt` bleibt `true`,
+`feedbackFehler` bleibt `null`, die Bedingung für „Lädt…" bleibt für immer
+wahr.
+
+**Geändert:** `app.js` — drei neue Zustände `feedbackLadeTimer`,
+`feedbackLadeLangsam`, `feedbackLadeToken` (Deklaration bei den übrigen
+Feedback-Variablen, Reset in `onAuthStateChanged`); `feedbackLaden()` startet
+jetzt denselben 9-Sekunden-Zeitgeber wie der Start-Ladebildschirm
+(`render()`, `ladeTimer`/`ladeLangsam` seit 2.21.1) und lässt sich nicht mehr
+über `if (feedbackLaedt) return` blockieren — jeder Aufruf ist ein neuer,
+per `feedbackLadeToken` eindeutig nummerierter Versuch, ein spät doch noch
+eintreffendes Ergebnis eines aufgegebenen Versuchs wird am Token erkannt und
+verworfen; `renderFeedbackSeite()` zeigt nach 9s „Das dauert länger als
+sonst" mit demselben „Erneut versuchen"-Knopf wie im Fehlerfall.
+
+**Entscheidung — warum ein Token statt eines einfachen erneuten Guards:**
+Ein zweiter Versuch über den neuen „Erneut versuchen"-Knopf im
+Langsam-Zustand muss den alten, hängenden Versuch praktisch aufgeben können
+— ein Promise lässt sich in JavaScript nicht abbrechen, es kann aber
+irgendwann doch noch auflösen. Ohne Kennzeichnung hätte ein sehr spät
+eintreffendes Ergebnis des ersten (aufgegebenen) Versuchs einen inzwischen
+neueren, vielleicht schon erfolgreichen Stand wieder überschrieben. Die
+laufende Nummer macht jeden Versuch einzeln erkennbar; nur der jeweils
+neueste darf den Zustand noch verändern.
+
+**Sicherheitsdurchsicht der übrigen Ladeflüsse (Auftrag „Ladefähigkeiten im
+gesamten Tool"):** Durchsucht nach jeder Stelle, die auf eine Firestore-
+Antwort wartet, ohne dabei entweder (a) über eine blockierende Abfrage
+(`dlgPrompt`/`dlgConfirm`/`dlgAlert`) zu laufen, die einen Fehler sofort
+meldet, oder (b) bereits ein eigenes Zeitlimit zu haben. Ergebnis: Der
+Start-Ladebildschirm (`render()`, Zeile ~4732) hatte das Zeitlimit bereits
+seit 2.21.1. Anmelden/Registrieren/Zurücksetzen (`ui.authBusy`) und die
+Code-Einlöse-Wege für geteilte Lektionen (`codeEinloesen`,
+`lehrerStandAktualisieren`) laufen alle über `try`/`catch` mit sofortiger
+Fehlermeldung per `dlgAlert` — dort kann ein Hänger zwar die Wartezeit ohne
+Rückmeldung verlängern, aber (anders als hier) keine dauerhafte,
+irreführende „Lädt…"-Anzeige erzeugen, die den Eindruck von Stillstand ohne
+jeden Ausweg macht. Das Feedback-Board war die einzige Stelle mit exakt
+diesem Muster (eigene Lade-Anzeige statt blockierendem Dialog, kein
+Zeitlimit). Kein weiterer Fund.
+
+**Geprüft:** `node --check app.js` sauber. Nicht am echten Gerät/Konto
+geprüft (kein Login in dieser Arbeitsumgebung möglich) — Code-Review gegen
+das bestehende, bereits bewährte Muster des Start-Ladebildschirms.
+
+**Offen:** Ob der ursprüngliche, in v3.9.1 vermerkte Deploy-Schritt
+(`firestore.rules` für „feedback") inzwischen erledigt ist, ist von hier aus
+nicht prüfbar — laut der neuen Meldung hat mindestens ein Konto erfolgreich
+eingereicht, was dafür spricht. Der jetzt behobene Zustand (dauerhaftes
+„Lädt…" ohne jede Fehlermeldung) war in jedem Fall unabhängig davon
+reproduzierbar.
+
+**Nächster Schritt:** Betreiber-Rückmeldung abwarten, ob „Erneut versuchen"
+nach 9s tatsächlich erscheint und einen neuen Versuch auslöst, statt weiter
+nur „Lädt…" zu zeigen.
+
 ### 2026-09-23 — Endlosschleife beim Laden gefunden und behoben, Doppel-Einreichen verhindert (v3.9.1)
 
 **Anlass:** Betreiber-Meldung mit Screenshot: das Formular unter „Ideen &
