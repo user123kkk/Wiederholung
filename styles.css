@@ -2685,6 +2685,8 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .einstieg .hint { padding-top: 0; }
 .einstieg-aktion { margin-top: var(--space-6); }
 .einstieg-neben { margin-top: var(--space-4); }
+/* Trefferflaeche wie der Rest (Satz 3): .linklike ist sonst nur 36 px hoch. */
+.einstieg-neben .linklike { min-height: var(--tap); }
 .einstieg-nachsatz { margin-top: var(--space-3); }
 
 /* ---- Kopf: Zurück + Fortschritt ---------------------------------------- */
@@ -2692,7 +2694,9 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   display: flex; align-items: center; gap: var(--space-2);
   margin: calc(-1 * var(--space-5)) 0 var(--space-6);
 }
-.einstieg-kopf__zurueck {
+/* Zwei Klassen, nicht eine: button.ghost (Abschnitt 6) setzt min-height auf
+   --ctrl-sm und gewaenne sonst - gemessen 36 px statt 44. */
+.einstieg-kopf .einstieg-kopf__zurueck {
   flex: 0 0 auto;
   width: var(--tap); min-height: var(--tap);
   padding: 0;
@@ -2747,9 +2751,11 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 .einstieg-option__text { flex: 1 1 auto; }
+/* --text-2, nicht --text-3: --text-3 ist auf --bg auf AA gerechnet (Phase 9),
+   faellt auf der helleren Flaeche aber auf 4,45:1 (gemessen) - knapp darunter. */
 .einstieg-option__rechts {
   flex: 0 0 auto;
-  color: var(--text-3);
+  color: var(--text-2);
   font-size: var(--fs-sm); font-weight: 500;
 }
 .einstieg-option__haken {
@@ -3000,7 +3006,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   background: var(--sheen), var(--surface);
   border: 1px solid var(--border-subtle);
 }
-.einstieg-kachel__titel { display: block; font-size: var(--fs-xs); color: var(--text-3); }
+.einstieg-kachel__titel { display: block; font-size: var(--fs-xs); color: var(--text-2); }
 .einstieg-kachel__wert {
   display: block; margin-top: 2px;
   font-size: var(--fs-md); font-weight: 600; line-height: 1.35;

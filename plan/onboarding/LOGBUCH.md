@@ -4,6 +4,70 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-23 (dieselbe Session, abends) — Fehlersuche nach dem Neubau (v3.10.1)
+
+**Geändert:**
+- `app.js`:
+  - Doppeltipp-Sperre in `einstieg-weiter` und `einstieg-zurueck` (Feld `zeit`
+    im Einstiegs-Zustand, gesetzt in `renderEinstieg()`)
+  - `ui.authAusEinstieg` wird beim Anmelden zurückgesetzt
+    (`onAuthStateChanged`)
+- `styles.css` Abschnitt 16b: Zurück-Knopf und „Überspringen“ auf 44 px, zwei
+  Beschriftungen von `--text-3` auf `--text-2`
+- `index.html`, `sw.js`, `CHANGELOG.md`: Versionsliste vollständig auf 3.10.1.
+  `APP_SHELL` unverändert, keine neue Startdatei.
+
+**Anlass, wörtlich:** „überprüfe nach fehlern“.
+
+**Gemessen, nicht vermutet** (lokaler Server, 320 px, hell und dunkel):
+1. **Doppeltipp** auf „Weiter“ ging von „Ziel“ direkt zur Probekarte. Der
+   Hürden-Bildschirm fiel weg. Der Fehler bestand schon seit 3.9.9. Nach der
+   Sperre bleibt der zweite Tipp wirkungslos; nach 400 ms geht es normal
+   weiter.
+2. **Trefferflächen:** Zurück-Knopf 36 px (`button.ghost` gewinnt gegen die
+   eigene Klasse), „Überspringen“ und „Ich habe schon ein Konto“ 36 px
+   (`.linklike`). Alle drei jetzt 44 px.
+3. **Kontrast:** `--text-3` auf der helleren Fläche gemessen 4,45:1 statt
+   4,5:1. Betraf die Zusatzangabe rechts in den Runden-Zeilen und die Titel der
+   Plan-Kacheln.
+4. **„Plan speichern“ blieb für die Sitzung stehen.** Zurückgesetzt, sobald
+   jemand angemeldet ist.
+
+**Geprüft und in Ordnung:**
+- Zufallstest mit 350 Klicks auf alle Einstiegs-Knöpfe: alle 8 Bildschirme
+  besucht, kein Verstoß gegen `aria-pressed`↔Markierung, Überlauf, Anzahl der
+  Überschriften oder das freie Feld; keine Exceptions.
+- XSS: Ein Text mit `<img onerror>`, `<script>` und Anführungszeichen im
+  freien Feld erscheint auf Anker-, Plan- und Konto-Bildschirm nur als
+  Klartext; kein Element entsteht, `window.__xss` bleibt 0.
+- Aussagen der App gegen den Code: „Nicht → kommt in dieser Runde gleich noch
+  einmal“ (`queue.push`), „Fast → morgen“ (`dateInDays(1)`), Abstände
+  1/2/3/6/10/19 (`intervalForStufe`), Serie mit einem Ausfalltag
+  (`serieAktuell`), Reihenfolge „zuerst Wiederholungen, dann Neues“
+  (`dueCardsFor`). Alles stimmt.
+
+**Neu gefunden, NICHT behoben (liegt außerhalb des Einstiegs):**
+`themaAnwenden()` läuft in `app.js` (Zeile ~1230) beim Laden des Moduls mit den
+Grundeinstellungen und schreibt „dunkel“ in `data-thema` **und** in
+`localStorage["adrabic-thema"]`, bevor Cloud-Daten da sind. Gemessen: gespeichert
+„hell“, nach dem Laden „dunkel“/„dunkel“. Folge für Nutzer:innen mit hellem
+Thema: Die Seite beginnt hell (Kopfskript in `index.html`), springt beim Start
+auf dunkel und nach dem Cloud-Dokument (Zeile ~1793) zurück auf hell. Ohne
+Netz bleibt sie dunkel, und die lokale Wahl ist überschrieben. Das ist die
+wahrscheinlichere Ursache für den „kurzen Flash“, den 3.9.12 nur dem
+blockierten Kopfskript zuschrieb. Ein Fix wäre klein (die gespeicherte Wahl vor
+dem ersten `themaAnwenden()` in `settings.thema` lesen), berührt aber den
+Start aller Konten und ist ohne echtes Firebase-Konto nicht zu prüfen.
+Deshalb nur festgehalten. Betreiber entscheidet.
+
+**Nicht geprüft:** echtes Konto und Firebase; `prefers-reduced-motion` (nur per
+CSS-Regel abgesichert); das echte Gerät.
+
+**Nächster Schritt:** Der Betreiber führt `veroeffentlichen.bat` aus. Offen
+sind weiter Gerätetest, J1 und der Wortlaut „Den Quran verstehen“.
+
+---
+
 ### 2026-09-23 (dieselbe Session, später) — Video 3 ausgewertet, Einstieg neu gebaut (v3.10.0)
 
 **Geändert:**

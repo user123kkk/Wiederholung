@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.10.0";
+const APP_VERSION = "3.10.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1742,6 +1742,10 @@ async function initFirebase() {
     ui.umzug = null;
     ui.einstellungen = false;
     if (user) {
+      /* "Plan speichern" gilt nur fuer das Formular direkt nach dem Einstieg.
+         Wer sich spaeter in derselben Sitzung abmeldet und ein Konto anlegt,
+         soll wieder "Konto anlegen" lesen. */
+      ui.authAusEinstieg = false;
       displayName = user.displayName || (user.email ? user.email.split("@")[0] : "Lernende:r");
       userDocRef = fb.doc(db, "users", user.uid);
       bereicheColRef = fb.collection(userDocRef, "bereiche");
@@ -5238,6 +5242,7 @@ function renderEinstieg() {
   const neu = e.gezeigt !== e.schritt;
   const richtung = e.gezeigt === -1 ? "start" : (e.richtung === "zurueck" ? "zurueck" : "vor");
   e.gezeigt = e.schritt;
+  if (neu) e.zeit = Date.now();
 
   let html = '<div class="solo einstieg-solo">';
   html += e.schritt === 0 ? soloMarke(null) : einstiegKopf(e);
@@ -5444,7 +5449,7 @@ function render() {
      ist renderAuth() selbst. Reihenfolge und Begruendung: BESTAND.md 1. */
   if (currentUser === null && ui.einstieg === null && !einstiegGesehen()) {
     ui.einstieg = { schritt: 0, aufgedeckt: false, bewertet: null, ziele: [], huerden: [],
-      anker: null, ankerFrei: "", gezeigt: -1, richtung: "vor", balkenVorher: 0 };
+      anker: null, ankerFrei: "", gezeigt: -1, richtung: "vor", balkenVorher: 0, zeit: 0 };
   }
   if (currentUser === null && ui.einstieg) { renderEinstieg(); return; }
   if (currentUser === null) { renderAuth(); return; }
@@ -9760,8 +9765,12 @@ document.body.addEventListener("click", e => {
     /* ---- Einstieg vor der Anmeldung (3.9.9, neu aufgebaut 3.10.0) ----
        Alle Handlungen laufen ueber denselben delegierten Listener wie der
        Rest der App (README.md: EIN Klick-Listener ueber data-action). */
+    /* Doppeltipp-Sperre: Ein zweiter Tipp binnen 400 ms trifft schon den NAECHSTEN
+       Bildschirm und ueberspringt ihn. Nachgestellt: zwei schnelle Klicks auf
+       "Weiter" gingen von "Ziel" direkt zur Probekarte, die Huerden fielen
+       weg. Gesperrt ist nur das Weitergehen, nicht das Antworten. */
     case "einstieg-weiter":
-      if (ui.einstieg) {
+      if (ui.einstieg && Date.now() - ui.einstieg.zeit >= 400) {
         einstiegSchrittSichern(ui.einstieg);
         ui.einstieg.richtung = "vor";
         ui.einstieg.schritt = Math.min(EINSTIEG_LETZTER, ui.einstieg.schritt + 1);
@@ -9770,7 +9779,7 @@ document.body.addEventListener("click", e => {
       }
       break;
     case "einstieg-zurueck":
-      if (ui.einstieg) {
+      if (ui.einstieg && Date.now() - ui.einstieg.zeit >= 400) {
         ui.einstieg.richtung = "zurueck";
         ui.einstieg.schritt = Math.max(0, ui.einstieg.schritt - 1);
         window.scrollTo(0, 0);

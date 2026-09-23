@@ -684,7 +684,14 @@ Festgelegt vom Betreiber am 12.09.2026:
 ## Wo eine neue Session anfängt
 
 **AKTUELL (23.09.2026, abends): Einstieg nach Video 3 neu gebaut (v3.10.0),
-auf `main`, noch nicht ausgeliefert.**
+Fehlersuche danach (v3.10.1), auf `main`, noch nicht ausgeliefert.**
+
+Die Fehlersuche fand vier Fehler im Einstieg (Doppeltipp übersprang einen
+Bildschirm, zu kleine Trefferflächen, Kontrast 4,45:1, „Plan speichern“ blieb
+stehen); alle behoben. **Ein Fehler außerhalb des Einstiegs ist nur
+festgehalten:** Das helle Thema wird beim Start kurz auf dunkel gesetzt
+(`themaAnwenden()`, `app.js` ~1230). Der Betreiber entscheidet über den Fix,
+Einzelheiten im Logbuch von `onboarding/`.
 
 Der Betreiber sagte: „onboarding ist schlechter als erwartet … du hast die
 videos anscheinend nicht verstanden". Darauf folgte Video 3 (Rok Bozic:

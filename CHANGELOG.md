@@ -1,3 +1,26 @@
+## 3.10.1 - 23. September 2026
+
+**Fehlersuche nach dem Neubau des Einstiegs (3.10.0).** Vier gemessene Fehler
+behoben, alle im Einstieg:
+
+- **Doppeltipp übersprang einen Bildschirm.** Zwei schnelle Tipps auf „Weiter“
+  gingen von „Ziel“ direkt zur Probekarte, die Hürden fielen weg. Weitergehen
+  und Zurückgehen sind jetzt 400 ms nach jedem Bildschirmwechsel gesperrt.
+  Antworten bleibt jederzeit möglich. Der Fehler bestand schon seit 3.9.9.
+- **Zurück-Knopf und „Überspringen“ waren nur 36 px hoch** statt der 44 px, die
+  die App sonst für Trefferflächen verlangt. Der Zurück-Knopf verlor gegen
+  `button.ghost`, das „Überspringen“ ist ein `.linklike` mit fester Höhe.
+- **Zwei Beschriftungen knapp unter dem Kontrast von 4,5:1** (gemessen 4,45:1):
+  die Zusatzangabe rechts in den Zeilen der Runden-Größe und die Titel der vier
+  Plan-Kacheln. `--text-3` ist auf dem Hintergrund gerechnet, nicht auf der
+  helleren Fläche; beide nehmen jetzt `--text-2`.
+- **„Plan speichern“ blieb für den Rest der Sitzung stehen.** Wer sich später in
+  derselben Sitzung abmeldete und ein Konto anlegte, las weiter „Plan
+  speichern“. Es gilt jetzt nur bis zur ersten Anmeldung.
+
+Nachgemessen bei 320 px, hell und dunkel: kein waagerechter Überlauf, kein
+Element außerhalb des Bildschirms, keine Konsolenfehler.
+
 ## 3.10.0 - 23. September 2026
 
 **Der Einstieg vor der Anmeldung ist neu gebaut.** Er folgt dem dritten
