@@ -472,6 +472,19 @@ das Over-Scrolling weiterhin auftritt oder sich etwas anderes verschiebt
 rückgängig machbar (dieser eine Commit), kein Rückbau an mehreren Stellen
 nötig.
 
+**23.09.2026 — noch einmal durchgesehen (Betreiber-Freigabe „mach einfach"),
+kein weiterer Fund, kein Code geändert.** Gezielt nach verbliebenen
+`100vh`/`100dvh`-Stellen gesucht (keine außer dem gewollten `100vh`-Fallback
+vor `100svh` in `body`, für Browser ohne `svh`-Unterstützung) und geprüft, ob
+`--vv-gap` (Beobachtung 18, `syncViewportGap()`) irgendwo die Seitenhöhe statt
+nur die Nav-Position beeinflusst — tut es nicht, einzige Verwendung ist
+`.nav { bottom: ... }`. Der bestehende `svh`-Fix deckt den beschriebenen
+Mechanismus damit vollständig ab, soweit sich das ohne echtes Gerät mit
+ein-/ausklappender Werkzeugleiste beurteilen lässt. Ein weiterer Eingriff
+ohne Testmöglichkeit wäre wieder nur eine Vermutung ohne neue Grundlage —
+anders als bei Beobachtung 16, wo sich der Fehler ohne Gerät nachstellen
+ließ, aber hier nicht.
+
 ## 14. Scroll-Position wird zwischen Bereichen nicht zurückgesetzt — ✅ behoben (v3.0.36)
 
 **Beobachtung:** Wenn man in einem Bereich (z. B. Medina im Verwalten) nach
@@ -501,7 +514,7 @@ Hängt zusammen mit **Punkt 3 (Zurück zur Scroll-Position nach dem Bearbeiten)*
 entschieden werden, da 3 um eine bewusste Erhaltung nach einem Modal/Dialog
 geht, während 14 um ein unerwartetes Verhalten bei einfachem Navigation geht.
 
-## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — ⏸ Ursache weiterhin ungeklärt, drei Abmilderungen versucht (v3.0.41–43, 51)
+## 16. Browser-Zurück von externen Seiten (Datenschutzerklärung, Impressum) zur App wirft Fehler oder zeigt alte Modal — 🔧 echter Defekt in der Wiederholungslogik gefunden und behoben (v3.9.4), Gesamtursache weiterhin nicht am Gerät bestätigt
 
 **Beobachtung:** Navigation zwischen App und statischen Seiten ist fehlerhaft:
 - Von der App (z.B. Fehlerformular in Einstellungen) zur externen Seite
@@ -646,6 +659,47 @@ Zurück-Navigation, die auch eine vorbereitete Verbindung nicht umgeht).
 **Weiterhin ausdrücklich unbestätigt**, wie bei Beobachtung 13 - kein
 Gerätetest in dieser Umgebung möglich. Trivial rückgängig zu machen (ein
 `<link>`-Paar), keine Logik geändert.
+
+**23.09.2026 (v3.9.4) — erstmals ein nachgewiesener, kein vermuteter Fehler,
+auf ausdrückliche Betreiber-Freigabe („mach A", dann „mach einfach" auf
+Rückfrage zu den beiden noch offenen Punkten).** `importMitVersuch()`
+(`app.js`, seit v3.0.43 für alle drei Firebase-Bausteine im Einsatz) sollte
+einen fehlgeschlagenen `import()` bis zu dreimal mit derselben URL
+wiederholen. Mit Playwright gegen einen lokalen Server nachgestellt, der die
+erste Anfrage kappt und danach normal antwortet: **Chromium cacht eine
+fehlgeschlagene Modul-Auflösung fest an die exakte URL** — jeder weitere
+`import()` derselben Zeichenkette lehnt sofort ab, ohne überhaupt eine neue
+Netzwerkanfrage zu stellen (im Test durch Mitzählen der tatsächlich beim
+Server ankommenden Anfragen belegt: nur 1, trotz dreifacher Schleife). Die
+„drei Versuche" waren dadurch seit ihrer Einführung **faktisch nie mehr als
+einer** — ein kurzer, erholbarer Netzwerk-Aussetzer (genau das seit 15.09.
+vermutete Szenario) bekam nie eine echte zweite Chance, egal wie oft die
+Schleife lief.
+
+**Fix:** Ab dem zweiten Versuch trägt die URL einen zählenden Anhang
+(`?wiederholung=2`, `?wiederholung=3`) — für den Modul-Cache des Browsers
+eine neue, unbekannte Adresse, für `gstatic.com` (per CSP nur nach Ursprung
+erlaubt, kein fester Pfad) dieselbe Datei. Mit demselben Testaufbau
+bestätigt: danach 2 echte Netzwerkversuche statt 1, der zweite gelingt.
+Zusätzlich End-zu-Ende gegen die echte `app.js`/`initFirebase()` geprüft: ein
+einmalig gekappter Ladeversuch für `firebase-auth.js` führt jetzt zum
+normalen Anmeldebildschirm statt zum Fehlerbildschirm.
+
+**Ehrlich eingeordnet:** Dies ist ein echter, jetzt behobener Defekt in der
+Wiederholungslogik selbst — er erklärt plausibel, warum die bisherigen
+Verdachtsfixe (Preconnect, mehr Selbstheilungsversuche) die Meldung nicht
+zuverlässig zum Verschwinden brachten, denn die eigentliche
+Erholungs-Chance hat nie funktioniert. Ob er die **einzige** Ursache der am
+16.09. gemeldeten Fehlermeldung war, oder ob nach einer Zurück-Navigation
+noch ein zweiter Faktor mitspielt, lässt sich ohne echten Gerätetest nicht
+abschließend sagen — dafür bleibt die bestehende Selbstheilung (kompletter
+Neuladen, max. 2 automatische Versuche) als weiteres Sicherheitsnetz
+unverändert bestehen.
+
+**Nächster Schritt:** Betreiber-Test am Gerät — gezielt „Impressum" öffnen,
+Browser-Zurück, mehrfach wiederholen. Tritt der Fehler weiterhin auf, wäre
+das ein starkes Signal für einen zweiten, noch unbekannten Faktor (dann bitte
+den Diagnose-Text aus dem Fehlerbildschirm mitschicken, siehe v3.0.43).
 
 ## 15. Viewport-Verschiebung beim Scrollen und beim Registrieren — ✅ behoben (v3.0.37)
 

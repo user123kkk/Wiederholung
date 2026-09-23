@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.9.3";
+const APP_VERSION = "3.9.4";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1495,11 +1495,27 @@ function sammlungenStarten() {
    Funktion denselben einzelnen Abruf erst noch zweimal, mit kurzer Pause,
    an genau der Stelle, an der er fehlschlug. Deutlich billiger und
    schneller als ein Reload, und trifft die Ursache direkter, falls es
-   wirklich nur ein kurzer Haenger war. */
+   wirklich nur ein kurzer Haenger war.
+
+   23.09.2026: Echter, mit Playwright nachgewiesener Fehler in genau dieser
+   Wiederholung gefunden - sie hat nie funktioniert. import() derselben URL
+   cacht eine fehlgeschlagene Aufloesung im Modul-Register des Browsers:
+   Schlaegt der erste Abruf fehl, lehnt jeder weitere import() derselben
+   Zeichenkette sofort ab, OHNE ueberhaupt eine neue Netzwerkanfrage zu
+   stellen (nachgestellt gegen einen lokalen Server: der Anfrage-Mitschnitt
+   zeigte nur EINEN echten Request, obwohl die Schleife dreimal lief).
+   Die "drei Versuche" waren dadurch faktisch nie mehr als einer - beim
+   zweiten und dritten Mal gab es nichts mehr zu wiederholen, das Netz hatte
+   gar keine Chance, sich erholt zu haben. Mit dem angehaengten Zaehler an
+   jedem weiteren Versuch ist es fuer den Modul-Cache eine neue, ihm
+   unbekannte URL, und derselbe Test zeigt dann tatsaechlich einen zweiten
+   Request. */
 async function importMitVersuch(url, versuche, wartenMs) {
   for (let i = 1; i <= versuche; i++) {
-    try { return await import(url); }
-    catch (e) {
+    try {
+      const frischeUrl = i === 1 ? url : url + (url.includes("?") ? "&" : "?") + "wiederholung=" + i;
+      return await import(frischeUrl);
+    } catch (e) {
       if (i === versuche) throw e;
       await new Promise(r => setTimeout(r, wartenMs));
     }

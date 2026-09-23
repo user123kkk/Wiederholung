@@ -4,6 +4,81 @@ Letzter Eintrag zuerst.
 
 ---
 
+### 2026-09-23 — Beobachtung 16 (Firebase-Fehler nach Browser-Zurück): echter Defekt gefunden und behoben (v3.9.4); Beobachtung 13 erneut durchgesehen
+
+**Anlass:** Rückfrage des Betreibers, ob Kategorie A wirklich komplett ist,
+dann ausdrücklich „ich gebe dir Erlaubnis alles zu machen" für die letzten
+zwei offenen Punkte (13, 16) — beide vorher bewusst nicht weiter angefasst,
+weil frühere Verdachtsfixe (v3.0.41–43/50/51) unbestätigt blieben und ein
+weiterer blinder Versuch ohne Gerät wieder nur geraten gewesen wäre. Mit der
+Freigabe: nicht raten, sondern zuerst mit den hier verfügbaren Werkzeugen
+(Playwright, lokaler Server) nachprüfen, ob sich der Mechanismus überhaupt
+nachstellen lässt, bevor irgendwas geändert wird.
+
+**Beobachtung 16 — Nachstellbar, echter Fehler gefunden.** `importMitVersuch()`
+(`app.js`, Zeile ~1499) wiederholt einen fehlgeschlagenen `import()` bis zu
+dreimal mit **derselben** URL. Mit einem lokalen Server nachgestellt, der die
+erste Anfrage kappt (`route.abort`) und danach normal antwortet, und dabei
+die tatsächlich beim Server ankommenden Anfragen mitgezählt: **nur eine**
+einzige echte Netzwerkanfrage lief, obwohl die Schleife dreimal durchlief —
+Chromium cacht eine fehlgeschlagene Modul-Auflösung fest an die exakte URL,
+jeder weitere `import()` derselben Zeichenkette lehnt sofort ab, ohne den
+Server je wieder zu kontaktieren. Das erklärt plausibel, warum frühere
+Mitigationen (mehr Selbstheilungsversuche, Preconnect) nichts halfen: Die
+eigentliche Erholungs-Chance in `importMitVersuch()` hat seit ihrer
+Einführung (v3.0.43) nie funktioniert.
+
+**Geändert:** `app.js`, `importMitVersuch()` — ab dem zweiten Versuch trägt
+die URL einen zählenden Anhang (`?wiederholung=2`, `?wiederholung=3`). Für
+den Modul-Cache des Browsers eine neue, unbekannte Adresse (neue echte
+Anfrage), für `gstatic.com` dieselbe Datei (CSP erlaubt den Ursprung ohne
+Pfadeinschränkung, `firebase.json`). Erster Versuch bleibt unverändert ohne
+Anhang.
+
+**Geprüft:** Mit demselben Testaufbau (lokaler Server, erste Anfrage gekappt)
+bestätigt: vorher 1 echte Netzwerkanfrage trotz dreifacher Schleife, danach
+2 (die zweite kommt durch). Zusätzlich End-zu-Ende gegen die echte
+`app.js`/`initFirebase()` mit der Firebase-Attrappe: ein einmalig gekappter
+Ladeversuch für `firebase-auth.js` führt jetzt zum normalen
+Anmeldebildschirm statt zum Fehlerbildschirm (`Start fehlgeschlagen`).
+
+**Entscheidung/Einordnung:** Dies ist ein echter, jetzt behobener Defekt in
+der Wiederholungslogik — kein Verdachtsfix wie die vorigen drei Runden.
+Trotzdem ehrlich offen: ob er die **einzige** Ursache der am 16.09.
+gemeldeten Fehlermeldung nach Browser-Zurück war, lässt sich ohne echten
+Gerätetest nicht sicher sagen — es könnte ein zweiter, hier nicht
+nachstellbarer Faktor mitspielen (z. B. echtes Verhalten der
+Zurück-Navigation auf einem Telefon). Die Selbstheilung (kompletter
+Neuladen, max. 2 automatische Versuche) bleibt unverändert als zusätzliches
+Sicherheitsnetz bestehen.
+
+**Beobachtung 13 (Über-Scrolling) — noch einmal durchgesehen, nicht
+nachstellbar, kein Code geändert.** Anders als bei 16 gibt es hier keinen
+Mechanismus, der sich ohne ein echtes mobiles Betriebssystem mit ein-/
+ausklappender Adressleiste nachstellen lässt — ein Headless-Chromium hat
+keine solche Leiste. Stattdessen den bestehenden `svh`-Fix (v3.0.50) noch
+einmal gegen den aktuellen Code geprüft: keine verbliebene `100vh`/`100dvh`-
+Stelle außer dem gewollten Fallback vor `100svh` in `body`; `--vv-gap`
+(Beobachtung 18) wirkt nachweislich nur auf `.nav { bottom }`, nicht auf
+irgendeine Container-Höhe. Der bestehende Fix deckt den beschriebenen
+Mechanismus damit vollständig ab, soweit das ohne Gerät beurteilbar ist —
+kein Ansatzpunkt für eine weitere, begründete Änderung gefunden.
+
+**Veröffentlichungsliste:** `APP_VERSION`/`CACHE_NAME` auf 3.9.4,
+`CHANGELOG.md` ergänzt. Keine neuen Startdateien.
+
+**Offen:** Beide Punkte brauchen für eine wirkliche Bestätigung einen echten
+Gerätetest (Beobachtung 16: gezielt Browser-Zurück von einer externen Seite
+wiederholt auslösen; Beobachtung 13: Scrollen mit ein-/ausklappender
+Werkzeugleiste beobachten).
+
+**Nächster Schritt:** Betreiber-Test am Gerät für beide Punkte. Damit ist
+Kategorie A aus `beobachtungen-lernwerkzeug.md` vollständig durchgearbeitet —
+jeder Punkt gebaut, geprüft-erledigt, oder mit Begründung als ohne
+Gerätetest nicht weiter belegbar dokumentiert.
+
+---
+
 ### 2026-09-23 — Punkt 19/13 (Renderkosten Verwalten-Liste) nachgemessen: bereits erledigt, keine Virtualisierung gebaut
 
 **Anlass:** Rückfrage des Betreibers, ob Kategorie A wirklich vollständig

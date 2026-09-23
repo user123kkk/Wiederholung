@@ -179,9 +179,20 @@ wirklich vollständig bearbeitet ist, dann „mach einfach":** Punkt 19/13
 Seitenteilung aus v3.6.9 erledigt (1445 DOM-Elemente unverändert bei 200 wie
 bei 5000 Karten), **keine Virtualisierung gebaut**, kein Code geändert.
 Details und Messwerte: `redesign-oberflaeche/AUFTRAG.md`,
-`redesign-oberflaeche/LOGBUCH.md`. Weiterhin offen, unverändert: Punkt 13
-(Über-Scrolling), Punkt 16 (Firebase-Fehler nach Browser-Zurück) — beide ohne
-Gerätetest nicht weiter belegbar, siehe `beobachtungen-lernwerkzeug.md`.
+`redesign-oberflaeche/LOGBUCH.md`. **Erneute Freigabe „ich gebe dir Erlaubnis
+alles zu machen" für die letzten zwei Punkte, dann (v3.9.4):** Punkt 16
+(Firebase-Fehler nach Browser-Zurück) hatte einen echten, mit Playwright
+bewiesenen Defekt in `importMitVersuch()` — Chromium cacht einen
+fehlgeschlagenen `import()` an die exakte URL, die „drei Versuche" waren
+dadurch faktisch nie mehr als einer. Behoben (zählender URL-Anhang ab dem
+zweiten Versuch), End-zu-Ende gegen die echte `initFirebase()` bestätigt.
+Ob das die einzige Ursache der ursprünglichen Meldung war, bleibt ohne
+Gerätetest offen. Punkt 13 (Über-Scrolling) noch einmal durchgesehen —
+kein weiterer Fund, der bestehende `svh`-Fix deckt den Mechanismus bereits
+vollständig ab, kein Code geändert. Details: `beobachtungen-lernwerkzeug.md`
+Punkt 13/16, `CHANGELOG.md` 3.9.4. **Kategorie A ist damit vollständig
+durchgearbeitet** — jeder Punkt gebaut, geprüft-erledigt, oder mit
+Begründung als ohne Gerätetest nicht weiter belegbar dokumentiert.
 Details: `CHANGELOG.md` 3.9.3.
 
 ### Nebenstrang: Monetarisierung & Wachstum (Gerüst)
