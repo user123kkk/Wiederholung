@@ -4,6 +4,19 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-23 — F4 entschieden, E3 freigegeben, kompletter Wortlaut geschrieben
+
+**Geändert:** neu `plan/onboarding/WORTLAUT.md`; `plan/onboarding/FRAGENKATALOG.md` (§9 F4 nachgezogen); `plan/onboarding/AUFTRAG.md` (E3, E4); `plan/PLAN.md`. Kein App-Code.
+**Anlass, wörtlich:** „f4 alles klar, es soll passen, weis ned, dürftest von mir aus sowas wie nach fajr oder so idc, man kann ja schlecht 20 auswahlen haben." · „e3 ich gebe frei, sachen die einem talab al ilm gehören eben."
+**Entscheidung — die religiöse Sperre ist an einer Stelle geöffnet, nicht aufgehoben.** Der Betreiber erlaubt Gebetszeiten als Anker und gibt den Wortlaut frei. Der Agent schreibt daraufhin die Bildschirmtexte, hält aber die Grenze, wo sie war: **keine Zitate, kein Vers, kein Hadith, keine Duʿāʾ, keine Formel, kein Satz über den religiösen Wert des Lernens, keine Ermahnung.** Die Gebetsnamen stehen als **Tageszeiten**, nicht als religiöse Aussage. Die Freigabe ist in `WORTLAUT.md` §0 wörtlich zitiert, damit spätere Sessions sehen, worauf sie sich stützt, und sie nicht auf andere Stellen ausdehnen.
+**Ankerliste (F4):** fünf feste Anker plus freies Feld — nach Fajr · nach Dhuhr · nach ʿAsr · nach ʿIshāʾ · wenn ich heimkomme · eigene Situation. Obergrenze kam vom Betreiber selbst („kann ja schlecht 20 auswahlen haben"). **Fachlicher Grund, warum Gebetszeiten hier die besten Anker sind:** Ein Wenn-dann-Satz wirkt nur, wenn die Situation zuverlässig eintritt und erkennbar ist (Gollwitzer & Sheeran 2006). Fünf feste, täglich wiederkehrende Punkte sind genau das — für diese Zielgruppe gibt es keinen besseren Anker. **Punkt 5 ist kein Beiwerk:** Schichtdienst und andere Tageseinteilungen brauchen einen weltlichen Anker. **Maghrib fehlt bewusst**, sonst wären es sieben Optionen; Tausch gegen ʿIshāʾ wäre möglich.
+**Wortlaut:** alle neun Stationen wörtlich ausgeschrieben, mit Knopfbeschriftungen, `data-action`-Werten und Hilfstexten für Bildschirmleser. Sechs Tonfall-Regeln vorangestellt, gegen die jeder Satz geprüft ist. **Im ganzen Einstieg steht kein Ausrufezeichen, keine Zahl über Wirkung, keine Studie, kein Vergleich mit anderen Apps.**
+**Zwei Stellen, an denen der Agent bewusst nichts festgelegt hat:** (1) die Schreibweise der Gebetsnamen (Fajr/Fadschr, ʿIshāʾ/Ischa) — eine Zeile Antwort genügt; (2) das Wort auf der Beispielkarte in S2. Das ist **Lehrstoff**, und dafür gilt die Lehre vom 13.09.2026 (erfundener Kartensatz) unverändert: kommt vom Betreiber.
+**Offen:** F5 (Rechtsprüfung, Betreiber hat zugesagt) — betrifft nur die neuen `localStorage`-Schlüssel für A1, A3 und den Merker, **nicht** `adrabic-thema`. Dazu die zwei Punkte oben.
+**Nächster Schritt:** **Bauen (Block 3)** — Umfang, Fragen und Wortlaut sind damit alle drei entschieden, die Voraussetzung aus `AUFTRAG.md` §7 ist erfüllt. **Bewusst noch nicht begonnen:** Ein Bau geht nach `../../CLAUDE.md` direkt auf `main` und ist damit **veröffentlicht** — und F5 ist ausdrücklich „vor dem Veröffentlichen" zu klären. Deshalb wartet der Bau auf ein Wort des Betreibers, nicht auf eine weitere Entscheidung.
+
+---
+
 ### 2026-09-23 — Betreiber delegiert F1/F2/F3/F6/F7, Entscheidungen getroffen, Psychologie belegt
 
 **Geändert:** neu `plan/onboarding/PSYCHOLOGIE.md`; `plan/onboarding/FRAGENKATALOG.md` (Abschnitt 9 von Empfehlungen auf Entscheidungen umgeschrieben, neu §10 F4 erklärt und §11 F6 als Gestaltungsregel, Kopf und §2 nachgezogen); `plan/onboarding/AUFTRAG.md` (Kopf, E2, E3, E4); `plan/PLAN.md`. Kein App-Code.

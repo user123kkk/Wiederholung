@@ -256,9 +256,17 @@ nachgeschlagen statt behauptet — es tragen **zwei** Belege (Gollwitzer &
 Sheeran 2006 für den Wenn-dann-Satz, Norton u. a. 2012 für die erste eigene
 Karte, samt Vorbehalt „nur bei Abschluss"); „zu viel Auswahl lähmt" trägt
 **nicht** (Sammelauswertung 2010: Wirkung praktisch null) und künstlicher
-Fortschritt wird benannt und verworfen. Status:
-`Umfang entschieden, wartet auf F4 (Ankerliste) und F5 (Rechtsprüfung)`,
-gebaut wird weiterhin nichts.
+Fortschritt wird benannt und verworfen. **Noch am 23.09.2026, vierter Schritt:** Betreiber erlaubt Gebetszeiten als
+Anker ausdrücklich und gibt den Wortlaut frei („sachen die einem talab al
+ilm gehören"). Daraufhin [`onboarding/WORTLAUT.md`](onboarding/WORTLAUT.md)
+— alle neun Stationen wörtlich, mit Knöpfen, `data-action`-Werten und
+Hilfstexten. Die religiöse Sperre aus `KONZEPT.md` §7 ist damit an **einer**
+Stelle geöffnet, nicht aufgehoben: keine Zitate, keine Formeln, kein Satz
+über den religiösen Wert des Lernens; die Gebetsnamen stehen als
+Tageszeiten. Die Freigabe ist in `WORTLAUT.md` §0 wörtlich zitiert. Status:
+`Umfang, Fragen und Wortlaut entschieden — Bau wartet auf ein Wort des
+Betreibers, weil ein Bau auf main zugleich Veröffentlichung ist und F5
+(Rechtsprüfung) davor liegt`.
 
 ### Nebenstrang: Feedback-Board
 
