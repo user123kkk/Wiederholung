@@ -4,6 +4,39 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-23 (dieselbe Session) — Veröffentlicht; S1-Zusatzsatz geprüft, bereits erledigt
+
+**Geändert:** `plan/onboarding/VIDEO-BEFUND-2.md` §6 (Erledigt-Vermerk). Kein
+App-Code.
+**Anlass:** Betreiber hat `veroeffentlichen.bat` bereits ausgeführt
+(Gerätetest und J1-Rechtsprüfung macht er selbst, „heut noch" bzw. „am
+Ende"). Auf die Rückfrage, woran ich weiterbauen soll, wählte er den
+offenen Vorschlag aus `VIDEO-BEFUND-2.md` §6 — ein zusätzlicher Satz in S1.
+**Befund vor dem Bauen:** Der Vorschlag in §6 bezog sich auf die **alte**
+S1-Fassung („Arabisch, Karte für Karte."). Die ist seit v3.9.9 nicht mehr
+aktuell — der Betreiber hatte beim Bauen selbst „das problem soll schmerzhaft
+benannt werden ja" verlangt, S1 wurde daraufhin härter neu geschrieben
+(„Du hast es gelernt. Und es ist weg." + zwei Absätze). Das ist inhaltlich
+bereits das, was §6 vorschlug (Problem **und** Mechanik benennen), nur mit
+anderem, deutlicherem Wortlaut. Nur `VIDEO-BEFUND-2.md` hatte das nie
+nachgetragen — ein reiner Dokumentationsstand, kein Bau-Rückstand.
+**Entscheidung: nichts hinzugefügt.** Den alten Vorschlagssatz zusätzlich
+auf die schon härtere Fassung zu setzen, wäre eine Wiederholung derselben
+Aussage — verstößt gegen Tonfall-Regel 4 („kein Druck") und die
+Kürze-Vorgabe (`AUFTRAG.md` §5). Die einzige im Vorschlag noch nicht
+wörtlich vorhandene Zeile, „Anmelden kommt später", ist strukturell bereits
+gelöst: Der Knopf heißt „Zeig mir das", kein Anmelde-Knopf — das sagt an Ort
+und Stelle dasselbe, ohne einen weiteren Satz.
+**Nachgetragen statt gebaut:** `VIDEO-BEFUND-2.md` §6 mit Erledigt-Vermerk
+versehen, damit die nächste Session diesen Punkt nicht wieder als offen
+findet.
+**Offen, unverändert:** J1 Rechtsprüfung und Gerätetest, beide beim
+Betreiber. Sonst kein unblockierter Punkt im Onboarding-Strang übrig.
+**Nächster Schritt:** liegt beim Betreiber (J1, Gerätetest). Ohne neue
+Vorgabe ist der Strang inhaltlich durch.
+
+---
+
 ### 2026-09-23 (dieselbe Session) — TikTok-Link ausgewertet, kein Fund
 
 **Geändert:** dieser Eintrag. Kein App-Code, keine neue Datei — für einen

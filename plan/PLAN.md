@@ -664,7 +664,22 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELLSTER STAND (23.09.2026, neue Session): neun offene Punkte
+**NEUESTER STAND (23.09.2026, dieselbe Session, danach): veröffentlicht
+(`veroeffentlichen.bat` durch den Betreiber ausgeführt).** Gerätetest und
+J1-Rechtsprüfung macht der Betreiber selbst, „heut noch" bzw. „am Ende" —
+keine Session-Aktion nötig, bis er sich meldet. Auf Rückfrage, woran
+weitergebaut werden soll, kam der offene Vorschlag aus `VIDEO-BEFUND-2.md`
+§6 (S1-Zusatzsatz) — geprüft und als **bereits erledigt** befunden (S1 wurde
+beim Bau v3.9.9 ohnehin härter geschrieben, deckt den Vorschlag inhaltlich
+ab), nur nachdokumentiert, kein neuer Code. Damit ist der Onboarding-Strang
+**ohne unblockierten Punkt** — nächste Session prüft zuerst, ob der
+Betreiber J1 und den Gerätetest inzwischen gemacht hat, bevor sie etwas
+Neues sucht. Details: `onboarding/LOGBUCH.md`, Eintrag „Veröffentlicht;
+S1-Zusatzsatz geprüft, bereits erledigt".
+
+---
+
+**Vorheriger Stand (23.09.2026, neue Session): neun offene Punkte
 beantwortet, Video-Tipps gegengeprüft, kein Fund.** Betreiber-Antwort auf die
 neun Punkte aus `onboarding/ENTSCHIEDEN.md`: nein zu 1–7 und 9 (gebauter Stand
 bleibt, J1-Rechtsprüfung bleibt trotzdem offen), Punkt 8 (K7) an den Agenten

@@ -239,6 +239,24 @@ Wirkungsbehauptung. Er ist durch Roediger & Karpicke 2006 und Cepeda u. a.
 Bildschirm muss. **Der kürzere Satz ohne diese Zeile bleibt die Vorgabe**,
 solange der Betreiber nicht ausdrücklich den längeren will.
 
+**Erledigt, 23.09.2026 (v3.9.9) — auf anderem Weg als hier vorgeschlagen.**
+Dieser Absatz ist stehen geblieben, obwohl der Grundgedanke längst gebaut ist:
+Der Betreiber sagte beim Bauen selbst „das problem soll schmerzhaft benannt
+werden ja" und S1 wurde **härter** neu geschrieben, nicht um den hier
+vorgeschlagenen Satz ergänzt. Aktueller Wortlaut in
+[`WORTLAUT.md`](WORTLAUT.md) §2 S1: „Du hast es gelernt. Und es ist weg." +
+zwei Absätze, die Vergessen und Mechanik benennen — deckt „Problem und
+Lösung in den ersten Bildschirmen" bereits ab, ohne den hier vorgeschlagenen
+Wortlaut zu übernehmen. **Der oben vorgeschlagene Satz kommt nicht mehr
+dazu** — er wäre auf der jetzigen, schon deutlicheren Fassung eine
+Wiederholung derselben Aussage (Regel 4, „kein Druck", und die
+Kürze-Vorgabe aus `AUFTRAG.md` §5 sprechen dagegen), nicht eine Ergänzung.
+Einzig „Anmelden kommt später" aus dem Vorschlag fehlt weiterhin wörtlich —
+aber `einstiegFuss()` löst das strukturell: „Zeig mir das" statt eines
+Anmelde-Knopfs macht an Ort und Stelle klar, dass jetzt kein Konto verlangt
+wird, ohne einen weiteren Satz zu brauchen. Kein Code geändert. Details:
+`onboarding/LOGBUCH.md`, Eintrag „S1-Zusatzsatz geprüft, bereits erledigt".
+
 ---
 
 ## 7. Was aus diesem Video in die Regeln übernommen wird
