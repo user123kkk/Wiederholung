@@ -1,9 +1,11 @@
 # Fragenkatalog für den Einstieg
 
-Angelegt: 23. September 2026 · Status: **Vorschlag, nichts davon freigegeben,
-nichts gebaut**
+Angelegt: 23. September 2026 · Status: **Umfang entschieden (Abschnitt 9),
+Wortlaut offen, nichts gebaut**
 Gehört zu: [`AUFTRAG.md`](AUFTRAG.md) · Belege aus dem Video:
-[`VIDEO-BEFUND.md`](VIDEO-BEFUND.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
+[`VIDEO-BEFUND.md`](VIDEO-BEFUND.md) · Psychologie:
+[`PSYCHOLOGIE.md`](PSYCHOLOGIE.md) · Code-Befund:
+[`BESTAND.md`](BESTAND.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
 
 ---
 
@@ -76,22 +78,23 @@ möglich zum Wert**, und das Konto so spät wie möglich.
 | # | Station | Zweck | Fragen? | Grund für diesen Platz |
 |---|---|---|---|---|
 | **S1** | **Zeigen, nicht sagen** | Die App in Aktion, ohne ein Wort über Funktionen | keine | Video §3.1. Wer zuerst gefragt wird, weiß noch nicht, wofür er antwortet — P3 scheitert reihum, wenn eine Frage vor S1 steht. |
-| **S2** | **Eine Handlung ohne Konto** | Eine einzige Karte umdrehen und bewerten — echte Mechanik, Beispielinhalt | keine | Video §3.2 (Elma). Erzeugt die Erfahrung, auf die sich jede spätere Frage beziehen kann. |
+| **S2** | **Eine Handlung ohne Konto** | Eine einzige Karte umdrehen und bewerten — echte Mechanik, Beispielinhalt | keine | Video §3.2 (Alma). Erzeugt die Erfahrung, auf die sich jede spätere Frage beziehen kann. |
 | **S3** | **Lesbarkeit** | Arabische Schrift an einer echten Probe einstellen | **A1** | Muss vor allen weiteren Bildschirmen kommen: Wer die Schrift nicht lesen kann, beantwortet den Rest blind. Zugleich P2 im Idealfall — die Einlösung ist der Bildschirm selbst. |
 | **S4** | **Aussehen** | Hell/Dunkel an der laufenden Oberfläche | **A2** | Direkt nach S3, weil beide dieselbe Probe benutzen und die Antwort sofort sichtbar ist. |
 | **S5** | **Umfang pro Runde** | Wie viele Karten eine Sitzung höchstens hat | **A3** | Erst nachdem man in S2 gespürt hat, wie lange **eine** Karte dauert. Vorher ist „20 Karten" eine Zahl ohne Maß — P3. |
-| **S6** | **Einlösung** | Ein Bildschirm, der zeigt, was die drei Antworten bewirkt haben | keine | Video §3.4. **Ohne diese Station fällt der ganze Einstieg durch P2.** |
+| **S6** | **Einlösung** | Kurzer Abschluss: was A3 und B1 bewirken, dann weiter zur Anmeldung | keine | Video §3.4. A1 und A2 lösen sich bereits im eigenen Bildschirm ein und werden hier **nicht** wiederholt (entschieden als F2, Abschnitt 9). |
 | **S7** | **Wiederkommen** | Der Wenn-dann-Satz (E2, am 19.09. als einziger Baustein gewählt) | **B1** | Nach der Einlösung, nicht davor: Ein Vorsatz ergibt erst Sinn, wenn man weiß, worauf er sich bezieht. |
-| **S8** | **Konto** | Registrierung, Formular ggf. auf zwei Schritte verteilt | keine | So spät wie möglich (Video §1: Duolingo 60 Bildschirme vor dem Konto; §3.10: House +15 % durch Aufteilung). Vorher liegt alles auf dem Gerät. |
+| **S8** | **Konto** | Registrierung, Formular ggf. auf zwei Schritte verteilt | keine | So spät wie möglich (Video §1: Duolingo 60 Bildschirme vor dem Konto; §3.10: Houzz +15 % durch Aufteilung). Vorher liegt alles auf dem Gerät. |
 | **S9** | **Erste eigene Karte** | Der Aha-Moment aus `AUFTRAG.md` §1 | keine | Das Ziel des ganzen Strangs. Alles davor dient nur hierhin. |
 
 **Drei Regeln über die Stationen hinweg:**
 
 - **Überspringbar an jeder Station**, und der Einstieg erscheint genau einmal
   pro Gerät (`AUFTRAG.md` §5).
-- **Höchstens drei Fragen insgesamt**, solange die App drei Einstellungen hat.
-  Die Zahl 25 aus dem Video ist der Durchschnitt von Apps mit viel mehr
-  Einstellfläche und begründet hier gar nichts.
+- **Höchstens vier Inhalte insgesamt** — drei Einstellfragen plus der
+  Wenn-dann-Satz (entschieden als F1, Abschnitt 9). Die Zahl 25 aus dem Video
+  ist der Durchschnitt von Apps mit viel mehr Einstellfläche und begründet hier
+  gar nichts.
 - **Keine Fortschrittsanzeige mit Zähler** („Frage 2 von 3") — `AUFTRAG.md` §5
   verbietet Fortschrittsdruck ausdrücklich. Ein stiller Balken ohne Zahl ist
   zulässig, wenn der Betreiber ihn will.
@@ -286,15 +289,74 @@ Auftrag und ist hier nicht enthalten.
 
 ---
 
-## 9. Was entschieden werden muss, bevor irgendetwas gebaut wird
+## 9. Entscheidungen — Stand 23.09.2026
 
-Diese Punkte gehören zusätzlich in `AUFTRAG.md` §6 und ins Logbuch.
+Der Betreiber hat F1, F2, F3, F6 und F7 am 23.09.2026 ausdrücklich an den
+Agenten delegiert („kannst du entscheiden", „entscheide du, hauptsache gut, da
+weißt du mehr als ich"). Die Entscheidungen stehen damit fest und sind keine
+Empfehlungen mehr. F4 und F5 bleiben beim Betreiber bzw. bei einer echten
+Person.
 
-| Nr. | Frage | Empfehlung |
+| Nr. | Frage | **Entscheidung** |
 |---|---|---|
-| **F1** | Bleibt es bei E2 vom 19.09. (**nur** der Wenn-dann-Satz B1), oder kommen A1–A3 dazu? | **A1–A3 dazu.** Der Wenn-dann-Satz allein hat keinen Speicherort und damit keine Einlösung (P2). Allein gebaut wäre er der schwächste Teil des Katalogs. |
-| **F2** | Wird B3 (Einlösungs-Bildschirm) gebaut? | **Ja, zuerst.** Ohne ihn fallen A1–A3 durch P2 und der Einstieg ist ein Fragebogen. |
-| **F3** | Wird B4 (Probelauf ohne Konto) gebaut? | **Ja, wenn Umfang erlaubt.** Stärkstes Muster des Videos, berührt die Lernlogik nicht (nur Anzeige einer festen Beispielkarte). |
-| **F4** | Anker für B1 — Tagesablauf allgemein oder Gebetszeiten? | **Betreiber.** Agent schreibt keinen religiösen Wortlaut. |
-| **F5** | E4 — Rechtsprüfung der Zwischenspeicherung vor der Registrierung | **Echte Person, vor dem Veröffentlichen.** Keine Agenten-Entscheidung. |
-| **F6** | Was der Betreiber mit „Animationen" (Higgsfield/Flutter) genau meint | **Offen.** Technisch bleibt es `@keyframes` nach `README.md`; welche Bewegung gemeint ist, sagt der Betreiber. |
+| **F1** | Umfang — nur der Wenn-dann-Satz (B1) oder auch A1–A3? | **A1–A3 kommen dazu.** Vier Inhalte insgesamt: Schriftprobe, Hell/Dunkel, Rundengröße, Wenn-dann-Satz. Grund: B1 allein hat keinen Speicherort und löst sich nicht sichtbar ein (P2); A1 und A2 lösen sich **von selbst** ein, weil ihre Wirkung die Anzeige ist. E2 vom 19.09. ist damit erweitert, nicht verworfen. |
+| **F2** | Einlösungs-Bildschirm (B3) — und wenn ja, wann? | **Ja, aber schlanker als vorgeschlagen.** Kein eigener Bildschirm für A1/A2 — die wirken sofort. **Ein** kurzer Abschluss (S6) fasst nur zusammen, was A3 und B1 bewirken, und führt zur Anmeldung. Grund: der Bilddurchgang zeigt, dass die stärkste Einlösung **im selben Bildschirm** passiert (BitePal), nicht in einem nachgeschobenen. |
+| **F3** | Probelauf ohne Konto (B4)? | **Ja.** Eine fest eingebaute Beispielkarte, einmal umdrehen, einmal bewerten — ohne Firestore, ohne Konto, ohne Eingriff in die Lernlogik. Grund: seltenstes und stärkstes Muster des Videos (Alma), und Voraussetzung dafür, dass A3 überhaupt beantwortbar ist (P3). **Inhalt der Beispielkarte bleibt E3 (Betreiber).** |
+| **F4** | Anker für den Wenn-dann-Satz | **Offen — Betreiber.** Erklärung und ein Vorschlag zum Abnicken stehen in Abschnitt 10. |
+| **F5** | Rechtsprüfung der Zwischenspeicherung (E4) | **Offen — echte Person.** Betreiber hat am 23.09. zugesagt, das prüfen zu lassen. Umfang laut `BESTAND.md` §5/§8: neue `localStorage`-Schlüssel für A1, A3 und den Merker; **A2 ist nicht betroffen**, weil `adrabic-thema` schon heute ohne Konto geschrieben wird. |
+| **F6** | „Animationen" | **Entschieden als Gestaltungsregel** (Betreiber: „wollte einfach cleane Animationen"). Siehe Abschnitt 11. |
+| **F7** | Erscheint der Einstieg nach einer Abmeldung erneut? | **Nein.** Der Merker ist gerätelokal und bleibt nach dem Abmelden stehen. Grund: Wer sich abmeldet, ist kein Neuling; und der Betreiber würde ihn sonst bei jedem Test wiedersehen. Ein Schalter „Einstieg erneut zeigen" in den Einstellungen wäre denkbar — **wird nicht gebaut**, nur hier vermerkt. |
+
+## 10. F4 erklärt — was ein Wenn-dann-Satz ist und was zu entscheiden bleibt
+
+Betreiber am 23.09.: „f4 versteh ich ned, müssen wir noch klären." Deshalb
+ausgeschrieben.
+
+**Das Prinzip.** Ein Vorsatz wie „ich will regelmäßig lernen" ist vage; man
+merkt nie, wann er fällig ist. Ein Satz der Form **„Wenn [feste Situation],
+dann [Handlung]"** hängt die Handlung an etwas, das ohnehin jeden Tag
+passiert. Man muss sich dann nicht mehr entscheiden, sondern nur noch
+erkennen. Das ist der einzige Baustein des Einstiegs mit einem echten Beleg
+(Gollwitzer & Sheeran 2006, d = 0,65 über 94 Tests — [`PSYCHOLOGIE.md`](PSYCHOLOGIE.md) §1.1).
+
+**Wie es auf dem Bildschirm aussähe** — ein Satz, bei dem nur die erste Hälfte
+gewählt wird:
+
+> Wenn ich **[Auswahl]**, dann mache ich eine Runde Adrabic.
+
+**Was zu entscheiden ist: die Auswahlliste.** Und zwar nur sie — den Rest
+macht der Agent. Drei Fassungen zur Auswahl:
+
+| Fassung | Anker | Bemerkung |
+|---|---|---|
+| **a) neutral** | „mein Frühstück fertig habe" · „von der Schule/Arbeit heimkomme" · „im Bett liege" · „auf den Bus warte" | Agent kann das ohne Rückfrage schreiben |
+| **b) religiös** | Anker am Gebetsablauf | **Nur vom Betreiber zu schreiben.** Der Agent schlägt hier bewusst keinen Wortlaut vor (`AUFTRAG.md` §4, Lehre vom 13.09.2026) |
+| **c) frei** | ein Textfeld, der Nutzer schreibt selbst | stärkste Fassung laut Beleg (selbst formuliert), aber leeres Feld schreckt ab |
+
+**Vorschlag des Agenten:** **a) plus c)** — vier feste Anker zum Antippen,
+darunter „eigene Situation". Wer religiöse Anker will, trägt sie selbst als
+fünften bis achten Eintrag nach; dann ist Fassung b) abgedeckt, ohne dass der
+Agent religiösen Wortlaut schreibt. **Eine Antwort „a+c passt" reicht, um
+diesen Punkt zu schließen.**
+
+## 11. F6 entschieden — was „clean" hier heißt
+
+Betreiber: „weiß ned, wollte einfach cleane Animationen." Damit ist keine
+Technik gemeint, sondern ein Eindruck. Als prüfbare Regeln festgelegt:
+
+1. **Nur Eintritte, keine Dauerbewegung.** Jedes Element kommt einmal herein
+   und bleibt dann still. Nichts pulsiert, nichts wackelt, nichts schwebt.
+2. **`@keyframes`, kein `transition`-Missbrauch für Eintritte** (`README.md`).
+   In `styles.css` stehen bereits 20 Keyframe-Sätze — der Einstieg benutzt die
+   vorhandenen, statt neue zu erfinden.
+3. **Kurz:** 150–250 ms je Eintritt, gestaffelt höchstens 40 ms je Element.
+   Was länger dauert, fühlt sich nicht ruhig an, sondern langsam.
+4. **Eine Bewegung pro Bildschirm.** Nicht Überschrift, Karte, Knopf und
+   Fußzeile einzeln animiert — ein Block, eine Bewegung.
+5. **Keine Maskottchen, kein Konfetti, keine Verlaufs-Spielereien.** Das
+   Waschbär-Muster aus dem Video (BitePal) ist bewusst **nicht** übernommen.
+6. **`prefers-reduced-motion` wird respektiert** — in `styles.css:568` bereits
+   vorhanden, der Einstieg wird dort mitgenommen.
+7. **Die einzige Bewegung mit Bedeutung:** Wenn A1 die Schriftgröße ändert,
+   ändert sich die Probe **sichtbar weich** statt zu springen. Das ist keine
+   Verzierung, sondern die Einlösung selbst.

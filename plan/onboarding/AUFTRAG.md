@@ -1,7 +1,16 @@
 # Auftrag: Einstieg vor der Anmeldung
 
-Angelegt: 19. September 2026 · Status: `Konzept wird auf Betreiber-Wunsch neu
-aufgesetzt (23.09.2026) — nächstes Ziel, wartet auf Betreiber-Quellen`
+Angelegt: 19. September 2026 · Status: `Konzept neu aufgesetzt (23.09.2026),
+Umfang entschieden — wartet auf F4 (Anker) und F5 (Rechtsprüfung)`
+
+> **Der maßgebliche Stand steht seit 23.09.2026 in drei neuen Dateien:**
+> [`VIDEO-BEFUND.md`](VIDEO-BEFUND.md) (die Betreiber-Quelle, zweimal
+> ausgewertet), [`FRAGENKATALOG.md`](FRAGENKATALOG.md) (Prüfungen, neun
+> Stationen, 139 Fragen, **Entscheidungen in Abschnitt 9**),
+> [`PSYCHOLOGIE.md`](PSYCHOLOGIE.md) (was belegt ist und was nicht) und
+> [`BESTAND.md`](BESTAND.md) (wo der Einstieg im Code einhakt).
+> Die Abschnitte 1–8 unten sind der Stand vom 19.09. und bleiben als
+> Vorgeschichte stehen; wo sie abweichen, gilt `FRAGENKATALOG.md`.
 Gesamtplan: [`../PLAN.md`](../PLAN.md) · Nebenstrang, keine Phasennummer
 
 ---
@@ -138,10 +147,10 @@ Struktur, Reihenfolge und Technik.
 | Nr. | Frage | Empfehlung des Agenten |
 |---|---|---|
 | E1 | Umfang: **A** nur Einstellungen anwenden · **B** auch die erste Karte schon vor der Anmeldung anlegen | A. B berührt das Kartenformular und braucht eine Zwischenspeicherung samt Prüfung; das ist ein eigener, größerer Block und erst nach A sinnvoll |
-| E2 | Welche Kandidaten aus 4 kommen hinein | **Entschieden 19.09.: nur Kandidat 2, der Wenn-dann-Satz.** 1, 3 und 4 wurden nicht gewählt und bleiben draußen, bis der Betreiber sie nachfordert. Damit ist der Strang ein Einstieg zum **Dranbleiben** (wann komme ich zurück), nicht zur Einrichtung |
+| E2 | Welche Kandidaten aus 4 kommen hinein | **Entschieden 19.09.: nur Kandidat 2, der Wenn-dann-Satz.** **Erweitert am 23.09.2026 (F1, `FRAGENKATALOG.md` §9):** Kandidat 1 (Zeit/Rundengröße) und 3 (Schriftprobe) kommen dazu, ebenso Hell/Dunkel; Kandidat 4 (drei Mechanik-Bildschirme) bleibt draußen. Grund: Der Wenn-dann-Satz allein hat keinen Speicherort und löst sich nicht sichtbar ein. Der Strang ist damit Einstieg zum Dranbleiben **und** zur Einrichtung |
 | E1 | (Antwort war „weiß nicht, ob stetigs in sowas behandelt werden oder persönliches") | **Lesart des Agenten, unbestätigt:** Frage war, ob ein solcher Einstieg Stetigkeit/Dranbleiben oder Persönliches behandelt. Gewählter Baustein spricht für Stetigkeit. E1 A/B bleibt offen; bei nur einem Wenn-dann-Satz stellt sich B (erste Karte vorher) ohnehin nicht |
-| E3 | Wortlaut und Ton, besonders alles mit religiösem Bezug | du schreibst oder gibst frei |
-| E4 | Datenschutz: Rechtsprüfung der Zwischenspeicherung | vor dem Veröffentlichen, durch eine echte Person |
+| E3 | Wortlaut und Ton, besonders alles mit religiösem Bezug | du schreibst oder gibst frei. **Offen.** Konkret zu klären ist heute nur noch die Ankerliste des Wenn-dann-Satzes — erklärt in `FRAGENKATALOG.md` §10, Vorschlag „a+c" |
+| E4 | Datenschutz: Rechtsprüfung der Zwischenspeicherung | vor dem Veröffentlichen, durch eine echte Person. **23.09.2026: Betreiber sagt zu, prüfen zu lassen.** Umfang laut `BESTAND.md` §5: neue Schlüssel für A1, A3 und den Merker; `adrabic-thema` (A2) ist **nicht** betroffen |
 
 ## 7. Blöcke
 

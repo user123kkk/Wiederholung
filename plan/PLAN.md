@@ -244,8 +244,20 @@ Code: `onAuthStateChanged` setzt `settings` unbedingt zurück
 (`app.js:1551`), Antworten müssen also in den `localStorage` und dürfen
 erst nach dem Cloud-Dokument angewendet werden; `cloudDocExists`
 (`app.js:1607`) ist bereits die Unterscheidung „neues vs. bestehendes
-Konto". Status:
-`Katalog und Bestandsaufnahme liegen vor, wartet auf Betreiber-Entscheidung F1/F2`,
+Konto". **Noch am 23.09.2026, dritter Schritt:** Betreiber delegiert F1, F2, F3, F6
+und F7 ausdrücklich an den Agenten („entscheide du, hauptsache gut").
+Entschieden und in [`onboarding/FRAGENKATALOG.md`](onboarding/FRAGENKATALOG.md)
+§9 festgehalten: **vier Inhalte** (Schriftprobe, Hell/Dunkel, Rundengröße,
+Wenn-dann-Satz), **ein** schlanker Abschluss-Bildschirm statt eines eigenen
+für jede Frage, **Probelauf ohne Konto wird gebaut**, „clean" als sieben
+prüfbare Animationsregeln, und der Einstieg erscheint nach einer Abmeldung
+**nicht** erneut. Dazu neu [`onboarding/PSYCHOLOGIE.md`](onboarding/PSYCHOLOGIE.md):
+nachgeschlagen statt behauptet — es tragen **zwei** Belege (Gollwitzer &
+Sheeran 2006 für den Wenn-dann-Satz, Norton u. a. 2012 für die erste eigene
+Karte, samt Vorbehalt „nur bei Abschluss"); „zu viel Auswahl lähmt" trägt
+**nicht** (Sammelauswertung 2010: Wirkung praktisch null) und künstlicher
+Fortschritt wird benannt und verworfen. Status:
+`Umfang entschieden, wartet auf F4 (Ankerliste) und F5 (Rechtsprüfung)`,
 gebaut wird weiterhin nichts.
 
 ### Nebenstrang: Feedback-Board
