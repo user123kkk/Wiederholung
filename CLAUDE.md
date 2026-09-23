@@ -88,8 +88,13 @@ Veröffentlichungsliste aus [`README.md`](README.md):
 1. `APP_VERSION` in `app.js` hochzählen.
 2. **Denselben Wert** als `CACHE_NAME` in `sw.js` eintragen. Ohne das behalten
    Nutzer:innen die alten Dateien im Cache.
-3. Neue Startdateien in `APP_SHELL` in `sw.js` aufnehmen.
-4. Eintrag in `CHANGELOG.md`.
+3. **Denselben Wert** auch im Versions-Query von `<script src="./app.js?v=…">`
+   in `index.html` eintragen — sonst bleibt `app.js` bis zu eine Stunde im
+   normalen HTTP-Cache des Browsers hängen (`Cache-Control: max-age=3600`),
+   selbst ein Reload holt dann noch die alte Datei. Steht in `README.md`,
+   fehlte hier bis 23.09.2026 (v3.9.5) — deshalb bei 3.9.3/3.9.4 übersehen.
+4. Neue Startdateien in `APP_SHELL` in `sw.js` aufnehmen.
+5. Eintrag in `CHANGELOG.md`.
 
 Plandateien unter `plan/` und `KONZEPT.md` sind reine Textdateien, stehen nicht
 in `APP_SHELL` und werden nicht ausgeliefert — für sie entfällt die Liste.
