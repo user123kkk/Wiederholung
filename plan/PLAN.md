@@ -263,7 +263,18 @@ ilm gehören"). Daraufhin [`onboarding/WORTLAUT.md`](onboarding/WORTLAUT.md)
 Hilfstexten. Die religiöse Sperre aus `KONZEPT.md` §7 ist damit an **einer**
 Stelle geöffnet, nicht aufgehoben: keine Zitate, keine Formeln, kein Satz
 über den religiösen Wert des Lernens; die Gebetsnamen stehen als
-Tageszeiten. Die Freigabe ist in `WORTLAUT.md` §0 wörtlich zitiert. Status:
+Tageszeiten. Die Freigabe ist in `WORTLAUT.md` §0 wörtlich zitiert. **Zweites Betreiber-Video am 23.09.2026 ausgewertet**
+([`onboarding/VIDEO-BEFUND-2.md`](onboarding/VIDEO-BEFUND-2.md), Starter
+Story Build mit Mau Baron/Prayer Lock): ein **Einzelfall**, der
+erklärtermaßen auf **Umsatz** optimiert („an app is nothing more than a
+sales funnel"). Da `KONZEPT.md` §1 kein Geldfluss vorsieht, trägt der größte
+Teil hier nicht. **Drei Punkte übernommen** — Hauptfunktion im Einstieg
+ausprobieren (F3 steht damit auf zwei unabhängigen Quellen), Antworten
+zurückspiegeln, erst fragen wenn beantwortbar. **Vier ausdrücklich
+abgelehnt** — Länge als Mittel der Verlustaversion, „Fragen, die die App
+verkaufen" (die Umkehrung von P1), die folgenlose Bekenntnis-Frage und die
+30-Tage-Zusage. Wo beide Videos sich widersprechen, gewinnt Video 1; die
+Auflösung steht in `VIDEO-BEFUND-2.md` §4. Status:
 `Umfang, Fragen und Wortlaut entschieden — Bau wartet auf ein Wort des
 Betreibers, weil ein Bau auf main zugleich Veröffentlichung ist und F5
 (Rechtsprüfung) davor liegt`.

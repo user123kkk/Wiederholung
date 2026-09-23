@@ -2,7 +2,8 @@
 
 Angelegt: 23. September 2026 · **Nichts davon steht auf einem Bildschirm.**
 Gehört zu: [`FRAGENKATALOG.md`](FRAGENKATALOG.md) ·
-[`VIDEO-BEFUND.md`](VIDEO-BEFUND.md) · [`AUFTRAG.md`](AUFTRAG.md) §3
+[`VIDEO-BEFUND.md`](VIDEO-BEFUND.md) ·
+[`VIDEO-BEFUND-2.md`](VIDEO-BEFUND-2.md) · [`AUFTRAG.md`](AUFTRAG.md) §3
 
 ---
 
@@ -154,6 +155,16 @@ Ausgeschlossen, unabhängig von jedem Beleg:
 - **Fragen, deren Antwort nirgends hinführt**, nur damit sich der Einstieg
   persönlich anfühlt. Das ist `FRAGENKATALOG.md` D1 — 38 Fragen, alle
   abgelehnt.
+- **Versunkener Aufwand als Absicht** — den Einstieg absichtlich lang machen,
+  damit der Nutzer am Ende denkt „ich habe schon zehn Minuten investiert".
+  In [`VIDEO-BEFUND-2.md`](VIDEO-BEFUND-2.md) §5.1 wird genau das offen als
+  Bauprinzip empfohlen, samt Mechanismus (Verlustaversion). Es ist die
+  sauberste Beschreibung einer Manipulation in beiden ausgewerteten Videos.
+- **Das folgenlose Bekenntnis** — „wie verpflichtet bist du?" mit fünf Stufen,
+  unmittelbar vor der Zahlungsaufforderung, ohne dass die Antwort irgendetwas
+  ändert ([`VIDEO-BEFUND-2.md`](VIDEO-BEFUND-2.md) §5.3). Fällt zusätzlich
+  durch P1; der zugrundeliegende Mechanismus ist hier ohnehin nicht geprüft
+  (§3.2).
 
 ---
 

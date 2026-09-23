@@ -3,7 +3,9 @@
 Angelegt: 23. September 2026 · Status: **Umfang entschieden (Abschnitt 9),
 Wortlaut offen, nichts gebaut**
 Gehört zu: [`AUFTRAG.md`](AUFTRAG.md) · Belege aus dem Video:
-[`VIDEO-BEFUND.md`](VIDEO-BEFUND.md) · Psychologie:
+[`VIDEO-BEFUND.md`](VIDEO-BEFUND.md) und
+[`VIDEO-BEFUND-2.md`](VIDEO-BEFUND-2.md) · Wortlaut:
+[`WORTLAUT.md`](WORTLAUT.md) · Psychologie:
 [`PSYCHOLOGIE.md`](PSYCHOLOGIE.md) · Code-Befund:
 [`BESTAND.md`](BESTAND.md) · Gesamtplan: [`../PLAN.md`](../PLAN.md)
 
@@ -53,7 +55,7 @@ Jede Zeile in den Katalogen nennt, an welcher Prüfung eine Frage scheitert.
 
 | # | Prüfung | Woher die Regel kommt |
 |---|---|---|
-| **P1 — Ziel** | Die Antwort landet in einem Feld, das die App liest, oder verändert sichtbar, was danach auf dem Bildschirm steht. | `AUFTRAG.md` §2/§4 |
+| **P1 — Ziel** | Die Antwort landet in einem Feld, das die App liest, oder verändert sichtbar, was danach auf dem Bildschirm steht. **Zusatz seit 23.09.2026:** Eine Frage ist auch dann abzulehnen, wenn sie erkennbar gestellt wird, um den Nutzer zu überzeugen, statt um etwas einzustellen — siehe [`VIDEO-BEFUND-2.md`](VIDEO-BEFUND-2.md) §5.2, wo genau das als Handwerk gelehrt wird. | `AUFTRAG.md` §2/§4 |
 | **P2 — Einlösung** | Der Nutzer **sieht** innerhalb von höchstens zwei Bildschirmen, was seine Antwort bewirkt hat. | [`VIDEO-BEFUND.md`](VIDEO-BEFUND.md) §3.4 (Endel, BitePal, Speak, Brilliant) |
 | **P3 — Beantwortbarkeit** | Jemand, der die App noch nie gesehen hat, kann die Frage in unter fünf Sekunden beantworten, ohne zu raten. | `AUFTRAG.md` §5 („still und nicht drängend") |
 | **P4 — Keine Behauptung** | Weder Frage noch Antwortbildschirm behaupten eine Wirkung, die nicht in `AUFTRAG.md` §3 belegt ist. Video-Zahlen zählen nicht. | `landing-page-strategie/STRATEGIE.md` 1.1 |
@@ -301,7 +303,7 @@ Person.
 |---|---|---|
 | **F1** | Umfang — nur der Wenn-dann-Satz (B1) oder auch A1–A3? | **A1–A3 kommen dazu.** Vier Inhalte insgesamt: Schriftprobe, Hell/Dunkel, Rundengröße, Wenn-dann-Satz. Grund: B1 allein hat keinen Speicherort und löst sich nicht sichtbar ein (P2); A1 und A2 lösen sich **von selbst** ein, weil ihre Wirkung die Anzeige ist. E2 vom 19.09. ist damit erweitert, nicht verworfen. |
 | **F2** | Einlösungs-Bildschirm (B3) — und wenn ja, wann? | **Ja, aber schlanker als vorgeschlagen.** Kein eigener Bildschirm für A1/A2 — die wirken sofort. **Ein** kurzer Abschluss (S6) fasst nur zusammen, was A3 und B1 bewirken, und führt zur Anmeldung. Grund: der Bilddurchgang zeigt, dass die stärkste Einlösung **im selben Bildschirm** passiert (BitePal), nicht in einem nachgeschobenen. |
-| **F3** | Probelauf ohne Konto (B4)? | **Ja.** Eine fest eingebaute Beispielkarte, einmal umdrehen, einmal bewerten — ohne Firestore, ohne Konto, ohne Eingriff in die Lernlogik. Grund: seltenstes und stärkstes Muster des Videos (Alma), und Voraussetzung dafür, dass A3 überhaupt beantwortbar ist (P3). **Inhalt der Beispielkarte bleibt E3 (Betreiber).** |
+| **F3** | Probelauf ohne Konto (B4)? | **Ja — und seit 23.09.2026 auf zwei unabhängigen Quellen** (Alma in Video 1, Prayer Lock in [`VIDEO-BEFUND-2.md`](VIDEO-BEFUND-2.md) §3.1). Eine fest eingebaute Beispielkarte, einmal umdrehen, einmal bewerten — ohne Firestore, ohne Konto, ohne Eingriff in die Lernlogik. Grund: seltenstes und stärkstes Muster des Videos (Alma), und Voraussetzung dafür, dass A3 überhaupt beantwortbar ist (P3). **Inhalt der Beispielkarte bleibt E3 (Betreiber).** |
 | **F4** | Anker für den Wenn-dann-Satz | **Entschieden 23.09.2026.** Betreiber erlaubt Gebetszeiten ausdrücklich („dürftest von mir aus sowas wie nach fajr oder so") und nennt die Obergrenze selbst. Liste: nach Fajr · nach Dhuhr · nach ʿAsr · nach ʿIshāʾ · wenn ich heimkomme · eigene Situation. Begründung und Wortlaut: [`WORTLAUT.md`](WORTLAUT.md) §3. |
 | **F5** | Rechtsprüfung der Zwischenspeicherung (E4) | **Offen — echte Person.** Betreiber hat am 23.09. zugesagt, das prüfen zu lassen. Umfang laut `BESTAND.md` §5/§8: neue `localStorage`-Schlüssel für A1, A3 und den Merker; **A2 ist nicht betroffen**, weil `adrabic-thema` schon heute ohne Konto geschrieben wird. |
 | **F6** | „Animationen" | **Entschieden als Gestaltungsregel** (Betreiber: „wollte einfach cleane Animationen"). Siehe Abschnitt 11. |
