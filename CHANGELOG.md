@@ -1,3 +1,24 @@
+## 3.10.2 - 23. September 2026
+
+**Das helle Thema springt beim Start nicht mehr kurz auf dunkel.** `app.js`
+rief beim Laden `themaAnwenden()` mit den Grundeinstellungen auf und setzte
+damit `data-thema` **und** `localStorage["adrabic-thema"]` auf „dunkel“, noch
+bevor ein Cloud-Dokument da war. Gemessen: gespeichert „hell“, nach dem Laden
+„dunkel“/„dunkel“. Wer hell eingestellt hat, sah die Seite hell beginnen (das
+Kopfskript in `index.html` liest die Wahl), auf dunkel springen und nach dem
+Cloud-Dokument zurück auf hell; ohne Netz blieb sie dunkel und die lokale Wahl
+war überschrieben. Das ist die wahrscheinlichere Ursache des „kurzen Flashs“,
+den 3.9.12 nur dem blockierten Kopfskript zuschrieb.
+
+Jetzt gilt die auf dem Gerät gespeicherte Wahl, bis die Cloud antwortet, wie es
+der Kommentar in `index.html` schon immer beschrieb. Die Cloud bleibt
+maßgeblich. Bei einem neuen Konto wird die Grundeinstellung (dunkel) sofort
+angewendet, damit Anzeige und Einstellung nicht auseinanderlaufen.
+
+Nachgemessen ohne Konto: gespeichert `hell` bleibt hell, `auto` folgt dem
+System und bleibt als `auto` gespeichert, Unsinn und „nichts gespeichert“ ergeben
+dunkel. **Nicht geprüft:** der Weg über ein echtes Firebase-Konto.
+
 ## 3.10.1 - 23. September 2026
 
 **Fehlersuche nach dem Neubau des Einstiegs (3.10.0).** Vier gemessene Fehler

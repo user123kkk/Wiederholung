@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.10.1";
+const APP_VERSION = "3.10.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1227,6 +1227,19 @@ function setSitzungsLimit(id) {
   persistSettings();
   render();
 }
+/* 3.10.2: Die auf dem Geraet gespeicherte Wahl gilt, bis die Cloud antwortet.
+   Bis 3.10.1 lief hier themaAnwenden() mit den Grundeinstellungen ("dunkel"):
+   Es setzte data-thema auf dunkel UND ueberschrieb adrabic-thema, noch bevor
+   irgendein Cloud-Dokument da war. Gemessen: gespeichert "hell", nach dem
+   Laden "dunkel"/"dunkel". Wer hell eingestellt hat, sah die Seite hell
+   beginnen (Kopfskript in index.html), auf dunkel springen und nach dem
+   Cloud-Dokument zurueck - ohne Netz blieb sie dunkel, die lokale Wahl war
+   weg. Die Cloud bleibt maßgeblich: Zeile "themaAnwenden(); // 2.20.0" im
+   Schnappschuss ueberschreibt das hier, sobald die Daten da sind. */
+try {
+  const gespeichertesThema = localStorage.getItem("adrabic-thema");
+  if (THEMEN.some(x => x.id === gespeichertesThema)) settings.thema = gespeichertesThema;
+} catch (e) {}
 themaAnwenden();
 
 let ui = {
@@ -1782,6 +1795,11 @@ async function initFirebase() {
              bekommt nichts ueberschrieben. persistAll() weiter unten
              schreibt die uebernommenen Werte gleich mit hoch. */
           einstiegAnwenden();
+          /* 3.10.2: Neues Konto = Grundeinstellungen (dunkel). Seit die
+             Geraetewahl beim Start gilt, kann data-thema hier noch die eines
+             frueheren Kontos auf diesem Geraet tragen - sonst stuende in den
+             Einstellungen "Dunkel" bei heller Anzeige. */
+          themaAnwenden();
           ui.askImport = oldLocalProfiles().length > 0;
           if (!ui.askImport) persistAll(); // leeres Startdokument anlegen
           evaluateStreakForNewDay();

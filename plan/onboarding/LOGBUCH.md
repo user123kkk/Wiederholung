@@ -4,9 +4,9 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
-### 2026-09-23 (dieselbe Session, abends) — Fehlersuche nach dem Neubau (v3.10.1)
+### 2026-09-23 (dieselbe Session, abends) — Fehlersuche nach dem Neubau (v3.10.1, v3.10.2)
 
-**Geändert:**
+**Geändert (v3.10.1; der Theme-Fix v3.10.2 steht weiter unten):**
 - `app.js`:
   - Doppeltipp-Sperre in `einstieg-weiter` und `einstieg-zurueck` (Feld `zeit`
     im Einstiegs-Zustand, gesetzt in `renderEinstieg()`)
@@ -46,25 +46,39 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
   (`serieAktuell`), Reihenfolge „zuerst Wiederholungen, dann Neues“
   (`dueCardsFor`). Alles stimmt.
 
-**Neu gefunden, NICHT behoben (liegt außerhalb des Einstiegs):**
-`themaAnwenden()` läuft in `app.js` (Zeile ~1230) beim Laden des Moduls mit den
-Grundeinstellungen und schreibt „dunkel“ in `data-thema` **und** in
-`localStorage["adrabic-thema"]`, bevor Cloud-Daten da sind. Gemessen: gespeichert
-„hell“, nach dem Laden „dunkel“/„dunkel“. Folge für Nutzer:innen mit hellem
-Thema: Die Seite beginnt hell (Kopfskript in `index.html`), springt beim Start
-auf dunkel und nach dem Cloud-Dokument (Zeile ~1793) zurück auf hell. Ohne
-Netz bleibt sie dunkel, und die lokale Wahl ist überschrieben. Das ist die
-wahrscheinlichere Ursache für den „kurzen Flash“, den 3.9.12 nur dem
-blockierten Kopfskript zuschrieb. Ein Fix wäre klein (die gespeicherte Wahl vor
-dem ersten `themaAnwenden()` in `settings.thema` lesen), berührt aber den
-Start aller Konten und ist ohne echtes Firebase-Konto nicht zu prüfen.
-Deshalb nur festgehalten. Betreiber entscheidet.
+**Außerhalb des Einstiegs gefunden und behoben (v3.10.2):** `themaAnwenden()`
+lief in `app.js` (Zeile ~1230) beim Laden des Moduls mit den Grundeinstellungen
+und schrieb „dunkel“ in `data-thema` **und** in `localStorage["adrabic-thema"]`,
+bevor Cloud-Daten da waren. Gemessen: gespeichert „hell“, nach dem Laden
+„dunkel“/„dunkel“. Folge für Nutzer:innen mit hellem Thema: Die Seite begann
+hell (Kopfskript in `index.html`), sprang beim Start auf dunkel und nach dem
+Cloud-Dokument (Zeile ~1793) zurück auf hell; ohne Netz blieb sie dunkel, und
+die lokale Wahl war überschrieben. Das ist die wahrscheinlichere Ursache für den
+„kurzen Flash“, den 3.9.12 nur dem blockierten Kopfskript zuschrieb.
 
-**Nicht geprüft:** echtes Konto und Firebase; `prefers-reduced-motion` (nur per
-CSS-Regel abgesichert); das echte Gerät.
+**Zur Einordnung, weil der erste Entwurf dieses Eintrags es falsch darstellte:**
+Das war zuerst als „Betreiber entscheidet“ vermerkt. Das stimmte nicht. Eine
+Entscheidung des Betreibers war nicht nötig; der Fix ist mechanisch (die
+gespeicherte Wahl vor dem ersten `themaAnwenden()` lesen) und stellt nur das
+her, was der Kommentar in `index.html` schon immer beschrieb. Der einzige
+Grund zu zögern war, dass der Weg über ein echtes Firebase-Konto hier nicht zu
+prüfen ist. Das steht jetzt so unter „Nicht geprüft“.
 
-**Nächster Schritt:** Der Betreiber führt `veroeffentlichen.bat` aus. Offen
-sind weiter Gerätetest, J1 und der Wortlaut „Den Quran verstehen“.
+Geändert: `app.js` (gespeicherte Wahl vor dem ersten `themaAnwenden()`;
+zusätzlich `themaAnwenden()` im Zweig „neues Konto“ des Schnappschusses, damit
+die Anzeige nicht das Thema eines früheren Kontos auf diesem Gerät behält).
+Gemessen ohne Konto: `hell` bleibt `hell`, `auto` folgt dem System (hell und
+dunkel geprüft) und bleibt als `auto` gespeichert, Unsinn und „nichts
+gespeichert“ ergeben `dunkel`.
+
+**Nicht geprüft:** der Weg über ein echtes Firebase-Konto (Anmeldung, Cloud-
+Dokument, neues Konto, Abmeldung); `prefers-reduced-motion` (nur per CSS-Regel
+abgesichert); das echte Gerät.
+
+**Nächster Schritt:** Der Betreiber führt `veroeffentlichen.bat` aus und prüft
+am Gerät **mit hellem Thema und angemeldet**, ob die Seite nicht mehr kurz
+dunkel wird. Offen sind weiter Gerätetest, J1 und der Wortlaut „Den Quran
+verstehen“.
 
 ---
 

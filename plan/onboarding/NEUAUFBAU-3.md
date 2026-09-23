@@ -342,10 +342,10 @@ voraus, ob jemand bleibt; die Start-Liste wäre der Hebel dafür.
 4. **Das Wort auf der Probekarte** bleibt der Platzhalter كِتَابٌ.
 5. **Vorschlag Start-Liste** nach der Anmeldung, siehe Abschnitt 6. Das
    braucht eine Freigabe, weil es das Lernwerkzeug berührt.
-6. **Beobachtung, nicht behoben:** `themaAnwenden()` setzt beim Laden von
-   `app.js` `data-thema` und `adrabic-thema` auf „dunkel", bevor Cloud-Daten da
-   sind (Abschnitt 2, Punkt 3). Für den Einstieg gilt das nicht mehr, weil er
-   nicht mehr nach dem Thema fragt. **Es betrifft aber angemeldete Nutzer:innen
-   mit hellem Thema:** kurzer Sprung auf dunkel bei jedem Start, ohne Netz
-   dauerhaft. Gemessen in v3.10.1, Einzelheiten im Logbuch. Der Betreiber
-   entscheidet, ob es behoben wird.
+6. **Erledigt in v3.10.2:** `themaAnwenden()` setzte beim Laden von `app.js`
+   `data-thema` und `adrabic-thema` auf „dunkel", bevor Cloud-Daten da waren
+   (Abschnitt 2, Punkt 3). Das traf auch angemeldete Nutzer:innen mit hellem
+   Thema (kurzer Sprung auf dunkel bei jedem Start). Jetzt gilt die
+   Geräte-Wahl, bis die Cloud antwortet. **Offen bleibt nur die Prüfung am
+   Gerät mit hellem Thema und angemeldet**, weil der Weg über ein echtes Konto
+   hier nicht zu messen war. Einzelheiten im Logbuch.
