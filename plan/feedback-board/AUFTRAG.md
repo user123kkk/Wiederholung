@@ -43,13 +43,12 @@ behobenen echten Regel-Fehlers, im Logbuch: `redesign-oberflaeche/LOGBUCH.md`.
 Die vier „Offen"-Punkte unten sind damit beantwortet (1, 2) bzw. bewusst
 vertagt (3, 4) — siehe dort für die Begründung je Punkt.
 
-**Nicht fertig, solange der Betreiber diesen einen Schritt offen hat:** In
-`firestore.rules`, Funktion `istFeedbackModerator()`, steht der Platzhalter
-`'HIER-DEINE-KONTO-ID-EINTRAGEN'`. Solange er dort steht, kann **niemand**
-Einträge löschen oder ihren Status ändern (sicherer Standard, kein
-Versehen). Vor dem Deploy einmal durch die echte Konto-ID ersetzen —
-Einstellungen → Konto → „Konto-ID" in der App zeigt sie an, solange
-`BETREIBER_UIDS` in `app.js` noch leer ist.
+**23.09.2026: Konto-ID eingetragen, `istFeedbackModerator()` fertig.**
+Gegen den Emulator erneut geprüft (132/132). **Nicht fertig, solange der
+Betreiber diesen Schritt offen hat:** `firebase deploy --only
+"firestore:rules"` — ohne den Deploy gilt weiterhin die alte, live
+deployte Regel ohne die `feedback`-Sammlung, das Board lädt dann mit
+`permission-denied`.
 
 ## Modell (wie gebaut)
 
