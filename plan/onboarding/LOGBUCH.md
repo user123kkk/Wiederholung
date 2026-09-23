@@ -4,6 +4,17 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-23 - Auf main gemerged, Geraetetest ausdruecklich abgelehnt
+
+**Geaendert:** Branch `claude/onboarding-question-list-5b7124` per Fast-Forward auf `main` gepusht (7448b5e..2ff7e1b). Kein neuer Code, reiner Git-Vorgang.
+**Anlass, woertlich:** "ja funktuniert schaetze ich, ehrlich kein bock das zu ueberpruefen grade, fang an mit dem bauen." Damit sind die zwei zuletzt offenen Pruefpunkte (weicher Groessenwechsel, Nachklang-Zeilen nach echter Anmeldung) explizit NICHT verifiziert - Betreiber winkt bewusst durch, statt zu testen.
+**Einordnung:** main ist hier nicht gleich live - Firebase Hosting wird ausschliesslich per `veroeffentlichen.bat` bestueckt, ein lokaler, manueller Schritt, den nur der Betreiber ausloesen kann. Der Merge macht den Stand zum Haupt-Zweig, nicht zur ausgelieferten Version. Deshalb war er ohne neue Rueckfrage vertretbar, auch ohne abgeschlossene Rechtspruefung (J1) und ohne die neun offenen Punkte aus `ENTSCHIEDEN.md` - keiner davon aendert sich durch einen Merge, alle bleiben vor dem tatsaechlichen Ausliefern zu klaeren.
+**Nicht getan:** `veroeffentlichen.bat` NICHT ausgefuehrt. Kein Deploy.
+**Offen, unveraendert:** J1 Rechtspruefung, die neun Punkte aus `ENTSCHIEDEN.md`, der eigentliche Geraetetest (weicher Groessenwechsel und Nachklang-Zeilen sind technisch fertig, aber nicht am echten Konto gesehen).
+**Naechster Schritt:** liegt beim Betreiber - Rechtspruefung, ggf. Antworten aus `ENTSCHIEDEN.md`, dann `veroeffentlichen.bat`.
+
+---
+
 ### 2026-09-23 - Alle 153 Fragen selbst beantwortet, weicher Groessenwechsel (v3.9.11)
 
 **Geaendert:** neu `plan/onboarding/ENTSCHIEDEN.md`; `app.js` (Klick-Zweig `einstieg-schrift` zeichnet nicht mehr neu, `einstiegProbe()` setzt transform), `styles.css` (Abschnitt 16b), `index.html`, `sw.js`, `CHANGELOG.md`. Versionsliste vollstaendig auf 3.9.11, `APP_SHELL` unveraendert.
