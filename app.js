@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.18";
+const APP_VERSION = "3.17.19";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2473,8 +2473,13 @@ function evaluateStreakForNewDay() {
    Import und kein zweites Geraet kann sie mehr anfassen. Was frueher galt,
    traegt der Sockel: die Zahl, die beim Umstieg bestand.
 
-   Ein Tag zaehlt, wenn an ihm gelernt wurde. Eine Luecke wird ueberbrueckt,
-   wenn seit der letzten mindestens sieben gezaehlte Tage liegen. */
+   Ein Tag zaehlt, wenn an ihm gelernt wurde - eine Karte in irgendeinem
+   Bereich genuegt, das Rundenlimit spielt keine Rolle.
+   3.17.19, Kommentar berichtigt (die Regel darunter war schon laenger eine
+   andere): Rueckwaerts gezaehlt wird EINE Luecke von einem Tag ueberbrueckt,
+   an der zweiten hoert die Zaehlung auf - auch wenn sie Wochen zurueckliegt.
+   Frueher stand hier "eine Luecke je sieben Tage"; das ist nicht mehr der
+   Code. Offene Frage 18 in plan/PLAN.md. */
 function serieAktuell() {
   const t = todayStr();
   const sockel = Number.isInteger(streak.sockel) ? streak.sockel : 0;
@@ -2520,9 +2525,11 @@ function checkStreakOnSessionComplete() {
   const jetzt = serieAktuell();
   if (jetzt > (streak.beste || 0)) { streak.beste = jetzt; persistStreak(["beste"]); }
 }
-/* Alle Bereiche, in denen heute noch eine WIEDERHOLUNG offen ist – Grundlage
-   für die Streak-Prüfung UND für die Anzeige „Noch offen: …" auf dem
-   Lernen-Tab. Neue Karten stehen hier bewusst nicht drin (siehe oben). */
+/* Alle Bereiche, in denen heute noch eine WIEDERHOLUNG offen ist – nur noch
+   Grundlage für den Hinweis „Heute auch fällig: …" auf dem Lernen-Tab.
+   3.17.19: Mit der Serie hat das seit 2.14.0 nichts mehr zu tun (die kommt
+   aus dem Tagesprotokoll, serieAktuell); der alte Satz "Grundlage für die
+   Streak-Prüfung" hier war veraltet. Neue Karten stehen bewusst nicht drin. */
 function bereicheMitOffenem() {
   if (bereiche === null) return [];
   const t = todayStr();
@@ -8729,12 +8736,17 @@ function renderLernen() {
      Tagesprotokoll - gezaehlt, nicht behauptet). --- */
   html += lernenSerie();
 
-  /* A7: Wer drei Bereiche hat und heute nur einen lernt, bekam nie eine
-     Streak und erfuhr nirgends, warum. Jetzt steht es hier. */
+  /* Wiederholungen, die heute in ANDEREN Bereichen faellig sind.
+     3.17.19: Bis hier stand "Noch offen fuer die Serie" - ein Rest aus der
+     Zeit vor 2.14.0 (A7), als die Serie an allen Bereichen hing. Seit 2.14.0
+     zaehlt ein Tag, sobald irgendwo eine Karte gelernt wurde (serieAktuell,
+     tagGelernt); die anderen Bereiche sind fuer die Serie egal. Der Satz
+     behauptete also etwas Falsches. Der Hinweis selbst bleibt: wer mehrere
+     Bereiche hat, sieht hier, wo sonst noch etwas wartet. */
   const offen = bereicheMitOffenem().filter(x => x.bereich.id !== currentBereich().id);
   if (offen.length > 0) {
     html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
-      ikon("lernen", "i-sm") + '<div class="banner__text">Noch offen f\u00fcr die Serie: ' +
+      ikon("lernen", "i-sm") + '<div class="banner__text">Heute auch f\u00e4llig: ' +
       offen.map(x => '<strong>' + esc(x.bereich.name) + '</strong> (' + x.offen + ')').join(", ") +
       '</div></div>';
   }

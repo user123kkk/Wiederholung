@@ -1,5 +1,46 @@
 # Hinweise für Claude Code
 
+## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
+
+Dort steht jeder Fehler, der in diesem Projekt schon passiert ist, samt der
+Regel, die ihn verhindert. Das umfasst Code, Firebase, Regeln, E-Mails,
+Hosting, iOS, Texte, Recht und den Umgang mit dem Betreiber. Der Betreiber
+(24.09.2026): „soll zukünftig direkt korrekt sein … das kann ich mir einfach
+nicht leisten."
+
+Pflicht in jeder Session:
+
+- `plan/LEHREN.md` **vor der ersten Änderung** lesen.
+- Vor jedem Commit die **Checkliste in § 14** dort durchgehen.
+- Jeder neue Fehler, auch ein eigener, kommt dort hinein: als Regel im
+  passenden Abschnitt und als Zeile in der Vorfall-Liste (§ 15).
+
+## Zwei Grundsätze des Betreibers (24.09.2026, ausdrücklich „notieren")
+
+1. **Seine Vorschläge sind Fragen, keine Beschlüsse.**
+   > „nur weil ich ein Argument dafür bringen kann, heißt es nicht, dass es
+   > überwiegt."
+
+   Zu jedem Vorschlag und jeder Kritik gehören:
+   - Argumente dafür **und** dagegen, ehrlich gewichtet;
+   - dann ein eigenes Urteil mit Empfehlung, auch wenn es „lieber nicht"
+     lautet.
+
+   Ein Bedenken, das er *vor* einer Anweisung äußert, ist kein Bauauftrag.
+   Echte Fehler, die dabei auffallen, werden trotzdem sofort behoben.
+   Einzelheiten: `plan/LEHREN.md` § 1.
+2. **Religiöser Rahmen:** Es gilt ausschließlich **Quran und Sunnah nach dem
+   Verständnis der Salaf as-Salih**. Gemeint sind die drei ersten Generationen
+   nach dem Propheten Muhammad ﷺ, dazu die Fatawa der Gelehrten auf dem Manhaj
+   der Salaf, die Hadithe und der Quran.
+   - Keine Sekte, keine Organisation, keine Bewegung, kein politischer Bezug,
+     auch nicht als Abgrenzung.
+   - Religiöse Inhalte verfasst kein Agent selbst; Wortlaut kommt vom
+     Betreiber.
+   - Religiöse Angaben von Nutzer:innen werden nicht gespeichert.
+
+   Einzelheiten: `plan/LEHREN.md` § 2.
+
 ## Wenn hier jemand „leg los" sagt
 
 Dann ist **immer** das gemeint: die Arbeit aus `plan/` an genau der Stelle
@@ -101,13 +142,24 @@ Veröffentlichungsliste aus [`README.md`](README.md):
    das sich aus `CACHE_NAME` ableitet) — `caches.match()` vergleicht die ganze
    URL samt Query, ohne sie traf der vorab gespeicherte Eintrag nie.
 5. Eintrag in `CHANGELOG.md`.
+6. `node --check app.js` vor dem Commit.
+   - Warum: 3.6.2 startete die App auf keinem Gerät, weil typografische
+     Anführungszeichen als String-Begrenzer im Code standen.
+7. Nur `firebase.json` geändert (Header, CSP)? Dann die Zeile `csp-build` in
+   `index.html` mitzählen.
+   - Warum: Sonst antwortet der Server 304, und Browser behalten die alten
+     Header (3.4.10).
+8. `veroeffentlichen.bat` spielt **nur Hosting** ein.
+   - Geänderte `firestore.rules` braucht einen eigenen Schritt des Betreibers:
+     `firebase deploy --only firestore:rules` oder die Firebase-Konsole.
+   - Dieser Schritt gehört unter „Was Du noch tun musst".
 
 Plandateien unter `plan/` und `KONZEPT.md` sind reine Textdateien, stehen nicht
 in `APP_SHELL` und werden nicht ausgeliefert — für sie entfällt die Liste.
 
 ## Was dieses Repo ist
 
-Karteikarten-PWA, Version 3.0.3. Kein Build-Schritt, keine Paketverwaltung: die
+Karteikarten-PWA (aktuelle Version: `APP_VERSION` in `app.js`). Kein Build-Schritt, keine Paketverwaltung: die
 Dateien werden so ausgeliefert, wie sie im Wurzelverzeichnis liegen. Der
 Browser spricht direkt mit Firestore; es gibt **keinen eigenen Server**.
 

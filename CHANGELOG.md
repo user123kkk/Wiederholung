@@ -1,3 +1,15 @@
+## 3.17.19 - 24. September 2026
+
+**Serien-Hinweis richtiggestellt.**
+
+- Auf dem Lernen-Tab stand bei mehreren Bereichen „Noch offen für die Serie:
+  …". Das stimmte nicht mehr: Seit 2.14.0 zählt ein Tag für die Serie, sobald
+  irgendwo eine Karte gelernt wurde. Welche Bereiche sonst noch fällig sind,
+  spielt keine Rolle, und das Rundenlimit auch nicht. Der Hinweis heißt jetzt
+  „Heute auch fällig: …".
+- Zwei veraltete Code-Kommentare zur Serie berichtigt: bei `serieAktuell()` und
+  bei `bereicheMitOffenem()`. An der Lernlogik hat sich nichts geändert.
+
 ## 3.17.18 - 24. September 2026
 
 **Prüfschleife, Station 18 (Hell & ruhig) – die Schleife ist durch.**

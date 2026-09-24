@@ -511,6 +511,95 @@ hängt, nicht begonnen.
 | ~~13~~ | ~~Anmelden mit Google (oder Apple)?~~ | **erledigt 17.09.2026** — siehe unten |
 | ~~14~~ | ~~Analytics – Ja oder Nein?~~ | **entschieden 24.09.2026: JA** (Betreiber: „datenschutzerklärung usw. lässt sich umschreiben [...] daher analytics"). Gebaut in v3.17.0, **aus bis zum Schlüssel**: Betreiber legt ein PostHog-Projekt (EU) an und trägt den Projektschlüssel in `app.js` (`POSTHOG_KEY`) ein bzw. schickt ihn. Datenschutzerklärung Punkt 15 ergänzt – vor dem Einschalten rechtlich gegenlesen lassen. Details: [`analytics/GERUEST.md`](analytics/GERUEST.md). |
 | ~~15~~ | ~~Üben im Fortschritt zählen?~~ | **erledigt 24.09.2026 (v3.16.0)** — Betreiber: „mach einfach". Gebaut: Übungsantworten als `u` im Tagesprotokoll, sichtbar im Fortschritt; ein reiner Übungstag hält **keine** Serie (`tagGelernt`, `app.js`). |
+| 16 | Einstieg, erster Bildschirm: Die Karte „كِتَابٌ → Buch" dreht sich einmal nach 1 s. Wer später hinschaut, hat es verpasst. Was tun? | **offen, Empfehlung C** (siehe unten). Nichts gebaut. |
+| 17 | Einstieg „Wofür lernst du Arabisch?": Die Antworten überschneiden sich. Ändern? | **offen, Empfehlung B** (siehe unten). Nichts gebaut. |
+| 18 | Serie: Wie viele ausgelassene Tage verzeiht sie? Heute wird genau **eine** Lücke überbrückt; an der zweiten hört die Zählung auf, auch Wochen später. | **offen, Empfehlung B** (siehe unten). **Lernlogik**, nur mit ausdrücklichem „ja". Nichts gebaut. |
+
+**Neu am 24.09.2026 (Fragen 16–18).** Die drei Bedenken äußerte der Betreiber
+„bevor ich eine Anweisung gebe". Nach seiner Regel (`plan/LEHREN.md` § 1.1)
+steht zu jeder Frage Pro und Contra mit Empfehlung. Die Beantwortung steht im
+Chat vom 24.09.2026 und im `audit/LOGBUCH.md` (oberster Eintrag).
+
+*Frage 16 – Karte auf dem ersten Einstieg-Bildschirm*
+(`einstiegHero()` in `app.js`, `.einstieg-hero__dreh` in `styles.css`):
+
+- **A – lassen.**
+  - Pro: ruhig, eine Bewegung.
+  - Contra: Wer spät hinschaut, sieht nur „Buch" und ahnt die Drehung nicht.
+    Mit „Bewegung reduzieren" dreht sie **nie**, die Rückseite ist dann gar
+    nicht erreichbar (`plan/LEHREN.md` § 6.4).
+- **B – einmal hin und nach ~2 s zurück, Ende auf der arabischen Seite.**
+  Das dauert unter 5 s und braucht deshalb keinen Stopp-Knopf (WCAG 2.2.2).
+  - Pro: Wer spät kommt, sieht die schöne Seite.
+  - Contra: Die Drehung selbst bleibt trotzdem verpasst.
+- **C – B, und die Karte ist jederzeit antippbar zum Umdrehen**, auch bei
+  reduzierter Bewegung (dann ohne Drehung, direkter Wechsel).
+  - Pro: dieselbe Geste wie in der App; Selbstbestimmung; löst die Lücke bei
+    reduzierter Bewegung.
+  - Contra: nimmt Bildschirm 3 (Probekarte selbst umdrehen) ein Stück vorweg;
+    ein zweites Bedienelement auf einem Bildschirm, dessen Aufgabe „Los geht's"
+    ist; wer spät kommt, weiß nicht, dass man tippen kann (ein Hinweistext
+    wäre mehr Text).
+- **D – Endlosschleife.** Abgelehnt: Sie zieht dauerhaft Aufmerksamkeit vom
+  Knopf, ist unruhig, und WCAG 2.2.2 verlangt dann einen Stopp.
+- **Empfehlung C.** Die Vorwegnahme von Bildschirm 3 wiegt weniger als die
+  Lücke bei reduzierter Bewegung.
+
+*Frage 17 – „Wofür lernst du Arabisch?"* (`EINSTIEG_ZIELE`). Heute stehen dort
+vier Antworten, Mehrfachwahl möglich:
+
+- Quran und Sunnah verstehen;
+- Für meinen Kurs oder mein Buch;
+- Hocharabisch lesen und sprechen;
+- Etwas anderes.
+
+Sie mischen **Ziel** (Quran und Sunnah) und **Mittel** (Kurs, Buch,
+Hocharabisch). Hocharabisch ist die Sprache von Quran und Sunnah, also für die
+Zielgruppe keine eigene Antwort. Die Antworten wirken nur auf zwei Stellen: den
+Echo-Satz („… aus Quran und Sunnah …") und die Zeile „Ziel" im Plan. Sie werden
+**nirgends gespeichert** (§ 2 in `LEHREN.md`), also gibt es bei einer Änderung
+nichts zu übertragen.
+
+- **A – lassen.**
+  - Pro: keine Arbeit.
+  - Contra: Die Überschneidung fällt schon dem Betreiber auf, und mehr
+    Antworten heißt mehr Nachdenken (Hick).
+- **B – drei Antworten:** Quran und Sunnah verstehen · Für meinen Kurs oder
+  mein Buch · Etwas anderes. „Kurs oder Buch" bleibt, weil daher die meisten
+  Wörter kommen, die man in Adrabic anlegt. Wer mit dem Medina-Buch für den
+  Quran lernt, wählt beides, das geht schon heute.
+  - Contra: Wer für Beruf, Reise oder Familie lernt, landet bei „Etwas anderes"
+    und bekommt einen weniger persönlichen Satz.
+- **C – zwei Antworten** (Quran und Sunnah · Etwas anderes). Contra: Dann ist
+  die Frage für fast alle vorhersehbar, der Bildschirm wird zur Formalie, und
+  der Echo-Satz verliert „dein Kurs oder Buch".
+- **D – Bildschirm streichen**, den Echo-Satz woanders hin. Contra: größerer
+  Eingriff in einen freigegebenen Einstieg, der Festlegungs-Schritt fällt weg.
+- **Empfehlung B.**
+
+*Frage 18 – Lücken-Regel der Serie* (`serieAktuell()`). Heute wird rückwärts
+**eine** Lücke überbrückt; an der zweiten Lücke endet die Zählung. Folge: Eine
+Serie von z. B. 118 Tagen mit einer alten Lücke vor 20 Tagen fällt nach dem
+nächsten verpassten Tag auf 19. Sie fällt nicht auf 0 und bleibt nicht bei 118,
+sondern landet auf einem „krummen" Wert. Das wirkt unberechenbar, genau wie die
+Meldung aus Beobachtung 17. Der Einstieg sagt „Ein ausgelassener Tag reißt sie
+nicht", was nur für den ersten stimmt. Der Hinweis „Heute zählt: Ohne eine
+Runde endet deine Serie" erscheint nur, wenn **gestern** fehlt; der Absturz
+durch eine alte Lücke wird nicht angekündigt.
+
+- **A – Regel lassen, Texte präzisieren**, etwa „Einen ausgelassenen Tag
+  verzeiht sie – den zweiten nicht".
+  - Pro: keine Lernlogik angefasst.
+  - Contra: Der krumme Absturz bleibt.
+- **B – ein ausgelassener Tag je Woche wird überbrückt**, vorwärts gerechnet:
+  Der „Joker" lädt nach 7 gelernten Tagen wieder auf.
+  - Pro: Der Einstiegs-Satz stimmt dann genau; nachsichtig bei Krankheit oder
+    Reise; wer nur jeden zweiten Tag lernt, hält trotzdem keine Serie; kein
+    krummer Wert mehr, sondern entweder weiter oder ein klarer Neuanfang.
+  - Contra: Lernlogik, braucht Freigabe; bestehende Serien ändern sich einmal
+    (meist nach oben, selten nach unten; lässt sich mit dem vorhandenen Sockel
+    abfedern); der Hinweis „Heute zählt" muss mitziehen; Tests nötig.
+- **Empfehlung B.**
 
 **Geklärt am 12.09.2026 (vormals offene Frage 1).** Entscheidung des
 Betreibers: **Firebase Hosting**, nicht GitHub Pages, nicht Netlify/Vercel —
@@ -685,7 +774,22 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026): v3.17.18 auf `main` – PRÜFSCHLEIFE ABGESCHLOSSEN: alle 18 Stationen erledigt (v3.16.1 → v3.17.18), Routine gelöscht, Zusammenfassung in `audit/LOGBUCH.md` (oberster Eintrag). Nächstes nur auf Betreiber-Wunsch. Offen beim Betreiber: `veroeffentlichen.bat`; PostHog-Schlüssel („von vorhin: …"); Datenschutz §15 prüfen lassen; am Gerät: Konto-Löschen mit Google, Kalender-Erinnerung iOS. Davor v3.17.17 – Prüfschleife Station 17 (Große Bildschirme): Lernen-Raster am Computer ausgewogen, gesperrter Knopf lesbar; nächste Station 18 (Hell & ruhig), danach Abschluss. Davor v3.17.16 – Prüfschleife Station 16 (Querschnitt): Offline-Hinweis kurz, Fehler ohne Systemcodes, Startfehler mit Abmelden; nächste Station 17 (Große Bildschirme). Davor v3.17.15 – Prüfschleife Station 15 (Konto): Google/Apple-Konten löschbar, erst neu anmelden dann löschen, gesperrter Knopf lesbar; nächste Station 16 (Querschnitt). Offen beim Betreiber: Konto-Löschen mit Google einmal am Gerät testen. Davor v3.17.14 – Prüfschleife Station 14 (Einstellungen): Fehler melden schlank, Erinnerungs-Blatt schließt, „Runde" statt „Sitzung"; nächste Station 15 (Konto). Davor v3.17.13 – Prüfschleife Station 13 (Kartensätze & Daten): Codes in jeder Schreibweise, Fehler in Worten, keine „Karte(n)" mehr; nächste Station 14 (Einstellungen). Davor v3.17.12 – Prüfschleife Station 12 (Bereiche): neuer/gelöschter Bereich setzt Zustand zurück, leerer Bereich einfach löschbar, kein Löschen beim letzten, „leer" statt „fertig"; nächste Station 13 (Kartensätze & Daten). Stationen laufen jetzt direkt hintereinander (Betreiber). Davor v3.17.11 – Prüfschleife Station 11 (Karten-Blätter): angefangene Karte geht nicht mehr verloren, Enter springt weiter, Fehler ohne Sprung, gleiche Abstände; nächste Station 12 (Bereiche). Davor v3.17.10 – Prüfschleife Station 10 (Verwalten): Auswahl ohne Sprung, Leiste einzeilig mit Blättern, Suche flackert nicht, Tastatur-Sortieren hält den Fokus; nächste Station 11 (Karten-Blätter). Davor v3.17.9 – Prüfschleife Station 9 (Fortschritt): gesperrte Lektionen lesbar, Einzahl überall, Kalender-Tooltip lesbar, keine doppelte Überschrift; nächste Station 10 (Verwalten). Davor v3.17.8 – Prüfschleife Station 8 (Üben, Rest): Schreiben kompakt und sofort im Bild, Wort im Vollbild sichtbar, „Strich zurück" fest, Schalter „Mit Schreiben" bleibt; nächste Station 9 (Fortschritt). Davor v3.17.7 – Prüfschleife Station 7 (Rundenende): mit Rundenlimit „N Karten geschafft, noch N offen" + Weiterlernen, ein Ausgang statt zwei; nächste Station 8 (Üben, Rest). Davor v3.17.6 – Rückgängig zählt auch das Tagesprotokoll zurück (Betreiber: ja); flüssiger: Kartenliste animiert nur 14 Zeilen, content-visibility; Prüfliste um „Flüssig" (CPU 4×) ergänzt; nächste Station 7 (Rundenende). Davor v3.17.5 – Station 6 (Lernrunde, Rest). Davor v3.17.4 – Station 5 (Lernen-Start). Davor v3.17.3 – Station 4 (Bestätigung): Meldungen unter den Knöpfen, Tipp-Feedback, keine Systemcodes. Davor v3.17.2 – Station 3 (Anmelden): Fehlermeldung unter dem Knopf, Schütteln, Name-Fehler in der Beschriftung. Davor v3.17.1 – Station 2 (Einstieg): Weiter-Knopf unten fest. Davor v3.17.0 – Hinweise zur richtigen Zeit, Kalender-Erinnerung, Ideen-Board neu (vorladen, Platzhalter, Abschnitte), Moderation nur Betreiber, Antwort mit der Drehung, Bewertung ohne Unterzeilen, Nutzungsstatistik (PostHog) vorbereitet und aus bis zum Schlüssel. Offen beim Betreiber: PostHog-Schlüssel. Prüfschleife: nächste Station 2. Davor v3.16.1 – Prüfschleife Station 1 (Start) erledigt: kein endloser Startbildschirm mehr bei hängendem Netz; nächste Station 2. Davor v3.16.0 – Hick-Durchgang über das ganze Tool: Doppeltes raus (Serie nur auf Lernen, Fortschritt zwei Blöcke, Stand-Punkte in der Kartenliste, „Tage gelernt" durch „Dabei seit" ersetzt), Üben zählt im Fortschritt ohne Serie. Offen: Frage 14 (Analytics Ja/Nein). Davor v3.15.0 – Üben neu (Auswahl, Bewertung, Ende), Kontrast überall gemessen (0 Funde), Schreib-Tinte sichtbar, Einladungs-Ring aus dem Einstieg, Karte steht still. Neue offene Fragen 14 (Analytics) und 15 (Üben im Fortschritt). Davor v3.14.0: Karte dreht sich wirklich, antippbar, fliegt nach der Bewertung weg. Danach lief die PRÜFSCHLEIFE (`audit/AUFTRAG.md` + `audit/LOGBUCH.md`) – am 24.09.2026 mit Station 18 abgeschlossen, Routine gelöscht. Bei „leg los" gibt es aus der Schleife nichts mehr zu tun: auf Betreiber-Rückmeldung warten; eine zweite Runde nur auf seinen Wunsch.**
+**AKTUELL (24.09.2026, abends): v3.17.19 auf `main`.**
+
+- **NEU: [`LEHREN.md`](LEHREN.md)** ist Pflichtlektüre vor jeder Änderung
+  (`CLAUDE.md` verweist darauf). Es sammelt alle Fehler und Muster aus allen
+  Phasen und Regeln für Tool, Firebase, Regeln, E-Mails, Hosting, iOS, Texte
+  und Recht. Vor jedem Commit gilt die Checkliste § 14 dort.
+- Drei Betreiber-Bedenken sind beantwortet: offene Fragen **16**
+  (Einstieg-Karte), **17** (Ziel-Antworten) und **18** (Lücken-Regel der
+  Serie). Sie warten auf seine Entscheidung: **nicht vorher bauen**.
+- In 3.17.19 wurde nur der falsche Hinweis „Noch offen für die Serie"
+  richtiggestellt.
+- Offen beim Betreiber: `veroeffentlichen.bat`; PostHog-Schlüssel; Datenschutz
+  §15 prüfen lassen; am Gerät das Konto-Löschen mit Google und die
+  Kalender-Erinnerung auf iOS; Fragen 16–18.
+
+**Davor (24.09.2026): v3.17.18 auf `main` – PRÜFSCHLEIFE ABGESCHLOSSEN: alle 18 Stationen erledigt (v3.16.1 → v3.17.18), Routine gelöscht, Zusammenfassung in `audit/LOGBUCH.md` (oberster Eintrag). Nächstes nur auf Betreiber-Wunsch. Offen beim Betreiber: `veroeffentlichen.bat`; PostHog-Schlüssel („von vorhin: …"); Datenschutz §15 prüfen lassen; am Gerät: Konto-Löschen mit Google, Kalender-Erinnerung iOS. Davor v3.17.17 – Prüfschleife Station 17 (Große Bildschirme): Lernen-Raster am Computer ausgewogen, gesperrter Knopf lesbar; nächste Station 18 (Hell & ruhig), danach Abschluss. Davor v3.17.16 – Prüfschleife Station 16 (Querschnitt): Offline-Hinweis kurz, Fehler ohne Systemcodes, Startfehler mit Abmelden; nächste Station 17 (Große Bildschirme). Davor v3.17.15 – Prüfschleife Station 15 (Konto): Google/Apple-Konten löschbar, erst neu anmelden dann löschen, gesperrter Knopf lesbar; nächste Station 16 (Querschnitt). Offen beim Betreiber: Konto-Löschen mit Google einmal am Gerät testen. Davor v3.17.14 – Prüfschleife Station 14 (Einstellungen): Fehler melden schlank, Erinnerungs-Blatt schließt, „Runde" statt „Sitzung"; nächste Station 15 (Konto). Davor v3.17.13 – Prüfschleife Station 13 (Kartensätze & Daten): Codes in jeder Schreibweise, Fehler in Worten, keine „Karte(n)" mehr; nächste Station 14 (Einstellungen). Davor v3.17.12 – Prüfschleife Station 12 (Bereiche): neuer/gelöschter Bereich setzt Zustand zurück, leerer Bereich einfach löschbar, kein Löschen beim letzten, „leer" statt „fertig"; nächste Station 13 (Kartensätze & Daten). Stationen laufen jetzt direkt hintereinander (Betreiber). Davor v3.17.11 – Prüfschleife Station 11 (Karten-Blätter): angefangene Karte geht nicht mehr verloren, Enter springt weiter, Fehler ohne Sprung, gleiche Abstände; nächste Station 12 (Bereiche). Davor v3.17.10 – Prüfschleife Station 10 (Verwalten): Auswahl ohne Sprung, Leiste einzeilig mit Blättern, Suche flackert nicht, Tastatur-Sortieren hält den Fokus; nächste Station 11 (Karten-Blätter). Davor v3.17.9 – Prüfschleife Station 9 (Fortschritt): gesperrte Lektionen lesbar, Einzahl überall, Kalender-Tooltip lesbar, keine doppelte Überschrift; nächste Station 10 (Verwalten). Davor v3.17.8 – Prüfschleife Station 8 (Üben, Rest): Schreiben kompakt und sofort im Bild, Wort im Vollbild sichtbar, „Strich zurück" fest, Schalter „Mit Schreiben" bleibt; nächste Station 9 (Fortschritt). Davor v3.17.7 – Prüfschleife Station 7 (Rundenende): mit Rundenlimit „N Karten geschafft, noch N offen" + Weiterlernen, ein Ausgang statt zwei; nächste Station 8 (Üben, Rest). Davor v3.17.6 – Rückgängig zählt auch das Tagesprotokoll zurück (Betreiber: ja); flüssiger: Kartenliste animiert nur 14 Zeilen, content-visibility; Prüfliste um „Flüssig" (CPU 4×) ergänzt; nächste Station 7 (Rundenende). Davor v3.17.5 – Station 6 (Lernrunde, Rest). Davor v3.17.4 – Station 5 (Lernen-Start). Davor v3.17.3 – Station 4 (Bestätigung): Meldungen unter den Knöpfen, Tipp-Feedback, keine Systemcodes. Davor v3.17.2 – Station 3 (Anmelden): Fehlermeldung unter dem Knopf, Schütteln, Name-Fehler in der Beschriftung. Davor v3.17.1 – Station 2 (Einstieg): Weiter-Knopf unten fest. Davor v3.17.0 – Hinweise zur richtigen Zeit, Kalender-Erinnerung, Ideen-Board neu (vorladen, Platzhalter, Abschnitte), Moderation nur Betreiber, Antwort mit der Drehung, Bewertung ohne Unterzeilen, Nutzungsstatistik (PostHog) vorbereitet und aus bis zum Schlüssel. Offen beim Betreiber: PostHog-Schlüssel. Prüfschleife: nächste Station 2. Davor v3.16.1 – Prüfschleife Station 1 (Start) erledigt: kein endloser Startbildschirm mehr bei hängendem Netz; nächste Station 2. Davor v3.16.0 – Hick-Durchgang über das ganze Tool: Doppeltes raus (Serie nur auf Lernen, Fortschritt zwei Blöcke, Stand-Punkte in der Kartenliste, „Tage gelernt" durch „Dabei seit" ersetzt), Üben zählt im Fortschritt ohne Serie. Offen: Frage 14 (Analytics Ja/Nein). Davor v3.15.0 – Üben neu (Auswahl, Bewertung, Ende), Kontrast überall gemessen (0 Funde), Schreib-Tinte sichtbar, Einladungs-Ring aus dem Einstieg, Karte steht still. Neue offene Fragen 14 (Analytics) und 15 (Üben im Fortschritt). Davor v3.14.0: Karte dreht sich wirklich, antippbar, fliegt nach der Bewertung weg. Danach lief die PRÜFSCHLEIFE (`audit/AUFTRAG.md` + `audit/LOGBUCH.md`) – am 24.09.2026 mit Station 18 abgeschlossen, Routine gelöscht. Bei „leg los" gibt es aus der Schleife nichts mehr zu tun: auf Betreiber-Rückmeldung warten; eine zweite Runde nur auf seinen Wunsch.**
 
 Davor: v3.13.1 (Ladebildschirm weiß statt gold); v3.13.0 – sechs Zustände
 (neu · im Lernen · frisch gelernt · wird fester · gefestigt · dauerhaft,

@@ -28,6 +28,85 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Nachtrag: drei Betreiber-Bedenken, `LEHREN.md`, v3.17.19
+
+**Geändert:**
+
+- **`plan/LEHREN.md` neu.**
+  - Inhalt: alle Fehler und Muster aus allen Phasen, Logbüchern und diesem
+    Chat, als Regeln (§ 1–13), dazu eine Checkliste vor jedem Commit (§ 14)
+    und die Vorfall-Liste (§ 15).
+  - Quellen: `PLAN.md` Statusverlauf, alle `LOGBUCH.md`,
+    `beobachtungen-lernwerkzeug.md`, `regeln-pruefung.mjs`, alle
+    Betreiber-Nachrichten dieses Chats.
+- **`CLAUDE.md`:**
+  - neuer Abschnitt ganz oben „Vor allem anderen: `plan/LEHREN.md` lesen";
+  - die zwei Grundsätze des Betreibers: Pro/Contra statt Übernahme, und der
+    religiöse Rahmen „Quran und Sunnah nach dem Verständnis der Salaf
+    as-Salih";
+  - Veröffentlichungsliste um `node --check`, `csp-build` und den getrennten
+    Regel-Deploy ergänzt;
+  - veraltete „Version 3.0.3" ersetzt.
+- **`app.js`:**
+  - Hinweis auf Lernen „Noch offen für die Serie: …" → „Heute auch fällig: …"
+    (in `renderLernen`, beim Kommentar „Wiederholungen, die heute in ANDEREN
+    Bereichen");
+  - Kommentar über `serieAktuell()` berichtigt;
+  - Kommentar über `bereicheMitOffenem()` berichtigt;
+  - `APP_VERSION` 3.17.19.
+- `sw.js` `CACHE_NAME`, `index.html` beide `?v=` auf 3.17.19, `CHANGELOG.md`.
+- **`plan/PLAN.md`:** offene Fragen 16, 17, 18 mit Pro/Contra und Empfehlung;
+  „AKTUELL".
+
+**Entscheidung:**
+
+- **Bedenken 2 (Serie mit Rundenlimit) – geprüft, schon so.**
+  - Ein Tag zählt, sobald die **erste** Karte des Tages gelernt ist, in
+    irgendeinem Bereich (`tagGelernt`: w+n>0).
+  - Das Limit (10/20/30/alle) gilt je Runde. Danach bietet das Rundenende
+    „Weiterlernen" an.
+  - Mit Limit 10 und 11 fälligen Karten steigt die Serie also schon mit der
+    ersten Karte. Die elfte bleibt für „Weiterlernen" oder morgen.
+- **Dabei gefunden und behoben:** Der Hinweis „Noch offen für die Serie"
+  stammte aus der Zeit vor 2.14.0 (A7), als die Serie an allen Bereichen hing.
+  Er war falsch und ist jetzt richtiggestellt; `LEHREN.md` § 3.2, § 7.3.
+- **Dabei gefunden, nicht gebaut (Lernlogik):** Die Lücken-Regel der Serie
+  überbrückt nur **eine** Lücke. An der zweiten endet die Zählung, auch Wochen
+  später. Das ergibt „krumme" Abstürze, und der Einstieg-Satz „Ein
+  ausgelassener Tag reißt sie nicht" stimmt nur halb. Daraus wurde offene
+  Frage 18.
+- **Bedenken 1 und 3** sind Fragen *vor* einer Anweisung. Deshalb wurde nichts
+  gebaut, sondern Pro/Contra vorgelegt: offene Fragen 16 und 17 in `PLAN.md`.
+- **Eigener Fehler, im Chat richtiggestellt:** Die erste Analyse zu Frage 17
+  nahm an, gespeicherte Antworten „msa" müssten gefiltert werden. Die
+  Ziel-Antworten werden aber nirgends gespeichert. Es fehlte ein Blick in den
+  Code; dazu `LEHREN.md` § 1.3.
+
+**Geprüft:**
+
+- `t_lernen_start.js` (Handy dunkel und hell, iPad), Zustand „zwei Bereiche":
+  Text „Heute auch fällig: Quran-Wörter (1)", CLS 0, Kontrast 0, kein
+  Seitenfehler.
+- `node --check app.js` sauber.
+- Versionen an vier Stellen gleich (`grep -F`).
+- Regression `t_sprung.js`: 0 auf Handy, klein, iPad und Desktop (klein ±1
+  Rundung).
+- Regression `t_kontrast.js`: 0 Funde.
+
+**Offen (Betreiber):**
+
+- Fragen 16, 17, 18;
+- `veroeffentlichen.bat`;
+- PostHog-Schlüssel;
+- Datenschutz §15 prüfen lassen;
+- am Gerät: Konto-Löschen mit Google, Kalender-Erinnerung iOS.
+
+**Nächster Schritt:** Auf die Antworten zu 16–18 warten. Bei „ja" die
+jeweilige Empfehlung bauen. Vorher `LEHREN.md` § 14 durchgehen; für 18 zuerst
+einen Test schreiben, der die heutigen Serienwerte festhält.
+
+---
+
 ### 2026-09-24 — Abschluss: alle 18 Stationen durch (v3.16.1 → v3.17.18)
 
 **Station 18: Hell & ruhig (v3.17.18).** Geprüft mit `t_a11y.js` (helle
