@@ -8,7 +8,7 @@ const S = (window.__FB = window.__FB || {});
 S.authListeners = S.authListeners || [];
 function mkUser(u){ if(!u) return null; return Object.assign({
   getIdToken(){ return Promise.resolve('tok'); },
-  reload(){ return Promise.resolve(); }
+  reload(){ if (S.authFail) return Promise.reject(Object.assign(new Error('x'),{code:S.authFail})); return Promise.resolve(); }
 }, u); }
 if (S.user === undefined) S.user = window.__START_USER ? mkUser(window.__START_USER) : null;
 function feuer(){ for (const cb of S.authListeners) setTimeout(()=>cb(S.user), 5); }
@@ -29,7 +29,7 @@ export function createUserWithEmailAndPassword(a, email){
   return Promise.resolve({ user:S.user });
 }
 export function sendPasswordResetEmail(){ return Promise.resolve(); }
-export function sendEmailVerification(){ return Promise.resolve(); }
+export function sendEmailVerification(){ if (S.authFail) return Promise.reject(Object.assign(new Error('x'),{code:S.authFail})); return Promise.resolve(); }
 export function signOut(){ S.user = null; feuer(); return Promise.resolve(); }
 export function updateProfile(u, p){ Object.assign(u, p); return Promise.resolve(); }
 export function signInWithPopup(){ return Promise.reject(Object.assign(new Error('x'),{code:'auth/popup-closed-by-user'})); }
@@ -103,7 +103,10 @@ export function writeBatch(){ const ops = []; return {
   delete(r){ ops.push(() => S.store.delete(r.path)); return this; },
   commit(){ try { ops.forEach(f => f()); } catch(e){ return Promise.reject(e); } melden(); return Promise.resolve(); } }; }
 export function runTransaction(db, fn){ return fn({ get: getDoc, set: (r,d,o)=>_set(r,d,o), update: (r,...a)=>_update(r,...a), delete: r=>S.store.delete(r.path) }).then(v => { melden(); return v; }); }
-export function onSnapshot(ref, cb, err){ const l = { ref, cb }; S.listeners.push(l);
+export function onSnapshot(ref, cb, err){
+  // wie firestore.rules: ohne bestaetigte E-Mail kein Lesen
+  if (S.user && S.user.emailVerified === false && err) { setTimeout(() => err(Object.assign(new Error('x'), { code: 'permission-denied' })), 20); return () => {}; }
+  const l = { ref, cb }; S.listeners.push(l);
   setTimeout(() => { try { cb(ref.col ? qsnap(ref) : dsnap(ref.path)); } catch(e){ console.error('snap', e); } }, 20);
   return () => { S.listeners = S.listeners.filter(x => x !== l); }; }
 `;

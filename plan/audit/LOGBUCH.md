@@ -9,12 +9,59 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 1 | Start | erledigt (v3.16.1) |
 | 2 | Einstieg | erledigt (v3.17.1) |
 | 3 | Anmelden | erledigt (v3.17.2) |
-| 4 | Bestätigung | offen |
+| 4 | Bestätigung | erledigt (v3.17.3) |
 | 5 | Lernen-Start | offen |
 | 6 | Lernrunde | teilweise (Umdrehen, Bewerten, Sprünge, Ring – v3.14.0/3.15.0); Rest offen |
 | 7 | Rundenende | offen |
 | 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 4: Bestätigung (v3.17.3)
+
+**Anlass:** Schleife direkt nach Station 3 („Arbeite weiter an stellen wo du
+es für nötig hälst").
+
+**Geprüft (`t_bestaetigung.js`, Handy hell/dunkel, klein, iPad):**
+- **Fund 1: Meldungen schieben alle drei Knöpfe** um 83 (Handy), 84–105
+  (klein), 63–84 px (iPad) – „Noch nicht bestätigt", „erneut gesendet",
+  Fehler.
+- **Fund 2: kein Tipp-Feedback** – „Ich habe bestätigt"/„Erneut senden"
+  wurden während der Anfrage weder gesperrt noch drehten sie (Checkliste:
+  sofortige Rückmeldung).
+- **Fund 3: Systemcodes im Text** – „Konnte nicht prüfen:
+  auth/network-request-failed", „Fehler beim Versand: auth/too-many-requests".
+- Fund 4: Text-Reste – „versuch es dann noch einmal" (seit 3.12.0 prüft der
+  Bildschirm selbst), „Verifikations-E-Mail" neben „Bestätigungs-E-Mail",
+  Spam-Hinweis doppelt (fest auf der Seite + in jeder Meldung).
+- Ohne Befund: automatische Weiterleitung nach Bestätigung 2,2–2,8 s,
+  Kontrast 0, Knöpfe im Fenster, nicht quer.
+- Kein App-Fund, aber Prüfstand: `stubs.js` erlaubte unbestätigten Nutzern
+  das Lesen – die App lief deshalb im Test in den „neues Konto"-Zweig und
+  setzte das Thema auf dunkel. Echte Regeln (`firestore.rules` Z. 67/275)
+  verweigern das; der Stub tut es jetzt auch (`permission-denied`).
+  `reload()`/`sendEmailVerification()` im Stub können über
+  `__FB.authFail` scheitern.
+
+**Geändert (app.js):** `renderPendingVerification` (~Z. 6360–6400): Schütteln
+wie in `renderAuth`, Spam-Satz kürzer, Knöpfe mit `disabled`/`busy`
+(`ui.authBusyWas` = "pruefen"/"senden", neu in `ui`), Meldungen
+(`auth-meldung`, `role`) unter die Knöpfe. `pruefeBestaetigung` /
+`doResendVerification` (~Z. 2665–2700): `authErrorText(e)` statt Code, neue
+Texte. `doRegister`: Info nur noch „Konto angelegt.". Version 3.17.3.
+**Neu (Prüfstand):** `t_bestaetigung.js`; `stubs.js` s. o.
+
+**Entscheidung:** Dieselben Bausteine wie Station 3 (Meldung unten,
+Schütteln), damit beide Anmelde-Bildschirme gleich antworten (Checkliste
+Konsistenz). „Ich habe bestätigt" bleibt trotz Selbst-Prüfung – er ist der
+Weg bei hakendem Netz (Begründung 3.12.0).
+
+**Geprüft danach:** Sprünge 0 px in allen Fällen und Geräten, Tipp-Feedback
+ja, Texte ohne Codes, Kontrast 0; Regression `t_anmelden.js` unverändert 0.
+
+**Offen:** –
+**Nächste Station:** 5 (Lernen-Start)
 
 ---
 

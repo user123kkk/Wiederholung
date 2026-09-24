@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.2";
+const APP_VERSION = "3.17.3";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1449,6 +1449,7 @@ let ui = {
   authError: null,
   authInfo: null,
   authBusy: false,
+  authBusyWas: null,
   /* 3.4.0: Was im Anmeldeformular schon getippt ist. render() ersetzt den
      ganzen Inhalt von #app - ohne diesen Zwischenspeicher waren E-Mail und
      Passwort nach jeder Fehlermeldung und jedem Wechsel Anmelden/Konto
@@ -2653,7 +2654,9 @@ async function doRegister() {
     /* C4: Nach der Registrierung eine Bestätigungs-E-Mail schicken. Die App
        sperrt sich selbst, bis emailVerified wahr ist (siehe renderAuth). */
     await mitZeitlimit(fb.sendEmailVerification(cred.user));
-    ui.authInfo = "Konto erstellt! Bitte E-Mail bestätigen – schau in deinem Posteingang (und Spam) nach.";
+    /* 3.17.3: Der Rest (Posteingang, Spam) steht fest auf dem
+       Bestaetigungs-Bildschirm - hier nicht noch einmal. */
+    ui.authInfo = "Konto angelegt.";
     zaehle("konto_erstellt", { aus_einstieg: !!ui.authAusEinstieg });
   } catch (e) {
     ui.authError = authErrorText(e);
@@ -2667,7 +2670,7 @@ async function doRegister() {
    App, wuerde dort aber von der Datenbank abgewiesen. */
 async function pruefeBestaetigung() {
   if (!currentUser) return;
-  ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+  ui.authError = null; ui.authInfo = null; ui.authBusy = true; ui.authBusyWas = "pruefen"; render();
   try {
     await mitZeitlimit(currentUser.reload());
     if (currentUser.emailVerified) {
@@ -2675,21 +2678,25 @@ async function pruefeBestaetigung() {
       location.reload();
       return;
     }
-    ui.authError = "Noch nicht bestätigt. Öffne den Link in der E-Mail und versuch es dann noch einmal.";
+    /* 3.17.3: "versuch es dann noch einmal" stimmte seit 3.12.0 nicht mehr -
+       der Bildschirm schaut selbst nach. Fehler ohne Systemcode (Station 4). */
+    ui.authError = "Noch nicht bestätigt – öffne den Link in der E-Mail, dann geht es hier von selbst weiter.";
   } catch (e) {
-    ui.authError = "Konnte nicht prüfen: " + (e && e.code ? e.code : String(e));
+    ui.authError = authErrorText(e);
   }
   ui.authBusy = false;
   render();
 }
 async function doResendVerification() {
   if (!currentUser) return;
-  ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+  ui.authError = null; ui.authInfo = null; ui.authBusy = true; ui.authBusyWas = "senden"; render();
   try {
     await mitZeitlimit(fb.sendEmailVerification(currentUser));
-    ui.authInfo = "Verifikations-E-Mail wurde verschickt – bitte Posteingang (und Spam) prüfen.";
+    /* 3.17.3: dasselbe Wort wie oben ("Bestaetigungs-E-Mail", nicht
+       "Verifikations-"); der Spam-Hinweis steht schon fest auf der Seite. */
+    ui.authInfo = "Neue Bestätigungs-E-Mail ist unterwegs.";
   } catch (e) {
-    ui.authError = "Fehler beim Versand: " + (e && e.code ? e.code : String(e));
+    ui.authError = authErrorText(e);
   }
   ui.authBusy = false;
   render();
@@ -6361,7 +6368,10 @@ function renderPendingVerification() {
   let html = '<div class="solo">';
   html += soloMarke("E-Mail best\u00e4tigen", "Schritt 2 von 2 \u00b7 Best\u00e4tigen");
   html += '<div class="brief-bild" aria-hidden="true">' + ikon("brief", "i-xl") + '<span class="brief-bild__punkt"></span></div>';
-  html += '<div class="card">';
+  /* 3.17.3 (Station 4): dasselbe einmalige Schuetteln wie beim Anmelden. */
+  const wackeln = ui.authError && ui.authError !== ui.authFehlerGezeigt;
+  ui.authFehlerGezeigt = ui.authError || null;
+  html += '<div class="card' + (wackeln ? ' auth-wackeln' : '') + '">';
   html += '<p class="hint">Wir haben eine Best\u00e4tigungs-E-Mail an <strong>' + esc(currentUser.email) +
     '</strong> geschickt. \u00d6ffne den Link darin, um dein Konto freizuschalten.</p>';
   /* 22.09.2026 (Block 14): Vorher stand der Spam-Hinweis nur in den
@@ -6370,24 +6380,31 @@ function renderPendingVerification() {
      Bestaetigung spaeter fortsetzt, landet hier ohne jede Meldung und ohne
      diesen Hinweis. Jetzt fest auf dieser Seite, nicht nur im fluechtigen
      Toast. */
-  html += '<p class="hint" style="margin-top:var(--space-3)">Kommt nichts an: kurz im Spam-/Werbe-Ordner nachsehen \u2013 Best\u00e4tigungsmails landen dort leicht, wenn man den Absender noch nicht kennt.</p>';
+  /* 3.17.3: kuerzer - dieselbe Aussage in einer Zeile statt zwei. */
+  html += '<p class="hint" style="margin-top:var(--space-3)">Nichts angekommen? Schau im Spam- oder Werbe-Ordner nach.</p>';
   /* 3.3.2: landing.html verspricht "Danach legst du direkt deine erste
      Karte an" - und dann kommt erstmal diese Wartezeile. Ohne diesen Satz
      verschwindet das Versprechen genau dort, wo es am meisten zaehlt. Der
      Satz sagt nichts Neues zu, er haelt nur fest, was schon zugesagt war. */
   html += '<p class="hint bestaetigung-warten" style="margin-top:var(--space-3)"><span class="bestaetigung-warten__punkt" aria-hidden="true"></span>' +
     'Sobald du bestätigt hast, geht es hier von selbst weiter – zu deiner ersten Karte.</p>';
-  if (ui.authError) html += '<div class="error-box" style="margin-top:var(--space-4)">' + ikon("warnung", "i-sm") +
-    '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
-  if (ui.authInfo) html += '<div class="info-box" style="margin-top:var(--space-4)">' + ikon("haken", "i-sm") +
-    '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
+  /* 3.17.3 (Pruefschleife, Station 4): Die Knoepfe sperren sich und der
+     getippte dreht, solange die Anfrage laeuft - vorher passierte beim
+     Tippen sichtbar nichts. Meldungen stehen UNTER den Knoepfen: darueber
+     schoben sie alle drei um 63-105 px nach unten. */
+  const busy = ui.authBusy ? " disabled" : "";
+  const laed = was => ui.authBusy && ui.authBusyWas === was ? " busy" : "";
   html += '<div class="form-actions">';
-  html += '<button data-action="verification-check">Ich habe best\u00e4tigt</button>';
+  html += '<button' + (laed("pruefen") ? ' class="busy"' : '') + ' data-action="verification-check"' + busy + '>Ich habe best\u00e4tigt</button>';
   html += '</div>';
   html += '<div class="form-actions" style="margin-top:var(--space-2)">';
-  html += '<button class="secondary" data-action="resend-verification">Erneut senden</button>';
-  html += '<button class="secondary" data-action="logout">Abmelden</button>';
+  html += '<button class="secondary' + laed("senden") + '" data-action="resend-verification"' + busy + '>Erneut senden</button>';
+  html += '<button class="secondary" data-action="logout"' + busy + '>Abmelden</button>';
   html += '</div>';
+  if (ui.authError) html += '<div class="error-box auth-meldung" role="alert">' + ikon("warnung", "i-sm") +
+    '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
+  if (ui.authInfo) html += '<div class="info-box auth-meldung" role="status">' + ikon("haken", "i-sm") +
+    '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
   html += '</div></div>';
   app.innerHTML = html;
 }

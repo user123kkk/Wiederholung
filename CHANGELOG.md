@@ -1,3 +1,27 @@
+## 3.17.3 - 24. September 2026
+
+**Prüfschleife, Station 4 (E-Mail bestätigen).**
+
+- **Die Knöpfe bleiben stehen.** Jede Meldung („Noch nicht bestätigt",
+  „Neue E-Mail ist unterwegs", Fehler) stand über den Knöpfen und schob alle
+  drei um 63–105 px nach unten. Jetzt steht sie darunter; bei einem Fehler
+  schüttelt die Karte einmal kurz – wie beim Anmelden.
+- **Tippen zeigt sofort etwas:** Während geprüft oder gesendet wird, dreht
+  der getippte Knopf und die anderen sind gesperrt. Vorher geschah sichtbar
+  nichts, bis die Antwort kam.
+- **Keine Systemcodes mehr:** statt „Konnte nicht prüfen:
+  auth/network-request-failed" steht „Keine Verbindung – bitte Internet
+  prüfen.", statt „Fehler beim Versand: auth/too-many-requests" „Zu viele
+  Versuche – bitte kurz warten".
+- **Texte:** „Noch nicht bestätigt" sagt jetzt, dass es von selbst
+  weitergeht (seit 3.12.0 schaut der Bildschirm selbst nach), statt „versuch
+  es dann noch einmal". „Verifikations-E-Mail" heißt wie überall
+  „Bestätigungs-E-Mail". Den Spam-Ordner nennt die Seite einmal, nicht in
+  jeder Meldung noch einmal.
+- Geprüft ohne Befund: automatische Weiterleitung nach der Bestätigung
+  (2–3 s), Kontrast hell und dunkel, keine waagerechte Scrollleiste – Handy,
+  kleines Handy, iPad.
+
 ## 3.17.2 - 24. September 2026
 
 **Prüfschleife, Station 3 (Anmelden).**
