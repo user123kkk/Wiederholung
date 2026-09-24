@@ -3675,15 +3675,44 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .einstieg-vorauswahl { margin-top: var(--space-4); }
 
 /* ---- Bildschirm 1: die Karte, die sich umdreht --------------------------
-   Hebt sich beim Drehen kurz an (scale in der Mitte) und fängt danach einmal
-   Licht (Streif über die Rückseite). */
+   3.17.20 (offene Frage 16, Betreiber-Bedenken 24.09.2026: "wenn man slow
+   ist ist das verpasst"): zwei Aenderungen.
+   1. Die Karte dreht jetzt HIN UND ZURUECK (zeigt die Uebersetzung kurz,
+      endet wieder auf Arabisch) statt nur einmal - wer beim ersten Hinsehen
+      zu langsam ist, sieht die Uebersetzung trotzdem, verpasst aber nicht
+      mehr das Wort selbst, weil die Karte danach wieder darauf steht.
+   2. Die Karte ist ein <button> (app.js) und laesst sich jederzeit antippen
+      - auch bei reduzierter Bewegung, wo die Animation unten komplett
+      wegfaellt (Abschnitt 16b) und Antippen der einzige Weg zur
+      Uebersetzung ist.
+   Die Intro-Animation ist an --intro gebunden (nur beim frischen Ankommen),
+   nicht an .einstieg--neu direkt: app.js entfernt die Klasse beim ersten
+   Antippen, damit die danach folgende manuelle Drehung sauber per
+   transition uebernimmt, statt gegen eine noch "gehaltene" (both-Fill-Mode)
+   Animation anzukaempfen. */
 .einstieg-hero { margin: var(--space-6) 0 var(--space-4); }
-.einstieg-hero__karte { perspective: 1000px; }
+.einstieg-hero__karte {
+  display: block; width: 100%;
+  padding: 0; margin: 0; border: 0; background: none; box-shadow: none;
+  color: inherit; text-align: inherit;
+  perspective: 1000px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms var(--ease-out);
+}
+.einstieg-hero__karte:active { transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) {
+  .einstieg-hero__karte:hover .einstieg-hero__seite { border-color: var(--border-strong); }
+}
 .einstieg-hero__dreh {
   position: relative; height: 128px;
   transform-style: preserve-3d;
-  animation: einstieg-dreh 760ms var(--ease-in-out) 1000ms both;
+  transition: transform 480ms var(--ease-in-out);
 }
+.einstieg-hero__karte--intro .einstieg-hero__dreh {
+  animation: einstieg-dreh-hin-zurueck 1600ms var(--ease-in-out) 1000ms both;
+}
+.einstieg-hero__karte--hinten .einstieg-hero__dreh { transform: rotateY(180deg); }
 .einstieg-hero__seite {
   position: absolute; inset: 0;
   display: grid; place-items: center;
@@ -3706,13 +3735,18 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.16) 50%, transparent 65%);
   background-size: 250% 100%;
   background-position: 130% 0;
-  animation: einstieg-schimmer 900ms var(--ease-out) 1750ms both;
+  animation: einstieg-schimmer 700ms var(--ease-out) 1450ms both;
   pointer-events: none;
 }
-@keyframes einstieg-dreh {
-  0%   { transform: rotateY(0deg) scale(1); }
-  50%  { transform: rotateY(90deg) scale(1.06); }
-  100% { transform: rotateY(180deg) scale(1); }
+/* Hin (0 -> 180, Uebersetzung) und zurueck (180 -> 360, wieder Arabisch -
+   360deg statt 0deg, damit die Drehung durchgaengig in eine Richtung laeuft
+   und nicht in der Mitte umkehrt). */
+@keyframes einstieg-dreh-hin-zurueck {
+  0%   { transform: rotateY(0deg)   scale(1); }
+  22%  { transform: rotateY(90deg)  scale(1.06); }
+  45%  { transform: rotateY(180deg) scale(1); }
+  67%  { transform: rotateY(270deg) scale(1.06); }
+  100% { transform: rotateY(360deg) scale(1); }
 }
 .einstieg-hero__text { margin-top: var(--space-2); }
 
@@ -4155,9 +4189,12 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 
 /* Bewegung abbestellt: Die Dauer setzt Abschnitt 3 schon auf null – die
    Verzögerungen blieben aber stehen, und alles erschiene erst später. Die
-   Karte auf Bildschirm 1 dreht sich dann gar nicht und zeigt das Wort; kein
-   Aufleuchten, kein Lichtstreif, kein Puls. Den Aufbau des Plans überspringt
-   app.js dann ganz (einstiegBewegungReduziert). */
+   Karte auf Bildschirm 1 dreht sich dann automatisch gar nicht und zeigt das
+   Wort; kein Aufleuchten, kein Lichtstreif, kein Puls. Antippen bleibt der
+   Weg zur Übersetzung (die Drehung dafür ist eine transition, keine
+   Animation - Abschnitt 3 setzt ihre Dauer schon auf 0.01ms, sie "springt"
+   also nur um). Den Aufbau des Plans überspringt app.js dann ganz
+   (einstiegBewegungReduziert). */
 @media (prefers-reduced-motion: reduce) {
   .einstieg *, .einstieg *::before, .einstieg *::after,
   .einstieg-kopf * { animation-delay: 0s !important; }
@@ -4650,6 +4687,12 @@ button.halten:disabled {
     display: grid; grid-template-columns: 1fr 1fr;
     gap: var(--space-3);
   }
+  /* 3.17.20: EINSTIEG_ZIELE hat jetzt 3 statt 4 Antworten (Frage 17) - bei
+     zwei Spalten bliebe die dritte sonst allein in der ersten Spalte
+     haengen, daneben eine Luecke. ":last-child:nth-child(odd)" trifft genau
+     das letzte Element, wenn es an ungerader Position steht - bei 3 Karten
+     die dritte, bei (wieder) 4 keine, ohne die Zahl fest zu verdrahten. */
+  .einstieg-wahl--paar .einstieg-option:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .einstieg-kacheln { grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
   .einstieg-wege { flex-direction: row; gap: var(--space-6); }
   .einstieg-weg { flex: 1 1 0; }

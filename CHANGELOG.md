@@ -1,3 +1,28 @@
+## 3.17.20 - 24. September 2026
+
+**Drei Betreiber-Bedenken umgesetzt (offene Fragen 16, 17, 18 aus `plan/PLAN.md`).**
+
+- **Einstieg, erster Bildschirm: die Karte dreht jetzt hin und zurück** (zeigt
+  „Buch" kurz, endet wieder auf „كِتَابٌ") statt nur einmal – wer beim ersten
+  Hinsehen zu langsam ist, sieht die Übersetzung trotzdem, verpasst aber nicht
+  mehr das Wort selbst. Die Karte lässt sich außerdem **jederzeit antippen**,
+  um sie von Hand zu drehen – auch bei „Bewegung reduzieren", wo sie
+  automatisch gar nicht mehr dreht und Antippen der einzige Weg zur
+  Übersetzung ist.
+- **„Wofür lernst du Arabisch?" hat jetzt 3 statt 4 Antworten.** „Hocharabisch
+  lesen und sprechen" ist raus – es überschnitt sich mit „Quran und Sunnah
+  verstehen" (Fusha ist die Sprache von beidem). Die Antworten werden
+  nirgends gespeichert, es gab also keinen Altwert zu migrieren.
+- **Serie: Ein ausgelassener Tag wird jetzt öfter verziehen, nicht nur
+  einmal im ganzen Verlauf.** Nach 7 gelernten Tagen lädt sich die Gnade neu
+  auf. Vorher fiel eine lange zurückliegende, längst verziehene Lücke beim
+  nächsten verpassten Tag auf einen krummen Rest zurück, unabhängig davon,
+  wie viele Tage seither durchgehend gelernt wurde. Die Zusage im Einstieg
+  („Ein ausgelassener Tag reißt sie nicht") stimmt damit jetzt dauerhaft.
+  **Lernlogik – nur mit ausdrücklicher Betreiber-Freigabe geändert.** Mit
+  sechs konstruierten Verlaufsreihen gegen die echte App geprüft
+  (`plan/werkzeuge/pruefstand/t_serie.js`).
+
 ## 3.17.19 - 24. September 2026
 
 **Serien-Hinweis richtiggestellt.**

@@ -28,6 +28,102 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Fragen 16–18 entschieden und gebaut (v3.17.20)
+
+**Anlass:** Betreiber antwortet auf die vorgelegten Empfehlungen: „16 c 17b
+18b ja mach, ich finde diese Einstellung mit viel und ruhig eh unnötig,
+lieber löschen ging ja drum premium gefühl zu verschaffen." Das „ja mach" ist
+die für Frage 18 nötige ausdrückliche Freigabe (Lernlogik). Der Nebensatz zur
+Einstellung „Voll/Ruhig" bezieht sich auf etwas, das es nicht mehr gibt –
+siehe unten.
+
+**Geändert:**
+
+- **Frage 16 (Einstieg-Karte, Empfehlung C):**
+  - `app.js`, `einstiegHero()`: jetzt ein `<button>` statt eines
+    `aria-hidden`-`<div>`, `aria-label="Beispielkarte umdrehen"`,
+    `aria-pressed`. Neues Feld `ui.einstieg.heroHinten`, zurückgesetzt bei
+    jedem frischen Ankommen auf Schritt 0 (`neu`).
+  - Neuer Klick-Fall `einstieg-hero-dreh`: **kein** `render()` – direkte
+    DOM-Änderung (Klasse umschalten), wie bei `einstieg-ziel`/`-huerde`,
+    damit die CSS-`transition` am bestehenden Element greift statt an einem
+    von `render()` neu gebauten.
+  - `styles.css`: `@keyframes einstieg-dreh-hin-zurueck` (0→180→360°, endet
+    wieder auf Arabisch) nur bei `--intro` (frisches Ankommen); der Klick
+    entfernt `--intro` sofort, danach übernimmt `.einstieg-hero__karte--hinten`
+    (statische Regel) + `transition: transform 480ms` die manuelle Drehung.
+    Grund für die Trennung: Eine per `both` „gehaltene" Animation blockiert
+    sonst dauerhaft jede spätere Style-Regel auf derselben Eigenschaft.
+  - `prefers-reduced-motion` unverändert wirksam: Die Animation entfällt
+    (bestehende Regel für `.einstieg-hero__dreh`), Antippen bleibt über die
+    (auf 0,01 ms verkürzte) `transition` als „Sprung" möglich.
+- **Frage 17 (Ziel-Antworten, Empfehlung B):** `EINSTIEG_ZIELE` – Eintrag
+  `msa` („Hocharabisch lesen und sprechen") entfernt, 3 statt 4 Einträge.
+  Dazu `styles.css`: `.einstieg-wahl--paar .einstieg-option:last-child:
+  nth-child(odd)` lässt das letzte Element bei ungerader Anzahl über beide
+  Spalten laufen (Tablet/Desktop), statt eine Lücke daneben stehen zu lassen
+  – funktioniert auch, falls die Zahl der Antworten sich künftig wieder
+  ändert.
+- **Frage 18 (Serie, Empfehlung B, Lernlogik):** `serieAktuell()` – neue
+  Konstante `SERIE_JOKER_TAGE = 7`. Statt eines einzigen Lebenszeit-Jokers
+  (`luecke`-Flag) zählt jetzt `seitJoker` die gelernten Tage seit der
+  letzten verziehenen Lücke; ab 7 lädt sich der Joker wieder auf. Beginnt
+  „aufgeladen" (unverändert seit 2.16.0: der erste geprüfte Tag bekommt die
+  Gnade immer). Sockel-Kurzschluss (Alt-Konten vor 2.14.0) unverändert.
+
+**Entscheidung – warum das nicht dieselbe (verworfene) Idee von vor 2.14.0
+ist:** Das CHANGELOG zu 2.14.0 verwirft ausdrücklich eine frühere Regel
+„eine Lücke je sieben Tage", weil sie sich „beim Rückwärtszählen nicht sauber
+prüfen ließ". Jene Fassung war ein **vorwärts gezählter, gespeicherter**
+Zustand (`streak.count`, täglich fortgeschrieben) – inkonsistent, je nachdem
+wie oft/wann die App zwischenzeitlich lief. `serieAktuell()` ist dagegen eine
+**reine Funktion**, die bei jedem Aufruf komplett neu aus dem unveränderlichen
+Tagesprotokoll rechnet; zwei Aufrufe mit demselben Verlauf liefern immer
+dasselbe Ergebnis. Um das nicht nur zu behaupten, sondern zu belegen: neuer
+Test [`t_serie.js`](../werkzeuge/pruefstand/t_serie.js) mit sechs
+konstruierten Verlaufsreihen gegen die **echte** `app.js` (kein Nachbau der
+Formel), gelesen über den angezeigten Wert auf dem Lernen-Tab:
+
+| Fall | Erwartet | Gemessen |
+|---|---|---|
+| ohne Lücke, 10 Tage | 10 | 10 |
+| eine alte Lücke (Tag 7), danach 7 Tage gelernt | 14 | 14 |
+| zwei Lücken (Tag 7 und 15), je 7 Tage dazwischen | 21 | 21 |
+| zweite Lücke zu früh (nur 3 Tage seit der ersten) – bricht ab | 6 | 6 |
+| heute+gestern noch offen, alte Serie bleibt stehen | 10 | 10 |
+| Sockel (Alt-Konto) trägt weiter, unverändert | 47 | 47 |
+
+Der zweite und dritte Fall zusammen zeigen den eigentlichen Fund: Unter der
+alten Regel hätte der dritte Fall bei 14 abgebrochen (der einzige Joker war
+beim ersten Gap schon verbraucht) – **7 real gelernte Tage wären unterschlagen
+worden.** Der vierte Fall zeigt, dass die neue Regel nicht „unendlich
+nachsichtig" ist: Ohne volle Erholung bricht sie weiterhin ab.
+
+**Nebenbefund beim Lesen der Betreiber-Nachricht:** „Diese Einstellung mit
+viel und ruhig" bezieht sich auf den früheren Schalter „Bewegung"
+(Voll/Ruhig) im Einstieg – der ist bereits seit v3.12.0 entfernt, auf
+denselben Wunsch des Betreibers von damals („die einstellung mit voll oder
+ruhig auch ned so sinnvoll, loeschen"). Nichts zu tun, nur zur Klarheit im
+Plan vermerkt (`app.js`, Kommentar bei `localStorage.removeItem
+("adrabic-bewegung")`).
+
+**Geprüft:** `node --check app.js` sauber; Versionen an vier Stellen
+gleich. Regression: `t_sprung.js` 0 auf allen vier Geräten; `t_kontrast.js`
+0 Funde; `t_a11y.js` (Einstieg abgemeldet inklusive) ohne unbenannte Knöpfe
+oder Felder; `t_einstieg.js` auf Handy/klein/iPad × hell/dunkel: 0 Sprünge,
+0 Kontrast-/Querschnitt-Funde; `t_lernen_start.js`: „zwei Bereiche" zeigt
+weiterhin korrekt „Heute auch fällig: …", „Serie in Gefahr" unverändert.
+Eigener `t_serie.js`: 6 von 6 richtig (Tabelle oben).
+
+**Offen:** unverändert `veroeffentlichen.bat`, PostHog-Schlüssel, Datenschutz
+§15, Google-Konto-Löschung und Kalender-Erinnerung am Gerät.
+
+**Nächster Schritt:** Auf Betreiber-Rückmeldung zu v3.17.20 warten,
+insbesondere ob sich die neue Einstieg-Karte und die Serie „richtig"
+anfühlen – ein Gefühl kann kein Test messen.
+
+---
+
 ### 2026-09-24 — Nachtrag: drei Betreiber-Bedenken, `LEHREN.md`, v3.17.19
 
 **Geändert:**

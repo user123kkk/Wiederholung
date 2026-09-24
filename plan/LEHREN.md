@@ -1040,7 +1040,8 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
 |---|---|---|
 | `render()` | ersetzt `#app` komplett | § 6.3, § 6.4 |
 | Klick-Delegation | **ein** Listener auf `body`, `data-action` | nie eigene Listener an Knöpfe |
-| `serieAktuell()` | Serie aus `verlauf`; ein Tag zählt ab der ersten gelernten Karte in **irgendeinem** Bereich (`tagGelernt`: w+n>0, Üben `u` zählt nicht). Rückwärts gezählt wird **eine** Lücke überbrückt; an der **zweiten** Lücke hört die Zählung auf, auch wenn sie Wochen zurückliegt (offene Frage 18 in `PLAN.md`) | Lernlogik – nur mit Freigabe anfassen |
+| `serieAktuell()` | Serie aus `verlauf`; ein Tag zählt ab der ersten gelernten Karte in **irgendeinem** Bereich (`tagGelernt`: w+n>0, Üben `u` zählt nicht). Seit 3.17.20: Ein ausgelassener Tag wird verziehen, der Joker lädt nach `SERIE_JOKER_TAGE` (7) gelernten Tagen wieder auf – **keine** einmalige Lebenszeit-Gnade mehr (Frage 18) | Lernlogik – nur mit Freigabe anfassen |
+| `serieSockelSichern()` | stempelt bei **jedem** Laden `sockel`/`sockelBis`, sobald `streak.sockel` fehlt (`null`) – auch in Tests! | Prüfstand-Store für Serientests braucht ein gültiges `{sockel, sockelBis: <weit zurück>}`, sonst kurzschließt der Sockel jede Rechnung auf 0 (§ 15, 24.09.2026) |
 | `evaluateStreakForNewDay()` | absichtlich stillgelegt (`if (false && …)`) | nicht „reparieren" |
 | `streak.lastCompletedDate` | tot seit 2.14.0 | nie wieder darauf bauen |
 | `bereicheMitOffenem()` | nur noch für den Hinweis „Heute auch fällig" | kein Serien-Bezug |
@@ -1140,3 +1141,4 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | 24.09. | „Noch offen für die Serie" falsch | Text aus der Zeit vor 2.14.0, Kommentar veraltet | § 3.2, § 7.3 |
 | 24.09. | Kommentar über `serieAktuell()` beschrieb alte Regel | Kommentar nicht mitgezogen | § 3.2 |
 | 24.09. (eigener Fehler) | Behauptung „gespeicherte Ziel-Antworten filtern" | Stelle nicht gelesen | § 1.3 |
+| 24.09. (eigener Fehler, beim Bau von t_serie.js) | neuer Serien-Test maß erst durchgehend 0 | `streak: {}` ohne `sockel` löst `serieSockelSichern()` aus, die `sockelBis` auf heute stempelt und jede Rechnung kurzschließt; dazu zuerst `vollerStore({leer:true})` verwendet, dessen leerer Bereich `.serie-karte` gar nicht erst rendert | § 5.4, § 13 |

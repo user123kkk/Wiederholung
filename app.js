@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.19";
+const APP_VERSION = "3.17.20";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1254,12 +1254,18 @@ const EINSTIEG_ANKER = [
 /* 3.10.3: "Quran und Sunnah" ist der Wortlaut des Betreibers (23.09.2026:
    "um quran und sunnah lesen und verstehen zu koennen"). "anders" hatte als
    Quelle "dem, was du gerade lernst" - im Echo stand dann "die du gerade
-   lernst - aus dem, was du gerade lernst". */
+   lernst - aus dem, was du gerade lernst".
+   3.17.20 (offene Frage 17, Betreiber-Bedenken 24.09.2026: "bisl doppelt
+   gemoppelt"): "msa" (Hocharabisch lesen und sprechen) ist raus. Es
+   ueberschnitt sich fuer diese Zielgruppe mit "Quran und Sunnah verstehen" -
+   Fusha IST die Sprache von Quran und Sunnah. Wer aus einem anderen Grund
+   Hocharabisch lernt (Beruf, Reise), waehlt jetzt "Etwas anderes". Die
+   Antworten werden nirgends gespeichert (siehe Kommentar oben), es gibt
+   also keinen Altwert zu migrieren oder zu filtern. */
 const EINSTIEG_ZIELE = [
-  { id: "quran",  label: "Quran und Sunnah verstehen",     kurz: "Quran und Sunnah", quelle: "Quran und Sunnah",            icon: "lektion" },
-  { id: "kurs",   label: "Für meinen Kurs oder mein Buch", kurz: "Kurs und Buch",    quelle: "deinem Kurs oder Buch",       icon: "tafel" },
-  { id: "msa",    label: "Hocharabisch lesen und sprechen", kurz: "Hocharabisch",    quelle: "dem, was du liest und hörst", icon: "sprechen" },
-  { id: "anders", label: "Etwas anderes",                  kurz: "eigenes Ziel",     quelle: "deinem eigenen Stoff",        icon: "mehr" }
+  { id: "quran",  label: "Quran und Sunnah verstehen",     kurz: "Quran und Sunnah", quelle: "Quran und Sunnah",      icon: "lektion" },
+  { id: "kurs",   label: "Für meinen Kurs oder mein Buch", kurz: "Kurs und Buch",    quelle: "deinem Kurs oder Buch", icon: "tafel" },
+  { id: "anders", label: "Etwas anderes",                  kurz: "eigenes Ziel",     quelle: "deinem eigenen Stoff",  icon: "mehr" }
 ];
 /* Jede Antwort auf eine Huerde nennt nur, was die App TATSAECHLICH tut - die
    Abstaende stehen in intervalForStufe(), die Serien-Regel in serieAktuell(),
@@ -1318,7 +1324,8 @@ const EINSTIEG_RUNDEN = [
    den Willkommensbildschirm schon hinter sich). */
 function einstiegNeu(schritt) {
   return { schritt: schritt || 0, aufgedeckt: false, bewertet: null, ziele: [], huerden: [],
-    anker: null, ankerFrei: "", gezeigt: -1, richtung: "vor", balkenVorher: 0, zeit: 0, planGebaut: false };
+    anker: null, ankerFrei: "", gezeigt: -1, richtung: "vor", balkenVorher: 0, zeit: 0, planGebaut: false,
+    heroHinten: false /* 3.17.20: Bildschirm 1, manuell gedreht? */ };
 }
 function einstiegAntwortenSichern(patch) {
   let alt = {};
@@ -2475,32 +2482,51 @@ function evaluateStreakForNewDay() {
 
    Ein Tag zaehlt, wenn an ihm gelernt wurde - eine Karte in irgendeinem
    Bereich genuegt, das Rundenlimit spielt keine Rolle.
-   3.17.19, Kommentar berichtigt (die Regel darunter war schon laenger eine
-   andere): Rueckwaerts gezaehlt wird EINE Luecke von einem Tag ueberbrueckt,
-   an der zweiten hoert die Zaehlung auf - auch wenn sie Wochen zurueckliegt.
-   Frueher stand hier "eine Luecke je sieben Tage"; das ist nicht mehr der
-   Code. Offene Frage 18 in plan/PLAN.md. */
+
+   3.17.20 (offene Frage 18, Betreiber-Freigabe "ja mach" am 24.09.2026 -
+   Lernlogik, deshalb nur mit ausdruecklicher Erlaubnis geaendert): Der
+   Joker laedt sich nach SERIE_JOKER_TAGE gelernten Tagen wieder auf, statt
+   nur ein einziges Mal im ganzen Verlauf zu gelten. Vorher fiel eine alte,
+   lang verziehene Luecke (z. B. vor 20 Tagen) beim naechsten verpassten Tag
+   sofort auf einen krummen Rest, weil die einzige Gnade schon verbraucht
+   war - unabhaengig davon, wie viele Tage seither durchgehend gelernt
+   wurde. Das wirkte "unberechenbar" (Beobachtung 17 hat genau dieses Muster
+   fuer einen anderen Fehler beschrieben; das hier ist derselbe Eindruck,
+   andere Ursache). Die Textzusage "Ein ausgelassener Tag reißt sie nicht"
+   (Einstieg) stimmt damit jetzt dauerhaft, nicht nur beim ersten Mal.
+
+   WICHTIG, Verwechslungsgefahr mit einer aelteren, bewusst verworfenen Idee:
+   Vor 2.14.0 gab es schon einmal eine Regel "eine Luecke je sieben Tage" -
+   die stand aber auf einem VORWAERTS gezaehlten, gespeicherten Zaehler
+   (streak.count, taeglich per evaluateStreakForNewDay() fortgeschrieben) und
+   wurde verworfen, weil sich das beim Rueckwaertszaehlen nicht sauber
+   nachvollziehen liess (CHANGELOG 2.14.0). Diese Funktion hier ist etwas
+   anderes: eine REINE Funktion, die bei jedem Aufruf komplett neu aus dem
+   unveraenderlichen Tagesprotokoll (verlauf) rechnet - kein gespeicherter
+   Zwischenstand, der aus dem Tritt geraten kann. Zwei Aufrufe mit demselben
+   verlauf liefern immer dasselbe Ergebnis, egal wie viele Tage dazwischen
+   uebersprungen wurden. Getestet in plan/werkzeuge/pruefstand/t_serie.js. */
+const SERIE_JOKER_TAGE = 7;
 function serieAktuell() {
   const t = todayStr();
   const sockel = Number.isInteger(streak.sockel) ? streak.sockel : 0;
   const sockelBis = streak.sockelBis;
-  let tage = 0, luecke = false;
+  let tage = 0;
+  /* Von Anfang an "aufgeladen" (2.16.0): der erste geprüfte Tag bekommt die
+     Gnade immer, unabhängig davon, ob vorher schon ein Tag gelernt wurde -
+     sonst sähe man am Anfang der Prüfung eine 0, bevor überhaupt ein Tag
+     gezählt ist. */
+  let seitJoker = SERIE_JOKER_TAGE;
   /* Heute zaehlt nur, wenn heute schon gelernt wurde - sonst beginnt die Kette
      bei gestern, damit die Serie nicht mitten am Tag verschwindet. */
   for (let i = tagGelernt(verlauf[t]) ? 0 : 1; i < 400; i++) {
     const d = dateInDays(-i);
     if (sockelBis && d <= sockelBis) return tage + sockel;
-    if (tagGelernt(verlauf[d])) { tage++; continue; }
-    /* Ein einzelner ausgelassener Tag unterbricht die Serie nicht - Krankheit,
-       Reise, ein voller Tag. Der zweite beendet sie. Eine Regel, die sich in
-       einem Satz sagen laesst; die alte ("eine Luecke je sieben Tage") liess
-       sich beim Rueckwaertszaehlen gar nicht sauber pruefen. */
-    /* 2.16.0: Die Kulanz gilt auch fuer den ERSTEN geprueften Tag. Vorher
-       hing sie an tage > 0: Wer gestern ausliess und heute noch nicht gelernt
-       hat, sah den ganzen Tag eine 0 - und nach der ersten Karte stand die
-       alte Zahl wieder da. Zwei ausgelassene Tage beenden die Serie
-       nach wie vor. */
-    if (!luecke) { luecke = true; continue; }
+    if (tagGelernt(verlauf[d])) { tage++; seitJoker++; continue; }
+    /* Ein ausgelassener Tag unterbricht die Serie nicht - Krankheit, Reise,
+       ein voller Tag - solange seit dem letzten verziehenen Tag genug
+       gelernt wurde. Reicht es nicht, endet die Zaehlung hier. */
+    if (seitJoker >= SERIE_JOKER_TAGE) { seitJoker = 0; continue; }
     break;
   }
   return tage;
@@ -5693,16 +5719,30 @@ function einstiegProbe(groesse) {
     '</div>';
 }
 
-/* Die Karte auf dem ersten Bildschirm: sie dreht sich einmal um und zeigt,
-   was hinten steht - darunter waechst die Leiste der Abstaende. Das ist die
-   "Demo" (Cal AI) ohne Video: die App in Aktion, bevor irgendetwas gefragt
-   wird. Reine Anzeige; wer Bewegung abbestellt hat, sieht die Vorderseite. */
-function einstiegHero() {
+/* Die Karte auf dem ersten Bildschirm: sie dreht sich hin und zurueck (zeigt
+   die Uebersetzung kurz, endet wieder auf Arabisch) - darunter waechst die
+   Leiste der Abstaende. Das ist die "Demo" (Cal AI) ohne Video: die App in
+   Aktion, bevor irgendetwas gefragt wird.
+   3.17.20 (offene Frage 16, Betreiber-Bedenken 24.09.2026: "wenn man slow
+   ist ist das verpasst, [...] die karte drehen kann wann man will"): Die
+   Karte ist jetzt ein echter <button> und laesst sich jederzeit antippen -
+   auch bei reduzierter Bewegung, wo sie automatisch gar nicht mehr dreht
+   (styles.css Abschnitt 16b) und Antippen der einzige Weg zur Uebersetzung
+   ist. intro = true nur beim frischen Ankommen auf Schritt 0 (renderEinstieg,
+   Variable neu): loest die einmalige Hin-und-zurueck-Drehung aus; der
+   Klick-Handler entfernt die Klasse dafuer sofort (kein render(), reine
+   DOM-Aenderung wie bei einstieg-ziel/-huerde), damit die anschliessende
+   manuelle Drehung sauber per CSS-transition uebernimmt, ohne mit der noch
+   "gehaltenen" Animation zu ringen. */
+function einstiegHero(hinten, intro) {
   return '<div class="einstieg-hero">' +
-    '<div class="einstieg-hero__karte" aria-hidden="true"><div class="einstieg-hero__dreh">' +
+    '<button type="button" class="einstieg-hero__karte' + (intro ? ' einstieg-hero__karte--intro' : '') +
+      (hinten ? ' einstieg-hero__karte--hinten' : '') + '" data-action="einstieg-hero-dreh" ' +
+      'aria-pressed="' + (hinten ? 'true' : 'false') + '" aria-label="Beispielkarte umdrehen">' +
+      '<div class="einstieg-hero__dreh">' +
       '<div class="einstieg-hero__seite"><span class="arabic" lang="ar" dir="rtl">' + esc(EINSTIEG_BEISPIEL.arab) + '</span></div>' +
       '<div class="einstieg-hero__seite einstieg-hero__seite--hinten">' + esc(EINSTIEG_BEISPIEL.de) + '</div>' +
-    '</div></div>' +
+    '</div></button>' +
     einstiegLeiste(true) +
   '</div>';
 }
@@ -6001,10 +6041,14 @@ function renderEinstieg() {
        benannt werden"). Die Karte darunter zeigt die App in Aktion, bevor
        gefragt wird (Cal AI: Demo zuerst). "Ich habe schon ein Konto" wie bei
        Duolingo - der einzige Weg an diesem Einstieg vorbei. */
+    /* 3.17.20: Bei jedem frischen Ankommen (auch nach Zurueck-Vor) faengt die
+       Karte wieder auf Arabisch an - unabhaengig davon, ob vorher manuell
+       gedreht wurde. */
+    if (neu) e.heroHinten = false;
     html += '<h1>Du hast es gelernt. Und es ist weg.</h1>';
     html += '<p class="subtitle">Die Wörter von letzter Woche. Die Lektion von letztem Monat. ' +
       'Nicht, weil du zu langsam bist – sondern weil du sie nie wieder gesehen hast.</p>';
-    html += einstiegHero();
+    html += einstiegHero(e.heroHinten, neu);
     html += '<p class="hint einstieg-hero__text">Adrabic bringt dir jedes Wort zurück. In wachsenden Abständen, ' +
       'so lange, bis es sitzt.</p>';
     html += einstiegFuss("Meinen Plan erstellen", null, "einstieg-aktion--glanz");
@@ -11734,6 +11778,22 @@ document.body.addEventListener("click", e => {
     case "einstieg-aufdecken":
       if (ui.einstieg) { ui.einstieg.aufgedeckt = true; render(); }
       break;
+    /* 3.17.20: Bildschirm 1, Karte manuell drehen - jederzeit, beliebig oft.
+       KEIN render(): #app.innerHTML wuerde das Element neu bauen und die
+       CSS-transition fuer die Drehung liefe ins Leere (nur an bestehenden
+       Elementen wirksam, LEHREN.md). Die Intro-Klasse (einmalige
+       Hin-und-zurueck-Animation) wird beim ersten Antippen entfernt, damit
+       sie die manuelle Drehung nicht mehr ueberschreibt (siehe Kommentar bei
+       einstiegHero). */
+    case "einstieg-hero-dreh": {
+      const e = ui.einstieg;
+      if (!e) break;
+      e.heroHinten = !e.heroHinten;
+      btn.classList.remove("einstieg-hero__karte--intro");
+      btn.classList.toggle("einstieg-hero__karte--hinten", e.heroHinten);
+      btn.setAttribute("aria-pressed", e.heroHinten ? "true" : "false");
+      break;
+    }
     /* Die Bewertung im Probelauf wird NICHT gespeichert und beruehrt die
        Lernlogik nicht (Pruefung P5). Sie zeigt, was die App mit dieser
        Antwort bei einer echten Karte tun wuerde. */

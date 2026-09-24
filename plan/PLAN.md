@@ -511,9 +511,9 @@ hängt, nicht begonnen.
 | ~~13~~ | ~~Anmelden mit Google (oder Apple)?~~ | **erledigt 17.09.2026** — siehe unten |
 | ~~14~~ | ~~Analytics – Ja oder Nein?~~ | **entschieden 24.09.2026: JA** (Betreiber: „datenschutzerklärung usw. lässt sich umschreiben [...] daher analytics"). Gebaut in v3.17.0, **aus bis zum Schlüssel**: Betreiber legt ein PostHog-Projekt (EU) an und trägt den Projektschlüssel in `app.js` (`POSTHOG_KEY`) ein bzw. schickt ihn. Datenschutzerklärung Punkt 15 ergänzt – vor dem Einschalten rechtlich gegenlesen lassen. Details: [`analytics/GERUEST.md`](analytics/GERUEST.md). |
 | ~~15~~ | ~~Üben im Fortschritt zählen?~~ | **erledigt 24.09.2026 (v3.16.0)** — Betreiber: „mach einfach". Gebaut: Übungsantworten als `u` im Tagesprotokoll, sichtbar im Fortschritt; ein reiner Übungstag hält **keine** Serie (`tagGelernt`, `app.js`). |
-| 16 | Einstieg, erster Bildschirm: Die Karte „كِتَابٌ → Buch" dreht sich einmal nach 1 s. Wer später hinschaut, hat es verpasst. Was tun? | **offen, Empfehlung C** (siehe unten). Nichts gebaut. |
-| 17 | Einstieg „Wofür lernst du Arabisch?": Die Antworten überschneiden sich. Ändern? | **offen, Empfehlung B** (siehe unten). Nichts gebaut. |
-| 18 | Serie: Wie viele ausgelassene Tage verzeiht sie? Heute wird genau **eine** Lücke überbrückt; an der zweiten hört die Zählung auf, auch Wochen später. | **offen, Empfehlung B** (siehe unten). **Lernlogik**, nur mit ausdrücklichem „ja". Nichts gebaut. |
+| ~~16~~ | ~~Einstieg, erster Bildschirm: Die Karte „كِتَابٌ → Buch" dreht sich einmal nach 1 s. Wer später hinschaut, hat es verpasst. Was tun?~~ | **entschieden 24.09.2026: Empfehlung C.** Gebaut in v3.17.20: Karte dreht hin und zurück (endet auf Arabisch), zusätzlich jederzeit antippbar. |
+| ~~17~~ | ~~Einstieg „Wofür lernst du Arabisch?": Die Antworten überschneiden sich. Ändern?~~ | **entschieden 24.09.2026: Empfehlung B.** Gebaut in v3.17.20: „Hocharabisch lesen und sprechen" entfernt, 3 statt 4 Antworten. |
+| ~~18~~ | ~~Serie: Wie viele ausgelassene Tage verzeiht sie?~~ | **entschieden 24.09.2026 („ja mach"): Empfehlung B, Lernlogik mit Freigabe geändert.** Gebaut in v3.17.20: Der Joker lädt sich nach 7 gelernten Tagen wieder auf, statt nur einmal im ganzen Verlauf zu gelten. Geprüft mit sechs konstruierten Fällen gegen die echte App (`plan/werkzeuge/pruefstand/t_serie.js`). |
 
 **Neu am 24.09.2026 (Fragen 16–18).** Die drei Bedenken äußerte der Betreiber
 „bevor ich eine Anweisung gebe". Nach seiner Regel (`plan/LEHREN.md` § 1.1)
@@ -774,20 +774,34 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026, abends): v3.17.19 auf `main`.**
+**AKTUELL (24.09.2026, abends): v3.17.20 auf `main`.**
 
 - **NEU: [`LEHREN.md`](LEHREN.md)** ist Pflichtlektüre vor jeder Änderung
   (`CLAUDE.md` verweist darauf). Es sammelt alle Fehler und Muster aus allen
   Phasen und Regeln für Tool, Firebase, Regeln, E-Mails, Hosting, iOS, Texte
   und Recht. Vor jedem Commit gilt die Checkliste § 14 dort.
-- Drei Betreiber-Bedenken sind beantwortet: offene Fragen **16**
-  (Einstieg-Karte), **17** (Ziel-Antworten) und **18** (Lücken-Regel der
-  Serie). Sie warten auf seine Entscheidung: **nicht vorher bauen**.
-- In 3.17.19 wurde nur der falsche Hinweis „Noch offen für die Serie"
+- **Drei Betreiber-Bedenken entschieden und gebaut** (Betreiber: „16 c 17b
+  18b ja mach"), offene Fragen 16–18 damit erledigt:
+  - **16 (Empfehlung C):** Die Einstieg-Karte dreht hin und zurück (endet auf
+    Arabisch) und ist jederzeit antippbar (`einstiegHero()`, `app.js`).
+  - **17 (Empfehlung B):** „Wofür lernst du Arabisch?" hat jetzt 3 statt 4
+    Antworten – „Hocharabisch" ist raus (`EINSTIEG_ZIELE`).
+  - **18 (Empfehlung B, Lernlogik, Freigabe erteilt):** Die Serie verzeiht
+    jetzt einen ausgelassenen Tag je 7 gelernte Tage, nicht nur einmal im
+    ganzen Verlauf (`serieAktuell()`, `SERIE_JOKER_TAGE`). Neuer Test:
+    [`werkzeuge/pruefstand/t_serie.js`](werkzeuge/pruefstand/t_serie.js) –
+    6 konstruierte Verlaufsreihen gegen die echte App, alle richtig.
+  - Details und Begründung: `audit/LOGBUCH.md`, Eintrag 24.09.2026.
+- Davor in 3.17.19: der falsche Hinweis „Noch offen für die Serie"
   richtiggestellt.
+- **Nebenbemerkung des Betreibers, bereits erledigt:** Die Einstellung
+  „Bewegung" (Voll/Ruhig) gibt es nicht mehr – auf seinen eigenen Wunsch
+  schon in 3.12.0 entfernt (`app.js`, Kommentar „die Einstellung ist wieder
+  weg"). `prefers-reduced-motion` (Betriebssystem) bleibt als
+  Barrierefreiheits-Schalter bestehen.
 - Offen beim Betreiber: `veroeffentlichen.bat`; PostHog-Schlüssel; Datenschutz
   §15 prüfen lassen; am Gerät das Konto-Löschen mit Google und die
-  Kalender-Erinnerung auf iOS; Fragen 16–18.
+  Kalender-Erinnerung auf iOS.
 
 **Davor (24.09.2026): v3.17.18 auf `main` – PRÜFSCHLEIFE ABGESCHLOSSEN: alle 18 Stationen erledigt (v3.16.1 → v3.17.18), Routine gelöscht, Zusammenfassung in `audit/LOGBUCH.md` (oberster Eintrag). Nächstes nur auf Betreiber-Wunsch. Offen beim Betreiber: `veroeffentlichen.bat`; PostHog-Schlüssel („von vorhin: …"); Datenschutz §15 prüfen lassen; am Gerät: Konto-Löschen mit Google, Kalender-Erinnerung iOS. Davor v3.17.17 – Prüfschleife Station 17 (Große Bildschirme): Lernen-Raster am Computer ausgewogen, gesperrter Knopf lesbar; nächste Station 18 (Hell & ruhig), danach Abschluss. Davor v3.17.16 – Prüfschleife Station 16 (Querschnitt): Offline-Hinweis kurz, Fehler ohne Systemcodes, Startfehler mit Abmelden; nächste Station 17 (Große Bildschirme). Davor v3.17.15 – Prüfschleife Station 15 (Konto): Google/Apple-Konten löschbar, erst neu anmelden dann löschen, gesperrter Knopf lesbar; nächste Station 16 (Querschnitt). Offen beim Betreiber: Konto-Löschen mit Google einmal am Gerät testen. Davor v3.17.14 – Prüfschleife Station 14 (Einstellungen): Fehler melden schlank, Erinnerungs-Blatt schließt, „Runde" statt „Sitzung"; nächste Station 15 (Konto). Davor v3.17.13 – Prüfschleife Station 13 (Kartensätze & Daten): Codes in jeder Schreibweise, Fehler in Worten, keine „Karte(n)" mehr; nächste Station 14 (Einstellungen). Davor v3.17.12 – Prüfschleife Station 12 (Bereiche): neuer/gelöschter Bereich setzt Zustand zurück, leerer Bereich einfach löschbar, kein Löschen beim letzten, „leer" statt „fertig"; nächste Station 13 (Kartensätze & Daten). Stationen laufen jetzt direkt hintereinander (Betreiber). Davor v3.17.11 – Prüfschleife Station 11 (Karten-Blätter): angefangene Karte geht nicht mehr verloren, Enter springt weiter, Fehler ohne Sprung, gleiche Abstände; nächste Station 12 (Bereiche). Davor v3.17.10 – Prüfschleife Station 10 (Verwalten): Auswahl ohne Sprung, Leiste einzeilig mit Blättern, Suche flackert nicht, Tastatur-Sortieren hält den Fokus; nächste Station 11 (Karten-Blätter). Davor v3.17.9 – Prüfschleife Station 9 (Fortschritt): gesperrte Lektionen lesbar, Einzahl überall, Kalender-Tooltip lesbar, keine doppelte Überschrift; nächste Station 10 (Verwalten). Davor v3.17.8 – Prüfschleife Station 8 (Üben, Rest): Schreiben kompakt und sofort im Bild, Wort im Vollbild sichtbar, „Strich zurück" fest, Schalter „Mit Schreiben" bleibt; nächste Station 9 (Fortschritt). Davor v3.17.7 – Prüfschleife Station 7 (Rundenende): mit Rundenlimit „N Karten geschafft, noch N offen" + Weiterlernen, ein Ausgang statt zwei; nächste Station 8 (Üben, Rest). Davor v3.17.6 – Rückgängig zählt auch das Tagesprotokoll zurück (Betreiber: ja); flüssiger: Kartenliste animiert nur 14 Zeilen, content-visibility; Prüfliste um „Flüssig" (CPU 4×) ergänzt; nächste Station 7 (Rundenende). Davor v3.17.5 – Station 6 (Lernrunde, Rest). Davor v3.17.4 – Station 5 (Lernen-Start). Davor v3.17.3 – Station 4 (Bestätigung): Meldungen unter den Knöpfen, Tipp-Feedback, keine Systemcodes. Davor v3.17.2 – Station 3 (Anmelden): Fehlermeldung unter dem Knopf, Schütteln, Name-Fehler in der Beschriftung. Davor v3.17.1 – Station 2 (Einstieg): Weiter-Knopf unten fest. Davor v3.17.0 – Hinweise zur richtigen Zeit, Kalender-Erinnerung, Ideen-Board neu (vorladen, Platzhalter, Abschnitte), Moderation nur Betreiber, Antwort mit der Drehung, Bewertung ohne Unterzeilen, Nutzungsstatistik (PostHog) vorbereitet und aus bis zum Schlüssel. Offen beim Betreiber: PostHog-Schlüssel. Prüfschleife: nächste Station 2. Davor v3.16.1 – Prüfschleife Station 1 (Start) erledigt: kein endloser Startbildschirm mehr bei hängendem Netz; nächste Station 2. Davor v3.16.0 – Hick-Durchgang über das ganze Tool: Doppeltes raus (Serie nur auf Lernen, Fortschritt zwei Blöcke, Stand-Punkte in der Kartenliste, „Tage gelernt" durch „Dabei seit" ersetzt), Üben zählt im Fortschritt ohne Serie. Offen: Frage 14 (Analytics Ja/Nein). Davor v3.15.0 – Üben neu (Auswahl, Bewertung, Ende), Kontrast überall gemessen (0 Funde), Schreib-Tinte sichtbar, Einladungs-Ring aus dem Einstieg, Karte steht still. Neue offene Fragen 14 (Analytics) und 15 (Üben im Fortschritt). Davor v3.14.0: Karte dreht sich wirklich, antippbar, fliegt nach der Bewertung weg. Danach lief die PRÜFSCHLEIFE (`audit/AUFTRAG.md` + `audit/LOGBUCH.md`) – am 24.09.2026 mit Station 18 abgeschlossen, Routine gelöscht. Bei „leg los" gibt es aus der Schleife nichts mehr zu tun: auf Betreiber-Rückmeldung warten; eine zweite Runde nur auf seinen Wunsch.**
 
