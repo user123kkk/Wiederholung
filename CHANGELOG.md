@@ -1,3 +1,23 @@
+## 3.17.9 - 24. September 2026
+
+**Prüfschleife, Station 9 (Fortschritt).**
+
+- **Gesperrte Lektionen sind lesbar.** Die ganze Kachel war auf 42 %
+  abgedunkelt – „13 Karten" lag bei einem Kontrast von 2:1. Gesperrt heißt
+  jetzt: Schloss, leerer Balken, gedeckte Schrift. Das Schloss steht in der
+  Zeile neben dem Namen statt darüber.
+- **„Lektionen" steht nur noch einmal da** – die Seite heißt schon so, die
+  zweite Überschrift darunter ist weg.
+- **Einzahl:** „1 Antwort diese Woche", „1 von 1 Karte saß schon einmal",
+  „1 Karte" in den nächsten 7 Tagen, „1 von 3 sitzt", im Wochenrückblick
+  „1 Antwort · 1 neue Karte".
+- **Kalender:** Beim Drüberfahren steht „20.9.: 5 Antworten" statt
+  „2026-09-20: 5 Karten" – lesbares Datum, und es sind Antworten, wie in der
+  Zahl darüber.
+- Geprüft ohne Befund: leer, eine Karte, gefüllt; Unterseiten „Karten, die
+  nicht klappen" und „Die nächsten 7 Tage"; nichts verschiebt sich beim
+  Laden; hell und dunkel – Handy, kleines Handy, iPad.
+
 ## 3.17.8 - 24. September 2026
 
 **Prüfschleife, Station 8 (Üben: Schreiben, Speicherkarten).**

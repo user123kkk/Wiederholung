@@ -14,7 +14,51 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 6 | Lernrunde | erledigt (v3.14.0/3.15.0 Umdrehen/Bewerten, v3.17.5 Rest) |
 | 7 | Rundenende | erledigt (v3.17.7) |
 | 8 | Üben | erledigt (v3.15.0 Auswahl/Bewertung/Ende, v3.17.8 Schreiben/Speicherkarten) |
-| 9–18 | … | offen |
+| 9 | Fortschritt | erledigt (v3.17.9) |
+| 10–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 9: Fortschritt (v3.17.9)
+
+**Anlass:** Routine, 14:50 UTC. Keine neue Betreiber-Nachricht seit „Gehts
+weiter?".
+
+**Geprüft (`t_fortschritt.js`: leer / eine Karte / gefüllt × Handy hell+dunkel,
+klein, iPad; Unterseiten Lektionen, Karten die nicht klappen, 7 Tage;
+`t_fluessig_gross.js 400 fort`):**
+- **Fund 1: Kontrast Lektionen-Seite** – gesperrte Kachel `opacity: 0.42`:
+  „13 Karten" 2,05:1, Name 3,79:1; `.lekt-zahl` (--text-3) auf der Kachel
+  4,36:1.
+- **Fund 2: Einzahl** – „1 Antworten diese Woche", „1 von 1 Karten saßen",
+  „1 Karten" (7 Tage), „1 von 3 sitzen", Wochenrückblick „1 Antworten / 1 neue
+  Karten", gesperrte Kachel „1 Karten".
+- **Fund 3: Kalender-Tooltip** „2026-09-20: 5 Karten" – Systemdatum, und die
+  Zahl ist w+n (Antworten), nicht Karten.
+- Fund 4 (Hick): Überschrift „Lektionen" doppelt (Kopfzeile + h3).
+- Fund 5: Schloss-Symbol auf eigener Zeile (`.i` ist block).
+- Ohne Befund: Layout-Shift 0 in allen Zuständen, Kontrast Hauptseite und
+  andere Unterseiten 0, nicht quer, Rückweg `seite-zu`.
+- Gemessen, nicht behoben: erstes Öffnen mit 400 Karten ≈100 ms bei CPU 4×
+  (JS davon ≈11 ms, Rest Layout). Versuch, `syncAppbarKante` ins nächste
+  Bild zu schieben: kein Gewinn (Layout wird dann an anderer Stelle
+  erzwungen) – zurückgenommen. Real ≈25 ms, bleibt.
+- Bemerkt, kein App-Fund: Test-Store hat gelernte Karten in gesperrten
+  Lektionen → „2 von 3 sitzen" neben zwei Schlössern. Mit echten Daten kaum
+  möglich (Freischalten = Lernlogik, nicht angefasst).
+
+**Geändert (app.js):** `fortschrittWochen` (Antwort/Antworten),
+`fortschrittStoff` (Karte/saß), `renderFortschritt` (7 Tage, Lektionen-Zeile),
+`fortschrittLektionen` (ohne h3, sitzt/sitzen, Karte/Karten), `renderKalender`
+(Tooltip `tagKurz` + Antworten), Wochenrückblick-Hinweis. **styles.css:**
+`.lekt-kachel.zu` ohne opacity, `.lekt-zahl` --text-2, `.lekt-name .i`
+inline. Version 3.17.9.
+**Neu (Prüfstand):** `t_fortschritt.js`; `t_fluessig_gross.js` mit Modus
+`fort` (Profil erstes Öffnen).
+
+**Offen:** –
+**Nächste Station:** 10 (Verwalten – Liste, Suche, Auswahl, Sortieren,
+Speicherkarten, Lektionen)
 
 ---
 

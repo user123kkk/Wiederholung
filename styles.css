@@ -2886,19 +2886,27 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   background: var(--sheen), var(--surface); border: 1px solid var(--border-subtle);   /* Block 13, siehe .card */
   border-radius: var(--r-md);
 }
-.lekt-kachel.zu { opacity: 0.42; }
+/* 3.17.9 (Station 9): nicht mehr die ganze Kachel auf 42 % - damit lag
+   die Schrift bei 2,05:1 (gemessen). Gesperrt heisst jetzt: Schloss, leerer
+   Balken, gedeckte Schrift - lesbar bleibt sie. */
+.lekt-kachel.zu { background: transparent; }
+.lekt-kachel.zu .lekt-name { color: var(--text-2); font-weight: 500; }
+.lekt-kachel.zu .lekt-bar { opacity: 0.45; }
 .lekt-kachel.dran { border-color: var(--accent-border); background: var(--accent-bg); }
 .lekt-name {
   flex: 1 1 auto; min-width: 0; font-size: var(--fs-md);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+/* 3.17.9: Schloss/Haken in derselben Zeile wie der Name - .i ist block,
+   das Schloss stand darueber und machte gesperrte Kacheln doppelt so hoch. */
+.lekt-name .i { display: inline-block; vertical-align: -2px; }
 .lekt-bar {
   flex: 0 0 72px; height: 4px; border-radius: var(--r-full);
   background: var(--surface-raised); overflow: hidden;
 }
 .lekt-bar span { display: block; height: 100%; background: var(--stufe-3); }
 .lekt-kachel.sitzt .lekt-bar span { background: var(--positive); }
-.lekt-zahl { font-size: var(--fs-xs); color: var(--text-3); flex: none; font-variant-numeric: tabular-nums; }
+.lekt-zahl { font-size: var(--fs-xs); color: var(--text-2);   /* 3.17.9: --text-3 auf der Kachel 4,36:1 */ flex: none; font-variant-numeric: tabular-nums; }
 
 /* Serie. */
 .serie-karte {

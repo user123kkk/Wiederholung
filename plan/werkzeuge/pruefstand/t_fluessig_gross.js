@@ -15,6 +15,19 @@ const fs = require('fs');
   const cdp = await p.context().newCDPSession(p);
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
   const zeit = async a => p.evaluate(a => new Promise(r => { const k = document.querySelector('[data-action="' + a + '"]'); const t = performance.now(); k.click(); const d = performance.now() - t; requestAnimationFrame(() => r(Math.round(d) + ' ms JS, erstes Bild nach ' + Math.round(performance.now() - t) + ' ms')); }), a);
+  if (process.argv[3] === 'fort') {
+    await cdp.send('Profiler.enable'); await cdp.send('Profiler.setSamplingInterval', { interval: 200 }); await cdp.send('Profiler.start');
+    console.log('tab-fortschritt (erstes Mal)', await zeit('tab-fortschritt'));
+    const pr = (await cdp.send('Profiler.stop')).profile; const m = new Map(pr.nodes.map(n => [n.id, n])); const self = {};
+    pr.samples.forEach((id, i) => { const n = m.get(id); const k = n.callFrame.functionName || '(' + n.callFrame.url.split('/').pop() + ')'; self[k] = (self[k] || 0) + (pr.timeDeltas[i] || 0) / 1000; });
+    // Gesamtzeit je Funktion (inkl. Kinder)
+    const kinder = new Map(pr.nodes.map(n => [n.id, n.children || []])); const selbst = new Map(); pr.samples.forEach((id, i) => selbst.set(id, (selbst.get(id) || 0) + (pr.timeDeltas[i] || 0) / 1000));
+    const tot = id => (selbst.get(id) || 0) + kinder.get(id).reduce((a, c) => a + tot(c), 0); const ges = {};
+    for (const n of pr.nodes) { const k = n.callFrame.functionName; if (k) ges[k] = Math.max(ges[k] || 0, tot(n.id)); }
+    console.log('Selbst:', Object.entries(self).sort((a, c) => c[1] - a[1]).slice(0, 10).map(([k, v]) => k + ' ' + v.toFixed(1)).join(', '));
+    console.log('Gesamt:', Object.entries(ges).sort((a, c) => c[1] - a[1]).slice(0, 16).map(([k, v]) => k + ' ' + v.toFixed(1)).join(', '));
+    await b.close(); return;
+  }
   for (const a of ['tab-fortschritt', 'tab-verwalten', 'tab-lernen', 'tab-verwalten', 'tab-fortschritt', 'tab-lernen']) console.log(a.padEnd(16), await zeit(a));
   // Profil fuer Verwalten
   await cdp.send('Profiler.enable'); await cdp.send('Profiler.start');

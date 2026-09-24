@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.8";
+const APP_VERSION = "3.17.9";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -3181,7 +3181,10 @@ function renderKalender(tage) {
     /* Vier Stufen. Feiner waere bei 11 Pixeln nicht mehr unterscheidbar. */
     const stufe = zukunft ? "x" : menge === 0 ? 0 : menge < 10 ? 1 : menge < 25 ? 2 : menge < 50 ? 3 : 4;
     html += '<div class="kal-tag s' + stufe + (iso === heuteIso ? " heute" : "") +
-      '" title="' + esc(iso + (zukunft ? "" : ": " + menge + " Karten")) + '"></div>';
+      /* 3.17.9 (Station 9): lesbares Datum statt "2026-09-20", und es sind
+         Antworten (w + n), keine Karten - dieselbe Zahl wie "Antworten diese
+         Woche" darueber. */
+      '" title="' + esc(tagKurz(iso) + (zukunft ? "" : ": " + menge + (menge === 1 ? " Antwort" : " Antworten"))) + '"></div>';
   }
   html += '</div>';
   return html;
@@ -8625,8 +8628,8 @@ function lernenHinweis() {
   if (lw.dow <= 2 && lw.tage > 0 && sp.rueckblick !== lw.woche) {
     let t = '<span class="hinweis__titel">Deine letzte Woche</span>' +
       '<span class="hinweis__zahlen"><span><strong>' + lw.tage + '</strong> von 7 Tagen</span>' +
-      '<span><strong>' + lw.antworten + '</strong> Antworten</span>' +
-      '<span><strong>' + lw.neu + '</strong> neue Karten</span></span>';
+      '<span><strong>' + lw.antworten + '</strong> ' + (lw.antworten === 1 ? 'Antwort' : 'Antworten') + '</span>' +
+      '<span><strong>' + lw.neu + '</strong> ' + (lw.neu === 1 ? 'neue Karte' : 'neue Karten') + '</span></span>';
     return hinweisKarte("rueckblick", "fortschritt", t, null, true);
   }
   /* 4 - Erinnerung einrichten */
@@ -8954,7 +8957,7 @@ function fortschrittWochen() {
     /* Die Zahl zaehlt beim Anzeigen von 0 hoch (tickCountups()). */
     html += '<div class="wochen-kopf">';
     html += '<p class="gross-zahl" style="margin:0" data-countup="' + diese.gesamt + '"><strong>0</strong>' +
-      '<span>Antworten diese Woche</span></p>';
+      '<span>' + (diese.gesamt === 1 ? 'Antwort' : 'Antworten') + ' diese Woche</span></p>';
     /* Eine Richtung nur, wenn es etwas zu vergleichen gibt. "Vorwoche war
        leer" war eine Pille, die nichts sagte. */
     if (letzte.gesamt > 0) {
@@ -8993,7 +8996,8 @@ function fortschrittStoff(cards) {
      schwankt, sobald man etwas vergisst. Deshalb steht diese Zahl oben. */
   html += '<p class="gross-zahl"><strong>' + gesessen + '</strong>' +
     '<span class="arab-ziffer" lang="ar" dir="rtl">' + arabZahl(gesessen) + '</span>' +
-    ' <span>von ' + gesamt + ' Karten saßen schon einmal</span></p>';
+    /* 3.17.9: Einzahl ("1 von 1 Karten saßen" gemessen). */
+    ' <span>von ' + gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' ' + (gesessen === 1 ? 'saß' : 'saßen') + ' schon einmal</span></p>';
   /* 22.09.2026 (Block 16): Hier stand "Diese Woche N neue dazu." - dieselbe
      Zaehlung ("Karten zum ersten Mal gesehen") steht schon zweimal weiter
      oben auf demselben Bildschirm: in "Heute" fuer heute und in "Die letzten
@@ -9061,9 +9065,10 @@ function fortschrittLektionen(nurBereich) {
     const offenIds = offeneLektionIds(bF);
     const aktF = aktuelleLektion(bF);
     html += '<div class="stat-block">';
-    html += '<h3>Lektionen</h3>';
+    /* 3.17.9 (Station 9): keine zweite Ueberschrift "Lektionen" - die Seite
+       heisst schon so (Kopfzeile). */
     const fertig = lekF.filter(x => lektionSitzt(bF, x)).length;
-    html += '<p class="stat-sub">' + fertig + ' von ' + lekF.length + ' sitzen</p>';
+    html += '<p class="stat-sub">' + fertig + ' von ' + lekF.length + (fertig === 1 ? ' sitzt' : ' sitzen') + '</p>';
     html += '<div class="lekt-leiste">';
     for (const st of lekF) {
       const karten = setCards(st);
@@ -9075,7 +9080,7 @@ function fortschrittLektionen(nurBereich) {
       html += '<div class="lekt-kachel' + (zu ? " zu" : sitzt ? " sitzt" : "") + (dran ? " dran" : "") + '">';
       html += '<div class="lekt-name">' + (zu ? ikon("schloss", "i-sm") + " " : sitzt ? ikon("haken", "i-sm") + " " : "") + esc(st.name) + '</div>';
       html += '<div class="lekt-bar"><span style="width:' + (zu ? 0 : p) + '%"></span></div>';
-      html += '<div class="lekt-zahl">' + (zu ? karten.length + ' Karten' : fest + ' / ' + karten.length) + '</div>';
+      html += '<div class="lekt-zahl">' + (zu ? karten.length + (karten.length === 1 ? ' Karte' : ' Karten') : fest + ' / ' + karten.length) + '</div>';
       html += '</div>';
     }
     html += '</div>';
@@ -9152,7 +9157,7 @@ function renderFortschritt() {
     if (zeigtLektionen) {
       const fertig = lekF.filter(x => lektionSitzt(currentBereich(), x)).length;
       html += einstZeile({ action: "fort-seite", id: "lektionen", icon: "ordner", text: "Lektionen",
-        wert: fertig + " von " + lekF.length + " sitzen" });
+        wert: fertig + " von " + lekF.length + (fertig === 1 ? " sitzt" : " sitzen") });
     }
     if (leeches.length > 0) {
       html += einstZeile({ action: "fort-seite", id: "leeches", icon: "warnung",
@@ -9161,7 +9166,7 @@ function renderFortschritt() {
     if (hatVorschau) {
       const summe = tage7.reduce((a, x) => a + x.anzahl, 0);
       html += einstZeile({ action: "fort-seite", id: "vorschau", icon: "serie",
-        text: "Die nächsten 7 Tage", wert: summe + " Karten" });
+        text: "Die nächsten 7 Tage", wert: summe + (summe === 1 ? " Karte" : " Karten") });
     }
     html += '</div></div>';
   }
