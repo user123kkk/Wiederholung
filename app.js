@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.5";
+const APP_VERSION = "3.17.6";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4944,7 +4944,11 @@ function gradeCard(kind) {
          Lektion haette ein einziger Fehlgriff die naechste Lektion dauerhaft
          aufgeschlossen. */
       prevMaxStufe: card.maxStufe || 0,
-      prevQueue: s.queue.slice()
+      prevQueue: s.queue.slice(),
+      /* 3.17.6: welcher Tageszaehler gleich hochgeht - Rueckgaengig nimmt
+         genau den wieder zurueck (Betreiber: "man hat es ja nicht gewollt"). */
+      verlaufTag: todayStr(),
+      verlaufArt: warNeu ? "n" : "w"
     };
     // B3: ab jetzt gilt die Karte als eingeführt und zählt gegen das Tageslimit
     if (istNeueKarte(card)) card.ersteBewertung = todayStr();
@@ -5057,6 +5061,17 @@ function undoLastGrade() {
     card.maxStufe = s.lastAction.prevMaxStufe;
   }
   s.queue = s.lastAction.prevQueue;
+  /* 3.17.6: Auch das Tagesprotokoll vergisst die Antwort. Vorher blieb sie
+     gezaehlt - der Fortschritt zeigte nach jedem Rueckgaengig eine Antwort zu
+     viel, und ein versehentlich bewerteter erster Tag zaehlte fuer die Serie.
+     Sofort geschrieben, nicht gebuendelt: verlaufZusammen nimmt je Tag die
+     groessere Zahl, ein spaeter Schnappschuss mit dem alten Stand saehe sonst
+     groesser aus. */
+  const va = s.lastAction.verlaufArt, vt = s.lastAction.verlaufTag;
+  if (va && vt && verlauf[vt] && (verlauf[vt][va] || 0) > 0) {
+    verlauf[vt][va]--;
+    if (vt === todayStr()) persistVerlauf();
+  }
   if (s.zaehler && s.letzteArt && s.zaehler[s.letzteArt] > 0) s.zaehler[s.letzteArt]--;
   s.letzteArt = null;
   s.zug = (s.zug || 0) + 1;

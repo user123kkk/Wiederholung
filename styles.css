@@ -4244,7 +4244,10 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 /* Verwalten: die ersten Zeilen der Liste kommen nacheinander – nur die
    ersten vierzehn, der Rest steht einfach da (eine Liste mit hundert
    Einträgen, die zwei Sekunden lang einfliegt, ist Wartezeit). */
-#app:not(.still-ansicht) #karten-liste > .card-row {
+/* 3.17.6 (Fluessig-Messung): nur die ersten vierzehn - wie der Satz oben
+   sagt. Bis hier traf die Regel JEDE Zeile, der Rest startete nur spaeter
+   (Standardwert --n: 14): bei 400 Karten 400 gleichzeitige Animationen. */
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(-n+14) {
   animation: einstieg-zeile 300ms var(--ease-out) backwards;
   animation-delay: calc(var(--n, 14) * 28ms + 60ms);
 }
@@ -4916,3 +4919,10 @@ label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); f
 .merk-btn__wort { display: inline-grid; }
 .merk-btn__wort > span { grid-area: 1 / 1; }
 .merk-btn__wort > .aus { visibility: hidden; }
+
+/* 3.17.6 (Fluessig-Messung, CPU 4x gedrosselt, 400 Karten): Der Wechsel auf
+   "Verwalten" blockierte ~200 ms, fast alles Layout der ganzen Liste. Zeilen
+   ausserhalb des Bildes rechnet der Browser jetzt erst, wenn sie ins Bild
+   kommen. 75 px ist die gemessene Hoehe einer einzeiligen Zeile; "auto"
+   merkt sich danach die echte. */
+.card-row { content-visibility: auto; contain-intrinsic-size: auto 75px; }

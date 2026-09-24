@@ -18,6 +18,47 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 
 ---
 
+### 2026-09-24 — Betreiber: Rückgängig zählt zurück, „soll flüssig sein" (v3.17.6)
+
+**Anlass (Vorrang vor der Schleife):** Antwort auf die offene Frage aus
+Station 6: „ja natürlich [...] man hat es ja nicht gewollt, nichts zum
+überlegen". Dazu: „Meinst du du findest mehr? Soll flüssig sein."
+
+**Geändert (app.js):** `gradeCard` (~Z. 4936) merkt sich in `lastAction`
+`verlaufTag`/`verlaufArt` ("n" bei neuer Karte, sonst "w");
+`undoLastGrade` (~Z. 5060) zählt genau diesen Zähler herunter und schreibt
+sofort (`persistVerlauf`) – gebündelt wäre riskant, weil
+`verlaufZusammen` je Tag die größere Zahl nimmt. Üben hat kein Rückgängig
+(`lastAction` nur im Lernen), dort nichts zu tun.
+**Geändert (styles.css):** Einblend-Bewegung der Kartenliste nur noch
+`:nth-child(-n+14)` (die Regel traf jede Zeile, Rest nur verzögert);
+`.card-row { content-visibility: auto; contain-intrinsic-size: auto 75px }`
+(gemessene Zeilenhöhe 75 px, 98 bei zwei Zeilen).
+**Neu (Prüfstand):** `t_undo_verlauf.js` (3× bewerten/rückgängig → Zähler
+stimmt, auch im Store), `t_fluessig.js` (CPU 4×, longtask + Bilder > 34 ms je
+Handlung), `t_fluessig_gross.js` (400 Karten, mit CPU-Profil),
+`t_liste_lang.js` (Scrollen ans Ende, Ziehen sortiert).
+**AUFTRAG.md:** Prüfliste um „Flüssig" ergänzt – ab Station 7 mitmessen.
+
+**Gemessen (CPU 4×, 400 Karten, erstes Bild nach Tipp):** Verwalten 206 →
+79 ms (zweites Mal 33), Fortschritt 137 → 89 ms. Profil vorher:
+`syncAppbarKante` 93 ms – nicht die Funktion selbst, sondern ihr
+`scrollY`-Lesen erzwingt das Layout der ganzen neuen Liste.
+Mit 40 Karten: alle Handlungen < 100 ms, Umdrehen/Bewerten 0 verpasste
+Bilder.
+**Regression:** `t_runde_rest.js` ohne Fund, Affe Handy 150 / iPad 120
+Schritte 0 Befunde, Liste lang: sortiert, Ende sichtbar.
+
+**Entscheidung:** `content-visibility` statt eine eigene „virtuelle Liste"
+zu bauen – eine CSS-Zeile, kein neuer Code, der Browser rechnet die
+Zeilen weiter selbst (Suchen mit Strg+F, Ziehen, Tastatur bleiben).
+
+**Offen:** Fortschritt beim ersten Öffnen noch ≈90 ms bei 400 Karten –
+bei Station 9 (Fortschritt) genauer ansehen.
+**Nächste Station:** 7 (Rundenende)
+
+---
+
 ### 2026-09-24 — Station 6: Lernrunde, Rest (v3.17.5)
 
 **Anlass:** Routine, 12:50 UTC. Keine neue Betreiber-Nachricht.
@@ -55,8 +96,8 @@ Merken-Knopf mit beiden Wörtern (`.merk-btn__wort`). **styles.css (Ende):**
 `t_sprung.js` 0 px (klein ±1 Rundung, wie vorher), Affe Handy 150 Schritte
 0 Befunde.
 
-**Offen:** Verlauf nach Rückgängig (s. o.) – Betreiber-Entscheidung, ob das
-angefasst werden darf (Lernlogik/Statistik).
+**Offen:** Verlauf nach Rückgängig (s. o.) – vom Betreiber freigegeben und in
+v3.17.6 gebaut.
 **Nächste Station:** 7 (Rundenende – Einzahl-Grammatik dort schon in
 3.17.4 behoben)
 

@@ -50,6 +50,11 @@ spricht, steht das im Logbuch und in der Antwort.
   es hingehört; was geht, geht in die Richtung seiner Bedeutung. Eine
   Bewegung pro Ursache, keine zwei nacheinander. 150–450 ms, Federn bei
   Dingen, die man „anfasst".
+- **Flüssig, auch auf einem älteren Handy** (Betreiber 24.09.2026: „Soll
+  flüssig sein"): `t_fluessig.js` (CPU 4× gedrosselt) und bei Listen
+  `t_fluessig_gross.js` (400 Karten). Ziel: keine Blockade über 100 ms bei
+  einer Handlung, Umdrehen/Bewerten ohne verpasstes Bild. Bei jeder Station,
+  die eine Liste oder einen neuen Bildschirm zeigt, mitmessen.
 - **Jeder Tipp antwortet sofort** (< 100 ms sichtbar: Druckzustand,
   Nachgeben). Haptik an Schlüsselstellen (Umdrehen, Bewerten, Abschluss),
   nicht überall.

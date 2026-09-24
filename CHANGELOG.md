@@ -1,3 +1,21 @@
+## 3.17.6 - 24. September 2026
+
+**Rückgängig nimmt die Antwort ganz zurück – und die App ist flüssiger.**
+
+- **Rückgängig zählt die Antwort nicht mehr im Fortschritt mit.** Vorher
+  wurde die Karte zurückgesetzt, die Antwort blieb aber im Tagesprotokoll:
+  eine Antwort zu viel in „Antworten diese Woche", und ein versehentlich
+  bewerteter erster Tag zählte schon für die Serie. Betreiber: „man hat es
+  ja nicht gewollt".
+- **Verwalten öffnet deutlich schneller.** Gemessen auf einem gedrosselten
+  Rechner (wie ein älteres Handy) mit 400 Karten: von rund 200 ms Stocken auf
+  80 ms beim ersten Öffnen, 35 ms danach. Zwei Ursachen: Alle Zeilen der
+  Liste liefen eine Einblend-Bewegung, obwohl nur die ersten vierzehn sollten
+  – jetzt nur noch die vierzehn. Und der Browser rechnet Zeilen außerhalb des
+  Bildes erst, wenn man dorthin scrollt.
+- Fortschritt öffnet mit vielen Karten ebenfalls schneller (≈140 → 90 ms).
+- Umdrehen und Bewerten: gemessen ohne verpasstes Bild.
+
 ## 3.17.5 - 24. September 2026
 
 **Prüfschleife, Station 6 (Lernrunde: Wischen, Rückgängig, Notiz, Merken,
