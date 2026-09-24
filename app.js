@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.6";
+const APP_VERSION = "3.17.7";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -6711,8 +6711,11 @@ function modeBar(cfg) {
     html += '<div class="modebar__fortschritt" style="--von:' + von.toFixed(3) + ';--bis:' + bis.toFixed(3) + '"></div>';
   }
   html += '<div class="modebar">';
-  html += '<button class="icon-btn" data-action="' + esc(c.zu) + '" aria-label="' +
-    esc(c.zuLabel || "Schließen") + '">' + ikon("schliessen") + '</button>';
+  /* 3.17.7: zu: null = kein Schliessen-Knopf, nur ein gleich breiter
+     Platzhalter (Rundenende: dort ist "Fertig" der eine Ausgang). */
+  html += c.zu ? '<button class="icon-btn" data-action="' + esc(c.zu) + '" aria-label="' +
+    esc(c.zuLabel || "Schließen") + '">' + ikon("schliessen") + '</button>'
+    : '<span style="width:var(--ctrl-md);flex:none"></span>';
   html += '<div class="modebar__mitte">' + (c.mitte || "") + '</div>';
   html += c.rechts || '<span style="width:var(--ctrl-md);flex:none"></span>';
   html += '</div>';
@@ -9260,7 +9263,9 @@ function renderSession() {
     s.anteilVorher = 1;
     /* 3.16.0: ohne "Fertig" in der Kopfzeile - darunter steht "Geschafft"
        als Ueberschrift und "Fertig" als Knopf. */
-    let html = modeBar({ zu: "end-session", zuLabel: "Zur\u00fcck", mitte: "", anteil: 1, anteilVorher: vorher });
+    /* 3.17.7 (Station 7): ohne X - oben links stand derselbe Ausgang wie
+       "Fertig" unten, zwei Wege fuer eine Handlung (Hick). */
+    let html = modeBar({ zu: null, mitte: "", anteil: 1, anteilVorher: vorher });
     html += renderRundenEnde(s, gesamt);
     return html;
   }
@@ -9543,6 +9548,12 @@ function renderRundenEnde(s, gesamt) {
      heute steht etwas im Protokoll. */
   const serieHeute = !s.isDrill && tagGelernt(verlauf[todayStr()]) ? serieAktuell() : 0;
   const morgen = vorschau7(currentCards())[1].anzahl;
+  /* 3.17.7 (Station 7): Mit einem Rundenlimit (10/20/30) stand hier "Alle 10
+     Karten fuer heute durch", obwohl noch Karten faellig waren - und es gab
+     keinen Weg weiter ausser zurueck auf den Lernen-Tab. Jetzt sagt der Satz,
+     was stimmt, und ein zweiter Knopf fuehrt in die naechste Runde. "Fertig"
+     bleibt der gefuellte: das Limit hat man sich selbst gesetzt. */
+  const offenHeute = s.isDrill ? 0 : dueCards().length;
   let html = '<div class="ende' + (neu ? ' ende--neu' : '') + '">';
   html += '<div class="ende__haken" aria-hidden="true">' +
     '<svg class="i ende__zeichen" viewBox="0 0 24 24" focusable="false">' +
@@ -9551,7 +9562,9 @@ function renderRundenEnde(s, gesamt) {
   html += '<h2>' + (s.isDrill ? '\u00dcbung fertig' : 'Geschafft') + '</h2>';
   html += '<p class="hint ende__satz">' + (s.isDrill
     ? gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' ge\u00fcbt \u00b7 ' + esc(s.drillLabel)
-    : (gesamt === 1 ? 'Die Karte für heute ist durch.' : 'Alle ' + gesamt + ' Karten für heute durch.')) + '</p>';
+    : offenHeute > 0
+      ? (gesamt === 1 ? 'Eine Karte geschafft.' : gesamt + ' Karten geschafft.')
+      : (gesamt === 1 ? 'Die Karte für heute ist durch.' : 'Alle ' + gesamt + ' Karten für heute durch.')) + '</p>';
   html += '<div class="ende__kacheln">';
   html += '<div class="ende__kachel ende__kachel--sicher" style="--i:0"><strong>' + z.known + '</strong><span>sicher</span></div>';
   html += '<div class="ende__kachel" style="--i:1"><strong>' + z.almost + '</strong><span>fast</span></div>';
@@ -9561,7 +9574,9 @@ function renderRundenEnde(s, gesamt) {
     html += '<div class="ende__serie" style="--i:3">' + ikon("serie", "i-lg") +
       '<span><strong>' + serieHeute + ' Tag' + (serieHeute === 1 ? '' : 'e') + '</strong> am Stück</span></div>';
   }
-  if (!s.isDrill) html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
+  if (offenHeute > 0) html += '<p class="hint ende__morgen" style="--i:4">Heute ' + (offenHeute === 1 ? 'ist' : 'sind') +
+    ' noch <strong>' + offenHeute + '</strong> Karte' + (offenHeute === 1 ? '' : 'n') + ' offen.</p>';
+  else if (!s.isDrill) html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
     ? 'Morgen ' + (morgen === 1 ? 'kommt' : 'kommen') + ' <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
     : 'Morgen ist nichts fällig. Die nächsten kommen von selbst.') + '</p>';
   html += gemerktHinweis();
@@ -9570,6 +9585,7 @@ function renderRundenEnde(s, gesamt) {
   /* 3.15.0: Ueben laedt zum Weitermachen ein - dieselben Karten, neu
      gemischt; wer "Nicht" hatte, bekommt sie so noch einmal. */
   if (s.isDrill) html += '<button class="secondary" data-action="drill-nochmal">' + ikon("ueben", "i-sm") + ' Noch eine Runde</button>';
+  else if (offenHeute > 0) html += '<button class="secondary" data-action="start-session">Weiterlernen</button>';
   if (s.lastAction) {
     html += '<button class="ghost" data-action="undo-grade">' + ikon("rueckgaengig", "i-sm") +
       ' Letzte Bewertung r\u00fcckg\u00e4ngig</button>';

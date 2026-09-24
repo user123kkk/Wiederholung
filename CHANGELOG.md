@@ -1,3 +1,20 @@
+## 3.17.7 - 24. September 2026
+
+**Prüfschleife, Station 7 (Rundenende).**
+
+- **Mit Rundenlimit sagt das Ende die Wahrheit.** Wer „10 Karten pro Runde"
+  eingestellt hat, las nach zehn Karten „Alle 10 Karten für heute durch" –
+  obwohl noch Karten fällig waren. Jetzt: „10 Karten geschafft. Heute sind
+  noch 2 Karten offen." und ein Knopf **Weiterlernen**, der die nächste Runde
+  startet. „Fertig" bleibt der Hauptknopf – das Limit hat man sich selbst
+  gesetzt.
+- **Ein Ausgang statt zwei:** Oben links stand ein X, unten „Fertig" – beide
+  taten dasselbe. Das X ist auf dem Abschluss weg.
+- Geprüft ohne Befund: Bilanz (sicher/fast/nicht), Serie, „Morgen kommen …",
+  Rückgängig vom Abschluss zurück in die Runde (ohne zweites Feiern),
+  Üben-Abschluss mit „Noch eine Runde", Kontrast, Übergang ins Feiern auf
+  gedrosseltem Rechner ohne spürbares Stocken – Handy, kleines Handy, iPad.
+
 ## 3.17.6 - 24. September 2026
 
 **Rückgängig nimmt die Antwort ganz zurück – und die App ist flüssiger.**

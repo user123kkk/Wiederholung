@@ -12,9 +12,50 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 4 | Bestätigung | erledigt (v3.17.3) |
 | 5 | Lernen-Start | erledigt (v3.17.4) |
 | 6 | Lernrunde | erledigt (v3.14.0/3.15.0 Umdrehen/Bewerten, v3.17.5 Rest) |
-| 7 | Rundenende | offen |
+| 7 | Rundenende | erledigt (v3.17.7) |
 | 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 7: Rundenende (v3.17.7)
+
+**Anlass:** Routine, 13:50 UTC. Keine neue Betreiber-Nachricht seit v3.17.6.
+
+**Geprüft (`t_rundenende.js`, Handy, klein, iPad; `t_fluessig_ende.js`):**
+normale Runde, Rundenlimit 10, Rückgängig vom Abschluss, Fertig → Lernen,
+Weiterlernen, Üben-Abschluss (Regression `t_ueben.js`), Kontrast, quer,
+Übergang ins Feiern bei CPU 4×.
+- **Fund 1: Rundenlimit – „Alle 10 Karten für heute durch"** bei 2 weiteren
+  fälligen, und kein Weg weiter (nur über Fertig → Lernen-Tab → Runde
+  starten). `renderRundenEnde` kannte das Limit nicht.
+- **Fund 2 (Hick): zwei Ausgänge** – X oben (`modeBar zu: "end-session"`,
+  aria „Zurück") und „Fertig" unten, gleiche Handlung.
+- Ohne Befund: Rückgängig vom Ende führt zurück zur offenen Karte, erneutes
+  Bewerten zeigt das Ende ohne zweite Feier-Vibration/Zählung
+  (`s.endeGezeigt`); Kontrast 0; Übergang ins Feiern: eine Blockade 57–66 ms,
+  ein Bild 50–67 ms (Ziel < 100).
+- Kein App-Fund: Serie „4" im Test kommt vom Sockel (`serieSockelSichern`
+  setzt `sockelBis` = heute, weil der Test-Store keinen Sockel hat).
+
+**Geändert (app.js):** `modeBar` – `zu: null` zeichnet einen gleich breiten
+Platzhalter statt des X; `renderSession` Endzweig ohne X;
+`renderRundenEnde` – `offenHeute` (= `dueCards().length`, nicht im Üben),
+Satz „N Karten geschafft." + „Heute sind noch N Karten offen." statt
+„Morgen …", Knopf `start-session` „Weiterlernen" (.secondary). Version 3.17.7.
+**Neu (Prüfstand):** `t_rundenende.js`, `t_fluessig_ende.js`.
+
+**Entscheidung:** „Fertig" bleibt gefüllt, „Weiterlernen" zweitrangig – wer
+ein Limit setzt, will kurze Runden (Hürde „Zeit" im Einstieg); die Einladung
+steht da, drängt aber nicht. „Morgen kommen …" entfällt, solange heute noch
+etwas offen ist – eine Aussage statt zwei.
+
+**Geprüft danach:** alles wie oben auf drei Geräten; Affe Handy 150 / klein
+120 Schritte 0 Befunde; `t_runde_rest.js` ohne Fund.
+
+**Offen:** –
+**Nächste Station:** 8 (Üben – Rest: Schreiben im Vollbild,
+Speicherkarten-Liste)
 
 ---
 
