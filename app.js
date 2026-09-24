@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.3";
+const APP_VERSION = "3.17.4";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -7824,7 +7824,7 @@ function renderEinstellungenSeite(id) {
     html += '<div class="card" style="margin-top:var(--stack)">';
     html += '<h3>Aufzeichnung</h3>';
     html += '<p class="hint">Das Tagesprotokoll trägt Kalender, Wochenzahlen und die Serie – ' +
-      'aufgezeichnet sind <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
+      'aufgezeichnet ' + (tage === 1 ? 'ist' : 'sind') + ' <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
       'Zurücksetzen betrifft nur die Anzeige: deine Karten und ihr Lernstand bleiben.</p>';
     html += '<div class="form-actions">';
     html += '<button class="ghost" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") +
@@ -8765,7 +8765,7 @@ function lernenStapel(b, cards, due, neuImStapel) {
       '<div class="stapel__mitte">' + ikon("haken", "i-xl") + '</div></div>';
     html += '<div class="stapel__titel">Für heute durch</div>';
     html += '<div class="stapel__was">' + (morgen > 0
-      ? 'Morgen kommen <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
+      ? 'Morgen ' + (morgen === 1 ? 'kommt' : 'kommen') + ' <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
       : 'In \u201e' + esc(b.name) + '\u201c ist nichts mehr f\u00e4llig. Der n\u00e4chste Schwung kommt von selbst.') + '</div>';
     /* 3.16.0: oeffnet das Ueben direkt, statt nur den Reiter zu wechseln -
        dort musste man "Ueben" noch einmal suchen. */
@@ -8775,7 +8775,9 @@ function lernenStapel(b, cards, due, neuImStapel) {
        Feld wird seit 2.14.0 nicht mehr gesetzt, der Hinweis erschien nie. */
     /* 3.16.0: nur bei mehreren Bereichen - mit einem einzigen sagte das
        Banner unter "Fuer heute durch" dasselbe noch einmal. */
-    if (bereiche.length > 1 && tagGelernt(verlauf[todayStr()]) && bereicheMitOffenem().length === 0) {
+    /* 3.17.4 (Station 5): gezaehlt werden nur Bereiche MIT Karten - ein
+       leerer zweiter Bereich machte die Zeile wieder zur Wiederholung. */
+    if (bereiche.filter(x => x.karten.length > 0).length > 1 && tagGelernt(verlauf[todayStr()]) && bereicheMitOffenem().length === 0) {
       html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
         ikon("haken", "i-sm") + '<div class="banner__text">Heute ist in allen Bereichen alles erledigt.</div></div>';
     }
@@ -8974,7 +8976,7 @@ function fortschrittStoff(cards) {
      bleibt er weg. */
   const belegt = gruppen.filter(g => g.anzahl > 0);
   if (belegt.length < 2) {
-    html += '<p class="stat-sub">Alle ' + gesamt + ' Karten sind gerade <strong>' +
+    html += '<p class="stat-sub">' + (gesamt === 1 ? 'Deine Karte ist' : 'Alle ' + gesamt + ' Karten sind') + ' gerade <strong>' +
       esc(belegt.length ? belegt[0].label : "neu") + '</strong>.</p>';
     return html + '</div>';
   }
@@ -9518,7 +9520,7 @@ function renderRundenEnde(s, gesamt) {
   html += '<h2>' + (s.isDrill ? '\u00dcbung fertig' : 'Geschafft') + '</h2>';
   html += '<p class="hint ende__satz">' + (s.isDrill
     ? gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' ge\u00fcbt \u00b7 ' + esc(s.drillLabel)
-    : 'Alle ' + gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' für heute durch.') + '</p>';
+    : (gesamt === 1 ? 'Die Karte für heute ist durch.' : 'Alle ' + gesamt + ' Karten für heute durch.')) + '</p>';
   html += '<div class="ende__kacheln">';
   html += '<div class="ende__kachel ende__kachel--sicher" style="--i:0"><strong>' + z.known + '</strong><span>sicher</span></div>';
   html += '<div class="ende__kachel" style="--i:1"><strong>' + z.almost + '</strong><span>fast</span></div>';
@@ -9529,7 +9531,7 @@ function renderRundenEnde(s, gesamt) {
       '<span><strong>' + serieHeute + ' Tag' + (serieHeute === 1 ? '' : 'e') + '</strong> am Stück</span></div>';
   }
   if (!s.isDrill) html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
-    ? 'Morgen kommen <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
+    ? 'Morgen ' + (morgen === 1 ? 'kommt' : 'kommen') + ' <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
     : 'Morgen ist nichts fällig. Die nächsten kommen von selbst.') + '</p>';
   html += gemerktHinweis();
   html += '<div class="empty__aktionen ende__aktionen">';

@@ -10,11 +10,48 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 2 | Einstieg | erledigt (v3.17.1) |
 | 3 | Anmelden | erledigt (v3.17.2) |
 | 4 | Bestätigung | erledigt (v3.17.3) |
-| 5 | Lernen-Start | offen |
+| 5 | Lernen-Start | erledigt (v3.17.4) |
 | 6 | Lernrunde | teilweise (Umdrehen, Bewerten, Sprünge, Ring – v3.14.0/3.15.0); Rest offen |
 | 7 | Rundenende | offen |
 | 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 5: Lernen-Start (v3.17.4)
+
+**Geprüft (`t_lernen_start.js`, sieben Zustände × Handy hell/dunkel, klein,
+iPad):** leer (Start-Liste), eine Karte, erste Runde, gefüllt, alles
+erledigt, Serie in Gefahr, zweiter Bereich offen. Gemessen: Layout-Shift ab
+dem Laden (PerformanceObserver `layout-shift`) 0,0000 überall, Kontrast 0,
+nicht quer, keine Konsolenfehler.
+- **Fund 1 (Grammatik): „Morgen kommen 1 Karte wieder."** – Lernen-Tab
+  (`lernenStapel`) und Rundenende (gleicher Satz). Beim Suchen nach derselben
+  Sorte: „Alle 1 Karte für heute durch" (Rundenende), „Alle 1 Karten sind
+  gerade neu" (Fortschritt, Zustände), „aufgezeichnet sind 1 Tag"
+  (Einstellungen). Alle vier gleich mit behoben – gehören zu Station 7/9/14,
+  sind aber derselbe Fehler; dort nicht noch einmal suchen.
+- **Fund 2 (doppelt): „Für heute durch" + „Heute ist in allen Bereichen
+  alles erledigt"** bei nur einem Bereich mit Karten. Die 3.16.0-Sperre
+  zählte `bereiche.length`, ein leerer zweiter Bereich hob sie auf.
+- Ohne Befund: Plaketten „8 Wiederholungen · 4 neu" sind reine Anzeige (kein
+  toter Knopf), Serie-Hinweis erscheint nur bei Gefahr, höchstens ein
+  Hinweis, Start-Liste ersetzt den Hinweis.
+- Bemerkt, kein App-Fehler: im Testzustand „erste Runde" zeigt die Serie
+  „Heute wird Tag 1", weil der Test-Store kein `streak` setzt – echte Runden
+  schreiben ihn.
+
+**Geändert (app.js):** `lernenStapel` (~Z. 8768, 8778), Rundenende (~Z. 9523,
+9532), Fortschritt-Zustände (~Z. 8979), Aufzeichnung (~Z. 7827). Version 3.17.4.
+**Neu (Prüfstand):** `t_lernen_start.js`.
+
+**Entscheidung:** Einzahl ausgeschrieben („Die Karte für heute ist durch.",
+„Deine Karte ist gerade …") statt „1 Karte" – liest sich wie ein Satz, nicht
+wie eine Zählung.
+
+**Offen:** –
+**Nächste Station:** 6 (Lernrunde – Rest: Wischen, Rückgängig, Notiz,
+Merken, Tastatur)
 
 ---
 

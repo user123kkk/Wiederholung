@@ -1,3 +1,21 @@
+## 3.17.4 - 24. September 2026
+
+**Prüfschleife, Station 5 (Lernen-Start).**
+
+- **„Morgen kommen 1 Karte wieder"** heißt jetzt „Morgen kommt 1 Karte
+  wieder" – auf dem Lernen-Tab und am Rundenende. Dieselbe Sorte Fehler an
+  drei weiteren Stellen behoben: „Alle 1 Karte für heute durch" (Rundenende),
+  „Alle 1 Karten sind gerade neu" (Fortschritt), „aufgezeichnet sind 1 Tag"
+  (Einstellungen).
+- **„Für heute durch" steht nur noch einmal da.** Die Zeile „Heute ist in
+  allen Bereichen alles erledigt" erschien auch dann, wenn nur ein Bereich
+  überhaupt Karten hat – ein leerer zweiter Bereich reichte. Jetzt zählen nur
+  Bereiche mit Karten.
+- Geprüft ohne Befund: sieben Zustände (leer, erste Karte, erste Runde,
+  gefüllt, alles erledigt, Serie in Gefahr, zweiter Bereich offen) – keine
+  Verschiebung beim Laden, Kontrast hell und dunkel, keine waagerechte
+  Scrollleiste; Handy, kleines Handy, iPad.
+
 ## 3.17.3 - 24. September 2026
 
 **Prüfschleife, Station 4 (E-Mail bestätigen).**
