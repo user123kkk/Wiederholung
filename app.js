@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.4";
+const APP_VERSION = "3.17.5";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5062,7 +5062,10 @@ function undoLastGrade() {
   s.zug = (s.zug || 0) + 1;
   s.lastAction = null;
   s.revealed = true;
-  s.extraOpen = false;
+  /* 3.17.5 (Station 6): offen wie auf jeder anderen Karte (2.7.0). Hier
+     stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
+     sie beim Bewerten offen war. */
+  s.extraOpen = true;
   if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
   render();
 }
@@ -5080,8 +5083,16 @@ document.addEventListener("keydown", e => {
   if (!ui.session || ui.tab !== "lernen") return;
   const tag = document.activeElement && document.activeElement.tagName;
   if (tag === "INPUT" || tag === "TEXTAREA") return;
+  /* 3.17.5 (Station 6): Ein offener Dialog (z. B. Fehler melden) gehoert der
+     Tastatur allein - vorher bewertete "3" die Karte dahinter. */
+  if (document.querySelector(".dlg") || document.documentElement.classList.contains("blatt-offen")) return;
   const s = ui.session;
   if (s.queue.length === 0) return;
+  /* 3.17.5: Steht der Fokus auf einem Knopf oder Link (per Tab erreicht),
+     loesen Enter/Leertaste DEN aus - wie ueberall im Web. Vorher fing dieser
+     Listener beide ab: "Rueckgaengig" oder "Runde beenden" liessen sich mit
+     der Tastatur nicht bedienen. */
+  if ((e.key === " " || e.key === "Enter") && (tag === "BUTTON" || tag === "A" || tag === "SELECT")) return;
   if (e.key === " " || e.key === "Enter") {
     e.preventDefault();
     /* 2.15.0: Im Uebungsmodus traegt die Leertaste durch: aufdecken, dann
@@ -9268,7 +9279,8 @@ function renderSession() {
   let html = modeBar({
     zu: "end-session",
     anteilVorher: anteilVorher,
-    zuLabel: s.isDrill ? "\u00dcbung beenden" : "Session abbrechen",
+    /* 3.17.5: "Runde" wie auf jedem anderen Knopf ("Runde starten"). */
+    zuLabel: s.isDrill ? "\u00dcbung beenden" : "Runde beenden",
     /* 3.2.1: Stand bis hier "0 von 11" auf der ERSTEN Karte - richtig
        gezaehlt (null erledigt), aber gelesen wie "Karte 0". Video 3, Ziel-
        Gradient: eine Null als erste Zahl eines Ablaufs liest sich wie
@@ -9437,7 +9449,11 @@ function renderSession() {
       html += '<button class="ghost merk-btn" data-action="karte-merken" data-id="' + esc(card.id) + '" title="' +
         (gemerkt ? 'Wieder herausnehmen' : 'In \u201e' + esc(MERK_SET_NAME) + '\u201c ablegen, um sie sp\u00e4ter gezielt zu \u00fcben') + '">' +
         sternIcon(gemerkt, justPopped) +
-        (gemerkt ? 'Gemerkt' : "Merken") + '</button>';
+        /* 3.17.5 (Station 6): beide Woerter liegen uebereinander, das
+           unsichtbare haelt die Breite - "Gemerkt" ist breiter als "Merken",
+           der Nachbarknopf "Notiz" rueckte beim Tippen um 4 px. */
+        '<span class="merk-btn__wort"><span' + (gemerkt ? ' class="aus" aria-hidden="true"' : '') + '>Merken</span>' +
+        '<span' + (gemerkt ? '' : ' class="aus" aria-hidden="true"') + '>Gemerkt</span></span></button>';
     }
     html += '</div>';
   }

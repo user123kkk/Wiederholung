@@ -4910,3 +4910,9 @@ button.ghost::after, button.linklike::after, button.tiny-link::after, a.linklike
   75% { transform: translateX(2px); }
 }
 label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); font-weight: 600; }
+
+/* 3.17.5 (Pruefschleife, Station 6): "Merken"/"Gemerkt" gleich breit -
+   beide Woerter im selben Rasterfeld, das inaktive unsichtbar. */
+.merk-btn__wort { display: inline-grid; }
+.merk-btn__wort > span { grid-area: 1 / 1; }
+.merk-btn__wort > .aus { visibility: hidden; }

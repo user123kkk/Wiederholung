@@ -11,10 +11,54 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 3 | Anmelden | erledigt (v3.17.2) |
 | 4 | Bestätigung | erledigt (v3.17.3) |
 | 5 | Lernen-Start | erledigt (v3.17.4) |
-| 6 | Lernrunde | teilweise (Umdrehen, Bewerten, Sprünge, Ring – v3.14.0/3.15.0); Rest offen |
+| 6 | Lernrunde | erledigt (v3.14.0/3.15.0 Umdrehen/Bewerten, v3.17.5 Rest) |
 | 7 | Rundenende | offen |
 | 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 6: Lernrunde, Rest (v3.17.5)
+
+**Anlass:** Routine, 12:50 UTC. Keine neue Betreiber-Nachricht.
+
+**Geprüft (`t_runde_rest.js`, Handy, klein, iPad):** Wischen rechts/links,
+kurzer und senkrechter Wisch, Rückgängig, Notiz verbergen/zeigen, Merken,
+Leertaste/1/2/3, Enter auf fokussiertem Knopf, Taste bei offenem Dialog,
+Kontrast.
+- **Fund 1: Rückgängig schließt die Notiz** – `undoLastGrade` setzte
+  `extraOpen = false`, überall sonst gilt „offen" (2.7.0).
+- **Fund 2: Enter/Leertaste auf fokussiertem Knopf wirkungslos** – der
+  Runden-Listener fing beide Tasten immer ab (`preventDefault`), Rückgängig
+  und Schließen waren per Tastatur nicht bedienbar.
+- **Fund 3: Tasten wirken durch offene Dialoge** – kein Test auf `.dlg`.
+- Fund 4: „Merken" → „Gemerkt" macht den Knopf 8 px breiter, der Nachbar
+  „Notiz" rückt 4 px.
+- Fund 5: `aria-label` „Session abbrechen" – sonst heißt es überall „Runde".
+- Ohne Befund: Wischen (beide Richtungen bewerten, kurz federt zurück,
+  senkrecht nichts), Notiz ein/aus 0 px, Kontrast 0. Messfehler im ersten
+  Lauf: „Nicht" lässt „Karte x von y" gleich (Karte kommt wieder) – der Test
+  prüft jetzt, ob die nächste Karte zugedeckt ist.
+- Bemerkt, nicht gebaut (Lernlogik): Rückgängig setzt die Karte zurück, zählt
+  den Tagesverlauf (`verlauf[heute].w/n`) aber nicht herunter – Fortschritt
+  zeigt nach einem Rückgängig eine Antwort zu viel. Gehört zur Lernlogik/
+  Statistik, deshalb nur notiert.
+
+**Geändert (app.js):** Tastatur-Listener (~Z. 5080–5100): Dialog-Sperre,
+Enter/Leertaste bei Fokus auf BUTTON/A/SELECT durchlassen; `undoLastGrade`
+(~Z. 5065) `extraOpen = true`; `renderSession` zuLabel „Runde beenden",
+Merken-Knopf mit beiden Wörtern (`.merk-btn__wort`). **styles.css (Ende):**
+`.merk-btn__wort`. Version 3.17.5.
+**Neu (Prüfstand):** `t_runde_rest.js`.
+
+**Geprüft danach:** alle Funde behoben auf allen drei Geräten; Regression
+`t_sprung.js` 0 px (klein ±1 Rundung, wie vorher), Affe Handy 150 Schritte
+0 Befunde.
+
+**Offen:** Verlauf nach Rückgängig (s. o.) – Betreiber-Entscheidung, ob das
+angefasst werden darf (Lernlogik/Statistik).
+**Nächste Station:** 7 (Rundenende – Einzahl-Grammatik dort schon in
+3.17.4 behoben)
 
 ---
 

@@ -1,3 +1,24 @@
+## 3.17.5 - 24. September 2026
+
+**Prüfschleife, Station 6 (Lernrunde: Wischen, Rückgängig, Notiz, Merken,
+Tastatur).**
+
+- **Rückgängig holt die Karte so zurück, wie sie war** – mit offener Notiz.
+  Vorher stand sie ohne Notiz da, obwohl die Notiz auf jeder anderen Karte
+  offen ist.
+- **Tastatur:** Wer mit Tab auf „Rückgängig" oder „Schließen" geht, kann ihn
+  mit Enter oder Leertaste auch auslösen. Vorher fing die Runde beide Tasten
+  ab, die Knöpfe ließen sich per Tastatur nicht bedienen. Steht ein Dialog
+  offen, bewerten die Tasten 1/2/3 nicht mehr die Karte dahinter.
+- **„Merken" und „Gemerkt" sind gleich breit** – der Knopf „Notiz" daneben
+  rückt beim Tippen nicht mehr um 4 px.
+- Der Schließen-Knopf heißt für Vorlese-Programme „Runde beenden" statt
+  „Session abbrechen" – wie „Runde starten".
+- Geprüft ohne Befund: Wischen rechts/links bewertet, kurzes Wischen federt
+  zurück, senkrechtes Ziehen bewertet nichts; Notiz ein-/ausblenden
+  verschiebt nichts; Leertaste und 1/2/3; Kontrast – Handy, kleines Handy,
+  iPad.
+
 ## 3.17.4 - 24. September 2026
 
 **Prüfschleife, Station 5 (Lernen-Start).**
