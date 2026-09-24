@@ -5,3 +5,4 @@ node_modules/
 # Bilder des Probelaufs (plan/redesign-oberflaeche/probelauf.mjs) - Arbeitsstand,
 # wird bei jedem Lauf neu erzeugt und gehoert nicht ins Repo.
 plan/redesign-oberflaeche/.probelauf/
+plan/werkzeuge/pruefstand/package*.json

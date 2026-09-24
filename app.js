@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.13.1";
+const APP_VERSION = "3.14.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4260,6 +4260,9 @@ const UEBEN_GRUPPEN = [
 function stufenBereichName(von, bis) {
   const g = UEBEN_GRUPPEN.filter(x => x.von <= bis && x.bis >= von);
   if (!g.length) return "";
+  /* 3.14.0: alles gewaehlt - "neu & im Lernen bis dauerhaft" brach im
+     Ueben-Banner auf zwei Zeilen um und sagte nur "alle". */
+  if (g.length === UEBEN_GRUPPEN.length) return "alle Karten";
   return g.length === 1 ? g[0].label : g[0].label + " bis " + g[g.length - 1].label;
 }
 function waehleStufe(s, bisS) {
@@ -4705,7 +4708,9 @@ function revealAnswer() {
      fertig zu werden, bevor die sanfte Bewegung anfaengt - fuehlt sich eher
      wie EINE Bewegung an. Ohne Vollbild vorher aendert sich nichts. */
   const ausVollbild = hwFullscreen;
+  if (!ui.session || ui.session.revealed) return;   /* 3.14.0: Doppeltipp auf die Karte */
   ui.session.revealed = true;
+  fuehlbar(8);    /* 3.14.0: ein Tick, wenn die Karte umschlaegt */
   if (ausVollbild) { hwVollbildVerlassen(); return; }
   render();
   scrollGradeRowIntoView();
@@ -4814,6 +4819,7 @@ function gradeCard(kind) {
   }
   s.zug = (s.zug || 0) + 1;
   fuehlbar(kind === "known" ? 10 : kind === "unknown" ? [6, 30, 6] : 6);
+  kartenAbflug(kind);
   const id = s.queue.shift();
   // Nur „Nicht" hängt die Karte wieder hinten an. „Fast" ist morgen dran –
   // stünde sie auch heute noch einmal an, würde die Session nie enden.
@@ -4827,6 +4833,40 @@ function gradeCard(kind) {
     if (s.queue.length === 0) checkStreakOnSessionComplete();
   }
   render();
+}
+/* 3.14.0: Die bewertete Karte geht - in die Richtung ihrer Bewertung.
+   Betreiber am 24.09.2026 zu den Bewertungsknoepfen: "knoepfe garnicht".
+   Bis 3.13 verschwand die Karte beim Knopfdruck einfach (render() ersetzt
+   das Markup), nur beim Wischen flog sie weg. Jetzt fliegt sie bei jedem
+   Weg gleich: Sicher nach rechts, Nicht nach links (wie das Wischen), Fast
+   sinkt nach unten weg, im Ueben ("weiter") nach links oben. Die naechste
+   Karte steigt gleichzeitig vom Stapel auf (.study-flaeche--kommt) - aus
+   zwei Bewegungen wird ein Wechsel.
+   Technik: render() ersetzt #app, also wird VOR dem Neuzeichnen eine Kopie
+   der Karte an genau ihre Stelle gelegt (position: fixed, ausserhalb von
+   #app) und fliegt dort weg; nach der Bewegung wird sie entfernt. Nach
+   einem Wisch ist die Karte schon weg (Inline-Transform) - dann nichts. */
+function kartenAbflug(kind) {
+  try {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const el = app.querySelector(".study-flaeche");
+    if (!el || el.style.transform) return;
+    const r = el.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const g = el.cloneNode(true);
+    g.removeAttribute("data-action");
+    g.className = "study-flaeche karte-geist karte-geist--" + kind;
+    g.setAttribute("aria-hidden", "true");
+    const dreh = g.querySelector(".karte-dreh");
+    if (dreh) dreh.classList.remove("karte-dreh--wende");
+    if (g.querySelector(".karte-seite--hinten")) {
+      const vorn = g.querySelector(".karte-seite--vorn");
+      if (vorn) vorn.remove();
+    }
+    g.style.cssText = "position:fixed;margin:0;left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;height:" + r.height + "px";
+    document.body.appendChild(g);
+    setTimeout(() => g.remove(), 560);
+  } catch (e) {}
 }
 function gradeKnown() { gradeCard("known"); }
 function gradeAlmost() { gradeCard("almost"); }
@@ -8704,6 +8744,16 @@ function renderFortschrittSeite(id) {
    Unveraendert bleibt alles, was daran haengt: dieselben data-action-Werte,
    dieselbe Kennung #sitzung, dieselben Klassen .study-word, .study-answer und
    .grade-row - auf die greift scrollGradeRowIntoView() zu. */
+/* E6-Hinweis unter einer oft vergessenen Karte. 3.14.0: als Funktion, weil
+   er vor dem Aufdecken unsichtbar als Platzhalter steht (platz = true) -
+   siehe renderSession, Begruendung bei der Notiz. */
+function leechHinweis(card, platz) {
+  return '<div class="leech-banner' + (platz ? ' study-extra--platz" aria-hidden="true' : '') + '">' +
+    ikon("serie", "i-sm") + ' Diese Karte ist dir schon <strong>' +
+    card.rueckfaelle + '-mal</strong> wieder entfallen. Formuliere sie im Verwalten-Tab um oder ' +
+    'teile sie in zwei Karten \u2013 sonst frisst sie weiter deine Lernzeit. Sobald du Wort oder ' +
+    '\u00dcbersetzung \u00e4nderst, beginnt die Z\u00e4hlung von vorn.</div>';
+}
 function renderSession() {
   const s = ui.session;
   const gesamt = s.total || (s.drillIds ? s.drillIds.length : 0) || 1;
@@ -8791,40 +8841,77 @@ function renderSession() {
   html += '<div class="study-buehne">';
   if (rest >= 3) html += '<div class="study-stapel study-stapel--2" aria-hidden="true"></div>';
   if (rest >= 2) html += '<div class="study-stapel study-stapel--1" aria-hidden="true"></div>';
-  html += '<div class="study-flaeche' + (s.revealed ? ' study-flaeche--offen' : '') +
-    (neueKarte ? ' study-flaeche--kommt' : '') + (frischAufgedeckt ? ' study-flaeche--dreht' : '') + '">';
-  if (!s.isDrill) {
-    html += '<div class="study-flaeche__kopf">' + zustandPunkte(card) +
-      '<span class="study-flaeche__zustand">' + esc(kartenZustand(card).label) + '</span></div>';
-  }
+  /* 3.14.0: Die Karte dreht sich wirklich um. Betreiber am 24.09.2026:
+     "karten umdrehen [...] sehr unsatisfying". Bis 3.13 kippte dieselbe
+     Flaeche kurz weg und schnappte zurueck - die Antwort stand dabei schon
+     im Markup, es gab keine Rueckseite. Jetzt zwei Seiten:
+
+       .karte-dreh            dreht sich (rotateY), traegt beide Seiten
+       .karte-seite--vorn     Wort (und Stand), vorher sichtbar
+       .karte-seite--hinten   Wort, Linie, Antwort, Tags
+
+     Beide Seiten liegen im selben Rasterfeld (styles.css), die Karte ist
+     also so hoch wie die hoehere. Gezeichnet wird je nach Zustand:
+       zugedeckt        nur vorn
+       gerade gedreht   vorn + hinten, .karte-dreh--wende dreht einmal
+       offen (erneut    nur hinten, ohne Drehung - z. B. nach "Merken" oder
+       gezeichnet)      "Notiz verbergen"; die Karte steht dann schon offen
+     Der Wisch zum Bewerten greift weiter an .study-flaeche (wischStart). */
+  const kopf = s.isDrill ? '' : '<div class="study-flaeche__kopf">' + zustandPunkte(card) +
+    '<span class="study-flaeche__zustand">' + esc(kartenZustand(card).label) + '</span></div>';
   /* D4 (1.8.0): lang und dir sagen dem Browser, dass hier Arabisch steht.
      Er waehlt danach Schrift und Leserichtung; ohne das rutschen Satzzeichen
      in gemischtem Text auf die falsche Seite. */
-  html += '<div class="study-word' + (promptArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(promptText) + '</div>';
+  const wortHtml = '<div class="study-word' + (promptArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(promptText) + '</div>';
+  /* 3.14.0: Im Lernen deckt jetzt auch ein Tipp auf die Karte selbst auf,
+     nicht nur der Knopf. Die Sorge aus 2.16.0 ("wer zielen muss, soll nicht
+     aus Versehen aufdecken") galt einem Tipp IRGENDWO auf dem Bildschirm;
+     die Karte anzutippen ist eine Absicht, und Aufdecken bewertet nichts.
+     So machen es Anki (Tipp auf die Karte) und Quizlet (Tipp dreht). Bei
+     Handschrift bleibt es beim "Fertig" der Zeichenleiste, im Ueben deckt
+     ohnehin ein Tipp irgendwo auf (document.body-Listener weiter unten). */
+  const tippbar = !s.revealed && !s.isDrill && !s.handwriting;
+  html += '<div class="study-flaeche' + (s.revealed ? ' study-flaeche--offen' : '') +
+    (neueKarte ? ' study-flaeche--kommt' : '') + (frischAufgedeckt ? ' study-flaeche--dreht' : '') + '"' +
+    (tippbar ? ' data-action="reveal"' : '') + '>';
+  html += '<div class="karte-dreh' + (frischAufgedeckt ? ' karte-dreh--wende' : '') + '">';
+  if (!s.revealed || frischAufgedeckt) {
+    html += '<div class="karte-seite karte-seite--vorn"' + (s.revealed ? ' aria-hidden="true"' : '') + '>' + kopf + wortHtml;
+    if (!s.isDrill && !s.handwriting) {
+      html += '<div class="study-flaeche__tipp" aria-hidden="true">' + ikon("auge", "i-sm") + 'Tippen zum Umdrehen</div>';
+    }
+    html += '</div>';
+  }
   if (s.revealed) {
+    html += '<div class="karte-seite karte-seite--hinten">' + kopf + wortHtml;
     html += '<div class="study-trenner" aria-hidden="true"></div>';
     html += '<div class="study-answer' + (answerArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(answerText) + '</div>';
     /* 2.21.3: Gerade beim Wiederholen aus "Schwierige Woerter" heraus war
        bisher nicht zu sehen, aus welcher Lektion das Wort stammt. */
     html += kartenTagsHtml(card.id, currentBereich());
-  } else if (!s.isDrill && !s.handwriting) {
-    html += '<div class="study-flaeche__tipp" aria-hidden="true">' + ikon("auge", "i-sm") + 'Weißt du es?</div>';
+    html += '</div>';
   }
-  html += '</div></div>';
+  html += '</div></div></div>';
 
   if (!s.revealed) {
     if (s.handwriting) html += renderHandwritingCanvas(false);
+    /* 3.14.0: Die Notiz erscheint nach dem Aufdecken unter der Karte. Ohne
+       Platzhalter schob sie die (senkrecht zentrierte) Karte mitten in der
+       Drehung nach oben - gemessen 93px am Handy. Unsichtbar vorgehalten
+       steht die Karte vorher schon dort, wo sie nachher steht. visibility:
+       hidden liest auch kein Screenreader vor. */
+    else if (!s.isDrill) {
+      if (istVerbrannt(card)) html += leechHinweis(card, true);
+      if (card.extra && s.extraOpen) {
+        html += '<div class="study-extra study-extra--platz" aria-hidden="true">' + renderExtra(card.extra) + '</div>';
+      }
+    }
   } else {
     if (s.handwriting) html += renderHandwritingCanvas(true);
     /* E6: erst NACH dem Aufdecken. Vorher waere der Hinweis ein Tipp
        ("Achtung, die kannst du nicht") und wuerde die Bewertung verfaelschen.
        Im Uebungsmodus bleibt er weg, dort zaehlt nichts. */
-    if (!s.isDrill && istVerbrannt(card)) {
-      html += '<div class="leech-banner">' + ikon("serie", "i-sm") + ' Diese Karte ist dir schon <strong>' +
-        card.rueckfaelle + '-mal</strong> wieder entfallen. Formuliere sie im Verwalten-Tab um oder ' +
-        'teile sie in zwei Karten \u2013 sonst frisst sie weiter deine Lernzeit. Sobald du Wort oder ' +
-        '\u00dcbersetzung \u00e4nderst, beginnt die Z\u00e4hlung von vorn.</div>';
-    }
+    if (!s.isDrill && istVerbrannt(card)) html += leechHinweis(card, false);
     if (card.extra && s.extraOpen) {
       /* 2.7.0: Die Notiz steht offen da. Vorher klappte sie nach JEDER Karte
          wieder zu - bei 25 Karten also 25 Extra-Tipps fuer etwas, das man
@@ -8868,10 +8955,18 @@ function renderSession() {
          nach dem Aufdecken mit einer ECHTEN Entscheidung weiter (Nicht /
          Fast / Sicher), und wer dafuer ohnehin zielen muss, soll nicht aus
          Versehen aufdecken. */
-      html += '<p class="weiter-hinweis">Leertaste oder tippen \u2013 Antwort zeigen</p>';
+      /* 3.14.0: Platzhalter fuer "Merken", wie im Lernen (siehe unten). */
+      html += '<div class="study-nebenaktionen" aria-hidden="true" style="visibility:hidden">' +
+        '<button class="ghost" tabindex="-1">' + ikon("stern", "i-sm") + 'Merken</button></div>';
+      html += '<p class="weiter-hinweis" style="margin-bottom:var(--space-2)">Leertaste oder tippen \u2013 Antwort zeigen</p>';   /* = padding-bottom der .grade-row danach */
     } else if (!s.handwriting) {
       /* Bei Handschrift deckt "Fertig" in der Zeichenleiste auf. */
-      html += '<button class="lg full" data-action="reveal">Antwort zeigen</button>';
+      /* 3.14.0: Platzhalter in Hoehe der Zeile "Merken", die nach dem
+         Aufdecken dort steht - sonst rutschte die Karte mitten in der
+         Drehung um gut 30px nach oben (gemessen: Aktionszone 72 -> 133px). */
+      html += '<div class="study-nebenaktionen" aria-hidden="true" style="visibility:hidden">' +
+        '<button class="ghost" tabindex="-1">' + ikon("stern", "i-sm") + 'Merken</button></div>';
+      html += '<button class="lg full study-aufdecken" data-action="reveal">Antwort zeigen</button>';
     }
   } else if (s.isDrill) {
     /* 2.15.0: Gar keine Knoepfe. Im Uebungsmodus aendert sich nichts am

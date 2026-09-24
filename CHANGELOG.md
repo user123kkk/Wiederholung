@@ -1,3 +1,28 @@
+## 3.14.0 - 24. September 2026
+
+**Die Karte dreht sich wirklich um – und geht, wenn sie bewertet ist.**
+Betreiber: „kann man karte nur umdrehen wenn man auf antwort anzeigen drückt,
+soll das? [...] karten umdrehen [...] sehr unsatisfying. knöpfe garnicht".
+
+- **Antippen dreht um.** Im Lernen deckt jetzt auch ein Tipp auf die Karte
+  auf, nicht nur der Knopf (im Üben ging das schon). Der Hinweis auf der
+  Karte sagt es: „Tippen zum Umdrehen".
+- **Echte Drehung:** Vorder- und Rückseite, eine Bewegung um die senkrechte
+  Achse mit leichtem Nachfedern; die Karte hebt sich dabei an, der Schatten
+  wächst mit, ein kurzer Vibrations-Tick. Vorher kippte dieselbe Fläche weg
+  und schnappte zurück – ohne Rückseite.
+- **Nichts springt mehr beim Aufdecken:** Die Karte rutschte bis 3.13 um
+  3–120 px nach oben, weil darunter Knöpfe, Notiz oder Hinweis auftauchten.
+  Deren Platz ist jetzt vorher schon reserviert – gemessen 0 px auf Handy,
+  kleinem Handy, iPad und Desktop, im Lernen wie im Üben.
+- **Bewertete Karte fliegt weg:** Sicher nach rechts, Nicht nach links (wie
+  das Wischen), Fast fällt nach unten, im Üben nach links oben – gleichzeitig
+  steigt die nächste vom Stapel auf. Vorher verschwand sie beim Knopfdruck
+  einfach.
+- Bewertungsknöpfe geben beim Drücken spürbar nach und leuchten kurz auf.
+- Üben über alle Stände heißt im Banner „alle Karten" statt „neu & im Lernen
+  bis dauerhaft".
+
 ## 3.13.1 - 24. September 2026
 
 **Ladebildschirm in den Farben der App.** Betreiber: „Das laden soll passen,
