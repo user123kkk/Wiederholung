@@ -24,7 +24,10 @@ const { start, neueSeite, aktion, foto, GERAETE } = require('./lib');
   await p.mouse.up(); await p.waitForTimeout(300);
   console.log('nach halbem Halten geloescht?', await p.evaluate(() => !!window.__FB.geloescht));
   await p.mouse.move(box.x + 20, box.y + 10); await p.mouse.down();
-  await p.waitForTimeout(2100); await p.mouse.up(); await p.waitForTimeout(1200);
+  await p.waitForTimeout(2100); await p.mouse.up(); await p.waitForTimeout(700);
+  // 3.17.15: ohne frische Anmeldung kommt erst die Passwort-Frage
+  if (await p.$('#dlg-input')) { await p.fill('#dlg-input', 'geheim'); await p.evaluate(() => [...document.querySelectorAll('.dlg button')].find(x => x.innerText.trim() === 'Weiter').click()); }
+  await p.waitForTimeout(1200);
   console.log('nach vollem Halten geloescht?', await p.evaluate(() => !!window.__FB.geloescht));
   await foto(p, 's4-nach-loeschen');
   console.log('danach Einstieg?', await p.evaluate(() => !!document.querySelector('.einstieg')));

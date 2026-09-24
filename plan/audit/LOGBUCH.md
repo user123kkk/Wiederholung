@@ -20,7 +20,46 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 12 | Bereiche | erledigt (v3.17.12) |
 | 13 | Kartensätze & Daten | erledigt (v3.17.13) |
 | 14 | Einstellungen | erledigt (v3.17.14) |
-| 15–18 | … | offen |
+| 15 | Konto | erledigt (v3.17.15) |
+| 16–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 15: Konto (v3.17.15)
+
+**Geprüft (`t_konto.js`: Passwort abbrechen/falsch/richtig, Google Fenster
+zu/angemeldet, frisch angemeldet, Abmelden; `t_sicher.js`):**
+- **Fund 1 (ernst): Google/Apple-Konten nicht löschbar**, sobald Firebase
+  `auth/requires-recent-login` meldet – `kontoAuthLoeschen` fragte immer
+  ein Passwort ab (`EmailAuthProvider`), das es dort nicht gibt.
+- **Fund 2: Neu-Anmeldung erst nach dem Datenlöschen** – Abbruch oder
+  falsches Passwort hinterließ ein Konto ohne Daten. Die Reihenfolge Daten →
+  Konto bleibt (Kommentar Phase 2: verwaiste Daten wären schlimmer), aber
+  die Anmeldung wird jetzt VORHER geprüft (`kontoAnmeldungFrisch`, 4 Min.).
+- Fund 3: gesperrter Halte-Knopf 2,7:1 (dunkel) / 3,9:1 (hell) – `button:disabled
+  { opacity: .45 }` auf Rot.
+- Fund 4: „Abmelden?" sagte „mit E-Mail und Passwort" auch für Google/Apple.
+- Fund 5: Rückfall in `kontoLoeschenFehlerText` und `authErrorText` mit
+  Systemcode; `auth/invalid-credential` (Firebase 10 bei falschem Passwort)
+  fehlte.
+- Ohne Befund: Halten-Hürden (kurz/halb lösen nichts aus), E-Mail-Hürde,
+  Backup, Einstieg nach dem Löschen und Abmelden.
+
+**Geändert (app.js):** `kontoNeuAnmelden` (neu: Passwort oder
+`reauthenticateWithPopup` Google/Apple, false bei Abbruch),
+`kontoAnmeldungFrisch` (neu), `kontoLoeschenAusfuehren` meldet vorher neu an,
+`kontoAuthLoeschen` nutzt `kontoNeuAnmelden` als Rückfall;
+`kontoLoeschenFehlerText`/`authErrorText` → `fehlerKlartext`; `doLogout`
+Text je Anmeldeart. **styles.css:** `button.halten:disabled` neutral.
+Version 3.17.15.
+**Prüfstand:** `t_konto.js` neu; `stubs.js` `reauthenticateWithPopup`,
+`reauthFail`, `popupZu`; `t_sicher.js` beantwortet die neue Passwort-Frage.
+
+**Offen (Betreiber, am Gerät):** Löschen mit einem Google-Konto einmal echt
+durchspielen – das Anmeldefenster kommt von Google, im Prüfstand ist es
+nachgebaut.
+**Nächste Station:** 16 (Querschnitt – Dialoge, Toasts, Fehler, offline;
+auch syncError)
 
 ---
 

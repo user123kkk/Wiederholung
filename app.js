@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.14";
+const APP_VERSION = "3.17.15";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2543,7 +2543,8 @@ const AUTH_ERRORS = {
   "auth/unauthorized-domain": "Diese Adresse ist für die Anmeldung nicht freigeschaltet."
 };
 function authErrorText(e) {
-  return (e && AUTH_ERRORS[e.code]) || "Das hat nicht geklappt (" + (e && e.code ? e.code : "unbekannter Fehler") + ").";
+  /* 3.17.15: Rueckfall ohne Systemcode (fehlerKlartext loggt ihn). */
+  return (e && AUTH_ERRORS[e.code]) || fehlerKlartext(e);
 }
 /* 22.09.2026 (Block 14, plan/redesign-oberflaeche): Betreiber-Meldung vom
    Handy im Flugmodus - der Anmelden-Knopf drehte sich unbegrenzt weiter,
@@ -2724,9 +2725,14 @@ async function doReset() {
    der Adresse vertippt hat - eine Rueckfrage waere dort nur Reibung. */
 async function doLogout() {
   if (currentUser && currentUser.emailVerified) {
+    /* 3.17.15 (Station 15): Wer mit Google/Apple angemeldet ist, hat kein
+       Passwort - der Satz nennt den Weg, den es wirklich gibt. */
+    const anbieter = (currentUser.providerData || []).map(x => x && x.providerId);
+    const weg = anbieter.includes("password") || !anbieter.length ? "mit E-Mail und Passwort"
+      : anbieter.includes("google.com") ? "mit Google" : anbieter.includes("apple.com") ? "mit Apple" : "wie gewohnt";
     const ok = await dlgConfirm(
       "Deine Karten und dein Lernstand bleiben im Konto gespeichert. Auf diesem Gerät " +
-      "meldest du dich danach mit E-Mail und Passwort wieder an." +
+      "meldest du dich danach " + weg + " wieder an." +
       (offline ? "\n\nDu bist gerade offline: Was du seit der letzten Verbindung gelernt " +
         "hast, wird erst übertragen, wenn du dich hier wieder anmeldest." : ""),
       { title: "Abmelden?", okLabel: "Abmelden", danger: true });
@@ -2766,22 +2772,57 @@ async function kontoDatenLoeschen() {
   await fb.deleteDoc(userDocRef);
 }
 function kontoLoeschenFehlerText(e) {
-  if (e && e.code === "auth/wrong-password") return "Falsches Passwort – das Konto wurde nicht gelöscht.";
+  /* 3.17.15: auth/invalid-credential ist, was Firebase 10 bei falschem
+     Passwort liefert; der Rest ohne Systemcode (fehlerKlartext). */
+  if (e && (e.code === "auth/wrong-password" || e.code === "auth/invalid-credential")) return "Falsches Passwort – es wurde nichts gelöscht.";
   if (e && e.code === "auth/too-many-requests") return "Zu viele Versuche – bitte kurz warten und erneut probieren.";
   if (e && e.code === "auth/network-request-failed") return "Keine Verbindung – bitte Internet prüfen und erneut probieren.";
-  return "Das hat nicht geklappt (" + (e && e.code ? e.code : "unbekannter Fehler") + "). Bitte erneut versuchen.";
+  return fehlerKlartext(e);
+}
+/* 3.17.15 (Pruefschleife, Station 15): Noch einmal anmelden - passend zur
+   Anmeldeart. Bis hier fragte die App IMMER nach einem Passwort: Wer mit
+   Google oder Apple angemeldet war, hat keins und konnte sein Konto nach
+   ein paar Minuten nicht mehr loeschen. Gibt false zurueck, wenn man
+   abbricht. */
+async function kontoNeuAnmelden() {
+  const anbieter = ((currentUser && currentUser.providerData) || []).map(x => x && x.providerId);
+  if (anbieter.includes("password") || !anbieter.length) {
+    const pass = await dlgPrompt(
+      "Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht wird.",
+      "", { title: "Passwort bestätigen", okLabel: "Weiter", type: "password" });
+    if (!pass) return false;
+    await fb.reauthenticateWithCredential(currentUser, fb.EmailAuthProvider.credential(currentUser.email, pass));
+    return true;
+  }
+  const google = anbieter.includes("google.com");
+  const ok = await dlgConfirm("Aus Sicherheitsgründen meldest du dich noch einmal bei " + (google ? "Google" : "Apple") +
+    " an. Erst danach wird gelöscht.", { title: "Noch einmal anmelden", okLabel: "Weiter" });
+  if (!ok) return false;
+  let provider;
+  if (google) provider = new fb.GoogleAuthProvider();
+  else { provider = new fb.OAuthProvider("apple.com"); provider.addScope("email"); }
+  try {
+    await fb.reauthenticateWithPopup(currentUser, provider);
+  } catch (e) {
+    if (e && (e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request")) return false;
+    throw e;
+  }
+  return true;
+}
+/* Firebase verlangt fuers Loeschen eine Anmeldung der letzten Minuten.
+   Liegt sie laenger zurueck, wird VOR dem Loeschen der Daten neu
+   angemeldet - vorher kam die Frage erst danach: Wer dann abbrach, hatte
+   keine Daten mehr, aber noch ein Konto. */
+function kontoAnmeldungFrisch() {
+  const letzte = Date.parse((currentUser && currentUser.metadata && currentUser.metadata.lastSignInTime) || "") || 0;
+  return Date.now() - letzte < 4 * 60 * 1000;
 }
 async function kontoAuthLoeschen() {
   try {
     await fb.deleteUser(currentUser);
   } catch (e) {
     if (!e || e.code !== "auth/requires-recent-login") throw e;
-    const pass = await dlgPrompt(
-      "Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht wird.",
-      "", { title: "Passwort bestätigen", okLabel: "Konto löschen", danger: true, type: "password" });
-    if (!pass) throw e;
-    const zugangsdaten = fb.EmailAuthProvider.credential(currentUser.email, pass);
-    await fb.reauthenticateWithCredential(currentUser, zugangsdaten);
+    if (!(await kontoNeuAnmelden())) throw e;
     await fb.deleteUser(currentUser);
   }
 }
@@ -2805,6 +2846,16 @@ function kontoLoeschenBereit() {
 }
 async function kontoLoeschenAusfuehren() {
   if (!currentUser || ui.kontoLoeschenBusy || !kontoLoeschenBereit()) return;
+  /* 3.17.15: erst anmelden (wenn noetig), dann loeschen - siehe
+     kontoAnmeldungFrisch. Abbruch oder falsches Passwort: nichts passiert. */
+  if (!kontoAnmeldungFrisch()) {
+    try {
+      if (!(await kontoNeuAnmelden())) return;
+    } catch (e) {
+      await dlgAlert(kontoLoeschenFehlerText(e), "Nicht gelöscht");
+      return;
+    }
+  }
   exportBackup();
   zaehle("konto_geloescht");
   zaehlSenden(true);

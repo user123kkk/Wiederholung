@@ -36,7 +36,8 @@ export function signInWithPopup(){ return Promise.reject(Object.assign(new Error
 export function signInWithRedirect(){ return Promise.reject(new Error('stub')); }
 export function getRedirectResult(){ return Promise.resolve(null); }
 export function deleteUser(){ S.geloescht = true; S.user = null; feuer(); return Promise.resolve(); }
-export function reauthenticateWithCredential(){ return Promise.resolve(); }
+export function reauthenticateWithCredential(){ S.reauth = (S.reauth || 0) + 1; if (S.reauthFail) return Promise.reject(Object.assign(new Error('x'), { code: 'auth/invalid-credential' })); return Promise.resolve(); }
+export function reauthenticateWithPopup(u, p){ S.reauthPopup = (S.reauthPopup || 0) + 1; if (S.popupZu) return Promise.reject(Object.assign(new Error('x'), { code: 'auth/popup-closed-by-user' })); return Promise.resolve(); }
 export function reload(){ return Promise.resolve(); }
 `;
 

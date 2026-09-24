@@ -4420,6 +4420,13 @@ button.halten.haelt { transform: scale(0.985); }
   button.halten.haelt .halten__fuellung { animation-duration: var(--halten, 1800ms) !important; }
 }
 .halten__hinweis { margin-top: var(--space-3); text-align: center; }
+/* 3.17.15 (Station 15): gesperrt nicht mehr als blasses Rot (Schrift 2,7:1),
+   sondern neutral und lesbar - rot wird er erst, wenn die Adresse stimmt.
+   Der Wechsel ist selbst das Zeichen "jetzt geht es". */
+button.halten:disabled {
+  opacity: 1; background: var(--surface-raised); border-color: var(--border);
+  color: var(--text-2);
+}
 @media (hover: hover) and (pointer: fine) {
   button.halten:hover:not(:disabled) { background: var(--negative-bg); border-color: var(--negative); filter: none; }
 }

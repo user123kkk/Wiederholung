@@ -1,3 +1,24 @@
+## 3.17.15 - 24. September 2026
+
+**Prüfschleife, Station 15 (Konto).**
+
+- **Mit Google oder Apple angemeldet? Dann lässt sich das Konto jetzt auch
+  löschen.** Firebase verlangt dafür eine Anmeldung der letzten Minuten; die
+  App fragte dann immer nach einem Passwort – das es bei Google/Apple nicht
+  gibt. Das Konto blieb für immer. Jetzt meldet man sich über das passende
+  Fenster noch einmal an.
+- **Erst anmelden, dann löschen.** Die Nachfrage kam bisher erst, nachdem die
+  Karten schon gelöscht waren – wer dann abbrach oder sich vertippte, hatte
+  keine Daten mehr, aber noch ein Konto. Jetzt kommt sie vorher; Abbrechen
+  oder ein falsches Passwort löschen nichts.
+- **Der gesperrte Löschen-Knopf ist lesbar** (vorher blasses Rot, Schrift
+  2,7:1) – neutral, bis die Adresse stimmt, dann rot.
+- „Abmelden?" nennt den richtigen Weg zurück: bei Google/Apple nicht mehr
+  „mit E-Mail und Passwort".
+- Anmelde- und Löschfehler ohne Systemcode.
+- Geprüft ohne Befund: Abmelden mit Rückfrage, Löschen mit E-Mail + Halten
+  (kurzer Tipp und halbes Halten lösen nichts aus), Backup vorher.
+
 ## 3.17.14 - 24. September 2026
 
 **Prüfschleife, Station 14 (Einstellungen).**
