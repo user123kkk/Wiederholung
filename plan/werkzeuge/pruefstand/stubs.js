@@ -95,7 +95,7 @@ export function setDoc(ref, data, opt){ try { _set(ref, data, opt); } catch(e){ 
 export function updateDoc(ref, ...args){ try { _update(ref, ...args); } catch(e){ return Promise.reject(e); } melden(); return Promise.resolve(); }
 export function deleteDoc(ref){ S.store.delete(ref.path); melden(); return Promise.resolve(); }
 export function addDoc(col, data){ const r = doc(col); _set(r, data); melden(); return Promise.resolve(r); }
-export function getDoc(ref){ return Promise.resolve(dsnap(ref.path)); }
+export function getDoc(ref){ if (S.failGet) return Promise.reject(Object.assign(new Error('Failed to get document because the client is offline.'), { code: 'unavailable' })); return Promise.resolve(dsnap(ref.path)); }
 export function getDocs(q){ return Promise.resolve(qsnap(q)); }
 export function writeBatch(){ const ops = []; return {
   set(r, d, o){ ops.push(() => _set(r, d, o)); return this; },

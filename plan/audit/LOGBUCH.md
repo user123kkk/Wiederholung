@@ -18,7 +18,43 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 10 | Verwalten | erledigt (v3.17.10) |
 | 11 | Karten-Blätter | erledigt (v3.17.11) |
 | 12 | Bereiche | erledigt (v3.17.12) |
-| 13–18 | … | offen |
+| 13 | Kartensätze & Daten | erledigt (v3.17.13) |
+| 14–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 13: Kartensätze & Daten (v3.17.13)
+
+**Geprüft (`t_daten.js`, Handy, klein, iPad; Stub `getDoc` kann jetzt über
+`__FB.failGet` offline scheitern):** Seite „Kartensatz per Code", Code
+erzeugen, Code-Dialog, Kopieren, Einlösen (klein + Leerzeichen), falscher
+Code, offline, Sichern, eigenes Backup einspielen, kaputte Datei.
+- **Fund 1: Einlösen nur in exakter Schreibweise** – `code.trim().toUpperCase()`;
+  „abcde fghjk" oder ohne Strich → „gibt es nicht".
+- **Fund 2: Systemtext in Fehlern** – `e.message` an 7 Stellen
+  (Teilen, Freigeben, Einlösen, Ideen-Board laden/speichern/Status/löschen),
+  englisch.
+- **Fund 3: Code-Dialog** – Code in 0.9em, „Klick …" am Handy.
+- **Fund 4: „(n)/(e)/(en)"** an 9 Stellen (Teilen, Aktualisieren,
+  Import-Ergebnis, Lektionen-Plakette, Aufzeichnung löschen).
+- Selbst eingebaut und vor dem Veröffentlichen gefunden: meine erste
+  Normalisierung entfernte auch den Strich, der zum Code gehört
+  (`XXXXX-XXXXX`) – `t_daten.js` zeigte „Code ungültig". Jetzt: nur A–Z/0–9,
+  bei zehn Zeichen Strich an Stelle 6.
+- Kein Fund: eigenes Backup erneut einspielen legt Kopien „(2)" an bzw.
+  meldet „Nichts zu tun" für geführte Sätze – so gewollt (2.2.0: ein Import
+  überschreibt nie).
+
+**Geändert (app.js):** `mz()` und `fehlerKlartext()` (neu, vor
+`genTeilCode`); alle `e.message`-Meldungen außer dem Start-Fehlerbildschirm
+(dort bleibt die technische Meldung für die Fehlersuche);
+`codeEinloesenStart` normalisiert; Code-Dialog `.teil-code`; Mehrzahl an 9
+Stellen. **styles.css:** `.teil-code`. Version 3.17.13.
+**Neu (Prüfstand):** `t_daten.js`; `stubs.js` `failGet`.
+
+**Offen:** –
+**Nächste Station:** 14 (Einstellungen – Übersicht, Wahl-Blätter,
+Unterseiten)
 
 ---
 

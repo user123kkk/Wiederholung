@@ -1,3 +1,24 @@
+## 3.17.13 - 24. September 2026
+
+**Prüfschleife, Station 13 (Kartensätze & Daten).**
+
+- **Codes lassen sich so eingeben, wie man sie abliest.** Vorher ging nur
+  genau „ABCDE-FGHJK" – klein geschrieben mit Leerzeichen statt Strich hieß
+  es „Diesen Code gibt es nicht". Jetzt zählen nur Buchstaben und Ziffern.
+- **Der Code steht groß da** (vorher kleiner als der Text drumherum) – er
+  wird ja vorgelesen oder abgetippt. „Klick ‚Kopieren' oder wähle den Code"
+  heißt jetzt „Gib diesen Code weiter …".
+- **Fehler in Worten statt Systemtext.** Vorher z. B. „Konnte den Code
+  nicht prüfen: Failed to get document because the client is offline." Jetzt:
+  „Keine Verbindung – versuch es gleich noch einmal." Gilt auch beim
+  Teilen, Freigeben und im Ideen-Board.
+- **Keine „Karte(n)" mehr.** Überall richtige Einzahl und Mehrzahl samt
+  Verb: „1 Karte kommt dazu", „2 Bereiche mit insgesamt 40 Karten
+  eingespielt", „1 eigene Speicherkarte bleibt zu Hause" …
+- Geprüft ohne Befund: Code erzeugen, Kopieren, Code einlösen, falscher
+  Code, Alles sichern (Datei kommt, „heute" steht da), eigenes Backup
+  einspielen, kaputte Datei – Handy, kleines Handy, iPad.
+
 ## 3.17.12 - 24. September 2026
 
 **Prüfschleife, Station 12 (Bereiche).**

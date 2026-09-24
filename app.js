@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.12";
+const APP_VERSION = "3.17.13";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -958,7 +958,7 @@ function verlaufAufraeumen(roh) {
    laufendes Geraet, das seinen Speicherstand zurueckschreibt. */
 async function verlaufZuruecksetzen() {
   const tage = Object.keys(verlauf).length;
-  const ok = await dlgConfirm("Das Tagesprotokoll von " + tage + " Tag(en) wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an.\n\nDeine Karten und ihr Lernstand bleiben unberührt.",
+  const ok = await dlgConfirm("Das Tagesprotokoll von " + mz(tage, "Tag", "Tagen") + " wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an.\n\nDeine Karten und ihr Lernstand bleiben unberührt.",
     { title: "Aufzeichnung zurücksetzen?", okLabel: "Löschen", danger: true });
   if (!ok) return;
   if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
@@ -3383,10 +3383,10 @@ function weitergabeBestaetigung(b, version, modus) {
   const eigeneAnzahl = (b.sets || []).filter(s => (s.art || "eigen") === "eigen").length;
   let txt = b.karten.length + ' Karten, ' + lektionen.length + ' Lektionen. Nur „' + lektionen[0].name + '" ist offen, der Rest kommt gesperrt an.';
   if (ohneLektion > 0) {
-    txt += '\n\nAchtung: ' + ohneLektion + ' Karte(n) liegen in keiner Lektion. Die bleiben beim Empfänger für immer gesperrt.';
+    txt += '\n\nAchtung: ' + mz(ohneLektion, 'Karte liegt', 'Karten liegen') + ' in keiner Lektion. ' + (ohneLektion === 1 ? 'Die bleibt' : 'Die bleiben') + ' beim Empfänger für immer gesperrt.';
   }
   if (eigeneAnzahl > 0) {
-    txt += '\n\n' + eigeneAnzahl + ' eigene Speicherkarte(n) bleiben zu Hause – weitergegeben werden nur Kategorien und Lektionen.';
+    txt += '\n\n' + mz(eigeneAnzahl, 'eigene Speicherkarte bleibt', 'eigene Speicherkarten bleiben') + ' zu Hause – weitergegeben werden nur Kategorien und Lektionen.';
   }
   if (modus === "lehrer") {
     txt += '\n\nDu schaltest die Lektionen selbst frei, mit einem Klick. Was du freigibst, bleibt offen.';
@@ -3453,6 +3453,26 @@ async function dekomprimiere(bytes, warKomprimiert) {
   return new TextDecoder().decode(buf);
 }
 
+/* 3.17.13 (Pruefschleife, Station 13): Fehler in Worten statt Systemtext.
+   Vorher stand z. B. "Konnte den Code nicht pruefen: Failed to get document
+   because the client is offline." - englisch und ohne Hinweis, was zu tun
+   ist. Die technische Meldung geht in die Konsole (fuer Fehler melden). */
+/* 3.17.13: Zahl mit Einzahl/Mehrzahl - statt "Karte(n)". mz(1, "Karte",
+   "Karten") = "1 Karte". */
+function mz(n, ein, viel) { return n + " " + (n === 1 ? ein : viel); }
+function fehlerKlartext(e) {
+  try { console.warn(e); } catch (x) {}
+  const code = e && e.code ? String(e.code) : "";
+  const text = code + " " + (e && e.message ? e.message : String(e || ""));
+  if (offline || code === "unavailable" || /offline|network|failed to fetch/i.test(text)) {
+    return "Keine Verbindung – versuch es gleich noch einmal.";
+  }
+  if (code === "permission-denied" || code === "unauthenticated") {
+    return "Das wurde abgelehnt. Melde dich einmal ab und wieder an und versuch es dann noch einmal.";
+  }
+  if (code === "resource-exhausted") return "Gerade zu viele Anfragen – versuch es in einer Minute noch einmal.";
+  return "Das hat nicht geklappt. Versuch es gleich noch einmal.";
+}
 function genTeilCode() {
   /* Absichtlich kryptographisch zufaellig, nicht genId(): der Code ist hier
      die einzige Zugriffsschranke (wer ihn kennt, kann lesen), nicht nur eine
@@ -3507,7 +3527,7 @@ async function teileLektionCode(modus) {
   try {
     await fb.setDoc(fb.doc(db, "geteilteLektionen", code), datensatz);
   } catch (e) {
-    await dlgAlert("Fehler beim Speichern des Codes: " + (e && e.message ? e.message : e), "Fehler");
+    await dlgAlert(fehlerKlartext(e), "Code nicht gespeichert");
     return;
   }
   render();
@@ -3533,7 +3553,7 @@ async function lehrerFreigeben() {
   try {
     await fb.updateDoc(fb.doc(db, "geteilteLektionen", b.teilCode), { freigabe: { offenBis: neu } });
   } catch (e) {
-    await dlgAlert("Freigeben hat nicht geklappt: " + (e && e.message ? e.message : e), "Fehler");
+    await dlgAlert(fehlerKlartext(e), "Nicht freigegeben");
     return;
   }
   b.teilFreigabe = neu;
@@ -3562,7 +3582,12 @@ async function codeEinloesenStart() {
   const code = await dlgPrompt("Code eingeben (von der Person, die geteilt hat):", "",
     { title: "Code einlösen", okLabel: "Einlösen" });
   if (!code || !code.trim()) return;
-  await codeEinloesen(code.trim().toUpperCase());
+  /* 3.17.13 (Station 13): Codes haben die Form XXXXX-XXXXX (genTeilCode).
+     Bis hier ging nur genau diese Schreibweise - "abcde fghjk" oder ohne
+     Strich hiess "Diesen Code gibt es nicht". Jetzt zaehlen nur Buchstaben
+     und Ziffern; bei zehn Zeichen kommt der Strich an seine Stelle. */
+  const roh = code.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  await codeEinloesen(roh.length === 10 ? roh.slice(0, 5) + "-" + roh.slice(5) : code.trim().toUpperCase());
 }
 
 async function codeEinloesen(code) {
@@ -3571,7 +3596,7 @@ async function codeEinloesen(code) {
   try {
     snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code));
   } catch (e) {
-    await dlgAlert("Konnte den Code nicht prüfen: " + (e && e.message ? e.message : e), "Fehler");
+    await dlgAlert(fehlerKlartext(e), "Code nicht geprüft");
     return;
   }
   if (!snap.exists()) {
@@ -3740,10 +3765,10 @@ async function satzZusammenfuehren(ziel, datei) {
       ziel.lehrerCode === datei.lehrerCode ? (ziel.lehrerOffenBis || 1) : 1);
     ziel.lehrerCode = datei.lehrerCode;
   };
-  if (d.neu.length) zeilen.push("• " + d.neu.length + " Karte(n) kommen dazu" + (neueLektionen ? " (" + neueLektionen + " neue Lektion(en), gesperrt)" : ""));
-  if (d.aktualisiert.length) zeilen.push("• " + d.aktualisiert.length + " Karte(n) werden im Text berichtigt");
-  if (d.entfernt.length) zeilen.push("• " + d.entfernt.length + " Karte(n) fallen weg");
-  if (d.entfernteSets.length) zeilen.push("• " + d.entfernteSets.length + " Speicherkarte(n) fallen weg");
+  if (d.neu.length) zeilen.push("• " + mz(d.neu.length, "Karte kommt", "Karten kommen") + " dazu" + (neueLektionen ? " (" + mz(neueLektionen, "neue Lektion", "neue Lektionen") + ", gesperrt)" : ""));
+  if (d.aktualisiert.length) zeilen.push("• " + mz(d.aktualisiert.length, "Karte wird", "Karten werden") + " im Text berichtigt");
+  if (d.entfernt.length) zeilen.push("• " + mz(d.entfernt.length, "Karte fällt", "Karten fallen") + " weg");
+  if (d.entfernteSets.length) zeilen.push("• " + mz(d.entfernteSets.length, "Speicherkarte fällt", "Speicherkarten fallen") + " weg");
   /* 2.11.5: Aendert sich nichts, gibt es auch nichts zu bestaetigen. Vorher
      stand da ein "Übernehmen" fuer einen Vorgang ohne Wirkung. */
   if (zeilen.length === 0 && (datei.satzVersion || 1) <= (ziel.satzVersion || 0)) {
@@ -3906,7 +3931,7 @@ async function verarbeiteImportDaten(data) {
     if (berichte.length > 0) {
       const r = berichte[0].bericht;
       await dlgAlert('„' + berichte[0].name + '" ist aktualisiert: ' +
-        r.neu.length + ' Karte(n) dazu, ' + r.aktualisiert.length + ' berichtigt, ' + r.entfernt.length + ' weggefallen. ' +
+        mz(r.neu.length, 'Karte', 'Karten') + ' dazu, ' + r.aktualisiert.length + ' berichtigt, ' + r.entfernt.length + ' weggefallen. ' +
         'Dein Lernstand ist unverändert.', "Kartensatz aktualisiert");
     }
     return;
@@ -3960,7 +3985,8 @@ async function verarbeiteImportDaten(data) {
   }
   patchDoc(patch);
   render();
-  dlgAlert(imported.length + " Bereich(e) mit insgesamt " + imported.reduce((sum, b) => sum + b.karten.length, 0) + " Karte(n) importiert.", "Import fertig");
+  const kartenImport = imported.reduce((sum, b) => sum + b.karten.length, 0);
+  dlgAlert(mz(imported.length, "Bereich", "Bereiche") + " mit " + (imported.length === 1 ? "" : "insgesamt ") + mz(kartenImport, "Karte", "Karten") + " eingespielt.", "Eingespielt");
 }
 
 function importBackupFile(file) {
@@ -8304,7 +8330,7 @@ async function feedbackLaden() {
     feedbackEinblenden = true;
   } catch (e) {
     if (meinToken !== feedbackLadeToken) return;
-    feedbackFehler = "Liste konnte nicht geladen werden: " + (e && e.message ? e.message : String(e));
+    feedbackFehler = fehlerKlartext(e);
   }
   if (feedbackLadeTimer) { clearTimeout(feedbackLadeTimer); feedbackLadeTimer = null; }
   feedbackLaedt = false;
@@ -8346,7 +8372,7 @@ async function feedbackEinreichen() {
     if (!feedbackListe) await feedbackLaden();
   } catch (e) {
     feedbackEinreichtWird = false;
-    dlgAlert("Konnte nicht gespeichert werden: " + (e && e.message ? e.message : e));
+    dlgAlert(fehlerKlartext(e), "Nicht gespeichert");
     render();
   }
 }
@@ -8383,7 +8409,7 @@ async function feedbackStatusAendern(id, status) {
     if (e) e.status = status;
     zeichneIdeen();
   } catch (e) {
-    dlgAlert("Konnte Status nicht ändern: " + (e && e.message ? e.message : e));
+    dlgAlert(fehlerKlartext(e), "Status nicht geändert");
   }
 }
 
@@ -8395,7 +8421,7 @@ async function feedbackLoeschen(id) {
     if (feedbackListe) feedbackListe = feedbackListe.filter(e => e.id !== id);
     zeichneIdeen();
   } catch (e) {
-    dlgAlert("Konnte nicht gelöscht werden: " + (e && e.message ? e.message : e));
+    dlgAlert(fehlerKlartext(e), "Nicht gelöscht");
   }
 }
 
@@ -10376,7 +10402,7 @@ function renderSetsPanel() {
   html += '<button class="secondary sets-kopf" data-action="toggle-sets" aria-expanded="' + (ui.setsOffen ? "true" : "false") + '">';
   html += ikon(ui.setsOffen ? "chevronUnten" : "chevronRechts", "i-sm") + '<span>Speicherkarten</span>';
   html += '<span class="badge">' + sets.length + '</span>';
-  if (zuAnzahl > 0) html += '<span class="badge" title="' + zuAnzahl + ' Lektion(en) noch gesperrt">' + ikon("schloss", "i-sm") + ' ' + zuAnzahl + '</span>';
+  if (zuAnzahl > 0) html += '<span class="badge" title="' + mz(zuAnzahl, 'Lektion', 'Lektionen') + ' noch gesperrt">' + ikon("schloss", "i-sm") + ' ' + zuAnzahl + '</span>';
   html += '</button>';
   if (!ui.setsOffen) { html += '</div>'; return html; }
   if (istAutor() && !gefuehrt) {
@@ -11222,8 +11248,11 @@ function renderDialog() {
   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
 
   if (d.kind === "code-share") {
-    h += '<p class="dlg-text" id="dlg-text">Klick „Kopieren" oder wähle den Code:</p>';
-    h += '<code style="display:block; word-break:break-all; padding:var(--space-3); background:var(--surface-raised); border-radius:var(--r-sm); font-size:0.9em; overflow-y:auto; max-height:120px; text-align:center; letter-spacing:2px; font-weight:bold">' + esc(d.code) + '</code>';
+    /* 3.17.13 (Station 13): gross - der Code wird vorgelesen oder
+       abgetippt. Vorher 0.9em und "Klick ..." (am Handy tippt man).
+       Eingeloest wird er mit oder ohne Strich (codeEinloesenStart). */
+    h += '<p class="dlg-text" id="dlg-text">Gib diesen Code weiter. Wer ihn in der App eingibt, bekommt den Kartensatz.</p>';
+    h += '<code class="teil-code" aria-label="' + esc(d.code.replace(/-/g, "").split("").join(" ")) + '">' + esc(d.code) + '</code>';
   } else {
     h += '<div class="dlg-text" id="dlg-text">' + esc(d.text) + '</div>';
   }
