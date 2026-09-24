@@ -4,6 +4,47 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-24 — Systemzahlen entfernt, neuer Ladebildschirm (v3.12.1)
+
+**Anlass:** Betreiber: „Sachen wie die knöpfe dicher, wo steht in x tagen,
+diese zahlen entfernen. Kein bock dass man mein system leicht herauskriegen
+kann. Sowas mäsig. […] Für jetzt möchte ich ein passendes loading screen."
+Auf Einstieg und Arbeit von 3.12.0 will er später eingehen.
+
+**Geändert (app.js):** Bewertungsknöpfe (Text und aria-label),
+`abstandText()` entfernt, `wiederText()` grob, `zustandBadge()` ohne Zahl,
+`KARTEN_ZUSTAENDE.erklaerung` ohne Stufen, `UEBEN_GRUPPEN` +
+`stufenBereichName()` + `waehleStufe(von, bis)` (Üben-Chips), `karteSheet()`
+Stand-Auswahl statt Zahlenfeld, fünf Texte (Rückfälle, Stufe 0/1), neu
+`bootStapel()` im Lade-Zweig von `render()`.
+**Geändert (index.html):** Ladebildschirm-Markup = `bootStapel()`.
+**Geändert (styles.css):** `.boot__*` neu, `bootSpin`/Orbit entfernt.
+
+**Entscheidung:**
+- **Grenze:** Entfernt ist, was zusammen die Abstandsreihe oder die Zahl der
+  Stufen verrät (Tage auf Knöpfen, Stufenzahlen, genaues Wiederkehrdatum,
+  Rückfall-Schwelle). **Stehen geblieben** sind Mengen, die nichts über die
+  Formel sagen: „12 fällig", „Morgen kommen 9 Karten", die Vorschau „Die
+  nächsten 7 Tage" (Kartenzahl pro Tag), die Serie. Ebenso die groben
+  Zeitworte der Leiter im Einstieg („in ein paar Tagen") – vom Betreiber in
+  3.10.3 so gewollt.
+- **„Fast" bleibt „morgen wieder"** – dasselbe sagt der Einstieg bei der
+  Probekarte, und „morgen" ist keine Zahl.
+- **Stand-Auswahl ohne Eingriff in die Lernlogik:** Der gewählte Zustand trägt
+  als Wert genau die bisherige Stufe; nur wer einen anderen Zustand wählt,
+  setzt die Karte auf dessen Anfang (0/1/3/6) – wie vorher beim Eintippen.
+- **Ladebildschirm = Kartenstapel**, weil er zeigt, was gleich kommt (die
+  Karte der Runde), statt eines Zeichens ohne Bezug.
+
+**Offen:** Gerätetest (Drehen der Ladekarte, Übergang zur App). `flower-
+isolated.png` steht noch in `APP_SHELL`, wird vom Ladebildschirm aber nicht
+mehr benutzt – bleibt, bis geprüft ist, ob die Startseite (landing) sie
+braucht.
+
+**Nächster Schritt:** Betreiber geht auf Einstieg und 3.12.0 ein (angekündigt).
+
+---
+
 ### 2026-09-24 — Die ganze App in der Formsprache des Einstiegs, Absicherung, Tablet (v3.12.0)
 
 **Anlass (Betreiber, 24.09., gekürzt):** „vom onboarding sieht man so design

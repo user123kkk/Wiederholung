@@ -683,8 +683,12 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026, später): v3.12.0 – die ganze App in der Formsprache
-des Einstiegs, auf `main`, noch nicht ausgeliefert.**
+**AKTUELL (24.09.2026, abends): v3.12.1 auf `main` – Systemzahlen entfernt
+(Tage, Stufen) und neuer Ladebildschirm; davor v3.12.0 (siehe unten). Der
+Betreiber will als Nächstes auf Einstieg und 3.12.0 eingehen – auf seine
+Rückmeldung warten, nicht vorgreifen.**
+
+**Stand v3.12.0: die ganze App in der Formsprache des Einstiegs.**
 
 Betreiber: „vom onboarding sieht man so design bzw animationen und so kaum
 was im tool", dazu Abmelden/Löschen absichern, Einstellung „Bewegung" weg,

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.12.0";
+const APP_VERSION = "3.12.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2851,9 +2851,11 @@ function statsCards() {
 const KARTEN_ZUSTAENDE = [
   { id: "neu",      label: "neu",      erklaerung: "noch nie angesehen",             farbe: "var(--stufe-0)", test: c => istNeueKarte(c) },
   { id: "gesehen",  label: "gesehen",  erklaerung: "durchgesehen, noch nie gewusst", farbe: "var(--stufe-1)", test: c => !istNeueKarte(c) && (c.maxStufe || 0) === 0 },
-  { id: "wackelig", label: "wackelig", erklaerung: "Stufe 1–2",                      farbe: "var(--stufe-2)", test: c => (c.maxStufe || 0) > 0 && c.stufe <= 2 },
-  { id: "solide",   label: "solide",   erklaerung: "Stufe 3–5",                      farbe: "var(--stufe-3)", test: c => (c.maxStufe || 0) > 0 && c.stufe >= 3 && c.stufe <= 5 },
-  { id: "fest",     label: "fest",     erklaerung: "Stufe 6+",                       farbe: "var(--stufe-4)", test: c => (c.maxStufe || 0) > 0 && c.stufe >= 6 }
+  /* 3.12.1: erklaerung ohne Stufenzahlen ("Stufe 1–2" usw.) - siehe
+     zustandBadge. */
+  { id: "wackelig", label: "wackelig", erklaerung: "schon gewusst, sitzt noch nicht", farbe: "var(--stufe-2)", test: c => (c.maxStufe || 0) > 0 && c.stufe <= 2 },
+  { id: "solide",   label: "solide",   erklaerung: "kommt schon seltener",           farbe: "var(--stufe-3)", test: c => (c.maxStufe || 0) > 0 && c.stufe >= 3 && c.stufe <= 5 },
+  { id: "fest",     label: "fest",     erklaerung: "sitzt",                          farbe: "var(--stufe-4)", test: c => (c.maxStufe || 0) > 0 && c.stufe >= 6 }
 ];
 const STAT_GRUPPEN = KARTEN_ZUSTAENDE;
 /* Der Zustand einer einzelnen Karte. Der erste passende gewinnt; die Tests
@@ -2863,10 +2865,11 @@ function kartenZustand(c) {
 }
 /* Die Plakette, die in jeder Liste an einer Karte steht. Ein Ort, ein
    Wortlaut - vorher stand mal "Stufe 3", mal "✓ gesehen", mal nichts. */
+/* 3.12.1: ohne die Stufenzahl dahinter ("wackelig 1", "solide 4") - die
+   Zahl verriet, wie viele Stufen es gibt und wie sie wachsen. Betreiber am 24.09.2026: "Sachen wie die knoepfe dicher, wo steht in x tagen, diese zahlen entfernen. Kein bock dass man mein system leicht herauskriegen kann." */
 function zustandBadge(c) {
   const z = kartenZustand(c);
-  const stufe = (z.id === "neu" || z.id === "gesehen") ? "" : " " + c.stufe;
-  return '<span class="badge zustand-' + z.id + '" title="' + esc(z.erklaerung) + '">' + z.label + stufe + '</span>';
+  return '<span class="badge zustand-' + z.id + '" title="' + esc(z.erklaerung) + '">' + z.label + '</span>';
 }
 /* 3.12.0: Der Zustand einer Karte als fuenf Punkte - dieselbe Form wie die
    Leiste im Einstieg (einstiegLeiste: Punkte, die sich von "neu" bis
@@ -2882,24 +2885,19 @@ function zustandPunkte(c) {
   });
   return h + '</span>';
 }
-/* 3.12.0: Wann eine Karte wiederkommt, in Worten - fuer das Karten-Blatt. */
+/* Wann eine Karte wiederkommt, in Worten - fuer das Karten-Blatt.
+   3.12.1: grob statt genau. Vorher "Kommt am Do, 1.10. wieder - in 7
+   Tagen": neben dem Stand einer Karte ergab das die Abstandsreihe zum
+   Nachschlagen. Betreiber am 24.09.2026: "Sachen wie die knoepfe dicher, wo steht in x tagen, diese zahlen entfernen. Kein bock dass man mein system leicht herauskriegen kann." */
 function wiederText(c) {
   if (istNeueKarte(c)) return "Noch nie abgefragt";
   const t = todayStr();
   if (c.nextReview <= t) return "Heute fällig";
-  const morgen = dateInDays(1);
-  if (c.nextReview === morgen) return "Kommt morgen wieder";
   const tage = Math.round((new Date(c.nextReview + "T00:00:00") - new Date(t + "T00:00:00")) / 86400000);
-  return "Kommt am " + wochentagKurz(c.nextReview) + ", " + tagKurz(c.nextReview) + " wieder · in " + tage + " Tagen";
-}
-/* 3.12.0: "in ~1 Tagen" stand auf dem Sicher-Knopf jeder neuen Karte - ein
-   Grammatikfehler an der Stelle, die man am oefter sieht als jede andere.
-   Bis drei Tage gibt es keine Streuung (nextReviewForStufe rundet sie dort
-   auf null), also auch kein "~". */
-function abstandText(tage) {
-  if (tage <= 1) return "morgen wieder";
-  if (tage <= 3) return "in " + tage + " Tagen";
-  return "in ~" + tage + " Tagen";
+  if (tage <= 1) return "Kommt morgen wieder";
+  if (tage <= 7) return "Kommt diese Woche wieder";
+  if (tage <= 45) return "Kommt in ein paar Wochen wieder";
+  return "Kommt in ein paar Monaten wieder";
 }
 /* Arabisch-indische Ziffern. Sie stehen klein neben den grossen Zahlen im
    Fortschritt - das ist die Handschrift dieser App: arabische Schrift als
@@ -4205,14 +4203,31 @@ function setzeVollenStufenBereich() {
    Stufe), der zweite Tipp spannt den Bereich zwischen beiden auf - danach
    startet der naechste Tipp wieder neu. Die Reihenfolge der beiden Tipps
    spielt keine Rolle, min/max richten sich selbst aus. */
-function waehleStufe(s) {
+/* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
+   mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
+   Intern bleibt es ein Stufenbereich: von/bis sind die Grenzen der
+   gewaehlten Zustaende, startDrill() filtert wie bisher nach c.stufe.
+   Betreiber am 24.09.2026: "Sachen wie die knoepfe dicher, wo steht in x tagen, diese zahlen entfernen. Kein bock dass man mein system leicht herauskriegen kann." */
+const UEBEN_GRUPPEN = [
+  { label: "neu",      von: 0, bis: 0 },
+  { label: "wackelig", von: 1, bis: 2 },
+  { label: "solide",   von: 3, bis: 5 },
+  { label: "fest",     von: 6, bis: MAX_STUFE }
+];
+function stufenBereichName(von, bis) {
+  const g = UEBEN_GRUPPEN.filter(x => x.von <= bis && x.bis >= von);
+  if (!g.length) return "";
+  return g.length === 1 ? g[0].label : g[0].label + " bis " + g[g.length - 1].label;
+}
+function waehleStufe(s, bisS) {
+  const bis = Number.isInteger(bisS) ? bisS : s;
   if (ui.drillAnker === null) {
-    ui.drillAnker = s;
+    ui.drillAnker = { von: s, bis: bis };
     ui.drillVon = s;
-    ui.drillBis = s;
+    ui.drillBis = bis;
   } else {
-    ui.drillVon = Math.min(ui.drillAnker, s);
-    ui.drillBis = Math.max(ui.drillAnker, s);
+    ui.drillVon = Math.min(ui.drillAnker.von, s);
+    ui.drillBis = Math.max(ui.drillAnker.bis, bis);
     ui.drillAnker = null;
   }
   render();
@@ -4220,10 +4235,10 @@ function waehleStufe(s) {
 async function startDrill(min, max, handwriting) {
   const cards = uebbareKarten().filter(c => c.stufe >= min && c.stufe <= max);
   if (cards.length === 0) {
-    await dlgAlert("In diesem Stufenbereich gibt es keine Karten.", "Nichts zu üben");
+    await dlgAlert("Dazu gibt es gerade keine Karten.", "Nichts zu üben");
     return;
   }
-  startDrillWithCards(cards, min === max ? ("Stufe " + min) : ("Stufe " + min + "–" + max), handwriting);
+  startDrillWithCards(cards, stufenBereichName(min, max), handwriting);
 }
 /* 2.21.0: Loest das bisherige startDrillFromSet(EINE Speicherkarte) ab -
    jetzt koennen mehrere Speicherkarten zusammen geuebt werden (z.B.
@@ -5808,6 +5823,29 @@ function einstiegWieder() {
   render();
 }
 
+/* ---------- 3.12.1: Der Ladebildschirm ----------
+   Betreiber am 24.09.2026: "Für jetzt möchte ich ein passendes loading
+   screen." Vorher: die Bluete mit drei kreisenden Punkten - aus einer
+   frueheren Fassung, ohne Bezug zu dem, was danach kommt. Jetzt ein kleiner
+   Stapel wie in der Lernrunde (.study-stapel): die oberste Karte dreht sich
+   um, vorne das Zeichen, hinten ein Wort; darunter der Name und fuenf
+   Punkte, die sich nacheinander fuellen - dieselben Punkte wie an jeder
+   Karte (zustandPunkte). Man sieht beim Laden schon, was gleich kommt.
+   Reines CSS (styles.css, .boot__*). DASSELBE MARKUP steht in index.html
+   (dort ohne JavaScript, damit es sich schon dreht, bevor app.js laeuft) -
+   wer hier etwas aendert, aendert es dort mit, sonst springt der Bildschirm
+   beim Uebergang. */
+function bootStapel() {
+  return '<div class="boot__stapel" aria-hidden="true">' +
+    '<span class="boot__blatt boot__blatt--2"></span><span class="boot__blatt boot__blatt--1"></span>' +
+    '<span class="boot__karte"><span class="boot__dreh">' +
+      '<span class="boot__seite">' + ikon("marke", "boot__zeichen") + '</span>' +
+      '<span class="boot__seite boot__seite--hinten" lang="ar" dir="rtl">\u0643\u0650\u062a\u064e\u0627\u0628\u064c</span>' +
+    '</span></span></div>' +
+    '<div class="boot__marke">Adrabic</div>' +
+    '<div class="boot__punkte" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>';
+}
+
 /* ---------- Rendering ---------- */
 function render() {
   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
@@ -5851,10 +5889,7 @@ function render() {
       }, 9000);
     }
     if (!bootAktiv) { bootAktiv = true; bootStart = Date.now(); }
-    let laden = '<div class="boot">';
-    laden += '<div class="boot__mark"><div class="boot__orbit r1"><span></span></div>' +
-      '<div class="boot__orbit r2"><span></span></div><div class="boot__orbit r3"><span></span></div>' +
-      '<img src="./flower-isolated.png" class="i" alt=""></div>';
+    let laden = '<div class="boot">' + bootStapel();
     if (syncError) {
       /* Blockierend: Ohne Daten gibt es nichts zu zeigen. Also Klartext und
          ein Weg weiter, statt eines Ladepunkts, der nie aufhoert. */
@@ -5867,7 +5902,7 @@ function render() {
         'oder lade die Seite neu.</p>';
       laden += '<button class="secondary" data-action="seite-neu-laden">Neu laden</button>';
     } else {
-      laden += '<p class="boot__text">Deine Karten werden geladen\u2026</p>';
+      laden += '<p class="boot__text" role="status">Deine Karten werden geladen\u2026</p>';
     }
     laden += '</div>';
     app.innerHTML = laden;
@@ -6519,8 +6554,20 @@ function karteSheet() {
   html += '<div class="field"><label for="f-extra">Beispielsatz, Grammatik, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
   html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '">' + esc(formDraft.extra) + '</textarea></div>';
   if (editing) {
-    html += '<div class="field"><label for="f-stufe">Wiederholungsstufe</label>';
-    html += '<input type="number" id="f-stufe" min="0" max="' + MAX_STUFE + '" step="1" value="' + editing.stufe + '" inputmode="numeric"></div>';
+    /* 3.12.1: Stand statt "Wiederholungsstufe 0-12". Das Zahlenfeld zeigte
+       offen, wie viele Stufen es gibt - Betreiber am 24.09.2026: "Kein bock
+       dass man mein system leicht herauskriegen kann." Jetzt dieselben vier
+       Woerter wie an jeder Karte (UEBEN_GRUPPEN). Die Lernlogik bleibt
+       unberuehrt: Der gerade gewaehlte Zustand traegt als Wert GENAU die
+       bisherige Stufe - Speichern ohne Aenderung aendert also nichts (der
+       Vergleich newStufe !== card.stufe in submitCardForm greift nicht).
+       Nur wer einen anderen Zustand waehlt, setzt die Karte auf dessen
+       Anfang, wie vorher beim Eintippen einer Zahl. */
+    html += '<div class="field"><label for="f-stufe">Stand</label>';
+    html += '<select id="f-stufe">' + UEBEN_GRUPPEN.map(g => {
+      const hier = editing.stufe >= g.von && editing.stufe <= g.bis;
+      return '<option value="' + (hier ? editing.stufe : g.von) + '"' + (hier ? ' selected' : '') + '>' + esc(g.label) + '</option>';
+    }).join("") + '</select></div>';
   }
   html += '<div class="dlg-actions">';
   /* Kurze Beschriftungen: .dlg-actions macht beide Knoepfe gleich breit, und
@@ -7021,7 +7068,7 @@ function renderDurchsicht(set) {
   if (offen.length === 0) {
     html += '<div class="stapel" style="margin-top:var(--stack)">';
     html += '<div class="empty__titel">Durchgearbeitet</div>';
-    html += '<p class="empty__text">Jetzt kommt die erste Abfrage – dort verdienen sich die Karten ihre Stufe 1.</p>';
+    html += '<p class="empty__text">Jetzt kommt die erste Abfrage – ab da kommen die Karten von selbst wieder.</p>';
     html += '<button class="lg full" data-action="start-session">Abfrage starten</button>';
     html += '</div>';
   } else {
@@ -7138,7 +7185,7 @@ function renderFaden(b, due) {
   if (naechste) {
     const naechsterTermin = fehlen.map(c => c.nextReview).sort()[0];
     html += '<p class="hint" style="padding:6px 0 0">' + ikon("schloss", "i-sm") + ' <strong>' + esc(naechste.name) + '</strong> wird frei, ' +
-      'sobald jede Karte aus „' + esc(akt.name) + '" einmal auf Stufe ' + LEKTION_STUFE + ' war.</p>';
+      'sobald du jede Karte aus „' + esc(akt.name) + '" einmal gewusst hast.</p>';
     html += '<p class="hint" style="padding:0">Noch ' + fehlen.length + ' Karte' + (fehlen.length === 1 ? '' : 'n') +
       (naechsterTermin ? ' – die nächste ist am ' + fmtDatum(naechsterTermin) + ' dran.' : '.') + '</p>';
   } else {
@@ -7407,7 +7454,7 @@ function renderEinstellungenSeite(id) {
     html += '<div class="card">';
     html += '<h3>Kartensatz übernehmen</h3>';
     html += '<p class="hint">Hat dir jemand einen Code gegeben, gib ihn hier ein. ' +
-      'Seine Lektionen stehen danach bei dir – alles auf Stufe 0, du fängst selbst an.</p>';
+      'Seine Lektionen stehen danach bei dir – alles auf Anfang, du fängst selbst an.</p>';
     html += '<div class="form-actions">';
     html += '<button data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
       ' Code eingeben</button>';
@@ -7440,7 +7487,7 @@ function renderEinstellungenSeite(id) {
         html += '<button class="ghost"' + offlineAttr + offlineTxt + ' data-action="beende-teilen-code">Teilen beenden</button>';
         html += '</div>';
       } else {
-        html += '<p class="hint">Du bekommst einen Code. Wer ihn in der App eingibt, bekommt denselben Bereich – alles auf Stufe 0, dein eigener Stand bleibt. Du siehst nicht, wer ihn benutzt.</p>';
+        html += '<p class="hint">Du bekommst einen Code. Wer ihn in der App eingibt, bekommt denselben Bereich – alles auf Anfang, dein eigener Stand bleibt. Du siehst nicht, wer ihn benutzt.</p>';
         html += '<div class="form-actions">';
         const offlineTxt = offline ? ' title="Zum Teilen brauchst du eine Verbindung"' : '';
         const offlineAttr = offline ? ' disabled' : '';
@@ -8537,8 +8584,9 @@ function renderFortschrittSeite(id) {
 
   if (id === "leeches") {
     const leeches = verbrannteKarten();
-    let html = '<p class="hint" style="margin-bottom:var(--space-5)">Ab ' + LEECH_SCHWELLE +
-      ' Rückfällen. Meist liegt es an der Karte, nicht am Gedächtnis – zu viel auf ' +
+    /* 3.12.1: "Ab 5 Rueckfaellen" nannte die Schwelle - siehe zustandBadge. */
+    let html = '<p class="hint" style="margin-bottom:var(--space-5)">Karten, die dir immer wieder ' +
+      'entfallen. Meist liegt es an der Karte, nicht am Gedächtnis – zu viel auf ' +
       'einmal, zu ähnlich zu einer anderen, oder die Übersetzung passt nicht ganz. ' +
       'Nimm dir erst die obersten vor.</p>';
     if (leeches.length === 0) {
@@ -8789,11 +8837,14 @@ function renderSession() {
        sichtbar ungleich da. "gleich wieder" sagt dasselbe und reiht sich
        neben "morgen wieder" und "in ~N Tagen" ein. Die Vorlesefassung im
        aria-label bleibt ausfuehrlich. */
-    const sicherTage = intervalForStufe(Math.min(card.stufe + 1, MAX_STUFE));
-    html += '<button class="btn-unknown" style="--n:0" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 zwei Stufen zur\u00fcck, kommt gleich noch einmal">Nicht<span class="sub">gleich wieder</span></button>';
-    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-label="Fast gewusst \u2013 eine Stufe zur\u00fcck, morgen wieder">Fast<span class="sub">morgen wieder</span></button>';
-    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-label="Sicher gewusst \u2013 eine Stufe weiter, ' +
-      abstandText(sicherTage) + '">Sicher<span class="sub">' + abstandText(sicherTage) + '</span></button>';
+    /* 3.12.1: keine Tage und keine Stufen mehr - weder auf dem Knopf noch im
+       Vorlesetext. Betreiber am 24.09.2026: "Sachen wie die knoepfe dicher, wo steht in x tagen, diese zahlen entfernen. Kein bock dass man mein system leicht herauskriegen kann."
+       Auf dem Sicher-Knopf stand "in ~10 Tagen": Wer ein paar Karten
+       bewertet, konnte daraus die ganze Abstandsreihe ablesen. Jetzt sagt
+       jeder Knopf nur noch die Richtung. */
+    html += '<button class="btn-unknown" style="--n:0" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 kommt gleich noch einmal">Nicht<span class="sub">gleich wieder</span></button>';
+    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-label="Fast gewusst \u2013 kommt morgen wieder">Fast<span class="sub">morgen wieder</span></button>';
+    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-label="Sicher gewusst \u2013 kommt sp\u00e4ter wieder">Sicher<span class="sub">sp\u00e4ter wieder</span></button>';
     html += '</div>';
   }
 
@@ -9216,17 +9267,18 @@ function renderVerwaltenListe(cards, gefuehrt) {
          der zweite spannt den Bereich dazwischen auf (waehleStufe()). Bis zu
          MAX_STUFE+1 Chips duerfen umbrechen, keine erzwungene Einzelzeile. */
       html += '<p class="hint" style="padding-top:0">Anfang antippen, dann Ende</p>';
-      html += '<div class="stufe-chips" role="group" aria-label="Stufenbereich">';
-      html += stufen.map(s => {
-        const aktiv = ui.drillVon !== null && s >= ui.drillVon && s <= ui.drillBis;
+      html += '<div class="stufe-chips" role="group" aria-label="Welche Karten">';
+      /* Nur Zustaende, zu denen es gerade Karten gibt - ein Chip, der ins
+         Leere fuehrt, waere schlechter als keiner. */
+      html += UEBEN_GRUPPEN.filter(g => stufen.some(s => s >= g.von && s <= g.bis)).map(g => {
+        const aktiv = ui.drillVon !== null && g.von <= ui.drillBis && g.bis >= ui.drillVon;
         return '<button type="button" class="stufe-chip' + (aktiv ? " aktiv" : "") +
-          '" data-action="stufe-chip" data-stufe="' + s + '" aria-pressed="' + (aktiv ? "true" : "false") +
-          '" aria-label="Stufe ' + s + '">' + s + '</button>';
+          '" data-action="stufe-chip" data-stufe="' + g.von + '" data-bis="' + g.bis + '" aria-pressed="' + (aktiv ? "true" : "false") +
+          '">' + esc(g.label) + '</button>';
       }).join("");
       html += '</div>';
       html += '<p class="hint" style="padding:0 0 10px">' +
-        (ui.drillVon === null ? "Keine Stufe verfügbar" :
-         ui.drillVon === ui.drillBis ? ("Stufe " + ui.drillVon) : ("Stufe " + ui.drillVon + "–" + ui.drillBis)) + '</p>';
+        (ui.drillVon === null ? "Keine Karten verfügbar" : stufenBereichName(ui.drillVon, ui.drillBis)) + '</p>';
     }
     /* 3.0.0: Die Handschrift-Wahl steht VOR dem Start, nicht darunter. Ein
        Haken, den man erst unter dem Knopf sieht, ist einer, den man nicht
@@ -10947,7 +10999,7 @@ document.body.addEventListener("click", e => {
       }
       break;
     }
-    case "stufe-chip": waehleStufe(parseInt(btn.dataset.stufe, 10)); break;
+    case "stufe-chip": waehleStufe(parseInt(btn.dataset.stufe, 10), parseInt(btn.dataset.bis, 10)); break;
     case "save-to-new-set": saveSelectedToSet("__new__"); break;
     case "save-to-set": {
       const sel = document.getElementById("save-set-select");

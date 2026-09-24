@@ -1,3 +1,29 @@
+## 3.12.1 - 24. September 2026
+
+**Keine Zahlen mehr, aus denen sich das System ablesen lässt – und ein neuer
+Ladebildschirm.** Betreiber: „Sachen wie die knöpfe dicher, wo steht in x
+tagen, diese zahlen entfernen. Kein bock dass man mein system leicht
+herauskriegen kann."
+
+- **Bewertungsknöpfe:** „Sicher" sagt „später wieder" statt „in ~10 Tagen".
+  Auch der Vorlesetext nennt keine Stufen mehr („zwei Stufen zurück").
+- **Karten-Plaketten** ohne Stufenzahl: „solide" statt „solide 4".
+- **Karten-Blatt:** „Kommt diese Woche wieder" / „in ein paar Wochen" statt
+  Datum und Tagen.
+- **Fortschritt, Legende:** „kommt schon seltener" statt „Stufe 3–5".
+- **Üben:** Auswahl nach neu / wackelig / solide / fest statt 13 Zahlen-Chips
+  von 0 bis 12. Geübt wird genauso wie vorher.
+- **Karte bearbeiten:** „Stand" als Auswahl der vier Zustände statt
+  „Wiederholungsstufe" als Zahlenfeld 0–12. Speichern ohne Änderung lässt die
+  Karte genau, wie sie ist.
+- Texte ohne Stufen und Schwellen: „Ab 5 Rückfällen", „auf Stufe 0", „ihre
+  Stufe 1", „einmal auf Stufe 1 war" sind in Worte gefasst.
+- **Neuer Ladebildschirm:** ein kleiner Kartenstapel, die oberste Karte dreht
+  sich um (vorne das Zeichen, hinten كِتَابٌ), darunter „Adrabic" und fünf
+  Punkte, die sich nacheinander füllen. Steht gleich in `index.html`, bewegt
+  sich also schon, bevor das Skript läuft. Die kreisenden Punkte um die Blüte
+  sind weg.
+
 ## 3.12.0 - 24. September 2026
 
 **Die Formsprache des Einstiegs in der ganzen App – und fünf echte Fehler.**
