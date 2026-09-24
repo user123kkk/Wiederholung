@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.11.0";
+const APP_VERSION = "3.12.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -125,6 +125,17 @@ function nextReviewForStufe(stufe) {
      Jahr" waere nicht mehr wahr. Nach oben wird also gekappt, nach unten
      streut es weiter. */
   return dateInDays(Math.min(MAX_INTERVAL_DAYS, Math.max(1, tage + jitter)));
+}
+/* 3.12.0: eine kurze Rueckmeldung zum Fuehlen, wo das Geraet sie kann
+   (Android; iOS-Safari kennt navigator.vibrate nicht und bleibt still).
+   Nie bei "Bewegung reduzieren" - wer Bewegung abbestellt, will auch kein
+   Brummen. Die Muster sind absichtlich kurz: eine Bestaetigung, kein Alarm. */
+function fuehlbar(muster) {
+  try {
+    if (!navigator.vibrate) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    navigator.vibrate(muster);
+  } catch (e) {}
 }
 function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -484,6 +495,8 @@ const ICON_PFADE = {
   ueben:       '<path d="M17 2.5 20.5 6 17 9.5"/><path d="M3.5 12v-2a4 4 0 0 1 4-4h13"/><path d="M7 21.5 3.5 18 7 14.5"/><path d="M20.5 12v2a4 4 0 0 1-4 4h-13"/>',
   serie:       '<path d="M12 22c3.9 0 7-2.7 7-6.5 0-4-3-6.4-4.1-9.4-.6 2-1.6 3-2.6 3.7C11 8 11 6 9 2.5c0 3.6-4 5.4-4 13C5 19.3 8.1 22 12 22z"/>',
   sichern:     '<path d="M12 3.5v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20.5h16"/>',
+  /* 3.12.0: Briefumschlag fuer den Bestaetigungs-Bildschirm. */
+  brief:       '<rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3.8 7.2 12 13l8.2-5.8"/>',
   einspielen:  '<path d="M12 20.5v-12"/><path d="M7 13.5l5-5 5 5"/><path d="M4 3.5h16"/>',
   teilen:      '<path d="M12 3v12"/><path d="M8 6.5 12 2.5l4 4"/><path d="M5 13v6.5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V13"/>',
   stift:       '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14.5 5.5l4 4"/>',
@@ -1051,7 +1064,17 @@ let settings = normSettings(null); // { arabGroesse, lastBackup, thema, sitzungs
       heute ohne Konto, und das Kopfskript in index.html liest es vor dem
       ersten Zeichnen. Die Frage wirkt dort also sofort und braucht keinen
       eigenen Zwischenspeicher. */
-const EINSTIEG_KEY = "adrabic-einstieg";            // "fertig" = schon gesehen
+/* 3.12.0: Der Merker "adrabic-einstieg" = "fertig" ist weg. Er entschied,
+   ob der Einstieg ueberhaupt noch erscheint - und genau das war der Fehler,
+   den der Betreiber am 24.09.2026 meldete: "auf meinem handy bin ich grad
+   abgemeldet aber ich kann nicht diesen plan erstellen und so also onboarding
+   sehen". Wer den Einstieg einmal durchlaufen hatte, bekam ihn auf diesem
+   Geraet nie wieder, auch nicht abgemeldet und auch nicht fuer ein zweites
+   Konto. Jetzt gilt das Muster von Duolingo (VIDEO-BEFUND.md 5.3): abgemeldet
+   steht IMMER der Willkommensbildschirm mit "Ich habe schon ein Konto"
+   daneben; wer ein Konto hat, braucht einen Tipp mehr, wer keines hat, kommt
+   an den Plan. Der alte Schluessel wird einmal weggeraeumt. */
+try { localStorage.removeItem("adrabic-einstieg"); } catch (e) {}
 const EINSTIEG_ANTWORT_KEY = "adrabic-einstieg-antworten";
 
 /* Die Beispielkarte aus S2. Ein einzelnes Wort, bewusst ohne religiösen
@@ -1149,14 +1172,12 @@ const EINSTIEG_RUNDEN = [
   { id: "alle", label: "Alle fälligen", stufe: "ohne Grenze" }
 ];
 
-function einstiegGesehen() {
-  try { return localStorage.getItem(EINSTIEG_KEY) === "fertig"; } catch (e) { return true; }
-}
-/* Faellt localStorage aus (privates Fenster, gesperrte Website-Daten), gilt
-   der Einstieg als gesehen. Lieber gar kein Einstieg als einer, der bei
-   jedem Oeffnen wiederkommt und nichts behalten kann. */
-function einstiegAbschliessen() {
-  try { localStorage.setItem(EINSTIEG_KEY, "fertig"); } catch (e) {}
+/* Ein frischer Einstieg. schritt 0 = Willkommen; 1 = gleich die erste
+   Frage (aus "Neues Konto anlegen" im Anmeldeformular - wer dort tippt, hat
+   den Willkommensbildschirm schon hinter sich). */
+function einstiegNeu(schritt) {
+  return { schritt: schritt || 0, aufgedeckt: false, bewertet: null, ziele: [], huerden: [],
+    anker: null, ankerFrei: "", gezeigt: -1, richtung: "vor", balkenVorher: 0, zeit: 0, planGebaut: false };
 }
 function einstiegAntwortenSichern(patch) {
   let alt = {};
@@ -1273,45 +1294,14 @@ try {
 } catch (e) {}
 themaAnwenden();
 
-/* ---------- 3.11.0: Bewegung ----------------------------------------------
-   Betreiber am 24.09.2026: die Bewegungen aus dem Einstieg sollen auch in der
-   App selbst wirken ("kann man anhand der animationen und sachen am onboarding
-   von dir oder prompts am tool selbst anwenden? die sachen gefallen mir sehr").
-   Wer mehr Bewegung einbaut, muss sie auch abschaltbar machen - bisher gab es
-   dafuer nur den Schalter des Betriebssystems (prefers-reduced-motion,
-   styles.css Abschnitt 3). Auf dem Handy findet den fast niemand, und wer ihn
-   fuer das ganze Geraet setzt, will ihn selten fuer das ganze Geraet.
-
-   GERAETELOKAL, nicht in der Cloud - und das ist eine Entscheidung, keine
-   Bequemlichkeit. firestore.rules pruefen `settings` mit hasOnly(['arabGroesse',
-   'lastBackup', 'thema', 'sitzungsLimit']): ein fuenftes Feld wuerde von den
-   DEPLOYTEN Regeln abgelehnt, bis der Betreiber neue Regeln einspielt - bis
-   dahin schluege jedes Speichern der Einstellungen fehl. Ein Schalter fuer die
-   Optik dieses Geraets ist ausserdem sachlich geraetegebunden: dasselbe Konto
-   auf einem schnellen Rechner und einem alten Handy will hier nicht dasselbe.
-   Genau wie "adrabic-thema" (siehe oben) steht der Wert deshalb im
-   localStorage. */
-const BEWEGUNG_KEY = "adrabic-bewegung";
-const BEWEGUNGEN = [
-  { id: "voll",  label: "Voll" },
-  { id: "ruhig", label: "Ruhig" }
-];
-let bewegung = "voll";
-function bewegungAnwenden() {
-  document.documentElement.setAttribute("data-bewegung", bewegung);
-}
-function setBewegung(id) {
-  if (!BEWEGUNGEN.some(x => x.id === id)) return;
-  bewegung = id;
-  try { localStorage.setItem(BEWEGUNG_KEY, id); } catch (e) {}
-  bewegungAnwenden();
-  render();
-}
-try {
-  const gespeichert = localStorage.getItem(BEWEGUNG_KEY);
-  if (BEWEGUNGEN.some(x => x.id === gespeichert)) bewegung = gespeichert;
-} catch (e) {}
-bewegungAnwenden();
+/* ---------- 3.12.0: die Einstellung "Bewegung" ist wieder weg ----------
+   3.11.0 hatte hier einen eigenen Schalter Voll/Ruhig. Betreiber am
+   24.09.2026: "die einstellung mit voll oder ruhig auch ned so sinnvoll,
+   loeschen." Der Schalter des Betriebssystems (prefers-reduced-motion,
+   styles.css Abschnitt 3) bleibt - er ist Barrierefreiheit, keine
+   Geschmacksfrage. Der alte Schluessel wird einmal weggeraeumt, damit auf
+   keinem Geraet ein toter Wert liegen bleibt (Datensparsamkeit, J1). */
+try { localStorage.removeItem("adrabic-bewegung"); } catch (e) {}
 
 let ui = {
   authMode: "login",         // "login" | "register" | "reset"
@@ -1338,10 +1328,17 @@ let ui = {
      Anmeldeformular (einstiegWieder). Nur im Speicher. */
   einstiegZurueck: null,
   einstiegTimer: null,
+  /* 3.12.0: true, sobald man sich abgemeldet selbst fuer das Formular
+     entschieden hat ("Ich habe schon ein Konto", "Plan speichern"). Solange
+     es false ist, zeigt render() abgemeldet den Einstieg. Wird bei jeder
+     Anmeldung zurueckgesetzt - nach dem naechsten Abmelden steht also wieder
+     der Willkommensbildschirm da. */
+  authGewaehlt: false,
   /* 9 (17.09.2026): fehlender Name beim Registrieren steht direkt am Feld,
      nicht im allgemeinen Fehlerkasten - siehe doRegister/renderAuth. */
   authFeldFehler: null,
   kontoLoeschenBusy: false,  // Konto-Loeschung laeuft (Phase 2)
+  kontoLoeschenEmail: "",    // 3.12.0: was auf der Loeschen-Seite getippt ist (ueberlebt render())
   /* A3 (1.9.0): der offene Bereich haengt an seiner ID, nicht mehr an einer
      Positionsnummer - siehe currentBereich(). null = noch keiner gewaehlt,
      dann faellt die App auf den ersten Bereich zurueck. */
@@ -1830,6 +1827,7 @@ async function initFirebase() {
     ui.umzug = null;
     ui.einstellungen = false;
     if (user) {
+      ui.authGewaehlt = false;
       /* "Plan speichern" gilt nur fuer das Formular direkt nach dem Einstieg.
          Wer sich spaeter in derselben Sitzung abmeldet und ein Konto anlegt,
          soll wieder "Konto anlegen" lesen. */
@@ -2565,7 +2563,25 @@ async function doReset() {
   ui.authBusy = false;
   render();
 }
-function doLogout() {
+/* 3.12.0: Abmelden fragt nach. Betreiber am 24.09.2026: "wen man sich
+   abmelden will oder loeschen und sowas risko bitte nicht so einfach zu
+   lasse". Abmelden loescht nichts - aber es ist ein Tipp, nach dem man auf
+   diesem Geraet E-Mail und Passwort wieder braucht, und wer offline
+   abmeldet, schickt seine letzten Antworten erst beim naechsten Anmelden ab.
+   Beides sagt die Rueckfrage.
+   Ausnahme: der Bestaetigungs-Bildschirm. Dort hat man noch nichts, das man
+   verlieren koennte, und "Abmelden" ist der Weg zurueck, wenn man sich bei
+   der Adresse vertippt hat - eine Rueckfrage waere dort nur Reibung. */
+async function doLogout() {
+  if (currentUser && currentUser.emailVerified) {
+    const ok = await dlgConfirm(
+      "Deine Karten und dein Lernstand bleiben im Konto gespeichert. Auf diesem Gerät " +
+      "meldest du dich danach mit E-Mail und Passwort wieder an." +
+      (offline ? "\n\nDu bist gerade offline: Was du seit der letzten Verbindung gelernt " +
+        "hast, wird erst übertragen, wenn du dich hier wieder anmeldest." : ""),
+      { title: "Abmelden?", okLabel: "Abmelden", danger: true });
+    if (!ok) return;
+  }
   fb.signOut(auth);
 }
 
@@ -2617,28 +2633,33 @@ async function kontoAuthLoeschen() {
     await fb.deleteUser(currentUser);
   }
 }
-async function doKontoLoeschen() {
-  if (!currentUser || ui.kontoLoeschenBusy) return;
-  const email = (currentUser.email || "").trim();
+/* 3.12.0: Das Loeschen des Kontos hat eine eigene Seite (Einstellungen ->
+   Konto loeschen) und wird dort durch Gedrueckthalten ausgeloest, nachdem
+   die E-Mail-Adresse eingetippt ist. Vorher: eine rote Zeile direkt in der
+   Einstellungsliste, ein Tipp - und im selben Augenblick startete schon ein
+   Download, bevor ueberhaupt gefragt war. Betreiber am 24.09.2026: "loeschen
+   und sowas risko bitte nicht so einfach zu lasse".
+   Drei Huerden, jede mit eigenem Zweck:
+     1. eine eigene Seite: man landet dort nicht aus Versehen beim Scrollen
+     2. die E-Mail tippen: ein Name laesst sich nicht blind druecken
+        (dieselbe Begruendung wie beim Bereich, deleteBereich)
+     3. gedrueckt halten: ein versehentlicher Tipp loest nichts aus
+   Das Backup wird weiter vorher angeboten - jetzt aber als eigener Knopf auf
+   der Seite und noch einmal unmittelbar vor dem Loeschen. */
+const KONTO_LOESCHEN_HALTEN_MS = 1800;
+function kontoLoeschenBereit() {
+  const email = ((currentUser && currentUser.email) || "").trim().toLowerCase();
+  return !!email && (ui.kontoLoeschenEmail || "").trim().toLowerCase() === email;
+}
+async function kontoLoeschenAusfuehren() {
+  if (!currentUser || ui.kontoLoeschenBusy || !kontoLoeschenBereit()) return;
   exportBackup();
-  const eingabe = await dlgPrompt(
-    "Dein Konto und alle deine Karten, Bereiche und dein Lernstand werden unwiderruflich " +
-    "gelöscht. Das lässt sich nicht rückgängig machen.\n\n" +
-    "Ein Backup wurde gerade zum Herunterladen angeboten – sieh in deinen Downloads nach, " +
-    "dass die Datei wirklich da ist.\n\n" +
-    "Tipp zum Bestätigen deine E-Mail-Adresse ein: " + email,
-    "", { title: "Konto endgültig löschen?", okLabel: "Endgültig löschen", danger: true });
-  if (eingabe === null) return;
-  if (eingabe.trim().toLowerCase() !== email.toLowerCase()) {
-    await dlgAlert("Die E-Mail-Adresse stimmt nicht überein – es wurde nichts gelöscht.", "Abgebrochen");
-    return;
-  }
   ui.kontoLoeschenBusy = true; render();
   try {
     await kontoDatenLoeschen();
     await kontoAuthLoeschen();
     /* Erfolg: fb.deleteUser meldet auch ab, onAuthStateChanged raeumt den
-       Rest auf (currentUser wird null, die App zeigt den Anmeldebildschirm). */
+       Rest auf (currentUser wird null, die App zeigt den Einstieg). */
   } catch (e) {
     ui.kontoLoeschenBusy = false; render();
     await dlgAlert(kontoLoeschenFehlerText(e), "Löschen fehlgeschlagen");
@@ -2648,8 +2669,16 @@ async function doKontoLoeschen() {
        Neuladen macht das ueber den normalen Anmelde-Weg (onAuthStateChanged)
        gruendlicher, als es hier von Hand nachzuziehen. */
     location.reload();
-    return;
   }
+}
+/* Tastatur und Bildschirmleser koennen nicht "gedrueckt halten". Fuer sie
+   ersetzt eine ausdrueckliche Rueckfrage die dritte Huerde - die ersten
+   beiden (eigene Seite, E-Mail) gelten unveraendert. */
+async function kontoLoeschenPerTastatur() {
+  if (!kontoLoeschenBereit()) return;
+  const ok = await dlgConfirm("Dein Konto, alle Karten, Bereiche und dein Lernstand werden " +
+    "unwiderruflich gelöscht.", { title: "Konto jetzt löschen?", okLabel: "Endgültig löschen", danger: true });
+  if (ok) kontoLoeschenAusfuehren();
 }
 
 /* ---------- Datenzugriff ---------- */
@@ -2838,6 +2867,39 @@ function zustandBadge(c) {
   const z = kartenZustand(c);
   const stufe = (z.id === "neu" || z.id === "gesehen") ? "" : " " + c.stufe;
   return '<span class="badge zustand-' + z.id + '" title="' + esc(z.erklaerung) + '">' + z.label + stufe + '</span>';
+}
+/* 3.12.0: Der Zustand einer Karte als fuenf Punkte - dieselbe Form wie die
+   Leiste im Einstieg (einstiegLeiste: Punkte, die sich von "neu" bis
+   "sitzt" fuellen), jetzt auf jeder Karte der Runde und im Karten-Blatt.
+   Der Einstieg hat das Bild beigebracht; hier taucht es wieder auf und
+   bedeutet dasselbe. Die Farben sind die Rampe --stufe-0 bis --stufe-4. */
+function zustandPunkte(c) {
+  const i = Math.max(0, KARTEN_ZUSTAENDE.indexOf(kartenZustand(c)));
+  let h = '<span class="zustand-punkte" role="img" aria-label="Stand: ' + esc(KARTEN_ZUSTAENDE[i].label) + '">';
+  KARTEN_ZUSTAENDE.forEach((z, n) => {
+    h += '<span class="zustand-punkte__p' + (n <= i ? ' voll' : '') + (n === i ? ' jetzt' : '') + '" ' +
+      'style="--fuellung:' + z.farbe + ';--n:' + n + '"></span>';
+  });
+  return h + '</span>';
+}
+/* 3.12.0: Wann eine Karte wiederkommt, in Worten - fuer das Karten-Blatt. */
+function wiederText(c) {
+  if (istNeueKarte(c)) return "Noch nie abgefragt";
+  const t = todayStr();
+  if (c.nextReview <= t) return "Heute fällig";
+  const morgen = dateInDays(1);
+  if (c.nextReview === morgen) return "Kommt morgen wieder";
+  const tage = Math.round((new Date(c.nextReview + "T00:00:00") - new Date(t + "T00:00:00")) / 86400000);
+  return "Kommt am " + wochentagKurz(c.nextReview) + ", " + tagKurz(c.nextReview) + " wieder · in " + tage + " Tagen";
+}
+/* 3.12.0: "in ~1 Tagen" stand auf dem Sicher-Knopf jeder neuen Karte - ein
+   Grammatikfehler an der Stelle, die man am oefter sieht als jede andere.
+   Bis drei Tage gibt es keine Streuung (nextReviewForStufe rundet sie dort
+   auf null), also auch kein "~". */
+function abstandText(tage) {
+  if (tage <= 1) return "morgen wieder";
+  if (tage <= 3) return "in " + tage + " Tagen";
+  return "in ~" + tage + " Tagen";
 }
 /* Arabisch-indische Ziffern. Sie stehen klein neben den grossen Zahlen im
    Fortschritt - das ist die Handschrift dieser App: arabische Schrift als
@@ -4684,6 +4746,16 @@ function gradeCard(kind) {
        als neu erkennbar. */
     verlaufZaehle(warNeu ? "n" : "w");
   }
+  /* 3.12.0: nur fuer die Anzeige - der Abschluss zeigt, wie die Runde lief,
+     und die Karte darf wissen, dass sie neu hereinkommt (renderSession).
+     Beides beruehrt keine Stufe und keine Faelligkeit. */
+  if (!s.isDrill && card && (kind === "known" || kind === "almost" || kind === "unknown")) {
+    s.zaehler = s.zaehler || { known: 0, almost: 0, unknown: 0 };
+    s.zaehler[kind]++;
+    s.letzteArt = kind;
+  }
+  s.zug = (s.zug || 0) + 1;
+  fuehlbar(kind === "known" ? 10 : kind === "unknown" ? [6, 30, 6] : 6);
   const id = s.queue.shift();
   // Nur „Nicht" hängt die Karte wieder hinten an. „Fast" ist morgen dran –
   // stünde sie auch heute noch einmal an, würde die Session nie enden.
@@ -4715,6 +4787,9 @@ function undoLastGrade() {
     card.maxStufe = s.lastAction.prevMaxStufe;
   }
   s.queue = s.lastAction.prevQueue;
+  if (s.zaehler && s.letzteArt && s.zaehler[s.letzteArt] > 0) s.zaehler[s.letzteArt]--;
+  s.letzteArt = null;
+  s.zug = (s.zug || 0) + 1;
   s.lastAction = null;
   s.revealed = true;
   s.extraOpen = false;
@@ -4758,7 +4833,10 @@ document.addEventListener("keydown", e => {
 let wischStart = null;
 let wischBewertung = false;
 app.addEventListener("pointerdown", e => {
-  const karte = e.target.closest("#sitzung");
+  /* 3.12.0: gezogen wird die Karte selbst (.study-flaeche), nicht mehr die
+     ganze Buehne samt Knoepfen - der Stapel dahinter bleibt liegen, wie bei
+     einem echten Kartenstapel. */
+  const karte = e.target.closest(".study-flaeche");
   if (!karte || !ui.session || !ui.session.revealed || ui.session.isDrill || wischBewertung) return;
   if (e.target.closest("button, a, canvas, input, textarea")) return;
   wischStart = { x: e.clientX, y: e.clientY, karte, breite: karte.getBoundingClientRect().width, id: e.pointerId, erfasst: false };
@@ -5441,12 +5519,7 @@ function einstiegZeitpunkt(e) {
   if (e.anker === "eigen") return e.ankerFrei ? "wenn ich " + e.ankerFrei : "noch offen";
   return e.anker ? ankerLabel(e.anker) : "noch offen";
 }
-/* 3.11.0: die eigene Einstellung zaehlt genauso wie die des Betriebssystems.
-   Ohne das lief der Plan-Aufbau weiter, obwohl in den Einstellungen "Ruhig"
-   steht - und der Einstieg waere der einzige Ort in der App, an dem der
-   Schalter nicht wirkt. */
 function einstiegBewegungReduziert() {
-  if (bewegung === "ruhig") return true;
   try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (err) { return false; }
 }
 function einstiegTimerStoppen() {
@@ -5704,7 +5777,7 @@ function renderEinstieg() {
    F7): wer sich abmeldet, ist kein Neuling. */
 function einstiegBeenden(satz) {
   einstiegTimerStoppen();
-  einstiegAbschliessen();
+  ui.authGewaehlt = true;
   nachklangSetzen(satz || "");
   /* 3.10.3: Rueckweg. Betreiber: "was wenn man aber zurueck will zu plan
      speichern oder nochmal von neu". Der Stand bleibt im Speicher, das
@@ -5723,7 +5796,7 @@ function einstiegBeenden(satz) {
 function einstiegWieder() {
   const e = ui.einstiegZurueck;
   if (!e) return;
-  try { localStorage.removeItem(EINSTIEG_KEY); } catch (err) {}
+  ui.authGewaehlt = false;
   nachklangLoeschen();
   ui.einstiegZurueck = null;
   ui.authAusEinstieg = false;
@@ -5746,15 +5819,20 @@ function render() {
      angemeldetes Konto kommt nie hierher, weil currentUser dann nicht null
      ist. Laeuft er gerade, ersetzt er renderAuth(); die Station S8 (Konto)
      ist renderAuth() selbst. Reihenfolge und Begruendung: BESTAND.md 1. */
-  if (currentUser === null && ui.einstieg === null && !einstiegGesehen()) {
-    ui.einstieg = { schritt: 0, aufgedeckt: false, bewertet: null, ziele: [], huerden: [],
-      anker: null, ankerFrei: "", gezeigt: -1, richtung: "vor", balkenVorher: 0, zeit: 0, planGebaut: false };
+  /* 3.12.0: abgemeldet steht immer der Einstieg - ausser man hat sich gerade
+     selbst fuer das Formular entschieden (ui.authGewaehlt, gesetzt von "Ich
+     habe schon ein Konto" und "Plan speichern"). Siehe die Begruendung am
+     frueheren Merker oben bei EINSTIEG_ANTWORT_KEY. */
+  if (currentUser === null && ui.einstieg === null && !ui.authGewaehlt) {
+    ui.einstieg = einstiegNeu(0);
   }
+  if (currentUser === null) bestaetigungBeenden();
   if (currentUser === null && ui.einstieg) { renderEinstieg(); return; }
   if (currentUser === null) { renderAuth(); return; }
   /* C4: E-Mail muss bestätigt sein, bevor der Rest der App zugreifbar ist.
      Ohne das kann sich jeder mit einer erfundenen Adresse registrieren. */
   if (!currentUser.emailVerified) { renderPendingVerification(); return; }
+  bestaetigungBeenden();
   /* C1: Liegen die Daten noch im alten Format, gibt es genau einen
      Bildschirm - den Umzug. Vorher darf nichts geschrieben werden, sonst
      entstehen zwei halbe Staende. */
@@ -5914,9 +5992,43 @@ async function umzugStarten() {
   }
 }
 
+/* 3.12.0: Der Bestaetigungs-Bildschirm schaut selbst nach. Vorher musste man
+   nach dem Klick auf den Link in der Mail zurueck in die App und "Ich habe
+   bestaetigt" tippen - der Moment, in dem man gerade etwas erledigt hat und
+   dann noch einmal gefragt wird. Jetzt: alle fuenf Sekunden still, und
+   sofort, wenn man aus der Mail-App zurueckkommt (visibilitychange). Der
+   Knopf bleibt fuer den Fall, dass das Netz hakt. Todoist macht es mit
+   "Already verified? Refresh" (VIDEO-BEFUND.md 5.3) - hier ohne Tippen. */
+let bestaetigungTimer = null;
+let bestaetigungLaeuft = false;
+async function bestaetigungStillPruefen() {
+  if (!currentUser || ui.authBusy || bestaetigungLaeuft) return;
+  if (document.visibilityState !== "visible") return;
+  bestaetigungLaeuft = true;
+  try {
+    await mitZeitlimit(currentUser.reload());
+    if (currentUser && currentUser.emailVerified) {
+      await mitZeitlimit(currentUser.getIdToken(true));
+      location.reload();
+    }
+  } catch (e) { /* still - der Knopf zeigt Fehler, das Nachsehen nicht */ }
+  bestaetigungLaeuft = false;
+}
+function bestaetigungBeobachten() {
+  if (!bestaetigungTimer) bestaetigungTimer = setInterval(bestaetigungStillPruefen, 5000);
+}
+function bestaetigungBeenden() {
+  if (bestaetigungTimer) { clearInterval(bestaetigungTimer); bestaetigungTimer = null; }
+}
+document.addEventListener("visibilitychange", () => {
+  if (bestaetigungTimer && document.visibilityState === "visible") bestaetigungStillPruefen();
+});
+
 function renderPendingVerification() {
+  bestaetigungBeobachten();
   let html = '<div class="solo">';
   html += soloMarke("E-Mail best\u00e4tigen", "Schritt 2 von 2 \u00b7 Best\u00e4tigen");
+  html += '<div class="brief-bild" aria-hidden="true">' + ikon("brief", "i-xl") + '<span class="brief-bild__punkt"></span></div>';
   html += '<div class="card">';
   html += '<p class="hint">Wir haben eine Best\u00e4tigungs-E-Mail an <strong>' + esc(currentUser.email) +
     '</strong> geschickt. \u00d6ffne den Link darin, um dein Konto freizuschalten.</p>';
@@ -5931,7 +6043,8 @@ function renderPendingVerification() {
      Karte an" - und dann kommt erstmal diese Wartezeile. Ohne diesen Satz
      verschwindet das Versprechen genau dort, wo es am meisten zaehlt. Der
      Satz sagt nichts Neues zu, er haelt nur fest, was schon zugesagt war. */
-  html += '<p class="hint" style="margin-top:var(--space-3)">Danach geht es gleich weiter zu deiner ersten Karte.</p>';
+  html += '<p class="hint bestaetigung-warten" style="margin-top:var(--space-3)"><span class="bestaetigung-warten__punkt" aria-hidden="true"></span>' +
+    'Sobald du bestätigt hast, geht es hier von selbst weiter – zu deiner ersten Karte.</p>';
   if (ui.authError) html += '<div class="error-box" style="margin-top:var(--space-4)">' + ikon("warnung", "i-sm") +
     '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
   if (ui.authInfo) html += '<div class="info-box" style="margin-top:var(--space-4)">' + ikon("haken", "i-sm") +
@@ -6204,8 +6317,13 @@ function modeBar(cfg) {
   const c = cfg || {};
   let html = "";
   if (typeof c.anteil === "number") {
-    const p = Math.max(0, Math.min(100, Math.round(c.anteil * 100)));
-    html += '<div class="modebar__fortschritt" style="width:' + p + '%"></div>';
+    /* 3.12.0: Der Strich waechst von seinem letzten Stand aus (--von -> --bis),
+       wie der Balken im Einstieg (einstiegKopf). Vorher stand hier eine
+       width-Transition - die lief nie, weil render() den Strich jedes Mal neu
+       anlegt (styles.css Abschnitt 3): er sprang von Karte zu Karte. */
+    const bis = Math.max(0, Math.min(1, c.anteil));
+    const von = typeof c.anteilVorher === "number" ? Math.max(0, Math.min(1, c.anteilVorher)) : bis;
+    html += '<div class="modebar__fortschritt" style="--von:' + von.toFixed(3) + ';--bis:' + bis.toFixed(3) + '"></div>';
   }
   html += '<div class="modebar">';
   html += '<button class="icon-btn" data-action="' + esc(c.zu) + '" aria-label="' +
@@ -6346,7 +6464,13 @@ function cardDetailSheet() {
   html += '<h3 id="card-detail-titel"' + (istArabisch(c.wort) ? ' class="arabic" lang="ar" dir="rtl"' : '') + '>' + esc(c.wort) + '</h3>';
   html += '<p class="dlg-text" style="margin-bottom:var(--space-3)">' + esc(c.uebersetzung) + '</p>';
   if (c.extra) html += '<div class="extra-note-voll" style="margin-bottom:var(--space-4)">' + renderExtra(c.extra, []) + '</div>';
-  html += '<div style="margin-bottom:var(--space-2)">' + zustandBadge(c) + '</div>';
+  /* 3.12.0: Stand und naechster Termin statt einer einzelnen Plakette -
+     dieselben Punkte wie auf der Karte in der Runde und wie die Leiste im
+     Einstieg. Der Termin steht als Wochentag und Datum da, weil man ihn so
+     im Kopf hat; "in N Tagen" nur als Zusatz. */
+  html += '<div class="karte-weg">' + zustandPunkte(c) +
+    '<div class="karte-weg__text"><strong>' + esc(kartenZustand(c).label) + '</strong>' +
+    '<span>' + esc(wiederText(c)) + '</span></div></div>';
   html += kartenTagsHtml(c.id, b);
   html += '<div class="dlg-actions">';
   if (kartenBearbeitbar(b)) {
@@ -6476,6 +6600,7 @@ function syncAppbarKante() {
 }
 window.addEventListener("scroll", syncAppbarKante, { passive: true });
 
+let viewZusatz = "";
 function renderMain() {
   /* 2.16.0: Im Modus verschwindet die Navigation.
 
@@ -6497,6 +6622,11 @@ function renderMain() {
   /* Erst den Inhalt bauen. Die Modi geben ihre Leiste selbst aus, deshalb
      muss das Geruest wissen, ob es ueberhaupt eines zeichnen soll. */
   let inhalt = "";
+  /* 3.12.0: Eine Ansicht kann sich fuer breite Bildschirme ein Raster
+     wuenschen (styles.css Abschnitt 17, view--lernen / view--raster). Sie
+     setzt viewZusatz waehrend sie gezeichnet wird; hier wird es vorher
+     geleert, damit ein Wunsch nie in die naechste Ansicht hinueberreicht. */
+  viewZusatz = "";
   if (ui.einstellungen) inhalt = renderEinstellungen();
   else inhalt = ui.tab === "lernen" ? renderLernen()
               : ui.tab === "fortschritt" ? renderFortschritt()
@@ -6524,7 +6654,12 @@ function renderMain() {
     }
 
     const backupAge = ui.einstellungen ? 0 : daysSinceLastBackup();
-    if (backupAge === null || backupAge >= 14) {
+    /* 3.12.0: erst ab zehn Karten. Vorher stand "Du hast noch nie ein Backup
+       heruntergeladen" schon ueber dem allerersten, leeren Bildschirm nach
+       der Anmeldung - eine Mahnung, bevor es irgendetwas zu verlieren gibt,
+       und direkt neben der Start-Liste die zweite Aufgabe, die keine ist. */
+    const kartenGesamt = bereiche ? bereiche.reduce((n, x) => n + x.karten.length, 0) : 0;
+    if (kartenGesamt >= 10 && (backupAge === null || backupAge >= 14)) {
       kopf += '<div class="banner-info banner-leise">' + ikon("sichern", "i-sm") +
         '<div class="banner__text">' +
         (backupAge === null ? "Du hast noch nie ein Backup heruntergeladen."
@@ -6550,13 +6685,13 @@ function renderMain() {
           zurueck: "einstellungen-zu",
           aktion: '<button class="ghost" data-action="einstellungen-zu">Fertig</button>'
         });
-    html += '<div class="view">' + kopf + inhalt + '</div>';
+    html += '<div class="view' + viewZusatz + '">' + kopf + inhalt + '</div>';
     html += navLeiste();
   } else if (ui.seite) {
     /* Unterseite eines Reiters (gerade nur Fortschritt). Die Navigation
        bleibt stehen - man ist weiter in diesem Reiter, eine Ebene tiefer. */
     html += appBar({ titel: SEITEN_TITEL[ui.seite] || "", zurueck: "seite-zu" });
-    html += '<div class="view">' + kopf + inhalt + '</div>';
+    html += '<div class="view' + viewZusatz + '">' + kopf + inhalt + '</div>';
     html += navLeiste();
   } else {
     const ansicht = ui.tab === "lernen" ? currentBereich().name
@@ -6574,7 +6709,7 @@ function renderMain() {
       aktion: '<button class="icon-btn appbar__einstellungen" data-action="einstellungen" aria-label="Einstellungen">' +
         ikon("zahnrad", "i-sm") + '</button>'
     });
-    html += '<div class="view">' + kopf + inhalt + '</div>';
+    html += '<div class="view' + viewZusatz + '">' + kopf + inhalt + '</div>';
     html += navLeiste();
   }
 
@@ -6766,6 +6901,7 @@ function renderMain() {
   }
 
   if (ui.dialog) setupDialog();     // D2
+  if (ui.seite === "konto-loeschen") kontoLoeschenVerbinden();
 
   if (ui.tab === "verwalten") {
     ["f-wort", "f-ueb"].forEach(id => {
@@ -7081,6 +7217,7 @@ const SEITEN_TITEL = {
      derselben Sache, versteckt hinter zwei Begriffen, die von Backups
      sprechen. Siehe renderEinstellungen. */
   kartensaetze: "Kartensätze",
+  "konto-loeschen": "Konto löschen",
   einspielen: "Einspielen",
   verlauf: "Aufzeichnung",
   lektionen: "Lektionen",
@@ -7110,6 +7247,21 @@ function renderEinstellungen() {
   const alter = daysSinceLastBackup();
   const tage = Object.keys(verlauf).length;
   let html = "";
+
+  /* 3.12.0: Wer man ist, steht oben - wie in jeder Einstellungen-Seite, die
+     man kennt. Vorher stand der Name als unscheinbare Zeile ganz unten im
+     Abschnitt "Konto", zwischen Konto-ID und "Abmelden". */
+  const initiale = (displayName || (currentUser && currentUser.email) || "?").trim().charAt(0).toUpperCase();
+  html += '<div class="profil">';
+  html += '<div class="profil__bild" aria-hidden="true">' + esc(initiale) + '</div>';
+  html += '<div class="profil__text"><strong>' + esc(displayName) + '</strong>' +
+    (currentUser && currentUser.email ? '<span>' + esc(currentUser.email) + '</span>' : '') + '</div>';
+  const kartenAlle = bereiche.reduce((n, x) => n + x.karten.length, 0);
+  html += '<div class="profil__zahlen">' +
+    '<span><strong>' + kartenAlle + '</strong> Karten</span>' +
+    '<span><strong>' + serieAktuell() + '</strong> Tage Serie</span>' +
+    '<span><strong>' + tage + '</strong> Tage gelernt</span></div>';
+  html += '</div>';
 
   /* ---------- 3.11.0: die Reihenfolge ----------
      Betreiber am 24.09.2026: "gucken ob man noch weitere sachen in die
@@ -7158,12 +7310,6 @@ function renderEinstellungen() {
     wert: labelVon(THEMEN, settings.thema, "Dunkel") });
   html += einstZeile({ action: "wahl-sheet", id: "arab", icon: "karten", text: "Arabische Schrift",
     wert: labelVon(ARAB_STUFEN, settings.arabGroesse, "Normal") });
-  /* 3.11.0: siehe BEWEGUNG_KEY - wer mehr Bewegung einbaut, muss sie
-     abschaltbar machen, und zwar hier und nicht nur im Betriebssystem. */
-  /* "umkehren" (zwei Pfeile im Kreis) statt der Serien-Flamme: eine Flamme
-     neben "Bewegung" liest sich wie die Lernserie, nicht wie Animation. */
-  html += einstZeile({ action: "wahl-sheet", id: "bewegung", icon: "umkehren", text: "Bewegung",
-    wert: labelVon(BEWEGUNGEN, bewegung, "Voll") });
   html += '</div></div>';
 
   /* ---------- Daten: drei Handlungen, jede auf eigener Seite ----------
@@ -7196,10 +7342,6 @@ function renderEinstellungen() {
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Konto</div>';
   html += '<div class="liste">';
-  html += '<div class="liste-zeile">' + ikon("konto", "i-sm") +
-    '<span class="liste-zeile__text">' + esc(displayName) + '</span>' +
-    (currentUser && currentUser.email ? '<span class="liste-zeile__wert">' + esc(currentUser.email) + '</span>' : '') +
-    '</div>';
   if (BETREIBER_UIDS.length === 0 && currentUser) {
     html += '<div class="liste-zeile">' + ikon("konto", "i-sm") +
       '<span class="liste-zeile__text">Konto-ID</span>' +
@@ -7207,9 +7349,9 @@ function renderEinstellungen() {
   }
   html += '<button class="liste-zeile gefahr" data-action="logout">' + ikon("abmelden", "i-sm") +
     '<span class="liste-zeile__text">Abmelden</span></button>';
-  html += '<button class="liste-zeile gefahr" data-action="delete-account"' +
-    (ui.kontoLoeschenBusy ? " disabled" : "") + '>' + ikon("muell", "i-sm") +
-    '<span class="liste-zeile__text">Konto endgültig löschen</span></button>';
+  /* 3.12.0: keine Loeschen-Zeile mehr, die selbst etwas tut - nur ein Weg
+     auf die eigene Seite (siehe kontoLoeschenAusfuehren). */
+  html += einstZeile({ action: "einst-seite", id: "konto-loeschen", icon: "muell", text: "Konto löschen" });
   html += '</div></div>';
 
   html += einstFuss();
@@ -7349,8 +7491,108 @@ function renderEinstellungenSeite(id) {
 
   if (id === "feedback") return renderFeedbackSeite();
 
+  if (id === "konto-loeschen") return renderKontoLoeschen();
+
   return '<p class="hint">Diese Seite gibt es nicht.</p>';
 }
+
+/* 3.12.0: die Loeschen-Seite. Erst steht da, WAS verschwindet - in Zahlen
+   aus dem eigenen Konto, nicht als allgemeiner Satz. Dann das Backup, dann
+   die zwei Huerden. Der Knopf ist gesperrt, bis die Adresse stimmt; gehalten
+   fuellt er sich von links nach rechts (styles.css, .halten). */
+function renderKontoLoeschen() {
+  const karten = bereiche.reduce((n, b) => n + b.karten.length, 0);
+  const tage = Object.keys(verlauf).length;
+  const bereit = kontoLoeschenBereit();
+  const alter = daysSinceLastBackup();
+  let html = '<div class="card gefahr-karte">';
+  html += '<div class="gefahr-karte__kopf">' + ikon("warnung", "i-lg") +
+    '<h3>Das lässt sich nicht rückgängig machen</h3></div>';
+  html += '<ul class="gefahr-liste">';
+  html += '<li><strong>' + karten + '</strong> Karte' + (karten === 1 ? '' : 'n') + ' mit ihrem Lernstand</li>';
+  html += '<li><strong>' + bereiche.length + '</strong> Bereich' + (bereiche.length === 1 ? '' : 'e') + ' mit allen Speicherkarten</li>';
+  html += '<li>Deine Serie und <strong>' + tage + '</strong> Tag' + (tage === 1 ? '' : 'e') + ' Aufzeichnung</li>';
+  html += '<li>Dein Konto – die Anmeldung mit ' + esc((currentUser && currentUser.email) || "") + '</li>';
+  html += '</ul></div>';
+
+  html += '<div class="card" style="margin-top:var(--stack)">';
+  html += '<h3>Erst sichern</h3>';
+  html += '<p class="hint">' + (alter === 0 ? 'Heute schon gesichert. ' : '') +
+    'Die Datei bleibt auf deinem Gerät. Mit ihr kannst du alles in ein neues Konto einspielen.</p>';
+  html += '<div class="form-actions"><button class="secondary" data-action="konto-backup">' +
+    ikon("sichern", "i-sm") + ' Backup herunterladen</button></div>';
+  html += '</div>';
+
+  html += '<div class="card" style="margin-top:var(--stack)">';
+  html += '<div class="field"><label for="konto-loeschen-email">Zum Bestätigen deine E-Mail-Adresse</label>';
+  html += '<input type="email" id="konto-loeschen-email" autocomplete="off" autocapitalize="off" spellcheck="false" ' +
+    'inputmode="email" placeholder="' + esc((currentUser && currentUser.email) || "") + '"></div>';
+  html += '<button class="danger full halten' + (ui.kontoLoeschenBusy ? ' busy' : '') + '" data-action="delete-account" ' +
+    'data-halten="konto-loeschen"' + (bereit && !ui.kontoLoeschenBusy ? '' : ' disabled') +
+    ' style="--halten:' + KONTO_LOESCHEN_HALTEN_MS + 'ms">' +
+    '<span class="halten__fuellung" aria-hidden="true"></span>' +
+    '<span class="halten__text">' + (ui.kontoLoeschenBusy ? 'Wird gelöscht …' : 'Zum Löschen gedrückt halten') + '</span></button>';
+  html += '<p class="hint halten__hinweis" id="konto-loeschen-hinweis">' +
+    (bereit ? 'Halte den Knopf, bis er sich gefüllt hat.' : 'Der Knopf wird frei, sobald die Adresse stimmt.') + '</p>';
+  html += '</div>';
+  return html;
+}
+/* Das Feld zieht Knopf und Hinweis an Ort und Stelle nach - ohne render(),
+   sonst waere der Fokus nach jedem Buchstaben weg (wie im Einstieg,
+   einstiegFreiVerbinden). */
+function kontoLoeschenVerbinden() {
+  const feld = document.getElementById("konto-loeschen-email");
+  if (!feld || feld.dataset.verbunden) return;
+  feld.dataset.verbunden = "1";
+  feld.value = ui.kontoLoeschenEmail || "";
+  feld.addEventListener("input", () => {
+    ui.kontoLoeschenEmail = feld.value;
+    const bereit = kontoLoeschenBereit();
+    const knopf = app.querySelector('[data-halten="konto-loeschen"]');
+    if (knopf && !ui.kontoLoeschenBusy) knopf.disabled = !bereit;
+    const h = document.getElementById("konto-loeschen-hinweis");
+    if (h) h.textContent = bereit ? "Halte den Knopf, bis er sich gefüllt hat." : "Der Knopf wird frei, sobald die Adresse stimmt.";
+  });
+}
+
+/* ---------- 3.12.0: Gedrueckthalten ----------
+   Ein Knopf mit data-halten loest erst aus, wenn er KONTO_LOESCHEN_HALTEN_MS
+   lang gedrueckt bleibt. Loslassen, Wegziehen oder Abbruch durch den Browser
+   setzen ihn zurueck. Die Fuellung ist eine CSS-Animation auf .haelt; das
+   Ausloesen macht der Timer hier - so kann eine abgebrochene Animation nie
+   etwas ausloesen. */
+const HALTEN_AKTIONEN = { "konto-loeschen": () => kontoLoeschenAusfuehren() };
+let halten = null;
+function haltenAbbrechen() {
+  if (!halten) return;
+  clearTimeout(halten.timer);
+  halten.knopf.classList.remove("haelt");
+  halten = null;
+}
+document.addEventListener("pointerdown", e => {
+  const knopf = e.target.closest && e.target.closest("[data-halten]");
+  if (!knopf || knopf.disabled || e.button > 0) return;
+  const was = HALTEN_AKTIONEN[knopf.dataset.halten];
+  if (!was) return;
+  haltenAbbrechen();
+  knopf.classList.add("haelt");
+  fuehlbar(8);
+  halten = { knopf, timer: setTimeout(() => {
+    const k = halten && halten.knopf;
+    halten = null;
+    if (k) k.classList.remove("haelt");
+    fuehlbar([12, 40, 24]);
+    was();
+  }, KONTO_LOESCHEN_HALTEN_MS) };
+});
+["pointerup", "pointercancel", "pointerleave"].forEach(t =>
+  document.addEventListener(t, e => {
+    if (halten && (t !== "pointerleave" || e.target === halten.knopf)) haltenAbbrechen();
+  }, true));
+/* Ein langer Druck oeffnet am Handy sonst das Kontextmenue bzw. markiert Text. */
+document.addEventListener("contextmenu", e => {
+  if (e.target.closest && e.target.closest("[data-halten]")) e.preventDefault();
+});
 
 /* ---------- Feedback-Board ----------
    Oeffentliche Liste mit Vorschlaegen und Abstimmen (plan/feedback-board/
@@ -7603,16 +7845,6 @@ const WAHLEN = {
            'was du lesen kannst.',
     probe: true
   },
-  /* 3.11.0: siehe BEWEGUNG_KEY. Der Hinweis nennt beide Wege ausdruecklich -
-     wer "Ruhig" sucht, weil das ganze Geraet schon ruhig steht, soll hier
-     nicht glauben, er muesse es zweimal setzen. */
-  bewegung: {
-    titel: "Bewegung", action: "set-bewegung",
-    liste: () => BEWEGUNGEN, wert: () => bewegung,
-    hilfe: 'Bei „Ruhig“ erscheint alles sofort – kein Einfliegen, kein Aufleuchten, kein Aufbau. ' +
-           'Gilt nur auf diesem Gerät. Steht im Betriebssystem schon „Bewegung reduzieren“, ' +
-           'ist die App ohnehin ruhig, ganz gleich was hier steht.'
-  },
   limit: {
     titel: "Karten pro Sitzung", action: "set-sitzungslimit",
     liste: () => SITZUNGS_LIMITS, wert: () => settings.sitzungsLimit,
@@ -7741,6 +7973,22 @@ function renderLernen() {
       if (nk.satz) html += '<p class="nachklang__satz">' + esc(nk.satz) + '</p>';
       html += '</div>';
     }
+    /* 3.12.0: Fuer ein neues Konto IST die Start-Liste der leere Zustand -
+       ihr erster Schritt ist "Erste Karte anlegen". Darunter stehen nur noch
+       die beiden anderen Wege zu Karten, leise. Vorher stand derselbe Knopf
+       zweimal untereinander. Fuer einen leeren Bereich in einem Konto, das
+       schon Karten hat, bleibt der alte leere Zustand. */
+    const liste = kannAnlegen ? startListe() : "";
+    if (liste) {
+      html += liste;
+      html += '<div class="startliste-oder">';
+      html += '<span class="startliste-oder__text">Oder übernimm fertige Karten</span>';
+      html += '<div class="empty__aktionen">';
+      html += '<button class="secondary" data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") + ' Kartensatz per Code</button>';
+      html += '<button class="ghost" data-action="import-trigger">Datei einspielen</button>';
+      html += '</div></div>';
+      return html;
+    }
     html += '<div class="empty">';
     html += '<div class="empty__icon betont">' + ikon(kannAnlegen ? "karten" : "einspielen", "i-xl") + '</div>';
     html += '<div class="empty__titel">Noch nichts in „' + esc(b.name) + '“</div>';
@@ -7768,50 +8016,23 @@ function renderLernen() {
     return html;
   }
 
+  html += lernenGruss();
+  if (!istGefuehrt(b)) viewZusatz = " view--lernen";
+
   /* --- Ein gefuehrter Satz hat seinen eigenen Faden. --- */
   if (istGefuehrt(b)) {
     html += renderFaden(b, due);
-  } else if (due.length === 0) {
-    html += '<div class="empty">';
-    html += '<div class="empty__icon betont">' + ikon("fertig", "i-xl") + '</div>';
-    html += '<div class="empty__titel">F\u00fcr heute durch</div>';
-    html += '<p class="empty__text">In \u201e' + esc(b.name) + '\u201c ist nichts mehr f\u00e4llig. ' +
-      'Der n\u00e4chste Schwung kommt von selbst.</p>';
-    html += '<div class="empty__aktionen">';
-    html += '<button class="secondary" data-action="tab-verwalten">Trotzdem \u00fcben</button>';
-    html += '</div></div>';
   } else {
-    /* --- Der Stapel. Die eine gefuellte Goldflaeche dieses Bildschirms. --- */
-    html += '<div class="stapel">';
-    html += '<div class="stapel__zahl">' + due.length + '</div>';
-    html += '<div class="stapel__was">' +
-      (due.length === 1 ? 'Karte ist heute f\u00e4llig' : 'Karten sind heute f\u00e4llig') +
-      ' \u00b7 von ' + cards.length + '</div>';
-    html += '<button class="lg full" data-action="start-session">Lernsession starten</button>';
-    if (neuImStapel > 0 || due.length - neuImStapel > 0) {
-      html += '<div class="stapel__meta">';
-      if (due.length - neuImStapel > 0) {
-        html += '<span class="badge zustand-solide">' + (due.length - neuImStapel) + ' Wiederholung' +
-          (due.length - neuImStapel === 1 ? '' : 'en') + '</span>';
-      }
-      if (neuImStapel > 0) html += '<span class="badge zustand-neu">' + neuImStapel + ' neu</span>';
-      html += '</div>';
-    }
-    html += '</div>';
+    html += lernenStapel(b, cards, due, neuImStapel);
   }
 
+  html += startListe();
+
   /* --- Serie. Steht unter dem Stapel, nicht darueber: sie ist Belohnung,
-     nicht Aufgabe. --- */
-  const serieHeute = serieAktuell();
-  if (serieHeute > 0) {
-    html += '<div class="serie-karte" style="margin-top:var(--stack)">';
-    html += '<span class="serie-zahl">' + ikon("serie", "i-lg") +
-      '<strong>' + serieHeute + '</strong></span>';
-    html += '<span class="serie-text">Tag' + (serieHeute === 1 ? "" : "e") + ' am St\u00fcck' +
-      (streak.beste > serieHeute ? '<br><span class="serie-beste">Bester Lauf: <strong>' +
-        streak.beste + '</strong></span>' : '') + '</span>';
-    html += '</div>';
-  }
+     nicht Aufgabe. 3.12.0: mit der Woche als Punkten (Duolingo zeigt dort
+     die Tage der Woche; hier sind es die letzten sieben Tage aus dem
+     Tagesprotokoll - gezaehlt, nicht behauptet). --- */
+  html += lernenSerie();
 
   /* A7: Wer drei Bereiche hat und heute nur einen lernt, bekam nie eine
      Streak und erfuhr nirgends, warum. Jetzt steht es hier. */
@@ -7821,11 +8042,171 @@ function renderLernen() {
       ikon("lernen", "i-sm") + '<div class="banner__text">Noch offen f\u00fcr die Serie: ' +
       offen.map(x => '<strong>' + esc(x.bereich.name) + '</strong> (' + x.offen + ')').join(", ") +
       '</div></div>';
-  } else if (due.length === 0 && streak.lastCompletedDate === todayStr()) {
-    html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
-      ikon("haken", "i-sm") + '<div class="banner__text">Heute ist in allen Bereichen alles erledigt.</div></div>';
   }
 
+  return html;
+}
+
+/* ---------- 3.12.0: Der Startbildschirm, neu gefasst ----------
+   Betreiber am 24.09.2026: "vom onboarding sieht man so design bzw
+   animationen und so kaum was im tool" und "das tool soll kleine features
+   haben, animationen, sachen [...] wenn man eine aehnliche app wie meine
+   nutzen wuerde es nicht gut anfuehlt". Der Startbildschirm ist der
+   Bildschirm, den man am haeufigsten sieht - vorher eine grosse Zahl, ein
+   Knopf und zwei Plaketten.
+
+   Jetzt, von oben nach unten:
+     Gruss      Tageszeit und Name, darunter das Datum - man kommt an
+     Stapel     ein Ring um die Zahl zeigt, wie viel von heute schon getan
+                ist (Antworten heute gegen Antworten + noch faellig); der
+                Knopf bekommt den Lichtstreif aus dem Einstieg
+     Start-Liste fuer neue Konten, bis sie erledigt ist (startListe)
+     Serie      mit den letzten sieben Tagen als Punkte
+
+   Jede Zahl ist gezaehlt. Keine Minutenangabe ("etwa 4 Minuten"): Dafuer
+   gibt es keine Messung, nur eine Annahme - NEUAUFBAU-3.md Abschnitt 8. */
+function lernenGruss() {
+  const std = new Date().getHours();
+  const gruss = std < 5 ? "Gute Nacht" : std < 11 ? "Guten Morgen" : std < 17 ? "Guten Tag" : "Guten Abend";
+  const name = (displayName || "").trim().split(/\s+/)[0];
+  const datum = new Date().toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
+  return '<div class="lernen-gruss">' +
+    '<div class="lernen-gruss__datum">' + esc(datum) + '</div>' +
+    '<h1 class="lernen-gruss__titel">' + esc(gruss) + (name ? ', ' + esc(name) : '') + '</h1></div>';
+}
+
+/* Der Ring: Anteil von heute. getan = Antworten heute (verlauf), offen =
+   was im aktuellen Bereich noch faellig ist. Beides gibt es schon im
+   Fortschritt (fortschrittHeute) - hier dieselbe Rechnung, nur fuer den
+   Bereich, den man gerade lernt. */
+function heuteAnteil(cards) {
+  const t = todayStr();
+  const heute = verlauf[t] || { w: 0, n: 0 };
+  const getan = heute.w + heute.n;
+  const offen = cards.filter(c => c.nextReview <= t).length;
+  return { getan, offen, anteil: getan + offen > 0 ? getan / (getan + offen) : 1 };
+}
+function ringSvg(anteil, klasse) {
+  return '<svg class="ring ' + (klasse || '') + '" viewBox="0 0 120 120" aria-hidden="true" focusable="false">' +
+    '<circle class="ring__spur" cx="60" cy="60" r="52" pathLength="1"/>' +
+    '<circle class="ring__fuellung" cx="60" cy="60" r="52" pathLength="1" style="--ziel:' + (1 - anteil).toFixed(3) + '"/></svg>';
+}
+
+function lernenStapel(b, cards, due, neuImStapel) {
+  const h = heuteAnteil(cards);
+  let html = "";
+  if (due.length === 0) {
+    const morgen = vorschau7(cards)[1].anzahl;
+    html += '<div class="stapel stapel--fertig">';
+    html += '<div class="stapel__ring">' + ringSvg(1) +
+      '<div class="stapel__mitte">' + ikon("haken", "i-xl") + '</div></div>';
+    html += '<div class="stapel__titel">Für heute durch</div>';
+    html += '<div class="stapel__was">' + (morgen > 0
+      ? 'Morgen kommen <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
+      : 'In \u201e' + esc(b.name) + '\u201c ist nichts mehr f\u00e4llig. Der n\u00e4chste Schwung kommt von selbst.') + '</div>';
+    html += '<div class="empty__aktionen"><button class="secondary" data-action="tab-verwalten">Trotzdem \u00fcben</button></div>';
+    html += '</div>';
+    /* Fund 3.12.0: Hier stand streak.lastCompletedDate === todayStr() - das
+       Feld wird seit 2.14.0 nicht mehr gesetzt, der Hinweis erschien nie. */
+    if (verlauf[todayStr()] && bereicheMitOffenem().length === 0) {
+      html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
+        ikon("haken", "i-sm") + '<div class="banner__text">Heute ist in allen Bereichen alles erledigt.</div></div>';
+    }
+    return html;
+  }
+  /* --- Der Stapel. Die eine gefuellte Goldflaeche dieses Bildschirms. --- */
+  const wdh = due.length - neuImStapel;
+  html += '<div class="stapel">';
+  html += '<div class="stapel__ring">' + ringSvg(h.anteil) +
+    '<div class="stapel__mitte"><span class="stapel__zahl">' + due.length + '</span>' +
+    '<span class="stapel__einheit">f\u00e4llig</span></div></div>';
+  html += '<div class="stapel__was">' + (h.getan > 0
+    ? 'Heute schon <strong>' + h.getan + '</strong> Antwort' + (h.getan === 1 ? '' : 'en') + ' \u00b7 von ' + cards.length + ' Karten'
+    : (due.length === 1 ? 'Karte ist heute f\u00e4llig' : 'Karten sind heute f\u00e4llig') + ' \u00b7 von ' + cards.length) + '</div>';
+  html += '<div class="stapel__meta">';
+  if (wdh > 0) html += '<span class="badge zustand-solide">' + wdh + ' Wiederholung' + (wdh === 1 ? '' : 'en') + '</span>';
+  if (neuImStapel > 0) html += '<span class="badge zustand-neu">' + neuImStapel + ' neu</span>';
+  html += '</div>';
+  html += '<button class="lg full stapel__start" data-action="start-session">' +
+    (h.getan > 0 ? 'Weiterlernen' : 'Runde starten') + '</button>';
+  html += '</div>';
+  return html;
+}
+
+/* Die letzten sieben Tage aus dem Tagesprotokoll, heute rechts. */
+function lernenSerie() {
+  const serie = serieAktuell();
+  const t = todayStr();
+  let tage = "";
+  for (let i = 6; i >= 0; i--) {
+    const d = dateInDays(-i);
+    const da = !!verlauf[d];
+    tage += '<span class="woche__tag' + (da ? ' da' : '') + (d === t ? ' heute' : '') + '" style="--n:' + (6 - i) + '">' +
+      '<span class="woche__punkt">' + (da ? ikon("haken", "i-sm") : '') + '</span>' +
+      '<span class="woche__kurz">' + esc(wochentagKurz(d)) + '</span></span>';
+  }
+  let html = '<div class="serie-karte serie-karte--woche" style="margin-top:var(--stack)">';
+  html += '<div class="serie-karte__kopf">';
+  /* Keine grosse 0 (2.13.0, fortschrittHeute): ohne Serie steht nur die
+     Flamme da und der Satz, was heute passiert. */
+  html += '<span class="serie-zahl">' + ikon("serie", "i-lg") + (serie > 0 ? '<strong>' + serie + '</strong>' : '') + '</span>';
+  html += '<span class="serie-text">' + (serie === 0
+    ? 'Heute wird Tag 1'
+    : 'Tag' + (serie === 1 ? '' : 'e') + ' am St\u00fcck') +
+    (streak.beste > serie ? '<br><span class="serie-beste">Bester Lauf: <strong>' + streak.beste + '</strong></span>' : '') + '</span>';
+  html += '</div>';
+  html += '<div class="woche" role="img" aria-label="Die letzten sieben Tage">' + tage + '</div>';
+  html += '</div>';
+  return html;
+}
+
+/* ---------- 3.12.0: Die Start-Liste ----------
+   Aus NEUAUFBAU-3.md Abschnitt 6 ("Vorschlag, nicht gebaut: eine kleine
+   Start-Liste wie bei Ladder ... braucht eine Freigabe, weil sie das
+   Lernwerkzeug beruehrt"). Die Freigabe kam am 24.09.2026: "Onboarding
+   logik von mir aus wenn ned passt komplett aendern, mach perfekt" und
+   "Erfuellung der Methoden, Tips des Videos". Mobbin (VIDEO-BEFUND.md 3.8):
+   Checklisten ueberleben den Einstieg und wirken laenger als ein Pop-up.
+
+   Drei Schritte, jeder aus vorhandenen Daten abgelesen - nichts wird dafuer
+   gespeichert, kein neuer Schluessel, kein neues Feld:
+     1 erste Karte     es gibt in irgendeinem Bereich eine Karte
+     2 erste Runde     eine Karte ist schon einmal bewertet worden
+     3 wiederkommen    das Tagesprotokoll kennt zwei verschiedene Tage
+   Die Liste verschwindet, sobald alles erledigt ist - fuer Bestandskonten
+   mit langem Verlauf erscheint sie gar nicht erst. */
+function startListe() {
+  if (!bereiche) return "";
+  const alle = bereiche.reduce((a, x) => a.concat(x.karten), []);
+  const tage = Object.keys(verlauf).length;
+  const schritte = [
+    { fertig: alle.length > 0, titel: "Erste Karte anlegen", text: "Ein Wort aus dem, was du gerade lernst.",
+      aktion: istGefuehrt(currentBereich()) ? null : "karte-neu" },
+    { fertig: alle.some(c => !istNeueKarte(c)) || tage > 0, titel: "Erste Runde", text: "Umdrehen, bewerten – Adrabic merkt sich den Rest.",
+      aktion: dueCards().length > 0 ? "start-session" : null },
+    { fertig: tage >= 2, titel: "Morgen wiederkommen", text: "Dann kommen die ersten Karten zurück." }
+  ];
+  const erledigt = schritte.filter(x => x.fertig).length;
+  if (erledigt === schritte.length) return "";
+  const naechster = schritte.findIndex(x => !x.fertig);
+  let html = '<div class="startliste" style="margin-top:var(--stack)">';
+  html += '<div class="startliste__kopf"><h3>Dein Start</h3><span class="startliste__zahl">' +
+    erledigt + ' von ' + schritte.length + '</span></div>';
+  html += '<div class="startliste__balken" role="progressbar" aria-valuemin="0" aria-valuemax="' + schritte.length +
+    '" aria-valuenow="' + erledigt + '" aria-label="Dein Start"><span style="--bis:' + (erledigt / schritte.length).toFixed(3) + '"></span></div>';
+  html += '<ol class="startliste__schritte">';
+  schritte.forEach((x, i) => {
+    const jetzt = i === naechster;
+    const inhalt = '<span class="startliste__haken" aria-hidden="true">' + (x.fertig ? ikon("haken", "i-sm") : (i + 1)) + '</span>' +
+      '<span class="startliste__text"><strong>' + esc(x.titel) + '</strong>' +
+      (jetzt ? '<span>' + esc(x.text) + '</span>' : '') + '</span>' +
+      (jetzt && x.aktion ? ikon("chevronRechts", "i-sm") : '');
+    const klasse = 'startliste__schritt' + (x.fertig ? ' fertig' : '') + (jetzt ? ' jetzt' : '');
+    html += '<li style="--n:' + i + '">' + (jetzt && x.aktion
+      ? '<button type="button" class="' + klasse + '" data-action="' + x.aktion + '">' + inhalt + '</button>'
+      : '<div class="' + klasse + '">' + inhalt + '</div>') + '</li>';
+  });
+  html += '</ol></div>';
   return html;
 }
 
@@ -8109,6 +8490,7 @@ function renderFortschritt() {
   }
 
   /* Der Stand: vier Bloecke, von "heute" nach "insgesamt". */
+  viewZusatz = " view--raster";
   html += fortschrittHeute(cards);
   html += fortschrittTrend();
   html += fortschrittWochen();
@@ -8228,23 +8610,10 @@ function renderSession() {
   const gesamt = s.total || (s.drillIds ? s.drillIds.length : 0) || 1;
 
   if (s.queue.length === 0) {
-    let html = modeBar({ zu: "end-session", zuLabel: "Zur\u00fcck", mitte: "Fertig", anteil: 1 });
-    html += '<div class="done-box">' +
-      '<div class="emoji">' + ikon("fertig", "i-xl") + '</div>' +
-      '<h2>Geschafft</h2>' +
-      '<p class="hint">Alle ' + gesamt + ' Karten f\u00fcr heute durch.' +
-      (streak.lastCompletedDate === todayStr()
-        ? ' ' + streak.count + ' Tag' + (streak.count === 1 ? "" : "e") + ' am St\u00fcck.'
-        : '') +
-      '</p>';
-    html += gemerktHinweis();
-    html += '<div class="empty__aktionen" style="margin-top:var(--space-6)">';
-    html += '<button data-action="end-session">Zur\u00fcck</button>';
-    if (s.lastAction) {
-      html += '<button class="ghost" data-action="undo-grade">' + ikon("rueckgaengig", "i-sm") +
-        ' Letzte Bewertung r\u00fcckg\u00e4ngig</button>';
-    }
-    html += '</div></div>';
+    const vorher = typeof s.anteilVorher === "number" ? s.anteilVorher : 1;
+    s.anteilVorher = 1;
+    let html = modeBar({ zu: "end-session", zuLabel: "Zur\u00fcck", mitte: "Fertig", anteil: 1, anteilVorher: vorher });
+    html += renderRundenEnde(s, gesamt);
     return html;
   }
 
@@ -8261,8 +8630,22 @@ function renderSession() {
   const answerArabic = s.handwriting && istArabisch(answerText);
   const fertig = Math.max(0, gesamt - remaining);
 
+  /* 3.12.0: Was ist an dieser Karte neu? Aus dem Zustand abgeleitet statt an
+     einzelnen Knoepfen gesetzt - dann stimmt es fuer Knopf, Taste, Wischen
+     und Rueckgaengig gleichermassen. zug zaehlt jede Bewertung: Kommt nach
+     "Nicht" dieselbe Karte als einzige wieder, ist sie trotzdem neu. */
+  const anzeige = card.id + ":" + (s.zug || 0);
+  const neueKarte = s.anzeigeId !== anzeige;
+  const frischAufgedeckt = !neueKarte && s.revealed && !s.anzeigeOffen;
+  s.anzeigeId = anzeige;
+  s.anzeigeOffen = s.revealed;
+  const anteilJetzt = s.isDrill ? null : fertig / gesamt;
+  const anteilVorher = typeof s.anteilVorher === "number" ? s.anteilVorher : 0;
+  if (anteilJetzt !== null) s.anteilVorher = anteilJetzt;
+
   let html = modeBar({
     zu: "end-session",
+    anteilVorher: anteilVorher,
     zuLabel: s.isDrill ? "\u00dcbung beenden" : "Session abbrechen",
     /* 3.2.1: Stand bis hier "0 von 11" auf der ERSTEN Karte - richtig
        gezaehlt (null erledigt), aber gelesen wie "Karte 0". Video 3, Ziel-
@@ -8274,7 +8657,7 @@ function renderSession() {
     mitte: s.isDrill
       ? "Noch " + remaining + " in dieser Runde"
       : "Karte " + Math.min(fertig + 1, gesamt) + " von " + gesamt,
-    anteil: s.isDrill ? null : fertig / gesamt,
+    anteil: anteilJetzt,
     rechts: s.lastAction
       ? '<button class="icon-btn" data-action="undo-grade" aria-label="Letzte Bewertung r\u00fcckg\u00e4ngig machen">' +
         ikon("rueckgaengig") + '</button>'
@@ -8297,19 +8680,43 @@ function renderSession() {
   }
 
   html += '<div class="study-card__mitte">';
+  /* 3.12.0: Die Karte ist eine Karte. Vorher stand das Wort frei in einer
+     leeren schwarzen Flaeche - im Einstieg dagegen lag es auf einer Karte,
+     die sich umdreht. Betreiber am 24.09.2026: "vom onboarding sieht man so
+     design bzw animationen und so kaum was im tool". Jetzt: dieselbe Karte,
+     dahinter der Stapel der noch offenen Karten (zwei Blaetter, solange noch
+     so viele kommen), oben ihr Stand als Punkte wie in der Leiste des
+     Einstiegs. Eine neue Karte steigt vom Stapel auf, beim Aufdecken klappt
+     sie um. */
+  const rest = s.isDrill ? 3 : remaining;
+  html += '<div class="study-buehne">';
+  if (rest >= 3) html += '<div class="study-stapel study-stapel--2" aria-hidden="true"></div>';
+  if (rest >= 2) html += '<div class="study-stapel study-stapel--1" aria-hidden="true"></div>';
+  html += '<div class="study-flaeche' + (s.revealed ? ' study-flaeche--offen' : '') +
+    (neueKarte ? ' study-flaeche--kommt' : '') + (frischAufgedeckt ? ' study-flaeche--dreht' : '') + '">';
+  if (!s.isDrill) {
+    html += '<div class="study-flaeche__kopf">' + zustandPunkte(card) +
+      '<span class="study-flaeche__zustand">' + esc(kartenZustand(card).label) + '</span></div>';
+  }
   /* D4 (1.8.0): lang und dir sagen dem Browser, dass hier Arabisch steht.
      Er waehlt danach Schrift und Leserichtung; ohne das rutschen Satzzeichen
      in gemischtem Text auf die falsche Seite. */
   html += '<div class="study-word' + (promptArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(promptText) + '</div>';
+  if (s.revealed) {
+    html += '<div class="study-trenner" aria-hidden="true"></div>';
+    html += '<div class="study-answer' + (answerArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(answerText) + '</div>';
+    /* 2.21.3: Gerade beim Wiederholen aus "Schwierige Woerter" heraus war
+       bisher nicht zu sehen, aus welcher Lektion das Wort stammt. */
+    html += kartenTagsHtml(card.id, currentBereich());
+  } else if (!s.isDrill && !s.handwriting) {
+    html += '<div class="study-flaeche__tipp" aria-hidden="true">' + ikon("auge", "i-sm") + 'Weißt du es?</div>';
+  }
+  html += '</div></div>';
 
   if (!s.revealed) {
     if (s.handwriting) html += renderHandwritingCanvas(false);
   } else {
     if (s.handwriting) html += renderHandwritingCanvas(true);
-    html += '<div class="study-answer' + (answerArabic ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(answerText) + '</div>';
-    /* 2.21.3: Gerade beim Wiederholen aus "Schwierige Woerter" heraus war
-       bisher nicht zu sehen, aus welcher Lektion das Wort stammt. */
-    html += kartenTagsHtml(card.id, currentBereich());
     /* E6: erst NACH dem Aufdecken. Vorher waere der Hinweis ein Tipp
        ("Achtung, die kannst du nicht") und wuerde die Bewertung verfaelschen.
        Im Uebungsmodus bleibt er weg, dort zaehlt nichts. */
@@ -8382,14 +8789,67 @@ function renderSession() {
        sichtbar ungleich da. "gleich wieder" sagt dasselbe und reiht sich
        neben "morgen wieder" und "in ~N Tagen" ein. Die Vorlesefassung im
        aria-label bleibt ausfuehrlich. */
-    html += '<button class="btn-unknown" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 zwei Stufen zur\u00fcck, kommt gleich noch einmal">Nicht<span class="sub">gleich wieder</span></button>';
-    html += '<button class="btn-almost" data-action="grade-almost" aria-label="Fast gewusst \u2013 eine Stufe zur\u00fcck, morgen wieder">Fast<span class="sub">morgen wieder</span></button>';
-    html += '<button class="btn-known" data-action="grade-known" aria-label="Sicher gewusst \u2013 eine Stufe weiter">Sicher<span class="sub">in ~' + intervalForStufe(Math.min(card.stufe + 1, MAX_STUFE)) + ' Tagen</span></button>';
+    const sicherTage = intervalForStufe(Math.min(card.stufe + 1, MAX_STUFE));
+    html += '<button class="btn-unknown" style="--n:0" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 zwei Stufen zur\u00fcck, kommt gleich noch einmal">Nicht<span class="sub">gleich wieder</span></button>';
+    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-label="Fast gewusst \u2013 eine Stufe zur\u00fcck, morgen wieder">Fast<span class="sub">morgen wieder</span></button>';
+    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-label="Sicher gewusst \u2013 eine Stufe weiter, ' +
+      abstandText(sicherTage) + '">Sicher<span class="sub">' + abstandText(sicherTage) + '</span></button>';
     html += '</div>';
   }
 
   html += '</div>';
   html += '</div>';
+  return html;
+}
+
+/* 3.12.0: Der Abschluss einer Runde. Vorher: ein Haken, "Geschafft", ein
+   Knopf. Das ist die Stelle, an der jede Runde endet - Peak-End-Regel: sie
+   praegt, wie sich die ganze Runde anfuehlt. Jetzt nach dem Vorbild des
+   Plan-Bildschirms im Einstieg: der Haken zeichnet sich selbst, darunter
+   drei Kacheln mit dem, was in dieser Runde war, die Serie, und was morgen
+   kommt. Alles gezaehlt, nichts versprochen.
+   s.endeGezeigt: Die Bewegung laeuft beim ersten Zeichnen - ein spaeteres
+   Neuzeichnen (Merken, Cloud-Stand) laesst alles ruhig stehen. */
+function renderRundenEnde(s, gesamt) {
+  const z = s.zaehler || { known: 0, almost: 0, unknown: 0 };
+  const neu = !s.endeGezeigt;
+  s.endeGezeigt = true;
+  /* Echter Fund 3.12.0: Hier stand (schon im alten "Geschafft")
+     streak.lastCompletedDate === todayStr(). Das Feld wird seit 2.14.0 nicht
+     mehr gesetzt - die Serie ergibt sich aus dem Tagesprotokoll
+     (serieAktuell, checkStreakOnSessionComplete). Die Zeile "N Tage am
+     Stueck" erschien deshalb nach keiner einzigen Runde. Heute gelernt heisst:
+     heute steht etwas im Protokoll. */
+  const serieHeute = verlauf[todayStr()] ? serieAktuell() : 0;
+  const morgen = vorschau7(currentCards())[1].anzahl;
+  let html = '<div class="ende' + (neu ? ' ende--neu' : '') + '">';
+  html += '<div class="ende__haken" aria-hidden="true">' +
+    '<svg class="i ende__zeichen" viewBox="0 0 24 24" focusable="false">' +
+    '<circle cx="12" cy="12" r="9" pathLength="1"/><path d="M8 12.3l2.8 2.8L16.2 9.6" pathLength="1"/></svg>' +
+    '<span class="ende__ring"></span><span class="ende__ring ende__ring--2"></span></div>';
+  html += '<h2>Geschafft</h2>';
+  html += '<p class="hint ende__satz">Alle ' + gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' für heute durch.</p>';
+  html += '<div class="ende__kacheln">';
+  html += '<div class="ende__kachel ende__kachel--sicher" style="--i:0"><strong>' + z.known + '</strong><span>sicher</span></div>';
+  html += '<div class="ende__kachel" style="--i:1"><strong>' + z.almost + '</strong><span>fast</span></div>';
+  html += '<div class="ende__kachel ende__kachel--nicht" style="--i:2"><strong>' + z.unknown + '</strong><span>nicht</span></div>';
+  html += '</div>';
+  if (serieHeute > 0) {
+    html += '<div class="ende__serie" style="--i:3">' + ikon("serie", "i-lg") +
+      '<span><strong>' + serieHeute + ' Tag' + (serieHeute === 1 ? '' : 'e') + '</strong> am Stück</span></div>';
+  }
+  html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
+    ? 'Morgen kommen <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
+    : 'Morgen ist nichts fällig. Die nächsten kommen von selbst.') + '</p>';
+  html += gemerktHinweis();
+  html += '<div class="empty__aktionen ende__aktionen">';
+  html += '<button data-action="end-session">Fertig</button>';
+  if (s.lastAction) {
+    html += '<button class="ghost" data-action="undo-grade">' + ikon("rueckgaengig", "i-sm") +
+      ' Letzte Bewertung r\u00fcckg\u00e4ngig</button>';
+  }
+  html += '</div></div>';
+  if (neu) fuehlbar([10, 60, 14]);
   return html;
 }
 
@@ -10140,7 +10600,20 @@ document.body.addEventListener("click", e => {
     case "google-login": doGoogleLogin(); break;
     case "apple-login": doAppleLogin(); break;
     case "mode-login": ui.authMode = "login"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
-    case "mode-register": ui.authMode = "register"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
+    /* 3.12.0: "Neues Konto anlegen" fuehrt in den Plan, nicht ins nackte
+       Formular (Betreiber-Screenshot vom 24.09.2026: "Konto anlegen - Schritt
+       1 von 2" ohne jeden Plan davor). Der Willkommensbildschirm wird dabei
+       uebersprungen - wer hier tippt, hat ihn schon gesehen; der
+       Zurueck-Pfeil fuehrt trotzdem hin. */
+    case "mode-register":
+      ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null;
+      ui.authGewaehlt = false;
+      ui.einstiegZurueck = null;
+      ui.einstieg = einstiegNeu(1);
+      ui.einstieg.gezeigt = 0;
+      window.scrollTo(0, 0);
+      render();
+      break;
     case "mode-reset": ui.authMode = "reset"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
     case "passwort-zeigen": ui.authPassSichtbar = !ui.authPassSichtbar; render(); break;
     /* ---- Einstieg vor der Anmeldung (3.9.9, neu aufgebaut 3.10.0) ----
@@ -10198,7 +10671,7 @@ document.body.addEventListener("click", e => {
     case "einstieg-konto":
       try { localStorage.removeItem(EINSTIEG_ANTWORT_KEY); } catch (err) {}
       nachklangLoeschen();
-      einstiegAbschliessen();
+      ui.authGewaehlt = true;
       ui.einstiegZurueck = ui.einstieg;
       ui.einstieg = null;
       ui.authMode = "login";
@@ -10339,7 +10812,11 @@ document.body.addEventListener("click", e => {
       if (ui.einstieg && Date.now() - ui.einstieg.zeit >= 400) einstiegBeenden(vorsatzSatz(ui.einstieg));
       break;
     case "logout": doLogout(); break;
-    case "delete-account": doKontoLoeschen(); break;
+    /* 3.12.0: Nur die Tastatur-Fassung laeuft ueber diesen Klick. Ein
+       Zeigerklick hat e.detail >= 1 und tut hier nichts - dort loest das
+       Gedrueckthalten aus (haltenStarten, weiter unten). */
+    case "delete-account": if (e.detail === 0) kontoLoeschenPerTastatur(); break;
+    case "konto-backup": exportBackup(); break;
     /* 3.0.0: Das Bereichs-Sheet. "nichts" traegt das Blatt selbst, damit ein
        Tipp hinein nicht bis zum Hintergrund durchschlaegt und schliesst. */
     case "bereich-sheet-auf": ui.bereichSheet = true; render(); break;
@@ -10516,7 +10993,6 @@ document.body.addEventListener("click", e => {
       break;
     case "set-arab-groesse": setArabGroesse(btn.dataset.id); break;   // E7
     case "set-thema": setThema(btn.dataset.id); break;
-    case "set-bewegung": setBewegung(btn.dataset.id); break;
     case "set-sitzungslimit":
       setSitzungsLimit(btn.dataset.id === "alle" ? "alle" : Number(btn.dataset.id));
       break;

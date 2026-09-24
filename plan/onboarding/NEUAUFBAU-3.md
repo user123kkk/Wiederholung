@@ -309,7 +309,7 @@ Was geschieht, ist schon gebaut:
 4. Am nächsten Tag zur gewählten Zeit kommt sie wieder. Das ist genau die
    zweite Sprosse der Leiter.
 
-**Vorschlag, nicht gebaut:** eine kleine Start-Liste wie bei Ladder („Get
+**Gebaut in v3.12.0 (24.09.2026, freigegeben vom Betreiber):** `startListe()` in `app.js`, auf dem Lernen-Bildschirm und als leerer Zustand eines neuen Kontos. Ursprünglicher Vorschlag: eine kleine Start-Liste wie bei Ladder („Get
 Started Challenge"): erste Karte · erste Runde · morgen wiederkommen. Sie
 müsste auf dem gefüllten Lernen-Bildschirm stehen und berührt damit das
 Lernwerkzeug; das braucht eine Freigabe. Die Rückkehr am zweiten Tag sagt
@@ -356,7 +356,7 @@ voraus, ob jemand bleibt; die Start-Liste wäre der Hebel dafür.
 2. **J1 Rechtsprüfung.** Der Umfang ist unverändert, siehe Abschnitt 8.
 3. **Wortlaut der Ziel-Zeile „Den Quran verstehen"**, siehe Abschnitt 8.
 4. **Das Wort auf der Probekarte** bleibt der Platzhalter كِتَابٌ.
-5. **Vorschlag Start-Liste** nach der Anmeldung, siehe Abschnitt 6. Das
+5. **Erledigt in v3.12.0:** Start-Liste gebaut. Ursprünglich: **Vorschlag Start-Liste** nach der Anmeldung, siehe Abschnitt 6. Das
    braucht eine Freigabe, weil es das Lernwerkzeug berührt.
 6. **Erledigt in v3.10.2:** `themaAnwenden()` setzte beim Laden von `app.js`
    `data-thema` und `adrabic-thema` auf „dunkel", bevor Cloud-Daten da waren

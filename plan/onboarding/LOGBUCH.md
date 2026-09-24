@@ -4,6 +4,106 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-24 — Die ganze App in der Formsprache des Einstiegs, Absicherung, Tablet (v3.12.0)
+
+**Anlass (Betreiber, 24.09., gekürzt):** „vom onboarding sieht man so design
+bzw animationen und so kaum was im tool" · abgemeldet „kann nicht diesen plan
+erstellen … onboarding sehen, fixen" · „abmelden oder löschen … risko bitte
+nicht so einfach zu lasse" · „die einstellung mit voll oder ruhig auch ned so
+sinnvoll, löschen" · „Anpassung für jedes gerät" · „Einstellungen,
+fortschritt, verwalten, lernen, onboard, premium feeling, erfüllung der
+methoden, prompte, tips des videos" · „Onboarding logik von mir aus wenn ned
+passt komplett änder" · „Keine fragen". Dazu zwei Handy-Screenshots:
+Anmelden und „Konto anlegen · Schritt 1 von 2" ohne Plan davor.
+
+**Vorgehen:** Erst Bestand fotografiert – mit einem zustandsbehafteten
+Nachbau von firebase-auth/-firestore in Playwright (echte Lese- und
+Schreibwege, Karten bewerten, anlegen, löschen), 40 Karten über alle Stufen,
+25 Tage Verlauf. Jeder Bildschirm auf 390×844 und 820×1180. Befund, der die
+Rückmeldung erklärt: In der Runde stand das Wort frei in einer leeren
+Fläche; im Einstieg liegt es auf einer Karte, die sich umdreht.
+
+**Geändert (app.js):**
+- `renderSession()` neu: `.study-buehne` / `.study-stapel` / `.study-flaeche`,
+  `zustandPunkte()`, `abstandText()`; Bewegung aus dem Zustand abgeleitet
+  (`s.zug`, `s.anzeigeId`, `s.anzeigeOffen`), nicht an Knöpfen gesetzt
+- `renderRundenEnde()` neu (Haken, Kacheln aus `s.zaehler`, Serie, morgen)
+- `modeBar()`: `anteilVorher`, Strich wächst per `--von/--bis`
+- Wischen zieht `.study-flaeche` statt `#sitzung`
+- `renderLernen()` gefüllter Teil neu: `lernenGruss()`, `lernenStapel()`,
+  `heuteAnteil()`, `ringSvg()`, `lernenSerie()`, `startListe()`
+- `renderEinstellungen()`: Profil oben; Konto-Abschnitt ohne Löschen-Knopf;
+  neue Seite `konto-loeschen` (`renderKontoLoeschen()`,
+  `kontoLoeschenVerbinden()`, `kontoLoeschenAusfuehren()`,
+  `kontoLoeschenPerTastatur()`, Gedrückthalten über `data-halten`)
+- `doLogout()` mit Rückfrage; `doKontoLoeschen()` ersetzt
+- `cardDetailSheet()`: `.karte-weg` mit `wiederText()`
+- Einstellung „Bewegung" entfernt, Schlüssel `adrabic-bewegung` wird einmal
+  gelöscht
+- Merker `adrabic-einstieg` entfernt (einmal gelöscht), neu
+  `ui.authGewaehlt`, `einstiegNeu()`; `mode-register` startet den Einstieg
+  bei Schritt 1
+- `renderPendingVerification()`: `bestaetigungStillPruefen()` alle 5 s und
+  bei `visibilitychange`; Icon `brief`
+- `fuehlbar()` (navigator.vibrate, nie bei reduzierter Bewegung)
+- `renderMain()`: `viewZusatz` (view--lernen / view--raster)
+- Backup-Banner erst ab 10 Karten
+
+**Geändert (styles.css):** Abschnitt 9 (Karte der Runde, Abschluss,
+Startbildschirm, Start-Liste), 16d (riskante Handlungen, Bestätigung),
+16e (Tabs bauen sich auf, Karten-Blatt, Profil), 17 (Tablet 720 px,
+Leiste als Kapsel 640–899 px, --measure 820 ab 1200 px); Blöcke der
+Bewegungs-Einstellung entfernt.
+
+**Entscheidung:**
+- **Nichts Neues erfunden, das Vorhandene weitergetragen.** Jede Bewegung
+  in der App ist eine aus dem Einstieg (einstieg-kachel, -zeile, -punkt,
+  -haken, -wachsen, -strich, -schimmer, -flamme). Der Einstieg bringt die
+  Bilder bei, die App benutzt sie.
+- **Bewegung nur beim Hereinkommen.** `#app:not(.still-ansicht)` bzw.
+  Zustandsvergleich in `renderSession()` – sonst flöge bei jedem Neuzeichnen
+  alles neu herein.
+- **Start-Liste ohne neuen Speicher.** Alle drei Schritte werden aus Karten
+  und Tagesprotokoll abgelesen – damit bleibt J1 so groß wie vorher.
+- **Keine Minutenangabe** („etwa 4 Minuten") auf dem Startbildschirm – dafür
+  gibt es keine Messung (NEUAUFBAU-3.md §8).
+- **Abgemeldet immer Willkommen** (Duolingo, VIDEO-BEFUND.md 5.3) statt eines
+  Gerätemerkers. Wer ein Konto hat, braucht einen Tipp mehr.
+- **Konto löschen: drei Hürden, jede mit eigenem Zweck** – eigene Seite
+  (nicht aus Versehen), E-Mail (nicht blind), Halten (kein Fehltipp).
+- **Tablet ohne Navigationsspalte unter 900 px** – weiterhin, Begründung im
+  Eintrag davor. Stattdessen schwebt die Leiste als Kapsel mittig.
+
+**Echte Fehler, gefunden und behoben:**
+1. Abgemeldet kein Einstieg (Merker `adrabic-einstieg`) – Betreiber-Meldung.
+2. „Sicher – in ~1 Tagen" auf jeder neuen Karte.
+3. Serie im Abschluss nie sichtbar: `streak.lastCompletedDate` wird seit
+   2.14.0 nicht gesetzt. Dieselbe tote Bedingung versteckte „Heute ist in
+   allen Bereichen alles erledigt".
+4. Fortschrittsstrich der Runde sprang (width-Transition auf einem jedes Mal
+   neu angelegten Element).
+5. Tablet-Raster verteilte die Höhe (min-height 100svh) auf seine Zeilen –
+   gut 100 px Lücke auf dem iPad.
+Dazu: Backup-Mahnung über dem leeren Erstbildschirm; Löschen startete einen
+Download schon beim ersten Tipp.
+
+**Geprüft, nichts zu tun:** Kleine Links (Datenschutz/Impressum, 21 px) und
+36-px-Chips – haben bereits unsichtbar vergrößerte Trefferflächen
+(styles.css, Abschnitt Trefferflächen). Das Messwerkzeug hatte nur die
+sichtbare Größe gemessen.
+
+**Offen:**
+- **Gerätetest** auf echtem Handy und iPad: Umklappen der Karte, Wischen der
+  Karte (nicht mehr der Bühne), Halten zum Löschen, Vibration (Android),
+  automatisches Weitergehen nach der Bestätigungsmail.
+- **J1** unverändert offen. Kein neuer Schlüssel; zwei alte
+  (`adrabic-bewegung`, `adrabic-einstieg`) werden gelöscht.
+
+**Nächster Schritt:** Betreiber führt `veroeffentlichen.bat` aus und prüft
+v3.12.0 auf Handy und iPad; danach J1.
+
+---
+
 ### 2026-09-24 — Zweite Rückmeldung: kürzere Sätze, Pflichtantworten, Tablet-Fassung, Einstellungen (v3.11.0)
 
 **Geändert:**

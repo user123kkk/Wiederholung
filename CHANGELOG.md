@@ -1,3 +1,87 @@
+## 3.12.0 - 24. September 2026
+
+**Die Formsprache des Einstiegs in der ganzen App – und fünf echte Fehler.**
+Betreiber: „vom onboarding sieht man so design bzw animationen und so kaum
+was im tool." Am Bildschirm gemessen: Im Einstieg liegt das Wort auf einer
+Karte, die sich umdreht; in der echten Runde stand es frei in einer leeren
+schwarzen Fläche.
+
+**Lernrunde**
+- **Die Karte ist eine Karte.** Das Wort liegt auf einer Fläche, dahinter der
+  Stapel der noch offenen Karten. Oben steht ihr Stand als fünf Punkte – die
+  Leiste aus dem Einstieg. Eine neue Karte steigt vom Stapel auf, beim
+  Aufdecken klappt sie um, die Antwort schiebt sich unter einer Linie herein,
+  die Bewertungsknöpfe kommen nacheinander. Gewischt wird die Karte, nicht
+  mehr die ganze Bühne samt Knöpfen.
+- **Der Fortschrittsstrich** oben wächst von Karte zu Karte, statt zu springen
+  (die alte width-Transition lief nie, weil der Strich jedes Mal neu entsteht).
+- **Behoben: „Sicher – in ~1 Tagen".** Jetzt „morgen wieder", bis drei Tage
+  ohne „~" (dort gibt es keine Streuung).
+- **Der Abschluss** hat einen Haken, der sich selbst zeichnet, drei Kacheln
+  mit sicher / fast / nicht aus dieser Runde, die Serie und was morgen kommt.
+- **Behoben: Die Serie stand nach keiner Runde da.** Die Bedingung prüfte
+  `streak.lastCompletedDate` – das Feld wird seit 2.14.0 nicht mehr gesetzt.
+  Dieselbe tote Bedingung versteckte auf dem Lernen-Bildschirm „Heute ist in
+  allen Bereichen alles erledigt".
+- Auf Android gibt es beim Bewerten eine kurze Vibration (iOS kennt das im
+  Browser nicht). Nie bei „Bewegung reduzieren".
+
+**Lernen**
+- Oben Tageszeit und Name, darunter das Datum. Die fällige Zahl sitzt in
+  einem Ring, der zeigt, wie viel von heute schon getan ist. „Runde starten"
+  bzw. „Weiterlernen", mit dem Lichtstreif aus dem Einstieg.
+- Die Serie zeigt die letzten sieben Tage als Punkte (aus dem Tagesprotokoll).
+- **Neu: die Start-Liste** – erste Karte, erste Runde, morgen wiederkommen.
+  Aus NEUAUFBAU-3.md §6, bis dahin „braucht Freigabe", jetzt freigegeben.
+  Jeder Schritt wird aus vorhandenen Daten abgelesen, nichts Neues gespeichert.
+  Für ein leeres Konto ist sie der leere Zustand (vorher stand „Erste Karte
+  anlegen" zweimal untereinander).
+- Die Backup-Mahnung erscheint erst ab zehn Karten – vorher stand sie schon
+  über dem allerersten, leeren Bildschirm.
+
+**Fortschritt, Verwalten, Einstellungen**
+- Blöcke kommen nacheinander herein, Balken wachsen, der Kalender deckt sich
+  von alt nach neu auf, die ersten Zeilen der Kartenliste folgen gestaffelt.
+  Alles nur beim Wechsel des Bildschirms, nie beim bloßen Neuzeichnen.
+- Das Karten-Blatt zeigt Stand (Punkte) und nächsten Termin („Kommt am Do,
+  1.10. wieder · in 7 Tagen").
+- Einstellungen beginnen mit dem Profil: Initiale, Name, E-Mail, Karten,
+  Serie, gelernte Tage.
+- **Die Einstellung „Bewegung" (Voll/Ruhig) ist wieder entfernt**, der
+  gespeicherte Wert wird einmal weggeräumt. Es gilt der Schalter des
+  Betriebssystems.
+
+**Abmelden und Löschen**
+- **Abmelden fragt nach** (offline mit dem Hinweis, dass das zuletzt Gelernte
+  erst beim nächsten Anmelden übertragen wird). Auf dem Bestätigungs-
+  Bildschirm nicht – dort gibt es nichts zu verlieren.
+- **Konto löschen hat eine eigene Seite**: was verschwindet (in Zahlen), dann
+  das Backup, dann E-Mail eintippen und den Knopf gedrückt halten, bis er sich
+  gefüllt hat. Ein kurzer Tipp tut nichts. Tastatur: Rückfrage statt Halten.
+  Vorher: rote Zeile in der Liste, ein Tipp – und sofort startete ein Download.
+
+**Einstieg und Konto**
+- **Behoben: Abgemeldet war der Einstieg nicht mehr zu sehen**, sobald er auf
+  dem Gerät einmal durchlaufen war (Merker `adrabic-einstieg`). Jetzt steht
+  abgemeldet immer der Willkommensbildschirm mit „Ich habe schon ein Konto"
+  (Duolingo-Muster), und „Neues Konto anlegen" im Anmeldeformular führt in den
+  Plan statt ins nackte Formular. Der alte Merker wird einmal weggeräumt.
+- Der Bestätigungs-Bildschirm schaut selbst nach, ob die E-Mail bestätigt ist
+  – alle fünf Sekunden und sofort beim Zurückkommen aus der Mail-App – und
+  geht dann von selbst weiter.
+
+**Jedes Gerät**
+- Auf dem Tablet schwebt die Leiste als Kapsel in der Mitte statt von Rand zu
+  Rand, die Spalte ist breiter (760 px), Lernen und Fortschritt stehen
+  zweispaltig. Gemessen und behoben: Das Raster verteilte die Höhe der
+  Ansicht auf seine Zeilen – auf dem iPad klaffte zwischen Gruß und Karten
+  eine Lücke von gut 100 px. Am Desktop wird die Spalte ab 1200 px 820 px
+  breit.
+
+Geprüft in Chromium bei 360×740, 390×844, 820×1180, 1180×820 und 1440×900
+mit einem nachgebauten Firebase (echte Schreib- und Lesewege, kein Server),
+dazu ein Zufallstest über mehrere hundert Handlungen. Nicht am echten Gerät.
+
 ## 3.11.0 - 24. September 2026
 
 **Einstieg nach der zweiten Rückmeldung des Betreibers: kürzere Sätze, kein

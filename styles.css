@@ -573,21 +573,6 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
     scroll-behavior: auto !important;
   }
 }
-/* 3.11.0: derselbe Zustand, aber in der App eingestellt statt im
-   Betriebssystem (app.js, BEWEGUNG_KEY / bewegungAnwenden). Absichtlich
-   dieselben vier Zeilen und nicht eine gemeinsame Regel mit dem Block
-   darüber: eine Medienabfrage und ein Attribut-Treffer lassen sich in CSS
-   nicht zu einem Selektor verbinden, und ein `:where()`-Umbau würde die
-   Spezifität verschieben. Zwei kurze Blöcke sind hier ehrlicher als ein
-   trickreicher. */
-html[data-bewegung="ruhig"] *,
-html[data-bewegung="ruhig"] *::before,
-html[data-bewegung="ruhig"] *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-  scroll-behavior: auto !important;
-}
 
 
 /* ===========================================================================
@@ -1577,6 +1562,162 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .due-info { font-size: var(--fs-md); color: var(--text-2); margin-bottom: var(--space-4); }
 .due-info strong { color: var(--text-1); font-weight: 600; }
 
+/* ---- 3.12.0: Der Startbildschirm ----------------------------------------
+   app.js, lernenGruss / lernenStapel / lernenSerie / startListe. Die Formen
+   kommen aus dem Einstieg: der Ring aus „Dein Plan entsteht" (16b,
+   .einstieg-bau__ring), der Lichtstreif über dem Hauptknopf
+   (.einstieg-aktion--glanz), die Punkte der Leiste. Bewegung nur beim
+   Hereinkommen (#app:not(.still-ansicht)), nie beim bloßen Neuzeichnen. */
+.lernen-gruss { margin: var(--space-1) 0 var(--space-5); }
+.lernen-gruss__datum {
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--text-3);
+}
+.lernen-gruss__titel { margin: var(--space-1) 0 0; font-size: clamp(1.5rem, 3vw + 0.9rem, 2rem); }
+#app:not(.still-ansicht) .lernen-gruss { animation: enter-rise var(--dur-slow) var(--ease-out) both; }
+
+.stapel {
+  position: relative; overflow: hidden;
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  background:
+    radial-gradient(90% 60% at 50% 0%, var(--accent-bg-strong), transparent 70%),
+    linear-gradient(180deg, var(--accent-bg) 0%, transparent 58%), var(--surface);
+  box-shadow: var(--kante), var(--shadow-md);
+}
+#app:not(.still-ansicht) .stapel { animation: einstieg-kachel 460ms var(--ease-spring) 60ms both; }
+.stapel__ring {
+  position: relative;
+  width: 148px; height: 148px;
+  margin: 0 auto var(--space-4);
+  display: grid; place-items: center;
+}
+.ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 7; }
+.ring__spur { stroke: var(--stufe-0); }
+.ring__fuellung {
+  stroke: var(--accent); stroke-linecap: round;
+  stroke-dasharray: 1; stroke-dashoffset: var(--ziel, 1);
+  filter: drop-shadow(0 0 6px var(--accent-border));
+}
+#app:not(.still-ansicht) .ring__fuellung { animation: ring-fuellen 1100ms var(--ease-out) 250ms both; }
+@keyframes ring-fuellen { from { stroke-dashoffset: 1; } to { stroke-dashoffset: var(--ziel, 1); } }
+.stapel__mitte { position: relative; display: flex; flex-direction: column; align-items: center; color: var(--accent); }
+.stapel__mitte .i-xl { width: 46px; height: 46px; stroke-width: 1.8; }
+.stapel__zahl { font-size: clamp(2.75rem, 11vw, 3.5rem); }
+.stapel__einheit {
+  margin-top: var(--space-1);
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-2);
+}
+.stapel__titel { font-family: var(--font-text); font-size: var(--fs-xl); font-weight: 700; color: var(--text-1); }
+.stapel__was { margin: 0 0 var(--space-3); }
+.stapel__was strong { color: var(--text-1); }
+.stapel__meta { margin: 0 0 var(--space-5); }
+.stapel--fertig .stapel__was { margin-top: var(--space-2); }
+.stapel--fertig .empty__aktionen { margin-top: var(--space-4); }
+/* Der Lichtstreif aus dem Einstieg, einmal, wenn der Bildschirm hereinkommt. */
+.stapel__start { position: relative; overflow: hidden; }
+.stapel__start::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  background-size: 250% 100%; background-position: 130% 0;
+  pointer-events: none;
+}
+#app:not(.still-ansicht) .stapel__start::after { animation: einstieg-schimmer 1100ms var(--ease-out) 1300ms both; }
+
+/* Die Serie mit der Woche. */
+.serie-karte--woche { flex-direction: column; align-items: stretch; gap: var(--space-4); }
+.serie-karte__kopf { display: flex; align-items: center; gap: var(--space-4); }
+.serie-karte--woche .serie-zahl { align-items: center; color: var(--accent); }
+.serie-karte--woche .serie-zahl .i { transform-origin: 50% 90%; }
+#app:not(.still-ansicht) .serie-karte--woche .serie-zahl .i { animation: einstieg-flamme 700ms var(--ease-spring) 700ms 2 both; }
+.woche { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--space-1); }
+.woche__tag { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.woche__punkt {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 1.5px dashed var(--border-strong);
+  color: var(--text-on-accent);
+}
+.woche__tag.da .woche__punkt { background: var(--accent); border: 0; box-shadow: 0 0 0 3px var(--accent-bg); }
+.woche__tag.da .woche__punkt .i { width: 14px; height: 14px; stroke-width: 3; }
+.woche__tag.heute .woche__punkt { border-style: solid; border-color: var(--accent); }
+.woche__kurz { font-size: var(--fs-micro); font-weight: 600; color: var(--text-3); }
+.woche__tag.heute .woche__kurz { color: var(--text-1); }
+#app:not(.still-ansicht) .woche__tag .woche__punkt {
+  animation: einstieg-punkt 380ms var(--ease-spring) backwards;
+  animation-delay: calc(var(--n, 0) * 55ms + 380ms);
+}
+
+/* Die Start-Liste (Ladder: „Get Started Challenge", Mobbin: Checklisten
+   überleben den Einstieg). */
+.startliste {
+  background: var(--sheen), var(--surface);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r-lg);
+  padding: var(--space-5);
+  box-shadow: var(--kante), var(--shadow-sm);
+}
+.startliste__kopf { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+.startliste__kopf h3 { margin: 0; }
+.startliste__zahl { font-size: var(--fs-xs); font-weight: 600; color: var(--text-2); }
+.startliste__balken {
+  height: 4px; border-radius: 2px; margin: var(--space-3) 0 var(--space-4);
+  background: var(--stufe-0); overflow: hidden;
+}
+.startliste__balken span {
+  display: block; height: 100%; border-radius: inherit;
+  background: var(--accent);
+  transform-origin: left center; transform: scaleX(var(--bis, 0));
+}
+#app:not(.still-ansicht) .startliste__balken span { animation: fortschritt-waechst 700ms var(--ease-out) 300ms both; }
+.startliste__schritte { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.startliste__schritt {
+  width: 100%;
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--r-md);
+  background: none; border: 1px solid transparent; box-shadow: none;
+  color: var(--text-2); text-align: left; font-weight: 500; font-size: var(--fs-md);
+  min-height: var(--tap); justify-content: flex-start;
+}
+button.startliste__schritt { cursor: pointer; }
+.startliste__schritt.jetzt { background: var(--accent-bg); border-color: var(--accent-border); color: var(--text-1); }
+.startliste__schritt.fertig .startliste__text strong { color: var(--text-3); text-decoration: line-through; text-decoration-color: var(--border-strong); }
+.startliste__haken {
+  flex: 0 0 auto;
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 1.5px solid var(--border-strong);
+  font-size: var(--fs-xs); font-weight: 700; color: var(--text-2);
+}
+.startliste__schritt.fertig .startliste__haken { background: var(--accent); border-color: var(--accent); color: var(--text-on-accent); }
+.startliste__schritt.fertig .startliste__haken .i { width: 14px; height: 14px; stroke-width: 3; }
+.startliste__schritt.jetzt .startliste__haken { border-color: var(--accent); color: var(--accent); }
+.startliste__text { flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.startliste__text strong { font-weight: 600; }
+.startliste__text span { font-size: var(--fs-xs); color: var(--text-2); font-weight: 400; }
+.startliste__schritt > .i:last-child { color: var(--accent); }
+#app:not(.still-ansicht) .startliste li {
+  animation: einstieg-zeile 320ms var(--ease-out) backwards;
+  animation-delay: calc(var(--n, 0) * 70ms + 200ms);
+}
+#app:not(.still-ansicht) .startliste__schritt.fertig .startliste__haken {
+  animation: einstieg-haken 360ms var(--ease-spring) backwards;
+  animation-delay: calc(var(--n, 0) * 70ms + 380ms);
+}
+@media (hover: hover) and (pointer: fine) {
+  button.startliste__schritt:hover { background: var(--accent-bg-strong); }
+}
+.startliste-oder { margin-top: var(--space-7); text-align: center; }
+.startliste-oder__text {
+  display: flex; align-items: center; gap: var(--space-3);
+  font-size: var(--fs-xs); font-weight: 600; color: var(--text-3);
+  margin-bottom: var(--space-3);
+}
+.startliste-oder__text::before, .startliste-oder__text::after { content: ""; flex: 1 1 auto; height: 1px; background: var(--border-subtle); }
+#app:not(.still-ansicht) .startliste-oder { animation: enter-rise var(--dur-slow) var(--ease-out) 420ms both; }
+
 /* ---- Die Bühne ----------------------------------------------------------
    Die Abfragekarte war bisher ein Kasten unter Kästen. Jetzt bekommt sie
    den Bildschirm: Das Wort sitzt im oberen Drittel (optisch mittig, nicht
@@ -1713,6 +1854,214 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 .done-box .emoji .i { width: 34px; height: 34px; }
 .done-box h2 { margin-bottom: var(--space-2); }
+
+/* ---- 3.12.0: Die Karte der Runde -----------------------------------------
+   Betreiber am 24.09.2026: „vom onboarding sieht man so design bzw
+   animationen und so kaum was im tool." Am Bildschirm gemessen: Im Einstieg
+   liegt das Wort auf einer Karte, die sich umdreht (16b, .einstieg-probe,
+   einstieg-aufklappen); in der echten Runde stand es frei in einer leeren
+   schwarzen Fläche. Jetzt ist es dieselbe Karte:
+
+     .study-buehne    hält Karte und Stapel zusammen
+     .study-stapel    zwei Blätter dahinter, solange noch so viele kommen
+     .study-flaeche   die Karte; wird beim Wischen gezogen (app.js)
+
+   Drei Bewegungen, jede genau einmal (app.js leitet sie aus dem Zustand ab,
+   renderSession): eine neue Karte steigt vom Stapel auf (--kommt), beim
+   Aufdecken klappt sie um (--dreht), die Antwort schiebt sich unter einer
+   Linie herein, die sich von der Mitte aus zieht. */
+.study-card.zugedeckt .study-word { animation: none; }
+.study-card__mitte { justify-content: center; gap: var(--space-5); }
+.study-buehne {
+  position: relative;
+  width: 100%; max-width: 560px;
+  margin: 0 auto;
+  perspective: 1200px;
+}
+.study-flaeche {
+  position: relative; z-index: 2;
+  min-height: clamp(230px, 40svh, 420px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-9) var(--space-5) var(--space-7);
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(130% 70% at 50% 0%, rgba(255, 255, 255, 0.055), transparent 62%),
+    var(--surface-raised);
+  border: 1px solid var(--border);
+  box-shadow: var(--kante), 0 18px 44px rgba(0, 0, 0, 0.42), 0 2px 6px rgba(0, 0, 0, 0.3);
+  touch-action: pan-y;
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+:root[data-thema="hell"] .study-flaeche {
+  background:
+    radial-gradient(130% 70% at 50% 0%, rgba(255, 255, 255, 0.6), transparent 62%),
+    var(--surface-raised);
+  box-shadow: var(--kante), 0 16px 36px rgba(60, 45, 20, 0.14), 0 2px 6px rgba(60, 45, 20, 0.08);
+}
+.study-flaeche.wird-gezogen { cursor: grabbing; }
+.study-stapel {
+  position: absolute; inset: 0;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  pointer-events: none;
+  transform-origin: 50% 100%;
+}
+.study-stapel--1 { z-index: 1; transform: translateY(12px) scale(0.955); opacity: 0.75; }
+.study-stapel--2 { z-index: 0; transform: translateY(23px) scale(0.91); opacity: 0.4; }
+
+/* Stand der Karte oben auf der Karte – dieselben Punkte wie die Leiste im
+   Einstieg. */
+.study-flaeche__kopf {
+  position: absolute; top: var(--space-4); left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+}
+.study-flaeche__zustand {
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-3);
+}
+.study-flaeche__tipp {
+  position: absolute; bottom: var(--space-4); left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+  font-size: var(--fs-xs); color: var(--text-3);
+}
+.study-trenner {
+  width: min(160px, 40%); height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-border), transparent);
+  margin: var(--space-1) 0;
+}
+.study-flaeche .card-tags { margin-top: var(--space-1); }
+
+.zustand-punkte { display: inline-flex; align-items: center; gap: 5px; }
+.zustand-punkte__p {
+  width: 7px; height: 7px; border-radius: 50%;
+  border: 1.5px solid var(--stufe-2);
+  background: transparent;
+}
+.zustand-punkte__p.voll { background: var(--fuellung); border-color: transparent; }
+.zustand-punkte__p.voll:first-child { border-color: var(--stufe-2); }
+.zustand-punkte__p.jetzt { width: 9px; height: 9px; box-shadow: 0 0 0 3px var(--accent-bg); }
+
+/* Eine neue Karte steigt vom Stapel auf. Der Stapel rückt dabei eine Lage
+   nach – das ist das, was bei einem echten Stapel passiert, wenn die oberste
+   Karte weg ist. */
+.study-flaeche--kommt { animation: karte-kommt 420ms var(--ease-spring) both; }
+.study-buehne:has(.study-flaeche--kommt) .study-stapel { animation: stapel-rueckt 420ms var(--ease-out) both; }
+@keyframes karte-kommt {
+  from { opacity: 0; transform: translateY(26px) scale(0.93); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes stapel-rueckt {
+  from { opacity: 0; }
+}
+/* Aufdecken: die Karte klappt um, wie die Probekarte im Einstieg. */
+.study-flaeche--dreht { animation: karte-dreht 520ms var(--ease-out) both; }
+@keyframes karte-dreht {
+  0%   { transform: rotateX(0deg); }
+  45%  { transform: rotateX(78deg) scale(0.985); }
+  46%  { transform: rotateX(-78deg) scale(0.985); }
+  100% { transform: none; }
+}
+.study-flaeche--dreht .study-trenner { animation: einstieg-wachsen 420ms var(--ease-out) 220ms both; }
+.study-flaeche--dreht .study-answer,
+.study-flaeche--dreht .card-tags { animation: enter-rise 360ms var(--ease-out) 260ms both; }
+.study-flaeche--offen .study-answer { animation: none; }
+.study-flaeche--dreht.study-flaeche--offen .study-answer { animation: enter-rise 360ms var(--ease-out) 260ms both; }
+
+/* Die drei Bewertungen kommen nacheinander herein, wie die Antwortzeilen im
+   Einstieg – und nur dann, wenn gerade aufgedeckt wurde (sonst stünden sie
+   bei jedem Neuzeichnen wieder in Bewegung). */
+.grade-row { animation: none; }
+.grade-row button { position: relative; overflow: hidden; }
+.study-card:has(.study-flaeche--dreht) .grade-row button {
+  animation: einstieg-zeile 320ms var(--ease-out) backwards;
+  animation-delay: calc(var(--n, 0) * 60ms + 240ms);
+}
+.grade-row button:active { transform: scale(0.96); }
+.grade-row button .sub { transition: opacity var(--dur-fast) var(--ease-out); }
+.btn-known { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+
+/* Der Fortschrittsstrich oben: dicker, mit einem Licht an der Spitze, und er
+   wächst von seinem letzten Stand aus (app.js, modeBar). */
+.modebar__fortschritt {
+  left: 0; right: 0; width: auto !important;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-bg-strong), var(--accent));
+  transform-origin: left center;
+  transform: scaleX(var(--bis, 0));
+  animation: fortschritt-waechst 520ms var(--ease-out) both;
+  box-shadow: 0 0 10px var(--accent-border);
+  transition: none;
+}
+@keyframes fortschritt-waechst {
+  from { transform: scaleX(var(--von, 0)); }
+  to   { transform: scaleX(var(--bis, 0)); }
+}
+
+/* ---- 3.12.0: Der Abschluss einer Runde ----------------------------------
+   Nach dem Plan-Bildschirm des Einstiegs: der Haken zeichnet sich selbst,
+   zwei Lichtringe laufen aus, die Kacheln springen herein. Die Bewegung
+   gibt es nur mit .ende--neu (app.js: nur beim ersten Zeichnen). */
+.ende { text-align: center; padding: var(--space-8) var(--space-4) var(--space-6); max-width: 520px; margin: 0 auto; }
+.ende__haken {
+  position: relative;
+  width: 84px; height: 84px; margin: 0 auto var(--space-5);
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, var(--accent-bg-strong), var(--accent-bg));
+  color: var(--accent);
+  filter: var(--mark-glow);
+}
+.ende__zeichen { width: 44px; height: 44px; stroke-width: 1.8; }
+.ende__zeichen circle, .ende__zeichen path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.ende__ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid var(--accent-border); opacity: 0;
+}
+.ende--neu .ende__haken { animation: enter-pop 420ms var(--ease-spring) both; }
+.ende--neu .ende__zeichen circle { animation: einstieg-strich 620ms var(--ease-out) 120ms both; }
+.ende--neu .ende__zeichen path   { animation: einstieg-strich 360ms var(--ease-out) 640ms both; }
+.ende--neu .ende__ring   { animation: einstieg-halo 1.3s var(--ease-out) 700ms both; }
+.ende--neu .ende__ring--2 { animation-delay: 1000ms; }
+.ende h2 { margin-bottom: var(--space-1); }
+.ende__satz { font-size: var(--fs-sm); }
+.ende__kacheln {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2);
+  margin: var(--space-6) 0 var(--space-4);
+}
+.ende__kachel {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--r-md);
+  background: var(--sheen), var(--surface);
+  border: 1px solid var(--border-subtle);
+}
+.ende__kachel strong { font-family: var(--font-text); font-size: var(--fs-2xl); line-height: 1.1; color: var(--text-1); }
+.ende__kachel span { font-size: var(--fs-xs); color: var(--text-2); }
+.ende__kachel--sicher { border-color: var(--positive-border); background: var(--positive-bg); }
+.ende__kachel--sicher strong { color: var(--positive); }
+.ende__kachel--nicht strong { color: var(--text-2); }
+.ende__serie {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--r-full);
+  background: var(--accent-bg); color: var(--text-1);
+  font-size: var(--fs-sm);
+}
+.ende__serie .i { color: var(--accent); transform-origin: 50% 90%; }
+.ende__morgen { margin-top: var(--space-4); }
+.ende__aktionen { margin-top: var(--space-6); }
+.ende--neu .ende__kachel,
+.ende--neu .ende__serie,
+.ende--neu .ende__morgen {
+  animation: einstieg-kachel 420ms var(--ease-spring) backwards;
+  animation-delay: calc(var(--i, 0) * 90ms + 820ms);
+}
+.ende--neu .ende__serie .i { animation: einstieg-flamme 700ms var(--ease-spring) 1400ms 2 both; }
+.ende--neu .ende__aktionen { animation: enter-rise 360ms var(--ease-out) 1300ms backwards; }
 
 .drill-banner, .satz-banner, .leech-banner, .merk-hinweis {
   font-size: var(--fs-xs); line-height: 1.5;
@@ -3410,20 +3759,6 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
      Schleier stehen. */
   .einstieg-option.aktiv::after { display: none; }
 }
-/* 3.11.0: dasselbe für die Einstellung „Bewegung: Ruhig" — siehe den
-   Zwillingsblock in Abschnitt 3. Ohne ihn blieben im Einstieg die
-   Verzögerungen stehen und alles erschiene verspätet statt sofort. */
-html[data-bewegung="ruhig"] .einstieg *,
-html[data-bewegung="ruhig"] .einstieg *::before,
-html[data-bewegung="ruhig"] .einstieg *::after,
-html[data-bewegung="ruhig"] .einstieg-kopf * { animation-delay: 0s !important; }
-html[data-bewegung="ruhig"] .einstieg-hero__dreh,
-html[data-bewegung="ruhig"] .einstieg-hero__seite--hinten::after,
-html[data-bewegung="ruhig"] .einstieg-leiste__punkt--ziel::after,
-html[data-bewegung="ruhig"] .einstieg-leiter__ziel .einstieg-leiter__punkt::after,
-html[data-bewegung="ruhig"] .einstieg-karte--wartet .einstieg-probe,
-html[data-bewegung="ruhig"] .einstieg-aktion--glanz button.full::after { animation: none !important; }
-html[data-bewegung="ruhig"] .einstieg-option.aktiv::after { display: none; }
 
 /* ===========================================================================
    16c · DIE BEWEGUNG DES EINSTIEGS IN DER APP
@@ -3492,6 +3827,201 @@ html[data-bewegung="ruhig"] .einstieg-option.aktiv::after { display: none; }
    zurückschnappen (`backwards`). Beides ist schlechter als keine Bewegung.
    Steht hier und im Logbuch, damit die nächste Sitzung es nicht noch einmal
    versucht und dann denselben Fund macht. */
+
+
+/* ===========================================================================
+   16e · DIE TABS BAUEN SICH AUF (3.12.0)
+   ---------------------------------------------------------------------------
+   Dieselbe Regel wie in 16c: Bewegung nur beim Hereinkommen eines
+   Bildschirms (#app:not(.still-ansicht)), nie beim bloßen Neuzeichnen. Alles
+   hier sind Formen aus dem Einstieg – die Kacheln des Plans
+   (einstieg-kachel), der wachsende Balken (einstieg-wachsen), die
+   nacheinander hereinkommenden Zeilen (einstieg-zeile).
+   ========================================================================= */
+
+/* Fortschritt: die Blöcke kommen nacheinander, Balken wachsen von links,
+   der Kalender deckt sich von alt nach neu auf, die Wochenbalken wachsen
+   von unten. */
+#app:not(.still-ansicht) .view > .serie-karte,
+#app:not(.still-ansicht) .view > .stat-block {
+  animation: einstieg-kachel 440ms var(--ease-spring) backwards;
+}
+#app:not(.still-ansicht) .view > .stat-block:nth-of-type(1) { animation-delay: 80ms; }
+#app:not(.still-ansicht) .view > .stat-block:nth-of-type(2) { animation-delay: 150ms; }
+#app:not(.still-ansicht) .view > .stat-block:nth-of-type(3) { animation-delay: 220ms; }
+#app:not(.still-ansicht) .view > .stat-block:nth-of-type(4) { animation-delay: 290ms; }
+#app:not(.still-ansicht) .view > .stat-block:nth-of-type(5) { animation-delay: 360ms; }
+.heute-bar span, .lekt-bar span { transform-origin: left center; }
+#app:not(.still-ansicht) .heute-bar span,
+#app:not(.still-ansicht) .lekt-bar span { animation: einstieg-wachsen 900ms var(--ease-out) 350ms backwards; }
+.stat-bar { transform-origin: left center; }
+#app:not(.still-ansicht) .stat-bar { animation: einstieg-wachsen 1000ms var(--ease-out) 450ms backwards; }
+#app:not(.still-ansicht) .kal { animation: kal-aufdecken 1100ms var(--ease-out) 300ms backwards; }
+@keyframes kal-aufdecken { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.spark-fill { transform-origin: bottom center; }
+#app:not(.still-ansicht) .spark-fill { animation: spark-wachsen 700ms var(--ease-spring) backwards; }
+#app:not(.still-ansicht) .spark-fill:nth-child(2) { animation-delay: 50ms; }
+#app:not(.still-ansicht) .spark-fill:nth-child(3) { animation-delay: 100ms; }
+#app:not(.still-ansicht) .spark-fill:nth-child(4) { animation-delay: 150ms; }
+#app:not(.still-ansicht) .spark-fill:nth-child(5) { animation-delay: 200ms; }
+#app:not(.still-ansicht) .spark-fill:nth-child(6) { animation-delay: 250ms; }
+#app:not(.still-ansicht) .spark-fill:nth-child(7) { animation-delay: 300ms; }
+@keyframes spark-wachsen { from { transform: scaleY(0); } }
+#app:not(.still-ansicht) .lekt-kachel { animation: einstieg-zeile 320ms var(--ease-out) backwards; }
+
+/* Verwalten: die ersten Zeilen der Liste kommen nacheinander – nur die
+   ersten vierzehn, der Rest steht einfach da (eine Liste mit hundert
+   Einträgen, die zwei Sekunden lang einfliegt, ist Wartezeit). */
+#app:not(.still-ansicht) #karten-liste > .card-row {
+  animation: einstieg-zeile 300ms var(--ease-out) backwards;
+  animation-delay: calc(var(--n, 14) * 28ms + 60ms);
+}
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(1) { --n: 0; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(2) { --n: 1; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(3) { --n: 2; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(4) { --n: 3; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(5) { --n: 4; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(6) { --n: 5; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(7) { --n: 6; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(8) { --n: 7; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(9) { --n: 8; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(10) { --n: 9; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(11) { --n: 10; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(12) { --n: 11; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(13) { --n: 12; }
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(14) { --n: 13; }
+
+/* Das Karten-Blatt: Stand und nächster Termin. */
+.karte-weg {
+  display: flex; align-items: center; gap: var(--space-3);
+  margin: var(--space-2) 0 var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--r-md);
+  background: var(--surface-raised); border: 1px solid var(--border-subtle);
+}
+.karte-weg__text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.karte-weg__text strong { font-size: var(--fs-sm); color: var(--text-1); text-transform: capitalize; }
+.karte-weg__text span { font-size: var(--fs-xs); color: var(--text-2); }
+#app:not(.still-overlay) .karte-weg .zustand-punkte__p { animation: einstieg-punkt 360ms var(--ease-spring) backwards; animation-delay: calc(var(--n, 0) * 60ms + 160ms); }
+
+/* Einstellungen: wer man ist, steht oben. */
+.profil {
+  display: grid; grid-template-columns: auto 1fr; align-items: center;
+  column-gap: var(--space-4); row-gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: var(--space-5);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(80% 90% at 0% 0%, var(--accent-bg-strong), transparent 70%),
+    var(--sheen), var(--surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--kante), var(--shadow-sm);
+}
+#app:not(.still-ansicht) .profil { animation: einstieg-kachel 420ms var(--ease-spring) both; }
+.profil__bild {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--font-text); font-size: 1.6rem; font-weight: 700;
+  color: var(--text-on-accent);
+  background: linear-gradient(145deg, var(--paper-50), var(--accent));
+  box-shadow: 0 0 0 3px var(--accent-bg), 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+.profil__text { display: flex; flex-direction: column; min-width: 0; }
+.profil__text strong { font-family: var(--font-text); font-size: var(--fs-lg); color: var(--text-1); }
+.profil__text span { font-size: var(--fs-xs); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profil__zahlen {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);
+  text-align: center;
+}
+.profil__zahlen span { display: flex; flex-direction: column; font-size: var(--fs-micro); color: var(--text-3); font-weight: 600; letter-spacing: 0.02em; }
+.profil__zahlen span + span { border-left: 1px solid var(--border-subtle); }
+.profil__zahlen strong { font-family: var(--font-text); font-size: var(--fs-xl); color: var(--text-1); letter-spacing: 0; }
+
+/* ---- 3.12.0: Warten auf die Bestätigung --------------------------------
+   Ein Umschlag mit einem Punkt, der atmet, und darunter der Satz, dass es
+   von selbst weitergeht (app.js, bestaetigungStillPruefen). */
+.brief-bild {
+  position: relative;
+  width: 88px; height: 88px; margin: var(--space-2) 0 var(--space-5);
+  display: grid; place-items: center;
+  border-radius: var(--r-xl);
+  background: radial-gradient(circle at 50% 35%, var(--accent-bg-strong), var(--accent-bg));
+  color: var(--accent);
+  animation: enter-pop 420ms var(--ease-spring) both;
+}
+.brief-bild .i-xl { width: 44px; height: 44px; stroke-width: 1.5; animation: brief-schweben 2.8s ease-in-out 600ms infinite; }
+@keyframes brief-schweben { 0%, 100% { transform: none; } 50% { transform: translateY(-3px) rotate(-2deg); } }
+.brief-bild__punkt {
+  position: absolute; top: 14px; right: 14px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 3px var(--surface);
+  animation: enter-pop 360ms var(--ease-spring) 500ms both;
+}
+.bestaetigung-warten { display: flex; align-items: flex-start; gap: var(--space-2); }
+.bestaetigung-warten__punkt {
+  flex: 0 0 auto; margin-top: 5px;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--positive);
+  animation: puls 1.6s ease-in-out infinite;
+}
+
+/* ===========================================================================
+   16d · RISKANTE HANDLUNGEN (3.12.0)
+   ---------------------------------------------------------------------------
+   Betreiber am 24.09.2026: „wen man sich abmelden will oder löschen und sowas
+   risko bitte nicht so einfach zu lasse". Konto löschen hat eine eigene Seite
+   (app.js, renderKontoLoeschen): erst was verschwindet, dann Backup, dann
+   E-Mail und ein Knopf, den man gedrückt halten muss.
+   ========================================================================= */
+.gefahr-karte { border-color: var(--negative-border); background: var(--negative-bg); }
+.gefahr-karte__kopf { display: flex; align-items: center; gap: var(--space-3); color: var(--negative); }
+.gefahr-karte__kopf h3 { margin: 0; color: var(--text-1); }
+.gefahr-liste {
+  list-style: none; margin: var(--space-4) 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: var(--space-2);
+  font-size: var(--fs-md); color: var(--text-2);
+}
+.gefahr-liste li { position: relative; padding-left: var(--space-5); }
+.gefahr-liste li::before {
+  content: ""; position: absolute; left: 4px; top: 0.62em;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--negative);
+}
+.gefahr-liste strong { color: var(--text-1); }
+
+/* Der Halte-Knopf: getönt, solange nichts passiert; beim Halten läuft eine
+   volle Fläche von links nach rechts durch. Ausgelöst wird im Timer in
+   app.js, nicht am Ende der Animation – eine abgebrochene Animation kann
+   deshalb nie etwas auslösen. */
+button.halten {
+  position: relative; overflow: hidden; isolation: isolate;
+  margin-top: var(--space-4);
+  min-height: var(--ctrl-lg);
+  background: var(--negative-bg); color: var(--text-1);
+  border-color: var(--negative-border);
+  -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+  touch-action: none;
+}
+.halten__fuellung {
+  position: absolute; inset: 0; z-index: -1;
+  background: var(--negative);
+  transform: scaleX(0); transform-origin: left center;
+}
+button.halten.haelt .halten__fuellung { animation: halten-fuellen var(--halten, 1800ms) linear forwards; }
+button.halten.haelt { transform: scale(0.985); }
+@keyframes halten-fuellen { to { transform: scaleX(1); } }
+.halten__text { position: relative; }
+/* Die Füllung ist hier keine Zier, sondern die Anzeige, wie lange man noch
+   halten muss. Deshalb läuft sie auch bei „Bewegung reduzieren" in echter
+   Dauer – sonst stünde der Knopf sofort voll da und löste doch erst nach
+   1,8 Sekunden aus. */
+@media (prefers-reduced-motion: reduce) {
+  button.halten.haelt .halten__fuellung { animation-duration: var(--halten, 1800ms) !important; }
+}
+.halten__hinweis { margin-top: var(--space-3); text-align: center; }
+@media (hover: hover) and (pointer: fine) {
+  button.halten:hover:not(:disabled) { background: var(--negative-bg); border-color: var(--negative); filter: none; }
+}
 
 /* Der Nachklang auf dem leeren Lernen-Bildschirm (app.js, renderLernen).
    Bewusst KEIN Kasten und keine Fläche: er gehört zum Bildschirm, nicht auf
@@ -3713,8 +4243,58 @@ html[data-bewegung="ruhig"] .einstieg-option.aktiv::after { display: none; }
   .einstieg-aktion { max-width: 420px; margin-left: auto; margin-right: auto; }
 }
 
+/* ---- 3.12.0: Die App auf dem Tablet --------------------------------------
+   Betreiber am 24.09.2026: „Anpassung für jedes gerät." Gemessen in
+   Chromium bei 820×1180 (iPad hoch): Jeder Tab war ein 680-px-Streifen, die
+   schwebende Leiste lief darunter über die volle Breite, und unter dem
+   Inhalt blieb die Hälfte des Bildschirms leer. Drei Änderungen, nur hier:
+
+     1. Die Leiste schwebt als Kapsel in der Mitte (so steht die Tab-Leiste
+        auf dem iPad), statt sich von Rand zu Rand zu ziehen.
+     2. Die Spalte wird breiter (--measure 760).
+     3. Lernen und Fortschritt stehen zweispaltig, wo die Blöcke es tragen
+        (app.js setzt view--lernen / view--raster nur für diese Ansichten).
+   Die Navigationsspalte links bleibt bei 900 px (Abschnitt 17 oben) - das
+   ist eine andere Frage, siehe onboarding/LOGBUCH.md. */
+@media (min-width: 720px) {
+  :root { --measure: 760px; }
+  .grade-row { max-width: 520px; margin-left: auto; margin-right: auto; width: 100%; }
+  .study-aktionen { max-width: 560px; margin: 0 auto; width: 100%; }
+
+  .view--raster {
+    display: grid; grid-template-columns: 1fr 1fr;
+    column-gap: var(--stack); align-items: start;
+    /* .view hat min-height: 100svh - ohne das verteilte das Raster die
+       uebrige Hoehe auf seine Zeilen, und zwischen Gruss und Stapel klaffte
+       auf dem iPad eine Luecke von gut 100 px (gemessen). */
+    align-content: start;
+  }
+  .view--raster > * { grid-column: 1 / -1; }
+  .view--raster > .stat-block { grid-column: auto; margin-bottom: var(--stack); height: calc(100% - var(--stack)); }
+
+  .view--lernen {
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: var(--stack); align-items: start;
+    /* .view hat min-height: 100svh - ohne das verteilte das Raster die
+       uebrige Hoehe auf seine Zeilen, und zwischen Gruss und Stapel klaffte
+       auf dem iPad eine Luecke von gut 100 px (gemessen). */
+    align-content: start;
+  }
+  .view--lernen > * { grid-column: 1 / -1; }
+  .view--lernen > .stapel { grid-column: 1; grid-row: span 4; margin-bottom: var(--stack); }
+  .view--lernen > .startliste,
+  .view--lernen > .serie-karte,
+  .view--lernen > .banner-info { grid-column: 2; margin-top: 0 !important; margin-bottom: var(--stack); }
+}
+@media (min-width: 640px) and (max-width: 899.98px) {
+  .nav {
+    left: max(calc(var(--space-3) + var(--sal)), calc(50% - 240px));
+    right: max(calc(var(--space-3) + var(--sar)), calc(50% - 240px));
+  }
+}
+
 @media (min-width: 1200px) {
-  :root { --measure: 720px; }
+  :root { --measure: 820px; }
   .lern-raster { grid-template-columns: repeat(3, 1fr); }
 }
 

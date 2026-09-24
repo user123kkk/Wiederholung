@@ -683,7 +683,32 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026): zweite Rückmeldung des Betreibers zum Einstieg
+**AKTUELL (24.09.2026, später): v3.12.0 – die ganze App in der Formsprache
+des Einstiegs, auf `main`, noch nicht ausgeliefert.**
+
+Betreiber: „vom onboarding sieht man so design bzw animationen und so kaum
+was im tool", dazu Abmelden/Löschen absichern, Einstellung „Bewegung" weg,
+jedes Gerät, und: abgemeldet war der Einstieg nicht mehr zu sehen.
+
+Gebaut: Lernrunde mit echter Karte (Stapel, Stufen-Punkte, Umklappen),
+Abschluss mit Bilanz, neuer Lernen-Startbildschirm (Ring, Woche, Start-Liste),
+Aufbau-Bewegungen in Fortschritt/Verwalten, Profil in den Einstellungen,
+Konto löschen auf eigener Seite mit Gedrückthalten, Abmelden mit Rückfrage,
+Bestätigungs-Bildschirm geht von selbst weiter, Tablet-Raster. Fünf echte
+Fehler behoben (Einzelheiten und Begründungen: `onboarding/LOGBUCH.md`,
+Eintrag „Die ganze App in der Formsprache des Einstiegs").
+
+**Bei „leg los" zuerst prüfen:**
+1. Hat der Betreiber v3.12.0 veröffentlicht und am Gerät geprüft (Handy UND
+   iPad)? Offene Punkte dazu stehen im Logbuch unter „Offen".
+2. Liegt J1 vor?
+
+Die Start-Liste (NEUAUFBAU-3.md §6) ist damit gebaut – der Punkt „braucht
+Freigabe" ist erledigt.
+
+---
+
+**Vorheriger Stand (24.09.2026): zweite Rückmeldung des Betreibers zum Einstieg
 umgesetzt (v3.11.0), auf dem Arbeitsbranch, noch nicht ausgeliefert.**
 
 Sieben Punkte, alle vom Betreiber benannt, alle umgesetzt:
