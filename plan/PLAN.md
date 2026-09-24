@@ -509,6 +509,8 @@ hängt, nicht begonnen.
 | ~~6~~ | ~~Gilt `KONZEPT.md` §7 („App-Funktionen nicht anfassen") weiter, oder darf der Redesign auch die Bedienung ändern?~~ | **erledigt 18.09.2026** — dauerhaft gelockert, mit Bedingung — siehe unten |
 | ~~12~~ | ~~Farben: Hintergrund heller, Knopf-Hover kein reines Weiß mehr?~~ | **erledigt 17.09.2026 (v3.4.4)** — siehe unten |
 | ~~13~~ | ~~Anmelden mit Google (oder Apple)?~~ | **erledigt 17.09.2026** — siehe unten |
+| 14 | **Analytics:** Was soll gemessen werden, mit welchem Werkzeug, mit welcher rechtlichen Prüfung? Gerüst mit Möglichkeiten und Empfehlung: [`analytics/GERUEST.md`](analytics/GERUEST.md). | jede Messung über alle Konten (nichts gebaut) |
+| 15 | **Üben im Fortschritt zählen?** Seit 3.15.0 wird im Üben bewertet (nur für die Runde). Sollen Übungsrunden im Fortschritt-Tab erscheinen („heute 40 Karten geübt")? Technisch: ein Feld `u` je Tag im `verlauf` (die Regeln prüfen die Tageseinträge nicht, keine Regeländerung nötig). **Zu entscheiden:** zählt ein Übungstag für die **Serie**? Empfehlung: nein – die Serie belohnt fällige Wiederholungen, sonst hält man sie mit Üben am Leben, ohne zu wiederholen. | Anzeige „geübt" im Fortschritt |
 
 **Geklärt am 12.09.2026 (vormals offene Frage 1).** Entscheidung des
 Betreibers: **Firebase Hosting**, nicht GitHub Pages, nicht Netlify/Vercel —
@@ -683,7 +685,7 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026): v3.14.0 auf `main` – Karte dreht sich wirklich, antippbar, fliegt nach der Bewertung weg, springt nicht mehr. Seitdem läuft die PRÜFSCHLEIFE: `audit/AUFTRAG.md` + `audit/LOGBUCH.md` (nächste Station steht dort), stündliche Routine `trig_016y2uuWtQZ4yrCzAhkZsLQn`. Bei „leg los" dort weitermachen.**
+**AKTUELL (24.09.2026): v3.15.0 auf `main` – Üben neu (Auswahl, Bewertung, Ende), Kontrast überall gemessen (0 Funde), Schreib-Tinte sichtbar, Einladungs-Ring aus dem Einstieg, Karte steht still. Neue offene Fragen 14 (Analytics) und 15 (Üben im Fortschritt). Davor v3.14.0: Karte dreht sich wirklich, antippbar, fliegt nach der Bewertung weg. Seitdem läuft die PRÜFSCHLEIFE: `audit/AUFTRAG.md` + `audit/LOGBUCH.md` (nächste Station steht dort), stündliche Routine `trig_016y2uuWtQZ4yrCzAhkZsLQn`. Bei „leg los" dort weitermachen.**
 
 Davor: v3.13.1 (Ladebildschirm weiß statt gold); v3.13.0 – sechs Zustände
 (neu · im Lernen · frisch gelernt · wird fester · gefestigt · dauerhaft,

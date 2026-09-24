@@ -11,10 +11,64 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 3 | Anmelden | offen |
 | 4 | Bestätigung | offen |
 | 5 | Lernen-Start | offen |
-| 6 | Lernrunde | teilweise (Umdrehen, Bewerten, Sprünge – v3.14.0); Rest offen |
+| 6 | Lernrunde | teilweise (Umdrehen, Bewerten, Sprünge, Ring – v3.14.0/3.15.0); Rest offen |
 | 7 | Rundenende | offen |
-| 8 | Üben | teilweise (Umdrehen, Sprünge – v3.14.0); Rest offen |
+| 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Betreiber-Rückmeldung zu Üben, Tinte, Ring (v3.15.0)
+
+**Anlass:** Betreiber (hat Vorrang vor der Schleife): Üben überladen, Banner
+auf jeder Karte unnötig, Schreiben dunkel auf dunkel, Bewertungsknöpfe ins
+Üben zurück, Üben evtl. im Fortschritt zählen, Umrandungs-Animation aus dem
+Einstieg durchgängig, Analytics notieren, „alles durchdenken".
+
+**Geändert (app.js):** `drawStrokes()` Farben aus `--text-1`/`--border-strong`;
+`renderSession()` – Kopfzeilen-Hinweis erste Übungskarte (`.mitte-wechsel`),
+Üben mit Knopf + antippbarer Karte + Bewertungszeile (eigene Unterzeilen),
+Raster-Mitte (`.study-card__oben/__unten`), `study-flaeche--wartet`, Tipp-Satz
+nur bei `!s.zug`; `leechHinweis()` gekürzt; `gradeCard()` zählt auch im Üben,
+kein Neumischen; Tastatur/Tipp-irgendwo decken nur noch auf; Wischen auch im
+Üben; `renderRundenEnde()` mit Übungsfassung + `drill-nochmal`;
+Übungsauswahl neu (`ui.drillGruppen`, `gruppenName`, `drillGruppenKarten`,
+`startDrillGruppen`, `case "stufe-chip"` an/aus); `waehleStufe()` und
+`startDrill(min,max)` entfernt (unbenutzt); Version 3.15.0.
+**Geändert (styles.css):** `--paper-500` (dunkel), `--cinnabar-400`,
+`--verdigris-400` (hell/dunkel), `.grade-row .sub` ohne Deckkraft,
+`.badge.zustand-frisch` hell; `karte-einladen`, `geist-glanz-*`,
+`karte-schatten` über `::before`-Deckkraft; `.segment`, `input.schalter`,
+`.drill-*`, `.mitte-wechsel`, `.study-card__mitte` als Raster,
+`.leech-banner` mit Zeichen daneben.
+**Neu:** `plan/werkzeuge/pruefstand/kontrast.js` + `t_kontrast.js`,
+`t_ueben.js`, `t_sprung_ueben.js`, `t_ring.js`, `t_fotos_runde.js`;
+`plan/analytics/GERUEST.md`; offene Fragen 14 (Analytics) und 15 (Üben im
+Fortschritt) in `plan/PLAN.md`.
+
+**Entscheidung:**
+- **Schreiben bleibt**, aber als Schalter mit Unterzeile statt Haken mit
+  Klammertext. Ob es ganz wegfällt, kann erst Nutzung zeigen (Frage 14) –
+  Entfernen wäre nicht rückgängig zu machen für die, die es benutzen.
+- **Bewertung im Üben wirkt nur auf die Runde.** Alles andere hieße, die
+  Lernlogik zu ändern (tabu). Deshalb eigene Unterzeilen („passt", „sitzt")
+  statt „morgen/später wieder".
+- **Üben zählt (noch) nicht im Fortschritt:** Die Anzeige wäre leicht, aber
+  ob ein Übungstag die Serie hält, ist eine Entscheidung des Betreibers
+  (Frage 15, Empfehlung: nein).
+- **Analytics nicht gebaut:** braucht Rechtsprüfung und eine Wahl (Frage 14).
+- **Kontrast wird jetzt gemessen, nicht angeschaut** – die dunkle Tinte war
+  genau die Sorte Fehler, die man auf Fotos übersieht. `t_kontrast.js` gehört
+  ab jetzt zu jeder Runde der Schleife.
+
+**Geprüft:** Kontrast 0 Funde (vorher 48); Sprünge: Aufdecken 0 px, Karte zu
+Karte 0 px (Ausnahme 4 px am 360-px-Handy, wenn Rückfall-Hinweis und Notiz
+zusammenkommen); Üben komplett (Auswahl, 12 Bewertungen, Ende, Nochmal,
+Schreiben hell/dunkel); Ring und Aufleuchten Bild für Bild; Regressionstests;
+Affentest 200 + 150 Schritte, 0 Befunde.
+
+**Offen:** Fragen 14 und 15 (`plan/PLAN.md`).
+**Nächste Station:** 1 (Start)
 
 ---
 

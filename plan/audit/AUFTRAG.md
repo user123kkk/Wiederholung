@@ -32,9 +32,14 @@ spricht, steht das im Logbuch und in der Antwort.
 
 ## Prüfliste – was unbewusst auffällt
 
-- **Nichts springt.** Kein Element verschiebt sich, ohne dass man es bewegt
-  hat (Aufdecken, Laden, Fehlermeldung, Tastatur, Bild lädt nach). Messen,
-  nicht schätzen: 0 px ist das Ziel.
+- **Kontrast gemessen, nicht geschätzt:** `t_kontrast.js` (Prüfstand) in
+  jeder Runde, beide Fassungen – Ziel 0 Funde. Auch gezeichnete Dinge
+  (Canvas, SVG) von Hand prüfen: das misst das Skript nicht. Anlass: dunkle
+  Tinte auf dunkler Zeichenfläche (v3.15.0).
+- **Nichts springt** – weder innerhalb einer Karte noch von einer Karte zur
+  nächsten (`t_sprung.js`, `t_sprung_ueben.js`). Kein Element verschiebt
+  sich, ohne dass man es bewegt hat (Aufdecken, Laden, Fehlermeldung,
+  Tastatur, Bild lädt nach). Messen, nicht schätzen: 0 px ist das Ziel.
 - **Jede Bewegung hat Herkunft und Ziel.** Was erscheint, kommt von dort, wo
   es hingehört; was geht, geht in die Richtung seiner Bedeutung. Eine
   Bewegung pro Ursache, keine zwei nacheinander. 150–450 ms, Federn bei

@@ -94,13 +94,13 @@
      das alte Grau erreichte auf --surface nur 3,51:1 und lag damit unter den
      4,5:1, die AA für normalen Text verlangt. --text-3 traegt aber echten
      Lesetext: Hinweise, Formularhilfe, kleine Beschriftungen. */
-  --paper-500: #82807a;
+  --paper-500: #95938c;   /* 3.15.0: war #82807a - 4.0-4.45:1 auf Karten und Flaechen, knapp unter AA (plan/werkzeuge/pruefstand/kontrast.js) */
   --gold-300: #eed8a6;
   --gold-400: #e3c88a;
   --gold-500: #c9a961;
   --gold-600: #a98a46;
   --verdigris-400: #6aa588;
-  --cinnabar-400: #c96b52;
+  --cinnabar-400: #d67a61;   /* 3.15.0: war #c96b52 - 4.1:1 auf --negative-bg */
 
   /* ---- Semantik · Flächen ----------------------------------------------- */
   --bg: var(--ink-900);
@@ -327,8 +327,8 @@
   --gold-500: #6d5217;
   --gold-600: #b39a63;
   /* 3.0.25: von #3d7a5c abgedunkelt - 4,31:1 auf --bg reichte knapp nicht. */
-  --verdigris-400: #3a7357;
-  --cinnabar-400: #a8452e;
+  --verdigris-400: #316449;   /* 3.15.0: war #3a7357 - 4.1:1 auf --positive-bg */
+  --cinnabar-400: #9a3d27;   /* 3.15.0: war #a8452e */
 
   --text-on-accent: #fffdf6;
   --accent-border: rgba(138, 106, 36, 0.34);
@@ -1518,6 +1518,8 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .badge.zustand-neu       { background: var(--stufe-0); color: var(--text-2); border-color: transparent; }
 .badge.zustand-lernen    { background: var(--stufe-1); color: var(--text-1); border-color: transparent; }
 .badge.zustand-frisch    { background: var(--stufe-2); color: var(--text-on-accent); border-color: transparent; }
+/* 3.15.0: hell liegt --stufe-2 bei Mittelgrau - helle Schrift darauf 2.9:1 */
+:root[data-thema="hell"] .badge.zustand-frisch { color: var(--text-1); }
 .badge.zustand-festigung { background: var(--stufe-3); color: var(--text-on-accent); border-color: transparent; }
 .badge.zustand-gefestigt { background: var(--stufe-4); color: var(--text-on-accent); border-color: transparent; }
 .badge.zustand-dauerhaft { background: var(--stufe-5); color: var(--text-on-accent); border-color: transparent; }
@@ -1815,7 +1817,8 @@ button.startliste__schritt { cursor: pointer; }
   border-radius: var(--r-md);
 }
 .grade-row .sub {
-  font-size: var(--fs-micro); font-weight: 500; opacity: 0.72;
+  /* 3.15.0: ohne opacity .72 - damit lag die Unterzeile bei 2.6-3.5:1 */
+  font-size: var(--fs-micro); font-weight: 500;
   letter-spacing: 0; line-height: 1.2;
 }
 .btn-unknown { background: var(--negative-bg); color: var(--negative); border-color: var(--negative-border); }
@@ -1884,6 +1887,15 @@ button.startliste__schritt { cursor: pointer; }
    Linie herein, die sich von der Mitte aus zieht. */
 .study-card.zugedeckt .study-word { animation: none; }
 .study-card__mitte { justify-content: center; gap: var(--space-5); }
+/* 3.15.0: drei Zeilen - die Karte in der Mitte bleibt stehen, egal was
+   darunter steht (app.js, renderSession). */
+.study-card__mitte {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+.study-card__unten { display: flex; flex-direction: column; gap: var(--space-4); padding-top: var(--space-5); align-self: start; min-width: 0; }
 .study-buehne {
   position: relative;
   width: 100%; max-width: 560px;
@@ -2005,7 +2017,7 @@ button.startliste__schritt { cursor: pointer; }
      legt sich wieder ab; der Schatten wird mit ihr groesser.
    - Haptik: ein kurzer Tick in revealAnswer() (app.js).
    Die Antwort erscheint erst, wenn die Rueckseite nach vorn kommt. */
-.karte-dreh--wende { animation: karte-wende 620ms cubic-bezier(0.3, 1.28, 0.55, 1) both; }
+.karte-dreh--wende { animation: karte-wende 540ms cubic-bezier(0.3, 1.28, 0.55, 1) both; }   /* 3.15.0: 620 -> 540 ms - bei 50 Karten am Stueck zaehlt jede Zehntelsekunde */
 .karte-dreh--wende .karte-seite--hinten { transform: rotateY(180deg); }
 @keyframes karte-wende {
   from { transform: rotateY(0deg); }
@@ -2013,21 +2025,61 @@ button.startliste__schritt { cursor: pointer; }
 }
 /* Ohne Fuellmodus: die Endlage ist "none", und das Wischen setzt danach
    seine eigene Verschiebung (siehe .study-flaeche--kommt). */
-.study-flaeche--dreht { animation: karte-hebt 620ms var(--ease-out); }
+.study-flaeche--dreht { animation: karte-hebt 540ms var(--ease-out); }
 @keyframes karte-hebt {
   0%   { transform: none; }
   40%  { transform: translateY(-8px) scale(1.035); }
   100% { transform: none; }
 }
-.study-flaeche--dreht .karte-seite { animation: karte-schatten 620ms var(--ease-out); }
-@keyframes karte-schatten {
-  40% { box-shadow: var(--kante), 0 34px 70px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3); }
+/* 3.15.0: Der groessere Schatten beim Anheben liegt als eigene Schicht
+   (::before) bereit und wird nur ueber die Deckkraft eingeblendet. Eine
+   box-shadow-Animation zeichnet die Karte in jedem Bild neu - auf
+   schwaecheren Handys ist das der Unterschied zwischen fluessig und
+   ruckelig. opacity laeuft auf der Grafikkarte. */
+.karte-seite::before {
+  content: ""; position: absolute; inset: 0;
+  border-radius: inherit; pointer-events: none;
+  box-shadow: 0 34px 70px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
+  opacity: 0;
 }
-.study-flaeche--dreht .study-trenner { animation: einstieg-wachsen 420ms var(--ease-out) 300ms both; }
+:root[data-thema="hell"] .karte-seite::before { box-shadow: 0 30px 60px rgba(60, 45, 20, 0.2), 0 4px 10px rgba(60, 45, 20, 0.1); }
+.study-flaeche--dreht .karte-seite::before { animation: karte-schatten 540ms var(--ease-out); }
+@keyframes karte-schatten { 40% { opacity: 1; } }
+.study-flaeche--dreht .study-trenner { animation: einstieg-wachsen 380ms var(--ease-out) 250ms both; }
 .study-flaeche--dreht .study-answer,
-.study-flaeche--dreht .karte-seite--hinten .card-tags { animation: enter-rise 360ms var(--ease-out) 320ms both; }
+.study-flaeche--dreht .karte-seite--hinten .card-tags { animation: enter-rise 340ms var(--ease-out) 270ms both; }
 .study-flaeche--offen .study-answer { animation: none; }
-.study-flaeche--dreht.study-flaeche--offen .study-answer { animation: enter-rise 360ms var(--ease-out) 320ms both; }
+.study-flaeche--dreht.study-flaeche--offen .study-answer { animation: enter-rise 340ms var(--ease-out) 270ms both; }
+
+/* 3.15.0: Die Bewegungen des Einstiegs in der Runde. Betreiber am
+   24.09.2026: "bei onboarding hab ich gesehen einige karten haben
+   animationen im sinne von umrandung [...] ich wuerde diese animation
+   durchgaengig haben wollen damit man das sieht [...] alle x momente".
+   Im Einstieg pulst um die wartende Karte ein Ring nach aussen
+   (einstieg-einladen, "tipp mich an"), nach der Antwort leuchtet sie auf
+   (einstieg-glanz). Hier dieselben zwei:
+   - Einladen: nur wer zoegert, sieht ihn. Erst nach 2,6 s auf derselben
+     Karte, dann alle 7 s ein Puls (18 % der Dauer, der Rest ist Ruhe). Wer
+     zuegig lernt, sieht ihn nie - er soll helfen, nicht nerven. Jede neue
+     Karte beginnt die Wartezeit von vorn (neues Markup).
+   - Aufleuchten: die bewertete Karte gibt beim Wegfliegen einen Ring in der
+     Farbe ihrer Bewertung ab (.karte-geist, unten). */
+.study-flaeche--wartet .karte-seite--vorn::after {
+  content: ""; position: absolute; inset: -1px;
+  border-radius: inherit; pointer-events: none;
+  animation: karte-einladen 7s var(--ease-out) 2.6s infinite;
+}
+@keyframes karte-einladen {
+  0%   { box-shadow: 0 0 0 0 var(--accent-border), inset 0 0 0 1px var(--accent-border); }
+  18%  { box-shadow: 0 0 0 14px transparent, inset 0 0 0 1px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent, inset 0 0 0 1px transparent; }
+}
+.karte-geist--known .karte-seite   { animation: geist-glanz-gut 440ms var(--ease-out) both; }
+.karte-geist--unknown .karte-seite { animation: geist-glanz-nicht 440ms var(--ease-out) both; }
+.karte-geist--almost .karte-seite  { animation: geist-glanz 440ms var(--ease-out) both; }
+@keyframes geist-glanz-gut   { from { box-shadow: 0 0 0 0 var(--positive-border); } to { box-shadow: 0 0 0 18px transparent; } }
+@keyframes geist-glanz-nicht { from { box-shadow: 0 0 0 0 var(--negative-border); } to { box-shadow: 0 0 0 18px transparent; } }
+@keyframes geist-glanz       { from { box-shadow: 0 0 0 0 var(--accent-border); } to { box-shadow: 0 0 0 18px transparent; } }
 
 /* 3.14.0: Die bewertete Karte fliegt weg (app.js, kartenAbflug) - eine
    Kopie ausserhalb von #app, damit render() sie nicht mitnimmt. */
@@ -2176,7 +2228,9 @@ button.startliste__schritt { cursor: pointer; }
   background: var(--negative-bg); color: var(--text-2);
   border-color: var(--negative-border);
   text-align: left; margin-top: var(--space-4);
+  display: flex; align-items: flex-start; gap: var(--space-2);   /* 3.15.0: Zeichen neben dem Text, nicht darueber */
 }
+.leech-banner .i { flex: none; margin-top: 2px; color: var(--negative); }
 .leech-banner strong { color: var(--negative); }
 .merk-hinweis {
   background: var(--accent-bg); color: var(--text-2);
@@ -2216,6 +2270,66 @@ button.startliste__schritt { cursor: pointer; }
   .stufe-chip:hover { color: var(--text-1); border-color: var(--border-strong); }
   .stufe-chip.aktiv:hover { color: var(--accent); }
 }
+/* 3.15.0: die vereinfachte Uebungsauswahl (app.js, Verwalten). */
+.drill-kopf { display: flex; flex-direction: column; gap: 2px; margin-bottom: var(--space-4); }
+.drill-kopf strong { font-family: var(--font-text); font-size: var(--fs-lg); color: var(--text-1); }
+.drill-kopf span { font-size: var(--fs-xs); color: var(--text-3); }
+.segment {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  padding: 3px; margin-bottom: var(--space-4);
+  background: var(--bg-sunken); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-full);
+}
+.segment__teil { position: relative; margin: 0; cursor: pointer; }
+.segment__teil input { position: absolute; opacity: 0; pointer-events: none; }
+.segment__teil span {
+  display: grid; place-items: center; min-height: 36px;
+  border-radius: var(--r-full);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text-2);
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.segment__teil input:checked + span { background: var(--surface-raised); color: var(--text-1); box-shadow: var(--kante), 0 1px 3px rgba(0, 0, 0, 0.25); }
+.segment__teil input:focus-visible + span { outline: 2px solid var(--accent-border); outline-offset: 2px; }
+.stufe-chip { display: inline-flex; align-items: center; gap: 6px; transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.stufe-chip .i { width: 14px; height: 14px; animation: enter-pop 220ms var(--ease-spring) both; }
+.drill-zahl { font-size: var(--fs-sm); color: var(--text-2); margin: 0 0 var(--space-3); }
+.drill-zahl strong { color: var(--text-1); font-variant-numeric: tabular-nums; }
+.drill-schreiben { margin-bottom: var(--space-2); }
+/* Erste Uebungskarte: die Kopfzeile sagt "Uebung - zaehlt nicht als
+   Wiederholung" und blendet nach gut 3 s in "Karte 1 von N" ueber. Beide
+   Texte liegen in derselben Rasterzelle - nichts verschiebt sich. */
+.mitte-wechsel { display: inline-grid; }
+.mitte-wechsel > span { grid-area: 1 / 1; }
+.mitte-wechsel__a { animation: mitte-weg 3.8s var(--ease-out) both; }
+.mitte-wechsel__b { animation: mitte-her 3.8s var(--ease-out) both; }
+@keyframes mitte-weg { 0%, 82% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes mitte-her { 0%, 84% { opacity: 0; transform: translateY(3px); } 100% { opacity: 1; transform: none; } }
+/* Der Schalter "Mit Schreiben": Text links, Schalter rechts - wie jeder
+   Einstellungs-Schalter auf dem Handy. */
+.drill-schreiben { justify-content: space-between; padding: var(--space-2) 0; border-top: 1px solid var(--border-subtle); margin-top: var(--space-1); }
+.drill-schreiben__text { display: inline-flex; align-items: center; gap: var(--space-3); }
+.drill-schreiben__text > span { display: flex; flex-direction: column; line-height: 1.3; }
+.drill-schreiben__text small { font-size: var(--fs-xs); font-weight: 400; color: var(--text-3); }
+input.schalter {
+  -webkit-appearance: none; appearance: none;
+  flex: none; position: relative;
+  width: 46px; height: 28px; margin: 0;
+  border-radius: 14px;
+  background: var(--stufe-1);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+input.schalter::after {
+  content: ""; position: absolute; top: 2px; left: 2px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--text-1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition: transform 220ms var(--ease-spring);
+}
+input.schalter:checked { background: var(--accent); border-color: var(--accent); }
+input.schalter:checked::after { transform: translateX(18px); background: var(--text-on-accent); }
+input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-offset: 2px; }
 .drill-set-liste {
   max-height: 240px; overflow-y: auto;
   border: 1px solid var(--border-subtle); border-radius: var(--r-md);

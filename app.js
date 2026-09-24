@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.14.0";
+const APP_VERSION = "3.15.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4224,6 +4224,9 @@ function openDrillPicker(source) {
     ui.drillSetIds = new Set();
   }
   setzeVollenStufenBereich();
+  /* 3.15.0: jeder Stand einzeln an/aus (ui.drillGruppen, Indizes in
+     UEBEN_GRUPPEN) - zu Beginn alle, zu denen es Karten gibt. */
+  ui.drillGruppen = new Set(UEBEN_GRUPPEN.map((g, i) => i).filter(i => uebbareKarten().some(c => c.stufe >= UEBEN_GRUPPEN[i].von && c.stufe <= UEBEN_GRUPPEN[i].bis)));
   /* 2.16.0: Der Auswahlkasten oeffnet sich ganz oben in der Werkzeugleiste -
      der Knopf dafuer steht aber in der Speicherkarte, oft mehrere Bildschirme
      weiter unten. Wer ihn dort drueckte, sah gar nichts passieren. */
@@ -4265,26 +4268,28 @@ function stufenBereichName(von, bis) {
   if (g.length === UEBEN_GRUPPEN.length) return "alle Karten";
   return g.length === 1 ? g[0].label : g[0].label + " bis " + g[g.length - 1].label;
 }
-function waehleStufe(s, bisS) {
-  const bis = Number.isInteger(bisS) ? bisS : s;
-  if (ui.drillAnker === null) {
-    ui.drillAnker = { von: s, bis: bis };
-    ui.drillVon = s;
-    ui.drillBis = bis;
-  } else {
-    ui.drillVon = Math.min(ui.drillAnker.von, s);
-    ui.drillBis = Math.max(ui.drillAnker.bis, bis);
-    ui.drillAnker = null;
-  }
-  render();
+/* 3.15.0: waehleStufe() (Zwei-Tipp-Bereich) entfernt - die Chips schalten
+   jetzt einzeln an/aus, siehe case "stufe-chip" und startDrillGruppen(). */
+/* 3.15.0: Ueben nach gewaehlten Staenden (Indizes in UEBEN_GRUPPEN). */
+function gruppenName(gruppen) {
+  const g = UEBEN_GRUPPEN.filter((x, i) => gruppen.has(i));
+  if (g.length === UEBEN_GRUPPEN.length) return "alle Karten";
+  return g.map(x => x.label).join(" + ");
 }
-async function startDrill(min, max, handwriting) {
-  const cards = uebbareKarten().filter(c => c.stufe >= min && c.stufe <= max);
+function drillGruppenKarten(gruppen) {
+  return uebbareKarten().filter(c => [...gruppen].some(i => UEBEN_GRUPPEN[i] && c.stufe >= UEBEN_GRUPPEN[i].von && c.stufe <= UEBEN_GRUPPEN[i].bis));
+}
+async function startDrillGruppen(gruppen, handwriting) {
+  const cards = drillGruppenKarten(gruppen);
   if (cards.length === 0) {
-    await dlgAlert("Dazu gibt es gerade keine Karten.", "Nichts zu üben");
+    await dlgAlert(gruppen.size ? "Dazu gibt es gerade keine Karten." : "W\u00e4hle mindestens einen Stand aus.", "Nichts zu \u00fcben");
     return;
   }
-  startDrillWithCards(cards, stufenBereichName(min, max), handwriting);
+  /* Alle Staende mit Karten gewaehlt = "alle Karten", auch wenn es fuer
+     einen Stand gerade keine gibt. */
+  const moeglich = UEBEN_GRUPPEN.map((g, i) => i).filter(i => drillGruppenKarten(new Set([i])).length);
+  const alle = moeglich.every(i => gruppen.has(i));
+  startDrillWithCards(cards, alle ? "alle Karten" : gruppenName(gruppen), handwriting);
 }
 /* 2.21.0: Loest das bisherige startDrillFromSet(EINE Speicherkarte) ab -
    jetzt koennen mehrere Speicherkarten zusammen geuebt werden (z.B.
@@ -4812,7 +4817,7 @@ function gradeCard(kind) {
   /* 3.12.0: nur fuer die Anzeige - der Abschluss zeigt, wie die Runde lief,
      und die Karte darf wissen, dass sie neu hereinkommt (renderSession).
      Beides beruehrt keine Stufe und keine Faelligkeit. */
-  if (!s.isDrill && card && (kind === "known" || kind === "almost" || kind === "unknown")) {
+  if (card && (kind === "known" || kind === "almost" || kind === "unknown")) {   /* 3.15.0: auch im Ueben - fuer den Abschluss */
     s.zaehler = s.zaehler || { known: 0, almost: 0, unknown: 0 };
     s.zaehler[kind]++;
     s.letzteArt = kind;
@@ -4824,7 +4829,9 @@ function gradeCard(kind) {
   // Nur „Nicht" hängt die Karte wieder hinten an. „Fast" ist morgen dran –
   // stünde sie auch heute noch einmal an, würde die Session nie enden.
   if (kind === "unknown" && card) s.queue.push(id);
-  if (s.isDrill && s.queue.length === 0) s.queue = shuffled(s.drillIds);
+  /* 3.15.0: kein endloses Neumischen mehr - die Uebungsrunde endet wie
+     eine Lernrunde, wenn jede Karte einmal mit Fast oder Sicher durch ist.
+     "Noch eine Runde" auf dem Abschluss mischt neu (drill-nochmal). */
   s.revealed = false;
   s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
   hwStrokes = [];
@@ -4908,7 +4915,6 @@ document.addEventListener("keydown", e => {
     /* 2.15.0: Im Uebungsmodus traegt die Leertaste durch: aufdecken, dann
        weiter. Nur eine Bewegung, kein Zielen auf Knoepfe. */
     if (!s.revealed) revealAnswer();
-    else if (s.isDrill) gradeCard("weiter");
     return;
   }
   if (e.key === "ArrowRight" || e.key === "3") {
@@ -4935,7 +4941,7 @@ app.addEventListener("pointerdown", e => {
      ganze Buehne samt Knoepfen - der Stapel dahinter bleibt liegen, wie bei
      einem echten Kartenstapel. */
   const karte = e.target.closest(".study-flaeche");
-  if (!karte || !ui.session || !ui.session.revealed || ui.session.isDrill || wischBewertung) return;
+  if (!karte || !ui.session || !ui.session.revealed || wischBewertung) return;   /* 3.15.0: auch im Ueben */
   if (e.target.closest("button, a, canvas, input, textarea")) return;
   wischStart = { x: e.clientX, y: e.clientY, karte, breite: karte.getBoundingClientRect().width, id: e.pointerId, erfasst: false };
 });
@@ -8749,10 +8755,12 @@ function renderFortschrittSeite(id) {
    siehe renderSession, Begruendung bei der Notiz. */
 function leechHinweis(card, platz) {
   return '<div class="leech-banner' + (platz ? ' study-extra--platz" aria-hidden="true' : '') + '">' +
-    ikon("serie", "i-sm") + ' Diese Karte ist dir schon <strong>' +
-    card.rueckfaelle + '-mal</strong> wieder entfallen. Formuliere sie im Verwalten-Tab um oder ' +
-    'teile sie in zwei Karten \u2013 sonst frisst sie weiter deine Lernzeit. Sobald du Wort oder ' +
-    '\u00dcbersetzung \u00e4nderst, beginnt die Z\u00e4hlung von vorn.</div>';
+    ikon("serie", "i-sm") + '<span>Schon <strong>' + card.rueckfaelle + '-mal</strong> vergessen. ' +
+    'Formuliere sie um oder teile sie in zwei Karten.</span></div>';
+  /* 3.15.0: zwei kurze Saetze statt vier. Der Rest ("im Verwalten-Tab",
+     "frisst Lernzeit", "Zaehlung beginnt von vorn") stand auf jeder dieser
+     Karten, war nach dem ersten Lesen bekannt und machte den Hinweis so hoch,
+     dass er die Karte am kleinen Handy verschob (gemessen 52-83 px). */
 }
 function renderSession() {
   const s = ui.session;
@@ -8788,7 +8796,7 @@ function renderSession() {
   const frischAufgedeckt = !neueKarte && s.revealed && !s.anzeigeOffen;
   s.anzeigeId = anzeige;
   s.anzeigeOffen = s.revealed;
-  const anteilJetzt = s.isDrill ? null : fertig / gesamt;
+  const anteilJetzt = fertig / gesamt;
   const anteilVorher = typeof s.anteilVorher === "number" ? s.anteilVorher : 0;
   if (anteilJetzt !== null) s.anteilVorher = anteilJetzt;
 
@@ -8803,8 +8811,15 @@ function renderSession() {
        ist dieselbe Information, nur nie null. Der Fortschrittsstrich
        darunter bleibt unveraendert bei fertig/gesamt; er soll bei null
        anfangen, er ist ja der Balken. */
-    mitte: s.isDrill
-      ? "Noch " + remaining + " in dieser Runde"
+    /* 3.15.0: auch im Ueben "Karte x von y" mit Strich - seit das Ueben
+       bewertet, hat die Runde ein Ende und damit einen Stand. */
+    mitte: s.isDrill && !s.zug && !s.revealed
+      /* 3.15.0: erste Uebungskarte - die Kopfzeile sagt einmal, was Ueben
+         ist, und blendet dann in den Stand ueber (styles.css,
+         .mitte-wechsel). Kein eigener Streifen, also kein Platz, der auf
+         der zweiten Karte fehlt oder frei wird. */
+      ? '<span class="mitte-wechsel"><span class="mitte-wechsel__a" role="status">\u00dcbung \u2013 z\u00e4hlt nicht als Wiederholung</span>' +
+        '<span class="mitte-wechsel__b">Karte 1 von ' + gesamt + '</span></span>'
       : "Karte " + Math.min(fertig + 1, gesamt) + " von " + gesamt,
     anteil: anteilJetzt,
     rechts: s.lastAction
@@ -8822,11 +8837,14 @@ function renderSession() {
      nicht geaendert hat. */
   html += '<div class="study-card' + (s.revealed ? '' : ' zugedeckt') + '" id="sitzung">';
 
-  if (s.isDrill) {
-    html += '<div class="drill-banner">' + ikon("ueben", "i-sm") + ' \u00dcbungsmodus \u00b7 ' +
-      esc(s.drillLabel) + (s.handwriting ? ' \u00b7 Handschrift' : '') +
-      ' \u2013 dein Fortschritt bleibt unber\u00fchrt</div>';
-  }
+  /* 3.15.0: Das Banner "Uebungsmodus - dein Fortschritt bleibt
+     unberuehrt" stand auf JEDER Karte, zwei Zeilen hoch. Betreiber am
+     24.09.2026: "die nachricht dass der fortschritt unangetastet ist, ist
+     nicht noetig zumindest sollte das nur kurz oder fuer erste karte da
+     sein". Jetzt: nur auf der ersten Karte, eine Zeile, blendet nach ein
+     paar Sekunden aus. Absolut gesetzt (styles.css, .ueben-hinweis) - sie
+     nimmt keinen Platz, die Karte steht mit und ohne sie gleich. */
+  /* (der Hinweis selbst steht in der Kopfzeile, siehe mitte oben) */
 
   html += '<div class="study-card__mitte">';
   /* 3.12.0: Die Karte ist eine Karte. Vorher stand das Wort frei in einer
@@ -8838,6 +8856,14 @@ function renderSession() {
      Einstiegs. Eine neue Karte steigt vom Stapel auf, beim Aufdecken klappt
      sie um. */
   const rest = s.isDrill ? 3 : remaining;
+  /* 3.15.0: Die Karte steht auf jeder Karte an derselben Stelle. Bis 3.14
+     war .study-card__mitte eine zentrierte Spalte: Hatte eine Karte eine
+     Notiz (oder einen Rueckfall-Hinweis), rutschte sie um die halbe Hoehe
+     davon nach oben - gemessen 40 px von einer Karte zur naechsten. Jetzt
+     ein Raster aus drei Zeilen (1fr | Karte | 1fr, styles.css): Die Notiz
+     liegt in der unteren Zeile und aendert die Mitte nicht, solange sie
+     kuerzer ist als der Platz darunter. */
+  html += '<div class="study-card__oben" aria-hidden="true"></div>';
   html += '<div class="study-buehne">';
   if (rest >= 3) html += '<div class="study-stapel study-stapel--2" aria-hidden="true"></div>';
   if (rest >= 2) html += '<div class="study-stapel study-stapel--1" aria-hidden="true"></div>';
@@ -8870,14 +8896,17 @@ function renderSession() {
      So machen es Anki (Tipp auf die Karte) und Quizlet (Tipp dreht). Bei
      Handschrift bleibt es beim "Fertig" der Zeichenleiste, im Ueben deckt
      ohnehin ein Tipp irgendwo auf (document.body-Listener weiter unten). */
-  const tippbar = !s.revealed && !s.isDrill && !s.handwriting;
+  const tippbar = !s.revealed && !s.handwriting;   /* 3.15.0: auch im Ueben */
   html += '<div class="study-flaeche' + (s.revealed ? ' study-flaeche--offen' : '') +
+    (!s.revealed && !s.handwriting ? ' study-flaeche--wartet' : '') +
     (neueKarte ? ' study-flaeche--kommt' : '') + (frischAufgedeckt ? ' study-flaeche--dreht' : '') + '"' +
     (tippbar ? ' data-action="reveal"' : '') + '>';
   html += '<div class="karte-dreh' + (frischAufgedeckt ? ' karte-dreh--wende' : '') + '">';
   if (!s.revealed || frischAufgedeckt) {
     html += '<div class="karte-seite karte-seite--vorn"' + (s.revealed ? ' aria-hidden="true"' : '') + '>' + kopf + wortHtml;
-    if (!s.isDrill && !s.handwriting) {
+    /* 3.15.0: nur auf der ersten Karte einer Runde - danach weiss man es,
+       und der Satz waere auf jeder weiteren Karte nur noch Rauschen. */
+    if (!s.handwriting && !s.zug) {
       html += '<div class="study-flaeche__tipp" aria-hidden="true">' + ikon("auge", "i-sm") + 'Tippen zum Umdrehen</div>';
     }
     html += '</div>';
@@ -8892,6 +8921,7 @@ function renderSession() {
     html += '</div>';
   }
   html += '</div></div></div>';
+  html += '<div class="study-card__unten">';
 
   if (!s.revealed) {
     if (s.handwriting) html += renderHandwritingCanvas(false);
@@ -8900,8 +8930,8 @@ function renderSession() {
        Drehung nach oben - gemessen 93px am Handy. Unsichtbar vorgehalten
        steht die Karte vorher schon dort, wo sie nachher steht. visibility:
        hidden liest auch kein Screenreader vor. */
-    else if (!s.isDrill) {
-      if (istVerbrannt(card)) html += leechHinweis(card, true);
+    else {
+      if (!s.isDrill && istVerbrannt(card)) html += leechHinweis(card, true);
       if (card.extra && s.extraOpen) {
         html += '<div class="study-extra study-extra--platz" aria-hidden="true">' + renderExtra(card.extra) + '</div>';
       }
@@ -8919,7 +8949,7 @@ function renderSession() {
       html += '<div class="study-extra">' + renderExtra(card.extra) + '</div>';
     }
   }
-  html += '</div>';
+  html += '</div></div>';   /* .study-card__unten, .study-card__mitte */
 
   /* ---- Die Aktionszone, unten verankert ---- */
   html += '<div class="study-aktionen">';
@@ -8948,19 +8978,14 @@ function renderSession() {
   }
 
   if (!s.revealed) {
-    if (s.isDrill) {
-      /* 2.16.0: Im Uebungsmodus kein Knopf mehr zum Aufdecken. Dieselbe
-         Bewegung, die danach weitertraegt, deckt auch auf - Leertaste oder
-         ein Tipp irgendwo. Im echten Lernen bleibt der Knopf: dort geht es
-         nach dem Aufdecken mit einer ECHTEN Entscheidung weiter (Nicht /
-         Fast / Sicher), und wer dafuer ohnehin zielen muss, soll nicht aus
-         Versehen aufdecken. */
-      /* 3.14.0: Platzhalter fuer "Merken", wie im Lernen (siehe unten). */
-      html += '<div class="study-nebenaktionen" aria-hidden="true" style="visibility:hidden">' +
-        '<button class="ghost" tabindex="-1">' + ikon("stern", "i-sm") + 'Merken</button></div>';
-      html += '<p class="weiter-hinweis" style="margin-bottom:var(--space-2)">Leertaste oder tippen \u2013 Antwort zeigen</p>';   /* = padding-bottom der .grade-row danach */
-    } else if (!s.handwriting) {
+    /* 3.15.0: Ueben und Lernen sehen gleich aus - Knopf "Antwort zeigen"
+       und antippbare Karte. Bis 3.14 hatte das Ueben keinen Knopf, einen
+       Tipp irgendwo und danach keine Bewertung (2.15.0/2.16.0). Seit das
+       Ueben wieder bewertet (siehe gradeCard), braucht es dieselbe Ruhe
+       wie das Lernen: ein Tipp irgendwo darf nicht mehr weiterschalten. */
+    if (s.handwriting) {
       /* Bei Handschrift deckt "Fertig" in der Zeichenleiste auf. */
+    } else {
       /* 3.14.0: Platzhalter in Hoehe der Zeile "Merken", die nach dem
          Aufdecken dort steht - sonst rutschte die Karte mitten in der
          Drehung um gut 30px nach oben (gemessen: Aktionszone 72 -> 133px). */
@@ -8968,14 +8993,6 @@ function renderSession() {
         '<button class="ghost" tabindex="-1">' + ikon("stern", "i-sm") + 'Merken</button></div>';
       html += '<button class="lg full study-aufdecken" data-action="reveal">Antwort zeigen</button>';
     }
-  } else if (s.isDrill) {
-    /* 2.15.0: Gar keine Knoepfe. Im Uebungsmodus aendert sich nichts am
-       Fortschritt - uebrig bleibt eine einzige Bewegung, und die braucht
-       keinen Knopf. Der Hinweis traegt trotzdem .grade-row: auf dieses
-       Element scrollt scrollGradeRowIntoView() nach dem Aufdecken. Steht es
-       nicht da (oder steht es auf display:none), bleibt der Blick haengen. */
-    html += '<div class="grade-row" style="grid-template-columns:1fr">' +
-      '<p class="weiter-hinweis">Leertaste oder tippen \u2013 weiter</p></div>';
   } else {
     html += '<div class="grade-row">';
     /* 3.2.1: "kommt gleich wieder" war die einzige der drei Unterzeilen, die
@@ -8988,9 +9005,14 @@ function renderSession() {
        Auf dem Sicher-Knopf stand "in ~10 Tagen": Wer ein paar Karten
        bewertet, konnte daraus die ganze Abstandsreihe ablesen. Jetzt sagt
        jeder Knopf nur noch die Richtung. */
+    /* 3.15.0: Im Ueben dieselben drei Knoepfe. Sie wirken nur auf die
+       laufende Runde (gradeCard): Nicht kommt in dieser Runde wieder, Fast
+       und Sicher sind fuer diese Runde durch. Stufe und Faelligkeit bleiben
+       unberuehrt - deshalb andere Unterzeilen als beim Lernen. */
+    const u = s.isDrill;
     html += '<button class="btn-unknown" style="--n:0" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 kommt gleich noch einmal">Nicht<span class="sub">gleich wieder</span></button>';
-    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-label="Fast gewusst \u2013 kommt morgen wieder">Fast<span class="sub">morgen wieder</span></button>';
-    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-label="Sicher gewusst \u2013 kommt sp\u00e4ter wieder">Sicher<span class="sub">sp\u00e4ter wieder</span></button>';
+    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-label="' + (u ? 'Fast gewusst \u2013 f\u00fcr diese Runde durch' : 'Fast gewusst \u2013 kommt morgen wieder') + '">Fast<span class="sub">' + (u ? 'passt' : 'morgen wieder') + '</span></button>';
+    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-label="' + (u ? 'Sicher gewusst \u2013 f\u00fcr diese Runde durch' : 'Sicher gewusst \u2013 kommt sp\u00e4ter wieder') + '">Sicher<span class="sub">' + (u ? 'sitzt' : 'sp\u00e4ter wieder') + '</span></button>';
     html += '</div>';
   }
 
@@ -9017,15 +9039,17 @@ function renderRundenEnde(s, gesamt) {
      (serieAktuell, checkStreakOnSessionComplete). Die Zeile "N Tage am
      Stueck" erschien deshalb nach keiner einzigen Runde. Heute gelernt heisst:
      heute steht etwas im Protokoll. */
-  const serieHeute = verlauf[todayStr()] ? serieAktuell() : 0;
+  const serieHeute = !s.isDrill && verlauf[todayStr()] ? serieAktuell() : 0;
   const morgen = vorschau7(currentCards())[1].anzahl;
   let html = '<div class="ende' + (neu ? ' ende--neu' : '') + '">';
   html += '<div class="ende__haken" aria-hidden="true">' +
     '<svg class="i ende__zeichen" viewBox="0 0 24 24" focusable="false">' +
     '<circle cx="12" cy="12" r="9" pathLength="1"/><path d="M8 12.3l2.8 2.8L16.2 9.6" pathLength="1"/></svg>' +
     '<span class="ende__ring"></span><span class="ende__ring ende__ring--2"></span></div>';
-  html += '<h2>Geschafft</h2>';
-  html += '<p class="hint ende__satz">Alle ' + gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' für heute durch.</p>';
+  html += '<h2>' + (s.isDrill ? '\u00dcbung fertig' : 'Geschafft') + '</h2>';
+  html += '<p class="hint ende__satz">' + (s.isDrill
+    ? gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' ge\u00fcbt \u00b7 ' + esc(s.drillLabel)
+    : 'Alle ' + gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' für heute durch.') + '</p>';
   html += '<div class="ende__kacheln">';
   html += '<div class="ende__kachel ende__kachel--sicher" style="--i:0"><strong>' + z.known + '</strong><span>sicher</span></div>';
   html += '<div class="ende__kachel" style="--i:1"><strong>' + z.almost + '</strong><span>fast</span></div>';
@@ -9035,12 +9059,15 @@ function renderRundenEnde(s, gesamt) {
     html += '<div class="ende__serie" style="--i:3">' + ikon("serie", "i-lg") +
       '<span><strong>' + serieHeute + ' Tag' + (serieHeute === 1 ? '' : 'e') + '</strong> am Stück</span></div>';
   }
-  html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
+  if (!s.isDrill) html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
     ? 'Morgen kommen <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
     : 'Morgen ist nichts fällig. Die nächsten kommen von selbst.') + '</p>';
   html += gemerktHinweis();
   html += '<div class="empty__aktionen ende__aktionen">';
   html += '<button data-action="end-session">Fertig</button>';
+  /* 3.15.0: Ueben laedt zum Weitermachen ein - dieselben Karten, neu
+     gemischt; wer "Nicht" hatte, bekommt sie so noch einmal. */
+  if (s.isDrill) html += '<button class="secondary" data-action="drill-nochmal">' + ikon("ueben", "i-sm") + ' Noch eine Runde</button>';
   if (s.lastAction) {
     html += '<button class="ghost" data-action="undo-grade">' + ikon("rueckgaengig", "i-sm") +
       ' Letzte Bewertung r\u00fcckg\u00e4ngig</button>';
@@ -9372,69 +9399,54 @@ function renderVerwaltenListe(cards, gefuehrt) {
        mitkommen duerfen. */
     const freiDrill = freieIdsFor(currentBereich());
     html += '<div class="drill-picker" id="drill-box">';
-    html += '<p class="hint" style="padding-top:0">Was üben? (Fortschritt bleibt dabei unverändert)</p>';
-    /* 2.21.0: Radioknoepfe statt Dropdown - "Nach Stufen" und "Speicherkarten"
-       sind jetzt zwei unterschiedlich bediente Modi (Stufenbereich vs.
-       Mehrfachauswahl), das liess sich in einem einzelnen <select> nicht
-       mehr sauber unterbringen. */
+    /* 3.15.0: vereinfacht. Vorher: Satz mit Klammer, Radioknoepfe, "Anfang
+       antippen, dann Ende", Bereichsname darunter, Handschrift-Haken. Jetzt:
+       zwei Reiter (Stand | Speicherkarten), Chips einzeln an/aus, eine Zahl,
+       ein Schalter. Hick: weniger Entscheidungen auf einmal, und keine davon
+       haengt von der Reihenfolge ab. */
+    html += '<div class="drill-kopf"><strong>Üben</strong><span>Zählt nicht für deine Wiederholungen</span></div>';
     if (sets.length > 0) {
-      html += '<div class="wahl-reihe">';
-      html += '<label class="check-row"><input type="radio" name="drill-mode" value="stufen"' +
-        (ui.drillSource === "stufen" ? " checked" : "") + '><span>Nach Stufen</span></label>';
-      html += '<label class="check-row"><input type="radio" name="drill-mode" value="sets"' +
+      html += '<div class="segment" role="radiogroup" aria-label="Wonach üben">';
+      html += '<label class="segment__teil"><input type="radio" name="drill-mode" value="stufen"' +
+        (ui.drillSource === "stufen" ? " checked" : "") + '><span>Nach Stand</span></label>';
+      html += '<label class="segment__teil"><input type="radio" name="drill-mode" value="sets"' +
         (ui.drillSource === "sets" ? " checked" : "") + '><span>Speicherkarten</span></label>';
       html += '</div>';
     }
+    let anzahl = 0;
     if (ui.drillSource === "sets" && sets.length > 0) {
-      /* 2.21.0: Mehrfachauswahl statt eines einzelnen Eintrags - mehrere
-         Speicherkarten zusammen ueben (z.B. "Nomen" + "Weiblich"), ohne
-         eine Karte doppelt zu zaehlen, wenn sie in beiden liegt.
-         2.21.2: Die Kartenzahl je Zeile ("Verben (2)", "Lektion 1–3
-         Wiederholung (16)") wieder raus - bei laengeren Namen wurde die
-         Zeile dadurch unnoetig breit, und dieselbe Zahl steht ohnehin schon
-         bei der Speicherkarte selbst weiter unten im Verwalten-Tab, links
-         vom "🔁 Üben"-Knopf. */
       html += '<div class="drill-set-liste">';
       html += sets.map(s => {
         const checked = ui.drillSetIds.has(s.id);
-        return '<label style="display:flex; align-items:center; gap:6px; cursor:pointer">' +
-          '<input type="checkbox" class="drill-set-check" data-id="' + esc(s.id) + '"' + (checked ? " checked" : "") + '> ' +
-          iconSvg(s.art || "eigen") + ' ' + esc(s.name) + '</label>';
+        return '<label class="check-row">' +
+          '<input type="checkbox" class="drill-set-check" data-id="' + esc(s.id) + '"' + (checked ? " checked" : "") + '>' +
+          '<span>' + iconSvg(s.art || "eigen") + ' ' + esc(s.name) + '</span></label>';
       }).join("");
       html += '</div>';
       const gewaehlteSets = sets.filter(s => ui.drillSetIds.has(s.id));
-      const gesamtzahl = new Set(gewaehlteSets.flatMap(s => setCards(s).filter(c => freiDrill === null || freiDrill.has(c.id)).map(c => c.id))).size;
-      html += '<p class="hint" style="padding:0 0 10px">' + gesamtzahl + ' Karte(n)' +
-        (gewaehlteSets.length > 1 ? " insgesamt (zusammen, ohne Dopplungen)" : "") + '</p>';
-    }
-    if (ui.drillSource !== "sets" || sets.length === 0) {
-      /* 10: Chips statt "von"/"bis"-Klapplisten - bei 2-5 Stufen sieht man
-         gleich alle auf einmal (Bild 9, 72). Erster Tipp waehlt eine Stufe,
-         der zweite spannt den Bereich dazwischen auf (waehleStufe()). Bis zu
-         MAX_STUFE+1 Chips duerfen umbrechen, keine erzwungene Einzelzeile. */
-      html += '<p class="hint" style="padding-top:0">Anfang antippen, dann Ende</p>';
+      anzahl = new Set(gewaehlteSets.flatMap(s => setCards(s).filter(c => freiDrill === null || freiDrill.has(c.id)).map(c => c.id))).size;
+    } else {
+      const gruppen = ui.drillGruppen || new Set();
       html += '<div class="stufe-chips" role="group" aria-label="Welche Karten">';
-      /* Nur Zustaende, zu denen es gerade Karten gibt - ein Chip, der ins
+      /* Nur Staende, zu denen es gerade Karten gibt - ein Chip, der ins
          Leere fuehrt, waere schlechter als keiner. */
-      html += UEBEN_GRUPPEN.filter(g => stufen.some(s => s >= g.von && s <= g.bis)).map(g => {
-        const aktiv = ui.drillVon !== null && g.von <= ui.drillBis && g.bis >= ui.drillVon;
+      html += UEBEN_GRUPPEN.map((g, i) => ({ g, i })).filter(x => stufen.some(s => s >= x.g.von && s <= x.g.bis)).map(({ g, i }) => {
+        const aktiv = gruppen.has(i);
         return '<button type="button" class="stufe-chip' + (aktiv ? " aktiv" : "") +
-          '" data-action="stufe-chip" data-stufe="' + g.von + '" data-bis="' + g.bis + '" aria-pressed="' + (aktiv ? "true" : "false") +
-          '">' + esc(g.label) + '</button>';
+          '" data-action="stufe-chip" data-gruppe="' + i + '" aria-pressed="' + (aktiv ? "true" : "false") +
+          '">' + (aktiv ? ikon("haken", "i-sm") : '') + esc(g.label) + '</button>';
       }).join("");
       html += '</div>';
-      html += '<p class="hint" style="padding:0 0 10px">' +
-        (ui.drillVon === null ? "Keine Karten verfügbar" : stufenBereichName(ui.drillVon, ui.drillBis)) + '</p>';
+      anzahl = drillGruppenKarten(gruppen).length;
     }
-    /* 3.0.0: Die Handschrift-Wahl steht VOR dem Start, nicht darunter. Ein
-       Haken, den man erst unter dem Knopf sieht, ist einer, den man nicht
-       mehr setzt. */
-    html += '<label class="check-row">';
-    html += '<input type="checkbox" id="drill-handwriting">';
-    html += '<span>' + ikon("hand", "i-sm") + ' Handschriftlich üben (Deutsch → Arabisch)</span>';
+    html += '<p class="drill-zahl"><strong>' + anzahl + '</strong> Karte' + (anzahl === 1 ? '' : 'n') + '</p>';
+    /* 3.0.0: Die Handschrift-Wahl steht VOR dem Start, nicht darunter. */
+    html += '<label class="check-row drill-schreiben">';
+    html += '<span class="drill-schreiben__text">' + ikon("hand", "i-sm") + '<span>Mit Schreiben<small>Deutsch → Arabisch, von Hand</small></span></span>';
+    html += '<input type="checkbox" class="schalter" id="drill-handwriting" role="switch">';
     html += '</label>';
     html += '<div class="form-actions">';
-    html += '<button data-action="start-drill">Start</button>';
+    html += '<button data-action="start-drill"' + (anzahl ? '' : ' disabled') + '>' + ikon("ueben", "i-sm") + ' Üben</button>';
     html += '<button class="secondary" data-action="close-drill">Abbrechen</button>';
     html += '</div>';
     html += '</div>';
@@ -9931,8 +9943,8 @@ document.body.addEventListener("click", e => {
      geschrieben hat. */
   if (s.handwriting && !s.revealed) return;
   if (e.target.closest("button, a, input, select, textarea, canvas, .hw-toolbar, .modebar")) return;
-  if (!s.revealed) revealAnswer();
-  else gradeCard("weiter");
+  /* 3.15.0: nur noch aufdecken - weiter geht es ueber die Bewertung. */
+  if (!s.revealed && !e.target.closest(".study-flaeche")) revealAnswer();
 });
 
 /* Gemeinsamer Aktivierungspunkt fuer Maus (sofort) und Touch/Stift (nach
@@ -10261,8 +10273,16 @@ function drawStrokes(ctx, canvas) {
      Sie wird VOR den Strichen gezeichnet und liegt so immer hinter der
      eigenen Schrift. Das halbe Pixel (+0.5) macht die Linie scharf statt
      grau verwaschen. */
+  /* 3.15.0: Farben aus der gerade gueltigen Fassung. Bis hier fest
+     "#2a2016" (dunkelbraune Tinte) und "#ddd0ba" (Linie) - Werte aus der
+     Zeit, als die Zeichenflaeche hell war. Auf --bg-sunken der dunklen
+     Fassung schrieb man damit dunkel auf dunkel. Betreiber am 24.09.2026:
+     "beim schreiben ist es dunkle tinte auf dunkle farbe". */
+  const farben = getComputedStyle(document.documentElement);
+  const tinte = (farben.getPropertyValue("--text-1") || "").trim() || "#f5f3ec";
+  const linie = (farben.getPropertyValue("--border-strong") || "").trim() || "rgba(245,243,236,0.2)";
   ctx.save();
-  ctx.strokeStyle = "#ddd0ba";
+  ctx.strokeStyle = linie;
   ctx.lineWidth = 1;
   ctx.beginPath();
   const baseline = Math.round(h * 0.66) + 0.5;
@@ -10270,7 +10290,7 @@ function drawStrokes(ctx, canvas) {
   ctx.lineTo(Math.max(10, w - 10), baseline);
   ctx.stroke();
   ctx.restore();
-  ctx.strokeStyle = "#2a2016";
+  ctx.strokeStyle = tinte;
   ctx.lineWidth = 4;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
@@ -11131,6 +11151,13 @@ document.body.addEventListener("click", e => {
     }
     case "open-drill": openDrillPicker(); break;
     case "close-drill": ui.drillOpen = false; render(); break;
+    case "drill-nochmal": {
+      const alt = ui.session;
+      if (!alt || !alt.isDrill) break;
+      const karten = alt.drillIds.map(id => findCard(id)).filter(Boolean);
+      if (karten.length) startDrillWithCards(karten, alt.drillLabel, alt.handwriting);
+      break;
+    }
     case "start-drill": {
       const hwEl = document.getElementById("drill-handwriting");
       const hw = hwEl && hwEl.checked;
@@ -11138,14 +11165,20 @@ document.body.addEventListener("click", e => {
         startDrillFromSets([...ui.drillSetIds], hw);
         break;
       }
-      /* 10: von/bis kommen jetzt aus den Chips (ui.drillVon/drillBis) statt
-         aus zwei <select>-Elementen. */
-      if (ui.drillVon !== null && ui.drillBis !== null) {
-        startDrill(Math.min(ui.drillVon, ui.drillBis), Math.max(ui.drillVon, ui.drillBis), hw);
-      }
+      startDrillGruppen(ui.drillGruppen || new Set(), hw);
       break;
     }
-    case "stufe-chip": waehleStufe(parseInt(btn.dataset.stufe, 10), parseInt(btn.dataset.bis, 10)); break;
+    case "stufe-chip": {
+      /* 3.15.0: an/aus statt "Anfang antippen, dann Ende" (waehleStufe).
+         Der Zwei-Tipp-Bereich war die einzige Stelle der App, an der ein
+         Chip je nach Reihenfolge der Tipps etwas anderes tat. */
+      const i = parseInt(btn.dataset.gruppe, 10);
+      if (!ui.drillGruppen) ui.drillGruppen = new Set();
+      if (ui.drillGruppen.has(i)) ui.drillGruppen.delete(i); else ui.drillGruppen.add(i);
+      fuehlbar(4);
+      render();
+      break;
+    }
     case "save-to-new-set": saveSelectedToSet("__new__"); break;
     case "save-to-set": {
       const sel = document.getElementById("save-set-select");

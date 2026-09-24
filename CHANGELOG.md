@@ -1,3 +1,44 @@
+## 3.15.0 - 24. September 2026
+
+**Üben neu gedacht, nichts mehr dunkel auf dunkel, die Karte steht still.**
+Betreiber: „der übungsmodus hat viel mit sich zu tun [...] beim schreiben ist
+es dunkle tinte auf dunkle farbe [...] bewertungsknöpfe zurückholen [...]
+einige karten haben animationen im sinne von umrandung [...] durchgängig
+haben wollen [...] alles durchdenken".
+
+- **Schreiben:** Die Tinte war fest dunkelbraun (aus der Zeit der hellen
+  Zeichenfläche) – in der dunklen Fassung unsichtbar. Tinte und Linie kommen
+  jetzt aus der jeweiligen Fassung.
+- **Kontrast überall geprüft:** neues Prüfskript misst jeden sichtbaren Text
+  gegen seinen Hintergrund. 48 Stellen lagen unter der Lesbarkeitsgrenze
+  (u. a. Unterzeilen der Bewertungsknöpfe, „frisch gelernt" in Hell, graue
+  Nebentexte in Dunkel) – jetzt 0.
+- **Üben:**
+  - Auswahl vereinfacht: zwei Reiter (Nach Stand | Speicherkarten), jeder
+    Stand einzeln an/aus statt „Anfang antippen, dann Ende", eine Zahl, ein
+    Schalter „Mit Schreiben".
+  - Bewertungsknöpfe wieder da: Nicht kommt in der Runde noch einmal, Fast
+    und Sicher sind für diese Runde durch. Deine Wiederholungen bleiben
+    unberührt.
+  - Die Runde hat ein Ende („Übung fertig" mit Bilanz, „Noch eine Runde")
+    statt endlos weiterzumischen.
+  - Das Banner „dein Fortschritt bleibt unberührt" auf jeder Karte ist weg –
+    die Kopfzeile sagt es einmal auf der ersten Karte und blendet in
+    „Karte 1 von N" über.
+  - Dieselbe Karte wie beim Lernen: antippen zum Umdrehen, wischen zum
+    Bewerten.
+- **Aus dem Einstieg übernommen:** Wer auf einer Karte zögert, sieht nach ein
+  paar Sekunden einen Ring nach außen pulsieren („tipp mich an"), danach alle
+  7 Sekunden wieder. Die bewertete Karte leuchtet beim Wegfliegen in der
+  Farbe ihrer Bewertung auf.
+- **Die Karte steht still:** Von einer Karte zur nächsten lag sie je nach
+  Notiz oder Hinweis bis zu 83 px höher oder tiefer – jetzt an derselben
+  Stelle. Der Hinweis zu oft vergessenen Karten ist auf zwei kurze Sätze
+  gekürzt.
+- Drehung etwas schneller (540 ms), der Schatten beim Anheben ruckelt auf
+  schwächeren Handys nicht mehr. „Tippen zum Umdrehen" nur noch auf der
+  ersten Karte einer Runde.
+
 ## 3.14.0 - 24. September 2026
 
 **Die Karte dreht sich wirklich um – und geht, wenn sie bewertet ist.**
