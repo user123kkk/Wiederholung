@@ -4695,6 +4695,9 @@ button.halten:disabled {
   .view--lernen > .stapel { grid-column: 1; grid-row: span 4; margin-bottom: var(--stack); }
   .view--lernen > .startliste,
   .view--lernen > .serie-karte,
+  .view--lernen > .hinweis,   /* 3.17.17 (Station 17): die Hinweise (3.17.0) fehlten hier -
+                                 sie spannten ueber beide Spalten und schoben die Serie
+                                 unter den Stapel, rechts oben blieb es leer */
   .view--lernen > .banner-info { grid-column: 2; margin-top: 0 !important; margin-bottom: var(--stack); }
 }
 @media (min-width: 640px) and (max-width: 899.98px) {
@@ -5002,3 +5005,8 @@ label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); f
   letter-spacing: 0.12em; font-variant-numeric: tabular-nums;
   color: var(--text-1); user-select: all; -webkit-user-select: all;
 }
+
+/* 3.17.17 (Pruefschleife, Station 17): "Strich zurueck" steht seit 3.17.8
+   gesperrt da, bis es einen Strich gibt - mit der ueblichen Deckkraft 0.45
+   lag die Schrift bei 4,03:1. Gesperrt, aber lesbar. */
+.hw-toolbar button:disabled { opacity: 0.62; }

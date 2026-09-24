@@ -1,3 +1,19 @@
+## 3.17.17 - 24. September 2026
+
+**Prüfschleife, Station 17 (große Bildschirme).**
+
+- **Lernen am Computer und am quer gehaltenen Tablet ist wieder
+  ausgewogen:** Hinweis und Serie stehen rechts neben dem Stapel. Seit die
+  Hinweise dazukamen (3.17.0), spannten sie über die ganze Breite – rechts
+  oben blieb eine leere Fläche, die Serie hing versetzt darunter.
+- Der gesperrte Knopf „Strich zurück" beim Schreiben ist lesbar (war knapp
+  unter der Grenze).
+- Geprüft ohne Befund auf Tablet hoch und quer und am Computer: Einstieg,
+  Anmelden, Lernen, Runde, Rundenende, Fortschritt, Verwalten, Auswahl,
+  Karten-Blatt, Schreiben, Einstellungen, Wahl-Blatt, Konto löschen – kein
+  Kontrastfehler, keine waagerechte Scrollleiste, nichts unter der
+  Seitenleiste, keine überlangen Zeilen.
+
 ## 3.17.16 - 24. September 2026
 
 **Prüfschleife, Station 16 (Querschnitt: Meldungen, Fehler, offline).**

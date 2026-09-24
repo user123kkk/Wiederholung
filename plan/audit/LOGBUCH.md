@@ -22,7 +22,34 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 14 | Einstellungen | erledigt (v3.17.14) |
 | 15 | Konto | erledigt (v3.17.15) |
 | 16 | Querschnitt | erledigt (v3.17.16) |
-| 17–18 | … | offen |
+| 17 | Große Bildschirme | erledigt (v3.17.17) |
+| 18 | Hell & ruhig | offen |
+
+---
+
+### 2026-09-24 — Station 17: Große Bildschirme (v3.17.17)
+
+**Geprüft (`t_gross_alle.js`: iPad hoch, iPad quer, Desktop 1440×900 – 14
+Bildschirme je Gerät):** Kontrast, waagerechtes Scrollen, Elemente unter der
+Seitenleiste, Zeilen über 48 Zeichen Breite bei langem Text, Blattbreite
+(460 px), Fotos.
+- **Fund 1: Lernen-Raster (≥ 900 px)** – `.hinweis` (3.17.0) fehlte in der
+  Liste der rechten Spalte (`.view--lernen > …`), spannte über beide
+  Spalten; rechts neben dem Stapel leer, Serie versetzt darunter.
+- **Fund 2: „Strich zurück" gesperrt 4,03:1** – selbst eingeführt in
+  3.17.8 (immer da, gesperrt ohne Strich); `t_schreiben.js` maß erst nach dem
+  ersten Strich.
+- Ohne Befund: alle 14 Bildschirme × 3 Geräte (42 Messungen) nach der
+  Behebung Kontrast 0, nicht quer, nichts unter der Leiste, keine
+  überlangen Zeilen.
+
+**Geändert (styles.css):** `.view--lernen > .hinweis` in Spalte 2;
+`.hw-toolbar button:disabled { opacity: .62 }`. Version 3.17.17.
+**Neu (Prüfstand):** `t_gross_alle.js`.
+
+**Offen:** –
+**Nächste Station:** 18 (Hell & ruhig – helle Fassung, reduzierte Bewegung,
+Screenreader-Grundlagen) – danach Routine löschen und Zusammenfassung
 
 ---
 
