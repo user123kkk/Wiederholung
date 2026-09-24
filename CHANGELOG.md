@@ -1,3 +1,22 @@
+## 3.17.23 – 24. September 2026
+
+**Nutzungsstatistik komplett entfernt.** Auf Wunsch des Betreibers gibt es
+keine Zählung mehr, welche Funktionen genutzt werden – keinen Dienstleister,
+keinen Vertrag, keine offene Rechtsfrage dazu. Die Statistik (PostHog, seit
+3.17.0) war nie eingeschaltet: Der Projektschlüssel stand nie in einer
+veröffentlichten Fassung, es sind also nie Daten gesendet worden.
+
+- `app.js`: der gesamte Statistik-Abschnitt (Sender, Kennung, alle Ereignisse)
+  und der Schalter „Anonyme Nutzungsstatistik" in den Einstellungen sind raus.
+  Ein altes Aus-Merkzeichen (`adrabic-statistik-aus`) wird beim Start vom
+  Gerät gelöscht.
+- `styles.css`: die nur dafür gebaute Schalter-Optik entfernt.
+- `firebase.json`: `eu.i.posthog.com` aus der Content-Security-Policy
+  gestrichen (dazu `csp-build` in `index.html`).
+- `datenschutzerklaerung.html`: Abschnitt „Anonyme Nutzungsstatistik" und alle
+  Verweise darauf entfernt (Kurz gesagt, Punkte 2, 7, 8, 9, 10); der letzte
+  Abschnitt heißt wieder 15.
+
 ## 3.17.22 – 24. September 2026
 
 **Einstieg: die Beispielkarte dreht nur noch einmal, die „Analyse" dauert

@@ -2353,22 +2353,6 @@ input.schalter::after {
 input.schalter:checked { background: var(--accent); border-color: var(--accent); }
 input.schalter:checked::after { transform: translateX(18px); background: var(--text-on-accent); }
 input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-offset: 2px; }
-/* 3.17.0: dieselbe Optik ohne echtes Eingabefeld - fuer ganze Zeilen, die
-   als Schalter wirken (role="switch", z.B. Nutzungsstatistik). */
-.schalter-optik {
-  flex: none; position: relative; margin-left: auto;
-  width: 46px; height: 28px; border-radius: 14px;
-  background: var(--stufe-1); border: 1px solid var(--border);
-  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
-}
-.schalter-optik::after {
-  content: ""; position: absolute; top: 2px; left: 2px;
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--text-1); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-  transition: transform 220ms var(--ease-spring);
-}
-.schalter-optik.an { background: var(--accent); border-color: var(--accent); }
-.schalter-optik.an::after { transform: translateX(18px); background: var(--text-on-accent); }
 .drill-set-liste {
   max-height: 240px; overflow-y: auto;
   border: 1px solid var(--border-subtle); border-radius: var(--r-md);

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.22";
+const APP_VERSION = "3.17.23";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -141,105 +141,10 @@ function fuehlbar(muster) {
     navigator.vibrate(muster);
   } catch (e) {}
 }
-/* ============================================================================
-   3.17.0: NUTZUNGSSTATISTIK (PostHog, EU, ohne Cookies)
-
-   Betreiber am 24.09.2026: "analytics, wichtig um zu sehen welche
-   funktionen und so verwendet werden, ueben usw, code alles [...] eine app
-   ohne das ist tot, man weiss nicht was funktioniert". Werkzeug nach seinem
-   Hinweis (TikTok: "analytics posthog"): PostHog, EU-Server.
-
-   Bewusst OHNE die PostHog-Bibliothek: kein fremdes Skript, keine
-   Cookies, kein localStorage, keine automatische Klick-Aufzeichnung, keine
-   Bildschirmaufnahmen. Nur die Ereignisse unten, von Hand benannt, per
-   fetch an die Capture-Schnittstelle (/batch/). Nie gesendet: Karteninhalte,
-   Namen, E-Mail, Konto-ID, die Adresse der Seite (ein geteilter Kartensatz
-   steckt im #-Teil der Adresse!).
-   Kennung: angemeldet = SHA-256 aus "adrabic|" + Konto-ID, gekuerzt
-   (pseudonym, gleich auf allen Geraeten - damit "kommt wieder" messbar
-   ist); abgemeldet = eine Zufallskennung nur fuer diesen Seitenaufruf, ohne
-   Personenprofil.
-   Aus, solange POSTHOG_KEY leer ist. Abschaltbar in den Einstellungen
-   (statistikAn, localStorage "adrabic-statistik-aus").
-   Ereignisse (Namen fuer die PostHog-Auswertung):
-     app_start, bildschirm {name}, runde_start, runde_ende, runde_abbruch,
-     ueben_start, karte_angelegt, karte_geaendert, karte_geloescht,
-     code_einloesen, code_teilen, datei_einspielen, sicherung,
-     idee_eingereicht, idee_gestimmt, fehler_gemeldet, einstellung {name,wert},
-     erinnerung_kalender {zeit}, hinweis {name, aktion}, konto_erstellt,
-     abgemeldet, konto_geloescht, start_haenger, statistik_aus
-   ========================================================================= */
-const POSTHOG_KEY = "phc_o6P9ZKCDkseikFC9iDFVYTMso9iQYDdN5MYKnjZjCTok";   /* PostHog: Settings -> Project -> Project API Key. Eingerichtet 24.09.2026: EU-Region, Free-Tarif (1 Jahr Aufbewahrung), Autocapture/Web-Vitals/Dead-Clicks/Session-Replay/Heatmaps alle aus, IP-Verwerfung an. */
-const POSTHOG_HOST = "https://eu.i.posthog.com";
-const STATISTIK_AUS_KEY = "adrabic-statistik-aus";
-let zaehlPuffer = [];
-let zaehlTimer = null;
-let zaehlKennung = null;
-let zaehlLetzterBildschirm = null;
-const zaehlSitzung = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
-  : Date.now().toString(36) + Math.random().toString(36).slice(2);
-function statistikAn() {
-  if (!POSTHOG_KEY) return false;
-  try { return localStorage.getItem(STATISTIK_AUS_KEY) !== "1"; } catch (e) { return true; }
-}
-function zaehle(ereignis, eigenschaften) {
-  if (!statistikAn()) return;
-  try {
-    zaehlPuffer.push({ event: ereignis, props: Object.assign({}, eigenschaften || {}),
-      zeit: new Date().toISOString(), angemeldet: !!currentUser });
-    if (zaehlPuffer.length >= 20) zaehlSenden(false);
-    else if (!zaehlTimer) zaehlTimer = setTimeout(() => zaehlSenden(false), 5000);
-  } catch (e) {}
-}
-function zaehlKennungSetzen(uid) {
-  zaehlKennung = null;
-  if (!uid || !window.crypto || !crypto.subtle) return;
-  try {
-    crypto.subtle.digest("SHA-256", new TextEncoder().encode("adrabic|" + uid)).then(buf => {
-      zaehlKennung = "k-" + Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 32);
-    }).catch(() => {});
-  } catch (e) {}
-}
-function zaehlSenden(beimVerlassen) {
-  if (zaehlTimer) { clearTimeout(zaehlTimer); zaehlTimer = null; }
-  if (!zaehlPuffer.length) return;
-  if (!statistikAn()) { zaehlPuffer = []; return; }
-  const standalone = !!((window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || navigator.standalone);
-  const w = window.innerWidth;
-  const basis = { app_version: APP_VERSION, geraet: w < 640 ? "handy" : w < 1024 ? "tablet" : "desktop",
-    als_app: standalone, $lib: "adrabic", $geoip_disable: true, $session_id: zaehlSitzung };
-  const batch = zaehlPuffer.map(x => {
-    const mitKonto = x.angemeldet && zaehlKennung;
-    const props = Object.assign({}, basis, x.props, { distinct_id: mitKonto ? zaehlKennung : "anon-" + zaehlSitzung });
-    if (!mitKonto) props.$process_person_profile = false;
-    return { event: x.event, properties: props, timestamp: x.zeit };
-  });
-  zaehlPuffer = [];
-  try {
-    fetch(POSTHOG_HOST + "/batch/", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ api_key: POSTHOG_KEY, batch: batch }),
-      keepalive: !!beimVerlassen, credentials: "omit"
-    }).catch(() => {});
-  } catch (e) {}
-}
-document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") zaehlSenden(true); });
-/* Welcher Bildschirm gerade steht - einmal je Wechsel gezaehlt (render). */
-function zaehlBildschirm() {
-  if (!statistikAn()) return;
-  let name = null;
-  if (currentUser === null) name = ui.einstieg ? "einstieg-" + ui.einstieg.schritt : "anmelden";
-  else if (currentUser && !currentUser.emailVerified) name = "bestaetigen";
-  else if (bereiche === null) return;
-  else if (ui.session) name = ui.session.queue.length === 0 ? (ui.session.isDrill ? "ueben-ende" : "runde-ende") : (ui.session.isDrill ? "ueben" : "runde");
-  else if (ui.einstellungen) name = "einstellungen" + (ui.seite ? "/" + ui.seite : "");
-  else if (ui.seite) name = ui.tab + "/" + ui.seite;
-  else name = ui.tab;
-  if (name && name !== zaehlLetzterBildschirm) {
-    zaehlLetzterBildschirm = name;
-    zaehle("bildschirm", { name: name });
-  }
-}
+/* 3.17.23: Die Nutzungsstatistik (PostHog, 3.17.0) ist auf Wunsch des
+   Betreibers komplett entfernt. Nur der Schluessel ihres Aus-Schalters
+   kann noch auf Geraeten liegen - er wird hier geloescht. */
+try { localStorage.removeItem("adrabic-statistik-aus"); } catch (e) {}
 
 function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -1989,7 +1894,6 @@ async function initFirebase() {
       ui.einstiegZurueck = null;
       displayName = user.displayName || (user.email ? user.email.split("@")[0] : "Lernende:r");
       userDocRef = fb.doc(db, "users", user.uid);
-      zaehlKennungSetzen(user.uid);
       bereicheColRef = fb.collection(userDocRef, "bereiche");
       kartenColRef = fb.collection(userDocRef, "karten");
       unsubscribeSnapshot = fb.onSnapshot(userDocRef, snap => {
@@ -2704,7 +2608,6 @@ async function doRegister() {
     /* 3.17.3: Der Rest (Posteingang, Spam) steht fest auf dem
        Bestaetigungs-Bildschirm - hier nicht noch einmal. */
     ui.authInfo = "Konto angelegt.";
-    zaehle("konto_erstellt", { aus_einstieg: !!ui.authAusEinstieg });
   } catch (e) {
     ui.authError = authErrorText(e);
   }
@@ -2784,8 +2687,6 @@ async function doLogout() {
       { title: "Abmelden?", okLabel: "Abmelden", danger: true });
     if (!ok) return;
   }
-  zaehle("abgemeldet");
-  zaehlSenden(true);
   fb.signOut(auth);
 }
 
@@ -2903,8 +2804,6 @@ async function kontoLoeschenAusfuehren() {
     }
   }
   exportBackup();
-  zaehle("konto_geloescht");
-  zaehlSenden(true);
   ui.kontoLoeschenBusy = true; render();
   try {
     await kontoDatenLoeschen();
@@ -3409,7 +3308,6 @@ function dateiSpeichern(daten, dateiname) {
   URL.revokeObjectURL(url);
 }
 function exportBackup(onlyCurrent) {
-  zaehle("sicherung", { nur_bereich: !!onlyCurrent });
   const data = {
     exportedAt: new Date().toISOString(),
     profil: displayName,
@@ -3588,7 +3486,6 @@ function genTeilCode() {
    Netz auskommt. Ohne modus: wie bisher, die Lernenden schalten sich per
    Fortschritt selbst frei. */
 async function teileLektionCode(modus) {
-  zaehle("code_teilen");
   const b = currentBereich();
   if (!(await weitergabeMoeglich(b))) return;
   if (b.teilCode) {
@@ -3688,7 +3585,6 @@ async function codeEinloesenStart() {
 }
 
 async function codeEinloesen(code) {
-  zaehle("code_einloesen");
   let snap;
   try {
     snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code));
@@ -3980,7 +3876,6 @@ async function satzZusammenfuehren(ziel, datei) {
    Fassung. `data` hat die Form {bereiche: [...]}, egal ob sie aus einer
    Datei oder aus einem per Link geteilten Fragment kommt. */
 async function verarbeiteImportDaten(data) {
-  zaehle("datei_einspielen");
   if (!data || !Array.isArray(data.bereiche)) {
     await dlgAlert("Das ist kein gültiger Lernkarten-Bestand.", "Import nicht möglich");
     return;
@@ -4629,7 +4524,6 @@ async function startDrillFromSets(setIds, handwriting) {
   startDrillWithCards(cards, label, handwriting);
 }
 function startDrillWithCards(cards, label, handwriting) {
-  zaehle("ueben_start", { karten: cards.length, schreiben: !!handwriting, quelle: ui.drillSource === "sets" ? "speicherkarten" : "stand" });
   springeNachOben("sitzung");
   const ids = cards.map(c => c.id);
   hwStrokes = [];
@@ -4831,7 +4725,6 @@ async function submitCardForm() {
      der ganze Kartenbestand. Der Patch wird waehrend der Aenderung
      mitgefuehrt, damit nur wirklich geaenderte Felder darin landen. */
   const warEdit = !!ui.editId;
-  zaehle(warEdit ? "karte_geaendert" : "karte_angelegt", { mit_notiz: !!extra });
   const patch = {};
   if (ui.editId) {
     const card = findCard(ui.editId);
@@ -4974,7 +4867,6 @@ async function deleteCard(id) {
   const ok = await dlgConfirm('Die Karte „' + card.wort + '" (' + card.uebersetzung + ') wird gelöscht.',
     { title: "Karte löschen?", okLabel: "Löschen", danger: true });
   if (!ok) return;
-  zaehle("karte_geloescht");
   const b = currentBereich();
   b.karten.splice(b.karten.findIndex(c => c.id === id), 1);
   const patch = {};
@@ -5004,7 +4896,6 @@ function startSession() {
   ui.lernLetzte = null;
   ui.gemerktRunde = new Set();
   ui.session = { queue: shuffled(due.map(c => c.id)), total: due.length, revealed: false, extraOpen: true, lastAction: null, isDrill: false, bereichId: currentBereich().id };
-  zaehle("runde_start", { karten: due.length, neu: due.filter(istNeueKarte).length });
   render();
 }
 /* E5 (1.8.0): Beim Aufdecken das Vollbild verlassen.
@@ -5249,7 +5140,6 @@ function endSession() {
   const s = ui.session;
   if (s && s.queue.length > 0) {
     const gesamt = s.total || 1;
-    zaehle("runde_abbruch", { ueben: !!s.isDrill, bei: Math.max(0, gesamt - s.queue.length), von: gesamt });
   }
   ui.session = null; hwStrokes = []; hwFullscreen = false; render();
 }
@@ -6398,7 +6288,6 @@ function bootBild() {
 /* ---------- Rendering ---------- */
 function render() {
   ersterRender = true;
-  if (POSTHOG_KEY) queueMicrotask(zaehlBildschirm);
   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
      der Cloud), ist ein noch wartender Such-Timer gegenstandslos - der
      Suchtext steht bereits in ui.searchQuery. */
@@ -8021,15 +7910,6 @@ function renderEinstellungen() {
   html += einstZeile({ action: "einst-seite", id: "daten", icon: "sichern", text: "Sichern & einspielen",
     /* 3.17.14: ausgeschrieben - "vor 3 Tg." war die einzige Abkuerzung der App. */
     wert: alter === null ? "noch nie" : alter === 0 ? "heute" : alter === 1 ? "gestern" : "vor " + alter + " Tagen" });
-  /* 3.17.0: nur, wenn die Statistik ueberhaupt eingerichtet ist (POSTHOG_KEY)
-     - ein Schalter fuer etwas, das es nicht gibt, waere eine Entscheidung
-     zu viel. */
-  if (POSTHOG_KEY) {
-    const an = statistikAn();
-    html += '<button class="liste-zeile" role="switch" aria-checked="' + (an ? "true" : "false") + '" data-action="statistik-umschalten">' +
-      ikon("fortschritt", "i-sm") + '<span class="liste-zeile__text">Anonyme Nutzungsstatistik</span>' +
-      '<span class="schalter-optik' + (an ? ' an' : '') + '" aria-hidden="true"></span></button>';
-  }
   html += '</div></div>';
 
   /* ---------- Hilfe ---------- */
@@ -8549,7 +8429,6 @@ async function feedbackEinreichen() {
     feedbackDanke = true;
     feedbackEinreichtWird = false;
     fuehlbar([8, 40, 12]);
-    zaehle("idee_eingereicht");
     render();
     if (!feedbackListe) await feedbackLaden();
   } catch (e) {
@@ -8568,7 +8447,7 @@ async function feedbackAbstimmen(id, will) {
      sich etwas in der Oberflaeche ruehrt). */
   eintrag.votes = vorher + (will ? 1 : -1);
   if (will) feedbackEigeneVotes.add(id); else feedbackEigeneVotes.delete(id);
-  if (will) { feedbackPopId = id; fuehlbar(8); zaehle("idee_gestimmt"); }
+  if (will) { feedbackPopId = id; fuehlbar(8); }
   zeichneIdeen();
   try {
     const batch = fb.writeBatch(db);
@@ -8945,7 +8824,6 @@ function lernenHinweis() {
   return "";
 }
 function hinweisKarte(name, icon, text, knopf, wegtippbar) {
-  if (ui.hinweisGezaehlt !== name) { ui.hinweisGezaehlt = name; zaehle("hinweis", { name: name, aktion: "gezeigt" }); }
   let h = '<div class="hinweis hinweis--' + name + '" role="status">';
   h += '<span class="hinweis__icon" aria-hidden="true">' + ikon(icon, "i-sm") + '</span>';
   h += '<div class="hinweis__text">' + text + '</div>';
@@ -8966,7 +8844,6 @@ function hinweisWeg(name) {
   else if (name === "rueckblick") patch.rueckblick = letzteWoche().woche;
   else { weg[name] = todayStr(); patch.weg = weg; }
   hinweisMerken(patch);
-  zaehle("hinweis", { name: name, aktion: "weg" });
   render();
 }
 
@@ -9036,7 +8913,6 @@ function erinnerungHerunterladen(hhmm) {
     }
   } catch (e) {}
   hinweisMerken({ erinnerung: hhmm });
-  zaehle("erinnerung_kalender", { zeit: hhmm });
   ui.erinnerungSheet = false;
   zeigeToast("Erinnerung für " + hhmm.replace(/^0/, "") + " Uhr – öffne die Datei, um sie in den Kalender zu übernehmen.");
   render();
@@ -9904,7 +9780,6 @@ function renderRundenEnde(s, gesamt) {
   html += '</div></div>';
   if (neu) {
     fuehlbar([10, 60, 14]);
-    zaehle("runde_ende", { ueben: !!s.isDrill, karten: gesamt, sicher: z.known, fast: z.almost, nicht: z.unknown });
   }
   return html;
 }
@@ -11655,7 +11530,6 @@ document.addEventListener("DOMContentLoaded", () => {
       dlgAlert("Bitte beschreib den Fehler.");
       return;
     }
-    zaehle("fehler_gemeldet");
 
     const subject = encodeURIComponent("Fehler gemeldet");
     /* 3.17.14: statt Name/E-Mail-Feldern die Angaben, die beim Nachstellen
@@ -11942,7 +11816,7 @@ document.body.addEventListener("click", e => {
       if (ui.einstieg && Date.now() - ui.einstieg.zeit >= 400) einstiegBeenden(vorsatzSatz(ui.einstieg));
       break;
     case "logout": doLogout(); break;
-    case "boot-abmelden": zaehle("abgemeldet"); zaehlSenden(true); fb.signOut(auth); break;
+    case "boot-abmelden": fb.signOut(auth); break;
     /* 3.12.0: Nur die Tastatur-Fassung laeuft ueber diesen Klick. Ein
        Zeigerklick hat e.detail >= 1 und tut hier nichts - dort loest das
        Gedrueckthalten aus (haltenStarten, weiter unten). */
@@ -12154,19 +12028,11 @@ document.body.addEventListener("click", e => {
         });
       }
       break;
-    case "set-arab-groesse": setArabGroesse(btn.dataset.id); zaehle("einstellung", { name: "arabische_schrift", wert: btn.dataset.id }); break;   // E7
-    case "set-thema": setThema(btn.dataset.id); zaehle("einstellung", { name: "helligkeit", wert: btn.dataset.id }); break;
+    case "set-arab-groesse": setArabGroesse(btn.dataset.id); break;   // E7
+    case "set-thema": setThema(btn.dataset.id); break;
     case "set-sitzungslimit":
       setSitzungsLimit(btn.dataset.id === "alle" ? "alle" : Number(btn.dataset.id));
-      zaehle("einstellung", { name: "karten_pro_sitzung", wert: btn.dataset.id });
       break;
-    case "statistik-umschalten": {
-      const an = statistikAn();
-      if (an) { zaehle("statistik_aus"); zaehlSenden(true); }
-      try { if (an) localStorage.setItem(STATISTIK_AUS_KEY, "1"); else localStorage.removeItem(STATISTIK_AUS_KEY); } catch (e) {}
-      render();
-      break;
-    }
     case "hw-undo": if (!hwStrokes.length) break; hwStrokes.pop(); render(); break;   // D9
     case "hw-clear": hwStrokes = []; render(); break;
     case "hw-fullscreen":
@@ -12200,7 +12066,7 @@ document.body.addEventListener("click", e => {
       break;
     case "feedback-form-zu": ui.feedbackForm = false; feedbackFormFehler = false; render(); break;
     case "hinweis-weg": hinweisWeg(btn.dataset.id); break;
-    case "erinnerung-auf": ui.erinnerungSheet = true; zaehle("hinweis", { name: "erinnerung", aktion: "geoeffnet" }); render(); break;
+    case "erinnerung-auf": ui.erinnerungSheet = true; render(); break;
     case "erinnerung-zu": ui.erinnerungSheet = false; render(); break;
     case "erinnerung-zeit": erinnerungHerunterladen(btn.dataset.id); break;
     case "erinnerung-eigene": {
@@ -12211,7 +12077,6 @@ document.body.addEventListener("click", e => {
     }
     case "ideen-auf":
       hinweisMerken({ weg: Object.assign({}, hinweisSpeicher().weg || {}, { ideen: todayStr() }) });
-      zaehle("hinweis", { name: "ideen", aktion: "geoeffnet" });
       ui.einstellungen = true; ui.seite = "feedback"; ui.feedbackForm = true; feedbackDanke = false;
       window.scrollTo(0, 0); render();
       requestAnimationFrame(() => { const f = document.getElementById("fb-text"); if (f) f.focus(); });
@@ -12310,7 +12175,6 @@ function zeigeStartfehler(e) {
 }
 
 /* ---------- Start ---------- */
-zaehle("app_start");
 /* 3.16.1 (Pruefschleife, Station 1, 24.09.2026): Waechter fuer den ersten
    Start. render() laeuft erst, wenn die Firebase-Bausteine geladen sind und
    die Anmeldung geprueft ist (onAuthStateChanged). Scheitert ein Abruf,
@@ -12330,7 +12194,6 @@ function startWaechter() {
   boot.classList.add("boot--langsam");
   boot.dataset.stand = "langsam";
   boot.insertAdjacentHTML("beforeend", bootLangsamHinweis());
-  zaehle("start_haenger");
 }
 if (CONFIGURED) {
   setTimeout(startWaechter, START_WAECHTER_MS);

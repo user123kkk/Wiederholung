@@ -83,7 +83,7 @@ allem", „mach einfach".
 | Gestaltung und Bedienung im bestehenden Stil (`KONZEPT.md` §7, Frage 6) | **Lehrstoff und religiöser Wortlaut** (§ 2) |
 | Aufräumen, Messen, Tests, Logbuch | **Recht** (was versprochen, gespeichert, weitergegeben wird) |
 | Texte, die nachweislich falsch sind, richtigstellen | **Marke**, kompletter Umbau, etwas Neues, das nicht im Plan steht |
-| | alles in einer fremden Konsole (Firebase, Google Cloud, Search Console, PostHog) |
+| | alles in einer fremden Konsole (Firebase, Google Cloud, Search Console) |
 
 **Vorfall 3.10.2:** Das Thema sprang beim Start auf „dunkel" und überschrieb
 die lokale Wahl. Der erste Logbuch-Entwurf vermerkte das als „Betreiber
@@ -212,8 +212,8 @@ Festgelegt vom Betreiber am 24.09.2026, wörtlich sinngemäß:
 5. **Religiöse Angaben von Nutzer:innen werden nicht gespeichert.** Religion ist
    nach Art. 9 DSGVO eine besondere Datenkategorie. Deshalb bleibt z. B. das Ziel
    „Quran und Sunnah verstehen" im Einstieg **nur im Arbeitsspeicher**. Es kommt
-   nicht in `localStorage`, nicht in Firestore und nicht in die Statistik
-   (PostHog-Ereignisliste in `app.js`, oberer Block). Das bleibt so.
+   nicht in `localStorage`, nicht in Firestore. Das bleibt so. (Eine Statistik
+   gibt es seit 3.17.23 nicht mehr.)
 6. Arabische Schrift sauber:
    - Harakat werden nicht verändert.
    - Die Quran-Schrift wird nur für arabischen Text verwendet.
@@ -435,7 +435,7 @@ Begrenzer.
 |---|---|---|
 | App-Dateien (Hosting) | `veroeffentlichen.bat` = `git pull` + `firebase deploy --only hosting` | Betreiber |
 | `firestore.rules` | `firebase deploy --only firestore:rules` (seit `firebase.json` einen `firestore`-Abschnitt hat) **oder** in der Firebase-Konsole einfügen und „Veröffentlichen" | Betreiber |
-| Konsolen-Einstellungen (Auth-Domains, Browser-Key, E-Mail-Vorlagen, Search Console, PostHog) | nur in der jeweiligen Konsole | Betreiber |
+| Konsolen-Einstellungen (Auth-Domains, Browser-Key, E-Mail-Vorlagen, Search Console) | nur in der jeweiligen Konsole | Betreiber |
 
 `veroeffentlichen.bat` spielt **keine Regeln** ein. Eine Funktion, die neue
 Regeln braucht, ist bis zum Regel-Deploy kaputt. Deshalb gilt:
@@ -1048,7 +1048,7 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
   - neue Sammlung;
   - neue Sichtbarkeit.
   Das gehört in die Datenschutzerklärung, und der Betreiber lässt es prüfen
-  (offen: J1/F5, §15).
+  (offen: J1/F5).
 - **Minderjährige (C5):** Das ist eine harte Sperre für alles, was Daten über
   Konten hinweg speichert. Sie wurde für das Teilen durch Architektur umgangen,
   nicht beantwortet.
@@ -1082,7 +1082,7 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
 | `bereicheMitOffenem()` | nur noch für den Hinweis „Heute auch fällig" | kein Serien-Bezug |
 | `SITZUNGS_LIMITS` | Limit gilt **je Runde**, danach „Weiterlernen" | die Serie hängt nicht am Limit |
 | `EINSTIEG_ZIELE` / `ui.einstieg` | Antworten nur im Arbeitsspeicher | nie speichern (§ 2) |
-| `POSTHOG_KEY` | leer = Statistik aus | Schlüssel nur vom Betreiber |
+| Nutzungsstatistik | **entfernt in 3.17.23** (Betreiber: „jede Spur“), Code, Schalter, CSP und Datenschutz-Abschnitt | nicht wieder einbauen ohne neue Betreiber-Entscheidung (§ 3.5) |
 | `APPLE_LOGIN_BEREIT` | `false` | erst mit Konsole |
 | Debug-Overlay | entfernt in 3.6.13; `localStorage` `debugNav` wird beim Start gelöscht | nicht wieder einbauen (§ 3.9) |
 | `mitZeitlimit` | 12 s für Auth-Aufrufe | nicht für Popups |

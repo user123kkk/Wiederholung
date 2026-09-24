@@ -28,6 +28,59 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Nutzungsstatistik komplett entfernt (v3.17.23)
+
+**Anlass:** Betreiber nach der Rechtsprüfung: „ne dann logs dings komplett
+entfernen bitte, dannn hab ich keine kopfschmerzen, jede spur". Gelesen als:
+die Nutzungsstatistik (PostHog). Die Plandateien bleiben (nicht
+ausgeliefert, Dokumentationspflicht).
+
+**Pro/Contra (vorgelegt):** Dafür — PostHog-Vertrag, Anwaltsfrage § 25
+TDDDG und ein Dienstleister entfallen; nichts verloren, der Schlüssel war
+nie auf `main`. Dagegen — keine Nutzungszahlen mehr. Urteil: richtig so;
+später ginge es ohne Dienstleister (Tageszähler ohne Kennung in Firestore).
+
+**Vorher:** `origin/main` (`08be14c`, anderes 3.17.22) in den Zweig
+geholt, Merge-Commit `1c135a7`. Konflikte nur in CHANGELOG/LEHREN/LOGBUCH
+(beide Seiten oben ergänzt); im CHANGELOG nur `main` übernommen, weil der
+eigene 3.17.22-Eintrag „Statistik aktiviert" nie live war.
+
+**Geändert:**
+- `app.js`: Statistik-Block (Kopfkommentar, `POSTHOG_KEY`, Sender,
+  Kennung, `zaehlBildschirm`, `visibilitychange`-Listener) ersetzt durch eine
+  Zeile, die `adrabic-statistik-aus` von Geräten löscht; 24 freistehende
+  und 8 eingebettete `zaehle`/`zaehlSenden`/`zaehlKennungSetzen`-Aufrufe,
+  `ui.hinweisGezaehlt`, der Einstellungs-Schalter und `case
+  "statistik-umschalten"` entfernt. `APP_VERSION` 3.17.23.
+- `styles.css`: `.schalter-optik` (nur dafür gebaut) entfernt.
+- `firebase.json`: `https://eu.i.posthog.com` aus `connect-src` (beide Sites).
+- `index.html`: Versions-Querys 3.17.23, `csp-build` mitgezählt.
+- `sw.js`: `CACHE_NAME` 3.17.23.
+- `datenschutzerklaerung.html`: Abschnitt 15 raus, Verweise in „Kurz
+  gesagt", 2, 7, 8, 9, 10 entfernt, „Änderungen" heißt wieder 15.
+- `CHANGELOG.md` 3.17.23.
+- Prüfstand `t_317.js`: Statistik-Teil entfernt.
+- Plan: `analytics/INTERESSENABWAEGUNG.md` gelöscht (gegenstandslos),
+  `analytics/GERUEST.md` Kopf „ENTFERNT", `PLAN.md` Frage 14 + AKTUELL,
+  `LEHREN.md` §§ 1.2, 2.5, 4.5, 12, 13, `phase-5-recht/PRUEFUNG-…` Nachtrag.
+
+**Geprüft:** `node --check app.js` sauber; `grep` auf `zaehl`/`POSTHOG`/
+`statistik`/`posthog` in allen ausgelieferten Dateien → nur der
+Lösch-Kommentar; Version 3.17.23 an vier Stellen. Prüfstand (Chromium
+`/opt/pw-browsers/chromium` über `CHROMIUM=…`): `t_317.js` (Hinweise,
+Kalender-Erinnerung, Ideen-Board) keine Fehler; `t_einstellungen.js`
+Handy/klein/iPad hell+dunkel „ok", Kontrast 0, kein Statistik-Schalter;
+`t_a11y.js` alle Bildschirme ohne Befund; Affe Handy 150 Schritte 0 Befunde.
+
+**Offen:** siehe `PLAN.md` AKTUELL — Zweig auf `main`, PostHog-Projekt
+löschen (Konsole), R2/R3/O1–O3/G1/G2 und Impressum-Frage aus dem
+Prüfbericht.
+
+**Nächster Schritt:** Auf Betreiber-„ja" R3 (geteilte Kartensätze beim
+Löschen mitlöschen) und R2 (Schrift selbst ausliefern) bauen.
+
+---
+
 ### 2026-09-24 — Rechtsprüfung der ganzen App + Korrektur zum PostHog-Vertrag
 
 **Anlass:** Betreiber: „nutz bitte die recht dngs github linkskills und

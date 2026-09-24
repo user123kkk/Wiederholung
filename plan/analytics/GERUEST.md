@@ -1,5 +1,14 @@
 # Gerüst: Messen, was ankommt (Analytics)
 
+> **ENTFERNT am 24.09.2026 (v3.17.23), auf Wunsch des Betreibers:** „ne dann
+> logs dings komplett entfernen bitte, dannn hab ich keine kopfschmerzen, jede
+> spur". Grund: Der PostHog-Auftragsverarbeitungsvertrag hätte eigens
+> unterschrieben werden müssen, dazu eine offene Anwaltsfrage (§ 25 TDDDG).
+> Code, Einstellungs-Schalter, CSP-Eintrag und Datenschutz-Abschnitt sind
+> weg; der Schlüssel war nie auf `main`, es wurden nie Daten gesendet. Alles
+> darunter ist Vorgeschichte. Falls je wieder gewünscht: Möglichkeit 3
+> (Tageszähler ohne Kennung in Firestore) kommt ohne Dienstleister aus.
+
 > **Stand 24.09.2026 (v3.17.0): gebaut, aus bis zum Schlüssel.** Betreiber
 > hat Ja gesagt (Datenschutzerklärung darf sich ändern). Werkzeug: PostHog
 > (EU), eigener schlanker Sender in `app.js` (Abschnitt „Nutzungsstatistik"),
@@ -15,7 +24,7 @@
 > Übermittlung und Formulierungsgenauigkeit geprüft; zwei Textstellen
 > präzisiert (Transfer-Mechanismus PostHog Inc. USA, Hash-Formulierung).
 > Interne Interessenabwägung geschrieben:
-> [`INTERESSENABWAEGUNG.md`](INTERESSENABWAEGUNG.md) (nicht veröffentlicht).
+> `INTERESSENABWAEGUNG.md` (mit der Entfernung gelöscht).
 > Anwaltliche Bestätigung liegt vor (Betreiber: „mein anwalt sagt dass das
 > alles stimmt"). **Verbleibend vor `POSTHOG_KEY`-Aktivierung** (rein
 > organisatorisch, keine offene Rechtsfrage mehr): Auftragsverarbeitungs-
