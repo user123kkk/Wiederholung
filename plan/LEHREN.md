@@ -642,6 +642,34 @@ halten.
     tat das vor 3.3.0 nicht.
 - Kein Endlos-Loop, der Aufmerksamkeit zieht. Automatische Bewegung über 5 s
   braucht nach WCAG 2.2.2 einen Stopp.
+- **Eine Bewegung, die etwas zeigen soll, endet bei dem, was sie zeigt.**
+  3.17.20 ließ die Beispielkarte im Einstieg hin *und zurück* drehen, damit
+  man das arabische Wort am Ende wieder sieht. Ergebnis: Die Übersetzung war
+  nur ein Aufblitzen, und der Betreiber (24.09.2026) meldete: „soll kitaab
+  nicht einmal ins deutsche nur damit es direkt wieder in arabische umgedreht
+  wird … es soll ja alles vom user verfolgt werden können". Seit 3.17.22 hält
+  die Karte das Wort 2,4 s, dreht **einmal** und bleibt auf der Übersetzung.
+  Wer beides sehen will, tippt.
+- **Automatische Zustandswechsel an einem bestehenden Element laufen über den
+  Zustand, nicht über eine haltende Animation.** Eine Animation mit
+  `both`/`forwards` hält einen Wert fest, den die spätere `transition` nicht
+  mehr überschreiben kann, ohne dass ein eigener Stil-Durchlauf dazwischen
+  liegt — genau daran scheiterte der erste Tipp in 3.17.20 (Reflow-Kniff in
+  3.17.21, ganz weg in 3.17.22). Besser: ein Timer setzt dieselbe Klasse, die
+  auch das Antippen setzt. Dann ist der sichtbare Zustand immer der
+  gespeicherte. Bei `prefers-reduced-motion` wird der Timer gar nicht gesetzt.
+- **Energie sparsam, gerade bei Wiederholung.** Nachfedern
+  (`--ease-spring`, Überschwingen im Keyframe) wirkt bei *einem* Element
+  lebendig und bei fünf nacheinander unruhig; zweifaches Aufleuchten wirkt wie
+  Werbung. 3.17.22 hat deshalb für Reihen ein eigenes, ruhiges Keyframe
+  (`einstieg-punkt-ruhig`) und lässt das Aufleuchten einmal laufen.
+  Betreiber: „die energie könnte ein ticken runter geschraubt werden entweder
+  oder die transition ist cleaner bei sowas."
+- **Zusammengesetzte Zeichen (Pfeile, Verbinder) brauchen dieselbe
+  Strichstärke wie ihre Linie und Abstand zum nächsten Element.** Die
+  Pfeilspitze der Einstiegs-Leiste war doppelt so dick wie die Linie wirkte
+  und saß mit ihrer Ecke auf dem nächsten Punkt — Betreiber: „schau mal bitte
+  dass diese pfeil sachen wie eine richtige ui aussehen" (3.17.22).
 
 ### 6.5 Farben und Kontrast
 
@@ -1151,3 +1179,5 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | 24.09. (eigener Fehler, beim Bau von t_serie.js) | neuer Serien-Test maß erst durchgehend 0 | `streak: {}` ohne `sockel` löst `serieSockelSichern()` aus, die `sockelBis` auf heute stempelt und jede Rechnung kurzschließt; dazu zuerst `vollerStore({leer:true})` verwendet, dessen leerer Bereich `.serie-karte` gar nicht erst rendert | § 5.4, § 13 |
 | 24.09. (eigener Fehler) | Logbuch behauptete, PostHogs Auftragsverarbeitungsvertrag gelte automatisch über die Nutzungsbedingungen | Annahme statt Nachsehen; PostHog verlangt eigene Unterschrift unter `…posthog.com/legal` | § 1.3, § 12 |
 | 24.09. (eigener Fehler) | Rechtsprüfung nur von Punkt 15 wurde wie eine Prüfung „der App" behandelt; Konto-Löschen ließ geteilte Kartensätze stehen, „Kartensatz per Code" fehlte ganz in der Datenschutzerklärung | nur der gefragte Abschnitt gelesen, nicht jeder Datenfluss gegen den Text | § 12 |
+| 3.17.20 → 3.17.22 | Beispielkarte drehte hin und zurück, Übersetzung nur ein Aufblitzen | Bewegung endete nicht bei dem, was sie zeigen sollte; dazu haltende Animation gegen `transition` | § 6.4 |
+| 3.17.22 | Pfeilspitze der Einstiegs-Leiste sah aufgesetzt aus | andere Strichstärke als die Linie, Spitze saß im nächsten Punkt | § 6.4 |

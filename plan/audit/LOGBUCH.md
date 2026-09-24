@@ -209,6 +209,88 @@ einstellen.
 
 **Nächster Schritt:** Betreiber richtet PostHog-Projekt ein (siehe die drei
 Punkte oben), dann `POSTHOG_KEY` in `app.js` eintragen und veröffentlichen.
+### 2026-09-24 — Einstieg: eine Drehung, längere Analyse, ruhigere Bewegung (v3.17.22)
+
+**Anlass:** Betreiber-Rückmeldung zu v3.17.21, fünf Punkte in einem Satz:
+
+> „entferne dieses kostenlos. keine werbun.. komplett. lass diese analyse
+> länger dauert damit es rüber kmmt als wäre seine analyse wertvoll. auf der
+> ersten seite soll kitaab nicht einmal ins deutsche nur damit es direkt
+> wieder in arabishe umgedreht wird. einfach kittab lang genug angezeigt
+> lassen, dann ins deutsche, es soll ja alles vom usr verfolt werden können
+> checkst du. un d schau mal bitte dass diese pfeil sachen wie eine richtige
+> ui aussehen, und ob die animation to much ist oder nicht, und zu schnel
+> oder langsam, ich finde zu langsam und die energie könnte ein ticken runter
+> gechraubt werden entweder oder die transition ist cleaner bei sowas"
+
+Das sind Anweisungen, keine bloßen Bedenken (§ 1.1 LEHREN.md) — bis auf den
+letzten Punkt, der eine Frage stellt („to much oder nicht"). Zu dem steht
+unten ein eigenes Urteil.
+
+**Geändert:**
+
+- `app.js:6250 ff.` (renderEinstieg, Plan-Bildschirm): der Zusatz
+  „Kostenlos. Keine Werbung, keine Cookies." ist ersatzlos weg; `einstiegFuss`
+  wird ohne `zusatz` aufgerufen. `styles.css`: Regel `.einstieg-vertrauen`
+  gelöscht (sonst bleibt toter Stil stehen).
+- `app.js:5993 ff.`: `EINSTIEG_BAU_SCHRITT_MS` 560 → 700,
+  `EINSTIEG_BAU_VORLAUF_MS` 420 → 620, `EINSTIEG_BAU_NACHLAUF_MS` 700 → 900.
+  Bei sechs Punkten 4480 ms → 5740 ms.
+- `app.js:5738 ff.` (`einstiegHero`), `app.js:6038 ff.`
+  (`heroTimerStoppen`, `EINSTIEG_HERO_HALTEN_MS = 2400`), `app.js` Klick-Zweig
+  `einstieg-hero-dreh`: Die Karte dreht sich nicht mehr per CSS-Animation hin
+  und zurück, sondern nach 2,4 s **einmal** per Klassenwechsel `--hinten` —
+  und bleibt auf der Übersetzung. Der Parameter `intro` von `einstiegHero`
+  entfällt.
+- `styles.css` Abschnitt 16b: `@keyframes einstieg-dreh-hin-zurueck` und die
+  Regel für `--intro` entfernt; Drehung jetzt nur noch die transition
+  (480 ms `--ease-in-out` → 560 ms `cubic-bezier(.4,0,.2,1)`, ohne den
+  scale-Sprung 1.06). Lichtstreif über der Übersetzung hängt an `--hinten`
+  statt an einer festen Verzögerung (1450 ms), ist schwächer (0.16 → 0.10) und
+  kürzer (700 → 620 ms).
+- `styles.css`, Leiste und Leiter: neues `@keyframes einstieg-punkt-ruhig`
+  (ohne Überschwingen) für die Punkte, Takt 190 → 130 ms bzw. 170 → 130 ms,
+  Halo einmal statt zweimal, `.einstieg-leiste--spaeter` 1750 → 1150 ms.
+- `styles.css`, Pfeile der Leiste: Linie 2 px → 1,5 px mit `border-radius`,
+  Spitze in derselben Stärke und `right: -5px` mit `margin-right: 10px`, damit
+  sie **vor** dem nächsten Punkt steht statt in ihm.
+- `plan/werkzeuge/pruefstand/t_hero_dreh.js` auf das neue Verhalten
+  umgeschrieben.
+- Veröffentlichungsliste: `APP_VERSION`, `CACHE_NAME`, beide Versions-Querys
+  in `index.html` auf 3.17.22; `CHANGELOG.md` ergänzt; `node --check app.js`
+  ohne Befund.
+
+**Entscheidung — warum die Karte per JS-Timer dreht und nicht per @keyframes:**
+Die Regel aus `README.md` („Eintrittsbewegungen sind @keyframes") gilt für neu
+eingefügte Elemente. Hier ändert ein bestehendes Element seinen Zustand, und
+genau das war die Fehlerquelle von 3.17.21: Eine haltende Animation und der
+manuelle Klassenwechsel kämpften um dasselbe `transform`, weshalb der erste
+Tipp nicht sichtbar drehte und ein Reflow-Kniff nötig war. Jetzt gibt es nur
+eine Quelle der Wahrheit — `e.heroHinten` und die Klasse `--hinten`. Der
+Reflow-Kniff ist deshalb entfallen, nicht vergessen worden.
+
+**Eigenes Urteil zur offenen Frage „to much oder nicht":** Zu viel war nicht die
+Menge, sondern die *Art* der Energie. Gestrichen ist deshalb das, was nach
+Effekt aussah (Nachfedern bei bis zu fünf Punkten nacheinander, zweifaches
+Aufleuchten, Maßstabssprung mitten in der Drehung, greller Lichtstreif); die
+Bewegungen selbst bleiben, nur schneller und gleichmäßiger. Die eine Stelle,
+die **länger** dauert, ist bewusst die Analyse — dort ist Warten die Aussage.
+Empfehlung: erst am Gerät ansehen, bevor weiter gedreht wird; Zahlen dafür
+stehen alle an einer Stelle (`EINSTIEG_BAU_*`, `EINSTIEG_HERO_HALTEN_MS`).
+
+**Geprüft:** `t_hero_dreh.js` läuft grün (Chromium 390 px, Firebase-Attrappe):
+vor der Haltezeit steht die Karte auf Arabisch, danach von selbst auf der
+Übersetzung (`aria-pressed="true"`, eine echte transition), erster Tipp dreht
+sichtbar zurück, zweiter wieder vor. `t_leiste.js` und `t_hick.js` ebenfalls
+grün.
+
+**Offen:** Ob Tempo und Haltezeit am echten Gerät stimmen, kann nur der
+Betreiber sagen — in dieser Umgebung ist nur messbar, *dass* die Übergänge
+laufen, nicht wie sie sich anfühlen. `firestore.rules` ist unverändert, es
+steht kein Konsolen-Schritt an.
+
+**Nächster Schritt:** Rückmeldung des Betreibers zu Haltezeit (2,4 s),
+Analysedauer (5,7 s) und der neuen Pfeilreihe abwarten.
 
 ---
 
