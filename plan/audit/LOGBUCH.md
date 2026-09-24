@@ -28,6 +28,48 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Impressum-Frage geklärt, aber rechtlich ungelöst
+
+**Anlass:** Frage 1 aus der Rechtsprüfung („Wer steht im Impressum – und
+betreibt das tatsächlich?"). Betreiber-Antwort: „also das tool gehört meinem
+cousin aber der vater haftet deswegen hat claude code den namen von seinem
+dad rauf gepackt."
+
+**Kein Code geändert, kein Rechtstext geändert** – das ist eine Rechtsfrage,
+keine Textkorrektur (`LEHREN.md` § 1.2: „Recht" gehört dem Betreiber/Anwalt,
+nicht dem Agenten).
+
+**Einschätzung (keine Rechtsberatung, nur Hinweis):** Diese Konstruktion
+trägt nach erster Einschätzung so **nicht**. § 5 DDG verlangt den
+tatsächlichen Anbieter, Art. 4 Nr. 7 DSGVO den tatsächlich Verantwortlichen
+– beides folgt der Realität (wer entscheidet/betreibt), nicht der Eintragung
+im Impressum. Ein Name lässt sich nicht eintragen, um Haftung zu übertragen;
+das kann die Anbieterkennzeichnung im Zweifel zusätzlich angreifbar machen,
+statt das ursprüngliche Problem zu lösen.
+
+**Geändert:**
+- `plan/phase-5-recht/PRUEFUNG-2026-09-24.md` Frage 1 ausführlich ergänzt.
+- `plan/PLAN.md` AKTUELL: Phase 5 (Recht) trotz „fertig" in der
+  Phasentabelle **nicht als abgeschlossen** markiert, bis geklärt.
+- `plan/LEHREN.md` § 1.5 korrigiert: „Betreiber 16, Vater haftet" war
+  überholt/unvollständig – die App gehört dem Cousin, nicht dem Betreiber
+  dieser Chats; der Vater steht im Impressum wegen der Haftung, nicht weil
+  er selbst etwas mit dem Betrieb zu tun hat.
+
+**Entscheidung:** Keine – das ist ausdrücklich eine Frage an den Anwalt
+(Vertretung? Vollmacht? wer haftet wirklich, unter welchen Voraussetzungen?).
+Der Agent macht dazu keinen Vorschlag zur Textänderung, solange die
+Konstruktion nicht geklärt ist.
+
+**Offen:** Die eigentliche Klärung durch den Anwalt. Erst danach ergibt eine
+Anwalts-Durchsicht von Impressum + Datenschutzerklärung (aus der vorherigen
+Prüfung) Sinn – vorher könnte sich der Text dort noch ändern.
+
+**Nächster Schritt:** Auf Antwort/Klärung warten. Diese Phase (5, Recht)
+bleibt bis dahin offen, unabhängig vom „fertig" in der alten Phasentabelle.
+
+---
+
 ### 2026-09-24 — Befunde der Rechtsprüfung behoben (v3.17.24)
 
 **Anlass:** Betreiber „ja" auf die Liste 1–6 (Rechtsprüfung, `phase-5-recht/

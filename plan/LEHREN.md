@@ -140,9 +140,22 @@ aus der Geschichte:
 
 ### 1.5 Wer der Betreiber ist, wie er schreibt
 
-- Er ist 16 Jahre alt. Im Impressum steht **sein Vater**, der rechtlich haftet.
-  Deshalb gibt der Agent keine Rechtsberatung, sondern nur Hinweise. Wo es
-  rechtlich wird, heißt es: „von einer echten Person prüfen lassen" (§ 12).
+- **Korrektur 24.09.2026:** Die App gehört **seinem Cousin** – der
+  Betreiber dieser Chats trifft die Entscheidungen über die App, sie gehört
+  ihm aber nicht formal. Im Impressum steht **der Vater** des Cousins, „weil
+  er haftet". **Diese Konstruktion ist rechtlich ungeklärt, nicht
+  bestätigt:** Haftung folgt der Realität (wer tatsächlich betreibt/
+  entscheidet), nicht dem Namen im Impressum – ein Name lässt sich nicht
+  einfach eintragen, um Verantwortung zu übertragen. Details und warum das
+  so nicht trägt: `plan/phase-5-recht/PRUEFUNG-2026-09-24.md` Frage 1,
+  `plan/PLAN.md` AKTUELL. **Der Agent löst das nicht selbst** – das ist eine
+  Frage an den Anwalt, keine Textkorrektur.
+- Frühere, jetzt überholte Angabe hier: „Betreiber 16, Vater haftet". Das
+  Alter des Betreibers war ohnehin schon am 22.09.2026 auf 18 korrigiert
+  worden (siehe `PLAN.md`); unabhängig davon ist jetzt klar, dass er nicht
+  der Eigentümer der App ist. Der Agent gibt weiterhin keine Rechtsberatung,
+  sondern nur Hinweise. Wo es rechtlich wird, heißt es: „von einer echten
+  Person prüfen lassen" (§ 12).
 - Er schreibt locker, mit Tippfehlern und aus dem Bauch („mach was starkes
   daraus", „checkst du").
   - Den gemeinten Kern herauslesen, nicht den Wortlaut.
