@@ -17,6 +17,8 @@
 - „vor 3 Tg." heißt „vor 3 Tagen" (bzw. „gestern"); „Tägliche Erinnerung"
   zeigt „aus", solange keine eingerichtet ist – wie jede andere Zeile ihren
   Stand.
+- Datenschutzerklärung Abschnitt 11 (Fehlerformular) nachgezogen: was
+  angehängt wird und dass man es vor dem Abschicken sieht.
 - Geprüft ohne Befund: Übersicht, alle Wahl-Blätter (Wert steht danach in der
   Zeile), Unterseiten, Ideen-Formular, Kontrast hell und dunkel – Handy,
   kleines Handy, iPad.
