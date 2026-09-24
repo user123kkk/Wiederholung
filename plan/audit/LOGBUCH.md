@@ -18,6 +18,75 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 
 ---
 
+### 2026-09-24 — Hick-Durchgang über das ganze Tool, „Tage gelernt" (v3.16.0)
+
+**Anlass:** Betreiber (Vorrang vor der Schleife): „mach einfach, und achte
+dabei auf hick's law" (= offene Fragen 14/15 selbst entscheiden), „bei profil
+wie viele tage gelernt, muss da auf jeden überprüft werden weil hab das tool
+locker über 30 tage genutzt", „deine karten [...] zu viel platz [...] stufen
+und farbe erklärt", „sachen im doppelt gemoppelt raus", „gesamtes tool".
+
+**Vorgehen:** Inventar jedes Bildschirms (`plan/werkzeuge/pruefstand/
+t_inventar.js`, `t_inventar2.js`: Text-Gliederung + Ganzseitenfotos), dann
+jede Information gegen die anderen Bildschirme gehalten.
+
+**Befund „Tage gelernt":** `Object.keys(verlauf).length`. Das Protokoll gibt
+es seit 2.8.0 (7.9.2026), es zählt nur Tage mit Bewertung, hält 120 Tage.
+`ersteBewertung` existiert erst seit 1.6.0 (3.9.2026) und nur für Tage mit
+neuen Karten. Die Tage des Betreibers vor dem 7.9. sind **nirgends
+gespeichert** – nicht rekonstruierbar.
+
+**Geändert (app.js):** Profil (`renderEinstellungen`) ohne Zahlenreihe, neu
+`kontoSeit()` („Dabei seit …" aus `currentUser.metadata.creationTime`);
+Einstellungen-Kopf ohne „Fertig"; `tagGelernt()` + Feld `u` im Protokoll
+(`normVerlauf`, `verlaufZaehle`, `verlaufZusammen`, `verlaufNachschicken`,
+`verlaufSumme`), alle Serien-/Tagesprüfungen über `tagGelernt`
+(`serieAktuell`, `lernenSerie`, `lernenStapel`, `renderRundenEnde`,
+`startListe`), `gradeCard` zählt Übungsantworten (`u`); Fortschritt:
+`fortschrittHeute`/`fortschrittTrend` entfernt, `fortschrittWochen` =
+Zahl + Vergleich + Kalender + Übungszeile, Legende kompakt ohne Nullen,
+Umschalter weg (`ui.statsScope` fest „alle"), Lektionen-Zeile für den offenen
+Bereich; Lernen ohne doppelte „fällig"-Zeile, `trotzdem-ueben` öffnet Üben,
+Alles-erledigt-Banner nur bei mehreren Bereichen; Verwalten: Stand-Punkte
+statt Plakette, Zieh-Hinweis nur bei mehreren Seiten, Suchbereich nur beim
+Suchen; Kartenblatt ohne „– Pflicht", Notiz mit Platzhalter; Rundenende ohne
+„Fertig" in der Kopfzeile; zwei Einleitungstexte gekürzt. Version 3.16.0.
+**Geändert (styles.css):** `.profil__seit` (statt `.profil__zahlen`),
+`.stat-legend--kompakt`, `.wochen-kopf`, `.wochen-ueben`,
+`.card-row__stand`, `.liste-suchbereich`.
+
+**Entscheidung:**
+- **Frage 15 (Üben im Fortschritt): gebaut, ohne Serie.** Ein reiner
+  Übungstag füllt keinen Wochenpunkt, kein Kalenderkästchen, hält keine
+  Serie. Geprüft: 6 Übungsantworten → Serie und Woche unverändert; danach
+  eine echte Runde → heutiger Punkt gefüllt.
+- **Frage 14 (Analytics): nicht gebaut.** Die Datenschutzerklärung verspricht
+  wörtlich „Keine Werbung, kein Tracking, keine Analyse-Dienste" und „keine
+  Analyse des Nutzungsverhaltens". Jede Zählung bräche das öffentliche
+  Versprechen an die Nutzer:innen oder müsste es ändern – das ist keine
+  Gestaltungsfrage, die „mach einfach" abdeckt. Dem Betreiber als Ja/Nein
+  vorgelegt („Zählen ja?"); bei Ja: anonyme Tageszähler ohne Kennung +
+  neuer Absatz in der Datenschutzerklärung + Firestore-Regel (die
+  `veroeffentlichen.bat` NICHT mitspielt – sie deployt nur Hosting).
+- **Serie nur noch auf Lernen**, nicht im Fortschritt: Lernen ist der Ort,
+  an den man täglich kommt (Rückkehr-Drang), Fortschritt der Ort für „wie
+  stehe ich da".
+- **„Serie fortsetzen" entfällt** mit `fortschrittHeute`: hing an
+  `streak.gerissenAm`, das seit 2.14.0 nie gesetzt wird (toter Hinweis).
+- **Einstieg nicht umgebaut:** Der Betreiber will ihn selbst durchgehen;
+  im Inventar keine Doppelung gefunden, die nicht bewusst ist (Echo-Sätze).
+
+**Geprüft:** Kontrast 0; Sprünge Lernen/Üben 0 px (Ausnahme bekannt: 4 px am
+360-px-Handy bei Rückfall + Notiz); `t_hick.js` hell und dunkel (Profil,
+Fortschritt, Suchbereich an/aus, Formular, Rundenende, Trotzdem üben, Serie
+bei reinem Üben); `t_ueben.js`, `t_sicher.js`; iPad + Desktop; Affentest
+200 (Handy) + 150 (iPad) Schritte, 0 Befunde.
+
+**Offen:** Frage 14 (Ja/Nein des Betreibers). J1.
+**Nächste Station:** 1 (Start)
+
+---
+
 ### 2026-09-24 — Betreiber-Rückmeldung zu Üben, Tinte, Ring (v3.15.0)
 
 **Anlass:** Betreiber (hat Vorrang vor der Schleife): Üben überladen, Banner

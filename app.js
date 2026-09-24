@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.15.0";
+const APP_VERSION = "3.16.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -733,13 +733,30 @@ function normVerlauf(v) {
     const e = v[k] || {};
     out[k] = { w: Number.isInteger(e.w) && e.w > 0 ? e.w : 0,
                n: Number.isInteger(e.n) && e.n > 0 ? e.n : 0 };
+    if (Number.isInteger(e.u) && e.u > 0) out[k].u = e.u;   /* 3.16.0: geuebt, siehe tagGelernt */
   }
   return out;
 }
+/* 3.16.0: Das Protokoll zaehlt auch Antworten im UEBEN (u), damit der
+   Fortschritt zeigen kann, wie viel geuebt wurde (offene Frage 15,
+   Betreiber am 24.09.2026: "mach einfach"). Die Entscheidung dazu: Ein Tag,
+   an dem NUR geuebt wurde, ist kein Lerntag - er haelt keine Serie, fuellt
+   keinen Punkt der Woche und kein Kaestchen im Kalender. Die Serie belohnt
+   faellige Wiederholungen; wer sie mit Ueben am Leben halten koennte, ohne
+   zu wiederholen, verlernt dabei genau das, wofuer sie da ist.
+   Deshalb fragt jede Stelle, die wissen will, ob an einem Tag gelernt
+   wurde, diese Funktion - und nicht mehr, ob es den Eintrag gibt. */
+function tagGelernt(e) {
+  return !!e && ((e.w || 0) + (e.n || 0)) > 0;
+}
 function verlaufZaehle(art) {
   const t = todayStr();
-  const ersterHeute = !verlauf[t];
-  if (ersterHeute) verlauf[t] = { w: 0, n: 0 };
+  /* 3.16.0: "erster" heisst jetzt: erste LERN-Antwort des Tages. Hat man
+     vorher schon geuebt, gibt es den Eintrag bereits - der Tag zaehlt fuer
+     die Serie aber erst mit der ersten Wiederholung, und genau die muss
+     sofort raus (siehe tagGelernt). */
+  const ersterHeute = art !== "u" && !tagGelernt(verlauf[t]);
+  if (!verlauf[t]) verlauf[t] = { w: 0, n: 0 };
   verlauf[t][art] = (verlauf[t][art] || 0) + 1;
   verlaufEigene.add(t);
   /* Der ERSTE Eintrag eines Tages entscheidet, ob der Tag fuer die Serie
@@ -751,12 +768,17 @@ function verlaufZaehle(art) {
    groessere Zahl, aber nur fuer Tage, die dieses Geraet selbst gezaehlt hat. */
 function verlaufZusammen(lokal, wolke) {
   const out = {};
-  for (const k of Object.keys(wolke)) out[k] = { w: wolke[k].w, n: wolke[k].n };
+  for (const k of Object.keys(wolke)) {
+    out[k] = { w: wolke[k].w, n: wolke[k].n };
+    if (wolke[k].u) out[k].u = wolke[k].u;
+  }
   for (const k of verlaufEigene) {
     const a = lokal[k];
     if (!a) continue;
     const b = out[k];
     out[k] = b ? { w: Math.max(a.w, b.w), n: Math.max(a.n, b.n) } : { w: a.w, n: a.n };
+    const u = Math.max((a && a.u) || 0, (b && b.u) || 0);
+    if (u > 0) out[k].u = u;
   }
   return out;
 }
@@ -769,7 +791,7 @@ function verlaufNachschicken(wolke) {
     const a = verlauf[k];
     if (!a) continue;
     const b = wolke[k];
-    if (b && b.w >= a.w && b.n >= a.n) continue;
+    if (b && b.w >= a.w && b.n >= a.n && (b.u || 0) >= (a.u || 0)) continue;
     args.push(new fb.FieldPath("verlauf", k), a);
   }
   if (args.length === 0) return;
@@ -843,12 +865,13 @@ async function verlaufZuruecksetzen() {
 }
 /* Summe der letzten n Tage (heute eingeschlossen). */
 function verlaufSumme(tage) {
-  let w = 0, nn = 0;
+  let w = 0, nn = 0, u = 0;
   for (let i = 0; i < tage; i++) {
     const e = verlauf[dateInDays(-i)];
-    if (e) { w += e.w || 0; nn += e.n || 0; }
+    if (e) { w += e.w || 0; nn += e.n || 0; u += e.u || 0; }
   }
-  return { w: w, n: nn, gesamt: w + nn };
+  /* gesamt = Lernen; u (Ueben) steht daneben und zaehlt nicht mit. */
+  return { w: w, n: nn, u: u, gesamt: w + nn };
 }
 
 /* Summe einer 7-Tage-Spanne, um "von" Tagen zurück bis ausschließlich
@@ -2328,10 +2351,10 @@ function serieAktuell() {
   let tage = 0, luecke = false;
   /* Heute zaehlt nur, wenn heute schon gelernt wurde - sonst beginnt die Kette
      bei gestern, damit die Serie nicht mitten am Tag verschwindet. */
-  for (let i = verlauf[t] ? 0 : 1; i < 400; i++) {
+  for (let i = tagGelernt(verlauf[t]) ? 0 : 1; i < 400; i++) {
     const d = dateInDays(-i);
     if (sockelBis && d <= sockelBis) return tage + sockel;
-    if (verlauf[d]) { tage++; continue; }
+    if (tagGelernt(verlauf[d])) { tage++; continue; }
     /* Ein einzelner ausgelassener Tag unterbricht die Serie nicht - Krankheit,
        Reise, ein voller Tag. Der zweite beendet sie. Eine Regel, die sich in
        einem Satz sagen laesst; die alte ("eine Luecke je sieben Tage") liess
@@ -4817,6 +4840,9 @@ function gradeCard(kind) {
   /* 3.12.0: nur fuer die Anzeige - der Abschluss zeigt, wie die Runde lief,
      und die Karte darf wissen, dass sie neu hereinkommt (renderSession).
      Beides beruehrt keine Stufe und keine Faelligkeit. */
+  /* 3.16.0: Uebungsantworten ins Tagesprotokoll (u) - fuer die Anzeige im
+     Fortschritt, nie fuer die Serie (tagGelernt). */
+  if (s.isDrill && card && (kind === "known" || kind === "almost" || kind === "unknown")) verlaufZaehle("u");
   if (card && (kind === "known" || kind === "almost" || kind === "unknown")) {   /* 3.15.0: auch im Ueben - fuer den Abschluss */
     s.zaehler = s.zaehler || { known: 0, almost: 0, unknown: 0 };
     s.zaehler[kind]++;
@@ -6650,18 +6676,21 @@ function karteSheet() {
   let html = '<div class="dlg-backdrop" data-action="nichts" role="presentation">';
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="karte-sheet-titel">';
   html += '<h3 id="karte-sheet-titel">' + (editing ? "Karte bearbeiten" : "Neue Karte") + '</h3>';
-  html += '<div class="field"><label for="f-wort">Wort <span class="opt">– Pflicht</span></label>';
+  /* 3.16.0: Pflicht ist der Normalfall und braucht kein Etikett - markiert
+     wird nur, was man weglassen darf (so machen es die meisten Formulare).
+     Vorher stand "– Pflicht" an zwei von drei Feldern. */
+  html += '<div class="field"><label for="f-wort">Wort</label>';
   html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.wort) + '"' +
     (fehler.wort ? ' aria-invalid="true" aria-describedby="f-wort-fehler"' : '') + '>';
   if (fehler.wort) html += '<div class="field__fehler" id="f-wort-fehler">Bitte ausfüllen</div>';
   html += '</div>';
-  html += '<div class="field"><label for="f-ueb">Übersetzung <span class="opt">– Pflicht</span></label>';
+  html += '<div class="field"><label for="f-ueb">Übersetzung</label>';
   html += '<input type="text" id="f-ueb" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.ueb) + '"' +
     (fehler.ueb ? ' aria-invalid="true" aria-describedby="f-ueb-fehler"' : '') + '>';
   if (fehler.ueb) html += '<div class="field__fehler" id="f-ueb-fehler">Bitte ausfüllen</div>';
   html += '</div>';
-  html += '<div class="field"><label for="f-extra">Beispielsatz, Grammatik, Bild-Link oder Notiz <span class="opt">– optional</span></label>';
-  html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '">' + esc(formDraft.extra) + '</textarea></div>';
+  html += '<div class="field"><label for="f-extra">Notiz <span class="opt">– optional</span></label>';
+  html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '" placeholder="Beispielsatz, Grammatik oder Bild-Link">' + esc(formDraft.extra) + '</textarea></div>';
   if (editing) {
     /* 3.12.1: Stand statt "Wiederholungsstufe 0-12". Das Zahlenfeld zeigte
        offen, wie viele Stufen es gibt - Betreiber am 24.09.2026: "Kein bock
@@ -6836,10 +6865,12 @@ function renderMain() {
        verliert man mit einem Tipp zwei Ebenen auf einmal. */
     html += ui.seite
       ? appBar({ titel: SEITEN_TITEL[ui.seite] || "Einstellungen", zurueck: "seite-zu" })
+      /* 3.16.0: ohne "Fertig" rechts oben - links stand schon der Pfeil
+         zurueck, der dasselbe tut, und unten die Navigation. Drei Wege aus
+         einer Seite waren zwei zu viel. */
       : appBar({
           titel: "Einstellungen",
-          zurueck: "einstellungen-zu",
-          aktion: '<button class="ghost" data-action="einstellungen-zu">Fertig</button>'
+          zurueck: "einstellungen-zu"
         });
     html += '<div class="view' + viewZusatz + '">' + kopf + inhalt + '</div>';
     html += navLeiste();
@@ -7409,7 +7440,6 @@ function renderEinstellungen() {
   if (ui.seite) return renderEinstellungenSeite(ui.seite);
 
   const alter = daysSinceLastBackup();
-  const tage = Object.keys(verlauf).length;
   let html = "";
 
   /* 3.12.0: Wer man ist, steht oben - wie in jeder Einstellungen-Seite, die
@@ -7418,13 +7448,25 @@ function renderEinstellungen() {
   const initiale = (displayName || (currentUser && currentUser.email) || "?").trim().charAt(0).toUpperCase();
   html += '<div class="profil">';
   html += '<div class="profil__bild" aria-hidden="true">' + esc(initiale) + '</div>';
+  /* 3.16.0: keine Zahlenreihe mehr ("40 Karten · 4 Tage Serie · 21 Tage
+     gelernt"). Betreiber am 24.09.2026: "bei profil wie viele tage gelernt,
+     muss da auf jeden ueberprueft werden weil hab das tool locker ueber 30
+     tage genutzt". Befund:
+     - "Tage gelernt" war Object.keys(verlauf).length. Das Tagesprotokoll
+       gibt es erst seit 2.8.0 (7. September 2026), es zaehlt nur Tage mit
+       mindestens einer Bewertung und hebt hoechstens 120 Tage auf
+       (VERLAUF_TAGE). Die Zahl war also fuer jeden, der vor dem 7.9. schon
+       gelernt hat, zu klein - und haette nie ueber 120 wachsen koennen.
+       Aeltere Tage stehen nirgends; auch ersteBewertung gibt es erst seit
+       1.6.0 (3.9.2026) und nur fuer Tage mit neuen Karten.
+     - "Karten" und "Tage Serie" standen ein zweites Mal hier: die Serie auf
+       dem Lernen-Tab (lernenSerie), die Kartenzahl im Fortschritt.
+     Uebrig bleibt, was stimmt und nirgends sonst steht: seit wann das Konto
+     besteht (Firebase Auth, metadata.creationTime). */
+  const seit = kontoSeit();
   html += '<div class="profil__text"><strong>' + esc(displayName) + '</strong>' +
-    (currentUser && currentUser.email ? '<span>' + esc(currentUser.email) + '</span>' : '') + '</div>';
-  const kartenAlle = bereiche.reduce((n, x) => n + x.karten.length, 0);
-  html += '<div class="profil__zahlen">' +
-    '<span><strong>' + kartenAlle + '</strong> Karten</span>' +
-    '<span><strong>' + serieAktuell() + '</strong> Tage Serie</span>' +
-    '<span><strong>' + tage + '</strong> Tage gelernt</span></div>';
+    (currentUser && currentUser.email ? '<span>' + esc(currentUser.email) + '</span>' : '') +
+    (seit ? '<span class="profil__seit">Dabei seit ' + esc(seit) + '</span>' : '') + '</div>';
   html += '</div>';
 
   /* ---------- 3.13.0: weniger Entscheidungen (Hick) ----------
@@ -7499,6 +7541,20 @@ function renderEinstellungen() {
 
   html += einstFuss();
   return html;
+}
+
+/* 3.16.0: Seit wann das Konto besteht, als "3. August 2026". Firebase Auth
+   liefert metadata.creationTime als Datumstext (RFC 7231); fehlt er oder
+   ist er unlesbar, steht die Zeile nicht da - lieber nichts als etwas
+   Falsches. */
+function kontoSeit() {
+  try {
+    const roh = currentUser && currentUser.metadata && currentUser.metadata.creationTime;
+    if (!roh) return "";
+    const d = new Date(roh);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleDateString("de-DE", { day: "numeric", month: "long", year: "numeric" });
+  } catch (e) { return ""; }
 }
 
 /* Datenschutz und Impressum muessen jederzeit erreichbar sein, nicht nur vor
@@ -8248,11 +8304,15 @@ function lernenStapel(b, cards, due, neuImStapel) {
     html += '<div class="stapel__was">' + (morgen > 0
       ? 'Morgen kommen <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
       : 'In \u201e' + esc(b.name) + '\u201c ist nichts mehr f\u00e4llig. Der n\u00e4chste Schwung kommt von selbst.') + '</div>';
-    html += '<div class="empty__aktionen"><button class="secondary" data-action="tab-verwalten">Trotzdem \u00fcben</button></div>';
+    /* 3.16.0: oeffnet das Ueben direkt, statt nur den Reiter zu wechseln -
+       dort musste man "Ueben" noch einmal suchen. */
+    html += '<div class="empty__aktionen"><button class="secondary" data-action="trotzdem-ueben">' + ikon("ueben", "i-sm") + ' Trotzdem \u00fcben</button></div>';
     html += '</div>';
     /* Fund 3.12.0: Hier stand streak.lastCompletedDate === todayStr() - das
        Feld wird seit 2.14.0 nicht mehr gesetzt, der Hinweis erschien nie. */
-    if (verlauf[todayStr()] && bereicheMitOffenem().length === 0) {
+    /* 3.16.0: nur bei mehreren Bereichen - mit einem einzigen sagte das
+       Banner unter "Fuer heute durch" dasselbe noch einmal. */
+    if (bereiche.length > 1 && tagGelernt(verlauf[todayStr()]) && bereicheMitOffenem().length === 0) {
       html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
         ikon("haken", "i-sm") + '<div class="banner__text">Heute ist in allen Bereichen alles erledigt.</div></div>';
     }
@@ -8264,9 +8324,13 @@ function lernenStapel(b, cards, due, neuImStapel) {
   html += '<div class="stapel__ring">' + ringSvg(h.anteil) +
     '<div class="stapel__mitte"><span class="stapel__zahl">' + due.length + '</span>' +
     '<span class="stapel__einheit">f\u00e4llig</span></div></div>';
-  html += '<div class="stapel__was">' + (h.getan > 0
-    ? 'Heute schon <strong>' + h.getan + '</strong> Antwort' + (h.getan === 1 ? '' : 'en') + ' \u00b7 von ' + cards.length + ' Karten'
-    : (due.length === 1 ? 'Karte ist heute f\u00e4llig' : 'Karten sind heute f\u00e4llig') + ' \u00b7 von ' + cards.length) + '</div>';
+  /* 3.16.0: Unter "12 faellig" im Ring stand "Karten sind heute faellig ·
+     von 40" - dasselbe Wort zweimal, dazu eine Gesamtzahl, die hier nichts
+     entscheidet. Die Zeile steht nur noch, wenn sie etwas Neues sagt: wie
+     viel heute schon getan ist. */
+  if (h.getan > 0) {
+    html += '<div class="stapel__was">Heute schon <strong>' + h.getan + '</strong> Antwort' + (h.getan === 1 ? '' : 'en') + '</div>';
+  }
   html += '<div class="stapel__meta">';
   if (wdh > 0) html += '<span class="badge zustand-festigung">' + wdh + ' Wiederholung' + (wdh === 1 ? '' : 'en') + '</span>';
   if (neuImStapel > 0) html += '<span class="badge zustand-neu">' + neuImStapel + ' neu</span>';
@@ -8284,7 +8348,7 @@ function lernenSerie() {
   let tage = "";
   for (let i = 6; i >= 0; i--) {
     const d = dateInDays(-i);
-    const da = !!verlauf[d];
+    const da = tagGelernt(verlauf[d]);
     tage += '<span class="woche__tag' + (da ? ' da' : '') + (d === t ? ' heute' : '') + '" style="--n:' + (6 - i) + '">' +
       '<span class="woche__punkt">' + (da ? ikon("haken", "i-sm") : '') + '</span>' +
       '<span class="woche__kurz">' + esc(wochentagKurz(d)) + '</span></span>';
@@ -8322,7 +8386,7 @@ function lernenSerie() {
 function startListe() {
   if (!bereiche) return "";
   const alle = bereiche.reduce((a, x) => a.concat(x.karten), []);
-  const tage = Object.keys(verlauf).length;
+  const tage = Object.values(verlauf).filter(tagGelernt).length;
   const schritte = [
     { fertig: alle.length > 0, titel: "Erste Karte anlegen", text: "Ein Wort aus dem, was du gerade lernst.",
       aktion: istGefuehrt(currentBereich()) ? null : "karte-neu" },
@@ -8357,111 +8421,26 @@ function startListe() {
 /* E4/D10: der Fortschritts-Tab.
    Ohne sichtbaren Fortschritt fehlt der Grund weiterzumachen - und die
    Vorschau warnt vor einem 300er-Tag, bevor er da ist. */
-/* Was heute noch zu tun ist - der einzige Teil des Tabs, der jeden Tag von
-   vorn beginnt und abschliessbar ist. */
-function fortschrittHeute(cards) {
-  let html = "";
-  /* --- 1. Heute: das Einzige, was jeden Tag von vorn beginnt --- */
-  const t = todayStr();
-  /* 2.10.1: Neue Karten zaehlen hier mit. Vorher standen nur Wiederholungen
-     drin - wer einen frisch eingespielten Satz vor sich hatte, las "fertig ✓",
-     obwohl die erste Lektion noch komplett ungelernt war. Fuer die STREAK
-     zaehlen weiterhin nur Wiederholungen (siehe bereicheMitOffenem); hier
-     geht es um die Frage "was ist heute noch zu tun", und dazu gehoert neuer
-     Stoff, der freigeschaltet ist. */
-  const offenHeute = cards.filter(c => c.nextReview <= t).length;
-  const heute = verlauf[t] || { w: 0, n: 0 };
-  const getan = heute.w + heute.n;
-  const ziel = getan + offenHeute;
-  const anteil = ziel > 0 ? Math.round((getan / ziel) * 100) : 100;
-  /* Die Serie steht oben und gross - sie ist die einzige Zahl, die taeglich
-     etwas von einem will. Daneben die beste Serie, damit ein Riss nicht wie
-     ein Totalverlust aussieht. */
-  /* 2.13.0: Eine grosse 0 als erste Zahl des Tabs sieht aus wie ein Fehler
-     und nicht wie ein Anfang. Wer noch keine Serie hat, bekommt deshalb keine
-     Null, sondern die naechste Handlung. Und "beste Serie" erscheint erst,
-     wenn es eine gibt - eine zweite 0 daneben macht es nur schlimmer. */
-  const serie = serieAktuell();
-  if (serie === 0) {
-    html += '<div class="serie-karte">';
-    html += '<div class="serie-zahl"><strong>' + (offenHeute === 0 && getan > 0 ? ikon("haken", "i-lg") : "1") + '</strong></div>';
-    html += '<div class="serie-text">' +
-      (offenHeute === 0 && getan > 0
-        ? 'Heute erledigt – morgen beginnt die Serie'
-        : 'Heute wird Tag 1<br><span class="serie-klein">Wiederholungen erledigen, dann zählt der Tag</span>') + '</div>';
-    if (streak.beste > 0) html += '<div class="serie-beste">beste Serie<br><strong>' + streak.beste + '</strong></div>';
-    html += '</div>';
-  } else {
-    html += '<div class="serie-karte">';
-    html += '<div class="serie-zahl"><strong>' + serie + '</strong><span class="arab-ziffer" lang="ar" dir="rtl">' + arabZahl(serie) + '</span></div>';
-    html += '<div class="serie-text">Tag' + (serie === 1 ? '' : 'e') + ' am Stück</div>';
-    if (streak.beste > 0) html += '<div class="serie-beste">beste Serie<br><strong>' + streak.beste + '</strong></div>';
-    html += '</div>';
-  }
-  if (streakRissZurueckliegtInTagen()) {
-    /* 3.2.0: War ein .stat-block mit drei Inline-Korrekturen, die den Block
-       gleich wieder flach machten - seit .stat-block eine Flaeche ist, waere
-       das ein Kasten, der nur so tut. Es ist inhaltlich auch keiner: ein
-       Hinweis mit einer Handlung. */
-    html += '<div class="stat-block">';
-    html += '<p class="stat-sub">Die Serie stand bei <strong>' + streak.vorher +
-      '</strong> und ist ' + fmtDatum(streak.gerissenAm) + ' gerissen.</p>';
-    html += '<button class="secondary" data-action="streak-fortsetzen">Serie fortsetzen</button>';
-    html += '</div>';
-  }
-  
-  html += '<div class="stat-block">';
-  html += '<h3>Heute</h3>';
-  html += '<div class="heute-bar" role="img" aria-label="' + getan + ' von ' + ziel + ' erledigt"><span style="width:' + anteil + '%"></span></div>';
-  html += '<p class="stat-sub">' +
-    (ziel === 0
-      ? 'Nichts zu tun – schau morgen wieder rein.'
-      : '<strong>' + getan + '</strong> Antwort' + (getan === 1 ? '' : 'en') + (offenHeute > 0 ? ', noch ' + offenHeute + ' Karte' + (offenHeute === 1 ? '' : 'n') + ' offen' : ' – fertig')) +
-    (heute.n > 0 ? ' · ' + heute.n + ' zum ersten Mal gesehen' : '') + '</p>';
-  /* 2.13.0: Ein Tab, der nur zusieht, fuehlt sich tot an. Wenn heute noch
-     etwas offen ist, gehoert der Weg dorthin hierher - und nicht nur die
-     Feststellung, dass etwas offen ist. */
-  if (offenHeute > 0) html += '<button data-action="tab-lernen">Weiter lernen</button>';
-  html += '</div>';
-  return html;
-}
-
-/* Der Wochenvergleich: die einzige Stelle im Fortschritt-Tab, die eine
-   RICHTUNG zeigt statt eines Standes. Bewusst nur diese eine Zahl (Antworten
-   gesamt), nicht drei - sonst ist es wieder ein Kachel-Armaturenbrett
-   (siehe Abschnitt 12 in styles.css). Die Zahl zählt beim Anzeigen von 0
-   hoch (tickCountups()) - das einzige animierte Element hier, und es zeigt
-   etwas Echtes: wie viel diese Woche schon zusammengekommen ist. */
-function fortschrittTrend() {
-  const diese = verlaufSumme(7);
-  const letzte = verlaufSummeSpanne(7, 14);
-  if (diese.gesamt === 0 && letzte.gesamt === 0) return "";
-  let html = '<div class="stat-block">';
-  html += '<h3>Diese Woche im Vergleich</h3>';
-  html += '<div style="display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap">';
-  html += '<p class="gross-zahl" style="margin:0" data-countup="' + diese.gesamt + '"><strong>0</strong>' +
-    '<span>Antworten diese Woche</span></p>';
-  if (letzte.gesamt > 0) {
-    const delta = diese.gesamt - letzte.gesamt;
-    const pct = Math.round((delta / letzte.gesamt) * 100);
-    const richtung = delta > 0 ? "trend-up" : delta < 0 ? "trend-down" : "trend-flat";
-    const pfeil = delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
-    html += '<span class="trend-pill ' + richtung + '">' + pfeil + ' ' + Math.abs(pct) +
-      ' % zur Vorwoche</span>';
-  } else {
-    html += '<span class="trend-pill">Vorwoche war leer</span>';
-  }
-  html += '</div></div>';
-  return html;
-}
-
-/* Die Bewegung: zwoelf Wochen als Kalenderraster. */
+/* ---------- 3.16.0: ein Block fuer die Zeit ----------
+   Betreiber am 24.09.2026: "hicks law und simple pro tab [...] sachen im
+   doppelt gemoppelt raus". Bis 3.15 standen hier vier Bloecke fuer "wann":
+     Serie   - stand ein zweites Mal auf dem Lernen-Tab (lernenSerie), dort
+               mit der Woche als Punkten. Bleibt nur dort.
+     Heute   - Ring, Zahl und "Runde starten" stehen auf dem Lernen-Tab;
+               hier stand dasselbe noch einmal mit "Weiter lernen".
+     Woche   - "52 Antworten diese Woche" + Vergleich
+     Wochen  - Kalender + "221 Antworten · 25 Karten zum ersten Mal"
+   Woche und Wochen sind jetzt EIN Block: oben die eine Zahl mit Richtung,
+   darunter das Raster. Die Summe ueber vier Wochen ist weg - sie sagte in
+   anderer Form, was das Raster zeigt.
+   Der Hinweis "Serie fortsetzen" (fortschrittHeute) ist mit weg: er hing an
+   streak.gerissenAm, und das setzt seit 2.14.0 niemand mehr (siehe
+   evaluateStreakForNewDay, "if (false && ...)") - er konnte nicht mehr
+   erscheinen. */
 function fortschrittWochen() {
   let html = "";
-  /* --- 2. Die letzten Wochen: die Bewegung, die dem Tab vorher fehlte ---
-     Ein Kalenderraster sagt in einer Sekunde, ob man dranbleibt - dafür
-     braucht es keine Beschriftung und keine Erklärung. */
-  const w12 = verlaufSumme(84);
+  const diese = verlaufSumme(7);
+  const letzte = verlaufSummeSpanne(7, 14);
   /* 2.13.0: Das Raster waechst mit. Zwoelf leere Wochen am ersten Tag sehen
      aus wie ein Fehler; vier Wochen mit einem hellen Kaestchen sehen aus wie
      ein Anfang. Gezeigt wird ab der ersten Woche mit einem Eintrag,
@@ -8472,20 +8451,35 @@ function fortschrittWochen() {
     if (alter > tageTief) tageTief = alter;
   }
   const wochen = Math.min(12, Math.max(4, Math.ceil((tageTief + 1) / 7)));
+  const zeitraum = verlaufSumme(wochen * 7);
   html += '<div class="stat-block">';
-  html += '<h3>' + (wochen === 1 ? 'Diese Woche' : 'Die letzten ' + wochen + ' Wochen') + '</h3>';
-  /* 2.11.5: Gezaehlt werden ANTWORTEN, nicht Karten. Eine Karte kann an einem
-     Tag mehrfach drankommen ("Nicht" haengt sie wieder hinten an), und wer
-     21 Karten durchsieht und danach abfragt, hat 42 Antworten gegeben.
-     "44 Karten bearbeitet" bei 21 Karten im Stapel las sich wie ein Fehler. */
-  html += '<p class="stat-sub">' + w12.gesamt + ' Antworten · ' + w12.n + ' Karten zum ersten Mal gesehen</p>';
-  html += renderKalender(wochen * 7);
-  if (w12.gesamt === 0) {
-    html += '<p class="stat-sub" style="margin-top:var(--space-3)">Noch nichts aufgezeichnet – ab dem ersten gelernten Tag füllt sich das Raster.</p>';
+  html += '<h3>Die letzten ' + wochen + ' Wochen</h3>';
+  if (diese.gesamt > 0 || letzte.gesamt > 0) {
+    /* Die Zahl zaehlt beim Anzeigen von 0 hoch (tickCountups()). */
+    html += '<div class="wochen-kopf">';
+    html += '<p class="gross-zahl" style="margin:0" data-countup="' + diese.gesamt + '"><strong>0</strong>' +
+      '<span>Antworten diese Woche</span></p>';
+    /* Eine Richtung nur, wenn es etwas zu vergleichen gibt. "Vorwoche war
+       leer" war eine Pille, die nichts sagte. */
+    if (letzte.gesamt > 0) {
+      const delta = diese.gesamt - letzte.gesamt;
+      const pct = Math.round((delta / letzte.gesamt) * 100);
+      const richtung = delta > 0 ? "trend-up" : delta < 0 ? "trend-down" : "trend-flat";
+      const pfeil = delta > 0 ? "\u2191" : delta < 0 ? "\u2193" : "\u2192";
+      html += '<span class="trend-pill ' + richtung + '">' + pfeil + ' ' + Math.abs(pct) + ' % zur Vorwoche</span>';
+    }
+    html += '</div>';
   }
-  /* 2.19.0: „Verlauf zurücksetzen" stand mitten in der Anzeige, die es
-     löscht. Es steht jetzt bei den anderen Daten-Handlungen in den
-     Einstellungen. */
+  html += renderKalender(wochen * 7);
+  /* 3.16.0: Ueben steht als eine leise Zeile darunter - nur, wenn diese
+     Woche geuebt wurde. Es fuellt kein Kaestchen (tagGelernt). */
+  if (diese.u > 0) {
+    html += '<p class="stat-sub wochen-ueben">' + ikon("ueben", "i-sm") + ' Dazu <strong>' + diese.u + '</strong> Antwort' +
+      (diese.u === 1 ? '' : 'en') + ' im \u00dcben</p>';
+  }
+  if (zeitraum.gesamt === 0 && zeitraum.u === 0) {
+    html += '<p class="stat-sub" style="margin-top:var(--space-3)">Noch nichts aufgezeichnet \u2013 ab dem ersten gelernten Tag f\u00fcllt sich das Raster.</p>';
+  }
   html += '</div>';
   return html;
 }
@@ -8503,7 +8497,7 @@ function fortschrittStoff(cards) {
      schwankt, sobald man etwas vergisst. Deshalb steht diese Zahl oben. */
   html += '<p class="gross-zahl"><strong>' + gesessen + '</strong>' +
     '<span class="arab-ziffer" lang="ar" dir="rtl">' + arabZahl(gesessen) + '</span>' +
-    ' <span>von ' + gesamt + ' Karten saßen schon mindestens einmal</span></p>';
+    ' <span>von ' + gesamt + ' Karten saßen schon einmal</span></p>';
   /* 22.09.2026 (Block 16): Hier stand "Diese Woche N neue dazu." - dieselbe
      Zaehlung ("Karten zum ersten Mal gesehen") steht schon zweimal weiter
      oben auf demselben Bildschirm: in "Heute" fuer heute und in "Die letzten
@@ -8521,7 +8515,7 @@ function fortschrittStoff(cards) {
       esc(belegt.length ? belegt[0].label : "neu") + '</strong>.</p>';
     return html + '</div>';
   }
-  html += '<p class="stat-sub" style="margin-top:var(--space-4)">Wie fest es gerade sitzt:</p>';
+  /* 3.16.0: ohne "Wie fest es gerade sitzt:" - Band und Legende sagen es. */
   html += '<div class="stat-bar" role="img" aria-label="' +
     esc(gruppen.map(g => g.anzahl + " " + g.label).join(", ")) + '">';
   gruppen.forEach(g => {
@@ -8531,8 +8525,15 @@ function fortschrittStoff(cards) {
       esc(g.label + ": " + g.anzahl + " Karten (" + g.erklaerung + ")") + '"></div>';
   });
   html += '</div>';
-  html += '<div class="stat-legend">';
-  gruppen.forEach(g => {
+  /* 3.16.0: Legende in zwei Spalten, ohne Erklaerzeile, und nur Staende,
+     die es gerade gibt. Betreiber am 24.09.2026: "da ist zu viel platz
+     eingenommen wegen den stufen und farbe erklaert". Sechs Staende mit je
+     zwei Zeilen waren zwoelf Zeilen - fast die Haelfte des Tabs. Die
+     Erklaerung bleibt als title (Maus) im Band und hier; die Woerter
+     selbst sind seit 3.13.0 so gewaehlt, dass sie ohne sie verstaendlich
+     sind (KARTEN_ZUSTAENDE). Reihenfolge der Rampe: spaltenweise von oben. */
+  html += '<div class="stat-legend stat-legend--kompakt">';
+  gruppen.filter(g => g.anzahl > 0).forEach(g => {
     /* 22.09.2026 (Block 15): Die Erklaerung stand in Klammern HINTER dem
        Label in derselben Zeile. Bei fuenf Stufen ergab das fuenf Zeilen, die
        jede fuer sich umbrachen - eine Textwand aus lauter Klammern, in der
@@ -8541,9 +8542,8 @@ function fortschrittStoff(cards) {
        zweite, leisere Zeile unter der ersten: oben Zahl und Wort, darunter
        die Erklaerung. Keine Klammern mehr, die braucht es nicht, wenn die
        Zeile ohnehin getrennt steht. */
-    html += '<span><span class="dot" style="background:' + g.farbe + '"></span>' +
-      '<strong>' + g.anzahl + '</strong> ' + esc(g.label) +
-      '<em class="legende-erklaerung">' + esc(g.erklaerung) + '</em></span>';
+    html += '<span title="' + esc(g.erklaerung) + '"><span class="dot" style="background:' + g.farbe + '"></span>' +
+      '<strong>' + g.anzahl + '</strong> ' + esc(g.label) + '</span>';
   });
   html += '</div>';
   html += '</div>';
@@ -8611,14 +8611,15 @@ function fortschrittLektionen(nurBereich) {
 function renderFortschritt() {
   if (ui.seite) return renderFortschrittSeite(ui.seite);
 
+  /* 3.16.0: kein Umschalter "Alle Bereiche | Nur X" mehr. Die Zeit (Woche,
+     Kalender) gehoert ohnehin keinem Bereich, und der Stoff zaehlt alle
+     Karten - wie bisher voreingestellt. Einen Bereich waehlt man oben in der
+     Kopfzeile; ein zweiter Bereichswaehler auf demselben Bildschirm war
+     eine Entscheidung zu viel (Hick). Lektionen gehoeren zum offenen
+     Bereich und stehen deshalb unten als Zeile, sobald er welche hat. */
+  ui.statsScope = "alle";
   const cards = statsCards();
-  const nurBereich = ui.statsScope === "bereich";
   let html = "";
-
-  html += '<div class="pills" style="margin-bottom:var(--space-4)">';
-  html += '<button class="pill' + (nurBereich ? "" : " active") + '" data-action="stats-scope" data-scope="alle">Alle Bereiche</button>';
-  html += '<button class="pill' + (nurBereich ? " active" : "") + '" data-action="stats-scope" data-scope="bereich">Nur „' + esc(currentBereich().name) + '"</button>';
-  html += '</div>';
 
   if (cards.length === 0) {
     html += '<div class="empty">';
@@ -8633,10 +8634,9 @@ function renderFortschritt() {
     return html;
   }
 
-  /* Der Stand: vier Bloecke, von "heute" nach "insgesamt". */
+  /* 3.16.0: zwei Bloecke - die Zeit, der Stoff. Heute und Serie stehen
+     auf dem Lernen-Tab. */
   viewZusatz = " view--raster";
-  html += fortschrittHeute(cards);
-  html += fortschrittTrend();
   html += fortschrittWochen();
   html += fortschrittStoff(cards);
 
@@ -8647,7 +8647,7 @@ function renderFortschritt() {
   const lekF = lektionenVon(currentBereich());
   const tage7 = vorschau7(cards);
   const hatVorschau = !tage7.every(x => x.anzahl === 0);
-  const zeigtLektionen = nurBereich && lekF.length > 0;
+  const zeigtLektionen = lekF.length > 0;
 
   if (zeigtLektionen || leeches.length > 0 || hatVorschau) {
     html += '<div class="sektion" style="margin-top:var(--stack)">';
@@ -8656,7 +8656,7 @@ function renderFortschritt() {
     if (zeigtLektionen) {
       const fertig = lekF.filter(x => lektionSitzt(currentBereich(), x)).length;
       html += einstZeile({ action: "fort-seite", id: "lektionen", icon: "ordner", text: "Lektionen",
-        wert: fertig + " von " + lekF.length });
+        wert: fertig + " von " + lekF.length + " sitzen" });
     }
     if (leeches.length > 0) {
       html += einstZeile({ action: "fort-seite", id: "leeches", icon: "warnung",
@@ -8682,10 +8682,9 @@ function renderFortschrittSeite(id) {
   if (id === "leeches") {
     const leeches = verbrannteKarten();
     /* 3.12.1: "Ab 5 Rueckfaellen" nannte die Schwelle - siehe zustandBadge. */
-    let html = '<p class="hint" style="margin-bottom:var(--space-5)">Karten, die dir immer wieder ' +
-      'entfallen. Meist liegt es an der Karte, nicht am Gedächtnis – zu viel auf ' +
-      'einmal, zu ähnlich zu einer anderen, oder die Übersetzung passt nicht ganz. ' +
-      'Nimm dir erst die obersten vor.</p>';
+    /* 3.16.0: zwei Saetze statt vier - wie der Hinweis in der Runde. */
+    let html = '<p class="hint" style="margin-bottom:var(--space-5)">Meist liegt es an der Karte, nicht am ' +
+      'Gedächtnis: zu viel auf einmal oder zu ähnlich zu einer anderen. Fang oben an.</p>';
     if (leeches.length === 0) {
       return '<div class="empty"><div class="empty__icon">' + ikon("fertig", "i-xl") + '</div>' +
         '<div class="empty__titel">Keine dabei</div>' +
@@ -8712,8 +8711,7 @@ function renderFortschrittSeite(id) {
   if (id === "vorschau") {
     const tage = vorschau7(cards);
     const maxTag = Math.max(1, ...tage.map(x => x.anzahl));
-    let html = '<p class="hint" style="margin-bottom:var(--space-5)">Nur Wiederholungen – noch nie ' +
-      'bewertete Karten stehen hier nicht drin, die kommen erst, wenn du sie freischaltest.</p>';
+    let html = '<p class="hint" style="margin-bottom:var(--space-5)">Nur Wiederholungen – neue Karten kommen dazu, sobald du sie lernst.</p>';
     html += '<div class="card">';
     html += '<div class="spark-reihe oben">';
     tage.forEach(x => { html += '<span>' + (x.anzahl > 0 ? x.anzahl : "") + '</span>'; });
@@ -8769,7 +8767,9 @@ function renderSession() {
   if (s.queue.length === 0) {
     const vorher = typeof s.anteilVorher === "number" ? s.anteilVorher : 1;
     s.anteilVorher = 1;
-    let html = modeBar({ zu: "end-session", zuLabel: "Zur\u00fcck", mitte: "Fertig", anteil: 1, anteilVorher: vorher });
+    /* 3.16.0: ohne "Fertig" in der Kopfzeile - darunter steht "Geschafft"
+       als Ueberschrift und "Fertig" als Knopf. */
+    let html = modeBar({ zu: "end-session", zuLabel: "Zur\u00fcck", mitte: "", anteil: 1, anteilVorher: vorher });
     html += renderRundenEnde(s, gesamt);
     return html;
   }
@@ -9039,7 +9039,7 @@ function renderRundenEnde(s, gesamt) {
      (serieAktuell, checkStreakOnSessionComplete). Die Zeile "N Tage am
      Stueck" erschien deshalb nach keiner einzigen Runde. Heute gelernt heisst:
      heute steht etwas im Protokoll. */
-  const serieHeute = !s.isDrill && verlauf[todayStr()] ? serieAktuell() : 0;
+  const serieHeute = !s.isDrill && tagGelernt(verlauf[todayStr()]) ? serieAktuell() : 0;
   const morgen = vorschau7(currentCards())[1].anzahl;
   let html = '<div class="ende' + (neu ? ' ende--neu' : '') + '">';
   html += '<div class="ende__haken" aria-hidden="true">' +
@@ -9496,13 +9496,9 @@ function renderVerwaltenListe(cards, gefuehrt) {
     html += '<button class="search-clear" id="f-search-clear" data-action="search-clear" aria-label="Suche leeren"' +
       (ui.searchQuery ? '' : ' hidden') + '>' + ikon("schliessen", "i-sm") + '</button>';
     html += '</div>';
-    if (bereiche.length > 1) {
-      html += '<div class="seg-row" style="margin:0 0 14px">';
-      html += '<span class="seg" role="group" aria-label="Suchbereich">';
-      html += '<button class="' + (ui.searchAll ? "" : "active") + '" data-action="search-scope" data-scope="eins" aria-pressed="' + (ui.searchAll ? "false" : "true") + '">nur dieser Bereich</button>';
-      html += '<button class="' + (ui.searchAll ? "active" : "") + '" data-action="search-scope" data-scope="alle" aria-pressed="' + (ui.searchAll ? "true" : "false") + '">alle Bereiche</button>';
-      html += '</span></div>';
-    }
+    /* 3.16.0: Der Umschalter "nur dieser Bereich | alle Bereiche" steht
+       jetzt IN der Liste und nur, solange gesucht wird (kartenListeInhalt) -
+       vorher stand er immer da, auch ohne ein einziges Suchwort. */
     html += '<div id="karten-liste">' + kartenListeInhalt() + '</div>';
   }
   html += '</div>';
@@ -9582,6 +9578,13 @@ function kartenListeInhalt() {
     return html;
   }
 
+  if (tokens.length && bereiche.length > 1) {
+    html += '<div class="seg-row liste-suchbereich">';
+    html += '<span class="seg" role="group" aria-label="Suchbereich">';
+    html += '<button class="' + (ui.searchAll ? "" : "active") + '" data-action="search-scope" data-scope="eins" aria-pressed="' + (ui.searchAll ? "false" : "true") + '">nur dieser Bereich</button>';
+    html += '<button class="' + (ui.searchAll ? "active" : "") + '" data-action="search-scope" data-scope="alle" aria-pressed="' + (ui.searchAll ? "true" : "false") + '">alle Bereiche</button>';
+    html += '</span></div>';
+  }
   if (tokens.length) {
     html += '<p class="hint liste-hinweis">' +
       (ungefaehr ? 'Keine genauen Treffer – ähnlich geschrieben: ' : '') +
@@ -9621,8 +9624,11 @@ function kartenListeInhalt() {
      bringt sie mit und trennt die Zeile mit einer Haarlinie von der ersten
      Karte, damit sie als Kopf der Liste liest und nicht als deren erste
      Zeile. */
-  if (draggable) html += '<p class="hint liste-hinweis">Am Griff ziehen ändert die Reihenfolge.' +
-    (seiten > 1 ? ' Über die Seitengrenze hinaus geht das nicht – dafür „Verschieben“ im Auswahlmodus.' : '') + '</p>';
+  /* 3.16.0: "Am Griff ziehen aendert die Reihenfolge." stand ueber jeder
+     Liste - eine Anleitung fuer einen Griff, der sich selbst erklaert (und
+     dessen Tastaturfassung im aria-label steht). Bleibt nur die Grenze, in
+     die man sonst unerklaert laeuft: bei mehreren Seiten. */
+  if (draggable && seiten > 1) html += '<p class="hint liste-hinweis">Sortieren geht nur innerhalb einer Seite – darüber hinaus „Verschieben“ im Auswahlmodus.</p>';
   if (seiten > 1) html += seitenLeiste(ui.kartenSeite, seiten, shownCards.length);
   for (let i = 0; i < seitenKarten.length; i++) {
     const c = seitenKarten[i];
@@ -9662,7 +9668,13 @@ function kartenListeInhalt() {
     html += '</div>';
     if (fremd) html += '<span class="badge" title="Diese Karte liegt in einem anderen Bereich">' + esc(fremd.name) + '</span>';
     if (kartenZu && !ui.selectMode) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">' + ikon("schloss", "i-sm") + ' </span>';
-    html += zustandBadge(c);
+    /* 3.16.0: die Punkte statt der Wort-Plakette. Betreiber am 24.09.2026:
+       "deine karten finde ich da ist zu viel platz eingenommen wegen den
+       stufen und farbe erklaert". Jede Zeile trug "frisch gelernt" oder
+       "wird fester" als farbige Pille, bis zu 130 px breit. Die Punkte sind
+       dieselbe Sprache wie auf der Lernkarte und im Karten-Blatt, halb so
+       breit; das Wort steht im aria-label (Screenreader) und im Blatt. */
+    html += '<span class="card-row__stand">' + zustandPunkte(c) + '</span>';
     /* E6: In der Liste sichtbar machen, damit beim Durchsehen sofort
        auffaellt, welche Karte umformuliert gehoert. */
     if (istVerbrannt(c)) html += '<span class="leech-badge" title="' + c.rueckfaelle + '-mal wieder vergessen – umformulieren oder aufteilen">' + ikon("serie", "i-sm") + ' ' + c.rueckfaelle + '×</span>';
@@ -11100,6 +11112,11 @@ document.body.addEventListener("click", e => {
       if (tabSchonAktiv("fortschritt")) { nachObenBlaettern(); break; }
       ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
+    case "trotzdem-ueben":
+      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null;
+      ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null;
+      openDrillPicker();
+      break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
     case "tab-verwalten":

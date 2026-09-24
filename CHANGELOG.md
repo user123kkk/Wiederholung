@@ -1,3 +1,41 @@
+## 3.16.0 - 24. September 2026
+
+**Alles nur noch einmal: weniger auf jedem Bildschirm.** Betreiber: „achte
+dabei auf hick's law [...] bei einstellungen bei profil wie viele tage
+gelernt, muss da auf jeden überprüft werden [...] deine karten [...] zu viel
+platz eingenommen wegen den stufen und farbe erklärt [...] sachen im doppelt
+gemoppelt raus".
+
+- **„Tage gelernt" war falsch – und ist weg.** Gezählt wurde das
+  Tagesprotokoll, das es erst seit 2.8.0 (7. September) gibt, nur Tage mit
+  Bewertung, höchstens 120. Wer vorher schon gelernt hat, sah zu wenig; ältere
+  Tage stehen nirgends und lassen sich nicht nachrechnen. Im Profil steht
+  jetzt, was stimmt: **„Dabei seit …"** (Datum des Kontos). Kartenzahl und
+  Serie standen dort ein zweites Mal und sind ebenfalls raus.
+- **Fortschritt:** zwei Blöcke statt vier plus Umschalter. Serie und „Heute"
+  standen schon auf dem Lernen-Tab; „Diese Woche" und „Die letzten Wochen"
+  sind ein Block (Zahl + Vergleich + Kalender). Der Umschalter „Alle Bereiche |
+  Nur …" ist weg. Die Legende der Stände steht in zwei Spalten ohne
+  Erklärzeilen – vorher zwölf Zeilen. „Lektionen" erscheint jetzt immer, wenn
+  der offene Bereich welche hat.
+- **Üben zählt im Fortschritt** („Dazu 40 Antworten im Üben") – aber nicht
+  für die Serie und nicht im Kalender. Die Serie belohnt fällige
+  Wiederholungen.
+- **Deine Karten (Verwalten):** statt „frisch gelernt"/„wird fester" als
+  breite Plakette in jeder Zeile stehen die Stand-Punkte, halb so breit.
+  „Am Griff ziehen ändert die Reihenfolge." ist weg; der Umschalter
+  „nur dieser Bereich | alle Bereiche" erscheint nur noch beim Suchen.
+- **Lernen:** unter „12 fällig" stand noch einmal „Karten sind heute fällig ·
+  von 40" – raus. „Trotzdem üben" öffnet das Üben direkt. „Heute ist in allen
+  Bereichen alles erledigt" nur noch bei mehreren Bereichen.
+- **Einstellungen:** „Fertig" oben rechts ist weg (der Pfeil links tut
+  dasselbe).
+- **Karte anlegen:** nur „Notiz – optional" ist markiert; „– Pflicht" an
+  Wort und Übersetzung ist weg.
+- **Rundenende:** „Fertig" steht nicht mehr zusätzlich in der Kopfzeile.
+- Kürzere Einleitungen auf „Karten, die nicht klappen" und „Die nächsten 7
+  Tage".
+
 ## 3.15.0 - 24. September 2026
 
 **Üben neu gedacht, nichts mehr dunkel auf dunkel, die Karte steht still.**

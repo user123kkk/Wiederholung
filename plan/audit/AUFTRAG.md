@@ -40,6 +40,12 @@ spricht, steht das im Logbuch und in der Antwort.
   nächsten (`t_sprung.js`, `t_sprung_ueben.js`). Kein Element verschiebt
   sich, ohne dass man es bewegt hat (Aufdecken, Laden, Fehlermeldung,
   Tastatur, Bild lädt nach). Messen, nicht schätzen: 0 px ist das Ziel.
+- **Einmal statt doppelt (Hick).** Jede Information steht auf einem
+  Bildschirm genau einmal; über mehrere Bildschirme nur, wenn der Ort einen
+  anderen Zweck hat (Rundenende feiert, Lernen treibt an). Kein Satz, der
+  wiederholt, was eine Zahl, ein Symbol oder die Überschrift schon sagt.
+  Wege aus einer Seite: einer reicht, höchstens zwei. Anlass: v3.16.0
+  (Serie dreimal, „fällig" zweimal, „Fertig" dreimal).
 - **Jede Bewegung hat Herkunft und Ziel.** Was erscheint, kommt von dort, wo
   es hingehört; was geht, geht in die Richtung seiner Bedeutung. Eine
   Bewegung pro Ursache, keine zwei nacheinander. 150–450 ms, Federn bei

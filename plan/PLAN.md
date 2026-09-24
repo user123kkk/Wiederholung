@@ -509,8 +509,8 @@ hängt, nicht begonnen.
 | ~~6~~ | ~~Gilt `KONZEPT.md` §7 („App-Funktionen nicht anfassen") weiter, oder darf der Redesign auch die Bedienung ändern?~~ | **erledigt 18.09.2026** — dauerhaft gelockert, mit Bedingung — siehe unten |
 | ~~12~~ | ~~Farben: Hintergrund heller, Knopf-Hover kein reines Weiß mehr?~~ | **erledigt 17.09.2026 (v3.4.4)** — siehe unten |
 | ~~13~~ | ~~Anmelden mit Google (oder Apple)?~~ | **erledigt 17.09.2026** — siehe unten |
-| 14 | **Analytics:** Was soll gemessen werden, mit welchem Werkzeug, mit welcher rechtlichen Prüfung? Gerüst mit Möglichkeiten und Empfehlung: [`analytics/GERUEST.md`](analytics/GERUEST.md). | jede Messung über alle Konten (nichts gebaut) |
-| 15 | **Üben im Fortschritt zählen?** Seit 3.15.0 wird im Üben bewertet (nur für die Runde). Sollen Übungsrunden im Fortschritt-Tab erscheinen („heute 40 Karten geübt")? Technisch: ein Feld `u` je Tag im `verlauf` (die Regeln prüfen die Tageseinträge nicht, keine Regeländerung nötig). **Zu entscheiden:** zählt ein Übungstag für die **Serie**? Empfehlung: nein – die Serie belohnt fällige Wiederholungen, sonst hält man sie mit Üben am Leben, ohne zu wiederholen. | Anzeige „geübt" im Fortschritt |
+| 14 | **Analytics – Ja oder Nein?** Die Datenschutzerklärung verspricht „keine Analyse des Nutzungsverhaltens". Messen geht nur, wenn dieses Versprechen geändert wird. Bei **Ja**: anonyme Tageszähler ohne Namen/Kennung/Cookies, neuer Absatz in der Datenschutzerklärung, eine Firestore-Regel (einmal selbst einspielen). Gerüst: [`analytics/GERUEST.md`](analytics/GERUEST.md). Auf „mach einfach" (24.09.2026) bewusst **nicht** gebaut – ein öffentliches Versprechen an die Nutzer:innen ändert der Agent nicht ohne ausdrückliches Ja. | jede Messung über alle Konten |
+| ~~15~~ | ~~Üben im Fortschritt zählen?~~ | **erledigt 24.09.2026 (v3.16.0)** — Betreiber: „mach einfach". Gebaut: Übungsantworten als `u` im Tagesprotokoll, sichtbar im Fortschritt; ein reiner Übungstag hält **keine** Serie (`tagGelernt`, `app.js`). |
 
 **Geklärt am 12.09.2026 (vormals offene Frage 1).** Entscheidung des
 Betreibers: **Firebase Hosting**, nicht GitHub Pages, nicht Netlify/Vercel —
@@ -685,7 +685,7 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026): v3.15.0 auf `main` – Üben neu (Auswahl, Bewertung, Ende), Kontrast überall gemessen (0 Funde), Schreib-Tinte sichtbar, Einladungs-Ring aus dem Einstieg, Karte steht still. Neue offene Fragen 14 (Analytics) und 15 (Üben im Fortschritt). Davor v3.14.0: Karte dreht sich wirklich, antippbar, fliegt nach der Bewertung weg. Seitdem läuft die PRÜFSCHLEIFE: `audit/AUFTRAG.md` + `audit/LOGBUCH.md` (nächste Station steht dort), stündliche Routine `trig_016y2uuWtQZ4yrCzAhkZsLQn`. Bei „leg los" dort weitermachen.**
+**AKTUELL (24.09.2026): v3.16.0 auf `main` – Hick-Durchgang über das ganze Tool: Doppeltes raus (Serie nur auf Lernen, Fortschritt zwei Blöcke, Stand-Punkte in der Kartenliste, „Tage gelernt" durch „Dabei seit" ersetzt), Üben zählt im Fortschritt ohne Serie. Offen: Frage 14 (Analytics Ja/Nein). Davor v3.15.0 – Üben neu (Auswahl, Bewertung, Ende), Kontrast überall gemessen (0 Funde), Schreib-Tinte sichtbar, Einladungs-Ring aus dem Einstieg, Karte steht still. Neue offene Fragen 14 (Analytics) und 15 (Üben im Fortschritt). Davor v3.14.0: Karte dreht sich wirklich, antippbar, fliegt nach der Bewertung weg. Seitdem läuft die PRÜFSCHLEIFE: `audit/AUFTRAG.md` + `audit/LOGBUCH.md` (nächste Station steht dort), stündliche Routine `trig_016y2uuWtQZ4yrCzAhkZsLQn`. Bei „leg los" dort weitermachen.**
 
 Davor: v3.13.1 (Ladebildschirm weiß statt gold); v3.13.0 – sechs Zustände
 (neu · im Lernen · frisch gelernt · wird fester · gefestigt · dauerhaft,

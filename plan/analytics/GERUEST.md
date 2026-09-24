@@ -51,6 +51,25 @@ TDDDG), keine Rechtsberatung durch den Agenten.
   – das ist Nutzungsstatistik **pro Konto**, nicht über alle Konten.
 - Das Board „Ideen & Vorschläge" (`plan/feedback-board/`).
 
+## D2. Befund 24.09.2026 (v3.16.0) – warum nichts gebaut ist
+
+`datenschutzerklaerung.html` verspricht wörtlich: „Keine Werbung, kein
+Tracking, keine Analyse-Dienste" und „Es findet keine Werbung, kein Tracking
+und keine Analyse des Nutzungsverhaltens statt." Jede der Möglichkeiten 1–3
+bricht dieses Versprechen, solange der Text so steht. Auf „mach einfach" hat
+der Agent deshalb nicht gezählt, sondern die Frage auf ein Ja/Nein
+verkürzt (`plan/PLAN.md`, Frage 14). Außerdem: `veroeffentlichen.bat`
+deployt nur Hosting – eine neue Firestore-Regel für Zähler müsste einmal
+von Hand eingespielt werden.
+
+Bei **Ja** ist der kleinste Bau: Möglichkeit 3 (Tagessummen je Ereignis in
+`/statistik/{JJJJ-MM-TT}`, nur Erhöhen um 1, nur angemeldet, niemand liest
+per App), dazu ein Absatz in der Datenschutzerklärung (was gezählt wird,
+dass nichts einer Person zugeordnet wird) – vorher von jemandem mit
+Rechtskenntnis lesen lassen. Der Einstiegs-Trichter (A1) fehlt dann, weil
+vor der Anmeldung nicht geschrieben werden kann, ohne die Datenbank für
+alle zu öffnen.
+
 ## E. Offene Fragen an den Betreiber
 
 1. Welche der Fragen in A sind die wichtigsten zwei?

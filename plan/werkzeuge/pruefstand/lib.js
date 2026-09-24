@@ -78,7 +78,7 @@ async function neueSeite(browser, vp, opt = {}) {
   });
   await p.route('**/verses.quran.foundation/**', r => r.abort());
   await p.route('**/apis.google.com/**', r => r.abort());
-  const init = { user: opt.user === undefined ? { uid: 'u1', email: 'test@example.com', displayName: 'Test', emailVerified: true } : opt.user,
+  const init = { user: opt.user === undefined ? { uid: 'u1', email: 'test@example.com', displayName: 'Test', emailVerified: true, metadata: { creationTime: 'Mon, 03 Aug 2026 10:00:00 GMT' } } : opt.user,
     store: opt.store || vollerStore(opt), ls: opt.ls || {} };
   await p.addInitScript(i => {
     window.__START_USER = i.user; window.__START_STORE = i.store;
