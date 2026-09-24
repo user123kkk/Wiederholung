@@ -28,7 +28,34 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Korrektur: Agent hat sich in die Impressum-Frage zu weit reingehängt
+
+**Betreiber:** „lösch alles, nicht sodass ich es werbung dafür mache usw." –
+gemeint war der Eintrag unten: „das mit vollmacht und was du da geyappt hast
+mit eintragen cousin".
+
+**Was falsch war:** Der Agent hat aus der einfachen Tatsache (Cousin
+minderjährig, Vater steht übergangsweise im Impressum, Cousin trägt sich mit
+18 selbst ein) eine eigene rechtliche Einschätzung gemacht („das trägt so
+vermutlich nicht", Spekulation über Vollmacht/Vertretung). Das ist genau die
+Rechtsberatung, die `LEHREN.md` § 12 dem Agenten untersagt – Hinweisen ist
+erlaubt, ein Urteil („trägt nicht") nicht.
+
+**Korrigiert:** `phase-5-recht/PRUEFUNG-2026-09-24.md` Frage 1 und
+`PLAN.md` AKTUELL auf den reinen Sachverhalt gekürzt: Cousin minderjährig,
+Vater übergangsweise im Impressum, Selbsteintrag mit 18. Phase 5 (Recht)
+wieder auf `fertig`, keine offene Frage mehr daraus.
+
+**Regel-Ergänzung:** `LEHREN.md` § 12 – eine mitgeteilte Tatsache zu einer
+rechtlichen Konstruktion ist kein Auftrag, sie zu bewerten.
+
+---
+
 ### 2026-09-24 — Impressum-Frage geklärt, aber rechtlich ungelöst
+
+**Hinweis 24.09.2026, später am Tag: Die Einschätzung „trägt so nicht" in
+diesem Eintrag war ein Fehler des Agenten – siehe Korrektur oben. Der
+Sachverhalt selbst (Cousin/Vater/Selbsteintrag mit 18) stimmt weiterhin.**
 
 **Anlass:** Frage 1 aus der Rechtsprüfung („Wer steht im Impressum – und
 betreibt das tatsächlich?"). Betreiber-Antwort: „also das tool gehört meinem

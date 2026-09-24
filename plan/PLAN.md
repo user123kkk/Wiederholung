@@ -75,7 +75,7 @@ Konzepts vom Code abweichen, gewinnt der Code; die Abweichung wird in
 | **2** | Konto-Lebenszyklus: Registrierung, Bestätigung, Passwort zurücksetzen, Konto löschen | `fertig` | [`phase-2-konto/`](phase-2-konto/) |
 | **3** | Hygiene: Git-Historie, Key-Einschränkung, Debug-Reste, Abhängigkeiten | `fertig` | [`phase-3-hygiene/`](phase-3-hygiene/) |
 | **4** | Domain und Hosting, danach Security-Header und HTTPS-Feinheiten | `fertig` | [`phase-4-domain-hosting/`](phase-4-domain-hosting/) |
-| **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `läuft` (24.09.2026 wieder geöffnet — Impressum-Frage ungelöst, siehe „Wo eine neue Session anfängt") | [`phase-5-recht/`](phase-5-recht/) |
+| **5** | Recht: Impressum, Datenschutzerklärung, Cookie-Frage | `fertig` | [`phase-5-recht/`](phase-5-recht/) |
 | **6** | Öffentliche Startseite: Problem → Lösung → Handlungsaufruf, getrennt von der App | `zurückgestellt` (23.09.: `landing.html` auf Betreiber-Wunsch gelöscht, wird neu gemacht) | [`phase-6-startseite/`](phase-6-startseite/) |
 | **7** | SEO: Search Console, `robots.txt`, Sitemap, FAQ | `fertig` | [`phase-7-seo/`](phase-7-seo/) |
 | **8** | Rückmeldung: Kontakt- und Fehlerformular | `fertig` | [`phase-8-rueckmeldung/`](phase-8-rueckmeldung/) |
@@ -783,25 +783,19 @@ behoben (Betreiber: „ja") – Quran-Schrift selbst ausgeliefert, Konto-/
 Bereich-Löschen räumt geteilte Kartensätze und Stimm-Merker mit ab, fremde
 Bilder nur als Link, Datenschutzerklärung an den Code angeglichen.
 
-**Neue, ungelöste Rechtsfrage (24.09.2026, Klärung von Frage 1):** Die App
-gehört dem **Cousin** des Betreibers dieser Chats; im Impressum steht **der
-Vater**, „weil er haftet". Das trägt so nach erster Einschätzung **nicht** —
-§ 5 DDG und Art. 4 Nr. 7 DSGVO verlangen den tatsächlichen Betreiber/
-Verantwortlichen, das folgt der Realität, nicht der Eintragung. Haftung lässt
-sich nicht durch einen Namen übertragen. **Das ist keine Aufgabe für den
-Agenten** — nötig ist eine echte rechtliche Klärung der Konstruktion
-(Vertretung? Vollmacht? wer haftet tatsächlich?) durch einen Anwalt, bevor
-das Impressum als korrekt gelten kann. Details:
+**Frage 1 (Impressum) geklärt (24.09.2026):** Die App gehört dem **Cousin**
+des Betreibers dieser Chats. Er ist noch nicht volljährig; im Impressum
+steht deshalb übergangsweise der Vater. Der Cousin trägt sich selbst ein,
+sobald er 18 wird. Details:
 [`phase-5-recht/PRUEFUNG-2026-09-24.md`](phase-5-recht/PRUEFUNG-2026-09-24.md)
-Frage 1. **Diese Phase (5, Recht) gilt deshalb trotz „fertig" in der
-Tabelle oben nicht als abgeschlossen, bis das geklärt ist.**
+Frage 1.
 
 **Offen sonst nur noch bei Menschen:** DSA (Frage 3 des Berichts),
 abschließende Durchsicht von Impressum + Datenschutzerklärung durch den
-Anwalt (erst sinnvoll, NACHDEM die Impressum-Frage geklärt ist). Offen beim
-Betreiber außerdem: Zweig auf `main` + `veroeffentlichen.bat`; PostHog-Projekt
-löschen; in der Firebase-Konsole alte `geteilteLektionen` gelöschter Konten
-prüfen; am Gerät Konto-Löschen mit Google und Kalender-Erinnerung iOS.
+Anwalt. Offen beim Betreiber außerdem: Zweig auf `main` +
+`veroeffentlichen.bat`; PostHog-Projekt löschen; in der Firebase-Konsole
+alte `geteilteLektionen` gelöschter Konten prüfen; am Gerät Konto-Löschen
+mit Google und Kalender-Erinnerung iOS.
 
 **AKTUELL (24.09.2026, spätnachts): v3.17.22 auf `main` – fünf Punkte aus der
 Betreiber-Rückmeldung zu v3.17.21 umgesetzt.**
