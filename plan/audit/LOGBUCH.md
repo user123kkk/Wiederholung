@@ -46,9 +46,9 @@ sonst stünde die Schleife nach einem Container-Neustart ohne Werkzeug da).
   aus Versehen aufdecken"). Das galt einem Tipp *irgendwo*. Die Karte selbst
   anzutippen ist Absicht, Aufdecken bewertet nichts, und Anki/Quizlet machen
   es genauso. Der Knopf bleibt (Zugänglichkeit, Gewohnheit).
-- **„Fast"/„Sicher" bleiben.** Geprüft: drei Stufen sind richtig (Anki hat
-  vier, aber „Hard" und „Good" werden in Studien oft verwechselt), die
-  Wörter sind kurz und eindeutig, die Unterzeilen verraten kein System. Was
+- **„Fast"/„Sicher" bleiben.** Geprüft: Die Zahl der Knöpfe ist Lernlogik
+  (tabu); die Wörter sind kurz und eindeutig, die Unterzeilen verraten kein
+  System. Was
   fehlte, war das Gefühl, nicht die Beschriftung – deshalb Abflug + Druck.
 - **Wegflug statt Verschwinden** mit einer Kopie außerhalb von `#app`, weil
   `render()` das Markup ersetzt. Nach einem Wisch wird nichts kopiert (die
