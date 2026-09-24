@@ -1,5 +1,15 @@
 # Gerüst: Messen, was ankommt (Analytics)
 
+> **Stand 24.09.2026 (v3.17.0): gebaut, aus bis zum Schlüssel.** Betreiber
+> hat Ja gesagt (Datenschutzerklärung darf sich ändern). Werkzeug: PostHog
+> (EU), eigener schlanker Sender in `app.js` (Abschnitt „Nutzungsstatistik"),
+> Ereignisliste dort im Kopfkommentar. Einschalten: `POSTHOG_KEY` in
+> `app.js` setzen. In PostHog danach einrichten (Vorschlag): Trend
+> „bildschirm" nach `name`; Trichter `bildschirm` einstieg-0 → einstieg-… →
+> `konto_erstellt`; Retention auf `app_start`; Trends `runde_ende`,
+> `ueben_start`, `code_einloesen`, `idee_eingereicht`, `hinweis`.
+> Die Abschnitte unten sind die Vorgeschichte.
+
 Stand 24.09.2026. **Kein Bauauftrag** – ein Gerüst mit Fragen, wie
 `monetarisierung/GERUEST.md` und `lehrer-modus/GERUEST.md`.
 

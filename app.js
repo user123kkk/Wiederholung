@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.16.1";
+const APP_VERSION = "3.17.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -60,7 +60,11 @@ function istAutor() { return true; }
    sind fuer alle Konten gleich.
    Solange BETREIBER_UIDS leer ist (Einrichtung), sehen alle alles, und unter
    Einstellungen -> Konto steht die eigene Konto-ID zum Eintragen. */
-const BETREIBER_UIDS = [];
+/* 3.17.0: eingetragen - dieselbe Kennung wie istFeedbackModerator() in
+   firestore.rules (seit 23.09.2026). Bis hier war die Liste leer, und damit
+   sah JEDES Konto die Moderationsknoepfe im Ideen-Board ("-> Geplant",
+   "Loeschen"), die fuer alle ausser dem Betreiber an den Regeln scheiterten. */
+const BETREIBER_UIDS = ["pitcQCAowlSOMjCvJ4xKSnuGVXi1"];
 function istBetreiber() {
   return BETREIBER_UIDS.length === 0 || !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);
 }
@@ -137,6 +141,106 @@ function fuehlbar(muster) {
     navigator.vibrate(muster);
   } catch (e) {}
 }
+/* ============================================================================
+   3.17.0: NUTZUNGSSTATISTIK (PostHog, EU, ohne Cookies)
+
+   Betreiber am 24.09.2026: "analytics, wichtig um zu sehen welche
+   funktionen und so verwendet werden, ueben usw, code alles [...] eine app
+   ohne das ist tot, man weiss nicht was funktioniert". Werkzeug nach seinem
+   Hinweis (TikTok: "analytics posthog"): PostHog, EU-Server.
+
+   Bewusst OHNE die PostHog-Bibliothek: kein fremdes Skript, keine
+   Cookies, kein localStorage, keine automatische Klick-Aufzeichnung, keine
+   Bildschirmaufnahmen. Nur die Ereignisse unten, von Hand benannt, per
+   fetch an die Capture-Schnittstelle (/batch/). Nie gesendet: Karteninhalte,
+   Namen, E-Mail, Konto-ID, die Adresse der Seite (ein geteilter Kartensatz
+   steckt im #-Teil der Adresse!).
+   Kennung: angemeldet = SHA-256 aus "adrabic|" + Konto-ID, gekuerzt
+   (pseudonym, gleich auf allen Geraeten - damit "kommt wieder" messbar
+   ist); abgemeldet = eine Zufallskennung nur fuer diesen Seitenaufruf, ohne
+   Personenprofil.
+   Aus, solange POSTHOG_KEY leer ist. Abschaltbar in den Einstellungen
+   (statistikAn, localStorage "adrabic-statistik-aus").
+   Ereignisse (Namen fuer die PostHog-Auswertung):
+     app_start, bildschirm {name}, runde_start, runde_ende, runde_abbruch,
+     ueben_start, karte_angelegt, karte_geaendert, karte_geloescht,
+     code_einloesen, code_teilen, datei_einspielen, sicherung,
+     idee_eingereicht, idee_gestimmt, fehler_gemeldet, einstellung {name,wert},
+     erinnerung_kalender {zeit}, hinweis {name, aktion}, konto_erstellt,
+     abgemeldet, konto_geloescht, start_haenger, statistik_aus
+   ========================================================================= */
+const POSTHOG_KEY = "";   /* Projekt-Schluessel "phc_..." aus PostHog: Settings -> Project -> Project API Key */
+const POSTHOG_HOST = "https://eu.i.posthog.com";
+const STATISTIK_AUS_KEY = "adrabic-statistik-aus";
+let zaehlPuffer = [];
+let zaehlTimer = null;
+let zaehlKennung = null;
+let zaehlLetzterBildschirm = null;
+const zaehlSitzung = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+  : Date.now().toString(36) + Math.random().toString(36).slice(2);
+function statistikAn() {
+  if (!POSTHOG_KEY) return false;
+  try { return localStorage.getItem(STATISTIK_AUS_KEY) !== "1"; } catch (e) { return true; }
+}
+function zaehle(ereignis, eigenschaften) {
+  if (!statistikAn()) return;
+  try {
+    zaehlPuffer.push({ event: ereignis, props: Object.assign({}, eigenschaften || {}),
+      zeit: new Date().toISOString(), angemeldet: !!currentUser });
+    if (zaehlPuffer.length >= 20) zaehlSenden(false);
+    else if (!zaehlTimer) zaehlTimer = setTimeout(() => zaehlSenden(false), 5000);
+  } catch (e) {}
+}
+function zaehlKennungSetzen(uid) {
+  zaehlKennung = null;
+  if (!uid || !window.crypto || !crypto.subtle) return;
+  try {
+    crypto.subtle.digest("SHA-256", new TextEncoder().encode("adrabic|" + uid)).then(buf => {
+      zaehlKennung = "k-" + Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 32);
+    }).catch(() => {});
+  } catch (e) {}
+}
+function zaehlSenden(beimVerlassen) {
+  if (zaehlTimer) { clearTimeout(zaehlTimer); zaehlTimer = null; }
+  if (!zaehlPuffer.length) return;
+  if (!statistikAn()) { zaehlPuffer = []; return; }
+  const standalone = !!((window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || navigator.standalone);
+  const w = window.innerWidth;
+  const basis = { app_version: APP_VERSION, geraet: w < 640 ? "handy" : w < 1024 ? "tablet" : "desktop",
+    als_app: standalone, $lib: "adrabic", $geoip_disable: true, $session_id: zaehlSitzung };
+  const batch = zaehlPuffer.map(x => {
+    const mitKonto = x.angemeldet && zaehlKennung;
+    const props = Object.assign({}, basis, x.props, { distinct_id: mitKonto ? zaehlKennung : "anon-" + zaehlSitzung });
+    if (!mitKonto) props.$process_person_profile = false;
+    return { event: x.event, properties: props, timestamp: x.zeit };
+  });
+  zaehlPuffer = [];
+  try {
+    fetch(POSTHOG_HOST + "/batch/", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ api_key: POSTHOG_KEY, batch: batch }),
+      keepalive: !!beimVerlassen, credentials: "omit"
+    }).catch(() => {});
+  } catch (e) {}
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") zaehlSenden(true); });
+/* Welcher Bildschirm gerade steht - einmal je Wechsel gezaehlt (render). */
+function zaehlBildschirm() {
+  if (!statistikAn()) return;
+  let name = null;
+  if (currentUser === null) name = ui.einstieg ? "einstieg-" + ui.einstieg.schritt : "anmelden";
+  else if (currentUser && !currentUser.emailVerified) name = "bestaetigen";
+  else if (bereiche === null) return;
+  else if (ui.session) name = ui.session.queue.length === 0 ? (ui.session.isDrill ? "ueben-ende" : "runde-ende") : (ui.session.isDrill ? "ueben" : "runde");
+  else if (ui.einstellungen) name = "einstellungen" + (ui.seite ? "/" + ui.seite : "");
+  else if (ui.seite) name = ui.tab + "/" + ui.seite;
+  else name = ui.tab;
+  if (name && name !== zaehlLetzterBildschirm) {
+    zaehlLetzterBildschirm = name;
+    zaehle("bildschirm", { name: name });
+  }
+}
+
 function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
@@ -1019,6 +1123,16 @@ let feedbackFormFehler = false;
    feedbackLadeToken macht jeden Versuch einzeln erkennbar, damit ein spaet
    doch noch eintreffendes Ergebnis eines laengst aufgegebenen Versuchs den
    Zustand eines inzwischen neu gestarteten Versuchs nicht mehr ueberschreibt. */
+/* 3.17.0: Board-Zustand fuer die neue Seite. Entwurf ueberlebt jedes
+   Neuzeichnen (vorher gingen halb getippte Ideen verloren, wenn die Liste
+   waehrenddessen fertig lud), einblenden = die Liste erscheint beim ersten
+   Mal gestaffelt statt auf einen Schlag, pop/neu = kurze Rueckmeldung an
+   genau einer Zeile. */
+let feedbackEntwurf = { text: "", beschreibung: "" };
+let feedbackEinblenden = false;
+let feedbackPopId = null;
+let feedbackNeuId = null;
+let feedbackDanke = false;
 let feedbackLadeTimer = null;
 let feedbackLadeLangsam = false;
 let feedbackLadeToken = 0;
@@ -1862,6 +1976,7 @@ async function initFirebase() {
       ui.einstiegZurueck = null;
       displayName = user.displayName || (user.email ? user.email.split("@")[0] : "Lernende:r");
       userDocRef = fb.doc(db, "users", user.uid);
+      zaehlKennungSetzen(user.uid);
       bereicheColRef = fb.collection(userDocRef, "bereiche");
       kartenColRef = fb.collection(userDocRef, "karten");
       unsubscribeSnapshot = fb.onSnapshot(userDocRef, snap => {
@@ -2539,6 +2654,7 @@ async function doRegister() {
        sperrt sich selbst, bis emailVerified wahr ist (siehe renderAuth). */
     await mitZeitlimit(fb.sendEmailVerification(cred.user));
     ui.authInfo = "Konto erstellt! Bitte E-Mail bestätigen – schau in deinem Posteingang (und Spam) nach.";
+    zaehle("konto_erstellt", { aus_einstieg: !!ui.authAusEinstieg });
   } catch (e) {
     ui.authError = authErrorText(e);
   }
@@ -2609,6 +2725,8 @@ async function doLogout() {
       { title: "Abmelden?", okLabel: "Abmelden", danger: true });
     if (!ok) return;
   }
+  zaehle("abgemeldet");
+  zaehlSenden(true);
   fb.signOut(auth);
 }
 
@@ -2681,6 +2799,8 @@ function kontoLoeschenBereit() {
 async function kontoLoeschenAusfuehren() {
   if (!currentUser || ui.kontoLoeschenBusy || !kontoLoeschenBereit()) return;
   exportBackup();
+  zaehle("konto_geloescht");
+  zaehlSenden(true);
   ui.kontoLoeschenBusy = true; render();
   try {
     await kontoDatenLoeschen();
@@ -3182,6 +3302,7 @@ function dateiSpeichern(daten, dateiname) {
   URL.revokeObjectURL(url);
 }
 function exportBackup(onlyCurrent) {
+  zaehle("sicherung", { nur_bereich: !!onlyCurrent });
   const data = {
     exportedAt: new Date().toISOString(),
     profil: displayName,
@@ -3340,6 +3461,7 @@ function genTeilCode() {
    Netz auskommt. Ohne modus: wie bisher, die Lernenden schalten sich per
    Fortschritt selbst frei. */
 async function teileLektionCode(modus) {
+  zaehle("code_teilen");
   const b = currentBereich();
   if (!(await weitergabeMoeglich(b))) return;
   if (b.teilCode) {
@@ -3434,6 +3556,7 @@ async function codeEinloesenStart() {
 }
 
 async function codeEinloesen(code) {
+  zaehle("code_einloesen");
   let snap;
   try {
     snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code));
@@ -3725,6 +3848,7 @@ async function satzZusammenfuehren(ziel, datei) {
    Fassung. `data` hat die Form {bereiche: [...]}, egal ob sie aus einer
    Datei oder aus einem per Link geteilten Fragment kommt. */
 async function verarbeiteImportDaten(data) {
+  zaehle("datei_einspielen");
   if (!data || !Array.isArray(data.bereiche)) {
     await dlgAlert("Das ist kein gültiger Lernkarten-Bestand.", "Import nicht möglich");
     return;
@@ -4354,6 +4478,7 @@ async function startDrillFromSets(setIds, handwriting) {
   startDrillWithCards(cards, label, handwriting);
 }
 function startDrillWithCards(cards, label, handwriting) {
+  zaehle("ueben_start", { karten: cards.length, schreiben: !!handwriting, quelle: ui.drillSource === "sets" ? "speicherkarten" : "stand" });
   springeNachOben("sitzung");
   const ids = cards.map(c => c.id);
   hwStrokes = [];
@@ -4554,6 +4679,7 @@ async function submitCardForm() {
      der ganze Kartenbestand. Der Patch wird waehrend der Aenderung
      mitgefuehrt, damit nur wirklich geaenderte Felder darin landen. */
   const warEdit = !!ui.editId;
+  zaehle(warEdit ? "karte_geaendert" : "karte_angelegt", { mit_notiz: !!extra });
   const patch = {};
   if (ui.editId) {
     const card = findCard(ui.editId);
@@ -4680,6 +4806,7 @@ async function deleteCard(id) {
   const ok = await dlgConfirm('Die Karte „' + card.wort + '" (' + card.uebersetzung + ') wird gelöscht.',
     { title: "Karte löschen?", okLabel: "Löschen", danger: true });
   if (!ok) return;
+  zaehle("karte_geloescht");
   const b = currentBereich();
   b.karten.splice(b.karten.findIndex(c => c.id === id), 1);
   const patch = {};
@@ -4709,6 +4836,7 @@ function startSession() {
   ui.lernLetzte = null;
   ui.gemerktRunde = new Set();
   ui.session = { queue: shuffled(due.map(c => c.id)), total: due.length, revealed: false, extraOpen: true, lastAction: null, isDrill: false, bereichId: currentBereich().id };
+  zaehle("runde_start", { karten: due.length, neu: due.filter(istNeueKarte).length });
   render();
 }
 /* E5 (1.8.0): Beim Aufdecken das Vollbild verlassen.
@@ -4931,7 +5059,14 @@ function undoLastGrade() {
   if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
   render();
 }
-function endSession() { ui.session = null; hwStrokes = []; hwFullscreen = false; render(); }
+function endSession() {
+  const s = ui.session;
+  if (s && s.queue.length > 0) {
+    const gesamt = s.total || 1;
+    zaehle("runde_abbruch", { ueben: !!s.isDrill, bei: Math.max(0, gesamt - s.queue.length), von: gesamt });
+  }
+  ui.session = null; hwStrokes = []; hwFullscreen = false; render();
+}
 
 /* ---------- Tastatur-Shortcuts während einer Session ---------- */
 document.addEventListener("keydown", e => {
@@ -5992,6 +6127,7 @@ function bootBild() {
 /* ---------- Rendering ---------- */
 function render() {
   ersterRender = true;
+  if (POSTHOG_KEY) queueMicrotask(zaehlBildschirm);
   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
      der Cloud), ist ein noch wartender Such-Timer gegenstandslos - der
      Suchtext steht bereits in ui.searchQuery. */
@@ -6937,6 +7073,7 @@ function renderMain() {
   html += bereichSheet();
   html += bereichMehrSheet();
   html += wahlSheet();
+  html += erinnerungSheet();
   html += setArtSheet();
   html += karteSheet();
   html += cardDetailSheet();
@@ -7520,6 +7657,11 @@ function renderEinstellungen() {
     wert: labelVon(ARAB_STUFEN, settings.arabGroesse, "Normal") });
   html += einstZeile({ action: "wahl-sheet", id: "thema", icon: "leer", text: "Helligkeit",
     wert: labelVon(THEMEN, settings.thema, "Dunkel") });
+  {
+    const erinnert = hinweisSpeicher().erinnerung;
+    html += einstZeile({ action: "erinnerung-auf", icon: "serie", text: "Tägliche Erinnerung",
+      wert: erinnert ? erinnert.replace(/^0/, "") + " Uhr" : "" });
+  }
   html += '</div></div>';
 
   /* Kartensätze: seit 3.11.0 eine Zeile mit dem Namen der Sache (vorher
@@ -7532,6 +7674,15 @@ function renderEinstellungen() {
     text: "Kartensatz per Code" });
   html += einstZeile({ action: "einst-seite", id: "daten", icon: "sichern", text: "Sichern & einspielen",
     wert: alter === null ? "noch nie" : alter === 0 ? "heute" : "vor " + alter + " Tg." });
+  /* 3.17.0: nur, wenn die Statistik ueberhaupt eingerichtet ist (POSTHOG_KEY)
+     - ein Schalter fuer etwas, das es nicht gibt, waere eine Entscheidung
+     zu viel. */
+  if (POSTHOG_KEY) {
+    const an = statistikAn();
+    html += '<button class="liste-zeile" role="switch" aria-checked="' + (an ? "true" : "false") + '" data-action="statistik-umschalten">' +
+      ikon("fortschritt", "i-sm") + '<span class="liste-zeile__text">Anonyme Nutzungsstatistik</span>' +
+      '<span class="schalter-optik' + (an ? ' an' : '') + '" aria-hidden="true"></span></button>';
+  }
   html += '</div></div>';
 
   /* ---------- Hilfe ---------- */
@@ -7727,9 +7878,15 @@ function renderKontoLoeschen() {
   html += '<div class="gefahr-karte__kopf">' + ikon("warnung", "i-lg") +
     '<h3>Das lässt sich nicht rückgängig machen</h3></div>';
   html += '<ul class="gefahr-liste">';
-  html += '<li><strong>' + karten + '</strong> Karte' + (karten === 1 ? '' : 'n') + ' mit ihrem Lernstand</li>';
+  /* 3.17.0: was verloren geht, in Fortschritt statt nur in Mengen - "zeig
+     vor dem Gehen, was verloren geht" (Betreiber-Video, 24.09.2026). */
+  const gesessen = gesesseneKarten();
+  const serie = serieAktuell();
+  html += '<li><strong>' + karten + '</strong> Karte' + (karten === 1 ? '' : 'n') + ' mit ihrem Lernstand' +
+    (gesessen > 0 ? ' – <strong>' + gesessen + '</strong> davon saßen schon einmal' : '') + '</li>';
   html += '<li><strong>' + bereiche.length + '</strong> Bereich' + (bereiche.length === 1 ? '' : 'e') + ' mit allen Speicherkarten</li>';
-  html += '<li>Deine Serie und <strong>' + tage + '</strong> Tag' + (tage === 1 ? '' : 'e') + ' Aufzeichnung</li>';
+  html += '<li>' + (serie > 0 ? 'Deine Serie von <strong>' + serie + '</strong> Tag' + (serie === 1 ? '' : 'en') : 'Deine Serie') +
+    ' und <strong>' + tage + '</strong> Tag' + (tage === 1 ? '' : 'e') + ' Aufzeichnung</li>';
   html += '<li>Dein Konto – die Anmeldung mit ' + esc((currentUser && currentUser.email) || "") + '</li>';
   html += '</ul></div>';
 
@@ -7812,6 +7969,14 @@ document.addEventListener("contextmenu", e => {
   if (e.target.closest && e.target.closest("[data-halten]")) e.preventDefault();
 });
 
+/* 3.17.0: Was im Ideen-Formular steht, ueberlebt jedes Neuzeichnen. */
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (!t || !t.id) return;
+  if (t.id === "fb-text") feedbackEntwurf.text = t.value;
+  else if (t.id === "fb-beschreibung") feedbackEntwurf.beschreibung = t.value;
+});
+
 /* ---------- Feedback-Board ----------
    Oeffentliche Liste mit Vorschlaegen und Abstimmen (plan/feedback-board/
    AUFTRAG.md). Bewusst KEINE Konto-Kennung am Vorschlag - niemand sieht, wer
@@ -7819,91 +7984,131 @@ document.addEventListener("contextmenu", e => {
    Deshalb auch kein "eigenen Vorschlag loeschen": das ist der Preis fuer
    echte Anonymitaet, nur Moderation kann Eintraege entfernen. */
 function renderFeedbackSeite() {
-  /* 23.09.2026, echter Fund (Betreiber-Meldung: Formular flackert, "Laedt"
-     stand dauerhaft da): OHNE !feedbackFehler haengt sich das hier auf, sobald
-     das Laden einmal fehlschlaegt (z.B. firestore.rules fuer "feedback" noch
-     nicht deployt - genau der Fall, wenn der Betreiber das vor dem Deploy
-     ausprobiert). feedbackLaden() setzt feedbackFehler und feedbackLaedt=false
-     im Fehlerfall; ohne diese Zeile wurde GENAU DANN die Bedingung unten
-     wieder wahr und feedbackLaden() sofort erneut aufgerufen - ein
-     Endlosschleifen-Versuch, der bei jedem fehlgeschlagenen Rueckruf einen
-     kompletten Neubau von #app ausloest (render() zweimal pro Versuch) und
-     dabei die gerade getippten Eingabefelder unter der Handy-Tastatur
-     zerstoert und neu aufbaut - das ist das gemeldete Flackern. Jetzt: nach
-     einem Fehlschlag wird NICHT automatisch erneut versucht, nur noch ueber
-     den expliziten "Erneut versuchen"-Knopf unten. */
+  /* 23.09.2026: nach einem Fehlschlag KEIN automatischer neuer Versuch (sonst
+     Endlosschleife, siehe Logbuch) - nur ueber "Erneut versuchen". */
   if (feedbackListe === null && !feedbackLaedt && !feedbackFehler) feedbackLaden();
 
-  let html = '<div class="card">';
-  html += '<p class="hint">Was soll dazukommen, was soll sich ändern? Alle sehen die Liste, ' +
-    'niemand sieht, von wem ein Vorschlag stammt.</p>';
-  html += '<div class="field"><label for="fb-text">Kurz gesagt <span class="opt">– Pflicht</span></label>';
-  html += '<input type="text" id="fb-text" maxlength="100" placeholder="z.B. Dunkler Modus im Widget"' +
-    (feedbackFormFehler ? ' aria-invalid="true" aria-describedby="fb-text-fehler"' : '') + '>';
-  if (feedbackFormFehler) html += '<div class="field__fehler" id="fb-text-fehler">Bitte ausfüllen</div>';
+  /* 3.17.0: Die Liste steht vorn, das Formular klappt erst auf, wenn man
+     etwas vorschlagen will (Hick: wer abstimmen will, muss nicht an zwei
+     leeren Feldern vorbei). Betreiber am 24.09.2026: "bei ideen, vorschlaege
+     cleane dings [...] statt ploetzliches verspaetetes geladenes pop up". */
+  let html = '<div class="ideen-kopf">';
+  html += '<p class="hint">Was soll dazukommen? Stimm für die Ideen, die du willst – die gefragtesten kommen zuerst. Niemand sieht, von wem eine Idee stammt.</p>';
+  if (!ui.feedbackForm) {
+    html += '<button class="ideen-neu-knopf" data-action="feedback-form-auf">' + ikon("plus", "i-sm") + ' Idee einreichen</button>';
+  } else {
+    html += '<div class="card ideen-formular">';
+    html += '<div class="field"><label for="fb-text">Deine Idee in einem Satz</label>';
+    html += '<input type="text" id="fb-text" maxlength="100" placeholder="z.B. Karten mit Bild" value="' + esc(feedbackEntwurf.text) + '"' +
+      (feedbackFormFehler ? ' aria-invalid="true" aria-describedby="fb-text-fehler"' : '') + '>';
+    if (feedbackFormFehler) html += '<div class="field__fehler" id="fb-text-fehler">Bitte ausfüllen</div>';
+    html += '</div>';
+    html += '<div class="field"><label for="fb-beschreibung">Genauer <span class="opt">– optional</span></label>';
+    html += '<textarea id="fb-beschreibung" rows="2" maxlength="500">' + esc(feedbackEntwurf.beschreibung) + '</textarea></div>';
+    html += '<div class="form-actions">';
+    html += '<button class="' + (feedbackEinreichtWird ? "busy" : "") + '" data-action="feedback-submit"' +
+      (feedbackEinreichtWird ? ' disabled' : '') + '>Einreichen</button>';
+    html += '<button class="secondary" data-action="feedback-form-zu">Abbrechen</button>';
+    html += '</div></div>';
+  }
   html += '</div>';
-  html += '<div class="field"><label for="fb-beschreibung">Genauer <span class="opt">– optional</span></label>';
-  html += '<textarea id="fb-beschreibung" rows="2" maxlength="500"></textarea></div>';
-  html += '<div class="form-actions">';
-  html += '<button class="' + (feedbackEinreichtWird ? "busy" : "") + '" data-action="feedback-submit"' +
-    (feedbackEinreichtWird ? ' disabled' : '') + '>' +
-    ikon("plus", "i-sm") + ' Vorschlag einreichen</button>';
-  html += '</div></div>';
+  if (feedbackDanke) {
+    html += '<div class="banner-info ideen-danke" role="status">' + ikon("haken", "i-sm") +
+      '<div class="banner__text">Danke! Deine Idee steht jetzt in der Liste.</div></div>';
+  }
+  html += '<div id="ideen-inhalt">' + feedbackInhalt() + '</div>';
+  return html;
+}
 
+/* Nur die Liste neu zeichnen - das Formular darueber bleibt unberuehrt
+   (Tastatur, Cursor, Getipptes). Steht die Seite gerade nicht da (z.B. beim
+   Vorladen aus den Einstellungen), gibt es nichts zu zeichnen. */
+function zeichneIdeen() {
+  const el = document.getElementById("ideen-inhalt");
+  if (el) el.innerHTML = feedbackInhalt();
+}
+
+function feedbackInhalt() {
+  let html = "";
   if (feedbackFehler) {
     html += '<div class="error-box" style="margin-top:var(--stack-tight)">' + ikon("warnung", "i-sm") +
       '<div class="banner__text">' + esc(feedbackFehler) + '</div></div>';
     html += '<div class="form-actions" style="margin-top:var(--space-3)">';
     html += '<button class="secondary" data-action="feedback-retry">Erneut versuchen</button>';
     html += '</div>';
-  } else if (feedbackLadeLangsam && feedbackLaedt && feedbackListe === null) {
-    /* Nach 9s ohne Antwort (siehe feedbackLaden()): nicht laenger nur warten -
-       derselbe Ausweg wie beim Start-Ladebildschirm (render(), ladeLangsam). */
-    html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Das dauert länger als sonst. ' +
-      'Prüf deine Internetverbindung.</p>';
-    html += '<div class="form-actions" style="margin-top:var(--space-3)">';
-    html += '<button class="secondary" data-action="feedback-retry">Erneut versuchen</button>';
+    return html;
+  }
+  if (feedbackListe === null) {
+    if (feedbackLadeLangsam) {
+      html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Das dauert gerade länger.</p>';
+      html += '<div class="form-actions" style="margin-top:var(--space-3);justify-content:center">';
+      html += '<button class="secondary" data-action="feedback-retry">Erneut versuchen</button></div>';
+      return html;
+    }
+    /* 3.17.0: Platzhalter in der Form der echten Zeilen statt "Laedt..." -
+       die Liste waechst nicht mehr aus dem Nichts, sie fuellt sich. */
+    html += '<div class="ideen-liste" aria-busy="true" aria-label="Ideen werden geladen">';
+    for (let i = 0; i < 3; i++) {
+      html += '<div class="ideen-zeile ideen-zeile--platz"><span class="skeleton ideen-platz-stimme"></span>' +
+        '<span class="ideen-platz-text"><span class="skeleton skeleton-bar w60"></span><span class="skeleton skeleton-bar w35"></span></span></div>';
+    }
     html += '</div>';
-  } else if (feedbackLaedt && feedbackListe === null) {
-    html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Lädt…</p>';
-  } else if (feedbackListe && feedbackListe.length === 0) {
-    html += '<p class="hint" style="text-align:center;margin-top:var(--stack)">Noch keine Vorschläge – sei der oder die Erste.</p>';
-  } else if (feedbackListe) {
-    /* KEIN .liste als Rahmen darum: .liste traegt selbst eine Flaeche
-       (Hintergrund, Rand, Schatten - styles.css:1429), und jeder Eintrag
-       ist ebenfalls ein .card - das waere genau die "Flaeche in einer
-       Flaeche", die Satz 2 der Gestaltungsregeln verbietet. Stattdessen
-       einzelne Karten mit Abstand dazwischen, wie auch sonst in der App. */
-    html += '<div style="display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--stack)">';
-    html += feedbackListe.map(feedbackZeile).join("");
-    html += '</div>';
+    return html;
+  }
+  const liste = feedbackListe;
+  const offen = liste.filter(e => !e.status || e.status === "offen" || e.status === "geplant");
+  const fertig = liste.filter(e => e.status === "umgesetzt");
+  const abgelehnt = istBetreiber() ? liste.filter(e => e.status === "abgelehnt") : [];
+  const neu = feedbackEinblenden;
+  feedbackEinblenden = false;
+  if (offen.length === 0 && fertig.length === 0 && abgelehnt.length === 0) {
+    html += '<div class="empty ideen-leer"><div class="empty__icon">' + ikon("stern", "i-xl") + '</div>' +
+      '<div class="empty__titel">Noch keine Ideen</div>' +
+      '<p class="empty__text">Du kannst die erste einreichen.</p></div>';
+    return html;
+  }
+  if (offen.length) {
+    html += '<div class="ideen-liste' + (neu ? ' ideen-liste--neu' : '') + '">' + offen.map(feedbackZeile).join("") + '</div>';
+  }
+  /* Was schon umgesetzt ist, steht sichtbar darunter - das Board soll
+     zeigen, dass daraus etwas wird ("nicht was Totes"). */
+  if (fertig.length) {
+    html += '<div class="eyebrow ideen-eyebrow">' + ikon("haken", "i-sm") + ' Schon umgesetzt</div>';
+    html += '<div class="ideen-liste ideen-liste--fertig' + (neu ? ' ideen-liste--neu' : '') + '">' + fertig.map(feedbackZeile).join("") + '</div>';
+  }
+  if (abgelehnt.length) {
+    html += '<div class="eyebrow ideen-eyebrow">Abgelehnt – nur für dich sichtbar</div>';
+    html += '<div class="ideen-liste ideen-liste--aus">' + abgelehnt.map(feedbackZeile).join("") + '</div>';
   }
   return html;
 }
 
-function feedbackZeile(e) {
+function feedbackZeile(e, i) {
   const abgestimmt = feedbackEigeneVotes.has(e.id);
-  const statusLabel = FEEDBACK_STATUS.find(s => s.id === e.status);
-  let html = '<div class="card" style="display:flex;gap:var(--space-4);align-items:flex-start">';
-  html += '<button class="pill' + (abgestimmt ? ' active' : '') + '" style="flex:none;flex-direction:column;height:auto;padding:var(--space-2) var(--space-3)"' +
-    ' data-action="' + (abgestimmt ? "feedback-unvote" : "feedback-vote") + '" data-id="' + esc(e.id) + '"' +
-    ' aria-pressed="' + (abgestimmt ? "true" : "false") + '" aria-label="' + (abgestimmt ? "Stimme zurückziehen" : "Dafür stimmen") + '">' +
-    ikon("pfeilHoch", "i-sm") + '<span>' + Math.max(0, e.votes || 0) + '</span></button>';
-  html += '<div style="flex:1 1 auto;min-width:0">';
-  html += '<div style="display:flex;gap:var(--space-2);align-items:baseline;flex-wrap:wrap">';
-  html += '<strong>' + esc(e.text) + '</strong>';
-  if (statusLabel && statusLabel.id !== "offen") {
-    html += '<span class="badge' + (statusLabel.id === "umgesetzt" ? " positiv" : statusLabel.id === "abgelehnt" ? " negativ" : "") + '">' +
-      esc(statusLabel.label) + '</span>';
+  const fertig = e.status === "umgesetzt";
+  const pop = feedbackPopId === e.id;
+  const frisch = feedbackNeuId === e.id;
+  if (pop) feedbackPopId = null;
+  let html = '<div class="ideen-zeile' + (frisch ? ' ideen-zeile--frisch' : '') + '" style="--n:' + Math.min(i || 0, 8) + '">';
+  if (fertig) {
+    html += '<span class="ideen-stimme ideen-stimme--fertig" aria-hidden="true">' + ikon("haken", "i-sm") + '</span>';
+  } else {
+    html += '<button class="ideen-stimme' + (abgestimmt ? ' aktiv' : '') + (pop ? ' pop' : '') + '"' +
+      ' data-action="' + (abgestimmt ? "feedback-unvote" : "feedback-vote") + '" data-id="' + esc(e.id) + '"' +
+      ' aria-pressed="' + (abgestimmt ? "true" : "false") + '" aria-label="' + (abgestimmt ? "Stimme zurückziehen" : "Dafür stimmen") +
+      ' (' + Math.max(0, e.votes || 0) + ')">' +
+      ikon("pfeilHoch", "i-sm") + '<span>' + Math.max(0, e.votes || 0) + '</span></button>';
   }
-  html += '</div>';
-  if (e.beschreibung) html += '<p class="hint" style="margin-top:2px">' + esc(e.beschreibung) + '</p>';
+  html += '<div class="ideen-text">';
+  html += '<strong>' + esc(e.text) + '</strong>';
+  if (e.status === "geplant") html += '<span class="badge ideen-geplant">Geplant</span>';
+  if (e.beschreibung) html += '<p class="hint">' + esc(e.beschreibung) + '</p>';
   if (istBetreiber()) {
-    html += '<div style="display:flex;gap:var(--space-2);flex-wrap:wrap;margin-top:var(--space-2)">';
-    FEEDBACK_STATUS.forEach(s => {
-      if (s.id === e.status) return;
+    html += '<div class="ideen-moderation">';
+    FEEDBACK_STATUS.forEach(st => {
+      if (st.id === (e.status || "offen")) return;
       html += '<button class="ghost" data-action="feedback-status" data-id="' + esc(e.id) +
-        '" data-status="' + s.id + '">→ ' + esc(s.label) + '</button>';
+        '" data-status="' + st.id + '">→ ' + esc(st.label) + '</button>';
     });
     html += '<button class="ghost" data-action="feedback-delete" data-id="' + esc(e.id) + '">' +
       ikon("muell", "i-sm") + ' Löschen</button>';
@@ -7935,9 +8140,9 @@ async function feedbackLaden() {
   feedbackLadeTimer = setTimeout(() => {
     if (meinToken !== feedbackLadeToken) return;   // laengst ueberholt
     feedbackLadeLangsam = true;
-    render();
+    zeichneIdeen();
   }, 9000);
-  render();
+  zeichneIdeen();
   try {
     const snap = await fb.getDocs(fb.collection(db, "feedback"));
     const liste = [];
@@ -7957,6 +8162,7 @@ async function feedbackLaden() {
     if (meinToken !== feedbackLadeToken) return;    // ein neuerer Versuch laeuft laengst
     feedbackListe = liste;
     feedbackEigeneVotes = eigene;
+    feedbackEinblenden = true;
   } catch (e) {
     if (meinToken !== feedbackLadeToken) return;
     feedbackFehler = "Liste konnte nicht geladen werden: " + (e && e.message ? e.message : String(e));
@@ -7964,7 +8170,7 @@ async function feedbackLaden() {
   if (feedbackLadeTimer) { clearTimeout(feedbackLadeTimer); feedbackLadeTimer = null; }
   feedbackLaedt = false;
   feedbackLadeLangsam = false;
-  render();
+  zeichneIdeen();
 }
 
 async function feedbackEinreichen() {
@@ -7985,11 +8191,20 @@ async function feedbackEinreichen() {
   feedbackEinreichtWird = true;
   render();
   try {
-    await fb.addDoc(fb.collection(db, "feedback"), neu);
-    feedbackListe = null;
+    const ref = await fb.addDoc(fb.collection(db, "feedback"), neu);
+    /* 3.17.0: Die neue Idee steht sofort in der Liste (hervorgehoben), statt
+       die ganze Liste zu verwerfen und neu zu laden. */
+    const eintrag = Object.assign({ id: ref && ref.id ? ref.id : "neu-" + Date.now() }, neu);
+    if (feedbackListe) feedbackListe.unshift(eintrag);
+    feedbackNeuId = eintrag.id;
+    feedbackEntwurf = { text: "", beschreibung: "" };
+    ui.feedbackForm = false;
+    feedbackDanke = true;
     feedbackEinreichtWird = false;
+    fuehlbar([8, 40, 12]);
+    zaehle("idee_eingereicht");
     render();
-    await feedbackLaden();
+    if (!feedbackListe) await feedbackLaden();
   } catch (e) {
     feedbackEinreichtWird = false;
     dlgAlert("Konnte nicht gespeichert werden: " + (e && e.message ? e.message : e));
@@ -8006,7 +8221,8 @@ async function feedbackAbstimmen(id, will) {
      sich etwas in der Oberflaeche ruehrt). */
   eintrag.votes = vorher + (will ? 1 : -1);
   if (will) feedbackEigeneVotes.add(id); else feedbackEigeneVotes.delete(id);
-  render();
+  if (will) { feedbackPopId = id; fuehlbar(8); zaehle("idee_gestimmt"); }
+  zeichneIdeen();
   try {
     const batch = fb.writeBatch(db);
     const stimmDoc = fb.doc(db, "feedback", id, "votes", currentUser.uid);
@@ -8017,7 +8233,7 @@ async function feedbackAbstimmen(id, will) {
   } catch (e) {
     eintrag.votes = vorher;
     if (will) feedbackEigeneVotes.delete(id); else feedbackEigeneVotes.add(id);
-    render();
+    zeichneIdeen();
   }
 }
 
@@ -8026,7 +8242,7 @@ async function feedbackStatusAendern(id, status) {
     await fb.updateDoc(fb.doc(db, "feedback", id), { status: status });
     const e = feedbackListe && feedbackListe.find(x => x.id === id);
     if (e) e.status = status;
-    render();
+    zeichneIdeen();
   } catch (e) {
     dlgAlert("Konnte Status nicht ändern: " + (e && e.message ? e.message : e));
   }
@@ -8038,7 +8254,7 @@ async function feedbackLoeschen(id) {
   try {
     await fb.deleteDoc(fb.doc(db, "feedback", id));
     if (feedbackListe) feedbackListe = feedbackListe.filter(e => e.id !== id);
-    render();
+    zeichneIdeen();
   } catch (e) {
     dlgAlert("Konnte nicht gelöscht werden: " + (e && e.message ? e.message : e));
   }
@@ -8244,7 +8460,10 @@ function renderLernen() {
     html += lernenStapel(b, cards, due, neuImStapel);
   }
 
-  html += startListe();
+  /* 3.17.0: hoechstens ein Hinweis, und nur, wenn die Start-Liste nicht
+     steht (die ist fuer neue Konten selbst der Hinweis). */
+  const startL = startListe();
+  html += startL || lernenHinweis();
 
   /* --- Serie. Steht unter dem Stapel, nicht darueber: sie ist Belohnung,
      nicht Aufgabe. 3.12.0: mit der Woche als Punkten (Duolingo zeigt dort
@@ -8263,6 +8482,197 @@ function renderLernen() {
   }
 
   return html;
+}
+
+/* ============================================================================
+   3.17.0: HINWEISE ZUR RICHTIGEN ZEIT
+
+   Betreiber am 24.09.2026: "soll was nices sein, nicht was totes,
+   anmerkungen oder so passend in bestimmten situationen, wie so eine
+   benachrichtigung zum erinnern zu lernen [...] will einfach ned dass es tot
+   ist oder leute alle verlassen weil es zu kompliziert wirkt oder es so wirkt
+   als bringe sie nichts die app". Dazu ein Video: Leute gehen, wenn sie
+   nicht SEHEN, dass etwas wirkt - Fortschritt sichtbar machen, vor dem
+   Gehen zeigen, was verloren geht, regelmaessig zurueckblicken.
+
+   Hoechstens EIN Hinweis steht auf dem Lernen-Tab (Hick), unter dem
+   Stapel, nie darueber - die Runde bleibt die eine Handlung. Reihenfolge:
+     1 serie     heute noch nicht gelernt UND gestern nicht: ohne Runde
+                 endet die Serie (serieAktuell verzeiht genau einen Tag)
+     2 meilenstein  10/25/50/100/250/500/1000 Karten "sassen schon einmal"
+     3 rueckblick   Mo-Mi: die vergangene Woche in drei Zahlen
+     4 erinnerung   nach zwei Lerntagen: taegliche Erinnerung einrichten
+     5 ideen        nach fuenf Lerntagen, einmal: "Was fehlt dir?"
+   Jeder ausser 1 laesst sich wegtippen; gemerkt wird das NUR auf dem Geraet
+   (localStorage "adrabic-hinweise") - kein Feld im Konto, keine Regel.
+   Eine echte Push-Mitteilung braeuchte einen Server (Firebase Cloud
+   Messaging + Cloud Functions) - den gibt es bewusst nicht. Die Erinnerung
+   ist deshalb ein Kalendereintrag (.ics): geht auf jedem Geraet, ohne
+   Erlaubnis-Abfrage, ohne Konto, und laeuft auch, wenn die App zu ist.
+   ========================================================================= */
+const HINWEISE_KEY = "adrabic-hinweise";
+function hinweisSpeicher() {
+  try { return JSON.parse(localStorage.getItem(HINWEISE_KEY)) || {}; } catch (e) { return {}; }
+}
+function hinweisMerken(patch) {
+  const neu = Object.assign(hinweisSpeicher(), patch);
+  try { localStorage.setItem(HINWEISE_KEY, JSON.stringify(neu)); } catch (e) {}
+  return neu;
+}
+const MEILENSTEINE = [10, 25, 50, 100, 250, 500, 1000];
+function gesesseneKarten() {
+  if (!bereiche) return 0;
+  let n = 0;
+  for (const b of bereiche) for (const c of b.karten) if ((c.maxStufe || 0) >= LEKTION_STUFE) n++;
+  return n;
+}
+function lerntageGesamt() { return Object.values(verlauf).filter(tagGelernt).length; }
+/* Die vergangene Woche (Mo-So), aus dem Tagesprotokoll. */
+function letzteWoche() {
+  const heute = new Date(todayStr() + "T00:00:00");
+  const dow = (heute.getDay() + 6) % 7;            // Mo = 0
+  let tage = 0, antworten = 0, neu = 0, geuebt = 0;
+  for (let i = dow + 1; i <= dow + 7; i++) {
+    const e = verlauf[dateInDays(-i)];
+    if (tagGelernt(e)) tage++;
+    if (e) { antworten += (e.w || 0) + (e.n || 0); neu += e.n || 0; geuebt += e.u || 0; }
+  }
+  const montag = dateInDays(-dow);
+  return { tage, antworten, neu, geuebt, woche: montag, dow };
+}
+function lernenHinweis() {
+  const sp = hinweisSpeicher();
+  const heute = todayStr();
+  /* 1 - Serie braucht heute eine Runde */
+  const serie = serieAktuell();
+  if (serie >= 2 && !tagGelernt(verlauf[heute]) && !tagGelernt(verlauf[dateInDays(-1)]) && dueCards().length > 0) {
+    return hinweisKarte("serie", "serie", 'Heute zählt: Ohne eine Runde endet deine Serie von <strong>' + serie + ' Tagen</strong>.', null, false);
+  }
+  /* 2 - Meilenstein */
+  const gesessen = gesesseneKarten();
+  const erreicht = MEILENSTEINE.filter(m => gesessen >= m).pop() || 0;
+  if (erreicht > (sp.meilenstein || 0)) {
+    return hinweisKarte("meilenstein", "haken", '<strong>' + erreicht + ' Karten</strong> saßen schon einmal. So viel hast du schon geschafft.', null, true);
+  }
+  /* 3 - Wochenrueckblick (Mo-Mi) */
+  const lw = letzteWoche();
+  if (lw.dow <= 2 && lw.tage > 0 && sp.rueckblick !== lw.woche) {
+    let t = '<span class="hinweis__titel">Deine letzte Woche</span>' +
+      '<span class="hinweis__zahlen"><span><strong>' + lw.tage + '</strong> von 7 Tagen</span>' +
+      '<span><strong>' + lw.antworten + '</strong> Antworten</span>' +
+      '<span><strong>' + lw.neu + '</strong> neue Karten</span></span>';
+    return hinweisKarte("rueckblick", "fortschritt", t, null, true);
+  }
+  /* 4 - Erinnerung einrichten */
+  const tage = lerntageGesamt();
+  const vorVierzehn = dateInDays(-14);
+  if (tage >= 2 && !sp.erinnerung && !(sp.weg && sp.weg.erinnerung && sp.weg.erinnerung > vorVierzehn)) {
+    return hinweisKarte("erinnerung", "serie", 'Jeden Tag zur selben Zeit hilft am meisten. Leg dir eine Erinnerung in den Kalender.',
+      { action: "erinnerung-auf", text: "Erinnerung einrichten" }, true);
+  }
+  /* 5 - Ideen, einmal */
+  if (tage >= 5 && !(sp.weg && sp.weg.ideen)) {
+    return hinweisKarte("ideen", "stern", 'Was fehlt dir in Adrabic? Schlag es vor – die anderen stimmen mit ab.',
+      { action: "ideen-auf", text: "Idee einreichen" }, true);
+  }
+  return "";
+}
+function hinweisKarte(name, icon, text, knopf, wegtippbar) {
+  if (ui.hinweisGezaehlt !== name) { ui.hinweisGezaehlt = name; zaehle("hinweis", { name: name, aktion: "gezeigt" }); }
+  let h = '<div class="hinweis hinweis--' + name + '" role="status">';
+  h += '<span class="hinweis__icon" aria-hidden="true">' + ikon(icon, "i-sm") + '</span>';
+  h += '<div class="hinweis__text">' + text + '</div>';
+  if (knopf || wegtippbar) {
+    h += '<div class="hinweis__aktionen">';
+    if (knopf) h += '<button class="secondary" data-action="' + knopf.action + '">' + esc(knopf.text) + '</button>';
+    if (wegtippbar) h += '<button class="ghost hinweis__weg" data-action="hinweis-weg" data-id="' + name + '" aria-label="Hinweis schließen">' +
+      (knopf ? 'Nicht jetzt' : ikon("schliessen", "i-sm")) + '</button>';
+    h += '</div>';
+  }
+  return h + '</div>';
+}
+function hinweisWeg(name) {
+  const sp = hinweisSpeicher();
+  const weg = Object.assign({}, sp.weg || {});
+  const patch = {};
+  if (name === "meilenstein") patch.meilenstein = MEILENSTEINE.filter(m => gesesseneKarten() >= m).pop() || 0;
+  else if (name === "rueckblick") patch.rueckblick = letzteWoche().woche;
+  else { weg[name] = todayStr(); patch.weg = weg; }
+  hinweisMerken(patch);
+  zaehle("hinweis", { name: name, aktion: "weg" });
+  render();
+}
+
+/* ---------- Taegliche Erinnerung als Kalendereintrag ---------- */
+const ERINNERUNG_ZEITEN = [
+  { id: "07:30", label: "Morgens", zeit: "7:30" },
+  { id: "12:30", label: "Mittags", zeit: "12:30" },
+  { id: "19:30", label: "Abends", zeit: "19:30" }
+];
+function erinnerungSheet() {
+  if (!ui.erinnerungSheet) return "";
+  let html = '<div class="dlg-backdrop" data-action="erinnerung-zu" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="erinnerung-titel">';
+  html += '<h3 id="erinnerung-titel">Tägliche Erinnerung</h3>';
+  html += '<p class="hint">Ein Eintrag in deinem Kalender, jeden Tag zur selben Zeit – er erinnert dich auch, wenn die App zu ist. Wann passt es dir?</p>';
+  html += '<div class="liste" style="margin-top:var(--space-4)">';
+  ERINNERUNG_ZEITEN.forEach(z => {
+    html += '<button class="liste-zeile" data-action="erinnerung-zeit" data-id="' + z.id + '">' +
+      '<span class="liste-zeile__text">' + esc(z.label) + '</span><span class="liste-zeile__wert">' + esc(z.zeit) + ' Uhr</span>' +
+      ikon("chevronRechts", "i-sm") + '</button>';
+  });
+  html += '</div>';
+  html += '<div class="field erinnerung-eigene"><label for="erinnerung-zeit">Andere Zeit</label>' +
+    '<div class="erinnerung-eigene__reihe"><input type="time" id="erinnerung-zeit" value="20:00">' +
+    '<button class="secondary" data-action="erinnerung-eigene">Übernehmen</button></div></div>';
+  html += '<p class="field__hilfe">Löschen oder verschieben kannst du ihn jederzeit im Kalender.</p>';
+  html += '<div class="dlg-actions"><button class="secondary" data-action="erinnerung-zu">Abbrechen</button></div>';
+  html += '</div></div>';
+  return html;
+}
+function erinnerungIcs(hhmm) {
+  const [hh, mm] = hhmm.split(":").map(x => String(parseInt(x, 10) || 0).padStart(2, "0"));
+  const d = new Date(); d.setDate(d.getDate() + 1);
+  const tag = d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
+  const jetzt = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
+  const adresse = location.origin + location.pathname;
+  return [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Adrabic//Erinnerung//DE", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    "UID:adrabic-erinnerung-" + Date.now() + "@adrabic",
+    "DTSTAMP:" + jetzt,
+    "DTSTART:" + tag + "T" + hh + mm + "00",
+    "DURATION:PT10M",
+    "RRULE:FREQ=DAILY",
+    "SUMMARY:Adrabic – kurz wiederholen",
+    "DESCRIPTION:Deine Karten warten. " + adresse,
+    "URL:" + adresse,
+    "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Adrabic – kurz wiederholen", "TRIGGER:PT0M", "END:VALARM",
+    "END:VEVENT", "END:VCALENDAR"
+  ].join("\r\n");
+}
+function erinnerungHerunterladen(hhmm) {
+  const ics = erinnerungIcs(hhmm);
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  try {
+    if (ios) {
+      /* Safari zeigt einen Kalendereintrag direkt an ("Zum Kalender hinzufuegen"),
+         wenn er als Adresse geoeffnet wird - ein Download-Link landet dort
+         sonst nur in "Dateien". */
+      location.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+    } else {
+      const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+      const a = document.createElement("a");
+      a.href = url; a.download = "adrabic-erinnerung.ics";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    }
+  } catch (e) {}
+  hinweisMerken({ erinnerung: hhmm });
+  zaehle("erinnerung_kalender", { zeit: hhmm });
+  ui.erinnerungSheet = false;
+  zeigeToast("Erinnerung für " + hhmm.replace(/^0/, "") + " Uhr – öffne die Datei, um sie in den Kalender zu übernehmen.");
+  render();
 }
 
 /* ---------- 3.12.0: Der Startbildschirm, neu gefasst ----------
@@ -9027,10 +9437,16 @@ function renderSession() {
        laufende Runde (gradeCard): Nicht kommt in dieser Runde wieder, Fast
        und Sicher sind fuer diese Runde durch. Stufe und Faelligkeit bleiben
        unberuehrt - deshalb andere Unterzeilen als beim Lernen. */
+    /* 3.17.0: ohne Unterzeilen ("gleich wieder", "morgen wieder", "spaeter
+       wieder"). Betreiber am 24.09.2026: "dieses darunter, kommt spaeter,
+       kommt gleich ist glaub unnoetig, lass die user nur an das dings denken,
+       lernen [...] simple hicks law". Wer bewertet, soll sich fragen "wusste
+       ich es?" - nicht "wann will ich sie wiedersehen?". Die Vorlesefassung
+       (aria-label) sagt weiter, was passiert. */
     const u = s.isDrill;
-    html += '<button class="btn-unknown" style="--n:0" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 kommt gleich noch einmal">Nicht<span class="sub">gleich wieder</span></button>';
-    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-label="' + (u ? 'Fast gewusst \u2013 f\u00fcr diese Runde durch' : 'Fast gewusst \u2013 kommt morgen wieder') + '">Fast<span class="sub">' + (u ? 'passt' : 'morgen wieder') + '</span></button>';
-    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-label="' + (u ? 'Sicher gewusst \u2013 f\u00fcr diese Runde durch' : 'Sicher gewusst \u2013 kommt sp\u00e4ter wieder') + '">Sicher<span class="sub">' + (u ? 'sitzt' : 'sp\u00e4ter wieder') + '</span></button>';
+    html += '<button class="btn-unknown" style="--n:0" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 kommt gleich noch einmal">Nicht</button>';
+    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-label="' + (u ? 'Fast gewusst \u2013 f\u00fcr diese Runde durch' : 'Fast gewusst \u2013 kommt morgen wieder') + '">Fast</button>';
+    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-label="' + (u ? 'Sicher gewusst \u2013 f\u00fcr diese Runde durch' : 'Sicher gewusst \u2013 kommt sp\u00e4ter wieder') + '">Sicher</button>';
     html += '</div>';
   }
 
@@ -9091,7 +9507,10 @@ function renderRundenEnde(s, gesamt) {
       ' Letzte Bewertung r\u00fcckg\u00e4ngig</button>';
   }
   html += '</div></div>';
-  if (neu) fuehlbar([10, 60, 14]);
+  if (neu) {
+    fuehlbar([10, 60, 14]);
+    zaehle("runde_ende", { ueben: !!s.isDrill, karten: gesamt, sicher: z.known, fast: z.almost, nicht: z.unknown });
+  }
   return html;
 }
 
@@ -10802,6 +11221,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dlgAlert("Bitte beschreib den Fehler.");
       return;
     }
+    zaehle("fehler_gemeldet");
 
     const subject = encodeURIComponent("Fehler gemeldet");
     const body = encodeURIComponent(
@@ -11081,7 +11501,13 @@ document.body.addEventListener("click", e => {
        automatische Selbstheilung schon hinter sich und darf sie erneut
        anstoßen, z.B. nachdem er sein Netz repariert hat. */
     case "start-neu-versuchen": selbstheilung().then(() => location.reload()); break;
-    case "einstellungen": ui.einstellungen = true; ui.seite = null; window.scrollTo(0, 0); render(); break;
+    case "einstellungen":
+      ui.einstellungen = true; ui.seite = null; window.scrollTo(0, 0); render();
+      /* 3.17.0: Das Ideen-Board ist von hier einen Tipp entfernt - es laedt
+         schon jetzt still vor, damit die Seite sofort gefuellt dasteht statt
+         nach einer Sekunde aufzuspringen. */
+      if (fb && db && currentUser && feedbackListe === null && !feedbackLaedt && !feedbackFehler) feedbackLaden();
+      break;
     case "einstellungen-zu": ui.einstellungen = false; ui.seite = null; window.scrollTo(0, 0); render(); break;
 
     /* 3.2.0 - Unterseiten und Wahl-Blatt. Beide Seiten-Handlungen tun
@@ -11089,7 +11515,9 @@ document.body.addEventListener("click", e => {
        aus welchem Bildschirm die Zeile kommt. */
     case "einst-seite":
     case "fort-seite":
-      ui.seite = btn.dataset.id || null; window.scrollTo(0, 0); render(); break;
+      ui.seite = btn.dataset.id || null;
+      if (ui.seite === "feedback") { ui.feedbackForm = false; feedbackDanke = false; feedbackNeuId = null; }
+      window.scrollTo(0, 0); render(); break;
     case "seite-zu":
       ui.seite = null; window.scrollTo(0, 0); render(); break;
     case "wahl-sheet":
@@ -11257,11 +11685,19 @@ document.body.addEventListener("click", e => {
         });
       }
       break;
-    case "set-arab-groesse": setArabGroesse(btn.dataset.id); break;   // E7
-    case "set-thema": setThema(btn.dataset.id); break;
+    case "set-arab-groesse": setArabGroesse(btn.dataset.id); zaehle("einstellung", { name: "arabische_schrift", wert: btn.dataset.id }); break;   // E7
+    case "set-thema": setThema(btn.dataset.id); zaehle("einstellung", { name: "helligkeit", wert: btn.dataset.id }); break;
     case "set-sitzungslimit":
       setSitzungsLimit(btn.dataset.id === "alle" ? "alle" : Number(btn.dataset.id));
+      zaehle("einstellung", { name: "karten_pro_sitzung", wert: btn.dataset.id });
       break;
+    case "statistik-umschalten": {
+      const an = statistikAn();
+      if (an) { zaehle("statistik_aus"); zaehlSenden(true); }
+      try { if (an) localStorage.setItem(STATISTIK_AUS_KEY, "1"); else localStorage.removeItem(STATISTIK_AUS_KEY); } catch (e) {}
+      render();
+      break;
+    }
     case "hw-undo": hwStrokes.pop(); render(); break;   // D9
     case "hw-clear": hwStrokes = []; render(); break;
     case "hw-fullscreen":
@@ -11289,6 +11725,28 @@ document.body.addEventListener("click", e => {
     case "open-error-modal": openErrorModal(); break;
     case "close-error-modal": closeErrorModal(); break;
     case "feedback-submit": feedbackEinreichen(); break;
+    case "feedback-form-auf":
+      ui.feedbackForm = true; feedbackDanke = false; render();
+      requestAnimationFrame(() => { const f = document.getElementById("fb-text"); if (f) f.focus(); });
+      break;
+    case "feedback-form-zu": ui.feedbackForm = false; feedbackFormFehler = false; render(); break;
+    case "hinweis-weg": hinweisWeg(btn.dataset.id); break;
+    case "erinnerung-auf": ui.erinnerungSheet = true; zaehle("hinweis", { name: "erinnerung", aktion: "geoeffnet" }); render(); break;
+    case "erinnerung-zu": ui.erinnerungSheet = false; render(); break;
+    case "erinnerung-zeit": erinnerungHerunterladen(btn.dataset.id); break;
+    case "erinnerung-eigene": {
+      const f = document.getElementById("erinnerung-zeit");
+      const v = f && /^\d{1,2}:\d{2}$/.test(f.value) ? f.value : "20:00";
+      erinnerungHerunterladen(v);
+      break;
+    }
+    case "ideen-auf":
+      hinweisMerken({ weg: Object.assign({}, hinweisSpeicher().weg || {}, { ideen: todayStr() }) });
+      zaehle("hinweis", { name: "ideen", aktion: "geoeffnet" });
+      ui.einstellungen = true; ui.seite = "feedback"; ui.feedbackForm = true; feedbackDanke = false;
+      window.scrollTo(0, 0); render();
+      requestAnimationFrame(() => { const f = document.getElementById("fb-text"); if (f) f.focus(); });
+      break;
     case "feedback-retry": feedbackFehler = null; feedbackLaden(); break;
     case "feedback-vote": feedbackAbstimmen(btn.dataset.id, true); break;
     case "feedback-unvote": feedbackAbstimmen(btn.dataset.id, false); break;
@@ -11383,6 +11841,7 @@ function zeigeStartfehler(e) {
 }
 
 /* ---------- Start ---------- */
+zaehle("app_start");
 /* 3.16.1 (Pruefschleife, Station 1, 24.09.2026): Waechter fuer den ersten
    Start. render() laeuft erst, wenn die Firebase-Bausteine geladen sind und
    die Anmeldung geprueft ist (onAuthStateChanged). Scheitert ein Abruf,
@@ -11402,6 +11861,7 @@ function startWaechter() {
   boot.classList.add("boot--langsam");
   boot.dataset.stand = "langsam";
   boot.insertAdjacentHTML("beforeend", bootLangsamHinweis());
+  zaehle("start_haenger");
 }
 if (CONFIGURED) {
   setTimeout(startWaechter, START_WAECHTER_MS);

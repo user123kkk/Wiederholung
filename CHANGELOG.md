@@ -1,3 +1,38 @@
+## 3.17.0 - 24. September 2026
+
+**Die App lebt: Hinweise zur richtigen Zeit, ein Ideen-Board, das sich
+füllt, eine Erinnerung – und bald Zahlen, was genutzt wird.** Betreiber:
+„analytics, wichtig um zu sehen welche funktionen verwendet werden [...]
+ideen, vorschläge cleane dings statt plötzliches verspätetes pop up [...]
+will einfach ned dass es tot ist".
+
+- **Lernrunde:** Die Übersetzung steht schon auf der Rückseite, sobald die
+  sich umdreht – nicht mehr eine Viertelsekunde später. Die Knöpfe heißen nur
+  noch **Nicht · Fast · Sicher**, ohne „gleich wieder / morgen wieder /
+  später wieder" darunter.
+- **Hinweise zur richtigen Zeit** (höchstens einer, unter dem Stapel):
+  „Heute zählt – ohne Runde endet deine Serie", Meilensteine („50 Karten
+  saßen schon einmal"), montags bis mittwochs der Rückblick auf die letzte
+  Woche, nach zwei Lerntagen das Angebot einer Erinnerung, nach fünf einmal
+  „Was fehlt dir?". Jeder lässt sich wegtippen.
+- **Tägliche Erinnerung** (Einstellungen → Lernen oder über den Hinweis):
+  ein Kalendereintrag jeden Tag zur gewählten Zeit – funktioniert auf jedem
+  Gerät, auch wenn die App zu ist, ohne Erlaubnis-Abfrage.
+- **Ideen & Vorschläge:** lädt schon beim Öffnen der Einstellungen vor – die
+  Liste steht sofort da; solange sie lädt, Platzhalter in Form der Zeilen
+  statt „Lädt…". Liste zuerst, „Idee einreichen" klappt das Formular auf;
+  getippter Text geht nicht mehr verloren. „Geplant" als Marke,
+  „Schon umgesetzt" als eigener Abschnitt. Abstimmen federt und vibriert,
+  eine eingereichte Idee steht sofort hervorgehoben oben.
+- **Moderation nur noch für den Betreiber:** Die Knöpfe „→ Geplant" /
+  „Löschen" sah bisher jedes Konto (sie scheiterten dann an den Regeln).
+- **Konto löschen** zeigt, was verloren geht, jetzt auch als Fortschritt
+  („… davon saßen schon N einmal", „deine Serie von N Tagen").
+- **Anonyme Nutzungsstatistik (PostHog, EU):** vorbereitet, **aus, bis der
+  Projektschlüssel eingetragen ist**. Ohne Cookies, ohne fremdes Skript,
+  ohne Karteninhalte, Namen, E-Mail oder Konto-ID; abschaltbar in den
+  Einstellungen. Datenschutzerklärung entsprechend ergänzt (Punkt 15).
+
 ## 3.16.1 - 24. September 2026
 
 **Prüfschleife, Station 1 (Start).**

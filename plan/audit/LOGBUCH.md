@@ -18,6 +18,68 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 
 ---
 
+### 2026-09-24 — Betreiber: Analytics ja, Board, Hinweise, Runde (v3.17.0)
+
+**Anlass (Vorrang vor der Schleife):** Datenschutz/Impressum „sollen mit der
+Zeit gehen" → Analytics ja (PostHog, TikTok-Hinweis), Ideen-Board „cleane
+dings statt plötzliches verspätetes pop up" und ausbauen, Übersetzung früher?,
+Unterzeilen der Bewertung weg, Hinweise/Erinnerung „passend in bestimmten
+Situationen", Video: Fortschritt sichtbar machen, vor dem Gehen zeigen, was
+verloren geht, Rückblick. „viele regeln wurden von claude früher
+geschrieben [...] kannst umgehen" (u. a. J1: keine neuen localStorage-Schlüssel).
+
+**Geändert (app.js):** Statistik-Modul (Z. ~150–250: `POSTHOG_KEY` leer =
+aus, `zaehle`, `zaehlSenden`, `zaehlKennungSetzen`, `zaehlBildschirm`) und
+Ereignisse an Runde/Üben/Karten/Codes/Dateien/Sicherung/Konto/Einstellungen/
+Ideen/Fehlerformular/Start; `BETREIBER_UIDS` = Betreiber-Kennung aus
+`firestore.rules`; Ideen-Board neu (`renderFeedbackSeite`, `feedbackInhalt`,
+`zeichneIdeen`, `feedbackZeile`, Entwurf per input-Listener, Vorladen in
+`case "einstellungen"`, Einreichen ohne Neuladen); Hinweise
+(`lernenHinweis`, `hinweisKarte`, `hinweisWeg`, `letzteWoche`,
+`gesesseneKarten`, localStorage `adrabic-hinweise`); Erinnerung
+(`erinnerungSheet`, `erinnerungIcs`, `erinnerungHerunterladen`, Zeile in den
+Einstellungen); Bewertung ohne Unterzeilen; Löschen-Seite mit Fortschritt;
+Version 3.17.0.
+**Geändert (styles.css):** Antwort ohne Verzögerung (Linie 120 ms),
+Knopfhöhe `--ctrl-lg`, `.schalter-optik`, Abschnitt „3.17.0 · Hinweise,
+Ideen-Board, Erinnerung".
+**Geändert (sonst):** `firebase.json` (CSP connect-src + eu.i.posthog.com, beide
+Seiten), `datenschutzerklaerung.html` (Kurz gesagt, 2, 7, 8, 9, 10, neu 15,
+Stand 24.9.), `plan/analytics/GERUEST.md`, `plan/PLAN.md` (Frage 14).
+**Neu:** `plan/werkzeuge/pruefstand/t_317.js`.
+
+**Entscheidung:**
+- **PostHog ohne Bibliothek:** eigener schlanker Sender an `/batch/`. Kein
+  fremdes Skript (Sicherheit, CSP nur connect-src), keine Cookies/kein
+  Speicher auf dem Gerät, keine Autocapture/Aufnahmen. Kennung angemeldet =
+  SHA-256("adrabic|"+uid) gekürzt (Wiederkehr messbar, nicht umkehrbar);
+  abgemeldet = Zufall je Seitenaufruf ohne Personenprofil
+  (`$process_person_profile: false`). Einstieg-Trichter über
+  `bildschirm` = „einstieg-N".
+- **Bis zum Schlüssel aus:** Ohne PostHog-Konto des Betreibers gibt es keinen
+  Schlüssel; der Schalter in den Einstellungen erscheint erst mit Schlüssel.
+- **Push-Mitteilungen nicht gebaut:** bräuchten einen Server (FCM + Cloud
+  Functions, Blaze-Tarif) – stattdessen Kalendereintrag (.ics, täglich).
+- **Übersetzung früher: ja** – die Rückseite war beim Umdrehen kurz leer.
+- **Rabatt beim Kündigen (Video):** trifft nicht zu – es gibt kein Abo.
+  Übernommen ist der Kern: vor dem Löschen den Fortschritt zeigen.
+- **Moderation:** Anzeige jetzt nur für die Betreiber-Kennung; Sicherheit
+  lag schon immer in den Regeln (`istFeedbackModerator`).
+
+**Geprüft:** `t_317.js` dunkel+hell (Hinweis-Kette Meilenstein → Erinnerung
+→ Ideen, .ics mit RRULE und DTSTART, Toast, Einstellungszeile, Board ohne
+Platzhalter nach Vorladen, Stimme 3→4, Einreichen mit Dank, keine
+Moderation für Nicht-Betreiber, Statistik: 13 Ereignisse, Kennung „k-…",
+keine uid/E-Mail/Inhalte im Versand); Kontrast 0; Sprünge 0 (±1 px am
+360-px-Handy); `t_hick`, `t_ueben`, `t_start`, `t_sicher`; Affe 200, 0.
+
+**Offen:** PostHog-Schlüssel und IP-Einstellung (Betreiber, siehe PLAN
+Frage 14); Datenschutz-Punkt 15 rechtlich gegenlesen lassen; Kalender-Datei
+am iPhone prüfen.
+**Nächste Station:** 2 (Einstieg)
+
+---
+
 ### 2026-09-24 — Station 1: Start (v3.16.1)
 
 **Anlass:** Routine `trig_016y2uuWtQZ4yrCzAhkZsLQn`, 10:50 UTC. Keine neue

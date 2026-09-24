@@ -53,10 +53,13 @@
       deine Serie – liegen in der Firestore-Datenbank (Google), erreichbar nur für dich; die
       Zugriffsregeln dafür liegen in <code>firestore.rules</code>. Auf deinem Gerät bleiben nur die
       Helligkeit und die App-Dateien selbst, damit sie offline startet.</p>
-      <p class="hint" style="margin-top:var(--space-3)">Keine Werbung, kein Tracking, keine
-      Analyse-Dienste, keine Weitergabe an Dritte, keine Cookies, die dich wiedererkennen. Löschen
-      kannst du dein Konto jederzeit selbst (Einstellungen → Konto löschen), mitnehmen jederzeit
-      als Datei (Einstellungen → Sichern).</p>
+      <p class="hint" style="margin-top:var(--space-3)">Keine Werbung, keine Cookies, keine
+      Weitergabe deiner Lerninhalte. Damit wir sehen, welche Funktionen genutzt werden, zählt die
+      App anonym mit, <strong>was</strong> benutzt wird – nie <strong>was</strong> du lernst, nie
+      Name oder E-Mail (Punkt 15). Das lässt sich unter Einstellungen → Anonyme
+      Nutzungsstatistik abschalten. Löschen kannst du dein Konto jederzeit selbst
+      (Einstellungen → Konto löschen), mitnehmen jederzeit als Datei (Einstellungen → Sichern &amp;
+      einspielen).</p>
     </div>
   </div>
 
@@ -76,9 +79,10 @@
     <div class="eyebrow">2. Allgemeines zur Datenverarbeitung</div>
     <div class="card">
       <p class="hint">Diese App wird privat und nicht-gewerblich für einen kleinen, wachsenden
-      Nutzerkreis betrieben. Es findet keine Werbung, kein Tracking und keine Analyse des
-      Nutzungsverhaltens statt. Daten werden nur verarbeitet, soweit es für den Betrieb der App
-      und die von dir angeforderten Funktionen notwendig ist.</p>
+      Nutzerkreis betrieben. Es findet keine Werbung und kein Tracking über Cookies oder
+      Werbekennungen statt. Daten werden verarbeitet, soweit es für den Betrieb der App und die
+      von dir angeforderten Funktionen notwendig ist – und, abschaltbar, für eine anonyme
+      Zählung, welche Funktionen genutzt werden (Punkt 15).</p>
     </div>
   </div>
 
@@ -169,8 +173,10 @@
     <div class="card">
       <p class="hint">Die gewählte Helligkeit (hell/dunkel) und das Datum des letzten Backups
       werden zusätzlich lokal auf deinem Gerät gespeichert (<code>localStorage</code>), damit die
-      App beim Start sofort die richtige Ansicht zeigt und offline funktioniert. Diese Angaben
-      verlassen dein Gerät nicht.</p>
+      App beim Start sofort die richtige Ansicht zeigt und offline funktioniert. Ebenso, welche
+      Hinweise der App du schon gesehen oder weggetippt hast (damit derselbe Hinweis nicht immer
+      wieder erscheint) und – nur wenn du sie abschaltest – dass die Nutzungsstatistik aus sein
+      soll. Diese Angaben verlassen dein Gerät nicht.</p>
     </div>
   </div>
 
@@ -184,8 +190,10 @@
       stattfinden; die Übermittlung dorthin stützt sich auf die EU-Standardvertragsklauseln
       (Art. 46 Abs. 2 lit. c DSGVO). Über die Anmeldung und Lerninhalte hinaus werden keine Daten
       an Dritte weitergegeben, nicht verkauft und nicht für Werbezwecke genutzt – anders als bei
-      manchen anderen Apps gibt es hier keine weiteren Auftragsverarbeiter (kein Analyse-Dienst,
-      kein Bezahl-Anbieter, kein eigener Server). Meldest du dich über Google oder Apple an,
+      manchen anderen Apps gibt es hier nur einen weiteren Auftragsverarbeiter: PostHog Inc.
+      (USA) für die anonyme Nutzungsstatistik, mit Datenhaltung auf Servern in der EU
+      (PostHog Cloud EU); Einzelheiten unter Punkt 15. Kein Bezahl-Anbieter, kein eigener
+      Server. Meldest du dich über Google oder Apple an,
       erhält der jeweils gewählte Anbieter zusätzlich die technisch dafür notwendige Information,
       dass du dich bei dieser App anmeldest (siehe Punkt 4) – als Betreiber dieses eigenen Dienstes
       (kein Auftragsverarbeiter für diesen Teil).</p>
@@ -201,6 +209,9 @@
         <li>Das Firebase-SDK – von <code>gstatic.com</code> (Google, Anschrift siehe Punkt 8)</li>
         <li>Die arabische Koranschrift – von <code>verses.quran.foundation</code></li>
       </ul>
+      <p class="hint" style="margin-top:var(--space-3)">Außerdem schickt die App, solange die
+      Nutzungsstatistik eingeschaltet ist, die gezählten Ereignisse an
+      <code>eu.i.posthog.com</code> (Punkt 15). Dabei wird kein Skript von dort geladen.</p>
       <p class="hint" style="margin-top:var(--space-3)">Beide Male ausschließlich zur
       Schriftdarstellung bzw. zum Laden der Anmelde-Bausteine, nicht zu Tracking-Zwecken.
       Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einheitlicher
@@ -215,8 +226,8 @@
       Authentication) speichert den angemeldeten Zustand technisch über den Browser-eigenen
       Speicher (IndexedDB), nicht über Cookies. Die einzige weitere Speicherung im Browser ist
       der oben unter Punkt 7 genannte, rein technisch notwendige <code>localStorage</code>. Es
-      gibt keine Cookies oder vergleichbaren Technologien zu Analyse-, Marketing- oder
-      Tracking-Zwecken – ein Cookie-Banner ist deshalb nicht erforderlich.</p>
+      gibt keine Cookies oder vergleichbaren Technologien zu Marketing- oder Tracking-Zwecken;
+      auch die Nutzungsstatistik (Punkt 15) speichert und liest nichts auf deinem Gerät.</p>
     </div>
   </div>
 
@@ -288,7 +299,32 @@
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">15. Änderungen dieser Erklärung</div>
+    <div class="eyebrow">15. Anonyme Nutzungsstatistik</div>
+    <div class="card">
+      <p class="hint">Damit wir wissen, welche Funktionen gebraucht werden, was niemand findet und
+      wo es hakt, zählt die App, <strong>welche</strong> Funktionen genutzt werden – zum Beispiel
+      „eine Lernrunde wurde begonnen", „eine Übungsrunde wurde beendet (12 Karten, 3 nicht
+      gewusst)", „ein Kartensatz-Code wurde eingelöst", „der Fortschritt wurde geöffnet".
+      Dazu kommen Version der App, grobe Geräteart (Handy, Tablet, Computer) und ob sie als App
+      vom Home-Bildschirm läuft.</p>
+      <p class="hint"><strong>Nie</strong> übertragen werden: der Inhalt deiner Karten, dein
+      Name, deine E-Mail-Adresse, deine Konto-Kennung, die Adresse der Seite. Statt der
+      Konto-Kennung wird daraus eine nicht umkehrbare Prüfsumme gebildet (SHA-256), damit
+      erkennbar ist, ob jemand wiederkommt, ohne dass jemand erkennen kann, wer das ist. Vor der
+      Anmeldung gilt eine Zufallskennung, die nur bis zum Schließen der Seite besteht. Es werden
+      keine Cookies gesetzt und nichts auf deinem Gerät gespeichert oder ausgelesen.</p>
+      <p class="hint">Empfänger ist PostHog Inc. als Auftragsverarbeiter (Art. 28 DSGVO), die
+      Daten liegen auf Servern in der EU (PostHog Cloud EU). Deine IP-Adresse wird dort nicht
+      gespeichert. Die gezählten Ereignisse werden nach höchstens einem Jahr gelöscht.
+      Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO – unser berechtigtes Interesse, die App
+      anhand ihrer tatsächlichen Nutzung zu verbessern. Du kannst jederzeit widersprechen:
+      Einstellungen → Anonyme Nutzungsstatistik ausschalten; ab dann wird nichts mehr
+      gesendet.</p>
+    </div>
+  </div>
+
+  <div class="sektion">
+    <div class="eyebrow">16. Änderungen dieser Erklärung</div>
     <div class="card">
       <p class="hint">Ändert sich, was diese App tatsächlich speichert oder verarbeitet, wird
       diese Erklärung entsprechend angepasst. Es lohnt sich, sie von Zeit zu Zeit erneut zu
@@ -296,7 +332,7 @@
     </div>
   </div>
 
-  <p class="hint rechtsseite__fuss">Stand: 23. September 2026</p>
+  <p class="hint rechtsseite__fuss">Stand: 24. September 2026</p>
 </div>
 </body>
 </html>
