@@ -15,7 +15,13 @@ async function pruefeKontrast(p, name) {
     const mix = (o, u) => ({ r: o.r * o.a + u.r * (1 - o.a), g: o.g * o.a + u.g * (1 - o.a), b: o.b * o.a + u.b * (1 - o.a), a: 1 });
     function grund(el) {
       const schichten = [];
+      const r0 = el.getBoundingClientRect();
+      const mx = r0.left + r0.width / 2, my = r0.top + r0.height / 2;
       for (let e = el; e; e = e.parentElement) {
+        /* Nur Flaechen, die wirklich UNTER dem Text liegen - ein absolut
+           gesetztes Kind kann ausserhalb seines Elternkastens stehen (z. B.
+           das Wort unter einem Punkt der Einstiegs-Leiter). */
+        if (e !== el) { const r = e.getBoundingClientRect(); if (mx < r.left || mx > r.right || my < r.top || my > r.bottom) continue; }
         const st = getComputedStyle(e);
         if (st.backgroundImage && st.backgroundImage !== 'none' && /gradient\(/.test(st.backgroundImage) && !parse(st.backgroundColor)?.a) return null;   /* Verlauf ohne Grundfarbe: nicht messbar */
         const c = parse(st.backgroundColor);
@@ -38,6 +44,11 @@ async function pruefeKontrast(p, name) {
       const r = el.getBoundingClientRect();
       if (!r.width || !r.height || r.bottom < 0 || r.top > innerHeight) continue;
       if (el.closest('[aria-hidden="true"]') && el.closest('.study-extra--platz, [style*="visibility:hidden"]')) continue;
+      /* In Bewegung (Einblendung, Schleife): Deckkraft und Farbe sind gerade
+         Zwischenwerte - gemessen wird nur, was steht. */
+      let bewegt = false;
+      for (let x = el; x && !bewegt; x = x.parentElement) bewegt = x.getAnimations().some(a => a.playState === 'running');
+      if (bewegt) continue;
       const o = deckkraft(el); if (o < 0.05) continue;
       let f = parse(cs.color); if (!f) continue;
       const g = grund(el);

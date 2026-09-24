@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.0";
+const APP_VERSION = "3.17.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5731,7 +5731,12 @@ function einstiegFuss(weiterLabel, weiterAktion, klasse) {
   return '<div class="form-actions einstieg-aktion' + (klasse ? ' ' + klasse : '') + '">' +
     '<button class="full" data-action="' + (weiterAktion || "einstieg-weiter") + '"' +
     (gesperrt ? ' disabled aria-disabled="true"' : '') + '>' + esc(weiterLabel) + '</button>' +
-    (pflicht ? '<p class="einstieg-sperre" aria-live="polite">' + esc(hinweis) + '</p>' : '') +
+    /* 3.17.1: Die Zeile steht auf allen Frage-Bildschirmen (1-6), auf den
+       Pflicht-Bildschirmen mit Text, sonst leer. Seit der Knopf unten fest
+       steht, ist sie kein Loch mehr, sondern haelt ihn von Bildschirm zu
+       Bildschirm an derselben Stelle (vorher 30 px Unterschied). */
+    (pflicht ? '<p class="einstieg-sperre" aria-live="polite">' + esc(hinweis) + '</p>'
+      : (e && e.schritt >= 1 && e.schritt <= 6 ? '<p class="einstieg-sperre" aria-hidden="true"></p>' : '')) +
     '</div>';
 }
 /* Die Wahl-Zweige zeichnen den Bildschirm bewusst NICHT neu (Fokus, Bewegung -
@@ -6017,7 +6022,10 @@ function renderEinstieg() {
       'stehen seine Lektionen bei dir fertig da.</span></div>';
     html += '</div>';
     html += einstiegFuss("Plan speichern", "einstieg-fertig", "einstieg-aktion--glanz einstieg-aktion--spaet");
-    html += '<p class="einstieg-vertrauen">Kostenlos. Keine Werbung, kein Tracking.</p>';
+    /* 3.17.1: "kein Tracking" stimmt seit der (abschaltbaren) anonymen
+       Nutzungsstatistik nicht mehr woertlich - hier steht nur, was ohne
+       Einschraenkung gilt (Datenschutzerklaerung Punkt 10 und 15). */
+    html += '<p class="einstieg-vertrauen">Kostenlos. Keine Werbung, keine Cookies.</p>';
   }
 
   html += '</div></div>';

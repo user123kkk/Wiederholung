@@ -3386,6 +3386,34 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
    sie bei jedem Neuzeichnen desselben Bildschirms erneut (Karte umdrehen,
    bewerten). */
 .solo.einstieg-solo { animation: none; }
+/* 3.17.1 (Pruefschleife, Station 2): Der Weiter-Knopf steht unten fest, der
+   Inhalt beginnt oben. Bis hier hing der Knopf direkt unter den Antworten -
+   jeder Echo-Satz, der nach einer Wahl erscheint, schob ihn nach unten:
+   gemessen 81 px (Handy), 105 px (kleines Handy), 31 px (iPad) beim Ziel,
+   39 px bei den Huerden. Jetzt waechst das Echo in den freien Raum ueber dem
+   Knopf, nichts bewegt sich - und der Knopf liegt in der Daumenzone, wie in
+   den Einstiegen, die dafuer Vorbild waren (Duolingo, Cal AI). Ist ein
+   Bildschirm hoeher als das Fenster (Plan), steht der Knopf wie bisher am
+   Ende des Inhalts. */
+.solo.einstieg-solo { min-height: 100svh; display: flex; flex-direction: column; }
+.solo.einstieg-solo > .einstieg { flex: 1 0 auto; display: flex; flex-direction: column; }
+.einstieg > .einstieg-aktion {
+  margin-top: auto; padding-top: var(--space-6);
+  /* Ist der Bildschirm hoeher als das Fenster (kleines Handy), bleibt der
+     Knopf trotzdem unten sichtbar stehen und laeuft nicht mit dem Echo mit.
+     Ein Verlauf in der Seitenfarbe laesst den Inhalt darunter auslaufen. */
+  position: sticky; bottom: 0; z-index: 2;
+  /* Der untere Abstand der Seite gehoert hierher, nicht an .solo: so steht
+     der Knopf im Fluss und angeheftet an derselben Stelle (sonst 24 px
+     Sprung, sobald der Inhalt ueber das Fenster waechst). */
+  padding-bottom: calc(var(--sab) + var(--space-6));
+  background: linear-gradient(to top, var(--bg) 72%, transparent);
+}
+.solo.einstieg-solo { padding-bottom: 0; }
+.einstieg > .einstieg-aktion:has(+ .einstieg-neben) { padding-bottom: var(--space-2); }
+.einstieg > .einstieg-neben { margin-top: 0; padding-bottom: calc(var(--sab) + var(--space-6)); }
+/* Ohne Knopf (Plan entsteht) braucht der Bildschirm den Abstand selbst. */
+.einstieg:not(:has(> .einstieg-aktion)) { padding-bottom: calc(var(--sab) + var(--space-9)); }
 .einstieg--start   { animation: enter-rise var(--dur-slow) var(--ease-out) both; }
 .einstieg--vor     { animation: enter-vor var(--dur-slow) var(--ease-out) both; }
 .einstieg--zurueck { animation: enter-zurueck var(--dur-slow) var(--ease-out) both; }
@@ -4064,7 +4092,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
    verschwindet (die Höhe ist reserviert, siehe min-height). */
 .einstieg-sperre {
   margin: var(--space-2) 0 0;
-  min-height: 1.2em;
+  line-height: 1.4; min-height: 1.4em;   /* 3.17.1: Hoehe = Zeilenhoehe, sonst 4 px Sprung, wenn der Satz verschwindet */
   text-align: center;
   font-size: var(--fs-xs); color: var(--text-3);
 }
@@ -4564,7 +4592,10 @@ button.halten.haelt { transform: scale(0.985); }
     min-height: 100svh;
     display: flex; flex-direction: column;
   }
-  .solo.einstieg-solo > .einstieg { margin-top: auto; margin-bottom: auto; }
+  /* 3.17.1: nicht mehr senkrecht mittig (das verschob beim Echo alles um die
+     halbe Hoehe), sondern oben mit etwas Luft - der Knopf unten fuellt die
+     Hoehe, die Ansicht wirkt nicht "oben angeheftet". */
+  .solo.einstieg-solo > .einstieg { margin-top: 0; margin-bottom: 0; padding-top: clamp(0px, 6svh, 72px); }
   .einstieg-wahl--paar {
     display: grid; grid-template-columns: 1fr 1fr;
     gap: var(--space-3);

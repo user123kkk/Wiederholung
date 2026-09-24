@@ -7,7 +7,7 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | Nr | Station | Stand |
 |---|---|---|
 | 1 | Start | erledigt (v3.16.1) |
-| 2 | Einstieg | offen |
+| 2 | Einstieg | erledigt (v3.17.1) |
 | 3 | Anmelden | offen |
 | 4 | Bestätigung | offen |
 | 5 | Lernen-Start | offen |
@@ -15,6 +15,49 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 7 | Rundenende | offen |
 | 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 2: Einstieg (v3.17.1)
+
+**Anlass:** Routine, 11:50 UTC. Keine neue Betreiber-Nachricht seit v3.17.0.
+Der Betreiber will den Einstieg inhaltlich selbst durchgehen – geprüft und
+behoben wurde nur Handwerk (Sprünge, Kontrast, Lage), Inhalt und Ablauf
+unverändert.
+
+**Geprüft (`t_einstieg.js`, `t_einstieg_lage.js`, Handy/klein/iPad, hell+dunkel):**
+- **Fund: Weiter-Knopf springt bei jeder Wahl** – Ziel 81/105/31 px
+  (Handy/klein/iPad), Hürden 39/39/22, Zeitpunkt 0/25/2. Ursache: Knopf im
+  Fluss direkt unter Echo-Satz bzw. Hürden-Echo; auf dem iPad zusätzlich die
+  senkrechte Zentrierung (Echo verschob alles um die halbe Höhe).
+- Fund 2: Knopf-Lage zwischen den Schritten verschieden (±30 px), weil nur
+  Pflicht-Bildschirme die Hinweiszeile darunter haben.
+- Fund 3: „kein Tracking" im Einstieg (Plan-Bildschirm) – seit 3.17.0 nicht
+  mehr wörtlich wahr.
+- Kontrast: Die Meldungen zu den Leiter-Wörtern waren ein Fehler des
+  Prüfskripts (absolut gesetztes Kind außerhalb des Eltern-Kastens → Punkt als
+  Hintergrund gewertet). `kontrast.js` wertet jetzt nur Flächen unter dem
+  Text und überspringt laufende Animationen.
+
+**Geändert (styles.css):** `.solo.einstieg-solo` volle Höhe als Spalte,
+`.einstieg` wächst, `.einstieg > .einstieg-aktion` unten (`margin-top: auto`,
+`position: sticky`, Verlauf, unterer Abstand hier statt an `.solo`), iPad:
+oben mit Luft statt zentriert; `.einstieg-sperre` Zeilenhöhe = Mindesthöhe.
+**Geändert (app.js):** `einstiegFuss` – leere Hinweiszeile auf Schritt 1–6;
+Vertrauenssatz „Keine Werbung, keine Cookies."; Version 3.17.1.
+**Neu (Prüfstand):** `t_einstieg.js`, `t_einstieg_lage.js`, `t_leiste.js`;
+`kontrast.js` verbessert.
+
+**Entscheidung:** Knopf unten fest statt Platz für das Echo freizuhalten – ein
+freigehaltener Platz wäre vor der Wahl ein Loch; unten fest ist das Muster
+der Vorbilder (Duolingo, Cal AI) und die Daumenzone.
+
+**Geprüft danach:** Sprünge 0 px überall; Knopf auf Schritt 1–6 an derselben
+Stelle (741/637/1077 px), Schritt 0 17 px höher (Link darunter); Kontrast 0;
+Regression (Kontrast App, Sprünge Runde, Konto löschen), Affe klein 150, 0.
+
+**Offen:** –
+**Nächste Station:** 3 (Anmelden)
 
 ---
 

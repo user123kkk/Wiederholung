@@ -1,3 +1,19 @@
+## 3.17.1 - 24. September 2026
+
+**Prüfschleife, Station 2 (Einstieg).**
+
+- **Der Weiter-Knopf springt nicht mehr.** Er hing direkt unter den Antworten;
+  jeder Satz, der nach einer Wahl erscheint, schob ihn nach unten – bis zu
+  105 px am kleinen Handy. Jetzt steht er unten fest (Daumenzone), der Inhalt
+  beginnt oben; ist ein Bildschirm länger als das Fenster, bleibt er unten
+  sichtbar. Gemessen: 0 px bei jeder Wahl, auf Handy, kleinem Handy und iPad,
+  hell und dunkel – und auf allen Frage-Bildschirmen an derselben Stelle.
+- „Kostenlos. Keine Werbung, kein Tracking." heißt jetzt „Kostenlos. Keine
+  Werbung, keine Cookies." – seit der anonymen Nutzungsstatistik stimmt nur
+  noch das ohne Einschränkung.
+- Geprüft ohne Befund: Kontrast auf allen Einstiegs-Bildschirmen, keine
+  waagerechte Scrollleiste.
+
 ## 3.17.0 - 24. September 2026
 
 **Die App lebt: Hinweise zur richtigen Zeit, ein Ideen-Board, das sich
