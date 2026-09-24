@@ -1,8 +1,9 @@
 # Logbuch: Prüfschleife
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
-Routine: `trig_016y2uuWtQZ4yrCzAhkZsLQn`, stündlich zur Minute 50 (UTC), weckt
-die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
+Routine: `trig_016y2uuWtQZ4yrCzAhkZsLQn` – **am 24.09.2026 nach Station 18
+gelöscht**, die Schleife ist abgeschlossen. Eine zweite Runde nur auf Wunsch
+des Betreibers (AUFTRAG.md).
 
 | Nr | Station | Stand |
 |---|---|---|
@@ -23,7 +24,75 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 15 | Konto | erledigt (v3.17.15) |
 | 16 | Querschnitt | erledigt (v3.17.16) |
 | 17 | Große Bildschirme | erledigt (v3.17.17) |
-| 18 | Hell & ruhig | offen |
+| 18 | Hell & ruhig | erledigt (v3.17.18) |
+
+---
+
+### 2026-09-24 — Abschluss: alle 18 Stationen durch (v3.16.1 → v3.17.18)
+
+**Station 18: Hell & ruhig (v3.17.18).** Geprüft mit `t_a11y.js` (helle
+Fassung + `prefers-reduced-motion: reduce`, 11 Bildschirme plus Einstieg/
+Anmelden): Knöpfe ohne Namen 0, Bilder ohne alt 0, Blätter als Dialog
+benannt, `lang="de"`, Bewegung über 50 ms trotz „reduziert" 0, Kontrast 0.
+- **Fund 1: Überschriften** – nur „Guten Tag" (Lernen) war ein h1.
+  `.appbar__title` ist jetzt `h1` (Aussehen unverändert: `margin:0;
+  line-height:inherit`), der Ansichtstitel am Handy statt `display:none`
+  nur für Bildschirmleser; in der Runde `h1.sr-only` „Runde"/„Üben".
+- **Fund 2: Suchfeld ohne Namen** – `aria-label="Karten durchsuchen"`
+  (`type="text"` bleibt: `search` brächte ein zweites, natives X).
+- Regression: `t_sprung.js` 0 (klein ±1 Rundung), Affe Handy 150 / Desktop
+  120 0 Befunde, `t_kontrast.js` dunkel+hell 0, `t_gross_alle.js` Desktop
+  14/14.
+
+**Routine gelöscht** (`trig_016y2uuWtQZ4yrCzAhkZsLQn`, per `delete_trigger`).
+
+#### Zusammenfassung aller Runden
+
+| Nr | Station | Version | Wichtigste Funde |
+|---|---|---|---|
+| 1 | Start | 3.16.1 | endloser Ladebildschirm bei hängendem Netz |
+| 2 | Einstieg | 3.17.1 | Weiter-Knopf sprang bis 105 px; „kein Tracking" nicht mehr wahr |
+| 3 | Anmelden | 3.17.2 | Fehlermeldung schob Knopf 63 px; Name-Fehler 30 px |
+| 4 | Bestätigung | 3.17.3 | Meldungen schoben Knöpfe 63–105 px; kein Tipp-Feedback; Systemcodes |
+| 5 | Lernen-Start | 3.17.4 | „Morgen kommen 1 Karte" u. 3 weitere Einzahlfehler; „alles erledigt" doppelt |
+| 6 | Lernrunde | 3.17.5 (+3.17.6) | Rückgängig verlor Notiz und zählte weiter; Tastatur bediente keine Knöpfe; Tasten durch Dialoge; Liste 400 Animationen, Verwalten 200 → 80 ms |
+| 7 | Rundenende | 3.17.7 | Rundenlimit log „alle durch", kein Weiterlernen; zwei Ausgänge |
+| 8 | Üben | 3.17.8 | Zeichenfläche unter dem Rand; Vollbild verdeckte das Wort; Knöpfe sprangen; Schreib-Schalter ging still aus |
+| 9 | Fortschritt | 3.17.9 | gesperrte Lektionen 2:1; Einzahl; Kalender mit Systemdatum; doppelte Überschrift |
+| 10 | Verwalten | 3.17.10 | Auswahl sprang 214 px, Leiste 203 px → eine Zeile; Suche flackerte; Sortieren per Tastatur nur 1 Schritt |
+| 11 | Karten-Blätter | 3.17.11 | angefangene Karte ging still verloren; Enter speicherte zu früh; Fehler verschoben Felder |
+| 12 | Bereiche | 3.17.12 | neuer Bereich erbte Auswahl/Suche; leerer Bereich mit Backup+Name; toter Löschen-Knopf |
+| 13 | Kartensätze & Daten | 3.17.13 | Code nur in exakter Schreibweise; englische Systemfehler an 7 Stellen; „(n)" an 9 Stellen |
+| 14 | Einstellungen | 3.17.14 | Erinnerungs-Blatt schloss nicht; Fehlerformular mit überflüssigen Feldern und Textverlust; „Sitzung" statt „Runde" |
+| 15 | Konto | 3.17.15 | **Google/Apple-Konten nicht löschbar**; Neu-Anmeldung erst nach dem Datenlöschen |
+| 16 | Querschnitt | 3.17.16 | Offline-Banner 130 px; Systemcodes in Speicherfehlern; Startfehler ohne Ausweg |
+| 17 | Große Bildschirme | 3.17.17 | Lernen-Raster am Desktop zerrissen; gesperrter Knopf knapp unter Kontrastgrenze |
+| 18 | Hell & ruhig | 3.17.18 | keine Überschriften für Bildschirmleser; Suchfeld ohne Namen |
+
+**Muster, die sich wiederholt haben** (für künftige Arbeit):
+1. *Etwas erscheint nachträglich über dem Finger* (Meldungen, Leisten,
+   Fehlerzeilen) – Lösung jedes Mal: Platz vorher da, oder unter/neben die
+   Handlung.
+2. *Neue Teile wurden an zentralen Listen vergessen* – Hinweise (3.17.0) im
+   Desktop-Raster, Erinnerungs-Blatt in `schliesseObersteEbene`/
+   `overlayIstOffen`/`renderToast`. Wer ein Blatt baut: alle vier Stellen.
+3. *Systemsprache im Text* – `e.code`/`e.message`, „(n)", Abkürzungen,
+   ISO-Datum. Jetzt gibt es `fehlerKlartext()` und `mz()`.
+4. *Zustand nur im DOM* (Schalter, Fokus am Griff) – geht beim nächsten
+   `render()` verloren; in `ui` halten.
+5. *Halbdurchsichtige Farben* für Schrift-Hintergründe kippen je nach
+   Untergrund unter 4,5:1 – `--stufe-1-fest`/`--stufe-2-fest`.
+
+**Prüfstand für die nächste Runde:** 30+ Tests unter
+`plan/werkzeuge/pruefstand/` (je Station `t_*.js`, dazu `t_fluessig*.js`,
+`t_gross_alle.js`, `t_a11y.js`, `affe.js`); Stub kann Schreib-, Lese-,
+Live- und Anmeldefehler nachstellen.
+
+**Offen (Betreiber):** siehe PLAN.md „AKTUELL" – veroeffentlichen.bat,
+PostHog-Schlüssel, Datenschutz §15 prüfen lassen, und am Gerät: Konto mit
+Google löschen, Kalender-Erinnerung iOS.
+**Nächster Schritt:** keiner aus der Schleife. Auf Betreiber-Rückmeldung
+warten (zweite Runde nur auf Wunsch).
 
 ---
 
