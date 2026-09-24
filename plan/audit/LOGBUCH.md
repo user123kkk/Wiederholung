@@ -8,13 +8,54 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 |---|---|---|
 | 1 | Start | erledigt (v3.16.1) |
 | 2 | Einstieg | erledigt (v3.17.1) |
-| 3 | Anmelden | offen |
+| 3 | Anmelden | erledigt (v3.17.2) |
 | 4 | Bestätigung | offen |
 | 5 | Lernen-Start | offen |
 | 6 | Lernrunde | teilweise (Umdrehen, Bewerten, Sprünge, Ring – v3.14.0/3.15.0); Rest offen |
 | 7 | Rundenende | offen |
 | 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 3: Anmelden (v3.17.2)
+
+**Anlass:** Schleife nach Station 2, keine neue Betreiber-Nachricht außer
+„Arbeite weiter an stellen wo du es für nötig hälst" (PostHog-Schlüssel
+kommt später mit „von vorhin:").
+
+**Geprüft (`t_anmelden.js`, Handy hell/dunkel, klein, iPad):**
+- **Fund 1: Fehlermeldung schiebt den Knopf** – „E-Mail oder Passwort stimmt
+  nicht" stand über dem Formular, Anmelde-Knopf 63 px tiefer. Ein zweiter
+  Tipp landete daneben.
+- **Fund 2: Name-Fehler verlängert das Formular** um 30 px (eigene Zeile
+  `.field__fehler` unter dem Feld), Knopf rutschte.
+- Fund 3: Kein Tast-/Sichtsignal bei wiederholtem Fehlversuch – die Meldung
+  steht schon da, ein zweiter Fehlschlag sieht aus wie „nichts passiert".
+- Ohne Befund: Passwort vergessen (Bestätigung erscheint), Passwort-Auge
+  behält Eingaben, Kontrast 0, keine waagerechte Scrollleiste.
+- „Neues Konto" führt über den Einstieg (Plan speichern) – so gewollt
+  (`mode-register`), kein Fund.
+
+**Geändert (app.js, `renderAuth` ~Z. 6460–6520):** `ui.authError`/`ui.authInfo`
+nach den Formular-Aktionen, Klasse `auth-meldung`, `role="alert"`/`"status"`;
+Schütteln nur bei neuer Meldung (`ui.authFehlerGezeigt`); Name-Fehler als
+`.opt--fehler` in der Beschriftung (`#a-name-fehler`), der input-Listener
+setzt Text/Klasse zurück statt ein Element zu entfernen. Version 3.17.2.
+**Geändert (styles.css, Ende):** `.auth-meldung` (enter-rise),
+`.auth-wackeln` + `@keyframes auth-wackeln`, `.opt--fehler`.
+**Neu (Prüfstand):** `t_anmelden.js`.
+
+**Entscheidung:** Meldung unter den Knopf statt Platz oben freihalten – ein
+leerer Platz wäre ohne Fehler ein Loch; unter dem Knopf verschiebt sie nichts,
+was man noch antippen will. Schütteln nur einmal pro neuer Meldung, damit es
+nicht bei jedem Neuzeichnen (z. B. Passwort-Auge) wackelt.
+
+**Geprüft danach:** Sprünge 0 px (Fehler, Name), Kontrast 0 in allen
+Varianten, keine Konsolenfehler.
+
+**Offen:** –
+**Nächste Station:** 4 (Bestätigung)
 
 ---
 

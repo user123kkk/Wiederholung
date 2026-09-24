@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.1";
+const APP_VERSION = "3.17.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -6462,13 +6462,20 @@ function renderAuth() {
                                      : "Einmalig \u2013 danach auf jedem Ger\u00e4t.")
      : m === "reset" ? "Wir schicken dir einen Link zum Neusetzen."
      : "Weiterlernen, wo du aufgeh\u00f6rt hast.") + '</p>';
-  html += '<div class="card">';
+  /* 3.17.2: Bei einer neuen Fehlermeldung schuettelt die Karte einmal kurz -
+     das "Nein" von iOS, ohne dass man lesen muss. */
+  const wackeln = ui.authError && ui.authError !== ui.authFehlerGezeigt;
+  ui.authFehlerGezeigt = ui.authError || null;
+  html += '<div class="card' + (wackeln ? ' auth-wackeln' : '') + '">';
   if (m === "register") {
     const nameFehler = !!(ui.authFeldFehler && ui.authFeldFehler.name);
-    html += '<div class="field"><label for="a-name">Dein Name <span class="opt">\u2013 wird in der App angezeigt</span></label>';
+    /* 3.17.2: Der Fehler steht IN der Beschriftung (statt "wird in der App
+       angezeigt"), nicht als eigene Zeile unter dem Feld - die schob Knopf
+       und Karte um 30 px. */
+    html += '<div class="field"><label for="a-name">Dein Name <span class="opt' + (nameFehler ? ' opt--fehler' : '') + '" id="a-name-fehler">' +
+      (nameFehler ? '\u2013 bitte ausf\u00fcllen' : '\u2013 wird in der App angezeigt') + '</span></label>';
     html += '<input type="text" id="a-name" maxlength="40" autocomplete="nickname"' +
       (nameFehler ? ' aria-invalid="true" aria-describedby="a-name-fehler"' : '') + '>';
-    if (nameFehler) html += '<div class="field__fehler" id="a-name-fehler">Bitte ausf\u00fcllen</div>';
     html += '</div>';
   }
   html += '<div class="field"><label for="a-email">E-Mail</label>';
@@ -6486,11 +6493,6 @@ function renderAuth() {
       ikon(sichtbar ? "augeZu" : "auge") + '</button>';
     html += '</div></div>';
   }
-  if (ui.authError) html += '<div class="error-box" style="margin:var(--space-4) 0 0">' + ikon("warnung", "i-sm") +
-    '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
-  if (ui.authInfo) html += '<div class="info-box" style="margin:var(--space-4) 0 0">' + ikon("haken", "i-sm") +
-    '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
-
   const busy = ui.authBusy ? " disabled" : "";
   const laed = ui.authBusy ? " busy" : "";
   html += '<div class="form-actions">';
@@ -6502,6 +6504,14 @@ function renderAuth() {
     html += '<button class="full' + laed + '" data-action="reset"' + busy + '>Link zusenden</button>';
   }
   html += '</div>';
+  /* 3.17.2 (Pruefschleife, Station 3): Meldungen UNTER dem Knopf. Vorher
+     standen sie darueber und schoben ihn um 63 px nach unten - genau unter
+     dem Finger, der gerade getippt hatte. Jetzt erscheint die Antwort dort,
+     wo man hinsieht, und nichts bewegt sich. */
+  if (ui.authError) html += '<div class="error-box auth-meldung" role="alert">' + ikon("warnung", "i-sm") +
+    '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
+  if (ui.authInfo) html += '<div class="info-box auth-meldung" role="status">' + ikon("haken", "i-sm") +
+    '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
 
   /* Offene Frage 13: Google/Apple als zusaetzliche Anmeldearten, nur dort
      sinnvoll, wo tatsaechlich ein Konto entsteht bzw. man sich anmeldet -
@@ -6577,7 +6587,7 @@ function renderAuth() {
       name.removeAttribute("aria-invalid");
       name.removeAttribute("aria-describedby");
       const fehlerEl = document.getElementById("a-name-fehler");
-      if (fehlerEl) fehlerEl.remove();
+      if (fehlerEl) { fehlerEl.classList.remove("opt--fehler"); fehlerEl.textContent = "\u2013 wird in der App angezeigt"; }
     }
   });
 }

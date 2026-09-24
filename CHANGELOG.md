@@ -1,3 +1,21 @@
+## 3.17.2 - 24. September 2026
+
+**Prüfschleife, Station 3 (Anmelden).**
+
+- **Eine Fehlermeldung schiebt den Knopf nicht mehr weg.** „E-Mail oder
+  Passwort stimmt nicht" stand über dem Formular und drückte Felder und
+  Anmelde-Knopf um 63 px nach unten – der Daumen traf danach daneben. Die
+  Meldung steht jetzt unter dem Knopf, genau dort, wo man hinschaut.
+- **Die Karte schüttelt einmal kurz**, wenn eine neue Fehlermeldung kommt –
+  man merkt auch aus dem Augenwinkel, dass es nicht geklappt hat. Bei
+  derselben Meldung ein zweites Mal nicht erneut.
+- **Leerer Name:** Der Hinweis steht in der Beschriftung („Name – bitte
+  ausfüllen", rot) statt als eigene Zeile darunter, die das Formular um
+  30 px verlängerte.
+- Geprüft ohne Befund: Kontrast (hell/dunkel), Passwort-Auge behält die
+  Eingaben, „Passwort vergessen" zeigt die Bestätigung, keine waagerechte
+  Scrollleiste – auf Handy, kleinem Handy und iPad.
+
 ## 3.17.1 - 24. September 2026
 
 **Prüfschleife, Station 2 (Einstieg).**

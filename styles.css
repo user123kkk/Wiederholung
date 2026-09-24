@@ -4898,3 +4898,15 @@ button.ghost::after, button.linklike::after, button.tiny-link::after, a.linklike
 .erinnerung-eigene { margin-top: var(--space-4); }
 .erinnerung-eigene__reihe { display: flex; gap: var(--space-2); }
 .erinnerung-eigene__reihe input { flex: 1 1 auto; min-width: 0; }
+
+/* 3.17.2: Anmeldung - Meldung unter dem Knopf, kurzes Schuetteln bei Fehler. */
+.auth-meldung { margin: var(--space-3) 0 0; animation: enter-rise 280ms var(--ease-out) both; }
+.auth-wackeln { animation: auth-wackeln 420ms var(--ease-out); }
+@keyframes auth-wackeln {
+  0%, 100% { transform: none; }
+  15% { transform: translateX(-8px); }
+  35% { transform: translateX(7px); }
+  55% { transform: translateX(-4px); }
+  75% { transform: translateX(2px); }
+}
+label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); font-weight: 600; }
