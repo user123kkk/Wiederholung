@@ -1,3 +1,49 @@
+## 3.17.22 – 24. September 2026
+
+**Einstieg: die Beispielkarte dreht nur noch einmal, die „Analyse" dauert
+länger, die Pfeilreihe sieht aus wie gezeichnet – und der Werbesatz ist weg.**
+
+- **„Kostenlos. Keine Werbung, keine Cookies." ist ersatzlos gestrichen.**
+  Betreiber: „entferne dieses kostenlos. keine werbung.. komplett". Der letzte
+  Bildschirm endet damit mit einer Handlung und ohne Werbeton. Was ohne Konto
+  gespeichert wird, steht weiterhin in der Datenschutzerklärung. Auch die
+  zugehörige Regel `.einstieg-vertrauen` ist aus `styles.css` entfernt.
+- **Die Beispielkarte auf dem ersten Bildschirm dreht sich nur noch EINMAL.**
+  Bisher lief eine Hin-und-zurück-Animation: das arabische Wort, kurz die
+  Übersetzung, dann wieder das arabische Wort. Wer nicht genau hinsah, sah die
+  Übersetzung nur aufblitzen. Jetzt steht das Wort 2,4 s ruhig da, dann dreht
+  die Karte einmal – und bleibt auf „Buch" stehen. Antippen dreht wie bisher
+  jederzeit hin und her; wer vorher tippt, hat die Karte übernommen und der
+  automatische Dreh fällt aus. Technisch: keine `@keyframes` mehr, sondern ein
+  Klassenwechsel (`--hinten`) nach der Haltezeit. Damit ist der sichtbare
+  Zustand immer derselbe wie der gespeicherte – der Reflow-Kniff aus 3.17.21
+  wird nicht mehr gebraucht und ist entfallen.
+- **„Dein Plan entsteht …" dauert länger.** Betreiber: „lass diese analyse
+  länger dauern damit es rüberkommt als wäre seine analyse wertvoll." Takt
+  560 → 700 ms je Punkt, Vorlauf 420 → 620 ms, Nachlauf 700 → 900 ms; bei sechs
+  Punkten rund 5,7 s statt 4,5 s. Jeder Punkt steht jetzt knapp eine Sekunde
+  für sich, statt dass die Liste durchrattert.
+- **Die Pfeilreihe („der Weg eines Wortes") sieht aus wie UI, nicht wie
+  zusammengesetzt.** Die Spitze saß mit ihrer Ecke auf dem nächsten Punkt und
+  war dicker als die Linie. Jetzt: dünnere Linie mit runden Enden (1,5 px),
+  gleiche Strichstärke für Linie und Spitze, und die Spitze steht frei vor dem
+  nächsten Punkt statt in ihm.
+- **Weniger Energie, weniger Wartezeit in den Animationen.** Betreiber: „ob die
+  animation to much ist … ich finde zu langsam und die energie könnte ein
+  ticken runter geschraubt werden". Die Punkte der Leiste und der Leiter
+  kommen ohne Nachfedern herein (eigenes `einstieg-punkt-ruhig` statt des
+  Sprungs über die Zielgröße), im Takt von 130 statt 190 bzw. 170 ms; das
+  Aufleuchten am Ziel läuft einmal statt zweimal; die Leiste auf Bildschirm 1
+  startet 1150 statt 1750 ms nach dem Aufbau, weil sie nicht mehr auf die alte
+  Doppeldrehung warten muss. Die Drehung selbst ist ruhiger: 560 ms, gleichmäßig,
+  ohne den Maßstabssprung der alten Animation; der Lichtstreif über der
+  Übersetzung ist schwächer und hängt jetzt an der Drehung statt an einer
+  festen Verzögerung.
+- Geprüft mit `plan/werkzeuge/pruefstand/t_hero_dreh.js` (auf das neue
+  Verhalten umgeschrieben): vor der Haltezeit steht die Karte auf Arabisch,
+  danach von selbst auf der Übersetzung, und beide folgenden Tipps lösen eine
+  echte Drehung aus.
+
 ## 3.17.21 - 24. September 2026
 
 **Zwei echte Fehler aus der Betreiber-Rückmeldung zu v3.17.20 behoben.**

@@ -774,7 +774,26 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026, spätabends): v3.17.21 auf `main` – zwei echte Fehler
+**AKTUELL (24.09.2026, spätnachts): v3.17.22 auf `main` – fünf Punkte aus der
+Betreiber-Rückmeldung zu v3.17.21 umgesetzt.**
+
+- **„Kostenlos. Keine Werbung, keine Cookies." ist komplett gestrichen**
+  (Betreiber: „entferne dieses kostenlos. keine werbun.. komplett"), samt der
+  CSS-Regel dazu.
+- **Die Beispielkarte auf Bildschirm 0 dreht sich nur noch einmal** und bleibt
+  auf der Übersetzung stehen (2,4 s Haltezeit davor). Das Hin-und-zurück ließ
+  die Übersetzung nur aufblitzen.
+- **„Dein Plan entsteht …" dauert länger** (rund 5,7 s statt 4,5 s bei sechs
+  Punkten) – ausdrücklich gewollt: „damit es rüberkommt als wäre seine
+  Analyse wertvoll".
+- **Pfeilreihe und Bewegung überarbeitet:** dünnere Linie mit runden Enden,
+  Spitze frei vor dem nächsten Punkt; Punkte ohne Nachfedern, schnellerer
+  Takt, Aufleuchten einmal statt zweimal.
+- **Offen (nur am Gerät zu beurteilen):** ob Haltezeit, Analysedauer und Tempo
+  jetzt stimmen. Alle Zahlen dafür stehen an einer Stelle
+  (`EINSTIEG_BAU_*`, `EINSTIEG_HERO_HALTEN_MS` in `app.js`).
+
+**Davor (24.09.2026, spätabends): v3.17.21 auf `main` – zwei echte Fehler
 aus der Rückmeldung zu v3.17.20 behoben.**
 
 - **Einstieg-Karte:** der erste Tipp nach der Intro-Drehung sprang ohne

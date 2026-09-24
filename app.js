@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.21";
+const APP_VERSION = "3.17.22";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1477,6 +1477,8 @@ let ui = {
      Anmeldeformular (einstiegWieder). Nur im Speicher. */
   einstiegZurueck: null,
   einstiegTimer: null,
+  /* 3.17.22: Timer fuer die eine Drehung der Beispielkarte auf Bildschirm 0. */
+  heroTimer: null,
   /* 3.12.0: true, sobald man sich abgemeldet selbst fuer das Formular
      entschieden hat ("Ich habe schon ein Konto", "Plan speichern"). Solange
      es false ist, zeigt render() abgemeldet den Einstieg. Wird bei jeder
@@ -5725,18 +5727,27 @@ function einstiegProbe(groesse) {
    Aktion, bevor irgendetwas gefragt wird.
    3.17.20 (offene Frage 16, Betreiber-Bedenken 24.09.2026: "wenn man slow
    ist ist das verpasst, [...] die karte drehen kann wann man will"): Die
-   Karte ist jetzt ein echter <button> und laesst sich jederzeit antippen -
-   auch bei reduzierter Bewegung, wo sie automatisch gar nicht mehr dreht
-   (styles.css Abschnitt 16b) und Antippen der einzige Weg zur Uebersetzung
-   ist. intro = true nur beim frischen Ankommen auf Schritt 0 (renderEinstieg,
-   Variable neu): loest die einmalige Hin-und-zurueck-Drehung aus; der
-   Klick-Handler entfernt die Klasse dafuer sofort (kein render(), reine
-   DOM-Aenderung wie bei einstieg-ziel/-huerde), damit die anschliessende
-   manuelle Drehung sauber per CSS-transition uebernimmt, ohne mit der noch
-   "gehaltenen" Animation zu ringen. */
-function einstiegHero(hinten, intro) {
+   Karte ist ein echter <button> und laesst sich jederzeit antippen - auch bei
+   reduzierter Bewegung, wo sie sich automatisch gar nicht dreht.
+
+   3.17.22 (Betreiber 24.09.2026: "soll kitaab nicht einmal ins deutsche nur
+   damit es direkt wieder in arabische umgedreht wird. einfach kitaab lang
+   genug angezeigt lassen, dann ins deutsche, es soll ja alles vom user
+   verfolgt werden koennen"): Die Karte dreht sich nur noch EINMAL und bleibt
+   dann auf Deutsch stehen. Vorher lief eine Hin-und-zurueck-Animation
+   (@keyframes einstieg-dreh-hin-zurueck), die am Ende wieder auf Arabisch
+   stand - wer hinsah, sah die Uebersetzung aufblitzen und verschwinden.
+
+   Wie: kein @keyframes mehr, sondern nach EINSTIEG_HERO_HALTEN_MS setzt
+   renderEinstieg die Klasse --hinten. Damit ist das, was man sieht, genau der
+   Zustand in e.heroHinten - der erste Tipp dreht deshalb immer sichtbar in
+   die richtige Richtung (der Reflow-Kniff aus 3.17.21 wird nicht mehr
+   gebraucht, weil es keine haltende Animation mehr gibt, gegen die die
+   transition antreten muesste). Antippen vor Ablauf uebernimmt: der Timer
+   faellt dann weg. */
+function einstiegHero(hinten) {
   return '<div class="einstieg-hero">' +
-    '<button type="button" class="einstieg-hero__karte' + (intro ? ' einstieg-hero__karte--intro' : '') +
+    '<button type="button" class="einstieg-hero__karte' +
       (hinten ? ' einstieg-hero__karte--hinten' : '') + '" data-action="einstieg-hero-dreh" ' +
       'aria-pressed="' + (hinten ? 'true' : 'false') + '" aria-label="Beispielkarte umdrehen">' +
       '<div class="einstieg-hero__dreh">' +
@@ -5990,9 +6001,14 @@ function einstiegWeiterPruefen() {
    Was NICHT dazukommt: eine Prozentzahl, eine Rechnung, eine Wirkungszusage.
    Jeder Punkt ist etwas, das gleich wirklich so eingestellt ist
    (NEUAUFBAU-3.md Abschnitt 5). */
-const EINSTIEG_BAU_SCHRITT_MS = 560;    // Abstand von einem Punkt zum naechsten
-const EINSTIEG_BAU_VORLAUF_MS = 420;    // bis der erste Punkt steht
-const EINSTIEG_BAU_NACHLAUF_MS = 700;   // der letzte Punkt darf einen Moment stehen
+/* 3.17.22: laenger. Betreiber 24.09.2026: "lass diese analyse laenger dauern
+   damit es rueberkommt als waere seine analyse wertvoll." Mit sechs Punkten
+   sind das jetzt rund 5,7 s statt 4,5 s - jeder Punkt steht knapp eine
+   Sekunde fuer sich, statt dass die Liste durchrattert. Laenger als das wird
+   Warten statt Wert. */
+const EINSTIEG_BAU_SCHRITT_MS = 700;    // Abstand von einem Punkt zum naechsten
+const EINSTIEG_BAU_VORLAUF_MS = 620;    // bis der erste Punkt steht
+const EINSTIEG_BAU_NACHLAUF_MS = 900;   // der letzte Punkt darf einen Moment stehen
 function einstiegBauListe(e) {
   const punkte = [];
   const ziel = EINSTIEG_ZIELE.filter(z => e.ziele.includes(z.id)).map(z => z.kurz).join(", ");
@@ -6022,6 +6038,13 @@ function einstiegBewegungReduziert() {
 function einstiegTimerStoppen() {
   if (ui.einstiegTimer) { clearTimeout(ui.einstiegTimer); ui.einstiegTimer = null; }
 }
+/* 3.17.22: Die Karte auf Bildschirm 0 dreht sich nicht mehr per CSS-Animation,
+   sondern nach dieser Haltezeit per Klassenwechsel - deshalb ein eigener
+   Timer, der beim Verlassen des Bildschirms und beim ersten Antippen faellt. */
+const EINSTIEG_HERO_HALTEN_MS = 2400;
+function heroTimerStoppen() {
+  if (ui.heroTimer) { clearTimeout(ui.heroTimer); ui.heroTimer = null; }
+}
 
 function einstiegKachel(titel, wert, i) {
   return '<div class="einstieg-kachel" style="--i:' + i + '">' +
@@ -6038,6 +6061,7 @@ function renderEinstieg() {
   /* Beim Verlassen des Plan-Bildschirms waehrend des Aufbaus darf der Timer
      nicht nachtraeglich den Plan zeichnen. */
   if (e.schritt !== EINSTIEG_LETZTER) einstiegTimerStoppen();
+  if (e.schritt !== 0) heroTimerStoppen();
   if (e.schritt === EINSTIEG_LETZTER && !e.planGebaut && einstiegBewegungReduziert()) e.planGebaut = true;
   const aufbau = e.schritt === EINSTIEG_LETZTER && !e.planGebaut;
 
@@ -6058,7 +6082,7 @@ function renderEinstieg() {
     html += '<h1>Du hast es gelernt. Und es ist weg.</h1>';
     html += '<p class="subtitle">Die Wörter von letzter Woche. Die Lektion von letztem Monat. ' +
       'Nicht, weil du zu langsam bist – sondern weil du sie nie wieder gesehen hast.</p>';
-    html += einstiegHero(e.heroHinten, neu);
+    html += einstiegHero(e.heroHinten);
     html += '<p class="hint einstieg-hero__text">Adrabic bringt dir jedes Wort zurück. In wachsenden Abständen, ' +
       'so lange, bis es sitzt.</p>';
     html += einstiegFuss("Meinen Plan erstellen", null, "einstieg-aktion--glanz");
@@ -6241,13 +6265,12 @@ function renderEinstieg() {
       '<span><strong>Kartensatz per Code.</strong> Hat dir jemand einen Code gegeben, ' +
       'stehen seine Lektionen bei dir fertig da.</span></div>';
     html += '</div>';
-    /* 3.17.1: "kein Tracking" stimmt seit der (abschaltbaren) anonymen
-       Nutzungsstatistik nicht mehr woertlich - hier steht nur, was ohne
-       Einschraenkung gilt (Datenschutzerklaerung Punkt 10 und 15).
-       3.17.21: als "zusatz" INNERHALB des stehenden Knopf-Blocks (siehe
-       Kommentar bei einstiegFuss) statt als eigener Absatz danach. */
-    html += einstiegFuss("Plan speichern", "einstieg-fertig", "einstieg-aktion--glanz einstieg-aktion--spaet",
-      '<p class="einstieg-vertrauen">Kostenlos. Keine Werbung, keine Cookies.</p>');
+    /* 3.17.22: Die Zeile "Kostenlos. Keine Werbung, keine Cookies." ist hier
+       ersatzlos gestrichen (Betreiber 24.09.2026: "entferne dieses kostenlos.
+       keine werbung.. komplett"). Der letzte Bildschirm endet damit mit EINER
+       Handlung und ohne Werbesatz; was ohne Konto gespeichert wird, steht
+       weiterhin in der Datenschutzerklaerung. */
+    html += einstiegFuss("Plan speichern", "einstieg-fertig", "einstieg-aktion--glanz einstieg-aktion--spaet");
   }
 
   html += '</div></div>';
@@ -6258,6 +6281,23 @@ function renderEinstieg() {
   /* Neuer Bildschirm: Fokus auf die Ueberschrift, damit ein Bildschirmleser
      ihn ansagt - statt auf dem body stehen zu bleiben, wo der gedrueckte
      Knopf eben verschwunden ist. */
+  /* 3.17.22: die eine Drehung der Beispielkarte. Erst steht das arabische
+     Wort lange genug, damit man es wirklich gesehen hat, dann kommt die
+     Uebersetzung - und bleibt. Bei reduzierter Bewegung dreht nichts von
+     selbst; dort ist Antippen der Weg (wie bisher). */
+  if (e.schritt === 0 && neu) {
+    heroTimerStoppen();
+    if (!einstiegBewegungReduziert()) {
+      ui.heroTimer = setTimeout(() => {
+        ui.heroTimer = null;
+        const karte = document.querySelector(".einstieg-hero__karte");
+        if (!karte || ui.einstieg !== e || e.schritt !== 0 || e.heroHinten) return;
+        e.heroHinten = true;
+        karte.classList.add("einstieg-hero__karte--hinten");
+        karte.setAttribute("aria-pressed", "true");
+      }, EINSTIEG_HERO_HALTEN_MS);
+    }
+  }
   if (neu && e.schritt > 0) {
     const h = app.querySelector(".einstieg h1");
     if (h) {
@@ -6283,6 +6323,7 @@ function renderEinstieg() {
    F7): wer sich abmeldet, ist kein Neuling. */
 function einstiegBeenden(satz) {
   einstiegTimerStoppen();
+  heroTimerStoppen();
   ui.authGewaehlt = true;
   nachklangSetzen(satz || "");
   /* 3.10.3: Rueckweg. Betreiber: "was wenn man aber zurueck will zu plan
@@ -11793,30 +11834,23 @@ document.body.addEventListener("click", e => {
     /* 3.17.21: Bildschirm 1, Karte manuell drehen - jederzeit, beliebig oft.
        KEIN render(): #app.innerHTML wuerde das Element neu bauen und die
        CSS-transition fuer die Drehung liefe ins Leere (nur an bestehenden
-       Elementen wirksam, LEHREN.md). Die Intro-Klasse (einmalige
-       Hin-und-zurueck-Animation) wird beim ersten Antippen entfernt, damit
-       sie die manuelle Drehung nicht mehr ueberschreibt (siehe Kommentar bei
-       einstiegHero).
+       Elementen wirksam, LEHREN.md).
 
-       Echter Fund (Betreiber-Meldung 24.09.2026, "fehler fehler fehler"):
-       Erster Tipp sprang OHNE Drehung direkt auf "Buch", erst der ZWEITE
-       Tipp drehte sich sichtbar. Ursache: --intro entfernen (beendet die
-       haltende Animation) und --hinten setzen (neues Transform-Ziel) liefen
-       im selben synchronen Durchlauf - der Browser berechnet daraus direkt
-       den Endzustand, ohne je einen "settled" Zwischenstand ohne Animation
-       zu rendern, an dem die CSS-transition ansetzen koennte. Sie greift
-       nur, wenn zwischen "alter Wert" und "neuer Wert" tatsaechlich ein
-       eigener Stil-Durchlauf lag. Fix: nach dem Entfernen von --intro einen
-       Reflow erzwingen (offsetWidth lesen), ERST DANACH --hinten setzen -
-       nur beim allerersten Antippen noetig, wenn --intro ueberhaupt noch
-       da war. */
+       3.17.22: Der Reflow-Kniff von 3.17.21 ist weg, weil seine Ursache weg
+       ist. Damals lief eine haltende Intro-Animation (--intro); sie zu
+       beenden und im selben Durchlauf das neue Ziel zu setzen ergab fuer den
+       Browser direkt den Endzustand, ohne Zwischenstand, an dem die
+       transition haette ansetzen koennen - der erste Tipp sprang deshalb
+       ohne Drehung ("fehler fehler fehler", Betreiber 24.09.2026). Seit die
+       eine Drehung selbst ueber --hinten laeuft, gibt es keine Animation
+       mehr, gegen die die transition antreten muesste. */
     case "einstieg-hero-dreh": {
       const e = ui.einstieg;
       if (!e) break;
+      /* Wer selbst tippt, hat die Karte uebernommen - die automatische
+         Drehung darf ihm danach nicht mehr dazwischenfahren. */
+      heroTimerStoppen();
       e.heroHinten = !e.heroHinten;
-      const hatteIntro = btn.classList.contains("einstieg-hero__karte--intro");
-      btn.classList.remove("einstieg-hero__karte--intro");
-      if (hatteIntro) void btn.offsetWidth;  // Reflow erzwingen, siehe Kommentar oben
       btn.classList.toggle("einstieg-hero__karte--hinten", e.heroHinten);
       btn.setAttribute("aria-pressed", e.heroHinten ? "true" : "false");
       break;
