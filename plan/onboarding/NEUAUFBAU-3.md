@@ -1,5 +1,21 @@
 # Neuaufbau des Einstiegs nach Video 3 (v3.10.0)
 
+> **Nachtrag v3.10.3 (24.09.2026), nach Rückmeldung des Betreibers:**
+> - **Keine Zahlen und kein Datum mehr.** Leiste und Plan zeigen den Weg
+>   „neu → besser → gut → sitzt" mit sich füllenden Punkten. Abschnitt 4
+>   (Bildschirm 1, 4, 8) ist in diesem Punkt überholt; `EINSTIEG_WEG` in
+>   `app.js` ist maßgeblich.
+> - **„Überspringen" ist entfernt**, auf ausdrücklichen Wunsch. Der einzige Weg
+>   am Einstieg vorbei ist „Ich habe schon ein Konto".
+> - **Neu ist ein Aufbau-Bildschirm vor dem Plan** („Dein Plan entsteht …").
+>   Dazu kommt ein Rückweg aus dem Anmeldeformular, und der Wenn-dann-Satz
+>   steht nicht mehr unter „Plan speichern".
+> - **Wortlaut:** „Quran und Sunnah verstehen" (Betreiber). Damit ist Punkt 3
+>   in Abschnitt 9 erledigt. Die Hürde zur Schrift heißt jetzt „Ich lese
+>   Arabisch noch schlecht oder gar nicht".
+>
+> Einzelheiten: `LOGBUCH.md`, Eintrag vom 24.09.2026.
+
 Angelegt: 23. September 2026. Ersetzt für den gebauten Ablauf
 [`WORTLAUT.md`](WORTLAUT.md) (Stand v3.9.9–3.9.12). Die früheren Dateien bleiben
 als Herleitung stehen.

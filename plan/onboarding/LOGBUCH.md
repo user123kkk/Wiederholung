@@ -4,6 +4,125 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-24 — Rückmeldung des Betreibers umgesetzt, mehr Bewegung (v3.10.3)
+
+**Geändert:**
+- `app.js`:
+  - `EINSTIEG_ZIELE`, `EINSTIEG_HUERDEN` (Wortlaut)
+  - neu `EINSTIEG_WEG`; `einstiegLeiste()` und `einstiegLeiter()` neu, ohne
+    Zahl und Datum
+  - `einstiegFuss()` ohne „Überspringen"
+  - neu `einstiegBauListe()`, `einstiegZeitpunkt()`,
+    `einstiegBewegungReduziert()`, `einstiegTimerStoppen()`,
+    `einstiegWieder()`
+  - `renderEinstieg()` neu: Aufbau-Bildschirm, Klassen für die Bewegungen
+  - Klick-Zweige: `einstieg-ueberspringen` entfernt, `einstieg-wieder` neu,
+    `einstieg-konto` merkt sich den Stand
+  - `renderAuth()`: Rückweg oben, kein Wenn-dann-Satz mehr, Nebenweg
+    „Ich habe schon ein Konto"
+  - neue Felder in `ui`: `einstiegZurueck`, `einstiegTimer`
+- `styles.css`: Abschnitt 16b neu; dazu `.auth-trenner`, `.card label .opt`
+  und `.auth-nebenwege` (Kontrast und Trefferfläche im Anmeldeformular)
+- `index.html`, `sw.js`, `CHANGELOG.md`: Versionsliste vollständig auf 3.10.3.
+  `APP_SHELL` unverändert, keine neue Startdatei.
+
+**Anlass (Betreiber, 23.09. abends, gekürzt):**
+- „die werden nichts mit den zahlen anfangen, vielmehr könnte man meine
+  methodik kopieren. zeitstrahl gut"
+- „statt die zahlen … pfeile … mit fortschrittszeichen … schlecht besser …
+  beim letzten gut oder sitzt"
+- „diese überspringen knopf muss ganz schnell weg"
+- zur Hürde „vergessen" die Antwort mit Tagen: „nicht befriedigend"
+- „eine realistische antwort wäre, ich kann nicht oder schlecht lesen"
+- zum Plan: „soo tuff aber wieder dieses datum"
+- zum Wenn-dann-Satz unter „Plan speichern": „fehl am platz … doppelt
+  gemoppelt"
+- „was wenn man aber zurück will zu plan speichern oder nochmal von neu"
+- „effekte alles hochdingsen … denk nicht dass ich die animationen nicht
+  bemerkt habe"
+
+**Entscheidungen:**
+1. **Weg statt Zahlen.** Punkte, die sich über die Lernstufen-Rampe der App
+   füllen (`--stufe-0` bis `--accent`), Pfeile dazwischen, darunter „neu ·
+   besser · gut · sitzt". Die wachsenden Abstände kommen weiter aus
+   `intervalForStufe()` (Wurzel), sind aber nicht lesbar. Die Plan-Leiter nennt
+   grobe Zeiten. Sie sind gegen die Formel geprüft: 1 Tag = „morgen", 1+2 =
+   „in ein paar Tagen", 1+2+3 = „nach etwa einer Woche", danach +6 = „eine
+   Woche danach".
+2. **„Überspringen" entfernt**, wie verlangt. Die frühere Begründung
+   (Grammarly-Muster, `PSYCHOLOGIE.md` §4) war die eigene Regel des Agenten.
+   Kein Dark Pattern entsteht: Keine Frage ist Pflicht, Zurück steht überall,
+   wer ein Konto hat, nimmt Bildschirm 1.
+3. **Rückweg:** Der Stand des Einstiegs bleibt im Speicher (`einstiegZurueck`).
+   „Zurück zum Plan" stellt ihn her und löscht Merker und Nachklang, bis wieder
+   „Plan speichern" gedrückt wird. Das gilt auch nach „Ich habe schon ein
+   Konto", falls der Knopf aus Versehen gedrückt wurde.
+4. **Aufbau-Bildschirm „Dein Plan entsteht …"** (Cal AI). Er hakt nur echte
+   Einstellungen ab, zeigt keine Prozentzahl und dauert 2,3 s. Er erscheint
+   einmal je Durchlauf und nie bei „Bewegung reduzieren".
+5. **Bewegungen** nach der Liste im Changelog. Jede läuft einmal, das
+   Aufleuchten höchstens zweimal. Alle sind in `prefers-reduced-motion`
+   abgefangen.
+6. **Wortlaut:**
+   - „Quran und Sunnah verstehen" (Wortlaut des Betreibers). Damit ist der
+     offene Punkt „Den Quran verstehen prüfen" erledigt.
+   - Die Hürde zur Schrift heißt jetzt „Ich lese Arabisch noch schlecht oder
+     gar nicht". Die Antwort darauf: Buchstaben als Karten, das Wort-Feld
+     nimmt jeden Text.
+   - Das Ziel-Echo nennt geteilte Kartensätze (Betreiber will seine Karteien
+     später freigeben; für Lehrkräfte gibt es Datei und Code schon heute).
+     Aneinandergereiht wird mit „sowie", weil „Quran und Sunnah" schon ein
+     „und" hat.
+7. **„in shā' Allāh" oder „bi-idhnillāh" am Ziel „sitzt": NICHT eingebaut.**
+   Der Betreiber war selbst unsicher („vielleicht lassen wir des auch") und
+   fragte, welcher Begriff passt. Eine religiöse Formel setzt der Agent nicht
+   (`WORTLAUT.md` §0). Das ist eine Zeile, wenn der Betreiber sie will.
+
+**Beim Prüfen gefunden und behoben:**
+- **Die Blume im Aufbau-Ring** wurde von der Ring-Regel (`svg`) mitgedreht
+  und auf 108 px gezogen. Selektor auf `svg:not(.i)` eingegrenzt.
+- **„sitzt" stand 5 px tiefer** als die anderen Worte, weil der Zielpunkt
+  größer ist. Jetzt wird von der Punktmitte aus gemessen; alle vier stehen
+  auf 462 px.
+- **Im Ziel-Echo stand „aus dem Quran und der Sunnah und deinem eigenen
+  Stoff".** Jetzt heißt es „aus Quran und Sunnah sowie …".
+- **Im Anmeldeformular (älter als der Einstieg):**
+  - der Nebenweg-Link war 36 px hoch
+  - Kontrast 4,45:1 bei „– wird in der App angezeigt", „– mindestens
+    6 Zeichen" und „oder"
+
+  Beides ist behoben wie im Einstieg (v3.10.1).
+
+**Geprüft im Browser** (lokaler Server, 375 und 320 px, dunkel und hell):
+- alle Bildschirme samt Aufbau
+- Rückweg aus „Plan speichern" (Plan kommt ohne erneuten Aufbau, Anker bleibt
+  gewählt)
+- Rückweg aus „Ich habe schon ein Konto"
+- kein „Überspringen" mehr im DOM
+- Mess-Durchlauf: Überlauf, Trefferflächen, Kontrast; keine Exceptions
+
+Der Test meldete die Worte unter der Leiste zuerst mit Kontrast 1,0 bis 1,6.
+Das war ein Messfehler: Er rechnete den gefüllten Punkt als Hintergrund, die
+Worte stehen aber darunter auf der Seite. Der Test ist korrigiert.
+
+**Nicht geprüft:**
+- `prefers-reduced-motion` (nur per CSS-Regel und `matchMedia` abgesichert)
+- echtes Konto
+- das echte Gerät
+
+**Offen:**
+1. Gerätetest
+2. J1
+3. Formel am Ziel ja/nein (Betreiber)
+4. Idee des Betreibers, seine Kartei bald öffentlich im Werkzeug
+   freizuschalten. Nur vermerkt: Das ist kein Einstiegs-Punkt, sondern die
+   Frage 2.1 der Landing-Page-Strategie (Kartensatz des Betreibers).
+
+**Nächster Schritt:** Der Betreiber führt `veroeffentlichen.bat` aus und
+testet am Gerät.
+
+---
+
 ### 2026-09-23 (dieselbe Session, abends) — Fehlersuche nach dem Neubau (v3.10.1, v3.10.2)
 
 **Geändert (v3.10.1; der Theme-Fix v3.10.2 steht weiter unten):**

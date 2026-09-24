@@ -1,3 +1,45 @@
+## 3.10.3 - 24. September 2026
+
+**Einstieg nach der Rückmeldung des Betreibers überarbeitet – ohne Zahlen,
+ohne „Überspringen", mit mehr Bewegung.**
+
+- **Keine Tageszahlen und kein Datum mehr.** Die Leiste auf Bildschirm 1 und
+  nach „Sicher" zeigte 1 · 2 · 3 · 6 · 10 · 19 Tage, der Plan echte
+  Kalendertage. Betreiber: Damit fängt niemand etwas an, und die Methode ließe
+  sich abschreiben. Jetzt zeigen Punkte, die sich von „neu" über „besser" und
+  „gut" bis „sitzt" füllen, mit Pfeilen dazwischen, dass ein Wort immer
+  seltener kommt; der Plan nennt grobe Zeiten („morgen", „in ein paar Tagen",
+  „nach etwa einer Woche"). Die wachsenden Abstände kommen weiter aus
+  `intervalForStufe()`, sind aber nirgends als Zahl zu lesen. Auch die Antwort
+  auf „Ich vergesse Wörter schnell wieder" nennt keine Tage mehr.
+- **„Überspringen" ist entfernt.** Wer ein Konto hat, nimmt „Ich habe schon
+  ein Konto" auf dem ersten Bildschirm. Keine Frage ist Pflicht, „Weiter" geht
+  immer, Zurück steht überall.
+- **Rückweg aus dem Anmeldeformular.** „Zurück zum Plan" bzw. „Zurück zum
+  Einstieg" oben im Formular führt an die Stelle, von der man kam, samt allen
+  Antworten. Unten heißt es nach dem Einstieg „Ich habe schon ein Konto" statt
+  „Zurück zur Anmeldung" – man war nie in der Anmeldung.
+- **Unter „Plan speichern" steht der Wenn-dann-Satz nicht mehr.** Er wirkte
+  doppelt neben „Kostenlos. Einmal anlegen – dann ist dein Plan gespeichert."
+- **Neu: „Dein Plan entsteht …"** (Cal AI). Ein Ring füllt sich, die echten
+  Einstellungen haken sich nacheinander ab, dann erscheint der Plan von
+  selbst. Keine Prozentzahl. Nur beim ersten Mal, nicht bei „Bewegung
+  reduzieren".
+- **Mehr Bewegung, jede genau einmal:** Antwortzeilen kommen nacheinander
+  herein, eine gewählte Zeile leuchtet auf und ihr Zeichen springt; die
+  Antworten der App schreiben sich von links auf; die Probekarte lädt mit einem
+  Puls zum Antippen ein, klappt beim Aufdecken um und leuchtet nach der
+  Bewertung; die Serien-Flamme flackert; der Wenn-dann-Satz baut sich bei jeder
+  Wahl neu auf; auf dem Plan zeichnet sich der Haken selbst, die Kacheln
+  springen herein, die Leiter zeichnet sich von oben nach unten und ihr Ziel
+  „sitzt" leuchtet auf; über den Hauptknopf läuft einmal ein Lichtstreif.
+- **Wortlaut:** „Quran und Sunnah verstehen" (Wortlaut des Betreibers). Die
+  Hürde zur Schrift heißt jetzt „Ich lese Arabisch noch schlecht oder gar
+  nicht" und hat eine echte Antwort: Buchstaben lassen sich wie Wörter als
+  Karten anlegen. Das Echo auf dem Ziel-Bildschirm nennt geteilte Kartensätze.
+  Behoben: Bei „Etwas anderes" stand „die du gerade lernst – aus dem, was du
+  gerade lernst".
+
 ## 3.10.2 - 23. September 2026
 
 **Das helle Thema springt beim Start nicht mehr kurz auf dunkel.** `app.js`
