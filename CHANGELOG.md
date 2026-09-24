@@ -1,3 +1,31 @@
+## 3.13.0 - 24. September 2026
+
+**Zustände, die stimmen – aufgeräumte Einstellungen – ein ruhiger
+Startbildschirm.** Betreiber: „Würde niemals stufe 6 als fest dingsen [...]
+hicks law oder simple, in den settings ist ja viel unnötiges [...] perfektes
+lade bildschirm. Sowas wie karten werden gebildet ist unnötig."
+
+- **Sechs Zustände statt fünf, an der Gedächtnisforschung geschnitten:**
+  neu · im Lernen · frisch gelernt · wird fester · gefestigt · dauerhaft.
+  „fest" hieß bisher schon eine Karte, die nach knapp drei Wochen zum ersten
+  Mal wiederkam – „gefestigt" beginnt jetzt erst da, wo auch Anki und SuperMemo
+  eine Karte „reif" nennen, und für den halbjährlichen Deckel gibt es ein
+  eigenes Wort („dauerhaft", in Gold). Die genauen Grenzen stehen nur im Code
+  (`KARTEN_ZUSTAENDE`), nicht in der App. Üben-Auswahl, Karte bearbeiten,
+  Fortschritt und der Einstieg benutzen dieselben Wörter. Die Lernlogik ist
+  unverändert.
+- **Einstellungen: vier Abschnitte, acht Zeilen** (vorher sechs Abschnitte, elf
+  Zeilen). Darstellung ist in „Lernen" aufgegangen; Sichern, Datei einspielen
+  und Aufzeichnung liegen auf einer Seite „Sichern & einspielen"; die
+  Konto-ID ist Kleingedrucktes im Fuß. Nichts ist weggefallen.
+- **Neuer Ladebildschirm:** Zeichen und Name, ruhig in der Mitte, ein goldener
+  Hof atmet dahinter. Kein Text mehr. Eine feine Linie erscheint nur, wenn es
+  länger als knapp eine Sekunde dauert. Bei langem Laden: „Das dauert gerade
+  länger." und „Neu laden".
+- **iPhone/iPad: Startbilder.** Vom Home-Bildschirm geöffnet, steht jetzt
+  sofort der Startbildschirm da, statt einer leeren Fläche – wie bei einer App
+  aus dem App Store (`/splash/`, `index.html`).
+
 ## 3.12.1 - 24. September 2026
 
 **Keine Zahlen mehr, aus denen sich das System ablesen lässt – und ein neuer

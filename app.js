@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.12.1";
+const APP_VERSION = "3.13.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -832,8 +832,8 @@ function verlaufAufraeumen(roh) {
    laufendes Geraet, das seinen Speicherstand zurueckschreibt. */
 async function verlaufZuruecksetzen() {
   const tage = Object.keys(verlauf).length;
-  const ok = await dlgConfirm("Das Tagesprotokoll von " + tage + " Tag(en) wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an.\n\nKarten, Stufen und Fälligkeiten bleiben unberührt.",
-    { title: "Verlauf zurücksetzen?", okLabel: "Löschen", danger: true });
+  const ok = await dlgConfirm("Das Tagesprotokoll von " + tage + " Tag(en) wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an.\n\nDeine Karten und ihr Lernstand bleiben unberührt.",
+    { title: "Aufzeichnung zurücksetzen?", okLabel: "Löschen", danger: true });
   if (!ok) return;
   if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
   verlauf = {};
@@ -2848,14 +2848,53 @@ function statsCards() {
    und die Plaketten an den Karten.
    Geaendert ist ausschliesslich das Feld "farbe" - id, label, erklaerung
    und test sind unveraendert. */
+/* ---------- 3.13.0: sechs Zustaende, am Gedaechtnis geschnitten ----------
+   Betreiber am 24.09.2026: "sollten zumindest die woerter, neu wackelig und
+   so neu umstrukturiert werden, passender. Wissenschaftlich [...] Wuerde
+   niemals stufe 6 als fest dingsen [...] korrekt, spezifisch und passende
+   namen." Und: "kannst das gerne spezifischer im versteckten code schreiben
+   fuer dich bzw eine ki die ueber den code drueber scannt".
+
+   FUER MENSCHEN steht nur das Wort (label) und ein Satz ohne Zahl
+   (erklaerung). FUER DEN CODE - und jede KI, die ihn liest - die Grenzen:
+
+     id          label            Stufe   Abstand nach Sicher   Einordnung
+     ----------  ---------------  ------  --------------------  ----------------------------
+     neu         neu              -       -                     nie abgefragt (ersteBewertung null)
+     lernen      im Lernen        0       gleich / morgen       abgefragt, gerade nicht gewusst
+     frisch      frisch gelernt   1-3     1, 2, 3 Tage          Kurzzeit: faellt ohne Wiederholung
+                                                                 binnen Tagen weg (Ebbinghaus-Kurve)
+     festigung   wird fester      4-6     6, 10, 19 Tage        Festigung: Abstaende wachsen ueber
+                                                                 eine Woche hinaus
+     gefestigt   gefestigt        7-9     34, 61, 110 Tage      "reif": ab ~3 Wochen Abstand, dieselbe
+                                                                 Schwelle, die Anki/SuperMemo nutzen
+                                                                 (mature = interval >= 21 d)
+     dauerhaft   dauerhaft        10-12   180 Tage (Deckel)     halbjaehrlich, MAX_INTERVAL_DAYS
+
+   Warum so und nicht mehr wie bis 3.12: "fest" begann bei Stufe 6 - das ist
+   ein Abstand von 19 Tagen. Eine Karte, die man zweieinhalb Wochen nach dem
+   letzten Mal zum ersten Mal wieder sieht, ist nicht "fest"; die Forschung
+   zum verteilten Lernen (Cepeda u. a. 2006, Bahrick 1993) zeigt die grossen
+   Gewinne erst bei Abstaenden von Wochen bis Monaten. "gefestigt" beginnt
+   deshalb erst bei 34 Tagen, und fuer den Deckel (180 Tage) gibt es ein
+   eigenes Wort.
+
+   Die Zustaende haengen an der AKTUELLEN Stufe (c.stufe), nicht am
+   Hoechststand: Wer eine gefestigte Karte vergisst ("Nicht" = zwei Stufen
+   zurueck), sieht sie ehrlich wieder weiter vorn. Der Hoechststand
+   (maxStufe) steuert weiterhin nur das Freischalten von Lektionen.
+
+   Die Tests sind ueberschneidungsfrei: neu faengt jede nie bewertete Karte,
+   danach entscheidet allein c.stufe (0 | 1-3 | 4-6 | 7-9 | 10+). Die
+   Ueben-Auswahl und das Bearbeiten-Blatt lesen dieselben Grenzen
+   (UEBEN_GRUPPEN). Farben: die Rampe --stufe-0 bis --stufe-5 (styles.css). */
 const KARTEN_ZUSTAENDE = [
-  { id: "neu",      label: "neu",      erklaerung: "noch nie angesehen",             farbe: "var(--stufe-0)", test: c => istNeueKarte(c) },
-  { id: "gesehen",  label: "gesehen",  erklaerung: "durchgesehen, noch nie gewusst", farbe: "var(--stufe-1)", test: c => !istNeueKarte(c) && (c.maxStufe || 0) === 0 },
-  /* 3.12.1: erklaerung ohne Stufenzahlen ("Stufe 1–2" usw.) - siehe
-     zustandBadge. */
-  { id: "wackelig", label: "wackelig", erklaerung: "schon gewusst, sitzt noch nicht", farbe: "var(--stufe-2)", test: c => (c.maxStufe || 0) > 0 && c.stufe <= 2 },
-  { id: "solide",   label: "solide",   erklaerung: "kommt schon seltener",           farbe: "var(--stufe-3)", test: c => (c.maxStufe || 0) > 0 && c.stufe >= 3 && c.stufe <= 5 },
-  { id: "fest",     label: "fest",     erklaerung: "sitzt",                          farbe: "var(--stufe-4)", test: c => (c.maxStufe || 0) > 0 && c.stufe >= 6 }
+  { id: "neu",       label: "neu",            erklaerung: "noch nie abgefragt",               farbe: "var(--stufe-0)", test: c => istNeueKarte(c) },
+  { id: "lernen",    label: "im Lernen",      erklaerung: "abgefragt, noch nicht gewusst",    farbe: "var(--stufe-1)", test: c => !istNeueKarte(c) && c.stufe <= 0 },
+  { id: "frisch",    label: "frisch gelernt", erklaerung: "gerade gewusst – kommt bald wieder", farbe: "var(--stufe-2)", test: c => !istNeueKarte(c) && c.stufe >= 1 && c.stufe <= 3 },
+  { id: "festigung", label: "wird fester",    erklaerung: "kommt schon seltener",             farbe: "var(--stufe-3)", test: c => !istNeueKarte(c) && c.stufe >= 4 && c.stufe <= 6 },
+  { id: "gefestigt", label: "gefestigt",      erklaerung: "kommt nur noch ab und zu",         farbe: "var(--stufe-4)", test: c => !istNeueKarte(c) && c.stufe >= 7 && c.stufe <= 9 },
+  { id: "dauerhaft", label: "dauerhaft",      erklaerung: "sitzt – kommt nur noch selten",    farbe: "var(--stufe-5)", test: c => !istNeueKarte(c) && c.stufe >= 10 }
 ];
 const STAT_GRUPPEN = KARTEN_ZUSTAENDE;
 /* Der Zustand einer einzelnen Karte. Der erste passende gewinnt; die Tests
@@ -4208,11 +4247,15 @@ function setzeVollenStufenBereich() {
    Intern bleibt es ein Stufenbereich: von/bis sind die Grenzen der
    gewaehlten Zustaende, startDrill() filtert wie bisher nach c.stufe.
    Betreiber am 24.09.2026: "Sachen wie die knoepfe dicher, wo steht in x tagen, diese zahlen entfernen. Kein bock dass man mein system leicht herauskriegen kann." */
+/* 3.13.0: dieselben Grenzen wie KARTEN_ZUSTAENDE. "neu" und "im Lernen"
+   liegen beide auf Stufe 0 und lassen sich nach der Stufe nicht trennen -
+   deshalb ein gemeinsamer Chip. */
 const UEBEN_GRUPPEN = [
-  { label: "neu",      von: 0, bis: 0 },
-  { label: "wackelig", von: 1, bis: 2 },
-  { label: "solide",   von: 3, bis: 5 },
-  { label: "fest",     von: 6, bis: MAX_STUFE }
+  { label: "neu & im Lernen", von: 0,  bis: 0 },
+  { label: "frisch gelernt",  von: 1,  bis: 3 },
+  { label: "wird fester",     von: 4,  bis: 6 },
+  { label: "gefestigt",       von: 7,  bis: 9 },
+  { label: "dauerhaft",       von: 10, bis: MAX_STUFE }
 ];
 function stufenBereichName(von, bis) {
   const g = UEBEN_GRUPPEN.filter(x => x.von <= bis && x.bis >= von);
@@ -5197,12 +5240,19 @@ function einstiegSchrittSichern(e) {
    der App (--stufe-0 bis --stufe-4: mehr Deckkraft = sitzt besser).
    Die Zeitangaben sind grob und stimmen mit der Formel: 1 Tag, dann 2, dann 3
    (zusammen 6 = "etwa eine Woche"), dann 6 (= "eine Woche danach"). */
+/* 3.13.0: dieselben Woerter wie an jeder Karte (KARTEN_ZUSTAENDE). Vorher
+   stand hier "sitzt" nach "eine Woche danach" - dieselbe Uebertreibung, die
+   der Betreiber an "fest ab Stufe 6" bemaengelt hat. Das Ziel der Leiter ist
+   jetzt "gefestigt" nach ein paar Wochen; die letzte Zeile ("bis es
+   dauerhaft sitzt") nennt den Rest ohne Zahl. Die Abstaende zwischen den
+   Punkten kommen weiter aus intervalForStufe(0..4) - nur die Beschriftung
+   der letzten Sprosse ist groeber geworden. */
 const EINSTIEG_WEG = [
-  { wort: "neu",    wann: "heute",                 was: "neu angelegt",  fuellung: "var(--stufe-0)" },
-  { wort: "",       wann: "morgen",                was: "noch wackelig", fuellung: "var(--stufe-1)" },
-  { wort: "besser", wann: "in ein paar Tagen",     was: "wird besser",   fuellung: "var(--stufe-2)" },
-  { wort: "gut",    wann: "nach etwa einer Woche", was: "gut",           fuellung: "var(--stufe-3)" },
-  { wort: "sitzt",  wann: "eine Woche danach",     was: "sitzt",         fuellung: "var(--accent)", ziel: true }
+  { wort: "neu",       wann: "heute",                 was: "neu angelegt",   fuellung: "var(--stufe-0)" },
+  { wort: "",          wann: "morgen",                was: "im Lernen",      fuellung: "var(--stufe-1)" },
+  { wort: "frisch",    wann: "in ein paar Tagen",     was: "frisch gelernt", fuellung: "var(--stufe-2)" },
+  { wort: "fester",    wann: "nach etwa einer Woche", was: "wird fester",    fuellung: "var(--stufe-3)" },
+  { wort: "gefestigt", wann: "nach ein paar Wochen",  was: "gefestigt",      fuellung: "var(--accent)", ziel: true }
 ];
 function einstiegWegAbstand(i) { return Math.sqrt(intervalForStufe(i)); }
 
@@ -5211,7 +5261,7 @@ function einstiegWegAbstand(i) { return Math.sqrt(intervalForStufe(i)); }
    Zahlen. Das Ziel "sitzt" traegt einen Haken und leuchtet einmal auf. */
 function einstiegLeiste(spaeter) {
   let h = '<div class="einstieg-leiste' + (spaeter ? ' einstieg-leiste--spaeter' : '') + '" role="img" ' +
-    'aria-label="Der Weg eines Wortes: neu, besser, gut, sitzt – jedes Mal mit mehr Abstand">';
+    'aria-label="Der Weg eines Wortes: neu, frisch gelernt, wird fester, gefestigt – jedes Mal mit mehr Abstand">';
   EINSTIEG_WEG.forEach((p, i) => {
     if (i > 0) {
       h += '<span class="einstieg-leiste__stueck" style="--w:' + einstiegWegAbstand(i).toFixed(2) + ';--i:' + i + '"></span>';
@@ -5241,7 +5291,7 @@ function einstiegLeiter() {
     Math.round(einstiegWegAbstand(EINSTIEG_WEG.length) * 10) + 'px">' +
     '<span class="einstieg-leiter__punkt" aria-hidden="true"></span>' +
     '<span class="einstieg-leiter__wann">danach immer seltener</span>' +
-    '<span class="einstieg-leiter__was">damit es bleibt</span></li>';
+    '<span class="einstieg-leiter__was">bis es dauerhaft sitzt</span></li>';
   h += '</ol>';
   return h;
 }
@@ -5823,27 +5873,37 @@ function einstiegWieder() {
   render();
 }
 
-/* ---------- 3.12.1: Der Ladebildschirm ----------
-   Betreiber am 24.09.2026: "Für jetzt möchte ich ein passendes loading
-   screen." Vorher: die Bluete mit drei kreisenden Punkten - aus einer
-   frueheren Fassung, ohne Bezug zu dem, was danach kommt. Jetzt ein kleiner
-   Stapel wie in der Lernrunde (.study-stapel): die oberste Karte dreht sich
-   um, vorne das Zeichen, hinten ein Wort; darunter der Name und fuenf
-   Punkte, die sich nacheinander fuellen - dieselben Punkte wie an jeder
-   Karte (zustandPunkte). Man sieht beim Laden schon, was gleich kommt.
-   Reines CSS (styles.css, .boot__*). DASSELBE MARKUP steht in index.html
-   (dort ohne JavaScript, damit es sich schon dreht, bevor app.js laeuft) -
-   wer hier etwas aendert, aendert es dort mit, sonst springt der Bildschirm
-   beim Uebergang. */
-function bootStapel() {
-  return '<div class="boot__stapel" aria-hidden="true">' +
-    '<span class="boot__blatt boot__blatt--2"></span><span class="boot__blatt boot__blatt--1"></span>' +
-    '<span class="boot__karte"><span class="boot__dreh">' +
-      '<span class="boot__seite">' + ikon("marke", "boot__zeichen") + '</span>' +
-      '<span class="boot__seite boot__seite--hinten" lang="ar" dir="rtl">\u0643\u0650\u062a\u064e\u0627\u0628\u064c</span>' +
-    '</span></span></div>' +
+/* ---------- 3.13.0: Der Ladebildschirm ----------
+   Betreiber am 24.09.2026: "Sonst will ich ein premium ladebildschirm [...]
+   perfektes lade bildschirm. Sowas wie karten werden gebildet ist unnoetig."
+
+   Vorbild sind native Apps: Beim Antippen steht sofort ein ruhiges Bild -
+   Zeichen und Name, sonst nichts - und daraus waechst die App. Deshalb:
+
+   - KEIN Text. "Deine Karten werden geladen..." sagte, was man ohnehin
+     sieht. Fuer Screenreader steht ein unsichtbares role="status".
+   - Das erste Bild steht STILL: Zeichen und Name erscheinen nicht mit einer
+     Einblendung, sondern sind vom ersten Bild an da. Nur so passt es nahtlos
+     an das Startbild, das iOS vor dem ersten Zeichnen zeigt (index.html,
+     apple-touch-startup-image, /splash/*.png - ein Foto genau dieses
+     Bildschirms). Eine Einblendung haette dazwischen einen leeren
+     Bildschirm erzeugt.
+   - Bewegung nur, wo sie nichts versetzt: ein goldener Hof hinter dem
+     Zeichen atmet langsam, und erst wenn das Laden spuerbar dauert (ab
+     900 ms), laeuft eine feine Linie unter dem Namen. Wer schnell laedt,
+     sieht sie nie.
+   - Der Kartenstapel aus 3.12.1 ist weg: Eine drehende Karte beim Start war
+     Unterhaltung, keine Marke, und liess sich nicht als Startbild fotografieren.
+
+   DASSELBE MARKUP steht in index.html (dort ohne JavaScript, damit es steht,
+   bevor app.js laeuft). render() tauscht es waehrend des Ladens NICHT aus
+   (siehe dort) - sonst begaennen Hof und Linie von vorn. Wer hier etwas
+   aendert, aendert index.html und die Startbilder mit (README.md). */
+function bootBild() {
+  return '<div class="boot__zeichen-hof">' + ikon("marke", "boot__zeichen") + '</div>' +
     '<div class="boot__marke">Adrabic</div>' +
-    '<div class="boot__punkte" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>';
+    '<div class="boot__linie" aria-hidden="true"></div>' +
+    '<span class="sr-only" role="status">Adrabic startet</span>';
 }
 
 /* ---------- Rendering ---------- */
@@ -5889,7 +5949,12 @@ function render() {
       }, 9000);
     }
     if (!bootAktiv) { bootAktiv = true; bootStart = Date.now(); }
-    let laden = '<div class="boot">' + bootStapel();
+    /* 3.13.0: Steht der ruhige Ladebildschirm schon (aus index.html oder
+       einem frueheren Durchlauf), bleibt er unangetastet - ein neues
+       innerHTML wuerde Hof und Linie neu starten, sichtbar als Zucken. */
+    const bootDa = app.querySelector(".boot");
+    if (!syncError && !ladeLangsam && bootDa && !bootDa.classList.contains("boot--hinweis")) return;
+    let laden = '<div class="boot' + (syncError || ladeLangsam ? ' boot--hinweis' : '') + '">' + bootBild();
     if (syncError) {
       /* Blockierend: Ohne Daten gibt es nichts zu zeigen. Also Klartext und
          ein Weg weiter, statt eines Ladepunkts, der nie aufhoert. */
@@ -5898,11 +5963,9 @@ function render() {
         '<div class="banner__text">' + esc(syncError) + '</div></div>';
       laden += '<button class="secondary" data-action="seite-neu-laden">Neu laden</button>';
     } else if (ladeLangsam) {
-      laden += '<p class="boot__text">Das dauert l\u00e4nger als sonst. Pr\u00fcf deine Internetverbindung \u2013 ' +
-        'oder lade die Seite neu.</p>';
+      /* 3.13.0: ein Satz statt zwei - der Knopf darunter sagt den Rest. */
+      laden += '<p class="boot__text">Das dauert gerade l\u00e4nger.</p>';
       laden += '<button class="secondary" data-action="seite-neu-laden">Neu laden</button>';
-    } else {
-      laden += '<p class="boot__text" role="status">Deine Karten werden geladen\u2026</p>';
     }
     laden += '</div>';
     app.innerHTML = laden;
@@ -6392,7 +6455,7 @@ function navLeiste() {
     html += '<button class="liste-zeile' + (b.id === currentBereich().id && !ui.einstellungen ? " aktiv" : "") +
       '" data-action="select-bereich" data-bid="' + esc(b.id) + '">' +
       '<span class="liste-zeile__text">' + esc(b.name) + '</span>' +
-      (d > 0 ? '<span class="badge zustand-gesehen">' + d + '</span>' : '') + '</button>';
+      (d > 0 ? '<span class="badge zustand-lernen">' + d + '</span>' : '') + '</button>';
   });
   html += '<button class="liste-zeile" data-action="add-bereich">' +
     ikon("plus", "i-sm") + '<span class="liste-zeile__text">Bereich anlegen</span></button>';
@@ -6440,7 +6503,7 @@ function bereichSheet() {
     html += '<button class="liste-zeile' + (aktiv ? " aktiv" : "") +
       '" data-action="select-bereich" data-bid="' + esc(b.id) + '">' +
       '<span class="liste-zeile__text">' + esc(b.name) + '</span>' +
-      (d > 0 ? '<span class="badge zustand-gesehen">' + d + ' fällig</span>' : '<span class="liste-zeile__wert">fertig</span>') +
+      (d > 0 ? '<span class="badge zustand-lernen">' + d + ' fällig</span>' : '<span class="liste-zeile__wert">fertig</span>') +
       (aktiv ? ikon("haken", "i-sm") : '') + '</button>';
   });
   html += '<button class="liste-zeile" data-action="add-bereich">' +
@@ -7153,7 +7216,10 @@ function renderFaden(b, due) {
     /* Wortwahl aus demselben Wortschatz: Karten, die gerade erst durchgesehen
        wurden, sind "gesehen" - sie zu "Wiederholungen" zu erklaeren waere
        falsch, man hat sie ja noch nie gewusst. */
-    const erstmalig = wiederholungen.filter(c => kartenZustand(c).id === "gesehen").length;
+    /* 3.13.0: hier stand kartenZustand(c).id === "gesehen" - den Zustand gibt
+       es nicht mehr. Dieselbe Bedingung ausgeschrieben: bewertet, aber noch nie
+       gewusst. */
+    const erstmalig = wiederholungen.filter(c => !istNeueKarte(c) && (c.maxStufe || 0) === 0).length;
     const wort = erstmalig === wiederholungen.length
       ? (wiederholungen.length === 1 ? 'gesehene Karte zum Abfragen' : 'gesehene Karten zum Abfragen')
       : (wiederholungen.length === 1 ? 'Wiederholung' : 'Wiederholungen');
@@ -7258,15 +7324,20 @@ function merkSetOeffnen() {
 /* Die Titel der Unterseiten. Eine Stelle, damit Kopfzeile und Zeile nicht
    auseinanderlaufen. */
 const SEITEN_TITEL = {
-  sichern: "Sichern",
+  /* 3.13.0: Sichern, Einspielen und Aufzeichnung auf EINER Seite "Daten" -
+     siehe renderEinstellungen. Die alten drei Namen bleiben als Titel
+     stehen, falls ein alter Verweis sie noch oeffnet (sie zeigen dieselbe
+     Seite). */
+  daten: "Sichern & einspielen",
+  sichern: "Sichern & einspielen",
   /* 3.11.0: eigene Seite. Bis dahin lag "Code einloesen" unten auf
      "Einspielen" und "Per Code teilen" unten auf "Sichern" - zwei Haelften
      derselben Sache, versteckt hinter zwei Begriffen, die von Backups
      sprechen. Siehe renderEinstellungen. */
-  kartensaetze: "Kartensätze",
+  kartensaetze: "Kartensatz per Code",
   "konto-loeschen": "Konto löschen",
-  einspielen: "Einspielen",
-  verlauf: "Aufzeichnung",
+  einspielen: "Sichern & einspielen",
+  verlauf: "Sichern & einspielen",
   lektionen: "Lektionen",
   leeches: "Karten, die nicht klappen",
   vorschau: "Die n\u00e4chsten 7 Tage",
@@ -7310,67 +7381,51 @@ function renderEinstellungen() {
     '<span><strong>' + tage + '</strong> Tage gelernt</span></div>';
   html += '</div>';
 
-  /* ---------- 3.11.0: die Reihenfolge ----------
-     Betreiber am 24.09.2026: "gucken ob man noch weitere sachen in die
-     einstellungen einbauen kann sinnvoll, strukturiert auch, reihenfolge,
-     alles, welche vielleicht dann auch einfluss auf onboarding haben."
+  /* ---------- 3.13.0: weniger Entscheidungen (Hick) ----------
+     Betreiber am 24.09.2026: "Sonst finde ich es wichtig hicks law oder
+     simple, in den setzings ist ja viel unnoettiges, oder nicht? Entscheide
+     du."
 
-     Geordnet ist jetzt nach Haeufigkeit, nicht nach Verwandtschaft:
+     Hick-Hyman: die Zeit bis zur Wahl waechst mit der Zahl der Moeglich-
+     keiten (log2(n+1)). Bis 3.12 standen hier 6 Abschnitte mit 11 Zeilen
+     plus einer Konto-ID, die jeder sah (BETREIBER_UIDS ist leer, siehe oben).
+     Jetzt 4 Abschnitte mit 8 Zeilen:
 
-       1 Lernen       - die eine Einstellung, die den Alltag aendert
-       2 Kartensätze  - der Weg, an Stoff zu kommen (siehe unten)
-       3 Darstellung  - einmal gesetzt, danach selten
-       4 Daten        - im Notfall, nicht im Alltag
-       5 Hilfe
-       6 Konto        - zuletzt, weil "Konto loeschen" darin steht
+       Lernen   Karten pro Sitzung, Arabische Schrift, Helligkeit
+                (Darstellung war ein eigener Abschnitt fuer zwei Zeilen; beide
+                Einstellungen betreffen das, was man beim Lernen sieht)
+       Daten    Kartensätze teilen/uebernehmen, Sichern & einspielen
+                (Sichern, Datei einspielen und Aufzeichnung waren drei Zeilen
+                mit drei Seiten - jetzt eine Seite, drei Karten darauf;
+                "Verlauf zuruecksetzen" braucht praktisch niemand und muss
+                deshalb keine eigene Zeile belegen)
+       Hilfe    Ideen & Vorschlaege, Fehler melden
+       Konto    Abmelden, Konto loeschen
 
-     Vorher stand Darstellung ganz oben und "Karten pro Sitzung" allein in
-     einem eigenen Abschnitt darunter - die Helligkeit also vor der einzigen
-     Einstellung, die etwas am Lernen aendert. */
+     Die Konto-ID ist als Kleingedrucktes in den Fuss gewandert (einstFuss) -
+     sie braucht nur, wer sie fuer BETREIBER_UIDS nachschlaegt.
+     Nichts ist weggefallen: jede Handlung ist weiter erreichbar. */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Lernen</div>';
   html += '<div class="liste">';
   html += einstZeile({ action: "wahl-sheet", id: "limit", icon: "lernen", text: "Karten pro Sitzung",
     wert: labelVon(SITZUNGS_LIMITS, settings.sitzungsLimit, "Alle") });
-  html += '</div></div>';
-
-  /* ---------- Kartensätze: die Funktion, die niemand fand ----------
-     Betreiber am 24.09.2026, aus einem TikTok-Befund: eine Funktion, die im
-     Einstieg nicht vorkommt, benutzt fast niemand. Das Teilen und Uebernehmen
-     per Code ist genau so ein Fall - es lag als letzter Kasten auf "Sichern"
-     (teilen) und als letzter Kasten auf "Einspielen" (einloesen), also
-     zweigeteilt unter zwei Begriffen, die von Backups sprechen. Wer einen Code
-     bekommen hatte, suchte ihn unter "Einspielen" nicht.
-     Jetzt: eine Zeile mit dem Namen der Sache, eine Seite, beide Haelften
-     darauf. Der Einstieg nennt sie seit 3.11.0 ebenfalls (Plan-Bildschirm). */
-  html += '<div class="sektion">';
-  html += '<div class="eyebrow">Kartensätze</div>';
-  html += '<div class="liste">';
-  html += einstZeile({ action: "einst-seite", id: "kartensaetze", icon: "teilen",
-    text: "Teilen und übernehmen" });
-  html += '</div></div>';
-
-  html += '<div class="sektion">';
-  html += '<div class="eyebrow">Darstellung</div>';
-  html += '<div class="liste">';
-  html += einstZeile({ action: "wahl-sheet", id: "thema", icon: "leer", text: "Helligkeit",
-    wert: labelVon(THEMEN, settings.thema, "Dunkel") });
   html += einstZeile({ action: "wahl-sheet", id: "arab", icon: "karten", text: "Arabische Schrift",
     wert: labelVon(ARAB_STUFEN, settings.arabGroesse, "Normal") });
+  html += einstZeile({ action: "wahl-sheet", id: "thema", icon: "leer", text: "Helligkeit",
+    wert: labelVon(THEMEN, settings.thema, "Dunkel") });
   html += '</div></div>';
 
-  /* ---------- Daten: drei Handlungen, jede auf eigener Seite ----------
-     Sichern, Einspielen und Verlauf standen bisher als drei Kaesten
-     untereinander, zusammen ueber 15 Zeilen Text auf einem Bildschirm, den
-     man wegen einer einzigen Sache aufruft. */
+  /* Kartensätze: seit 3.11.0 eine Zeile mit dem Namen der Sache (vorher
+     zweigeteilt auf "Sichern" und "Einspielen", wo niemand einen Code
+     suchte - TikTok-Befund des Betreibers). */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Daten</div>';
   html += '<div class="liste">';
-  html += einstZeile({ action: "einst-seite", id: "sichern", icon: "sichern", text: "Sichern",
+  html += einstZeile({ action: "einst-seite", id: "kartensaetze", icon: "teilen",
+    text: "Kartensatz per Code" });
+  html += einstZeile({ action: "einst-seite", id: "daten", icon: "sichern", text: "Sichern & einspielen",
     wert: alter === null ? "noch nie" : alter === 0 ? "heute" : "vor " + alter + " Tg." });
-  html += einstZeile({ action: "einst-seite", id: "einspielen", icon: "einspielen", text: "Datei einspielen" });
-  html += einstZeile({ action: "einst-seite", id: "verlauf", icon: "fortschritt", text: "Aufzeichnung",
-    wert: tage + " Tag" + (tage === 1 ? "" : "e") });
   html += '</div></div>';
 
   /* ---------- Hilfe ---------- */
@@ -7389,11 +7444,6 @@ function renderEinstellungen() {
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Konto</div>';
   html += '<div class="liste">';
-  if (BETREIBER_UIDS.length === 0 && currentUser) {
-    html += '<div class="liste-zeile">' + ikon("konto", "i-sm") +
-      '<span class="liste-zeile__text">Konto-ID</span>' +
-      '<span class="liste-zeile__wert" style="font-size:var(--fs-xs);word-break:break-all;user-select:all">' + esc(currentUser.uid) + '</span></div>';
-  }
   html += '<button class="liste-zeile gefahr" data-action="logout">' + ikon("abmelden", "i-sm") +
     '<span class="liste-zeile__text">Abmelden</span></button>';
   /* 3.12.0: keine Loeschen-Zeile mehr, die selbst etwas tut - nur ein Weg
@@ -7419,6 +7469,12 @@ function einstFuss() {
   html += '</div>';
   html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-4)">' +
     'Adrabic ' + APP_VERSION + '</p>';
+  /* 3.13.0: die Konto-ID stand bis hier als eigene Zeile im Abschnitt Konto -
+     sichtbar fuer alle, solange BETREIBER_UIDS leer ist. Gebraucht wird sie
+     nur einmal, zum Eintragen dort. Jetzt Kleingedrucktes, markierbar. */
+  if (BETREIBER_UIDS.length === 0 && currentUser) {
+    html += '<p class="hint einst-id">Konto-ID <span>' + esc(currentUser.uid) + '</span></p>';
+  }
   return html;
 }
 
@@ -7429,9 +7485,13 @@ function renderEinstellungenSeite(id) {
   const b = currentBereich();
   let html = "";
 
-  if (id === "sichern") {
+  /* 3.13.0: "daten" fasst die frueheren Seiten sichern, einspielen und
+     verlauf zusammen - gleiche Karten, gleiche Knoepfe, eine Seite. */
+  if (id === "daten" || id === "sichern" || id === "einspielen" || id === "verlauf") {
     const alter = daysSinceLastBackup();
+    const tage = Object.keys(verlauf).length;
     html += '<div class="card">';
+    html += '<h3>Sichern</h3>';
     html += '<p class="hint">Ein Backup ist eine Datei auf deinem Gerät. Sie hängt an nichts – ' +
       'geht das Konto verloren, ist sie das Einzige, was bleibt.</p>';
     html += '<div class="' + (alter === null || alter >= 14 ? "banner-info" : "banner-info banner-leise") +
@@ -7444,6 +7504,26 @@ function renderEinstellungenSeite(id) {
     html += '<button class="secondary" data-action="export-backup-current">Nur „' + esc(b.name) + '“</button>';
     html += '</div>';
     html += '</div>';
+
+    html += '<div class="card" style="margin-top:var(--stack)">';
+    html += '<h3>Einspielen</h3>';
+    html += '<p class="hint">Eine Backup-Datei oder einen Kartensatz laden. Gehört die Datei zu einem ' +
+      'Satz, den du schon hast, wird er ergänzt – dein Lernstand bleibt. Einen <strong>Code</strong> ' +
+      'löst du unter „Kartensatz per Code“ ein.</p>';
+    html += '<div class="form-actions">';
+    html += '<button class="secondary" data-action="import-trigger">' + ikon("einspielen", "i-sm") +
+      ' Datei auswählen</button>';
+    html += '</div></div>';
+
+    html += '<div class="card" style="margin-top:var(--stack)">';
+    html += '<h3>Aufzeichnung</h3>';
+    html += '<p class="hint">Das Tagesprotokoll trägt Kalender, Wochenzahlen und die Serie – ' +
+      'aufgezeichnet sind <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
+      'Zurücksetzen betrifft nur die Anzeige: deine Karten und ihr Lernstand bleiben.</p>';
+    html += '<div class="form-actions">';
+    html += '<button class="ghost" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") +
+      '>Aufzeichnung zurücksetzen</button>';
+    html += '</div></div>';
     return html;
   }
 
@@ -7504,35 +7584,6 @@ function renderEinstellungenSeite(id) {
       }
       html += '</div>';
     }
-    return html;
-  }
-
-  if (id === "einspielen") {
-    html += '<div class="card">';
-    html += '<p class="hint">Eine Backup-Datei oder einen Kartensatz laden. Gehört die Datei zu einem ' +
-      'Satz, den du schon hast, wird er ergänzt – dein Lernstand bleibt.</p>';
-    html += '<div class="form-actions">';
-    html += '<button data-action="import-trigger">' + ikon("einspielen", "i-sm") +
-      ' Datei auswählen</button>';
-    html += '</div></div>';
-    /* 3.11.0: "Code einloesen" stand hier als zweiter Kasten und ist jetzt auf
-       der Seite "Kartensätze" - dort, wo man danach sucht. Ein Verweis bleibt,
-       damit niemand ins Leere laeuft, der sich den alten Ort gemerkt hat. */
-    html += '<p class="hint" style="margin-top:var(--stack-tight)">Einen <strong>Code</strong> ' +
-      'löst du unter „Kartensätze“ ein.</p>';
-    return html;
-  }
-
-  if (id === "verlauf") {
-    const tage = Object.keys(verlauf).length;
-    html += '<div class="card">';
-    html += '<p class="hint">Das Tagesprotokoll trägt Kalender, Wochenzahlen und die Serie – ' +
-      'aufgezeichnet sind <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
-      'Löschen betrifft nur die Anzeige: Karten, Stufen und Fälligkeiten bleiben unberührt.</p>';
-    html += '<div class="form-actions">';
-    html += '<button class="secondary" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") +
-      '>Verlauf zurücksetzen</button>';
-    html += '</div></div>';
     return html;
   }
 
@@ -8171,7 +8222,7 @@ function lernenStapel(b, cards, due, neuImStapel) {
     ? 'Heute schon <strong>' + h.getan + '</strong> Antwort' + (h.getan === 1 ? '' : 'en') + ' \u00b7 von ' + cards.length + ' Karten'
     : (due.length === 1 ? 'Karte ist heute f\u00e4llig' : 'Karten sind heute f\u00e4llig') + ' \u00b7 von ' + cards.length) + '</div>';
   html += '<div class="stapel__meta">';
-  if (wdh > 0) html += '<span class="badge zustand-solide">' + wdh + ' Wiederholung' + (wdh === 1 ? '' : 'en') + '</span>';
+  if (wdh > 0) html += '<span class="badge zustand-festigung">' + wdh + ' Wiederholung' + (wdh === 1 ? '' : 'en') + '</span>';
   if (neuImStapel > 0) html += '<span class="badge zustand-neu">' + neuImStapel + ' neu</span>';
   html += '</div>';
   html += '<button class="lg full stapel__start" data-action="start-session">' +

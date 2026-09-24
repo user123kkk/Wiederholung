@@ -43,7 +43,48 @@
      beim "Zum Home-Bildschirm" leer bzw. wurde durch einen Seiten-Screenshot
      ersetzt. 180x180 ist Apples eigene Empfehlung (Retina-Icon). -->
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
-<link rel="stylesheet" href="./styles.css?v=3.12.1">
+<!-- 3.13.0: Startbilder fuer iOS. Eine App aus dem App Store zeigt beim
+     Antippen sofort ihren Startbildschirm; eine Web-App auf dem Home-
+     Bildschirm zeigt auf dem iPhone bis zum ersten Zeichnen der Seite NICHTS
+     (weiss bzw. schwarz) - ausser, es liegt ein Startbild in genau der
+     Pixelgroesse des Geraets bereit. Die Bilder sind Fotos des Lade-
+     bildschirms unten (.boot, dunkle Fassung, erstes Bild), deshalb geht das
+     eine nahtlos ins andere ueber. Android baut seinen Startbildschirm selbst
+     aus manifest.json (background_color + Symbol).
+     Neu erzeugen, wenn sich .boot aendert: README.md, "Startbilder".
+     Nicht in APP_SHELL (sw.js): iOS laedt nur das eine passende Bild. -->
+<link rel="apple-touch-startup-image" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1320x2868.png">
+<link rel="apple-touch-startup-image" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1206x2622.png">
+<link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1290x2796.png">
+<link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1179x2556.png">
+<link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1284x2778.png">
+<link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1170x2532.png">
+<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1125x2436.png">
+<link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1080x2340.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2688.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-828x1792.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2208.png">
+<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-750x1334.png">
+<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-640x1136.png">
+<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2064x2752.png">
+<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2752x2064.png">
+<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2048x2732.png">
+<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2732x2048.png">
+<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2420.png">
+<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2420x1668.png">
+<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2388.png">
+<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2388x1668.png">
+<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1640x2360.png">
+<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2360x1640.png">
+<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2224.png">
+<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2224x1668.png">
+<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1620x2160.png">
+<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2160x1620.png">
+<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1536x2048.png">
+<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png">
+<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png">
+<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png">
+<link rel="stylesheet" href="./styles.css?v=3.13.0">
 <script>
 /* 2.20.0: Läuft, BEVOR das erste Bild steht.
 
@@ -70,24 +111,17 @@
 <div class="container" id="app">
   <!-- Beobachtung 12: bis hierhin ist app.js noch nicht gelaufen (Modul-
        Skripte werden erst nach dem Parsen ausgefuehrt). Deshalb steht der
-       Ladebildschirm schon hier im HTML - reines CSS (styles.css, .boot__*),
-       er bewegt sich also, bevor ueberhaupt ein Skript gelaufen ist.
-       3.12.1: neuer Ladebildschirm, ein kleiner Kartenstapel, dessen oberste
-       Karte sich dreht (app.js, bootStapel). Dieses Markup MUSS dem von
-       bootStapel() entsprechen - sonst springt der Bildschirm, wenn render()
-       ihn ablöst. Das Zeichen steht hier als SVG mit demselben Pfad wie
-       ICON_PFADE.marke in app.js. -->
+       Ladebildschirm schon hier im HTML - reines CSS (styles.css, .boot__*).
+       3.13.0: ruhiger Ladebildschirm - Zeichen und Name, kein Text. Dieses
+       Markup MUSS dem von bootBild() in app.js entsprechen, und die
+       Startbilder in /splash/ sind ein Foto davon - wer es aendert, erzeugt
+       sie neu (README.md). Das Zeichen steht hier als SVG mit demselben Pfad
+       wie ICON_PFADE.marke in app.js. -->
   <div class="boot">
-    <div class="boot__stapel" aria-hidden="true">
-      <span class="boot__blatt boot__blatt--2"></span><span class="boot__blatt boot__blatt--1"></span>
-      <span class="boot__karte"><span class="boot__dreh">
-        <span class="boot__seite"><svg class="i boot__zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" stroke="none" d="M11.53,15.02L9.3,14.84L9.21,14.74L8.74,14.74L8.65,14.65L7.63,14.47L7.53,14.37L7.07,14.28L6.79,14.09L6.6,14.09L5.3,13.44L4.65,12.98L3.44,11.77L2.6,10.28L2.6,10.09L2.42,9.72L2.42,9.44L2.33,9.35L2.33,8.98L2.23,8.88L2.14,7.58L3.72,7.67L3.81,7.77L4.28,7.77L4.37,7.86L4.65,7.86L5.12,8.05L5.4,8.05L5.49,7.95L5.4,7.86L5.4,7.3L5.3,7.21L5.3,5.44L5.4,5.35L5.49,4.23L5.58,4.14L5.58,3.86L5.67,3.77L5.67,3.49L5.77,3.4L5.86,2.93L6.88,3.4L8.09,4.23L9.3,5.44L9.77,6.09L9.86,6L10.14,4.98L10.6,3.95L10.79,3.77L11.16,3.02L12,2L12.84,3.02L12.93,3.3L13.4,3.95L13.86,4.98L13.86,5.16L14.23,6.09L14.7,5.44L15.91,4.23L17.12,3.4L18.14,2.93L18.14,3.12L18.33,3.49L18.33,3.77L18.42,3.86L18.42,4.14L18.51,4.23L18.6,5.35L18.7,5.44L18.7,7.21L18.6,7.3L18.6,7.86L18.51,7.95L18.6,8.05L18.88,8.05L18.98,7.95L19.26,7.95L19.72,7.77L20.19,7.77L20.28,7.67L21.86,7.58L21.77,8.88L21.67,8.98L21.58,9.72L20.93,11.21L20.56,11.77L19.35,12.98L18.7,13.44L17.4,14.09L17.21,14.09L16.93,14.28L16.74,14.28L16.37,14.47L16.09,14.47L16,14.56L15.72,14.56L15.26,14.74L14.79,14.74L14.7,14.84L14.14,14.84L14.05,14.93L13.02,14.93L12.93,15.02L11.53,15.02Z"/><path d="M11.95,15.02L12,22"/></svg></span>
-        <span class="boot__seite boot__seite--hinten" lang="ar" dir="rtl">كِتَابٌ</span>
-      </span></span>
-    </div>
+    <div class="boot__zeichen-hof"><svg class="i boot__zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" stroke="none" d="M11.53,15.02L9.3,14.84L9.21,14.74L8.74,14.74L8.65,14.65L7.63,14.47L7.53,14.37L7.07,14.28L6.79,14.09L6.6,14.09L5.3,13.44L4.65,12.98L3.44,11.77L2.6,10.28L2.6,10.09L2.42,9.72L2.42,9.44L2.33,9.35L2.33,8.98L2.23,8.88L2.14,7.58L3.72,7.67L3.81,7.77L4.28,7.77L4.37,7.86L4.65,7.86L5.12,8.05L5.4,8.05L5.49,7.95L5.4,7.86L5.4,7.3L5.3,7.21L5.3,5.44L5.4,5.35L5.49,4.23L5.58,4.14L5.58,3.86L5.67,3.77L5.67,3.49L5.77,3.4L5.86,2.93L6.88,3.4L8.09,4.23L9.3,5.44L9.77,6.09L9.86,6L10.14,4.98L10.6,3.95L10.79,3.77L11.16,3.02L12,2L12.84,3.02L12.93,3.3L13.4,3.95L13.86,4.98L13.86,5.16L14.23,6.09L14.7,5.44L15.91,4.23L17.12,3.4L18.14,2.93L18.14,3.12L18.33,3.49L18.33,3.77L18.42,3.86L18.42,4.14L18.51,4.23L18.6,5.35L18.7,5.44L18.7,7.21L18.6,7.3L18.6,7.86L18.51,7.95L18.6,8.05L18.88,8.05L18.98,7.95L19.26,7.95L19.72,7.77L20.19,7.77L20.28,7.67L21.86,7.58L21.77,8.88L21.67,8.98L21.58,9.72L20.93,11.21L20.56,11.77L19.35,12.98L18.7,13.44L17.4,14.09L17.21,14.09L16.93,14.28L16.74,14.28L16.37,14.47L16.09,14.47L16,14.56L15.72,14.56L15.26,14.74L14.79,14.74L14.7,14.84L14.14,14.84L14.05,14.93L13.02,14.93L12.93,15.02L11.53,15.02Z"/><path d="M11.95,15.02L12,22"/></svg></div>
     <div class="boot__marke">Adrabic</div>
-    <div class="boot__punkte" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-    <p class="boot__text" role="status">Deine Karten werden geladen…</p>
+    <div class="boot__linie" aria-hidden="true"></div>
+    <span class="sr-only" role="status">Adrabic startet</span>
   </div>
 </div>
 
@@ -131,6 +165,6 @@
      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
      die die App innerhalb der letzten Stunde offen hatten, an der alten
      app.js fest, auch nach einem Reload. -->
-<script type="module" src="./app.js?v=3.12.1"></script>
+<script type="module" src="./app.js?v=3.13.0"></script>
 </body>
 </html>

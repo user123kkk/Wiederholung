@@ -683,10 +683,14 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026, abends): v3.12.1 auf `main` – Systemzahlen entfernt
-(Tage, Stufen) und neuer Ladebildschirm; davor v3.12.0 (siehe unten). Der
-Betreiber will als Nächstes auf Einstieg und 3.12.0 eingehen – auf seine
-Rückmeldung warten, nicht vorgreifen.**
+**AKTUELL (24.09.2026, spätabends): v3.13.0 auf `main` – sechs Zustände
+(neu · im Lernen · frisch gelernt · wird fester · gefestigt · dauerhaft,
+Grenzen nur im Code), Einstellungen auf 4 Abschnitte/8 Zeilen, ruhiger
+Ladebildschirm ohne Text plus iOS-Startbilder (`splash/`). Davor v3.12.1
+(Systemzahlen entfernt) und v3.12.0. Der Betreiber will als Nächstes auf
+Einstieg und 3.12.x/3.13.0 eingehen – auf seine Rückmeldung warten, nicht
+vorgreifen. Offen am Gerät: Startbilder auf iPhone/iPad (Logbuch
+`onboarding/LOGBUCH.md`, Eintrag v3.13.0).**
 
 **Stand v3.12.0: die ganze App in der Formsprache des Einstiegs.**
 

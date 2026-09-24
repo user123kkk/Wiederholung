@@ -4,6 +4,73 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-24 — Sechs Zustände, schlankere Einstellungen, ruhiger Startbildschirm (v3.13.0)
+
+**Anlass:** Betreiber: „die wörter, neu wackelig und so neu umstrukturiert
+[...] Wissenschaftlich [...] Würde niemals stufe 6 als fest dingsen [...]
+hicks law oder simple, in den settings ist ja viel unnötiges [...] Entscheide
+du [...] perfektes lade bildschirm. Sowas wie karten werden gebildet ist
+unnötig." Genaues darf im Code stehen, nicht in der App.
+
+**Geändert (app.js):** `KARTEN_ZUSTAENDE` (~Z. 2850–2900, sechs Zustände mit
+Grenzen- und Quellentabelle im Kommentar), `UEBEN_GRUPPEN` (fünf Gruppen),
+Faden-Zählung „erstmalig" ohne den weggefallenen Zustand „gesehen",
+Plaketten-Klassen `zustand-lernen`/`zustand-festigung`, `EINSTIEG_WEG` +
+aria-label + letzte Sprosse („bis es dauerhaft sitzt"),
+`renderEinstellungen()` (4 Abschnitte/8 Zeilen, Begründung Hick-Hyman im
+Kommentar), `einstFuss()` (Konto-ID), `renderEinstellungenSeite()` (neue Seite
+`daten` = Sichern + Einspielen + Aufzeichnung; alte ids zeigen dieselbe Seite),
+`SEITEN_TITEL`, Dialog „Aufzeichnung zurücksetzen?", `bootStapel()` →
+`bootBild()`, Lade-Zweig in `render()` (tauscht den stehenden Ladebildschirm
+nicht mehr aus; kein Text; Hinweis nach 9 s kürzer), `APP_VERSION` 3.13.0.
+**Geändert (styles.css):** `--stufe-5` (Gold) in beiden Fassungen,
+`.badge.zustand-*` neu benannt, `.einst-id`, `.boot*` neu (Hof, Linie,
+`.boot--hinweis`, Ausgang).
+**Geändert (index.html):** Lade-Markup = `bootBild()`, 31
+`apple-touch-startup-image`-Zeilen, Versions-Querys 3.13.0.
+**Neu:** `splash/*.png` (31 Bilder, ~3 MB, 256 Farben),
+`plan/werkzeuge/startbilder.js` (Erzeuger, von Hosting ausgenommen).
+**Geändert (sonst):** `sw.js` CACHE_NAME, `README.md` (Abschnitt
+„Startbilder"), `CHANGELOG.md`.
+
+**Entscheidung:**
+- **Zustände hängen an der aktuellen Stufe**, Schnitte 0 | 1–3 | 4–6 | 7–9 |
+  10+ (Abstände 1–3 / 6–19 / 34–110 / 180 Tage). „gefestigt" ab 34 Tagen,
+  weil Anki/SuperMemo „reif" ab 21 Tagen Abstand ansetzen und Stufe 6 (19 Tage)
+  darunter liegt. „neu" vs. „im Lernen" trennt `ersteBewertung`; in der
+  Üben-Auswahl sind beide ein Chip, weil beide Stufe 0 sind. Lernlogik
+  (`intervalForStufe`, Bewertung) unverändert.
+- **Einstellungen:** nichts gestrichen, nur zusammengelegt – jede Handlung ist
+  erreichbar. Konto-ID bleibt sichtbar, solange `BETREIBER_UIDS` leer ist, aber
+  als Kleingedrucktes.
+- **Ladebildschirm:** erstes Bild still (keine Einblendung), damit das
+  iOS-Startbild nahtlos übergeht; Kartenstapel aus 3.12.1 verworfen (ließ sich
+  nicht als Startbild fotografieren, war Unterhaltung statt Marke). Startbilder
+  nur dunkel (Standard-Fassung), nicht in `APP_SHELL`.
+- `plan/redesign-oberflaeche/stilprobe.html` nutzt noch alte Klassennamen –
+  alte Stilprobe, nicht ausgeliefert, bewusst nicht angefasst.
+
+**Geprüft (Chromium, 390 px, hell + dunkel):** Plaketten, Fortschritt-Legende
+(6 Zeilen, Gold für dauerhaft), 6 Punkte im Karten-Blatt, Üben-Chips,
+Stand-Auswahl behält die genaue Stufe, Einstellungen und Seite „Sichern &
+einspielen", Ladebildschirm bei 250 ms / 1,5 s / 11 s und Hinweis-Fassung
+(dabei gefunden und behoben: Linie ohne `position: relative` lief über den
+ganzen Bildschirm). Keine Konsolenfehler.
+
+**Offen:**
+- Startbilder am echten iPhone/iPad prüfen (nur Betreiber). Bekannte kleine
+  Abweichung: Die Bilder sind unter Linux erzeugt; das Wort „Adrabic" steht
+  darin in einer Ersatz-Serifenschrift, auf dem iPhone danach in „New York"
+  (`ui-serif`) – beim Übergang ändert sich die Schrift des Namens leicht. Wenn
+  das stört: Bilder auf einem Mac mit Safari/Chromium neu erzeugen.
+- Helle Fassung sieht beim Start zuerst das dunkle Startbild.
+- J1 unverändert offen.
+
+**Nächster Schritt:** Auf die Rückmeldung des Betreibers zu Einstieg,
+3.12.x und 3.13.0 warten; vorher nichts Neues bauen.
+
+---
+
 ### 2026-09-24 — Systemzahlen entfernt, neuer Ladebildschirm (v3.12.1)
 
 **Anlass:** Betreiber: „Sachen wie die knöpfe dicher, wo steht in x tagen,

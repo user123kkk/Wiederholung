@@ -62,6 +62,17 @@ hat keinen Server, der so einen Schlüssel bräuchte.
    sich in `sw.js` aus `CACHE_NAME` ab – dort ist also nichts extra zu ändern.
 5. Eintrag in `CHANGELOG.md`.
 
+### Startbilder (seit 3.13.0)
+
+`/splash/*.png` sind Fotos des Ladebildschirms (`.boot` in `index.html`,
+dunkel, erstes Bild) in jeder Pixelgröße, die iOS als
+`apple-touch-startup-image` erwartet. Nur mit ihnen zeigt eine Web-App auf dem
+iPhone-Home-Bildschirm beim Antippen **sofort** etwas – ohne sie bleibt der
+Bildschirm bis zum ersten Zeichnen leer. **Wer `.boot` (Markup in `index.html`
+und `bootBild()` in `app.js`, Stil in `styles.css`) ändert, erzeugt die Bilder
+neu:** `plan/werkzeuge/startbilder.js` (Anleitung oben in der Datei). Sie
+stehen bewusst nicht in `APP_SHELL`.
+
 ## Wenn du an der Gestaltung arbeitest
 
 Die `styles.css` beginnt mit vier Sätzen, aus denen sich alles Weitere ergibt
