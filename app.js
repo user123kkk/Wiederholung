@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.10";
+const APP_VERSION = "3.17.11";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4680,8 +4680,9 @@ async function submitCardForm() {
     return;
   }
   ui.karteFeldFehler = null;
-  /* D6: Der Entwurf haelt den getippten Text fest, waehrend der Dialog offen
-     ist - beim Abbrechen bleibt die Eingabe also stehen. */
+  /* D6: Der Entwurf haelt den getippten Text fest, waehrend das Blatt offen
+     ist (render() dazwischen loescht nichts). Beim Schliessen fragt seit
+     3.17.11 karteEntwurfVerwerfenFragen - vorher ging er dort verloren. */
   const dup = findeDuplikat(wort, ui.editId || null);
   if (dup) {
     const ok = await dlgConfirm('„' + wort + '" gibt es in diesem Bereich schon.\nÜbersetzung dort: „' +
@@ -4808,6 +4809,22 @@ function fokusInsErstesFehlerfeld() {
   const id = (ui.karteFeldFehler && ui.karteFeldFehler.wort) ? "f-wort" : "f-ueb";
   const el = document.getElementById(id);
   if (el) el.focus();
+}
+/* 3.17.11 (Pruefschleife, Station 11): Eine angefangene NEUE Karte ging
+   beim Schliessen still verloren - "Fertig", Escape oder Wischen, und das
+   Getippte war weg. Beim Bearbeiten heisst der Knopf "Abbrechen", dort ist
+   Verwerfen gemeint und bleibt ohne Rueckfrage. */
+function karteEntwurfOffen() {
+  return !ui.editId && ui.karteSheet &&
+    !!((formDraft.wort || "").trim() || (formDraft.ueb || "").trim() || (formDraft.extra || "").trim());
+}
+async function karteEntwurfVerwerfenFragen() {
+  const w = (formDraft.wort || "").trim(), u = (formDraft.ueb || "").trim();
+  const ok = await dlgConfirm((w || u ? "„" + (w || u) + "“ ist noch nicht hinzugefügt." : "Die Notiz ist noch nicht hinzugefügt.") +
+    " Verworfen ist es weg.", { title: "Angefangene Karte verwerfen?", okLabel: "Verwerfen", danger: true });
+  if (!ok) { fokusInsWortfeld(); return; }
+  resetFormDraft();
+  schliesseObersteEbene();
 }
 function cancelEdit() {
   ui.editId = null; ui.karteSheet = false; resetFormDraft(); render();
@@ -6904,15 +6921,20 @@ function karteSheet() {
   /* 3.16.0: Pflicht ist der Normalfall und braucht kein Etikett - markiert
      wird nur, was man weglassen darf (so machen es die meisten Formulare).
      Vorher stand "– Pflicht" an zwei von drei Feldern. */
-  html += '<div class="field"><label for="f-wort">Wort</label>';
-  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.wort) + '"' +
+  /* 3.17.11 (Pruefschleife, Station 11): Der Fehler steht IN der
+     Beschriftung wie beim Anmelden (3.17.2). Als eigene Zeile unter dem Feld
+     machte er das Blatt hoeher - und weil es unten verankert ist, rutschte
+     beim Tippen das Feld, in dem man gerade schrieb, nach unten, sobald die
+     Zeile verschwand. enterkeyhint: die Handy-Tastatur zeigt im Wort-Feld
+     "Weiter" statt "Eingabe". */
+  const fehlerMarke = (feld, an) => '<span class="opt' + (an ? ' opt--fehler' : '') + '" id="f-' + feld + '-fehler">' + (an ? ' – bitte ausfüllen' : '') + '</span>';
+  html += '<div class="field"><label for="f-wort">Wort' + fehlerMarke("wort", fehler.wort) + '</label>';
+  html += '<input type="text" id="f-wort" class="arabic" dir="rtl" lang="ar" enterkeyhint="next" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.wort) + '"' +
     (fehler.wort ? ' aria-invalid="true" aria-describedby="f-wort-fehler"' : '') + '>';
-  if (fehler.wort) html += '<div class="field__fehler" id="f-wort-fehler">Bitte ausfüllen</div>';
   html += '</div>';
-  html += '<div class="field"><label for="f-ueb">Übersetzung</label>';
+  html += '<div class="field"><label for="f-ueb">Übersetzung' + fehlerMarke("ueb", fehler.ueb) + '</label>';
   html += '<input type="text" id="f-ueb" maxlength="' + MAX_WORT + '" value="' + esc(formDraft.ueb) + '"' +
     (fehler.ueb ? ' aria-invalid="true" aria-describedby="f-ueb-fehler"' : '') + '>';
-  if (fehler.ueb) html += '<div class="field__fehler" id="f-ueb-fehler">Bitte ausfüllen</div>';
   html += '</div>';
   html += '<div class="field"><label for="f-extra">Notiz <span class="opt">– optional</span></label>';
   html += '<textarea id="f-extra" rows="2" maxlength="' + MAX_EXTRA + '" placeholder="Beispielsatz, Grammatik oder Bild-Link">' + esc(formDraft.extra) + '</textarea></div>';
@@ -7335,7 +7357,17 @@ function renderMain() {
     ["f-wort", "f-ueb"].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener("keydown", e => {
-        if (e.key === "Enter") submitCardForm();
+        if (e.key !== "Enter" || e.isComposing) return;
+        /* 3.17.11: Enter im Wort-Feld heisst "weiter", solange die
+           Uebersetzung fehlt - vorher speicherte es sofort und empfing einen
+           im naechsten Feld mit "bitte ausfuellen". */
+        if (id === "f-wort" && !val("f-ueb").trim()) {
+          e.preventDefault();
+          const ueb = document.getElementById("f-ueb");
+          if (ueb) ueb.focus();
+          return;
+        }
+        submitCardForm();
       });
     });
     /* Jede Eingabe sofort in den Entwurf spiegeln, damit ein render()
@@ -7351,7 +7383,7 @@ function renderMain() {
           el.removeAttribute("aria-invalid");
           el.removeAttribute("aria-describedby");
           const fehlerEl = document.getElementById(id + "-fehler");
-          if (fehlerEl) fehlerEl.remove();
+          if (fehlerEl) { fehlerEl.textContent = ""; fehlerEl.classList.remove("opt--fehler"); }
         }
       });
     });
@@ -11228,7 +11260,10 @@ function schliesseObersteEbene() {
   };
   if (ui.setArtSheetId) { schliesse(() => { ui.setArtSheetId = null; render(); }); return true; }
   if (ui.wahlSheet) { schliesse(() => { ui.wahlSheet = null; render(); }); return true; }
-  if (ui.karteSheet || ui.editId) { schliesse(cancelEdit); return true; }
+  if (ui.karteSheet || ui.editId) {
+    if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
+    schliesse(cancelEdit); return true;
+  }
   if (ui.bereichMehr) { schliesse(() => { ui.bereichMehr = false; render(); }); return true; }
   if (ui.cardDetailId) { schliesse(() => { ui.cardDetailId = null; render(); }); return true; }
   if (ui.bereichSheet) { schliesse(() => { ui.bereichSheet = false; render(); }); return true; }
@@ -11269,8 +11304,10 @@ document.addEventListener("keydown", e => {
      - nicht ueber Eingabefeldern;
      - erst nach 10 px eindeutig senkrechter Bewegung nach unten; waagerecht
        oder nach oben gibt die Geste sofort auf;
-     - wie Escape: ein Eingabe-Dialog gilt als abgebrochen, ein halb getipptes
-       Karten-Formular bleibt als Entwurf erhalten (cancelEdit). */
+     - wie Escape: ein Eingabe-Dialog gilt als abgebrochen. Ein halb
+       getipptes Karten-Formular ging dabei bis 3.17.11 verloren (cancelEdit
+       leert den Entwurf) - jetzt federt das Blatt zurueck und fragt
+       (karteEntwurfVerwerfenFragen). */
 (function blattWischen() {
   const WEG_PX = 90, WEG_TEMPO = 0.55;   // px, px pro ms
   let g = null;
@@ -11320,6 +11357,9 @@ document.addEventListener("keydown", e => {
     if (!g.aktiv) { g = null; return; }
     const tempo = g.dy / Math.max(1, Date.now() - g.zeit);
     if (g.dy < WEG_PX && tempo < WEG_TEMPO) { zurueck(); return; }
+    /* 3.17.11: Angefangene Karte - nicht wegwischen, sondern zurueckfedern
+       und fragen. */
+    if (karteEntwurfOffen() && g.dlg.querySelector("#f-wort")) { zurueck(); karteEntwurfVerwerfenFragen(); return; }
     const { dlg, huelle } = g;
     g = null;
     /* Beobachtung 19/9: dieselbe Bewegung wie bei Escape/Knopf jetzt aus
@@ -11739,7 +11779,15 @@ document.body.addEventListener("click", e => {
     case "karte-neu":
       ui.editId = null; resetFormDraft(); ui.karteSheet = true;
       render(); fokusInsWortfeld(); break;
-    case "karte-sheet-zu": schliesseObersteEbene(); break;
+    case "karte-sheet-zu":
+      /* 3.17.11: "Fertig" mit vollstaendiger Karte fuegt sie hinzu und
+         schliesst - "fertig" heisst nicht "wegwerfen". Klappt das Speichern
+         nicht (Duplikat abgelehnt), bleibt das Blatt offen. */
+      if (!ui.editId && ui.karteSheet && (formDraft.wort || "").trim() && (formDraft.ueb || "").trim()) {
+        submitCardForm().then(() => { if (!formDraft.wort && !formDraft.ueb) schliesseObersteEbene(); });
+        break;
+      }
+      schliesseObersteEbene(); break;
     case "edit-card": editCard(btn.dataset.id); break;
     /* D7: Sprung in den fremden Bereich. Nutzt dieselbe Funktion wie der
        Fortschritts-Tab - dort wechselt sie schon seit 1.7.0 den Bereich,

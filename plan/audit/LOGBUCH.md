@@ -16,7 +16,58 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 8 | Üben | erledigt (v3.15.0 Auswahl/Bewertung/Ende, v3.17.8 Schreiben/Speicherkarten) |
 | 9 | Fortschritt | erledigt (v3.17.9) |
 | 10 | Verwalten | erledigt (v3.17.10) |
-| 11–18 | … | offen |
+| 11 | Karten-Blätter | erledigt (v3.17.11) |
+| 12–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 11: Karten-Blätter (v3.17.11)
+
+**Anlass:** Routine, 15:50 UTC. Keine neue Betreiber-Nachricht.
+
+**Geprüft (`t_karten_blatt.js`, Handy hell/dunkel, klein, iPad):** Blatt
+öffnen, leer abschicken, Tippen nach Fehler, Enter im Wort-Feld,
+Hinzufügen per Enter, Duplikat, Fertig mit vollständiger/halber Karte,
+Escape, Detail, Bearbeiten, Löschen, Kontrast.
+- **Fund 1 (Datenverlust): „Fertig"/Escape/Wegwischen verwarf eine
+  angefangene Karte still.** `schliesseObersteEbene` → `cancelEdit` →
+  `resetFormDraft`. Die Kommentare (D6 in `submitCardForm`, `blattWischen`)
+  behaupteten, der Entwurf bleibe erhalten – stimmte nicht.
+- **Fund 2: Enter im Wort-Feld speicherte sofort** → Fehler „bitte
+  ausfüllen" an der Übersetzung, obwohl man nur weiter wollte.
+- **Fund 3: Fehlerzeilen als eigene `.field__fehler`-Zeile** – beim Tippen
+  verschwand sie, das unten verankerte Blatt schrumpfte, das Feld unter dem
+  Finger rutschte nach unten.
+- **Fund 4: Abstand Beschriftung–Feld 24 px vs. 8 px** – `.dlg input
+  { margin-top }` (für das Feld unter einem Dialog-Text gedacht) traf auch
+  die Formularfelder im Blatt.
+- Ohne Befund: Knopf springt nicht (Blatt unten verankert), Toast oben
+  sichtbar, Duplikat-Rückfrage, Bearbeiten mit Stand, Speichern schließt,
+  Löschen fragt, Detail-Blatt Kontrast 0.
+
+**Geändert (app.js):** `karteSheet` – Fehler als `.opt--fehler` in der
+Beschriftung, `enterkeyhint="next"` am Wort-Feld; Eingabe-Listener leert die
+Marke; Enter-Listener (Wort → Übersetzung, `isComposing` ausgenommen);
+`karteEntwurfOffen` / `karteEntwurfVerwerfenFragen` (neu, vor `cancelEdit`);
+`schliesseObersteEbene` fragt bei Entwurf; `karte-sheet-zu` fügt eine
+vollständige Karte hinzu und schließt; `blattWischen` federt bei Entwurf
+zurück und fragt. **styles.css:** `.dlg .field input { margin-top: 0 }`.
+Version 3.17.11.
+**Neu (Prüfstand):** `t_karten_blatt.js`.
+
+**Entscheidung:** „Fertig" mit vollständiger Karte = hinzufügen, nicht
+fragen – „fertig" heißt nicht „wegwerfen", und ein Dialog mehr wäre Reibung
+für den häufigsten Fall (letzte Karte getippt, Fertig statt Hinzufügen).
+Rückfrage nur, wo wirklich etwas verloren ginge (halb getippt, oder Escape /
+Wischen). Beim Bearbeiten heißt der Knopf „Abbrechen" – dort bleibt
+Verwerfen ohne Rückfrage.
+
+**Geprüft danach:** alle Fälle wie gewollt auf drei Geräten; Feld rutscht
+0 px, Abstand 8/8; Regression `t_anmelden.js` (gleiche Fehler-Marke) 0 px,
+`t_kontrast.js` 0, Affe Handy/iPad 150 Schritte 0 Befunde.
+
+**Offen:** –
+**Nächste Station:** 12 (Bereiche – anlegen, wechseln, umbenennen, löschen)
 
 ---
 

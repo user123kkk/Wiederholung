@@ -3299,6 +3299,10 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   white-space: pre-wrap; word-break: break-word;
 }
 .dlg input { margin-top: var(--space-4); }
+/* 3.17.11 (Station 11): gilt dem Eingabefeld unter dem Frage-Text eines
+   Dialogs - nicht den Formularfeldern im Karten-Blatt (dort 24 px statt 8 px
+   zwischen Beschriftung und Feld, beim Notizfeld 8 px). */
+.dlg .field input { margin-top: 0; }
 .dlg-actions {
   display: flex; gap: var(--space-2); margin-top: var(--space-6);
 }

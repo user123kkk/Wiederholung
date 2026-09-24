@@ -1,3 +1,28 @@
+## 3.17.11 - 24. September 2026
+
+**Prüfschleife, Station 11 (Karten anlegen, bearbeiten, löschen).**
+
+- **Eine angefangene Karte geht nicht mehr still verloren.** Wer Wort und
+  Übersetzung eintippte und dann „Fertig" drückte, verlor die Karte ohne
+  Rückfrage. Jetzt: Ist die Karte vollständig, fügt „Fertig" sie hinzu und
+  schließt. Ist sie halb getippt, fragt die App, ob verworfen werden soll –
+  auch bei Escape und beim Wegwischen des Blatts (das Blatt federt dann
+  zurück).
+- **Eingabetaste im Feld „Wort" springt weiter zur Übersetzung** – vorher
+  speicherte sie sofort und empfing einen dort mit „bitte ausfüllen". Die
+  Handy-Tastatur zeigt im Wort-Feld „Weiter". Ablauf jetzt: Wort, Enter,
+  Übersetzung, Enter – gespeichert, und der Cursor steht für die nächste
+  Karte bereit.
+- **Fehlermeldungen verschieben nichts mehr.** „Bitte ausfüllen" steht in
+  der Beschriftung (wie beim Anmelden) statt als eigene Zeile – vorher
+  rutschte das Feld, in dem man gerade schrieb, beim Tippen nach unten.
+- **Gleiche Abstände:** Zwischen Beschriftung und Feld lagen bei Wort und
+  Übersetzung 24 px, bei der Notiz 8 px. Jetzt überall 8 px – das Blatt ist
+  dadurch auch kürzer.
+- Geprüft ohne Befund: Doppeltes Wort wird erkannt, Bearbeiten übernimmt
+  alle Werte und schließt nach dem Speichern, Löschen fragt nach, Detail-Blatt,
+  Kontrast hell und dunkel – Handy, kleines Handy, iPad.
+
 ## 3.17.10 - 24. September 2026
 
 **Prüfschleife, Station 10 (Verwalten).**
