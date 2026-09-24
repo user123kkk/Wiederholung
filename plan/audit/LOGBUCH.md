@@ -28,6 +28,72 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Rechtsprüfung Punkt 15 (Analytics), anwaltlich bestätigt
+
+**Anlass:** Betreiber fragt nach einem rechtlichen Beleg für Punkt 15
+(Nutzungsstatistik) der Datenschutzerklärung. Prüfung mit dem
+DPA-Review-Ansatz aus `anthropics/claude-for-legal` (Term-für-Term,
+Quellen-Tiering) auf `datenschutzerklaerung.html` Punkt 15 angewendet —
+keine echte DPA (es gibt noch keinen PostHog-Vertrag), sondern eine
+Rechtsgrundlagen-Prüfung nach derselben Methode.
+
+**Geprüft:**
+
+- Rechtsgrundlage Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse) —
+  Dreistufentest (EDPB Guidelines 3/2019): Zweck (Produktverbesserung),
+  Erforderlichkeit (datenminimiert, kein Fremdskript, keine Cookies), 
+  Interessenabwägung (überschaubarer Nutzerkreis, sofortiges
+  bedingungsloses Opt-out, keine besonderen Kategorien betroffen).
+- **Wichtiger Befund dabei:** Ursprüngliche Annahme, die App nutze die
+  PostHog-JS-Bibliothek mit riskanten Standardeinstellungen (Autocapture,
+  Cookie-Persistenz), war **falsch** — `app.js` Zeilen 144–242 zeigen eine
+  selbst geschriebene, schlanke `fetch()`-Übertragung ohne Fremdcode, ohne
+  Cookies, ohne Autocapture. Dieser Punkt entfiel dadurch als Befund.
+- Internationale Übermittlung: PostHog Inc. (USA) trotz EU-Hosting
+  (PostHog Cloud EU) — Transfer-Mechanismus fehlte bisher im Text.
+- Formulierung „nicht umkehrbare Prüfsumme" — technisch ungenau (Hash ist
+  Pseudonymisierung, keine Anonymisierung im strengen Sinn).
+- Fehlende schriftliche Interessenabwägung (Art. 5 Abs. 2 DSGVO,
+  Rechenschaftspflicht) — bisher nur mündlich/implizit vertreten.
+
+**Geändert:**
+
+- `datenschutzerklaerung.html` Punkt 15: Transfer-Mechanismus-Satz ergänzt
+  (SCC bzw. EU-US Data Privacy Framework, je nach PostHogs aktueller
+  Dokumentation), Hash-Formulierung präzisiert („praktisch nicht
+  zurückrechenbar" statt „nicht umkehrbar"), Verweis auf die vorliegende
+  Interessenabwägung ergänzt.
+- Neu: [`plan/analytics/INTERESSENABWAEGUNG.md`](../analytics/INTERESSENABWAEGUNG.md)
+  — interne, nicht veröffentlichte Dreistufen-Abwägung nach Art. 6 Abs. 1
+  lit. f DSGVO, als Beleg für den Ernstfall (Anfrage einer Aufsichtsbehörde
+  oder betroffenen Person).
+- `plan/analytics/GERUEST.md` und `plan/PLAN.md` (Frage 14) mit dem
+  Ergebnis und den verbleibenden organisatorischen Schritten aktualisiert.
+
+**Entscheidung:** Betreiber-Freigabe liegt vor: „mein anwalt sagt dass das
+alles stimmt. übernehmen" — die beiden Text-Präzisierungen und die interne
+Interessenabwägung sind damit auf Anweisung übernommen, nicht auf eigene
+Einschätzung des Agenten gebaut. Rechtliche Bewertung selbst bleibt beim
+Anwalt; der Agent hat nur recherchiert, Lücken benannt und die vom
+Betreiber freigegebene Fassung eingebaut.
+
+**Geprüft (technisch):** `node --check app.js` nicht betroffen (keine
+Code-Änderung), `datenschutzerklaerung.html` ist keine App-Shell-Datei
+(nicht in `sw.js` `APP_SHELL`) und hat `Cache-Control: max-age=0,
+must-revalidate` (`firebase.json`) — keine Versions-Query nötig, kein
+App-Versionssprung erforderlich für diese reine Text-Änderung.
+
+**Offen:** Vor Aktivierung von `POSTHOG_KEY` weiterhin nötig (rein
+organisatorisch, keine offene Rechtsfrage mehr): Auftragsverarbeitungs-
+vertrag mit PostHog im Dashboard abschließen, aktuelle Transfer-Grundlage
+(SCC/DPF) dort nachsehen, Datenaufbewahrung im PostHog-Projekt auf ≤ 1 Jahr
+einstellen.
+
+**Nächster Schritt:** Betreiber richtet PostHog-Projekt ein (siehe die drei
+Punkte oben), dann `POSTHOG_KEY` in `app.js` eintragen und veröffentlichen.
+
+---
+
 ### 2026-09-24 — Zwei echte Fehler aus der Rückmeldung zu v3.17.20 behoben (v3.17.21)
 
 **Anlass:** Betreiber testet v3.17.20 sofort und meldet direkt hintereinander

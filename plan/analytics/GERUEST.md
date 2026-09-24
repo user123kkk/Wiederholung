@@ -9,6 +9,19 @@
 > `konto_erstellt`; Retention auf `app_start`; Trends `runde_ende`,
 > `ueben_start`, `code_einloesen`, `idee_eingereicht`, `hinweis`.
 > Die Abschnitte unten sind die Vorgeschichte.
+>
+> **Rechtsprüfung abgeschlossen (24.09.2026).** `datenschutzerklaerung.html`
+> Punkt 15 auf Rechtsgrundlage (Art. 6 Abs. 1 lit. f DSGVO), internationale
+> Übermittlung und Formulierungsgenauigkeit geprüft; zwei Textstellen
+> präzisiert (Transfer-Mechanismus PostHog Inc. USA, Hash-Formulierung).
+> Interne Interessenabwägung geschrieben:
+> [`INTERESSENABWAEGUNG.md`](INTERESSENABWAEGUNG.md) (nicht veröffentlicht).
+> Anwaltliche Bestätigung liegt vor (Betreiber: „mein anwalt sagt dass das
+> alles stimmt"). **Verbleibend vor `POSTHOG_KEY`-Aktivierung** (rein
+> organisatorisch, keine offene Rechtsfrage mehr): Auftragsverarbeitungs-
+> vertrag mit PostHog im Dashboard abschließen, aktuelle Transfer-Grundlage
+> (SCC/DPF) dort nachsehen, Datenaufbewahrung im PostHog-Projekt auf ≤ 1 Jahr
+> einstellen. Details: `INTERESSENABWAEGUNG.md` Abschnitt 5.
 
 Stand 24.09.2026. **Kein Bauauftrag** – ein Gerüst mit Fragen, wie
 `monetarisierung/GERUEST.md` und `lehrer-modus/GERUEST.md`.
