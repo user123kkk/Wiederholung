@@ -60,9 +60,12 @@ Erkenntnis zu verzichten.
   Gesetz für lit.-f-Verarbeitungen gefordert (kein Abwägungsvorbehalt,
   sondern sofortiger, bedingungsloser Stopp).
 - Begrenzte Speicherdauer (max. 1 Jahr).
-- Betroffenenkreis ist überschaubar (kleiner, wachsender Nutzerkreis,
-  keine Kinder als Zielgruppe, keine besonderen Kategorien nach Art. 9
-  DSGVO betroffen).
+- Betroffenenkreis ist überschaubar (kleiner, wachsender Nutzerkreis;
+  keine besonderen Kategorien nach Art. 9 DSGVO in den Ereignissen — alle
+  `zaehle()`-Aufrufe am 24.09.2026 nachgelesen). **Ob Minderjährige zur
+  Zielgruppe gehören, ist nicht geprüft** — Korrektur 24.09.2026: Die frühere
+  Fassung behauptete „keine Kinder als Zielgruppe" ohne Grundlage. Betreiber
+  bestätigen lassen.
 
 **Gegen die Verarbeitung spricht:**
 
@@ -92,7 +95,10 @@ diese Verarbeitung.
 
 ## 5. Offen — vor Aktivierung des `POSTHOG_KEY` zu erledigen
 
-1. Auftragsverarbeitungsvertrag mit PostHog im Dashboard abschließen.
+1. Auftragsverarbeitungsvertrag mit PostHog abschließen — **gilt nicht
+   automatisch** (Korrektur 24.09.2026): `https://eu.posthog.com/legal` →
+   „+ New" → „Data Processing Agreement" → Firmen-/Namensangaben →
+   „Send for signature" → E-Mail von PandaDoc öffnen und unterschreiben.
 2. Aktuelle Transfer-Grundlage (SCC oder DPF) bei PostHog nachsehen und
    `datenschutzerklaerung.html` Punkt 15 bei Bedarf präzisieren (Formulierung
    deckt beide Fälle bereits ab, „bzw."-Formulierung).

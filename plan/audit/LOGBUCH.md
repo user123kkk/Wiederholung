@@ -28,6 +28,44 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Rechtsprüfung der ganzen App + Korrektur zum PostHog-Vertrag
+
+**Anlass:** Betreiber: „nutz bitte die recht dngs github linkskills und
+übberprüfe ob Alles rechtlichsicher ist". Methode der Skills aus
+`anthropics/claude-for-legal` (launch-review, reg-gap-analysis,
+marketing-claims-review) auf App und Rechtstexte angewendet. Bericht:
+[`../phase-5-recht/PRUEFUNG-2026-09-24.md`](../phase-5-recht/PRUEFUNG-2026-09-24.md).
+
+**Korrektur zum Eintrag darunter („PostHog eingerichtet"):** Dort steht, der
+PostHog-Auftragsverarbeitungsvertrag gelte automatisch über die
+Nutzungsbedingungen. **Falsch.** PostHog verlangt eine eigene Unterschrift
+(`…posthog.com/legal` → „+ New" → „Data Processing Agreement"). Ebenfalls
+falsch dort: „aktiviert" — der Schlüssel liegt nur auf diesem Arbeitszweig,
+`origin/main` hat `POSTHOG_KEY = ""` und ein **anderes** 3.17.22 (Einstieg,
+Commit `08be14c`). Es sind also keine Daten ohne Vertrag geflossen.
+
+**Geändert:** neu `plan/phase-5-recht/PRUEFUNG-2026-09-24.md`;
+`plan/LEHREN.md` § 12 (zwei Regeln) und § 15 (zwei eigene Fehler);
+`plan/analytics/INTERESSENABWAEGUNG.md` (Vertrag nicht automatisch;
+„keine Kinder als Zielgruppe" als ungeprüft gekennzeichnet);
+`plan/PLAN.md` Frage 14 (Korrektur „nicht live"). Kein App-Code, kein
+Rechtstext geändert — Recht gehört dem Betreiber (`LEHREN.md` § 1.2).
+
+**Entscheidung:** Befunde nur vorgelegt, nicht gebaut. Drei rote Punkte:
+R1 PostHog-Vertrag unterschreiben; R2 Quran-Schrift selbst ausliefern
+(LG München I, 3 O 17493/20, Google Fonts); R3 Konto-/Bereich-Löschen
+entfernt geteilte Kartensätze (`geteilteLektionen`) nicht, obwohl Punkt 12
+das verspricht.
+
+**Offen:** Freigabe des Betreibers für R2, R3, O1–O3, G1–G5; die vier Fragen
+im Bericht (Impressum-Person, § 25 TDDDG, DSA, Medina-Urheberrecht);
+Vertrag unterschreiben; Zusammenführen mit `main` als 3.17.23.
+
+**Nächster Schritt:** Auf „ja" des Betreibers R3 und R2 bauen (mit
+Prüfstand-Test), dann O1/G1–G4 als Textänderung in einem Commit.
+
+---
+
 ### 2026-09-24 — PostHog eingerichtet und aktiviert (v3.17.22)
 
 **Anlass:** Betreiber richtet nach der Rechtsprüfung (Eintrag unten) das

@@ -1025,6 +1025,13 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
   Konten hinweg speichert. Sie wurde für das Teilen durch Architektur umgangen,
   nicht beantwortet.
 - **Religiöse Angaben** werden nicht gespeichert (§ 2 Punkt 5).
+- **Verträge mit Dienstleistern nie als „automatisch" annehmen.** Ob ein
+  Auftragsverarbeitungsvertrag gilt, steht in der Doku des Anbieters — nachlesen
+  und die Quelle ins Logbuch. *Vorfall 24.09.2026:* PostHog verlangt eine eigene
+  Unterschrift.
+- **Beim Löschen alle Orte mitnehmen,** auch Sammlungen außerhalb von
+  `users/{uid}` (`geteilteLektionen`). Das Versprechen in Punkt 12 gilt für
+  alles, was ein Konto irgendwo hinterlässt. *Vorfall 24.09.2026.*
 - **Nur versprechen, was rechtlich nötig ist** (§ 7.2). Keine selbst erfundenen
   Zusatzpflichten für den Betreiber.
 - Rechtstexte sprechen von „der Betreiber", nicht „wir": Dort steht eine
@@ -1142,3 +1149,5 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | 24.09. | Kommentar über `serieAktuell()` beschrieb alte Regel | Kommentar nicht mitgezogen | § 3.2 |
 | 24.09. (eigener Fehler) | Behauptung „gespeicherte Ziel-Antworten filtern" | Stelle nicht gelesen | § 1.3 |
 | 24.09. (eigener Fehler, beim Bau von t_serie.js) | neuer Serien-Test maß erst durchgehend 0 | `streak: {}` ohne `sockel` löst `serieSockelSichern()` aus, die `sockelBis` auf heute stempelt und jede Rechnung kurzschließt; dazu zuerst `vollerStore({leer:true})` verwendet, dessen leerer Bereich `.serie-karte` gar nicht erst rendert | § 5.4, § 13 |
+| 24.09. (eigener Fehler) | Logbuch behauptete, PostHogs Auftragsverarbeitungsvertrag gelte automatisch über die Nutzungsbedingungen | Annahme statt Nachsehen; PostHog verlangt eigene Unterschrift unter `…posthog.com/legal` | § 1.3, § 12 |
+| 24.09. (eigener Fehler) | Rechtsprüfung nur von Punkt 15 wurde wie eine Prüfung „der App" behandelt; Konto-Löschen ließ geteilte Kartensätze stehen, „Kartensatz per Code" fehlte ganz in der Datenschutzerklärung | nur der gefragte Abschnitt gelesen, nicht jeder Datenfluss gegen den Text | § 12 |
