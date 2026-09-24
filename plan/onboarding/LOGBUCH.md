@@ -4,6 +4,145 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-24 — Zweite Rückmeldung: kürzere Sätze, Pflichtantworten, Tablet-Fassung, Einstellungen (v3.11.0)
+
+**Geändert:**
+- `app.js`:
+  - `EINSTIEG_HUERDEN`: alle Echos auf je einen Satz gekürzt, neues Feld
+    `kurz` (für den Plan-Aufbau), neue Antwort `keine` („Nichts davon")
+  - `einstiegZielEchoText()` und `einstiegBewertungEcho()` gekürzt
+  - neu `EINSTIEG_PFLICHT`, `EINSTIEG_SPERRE_TEXT`, `einstiegWahlFehlt()`,
+    `einstiegWeiterPruefen()`; `einstiegFuss()` sperrt den Knopf
+  - `einstiegBauListe()` baut aus den Antworten; neu `einstiegBauDauer()`,
+    `EINSTIEG_BAU_SCHRITT_MS/_VORLAUF_MS/_NACHLAUF_MS` statt `EINSTIEG_BAU_MS`
+  - `renderEinstieg()`: Takt als CSS-Variablen am `.einstieg-bau`; Klasse
+    `einstieg-wahl--paar` auf Bildschirm 1 und 6; neuer Block „Und so kommst
+    du an deine Karten" auf dem Plan
+  - Klick-Zweig `einstieg-zurueck` setzt `planGebaut` zurück (Fehler unten);
+    `einstieg-ziel`/`-huerde`/`-anker` und das freie Feld rufen
+    `einstiegWeiterPruefen()`; `einstieg-huerde` schließt „Nichts davon" und
+    die genannten Hürden gegenseitig aus
+  - neu `BEWEGUNG_KEY`, `BEWEGUNGEN`, `bewegung`, `bewegungAnwenden()`,
+    `setBewegung()`; `einstiegBewegungReduziert()` liest sie mit
+  - `renderEinstellungen()` neu geordnet, neue Seite `kartensaetze`
+    (`SEITEN_TITEL`, `renderEinstellungenSeite()`), `WAHLEN.bewegung`,
+    Klick-Zweig `set-bewegung`
+  - `renderLernen()`, leerer Zustand: „Kartensatz per Code" als `.secondary`
+    vor der Datei
+- `styles.css`: `.einstieg-sperre`, `.einstieg-wege`/`.einstieg-weg`,
+  `.einstieg-aktion` als Spalte, Bau-Takt über `--bau-*`, Abschnitt 16c neu
+  (Bewegung des Einstiegs in der App), Abschnitt 17 um die Tablet- und
+  Desktop-Regeln erweitert, Zwillingsblöcke für `html[data-bewegung="ruhig"]`
+- `index.html`, `sw.js`, `README.md`, `CLAUDE.md`, `CHANGELOG.md`
+
+**Anlass (Betreiber, 24.09., gekürzt):**
+- „diese beschreibung ‚wie‘ auf der seite was hat dich bisher gebremst ist doch
+  egal … versicherung. deswegen hier nicht dieses und jedes mal blablabla."
+- „dasselbe problem auf der seite probier eine karte ‚dann kommt sie morgen
+  wieder – und jedes mal…‘"
+- „auf dem ipad sieht das so schmal aus wie auf mobile app … wie machen das
+  andere apps? so sieht das ja aus für mobile version, ned für ipad"
+- „dein plan wird erstellt … soll ja personalisiert aussehen … vielleicht in
+  die länge ziehen für wertgefühl"; und: nach Zurück und erneutem Eintragen
+  kommt der Aufbau nicht mehr
+- „man kann alles skippen indem man einfach auf weiter drückt ohne je was
+  ausgewählt zu haben"
+- TikTok-Befund: ein Feature wurde nur von 4 % benutzt, weil es im Onboarding
+  nicht vorkam — „das mit dem code bzw kartensatz der grob erwähnt wird reicht
+  ned oder"
+- „kann man anhand der animationen und sachen am onboarding … am tool selbst
+  anwenden? die sachen gefallen mir sehr"
+
+**Entscheidung:**
+- **Kürzen heißt hier: die Mechanik genau einmal.** Die langen Echos sagten
+  alle dasselbe („und jedes Mal … bis es sitzt"). Das steht jetzt als BILD da
+  (die Leiste auf Bildschirm 0 und nach „Sicher"), und die Echos sind
+  Zusicherungen. Vorbild ist die Antwort, die der Betreiber selbst zitiert hat:
+  „Das rechnet Adrabic für dich aus."
+- **Pflicht nur, wo es einen ehrlichen Ausweg gibt.** Deshalb die neue Antwort
+  „Nichts davon" bei den Hürden — ohne sie wäre die Pflicht eine Falle, in der
+  man sich ein Problem zuschreiben müsste, das man nicht hat. Nicht Pflicht
+  sind Schrift und Runde: dort ist „nichts gewählt" kein möglicher Zustand, es
+  steht immer eine Größe da.
+- **Der Plan-Aufbau ist jetzt so lang, wie er Punkte hat.** Fest 2,3 s war bei
+  einem langen Plan gehetzt und bei einem kurzen Stillstand. Ring, Punkte und
+  der Timer in `app.js` rechnen mit derselben Zahl; vorher waren es drei
+  Zahlenreihen (2100 ms im CSS, 2300 ms in JS, 420 ms Takt), die sich nur
+  zufällig trafen.
+- **Tablet heißt nicht „dasselbe, breiter".** Ab 900 px ändert sich die FORM:
+  Antwortlisten zweispaltig, Plan-Kacheln vierspaltig. Die Hürden bleiben
+  einspaltig — unter jeder gewählten Zeile hängt ihr Echo, und das liest sich
+  in zwei Spalten wie ein Formular.
+- **„Bewegung" liegt im localStorage, nicht in der Cloud.** `firestore.rules`
+  prüfen `settings` mit `hasOnly(['arabGroesse','lastBackup','thema',
+  'sitzungsLimit'])`: ein fünftes Feld würde von den DEPLOYTEN Regeln abgelehnt
+  — bis zu einem Regel-Deploy schlüge jedes Speichern der Einstellungen fehl.
+  Ein Schalter für die Optik dieses Geräts ist außerdem sachlich gerätegebunden.
+- **Aus dem Einstieg übernommen sind zwei Bewegungen, keine neue.** Mehr wäre
+  Lärm gewesen (`styles.css` Abschnitt 3: eine App, der man beim Denken zusieht,
+  wirkt langsam). Beide laufen nur beim Wechsel des Bildschirms
+  (`#app:not(.still-ansicht)`), sonst flöge die Einstellungen-Liste bei jedem
+  Antippen neu herein, auch hinter einem offenen Wahl-Blatt.
+
+**Fehler, gefunden und behoben:**
+1. **Aufbau kam nach Zurück nicht wieder** (vom Betreiber gemeldet).
+   `planGebaut` blieb beim Verlassen des Plan-Bildschirms nach hinten stehen.
+   `einstieg-zurueck` setzt ihn jetzt zurück.
+2. **`styles.css` ohne Versions-Query** in `index.html` — dieselbe Falle, die
+   `README.md` seit 3.9.5 für `app.js` beschreibt. `Cache-Control: max-age=3600`
+   gilt laut `firebase.json` für `.js` UND `.css`. Eine reine
+   Gestaltungsänderung konnte bis zu eine Stunde unsichtbar bleiben. Ausgerechnet
+   diese Version ist überwiegend Gestaltung.
+3. **`APP_SHELL` traf nie.** Dort stand `"./app.js"`, `index.html` fordert
+   `./app.js?v=…` an; `caches.match()` vergleicht die ganze URL samt Query.
+   Offline lief die App nur, weil der fetch-Handler jede erfolgreiche Antwort
+   unter ihrer echten URL nachträgt. Beide Einträge hängen jetzt an `VERSION`
+   (abgeleitet aus `CACHE_NAME`). Veröffentlichungsliste in `README.md` und
+   `CLAUDE.md` ergänzt.
+
+**Geprüft, nichts zu tun:**
+- **Lernen-Raster (`.lern-karte`) bekommt KEINEN Kachel-Eintritt.** Wäre die
+  naheliegende dritte Übernahme, geht aber nicht: eine erledigte Karte trägt
+  `opacity: 0.42` (`.ist-gelernt`). Eine Animation, die auf `opacity: 1` endet,
+  überschreibt das entweder dauerhaft (`fill-mode: both`) oder lässt die Kachel
+  am Ende sichtbar von hell auf blass zurückschnappen (`backwards`). Steht auch
+  als Kommentar in `styles.css` Abschnitt 16c, damit es niemand nochmal
+  versucht.
+- **Die Navigationsleiste bleibt unter 900 px unten.** Erwogen war, die Spalte
+  links schon ab iPad-Hochformat (~820 px) zu zeigen — das ist, was andere Apps
+  tun. Dagegen: Die Bedingung müsste Handys im Querformat ausschließen (844×390
+  ist breiter als ein iPad mini hoch ist), also `min-height`. Der Zwillingsblock
+  `@media (max-width: 899.98px)` für die iOS-Home-Bildschirm-Fassung
+  (`html.ref-hoehe .nav`) müsste dann die exakte Gegenbedingung tragen, sonst
+  schiebt er die Leiste auf dem iPad im App-Modus wieder nach unten. Jede
+  einfache Fassung davon schließt große iPhones (430×932) falsch mit ein. Der
+  gemeldete Fehler war der Einstieg (440 px), nicht die Leiste — der ist
+  behoben. Für die Leiste braucht es einen eigenen, gemessenen Schritt.
+
+**Offen:**
+- **Erinnerungssatz in den Einstellungen.** Läge nahe (der Wenn-dann-Satz aus
+  dem Einstieg hat heute keinen Ort zum Nachlesen oder Ändern), ist aber nicht
+  gebaut: Er müsste dauerhaft gespeichert werden, und genau die drei
+  `localStorage`-Schlüssel des Einstiegs hängen in der Rechtsprüfung **J1** —
+  der Anker ist eine Gebetszeit, also eine Angabe mit religiösem Bezug. Ein
+  vierter Ort dafür würde J1 vergrößern, bevor sie beantwortet ist. Erst nach J1
+  entscheiden.
+- **J1 (Rechtsprüfung der drei `localStorage`-Schlüssel)** und der **Gerätetest**
+  (echtes Handy und echtes iPad) sind weiter offen und müssen vor
+  `veroeffentlichen.bat` erledigt sein. Der neue Schlüssel `adrabic-bewegung`
+  kommt hinzu — er trägt keine Angabe über die Person, nur „Voll" oder „Ruhig",
+  ist aber der Vollständigkeit halber zu nennen.
+- **Nicht am Gerät geprüft:** die zweispaltigen Antwortlisten ab 900 px, die
+  vierspaltigen Plan-Kacheln (der Wert „alle fälligen Karten" ist der längste)
+  und der gestreckte Plan-Aufbau. Diese Arbeitsumgebung meldet
+  `document.visibilityState === "hidden"`; Animationen laufen darin nicht.
+
+**Nächster Schritt:** Betreiber prüft v3.11.0 auf Handy und iPad — besonders,
+ob der Plan-Aufbau in der Länge stimmt und ob die zweispaltigen Listen auf dem
+iPad gut aussehen. Danach J1 beantworten, dann veröffentlichen.
+
+---
+
 ### 2026-09-24 — Rückmeldung des Betreibers umgesetzt, mehr Bewegung (v3.10.3)
 
 **Geändert:**

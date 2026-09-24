@@ -43,16 +43,23 @@ hat keinen Server, der so einen Schlüssel bräuchte.
 1. `APP_VERSION` in `app.js` hochzählen.
 2. **Denselben Wert** als `CACHE_NAME` in `sw.js` eintragen. Ohne das behalten
    Nutzer:innen die alten Dateien im Cache.
-3. **Denselben Wert** auch im Versions-Query von `<script src="./app.js?v=…">`
-   in `index.html` eintragen. Ohne das bleibt `app.js` bis zu eine Stunde lang
-   im normalen HTTP-Cache des Browsers hängen (`Cache-Control: max-age=3600`
-   in `firebase.json`) – selbst ein normaler Reload holt dann noch die alte
-   Datei, weil nur `index.html` selbst immer frisch geladen wird, nicht die
-   Skripte, die sie einbindet. Gefunden 18.09.2026: ein Syntaxfehler in
-   `app.js` blieb dadurch bis zu einer Stunde lang live, obwohl der Server
-   längst die reparierte Version auslieferte.
+3. **Denselben Wert** auch in **beide** Versions-Querys in `index.html`
+   eintragen: `<script src="./app.js?v=…">` **und**
+   `<link rel="stylesheet" href="./styles.css?v=…">`. Ohne das bleibt die
+   betroffene Datei bis zu eine Stunde lang im normalen HTTP-Cache des Browsers
+   hängen (`Cache-Control: max-age=3600` in `firebase.json` – die Regel gilt
+   für `.js` **und** `.css`) – selbst ein normaler Reload holt dann noch die
+   alte Datei, weil nur `index.html` selbst immer frisch geladen wird, nicht
+   das, was sie einbindet. Gefunden 18.09.2026: ein Syntaxfehler in `app.js`
+   blieb dadurch bis zu einer Stunde lang live, obwohl der Server längst die
+   reparierte Version auslieferte. Für `styles.css` fehlte die Query bis
+   24.09.2026 (v3.11.0) ganz – dieselbe Falle, nur für die Gestaltung.
 4. Neue Dateien, die zum Starten gebraucht werden, in `APP_SHELL` in `sw.js`
-   aufnehmen.
+   aufnehmen. `app.js` und `styles.css` stehen dort seit 3.11.0 **mit**
+   Versions-Query (`"./app.js?v=" + VERSION`), weil `caches.match()` die
+   komplette URL samt Query vergleicht: ohne Query traf der vorab gespeicherte
+   Eintrag nie die Anfrage, die `index.html` wirklich stellt. `VERSION` leitet
+   sich in `sw.js` aus `CACHE_NAME` ab – dort ist also nichts extra zu ändern.
 5. Eintrag in `CHANGELOG.md`.
 
 ## Wenn du an der Gestaltung arbeitest

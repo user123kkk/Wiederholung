@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.10.3";
+const APP_VERSION = "3.11.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1103,20 +1103,41 @@ const EINSTIEG_ZIELE = [
 /* 3.10.3: keine Tageszahlen mehr in den Antworten - der Betreiber: "die
    werden nichts mit den zahlen anfangen, vielmehr koennte man meine methodik
    kopieren". Die Abstaende zeigt die Leiste als Bild, nicht als Zahl. */
+/* 3.11.0: jedes Echo ist EIN kurzer Satz. Betreiber am 24.09.2026: "diese
+   beschreibung 'wie' auf der seite was hat dich bisher gebremst ist doch egal.
+   zu der antwort ich weis nicht wann ich wiederholen soll, lautet die antwort
+   ja adrabic rechnet das fuer dich aus und so, versicherung. deswegen hier
+   nicht dieses und jedes mal blablabla."
+   Also: Zusicherung, keine Mechanik-Erklaerung. Wie die Abstaende wachsen,
+   steht genau EINMAL im Einstieg - als Bild auf Bildschirm 0 und 3 (die
+   Leiste), nicht noch einmal als Satz unter jeder Antwort.
+   kurz = wie dieselbe Huerde im Plan-Aufbau als abgehakter Punkt auftaucht. */
 const EINSTIEG_HUERDEN = [
   { id: "vergessen", label: "Ich vergesse Wörter schnell wieder", icon: "ueben",
-    echo: "Genau dafür ist Adrabic da: Jedes Wort kommt wieder – und jedes Mal, wenn du es weißt, ein Stück später. So lange, bis es sitzt." },
+    kurz: "gegen das Vergessen",
+    echo: "Genau dafür ist Adrabic da." },
   { id: "wann", label: "Ich weiß nicht, was ich wann wiederholen soll", icon: "frage",
-    echo: "Das rechnet Adrabic für dich aus. Du siehst jeden Tag nur, was fällig ist." },
+    kurz: "Fälligkeiten übernimmt Adrabic",
+    echo: "Das rechnet Adrabic für dich aus." },
   { id: "dran", label: "Ich bleibe nicht dran", icon: "serie",
-    echo: "Gleich legst du einen festen Zeitpunkt am Tag fest. Und ein ausgelassener Tag reißt deine Serie nicht." },
+    kurz: "fester Zeitpunkt am Tag",
+    echo: "Gleich legst du einen festen Zeitpunkt fest." },
   { id: "zeit", label: "Mir fehlt die Zeit", icon: "uhr",
-    echo: "Deine Runde darf klein sein – ab 10 Karten. Das stellen wir gleich so ein." },
+    kurz: "kurze Runden",
+    echo: "Deine Runde darf klein sein. Stellen wir gleich ein." },
   /* 3.10.3: Betreiber - "eine realistische antwort waere, ich kann nicht oder
      schlecht lesen". Die Antwort darauf gibt es: Buchstaben lassen sich wie
      Woerter als Karten anlegen (Wort-Feld nimmt jeden Text). */
   { id: "schrift", label: "Ich lese Arabisch noch schlecht oder gar nicht", icon: "auge",
-    echo: "Dann fang bei den Buchstaben an: Auch sie werden Karten – vorne der Buchstabe, hinten die Aussprache. Und die Schrift stellen wir gleich groß." }
+    kurz: "große Schrift, Buchstaben als Karten",
+    echo: "Dann fang bei den Buchstaben an. Die Schrift stellen wir groß." },
+  /* 3.11.0: der ehrliche Ausweg. Seit dieser Fassung ist auf diesem
+     Bildschirm eine Wahl Pflicht (siehe einstiegWahlFehlt) - ohne eine
+     Antwort "nichts davon" waere das eine Falle: niemand darf gezwungen
+     werden, sich ein Problem zuzuschreiben, das er nicht hat. */
+  { id: "keine", label: "Nichts davon", icon: "haken",
+    kurz: "",
+    echo: "Gut. Dann halten wir es kurz." }
 ];
 /* Dieselben Werte wie SITZUNGS_LIMITS, nur mit einer Einordnung rechts -
    Duolingo ("5 min / Casual"), hier in Karten statt Minuten, weil die App
@@ -1251,6 +1272,46 @@ try {
   if (THEMEN.some(x => x.id === gespeichertesThema)) settings.thema = gespeichertesThema;
 } catch (e) {}
 themaAnwenden();
+
+/* ---------- 3.11.0: Bewegung ----------------------------------------------
+   Betreiber am 24.09.2026: die Bewegungen aus dem Einstieg sollen auch in der
+   App selbst wirken ("kann man anhand der animationen und sachen am onboarding
+   von dir oder prompts am tool selbst anwenden? die sachen gefallen mir sehr").
+   Wer mehr Bewegung einbaut, muss sie auch abschaltbar machen - bisher gab es
+   dafuer nur den Schalter des Betriebssystems (prefers-reduced-motion,
+   styles.css Abschnitt 3). Auf dem Handy findet den fast niemand, und wer ihn
+   fuer das ganze Geraet setzt, will ihn selten fuer das ganze Geraet.
+
+   GERAETELOKAL, nicht in der Cloud - und das ist eine Entscheidung, keine
+   Bequemlichkeit. firestore.rules pruefen `settings` mit hasOnly(['arabGroesse',
+   'lastBackup', 'thema', 'sitzungsLimit']): ein fuenftes Feld wuerde von den
+   DEPLOYTEN Regeln abgelehnt, bis der Betreiber neue Regeln einspielt - bis
+   dahin schluege jedes Speichern der Einstellungen fehl. Ein Schalter fuer die
+   Optik dieses Geraets ist ausserdem sachlich geraetegebunden: dasselbe Konto
+   auf einem schnellen Rechner und einem alten Handy will hier nicht dasselbe.
+   Genau wie "adrabic-thema" (siehe oben) steht der Wert deshalb im
+   localStorage. */
+const BEWEGUNG_KEY = "adrabic-bewegung";
+const BEWEGUNGEN = [
+  { id: "voll",  label: "Voll" },
+  { id: "ruhig", label: "Ruhig" }
+];
+let bewegung = "voll";
+function bewegungAnwenden() {
+  document.documentElement.setAttribute("data-bewegung", bewegung);
+}
+function setBewegung(id) {
+  if (!BEWEGUNGEN.some(x => x.id === id)) return;
+  bewegung = id;
+  try { localStorage.setItem(BEWEGUNG_KEY, id); } catch (e) {}
+  bewegungAnwenden();
+  render();
+}
+try {
+  const gespeichert = localStorage.getItem(BEWEGUNG_KEY);
+  if (BEWEGUNGEN.some(x => x.id === gespeichert)) bewegung = gespeichert;
+} catch (e) {}
+bewegungAnwenden();
 
 let ui = {
   authMode: "login",         // "login" | "register" | "reset"
@@ -5189,9 +5250,15 @@ function einstiegZielEchoText(e) {
     : quellen.slice(0, -1).join(", ") + " sowie " + quellen[quellen.length - 1];
   /* 3.10.3: "oder uebernimmst einen Kartensatz" - der Betreiber will fertige
      Karteien spaeter freigeben, und Lehrkraefte koennen es heute schon: Datei
-     und Code gibt es (leerer Lernen-Bildschirm). */
+     und Code gibt es (leerer Lernen-Bildschirm).
+     3.11.0: der letzte Satz ("Adrabic sorgt dafuer, dass sie wiederkommen")
+     ist weg - das sagt der Bildschirm davor schon als Bild. Stattdessen wird
+     der Kartensatz KONKRET: "per Code". Grund: Betreiber am 24.09.2026, aus
+     einem TikTok-Befund - eine Funktion, die im Einstieg nur angedeutet wird,
+     benutzt fast niemand ("das mit dem code bzw kartensatz der grob erwaehnt
+     wird reicht ned"). */
   return "Adrabic ist kein fertiger Kurs. Du legst die Wörter an, die du gerade lernst – aus " + liste +
-    " – oder übernimmst einen Kartensatz, den dir jemand teilt. Adrabic sorgt dafür, dass sie wiederkommen.";
+    ". Oder du übernimmst einen fertigen Kartensatz per Code.";
 }
 function einstiegHuerdeZeile(hd, aktiv, n) {
   return '<div class="einstieg-option-rahmen">' +
@@ -5203,15 +5270,20 @@ function einstiegHuerdeZeile(hd, aktiv, n) {
 /* Was nach dem Bewerten der Probekarte gesagt wird - genau das, was die
    Lernlogik mit einer NEUEN Karte tut (app.js, Bewerten: known/almost/else):
    Sicher -> Stufe 1, morgen; Fast -> morgen; Nicht -> heute noch einmal. */
+/* 3.11.0: jede Antwort ist EIN kurzer Satz. Betreiber am 24.09.2026, zu
+   genau dieser Stelle: "dasselbe problem auf der seite probier eine karte
+   'dann kommt sie morgen wieder- und jedes mal…'". Was danach kam, erklaerte
+   die wachsenden Abstaende noch einmal in Worten - obwohl direkt darunter die
+   Leiste steht, die genau das ZEIGT. Der Satz ist weg, die Leiste bleibt. */
 function einstiegBewertungEcho(b) {
   let h;
   if (b === "Sicher") {
-    h = '<p class="einstieg-echo">Dann kommt sie morgen wieder – und jedes Mal, wenn du sie weißt, ' +
-      'ein Stück später. So lange, bis sie sitzt.</p>' + einstiegLeiste(false);
+    h = '<p class="einstieg-echo">Dann kommt sie morgen wieder. Danach immer seltener.</p>' +
+      einstiegLeiste(false);
   } else if (b === "Fast") {
-    h = '<p class="einstieg-echo">Dann kommt sie morgen noch einmal. Danach geht es in wachsenden Abständen weiter.</p>';
+    h = '<p class="einstieg-echo">Dann kommt sie morgen noch einmal.</p>';
   } else {
-    h = '<p class="einstieg-echo">Dann kommt sie in dieser Runde gleich noch einmal – so lange, bis du sie weißt.</p>';
+    h = '<p class="einstieg-echo">Dann kommt sie in dieser Runde gleich noch einmal.</p>';
   }
   return h + '<p class="hint einstieg-nachsatz">So macht Adrabic es mit jeder deiner Karten.</p>';
 }
@@ -5233,6 +5305,10 @@ function einstiegFreiVerbinden() {
     ui.einstieg.ankerFrei = feld.value.trim();
     const s = document.getElementById("einstieg-satz");
     if (s) s.innerHTML = einstiegSatzHtml(ui.einstieg);
+    /* 3.11.0: "eigene Situation" ohne Text ist keine Wahl - der Satz im Plan
+       hiesse dann "Wenn ich …, mache ich eine Runde." Der Knopf folgt dem
+       Feld Buchstabe fuer Buchstabe. */
+    einstiegWeiterPruefen();
   });
 }
 
@@ -5255,36 +5331,122 @@ function einstiegKopf(e) {
    muss ganz schnell weg - wenn man ein konto hat, kann man das druecken am
    anfang, sonst nicht alles skipen." Wer ein Konto hat, nimmt "Ich habe
    schon ein Konto" auf Bildschirm 1; alle anderen gehen den Einstieg durch.
-   Keine Frage ist Pflicht - "Weiter" geht immer, auch ohne Wahl -, und
-   Zurueck steht auf jedem Bildschirm. */
+   Zurueck steht auf jedem Bildschirm.
+
+   3.11.0: "Weiter" geht NICHT mehr immer. Betreiber am 24.09.2026: "anderes
+   problem ist, man kann alles skippen indem man einfach auf weiter druegt ohne
+   je was ausgewaehlt zu haben." Das war die letzte Luecke, die das
+   Ueberspringen-Loeschen offen gelassen hatte: dreimal "Weiter" und man stand
+   auf dem Plan, ohne eine einzige Antwort - und der Plan zeigte dann
+   Voreinstellungen, die er als "aus deinen Antworten" ausgibt. Das ist die
+   Unwahrheit, gegen die NEUAUFBAU-3.md Abschnitt 5 geschrieben ist.
+
+   Pflicht ist nur, wo es auch eine ehrliche Antwort fuer jeden gibt:
+     1 Ziel      - "Etwas anderes" steht in der Liste
+     2 Huerden   - "Nichts davon" ist seit 3.11.0 eine Antwort (EINSTIEG_HUERDEN)
+     6 Zeitpunkt - fuenf Tageszeiten plus eigene Situation
+   NICHT Pflicht sind 3 (Probekarte: "Weiter" erscheint erst nach dem
+   Bewerten, das ist die Sperre schon), 4 und 5 (beide zeigen eine Groesse
+   bzw. eine Rundengroesse als gesetzten Stand an - dort ist "nichts gewaehlt"
+   kein moeglicher Zustand). */
+const EINSTIEG_PFLICHT = {
+  1: e => e.ziele.length > 0,
+  2: e => e.huerden.length > 0,
+  6: e => !!e.anker && (e.anker !== "eigen" || !!e.ankerFrei)
+};
+/* Was unter dem gesperrten Knopf steht. Ein gesperrter Knopf ohne Begruendung
+   ist eine Sackgasse, in der man nicht weiss, was von einem erwartet wird. */
+const EINSTIEG_SPERRE_TEXT = {
+  1: "Wähl mindestens ein Ziel.",
+  2: "Wähl, was stimmt – oder „Nichts davon“.",
+  6: "Wähl einen Zeitpunkt."
+};
+function einstiegWahlFehlt(e) {
+  const pruefung = e && EINSTIEG_PFLICHT[e.schritt];
+  return pruefung ? !pruefung(e) : false;
+}
 function einstiegFuss(weiterLabel, weiterAktion, klasse) {
+  const e = ui.einstieg;
+  /* Die Hinweiszeile steht NUR auf Bildschirmen mit Pflicht. Sie haelt ihren
+     Platz frei (min-height in styles.css), damit der Knopf nicht springt, wenn
+     der Satz nach der ersten Wahl verschwindet - auf allen anderen
+     Bildschirmen waere dieser reservierte Platz einfach ein Loch. */
+  const pflicht = !!(e && EINSTIEG_PFLICHT[e.schritt]);
+  const gesperrt = einstiegWahlFehlt(e);
+  const hinweis = gesperrt ? (EINSTIEG_SPERRE_TEXT[e.schritt] || "") : "";
   return '<div class="form-actions einstieg-aktion' + (klasse ? ' ' + klasse : '') + '">' +
-    '<button class="full" data-action="' + (weiterAktion || "einstieg-weiter") + '">' + esc(weiterLabel) + '</button>' +
+    '<button class="full" data-action="' + (weiterAktion || "einstieg-weiter") + '"' +
+    (gesperrt ? ' disabled aria-disabled="true"' : '') + '>' + esc(weiterLabel) + '</button>' +
+    (pflicht ? '<p class="einstieg-sperre" aria-live="polite">' + esc(hinweis) + '</p>' : '') +
     '</div>';
+}
+/* Die Wahl-Zweige zeichnen den Bildschirm bewusst NICHT neu (Fokus, Bewegung -
+   siehe einstiegOptionZustand). Der Knopf muss deshalb an Ort und Stelle
+   nachgezogen werden, sonst bleibt er gesperrt, obwohl gerade etwas gewaehlt
+   wurde. */
+function einstiegWeiterPruefen() {
+  const e = ui.einstieg;
+  if (!e) return;
+  const knopf = app.querySelector(".einstieg-aktion button.full");
+  if (!knopf) return;
+  const gesperrt = einstiegWahlFehlt(e);
+  knopf.disabled = gesperrt;
+  if (gesperrt) knopf.setAttribute("aria-disabled", "true");
+  else knopf.removeAttribute("aria-disabled");
+  const hinweis = app.querySelector(".einstieg-sperre");
+  if (hinweis) hinweis.textContent = gesperrt ? (EINSTIEG_SPERRE_TEXT[e.schritt] || "") : "";
 }
 
 /* Der Plan entsteht (Cal AI: "We're setting everything up for you"). Ein
    kurzer Aufbau, der genau die Punkte abhakt, die gerade wirklich eingestellt
    werden - keine Prozentzahl, keine erfundene Rechnung. Nur beim ersten Mal
    und nicht bei "Bewegung reduzieren". */
-const EINSTIEG_BAU_MS = 2300;
+/* 3.11.0: der Aufbau ist laenger und er ist PERSOENLICH. Betreiber am
+   24.09.2026: "das hier mit dein plan wird erstellt soll ja personalisiert
+   aussehen und sowas meine ich, das animation alles gefaellt mir, vielleicht
+   in die laenge ziehen fuer wertgefuehl."
+
+   Vorher: vier feste Punkte, zwei davon aus Voreinstellungen - der Aufbau sah
+   bei jedem gleich aus und dauerte 2,3 s. Jetzt kommen Ziel und Huerde aus den
+   eigenen Antworten dazu, der Punkt zaehlt also mit, was man gesagt hat.
+   Die Dauer folgt der Zahl der Punkte, statt fest zu sein: sonst waere ein
+   langer Plan gehetzt und ein kurzer stuende still.
+
+   Was NICHT dazukommt: eine Prozentzahl, eine Rechnung, eine Wirkungszusage.
+   Jeder Punkt ist etwas, das gleich wirklich so eingestellt ist
+   (NEUAUFBAU-3.md Abschnitt 5). */
+const EINSTIEG_BAU_SCHRITT_MS = 560;    // Abstand von einem Punkt zum naechsten
+const EINSTIEG_BAU_VORLAUF_MS = 420;    // bis der erste Punkt steht
+const EINSTIEG_BAU_NACHLAUF_MS = 700;   // der letzte Punkt darf einen Moment stehen
 function einstiegBauListe(e) {
-  const groesse = einstiegGroesse(e);
+  const punkte = [];
+  const ziel = EINSTIEG_ZIELE.filter(z => e.ziele.includes(z.id)).map(z => z.kurz).join(", ");
+  if (ziel) punkte.push("Dein Ziel: " + ziel);
+  /* Nur die erste genannte Huerde. Bei drei Kreuzen stuenden hier sonst drei
+     fast gleich klingende Zeilen, und der Aufbau waere Fuellmaterial statt
+     Antwort. "Nichts davon" hat kein kurz und faellt damit von selbst weg. */
+  const huerde = EINSTIEG_HUERDEN.find(h => e.huerden.includes(h.id) && h.kurz);
+  if (huerde) punkte.push("Eingerichtet: " + huerde.kurz);
   const limit = einstiegLimit(e);
-  const zeitpunkt = einstiegZeitpunkt(e);
-  const punkte = [
-    "Schrift: " + labelVon(ARAB_STUFEN, groesse, "Normal"),
-    "Runde: " + (String(limit) === "alle" ? "alle fälligen Karten" : "bis zu " + limit + " Karten"),
-    "Zeitpunkt: " + zeitpunkt,
-    "Wiederholungen: automatisch"
-  ];
+  punkte.push("Schrift: " + labelVon(ARAB_STUFEN, einstiegGroesse(e), "Normal"));
+  punkte.push("Runde: " + (String(limit) === "alle" ? "alle fälligen Karten" : "bis zu " + limit + " Karten"));
+  punkte.push("Zeitpunkt: " + einstiegZeitpunkt(e));
+  punkte.push("Wiederholungen: rechnet Adrabic");
   return punkte;
+}
+function einstiegBauDauer(anzahl) {
+  return EINSTIEG_BAU_VORLAUF_MS + anzahl * EINSTIEG_BAU_SCHRITT_MS + EINSTIEG_BAU_NACHLAUF_MS;
 }
 function einstiegZeitpunkt(e) {
   if (e.anker === "eigen") return e.ankerFrei ? "wenn ich " + e.ankerFrei : "noch offen";
   return e.anker ? ankerLabel(e.anker) : "noch offen";
 }
+/* 3.11.0: die eigene Einstellung zaehlt genauso wie die des Betriebssystems.
+   Ohne das lief der Plan-Aufbau weiter, obwohl in den Einstellungen "Ruhig"
+   steht - und der Einstieg waere der einzige Ort in der App, an dem der
+   Schalter nicht wirkt. */
 function einstiegBewegungReduziert() {
+  if (bewegung === "ruhig") return true;
   try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (err) { return false; }
 }
 function einstiegTimerStoppen() {
@@ -5336,7 +5498,11 @@ function renderEinstieg() {
        Grund haben (Video 1, Headspace). */
     html += '<h1 id="einstieg-frage">Wofür lernst du Arabisch?</h1>';
     html += '<p class="subtitle">Wähl alles, was passt.</p>';
-    html += '<div class="einstieg-wahl" role="group" aria-labelledby="einstieg-frage">';
+    /* 3.11.0: --paar heisst "darf ab Tablet in zwei Spalten stehen". Nur hier
+       und beim Zeitpunkt: diese beiden Listen sind reine Antwortzeilen. Die
+       Huerden koennen es NICHT - dort haengt unter jeder gewaehlten Zeile ihr
+       Echo, und das liest sich in zwei Spalten wie ein Formular. */
+    html += '<div class="einstieg-wahl einstieg-wahl--paar" role="group" aria-labelledby="einstieg-frage">';
     html += EINSTIEG_ZIELE.map((z, n) => einstiegOption("einstieg-ziel", z, e.ziele.includes(z.id), null, n)).join("");
     html += '</div>';
     html += '<div class="einstieg-echo-platz" id="einstieg-ziel-echo" aria-live="polite">' +
@@ -5432,23 +5598,29 @@ function renderEinstieg() {
       ? 'Du hast gesagt, du bleibst schwer dran – dafür ist dieser Schritt da. ' : '') +
       'Ein fester Punkt am Tag hält besser als ein guter Vorsatz.</p>';
     html += '<p class="einstieg-satz" id="einstieg-satz">' + einstiegSatzHtml(e) + '</p>';
-    html += '<div class="einstieg-wahl" role="group" aria-labelledby="einstieg-frage">';
+    html += '<div class="einstieg-wahl einstieg-wahl--paar" role="group" aria-labelledby="einstieg-frage">';
     html += EINSTIEG_ANKER.map((o, n) => einstiegOption("einstieg-anker", o, e.anker === o.id, null, n)).join("");
     html += '</div>';
     html += '<div id="einstieg-frei-platz">' + (frei ? einstiegFreiFeld() : '') + '</div>';
     html += einstiegFuss("Weiter");
 
   } else if (aufbau) {
-    /* Der Plan entsteht - siehe EINSTIEG_BAU_MS. Der Ring fuellt sich, die
-       Punkte haken sich nacheinander ab, dann folgt der Plan von selbst. */
-    html += '<div class="einstieg-bau">';
+    /* Der Plan entsteht. Der Ring fuellt sich, die Punkte haken sich
+       nacheinander ab, dann folgt der Plan von selbst.
+       3.11.0: Takt und Dauer stehen als CSS-Variablen am Block, damit Ring,
+       Punkte und der Timer in app.js dieselbe Zeit benutzen - drei
+       Zahlenreihen, die sich frueher nur zufaellig trafen. */
+    const punkte = einstiegBauListe(e);
+    const dauer = einstiegBauDauer(punkte.length);
+    html += '<div class="einstieg-bau" style="--bau-schritt:' + EINSTIEG_BAU_SCHRITT_MS + 'ms;' +
+      '--bau-vorlauf:' + EINSTIEG_BAU_VORLAUF_MS + 'ms;--bau-dauer:' + dauer + 'ms">';
     html += '<div class="einstieg-bau__ring" aria-hidden="true">' +
       '<svg viewBox="0 0 64 64" focusable="false"><circle class="einstieg-bau__spur" cx="32" cy="32" r="28"/>' +
       '<circle class="einstieg-bau__fuellung" cx="32" cy="32" r="28" pathLength="1"/></svg>' +
       ikon("marke", "i-lg") + '</div>';
     html += '<h1>Dein Plan entsteht …</h1>';
     html += '<ul class="einstieg-bau__liste">';
-    html += einstiegBauListe(e).map((t, n) =>
+    html += punkte.map((t, n) =>
       '<li style="--n:' + n + '">' + ikon("haken", "i-sm") + '<span>' + esc(t) + '</span></li>').join("");
     html += '</ul></div>';
 
@@ -5477,6 +5649,24 @@ function renderEinstieg() {
     html += '<h2 class="einstieg-zwischentitel">So kommt ein Wort zurück, das du heute anlegst</h2>';
     html += einstiegLeiter();
     html += '<p class="hint einstieg-nachsatz">Weißt du es mal nicht, kommt es früher wieder.</p>';
+    /* 3.11.0: die zwei Wege zu Karten, beim Namen genannt. Betreiber am
+       24.09.2026, aus einem TikTok-Befund: "hab in einem tiktok video gesehen,
+       dass deren foto feature von 4% genutzt wurde nur, weil es im onboarding
+       nicht erwaehnt war. das mit dem code bzw kartensatz der grob erwaehnt
+       wird reicht ned oder."
+       Beides gibt es heute (renderLernen, leerer Zustand: "Erste Karte
+       anlegen" und "Code eingeben"; Einstellungen: "Code einloesen"). Wer es
+       hier nicht gelesen hat, sucht es dort nicht. Deshalb stehen die zwei
+       Wege hier als Anzeige - keine Knoepfe: der Einstieg endet mit EINER
+       Handlung, und das ist "Plan speichern". */
+    html += '<h2 class="einstieg-zwischentitel">Und so kommst du an deine Karten</h2>';
+    html += '<div class="einstieg-wege">';
+    html += '<div class="einstieg-weg" style="--n:0">' + ikon("plus", "i-sm") +
+      '<span><strong>Selbst anlegen.</strong> Vorne das Wort, hinten die Bedeutung.</span></div>';
+    html += '<div class="einstieg-weg" style="--n:1">' + ikon("einspielen", "i-sm") +
+      '<span><strong>Kartensatz per Code.</strong> Hat dir jemand einen Code gegeben, ' +
+      'stehen seine Lektionen bei dir fertig da.</span></div>';
+    html += '</div>';
     html += einstiegFuss("Plan speichern", "einstieg-fertig", "einstieg-aktion--glanz einstieg-aktion--spaet");
     html += '<p class="einstieg-vertrauen">Kostenlos. Keine Werbung, kein Tracking.</p>';
   }
@@ -5505,7 +5695,7 @@ function renderEinstieg() {
       e.planGebaut = true;
       e.gezeigt = -1;
       render();
-    }, EINSTIEG_BAU_MS);
+    }, einstiegBauDauer(einstiegBauListe(e).length));
   }
 }
 
@@ -6886,6 +7076,11 @@ function merkSetOeffnen() {
    auseinanderlaufen. */
 const SEITEN_TITEL = {
   sichern: "Sichern",
+  /* 3.11.0: eigene Seite. Bis dahin lag "Code einloesen" unten auf
+     "Einspielen" und "Per Code teilen" unten auf "Sichern" - zwei Haelften
+     derselben Sache, versteckt hinter zwei Begriffen, die von Backups
+     sprechen. Siehe renderEinstellungen. */
+  kartensaetze: "Kartensätze",
   einspielen: "Einspielen",
   verlauf: "Aufzeichnung",
   lektionen: "Lektionen",
@@ -6916,7 +7111,46 @@ function renderEinstellungen() {
   const tage = Object.keys(verlauf).length;
   let html = "";
 
-  /* ---------- Darstellung und Lernen: drei kleine Entscheidungen ---------- */
+  /* ---------- 3.11.0: die Reihenfolge ----------
+     Betreiber am 24.09.2026: "gucken ob man noch weitere sachen in die
+     einstellungen einbauen kann sinnvoll, strukturiert auch, reihenfolge,
+     alles, welche vielleicht dann auch einfluss auf onboarding haben."
+
+     Geordnet ist jetzt nach Haeufigkeit, nicht nach Verwandtschaft:
+
+       1 Lernen       - die eine Einstellung, die den Alltag aendert
+       2 Kartensätze  - der Weg, an Stoff zu kommen (siehe unten)
+       3 Darstellung  - einmal gesetzt, danach selten
+       4 Daten        - im Notfall, nicht im Alltag
+       5 Hilfe
+       6 Konto        - zuletzt, weil "Konto loeschen" darin steht
+
+     Vorher stand Darstellung ganz oben und "Karten pro Sitzung" allein in
+     einem eigenen Abschnitt darunter - die Helligkeit also vor der einzigen
+     Einstellung, die etwas am Lernen aendert. */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Lernen</div>';
+  html += '<div class="liste">';
+  html += einstZeile({ action: "wahl-sheet", id: "limit", icon: "lernen", text: "Karten pro Sitzung",
+    wert: labelVon(SITZUNGS_LIMITS, settings.sitzungsLimit, "Alle") });
+  html += '</div></div>';
+
+  /* ---------- Kartensätze: die Funktion, die niemand fand ----------
+     Betreiber am 24.09.2026, aus einem TikTok-Befund: eine Funktion, die im
+     Einstieg nicht vorkommt, benutzt fast niemand. Das Teilen und Uebernehmen
+     per Code ist genau so ein Fall - es lag als letzter Kasten auf "Sichern"
+     (teilen) und als letzter Kasten auf "Einspielen" (einloesen), also
+     zweigeteilt unter zwei Begriffen, die von Backups sprechen. Wer einen Code
+     bekommen hatte, suchte ihn unter "Einspielen" nicht.
+     Jetzt: eine Zeile mit dem Namen der Sache, eine Seite, beide Haelften
+     darauf. Der Einstieg nennt sie seit 3.11.0 ebenfalls (Plan-Bildschirm). */
+  html += '<div class="sektion">';
+  html += '<div class="eyebrow">Kartensätze</div>';
+  html += '<div class="liste">';
+  html += einstZeile({ action: "einst-seite", id: "kartensaetze", icon: "teilen",
+    text: "Teilen und übernehmen" });
+  html += '</div></div>';
+
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Darstellung</div>';
   html += '<div class="liste">';
@@ -6924,13 +7158,12 @@ function renderEinstellungen() {
     wert: labelVon(THEMEN, settings.thema, "Dunkel") });
   html += einstZeile({ action: "wahl-sheet", id: "arab", icon: "karten", text: "Arabische Schrift",
     wert: labelVon(ARAB_STUFEN, settings.arabGroesse, "Normal") });
-  html += '</div></div>';
-
-  html += '<div class="sektion">';
-  html += '<div class="eyebrow">Lernen</div>';
-  html += '<div class="liste">';
-  html += einstZeile({ action: "wahl-sheet", id: "limit", icon: "lernen", text: "Karten pro Sitzung",
-    wert: labelVon(SITZUNGS_LIMITS, settings.sitzungsLimit, "Alle") });
+  /* 3.11.0: siehe BEWEGUNG_KEY - wer mehr Bewegung einbaut, muss sie
+     abschaltbar machen, und zwar hier und nicht nur im Betriebssystem. */
+  /* "umkehren" (zwei Pfeile im Kreis) statt der Serien-Flamme: eine Flamme
+     neben "Bewegung" liest sich wie die Lernserie, nicht wie Animation. */
+  html += einstZeile({ action: "wahl-sheet", id: "bewegung", icon: "umkehren", text: "Bewegung",
+    wert: labelVon(BEWEGUNGEN, bewegung, "Voll") });
   html += '</div></div>';
 
   /* ---------- Daten: drei Handlungen, jede auf eigener Seite ----------
@@ -6942,7 +7175,7 @@ function renderEinstellungen() {
   html += '<div class="liste">';
   html += einstZeile({ action: "einst-seite", id: "sichern", icon: "sichern", text: "Sichern",
     wert: alter === null ? "noch nie" : alter === 0 ? "heute" : "vor " + alter + " Tg." });
-  html += einstZeile({ action: "einst-seite", id: "einspielen", icon: "einspielen", text: "Einspielen" });
+  html += einstZeile({ action: "einst-seite", id: "einspielen", icon: "einspielen", text: "Datei einspielen" });
   html += einstZeile({ action: "einst-seite", id: "verlauf", icon: "fortschritt", text: "Aufzeichnung",
     wert: tage + " Tag" + (tage === 1 ? "" : "e") });
   html += '</div></div>';
@@ -7022,6 +7255,22 @@ function renderEinstellungenSeite(id) {
     html += '<button class="secondary" data-action="export-backup-current">Nur „' + esc(b.name) + '“</button>';
     html += '</div>';
     html += '</div>';
+    return html;
+  }
+
+  /* 3.11.0: die beiden Haelften des Code-Teilens, zusammen auf einer Seite -
+     siehe die Begruendung in renderEinstellungen. Uebernehmen steht VOR
+     Teilen: die meisten bekommen einen Code, wenige geben einen. */
+  if (id === "kartensaetze") {
+    html += '<div class="card">';
+    html += '<h3>Kartensatz übernehmen</h3>';
+    html += '<p class="hint">Hat dir jemand einen Code gegeben, gib ihn hier ein. ' +
+      'Seine Lektionen stehen danach bei dir – alles auf Stufe 0, du fängst selbst an.</p>';
+    html += '<div class="form-actions">';
+    html += '<button data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
+      ' Code eingeben</button>';
+    html += '</div></div>';
+
     if (!istGefuehrt(b)) {
       /* Lehrer-Modus, Kernablauf - siehe teileLektionCode() in app.js und
          plan/lehrer-modus/GERUEST.md, Abschnitt H. Code-basiertes Teilen skaliert
@@ -7029,7 +7278,7 @@ function renderEinstellungenSeite(id) {
          Der Datei-Knopf "Kartensatz zum Weitergeben" ist seit 3.7.2 weg: derselbe
          Inhalt laeuft ueber "Code – Fortschritt schaltet frei". */
       html += '<div class="card" style="margin-top:var(--stack)">';
-      html += '<h3>Per Code teilen</h3>';
+      html += '<h3>„' + esc(b.name) + '“ teilen</h3>';
       if (b.teilCode) {
         html += '<p class="hint">Dein Code: <strong>' + esc(b.teilCode) + '</strong><br>' +
           'Wer ihn in der App eingibt, bekommt deine Lektionen. Du siehst nicht, wer.</p>';
@@ -7077,14 +7326,11 @@ function renderEinstellungenSeite(id) {
     html += '<button data-action="import-trigger">' + ikon("einspielen", "i-sm") +
       ' Datei auswählen</button>';
     html += '</div></div>';
-
-    html += '<div class="card" style="margin-top:var(--stack)">';
-    html += '<h3>Code einlösen</h3>';
-    html += '<p class="hint">Hast du einen Code bekommen? Gib ihn hier ein.</p>';
-    html += '<div class="form-actions">';
-    html += '<button class="secondary" data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
-      ' Code eingeben</button>';
-    html += '</div></div>';
+    /* 3.11.0: "Code einloesen" stand hier als zweiter Kasten und ist jetzt auf
+       der Seite "Kartensätze" - dort, wo man danach sucht. Ein Verweis bleibt,
+       damit niemand ins Leere laeuft, der sich den alten Ort gemerkt hat. */
+    html += '<p class="hint" style="margin-top:var(--stack-tight)">Einen <strong>Code</strong> ' +
+      'löst du unter „Kartensätze“ ein.</p>';
     return html;
   }
 
@@ -7357,6 +7603,16 @@ const WAHLEN = {
            'was du lesen kannst.',
     probe: true
   },
+  /* 3.11.0: siehe BEWEGUNG_KEY. Der Hinweis nennt beide Wege ausdruecklich -
+     wer "Ruhig" sucht, weil das ganze Geraet schon ruhig steht, soll hier
+     nicht glauben, er muesse es zweimal setzen. */
+  bewegung: {
+    titel: "Bewegung", action: "set-bewegung",
+    liste: () => BEWEGUNGEN, wert: () => bewegung,
+    hilfe: 'Bei „Ruhig“ erscheint alles sofort – kein Einfliegen, kein Aufleuchten, kein Aufbau. ' +
+           'Gilt nur auf diesem Gerät. Steht im Betriebssystem schon „Bewegung reduzieren“, ' +
+           'ist die App ohnehin ruhig, ganz gleich was hier steht.'
+  },
   limit: {
     titel: "Karten pro Sitzung", action: "set-sitzungslimit",
     liste: () => SITZUNGS_LIMITS, wert: () => settings.sitzungsLimit,
@@ -7490,17 +7746,24 @@ function renderLernen() {
     html += '<div class="empty__titel">Noch nichts in „' + esc(b.name) + '“</div>';
     html += '<p class="empty__text">' + (kannAnlegen
       ? 'Fang mit einem Wort an – aus deinem Buch, deinem Unterricht, was gerade ansteht. ' +
-        'Hast du von jemandem eine Datei oder einen Code bekommen, findest du beides darunter.'
+        'Oder übernimm einen fertigen Kartensatz: Code eingeben, fertig.'
       : 'Hast du eine Kartensatz-Datei oder einen Code bekommen? Spiel sie ein – ' +
         'deine Lektionen stehen danach fertig da.') + '</p>';
     html += '<div class="empty__aktionen">';
     if (kannAnlegen) {
       html += '<button data-action="karte-neu">' + ikon("plus", "i-sm") + ' Erste Karte anlegen</button>';
-      html += '<button class="secondary" data-action="import-trigger">Datei einspielen</button>';
+      /* 3.11.0: "Kartensatz per Code" steht jetzt VOR der Datei und als
+         .secondary statt .ghost. Derselbe Grund wie auf dem Plan-Bildschirm
+         (TikTok-Befund, 24.09.2026): der Code ist der Weg, den jemand ohne
+         eigenen Stoff wirklich gehen kann - eine Backup-Datei hat am ersten
+         Tag niemand. Als .ghost war er der leiseste von drei Knoepfen. */
+      html += '<button class="secondary" data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
+        ' Kartensatz per Code</button>';
+      html += '<button class="ghost" data-action="import-trigger">Datei einspielen</button>';
     } else {
       html += '<button data-action="import-trigger">Kartensatz einspielen</button>';
+      html += '<button class="ghost" data-action="code-einloesen-start">Code eingeben</button>';
     }
-    html += '<button class="ghost" data-action="code-einloesen-start">Code eingeben</button>';
     html += '</div></div>';
     return html;
   }
@@ -9888,6 +10151,11 @@ document.body.addEventListener("click", e => {
        "Weiter" gingen von "Ziel" direkt zur Probekarte, die Huerden fielen
        weg. Gesperrt ist nur das Weitergehen, nicht das Antworten. */
     case "einstieg-weiter":
+      /* 3.11.0: zweite Sperre neben dem disabled-Attribut am Knopf. Der
+         delegierte Listener bekommt auch Tastatur-Ereignisse und Klicks aus
+         Bedienhilfen; ein disabled-Knopf schickt die normalerweise nicht, aber
+         die Pflicht steht hier im Code und nicht nur in der Anzeige. */
+      if (einstiegWahlFehlt(ui.einstieg)) break;
       if (ui.einstieg && Date.now() - ui.einstieg.zeit >= 400) {
         einstiegTimerStoppen();
         einstiegSchrittSichern(ui.einstieg);
@@ -9900,6 +10168,17 @@ document.body.addEventListener("click", e => {
     case "einstieg-zurueck":
       if (ui.einstieg && Date.now() - ui.einstieg.zeit >= 400) {
         einstiegTimerStoppen();
+        /* 3.11.0, echter Fund (Betreiber am 24.09.2026): "wenn man auf oben
+           links alle zurueck geht, dann wieder eintraegt, kommt am ende diese
+           animation ned mehr bis man app schliest und nochmal."
+           Stimmt. planGebaut merkt sich, dass der Aufbau gelaufen ist - damit
+           er nicht bei jedem stillen Neuzeichnen des Plans wieder losgeht.
+           Beim Zurueckgehen blieb der Merker aber stehen, obwohl die Antworten
+           danach neu gegeben werden: der Plan sprang beim zweiten Durchgang
+           ohne Aufbau herein. Wer den Plan-Bildschirm nach hinten verlaesst,
+           gibt ihn auf - also wird der Merker hier geloescht und der Aufbau
+           laeuft mit den neuen Antworten noch einmal. */
+        if (ui.einstieg.schritt === EINSTIEG_LETZTER) ui.einstieg.planGebaut = false;
         ui.einstieg.richtung = "zurueck";
         ui.einstieg.schritt = Math.max(0, ui.einstieg.schritt - 1);
         window.scrollTo(0, 0);
@@ -9937,6 +10216,7 @@ document.body.addEventListener("click", e => {
       einstiegOptionZustand(btn, an);
       const platz = document.getElementById("einstieg-ziel-echo");
       if (platz) einstiegEchoSetzen(platz, einstiegZielEchoText(e));
+      einstiegWeiterPruefen();
       break;
     }
     case "einstieg-huerde": {
@@ -9945,11 +10225,28 @@ document.body.addEventListener("click", e => {
       const id = btn.dataset.id;
       const an = !e.huerden.includes(id);
       e.huerden = an ? e.huerden.concat(id) : e.huerden.filter(x => x !== id);
-      einstiegOptionZustand(btn, an);
-      const rahmen = btn.closest(".einstieg-option-rahmen");
-      const platz = rahmen && rahmen.querySelector(".einstieg-echo-platz");
-      const hd = EINSTIEG_HUERDEN.find(x => x.id === id);
-      if (platz) einstiegEchoSetzen(platz, an && hd ? hd.echo : "");
+      /* 3.11.0: "Nichts davon" und eine genannte Huerde schliessen sich aus -
+         sonst stuende im Plan "gegen das Vergessen" neben "nichts davon". Wer
+         das eine waehlt, verliert das andere, und zwar sichtbar: die Zeilen der
+         anderen Wahl werden mit ihren Echos zurueckgesetzt. */
+      if (an) {
+        e.huerden = id === "keine" ? ["keine"] : e.huerden.filter(x => x !== "keine");
+      }
+      const gruppe = btn.closest(".einstieg-wahl");
+      if (gruppe) {
+        gruppe.querySelectorAll(".einstieg-option").forEach(b => {
+          const bid = b.dataset.id;
+          const bAn = e.huerden.includes(bid);
+          einstiegOptionZustand(b, bAn);
+          const bRahmen = b.closest(".einstieg-option-rahmen");
+          const bPlatz = bRahmen && bRahmen.querySelector(".einstieg-echo-platz");
+          const bHd = EINSTIEG_HUERDEN.find(x => x.id === bid);
+          if (bPlatz) einstiegEchoSetzen(bPlatz, bAn && bHd ? bHd.echo : "");
+        });
+      } else {
+        einstiegOptionZustand(btn, an);
+      }
+      einstiegWeiterPruefen();
       break;
     }
     case "einstieg-aufdecken":
@@ -10032,6 +10329,7 @@ document.body.addEventListener("click", e => {
           platz.innerHTML = "";
         }
       }
+      einstiegWeiterPruefen();
       break;
     }
     /* Der Wenn-dann-Satz hat bewusst KEINEN Speicherort in der Cloud: Er ist
@@ -10218,6 +10516,7 @@ document.body.addEventListener("click", e => {
       break;
     case "set-arab-groesse": setArabGroesse(btn.dataset.id); break;   // E7
     case "set-thema": setThema(btn.dataset.id); break;
+    case "set-bewegung": setBewegung(btn.dataset.id); break;
     case "set-sitzungslimit":
       setSitzungsLimit(btn.dataset.id === "alle" ? "alle" : Number(btn.dataset.id));
       break;

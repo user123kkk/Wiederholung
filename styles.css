@@ -573,6 +573,21 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
     scroll-behavior: auto !important;
   }
 }
+/* 3.11.0: derselbe Zustand, aber in der App eingestellt statt im
+   Betriebssystem (app.js, BEWEGUNG_KEY / bewegungAnwenden). Absichtlich
+   dieselben vier Zeilen und nicht eine gemeinsame Regel mit dem Block
+   darüber: eine Medienabfrage und ein Attribut-Treffer lassen sich in CSS
+   nicht zu einem Selektor verbinden, und ein `:where()`-Umbau würde die
+   Spezifität verschieben. Zwei kurze Blöcke sind hier ehrlicher als ein
+   trickreicher. */
+html[data-bewegung="ruhig"] *,
+html[data-bewegung="ruhig"] *::before,
+html[data-bewegung="ruhig"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
 
 
 /* ===========================================================================
@@ -2692,7 +2707,14 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .einstieg h1:focus { outline: none; }
 .einstieg .subtitle { margin-bottom: var(--space-4); }
 .einstieg .hint { padding-top: 0; }
-.einstieg-aktion { margin-top: var(--space-6); }
+/* 3.11.0: Spalte statt Reihe. .form-actions ist eine Reihe mit Umbruch - der
+   Sperr-Hinweis (.einstieg-sperre) landete darin NEBEN dem Knopf und rutschte
+   nur durch Zufall in die zweite Zeile. Hier steht immer ein Knopf und darunter
+   höchstens ein Satz, also ist eine Spalte die richtige Bauform. */
+.einstieg-aktion {
+  margin-top: var(--space-6);
+  flex-direction: column; align-items: stretch;
+}
 .einstieg-neben { margin-top: var(--space-4); }
 /* Trefferflaeche wie der Rest (Satz 3): .linklike ist sonst nur 36 px hoch. */
 .einstieg-neben .linklike { min-height: var(--tap); }
@@ -3157,18 +3179,27 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .einstieg-bau__ring > svg:not(.i) { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .einstieg-bau__ring circle { fill: none; stroke-width: 4; }
 .einstieg-bau__spur { stroke: var(--stufe-0); }
+/* 3.11.0: Dauer und Takt kommen aus app.js (renderEinstieg setzt --bau-dauer,
+   --bau-schritt und --bau-vorlauf am .einstieg-bau). Vorher standen hier feste
+   2100 ms, waehrend app.js mit 2300 ms rechnete und die Punkte im Abstand von
+   420 ms kamen - drei Zahlenreihen, die sich nur zufaellig trafen. Seit der
+   Aufbau aus den Antworten gebaut wird, ist die Zahl der Punkte nicht mehr
+   fest, also darf die Dauer es auch nicht sein. */
 .einstieg-bau__fuellung {
   stroke: var(--accent);
   stroke-linecap: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: einstieg-strich 2100ms var(--ease-in-out) 100ms forwards;
+  animation: einstieg-strich calc(var(--bau-dauer, 2100ms) - 200ms) var(--ease-in-out) 100ms forwards;
 }
 .einstieg-bau__ring > .i {
   width: 40px; height: 40px;
   color: var(--accent);
   filter: var(--mark-glow);
-  animation: einstieg-atmen 1.1s ease-in-out 2 alternate;
+  /* Laeuft, solange der Aufbau steht: eine feste Zahl von Durchläufen hoerte
+     bei einem laengeren Plan mitten im Aufbau auf, und ein Zeichen, das
+     plötzlich still steht, sieht nach Hänger aus. */
+  animation: einstieg-atmen 1.1s ease-in-out infinite alternate;
 }
 @keyframes einstieg-atmen {
   from { transform: scale(1); }
@@ -3186,7 +3217,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   color: var(--text-2);
   font-size: var(--fs-md);
   animation: einstieg-zeile 320ms var(--ease-out) both;
-  animation-delay: calc(var(--n, 0) * 420ms + 300ms);
+  animation-delay: calc(var(--n, 0) * var(--bau-schritt, 420ms) + var(--bau-vorlauf, 300ms));
 }
 .einstieg-bau__liste .i {
   flex: 0 0 auto;
@@ -3198,7 +3229,9 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   color: var(--text-on-accent);
   stroke-width: 3;
   animation: einstieg-haken 300ms var(--ease-spring) both;
-  animation-delay: calc(var(--n, 0) * 420ms + 520ms);
+  /* Der Haken kommt kurz NACH seiner Zeile - erst steht der Punkt da, dann
+     wird er abgehakt. Das ist der Moment, der den Aufbau glaubhaft macht. */
+  animation-delay: calc(var(--n, 0) * var(--bau-schritt, 420ms) + var(--bau-vorlauf, 300ms) + 220ms);
 }
 
 /* ---- Bildschirm 8b: der Plan steht --------------------------------------- */
@@ -3313,6 +3346,36 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   font-size: var(--fs-xs); color: var(--text-3);
 }
 
+/* ---- 3.11.0: die zwei Wege zu Karten (Plan-Bildschirm) -------------------
+   Anzeige, keine Knöpfe: der Einstieg endet mit EINER Handlung. Deshalb auch
+   keine .card — das wäre eine Fläche in einer Fläche (Satz 2). */
+.einstieg-wege {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.einstieg-weg {
+  display: flex; align-items: flex-start; gap: var(--space-3);
+  font-size: var(--fs-sm); color: var(--text-2); line-height: 1.6;
+}
+.einstieg-weg strong { color: var(--text-1); font-weight: 600; }
+.einstieg-weg .i { flex: 0 0 auto; margin-top: 4px; color: var(--accent); }
+.einstieg--neu .einstieg-weg {
+  animation: einstieg-zeile 340ms var(--ease-out) both;
+  animation-delay: calc(var(--n, 0) * 110ms + 900ms);
+}
+
+/* ---- 3.11.0: der gesperrte Weiter-Knopf ----------------------------------
+   Ein gesperrter Knopf ohne Begründung ist eine Sackgasse. Die Zeile steht
+   unter dem Knopf und ist leer, sobald etwas gewählt ist — :empty nimmt ihr
+   dann auch den Platz weg, damit der Knopf nicht springt, wenn der Satz
+   verschwindet (die Höhe ist reserviert, siehe min-height). */
+.einstieg-sperre {
+  margin: var(--space-2) 0 0;
+  min-height: 1.2em;
+  text-align: center;
+  font-size: var(--fs-xs); color: var(--text-3);
+}
+
 /* ---- Der Hauptknopf auf Bildschirm 1 und 8 -------------------------------
    Wenn alles davor steht, läuft einmal ein Lichtstreif darüber: „hier geht es
    weiter". Auf dem Plan kommt der Knopf erst, wenn die Leiter steht. */
@@ -3347,6 +3410,88 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
      Schleier stehen. */
   .einstieg-option.aktiv::after { display: none; }
 }
+/* 3.11.0: dasselbe für die Einstellung „Bewegung: Ruhig" — siehe den
+   Zwillingsblock in Abschnitt 3. Ohne ihn blieben im Einstieg die
+   Verzögerungen stehen und alles erschiene verspätet statt sofort. */
+html[data-bewegung="ruhig"] .einstieg *,
+html[data-bewegung="ruhig"] .einstieg *::before,
+html[data-bewegung="ruhig"] .einstieg *::after,
+html[data-bewegung="ruhig"] .einstieg-kopf * { animation-delay: 0s !important; }
+html[data-bewegung="ruhig"] .einstieg-hero__dreh,
+html[data-bewegung="ruhig"] .einstieg-hero__seite--hinten::after,
+html[data-bewegung="ruhig"] .einstieg-leiste__punkt--ziel::after,
+html[data-bewegung="ruhig"] .einstieg-leiter__ziel .einstieg-leiter__punkt::after,
+html[data-bewegung="ruhig"] .einstieg-karte--wartet .einstieg-probe,
+html[data-bewegung="ruhig"] .einstieg-aktion--glanz button.full::after { animation: none !important; }
+html[data-bewegung="ruhig"] .einstieg-option.aktiv::after { display: none; }
+
+/* ===========================================================================
+   16c · DIE BEWEGUNG DES EINSTIEGS IN DER APP
+   ---------------------------------------------------------------------------
+   Betreiber am 24.09.2026: „kann man anhand der animationen und sachen am
+   onboarding von dir oder prompts am tool selbst anwenden? die sachen gefallen
+   mir sehr die ich hier sehe."
+
+   Ja — und zwar ohne eine einzige neue Animation. Übernommen werden GENAU DREI
+   Bewegungen, die es im Einstieg schon gibt, und jede an die Stelle, an der sie
+   dasselbe sagt wie dort:
+
+     einstieg-zeile   → Listenzeilen kommen nacheinander herein (S1/S2: die
+                        Antwortzeilen)
+     einstieg-haken   → der gesetzte Haken federt ein (S1/S2: die gewählte
+                        Antwort)
+     einstieg-kachel  → Kacheln steigen gestaffelt auf (S8: der Plan)
+
+   Warum nicht mehr: Bewegung, die nichts erklärt, ist Lärm, und eine App, der
+   man beim Denken zusieht, wirkt langsam (Abschnitt 3). Die Lernlogik wird
+   nirgends berührt; das hier sind Regeln über Aussehen, nichts sonst.
+
+   Zwei Einschränkungen tragen das Ganze, und ohne sie wäre es eine
+   Verschlechterung:
+
+   1. `#app:not(.still-ansicht)` — nur beim WECHSEL des Bildschirms. render()
+      ersetzt bei jeder Handlung den kompletten Inhalt von #app; ohne diese
+      Bedingung flöge die Einstellungen-Liste bei jedem Antippen von neuem
+      herein, auch hinter einem offenen Wahl-Blatt. Die Klasse setzt app.js
+      selbst (renderMain, ansichtSchluessel): sie steht genau dann, wenn sich
+      der Bildschirm NICHT geändert hat.
+   2. Nur INNERHALB von .sektion. Die Staffelung gehört zu kurzen Listen mit
+      fünf oder sechs Einträgen (Einstellungen, „Genauer ansehen"). In der
+      Kartenliste unter Verwalten stehen bis zu hundert Zeilen — dort wäre
+      dasselbe Muster ein minutenlanges Einfliegen. Die Liste dort trägt kein
+      .sektion um sich und bleibt deshalb unberührt.
+   ========================================================================= */
+#app:not(.still-ansicht) .sektion > .liste > * {
+  animation: einstieg-zeile 300ms var(--ease-out) backwards;
+  animation-delay: calc(var(--n, 0) * 45ms + 40ms);
+}
+/* Die Zeilen tragen kein --n aus app.js (einstZeile schreibt keine Position) -
+   also wird hier gezählt. Sechs reichen: die längste .sektion-Liste in der App
+   hat fünf Zeilen (Konto), alles darüber startet zusammen mit der sechsten. */
+.sektion > .liste > *:nth-child(1) { --n: 0; }
+.sektion > .liste > *:nth-child(2) { --n: 1; }
+.sektion > .liste > *:nth-child(3) { --n: 2; }
+.sektion > .liste > *:nth-child(4) { --n: 3; }
+.sektion > .liste > *:nth-child(5) { --n: 4; }
+.sektion > .liste > *:nth-child(n+6) { --n: 5; }
+
+/* Der Haken im Wahl-Blatt federt ein, wie der Haken auf einer gewählten
+   Antwort im Einstieg. Das ist die Rückmeldung, die dort gefällt: man sieht,
+   dass die Wahl angekommen ist, statt sie nur vorzufinden.
+   `backwards` und nicht `both`: nach der Bewegung soll der Haken ganz normal
+   dastehen, nicht im Endbild der Animation festhängen. */
+.sheet-liste .liste-zeile.aktiv > .i:last-child {
+  animation: einstieg-haken var(--dur-base) var(--ease-spring) backwards;
+}
+
+/* NICHT übernommen: das Lernen-Raster (.lern-karte). Der Eintritt der
+   Plan-Kacheln (einstieg-kachel) würde dort gut passen, aber die Kachel einer
+   erledigten Karte trägt `opacity: 0.42` (.ist-gelernt) — und eine Animation,
+   die auf `opacity: 1` endet, überschreibt das entweder dauerhaft (fill-mode
+   `both`) oder lässt die Kachel am Ende sichtbar von hell auf blass
+   zurückschnappen (`backwards`). Beides ist schlechter als keine Bewegung.
+   Steht hier und im Logbuch, damit die nächste Sitzung es nicht noch einmal
+   versucht und dann denselben Fund macht. */
 
 /* Der Nachklang auf dem leeren Lernen-Bildschirm (app.js, renderLernen).
    Bewusst KEIN Kasten und keine Fläche: er gehört zum Bildschirm, nicht auf
@@ -3384,6 +3529,28 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   :root { --gutter: var(--space-5); --stack: var(--space-7); }
   .lern-raster { grid-template-columns: repeat(2, 1fr); }
   .empty__aktionen { flex-direction: row; justify-content: center; }
+
+  /* ---- 3.11.0: die Bildschirme ohne Shell auf Tablet und Desktop ----------
+     Betreiber am 24.09.2026: „wäre es möglich für alle geräte anzupassen? also
+     z.b. auf dem ipad sieht das so schmal aus wie auf mobile app. soll an jedes
+     gerät angepasst sein. wie machen das andere apps? so sieht das ja aus für
+     mobile version, ned für ipad."
+
+     Stimmt, und der Grund ist eine Zahl: `.solo` hatte `max-width: 440px`,
+     und zwar auf JEDEM Gerät. Auf einem iPad (820 px im Hochformat) stand der
+     Einstieg damit als handybreites Band in der Mitte einer großen leeren
+     Fläche — dieselbe Ansicht wie auf dem Handy, nur mit mehr Rand.
+
+     Was andere Apps hier tun, und was hier jetzt auch passiert: die Spalte
+     wächst mit, aber sie wird nicht bildschirmbreit (ein Fragesatz über 1000 px
+     ist unlesbar). Stattdessen wächst mit der Breite auch die Schrift, der
+     Abstand und — ab 900 px — die Zahl der Spalten in den Antwortlisten. Das
+     Markup bleibt Zeile für Zeile dasselbe; es entscheiden nur diese Regeln. */
+  .solo { max-width: 540px; padding-top: calc(var(--sat) + var(--space-10)); }
+  .einstieg h1 { font-size: clamp(1.75rem, 2.4vw + 1rem, 2.25rem); }
+  .einstieg .subtitle { font-size: var(--fs-lg); }
+  .einstieg-option { min-height: 60px; padding: var(--space-3) var(--space-5); }
+  .einstieg-hero__seite .arabic { font-size: 3.1rem; }
 }
 
 @media (min-width: 900px) {
@@ -3489,6 +3656,61 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   .study-card__mitte { padding-bottom: var(--space-9); }
   .grade-row { max-width: 520px; margin: 0 auto; }
   .study-aktionen { max-width: 520px; margin: 0 auto; width: 100%; }
+
+  .solo { max-width: 560px; }
+}
+
+/* ---- 3.11.0: der Einstieg auf dem Tablet ---------------------------------
+   Zweite Stufe zu den Regeln bei 600 px (Begründung dort). Hier ändert sich
+   nicht nur die Breite, sondern die FORM: Antwortlisten stehen zweispaltig,
+   die Kacheln des Plans vierspaltig, die zwei Wege nebeneinander. Das ist der
+   Punkt, an dem eine Ansicht aufhört, eine breitere Handy-Ansicht zu sein.
+
+   Warum 720 px und nicht 900 wie die Navigationsspalte: Ein iPad im
+   Hochformat ist 820 px breit, ein iPad mini 744 px — bei 900 px hätte GENAU
+   das Gerät, von dem die Rückmeldung kam, weiterhin die einspaltige Fassung
+   gesehen. Nachgemessen am 24.09.2026 in Chromium bei 820×1180: mit 900 px
+   blieb die Zielliste einspaltig und die Plan-Kacheln zweispaltig. Die
+   Navigationsspalte der App bleibt trotzdem bei 900 px — das ist eine andere
+   Frage (siehe Logbuch, „Geprüft, nichts zu tun").
+
+   Der Einstieg bekommt eine eigene, größere Breite als die Anmeldung (`.solo`
+   bleibt bei 560): ein Formular mit zwei Feldern wird durch Breite nicht
+   besser, eine Liste mit sechs Antworten schon. */
+@media (min-width: 720px) {
+  .solo.einstieg-solo {
+    max-width: 720px;
+    padding-top: calc(var(--sat) + var(--space-9));
+    /* Senkrecht mittig — aber nur der Inhalt, nicht die Kopfzeile. Auf einem
+       iPad im Hochformat endete „Wofür lernst du Arabisch?" nach rund 800 von
+       1180 px und der Rest war leer: eine Handy-Ansicht, die man oben
+       angeheftet hat.
+
+       Zentriert wird über `margin: auto` am Kind, NICHT über
+       `justify-content: center` am Elternteil. Zwei Gründe:
+         1. Zurück-Pfeil und Fortschrittsbalken (.einstieg-kopf) sind das erste
+            Kind und gehören nach oben. Mit justify-content schwebten sie mit
+            in die Mitte.
+         2. Automatische Ränder lösen sich zu 0 auf, sobald kein Platz übrig
+            ist. Ein langer Bildschirm (der Plan) wird also einfach oben
+            angesetzt, statt nach oben aus dem Bild geschoben zu werden — der
+            bekannte Fallstrick beim Zentrieren. */
+    min-height: 100svh;
+    display: flex; flex-direction: column;
+  }
+  .solo.einstieg-solo > .einstieg { margin-top: auto; margin-bottom: auto; }
+  .einstieg-wahl--paar {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+  }
+  .einstieg-kacheln { grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+  .einstieg-wege { flex-direction: row; gap: var(--space-6); }
+  .einstieg-weg { flex: 1 1 0; }
+  .einstieg-bewertung { max-width: 420px; margin-left: auto; margin-right: auto; }
+  .einstieg-hero__seite .arabic { font-size: 3.6rem; }
+  /* Der Hauptknopf soll auf 720 px nicht über die ganze Breite laufen — ein
+     Knopf, der breiter als lesbar ist, sieht nach Platzhalter aus. */
+  .einstieg-aktion { max-width: 420px; margin-left: auto; margin-right: auto; }
 }
 
 @media (min-width: 1200px) {

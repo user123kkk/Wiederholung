@@ -7,16 +7,39 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.10.3";
+const CACHE_NAME = "adrabic-3.11.0";
+
+/* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
+   unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
+const VERSION = CACHE_NAME.replace("adrabic-", "");
 
 /* 3.0.0: Gestaltung und Ablauf liegen jetzt in eigenen Dateien neben der
    index.html. Beide MUESSEN hier stehen - sonst startet die App offline zwar,
-   steht aber ohne Aussehen und ohne Funktion da. */
+   steht aber ohne Aussehen und ohne Funktion da.
+
+   3.11.0, echter Fund beim Hochzaehlen auf diese Version:
+
+   1. `"./app.js"` stand hier OHNE Versions-Query, waehrend index.html seit
+      3.9.5 `./app.js?v=…` anfordert. Das sind zwei verschiedene URLs, und
+      caches.match() vergleicht die ganze URL samt Query. Der Eintrag aus dem
+      Vorabspeichern wurde also NIE getroffen - offline lief die App nur
+      deshalb, weil der fetch-Handler weiter unten jede erfolgreiche Antwort
+      unter ihrer echten URL nachtraegt. Ein Vorabspeichern, das nichts
+      vorab speichert, ist aber kein Vorabspeichern.
+   2. styles.css hatte ueberhaupt keine Versions-Query - dieselbe Falle, die
+      README.md fuer app.js beschreibt (Cache-Control: max-age=3600 auf alle
+      .js- und .css-Dateien, siehe firebase.json). Der fetch-Handler holt mit
+      cache: "no-store" am Browser-Cache vorbei, aber nur fuer Seiten, die
+      dieser Service Worker schon steuert; beim allerersten Laden nach einer
+      Registrierung ist das nicht der Fall.
+
+   Beides haengt jetzt an VERSION und wird mit CACHE_NAME zusammen einmal
+   hochgezaehlt, statt an drei Stellen von Hand. */
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./app.js",
+  "./styles.css?v=" + VERSION,
+  "./app.js?v=" + VERSION,
   "./manifest.json",
   "./icon.svg",
   "./desktop-icon.png",

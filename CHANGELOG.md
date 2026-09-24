@@ -1,3 +1,91 @@
+## 3.11.0 - 24. September 2026
+
+**Einstieg nach der zweiten Rückmeldung des Betreibers: kürzere Sätze, kein
+Durchklicken mehr ohne Antwort, ein persönlicher Plan-Aufbau – und der ganze
+Einstieg passt sich jetzt an Tablet und Desktop an statt überall wie die
+Handy-Fassung auszusehen.**
+
+- **Die Antworten auf „Was hat dich bisher gebremst?" sind je EIN Satz.**
+  Betreiber: „diese beschreibung ‚wie‘ … ist doch egal … versicherung. deswegen
+  hier nicht dieses und jedes mal blablabla." Aus „Genau dafür ist Adrabic da:
+  Jedes Wort kommt wieder – und jedes Mal, wenn du es weißt, ein Stück später.
+  So lange, bis es sitzt." wird „Genau dafür ist Adrabic da." Wie die Abstände
+  wachsen, steht jetzt genau einmal im Einstieg – als Bild (die Leiste), nicht
+  noch einmal als Satz unter jeder Antwort.
+- **Dasselbe auf „Probier eine Karte".** Nach „Sicher" steht „Dann kommt sie
+  morgen wieder. Danach immer seltener." – die Leiste darunter zeigt den Rest.
+- **Neue Antwort „Nichts davon".** Sie schließt sich mit den genannten Hürden
+  gegenseitig aus.
+- **„Weiter" geht nicht mehr ohne Auswahl.** Betreiber: „man kann alles skippen
+  indem man einfach auf weiter drückt ohne je was ausgewählt zu haben." Pflicht
+  ist es auf Ziel, Hürden und Zeitpunkt – also genau dort, wo es auch eine
+  ehrliche Antwort für jeden gibt („Etwas anderes", „Nichts davon", „eigene
+  Situation"). Der gesperrte Knopf sagt darunter, was fehlt. Bei „eigene
+  Situation" zählt erst der eingetippte Text als Antwort.
+- **„Dein Plan entsteht …" ist persönlich und länger.** Der Aufbau zeigt jetzt
+  das eigene Ziel und die erste genannte Hürde, nicht mehr nur vier feste
+  Punkte; die Dauer richtet sich nach der Zahl der Punkte (rund 4 statt 2,3
+  Sekunden). Ring, Punkte und Zeitschaltung benutzen dieselbe Zahl – vorher
+  waren es drei Zahlenreihen, die sich nur zufällig trafen.
+- **Behoben:** Ging man vom Plan zurück und noch einmal vor, lief der Aufbau
+  nicht mehr, bis die App geschlossen und neu geöffnet wurde. Der Merker
+  `planGebaut` blieb beim Zurückgehen stehen.
+- **Der Einstieg auf Tablet und Desktop.** Betreiber: „auf dem ipad sieht das
+  so schmal aus wie auf mobile app … so sieht das ja aus für mobile version,
+  ned für ipad." Grund war eine Zahl: `.solo` stand auf `max-width: 440px`, auf
+  jedem Gerät. Ab 600 px wächst die Spalte auf 540 px, Überschrift, Untertitel
+  und Antwortzeilen wachsen mit; ab 900 px ist der Einstieg 720 px breit, die
+  Antwortlisten auf „Ziel" und „Zeitpunkt" stehen zweispaltig, die Plan-Kacheln
+  vierspaltig, die zwei Wege nebeneinander. Das Markup ist unverändert – es
+  entscheiden nur die neuen Regeln in Abschnitt 17.
+- **Kartensätze werden im Einstieg beim Namen genannt.** Betreiber, aus einem
+  TikTok-Befund: Ein Foto-Feature wurde nur von 4 % benutzt, weil es im
+  Onboarding nicht vorkam – „das mit dem code bzw kartensatz der grob erwähnt
+  wird reicht ned oder." Der Plan-Bildschirm zeigt jetzt „Und so kommst du an
+  deine Karten": selbst anlegen, oder Kartensatz per Code. Auf dem leeren
+  Lernen-Bildschirm steht „Kartensatz per Code" als richtiger Knopf vor der
+  Datei, nicht mehr als leisester von dreien.
+
+**Einstellungen neu geordnet und ergänzt.**
+
+- **Reihenfolge nach Häufigkeit:** Lernen, Kartensätze, Darstellung, Daten,
+  Hilfe, Konto. Vorher stand die Helligkeit vor der einzigen Einstellung, die
+  etwas am Lernen ändert.
+- **Neue Seite „Kartensätze".** Übernehmen und Teilen standen bisher als
+  letzter Kasten auf zwei verschiedenen Unterseiten, beide unter Begriffen, die
+  von Backups sprechen („Einspielen", „Sichern"). Wer einen Code bekommen
+  hatte, suchte ihn dort nicht. Jetzt: eine Zeile mit dem Namen der Sache, eine
+  Seite, beide Hälften darauf.
+- **Neue Einstellung „Bewegung" (Voll / Ruhig).** Bei „Ruhig" erscheint alles
+  sofort. Gilt nur auf diesem Gerät und liegt deshalb im localStorage, nicht in
+  der Cloud: `firestore.rules` lassen im Feld `settings` nur vier feste
+  Schlüssel zu, ein fünfter würde von den deployten Regeln abgelehnt werden.
+  Steht im Betriebssystem schon „Bewegung reduzieren", ist die App ohnehin ruhig.
+
+**Die Bewegung des Einstiegs in der App.** Betreiber: „kann man anhand der
+animationen und sachen am onboarding … am tool selbst anwenden? die sachen
+gefallen mir sehr." Übernommen sind zwei vorhandene Bewegungen, keine neue:
+Die Zeilen kurzer Listen (Einstellungen, „Genauer ansehen") kommen gestaffelt
+herein, und der Haken im Wahl-Blatt federt ein wie auf einer gewählten Antwort
+im Einstieg. Beides nur beim Wechsel des Bildschirms, nicht bei jedem Antippen.
+Nicht übernommen: das Lernen-Raster – eine erledigte Karte trägt `opacity:
+0.42`, und eine Eintrittsbewegung würde das entweder dauerhaft überschreiben
+oder am Ende sichtbar zurückschnappen lassen.
+
+**Zwei echte Funde beim Hochzählen der Version.**
+
+- `styles.css` hatte keinen Versions-Query in `index.html` – dieselbe Falle,
+  die `README.md` seit 3.9.5 für `app.js` beschreibt (`Cache-Control:
+  max-age=3600` gilt für `.js` und `.css`). Eine reine Gestaltungsänderung
+  konnte bis zu eine Stunde lang unsichtbar bleiben. Jetzt
+  `./styles.css?v=3.11.0`.
+- `APP_SHELL` in `sw.js` listete `"./app.js"` ohne Query, während `index.html`
+  `./app.js?v=…` anfordert. `caches.match()` vergleicht die ganze URL samt
+  Query – der vorab gespeicherte Eintrag wurde also nie getroffen. Beide
+  Einträge hängen jetzt an `VERSION`, das sich aus `CACHE_NAME` ableitet.
+  Die Veröffentlichungsliste in `README.md` und `CLAUDE.md` ist entsprechend
+  ergänzt.
+
 ## 3.10.3 - 24. September 2026
 
 **Einstieg nach der Rückmeldung des Betreibers überarbeitet – ohne Zahlen,

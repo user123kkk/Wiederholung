@@ -683,7 +683,54 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (23.09.2026, abends): Einstieg nach Video 3 neu gebaut (v3.10.0),
+**AKTUELL (24.09.2026): zweite Rückmeldung des Betreibers zum Einstieg
+umgesetzt (v3.11.0), auf dem Arbeitsbranch, noch nicht ausgeliefert.**
+
+Sieben Punkte, alle vom Betreiber benannt, alle umgesetzt:
+
+1. **Kürzere Sätze.** Die Antworten auf „Was hat dich bisher gebremst?" und
+   auf die Probekarte sind je EIN Satz. Die Mechanik („und jedes Mal ein Stück
+   später, bis es sitzt") steht nur noch als Bild da, nicht mehr unter jeder
+   Antwort als Text.
+2. **„Weiter" geht nicht mehr ohne Auswahl** — auf Ziel, Hürden und Zeitpunkt.
+   Dafür neu: die Antwort „Nichts davon" bei den Hürden, damit die Pflicht
+   keine Falle ist.
+3. **„Dein Plan entsteht …" ist persönlich und länger** (Ziel und Hürde aus den
+   eigenen Antworten; Dauer folgt der Zahl der Punkte, rund 4 statt 2,3 s).
+4. **Behoben:** Nach Zurück und erneutem Vorgehen lief der Aufbau nicht mehr
+   (`planGebaut` blieb stehen).
+5. **Tablet und Desktop.** `.solo` stand auf `max-width: 440px` — auf jedem
+   Gerät. Ab 600 px wächst die Spalte, ab 900 px ändert sich die Form
+   (Antwortlisten zweispaltig, Plan-Kacheln vierspaltig).
+6. **Kartensätze werden im Einstieg benannt** (TikTok-Befund des Betreibers:
+   was im Onboarding fehlt, benutzt fast niemand) und haben in den
+   Einstellungen eine eigene Seite statt zwei versteckter Hälften.
+7. **Zwei Bewegungen aus dem Einstieg in der App** (gestaffelte Listenzeilen,
+   federnder Haken im Wahl-Blatt) und eine neue Einstellung „Bewegung"
+   (Voll / Ruhig, gerätelokal).
+
+Nebenher zwei echte Funde: `styles.css` hatte keinen Versions-Query, und
+`APP_SHELL` in `sw.js` traf mit `"./app.js"` nie die Anfrage `./app.js?v=…`.
+Beides behoben, Veröffentlichungsliste in `README.md` und `CLAUDE.md` ergänzt.
+
+Einzelheiten, Begründungen und die abgelehnten Punkte (Navigationsleiste auf
+dem iPad, Kachel-Eintritt im Lernen-Raster, Erinnerungssatz in den
+Einstellungen) stehen im Logbuch von `onboarding/`, Eintrag vom 24.09.2026.
+
+**Bei „leg los" zuerst prüfen:**
+1. Hat der Betreiber v3.11.0 am Gerät geprüft — Handy UND iPad?
+2. Liegt J1 vor? (Neu dazu: der Schlüssel `adrabic-bewegung`, ohne Angabe über
+   die Person.)
+3. Hat er `veroeffentlichen.bat` ausgeführt?
+
+Offen und bewusst nicht gebaut: der Erinnerungssatz als Einstellung — er
+bräuchte einen dauerhaften Speicherort, und genau diese Schlüssel hängen in
+J1.
+
+---
+
+**Vorheriger Stand (23.09.2026, abends): Einstieg nach Video 3 neu gebaut (v3.10.0),
+ Einstieg nach Video 3 neu gebaut (v3.10.0),
 Fehlersuche danach (v3.10.1, v3.10.2), auf `main`, noch nicht ausgeliefert.**
 
 Die Fehlersuche fand vier Fehler im Einstieg (Doppeltipp übersprang einen

@@ -88,12 +88,18 @@ Veröffentlichungsliste aus [`README.md`](README.md):
 1. `APP_VERSION` in `app.js` hochzählen.
 2. **Denselben Wert** als `CACHE_NAME` in `sw.js` eintragen. Ohne das behalten
    Nutzer:innen die alten Dateien im Cache.
-3. **Denselben Wert** auch im Versions-Query von `<script src="./app.js?v=…">`
-   in `index.html` eintragen — sonst bleibt `app.js` bis zu eine Stunde im
-   normalen HTTP-Cache des Browsers hängen (`Cache-Control: max-age=3600`),
+3. **Denselben Wert** auch in **beide** Versions-Querys in `index.html`
+   eintragen: `<script src="./app.js?v=…">` und
+   `<link rel="stylesheet" href="./styles.css?v=…">` — sonst bleibt die Datei
+   bis zu eine Stunde im normalen HTTP-Cache des Browsers hängen
+   (`Cache-Control: max-age=3600`, die Regel gilt für `.js` **und** `.css`),
    selbst ein Reload holt dann noch die alte Datei. Steht in `README.md`,
    fehlte hier bis 23.09.2026 (v3.9.5) — deshalb bei 3.9.3/3.9.4 übersehen.
-4. Neue Startdateien in `APP_SHELL` in `sw.js` aufnehmen.
+   Für `styles.css` fehlte die Query überall bis 24.09.2026 (v3.11.0).
+4. Neue Startdateien in `APP_SHELL` in `sw.js` aufnehmen. `app.js` und
+   `styles.css` stehen dort seit 3.11.0 **mit** Versions-Query (aus `VERSION`,
+   das sich aus `CACHE_NAME` ableitet) — `caches.match()` vergleicht die ganze
+   URL samt Query, ohne sie traf der vorab gespeicherte Eintrag nie.
 5. Eintrag in `CHANGELOG.md`.
 
 Plandateien unter `plan/` und `KONZEPT.md` sind reine Textdateien, stehen nicht
