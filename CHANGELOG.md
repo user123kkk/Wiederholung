@@ -1,3 +1,26 @@
+## 3.17.14 - 24. September 2026
+
+**Prüfschleife, Station 14 (Einstellungen).**
+
+- **„Fehler melden" ist ein Feld statt drei.** Das Formular fragte nach Name
+  und E-Mail, obwohl beides aus der Anmeldung bekannt ist – die Mail geht
+  ohnehin aus dem eigenen Mail-Programm raus. Jetzt nur „Was ist passiert?";
+  App-Version und Gerät stehen automatisch im Entwurf (sichtbar, vor dem
+  Abschicken änderbar). Der Knopf heißt „Weiter zur E-Mail" – so weiß man
+  vorher, was passiert. Öffnet sich kein Mail-Programm, bleibt der Text
+  stehen statt zu verschwinden.
+- **Das Erinnerungs-Blatt schließt mit Escape und Wischen** wie jedes andere
+  Blatt. Vorher blieb es offen, und die Seite dahinter ließ sich weiter
+  scrollen.
+- **„Karten pro Runde"** statt „Karten pro Sitzung" – überall sonst heißt es
+  Runde.
+- „vor 3 Tg." heißt „vor 3 Tagen" (bzw. „gestern"); „Tägliche Erinnerung"
+  zeigt „aus", solange keine eingerichtet ist – wie jede andere Zeile ihren
+  Stand.
+- Geprüft ohne Befund: Übersicht, alle Wahl-Blätter (Wert steht danach in der
+  Zeile), Unterseiten, Ideen-Formular, Kontrast hell und dunkel – Handy,
+  kleines Handy, iPad.
+
 ## 3.17.13 - 24. September 2026
 
 **Prüfschleife, Station 13 (Kartensätze & Daten).**

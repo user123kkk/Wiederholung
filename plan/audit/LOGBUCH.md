@@ -19,7 +19,40 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 11 | Karten-Blätter | erledigt (v3.17.11) |
 | 12 | Bereiche | erledigt (v3.17.12) |
 | 13 | Kartensätze & Daten | erledigt (v3.17.13) |
-| 14–18 | … | offen |
+| 14 | Einstellungen | erledigt (v3.17.14) |
+| 15–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 14: Einstellungen (v3.17.14)
+
+**Geprüft (`t_einstellungen.js`, Handy hell/dunkel, klein, iPad):**
+Übersicht, Wahl-Blätter limit/arab/thema (Wahl → Zeile), Erinnerung,
+alle Unterseiten, Fehler melden (inkl. Absenden), Idee einreichen.
+- **Fund 1: Erinnerungs-Blatt (3.17.0) nicht in `schliesseObersteEbene`,
+  `overlayIstOffen`, `overlaySchluessel`, `tabSchonAktiv`** – Escape/Wischen
+  schlossen es nicht, `blatt-offen` fehlte (Seite dahinter scrollbar,
+  Reiter-Wischen aktiv).
+- **Fund 2: „Fehler melden"** – Name- und E-Mail-Feld trotz Anmeldung,
+  Sternchen-Pflichtfeld (App markiert sonst nur Optionales), Knopf
+  „Fehler melden" öffnet tatsächlich das Mail-Programm, Formular wurde nach
+  `mailto:` geleert (ohne Mail-Programm war der Text weg).
+- Fund 3: „Karten pro Sitzung" (einzige Stelle mit „Sitzung").
+- Fund 4: „vor 3 Tg." (einzige Abkürzung); „Tägliche Erinnerung" ohne Wert.
+- Weitergereicht an Station 15: „Zum Löschen gedrückt halten" (gesperrt)
+  2,7:1 auf der Seite „Konto löschen".
+- Ohne Befund: Wahl-Blätter bleiben nach der Wahl offen (so gewollt, „Fertig"
+  schließt), Wert steht danach in der Zeile; Unterseiten Kontrast 0.
+
+**Geändert:** index.html – Fehler-Formular nur Beschreibung, „Weiter zur
+E-Mail", neuer Hinweissatz. app.js – Absenden hängt `APP_VERSION`, Name,
+Gerät an; `closeErrorModal(textBehalten)`; `erinnerungSheet` an vier
+Stellen; „Karten pro Runde" (Zeile + `WAHLEN.limit`); Sicherungs-Alter
+ausgeschrieben; Erinnerung „aus". Version 3.17.14.
+**Neu (Prüfstand):** `t_einstellungen.js` (Modus `text` gibt alle Texte aus).
+
+**Offen:** –
+**Nächste Station:** 15 (Konto – Abmelden, Konto löschen)
 
 ---
 

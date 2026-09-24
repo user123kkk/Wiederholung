@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.13";
+const APP_VERSION = "3.17.14";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -7241,7 +7241,7 @@ function renderMain() {
   const ansichtSchluessel = [ui.einstellungen ? "e" : "", ui.seite || "", ui.tab, imModus ? "m" : "",
     imModus && sess ? (sess.queue && sess.queue[0]) + "|" + sess.revealed + "|" + (sess.extraOpen ? 1 : 0) : "",
     imModus ? (ui.lernSetId || "") : ""].join("/");
-  const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.setArtSheetId,
+  const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
     ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : ""].join("/");
   /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
      kein .view - dann ist alles neu. */
@@ -7289,7 +7289,9 @@ function renderMain() {
        springen und beim Zurueckkommen wieder heranfahren. */
     navEl.dataset.reiter = reiterJetzt >= 0 ? String(reiterJetzt) : "aus";
   }
-  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog);
+  /* 3.17.14: + erinnerungSheet - sonst liess sich die Seite dahinter
+     scrollen und per Wischen wechseln. */
+  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog);
   document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
   syncAppbarKante();
   /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
@@ -7816,7 +7818,9 @@ function renderEinstellungen() {
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Lernen</div>';
   html += '<div class="liste">';
-  html += einstZeile({ action: "wahl-sheet", id: "limit", icon: "lernen", text: "Karten pro Sitzung",
+  /* 3.17.14 (Station 14): "Runde" wie auf jedem Knopf ("Runde starten",
+     "Runde beenden", Rundenende) - hier stand als einziger Stelle "Sitzung". */
+  html += einstZeile({ action: "wahl-sheet", id: "limit", icon: "lernen", text: "Karten pro Runde",
     wert: labelVon(SITZUNGS_LIMITS, settings.sitzungsLimit, "Alle") });
   html += einstZeile({ action: "wahl-sheet", id: "arab", icon: "karten", text: "Arabische Schrift",
     wert: labelVon(ARAB_STUFEN, settings.arabGroesse, "Normal") });
@@ -7825,7 +7829,8 @@ function renderEinstellungen() {
   {
     const erinnert = hinweisSpeicher().erinnerung;
     html += einstZeile({ action: "erinnerung-auf", icon: "serie", text: "Tägliche Erinnerung",
-      wert: erinnert ? erinnert.replace(/^0/, "") + " Uhr" : "" });
+      /* 3.17.14: "aus" statt leer - jede andere Zeile zeigt ihren Stand. */
+      wert: erinnert ? erinnert.replace(/^0/, "") + " Uhr" : "aus" });
   }
   html += '</div></div>';
 
@@ -7838,7 +7843,8 @@ function renderEinstellungen() {
   html += einstZeile({ action: "einst-seite", id: "kartensaetze", icon: "teilen",
     text: "Kartensatz per Code" });
   html += einstZeile({ action: "einst-seite", id: "daten", icon: "sichern", text: "Sichern & einspielen",
-    wert: alter === null ? "noch nie" : alter === 0 ? "heute" : "vor " + alter + " Tg." });
+    /* 3.17.14: ausgeschrieben - "vor 3 Tg." war die einzige Abkuerzung der App. */
+    wert: alter === null ? "noch nie" : alter === 0 ? "heute" : alter === 1 ? "gestern" : "vor " + alter + " Tagen" });
   /* 3.17.0: nur, wenn die Statistik ueberhaupt eingerichtet ist (POSTHOG_KEY)
      - ein Schalter fuer etwas, das es nicht gibt, waere eine Entscheidung
      zu viel. */
@@ -8460,11 +8466,11 @@ const WAHLEN = {
     hilfe: 'Die Karten bleiben, wo sie sind – die Speicherkarte merkt sich nur, welche es sind.'
   },
   limit: {
-    titel: "Karten pro Sitzung", action: "set-sitzungslimit",
+    titel: "Karten pro Runde", action: "set-sitzungslimit",
     liste: () => SITZUNGS_LIMITS, wert: () => settings.sitzungsLimit,
-    hilfe: 'Bei „Alle“ zeigt eine Sitzung jede fällige Karte auf einmal. Bei einer ' +
-           'Zahl hört sie danach auf – der Rest bleibt fällig und steht in der nächsten ' +
-           'Sitzung wieder oben, Wiederholungen zuerst. Bremst nur die Sitzung, nicht den Stoff.'
+    hilfe: 'Bei „Alle“ zeigt eine Runde jede fällige Karte auf einmal. Bei einer ' +
+           'Zahl hört sie danach auf – der Rest bleibt fällig und kommt in der nächsten ' +
+           'Runde zuerst, Wiederholungen vorn. Bremst nur die Runde, nicht den Stoff.'
   }
 };
 
@@ -11308,6 +11314,9 @@ function schliesseObersteEbene() {
   };
   if (ui.setArtSheetId) { schliesse(() => { ui.setArtSheetId = null; render(); }); return true; }
   if (ui.wahlSheet) { schliesse(() => { ui.wahlSheet = null; render(); }); return true; }
+  /* 3.17.14 (Station 14): Das Erinnerungs-Blatt (3.17.0) fehlte hier - Escape
+     und Wischen nach unten schlossen es nicht. */
+  if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; render(); }); return true; }
   if (ui.karteSheet || ui.editId) {
     if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
     schliesse(cancelEdit); return true;
@@ -11431,14 +11440,14 @@ function openErrorModal() {
   }
 }
 
-function closeErrorModal() {
+function closeErrorModal(textBehalten) {
   const modal = document.getElementById("errorModal");
   if (modal) {
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
   }
   const form = document.getElementById("errorForm");
-  if (form) form.reset();
+  if (form && !textBehalten) form.reset();
 }
 
 /* Initialisierung des Fehlerformulars. Kein Klick auf den Hintergrund zum
@@ -11454,8 +11463,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const honeypot = form.querySelector('input[name="website"]').value;
     if (honeypot) return;
 
-    const name = document.getElementById("error-name").value.trim() || "(kein Name)";
-    const email = document.getElementById("error-email").value.trim() || "(keine E-Mail)";
     const description = document.getElementById("error-description").value.trim();
 
     if (!description) {
@@ -11465,16 +11472,20 @@ document.addEventListener("DOMContentLoaded", () => {
     zaehle("fehler_gemeldet");
 
     const subject = encodeURIComponent("Fehler gemeldet");
+    /* 3.17.14: statt Name/E-Mail-Feldern die Angaben, die beim Nachstellen
+       helfen - sie stehen sichtbar im Entwurf und lassen sich dort loeschen. */
     const body = encodeURIComponent(
-      "Name: " + name + "\n" +
-      "E-Mail: " + email + "\n" +
-      "Fehler:\n" + description
+      description + "\n\n—\n" +
+      "Adrabic " + APP_VERSION + (displayName ? " · " + displayName : "") + "\n" +
+      "Gerät: " + (navigator.userAgent || "") + " · " + window.innerWidth + "×" + window.innerHeight
     );
 
     window.location.href = "mailto:" +
       String.fromCharCode(97,100,114,97,98,105,99,46,100,101,64,103,109,97,105,108,46,99,111,109) +
       "?subject=" + subject + "&body=" + body;
-    closeErrorModal();
+    /* 3.17.14: Text NICHT leeren - oeffnet sich kein Mail-Programm (am PC
+       oft), waere er sonst weg. */
+    closeErrorModal(true);
   });
 });
 
@@ -11492,7 +11503,7 @@ document.addEventListener("DOMContentLoaded", () => {
    liegt (Einstellungen, Unterseite, Blatt, laufende Runde). */
 function tabSchonAktiv(id) {
   return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
-    !ui.wahlSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
+    !ui.wahlSheet && !ui.erinnerungSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
     !ui.bereichMehr && !ui.cardDetailId && !ui.dialog;
 }
 function nachObenBlaettern() {
