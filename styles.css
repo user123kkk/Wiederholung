@@ -159,6 +159,7 @@
   --stufe-1: rgba(245, 243, 236, 0.28);
   --stufe-2: rgba(245, 243, 236, 0.48);
   --stufe-2-fest: #888682;   /* 3.17.10: --stufe-2 deckend auf --surface-raised */
+  --stufe-1-fest: #5e5d5a;   /* 3.17.12: --stufe-1 deckend auf --surface-raised */
   --stufe-3: rgba(245, 243, 236, 0.72);
   --stufe-4: rgba(245, 243, 236, 1);
   /* 3.13.0: sechster Zustand "dauerhaft" (app.js, KARTEN_ZUSTAENDE, Stufe 10+,
@@ -347,6 +348,7 @@
   --stufe-1: rgba(36, 31, 24, 0.26);
   --stufe-2: rgba(36, 31, 24, 0.46);
   --stufe-2-fest: #9a978f;   /* 3.17.10: --stufe-2 deckend auf --surface-raised */
+  --stufe-1-fest: #c6c3bd;   /* 3.17.12: --stufe-1 deckend auf --surface-raised */
   --stufe-3: rgba(36, 31, 24, 0.70);
   --stufe-4: rgba(36, 31, 24, 1);
   --stufe-5: var(--gold-400);
@@ -1518,7 +1520,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 }
 /* Die Lernstufen-Rampe: mehr Deckkraft heißt überall dasselbe. */
 .badge.zustand-neu       { background: var(--stufe-0); color: var(--text-2); border-color: transparent; }
-.badge.zustand-lernen    { background: var(--stufe-1); color: var(--text-1); border-color: transparent; }
+.badge.zustand-lernen    { background: var(--stufe-1-fest); color: var(--text-1); border-color: transparent; }   /* 3.17.12: deckend - halbdurchsichtig lag "12 fällig" im Bereichs-Blatt bei 4,41:1 */
 .badge.zustand-frisch    { background: var(--stufe-2); color: var(--text-on-accent); border-color: transparent; }
 /* 3.17.10 (Station 10): --stufe-2 ist halbdurchsichtig - auf der dunkleren
    Speicherkarten-Liste (iPad) lag die Plakette bei 4,47:1. Mit festem

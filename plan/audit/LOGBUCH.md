@@ -17,7 +17,49 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 9 | Fortschritt | erledigt (v3.17.9) |
 | 10 | Verwalten | erledigt (v3.17.10) |
 | 11 | Karten-Blätter | erledigt (v3.17.11) |
-| 12–18 | … | offen |
+| 12 | Bereiche | erledigt (v3.17.12) |
+| 13–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 12: Bereiche (v3.17.12)
+
+**Anlass:** Betreiber „weiter, bitte so früh wie möglich fertig werden ohne
+qualität liegen zu lassen" – Stationen ab jetzt direkt hintereinander, nicht
+mehr stündlich.
+
+**Geprüft (`t_bereiche.js`, Handy, klein, iPad; Löschen mit Karten
+gesondert):**
+- **Fund 1: `addBereich` setzte nur `bereichId`** – Auswahlmodus, Suche,
+  Übungswahl blieben vom alten Bereich (gemessen: „0 ausgewählt" im neuen,
+  leeren Bereich). Dasselbe nach dem Löschen.
+- **Fund 2: leerer Bereich löschen** = Backup-Download + Name abtippen,
+  Text „Es werden 0 Karte(n) …".
+- **Fund 3: „Bereich löschen" beim letzten Bereich** → nur „Nicht möglich".
+- **Fund 4: leerer Bereich „fertig"** im Bereichs-Blatt.
+- Fund 5: vorhandenen Namen anlegen wechselte still.
+- Fund 6: Plakette „12 fällig" (`zustand-lernen`, halbdurchsichtig) 4,41:1.
+- Ohne Befund: Wechseln, Umbenennen inkl. vergebener Name, Löschen mit
+  Karten (Backup, falscher Name wird abgelehnt).
+
+**Geändert (app.js):** `addBereich` → `selectBereich` + Hinweis bei
+vorhandenem Namen; `deleteBereich` – leerer Bereich: einfache Rückfrage;
+Text Einzahl/Mehrzahl; neues `bereichEntfernen` (→ `selectBereich`);
+`bereichMehrSheet` ohne Löschen beim letzten Bereich; `bereichSheet`
+„leer"/„fertig". **styles.css:** `--stufe-1-fest` (dunkel #5e5d5a, hell
+#c6c3bd) für `.badge.zustand-lernen`. Version 3.17.12.
+**Neu (Prüfstand):** `t_bereiche.js`.
+
+**Entscheidung:** Die doppelte Sicherung (Backup + Name) bleibt für Bereiche
+mit Karten unverändert (2.11.0, Betreiber „risiko nicht so einfach"). Leer
+heißt: keine Karte und keine Speicherkarte.
+
+**Geprüft danach:** alles wie gewollt auf drei Geräten; `t_kontrast.js`
+dunkel+hell 0; Affe Handy/klein 150 Schritte 0 Befunde.
+
+**Offen:** –
+**Nächste Station:** 13 (Kartensätze & Daten – Code teilen/einlösen,
+Sichern, Einspielen)
 
 ---
 

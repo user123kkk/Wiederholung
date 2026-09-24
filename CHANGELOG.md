@@ -1,3 +1,24 @@
+## 3.17.12 - 24. September 2026
+
+**Prüfschleife, Station 12 (Bereiche).**
+
+- **Ein neuer Bereich beginnt sauber.** Vorher nahm er Auswahlmodus, Suche
+  und Übungswahl des alten Bereichs mit – man stand in einem leeren Bereich
+  mit „0 ausgewählt". Nach dem Löschen eines Bereichs genauso.
+- **Einen leeren Bereich löschen ist eine einfache Rückfrage.** Vorher lud
+  die App auch dafür ein Backup herunter und verlangte den Namen („Es werden
+  0 Karte(n) gelöscht"). Bereiche mit Karten sind unverändert doppelt
+  gesichert.
+- **„Bereich löschen" steht beim letzten Bereich nicht mehr da** – es führte
+  nur zu „Nicht möglich".
+- **Leere Bereiche heißen in der Liste „leer"**, nicht „fertig".
+- **Einen vorhandenen Namen anlegen** öffnet diesen Bereich wie bisher, sagt
+  es jetzt aber („… gibt es schon – geöffnet").
+- Die Plakette „12 fällig" ist besser lesbar (war knapp unter der Grenze).
+- Geprüft ohne Befund: Wechseln, Umbenennen (auch auf einen vergebenen
+  Namen), Löschen mit Karten samt Backup und Namensprüfung – Handy, kleines
+  Handy, iPad.
+
 ## 3.17.11 - 24. September 2026
 
 **Prüfschleife, Station 11 (Karten anlegen, bearbeiten, löschen).**

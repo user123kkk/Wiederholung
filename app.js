@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.11";
+const APP_VERSION = "3.17.12";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -3998,16 +3998,19 @@ async function addBereich() {
   if (!name || !name.trim()) return;
   const n = name.trim().slice(0, 40);
   let b = bereiche.find(x => x.name === n);
+  const gabEsSchon = !!b;
   if (!b) {
     b = { id: genId(), name: n, karten: [], sets: [] };
     bereiche.push(b);
     patchDoc({ [pfadBereich(b.id)]: bereichFelder(b, bereiche.length - 1) });
   }
-  ui.bereichId = b.id;
-  ui.bereichSheet = false;
-  ui.session = null;
-  ui.editId = null;
-  render();
+  /* 3.17.12 (Pruefschleife, Station 12): ueber selectBereich - dort wird
+     alles zurueckgesetzt, was zum alten Bereich gehoerte. Vorher nahm ein
+     neuer Bereich Auswahlmodus, Suche und Uebungswahl des alten mit
+     ("0 ausgewaehlt" in einem Bereich ohne Karten). Und ein schon
+     vergebener Name wechselte still dorthin - jetzt sagt es ein Hinweis. */
+  selectBereich(b.id);
+  if (gabEsSchon) zeigeToast("„" + n + "“ gibt es schon – geöffnet");
 }
 function selectBereich(bereichId) {
   if (!bereiche.some(b => b.id === bereichId)) return;
@@ -4063,6 +4066,16 @@ async function deleteBereich() {
     return;
   }
   const b = currentBereich();
+  /* 3.17.12 (Station 12): Ein leerer Bereich (keine Karte, keine
+     Speicherkarte) hat nichts, was ein Backup oder das Abtippen des Namens
+     schuetzen koennte - vorher lud die App trotzdem eine Datei herunter und
+     verlangte den Namen ("Es werden 0 Karte(n) ... geloescht"). */
+  if (b.karten.length === 0 && !(b.sets || []).length) {
+    const ok = await dlgConfirm("„" + b.name + "“ ist leer.", { title: "Bereich löschen?", okLabel: "Löschen", danger: true });
+    if (!ok) return;
+    bereichEntfernen(b);
+    return;
+  }
   /* 2.11.0: Zwei Sicherungen statt einer Nachfrage, die man wegtippt.
 
      Erstens laedt die App vorher ein Backup dieses Bereichs herunter - ohne
@@ -4073,7 +4086,7 @@ async function deleteBereich() {
      haette nichts gebracht, das klickt man genauso weg. */
   exportBackup(true);
   const eingabe = await dlgPrompt(
-    'Es werden ' + b.karten.length + ' Karte(n) mit ihrem gesamten Lernstand gelöscht. Das lässt sich nicht rückgängig machen.\n\n' +
+    (b.karten.length === 1 ? 'Eine Karte wird' : 'Es werden ' + b.karten.length + ' Karten') + ' mit ' + (b.karten.length === 1 ? 'ihrem' : 'ihrem gesamten') + ' Lernstand gelöscht. Das lässt sich nicht rückgängig machen.\n\n' +
     'Ein Backup dieses Bereichs wurde gerade zum Herunterladen angeboten – ' +
     'sieh in deinen Downloads nach, dass die Datei wirklich da ist.\n\n' +
     'Tipp zum Bestätigen den Namen des Bereichs ein: ' + b.name,
@@ -4083,15 +4096,16 @@ async function deleteBereich() {
     await dlgAlert("Der Name stimmt nicht überein – es wurde nichts gelöscht.", "Abgebrochen");
     return;
   }
+  bereichEntfernen(b);
+}
+function bereichEntfernen(b) {
   const idx = bereiche.findIndex(x => x.id === b.id);
   bereiche.splice(idx, 1);
-  ui.bereichId = bereiche[Math.max(0, Math.min(idx, bereiche.length - 1))].id;
-  ui.session = null;
-  ui.editId = null;
   /* A4: nur diesen einen Bereich entfernen. deleteField() loescht genau
      dieses Feld, alles daneben bleibt so, wie es in der Cloud steht. */
   patchDoc({ [pfadBereich(b.id)]: LOESCHEN });
-  render();
+  /* 3.17.12: selectBereich setzt Suche, Auswahl und Uebungswahl zurueck. */
+  selectBereich(bereiche[Math.max(0, Math.min(idx, bereiche.length - 1))].id);
 }
 
 /* ---------- Mehrfachauswahl ---------- */
@@ -6817,7 +6831,8 @@ function bereichSheet() {
     html += '<button class="liste-zeile' + (aktiv ? " aktiv" : "") +
       '" data-action="select-bereich" data-bid="' + esc(b.id) + '">' +
       '<span class="liste-zeile__text">' + esc(b.name) + '</span>' +
-      (d > 0 ? '<span class="badge zustand-lernen">' + d + ' fällig</span>' : '<span class="liste-zeile__wert">fertig</span>') +
+      /* 3.17.12: ein Bereich ohne Karten ist "leer", nicht "fertig". */
+      (d > 0 ? '<span class="badge zustand-lernen">' + d + ' fällig</span>' : '<span class="liste-zeile__wert">' + (b.karten.length ? 'fertig' : 'leer') + '</span>') +
       (aktiv ? ikon("haken", "i-sm") : '') + '</button>';
   });
   html += '<button class="liste-zeile" data-action="add-bereich">' +
@@ -6853,8 +6868,12 @@ function bereichMehrSheet() {
     html += '<button class="liste-zeile" data-action="bereich-mehr-umbenennen" title="Bereich umbenennen">' +
       ikon("stift", "i-sm") + '<span class="liste-zeile__text">Bereich umbenennen</span></button>';
   }
-  html += '<button class="liste-zeile gefahr" data-action="bereich-mehr-loeschen" title="Bereich löschen">' +
-    ikon("muell", "i-sm") + '<span class="liste-zeile__text">Bereich löschen</span></button>';
+  /* 3.17.12: beim letzten Bereich nicht - der Knopf fuehrte nur zu
+     "Nicht moeglich" (Hick: keine Handlung zeigen, die nicht geht). */
+  if (bereiche.length > 1) {
+    html += '<button class="liste-zeile gefahr" data-action="bereich-mehr-loeschen" title="Bereich löschen">' +
+      ikon("muell", "i-sm") + '<span class="liste-zeile__text">Bereich löschen</span></button>';
+  }
   html += '</div></div>';
   html += '<div class="dlg-actions"><button class="secondary" data-action="bereich-mehr-zu">Schließen</button></div>';
   html += '</div></div>';
