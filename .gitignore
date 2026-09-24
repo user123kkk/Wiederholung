@@ -6,3 +6,4 @@ node_modules/
 # wird bei jedem Lauf neu erzeugt und gehoert nicht ins Repo.
 plan/redesign-oberflaeche/.probelauf/
 plan/werkzeuge/pruefstand/package*.json
+plan/werkzeuge/pruefstand/node_modules
