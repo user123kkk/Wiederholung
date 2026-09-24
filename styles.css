@@ -697,11 +697,17 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   font-family: var(--font-text); font-size: var(--fs-base); font-weight: 600;
   letter-spacing: -0.01em; white-space: nowrap; overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0; line-height: inherit;   /* 3.17.18: jetzt ein h1 - Aussehen wie vorher */
 }
 .appbar__spacer { flex: 1 1 auto; }
 /* Am Handy traegt der Umschalter den Bereichsnamen; der Ansichtstitel waere
    daneben doppelt. Ab 900 px kehrt sich das um. */
-.appbar__title--ansicht { display: none; }
+.appbar__title--ansicht {
+  /* 3.17.18: am Handy nur fuer Bildschirmleser (wie .sr-only) statt
+     display:none - die Ueberschrift der Seite soll es auch dort geben. */
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); border: 0;
+}
 
 /* Der Bereichs-Umschalter. Ersetzt die waagerecht scrollende Pill-Reihe —
    die kostete eine volle Zeile auf dem wichtigsten Bildschirm und hörte
@@ -4564,7 +4570,7 @@ button.halten:disabled {
      Umschalter in der Kopfzeile werden dort nicht gebraucht. Stattdessen
      steht hier, wo man gerade ist. */
   .bereich-pill { display: none; }
-  .appbar__title--ansicht { display: block; }
+  .appbar__title--ansicht { display: block; position: static; width: auto; height: auto; margin: 0; clip: auto; }
   /* Einstellungen fuehrt am Desktop weiterhin nur ueber die Rail-Zeile
      (.nav__foot) - das Zahnrad in der Kopfzeile ist die Handy-Notloesung
      dafuer, dass .nav__foot unter 900px ausgeblendet ist. */

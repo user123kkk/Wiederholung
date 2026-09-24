@@ -1,3 +1,20 @@
+## 3.17.18 - 24. September 2026
+
+**Prüfschleife, Station 18 (Hell & ruhig) – die Schleife ist durch.**
+
+- **Jede Seite hat eine Überschrift für Bildschirmleser.** Bisher hatte nur
+  „Guten Tag" auf dem Lernen-Tab eine – wer mit VoiceOver über Überschriften
+  springt, fand sonst keine. Der Seitentitel in der Kopfzeile ist jetzt eine
+  echte Überschrift (Aussehen unverändert); am Handy, wo dort der
+  Bereichsname steht, ist sie nur für Bildschirmleser da; in der Runde heißt
+  sie „Runde" bzw. „Üben".
+- **Das Suchfeld in Verwalten hat einen Namen** („Karten durchsuchen") – der
+  Platzhalter allein wird nicht von jedem Bildschirmleser vorgelesen.
+- Geprüft ohne Befund: mit „Bewegung reduzieren" läuft keine Bewegung über
+  50 ms; jeder Knopf hat einen Namen; alle Felder sind beschriftet; alle
+  Blätter sind als Dialog benannt; Sprache Deutsch gesetzt; helle Fassung
+  Kontrast 0 überall.
+
 ## 3.17.17 - 24. September 2026
 
 **Prüfschleife, Station 17 (große Bildschirme).**

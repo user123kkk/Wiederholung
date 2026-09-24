@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.17";
+const APP_VERSION = "3.17.18";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -6811,7 +6811,10 @@ function appBar(cfg) {
       ikon("zurueck") + '</button>';
   }
   if (c.titel) {
-    html += '<div class="appbar__title">' + esc(c.titel) + '</div>';
+    /* 3.17.18 (Pruefschleife, Station 18): h1 statt div - Bildschirmleser
+       springen ueber Ueberschriften; ausser "Guten Tag" auf Lernen hatte
+       keine Seite eine. Aussehen unveraendert (styles.css .appbar__title). */
+    html += '<h1 class="appbar__title">' + esc(c.titel) + '</h1>';
   } else {
     /* Zwei Fassungen desselben Platzes: Am Handy steht hier der Umschalter
        (die Bereichsliste passt nicht auf den Bildschirm), am Desktop steht
@@ -6820,7 +6823,7 @@ function appBar(cfg) {
     html += '<button class="bereich-pill" data-action="bereich-sheet-auf" ' +
       'aria-haspopup="dialog" aria-label="Bereich wechseln">' +
       '<span>' + esc(currentBereich().name) + '</span>' + ikon("chevronUnten") + '</button>';
-    html += '<div class="appbar__title appbar__title--ansicht">' + esc(c.ansicht || "") + '</div>';
+    if (c.ansicht) html += '<h1 class="appbar__title appbar__title--ansicht">' + esc(c.ansicht) + '</h1>';
   }
   html += '<div class="appbar__spacer"></div>';
   if (c.aktion) html += c.aktion;
@@ -9528,6 +9531,9 @@ function renderSession() {
   /* 3.17.8 (Station 8): Schreiben hat eine eigene, kompakte Anordnung - die
      grosse, senkrecht zentrierte Karte schob die Zeichenflaeche am Handy
      unter den Bildschirmrand (gemessen: Oberkante 806 von 844 px). */
+  /* 3.17.18 (Station 18): Ueberschrift fuer Bildschirmleser - sichtbar steht
+     der Stand in der Leiste ("Karte 3 von 12"). */
+  html += '<h1 class="sr-only">' + (s.isDrill ? 'Üben' : 'Runde') + '</h1>';
   html += '<div class="study-card' + (s.revealed ? '' : ' zugedeckt') + (s.handwriting ? ' study-card--schreiben' : '') + '" id="sitzung">';
 
   /* 3.15.0: Das Banner "Uebungsmodus - dein Fortschritt bleibt
@@ -10222,7 +10228,9 @@ function renderVerwaltenListe(cards, gefuehrt) {
     html += '<p class="hint">Noch keine Karten vorhanden.</p>';
   } else {
     html += '<div class="search-wrap">' + ikon("suche", "i-such");
-    html += '<input type="text" id="f-search" placeholder="Wort, Übersetzung oder Notiz…" value="' + esc(ui.searchQuery) + '"' +
+    /* 3.17.18: aria-label - der Platzhalter allein wird nicht von jedem
+       Bildschirmleser vorgelesen. */
+    html += '<input type="text" id="f-search" aria-label="Karten durchsuchen" placeholder="Wort, Übersetzung oder Notiz…" value="' + esc(ui.searchQuery) + '"' +
       ' autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">';
     html += '<button class="search-clear" id="f-search-clear" data-action="search-clear" aria-label="Suche leeren"' +
       (ui.searchQuery ? '' : ' hidden') + '>' + ikon("schliessen", "i-sm") + '</button>';
