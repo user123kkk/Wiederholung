@@ -1,3 +1,21 @@
+## 3.17.16 - 24. September 2026
+
+**Prüfschleife, Station 16 (Querschnitt: Meldungen, Fehler, offline).**
+
+- **Offline-Hinweis in einem Satz:** „Offline – alles geht weiter und wird
+  übertragen, sobald du wieder online bist." Vorher drei Sätze, 130 px hoch –
+  beim Verbindungsverlust rutschte alles um 142 px nach unten, jetzt um 80.
+- **Keine Systemcodes mehr in Speicher- und Startfehlern.** Statt
+  „Speichern in der Cloud fehlgeschlagen (permission-denied)" steht da, was
+  los ist („… nicht in der Cloud angekommen – keine Verbindung").
+- **Startfehler mit Ausweg:** Kann die App die Daten nicht laden, riet sie
+  „melde dich ab" – ohne Knopf dafür, und mit einem Hinweis auf „die
+  Sicherheitsregeln in Firebase". Jetzt: ein klarer Satz und ein
+  Abmelden-Knopf neben „Neu laden".
+- Meldungen erscheinen über dem Erinnerungs-Blatt oben statt darunter.
+- Geprüft ohne Befund: wieder online (Hinweis verschwindet), Eingabe-Dialog
+  mit Enter, Rückfrage mit Escape abbrechen, Fokus im Eingabefeld.
+
 ## 3.17.15 - 24. September 2026
 
 **Prüfschleife, Station 15 (Konto).**

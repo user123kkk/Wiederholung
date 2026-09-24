@@ -107,6 +107,7 @@ export function runTransaction(db, fn){ return fn({ get: getDoc, set: (r,d,o)=>_
 export function onSnapshot(ref, cb, err){
   // wie firestore.rules: ohne bestaetigte E-Mail kein Lesen
   if (S.user && S.user.emailVerified === false && err) { setTimeout(() => err(Object.assign(new Error('x'), { code: 'permission-denied' })), 20); return () => {}; }
+  if (window.__SNAP_FAIL && err) { setTimeout(() => err(Object.assign(new Error('x'), { code: window.__SNAP_FAIL })), 20); return () => {}; }
   const l = { ref, cb }; S.listeners.push(l);
   setTimeout(() => { try { cb(ref.col ? qsnap(ref) : dsnap(ref.path)); } catch(e){ console.error('snap', e); } }, 20);
   return () => { S.listeners = S.listeners.filter(x => x !== l); }; }

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.15";
+const APP_VERSION = "3.17.16";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1626,7 +1626,7 @@ function renderToast() {
   if (!ui.toast) return "";
   /* Bei offenem Blatt steht die Meldung oben - unten lag sie auf dem Formular
      und fing die Taps darauf ab. */
-  const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.setArtSheetId ||
+  const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId ||
     ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog);
   return '<div class="toast-wrap' + (blattOffen ? ' toast-wrap--oben' : '') + '"><div class="toast" role="status" aria-live="polite">' +
     ikon("fertig", "i-sm") + '<span>' + esc(ui.toast.text) + '</span></div></div>';
@@ -1791,7 +1791,10 @@ function snapFehler(err) {
     }
     syncError = currentUser && !currentUser.emailVerified
       ? "Zugriff verweigert – die E-Mail ist noch nicht bestätigt."
-      : "Zugriff verweigert. Melde dich einmal ab und wieder an – hilft das nicht, stimmen die Sicherheitsregeln in Firebase nicht.";
+      /* 3.17.16: ohne "Sicherheitsregeln in Firebase" - das ist ein Satz fuer
+         den Betreiber, nicht fuer Lernende. Der Knopf zum Abmelden steht
+         jetzt direkt darunter (Startbildschirm). */
+      : "Zugriff verweigert. Melde dich einmal ab und wieder an.";
   } else {
     syncError = "Verbindungsproblem beim Laden der Daten.";
   }
@@ -2080,6 +2083,14 @@ let saveWarned = false;
    landen nur echte Ablehnungen (fehlende Rechte, kaputte Daten). */
 let schreibFehler = null;
 let schreibFehlerAusweisErneuert = false;
+/* 3.17.16 (Pruefschleife, Station 16): Der Grund in Worten - Banner und
+   Dialog zeigten bisher den Systemcode ("permission-denied"). */
+function schreibFehlerText(code) {
+  if (code === "permission-denied" || code === "unauthenticated") return "die Anmeldung wurde abgelehnt";
+  if (code === "unavailable" || code === "deadline-exceeded" || offline) return "keine Verbindung";
+  if (code === "resource-exhausted") return "gerade zu viele Anfragen";
+  return "die Übertragung hat nicht geklappt";
+}
 function saveFehler(e) {
   schreibFehler = (e && e.code) ? e.code : "unbekannter Fehler";
   if (schreibFehler === "permission-denied" && ausweisErneuernFuerSchreiben()) {
@@ -2089,7 +2100,7 @@ function saveFehler(e) {
   }
   if (saveWarned) { render(); return; }
   saveWarned = true;
-  dlgAlert("Speichern in der Cloud fehlgeschlagen (" + schreibFehler + "). Änderungen werden erneut versucht, sobald die Verbindung steht.", "Cloud nicht erreichbar");
+  dlgAlert("Deine letzte Änderung ist nicht in der Cloud angekommen – " + schreibFehlerText(schreibFehler) + ". Die App versucht es weiter, sobald die Verbindung steht.", "Nicht gespeichert");
 }
 function schreibErfolg() { saveWarned = false; if (schreibFehler) { schreibFehler = null; render(); } }
 
@@ -6343,6 +6354,11 @@ function render() {
       laden += '<div class="error-box" style="max-width:34ch;text-align:left">' + ikon("warnung", "i-sm") +
         '<div class="banner__text">' + esc(syncError) + '</div></div>';
       laden += '<button class="secondary" data-action="seite-neu-laden">Neu laden</button>';
+      /* 3.17.16 (Station 16): Der Text riet "melde dich ab", aber hier gab es
+         keinen Weg dazu - nur "Neu laden". Direkt, ohne Rueckfrage: Dialoge
+         erscheinen auf diesem Bildschirm nicht, und es gibt nichts, das
+         verloren gehen koennte (die Daten liessen sich ja nicht laden). */
+      if (currentUser) laden += '<button class="ghost" data-action="boot-abmelden">Abmelden</button>';
     } else if (ladeLangsam) {
       /* 3.13.0: ein Satz statt zwei - der Knopf darunter sagt den Rest.
          3.16.1: unter der Linie, absolut gesetzt (.boot__hinweis) - Zeichen
@@ -6467,7 +6483,7 @@ async function umzugStarten() {
     render();
   } catch (e) {
     ui.umzug.laeuft = false;
-    ui.umzug.fehler = e && e.code ? e.code : "Fehler";
+    ui.umzug.fehler = fehlerKlartext(e);   /* 3.17.16: statt Systemcode */
     render();
   }
 }
@@ -7081,7 +7097,7 @@ function bannerSchreibfehler() {
       'Die Anmeldung war veraltet und wurde gerade erneuert. Versuch die letzte Änderung noch einmal zu speichern.');
   }
   return bannerFehler("Nicht gespeichert:",
-    'Änderungen kommen gerade nicht in der Cloud an (' + esc(schreibFehler) + '). ' +
+    'Änderungen kommen gerade nicht in der Cloud an – ' + esc(schreibFehlerText(schreibFehler)) + '. ' +
     'Lade ein Backup herunter, bevor du weiterlernst.');
 }
 
@@ -7174,11 +7190,13 @@ function renderMain() {
        weiter geht, wohin die Antworten gehen und was NICHT geht (Teilen per
        Code braucht den Server). Faellt weg, sobald die Verbindung zurueck ist. */
     if (offline) {
-      kopf += bannerInfo('<strong>Offline.</strong> Lernen und Karten bearbeiten geht weiter. ' +
-        (offlineCacheAktiv
-          ? 'Änderungen werden auf diesem Gerät gespeichert und übertragen, sobald du wieder online bist.'
-          : 'Änderungen werden übertragen, sobald du wieder online bist – schließ die App bis dahin nicht.') +
-        ' Teilen per Code braucht eine Verbindung.', true);
+      /* 3.17.16 (Station 16): ein Satz statt drei - der Banner war 130 px
+         hoch und schob beim Wechsel ins Offline alles um 142 px nach unten.
+         "Teilen per Code braucht eine Verbindung" sagen die gesperrten Knoepfe
+         selbst (title), dort, wo es gilt. */
+      kopf += bannerInfo('<strong>Offline</strong> – alles geht weiter' +
+        (offlineCacheAktiv ? ' und wird übertragen, sobald du wieder online bist.'
+          : '. Schließ die App nicht, bis du wieder online bist.'), true);
     }
 
     const backupAge = ui.einstellungen ? 0 : daysSinceLastBackup();
@@ -11783,6 +11801,7 @@ document.body.addEventListener("click", e => {
       if (ui.einstieg && Date.now() - ui.einstieg.zeit >= 400) einstiegBeenden(vorsatzSatz(ui.einstieg));
       break;
     case "logout": doLogout(); break;
+    case "boot-abmelden": zaehle("abgemeldet"); zaehlSenden(true); fb.signOut(auth); break;
     /* 3.12.0: Nur die Tastatur-Fassung laeuft ueber diesen Klick. Ein
        Zeigerklick hat e.detail >= 1 und tut hier nichts - dort loest das
        Gedrueckthalten aus (haltenStarten, weiter unten). */

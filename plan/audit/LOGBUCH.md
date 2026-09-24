@@ -21,7 +21,41 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 13 | Kartensätze & Daten | erledigt (v3.17.13) |
 | 14 | Einstellungen | erledigt (v3.17.14) |
 | 15 | Konto | erledigt (v3.17.15) |
-| 16–18 | … | offen |
+| 16 | Querschnitt | erledigt (v3.17.16) |
+| 17–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 16: Querschnitt (v3.17.16)
+
+**Geprüft (`t_querschnitt.js`, Handy/klein/iPad; Stub: `window.__SNAP_FAIL`
+lässt die Live-Listener mit einem Code scheitern):** offline/online,
+Schreibfehler, Toast bei offenem Blatt, Eingabe-Dialog (Fokus, Enter),
+Rückfrage + Escape, Start mit `unavailable` und `permission-denied`
+(syncError – aus Station 16 des Auftrags ausdrücklich verlangt).
+- **Fund 1: Offline-Banner 130 px, Inhalt springt 142 px.** Jetzt ein Satz
+  (67 px, Sprung 80/100 px). Rest bleibt bewusst: der Banner steht seit 3.6.9
+  leise im Fluss; ein schwebender Hinweis läge über dem Inhalt. Der Wechsel
+  kommt vom Netz, nicht von einem Tipp.
+- **Fund 2: Systemcodes** – `saveFehler`-Dialog und Schreib-Banner
+  „(permission-denied)", Umzugsfehler zeigte `e.code`.
+- **Fund 3: Startfehler `permission-denied`** – Text „… stimmen die
+  Sicherheitsregeln in Firebase nicht" und „melde dich ab" ohne Knopf
+  (Dialoge erscheinen auf dem Startbildschirm nicht → direkter
+  `boot-abmelden`).
+- Fund 4: `renderToast` kannte `erinnerungSheet` nicht (gleiches Versäumnis
+  wie Station 14).
+- Ohne Befund: Online-Rückkehr, Prompt mit Enter, Escape bricht Rückfrage ab,
+  Schreibfehler mit `permission-denied` → Ausweis-Erneuerung + Banner.
+
+**Geändert (app.js):** `schreibFehlerText` (neu), `saveFehler`,
+`bannerSchreibfehler`, `snapFehler`-Text, Startbildschirm mit Abmelden,
+Handler `boot-abmelden`, Offline-Banner, `renderToast`, Umzugsfehler →
+`fehlerKlartext`. Version 3.17.16.
+**Prüfstand:** `t_querschnitt.js` neu; `stubs.js` `__SNAP_FAIL`.
+
+**Offen:** –
+**Nächste Station:** 17 (Große Bildschirme – Tablet hoch/quer, Desktop)
 
 ---
 
