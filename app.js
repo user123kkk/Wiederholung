@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.20";
+const APP_VERSION = "3.17.21";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5925,7 +5925,16 @@ function einstiegWahlFehlt(e) {
   const pruefung = e && EINSTIEG_PFLICHT[e.schritt];
   return pruefung ? !pruefung(e) : false;
 }
-function einstiegFuss(weiterLabel, weiterAktion, klasse) {
+/* zusatz: HTML, das NOCH INNERHALB des unten fest stehenden (position:
+   sticky) Bereichs landet - z. B. die Vertrauens-Zeile auf dem letzten
+   Bildschirm. 3.17.21, echter Fund (Betreiber 24.09.2026): "Kostenlos.
+   Keine Werbung, keine Cookies." stand bisher als eigener Absatz NACH
+   diesem ganzen Block. .einstieg-aktion hat "margin-top: auto" und schiebt
+   sich damit im Flex-Layout ganz nach unten - alles, was danach in derselben
+   Spalte folgt, landet dadurch NOCH weiter unten, meist unter dem sichtbaren
+   Bildschirmrand. Der Satz stand am aeussersten Rand, kaum lesbar/erreichbar.
+   Jetzt steht er IM selben stehenden Block wie der Knopf, direkt darunter. */
+function einstiegFuss(weiterLabel, weiterAktion, klasse, zusatz) {
   const e = ui.einstieg;
   /* Die Hinweiszeile steht NUR auf Bildschirmen mit Pflicht. Sie haelt ihren
      Platz frei (min-height in styles.css), damit der Knopf nicht springt, wenn
@@ -5943,6 +5952,7 @@ function einstiegFuss(weiterLabel, weiterAktion, klasse) {
        Bildschirm an derselben Stelle (vorher 30 px Unterschied). */
     (pflicht ? '<p class="einstieg-sperre" aria-live="polite">' + esc(hinweis) + '</p>'
       : (e && e.schritt >= 1 && e.schritt <= 6 ? '<p class="einstieg-sperre" aria-hidden="true"></p>' : '')) +
+    (zusatz || "") +
     '</div>';
 }
 /* Die Wahl-Zweige zeichnen den Bildschirm bewusst NICHT neu (Fokus, Bewegung -
@@ -6231,11 +6241,13 @@ function renderEinstieg() {
       '<span><strong>Kartensatz per Code.</strong> Hat dir jemand einen Code gegeben, ' +
       'stehen seine Lektionen bei dir fertig da.</span></div>';
     html += '</div>';
-    html += einstiegFuss("Plan speichern", "einstieg-fertig", "einstieg-aktion--glanz einstieg-aktion--spaet");
     /* 3.17.1: "kein Tracking" stimmt seit der (abschaltbaren) anonymen
        Nutzungsstatistik nicht mehr woertlich - hier steht nur, was ohne
-       Einschraenkung gilt (Datenschutzerklaerung Punkt 10 und 15). */
-    html += '<p class="einstieg-vertrauen">Kostenlos. Keine Werbung, keine Cookies.</p>';
+       Einschraenkung gilt (Datenschutzerklaerung Punkt 10 und 15).
+       3.17.21: als "zusatz" INNERHALB des stehenden Knopf-Blocks (siehe
+       Kommentar bei einstiegFuss) statt als eigener Absatz danach. */
+    html += einstiegFuss("Plan speichern", "einstieg-fertig", "einstieg-aktion--glanz einstieg-aktion--spaet",
+      '<p class="einstieg-vertrauen">Kostenlos. Keine Werbung, keine Cookies.</p>');
   }
 
   html += '</div></div>';
@@ -11778,18 +11790,33 @@ document.body.addEventListener("click", e => {
     case "einstieg-aufdecken":
       if (ui.einstieg) { ui.einstieg.aufgedeckt = true; render(); }
       break;
-    /* 3.17.20: Bildschirm 1, Karte manuell drehen - jederzeit, beliebig oft.
+    /* 3.17.21: Bildschirm 1, Karte manuell drehen - jederzeit, beliebig oft.
        KEIN render(): #app.innerHTML wuerde das Element neu bauen und die
        CSS-transition fuer die Drehung liefe ins Leere (nur an bestehenden
        Elementen wirksam, LEHREN.md). Die Intro-Klasse (einmalige
        Hin-und-zurueck-Animation) wird beim ersten Antippen entfernt, damit
        sie die manuelle Drehung nicht mehr ueberschreibt (siehe Kommentar bei
-       einstiegHero). */
+       einstiegHero).
+
+       Echter Fund (Betreiber-Meldung 24.09.2026, "fehler fehler fehler"):
+       Erster Tipp sprang OHNE Drehung direkt auf "Buch", erst der ZWEITE
+       Tipp drehte sich sichtbar. Ursache: --intro entfernen (beendet die
+       haltende Animation) und --hinten setzen (neues Transform-Ziel) liefen
+       im selben synchronen Durchlauf - der Browser berechnet daraus direkt
+       den Endzustand, ohne je einen "settled" Zwischenstand ohne Animation
+       zu rendern, an dem die CSS-transition ansetzen koennte. Sie greift
+       nur, wenn zwischen "alter Wert" und "neuer Wert" tatsaechlich ein
+       eigener Stil-Durchlauf lag. Fix: nach dem Entfernen von --intro einen
+       Reflow erzwingen (offsetWidth lesen), ERST DANACH --hinten setzen -
+       nur beim allerersten Antippen noetig, wenn --intro ueberhaupt noch
+       da war. */
     case "einstieg-hero-dreh": {
       const e = ui.einstieg;
       if (!e) break;
       e.heroHinten = !e.heroHinten;
+      const hatteIntro = btn.classList.contains("einstieg-hero__karte--intro");
       btn.classList.remove("einstieg-hero__karte--intro");
+      if (hatteIntro) void btn.offsetWidth;  // Reflow erzwingen, siehe Kommentar oben
       btn.classList.toggle("einstieg-hero__karte--hinten", e.heroHinten);
       btn.setAttribute("aria-pressed", e.heroHinten ? "true" : "false");
       break;

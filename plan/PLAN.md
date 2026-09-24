@@ -774,7 +774,26 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026, abends): v3.17.20 auf `main`.**
+**AKTUELL (24.09.2026, spätabends): v3.17.21 auf `main` – zwei echte Fehler
+aus der Rückmeldung zu v3.17.20 behoben.**
+
+- **Einstieg-Karte:** der erste Tipp nach der Intro-Drehung sprang ohne
+  sichtbaren Übergang direkt auf „Buch" (Betreiber: „fehler fehler fehler").
+  Ursache und Fix, dazu neuer Test `t_hero_dreh.js`: siehe `CHANGELOG.md` und
+  `audit/LOGBUCH.md`.
+- **„Dein Plan steht":** der Satz „Kostenlos. Keine Werbung, keine Cookies."
+  stand ganz am unteren Rand, kaum sichtbar/erreichbar. Jetzt im selben
+  stehenden Block wie der „Plan speichern"-Knopf.
+- **Geprüft, kein Fehler gefunden:** Die dritte Betreiber-Meldung („auf der
+  Seite Probier eine Karte ist das auch komisch, wenn man auf die Karte
+  drückt mit 'Wie sicher warst du'") wurde nachgestellt – Tippen auf die
+  bereits aufgedeckte Karte tut nichts, keine Fehlermeldung, kein falscher
+  Zustand, kein Sprung. Das ist dieselbe Bedienung wie die echte Lernkarte
+  (nach dem Aufdecken reagiert nur noch die Bewertung, nicht die Karte
+  selbst). **Offen:** Was genau daran „komisch" wirkt, ist unklar – kann ein
+  Screenshot/eine Bildschirmaufnahme klären. Nicht spekulativ geändert.
+
+**Davor (24.09.2026, abends): v3.17.20 auf `main`.**
 
 - **NEU: [`LEHREN.md`](LEHREN.md)** ist Pflichtlektüre vor jeder Änderung
   (`CLAUDE.md` verweist darauf). Es sammelt alle Fehler und Muster aus allen

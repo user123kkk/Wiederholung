@@ -28,6 +28,89 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Zwei echte Fehler aus der Rückmeldung zu v3.17.20 behoben (v3.17.21)
+
+**Anlass:** Betreiber testet v3.17.20 sofort und meldet direkt hintereinander
+drei Beobachtungen, mit Zeitdruck („hab ned mehr viel Zeit … fang in einem
+neuen Chat weiter an").
+
+**1. Einstieg-Karte, erster Tipp ohne Drehung – echter Fehler, behoben.**
+
+> „die karte dreht sich von kitaab um zu buch, dann wieder zu kitaab, und
+> wenn man dann drauf drückt steht da plötzlich einfach trocken buch, und
+> wenn man von da aus nochmal auf die karte drückt erst dreht sich das.
+> fehler fehler fehler."
+
+**Ursache:** Im Klick-Fall `einstieg-hero-dreh` liefen zwei Klassenänderungen
+im selben synchronen Durchlauf: `--intro` entfernen (beendet die haltende
+Animation) und `--hinten` setzen (neues Transform-Ziel). Der Browser
+berechnete daraus direkt den Endzustand, ohne einen eigenen, „festgeschriebenen"
+Zwischenstand ohne Animation zu rendern – die CSS-`transition` für die
+Drehung braucht aber genau diesen Zwischenstand, um von ihm aus zum neuen
+Wert überzublenden. Ohne ihn springt der Wert einfach um. Ab dem zweiten Tipp
+gab es diesen Zwischenstand längst (kein `--intro` mehr im Spiel), daher lief
+er dort schon immer richtig.
+
+**Geändert:** `app.js`, Klick-Fall `einstieg-hero-dreh` – zwischen dem
+Entfernen von `--intro` und dem Setzen von `--hinten` wird ein Reflow
+erzwungen (`void btn.offsetWidth`), aber nur, wenn `--intro` überhaupt noch
+da war (jeder Tipp danach bleibt unverändert schnell/direkt).
+
+**Geprüft:** Neuer Test
+[`t_hero_dreh.js`](../werkzeuge/pruefstand/t_hero_dreh.js) – misst über ein
+`transitionrun`-Ereignis, ob beim ERSTEN Tipp nach der Intro-Drehung
+tatsächlich eine `transform`-Übergangsanimation läuft. Vor dem Fix hätte das
+gefehlt; nach dem Fix: 1 Übergang nach dem ersten Tipp, ein zweiter nach dem
+zweiten, `aria-pressed` und die Klasse `--hinten` jeweils korrekt.
+
+**2. „Dein Plan steht": Vertrauens-Satz am äußersten Rand – echter Fehler, behoben.**
+
+> „auf der Seite 'dein Plan steht', steht ganz ganz unten am Rand Rand
+> kostenlos. keine Werbung..."
+
+**Ursache:** `.einstieg-aktion` (der Knopf-Block) hat `position: sticky` und
+`margin-top: auto` – im Flex-Layout schiebt sich der Block dadurch so weit
+wie möglich nach unten. `<p class="einstieg-vertrauen">…</p>` stand bisher
+als eigener Absatz DANACH im selben Flex-Fluss und wurde dadurch noch weiter
+nach unten geschoben, meist an oder über den sichtbaren Rand hinaus.
+
+**Geändert:** `einstiegFuss()` (`app.js`) nimmt jetzt einen vierten
+Parameter `zusatz` entgegen, dessen HTML noch INNERHALB des stehenden Blocks
+landet (nach dem Knopf, vor dem schließenden `</div>`). Der Aufruf auf dem
+letzten Bildschirm übergibt die Vertrauens-Zeile darüber statt sie als
+eigenen Absatz danach zu setzen.
+
+**Geprüft:** Gemessen mit `getBoundingClientRect()` gegen die echte App
+(Handy, 844 px Fensterhöhe): Knopf endet bei y=786,6, der Satz jetzt bei
+y=806,6–828 – vollständig sichtbar, 16 px Abstand zum unteren Rand.
+
+**3. „Probier eine Karte", Tippen auf die aufgedeckte Karte – geprüft, kein Fehler gefunden.**
+
+> „au der seite probier eine karte ist das auch komisch wenn man auf die
+> karte drückt mit wie sicher warst du. alll sowas"
+
+**Nachgestellt:** Karte aufdecken (Schritt 3), dann auf die Karte selbst
+tippen, während „Wie sicher warst du?" mit den drei Antwortknöpfen steht.
+Ergebnis: keine Klassenänderung, keine Fehlermeldung, keine Navigation –
+der Tipp tut schlicht nichts, weil die aufgedeckte Karte ein reines `<div>`
+ohne `data-action` ist (kein Knopf mehr). Das entspricht der echten
+Lernkarte: Nach dem Aufdecken reagiert dort ebenfalls nur noch die Bewertung
+auf einen Tipp, nicht die Karte selbst (`app.js`, `renderSession`/
+`revealAnswer`).
+
+**Offen:** Ohne Screenshot oder genauere Beschreibung ist nicht klar, WAS an
+diesem (unveränderten, mit der echten App konsistenten) Verhalten „komisch"
+wirkt. Nicht spekulativ geändert – ein Rateschuss auf ein Demo-Element vor
+dem Konto wäre eher ein neues Risiko als eine Verbesserung. **Nächster
+Schritt:** beim Betreiber nachfragen, was genau passiert (Screenshot oder
+kurze Aufnahme), sobald er wieder Zeit hat.
+
+**Geprüft (gesamt):** `node --check app.js` sauber, Version an vier Stellen
+gleich. Regression: `t_sprung.js`, `t_einstieg.js` (alle Geräte/Themen),
+`t_a11y.js` – siehe unten, sofern bis zum Push abgeschlossen.
+
+---
+
 ### 2026-09-24 — Fragen 16–18 entschieden und gebaut (v3.17.20)
 
 **Anlass:** Betreiber antwortet auf die vorgelegten Empfehlungen: „16 c 17b

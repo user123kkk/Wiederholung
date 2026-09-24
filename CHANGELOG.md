@@ -1,3 +1,24 @@
+## 3.17.21 - 24. September 2026
+
+**Zwei echte Fehler aus der Betreiber-Rückmeldung zu v3.17.20 behoben.**
+
+- **Einstieg-Karte: der erste Tipp drehte sich nicht sichtbar.** Nach der
+  automatischen Hin-und-zurück-Drehung sprang die Karte beim ersten Antippen
+  ohne Übergang direkt auf „Buch" – erst der zweite Tipp drehte sich sichtbar.
+  Ursache: Zwei Klassenänderungen (Intro-Animation beenden, neues Ziel
+  setzen) liefen im selben Durchlauf, sodass der Browser keinen eigenen
+  Zwischenstand hatte, an dem die Übergangs-Animation ansetzen konnte. Fix:
+  ein erzwungener Reflow zwischen beiden Schritten, nur beim allerersten
+  Antippen nötig. Mit einem neuen Test geprüft
+  (`plan/werkzeuge/pruefstand/t_hero_dreh.js`) – der erste Tipp löst jetzt
+  nachweislich eine echte Drehung aus.
+- **„Dein Plan steht": der Vertrauens-Satz („Kostenlos. Keine Werbung, keine
+  Cookies.") stand ganz am unteren Bildschirmrand, kaum sichtbar.** Der
+  „Plan speichern"-Knopf steht unten fest (`position: sticky` mit
+  `margin-top: auto`); der Satz kam danach im selben Layout und wurde dadurch
+  noch weiter nach unten geschoben, meist unter den sichtbaren Rand. Er steht
+  jetzt im selben stehenden Block wie der Knopf, direkt darunter.
+
 ## 3.17.20 - 24. September 2026
 
 **Drei Betreiber-Bedenken umgesetzt (offene Fragen 16, 17, 18 aus `plan/PLAN.md`).**
