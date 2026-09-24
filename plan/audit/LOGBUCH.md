@@ -28,6 +28,86 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — PostHog eingerichtet und aktiviert (v3.17.22)
+
+**Anlass:** Betreiber richtet nach der Rechtsprüfung (Eintrag unten) das
+PostHog-Projekt selbst ein, Schritt für Schritt begleitet.
+
+**Eingerichtet (PostHog-Konsole, EU-Region, Projekt „Adrabic", ID 283758):**
+
+- Region: **EU Cloud** (bestätigt, nicht US)
+- Tarif: **Free** — 1 Jahr Datenaufbewahrung eingebaut, kein Kreditkarte,
+  deckt damit automatisch das Versprechen in Punkt 15 ohne separate
+  Einstellung
+- Onboarding-Ziel: „Understand how users behave" (Product Analytics) —
+  **nicht** „Find and fix issues" gewählt, weil das standardmäßig Session
+  Replay aktiviert hätte
+- Produkte: nur **Product Analytics** ausgewählt; Session Replay, Web
+  Analytics, AI observability, Data Warehouse, Experiments, Error
+  Tracking, Surveys, Workflows, Logs, Metrics, MCP analytics, Support —
+  alle abgewählt
+- Setup-Wizard (`npx @posthog/wizard`) **nicht verwendet** — hätte die
+  volle PostHog-JS-Bibliothek mit Autocapture/Cookie-Persistenz
+  installiert; die App hat ihre eigene schlanke `fetch()`-Übertragung
+  bereits fertig (`app.js` Zeilen 144–242), kein Fremdcode nötig
+- „Connect your data" (Stripe/Hubspot/Datenbanken) übersprungen — nicht
+  zutreffend, kein Bezahl-Anbieter vorhanden
+- Team-Einladung übersprungen — Einzelbetrieb
+- **Settings → Autocapture:** „Enable autocapture for web",
+  „Enable web vitals autocapture", „Enable dead clicks autocapture" —
+  alle drei **aus**
+- **Settings → Privacy:** „Discard client IP data" — **an** (IP wird
+  serverseitig verworfen)
+- Organisationsweite DPA-Seite unter „compliance" gesucht, nicht
+  gefunden — deckt sich mit der Einschätzung, dass PostHogs
+  Auftragsverarbeitungsvertrag bei der EU-Cloud automatisch mit den beim
+  Sign-up akzeptierten Terms of Service gilt, kein gesonderter
+  Klick-Schritt nötig
+
+**Zwischenfrage des Betreibers (aus dem Onboarding-Dialog, „Enable Session
+Replay?"):** Ob sich die Datenschutzerklärung nicht einfach für Session
+Replay mit umschreiben ließe, wenn sie doch für die übrige Statistik auch
+umgeschrieben wurde. Pro/Contra vorgelegt (nicht gebaut, nur beantwortet):
+Session Replay zeichnet den sichtbaren Bildschirminhalt auf und würde damit
+gegen das bestehende Versprechen „Nie übertragen werden: der Inhalt deiner
+Karten" verstoßen (Kartennotizen sind Freitext), bräuchte eine andere
+Rechtsgrundlage (Einwilligung statt berechtigtes Interesse, damit ein
+Cookie-Banner) und war in `plan/analytics/GERUEST.md` (18.09.2026) bereits
+ausdrücklich als „scheidet aus" entschieden. Betreiber hat daraufhin „No,
+thanks" gewählt — Session Replay bleibt aus.
+
+**Geändert (Veröffentlichung):**
+
+- `app.js`: `POSTHOG_KEY` eingetragen (PostHog-Projekt-Token), Kommentar
+  mit Datum und Konfigurationsstand ergänzt; `APP_VERSION` 3.17.22.
+- `sw.js`: `CACHE_NAME` 3.17.22.
+- `index.html`: beide Versions-Querys (`app.js`, `styles.css`) auf
+  3.17.22.
+- `CHANGELOG.md`: Eintrag 3.17.22.
+
+**Geprüft:** `node --check app.js` sauber; `grep -c "3.17.22"` über
+`app.js`/`sw.js`/`index.html` ergibt 1+1+2 = 4 Treffer, wie gefordert.
+Kein Verhaltenstest nötig — reine Konfigurationsänderung (Konstante), keine
+Logikänderung; bestehende Test-Suite (`t_sprung.js`, `t_a11y.js` u. a.)
+bleibt unberührt von dieser Änderung.
+
+**Entscheidung:** Der Key wurde erst eingetragen, nachdem alle vier
+organisatorischen Punkte aus `plan/analytics/GERUEST.md`/
+`INTERESSENABWAEGUNG.md` Abschnitt 5 geprüft waren (Region, Tarif/
+Aufbewahrung, Autocapture-Einstellungen, IP-Verwerfung, DPA-Einschätzung) —
+keiner davon wurde übersprungen, um „schnell fertig" zu werden.
+
+**Offen:** Betreiber sollte nach den ersten Tagen echter Nutzung im
+PostHog-Dashboard prüfen, ob Ereignisse ankommen (Trend „bildschirm" nach
+`name`, siehe `GERUEST.md`-Vorschlag) — kein Agenten-Schritt, da Zugriff
+nur über die PostHog-Konsole (Login) möglich.
+
+**Nächster Schritt:** `veroeffentlichen.bat` ausführen, damit v3.17.22
+live geht. Danach in ein paar Tagen im PostHog-Dashboard nachsehen, ob
+Ereignisse ankommen.
+
+---
+
 ### 2026-09-24 — Rechtsprüfung Punkt 15 (Analytics), anwaltlich bestätigt
 
 **Anlass:** Betreiber fragt nach einem rechtlichen Beleg für Punkt 15

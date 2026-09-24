@@ -1,3 +1,16 @@
+## 3.17.22 - 24. September 2026
+
+**Anonyme Nutzungsstatistik aktiviert.** `POSTHOG_KEY` eingetragen (PostHog,
+EU-Region, Free-Tarif mit 1 Jahr Aufbewahrung). Autocapture, Web-Vitals,
+Dead-Clicks-Erfassung, Session Replay und Heatmaps im PostHog-Projekt
+bewusst ausgeschaltet – die App sendet ausschließlich die selbst benannten
+Ereignisse aus der eigenen `fetch()`-Übertragung (`app.js`, kein
+Fremdcode). IP-Verwerfung im Projekt aktiv. Vorher rechtlich geprüft und
+anwaltlich bestätigt (`plan/analytics/INTERESSENABWAEGUNG.md`,
+`datenschutzerklaerung.html` Punkt 15). Kein Verhaltens- oder
+Oberflächenwechsel für Nutzer:innen – die Statistik lässt sich unverändert
+unter Einstellungen → Anonyme Nutzungsstatistik ausschalten.
+
 ## 3.17.21 - 24. September 2026
 
 **Zwei echte Fehler aus der Betreiber-Rückmeldung zu v3.17.20 behoben.**

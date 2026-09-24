@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.21";
+const APP_VERSION = "3.17.22";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -169,7 +169,7 @@ function fuehlbar(muster) {
      erinnerung_kalender {zeit}, hinweis {name, aktion}, konto_erstellt,
      abgemeldet, konto_geloescht, start_haenger, statistik_aus
    ========================================================================= */
-const POSTHOG_KEY = "";   /* Projekt-Schluessel "phc_..." aus PostHog: Settings -> Project -> Project API Key */
+const POSTHOG_KEY = "phc_o6P9ZKCDkseikFC9iDFVYTMso9iQYDdN5MYKnjZjCTok";   /* PostHog: Settings -> Project -> Project API Key. Eingerichtet 24.09.2026: EU-Region, Free-Tarif (1 Jahr Aufbewahrung), Autocapture/Web-Vitals/Dead-Clicks/Session-Replay/Heatmaps alle aus, IP-Verwerfung an. */
 const POSTHOG_HOST = "https://eu.i.posthog.com";
 const STATISTIK_AUS_KEY = "adrabic-statistik-aus";
 let zaehlPuffer = [];
