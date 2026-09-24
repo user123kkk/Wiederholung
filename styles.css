@@ -4926,3 +4926,23 @@ label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); f
    kommen. 75 px ist die gemessene Hoehe einer einzeiligen Zeile; "auto"
    merkt sich danach die echte. */
 .card-row { content-visibility: auto; contain-intrinsic-size: auto 75px; }
+
+/* 3.17.8 (Pruefschleife, Station 8): Schreiben. Die Karte steht oben und
+   ist nur so hoch wie noetig, die Zeichenflaeche direkt darunter - vorher
+   lag sie unter dem Bildschirmrand. */
+.study-card--schreiben .study-card__mitte { grid-template-rows: auto auto auto; align-content: start; }
+.study-card--schreiben .karte-seite {
+  min-height: clamp(120px, 18svh, 190px);
+  padding: var(--space-6) var(--space-5);
+}
+.study-card--schreiben .study-card__unten { padding-top: var(--space-3); }
+.study-card--schreiben .hw-canvas-wrap { margin-top: 0; }
+/* Die Vorlage im Vollbild: das Wort, das man schreibt. */
+.hw-vorlage {
+  flex: none; text-align: center;
+  font-size: var(--text-lg, 1.125rem); font-weight: 600; color: var(--text-1);
+  display: flex; align-items: baseline; justify-content: center; gap: var(--space-3); flex-wrap: wrap;
+}
+.hw-vorlage__trenner { color: var(--text-3); }
+.hw-vorlage__antwort { color: var(--accent); font-weight: 500; }
+.hw-vorlage__antwort.arabic { font-size: 1.4em; }

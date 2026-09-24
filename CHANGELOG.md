@@ -1,3 +1,25 @@
+## 3.17.8 - 24. September 2026
+
+**Prüfschleife, Station 8 (Üben: Schreiben, Speicherkarten).**
+
+- **Schreiben: die Zeichenfläche ist sofort da.** Am Handy lag sie unter
+  dem Bildschirmrand – oben viel leerer Raum, darunter eine große Karte, man
+  musste erst scrollen. Jetzt steht die Karte kompakt oben, darunter die
+  Zeichenfläche und die Knöpfe, alles auf einen Blick (Handy, kleines Handy,
+  iPad).
+- **Im Vollbild sieht man das Wort, das man schreibt.** Vorher deckte das
+  Vollbild die Karte zu – man schrieb blind. Nach dem Aufdecken steht
+  daneben die Lösung zum Vergleichen.
+- **„Strich zurück" steht von Anfang an da** (ausgegraut, bis es einen
+  Strich gibt). Vorher tauchte er nach dem ersten Strich auf und schob die
+  anderen Knöpfe weg.
+- **„Mit Schreiben" bleibt an.** Der Schalter ging still aus, sobald man
+  einen Stand oder eine Speicherkarte antippte – die Übung startete dann
+  ohne Schreiben.
+- Geprüft ohne Befund: Striche bleiben beim Wechsel ins Vollbild, Zeichnen
+  auf gedrosseltem Rechner ohne Ruckeln, „Fertig" verlässt das Vollbild und
+  zeigt die Bewertung, Kontrast.
+
 ## 3.17.7 - 24. September 2026
 
 **Prüfschleife, Station 7 (Rundenende).**

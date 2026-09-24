@@ -13,8 +13,54 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 5 | Lernen-Start | erledigt (v3.17.4) |
 | 6 | Lernrunde | erledigt (v3.14.0/3.15.0 Umdrehen/Bewerten, v3.17.5 Rest) |
 | 7 | Rundenende | erledigt (v3.17.7) |
-| 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
+| 8 | Üben | erledigt (v3.15.0 Auswahl/Bewertung/Ende, v3.17.8 Schreiben/Speicherkarten) |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 8: Üben, Rest (v3.17.8)
+
+**Anlass:** Betreiber „Gehts weiter?" – Station direkt im Anschluss.
+
+**Geprüft (`t_schreiben.js`, `t_ueben_auswahl.js`, Handy, klein, iPad):**
+- **Fund 1: Zeichenfläche unter dem Bildschirmrand** – Handy Oberkante
+  806 von 844 px, Seite scrollbar. Ursache: das 3.15.0-Raster
+  (1fr | Karte | 1fr) plus Mindesthöhe der Karte (40svh) ist für Lernen
+  gemacht; beim Schreiben kommt die Fläche darunter.
+- **Fund 2: Vollbild verdeckt die Abfrage** – `elementFromPoint` auf das
+  Wort traf die Vollbild-Fläche. Man schrieb, ohne das Wort zu sehen.
+- **Fund 3: Knöpfe springen nach dem ersten Strich** – „Strich zurück"
+  kam erst dann ins Markup: „Löschen" 159 px nach rechts, „Vollbild" in die
+  zweite Zeile (iPad alle 91 px nach rechts).
+- **Fund 4: Schalter „Mit Schreiben" geht still aus** – nur im DOM, jeder
+  Chip-/Speicherkarten-Tipp zeichnet neu; die Übung startete ohne Schreiben.
+- Ohne Befund: Striche bleiben im Vollbild (Tinte gezählt), Strich zurück,
+  „Fertig" verlässt das Vollbild, Bewertung im Bild, Kontrast 0, Zeichnen
+  mit 25 Strichen bei CPU 4× 0 verpasste Bilder (der Verdacht
+  `getComputedStyle` je Bewegung war unbegründet – nicht angefasst).
+  Speicherkarten-Liste: alle nicht gesperrten, Zahl stimmt.
+
+**Geändert (app.js):** `renderSession` Klasse `study-card--schreiben`;
+`renderHandwritingCanvas(revealed, frage, antwort, antwortArabisch)` –
+Vorlage `.hw-vorlage` im Vollbild, „Strich zurück" immer (disabled ohne
+Strich); `endStroke` gibt den Knopf frei statt `render()`; `hw-undo` ohne
+Strich nichts; Schalter `ui.drillSchreiben` + change-Listener (~Z. 7348).
+**styles.css (Ende):** `.study-card--schreiben …`, `.hw-vorlage…`.
+Version 3.17.8.
+**Neu (Prüfstand):** `t_schreiben.js`, `t_ueben_auswahl.js`.
+
+**Entscheidung:** Eigene Anordnung nur für Schreiben statt das Lern-Raster
+zu ändern – Lernen bleibt, wie es gemessen 0 px springt. Der Schalter
+behält seinen Stand für die Sitzung (eine Vorliebe, keine einmalige Wahl).
+
+**Geprüft danach:** alles im Bild ohne Scrollen (Handy Leiste unten bei
+544/844), 0 px Sprung nach dem ersten Strich, Vorlage im Vollbild, Schalter
+bleibt; Regression `t_sprung.js` 0 (klein ±1 Rundung), `t_ueben.js` ok,
+Affe Handy 150 / iPad 120 0 Befunde.
+
+**Offen:** –
+**Nächste Station:** 9 (Fortschritt – dort auch das erste Öffnen mit 400
+Karten, ≈90 ms)
 
 ---
 

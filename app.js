@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.7";
+const APP_VERSION = "3.17.8";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -7345,6 +7345,8 @@ function renderMain() {
         render();
       });
     });
+    const hwSchalter = document.getElementById("drill-handwriting");
+    if (hwSchalter) hwSchalter.addEventListener("change", e => { ui.drillSchreiben = e.target.checked; });
     document.querySelectorAll(".drill-set-check").forEach(el => {
       el.addEventListener("change", e => {
         if (e.target.checked) ui.drillSetIds.add(el.dataset.id);
@@ -9332,7 +9334,10 @@ function renderSession() {
      Eintrittsbewegung auf .study-word liefe deshalb auch beim blossen
      Aufdecken noch einmal - das Wort haette gezuckt, obwohl es sich gar
      nicht geaendert hat. */
-  html += '<div class="study-card' + (s.revealed ? '' : ' zugedeckt') + '" id="sitzung">';
+  /* 3.17.8 (Station 8): Schreiben hat eine eigene, kompakte Anordnung - die
+     grosse, senkrecht zentrierte Karte schob die Zeichenflaeche am Handy
+     unter den Bildschirmrand (gemessen: Oberkante 806 von 844 px). */
+  html += '<div class="study-card' + (s.revealed ? '' : ' zugedeckt') + (s.handwriting ? ' study-card--schreiben' : '') + '" id="sitzung">';
 
   /* 3.15.0: Das Banner "Uebungsmodus - dein Fortschritt bleibt
      unberuehrt" stand auf JEDER Karte, zwei Zeilen hoch. Betreiber am
@@ -9421,7 +9426,7 @@ function renderSession() {
   html += '<div class="study-card__unten">';
 
   if (!s.revealed) {
-    if (s.handwriting) html += renderHandwritingCanvas(false);
+    if (s.handwriting) html += renderHandwritingCanvas(false, promptText);
     /* 3.14.0: Die Notiz erscheint nach dem Aufdecken unter der Karte. Ohne
        Platzhalter schob sie die (senkrecht zentrierte) Karte mitten in der
        Drehung nach oben - gemessen 93px am Handy. Unsichtbar vorgehalten
@@ -9434,7 +9439,7 @@ function renderSession() {
       }
     }
   } else {
-    if (s.handwriting) html += renderHandwritingCanvas(true);
+    if (s.handwriting) html += renderHandwritingCanvas(true, promptText, answerText, answerArabic);
     /* E6: erst NACH dem Aufdecken. Vorher waere der Hinweis ein Tipp
        ("Achtung, die kannst du nicht") und wuerde die Bewertung verfaelschen.
        Im Uebungsmodus bleibt er weg, dort zaehlt nichts. */
@@ -9600,16 +9605,29 @@ function renderRundenEnde(s, gesamt) {
 
 /* Handschrift-Canvas: bleibt nach "Fertig" sichtbar, damit die eigene
    Zeichnung neben der aufgedeckten Lösung stehen bleibt. */
-function renderHandwritingCanvas(revealed) {
+function renderHandwritingCanvas(revealed, frage, antwort, antwortArabisch) {
   let html = '<div class="hw-canvas-wrap' + (hwFullscreen ? ' fullscreen' : '') + '">';
+  /* 3.17.8 (Station 8): Das Vollbild deckt die Karte zu - man schrieb, ohne
+     das Wort zu sehen, das man schreiben soll. Jetzt steht es oben in der
+     Zeichenflaeche; nach dem Aufdecken daneben die Loesung zum Vergleichen. */
+  if (hwFullscreen && frage) {
+    html += '<div class="hw-vorlage">' + esc(frage) + (revealed && antwort
+      ? '<span class="hw-vorlage__trenner" aria-hidden="true">·</span><span class="hw-vorlage__antwort' +
+        (antwortArabisch ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(antwort) + '</span>'
+      : '') + '</div>';
+  }
   html += '<canvas id="hw-canvas" width="700" height="260"></canvas>';
   html += '<div class="hw-toolbar">';
   /* D9 (1.8.0): einzelnen Strich zuruecknehmen. Vorher gab es nur "alles
      loeschen" - ein verrutschter letzter Zahn kostete das ganze Wort.
      Nach dem Aufdecken ausgeblendet: dann wird nicht mehr geschrieben,
      sondern verglichen. */
-  if (!revealed && hwStrokes.length) {
-    html += '<button class="secondary" data-action="hw-undo" aria-label="Letzten Strich zurücknehmen">' + ikon("rueckgaengig", "i-sm") + ' Strich zurück</button>';
+  /* 3.17.8 (Station 8): steht immer da, nur gesperrt ohne Strich. Vorher
+     tauchte er nach dem ersten Strich auf und schob die anderen Knoepfe weg
+     (gemessen: "Loeschen" 159 px nach rechts, "Vollbild" in die zweite
+     Zeile) - genau dort, wo der Finger als Naechstes hinwollte. */
+  if (!revealed) {
+    html += '<button class="secondary" data-action="hw-undo" aria-label="Letzten Strich zurücknehmen"' + (hwStrokes.length ? '' : ' disabled') + '>' + ikon("rueckgaengig", "i-sm") + ' Strich zurück</button>';
   }
   html += '<button class="secondary" data-action="hw-clear" aria-label="Ganze Zeichnung löschen">' + ikon("muell", "i-sm") + ' Löschen</button>';
   html += '<button class="secondary" data-action="hw-fullscreen" aria-label="' + (hwFullscreen ? "Zeichenfläche verkleinern" : "Zeichenfläche als Vollbild") + '">' + ikon("vollbild", "i-sm") + (hwFullscreen ? " Verkleinern" : " Vollbild") + '</button>';
@@ -9964,7 +9982,10 @@ function renderVerwaltenListe(cards, gefuehrt) {
     /* 3.0.0: Die Handschrift-Wahl steht VOR dem Start, nicht darunter. */
     html += '<label class="check-row drill-schreiben">';
     html += '<span class="drill-schreiben__text">' + ikon("hand", "i-sm") + '<span>Mit Schreiben<small>Deutsch → Arabisch, von Hand</small></span></span>';
-    html += '<input type="checkbox" class="schalter" id="drill-handwriting" role="switch">';
+    /* 3.17.8 (Station 8): Der Schalter merkt sich seinen Stand in ui. Vorher
+       stand er nur im DOM - jeder Tipp auf einen Chip oder eine Speicherkarte
+       zeichnete neu, und "Mit Schreiben" war still wieder aus. */
+    html += '<input type="checkbox" class="schalter" id="drill-handwriting" role="switch"' + (ui.drillSchreiben ? ' checked' : '') + '>';
     html += '</label>';
     html += '<div class="form-actions">';
     html += '<button data-action="start-drill"' + (anzahl ? '' : ' disabled') + '>' + ikon("ueben", "i-sm") + ' Üben</button>';
@@ -10880,7 +10901,13 @@ function setupHandwritingCanvas() {
     /* Erst HIER, nach pointerup, ist der Strich fertig. Ein render() waehrend
        des Zeichnens wuerde das Canvas-Element ersetzen und damit die laufende
        Pointer-Erfassung kappen - der Strich risse mitten drin ab. */
-    if (ersterStrich) { ersterStrich = false; render(); }
+    /* 3.17.8: nur den Knopf freigeben statt alles neu zu zeichnen - der
+       Knopf steht schon da (renderHandwritingCanvas). */
+    if (ersterStrich) {
+      ersterStrich = false;
+      const zurueck = document.querySelector('[data-action="hw-undo"]');
+      if (zurueck) zurueck.disabled = false; else render();
+    }
   }
   canvas.addEventListener("pointerup", endStroke);
   canvas.addEventListener("pointercancel", endStroke);
@@ -11782,7 +11809,7 @@ document.body.addEventListener("click", e => {
       render();
       break;
     }
-    case "hw-undo": hwStrokes.pop(); render(); break;   // D9
+    case "hw-undo": if (!hwStrokes.length) break; hwStrokes.pop(); render(); break;   // D9
     case "hw-clear": hwStrokes = []; render(); break;
     case "hw-fullscreen":
       if (hwFullscreen) hwVollbildVerlassen();
