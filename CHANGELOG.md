@@ -1,3 +1,28 @@
+## 3.17.24 – 24. September 2026
+
+**Rechtsprüfung: App und Datenschutzerklärung stimmen jetzt überein.**
+Umgesetzt nach `plan/phase-5-recht/PRUEFUNG-2026-09-24.md` (Betreiber: „ja").
+
+- **Quran-Schrift selbst ausgeliefert** (`fonts/UthmanicHafs1Ver18.ttf`)
+  statt von `verses.quran.foundation`. Bisher bekam dieser Server die
+  IP-Adresse jedes Besuchers – dasselbe Muster, das das LG München I 2022 bei
+  Google Fonts beanstandet hat. Die Datei ist die originale, digital signierte
+  TTF des King Fahd Complex, unverändert (die Lizenz verbietet Änderungen).
+  CSP `font-src` nur noch `'self'`; `sw.js` speichert die Schrift vorab, sie
+  steht damit auch beim ersten Start offline.
+- **Konto löschen löscht jetzt wirklich alles:** auch Kartensätze, die man
+  per Code geteilt hat (`geteilteLektionen`), und die eigenen Stimm-Merker im
+  Ideen-Board. Vorher blieben beide mit der Konto-Kennung zurück.
+- **Bereich löschen beendet das Teilen:** Der Code des Bereichs wird mit
+  gelöscht, die Rückfrage sagt das.
+- **Bilder aus fremden Kartensätzen** werden nicht mehr von selbst geladen,
+  sondern als Link gezeigt – den Server hat jemand anders gewählt.
+- **Datenschutzerklärung:** Teilen per Code beschrieben (Punkt 5), alle
+  Gerätespeicher-Einträge genannt (Punkt 7, auch der Wenn-dann-Satz), Bilder
+  in Karten (Punkt 9), Löschumfang (Punkt 12); „Apple" gestrichen (nicht
+  eingeschaltet); Feedback-Board auf Art. 6 Abs. 1 lit. b statt Einwilligung.
+- Neuer Prüfstand-Test `t_loeschen_teilen.js` (15 Prüfungen).
+
 ## 3.17.23 – 24. September 2026
 
 **Nutzungsstatistik komplett entfernt.** Auf Wunsch des Betreibers gibt es

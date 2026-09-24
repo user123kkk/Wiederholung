@@ -213,7 +213,11 @@ Festgelegt vom Betreiber am 24.09.2026, wörtlich sinngemäß:
    nach Art. 9 DSGVO eine besondere Datenkategorie. Deshalb bleibt z. B. das Ziel
    „Quran und Sunnah verstehen" im Einstieg **nur im Arbeitsspeicher**. Es kommt
    nicht in `localStorage`, nicht in Firestore. Das bleibt so. (Eine Statistik
-   gibt es seit 3.17.23 nicht mehr.)
+   gibt es seit 3.17.23 nicht mehr.) **Eine bewusste Ausnahme:** der
+   Wenn-dann-Satz (`adrabic-einstieg-nachklang`, z. B. „Nach dem Fajr-Gebet …")
+   liegt nur im `localStorage` des Geräts, nie in der Cloud, steht in der
+   Datenschutzerklärung Punkt 7 und wird mit der ersten eigenen Karte
+   gelöscht (Betreiber-„ja" zu Empfehlung O3a, 24.09.2026).
 6. Arabische Schrift sauber:
    - Harakat werden nicht verändert.
    - Die Quran-Schrift wird nur für arabischen Text verwendet.
@@ -1057,8 +1061,13 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
   Auftragsverarbeitungsvertrag gilt, steht in der Doku des Anbieters — nachlesen
   und die Quelle ins Logbuch. *Vorfall 24.09.2026:* PostHog verlangt eine eigene
   Unterschrift.
+- **Keine Dateien von fremden Servern einbinden** (Schriften, Bilder, Skripte),
+  außer vom Auftragsverarbeiter selbst (Firebase/gstatic). Der fremde Server
+  bekommt sonst die IP-Adresse (LG München I, 3 O 17493/20). Selbst ausliefern
+  – Lizenz prüfen, Datei unverändert lassen. Bilder aus fremden Kartensätzen
+  nur als Link (`renderExtra(…, fremd)`). *Vorfall 3.17.24:* Quran-Schrift.
 - **Beim Löschen alle Orte mitnehmen,** auch Sammlungen außerhalb von
-  `users/{uid}` (`geteilteLektionen`). Das Versprechen in Punkt 12 gilt für
+  `users/{uid}` (`geteilteLektionen`, `feedback/*/votes/{uid}`). Das Versprechen in Punkt 12 gilt für
   alles, was ein Konto irgendwo hinterlässt. *Vorfall 24.09.2026.*
 - **Nur versprechen, was rechtlich nötig ist** (§ 7.2). Keine selbst erfundenen
   Zusatzpflichten für den Betreiber.

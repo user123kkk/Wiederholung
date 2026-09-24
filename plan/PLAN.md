@@ -774,19 +774,20 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026, nachts): v3.17.23 auf dem Arbeitszweig
-`claude/onboarding-videos-tips-52f5ff-79yprk` (enthält `main` bis `08be14c`)
-– Nutzungsstatistik komplett entfernt** (Betreiber: „jede spur"). Davor die
-Rechtsprüfung der ganzen App:
-[`phase-5-recht/PRUEFUNG-2026-09-24.md`](phase-5-recht/PRUEFUNG-2026-09-24.md).
-Noch offen daraus und **dem Betreiber vorzulegen, nicht selbst zu bauen**
-(`LEHREN.md` § 1.2): R2 Quran-Schrift selbst ausliefern, R3 Konto-/Bereich-
-Löschen entfernt geteilte Kartensätze nicht, O1 „Kartensatz per Code" fehlt
-in der Datenschutzerklärung, O2 Bilder aus fremden Kartensätzen, O3
-Wenn-dann-Satz im Gerätespeicher (J1), G1 Feedback-Rechtsgrundlage, G2
-„Apple" in Punkt 4, Frage 1 (wer steht im Impressum). Offen beim Betreiber:
-Zweig auf `main` bringen und `veroeffentlichen.bat`; PostHog-Projekt
-löschen; am Gerät Konto-Löschen mit Google und Kalender-Erinnerung iOS.
+**AKTUELL (24.09.2026, nachts): v3.17.24 auf dem Arbeitszweig
+`claude/onboarding-videos-tips-52f5ff-79yprk` (enthält `main` bis `08be14c`).**
+3.17.23: Nutzungsstatistik komplett entfernt (Betreiber: „jede spur").
+3.17.24: alle Code-/Text-Befunde der Rechtsprüfung
+[`phase-5-recht/PRUEFUNG-2026-09-24.md`](phase-5-recht/PRUEFUNG-2026-09-24.md)
+behoben (Betreiber: „ja") – Quran-Schrift selbst ausgeliefert, Konto-/
+Bereich-Löschen räumt geteilte Kartensätze und Stimm-Merker mit ab, fremde
+Bilder nur als Link, Datenschutzerklärung an den Code angeglichen. **Offen nur
+noch bei Menschen:** wer im Impressum steht (Frage 1 des Berichts), DSA
+(Frage 3), abschließende Durchsicht von Impressum + Datenschutzerklärung
+durch den Anwalt. Offen beim Betreiber außerdem: Zweig auf `main` +
+`veroeffentlichen.bat`; PostHog-Projekt löschen; in der Firebase-Konsole
+alte `geteilteLektionen` gelöschter Konten prüfen; am Gerät Konto-Löschen
+mit Google und Kalender-Erinnerung iOS.
 
 **AKTUELL (24.09.2026, spätnachts): v3.17.22 auf `main` – fünf Punkte aus der
 Betreiber-Rückmeldung zu v3.17.21 umgesetzt.**

@@ -50,9 +50,10 @@
       <p class="hint">Dein <strong>Name</strong> (frei wählbar, nur zur Begrüßung in der App) und
       deine <strong>E-Mail-Adresse</strong> – für die Anmeldung und um dein Passwort zurücksetzen
       zu können. Deine <strong>Lerninhalte</strong> – Bereiche, Karten, Lernstufen, Fälligkeiten,
-      deine Serie – liegen in der Firestore-Datenbank (Google), erreichbar nur für dich; die
-      Zugriffsregeln dafür liegen in <code>firestore.rules</code>. Auf deinem Gerät bleiben nur die
-      Helligkeit und die App-Dateien selbst, damit sie offline startet.</p>
+      deine Serie – liegen in der Firestore-Datenbank (Google), erreichbar nur für dich, außer du
+      teilst selbst einen Kartensatz per Code (Punkt 5); die Zugriffsregeln dafür liegen in
+      <code>firestore.rules</code>. Auf deinem Gerät bleiben nur ein paar Einstellungen und
+      Merkzeichen (Punkt 7) und die App-Dateien selbst, damit sie offline startet.</p>
       <p class="hint" style="margin-top:var(--space-3)">Keine Werbung, keine Cookies, keine
       Auswertung deines Nutzungsverhaltens, keine Weitergabe deiner Lerninhalte. Löschen kannst du dein Konto jederzeit selbst
       (Einstellungen → Konto löschen), mitnehmen jederzeit als Datei (Einstellungen → Sichern &amp;
@@ -113,11 +114,10 @@
       Möglichkeit, dein Passwort zurückzusetzen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO
       (Erfüllung des Nutzungsverhältnisses, das mit der Registrierung entsteht).</p>
       <p class="hint" style="margin-top:var(--space-3)">Statt E-Mail und Passwort selbst
-      einzugeben, kannst du dich auch <strong>mit deinem Google- oder Apple-Konto</strong>
-      anmelden. Dabei erhält diese App von Google bzw. Apple nur Name, E-Mail-Adresse und die
-      Bestätigung, dass die E-Mail-Adresse geprüft ist – keine weiteren Daten aus deinem Google-
-      oder Apple-Konto. Umgekehrt erfährt Google bzw. Apple dabei, dass du dich bei dieser App
-      anmeldest. Es entsteht dasselbe Nutzerkonto wie bei E-Mail und Passwort; welchen Weg du
+      einzugeben, kannst du dich auch <strong>mit deinem Google-Konto</strong> anmelden. Dabei erhält diese
+      App von Google nur Name, E-Mail-Adresse und die Bestätigung, dass die E-Mail-Adresse geprüft
+      ist – keine weiteren Daten aus deinem Google-Konto. Umgekehrt erfährt Google dabei, dass du
+      dich bei dieser App anmeldest. Es entsteht dasselbe Nutzerkonto wie bei E-Mail und Passwort; welchen Weg du
       wählst, ändert nichts daran, welche Daten diese App anschließend speichert. Rechtsgrundlage
       ist wie oben Art. 6 Abs. 1 lit. b DSGVO.</p>
     </div>
@@ -130,9 +130,21 @@
       das Tagesprotokoll und deine Einstellungen werden in der Firestore-Datenbank (Google)
       gespeichert, damit sie über mehrere Geräte hinweg verfügbar sind. Die Zugriffsregeln der
       Datenbank (<code>firestore.rules</code>) lassen jedes Konto ausschließlich an die eigenen
-      Daten – andere Nutzer:innen können sie nicht einsehen. (Ausnahme: das Feedback-Board,
-      siehe Punkt 6 – dort ist Sichtbarkeit für alle angemeldeten Konten gerade der Zweck.)
-      Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.</p>
+      Daten – andere Nutzer:innen können sie nicht einsehen. Ausnahmen gibt es zwei: Kartensätze,
+      die du selbst per Code teilst (unten), und das Feedback-Board (Punkt 6) – dort ist
+      Sichtbarkeit für alle angemeldeten Konten gerade der Zweck. Rechtsgrundlage ist Art. 6
+      Abs. 1 lit. b DSGVO.</p>
+      <p class="hint" style="margin-top:var(--space-3)"><strong>Kartensatz per Code teilen:</strong>
+      Teilst du einen Bereich über „Code erzeugen", wird eine Kopie davon gespeichert – Karten,
+      Speicherkarten und gegebenenfalls der Stand der Freigabe –, zusammen mit dem Zeitpunkt und
+      deiner Konto-Kennung. Die Konto-Kennung ist eine zufällige Zeichenfolge, kein Name und keine
+      E-Mail-Adresse; über sie kann nur dein Konto das Teilen ändern oder beenden. Lesen kann den
+      Satz jedes angemeldete, bestätigte Konto, das den Code kennt. Eine Liste aller Codes gibt es
+      nicht, und der Code ist zu lang, um ihn zu erraten. Wer ihn einlöst, bekommt eine Kopie ins
+      eigene Konto; du erfährst nicht, wer ihn eingelöst hat. Das Teilen endet, wenn du „Teilen
+      beenden" wählst, den Bereich löschst oder dein Konto löschst; Kopien, die andere schon
+      eingelöst haben, liegen dann in deren Konten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b
+      DSGVO.</p>
     </div>
   </div>
 
@@ -147,8 +159,9 @@
       nicht ablesen, wer ihn eingereicht hat, auch der Betreiber kann das nicht einsehen.</p>
       <p class="hint" style="margin-top:var(--space-3)">Sichtbar sind alle Vorschläge samt Titel,
       Beschreibung, Stimmenzahl und Status für <strong>jedes angemeldete, bestätigte Konto</strong>
-      – das ist der Zweck des Boards. Ob du selbst für einen Vorschlag abgestimmt hast, ist nur
-      für dich selbst sichtbar. Gib deshalb im Titel oder in der Beschreibung keine Angaben, an
+      – das ist der Zweck des Boards. Ob du selbst für einen Vorschlag abgestimmt hast, wird mit
+      deiner Konto-Kennung gespeichert, damit niemand doppelt abstimmt, und ist nur für dich
+      selbst sichtbar. Gib deshalb im Titel oder in der Beschreibung keine Angaben, an
       denen dich jemand erkennen könnte, wenn du das nicht möchtest.</p>
       <p class="hint" style="margin-top:var(--space-3)"><strong>Löschung:</strong> Weil kein
       Vorschlag mit einem Konto verknüpft gespeichert wird, kann diese App – strukturell, nicht
@@ -159,19 +172,31 @@
       Betreiber erst, wenn er auf einen konkreten Rechtsverstoß hingewiesen wird, nicht als
       laufender Dienst. Für einen solchen Hinweis oder sonstige Anliegen zu dieser App gilt
       unverändert der allgemeine Weg unter Punkt 13 „Deine Rechte". Rechtsgrundlage der
-      Verarbeitung ist Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch aktives Einreichen bzw.
-      Abstimmen).</p>
+      Verarbeitung ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der Funktion, die du mit dem
+      Einreichen bzw. Abstimmen selbst nutzt).</p>
     </div>
   </div>
 
   <div class="sektion">
     <div class="eyebrow">7. Auf deinem Gerät</div>
     <div class="card">
-      <p class="hint">Die gewählte Helligkeit (hell/dunkel) und das Datum des letzten Backups
-      werden zusätzlich lokal auf deinem Gerät gespeichert (<code>localStorage</code>), damit die
-      App beim Start sofort die richtige Ansicht zeigt und offline funktioniert. Ebenso, welche
-      Hinweise der App du schon gesehen oder weggetippt hast (damit derselbe Hinweis nicht immer
-      wieder erscheint). Diese Angaben verlassen dein Gerät nicht.</p>
+      <p class="hint">Einige Angaben liegen nur lokal auf deinem Gerät (<code>localStorage</code>):</p>
+      <ul>
+        <li>die gewählte Helligkeit, damit die App beim Start sofort richtig aussieht</li>
+        <li>das Datum deines letzten Backups</li>
+        <li>welche Hinweise der App du schon gesehen oder weggetippt hast, damit derselbe Hinweis
+        nicht immer wieder erscheint, und – falls du eine eingerichtet hast – die Uhrzeit deiner
+        Kalender-Erinnerung</li>
+        <li>aus dem Einstieg vor der Anmeldung die gewählte Schrift- und Rundengröße, bis dein
+        Konto angelegt ist</li>
+        <li>dein Wenn-dann-Satz aus dem Einstieg (zum Beispiel „Nach dem Fajr-Gebet mache ich eine
+        Runde."). Er erscheint einmal auf dem leeren Lernen-Bildschirm und wird gelöscht, sobald
+        deine erste eigene Karte steht.</li>
+      </ul>
+      <p class="hint" style="margin-top:var(--space-3)">Dazu kommen kurzlebige technische
+      Merkzeichen, die nur bis zum Schließen des Tabs gelten (<code>sessionStorage</code>). Diese
+      Angaben verlassen dein Gerät nicht, der Betreiber sieht sie nie. Wer dasselbe Gerät benutzt,
+      kann sie aber sehen.</p>
     </div>
   </div>
 
@@ -185,8 +210,8 @@
       stattfinden; die Übermittlung dorthin stützt sich auf die EU-Standardvertragsklauseln
       (Art. 46 Abs. 2 lit. c DSGVO). Über die Anmeldung und Lerninhalte hinaus werden keine Daten
       an Dritte weitergegeben, nicht verkauft und nicht für Werbezwecke genutzt. Kein Analyse-Dienst,
-      kein Bezahl-Anbieter, kein eigener Server. Meldest du dich über Google oder Apple an,
-      erhält der jeweils gewählte Anbieter zusätzlich die technisch dafür notwendige Information,
+      kein Bezahl-Anbieter, kein eigener Server. Meldest du dich über Google an,
+      erhält Google zusätzlich die technisch dafür notwendige Information,
       dass du dich bei dieser App anmeldest (siehe Punkt 4) – als Betreiber dieses eigenen Dienstes
       (kein Auftragsverarbeiter für diesen Teil).</p>
     </div>
@@ -195,16 +220,17 @@
   <div class="sektion">
     <div class="eyebrow">9. Fremde Server beim Laden der App</div>
     <div class="card">
-      <p class="hint">Zwei Dinge lädt die App beim Start von außen; dabei erfährt der jeweilige
-      Server technisch bedingt deine IP-Adresse:</p>
-      <ul>
-        <li>Das Firebase-SDK – von <code>gstatic.com</code> (Google, Anschrift siehe Punkt 8)</li>
-        <li>Die arabische Koranschrift – von <code>verses.quran.foundation</code></li>
-      </ul>
-      <p class="hint" style="margin-top:var(--space-3)">Beide Male ausschließlich zur
-      Schriftdarstellung bzw. zum Laden der Anmelde-Bausteine, nicht zu Tracking-Zwecken.
-      Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einheitlicher
-      Darstellung ohne eigene Server dafür betreiben zu müssen).</p>
+      <p class="hint">Beim Start lädt die App eine Sache von außen: das Firebase-SDK von
+      <code>gstatic.com</code> – die Bausteine für Anmeldung und Datenbank von Google, das hier
+      ohnehin als Auftragsverarbeiter tätig ist (Punkt 8). Dabei erfährt Google technisch bedingt
+      deine IP-Adresse. Die arabische Schrift liefert die App selbst aus, ohne fremden Server.</p>
+      <p class="hint" style="margin-top:var(--space-3)"><strong>Bilder in Karten:</strong> Trägst du
+      in einer Karte einen Bild-Link ein, lädt die App das Bild direkt von dem Server, den du
+      angegeben hast; dieser erfährt dabei deine IP-Adresse. Bei Karten aus einem Kartensatz, den
+      dir jemand per Code gegeben hat, lädt die App Bilder nicht von selbst – sie zeigt nur den
+      Link, und erst wenn du ihn antippst, wird das Bild geöffnet.</p>
+      <p class="hint" style="margin-top:var(--space-3)">Rechtsgrundlage ist Art. 6 Abs. 1 lit. b
+      DSGVO – beides ist nötig, um dir die App und die von dir eingetragenen Inhalte anzuzeigen.</p>
     </div>
   </div>
 
@@ -213,8 +239,9 @@
     <div class="card">
       <p class="hint">Diese App setzt <strong>keine Cookies</strong>. Die Anmeldung (Firebase
       Authentication) speichert den angemeldeten Zustand technisch über den Browser-eigenen
-      Speicher (IndexedDB), nicht über Cookies. Die einzige weitere Speicherung im Browser ist
-      der oben unter Punkt 7 genannte, rein technisch notwendige <code>localStorage</code>. Es
+      Speicher (IndexedDB), nicht über Cookies. Die einzige weitere Speicherung im Browser sind
+      die unter Punkt 7 genannten Einträge in <code>localStorage</code> und
+      <code>sessionStorage</code>. Es
       gibt keine Cookies oder vergleichbaren Technologien zu Marketing-, Analyse- oder
       Tracking-Zwecken.</p>
     </div>
@@ -241,7 +268,9 @@
     <div class="card">
       <p class="hint">Deine Daten werden gespeichert, solange dein Konto besteht. Löschst du dein
       Konto (Einstellungen → Konto löschen), werden dein Nutzerkonto und alle zugehörigen Inhalte
-      sofort und unwiderruflich entfernt. Formular-Nachrichten werden von dieser App nicht
+      sofort und unwiderruflich entfernt – auch Kartensätze, die du per Code geteilt hast, und
+      deine Stimm-Merker im Feedback-Board. Kopien, die andere schon eingelöst haben, liegen in
+      deren Konten. Formular-Nachrichten werden von dieser App nicht
       gespeichert – sie landen ausschließlich in deinem E-Mail-Programm bzw. im Postfach des
       Betreibers. Feedback-Board-Vorschläge (Punkt 6) sind davon unabhängig, da sie nicht an ein
       Konto geknüpft sind – sie bleiben grundsätzlich bestehen, auch wenn das einreichende Konto

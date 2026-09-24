@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.23";
+const APP_VERSION = "3.17.24";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2698,6 +2698,13 @@ async function doLogout() {
    ein Datenbestand ohne Konto, das ihn je wieder loeschen koennte - die
    Regeln verlangen ueberall auth.uid == uid, und ohne Konto gibt es kein
    uid mehr, das passen wuerde. Das waere endgueltig verwaist. */
+/* Loescht einen per Code geteilten Satz. Fehlt das Dokument schon, lehnt die
+   Regel (resource.data.ownerUid) mit permission-denied ab - dann ist nichts
+   mehr zu tun. Alles andere (z. B. offline) geht an den Aufrufer. */
+async function geteiltLoeschen(code) {
+  try { await fb.deleteDoc(fb.doc(db, "geteilteLektionen", code)); }
+  catch (e) { if (!e || (e.code !== "permission-denied" && e.code !== "not-found")) throw e; }
+}
 async function kontoDatenLoeschen() {
   if (!userDocRef || !bereicheColRef || !kartenColRef) return;
   /* Erst die Sperre, dann die Live-Listener abmelden - in dieser
@@ -2710,6 +2717,19 @@ async function kontoDatenLoeschen() {
   const [bereicheSnap, kartenSnap] = await Promise.all([
     fb.getDocs(bereicheColRef), fb.getDocs(kartenColRef)
   ]);
+  /* 3.17.24: Per Code geteilte Kartensaetze liegen ausserhalb von users/{uid}
+     (geteilteLektionen/{code}, mit ownerUid). Sie muessen VOR dem Konto weg -
+     danach erlaubt die Regel das Loeschen niemandem mehr. Die
+     Datenschutzerklaerung (Punkt 12) verspricht "alle zugehoerigen Inhalte". */
+  for (const d of bereicheSnap.docs) {
+    const code = (d.data() || {}).teilCode;
+    if (typeof code === "string" && code) await geteiltLoeschen(code);
+  }
+  /* Ebenso die Stimm-Merker im Ideen-Board: feedback/{id}/votes/{uid} traegt
+     die Konto-Kennung als Dokument-ID. Die Stimmenzahl selbst ist anonym und
+     bleibt. Loeschen eines fehlenden Merkers erlaubt die Regel (nur uid). */
+  const board = await fb.getDocs(fb.collection(db, "feedback"));
+  await Promise.all(board.docs.map(d => fb.deleteDoc(fb.doc(db, "feedback", d.id, "votes", currentUser.uid))));
   const alle = [...bereicheSnap.docs, ...kartenSnap.docs];
   for (let i = 0; i < alle.length; i += 400) {
     const stapel = fb.writeBatch(db);
@@ -4089,7 +4109,7 @@ async function deleteBereich() {
      schuetzen koennte - vorher lud die App trotzdem eine Datei herunter und
      verlangte den Namen ("Es werden 0 Karte(n) ... geloescht"). */
   if (b.karten.length === 0 && !(b.sets || []).length) {
-    const ok = await dlgConfirm("„" + b.name + "“ ist leer.", { title: "Bereich löschen?", okLabel: "Löschen", danger: true });
+    const ok = await dlgConfirm("„" + b.name + "“ ist leer." + (b.teilCode ? " Der Code " + b.teilCode + " funktioniert danach nicht mehr." : ""), { title: "Bereich löschen?", okLabel: "Löschen", danger: true });
     if (!ok) return;
     bereichEntfernen(b);
     return;
@@ -4105,6 +4125,7 @@ async function deleteBereich() {
   exportBackup(true);
   const eingabe = await dlgPrompt(
     (b.karten.length === 1 ? 'Eine Karte wird' : 'Es werden ' + b.karten.length + ' Karten') + ' mit ' + (b.karten.length === 1 ? 'ihrem' : 'ihrem gesamten') + ' Lernstand gelöscht. Das lässt sich nicht rückgängig machen.\n\n' +
+    (b.teilCode ? 'Der Code ' + b.teilCode + ' funktioniert danach nicht mehr.\n\n' : '') +
     'Ein Backup dieses Bereichs wurde gerade zum Herunterladen angeboten – ' +
     'sieh in deinen Downloads nach, dass die Datei wirklich da ist.\n\n' +
     'Tipp zum Bestätigen den Namen des Bereichs ein: ' + b.name,
@@ -4117,6 +4138,9 @@ async function deleteBereich() {
   bereichEntfernen(b);
 }
 function bereichEntfernen(b) {
+  /* 3.17.24: Ein geteilter Satz endet mit dem Bereich - sonst liefe sein Code
+     weiter, ohne dass es in der App noch einen Weg gaebe, ihn zu beenden. */
+  if (b.teilCode) geteiltLoeschen(b.teilCode).catch(() => {});
   const idx = bereiche.findIndex(x => x.id === b.id);
   bereiche.splice(idx, 1);
   /* A4: nur diesen einen Bereich entfernen. deleteField() loescht genau
@@ -6983,7 +7007,7 @@ function cardDetailSheet() {
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="card-detail-titel">';
   html += '<h3 id="card-detail-titel"' + (istArabisch(c.wort) ? ' class="arabic" lang="ar" dir="rtl"' : '') + '>' + esc(c.wort) + '</h3>';
   html += '<p class="dlg-text" style="margin-bottom:var(--space-3)">' + esc(c.uebersetzung) + '</p>';
-  if (c.extra) html += '<div class="extra-note-voll" style="margin-bottom:var(--space-4)">' + renderExtra(c.extra, []) + '</div>';
+  if (c.extra) html += '<div class="extra-note-voll" style="margin-bottom:var(--space-4)">' + renderExtra(c.extra, [], !!c.quelleId) + '</div>';
   /* 3.12.0: Stand und naechster Termin statt einer einzelnen Plakette -
      dieselben Punkte wie auf der Karte in der Runde und wie die Leiste im
      Einstieg. Der Termin steht als Wochentag und Datum da, weil man ihn so
@@ -7620,7 +7644,7 @@ function renderDurchsicht(set) {
     if (c.extra) {
       html += '<button class="lern-notiz-knopf" data-action="lern-notiz" data-id="' + esc(c.id) + '" aria-expanded="' + (notizOffen ? "true" : "false") + '">' +
         ikon(notizOffen ? "chevronUnten" : "chevronRechts", "i-sm") + ' Notiz</button>';
-      if (notizOffen) html += '<div class="extra-note-voll">' + renderExtra(c.extra, []) + '</div>';
+      if (notizOffen) html += '<div class="extra-note-voll">' + renderExtra(c.extra, [], !!c.quelleId) + '</div>';
     }
     html += '</div>';
     html += '<div class="lern-tat">';
@@ -9617,7 +9641,7 @@ function renderSession() {
     else {
       if (!s.isDrill && istVerbrannt(card)) html += leechHinweis(card, true);
       if (card.extra && s.extraOpen) {
-        html += '<div class="study-extra study-extra--platz" aria-hidden="true">' + renderExtra(card.extra) + '</div>';
+        html += '<div class="study-extra study-extra--platz" aria-hidden="true">' + renderExtra(card.extra, null, !!card.quelleId) + '</div>';
       }
     }
   } else {
@@ -9630,7 +9654,7 @@ function renderSession() {
       /* 2.7.0: Die Notiz steht offen da. Vorher klappte sie nach JEDER Karte
          wieder zu - bei 25 Karten also 25 Extra-Tipps fuer etwas, das man
          eigentlich immer sehen will. Wer sie knapp mag, klappt sie zu. */
-      html += '<div class="study-extra">' + renderExtra(card.extra) + '</div>';
+      html += '<div class="study-extra">' + renderExtra(card.extra, null, !!card.quelleId) + '</div>';
     }
   }
   html += '</div></div>';   /* .study-card__unten, .study-card__mitte */
@@ -9817,10 +9841,14 @@ function renderHandwritingCanvas(revealed, frage, antwort, antwortArabisch) {
   return html;
 }
 
-/* Extra-Feld: Bild-Links als Bild, http(s)-Links klickbar, Rest als Text */
-function renderExtra(extra, tokens) {
+/* Extra-Feld: Bild-Links als Bild, http(s)-Links klickbar, Rest als Text.
+   3.17.24: fremd = Karte aus einem weitergegebenen Kartensatz (quelleId).
+   Deren Bilder laedt die App nicht selbst - den Server hat jemand anders
+   gewaehlt, und beim Laden bekaeme er die IP-Adresse. Sie erscheinen als
+   Link; oeffnen ist dann die eigene Entscheidung. */
+function renderExtra(extra, tokens, fremd) {
   const trimmed = extra.trim();
-  if (/^https?:\/\/\S+\.(png|jpe?g|gif|webp|svg)(\?\S*)?$/i.test(trimmed)) {
+  if (!fremd && /^https?:\/\/\S+\.(png|jpe?g|gif|webp|svg)(\?\S*)?$/i.test(trimmed)) {
     return '<img src="' + esc(trimmed) + '" alt="Bild" style="max-width:100%;border-radius:8px">';
   }
   if (/^https?:\/\/\S+$/i.test(trimmed)) {
@@ -10386,7 +10414,7 @@ function kartenListeInhalt() {
     html += '<div class="words">';
     html += '<div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + markiere(c.wort, tokens) + '</div>';
     html += '<div class="uebersetzung">' + markiere(c.uebersetzung, tokens) + '</div>';
-    if (c.extra) html += '<div class="extra-note">' + renderExtra(c.extra, tokens) + '</div>';
+    if (c.extra) html += '<div class="extra-note">' + renderExtra(c.extra, tokens, !!c.quelleId) + '</div>';
     html += kartenTagsHtml(c.id, fremd || bAkt);
     html += '</div>';
     if (fremd) html += '<span class="badge" title="Diese Karte liegt in einem anderen Bereich">' + esc(fremd.name) + '</span>';

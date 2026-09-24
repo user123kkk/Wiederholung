@@ -3350,10 +3350,15 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
    überschreiben, egal an welcher Stelle das Wort steht.
    ========================================================================= */
 
+/* 3.17.24: selbst ausgeliefert statt von verses.quran.foundation - beim
+   Laden vom fremden Server bekam der die IP-Adresse jedes Besuchers (vgl.
+   LG Muenchen I, 3 O 17493/20, Google Fonts). Die Datei ist die originale,
+   digital signierte TTF des King Fahd Complex, UNVERAENDERT: Die Lizenz in der
+   Datei erlaubt Nutzen, Kopieren, Weitergeben, verbietet aber jede
+   Veraenderung - deshalb auch keine eigene WOFF2-Umwandlung. */
 @font-face {
   font-family: 'UthmanicHafs';
-  src: url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2') format('woff2'),
-       url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.ttf') format('truetype');
+  src: url('./fonts/UthmanicHafs1Ver18.ttf') format('truetype');
   font-display: swap;
 }
 

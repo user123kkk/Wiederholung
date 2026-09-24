@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.17.23";
+const CACHE_NAME = "adrabic-3.17.24";
 
 /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
    unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
@@ -46,15 +46,15 @@ const APP_SHELL = [
   "./flower-isolated.png",
   "./apple-touch-icon.png",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./fonts/UthmanicHafs1Ver18.ttf"      // 3.17.24: Quran-Schrift, selbst ausgeliefert
 ];
 
 /* Fremde Server, deren Dateien die App zum Starten braucht.
    Sie werden beim ersten Online-Besuch automatisch mitgespeichert
    (siehe fetch-Handler weiter unten). */
 const CACHEABLE_ORIGINS = [
-  "https://www.gstatic.com",            // Firebase-SDK
-  "https://verses.quran.foundation"     // Quran-Schrift (UthmanicHafs)
+  "https://www.gstatic.com"             // Firebase-SDK
 ];
 
 self.addEventListener("install", event => {

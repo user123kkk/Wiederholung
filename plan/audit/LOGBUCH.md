@@ -28,6 +28,63 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-24 — Befunde der Rechtsprüfung behoben (v3.17.24)
+
+**Anlass:** Betreiber „ja" auf die Liste 1–6 (Rechtsprüfung, `phase-5-recht/
+PRUEFUNG-2026-09-24.md`).
+
+**Geändert:**
+- `fonts/UthmanicHafs1Ver18.ttf` neu: originale, digital signierte TTF
+  (sha256 `a0636e68…`), aus `github.com/quran/quran.com-frontend-next`,
+  `public/fonts/quran/hafs/uthmanic_hafs/` – derselbe Pfad, den
+  `verses.quran.foundation` ausliefert (der Server selbst ist aus dieser
+  Umgebung gesperrt). Lizenz in der Datei: „Use, Copy, Distribute", nicht
+  verändern/verkaufen → nur TTF, **keine** eigene WOFF2-Umwandlung
+  (+155 KB, einmalig, danach im Service Worker).
+- `styles.css` `@font-face` → `./fonts/…`; `firebase.json` `font-src 'self'`
+  (beide Sites); `sw.js` Schrift in `APP_SHELL`, `verses.quran.foundation`
+  aus `CACHEABLE_ORIGINS`.
+- `app.js`: neu `geteiltLoeschen(code)` (fehlendes Dokument =
+  permission-denied wird ignoriert); `kontoDatenLoeschen()` löscht zuerst
+  alle `geteilteLektionen` aus den Bereich-Dokumenten und alle eigenen
+  `feedback/*/votes/{uid}` (Fund beim Umsetzen, gleiche Art wie R3);
+  `bereichEntfernen()` löscht den Code mit, `deleteBereich()` sagt es in
+  beiden Rückfragen; `renderExtra(extra, tokens, fremd)` – Karten mit
+  `quelleId` zeigen Bild-Links nur als Link (5 Aufrufer angepasst).
+  `APP_VERSION` 3.17.24.
+- `datenschutzerklaerung.html`: Kurz gesagt, Punkt 4 und 8 (Apple raus),
+  5 (Teilen per Code), 6 (Stimmen + lit. b), 7 (vollständige Liste inkl.
+  Wenn-dann-Satz und sessionStorage), 9 (nur noch gstatic; Bilder; lit. b
+  statt f), 10, 12 (Löschumfang).
+- `index.html` Versionen + `csp-build`; `CHANGELOG.md`.
+- Prüfstand: neu `t_loeschen_teilen.js`.
+- Plan: `LEHREN.md` § 2.5 (Ausnahme Wenn-dann-Satz), § 12 (keine fremden
+  Server; Löschorte), `PRUEFUNG-…` Nachtrag 2, `PLAN.md` AKTUELL.
+
+**Entscheidung:** O3 Variante a (offenlegen statt nicht speichern) – der Satz
+bleibt auf dem Gerät und ist der belegte Teil des Einstiegs. Punkt 9 auf
+lit. b statt lit. f, weil lit. f für das Nachladen von fremden Servern genau
+das ist, was das LG München verworfen hat; übrig ist nur der
+Auftragsverarbeiter. Beides steht in der Anwalts-Durchsicht mit an.
+
+**Geprüft:** `node --check app.js`/`sw.js`; Version 4 Stellen.
+`t_loeschen_teilen.js` 15/15 (Konto: eigene Codes + Stimme weg, fremde
+bleiben; Bereich: Code weg, Rückfrage nennt ihn; Bild: fremd nur Link und nie
+angefragt, eigenes als Bild). Schrift: `document.fonts` „loaded" von
+`/fonts/UthmanicHafs1Ver18.ttf`, einziger fremder Host `www.gstatic.com`.
+Regression: `t_konto.js` (6 Fälle wie vorher), `t_bereiche.js` ok,
+`t_daten.js` ok, `t_a11y.js` ok (11× Kontrast 0), Affe Handy 150 / iPad 120
+Schritte 0 Befunde.
+
+**Offen:** Impressum-Person (Frage 1), DSA (Frage 3), Anwalts-Durchsicht;
+Zweig auf `main`; PostHog-Projekt löschen; Firebase-Konsole: alte
+`geteilteLektionen`, deren `ownerUid` zu keinem Konto mehr gehört, löschen.
+
+**Nächster Schritt:** Antworten des Betreibers auf die Impressum-Frage
+einarbeiten; sonst nichts aus dieser Prüfung offen.
+
+---
+
 ### 2026-09-24 — Nutzungsstatistik komplett entfernt (v3.17.23)
 
 **Anlass:** Betreiber nach der Rechtsprüfung: „ne dann logs dings komplett
