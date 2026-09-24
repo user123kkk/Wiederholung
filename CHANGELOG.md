@@ -1,3 +1,11 @@
+## 3.13.1 - 24. September 2026
+
+**Ladebildschirm in den Farben der App.** Betreiber: „Das laden soll passen,
+es ist gelb wtf". Das Zeichen, der Schimmer dahinter und die Ladelinie waren
+golden – überall sonst ist das Zeichen papierweiß (Anmeldung, Einstieg).
+Jetzt dasselbe Weiß mit demselben leichten Leuchten wie dort; in der hellen
+Fassung dunkel. Die iOS-Startbilder (`splash/`) sind neu erzeugt.
+
 ## 3.13.0 - 24. September 2026
 
 **Zustände, die stimmen – aufgeräumte Einstellungen – ein ruhiger

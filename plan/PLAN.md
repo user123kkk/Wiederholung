@@ -683,7 +683,7 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**AKTUELL (24.09.2026, spätabends): v3.13.0 auf `main` – sechs Zustände
+**AKTUELL (24.09.2026, spätabends): v3.13.1 auf `main` (Ladebildschirm weiß statt gold); v3.13.0 – sechs Zustände
 (neu · im Lernen · frisch gelernt · wird fester · gefestigt · dauerhaft,
 Grenzen nur im Code), Einstellungen auf 4 Abschnitte/8 Zeilen, ruhiger
 Ladebildschirm ohne Text plus iOS-Startbilder (`splash/`). Davor v3.12.1

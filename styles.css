@@ -2809,11 +2809,14 @@ button.startliste__schritt { cursor: pointer; }
 .boot__zeichen-hof::before {
   content: ""; position: absolute; inset: -34px;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(227, 200, 138, 0.20), rgba(227, 200, 138, 0.06) 55%, transparent 72%);
+  /* 3.13.1: neutral statt gold - Betreiber: "Das laden soll passen, es ist
+     gelb". Das Zeichen ist ueberall sonst papierweiss (.solo-mark: --accent);
+     der Ladebildschirm war die einzige goldene Stelle. */
+  background: radial-gradient(closest-side, rgba(245, 243, 236, 0.10), rgba(245, 243, 236, 0.03) 55%, transparent 72%);
   animation: boot-hof 3.2s var(--ease-in-out) infinite;
 }
 :root[data-thema="hell"] .boot__zeichen-hof::before {
-  background: radial-gradient(closest-side, rgba(138, 106, 36, 0.14), rgba(138, 106, 36, 0.04) 55%, transparent 72%);
+  background: radial-gradient(closest-side, rgba(36, 31, 24, 0.08), rgba(36, 31, 24, 0.02) 55%, transparent 72%);
 }
 @keyframes boot-hof {
   0%, 100% { opacity: 0.55; transform: scale(0.92); }
@@ -2822,7 +2825,7 @@ button.startliste__schritt { cursor: pointer; }
 .boot__zeichen.i {
   position: relative;
   width: 76px; height: 76px;
-  color: var(--gold-400);
+  color: var(--accent);         /* wie .solo-mark .i */
   filter: var(--mark-glow);
 }
 .boot__marke {
@@ -2845,7 +2848,7 @@ button.startliste__schritt { cursor: pointer; }
 .boot__linie::after {
   content: ""; position: absolute; top: 0; bottom: 0; left: 0;
   width: 40%; border-radius: 2px;
-  background: var(--gold-400);
+  background: var(--accent);
   animation: boot-linie 1.4s var(--ease-in-out) 900ms infinite;
   transform: translateX(-100%);
 }

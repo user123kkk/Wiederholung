@@ -4,6 +4,23 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
 
 ---
 
+### 2026-09-24 — Ladebildschirm nicht mehr gold (v3.13.1)
+
+**Anlass:** Betreiber: „Das laden soll passen, es ist gelb wtf".
+**Geändert:** `styles.css` `.boot__zeichen-hof::before` (Hof neutral, hell/dunkel),
+`.boot__zeichen.i` (`--accent` statt `--gold-400`), `.boot__linie::after`
+(`--accent`); `splash/*.png` neu erzeugt (`plan/werkzeuge/startbilder.js`);
+Version 3.13.1 (app.js, sw.js, index.html), `CHANGELOG.md`.
+**Entscheidung:** Das Zeichen sieht jetzt aus wie `.solo-mark .i` (Anmeldung,
+Einstieg): `--accent` + `--mark-glow`. Der Ladebildschirm war die einzige
+Stelle mit goldenem Zeichen – er muss zur App passen, nicht eigen sein.
+Die Plakette „dauerhaft" (`--stufe-5`, Gold) bleibt: Die Rückmeldung galt dem
+Laden; ob das Gold dort auch stört, entscheidet der Betreiber.
+**Offen:** wie v3.13.0 (Startbilder am Gerät prüfen, J1).
+**Nächster Schritt:** Rückmeldung des Betreibers abwarten.
+
+---
+
 ### 2026-09-24 — Sechs Zustände, schlankere Einstellungen, ruhiger Startbildschirm (v3.13.0)
 
 **Anlass:** Betreiber: „die wörter, neu wackelig und so neu umstrukturiert
