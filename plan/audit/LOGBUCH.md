@@ -6,7 +6,7 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 
 | Nr | Station | Stand |
 |---|---|---|
-| 1 | Start | offen |
+| 1 | Start | erledigt (v3.16.1) |
 | 2 | Einstieg | offen |
 | 3 | Anmelden | offen |
 | 4 | Bestätigung | offen |
@@ -15,6 +15,47 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 7 | Rundenende | offen |
 | 8 | Üben | weitgehend (v3.15.0: Auswahl, Bewertung, Ende, Schreiben-Tinte); Rest: Schreiben im Vollbild, Speicherkarten-Liste |
 | 9–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 1: Start (v3.16.1)
+
+**Anlass:** Routine `trig_016y2uuWtQZ4yrCzAhkZsLQn`, 10:50 UTC. Keine neue
+Betreiber-Nachricht seit v3.16.0.
+
+**Geprüft (`plan/werkzeuge/pruefstand/t_start.js`, `t_klein_boot.js`):**
+- **Hänger beim Start – Fund.** `initFirebase()` → `importMitVersuch()`;
+  `render()` läuft erst nach `onAuthStateChanged`. Antwortet gstatic.com
+  nie (weder Daten noch Fehler), gab es keinen Ausweg: nach 11 s nur das
+  Zeichen. Der 9-s-Hinweis (`ladeTimer`) sitzt im Lade-Zweig von `render()`
+  und greift erst bei langsamen DATEN.
+- Startbild vs. erstes Bild (1170×2532): mittlere Abweichung 0,01 je Kanal,
+  eine Stelle >24 (Quantisierung) – Startbilder müssen nicht neu.
+- Übergang: 0,15/0,45 s Ladebild, 0,7/0,85 s Ausblenden, ab 1,0 s App.
+  Kein leeres Bild dazwischen gemessen.
+- Bewegung reduziert: Hof/Linie aus (Regel in 3.13.0), Linie erscheint ohne
+  Einblendung nach 0,9 s.
+
+**Geändert (app.js):** `let ersterRender` (Z. ~1033), in `render()` gesetzt;
+`startWaechter()` + `START_WAECHTER_MS = 9000` im Startblock;
+`bootLangsamHinweis()`; Lade-Zweig in `render()` über `data-stand`
+(ruhig/langsam/fehler) statt Klassenprüfung – der Hinweis wird nicht bei
+jedem Neuzeichnen neu eingeblendet. Version 3.16.1.
+**Geändert (styles.css):** `.boot__hinweis` (absolut unter der Linie).
+
+**Entscheidung:** Hinweis und Wartezeit wie beim langsamen Datenladen (ein
+Satz, „Neu laden", 9 s) – eine Regel, nicht zwei. „Neu laden" statt
+„Selbstheilung" (Caches löschen): bei einem Hänger ist das Netz das
+Problem, nicht der Zwischenspeicher. Der Fehlerfall (`syncError`) behält
+den Fluss-Aufbau (`.boot--hinweis`), weil er mehr Text trägt.
+
+**Geprüft danach:** Zeichen/Name vor und nach dem Hinweis 374/486 px (0
+Sprung); normaler Start ohne Hinweis; 320×568: Knopf endet bei 503 px;
+Kontrast 0; Sprünge 0 (bekannte 4 px); `t_hick.js`; Affe 150 Schritte, 0.
+
+**Offen:** Fehlerfall `syncError` am Bildschirm nicht nachgestellt (der
+Prüfstand kann Firestore-Fehler noch nicht auslösen) – gehört zu Station 16.
+**Nächste Station:** 2 (Einstieg)
 
 ---
 

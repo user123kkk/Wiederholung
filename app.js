@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.16.0";
+const APP_VERSION = "3.16.1";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1027,6 +1027,10 @@ let feedbackLadeToken = 0;
    die Daten da sind oder sich der Nutzer neu anmeldet - siehe render() und
    den Reset in onAuthStateChanged. */
 let ladeTimer = null;
+/* 3.16.1 (Pruefschleife, Station 1): Hat render() schon einmal gezeichnet?
+   Bis dahin steht nur der Ladebildschirm aus index.html - siehe
+   startWaechter() unten beim Start. */
+let ersterRender = false;
 let ladeLangsam = false;
 /* Lehrer-Modus, Kernablauf (siehe plan/lehrer-modus/GERUEST.md, Abschnitt J):
    Ein per Link geteilter Kartensatz steckt komplett im URL-Fragment, nicht
@@ -5971,6 +5975,13 @@ function einstiegWieder() {
    bevor app.js laeuft). render() tauscht es waehrend des Ladens NICHT aus
    (siehe dort) - sonst begaennen Hof und Linie von vorn. Wer hier etwas
    aendert, aendert index.html und die Startbilder mit (README.md). */
+/* 3.16.1: "Dauert laenger" - ein Satz, ein Knopf, unter der Linie. Von
+   render() (Daten kommen nicht) und startWaechter() (Bausteine kommen
+   nicht) gleich benutzt. */
+function bootLangsamHinweis() {
+  return '<div class="boot__hinweis"><p class="boot__text" role="status">Das dauert gerade l\u00e4nger.</p>' +
+    '<button class="secondary" data-action="seite-neu-laden">Neu laden</button></div>';
+}
 function bootBild() {
   return '<div class="boot__zeichen-hof">' + ikon("marke", "boot__zeichen") + '</div>' +
     '<div class="boot__marke">Adrabic</div>' +
@@ -5980,6 +5991,7 @@ function bootBild() {
 
 /* ---------- Rendering ---------- */
 function render() {
+  ersterRender = true;
   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
      der Cloud), ist ein noch wartender Such-Timer gegenstandslos - der
      Suchtext steht bereits in ui.searchQuery. */
@@ -6024,9 +6036,14 @@ function render() {
     /* 3.13.0: Steht der ruhige Ladebildschirm schon (aus index.html oder
        einem frueheren Durchlauf), bleibt er unangetastet - ein neues
        innerHTML wuerde Hof und Linie neu starten, sichtbar als Zucken. */
+    /* 3.16.1: auch der Hinweis "dauert laenger" bleibt stehen, solange er
+       gilt (data-stand) - sonst liefe seine Einblendung bei jedem render()
+       von vorn. Der Fehlerfall wird immer neu gezeichnet (Text kann sich
+       aendern). */
     const bootDa = app.querySelector(".boot");
-    if (!syncError && !ladeLangsam && bootDa && !bootDa.classList.contains("boot--hinweis")) return;
-    let laden = '<div class="boot' + (syncError || ladeLangsam ? ' boot--hinweis' : '') + '">' + bootBild();
+    const stand = syncError ? "fehler" : ladeLangsam ? "langsam" : "ruhig";
+    if (stand !== "fehler" && bootDa && (bootDa.dataset.stand || "ruhig") === stand) return;
+    let laden = '<div class="boot' + (syncError ? ' boot--hinweis' : ladeLangsam ? ' boot--langsam' : '') + '" data-stand="' + stand + '">' + bootBild();
     if (syncError) {
       /* Blockierend: Ohne Daten gibt es nichts zu zeigen. Also Klartext und
          ein Weg weiter, statt eines Ladepunkts, der nie aufhoert. */
@@ -6035,9 +6052,10 @@ function render() {
         '<div class="banner__text">' + esc(syncError) + '</div></div>';
       laden += '<button class="secondary" data-action="seite-neu-laden">Neu laden</button>';
     } else if (ladeLangsam) {
-      /* 3.13.0: ein Satz statt zwei - der Knopf darunter sagt den Rest. */
-      laden += '<p class="boot__text">Das dauert gerade l\u00e4nger.</p>';
-      laden += '<button class="secondary" data-action="seite-neu-laden">Neu laden</button>';
+      /* 3.13.0: ein Satz statt zwei - der Knopf darunter sagt den Rest.
+         3.16.1: unter der Linie, absolut gesetzt (.boot__hinweis) - Zeichen
+         und Name bleiben, wo sie sind (vorher rueckte alles nach oben). */
+      laden += bootLangsamHinweis();
     }
     laden += '</div>';
     app.innerHTML = laden;
@@ -11365,7 +11383,28 @@ function zeigeStartfehler(e) {
 }
 
 /* ---------- Start ---------- */
+/* 3.16.1 (Pruefschleife, Station 1, 24.09.2026): Waechter fuer den ersten
+   Start. render() laeuft erst, wenn die Firebase-Bausteine geladen sind und
+   die Anmeldung geprueft ist (onAuthStateChanged). Scheitert ein Abruf,
+   faengt importMitVersuch/zeigeStartfehler das ab. HAENGT er aber - keine
+   Antwort, kein Fehler (schwaches Netz, erster Besuch ohne Cache, der
+   Service Worker wartet dann weiter aufs Netz) -, stand bis hier der
+   Ladebildschirm fuer immer da: kein Text, kein Knopf. Nachgestellt mit
+   Playwright (gstatic.com antwortet nie): nach 11 s nur das Zeichen.
+   Der Hinweis danach ist derselbe wie beim langsamen Datenladen (render,
+   ladeLangsam): ein Satz, ein Knopf, nach derselben Wartezeit. Laeuft
+   render() doch noch, ersetzt es den Bildschirm wie gewohnt. */
+const START_WAECHTER_MS = 9000;
+function startWaechter() {
+  if (ersterRender) return;
+  const boot = app.querySelector(".boot");
+  if (!boot || boot.dataset.stand === "langsam") return;
+  boot.classList.add("boot--langsam");
+  boot.dataset.stand = "langsam";
+  boot.insertAdjacentHTML("beforeend", bootLangsamHinweis());
+}
 if (CONFIGURED) {
+  setTimeout(startWaechter, START_WAECHTER_MS);
   initFirebase().catch(async e => {
     if (kannSelbstheilen()) {
       await selbstheilung();

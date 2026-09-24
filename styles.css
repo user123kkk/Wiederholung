@@ -3088,6 +3088,17 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
 .boot--hinweis .boot__marke { margin-bottom: var(--space-2); }
 .boot--hinweis .boot__linie { position: relative; left: auto; margin: 0 auto var(--space-2); }  /* relative: sonst misst ::after am Bildschirm */
 .boot--hinweis .boot__text { max-width: 30ch; animation: enter-fade 420ms var(--ease-out) both; }
+/* 3.16.1: "Dauert laenger" steht unter der Linie, absolut - Zeichen, Name
+   und Linie bleiben, wo sie sind (.boot--hinweis oben stellt dagegen alles
+   in den Fluss und bleibt dem Fehlerfall vorbehalten, der mehr Text hat). */
+.boot__hinweis {
+  position: absolute; left: 0; right: 0;
+  top: calc(50% + 140px);
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-3);
+  padding: 0 var(--space-6);
+  animation: enter-rise 420ms var(--ease-out) both;
+}
+.boot__hinweis .boot__text { max-width: 30ch; margin: 0; }
 /* Uebergang in die App (E8, .boot--exit): das Zeichen zieht sich leicht
    zusammen und verblasst, der Name mit - die App waechst aus der Mitte. */
 .boot--exit { opacity: 0; transform: none; transition: opacity .32s var(--ease-out); }

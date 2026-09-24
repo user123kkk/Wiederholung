@@ -1,3 +1,19 @@
+## 3.16.1 - 24. September 2026
+
+**Prüfschleife, Station 1 (Start).**
+
+- **Kein endloser Startbildschirm mehr.** Hing das Laden der Firebase-Bausteine
+  ohne Fehler (schwaches Netz, erster Besuch ohne Zwischenspeicher), stand
+  das Zeichen für immer da – ohne Text, ohne Knopf. Der Hinweis „Das dauert
+  länger" kam nur, wenn die *Daten* langsam waren, nicht die App selbst.
+  Jetzt erscheint nach 9 Sekunden in beiden Fällen „Das dauert gerade
+  länger." mit „Neu laden".
+- Der Hinweis erscheint **unter** der Linie; Zeichen und Name bleiben stehen
+  (vorher rückte alles nach oben).
+- Geprüft und in Ordnung: Das iOS-Startbild gleicht dem ersten Bild der Seite
+  weiterhin Pixel für Pixel; Übergang in die App (knapp 0,3 s Ausblenden);
+  „Bewegung reduzieren" schaltet Hof und Linie ab.
+
 ## 3.16.0 - 24. September 2026
 
 **Alles nur noch einmal: weniger auf jedem Bildschirm.** Betreiber: „achte
