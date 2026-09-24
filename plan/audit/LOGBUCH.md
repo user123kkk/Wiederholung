@@ -15,7 +15,67 @@ die Session `session_01AFmawb4fvtC6x7d1U1ExLT`.
 | 7 | Rundenende | erledigt (v3.17.7) |
 | 8 | Üben | erledigt (v3.15.0 Auswahl/Bewertung/Ende, v3.17.8 Schreiben/Speicherkarten) |
 | 9 | Fortschritt | erledigt (v3.17.9) |
-| 10–18 | … | offen |
+| 10 | Verwalten | erledigt (v3.17.10) |
+| 11–18 | … | offen |
+
+---
+
+### 2026-09-24 — Station 10: Verwalten (v3.17.10)
+
+**Anlass:** Betreiber „alles klar, mach weiter" (Modellfrage beantwortet:
+Opus bleibt, Sonnet ginge auch).
+
+**Geprüft (`t_verwalten.js`, Handy hell/dunkel, klein, iPad; `t_liste_lang.js`):**
+- **Fund 1: Auswahl – 214 px Sprung beim ersten Haken.** `.select-actionbar`
+  erschien erst bei `selectedIds.size > 0`, oberhalb von Speicherkarten und
+  Liste.
+- **Fund 2 (Hick): Aktionsleiste 203 px** – zwei `<select>` (Zielbereich,
+  Ziel-Speicherkarte) plus vier Knöpfe, umgebrochen; „Karte hinzufügen"
+  blieb im Auswahlmodus als lauteste Fläche stehen.
+- **Fund 3: Suche flackert** – `zeichneKartenListe` ersetzt nur
+  `#karten-liste`, `still-ansicht` blieb aus → die ersten 14 Trefferzeilen
+  liefen nach jedem Tastendruck neu ein (`einstieg-zeile`, bis 452 ms).
+- **Fund 4: X der Suche bei leerem Feld sichtbar** – `button { display:
+  inline-flex }` schlug das `hidden`-Attribut.
+- **Fund 5: Tastatur-Sortieren nur ein Schritt** – der Handler fokussiert
+  den Griff, 11 ms später zeichnet die Datenbank-Rückmeldung neu, Fokus auf
+  `<body>`.
+- Fund 6: „frisch gelernt"-Plakette 4,47:1 in der aufgeklappten
+  Speicherkarten-Liste (iPad) – `--stufe-2` ist halbdurchsichtig.
+- Fund 7: „Karte(n)" in zwei Meldungen.
+- Ohne Befund: Kontrast Liste, Suche ohne Treffer / alle Bereiche, Leeren,
+  Speicherkarten-Panel, Ziehen mit Maus, lange Liste bis ans Ende.
+
+**Geändert (app.js):** `renderVerwalten` (kein „Karte hinzufügen" im
+Auswahlmodus); `renderVerwaltenListe` – Leiste immer im Auswahlmodus, eine
+Zeile, Knöpfe `auswahl-verschieben` / `auswahl-speicherkarte` /
+`delete-selected`, gesperrt bei 0; `toggleCardSelected` setzt nur
+Zahl/Kästchen/Sperre; `WAHLEN.verschieben` + `WAHLEN.speicherkarte`
+(Blatt), Handler `auswahl-ziel-bereich` / `auswahl-ziel-set`; alte
+`move-selected`, `save-to-set`, `save-to-new-set` samt `<select>` entfernt;
+`zeichneKartenListe` setzt `still-ansicht`; `render()` merkt sich einen
+fokussierten Ziehgriff (`prevGriff`) und stellt ihn wieder her;
+Löschen-/Ablegen-Meldungen Einzahl. **styles.css:** Leiste einzeilig,
+Knöpfe Symbol über Wort, Zahl gestapelt; `.search-clear[hidden]`;
+`--stufe-2-fest` (dunkel #888682, hell #9a978f) für
+`.badge.zustand-frisch`. Version 3.17.10.
+**Neu (Prüfstand):** `t_verwalten.js` (inkl. Verschieben, Ablegen,
+Pfeiltasten zweimal, X-Sichtbarkeit).
+
+**Entscheidung:** Ziele über ein Blatt (vorhandenes `wahlSheet`-Muster)
+statt `<select>` in der Leiste – ein Muster weniger, und die Leiste passt in
+eine Zeile auch am kleinen Handy (360 px). Ohne ablegbare Speicherkarte fragt
+„Ablegen" direkt nach dem Namen der neuen (ein Blatt mit einer einzigen
+Zeile wäre ein Tipp zu viel).
+
+**Geprüft danach:** Sprung 0 px, Leiste 66 px und innerhalb der Breite auf
+klein/Handy/iPad, Verschieben 40 → 38, Ablegen 2 → 3, Pfeil zweimal mit
+Fokus, X nur bei Text, Kontrast 0 (auch `t_kontrast.js` dunkel+hell),
+Affe Handy/klein/iPad 0 Befunde.
+
+**Offen:** –
+**Nächste Station:** 11 (Karten-Blätter – anlegen, bearbeiten, löschen,
+Detail)
 
 ---
 

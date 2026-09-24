@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.9";
+const APP_VERSION = "3.17.10";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4124,19 +4124,23 @@ function toggleCardSelected(id) {
      es, das Kaestchen und die Zahl in der Leiste zu aendern.
      Findet sich eine der beiden Stellen nicht, wird sicherheitshalber doch
      neu gezeichnet: lieber einmal ruckeln als eine Anzeige, die luegt. */
-  if (vorher === 0 || nachher === 0) { render(); return; }
+  /* 3.17.10: Die Leiste steht seit dem Start der Auswahl - auch beim Sprung
+     von 0 auf 1 reicht es, Kaestchen, Zahl und Sperre der Knoepfe zu setzen. */
   const zeile = app.querySelector('[data-action="toggle-card-select"][data-id="' + CSS.escape(id) + '"]');
   const kasten = zeile ? zeile.querySelector('input[type="checkbox"]') : null;
   const zaehler = app.querySelector(".select-actionbar strong");
   if (!kasten || !zaehler) { render(); return; }
   kasten.checked = ui.selectedIds.has(id);
   zaehler.textContent = String(nachher);
+  if ((vorher === 0) !== (nachher === 0)) {
+    app.querySelectorAll(".select-actionbar button").forEach(k => { k.disabled = nachher === 0; });
+  }
 }
 async function deleteSelectedCards() {
   const n = ui.selectedIds.size;
   if (n === 0) return;
   if (!kartenBearbeitbar()) { await hinweisGefuehrt("Karten löschen"); return; }
-  const ok = await dlgConfirm(n + " Karte(n) werden endgültig gelöscht. Das lässt sich nicht rückgängig machen.",
+  const ok = await dlgConfirm((n === 1 ? "Die Karte wird" : n + " Karten werden") + " endgültig gelöscht. Das lässt sich nicht rückgängig machen.",
     { title: "Karten löschen?", okLabel: "Endgültig löschen", danger: true });
   if (!ok) return;
   const b = currentBereich();
@@ -4295,7 +4299,7 @@ async function saveSelectedToSet(targetId) {
     : { [pfadSet(b.id, set.id) + ".cardIds"]: set.cardIds });
   render();
   if (uebersprungen > 0) {
-    dlgAlert(uebersprungen + " gesperrte Karte(n) aus der Auswahl wurden übersprungen.", "Teilweise abgelegt");
+    dlgAlert((uebersprungen === 1 ? "Eine gesperrte Karte aus der Auswahl wurde" : uebersprungen + " gesperrte Karten aus der Auswahl wurden") + " übersprungen.", "Teilweise abgelegt");
   }
 }
 /* 2.3.0: Die Art einer Speicherkarte umstellen. Nur im eigenen Bereich -
@@ -7131,6 +7135,17 @@ function renderMain() {
      er bei jedem Tastendruck heraus. Galt bisher nur fuer das Suchfeld. */
   const prevActive = document.activeElement;
   const prevActiveId = prevActive && prevActive.id ? prevActive.id : null;
+  /* 3.17.10 (Station 10): Ein Ziehgriff hat keine id. Nach "Pfeil runter"
+     zeichnete die Rueckmeldung der Datenbank die Liste 11 ms spaeter noch
+     einmal - der Fokus fiel auf <body>, man kam per Tastatur nur einen
+     Schritt weit. Der Griff wird ueber seine Zeile wiedergefunden. */
+  let prevGriff = null;
+  if (prevActive && prevActive.classList && prevActive.classList.contains("drag-handle")) {
+    const kz = prevActive.closest(".card-row[data-cardid]");
+    const sz = prevActive.closest(".set-block[data-setid]");
+    if (kz) prevGriff = '.card-row[data-cardid="' + CSS.escape(kz.dataset.cardid) + '"] .drag-handle';
+    else if (sz) prevGriff = '.set-block[data-setid="' + CSS.escape(sz.dataset.setid) + '"] > .set-row .drag-handle, .set-block[data-setid="' + CSS.escape(sz.dataset.setid) + '"] .drag-handle';
+  }
   const prevSelStart = prevActive && typeof prevActive.selectionStart === "number"
     ? prevActive.selectionStart : null;
 
@@ -7242,6 +7257,10 @@ function renderMain() {
   if (typeof syncViewportGap === "function") syncViewportGap();
   tickCountups();
 
+  if (!prevActiveId && prevGriff) {
+    const griff = document.querySelector(prevGriff);
+    if (griff) griff.focus({ preventScroll: true });
+  }
   if (prevActiveId) {
     const again = document.getElementById(prevActiveId);
     if (again && typeof again.focus === "function") {
@@ -8347,6 +8366,21 @@ const WAHLEN = {
     hilfe: 'Gilt überall in der App. Es gibt nichts einzustellen, nur auszuprobieren, ' +
            'was du lesen kannst.',
     probe: true
+  },
+  /* 3.17.10: Ziele der Mehrfachauswahl (Verwalten) - vorher zwei <select>
+     in der Aktionsleiste. */
+  verschieben: {
+    titel: "Verschieben nach", action: "auswahl-ziel-bereich",
+    liste: () => bereiche.filter(b => b.id !== ui.bereichId).map(b => ({ id: b.id, label: b.name })),
+    wert: () => null,
+    hilfe: 'Die Karten wandern mit ihrem Lernstand in den gewählten Bereich.'
+  },
+  speicherkarte: {
+    titel: "In Speicherkarte ablegen", action: "auswahl-ziel-set",
+    liste: () => [{ id: "__new__", label: "＋ Neue Speicherkarte" }]
+      .concat(currentSets().filter(x => setBearbeitbar(x)).map(x => ({ id: x.id, label: x.name }))),
+    wert: () => null,
+    hilfe: 'Die Karten bleiben, wo sie sind – die Speicherkarte merkt sich nur, welche es sind.'
   },
   limit: {
     titel: "Karten pro Sitzung", action: "set-sitzungslimit",
@@ -9902,9 +9936,14 @@ function renderVerwalten() {
      wer etwas anlegen will, bekommt dafuer ein Blatt. Uebrig bleibt der
      eine Knopf - die Handlung, die auf diesem Bildschirm dran ist
      (Satz 1). */
-  html += '<button class="lg full" data-action="karte-neu">' +
-    ikon("plus", "i-sm") + ' Karte hinzuf\u00fcgen</button>';
-  html += '<div style="height:var(--stack)"></div>';
+  /* 3.17.10 (Station 10): im Auswahlmodus nicht - dort waehlt man aus, der
+     grosse Knopf war die lauteste Flaeche auf einem Bildschirm, der gerade
+     etwas anderes tut. */
+  if (!ui.selectMode) {
+    html += '<button class="lg full" data-action="karte-neu">' +
+      ikon("plus", "i-sm") + ' Karte hinzuf\u00fcgen</button>';
+    html += '<div style="height:var(--stack)"></div>';
+  }
   return html + renderVerwaltenListe(cards, gefuehrt);
 }
 
@@ -9999,31 +10038,24 @@ function renderVerwaltenListe(cards, gefuehrt) {
     html += '</div>';
   }
 
-  if (ui.selectMode && ui.selectedIds.size > 0) {
+  /* 3.17.10 (Pruefschleife, Station 10): Die Leiste steht ab dem Moment, in
+     dem man auswaehlt - nicht erst nach dem ersten Haken. Vorher erschien sie
+     beim ersten Tipp UEBER der Liste und schob alles um 214 px nach unten,
+     genau unter dem Finger. Und sie ist eine Zeile statt vier: zwei
+     Auswahlfelder und vier Knoepfe (203 px hoch) wurden zu drei Knoepfen;
+     wohin verschoben oder abgelegt wird, fragt ein Blatt (WAHLEN). */
+  if (ui.selectMode) {
+    const n = ui.selectedIds.size;
+    const aus = n === 0 ? ' disabled' : '';
     html += '<div class="select-actionbar">';
-    html += '<strong>' + ui.selectedIds.size + '</strong> ausgewählt &nbsp;';
-    if (kartenBearbeitbar()) html += '<button class="ghost" data-action="delete-selected">' + ikon("muell", "i-sm") + ' Löschen</button>';
+    html += '<span class="select-actionbar__zahl"><strong>' + n + '</strong> ausgewählt</span>';
+    html += '<span class="select-actionbar__knoepfe">';
     if (bereiche.length > 1 && kartenBearbeitbar()) {
-      html += '<select id="move-target-select">' +
-        bereiche.filter(b => b.id !== ui.bereichId).map(b => '<option value="' + esc(b.id) + '">' + esc(b.name) + '</option>').join("") +
-        '</select>';
-      html += '<button class="ghost" data-action="move-selected">' + ikon("verschieben", "i-sm") + ' Verschieben</button>';
+      html += '<button class="ghost" data-action="auswahl-verschieben"' + aus + '>' + ikon("verschieben", "i-sm") + ' Verschieben</button>';
     }
-    const sets = currentSets().filter(s => setBearbeitbar(s));
-    if (sets.length > 0) {
-      /* Smart Default: die zuletzt in DIESER Sitzung benutzte Speicherkarte
-         vorausgewaehlt, falls sie noch existiert und bearbeitbar ist - sonst
-         bleibt "Neue Speicherkarte" die Vorauswahl, wie bisher. */
-      const vorgabe = ui.zuletztSetId && sets.some(s => s.id === ui.zuletztSetId) ? ui.zuletztSetId : "__new__";
-      html += '<select id="save-set-select">';
-      html += '<option value="__new__"' + (vorgabe === "__new__" ? " selected" : "") + '>＋ Neue Speicherkarte</option>';
-      html += sets.map(s => '<option value="' + esc(s.id) + '"' + (vorgabe === s.id ? " selected" : "") + '>' + esc(s.name) + '</option>').join("");
-      html += '</select>';
-      html += '<button class="ghost" data-action="save-to-set" title="Ausgewählte Karten in einer Speicherkarte ablegen">' + ikon("stern", "i-sm") + ' Speichern</button>';
-    } else {
-      html += '<button class="ghost" data-action="save-to-new-set" title="Ausgewählte Karten als Speicherkarte ablegen, um sie später gezielt zu üben">' + ikon("stern", "i-sm") + ' Als Speicherkarte</button>';
-    }
-    html += '</div>';
+    html += '<button class="ghost" data-action="auswahl-speicherkarte"' + aus + ' title="Ausgewählte Karten in einer Speicherkarte ablegen, um sie gezielt zu üben">' + ikon("stern", "i-sm") + ' Ablegen</button>';
+    if (kartenBearbeitbar()) html += '<button class="ghost" data-action="delete-selected"' + aus + '>' + ikon("muell", "i-sm") + ' Löschen</button>';
+    html += '</span></div>';
   }
 
   html += renderSetsPanel();
@@ -10244,6 +10276,11 @@ function kartenListeInhalt() {
 function zeichneKartenListe() {
   const kasten = document.getElementById("karten-liste");
   if (!kasten) { render(); return; }
+  /* 3.17.10 (Station 10): Ein neuer Suchstand ist kein neuer Bildschirm.
+     Ohne still-ansicht liefen die ersten 14 Trefferzeilen nach JEDEM
+     Tastendruck neu ein (gestaffelt bis 450 ms) - beim Tippen flackerte die
+     Liste ununterbrochen. */
+  app.classList.add("still-ansicht");
   kasten.innerHTML = kartenListeInhalt();
 }
 
@@ -11723,11 +11760,15 @@ document.body.addEventListener("click", e => {
     case "umzug-start": umzugStarten(); break;
     case "toggle-card-select": toggleCardSelected(btn.dataset.id); break;
     case "delete-selected": deleteSelectedCards(); break;
-    case "move-selected": {
-      const sel = document.getElementById("move-target-select");
-      if (sel && sel.value) moveSelectedCardsTo(sel.value);
-      break;
-    }
+    case "auswahl-verschieben": if (ui.selectedIds.size) { ui.wahlSheet = "verschieben"; render(); } break;
+    case "auswahl-speicherkarte":
+      if (!ui.selectedIds.size) break;
+      /* Ohne eine Speicherkarte, in die man ablegen darf, gibt es nichts zu
+         waehlen - dann gleich nach dem Namen der neuen fragen. */
+      if (!currentSets().some(x => setBearbeitbar(x))) { saveSelectedToSet("__new__"); break; }
+      ui.wahlSheet = "speicherkarte"; render(); break;
+    case "auswahl-ziel-bereich": ui.wahlSheet = null; moveSelectedCardsTo(btn.dataset.id); break;
+    case "auswahl-ziel-set": ui.wahlSheet = null; render(); saveSelectedToSet(btn.dataset.id); break;
     case "open-drill": openDrillPicker(); break;
     case "close-drill": ui.drillOpen = false; render(); break;
     case "drill-nochmal": {
@@ -11756,12 +11797,6 @@ document.body.addEventListener("click", e => {
       if (ui.drillGruppen.has(i)) ui.drillGruppen.delete(i); else ui.drillGruppen.add(i);
       fuehlbar(4);
       render();
-      break;
-    }
-    case "save-to-new-set": saveSelectedToSet("__new__"); break;
-    case "save-to-set": {
-      const sel = document.getElementById("save-set-select");
-      if (sel && sel.value) saveSelectedToSet(sel.value);
       break;
     }
     case "drill-set": openDrillPicker(btn.dataset.id); break;

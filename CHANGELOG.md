@@ -1,3 +1,33 @@
+## 3.17.10 - 24. September 2026
+
+**Prüfschleife, Station 10 (Verwalten).**
+
+- **Auswählen springt nicht mehr.** Beim ersten Antippen einer Karte im
+  Auswahlmodus erschien die Leiste mit Löschen/Verschieben/Speichern über der
+  Liste und schob alles um 214 px nach unten – genau unter dem Finger. Jetzt
+  steht die Leiste ab dem Start der Auswahl da (Knöpfe gesperrt, bis etwas
+  gewählt ist).
+- **Die Leiste ist eine Zeile statt vier.** Vorher zwei Auswahlfelder und
+  vier Knöpfe, über 200 px hoch. Jetzt: Zahl · Verschieben · Ablegen ·
+  Löschen (Symbol über dem Wort). Wohin verschoben oder abgelegt wird, fragt
+  ein Blatt – wie bei Helligkeit und Schriftgröße.
+- **„Karte hinzufügen" steht im Auswahlmodus nicht mehr groß oben** – dort
+  wählt man aus.
+- **Suchen flackert nicht mehr.** Nach jedem Tastendruck liefen die
+  Trefferzeilen neu ein (gestaffelt bis fast eine halbe Sekunde). Jetzt
+  stehen sie einfach da.
+- **Das X zum Leeren der Suche** stand auch bei leerem Feld da – jetzt nur,
+  wenn etwas drinsteht.
+- **Sortieren mit der Tastatur geht mehr als einen Schritt.** Nach „Pfeil
+  runter" war der Fokus weg; jetzt bleibt er am Griff.
+- Die Plakette „frisch gelernt" ist auf jedem Untergrund gleich gut lesbar
+  (vorher knapp unter der Grenze in der Speicherkarten-Liste am iPad).
+- „3 Karte(n) werden gelöscht" heißt jetzt „3 Karten werden gelöscht" bzw.
+  „Die Karte wird gelöscht".
+- Geprüft ohne Befund: Liste, Suche ohne Treffer, in allen Bereichen suchen,
+  Speicherkarten auf- und zuklappen, Ziehen zum Sortieren, lange Listen –
+  hell und dunkel, Handy, kleines Handy, iPad.
+
 ## 3.17.9 - 24. September 2026
 
 **Prüfschleife, Station 9 (Fortschritt).**
