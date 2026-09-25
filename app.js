@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.27";
+const APP_VERSION = "3.17.28";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -817,6 +817,18 @@ function verlaufSpeichernBald() {
   if (verlaufTimer) return;
   verlaufTimer = setTimeout(() => { verlaufTimer = null; persistVerlauf(); }, 2000);
 }
+/* 3.17.28: Ein gebuendelter Eintrag wartet bis zu 2 s. Beim Schliessen der
+   Runde und wenn die App in den Hintergrund geht, geht er sofort raus -
+   danach kann das System die Seite jederzeit beenden. */
+function verlaufJetztSchreiben() {
+  if (!verlaufTimer) return;
+  clearTimeout(verlaufTimer);
+  verlaufTimer = null;
+  persistVerlauf();
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") verlaufJetztSchreiben();
+});
 /* 2.10.2: Nur der heutige Eintrag geht raus, nicht das ganze Protokoll.
    Frueher schrieb die App bei jeder Karte alle 120 Tage zurueck - wer in der
    Konsole aufraeumte, hatte alles Sekunden spaeter wieder da.
@@ -846,6 +858,7 @@ function persistVerlauf() {
             return;
           } catch (e2) { saveFehler(e2); return; }
         }
+        if (e && e.code === "permission-denied") verlaufAbgelehnt = true;   /* 3.17.28, abgelehntesNachholen */
         saveFehler(e);
       });
   } else {
@@ -1700,7 +1713,8 @@ function ausweisErneuernFuerSchreiben() {
   try { schonVersucht = sessionStorage.getItem(TOKEN_ERNEUERT_SCHREIBEN_KEY) === "1"; } catch (e) {}
   if (schonVersucht || !currentUser || !currentUser.emailVerified) return false;
   try { sessionStorage.setItem(TOKEN_ERNEUERT_SCHREIBEN_KEY, "1"); } catch (e) {}
-  currentUser.getIdToken(true).catch(() => {});
+  /* 3.17.28: mit frischem Ausweis die abgelehnten Bewertungen nachschicken. */
+  currentUser.getIdToken(true).then(abgelehntesNachholen).catch(() => {});
   return true;
 }
 function snapFehler(err) {
@@ -2229,6 +2243,18 @@ async function persistAll() {
   } catch (e) { saveFehler(e); }
 }
 
+/* 3.17.28: Bewertungen und Tagesprotokoll, die mit veraltetem Ausweis
+   abgelehnt wurden. Firestore versucht eine Ablehnung nie selbst erneut -
+   ohne diese Liste waren sie verloren, der Banner bat nur darum, "die letzte
+   Aenderung noch einmal zu speichern", was bei einer Bewertung nicht geht. */
+const abgelehnteBewertungen = new Map();
+let verlaufAbgelehnt = false;
+function abgelehntesNachholen() {
+  const liste = [...abgelehnteBewertungen.entries()];
+  abgelehnteBewertungen.clear();
+  for (const [cardId, x] of liste) persistCardGrade(x.bereichId, cardId, x.fields);
+  if (verlaufAbgelehnt) { verlaufAbgelehnt = false; persistVerlauf(); }
+}
 /* Gezieltes Speichern fuers Lernen: aendert nur die Stufe und das
    Faelligkeitsdatum dieser einen Karte. Dadurch kann ein Geraet nie den
    Fortschritt eines anderen ausloeschen - auch nicht, wenn eine Karte offline
@@ -2252,7 +2278,13 @@ function persistCardGrade(bereichId, cardId, fields) {
        Hoechststand wieder 1, und die Lektion ging zu, die laengst offen war.
        Genau der Fall, den "einmal erreicht" verhindern sollte. */
     maxStufe: Number.isInteger(fields.maxStufe) ? fields.maxStufe : 0
-  }).then(schreibErfolg).catch(e => { saveFehler(e); });
+  }).then(schreibErfolg).catch(e => {
+    /* 3.17.28: Eine ABGELEHNTE Bewertung nimmt Firestore auch lokal zurueck -
+       die Karte ist dann wieder faellig, als waere nie bewertet worden. Nach
+       dem Erneuern des Ausweises wird sie nachgeschickt (abgelehntesNachholen). */
+    if (e && e.code === "permission-denied") abgelehnteBewertungen.set(cardId, { bereichId: bereichId, fields: fields });
+    saveFehler(e);
+  });
 }
 /* 2.9.0: Einen Riss zuruecknehmen. Zwei Tage lang, danach nicht mehr.
    Gedacht fuer den Fall, dass die Serie an etwas gerissen ist, das mit dem
@@ -2434,7 +2466,14 @@ function serieAktuell() {
      bei gestern, damit die Serie nicht mitten am Tag verschwindet. */
   for (let i = tagGelernt(verlauf[t]) ? 0 : 1; i < 400; i++) {
     const d = dateInDays(-i);
-    if (sockelBis && d <= sockelBis) return tage + sockel;
+    /* 3.17.28: Ein Sockel von 0 traegt nichts - dann zaehlt der Tag, an dem
+       er gesetzt wurde, selbst mit. Das ist jedes Konto seit 2.14.0: Der
+       Sockel entsteht beim ersten Laden (serieSockelSichern, sockelBis =
+       heute), und bisher endete die Zaehlung schon an diesem Tag. Wer am
+       ersten Tag lernte, sah 0, und der Tag fehlte der Serie danach fuer
+       immer. Die Regel selbst ist unveraendert: ein Tag zaehlt ab der ersten
+       gelernten Karte. */
+    if (sockelBis && (d < sockelBis || (d === sockelBis && sockel > 0))) return tage + sockel;
     if (tagGelernt(verlauf[d])) { tage++; seitJoker++; continue; }
     /* Ein ausgelassener Tag unterbricht die Serie nicht - Krankheit, Reise,
        ein voller Tag - solange seit dem letzten verziehenen Tag genug
@@ -5179,10 +5218,12 @@ function undoLastGrade() {
   render();
 }
 function endSession() {
-  const s = ui.session;
-  if (s && s.queue.length > 0) {
-    const gesamt = s.total || 1;
-  }
+  /* 3.17.28 (Betreiber: "Karten kamen wieder, wenn ich mitten im Lernen auf
+     das X druecke"): eine noch laufende Wisch-Bewertung zuerst buchen, und
+     das gebuendelte Tagesprotokoll sofort schreiben statt in 2 s - wer nach
+     dem X die App schliesst, verliert sonst die letzten Antworten. */
+  wischNachholen();
+  verlaufJetztSchreiben();
   ui.session = null; hwStrokes = []; hwFullscreen = false; render();
 }
 
@@ -5228,6 +5269,18 @@ document.addEventListener("keydown", e => {
 let wischStart = null;
 let wischBewertung = false;
 let wischFrame = null;
+/* 3.17.28: Die Wisch-Bewertung laeuft 150 ms verzoegert (die Karte fliegt
+   erst weg). Wer in dieser Zeit die Runde schliesst, verlor sie bisher still:
+   gradeCard fand keine Runde mehr. wischNachholen() bucht sie vorher. */
+let wischAusstehend = null;
+function wischNachholen() {
+  if (!wischAusstehend) return;
+  const art = wischAusstehend.art;
+  clearTimeout(wischAusstehend.timer);
+  wischAusstehend = null;
+  wischBewertung = false;
+  gradeCard(art);
+}
 /* 3.17.27: Wischen neu gefasst (Betreiber: "funktioniert schlecht,
    unzuverlaessig"). Gemessen mit echten Touch-Ereignissen (t_wischen.js):
    - Die Weite kam aus den Koordinaten des Loslass-Ereignisses. Bei
@@ -5325,7 +5378,8 @@ function wischEnde(e) {
        die NAECHSTE Karte, ungesehen. */
     wischBewertung = true;
     wischGeschafft();
-    setTimeout(() => { wischBewertung = false; rechts ? gradeKnown() : gradeUnknown(); }, 150);
+    wischAusstehend = { art: rechts ? "known" : "unknown",
+      timer: setTimeout(() => { wischAusstehend = null; wischBewertung = false; rechts ? gradeKnown() : gradeUnknown(); }, 150) };
   } else {
     karte.style.transition = "transform 260ms var(--ease-spring)";
     karte.style.transform = "";

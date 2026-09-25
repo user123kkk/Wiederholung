@@ -780,7 +780,15 @@ Wartet auf die Einrichtung durch den Betreiber: Dienstkonto-Schlüssel als
 Secret `FIREBASE_SERVICE_ACCOUNT` (Schritte im Chat vom 25.09.2026 und in
 `audit/LOGBUCH.md`). `main` steht auf 3.17.25, **noch nicht live**.
 
-**AKTUELL (25.09.2026): v3.17.25 auf dem Arbeitszweig** – Lernrunde gemessen
+**AKTUELL (25.09.2026, später): v3.17.28 auf `main`, noch nicht live** –
+Betreiber: „bewertete Karten kamen wieder, wenn ich mitten im Lernen auf das X
+drücke, und die Serie ging nicht hoch." Drei echte Fehler behoben (Wischen +
+sofort X, abgelehnte Bewertungen nie nachgeschickt, Sockel-Tag zählte nicht
+für die Serie), Ursache beim Betreiber aber **nicht bewiesen**.
+**Wartet auf Betreiber:** Veröffentlichen; Gerätetest und drei Rückfragen
+(`audit/LOGBUCH.md`, Eintrag 3.17.28).
+
+**Davor (25.09.2026): v3.17.25 auf dem Arbeitszweig** – Lernrunde gemessen
 (Betreiber: „fühlt sich komisch an, nur gedanken"). Ein echter Fehler behoben:
 schneller Doppeltipp auf „Antwort zeigen" bewertete blind mit „Fast".
 **Wartet auf Betreiber:** Vorschläge V1–V6 zur Ruhe der Runde (Leuchtring

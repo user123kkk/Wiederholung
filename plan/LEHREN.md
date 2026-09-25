@@ -898,6 +898,11 @@ nachweislich tut.
   - Beim Lesen gibt es das seit 2.11.4.
   - Beim Schreiben seit 3.4.5 (`ausweisErneuernFuerSchreiben`), ohne Reload,
     damit ein offenes Formular bleibt.
+  - **Erneuern allein reicht nicht:** Der abgelehnte Schreibvorgang ist weg,
+    Firestore nimmt ihn auch lokal zurück (die bewertete Karte war wieder
+    fällig). Was automatisch geschrieben wird (Bewertung, Tagesprotokoll),
+    schickt die App nach dem Erneuern selbst nach (`abgelehntesNachholen`,
+    3.17.28).
 
 ### 8.3 Snapshot-Echos
 
@@ -1102,7 +1107,8 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
 | `render()` | ersetzt `#app` komplett | § 6.3, § 6.4 |
 | Klick-Delegation | **ein** Listener auf `body`, `data-action` | nie eigene Listener an Knöpfe |
 | `serieAktuell()` | Serie aus `verlauf`; ein Tag zählt ab der ersten gelernten Karte in **irgendeinem** Bereich (`tagGelernt`: w+n>0, Üben `u` zählt nicht). Seit 3.17.20: Ein ausgelassener Tag wird verziehen, der Joker lädt nach `SERIE_JOKER_TAGE` (7) gelernten Tagen wieder auf – **keine** einmalige Lebenszeit-Gnade mehr (Frage 18) | Lernlogik – nur mit Freigabe anfassen |
-| `serieSockelSichern()` | stempelt bei **jedem** Laden `sockel`/`sockelBis`, sobald `streak.sockel` fehlt (`null`) – auch in Tests! | Prüfstand-Store für Serientests braucht ein gültiges `{sockel, sockelBis: <weit zurück>}`, sonst kurzschließt der Sockel jede Rechnung auf 0 (§ 15, 24.09.2026) |
+| `serieSockelSichern()` | stempelt bei **jedem** Laden `sockel`/`sockelBis`, sobald `streak.sockel` fehlt (`null`) – auch in Tests! Seit 3.17.28 zählt bei Sockel 0 der Sockel-Tag selbst mit (`serieAktuell`) | Prüfstand-Store für Serientests braucht ein gültiges `{sockel, sockelBis: <weit zurück>}`, sonst kurzschließt der Sockel jede Rechnung auf 0 (§ 15, 24.09.2026) |
+| Speichern beim Lernen | jede Bewertung sofort (`persistCardGrade`); Wisch-Bewertung 150 ms verzögert → vor jedem Ende der Runde `wischNachholen()`; abgelehnte (`permission-denied`) Bewertungen werden nach Ausweis-Erneuerung nachgeschickt (3.17.28) | Firestore wiederholt eine **Ablehnung** nie selbst und nimmt sie lokal zurück – wer schreibt, muss selbst nachholen (§ 8.2) |
 | `evaluateStreakForNewDay()` | absichtlich stillgelegt (`if (false && …)`) | nicht „reparieren" |
 | `streak.lastCompletedDate` | tot seit 2.14.0 | nie wieder darauf bauen |
 | `bereicheMitOffenem()` | nur noch für den Hinweis „Heute auch fällig" | kein Serien-Bezug |
@@ -1216,3 +1222,5 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | 3.17.22 | Pfeilspitze der Einstiegs-Leiste sah aufgesetzt aus | andere Strichstärke als die Linie, Spitze saß im nächsten Punkt | § 6.4 |
 | 3.17.25 | Schneller Doppeltipp auf „Antwort zeigen" bewertete die Karte blind mit „Fast" | an derselben Stelle erscheinender Knopf nahm Tipps an, obwohl noch unsichtbar | § 6.1 |
 | 2026-09-25 | Wischen unzuverlässig: Karte folgte nach dem Aufdecken nicht (Animation überschrieb transform), Fling zählte nicht, `pointercancel` konnte „Nicht" werten; iOS ohne `:active`. Behoben 3.17.27, Regel § 4.x. |
+| 3.17.28 | „Bewertete Karten kamen wieder nach X, Serie ging nicht hoch" | Wisch-Bewertung 150 ms verzögert, X dazwischen verwarf sie; abgelehnte Bewertungen nie nachgeschickt; Sockel-Tag zählte nicht (`d <= sockelBis`) | § 8.2, § 13 |
+| 3.17.28 (Prüfstand) | Test „Protokoll sofort nach X" schlug auch mit altem Code nicht an | Attrappe meldet eigene Schreibvorgänge ohne `hasPendingWrites`, `verlaufNachschicken` glich es aus | § 5.3, § 5.4 |

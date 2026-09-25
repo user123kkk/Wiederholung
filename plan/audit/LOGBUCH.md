@@ -1899,3 +1899,77 @@ Regressionstests; Affentest 200 Schritte, 0 Befunde.
 **Offen:** Gerätetest durch den Betreiber; Methoden-Checkliste „alle Methoden für so Apps" noch nicht begonnen.
 **Nächster Schritt:** Methoden-Checkliste für Lernkarten-PWAs aufstellen und gegen den Code prüfen; Lücken dem Betreiber vorlegen.
 
+
+### 2026-09-25 — 3.17.28: bewertete Karten kamen wieder, Serie ging nicht hoch
+
+Betreiber: „einige Karten, die ich bewertet hab (sicher oder …), kamen einfach
+wieder zurück, wenn ich mitten im Lernen auf das X drücke … meine Streak ist
+auch nicht hochgegangen. Überprüfe all solche Orte."
+
+**Geprüft (jede Stelle gelesen, nicht aus Kommentaren):**
+- X = `end-session` → `endSession()`: setzt nur `ui.session = null`. Jede
+  Bewertung wird schon in `gradeCard()` sofort geschrieben
+  (`persistCardGrade`, Tagesprotokoll `verlaufZaehle`). Nachgestellt mit
+  `t_x_mitten.js` Fall A (3× Sicher per Knopf, X): Karten im Speicher
+  bewertet, fällig 12 → 9, Serie +1, neue Runde ohne sie. **Der Knopfweg
+  verliert nichts.**
+- Alle anderen Wege, die eine Runde beenden (Reiterwechsel, `selectBereich`,
+  `editCardInBereich`, `merkSetOeffnen`, Abmelden): dasselbe, Bewertungen sind
+  vorher geschrieben.
+- Regeln `firestore.rules` für `karten`-Update: eine normale Bewertung
+  besteht sie (Felder/Typen geprüft).
+- `lehrerStandAktualisieren()` beim Zurückkehren in die App: sucht den
+  Bereich nach dem Warten frisch, schreibt nur `lehrerOffenBis` – kein
+  veralteter Kartenstand. `satzZusammenfuehren` nur nach Rückfrage.
+- `persistAll()` (schreibt alle Karten voll): nur beim Anlegen des Kontos,
+  beim Import alter Profile und bei `not-found` in `patchDoc` – nicht beim
+  Lernen.
+
+**Gefunden und behoben (je Gegenprobe mit dem alten Code: Test schlägt an):**
+1. **Wischen + sofort X** (`app.js`, `wischNachholen()` beim Wischblock,
+   Aufruf in `endSession()`): Die Wisch-Bewertung läuft 150 ms verzögert;
+   X in dieser Zeit → `gradeCard` fand keine Runde, die Bewertung war weg,
+   die Karte kam wieder. Alt: `t_x_mitten.js` Fall B FEHL (Stufe unverändert),
+   neu OK.
+2. **Abgelehnte Bewertungen** (`abgelehnteBewertungen`, `abgelehntesNachholen()`
+   vor `persistCardGrade`; `verlaufAbgelehnt` in `persistVerlauf`;
+   `ausweisErneuernFuerSchreiben` ruft nach `getIdToken(true)` das
+   Nachholen): Bei `permission-denied` (veralteter Ausweis) nimmt echtes
+   Firestore die Änderung auch lokal zurück – Karte wieder fällig. Firestore
+   versucht eine Ablehnung nie selbst neu, die App erneuerte nur den Ausweis;
+   die Bewertung und der Tageseintrag für die Serie blieben verloren. Jetzt
+   werden sie nachgeschickt. Test `t_abgelehnt.js`.
+3. **Serie am Sockel-Tag** (`serieAktuell()`): `serieSockelSichern()` setzt
+   beim ersten Laden jedes Kontos seit 2.14.0 `sockel 0, sockelBis = heute`;
+   die Zählung endete dann schon an diesem Tag (`d <= sockelBis`). Wer an dem
+   Tag lernte, sah 0, und der Tag fehlte der Serie für immer. Jetzt zählt der
+   Sockel-Tag bei Sockel 0 selbst mit; Alt-Konten mit Sockel > 0 unverändert.
+   `t_serie.js` +2 Fälle, alt 2 von 8 falsch, neu alle richtig.
+   *Lernlogik?* Nein – die Regel („ein Tag zählt ab der ersten gelernten
+   Karte") bleibt; der Code verletzte sie an einem Tag. Mechanischer Fehler
+   (LEHREN § 1.2). Sichtbar: betroffene Serien zeigen einen Tag mehr.
+4. `verlaufJetztSchreiben()`: beim X und bei `visibilitychange → hidden`
+   geht der gebündelte Tageseintrag sofort raus statt bis zu 2 s später.
+   *Nicht beweisbar im Prüfstand* (die Attrappe meldet eigene Schreibvorgänge
+   ohne `hasPendingWrites`, `verlaufNachschicken` deckt es dort ab) – im Test
+   vermerkt.
+
+**Entscheidung:** Die genaue Ursache beim Betreiber ist damit **nicht
+bewiesen**, nur eingegrenzt. Passt zu beiden Symptomen zugleich: Fund 1
+(nur die letzte Karte) und Fund 2 (alle Bewertungen ab der Ablehnung,
+inkl. Serie). Außerdem denkbar, nicht im Code behebbar: App geschlossen,
+bevor Änderungen offline übertragen waren, während Firestore nur im
+Arbeitsspeicher puffert (z. B. App zweimal offen → nur eine Instanz bekommt
+den Offline-Speicher). **Nicht gebaut** (`persistentMultipleTabManager`):
+reine Vermutung, am iPhone haben Home-Bildschirm-App und Safari getrennten
+Speicher, der Fall trifft dort kaum zu – dem Betreiber als Frage vorgelegt.
+
+**Geprüft:** `t_x_mitten`, `t_abgelehnt`, `t_serie`, `t_undo_verlauf`,
+`t_wischen`, `t_doppeltipp`, `t_sprung`, `t_kontrast`, `t_rundenende`,
+`t_ueben`. **Nicht geprüft:** echtes Firebase (Ablehnung + Rücknahme im
+Cache), echtes Handy.
+**Offen:** Gerätetest durch den Betreiber (siehe Antwort vom 25.09.2026):
+Welcher X, erschien eine rote Zeile „Kurz nicht gespeichert"/„Nicht
+gespeichert", kamen die Karten sofort oder erst nach dem nächsten Öffnen.
+**Nächster Schritt:** Antwort des Betreibers auswerten; danach
+Methoden-Checkliste (Eintrag 3.17.27).

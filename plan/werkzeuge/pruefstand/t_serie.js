@@ -61,6 +61,20 @@ const FAELLE = [
     erwartet: 10
   },
   {
+    /* 3.17.28: Konto seit 2.14.0 - der Sockel 0 entsteht heute beim ersten
+       Laden. Vorher zeigte das 0, obwohl heute gelernt wurde. */
+    name: 'Sockel 0 von heute (neues Konto), heute gelernt - zaehlt',
+    verlauf: verlaufAus([0]),
+    streak: { sockel: 0, sockelBis: tag(0) },
+    erwartet: 1
+  },
+  {
+    name: 'Sockel 0 vor 3 Tagen gesetzt, seitdem jeden Tag - Tag des Sockels zaehlt mit',
+    verlauf: verlaufAus(bereich([0, 5])),
+    streak: { sockel: 0, sockelBis: tag(-3) },
+    erwartet: 4
+  },
+  {
     name: 'Sockel (Alt-Konto vor 2.14.0) traegt weiter, unveraendert',
     verlauf: verlaufAus(bereich([0, 4])),
     streak: { sockel: 42, sockelBis: tag(-5) },

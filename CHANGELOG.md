@@ -1,3 +1,27 @@
+## 3.17.28 – 25. September 2026
+
+**Bewertungen und Serie gehen nicht mehr verloren.** Anlass: Rückmeldung
+des Betreibers – „Karten, die ich bewertet habe, kamen wieder, wenn ich
+mitten im Lernen auf das X drücke, und die Serie ist nicht hochgegangen."
+Alle Stellen geprüft, an denen eine Runde endet oder gespeichert wird
+(`plan/audit/LOGBUCH.md`, Eintrag 3.17.28).
+
+- **Wischen und gleich X:** Die Wisch-Bewertung wird 150 ms verzögert
+  gebucht (die Karte fliegt erst weg). Wer in dieser Zeit X drückte, verlor
+  sie still – die Karte kam wieder. Jetzt wird sie vor dem Schließen gebucht.
+- **Abgelehnte Bewertungen:** Lehnt die Cloud eine Bewertung wegen einer
+  veralteten Anmeldung ab, nimmt Firebase sie auch auf dem Gerät zurück – die
+  Karte ist wieder fällig. Nach dem Erneuern der Anmeldung wird sie jetzt
+  nachgeschickt, ebenso der Tageseintrag für die Serie. Vorher war sie weg.
+- **Serie am ersten Tag:** Bei jedem Konto seit 2.14.0 zählte der Tag, an dem
+  die App die Serie zum ersten Mal einrichtet, nicht mit – wer da lernte, sah
+  0, und dieser Tag fehlte der Serie danach für immer. Betroffene Serien
+  zeigen jetzt einen Tag mehr. Die Regel selbst ist unverändert.
+- Beim X und wenn die App in den Hintergrund geht, wird das Tagesprotokoll
+  sofort geschrieben statt bis zu 2 s später.
+- Neue Tests `t_x_mitten.js`, `t_abgelehnt.js`; `t_serie.js` um zwei Fälle
+  erweitert.
+
 ## 3.17.27 – 25. September 2026
 
 **Wischen zuverlässig, Tippen spürbar sofort.**
