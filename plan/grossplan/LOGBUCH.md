@@ -6,7 +6,7 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☐ · A5 ☐ · A6 ☐ |
-| Nächste Runde | 2 |
+| Nächste Runde | 2 (G-007 fertig, G-004/005/020/035 offen) |
 
 ---
 
@@ -22,7 +22,13 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
 **Prüfstand:** node --check app.js grün · Commit 880e488 · Push main erfolgreich
 
-**Offen:** Keine – G-007 fertig. Nächster Schritt: G-004, G-005, G-020, G-035 (Sonnet, Pakete P3/P4).
+**Offen:** 
+- G-004 (Sonnet, P3, hoch): Kartensatz-Update ersetzt über das Wort, auch bei anderer `quelleId`
+- G-005 (Sonnet, P4, hoch): Jede Sortierbewegung schreibt `order` aller Karten
+- G-020 (Sonnet, P4, mittel): Bilder in der Kartenliste sprengen die Zeile
+- G-035 (Sonnet, P5, mittel): „Gesehen" + Rückgängig zählt den Tag für die Serie
+
+**Nächster Schritt:** Runde 2 fortsetzen – G-004/G-005 (Paket P3/P4) an Sonnet delegieren mit UEBERGABE-Template. Befunde/Codeorte sind in AUFGABEN.md dokumentiert, LEHREN.md § 3–7 lesen.
 
 ---
 
