@@ -774,6 +774,18 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
+**GROSSPLAN (seit 25.09.2026, abends) – das ist jetzt die laufende Arbeit.**
+Betreiber: „ich möchte einen krassen perfekten Plan … die Arbeit an ein
+günstigeres Modell geben … so lange weiterlaufen, bis das Ergebnis wirklich
+die Kriterien erreicht … nachts von allein". Alles steht in
+[`grossplan/`](grossplan/): Auftrag, Rollen (Opus dirigiert und prüft,
+Sonnet/Haiku führen aus), Abnahmekriterien A1–A6, 133 Befunde aus 8
+Prüfbereichen, Aufgabenliste G-001 ff., Betreiber-Fragen E-01 ff.,
+Konsolen-Schritte K1 ff., Funktionen/Premium. **Bei „leg los" oder beim
+Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRAG.md)
+§ 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
+Die Einträge darunter bleiben als Verlauf gültig.
+
 **NEU (25.09.2026): Veröffentlichen geht auch ohne PC** – GitHub → Actions →
 „Veroeffentlichen" → „Run workflow" (`.github/workflows/veroeffentlichen.yml`).
 Wartet auf die Einrichtung durch den Betreiber: Dienstkonto-Schlüssel als

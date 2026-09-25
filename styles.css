@@ -577,6 +577,7 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
@@ -4241,18 +4242,18 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .einstieg-aktion--spaet { --glanz-verzug: 2300ms; }
 .einstieg--neu .einstieg-aktion--spaet { animation: enter-rise 360ms var(--ease-out) 1100ms both; }
 
-/* Bewegung abbestellt: Die Dauer setzt Abschnitt 3 schon auf null – die
-   Verzögerungen blieben aber stehen, und alles erschiene erst später. Die
-   Karte auf Bildschirm 1 dreht sich dann automatisch gar nicht und zeigt das
-   Wort (3.17.22: app.js setzt den Timer dafuer erst gar nicht,
-   einstiegBewegungReduziert); kein Aufleuchten, kein Lichtstreif, kein Puls. Antippen bleibt der
-   Weg zur Übersetzung (die Drehung dafür ist eine transition, keine
-   Animation - Abschnitt 3 setzt ihre Dauer schon auf 0.01ms, sie "springt"
-   also nur um). Den Aufbau des Plans überspringt app.js dann ganz
-   (einstiegBewegungReduziert). */
+/* Bewegung abbestellt: Die Dauer setzt Abschnitt 3 schon auf null, seit
+   3.17.30 auch animation-delay – deshalb hier keine Einstiegs-Sonderregel
+   mehr dafür. Manche Elemente zeigen aber nur *durch* eine Animation etwas
+   (z. B. der Lichtstreif als reiner Zierrat), die bleiben hier per
+   animation: none abgeschaltet. Die Karte auf Bildschirm 1 dreht sich dann
+   automatisch gar nicht und zeigt das Wort (3.17.22: app.js setzt den Timer
+   dafuer erst gar nicht, einstiegBewegungReduziert); kein Aufleuchten, kein
+   Lichtstreif, kein Puls. Antippen bleibt der Weg zur Übersetzung (die
+   Drehung dafür ist eine transition, keine Animation - Abschnitt 3 setzt
+   ihre Dauer schon auf 0.01ms, sie "springt" also nur um). Den Aufbau des
+   Plans überspringt app.js dann ganz (einstiegBewegungReduziert). */
 @media (prefers-reduced-motion: reduce) {
-  .einstieg *, .einstieg *::before, .einstieg *::after,
-  .einstieg-kopf * { animation-delay: 0s !important; }
   .einstieg-hero__karte--hinten .einstieg-hero__seite--hinten::after,
   .einstieg-leiste__punkt--ziel::after,
   .einstieg-leiter__ziel .einstieg-leiter__punkt::after,

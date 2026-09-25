@@ -7,3 +7,8 @@ node_modules/
 plan/redesign-oberflaeche/.probelauf/
 plan/werkzeuge/pruefstand/package*.json
 plan/werkzeuge/pruefstand/node_modules
+
+# Firebase-Werkzeuge (Deploy-Cache, Protokolle) - sonst blockiert die Pruefung "lokale Aenderungen" in veroeffentlichen.bat jeden zweiten Deploy
+.firebase/
+firebase-debug.log
+firestore-debug.log

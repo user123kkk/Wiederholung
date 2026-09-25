@@ -12,6 +12,8 @@ function store() {
   s['geteilteLektionen/ABCDE-FGHJK'] = satz('u1');
   s['geteilteLektionen/KLMNP-QRSTU'] = satz('u1');
   s['geteilteLektionen/ZZZZZ-ZZZZZ'] = satz('u2');
+  // 3.17.30 (G-006): verwaister eigener Satz - kein Bereich traegt seinen Code mehr
+  s['geteilteLektionen/WAWAW-WAWAW'] = satz('u1');
   s['feedback/f1'] = { text: 'Idee', erstelltAm: '2026-09-20T10:00:00Z', votes: 2, status: 'offen' };
   s['feedback/f1/votes/u1'] = {};
   s['feedback/f1/votes/u2'] = {};
@@ -37,6 +39,7 @@ const reste = p => p.evaluate(() => [...window.__FB.store.keys()].filter(k => /^
     await p.waitForTimeout(2500);
     const rest = await reste(p);
     pruefe('Konto: eigene geteilte Saetze weg', !rest.includes('geteilteLektionen/ABCDE-FGHJK') && !rest.includes('geteilteLektionen/KLMNP-QRSTU'));
+    pruefe('Konto: verwaister eigener Satz (ohne teilCode am Bereich) weg', !rest.includes('geteilteLektionen/WAWAW-WAWAW'));
     pruefe('Konto: fremder geteilter Satz bleibt', rest.includes('geteilteLektionen/ZZZZZ-ZZZZZ'));
     pruefe('Konto: eigener Stimm-Merker weg, fremder bleibt', !rest.includes('feedback/f1/votes/u1') && rest.includes('feedback/f1/votes/u2'));
     pruefe('Konto: Vorschlag selbst bleibt', rest.includes('feedback/f1'));

@@ -286,7 +286,14 @@ service cloud.firestore {
 
     match /geteilteLektionen/{code} {
       allow get: if angemeldetBestaetigt();
-      /* bewusst KEIN list - siehe oben, Punkt 2 */
+      /* KEIN freies list - siehe oben, Punkt 2. 25.09.2026 (Grossplan G-006):
+         EINE Abfrage ist erlaubt - die nach den eigenen Saetzen
+         (where ownerUid == eigene uid). Die Regel prueft jedes Ergebnis, eine
+         Abfrage ohne diesen Filter oder mit fremder uid wird abgelehnt
+         (Emulator P5/P6). Gebraucht beim Konto-Loeschen: Ein verwaister Satz,
+         dessen teilCode am Bereich fehlt, war sonst fuer niemanden mehr
+         auffindbar, blieb aber fuer jeden mit dem Code lesbar. */
+      allow list: if angemeldetBestaetigt() && resource.data.ownerUid == request.auth.uid;
 
       allow create: if angemeldetBestaetigt()
                     && code.matches('^[2-9A-HJ-NP-Z]{5}-[2-9A-HJ-NP-Z]{5}$')
@@ -340,22 +347,15 @@ service cloud.firestore {
        feedback/{id}/votes/{eigeneUid} an (Existenz = "hat abgestimmt") —
        nur fuer die eigene Kennung lesbar, nirgends list erlaubt (sonst waeren
        ueber die Dokument-IDs, die die Konto-Kennungen SIND, alle Stimmenden
-       sichtbar). WICHTIG, ehrlich dokumentiert: Die beiden Schreibvorgaenge
-       sind NICHT kryptografisch aneinander gebunden — beide Regeln pruefen
-       nur ihr EIGENES Dokument, keine gegen das andere. Das ist keine
-       Testluecke (siehe plan/phase-1-datenzugriff/regeln-pruefung.mjs, F01-F26,
-       alle 26 Faelle laufen gegen den echten Emulator), sondern eine bewusste
-       Design-Entscheidung: eine echte Bindung braeuchte entweder eine
-       Cloud-Function (dieses Projekt hat bewusst keinen eigenen Server, siehe
-       ../CLAUDE.md) oder eine dokumentuebergreifende Konsistenzpruefung, die
-       mit reinen Firestore-Regeln nur ueber `get()` auf das jeweils andere
-       Dokument ginge - und die Kette aus reads-in-rules bei jedem Stimmen
-       verdoppelt die Kosten pro Abstimmung ohne echten Sicherheitsgewinn (s.
-       unten). Angenommenes Risiko: Wer die Entwicklerwerkzeuge oeffnet, koennte
-       das Zaehlfeld einer EIGENEN oder fremden Idee wiederholt um 1 erhoehen,
-       ohne je eine eigene Stimme "zurueckzuziehen" - ein aufgeblaehter
-       Zaehler, kein Zugriff auf fremde Daten, kein finanzieller oder
-       rechtlicher Schaden. Bewusst in Kauf genommen. */
+       sichtbar). Seit 25.09.2026 (Grossplan G-014) sind beide Schreibvorgaenge
+       aneinander gebunden: +1 nur, wenn die eigene Stimme vorher NICHT da war
+       und nach dem Stapel da ist (exists/existsAfter), -1 nur umgekehrt. Die
+       fruehere Fassung pruefte nur +-1 und nahm "aufgeblaehte Zaehler" in
+       Kauf - uebersehen war das SABOTIEREN: ein fremdes Konto konnte jede
+       Idee per -1 auf 0 drehen, ohne je abgestimmt zu haben (Emulator E11).
+       Kosten: zwei Dokument-Lesungen je Stimme. Mehrere Wegwerf-Konten
+       bleiben moeglich (eine Stimme je Konto) - das kann keine Regel
+       verhindern, nur App Check (KONSOLE K14). */
 
     /* Konto-ID des Betreibers, eingetragen 23.09.2026. Anders als
        BETREIBER_UIDS in app.js (dort: leer = ALLE duerfen, reine
@@ -393,8 +393,12 @@ service cloud.firestore {
                     && (
                       (istFeedbackModerator() && beruehrt().hasOnly(['status']))
                       || (beruehrt().hasOnly(['votes'])
-                          && (request.resource.data.votes == resource.data.votes + 1
-                              || request.resource.data.votes == resource.data.votes - 1))
+                          && ((request.resource.data.votes == resource.data.votes + 1
+                               && !exists(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid))
+                               && existsAfter(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid)))
+                              || (request.resource.data.votes == resource.data.votes - 1
+                               && exists(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid))
+                               && !existsAfter(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid)))))
                     )
                     && feedbackWerte(request.resource.data, beruehrt());
 
@@ -404,8 +408,10 @@ service cloud.firestore {
          Dokument-IDs (= Konto-Kennungen) nie aufgelistet werden koennen. */
       match /votes/{uid} {
         allow get: if angemeldetBestaetigt() && request.auth.uid == uid;
+        /* 25.09.2026 (G-014/REGELN-4): nur unter einer Idee, die es gibt */
         allow create: if angemeldetBestaetigt() && request.auth.uid == uid
-                      && request.resource.data.size() == 0;
+                      && request.resource.data.size() == 0
+                      && exists(/databases/$(database)/documents/feedback/$(id));
         allow delete: if angemeldetBestaetigt() && request.auth.uid == uid;
       }
     }

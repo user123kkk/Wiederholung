@@ -2180,16 +2180,49 @@ async function patchDoc(patch) {
   }
 
   const liste = [...ops.values()];
+  const stapelSchreiben = async (teil) => {
+    const stapel = fb.writeBatch(db);
+    for (const op of teil) {
+      if (op.art === "delete") stapel.delete(op.ref);
+      else if (op.art === "set") stapel.set(op.ref, op.daten);
+      else stapel.update(op.ref, op.daten);
+    }
+    await stapel.commit();
+  };
   try {
     /* Ein Stapel fasst hoechstens 500 Vorgaenge. 400 laesst Luft. */
     for (let i = 0; i < liste.length; i += 400) {
-      const stapel = fb.writeBatch(db);
-      for (const op of liste.slice(i, i + 400)) {
-        if (op.art === "delete") stapel.delete(op.ref);
-        else if (op.art === "set") stapel.set(op.ref, op.daten);
-        else stapel.update(op.ref, op.daten);
+      const teil = liste.slice(i, i + 400);
+      try {
+        await stapelSchreiben(teil);
+      } catch (e) {
+        if (!e || e.code !== "not-found" || kontoWirdGeloescht) throw e;
+        /* 3.17.30: "not-found" heisst, ein update traf einen Bereich oder
+           eine Karte, die es in der Cloud nicht (mehr) gibt - patchDoc
+           schreibt das Nutzerdokument nie selbst. Bis 3.17.29 folgte darauf
+           persistAll(): Das schrieb ALLE Bereiche ohne merge neu (Teilen,
+           Lehrer-Bindung, "gefuehrt" weg) und holte auf einem anderen Geraet
+           Geloeschtes zurueck (Grossplan G-003, im Pruefstand nachgewiesen).
+           Jetzt: (1) Laeuft gerade das erste Anlegen, darauf warten - dafuer
+           war der alte Weg gedacht. (2) Sonst gewinnt die Loeschung: Vorgaenge
+           auf fehlende Dokumente fallen weg, der Rest des Stapels geht raus.
+           Der Snapshot bringt danach den Stand der Cloud. */
+        if (vollSchreiben) {
+          await vollSchreiben.catch(() => {});
+          await stapelSchreiben(teil);
+          continue;
+        }
+        const fehlt = new Set();
+        for (const op of teil) {
+          if (op.art !== "update") continue;
+          const s = await fb.getDoc(op.ref);
+          if (!s.exists()) fehlt.add(op);
+        }
+        const rest = teil.filter(op => !fehlt.has(op));
+        if (!fehlt.size) throw e;
+        console.warn("patchDoc: " + fehlt.size + " Aenderung(en) an geloeschten Dokumenten verworfen");
+        if (rest.length) await stapelSchreiben(rest);
       }
-      await stapel.commit();
     }
     /* Firestore loescht Unter-Sammlungen NICHT mit. Die Karten eines
        geloeschten Bereichs muessen einzeln weg, sonst bleiben sie fuer immer
@@ -2197,9 +2230,6 @@ async function patchDoc(patch) {
     for (const bid of bereichLoeschungen) await kartenEinesBereichsLoeschen(bid);
     schreibErfolg();
   } catch (e) {
-    /* Es gibt nichts zu aendern, weil das Dokument (noch) nicht existiert -
-       etwa direkt nach dem Anlegen des Kontos. Dann einmal komplett anlegen. */
-    if (e && e.code === "not-found") { if (kontoWirdGeloescht) return; persistAll(); return; }
     saveFehler(e);
   }
 }
@@ -2222,7 +2252,14 @@ async function kartenEinesBereichsLoeschen(bid) {
    Das Nutzerdokument wird mit merge geschrieben - damit bleibt das alte Feld
    "bereiche" als Sicherheitsnetz liegen, bis es in einer spaeteren Version
    entfernt wird. */
-async function persistAll() {
+let vollSchreiben = null;   // laufendes persistAll(), damit patchDoc darauf warten kann
+function persistAll() {
+  const lauf = persistAllAusfuehren();
+  vollSchreiben = lauf;
+  lauf.finally(() => { if (vollSchreiben === lauf) vollSchreiben = null; });
+  return lauf;
+}
+async function persistAllAusfuehren() {
   if (!userDocRef || bereiche === null) return;
   try {
     await fb.setDoc(userDocRef, {
@@ -2230,8 +2267,11 @@ async function persistAll() {
     }, { merge: true });
     const ops = [];
     bereiche.forEach((b, bi) => {
-      const felder = bereichFelder(b, bi);
-      ops.push({ ref: bereichRef(b.id), daten: { name: felder.name, order: felder.order, sets: felder.sets } });
+      /* 3.17.30: alle Bereichsfelder ausser den Karten (die sind eigene
+         Dokumente) - vorher nur name/order/sets, ein Vollschreiben nahm
+         so gefuehrt, satzId, Teilen- und Lehrer-Felder weg (G-003). */
+      const { karten, ...felder } = bereichFelder(b, bi);
+      ops.push({ ref: bereichRef(b.id), daten: felder });
       b.karten.forEach((c, ci) => ops.push({ ref: karteRef(c.id), daten: { ...kartenFelder(c, ci), bereichId: b.id } }));
     });
     for (let i = 0; i < ops.length; i += 400) {
@@ -2767,10 +2807,26 @@ async function kontoDatenLoeschen() {
      (geteilteLektionen/{code}, mit ownerUid). Sie muessen VOR dem Konto weg -
      danach erlaubt die Regel das Loeschen niemandem mehr. Die
      Datenschutzerklaerung (Punkt 12) verspricht "alle zugehoerigen Inhalte". */
+  const codes = new Set();
   for (const d of bereicheSnap.docs) {
     const code = (d.data() || {}).teilCode;
-    if (typeof code === "string" && code) await geteiltLoeschen(code);
+    if (typeof code === "string" && code) codes.add(code);
   }
+  /* 3.17.30 (G-006): Ein Satz kann verwaist sein - sein teilCode am Bereich
+     ist weg (Teilen beenden scheiterte still, oder ein altes Vollschreiben
+     hat das Feld entfernt), das Dokument steht aber noch. Die Regel erlaubt
+     seit 3.17.30 genau diese eine Abfrage: nur die eigenen, nach ownerUid.
+     Ist die Regel noch nicht veroeffentlicht, lehnt der Server ab - dann
+     bleibt es beim Weg ueber teilCode wie bisher (LEHREN § 8.4). */
+  try {
+    const eigene = await fb.getDocs(fb.query(fb.collection(db, "geteilteLektionen"),
+      fb.where("ownerUid", "==", currentUser.uid)));
+    eigene.docs.forEach(d => codes.add(d.id));
+  } catch (e) {
+    if (!e || e.code !== "permission-denied") throw e;
+    console.warn("geteilteLektionen: Abfrage nach Besitzer abgelehnt (Regel noch nicht veroeffentlicht?)");
+  }
+  for (const code of codes) await geteiltLoeschen(code);
   /* Ebenso die Stimm-Merker im Ideen-Board: feedback/{id}/votes/{uid} traegt
      die Konto-Kennung als Dokument-ID. Die Stimmenzahl selbst ist anonym und
      bleibt. Loeschen eines fehlenden Merkers erlaubt die Regel (nur uid). */
