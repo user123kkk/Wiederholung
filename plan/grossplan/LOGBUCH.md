@@ -73,7 +73,15 @@ nicht als Lernlogik-Frage: Die Regel der Serie bleibt, nur ein Speicherfehler
 wird behoben. Kommt in Runde 2 mit Testfällen vorab. Die Routine weckt diese
 Session statt frischer Sessions (Grund: `AUFTRAG.md` § 5).
 
-**Prüfstand vor dem Commit:** *(siehe Nachtrag unten)*
+**Prüfstand vor dem Commit (Chromium, Firebase-Attrappe):** `pruefe_stand.mjs`
+grün · `abnahme_runde.js` 13/13 („lesen"-Ausgaben gelesen: Einzahl/Mehrzahl,
+Limit mit Weiterlernen, Kontrast 0, Zeichnen ohne verpasstes Bild) ·
+`t_sprung`, `t_kontrast` (0 Funde), `t_a11y`, `t_notfound`, `t_teilen`,
+`t_loeschen_teilen`, `t_daten`, `t_anmelden`, `t_einstieg`, `t_start`,
+`t_csp`, `t_konto`, `t_bestaetigung`, `t_einstellungen`, `t_gross_alle` grün ·
+Affe Handy 150 und iPad 120 Schritte: 0 Befunde · Regeln im Emulator 153/153.
+**Nicht geprüft** (§ 5.6): echtes iOS, echtes Firebase (Regeln live,
+Mail-Zustellung, deutsche Mail nach G-010) – das sind Betreiber-Schritte.
 
 **Kriterien:** A1 ☐ (21 von 73 A-Aufgaben erledigt, G-013 teilweise) · A2 ☑ (alle Fragen mit
 Pro/Contra in ENTSCHEIDUNGEN.md) · A3 ☑ (KONSOLE.md vollständig) · A4 ☐ ·
