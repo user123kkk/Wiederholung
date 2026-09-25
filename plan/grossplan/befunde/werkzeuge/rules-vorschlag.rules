@@ -1,0 +1,422 @@
+rules_version = '2';
+
+/* ============================================================
+   ZUGRIFFSREGELN FÜR FIRESTORE
+
+   Diese Datei ist die einzige echte Grenze des Projekts. Alles, was app.js
+   prüft, ist Bedienkomfort: Der Browser gehört dem Nutzer, und wer die
+   Entwicklerwerkzeuge öffnet, schreibt an jeder Prüfung im JavaScript vorbei
+   direkt in die Datenbank. Was hier nicht steht, ist nicht geschützt.
+
+   Bis Phase 1 prüften die Regeln ausschließlich, WER schreibt — nie, WAS.
+   Jetzt gilt beides.
+
+   Drei Leitgedanken, damit spätere Änderungen sie nicht versehentlich
+   aushebeln:
+
+   1. GEPRÜFT WIRD NUR, WAS SICH ÄNDERT. `request.resource.data` ist bei
+      einem Update das VOLLSTÄNDIGE Dokument nach dem Schreiben — also auch
+      Felder, die der Schreibvorgang gar nicht angefasst hat. Würde man es
+      als Ganzes prüfen, blockierte ein altes Feld aus einer früheren Version
+      jeden weiteren Schreibvorgang dieses Kontos. Deshalb läuft jede Prüfung
+      über die Liste der tatsächlich berührten Felder.
+
+   2. DIE REGEL IST GROSSZÜGIGER ALS DIE OBERFLÄCHE. Ein Bereichsname darf in
+      der App 40 Zeichen haben, hier sind 200 erlaubt. Das ist Absicht: Die
+      Regel soll Missbrauch abwehren, nicht die Oberfläche nachbauen. Wären
+      beide Zahlen gleich, bräche jede kleine Änderung an der Oberfläche das
+      Speichern — und zwar erst beim Nutzer, nicht beim Entwickeln.
+
+   3. AUFZÄHLUNGEN STEHEN NICHT HIER. Thema und Schriftgröße werden nicht auf
+      ihre erlaubten Werte festgenagelt, nur auf Art und Länge. Ein
+      unbekannter Wert richtet keinen Schaden an — normSettings() in app.js
+      fällt auf den Standardwert zurück. Ein neues Thema, das die Regeln
+      nicht kennen, würde dagegen das Speichern abweisen.
+
+   Was diese Regeln NICHT leisten können, damit es niemand annimmt:
+
+   - INHALTE VON UNTER-MAPS. `sets` im Bereichsdokument ist eine Map mit den
+     Speicherkarten darin. Firestore-Regeln können die Werte einer Map nicht
+     durchlaufen; prüfbar sind nur Art und Anzahl. Dasselbe gilt für
+     `verlauf` im Nutzerdokument.
+   - STUFE UND HÖCHSTSTUFE. Beide werden auf Ganzzahl 0..MAX_STUFE begrenzt,
+     mehr geht nicht. Ein Deckel "maxStufe darf nur wachsen, wenn stufe
+     wächst" brächte nichts, denn die App selbst lässt die Stufe im
+     Bearbeiten-Formular frei setzen (app.js, renderVerwalten). Wer die
+     nächste Lektion freischalten will, kann das also auch ohne
+     Entwicklerwerkzeuge.
+   - OB EIN BEREICH EXISTIERT. `bereichId` wird nicht gegen die
+     Bereichs-Sammlung geprüft. Ein exists() sähe innerhalb eines Stapels den
+     Stand VOR dem Stapel — persistAll() legt Bereich und Karten in einem
+     Stapel an, die Karten würden also abgewiesen.
+
+   Feste Werte, die mit app.js zusammenhängen müssen:
+     MAX_STUFE = 12   (app.js, Konstante MAX_STUFE)
+   Wird dort etwas geändert, muss es hier mitgeändert werden.
+   ============================================================ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ---------- Wer darf überhaupt? ----------
+       Unverändert seit der ersten Fassung: eigenes Konto, angemeldet,
+       E-Mail bestätigt. */
+    function eigenesKonto(uid) {
+      return request.auth != null
+             && request.auth.uid == uid
+             && request.auth.token.email_verified == true;
+    }
+
+    /* ---------- Bausteine ---------- */
+    function text(w, max)         { return w is string && w.size() <= max; }
+    function textOderNull(w, max) { return w == null || text(w, max); }
+    function zahl(w, min, max)    { return w is int && w >= min && w <= max; }
+    function zahlOderNull(w, min, max) { return w == null || zahl(w, min, max); }
+    function datum(w)             { return w is string && w.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$'); }
+    function datumOderNull(w)     { return w == null || datum(w); }
+
+    /* Die Felder, die dieser Schreibvorgang tatsächlich anfasst. Beim Anlegen
+       sind das alle; beim Ändern nur die, deren Wert sich unterscheidet. */
+    function beruehrt() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    /* Beim Anlegen eines Dokuments wertet Firestore auch die update-Regel
+       aus. Dort gibt es noch kein `resource`, beruehrt() haette also nichts
+       zu vergleichen. Jede update-Regel fragt deshalb zuerst, ob das
+       Dokument ueberhaupt schon da ist. */
+    function vorhanden() { return resource != null; }
+
+    /* ============================================================
+       users/{uid} — Name, Serie, Einstellungen, Tagesprotokoll
+       ============================================================ */
+
+    /* `bereiche` ist das Altfeld aus der Zeit vor 2.0.0: Damals lagen alle
+       Karten im Nutzerdokument. Seit dem Umzug bleibt es als Sicherheitsnetz
+       liegen (persistAll schreibt mit merge). Es darf deshalb DA SEIN, aber
+       nicht mehr beschrieben werden — löschen ist erlaubt. Sonst wäre es die
+       offene Tür, durch die beliebige Daten ins Nutzerdokument kämen. */
+    function nutzerFelder() {
+      return ['name', 'streak', 'settings', 'schemaVersion', 'verlauf', 'bereiche'];
+    }
+
+    function streakOk(s) {
+      return s is map && s.size() <= 20
+        && (!('count' in s)             || zahlOderNull(s.count, 0, 100000))
+        && (!('beste' in s)             || zahlOderNull(s.beste, 0, 100000))
+        && (!('vorher' in s)            || zahlOderNull(s.vorher, 0, 100000))
+        && (!('sockel' in s)            || zahlOderNull(s.sockel, 0, 100000))
+        && (!('jokerAm' in s)           || datumOderNull(s.jokerAm))
+        && (!('gerissenAm' in s)        || datumOderNull(s.gerissenAm))
+        && (!('sockelBis' in s)         || datumOderNull(s.sockelBis))
+        && (!('lastCompletedDate' in s) || datumOderNull(s.lastCompletedDate))
+        && (!('lastEvaluatedDate' in s) || datumOderNull(s.lastEvaluatedDate));
+    }
+
+    /* Anders als bei der Serie ist hasOnly hier gefahrlos: persistSettings()
+       schreibt das Feld immer als Ganzes neu, ein altes Teilfeld kann also
+       nicht stehenbleiben und den nächsten Schreibvorgang blockieren. */
+    function settingsOk(s) {
+      return s is map
+        && s.keys().hasOnly(['arabGroesse', 'lastBackup', 'thema', 'sitzungsLimit'])
+        && (!('arabGroesse' in s)   || text(s.arabGroesse, 20))
+        && (!('thema' in s)         || text(s.thema, 20))
+        && (!('lastBackup' in s)    || datumOderNull(s.lastBackup))
+        /* sitzungsLimit ist entweder eine Zahl (10/20/30 in der Oberflaeche)
+           oder der String "alle" - siehe SITZUNGS_LIMITS in app.js. */
+        && (!('sitzungsLimit' in s) || s.sitzungsLimit == 'alle' || zahl(s.sitzungsLimit, 1, 100000));
+    }
+
+    /* VERLAUF_TAGE ist 120; die App räumt Älteres selbst weg
+       (verlaufAufraeumen). 400 lässt Luft für Geräte, die lange nicht
+       aufgeräumt haben. Die Tagesschlüssel selbst sind nicht prüfbar. */
+    function nutzerWerte(d, pruefen) {
+      return (!pruefen.hasAny(['name'])          || text(d.name, 200))
+          && (!pruefen.hasAny(['schemaVersion']) || zahl(d.schemaVersion, 0, 99))
+          && (!pruefen.hasAny(['streak'])        || streakOk(d.streak))
+          && (!pruefen.hasAny(['settings'])      || settingsOk(d.settings))
+          && (!pruefen.hasAny(['verlauf'])       || (d.verlauf is map && d.verlauf.size() <= 400));
+    }
+
+    match /users/{uid} {
+      allow read, delete: if eigenesKonto(uid);
+
+      allow create: if eigenesKonto(uid)
+                    && request.resource.data.keys().hasOnly(nutzerFelder())
+                    && !('bereiche' in request.resource.data)
+                    && nutzerWerte(request.resource.data, request.resource.data.keys());
+
+      allow update: if eigenesKonto(uid) && vorhanden()
+                    && beruehrt().hasOnly(nutzerFelder())
+                    && (!beruehrt().hasAny(['bereiche']) || !('bereiche' in request.resource.data))
+                    && nutzerWerte(request.resource.data, beruehrt());
+
+      /* ============================================================
+         users/{uid}/bereiche/{bid} — Name, Reihenfolge, Speicherkarten
+         ============================================================ */
+
+      function bereichFelder() {
+        return ['name', 'order', 'gefuehrt', 'satzId', 'satzVersion', 'sets', 'teilCode',
+                'teilFreigabe', 'lehrerCode', 'lehrerOffenBis'];
+      }
+
+      /* `karten` steht bewusst NICHT in der Liste. Seit 2.0.0 liegt jede
+         Karte als eigenes Dokument; bereichFelder() in app.js baut die Map
+         zwar noch, patchDoc() und persistAll() schneiden sie vor dem
+         Schreiben ab. Ein Bereichsdokument mit Karten darin wäre also ein
+         Rückschritt in die 1-MiB-Grenze, an der 2.0.0 gescheitert ist. */
+      function bereichWerte(d, pruefen) {
+        return (!pruefen.hasAny(['name'])        || text(d.name, 200))
+            && (!pruefen.hasAny(['order'])       || d.order is int)
+            && (!pruefen.hasAny(['gefuehrt'])    || d.gefuehrt is bool)
+            && (!pruefen.hasAny(['satzId'])      || textOderNull(d.satzId, 200))
+            && (!pruefen.hasAny(['satzVersion']) || zahlOderNull(d.satzVersion, 0, 100000))
+            && (!pruefen.hasAny(['sets'])        || (d.sets is map && d.sets.size() <= 500))
+            /* Die vier Felder unten sind alle loeschbar (Teilen beenden). Ein
+               geloeschtes Feld steht in `pruefen`, fehlt aber in `d` - ohne die
+               'in'-Abfrage lief der Zugriff ins Leere und die Regel lehnte das
+               Loeschen ab. */
+            && (!pruefen.hasAny(['teilCode'])    || !('teilCode' in d) || textOderNull(d.teilCode, 20))
+            /* „Lehrer gibt frei" (19.09.2026): teilFreigabe beim Ersteller
+               spiegelt den Stand im geteilten Datensatz, lehrerCode und
+               lehrerOffenBis beim Empfaenger sind Code und zuletzt bekannter
+               Stand. 1000 wie beim Datensatz selbst. */
+            && (!pruefen.hasAny(['teilFreigabe'])   || !('teilFreigabe' in d)   || zahlOderNull(d.teilFreigabe, 0, 1000))
+            && (!pruefen.hasAny(['lehrerCode'])     || !('lehrerCode' in d)     || textOderNull(d.lehrerCode, 20))
+            && (!pruefen.hasAny(['lehrerOffenBis']) || !('lehrerOffenBis' in d) || zahlOderNull(d.lehrerOffenBis, 0, 1000));
+      }
+
+      match /bereiche/{bid} {
+        allow read, delete: if eigenesKonto(uid);
+
+        allow create: if eigenesKonto(uid)
+                      && request.resource.data.keys().hasOnly(bereichFelder())
+                      && request.resource.data.keys().hasAll(['name'])
+                      && bereichWerte(request.resource.data, request.resource.data.keys());
+
+        allow update: if eigenesKonto(uid) && vorhanden()
+                      && beruehrt().hasOnly(bereichFelder())
+                      && bereichWerte(request.resource.data, beruehrt());
+      }
+
+      /* ============================================================
+         users/{uid}/karten/{cid} — eine Vokabel
+         ============================================================ */
+
+      function kartenFelder() {
+        return ['wort', 'uebersetzung', 'extra', 'stufe', 'nextReview',
+                'ersteBewertung', 'rueckfaelle', 'quelleId', 'maxStufe',
+                'order', 'bereichId'];
+      }
+
+      /* `order` ist absichtlich unbegrenzt: ordnungVorn() in app.js setzt
+         -Date.now(), um eine neue Karte vorn einzusortieren. Die Zahl sagt
+         nur etwas über die Reihenfolge aus und kann nichts verfälschen. */
+      function kartenWerte(d, pruefen) {
+        return (!pruefen.hasAny(['wort'])           || text(d.wort, 1000))
+            && (!pruefen.hasAny(['uebersetzung'])   || text(d.uebersetzung, 1000))
+            && (!pruefen.hasAny(['extra'])          || textOderNull(d.extra, 5000))
+            && (!pruefen.hasAny(['stufe'])          || zahl(d.stufe, 0, 12))
+            && (!pruefen.hasAny(['maxStufe'])       || zahl(d.maxStufe, 0, 12))
+            && (!pruefen.hasAny(['nextReview'])     || datum(d.nextReview))
+            && (!pruefen.hasAny(['ersteBewertung']) || datumOderNull(d.ersteBewertung))
+            && (!pruefen.hasAny(['rueckfaelle'])    || zahl(d.rueckfaelle, 0, 100000))
+            && (!pruefen.hasAny(['quelleId'])       || textOderNull(d.quelleId, 200))
+            && (!pruefen.hasAny(['order'])          || d.order is int)
+            && (!pruefen.hasAny(['bereichId'])      || text(d.bereichId, 200));
+      }
+
+      match /karten/{cid} {
+        allow read, delete: if eigenesKonto(uid);
+
+        allow create: if eigenesKonto(uid)
+                      && request.resource.data.keys().hasOnly(kartenFelder())
+                      && request.resource.data.keys().hasAll(
+                           ['wort', 'uebersetzung', 'stufe', 'nextReview', 'bereichId'])
+                      && kartenWerte(request.resource.data, request.resource.data.keys());
+
+        allow update: if eigenesKonto(uid) && vorhanden()
+                      && beruehrt().hasOnly(kartenFelder())
+                      && kartenWerte(request.resource.data, beruehrt());
+      }
+    }
+
+    /* ============================================================
+       geteilteLektionen/{code} — Code-basiertes Teilen (Lehrer-Modus)
+
+       Ein Bereich kann mit einem Code geteilt werden. Der Code ist die
+       einzige Zugriffsschranke: Wer ihn kennt, kann EINZELN lesen. Er hat
+       10 Zeichen aus 32 (crypto.getRandomValues, genTeilCode() in app.js),
+       das sind rund 2^50 Moeglichkeiten - raten lohnt nicht, solange man die
+       Sammlung nicht AUFLISTEN kann.
+
+       19.09.2026, zwei Korrekturen an der Fassung vom 18.09.:
+
+       1. LAGE. Der Block stand hinter der Klammer, die `match /databases/
+          {database}/documents` schliesst - also NEBEN dem Dokumentbaum statt
+          darin. Jede Dokumentregel gilt relativ zu /databases/(default)/
+          documents/..., ein Block daneben trifft nie einen echten Pfad. Ergebnis:
+          "Code erzeugen" waere serverseitig mit permission-denied abgewiesen
+          worden (Standard: alles verboten). Jetzt steht er hier, im Baum.
+
+       2. `read` STATT `get`. `read` heisst get UND list. Mit list konnte jedes
+          angemeldete Konto ALLE geteilten Lektionen samt Codes abfragen - der
+          Code waere keine Schranke gewesen. Die App listet diese Sammlung nie
+          auf (nur getDoc/setDoc/deleteDoc), also faellt list ersatzlos weg.
+
+       Dazu, weil ein Konto ohne bestaetigte E-Mail die App ohnehin nicht
+       benutzen kann (renderPendingVerification), die Regel es aber nicht
+       wusste: bestaetigte E-Mail wie bei eigenesKonto(), Format des Codes und
+       Form des Inhalts beim Anlegen. Sonst haette jedes frisch registrierte
+       Wegwerf-Konto beliebig viele beliebig benannte Dokumente ablegen koennen.
+       Das Format gilt nur beim ANLEGEN; gelesen wird jeder Code, der da ist.
+       ============================================================ */
+    function angemeldetBestaetigt() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    /* „Lehrer gibt frei" (19.09.2026): Ein Datensatz kann beim ANLEGEN ein
+       Feld `freigabe: { offenBis: N }` tragen - die ersten N Lektionen sind
+       dann offen, die Empfaenger-Apps lesen die Zahl mit. Nur der Ersteller
+       darf sie spaeter aendern, nur dieses Feld, nur nach oben. Ohne
+       `freigabe` (gewoehnlicher Code) bleibt der Datensatz unveraenderlich. */
+    function freigabeOk(f) {
+      return f is map && f.keys().hasOnly(['offenBis']) && zahl(f.offenBis, 1, 1000);
+    }
+
+    match /geteilteLektionen/{code} {
+      allow get: if angemeldetBestaetigt();
+      allow list: if angemeldetBestaetigt() && resource.data.ownerUid == request.auth.uid;
+
+      allow create: if angemeldetBestaetigt()
+                    && code.matches('^[2-9A-HJ-NP-Z]{5}-[2-9A-HJ-NP-Z]{5}$')
+                    && request.resource.data.keys().hasOnly(['ownerUid', 'erstelltAm', 'inhalt', 'freigabe'])
+                    && request.resource.data.keys().hasAll(['ownerUid', 'erstelltAm', 'inhalt'])
+                    && request.resource.data.ownerUid == request.auth.uid
+                    && text(request.resource.data.erstelltAm, 40)
+                    && request.resource.data.inhalt is map
+                    && request.resource.data.inhalt.keys().hasOnly(['bereiche'])
+                    && request.resource.data.inhalt.bereiche is list
+                    && request.resource.data.inhalt.bereiche.size() == 1
+                    && (!('freigabe' in request.resource.data) || freigabeOk(request.resource.data.freigabe));
+
+      allow delete: if angemeldetBestaetigt() && resource.data.ownerUid == request.auth.uid;
+
+      /* Der Inhalt ist unveraenderlich: neu erzeugen oder loeschen. Einzige
+         Ausnahme ist der Freigabe-Stand eines Lehrer-Datensatzes - er kann nur
+         wachsen (einmal offen bleibt offen), und ein gewoehnlicher Code kann
+         nachtraeglich nicht zu einem Lehrer-Code werden. */
+      allow update: if angemeldetBestaetigt() && vorhanden()
+                    && resource.data.ownerUid == request.auth.uid
+                    && 'freigabe' in resource.data
+                    && beruehrt().hasOnly(['freigabe'])
+                    && freigabeOk(request.resource.data.freigabe)
+                    && request.resource.data.freigabe.offenBis > resource.data.freigabe.offenBis;
+    }
+
+    /* ============================================================
+       feedback/{id} — Feedback-Board (22.09.2026)
+
+       Oeffentliche Liste mit Vorschlaegen und Abstimmen (Betreiber-Anstoss,
+       TikTok-Video). Konzept: plan/feedback-board/AUFTRAG.md. Anders als bei
+       users/{uid} gehoert diese Sammlung NICHT einem einzelnen Konto — jedes
+       angemeldete, bestaetigte Konto darf lesen, jeder darf einen Vorschlag
+       anlegen. Deshalb bewusst KEINE Konto-Kennung im Dokument selbst
+       (kein `erstelltVon`): Betreiber-Vorgabe war "niemand kann auf die
+       Daten der anderen zugreifen" — mit einer gespeicherten uid waere das
+       nur eine App-Konvention gewesen, kein echter Schutz (wer die
+       Entwicklerwerkzeuge oeffnet, liest direkt aus Firestore, siehe
+       Kopfkommentar dieser Datei). Ohne die Kennung gibt es strukturell
+       nichts zu lesen.
+
+       Konsequenz: OHNE Konto-Kennung kann niemand "seinen eigenen" Vorschlag
+       nachweisen — loeschen und den Status aendern kann deshalb nur die
+       Moderation (istFeedbackModerator() unten), nicht die einreichende
+       Person selbst. Das ist der Preis fuer echte Anonymitaet, keine Luecke.
+
+       Stimmen zaehlen: `votes` ist ein Zaehlfeld auf dem Feedback-Dokument
+       selbst, das pro Schreibvorgang nur um genau 1 wachsen oder fallen darf.
+       Zusaetzlich legt jedes Konto beim Abstimmen ein LEERES Dokument unter
+       feedback/{id}/votes/{eigeneUid} an (Existenz = "hat abgestimmt") —
+       nur fuer die eigene Kennung lesbar, nirgends list erlaubt (sonst waeren
+       ueber die Dokument-IDs, die die Konto-Kennungen SIND, alle Stimmenden
+       sichtbar). WICHTIG, ehrlich dokumentiert: Die beiden Schreibvorgaenge
+       sind NICHT kryptografisch aneinander gebunden — beide Regeln pruefen
+       nur ihr EIGENES Dokument, keine gegen das andere. Das ist keine
+       Testluecke (siehe plan/phase-1-datenzugriff/regeln-pruefung.mjs, F01-F26,
+       alle 26 Faelle laufen gegen den echten Emulator), sondern eine bewusste
+       Design-Entscheidung: eine echte Bindung braeuchte entweder eine
+       Cloud-Function (dieses Projekt hat bewusst keinen eigenen Server, siehe
+       ../CLAUDE.md) oder eine dokumentuebergreifende Konsistenzpruefung, die
+       mit reinen Firestore-Regeln nur ueber `get()` auf das jeweils andere
+       Dokument ginge - und die Kette aus reads-in-rules bei jedem Stimmen
+       verdoppelt die Kosten pro Abstimmung ohne echten Sicherheitsgewinn (s.
+       unten). Angenommenes Risiko: Wer die Entwicklerwerkzeuge oeffnet, koennte
+       das Zaehlfeld einer EIGENEN oder fremden Idee wiederholt um 1 erhoehen,
+       ohne je eine eigene Stimme "zurueckzuziehen" - ein aufgeblaehter
+       Zaehler, kein Zugriff auf fremde Daten, kein finanzieller oder
+       rechtlicher Schaden. Bewusst in Kauf genommen. */
+
+    /* Konto-ID des Betreibers, eingetragen 23.09.2026. Anders als
+       BETREIBER_UIDS in app.js (dort: leer = ALLE duerfen, reine
+       Sichtbarkeit ohne Sicherheitswirkung) ist das hier eine echte
+       Berechtigung — Loeschen fremder Eintraege, Status aendern. */
+    function istFeedbackModerator() {
+      return request.auth != null && request.auth.uid in ['pitcQCAowlSOMjCvJ4xKSnuGVXi1'];
+    }
+
+    function feedbackFelder() { return ['text', 'beschreibung', 'erstelltAm', 'votes', 'status']; }
+
+    function feedbackWerte(d, pruefen) {
+      return (!pruefen.hasAny(['text'])         || text(d.text, 100))
+          && (!pruefen.hasAny(['beschreibung']) || textOderNull(d.beschreibung, 500))
+          && (!pruefen.hasAny(['erstelltAm'])   || text(d.erstelltAm, 40))
+          && (!pruefen.hasAny(['votes'])        || zahl(d.votes, 0, 100000000))
+          && (!pruefen.hasAny(['status'])       || d.status in ['offen', 'geplant', 'umgesetzt', 'abgelehnt']);
+    }
+
+    match /feedback/{id} {
+      allow get, list: if angemeldetBestaetigt();
+
+      allow create: if angemeldetBestaetigt()
+                    && request.resource.data.keys().hasOnly(feedbackFelder())
+                    && request.resource.data.keys().hasAll(['text', 'erstelltAm', 'votes', 'status'])
+                    && request.resource.data.votes == 0
+                    && request.resource.data.status == 'offen'
+                    && feedbackWerte(request.resource.data, request.resource.data.keys());
+
+      /* Zwei getrennte, einander ausschliessende Wege: Moderation aendert nur
+         status, Abstimmen aendert nur votes (und das nur um genau 1). Beides
+         gemeinsam in einem Schreibvorgang ist nicht erlaubt — es gibt in der
+         Oberflaeche auch keinen Anlass dafuer. */
+      allow update: if angemeldetBestaetigt() && vorhanden()
+                    && (
+                      (istFeedbackModerator() && beruehrt().hasOnly(['status']))
+                      || (beruehrt().hasOnly(['votes'])
+                          && ((request.resource.data.votes == resource.data.votes + 1
+                               && !exists(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid))
+                               && existsAfter(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid)))
+                              || (request.resource.data.votes == resource.data.votes - 1
+                               && exists(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid))
+                               && !existsAfter(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid)))))
+                    )
+                    && feedbackWerte(request.resource.data, beruehrt());
+
+      allow delete: if angemeldetBestaetigt() && istFeedbackModerator();
+
+      /* Nur die eigene Stimme ist sichtbar — kein list, damit die
+         Dokument-IDs (= Konto-Kennungen) nie aufgelistet werden koennen. */
+      match /votes/{uid} {
+        allow get: if angemeldetBestaetigt() && request.auth.uid == uid;
+        allow create: if angemeldetBestaetigt() && request.auth.uid == uid
+                      && request.resource.data.size() == 0;
+        allow delete: if angemeldetBestaetigt() && request.auth.uid == uid;
+      }
+    }
+
+    /* Alles andere: kein match, also kein Zugriff. Das ersetzt das frühere
+       match /{document=**} unter users/{uid} — damit ließ sich unter dem
+       eigenen Konto jeder erfundene Unterpfad anlegen und beliebig füllen.
+       Die App benutzt genau die drei Sammlungen oben. */
+  }
+}
