@@ -12,27 +12,44 @@
    So laeuft sie (ausserhalb des Repos, in einem leeren Ordner):
 
      npm init -y
-     npm install firebase-tools @firebase/rules-unit-testing
+     npm install firebase-tools @firebase/rules-unit-testing firebase
      # firebase.json:
      # { "emulators": { "firestore": { "port": 8085 }, "ui": { "enabled": false } },
      #   "firestore": { "rules": "<Pfad>/firestore.rules" } }
      npx firebase-tools emulators:exec --only firestore \
        --project wiederholung-test "node regeln-pruefung.mjs"
 
-   Erwartet: "62 von 62 Pruefungen wie erwartet."
-   (Nachtrag 19.09.2026: unten 14 weitere Faelle T01-T14 zu geteilteLektionen,
-   gelaufen am 19.09.2026: 76 von 76. Siehe Kommentar an der Stelle.)
+   Unter Linux geht es genauso, siehe zusaetzlich das Werkzeug
+   plan/werkzeuge/regeln_testen.sh: es richtet die Umgebung oben automatisch
+   in ${REGELN_EMU:-$HOME/.cache/adrabic-regeln-emu} ein (einmalig, danach
+   wiederverwendet) und ruft dieselbe emulators:exec-Zeile auf. Voraussetzung
+   ist ein installiertes Java (der Emulator braucht es); der Download des
+   Emulator-Jars ueber den Proxy funktioniert. Aufruf: `bash
+   plan/werkzeuge/regeln_testen.sh`. Mit `REGELN_DATEI=<Pfad>` laesst sich
+   eine andere firestore.rules pruefen (Gegenprobe gegen eine aeltere
+   Fassung), ohne die Umgebungsvariable direkt zu setzen.
+
+   Stand 25.09.2026 (G-055): 153 von 153 Faellen. Zusammensetzung: 62 Faelle
+   Normalbetrieb/Missbrauch (12.09.2026) + 14 Faelle T01-T14 zu
+   geteilteLektionen (19.09.2026) + 30 Faelle L01-L30 zum Lehrer-Modus
+   (19.09.2026) + 26 Faelle F01-F26 zum Feedback-Board (22.09.2026) + 21
+   weitere Randfaelle E01-E20/P1-P6 aus dem Audit (25.09.2026, siehe
+   Kommentar am Ende der Datei). Diese Kopfzahl war zuvor veraltet (stand auf
+   "62"/"76", obwohl schon 132 Faelle liefen) - LEHREN.md § 8.1 und
+   grossplan/befunde/REGELN.md REGELN-8 halten das fest. Nach jeder
+   Erweiterung hier auch diese Zahl nachziehen, sonst wiederholt sich genau
+   das.
 
    Beim Lesen der Emulator-Ausgabe nicht erschrecken: abgewiesene Faelle
    melden oft zusaetzlich "evaluation error". Das ist normal. Die Regelsprache
    wertet beide Seiten eines && aus und schluckt den Fehler, wenn die andere
    Seite ohnehin false ist - z.B. wenn stufe ein Text ist und deshalb die
-   Zahlenpruefung stolpert. Entscheidend ist allein, dass alle 62 Faelle so
+   Zahlenpruefung stolpert. Entscheidend ist allein, dass alle 153 Faelle so
    ausgehen wie erwartet.
    ============================================================ */
 
 import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
-import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField, increment } from "firebase/firestore";
+import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField, increment, query, where } from "firebase/firestore";
 import { readFileSync } from "fs";
 
 const UID = "nutzer-eins";
@@ -333,6 +350,102 @@ await pruefe("F24 Stimm-Dokument mit Inhalt statt leer", "nein", () => setDoc(fb
 
 await pruefe("F25 Moderator aendert status", "ja", () => updateDoc(doc(dbMod, "feedback", "e1"), { status: "geplant" }));
 await pruefe("F26 Moderator loescht Eintrag", "ja", () => deleteDoc(doc(dbMod, "feedback", "e2")));
+
+/* ================= NACHTRAG 25.09.2026 (G-055): Randfaelle aus dem Audit =================
+   Uebernommen aus audit/REGELN/extra.mjs (Fundstelle REGELN-8,
+   grossplan/befunde/REGELN.md). Dort wurden E01-E20 und P1-P6 nur GEMESSEN
+   (assertSucceeds/assertFails fehlten), teils gegen eine AELTERE
+   firestore.rules (vor der Aenderung vom 25.09.2026 an votes/{uid} und am
+   list bei geteilteLektionen). Die Erwartungen hier richten sich nach dem
+   heutigen SOLL der Regel, nicht nach dem damaligen Messwert:
+
+     ERLAUBT (assertSucceeds):  E01-E07, E09, E10, E19, P1, P4
+     ABGELEHNT (assertFails):   E08, E11, E12, E14, E20, P2, P3, P5, P6
+
+   E13 und E15-E18 beschreiben Luecken, die die Regel HEUTE noch zulaesst
+   (siehe Kommentarblock ganz unten) - dafuer gibt es hier bewusst keinen
+   assert, sie werden erst mit G-016/G-057 geschlossen. E16 (verwaister
+   Stimmen-Merker nach Moderator-Loeschung darf geloescht werden) ist kein
+   Fehlverhalten der Regel, sondern gewuenschtes Aufraeumen - deshalb auch
+   ohne assert hier, weil sie nicht zur "erlaubt/abgelehnt"-Liste oben passt
+   und keine offene Frage ist. */
+
+const AR = "كِتَابٌ "; // 7 JS-Zeichen (inkl. Harakat), fuer volle-Laenge-Faelle
+const ar = (n) => AR.repeat(Math.ceil(n / AR.length)).slice(0, n);
+
+await pruefe("E01 persistAll: Nutzerdokument mit sitzungsLimit 'alle'", "ja", () => setDoc(u(), {
+  name: "Test", schemaVersion: 2,
+  streak: { count: 0, lastCompletedDate: null, lastEvaluatedDate: null, jokerAm: null, beste: 0, gerissenAm: null, vorher: 0 },
+  settings: { arabGroesse: "normal", lastBackup: null, thema: "dunkel", sitzungsLimit: "alle" } }, { merge: true }));
+await pruefe("E02 Einstellungen sitzungsLimit 20", "ja", () => updateDoc(u(), {
+  settings: { arabGroesse: "normal", lastBackup: null, thema: "hell", sitzungsLimit: 20 } }));
+await pruefe("E03 Serie: sockel/sockelBis null (persistStreak mit undefined->null)", "ja", () => updateDoc(u(), {
+  "streak.sockel": null, "streak.sockelBis": null }));
+await pruefe("E04 Karte: wort volle Laenge MAX_WORT (1000 JS-Zeichen, Arabisch mit Harakat)", "ja", () => setDoc(k("g1"), { ...karte("b1"), wort: ar(1000) }));
+await pruefe("E05 Karte: extra volle Laenge MAX_EXTRA (5000 JS-Zeichen, Arabisch)", "ja", () => setDoc(k("g2"), { ...karte("b1"), extra: ar(5000) }));
+await pruefe("E06 Karte: 500 Emoji = 1000 JS-Zeichen (Surrogatpaare)", "ja", () => setDoc(k("g3"), { ...karte("b1"), wort: "😀".repeat(500) }));
+await pruefe("E07 Karte: extra 2500 Emoji-Paare = 5000 JS-Zeichen", "ja", () => setDoc(k("g4"), { ...karte("b1"), extra: "😀".repeat(2500) }));
+await pruefe("E08 Karte: stufe 13 (ueber MAX_STUFE, z.B. aus altem Backup)", "nein", () => setDoc(k("g5"), { ...karte("b1"), stufe: 13 }));
+await pruefe("E09 Karten-Abfrage where bereichId (kartenEinesBereichsLoeschen)", "ja", () => getDocs(query(collection(db, "users", UID, "karten"), where("bereichId", "==", "b1"))));
+await pruefe("E10 Bereich set wie patchDoc (bereichFelder, mit teilCode/teilFreigabe)", "ja", () => setDoc(b("b1"), {
+  name: "A", order: 0, gefuehrt: false, satzId: null, satzVersion: 0, sets: {}, teilCode: "ZZ9YY-XX8WW", teilFreigabe: 1 }));
+
+/* geteilteLektionen: list ist seit 25.09.2026 nur noch MIT where ownerUid == eigene uid erlaubt. */
+await setDoc(gl(db, "TT2TT-TT3TT"), glDaten());
+await pruefe("E19 Eigene Saetze per Abfrage finden (where ownerUid == eigene uid)", "ja", () => getDocs(query(collection(db, "geteilteLektionen"), where("ownerUid", "==", UID))));
+await setDoc(gl(db, "UU2UU-UU3UU"), glDaten());
+await pruefe("E20 Fremdes Konto ueberschreibt bestehenden Code (Kollision/Kapern)", "nein", () => setDoc(gl(dbFremd, "UU2UU-UU3UU"), glDaten({ ownerUid: FREMD })));
+await pruefe("P5 Fremde Saetze abfragen (where ownerUid == ANDERE uid)", "nein", () => getDocs(query(collection(dbFremd, "geteilteLektionen"), where("ownerUid", "==", UID))));
+await pruefe("P6 geteilteLektionen ohne Filter (kein where) auflisten", "nein", () => getDocs(collection(dbFremd, "geteilteLektionen")));
+
+/* Feedback-Board: votes+1/-1 sind seit 25.09.2026 an die eigene votes/{uid}
+   gebunden (exists/existsAfter), und votes/{uid} darf nur unter einem
+   bestehenden feedback/{id} angelegt werden. */
+/* votes ueber die Regel disabled anlegen, damit der Ausgangsstand (votes: 3)
+   unabhaengig davon ist, ob die Regel ein sabotiertes Aufblaehen zulaesst -
+   sonst waere -1 schon rein wegen der Untergrenze (zahl(...,0,...)) abgelehnt,
+   und der Fall wuerde nichts ueber die eigentliche Bindung an die eigene
+   Stimme aussagen. */
+await env.withSecurityRulesDisabled(async ctx => {
+  await setDoc(doc(ctx.firestore(), "feedback", "fg1"), feedbackDaten({ votes: 3 }));
+});
+await pruefe("E11 Fremdes Konto zieht Stimme ab, ohne je abgestimmt zu haben", "nein", () => updateDoc(fb1("fg1", dbFremd), { votes: increment(-1) }));
+await setDoc(fb1("fg2"), feedbackDaten());
+await pruefe("E12 Doppelstimme: Stimm-Dokument existiert schon, ein zweites Mal abstimmen", "nein", async () => {
+  const s1 = writeBatch(db); s1.set(fbv("fg2", UID), {}); s1.update(fb1("fg2"), { votes: increment(1) }); await s1.commit();
+  const s2 = writeBatch(db); s2.set(fbv("fg2", UID), {}); s2.update(fb1("fg2"), { votes: increment(1) });
+  return s2.commit();
+});
+await pruefe("E14 Stimm-Dokument unter NICHT existierendem Vorschlag", "nein", () => setDoc(fbv("gibtsnicht-g55", UID), {}));
+
+await setDoc(fb1("fg3"), feedbackDaten());
+await pruefe("P1 Abstimmen korrekt (Stimm-Dok + votes+1 im selben Stapel)", "ja", async () => {
+  const s = writeBatch(db); s.set(fbv("fg3", UID), {}); s.update(fb1("fg3"), { votes: increment(1) });
+  return s.commit();
+});
+await pruefe("P2 votes+1 OHNE Stimm-Dokument", "nein", () => updateDoc(fb1("fg3", dbFremd), { votes: increment(1) }));
+await pruefe("P3 votes-1 OHNE eigene Stimme", "nein", () => updateDoc(fb1("fg3", dbFremd), { votes: increment(-1) }));
+await pruefe("P4 Stimme zurueckziehen korrekt (Stimm-Dok loeschen + votes-1)", "ja", async () => {
+  const s = writeBatch(db); s.delete(fbv("fg3", UID)); s.update(fb1("fg3"), { votes: increment(-1) });
+  return s.commit();
+});
+
+/* Offen - wird mit G-016/G-057 zur Pruefung (siehe grossplan/befunde/REGELN.md
+   REGELN-10, REGELN-11 und die dazugehoerigen Auftraege):
+     - E13: Ideen duerfen ein erfundenes Datum tragen (z.B. "9999-12-31...").
+       Bei Stimmengleichstand sortiert app.js danach, eine Spam-Idee steht
+       also immer oben. Loesung erst mit serverTimestamp()/G-016.
+     - E15: Ein Stimmen-Merker (votes/{uid}) bleibt nach dem Loeschen des
+       zugehoerigen Vorschlags durch den Moderator bestehen und lesbar -
+       verwaist, aber ungefaehrlich (siehe E16, der genau diesen Merker
+       aufraeumt).
+     - E17: Der Inhalt eines geteilten Satzes (inhalt.bereiche) ist der
+       Groesse nach ungeprueft - ein ~900 KB grosses Dokument wird
+       angenommen.
+     - E18: Wer einen Teilen-Code hat, sieht auch die ownerUid des
+       Erstellers. Das ist heute schon in der Datenschutzerklaerung so
+       beschrieben (REGELN-11), aber als offener Punkt hier vermerkt, weil
+       er zur selben Fallgruppe gehoert. */
 
 console.log("\n" + ok + " von " + (ok + fehl) + " Pruefungen wie erwartet.");
 if (fehler.length) { console.log("\nABWEICHUNGEN:"); fehler.forEach(f => console.log("  " + f)); }

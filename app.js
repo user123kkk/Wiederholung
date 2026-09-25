@@ -3622,9 +3622,64 @@ async function teileLektionCode(modus) {
     { title: "Code erzeugen", okLabel: "Code erzeugen" });
   if (!ok) return;
 
-  if (!b.satzId) b.satzId = slugName(b.name) + "-" + genId();
+  /* DATEN-7/REGELN-7 (25.09.2026): Der Bereich wird erst NACH einem
+     erfolgreichen setDoc angefasst - vorher stand hier schon "Dein Code",
+     obwohl der Datensatz bei einem Fehler (Regel nicht deployt, kein Netz,
+     Kollision) gar nicht existierte. satzId wird deshalb nur lokal
+     vorbereitet und dem Datensatz mitgegeben, nicht am Bereich gesetzt. */
+  const satzIdNeu = b.satzId || (slugName(b.name) + "-" + genId());
+  const weitergabeBereich = baueWeitergabeBereich(b, version);
+  weitergabeBereich.satzId = satzIdNeu;
+  const datensatz = {
+    ownerUid: currentUser.uid,
+    erstelltAm: new Date().toISOString(),
+    inhalt: { bereiche: [weitergabeBereich] }
+  };
+  if (lehrer) datensatz.freigabe = { offenBis: 1 };
+  /* 1 MiB ist die harte Firestore-Grenze fuer ein Dokument; 900 KB laesst
+     Luft fuer Feldnamen und die Kodierung. Vorab pruefen, damit ein zu
+     grosser Satz gar nicht erst geschrieben wird. */
+  if (new Blob([JSON.stringify(datensatz)]).size > 900000) {
+    await dlgAlert("Der Kartensatz ist zu groß, um ihn per Code zu teilen. Teile ihn in zwei Bereiche auf.", "Zu groß");
+    return;
+  }
+
+  let code = genTeilCode();
+  let neuerCodeVersucht = false;
+  const schreibeDatensatz = () => mitZeitlimit(fb.setDoc(fb.doc(db, "geteilteLektionen", code), datensatz));
+  try {
+    try {
+      await schreibeDatensatz();
+    } catch (e) {
+      if (e && e.code === "permission-denied") {
+        /* § 8.2: veralteter Ausweis nach frischer Bestaetigung - einmal je
+           Sitzung erneuern und GENAU EINMAL denselben Versuch wiederholen. */
+        if (ausweisErneuernFuerSchreiben()) {
+          await currentUser.getIdToken(true);
+          try {
+            await schreibeDatensatz();
+            e = null;
+          } catch (e2) { e = e2; }
+        }
+        /* Moegliche Codekollision: kein Neuversuch nach demselben
+           Fehlschlag, sondern ein ANDERER Code - genau einmal. */
+        if (e && e.code === "permission-denied" && !neuerCodeVersucht) {
+          neuerCodeVersucht = true;
+          code = genTeilCode();
+          await schreibeDatensatz();
+          e = null;
+        }
+      }
+      if (e) throw e;
+    }
+  } catch (e) {
+    await dlgAlert(fehlerKlartext(e), "Code nicht gespeichert");
+    return;
+  }
+
+  /* Erst jetzt, nach Erfolg, am Bereich aendern und schreiben. */
+  b.satzId = satzIdNeu;
   b.satzVersion = version;
-  const code = genTeilCode();
   b.teilCode = code;
   b.teilFreigabe = lehrer ? 1 : null;
   const patch = {
@@ -3634,18 +3689,6 @@ async function teileLektionCode(modus) {
   };
   if (lehrer) patch[pfadBereich(b.id) + ".teilFreigabe"] = 1;
   patchDoc(patch);
-  const datensatz = {
-    ownerUid: currentUser.uid,
-    erstelltAm: new Date().toISOString(),
-    inhalt: { bereiche: [baueWeitergabeBereich(b, version)] }
-  };
-  if (lehrer) datensatz.freigabe = { offenBis: 1 };
-  try {
-    await fb.setDoc(fb.doc(db, "geteilteLektionen", code), datensatz);
-  } catch (e) {
-    await dlgAlert(fehlerKlartext(e), "Code nicht gespeichert");
-    return;
-  }
   render();
   zeigeTeileCode(code);
 }
@@ -3667,7 +3710,7 @@ async function lehrerFreigeben() {
     'Das lässt sich nicht wieder zumachen.', { title: "Nächste Lektion freigeben", okLabel: "Freigeben" });
   if (!ok) return;
   try {
-    await fb.updateDoc(fb.doc(db, "geteilteLektionen", b.teilCode), { freigabe: { offenBis: neu } });
+    await mitZeitlimit(fb.updateDoc(fb.doc(db, "geteilteLektionen", b.teilCode), { freigabe: { offenBis: neu } }));
   } catch (e) {
     await dlgAlert(fehlerKlartext(e), "Nicht freigegeben");
     return;
@@ -3684,13 +3727,21 @@ async function beendeTeilenCode() {
   const ok = await dlgConfirm("Der Code " + code + " funktioniert danach nicht mehr.",
     { title: "Teilen beenden?", okLabel: "Beenden", danger: true });
   if (!ok) return;
+  /* DATEN-6 (25.09.2026): erst der Server, erst bei Erfolg der lokale
+     Stand - vorher stand hier "kein Code mehr" in der App, obwohl der
+     Datensatz bei einem Fehler weiterhin lesbar blieb (§ 6.8). */
+  try {
+    await mitZeitlimit(geteiltLoeschen(code));
+  } catch (e) {
+    await dlgAlert(fehlerKlartext(e), "Teilen nicht beendet");
+    return;
+  }
   b.teilCode = null;
   b.teilFreigabe = null;
   patchDoc({
     [pfadBereich(b.id) + ".teilCode"]: LOESCHEN,
     [pfadBereich(b.id) + ".teilFreigabe"]: LOESCHEN
   });
-  try { await fb.deleteDoc(fb.doc(db, "geteilteLektionen", code)); } catch (e) {}
   render();
 }
 
@@ -4076,6 +4127,17 @@ async function verarbeiteImportDaten(data) {
     const vergeben = new Set();
     const frisch = () => { let x = genId(); while (vergeben.has(x)) x = genId(); vergeben.add(x); return x; };
     const nummernTausch = new Map();
+    /* DATEN-4 (25.09.2026): Jede Karte aus einem Code oder einer gefuehrten
+       Datei muss eine quelleId behalten - renderExtra() zeigt Bilder nur bei
+       eigenen Karten (!!c.quelleId === false) direkt an, sonst nur als Link
+       (§ 12, LG Muenchen I). Ohne eigene quelleId (weil der Absender sie z. B.
+       ueber das SDK auf null gesetzt hat) wuerde die alte id nach dem
+       Tauschen unwiderruflich verloren gehen und die Karte faelschlich als
+       "eigen" gelten. Ein normales Backup (kein satzId, nicht gefuehrt) ist
+       der eigene Arbeitsstand und bleibt unangetastet. */
+    if (b.gefuehrt || b.satzId) {
+      b.karten.forEach(c => { c.quelleId = c.quelleId || c.id || ("q-" + genId()); });
+    }
     b.karten.forEach(c => { const altId = c.id; c.id = frisch(); nummernTausch.set(altId, c.id); });
     (b.sets || []).forEach(st => {
       st.id = frisch();
@@ -4213,7 +4275,7 @@ async function deleteBereich() {
   if (b.karten.length === 0 && !(b.sets || []).length) {
     const ok = await dlgConfirm("„" + b.name + "“ ist leer." + (b.teilCode ? " Der Code " + b.teilCode + " funktioniert danach nicht mehr." : ""), { title: "Bereich löschen?", okLabel: "Löschen", danger: true });
     if (!ok) return;
-    bereichEntfernen(b);
+    await bereichEntfernen(b);
     return;
   }
   /* 2.11.0: Zwei Sicherungen statt einer Nachfrage, die man wegtippt.
@@ -4237,12 +4299,26 @@ async function deleteBereich() {
     await dlgAlert("Der Name stimmt nicht überein – es wurde nichts gelöscht.", "Abgebrochen");
     return;
   }
-  bereichEntfernen(b);
+  await bereichEntfernen(b);
 }
-function bereichEntfernen(b) {
+async function bereichEntfernen(b) {
   /* 3.17.24: Ein geteilter Satz endet mit dem Bereich - sonst liefe sein Code
-     weiter, ohne dass es in der App noch einen Weg gaebe, ihn zu beenden. */
-  if (b.teilCode) geteiltLoeschen(b.teilCode).catch(() => {});
+     weiter, ohne dass es in der App noch einen Weg gaebe, ihn zu beenden.
+     DATEN-6/§ 6.8 (25.09.2026): was scheitern kann, kommt zuerst - vorher
+     wurde der Bereich schon geloescht, waehrend das Loeschen des geteilten
+     Satzes still im Hintergrund lief und dann unbemerkt scheitern konnte. */
+  if (b.teilCode) {
+    if (offline) {
+      await dlgAlert("Dafür brauchst du eine Verbindung – der Code muss erst in der Cloud beendet werden.", "Keine Verbindung");
+      return;
+    }
+    try {
+      await mitZeitlimit(geteiltLoeschen(b.teilCode));
+    } catch (e) {
+      await dlgAlert(fehlerKlartext(e) + " Der Bereich wurde nicht gelöscht.", "Nicht gelöscht");
+      return;
+    }
+  }
   const idx = bereiche.findIndex(x => x.id === b.id);
   bereiche.splice(idx, 1);
   /* A4: nur diesen einen Bereich entfernen. deleteField() loescht genau
