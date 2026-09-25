@@ -1891,3 +1891,11 @@ Regressionstests; Affentest 200 Schritte, 0 Befunde.
 
 **Offen:** –
 **Nächste Station:** 1 (Start)
+
+### 2026-09-25 — 3.17.27: Wischen, Tippgefühl, Scrollen
+
+**Geändert:** `app.js` (touchstart-Listener Z. ~30; Wischblock ab Z. ~5231; Wisch-Hinweis in `renderSession` Z. ~9648), `styles.css` (`:active` 60 ms, `.wisch-tipp`, `.wisch-bereit`), neue Tests `plan/werkzeuge/pruefstand/t_wischen.js`, `t_scrollen.js`, Version 3.17.27.
+**Entscheidung:** Wischen wertet den gemessenen Weg bzw. das Tempo (Fling ≥ 40 px bei ≥ 0,45 px/ms); Abbruch wertet nie. Hinweis bleibt, bis einmal gewischt wurde. Lernlogik unverändert. Scrollen gemessen: 0 Ruckler, nichts zu ändern. Regressionen (doppeltipp, runde_rest, ueben, sprung) grün.
+**Offen:** Gerätetest durch den Betreiber; Methoden-Checkliste „alle Methoden für so Apps" noch nicht begonnen.
+**Nächster Schritt:** Methoden-Checkliste für Lernkarten-PWAs aufstellen und gegen den Code prüfen; Lücken dem Betreiber vorlegen.
+

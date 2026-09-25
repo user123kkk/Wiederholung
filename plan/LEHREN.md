@@ -1142,6 +1142,13 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 
 ---
 
+### 4.x Gefühl auf Touch-Geräten (3.17.27)
+
+- iOS-Safari zeigt `:active` nur, wenn die Seite einen `touchstart`-Listener hat — ohne ihn fühlt sich jedes Tippen verzögert an.
+- Wischgesten werten den zuletzt selbst gemessenen Weg aus, nie die Koordinaten von `pointercancel` (die sind 0). Abbruch = zurückfedern, nie bewerten.
+- Eine laufende CSS-Animation überschreibt ein Inline-`transform`: beim Greifen `animation: none` setzen.
+- Gesten mit echten Touch-Ereignissen (CDP) testen, nicht mit Maus: `t_wischen.js`.
+
 ## 15. Vorfall-Liste
 
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
@@ -1208,3 +1215,4 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | 3.17.20 → 3.17.22 | Beispielkarte drehte hin und zurück, Übersetzung nur ein Aufblitzen | Bewegung endete nicht bei dem, was sie zeigen sollte; dazu haltende Animation gegen `transition` | § 6.4 |
 | 3.17.22 | Pfeilspitze der Einstiegs-Leiste sah aufgesetzt aus | andere Strichstärke als die Linie, Spitze saß im nächsten Punkt | § 6.4 |
 | 3.17.25 | Schneller Doppeltipp auf „Antwort zeigen" bewertete die Karte blind mit „Fast" | an derselben Stelle erscheinender Knopf nahm Tipps an, obwohl noch unsichtbar | § 6.1 |
+| 2026-09-25 | Wischen unzuverlässig: Karte folgte nach dem Aufdecken nicht (Animation überschrieb transform), Fling zählte nicht, `pointercancel` konnte „Nicht" werten; iOS ohne `:active`. Behoben 3.17.27, Regel § 4.x. |

@@ -1,3 +1,17 @@
+## 3.17.27 – 25. September 2026
+
+**Wischen zuverlässig, Tippen spürbar sofort.**
+
+- Wischen zum Bewerten neu: die Karte folgt dem Finger auch direkt nach dem
+  Aufdecken; ein kurzer schneller Wisch zählt; bricht das System die Geste ab,
+  federt die Karte nur zurück statt „Nicht" zu werten. Ab der Schwelle ein
+  kurzes Vibrieren und ein Ring als Zeichen, dass Loslassen zählt.
+- Wisch-Hinweis mit geschwungenen Pfeilen auf der Karte, bis einmal gewischt
+  wurde (nur auf Touch-Geräten).
+- iPhone/iPad: Knöpfe und Karte drücken sich beim Antippen sofort sichtbar ein.
+- Scrollen in Verwalten, Fortschritt, Einstellungen gemessen: flüssig (400
+  Karten, 4× gedrosselt, kein Ruckler).
+
 ## 3.17.26 – 25. September 2026
 
 **Lernrunde ruhiger: eine Bewegung pro Tipp, nichts taucht nachträglich auf.**
