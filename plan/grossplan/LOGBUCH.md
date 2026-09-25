@@ -10,6 +10,22 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
 ---
 
+### 2026-09-25 — Runde 2, Aufgabe G-007: Serie unbegrenzt (v3.17.31)
+
+**Geändert:** `app.js` (2519), `sw.js` (CACHE_NAME), `index.html` (drei Query-Parameter), `CHANGELOG.md`, `plan/werkzeuge/pruefstand/t_serie.js` (zwei Testfälle)
+
+**Fehler:** Neue Konten (sockel=0, seit 2.14.0) konnten nicht über ~120 Tage wachsen. `serieAktuell()` wendete die sockelBis-Grenze auch bei sockel=0 an, obwohl diese nur für alte Konten mit echtem sockel>0 relevant ist (Umstieg vor 2.14.0).
+
+**Fix:** Bedingung auf Zeile 2519 geändert von `if (sockelBis && (d < sockelBis || (d === sockelBis && sockel > 0)))` zu `if (sockelBis && sockel > 0 && (d <= sockelBis))`. Jetzt gilt die Grenze nur noch bei sockel>0.
+
+**Testfälle:** Ergänzt in t_serie.js: 121 Tage ohne Lücke für neues Konto (erwartet 121), und Regressions-Test für Alt-Konto mit sockel=100.
+
+**Prüfstand:** node --check app.js grün · Commit 880e488 · Push main erfolgreich
+
+**Offen:** Keine – G-007 fertig. Nächster Schritt: G-004, G-005, G-020, G-035 (Sonnet, Pakete P3/P4).
+
+---
+
 ### 2026-09-25 — Runde 0 und 1: Großprüfung, Plan, erste 21 Aufgaben (v3.17.30)
 
 **Anlass:** Betreiber: Fehler, Verbesserungen, Unvollständiges, Fehlendes,
