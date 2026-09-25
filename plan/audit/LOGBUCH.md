@@ -28,6 +28,35 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-25 — Veröffentlichen vom iPad: GitHub-Knopf statt veroeffentlichen.bat
+
+**Anlass:** Betreiber am iPad (Safari), kein PC: „bitte finde einen Weg von
+hier aus [...] das auf firebase live zu bekommen". Dazu Freigabe für `main`.
+
+**Geändert:** `main` auf `cb32cc8` (3.17.25) vorgespult. Neu
+`.github/workflows/veroeffentlichen.yml` – nur `workflow_dispatch`, checkt
+`main` aus, `node --check app.js sw.js`, dann `firebase deploy --only
+hosting --project lernkarte-925c2` mit Dienstkonto aus dem Secret
+`FIREBASE_SERVICE_ACCOUNT`. `.github` wird nicht ausgeliefert (`**/.*` in
+`firebase.json`). `LEHREN.md` § 4.5, `PLAN.md`.
+
+**Entscheidung – warum nicht direkt aus der Agenten-Umgebung:** Firebase CLI
+15.31 installiert und `firebase login --no-localhost` versucht: scheitert an
+`auth.firebase.tools` (Proxy 403, ebenso `firebase.tools`,
+`firebase-public.firebaseio.com`). Die Google-APIs selbst sind erreichbar,
+die Anmeldung nicht. Ein Dienstkonto-Schlüssel im Chat wäre möglich, liegt
+dann aber dauerhaft im Verlauf – abgelehnt. Der GitHub-Weg hält den
+Schlüssel verschlüsselt bei GitHub, funktioniert von jedem Gerät und bleibt
+wie bisher manuell (kein Auto-Deploy bei Push, `PLAN.md`-Grundsatz).
+
+**Offen:** Betreiber legt das Dienstkonto an (Rolle Firebase Hosting Admin)
+und das Secret; dann erster Lauf. Keine Regeln betroffen.
+
+**Nächster Schritt:** Nach „fertig" des Betreibers den Workflow auslösen,
+Log prüfen, live-Version (3.17.25) auf `adrabic.web.app` bestätigen.
+
+---
+
 ### 2026-09-25 — Lernrunde „fühlt sich komisch an": gemessen, ein Fehler behoben (v3.17.25), Rest als Gedanken
 
 **Anlass:** Betreiber: „irgendwie gefällt mir das lernen tab ned, nicht das

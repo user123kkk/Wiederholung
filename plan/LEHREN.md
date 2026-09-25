@@ -446,11 +446,14 @@ Begrenzer.
 
 | Was | Wie | Wer |
 |---|---|---|
-| App-Dateien (Hosting) | `veroeffentlichen.bat` = `git pull` + `firebase deploy --only hosting` | Betreiber |
+| App-Dateien (Hosting) | `veroeffentlichen.bat` = `git pull` + `firebase deploy --only hosting` **oder** (seit 25.09.2026, von jedem Gerät) GitHub → Actions → „Veroeffentlichen" → „Run workflow" (`.github/workflows/veroeffentlichen.yml`, deployt `main`, braucht Secret `FIREBASE_SERVICE_ACCOUNT`). Nur auf Knopfdruck – ein Push auf `main` veröffentlicht nichts. | Betreiber (Agent löst den Knopf nur auf ausdrücklichen Wunsch aus) |
 | `firestore.rules` | `firebase deploy --only firestore:rules` (seit `firebase.json` einen `firestore`-Abschnitt hat) **oder** in der Firebase-Konsole einfügen und „Veröffentlichen" | Betreiber |
 | Konsolen-Einstellungen (Auth-Domains, Browser-Key, E-Mail-Vorlagen, Search Console) | nur in der jeweiligen Konsole | Betreiber |
 
-`veroeffentlichen.bat` spielt **keine Regeln** ein. Eine Funktion, die neue
+Aus der Agenten-Umgebung selbst geht `firebase login` nicht: `auth.firebase.tools`
+ist dort gesperrt (25.09.2026) – deshalb der GitHub-Knopf.
+
+`veroeffentlichen.bat` (und der GitHub-Knopf) spielen **keine Regeln** ein. Eine Funktion, die neue
 Regeln braucht, ist bis zum Regel-Deploy kaputt. Deshalb gilt:
 
 - Sie muss dann **sauber scheitern**, mit einer Meldung in Worten, ohne

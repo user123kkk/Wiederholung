@@ -1,0 +1,39 @@
+# Dasselbe wie veroeffentlichen.bat, aber von jedem Geraet aus:
+# GitHub -> Actions -> "Veroeffentlichen" -> "Run workflow".
+# Laeuft NUR auf Knopfdruck - ein Push auf main veroeffentlicht nichts.
+# Braucht das Repository-Secret FIREBASE_SERVICE_ACCOUNT (JSON-Schluessel
+# eines Dienstkontos mit der Rolle "Firebase Hosting Admin").
+name: Veroeffentlichen
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: veroeffentlichen
+  cancel-in-progress: false
+
+jobs:
+  hosting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # LEHREN.md § 4.2: 3.6.2 startete auf keinem Geraet wegen eines Syntaxfehlers.
+      - name: app.js pruefen
+        run: node --check app.js && node --check sw.js
+
+      - name: Auf Firebase Hosting veroeffentlichen
+        env:
+          SCHLUESSEL: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SCHLUESSEL" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT fehlt"; exit 1; fi
+          printf '%s' "$SCHLUESSEL" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx -y firebase-tools@latest deploy --only hosting --project lernkarte-925c2 --non-interactive
+          rm -f "$RUNNER_TEMP/sa.json"

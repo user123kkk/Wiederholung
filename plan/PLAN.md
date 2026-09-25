@@ -774,6 +774,12 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
+**NEU (25.09.2026): Veröffentlichen geht auch ohne PC** – GitHub → Actions →
+„Veroeffentlichen" → „Run workflow" (`.github/workflows/veroeffentlichen.yml`).
+Wartet auf die Einrichtung durch den Betreiber: Dienstkonto-Schlüssel als
+Secret `FIREBASE_SERVICE_ACCOUNT` (Schritte im Chat vom 25.09.2026 und in
+`audit/LOGBUCH.md`). `main` steht auf 3.17.25, **noch nicht live**.
+
 **AKTUELL (25.09.2026): v3.17.25 auf dem Arbeitszweig** – Lernrunde gemessen
 (Betreiber: „fühlt sich komisch an, nur gedanken"). Ein echter Fehler behoben:
 schneller Doppeltipp auf „Antwort zeigen" bewertete blind mit „Fast".
