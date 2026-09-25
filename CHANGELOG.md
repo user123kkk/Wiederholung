@@ -1,3 +1,23 @@
+## 3.17.29 – 25. September 2026
+
+**Lernrunde: passt immer in den Bildschirm, Wischen ohne Mitscrollen, keine
+Pfeile mehr.** Rückmeldung des Betreibers zu 3.17.27/28.
+
+- **„Antwort zeigen" nie mehr unter dem Rand.** Karten mit Notiz oder langer
+  Antwort machten die Seite bis zu 600 px höher als den Bildschirm (gemessen
+  auf vier Handygrößen) – der Knopf lag darunter. Jetzt hat die Runde genau
+  Bildschirmhöhe, die Knöpfe stehen unten fest, eine lange Notiz scrollt in
+  ihrem eigenen Feld. Die Karte steht auf jeder Karte an derselben Stelle,
+  etwas höher als vorher.
+- **Wischen:** Die Seite scrollt nicht mehr mit, die Karte springt nicht
+  mehr zurück, schräg mit dem Daumen angesetzt zählt es. Vorher übernahm der
+  Browser jeden leicht schrägen Zug als Scrollen (gemessen bis 1167 px).
+- **Antippen der Karte:** kein Eindrücken mehr vor dem Drehen – eine
+  Bewegung, wie beim Knopf „Antwort zeigen".
+- **Wisch-Pfeile entfernt.**
+- Neu: `abnahme_runde.js` – ein Befehl prüft die ganze Lernrunde (13
+  Messungen), Pflicht vor jeder Veröffentlichung, die die Runde berührt.
+
 ## 3.17.28 – 25. September 2026
 
 **Bewertungen und Serie gehen nicht mehr verloren.** Anlass: Rückmeldung

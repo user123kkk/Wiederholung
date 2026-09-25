@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.28";
+const APP_VERSION = "3.17.29";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5297,13 +5297,6 @@ function wischNachholen() {
 const WISCH_WEG = 0.26;          /* Anteil der Kartenbreite (max. 100 px) */
 const WISCH_TEMPO = 0.45;        /* px/ms fuer einen Fling */
 const WISCH_FLING_MIN = 40;      /* px, damit ein Zucken kein Fling ist */
-/* Der Wisch-Hinweis (renderSession) bleibt, bis einmal erfolgreich
-   gewischt wurde - dann nie wieder (gerätelokal, adrabic-hinweise). */
-function wischGeschafft() {
-  if (!hinweisSpeicher().gewischt) hinweisMerken({ gewischt: todayStr() });
-  const t = document.querySelector(".wisch-tipp");
-  if (t) t.remove();
-}
 function wischSchwelle(breite) { return Math.min(100, breite * WISCH_WEG); }
 app.addEventListener("pointerdown", e => {
   /* 3.12.0: gezogen wird die Karte selbst (.study-flaeche), nicht mehr die
@@ -5321,7 +5314,14 @@ app.addEventListener("pointermove", e => {
   const dx = e.clientX - wischStart.x, dy = e.clientY - wischStart.y;
   if (!wischStart.erfasst) {
     if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-    if (Math.abs(dy) > Math.abs(dx)) { wischStart = null; return; } // senkrecht: normales Scrollen
+    /* 3.17.29: Die aufgedeckte Karte hat touch-action: none (styles.css) und
+       die Runde passt immer in den Bildschirm - es gibt nichts zu scrollen.
+       Deshalb bricht nur noch ein klar senkrechter Zug ab; ein Daumen, der
+       schraeg ansetzt, wischt trotzdem. Vorher reichte ein Pixel mehr nach
+       unten als zur Seite, und der Browser uebernahm den Zug als Scrollen:
+       die Seite rutschte mit, die Karte sprang zurueck ("resetet sich"). */
+    if (Math.abs(dx) < 8) { if (Math.abs(dy) > 24) wischStart = null; return; }
+    if (Math.abs(dy) > Math.abs(dx) * 1.5) { wischStart = null; return; }
     wischStart.erfasst = true;
     try { wischStart.karte.setPointerCapture(e.pointerId); } catch (err) {}
     wischStart.karte.style.animation = "none";
@@ -5377,7 +5377,6 @@ function wischEnde(e) {
        verworfen. Sonst bewertete ein zweiter Tipp innerhalb dieser Zeit auch
        die NAECHSTE Karte, ungesehen. */
     wischBewertung = true;
-    wischGeschafft();
     wischAusstehend = { art: rechts ? "known" : "unknown",
       timer: setTimeout(() => { wischAusstehend = null; wischBewertung = false; rechts ? gradeKnown() : gradeUnknown(); }, 150) };
   } else {
@@ -9699,19 +9698,9 @@ function renderSession() {
      kuerzer ist als der Platz darunter. */
   html += '<div class="study-card__oben" aria-hidden="true"></div>';
   html += '<div class="study-buehne">';
-  /* 3.17.27: Betreiber - "bei der ersten karte rechts links mit so kurven
-     pfeilen angeben dass man wischen kann [...] das ned weg geht bis man es
-     zumindest einmal gemacht hat". Nur mit Antwort (vorher gibt es nichts
-     zu wischen), nur auf Touch-Geraeten (styles.css), bis zum ersten
-     gelungenen Wisch. Absolut gesetzt: nimmt keinen Platz. */
-  if (s.revealed && !s.handwriting && !hinweisSpeicher().gewischt) {
-    const bogen = r => '<svg viewBox="0 0 40 28" aria-hidden="true"><path d="' + (r ? 'M4 22 Q20 2 34 14' : 'M36 22 Q20 2 6 14') +
-      '" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="' + (r ? 'M27 13 L34 14 L32 7' : 'M13 13 L6 14 L8 7') +
-      '" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    html += '<div class="wisch-tipp" aria-hidden="true">' +
-      '<span class="wisch-tipp__seite wisch-tipp__seite--l">' + bogen(false) + '<span>Nicht</span></span>' +
-      '<span class="wisch-tipp__seite wisch-tipp__seite--r">' + bogen(true) + '<span>Sicher</span></span></div>';
-  }
+  /* 3.17.29: Der Wisch-Hinweis (Bogenpfeile, 3.17.27) ist entfernt -
+     Betreiber: "das mit den pfeilen doch komplett entfernen, komplett ganz
+     einfach". */
   if (rest >= 3) html += '<div class="study-stapel study-stapel--2" aria-hidden="true"></div>';
   if (rest >= 2) html += '<div class="study-stapel study-stapel--1" aria-hidden="true"></div>';
   /* 3.14.0: Die Karte dreht sich wirklich um. Betreiber am 24.09.2026:

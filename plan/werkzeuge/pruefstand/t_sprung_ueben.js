@@ -12,7 +12,10 @@ const { start, neueSeite, aktion, GERAETE } = require('./lib');
       await p.click('.study-flaeche'); await p.waitForTimeout(650); sp.push((await top()) - a);
       vorige = a; await p.click('.btn-known'); await p.waitForTimeout(600);
     }
-    console.log(g, 'Aufdecken:', sp.join(' '), '| Karte zu Karte:', zwischen.join(' '), p.fehler.join('|') || 'ok');
+    /* 3.17.29: urteilt selbst (Abnahme) - mehr als 1 px (Rundung) ist ein Sprung. */
+    const rot = sp.concat(zwischen).some(v => Math.abs(v) > 1) || p.fehler.length > 0;
+    if (rot) process.exitCode = 1;
+    console.log(rot ? 'FEHL' : 'OK  ', g, 'Aufdecken:', sp.join(' '), '| Karte zu Karte:', zwischen.join(' '), p.fehler.join('|') || 'ok');
     await p.context().close();
   }
   await b.close();

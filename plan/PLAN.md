@@ -780,7 +780,14 @@ Wartet auf die Einrichtung durch den Betreiber: Dienstkonto-Schlüssel als
 Secret `FIREBASE_SERVICE_ACCOUNT` (Schritte im Chat vom 25.09.2026 und in
 `audit/LOGBUCH.md`). `main` steht auf 3.17.25, **noch nicht live**.
 
-**AKTUELL (25.09.2026, später): v3.17.28 auf `main`, noch nicht live** –
+**AKTUELL (25.09.2026, abends): v3.17.29 auf `main`, noch nicht live** –
+Lernrunde passt immer in den Bildschirm („Antwort zeigen" nie mehr unter dem
+Rand), Wischen ohne Mitscrollen, Karte ohne Eindrücken, Wisch-Pfeile entfernt.
+**Neu: `plan/werkzeuge/pruefstand/abnahme_runde.js`** – vor jeder
+Veröffentlichung, die die Runde berührt. **Wartet auf Betreiber:**
+Veröffentlichen, Gerätetest (`audit/LOGBUCH.md`, Eintrag 3.17.29).
+
+**Davor (25.09.2026, später): v3.17.28** –
 Betreiber: „bewertete Karten kamen wieder, wenn ich mitten im Lernen auf das X
 drücke, und die Serie ging nicht hoch." Drei echte Fehler behoben (Wischen +
 sofort X, abgelehnte Bewertungen nie nachgeschickt, Sockel-Tag zählte nicht

@@ -1973,3 +1973,59 @@ Welcher X, erschien eine rote Zeile „Kurz nicht gespeichert"/„Nicht
 gespeichert", kamen die Karten sofort oder erst nach dem nächsten Öffnen.
 **Nächster Schritt:** Antwort des Betreibers auswerten; danach
 Methoden-Checkliste (Eintrag 3.17.27).
+
+### 2026-09-25 — 3.17.29: Runde passt in den Bildschirm, Wischen, Pfeile weg, Abnahme
+
+Betreiber zu 3.17.27/28: „Pfeile komplett entfernen, ganz einfach · das
+Wischen ist ass: man scrollt runter beim Wischen, es resetet sich, laggt ·
+Karte drücken: eingedrückt und dann gedreht, komisches Gefühl ('Antwort
+zeigen' dagegen geht geil) · manchmal geht 'Antwort zeigen' unten über den
+Rand · ich will was Genaues, wo viel abgenommen wird." Zu den Rückfragen aus
+3.17.28: „keine Ahnung, sollte jetzt alles fine sein" – Ursache der
+verlorenen Bewertungen bleibt offen, nicht weiter verfolgt.
+
+**Gemessen (neu `t_runde_lage.js`, ganze Runde, 4 Handygrößen):** 20 Befunde –
+Karten mit Notiz/langer Antwort machten die Seite bis 1292 px hoch (Bild
+844); der Notiz-Platzhalter steht seit 3.14.0 schon vor dem Aufdecken da.
+Folge 1: Knopf unter dem Rand. Folge 2: die Seite war scrollbar, und
+`.study-flaeche { touch-action: pan-y }` gab jeden leicht schrägen Zug dem
+Browser → Seite scrollte mit, `pointercancel`, Karte sprang zurück. Neu
+`t_wischen_schraeg.js` mit altem Code: 8 von 10 FEHL (bis 1167 px gescrollt,
+Wisch zählte nicht). Das ist der zweite Anlauf am Wischen (3.17.27 war der
+erste) – deshalb die Annahme geprüft (LEHREN § 3.4): nicht die Schwellen,
+sondern Scrollbarkeit + `pan-y` waren das Problem.
+
+**Geändert:**
+- `styles.css` nach `.view--modus > .study-card`: Runde (ohne Schreiben) fest
+  `100svh` bzw. `--ref-h` (iOS-Home-App), `overflow: hidden`; Mitte
+  `minmax(0,1fr) auto minmax(0,2fr)` auf jeder Karte gleich; Notizfeld
+  `.study-card__unten` scrollt selbst, weicher Auslauf unten.
+- `styles.css` `.study-flaeche--offen { touch-action: none }`; das
+  `:active`-Eindrücken der antippbaren Karte entfernt (seit 3.17.27 der
+  `touchstart`-Listener `:active` auf iOS einschaltet, lief es vor der
+  Drehung: klein → groß, zwei Bewegungen).
+- `app.js` Achsen-Sperre beim Wischen: bricht nur bei klar senkrechtem Zug
+  ab (|dy| > 1,5·|dx|, oder > 24 px ohne Seitwärts). Wisch-Hinweis (Pfeile)
+  samt `wischGeschafft()` und CSS `.wisch-tipp` entfernt.
+- Neu `plan/werkzeuge/pruefstand/abnahme_runde.js`: 13 Prüfungen in einem
+  Lauf, Code 1 bei Rot. `t_sprung.js`/`t_sprung_ueben.js` urteilen jetzt
+  selbst (> 1 px = FEHL). `t_rundenende`/`t_ueben`/`t_schreiben` beschreiben
+  nur – in der Abnahme als „(lesen)" markiert, rot nur bei Konsolenfehlern.
+- Version 3.17.29.
+
+**Entscheidung:**
+- **Wischen repariert, nicht entfernt.** Dafür (entfernen): „ass"; weniger
+  Code; Knöpfe gehen immer. Dagegen: der Betreiber hatte Wischen selbst
+  gewollt (3.17.27), und die Ursache war messbar und behebbar. Urteil:
+  reparieren; bleibt es am Gerät schlecht, ist Entfernen der nächste Schritt.
+- **Karte höher statt Notiz kleiner:** auf allen Karten gleich, damit von
+  Karte zu Karte nichts springt (`t_sprung` 0 px).
+- Lernlogik unverändert.
+
+**Geprüft:** `t_runde_lage` (0 Befunde), `t_wischen_schraeg` (10/10),
+`t_wischen`, `t_sprung` (0 px, 4 Geräte), Regression siehe Abnahme.
+**Nicht geprüft:** echtes iPhone (Gefühl des Wischens, Home-Bildschirm-App
+mit `--ref-h`).
+**Offen:** Gerätetest durch den Betreiber.
+**Nächster Schritt:** Rückmeldung zum Gerätetest; danach
+Methoden-Checkliste (Eintrag 3.17.27).

@@ -1142,6 +1142,9 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 11. Die Version steht an vier Stellen gleich (`grep -F`), dazu `CHANGELOG.md`.
     Bei reiner `firebase.json`-Änderung zusätzlich `csp-build`. (§ 4.1, § 4.3)
 12. Prüfstand: betroffener Test, Regression, bei Größerem der Affe. (§ 5.1)
+    **Berührt die Änderung die Lernrunde** (Karte, Knöpfe, Wischen,
+    Speichern, Serie): `node abnahme_runde.js` – alle 13 grün, die „(lesen)"-
+    Ausgaben gelesen. Sonst wird nicht veröffentlicht (3.17.29).
 13. Logbuch-Eintrag, `PLAN.md` „AKTUELL", offene Fragen. (§ 3.10)
 14. Antwort mit „Was Du noch tun musst", wenn der Betreiber etwas tun muss.
     (§ 1.4)
@@ -1149,6 +1152,17 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 ---
 
 ### 4.x Gefühl auf Touch-Geräten (3.17.27)
+
+- **Eine Fläche, die gewischt wird, darf nicht zugleich scrollen können**
+  (3.17.29). `touch-action: pan-y` gibt jeden leicht schrägen Zug dem
+  Browser: Seite rutscht, `pointercancel`, Karte springt zurück. Die Runde
+  hat deshalb feste Bildschirmhöhe, die aufgedeckte Karte `touch-action:
+  none`, Langes scrollt in einem eigenen Feld.
+- **Ein Bildschirm im Modus ist nie höher als der Bildschirm.** Platzhalter
+  für später Erscheinendes (Notiz) zählen mit – gemessen wird über eine
+  ganze Runde mit langen Inhalten (`t_runde_lage.js`), nicht an einer Karte.
+- **Kein Drück-Effekt auf etwas, das danach selbst eine Bewegung macht**
+  (Karte: 0.97 → Drehung mit 1.035 = zwei Bewegungen gegeneinander).
 
 - iOS-Safari zeigt `:active` nur, wenn die Seite einen `touchstart`-Listener hat — ohne ihn fühlt sich jedes Tippen verzögert an.
 - Wischgesten werten den zuletzt selbst gemessenen Weg aus, nie die Koordinaten von `pointercancel` (die sind 0). Abbruch = zurückfedern, nie bewerten.
@@ -1224,3 +1238,4 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | 2026-09-25 | Wischen unzuverlässig: Karte folgte nach dem Aufdecken nicht (Animation überschrieb transform), Fling zählte nicht, `pointercancel` konnte „Nicht" werten; iOS ohne `:active`. Behoben 3.17.27, Regel § 4.x. |
 | 3.17.28 | „Bewertete Karten kamen wieder nach X, Serie ging nicht hoch" | Wisch-Bewertung 150 ms verzögert, X dazwischen verwarf sie; abgelehnte Bewertungen nie nachgeschickt; Sockel-Tag zählte nicht (`d <= sockelBis`) | § 8.2, § 13 |
 | 3.17.28 (Prüfstand) | Test „Protokoll sofort nach X" schlug auch mit altem Code nicht an | Attrappe meldet eigene Schreibvorgänge ohne `hasPendingWrites`, `verlaufNachschicken` glich es aus | § 5.3, § 5.4 |
+| 3.17.29 | „Antwort zeigen“ unter dem Rand; Wischen scrollte mit und sprang zurück; Karte drückte sich vor dem Drehen ein | Notiz-Platzhalter machte die Seite höher als den Bildschirm + `pan-y` auf der Wischfläche; `:active` seit touchstart-Listener | § 4.x, § 14 |

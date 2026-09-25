@@ -656,6 +656,40 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
   display: flex; flex-direction: column;
 }
 .view--modus > .study-card { flex: 1 1 auto; }
+/* 3.17.29: Die Runde passt immer genau in den Bildschirm. Betreiber: "mal
+   kommt vor, dass der Antwort-zeigen-Knopf ueber den Rand hinausgeht".
+   Gemessen (t_runde_lage.js): Karten mit Notiz oder langer Antwort machten
+   die Seite bis 600 px hoeher als den Bildschirm - der Platzhalter der Notiz
+   steht schon vor dem Aufdecken da. Knopf unter dem Rand, die Seite
+   scrollbar, und genau das Scrollen stoerte das Wischen. Jetzt: feste Hoehe,
+   die Knoepfe unten fest, die Notiz scrollt in ihrem Feld.
+   Nicht beim Schreiben - die Zeichenflaeche braucht ihre Hoehe und darf die
+   Seite verlaengern (Station 8). */
+.view--modus:has(> .study-card:not(.study-card--schreiben)) {
+  height: 100svh; min-height: 0; overflow: hidden;
+}
+html.ref-hoehe .view--modus:has(> .study-card:not(.study-card--schreiben)) { height: var(--ref-h); }
+.view--modus > .study-card:not(.study-card--schreiben) { min-height: 0; }
+.study-card:not(.study-card--schreiben) > .study-card__mitte { flex: 1 1 auto; min-height: 0; }
+.study-card:not(.study-card--schreiben) .study-card__unten {
+  align-self: stretch; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.study-card.zugedeckt:not(.study-card--schreiben) .study-card__unten { overflow: hidden; }
+/* Oben halb so viel Luft wie unten - auf JEDER Karte gleich (kein Sprung
+   von Karte zu Karte), und die Notiz darunter bekommt den Platz. Unten
+   laeuft ein langes Notizfeld weich aus statt hart abgeschnitten. */
+.study-card:not(.study-card--schreiben) > .study-card__mitte {
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 2fr);
+  padding-bottom: var(--space-4);
+}
+.study-card:not(.study-card--schreiben) .study-card__unten {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent);
+          mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent);
+  padding-bottom: var(--space-4);
+}
+.study-aktionen { flex: none; }
 
 /* Bildschirme ohne Shell: Anmeldung, Bestätigung, Umzug, Einrichtung.
    Sie stehen für sich, mittig, ohne Navigation. */
@@ -1936,6 +1970,13 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
   -webkit-tap-highlight-color: transparent;
 }
 .study-flaeche[data-action] { cursor: pointer; }
+/* 3.17.29: Die aufgedeckte Karte gehoert beim Beruehren ganz dem Wischen.
+   Mit pan-y entschied der Browser bei jedem leicht schraegen Zug auf
+   "Scrollen": die Seite rutschte mit, pointercancel liess die Karte
+   zurueckspringen. Zu scrollen gibt es in der Runde nichts mehr (sie passt
+   in den Bildschirm, .view--modus unten); eine lange Notiz scrollt in
+   ihrem eigenen Feld. */
+.study-flaeche--offen { touch-action: none; }
 .karte-dreh {
   display: grid;
   transform-style: preserve-3d;
@@ -1956,12 +1997,13 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
   box-shadow: var(--kante), 0 18px 44px rgba(0, 0, 0, 0.42), 0 2px 6px rgba(0, 0, 0, 0.3);
   -webkit-backface-visibility: hidden; backface-visibility: hidden;
 }
-/* Antippbar: ein kaum merkliches Nachgeben unter dem Finger - die Karte
-   fuehlt sich an wie etwas, das man anfassen kann. */
-.study-flaeche[data-action] .karte-seite { transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
-/* 3.17.27: Beim Beruehren sofort (60 ms) und spuerbar nachgeben, beim
-   Loslassen weich zurueck - der Unterschied zwischen "reagiert" und "wartet". */
-.study-flaeche[data-action]:active .karte-seite { transform: scale(0.97); transition-duration: 60ms; }
+/* 3.17.29: Kein Eindruecken der Karte mehr beim Antippen. Betreiber: "es
+   wird eingedrueckt und dann gedreht, man spuert irgendwie komisches
+   Gefuehl" - zwei Bewegungen gegeneinander: erst kleiner (0.97), dann beim
+   Drehen groesser (karte-hebt 1.035). Seit 3.17.27 der touchstart-Listener
+   :active auf iOS einschaltet, war das Eindruecken dort erst sichtbar.
+   Jetzt wie beim Knopf "Antwort zeigen", den er als gut beschreibt: Tippen,
+   und die Karte dreht - eine Bewegung. */
 @media (hover: hover) and (pointer: fine) {
   .study-flaeche[data-action]:hover .karte-seite { border-color: var(--border-strong); }
 }
@@ -5075,25 +5117,5 @@ label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); f
 /* 3.17.26: haelt Platz, ohne sichtbar oder bedienbar zu sein */
 .platz-leer { visibility: hidden; pointer-events: none; }
 
-/* 3.17.27: Wisch-Hinweis an der aufgedeckten Karte, bis einmal gewischt
-   wurde (app.js, renderSession / wischGeschafft). Liegt ueber dem Stapel,
-   nimmt keinen Platz, nicht antippbar. */
-.wisch-tipp {
-  position: absolute; left: 0; right: 0; bottom: var(--space-4); z-index: 3;
-  display: flex; justify-content: space-between; padding: 0 var(--space-5);
-  pointer-events: none;
-  animation: bewertung-da 260ms var(--ease-out) 300ms backwards;
-}
-.wisch-tipp__seite {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.02em;
-}
-.wisch-tipp__seite svg { width: 30px; height: 21px; }
-.wisch-tipp__seite--l { color: var(--negative); animation: wisch-tipp-l 1.8s var(--ease-out) 700ms infinite; }
-.wisch-tipp__seite--r { color: var(--positive); animation: wisch-tipp-r 1.8s var(--ease-out) 700ms infinite; }
-@keyframes wisch-tipp-l { 0%, 55%, 100% { transform: none; } 25% { transform: translateX(-6px); } }
-@keyframes wisch-tipp-r { 0%, 55%, 100% { transform: none; } 25% { transform: translateX(6px); } }
-@media (pointer: fine) { .wisch-tipp { display: none; } }
-@media (prefers-reduced-motion: reduce) { .wisch-tipp__seite--l, .wisch-tipp__seite--r { animation: none; } }
 /* Ab der Schwelle zaehlt das Loslassen - die Karte zeigt es deutlich. */
 .study-flaeche.wisch-bereit .karte-seite { filter: brightness(1.06); }
