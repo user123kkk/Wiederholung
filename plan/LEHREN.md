@@ -599,6 +599,11 @@ zuerst: Sie sind am häufigsten aufgetreten.
   - Wechselnde Beschriftungen haben feste Breite: beide Wörter übereinander,
     `.merk-btn__wort`.
   - Der Weiter-Knopf im Einstieg steht unten fest.
+  - **Ein Knopf, der an der Stelle eines gerade gedrückten erscheint, nimmt
+    nicht sofort Tipps an** – schon gar nicht, solange er noch unsichtbar
+    einblendet. *Vorfall 3.17.25:* „Antwort zeigen" → an derselben Stelle
+    „Fast" (Deckkraft 0 bis 240 ms); ein zweiter Tipp bewertete blind.
+    Sperre `BEWERTEN_SPERRE_MS`, Test `t_doppeltipp.js`.
 
 ### 6.2 Neue Teile in **alle** zentralen Listen eintragen
 
@@ -1199,3 +1204,4 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | 24.09. (eigener Fehler) | Rechtsprüfung nur von Punkt 15 wurde wie eine Prüfung „der App" behandelt; Konto-Löschen ließ geteilte Kartensätze stehen, „Kartensatz per Code" fehlte ganz in der Datenschutzerklärung | nur der gefragte Abschnitt gelesen, nicht jeder Datenfluss gegen den Text | § 12 |
 | 3.17.20 → 3.17.22 | Beispielkarte drehte hin und zurück, Übersetzung nur ein Aufblitzen | Bewegung endete nicht bei dem, was sie zeigen sollte; dazu haltende Animation gegen `transition` | § 6.4 |
 | 3.17.22 | Pfeilspitze der Einstiegs-Leiste sah aufgesetzt aus | andere Strichstärke als die Linie, Spitze saß im nächsten Punkt | § 6.4 |
+| 3.17.25 | Schneller Doppeltipp auf „Antwort zeigen" bewertete die Karte blind mit „Fast" | an derselben Stelle erscheinender Knopf nahm Tipps an, obwohl noch unsichtbar | § 6.1 |

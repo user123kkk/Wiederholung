@@ -774,6 +774,14 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
+**AKTUELL (25.09.2026): v3.17.25 auf dem Arbeitszweig** – Lernrunde gemessen
+(Betreiber: „fühlt sich komisch an, nur gedanken"). Ein echter Fehler behoben:
+schneller Doppeltipp auf „Antwort zeigen" bewertete blind mit „Fast".
+**Wartet auf Betreiber:** Vorschläge V1–V6 zur Ruhe der Runde (Leuchtring
+weg, Knöpfe ohne Staffel, Wort bleibt stehen, Aktionszone ohne Hell→Dunkel,
+ruhigerer Abflug, „Merken" immer sichtbar) – `audit/LOGBUCH.md`, Eintrag
+25.09.2026. Nichts davon gebaut.
+
 **AKTUELL (24.09.2026, nachts): v3.17.24 auf dem Arbeitszweig
 `claude/onboarding-videos-tips-52f5ff-79yprk` (enthält `main` bis `08be14c`).**
 3.17.23: Nutzungsstatistik komplett entfernt (Betreiber: „jede spur").

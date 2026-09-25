@@ -28,6 +28,72 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-25 — Lernrunde „fühlt sich komisch an": gemessen, ein Fehler behoben (v3.17.25), Rest als Gedanken
+
+**Anlass:** Betreiber: „irgendwie gefällt mir das lernen tab ned, nicht das
+design sondern die funktionalität mit verschiebungen usw. weiß nicht was es
+ist, obs die knöpfe [...] das umdrehen nicht gezwungen, smooth nicht
+abfuckend, realistisch wo nicht später alles irgendwie aufploppt [...] nur
+gedanken". Keine Rückfragen gewünscht.
+
+**Gemessen** (Handy 390×844, Prüfstand, Skript im Session-Scratchpad):
+- M1 Karte verrutscht **nicht** (0 px vorn→hinten→nächste Karte), Seite
+  scrollt nicht. Kein Layout-Sprung im engen Sinn.
+- M2 Aufdecken startet **9 Animationen** gleichzeitig: Karte hebt sich,
+  dreht (540 ms), 2× Schatten, Trennlinie (ab 120 ms), die drei Knöpfe
+  **gestaffelt** (240/300/360 ms + 320 ms, letzter voll erst bei ≈ 680 ms),
+  Fortschrittsbalken.
+- M3 Das arabische Wort **springt in der Karte** beim Umdrehen nach oben
+  (Rückseite zentriert Wort + Linie + Antwort als Block; Foto 1 vs. 3).
+- M4 Unter dem Daumen wird aus „Antwort zeigen" (hell, volle Breite) „Fast"
+  (dunkel) – der größte Helligkeitswechsel des Bildschirms genau unter dem
+  Finger. **Dabei echter Fehler:** zweiter Tipp nach 80/150/250 ms traf
+  „Fast" bei Deckkraft 0 und bewertete blind (Karte 1 → 2).
+- M5 Zugedeckte Karte: `karte-einladen` – **Leuchtring ab 2,6 s, alle 7 s,
+  endlos** (`styles.css` ≈ Z. 2090). Das ist Druck genau während des
+  Erinnerns – vermutlich das „gezwungen".
+- M6 Bewerten: alte Karte fliegt **mit Antwort und Farbring über die neue**,
+  ≈ 400 ms zwei Wörter übereinander (Foto 4, 150 ms).
+- M7 Nach der ersten Bewertung taucht ↺ oben rechts auf; nach dem Aufdecken
+  taucht „Merken" auf (Platz reserviert, kein Sprung, aber es erscheint).
+
+**Behoben (echter Fehler, `CLAUDE.md` Grundsatz 1):** `app.js` –
+`ui.session.aufgedecktUm` in `revealAnswer()`, neu `BEWERTEN_SPERRE_MS = 400`
+und `bewertenZuFrueh()` vor `gradeKnown`; die vier Klick-Fälle `grade-*`
+prüfen die Sperre. Tastatur/Wischen unverändert (rufen `gradeKnown()` usw.
+direkt). `APP_VERSION` 3.17.25, `sw.js`, `index.html`, `CHANGELOG.md`.
+Neu `t_doppeltipp.js` (80/150/250 ms → bleibt Karte 1; 700 ms → Karte 2):
+4/4. Regression: `t_runde_rest.js` ok (Wischen, Rückgängig, Notiz, Merken,
+Tastatur, Kontrast 0), `t_ueben.js` ok, Affe Handy 150 Schritte 0 Befunde.
+`LEHREN.md` § 6.1 Regel + § 15 Vorfall.
+
+**Vorgelegt, NICHT gebaut** (Betreiber: „nur gedanken"; je Pro/Contra im
+Chat vom 25.09.2026):
+- V1 Leuchtring beim Warten entfernen (M5). Empfehlung: ja.
+- V2 Drei Knöpfe ohne Staffel, mit der Drehung zusammen (M2). Empfehlung: ja.
+- V3 Wort bleibt beim Umdrehen auf derselben Höhe, Antwort erscheint darunter
+  (Platz vorn reserviert); die Drehung selbst bleibt (Betreiber-Wunsch
+  3.14.0) (M3). Empfehlung: ja.
+- V4 Aktionszone ohne Hell→Dunkel-Wechsel: „Antwort zeigen" in derselben
+  Höhe und Tonalität wie die Bewertungsleiste (Duolingo-Muster: ein Platz,
+  andere Beschriftung) (M4). Empfehlung: ja. Nicht empfohlen: Bewertung
+  schon vorher gesperrt zeigen (wirkt tot).
+- V5 Abflug ruhiger: kurzer Schub + Ausblenden (≤ 200 ms) statt Flug über die
+  neue Karte (M6). Empfehlung: ja.
+- V6 „Merken" immer sichtbar (auch vor dem Aufdecken sinnvoll); ↺ bleibt wie
+  es ist (sonst toter Knopf) (M7).
+- Nicht angefasst: **Anzahl der Knöpfe** (Lernlogik, tabu) – Einschätzung:
+  drei ist nicht das Problem. **Aufdecken vor dem Bewerten** bleibt Pflicht
+  (aktives Erinnern, Lernlogik) – nur Druck und Hürde weg.
+
+**Offen:** Betreiber-Entscheidung zu V1–V6.
+
+**Nächster Schritt:** Auf „ja" (ganz oder einzeln) V1–V6 bauen, mit
+`t_runde_gefuehl`-Messung (Animationszahl, Wortposition, Daumen-Element)
+vorher/nachher.
+
+---
+
 ### 2026-09-24 — Korrektur: Agent hat sich in die Impressum-Frage zu weit reingehängt
 
 **Betreiber:** „lösch alles, nicht sodass ich es werbung dafür mache usw." –

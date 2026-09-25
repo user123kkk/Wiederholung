@@ -1,3 +1,13 @@
+## 3.17.25 – 25. September 2026
+
+**Lernrunde: kein blindes Bewerten mehr durch einen schnellen zweiten Tipp.**
+Nach „Antwort zeigen" erscheint an genau derselben Stelle der Knopf „Fast" –
+zuerst unsichtbar, er blendet ab 240 ms ein. Ein zweiter Tipp (gemessen nach
+80, 150 und 250 ms) traf ihn trotzdem und bewertete die Karte, ohne dass man
+die Antwort gesehen hatte. Die Bewertungsknöpfe nehmen Tipps jetzt erst
+400 ms nach dem Aufdecken an. Tastatur (1/2/3) und Wischen sind immer
+Absicht und bleiben ohne Sperre. Neuer Test `t_doppeltipp.js`.
+
 ## 3.17.24 – 24. September 2026
 
 **Rechtsprüfung: App und Datenschutzerklärung stimmen jetzt überein.**

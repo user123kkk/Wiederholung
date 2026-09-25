@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.24";
+const APP_VERSION = "3.17.25";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -4953,6 +4953,7 @@ function revealAnswer() {
   const ausVollbild = hwFullscreen;
   if (!ui.session || ui.session.revealed) return;   /* 3.14.0: Doppeltipp auf die Karte */
   ui.session.revealed = true;
+  ui.session.aufgedecktUm = Date.now();
   fuehlbar(8);    /* 3.14.0: ein Tick, wenn die Karte umschlaegt */
   if (ausVollbild) { hwVollbildVerlassen(); return; }
   render();
@@ -5119,6 +5120,16 @@ function kartenAbflug(kind) {
     document.body.appendChild(g);
     setTimeout(() => g.remove(), 560);
   } catch (e) {}
+}
+/* 3.17.25: Ein zweiter Tipp kurz nach "Antwort zeigen" traf "Fast", das genau
+   dort erscheint - noch unsichtbar (Einblenden ab 240 ms). Gemessen: Tipp nach
+   80/150/250 ms bei Deckkraft 0 bewertete die Karte blind. Bewertungs-KNOEPFE
+   nehmen Tipps deshalb erst nach BEWERTEN_SPERRE_MS an; Tastatur und Wischen
+   sind immer Absicht und bleiben frei. */
+const BEWERTEN_SPERRE_MS = 400;
+function bewertenZuFrueh() {
+  const s = ui.session;
+  return !!(s && s.aufgedecktUm && Date.now() - s.aufgedecktUm < BEWERTEN_SPERRE_MS);
 }
 function gradeKnown() { gradeCard("known"); }
 function gradeAlmost() { gradeCard("almost"); }
@@ -11941,10 +11952,10 @@ document.body.addEventListener("click", e => {
     case "start-session": startSession(); break;
     case "reveal": revealAnswer(); break;
     case "toggle-extra": toggleExtra(); break;
-    case "grade-known": gradeKnown(); break;
-    case "grade-almost": gradeAlmost(); break;
-    case "grade-unknown": gradeUnknown(); break;
-    case "grade-weiter": gradeCard("weiter"); break;   // Nachbesserung: nur im Übungsmodus sichtbar
+    case "grade-known": if (!bewertenZuFrueh()) gradeKnown(); break;
+    case "grade-almost": if (!bewertenZuFrueh()) gradeAlmost(); break;
+    case "grade-unknown": if (!bewertenZuFrueh()) gradeUnknown(); break;
+    case "grade-weiter": if (!bewertenZuFrueh()) gradeCard("weiter"); break;   // Nachbesserung: nur im Übungsmodus sichtbar
     case "undo-grade": undoLastGrade(); break;
     case "end-session": endSession(); break;
     case "submit-card": submitCardForm(); break;
