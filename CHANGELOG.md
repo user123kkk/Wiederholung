@@ -1,3 +1,13 @@
+## 3.17.31 – 25. September 2026
+
+**Großplan, Runde 2, G-007: Serie wächst unbegrenzt für neue Konten.**
+
+- **Serie stecken bei ~120 Tagen:** Neue Konten (registriert nach 2.14.0,
+  sockel=0) konnten aufgrund eines Fehlers in `serieAktuell()` nicht über eine
+  bestimmte Grenze hinaus wachsen. Der `sockelBis`-Grenzwert war für neue
+  Konten nicht relevant und bremste die Berechnung. Fix: `sockelBis`-Grenze
+  gilt nur noch für alte Konten mit echtem sockel>0 (Umstieg vor 2.14.0).
+
 ## 3.17.30 – 25. September 2026
 
 **Großplan, Runde 1: Daten sicherer, Teilen ehrlich, Mails deutsch.** Aus der

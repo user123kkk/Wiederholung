@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.30";
+const APP_VERSION = "3.17.31";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2515,8 +2515,11 @@ function serieAktuell() {
        heute), und bisher endete die Zaehlung schon an diesem Tag. Wer am
        ersten Tag lernte, sah 0, und der Tag fehlte der Serie danach fuer
        immer. Die Regel selbst ist unveraendert: ein Tag zaehlt ab der ersten
-       gelernten Karte. */
-    if (sockelBis && (d < sockelBis || (d === sockelBis && sockel > 0))) return tage + sockel;
+       gelernten Karte.
+       3.17.30 (G-007): sockelBis begrenzt nur, wenn es ein echtes sockel > 0
+       gibt (Umstieg vor 2.14.0). Neue Konten (sockel = 0) koennen unbegrenzt
+       waechsen. */
+    if (sockelBis && sockel > 0 && (d <= sockelBis)) return tage + sockel;
     if (tagGelernt(verlauf[d])) { tage++; seitJoker++; continue; }
     /* Ein ausgelassener Tag unterbricht die Serie nicht - Krankheit, Reise,
        ein voller Tag - solange seit dem letzten verziehenen Tag genug

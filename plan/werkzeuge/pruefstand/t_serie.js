@@ -79,6 +79,22 @@ const FAELLE = [
     verlauf: verlaufAus(bereich([0, 4])),
     streak: { sockel: 42, sockelBis: tag(-5) },
     erwartet: 47
+  },
+  {
+    /* G-007: Neues Konto (sockel = 0, sockelBis = heute), 121 Tage ohne
+       Luecke: sollte 121 zaehlen koennen. Vorher war sockelBis eine
+       Grenze, die bei ~120 Tagen Halt machte. */
+    name: 'Neues Konto, 121 Tage ohne Luecke - bleibt nicht stehen',
+    verlauf: verlaufAus(bereich([0, 120])),
+    streak: { sockel: 0, sockelBis: tag(0) },
+    erwartet: 121
+  },
+  {
+    /* Alt-Konto mit sockel > 0 sollte WEITER von sockelBis begrenzt sein. */
+    name: 'Alt-Konto, 30 Tage gelernt, sockel 100 ab Tag 30 - stoppt am sockelBis',
+    verlauf: verlaufAus(bereich([0, 29])),
+    streak: { sockel: 100, sockelBis: tag(-30) },
+    erwartet: 130
   }
 ];
 
