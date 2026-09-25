@@ -1,0 +1,22 @@
+const { start, neueSeite, aktion, foto, GERAETE, vollerStore } = require('/home/user/Wiederholung/plan/werkzeuge/pruefstand/lib.js');
+const zlib = require('zlib');
+(async () => {
+  const store = vollerStore();
+  store['users/u1/karten/k0'].extra = 'https://bild.test/gross.png';
+  store['users/u1/karten/k1'].extra = 'http://bild.test/alt.png';
+  const b = await start();
+  const ctxOpt = {};
+  const png = require('fs').readFileSync(__dirname + '/gross.png');
+  const anfragen = [];
+  const orig = b.newContext.bind(b);
+  b.newContext = async o => { const c = await orig(o); await c.route('**/bild.test/**', r => { anfragen.push(r.request().url() + ' referer=' + (r.request().headers()['referer'] || '-')); r.fulfill({ status: 200, contentType: 'image/png', body: png }); }); return c; };
+  const { p, ctx } = await neueSeite(b, GERAETE.handy, { store, warte: 1800 });
+  await aktion(p, 'tab-verwalten', null, 1200);
+  const h = await p.evaluate(() => [...document.querySelectorAll('.card-row')].slice(0, 3).map(r => Math.round(r.getBoundingClientRect().height)));
+  console.log('Zeilenhoehen erste 3:', h);
+  console.log('Bild-Anfragen:', anfragen);
+  console.log('img im Verwalten:', await p.evaluate(() => [...document.querySelectorAll('.card-row img')].map(i => i.src + ' ' + i.naturalWidth + 'x' + i.getBoundingClientRect().height)));
+  await foto(p, 'daten-bild-liste');
+  console.log(p.fehler.join(' | ') || 'keine Fehler');
+  await b.close();
+})();
