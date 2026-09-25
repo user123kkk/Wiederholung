@@ -889,6 +889,33 @@ nachweislich tut.
   Wer etwas in die Cloud verlegen will, beginnt bei den Regeln. Jeder neue
   Schlüssel gehört in die Datenschutzerklärung (§ 12).
 
+### 8.1a Nie „alles neu schreiben" als Antwort auf einen Fehler
+
+*Vorfall bis 3.17.29 (Großplan G-003, kritisch):* `patchDoc` antwortete auf
+`not-found` mit `persistAll()`. Gedacht war das für das frische Konto. Es
+griff aber bei **jedem** fehlenden Dokument, also immer dann, wenn ein anderes
+Gerät eine Karte oder einen Bereich gelöscht hatte. `persistAll()` schrieb
+alle Bereiche ohne merge und nur mit `name/order/sets` neu. Damit waren
+Teilen-Code, Lehrer-Freigabe und „geführt" weg, und Gelöschtes stand wieder
+auf.
+
+**Regeln:**
+- Ein Fehler-Fallback schreibt nie mehr als das, was gerade scheiterte.
+- „Dokument fehlt" heißt bei mehreren Geräten meistens „anderswo gelöscht".
+  Die Löschung gewinnt.
+- Ein Vollschreiben nimmt **alle** Felder der Positivliste mit
+  (`bereichFelder()` ohne `karten`), nie eine Auswahl von Hand.
+
+### 8.1b Regel-Risiko heißt auch: Schaden an Fremdem
+
+*Vorfall 25.09.2026 (G-014):* Der Regelkommentar zum Board nahm nur das
+**Aufblähen** eigener Stimmen in Kauf. Übersehen war das **Sabotieren**: Ein
+fremdes Konto drehte jede Idee per −1 auf 0 (Emulator E11). Behoben mit
+`exists`/`existsAfter`.
+**Regel:** Wer ein Risiko in den Regeln „bewusst in Kauf nimmt", prüft beide
+Richtungen: Was kann jemand an **eigenen** Daten verbiegen, und was an denen
+**anderer**?
+
 ### 8.2 Bestätigte E-Mail und veralteter Ausweis
 
 - Die Regeln prüfen `email_verified` **am ID-Token**.
@@ -1141,6 +1168,10 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 10. `node --check app.js` ist sauber. (§ 4.2)
 11. Die Version steht an vier Stellen gleich (`grep -F`), dazu `CHANGELOG.md`.
     Bei reiner `firebase.json`-Änderung zusätzlich `csp-build`. (§ 4.1, § 4.3)
+    **Seit 3.17.30 prüft das `node plan/werkzeuge/pruefe_stand.mjs` in einem
+    Schritt**, dazu die CSP-Hashes **aller** HTML-Seiten und `APP_SHELL`. Der
+    Veröffentlichen-Knopf bricht ab, wenn es rot ist. Geänderte
+    `firestore.rules`: `bash plan/werkzeuge/regeln_testen.sh` (Emulator, § 8.1).
 12. Prüfstand: betroffener Test, Regression, bei Größerem der Affe. (§ 5.1)
     **Berührt die Änderung die Lernrunde** (Karte, Knöpfe, Wischen,
     Speichern, Serie): `node abnahme_runde.js` – alle 13 grün, die „(lesen)"-
@@ -1239,3 +1270,8 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | 3.17.28 | „Bewertete Karten kamen wieder nach X, Serie ging nicht hoch" | Wisch-Bewertung 150 ms verzögert, X dazwischen verwarf sie; abgelehnte Bewertungen nie nachgeschickt; Sockel-Tag zählte nicht (`d <= sockelBis`) | § 8.2, § 13 |
 | 3.17.28 (Prüfstand) | Test „Protokoll sofort nach X" schlug auch mit altem Code nicht an | Attrappe meldet eigene Schreibvorgänge ohne `hasPendingWrites`, `verlaufNachschicken` glich es aus | § 5.3, § 5.4 |
 | 3.17.29 | „Antwort zeigen“ unter dem Rand; Wischen scrollte mit und sprang zurück; Karte drückte sich vor dem Drehen ein | Notiz-Platzhalter machte die Seite höher als den Bildschirm + `pan-y` auf der Wischfläche; `:active` seit touchstart-Listener | § 4.x, § 14 |
+| bis 3.17.29 (mindestens seit 3.10.3) | Impressum und Datenschutz ignorierten das helle Thema | Kopfskript wich in einer Farbe von `index.html` ab, sein Hash stand nie in der CSP; getestet wurde nur `index.html` | § 9.2, § 14 Punkt 11 (`pruefe_stand.mjs` rechnet alle Seiten nach) |
+| bis 3.17.29 (G-003) | Zwei Geräte: Teilen/Lehrer/„geführt" weg, Gelöschtes kam zurück | `not-found` → `persistAll()` ohne merge | § 8.1a |
+| bis 3.17.29 (G-014) | Board-Stimmen fremder Ideen auf 0 drehbar | Risiko nur in eine Richtung bedacht | § 8.1b |
+| 25.09. (eigener Fund vor dem Commit) | Neue Sperre „lokale Änderungen" in `veroeffentlichen.bat` hätte jeden zweiten Deploy blockiert | Firebase-CLI legt `.firebase/` an, das stand nicht in `.gitignore` | Wer eine Sperre einbaut, prüft, welche Dateien die Werkzeuge selbst erzeugen |
+| 25.09. (Prüfstand) | `t_a11y.js` meldete „keine Bewegung trotz ruhig", obwohl Inhalte 60–1300 ms verzögert erschienen | Test prüft laufende Animationen, nicht wartende Verzögerungen | § 5.3 – Aufgabe G-086 |

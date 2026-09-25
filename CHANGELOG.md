@@ -1,3 +1,41 @@
+## 3.17.30 – 25. September 2026
+
+**Großplan, Runde 1: Daten sicherer, Teilen ehrlich, Mails deutsch.** Aus der
+Großprüfung aller acht Bereiche (`plan/grossplan/`).
+
+- **Zwei Geräte konnten Daten verlieren (kritisch).** Bearbeitete ein Gerät
+  eine Karte oder einen Bereich, den ein anderes Gerät gerade gelöscht hatte,
+  schrieb die App alle Bereiche neu – dabei gingen Teilen-Code,
+  Lehrer-Freigabe und „geführt" verloren, und Gelöschtes kam zurück. Jetzt
+  gewinnt die Löschung, alles andere bleibt, wie es ist.
+- **Teilen per Code:** Der Code steht erst am Bereich, wenn er wirklich
+  gespeichert ist. Ein zu großer Satz wird vorher gemeldet. „Teilen beenden"
+  und „Bereich löschen" sagen es, wenn das Beenden in der Cloud scheitert,
+  statt den Code still weiterlaufen zu lassen.
+- **Konto löschen** räumt auch geteilte Sätze ab, die kein Bereich mehr
+  kennt (braucht die neuen Regeln).
+- **Ideen-Board:** Stimmen lassen sich nicht mehr ohne eigene Stimme hoch-
+  oder herunterdrehen (Regeln).
+- **Fremde Kartensätze** laden auch dann keine Bilder vom Server des
+  Absenders, wenn der Datensatz manipuliert ist.
+- **Mails und Passwort-Seite auf Deutsch**, vorsichtiger Text nach „Passwort
+  vergessen", Fehlermeldungen mit Ausweg („Mit Google angelegt?") und sieben
+  weitere Firebase-Fehler in Worten statt „Das hat nicht geklappt".
+- **Impressum und Datenschutz** zeigen das helle Thema wieder (die CSP hatte
+  ihr Kopfskript seit Langem blockiert) und verlinken einander.
+- **„Bewegung reduzieren"**: Nichts erscheint mehr verzögert (Rundenende-
+  Knöpfe waren 1,3 s unsichtbar).
+- Einstieg: „Kostenlos." ist auch unter „Plan speichern" weg; der
+  Google-Knopf sagt beim Anlegen „Mit Google fortfahren".
+- Einspielen: Eine Karte mit zu hoher Stufe lässt nicht mehr den ganzen
+  Stapel scheitern.
+- Veröffentlichen: Der Knopf und `veroeffentlichen.bat` prüfen vorher
+  Version, CSP und Dateien (`plan/werkzeuge/pruefe_stand.mjs`) und brechen ab,
+  wenn etwas nicht stimmt; ZIP-Dateien werden nie mit hochgeladen.
+- **Neue Regeln (`firestore.rules`) – müssen vom Betreiber veröffentlicht
+  werden** (Reihenfolge egal: die neue App kommt mit den alten Regeln zurecht, die alte App mit den neuen). Regeltest jetzt 153 Fälle
+  (`plan/werkzeuge/regeln_testen.sh`).
+
 ## 3.17.29 – 25. September 2026
 
 **Lernrunde: passt immer in den Bildschirm, Wischen ohne Mitscrollen, keine

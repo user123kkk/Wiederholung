@@ -61,7 +61,7 @@ const knopf = (p, t) => p.evaluate(t => { const k = [...document.querySelectorAl
     await aktion(p, 'einstellungen', null, 800);
     await aktion(p, 'einst-seite', 'kartensaetze', 800);
     await aktion(p, 'teile-lektion-code-lehrer', null, 700);
-    pruefe('Code erzeugen: fragt nach', (await blatt(p)).includes('Veröffentlichung'));
+    pruefe('Code erzeugen: fragt nach', (await blatt(p)).includes('Karten, 3 Lektionen'));
     await knopf(p, 'Code erzeugen');
     await p.waitForTimeout(1500);
     pruefe('Code erzeugen: Fehlermeldung sichtbar', (await blatt(p)) !== '–');
@@ -92,7 +92,7 @@ const knopf = (p, t) => p.evaluate(t => { const k = [...document.querySelectorAl
     await aktion(p, 'beende-teilen-code', null, 700);
     await knopf(p, 'Beenden');
     await p.waitForTimeout(1500);
-    pruefe('Teilen beenden: Fehlermeldung sichtbar', (await blatt(p)).length > 0);
+    pruefe('Teilen beenden: Fehlermeldung sichtbar', (await blatt(p)) !== '–');
     await knopf(p, 'OK');
     await p.waitForTimeout(400);
     const teilCode = await p.evaluate(() => { const d = window.__FB.store.get('users/u1/bereiche/b1'); return d ? d.teilCode : undefined; });

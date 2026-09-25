@@ -219,7 +219,7 @@ const LEGACY_FIRST_GRADE = "1970-01-01"; // "schon bewertet, Datum unbekannt"
    (zu viel auf einmal, unklare Uebersetzung), nicht am Gedaechtnis. */
 const LEECH_SCHWELLE = 5;
 function normCard(c) {
-  const stufe = Number.isInteger(c.stufe) && c.stufe >= 0 ? c.stufe : 0;
+  const stufe = Number.isInteger(c.stufe) && c.stufe >= 0 ? Math.min(c.stufe, MAX_STUFE) : 0;
   let erste = null;
   if (/^\d{4}-\d{2}-\d{2}$/.test(c.ersteBewertung)) erste = c.ersteBewertung;
   else if (c.ersteBewertung === undefined && stufe > 0) erste = LEGACY_FIRST_GRADE;
@@ -1868,6 +1868,9 @@ async function initFirebase() {
 
   const fbApp = initializeApp(firebaseConfig);
   auth = fb.getAuth(fbApp);
+  /* 3.17.30 (G-010): Mails, Passwort-Seite und Google-Fenster auf Deutsch.
+     Nicht useDeviceLanguage() - die App ist nur deutsch. */
+  auth.languageCode = "de";
   try {
     db = fb.initializeFirestore(fbApp, { localCache: fb.persistentLocalCache() });
     offlineCacheAktiv = true;
@@ -2564,19 +2567,25 @@ function bereicheMitOffenem() {
 
 /* ---------- Auth-Aktionen ---------- */
 const AUTH_ERRORS = {
-  "auth/invalid-credential": "E-Mail oder Passwort ist falsch.",
+  "auth/invalid-credential": "E-Mail oder Passwort ist falsch. Mit Google angelegt? Dann unten „Mit Google anmelden".",
   "auth/user-not-found": "Kein Konto mit dieser E-Mail gefunden.",
   "auth/wrong-password": "E-Mail oder Passwort ist falsch.",
   "auth/invalid-email": "Das ist keine gültige E-Mail-Adresse.",
-  "auth/email-already-in-use": "Mit dieser E-Mail gibt es schon ein Konto – bitte anmelden.",
+  "auth/email-already-in-use": "Zu dieser E-Mail gibt es schon ein Konto. Melde dich an – mit Google oder über „Passwort vergessen?".",
   "auth/weak-password": "Passwort zu schwach – mindestens 6 Zeichen.",
   "auth/missing-password": "Bitte ein Passwort eingeben.",
-  "auth/too-many-requests": "Zu viele Versuche – bitte kurz warten und erneut probieren.",
+  "auth/too-many-requests": "Zu viele Versuche – warte kurz oder setz dein Passwort zurück.",
   "auth/network-request-failed": "Keine Verbindung – bitte Internet prüfen.",
   "auth/popup-closed-by-user": "Fenster wurde geschlossen, bevor die Anmeldung fertig war.",
   "auth/cancelled-popup-request": "Es lief schon ein Anmeldefenster – bitte noch einmal versuchen.",
   "auth/account-exists-with-different-credential": "Zu dieser E-Mail gibt es schon ein Konto mit einer anderen Anmeldeart (z. B. E-Mail/Passwort). Bitte darüber anmelden.",
-  "auth/unauthorized-domain": "Diese Adresse ist für die Anmeldung nicht freigeschaltet."
+  "auth/unauthorized-domain": "Diese Adresse ist für die Anmeldung nicht freigeschaltet.",
+  "auth/user-disabled": "Dieses Konto ist gesperrt. Schreib dem Betreiber über das Impressum.",
+  "auth/popup-blocked": "Das Anmeldefenster wurde blockiert. Erlaube Pop-ups für diese Seite und tippe noch einmal.",
+  "auth/operation-not-allowed": "Diese Anmeldeart ist gerade nicht verfügbar.",
+  "auth/missing-email": "Bitte zuerst deine E-Mail-Adresse eingeben.",
+  "auth/web-storage-unsupported": "Dein Browser blockiert den Speicher, den die Anmeldung braucht. Privates Fenster? Dann bitte ein normales öffnen.",
+  "auth/user-token-expired": "Bitte melde dich neu an."
 };
 function authErrorText(e) {
   /* 3.17.15: Rueckfall ohne Systemcode (fehlerKlartext loggt ihn). */
@@ -2742,7 +2751,7 @@ async function doReset() {
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
     await mitZeitlimit(fb.sendPasswordResetEmail(auth, email));
-    ui.authInfo = "E-Mail zum Zurücksetzen wurde verschickt – bitte Posteingang (und Spam) prüfen.";
+    ui.authInfo = "Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach.";
   } catch (e) {
     ui.authError = authErrorText(e);
   }
@@ -6906,7 +6915,7 @@ function renderAuth() {
         : m === "reset" ? "Passwort zur\u00fccksetzen" : "Anmelden",
         m === "register" ? "Schritt 1 von 2 \u00b7 Konto" : null);
   html += '<p class="subtitle" style="margin-bottom:var(--space-6)">' +
-    (m === "register" ? (ausEinstieg ? "Kostenlos. Einmal anlegen \u2013 dann ist dein Plan gespeichert."
+    (m === "register" ? (ausEinstieg ? "Einmal anlegen \u2013 dann ist dein Plan gespeichert."
                                      : "Einmalig \u2013 danach auf jedem Ger\u00e4t.")
      : m === "reset" ? "Wir schicken dir einen Link zum Neusetzen."
      : "Weiterlernen, wo du aufgeh\u00f6rt hast.") + '</p>';
@@ -6971,10 +6980,10 @@ function renderAuth() {
     html += '<div class="auth-trenner"><span>oder</span></div>';
     html += '<div class="auth-anbieter">';
     html += '<button type="button" class="secondary full' + laed + '" data-action="google-login"' + busy + '>' +
-      OAUTH_LOGOS.google + '<span>Mit Google anmelden</span></button>';
+      OAUTH_LOGOS.google + '<span>' + (m === "register" ? "Mit Google fortfahren" : "Mit Google anmelden") + '</span></button>';
     if (APPLE_LOGIN_BEREIT) {
       html += '<button type="button" class="secondary full' + laed + '" data-action="apple-login"' + busy + '>' +
-        OAUTH_LOGOS.apple + '<span>Mit Apple anmelden</span></button>';
+        OAUTH_LOGOS.apple + '<span>' + (m === "register" ? "Mit Apple fortfahren" : "Mit Apple anmelden") + '</span></button>';
     }
     html += '</div>';
   }
