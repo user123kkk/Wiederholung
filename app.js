@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.26";
+const APP_VERSION = "3.17.27";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -27,6 +27,13 @@ const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
    bleibt an. Auf true stellen, sobald Apple in der Firebase-Konsole aktiv ist. */
 const APPLE_LOGIN_BEREIT = false;
 const app = document.getElementById("app");
+/* 3.17.27: iOS/iPadOS-Safari zeigt :active (Knopf drueckt sich ein, Karte
+   gibt nach) nur, wenn die Seite auf touchstart hoert - vorher kam auf dem
+   iPad beim Beruehren gar nichts, erst beim Loslassen die Handlung. Genau
+   das fuehlte sich wie Verzoegerung an (Betreiber: "selbst das druecken auf
+   einer karte hat kurze verzoegerung"). Leer und passiv: aendert nichts am
+   Scrollen. */
+document.addEventListener("touchstart", () => {}, { passive: true });
 
 /* ---------- Wer darf Kartensätze weitergeben? ----------
    Bis 3.5.1 war "Backup zum Weitergeben" an eine feste Nutzernummer (den
@@ -5220,6 +5227,31 @@ document.addEventListener("keydown", e => {
    Finger scrollt ganz normal weiter. */
 let wischStart = null;
 let wischBewertung = false;
+let wischFrame = null;
+/* 3.17.27: Wischen neu gefasst (Betreiber: "funktioniert schlecht,
+   unzuverlaessig"). Gemessen mit echten Touch-Ereignissen (t_wischen.js):
+   - Die Weite kam aus den Koordinaten des Loslass-Ereignisses. Bei
+     pointercancel (System bricht die Geste ab) sind die 0 - dann konnte ein
+     Abbruch als "Nicht" bewerten. Jetzt zaehlt die letzte Fingerbewegung,
+     und ein Abbruch federt nur zurueck.
+   - Direkt nach dem Aufdecken folgte die Karte nicht (4 px bei 150 px Weg):
+     die laufende Dreh-/Hebe-Animation ueberschreibt ein Inline-transform.
+     Beim Erfassen wird sie jetzt abgeschaltet.
+   - Ein kurzer, schneller Wisch zaehlte nicht (Schwelle nur 110 px Weite).
+     Jetzt wie beim Reiter-Wischen zusaetzlich ein Tempo-Kriterium.
+   - Ab der Schwelle faerbt sich die Karte kraeftiger und es gibt einen
+     Tick - man spuert, ab wann das Loslassen bewertet. */
+const WISCH_WEG = 0.26;          /* Anteil der Kartenbreite (max. 100 px) */
+const WISCH_TEMPO = 0.45;        /* px/ms fuer einen Fling */
+const WISCH_FLING_MIN = 40;      /* px, damit ein Zucken kein Fling ist */
+/* Der Wisch-Hinweis (renderSession) bleibt, bis einmal erfolgreich
+   gewischt wurde - dann nie wieder (gerätelokal, adrabic-hinweise). */
+function wischGeschafft() {
+  if (!hinweisSpeicher().gewischt) hinweisMerken({ gewischt: todayStr() });
+  const t = document.querySelector(".wisch-tipp");
+  if (t) t.remove();
+}
+function wischSchwelle(breite) { return Math.min(100, breite * WISCH_WEG); }
 app.addEventListener("pointerdown", e => {
   /* 3.12.0: gezogen wird die Karte selbst (.study-flaeche), nicht mehr die
      ganze Buehne samt Knoepfen - der Stapel dahinter bleibt liegen, wie bei
@@ -5227,7 +5259,9 @@ app.addEventListener("pointerdown", e => {
   const karte = e.target.closest(".study-flaeche");
   if (!karte || !ui.session || !ui.session.revealed || wischBewertung) return;   /* 3.15.0: auch im Ueben */
   if (e.target.closest("button, a, canvas, input, textarea")) return;
-  wischStart = { x: e.clientX, y: e.clientY, karte, breite: karte.getBoundingClientRect().width, id: e.pointerId, erfasst: false };
+  const t = performance.now();
+  wischStart = { x: e.clientX, y: e.clientY, karte, breite: karte.getBoundingClientRect().width, id: e.pointerId,
+    erfasst: false, dx: 0, zeit: t, spurX: e.clientX, spurT: t, tempo: 0, bereit: false };
 });
 app.addEventListener("pointermove", e => {
   if (!wischStart || e.pointerId !== wischStart.id) return;
@@ -5236,37 +5270,64 @@ app.addEventListener("pointermove", e => {
     if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
     if (Math.abs(dy) > Math.abs(dx)) { wischStart = null; return; } // senkrecht: normales Scrollen
     wischStart.erfasst = true;
-    wischStart.karte.setPointerCapture(e.pointerId);
+    try { wischStart.karte.setPointerCapture(e.pointerId); } catch (err) {}
+    wischStart.karte.style.animation = "none";
+    wischStart.karte.style.transition = "none";
     wischStart.karte.classList.add("wird-gezogen");
   }
   e.preventDefault();
-  const rot = Math.max(-10, Math.min(10, dx / 14));
-  wischStart.karte.style.transform = "translateX(" + dx + "px) rotate(" + rot + "deg)";
-  const anteil = Math.min(1, Math.abs(dx) / (wischStart.breite * 0.32));
-  wischStart.karte.style.boxShadow = anteil < 0.06 ? "" :
-    "inset 0 0 0 2px " + (dx > 0 ? "var(--positive-border)" : "var(--negative-border)");
-});
+  const t = performance.now();
+  /* Tempo ueber die letzten ~80 ms, nicht ueber den ganzen Weg - wer
+     langsam ansetzt und dann schnippt, meint das Schnippen. */
+  if (t - wischStart.spurT > 16) {
+    wischStart.tempo = (e.clientX - wischStart.spurX) / (t - wischStart.spurT);
+    if (t - wischStart.spurT > 80) { wischStart.spurX = e.clientX; wischStart.spurT = t; }
+  }
+  wischStart.dx = dx;
+  const bereit = Math.abs(dx) >= wischSchwelle(wischStart.breite);
+  if (bereit && !wischStart.bereit) fuehlbar(6);
+  wischStart.bereit = bereit;
+  if (wischFrame) return;
+  wischFrame = requestAnimationFrame(() => {
+    wischFrame = null;
+    if (!wischStart || !wischStart.erfasst) return;
+    const w = wischStart, d = w.dx;
+    const rot = Math.max(-10, Math.min(10, d / 14));
+    w.karte.style.transform = "translateX(" + d.toFixed(1) + "px) rotate(" + rot.toFixed(2) + "deg)";
+    const anteil = Math.min(1, Math.abs(d) / wischSchwelle(w.breite));
+    w.karte.style.boxShadow = anteil < 0.08 ? "" :
+      "inset 0 0 0 " + (w.bereit ? 3 : 2) + "px " + (d > 0 ? "var(--positive-border)" : "var(--negative-border)") +
+      (w.bereit ? ", 0 0 0 6px " + (d > 0 ? "var(--positive-bg)" : "var(--negative-bg)") : "");
+    w.karte.classList.toggle("wisch-bereit", w.bereit);
+  });
+}, { passive: false });
 function wischEnde(e) {
   if (!wischStart || e.pointerId !== wischStart.id) return;
-  const { karte, x, breite, erfasst } = wischStart;
+  const { karte, breite, erfasst, dx, zeit } = wischStart;
+  /* Ohne eigene Tempo-Messung (sehr kurze Geste) zaehlt der Schnitt. */
+  const tempo = wischStart.tempo || dx / Math.max(1, performance.now() - zeit);
   wischStart = null;
+  if (wischFrame) { cancelAnimationFrame(wischFrame); wischFrame = null; }
   if (!erfasst) return;
-  const dx = e.clientX - x;
-  const schwelle = Math.min(120, breite * 0.3);
-  karte.classList.remove("wird-gezogen");
+  karte.classList.remove("wird-gezogen", "wisch-bereit");
   karte.style.boxShadow = "";
-  if (Math.abs(dx) >= schwelle) {
+  const abbruch = e.type === "pointercancel";
+  const weit = Math.abs(dx) >= wischSchwelle(breite);
+  const fling = Math.abs(dx) >= WISCH_FLING_MIN && Math.abs(tempo) >= WISCH_TEMPO && Math.sign(tempo) === Math.sign(dx);
+  if (!abbruch && (weit || fling)) {
     const rechts = dx > 0;
-    karte.style.transition = "transform 220ms var(--ease-out)";
-    karte.style.transform = "translateX(" + (rechts ? "130%" : "-130%") + ") rotate(" + (rechts ? 12 : -12) + "deg)";
+    karte.style.transition = "transform 180ms var(--ease-out), opacity 180ms var(--ease-out)";
+    karte.style.transform = "translateX(" + (rechts ? "40%" : "-40%") + ") rotate(" + (rechts ? 8 : -8) + "deg)";
+    karte.style.opacity = "0";
     /* 3.6.13: Bis die Bewertung ausgeloest ist, gilt sie als laufend - jede
        weitere Eingabe (Knopf, Taste, zweites Wischen) wird in gradeCard
-       verworfen. Sonst bewertete ein zweiter Tipp innerhalb dieser 180 ms auch
+       verworfen. Sonst bewertete ein zweiter Tipp innerhalb dieser Zeit auch
        die NAECHSTE Karte, ungesehen. */
     wischBewertung = true;
-    setTimeout(() => { wischBewertung = false; rechts ? gradeKnown() : gradeUnknown(); }, 180);
+    wischGeschafft();
+    setTimeout(() => { wischBewertung = false; rechts ? gradeKnown() : gradeUnknown(); }, 150);
   } else {
-    karte.style.transition = "transform 220ms var(--ease-spring)";
+    karte.style.transition = "transform 260ms var(--ease-spring)";
     karte.style.transform = "";
   }
 }
@@ -9584,6 +9645,19 @@ function renderSession() {
      kuerzer ist als der Platz darunter. */
   html += '<div class="study-card__oben" aria-hidden="true"></div>';
   html += '<div class="study-buehne">';
+  /* 3.17.27: Betreiber - "bei der ersten karte rechts links mit so kurven
+     pfeilen angeben dass man wischen kann [...] das ned weg geht bis man es
+     zumindest einmal gemacht hat". Nur mit Antwort (vorher gibt es nichts
+     zu wischen), nur auf Touch-Geraeten (styles.css), bis zum ersten
+     gelungenen Wisch. Absolut gesetzt: nimmt keinen Platz. */
+  if (s.revealed && !s.handwriting && !hinweisSpeicher().gewischt) {
+    const bogen = r => '<svg viewBox="0 0 40 28" aria-hidden="true"><path d="' + (r ? 'M4 22 Q20 2 34 14' : 'M36 22 Q20 2 6 14') +
+      '" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="' + (r ? 'M27 13 L34 14 L32 7' : 'M13 13 L6 14 L8 7') +
+      '" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    html += '<div class="wisch-tipp" aria-hidden="true">' +
+      '<span class="wisch-tipp__seite wisch-tipp__seite--l">' + bogen(false) + '<span>Nicht</span></span>' +
+      '<span class="wisch-tipp__seite wisch-tipp__seite--r">' + bogen(true) + '<span>Sicher</span></span></div>';
+  }
   if (rest >= 3) html += '<div class="study-stapel study-stapel--2" aria-hidden="true"></div>';
   if (rest >= 2) html += '<div class="study-stapel study-stapel--1" aria-hidden="true"></div>';
   /* 3.14.0: Die Karte dreht sich wirklich um. Betreiber am 24.09.2026:
