@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.31";
+const APP_VERSION = "3.17.32";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -3894,7 +3894,7 @@ function satzUnterschied(ziel, datei) {
   const neu = [], aktualisiert = [];
   for (const c of datei.karten) {
     const q = herkunftsSchluessel(c);
-    const vorhanden = zielNachQuelle.get(q) || zielNachQuelle.get("w:" + c.wort);
+    const vorhanden = zielNachQuelle.get(q);
     if (!vorhanden) { neu.push(c); continue; }
     gesehen.add(vorhanden.id);
     if (vorhanden.wort !== c.wort || vorhanden.uebersetzung !== c.uebersetzung || vorhanden.extra !== c.extra) {
@@ -3996,7 +3996,7 @@ async function satzZusammenfuehren(ziel, datei) {
   const neueListe = [];
   for (const c of datei.karten) {
     const q = herkunftsSchluessel(c);
-    let lokal = nachQuelle.get(q) || nachQuelle.get("w:" + c.wort);
+    let lokal = nachQuelle.get(q);
     if (lokal) {
       if (!lokal.quelleId && c.quelleId) lokal.quelleId = c.quelleId;   // Nummer nachtragen
       lokal.wort = c.wort;
@@ -4851,7 +4851,9 @@ function lernAbhaken(id) {
   card.ersteBewertung = todayStr();
   card.stufe = 0;
   card.nextReview = todayStr();
-  verlaufZaehle("n");
+  /* LERNEN-3: "Gesehen" ist kein echtes Lernen (Karte bleibt Stufe 0),
+     daher nicht ins verlauf schreiben. Der Tag zaehlt nur mit echter
+     Bewertung (w oder n in der Abfrage). */
   persistCardGrade(currentBereich().id, card.id, {
     stufe: card.stufe, nextReview: card.nextReview,
     ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
@@ -10128,10 +10130,10 @@ function renderHandwritingCanvas(revealed, frage, antwort, antwortArabisch) {
    Link; oeffnen ist dann die eigene Entscheidung. */
 function renderExtra(extra, tokens, fremd) {
   const trimmed = extra.trim();
-  if (!fremd && /^https?:\/\/\S+\.(png|jpe?g|gif|webp|svg)(\?\S*)?$/i.test(trimmed)) {
-    return '<img src="' + esc(trimmed) + '" alt="Bild" style="max-width:100%;border-radius:8px">';
+  if (!fremd && /^https:\/\/\S+\.(png|jpe?g|gif|webp|svg)(\?\S*)?$/i.test(trimmed)) {
+    return '<img src="' + esc(trimmed) + '" alt="Bild" referrerpolicy="no-referrer" style="max-width:100%;border-radius:8px">';
   }
-  if (/^https?:\/\/\S+$/i.test(trimmed)) {
+  if (/^https:\/\/\S+$/i.test(trimmed)) {
     return '<a href="' + esc(trimmed) + '" target="_blank" rel="noopener noreferrer">' + esc(trimmed) + '</a>';
   }
   /* Nur reiner Text wird markiert - in ein Bild oder einen Link duerfen
@@ -11106,11 +11108,17 @@ function commitSetOrder(parent) {
   const inGruppe = new Set(ids);
   sets.forEach((x, i) => { if (inGruppe.has(x.id)) plaetze.push(i); });
   if (neu.length > 0 && neu.length === plaetze.length) {
+    const oldPositions = new Map(plaetze.map((pos, i) => [neu[i].id, pos]));
     plaetze.forEach((pos, i) => { sets[pos] = neu[i]; });
     const b = currentBereich();
     const patch = {};
-    sets.forEach((x, i) => { patch[pfadSet(b.id, x.id) + ".order"] = i; });
-    patchDoc(patch);
+    neu.forEach((x, i) => {
+      const newPos = plaetze[i];
+      if (oldPositions.get(x.id) !== newPos) {
+        patch[pfadSet(b.id, x.id) + ".order"] = newPos;
+      }
+    });
+    if (Object.keys(patch).length > 0) patchDoc(patch);
   }
 }
 
@@ -11121,8 +11129,10 @@ function commitSetCardOrder(parent, setid) {
   const set = findSet(setid);
   const neu = [...parent.querySelectorAll(".card-row")].map(r => r.dataset.cardid).filter(Boolean);
   if (set && neu.length === set.cardIds.length) {
-    set.cardIds = neu;
-    patchDoc({ [pfadSet(currentBereich().id, set.id) + ".cardIds"]: neu });
+    if (neu.some((id, i) => id !== set.cardIds[i])) {
+      set.cardIds = neu;
+      patchDoc({ [pfadSet(currentBereich().id, set.id) + ".cardIds"]: neu });
+    }
   }
 }
 
@@ -11135,9 +11145,17 @@ function commitBereichOrder(parent) {
   const byId = new Map(cards.map(c => [c.id, c]));
   const reordered = newOrderIds.map(cid => byId.get(cid)).filter(Boolean);
   if (listenFenster.anzahl > 0 && reordered.length === listenFenster.anzahl) {
+    const oldPositions = new Map(cards.slice(listenFenster.start, listenFenster.start + listenFenster.anzahl).map((c, i) => [c.id, listenFenster.start + i]));
     cards.splice(listenFenster.start, listenFenster.anzahl, ...reordered);
-    /* A4: nur die Ordnungszahlen dieses Bereichs, nichts sonst. */
-    patchDoc(ordnungPatch(currentBereich()));
+    /* A4: nur die Ordnungszahlen geaenderter Karten. */
+    const patch = {};
+    reordered.forEach((c, i) => {
+      const newPos = listenFenster.start + i;
+      if (oldPositions.get(c.id) !== newPos) {
+        patch[pfadKarte(currentBereich().id, c.id) + ".order"] = newPos;
+      }
+    });
+    if (Object.keys(patch).length > 0) patchDoc(patch);
   }
 }
 

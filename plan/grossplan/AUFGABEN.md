@@ -23,8 +23,8 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-001 | Prüfskript `pruefe_stand.mjs` (Version, CHANGELOG, CSP-Hashes, APP_SHELL, csp-build) | TECHNIK-2 | hoch | A | S | – | erledigt (Plan, 25.09.) |
 | G-002 | Rechtsseiten ignorieren helles Thema: CSP blockiert Kopfskript → Skript byte-gleich zu `index.html` machen (`#0e0e12`→`#111010`) | TECHNIK-1 | hoch | A | H | P1 | erledigt (3.17.30) |
 | G-003 | „not-found" beim Speichern schreibt alle Bereiche ohne merge neu: Teilen/Lehrer/geführt weg, Gelöschtes kommt zurück | DATEN-1, REGELN-1 | **kritisch** | A | O | P2 | erledigt (3.17.30) |
-| G-004 | Kartensatz-Update ersetzt über das Wort, auch bei anderer `quelleId` (عين Auge/Quelle) | DATEN-2 | hoch | A | S | P3 | offen |
-| G-005 | Jede Sortierbewegung schreibt `order` aller Karten (Kontingent) | DATEN-3 | hoch | A | S | P4 | offen |
+| G-004 | Kartensatz-Update ersetzt über das Wort, auch bei anderer `quelleId` (عين Auge/Quelle) | DATEN-2 | hoch | A | S | P3 | erledigt (3.17.32) |
+| G-005 | Jede Sortierbewegung schreibt `order` aller Karten (Kontingent) | DATEN-3 | hoch | A | S | P4 | erledigt (3.17.32) |
 | G-006 | Geteilte Sätze verwaisen und überleben „Konto löschen" (Regel `list` nach Besitzer + Löschen über Besitzer + Reihenfolge) | REGELN-3 | hoch | A | O | P2 | erledigt (3.17.30) |
 | G-007 | Serie bleibt bei 121 Tagen stehen (Protokoll 120 Tage, Sockel wird nicht nachgezogen) | LERNEN-1 | hoch | A¹ | O | P5 | erledigt (3.17.31) |
 | G-008 | Prüfskript in den Veröffentlichen-Knopf und die `.bat` einbauen (bricht vor dem Deploy ab) | TECHNIK-2, -14 | hoch | A | H | P1 | erledigt (3.17.30) |
@@ -44,7 +44,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-017 | Code erzeugen: Code steht am Bereich, bevor er gespeichert ist; keine 1-MiB-Prüfung; kein Zeitlimit | REGELN-7, LERNEN-7, DATEN-7 | A | S | P2 | erledigt (3.17.30) |
 | G-018 | „Teilen beenden"/Bereich löschen scheitert still, Code bleibt lesbar → erst Cloud löschen, dann lokal | DATEN-6 | A | S | P2 | erledigt (3.17.30) |
 | G-019 | Fremde Sätze können über `quelleId: null` doch Bilder vom Absender-Server laden | DATEN-4 | A | S | P3 | erledigt (3.17.30) |
-| G-020 | Bilder in der Kartenliste sprengen die Zeile, laden alle mit Referer, `http://` bricht | DATEN-5 | A | S | P4 | offen |
+| G-020 | Bilder in der Kartenliste sprengen die Zeile, laden alle mit Referer, `http://` bricht | DATEN-5 | A | S | P4 | erledigt (3.17.32) |
 | G-021 | Suche ab ~1400 Karten langsam (Zwischenspeicher zu klein) | DATEN-9 | A | S | P4 | offen |
 | G-022 | Großer Import in Stapeln nacheinander – Abbruch hinterlässt halben Bereich | DATEN-10 | A | O | P3 | offen |
 | G-023 | Ring und „Heute schon N Antworten" zählen fremde Bereiche mit | REST-1 | A | S | P9 | offen |
@@ -59,7 +59,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-032 | „Fehler melden": Tab verlässt den Dialog, Fokus kehrt nicht zurück | TECHNIK-7 | A | S | P12 | offen |
 | G-033 | Kurzmeldungen erreichen Bildschirmleser vermutlich nicht (Live-Region neu mit Text) | TECHNIK-8 | A | S | P12 | offen |
 | G-034 | Veröffentlichen lädt `*.zip` mit hoch; `.bat` deployt ungeprüften Arbeitsordner | TECHNIK-9 | A | H | P1 | erledigt (3.17.30) |
-| G-035 | „Gesehen" + Rückgängig zählt den Tag für die Serie | LERNEN-3 | A | S | P5 | offen |
+| G-035 | „Gesehen" + Rückgängig zählt den Tag für die Serie | LERNEN-3 | A | S | P5 | erledigt (3.17.32) |
 | G-036 | Keine Warnung an dem Tag, an dem Aussetzen die halbe Serie kostet (Hinweis an die geltende Regel angleichen) | LERNEN-5 (a) | A | S | P5 | offen |
 | G-037 | Große Bestände: jede Bewertung 200–700 ms Rechenzeit (3000–6000 Karten) | LERNEN-6 | A | O | P13 | offen |
 | G-038 | „Kostenlos." steht noch unter „Plan speichern" | EINSTIEG-2 | A | H | P14 | erledigt (3.17.30) |

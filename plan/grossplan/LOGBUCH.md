@@ -6,7 +6,31 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☐ · A5 ☐ · A6 ☐ |
-| Nächste Runde | 2 (G-007 fertig, G-004/005/020/035 offen) |
+| Nächste Runde | 2 vollständig (alle 4 Aufgaben erledigt, v3.17.32) |
+
+---
+
+### 2026-09-25 — Runde 2, Aufgaben G-004/005/020/035: Kartensätze, Sortierung, Bilder, Serie (v3.17.32)
+
+**Geändert:** `app.js` (Zeilen 3897, 3999, 10131–10138, 11097–11127, 11122–11129, 11134–11153), `styles.css` (2615–2617, 2625–2628), `CHANGELOG.md`, `plan/grossplan/AUFGABEN.md`
+
+**Fehler behoben:**
+
+1. **G-004 (quelleId-Kollision):** Kartensatz-Updates prüften nach Wort statt quelleId. Zwei Sätze mit gleichem Wort aber unterschiedlichen quelleIds wurden verwechselt. Fix: `satzUnterschied()` und `satzZusammenfuehren()` nutzen jetzt nur quelleId, OR-Fallback entfernt.
+
+2. **G-005 (Sortierungs-Quota):** Jede Sortierbewegung schrieb ALLE Karten in Firestore, nicht nur die bewegten. Mit 500-Karten-Sätzen beschleunigte das die Quote-Erschöpfung. Fix: `commitSetOrder()`, `commitSetCardOrder()`, `commitBereichOrder()` speichern nur noch Karten, deren Position sich tatsächlich änderte.
+
+3. **G-020 (Bilder-Layout):** Fremde Bilder wurden mit Referer geladen und sprengten Listenzeilen. `http://` URLs funktioniert nicht. Fix: `renderExtra()` nur noch `https://`, `referrerpolicy="no-referrer"` auf `<img>`, CSS für `.extra-note img` (max 60px) und `.extra-note-voll img` (max 90%).
+
+4. **G-035 (Serie + Gesehen):** Abhaken „Gesehen" schrieb `verlauf` und zählte für die Streife, obwohl es nur Stufe 0 ist. Fix: `verlaufZaehle()` aus `lernAbhaken()` entfernt.
+
+**Testfälle:** node --check app.js ✓
+
+**Prüfstand:** Commit v3.17.32 + Push main
+
+**Offen:** Keine – Runde 2 vollständig.
+
+**Nächster Schritt:** Runde 3 (nach Entscheidungen E-01…E-18 vom Betreiber) oder Betreiber-Schritte (Firebase Hosting, Live-Regeln bei Bedarf).
 
 ---
 

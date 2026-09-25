@@ -2613,12 +2613,20 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   font-size: var(--fs-xs); color: var(--text-3); margin-top: 2px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+.extra-note img {
+  max-width: 60px; height: 60px;
+  object-fit: cover; display: inline-block;
+}
 /* Aufgeklappte Notiz im Lernen-Tab (Chevron-Knopf) - hier soll der volle
    Text mit Zeilenumbruechen sichtbar sein, anders als in der einzeiligen
    Listenvorschau oben. Eigene Klasse statt .extra-note zu ueberladen. */
 .extra-note-voll {
   font-size: var(--fs-xs); color: var(--text-2); margin-top: var(--space-2);
   white-space: pre-wrap;
+}
+.extra-note-voll img {
+  max-width: 90%;
+  object-fit: cover;
 }
 .card-tags-inline { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
 

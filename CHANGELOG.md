@@ -1,3 +1,12 @@
+## 3.17.32 – 25. September 2026
+
+**Großplan, Runde 2: Kartensätze, Sortierung, Bilder, Serie.** Vier Fehler aus den Funden der Großprüfung.
+
+- **Kartensatz-Updates kollidieren bei gleichem Wort (quelleId).** Zwei Sätze mit demselben Wort aber unterschiedlichen quelleIds wurden verwechselt, das Wort wurde über das erste Ergebnis aktualisiert, Sätze gingen durcheinander. Fix: Lookup filtert jetzt korrekt nach quelleId.
+- **Sortierbewegungen schreiben jede Karte neu.** Jede Verschiebung im Kartensatz oder Bereich triggerte Firestore-Writes für *alle* Karten, nicht nur die bewegten. Mit 500-Karten-Sätzen war die Quote überlastet. Fix: Nur verschobene Karten werden gepatchr.
+- **Bilder in Kartenliste sprengen die Zeile.** Fremde Bilder wurden mit vollem Referer geladen und sprengten die Vorschau. Fix: `max-width: 60px; height: 60px` für Listenbilder, `referrerpolicy="no-referrer"` überall, nur HTTPS erlaubt.
+- **„Gesehen" beeinträchtigt die Serie.** Das Abhaken „Gesehen" schrieb das Tagesprotokoll und zählte für die Streife, obwohl es nur Stufe 0 und keine echte Bewertung ist. Fix: `verlaufZaehle()` entfernt aus `lernAbhaken()`.
+
 ## 3.17.31 – 25. September 2026
 
 **Großplan, Runde 2, G-007: Serie wächst unbegrenzt für neue Konten.**
