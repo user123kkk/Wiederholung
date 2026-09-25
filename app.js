@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.29";
+const APP_VERSION = "3.17.30";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -446,9 +446,9 @@ const SET_ARTEN = ["kategorie", "lektion", "eigen"];
    sie sind der Weg. Kategorien danach, die sind zum Nachschlagen. Eigene
    zuletzt, weil sie am Anfang leer sind und erst mit der Zeit wachsen. */
 const SET_ARTEN_ANZEIGE = ["lektion", "kategorie", "eigen"];
-/* Ab dieser je erreichten Stufe gilt eine Karte als sitzend. Stufe 2 heisst
-   bei den Intervallen (1,8 hoch Stufe-1): einmal gelernt, am naechsten Tag
-   wiedererkannt. Eine Lektion braucht also mindestens zwei Tage. */
+/* Ab dieser je erreichten Stufe (maxStufe) gilt eine Karte als sitzend.
+   Stufe 1 heisst: mindestens einmal mit "Sicher" bewertet. (Bis 3.17.29
+   stand hier "Stufe 2" - der Wert ist aber 1, der Kommentar war veraltet.) */
 const LEKTION_STUFE = 1;
 /* ---------- 2.13.1: liegengebliebene Karten ----------
    Die Serie zaehlt ueber ALLE Bereiche. Damit konnte ein einziger Bereich mit
@@ -2567,11 +2567,11 @@ function bereicheMitOffenem() {
 
 /* ---------- Auth-Aktionen ---------- */
 const AUTH_ERRORS = {
-  "auth/invalid-credential": "E-Mail oder Passwort ist falsch. Mit Google angelegt? Dann unten „Mit Google anmelden".",
+  "auth/invalid-credential": "E-Mail oder Passwort ist falsch. Mit Google angelegt? Dann unten „Mit Google anmelden“.",
   "auth/user-not-found": "Kein Konto mit dieser E-Mail gefunden.",
   "auth/wrong-password": "E-Mail oder Passwort ist falsch.",
   "auth/invalid-email": "Das ist keine gültige E-Mail-Adresse.",
-  "auth/email-already-in-use": "Zu dieser E-Mail gibt es schon ein Konto. Melde dich an – mit Google oder über „Passwort vergessen?".",
+  "auth/email-already-in-use": "Zu dieser E-Mail gibt es schon ein Konto. Melde dich an – mit Google oder über „Passwort vergessen?“.",
   "auth/weak-password": "Passwort zu schwach – mindestens 6 Zeichen.",
   "auth/missing-password": "Bitte ein Passwort eingeben.",
   "auth/too-many-requests": "Zu viele Versuche – warte kurz oder setz dein Passwort zurück.",

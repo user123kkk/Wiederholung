@@ -33,7 +33,9 @@ Regeln des Repos, die hier gelten:
 - Eintrittsbewegungen nur als @keyframes; prefers-reduced-motion beachten
 - Zustand in `ui`, nicht nur im DOM
 - Texte: Du-Form, ein Satz, mz(n, "Karte", "Karten") für Einzahl/Mehrzahl,
-  keine Systemcodes; deutsche Anführungszeichen nur IN Strings, nie als Begrenzer
+  keine Systemcodes; deutsche Anführungszeichen nur IN Strings, nie als Begrenzer,
+  und zwar genau „ (U+201E) … “ (U+201C) wie im Bestand – nicht ” (U+201D)
+  (Runde 1: Haiku setzte ” – Abnahme fand es)
 - nur vorhandene CSS-Token (var(--…)), die es in styles.css wirklich gibt
 
 Prüfen, bevor du fertig meldest:

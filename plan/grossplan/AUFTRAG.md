@@ -161,19 +161,25 @@ Menschen. Diese stehen im Abschlussbericht unter „Was Du noch tun musst".
 
 ## 5. Die Routine (Zeitplan)
 
-- Name: **„Adrabic Großplan – Nachtschicht"**.
-- Kennung und Zeitplan stehen im `LOGBUCH.md` (oberster Kasten).
-- Jede Auslösung startet eine **frische** Session (sauberer Kontext) mit dem
-  Auftrag: „Eine Runde nach `plan/grossplan/AUFTRAG.md`." Die Session ist
-  Opus und verteilt selbst an Sonnet/Haiku.
+- Name: **„Adrabic Großplan – Nachtschicht"**, Kennung
+  `trig_01L6Ves47R3gsG5kvqQVmyQA`.
+- Zeitplan: **23:07, 2:07 und 5:07 Uhr (Europe/Berlin)**, jede Nacht.
+- Sie weckt **die Session, in der der Plan entstanden ist**
+  (`session_01WzaCEZCxEqmfKVPh1ipGvX`). Warum nicht jedes Mal eine frische
+  Session: Eine von der Routine neu gestartete Session hätte kein Repository
+  angehängt und keine Konnektoren, der Push auf `main` wäre nicht gesichert.
+  In dieser Session ist beides bewiesen. Der Kontext wird bei Bedarf
+  zusammengefasst; deshalb steht der Stand immer in den Dateien, nie nur im
+  Gedächtnis.
+- Auftrag bei jedem Aufwachen: **eine** Runde nach § 2. Opus dirigiert und
+  verteilt an Sonnet/Haiku.
 - Die Routine veröffentlicht **nie** auf die Website. Sie pusht auf `main`;
   live geht es erst mit dem Knopf des Betreibers (GitHub → Actions →
   „Veroeffentlichen").
 - **Anhalten:** claude.ai → Routines → „Adrabic Großplan – Nachtschicht" →
-  ausschalten. Oder in einer Session: „Schleife stoppen".
-- Sind A1–A6 erfüllt, schaltet die letzte Runde die Routine selbst ab
-  (`update_trigger enabled=false`) und schreibt den Abschlussbericht
-  (`LOGBUCH.md`, oberster Eintrag „ABSCHLUSS").
-- Morgenbericht: Die letzte Runde der Nacht schreibt oben ins Logbuch eine
-  kurze Zusammenfassung für den Betreiber: was erledigt ist, was zurückging,
-  was er entscheiden oder klicken muss.
+  ausschalten. Oder in der Session schreiben: „Schleife stoppen".
+- Sind A1–A6 erfüllt, schaltet die letzte Runde die Routine selbst ab und
+  schreibt den Abschlussbericht (`LOGBUCH.md`, oberster Eintrag
+  „ABSCHLUSS").
+- Die letzte Antwort jeder Runde ist ein kurzer Morgenbericht: was erledigt
+  ist, was zurückging, was der Betreiber entscheiden oder klicken muss.
