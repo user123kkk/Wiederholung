@@ -1,3 +1,20 @@
+## 3.17.26 – 25. September 2026
+
+**Lernrunde ruhiger: eine Bewegung pro Tipp, nichts taucht nachträglich auf.**
+Umgesetzt nach der Messung vom 25.09. (V1–V6, `plan/audit/LOGBUCH.md`).
+
+- Kein pulsierender Leuchtring mehr um die zugedeckte Karte – er kam genau
+  während des Erinnerns.
+- Die drei Bewertungsknöpfe erscheinen gleichzeitig mit der Drehung statt
+  nacheinander (voll da nach 0,34 s statt 0,68 s).
+- Das Wort bleibt beim Umdrehen auf derselben Höhe; die Antwort erscheint
+  darunter.
+- „Antwort zeigen" hat dieselbe Fläche wie die Bewertungsknöpfe – kein
+  Hell-Dunkel-Wechsel mehr unter dem Daumen.
+- Bewerten: kurzer Schub in die Richtung und Ausblenden (0,26 s) statt Flug
+  über die nächste Karte.
+- „Merken" steht von Anfang an da, nicht erst nach dem Aufdecken.
+
 ## 3.17.25 – 25. September 2026
 
 **Lernrunde: kein blindes Bewerten mehr durch einen schnellen zweiten Tipp.**

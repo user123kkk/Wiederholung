@@ -1859,6 +1859,10 @@ button.startliste__schritt { cursor: pointer; }
    hat, die volle Knopfhoehe (--ctrl-lg), nicht mehr 58 px. */
 .study-aufdecken, .grade-row button { min-height: var(--ctrl-lg); }
 .study-aufdecken { height: var(--ctrl-lg); margin-bottom: var(--space-2); }
+/* 3.17.26: kein Hell->Dunkel-Wechsel unter dem Daumen mehr - "Antwort
+   zeigen" hat dieselbe Flaeche wie die Bewertungsknoepfe, die ihn abloesen. */
+button.study-aufdecken { background: var(--surface-raised); color: var(--text-1); border: 1px solid var(--border-strong); box-shadow: none; }
+@media (hover: hover) and (pointer: fine) { button.study-aufdecken:hover { background: var(--surface-overlay); } }
 .grade-row button { font-size: var(--fs-base); font-weight: 600; }
 .karte-geist .karte-dreh { height: 100%; }
 .study-extra--platz { visibility: hidden; animation: none; }
@@ -2087,19 +2091,14 @@ button.startliste__schritt { cursor: pointer; }
      Karte beginnt die Wartezeit von vorn (neues Markup).
    - Aufleuchten: die bewertete Karte gibt beim Wegfliegen einen Ring in der
      Farbe ihrer Bewertung ab (.karte-geist, unten). */
-.study-flaeche--wartet .karte-seite--vorn::after {
-  content: ""; position: absolute; inset: -1px;
-  border-radius: inherit; pointer-events: none;
-  animation: karte-einladen 7s var(--ease-out) 2.6s infinite;
-}
-@keyframes karte-einladen {
-  0%   { box-shadow: 0 0 0 0 var(--accent-border), inset 0 0 0 1px var(--accent-border); }
-  18%  { box-shadow: 0 0 0 14px transparent, inset 0 0 0 1px transparent; }
+/* 3.17.26: Einladen-Puls entfernt - er kam genau waehrend des Erinnerns
+   (Betreiber: "umdrehen nicht gezwungen"). Den Hinweis gibt "Tippen zum
+   Umdrehen" auf der ersten Karte. */
   100% { box-shadow: 0 0 0 0 transparent, inset 0 0 0 1px transparent; }
 }
-.karte-geist--known .karte-seite   { animation: geist-glanz-gut 440ms var(--ease-out) both; }
-.karte-geist--unknown .karte-seite { animation: geist-glanz-nicht 440ms var(--ease-out) both; }
-.karte-geist--almost .karte-seite  { animation: geist-glanz 440ms var(--ease-out) both; }
+.karte-geist--known .karte-seite   { animation: geist-glanz-gut 260ms var(--ease-out) both; }
+.karte-geist--unknown .karte-seite { animation: geist-glanz-nicht 260ms var(--ease-out) both; }
+.karte-geist--almost .karte-seite  { animation: geist-glanz 260ms var(--ease-out) both; }
 @keyframes geist-glanz-gut   { from { box-shadow: 0 0 0 0 var(--positive-border); } to { box-shadow: 0 0 0 18px transparent; } }
 @keyframes geist-glanz-nicht { from { box-shadow: 0 0 0 0 var(--negative-border); } to { box-shadow: 0 0 0 18px transparent; } }
 @keyframes geist-glanz       { from { box-shadow: 0 0 0 0 var(--accent-border); } to { box-shadow: 0 0 0 18px transparent; } }
@@ -2108,32 +2107,31 @@ button.startliste__schritt { cursor: pointer; }
    Kopie ausserhalb von #app, damit render() sie nicht mitnimmt. */
 .karte-geist { z-index: 40; pointer-events: none; will-change: transform, opacity; }
 .karte-geist .karte-seite { min-height: 0; height: 100%; }
-.karte-geist--known   { animation: geist-rechts 440ms cubic-bezier(0.4, 0, 0.9, 0.6) forwards; }
-.karte-geist--unknown { animation: geist-links 440ms cubic-bezier(0.4, 0, 0.9, 0.6) forwards; }
-.karte-geist--almost  { animation: geist-sinkt 440ms cubic-bezier(0.4, 0, 0.9, 0.6) forwards; }
-.karte-geist--weiter  { animation: geist-weiter 400ms cubic-bezier(0.4, 0, 0.9, 0.6) forwards; }
+.karte-geist--known   { animation: geist-rechts 260ms var(--ease-out) forwards; }
+.karte-geist--unknown { animation: geist-links 260ms var(--ease-out) forwards; }
+.karte-geist--almost  { animation: geist-sinkt 260ms var(--ease-out) forwards; }
+.karte-geist--weiter  { animation: geist-weiter 260ms var(--ease-out) forwards; }
 .karte-geist--known .karte-seite   { border-color: var(--positive-border); }
 .karte-geist--unknown .karte-seite { border-color: var(--negative-border); }
+/* 3.17.26: kurzer Schub in die Richtung und weg - kein Flug mehr ueber die
+   naechste Karte (zwei Woerter uebereinander). */
 @keyframes geist-rechts {
-  0%   { transform: none; opacity: 1; }
-  18%  { transform: translateX(-10px) rotate(-1.5deg); opacity: 1; }
-  100% { transform: translateX(115vw) rotate(14deg); opacity: 0.6; }
+  from { transform: none; opacity: 1; }
+  to   { transform: translateX(56px) rotate(2.5deg); opacity: 0; }
 }
 @keyframes geist-links {
-  0%   { transform: none; opacity: 1; }
-  18%  { transform: translateX(10px) rotate(1.5deg); opacity: 1; }
-  100% { transform: translateX(-115vw) rotate(-14deg); opacity: 0.6; }
+  from { transform: none; opacity: 1; }
+  to   { transform: translateX(-56px) rotate(-2.5deg); opacity: 0; }
 }
 /* "Fast" hat keine Wischrichtung - die Karte faellt nach unten aus dem Bild,
    statt an Ort und Stelle zu verblassen (das mischte sich mit der neuen). */
 @keyframes geist-sinkt {
-  0%   { transform: none; opacity: 1; }
-  18%  { transform: translateY(-8px); opacity: 1; }
-  100% { transform: translateY(85vh) rotate(3deg); opacity: 0.5; }
+  from { transform: none; opacity: 1; }
+  to   { transform: translateY(40px); opacity: 0; }
 }
 @keyframes geist-weiter {
-  0%   { transform: none; opacity: 1; }
-  100% { transform: translate(-60vw, -40px) rotate(-10deg); opacity: 0; }
+  from { transform: none; opacity: 1; }
+  to   { transform: translateX(-56px); opacity: 0; }
 }
 
 /* Die drei Bewertungen kommen nacheinander herein, wie die Antwortzeilen im
@@ -2141,10 +2139,12 @@ button.startliste__schritt { cursor: pointer; }
    bei jedem Neuzeichnen wieder in Bewegung). */
 .grade-row { animation: none; }
 .grade-row button { position: relative; overflow: hidden; }
+/* 3.17.26: alle drei zugleich, nur Einblenden, mit der Drehung (kein
+   Nacheinander mehr - das wirkte wie Aufploppen). */
 .study-card:has(.study-flaeche--dreht) .grade-row button {
-  animation: einstieg-zeile 320ms var(--ease-out) backwards;
-  animation-delay: calc(var(--n, 0) * 60ms + 240ms);
+  animation: bewertung-da 200ms var(--ease-out) 140ms backwards;
 }
+@keyframes bewertung-da { from { opacity: 0; } to { opacity: 1; } }
 .grade-row button { transition: transform 140ms var(--ease-out), filter 140ms var(--ease-out); }
 .grade-row button:active { transform: scale(0.95); filter: brightness(1.18); transition-duration: 60ms; }
 .grade-row button .sub { transition: opacity var(--dur-fast) var(--ease-out); }
@@ -5069,3 +5069,6 @@ label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); f
    gesperrt da, bis es einen Strich gibt - mit der ueblichen Deckkraft 0.45
    lag die Schrift bei 4,03:1. Gesperrt, aber lesbar. */
 .hw-toolbar button:disabled { opacity: 0.62; }
+
+/* 3.17.26: haelt Platz, ohne sichtbar oder bedienbar zu sein */
+.platz-leer { visibility: hidden; pointer-events: none; }

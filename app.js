@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.25";
+const APP_VERSION = "3.17.26";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -5118,7 +5118,7 @@ function kartenAbflug(kind) {
     }
     g.style.cssText = "position:fixed;margin:0;left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;height:" + r.height + "px";
     document.body.appendChild(g);
-    setTimeout(() => g.remove(), 560);
+    setTimeout(() => g.remove(), 340);
   } catch (e) {}
 }
 /* 3.17.25: Ein zweiter Tipp kurz nach "Antwort zeigen" traf "Fast", das genau
@@ -9623,6 +9623,15 @@ function renderSession() {
   html += '<div class="karte-dreh' + (frischAufgedeckt ? ' karte-dreh--wende' : '') + '">';
   if (!s.revealed || frischAufgedeckt) {
     html += '<div class="karte-seite karte-seite--vorn"' + (s.revealed ? ' aria-hidden="true"' : '') + '>' + kopf + wortHtml;
+    /* 3.17.26: Linie, Antwort und Tags stehen vorn unsichtbar mit - dann
+       steht das Wort auf beiden Seiten gleich hoch. Vorher sprang es beim
+       Umdrehen nach oben, weil die Rueckseite Wort + Antwort als Block
+       zentriert. visibility: hidden liest kein Bildschirmleser vor. */
+    if (!s.handwriting) {
+      html += '<div class="study-trenner platz-leer" aria-hidden="true"></div>' +
+        '<div class="study-answer platz-leer' + (answerArabic ? ' arabic" lang="ar" dir="rtl' : '') + '" aria-hidden="true">' + esc(answerText) + '</div>' +
+        '<div class="platz-leer" aria-hidden="true">' + kartenTagsHtml(card.id, currentBereich()) + '</div>';
+    }
     /* 3.15.0: nur auf der ersten Karte einer Runde - danach weiss man es,
        und der Satz waere auf jeder weiteren Karte nur noch Rauschen. */
     if (!s.handwriting && !s.zug) {
@@ -9673,11 +9682,15 @@ function renderSession() {
   /* ---- Die Aktionszone, unten verankert ---- */
   html += '<div class="study-aktionen">';
 
-  if (s.revealed) {
+  /* 3.17.26: "Merken" steht von Anfang an da (auch vor dem Aufdecken
+     sinnvoll: "die kann ich nie"). Der Notiz-Knopf gibt es erst mit der
+     Antwort - vorher haelt ein unsichtbarer Zwilling seinen Platz. */
+  if (s.revealed || !s.handwriting) {
     html += '<div class="study-nebenaktionen">';
     if (card.extra) {
-      html += '<button class="ghost" data-action="toggle-extra">' +
-        (s.extraOpen ? "Notiz verbergen" : "Notiz anzeigen") + '</button>';
+      html += s.revealed
+        ? '<button class="ghost" data-action="toggle-extra">' + (s.extraOpen ? "Notiz verbergen" : "Notiz anzeigen") + '</button>'
+        : '<button class="ghost platz-leer" tabindex="-1" aria-hidden="true">' + (s.extraOpen ? "Notiz verbergen" : "Notiz anzeigen") + '</button>';
     }
     /* 2.11.0/2.21.0: "Merken" genau dort, wo einem auffaellt, dass eine Karte
        schwer ist - auch im Uebungsmodus, denn es aendert nur die
@@ -9709,11 +9722,6 @@ function renderSession() {
     if (s.handwriting) {
       /* Bei Handschrift deckt "Fertig" in der Zeichenleiste auf. */
     } else {
-      /* 3.14.0: Platzhalter in Hoehe der Zeile "Merken", die nach dem
-         Aufdecken dort steht - sonst rutschte die Karte mitten in der
-         Drehung um gut 30px nach oben (gemessen: Aktionszone 72 -> 133px). */
-      html += '<div class="study-nebenaktionen" aria-hidden="true" style="visibility:hidden">' +
-        '<button class="ghost" tabindex="-1">' + ikon("stern", "i-sm") + 'Merken</button></div>';
       html += '<button class="lg full study-aufdecken" data-action="reveal">Antwort zeigen</button>';
     }
   } else {

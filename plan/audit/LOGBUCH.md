@@ -28,6 +28,33 @@ des Betreibers (AUFTRAG.md).
 
 ---
 
+### 2026-09-25 — V1–V6 gebaut: Lernrunde ruhig (v3.17.26)
+
+**Anlass:** Betreiber nach dem ersten Deploy: „das ist wirklich clean [...]
+tool an sich bitte überall clean und smooth" – als Freigabe für V1–V6 gelesen.
+
+**Geändert:** `styles.css` – `karte-einladen` entfernt (V1); Knöpfe
+`bewertung-da` 200 ms + 140 ms für alle drei (V2); `button.study-aufdecken`
+Fläche wie `.btn-almost` (V4); `geist-*` 260 ms, 56 px Schub + Ausblenden
+statt 115 vw Flug (V5); neu `.platz-leer`. `app.js` – Vorderseite trägt
+Linie/Antwort/Tags unsichtbar mit (V3); `.study-nebenaktionen` immer da,
+Notiz-Knopf vorher als unsichtbarer Zwilling, alter Platzhalter entfernt
+(V6); `kartenAbflug` räumt nach 340 statt 560 ms ab. Version 3.17.26.
+
+**Gemessen** (`t_runde_gefuehl.js`): Karte 0 px, Knöpfe voll bei 340 ms
+(< Sperre 400 ms), Bewerten nur noch eine Animation (260 ms), Wort vorn/
+hinten gleich hoch, keine Überlappung bei 150 ms. Regression:
+`t_doppeltipp` 4/4, `t_runde_rest` ok, `t_ueben` ok, `t_sprung` 0 (klein ±1
+Rundung wie bisher), `t_kontrast` 0, `t_a11y` ok, Affe Handy 150 / iPad 120
+0 Befunde.
+
+**Offen:** Wunsch „alle Methoden für so Apps überprüfen/ergänzen" – als
+nächster Schritt eine Prüfliste gängiger Lern-App-Methoden gegen den Stand.
+
+**Nächster Schritt:** Diese Prüfliste anlegen (`plan/redesign-oberflaeche/`).
+
+---
+
 ### 2026-09-25 — Veröffentlichen vom iPad: GitHub-Knopf statt veroeffentlichen.bat
 
 **Anlass:** Betreiber am iPad (Safari), kein PC: „bitte finde einen Weg von
