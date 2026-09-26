@@ -786,7 +786,12 @@ Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRA
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (26.09.2026, abends): v3.17.37 auf `main`; live ist 3.17.35.**
+**AKTUELL (26.09.2026, spätabends): v3.17.38 auf `main`; live ist 3.17.35.**
+Großplan Runde 8 fertig: Konto (G-011, G-050, G-051, G-053, G-054), Board-
+Mengenbremse (G-016, **Regel erst nach 3.17.38 live veröffentlichen**, K10),
+Wort springt beim Drehen (G-090). **Wartet auf Betreiber:** K11, dann K10.
+
+**Davor (26.09.2026, abends): v3.17.37 auf `main`; live ist 3.17.35.**
 Großplan Runde 7 fertig: G-067, G-070, G-086, G-087, G-089 (Meldungen,
 Fehlerformular, dauerhafter Speicher). Weiter mit Runde 8.
 **Wartet auf Betreiber:** K11 (3.17.36 + 3.17.37), sonst wie unten.

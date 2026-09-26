@@ -6,7 +6,65 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4–7) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 8 (Runde 7 fertig, v3.17.37) |
+| Nächste Runde | 9 (Runde 8 fertig, v3.17.38) |
+
+---
+
+### 2026-09-26 — Runde 8: Konto sicherer, Karte ruhiger (v3.17.38)
+
+**Geändert:** `app.js`: `kontoAnmeldungFrisch()` entfernt, `kontoLoeschenAusfuehren()`
+offline gesperrt → immer `kontoNeuAnmelden()` → Sicherung →
+`mitLoeschenZeitlimit(kontoDatenLoeschen())` (30 s) → `kontoAuthLoeschen()`
+(G-051, G-011); `renderKontoLoeschen()` offline `disabled`; Bestätigungsseite
+„Adresse falsch? Neu anfangen" (`fb.deleteUser`, dort jetzt auch
+`renderDialog()`, G-054); `ui.registrierungZeitlimit` → einmal Mail + Name
+nachholen (G-050); Anmelde-Felder in `<form data-submit>`, eine
+`submit`-Delegation auf `body`, `authBusy`-Sperre (G-053); `FEEDBACK_LIMIT`,
+Board mit `orderBy("votes")`/`limit(100)`, Stimm-Merker beim Löschen
+seitenweise (G-016) · `firestore.rules`: feedback `list` nur mit
+`limit <= 100`, Titel nicht leer, Form von `inhalt.bereiche[0]` (G-016) ·
+`styles.css`: `.karte-seite > .platz-leer:empty:not(.study-trenner)` (G-090) ·
+`regeln-pruefung.mjs` M1–M8 · `stubs.js` (Protokoll, orderBy/limit/startAfter
+echt, feedback ohne limit abgelehnt) · `lib.js` `opt.vorher` · Tests
+`t_konto_loeschen2`, `t_bestaetigung_neu`, `t_registrieren_zeitlimit`,
+`t_anmelden_enter` (Handwerker), `t_board_limit`, `t_dreh_lage` (Dirigent) ·
+`KONSOLE.md` K10 Reihenfolge · Version 3.17.38, `CHANGELOG.md` · `LEHREN.md` § 15.
+
+**Wer:** G-051, G-011, G-054, G-050, G-053 ein Handwerker (Sonnet, nacheinander);
+G-016 (Regel + App), G-090 Dirigent. Betreiber meldete mitten in der Runde
+„beim Drehen glitcht es … wird fester".
+
+**Entscheidung:** G-051 kostet bei Google ein zweites Popup – gewollt, Löschen
+soll nicht „so einfach" sein (Betreiber) und nie mehr an der Geräte-Uhr
+hängen. G-016 ohne Kartenzahl-Grenze für geteilte Sätze (1 MiB begrenzt
+ohnehin, eine Zahl hätte echte große Sätze abgewiesen). Board zeigt bei mehr
+als 100 Ideen die 100 mit den meisten Stimmen – eine neue Idee mit 0 Stimmen
+fehlt dann; bei der heutigen Größe ohne Belang. G-090: vorn stand ein LEERER
+Tag-Platzhalter als Flex-Kind (gap 12 px) → Wort 6 px höher als hinten.
+
+**Abnahme (selbst geprüft):** Diffs gelesen; Reihenfolge beim Löschen im Code
+nachgelesen. Emulator 161/161, alte Regeln 154/161 (M1–M8 rot). `t_dreh_lage`
+0 px auf vier Geräten, alt 6 px. `t_board_limit`: 100 Zeilen, 0 Merker übrig,
+alt scheitert. Bei der Abnahme korrigiert: `t_konto_loeschen2` Gegenprobe C maß
+`.busy`, das im Altstand nie anschlug („2 von 3") – jetzt an der Meldung,
+3 von 3, und fehlende Gegenproben machen den Test rot.
+
+**Prüfstand:** `pruefe_stand` grün · `abnahme_runde.js` 13/13 · 24 Tests
+(`t_dreh_lage`, `t_board_limit`, vier Konto-Tests, `t_konto`, `t_anmelden`,
+`t_bestaetigung`, `t_einstellungen`, `t_317`, `t_start`, `t_csp`, `t_sw`,
+`t_ansage`, `t_ansage2`, `t_fehler_melden`, `t_karte_kopf`, `t_sprung`,
+`t_kontrast`, `t_a11y`, `t_gross_alle`, `t_runde_lage`, `t_wischen`) grün ·
+Affe Handy 200: 0, iPad 150: 0. **Nicht geprüft:** echtes Firebase (Löschen,
+Popup-Neuanmeldung), iOS-Schlüsselbund „Passwort sichern?".
+
+**Kriterien:** A1 ☐ (21 offen + G-091) · A2 ☑ · A3 ☑ · A4 ☑ · A5 ☐ · A6 ☐
+
+**Offen:** K11 für 3.17.38, **danach** K10 (Regeln) – umgekehrt bricht das
+Ideen-Board. G-091 („wird fester", Verdacht Skalieren beim Anheben) als
+eigener Verdachts-Commit 3.17.39.
+
+**Nächster Schritt:** G-091 als 3.17.39, dann Runde 9 (P8: G-015, G-057, G-058;
+P9: G-061, G-062, G-066).
 
 ---
 

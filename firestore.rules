@@ -305,6 +305,16 @@ service cloud.firestore {
                     && request.resource.data.inhalt.keys().hasOnly(['bereiche'])
                     && request.resource.data.inhalt.bereiche is list
                     && request.resource.data.inhalt.bereiche.size() == 1
+                    /* 26.09.2026 (G-016/REGELN-5): Form des geteilten Bereichs -
+                       genau die Felder aus baueWeitergabeBereich() (app.js),
+                       Karten und Lektionen als Liste. Eine Obergrenze fuer die
+                       Kartenzahl bewusst NICHT: die Dokumentgroesse begrenzt
+                       Firestore ohnehin (1 MiB), eine feste Zahl haette echte
+                       grosse Saetze abgewiesen, ohne Kosten zu sparen. */
+                    && request.resource.data.inhalt.bereiche[0] is map
+                    && request.resource.data.inhalt.bereiche[0].keys().hasOnly(['id', 'name', 'gefuehrt', 'satzId', 'satzVersion', 'karten', 'sets'])
+                    && request.resource.data.inhalt.bereiche[0].karten is list
+                    && request.resource.data.inhalt.bereiche[0].sets is list
                     && (!('freigabe' in request.resource.data) || freigabeOk(request.resource.data.freigabe));
 
       allow delete: if angemeldetBestaetigt() && resource.data.ownerUid == request.auth.uid;
@@ -376,13 +386,22 @@ service cloud.firestore {
     }
 
     match /feedback/{id} {
-      allow get, list: if angemeldetBestaetigt();
+      allow get: if angemeldetBestaetigt();
+      /* 26.09.2026 (Grossplan G-016/REGELN-5): Auflisten nur mit limit <= 100.
+         Ohne diese Bremse las jedes Oeffnen des Boards die GANZE Sammlung -
+         mit Tausenden Spam-Eintraegen haette ein Nutzer das Tageskontingent
+         fuer alle verbraucht. Die App fragt mit limit(100) und blaettert beim
+         Konto-Loeschen seitenweise (app.js). ACHTUNG Reihenfolge: diese Regel
+         erst veroeffentlichen, wenn die App-Version mit limit() live ist -
+         die aeltere App fragt ohne limit und bekaeme permission-denied. */
+      allow list: if angemeldetBestaetigt() && request.query.limit <= 100;
 
       allow create: if angemeldetBestaetigt()
                     && request.resource.data.keys().hasOnly(feedbackFelder())
                     && request.resource.data.keys().hasAll(['text', 'erstelltAm', 'votes', 'status'])
                     && request.resource.data.votes == 0
                     && request.resource.data.status == 'offen'
+                    && !request.resource.data.text.matches('\\s*')      // G-016: nicht leer, nicht nur Leerzeichen
                     && feedbackWerte(request.resource.data, request.resource.data.keys());
 
       /* Zwei getrennte, einander ausschliessende Wege: Moderation aendert nur

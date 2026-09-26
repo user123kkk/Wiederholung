@@ -68,6 +68,10 @@ function vollerStore(opt = {}) {
 async function neueSeite(browser, vp, opt = {}) {
   const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: vp.dpr || 2,
     hasTouch: !!vp.touch, isMobile: !!vp.mobile, colorScheme: opt.hell ? 'light' : 'dark', reducedMotion: opt.ruhig ? 'reduce' : 'no-preference' });
+  /* opt.vorher(ctx): Umleitungen VOR dem ersten Laden (z. B. alte app.js fuer
+     eine Gegenprobe) - nach dem ersten Laden liefert der Service Worker
+     versionierte Dateien aus seinem Cache (3.17.36, G-029). */
+  if (opt.vorher) await opt.vorher(ctx);
   const p = await ctx.newPage();
   p.fehler = [];
   p.on('pageerror', e => p.fehler.push('PAGEERROR: ' + e.message + '\n' + (e.stack || '').split('\n').slice(0, 3).join('\n')));

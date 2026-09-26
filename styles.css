@@ -2047,6 +2047,13 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
   margin: var(--space-1) 0;
 }
 .study-flaeche .card-tags { margin-top: var(--space-1); }
+/* 3.17.38 (Betreiber 26.09.2026, "beim Drehen glitcht es"): Das Wort sprang
+   beim Umdrehen 6 px nach unten (gemessen auf Handy, 320, iPad, Desktop).
+   Vorn steht fuer die Tags immer ein Platzhalter, hinten nur, wenn es Tags
+   gibt - der LEERE Platzhalter zaehlte trotzdem als Kind der Flex-Spalte und
+   bekam einen gap (12 px), der Block vorn war hoeher, das Wort stand 6 px
+   hoeher. Leer = kein Platz, auf beiden Seiten gleich. */
+.karte-seite > .platz-leer:empty:not(.study-trenner) { display: none; }
 
 .zustand-punkte { display: inline-flex; align-items: center; gap: 5px; }
 .zustand-punkte__p {

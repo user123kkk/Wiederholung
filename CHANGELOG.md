@@ -1,3 +1,26 @@
+## 3.17.38 – 26. September 2026
+
+**Großplan, Runde 8: Konto sicherer, Karte ruhiger.**
+
+- **Karte umdrehen:** Das Wort springt beim Umdrehen nicht mehr 6 px nach
+  unten. Ein leerer Platzhalter auf der Vorderseite bekam Abstand, den die
+  Rückseite nicht hatte.
+- **Konto löschen:** Vor dem Löschen wird immer neu angemeldet – nicht mehr
+  abhängig davon, wie die Uhr des Geräts steht. Ohne Verbindung ist Löschen
+  gesperrt, und hängt das Netz, kommt nach 30 s eine Meldung statt eines
+  endlos drehenden Knopfs.
+- **Adresse vertippt?** Auf der Bestätigungsseite gibt es „Adresse falsch?
+  Neu anfangen": Das noch nicht bestätigte Konto wird gelöscht, danach
+  registrierst du dich mit der richtigen Adresse.
+- **Registrieren bei schlechtem Netz:** Wurde das Konto trotz Zeitüberschreitung
+  angelegt, schickt die App die Bestätigungs-Mail und den Namen einmal nach.
+- **Anmelden mit Enter:** Enter sendet jetzt in jedem Feld ab, und die Felder
+  stehen in einem echten Formular – Passwortmanager erkennen sie besser.
+- **Ideen-Board:** Es lädt höchstens die 100 Ideen mit den meisten Stimmen.
+  Die neuen Firestore-Regeln dazu (Board nur mit dieser Grenze, keine leeren
+  Ideen, feste Form geteilter Kartensätze) werden erst nach dieser Version
+  veröffentlicht.
+
 ## 3.17.37 – 26. September 2026
 
 **Großplan, Runde 7: Meldungen, die ankommen.**

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.37";
+const APP_VERSION = "3.17.38";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -174,6 +174,7 @@ function genId() {
    Nutzer. Wird hier etwas geaendert, dort mitaendern. */
 const MAX_WORT = 1000;     // wort und uebersetzung
 const MAX_EXTRA = 5000;    // Beispielsatz, Grammatik, Bild-Link oder Notiz
+const FEEDBACK_LIMIT = 100; // Ideen je Abfrage - dieselbe Zahl steht in firestore.rules (feedback list)
 function kuerze(s, max) { return String(s === undefined || s === null ? "" : s).slice(0, max); }
 
 /* ---------- Obergrenzen fuer den Import ----------
@@ -1021,6 +1022,12 @@ let listenFenster = { start: 0, anzahl: 0 };
 /* ---------- Zustand ---------- */
 let currentUser = null;      // Firebase-User
 let displayName = "";
+/* 3.17.38 (G-054, KONTO-15): Trägt einen Namen über den naechsten
+   onAuthStateChanged-Wechsel hinweg - dort wird ui.authEingabe sonst
+   unbedingt geleert. Nur kontoVertipptNeuAnfangen() setzt das, wenn das
+   unbestaetigte Konto geloescht und direkt der Registrieren-Bildschirm
+   gezeigt wird (Name bleibt, E-Mail nicht). */
+let authEingabeNameNachtrag = null;
 let bereiche = null;         // Array [{name, karten:[]}] – null solange Cloud-Daten noch nicht geladen
 let cloudDocExists = false;
 let syncError = null;
@@ -1427,6 +1434,11 @@ let ui = {
   /* 9 (17.09.2026): fehlender Name beim Registrieren steht direkt am Feld,
      nicht im allgemeinen Fehlerkasten - siehe doRegister/renderAuth. */
   authFeldFehler: null,
+  /* 3.17.38 (G-050, KONTO-11): true, wenn createUserWithEmailAndPassword in
+     mitZeitlimit lief - onAuthStateChanged prueft das beim naechsten
+     gemeldeten Nutzer nach (das Konto kann trotzdem entstanden sein) und
+     verbraucht den Merker dabei sofort wieder. Siehe doRegister. */
+  registrierungZeitlimit: false,
   kontoLoeschenBusy: false,  // Konto-Loeschung laeuft (Phase 2)
   kontoLoeschenEmail: "",    // 3.12.0: was auf der Loeschen-Seite getippt ist (ueberlebt render())
   /* A3 (1.9.0): der offene Bereich haengt an seiner ID, nicht mehr an einer
@@ -1983,6 +1995,12 @@ async function initFirebase() {
   }
 
   fb.onAuthStateChanged(auth, user => {
+    /* 3.17.38 (G-050, KONTO-11): vor den Resets unten sichern - beide werden
+       gleich unbedingt geleert (ui.registrierungZeitlimit hier, ui.authEingabe
+       weiter unten). Siehe die Verwendung im if(user)-Zweig. */
+    const registrierungNachholen = !!ui.registrierungZeitlimit;
+    const registrierungName = (ui.authEingabe && ui.authEingabe.name) || "";
+    ui.registrierungZeitlimit = false;
     currentUser = user;
     if (user) speicherDauerhaftAnfragen();
     listenerLoesen();
@@ -2008,7 +2026,10 @@ async function initFirebase() {
     feedbackLadeToken++;   // ein noch laufender Versuch des vorigen Kontos zaehlt nicht mehr
     ui.session = null;
     ui.editId = null;
-    ui.authEingabe = { name: "", email: "", pass: "" };
+    /* 3.17.38 (G-054): normalerweise leer - authEingabeNameNachtrag traegt
+       nur nach kontoVertipptNeuAnfangen() einen Namen ueber diesen Wechsel. */
+    ui.authEingabe = { name: authEingabeNameNachtrag || "", email: "", pass: "" };
+    authEingabeNameNachtrag = null;
     ui.authFeldFehler = null;
     ui.authPassSichtbar = false;
     ui.askImport = false;
@@ -2022,6 +2043,25 @@ async function initFirebase() {
       ui.authAusEinstieg = false;
       ui.einstiegZurueck = null;
       displayName = user.displayName || (user.email ? user.email.split("@")[0] : "Lernende:r");
+      /* 3.17.38 (G-050, KONTO-11): createUserWithEmailAndPassword lief zuvor
+         in mitZeitlimit's 12s, das Konto entstand aber doch noch - dieser
+         Aufruf hier ist der Beweis. sendEmailVerification/updateProfile
+         wurden deshalb nie erreicht (doRegister brach in den Fehler-Zweig
+         ab); das EINMALIG nachholen. registrierungNachholen ist schon
+         verbraucht (oben auf false gesetzt) - ein zweiter Aufruf hier fuer
+         dasselbe Konto (z.B. spaeterer Neustart) holt nichts doppelt nach.
+         Kein mitZeitlimit: schlaegt es nochmal fehl, bleibt "Erneut senden"
+         auf der Bestaetigungsseite der normale Weg. */
+      if (registrierungNachholen) {
+        fb.sendEmailVerification(user).catch(() => {});
+        if (!user.displayName && registrierungName) {
+          fb.updateProfile(user, { displayName: registrierungName })
+            .then(() => { displayName = registrierungName; }).catch(() => {});
+        }
+        ui.authError = null;
+        ui.authInfo = "Konto angelegt.";
+        ansagen(ui.authInfo);
+      }
       userDocRef = fb.doc(db, "users", user.uid);
       bereicheColRef = fb.collection(userDocRef, "bereiche");
       kartenColRef = fb.collection(userDocRef, "karten");
@@ -2775,9 +2815,19 @@ function val(id) {
 }
 
 async function doLogin() {
+  /* 3.17.38 (G-053, KONTO-14): Enter in JEDEM Feld sendet jetzt ueber ein
+     <form> ab (submit-Delegation an body) - ohne diese Sperre koennte ein
+     doppeltes Enter doLogin() zweimal anstossen, bevor der erste Aufruf den
+     Knopf disabled zeichnet. Dieselbe Sperre in doRegister/doReset. */
+  if (ui.authBusy) return;
   const email = val("a-email").trim();
   const pass = val("a-pass");
-  ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+  ui.authError = null; ui.authInfo = null; ui.authBusy = true;
+  /* 3.17.38 (G-050): ein alter Merker aus einem abgebrochenen
+     Registrieren-Versuch gilt nur fuer GENAU das naechste
+     onAuthStateChanged - eine Anmeldung hier ist ein anderes Konto. */
+  ui.registrierungZeitlimit = false;
+  render();
   try {
     await mitZeitlimit(fb.signInWithEmailAndPassword(auth, email, pass));
   } catch (e) {
@@ -2800,7 +2850,9 @@ async function doLogin() {
    pageshow/persisted-Handler unten den Fall ab, in dem jemand zurueckgeht,
    ohne fertig zu sein. */
 async function doGoogleLogin() {
-  ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+  ui.authError = null; ui.authInfo = null; ui.authBusy = true;
+  ui.registrierungZeitlimit = false;   /* 3.17.38 (G-050): siehe doLogin(). */
+  render();
   try {
     await fb.signInWithPopup(auth, new fb.GoogleAuthProvider());
   } catch (e) {
@@ -2810,7 +2862,9 @@ async function doGoogleLogin() {
   render();
 }
 async function doAppleLogin() {
-  ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+  ui.authError = null; ui.authInfo = null; ui.authBusy = true;
+  ui.registrierungZeitlimit = false;   /* 3.17.38 (G-050): siehe doLogin(). */
+  render();
   try {
     const provider = new fb.OAuthProvider("apple.com");
     provider.addScope("email");
@@ -2839,10 +2893,12 @@ window.addEventListener("pageshow", e => {
   }
 });
 async function doRegister() {
+  if (ui.authBusy) return;   /* 3.17.38 (G-053): siehe doLogin(). */
   const name = val("a-name").trim().slice(0, 40);
   const email = val("a-email").trim();
   const pass = val("a-pass");
   ui.authError = null; ui.authInfo = null;
+  ui.registrierungZeitlimit = false;   /* 3.17.38 (G-050): frischer Versuch, siehe unten. */
   if (!name) {
     /* 9: fehlender Name meldet sich direkt am Feld, nicht im Kasten darunter -
        der Fehler betrifft genau ein Feld, anders als eine Serverantwort. */
@@ -2854,8 +2910,24 @@ async function doRegister() {
   }
   ui.authFeldFehler = null;
   ui.authBusy = true; render();
+  /* 3.17.38 (G-050, KONTO-11): eigener try/catch nur um den ersten Schritt -
+     laeuft GENAU der ins Zeitlimit (mitZeitlimit wirft dann
+     auth/network-request-failed), kann der Server das Konto trotzdem noch
+     anlegen; updateProfile/sendEmailVerification unten wuerden das falsch
+     als "kein Konto" behandeln. ui.registrierungZeitlimit merkt sich den
+     Fall fuer onAuthStateChanged - dort ist "der Nutzer ist tatsaechlich
+     da" der einzig sichere Beweis, nicht der Fehlertext. */
+  let cred;
   try {
-    const cred = await mitZeitlimit(fb.createUserWithEmailAndPassword(auth, email, pass));
+    cred = await mitZeitlimit(fb.createUserWithEmailAndPassword(auth, email, pass));
+  } catch (e) {
+    ui.authError = authErrorText(e);
+    if (e && e.code === "auth/network-request-failed") ui.registrierungZeitlimit = true;
+    ui.authBusy = false;
+    render();
+    return;
+  }
+  try {
     displayName = name;
     await mitZeitlimit(fb.updateProfile(cred.user, { displayName: name }));
     /* C4: Nach der Registrierung eine Bestätigungs-E-Mail schicken. Die App
@@ -2913,7 +2985,51 @@ async function doResendVerification() {
   /* 3.17.37 (G-087): siehe doRegister(). */
   if (ui.authInfo) ansagen(ui.authInfo);
 }
+/* 3.17.38 (G-054, KONTO-15): "Adresse falsch? Neu anfangen" auf der
+   Bestaetigungsseite. Ein unbestaetigtes Konto bleibt sonst fuer immer in
+   Firebase Auth liegen - "Abmelden" ist der einzige Weg zurueck, "Konto
+   loeschen" liegt hinter der Bestaetigung, die genau hier fehlt. Firestore
+   hat dazu nichts zu loeschen: die Regeln verlangen ueberall
+   request.auth.token.email_verified == true (firestore.rules), ein
+   unbestaetigtes Konto hat also kein Nutzerdokument. Direkt nach dem
+   Registrieren ist die Anmeldung frisch (deleteUser scheitert nicht); nach
+   laengerem Warten holt kontoNeuAnmelden() das nach - Abbruch dort: nichts
+   geloescht. */
+async function kontoVertipptNeuAnfangen() {
+  if (!currentUser || ui.authBusy) return;
+  const ok = await dlgConfirm(
+    "Dieses noch nicht bestätigte Konto wird gelöscht. Danach kannst du dich mit der richtigen Adresse neu registrieren.",
+    { title: "Adresse falsch?", okLabel: "Konto löschen", danger: true });
+  if (!ok) return;
+  const nutzer = currentUser;
+  /* Name bleibt fuer den Registrieren-Bildschirm erhalten (authEingabeNameNachtrag,
+     siehe onAuthStateChanged) - nur die vertippte Adresse soll weg. */
+  authEingabeNameNachtrag = nutzer.displayName || "";
+  ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+  try {
+    try {
+      await fb.deleteUser(nutzer);
+    } catch (e) {
+      if (!e || e.code !== "auth/requires-recent-login") throw e;
+      if (!(await kontoNeuAnmelden())) { authEingabeNameNachtrag = null; ui.authBusy = false; render(); return; }
+      await fb.deleteUser(nutzer);
+    }
+    /* onAuthStateChanged raeumt currentUser/ui.authEingabe auf (mit dem
+       gemerkten Namen) - hier nur noch Modus und authGewaehlt, die dieser
+       Reset nicht anfasst. Ohne authGewaehlt zeigt render() bei
+       currentUser===null den Einstieg (Willkommensbildschirm) statt des
+       Registrieren-Formulars - siehe render(). */
+    ui.authMode = "register";
+    ui.authGewaehlt = true;
+  } catch (e) {
+    authEingabeNameNachtrag = null;
+    ui.authError = fehlerKlartext(e);
+  }
+  ui.authBusy = false;
+  render();
+}
 async function doReset() {
+  if (ui.authBusy) return;   /* 3.17.38 (G-053): siehe doLogin(). */
   const email = val("a-email").trim();
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
@@ -3008,8 +3124,18 @@ async function kontoDatenLoeschen() {
   /* Ebenso die Stimm-Merker im Ideen-Board: feedback/{id}/votes/{uid} traegt
      die Konto-Kennung als Dokument-ID. Die Stimmenzahl selbst ist anonym und
      bleibt. Loeschen eines fehlenden Merkers erlaubt die Regel (nur uid). */
-  const board = await fb.getDocs(fb.collection(db, "feedback"));
-  await Promise.all(board.docs.map(d => fb.deleteDoc(fb.doc(db, "feedback", d.id, "votes", currentUser.uid))));
+  /* 3.17.38 (G-016): seitenweise zu je FEEDBACK_LIMIT - die Regel erlaubt
+     kein Auflisten ohne limit, und bei mehr Ideen muss trotzdem JEDER eigene
+     Merker weg (Datenschutzerklaerung: alles, was ein Konto hinterlaesst). */
+  let letzteIdee = null;
+  for (;;) {
+    const teile = [fb.collection(db, "feedback"), fb.orderBy(fb.documentId()), fb.limit(FEEDBACK_LIMIT)];
+    if (letzteIdee) teile.push(fb.startAfter(letzteIdee));
+    const seite = await fb.getDocs(fb.query(...teile));
+    await Promise.all(seite.docs.map(d => fb.deleteDoc(fb.doc(db, "feedback", d.id, "votes", currentUser.uid))));
+    if (seite.docs.length < FEEDBACK_LIMIT) break;
+    letzteIdee = seite.docs[seite.docs.length - 1];
+  }
   const alle = [...bereicheSnap.docs, ...kartenSnap.docs];
   for (let i = 0; i < alle.length; i += 400) {
     const stapel = fb.writeBatch(db);
@@ -3018,12 +3144,37 @@ async function kontoDatenLoeschen() {
   }
   await fb.deleteDoc(userDocRef);
 }
+/* 3.17.38 (G-011, KONTO-2): eigenes Zeitlimit fuer kontoDatenLoeschen() als
+   Ganzes - deleteDoc()/writeBatch().commit() loesen laut Firestore-Doku erst
+   mit der Bestaetigung des Servers auf, mit persistentLocalCache (1872) also
+   nie ohne Verbindung. Ohne dieses Limit wuerde "Wird geloescht ..." endlos
+   drehen (LEHREN § 6.7: jedes Warten auf das Netz hat ein Zeitlimit).
+   30s statt der ueblichen 12s (mitZeitlimit bei doLogin & Co): Hier laufen
+   mehrere Abfragen und ein Stapel-Schreiben nacheinander, das darf laenger
+   dauern als eine einzelne Anmeldung. KONTO_LOESCHEN_ZEITLIMIT_MS ist eine
+   Stellschraube nur fuer den Pruefstand (Abnahme KONTO-2) - im echten Code
+   bleibt es bei 30s. */
+const KONTO_LOESCHEN_ZEITLIMIT_MS = 30000;
+function mitLoeschenZeitlimit(versprechen) {
+  let timer;
+  /* Stellschraube nur fuer den Pruefstand: window.__TEST_KONTO_LOESCHEN_MS
+     verkuerzt das Limit fuer die Abnahme (KONTO-2). Ohne diese globale
+     Variable - im echten Betrieb immer undefined - bleibt es bei 30s. */
+  const ms = (typeof window !== "undefined" && window.__TEST_KONTO_LOESCHEN_MS) || KONTO_LOESCHEN_ZEITLIMIT_MS;
+  const limit = new Promise((_, reject) => {
+    timer = setTimeout(() => reject({ code: "konto-loeschen-zeitlimit" }), ms);
+  });
+  return Promise.race([versprechen, limit]).finally(() => clearTimeout(timer));
+}
 function kontoLoeschenFehlerText(e) {
   /* 3.17.15: auth/invalid-credential ist, was Firebase 10 bei falschem
      Passwort liefert; der Rest ohne Systemcode (fehlerKlartext). */
   if (e && (e.code === "auth/wrong-password" || e.code === "auth/invalid-credential")) return "Falsches Passwort – es wurde nichts gelöscht.";
   if (e && e.code === "auth/too-many-requests") return "Zu viele Versuche – bitte kurz warten und erneut probieren.";
   if (e && e.code === "auth/network-request-failed") return "Keine Verbindung – bitte Internet prüfen und erneut probieren.";
+  /* 3.17.38 (G-011): abgelaufenes Zeitlimit beim Loeschen selbst - eigener
+     Text, weil Wortlaut sagt, WAS haengt (nicht "fertig geloescht"). */
+  if (e && e.code === "konto-loeschen-zeitlimit") return "Nicht fertig gelöscht – bitte mit Verbindung noch einmal.";
   return fehlerKlartext(e);
 }
 /* 3.17.15 (Pruefschleife, Station 15): Noch einmal anmelden - passend zur
@@ -3056,14 +3207,6 @@ async function kontoNeuAnmelden() {
   }
   return true;
 }
-/* Firebase verlangt fuers Loeschen eine Anmeldung der letzten Minuten.
-   Liegt sie laenger zurueck, wird VOR dem Loeschen der Daten neu
-   angemeldet - vorher kam die Frage erst danach: Wer dann abbrach, hatte
-   keine Daten mehr, aber noch ein Konto. */
-function kontoAnmeldungFrisch() {
-  const letzte = Date.parse((currentUser && currentUser.metadata && currentUser.metadata.lastSignInTime) || "") || 0;
-  return Date.now() - letzte < 4 * 60 * 1000;
-}
 async function kontoAuthLoeschen() {
   try {
     await fb.deleteUser(currentUser);
@@ -3093,20 +3236,34 @@ function kontoLoeschenBereit() {
 }
 async function kontoLoeschenAusfuehren() {
   if (!currentUser || ui.kontoLoeschenBusy || !kontoLoeschenBereit()) return;
-  /* 3.17.15: erst anmelden (wenn noetig), dann loeschen - siehe
-     kontoAnmeldungFrisch. Abbruch oder falsches Passwort: nichts passiert. */
-  if (!kontoAnmeldungFrisch()) {
-    try {
-      if (!(await kontoNeuAnmelden())) return;
-    } catch (e) {
-      await dlgAlert(kontoLoeschenFehlerText(e), "Nicht gelöscht");
-      return;
-    }
+  /* 3.17.38 (G-011, KONTO-2): offline ganz vorn abfangen, noch vor der
+     Neu-Anmeldung - ohne Verbindung loesen deleteDoc/writeBatch().commit()
+     sonst nie auf (dokumentiertes Firestore-Verhalten mit
+     persistentLocalCache), "Wird geloescht ..." wuerde endlos drehen.
+     dlgAlert ist hier richtig, es gibt kein Feld (LEHREN § 6.7). */
+  if (offline) { await dlgAlert("Zum Löschen brauchst du eine Verbindung.", "Keine Verbindung"); return; }
+  /* 3.17.38 (G-051, KONTO-12): IMMER neu anmelden, nicht mehr nur, wenn die
+     Anmeldung nach kontoAnmeldungFrisch() als "alt" galt. Diese Pruefung
+     verglich metadata.lastSignInTime (Serverzeit) gegen Date.now()
+     (Geraetezeit) - eine nachgehende Geraeteuhr liess eine alte Anmeldung
+     als frisch durchgehen. Dann loeschte die App zuerst die Daten, und erst
+     deleteUser() scheiterte mit requires-recent-login: Konto ohne Daten
+     uebrig. LEHREN § 6.8 verlangt, dass alles, was scheitern kann, VOR dem
+     ersten unumkehrbaren Schritt steht - die Neu-Anmeldung faellt deshalb
+     jetzt nicht mehr weg, nur weil die Uhr "frisch genug" sagt.
+     Abbruch oder falsches Passwort: nichts passiert. */
+  try {
+    if (!(await kontoNeuAnmelden())) return;
+  } catch (e) {
+    await dlgAlert(kontoLoeschenFehlerText(e), "Nicht gelöscht");
+    return;
   }
   exportBackup();
   ui.kontoLoeschenBusy = true; render();
   try {
-    await kontoDatenLoeschen();
+    /* 3.17.38 (G-011, KONTO-2): kontoDatenLoeschen() als Ganzes gegen ein
+       eigenes, grosszuegiges Zeitlimit - siehe mitLoeschenZeitlimit(). */
+    await mitLoeschenZeitlimit(kontoDatenLoeschen());
     await kontoAuthLoeschen();
     /* Erfolg: fb.deleteUser meldet auch ab, onAuthStateChanged raeumt den
        Rest auf (currentUser wird null, die App zeigt den Einstieg). */
@@ -7094,7 +7251,22 @@ function renderPendingVerification() {
      #ansage an (doRegister/doResendVerification/doReset). */
   if (ui.authInfo) html += '<div class="info-box auth-meldung">' + ikon("haken", "i-sm") +
     '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
-  html += '</div></div>';
+  html += '</div>';
+  /* 3.17.38 (G-054, KONTO-15): Wer sich vertippt hat, sass hier bis 3.17.37
+     fest - "Abmelden" lässt das unbestaetigte Konto in Firebase Auth
+     liegen, "Konto loeschen" liegt hinter der Bestaetigung. Ruhiger
+     Nebenknopf, derselbe Stil wie die Nebenwege in renderAuth
+     (.linklike/.auth-nebenwege), kein zusaetzlicher gefuellter Knopf neben
+     "Ich habe bestätigt". */
+  html += '<div class="empty__aktionen auth-nebenwege" style="margin-top:var(--space-5)">';
+  html += '<button class="linklike" data-action="konto-vertippt"' + busy + '>Adresse falsch? Neu anfangen</button>';
+  html += '</div>';
+  html += '</div>';
+  /* 3.17.38 (G-054): renderDialog() liegt sonst nur im Overlay des
+     angemeldeten Bereichs (render()) - diese Seite baut ihr HTML selbst und
+     braucht das Overlay hier ausdruecklich, sonst haengt dlgConfirm() in
+     kontoVertipptNeuAnfangen() unsichtbar (kein Markup fuer den Dialog). */
+  html += renderDialog();
   app.innerHTML = html;
 }
 
@@ -7173,6 +7345,17 @@ function renderAuth() {
   const wackeln = ui.authError && ui.authError !== ui.authFehlerGezeigt;
   ui.authFehlerGezeigt = ui.authError || null;
   html += '<div class="card' + (wackeln ? ' auth-wackeln' : '') + '">';
+  /* 3.17.38 (G-053, KONTO-14): Die Felder stehen jetzt in einem <form> -
+     Enter sendet in JEDEM Feld ab, nicht mehr nur im Passwortfeld (bzw. im
+     E-Mail-Feld nur beim Zuruecksetzen). Eigenes Attribut data-submit statt
+     data-action: der Absende-Knopf darin traegt SELBST schon
+     data-action="login"/"register"/"reset" (der Pruefstand waehlt ihn
+     darueber aus) - mit demselben Attribut auf dem <form> waeren zwei
+     Elemente auf einen Treffer, und querySelector/closest faenden je nach
+     DOM-Reihenfolge das FORM statt des Knopfs. novalidate: die App zeigt
+     ihre eigenen Fehler (a-name-fehler, error-box), nicht die Bordmittel
+     des Browsers. */
+  html += '<form novalidate data-submit="' + m + '">';
   if (m === "register") {
     const nameFehler = !!(ui.authFeldFehler && ui.authFeldFehler.name);
     /* 3.17.2: Der Fehler steht IN der Beschriftung (statt "wird in der App
@@ -7203,13 +7386,14 @@ function renderAuth() {
   const laed = ui.authBusy ? " busy" : "";
   html += '<div class="form-actions">';
   if (m === "login") {
-    html += '<button class="full' + laed + '" data-action="login"' + busy + '>Anmelden</button>';
+    html += '<button type="submit" class="full' + laed + '" data-action="login"' + busy + '>Anmelden</button>';
   } else if (m === "register") {
-    html += '<button class="full' + laed + '" data-action="register"' + busy + '>Konto anlegen</button>';
+    html += '<button type="submit" class="full' + laed + '" data-action="register"' + busy + '>Konto anlegen</button>';
   } else {
-    html += '<button class="full' + laed + '" data-action="reset"' + busy + '>Link zusenden</button>';
+    html += '<button type="submit" class="full' + laed + '" data-action="reset"' + busy + '>Link zusenden</button>';
   }
   html += '</div>';
+  html += '</form>';
   /* 3.17.2 (Pruefschleife, Station 3): Meldungen UNTER dem Knopf. Vorher
      standen sie darueber und schoben ihn um 63 px nach unten - genau unter
      dem Finger, der gerade getippt hatte. Jetzt erscheint die Antwort dort,
@@ -7277,14 +7461,11 @@ function renderAuth() {
     if (feld && zurueck[id]) feld.value = zurueck[id];
   }
 
-  const pass = document.getElementById("a-pass");
-  if (pass) pass.addEventListener("keydown", e => {
-    if (e.key === "Enter") (m === "register" ? doRegister() : doLogin());
-  });
-  const email = document.getElementById("a-email");
-  if (email && m === "reset") email.addEventListener("keydown", e => {
-    if (e.key === "Enter") doReset();
-  });
+  /* 3.17.38 (G-053, KONTO-14): Die alten Enter-Handler an einzelnen Feldern
+     (nur Passwortfeld, E-Mail nur bei "reset") sind weg - das <form> oben
+     sendet jetzt in JEDEM Feld per Enter ab (Browser-Standardverhalten),
+     ueber die submit-Delegation an body. Zwei Handler fuer denselben Enter
+     haetten doppelt abgeschickt. */
   const name = document.getElementById("a-name");
   /* 9: Fehler verschwindet, sobald man tippt - ohne render(), wie beim
      Kartenformular. */
@@ -8675,14 +8856,20 @@ function renderKontoLoeschen() {
   html += '<div class="card" style="margin-top:var(--stack)">';
   html += '<div class="field"><label for="konto-loeschen-email">Zum Bestätigen deine E-Mail-Adresse</label>';
   html += '<input type="email" id="konto-loeschen-email" autocomplete="off" autocapitalize="off" spellcheck="false" ' +
-    'inputmode="email" placeholder="' + esc((currentUser && currentUser.email) || "") + '"></div>';
+    'inputmode="email" placeholder="' + esc((currentUser && currentUser.email) || "") + '"' + (offline ? ' disabled' : '') + '></div>';
+  /* 3.17.38 (G-011, KONTO-2): offline gesperrt, wie beim Teilen (offlineAttr-
+     Muster). Ohne Verbindung loesen deleteDoc/writeBatch.commit() sonst nie
+     auf - "Wird geloescht ..." wuerde endlos drehen (LEHREN § 6.7). Der
+     Tastatur-Weg (kontoLoeschenPerTastatur) haengt an genau diesem Knopf,
+     ist also mit gesperrt. */
+  const offlineTxt = offline ? ' title="Zum Löschen brauchst du eine Verbindung"' : '';
   html += '<button class="danger full halten' + (ui.kontoLoeschenBusy ? ' busy' : '') + '" data-action="delete-account" ' +
-    'data-halten="konto-loeschen"' + (bereit && !ui.kontoLoeschenBusy ? '' : ' disabled') +
+    'data-halten="konto-loeschen"' + (bereit && !ui.kontoLoeschenBusy && !offline ? '' : ' disabled') + offlineTxt +
     ' style="--halten:' + KONTO_LOESCHEN_HALTEN_MS + 'ms">' +
     '<span class="halten__fuellung" aria-hidden="true"></span>' +
     '<span class="halten__text">' + (ui.kontoLoeschenBusy ? 'Wird gelöscht …' : 'Zum Löschen gedrückt halten') + '</span></button>';
   html += '<p class="hint halten__hinweis" id="konto-loeschen-hinweis">' +
-    (bereit ? 'Halte den Knopf, bis er sich gefüllt hat.' : 'Der Knopf wird frei, sobald die Adresse stimmt.') + '</p>';
+    (offline ? 'Zum Löschen brauchst du eine Verbindung.' : bereit ? 'Halte den Knopf, bis er sich gefüllt hat.' : 'Der Knopf wird frei, sobald die Adresse stimmt.') + '</p>';
   html += '</div>';
   return html;
 }
@@ -8921,7 +9108,11 @@ async function feedbackLaden() {
   }, 9000);
   zeichneIdeen();
   try {
-    const snap = await fb.getDocs(fb.collection(db, "feedback"));
+    /* 3.17.38 (G-016/REGELN-5): hoechstens FEEDBACK_LIMIT Eintraege, die mit
+       den meisten Stimmen zuerst - firestore.rules lehnt ein Auflisten ohne
+       limit ab (Mengenbremse gegen Spam, der sonst jedes Oeffnen teuer macht).
+       Folge bei mehr als 100 Ideen: die mit den wenigsten Stimmen fehlen. */
+    const snap = await fb.getDocs(fb.query(fb.collection(db, "feedback"), fb.orderBy("votes", "desc"), fb.limit(FEEDBACK_LIMIT)));
     const liste = [];
     snap.forEach(d => liste.push(Object.assign({ id: d.id }, d.data())));
     liste.sort((a, b) => (b.votes || 0) - (a.votes || 0) || String(b.erstelltAm || "").localeCompare(String(a.erstelltAm || "")));
@@ -12258,9 +12449,14 @@ document.body.addEventListener("click", e => {
   const btn = e.target.closest("[data-action]");
   if (!btn) return;
   switch (btn.dataset.action) {
-    case "login": doLogin(); break;
-    case "register": doRegister(); break;
-    case "reset": doReset(); break;
+    /* 3.17.38 (G-053, KONTO-14): "login"/"register"/"reset" liefen hier bis
+       3.17.37 direkt. Die Knoepfe stecken jetzt in einem <form
+       data-submit="...">, sind type="submit" - ein Klick loest zusaetzlich
+       zum click-Ereignis das Standard-Abschicken des Formulars aus. Liefe
+       der Fall hier UND in der submit-Delegation unten, ginge doLogin() &
+       Co. zweimal los. data-action bleibt am Knopf stehen (Pruefstand
+       waehlt ihn darueber aus), nur die Klick-Handlung zieht in den
+       submit-Listener um. */
     case "google-login": doGoogleLogin(); break;
     case "apple-login": doAppleLogin(); break;
     case "mode-login": ui.authMode = "login"; ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null; render(); break;
@@ -12558,6 +12754,7 @@ document.body.addEventListener("click", e => {
       setArtAendern(ui.setArtSheetId, btn.dataset.id); break;
     case "resend-verification": doResendVerification(); break;
     case "verification-check": pruefeBestaetigung(); break;
+    case "konto-vertippt": kontoVertipptNeuAnfangen(); break;
     case "import-old": importOldProfile(btn.dataset.name); break;
     case "skip-import": ui.askImport = false; persistAll(); render(); break;
     case "select-bereich": selectBereich(btn.dataset.bid); break;
@@ -12775,6 +12972,25 @@ document.body.addEventListener("click", e => {
     case "feedback-unvote": feedbackAbstimmen(btn.dataset.id, false); break;
     case "feedback-status": feedbackStatusAendern(btn.dataset.id, btn.dataset.status); break;
     case "feedback-delete": feedbackLoeschen(btn.dataset.id); break;
+  }
+});
+
+/* 3.17.38 (G-053, KONTO-14): Enter in JEDEM Anmelde-/Registrier-/
+   Zuruecksetzen-Feld sendet ab - renderAuth() fasst die Felder dazu in
+   <form data-submit="login|register|reset" novalidate> (eigenes Attribut,
+   nicht data-action - der Absende-Knopf darin traegt data-action schon
+   selbst, siehe renderAuth). Eine eigene submit-Delegation neben der
+   Klick-Delegation oben (README.md: EIN delegierter Klick-Listener - das
+   hier ist derselbe Gedanke, nur fuer submit statt click, kein Listener an
+   einzelnen Feldern/Knoepfen). */
+document.body.addEventListener("submit", e => {
+  const form = e.target.closest("form[data-submit]");
+  if (!form) return;
+  e.preventDefault();
+  switch (form.dataset.submit) {
+    case "login": doLogin(); break;
+    case "register": doRegister(); break;
+    case "reset": doReset(); break;
   }
 });
 

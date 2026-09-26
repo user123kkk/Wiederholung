@@ -49,7 +49,7 @@
    ============================================================ */
 
 import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
-import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField, increment, query, where } from "firebase/firestore";
+import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField, increment, query, where, limit, orderBy } from "firebase/firestore";
 import { readFileSync } from "fs";
 
 const UID = "nutzer-eins";
@@ -222,6 +222,11 @@ const glInhalt = { bereiche: [{ id: "b1", name: "Medina 1", gefuehrt: true, kart
 const glDaten = (extra = {}) => ({ ownerUid: UID, erstelltAm: "2026-09-19T10:00:00.000Z", inhalt: glInhalt, ...extra });
 
 await pruefe("T01 Code anlegen (bestaetigt, eigene uid)", "ja", () => setDoc(gl(db), glDaten()));
+/* G-016 (26.09.2026): Form des geteilten Bereichs */
+await pruefe("M5 Code anlegen wie die App (alle Felder aus baueWeitergabeBereich)", "ja", () => setDoc(gl(db, "MM5MM-MM5MM"), glDaten({ inhalt: { bereiche: [{ id: "b1", name: "A", gefuehrt: true, satzId: "a-x", satzVersion: 1, karten: [{ id: "k1", wort: "w", uebersetzung: "u", extra: "", stufe: 0, quelleId: "k1" }], sets: [] }] } })));
+await pruefe("M6 Code mit fremdem Feld im Bereich", "nein", () => setDoc(gl(db, "MM6MM-MM6MM"), glDaten({ inhalt: { bereiche: [{ id: "b1", name: "A", gefuehrt: true, karten: [], sets: [], muell: "x".repeat(1000) }] } })));
+await pruefe("M7 Code mit karten als Text statt Liste", "nein", () => setDoc(gl(db, "MM7MM-MM7MM"), glDaten({ inhalt: { bereiche: [{ id: "b1", name: "A", gefuehrt: true, karten: "x", sets: [] }] } })));
+await pruefe("M8 Code mit Bereich als Text statt Objekt", "nein", () => setDoc(gl(db, "MM8MM-MM8MM"), glDaten({ inhalt: { bereiche: ["x"] } })));
 await pruefe("T02 Code einzeln lesen (anderes Konto)", "ja", () => getDoc(gl(dbFremd)));
 await pruefe("T03 Sammlung AUFLISTEN (anderes Konto)", "nein", () => getDocs(collection(dbFremd, "geteilteLektionen")));
 await pruefe("T04 Sammlung auflisten (Besitzer selbst)", "nein", () => getDocs(collection(db, "geteilteLektionen")));
@@ -311,7 +316,12 @@ const feedbackDaten = (extra = {}) => ({
 });
 
 await pruefe("F01 Vorschlag anlegen (bestaetigt)", "ja", () => setDoc(fb1("e1"), feedbackDaten()));
-await pruefe("F02 Liste lesen (fremdes Konto)", "ja", () => getDocs(collection(dbFremd, "feedback")));
+await pruefe("F02 Liste lesen mit limit(100), wie die App (fremdes Konto)", "ja", () => getDocs(query(collection(dbFremd, "feedback"), orderBy("votes", "desc"), limit(100))));
+/* G-016 (26.09.2026): Mengenbremse */
+await pruefe("M1 Liste lesen OHNE limit", "nein", () => getDocs(collection(dbFremd, "feedback")));
+await pruefe("M2 Liste lesen mit limit(101)", "nein", () => getDocs(query(collection(dbFremd, "feedback"), limit(101))));
+await pruefe("M3 Vorschlag mit leerem Titel", "nein", () => setDoc(fb1("m3"), feedbackDaten({ text: "" })));
+await pruefe("M4 Vorschlag nur aus Leerzeichen", "nein", () => setDoc(fb1("m4"), feedbackDaten({ text: "   " })));
 await pruefe("F03 Abstimmen: Stimm-Dokument + votes+1 im selben Stapel", "ja", async () => {
   const st = writeBatch(db);
   st.set(fbv("e1", UID), {});
