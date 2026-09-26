@@ -53,7 +53,7 @@ const DEL = { __del:true };
 export function deleteField(){ return DEL; }
 export function increment(n){ return { __inc:n }; }
 export function serverTimestamp(){ return new Date().toISOString(); }
-export function arrayUnion(...a){ return a; } export function arrayRemove(){ return []; }
+export function arrayUnion(...a){ return { __union:a }; } export function arrayRemove(...a){ return { __remove:a }; }
 export function getFirestore(){ return { db:true }; }
 export function initializeFirestore(){ return { db:true }; }
 export function persistentLocalCache(){ return {}; }
@@ -78,9 +78,20 @@ function setzeTief(obj, segs, val){ let o = obj; for (let i = 0; i < segs.length
   const k = segs[segs.length-1];
   if (val === DEL || (val && val.__del)) delete o[k];
   else if (val && typeof val === 'object' && '__inc' in val) o[k] = (o[k] || 0) + val.__inc;
+  else if (val && typeof val === 'object' && '__union' in val) {
+    // wie Firestore arrayUnion: vorhandene Elemente zuerst, fehlende dahinter angehaengt
+    const vorhanden = Array.isArray(o[k]) ? o[k] : [];
+    const neu = vorhanden.slice();
+    for (const el of val.__union) if (!neu.includes(el)) neu.push(el);
+    o[k] = neu;
+  }
+  else if (val && typeof val === 'object' && '__remove' in val) {
+    const vorhanden = Array.isArray(o[k]) ? o[k] : [];
+    o[k] = vorhanden.filter(el => !val.__remove.includes(el));
+  }
   else o[k] = clone(val); }
 function mischen(ziel, quelle){ for (const k of Object.keys(quelle)) { const v = quelle[k];
-  if (v && typeof v === 'object' && !Array.isArray(v) && !v.__del && !('__inc' in v)) { if (typeof ziel[k] !== 'object' || ziel[k] === null) ziel[k] = {}; mischen(ziel[k], v); }
+  if (v && typeof v === 'object' && !Array.isArray(v) && !v.__del && !('__inc' in v) && !('__union' in v) && !('__remove' in v)) { if (typeof ziel[k] !== 'object' || ziel[k] === null) ziel[k] = {}; mischen(ziel[k], v); }
   else setzeTief(ziel, [k], v); } }
 function _set(ref, data, opt){ if (S.fail) throw Object.assign(new Error('fail'), {code:'permission-denied'});
   if (opt && opt.merge) { const alt = clone(S.store.get(ref.path)) || {}; mischen(alt, data); S.store.set(ref.path, alt); }

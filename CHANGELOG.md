@@ -1,3 +1,21 @@
+## 3.17.33 – 26. September 2026
+
+**Großplan, Runde 3: Suche, Merken, Bereich löschen, Serien-Warnung.**
+
+- **Suche in großen Sätzen:** Ab etwa 1400 Karten brauchte jede Suche
+  wieder 260–370 ms, weil der Zwischenspeicher zu klein war und sich ständig
+  leerte. Er wächst jetzt mit der Kartenzahl, ab der zweiten Suche ist sie
+  sofort da.
+- **„Merken“ auf zwei Geräten:** Merkte das Handy eine Karte und das iPad
+  kurz danach eine andere, war eine der beiden still wieder weg. Jetzt wird
+  nur die eine Karte hinzugefügt oder herausgenommen, beide bleiben.
+- **Bereich löschen:** Zum Bestätigen reicht der Name ohne Harakat
+  („كتاب“ für „كِتَاب“), Groß- und Kleinschreibung egal.
+- **Serien-Warnung am richtigen Tag:** „Heute zählt: Ohne eine Runde endet
+  deine Serie …“ erscheint jetzt immer dann, wenn eine ausgelassene Runde
+  die Serie morgen kleiner machen würde. Vorher kam sie in einem Fall erst,
+  als die Tage schon weg waren. Die Regel der Serie bleibt gleich.
+
 ## 3.17.32 – 25. September 2026
 
 **Großplan, Runde 2: Kartensatz-Update, Sortieren, Bilder, Rückgängig.**

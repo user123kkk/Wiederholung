@@ -6,7 +6,63 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☐ · A5 ☐ · A6 ☐ |
-| Nächste Runde | 3 (Runde 2 fertig, v3.17.32) |
+| Nächste Runde | 4 (Runde 3 fertig, v3.17.33) |
+
+---
+
+### 2026-09-26 — Runde 3: Suche, Merken, Bereich löschen, Serien-Warnung (v3.17.33)
+
+**Geändert:** `app.js`: `suchFeld()` (~10300, Puffergrenze
+`max(4000, 3 × Kartenzahl + 500)`) · `LISTE_DAZU`/`LISTE_WEG`/`setWertPatch`
+(~2115), `patchDoc` Zweig `sets` (~2207), `karteMerken` (~4567),
+`saveSelectedToSet` (~4619), `removeCardFromSet` (~4688) · `deleteBereich`
+(~4388, `vergleichsWort`) · `serieAktuell(info.versatz)` (~2528),
+`lernenHinweis()` (~9199) · Version 3.17.33 (`app.js`, `sw.js`, `index.html`),
+`CHANGELOG.md` · Prüfstand: `stubs.js` (`arrayUnion`/`arrayRemove` echt),
+`t_merken_zwei.js`, `t_serie_warnung.js` neu.
+
+**Wer:** G-021, G-077, G-036 Handwerker (Sonnet), G-081 Hilfskraft (Haiku) –
+nacheinander, nie zwei gleichzeitig an `app.js`. Entwurf für G-036 und
+G-077 vom Dirigenten in der Übergabe vorgegeben.
+
+**Entscheidung:**
+- G-021: Grenze an die Kartenzahl gekoppelt (Befund-Vorschlag 1), keine
+  WeakMap – kleinste Änderung, gleiche Wirkung.
+- G-077: nur Merken/Ablegen/Herausnehmen gezielt (`arrayUnion`/`arrayRemove`);
+  Sortieren, Verschieben, Zusammenführen schreiben die Liste weiter ganz,
+  weil dort die Reihenfolge mitgeht.
+- G-081: `vergleichsWort` wie die Duplikatprüfung.
+- G-036: nur der Hinweis (Befund-Teil a). Die Regel bleibt; Teil b (Joker
+  vorwärts) ist Lernlogik und bleibt beim Betreiber (nicht in ENTSCHEIDUNGEN
+  als eigene Frage, weil der Prüfer „lieber nicht" empfiehlt).
+
+**Abnahme (selbst geprüft):**
+- G-021 `daten_x_perf.js 2000` (CPU 4×): erste Suche 178 ms (Aufbau),
+  alle weiteren 0 Long Tasks (vorher je 260–370 ms).
+- G-081: „كِتَاب" mit „كتاب" gelöscht; „قلم" abgelehnt; leere Eingabe bei
+  „⭐⭐" abgelehnt; „medina buch 1" löscht „Medina Buch 1".
+- G-077 `t_merken_zwei.js` 10/10 (A, B von „zweitem Gerät", C → alle drei;
+  A heraus → B, C bleiben); Gegenprobe mit Vollschreiben: 2 FEHL.
+- G-036 `t_serie_warnung.js` 4/4; `lernen_t_logik.js [5a]`: „Heute zählt:
+  Ohne eine Runde endet deine Serie von 33 Tagen."; Gegenprobe alte
+  Bedingung: Fall a FEHL.
+
+**Prüfstand (TZ=Asia/Tokyo, Chromium, Firebase-Attrappe):** `pruefe_stand`
+grün · `abnahme_runde.js` 13/13 · `t_sprung`, `t_kontrast` (0), `t_a11y`,
+`t_serie` 9/9, `t_serie_lang`, `t_ordnung`, `t_verwalten`, `t_daten`,
+`t_loeschen_teilen`, `t_teilen`, `t_notfound`, `t_bild` grün · Affe Handy 150:
+0 Befunde. Nicht geprüft: echtes Firebase (`arrayUnion` gegen die echten
+Regeln – Regeln prüfen das Ergebnis, nicht den Weg, deshalb kein Regel-
+Risiko erwartet), echtes iOS.
+
+**Kriterien:** A1 ☐ (noch 40 A-Aufgaben offen) · A2 ☑ · A3 ☑ · A4 ☐ (Affe
+iPad 150, `t_gross_alle` in dieser Runde nicht gelaufen) · A5 ☐ · A6 ☐
+
+**Offen:** beim Betreiber unverändert (K11 Veröffentlichen, K10 Regeln aus
+Runde 1, K1–K7, K12, E-01–E-18).
+
+**Nächster Schritt:** Runde 4 – Paket P9 (Fortschritt): G-023, G-024, G-025,
+G-026, dazu G-060/061/062/066 (klein, Haiku), Agenten nacheinander.
 
 ---
 

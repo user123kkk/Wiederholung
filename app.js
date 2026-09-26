@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.32";
+const APP_VERSION = "3.17.33";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2113,6 +2113,20 @@ function ordnungVorn() { return -Date.now(); }
 const LOESCHEN = { __loeschen: true };   // Ersatz fuer deleteField() in Patches
 function istLoeschung(w) { return w === LOESCHEN; }
 
+/* 3.17.33 (LERNEN-10): Zwei Geraete, die kurz hintereinander "Merken"
+   antippen, schrieben cardIds bisher als GANZE Liste - wer zuletzt speichert,
+   ueberschreibt die Liste des anderen Geraets, dessen Karte ist dann still
+   weg. LISTE_DAZU/LISTE_WEG markieren stattdessen ein gezieltes Hinzufuegen
+   bzw. Herausnehmen; setWertPatch() uebersetzt sie in arrayUnion/arrayRemove. */
+function LISTE_DAZU(ids) { return { __dazu: ids }; }
+function LISTE_WEG(ids) { return { __weg: ids }; }
+function setWertPatch(wert) {
+  if (istLoeschung(wert)) return fb.deleteField();
+  if (wert && typeof wert === "object" && wert.__dazu) return fb.arrayUnion(...wert.__dazu);
+  if (wert && typeof wert === "object" && wert.__weg) return fb.arrayRemove(...wert.__weg);
+  return wert;
+}
+
 function bereichRef(bid) { return fb.doc(bereicheColRef, bid); }
 function karteRef(cid) { return fb.doc(kartenColRef, cid); }
 
@@ -2190,7 +2204,7 @@ async function patchDoc(patch) {
       /* Speicherkarten bleiben Unterfelder IM Bereichsdokument - sie
          enthalten nur Karten-IDs und werden nie gross. */
       const feldpfad = teile.slice(2).join(".");
-      merken("b/" + bid, bereichRef(bid), "update", { [feldpfad]: istLoeschung(wert) ? fb.deleteField() : wert });
+      merken("b/" + bid, bereichRef(bid), "update", { [feldpfad]: setWertPatch(wert) });
       continue;
     }
 
@@ -2514,9 +2528,15 @@ function evaluateStreakForNewDay() {
 const SERIE_JOKER_TAGE = 7;
 /* info (nur serieSockelNachziehen): merkt sich den ersten gelernten Tag der
    Kette, der info.grenze oder aelter ist, und wie viele Tage davor gezaehlt
-   waren. Am Ergebnis aendert info nichts. */
+   waren. Am Ergebnis aendert info nichts.
+   info.versatz (ganze Zahl, Tage in die Zukunft, Standard 0): rechnet so, als
+   waere "heute" dateInDays(versatz) statt todayStr() - fuer den Warn-Hinweis
+   (lernenHinweis), der wissen muss, wie die Serie MORGEN ohne heutige Runde
+   aussaehe. Ohne info oder ohne versatz identisch zum bisherigen Ergebnis,
+   da dateInDays(0) === todayStr(). */
 function serieAktuell(info) {
-  const t = todayStr();
+  const versatz = (info && Number.isInteger(info.versatz)) ? info.versatz : 0;
+  const t = versatz ? dateInDays(versatz) : todayStr();
   const sockel = Number.isInteger(streak.sockel) ? streak.sockel : 0;
   const sockelBis = streak.sockelBis;
   let tage = 0;
@@ -2528,7 +2548,7 @@ function serieAktuell(info) {
   /* Heute zaehlt nur, wenn heute schon gelernt wurde - sonst beginnt die Kette
      bei gestern, damit die Serie nicht mitten am Tag verschwindet. */
   for (let i = tagGelernt(verlauf[t]) ? 0 : 1; i < 400; i++) {
-    const d = dateInDays(-i);
+    const d = versatz ? dateInDays(versatz - i) : dateInDays(-i);
     /* 3.17.28: Ein Sockel von 0 traegt nichts - dann zaehlt der Tag, an dem
        er gesetzt wurde, selbst mit. Das ist jedes Konto seit 2.14.0: Der
        Sockel entsteht beim ersten Laden (serieSockelSichern, sockelBis =
@@ -4371,7 +4391,8 @@ async function deleteBereich() {
     'Tipp zum Bestätigen den Namen des Bereichs ein: ' + b.name,
     "", { title: "Bereich löschen?", okLabel: "Endgültig löschen", danger: true });
   if (eingabe === null) return;
-  if (eingabe.trim() !== b.name.trim()) {
+  /* 3.17.33 (DATEN-19): Harakat, Alif-Formen und Gross/klein zaehlen nicht - hinsehen ja, Harakat tippen nein. */
+  if (vergleichsWort(eingabe) !== vergleichsWort(b.name)) {
     await dlgAlert("Der Name stimmt nicht überein – es wurde nichts gelöscht.", "Abgebrochen");
     return;
   }
@@ -4552,17 +4573,23 @@ async function karteMerken(id) {
      ohnehin sah, und liess einen nichts tun. Wer sich vertippt, soll es
      zuruecknehmen koennen, ohne den Tab zu wechseln. */
   const drin = set.cardIds.indexOf(id);
+  let entfernt = false;
   if (drin !== -1) {
     set.cardIds.splice(drin, 1);
     ui.gemerktRunde.delete(id);
+    entfernt = true;
   } else {
     set.cardIds.push(id);
     ui.gemerktRunde.add(id);
     ui.merkPop = id;   // 2.21.5: Stern-Pop nur beim Hinzufuegen, nicht beim Herausnehmen
   }
+  /* 3.17.33 (LERNEN-10): Eine neue Speicherkarte wird komplett geschrieben -
+     es gibt noch keinen fremden Stand, der verloren gehen koennte. Bei einer
+     vorhandenen wird nur die eine ID gezielt hinzugefuegt bzw. entfernt
+     (arrayUnion/arrayRemove), statt die ganze Liste zu ueberschreiben. */
   patchDoc(neu
     ? { [pfadSet(b.id, set.id)]: setFelder(set, b.sets.length - 1) }
-    : { [pfadSet(b.id, set.id) + ".cardIds"]: set.cardIds });
+    : { [pfadSet(b.id, set.id) + ".cardIds"]: entfernt ? LISTE_WEG([id]) : LISTE_DAZU([id]) });
   render();
 }
 
@@ -4598,15 +4625,20 @@ async function saveSelectedToSet(targetId) {
     if (!setBearbeitbar(set)) { await hinweisGefuehrt("In diese Speicherkarte etwas ablegen"); return; }
   }
   const known = new Set(set.cardIds);
-  ids.forEach(id => { if (!known.has(id)) set.cardIds.push(id); });
+  const neuDazu = [];
+  ids.forEach(id => { if (!known.has(id)) { set.cardIds.push(id); neuDazu.push(id); } });
   ui.selectedIds = new Set();
   ui.selectMode = false;
   ui.openSetId = set.id;
   ui.zuletztSetId = set.id;
   const b = currentBereich();
-  patchDoc(neu
-    ? { [pfadSet(b.id, set.id)]: setFelder(set, currentSets().length - 1) }
-    : { [pfadSet(b.id, set.id) + ".cardIds"]: set.cardIds });
+  /* 3.17.33 (LERNEN-10): siehe karteMerken - nur die tatsaechlich neuen IDs
+     gezielt anhaengen (arrayUnion), nichts schreiben, wenn keine dazukam. */
+  if (neu) {
+    patchDoc({ [pfadSet(b.id, set.id)]: setFelder(set, currentSets().length - 1) });
+  } else if (neuDazu.length) {
+    patchDoc({ [pfadSet(b.id, set.id) + ".cardIds"]: LISTE_DAZU(neuDazu) });
+  }
   render();
   if (uebersprungen > 0) {
     dlgAlert((uebersprungen === 1 ? "Eine gesperrte Karte aus der Auswahl wurde" : uebersprungen + " gesperrte Karten aus der Auswahl wurden") + " übersprungen.", "Teilweise abgelegt");
@@ -4662,7 +4694,7 @@ function removeCardFromSet(setId, cardId) {
   if (!set) return;
   if (!setBearbeitbar(set)) { hinweisGefuehrt("Karten hier herausnehmen"); return; }
   set.cardIds = set.cardIds.filter(x => x !== cardId);
-  patchDoc({ [pfadSet(currentBereich().id, setId) + ".cardIds"]: set.cardIds });
+  patchDoc({ [pfadSet(currentBereich().id, setId) + ".cardIds"]: LISTE_WEG([cardId]) });
   render();
 }
 function toggleSetOpen(id) {
@@ -9153,9 +9185,18 @@ function letzteWoche() {
 function lernenHinweis() {
   const sp = hinweisSpeicher();
   const heute = todayStr();
-  /* 1 - Serie braucht heute eine Runde */
+  /* 1 - Serie braucht heute eine Runde
+     3.17.33 (LERNEN-5 a): Statt nur "gestern nicht gelernt" zu pruefen, wird
+     verglichen, wie die Serie MORGEN (versatz: 1) ohne heutige Runde ausfiele.
+     Der alte Test verzieh die juengste Luecke immer (seitJoker faengt jeden
+     Tag neu bei SERIE_JOKER_TAGE an) und warnte deshalb nicht, wenn schon
+     eine aeltere Luecke lauerte, die morgen die Zaehlung beendet - der Verlust
+     war dann schon passiert. Mit dem Vergleich warnt es auch in diesem Fall,
+     der bisherige Fall (gestern und heute nichts gelernt) bleibt weiterhin
+     erfasst, und der Normalfall (durchgehende Serie, nur heute noch offen)
+     warnt weiterhin nicht, weil die heutige Luecke morgen verziehen wuerde. */
   const serie = serieAktuell();
-  if (serie >= 2 && !tagGelernt(verlauf[heute]) && !tagGelernt(verlauf[dateInDays(-1)]) && dueCards().length > 0) {
+  if (serie >= 2 && !tagGelernt(verlauf[heute]) && serieAktuell({ versatz: 1 }) < serie && dueCards().length > 0) {
     return hinweisKarte("serie", "serie", 'Heute zählt: Ohne eine Runde endet deine Serie von <strong>' + serie + ' Tagen</strong>.', null, false);
   }
   /* 2 - Meilenstein */

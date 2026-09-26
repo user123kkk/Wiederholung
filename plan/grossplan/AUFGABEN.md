@@ -45,7 +45,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-018 | „Teilen beenden"/Bereich löschen scheitert still, Code bleibt lesbar → erst Cloud löschen, dann lokal | DATEN-6 | A | S | P2 | erledigt (3.17.30) |
 | G-019 | Fremde Sätze können über `quelleId: null` doch Bilder vom Absender-Server laden | DATEN-4 | A | S | P3 | erledigt (3.17.30) |
 | G-020 | Bilder in der Kartenliste sprengen die Zeile, laden alle mit Referer, `http://` bricht | DATEN-5 | A | S | P4 | erledigt (3.17.32) |
-| G-021 | Suche ab ~1400 Karten langsam (Zwischenspeicher zu klein) | DATEN-9 | A | S | P4 | offen |
+| G-021 | Suche ab ~1400 Karten langsam (Zwischenspeicher zu klein) | DATEN-9 | A | S | P4 | erledigt (3.17.33) |
 | G-022 | Großer Import in Stapeln nacheinander – Abbruch hinterlässt halben Bereich | DATEN-10 | A | O | P3 | offen |
 | G-023 | Ring und „Heute schon N Antworten" zählen fremde Bereiche mit | REST-1 | A | S | P9 | offen |
 | G-024 | Kalender ohne Wochen-Struktur (19 Spalten statt 7 Zeilen) | REST-2 | A | S | P9 | offen |
@@ -60,7 +60,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-033 | Kurzmeldungen erreichen Bildschirmleser vermutlich nicht (Live-Region neu mit Text) | TECHNIK-8 | A | S | P12 | offen |
 | G-034 | Veröffentlichen lädt `*.zip` mit hoch; `.bat` deployt ungeprüften Arbeitsordner | TECHNIK-9 | A | H | P1 | erledigt (3.17.30) |
 | G-035 | „Gesehen" + Rückgängig zählt den Tag für die Serie | LERNEN-3 | A | S | P5 | erledigt (3.17.32) |
-| G-036 | Keine Warnung an dem Tag, an dem Aussetzen die halbe Serie kostet (Hinweis an die geltende Regel angleichen) | LERNEN-5 (a) | A | S | P5 | offen |
+| G-036 | Keine Warnung an dem Tag, an dem Aussetzen die halbe Serie kostet (Hinweis an die geltende Regel angleichen) | LERNEN-5 (a) | A | S | P5 | erledigt (3.17.33) |
 | G-037 | Große Bestände: jede Bewertung 200–700 ms Rechenzeit (3000–6000 Karten) | LERNEN-6 | A | O | P13 | offen |
 | G-038 | „Kostenlos." steht noch unter „Plan speichern" | EINSTIEG-2 | A | H | P14 | erledigt (3.17.30) |
 | G-039 | Probekarte springt beim Antippen 40 px | EINSTIEG-3 | A | S | P14 | offen |
@@ -101,11 +101,11 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-074 | Unnötige Bytes: 147-KB-Favicon, ungenutzte Dateien im Vorabspeicher | TECHNIK-19 | A | H | P11 | offen |
 | G-075 | Tagesprotokoll zählt bei zwei Geräten/offline zu wenig (`increment`) | LERNEN-8 | A | O | P13 | offen |
 | G-076 | Zweiter Tab ohne Offline-Speicher (Mehr-Tab-Manager) | LERNEN-9 | A | S | P13 | offen |
-| G-077 | Speicherkarten-Liste überschreibt sich auf zwei Geräten (`arrayUnion`/`arrayRemove`) | LERNEN-10, DATEN-14 | A | S | P4 | offen |
+| G-077 | Speicherkarten-Liste überschreibt sich auf zwei Geräten (`arrayUnion`/`arrayRemove`) | LERNEN-10, DATEN-14 | A | S | P4 | erledigt (3.17.33) |
 | G-078 | Kommentar zur Lektions-Schwelle nennt Stufe 2 statt 1 | LERNEN-12 | A | H | P5 | erledigt (3.17.30) |
 | G-079 | Import verwirft zweiten Bereich mit gleichem Namen | DATEN-15 | A | H | P3 | offen |
 | G-080 | Toter Link-Teilen-Code (~80 Zeilen) entfernen | DATEN-16 | A | H | P3 | offen |
-| G-081 | Bereich löschen: Namensvergleich ohne Harakat | DATEN-19 | A | H | P4 | offen |
+| G-081 | Bereich löschen: Namensvergleich ohne Harakat | DATEN-19 | A | H | P4 | erledigt (3.17.33) |
 | G-082 | Bestätigungsseite: zwei Endlos-Bewegungen | EINSTIEG-10 | A | H | P14 | offen |
 | G-083 | Hauptknopf im Einstieg auf 0 und Plan 17–35 px versetzt | EINSTIEG-12 | A | S | P14 | offen |
 | G-084 | Google-Knopf sagt „anmelden", wo ein Konto angelegt wird | EINSTIEG-13 | A | H | P14 | erledigt (3.17.30) |
