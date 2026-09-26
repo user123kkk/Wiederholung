@@ -786,9 +786,10 @@ Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRA
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (27.09.2026): v3.17.41 auf `main`, live ist 3.17.40 (Regeln
-veröffentlicht).** Runde 10 fertig (Import, Erinnerung, Aufräumen). Weiter
-mit Runde 11. **Wartet auf Betreiber:** Gerätetest Drehen (iPhone),
+**AKTUELL (27.09.2026): v3.17.42 auf `main`, live ist 3.17.40.** Runde 11
+fertig (Einstieg). Offen im Großplan nur noch G-037, G-075 (Opus), danach
+Nachprüfung. **Wartet auf Betreiber:** K11, G-042-Rest (Zeitgrenze,
+Datenschutz-Satz). **Wartet auf Betreiber:** Gerätetest Drehen (iPhone),
 E-19 (Geste für „Fast", Empfehlung: lieber nicht).
 Davor 3.17.39:
 3.17.39: Karte drehen auf dem iPhone (Spiegelschrift, Linie; G-091, G-092) –

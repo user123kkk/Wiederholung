@@ -63,12 +63,12 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-036 | Keine Warnung an dem Tag, an dem Aussetzen die halbe Serie kostet (Hinweis an die geltende Regel angleichen) | LERNEN-5 (a) | A | S | P5 | erledigt (3.17.33) |
 | G-037 | Große Bestände: jede Bewertung 200–700 ms Rechenzeit (3000–6000 Karten) | LERNEN-6 | A | O | P13 | offen |
 | G-038 | „Kostenlos." steht noch unter „Plan speichern" | EINSTIEG-2 | A | H | P14 | erledigt (3.17.30) |
-| G-039 | Probekarte springt beim Antippen 40 px | EINSTIEG-3 | A | S | P14 | offen |
-| G-040 | Probekarte übt eine andere Bedienung als die Runde; Einladen-Puls läuft noch | EINSTIEG-4 | A | S | P14 | offen |
-| G-041 | „Nichts davon" auf 360 px hinter dem Weiter-Knopf | EINSTIEG-5 | A | S | P14 | offen |
-| G-042 | Einstiegs-Antworten/Nachklang bleiben nach Anmeldung mit Bestandskonto oder Abbruch liegen | EINSTIEG-7 | A | S | P14 | offen |
+| G-039 | Probekarte springt beim Antippen 40 px | EINSTIEG-3 | A | S | P14 | erledigt (3.17.42) |
+| G-040 | Probekarte übt eine andere Bedienung als die Runde; Einladen-Puls läuft noch | EINSTIEG-4 | A | S | P14 | erledigt (3.17.42): Markup/Klassen der Runde; bei der Abnahme: Platzhalter vorn ergänzt (Wort sprang ~15 px), doppelter Hinweis auf der Karte raus (Untertitel ist Betreiber-Wortlaut) |
+| G-041 | „Nichts davon" auf 360 px hinter dem Weiter-Knopf | EINSTIEG-5 | A | S | P14 | erledigt (3.17.42) |
+| G-042 | Einstiegs-Antworten/Nachklang bleiben nach Anmeldung mit Bestandskonto oder Abbruch liegen | EINSTIEG-7 | A | S | P14 | mechanischer Teil erledigt (3.17.42): Bestandskonto löscht beide Schlüssel. **Offen beim Betreiber:** Zeitgrenze für den Nachklang bei Abbruch ohne Konto, Satz in der Datenschutzerklärung (Punkt 7) zum neuen Löschanlass |
 | G-043 | „Bewegung reduzieren": Verzögerungen außerhalb des Einstiegs bleiben (Rundenende-Knöpfe 1,3 s unsichtbar) | EINSTIEG-8 | A | H | P12 | erledigt (3.17.30) |
-| G-044 | Zeitpunkt steht auf dem Plan zweimal | EINSTIEG-6 | A | H | P14 | offen |
+| G-044 | Zeitpunkt steht auf dem Plan zweimal | EINSTIEG-6 | A | H | P14 | erledigt (3.17.42) |
 
 ## C. Niedrig
 
@@ -100,14 +100,14 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-073 | Rechtsseiten: Querverweis Datenschutz → Impressum | TECHNIK-18 | A | H | P1 | erledigt (3.17.30) |
 | G-074 | Unnötige Bytes: 147-KB-Favicon, ungenutzte Dateien im Vorabspeicher | TECHNIK-19 | A | H | P11 | erledigt (3.17.36): Vorabspeicher ohne `icon.svg`/`flower-isolated.png`; Tab-Symbol bleibt `desktop-icon.png` – liegt wegen Manifest ohnehin im Vorabspeicher, Tausch spart nichts |
 | G-075 | Tagesprotokoll zählt bei zwei Geräten/offline zu wenig (`increment`) | LERNEN-8 | A | O | P13 | offen |
-| G-076 | Zweiter Tab ohne Offline-Speicher (Mehr-Tab-Manager) | LERNEN-9 | A | S | P13 | offen |
+| G-076 | Zweiter Tab ohne Offline-Speicher (Mehr-Tab-Manager) | LERNEN-9 | A | S | P13 | erledigt (3.17.42), am echten Projekt mit zwei Tabs zu prüfen |
 | G-077 | Speicherkarten-Liste überschreibt sich auf zwei Geräten (`arrayUnion`/`arrayRemove`) | LERNEN-10, DATEN-14 | A | S | P4 | erledigt (3.17.33) |
 | G-078 | Kommentar zur Lektions-Schwelle nennt Stufe 2 statt 1 | LERNEN-12 | A | H | P5 | erledigt (3.17.30) |
 | G-079 | Import verwirft zweiten Bereich mit gleichem Namen | DATEN-15 | A | H | P3 | erledigt (3.17.41): nur der Import-Weg (`normBereicheImport`), `normBereiche` am Start bleibt (Dedup dort bewusst) |
 | G-080 | Toter Link-Teilen-Code (~80 Zeilen) entfernen | DATEN-16 | A | H | P3 | erledigt (3.17.41, ~85 Zeilen) |
 | G-081 | Bereich löschen: Namensvergleich ohne Harakat | DATEN-19 | A | H | P4 | erledigt (3.17.33) |
-| G-082 | Bestätigungsseite: zwei Endlos-Bewegungen | EINSTIEG-10 | A | H | P14 | offen |
-| G-083 | Hauptknopf im Einstieg auf 0 und Plan 17–35 px versetzt | EINSTIEG-12 | A | S | P14 | offen |
+| G-082 | Bestätigungsseite: zwei Endlos-Bewegungen | EINSTIEG-10 | A | H | P14 | erledigt (3.17.42) |
+| G-083 | Hauptknopf im Einstieg auf 0 und Plan 17–35 px versetzt | EINSTIEG-12 | A | S | P14 | erledigt (3.17.42) |
 | G-084 | Google-Knopf sagt „anmelden", wo ein Konto angelegt wird | EINSTIEG-13 | A | H | P14 | erledigt (3.17.30) |
 | G-086 | `t_a11y.js` erkennt wartende Animations-Verzögerungen bei „ruhig" nicht (Messlücke, G-043 fiel nur mit eigenem Skript auf) → Prüfung aus `g043/t_g043.js` in `t_a11y.js` übernehmen | Runde 1 | A | S | P12 | erledigt (Prüfstand, dd81f95) |
 | G-087 | Weitere Live-Regionen entstehen mit ihrem Text in `render()` (Einstieg-Echos, Sperre, Anmelde-Info, Ideen-Danke, Hinweis, Modus-Wechsel ~ app.js 6162–9966) – vermutlich nicht angesagt wie TECHNIK-8 | Runde 5 (G-033) | A | S | P12 | erledigt (3.17.37): `ansagen()`; Hinweis, Anmelde-Info, Ideen-Danke, Übung, Probekarte umgestellt; Einstieg-Echo/-Sperre bleiben (Text wird in ein bestehendes Element geschrieben) |

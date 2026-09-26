@@ -2166,9 +2166,11 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
    24.09.2026: "bei onboarding hab ich gesehen einige karten haben
    animationen im sinne von umrandung [...] ich wuerde diese animation
    durchgaengig haben wollen damit man das sieht [...] alle x momente".
-   Im Einstieg pulst um die wartende Karte ein Ring nach aussen
-   (einstieg-einladen, "tipp mich an"), nach der Antwort leuchtet sie auf
-   (einstieg-glanz). Hier dieselben zwei:
+   Im Einstieg pulste bis 3.17.42 (G-040) um die wartende Karte ein Ring
+   nach aussen (einstieg-einladen, "tipp mich an") - seither entfaellt das,
+   wie in der Runde seit 3.17.26 (Befund EINSTIEG-4). Nach der Antwort
+   leuchtet die Probekarte weiter auf (einstieg-glanz). Hier dieselben zwei
+   waren gedacht als:
    - Einladen: nur wer zoegert, sieht ihn. Erst nach 2,6 s auf derselben
      Karte, dann alle 7 s ein Puls (18 % der Dauer, der Rest ist Ruhe). Wer
      zuegig lernt, sieht ihn nie - er soll helfen, nicht nerven. Jede neue
@@ -3559,8 +3561,6 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   background: linear-gradient(to top, var(--bg) 72%, transparent);
 }
 .solo.einstieg-solo { padding-bottom: 0; }
-.einstieg > .einstieg-aktion:has(+ .einstieg-neben) { padding-bottom: var(--space-2); }
-.einstieg > .einstieg-neben { margin-top: 0; padding-bottom: calc(var(--sab) + var(--space-6)); }
 /* Ohne Knopf (Plan entsteht) braucht der Bildschirm den Abstand selbst. */
 .einstieg:not(:has(> .einstieg-aktion)) { padding-bottom: calc(var(--sab) + var(--space-9)); }
 .einstieg--start   { animation: enter-rise var(--dur-slow) var(--ease-out) both; }
@@ -3585,7 +3585,16 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   margin-top: var(--space-6);
   flex-direction: column; align-items: stretch;
 }
-.einstieg-neben { margin-top: var(--space-4); }
+/* 3.17.42 (G-083, Befund EINSTIEG-12): einstieg-neben-platz liegt jetzt IN
+   .einstieg-aktion (zusatz-Parameter von einstiegFuss) und ist auf jedem
+   Bildschirm gleich hoch reserviert, egal ob er etwas enthaelt - vorher
+   stand "Ich habe schon ein Konto" als eigenes Element NACH dem stehenden
+   Bereich, nur auf Bildschirm 0, und machte dessen Fussbereich hoeher als
+   auf 1-6 (die Oberkante des Hauptknopfs sprang beim ersten "Weiter" 17-52 px
+   unter den Finger). Die Randbreite liegt jetzt am Platzhalter, nicht mehr
+   am Inhalt, sonst zaehlte sie doppelt. */
+.einstieg-neben-platz { margin-top: var(--space-4); min-height: var(--tap); }
+.einstieg-neben { margin-top: 0; }
 /* Trefferflaeche wie der Rest (Satz 3): .linklike ist sonst nur 36 px hoch. */
 .einstieg-neben .linklike { min-height: var(--tap); }
 .einstieg-nachsatz { margin-top: var(--space-3); }
@@ -3687,6 +3696,13 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .einstieg-wahl {
   display: flex; flex-direction: column; gap: var(--space-2);
   margin-top: var(--space-5);
+  /* 3.17.42 (G-041, Befund EINSTIEG-5): Ohne Luft unten lag die letzte
+     Zeile ("Nichts davon" bei den Huerden) auf 360 und 390 px hinter dem
+     fest stehenden Weiter-Bereich (.einstieg-aktion, position: sticky) -
+     nichts zeigte, dass sich dahinter noch etwas verbirgt. Der reservierte
+     Platz deckt Knopf + Sperr-Zeile + Abstand grosszuegig ab, der Verlauf
+     auf .einstieg-aktion bleibt der sichtbare Scroll-Hinweis. */
+  padding-bottom: calc(var(--sab) + 11rem);
 }
 .einstieg-option {
   position: relative;
@@ -4013,46 +4029,32 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 }
 @media (hover: hover) and (pointer: fine) {
   .einstieg-karte:hover { background: none; }
-  .einstieg-karte:hover .einstieg-probe { border-color: var(--border-strong); }
+  /* 3.17.42 (G-040): Die Umrandung ist jetzt .karte-seite (Karte der echten
+     Runde), nicht mehr .einstieg-probe - siehe Kommentar unten. */
+  .einstieg-karte:hover .karte-seite { border-color: var(--border-strong); }
 }
-.einstieg-karte .einstieg-probe { margin-top: 0; }
 .einstieg-karte--offen { cursor: default; }
-/* Drei Zustände, drei Bewegungen (app.js setzt die Klasse):
-   --wartet   ein Ring pulst zweimal nach außen: „tipp mich an"
-   --dreht    die Karte klappt beim Aufdecken um die Hochachse auf
-   --bewertet nach der Antwort leuchtet sie einmal auf */
-.einstieg-karte--wartet .einstieg-probe {
-  animation: einstieg-einladen 1.8s var(--ease-out) 900ms 2 both;
-}
-@keyframes einstieg-einladen {
-  0%   { box-shadow: 0 0 0 0 var(--accent-border); }
-  70%  { box-shadow: 0 0 0 12px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
-}
-.einstieg-karte--dreht { perspective: 900px; }
-.einstieg-karte--dreht .einstieg-probe {
-  animation: einstieg-aufklappen 560ms var(--ease-out) both;
-}
-@keyframes einstieg-aufklappen {
-  from { transform: rotateY(-90deg); opacity: 0.4; }
-  to   { transform: none; opacity: 1; }
-}
-.einstieg-karte--bewertet .einstieg-probe {
+/* 3.17.42 (G-040, Befund EINSTIEG-4): Die Probekarte dreht jetzt wie die
+   echte Runde (karte-dreh, karte-seite--vorn/--hinten, karte-dreh--wende,
+   styles.css Abschnitt "Die Karte der Runde") statt einer eigenen
+   -90-Grad-Aufklappung mit der Loesung unter der Karte. Der Einladen-Puls
+   (einstieg-einladen, "tipp mich an") entfaellt dazu - die Runde hat ihn
+   seit 3.17.26 auch nicht mehr (Betreiber: "umdrehen nicht gezwungen").
+   Nur das Aufleuchten nach der Antwort bleibt einstieg-eigen, weil die
+   Runde dafuer eine andere Geste hat (Wegfliegen, .karte-geist). Es liegt
+   jetzt auf .karte-seite (der Karte selbst), nicht mehr auf .einstieg-probe
+   - die eigene umrandete Flaeche entfaellt, das Wort steckt direkt in der
+   Karte wie in der Runde. */
+.einstieg-karte--bewertet .karte-seite--hinten {
   animation: einstieg-glanz 1s var(--ease-out) both;
 }
+/* outline statt box-shadow: .karte-seite traegt schon einen eigenen,
+   themenabhaengigen Schatten (box-shadow, weiter oben) - eine Animation
+   darauf wuerde ihn am Ende ueberschreiben ("both" haelt den letzten Wert).
+   outline liegt daneben und laesst den Kartenschatten unberuehrt. */
 @keyframes einstieg-glanz {
-  from { box-shadow: 0 0 0 0 var(--accent-border); border-color: var(--accent-border); }
-  to   { box-shadow: 0 0 0 16px transparent; border-color: var(--border); }
-}
-.einstieg-karte__loesung {
-  margin-top: var(--space-3);
-  text-align: center;
-  font-family: var(--font-text);
-  font-size: var(--fs-xl);
-  color: var(--text-1);
-}
-.einstieg-karte--dreht .einstieg-karte__loesung {
-  animation: enter-rise var(--dur-slow) var(--ease-out) 280ms both;
+  from { outline: 3px solid var(--accent-border); outline-offset: 2px; border-color: var(--accent-border); }
+  to   { outline: 3px solid transparent; outline-offset: 16px; border-color: var(--border); }
 }
 .einstieg-frage-klein { margin: var(--space-5) 0 0; }
 .einstieg-bewertung {
@@ -4174,11 +4176,13 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .einstieg-zeichnen circle, .einstieg-zeichnen path { stroke-dasharray: 1; stroke-dashoffset: 0; }
 .einstieg--neu .einstieg-zeichnen circle { animation: einstieg-strich 620ms var(--ease-out) 80ms both; }
 .einstieg--neu .einstieg-zeichnen path   { animation: einstieg-strich 360ms var(--ease-out) 600ms both; }
-/* Vier Kacheln, jede eine eigene Fläche – direkt auf der Seite, nicht in
-   einer weiteren (Satz 2). Tan AI zeigte hier ein 2×2-Raster; die Werte
-   kommen aus den Antworten. */
+/* Drei Kacheln, jede eine eigene Fläche – direkt auf der Seite, nicht in
+   einer weiteren (Satz 2). Die Werte kommen aus den Antworten.
+   3.17.42 (G-044, Befund EINSTIEG-6): vorher vier Kacheln in einem
+   2×2-Raster (Tan AI) - "Zeitpunkt" stand doppelt (auch im Satz darüber)
+   und ist entfallen, jetzt eine Reihe zu drei. */
 .einstieg-kacheln {
-  display: grid; grid-template-columns: 1fr 1fr;
+  display: grid; grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
@@ -4336,7 +4340,6 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   .einstieg-hero__karte--hinten .einstieg-hero__seite--hinten::after,
   .einstieg-leiste__punkt--ziel::after,
   .einstieg-leiter__ziel .einstieg-leiter__punkt::after,
-  .einstieg-karte--wartet .einstieg-probe,
   .einstieg-aktion--glanz button.full::after { animation: none !important; }
   /* Das Aufleuchten endet unsichtbar - ohne Animation bliebe es als
      Schleier stehen. */
@@ -4529,7 +4532,12 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   color: var(--accent);
   animation: enter-pop 420ms var(--ease-spring) both;
 }
-.brief-bild .i-xl { width: 44px; height: 44px; stroke-width: 1.5; animation: brief-schweben 2.8s ease-in-out 600ms infinite; }
+/* 3.17.42 (G-082, Befund EINSTIEG-10): "infinite" -> 2 Durchlaeufe. Wer auf
+   die Mail wartet, sieht das oft minutenlang - LEHREN § 6.4 verbietet einen
+   Endlos-Loop, der Aufmerksamkeit zieht (WCAG 2.2.2 verlangt ab 5s einen
+   Stopp). Die Kurve endet bei 100% wieder auf transform: none, also der
+   Ruhelage - kein Fuellmodus noetig. */
+.brief-bild .i-xl { width: 44px; height: 44px; stroke-width: 1.5; animation: brief-schweben 2.8s ease-in-out 600ms 2; }
 @keyframes brief-schweben { 0%, 100% { transform: none; } 50% { transform: translateY(-3px) rotate(-2deg); } }
 .brief-bild__punkt {
   position: absolute; top: 14px; right: 14px;
@@ -4538,10 +4546,12 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   animation: enter-pop 360ms var(--ease-spring) 500ms both;
 }
 .bestaetigung-warten { display: flex; align-items: flex-start; gap: var(--space-2); }
+/* 3.17.42 (G-082, Befund EINSTIEG-10): "infinite" -> 6 Durchlaeufe (rund
+   10s), danach steht der Punkt ruhig - LEHREN § 6.4, WCAG 2.2.2. */
 .bestaetigung-warten__punkt {
   flex: 0 0 auto; margin-top: 5px;
   width: 8px; height: 8px; border-radius: 50%; background: var(--positive);
-  animation: puls 1.6s ease-in-out infinite;
+  animation: puls 1.6s ease-in-out 6;
 }
 
 /* ===========================================================================
@@ -4836,7 +4846,7 @@ button.halten:disabled {
      das letzte Element, wenn es an ungerader Position steht - bei 3 Karten
      die dritte, bei (wieder) 4 keine, ohne die Zahl fest zu verdrahten. */
   .einstieg-wahl--paar .einstieg-option:last-child:nth-child(odd) { grid-column: 1 / -1; }
-  .einstieg-kacheln { grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+  .einstieg-kacheln { grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
   .einstieg-wege { flex-direction: row; gap: var(--space-6); }
   .einstieg-weg { flex: 1 1 0; }
   .einstieg-bewertung { max-width: 420px; margin-left: auto; margin-right: auto; }

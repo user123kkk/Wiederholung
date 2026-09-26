@@ -1,3 +1,24 @@
+## 3.17.42 – 27. September 2026
+
+**Großplan, Runde 11: Einstieg ruhiger, Probekarte wie die echte.**
+
+- **Die Probekarte dreht sich wie die Karten in der Runde** – dieselbe
+  Vorder- und Rückseite, dasselbe Umdrehen. Sie springt dabei nicht mehr
+  (vorher 40 px), und das Wort bleibt beim Umdrehen an seiner Stelle.
+- **Der Weiter-Knopf steht auf jedem Einstiegs-Bildschirm an derselben
+  Stelle.**
+- **„Nichts davon"** lässt sich auf kleinen Handys ganz über den Knopf
+  scrollen.
+- **Der Plan nennt den Zeitpunkt nur noch einmal** (im Satz, nicht zusätzlich
+  als Kachel).
+- **Bestätigungsseite:** Brief und Punkt bewegen sich nicht mehr endlos,
+  sondern ein paar Mal und kommen dann zur Ruhe.
+- **Wer sich nach dem Einstieg in ein bestehendes Konto anmeldet**, bei dem
+  werden die Einstiegs-Antworten auf dem Gerät gelöscht – das Konto braucht
+  sie nicht.
+- **Zwei Tabs gleichzeitig offen:** Auch der zweite Tab hat jetzt den
+  Offline-Speicher; offline Gelerntes geht beim Schließen nicht verloren.
+
 ## 3.17.41 – 27. September 2026
 
 **Großplan, Runde 10: Einspielen und Erinnerung verlässlich.**

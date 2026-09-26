@@ -6,7 +6,49 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4–7) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 11 (Runde 10 fertig, v3.17.41) |
+| Nächste Runde | 12 (Runde 11 fertig, v3.17.42) |
+
+---
+
+### 2026-09-27 — Runde 11: Einstieg ruhiger, Probekarte wie die echte (v3.17.42)
+
+**Anlass:** Betreiber „weiter, bitte schnell"; E-19 entschieden (keine Geste
+für „Fast"). Die Nachtschicht (21:07 UTC) sprang während dieser Runde an und
+startete keine zweite – sie schließt diese ab.
+
+**Geändert:** `app.js`/`styles.css` (Handwerker, Sonnet): Probekarte mit
+Markup/Klassen der Runde, `einstieg-einladen`/`einstieg-aufklappen` raus
+(G-040), Untertitel an fester Stelle (G-039), Luft unter „Nichts davon"
+(G-041), Kachel „Zeitpunkt" raus, Raster 3 Spalten (G-044), `einstiegFuss()`
+reserviert Sperr-Zeile und Nebenweg überall (G-083), `brief-schweben` 2×,
+`puls` 6× (G-082), Bestandskonto löscht Einstiegs-Schlüssel (G-042,
+mechanisch) · Dirigent: Platzhalter vorn auf der Probekarte, kein doppelter
+Hinweis; `persistentMultipleTabManager` (G-076) · Version 3.17.42,
+`CHANGELOG.md` · Tests `t_einstieg_g083_039_040_041_044`,
+`t_einstieg_bestandskonto_g042`, `t_bestaetigung_bewegung_g082`
+(Handwerker, vom Dirigenten um Wort-Lage ergänzt) · `ENTSCHEIDUNGEN.md` E-19.
+
+**Bei der Abnahme korrigiert:** Die neue Probekarte ließ das Wort beim
+Umdrehen ~15 px springen (vorn fehlten die Platzhalter – dieselbe Art wie
+G-090; der Test maß nur die Kartenkante). Und „Tippen zum Umdrehen" stand
+doppelt: auf der Karte UND im Untertitel, der Betreiber-Wortlaut ist
+(`plan/onboarding/WORTLAUT.md`) → Hinweis auf der Karte raus. Gemessen:
+Wort vor/nach 0 px (390, 360).
+
+**Prüfstand:** `pruefe_stand` grün · alle 90 `t_*.js` in der Schleife, einzige
+Meldung der absichtlich entfernte Hinweis (Test angepasst, grün) ·
+`abnahme_runde.js` 13/13 · Affe Handy 200: 0, iPad 150: 0.
+
+**Kriterien:** A1 ☐ (2 offen: G-037, G-075, beide Opus) · A2 ☑ · A3 ☑ ·
+A4 ☑ · A5 ☐ · A6 ☐
+
+**Offen:** K11 für 3.17.42. **Betreiber:** G-042-Rest (Zeitgrenze für den
+Nachklang bei Abbruch ohne Konto; Satz in der Datenschutzerklärung Punkt 7 zum
+Löschen bei Anmeldung in ein Bestandskonto – nichts wird falsch, nur nicht
+erwähnt). G-076 am echten Projekt mit zwei Tabs prüfen.
+
+**Nächster Schritt:** Runde 12 – G-037 (Tempo bei großen Beständen) und G-075
+(Tagesprotokoll mit `increment`), beide selbst; danach Nachprüfung (A5).
 
 ---
 

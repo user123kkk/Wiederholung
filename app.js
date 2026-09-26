@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.41";
+const APP_VERSION = "3.17.42";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1994,7 +1994,11 @@ async function initFirebase() {
      Nicht useDeviceLanguage() - die App ist nur deutsch. */
   auth.languageCode = "de";
   try {
-    db = fb.initializeFirestore(fbApp, { localCache: fb.persistentLocalCache() });
+    /* 3.17.42 (G-076/LERNEN-9): Mehr-Tab-Verwaltung. Ohne sie bekam nur der
+       erste Tab die IndexedDB-Sperre, ein zweiter fiel still auf den
+       Arbeitsspeicher zurueck - offline gelernte Bewertungen dort waren beim
+       Schliessen weg, obwohl das Banner die Uebertragung zusagte. */
+    db = fb.initializeFirestore(fbApp, { localCache: fb.persistentLocalCache({ tabManager: fb.persistentMultipleTabManager() }) });
     offlineCacheAktiv = true;
   } catch (e) {
     db = fb.getFirestore(fbApp); // Fallback ohne Offline-Cache
@@ -2133,6 +2137,20 @@ async function initFirebase() {
           evaluateStreakForNewDay();
           render();
           return;
+        }
+        if (!cloudDocExists) {
+          /* 3.17.42 (G-042, Befund EINSTIEG-7 - nur der mechanische Teil):
+             Bestandskonto, gerade angemeldet. Der Zwischenspeicher aus einem
+             GAST-Einstieg auf diesem Geraet (Antworten, Wenn-dann-Satz)
+             gehoert nicht zu diesem Konto - die Datenschutzerklaerung Punkt 7
+             verspricht "bis dein Konto angelegt ist", nicht laenger. NICHT
+             einstiegAnwenden(): das wuerde die Gast-Antworten als Einstellung
+             uebernehmen und die Einstellungen eines bestehenden Kontos
+             ueberschreiben - hier wird nur geloescht, nichts angewendet.
+             Die Bedingung (cloudDocExists war noch false) haelt das auf
+             "einmal je Anmeldung", nicht bei jedem weiteren Schnappschuss. */
+          try { localStorage.removeItem(EINSTIEG_ANTWORT_KEY); } catch (e) {}
+          nachklangLoeschen();
         }
         cloudDocExists = true;
         /* Es klappt wieder - der einmalige Erneuerungsversuch steht der
@@ -6258,10 +6276,18 @@ function einstiegProbe(groesse) {
      hier ein BESTEHENDES Element seinen Zustand aendert. Damit das trifft,
      zeichnet der Klick-Zweig "einstieg-schrift" diesen Bildschirm bewusst
      NICHT neu. */
-  return '<div class="einstieg-probe">' +
-    '<div class="study-word arabic" lang="ar" dir="rtl" ' +
-    'style="transform:scale(' + faktor + ')">' + esc(EINSTIEG_BEISPIEL.arab) + '</div>' +
-    '</div>';
+  return '<div class="einstieg-probe">' + einstiegKarteWort(groesse) + '</div>';
+}
+/* Nur das Wort, ohne die umrandete Flaeche von einstiegProbe() - fuer
+   Bildschirm 3 (G-040, Befund EINSTIEG-4): Dort steckt das Wort schon in
+   .karte-seite, der Karte der echten Runde, die selbst Rand und Hintergrund
+   mitbringt. Zwei umrandete Flaechen ineinander waeren ein Kasten im Kasten
+   (styles.css, Kommentar bei .einstieg-probe). */
+function einstiegKarteWort(groesse) {
+  const st = ARAB_STUFEN.find(x => x.id === groesse);
+  const faktor = st ? st.faktor : 1;
+  return '<div class="study-word arabic" lang="ar" dir="rtl" ' +
+    'style="transform:scale(' + faktor + ')">' + esc(EINSTIEG_BEISPIEL.arab) + '</div>';
 }
 
 /* Die Karte auf dem ersten Bildschirm: sie dreht sich hin und zurueck (zeigt
@@ -6509,10 +6535,20 @@ function einstiegFuss(weiterLabel, weiterAktion, klasse, zusatz) {
     /* 3.17.1: Die Zeile steht auf allen Frage-Bildschirmen (1-6), auf den
        Pflicht-Bildschirmen mit Text, sonst leer. Seit der Knopf unten fest
        steht, ist sie kein Loch mehr, sondern haelt ihn von Bildschirm zu
-       Bildschirm an derselben Stelle (vorher 30 px Unterschied). */
+       Bildschirm an derselben Stelle (vorher 30 px Unterschied).
+       3.17.42 (G-083, Befund EINSTIEG-12): Auf Bildschirm 0 und dem Plan (7)
+       fehlte die leere Zeile ganz (der Bereich lief nur bis Schritt 1-6) -
+       ihre reservierte Hoehe (min-height, styles.css) machte den Fussbereich
+       dort 17-35 px niedriger, der Hauptknopf sprang beim ersten "Weiter"
+       unter den Finger. Jetzt steht sie auf JEDEM Bildschirm, der ueber
+       einstiegFuss() kommt - leer, wo es keine Pflicht gibt. */
     (pflicht ? '<p class="einstieg-sperre" aria-live="polite">' + esc(hinweis) + '</p>'
-      : (e && e.schritt >= 1 && e.schritt <= 6 ? '<p class="einstieg-sperre" aria-hidden="true"></p>' : '')) +
-    (zusatz || "") +
+      : '<p class="einstieg-sperre" aria-hidden="true"></p>') +
+    /* 3.17.42 (G-083): zusatz steckt jetzt in einem reservierten Platz
+       (min-height, styles.css) statt direkt im Block - so ist die
+       Gesamthoehe des Fussbereichs auch dann gleich, wenn nur EIN Bildschirm
+       (0: "Ich habe schon ein Konto") etwas hineinschreibt. */
+    '<div class="einstieg-neben-platz"' + (zusatz ? '' : ' aria-hidden="true"') + '>' + (zusatz || "") + '</div>' +
     '</div>';
 }
 /* Die Wahl-Zweige zeichnen den Bildschirm bewusst NICHT neu (Fokus, Bewegung -
@@ -6634,9 +6670,16 @@ function renderEinstieg() {
     html += einstiegHero(e.heroHinten);
     html += '<p class="hint einstieg-hero__text">Adrabic bringt dir jedes Wort zurück. In wachsenden Abständen, ' +
       'so lange, bis es sitzt.</p>';
-    html += einstiegFuss("Meinen Plan erstellen", null, "einstieg-aktion--glanz");
-    html += '<div class="empty__aktionen einstieg-neben">' +
-      '<button class="linklike" data-action="einstieg-konto">Ich habe schon ein Konto</button></div>';
+    /* 3.17.42 (G-083, Befund EINSTIEG-12): "Ich habe schon ein Konto" steht
+       jetzt als zusatz IN der stehenden Flaeche (einstiegFuss), nicht mehr
+       als eigenes Element danach. Vorher machte genau dieses zusaetzliche
+       Element Bildschirm 0 hoeher als 1-6 (sticky haengt am Fuss, mehr
+       Inhalt darunter zieht die Oberkante des Knopfs nach oben) - der
+       reservierte Platz (.einstieg-neben-platz, styles.css) ist jetzt auf
+       jedem Bildschirm gleich hoch, egal ob er etwas enthaelt. */
+    html += einstiegFuss("Meinen Plan erstellen", null, "einstieg-aktion--glanz",
+      '<div class="empty__aktionen einstieg-neben">' +
+      '<button class="linklike" data-action="einstieg-konto">Ich habe schon ein Konto</button></div>');
 
   } else if (e.schritt === 1) {
     /* Ziel. "Eine Frage nach dem Ziel fragt selten nur nach dem Ziel"
@@ -6673,23 +6716,52 @@ function renderEinstieg() {
        ausgewerteten Quellen (Alma, Prayer Lock, Duolingos 2-Minuten-Lektion).
        Es ist eine Anzeige, kein Lernlauf: nichts wird gespeichert, keine
        Stufe, kein Verlauf, kein Eingriff in die Lernlogik.
-       Die Klassen steuern die Bewegung: --wartet laedt zum Antippen ein,
-       --dreht klappt die Karte beim Aufdecken um, --bewertet laesst sie nach
-       der Antwort einmal aufleuchten. */
+       3.17.42 (G-040, Befund EINSTIEG-4): Dieselbe Drehung wie in der echten
+       Runde - Markup und Klassen (karte-dreh, karte-seite--vorn/--hinten,
+       karte-dreh--wende) statt einer eigenen -90-Grad-Aufklappung mit der
+       Loesung unter der Karte. So lernt man im Einstieg dasselbe Kartenbild
+       kennen wie spaeter in der Runde (C2 in ENTSCHIEDEN.md: "wie im echten
+       Lernlauf"). "Tippen zum Umdrehen" steht wie dort auf der Karte, der
+       Einladen-Puls (einstieg-einladen) entfaellt - die Runde hat ihn seit
+       3.17.26 auch nicht mehr (Betreiber: "umdrehen nicht gezwungen").
+       Die 3.17.40-Absicherungen fuer Safari (backface-visibility an jedem
+       Kind, Vorderseite ueber opacity ausblenden) gelten mit, weil dieselben
+       CSS-Regeln (styles.css) an denselben Klassen haengen.
+       3.17.42 (G-039, Befund EINSTIEG-3): Der Untertitel bleibt in beiden
+       Zustaenden an derselben Stelle - vorher verschwand er beim Aufdecken
+       ganz und die Karte ruckte 40px nach oben. */
     const groesse = einstiegGroesse(e);
+    const frisch = e.aufgedeckt && e.bewertet === null;
     html += '<h1>Probier eine Karte.</h1>';
+    const subtitle = !e.aufgedeckt
+      ? (e.huerden.includes("vergessen")
+          ? 'So arbeitet Adrabic gegen das Vergessen. Tipp die Karte an, um sie umzudrehen.'
+          : 'Tipp die Karte an, um sie umzudrehen.')
+      : 'Wie sicher warst du?';
+    html += '<p class="subtitle">' + esc(subtitle) + '</p>';
+    /* 3.17.42 (Dirigent bei der Abnahme): kein "Tippen zum Umdrehen" auf der
+       Karte - der Untertitel sagt es schon (Wortlaut aus
+       plan/onboarding/WORTLAUT.md), doppelt waere Rauschen (LEHREN § 6.9).
+       Dafuer vorn dieselben unsichtbaren Platzhalter wie in der Runde (Linie,
+       Antwort): sonst stand das Wort vorn ~15 px tiefer als hinten und sprang
+       beim Umdrehen (gleicher Fehler wie G-090). */
+    const tipp = '<div class="study-trenner platz-leer" aria-hidden="true"></div>' +
+      '<div class="study-answer platz-leer" aria-hidden="true">' + esc(EINSTIEG_BEISPIEL.de) + '</div>';
     if (!e.aufgedeckt) {
-      html += '<p class="subtitle">' + (e.huerden.includes("vergessen")
-        ? 'So arbeitet Adrabic gegen das Vergessen. Tipp die Karte an, um sie umzudrehen.'
-        : 'Tipp die Karte an, um sie umzudrehen.') + '</p>';
-      html += '<button class="einstieg-karte einstieg-karte--wartet" data-action="einstieg-aufdecken" ' +
-        'aria-label="Beispielkarte umdrehen">' + einstiegProbe(groesse) + '</button>';
+      html += '<button class="einstieg-karte" data-action="einstieg-aufdecken" aria-label="Beispielkarte umdrehen">' +
+        '<div class="study-flaeche"><div class="karte-dreh">' +
+        '<div class="karte-seite karte-seite--vorn">' + einstiegKarteWort(groesse) + tipp + '</div>' +
+        '</div></div></button>';
     } else {
-      html += '<div class="einstieg-karte einstieg-karte--offen ' +
-        (e.bewertet === null ? 'einstieg-karte--dreht' : 'einstieg-karte--bewertet') + '">' + einstiegProbe(groesse) +
-        '<div class="einstieg-karte__loesung">' + esc(EINSTIEG_BEISPIEL.de) + '</div></div>';
-      if (e.bewertet === null) {
-        html += '<p class="subtitle einstieg-frage-klein">Wie sicher warst du?</p>';
+      html += '<div class="einstieg-karte einstieg-karte--offen' + (frisch ? '' : ' einstieg-karte--bewertet') + '">' +
+        '<div class="study-flaeche study-flaeche--offen' + (frisch ? ' study-flaeche--dreht' : '') + '">' +
+        '<div class="karte-dreh' + (frisch ? ' karte-dreh--wende' : '') + '">' +
+        (frisch ? '<div class="karte-seite karte-seite--vorn" aria-hidden="true">' + einstiegKarteWort(groesse) + tipp + '</div>' : '') +
+        '<div class="karte-seite karte-seite--hinten">' + einstiegKarteWort(groesse) +
+        '<div class="study-trenner" aria-hidden="true"></div>' +
+        '<div class="study-answer">' + esc(EINSTIEG_BEISPIEL.de) + '</div></div>' +
+        '</div></div></div>';
+      if (frisch) {
         html += '<div class="einstieg-bewertung">';
         html += ["Nicht", "Fast", "Sicher"].map((l, n) =>
           '<button class="secondary" style="--n:' + n + '" data-action="einstieg-bewerten" data-id="' + esc(l) + '">' + l + '</button>').join("");
@@ -6791,11 +6863,14 @@ function renderEinstieg() {
     html += '<h1>Dein Plan steht.</h1>';
     html += '<p class="subtitle">Aus deinen Antworten. Schrift und Runde kannst du jederzeit ändern.</p>';
     if (satz) html += '<p class="einstieg-satz einstieg-satz--plan"><strong>' + esc(satz) + '</strong></p>';
+    /* 3.17.42 (G-044, Befund EINSTIEG-6): "Zeitpunkt" entfaellt hier - der
+       Anker-Text steht schon im Satz direkt darueber ("Nach dem ... mache
+       ich eine Runde."), "nichts doppelt" (LEHREN § 6.9). Drei Kacheln statt
+       vier, das Raster ist entsprechend angepasst (styles.css). */
     html += '<div class="einstieg-kacheln">';
     html += einstiegKachel("Runde", String(limit) === "alle" ? "alle fälligen Karten" : "bis zu " + limit + " Karten", 0);
-    html += einstiegKachel("Zeitpunkt", einstiegZeitpunkt(e), 1);
-    html += einstiegKachel("Schrift", labelVon(ARAB_STUFEN, groesse, "Normal"), 2);
-    html += einstiegKachel("Ziel", ziel, 3);
+    html += einstiegKachel("Schrift", labelVon(ARAB_STUFEN, groesse, "Normal"), 1);
+    html += einstiegKachel("Ziel", ziel, 2);
     html += '</div>';
     html += '<h2 class="einstieg-zwischentitel">So kommt ein Wort zurück, das du heute anlegst</h2>';
     html += einstiegLeiter();
