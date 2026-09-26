@@ -36,6 +36,15 @@ const reste = p => p.evaluate(() => [...window.__FB.store.keys()].filter(k => /^
     await p.fill('#konto-loeschen-email', 'test@example.com'); await p.waitForTimeout(300);
     const k = await p.$('[data-action="delete-account"]'); const r = await k.boundingBox();
     await p.mouse.move(r.x + r.width / 2, r.y + r.height / 2); await p.mouse.down(); await p.waitForTimeout(2300); await p.mouse.up();
+    /* 3.17.38 (G-051): vor dem Loeschen wird IMMER neu angemeldet - vorher
+       sprang die Abfrage bei "frischer" lastSignInTime weg, dieser Test hat
+       sie deshalb nie beantwortet (5 Fehler seit 3.17.38, erst in Runde 10
+       bemerkt). */
+    await p.waitForTimeout(500);
+    if (await p.$('#dlg-input')) {
+      await p.fill('#dlg-input', 'geheim');
+      await p.evaluate(() => { const x = [...document.querySelectorAll('.dlg button')].find(y => y.innerText.trim() === 'Weiter'); if (x) x.click(); });
+    }
     await p.waitForTimeout(2500);
     const rest = await reste(p);
     pruefe('Konto: eigene geteilte Saetze weg', !rest.includes('geteilteLektionen/ABCDE-FGHJK') && !rest.includes('geteilteLektionen/KLMNP-QRSTU'));

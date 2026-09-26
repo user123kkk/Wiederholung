@@ -17,14 +17,20 @@ const nutzer = { uid: 'u1', email: 'test@example.com', displayName: 'Test', emai
    app.js und dieser Test duerfen es) - stattdessen dient hier eine lokale
    Variante des Firestore-Moduls, mit demselben Verhalten, nur dass
    deleteDoc bei window.__FB.failDeleteGeteilt = true ablehnt. */
+const DELETE_ALT = 'export function deleteDoc(ref){ S.protokoll.push(\'deleteDoc\'); S.store.delete(ref.path); melden(); return Promise.resolve(); }';
+/* 3.17.41: Seit 3.17.38 protokolliert die Attrappe deleteDoc - die alte
+   Ersetzung traf die Zeile nicht mehr und die Fehlschlag-Simulation lief
+   still ins Leere (4 Fehler "Teilen beenden"). Jetzt bricht der Test laut ab,
+   wenn die Zeile nicht gefunden wird (LEHREN § 5.3). */
+if (!FS.includes(DELETE_ALT)) throw new Error('t_teilen.js: deleteDoc-Zeile in stubs.js nicht gefunden - Ersetzung anpassen');
 const FS_FEHLSCHLAG = FS.replace(
-  'export function deleteDoc(ref){ S.store.delete(ref.path); melden(); return Promise.resolve(); }',
+  DELETE_ALT,
   /* "unavailable" statt "permission-denied": geteiltLoeschen() schluckt
      permission-denied absichtlich als "Dokument fehlt schon" (Kommentar dort,
      app.js ~2790) - das ist kein echter Fehlschlag. Ein echter Fehlschlag
      (Netz weg, Zeitlimit) hat einen anderen Code und muss beim Aufrufer
      ankommen. */
-  'export function deleteDoc(ref){ if (S.failDeleteGeteilt && ref.path.startsWith("geteilteLektionen/")) return Promise.reject(Object.assign(new Error("fail"), {code:"unavailable"})); S.store.delete(ref.path); melden(); return Promise.resolve(); }'
+  'export function deleteDoc(ref){ S.protokoll.push(\'deleteDoc\'); if (S.failDeleteGeteilt && ref.path.startsWith("geteilteLektionen/")) return Promise.reject(Object.assign(new Error("fail"), {code:"unavailable"})); S.store.delete(ref.path); melden(); return Promise.resolve(); }'
 );
 
 async function neueSeiteFehlschlagDelete(browser, vp, opt = {}) {

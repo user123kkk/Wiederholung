@@ -29,6 +29,7 @@ in der nächsten Runde.
 | E-16 | Funktionen/Premium | F-1 und F-2 bauen, Rest siehe `FUNKTIONEN.md` | – |
 | E-17 | „Lieber nicht"-Liste bestätigen | bestätigen | – |
 | E-18 | Gerätetest Google-Anmeldung | bitte testen | – |
+| E-19 | Geste für „Fast" (Tipp auf die Karte o. Ä.) | lieber nicht | offen |
 
 ---
 
@@ -227,3 +228,16 @@ iPhone testen, einmal vom Home-Bildschirm und einmal im Safari-Tab: abgemeldet �
 App ist. Ergebnis mit iOS-Version in den Chat. Klappt es, wird nur der Kommentar
 berichtigt. Klappt es nicht, baut Opus einen Weiterleitungs-Weg nur für die
 installierte App.
+
+### E-19 – Geste für „Fast" (Betreiber 26.09.2026)
+Frage: „was steht denn für Fast? einfach auf die Karte?" Heute: rechts wischen =
+Sicher, links = Nicht, „Fast" nur als Knopf (und Pfeil runter / Taste 2).
+Bewusst so seit dem Wisch-Bau („Fast hat keine Wischrichtung", Kommentar bei
+`wischStart`).
+- Dafür (Tipp = Fast): alles einhändig auf der Karte.
+- Dagegen: derselbe Tipp deckt auf – ein Doppeltipp würde aufdecken UND blind
+  „Fast" werten (genau Vorfall 3.17.25, `BEWERTEN_SPERRE_MS`); jedes
+  versehentliche Antippen (lange Notiz scrollen) würde bewerten.
+- Wischen nach oben ginge, ist aber schräg leicht mit links/rechts zu
+  verwechseln, und der Knopf liegt mittig unter dem Daumen.
+- **Empfehlung: lieber nicht.** Offen, bis der Betreiber es anders will.

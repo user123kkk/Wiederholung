@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.40";
+const APP_VERSION = "3.17.41";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -636,6 +636,32 @@ function normBereiche(arr) {
   }
   if (out.length === 0) out.push({ id: genId(), name: "Vokabeln", karten: [], sets: [] });
   return out;
+}
+/* 3.17.41 (G-079, DATEN-15): Nur fuer den Import gedacht. normBereiche()
+   selbst verwirft einen zweiten Bereich mit gleichem Namen STILL (Zeile
+   oben, `out.some(...) continue`) - das ist an den anderen Aufrufstellen
+   (Start, Cloud-Migration bei :2137) Absicht: siehe Kommentar an
+   moveSelectedCardsTo ("Zwei gleichnamige Bereiche konnten sonst entstehen
+   ... und dann traf das Verschieben den falschen"), dort bleibt es deshalb
+   unveraendert. Eine Sicherungsdatei soll beim Einspielen aber vollstaendig
+   wiederhergestellt werden - ein zweiter Bereich "A" bekommt hier denselben
+   Namen wie beim spaeteren Zusammenstoss mit einem vorhandenen Bereich
+   (verarbeiteImportDaten, "(2)", "(3)" ...), statt lautlos zu verschwinden. */
+function normBereicheImport(arr) {
+  if (!Array.isArray(arr)) return normBereiche(arr);
+  const namen = new Set();
+  const umbenannt = arr.map(b => {
+    if (!b || typeof b !== "object" || typeof b.name !== "string" || !b.name) return b;
+    let name = b.name;
+    if (namen.has(name)) {
+      let n = 2;
+      while (namen.has(name + " (" + n + ")")) n++;
+      name = name + " (" + n + ")";
+    }
+    namen.add(name);
+    return name === b.name ? b : Object.assign({}, b, { name: name });
+  });
+  return normBereiche(umbenannt);
 }
 /* Wandelt die lokale Bereiche-Liste (Array) in das in der Cloud gespeicherte
    Map-Format um (Bereiche und Karten jeweils als Objekt, per ID adressierbar).
@@ -2361,11 +2387,22 @@ async function patchDoc(patch) {
   };
   try {
     /* Ein Stapel fasst hoechstens 500 Vorgaenge. 400 laesst Luft. */
-    for (let i = 0; i < liste.length; i += 400) {
-      const teil = liste.slice(i, i + 400);
-      try {
-        await stapelSchreiben(teil);
-      } catch (e) {
+    /* 3.17.41 (G-022/DATEN-10): ALLE Stapel sofort anlegen, erst danach auf
+       die Antworten warten. Vorher wartete jeder Stapel auf die Bestaetigung
+       des Servers, bevor der naechste ueberhaupt entstand - wer bei einem
+       grossen Import (3000 Karten = 8 Stapel) offline war oder die App
+       schloss, hatte nur die ersten Stapel in der Offline-Warteschlange von
+       Firestore: ein halber Bereich, Lektionen zeigten ins Leere. commit()
+       reiht den Stapel sofort lokal ein; die Warteschlange ueberlebt das
+       Schliessen und wird in Reihenfolge nachgesendet. */
+    const teile = [];
+    for (let i = 0; i < liste.length; i += 400) teile.push(liste.slice(i, i + 400));
+    const laeufe = teile.map(teil => stapelSchreiben(teil).then(() => null, e => e || new Error("Stapel")));
+    for (let k = 0; k < teile.length; k++) {
+      const teil = teile[k];
+      const e = await laeufe[k];
+      if (!e) continue;
+      {
         if (!e || e.code !== "not-found" || kontoWirdGeloescht) throw e;
         /* 3.17.30: "not-found" heisst, ein update traf einen Bereich oder
            eine Karte, die es in der Cloud nicht (mehr) gibt - patchDoc
@@ -2444,11 +2481,16 @@ async function persistAllAusfuehren() {
       ops.push({ ref: bereichRef(b.id), daten: felder });
       b.karten.forEach((c, ci) => ops.push({ ref: karteRef(c.id), daten: { ...kartenFelder(c, ci), bereichId: b.id } }));
     });
+    /* 3.17.41 (G-022): alle Stapel sofort anlegen, dann gemeinsam warten -
+       sonst stand bei Abbruch nur ein Teil in der Offline-Warteschlange
+       (siehe patchDoc). */
+    const laeufe = [];
     for (let i = 0; i < ops.length; i += 400) {
       const stapel = fb.writeBatch(db);
       ops.slice(i, i + 400).forEach(o => stapel.set(o.ref, o.daten));
-      await stapel.commit();
+      laeufe.push(stapel.commit());
     }
+    await Promise.all(laeufe);
     schreibErfolg();
   } catch (e) { saveFehler(e); }
 }
@@ -3864,61 +3906,6 @@ function weitergabeBestaetigung(b, version, modus) {
   return txt;
 }
 
-/* ---------- Lehrer-Modus, Kernablauf: Lektion per Link teilen ----------
-   plan/lehrer-modus/GERUEST.md, Abschnitt J. Ersetzt den fruehreren
-   Firestore-Code-Entwurf (Abschnitt H/I): Statt eines Codes, der auf einen
-   Datenbank-Eintrag zeigt, steckt der ganze Lektionsinhalt komprimiert IM
-   LINK SELBST (URL-Fragment, alles nach "#"). Damit gibt es keine neue
-   Firestore-Sammlung, keinen Lesezugriff ueber Kontogrenzen hinweg - nichts,
-   was serverseitig gespeichert wuerde. Strukturell derselbe Fall wie das
-   Code-Teilen (baueWeitergabeBereich), nur per Link statt Datensatz.
-   Bewusste Entscheidung des Betreibers, dokumentiert in GERUEST.md:
-   dafuer gibt es KEINEN Widerruf (ein verschickter Link funktioniert wie
-   eine verschickte Datei fuer immer) und eine Laengengrenze.
-
-   Das Fragment (nicht die Query-String!) ist Absicht: Alles nach "#" geht
-   nie an einen Server - taucht also auch nicht in Zugriffs-Logs von Firebase
-   Hosting auf. Ein Query-Parameter waere dafuer der falsche Ort gewesen. */
-const TEIL_LINK_MAX_ZEICHEN = 4000; // grosszuegig unter praktischen Grenzen von Messenger-Links
-
-function bytesZuBase64Url(bytes) {
-  let bin = "";
-  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-function base64UrlZuBytes(str) {
-  let s = str.replace(/-/g, "+").replace(/_/g, "/");
-  while (s.length % 4) s += "=";
-  const bin = atob(s);
-  const bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  return bytes;
-}
-/* CompressionStream/DecompressionStream sind eine eingebaute Browser-API
-   (kein neues Abhaengigkeits-Paket, siehe README.md "kein Build-Schritt").
-   Wo sie fehlt (aeltere Browser), wird unkomprimiert codiert - der Link
-   wird dann laenger und stoesst frueher an TEIL_LINK_MAX_ZEICHEN, funktioniert
-   aber weiterhin. */
-async function komprimiere(text) {
-  const roh = new TextEncoder().encode(text);
-  if (typeof CompressionStream === "undefined") return { kompr: false, bytes: roh };
-  const cs = new CompressionStream("gzip");
-  const writer = cs.writable.getWriter();
-  writer.write(roh);
-  writer.close();
-  const buf = await new Response(cs.readable).arrayBuffer();
-  return { kompr: true, bytes: new Uint8Array(buf) };
-}
-async function dekomprimiere(bytes, warKomprimiert) {
-  if (!warKomprimiert) return new TextDecoder().decode(bytes);
-  const ds = new DecompressionStream("gzip");
-  const writer = ds.writable.getWriter();
-  writer.write(bytes);
-  writer.close();
-  const buf = await new Response(ds.readable).arrayBuffer();
-  return new TextDecoder().decode(buf);
-}
-
 /* 3.17.13 (Pruefschleife, Station 13): Fehler in Worten statt Systemtext.
    Vorher stand z. B. "Konnte den Code nicht pruefen: Failed to get document
    because the client is offline." - englisch und ohne Hinweis, was zu tun
@@ -4178,22 +4165,6 @@ async function zeigeTeileCode(code) {
   });
 }
 
-/* ---------- Deprecated: Link-basiertes Teilen (v3.5.x) - wird nicht mehr genutzt ----------
-   Falls noch URLs mit #teilen= im Umlauf sind, diese Funktionen als Stubs beibehalten.
-   Der Code-basierte Ansatz ist skalierbar (bis 3000+ Karten) und nicht invasiv. */
-
-async function teileLektionLink() {
-  await dlgAlert("Link-basiertes Teilen ist nicht mehr verfügbar. " +
-    "Bitte nutze stattdessen das neue Code-System – klick 'Per Code teilen' in den Einstellungen.",
-    "Link-System depreciert");
-}
-
-async function linkEinloesenStart() {
-  await dlgAlert("Link-basiertes Teilen ist nicht mehr verfügbar. " +
-    "Bitte frag die Person, die dir die Lektion zeigen will, nach einem aktuellen Code.",
-    "Link-System depreciert");
-}
-
 /* ---------- 2.5.0: Nachschub für einen vorhandenen Kartensatz ----------
 
    Bis 2.4.0 legte jeder Import einen NEUEN Bereich an. Fuer ein normales
@@ -4445,7 +4416,7 @@ async function verarbeiteImportDaten(data) {
      steht aber in den Bereichen. Ohne diese Zeile bliebe man auf dem
      Einstellungs-Bildschirm stehen und saehe von 120 neuen Karten nichts. */
   ui.einstellungen = false;
-  const imported = normBereiche(data.bereiche);
+  const imported = normBereicheImport(data.bereiche);
 
   /* 2.5.0: Erst pruefen, was davon Nachschub für einen schon vorhandenen
      Satz ist. Nur der Rest wird als neuer Bereich angelegt. */
@@ -8936,6 +8907,11 @@ document.addEventListener("input", e => {
   if (!t || !t.id) return;
   if (t.id === "fb-text") feedbackEntwurf.text = t.value;
   else if (t.id === "fb-beschreibung") feedbackEntwurf.beschreibung = t.value;
+  /* 3.17.41 (G-065): Wie feedbackEntwurf oben - ohne diesen Zwischenspeicher
+     stand nach jedem fremden Neuzeichnen (z.B. Snapshot waehrend das Blatt
+     offen ist) wieder der Platzhalter 20:00 im Feld, "Uebernehmen" legte dann
+     eine falsche Zeit an (Befund REST-11). */
+  else if (t.id === "erinnerung-zeit") ui.erinnerungZeit = t.value;
 });
 
 /* ---------- Feedback-Board ----------
@@ -9675,10 +9651,15 @@ const ERINNERUNG_ZEITEN = [
 ];
 function erinnerungSheet() {
   if (!ui.erinnerungSheet) return "";
+  /* 3.17.41 (G-027): Ist schon eine Erinnerung eingerichtet, bekommt sie
+     hier einen Satz zur festen UID/SEQUENCE (REST-5) und einen ruhigen Weg
+     zurueck auf "aus" - vorher gab es den nicht. */
+  const erinnert = hinweisSpeicher().erinnerung;
   let html = '<div class="dlg-backdrop" data-action="erinnerung-zu" role="presentation">';
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="erinnerung-titel">';
   html += '<h3 id="erinnerung-titel">Tägliche Erinnerung</h3>';
   html += '<p class="hint">Ein Eintrag in deinem Kalender, jeden Tag zur selben Zeit – er erinnert dich auch, wenn die App zu ist. Wann passt es dir?</p>';
+  if (erinnert) html += '<p class="hint">Eine neue Zeit ersetzt die alte, wenn dein Kalender das übernimmt – sonst lösch den alten Termin.</p>';
   html += '<div class="liste" style="margin-top:var(--space-4)">';
   ERINNERUNG_ZEITEN.forEach(z => {
     html += '<button class="liste-zeile" data-action="erinnerung-zeit" data-id="' + z.id + '">' +
@@ -9687,14 +9668,23 @@ function erinnerungSheet() {
   });
   html += '</div>';
   html += '<div class="field erinnerung-eigene"><label for="erinnerung-zeit">Andere Zeit</label>' +
-    '<div class="erinnerung-eigene__reihe"><input type="time" id="erinnerung-zeit" value="20:00">' +
+    '<div class="erinnerung-eigene__reihe"><input type="time" id="erinnerung-zeit" value="' + esc(ui.erinnerungZeit || "20:00") + '">' +
     '<button class="secondary" data-action="erinnerung-eigene">Übernehmen</button></div></div>';
   html += '<p class="field__hilfe">Löschen oder verschieben kannst du ihn jederzeit im Kalender.</p>';
+  if (erinnert) html += '<div class="dlg-nebenweg"><button class="ghost" data-action="erinnerung-aus">Erinnerung als aus markieren</button></div>';
   html += '<div class="dlg-actions"><button class="secondary" data-action="erinnerung-zu">Abbrechen</button></div>';
   html += '</div></div>';
   return html;
 }
-function erinnerungIcs(hhmm) {
+/* 3.17.41 (G-027, REST-5): UID jetzt fest statt Date.now() - erst dadurch
+   erkennt der Kalender einen erneuten Import als Aenderung DESSELBEN
+   Termins statt als neuen. SEQUENCE zaehlt hoch, das ist bei iCalendar der
+   vorgesehene Weg, eine Aenderung an einem gleich benannten Termin
+   anzuzeigen (RFC 5545). Der Zaehler liegt in hinweisSpeicher() - demselben
+   Geraete-Speicher, in dem die Erinnerung schon gemerkt wird, bewusst KEIN
+   neuer localStorage-Schluessel (sonst muesste die Datenschutzerklaerung
+   mit, § 12). */
+function erinnerungIcs(hhmm, seq) {
   const [hh, mm] = hhmm.split(":").map(x => String(parseInt(x, 10) || 0).padStart(2, "0"));
   const d = new Date(); d.setDate(d.getDate() + 1);
   const tag = d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
@@ -9703,7 +9693,8 @@ function erinnerungIcs(hhmm) {
   return [
     "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Adrabic//Erinnerung//DE", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    "UID:adrabic-erinnerung-" + Date.now() + "@adrabic",
+    "UID:adrabic-erinnerung@adrabic",
+    "SEQUENCE:" + seq,
     "DTSTAMP:" + jetzt,
     "DTSTART:" + tag + "T" + hh + mm + "00",
     "DURATION:PT10M",
@@ -9716,7 +9707,8 @@ function erinnerungIcs(hhmm) {
   ].join("\r\n");
 }
 function erinnerungHerunterladen(hhmm) {
-  const ics = erinnerungIcs(hhmm);
+  const seq = (hinweisSpeicher().erinnerungSeq || 0) + 1;
+  const ics = erinnerungIcs(hhmm, seq);
   const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   try {
     if (ios) {
@@ -9732,8 +9724,9 @@ function erinnerungHerunterladen(hhmm) {
       setTimeout(() => URL.revokeObjectURL(url), 4000);
     }
   } catch (e) {}
-  hinweisMerken({ erinnerung: hhmm });
+  hinweisMerken({ erinnerung: hhmm, erinnerungSeq: seq });
   ui.erinnerungSheet = false;
+  ui.erinnerungZeit = null;
   zeigeToast("Erinnerung für " + hhmm.replace(/^0/, "") + " Uhr – öffne die Datei, um sie in den Kalender zu übernehmen.");
   render();
 }
@@ -12253,7 +12246,7 @@ function schliesseObersteEbene() {
   if (ui.wahlSheet) { schliesse(() => { ui.wahlSheet = null; render(); }); return true; }
   /* 3.17.14 (Station 14): Das Erinnerungs-Blatt (3.17.0) fehlte hier - Escape
      und Wischen nach unten schlossen es nicht. */
-  if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; render(); }); return true; }
+  if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; ui.erinnerungZeit = null; render(); }); return true; }
   if (ui.karteSheet || ui.editId) {
     if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
     schliesse(cancelEdit); return true;
@@ -12959,21 +12952,6 @@ document.body.addEventListener("click", e => {
         });
       }
       break;
-    case "link-copy-clipboard":
-      if (ui.dialog && ui.dialog.link) {
-        navigator.clipboard.writeText(ui.dialog.link).then(() => {
-          btn.textContent = "✓ Kopiert!";
-          btn.disabled = true;
-          setTimeout(() => {
-            btn.textContent = "Kopieren";
-            btn.disabled = false;
-            render();
-          }, 2000);
-        }).catch(() => {
-          dlgAlert("Konnte nicht in die Zwischenablage kopieren.", "Fehler");
-        });
-      }
-      break;
     case "set-arab-groesse": setArabGroesse(btn.dataset.id); break;   // E7
     case "set-thema": setThema(btn.dataset.id); break;
     case "set-sitzungslimit":
@@ -12992,8 +12970,6 @@ document.body.addEventListener("click", e => {
     case "lehrer-freigeben": lehrerFreigeben(); break;
     case "beende-teilen-code": beendeTeilenCode(); break;
     case "code-einloesen-start": codeEinloesenStart(); break;
-    case "teile-lektion-link": teileLektionLink(); break;          // GERUEST.md Abschnitt J (deprecated)
-    case "link-einloesen-start": linkEinloesenStart(); break;      // deprecated
     case "streak-fortsetzen": streakFortsetzen(); break;
     case "verlauf-reset": verlaufZuruecksetzen(); break;
     case "karte-merken": karteMerken(btn.dataset.id); break;
@@ -13013,14 +12989,29 @@ document.body.addEventListener("click", e => {
     case "feedback-form-zu": ui.feedbackForm = false; feedbackFormFehler = false; render(); break;
     case "hinweis-weg": hinweisWeg(btn.dataset.id); break;
     case "erinnerung-auf": ui.erinnerungSheet = true; render(); break;
-    case "erinnerung-zu": ui.erinnerungSheet = false; render(); break;
+    /* 3.17.41 (G-065): Blatt zu -> Zwischenspeicher der eigenen Zeit
+       zuruecksetzen, sonst stuende beim naechsten Oeffnen noch die zuletzt
+       getippte, nie uebernommene Zeit da. */
+    case "erinnerung-zu": ui.erinnerungSheet = false; ui.erinnerungZeit = null; render(); break;
     case "erinnerung-zeit": erinnerungHerunterladen(btn.dataset.id); break;
     case "erinnerung-eigene": {
-      const f = document.getElementById("erinnerung-zeit");
-      const v = f && /^\d{1,2}:\d{2}$/.test(f.value) ? f.value : "20:00";
+      /* 3.17.41 (G-065): Aus ui.erinnerungZeit lesen (das input-Ereignis
+         oben haelt es aktuell) statt direkt aus dem DOM - das Feld kann
+         zwischen Tippen und Uebernehmen durch ein fremdes render() neu
+         entstanden sein. */
+      const v = /^\d{1,2}:\d{2}$/.test(ui.erinnerungZeit || "") ? ui.erinnerungZeit : "20:00";
       erinnerungHerunterladen(v);
       break;
     }
+    /* 3.17.41 (G-027, REST-5): loescht nur den Merker auf diesem Geraet -
+       der Termin im Kalender selbst bleibt und muss dort geloescht werden,
+       das sagt der Satz im Blatt. */
+    case "erinnerung-aus":
+      hinweisMerken({ erinnerung: null });
+      ui.erinnerungSheet = false; ui.erinnerungZeit = null;
+      zeigeToast("Erinnerung auf diesem Gerät als aus markiert. Lösch den Termin bei Bedarf im Kalender.");
+      render();
+      break;
     case "ideen-auf":
       hinweisMerken({ weg: Object.assign({}, hinweisSpeicher().weg || {}, { ideen: todayStr() }) });
       ui.einstellungen = true; ui.seite = "feedback"; ui.feedbackForm = true; feedbackDanke = false;

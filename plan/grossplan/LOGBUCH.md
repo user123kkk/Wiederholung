@@ -6,7 +6,47 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4–7) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 10 (Runde 9 fertig, v3.17.40) |
+| Nächste Runde | 11 (Runde 10 fertig, v3.17.41) |
+
+---
+
+### 2026-09-27 — Runde 10: Einspielen und Erinnerung (v3.17.41)
+
+**Anlass nebenbei:** Betreiber fragte, welche Geste für „Fast" steht – keine,
+bewusst (nur Knopf, Pfeil runter, Taste 2). Pro/Contra zu „Tipp = Fast" als
+**E-19** in `ENTSCHEIDUNGEN.md`, Empfehlung: lieber nicht (Doppeltipp würde
+wie Vorfall 3.17.25 blind werten). Betreiber meldete 3.17.40 live, Regeln
+veröffentlicht.
+
+**Geändert:** `app.js`: `patchDoc` und `persistAllAusfuehren` legen alle
+Stapel sofort an und warten gemeinsam (G-022, Dirigent); `ui.erinnerungZeit`
+(G-065); feste `UID` + `SEQUENCE` (im vorhandenen Hinweis-Speicher, kein neuer
+Schlüssel), „Erinnerung als aus markieren" (G-027); `normBereicheImport()`
+benennt gleichnamige Bereiche beim Einspielen „(2)" (G-079); toter
+Link-Teilen-Code entfernt, ~85 Zeilen (G-080) · Version 3.17.41,
+`CHANGELOG.md` · Tests `t_import_stapel` (Dirigent), `t_erinnerung_zeit`,
+`t_erinnerung_uid`, `t_import_doppelt` (Handwerker) · repariert:
+`t_teilen.js` (Ersetzung in der Attrappe lief seit 3.17.38 ins Leere, bricht
+jetzt laut ab), `t_loeschen_teilen.js` (beantwortet die Passwortabfrage seit
+G-051 nicht), `t_einst.js` (`history.back()` ist kein Zurück-Weg) ·
+`ENTSCHEIDUNGEN.md` E-19 · `LEHREN.md` § 15.
+
+**Entscheidung:** G-079 nur im Import-Weg: `normBereiche` am Start/Cloud
+verwirft Doppelnamen bewusst (Kommentar bei `moveSelectedCardsTo`). G-022:
+`kartenEinesBereichsLoeschen` bleibt Stapel für Stapel – nur Löschen, ein
+Abbruch lässt nichts Halbes zurück, das Schaden macht.
+
+**Prüfstand:** `pruefe_stand` grün · **erstmals alle 87 `t_*.js`** in einer
+Schleife (Auffälligkeiten gegrept): nach den drei Test-Reparaturen 0
+Auffälligkeiten · `abnahme_runde.js` 13/13 · Affe Handy 200: 0, iPad 150: 0.
+Die zwei seit 3.17.38 roten Tests hat nur diese Vollschleife gefunden.
+
+**Kriterien:** A1 ☐ (11 offen) · A2 ☑ · A3 ☑ · A4 ☑ · A5 ☐ · A6 ☐
+
+**Offen:** K11 für 3.17.41 (keine Regeländerung). Gerätetests: Import im
+Flugmodus, Kalender ersetzt den Termin. E-19.
+
+**Nächster Schritt:** Runde 11 (P13: G-037, G-075, G-076; P14: G-039 ff.).
 
 ---
 

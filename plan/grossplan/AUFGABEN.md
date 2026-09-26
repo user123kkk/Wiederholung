@@ -46,12 +46,12 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-019 | Fremde Sätze können über `quelleId: null` doch Bilder vom Absender-Server laden | DATEN-4 | A | S | P3 | erledigt (3.17.30) |
 | G-020 | Bilder in der Kartenliste sprengen die Zeile, laden alle mit Referer, `http://` bricht | DATEN-5 | A | S | P4 | erledigt (3.17.32) |
 | G-021 | Suche ab ~1400 Karten langsam (Zwischenspeicher zu klein) | DATEN-9 | A | S | P4 | erledigt (3.17.33) |
-| G-022 | Großer Import in Stapeln nacheinander – Abbruch hinterlässt halben Bereich | DATEN-10 | A | O | P3 | offen |
+| G-022 | Großer Import in Stapeln nacheinander – Abbruch hinterlässt halben Bereich | DATEN-10 | A | O | P3 | erledigt (3.17.41): `patchDoc` und `persistAllAusfuehren` legen alle Stapel sofort an, dann gemeinsam warten; `kartenEinesBereichsLoeschen` bewusst nicht (nur Löschen, Rest räumt der nächste Lauf ab). Test `t_import_stapel.js` (3 statt 1 commit bei hängendem Server). Gerätetest Flugmodus offen |
 | G-023 | Ring und „Heute schon N Antworten" zählen fremde Bereiche mit | REST-1 | A | S | P9 | erledigt (3.17.34) |
 | G-024 | Kalender ohne Wochen-Struktur (19 Spalten statt 7 Zeilen) | REST-2 | A | S | P9 | erledigt (3.17.34) |
 | G-025 | Lektionen-Seite zeigt Schlösser in eigenen Bereichen | REST-3 | A | H | P9 | erledigt (3.17.34) |
 | G-026 | „0 Antworten diese Woche ↓ 100 %" nach Pause; „diese Woche" sind 7 rollende Tage | REST-4 | A | S | P9 | erledigt (3.17.34) |
-| G-027 | Kalender-Erinnerung: jede Neueinrichtung legt einen zweiten Termin an; „aus" fehlt | REST-5 | A | S | P10 | offen |
+| G-027 | Kalender-Erinnerung: jede Neueinrichtung legt einen zweiten Termin an; „aus" fehlt | REST-5 | A | S | P10 | erledigt (3.17.41): feste UID + SEQUENCE im vorhandenen Hinweis-Speicher, „als aus markieren"; Gerätetest Kalender offen |
 | G-028 | Offene App erfährt nie von neuer Version | TECHNIK-3 | B | S | – | wartet: E-06 |
 | G-029 | Versionierte Dateien trotzdem „Netz zuerst" – langsamer Start bei schlechtem Netz | TECHNIK-4 | A | S | P11 | erledigt (3.17.36) |
 | G-030 | Firebase-Bausteine laden nacheinander statt gleichzeitig | TECHNIK-5 | A | S | P11 | erledigt (3.17.36) |
@@ -89,7 +89,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-062 | Segment „neu" im Stoff-Band dunkel unsichtbar | REST-8 | A | H | P9 | erledigt (3.17.40): nicht heller (Rampe verlangt „neu" als schwächste Stufe, 3:1 unmöglich ohne Umkehr; Info steht in Legende/aria-label), sondern hohles Segment + hohler Legenden-Punkt wie die ○ der Kopfzeile |
 | G-063 | Trefferflächen unter 44 px (Rückfall-Knöpfe, Hinweis-X, Fehler-Modal-X) | REST-9 | A | H | P12 | erledigt (3.17.35) |
 | G-064 | Zwei `h1` auf Lernen; Kalender/Woche für Bildschirmleser leer | REST-10 | A | H | P12 | erledigt (3.17.35) |
-| G-065 | Zeitfeld im Erinnerungs-Blatt geht beim Neuzeichnen verloren | REST-11 | A | H | P10 | offen |
+| G-065 | Zeitfeld im Erinnerungs-Blatt geht beim Neuzeichnen verloren | REST-11 | A | H | P10 | erledigt (3.17.41) |
 | G-066 | Gruß-Datum folgt der Uhr, der Rest dem Lerntag (4 Uhr) | REST-12 | A | H | P9 | erledigt (3.17.40) |
 | G-067 | „Fehler melden": Leer-Fehler als Dialog; Esc löscht den Text | REST-13 | A | H | P12 | erledigt (3.17.37): Feldfehler statt Dialog; Text bleibt beim Schließen UND nach dem Absenden (3.17.14 bleibt – mailto meldet keinen Erfolg) |
 | G-068 | Service Worker: fehlende Kerndatei löscht trotzdem den alten Cache | TECHNIK-11 | A | S | P11 | erledigt (3.17.36) |
@@ -103,8 +103,8 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-076 | Zweiter Tab ohne Offline-Speicher (Mehr-Tab-Manager) | LERNEN-9 | A | S | P13 | offen |
 | G-077 | Speicherkarten-Liste überschreibt sich auf zwei Geräten (`arrayUnion`/`arrayRemove`) | LERNEN-10, DATEN-14 | A | S | P4 | erledigt (3.17.33) |
 | G-078 | Kommentar zur Lektions-Schwelle nennt Stufe 2 statt 1 | LERNEN-12 | A | H | P5 | erledigt (3.17.30) |
-| G-079 | Import verwirft zweiten Bereich mit gleichem Namen | DATEN-15 | A | H | P3 | offen |
-| G-080 | Toter Link-Teilen-Code (~80 Zeilen) entfernen | DATEN-16 | A | H | P3 | offen |
+| G-079 | Import verwirft zweiten Bereich mit gleichem Namen | DATEN-15 | A | H | P3 | erledigt (3.17.41): nur der Import-Weg (`normBereicheImport`), `normBereiche` am Start bleibt (Dedup dort bewusst) |
+| G-080 | Toter Link-Teilen-Code (~80 Zeilen) entfernen | DATEN-16 | A | H | P3 | erledigt (3.17.41, ~85 Zeilen) |
 | G-081 | Bereich löschen: Namensvergleich ohne Harakat | DATEN-19 | A | H | P4 | erledigt (3.17.33) |
 | G-082 | Bestätigungsseite: zwei Endlos-Bewegungen | EINSTIEG-10 | A | H | P14 | offen |
 | G-083 | Hauptknopf im Einstieg auf 0 und Plan 17–35 px versetzt | EINSTIEG-12 | A | S | P14 | offen |

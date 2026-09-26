@@ -1,3 +1,19 @@
+## 3.17.41 – 27. September 2026
+
+**Großplan, Runde 10: Einspielen und Erinnerung verlässlich.**
+
+- **Großer Import bricht nicht mehr halb ab:** Alle Teile eines großen
+  Imports kommen sofort in die Offline-Warteschlange, statt nacheinander auf
+  den Server zu warten. Wer offline einspielt oder die App schließt, bekommt
+  beim nächsten Online-Start alle Karten, nicht nur die ersten 400.
+- **Zwei Bereiche mit gleichem Namen** in einer Sicherung: Der zweite heißt
+  nach dem Einspielen „… (2)", statt still zu fehlen.
+- **Tägliche Erinnerung:** Eine neue Zeit ersetzt den alten Kalendertermin
+  (sofern der Kalender das übernimmt), statt einen zweiten anzulegen. Die
+  Erinnerung lässt sich als „aus" markieren. Die eingestellte Uhrzeit geht
+  beim Einstellen nicht mehr verloren.
+- Alter, unerreichbarer Code für das frühere Teilen per Link ist entfernt.
+
 ## 3.17.40 – 26. September 2026
 
 **Großplan, Runde 9 – und die Karte dreht jetzt wirklich wie eine Karte.**
