@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.39";
+const APP_VERSION = "3.17.40";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -9019,7 +9019,11 @@ function feedbackInhalt() {
     html += '</div>';
     return html;
   }
-  const liste = feedbackListe;
+  /* 3.17.40 (G-015): status "entfernt" (Moderation) bleibt in feedbackListe
+     (kontoDatenLoeschen und ein spaeteres Neu-Laden brauchen das Dokument
+     noch), erscheint aber nirgends in der Liste - auch nicht bei der
+     Moderation, kein Wiederherstellen-Knopf. */
+  const liste = feedbackListe.filter(e => e.status !== "entfernt");
   const offen = liste.filter(e => !e.status || e.status === "offen" || e.status === "geplant");
   const fertig = liste.filter(e => e.status === "umgesetzt");
   const abgelehnt = istBetreiber() ? liste.filter(e => e.status === "abgelehnt") : [];
@@ -9075,11 +9079,29 @@ function feedbackZeile(e, i) {
         '" data-status="' + st.id + '">→ ' + esc(st.label) + '</button>';
     });
     html += '<button class="ghost" data-action="feedback-delete" data-id="' + esc(e.id) + '">' +
-      ikon("muell", "i-sm") + ' Löschen</button>';
+      ikon("muell", "i-sm") + ' Entfernen</button>';
     html += '</div>';
   }
   html += '</div></div>';
   return html;
+}
+
+/* 3.17.40 (G-057): erstelltAm kommt seit dieser Version als
+   fb.serverTimestamp() (echtes Firestore-Timestamp mit toMillis()), damit die
+   Regel spaeter erstelltAm == request.time verlangen kann. Alte Ideen tragen
+   noch den ISO-Text von vorher, und der lokale Platzhalter direkt nach dem
+   Anlegen hat gar kein erstelltAm (die Sentinel loest sich erst am Server
+   auf) - dafuer traegt er _localMillis. ideeZeit() macht daraus ueberall
+   dieselbe Vergleichszahl. */
+function ideeZeit(e) {
+  const t = e && e.erstelltAm;
+  if (t && typeof t.toMillis === "function") return t.toMillis();
+  if (typeof t === "string" && t) {
+    const ms = Date.parse(t);
+    if (!isNaN(ms)) return ms;
+  }
+  if (e && typeof e._localMillis === "number") return e._localMillis;
+  return 0;
 }
 
 const FEEDBACK_STATUS = [
@@ -9115,7 +9137,7 @@ async function feedbackLaden() {
     const snap = await fb.getDocs(fb.query(fb.collection(db, "feedback"), fb.orderBy("votes", "desc"), fb.limit(FEEDBACK_LIMIT)));
     const liste = [];
     snap.forEach(d => liste.push(Object.assign({ id: d.id }, d.data())));
-    liste.sort((a, b) => (b.votes || 0) - (a.votes || 0) || String(b.erstelltAm || "").localeCompare(String(a.erstelltAm || "")));
+    liste.sort((a, b) => (b.votes || 0) - (a.votes || 0) || ideeZeit(b) - ideeZeit(a));
     /* Eigene Stimmen: ein get() je Eintrag statt list auf der Unter-Sammlung -
        firestore.rules erlaubt dort bewusst kein list, sonst waeren ueber die
        Dokument-IDs (= Konto-Kennungen) alle Stimmenden sichtbar. Bei der
@@ -9151,7 +9173,9 @@ async function feedbackEinreichen() {
   const beschreibung = feldBeschr ? feldBeschr.value.trim() : "";
   const neu = {
     text: text.slice(0, 100),
-    erstelltAm: new Date().toISOString(),
+    /* 3.17.40 (G-057): echtes Server-Timestamp statt ISO-Text - siehe
+       ideeZeit(). */
+    erstelltAm: fb.serverTimestamp(),
     votes: 0,
     status: "offen"
   };
@@ -9161,8 +9185,11 @@ async function feedbackEinreichen() {
   try {
     const ref = await fb.addDoc(fb.collection(db, "feedback"), neu);
     /* 3.17.0: Die neue Idee steht sofort in der Liste (hervorgehoben), statt
-       die ganze Liste zu verwerfen und neu zu laden. */
-    const eintrag = Object.assign({ id: ref && ref.id ? ref.id : "neu-" + Date.now() }, neu);
+       die ganze Liste zu verwerfen und neu zu laden.
+       3.17.40 (G-057): erstelltAm ist hier noch die serverTimestamp-Sentinel
+       (loest sich erst am Server auf), _localMillis gibt ideeZeit() bis dahin
+       etwas zum Sortieren. */
+    const eintrag = Object.assign({ id: ref && ref.id ? ref.id : "neu-" + Date.now(), _localMillis: Date.now() }, neu);
     if (feedbackListe) feedbackListe.unshift(eintrag);
     feedbackNeuId = eintrag.id;
     feedbackEntwurf = { text: "", beschreibung: "" };
@@ -9204,6 +9231,9 @@ async function feedbackAbstimmen(id, will) {
     eintrag.votes = vorher;
     if (will) feedbackEigeneVotes.delete(id); else feedbackEigeneVotes.add(id);
     zeichneIdeen();
+    // 3.17.40 (G-058): Bisher drehte sich die Anzeige kommentarlos zurueck,
+    // das wirkte wie ein toter Knopf (§ 8.4 verlangt eine Meldung in Worten).
+    zeigeToast(fehlerKlartext(e));
   }
 }
 
@@ -9218,15 +9248,27 @@ async function feedbackStatusAendern(id, status) {
   }
 }
 
+/* 3.17.40 (G-015): Statt zu loeschen setzt die Moderation nur noch
+   status: "entfernt" (updateDoc, wie feedbackStatusAendern) - deleteDoc
+   nimmt die Unter-Sammlung "votes" nicht mit, darin standen die
+   Stimm-Merker mit Konto-Kennung fuer immer weiter (Datenschutzerklaerung
+   Punkt 12 verspricht deren Loeschung). Mit dem Status bleibt das Dokument
+   fuer kontoDatenLoeschen() sichtbar, das die eigenen Merker dort mit
+   abraeumt (seitenweises Lesen nach documentId, seit 3.17.38). Die Liste
+   blendet status "entfernt" aus - auch bei der Moderation, kein
+   Wiederherstellen-Knopf. */
 async function feedbackLoeschen(id) {
-  const ok = await dlgConfirm("Diesen Vorschlag endgültig löschen?", { danger: true, okLabel: "Löschen" });
+  const ok = await dlgConfirm("Diese Idee für alle entfernen?", { danger: true, okLabel: "Entfernen" });
   if (!ok) return;
   try {
-    await fb.deleteDoc(fb.doc(db, "feedback", id));
+    /* Titel und Beschreibung werden dabei geleert (firestore.rules erlaubt der
+       Moderation genau das): sonst blieben entfernte Inhalte fuer jedes Konto
+       ueber die Schnittstelle lesbar, nur die App blendete sie aus. */
+    await fb.updateDoc(fb.doc(db, "feedback", id), { status: "entfernt", text: "", beschreibung: null });
     if (feedbackListe) feedbackListe = feedbackListe.filter(e => e.id !== id);
     zeichneIdeen();
   } catch (e) {
-    dlgAlert(fehlerKlartext(e), "Nicht gelöscht");
+    dlgAlert(fehlerKlartext(e), "Nicht entfernt");
   }
 }
 
@@ -9510,10 +9552,21 @@ function hinweisMerken(patch) {
   return neu;
 }
 const MEILENSTEINE = [10, 25, 50, 100, 250, 500, 1000];
+/* 3.17.40 (G-061): Zaehlt wie fortschrittStoff()/statsCards() - ohne
+   gesperrte Karten. Vorher zaehlte diese Funktion ALLE Bereiche ohne den
+   freieIdsFor()-Filter mit, der Meilenstein-Hinweis ("25 Karten sassen
+   schon einmal") und der Fortschritt ("36 von 40 ...") nannten dadurch
+   zwei verschiedene Zahlen im selben Konto. */
 function gesesseneKarten() {
   if (!bereiche) return 0;
   let n = 0;
-  for (const b of bereiche) for (const c of b.karten) if ((c.maxStufe || 0) >= LEKTION_STUFE) n++;
+  for (const b of bereiche) {
+    const frei = freieIdsFor(b);
+    for (const c of b.karten) {
+      if (frei !== null && !frei.has(c.id)) continue;
+      if ((c.maxStufe || 0) >= LEKTION_STUFE) n++;
+    }
+  }
   return n;
 }
 function lerntageGesamt() { return Object.values(verlauf).filter(tagGelernt).length; }
@@ -9551,7 +9604,10 @@ function lernenHinweis() {
   const gesessen = gesesseneKarten();
   const erreicht = MEILENSTEINE.filter(m => gesessen >= m).pop() || 0;
   if (erreicht > (sp.meilenstein || 0)) {
-    return hinweisKarte("meilenstein", "haken", '<strong>' + erreicht + ' Karten</strong> saßen schon einmal. So viel hast du schon geschafft.', null, true);
+    /* 3.17.40 (G-061): Die Marke (erreicht) loest den Hinweis nur noch aus,
+       der Text nennt wie der Fortschritt die echte Zahl (gesessen) - sonst
+       standen zwei verschiedene Zahlen fuer denselben Sachverhalt da. */
+    return hinweisKarte("meilenstein", "haken", '<strong>' + mz(gesessen, "Karte", "Karten") + '</strong> saßen schon einmal. So viel hast du schon geschafft.', null, true);
   }
   /* 3 - Wochenrueckblick (Mo-Mi) */
   const lw = letzteWoche();
@@ -9705,7 +9761,11 @@ function lernenGruss() {
   const std = new Date().getHours();
   const gruss = std < 5 ? "Gute Nacht" : std < 11 ? "Guten Morgen" : std < 17 ? "Guten Tag" : "Guten Abend";
   const name = (displayName || "").trim().split(/\s+/)[0];
-  const datum = new Date().toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
+  /* 3.17.40 (G-066): Das angezeigte Datum folgt dem Lerntag (logicalToday,
+     DAY_START_HOUR = 4), nicht der echten Uhrzeit - sonst zeigten Kopfzeile
+     und Serie/Hinweis zwischen 0 und 4 Uhr zwei verschiedene "heute". Die
+     Anrede (Gruss) darf weiter der echten Uhr folgen. */
+  const datum = logicalToday().toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
   return '<div class="lernen-gruss">' +
     '<div class="lernen-gruss__datum">' + esc(datum) + '</div>' +
     '<h2 class="lernen-gruss__titel">' + esc(gruss) + (name ? ', ' + esc(name) : '') + '</h2></div>';

@@ -380,9 +380,20 @@ service cloud.firestore {
     function feedbackWerte(d, pruefen) {
       return (!pruefen.hasAny(['text'])         || text(d.text, 100))
           && (!pruefen.hasAny(['beschreibung']) || textOderNull(d.beschreibung, 500))
-          && (!pruefen.hasAny(['erstelltAm'])   || text(d.erstelltAm, 40))
+          /* 26.09.2026 (G-057/REGELN-10): neue Ideen tragen einen Server-
+             Zeitstempel (serverTimestamp, create prueft == request.time) -
+             vorher war es freier Text, "9999-12-31" stellte eine Idee bei
+             Stimmengleichstand dauerhaft nach oben. Alte Ideen mit Text-Datum
+             bleiben lesbar: feedbackWerte prueft beim Aendern nur beruehrte
+             Felder, erstelltAm wird nie geaendert. */
+          && (!pruefen.hasAny(['erstelltAm'])   || d.erstelltAm is timestamp)
           && (!pruefen.hasAny(['votes'])        || zahl(d.votes, 0, 100000000))
-          && (!pruefen.hasAny(['status'])       || d.status in ['offen', 'geplant', 'umgesetzt', 'abgelehnt']);
+          /* 'entfernt' (26.09.2026, G-015/REGELN-4): die Moderation loescht
+             eine Idee nicht mehr, sondern blendet sie aus - sonst blieben die
+             Stimm-Merker darunter (Dokument-ID = Konto-Kennung) fuer immer
+             liegen, weil Firestore Unter-Sammlungen nicht mitloescht und das
+             Konto-Loeschen nur ueber vorhandene Ideen geht. */
+          && (!pruefen.hasAny(['status'])       || d.status in ['offen', 'geplant', 'umgesetzt', 'abgelehnt', 'entfernt']);
     }
 
     match /feedback/{id} {
@@ -393,7 +404,10 @@ service cloud.firestore {
          fuer alle verbraucht. Die App fragt mit limit(100) und blaettert beim
          Konto-Loeschen seitenweise (app.js). ACHTUNG Reihenfolge: diese Regel
          erst veroeffentlichen, wenn die App-Version mit limit() live ist -
-         die aeltere App fragt ohne limit und bekaeme permission-denied. */
+         die aeltere App fragt ohne limit und bekaeme permission-denied. Seit
+         G-057 gilt auch umgekehrt: die neue App schreibt serverTimestamp, den
+         nur diese Regeln annehmen - also App und Regeln direkt nacheinander
+         (plan/grossplan/KONSOLE.md K10). */
       allow list: if angemeldetBestaetigt() && request.query.limit <= 100;
 
       allow create: if angemeldetBestaetigt()
@@ -402,6 +416,7 @@ service cloud.firestore {
                     && request.resource.data.votes == 0
                     && request.resource.data.status == 'offen'
                     && !request.resource.data.text.matches('\\s*')      // G-016: nicht leer, nicht nur Leerzeichen
+                    && request.resource.data.erstelltAm == request.time    // G-057: Serverzeit, kein erfundenes Datum
                     && feedbackWerte(request.resource.data, request.resource.data.keys());
 
       /* Zwei getrennte, einander ausschliessende Wege: Moderation aendert nur
@@ -411,6 +426,17 @@ service cloud.firestore {
       allow update: if angemeldetBestaetigt() && vorhanden()
                     && (
                       (istFeedbackModerator() && beruehrt().hasOnly(['status']))
+                      /* G-015 (26.09.2026): "entfernen" leert Titel und
+                         Beschreibung im selben Schritt - sonst blieben
+                         entfernte Inhalte (Beleidigung, persoenliche Angaben)
+                         fuer jedes Konto ueber die Schnittstelle lesbar. Das
+                         leere Dokument bleibt, damit das Konto-Loeschen die
+                         Stimm-Merker darunter findet. */
+                      || (istFeedbackModerator()
+                          && request.resource.data.status == 'entfernt'
+                          && beruehrt().hasOnly(['status', 'text', 'beschreibung'])
+                          && request.resource.data.text == ''
+                          && request.resource.data.get('beschreibung', null) == null)
                       || (beruehrt().hasOnly(['votes'])
                           && ((request.resource.data.votes == resource.data.votes + 1
                                && !exists(/databases/$(database)/documents/feedback/$(id)/votes/$(request.auth.uid))

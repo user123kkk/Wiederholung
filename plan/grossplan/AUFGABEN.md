@@ -39,7 +39,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-012 | „Passwort vergessen": vorsichtiger Erfolgstext (Enumeration) | KONTO-3 | A | H | P6 | erledigt (3.17.30) |
 | G-013 | Fehlende Auth-Fehlercodes in Worten + Leerfeld-Prüfung bei „Link zusenden" | KONTO-4 | A | S | P6 | teilweise (3.17.30): Texte erledigt, Leerfeld-Prüfung offen |
 | G-014 | Stimmen im Board ohne eigene Stimme ±1 manipulierbar → Regel mit `existsAfter` | REGELN-2 | A | O | P8 | erledigt (3.17.30) |
-| G-015 | Moderation löscht Idee → Stimm-Merker mit Kennung bleiben: Status „entfernt" statt Löschen | REGELN-4 | A | S | P8 | offen |
+| G-015 | Moderation löscht Idee → Stimm-Merker mit Kennung bleiben: Status „entfernt" statt Löschen | REGELN-4 | A | S | P8 | erledigt (3.17.40): Weg (a) + bei der Abnahme ergänzt: „entfernen" leert Titel/Beschreibung (sonst über die Schnittstelle lesbar); Merker unter FRÜHER gelöschten Ideen bleiben (nicht mehr auffindbar); Datenschutz Punkt 6 ergänzt |
 | G-016 | Mengenbremse: Board nur `limit(100)`, Text nicht leer, geteilter Satz mit Größen-/Formprüfung | REGELN-5 (Regelteil) | A | O | P8 | erledigt (3.17.38): Regel (list nur limit ≤ 100, Text nicht leer, Form des geteilten Bereichs) + App (`limit(100)`, seitenweises Löschen der Merker); keine Kartenzahl-Grenze (1 MiB begrenzt ohnehin). **Regel-Deploy erst nach 3.17.38 live (K10)** |
 | G-017 | Code erzeugen: Code steht am Bereich, bevor er gespeichert ist; keine 1-MiB-Prüfung; kein Zeitlimit | REGELN-7, LERNEN-7, DATEN-7 | A | S | P2 | erledigt (3.17.30) |
 | G-018 | „Teilen beenden"/Bereich löschen scheitert still, Code bleibt lesbar → erst Cloud löschen, dann lokal | DATEN-6 | A | S | P2 | erledigt (3.17.30) |
@@ -81,16 +81,16 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-054 | Unbestätigtes Konto mit vertippter Adresse: „Adresse falsch? Neu anfangen" | KONTO-15 | A | S | P7 | erledigt (3.17.38) |
 | G-055 | Regeltest um E01–E20/P1–P6 erweitern, Kopfzahl, Linux-Anleitung | REGELN-8 | A | S | P8 | erledigt (3.17.30) |
 | G-056 | `normCard` deckelt `stufe` nicht nach oben → Import-Stapel scheitert | REGELN-9 | A | H | P3 | erledigt (3.17.30) |
-| G-057 | Ideen mit erfundenem Datum/leerem Titel (Regel + `serverTimestamp`) | REGELN-10 | A | S | P8 | offen |
-| G-058 | Abstimmen scheitert ohne ein Wort → Toast | REGELN-12 | A | H | P8 | offen |
+| G-057 | Ideen mit erfundenem Datum/leerem Titel (Regel + `serverTimestamp`) | REGELN-10 | A | S | P8 | erledigt (3.17.40): serverTimestamp + Regel `== request.time`; alte Text-Daten bleiben lesbar. App und Regeln direkt nacheinander (K10) |
+| G-058 | Abstimmen scheitert ohne ein Wort → Toast | REGELN-12 | A | H | P8 | erledigt (3.17.40) |
 | G-059 | COOP-Header `same-origin-allow-popups` | REGELN-13 | A | S | – | zurückgestellt: nur mit der nächsten Header-Änderung **und** Google-Gerätetest |
 | G-060 | Leere Lektionen-Seite nach Bereichswechsel | REST-6 | A | H | P9 | erledigt (3.17.34) |
-| G-061 | Meilenstein nennt die Marke statt der echten Zahl | REST-7 | A | H | P9 | offen |
-| G-062 | Segment „neu" im Stoff-Band dunkel unsichtbar | REST-8 | A | H | P9 | offen |
+| G-061 | Meilenstein nennt die Marke statt der echten Zahl | REST-7 | A | H | P9 | erledigt (3.17.40) |
+| G-062 | Segment „neu" im Stoff-Band dunkel unsichtbar | REST-8 | A | H | P9 | erledigt (3.17.40): nicht heller (Rampe verlangt „neu" als schwächste Stufe, 3:1 unmöglich ohne Umkehr; Info steht in Legende/aria-label), sondern hohles Segment + hohler Legenden-Punkt wie die ○ der Kopfzeile |
 | G-063 | Trefferflächen unter 44 px (Rückfall-Knöpfe, Hinweis-X, Fehler-Modal-X) | REST-9 | A | H | P12 | erledigt (3.17.35) |
 | G-064 | Zwei `h1` auf Lernen; Kalender/Woche für Bildschirmleser leer | REST-10 | A | H | P12 | erledigt (3.17.35) |
 | G-065 | Zeitfeld im Erinnerungs-Blatt geht beim Neuzeichnen verloren | REST-11 | A | H | P10 | offen |
-| G-066 | Gruß-Datum folgt der Uhr, der Rest dem Lerntag (4 Uhr) | REST-12 | A | H | P9 | offen |
+| G-066 | Gruß-Datum folgt der Uhr, der Rest dem Lerntag (4 Uhr) | REST-12 | A | H | P9 | erledigt (3.17.40) |
 | G-067 | „Fehler melden": Leer-Fehler als Dialog; Esc löscht den Text | REST-13 | A | H | P12 | erledigt (3.17.37): Feldfehler statt Dialog; Text bleibt beim Schließen UND nach dem Absenden (3.17.14 bleibt – mailto meldet keinen Erfolg) |
 | G-068 | Service Worker: fehlende Kerndatei löscht trotzdem den alten Cache | TECHNIK-11 | A | S | P11 | erledigt (3.17.36) |
 | G-069 | Manifest: getrenntes `maskable`-Symbol, zweites `any` raus | TECHNIK-12 | A | H | P11 | erledigt (3.17.36): `icon-512.png` → `maskable`, `desktop-icon.png` bleibt einziges 512er `any` (rund, für Desktop). Gerätetest Android offen |
@@ -114,8 +114,8 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-088 | Meldung „Karte gespeichert" innen schief: links 20 px, rechts 12 px (Rest des Rückgängig-Knopfs bis 3.6.13); gemessen 20,8 vs. 12,8 px bis Häkchen bzw. Text | Betreiber 26.09.2026 | A | O | – | erledigt (3.17.36) |
 | G-089 | Bei offenem Karten-Blatt verdeckt „Karte gespeichert" den Titel („Neue Kart…"): `.toast-wrap--oben` steht bei `--sat + 16 px`, das hohe Blatt beginnt direkt darunter. Vorschlag: Bestätigung im Blatt-Kopf neben dem Titel (Platz reserviert, kein Sprung), globale Meldung bei offenem Karten-Blatt nur als Ansage | Betreiber-Screenshot 26.09.2026 (iPhone) | A | O | P12 | erledigt (3.17.37) |
 | G-090 | Beim Umdrehen springt das Wort 6 px nach unten: leerer Tag-Platzhalter vorn bekommt einen Flex-gap (gemessen Handy/320/iPad/Desktop) | Betreiber 26.09.2026 („beim Drehen glitcht es") | A | O | – | erledigt (3.17.38) |
-| G-091 | „… wird fester" beim Drehen (Punkte/Schrift): Verdacht – `karte-hebt` skaliert die Karte auf 1,035, Safari zeigt währenddessen ein skaliertes Bild und rechnet am Ende scharf nach. Verdachts-Fix: Anheben ohne Skalieren, eigener Commit. Am iPhone nicht nachstellbar | Betreiber 26.09.2026 | A | O | – | erledigt (3.17.39, Verdacht – am iPhone bestätigen) |
-| G-092 | iPhone: „Tippen zum Umdrehen" und Kopfzeile (Punkte, „NEU") spiegelverkehrt auf der Rückseite; Linie steht beim Drehen gerade in der schrägen Karte – Safari legt absolut positionierte/animierte Kinder auf eigene Ebenen, `backface-visibility`/3D der Seite gilt für sie nicht. Fix: `backface-visibility` an jedem Kind, Vorderseite ab 90° (15 % der Zeit, nachgerechnet) `hidden`; Einstiegskärtchen mit abgesichert, Linie wächst erst nach 540 ms | Betreiber-Screenshots 26.09.2026 (3.17.37) | A | O | – | erledigt (3.17.39, am iPhone bestätigen – Chromium zeigt den Fehler nicht) |
+| G-091 | „… wird fester" beim Drehen (Punkte/Schrift): Verdacht – `karte-hebt` skaliert die Karte auf 1,035, Safari zeigt währenddessen ein skaliertes Bild und rechnet am Ende scharf nach. Verdachts-Fix: Anheben ohne Skalieren, eigener Commit. Am iPhone nicht nachstellbar | Betreiber 26.09.2026 | A | O | – | **zurückgenommen (3.17.40):** „wird fester" war der Name des Lernstands in der gespiegelten Kopfzeile (G-092), nicht kräftiger werdende Schrift – das Skalieren ist wieder da |
+| G-092 | iPhone: „Tippen zum Umdrehen" und Kopfzeile (Punkte, „NEU") spiegelverkehrt auf der Rückseite; Linie steht beim Drehen gerade in der schrägen Karte – Safari legt absolut positionierte/animierte Kinder auf eigene Ebenen, `backface-visibility`/3D der Seite gilt für sie nicht. Fix: `backface-visibility` an jedem Kind, Vorderseite ab 90° (15 % der Zeit, nachgerechnet) `hidden`; Einstiegskärtchen mit abgesichert, Linie wächst erst nach 540 ms | Betreiber-Screenshots 26.09.2026 (3.17.37) | A | O | – | 3.17.39: Kinder mit backface + Vorderseite ab 90° `visibility` → Betreiber am iPhone: „steht kurz immer noch rückwärts", Linie kam spät. **3.17.40:** Vorderseite über opacity (synchron mit der Drehung, 0 ab 90°), Linie ohne eigene Bewegung sofort Teil der Rückseite. Am iPhone bestätigen |
 | G-085 | Search Console: „/" in der Sitemap, aber `noindex` | TECHNIK-17 | B | H | – | wartet: mit Phase 6 (Empfehlung des Prüfers) |
 
 ## D. Wartet auf den Betreiber

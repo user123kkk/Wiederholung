@@ -65,13 +65,25 @@ const S = (window.__FB = window.__FB || {});
 S.store = S.store || new Map(Object.entries(window.__START_STORE || {}));
 S.listeners = S.listeners || [];
 S.writes = S.writes || 0;
-const clone = v => v === undefined ? undefined : JSON.parse(JSON.stringify(v));
+/* 3.17.40 (G-057, § 5.4): serverTimestamp() muss so streng nachgebaut sein
+   wie das echte Firestore-Timestamp (toMillis()/toDate()), sonst haette der
+   Pruefstand einen ISO-Text durchgewunken, den die kommende Regel
+   (erstelltAm is timestamp) ablehnen wuerde. clone() muss Timestamp-Objekte
+   ueber JSON.stringify/parse hinweg erhalten, sonst wuerden sie beim naechsten
+   Lesen zu leeren Objekten ({}) statt Timestamps. */
+class Timestamp { constructor(ms){ this._ms = ms; }
+  toMillis(){ return this._ms; }
+  toDate(){ return new Date(this._ms); } }
+const clone = v => { if (v === undefined) return undefined;
+  return JSON.parse(JSON.stringify(v, (k, x) => x instanceof Timestamp ? { __ts:true, ms:x._ms } : x),
+    (k, x) => (x && x.__ts) ? new Timestamp(x.ms) : x); };
 class Ref { constructor(path, col){ this.path = path; this.col = !!col; this.id = path.split('/').pop(); } }
 export class FieldPath { constructor(...segs){ this.segs = segs; } }
 const DEL = { __del:true };
 export function deleteField(){ return DEL; }
 export function increment(n){ return { __inc:n }; }
-export function serverTimestamp(){ return new Date().toISOString(); }
+const SERVER_TS = { __serverTs:true };
+export function serverTimestamp(){ return SERVER_TS; }
 export function arrayUnion(...a){ return { __union:a }; } export function arrayRemove(...a){ return { __remove:a }; }
 export function getFirestore(){ return { db:true }; }
 export function initializeFirestore(){ return { db:true }; }
@@ -104,6 +116,7 @@ function melden(){ S.writes++; setTimeout(() => { for (const l of S.listeners) {
 function setzeTief(obj, segs, val){ let o = obj; for (let i = 0; i < segs.length - 1; i++) { if (typeof o[segs[i]] !== 'object' || o[segs[i]] === null) o[segs[i]] = {}; o = o[segs[i]]; }
   const k = segs[segs.length-1];
   if (val === DEL || (val && val.__del)) delete o[k];
+  else if (val === SERVER_TS || (val && val.__serverTs)) o[k] = new Timestamp(Date.now());
   else if (val && typeof val === 'object' && '__inc' in val) o[k] = (o[k] || 0) + val.__inc;
   else if (val && typeof val === 'object' && '__union' in val) {
     // wie Firestore arrayUnion: vorhandene Elemente zuerst, fehlende dahinter angehaengt
@@ -118,7 +131,7 @@ function setzeTief(obj, segs, val){ let o = obj; for (let i = 0; i < segs.length
   }
   else o[k] = clone(val); }
 function mischen(ziel, quelle){ for (const k of Object.keys(quelle)) { const v = quelle[k];
-  if (v && typeof v === 'object' && !Array.isArray(v) && !v.__del && !('__inc' in v) && !('__union' in v) && !('__remove' in v)) { if (typeof ziel[k] !== 'object' || ziel[k] === null) ziel[k] = {}; mischen(ziel[k], v); }
+  if (v && typeof v === 'object' && !Array.isArray(v) && !v.__del && !v.__serverTs && !(v instanceof Timestamp) && !('__inc' in v) && !('__union' in v) && !('__remove' in v)) { if (typeof ziel[k] !== 'object' || ziel[k] === null) ziel[k] = {}; mischen(ziel[k], v); }
   else setzeTief(ziel, [k], v); } }
 function _set(ref, data, opt){ if (S.fail) throw Object.assign(new Error('fail'), {code:'permission-denied'});
   if (opt && opt.merge) { const alt = clone(S.store.get(ref.path)) || {}; mischen(alt, data); S.store.set(ref.path, alt); }

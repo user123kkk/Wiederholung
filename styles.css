@@ -2100,12 +2100,20 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
    steht. Zweifach abgesichert: (1) jedes Kind (samt ::before/::after)
    verbirgt seine Rueckseite selbst, (2) die Vorderseite ist weg, sobald die
    Karte hochkant steht: Die Kurve karte-wende erreicht 90 Grad nach 14 %
-   der Zeit (~76 ms, nachgerechnet) - ab 15 % ist die Vorderseite ohnehin
-   abgewandt, also hidden (step-end: bis dahin unveraendert sichtbar). Im
+   der Zeit (~76 ms, nachgerechnet). 3.17.40: ueber opacity statt nur
+   visibility - Betreiber am iPhone (3.17.39): "steht kurz immer noch
+   rueckwaerts". visibility rechnet Safari auf dem Hauptthread, die Drehung
+   laeuft auf der Grafikkarte - das Ausblenden kam ein paar Bilder zu spaet.
+   opacity laeuft auf demselben Takt wie die Drehung: bis 13 % voll, bei
+   14 % (= 90 Grad, Karte hochkant) weg. visibility am Ende raeumt auf. Im
    Pruefstand (Chromium) nicht nachstellbar - am iPhone bestaetigen. */
 .karte-seite *, .karte-seite *::before, .karte-seite *::after { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-.karte-dreh--wende .karte-seite--vorn { animation: vorn-weg 540ms step-end both; }
-@keyframes vorn-weg { 0% { visibility: visible; } 15%, 100% { visibility: hidden; } }
+.karte-dreh--wende .karte-seite--vorn { animation: vorn-weg 540ms linear both; }
+@keyframes vorn-weg {
+  0%, 13% { opacity: 1; visibility: visible; }
+  14%     { opacity: 0; }
+  100%    { opacity: 0; visibility: hidden; }
+}
 @keyframes karte-wende {
   from { transform: rotateY(0deg); }
   to   { transform: rotateY(180deg); }
@@ -2113,15 +2121,13 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
 /* Ohne Fuellmodus: die Endlage ist "none", und das Wischen setzt danach
    seine eigene Verschiebung (siehe .study-flaeche--kommt). */
 .study-flaeche--dreht { animation: karte-hebt 540ms var(--ease-out); }
-/* 3.17.39 (G-091, VERDACHTS-Fix, Betreiber 26.09.2026: beim Drehen "wird
-   fester"): ohne scale(1.035). Beim Skalieren zeigt Safari waehrend der
-   Bewegung ein vergroessertes Bild der Karte und rechnet am Ende scharf
-   nach - Punkte und Schrift wirken dann ploetzlich kraeftiger. Das Anheben
-   (translateY) und der grosse Schatten (::before) bleiben. Am iPhone
-   bestaetigen; aendert sich nichts, zuruecknehmen (eigener Commit). */
+/* 3.17.40: scale(1.035) wieder da. 3.17.39 hatte es als Verdachts-Fix (G-091)
+   entfernt - "wird fester" war aber der Name des Lernstands in der
+   Kopfzeile, die gespiegelt durchschien (G-092), nicht kraeftiger werdende
+   Schrift. Korrektur im Logbuch. */
 @keyframes karte-hebt {
   0%   { transform: none; }
-  40%  { transform: translateY(-8px); }
+  40%  { transform: translateY(-8px) scale(1.035); }
   100% { transform: none; }
 }
 /* 3.15.0: Der groessere Schatten beim Anheben liegt als eigene Schicht
@@ -2144,12 +2150,13 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
    kommen?" - ja: Die Rueckseite dreht sich nach etwa einem Viertel der
    Drehung nach vorn, und genau dann war sie noch leer. Nur die Linie
    zieht sich noch kurz auf. */
-/* 3.17.39 (G-092, Betreiber-Screenshots iPhone 26.09.2026): Die Linie zieht
-   sich erst NACH der Drehung (540 ms) auf. Mit eigener transform-Animation
-   mitten in der Drehung legte Safari sie auf eine eigene Ebene, die die
-   3D-Drehung der Karte nicht mitmachte - sie stand gerade in der schraegen
-   Karte. Waehrend der Drehung haelt "both" sie bei scaleX(0), unsichtbar. */
-.study-flaeche--dreht .study-trenner { animation: einstieg-wachsen 320ms var(--ease-out) 540ms both; }
+/* 3.17.40 (G-092, Betreiber am iPhone): Die Linie ist Teil der Rueckseite
+   und steht sofort da - "es soll ja eine Vor- und Rueckseite sein". Bis
+   3.17.38 zog sie sich waehrend der Drehung auf (eigene transform-Animation):
+   Safari legte sie dafuer auf eine eigene Ebene, die die Drehung nicht
+   mitmachte. 3.17.39 schob das Aufziehen hinter die Drehung - dann kam die
+   Linie spaet. Ohne eigene Bewegung dreht sie einfach mit. */
+.study-flaeche--dreht .study-trenner { animation: none; }
 .study-flaeche--dreht .study-answer,
 .study-flaeche--dreht .karte-seite--hinten .card-tags { animation: none; }
 .study-flaeche--offen .study-answer { animation: none; }
@@ -2895,6 +2902,19 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   margin-bottom: var(--space-3);
 }
 .stat-seg { height: 100%; transition: width var(--dur-slow) var(--ease-out); }
+/* 3.17.40 (G-062/REST-8): "neu" (--stufe-0) war im dunklen Thema auf dem
+   Band unsichtbar (1,2:1) - das Band schien erst bei einem Zehntel
+   anzufangen. Heller faerben geht nicht: neu ist die unterste Stufe der
+   Deckkraft-Rampe und muss die schwaechste bleiben (schon "im Lernen" liegt
+   nur bei 2,2:1). Stattdessen ein HOHLES Segment mit feinem Rand - wie die
+   leeren Kreise, mit denen die Karte "neu" in der Kopfzeile zeigt. Die Zahl
+   steht ausserdem in Legende und aria-label. Die Farbe setzt app.js inline
+   (KARTEN_ZUSTAENDE.farbe), daher der Attribut-Selektor. */
+.stat-seg[style*="--stufe-0"],
+.stat-legend .dot[style*="--stufe-0"] {
+  box-shadow: inset 0 0 0 1px var(--stufe-2);
+  border-radius: var(--r-full);
+}
 .stat-legend {
   display: flex; gap: var(--space-4); flex-wrap: wrap;
   font-size: var(--fs-xs); color: var(--text-2);

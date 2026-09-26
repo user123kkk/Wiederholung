@@ -1,3 +1,30 @@
+## 3.17.40 – 26. September 2026
+
+**Großplan, Runde 9 – und die Karte dreht jetzt wirklich wie eine Karte.**
+
+- **Karte drehen (iPhone):** Die Vorderseite verschwindet jetzt genau in dem
+  Moment, in dem die Karte hochkant steht – im selben Takt wie die Drehung.
+  In 3.17.39 kam das Ausblenden in Safari ein paar Bilder zu spät, „Tippen
+  zum Umdrehen" stand kurz spiegelverkehrt da. Die Linie zwischen Wort und
+  Übersetzung ist sofort Teil der Rückseite, statt sich hinterher
+  aufzuziehen. Das Vergrößern beim Anheben ist wieder da (3.17.39 hatte es
+  aus einem Missverständnis entfernt). Am iPhone zu bestätigen.
+- **Stoff-Band im Fortschritt:** „neu" ist jetzt ein hohles Segment mit
+  feinem Rand (wie die leeren Kreise auf der Karte), im dunklen Thema war es
+  unsichtbar und das Band schien erst später anzufangen.
+- **Meilenstein:** Der Hinweis nennt die echte Zahl („36 Karten saßen schon
+  einmal") und zählt wie der Fortschritt – vorher standen zwei verschiedene
+  Zahlen da.
+- **Datum oben auf Lernen:** folgt zwischen 0 und 4 Uhr dem Lerntag wie der
+  Rest der App.
+- **Ideen-Board:** Abstimmen, das scheitert, sagt jetzt warum. Die Moderation
+  entfernt Ideen, statt sie zu löschen: Titel und Beschreibung werden
+  geleert, ein leerer Eintrag bleibt – so verschwinden beim Konto-Löschen
+  auch die eigenen Stimm-Merker darunter (Datenschutzerklärung Punkt 6
+  ergänzt). Neue Ideen bekommen die Zeit vom
+  Server, ein erfundenes Datum geht nicht mehr. Die Regeln dazu werden direkt
+  nach dieser Version veröffentlicht.
+
 ## 3.17.39 – 26. September 2026
 
 **Karte drehen auf dem iPhone (nach Betreiber-Screenshots).** Am iPhone zu

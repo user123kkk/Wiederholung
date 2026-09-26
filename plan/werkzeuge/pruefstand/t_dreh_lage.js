@@ -22,12 +22,19 @@ async function sprung(b, g, alt) {
   /* 3.17.39 (G-092): Vorderseite sichtbar, solange sie zum Betrachter zeigt
      (< 90 Grad), danach hidden - dann kann Safari nichts gespiegelt zeigen. */
   const winkel = [];
-  for (const t of [60, 90]) {
+  /* 3.17.40: gemessen an der Deckkraft (laeuft in Safari synchron mit der
+     Drehung, visibility nicht), dazu: die Linie hinten ist WAEHREND der
+     Drehung schon da (Betreiber: "es soll ja eine Vor- und Rueckseite sein"). */
+  for (const t of [60, 90, 150]) {
     await p.evaluate(t => document.getAnimations().forEach(a => { a.pause(); a.currentTime = t; }), t);
     winkel.push(await p.evaluate(() => { const m = new DOMMatrix(getComputedStyle(document.querySelector('.karte-dreh')).transform);
-      return { grad: (Math.round(Math.atan2(-m.m13, m.m11) * 180 / Math.PI) + 360) % 360, vorn: getComputedStyle(document.querySelector('.karte-seite--vorn')).visibility }; }));
+      const tr = document.querySelector('.karte-seite--hinten .study-trenner');
+      return { grad: (Math.round(Math.atan2(-m.m13, m.m11) * 180 / Math.PI) + 360) % 360,
+        vorn: +getComputedStyle(document.querySelector('.karte-seite--vorn')).opacity,
+        linie: Math.round(tr.getBoundingClientRect().width) }; }));
   }
-  const winkelOk = winkel.every(w => (w.grad < 90) === (w.vorn === 'visible'));
+  const winkelOk = winkel.every(w => (w.grad < 90) === (w.vorn === 1) && (w.grad < 90 || w.vorn === 0))
+    && winkel.filter(w => w.grad > 90).every(w => w.linie > 10);
   await p.evaluate(() => document.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} }));
   await p.waitForTimeout(100);
   const m = await p.evaluate(() => [...document.querySelectorAll('.karte-seite')].map(s => {

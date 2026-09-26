@@ -156,12 +156,16 @@ in der Antwort).
   einfügen → **Veröffentlichen**.
 - **Woran man es merkt:** Oben im Regel-Editor steht die heutige Uhrzeit; die
   Funktion aus dem Logbuch geht.
-- **Reihenfolge ab 3.17.38 (G-016):** Die Regel erlaubt das Ideen-Board nur noch
-  mit höchstens 100 Einträgen je Abfrage. Ältere App-Versionen fragen ohne
-  Grenze und würden abgelehnt. Deshalb **erst** 3.17.38 (oder neuer)
-  veröffentlichen (K11) und prüfen, dass unter Konto ganz unten mindestens
-  „Adrabic 3.17.38" steht, **dann** die Regeln. Woran man es danach merkt:
-  Einstellungen → „Ideen & Vorschläge" lädt die Liste ohne Fehlermeldung.
+- **Reihenfolge ab 3.17.40 (G-016, G-057): App und Regeln direkt
+  nacheinander.** Die neuen Regeln erlauben das Ideen-Board nur mit höchstens
+  100 Einträgen je Abfrage (ältere Apps würden abgelehnt), und die neue App
+  schreibt einen Server-Zeitstempel, den erst die neuen Regeln annehmen.
+  Deshalb: **zuerst** 3.17.40 (oder neuer) veröffentlichen (K11), prüfen, dass
+  unter Konto ganz unten „Adrabic 3.17.40" steht, **sofort danach** die Regeln.
+  In den Minuten dazwischen lädt das Board weiter, nur eine neue Idee
+  anzulegen schlägt mit einer Meldung fehl. Woran man es danach merkt:
+  Einstellungen → „Ideen & Vorschläge" lädt die Liste, und eine Test-Idee
+  lässt sich anlegen.
 
 ### K11 – Veröffentlichen (Hosting)
 GitHub → Repo `Wiederholung` → **Actions** → „Veroeffentlichen" → **Run workflow**

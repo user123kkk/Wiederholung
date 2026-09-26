@@ -6,7 +6,57 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4–7) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 9 (Runde 8 fertig, v3.17.38) |
+| Nächste Runde | 10 (Runde 9 fertig, v3.17.40) |
+
+---
+
+### 2026-09-26 — Runde 9: Board, Anzeige, Karte drehen (v3.17.40)
+
+**Geändert:** `app.js`: `feedbackAbstimmen` Toast im catch (G-058);
+`lernenGruss` Datum aus `logicalToday()` (G-066); `gesesseneKarten()` mit
+`freieIdsFor()`, Meilenstein nennt die echte Zahl (G-061); `feedbackLoeschen`
+→ `status: "entfernt"` + `text: ""`, `beschreibung: null`, Liste blendet
+„entfernt" aus (G-015); `erstelltAm: fb.serverTimestamp()`, `ideeZeit()`
+(G-057) · `firestore.rules`: Status „entfernt", Moderator darf beim Entfernen
+Titel/Beschreibung leeren, `erstelltAm is timestamp` + `== request.time` ·
+`regeln-pruefung.mjs` M9–M18 (171/171) · `styles.css`: Vorderseite über
+opacity ab 90°, Linie ohne eigene Bewegung, `karte-hebt` wieder mit scale
+(G-091 zurück), hohles „neu"-Segment + Legenden-Punkt (G-062) ·
+`datenschutzerklaerung.html` Punkt 6, Stand 26.09. · `stubs.js`
+serverTimestamp · Tests `t_abstimmen_fehler`, `t_gruss_datum`,
+`t_meilenstein`, `t_board_moderation`, `t_idee_zeit` (Handwerker),
+`t_dreh_lage` (opacity, Linie) · `KONSOLE.md` K10 · Version 3.17.40 ·
+`LEHREN.md` § 15 (drei Zeilen).
+
+**Wer:** G-058, G-066, G-061, G-015/G-057 (App) ein Handwerker (Sonnet);
+Regeln, G-062, Drehen, Datenschutz Dirigent. Der Handwerker hing am Ende in
+einer eigenen Warteschleife (Datei, die nie entstand) – Abnahme vom
+Dirigenten selbst übernommen, der Bericht kam danach und deckte sich.
+
+**Entscheidung / bei der Abnahme korrigiert:**
+- G-015: „entfernt" allein ließ den Inhalt für jedes Konto über die
+  Schnittstelle lesbar → Titel/Beschreibung werden beim Entfernen geleert,
+  Regel erlaubt genau das (M15–M18).
+- G-057 + G-016 zusammen: neue App braucht neue Regeln (Zeitstempel), neue
+  Regeln brauchen neue App (limit) → App und Regeln direkt nacheinander; in
+  der Lücke scheitert nur das Anlegen einer Idee, mit Meldung (G-058).
+- G-062: 3:1 für „neu" hätte die Deckkraft-Rampe umgedreht (schon „im Lernen"
+  2,2:1) → hohles Segment statt heller Farbe.
+- G-091 zurückgenommen: „wird fester" war der Lernstand in der gespiegelten
+  Kopfzeile. G-092 nachgebessert nach Betreiber-Test 3.17.39: opacity statt
+  visibility (Safari: Takt der Grafikkarte), Linie sofort Teil der Rückseite.
+
+**Prüfstand:** `pruefe_stand` grün · Emulator 171/171 · `abnahme_runde.js`
+13/13 · 22 Tests grün, keine Seitenfehler · Affe Handy 200: 0, iPad 150: 0.
+**Nicht geprüft:** Safari/iPhone (Drehen), echtes Firebase.
+
+**Kriterien:** A1 ☐ (16 offen) · A2 ☑ · A3 ☑ · A4 ☑ · A5 ☐ · A6 ☐
+
+**Offen:** K11 für 3.17.40, **sofort danach** K10 (Regeln). Gerätetest Drehen
+am iPhone. Stimm-Merker unter früher schon gelöschten Ideen bleiben (nicht
+mehr auffindbar).
+
+**Nächster Schritt:** Runde 10 (P10: G-027, G-065; P3: G-079, G-080, G-022).
 
 ---
 

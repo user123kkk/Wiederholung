@@ -49,7 +49,7 @@
    ============================================================ */
 
 import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
-import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField, increment, query, where, limit, orderBy } from "firebase/firestore";
+import { doc, collection, setDoc, updateDoc, deleteDoc, getDoc, getDocs, writeBatch, deleteField, increment, query, where, limit, orderBy, serverTimestamp } from "firebase/firestore";
 import { readFileSync } from "fs";
 
 const UID = "nutzer-eins";
@@ -311,8 +311,9 @@ await pruefe("L30 erfundenes Bereichsfeld weiterhin abgewiesen", "nein", () => u
    Pflicht, nicht Kuer. */
 const fb1 = (id, d = db) => doc(d, "feedback", id);
 const fbv = (id, uid, d = db) => doc(d, "feedback", id, "votes", uid);
+/* seit G-057 (26.09.2026): erstelltAm = serverTimestamp(), wie die App */
 const feedbackDaten = (extra = {}) => ({
-  text: "Dunkler Modus im Widget", erstelltAm: "2026-09-22T10:00:00.000Z", votes: 0, status: "offen", ...extra
+  text: "Dunkler Modus im Widget", erstelltAm: serverTimestamp(), votes: 0, status: "offen", ...extra
 });
 
 await pruefe("F01 Vorschlag anlegen (bestaetigt)", "ja", () => setDoc(fb1("e1"), feedbackDaten()));
@@ -360,6 +361,27 @@ await pruefe("F24 Stimm-Dokument mit Inhalt statt leer", "nein", () => setDoc(fb
 
 await pruefe("F25 Moderator aendert status", "ja", () => updateDoc(doc(dbMod, "feedback", "e1"), { status: "geplant" }));
 await pruefe("F26 Moderator loescht Eintrag", "ja", () => deleteDoc(doc(dbMod, "feedback", "e2")));
+/* G-057/G-015 (26.09.2026) */
+await pruefe("M9 Idee mit erfundenem Datum (Text, Zukunft)", "nein", () => setDoc(fb1("m9"), feedbackDaten({ erstelltAm: "9999-12-31T00:00:00Z" })));
+await pruefe("M10 Idee mit eigenem Zeitstempel statt Serverzeit", "nein", () => setDoc(fb1("m10"), feedbackDaten({ erstelltAm: new Date("2099-01-01") })));
+await pruefe("M11 Moderator setzt Status 'entfernt'", "ja", () => updateDoc(doc(dbMod, "feedback", "e3"), { status: "entfernt" }));
+await pruefe("M12 Fremdes Konto setzt Status 'entfernt'", "nein", () => updateDoc(fb1("e1", dbFremd), { status: "entfernt" }));
+await setDoc(fb1("m15"), feedbackDaten({ beschreibung: "Mit persoenlichen Angaben" }));
+await pruefe("M15 Moderator entfernt und leert Titel/Beschreibung (wie die App)", "ja", () => updateDoc(doc(dbMod, "feedback", "m15"), { status: "entfernt", text: "", beschreibung: null }));
+await setDoc(fb1("m16"), feedbackDaten());
+await pruefe("M16 Moderator aendert den Titel (nicht leeren)", "nein", () => updateDoc(doc(dbMod, "feedback", "m16"), { status: "entfernt", text: "Neuer Titel" }));
+await pruefe("M17 Moderator leert Titel ohne 'entfernt'", "nein", () => updateDoc(doc(dbMod, "feedback", "m16"), { status: "geplant", text: "" }));
+await pruefe("M18 Fremdes Konto leert Titel", "nein", () => updateDoc(fb1("m16", dbFremd), { status: "entfernt", text: "", beschreibung: null }));
+await env.withSecurityRulesDisabled(async ctx => {
+  await setDoc(doc(ctx.firestore(), "feedback", "alt1"), { text: "Alte Idee", erstelltAm: "2026-09-20T10:00:00.000Z", votes: 0, status: "offen" });
+});
+await pruefe("M13 Alte Idee mit Text-Datum: abstimmen geht weiter", "ja", async () => {
+  const st = writeBatch(db); st.set(fbv("alt1", UID), {}); st.update(fb1("alt1"), { votes: increment(1) }); return st.commit();
+});
+await pruefe("M14 Eigenen Merker unter entfernter Idee loeschen (Konto-Loeschen)", "ja", async () => {
+  const st = writeBatch(db); st.set(fbv("e3", UID), {}); st.update(fb1("e3"), { votes: increment(1) }); await st.commit();
+  return deleteDoc(fbv("e3", UID));
+});
 
 /* ================= NACHTRAG 25.09.2026 (G-055): Randfaelle aus dem Audit =================
    Uebernommen aus audit/REGELN/extra.mjs (Fundstelle REGELN-8,
