@@ -4657,6 +4657,15 @@ button.halten:disabled {
     padding: 0 var(--space-3) var(--space-2);
   }
 
+  /* 3.17.35 (TECHNIK-6): Im hellen Thema massen .nav__tab (nicht aktiv) und
+     .nav-titel in der Spalte links (--text-3 auf --bg-sunken) nur 4,31:1 -
+     unter den 4,5:1, die AA verlangt. Der aktive Reiter (.nav__tab.active,
+     Zeile oben) bekommt seine Farbe ueber --accent und bleibt unberuehrt. */
+  :root[data-thema="hell"] .nav__tab:not(.active),
+  :root[data-thema="hell"] .nav-titel {
+    color: var(--text-2);
+  }
+
   /* Inhalt rückt neben die Spalte. */
   .appbar { left: var(--rail-w); }
   .view {
@@ -5130,3 +5139,14 @@ label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); f
 
 /* Ab der Schwelle zaehlt das Loslassen - die Karte zeigt es deutlich. */
 .study-flaeche.wisch-bereit .karte-seite { filter: brightness(1.06); }
+
+/* 3.17.35 (REST-9): Trefferflaechen mindestens 44 px (--tap) - vorher
+   42x36 (Hinweis-X, Rueckfall-Knoepfe) bzw. 40x40 (Fehler-Dialog-X). Die
+   Rueckfall-Knoepfe haben keine eigene Klasse, deshalb ueber data-action. */
+button.hinweis__weg,
+.error-modal__close,
+button[data-action="edit-leech"],
+button[data-action="reset-leech"] {
+  min-width: var(--tap);
+  min-height: var(--tap);
+}

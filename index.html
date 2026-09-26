@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- csp-build: 3.17.34 -- reine Merkzeile ohne Wirkung im Browser. Aendert sich
+<!-- csp-build: 3.17.35 -- reine Merkzeile ohne Wirkung im Browser. Aendert sich
      ausschliesslich firebase.json (z.B. die Content-Security-Policy), aendert
      sich sonst KEIN Datei-Byte hier - Firebase Hosting liefert dann fuer schon
      cachende Clients per bedingtem GET ein 304 zurueck, und ein 304 aktualisiert
@@ -84,7 +84,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png">
 <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png">
 <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png">
-<link rel="stylesheet" href="./styles.css?v=3.17.34">
+<link rel="stylesheet" href="./styles.css?v=3.17.35">
 <script>
 /* 2.20.0: Läuft, BEVOR das erste Bild steht.
 
@@ -125,6 +125,13 @@
   </div>
 </div>
 
+<!-- 3.17.35 (TECHNIK-8): dauerhafte, leere Ansage-Region ausserhalb von #app.
+     render() ersetzt #app komplett - eine Live-Region, die erst zusammen mit
+     ihrem Text entsteht, kuendigen viele Bildschirmleser (VoiceOver, NVDA)
+     nicht an, weil sie die Region noch nicht kennen. Dieses div bleibt leer
+     und ueberlebt jedes render(); zeigeToast() (app.js) setzt hier den Text. -->
+<div id="ansage" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
 <!-- Fehlerformular-Modal: liegt bewusst ausserhalb von #app, siehe app.js -->
 <div class="error-modal" id="errorModal" aria-hidden="true">
   <div class="error-modal__backdrop" aria-hidden="true"></div>
@@ -162,6 +169,6 @@
      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
      die die App innerhalb der letzten Stunde offen hatten, an der alten
      app.js fest, auch nach einem Reload. -->
-<script type="module" src="./app.js?v=3.17.34"></script>
+<script type="module" src="./app.js?v=3.17.35"></script>
 </body>
 </html>

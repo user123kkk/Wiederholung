@@ -786,11 +786,12 @@ Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRA
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (26.09.2026, vormittags): v3.17.34 auf `main`; live ist 3.17.33.**
-Großplan Runde 4 fertig: G-023, G-024, G-025, G-026, G-060 (Fortschritt).
+**AKTUELL (26.09.2026, mittags): v3.17.35 auf `main`; live ist 3.17.34.**
+Großplan Runde 5 fertig: G-031, G-032, G-033, G-063, G-064 (Barrierefreiheit);
+davor Runde 4: G-023, G-024, G-025, G-026, G-060 (Fortschritt).
 `veroeffentlichen.bat` repariert (Windows-Zeilenenden, `call firebase`).
 Regeln: Betreiber hat den Stand von `main` eingesetzt (26.09.).
-Weiter mit Runde 5 nach `plan/grossplan/AUFTRAG.md` (Routine 23:07/2:07/5:07).
+Weiter mit Runde 6 nach `plan/grossplan/AUFTRAG.md` (Routine 23:07/2:07/5:07).
 **Wartet auf Betreiber:** wie unten (K11, K10, K1–K7, K12, E-01–E-18).
 
 **AKTUELL (25.09.2026, spät): v3.17.30 auf `main`, noch nicht live.**

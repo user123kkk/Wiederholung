@@ -5,8 +5,67 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 | | |
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
-| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 5 (Runde 4 fertig, v3.17.34) |
+| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4, 5) · A5 ☐ · A6 ☐ |
+| Nächste Runde | 6 (Runde 5 fertig, v3.17.35) |
+
+---
+
+### 2026-09-26 — Runde 5: Barrierefreiheit (v3.17.35)
+
+**Geändert:** `styles.css`: helles Thema ≥ 900 px `.nav__tab:not(.active)`,
+`.nav-titel` → `--text-2` (~4660); Trefferflächen `button.hinweis__weg`,
+`.error-modal__close`, `edit-/reset-leech` ≥ `--tap` (~5143) · `app.js`:
+Fokusfalle + `openErrorModal`/`closeErrorModal` (Öffner merken, `inert` auf
+`#app`, ~11870–12000) · `zeigeToast`/`renderToast` (Ansage über `#ansage`,
+sichtbare Meldung `aria-hidden`) · `lernenGruss` h1 → h2, `lernenSerie`
+aria-label, `kalenderText()` + `.kal role="img"` · `index.html`: `#ansage`
+(leer, außerhalb `#app`) · Version 3.17.35, `CHANGELOG.md` · Prüfstand:
+`t_kontrast.js` (Handy + Desktop + iPad quer; „Funde" jetzt wirklich letzte
+Zeile), `t_fehler_fokus.js`, `t_ansage.js` neu · `UEBERGABE.md`: kein
+`git stash` über den ganzen Ordner.
+
+**Wer:** G-031, G-032, G-033 Handwerker (Sonnet), G-063, G-064 Hilfskraft
+(Haiku). Zwei Spuren: CSS (G-031 → G-063) parallel zu `app.js`
+(G-032 → G-033 → G-064).
+
+**Eigener Fund bei der Abnahme:** G-063 – das Hinweis-X blieb 44×36, weil
+`button.ghost` (min-height `--ctrl-sm`) spezifischer ist als `.hinweis__weg`;
+vom Dirigenten auf `button.hinweis__weg` korrigiert. Außerdem: der
+G-032-Handwerker hat für seine Gegenprobe `git stash` über den ganzen Ordner
+benutzt, während die Hilfskraft an `styles.css` schrieb – geprüft, nichts
+verloren (Stash leer, beide CSS-Änderungen da); Regel in `UEBERGABE.md`.
+
+**Neuer Fund:** G-087 (weitere Live-Regionen, die mit ihrem Text in
+`render()` entstehen – dieselbe Art wie TECHNIK-8), in AUFGABEN aufgenommen.
+
+**Abnahme (selbst geprüft):**
+- G-031: Gegenprobe des erweiterten `t_kontrast.js` mit altem CSS: 52 Funde
+  (4,31); jetzt 0 auf Handy, Desktop, iPad quer; `t_a11y` Desktop Kontrast 0.
+  Thema „System" löst in `data-thema` auf hell/dunkel auf → Regel greift.
+- G-032 `t_fehler_fokus.js`: 25× Tab 0 außerhalb, Escape und X geben den
+  Fokus an den Öffner, `#app` danach nicht inert; Gegenprobe 21 außerhalb.
+- G-033 `t_ansage.js` 6/6 (`#ansage` trägt „Karte gespeichert", dasselbe
+  Element nach mehreren render(), Toast `aria-hidden`); `t_csp` ohne Meldung.
+- G-063: alle vier Knöpfe 44×44 (390 px).
+- G-064: je Bildschirm genau ein h1 (Handy + Desktop, Lernen/Fortschritt/
+  Verwalten); Gruß unverändert groß; Woche „5 von 7 Tagen gelernt, heute noch
+  nicht", Kalender „An 21 von 27 Tagen gelernt".
+
+**Prüfstand (TZ=Asia/Tokyo):** `pruefe_stand` grün · `abnahme_runde.js` 13/13 ·
+`t_sprung`, `t_kontrast` (0, drei Geräte), `t_a11y`, `t_gross_alle`,
+`t_fehler_fokus`, `t_ansage`, `t_csp`, `t_einstellungen`, `t_lernen_start`,
+`t_fortschritt`, `t_heute_bereich`, `t_wochen_kopf` grün · Affe Handy 200: 0,
+iPad 150: 0. **Nicht geprüft:** echter Bildschirmleser (VoiceOver/NVDA).
+
+**Kriterien:** A1 ☐ (31 A-Aufgaben offen) · A2 ☑ · A3 ☑ · A4 ☑ (zweite Runde
+in Folge) · A5 ☐ · A6 ☐
+
+**Offen:** K11 für 3.17.35. Gerätetest beim Betreiber: iPhone → Einstellungen
+→ Bedienungshilfen → VoiceOver an → in der App eine Karte speichern →
+„Karte gespeichert" wird gesprochen. K1–K7, K12, E-01–E-18 unverändert.
+
+**Nächster Schritt:** Runde 6 – Paket P11 (Start/Service Worker): G-029,
+G-030, G-068, G-069, G-074 (G-070 danach).
 
 ---
 

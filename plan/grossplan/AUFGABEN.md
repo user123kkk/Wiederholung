@@ -55,9 +55,9 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-028 | Offene App erfährt nie von neuer Version | TECHNIK-3 | B | S | – | wartet: E-06 |
 | G-029 | Versionierte Dateien trotzdem „Netz zuerst" – langsamer Start bei schlechtem Netz | TECHNIK-4 | A | S | P11 | offen |
 | G-030 | Firebase-Bausteine laden nacheinander statt gleichzeitig | TECHNIK-5 | A | S | P11 | offen |
-| G-031 | Helles Thema Desktop/iPad quer: Navigation 4,31:1 < 4,5; `t_kontrast.js` nur Handy | TECHNIK-6 | A | H+S | P12 | offen |
-| G-032 | „Fehler melden": Tab verlässt den Dialog, Fokus kehrt nicht zurück | TECHNIK-7 | A | S | P12 | offen |
-| G-033 | Kurzmeldungen erreichen Bildschirmleser vermutlich nicht (Live-Region neu mit Text) | TECHNIK-8 | A | S | P12 | offen |
+| G-031 | Helles Thema Desktop/iPad quer: Navigation 4,31:1 < 4,5; `t_kontrast.js` nur Handy | TECHNIK-6 | A | H+S | P12 | erledigt (3.17.35) |
+| G-032 | „Fehler melden": Tab verlässt den Dialog, Fokus kehrt nicht zurück | TECHNIK-7 | A | S | P12 | erledigt (3.17.35) |
+| G-033 | Kurzmeldungen erreichen Bildschirmleser vermutlich nicht (Live-Region neu mit Text) | TECHNIK-8 | A | S | P12 | erledigt (3.17.35) |
 | G-034 | Veröffentlichen lädt `*.zip` mit hoch; `.bat` deployt ungeprüften Arbeitsordner | TECHNIK-9 | A | H | P1 | erledigt (3.17.30) |
 | G-035 | „Gesehen" + Rückgängig zählt den Tag für die Serie | LERNEN-3 | A | S | P5 | erledigt (3.17.32) |
 | G-036 | Keine Warnung an dem Tag, an dem Aussetzen die halbe Serie kostet (Hinweis an die geltende Regel angleichen) | LERNEN-5 (a) | A | S | P5 | erledigt (3.17.33) |
@@ -87,8 +87,8 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-060 | Leere Lektionen-Seite nach Bereichswechsel | REST-6 | A | H | P9 | erledigt (3.17.34) |
 | G-061 | Meilenstein nennt die Marke statt der echten Zahl | REST-7 | A | H | P9 | offen |
 | G-062 | Segment „neu" im Stoff-Band dunkel unsichtbar | REST-8 | A | H | P9 | offen |
-| G-063 | Trefferflächen unter 44 px (Rückfall-Knöpfe, Hinweis-X, Fehler-Modal-X) | REST-9 | A | H | P12 | offen |
-| G-064 | Zwei `h1` auf Lernen; Kalender/Woche für Bildschirmleser leer | REST-10 | A | H | P12 | offen |
+| G-063 | Trefferflächen unter 44 px (Rückfall-Knöpfe, Hinweis-X, Fehler-Modal-X) | REST-9 | A | H | P12 | erledigt (3.17.35) |
+| G-064 | Zwei `h1` auf Lernen; Kalender/Woche für Bildschirmleser leer | REST-10 | A | H | P12 | erledigt (3.17.35) |
 | G-065 | Zeitfeld im Erinnerungs-Blatt geht beim Neuzeichnen verloren | REST-11 | A | H | P10 | offen |
 | G-066 | Gruß-Datum folgt der Uhr, der Rest dem Lerntag (4 Uhr) | REST-12 | A | H | P9 | offen |
 | G-067 | „Fehler melden": Leer-Fehler als Dialog; Esc löscht den Text | REST-13 | A | H | P12 | offen |
@@ -110,6 +110,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-083 | Hauptknopf im Einstieg auf 0 und Plan 17–35 px versetzt | EINSTIEG-12 | A | S | P14 | offen |
 | G-084 | Google-Knopf sagt „anmelden", wo ein Konto angelegt wird | EINSTIEG-13 | A | H | P14 | erledigt (3.17.30) |
 | G-086 | `t_a11y.js` erkennt wartende Animations-Verzögerungen bei „ruhig" nicht (Messlücke, G-043 fiel nur mit eigenem Skript auf) → Prüfung aus `g043/t_g043.js` in `t_a11y.js` übernehmen | Runde 1 | A | S | P12 | offen |
+| G-087 | Weitere Live-Regionen entstehen mit ihrem Text in `render()` (Einstieg-Echos, Sperre, Anmelde-Info, Ideen-Danke, Hinweis, Modus-Wechsel ~ app.js 6162–9966) – vermutlich nicht angesagt wie TECHNIK-8 | Runde 5 (G-033) | A | S | P12 | offen |
 | G-085 | Search Console: „/" in der Sitemap, aber `noindex` | TECHNIK-17 | B | H | – | wartet: mit Phase 6 (Empfehlung des Prüfers) |
 
 ## D. Wartet auf den Betreiber

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.34";
+const APP_VERSION = "3.17.35";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1559,6 +1559,21 @@ let ui = {
 let toastTimer = null;
 function zeigeToast(text) {
   ui.toast = { text: text };
+  /* 3.17.35 (TECHNIK-8): #ansage liegt ausserhalb von #app und bleibt bei
+     jedem render() dasselbe Element - anders als die sichtbare .toast, die
+     render() jedes Mal neu erzeugt. Erst leeren, dann im naechsten Bild den
+     Text setzen: nur der Wechsel loest die Ansage aus, so meldet der
+     Bildschirmleser auch zwei gleiche Meldungen hintereinander (z. B. zwei
+     "Gespeichert" kurz nacheinander). Fehlt #ansage (andere Seite), nichts tun. */
+  const ansage = document.getElementById("ansage");
+  if (ansage) {
+    ansage.textContent = "";
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        ansage.textContent = text;
+      });
+    });
+  }
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     toastTimer = null;
@@ -1578,7 +1593,10 @@ function renderToast() {
      und fing die Taps darauf ab. */
   const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId ||
     ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog);
-  return '<div class="toast-wrap' + (blattOffen ? ' toast-wrap--oben' : '') + '"><div class="toast" role="status" aria-live="polite">' +
+  /* 3.17.35 (TECHNIK-8): role/aria-live entfernt - die Ansage uebernimmt
+     #ansage (index.html, zeigeToast()). aria-hidden verhindert, dass dieses
+     Element zusaetzlich vorgelesen wird. */
+  return '<div class="toast-wrap' + (blattOffen ? ' toast-wrap--oben' : '') + '"><div class="toast" aria-hidden="true">' +
     ikon("fertig", "i-sm") + '<span>' + esc(ui.toast.text) + '</span></div></div>';
 }
 
@@ -3365,6 +3383,20 @@ function sprungAusfuehren() {
   });
 }
 
+/* 3.17.35 (REST-10): Zusammenfassung des Rasters fuer Bildschirmleser -
+   nur vergangene Tage und heute zaehlen, die leeren Zukunftstage nicht. */
+function kalenderText(anzahl, start, heuteIso) {
+  let gelernt = 0, bisher = 0;
+  for (let i = 0; i < anzahl; i++) {
+    const d = new Date(start); d.setDate(d.getDate() + i);
+    const iso = fmtDate(d);
+    if (iso > heuteIso) break;
+    bisher++;
+    if (tagGelernt(verlauf[iso])) gelernt++;
+  }
+  return "An " + gelernt + " von " + bisher + " Tagen gelernt";
+}
+
 /* Kalenderraster: sieben Zeilen (Wochentage), eine Spalte je Woche. Die
    Faerbung richtet sich nach der Menge des Tages, in vier groben Stufen -
    feiner waere nicht lesbar. */
@@ -3378,7 +3410,7 @@ function renderKalender(tage) {
   const dow = heute.getDay() === 0 ? 7 : heute.getDay();      // Mo=1 .. So=7
   const ende = new Date(heute); ende.setDate(ende.getDate() + (7 - dow));
   const start = new Date(ende); start.setDate(start.getDate() - (wochen * 7 - 1));
-  let html = '<div class="kal">';
+  let html = '<div class="kal" role="img" aria-label="' + esc(kalenderText(wochen * 7, start, heuteIso)) + '">';
   for (let i = 0; i < wochen * 7; i++) {
     const d = new Date(start); d.setDate(d.getDate() + i);
     const iso = fmtDate(d);
@@ -9362,6 +9394,7 @@ function erinnerungHerunterladen(hhmm) {
 
    Jede Zahl ist gezaehlt. Keine Minutenangabe ("etwa 4 Minuten"): Dafuer
    gibt es keine Messung, nur eine Annahme - NEUAUFBAU-3.md Abschnitt 8. */
+/* 3.17.35 (REST-10): h2 statt h1 - die Seite hat ihr h1 schon in der Kopfzeile (Bereichsname); zwei h1 verwirrten Bildschirmleser. Aussehen gleich (.lernen-gruss__titel setzt die Groesse). */
 function lernenGruss() {
   const std = new Date().getHours();
   const gruss = std < 5 ? "Gute Nacht" : std < 11 ? "Guten Morgen" : std < 17 ? "Guten Tag" : "Guten Abend";
@@ -9369,7 +9402,7 @@ function lernenGruss() {
   const datum = new Date().toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
   return '<div class="lernen-gruss">' +
     '<div class="lernen-gruss__datum">' + esc(datum) + '</div>' +
-    '<h1 class="lernen-gruss__titel">' + esc(gruss) + (name ? ', ' + esc(name) : '') + '</h1></div>';
+    '<h2 class="lernen-gruss__titel">' + esc(gruss) + (name ? ', ' + esc(name) : '') + '</h2></div>';
 }
 
 /* Der Ring: Anteil von heute. offen = was im aktuellen Bereich noch faellig
@@ -9474,7 +9507,11 @@ function lernenSerie() {
     : 'Tag' + (serie === 1 ? '' : 'e') + ' am St\u00fcck') +
     (streak.beste > serie ? '<br><span class="serie-beste">Bester Lauf: <strong>' + streak.beste + '</strong></span>' : '') + '</span>';
   html += '</div>';
-  html += '<div class="woche" role="img" aria-label="Die letzten sieben Tage">' + tage + '</div>';
+  /* 3.17.35 (REST-10): Der Bildschirmleser bekommt, was die Punkte zeigen. */
+  let gelernt = 0;
+  for (let i = 0; i < 7; i++) if (tagGelernt(verlauf[dateInDays(-i)])) gelernt++;
+  const wocheText = gelernt + " von 7 Tagen gelernt" + (tagGelernt(verlauf[t]) ? "" : ", heute noch nicht");
+  html += '<div class="woche" role="img" aria-label="' + esc(wocheText) + '">' + tage + '</div>';
   html += '</div>';
   return html;
 }
@@ -11871,7 +11908,13 @@ document.addEventListener("keydown", e => {
    (z.B. der erste Tab direkt nach dem Oeffnen) wird nicht angefasst. */
 document.addEventListener("keydown", e => {
   if (e.key !== "Tab") return;
-  const dlg = document.querySelector(".dlg");
+  /* 3.17.35 (TECHNIK-7): Das Fehler-Modal liegt bewusst ausserhalb von #app
+     (siehe openErrorModal/closeErrorModal) und damit ausserhalb von .dlg -
+     ohne diese Erweiterung fing die Falle es nicht ein, Tab wanderte aus dem
+     Modal auf die Knoepfe der Seite dahinter (Befund TECHNIK-7). */
+  const errorModal = document.getElementById("errorModal");
+  const errorModalOffen = errorModal && errorModal.getAttribute("aria-hidden") === "false";
+  const dlg = errorModalOffen ? errorModal.querySelector(".error-modal__dialog") : document.querySelector(".dlg");
   if (!dlg || !dlg.contains(document.activeElement)) return;
   const fokussierbar = [...dlg.querySelectorAll(
     'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -11961,11 +12004,22 @@ document.addEventListener("keydown", e => {
 })();
 
 /* ---------- Fehlerformular-Modal ---------- */
+/* 3.17.35 (TECHNIK-7): Oeffner merken - Element UND Fokus-Schluessel (siehe
+   fokusSchluessel oben), damit closeErrorModal() den Fokus zurueckgeben kann,
+   auch wenn zwischenzeitlich ein render() den Knopf (z.B. in den
+   Einstellungen) neu aufgebaut hat und die Elementreferenz verwaist waere. */
+let errorModalOeffner = null, errorModalOeffnerSel = null;
 function openErrorModal() {
   const modal = document.getElementById("errorModal");
   if (modal) {
+    errorModalOeffner = document.activeElement;
+    errorModalOeffnerSel = fokusSchluessel(document.activeElement);
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
+    /* 3.17.35 (TECHNIK-7): #app liegt ausserhalb des Modals (siehe Kommentar
+       weiter unten) und war deshalb per Maus/Touch schon unerreichbar, aber
+       per Tastatur/Screenreader nicht gesperrt - inert schliesst das. */
+    if (app) app.setAttribute("inert", "");
     const textarea = document.getElementById("error-description");
     if (textarea) setTimeout(() => textarea.focus(), 100);
   }
@@ -11979,6 +12033,16 @@ function closeErrorModal(textBehalten) {
   }
   const form = document.getElementById("errorForm");
   if (form && !textBehalten) form.reset();
+  /* 3.17.35 (TECHNIK-7): #app wieder freigeben und den Fokus zum Oeffner
+     zurueckgeben - bisher blieb er nach Escape wie nach dem X-Knopf auf
+     body stehen (Befund TECHNIK-7), wie bei jedem anderen Blatt (Beobachtung
+     19/9 oben). Erst die Elementreferenz versuchen, sonst ueber den
+     Schluessel neu suchen (z.B. nach einem zwischenzeitlichen render()). */
+  if (app) app.removeAttribute("inert");
+  const ziel = (errorModalOeffner && document.contains(errorModalOeffner)) ? errorModalOeffner :
+    (errorModalOeffnerSel ? document.querySelector(errorModalOeffnerSel) : null);
+  if (ziel && typeof ziel.focus === "function") ziel.focus({ preventScroll: true });
+  errorModalOeffner = null; errorModalOeffnerSel = null;
 }
 
 /* Initialisierung des Fehlerformulars. Kein Klick auf den Hintergrund zum

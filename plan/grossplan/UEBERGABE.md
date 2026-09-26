@@ -27,6 +27,10 @@ Was du NICHT anfasst:
 - APP_VERSION, sw.js CACHE_NAME, index.html ?v=, CHANGELOG.md, plan/ – macht der Dirigent
 - keine Lernlogik (Stufen, Abstände, Bewertung, Serie), kein religiöser Text
 - nicht committen, nicht pushen
+- kein `git stash`, `git checkout .` oder `git restore .` – andere Agenten können
+  parallel an anderen Dateien arbeiten. Gegenprobe: eigene Datei vorher kopieren
+  und danach zurückkopieren (Runde 5: ein Handwerker stashte den ganzen Ordner,
+  während ein zweiter schrieb)
 
 Regeln des Repos, die hier gelten:
 - ein delegierter Klick-Listener über data-action (kein eigener Listener an Knöpfen)

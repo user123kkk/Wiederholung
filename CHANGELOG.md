@@ -1,3 +1,21 @@
+## 3.17.35 – 26. September 2026
+
+**Großplan, Runde 5: Barrierefreiheit – lesbar, erreichbar, vorlesbar.**
+
+- **Helles Thema am Computer und iPad quer:** Die Navigation links hatte nur
+  4,31:1 Kontrast, jetzt über 4,5:1. Der Kontrast-Test prüft jetzt auch
+  diese Geräte.
+- **„Fehler melden“ mit der Tastatur:** Tab bleibt im Dialog, und nach dem
+  Schließen steht der Fokus wieder auf dem Knopf, der ihn geöffnet hat.
+- **Kurzmeldungen für Bildschirmleser:** „Gespeichert“, „Kopiert“ und
+  ähnliche Meldungen laufen über eine feste Ansage-Stelle, die jeder
+  Bildschirmleser kennt.
+- **Größere Knöpfe:** Das X am Hinweis, die zwei Knöpfe bei „Karten, die
+  nicht klappen“ und das X im Fehler-Dialog sind jetzt mindestens 44 px groß.
+- **Überschriften und Kalender:** Auf Lernen gibt es nur noch eine
+  Hauptüberschrift. Kalender und Wochenpunkte sagen dem Bildschirmleser, an
+  wie vielen Tagen gelernt wurde.
+
 ## 3.17.34 – 26. September 2026
 
 **Großplan, Runde 4: Fortschritt und Lernen-Start zeigen, was stimmt.**
