@@ -786,7 +786,9 @@ Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRA
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (26.09.2026, spätabends): v3.17.38 auf `main`; live ist 3.17.35.**
+**AKTUELL (26.09.2026, spätabends): v3.17.39 auf `main`; live ist 3.17.35.**
+3.17.39: Karte drehen auf dem iPhone (Spiegelschrift, Linie; G-091, G-092) –
+am Gerät zu bestätigen. Davor 3.17.38:
 Großplan Runde 8 fertig: Konto (G-011, G-050, G-051, G-053, G-054), Board-
 Mengenbremse (G-016, **Regel erst nach 3.17.38 live veröffentlichen**, K10),
 Wort springt beim Drehen (G-090). **Wartet auf Betreiber:** K11, dann K10.

@@ -2092,6 +2092,20 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
    Die Antwort erscheint erst, wenn die Rueckseite nach vorn kommt. */
 .karte-dreh--wende { animation: karte-wende 540ms cubic-bezier(0.3, 1.28, 0.55, 1) both; }   /* 3.15.0: 620 -> 540 ms - bei 50 Karten am Stueck zaehlt jede Zehntelsekunde */
 .karte-dreh--wende .karte-seite--hinten { transform: rotateY(180deg); }
+/* 3.17.39 (G-092, Betreiber-Screenshots iPhone 26.09.2026): "Tippen zum
+   Umdrehen" stand nach dem Drehen SPIEGELVERKEHRT auf der Rueckseite.
+   Safari legt Teile mit eigener Ebene (absolut positioniert, animiert)
+   gesondert an, und backface-visibility der Seite gilt fuer sie nicht mit.
+   Betroffen waren auch die Kopfzeile (Punkte, "NEU") - alles, was absolut
+   steht. Zweifach abgesichert: (1) jedes Kind (samt ::before/::after)
+   verbirgt seine Rueckseite selbst, (2) die Vorderseite ist weg, sobald die
+   Karte hochkant steht: Die Kurve karte-wende erreicht 90 Grad nach 14 %
+   der Zeit (~76 ms, nachgerechnet) - ab 15 % ist die Vorderseite ohnehin
+   abgewandt, also hidden (step-end: bis dahin unveraendert sichtbar). Im
+   Pruefstand (Chromium) nicht nachstellbar - am iPhone bestaetigen. */
+.karte-seite *, .karte-seite *::before, .karte-seite *::after { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.karte-dreh--wende .karte-seite--vorn { animation: vorn-weg 540ms step-end both; }
+@keyframes vorn-weg { 0% { visibility: visible; } 15%, 100% { visibility: hidden; } }
 @keyframes karte-wende {
   from { transform: rotateY(0deg); }
   to   { transform: rotateY(180deg); }
@@ -2099,9 +2113,15 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
 /* Ohne Fuellmodus: die Endlage ist "none", und das Wischen setzt danach
    seine eigene Verschiebung (siehe .study-flaeche--kommt). */
 .study-flaeche--dreht { animation: karte-hebt 540ms var(--ease-out); }
+/* 3.17.39 (G-091, VERDACHTS-Fix, Betreiber 26.09.2026: beim Drehen "wird
+   fester"): ohne scale(1.035). Beim Skalieren zeigt Safari waehrend der
+   Bewegung ein vergroessertes Bild der Karte und rechnet am Ende scharf
+   nach - Punkte und Schrift wirken dann ploetzlich kraeftiger. Das Anheben
+   (translateY) und der grosse Schatten (::before) bleiben. Am iPhone
+   bestaetigen; aendert sich nichts, zuruecknehmen (eigener Commit). */
 @keyframes karte-hebt {
   0%   { transform: none; }
-  40%  { transform: translateY(-8px) scale(1.035); }
+  40%  { transform: translateY(-8px); }
   100% { transform: none; }
 }
 /* 3.15.0: Der groessere Schatten beim Anheben liegt als eigene Schicht
@@ -2124,7 +2144,12 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
    kommen?" - ja: Die Rueckseite dreht sich nach etwa einem Viertel der
    Drehung nach vorn, und genau dann war sie noch leer. Nur die Linie
    zieht sich noch kurz auf. */
-.study-flaeche--dreht .study-trenner { animation: einstieg-wachsen 320ms var(--ease-out) 120ms both; }
+/* 3.17.39 (G-092, Betreiber-Screenshots iPhone 26.09.2026): Die Linie zieht
+   sich erst NACH der Drehung (540 ms) auf. Mit eigener transform-Animation
+   mitten in der Drehung legte Safari sie auf eine eigene Ebene, die die
+   3D-Drehung der Karte nicht mitmachte - sie stand gerade in der schraegen
+   Karte. Waehrend der Drehung haelt "both" sie bei scaleX(0), unsichtbar. */
+.study-flaeche--dreht .study-trenner { animation: einstieg-wachsen 320ms var(--ease-out) 540ms both; }
 .study-flaeche--dreht .study-answer,
 .study-flaeche--dreht .karte-seite--hinten .card-tags { animation: none; }
 .study-flaeche--offen .study-answer { animation: none; }
@@ -3802,6 +3827,10 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   backface-visibility: hidden;
 }
 .einstieg-hero__seite .arabic { font-size: 2.6rem; line-height: 1.6; }
+/* 3.17.39 (G-092): dieselbe Safari-Falle wie bei der Lernkarte - eigene
+   Ebenen von Kindern ignorieren die backface-visibility der Seite. Hier
+   stehen heute keine absoluten Kinder, abgesichert trotzdem. */
+.einstieg-hero__seite * { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 .einstieg-hero__seite--hinten {
   transform: rotateY(180deg);
   font-family: var(--font-text); font-size: var(--fs-2xl); font-weight: 600;

@@ -19,13 +19,28 @@ async function sprung(b, g, alt) {
   }
   await aktion(p, 'start-session', null, 1200);
   await p.click('#app .study-flaeche');
+  /* 3.17.39 (G-092): Vorderseite sichtbar, solange sie zum Betrachter zeigt
+     (< 90 Grad), danach hidden - dann kann Safari nichts gespiegelt zeigen. */
+  const winkel = [];
+  for (const t of [60, 90]) {
+    await p.evaluate(t => document.getAnimations().forEach(a => { a.pause(); a.currentTime = t; }), t);
+    winkel.push(await p.evaluate(() => { const m = new DOMMatrix(getComputedStyle(document.querySelector('.karte-dreh')).transform);
+      return { grad: (Math.round(Math.atan2(-m.m13, m.m11) * 180 / Math.PI) + 360) % 360, vorn: getComputedStyle(document.querySelector('.karte-seite--vorn')).visibility }; }));
+  }
+  const winkelOk = winkel.every(w => (w.grad < 90) === (w.vorn === 'visible'));
   await p.evaluate(() => document.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} }));
   await p.waitForTimeout(100);
   const m = await p.evaluate(() => [...document.querySelectorAll('.karte-seite')].map(s => {
     const w = s.querySelector('.study-word').getBoundingClientRect(), k = s.getBoundingClientRect();
     return (w.top + w.bottom) / 2 - k.top;
   }));
+  /* 3.17.39 (G-092): nach der Drehung ist die Vorderseite weg (in Safari
+     schien sie sonst gespiegelt durch), die Linie hinten ist da. */
+  const ende = await p.evaluate(() => { const v = document.querySelector('.karte-seite--vorn'), tr = document.querySelector('.karte-seite--hinten .study-trenner');
+    return { vornWeg: !v || getComputedStyle(v).visibility === 'hidden', linie: tr ? Math.round(tr.getBoundingClientRect().width) : 0 }; });
   const fehler = p.fehler.slice();
+  if (!alt && (!ende.vornWeg || ende.linie < 10)) fehler.push('Endzustand ' + JSON.stringify(ende));
+  if (!alt && !winkelOk) fehler.push('Vorderseite waehrend der Drehung ' + JSON.stringify(winkel));
   await ctx.close();
   return { d: m.length === 2 ? Math.round((m[1] - m[0]) * 10) / 10 : null, fehler };
 }

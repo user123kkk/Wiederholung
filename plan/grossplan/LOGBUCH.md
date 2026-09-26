@@ -10,6 +10,41 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
 ---
 
+### 2026-09-26 — Karte drehen auf dem iPhone (v3.17.39)
+
+**Anlass:** Betreiber-Screenshots (iPhone, 3.17.37): „Tippen zum Umdrehen" und
+die Kopfzeile (Punkte, „NEU") spiegelverkehrt auf der Rückseite; die Linie
+stand beim Drehen gerade in der schrägen Karte. „stell sicher, dass das und
+das Gleiche gefixt wird."
+
+**Geändert:** `styles.css`: `.karte-seite *` (+ `::before/::after`)
+`backface-visibility: hidden`; `.karte-dreh--wende .karte-seite--vorn`
+Animation `vorn-weg` (step-end, ab 15 % = 90° hidden); Linie wächst erst nach
+540 ms; `karte-hebt` ohne `scale(1.035)` (G-091); `.einstieg-hero__seite *`
+abgesichert · Version 3.17.39, `CHANGELOG.md` · `t_dreh_lage.js`
+(Endzustand, Vorderseite < 90° sichtbar / > 90° weg) · `LEHREN.md` § 15.
+
+**Entscheidung:** Ursache: Safari legt absolut positionierte oder animierte
+Kinder einer 3D-Fläche auf eigene Ebenen, `backface-visibility` der Seite
+gilt für sie nicht (das Wort, im Fluss, schien NICHT durch – passt dazu).
+Doppelt abgesichert, weil der Prüfstand kein WebKit hat: Selbst wenn (1)
+nicht greift, ist die Vorderseite ab 90° unsichtbar (Zeitpunkt aus der
+cubic-bezier nachgerechnet: 76 ms, gemessen 90° bei 76 ms, 96° bei 82 ms).
+Alle anderen 3D-Drehungen gesucht: nur das Einstiegskärtchen (keine absoluten
+Kinder, trotzdem abgesichert); `einstieg-aufklappen` hat nur eine Seite.
+
+**Prüfstand:** `pruefe_stand` grün · `abnahme_runde.js` 13/13 ·
+`t_dreh_lage`, `t_sprung`, `t_runde_lage`, `t_wischen`, `t_doppeltipp`,
+`t_kontrast`, `t_a11y`, `t_gross_alle`, `t_einstieg` grün · Affe Handy 200: 0,
+iPad 150: 0. **Nicht geprüft:** Safari/iPhone – kein WebKit im Prüfstand.
+
+**Offen:** Gerätetest beim Betreiber (nach K11): eine Karte umdrehen, auf der
+Rückseite darf nichts gespiegelt stehen, die Linie erscheint nach der Drehung.
+
+**Nächster Schritt:** Runde 9 (P8: G-015, G-057, G-058; P9: G-061, G-062, G-066).
+
+---
+
 ### 2026-09-26 — Runde 8: Konto sicherer, Karte ruhiger (v3.17.38)
 
 **Geändert:** `app.js`: `kontoAnmeldungFrisch()` entfernt, `kontoLoeschenAusfuehren()`

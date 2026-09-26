@@ -1,3 +1,20 @@
+## 3.17.39 – 26. September 2026
+
+**Karte drehen auf dem iPhone (nach Betreiber-Screenshots).** Am iPhone zu
+bestätigen – im Prüfstand (Chromium) tritt der Fehler nicht auf.
+
+- **„Tippen zum Umdrehen" und die Kopfzeile (Punkte, „NEU") standen
+  spiegelverkehrt auf der Rückseite.** Safari zeichnete sie auf eigenen
+  Ebenen, die das Verbergen der Rückseite nicht mitmachten. Jetzt verbirgt
+  jedes Teil der Karte seine Rückseite selbst, und die Vorderseite
+  verschwindet ganz, sobald die Karte hochkant steht (nach 76 ms). Dieselbe
+  Absicherung hat das Beispielkärtchen im Einstieg.
+- **Die Linie unter dem Wort stand beim Drehen gerade in der schrägen Karte.**
+  Sie zieht sich jetzt erst auf, wenn die Karte liegt.
+- **Beim Anheben wird die Karte nicht mehr vergrößert.** Das Vergrößern ließ
+  Schrift und Punkte am Ende der Drehung plötzlich kräftiger wirken
+  (Vermutung).
+
 ## 3.17.38 – 26. September 2026
 
 **Großplan, Runde 8: Konto sicherer, Karte ruhiger.**
