@@ -29,7 +29,7 @@ in der nächsten Runde.
 | E-16 | Funktionen/Premium | F-1 und F-2 bauen, Rest siehe `FUNKTIONEN.md` | – |
 | E-17 | „Lieber nicht"-Liste bestätigen | bestätigen | – |
 | E-18 | Gerätetest Google-Anmeldung | bitte testen | – |
-| E-19 | Geste für „Fast" (Tipp auf die Karte o. Ä.) | lieber nicht | offen |
+| E-19 | Geste für „Fast" (Tipp auf die Karte o. Ä.) | lieber nicht | **entschieden 27.09.: lassen** |
 
 ---
 
@@ -240,4 +240,4 @@ Bewusst so seit dem Wisch-Bau („Fast hat keine Wischrichtung", Kommentar bei
   versehentliche Antippen (lange Notiz scrollen) würde bewerten.
 - Wischen nach oben ginge, ist aber schräg leicht mit links/rechts zu
   verwechseln, und der Knopf liegt mittig unter dem Daumen.
-- **Empfehlung: lieber nicht.** Offen, bis der Betreiber es anders will.
+- **Empfehlung: lieber nicht.** **Entschieden 27.09.2026 (Betreiber: „alles klar, lassen wir"):** keine Geste, nichts bauen.
