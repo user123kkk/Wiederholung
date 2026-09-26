@@ -32,6 +32,10 @@ if errorlevel 1 (
 )
 
 echo [1/3] Hole neueste Aenderungen von main...
+rem 3.17.34: .firebase/hosting..cache schreibt die Firebase-CLI bei jedem
+rem Deploy neu. Die Datei steht (versehentlich) im Repo - ohne diese Zeile
+rem galt der Ordner danach immer als "geaendert". Es ist nur ein Zwischenspeicher.
+git checkout -- .firebase >nul 2>nul
 git checkout main
 if errorlevel 1 goto fehler
 git pull origin main

@@ -10,6 +10,24 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
 ---
 
+### 2026-09-26 — veroeffentlichen.bat, dritter Anlauf (kein App-Update)
+
+**Anlass:** Betreiber-Screenshot: neue `.bat` lief, Sperre meldete
+`M .firebase/hosting..cache`.
+**Ursache:** Der Deploy-Cache steht seit dem ersten Commit (`6cc5b91`) im Repo;
+`.gitignore` greift bei verfolgten Dateien nicht.
+**Geändert:** `veroeffentlichen.bat`: vor dem Pull `git checkout -- .firebase`
+(verwirft nur den Cache). `LEHREN.md` § 15.
+**Entscheidung:** Datei jetzt noch NICHT aus dem Repo nehmen (`git rm --cached`):
+beim Betreiber ist sie geändert, der Pull einer Löschung bräche ab, und die
+laufende alte `.bat` kann das nicht abfangen.
+**Offen:** Sobald der Betreiber einmal erfolgreich mit der `.bat`
+veröffentlicht hat: `git rm --cached .firebase/hosting..cache` committen (die
+`.bat` verwirft dann vorher die lokale Änderung, der Pull geht durch).
+**Nächster Schritt:** Runde 5 – Paket P12.
+
+---
+
 ### 2026-09-26 — veroeffentlichen.bat, zweiter Anlauf (kein App-Update)
 
 **Anlass:** Betreiber-Screenshot: „Es gibt lokale Aenderungen im Ordner" –
