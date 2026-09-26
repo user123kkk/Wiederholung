@@ -3268,7 +3268,10 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   background: var(--surface-overlay); color: var(--text-1);
   border: 1px solid var(--border-strong);
   border-radius: var(--r-full);
-  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-5);
+  /* 3.17.36: links und rechts gleich. Rechts war es enger (12 statt 20 px) -
+     Rest aus der Zeit mit Rueckgaengig-Knopf (bis 3.6.13); die Meldung wirkte
+     dadurch schief (Betreiber 26.09.2026). */
+  padding: var(--space-2) var(--space-4);
   box-shadow: var(--shadow-md);
   font-size: var(--fs-sm); font-weight: 500;
   /* 3.6.13: Die Meldung hat keinen Knopf - sie soll Taps nicht abfangen. */
@@ -3280,7 +3283,6 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   bottom: auto;
   top: calc(var(--sat) + var(--space-4));
 }
-.toast button { min-height: 32px; padding: 0 var(--space-3); font-size: var(--fs-xs); }
 
 .setup-steps { padding-left: var(--space-5); }
 .setup-steps li { margin-bottom: var(--space-3); font-size: var(--fs-sm); color: var(--text-2); }

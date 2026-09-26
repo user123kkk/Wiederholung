@@ -5,26 +5,65 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 | | |
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
-| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4, 5) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 6 (Runde 5 fertig, v3.17.35) |
+| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4–6) · A5 ☐ · A6 ☐ |
+| Nächste Runde | 7 (Runde 6 fertig, v3.17.36) |
 
 ---
 
-### 2026-09-26 — Runde 6 läuft (P11 Start/Service Worker + G-088)
+### 2026-09-26 — Runde 6: Start und Service Worker (v3.17.36)
 
-**Geändert (noch nicht committet):** `manifest.json` (G-069: `icon-512.png` →
-`maskable`, `desktop-icon.png` bleibt das runde `any` für Desktop), `sw.js`
-(G-074: `icon.svg`, `flower-isolated.png` aus `APP_SHELL`), `styles.css`
-`.toast` Innenabstand gleich (G-088). Handwerker an `sw.js` (G-029, G-068) und
-`app.js`/`index.html` (G-030).
-**Entscheidung:** G-074 Tab-Symbol bleibt `desktop-icon.png` – es steht wegen
-Manifest ohnehin im Vorabspeicher, ein Tausch spart keine Bytes.
-**Offen:** Betreiber (26.09.): auf 3.17.35 „Gespeichert" sichtbar, VoiceOver
-sprach nichts. Verdacht (unbewiesen): `fokusInsWortfeld()` nach dem Speichern
-lässt VoiceOver das Feld ansagen und die höfliche Meldung verschlucken.
-Gerätetest VoiceOver beim Betreiber gestrichen („schrecklich"). Tastatur beim
-Hinzufügen: D1, bleibt; Betreiber schickt ggf. Screenshot.
-**Nächster Schritt:** Handwerker abnehmen, Version 3.17.36, Prüfstand, Commit.
+**Geändert:** `sw.js`: `APP_SHELL` = `KERN` + `ZUSATZ` (~38–58), `install`
+mit `cache.addAll(KERN)` ohne catch (~67–94, G-068); `isUnveraenderlich()` +
+Cache-zuerst-Zweig im fetch-Handler für `?v=`, `gstatic/firebasejs/<Version>/`,
+`fonts/` (~108–160, G-029; Schriftenpfad vom Dirigenten auf relativ zu `sw.js`
+umgestellt); `icon.svg`, `flower-isolated.png` raus (G-074) · `app.js`:
+`FIREBASE_SDK_VERSION` + drei URLs (~1893), `initFirebase` mit `Promise.all`
+(~1913, G-030) · `index.html`: drei `modulepreload` (~40) · `manifest.json`:
+`icon-512.png` → `maskable` (G-069) · `styles.css` `.toast` Innenabstand
+gleich, toter `.toast button` raus (G-088) · Version 3.17.36, `CHANGELOG.md` ·
+`pruefe_stand.mjs`: Abschnitt 6 (SDK-Version app.js = modulepreload), APP_SHELL
+liest `KERN`/`ZUSATZ` · Prüfstand: `t_sw.js`, `t_laden_parallel.js` neu ·
+`LEHREN.md` § 15 (eigener Fehler „Bedienungshilfe").
+
+**Wer:** G-029 + G-068 Handwerker (Sonnet, `sw.js`), G-030 Handwerker (Sonnet,
+`app.js`/`index.html`), parallel an getrennten Dateien. G-069, G-074, G-088
+Dirigent.
+
+**Entscheidung:** G-069 abweichend vom Befund: `desktop-icon.png` bleibt im
+Manifest als einziges 512er `any` (rund, transparente Ecken – so sieht das
+Desktop-Symbol unverändert aus), `icon-512.png` wird nur `maskable` (Android
+schneidet es zu). G-074: Tab-Symbol bleibt – `desktop-icon.png` steht wegen
+Manifest ohnehin im Vorabspeicher, ein Tausch spart keine Bytes. G-088 kam vom
+Betreiber („gespeichert im Kasten nicht symmetrisch mittig"): gemessen 20,8 vs.
+12,8 px, jetzt 16,8/16,8, Breite unverändert.
+
+**Abnahme (selbst geprüft):** Diffs gelesen. `t_sw.js` 13 ok, Gegenprobe mit
+alter `sw.js` rot (Netz statt Cache; neue Version trotz 500 aktiv, alter Cache
+weg). `t_laden_parallel.js`: Spanne ohne modulepreload 0–1 ms, alte `app.js`
+609 ms (rot). `pruefe_stand` grün, neue Prüfung per `PRUEF_WURZEL` rot
+gemacht (Handwerker).
+
+**Prüfstand:** `abnahme_runde.js` 13/13 · `t_sw`, `t_laden_parallel`,
+`t_start` (Hänger → „Neu laden"), `t_csp`, `t_sprung`, `t_kontrast`, `t_a11y`,
+`t_ansage`, `t_gross_alle` grün · Affe Handy 200: 0, iPad 150: 0.
+**Nicht geprüft:** echtes Lie-Fi, Android-Symbol am Gerät, Chrome-DevTools-
+Manifestwarnungen.
+
+**Kriterien:** A1 ☐ (31 offen) · A2 ☑ · A3 ☑ · A4 ☑ (dritte Runde in Folge) ·
+A5 ☐ · A6 ☐
+
+**Offen:** K11 für 3.17.36. Betreiber (26.09.): auf 3.17.35 „Gespeichert"
+sichtbar, VoiceOver sprach nichts. Verdacht (unbewiesen): `fokusInsWortfeld()`
+direkt nach dem Speichern lässt VoiceOver das Feld ansagen und die höfliche
+Meldung verschlucken – zu G-087 (P12) prüfen. Gerätetest VoiceOver beim
+Betreiber gestrichen („schrecklich"). Tastatur beim Hinzufügen: D1, bleibt
+(Pro/Contra im Chat); Betreiber wünscht allgemein „premium" am Hinzufügen-Blatt,
+Screenshot angefragt – bis dahin nichts bauen. Nebenfund Handwerker: bei
+gescheiterter Installation bleibt ein leerer neuer Cache liegen (harmlos,
+wird beim nächsten erfolgreichen Update gelöscht).
+
+**Nächster Schritt:** Runde 7 – Paket P12 (G-067, G-086, G-087, dabei der
+VoiceOver-Verdacht) und G-070.
 
 ---
 

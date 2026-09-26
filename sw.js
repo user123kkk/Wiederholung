@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.17.35";
+const CACHE_NAME = "adrabic-3.17.36";
 
 /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
    unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
@@ -35,20 +35,27 @@ const VERSION = CACHE_NAME.replace("adrabic-", "");
 
    Beides haengt jetzt an VERSION und wird mit CACHE_NAME zusammen einmal
    hochgezaehlt, statt an drei Stellen von Hand. */
-const APP_SHELL = [
+/* 3.17.36 (G-068): KERN sind die Dateien, ohne die die App offline gar nicht
+   laufen kann (leere Seite ohne HTML/Gestaltung/Logik). Fehlt eine davon beim
+   Vorabspeichern, MUSS die ganze Installation scheitern - siehe install()
+   weiter unten, wo genau deshalb kein .catch() mehr dabei ist. ZUSATZ sind
+   Icons/Schriften: fehlen sie, sieht die App nur schlechter aus, startet aber
+   noch - dafuer bleibt das Einzeln-mit-catch aus 3.0.0. */
+const KERN = [
   "./",
   "./index.html",
   "./styles.css?v=" + VERSION,
-  "./app.js?v=" + VERSION,
+  "./app.js?v=" + VERSION
+];
+const ZUSATZ = [
   "./manifest.json",
-  "./icon.svg",
   "./desktop-icon.png",
-  "./flower-isolated.png",
   "./apple-touch-icon.png",
   "./icon-192.png",
   "./icon-512.png",
   "./fonts/UthmanicHafs1Ver18.ttf"      // 3.17.24: Quran-Schrift, selbst ausgeliefert
 ];
+const APP_SHELL = KERN.concat(ZUSATZ);
 
 /* Fremde Server, deren Dateien die App zum Starten braucht.
    Sie werden beim ersten Online-Besuch automatisch mitgespeichert
@@ -60,14 +67,27 @@ const CACHEABLE_ORIGINS = [
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
-      /* Einzeln statt addAll: Wenn eine Datei fehlt (z.B. manifest.json),
-         schlägt sonst der GESAMTE Vorgang fehl und es wird gar nichts
-         zwischengespeichert – still und unbemerkt. */
-      Promise.all(APP_SHELL.map(url =>
-        cache.add(url).catch(() => {
-          console.warn("[SW] Konnte nicht zwischenspeichern:", url);
-        })
-      ))
+      /* 3.17.36 (G-068): KERN mit addAll OHNE catch - fehlt eine Kerndatei
+         (z.B. app.js?v=… wegen eines Netzfehlers), MUSS die Installation
+         scheitern. Vorher fing jede Datei ihren eigenen Fehler ab; damit
+         gelang die Installation auch dann, wenn app.js gar nicht im Cache
+         lag - der alte Worker samt altem Cache wurde in activate() trotzdem
+         geloescht. Offline zeigte die neue index.html danach auf eine
+         app.js, die nirgends lag: die App blieb am Ladebildschirm haengen,
+         ohne jede Moeglichkeit, das zu reparieren. Scheitert addAll jetzt,
+         bleibt der alte, funktionierende Worker samt Cache aktiv (siehe
+         activate()), und der naechste Online-Besuch versucht es erneut.
+
+         Einzeln statt addAll gilt nur noch fuer ZUSATZ: Fehlt dort eine
+         Datei (z.B. ein Icon), soll die App trotzdem starten - nur mit
+         schlechterer Optik statt gar nicht. */
+      cache.addAll(KERN).then(() =>
+        Promise.all(ZUSATZ.map(url =>
+          cache.add(url).catch(() => {
+            console.warn("[SW] Konnte nicht zwischenspeichern:", url);
+          })
+        ))
+      )
     )
   );
   self.skipWaiting();
@@ -89,12 +109,55 @@ function isCacheable(url) {
   return url.origin === self.location.origin || CACHEABLE_ORIGINS.includes(url.origin);
 }
 
+/* 3.17.36 (G-029): Diese drei Faelle tragen ihre Version schon in der URL -
+   eine neue Version ist immer eine neue URL, die alte URL liefert nie wieder
+   etwas anderes als das, was gerade im Cache liegt. Die Begruendung von
+   "Zuerst Netz" weiter unten ("online immer die neueste Version") gilt hier
+   also nicht: die neueste Version bekommt man so oder so nur ueber eine neue
+   URL (neue index.html mit neuem ?v=, siehe README-Veroeffentlichungsliste).
+   Deshalb "Zuerst Cache, sonst Netz" - kein Zeitlimit-Warten auf ein Netz,
+   das ohnehin nur dieselben Bytes liefern koennte, die schon da sind:
+
+   1. eigene Herkunft mit Query-Parameter "v" (app.js?v=…, styles.css?v=…);
+   2. https://www.gstatic.com/firebasejs/<Version>/… (Firebase-SDK - app.js
+      haengt bei Wiederholungsversuchen zusaetzlich "?wiederholung=2" an,
+      das faellt mit unter Fall 2 und ist beim ersten Mal noch nicht im
+      Cache, geht dann also folgerichtig aufs Netz);
+   3. eigene Herkunft unter /fonts/ (die Quran-Schrift).
+
+   Alles andere (Navigationen, manifest.json, Bilder, Sonstiges) bleibt beim
+   bisherigen "Zuerst Netz"-Pfad. */
+const FIREBASEJS_VERSION_PFAD = /^\/firebasejs\/\d+[\w.-]*\//;
+const SCHRIFTEN_PFAD = new URL("./fonts/", self.location).pathname;   // relativ zu sw.js, nicht fest "/fonts/"
+function isUnveraenderlich(url) {
+  if (url.origin === self.location.origin) {
+    return url.searchParams.has("v") || url.pathname.startsWith(SCHRIFTEN_PFAD);
+  }
+  return url.origin === "https://www.gstatic.com" && FIREBASEJS_VERSION_PFAD.test(url.pathname);
+}
+
 self.addEventListener("fetch", event => {
   const req = event.request;
   if (req.method !== "GET") return;      // Schreibvorgänge unangetastet lassen
 
   const url = new URL(req.url);
   if (!isCacheable(url)) return;         // Auth-/Firestore-Aufrufe durchreichen
+
+  if (isUnveraenderlich(url)) {
+    event.respondWith((async () => {
+      const cached = await caches.match(req);
+      if (cached) return cached;                     // Cache zuerst
+      const res = await fetch(new Request(req, { cache: "no-store" }));
+      /* Nur eine ECHTE Antwort landet im eigenen Cache - siehe Begruendung
+         bei 3.0.23 weiter unten. */
+      if (res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+      }
+      return res;
+    })());
+    return;
+  }
 
   /* Zuerst Netz, dann Cache: online sieht man immer sofort die neueste
      Version, offline greift die zuletzt gespeicherte.

@@ -53,8 +53,8 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-026 | „0 Antworten diese Woche ↓ 100 %" nach Pause; „diese Woche" sind 7 rollende Tage | REST-4 | A | S | P9 | erledigt (3.17.34) |
 | G-027 | Kalender-Erinnerung: jede Neueinrichtung legt einen zweiten Termin an; „aus" fehlt | REST-5 | A | S | P10 | offen |
 | G-028 | Offene App erfährt nie von neuer Version | TECHNIK-3 | B | S | – | wartet: E-06 |
-| G-029 | Versionierte Dateien trotzdem „Netz zuerst" – langsamer Start bei schlechtem Netz | TECHNIK-4 | A | S | P11 | offen |
-| G-030 | Firebase-Bausteine laden nacheinander statt gleichzeitig | TECHNIK-5 | A | S | P11 | offen |
+| G-029 | Versionierte Dateien trotzdem „Netz zuerst" – langsamer Start bei schlechtem Netz | TECHNIK-4 | A | S | P11 | erledigt (3.17.36) |
+| G-030 | Firebase-Bausteine laden nacheinander statt gleichzeitig | TECHNIK-5 | A | S | P11 | erledigt (3.17.36) |
 | G-031 | Helles Thema Desktop/iPad quer: Navigation 4,31:1 < 4,5; `t_kontrast.js` nur Handy | TECHNIK-6 | A | H+S | P12 | erledigt (3.17.35) |
 | G-032 | „Fehler melden": Tab verlässt den Dialog, Fokus kehrt nicht zurück | TECHNIK-7 | A | S | P12 | erledigt (3.17.35) |
 | G-033 | Kurzmeldungen erreichen Bildschirmleser vermutlich nicht (Live-Region neu mit Text) | TECHNIK-8 | A | S | P12 | erledigt (3.17.35) |
@@ -92,13 +92,13 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-065 | Zeitfeld im Erinnerungs-Blatt geht beim Neuzeichnen verloren | REST-11 | A | H | P10 | offen |
 | G-066 | Gruß-Datum folgt der Uhr, der Rest dem Lerntag (4 Uhr) | REST-12 | A | H | P9 | offen |
 | G-067 | „Fehler melden": Leer-Fehler als Dialog; Esc löscht den Text | REST-13 | A | H | P12 | offen |
-| G-068 | Service Worker: fehlende Kerndatei löscht trotzdem den alten Cache | TECHNIK-11 | A | S | P11 | offen |
-| G-069 | Manifest: getrenntes `maskable`-Symbol, zweites `any` raus | TECHNIK-12 | A | H | P11 | offen |
+| G-068 | Service Worker: fehlende Kerndatei löscht trotzdem den alten Cache | TECHNIK-11 | A | S | P11 | erledigt (3.17.36) |
+| G-069 | Manifest: getrenntes `maskable`-Symbol, zweites `any` raus | TECHNIK-12 | A | H | P11 | erledigt (3.17.36): `icon-512.png` → `maskable`, `desktop-icon.png` bleibt einziges 512er `any` (rund, für Desktop). Gerätetest Android offen |
 | G-070 | Dauerhaften Speicher anfragen (nur installierte App) | TECHNIK-13 | A | S | P11 | offen |
 | G-071 | Workflow: Werkzeugversion festlegen, `trap`, `permissions: read` | TECHNIK-14 | A | H | P1 | erledigt (3.17.30) |
 | G-072 | Zwei tote CSP-Hashes (+ `csp-build` mitzählen) | TECHNIK-16 | A | H | P1 | erledigt (3.17.30) |
 | G-073 | Rechtsseiten: Querverweis Datenschutz → Impressum | TECHNIK-18 | A | H | P1 | erledigt (3.17.30) |
-| G-074 | Unnötige Bytes: 147-KB-Favicon, ungenutzte Dateien im Vorabspeicher | TECHNIK-19 | A | H | P11 | offen |
+| G-074 | Unnötige Bytes: 147-KB-Favicon, ungenutzte Dateien im Vorabspeicher | TECHNIK-19 | A | H | P11 | erledigt (3.17.36): Vorabspeicher ohne `icon.svg`/`flower-isolated.png`; Tab-Symbol bleibt `desktop-icon.png` – liegt wegen Manifest ohnehin im Vorabspeicher, Tausch spart nichts |
 | G-075 | Tagesprotokoll zählt bei zwei Geräten/offline zu wenig (`increment`) | LERNEN-8 | A | O | P13 | offen |
 | G-076 | Zweiter Tab ohne Offline-Speicher (Mehr-Tab-Manager) | LERNEN-9 | A | S | P13 | offen |
 | G-077 | Speicherkarten-Liste überschreibt sich auf zwei Geräten (`arrayUnion`/`arrayRemove`) | LERNEN-10, DATEN-14 | A | S | P4 | erledigt (3.17.33) |

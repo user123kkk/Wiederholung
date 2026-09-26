@@ -203,11 +203,13 @@ for (const datei of ["app.js", "sw.js"]) {
 
 if (version) {
   const swJs = lies("sw.js");
-  const shellMatch = swJs.match(/const APP_SHELL = \[([\s\S]*?)\];/);
-  if (!shellMatch) {
-    fehler("sw.js: `const APP_SHELL = [ ... ];` nicht gefunden.");
+  // Seit 3.17.36 (G-068) ist APP_SHELL = KERN.concat(ZUSATZ); beide Listen
+  // werden geprueft, eine alte Einzelliste APP_SHELL = [ ... ] ebenso.
+  const listen = [...swJs.matchAll(/const (?:APP_SHELL|KERN|ZUSATZ) = \[([\s\S]*?)\];/g)];
+  if (!listen.length) {
+    fehler("sw.js: weder `const APP_SHELL = [ ... ];` noch `KERN`/`ZUSATZ` gefunden.");
   } else {
-    const listenText = shellMatch[1];
+    const listenText = listen.map(m => m[1]).join("\n");
     // Zeilenweise durchgehen, Kommentare ab // ignorieren.
     const zeilen = listenText.split("\n");
     for (const rohzeile of zeilen) {
@@ -247,7 +249,51 @@ if (version) {
   }
 }
 
-// ---------- 6. csp-build ----------
+// ---------- 6. Firebase-SDK-Version: app.js vs. modulepreload in index.html ----------
+// G-030 (3.17.36): initFirebase() laedt die drei Bausteine parallel, dafuer
+// startet index.html sie per modulepreload schon beim Parsen vor - beide
+// Stellen muessen dieselbe SDK-Version tragen, sonst preloadet der Browser
+// eine Version, die app.js gar nicht mehr importiert (wirkungslos oder,
+// schlimmer, zwei verschiedene Versionen im Spiel).
+{
+  const appJs = lies("app.js");
+  const versionMatch = appJs.match(/const FIREBASE_SDK_VERSION = "([^"]+)";/);
+  if (!versionMatch) {
+    fehler("app.js: `const FIREBASE_SDK_VERSION = \"X\";` nicht gefunden.");
+  } else {
+    const sdkVersion = versionMatch[1];
+    const indexHtml = lies("index.html");
+    const preloadRegex = /<link rel="modulepreload" href="https:\/\/www\.gstatic\.com\/firebasejs\/([^/]+)\/(firebase-[a-z]+\.js)" crossorigin>/g;
+    const gefunden = [];
+    let m;
+    while ((m = preloadRegex.exec(indexHtml)) !== null) {
+      gefunden.push({ version: m[1], baustein: m[2] });
+    }
+    const erwarteteBausteine = ["firebase-app.js", "firebase-auth.js", "firebase-firestore.js"];
+    const gefundeneBausteine = gefunden.map(g => g.baustein).sort();
+    if (JSON.stringify(gefundeneBausteine) !== JSON.stringify([...erwarteteBausteine].sort())) {
+      fehler(
+        "index.html: modulepreload-Links fuer Firebase sollen genau " +
+        erwarteteBausteine.join(", ") + " sein, gefunden: " +
+        (gefundeneBausteine.join(", ") || "(keine)") + "."
+      );
+    } else {
+      ok("index.html: alle drei Firebase-modulepreload-Links vorhanden (" + gefundeneBausteine.join(", ") + ").");
+    }
+    for (const g of gefunden) {
+      if (g.version === sdkVersion) {
+        ok("index.html: modulepreload " + g.baustein + " Version " + g.version + " stimmt mit app.js überein.");
+      } else {
+        fehler(
+          "index.html: modulepreload " + g.baustein + " hat Version " + g.version +
+          ", app.js FIREBASE_SDK_VERSION ist aber " + sdkVersion + "."
+        );
+      }
+    }
+  }
+}
+
+// ---------- 7. csp-build ----------
 
 {
   let gitVerfuegbar = true;

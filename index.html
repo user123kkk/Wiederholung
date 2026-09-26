@@ -37,6 +37,14 @@
      ohnehin bereits (script-src/connect-src, firebase.json). -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://www.gstatic.com">
+<!-- 3.17.36 (G-030): startet den Abruf der drei Firebase-Bausteine schon
+     waehrend der Browser dieses HTML noch parst - deutlich vor dem
+     dynamischen import() in initFirebase() (app.js, erst nach Laden und
+     Ausfuehren von app.js). Die Version MUSS mit FIREBASE_SDK_VERSION in
+     app.js uebereinstimmen, pruefe_stand.mjs gleicht das ab. -->
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./desktop-icon.png" type="image/png">
 <!-- Safari kann kein SVG als Homescreen-Symbol - ohne PNG blieb das Symbol
@@ -84,7 +92,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png">
 <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png">
 <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png">
-<link rel="stylesheet" href="./styles.css?v=3.17.35">
+<link rel="stylesheet" href="./styles.css?v=3.17.36">
 <script>
 /* 2.20.0: Läuft, BEVOR das erste Bild steht.
 
@@ -169,6 +177,6 @@
      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
      die die App innerhalb der letzten Stunde offen hatten, an der alten
      app.js fest, auch nach einem Reload. -->
-<script type="module" src="./app.js?v=3.17.35"></script>
+<script type="module" src="./app.js?v=3.17.36"></script>
 </body>
 </html>

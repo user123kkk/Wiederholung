@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.35";
+const APP_VERSION = "3.17.36";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1890,6 +1890,14 @@ function sammlungenStarten() {
    jedem weiteren Versuch ist es fuer den Modul-Cache eine neue, ihm
    unbekannte URL, und derselbe Test zeigt dann tatsaechlich einen zweiten
    Request. */
+// 3.17.36 (G-030): Version nur hier, die drei URLs daraus - siehe Kommentar
+// bei initFirebase(). index.html muss dieselbe Version in ihren drei
+// modulepreload-Links tragen (pruefe_stand.mjs prueft das ab).
+const FIREBASE_SDK_VERSION = "10.14.1";
+const FIREBASE_APP_URL = "https://www.gstatic.com/firebasejs/" + FIREBASE_SDK_VERSION + "/firebase-app.js";
+const FIREBASE_AUTH_URL = "https://www.gstatic.com/firebasejs/" + FIREBASE_SDK_VERSION + "/firebase-auth.js";
+const FIREBASE_FS_URL = "https://www.gstatic.com/firebasejs/" + FIREBASE_SDK_VERSION + "/firebase-firestore.js";
+
 async function importMitVersuch(url, versuche, wartenMs) {
   for (let i = 1; i <= versuche; i++) {
     try {
@@ -1902,10 +1910,23 @@ async function importMitVersuch(url, versuche, wartenMs) {
   }
 }
 
+/* 3.17.36 (G-030): Die drei Firebase-Bausteine haben untereinander keine
+   Abhaengigkeit beim Laden (erst initializeApp() unten braucht `appMod`) -
+   nacheinander mit je einem eigenen await war ein reiner Wasserfall, ca.
+   350-400 ms laenger als noetig (gemessen). Mit Promise.all() starten alle
+   drei Abrufe gleichzeitig; jeder behaelt seine eigenen drei Versuche aus
+   importMitVersuch(), ein haengender Baustein blockiert die anderen beiden
+   nicht laenger als bisher. Die SDK-Version steht nur noch hier als
+   Konstante, damit sie nicht an drei Stellen einzeln gepflegt werden muss -
+   index.html braucht sie fuer die modulepreload-Links trotzdem separat
+   (siehe Kommentar dort); pruefe_stand.mjs gleicht beide ab. */
 async function initFirebase() {
-  const { initializeApp } = await importMitVersuch("https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js", 3, 500);
-  const authMod = await importMitVersuch("https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js", 3, 500);
-  const fsMod = await importMitVersuch("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js", 3, 500);
+  const [appMod, authMod, fsMod] = await Promise.all([
+    importMitVersuch(FIREBASE_APP_URL, 3, 500),
+    importMitVersuch(FIREBASE_AUTH_URL, 3, 500),
+    importMitVersuch(FIREBASE_FS_URL, 3, 500)
+  ]);
+  const { initializeApp } = appMod;
   fb = { ...authMod, ...fsMod };
 
   const fbApp = initializeApp(firebaseConfig);

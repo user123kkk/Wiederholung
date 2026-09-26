@@ -1,3 +1,23 @@
+## 3.17.36 – 26. September 2026
+
+**Großplan, Runde 6: schnellerer und sicherer Start.**
+
+- **Start bei schwachem Netz:** Dateien, die ihre Version im Namen tragen
+  (`app.js`, `styles.css`, Firebase, die Quran-Schrift), kommen jetzt sofort
+  aus dem Offline-Speicher, statt bis zu 4 s aufs Netz zu warten. Eine neue
+  Version hat eine neue Adresse und wird deshalb weiter frisch geholt.
+- **Firebase lädt gleichzeitig:** Die drei Bausteine laden nicht mehr
+  nacheinander, und der Browser beginnt schon beim Lesen der Seite damit.
+  Gemessen: vorher rund 610 ms Abstand, jetzt 0–1 ms.
+- **Kein toter Offline-Start nach einem halben Update:** Fehlt beim
+  Vorabspeichern einer neuen Version eine Kerndatei, bleibt die alte Version
+  samt Offline-Speicher, statt gelöscht zu werden.
+- **Android-Symbol:** eigenes Symbol zum Zuschneiden (maskable), damit es
+  randlos statt in einem weißen Kreis erscheint. Zwei ungenutzte Bilder
+  werden nicht mehr vorab gespeichert.
+- **Meldung „Karte gespeichert“ mittig:** Links und rechts ist der Abstand
+  jetzt gleich; vorher war er rechts enger.
+
 ## 3.17.35 – 26. September 2026
 
 **Großplan, Runde 5: Barrierefreiheit – lesbar, erreichbar, vorlesbar.**
