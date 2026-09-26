@@ -10,6 +10,24 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
 ---
 
+### 2026-09-26 — veroeffentlichen.bat, zweiter Anlauf (kein App-Update)
+
+**Anlass:** Betreiber-Screenshot: „Es gibt lokale Aenderungen im Ordner" –
+das ist der Text der ALTEN `.bat`.
+**Ursache:** (1) `git pull` tauschte die laufende `.bat` aus; Windows liest
+Batch-Dateien während des Laufs weiter aus der Datei. (2) Die `.bat` lag als
+einzige Datei mit CRLF im Repo (`git ls-files --eol`: `i/crlf`) – Git für
+Windows meldet so etwas als geändert → Sperre.
+**Geändert:** `veroeffentlichen.bat` (läuft aus `%TEMP%`-Kopie),
+`.gitattributes` neu (`*.bat text eol=crlf`, Repo jetzt `i/lf w/crlf`),
+`LEHREN.md` § 15.
+**Offen:** Gerätetest beim Betreiber: `.bat` zweimal starten (der erste Lauf
+holt die neue Fassung und kann noch einmal falsch abbrechen). Meldet der
+zweite Lauf Dateien: die Liste steht dann im Fenster.
+**Nächster Schritt:** Runde 5 – Paket P12.
+
+---
+
 ### 2026-09-26 — Runde 4: Fortschritt und Lernen-Start (v3.17.34)
 
 **Geändert:** `app.js`: `ui.heuteJeBereich`, `bereichHeuteZaehle()` (~784),

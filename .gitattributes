@@ -1,0 +1,4 @@
+# Batch-Dateien im Repo mit LF, im Arbeitsordner mit CRLF (Windows braucht CRLF).
+# Vorher lag veroeffentlichen.bat mit CRLF im Repo - Git fuer Windows meldete sie
+# dann als "geaendert", und die Sperre "lokale Aenderungen" brach den Deploy ab.
+*.bat text eol=crlf

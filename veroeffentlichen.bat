@@ -1,6 +1,15 @@
 @echo off
+rem 3.17.34: Die Batch-Datei laeuft aus einer Kopie im TEMP-Ordner. Windows
+rem liest eine .bat Zeile fuer Zeile waehrend sie laeuft - tauscht "git pull"
+rem sie unterwegs aus, liefe der Rest aus der neuen Datei an der falschen
+rem Stelle weiter (so geschehen am 26.09.: alte Meldung, falscher Abbruch).
+if not "%~1"=="--aus-temp" (
+  copy /y "%~f0" "%TEMP%\adrabic-veroeffentlichen.bat" >nul
+  call "%TEMP%\adrabic-veroeffentlichen.bat" --aus-temp "%~dp0"
+  exit /b
+)
 setlocal
-cd /d "%~dp0"
+cd /d "%~2"
 
 echo ============================================
 echo   Wiederholung - Update veroeffentlichen
