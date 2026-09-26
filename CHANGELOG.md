@@ -1,3 +1,22 @@
+## 3.17.34 – 26. September 2026
+
+**Großplan, Runde 4: Fortschritt und Lernen-Start zeigen, was stimmt.**
+
+- **Ring und „Heute schon N Antworten“** gehören jetzt zum offenen Bereich.
+  Vorher zeigte ein unberührter zweiter Bereich die Antworten des ersten
+  („Heute schon 30 Antworten“, „Weiterlernen“, Ring fast voll). Mit nur einem
+  Bereich bleibt alles wie bisher.
+- **Kalender in Wochen:** eine Spalte je Woche, eine Zeile je Wochentag, heute
+  unten rechts. Vorher liefen die Kästchen als lange Reihe durch.
+- **„↓ 100 %“ nach einer Pause ist weg.** Statt „0 Antworten“ und rotem Pfeil
+  steht ein ruhiger Satz. Die Zahl heißt jetzt ehrlich „in den letzten 7
+  Tagen“ (so wurde sie schon immer gerechnet), der Vergleich „zu den 7 Tagen
+  davor“.
+- **Lektionen in eigenen Bereichen** zeigen keine Schlösser mehr, die es gar
+  nicht gibt, und fertige Lektionen stehen mit Haken da.
+- Nach einem Bereichswechsel steht auf der Lektionen-Seite keine leere Seite
+  mehr, es geht zurück zur Übersicht.
+
 ## 3.17.33 – 26. September 2026
 
 **Großplan, Runde 3: Suche, Merken, Bereich löschen, Serien-Warnung.**

@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.17.33";
+const CACHE_NAME = "adrabic-3.17.34";
 
 /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
    unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */

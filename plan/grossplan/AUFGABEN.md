@@ -47,10 +47,10 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-020 | Bilder in der Kartenliste sprengen die Zeile, laden alle mit Referer, `http://` bricht | DATEN-5 | A | S | P4 | erledigt (3.17.32) |
 | G-021 | Suche ab ~1400 Karten langsam (Zwischenspeicher zu klein) | DATEN-9 | A | S | P4 | erledigt (3.17.33) |
 | G-022 | Großer Import in Stapeln nacheinander – Abbruch hinterlässt halben Bereich | DATEN-10 | A | O | P3 | offen |
-| G-023 | Ring und „Heute schon N Antworten" zählen fremde Bereiche mit | REST-1 | A | S | P9 | offen |
-| G-024 | Kalender ohne Wochen-Struktur (19 Spalten statt 7 Zeilen) | REST-2 | A | S | P9 | offen |
-| G-025 | Lektionen-Seite zeigt Schlösser in eigenen Bereichen | REST-3 | A | H | P9 | offen |
-| G-026 | „0 Antworten diese Woche ↓ 100 %" nach Pause; „diese Woche" sind 7 rollende Tage | REST-4 | A | S | P9 | offen |
+| G-023 | Ring und „Heute schon N Antworten" zählen fremde Bereiche mit | REST-1 | A | S | P9 | erledigt (3.17.34) |
+| G-024 | Kalender ohne Wochen-Struktur (19 Spalten statt 7 Zeilen) | REST-2 | A | S | P9 | erledigt (3.17.34) |
+| G-025 | Lektionen-Seite zeigt Schlösser in eigenen Bereichen | REST-3 | A | H | P9 | erledigt (3.17.34) |
+| G-026 | „0 Antworten diese Woche ↓ 100 %" nach Pause; „diese Woche" sind 7 rollende Tage | REST-4 | A | S | P9 | erledigt (3.17.34) |
 | G-027 | Kalender-Erinnerung: jede Neueinrichtung legt einen zweiten Termin an; „aus" fehlt | REST-5 | A | S | P10 | offen |
 | G-028 | Offene App erfährt nie von neuer Version | TECHNIK-3 | B | S | – | wartet: E-06 |
 | G-029 | Versionierte Dateien trotzdem „Netz zuerst" – langsamer Start bei schlechtem Netz | TECHNIK-4 | A | S | P11 | offen |
@@ -84,7 +84,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-057 | Ideen mit erfundenem Datum/leerem Titel (Regel + `serverTimestamp`) | REGELN-10 | A | S | P8 | offen |
 | G-058 | Abstimmen scheitert ohne ein Wort → Toast | REGELN-12 | A | H | P8 | offen |
 | G-059 | COOP-Header `same-origin-allow-popups` | REGELN-13 | A | S | – | zurückgestellt: nur mit der nächsten Header-Änderung **und** Google-Gerätetest |
-| G-060 | Leere Lektionen-Seite nach Bereichswechsel | REST-6 | A | H | P9 | offen |
+| G-060 | Leere Lektionen-Seite nach Bereichswechsel | REST-6 | A | H | P9 | erledigt (3.17.34) |
 | G-061 | Meilenstein nennt die Marke statt der echten Zahl | REST-7 | A | H | P9 | offen |
 | G-062 | Segment „neu" im Stoff-Band dunkel unsichtbar | REST-8 | A | H | P9 | offen |
 | G-063 | Trefferflächen unter 44 px (Rückfall-Knöpfe, Hinweis-X, Fehler-Modal-X) | REST-9 | A | H | P12 | offen |

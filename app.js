@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.33";
+const APP_VERSION = "3.17.34";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -781,6 +781,14 @@ function verlaufZaehle(art) {
      wird wie bisher gebuendelt geschrieben. */
   if (ersterHeute) persistVerlauf(); else verlaufSpeichernBald();
 }
+/* 3.17.34 (REST-1): Gegenstueck zu verlaufZaehle, aber je Bereich und nur
+   im Arbeitsspeicher (ui.heuteJeBereich) - siehe Kommentar dort und bei
+   heuteAnteil(). Ein neuer Tag setzt den Zaehler zurueck. */
+function bereichHeuteZaehle(bid, delta) {
+  if (ui.heuteJeBereich.tag !== todayStr()) ui.heuteJeBereich = { tag: todayStr(), n: {} };
+  const n = ui.heuteJeBereich.n;
+  n[bid] = Math.max(0, (n[bid] || 0) + delta);
+}
 /* Wolkenstand und eigenes Protokoll zusammenlegen statt ersetzen: je Tag die
    groessere Zahl, aber nur fuer Tage, die dieses Geraet selbst gezaehlt hat. */
 function verlaufZusammen(lokal, wolke) {
@@ -905,9 +913,10 @@ function verlaufSumme(tage) {
 }
 
 /* Summe einer 7-Tage-Spanne, um "von" Tagen zurück bis ausschließlich
-   "bis". verlaufSummeSpanne(0,7) ist diese Woche, (7,14) die davor - so
-   lassen sich zwei Wochen vergleichen, ohne verlaufSumme() doppelt zu
-   benutzen und die ältere von der jüngeren Hälfte abzuziehen. */
+   "bis". verlaufSummeSpanne(0,7) sind die letzten 7 Tage, (7,14) die 7 Tage
+   davor - rollend, keine Kalenderwoche (3.17.34, REST-4). So lassen sich
+   zwei Zeitraeume vergleichen, ohne verlaufSumme() doppelt zu benutzen und
+   die aeltere von der juengeren Haelfte abzuziehen. */
 function verlaufSummeSpanne(von, bis) {
   let w = 0, nn = 0;
   for (let i = von; i < bis; i++) {
@@ -1477,6 +1486,12 @@ let ui = {
      Steht hier statt in einer eigenen Variablen weiter unten, damit die
      Reihenfolge im Skript keine Rolle spielt. */
   lernFokusNach: null,
+  /* 3.17.34 (REST-1): Tageszaehler je Bereich, nur fuer den Ring/"Heute
+     schon" auf Lernen - das Tagesprotokoll (verlauf) zaehlt alle Bereiche
+     zusammen und kann das nicht hergeben. tag = todayStr() beim letzten
+     Zaehlen, n = { bereichId: Anzahl }. Nur Arbeitsspeicher, siehe
+     heuteAnteil(). */
+  heuteJeBereich: { tag: null, n: {} },
   /* 2.14.1: Die Karten, die man sich in DIESER Runde gemerkt hat. Sie stehen
      absichtlich nicht in ui.session: Wer mitten im Lernen den Tab wechselt,
      beendet damit die Sitzung - der Hinweis am Ende waere dann fuer immer
@@ -4323,6 +4338,8 @@ function selectBereich(bereichId) {
      die Durchsicht sonst auf eine Auswahl, die es hier nicht gibt. */
   ui.lernSetId = null;
   ui.lernLetzte = null;
+  /* 3.17.34 (REST-6): Die Lektionen-Seite gehoert zum Bereich - ohne Lektionen stand dort sonst eine leere Seite. */
+  if (ui.seite === "lektionen" && lektionenVon(bereiche.find(b => b.id === bereichId)).length === 0) ui.seite = null;
   ui.editId = null;
   ui.cardDetailId = null;
   resetFormDraft();
@@ -4948,6 +4965,7 @@ function lernAbhaken(id) {
   card.stufe = 0;
   card.nextReview = todayStr();
   verlaufZaehle("n");
+  bereichHeuteZaehle(currentBereich().id, 1);
   persistCardGrade(currentBereich().id, card.id, {
     stufe: card.stufe, nextReview: card.nextReview,
     ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
@@ -4982,6 +5000,7 @@ function lernRueckgaengig() {
   const vt = l.verlaufTag;
   if (vt && verlauf[vt] && (verlauf[vt].n || 0) > 0) {
     verlauf[vt].n--;
+    bereichHeuteZaehle(currentBereich().id, -1);
     if (vt === todayStr()) persistVerlauf();
   }
   ui.lernLetzte = null;
@@ -5349,6 +5368,7 @@ function gradeCard(kind) {
        danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
        als neu erkennbar. */
     verlaufZaehle(warNeu ? "n" : "w");
+    bereichHeuteZaehle(s.bereichId, 1);
   }
   /* 3.12.0: nur fuer die Anzeige - der Abschluss zeigt, wie die Runde lief,
      und die Karte darf wissen, dass sie neu hereinkommt (renderSession).
@@ -5450,6 +5470,7 @@ function undoLastGrade() {
   const va = s.lastAction.verlaufArt, vt = s.lastAction.verlaufTag;
   if (va && vt && verlauf[vt] && (verlauf[vt][va] || 0) > 0) {
     verlauf[vt][va]--;
+    bereichHeuteZaehle(s.bereichId, -1);
     if (vt === todayStr()) persistVerlauf();
   }
   if (s.zaehler && s.letzteArt && s.zaehler[s.letzteArt] > 0) s.zaehler[s.letzteArt]--;
@@ -9351,14 +9372,26 @@ function lernenGruss() {
     '<h1 class="lernen-gruss__titel">' + esc(gruss) + (name ? ', ' + esc(name) : '') + '</h1></div>';
 }
 
-/* Der Ring: Anteil von heute. getan = Antworten heute (verlauf), offen =
-   was im aktuellen Bereich noch faellig ist. Beides gibt es schon im
-   Fortschritt (fortschrittHeute) - hier dieselbe Rechnung, nur fuer den
-   Bereich, den man gerade lernt. */
-function heuteAnteil(cards) {
+/* Der Ring: Anteil von heute. offen = was im aktuellen Bereich noch faellig
+   ist. getan = Antworten heute IN DIESEM Bereich.
+   3.17.34 (REST-1): Das Tagesprotokoll (verlauf) zaehlt alle Bereiche
+   zusammen - mit mehreren Bereichen zeigte ein frisch geoeffneter, noch
+   unberuehrter Bereich trotzdem die Antworten eines anderen ("Heute schon
+   30 Antworten", Ring fast voll, obwohl hier noch nichts getan wurde).
+   Gibt es hoechstens einen Bereich mit Karten, bleibt die alte, exakte
+   Rechnung aus verlauf (die uebersteht auch ein Neuladen). Sonst zaehlt
+   ui.heuteJeBereich mit - ein Zaehler im Arbeitsspeicher, der nach einem
+   Neuladen bei 0 anfaengt. Das ist gewollt: lieber "Runde starten" als eine
+   Zahl aus einem fremden Bereich zu behaupten. */
+function heuteAnteil(cards, bid) {
   const t = todayStr();
-  const heute = verlauf[t] || { w: 0, n: 0 };
-  const getan = heute.w + heute.n;
+  let getan;
+  if (bereiche.filter(x => x.karten.length > 0).length <= 1) {
+    const heute = verlauf[t] || { w: 0, n: 0 };
+    getan = heute.w + heute.n;
+  } else {
+    getan = (ui.heuteJeBereich.tag === todayStr() && ui.heuteJeBereich.n[bid]) || 0;
+  }
   const offen = cards.filter(c => c.nextReview <= t).length;
   return { getan, offen, anteil: getan + offen > 0 ? getan / (getan + offen) : 1 };
 }
@@ -9369,7 +9402,7 @@ function ringSvg(anteil, klasse) {
 }
 
 function lernenStapel(b, cards, due, neuImStapel) {
-  const h = heuteAnteil(cards);
+  const h = heuteAnteil(cards, b.id);
   let html = "";
   if (due.length === 0) {
     const morgen = vorschau7(cards)[1].anzahl;
@@ -9506,7 +9539,8 @@ function startListe() {
                mit der Woche als Punkten. Bleibt nur dort.
      Heute   - Ring, Zahl und "Runde starten" stehen auf dem Lernen-Tab;
                hier stand dasselbe noch einmal mit "Weiter lernen".
-     Woche   - "52 Antworten diese Woche" + Vergleich
+     Woche   - "52 Antworten in den letzten 7 Tagen" + Vergleich (rollende
+               7-Tage-Summe, keine Kalenderwoche; 3.17.34, REST-4)
      Wochen  - Kalender + "221 Antworten · 25 Karten zum ersten Mal"
    Woche und Wochen sind jetzt EIN Block: oben die eine Zahl mit Richtung,
    darunter das Raster. Die Summe ueber vier Wochen ist weg - sie sagte in
@@ -9532,21 +9566,30 @@ function fortschrittWochen() {
   const zeitraum = verlaufSumme(wochen * 7);
   html += '<div class="stat-block">';
   html += '<h3>Die letzten ' + wochen + ' Wochen</h3>';
-  if (diese.gesamt > 0 || letzte.gesamt > 0) {
+  if (diese.gesamt > 0) {
     /* Die Zahl zaehlt beim Anzeigen von 0 hoch (tickCountups()). */
     html += '<div class="wochen-kopf">';
     html += '<p class="gross-zahl" style="margin:0" data-countup="' + diese.gesamt + '"><strong>0</strong>' +
-      '<span>' + (diese.gesamt === 1 ? 'Antwort' : 'Antworten') + ' diese Woche</span></p>';
-    /* Eine Richtung nur, wenn es etwas zu vergleichen gibt. "Vorwoche war
-       leer" war eine Pille, die nichts sagte. */
+      '<span>' + (diese.gesamt === 1 ? 'Antwort' : 'Antworten') + ' in den letzten 7 Tagen</span></p>';
+    /* Eine Richtung nur, wenn es etwas zu vergleichen gibt. "Die 7 Tage davor
+       waren leer" war eine Pille, die nichts sagte. */
     if (letzte.gesamt > 0) {
       const delta = diese.gesamt - letzte.gesamt;
       const pct = Math.round((delta / letzte.gesamt) * 100);
       const richtung = delta > 0 ? "trend-up" : delta < 0 ? "trend-down" : "trend-flat";
       const pfeil = delta > 0 ? "\u2191" : delta < 0 ? "\u2193" : "\u2192";
-      html += '<span class="trend-pill ' + richtung + '">' + pfeil + ' ' + Math.abs(pct) + ' % zur Vorwoche</span>';
+      html += '<span class="trend-pill ' + richtung + '">' + pfeil + ' ' + Math.abs(pct) + ' % zu den 7 Tagen davor</span>';
     }
     html += '</div>';
+  } else if (letzte.gesamt > 0) {
+    /* 3.17.34 (REST-4): diese.gesamt===0 nach einer Pause zeigte trotzdem
+       "0 Antworten diese Woche" mit einer roten "-100 %"-Pille - eine Zahl,
+       die Stillstand liest (LEHREN 7.1), und eine Pille ohne Aussage, denn
+       "diese Woche" ist ohnehin nur eine rollende 7-Tage-Summe, keine
+       Kalenderwoche (verlaufSumme/verlaufSummeSpanne). Statt Zahl und Pille
+       steht hier derselbe ruhige Satz, an der Stelle, wo sonst der Kopf
+       steht - damit der Kalender darunter nicht springt (LEHREN 6.1). */
+    html += '<p class="stat-sub">In den letzten 7 Tagen noch keine Antwort \u2013 eine Runde reicht f\u00fcr den Anfang.</p>';
   }
   html += renderKalender(wochen * 7);
   /* 3.16.0: Ueben steht als eine leise Zeile darunter - nur, wenn diese
@@ -9652,8 +9695,9 @@ function fortschrittLektionen(nurBereich) {
     for (const st of lekF) {
       const karten = setCards(st);
       const sitzt = lektionSitzt(bF, st);
-      const zu = !offenIds.has(st.id);
-      const dran = aktF && st.id === aktF.id;
+      /* 3.17.34 (REST-3): Schloss und "dran" gibt es nur in gefuehrten Bereichen - eigene sperren nichts. */
+      const zu = istGefuehrt(bF) && !offenIds.has(st.id);
+      const dran = istGefuehrt(bF) && aktF && st.id === aktF.id;
       const fest = karten.filter(c => (c.maxStufe || 0) >= LEKTION_STUFE || istVerbrannt(c)).length;
       const p = karten.length ? Math.round((fest / karten.length) * 100) : 100;
       html += '<div class="lekt-kachel' + (zu ? " zu" : sitzt ? " sitzt" : "") + (dran ? " dran" : "") + '">';

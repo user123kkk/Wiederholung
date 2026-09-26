@@ -5,8 +5,61 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 | | |
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
-| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☐ · A5 ☐ · A6 ☐ |
-| Nächste Runde | 4 (Runde 3 fertig, v3.17.33) |
+| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4) · A5 ☐ · A6 ☐ |
+| Nächste Runde | 5 (Runde 4 fertig, v3.17.34) |
+
+---
+
+### 2026-09-26 — Runde 4: Fortschritt und Lernen-Start (v3.17.34)
+
+**Geändert:** `app.js`: `ui.heuteJeBereich`, `bereichHeuteZaehle()` (~784),
+Aufrufe in `lernAbhaken`/`lernRueckgaengig`/`gradeCard`/`undoLastGrade`,
+`heuteAnteil(cards, bid)` + `lernenStapel` (~9372–9400) · `fortschrittLektionen`
+(`zu`/`dran` nur geführt, ~9686) · `selectBereich` (`ui.seite` Lektionen,
+~4340) · `fortschrittWochen` (Kopf nur bei Antworten, Beschriftung „in den
+letzten 7 Tagen", Pause-Satz, ~9569–9592), Kommentare `verlaufSummeSpanne`
+(~916) und Kopfblock (~9541) · `styles.css` `.kal` (7 Zeilen, spaltenweise,
+`--kal-box`) · Version 3.17.34, `CHANGELOG.md` · Prüfstand: `t_heute_bereich.js`,
+`t_wochen_kopf.js` neu.
+
+**Wer:** G-023, G-024, G-026 Handwerker (Sonnet), G-025, G-060 Hilfskraft
+(Haiku). G-024 (nur `styles.css`) lief parallel zu G-023 (nur `app.js`) –
+erlaubt nach AUFTRAG § 1 (verschiedene Dateien); an `app.js` nie zwei.
+
+**Entscheidung:**
+- G-023: kein neues Cloud-Feld (bräuchte Regel + Deploy). Ein Bereich mit
+  Karten → wie bisher aus dem Protokoll; mehrere → Zähler je Bereich im
+  Arbeitsspeicher, nach Neuladen 0 („Runde starten" statt fremder Zahl).
+- G-026: Rechnung bleibt rollend 7 Tage, Beschriftung ehrlich; Null-Fall als
+  Satz „In den letzten 7 Tagen noch keine Antwort – eine Runde reicht für den
+  Anfang." (Text, keine Lernlogik).
+- G-024: nur CSS; `renderKalender` war schon Mo–So ausgerichtet.
+
+**Abnahme (selbst geprüft):**
+- G-023 `t_heute_bereich.js`: b1 „Heute schon 3 Antworten"/„Weiterlernen",
+  b2 „Runde starten", Ring `--ziel 1.000`; ein Bereich: „Heute schon 5" nach
+  dem Laden. Gegenprobe (Handwerker) rot.
+- G-024: 320/390/1440 px je 7 Zeilen, 4 Spalten, kein Seitenscrollen; Foto
+  Handy angesehen, heute (Sa) letzte Spalte Zeile 6.
+- G-025: eigener Bereich „sitzt 13/13, 15/15", kein `.zu`; geführt
+  unverändert (`zu`, `dran`).
+- G-060: Desktop, Lektionen → Wechsel zu „Quran-Wörter" → Übersicht; mit
+  altem Code leere „Lektionen"-Seite.
+- G-026 `t_wochen_kopf.js` 4/4; Gegenprobe Fall a) rot.
+
+**Prüfstand (TZ=Asia/Tokyo):** `pruefe_stand` grün · `abnahme_runde.js` 13/13 ·
+`t_sprung`, `t_kontrast` (0), `t_a11y`, `t_gross_alle`, `t_fortschritt`,
+`t_lernen_start`, `t_undo_verlauf`, `t_serie`, `t_serie_warnung`,
+`t_merken_zwei`, `t_verwalten` grün · Affe Handy 200: 0, iPad 150: 0.
+
+**Kriterien:** A1 ☐ (35 A-Aufgaben offen) · A2 ☑ · A3 ☑ · A4 ☑ (diese Runde
+komplett) · A5 ☐ · A6 ☐
+
+**Offen:** K11 für 3.17.34 (Veröffentlichen-Knopf). K10 erledigt (Betreiber hat
+die Regeln von `main` eingesetzt, 26.09.). K1–K7, K12, E-01–E-18 unverändert.
+
+**Nächster Schritt:** Runde 5 – Paket P12 (Barrierefreiheit/Kontrast): G-031,
+G-032, G-033, G-063, G-064 (danach G-067, G-086).
 
 ---
 
