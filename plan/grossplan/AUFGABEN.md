@@ -111,6 +111,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-084 | Google-Knopf sagt „anmelden", wo ein Konto angelegt wird | EINSTIEG-13 | A | H | P14 | erledigt (3.17.30) |
 | G-086 | `t_a11y.js` erkennt wartende Animations-Verzögerungen bei „ruhig" nicht (Messlücke, G-043 fiel nur mit eigenem Skript auf) → Prüfung aus `g043/t_g043.js` in `t_a11y.js` übernehmen | Runde 1 | A | S | P12 | offen |
 | G-087 | Weitere Live-Regionen entstehen mit ihrem Text in `render()` (Einstieg-Echos, Sperre, Anmelde-Info, Ideen-Danke, Hinweis, Modus-Wechsel ~ app.js 6162–9966) – vermutlich nicht angesagt wie TECHNIK-8 | Runde 5 (G-033) | A | S | P12 | offen |
+| G-088 | Meldung „Karte gespeichert" innen schief: links 20 px, rechts 12 px (Rest des Rückgängig-Knopfs bis 3.6.13); gemessen 20,8 vs. 12,8 px bis Häkchen bzw. Text | Betreiber 26.09.2026 | A | O | – | erledigt (3.17.36) |
 | G-085 | Search Console: „/" in der Sitemap, aber `noindex` | TECHNIK-17 | B | H | – | wartet: mit Phase 6 (Empfehlung des Prüfers) |
 
 ## D. Wartet auf den Betreiber
