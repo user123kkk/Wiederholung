@@ -91,10 +91,10 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-064 | Zwei `h1` auf Lernen; Kalender/Woche für Bildschirmleser leer | REST-10 | A | H | P12 | erledigt (3.17.35) |
 | G-065 | Zeitfeld im Erinnerungs-Blatt geht beim Neuzeichnen verloren | REST-11 | A | H | P10 | offen |
 | G-066 | Gruß-Datum folgt der Uhr, der Rest dem Lerntag (4 Uhr) | REST-12 | A | H | P9 | offen |
-| G-067 | „Fehler melden": Leer-Fehler als Dialog; Esc löscht den Text | REST-13 | A | H | P12 | offen |
+| G-067 | „Fehler melden": Leer-Fehler als Dialog; Esc löscht den Text | REST-13 | A | H | P12 | erledigt (3.17.37): Feldfehler statt Dialog; Text bleibt beim Schließen UND nach dem Absenden (3.17.14 bleibt – mailto meldet keinen Erfolg) |
 | G-068 | Service Worker: fehlende Kerndatei löscht trotzdem den alten Cache | TECHNIK-11 | A | S | P11 | erledigt (3.17.36) |
 | G-069 | Manifest: getrenntes `maskable`-Symbol, zweites `any` raus | TECHNIK-12 | A | H | P11 | erledigt (3.17.36): `icon-512.png` → `maskable`, `desktop-icon.png` bleibt einziges 512er `any` (rund, für Desktop). Gerätetest Android offen |
-| G-070 | Dauerhaften Speicher anfragen (nur installierte App) | TECHNIK-13 | A | S | P11 | offen |
+| G-070 | Dauerhaften Speicher anfragen (nur installierte App) | TECHNIK-13 | A | S | P11 | erledigt (3.17.37) |
 | G-071 | Workflow: Werkzeugversion festlegen, `trap`, `permissions: read` | TECHNIK-14 | A | H | P1 | erledigt (3.17.30) |
 | G-072 | Zwei tote CSP-Hashes (+ `csp-build` mitzählen) | TECHNIK-16 | A | H | P1 | erledigt (3.17.30) |
 | G-073 | Rechtsseiten: Querverweis Datenschutz → Impressum | TECHNIK-18 | A | H | P1 | erledigt (3.17.30) |
@@ -109,10 +109,10 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-082 | Bestätigungsseite: zwei Endlos-Bewegungen | EINSTIEG-10 | A | H | P14 | offen |
 | G-083 | Hauptknopf im Einstieg auf 0 und Plan 17–35 px versetzt | EINSTIEG-12 | A | S | P14 | offen |
 | G-084 | Google-Knopf sagt „anmelden", wo ein Konto angelegt wird | EINSTIEG-13 | A | H | P14 | erledigt (3.17.30) |
-| G-086 | `t_a11y.js` erkennt wartende Animations-Verzögerungen bei „ruhig" nicht (Messlücke, G-043 fiel nur mit eigenem Skript auf) → Prüfung aus `g043/t_g043.js` in `t_a11y.js` übernehmen | Runde 1 | A | S | P12 | offen |
-| G-087 | Weitere Live-Regionen entstehen mit ihrem Text in `render()` (Einstieg-Echos, Sperre, Anmelde-Info, Ideen-Danke, Hinweis, Modus-Wechsel ~ app.js 6162–9966) – vermutlich nicht angesagt wie TECHNIK-8 | Runde 5 (G-033) | A | S | P12 | offen |
+| G-086 | `t_a11y.js` erkennt wartende Animations-Verzögerungen bei „ruhig" nicht (Messlücke, G-043 fiel nur mit eigenem Skript auf) → Prüfung aus `g043/t_g043.js` in `t_a11y.js` übernehmen | Runde 1 | A | S | P12 | erledigt (Prüfstand, dd81f95) |
+| G-087 | Weitere Live-Regionen entstehen mit ihrem Text in `render()` (Einstieg-Echos, Sperre, Anmelde-Info, Ideen-Danke, Hinweis, Modus-Wechsel ~ app.js 6162–9966) – vermutlich nicht angesagt wie TECHNIK-8 | Runde 5 (G-033) | A | S | P12 | erledigt (3.17.37): `ansagen()`; Hinweis, Anmelde-Info, Ideen-Danke, Übung, Probekarte umgestellt; Einstieg-Echo/-Sperre bleiben (Text wird in ein bestehendes Element geschrieben) |
 | G-088 | Meldung „Karte gespeichert" innen schief: links 20 px, rechts 12 px (Rest des Rückgängig-Knopfs bis 3.6.13); gemessen 20,8 vs. 12,8 px bis Häkchen bzw. Text | Betreiber 26.09.2026 | A | O | – | erledigt (3.17.36) |
-| G-089 | Bei offenem Karten-Blatt verdeckt „Karte gespeichert" den Titel („Neue Kart…"): `.toast-wrap--oben` steht bei `--sat + 16 px`, das hohe Blatt beginnt direkt darunter. Vorschlag: Bestätigung im Blatt-Kopf neben dem Titel (Platz reserviert, kein Sprung), globale Meldung bei offenem Karten-Blatt nur als Ansage | Betreiber-Screenshot 26.09.2026 (iPhone) | A | O | P12 | offen |
+| G-089 | Bei offenem Karten-Blatt verdeckt „Karte gespeichert" den Titel („Neue Kart…"): `.toast-wrap--oben` steht bei `--sat + 16 px`, das hohe Blatt beginnt direkt darunter. Vorschlag: Bestätigung im Blatt-Kopf neben dem Titel (Platz reserviert, kein Sprung), globale Meldung bei offenem Karten-Blatt nur als Ansage | Betreiber-Screenshot 26.09.2026 (iPhone) | A | O | P12 | erledigt (3.17.37) |
 | G-085 | Search Console: „/" in der Sitemap, aber `noindex` | TECHNIK-17 | B | H | – | wartet: mit Phase 6 (Empfehlung des Prüfers) |
 
 ## D. Wartet auf den Betreiber

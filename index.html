@@ -92,7 +92,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png">
 <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png">
 <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png">
-<link rel="stylesheet" href="./styles.css?v=3.17.36">
+<link rel="stylesheet" href="./styles.css?v=3.17.37">
 <script>
 /* 2.20.0: Läuft, BEVOR das erste Bild steht.
 
@@ -154,9 +154,16 @@
            Anmeldung bekannt ist - und die Mail geht ohnehin aus dem eigenen
            Programm raus, der Absender steht also drin. Version und Geraet
            haengt app.js an (sichtbar im Entwurf, vor dem Abschicken). -->
+      <!-- 3.17.37 (G-067): kein "required" mehr - das loeste die native
+           Validierung des Browsers aus (eigene Sprechblase, kein dlgAlert und
+           kein Feldfehler haetten sie je erreicht). Die Pruefung uebernimmt
+           app.js beim Absenden, der Fehler steht am Feld (LEHREN § 6.7), kein
+           Dialog. aria-describedby zeigt immer auf das Fehler-div; solange es
+           "hidden" ist, hat es nichts vorzulesen. -->
       <div class="field">
         <label for="error-description">Was ist passiert?</label>
-        <textarea id="error-description" name="description" required maxlength="5000" placeholder="Was hast du gemacht, und was ist dann passiert?"></textarea>
+        <textarea id="error-description" name="description" maxlength="5000" placeholder="Was hast du gemacht, und was ist dann passiert?" aria-describedby="error-description-fehler"></textarea>
+        <div class="field__fehler" id="error-description-fehler" hidden>Bitte beschreib den Fehler.</div>
       </div>
       <input type="text" name="website" class="error-modal__honeypot" tabindex="-1" autocomplete="off">
       <div class="form-actions">
@@ -177,6 +184,6 @@
      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
      die die App innerhalb der letzten Stunde offen hatten, an der alten
      app.js fest, auch nach einem Reload. -->
-<script type="module" src="./app.js?v=3.17.36"></script>
+<script type="module" src="./app.js?v=3.17.37"></script>
 </body>
 </html>

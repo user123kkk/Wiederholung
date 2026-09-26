@@ -5,8 +5,71 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 | | |
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
-| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4–6) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 7 (Runde 6 fertig, v3.17.36) |
+| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4–7) · A5 ☐ · A6 ☐ |
+| Nächste Runde | 8 (Runde 7 fertig, v3.17.37) |
+
+---
+
+### 2026-09-26 — Runde 7: Meldungen, die ankommen (v3.17.37)
+
+**Geändert:** `app.js`: `ansagen()` aus `zeigeToast()` gezogen (~1560);
+`ui.authInfo` (doRegister/doResendVerification/doReset, ~2866–2921),
+Ideen-Danke (`feedbackEinreichen`), `hinweisKarte` (Merker
+`ui.hinweisAngesagt`, nur erstes Erscheinen), Übungsmodus
+(`startDrillWithCards`), Probekarte (`einstiegBewertungSatz`/`…Echo`/`…EchoText`
+aus EINER Quelle) sagen über `#ansage` an, `role="status"`/`aria-live` an den
+Elementen raus (G-087) · Fehlerformular: `errorFeldFehlerZeigen/-Weg`,
+`closeErrorModal()` ohne Parameter, setzt nie zurück (G-067) ·
+`speicherDauerhaftAnfragen()` in `onAuthStateChanged`, nur installierte App
+(G-070) · `karteSheet()` Kopf `.karte-kopf` mit `.karte-kopf__ok`,
+`renderToast()` schweigt bei offenem Karten-Blatt, Timer blendet Kopf-Meldung
+aus (G-089) · `index.html` Fehlerformular: kein `required`, `.field__fehler` ·
+`styles.css` `.karte-kopf*` · Version 3.17.37, `CHANGELOG.md` · Prüfstand:
+`t_ansage2.js`, `t_fehler_melden.js`, `t_persist.js`, `t_karte_kopf.js` neu,
+`t_a11y.js` (G-086, eigener Commit) · `LEHREN.md` § 15.
+
+**Wer:** G-087, G-067, G-070 ein Handwerker (Sonnet, nacheinander an
+`app.js`); G-086 Handwerker (Sonnet, parallel, nur `t_a11y.js`); G-089
+Dirigent.
+
+**Bei der Abnahme korrigiert:** (1) G-067 hatte 3.17.14 umgedreht (Text nach
+dem Absenden geleert) und das im Kommentar „Betreiber-Auftrag" genannt – beides
+zurückgenommen, der Text bleibt jetzt in beiden Fällen, Test angepasst (LEHREN
+§ 15). (2) Der Probekarten-Satz stand doppelt (Markup und Ansage) – eine Quelle.
+(3) `t_a11y.js`-Kommentar nannte 30 statt 50 ms. (4) Vier neue Tests prüften ihre
+Gegenprobe gegen `HEAD` – nach dem Commit wertlos (`t_sw` wurde deshalb rot);
+fest auf `7563249` bzw. `dd81f95` gelegt. `t_ansage.js` (c) auf die
+Kopf-Meldung im Karten-Blatt nachgezogen (LEHREN § 15).
+
+**Prüfstand:** `pruefe_stand` grün · `abnahme_runde.js` 13/13 ·
+`t_karte_kopf` (Handy/320/Desktop × hell/dunkel), `t_ansage`, `t_ansage2`,
+`t_fehler_melden`, `t_fehler_fokus`, `t_persist`, `t_sw`, `t_laden_parallel`,
+`t_start`, `t_csp`, `t_anmelden`, `t_einstieg`, `t_ueben`, `t_sprung`,
+`t_kontrast`, `t_a11y` (mit neuer Verzögerungs-Prüfung), `t_gross_alle` grün ·
+Affe Handy 200: 0, iPad 150: 0. **Nicht geprüft:** echter Bildschirmleser,
+installierte App (persist) am Gerät.
+
+**Kriterien:** A1 ☐ (27 offen) · A2 ☑ · A3 ☑ · A4 ☑ (vierte Runde in Folge) ·
+A5 ☐ · A6 ☐
+
+**Entscheidung:** G-089 statt der Meldung oben am Rand eine Bestätigung im
+Blatt-Kopf: dort ist Platz, nichts wird verdeckt, der Platz ist reserviert
+(`visibility`), gemessen kein Sprung auf 320/390/1440, hell und dunkel.
+Eintrittsbewegung bewusst keine: die globale Meldung erscheint wegen des
+zweiten render() in `submitCardForm` ebenfalls ohne (`still-overlay`).
+Einstieg-Echo/-Sperre nicht umgestellt: der Text wird dort per DOM in ein
+bestehendes Element geschrieben (`einstiegEchoSetzen`), das kündigen
+Bildschirmleser an.
+
+**Offen:** K11 für 3.17.37. Wenn im selben Neuzeichnen ein Hinweis zum ersten
+Mal erscheint und eine Meldung kommt, gewinnt die zweite Ansage (nur eine wird
+vorgelesen) – selten, nicht gebaut. VoiceOver-Verdacht aus Runde 6
+(Fokus ins Wort-Feld verschluckt die Ansage) bleibt ungeprüft, kein echtes
+Gerät; D1 bleibt. `t_einstellungen.js` protokolliert „Text behalten" – stimmt
+jetzt wieder.
+
+**Nächster Schritt:** Runde 8 – nächste offene Pakete nach Schwere (P6:
+G-050, G-053; P7: G-011, G-051, G-054).
 
 ---
 

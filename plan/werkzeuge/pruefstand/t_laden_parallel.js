@@ -1,3 +1,5 @@
+/* Gegenprobe fest auf Commit 7563249 (Stand vor 3.17.36): gegen HEAD waere sie nach
+   dem Commit der Behebung wertlos - HEAD IST dann die Behebung (LEHREN § 15). */
 /* G-030 (3.17.36): initFirebase() laedt die drei Firebase-Bausteine seit
    dieser Version mit Promise.all() statt nacheinander mit drei einzelnen
    await. Dieser Test verzoegert alle gstatic-Antworten kuenstlich um rund
@@ -138,7 +140,7 @@ async function seiteMitInit(browser, opt) {
   // Stand vor G-030 direkt aus git holen statt eine zweite Kopie im Repo zu
   // pflegen - HEAD ist hier absichtlich der alte, noch nicht committete
   // Wasserfall-Code (diese Aufgabe committet nicht).
-  const altesAppJs = execFileSync('git', ['show', 'HEAD:app.js'], { cwd: WURZEL }).toString();
+  const altesAppJs = execFileSync('git', ['show', '7563249:app.js'], { cwd: WURZEL }).toString();
   const d = await seiteMitInit(b, { ohneModulepreload: true, appJsKoerper: altesAppJs });
   const spanneAlt = spanne(d.start);
   console.log('GEGENPROBE altes app.js, ohne modulepreload: Startzeiten', d.start, '| Spanne', spanneAlt, 'ms',

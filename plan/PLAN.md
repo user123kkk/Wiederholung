@@ -786,7 +786,12 @@ Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRA
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (26.09.2026, nachmittags): v3.17.36 auf `main`; live ist 3.17.35.**
+**AKTUELL (26.09.2026, abends): v3.17.37 auf `main`; live ist 3.17.35.**
+Großplan Runde 7 fertig: G-067, G-070, G-086, G-087, G-089 (Meldungen,
+Fehlerformular, dauerhafter Speicher). Weiter mit Runde 8.
+**Wartet auf Betreiber:** K11 (3.17.36 + 3.17.37), sonst wie unten.
+
+**Davor (26.09.2026, nachmittags): v3.17.36 auf `main`; live ist 3.17.35.**
 Großplan Runde 6 fertig: G-029, G-030, G-068, G-069, G-074 (Start/Service
 Worker) und G-088 (Meldung mittig, Betreiber-Fund). Weiter mit Runde 7
 (P12 + G-070). **Wartet auf Betreiber:** K11 für 3.17.36, Screenshot vom

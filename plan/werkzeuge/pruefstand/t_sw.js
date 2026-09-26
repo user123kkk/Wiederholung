@@ -1,3 +1,5 @@
+/* Gegenprobe fest auf Commit 7563249 (Stand vor 3.17.36): gegen HEAD waere sie nach
+   dem Commit der Behebung wertlos - HEAD IST dann die Behebung (LEHREN § 15). */
 /* G-029/G-068 (TECHNIK-4/TECHNIK-11): Service Worker (sw.js).
    A) unveraenderliche URLs (app.js?v=…, styles.css?v=…, firebase-*.js) sind
       "Cache zuerst" - nach einer Aufwaermrunde loest kein Reload mehr eine
@@ -29,7 +31,7 @@
    neueSeite() aus lib.js zu verwenden.
 
    Gegenprobe (LEHREN § 5.3): A und C laufen zusaetzlich gegen die letzte
-   COMMITTETE sw.js (git show HEAD:sw.js, nur in eine Variable im Speicher
+   COMMITTETE sw.js (git show 7563249:sw.js, nur in eine Variable im Speicher
    gelesen - die Datei im Repo bleibt unangetastet). Dort ist alles "Netz
    zuerst" und jede Datei einzeln mit .catch() - der Test muss dort FEHLER
    melden, sonst waere er nichts wert. */
@@ -47,7 +49,7 @@ const INDEX_ECHT = fs.readFileSync(path.join(REPO, 'index.html'), 'utf8');
 const SW_NEU = fs.readFileSync(path.join(REPO, 'sw.js'), 'utf8'); // die gerade geaenderte Datei
 let SW_ALT = null;
 try {
-  SW_ALT = execSync('git show HEAD:sw.js', { cwd: REPO, encoding: 'utf8' });
+  SW_ALT = execSync('git show 7563249:sw.js', { cwd: REPO, encoding: 'utf8' });
 } catch (e) {
   console.log('Kein Git-HEAD fuer sw.js gefunden - Gegenprobe entfaellt:', e.message);
 }
@@ -211,7 +213,7 @@ async function stationC(b, { versagt, swBasis, marker }) {
   await b.close();
 
   /* Gegenprobe: dieselben Stationen A und C gegen die letzte COMMITTETE
-     sw.js (git show HEAD:sw.js) - dort ist alles "Netz zuerst" und jede
+     sw.js (git show 7563249:sw.js) - dort ist alles "Netz zuerst" und jede
      Datei einzeln mit .catch(). Diese muessen ROT sein, sonst waere der Test
      oben nichts wert (LEHREN § 5.3). Die Gegenprobe zaehlt eigene "ok"-/
      "FEHLER"-Zeilen wie die eigentlichen Pruefungen - ein "ok" bedeutet

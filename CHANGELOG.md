@@ -1,3 +1,22 @@
+## 3.17.37 – 26. September 2026
+
+**Großplan, Runde 7: Meldungen, die ankommen.**
+
+- **„Karte gespeichert" im Blatt-Kopf:** Bei offenem Karten-Blatt steht die
+  Bestätigung rechts neben „Neue Karte", statt als Meldung darüber zu liegen
+  und den Titel zu verdecken.
+- **Für Bildschirmleser:** Hinweise auf Lernen, die Bestätigungen beim
+  Anmelden („Konto angelegt", „E-Mail ist unterwegs"), der Dank im
+  Ideen-Board, der Übungsmodus und die Antwort der Probekarte laufen jetzt
+  über die feste Ansage-Stelle aus 3.17.35. Mit echtem VoiceOver/NVDA nicht
+  geprüft.
+- **„Fehler melden":** Leer abgeschickt steht der Hinweis direkt am Feld statt
+  in einem eigenen Fenster. Schließen per Esc, X oder Zurück löscht den Text
+  nicht mehr.
+- **Offline-Daten bleiben:** Die installierte App bittet den Browser, ihren
+  Speicher nicht zu räumen, wenn das Gerät knapp an Platz ist – sonst könnten
+  offline gelernte, noch nicht gesendete Antworten verloren gehen.
+
 ## 3.17.36 – 26. September 2026
 
 **Großplan, Runde 6: schnellerer und sicherer Start.**

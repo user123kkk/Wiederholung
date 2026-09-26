@@ -8,7 +8,8 @@
    (b) #ansage bleibt ueber mehrere render()-Durchlaeufe (Tab-Wechsel) hinweg
        dasselbe Element (Identitaet per ===) - anders als die sichtbare
        .toast, die render() jedes Mal neu baut.
-   (c) Die sichtbare .toast hat aria-hidden="true" und kein aria-live/role,
+   (c) Die sichtbare Meldung hat aria-hidden="true" und kein aria-live/role
+       (seit 3.17.37, G-089, bei offenem Karten-Blatt .karte-kopf__ok statt .toast),
        damit nichts doppelt angesagt wird.
    (d) keine Seitenfehler. */
 const { start, neueSeite, aktion, GERAETE } = require('./lib');
@@ -27,7 +28,7 @@ const { start, neueSeite, aktion, GERAETE } = require('./lib');
 
   const nachSpeichern = await p.evaluate(() => {
     const ansage = document.getElementById('ansage');
-    const toast = document.querySelector('.toast');
+    const toast = document.querySelector('.toast') || document.querySelector('.karte-kopf__ok--an');
     return {
       ansageText: ansage ? ansage.textContent.trim() : null,
       ansageRolle: ansage ? ansage.getAttribute('role') : null,
@@ -52,8 +53,8 @@ const { start, neueSeite, aktion, GERAETE } = require('./lib');
     'role=' + nachSpeichern.ansageRolle + ' aria-live=' + nachSpeichern.ansageLive);
 
   // (c) sichtbare .toast: aria-hidden, kein aria-live/role.
-  pruef('(c) .toast hat aria-hidden=true', nachSpeichern.toastAriaHidden === 'true', 'aria-hidden=' + nachSpeichern.toastAriaHidden);
-  pruef('(c) .toast ohne role/aria-live', !nachSpeichern.toastRolle && !nachSpeichern.toastLive,
+  pruef('(c) sichtbare Meldung hat aria-hidden=true', nachSpeichern.toastAriaHidden === 'true', 'aria-hidden=' + nachSpeichern.toastAriaHidden);
+  pruef('(c) sichtbare Meldung ohne role/aria-live', !nachSpeichern.toastRolle && !nachSpeichern.toastLive,
     'role=' + nachSpeichern.toastRolle + ' aria-live=' + nachSpeichern.toastLive);
 
   // (b) #ansage bleibt dasselbe Element ueber mehrere render() (Tab-Wechsel).

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.36";
+const APP_VERSION = "3.17.37";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1033,6 +1033,10 @@ let syncError = null;
    ungesendete Aenderungen nur im Arbeitsspeicher, siehe initFirebase). */
 let offline = typeof navigator !== "undefined" && navigator.onLine === false;
 let offlineCacheAktiv = false;
+/* 3.17.37 (G-070): ob navigator.storage.persist() in dieser Sitzung schon
+   angefragt wurde - hoechstens einmal pro Seitenleben, siehe
+   speicherDauerhaftAnfragen(). */
+let speicherAngefragt = false;
 /* Feedback-Board (22.09.2026, plan/feedback-board/AUFTRAG.md): oeffentliche
    Sammlung "feedback", losgeloest vom eigenen Konto wie geteilteLektionen.
    null = noch nicht geladen (Seite wurde noch nicht geoeffnet). */
@@ -1550,6 +1554,12 @@ let ui = {
      abgerissene Verbindung - gehoert in ein Banner, das stehen bleibt, nicht
      in eine Meldung, die von selbst verschwindet. */
   toast: null,
+  /* 3.17.37 (G-087): Welche Namen aus hinweisKarte() in dieser Sitzung schon
+     ueber #ansage vorgelesen wurden. Der Hinweis auf "Lernen" entsteht bei
+     jedem render() neu (Karte bewerten, Reiter wechseln, ...) - ohne diesen
+     Merker wuerde derselbe Satz bei jedem Neuzeichnen erneut angesagt,
+     solange derselbe Hinweis noch steht. */
+  hinweisAngesagt: {},
 };
 
 /* ---------- 3.0.0: Toast ----------
@@ -1557,23 +1567,29 @@ let ui = {
    loest ein render() aus, mehr braucht es nicht - die Meldung steht in ui
    und verschwindet damit von selbst aus dem naechsten Aufbau. */
 let toastTimer = null;
+/* 3.17.35 (TECHNIK-8), aus zeigeToast() herausgezogen in 3.17.37 (G-087):
+   #ansage liegt ausserhalb von #app und bleibt bei jedem render() dasselbe
+   Element - anders als Elemente, die render() jedes Mal neu erzeugt (z. B.
+   die sichtbare .toast). Erst leeren, dann im naechsten Bild den Text
+   setzen: nur der Wechsel loest die Ansage aus, so meldet der Bildschirmleser
+   auch zwei gleiche Meldungen hintereinander (z. B. zwei "Gespeichert" kurz
+   nacheinander). Fehlt #ansage (andere Seite), nichts tun. Jede Stelle, die
+   eine Live-Region zusammen mit ihrem Text neu ins DOM einfuegt (render()
+   ersetzt #app komplett), meldet ihren Text stattdessen hierueber - sonst
+   kuendigen viele Bildschirmleser (VoiceOver, NVDA) die Aenderung nicht an. */
+function ansagen(text) {
+  const ansage = document.getElementById("ansage");
+  if (!ansage) return;
+  ansage.textContent = "";
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      ansage.textContent = text;
+    });
+  });
+}
 function zeigeToast(text) {
   ui.toast = { text: text };
-  /* 3.17.35 (TECHNIK-8): #ansage liegt ausserhalb von #app und bleibt bei
-     jedem render() dasselbe Element - anders als die sichtbare .toast, die
-     render() jedes Mal neu erzeugt. Erst leeren, dann im naechsten Bild den
-     Text setzen: nur der Wechsel loest die Ansage aus, so meldet der
-     Bildschirmleser auch zwei gleiche Meldungen hintereinander (z. B. zwei
-     "Gespeichert" kurz nacheinander). Fehlt #ansage (andere Seite), nichts tun. */
-  const ansage = document.getElementById("ansage");
-  if (ansage) {
-    ansage.textContent = "";
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        ansage.textContent = text;
-      });
-    });
-  }
+  ansagen(text);
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     toastTimer = null;
@@ -1583,12 +1599,17 @@ function zeigeToast(text) {
        dabei die Tastatur zu). Die Meldung wird direkt aus dem Bild genommen. */
     const el = app.querySelector(".toast-wrap");
     if (el) el.remove();
+    const ok = app.querySelector(".karte-kopf__ok");     // 3.17.37 (G-089)
+    if (ok) ok.classList.remove("karte-kopf__ok--an");
     letzterOverlaySchluessel = null;
   }, 2600);
   render();
 }
 function renderToast() {
   if (!ui.toast) return "";
+  /* 3.17.37 (G-089): bei offenem Karten-Blatt steht die Bestaetigung im Kopf
+     des Blatts (karteSheet), nicht hier. Dieselbe Bedingung wie dort. */
+  if ((ui.karteSheet || ui.editId) && !istGefuehrt(currentBereich())) return "";
   /* Bei offenem Blatt steht die Meldung oben - unten lag sie auf dem Formular
      und fing die Taps darauf ab. */
   const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId ||
@@ -1941,8 +1962,29 @@ async function initFirebase() {
     db = fb.getFirestore(fbApp); // Fallback ohne Offline-Cache
   }
 
+  /* 3.17.37 (G-070): Ungesendete Schreibvorgaenge liegen im dauerhaften
+     Firestore-Cache (IndexedDB, siehe offlineCacheAktiv oben). Ohne
+     navigator.storage.persist() darf der Browser diesen Speicher bei
+     knappem Platz raeumen - dann waeren offline gemachte Aenderungen weg,
+     bevor sie je gesendet wurden. Nur in der INSTALLIERTEN App anfragen
+     (display-mode: standalone bzw. iOS' navigator.standalone): Im normalen
+     Tab zeigt z.B. Firefox dafuer einen eigenen, fuer die meisten
+     ueberraschenden Dialog - den bekommt nur zu sehen, wer die App bewusst
+     installiert hat. Hoechstens einmal pro Seitenleben (speicherAngefragt),
+     Fehler werden verschluckt: Es ist eine Bitte an den Browser, kein
+     Vorgang, der der Person angezeigt werden muesste. */
+  function speicherDauerhaftAnfragen() {
+    if (speicherAngefragt) return;
+    speicherAngefragt = true;
+    const installiert = (typeof matchMedia === "function" && matchMedia("(display-mode: standalone)").matches) ||
+      navigator.standalone === true;
+    if (!installiert) return;
+    try { navigator.storage?.persist?.().catch(() => {}); } catch (e) {}
+  }
+
   fb.onAuthStateChanged(auth, user => {
     currentUser = user;
+    if (user) speicherDauerhaftAnfragen();
     listenerLoesen();
     bereiche = null;
     rohBereiche = null;
@@ -2827,6 +2869,10 @@ async function doRegister() {
   }
   ui.authBusy = false;
   render();
+  /* 3.17.37 (G-087): ui.authInfo entsteht als Live-Region zusammen mit
+     render() neu (§ role="status" oben entfernt) - #ansage sagt denselben
+     Text an, sonst hoert ein Bildschirmleser hier nichts. */
+  if (ui.authInfo) ansagen(ui.authInfo);
 }
 /* 2.11.4: Wer den Link angeklickt hat, sass hier sonst fest, bis er die Seite
    von sich aus neu lud. reload() holt den Kontostand vom Server, getIdToken
@@ -2864,6 +2910,8 @@ async function doResendVerification() {
   }
   ui.authBusy = false;
   render();
+  /* 3.17.37 (G-087): siehe doRegister(). */
+  if (ui.authInfo) ansagen(ui.authInfo);
 }
 async function doReset() {
   const email = val("a-email").trim();
@@ -2876,6 +2924,8 @@ async function doReset() {
   }
   ui.authBusy = false;
   render();
+  /* 3.17.37 (G-087): siehe doRegister(). */
+  if (ui.authInfo) ansagen(ui.authInfo);
 }
 /* 3.12.0: Abmelden fragt nach. Betreiber am 24.09.2026: "wen man sich
    abmelden will oder loeschen und sowas risko bitte nicht so einfach zu
@@ -4926,6 +4976,11 @@ function startDrillWithCards(cards, label, handwriting) {
   ui.seite = null;
   ui.tab = "lernen";
   render();
+  /* 3.17.37 (G-087): der Kopfstreifen "Übung – zählt nicht als Wiederholung"
+     entsteht mit render() zusammen (role="status" oben entfernt) - #ansage
+     sagt ihn an. Nur auf der ersten Karte sichtbar, also hier am
+     Rundenstart, nicht bei jedem weiteren render() der Runde. */
+  ansagen("Übung – zählt nicht als Wiederholung");
 }
 
 /* ---------- 2.4.0: der Modus „Lernen" ----------
@@ -6206,17 +6261,23 @@ function einstiegHuerdeZeile(hd, aktiv, n) {
    'dann kommt sie morgen wieder- und jedes mal…'". Was danach kam, erklaerte
    die wachsenden Abstaende noch einmal in Worten - obwohl direkt darunter die
    Leiste steht, die genau das ZEIGT. Der Satz ist weg, die Leiste bleibt. */
+/* 3.17.37 (G-087): die Saetze an EINER Stelle - einstiegBewertungEcho()
+   baut daraus das Markup, #ansage bekommt sie als reinen Text (Klick-Zweig
+   "einstieg-bewerten"). Die Leiste bei "Sicher" hat ihr eigenes
+   role="img"/aria-label (einstiegLeiste) und gehoert nicht in die Ansage. */
+const EINSTIEG_ECHO_NACHSATZ = "So macht Adrabic es mit jeder deiner Karten.";
+function einstiegBewertungSatz(b) {
+  return b === "Sicher" ? "Dann kommt sie morgen wieder. Danach immer seltener."
+    : b === "Fast" ? "Dann kommt sie morgen noch einmal."
+    : "Dann kommt sie in dieser Runde gleich noch einmal.";
+}
 function einstiegBewertungEcho(b) {
-  let h;
-  if (b === "Sicher") {
-    h = '<p class="einstieg-echo">Dann kommt sie morgen wieder. Danach immer seltener.</p>' +
-      einstiegLeiste(false);
-  } else if (b === "Fast") {
-    h = '<p class="einstieg-echo">Dann kommt sie morgen noch einmal.</p>';
-  } else {
-    h = '<p class="einstieg-echo">Dann kommt sie in dieser Runde gleich noch einmal.</p>';
-  }
-  return h + '<p class="hint einstieg-nachsatz">So macht Adrabic es mit jeder deiner Karten.</p>';
+  return '<p class="einstieg-echo">' + einstiegBewertungSatz(b) + '</p>' +
+    (b === "Sicher" ? einstiegLeiste(false) : "") +
+    '<p class="hint einstieg-nachsatz">' + EINSTIEG_ECHO_NACHSATZ + '</p>';
+}
+function einstiegBewertungEchoText(b) {
+  return einstiegBewertungSatz(b) + " " + EINSTIEG_ECHO_NACHSATZ;
 }
 function einstiegFreiFeld() {
   return '<div class="field einstieg-frei">' +
@@ -6506,7 +6567,11 @@ function renderEinstieg() {
           '<button class="secondary" style="--n:' + n + '" data-action="einstieg-bewerten" data-id="' + esc(l) + '">' + l + '</button>').join("");
         html += '</div>';
       } else {
-        html += '<div class="einstieg-antwort" aria-live="polite">' + einstiegBewertungEcho(e.bewertet) + '</div>';
+        /* 3.17.37 (G-087): aria-live entfernt - dieser Block entsteht mit
+           seinem Text zusammen ueber render() (Klick-Zweig "einstieg-
+           bewerten"), das wird von vielen Bildschirmlesern nicht angesagt.
+           #ansage uebernimmt es dort. */
+        html += '<div class="einstieg-antwort">' + einstiegBewertungEcho(e.bewertet) + '</div>';
         html += einstiegFuss("Weiter");
       }
     }
@@ -7023,7 +7088,11 @@ function renderPendingVerification() {
   html += '</div>';
   if (ui.authError) html += '<div class="error-box auth-meldung" role="alert">' + ikon("warnung", "i-sm") +
     '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
-  if (ui.authInfo) html += '<div class="info-box auth-meldung" role="status">' + ikon("haken", "i-sm") +
+  /* 3.17.37 (G-087): role="status" entfernt - dieser Kasten entsteht mit
+     seinem Text zusammen neu (render() ersetzt #app), das wird oft nicht
+     vorgelesen. Die Stelle, die ui.authInfo setzt, sagt denselben Text ueber
+     #ansage an (doRegister/doResendVerification/doReset). */
+  if (ui.authInfo) html += '<div class="info-box auth-meldung">' + ikon("haken", "i-sm") +
     '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
   html += '</div></div>';
   app.innerHTML = html;
@@ -7147,7 +7216,8 @@ function renderAuth() {
      wo man hinsieht, und nichts bewegt sich. */
   if (ui.authError) html += '<div class="error-box auth-meldung" role="alert">' + ikon("warnung", "i-sm") +
     '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
-  if (ui.authInfo) html += '<div class="info-box auth-meldung" role="status">' + ikon("haken", "i-sm") +
+  /* 3.17.37 (G-087): role="status" entfernt, siehe renderVerification(). */
+  if (ui.authInfo) html += '<div class="info-box auth-meldung">' + ikon("haken", "i-sm") +
     '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
 
   /* Offene Frage 13: Google/Apple als zusaetzliche Anmeldearten, nur dort
@@ -7495,7 +7565,14 @@ function karteSheet() {
   const fehler = ui.karteFeldFehler || {};
   let html = '<div class="dlg-backdrop" data-action="nichts" role="presentation">';
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="karte-sheet-titel">';
-  html += '<h3 id="karte-sheet-titel">' + (editing ? "Karte bearbeiten" : "Neue Karte") + '</h3>';
+  /* 3.17.37 (G-089, Betreiber-Screenshot 26.09.2026): Die Bestaetigung steht
+     im Kopf neben dem Titel. Als Meldung oben am Rand lag sie ueber "Neue
+     Karte" - das hohe Blatt beginnt direkt darunter. Das Element steht
+     immer da und wird nur sichtbar geschaltet: kein Sprung. Vorgelesen wird
+     ueber #ansage (zeigeToast), deshalb aria-hidden. */
+  html += '<div class="karte-kopf"><h3 id="karte-sheet-titel">' + (editing ? "Karte bearbeiten" : "Neue Karte") + '</h3>' +
+    '<span class="karte-kopf__ok' + (ui.toast ? ' karte-kopf__ok--an' : '') + '" aria-hidden="true">' + ikon("fertig", "i-sm") +
+    '<span>' + (ui.toast ? esc(ui.toast.text) : '') + '</span></span></div>';
   /* 3.16.0: Pflicht ist der Normalfall und braucht kein Etikett - markiert
      wird nur, was man weglassen darf (so machen es die meisten Formulare).
      Vorher stand "– Pflicht" an zwei von drei Feldern. */
@@ -8710,7 +8787,10 @@ function renderFeedbackSeite() {
   }
   html += '</div>';
   if (feedbackDanke) {
-    html += '<div class="banner-info ideen-danke" role="status">' + ikon("haken", "i-sm") +
+    /* 3.17.37 (G-087): role="status" entfernt - der Kasten entsteht mit
+       seinem Text zusammen neu, feedbackEinreichen() sagt denselben Text
+       ueber #ansage an. */
+    html += '<div class="banner-info ideen-danke">' + ikon("haken", "i-sm") +
       '<div class="banner__text">Danke! Deine Idee steht jetzt in der Liste.</div></div>';
   }
   html += '<div id="ideen-inhalt">' + feedbackInhalt() + '</div>';
@@ -8900,6 +8980,9 @@ async function feedbackEinreichen() {
     feedbackEinreichtWird = false;
     fuehlbar([8, 40, 12]);
     render();
+    /* 3.17.37 (G-087): der Dank-Kasten entsteht mit render() zusammen mit
+       seinem Text neu (role="status" oben entfernt) - #ansage sagt ihn an. */
+    ansagen("Danke! Deine Idee steht jetzt in der Liste.");
     if (!feedbackListe) await feedbackLaden();
   } catch (e) {
     feedbackEinreichtWird = false;
@@ -9303,7 +9386,18 @@ function lernenHinweis() {
   return "";
 }
 function hinweisKarte(name, icon, text, knopf, wegtippbar) {
-  let h = '<div class="hinweis hinweis--' + name + '" role="status">';
+  /* 3.17.37 (G-087): role/aria-live entfernt - dieser Hinweis entsteht bei
+     jedem render() zusammen mit seinem Text neu (#app wird ersetzt), eine
+     frisch eingefuegte Live-Region wird von vielen Bildschirmlesern nicht
+     angesagt. #ansage uebernimmt es, aber nur beim ERSTEN Erscheinen dieses
+     Hinweises in der Sitzung (hinweisAngesagt) - sonst wuerde jedes erneute
+     Zeichnen (z. B. eine bewertete Karte) denselben Satz noch einmal
+     vorlesen, solange derselbe Hinweis stehen bleibt. */
+  if (!ui.hinweisAngesagt[name]) {
+    ui.hinweisAngesagt[name] = true;
+    ansagen(text.replace(/<[^>]+>/g, ""));
+  }
+  let h = '<div class="hinweis hinweis--' + name + '">';
   h += '<span class="hinweis__icon" aria-hidden="true">' + ikon(icon, "i-sm") + '</span>';
   h += '<div class="hinweis__text">' + text + '</div>';
   if (knopf || wegtippbar) {
@@ -10003,7 +10097,10 @@ function renderSession() {
          ist, und blendet dann in den Stand ueber (styles.css,
          .mitte-wechsel). Kein eigener Streifen, also kein Platz, der auf
          der zweiten Karte fehlt oder frei wird. */
-      ? '<span class="mitte-wechsel"><span class="mitte-wechsel__a" role="status">\u00dcbung \u2013 z\u00e4hlt nicht als Wiederholung</span>' +
+      /* 3.17.37 (G-087): role="status" entfernt - dieser Streifen entsteht
+         beim Rundenstart mit seinem Text zusammen ueber render()
+         (startDrillWithCards() sagt denselben Text ueber #ansage an). */
+      ? '<span class="mitte-wechsel"><span class="mitte-wechsel__a">\u00dcbung \u2013 z\u00e4hlt nicht als Wiederholung</span>' +
         '<span class="mitte-wechsel__b">Karte 1 von ' + gesamt + '</span></span>'
       : "Karte " + Math.min(fertig + 1, gesamt) + " von " + gesamt,
     anteil: anteilJetzt,
@@ -12046,14 +12143,38 @@ function openErrorModal() {
   }
 }
 
-function closeErrorModal(textBehalten) {
+/* 3.17.37 (G-067): der Feldfehler am Textfeld, statt eines dlgAlert() (LEHREN
+   § 6.7: Fehler stehen am Feld, nicht im Dialog). Zwei kleine Funktionen statt
+   eigener render()-Anbindung, weil das Modal ausserhalb von #app liegt und
+   NICHT von render() neu gebaut wird. */
+function errorFeldFehlerZeigen() {
+  const textarea = document.getElementById("error-description");
+  const fehler = document.getElementById("error-description-fehler");
+  if (!textarea) return;
+  textarea.setAttribute("aria-invalid", "true");
+  if (fehler) fehler.hidden = false;
+  textarea.focus();
+}
+function errorFeldFehlerWeg() {
+  const textarea = document.getElementById("error-description");
+  const fehler = document.getElementById("error-description-fehler");
+  if (textarea) textarea.removeAttribute("aria-invalid");
+  if (fehler) fehler.hidden = true;
+}
+
+/* 3.17.37 (G-067, Befund REST-13): Der Entwurf bleibt beim Schliessen
+   erhalten - auch per Esc/X/Zurueck (vorher leerte ein versehentliches Esc
+   eine lange Beschreibung). Nach dem Absenden bleibt er ebenfalls (3.17.14):
+   ob sich wirklich ein Mailprogramm oeffnet, laesst sich aus der Seite nicht
+   feststellen. Leer wird das Feld erst mit dem Neuladen der Seite. */
+function closeErrorModal() {
   const modal = document.getElementById("errorModal");
   if (modal) {
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
   }
   const form = document.getElementById("errorForm");
-  if (form && !textBehalten) form.reset();
+  if (form) errorFeldFehlerWeg();
   /* 3.17.35 (TECHNIK-7): #app wieder freigeben und den Fokus zum Oeffner
      zurueckgeben - bisher blieb er nach Escape wie nach dem X-Knopf auf
      body stehen (Befund TECHNIK-7), wie bei jedem anderen Blatt (Beobachtung
@@ -12073,6 +12194,12 @@ function closeErrorModal(textBehalten) {
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("errorForm");
   if (!form) return;
+  const textarea = document.getElementById("error-description");
+  /* 3.17.37 (G-067): Fehler verschwindet, sobald wieder getippt wird - wie
+     beim Karten- und beim Ideen-Formular (formDraft/feedbackFormFehler). */
+  if (textarea) textarea.addEventListener("input", () => {
+    if (textarea.value.trim()) errorFeldFehlerWeg();
+  });
   form.addEventListener("submit", e => {
     e.preventDefault();
 
@@ -12081,8 +12208,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const description = document.getElementById("error-description").value.trim();
 
+    /* 3.17.37 (G-067): kein dlgAlert() mehr (LEHREN § 6.7: Fehler stehen am
+       Feld, nicht im Dialog) - der Fehler steht jetzt direkt am Textfeld. */
     if (!description) {
-      dlgAlert("Bitte beschreib den Fehler.");
+      errorFeldFehlerZeigen();
       return;
     }
 
@@ -12098,9 +12227,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "mailto:" +
       String.fromCharCode(97,100,114,97,98,105,99,46,100,101,64,103,109,97,105,108,46,99,111,109) +
       "?subject=" + subject + "&body=" + body;
-    /* 3.17.14: Text NICHT leeren - oeffnet sich kein Mail-Programm (am PC
-       oft), waere er sonst weg. */
-    closeErrorModal(true);
+    /* 3.17.14: Text NICHT leeren - oeffnet sich kein Mailprogramm (am PC
+       haeufig), waere die Beschreibung sonst weg. */
+    closeErrorModal();
   });
 });
 
@@ -12288,7 +12417,12 @@ document.body.addEventListener("click", e => {
        Lernlogik nicht (Pruefung P5). Sie zeigt, was die App mit dieser
        Antwort bei einer echten Karte tun wuerde. */
     case "einstieg-bewerten":
-      if (ui.einstieg) { ui.einstieg.bewertet = btn.dataset.id || "Fast"; render(); }
+      if (ui.einstieg) {
+        ui.einstieg.bewertet = btn.dataset.id || "Fast";
+        render();
+        /* 3.17.37 (G-087): siehe .einstieg-antwort oben. */
+        ansagen(einstiegBewertungEchoText(ui.einstieg.bewertet));
+      }
       break;
     /* 3.9.11: NICHT neu zeichnen. render() ersetzt den kompletten Inhalt von
        #app - die Probe waere ein neues Element, und auf frisch eingefuegten

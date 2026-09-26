@@ -3343,6 +3343,17 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   margin: calc(var(--space-3) * -1) auto var(--space-5);
 }
 .dlg h3 { font-size: var(--fs-lg); margin-bottom: var(--space-2); }
+/* 3.17.37 (G-089): Kopf des Karten-Blatts mit Platz fuer "Karte gespeichert"
+   rechts vom Titel. visibility statt display: die Zeile bleibt gleich hoch. */
+.karte-kopf { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2); min-width: 0; }
+.karte-kopf h3 { margin-bottom: 0; flex: 0 1 auto; min-width: 0; }
+.karte-kopf__ok {
+  margin-left: auto; flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-size: var(--fs-sm); font-weight: 500; color: var(--text-2);
+  white-space: nowrap; visibility: hidden;
+}
+.karte-kopf__ok--an { visibility: visible; }
 .dlg .dlg-text {
   color: var(--text-2); font-size: var(--fs-sm); line-height: 1.55;
   white-space: pre-wrap; word-break: break-word;
