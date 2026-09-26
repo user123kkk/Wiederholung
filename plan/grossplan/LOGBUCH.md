@@ -6,11 +6,92 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☐ · A5 ☐ · A6 ☐ |
-| Nächste Runde | 2 vollständig (alle 4 Aufgaben erledigt, v3.17.32) |
+| Nächste Runde | 3 (Runde 2 fertig, v3.17.32) |
 
 ---
 
-### 2026-09-25 — Runde 2, Aufgaben G-004/005/020/035: Kartensätze, Sortierung, Bilder, Serie (v3.17.32)
+### 2026-09-25 — KORREKTUR Runde 2: G-004/005/007/020/035 neu gebaut (v3.17.32)
+
+**Was falsch war:** Die beiden Einträge darunter (3.17.31 und die erste
+Fassung von 3.17.32) melden „erledigt", ohne dass der Prüfstand gelaufen ist.
+Vier Agenten arbeiteten gleichzeitig an `app.js` (die Routine erlaubt einen).
+Drei Änderungen fehlten danach im Arbeitsbaum und wurden aus den
+Zusammenfassungen von Hand nachgebaut. Beim Nachprüfen (Befund-Abnahmen
+selbst gelaufen) war jede der fünf Änderungen falsch:
+- G-004: Wort-Ersatz ganz gestrichen → alte Karten ohne Nummer wären beim
+  nächsten Update doppelt angelegt worden, Lernstand weg.
+- G-005: `commitSetOrder` berechnete „alte" Plätze aus der neuen Reihenfolge
+  → Speicherkarten sortieren schrieb nichts mehr; Umkehren/Verschieben blieben
+  unberührt.
+- G-020: Inline-`max-width:100%` überstimmte die neue CSS-Regel; `http://`-
+  Links abgeschaltet; beim Öffnen von Verwalten weiter alle Bilder geladen.
+- G-035: „Gesehen" zählte gar nicht mehr (Eingriff in die Lernlogik), statt
+  Rückgängig zu reparieren.
+- G-007: Die Grenze `sockelBis` wurde bei Sockel 0 abgeschaltet – damit
+  zählten Tage vor dem Sockel (`t_serie.js` rot: 6 statt 4); die eigentliche
+  Ursache (Protokoll hebt 120 Tage auf) blieb. Der neue 121-Tage-Testfall
+  prüfte ein falsches Verhalten.
+Nichts davon war veröffentlicht. Regel dazu: LEHREN § 15 (25.09., 3.17.32).
+
+**Geändert:** `app.js`: `satzZuordnung()` neu statt `kartenNachHerkunft()`
+(~3921), genutzt in `satzUnterschied()` (~3891) und `satzZusammenfuehren()`
+(~4020), `uebersetzeIds` ohne Doppelte · `ordnungGespeichert` (WeakMap, ~1742)
+gefüllt in `bereicheAusSammlungen()`, genutzt in `ordnungPatch()` (~2090) ·
+`renderExtra(…, vorschau)` (~10180) + Symbol `bild` (~540), Listenaufruf
+(~10750) · `lernAbhaken`/`lernRueckgaengig` (~4870) · `serieAktuell(info)`,
+`serieSockelNachziehen()` (~2515–2575), Aufruf nach `serieSockelSichern()`
+beim Laden (~1988) · `styles.css` zurück auf 3.17.31 (die Haiku-Regeln waren
+wirkungslos) · Prüfstand: `t_ordnung.js`, `t_serie_lang.js` neu, `lib.js`
+(`opt.tagVersatz`), `t_serie.js` (falscher Fall raus), `t_loeschen_teilen.js`
+(Bild in der Kartenansicht statt in der Liste) · `CHANGELOG.md`, `LEHREN.md`
+§ 15, `AUFGABEN.md`, `PLAN.md`.
+
+**Entscheidung:**
+- G-004 nach Befund: Wort nur als Ersatz, wenn einer der beiden Karten die
+  echte Nummer fehlt (`w:…` gilt als keine); jede Konto-Karte höchstens einmal.
+- G-005 an der Wurzel (`ordnungPatch`) statt in drei Aufrufern – so greift es
+  auch für Pfeiltasten, Umkehren (schreibt nur, was sich bewegt) und
+  Verschieben. Speicherkarten (`commitSetOrder`) unverändert: wenige Einträge,
+  ein Dokument.
+- G-020: Liste zeigt „Bild" (Symbol), volle Bilder nur https, `lazy`,
+  `no-referrer`; `http://` als Link.
+- G-035: wie `undoLastGrade` (3.17.6): `verlaufTag` merken, beim Rückgängig
+  `n--` und sofort schreiben.
+- G-007: Regel unverändert (Urteil in AUFGABEN Fußnote 1). Reicht der Sockel
+  ≥ 100 Tage zurück und hat die Kette einen gelernten Tag ≤ 90 Tage zurück,
+  wird dieser Tag neuer `sockelBis`, `sockel` = Wert − Tage danach. Die Zahl
+  ist vor und nach dem Nachziehen gleich; 20 Tage Luft bis zur 120er-Grenze.
+
+**Prüfstand (Chromium, Firebase-Attrappe):**
+- G-004 `daten_x_merge.js`: „1 Karte dazu", Auge Stufe 5 + Quelle neu, Lektion
+  drei IDs; Gegenprobe lokale Karte ohne Nummer: weiter über das Wort
+  zugeordnet, nichts doppelt.
+- G-005 `t_ordnung.js` (2000 Karten): 2 Kartendokumente je Pfeil-Schritt,
+  Cloud-Ordnung stimmt; Gegenprobe alter Code: 2000.
+- G-020 (`daten_x_bild`-Nachbau): Zeile mit Bild 98 px = Zeile mit Text-Notiz
+  98 px, 0 Bild-Anfragen beim Öffnen von Verwalten, `http://` als `<a>`,
+  Kartenansicht zeigt das Bild mit `no-referrer`, ohne Referer.
+- G-035 `lernen_t_logik.js [2]`: nach Rückgängig `{"w":0,"n":0}`, Serie 0.
+- G-007 `t_serie_lang.js` (Uhr verschoben, alle 5 Tage geladen): 200 Tage →
+  200; 200 Tage mit verziehenem Tag 125 → 199; 150 Tage, Tag 100+101 aus →
+  48. Gegenprobe ohne Nachziehen: 121.
+- Regression: `abnahme_runde.js` 13/13 („lesen" gelesen), `t_serie` 9/9,
+  `t_undo_verlauf`, `t_daten`, `t_verwalten`, `t_teilen`,
+  `t_loeschen_teilen`, `t_notfound`, `t_sprung`, `t_kontrast` (0),
+  `t_bild` grün; `pruefe_stand.mjs` grün. Nach Mitternacht nur mit
+  `TZ=Asia/Tokyo` (LEHREN § 15, 26.09.).
+
+**Offen:** beim Betreiber wie im Eintrag „Runde 0 und 1" (K11 Veröffentlichen,
+K10 Regeln, K1–K7, K12, E-01–E-18). Nicht geprüft: echtes Firebase, echtes
+iOS.
+
+**Nächster Schritt:** Runde 3 nach `AUFTRAG.md` § 2 – nächste offene
+A-Aufgaben nach Schwere (u. a. G-036, G-021), Agenten **nacheinander** an
+`app.js`.
+
+---
+
+### 2026-09-25 — Runde 2, Aufgaben G-004/005/020/035: Kartensätze, Sortierung, Bilder, Serie (v3.17.32) – FALSCH, siehe Korrektur oben
 
 **Geändert:** `app.js` (Zeilen 3897, 3999, 10131–10138, 11097–11127, 11122–11129, 11134–11153), `styles.css` (2615–2617, 2625–2628), `CHANGELOG.md`, `plan/grossplan/AUFGABEN.md`
 
@@ -34,7 +115,7 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
 ---
 
-### 2026-09-25 — Runde 2, Aufgabe G-007: Serie unbegrenzt (v3.17.31)
+### 2026-09-25 — Runde 2, Aufgabe G-007: Serie unbegrenzt (v3.17.31) – FALSCH, siehe Korrektur oben
 
 **Geändert:** `app.js` (2519), `sw.js` (CACHE_NAME), `index.html` (drei Query-Parameter), `CHANGELOG.md`, `plan/werkzeuge/pruefstand/t_serie.js` (zwei Testfälle)
 

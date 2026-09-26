@@ -1,11 +1,30 @@
 ## 3.17.32 – 25. September 2026
 
-**Großplan, Runde 2: Kartensätze, Sortierung, Bilder, Serie.** Vier Fehler aus den Funden der Großprüfung.
+**Großplan, Runde 2: Kartensatz-Update, Sortieren, Bilder, Rückgängig.**
 
-- **Kartensatz-Updates kollidieren bei gleichem Wort (quelleId).** Zwei Sätze mit demselben Wort aber unterschiedlichen quelleIds wurden verwechselt, das Wort wurde über das erste Ergebnis aktualisiert, Sätze gingen durcheinander. Fix: Lookup filtert jetzt korrekt nach quelleId.
-- **Sortierbewegungen schreiben jede Karte neu.** Jede Verschiebung im Kartensatz oder Bereich triggerte Firestore-Writes für *alle* Karten, nicht nur die bewegten. Mit 500-Karten-Sätzen war die Quote überlastet. Fix: Nur verschobene Karten werden gepatchr.
-- **Bilder in Kartenliste sprengen die Zeile.** Fremde Bilder wurden mit vollem Referer geladen und sprengten die Vorschau. Fix: `max-width: 60px; height: 60px` für Listenbilder, `referrerpolicy="no-referrer"` überall, nur HTTPS erlaubt.
-- **„Gesehen" beeinträchtigt die Serie.** Das Abhaken „Gesehen" schrieb das Tagesprotokoll und zählte für die Streife, obwohl es nur Stufe 0 und keine echte Bewertung ist. Fix: `verlaufZaehle()` entfernt aus `lernAbhaken()`.
+- **Kartensatz-Update verschluckte eine Karte mit gleichem Wort.** Brachte
+  eine neue Ausgabe „عين = Quelle“ zu einem vorhandenen „عين = Auge“, wurde
+  „Auge“ überschrieben, und der Lernstand hing an der falschen Bedeutung.
+  Jetzt zählt das Wort nur noch als Ersatz, wenn einer Karte die Nummer
+  fehlt, und jede Karte wird höchstens einmal zugeordnet.
+- **Sortieren schreibt nur noch, was sich bewegt.** Vorher kostete jeder
+  Schritt beim Ziehen, jeder Pfeiltasten-Schritt und jedes Verschieben einen
+  Schreibvorgang pro Karte im Bereich, bei 2000 Karten also 2000. Jetzt sind
+  es 2.
+- **Bilder in der Kartenliste:** Die Zeile zeigt „Bild“ statt des Bildes
+  und bleibt so hoch wie jede andere. Bilder laden erst in der Kartenansicht,
+  ohne Absender-Adresse (Referer). `http://`-Bilder erscheinen als Link
+  (unverschlüsselte Bilder lässt der Browser hier nicht zu).
+- **Die Serie wächst über 120 Tage hinaus.** Das Tagesprotokoll hebt nur
+  120 Tage auf, deshalb blieb die Serie (und „Bester Lauf“) bei 121 stehen.
+  Reicht die Serie weit genug zurück, wandert ihr älterer Teil jetzt in den
+  gespeicherten Sockel, an einem gelernten Tag. Die Zahl bleibt dabei gleich,
+  die Regel (was zählt, was verziehen wird) auch. Die Änderung in 3.17.31
+  behob das nicht und ließ bei manchen Konten Tage mitzählen, die nicht
+  zählen dürfen. Sie ist zurückgenommen (3.17.31 war nie veröffentlicht).
+- **„Gesehen“ und dann „Rückgängig“** nimmt den Tag wieder aus dem
+  Protokoll, wie Rückgängig in der Runde seit 3.17.6. Vorher hielt ein
+  Fehltipp die Serie am Leben.
 
 ## 3.17.31 – 25. September 2026
 

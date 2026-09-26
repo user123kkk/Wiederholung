@@ -80,15 +80,10 @@ const FAELLE = [
     streak: { sockel: 42, sockelBis: tag(-5) },
     erwartet: 47
   },
-  {
-    /* G-007: Neues Konto (sockel = 0, sockelBis = heute), 121 Tage ohne
-       Luecke: sollte 121 zaehlen koennen. Vorher war sockelBis eine
-       Grenze, die bei ~120 Tagen Halt machte. */
-    name: 'Neues Konto, 121 Tage ohne Luecke - bleibt nicht stehen',
-    verlauf: verlaufAus(bereich([0, 120])),
-    streak: { sockel: 0, sockelBis: tag(0) },
-    erwartet: 121
-  },
+  /* G-007 (Serie ueber 120 Tage) steht in t_serie_lang.js: dafuer muss Zeit
+     vergehen, ein einzelner Stand reicht nicht. (Der Fall "sockelBis heute,
+     121 Tage Verlauf, erwartet 121" aus 3.17.31 war falsch: ein Sockel von
+     heute heisst, vor heute gibt es keine Kette.) */
   {
     /* Alt-Konto mit sockel > 0 sollte WEITER von sockelBis begrenzt sein. */
     name: 'Alt-Konto, 30 Tage gelernt, sockel 100 ab Tag 30 - stoppt am sockelBis',

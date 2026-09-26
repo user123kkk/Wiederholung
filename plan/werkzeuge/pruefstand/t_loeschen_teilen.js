@@ -76,9 +76,15 @@ const reste = p => p.evaluate(() => [...window.__FB.store.keys()].filter(k => /^
       imgFremd: !!document.querySelector('img[src*="bild-fremd"]'), linkFremd: !!document.querySelector('a[href*="bild-fremd"]'),
       imgEigen: !!document.querySelector('img[src*="bild-eigen"]') }));
     await p.waitForTimeout(800);
+    /* 3.17.32 (G-020): Die Liste zeigt statt des Bildes nur noch "Bild" -
+       das eigene Bild erscheint in der Kartenansicht. */
+    dom.listeOhneBild = !dom.imgEigen && await p.evaluate(() => { const r = document.querySelector('[data-action="card-detail"][data-id="keigen"] .extra-note'); return !!r && r.innerText.includes('Bild'); });
+    await p.evaluate(() => document.querySelector('[data-action="card-detail"][data-id="keigen"]').click()); await p.waitForTimeout(1000);
+    dom.imgEigen = await p.evaluate(() => !!document.querySelector('img[src*="bild-eigen"]'));
     pruefe('Bild: fremdes nur als Link, kein <img>', dom.linkFremd && !dom.imgFremd);
     pruefe('Bild: fremdes nicht geladen', !geladen.some(u => u.includes('bild-fremd')));
-    pruefe('Bild: eigenes als Bild angezeigt', dom.imgEigen);
+    pruefe('Bild: eigenes in der Liste nur als „Bild"', dom.listeOhneBild);
+    pruefe('Bild: eigenes in der Kartenansicht als Bild', dom.imgEigen);
     pruefe('Bild: keine Seitenfehler', !p.fehler.length); if (p.fehler.length) console.log(p.fehler.join('\n'));
     await p.context().close();
   }

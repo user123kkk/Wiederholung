@@ -80,6 +80,16 @@ async function neueSeite(browser, vp, opt = {}) {
   await p.route('**/apis.google.com/**', r => r.abort());
   const init = { user: opt.user === undefined ? { uid: 'u1', email: 'test@example.com', displayName: 'Test', emailVerified: true, metadata: { creationTime: 'Mon, 03 Aug 2026 10:00:00 GMT' } } : opt.user,
     store: opt.store || vollerStore(opt), ls: opt.ls || {} };
+  /* opt.tagVersatz: die Seite lebt so viele Tage in der Zukunft (Date wird
+     verschoben, Timer laufen normal) - fuer Tests ueber Wochen (t_serie_lang). */
+  if (opt.tagVersatz) await p.addInitScript(tage => {
+    const Echt = Date, off = tage * 86400000;
+    class Verschoben extends Echt {
+      constructor(...a) { if (a.length) super(...a); else super(Echt.now() + off); }
+      static now() { return Echt.now() + off; }
+    }
+    window.Date = Verschoben;
+  }, opt.tagVersatz);
   await p.addInitScript(i => {
     window.__START_USER = i.user; window.__START_STORE = i.store;
     try { for (const [k, v] of Object.entries(i.ls)) localStorage.setItem(k, v); } catch (e) {}

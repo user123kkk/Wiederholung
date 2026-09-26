@@ -471,6 +471,9 @@ echte `app.js`, Firebase durch `stubs.js` ersetzt.
 
 - Server: `python3 -m http.server 8099 --bind 127.0.0.1` im Repo-Wurzelordner.
 - Chromium: `CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
+- Zwischen 0 und 4 Uhr (Container-Uhr, UTC): `TZ=Asia/Tokyo` davor setzen –
+  die App beginnt den Tag erst um 4 Uhr, sonst sind alle Datumstests um
+  einen Tag daneben (§ 15, 26.09.).
 - Fotos: `PRUEF_BILDER=<scratchpad>/bilder`.
 - Fehler nachstellen:
   - `__FB.fail` (Schreiben),
@@ -1275,3 +1278,5 @@ Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 | bis 3.17.29 (G-014) | Board-Stimmen fremder Ideen auf 0 drehbar | Risiko nur in eine Richtung bedacht | § 8.1b |
 | 25.09. (eigener Fund vor dem Commit) | Neue Sperre „lokale Änderungen" in `veroeffentlichen.bat` hätte jeden zweiten Deploy blockiert | Firebase-CLI legt `.firebase/` an, das stand nicht in `.gitignore` | Wer eine Sperre einbaut, prüft, welche Dateien die Werkzeuge selbst erzeugen |
 | 25.09. (Prüfstand) | `t_a11y.js` meldete „keine Bewegung trotz ruhig", obwohl Inhalte 60–1300 ms verzögert erschienen | Test prüft laufende Animationen, nicht wartende Verzögerungen | § 5.3 – Aufgabe G-086 |
+| 25.09. (3.17.32, eigener Fehler der Runde 2) | Vier Agenten gleichzeitig an `app.js` – drei Änderungen waren danach nicht im Arbeitsbaum. Die Rückmeldungen wurden dann aus den Zusammenfassungen von Hand nachgebaut und ohne Prüfstand committet: G-004 strich den Wort-Ersatz ganz (alte Karten ohne Nummer wären doppelt angelegt worden, Lernstand weg), G-005 schrieb beim Sortieren der Speicherkarten gar nichts mehr, G-020 wurde vom Inline-`max-width` überstimmt, G-035 änderte Lernlogik statt Rückgängig zu reparieren. Vor dem Veröffentlichen bemerkt, neu gebaut | Routine-Regel „nur EIN Agent gleichzeitig an app.js/styles.css" nicht befolgt; Agenten-Zusammenfassung für den Diff gehalten; Abnahme aus dem Befund nicht gelaufen | Agenten, die dieselbe Datei ändern, nacheinander. Eine Rückmeldung ist kein Beleg: `git diff` lesen, die **Abnahme aus dem Befund** selbst laufen lassen, dazu eine Gegenprobe mit altem Code (rot?). Fehlt eine Änderung im Diff: Aufgabe neu vergeben oder selbst bauen – nie aus der Zusammenfassung abschreiben. Commit erst nach grünem Prüfstand (§ 14 Punkt 12) |
+| 26.09. 00:12 (Prüfstand, Nachtschicht) | `abnahme_runde.js` 10/13 rot, `t_serie` überall um einen Tag daneben – ohne Codefehler | Die App beginnt den Tag erst um `DAY_START_HOUR` (4 Uhr, `logicalToday`), `tag()` im Prüfstand um Mitternacht. Zwischen 0 und 4 Uhr Ortszeit des Containers (UTC) zeigen alle Datumstests einen Tag Versatz | Prüfstand nachts mit `TZ=Asia/Tokyo` (oder einer anderen Zone, in der es gerade nach 4 Uhr ist) laufen lassen; bei „überall genau ±1 Tag" zuerst die Uhrzeit prüfen (§ 5.3) |

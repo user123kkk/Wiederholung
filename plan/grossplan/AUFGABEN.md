@@ -26,7 +26,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-004 | Kartensatz-Update ersetzt über das Wort, auch bei anderer `quelleId` (عين Auge/Quelle) | DATEN-2 | hoch | A | S | P3 | erledigt (3.17.32) |
 | G-005 | Jede Sortierbewegung schreibt `order` aller Karten (Kontingent) | DATEN-3 | hoch | A | S | P4 | erledigt (3.17.32) |
 | G-006 | Geteilte Sätze verwaisen und überleben „Konto löschen" (Regel `list` nach Besitzer + Löschen über Besitzer + Reihenfolge) | REGELN-3 | hoch | A | O | P2 | erledigt (3.17.30) |
-| G-007 | Serie bleibt bei 121 Tagen stehen (Protokoll 120 Tage, Sockel wird nicht nachgezogen) | LERNEN-1 | hoch | A¹ | O | P5 | erledigt (3.17.31) |
+| G-007 | Serie bleibt bei 121 Tagen stehen (Protokoll 120 Tage, Sockel wird nicht nachgezogen) | LERNEN-1 | hoch | A¹ | O | P5 | erledigt (3.17.32; die Fassung aus 3.17.31 war falsch und ist zurückgenommen) |
 | G-008 | Prüfskript in den Veröffentlichen-Knopf und die `.bat` einbauen (bricht vor dem Deploy ab) | TECHNIK-2, -14 | hoch | A | H | P1 | erledigt (3.17.30) |
 ¹ G-007: Der Prüfer hat „Betreiber" vorgeschlagen, weil `serieAktuell` Lernlogik ist. **Urteil des Dirigenten:** Die Regel der Serie (was zählt, wie viel verziehen wird) ändert sich nicht. Die Zahl hört nur durch einen Speicherfehler auf zu wachsen, nichts in der App verspricht eine Obergrenze. Das ist ein Fehler wie 3.17.28 (Sockel-Tag), und Fehler werden sofort behoben (`CLAUDE.md` Grundsatz 1). Mit Testfällen vorab, eigener Commit.
 

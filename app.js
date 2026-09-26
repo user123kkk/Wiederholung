@@ -537,6 +537,7 @@ const ICON_PFADE = {
   auswaehlen:  '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/>',
   auge:        '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
   augeZu:      '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 20 20 4"/>',
+  bild:        '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="9.5" r="1.6"/><path d="M4 17.5l4.5-4.5 3.5 3.5 2.5-2.5 5.5 5.5"/>',
   /* 3.10.0: Einstieg (plan/onboarding/NEUAUFBAU-3.md). Tageszeiten fuer die
      Gebets-Anker, dazu Uhr, Frage, Sprechblase und Tafel fuer Ziel und
      Huerden. Dasselbe 24er-Raster, dieselbe Strichstaerke wie oben. */
@@ -1739,6 +1740,10 @@ function snapFehler(err) {
 /* Setzt aus den beiden Sammlungen die Liste zusammen, mit der die App
    arbeitet - dieselbe Form wie bisher, damit Lernen, Fortschritt, Suche und
    Export unveraendert weiterlaufen. */
+/* 3.17.32 (DATEN-3): die Ordnungszahl, wie sie in der Cloud steht - je
+   Kartenobjekt, ausserhalb der Karte, damit sie nie in Export oder
+   Schreibfelder geraet. ordnungPatch() schreibt nur, wo sie abweicht. */
+const ordnungGespeichert = new WeakMap();
 function bereicheAusSammlungen(bDocs, kDocs) {
   const nachBereich = new Map();
   for (const b of bDocs) nachBereich.set(b.id, []);
@@ -1751,7 +1756,11 @@ function bereicheAusSammlungen(bDocs, kDocs) {
   }
   const list = bDocs.map(b => {
     const karten = (nachBereich.get(b.id) || [])
-      .map(k => ({ card: normCard(k), ord: Number.isFinite(k.order) ? k.order : 0 }))
+      .map(k => {
+        const card = normCard(k);
+        if (Number.isFinite(k.order)) ordnungGespeichert.set(card, k.order);
+        return { card: card, ord: Number.isFinite(k.order) ? k.order : 0 };
+      })
       .sort((x, y) => x.ord - y.ord).map(x => x.card);
     const setsMap = b.sets && typeof b.sets === "object" ? b.sets : {};
     const sets = Object.keys(setsMap).map(sid => {
@@ -1976,6 +1985,7 @@ async function initFirebase() {
         verlaufNachschicken(wolkenVerlauf);
         verlaufAufraeumen(data.verlauf);
         serieSockelSichern();
+        serieSockelNachziehen();
         if (data.schemaVersion === SCHEMA_VERSION) {
           ui.umzug = null;
           sammlungenStarten();
@@ -2071,12 +2081,19 @@ function pfadSet(bid, sid) { return "bereiche." + bid + ".sets." + sid; }
 
    "ausser" ist noetig, weil Firestore eine Aktualisierung ablehnt, in der ein
    Feldpfad im anderen steckt: Wer eine Karte komplett schreibt, darf ihr
-   ".order" nicht zusaetzlich einzeln setzen. */
+   ".order" nicht zusaetzlich einzeln setzen.
+
+   3.17.32 (DATEN-3): Geschrieben wird nur, wessen Platz sich gegenueber der
+   Cloud wirklich geaendert hat. Vorher kostete jedes Ziehen in einem Satz
+   mit 2000 Karten 2000 Schreibvorgaenge - das Tageskontingent des ganzen
+   Projekts ist nach zehn solchen Zuegen weg. */
 function ordnungPatch(b, patch, ausser) {
   const p = patch || {};
   const skip = ausser instanceof Set ? ausser : new Set();
   b.karten.forEach((c, i) => {
-    if (!skip.has(c.id)) p[pfadKarte(b.id, c.id) + ".order"] = i;
+    if (skip.has(c.id) || ordnungGespeichert.get(c) === i) return;
+    p[pfadKarte(b.id, c.id) + ".order"] = i;
+    ordnungGespeichert.set(c, i);
   });
   return p;
 }
@@ -2495,7 +2512,10 @@ function evaluateStreakForNewDay() {
    verlauf liefern immer dasselbe Ergebnis, egal wie viele Tage dazwischen
    uebersprungen wurden. Getestet in plan/werkzeuge/pruefstand/t_serie.js. */
 const SERIE_JOKER_TAGE = 7;
-function serieAktuell() {
+/* info (nur serieSockelNachziehen): merkt sich den ersten gelernten Tag der
+   Kette, der info.grenze oder aelter ist, und wie viele Tage davor gezaehlt
+   waren. Am Ergebnis aendert info nichts. */
+function serieAktuell(info) {
   const t = todayStr();
   const sockel = Number.isInteger(streak.sockel) ? streak.sockel : 0;
   const sockelBis = streak.sockelBis;
@@ -2515,12 +2535,12 @@ function serieAktuell() {
        heute), und bisher endete die Zaehlung schon an diesem Tag. Wer am
        ersten Tag lernte, sah 0, und der Tag fehlte der Serie danach fuer
        immer. Die Regel selbst ist unveraendert: ein Tag zaehlt ab der ersten
-       gelernten Karte.
-       3.17.30 (G-007): sockelBis begrenzt nur, wenn es ein echtes sockel > 0
-       gibt (Umstieg vor 2.14.0). Neue Konten (sockel = 0) koennen unbegrenzt
-       waechsen. */
-    if (sockelBis && sockel > 0 && (d <= sockelBis)) return tage + sockel;
-    if (tagGelernt(verlauf[d])) { tage++; seitJoker++; continue; }
+       gelernten Karte. */
+    if (sockelBis && (d < sockelBis || (d === sockelBis && sockel > 0))) return tage + sockel;
+    if (tagGelernt(verlauf[d])) {
+      if (info && !info.anker && d <= info.grenze) { info.anker = d; info.tageDavor = tage; }
+      tage++; seitJoker++; continue;
+    }
     /* Ein ausgelassener Tag unterbricht die Serie nicht - Krankheit, Reise,
        ein voller Tag - solange seit dem letzten verziehenen Tag genug
        gelernt wurde. Reicht es nicht, endet die Zaehlung hier. */
@@ -2528,6 +2548,28 @@ function serieAktuell() {
     break;
   }
   return tage;
+}
+/* 3.17.32 (G-007, LERNEN-1): Das Protokoll hebt nur VERLAUF_TAGE (120) Tage
+   auf. Die Serie zaehlt aber aus dem Protokoll - also blieb sie bei 121
+   stehen, und mit ihr "beste". Die Regel der Serie aendert sich hier nicht:
+   Reicht die Kette SERIE_NACHZIEHEN_AB Tage zurueck, wird ihr aelterer Teil
+   in den Sockel uebernommen, und zwar an einem gelernten Tag der Kette
+   (anker, rund SERIE_ANKER_TAGE zurueck). Der Sockel schliesst den Anker-Tag
+   ein (sockel > 0, siehe oben), die Tage danach zaehlt die Schleife genau
+   wie vorher - die Zahl ist nach dem Nachziehen dieselbe wie davor, nur
+   braucht sie die alten Tage nicht mehr. Bis zur Grenze von 120 Tagen
+   bleiben 20 Tage Luft, falls die App so lange nicht geladen wird. */
+const SERIE_ANKER_TAGE = 90;
+const SERIE_NACHZIEHEN_AB = 100;
+function serieSockelNachziehen() {
+  if (!Number.isInteger(streak.sockel) || !streak.sockelBis) return;
+  if (streak.sockelBis > dateInDays(-SERIE_NACHZIEHEN_AB)) return;
+  const info = { grenze: dateInDays(-SERIE_ANKER_TAGE), anker: null, tageDavor: 0 };
+  const wert = serieAktuell(info);
+  if (!info.anker || info.anker <= streak.sockelBis) return;
+  streak.sockel = wert - info.tageDavor;
+  streak.sockelBis = info.anker;
+  persistStreak(["sockel", "sockelBis"]);
 }
 /* Beim ersten Start unter 2.14.0 wird die bisherige Zahl zum Sockel, damit
    beim Umstieg niemand etwas verliert. */
@@ -3889,12 +3931,11 @@ async function linkEinloesenStart() {
    Meisterbereich umbauen. So entsteht stattdessen eine gefuehrte Kopie zum
    Ausprobieren, genau wie bei einem Bruder. */
 function satzUnterschied(ziel, datei) {
-  const zielNachQuelle = kartenNachHerkunft(ziel);
+  const zuordnung = satzZuordnung(ziel, datei);
   const gesehen = new Set();
   const neu = [], aktualisiert = [];
   for (const c of datei.karten) {
-    const q = herkunftsSchluessel(c);
-    const vorhanden = zielNachQuelle.get(q);
+    const vorhanden = zuordnung.get(c.id);
     if (!vorhanden) { neu.push(c); continue; }
     gesehen.add(vorhanden.id);
     if (vorhanden.wort !== c.wort || vorhanden.uebersetzung !== c.uebersetzung || vorhanden.extra !== c.extra) {
@@ -3917,12 +3958,35 @@ function satzUnterschied(ziel, datei) {
    keine Herkunfts-Nummern - traf sie auf einen gefuehrten Satz, passte KEINE
    einzige Karte, und das Zusammenfuehren tauschte alle 133 gegen 133 neue
    aus. Fuer den Lernenden hiess das: Lernstand weg. Mit dem Wort als
-   Rueckfallebene bleibt die Zuordnung erhalten. */
-function kartenNachHerkunft(b) {
-  const m = new Map();
-  for (const c of b.karten) if (c.quelleId) m.set(c.quelleId, c);
-  for (const c of b.karten) if (!m.has("w:" + c.wort)) m.set("w:" + c.wort, c);
-  return m;
+   Rueckfallebene bleibt die Zuordnung erhalten.
+
+   3.17.32 (DATEN-2): Das Wort ist nur Rueckfallebene, wenn eine der beiden
+   Karten keine echte Nummer hat. Tragen beide eine - verschiedene -, sind es
+   zwei Bedeutungen desselben Wortes (عين Auge/Quelle) und keine Karte
+   ersetzt die andere. Jede Karte im Konto wird hoechstens einmal vergeben.
+   Ergebnis: Karten-Nummer in der Datei -> Karte im Konto. */
+function satzZuordnung(ziel, datei) {
+  const echteNummer = c => !!c.quelleId && !String(c.quelleId).startsWith("w:");
+  const nachQuelle = new Map();
+  for (const l of ziel.karten) if (l.quelleId && !nachQuelle.has(l.quelleId)) nachQuelle.set(l.quelleId, l);
+  const vergeben = new Set();
+  const out = new Map();
+  for (const c of datei.karten) {
+    const l = c.quelleId ? nachQuelle.get(c.quelleId) : null;
+    if (l && !vergeben.has(l.id)) { out.set(c.id, l); vergeben.add(l.id); }
+  }
+  const nachWort = new Map();
+  for (const l of ziel.karten) {
+    if (vergeben.has(l.id)) continue;
+    if (!nachWort.has(l.wort)) nachWort.set(l.wort, []);
+    nachWort.get(l.wort).push(l);
+  }
+  for (const c of datei.karten) {
+    if (out.has(c.id)) continue;
+    const l = (nachWort.get(c.wort) || []).find(x => !vergeben.has(x.id) && (!echteNummer(c) || !echteNummer(x)));
+    if (l) { out.set(c.id, l); vergeben.add(l.id); }
+  }
+  return out;
 }
 function herkunftsSchluessel(c) { return c.quelleId || "w:" + c.wort; }
 
@@ -3989,16 +4053,16 @@ async function satzZusammenfuehren(ziel, datei) {
 
   /* 1. Karten: vorhandene behalten (mit Fortschritt), fehlende anlegen,
         weggefallene loeschen. Die Reihenfolge kommt aus der Datei. */
-  const nachQuelle = kartenNachHerkunft(ziel);
+  const zuordnung = satzZuordnung(ziel, datei);
   const vergeben = new Set(ziel.karten.map(c => c.id));
   const frisch = () => { let x = genId(); while (vergeben.has(x)) x = genId(); vergeben.add(x); return x; };
   const dateiZuLokal = new Map();   // Karten-Nummer in der Datei -> Karte im Konto
   const neueListe = [];
   for (const c of datei.karten) {
     const q = herkunftsSchluessel(c);
-    let lokal = nachQuelle.get(q);
+    let lokal = zuordnung.get(c.id);
     if (lokal) {
-      if (!lokal.quelleId && c.quelleId) lokal.quelleId = c.quelleId;   // Nummer nachtragen
+      if (c.quelleId && (!lokal.quelleId || String(lokal.quelleId).startsWith("w:"))) lokal.quelleId = c.quelleId;   // Nummer nachtragen
       lokal.wort = c.wort;
       lokal.uebersetzung = c.uebersetzung;
       lokal.extra = c.extra;
@@ -4017,7 +4081,7 @@ async function satzZusammenfuehren(ziel, datei) {
   /* 2. Speicherkarten: Inhalt und Name aus der Datei, Schloss vom Lernenden.
         Eigene (ohne Herkunfts-Nummer) bleiben stehen und verlieren nur
         Verweise auf Karten, die es nicht mehr gibt. */
-  const uebersetzeIds = ids => ids.map(fid => dateiZuLokal.get(fid)).filter(Boolean).map(c => c.id);
+  const uebersetzeIds = ids => [...new Set(ids.map(fid => dateiZuLokal.get(fid)).filter(Boolean).map(c => c.id))];
   const zielNachSetQuelle = new Map();
   for (const s of ziel.sets) if (s.quelleId) zielNachSetQuelle.set(s.quelleId, s);
   const dateiSetQuellen = new Set(datei.sets.map(s => s.quelleId || s.id));
@@ -4847,13 +4911,11 @@ function toggleLernNotiz(id) {
 function lernAbhaken(id) {
   const card = findCard(id);
   if (!card || !istNeueKarte(card)) return;
-  ui.lernLetzte = { cardId: card.id, prevStufe: card.stufe, prevNextReview: card.nextReview, prevErsteBewertung: card.ersteBewertung };
+  ui.lernLetzte = { cardId: card.id, prevStufe: card.stufe, prevNextReview: card.nextReview, prevErsteBewertung: card.ersteBewertung, verlaufTag: todayStr() };
   card.ersteBewertung = todayStr();
   card.stufe = 0;
   card.nextReview = todayStr();
-  /* LERNEN-3: "Gesehen" ist kein echtes Lernen (Karte bleibt Stufe 0),
-     daher nicht ins verlauf schreiben. Der Tag zaehlt nur mit echter
-     Bewertung (w oder n in der Abfrage). */
+  verlaufZaehle("n");
   persistCardGrade(currentBereich().id, card.id, {
     stufe: card.stufe, nextReview: card.nextReview,
     ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
@@ -4882,6 +4944,13 @@ function lernRueckgaengig() {
       ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
       maxStufe: card.maxStufe || 0
     });
+  }
+  /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
+     das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
+  const vt = l.verlaufTag;
+  if (vt && verlauf[vt] && (verlauf[vt].n || 0) > 0) {
+    verlauf[vt].n--;
+    if (vt === todayStr()) persistVerlauf();
   }
   ui.lernLetzte = null;
   render();
@@ -10127,13 +10196,19 @@ function renderHandwritingCanvas(revealed, frage, antwort, antwortArabisch) {
    3.17.24: fremd = Karte aus einem weitergegebenen Kartensatz (quelleId).
    Deren Bilder laedt die App nicht selbst - den Server hat jemand anders
    gewaehlt, und beim Laden bekaeme er die IP-Adresse. Sie erscheinen als
-   Link; oeffnen ist dann die eigene Entscheidung. */
-function renderExtra(extra, tokens, fremd) {
+   Link; oeffnen ist dann die eigene Entscheidung.
+   3.17.32 (DATEN-5): Bilder nur ueber https - die CSP laesst http-Bilder
+   ohnehin nicht zu, sie stehen als Link da. Kein Referer, geladen erst,
+   wenn sichtbar. In der einzeiligen Listenvorschau (vorschau) steht statt
+   des Bildes nur "Bild": sonst war jede Zeile 238 statt 75 px hoch und
+   Verwalten lud bis zu 100 Bilder auf einmal. */
+function renderExtra(extra, tokens, fremd, vorschau) {
   const trimmed = extra.trim();
   if (!fremd && /^https:\/\/\S+\.(png|jpe?g|gif|webp|svg)(\?\S*)?$/i.test(trimmed)) {
-    return '<img src="' + esc(trimmed) + '" alt="Bild" referrerpolicy="no-referrer" style="max-width:100%;border-radius:8px">';
+    if (vorschau) return iconSvg("bild") + ' Bild';
+    return '<img src="' + esc(trimmed) + '" alt="Bild" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="max-width:100%;border-radius:8px">';
   }
-  if (/^https:\/\/\S+$/i.test(trimmed)) {
+  if (/^https?:\/\/\S+$/i.test(trimmed)) {
     return '<a href="' + esc(trimmed) + '" target="_blank" rel="noopener noreferrer">' + esc(trimmed) + '</a>';
   }
   /* Nur reiner Text wird markiert - in ein Bild oder einen Link duerfen
@@ -10696,7 +10771,7 @@ function kartenListeInhalt() {
     html += '<div class="words">';
     html += '<div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + markiere(c.wort, tokens) + '</div>';
     html += '<div class="uebersetzung">' + markiere(c.uebersetzung, tokens) + '</div>';
-    if (c.extra) html += '<div class="extra-note">' + renderExtra(c.extra, tokens, !!c.quelleId) + '</div>';
+    if (c.extra) html += '<div class="extra-note">' + renderExtra(c.extra, tokens, !!c.quelleId, true) + '</div>';
     html += kartenTagsHtml(c.id, fremd || bAkt);
     html += '</div>';
     if (fremd) html += '<span class="badge" title="Diese Karte liegt in einem anderen Bereich">' + esc(fremd.name) + '</span>';
@@ -11108,17 +11183,11 @@ function commitSetOrder(parent) {
   const inGruppe = new Set(ids);
   sets.forEach((x, i) => { if (inGruppe.has(x.id)) plaetze.push(i); });
   if (neu.length > 0 && neu.length === plaetze.length) {
-    const oldPositions = new Map(plaetze.map((pos, i) => [neu[i].id, pos]));
     plaetze.forEach((pos, i) => { sets[pos] = neu[i]; });
     const b = currentBereich();
     const patch = {};
-    neu.forEach((x, i) => {
-      const newPos = plaetze[i];
-      if (oldPositions.get(x.id) !== newPos) {
-        patch[pfadSet(b.id, x.id) + ".order"] = newPos;
-      }
-    });
-    if (Object.keys(patch).length > 0) patchDoc(patch);
+    sets.forEach((x, i) => { patch[pfadSet(b.id, x.id) + ".order"] = i; });
+    patchDoc(patch);
   }
 }
 
@@ -11129,10 +11198,8 @@ function commitSetCardOrder(parent, setid) {
   const set = findSet(setid);
   const neu = [...parent.querySelectorAll(".card-row")].map(r => r.dataset.cardid).filter(Boolean);
   if (set && neu.length === set.cardIds.length) {
-    if (neu.some((id, i) => id !== set.cardIds[i])) {
-      set.cardIds = neu;
-      patchDoc({ [pfadSet(currentBereich().id, set.id) + ".cardIds"]: neu });
-    }
+    set.cardIds = neu;
+    patchDoc({ [pfadSet(currentBereich().id, set.id) + ".cardIds"]: neu });
   }
 }
 
@@ -11145,17 +11212,9 @@ function commitBereichOrder(parent) {
   const byId = new Map(cards.map(c => [c.id, c]));
   const reordered = newOrderIds.map(cid => byId.get(cid)).filter(Boolean);
   if (listenFenster.anzahl > 0 && reordered.length === listenFenster.anzahl) {
-    const oldPositions = new Map(cards.slice(listenFenster.start, listenFenster.start + listenFenster.anzahl).map((c, i) => [c.id, listenFenster.start + i]));
     cards.splice(listenFenster.start, listenFenster.anzahl, ...reordered);
-    /* A4: nur die Ordnungszahlen geaenderter Karten. */
-    const patch = {};
-    reordered.forEach((c, i) => {
-      const newPos = listenFenster.start + i;
-      if (oldPositions.get(c.id) !== newPos) {
-        patch[pfadKarte(currentBereich().id, c.id) + ".order"] = newPos;
-      }
-    });
-    if (Object.keys(patch).length > 0) patchDoc(patch);
+    /* A4: nur die Ordnungszahlen dieses Bereichs, nichts sonst. */
+    patchDoc(ordnungPatch(currentBereich()));
   }
 }
 

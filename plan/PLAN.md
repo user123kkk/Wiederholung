@@ -786,6 +786,12 @@ Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRA
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
+**AKTUELL (25.09.2026, nachts): v3.17.32 auf `main`, noch nicht live.**
+Großplan Runde 2 fertig: G-004, G-005, G-007, G-020, G-035 (Stand und
+Korrektur der ersten, fehlerhaften Fassung: `plan/grossplan/LOGBUCH.md`).
+Weiter mit Runde 3 nach `plan/grossplan/AUFTRAG.md` (Routine 2:07/5:07).
+**Wartet auf Betreiber:** wie unten (K11, K10, K1–K7, K12, E-01–E-18).
+
 **AKTUELL (25.09.2026, spät): v3.17.30 auf `main`, noch nicht live.**
 Großplan Runde 1 fertig (21 Aufgaben, u. a. der kritische Zwei-Geräte-Fehler
 G-003). **Wartet auf Betreiber:** Veröffentlichen (K11) **und** Regeln
