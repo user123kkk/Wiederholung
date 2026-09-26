@@ -10,6 +10,37 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
 ---
 
+### 2026-09-26 — veroeffentlichen.bat repariert, main geprüft (kein App-Update)
+
+**Anlass:** Betreiber: 3.17.33 per GitHub-Knopf veröffentlicht; „fix das mit
+veröffentlichen.bat, funktioniert ja ned"; Regeln aus Git (vor ~12 h) in
+Firestore eingesetzt – „stelle sicher, dass alles wirklich in main ist".
+
+**Geprüft:** `firestore.rules` zuletzt geändert in `7b8135a` (25.09. 18:34 UTC),
+Commit ist in `main`, seitdem unverändert → eingesetzte Regeln = `main`.
+Alle anderen Remote-Zweige (`claude/*`, `design-redesign`,
+`einstellungen-ausbau`) haben keine gemeinsame Basis mit `main` und enden
+bei ≤ v3.9.11; deren Inhalt steht im Changelog von `main` (3.9.7 Grammatik-
+Feld in 3.9.8 bewusst entfernt). Nichts fehlt.
+
+**Geändert:** `plan/werkzeuge/pruefe_stand.mjs` (`lies()`: `\r\n` → `\n`),
+`veroeffentlichen.bat` (Werkzeug-Prüfung `where`, `call firebase`, Liste der
+störenden Dateien, `node` fehlt → Hinweis statt Abbruch), `LEHREN.md` § 15.
+
+**Entscheidung:** Kein `.gitattributes` mit `eol=lf`: Beim Betreiber würden
+danach Dateien als „geändert" erscheinen und die Sperre „lokale
+Änderungen" auslösen. Stattdessen rechnet die Prüfung wie der Browser
+(der HTML-Parser macht aus `\r\n` vorher `\n`).
+
+**Prüfstand:** Kopie des Repos mit `\r\n` in allen Textdateien: vorher 3
+FEHLER, jetzt „Alles in Ordnung"; Gegenprobe (Inline-Skript geändert) → 1
+FEHLER. **Nicht geprüft:** die `.bat` selbst auf Windows (keine Windows-
+Umgebung) – Gerätetest beim Betreiber.
+
+**Nächster Schritt:** Runde 4 – Paket P9 (Fortschritt).
+
+---
+
 ### 2026-09-26 — Runde 3: Suche, Merken, Bereich löschen, Serien-Warnung (v3.17.33)
 
 **Geändert:** `app.js`: `suchFeld()` (~10300, Puffergrenze

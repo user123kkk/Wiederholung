@@ -21,8 +21,12 @@ function pfad(...teile) {
   return path.join(wurzel, ...teile);
 }
 
+// Zeilenenden wie der Browser: Der HTML-Parser macht aus \r\n vor allem
+// anderen \n, der CSP-Hash gilt also fuer den \n-Text. Git fuer Windows
+// checkt standardmaessig mit \r\n aus - ohne diese Zeile meldete die
+// Pruefung dort falsche CSP-Fehler und veroeffentlichen.bat brach ab.
 function lies(relPfad) {
-  return readFileSync(pfad(relPfad), "utf8");
+  return readFileSync(pfad(relPfad), "utf8").replace(/\r\n?/g, "\n");
 }
 
 let fehlerZahl = 0;
