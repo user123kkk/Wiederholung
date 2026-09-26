@@ -10,6 +10,24 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
 ---
 
+### 2026-09-26 — Runde 6 läuft (P11 Start/Service Worker + G-088)
+
+**Geändert (noch nicht committet):** `manifest.json` (G-069: `icon-512.png` →
+`maskable`, `desktop-icon.png` bleibt das runde `any` für Desktop), `sw.js`
+(G-074: `icon.svg`, `flower-isolated.png` aus `APP_SHELL`), `styles.css`
+`.toast` Innenabstand gleich (G-088). Handwerker an `sw.js` (G-029, G-068) und
+`app.js`/`index.html` (G-030).
+**Entscheidung:** G-074 Tab-Symbol bleibt `desktop-icon.png` – es steht wegen
+Manifest ohnehin im Vorabspeicher, ein Tausch spart keine Bytes.
+**Offen:** Betreiber (26.09.): auf 3.17.35 „Gespeichert" sichtbar, VoiceOver
+sprach nichts. Verdacht (unbewiesen): `fokusInsWortfeld()` nach dem Speichern
+lässt VoiceOver das Feld ansagen und die höfliche Meldung verschlucken.
+Gerätetest VoiceOver beim Betreiber gestrichen („schrecklich"). Tastatur beim
+Hinzufügen: D1, bleibt; Betreiber schickt ggf. Screenshot.
+**Nächster Schritt:** Handwerker abnehmen, Version 3.17.36, Prüfstand, Commit.
+
+---
+
 ### 2026-09-26 — Runde 5: Barrierefreiheit (v3.17.35)
 
 **Geändert:** `styles.css`: helles Thema ≥ 900 px `.nav__tab:not(.active)`,
