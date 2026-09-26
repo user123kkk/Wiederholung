@@ -21,9 +21,10 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 **Entscheidung:** Datei jetzt noch NICHT aus dem Repo nehmen (`git rm --cached`):
 beim Betreiber ist sie geändert, der Pull einer Löschung bräche ab, und die
 laufende alte `.bat` kann das nicht abfangen.
-**Offen:** Sobald der Betreiber einmal erfolgreich mit der `.bat`
-veröffentlicht hat: `git rm --cached .firebase/hosting..cache` committen (die
-`.bat` verwirft dann vorher die lokale Änderung, der Pull geht durch).
+**Offen:** – (Betreiber: „geklappt", 3.17.34 per `.bat` veröffentlicht.
+Danach `git rm --cached .firebase/hosting..cache` committet; die `.bat` verwirft
+vorher die lokale Änderung, der Pull löscht die Datei, die CLI legt sie als
+ignorierte Datei neu an.)
 **Nächster Schritt:** Runde 5 – Paket P12.
 
 ---
