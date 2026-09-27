@@ -9,8 +9,8 @@
          unerreichbar hinter dem stehenden Weiter-Bereich.
    G-044 (EINSTIEG-6) Der Anker-Text ("Nach dem Fajr-Gebet") steht auf dem
          fertigen Plan genau einmal.
-   G-083 (EINSTIEG-12) Die Oberkante des Hauptknopfs ist auf allen
-         Einstiegs-Bildschirmen gleich (+-1px).
+   G-083 (EINSTIEG-12) Kurze Screens setzen den Fuss unten, lange Screens
+         wachsen/scrollen normal; der Weiter-Bereich ueberdeckt nie den Inhalt.
 
    Gegenprobe fest auf Commit 5ad0a11 (Stand vor 3.17.42, LEHREN § 15):
    app.js UND styles.css werden dafuer aus dem alten Commit ausgeliefert -
@@ -192,33 +192,41 @@ async function pruefeZeitpunktEinmal(b) {
   await ctx.close();
 }
 
-/* ---- G-083: Oberkante Hauptknopf auf allen Bildschirmen gleich --------- */
+/* ---- G-083: normaler Dokumentfluss statt Footer-Overlay -------------- */
 async function pruefeKnopfHoehe(b, vp, label) {
   const { p, ctx } = await seite(b, vp);
-  const tops = {};
-  tops['0'] = await knopfTop(p);
+  const mess = () => p.evaluate(() => {
+    const aktion = document.querySelector('.einstieg-aktion');
+    if (!aktion) return null;
+    const ar = aktion.getBoundingClientRect();
+    const opts = [...document.querySelectorAll('.einstieg-option')];
+    const overlap = opts.some(el => {
+      const r = el.getBoundingClientRect();
+      return r.bottom > ar.top - 1 && r.top < ar.bottom + 1;
+    });
+    return {
+      overlap,
+      scroll: Math.round(document.documentElement.scrollHeight - innerHeight),
+      buttonVisible: ar.bottom <= innerHeight + 1
+    };
+  });
+  const kurz = await mess();
+  pruefe(!!kurz && !kurz.overlap, label + ': Fuss ueberdeckt im Startbildschirm keinen Inhalt');
   await klick(p, '[data-action="einstieg-weiter"]');                 // -> 1
-  tops['1'] = await knopfTop(p);
   await klick(p, '[data-action="einstieg-ziel"]', 300);
   await klick(p, '[data-action="einstieg-weiter"]');                 // -> 2
-  tops['2'] = await knopfTop(p);
-  await klick(p, '[data-action="einstieg-huerde"][data-id="keine"]', 300);
-  await klick(p, '[data-action="einstieg-weiter"]');                 // -> 3
-  await klick(p, '[data-action="einstieg-aufdecken"]');
-  await klick(p, '[data-action="einstieg-bewerten"][data-id="Sicher"]');
-  tops['3'] = await knopfTop(p);
-  await klick(p, '[data-action="einstieg-weiter"]');                 // -> 4
-  tops['4'] = await knopfTop(p);
-  await klick(p, '[data-action="einstieg-weiter"]');                 // -> 5
-  tops['5'] = await knopfTop(p);
-  await klick(p, '[data-action="einstieg-weiter"]');                 // -> 6
-  tops['6'] = await knopfTop(p);
-  await klick(p, '[data-action="einstieg-anker"][data-id="fajr"]', 300);
-  await klick(p, '[data-action="einstieg-weiter"]', 8000);           // -> 7 (Plan)
-  tops['7'] = await knopfTop(p);
-  const werte = Object.values(tops).filter(v => v !== null);
-  const spanne = werte.length ? Math.max(...werte) - Math.min(...werte) : null;
-  pruefe(spanne !== null && spanne <= 1, label + ': Oberkante Hauptknopf auf allen Bildschirmen gleich (Spanne ' + spanne + 'px): ' + JSON.stringify(tops));
+  await klick(p, '[data-action="einstieg-huerde"][data-id="vergessen"]', 300);
+  await klick(p, '[data-action="einstieg-huerde"][data-id="wann"]', 300);
+  await klick(p, '[data-action="einstieg-huerde"][data-id="dran"]', 300);
+  await klick(p, '[data-action="einstieg-huerde"][data-id="zeit"]', 300);
+  await klick(p, '[data-action="einstieg-huerde"][data-id="schrift"]', 300);
+  const lang = await mess();
+  pruefe(!!lang && !lang.overlap && lang.scroll >= 250,
+    label + ': langer Huerden-Screen scrollt und der Fuss ueberdeckt nichts: ' + JSON.stringify(lang));
+  await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  const ende = await mess();
+  pruefe(!!ende && !ende.overlap,
+    label + ': auch am Dokumentende kein Ueberdecken durch den Weiter-Bereich: ' + JSON.stringify(ende));
   console.log(label, '| Fehler auf der Seite:', p.fehler.join('|') || 'ok');
   await ctx.close();
 }
@@ -236,7 +244,7 @@ async function pruefeKnopfHoehe(b, vp, label) {
   console.log('\n-- G-044: Zeitpunkt nur einmal --');
   await pruefeZeitpunktEinmal(b);
 
-  console.log('\n-- G-083: Hauptknopf gleiche Hoehe --');
+  console.log('\n-- G-083: Footer im Dokumentfluss --');
   for (const [name, vp] of Object.entries(GERAETE)) await pruefeKnopfHoehe(b, vp, 'KnopfHoehe/' + name);
 
   console.log('\n' + funde + ' Fehler insgesamt auf dem aktuellen Stand.');
@@ -314,12 +322,21 @@ async function pruefeKnopfHoehe(b, vp, label) {
     // G-083 Gegenprobe
     {
       const { p, ctx } = await seite(b, { width: 390, height: 844 }, { alt: true });
-      const t0 = await knopfTop(p);
       await klick(p, '[data-action="einstieg-weiter"]');
-      const t1 = await knopfTop(p);
-      const gleich = t0 !== null && t1 !== null && Math.abs(t0 - t1) <= 1;
-      if (gleich) { console.log('  unerwartet: alter Stand hat schon gleiche Knopfhoehe (G-083): ' + t0 + '/' + t1); altFunde++; }
-      else console.log('  ok (=Fehler im Altstand): Knopf springt zwischen Bildschirm 0 und 1: ' + t0 + ' -> ' + t1);
+      await klick(p, '[data-action="einstieg-ziel"]', 200);
+      await klick(p, '[data-action="einstieg-weiter"]');
+      for (const id of ['vergessen','wann','dran','zeit','schrift']) {
+        await klick(p, '[data-action="einstieg-huerde"][data-id="' + id + '"]', 120);
+      }
+      const r = await p.evaluate(() => {
+        const k = document.querySelector('[data-action="einstieg-huerde"][data-id="keine"]');
+        const a = document.querySelector('.einstieg-aktion');
+        if (!k || !a) return null;
+        const kr = k.getBoundingClientRect(), ar = a.getBoundingClientRect();
+        return { overlap: kr.bottom > ar.top - 1 && kr.top < ar.bottom + 1, scroll: Math.round(document.documentElement.scrollHeight - innerHeight) };
+      });
+      if (r && !r.overlap && r.scroll >= 250) { console.log('  unerwartet: alter Stand scrollt ohne Ueberdeckung (G-083): ' + JSON.stringify(r)); altFunde++; }
+      else console.log('  ok (=Fehler im Altstand): Sticky-Fuss/fehlende Scroll-Logik: ' + JSON.stringify(r));
       await ctx.close();
     }
     console.log('\n' + altFunde + ' unerwartete "schon gut"-Treffer im Altstand (soll 0 sein).');
