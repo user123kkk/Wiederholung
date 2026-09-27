@@ -1,3 +1,12 @@
+## 3.17.44 – 27. September 2026
+
+**Onboarding: wieder echter Dokumentfluss statt überdeckendem Sticky-Footer.**
+
+- Der Weiter-/Plan-Block ist kein `position: sticky` mehr und kann keinen Inhalt beim Scrollen verdecken.
+- Lange Onboarding-Seiten wachsen normal mit; `Nichts davon`, Echo-Texte und weitere Auswahlzeilen bleiben Teil des scrollbaren Inhalts.
+- Den künstlichen 11rem-Platzhalter unter den Auswahlzeilen entfernt; der Button folgt wieder sauber im normalen Layout.
+- Die bestehende App-Logik „kurzer Screen unten, langer Screen scrollt“ bleibt erhalten.
+
 ## 3.17.43 – 27. September 2026
 
 **Onboarding-Layout bereinigt.**
