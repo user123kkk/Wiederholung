@@ -1,3 +1,15 @@
+### 2026-09-27 — ChatGPT: Onboarding-Motion, Probekarte, Loading-Screen und Session-Übergabe (3.17.44–3.17.46)
+
+**Geändert:** `styles.css`, `app.js`, `index.html`, `sw.js`, `CHANGELOG.md`, `CLAUDE.md`, neu `CHATGPT-HANDOFF-2026-09-27.md`. Der Weiter-Fuss läuft wieder im normalen Dokumentfluss; drei redundante Erklärungssätze wurden entfernt; Plan-/Leiter-Motion wurde entschleunigt; konkurrierende `scrollIntoView({behavior:"smooth"})`-Ketten wurden durch kontrollierte einzelne Scrollbewegungen ersetzt; die Probekarte wird beim Bewerten nicht mehr komplett neu gerendert; der Loading-First-Paint wurde im HTML abgesichert.
+
+**Entscheidung:** Bestehende App-Logik und vorhandene Muster bleiben maßgeblich. Keine neue Overlay-Architektur und keine Lernlogikänderung. Besonders festgehalten: Ein UI-/Motion-Fix kann unmittelbar einen neuen Fehler erzeugen. Deshalb muss nach jeder Änderung der benachbarte Flow erneut geprüft werden, nicht nur der ursprüngliche Screenshot.
+
+**Befund:** Der Betreiber meldet weiterhin einen Positionssprung des Loading-Icons. Der nächste Prüfpunkt ist die Grenze zwischen iOS-`apple-touch-startup-image` (`splash/*.png`) und HTML-`.boot`. Die statischen Splash-Bilder müssen bei einer Geometrieänderung mit `plan/werkzeuge/startbilder.js` neu erzeugt werden; nicht weiter mit zufälligen CSS-Offsets gegen einen möglichen Splash/HTML-Mismatch arbeiten.
+
+**Offen:** Echter iPhone-Test von Splash → HTML sowie Probekarte „Dann kommt sie morgen wieder“ und Plan-Scroll. Die aktuelle Umgebung kann den realen iOS First Paint nicht verifizieren.
+
+**Nächster Schritt:** Auf echtem iPhone zuerst feststellen, ob der Loading-Sprung genau beim Wechsel vom statischen Splash-PNG zum HTML entsteht. Danach die Probekarten-Bewertung und den einzelnen kontrollierten Plan-Scroll auf Ruckler prüfen.
+
 # Logbuch: Einstieg vor der Anmeldung
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md)
