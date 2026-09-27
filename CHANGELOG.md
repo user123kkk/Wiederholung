@@ -1,3 +1,15 @@
+## 3.17.45 – 27. September 2026
+
+**Onboarding-Motion und First-Paint bereinigt.**
+
+- Drei redundante Erklärungssätze aus der Plan-Seite entfernt.
+- Der personalisierte Plan-Aufbau läuft etwas ruhiger; die vorhandene Schrittfolge bleibt unverändert.
+- Während des Aufbaus folgt der Scroll ruhig den neu erscheinenden Analysepunkten.
+- Auf der fertigen Plan-Seite folgt der Scroll in abgestimmten Etappen Leiter → Karten-Wege → Handlung, statt den Nutzer alles suchen zu lassen.
+- Die Leiter zeichnet sich langsamer nach unten.
+- Der Loading-Screen bekommt seine kritische Zentrierung schon im HTML, damit das Icon beim ersten Paint nicht erst an einer anderen Stelle erscheint und danach springt.
+- Cache-Busting auf 3.17.45 angehoben.
+
 ## 3.17.44 – 27. September 2026
 
 **Onboarding: wieder echter Dokumentfluss statt überdeckendem Sticky-Footer.**
