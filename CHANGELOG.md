@@ -1,3 +1,12 @@
+## 3.17.43 – 27. September 2026
+
+**Onboarding-Layout bereinigt.**
+
+- Der sticky Weiter-/Plan-Bereich im Einstieg ist transparent und legt keinen großen Hintergrund mehr über darunterliegenden Inhalt.
+- Die Plan-Kacheln bleiben auf kleinen Displays einspaltig; lange Texte werden nicht mehr in zu schmale Spalten gequetscht.
+- Die Probekarte im Einstieg bekommt eine begrenzte Kartenhöhe und clippt ihre 3D-Fläche, damit gemeinsame Lernkarten-Ebenen nicht in den restlichen Einstieg ragen.
+- Cache-Busting auf 3.17.43 angehoben.
+
 ## 3.17.42 – 27. September 2026
 
 **Großplan, Runde 11: Einstieg ruhiger, Probekarte wie die echte.**
