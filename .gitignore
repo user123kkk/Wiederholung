@@ -12,3 +12,8 @@ plan/werkzeuge/pruefstand/node_modules
 .firebase/
 firebase-debug.log
 firestore-debug.log
+
+# Lokale Agenten-Konfiguration und erzeugte Linkliste (auch Hosting-ausgeschlossen).
+/AGENTS.md
+/.claude/settings.local.json
+/plan/werkzeuge/splash-links.txt

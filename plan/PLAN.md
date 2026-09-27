@@ -787,7 +787,9 @@ Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRA
 Die Einträge darunter bleiben als Verlauf gültig.
 
 **AKTUELL (27.09.2026): Runde 12 Teil 1 abgeschlossen, v3.17.47. Live-Stand
-nicht neu bestätigt.** G-037 und mobile Startbilder gebaut und abgenommen:
+nicht neu bestätigt.** Deploy war durch lokale Hilfsdateien blockiert;
+gezielte Git-Ausschlüsse ergänzt, `veroeffentlichen.bat` erneut starten.
+G-037 und mobile Startbilder gebaut und abgenommen:
 93 Tests, Lernrunden-Prüfungen 13/13 aus Einzeltest-Logs, Affe Handy 200 und
 iPad 150 ohne Befund. Nächster Schritt: G-075 (Mehrgeräte-Tagesprotokoll);
 danach Nachprüfung. **Wartet auf Betreiber:** K11 für den neuen Stand und

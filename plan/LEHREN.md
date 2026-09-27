@@ -371,6 +371,11 @@ Das Format steht in `CLAUDE.md`. Dazu:
 
 ### 3.11 Git
 
+- Vor der Aufforderung, `veroeffentlichen.bat` zu starten, muss auch
+  `git status --porcelain` leer sein. Lokale Agenten-Dateien und erzeugte
+  Hilfsdateien erhalten gezielte Ignore-Einträge, nachdem ihre Hosting-
+  Ausschlüsse geprüft sind; nicht die Schutzprüfung abschalten.
+
 - Direkt auf `main`, kein PR (`CLAUDE.md`).
 - Danach denselben Stand auf den Sitzungs-Branch:
   `git push origin HEAD:main && git push origin HEAD`.
@@ -1237,6 +1242,7 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 
 | Wann | Was | Ursache | Regel |
 |---|---|---|---|
+| 27.09. (eigener Fehler nach 3.17.47) | Veröffentlichung blockiert durch AGENTS.md und erzeugte splash-links.txt | Unversionierte Dateien beim Abschluss gesehen, aber Deploy-Sperre nicht berücksichtigt | § 3.11: vor Deploy-Aufforderung leeren Git-Status prüfen; nur Hosting-ausgeschlossene Hilfsdateien gezielt ignorieren |
 | 27.09. (Runde 12) | Startbild-Zeichen etwa 7,5 Pixel links vom mobilen HTML | Desktop-Kontext reserviert Scrollleistenplatz | § 11: mobile Bilder im mobilen Kontext erzeugen und vergleichen |
 | 27.09. (Runde 12, Prüfstand) | Einstiegstest verlangte alte Sticky-Puffer; Leistungstest lief parallel; Abnahme-Starter hatte zu kurzes Zeitlimit | Testablauf passte nicht zum geprüften Verhalten | § 5.3: Verhalten prüfen, Leistung isoliert messen, Gesamtzeitlimit passend wählen, Browser auch im Fehlerfall schließen |
 | 3.0.6 | gelöschtes Konto legte sich selbst wieder an | Listener schrieb nach dem Löschen weiter | § 6.8 |

@@ -2,6 +2,22 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-27 — Korrektur: Veröffentlichung von 3.17.47 blockiert
+
+**Geändert:** `.gitignore` (gezielt `/AGENTS.md`,
+`/.claude/settings.local.json`, `/plan/werkzeuge/splash-links.txt`),
+`plan/LEHREN.md` § 3.11 und § 15, `plan/PLAN.md`.
+**Entscheidung:** Der vorherige Abschluss ließ unversionierte Hilfsdateien
+zurück und forderte trotzdem zum Veröffentlichen auf. Das war ein eigener
+Fehler. Dateien erhalten; Hosting schließt sie bereits über `**/*.md`,
+`**/.*` und `plan/**` aus. Nur diese lokalen Hilfsdateien in Git ignorieren,
+die Deploy-Schutzprüfung bleibt unverändert. Keine App-Änderung, Version 3.17.47.
+**Offen:** Betreiber startet `veroeffentlichen.bat` erneut und bestätigt
+Version 3.17.47; iPhone-Kaltstartprüfung weiterhin offen.
+**Nächster Schritt:** G-075 nach dem letzten Runde-12-Eintrag fortsetzen.
+
+---
+
 | | |
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
