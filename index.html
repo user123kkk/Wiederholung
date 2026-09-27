@@ -96,13 +96,13 @@
      die .boot-Regeln in styles.css, damit das Icon nicht erst nach dem
      Stylesheet-Laden aus dem Dokumentfluss in die Mitte springt. -->
 <style>
-  .boot{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;gap:0;padding:var(--space-7);text-align:center}
+  .boot{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;gap:0;padding:32px;text-align:center}
   .boot__zeichen-hof{position:relative;width:96px;height:96px;display:grid;place-items:center}
   .boot__zeichen{position:relative;width:76px;height:76px}
   .boot__marke{position:absolute;left:0;right:0;top:calc(50% + 64px)}
   .boot__linie{position:absolute;left:50%;top:calc(50% + 116px);width:44px;height:2px;margin-left:-22px}
 </style>
-<link rel="stylesheet" href="./styles.css?v=3.17.45">
+<link rel="stylesheet" href="./styles.css?v=3.17.46">
 <script>
 /* 2.20.0: Läuft, BEVOR das erste Bild steht.
 
@@ -135,7 +135,7 @@
        Startbilder in /splash/ sind ein Foto davon - wer es aendert, erzeugt
        sie neu (README.md). Das Zeichen steht hier als SVG mit demselben Pfad
        wie ICON_PFADE.marke in app.js. -->
-  <div class="boot">
+  <div class="boot" data-stand="ruhig">
     <div class="boot__zeichen-hof"><svg class="i boot__zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" stroke="none" d="M11.53,15.02L9.3,14.84L9.21,14.74L8.74,14.74L8.65,14.65L7.63,14.47L7.53,14.37L7.07,14.28L6.79,14.09L6.6,14.09L5.3,13.44L4.65,12.98L3.44,11.77L2.6,10.28L2.6,10.09L2.42,9.72L2.42,9.44L2.33,9.35L2.33,8.98L2.23,8.88L2.14,7.58L3.72,7.67L3.81,7.77L4.28,7.77L4.37,7.86L4.65,7.86L5.12,8.05L5.4,8.05L5.49,7.95L5.4,7.86L5.4,7.3L5.3,7.21L5.3,5.44L5.4,5.35L5.49,4.23L5.58,4.14L5.58,3.86L5.67,3.77L5.67,3.49L5.77,3.4L5.86,2.93L6.88,3.4L8.09,4.23L9.3,5.44L9.77,6.09L9.86,6L10.14,4.98L10.6,3.95L10.79,3.77L11.16,3.02L12,2L12.84,3.02L12.93,3.3L13.4,3.95L13.86,4.98L13.86,5.16L14.23,6.09L14.7,5.44L15.91,4.23L17.12,3.4L18.14,2.93L18.14,3.12L18.33,3.49L18.33,3.77L18.42,3.86L18.42,4.14L18.51,4.23L18.6,5.35L18.7,5.44L18.7,7.21L18.6,7.3L18.6,7.86L18.51,7.95L18.6,8.05L18.88,8.05L18.98,7.95L19.26,7.95L19.72,7.77L20.19,7.77L20.28,7.67L21.86,7.58L21.77,8.88L21.67,8.98L21.58,9.72L20.93,11.21L20.56,11.77L19.35,12.98L18.7,13.44L17.4,14.09L17.21,14.09L16.93,14.28L16.74,14.28L16.37,14.47L16.09,14.47L16,14.56L15.72,14.56L15.26,14.74L14.79,14.74L14.7,14.84L14.14,14.84L14.05,14.93L13.02,14.93L12.93,15.02L11.53,15.02Z"/><path d="M11.95,15.02L12,22"/></svg></div>
     <div class="boot__marke">Adrabic</div>
     <div class="boot__linie" aria-hidden="true"></div>
