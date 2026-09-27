@@ -3549,13 +3549,13 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .solo.einstieg-solo { min-height: 100svh; display: flex; flex-direction: column; }
 .solo.einstieg-solo > .einstieg { flex: 1 0 auto; display: flex; flex-direction: column; }
 .einstieg > .einstieg-aktion {
-  margin-top: auto; padding-top: var(--space-6);
-  /* Sticky bleibt fuer lange Einstiegsseiten erhalten, ist aber selbst
-     transparent. Ein undurchsichtiger/gradienter Hintergrund hier lag im
-     Dark Mode wie ein schwarzer Block ueber Text, Karten und Auswahlzeilen. */
-  position: sticky; bottom: 0; z-index: 2;
+  /* Normaler Dokumentfluss: bei kurzen Screens schiebt margin-top:auto den
+     Fuss nach unten; sobald der Inhalt hoeher als der Viewport wird, loest
+     sich der Auto-Rand auf und der komplette Einstieg darf natuerlich
+     wachsen/scrollen. Kein Overlay, kein z-index, kein verdeckter Inhalt. */
+  margin-top: auto;
+  padding-top: var(--space-6);
   padding-bottom: calc(var(--sab) + var(--space-6));
-  background: transparent;
 }
 .solo.einstieg-solo { padding-bottom: 0; }
 /* Ohne Knopf (Plan entsteht) braucht der Bildschirm den Abstand selbst. */
@@ -3693,13 +3693,10 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .einstieg-wahl {
   display: flex; flex-direction: column; gap: var(--space-2);
   margin-top: var(--space-5);
-  /* 3.17.42 (G-041, Befund EINSTIEG-5): Ohne Luft unten lag die letzte
-     Zeile ("Nichts davon" bei den Huerden) auf 360 und 390 px hinter dem
-     fest stehenden Weiter-Bereich (.einstieg-aktion, position: sticky) -
-     nichts zeigte, dass sich dahinter noch etwas verbirgt. Der reservierte
-     Platz deckt Knopf + Sperr-Zeile + Abstand grosszuegig ab, der Verlauf
-     auf .einstieg-aktion bleibt der sichtbare Scroll-Hinweis. */
-  padding-bottom: calc(var(--sab) + 11rem);
+  /* Der Weiter-Bereich ist Teil des normalen Dokumentflusses. Deshalb
+     braucht die Liste keinen kuenstlichen 11rem-Puffer mehr; sonst entsteht
+     unter den Antworten ein riesiger Leerraum, obwohl nichts ueberlagert. */
+  padding-bottom: var(--space-4);
 }
 .einstieg-option {
   position: relative;
