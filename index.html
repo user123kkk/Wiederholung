@@ -92,7 +92,17 @@
 <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png">
 <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png">
 <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png">
-<link rel="stylesheet" href="./styles.css?v=3.17.44">
+<!-- Kritischer First-Paint-Teil des Boot-Screens: dieselbe Geometrie wie
+     die .boot-Regeln in styles.css, damit das Icon nicht erst nach dem
+     Stylesheet-Laden aus dem Dokumentfluss in die Mitte springt. -->
+<style>
+  .boot{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;gap:0;padding:var(--space-7);text-align:center}
+  .boot__zeichen-hof{position:relative;width:96px;height:96px;display:grid;place-items:center}
+  .boot__zeichen{position:relative;width:76px;height:76px}
+  .boot__marke{position:absolute;left:0;right:0;top:calc(50% + 64px)}
+  .boot__linie{position:absolute;left:50%;top:calc(50% + 116px);width:44px;height:2px;margin-left:-22px}
+</style>
+<link rel="stylesheet" href="./styles.css?v=3.17.45">
 <script>
 /* 2.20.0: Läuft, BEVOR das erste Bild steht.
 
