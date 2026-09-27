@@ -2,6 +2,12 @@
 
 ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
 
+### Aktuelle ChatGPT-Übergabe vom 27.09.2026
+
+Wenn die nächste Session an den aktuellen Onboarding/UI-Problemen arbeitet, zusätzlich **[`plan/onboarding/CHATGPT-HANDOFF-2026-09-27.md`](plan/onboarding/CHATGPT-HANDOFF-2026-09-27.md) komplett lesen**. Dort stehen die konkreten Änderungen 3.17.44–3.17.46, der noch offene Loading-Screen-Befund, die aktuelle Scroll-/Kartenlogik und die Regressionen, die in dieser Session entstanden sind.
+
+**Besonders wichtig:** UI-/Motion-Fixes erzeugen hier leicht neue Fehler. Nicht nur die gemeldete Stelle prüfen: angrenzende Screens, kurze/lange Viewports, Scrollposition, Karte → Bewertung, Plan-Aufbau, fertiger Plan und iOS First Paint nach jeder Änderung erneut prüfen. Ein Fix, der einen neuen Ruckler/Overlay/Sprung erzeugt, ist zurückzunehmen oder lokal anders zu lösen.
+
 Dort steht jeder Fehler, der in diesem Projekt schon passiert ist, samt der
 Regel, die ihn verhindert. Das umfasst Code, Firebase, Regeln, E-Mails,
 Hosting, iOS, Texte, Recht und den Umgang mit dem Betreiber. Der Betreiber
