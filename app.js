@@ -6632,6 +6632,10 @@ function einstiegBauScrollStoppen() {
     ui.einstiegBauScrollTimer.forEach(t => clearTimeout(t));
   }
   ui.einstiegBauScrollTimer = [];
+  if (Array.isArray(ui.einstiegPlanScrollTimer)) {
+    ui.einstiegPlanScrollTimer.forEach(t => clearTimeout(t));
+  }
+  ui.einstiegPlanScrollTimer = [];
 }
 function einstiegBauAutoScroll(anzahl) {
   einstiegBauScrollStoppen();
@@ -6646,6 +6650,31 @@ function einstiegBauAutoScroll(anzahl) {
       zeile.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, delay));
   }
+}
+function einstiegPlanAutoScroll() {
+  if (einstiegBewegungReduziert()) return;
+  const stop = () => {
+    if (!ui.einstieg || ui.einstieg.schritt !== EINSTIEG_LETZTER || !ui.einstieg.planGebaut) return;
+  };
+  const leiter = document.querySelector('.einstieg-leiter');
+  const wege = document.querySelector('.einstieg-wege');
+  const aktion = document.querySelector('.einstieg-aktion');
+  if (!leiter || !wege || !aktion) return;
+  /* Nicht sofort losspringen: erst darf der Plan-Haken und die Kacheln
+     ankommen. Danach folgt der Blick langsam der bereits vorhandenen
+     Leiter-Animation bis zu den Wegen und schliesslich zur Handlung. */
+  const ziele = [
+    [900, leiter],
+    [2500, wege],
+    [3900, aktion]
+  ];
+  ui.einstiegPlanScrollTimer = [];
+  ziele.forEach(([delay, el]) => {
+    ui.einstiegPlanScrollTimer.push(setTimeout(() => {
+      if (stop()) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, delay));
+  });
 }
 /* 3.17.22: Die Karte auf Bildschirm 0 dreht sich nicht mehr per CSS-Animation,
    sondern nach dieser Haltezeit per Klassenwechsel - deshalb ein eigener
@@ -6930,6 +6959,10 @@ function renderEinstieg() {
   app.style.setProperty("--arab-scale", String(arabFaktor()));
   e.balkenVorher = e.schritt / EINSTIEG_LETZTER;
   einstiegFreiVerbinden();
+  if (e.schritt === EINSTIEG_LETZTER && e.planGebaut && neu) {
+    einstiegBauScrollStoppen();
+    einstiegPlanAutoScroll();
+  }
   /* Neuer Bildschirm: Fokus auf die Ueberschrift, damit ein Bildschirmleser
      ihn ansagt - statt auf dem body stehen zu bleiben, wo der gedrueckte
      Knopf eben verschwunden ist. */
