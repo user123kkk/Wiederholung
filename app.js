@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.44";
+const APP_VERSION = "3.17.45";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -6591,9 +6591,9 @@ function einstiegWeiterPruefen() {
    sind das jetzt rund 5,7 s statt 4,5 s - jeder Punkt steht knapp eine
    Sekunde fuer sich, statt dass die Liste durchrattert. Laenger als das wird
    Warten statt Wert. */
-const EINSTIEG_BAU_SCHRITT_MS = 700;    // Abstand von einem Punkt zum naechsten
-const EINSTIEG_BAU_VORLAUF_MS = 620;    // bis der erste Punkt steht
-const EINSTIEG_BAU_NACHLAUF_MS = 900;   // der letzte Punkt darf einen Moment stehen
+const EINSTIEG_BAU_SCHRITT_MS = 820;    // ruhiger Abstand von einem Punkt zum naechsten
+const EINSTIEG_BAU_VORLAUF_MS = 700;    // etwas mehr Ruhe, bevor der erste Punkt steht
+const EINSTIEG_BAU_NACHLAUF_MS = 1100;  // der letzte Punkt darf bewusst stehen
 function einstiegBauListe(e) {
   const punkte = [];
   const ziel = EINSTIEG_ZIELE.filter(z => e.ziele.includes(z.id)).map(z => z.kurz).join(", ");
@@ -6623,6 +6623,30 @@ function einstiegBewegungReduziert() {
 function einstiegTimerStoppen() {
   if (ui.einstiegTimer) { clearTimeout(ui.einstiegTimer); ui.einstiegTimer = null; }
 }
+/* Der Aufbau ist länger als ein Handyfenster. Während die Analyse sichtbar
+   Schritt für Schritt entsteht, folgt der Blick ruhig dem jeweils neu
+   erscheinenden Punkt. Nicht bei reduced-motion und nur solange derselbe
+   Aufbau läuft. */
+function einstiegBauScrollStoppen() {
+  if (Array.isArray(ui.einstiegBauScrollTimer)) {
+    ui.einstiegBauScrollTimer.forEach(t => clearTimeout(t));
+  }
+  ui.einstiegBauScrollTimer = [];
+}
+function einstiegBauAutoScroll(anzahl) {
+  einstiegBauScrollStoppen();
+  if (einstiegBewegungReduziert() || anzahl < 2) return;
+  ui.einstiegBauScrollTimer = [];
+  for (let n = 1; n < anzahl; n++) {
+    const delay = EINSTIEG_BAU_VORLAUF_MS + n * EINSTIEG_BAU_SCHRITT_MS;
+    ui.einstiegBauScrollTimer.push(setTimeout(() => {
+      if (!ui.einstieg || ui.einstieg.schritt !== EINSTIEG_LETZTER || ui.einstieg.planGebaut) return;
+      const zeile = document.querySelector('.einstieg-bau__liste li:nth-child(' + (n + 1) + ')');
+      if (!zeile) return;
+      zeile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, delay));
+  }
+}
 /* 3.17.22: Die Karte auf Bildschirm 0 dreht sich nicht mehr per CSS-Animation,
    sondern nach dieser Haltezeit per Klassenwechsel - deshalb ein eigener
    Timer, der beim Verlassen des Bildschirms und beim ersten Antippen faellt. */
@@ -6645,7 +6669,10 @@ function renderEinstieg() {
   if (neu) e.zeit = Date.now();
   /* Beim Verlassen des Plan-Bildschirms waehrend des Aufbaus darf der Timer
      nicht nachtraeglich den Plan zeichnen. */
-  if (e.schritt !== EINSTIEG_LETZTER) einstiegTimerStoppen();
+  if (e.schritt !== EINSTIEG_LETZTER) {
+    einstiegTimerStoppen();
+    einstiegBauScrollStoppen();
+  }
   if (e.schritt !== 0) heroTimerStoppen();
   if (e.schritt === EINSTIEG_LETZTER && !e.planGebaut && einstiegBewegungReduziert()) e.planGebaut = true;
   const aufbau = e.schritt === EINSTIEG_LETZTER && !e.planGebaut;
@@ -6861,7 +6888,6 @@ function renderEinstieg() {
       '<svg class="i i-lg einstieg-zeichnen" viewBox="0 0 24 24" focusable="false">' +
       '<circle cx="12" cy="12" r="9" pathLength="1"/><path d="M8 12.3l2.8 2.8L16.2 9.6" pathLength="1"/></svg></div>';
     html += '<h1>Dein Plan steht.</h1>';
-    html += '<p class="subtitle">Aus deinen Antworten. Schrift und Runde kannst du jederzeit ändern.</p>';
     if (satz) html += '<p class="einstieg-satz einstieg-satz--plan"><strong>' + esc(satz) + '</strong></p>';
     /* 3.17.42 (G-044, Befund EINSTIEG-6): "Zeitpunkt" entfaellt hier - der
        Anker-Text steht schon im Satz direkt darueber ("Nach dem ... mache
@@ -6872,9 +6898,7 @@ function renderEinstieg() {
     html += einstiegKachel("Schrift", labelVon(ARAB_STUFEN, groesse, "Normal"), 1);
     html += einstiegKachel("Ziel", ziel, 2);
     html += '</div>';
-    html += '<h2 class="einstieg-zwischentitel">So kommt ein Wort zurück, das du heute anlegst</h2>';
     html += einstiegLeiter();
-    html += '<p class="hint einstieg-nachsatz">Weißt du es mal nicht, kommt es früher wieder.</p>';
     /* 3.11.0: die zwei Wege zu Karten, beim Namen genannt. Betreiber am
        24.09.2026, aus einem TikTok-Befund: "hab in einem tiktok video gesehen,
        dass deren foto feature von 4% genutzt wurde nur, weil es im onboarding
@@ -6936,6 +6960,7 @@ function renderEinstieg() {
   /* Nach dem Aufbau kommt der Plan als neuer Bildschirm herein (gezeigt = -1
      heisst "neu, von unten"), nicht als stilles Neuzeichnen. */
   if (aufbau && !ui.einstiegTimer) {
+    einstiegBauAutoScroll(einstiegBauListe(e).length);
     ui.einstiegTimer = setTimeout(() => {
       ui.einstiegTimer = null;
       if (ui.einstieg !== e || e.schritt !== EINSTIEG_LETZTER) return;
@@ -6951,6 +6976,7 @@ function renderEinstieg() {
    F7): wer sich abmeldet, ist kein Neuling. */
 function einstiegBeenden(satz) {
   einstiegTimerStoppen();
+  einstiegBauScrollStoppen();
   heroTimerStoppen();
   ui.authGewaehlt = true;
   nachklangSetzen(satz || "");
