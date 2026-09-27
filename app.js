@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.45";
+const APP_VERSION = "3.17.46";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -6628,53 +6628,65 @@ function einstiegTimerStoppen() {
    erscheinenden Punkt. Nicht bei reduced-motion und nur solange derselbe
    Aufbau läuft. */
 function einstiegBauScrollStoppen() {
-  if (Array.isArray(ui.einstiegBauScrollTimer)) {
-    ui.einstiegBauScrollTimer.forEach(t => clearTimeout(t));
+  if (ui.einstiegBauScrollRaf) {
+    cancelAnimationFrame(ui.einstiegBauScrollRaf);
+    ui.einstiegBauScrollRaf = null;
   }
-  ui.einstiegBauScrollTimer = [];
-  if (Array.isArray(ui.einstiegPlanScrollTimer)) {
-    ui.einstiegPlanScrollTimer.forEach(t => clearTimeout(t));
+  if (ui.einstiegPlanScrollRaf) {
+    cancelAnimationFrame(ui.einstiegPlanScrollRaf);
+    ui.einstiegPlanScrollRaf = null;
   }
-  ui.einstiegPlanScrollTimer = [];
 }
-function einstiegBauAutoScroll(anzahl) {
+function einstiegBauAutoScroll() {
   einstiegBauScrollStoppen();
-  if (einstiegBewegungReduziert() || anzahl < 2) return;
-  ui.einstiegBauScrollTimer = [];
-  for (let n = 1; n < anzahl; n++) {
-    const delay = EINSTIEG_BAU_VORLAUF_MS + n * EINSTIEG_BAU_SCHRITT_MS;
-    ui.einstiegBauScrollTimer.push(setTimeout(() => {
-      if (!ui.einstieg || ui.einstieg.schritt !== EINSTIEG_LETZTER || ui.einstieg.planGebaut) return;
-      const zeile = document.querySelector('.einstieg-bau__liste li:nth-child(' + (n + 1) + ')');
-      if (!zeile) return;
-      zeile.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, delay));
-  }
+  if (einstiegBewegungReduziert()) return;
+  /* Ein einziger kontinuierlicher Follow-Loop statt mehrerer scrollIntoView()
+     Aufrufe. Die alten Aufrufe haben sich gegenseitig abgebrochen und dadurch
+     auf iOS wie Ruckeln/Stop-and-go ausgesehen. */
+  const started = performance.now();
+  const dauer = EINSTIEG_BAU_VORLAUF_MS + 6 * EINSTIEG_BAU_SCHRITT_MS + EINSTIEG_BAU_NACHLAUF_MS;
+  const tick = now => {
+    if (!ui.einstieg || ui.einstieg.schritt !== EINSTIEG_LETZTER || ui.einstieg.planGebaut) {
+      ui.einstiegBauScrollRaf = null;
+      return;
+    }
+    const t = Math.min(1, (now - started) / dauer);
+    const ease = t * t * (3 - 2 * t);
+    const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const startTop = ui.einstiegBauScrollStartTop ?? window.scrollY;
+    const ziel = startTop + (max - startTop) * ease;
+    window.scrollTo(0, ziel);
+    if (t < 1) ui.einstiegBauScrollRaf = requestAnimationFrame(tick);
+    else ui.einstiegBauScrollRaf = null;
+  };
+  ui.einstiegBauScrollStartTop = window.scrollY;
+  ui.einstiegBauScrollRaf = requestAnimationFrame(tick);
 }
 function einstiegPlanAutoScroll() {
   if (einstiegBewegungReduziert()) return;
-  const stop = () => {
-    if (!ui.einstieg || ui.einstieg.schritt !== EINSTIEG_LETZTER || !ui.einstieg.planGebaut) return;
-  };
+  einstiegBauScrollStoppen();
   const leiter = document.querySelector('.einstieg-leiter');
   const wege = document.querySelector('.einstieg-wege');
   const aktion = document.querySelector('.einstieg-aktion');
   if (!leiter || !wege || !aktion) return;
-  /* Nicht sofort losspringen: erst darf der Plan-Haken und die Kacheln
-     ankommen. Danach folgt der Blick langsam der bereits vorhandenen
-     Leiter-Animation bis zu den Wegen und schliesslich zur Handlung. */
-  const ziele = [
-    [900, leiter],
-    [2500, wege],
-    [3900, aktion]
-  ];
-  ui.einstiegPlanScrollTimer = [];
-  ziele.forEach(([delay, el]) => {
-    ui.einstiegPlanScrollTimer.push(setTimeout(() => {
-      if (stop()) return;
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, delay));
-  });
+  /* Auch hier genau eine Bewegung: nicht drei smooth-scrolls, die sich
+     gegenseitig abbrechen. Der Zielpunkt wandert mit dem fertigen Plan. */
+  const started = performance.now();
+  const dauer = 3600;
+  const startTop = window.scrollY;
+  const tick = now => {
+    if (!ui.einstieg || ui.einstieg.schritt !== EINSTIEG_LETZTER || !ui.einstieg.planGebaut) {
+      ui.einstiegPlanScrollRaf = null;
+      return;
+    }
+    const t = Math.min(1, (now - started) / dauer);
+    const ease = t * t * (3 - 2 * t);
+    const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    window.scrollTo(0, startTop + (max - startTop) * ease);
+    if (t < 1) ui.einstiegPlanScrollRaf = requestAnimationFrame(tick);
+    else ui.einstiegPlanScrollRaf = null;
+  };
+  ui.einstiegPlanScrollRaf = requestAnimationFrame(tick);
 }
 /* 3.17.22: Die Karte auf Bildschirm 0 dreht sich nicht mehr per CSS-Animation,
    sondern nach dieser Haltezeit per Klassenwechsel - deshalb ein eigener
@@ -6993,7 +7005,7 @@ function renderEinstieg() {
   /* Nach dem Aufbau kommt der Plan als neuer Bildschirm herein (gezeigt = -1
      heisst "neu, von unten"), nicht als stilles Neuzeichnen. */
   if (aufbau && !ui.einstiegTimer) {
-    einstiegBauAutoScroll(einstiegBauListe(e).length);
+    einstiegBauAutoScroll();
     ui.einstiegTimer = setTimeout(() => {
       ui.einstiegTimer = null;
       if (ui.einstieg !== e || e.schritt !== EINSTIEG_LETZTER) return;
@@ -12802,8 +12814,18 @@ document.body.addEventListener("click", e => {
     case "einstieg-bewerten":
       if (ui.einstieg) {
         ui.einstieg.bewertet = btn.dataset.id || "Fast";
-        render();
-        /* 3.17.37 (G-087): siehe .einstieg-antwort oben. */
+        const antwort = document.createElement("div");
+        antwort.className = "einstieg-antwort";
+        antwort.innerHTML = einstiegBewertungEcho(ui.einstieg.bewertet);
+        const aktion = document.createElement("div");
+        aktion.innerHTML = einstiegFuss("Weiter");
+        const bewertung = btn.closest(".einstieg-bewertung");
+        if (bewertung) {
+          bewertung.replaceWith(antwort, ...Array.from(aktion.children));
+        } else {
+          render();
+        }
+        /* Karte und Scrollposition bleiben dabei exakt dieselben DOM-Knoten. */
         ansagen(einstiegBewertungEchoText(ui.einstieg.bewertet));
       }
       break;
