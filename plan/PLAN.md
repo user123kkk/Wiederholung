@@ -786,9 +786,12 @@ Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRA
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (27.09.2026): v3.17.42 auf `main`, live ist 3.17.40.** Runde 11
-fertig (Einstieg). Offen im Großplan nur noch G-037, G-075 (Opus), danach
-Nachprüfung. **Wartet auf Betreiber:** K11, G-042-Rest (Zeitgrenze,
+**AKTUELL (27.09.2026): Runde 12 Teil 1 abgeschlossen, v3.17.47. Live-Stand
+nicht neu bestätigt.** G-037 und mobile Startbilder gebaut und abgenommen:
+93 Tests, Lernrunden-Prüfungen 13/13 aus Einzeltest-Logs, Affe Handy 200 und
+iPad 150 ohne Befund. Nächster Schritt: G-075 (Mehrgeräte-Tagesprotokoll);
+danach Nachprüfung. **Wartet auf Betreiber:** K11 für den neuen Stand und
+Kaltstart der installierten iPhone-App prüfen, G-042-Rest (Zeitgrenze,
 Datenschutz-Satz). **Wartet auf Betreiber:** Gerätetest Drehen (iPhone),
 E-19 (Geste für „Fast", Empfehlung: lieber nicht).
 Davor 3.17.39:

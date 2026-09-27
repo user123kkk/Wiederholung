@@ -112,7 +112,43 @@ function qsnap(q){ let docs = kinder(q.path).map(([p]) => dsnap(p));
   for (const w of (q.where||[])) if (w.__after !== undefined) { const i = docs.findIndex(s => s.id === w.__after); docs = docs.slice(i + 1); }
   for (const w of (q.where||[])) if (w.__limit !== undefined) docs = docs.slice(0, w.__limit);
   return { docs, size: docs.length, empty: !docs.length, forEach: f => docs.forEach(f), metadata:{ hasPendingWrites:false } }; }
-function melden(){ S.writes++; setTimeout(() => { for (const l of S.listeners) { try { l.cb(l.ref.col ? qsnap(l.ref) : dsnap(l.ref.path)); } catch(e){ console.error('listener', e); } } }, 5); }
+/* Wie Firestore: nur tatsaechlich geaenderte Dokumente melden; docChanges
+   gehoert zum jeweiligen Listener (der erste Stand besteht aus added).
+   Vorher meldete jeder Tageszaehler auch alle unveraenderten Karten erneut. */
+function listenerMelden(l, changedPath){
+  if (changedPath && l.ref.col && !l.ref.where && l.vorher) {
+    const pre = l.ref.path + '/';
+    if (!changedPath.startsWith(pre) || changedPath.slice(pre.length).includes('/')) return;
+    const d = dsnap(changedPath), alt = l.vorher.get(d.id), text = JSON.stringify(d.data());
+    if (alt && alt.text === text) return;
+    const changes = [{ type: d.exists() ? (alt ? 'modified' : 'added') : 'removed', doc:d }];
+    if (d.exists()) l.vorher.set(d.id, {doc:d, text}); else l.vorher.delete(d.id);
+    const docs = [...l.vorher.values()].map(x => x.doc);
+    l.cb({docs, size:docs.length, empty:!docs.length, forEach:f=>docs.forEach(f),
+      docChanges:()=>changes, metadata:{hasPendingWrites:false}});
+    return;
+  }
+  if (changedPath && !l.ref.col && l.gemeldet && changedPath !== l.ref.path) return;
+  const snap = l.ref.col ? qsnap(l.ref) : dsnap(l.ref.path);
+  if (l.ref.col) {
+    const jetzt = new Map(snap.docs.map(d => [d.id, { doc:d, text:JSON.stringify(d.data()) }]));
+    const vorher = l.vorher || new Map(), changes = [];
+    for (const [id, x] of jetzt) {
+      if (!vorher.has(id)) changes.push({type:'added', doc:x.doc});
+      else if (vorher.get(id).text !== x.text) changes.push({type:'modified', doc:x.doc});
+    }
+    for (const [id, x] of vorher) if (!jetzt.has(id)) changes.push({type:'removed', doc:x.doc});
+    snap.docChanges = () => changes;
+    const erst = !l.vorher; l.vorher = jetzt;
+    if (!erst && !changes.length) return;
+  } else {
+    const text = JSON.stringify(snap.data());
+    if (l.gemeldet && l.vorher === text) return;
+    l.vorher = text; l.gemeldet = true;
+  }
+  l.cb(snap);
+}
+function melden(changedPath){ S.writes++; setTimeout(() => { for (const l of S.listeners) { try { listenerMelden(l, changedPath); } catch(e){ console.error('listener', e); } } }, 5); }
 function setzeTief(obj, segs, val){ let o = obj; for (let i = 0; i < segs.length - 1; i++) { if (typeof o[segs[i]] !== 'object' || o[segs[i]] === null) o[segs[i]] = {}; o = o[segs[i]]; }
   const k = segs[segs.length-1];
   if (val === DEL || (val && val.__del)) delete o[k];
@@ -143,8 +179,8 @@ function _update(ref, a, ...rest){ if (S.fail) throw Object.assign(new Error('fa
     for (let i = 0; i < paare.length; i += 2) { const f = paare[i]; const segs = f instanceof FieldPath ? f.segs : String(f).split('.'); setzeTief(d, segs, paare[i+1]); } }
   else { for (const k of Object.keys(a)) setzeTief(d, k.split('.'), a[k]); }
   S.store.set(ref.path, d); }
-export function setDoc(ref, data, opt){ try { _set(ref, data, opt); } catch(e){ return Promise.reject(e); } melden(); return Promise.resolve(); }
-export function updateDoc(ref, ...args){ try { _update(ref, ...args); } catch(e){ return Promise.reject(e); } melden(); return Promise.resolve(); }
+export function setDoc(ref, data, opt){ try { _set(ref, data, opt); } catch(e){ return Promise.reject(e); } melden(ref.path); return Promise.resolve(); }
+export function updateDoc(ref, ...args){ try { _update(ref, ...args); } catch(e){ return Promise.reject(e); } melden(ref.path); return Promise.resolve(); }
 export function deleteDoc(ref){ S.protokoll.push('deleteDoc'); S.store.delete(ref.path); melden(); return Promise.resolve(); }
 export function addDoc(col, data){ const r = doc(col); _set(r, data); melden(); return Promise.resolve(r); }
 export function getDoc(ref){ if (S.failGet) return Promise.reject(Object.assign(new Error('Failed to get document because the client is offline.'), { code: 'unavailable' })); return Promise.resolve(dsnap(ref.path)); }
@@ -170,7 +206,7 @@ export function onSnapshot(ref, cb, err){
   if (S.user && S.user.emailVerified === false && err) { setTimeout(() => err(Object.assign(new Error('x'), { code: 'permission-denied' })), 20); return () => {}; }
   if (window.__SNAP_FAIL && err) { setTimeout(() => err(Object.assign(new Error('x'), { code: window.__SNAP_FAIL })), 20); return () => {}; }
   const l = { ref, cb }; S.listeners.push(l);
-  setTimeout(() => { try { cb(ref.col ? qsnap(ref) : dsnap(ref.path)); } catch(e){ console.error('snap', e); } }, 20);
+  setTimeout(() => { try { listenerMelden(l); } catch(e){ console.error('snap', e); } }, 20);
   return () => { S.listeners = S.listeners.filter(x => x !== l); }; }
 `;
 

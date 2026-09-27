@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.46";
+const APP_VERSION = "3.17.47";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -318,11 +318,10 @@ function istGefuehrt(b) { return !!(b && b.gefuehrt); }
 function karteZaehltFuerLektion(c) {
   return (c.maxStufe || 0) < LEKTION_STUFE && !istVerbrannt(c);
 }
-function lektionOffeneKarten(b, set) {
-  const byId = new Map(b.karten.map(c => [c.id, c]));
+function lektionOffeneKarten(b, set, byId = new Map(b.karten.map(c => [c.id, c]))) {
   return set.cardIds.map(id => byId.get(id)).filter(c => c && karteZaehltFuerLektion(c));
 }
-function lektionSitzt(b, set) { return lektionOffeneKarten(b, set).length === 0; }
+function lektionSitzt(b, set, byId) { return lektionOffeneKarten(b, set, byId).length === 0; }
 /* ---------- 3.7.0: „Lehrer gibt frei" ----------
    plan/lehrer-modus/GERUEST.md, Abschnitte L und M. Wurde ein Satz ueber einen
    Code uebernommen, dessen Ersteller die Freischaltung selbst in der Hand
@@ -344,8 +343,11 @@ function offeneLektionIds(b) {
     for (let i = 0; i < lek.length && i < n; i++) offen.add(lek[i].id);
     return offen;
   }
+  // Ein Index je Durchlauf statt je Lektion; keine gespeicherten Ergebnisse,
+  // damit Bewertung, Rueckgaengig und fremde Aenderungen sofort gelten.
+  const byId = new Map(b.karten.map(c => [c.id, c]));
   for (let i = 0; i < lek.length; i++) {
-    if (i > 0 && !lektionSitzt(b, lek[i - 1])) break;
+    if (i > 0 && !lektionSitzt(b, lek[i - 1], byId)) break;
     offen.add(lek[i].id);
   }
   return offen;
@@ -1915,6 +1917,42 @@ function sammlungenStarten() {
     datenZusammenbauen();
   }, snapFehler);
   unsubKartenSnap = fb.onSnapshot(kartenColRef, snap => {
+    /* G-037: Bei unveraenderter Struktur nur geaenderte Karten abgleichen.
+       Ein eigenes Bewertungs-Echo ist bereits lokal angewendet und braucht
+       weder 6000 neue Kartenobjekte noch einen zweiten Bildschirmaufbau.
+       Anlegen/Loeschen/Verschieben/Sortieren geht weiter durch den vollen
+       Aufbau, damit Reihenfolge und Sammlungswechsel unveraendert bleiben. */
+    const aenderungen = rohKarten !== null && typeof snap.docChanges === "function"
+      ? snap.docChanges() : null;
+    if (aenderungen && bereiche !== null && rohBereiche !== null &&
+        !syncError && !ladeLangsam && !ui.umzug) {
+      const rohIndex = new Map(rohKarten.map(k => [k.id, k]));
+      const neu = aenderungen.map(a => ({ art: a.type, k: { id: a.doc.id, ...a.doc.data() } }));
+      if (neu.every(({ art, k }) => {
+        const alt = rohIndex.get(k.id);
+        const b = bereiche.find(b => b.id === k.bereichId);
+        return art === "modified" && alt && alt.bereichId === k.bereichId && alt.order === k.order &&
+          (!b || b.karten.some(c => c.id === k.id));
+      })) {
+        let geaendert = false;
+        for (const { k } of neu) {
+          // Ein fern geloeschtes optionales Feld darf nicht im Rohstand bleiben.
+          for (const f of Object.keys(rohIndex.get(k.id))) delete rohIndex.get(k.id)[f];
+          Object.assign(rohIndex.get(k.id), k);
+          const b = bereiche.find(b => b.id === k.bereichId);
+          const i = b ? b.karten.findIndex(c => c.id === k.id) : -1;
+          if (i < 0) continue; // verwaiste Karte ohne Bereich, wie im Vollaufbau
+          const c = normCard(k), alt = b.karten[i];
+          if (Object.keys(c).some(f => c[f] !== alt[f])) {
+            b.karten[i] = c;
+            if (Number.isFinite(k.order)) ordnungGespeichert.set(c, k.order);
+            geaendert = true;
+          }
+        }
+        if (geaendert) render();
+        return;
+      }
+    }
     rohKarten = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     datenZusammenbauen();
   }, snapFehler);

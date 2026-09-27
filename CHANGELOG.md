@@ -1,3 +1,12 @@
+## 3.17.47 – 27. September 2026
+
+**Große Kartenbestände schneller bewerten und iOS-Startbilder angleichen.**
+
+- Lektionsprüfungen teilen sich einen Kartenindex pro Durchlauf. Unveränderte Bewertungs-Echos aus Firestore bauen den Bildschirm nicht erneut auf; Strukturänderungen verwenden weiterhin den vollständigen Aufbau.
+- Startbilder mit mobilem Browserkontext neu erzeugt: der Desktop-Scrollleistenplatz verschob das Zeichen zuvor etwa 7,5 Pixel gegenüber dem mobilen HTML.
+- Prüfstand bildet geänderte Firestore-Dokumente ab; neue Tests prüfen Kartenänderungen, Laufzeit und Startbild-Geometrie. Onboarding-Test auf den Dokumentfluss seit 3.17.44 angepasst.
+- Der tatsächliche Start einer installierten PWA bleibt am iPhone zu bestätigen.
+
 ## 3.17.46 – 27. September 2026
 
 **Onboarding-Motion: Karte und Scroll ohne konkurrierende Bewegungen.**

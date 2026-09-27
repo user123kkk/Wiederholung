@@ -5,8 +5,53 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 | | |
 |---|---|
 | Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
-| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 4–7) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 12 (Runde 11 fertig, v3.17.42) |
+| Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 12 Teil 1) · A5 ☐ · A6 ☐ |
+| Nächste Runde | 12 Fortsetzung: G-075, danach Nachprüfung |
+
+---
+
+### 2026-09-27 — Runde 12 Teil 1 abgeschlossen: große Bestände und mobile Startbilder (3.17.47)
+
+**Geändert:** `app.js:321` und `app.js:1925` (gemeinsamer Kartenindex,
+gezielter Snapshot-Abgleich), `plan/werkzeuge/pruefstand/stubs.js:115`
+(docChanges und Meldungen nur für Änderungen), neue Tests
+`t_bestand_tempo.js`, `t_karten_snapshot.js`, `t_boot_geometrie.js`,
+`t_einstieg_g083_039_040_041_044.js` (Dokumentfluss statt Sticky-Puffer),
+`plan/werkzeuge/startbilder.js:35`, alle 31 `splash/*.png`, Version 3.17.47
+in `app.js`, `sw.js`, `index.html`, `CHANGELOG.md`, `plan/LEHREN.md:1084`,
+`plan/grossplan/AUFGABEN.md` (G-037 erledigt).
+
+**Entscheidung:** Keine Lektionsregel ändern, nur wiederholte Indexbildung
+und unnötigen Vollaufbau vermeiden. Strukturänderungen bleiben im Vollaufbau.
+Startbilder aus mobilem Kontext erzeugen: gemessener Desktop-Versatz etwa
+7,5 CSS-Pixel. Alle 31 PNGs lesbar, zusammen 3,35 MB; vier Handy-/iPad-
+Geometrien gegenüber HTML höchstens 0,5 Pixel abweichend. Nach vollständiger
+Komprimierung 2,33 MB (die zuvor genannten 3,35 MB waren der Zwischenstand).
+
+**Prüfung:** 91 Tests des Volltest-Starters erfolgreich, keine Fehler in den
+Logs. Zusätzlich `t_boot_geometrie` nach Komprimierung und
+`t_karten_snapshot` grün. Alle 13 Lernrunden-Prüfungen aus den erfolgreichen
+Einzeltest-Logs durch die Abnahmeliste ausgewertet; die Lese-Ausgaben geprüft.
+Der redundante serielle Abnahmelauf wurde wegen des zu kurzen Starter-
+Zeitlimits beendet. Er ist kein zusätzlicher Beleg. Leistungsprüfung zunächst
+mit konkurrierenden Browser-Tests: ein Ausreißer 137 ms; isolierte Prüfung
+folgte. Syntax, Versions-/Cache-/CSP-Prüfung grün.
+
+**Abnahme abgeschlossen:** Leistungsprüfung isoliert mit 3000 Karten und
+150 Lektionen, geführt/eigen, CPU 4×: zehn Bewertungen, `gradeCard` 21,6–46,4 ms,
+Summe langer Aufgaben je Bewertung jeweils 0 ms (keine Aufgabe über 50 ms).
+Die feste Grenze ist 100 ms, jede Bewertung muss genau einmal erfolgen.
+Gegenprobe `637995c` schlägt mit 173 ms erwartungsgemäß an. Affe Handy 200 und
+iPad 150 Schritte, Seed 12: jeweils 0 Befunde. Insgesamt alle 93 aktuellen
+`t_*.js` geprüft: 91 im Volltestlauf, Boot und Tempo separat.
+
+**Offen:** G-075 bleibt offen. Betreiber: Hosting veröffentlichen
+und installierte iPhone-App beim Kaltstart prüfen. Keine Regeln geändert.
+
+**Kriterien:** A1 ☐ (G-075 offen) · A2 ☑ · A3 ☑ · A4 ☑ · A5 ☐ · A6 ☐.
+
+**Nächster Schritt:** Runde 12 fortsetzen: G-075 (Tagesprotokoll über mehrere
+Geräte, Rückgängig und abgelehnte Schreibvorgänge); danach Nachprüfung A5/A6.
 
 ---
 

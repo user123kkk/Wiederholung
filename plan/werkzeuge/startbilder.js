@@ -27,7 +27,10 @@ fs.mkdirSync(ZIEL, { recursive: true });
   for (const [w, h, d] of GER) {
     const lagen = w >= 700 ? [['portrait', w, h], ['landscape', h, w]] : [['portrait', w, h]];
     for (const [o, vw, vh] of lagen) {
-      const ctx = await b.newContext({ viewport: { width: vw, height: vh }, deviceScaleFactor: d });
+      // iOS reserviert keine Desktop-Scrollleiste. Ohne isMobile verschob
+      // scrollbar-gutter das Zeichen im PNG um etwa 7,5 CSS-Pixel nach links.
+      const ctx = await b.newContext({ viewport: { width: vw, height: vh }, deviceScaleFactor: d,
+        isMobile: true, hasTouch: true, colorScheme: 'dark' });
       const p = await ctx.newPage();
       await p.route('**/www.gstatic.com/**', () => {});
       await p.route('**/verses.quran.foundation/**', r => r.abort());

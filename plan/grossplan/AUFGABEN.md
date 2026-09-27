@@ -61,7 +61,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-034 | Veröffentlichen lädt `*.zip` mit hoch; `.bat` deployt ungeprüften Arbeitsordner | TECHNIK-9 | A | H | P1 | erledigt (3.17.30) |
 | G-035 | „Gesehen" + Rückgängig zählt den Tag für die Serie | LERNEN-3 | A | S | P5 | erledigt (3.17.32) |
 | G-036 | Keine Warnung an dem Tag, an dem Aussetzen die halbe Serie kostet (Hinweis an die geltende Regel angleichen) | LERNEN-5 (a) | A | S | P5 | erledigt (3.17.33) |
-| G-037 | Große Bestände: jede Bewertung 200–700 ms Rechenzeit (3000–6000 Karten) | LERNEN-6 | A | O | P13 | offen |
+| G-037 | Große Bestände: jede Bewertung 200–700 ms Rechenzeit (3000–6000 Karten) | LERNEN-6 | A | O | P13 | erledigt (3.17.47): 3000 Karten, geführt/eigen, CPU 4×; zehn Bewertungen unter 100 ms, Gegenprobe 637995c rot |
 | G-038 | „Kostenlos." steht noch unter „Plan speichern" | EINSTIEG-2 | A | H | P14 | erledigt (3.17.30) |
 | G-039 | Probekarte springt beim Antippen 40 px | EINSTIEG-3 | A | S | P14 | erledigt (3.17.42) |
 | G-040 | Probekarte übt eine andere Bedienung als die Runde; Einladen-Puls läuft noch | EINSTIEG-4 | A | S | P14 | erledigt (3.17.42): Markup/Klassen der Runde; bei der Abnahme: Platzhalter vorn ergänzt (Wort sprang ~15 px), doppelter Hinweis auf der Karte raus (Untertitel ist Betreiber-Wortlaut) |

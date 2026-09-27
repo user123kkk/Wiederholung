@@ -514,6 +514,15 @@ Was gemessen wird:
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
 
+- Laufzeitprüfungen ohne konkurrierende Browser-Tests ausführen; feste
+  Grenzen nicht wegen eines langsamen Parallel-Laufs lockern.
+- Zeitlimits eines Teststarters müssen zum gesamten Ablauf passen.
+  Bereits bestandene Einzeltests dürfen aus ihren vollständigen Logs
+  ausgewertet werden; dies ausdrücklich von einem erneuten Lauf unterscheiden.
+- Neue Browser-Tests schließen den Browser in `finally`, auch bei Assertions.
+- Bei geänderter Oberfläche Verhalten prüfen (Überlappung, Antippbarkeit),
+  keine überholten Layout-Puffer verlangen (Runde 12).
+
 Belegte Fälle:
 
 - *Kontrast-Test (Einstieg):* Er meldete 1,0–1,6:1, weil er den gefüllten Punkt
@@ -1081,6 +1090,11 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
   es entfernt (§ 3.9).
 - **Startbilder** (`splash/`) müssen pro Gerätegröße passen. Geprüft wird das
   am echten Gerät.
+  - Der Generator muss einen mobilen Kontext (`isMobile`, `hasTouch`) verwenden.
+    Desktop-Scrollleistenplatz (`scrollbar-gutter`) verschob die PNG-Zeichen
+    etwa 7,5 CSS-Pixel gegenüber dem mobilen HTML (27.09.2026).
+  - PNG und HTML im selben mobilen Kontext pixelweise vergleichen; eine
+    Chromium-Messung ersetzt keine Bestätigung der installierten iOS-App.
 - **Kalender-Erinnerung** läuft über `.ics` (`text/calendar`). iOS muss das am
   Gerät bestätigen (offen beim Betreiber).
 
@@ -1207,8 +1221,24 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 
+27.09.2026, Runde 12: Startbilder wurden mit Desktop-Kontext erzeugt; das
+Zeichen lag etwa 7,5 CSS-Pixel links vom mobilen HTML. Generator auf mobilen
+Kontext umgestellt und vier Geometrien geprüft (§ 11). Der Einstiegstest
+forderte nach Entfernung des Sticky-Fußes noch alte Scroll-Puffer; Abnahme
+prüft jetzt Überlappung und tatsächliche Antippbarkeit statt alter Maße (§ 5.3).
+
+27.09.2026, eigener Prüfablauf: Der Volltest-Starter setzte auch für die
+gesamte Lernrunden-Abnahme nur fünf Minuten an; diese wiederholt 13 bereits
+gelaufene Tests und braucht länger. Abnahme stattdessen aus den erfolgreichen
+Einzeltest-Logs ausgewertet. Leistungsprüfungen liefen zunächst gleichzeitig
+mit anderen Browser-Tests (137 ms Ausreißer); Laufzeiten immer ohne
+konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
+`finally`, damit nach einer Assertion kein Browser offen bleibt (§ 5.3).
+
 | Wann | Was | Ursache | Regel |
 |---|---|---|---|
+| 27.09. (Runde 12) | Startbild-Zeichen etwa 7,5 Pixel links vom mobilen HTML | Desktop-Kontext reserviert Scrollleistenplatz | § 11: mobile Bilder im mobilen Kontext erzeugen und vergleichen |
+| 27.09. (Runde 12, Prüfstand) | Einstiegstest verlangte alte Sticky-Puffer; Leistungstest lief parallel; Abnahme-Starter hatte zu kurzes Zeitlimit | Testablauf passte nicht zum geprüften Verhalten | § 5.3: Verhalten prüfen, Leistung isoliert messen, Gesamtzeitlimit passend wählen, Browser auch im Fehlerfall schließen |
 | 3.0.6 | gelöschtes Konto legte sich selbst wieder an | Listener schrieb nach dem Löschen weiter | § 6.8 |
 | 3.0.21/22 | erfundener Kartensatz veröffentlicht | Inhalt ohne Freigabe | § 1.6 |
 | 3.0.21 | Startseite ignorierte helles Thema | Inline-Skript wich vom CSP-Hash ab | § 9.2 |

@@ -135,15 +135,9 @@ async function pruefeNichtsDavon(b, vp, label) {
   await klick(p, '[data-action="einstieg-huerde"][data-id="dran"]', 200);
   await klick(p, '[data-action="einstieg-huerde"][data-id="zeit"]', 200);
   await klick(p, '[data-action="einstieg-huerde"][data-id="schrift"]', 200);
-  /* Am Ende der Liste liegt "Nichts davon" IMMER buendig ueber dem
-     Weiter-Bereich (position: sticky gibt am Dokumentende nach - das gilt
-     schon im alten Stand und ist kein brauchbarer Unterschied). Der eigentliche
-     Fund war: ohne sichtbaren Grund zu scrollen, sah die Seite fertig aus,
-     "Nichts davon" blieb unbemerkt hinter dem Knopf. Zwei Dinge zaehlen:
-     (1) am Ende bleibt spuerbar LUFT zwischen Zeile und Knopf, nicht nur
-     buendig 0 px - das zeigt: hier ist wirklich Schluss, nichts verdeckt;
-     (2) ohne zu scrollen ist deutlich erkennbar mehr da (scrollHeight klar
-     groesser als das Fenster). */
+  /* Seit 3.17.44 stehen Auswahl und Weiter im Dokumentfluss.
+     Pruefen: kein Ueberlappen und die letzte Auswahl ist nach Scrollen
+     wirklich antippbar. Alte Sticky-Puffer sind kein Abnahmekriterium. */
   const ohneScroll = await p.evaluate(() => Math.round(document.documentElement.scrollHeight - innerHeight));
   await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await p.waitForTimeout(300);
@@ -154,9 +148,17 @@ async function pruefeNichtsDavon(b, vp, label) {
     const kr = keine.getBoundingClientRect(), ar = aktion.getBoundingClientRect();
     return { keineBottom: Math.round(kr.bottom), aktionTop: Math.round(ar.top) };
   });
-  pruefe(!!lage && (lage.aktionTop - lage.keineBottom) >= 40,
-    label + ': "Nichts davon" hat am Ende spuerbar Luft zum Weiter-Bereich (nicht nur buendig 0px): ' + JSON.stringify(lage));
-  pruefe(ohneScroll >= 250, label + ': ohne zu scrollen ist erkennbar mehr Seite da (scrollHeight-innerHeight=' + ohneScroll + 'px)');
+  // Seit 3.17.44 normaler Dokumentfluss: keine kuenstliche Scrollreserve.
+  // Entscheidend sind Ueberdeckung und echte Erreichbarkeit per Trefferpruefung.
+  pruefe(!!lage && lage.aktionTop >= lage.keineBottom,
+    label + ': Weiter-Bereich liegt hinter der letzten Auswahl: ' + JSON.stringify(lage));
+  const erreichbar = await p.evaluate(() => {
+    const el = document.querySelector('[data-action="einstieg-huerde"][data-id="keine"]');
+    el.scrollIntoView({block:'center', behavior:'instant'});
+    const r = el.getBoundingClientRect();
+    return el.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
+  });
+  pruefe(erreichbar, label + ': letzte Auswahl ist nach Scrollen tatsaechlich antippbar');
   console.log(label, '| Fehler auf der Seite:', p.fehler.join('|') || 'ok');
   await ctx.close();
 }
@@ -221,7 +223,7 @@ async function pruefeKnopfHoehe(b, vp, label) {
   await klick(p, '[data-action="einstieg-huerde"][data-id="zeit"]', 300);
   await klick(p, '[data-action="einstieg-huerde"][data-id="schrift"]', 300);
   const lang = await mess();
-  pruefe(!!lang && !lang.overlap && lang.scroll >= 250,
+  pruefe(!!lang && !lang.overlap && lang.scroll > 0,
     label + ': langer Huerden-Screen scrollt und der Fuss ueberdeckt nichts: ' + JSON.stringify(lang));
   await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   const ende = await mess();
