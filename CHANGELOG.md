@@ -1,3 +1,14 @@
+## 3.17.46 – 27. September 2026
+
+**Onboarding-Motion: Karte und Scroll ohne konkurrierende Bewegungen.**
+
+- Beim Bewerten der Probekarte wird die Karte nicht mehr durch einen kompletten render()-Durchlauf neu gemountet. Nur Bewertung/Antwort/Fuss werden ersetzt; dadurch bleiben Kartenposition, Drehzustand und Scrollposition stabil.
+- Der automatische Onboarding-Scroll verwendet nicht mehr mehrere scrollIntoView-Aufrufe, die sich gegenseitig abbrechen. Aufbau und fertiger Plan folgen jeweils einer einzigen kontrollierten Bewegung.
+- Loading-First-Paint weiter abgesichert: Das statische Boot-Markup trägt seinen Zustand bereits im HTML und die kritische Geometrie verwendet keine erst später definierten CSS-Variablen.
+- Wichtiger offener Punkt dokumentiert: iOS kann vor dem HTML den separaten apple-touch-startup-image-Splash zeigen. Diese PNGs müssen bei einer Änderung des Boot-Layouts mit plan/werkzeuge/startbilder.js neu erzeugt werden; sonst kann der sichtbare Übergang Splash → HTML weiterhin wie ein Positionssprung wirken.
+- Claude-Code-Übergabe ergänzt: plan/onboarding/CHATGPT-HANDOFF-2026-09-27.md.
+
+APP_VERSION, CACHE_NAME und beide Versions-Querys in index.html stehen auf 3.17.46.
 ## 3.17.45 – 27. September 2026
 
 **Onboarding-Motion und First-Paint bereinigt.**
