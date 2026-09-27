@@ -3550,15 +3550,12 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 .solo.einstieg-solo > .einstieg { flex: 1 0 auto; display: flex; flex-direction: column; }
 .einstieg > .einstieg-aktion {
   margin-top: auto; padding-top: var(--space-6);
-  /* Ist der Bildschirm hoeher als das Fenster (kleines Handy), bleibt der
-     Knopf trotzdem unten sichtbar stehen und laeuft nicht mit dem Echo mit.
-     Ein Verlauf in der Seitenfarbe laesst den Inhalt darunter auslaufen. */
+  /* Sticky bleibt fuer lange Einstiegsseiten erhalten, ist aber selbst
+     transparent. Ein undurchsichtiger/gradienter Hintergrund hier lag im
+     Dark Mode wie ein schwarzer Block ueber Text, Karten und Auswahlzeilen. */
   position: sticky; bottom: 0; z-index: 2;
-  /* Der untere Abstand der Seite gehoert hierher, nicht an .solo: so steht
-     der Knopf im Fluss und angeheftet an derselben Stelle (sonst 24 px
-     Sprung, sobald der Inhalt ueber das Fenster waechst). */
   padding-bottom: calc(var(--sab) + var(--space-6));
-  background: linear-gradient(to top, var(--bg) 72%, transparent);
+  background: transparent;
 }
 .solo.einstieg-solo { padding-bottom: 0; }
 /* Ohne Knopf (Plan entsteht) braucht der Bildschirm den Abstand selbst. */
@@ -4034,6 +4031,18 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
   .einstieg-karte:hover .karte-seite { border-color: var(--border-strong); }
 }
 .einstieg-karte--offen { cursor: default; }
+/* Die Lernkarte bringt bewusst eine grosse Bühne für den eigentlichen Lernlauf
+   mit. Im Einstieg ist sie Teil eines normalen Scroll-Layouts: dort braucht sie
+   keine 40svh-Überhöhe. Scoped sizing verhindert, dass die gemeinsame
+   3D-Kartenregel andere Einstiegsinhalte visuell überfährt. */
+.einstieg-karte .study-flaeche {
+  width: 100%;
+  overflow: hidden;
+}
+.einstieg-karte .karte-seite {
+  min-height: clamp(190px, 30svh, 300px);
+  padding: var(--space-7) var(--space-4) var(--space-6);
+}
 /* 3.17.42 (G-040, Befund EINSTIEG-4): Die Probekarte dreht jetzt wie die
    echte Runde (karte-dreh, karte-seite--vorn/--hinten, karte-dreh--wende,
    styles.css Abschnitt "Die Karte der Runde") statt einer eigenen
@@ -4182,7 +4191,11 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
    2×2-Raster (Tan AI) - "Zeitpunkt" stand doppelt (auch im Satz darüber)
    und ist entfallen, jetzt eine Reihe zu drei. */
 .einstieg-kacheln {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  /* Auf kleinen Geräten untereinander: drei 100px-Spalten machen lange
+     Werte unnötig schmal und lassen die Beschriftungen wie kaputte UI wirken.
+     Die kompakte Drei-Spalten-Ansicht kommt erst ab 720px. */
+  grid-template-columns: 1fr;
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
