@@ -32,42 +32,44 @@ Die Befunde, aus denen `AUFGABEN.md` entstanden ist, stehen in
 
 ---
 
-## 1. Wer was macht
+## 1. Codex: Modell und Arbeit wählen
 
-| Rolle | Modell | Macht | Macht nicht |
-|---|---|---|---|
-| **Dirigent** | Opus (die Session selbst) | wählt die nächsten Aufgaben, schreibt die Übergabe, prüft jedes Ergebnis gegen die Abnahme, lässt Tests laufen, committet, schreibt Logbuch; erledigt alle Aufgaben mit „Modell: Opus" selbst | nichts ungeprüft übernehmen |
-| **Handwerker** | Sonnet | genau **eine** Aufgabe nach Übergabe: klar umrissene Code-Änderung, zugehöriger Test | committen, pushen, Version zählen, Pläne ändern, außerhalb der genannten Stellen ändern |
-| **Hilfskraft** | Haiku | reine Textersetzungen mit festem Wortlaut, `grep`-Prüfungen, Tests laufen lassen und Ergebnis melden | Logik, Gestaltung, Entscheidungen |
+Die historischen Kürzel H/S/O in `AUFGABEN.md` beschreiben die damalige
+Claude-Übergabe, **keine** heutige Modellpflicht. Für neue Codex-Arbeit zählt
+die Schwierigkeit der konkreten Aufgabe. Die Modellwahl ist eine Empfehlung
+für den Nutzer beim Start einer Session; ein laufender Chat schaltet sein
+eigenes Modell nicht selbst um. Bei begrenztem Kontingent mit dem leichtesten
+passenden Modell beginnen und bei einem nachgewiesenen Problem hochgehen.
 
-Warum so: Die teure Arbeit ist **Urteilen** (ist das ein Fehler? reicht die
-Lösung? was bricht dabei?). Die billige Arbeit ist **Ausführen** einer
-eindeutigen Anweisung. Deshalb schreibt Opus die Anweisung so genau, dass
-Sonnet/Haiku nicht raten müssen, und prüft danach. Eine Aufgabe, die sich nicht
-eindeutig beschreiben lässt, ist eine Opus-Aufgabe.
+| Aufgabe | Codex-Empfehlung | Wann höher gehen |
+|---|---|---|
+| feste Textersetzung, Log-Sichtung, klarer Einzeltest | GPT-6 Luna, niedrig | mehrere abhängige Dateien oder unklarer Befund → Sol |
+| normale Codeänderung, UI-Fix, Regression, Plandateien | GPT-6 Sol, niedrig; bei mehreren Codepfaden mittel | wiederholte Fehlversuche oder Architekturfragen → Astra |
+| mehrgerätefähige Datenlogik, Firestore-Regeln, schwer reproduzierbares iOS-Verhalten, abschließende Sicherheitsprüfung | GPT-6 Astra, niedrig oder mittel je nach Befund | höhere Denkstufe nur, wenn die konkrete Analyse sie braucht |
 
-**Ein Handwerker-Ergebnis gilt erst, wenn der Dirigent es abgenommen hat.**
-Abnahme heißt: Diff gelesen, Abnahmekriterium selbst geprüft (nicht dem
-Bericht geglaubt), Tests grün. Fällt es durch: zurück an denselben Handwerker
-mit dem genauen Grund (höchstens zweimal), danach übernimmt Opus
-(`LEHREN.md` § 3.4: nach dem zweiten erfolglosen Anlauf die Annahme
-hinterfragen).
+Für G-075 ist wegen konkurrierender Geräte und Rückgängig Astra sinnvoll;
+für die achtteilige Nachprüfung zunächst Sol mittel, Astra für neue schwere
+Befunde. Das ist keine Aussage über garantierte Tokenkosten oder Qualität.
+Abnahme bleibt unabhängig vom Modell: Diff lesen, das Kriterium selbst prüfen,
+Gegenprobe bei Fehlern und passende Regressionstests. Keine pauschalen
+Testwiederholungen nach grünem Stand ohne neue Änderung.
 
-Es arbeitet immer nur **ein** Handwerker gleichzeitig an `app.js`/`styles.css`
-– die Dateien sind groß, parallele Änderungen würden sich überschreiben.
-Parallel laufen dürfen nur lesende Agenten oder Aufgaben an verschiedenen
-Dateien.
+Codex arbeitet standardmäßig in **diesem** Chat. Weitere Agenten nur bei
+ausdrücklichem Auftrag; niemals gleichzeitig an `app.js`/`styles.css`.
 
 ---
 
 ## 2. Ablauf einer Runde
 
-Eine Runde = ein Aufwachen der Routine oder ein „weiter" des Betreibers.
+Eine Runde beginnt nur nach einem ausdrücklichen „weiter" des Betreibers.
+**Stand 28.09.2026: pausiert nach dem Ladebildschirm-Fix.** G-075 und
+Nachprüfung A5/A6 werden bis zur Wiederaufnahme nicht begonnen. Die neue Idee
+„Quran oder andere Texte auswendig lernen" wird zuerst als Produktfrage
+besprochen, ohne Lernlogik oder religiösen Wortlaut zu bauen.
 
-1. **Einlesen:** `CLAUDE.md` → `plan/LEHREN.md` → diese Datei →
+1. **Einlesen:** `AGENTS.md`/`CLAUDE.md` → `plan/LEHREN.md` → diese Datei →
    `LOGBUCH.md` (letzter Eintrag) → `AUFGABEN.md`. `git pull origin main`.
-   Läuft laut Logbuch gerade eine andere Runde (Eintrag „Runde läuft" ohne
-   Abschluss, jünger als 3 Stunden): nichts tun, beenden.
+   Pausenstatus und parallele Arbeit zuerst prüfen.
 2. **Prüfstand starten** (`plan/werkzeuge/pruefstand/LIESMICH.md`): Server auf
    8099, `node_modules` einrichten, falls die Session frisch ist.
 3. **Auswählen:** bis zu **fünf** Aufgaben mit Status `offen`, deren
@@ -76,12 +78,13 @@ Eine Runde = ein Aufwachen der Routine oder ein „weiter" des Betreibers.
    (kritisch → niedrig), dann Aufgaben, die dieselbe Stelle betreffen,
    zusammen. Nie etwas aus `ENTSCHEIDUNGEN.md`, das noch offen ist.
 4. **Je Aufgabe:**
-   - Opus liest die Codestelle selbst (Beleg noch aktuell?). Stimmt der Befund
-     nicht mehr: Status `trifft nicht zu` mit Begründung.
-   - Modell „Haiku"/„Sonnet": Übergabe nach `UEBERGABE.md` schreiben, Agent mit
-     genau diesem Modell starten (`Agent`, `model: "sonnet"` bzw. `"haiku"`).
-   - Modell „Opus": selbst machen.
-   - **Abnahme** durch Opus (Abschnitt 3). Durchgefallen → zurück (s. o.).
+   - Codex liest die Codestelle selbst (Beleg noch aktuell?). Stimmt der
+     Befund nicht mehr: Status `trifft nicht zu` mit Begründung.
+   - Modell nach § 1 empfehlen. Im laufenden Chat mit dem gewählten Modell
+     arbeiten; keine automatische Delegation. Bei ausdrücklich gewünschter
+     Delegation `UEBERGABE.md` für genau eine Aufgabe verwenden.
+   - **Abnahme** durch den verantwortlichen Codex-Chat (Abschnitt 3).
+     Durchgefallen → Ursache prüfen und korrigieren, nicht schönreden.
    - Status in `AUFGABEN.md`: `erledigt (vX.Y.Z)` oder `zurück: <Grund>`.
 5. **Veröffentlichungsliste** aus `CLAUDE.md` einmal für alle Aufgaben der
    Runde zusammen (eine Version je Runde), `LEHREN.md` § 14 durchgehen, dann
@@ -159,27 +162,12 @@ Menschen. Diese stehen im Abschlussbericht unter „Was Du noch tun musst".
 
 ---
 
-## 5. Die Routine (Zeitplan)
+## 5. Zeitplan: angehalten
 
-- Name: **„Adrabic Großplan – Nachtschicht"**, Kennung
-  `trig_01L6Ves47R3gsG5kvqQVmyQA`.
-- Zeitplan: **23:07, 2:07 und 5:07 Uhr (Europe/Berlin)**, jede Nacht.
-- Sie weckt **die Session, in der der Plan entstanden ist**
-  (`session_01WzaCEZCxEqmfKVPh1ipGvX`). Warum nicht jedes Mal eine frische
-  Session: Eine von der Routine neu gestartete Session hätte kein Repository
-  angehängt und keine Konnektoren, der Push auf `main` wäre nicht gesichert.
-  In dieser Session ist beides bewiesen. Der Kontext wird bei Bedarf
-  zusammengefasst; deshalb steht der Stand immer in den Dateien, nie nur im
-  Gedächtnis.
-- Auftrag bei jedem Aufwachen: **eine** Runde nach § 2. Opus dirigiert und
-  verteilt an Sonnet/Haiku.
-- Die Routine veröffentlicht **nie** auf die Website. Sie pusht auf `main`;
-  live geht es erst mit dem Knopf des Betreibers (GitHub → Actions →
-  „Veroeffentlichen").
-- **Anhalten:** claude.ai → Routines → „Adrabic Großplan – Nachtschicht" →
-  ausschalten. Oder in der Session schreiben: „Schleife stoppen".
-- Sind A1–A6 erfüllt, schaltet die letzte Runde die Routine selbst ab und
-  schreibt den Abschlussbericht (`LOGBUCH.md`, oberster Eintrag
-  „ABSCHLUSS").
-- Die letzte Antwort jeder Runde ist ein kurzer Morgenbericht: was erledigt
-  ist, was zurückging, was der Betreiber entscheiden oder klicken muss.
+Die frühere Claude-Routine „Adrabic Großplan – Nachtschicht"
+(`trig_01L6Ves47R3gsG5kvqQVmyQA`, 23:07/2:07/5:07 Berlin) ist ein
+**historischer externer Zeitplan**, kein Codex-Auftrag. Ihr tatsächlicher
+Schalterzustand ist hier nicht einsehbar. Sie darf aus dieser Planfassung
+keine neue Runde ableiten. Der Betreiber muss sie in claude.ai → Routines
+anhalten, falls sie dort noch aktiv ist. In Codex wird kein Ersatz-Zeitplan
+angelegt. Nach dem Ladebildschirm-Fix warten G-075 und A5/A6 auf „weiter".

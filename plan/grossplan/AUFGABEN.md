@@ -7,7 +7,9 @@ Befund** (Zeile „Abnahme"). Der Dirigent prüft sie selbst (`AUFTRAG.md` § 3)
 
 **Spalten:** *Entscheidet* A = Agent darf bauen · B = wartet auf Betreiber
 (siehe `ENTSCHEIDUNGEN.md`) · K = Konsole (siehe `KONSOLE.md`).
-*Modell*: H = Haiku · S = Sonnet · O = Opus (Dirigent selbst).
+*Modell* (historische Claude-Zuordnung): H = Haiku · S = Sonnet · O = Opus.
+Für neue Codex-Arbeit gilt die aufgabenbezogene Auswahl in `AUFTRAG.md` § 1;
+die Kürzel erzwingen kein Modell.
 *Status*: `offen` · `läuft` · `erledigt (vX)` · `zurück: Grund` ·
 `trifft nicht zu: Grund` · `wartet: E-…`.
 

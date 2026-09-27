@@ -514,6 +514,7 @@ hängt, nicht begonnen.
 | ~~16~~ | ~~Einstieg, erster Bildschirm: Die Karte „كِتَابٌ → Buch" dreht sich einmal nach 1 s. Wer später hinschaut, hat es verpasst. Was tun?~~ | **entschieden 24.09.2026: Empfehlung C.** Gebaut in v3.17.20: Karte dreht hin und zurück (endet auf Arabisch), zusätzlich jederzeit antippbar. |
 | ~~17~~ | ~~Einstieg „Wofür lernst du Arabisch?": Die Antworten überschneiden sich. Ändern?~~ | **entschieden 24.09.2026: Empfehlung B.** Gebaut in v3.17.20: „Hocharabisch lesen und sprechen" entfernt, 3 statt 4 Antworten. |
 | ~~18~~ | ~~Serie: Wie viele ausgelassene Tage verzeiht sie?~~ | **entschieden 24.09.2026 („ja mach"): Empfehlung B, Lernlogik mit Freigabe geändert.** Gebaut in v3.17.20: Der Joker lädt sich nach 7 gelernten Tagen wieder auf, statt nur einmal im ganzen Verlauf zu gelten. Geprüft mit sechs konstruierten Fällen gegen die echte App (`plan/werkzeuge/pruefstand/t_serie.js`). |
+| Q1 | Wie soll das Auswendiglernen fortlaufender Texte funktionieren: vorhandene Karten kennzeichnen, eigener Bereich oder ein eigener Lernmodus? Welche Einheit und welche Rückmeldung sind sinnvoll? | Neue Text-/Quran-Funktion und F-12. Zuerst mit dem Betreiber abwägen; keine religiösen Inhalte durch Agenten verfassen und keine religiösen Angaben der Nutzenden speichern. |
 
 **Neu am 24.09.2026 (Fragen 16–18).** Die drei Bedenken äußerte der Betreiber
 „bevor ich eine Anweisung gebe". Nach seiner Regel (`plan/LEHREN.md` § 1.1)
@@ -778,22 +779,24 @@ Festgelegt vom Betreiber am 12.09.2026:
 Betreiber: „ich möchte einen krassen perfekten Plan … die Arbeit an ein
 günstigeres Modell geben … so lange weiterlaufen, bis das Ergebnis wirklich
 die Kriterien erreicht … nachts von allein". Alles steht in
-[`grossplan/`](grossplan/): Auftrag, Rollen (Opus dirigiert und prüft,
-Sonnet/Haiku führen aus), Abnahmekriterien A1–A6, 133 Befunde aus 8
+[`grossplan/`](grossplan/): Auftrag, Codex-Modellwahl nach Aufgabe,
+Abnahmekriterien A1–A6, 133 Befunde aus 8
 Prüfbereichen, Aufgabenliste G-001 ff., Betreiber-Fragen E-01 ff.,
-Konsolen-Schritte K1 ff., Funktionen/Premium. **Bei „leg los" oder beim
-Aufwachen der Routine: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRAG.md)
+Konsolen-Schritte K1 ff., Funktionen/Premium. **Nach der aktuellen Pause nur
+auf ausdrückliches „weiter" eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRAG.md)
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (27.09.2026): Runde 12 Teil 1 abgeschlossen, v3.17.47. Live-Stand
-nicht neu bestätigt.** Deploy war durch lokale Hilfsdateien blockiert;
-gezielte Git-Ausschlüsse ergänzt, `veroeffentlichen.bat` erneut starten.
-G-037 und mobile Startbilder gebaut und abgenommen:
-93 Tests, Lernrunden-Prüfungen 13/13 aus Einzeltest-Logs, Affe Handy 200 und
-iPad 150 ohne Befund. Nächster Schritt: G-075 (Mehrgeräte-Tagesprotokoll);
-danach Nachprüfung. **Wartet auf Betreiber:** K11 für den neuen Stand und
-Kaltstart der installierten iPhone-App prüfen, G-042-Rest (Zeitgrenze,
+**AKTUELL (28.09.2026): Runde 12 Teil 1 abgeschlossen; Korrektur 3.17.48
+für die iOS-Startbilder geprüft, Veröffentlichung offen.** Ihre URLs waren nach 3.17.47 unverändert,
+obwohl Hosting PNGs eine Woche cacht. Die Links tragen jetzt die App-Version;
+der installierte iPhone-Kaltstart bleibt am echten Gerät zu prüfen. Nach dem
+Fix **anhalten**: G-075, A5/A6 und Runde 13 erst auf ein neues „weiter".
+Vorher die offene Produktfrage Q1 (Quran/fortlaufende Texte auswendig lernen)
+mit dem Betreiber erörtern, nichts dazu bauen. Eine eventuell noch aktive
+externe Claude-Nachtroutine muss der Betreiber separat beenden.
+**Wartet auf Betreiber:** 3.17.48 veröffentlichen, K11 und Kaltstart der
+installierten iPhone-App prüfen, G-042-Rest (Zeitgrenze,
 Datenschutz-Satz). **Wartet auf Betreiber:** Gerätetest Drehen (iPhone),
 E-19 (Geste für „Fast", Empfehlung: lieber nicht).
 Davor 3.17.39:

@@ -70,3 +70,23 @@ Squeezy/Paddle) nimmt Steuer und Verbraucherrecht ab, kostet mehr. Tabelle in
 | F-20 | Wurzel-/Grammatik-Feld | 3.9.8 schon entfernt (0 von 136 Karten nutzten es) |
 | F-11b | Eigene Tonaufnahmen | Blaze + Stimmdaten |
 | F-12 | Reihenfolge-Modus (fortlaufende Texte) | eigenes Konzept, Religion und Lernlogik – **wenn, dann kostenlos**, nicht als Premium |
+
+### Offene Produktfrage Q1 (28.09.2026): Texte auswendig lernen
+
+Der Betreiber möchte nach dem Loading-Screen-Fix über Quran- und andere
+fortlaufende Texte sprechen. Das ist eine **Frage, kein Bauauftrag**. Die
+Möglichkeiten sind vorläufig so gewichtet:
+
+| Ansatz | Dafür | Dagegen |
+|---|---|---|
+| Vorhandene Karten kennzeichnen | Wenig neue Oberfläche; bekanntes Lernen | Reihenfolge und Zusammenhang gehen leicht verloren; ein neues Cloud-Feld hätte Regel-, Datenschutz- und Migrationsthemen |
+| Eigener Bereich mit vorhandenen Karten | Trennt Material ohne neue Lernlogik | Bleibt Kartenlernen; längere Passagen und fortlaufendes Aufsagen werden nicht gut abgebildet |
+| Eigener Text-/Reihenfolge-Modus (F-12) | Abschnitte, Reihenfolge und wiederholtes Aufsagen könnten passend gestaltet werden | Größerer Eingriff in Lernlogik, Bedienung und Speicherung; sorgfältiges Konzept und Abnahme nötig |
+
+**Vorläufige Empfehlung:** Erst anhand eines vom Betreiber beschriebenen,
+nichtreligiösen Beispieltexts Lernschritte und Rückmeldung klären. Für
+zusammenhängendes Auswendiglernen ist ein eigener Modus voraussichtlich
+passender als ein Kartenmerkmal; ein eigener Bereich allein löst das Problem
+nicht. Bis Q1 entschieden ist, nichts implementieren. Religiösen Wortlaut
+liefert ausschließlich der Betreiber; religiöse Angaben der Nutzenden werden
+nicht gespeichert (`plan/LEHREN.md` § 2).

@@ -1,14 +1,14 @@
-# Übergabe an einen Handwerker (Sonnet) oder eine Hilfskraft (Haiku)
+# Übergabe für eine ausdrücklich delegierte Codex-Aufgabe
 
-Der Dirigent (Opus) füllt diese Vorlage für **genau eine** Aufgabe aus und gibt
-sie als Prompt an den Agenten (`model: "sonnet"` oder `"haiku"`). Alles in
-spitzen Klammern ersetzen. Je genauer, desto weniger muss geraten werden – was
-sich nicht genau beschreiben lässt, ist eine Opus-Aufgabe.
+Nur bei ausdrücklichem Auftrag zur Delegation: Der verantwortliche Codex-Chat
+füllt diese Vorlage für **genau eine** Aufgabe aus. Das Modell wird nach
+`AUFTRAG.md` § 1 empfohlen. Alles in spitzen Klammern ersetzen. Aufgaben mit
+unklarer Ursache bleiben zunächst beim verantwortlichen Chat.
 
 ---
 
 ```
-Du arbeitest im Repo /home/user/Wiederholung (Karteikarten-PWA „Adrabic",
+Du arbeitest im angehängten Repo Wiederholung (Karteikarten-PWA „Adrabic",
 kein Build-Schritt). Du erledigst genau EINE Aufgabe: <ID> – <Titel>.
 
 Lies vorher:
@@ -44,9 +44,9 @@ Regeln des Repos, die hier gelten:
 
 Prüfen, bevor du fertig meldest:
 - node --check app.js
-- <konkreter Test: cd plan/werkzeuge/pruefstand && CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node t_xyz.js>
+- <konkreter Test aus plan/werkzeuge/pruefstand; Browserpfad der aktuellen Umgebung verwenden>
   (Server läuft auf 127.0.0.1:8099; falls nicht: im Repo-Wurzelordner
-  `python3 -m http.server 8099 --bind 127.0.0.1` im Hintergrund starten)
+  einen lokalen HTTP-Server auf Port 8099 starten)
 - <grep, der 0 bzw. N Treffer liefern muss>
 
 Abnahme (daran prüft der Dirigent):
@@ -59,10 +59,9 @@ hast. Nichts beschönigen: wenn ein Test rot ist, sag es.
 
 ---
 
-## Nach der Rückmeldung (Dirigent)
+## Nach der Rückmeldung (verantwortlicher Chat)
 
 1. `git diff` lesen – nur die genannten Stellen geändert?
 2. Abnahme **selbst** prüfen (Test selbst laufen lassen).
 3. Passt → Status `erledigt` (Version kommt beim Runden-Commit dazu).
-   Passt nicht → zurück an denselben Agenten (`SendMessage`) mit dem genauen
-   Grund. Nach zwei Fehlschlägen übernimmt Opus.
+   Passt nicht → Ursache prüfen und mit genauem Grund korrigieren.

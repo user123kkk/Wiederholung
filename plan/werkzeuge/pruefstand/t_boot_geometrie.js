@@ -3,6 +3,12 @@
 const {start,OUT} = require('./lib');
 const fs = require('fs'), path = require('path');
 const assert = require('node:assert/strict');
+const html = fs.readFileSync(path.join(__dirname,'../../../index.html'),'utf8');
+const version = /const APP_VERSION = "([0-9.]+)";/.exec(fs.readFileSync(path.join(__dirname,'../../../app.js'),'utf8'))?.[1];
+assert.ok(version,'APP_VERSION fehlt');
+const startLinks = [...html.matchAll(/rel="apple-touch-startup-image"[^>]+href="([^"]+)"/g)].map(x=>x[1]);
+assert.equal(startLinks.length,31,'31 Startbild-Links erwartet');
+assert.ok(startLinks.every(x=>x.endsWith('?v='+version)),'Startbilder ohne aktuelle Versionsadresse');
 (async()=>{
   const b=await start();
   try {
@@ -10,6 +16,9 @@ const assert = require('node:assert/strict');
       const ctx=await b.newContext({viewport:{width:w,height:h},deviceScaleFactor:d,isMobile:true,hasTouch:true});
       const p=await ctx.newPage();
       await p.route('**/www.gstatic.com/**',()=>{});
+      const link = startLinks.find(x=>x.startsWith(`./splash/splash-${w*d}x${h*d}.png?`));
+      assert.ok(link,`${w}x${h}: Startbild-Link fehlt`);
+      assert.equal((await p.request.get(new URL(link,'http://127.0.0.1:8099/index.html').href)).status(),200,'Startbild unter Versionsadresse nicht erreichbar');
       await p.goto('http://127.0.0.1:8099/index.html');
       await p.addStyleTag({content:'*,*::before,*::after{animation-play-state:paused!important;animation-delay:0s!important}.boot__linie{visibility:hidden!important}'});
       const lage=await p.evaluate(()=>{const r=document.querySelector('.boot__zeichen').getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height};});

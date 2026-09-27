@@ -1,3 +1,7 @@
+## 3.17.48 – 28. September 2026
+
+**iOS-Startbilder erhalten neue Versionsadressen.** Die korrigierten Bilder aus 3.17.47 lagen weiter unter den alten URLs und konnten aus dem Browser-Cache stammen. Alle 31 Links tragen jetzt eine Versions-Query; der Generator leitet sie künftig automatisch von `APP_VERSION` ab. Der tatsächliche Übergang auf einem bereits installierten iPhone muss am Gerät bestätigt werden.
+
 ## 3.17.47 – 27. September 2026
 
 **Große Kartenbestände schneller bewerten und iOS-Startbilder angleichen.**

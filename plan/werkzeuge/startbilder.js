@@ -20,6 +20,9 @@ const GER = [
 ];
 const path = require('path');
 const ZIEL = path.join(__dirname, '..', '..', 'splash');
+const appQuelle = fs.readFileSync(path.join(__dirname, '..', '..', 'app.js'), 'utf8');
+const VERSION = /const APP_VERSION = "([0-9.]+)";/.exec(appQuelle)?.[1];
+if (!VERSION) throw new Error('APP_VERSION in app.js nicht gefunden');
 fs.mkdirSync(ZIEL, { recursive: true });
 (async () => {
   const b = await chromium.launch({ ...(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {}) });
@@ -40,7 +43,7 @@ fs.mkdirSync(ZIEL, { recursive: true });
       const name = 'splash-' + (vw * d) + 'x' + (vh * d) + '.png';
       await p.screenshot({ path: ZIEL + '/' + name });
       links.push('<link rel="apple-touch-startup-image" media="(device-width: ' + w + 'px) and (device-height: ' + h +
-        'px) and (-webkit-device-pixel-ratio: ' + d + ') and (orientation: ' + o + ')" href="./splash/' + name + '">');
+        'px) and (-webkit-device-pixel-ratio: ' + d + ') and (orientation: ' + o + ')" href="./splash/' + name + '?v=' + VERSION + '">');
       await ctx.close();
     }
   }

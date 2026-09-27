@@ -2,6 +2,33 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-28 — iOS-Startbilder versioniert; Codex-Übergabe und Pause
+
+**Geändert:** `index.html:64` (31 Startbild-URLs und zwei Asset-Versionen),
+`app.js:19`/`sw.js:10` (3.17.48), `plan/werkzeuge/startbilder.js:23`,
+`plan/werkzeuge/pruefstand/t_boot_geometrie.js:6`, `CHANGELOG.md`, `README.md`,
+`plan/LEHREN.md` § 3.11/§ 11/§ 15, `plan/PLAN.md`,
+`plan/grossplan/AUFTRAG.md`, `AUFGABEN.md`, `UEBERGABE.md`, `FUNKTIONEN.md`.
+**Entscheidung:** Nach 3.17.47 blieben die 31 PNG-URLs gleich, obwohl
+Hosting diese Bilder sieben Tage cacht. Die Version in den Links erzwingt
+frische Anfragen; der Geometrietest prüft die tatsächlichen URLs und alle
+vier repräsentativen Gerätegrößen. Das erklärt einen möglichen Altbild-
+Effekt, ist aber ohne iPhone-Test keine Bestätigung für alle beobachteten
+Ruckler. Stand-, Boot-Geometrie-, Kleinbild-, Start-, Service-Worker- und
+CSP-Tests sind grün. Die festen Claude-Rollen sind durch aufgabenbezogene Codex-
+Empfehlungen ersetzt. Nach diesem Fix auf Wunsch des Betreibers vor G-075,
+A5/A6 und Runde 13 anhalten und Q1 zum Auswendiglernen erst besprechen.
+**Offen:** 3.17.48 auf Hosting veröffentlichen; Kaltstart der installierten
+iPhone-App und K11 am Gerät bestätigen. Falls noch aktiv, muss der Betreiber
+die externe Claude-Nachtroutine in claude.ai beenden. G-042-Rest, E-19 und
+Gerätetest Drehen bleiben offen; G-075/A5/A6 warten auf ausdrückliches
+„weiter“. Q1 ist ungeklärt, keine Textfunktion gebaut.
+**Nächster Schritt:** Nach Gerätebefund gegebenenfalls Loading-Screen lokal
+nachbessern; anschließend mit dem Betreiber Q1 abwägen und auf sein „weiter“
+für den Großplan warten.
+
+---
+
 ### 2026-09-27 — Korrektur: Veröffentlichung von 3.17.47 blockiert
 
 **Geändert:** `.gitignore` (gezielt `/AGENTS.md`,
@@ -20,9 +47,9 @@ Version 3.17.47; iPhone-Kaltstartprüfung weiterhin offen.
 
 | | |
 |---|---|
-| Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin), weckt `session_01WzaCEZCxEqmfKVPh1ipGvX` |
+| Historische Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin); extern, Status unbekannt, Betreiber beendet sie gegebenenfalls |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 12 Teil 1) · A5 ☐ · A6 ☐ |
-| Nächste Runde | 12 Fortsetzung: G-075, danach Nachprüfung |
+| Nächste Runde | Pause vor G-075, A5/A6 und Runde 13; nur nach ausdrücklichem „weiter" |
 
 ---
 

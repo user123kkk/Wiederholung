@@ -71,7 +71,9 @@ iPhone-Home-Bildschirm beim Antippen **sofort** etwas – ohne sie bleibt der
 Bildschirm bis zum ersten Zeichnen leer. **Wer `.boot` (Markup in `index.html`
 und `bootBild()` in `app.js`, Stil in `styles.css`) ändert, erzeugt die Bilder
 neu:** `plan/werkzeuge/startbilder.js` (Anleitung oben in der Datei). Sie
-stehen bewusst nicht in `APP_SHELL`.
+stehen bewusst nicht in `APP_SHELL`. Nach neuen Bildern auch die Version in
+allen `apple-touch-startup-image`-URLs ändern: Hosting cacht PNGs sieben Tage;
+der Generator schreibt die aktuelle `APP_VERSION` als Query in seine Linkliste.
 
 ## Wenn du an der Gestaltung arbeitest
 

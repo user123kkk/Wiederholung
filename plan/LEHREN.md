@@ -380,7 +380,8 @@ Das Format steht in `CLAUDE.md`. Dazu:
 - Danach denselben Stand auf den Sitzungs-Branch:
   `git push origin HEAD:main && git push origin HEAD`.
 - Commit-Nachricht: Version, dann was und warum in Worten des Betreibers.
-- Keine Modellnamen in Commits, Code oder Dateien.
+- Keine Modellnamen in Commits oder App-Code. Ausnahme: die vom Betreiber
+  ausdrücklich gewünschte Codex-Modellwahl in `plan/grossplan/AUFTRAG.md`.
 - Nie `--force` auf `main`.
 
 ---
@@ -1095,6 +1096,9 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
   es entfernt (§ 3.9).
 - **Startbilder** (`splash/`) müssen pro Gerätegröße passen. Geprüft wird das
   am echten Gerät.
+  - Werden PNGs neu erzeugt, brauchen alle `apple-touch-startup-image`-Links
+    eine neue Versions-Query. Hosting cacht PNGs eine Woche; dieselbe URL
+    kann trotz neuer Datei das alte Bild liefern (28.09.2026).
   - Der Generator muss einen mobilen Kontext (`isMobile`, `hasTouch`) verwenden.
     Desktop-Scrollleistenplatz (`scrollbar-gutter`) verschob die PNG-Zeichen
     etwa 7,5 CSS-Pixel gegenüber dem mobilen HTML (27.09.2026).
@@ -1225,6 +1229,13 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 ## 15. Vorfall-Liste
 
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
+
+28.09.2026, eigener Fehler bei 3.17.47: Nach Änderung aller Startbilder
+blieben ihre HTML-URLs gleich. Wegen `Cache-Control: max-age=604800` konnte
+die installierte App weiterhin alte PNGs laden; ob dies der einzige iPhone-
+Befund ist, muss am Gerät geprüft werden. Bei jedem neuen Startbild die
+Versions-Query der 31 Links hochzählen und die tatsächlich angefragten URLs
+testen (§ 11, `t_boot_geometrie.js`).
 
 27.09.2026, Runde 12: Startbilder wurden mit Desktop-Kontext erzeugt; das
 Zeichen lag etwa 7,5 CSS-Pixel links vom mobilen HTML. Generator auf mobilen
