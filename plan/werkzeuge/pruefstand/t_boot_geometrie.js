@@ -12,7 +12,7 @@ assert.ok(startLinks.every(x=>x.endsWith('?v='+version)),'Startbilder ohne aktue
 (async()=>{
   const b=await start();
   try {
-    for(const [w,h,d] of [[390,844,3],[375,667,2],[820,1180,2],[1180,820,2]]){
+    for(const [w,h,d] of [[414,896,2],[390,844,3],[375,667,2],[820,1180,2],[1180,820,2]]){
       const ctx=await b.newContext({viewport:{width:w,height:h},deviceScaleFactor:d,isMobile:true,hasTouch:true});
       const p=await ctx.newPage();
       await p.route('**/www.gstatic.com/**',()=>{});
@@ -38,5 +38,33 @@ assert.ok(startLinks.every(x=>x.endsWith('?v='+version)),'Startbilder ohne aktue
       }
       await ctx.close();
     }
+    // Chromium bildet WebKit 254868 nicht ab. Die gekuerzte svh-Hoehe und
+    // den Standalone-Medienzweig explizit simulieren, ohne iOS zu behaupten.
+    const css = fs.readFileSync(path.join(__dirname,'../../../styles.css'),'utf8');
+    async function bootLage(standalone,gegenprobe=false){
+      const ctx=await b.newContext({viewport:{width:414,height:896},isMobile:true,hasTouch:true});
+      const p=await ctx.newPage();
+      const abbild=quelle=>quelle.replace(/100svh/g,'calc(100vh - 48px)')
+        .replace(/\(display-mode:\s*standalone\)/g,standalone&&!gegenprobe?'all':'not all');
+      await p.route('**/index.html',r=>r.fulfill({contentType:'text/html',body:abbild(html)}));
+      await p.route('**/styles.css?*',r=>r.fulfill({contentType:'text/css',body:abbild(css)}));
+      await p.route('**/www.gstatic.com/**',()=>{});
+      await p.goto('http://127.0.0.1:8099/index.html');
+      const lage=await p.evaluate(()=>{
+        const b=document.querySelector('.boot').getBoundingClientRect();
+        const z=document.querySelector('.boot__zeichen').getBoundingClientRect();
+        const m=document.querySelector('.boot__marke').getBoundingClientRect();
+        return{hoehe:b.height,zeichen:z.y,marke:m.y};
+      });
+      await ctx.close();return lage;
+    }
+    const browser=await bootLage(false),standalone=await bootLage(true),alt=await bootLage(true,true);
+    assert.equal(browser.hoehe,848,'Browser-Zweig soll svh behalten');
+    assert.equal(standalone.hoehe,896,'Standalone-Boot muss volle Startbild-Hoehe nutzen');
+    assert.equal(standalone.zeichen,896/2-38,'Standalone-Zeichen ausserhalb der Mitte');
+    assert.equal(standalone.marke,896/2+64,'Standalone-Name versetzt');
+    assert.equal(standalone.zeichen-alt.zeichen,24,'Gegenprobe reproduziert den Hoehenversatz nicht');
+    assert.equal(standalone.marke-alt.marke,24,'Gegenprobe reproduziert den Namensversatz nicht');
+    console.log('WebKit-Hoehenfehler simuliert:',JSON.stringify({browser,standalone,alt}));
   }finally{await b.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

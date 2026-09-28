@@ -1,3 +1,7 @@
+## 3.17.49 – 28. September 2026
+
+**Ladebildschirm in der installierten App auf voller Bildschirmhöhe.** Das iPhone-Foto zeigt Startbild und HTML-Logo übereinander mit Höhenversatz. Nur der Boot-Screen verwendet im Standalone-Modus jetzt `100vh` statt `100svh`; WebKit kann bei `svh` die Statusleistenhöhe abziehen. Der Browser behält seine bisherige Höhe. Die Regression simuliert die verkürzte Höhe und reproduziert mit dem alten Code den Versatz von 24 CSS-Pixeln; Bestätigung am echten iPhone bleibt offen.
+
 ## 3.17.48 – 28. September 2026
 
 **iOS-Startbilder erhalten neue Versionsadressen.** Die korrigierten Bilder aus 3.17.47 lagen weiter unter den alten URLs und konnten aus dem Browser-Cache stammen. Alle 31 Links tragen jetzt eine Versions-Query; der Generator leitet sie künftig automatisch von `APP_VERSION` ab. Der tatsächliche Übergang auf einem bereits installierten iPhone muss am Gerät bestätigt werden.

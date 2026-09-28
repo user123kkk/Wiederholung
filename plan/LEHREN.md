@@ -390,6 +390,10 @@ Das Format steht in `CLAUDE.md`. Dazu:
 
 ### 4.1 Die Liste – jede Zeile hat einen Vorfall
 
+- Changelog-Einträge mit Kontext **vor** der ersten Versionsüberschrift
+  einfügen. Ein Patch ohne Kontext kann sie ans Dateiende hängen; vor Commit
+  muss `pruefe_stand.mjs` die oberste Version bestätigen.
+
 Bei **jeder** Änderung an ausgelieferten Dateien:
 
 | Schritt | Warum (Vorfall) |
@@ -1104,6 +1108,10 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
     etwa 7,5 CSS-Pixel gegenüber dem mobilen HTML (27.09.2026).
   - PNG und HTML im selben mobilen Kontext pixelweise vergleichen; eine
     Chromium-Messung ersetzt keine Bestätigung der installierten iOS-App.
+  - Installierten iOS-Modus getrennt von Browser-Viewports prüfen: WebKit
+    254868 kann `100svh` trotz `viewport-fit=cover` verkürzen. Boot nutzt nur
+    im Standalone-Modus `100vh`, passend zum bildschirmgroßen PNG. Nicht
+    pauschal die Höhen anderer Ansichten ändern oder Geräte-Offsets addieren.
 - **Kalender-Erinnerung** läuft über `.ics` (`text/calendar`). iOS muss das am
   Gerät bestätigen (offen beim Betreiber).
 
@@ -1229,6 +1237,19 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 ## 15. Vorfall-Liste
 
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
+
+28.09.2026, eigener Arbeitsfehler vor Commit 3.17.49: Ein Patch ohne
+Kontext fügte den neuen Changelog-Eintrag unten statt oben ein. Die
+Standprüfung wurde rot; Eintrag vor Veröffentlichung nach oben verschoben.
+Neue Versionsüberschriften nur mit Kontext einfügen und Standprüfung bestehen
+lassen (§ 4.1).
+
+28.09.2026, 3.17.48 weiterhin am Gerät fehlerhaft: Screenshot IMG_4397 zeigt
+das Startbild und das helle HTML-Zeichen vertikal versetzt übereinander.
+Die vorherigen Chromium-Tests hatten keine unterschiedliche svh/vh-Höhe
+simuliert. Standalone-Boot auf volle vh-Höhe begrenzen; Gegenprobe reproduziert
+bei 48px verkürztem svh den 24px-Versatz. WebKit-Befund:
+https://bugs.webkit.org/show_bug.cgi?id=254868 (§ 11). Gerätebestätigung offen.
 
 28.09.2026, eigener Fehler bei 3.17.47: Nach Änderung aller Startbilder
 blieben ihre HTML-URLs gleich. Wegen `Cache-Control: max-age=604800` konnte

@@ -787,15 +787,17 @@ auf ausdrückliches „weiter" eine Runde nach [`grossplan/AUFTRAG.md`](grosspla
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (28.09.2026): Runde 12 Teil 1 abgeschlossen; Korrektur 3.17.48
-für die iOS-Startbilder geprüft, Veröffentlichung offen.** Ihre URLs waren nach 3.17.47 unverändert,
-obwohl Hosting PNGs eine Woche cacht. Die Links tragen jetzt die App-Version;
-der installierte iPhone-Kaltstart bleibt am echten Gerät zu prüfen. Nach dem
+**AKTUELL (28.09.2026): Runde 12 Teil 1 abgeschlossen; Korrektur 3.17.49
+für die installierte iOS-Boot-Höhe, Veröffentlichung offen.** Screenshot
+IMG_4397 zeigt den Höhenversatz trotz 3.17.48. Nur Standalone-Boot nutzt
+jetzt `100vh`; die svh/vh-Abweichung wird mit Gegenprobe simuliert. Die
+Startbild-URLs bleiben versioniert. Der installierte iPhone-Kaltstart bleibt
+am echten Gerät zu prüfen. Nach dem
 Fix **anhalten**: G-075, A5/A6 und Runde 13 erst auf ein neues „weiter".
 Vorher die offene Produktfrage Q1 (Quran/fortlaufende Texte auswendig lernen)
 mit dem Betreiber erörtern, nichts dazu bauen. Eine eventuell noch aktive
 externe Claude-Nachtroutine muss der Betreiber separat beenden.
-**Wartet auf Betreiber:** 3.17.48 veröffentlichen, K11 und Kaltstart der
+**Wartet auf Betreiber:** 3.17.49 veröffentlichen, K11 und Kaltstart der
 installierten iPhone-App prüfen, G-042-Rest (Zeitgrenze,
 Datenschutz-Satz). **Wartet auf Betreiber:** Gerätetest Drehen (iPhone),
 E-19 (Geste für „Fast", Empfehlung: lieber nicht).

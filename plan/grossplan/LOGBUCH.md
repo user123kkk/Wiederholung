@@ -2,6 +2,31 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-28 — Screenshot belegt Boot-Höhenversatz (3.17.49)
+
+**Geändert:** `index.html:100` (kritische Standalone-Boot-Regel und Versionen),
+`styles.css:3188` (nur Standalone-Boot mit voller vh-Höhe), `app.js:19`,
+`sw.js:10`, `plan/werkzeuge/pruefstand/t_boot_geometrie.js:15`,
+`CHANGELOG.md`, `plan/LEHREN.md` § 11/§ 15, `plan/PLAN.md`.
+**Entscheidung:** Das Betreiberfoto IMG_4397 (828×1792) zeigt helles HTML-
+Zeichen und dunkleres Startbild übereinander, etwa 24 CSS-Pixel versetzt.
+Die PNG-Geometrie allein war nicht die Lösung. WebKit 254868 dokumentiert
+verkürzte svh-Höhen bei installierten Apps. Nur der Boot-Screen verwendet
+im Standalone-Modus 100vh; der Browser und alle anderen Screens behalten
+ihre Höhenlogik. Keine Geräte-Offsets und keine Änderung der Lernlogik.
+Der Test simuliert 48px svh/vh-Abweichung und reproduziert mit deaktivierter
+Korrektur 24px Versatz von Zeichen und Name. Keine echte iOS-Emulation.
+Boot-Geometrie (fünf Größen), Kleinbild-Boot, Startverhalten, Einstieg-Lage
+und Probekarte/Plan/Footer-Regression sind grün. Die Standprüfung fand einen
+zunächst unten angehängten Changelog-Eintrag; vor Commit korrigiert.
+**Offen:** Veröffentlichung 3.17.49, erneuter Kaltstart auf dem iPhone;
+ohne diese Bestätigung ist der Loading-Befund nicht abgeschlossen. Pause
+vor G-075/A5/A6/Runde 13 und offene Frage Q1 bleiben bestehen.
+**Nächster Schritt:** Betreiber bestätigt den Übergang nach Veröffentlichung;
+bei weiterem Befund gezielt nachprüfen, sonst Q1 besprechen.
+
+---
+
 ### 2026-09-28 — iOS-Startbilder versioniert; Codex-Übergabe und Pause
 
 **Geändert:** `index.html:64` (31 Startbild-URLs und zwei Asset-Versionen),
