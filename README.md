@@ -16,10 +16,22 @@ synchronisiert über Firebase.
 | `icon.svg` | App-Symbol (Browser-Tab, Startbildschirm) |
 | `firestore.rules` | Zugriffsregeln der Datenbank |
 | `impressum.html`, `datenschutzerklaerung.html` | Rechtstexte, ohne Anmeldung erreichbar (Phase 5) |
-| `veroeffentlichen.bat` | Für den Betreiber (Windows): Doppelklick zieht `main`, deployt auf Firebase Hosting. Wird selbst nicht mit ausgeliefert (siehe `firebase.json`) |
+| `veroeffentlichen.bat` | Für den Betreiber (Windows): Doppelklick holt `origin/main`, prüft und veröffentlicht dessen separate Kopie auf Firebase Hosting. Lokale Entwürfe bleiben erhalten. Wird selbst nicht ausgeliefert (siehe `firebase.json`) |
 | `CHANGELOG.md` | Was sich wann geändert hat – und warum |
 
 Kein Build-Schritt. Die Dateien werden so ausgeliefert, wie sie hier liegen.
+
+**Veröffentlichen am PC:** `veroeffentlichen.bat` startet
+`plan/werkzeuge/veroeffentlichen.ps1`. Git, Node.js und Firebase-CLI müssen
+installiert sein. Der Knopf veröffentlicht ausschließlich den frisch geholten
+Commit auf `origin/main`, zeigt Version/Commit und prüft vor dem Upload
+Versionen, Syntax, CSP und Startdateien. Lokale Änderungen, untracked Dateien
+und noch nicht gepushte Commits werden nicht hochgeladen; kein `pull`,
+`checkout`, `stash` oder Reset im Arbeitsordner. Ein Fetch-/Prüffehler stoppt
+vor dem Upload. Firestore-Regeln werden weiterhin separat veröffentlicht.
+Mit `veroeffentlichen.bat -NurPruefen` lässt sich derselbe Ablauf ohne Deploy
+prüfen. Regression ohne echten Deploy:
+`node plan/werkzeuge/veroeffentlichen_test.cjs` (Windows).
 
 **Deshalb auch bewusst kein `.env`.** `firebaseConfig` (u. a. `apiKey`) steht
 offen in `app.js` – das ist bei Firebase-Web-Apps so vorgesehen, kein

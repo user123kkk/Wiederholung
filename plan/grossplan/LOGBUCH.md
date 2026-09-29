@@ -2,6 +2,26 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — G-117: Veröffentlichungs-Batch aus sauberem main
+
+**Geändert:** `veroeffentlichen.bat:1`, `plan/werkzeuge/veroeffentlichen.ps1:1`,
+`plan/werkzeuge/veroeffentlichen_test.cjs:1`, `README.md:19`,
+`plan/grossplan/KONSOLE.md:187`, `plan/grossplan/AUFGABEN.md:150`,
+`plan/PLAN.md:776`, `plan/LEHREN.md:477,1441`.
+**Entscheidung:** Der ausdrückliche Betreiberwunsch betrifft den PC-Knopf.
+Der Batch holt den aktuellen Commit von `origin/main`, prüft einen isolierten
+Export und übergibt nur dessen Hosting-Dateien an Firebase. Er führt weder
+`pull` noch `checkout`, `stash` oder Reset im Arbeitsordner aus. Bei Fetch-,
+Versions-, Header-, Pfad- oder Firebase-Fehler gibt es keinen falschen Erfolg.
+Neun isolierte Windows-Nachweise mit Firebase-Attrappe sind grün; der alte
+Batch blockierte im festen Gegenversuch. Kein echter Deploy im Test.
+**Offen:** Der tatsächliche Firebase-CLI-Aufruf am Betreiber-PC bleibt
+ungeprüft. Runde15/3.17.57 bleibt lokaler Entwurf mit unterbrochener Abnahme;
+Firestore-Regeln K10 sind produktiv weiter unbestätigt.
+**Nächster Schritt:** Nach diesem getrennten Werkzeug-Commit die Runde15-
+Abnahme am gespeicherten Checkpoint fortsetzen; vorher G-117 auf dem echten
+`origin/main` noch einmal ohne Deploy mit `-NurPruefen` gegenprüfen.
+
 ### 2026-09-29 — Runde 14 abgenommen: G-102–G-106, 3.17.56
 
 **Geändert:** `app.js:3126/4129/4300/4339/4607/4727/7446/9479`

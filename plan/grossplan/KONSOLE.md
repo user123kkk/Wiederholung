@@ -151,7 +151,13 @@ zurücksetzen". Zeigt eine Vorlage kein Textfeld: nur den Betreff eintragen.
 **Seit 3.17.50 gilt zwingend: zuerst Regeln, danach Hosting.** Das neue
 Tagesprotokoll schreibt `verlaufEpoche`; die bisherigen Regeln erlauben
 dieses Feld nicht. Im Repo-Ordner `firebase deploy --only firestore:rules`
-ausführen oder unten den gesamten aktuellen Regeltext einsetzen. Erfolg:
+ausführen oder ausschließlich den Inhalt von `firestore.rules` einsetzen.
+**Dieser Abschnitt enthält Anweisungen, keinen kopierbaren Regeltext.**
+Direkter Regeltext: <https://raw.githubusercontent.com/user123kkk/Wiederholung/main/firestore.rules>.
+Im Firebase-Regeln-Editor zuerst alles markieren und vollständig ersetzen,
+nicht unter die bestehenden Regeln anhängen. Keine Markdown-Codezäune,
+GitHub-Seitentexte oder diese Anleitung mitkopieren. Der Text beginnt mit
+`rules_version = '2';` und endet mit den schließenden Klammern. Erfolg:
 Deploy meldet erfolgreich veröffentlichte Firestore-Regeln; im Editor steht
 `verlaufEpocheOk` und die aktuelle Veröffentlichungszeit. Dann K11 ausführen.
 Anschließend eine Antwort geben und die App neu öffnen: Der Zähler bleibt
@@ -181,7 +187,9 @@ in der Antwort).
 
 ### K11 – Veröffentlichen (Hosting)
 GitHub → Repo `Wiederholung` → **Actions** → „Veroeffentlichen" → **Run workflow**
-(oder am PC `veroeffentlichen.bat`). Voraussetzung einmalig: Secret
+(oder am PC Doppelklick auf `veroeffentlichen.bat`: prüft/veröffentlicht eine
+separate Kopie des aktuellen `origin/main`, erhält lokale Entwürfe und zeigt
+Version/Commit vor dem Upload). Voraussetzung für den GitHub-Weg einmalig: Secret
 `FIREBASE_SERVICE_ACCOUNT` (Schritte in `plan/audit/LOGBUCH.md`, 25.09.2026).
 **Woran man es merkt:** In der App unter Einstellungen steht die neue Version.
 

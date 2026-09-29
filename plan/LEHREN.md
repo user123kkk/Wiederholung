@@ -474,7 +474,7 @@ Begrenzer.
 
 | Was | Wie | Wer |
 |---|---|---|
-| App-Dateien (Hosting) | `veroeffentlichen.bat` = `git pull` + `firebase deploy --only hosting` **oder** (seit 25.09.2026, von jedem Gerät) GitHub → Actions → „Veroeffentlichen" → „Run workflow" (`.github/workflows/veroeffentlichen.yml`, deployt `main`, braucht Secret `FIREBASE_SERVICE_ACCOUNT`). Nur auf Knopfdruck – ein Push auf `main` veröffentlicht nichts. | Betreiber (Agent löst den Knopf nur auf ausdrücklichen Wunsch aus) |
+| App-Dateien (Hosting) | `veroeffentlichen.bat` holt `origin/main`, exportiert dessen Commit in eine eigene TEMP-Kopie, prüft dort den Stand und veröffentlicht nur Hosting. Lokale Entwürfe bleiben erhalten. **Oder:** GitHub → Actions → „Veroeffentlichen" → „Run workflow" (`.github/workflows/veroeffentlichen.yml`, deployt `main`, braucht Secret `FIREBASE_SERVICE_ACCOUNT`). Nur auf Knopfdruck – ein Push auf `main` veröffentlicht nichts. | Betreiber (Agent löst den Knopf nur auf ausdrücklichen Wunsch aus) |
 | `firestore.rules` | `firebase deploy --only firestore:rules` (seit `firebase.json` einen `firestore`-Abschnitt hat) **oder** in der Firebase-Konsole einfügen und „Veröffentlichen" | Betreiber |
 | Konsolen-Einstellungen (Auth-Domains, Browser-Key, E-Mail-Vorlagen, Search Console) | nur in der jeweiligen Konsole | Betreiber |
 
@@ -1421,6 +1421,18 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+29.09.2026, G-117: Der Betreiber wollte weiter den Batch-Knopf verwenden;
+mehrfache GitHub-Umleitungen lösten seinen lokalen Abbruch nicht. Batch
+veröffentlicht jetzt nur eine geprüfte Kopie von origin/main, statt lokale
+Entwürfe zu löschen/verschieben oder ungeprüft zu committen (§4.5). Fetch-
+Fehler darf keinen alten Ersatzstand nutzen. Git/Node sind Pflicht; temporäre
+Verzeichnisse vor rekursiver Entfernung absolut prüfen. PowerShell kann
+mehrere exe-Treffer liefern: genau einen verwenden. Eigene Vorabfehler wurden
+rot korrigiert: doppelter Datei-Patch abgelehnt (keine Änderung), Tool-Treffer
+als Array, Mock-Zeilenumbruch und cmd-Argumentquotierung. Keine echte
+Veröffentlichung durch diese Tests und keine rote Probe als bestanden melden.
+
 
 29.09.2026, Runde14 am Ladegerät: unveränderter Original-Tempotest grün,
 zehn Bewertungen3000 Karten geführt/eigen maximal57ms (Grenze100ms,

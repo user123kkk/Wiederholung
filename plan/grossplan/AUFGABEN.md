@@ -145,6 +145,7 @@ Beleg und Abnahme: [Nachlese](befunde/NACHLESE-2026-09-28.md).
 | G-106 | Alte Bestätigungsprüfung erneuert B-Token und lädt dessen Seite neu; alte Versandmeldung erscheint in B | mittel | Agent | Sol/Astra | erledigt (3.17.56): drei Fortsetzungen und echte B-Busy-Sperre geprüft, volle Regression grün; Altstand c4a2ccf rot |
 | G-107 | Weitere alte Auth-Fortsetzungen laden B neu, überschreiben dessen Info/Busy oder starten Reauth für B | mittel | Agent | Astra | offen: konto_authrest.js --befund belegt Lese-Token, Registrierung, Reset und „Adresse falsch“; Folgerunde nach G-102–G-106 |
 | G-109 | Inventartest Teil 2 liest verborgenes Fehlerdialog-Markup und beendet den Einstieg vor der Probekarte | niedrig | Agent | Sol | offen: t_inventar2 protokolliert leere Übersichten und endet bei null; Sichtbarkeit und erreichte Endzustände prüfen; Folgerunde |
+| G-117 | Veröffentlichungs-Batch blockiert wegen lokaler Entwürfe auch den freigegebenen Stand auf main | Betreiber 29.09.: ausdrücklich veroeffentlichen.bat | Agent | Sol | erledigt (Werkzeug, 29.09.): origin/main als saubere temporäre Kopie prüfen/veröffentlichen, Arbeitsbaum erhalten; neun isolierte Nachweise ohne echten Deploy grün. Runde15 bleibt offen. |
 
 ## D. Wartet auf den Betreiber
 

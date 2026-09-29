@@ -775,6 +775,12 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
+**Werkzeug G-117 (29.09.2026):** `veroeffentlichen.bat` prüft und veröffentlicht
+den frisch geholten `origin/main` aus einer eigenen temporären Kopie; lokale
+Entwürfe bleiben erhalten. Neun isolierte Nachweise grün, kein echter Deploy
+durch den Werkzeugtest. Die App auf `main` bleibt 3.17.56; Runde15 (3.17.57)
+ist lokal noch in der Abnahme. K10-Regeln bleiben produktiv unbestätigt.
+
 **GROSSPLAN (seit 25.09.2026, abends) – das ist jetzt die laufende Arbeit.**
 Betreiber: „ich möchte einen krassen perfekten Plan … die Arbeit an ein
 günstigeres Modell geben … so lange weiterlaufen, bis das Ergebnis wirklich
