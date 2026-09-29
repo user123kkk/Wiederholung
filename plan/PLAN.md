@@ -791,15 +791,14 @@ erstellen (`grossplan/AUFTRAG.md` § 4a).
   `grossplan/runde15-unfertig.patch` (gegen `a4b5677`). Nicht anwenden,
   solange der Texte-Bau läuft; danach mit `git apply --3way` einspielen und
   Konflikte lösen.
-- Offen, **vor dem Bau klären**: Betreiber kommt seit ca. 3 Stunden nicht
-  ins Konto (Anmelden **und** Passwort-Link: „Das hat nicht geklappt“ =
-  unbekannter Fehlercode in `fehlerKlartext`). Geprüft 29.09. abends:
-  Firebase-Schlüssel und Passwort-Link-Dienst antworten für
-  `adrabic.web.app`, `lernkarte-925c2.web.app`, `…firebaseapp.com` korrekt;
-  Live-Seite 3.17.56 lädt ohne Fehler; `doLogin`/`doReset` in 3.17.56
-  unverändert. Also Gerät/Browser-Zustand. Verdacht (unbelegt): Speicher
-  der Anmeldung (IndexedDB) auf dem iPhone hängt. Betreiber testet: PC-
-  Browser, iPhone-Safari statt App, iPhone neu starten.
+- **Erledigt (29.09. abends):** Anmeldeproblem des Betreibers – er hatte
+  eine falsche Adresse benutzt; am PC ging es. Kein App-Fehler belegt.
+  **Befund für die nächste Prüfrunde:** Bei einem unbekannten Fehlercode
+  zeigt die Anmeldung nur „Das hat nicht geklappt“. Fehler wie
+  `auth/requests-from-referer-…-are-blocked` (App über eine nicht
+  freigeschaltete Adresse geöffnet) sollten eine klare Meldung bekommen,
+  z. B. „Diese Adresse ist nicht freigeschaltet – öffne adrabic.web.app“
+  (`AUTH_ERRORS`/`authErrorText` in app.js). Nicht jetzt bauen.
 - Offen, **nicht** Teil des Baus: kurzes weißes Aufblitzen beim Start
   (Betreiber 29.09. abends, nach 3.17.56). Vermutung: Service Worker nach
   Pause kalt – unbelegt. Braucht Antwort „jedes Mal oder manchmal“ und ein
