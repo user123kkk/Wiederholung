@@ -151,7 +151,30 @@ Tests bekommt, nicht den Arbeitsverlauf. Ein frischer Blick findet mehr.
 | Logs sichten, feste Textersetzung | Luna niedrig |
 | Umsetzung | nach § 1, je Aufgabe |
 | Gegenprüfung (§ 2a) | eine Stufe über der Umsetzung, mindestens Sol mittel; Astra bei Daten, Regeln, iOS |
-| Nachprüfung A5/A6, neuer Zyklus (§ 6) | Astra mittel |
+| Nachprüfung A5/A6, neuer Zyklus (§ 4a) | Astra mittel |
+
+## 2c. Claude-Gesamtprüfung am Ende (Betreiber 29.09.2026)
+
+Codex macht alle Runden selbst, mit eigener Gegenprüfung nach § 2a je
+Runde. **Claude prüft nicht jede Runde**, sondern einmal gesammelt, wenn
+alles fertig ist: bei erfüllten A1–A6 oder wenn der Betreiber anhält.
+Vorbild ist die Prüfung vom 29.09. (Diff gegen Befund, Tests gegen Befund,
+Gerätebilder vermessen).
+
+Dafür schreibt Codex zum Schluss eine Übergabe
+`plan/onboarding/CLAUDE-HANDOFF-<Datum>.md` nach dem Muster von
+`CLAUDE-HANDOFF-2026-09-29.md`:
+
+- Commit-Bereich (`<letzter von Claude geprüfter Commit>..<HEAD>`; zuletzt
+  geprüft: `aa69187`, Stand 3.17.55) und Versionen;
+- je Runde: Aufgaben, geänderte Dateien, Gegenprüfungs-Zeile, Tests mit
+  Gegenprobe (Commit-Hash), Log-Pfade;
+- was nur am Gerät prüfbar ist und was der Betreiber davon bestätigt hat;
+- bekannte offene Punkte, damit Claude sie nicht neu „entdeckt“.
+
+`CLAUDE.md` bekommt oben einen Verweis auf diese Übergabe. Danach wartet
+Codex; ein neuer Zyklus (§ 4a) beginnt erst nach der Claude-Prüfung und
+einem neuen „weiter“ des Betreibers.
 
 ## 2b. Sparsam, ohne an der Qualität zu sparen
 
@@ -239,7 +262,8 @@ dem dann aktuellen Stand entstehen. Ziel ist, die App immer wieder zu prüfen
 und zu ergänzen. Ablauf, **nur nach ausdrücklichem „weiter“ / „neue
 Runden“** des Betreibers:
 
-1. Abschlussbericht des Zyklus ins Logbuch (A1–A6, offene Betreiber-Punkte).
+1. Abschlussbericht des Zyklus ins Logbuch (A1–A6, offene Betreiber-Punkte)
+   und Claude-Gesamtprüfung nach § 2c abgeschlossen.
 2. **Frische Prüfung aller acht Bereiche** wie in `befunde/`, gegen den
    aktuellen Code, nicht gegen alte Befunde. Dazu ein neunter Bereich:
    „Gegenprüfung der letzten Runden“ – Diffs seit dem letzten Zyklus nach

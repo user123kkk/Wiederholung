@@ -5,8 +5,9 @@
 ### Runden: Ablauf, Gegenprüfung, neuer Zyklus
 
 Jede Runde nach `plan/grossplan/AUFTRAG.md` § 2, § 2a (Gegenprüfung,
-Pflicht), § 2b (sparsam ohne Qualitätsverlust); nach A6 § 4a (neuer Zyklus
-aus dem aktuellen Stand, nur auf Betreiber-„weiter“).
+Pflicht), § 2b (sparsam ohne Qualitätsverlust); am Ende aller Runden § 2c
+(Codex schreibt Übergabe, Claude prüft gesammelt); danach § 4a (neuer
+Zyklus aus dem aktuellen Stand, nur auf Betreiber-„weiter“).
 
 ### Aktuelle Claude-Übergabe und Pause vom 29.09.2026
 
