@@ -9,6 +9,7 @@ if(alt){
   u=>u.hostname==='127.0.0.1'&&u.pathname.endsWith('/app.js'),
   r=>r.fulfill({contentType:'text/javascript',body:source}))});
 }
-console.log('Isoliert iPad: '+(alt?'5de6969 vor Runde 13':'aktueller Stand'));
-process.argv[2]='ipad';
+const geraet=process.argv.includes('--handy')?'handy':'ipad';
+console.log('Isoliert '+geraet+': '+(alt?'5de6969 vor Runde 13':'aktueller Stand'));
+process.argv[2]=geraet;
 require('../../../werkzeuge/pruefstand/t_schreiben');

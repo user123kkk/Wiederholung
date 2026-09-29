@@ -403,6 +403,11 @@ Das Format steht in `CLAUDE.md`. Dazu:
 
 ### 4.1 Die Liste – jede Zeile hat einen Vorfall
 
+- Versionswerte gezielt in ihren Deklarationen/Asset-URLs ersetzen, nicht
+  jede alte Versionsnummer in der Datei. Historische Ursachen-Kommentare
+  behalten ihre Version. 29.09., Runde 14: globale Ersetzung änderte den
+  .55-Cache-Kommentar versehentlich auf .56; vor Abnahme zurückgenommen.
+
 - Changelog-Einträge mit Kontext **vor** der ersten Versionsüberschrift
   einfügen. Ein Patch ohne Kontext kann sie ans Dateiende hängen; vor Commit
   muss `pruefe_stand.mjs` die oberste Version bestätigen.
@@ -494,6 +499,10 @@ echte `app.js`, Firebase durch `stubs.js` ersetzt.
 
 - Server: `python3 -m http.server 8099 --bind 127.0.0.1` im Repo-Wurzelordner.
 - Chromium: `CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
+- Windows: `CHROMIUM` in jedem neuen PowerShell-Prozess vor dem Test setzen;
+  Variablen früherer Tool-Aufrufe gelten dort nicht. Tatsächlich verwendeten
+  Browserpfad/Version prüfen, fehlender Browserstart ist keine Messung (§15,
+  29.09., Runde 14; aktueller Aufruf in `LIESMICH.md`).
 - Zwischen 0 und 4 Uhr (Container-Uhr, UTC): `TZ=Asia/Tokyo` davor setzen –
   die App beginnt den Tag erst um 4 Uhr, sonst sind alle Datumstests um
   einen Tag daneben (§ 15, 26.09.).
@@ -539,6 +548,11 @@ Was gemessen wird:
 
 - Laufzeitprüfungen ohne konkurrierende Browser-Tests ausführen; feste
   Grenzen nicht wegen eines langsamen Parallel-Laufs lockern.
+- Bei einem Rechnerwechsel Browser, Netz-/Akkubetrieb und unabhängige
+  CPU-Benchmarkwerte mit festhalten. Feste 4×-Drosselung ist relativ zur
+  jeweiligen Hardware. Ein ebenfalls roter Altstand beweist allein keinen
+  Messfehler; auch eine unstabile Kalibrierung ersetzt keine Abnahme.
+  Bereits grüne identische Funktionsprüfungen nicht deswegen wiederholen.
 - Zeitlimits eines Teststarters müssen zum gesamten Ablauf passen.
   Bereits bestandene Einzeltests dürfen aus ihren vollständigen Logs
   ausgewertet werden; dies ausdrücklich von einem erneuten Lauf unterscheiden.
@@ -565,6 +579,11 @@ Belegte Fälle:
 - Meldet ein Test **nichts**: kurz prüfen, ob er überhaupt hätte anschlagen
   können. Er muss **alle Zustände** abdecken (vorher/nachher, gesperrt/aktiv,
   leer/voll).
+- Inventare wählen nur tatsächlich sichtbare Wurzeln, einschließlich
+  `aria-hidden` der Vorfahren. Vollständige Rundgänge müssen ihre
+  Endzustände prüfen; ein stilles Ende bei fehlendem Weiter-Knopf ist keine
+  Abnahme. G-109 (29.09.): verborgenes Fehlerformular lieferte leere Texte,
+  Einstieg-Heuristik stoppte vor der Probekarte, trotzdem Exit 0.
 - Ein Test, der dauerhaft rot ist, ist wertlos, weil ihn niemand mehr ansieht.
 
 ### 5.4 Die Attrappe muss so streng sein wie die Wirklichkeit
@@ -993,6 +1012,32 @@ Richtungen: Was kann jemand an **eigenen** Daten verbiegen, und was an denen
 
 ### 8.3 Snapshot-Echos
 
+- **Runde 14, G-111:** Nachholen einer verspäteten Registrierung an den
+  konkreten eigenen Versuch und die angeforderte Adresse binden. Ein
+  allgemeiner „Zeitlimit“-Merker darf weder Mail noch Profiländerung für
+  das nächste fremde Konto auslösen. Normale eigene verspätete Ankunft
+  bleibt erhalten; neuer Anmeldeversuch muss alte Herkunft verwerfen.
+
+- **Runde 14, G-110:** Auch nach einem bereits bestätigten Dialog kann
+  dessen Microtask erst nach dem Kontowechsel laufen. Nutzer/Referenz vor
+  dem Dialog erfassen und nach seiner Antwort prüfen; Auflösen mit `false`
+  im Auth-Reset kann ein schon aufgelöstes Promise nicht mehr abbrechen.
+  Eigene erfolgreiche Löschung mit anschließender Abmeldung separat prüfen.
+
+- **Runde 14, G-108:** Kontowechsel leert private Entwürfe und die zugehörigen
+  offenen Blätter gemeinsam. Nur die Bearbeitungs-ID zu löschen ist falsch:
+  ein altes Bearbeitungsblatt wird sonst zur Neuanlage im Folge-Konto.
+  Normale Cloud-Echos/Render desselben Kontos erhalten den Entwurf weiter.
+  Bei Ideen nach Auth-Wechsel das Board erneut öffnen, statt sofortige
+  Sichtbarkeit im geschlossenen Einstellungsbereich vorauszusetzen.
+
+- **Runde 14, G-107:** Dieselbe Konto-Prüfung gilt für Lese-Token-Refresh,
+  Registrierung/Profil-/Mail-Folge, Reset-Rückmeldung und „Adresse falsch“.
+  Alte Antworten dürfen weder eine B-Seite neu laden noch neue B-Sperren
+  freigeben oder Reauth für B beginnen. Bei Auth-Aufträgen absichtliche
+  Übergänge (Gast→eigenes neues Konto, eigenes Löschen→Gast) getrennt von
+  fremdem Kontowechsel prüfen, nicht jede Auth-Änderung blind abbrechen.
+
 - **29.09.2026, G-106:** Bestätigungsprüfung/erneutes Senden und ihre
   Timer-Sperre an den ursprünglichen User binden. Alte reload-Antworten
   dürfen weder den Token eines Folgekontos erneuern noch dessen Seite neu
@@ -1376,6 +1421,73 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+29.09.2026, Runde14 am Ladegerät: unveränderter Original-Tempotest grün,
+zehn Bewertungen3000 Karten geführt/eigen maximal57ms (Grenze100ms,
+CPU4×). Keine der vermuteten Layoutkorrekturen übernommen und keine Grenze
+gelockert. Gleicher Produktfingerprint; die rote Messung war kein Beleg
+für einen App-Rückschritt. WMI meldet weiter798MHz, eignet sich allein
+also ebenfalls nicht als Nachweis realer Browserleistung. §5.3.
+
+29.09.2026, eigene Gewichtung G-110: fremder deleteUser-Aufruf zunächst
+als hoch dokumentiert. Derselbe unautorisierte Auth-Löschauftrag wie G-098
+ist kritisch; nach vollständiger App-/Alt-Gegenprobe korrigiert.
+
+29.09.2026, Runde-14-Tempodiagnose: Fix .56, Ausgang .55 und ursprünglich
+grüner Stand .47 auf Windows/Chrome154 rot; unabhängige DevTools-Werte
+schwanken stark, CPU4× weit unter Low-Ziel. Akkubetrieb17%, WMI798MHz.
+Weder .56-Regressionsursache noch Messfehler allein damit bewiesen;
+kein Grenzwert geändert, keine Freigabe. Netzbetrieb als nächste kontrollierte
+Bedingung, Regel §5.3. Eigene Diagnosefehler vor Browser-/Messstart:
+mehrdeutige Quellstelle ausdrücklich abgebrochen und präzisiert; Benchmark-
+Funktionsdeklaration für Playwright in eindeutigen IIFE-Ausdruck geklammert.
+
+29.09.2026, Runde-14-Mustersuche G-111: allgemeiner Registrierungsnachtrag
+nach Netzwerkfehler ändert das SDK-Profil von B auf den Testnamen von A
+und startet dessen Mail. Vollständige App belegt beide Aufrufe, keine
+Produktionskonten. Regel §8.3, hohe Aufgabe für Folgerunde.
+
+29.09.2026, eigene Messkorrekturen: Entwurfs-Ausgabe wurde erst nach dem
+Speichern gelesen (Felder dann leer), jetzt vorher sichern. Ein neues
+Registrierungs-Probeformular wurde vom noch aktiven Gast-Onboarding
+verdrängt; jetzt echten Formularzustand/ID vor SDK-Start prüfen. Die
+Schreibfehler-Hypothese bestätigt sich im Probeaufbau nicht: B-eigener
+Start-Write räumt die Meldung auf. Kein neuer Produktfehler daraus behauptet.
+
+29.09.2026, Runde 14, eigener Prüfstartfehler: isolierte Wiederholung ohne
+CHROMIUM in neuem PowerShell-Prozess. Playwright fand sein nicht installiertes
+Headless-Shell nicht; keine Messung. Originales 150ms-Protokoll vorher
+bewahrt, Browserpfad gesetzt. Regel §5.1, Windows-Aufruf in LIESMICH ergänzt.
+
+29.09.2026, Runde-14-Mustersuche G-110: Bereits bestätigter Dialog, danach
+Auth-Wechsel vor seiner Microtask. `kontoVertipptNeuAnfangen` erfasst B
+erst nach dem Dialog und ruft deleteUser(B); doLogout meldet B ab.
+Kontokontext vor dem Dialog erfassen und danach prüfen (§8.3); Dialog-
+Abbruch im Auth-Reset schützt nur noch nicht aufgelöste Dialoge.
+
+29.09.2026, Runde-14-Logsichtung G-109: `t_inventar2` wählt das verborgene
+Fehlerdialog-Markup und liefert leere Inventare; sein heuristischer Einstieg
+stoppt vor Aufdecken/Bewerten. Exit 0 ist kein vollständiger Rundgang.
+Prüfstand-Aufgabe für Folgerunde, Regel §5.3; kein Produktfehler behauptet.
+
+29.09.2026, Runde-14-Mustersuche G-108: Zwei vollständige App-Fälle belegen
+private A-Kartentexte im B-Formular und deren tatsächliche Speicherung in B;
+Bearbeitungs-ID leer, Blatt/Entwurf bleiben. Neue hohe Aufgabe, §8.3.
+Eigener Messfehler im angrenzenden Ideenfall: Einstellungen waren nach Auth
+geschlossen, deshalb nicht sofort sichtbar. Test blieb rot, korrigierte
+Probe braucht echtes Wiederöffnen des Boards; nicht als grün zählen (§5.3).
+
+29.09.2026, Runde-14-Mustersuche G-107: Vier echte Auth-Funktionspfade
+lassen nach alter Antwort die neue Sitzung neu laden, ersetzen Info/Busy
+oder fragen B zur Reauth auf. `konto_authrest.js --befund` belegt jeweils
+die konkrete Wirkung; keine Datenlöschung von B behauptet. Folgerunde,
+Regel §8.3, da G-102–G-106 die fünf Aufgaben dieser Runde sind.
+
+29.09.2026, Runde 14, eigener Dokumentationsfehler beim Hochzählen: globale
+Ersetzung änderte zusätzlich den historischen .55-Kommentar in `sw.js`.
+Diff-Gegenprüfung fand es, Kommentar wiederhergestellt. Der bereits gestartete
+Lauf wurde beendet und für den korrigierten Quellstand frisch gestartet;
+keine alten Ergebnisse übernommen. Regel §4.1: nur Versionswerte/URLs ändern.
 
 29.09.2026, 3.17.53/.54: Weißes Aufblitzen am iPhone zweimal falsch
 eingeordnet (erst iOS-Animation, dann fehlende HTML-Farbe). Erst die

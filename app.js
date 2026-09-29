@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.55";
+const APP_VERSION = "3.17.56";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2082,7 +2082,18 @@ async function initFirebase() {
     const registrierungNachholen = !!ui.registrierungZeitlimit;
     const registrierungName = (ui.authEingabe && ui.authEingabe.name) || "";
     ui.registrierungZeitlimit = false;
+    // Alte Konto-Auftraege duerfen die neue Anmeldung nicht blockieren.
+    // Beim ersten Registrieren (vorher kein User) laeuft der Mailversand
+    // noch: dessen Busy-Merker bleibt bis zum normalen Abschluss erhalten.
+    if (currentUser) {
+      ui.authBusy = false;
+      ui.authBusyWas = null;
+      ui.authError = null;
+      ui.authInfo = null;
+    }
     currentUser = user;
+    bestaetigungLaeuft = false;
+    lehrerLetzteAbfrage.clear();
     haltenAbbrechen(); // ein begonnenes Halten gehoert zum bisherigen Konto
     // Ein Dialog gehoert zum bisherigen Konto. Sofort ohne Austritts-
     // animation abbrechen; die alte Promise darf keinen neuen Auftrag starten.
@@ -2156,7 +2167,7 @@ async function initFirebase() {
         fb.sendEmailVerification(user).catch(() => {});
         if (!user.displayName && registrierungName) {
           fb.updateProfile(user, { displayName: registrierungName })
-            .then(() => { displayName = registrierungName; }).catch(() => {});
+            .then(() => { if (currentUser === user) displayName = registrierungName; }).catch(() => {});
         }
         ui.authError = null;
         ui.authInfo = "Konto angelegt.";
@@ -3114,11 +3125,15 @@ async function doRegister() {
    App, wuerde dort aber von der Datenbank abgewiesen. */
 async function pruefeBestaetigung() {
   if (!currentUser) return;
+  const user = currentUser, kontoRef = userDocRef;
+  const giltNoch = () => currentUser === user && userDocRef === kontoRef && !kontoWirdGeloescht;
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; ui.authBusyWas = "pruefen"; render();
   try {
-    await mitZeitlimit(currentUser.reload());
-    if (currentUser.emailVerified) {
-      await mitZeitlimit(currentUser.getIdToken(true));
+    await mitZeitlimit(user.reload());
+    if (!giltNoch()) return;
+    if (user.emailVerified) {
+      await mitZeitlimit(user.getIdToken(true));
+      if (!giltNoch()) return;
       location.reload();
       return;
     }
@@ -3126,6 +3141,7 @@ async function pruefeBestaetigung() {
        der Bildschirm schaut selbst nach. Fehler ohne Systemcode (Station 4). */
     ui.authError = "Noch nicht bestätigt – öffne den Link in der E-Mail, dann geht es hier von selbst weiter.";
   } catch (e) {
+    if (!giltNoch()) return;
     ui.authError = authErrorText(e);
   }
   ui.authBusy = false;
@@ -3133,13 +3149,17 @@ async function pruefeBestaetigung() {
 }
 async function doResendVerification() {
   if (!currentUser) return;
+  const user = currentUser, kontoRef = userDocRef;
+  const giltNoch = () => currentUser === user && userDocRef === kontoRef && !kontoWirdGeloescht;
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; ui.authBusyWas = "senden"; render();
   try {
-    await mitZeitlimit(fb.sendEmailVerification(currentUser));
+    await mitZeitlimit(fb.sendEmailVerification(user));
+    if (!giltNoch()) return;
     /* 3.17.3: dasselbe Wort wie oben ("Bestaetigungs-E-Mail", nicht
        "Verifikations-"); der Spam-Hinweis steht schon fest auf der Seite. */
     ui.authInfo = "Neue Bestätigungs-E-Mail ist unterwegs.";
   } catch (e) {
+    if (!giltNoch()) return;
     ui.authError = authErrorText(e);
   }
   ui.authBusy = false;
@@ -4107,8 +4127,12 @@ function genTeilCode() {
    Netz auskommt. Ohne modus: wie bisher, die Lernenden schalten sich per
    Fortschritt selbst frei. */
 async function teileLektionCode(modus) {
+  const kontoRef = userDocRef, user = currentUser;
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && currentUser === user && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   const b = currentBereich();
   if (!(await weitergabeMoeglich(b))) return;
+  if (!giltNoch()) return;
   if (b.teilCode) {
     await dlgAlert('„' + b.name + '" wird schon über den Code ' + b.teilCode + ' geteilt. ' +
       'Erst „Teilen beenden", dann neu teilen.', "Schon aktiv");
@@ -4119,7 +4143,7 @@ async function teileLektionCode(modus) {
   const ok = await dlgConfirm(
     weitergabeBestaetigung(b, version, lehrer ? "lehrer" : "fortschritt"),
     { title: "Code erzeugen", okLabel: "Code erzeugen" });
-  if (!ok) return;
+  if (!ok || !giltNoch()) return;
 
   /* DATEN-7/REGELN-7 (25.09.2026): Der Bereich wird erst NACH einem
      erfolgreichen setDoc angefasst - vorher stand hier schon "Dein Code",
@@ -4130,7 +4154,7 @@ async function teileLektionCode(modus) {
   const weitergabeBereich = baueWeitergabeBereich(b, version);
   weitergabeBereich.satzId = satzIdNeu;
   const datensatz = {
-    ownerUid: currentUser.uid,
+    ownerUid: user.uid,
     erstelltAm: new Date().toISOString(),
     inhalt: { bereiche: [weitergabeBereich] }
   };
@@ -4150,16 +4174,19 @@ async function teileLektionCode(modus) {
     try {
       await schreibeDatensatz();
     } catch (e) {
+      if (!giltNoch()) return;
       if (e && e.code === "permission-denied") {
         /* § 8.2: veralteter Ausweis nach frischer Bestaetigung - einmal je
            Sitzung erneuern und GENAU EINMAL denselben Versuch wiederholen. */
         if (ausweisErneuernFuerSchreiben()) {
-          await currentUser.getIdToken(true);
+          await user.getIdToken(true);
+          if (!giltNoch()) return;
           try {
             await schreibeDatensatz();
             e = null;
           } catch (e2) { e = e2; }
         }
+        if (!giltNoch()) return;
         /* Moegliche Codekollision: kein Neuversuch nach demselben
            Fehlschlag, sondern ein ANDERER Code - genau einmal. */
         if (e && e.code === "permission-denied" && !neuerCodeVersucht) {
@@ -4172,11 +4199,13 @@ async function teileLektionCode(modus) {
       if (e) throw e;
     }
   } catch (e) {
+    if (!giltNoch()) return;
     await dlgAlert(fehlerKlartext(e), "Code nicht gespeichert");
     return;
   }
 
   /* Erst jetzt, nach Erfolg, am Bereich aendern und schreiben. */
+  if (!giltNoch()) return;
   b.satzId = satzIdNeu;
   b.satzVersion = version;
   b.teilCode = code;
@@ -4199,6 +4228,9 @@ async function teileLektionCode(modus) {
    Schreiben fehl (Regel nicht deployed, kein Netz), soll die Anzeige nicht
    behaupten, es sei freigegeben. */
 async function lehrerFreigeben() {
+  const kontoRef = userDocRef;
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   const b = currentBereich();
   if (!b.teilCode || !Number.isInteger(b.teilFreigabe)) return;
   const gesamt = lektionenVon(b).length;
@@ -4207,34 +4239,41 @@ async function lehrerFreigeben() {
   const lek = lektionenVon(b)[neu - 1];
   const ok = await dlgConfirm('„' + lek.name + '" jetzt für alle mit dem Code freigeben? ' +
     'Das lässt sich nicht wieder zumachen.', { title: "Nächste Lektion freigeben", okLabel: "Freigeben" });
-  if (!ok) return;
+  if (!ok || !giltNoch()) return;
   try {
     await mitZeitlimit(fb.updateDoc(fb.doc(db, "geteilteLektionen", b.teilCode), { freigabe: { offenBis: neu } }));
   } catch (e) {
+    if (!giltNoch()) return;
     await dlgAlert(fehlerKlartext(e), "Nicht freigegeben");
     return;
   }
+  if (!giltNoch()) return;
   b.teilFreigabe = neu;
   patchDoc({ [pfadBereich(b.id) + ".teilFreigabe"]: neu });
   render();
 }
 
 async function beendeTeilenCode() {
+  const kontoRef = userDocRef;
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   const b = currentBereich();
   if (!b.teilCode) return;
   const code = b.teilCode;
   const ok = await dlgConfirm("Der Code " + code + " funktioniert danach nicht mehr.",
     { title: "Teilen beenden?", okLabel: "Beenden", danger: true });
-  if (!ok) return;
+  if (!ok || !giltNoch()) return;
   /* DATEN-6 (25.09.2026): erst der Server, erst bei Erfolg der lokale
      Stand - vorher stand hier "kein Code mehr" in der App, obwohl der
      Datensatz bei einem Fehler weiterhin lesbar blieb (§ 6.8). */
   try {
     await mitZeitlimit(geteiltLoeschen(code));
   } catch (e) {
+    if (!giltNoch()) return;
     await dlgAlert(fehlerKlartext(e), "Teilen nicht beendet");
     return;
   }
+  if (!giltNoch()) return;
   b.teilCode = null;
   b.teilFreigabe = null;
   patchDoc({
@@ -4245,25 +4284,31 @@ async function beendeTeilenCode() {
 }
 
 async function codeEinloesenStart() {
+  const kontoRef = userDocRef;
+  if (!kontoRef || kontoWirdGeloescht) return;
   const code = await dlgPrompt("Code eingeben (von der Person, die geteilt hat):", "",
     { title: "Code einlösen", okLabel: "Einlösen" });
-  if (!code || !code.trim()) return;
+  if (userDocRef !== kontoRef || kontoWirdGeloescht || !code || !code.trim()) return;
   /* 3.17.13 (Station 13): Codes haben die Form XXXXX-XXXXX (genTeilCode).
      Bis hier ging nur genau diese Schreibweise - "abcde fghjk" oder ohne
      Strich hiess "Diesen Code gibt es nicht". Jetzt zaehlen nur Buchstaben
      und Ziffern; bei zehn Zeichen kommt der Strich an seine Stelle. */
   const roh = code.toUpperCase().replace(/[^A-Z0-9]/g, "");
-  await codeEinloesen(roh.length === 10 ? roh.slice(0, 5) + "-" + roh.slice(5) : code.trim().toUpperCase());
+  await codeEinloesen(roh.length === 10 ? roh.slice(0, 5) + "-" + roh.slice(5) : code.trim().toUpperCase(), kontoRef);
 }
 
-async function codeEinloesen(code) {
+async function codeEinloesen(code, kontoRef = userDocRef) {
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   let snap;
   try {
     snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code));
   } catch (e) {
+    if (!giltNoch()) return;
     await dlgAlert(fehlerKlartext(e), "Code nicht geprüft");
     return;
   }
+  if (!giltNoch()) return;
   if (!snap.exists()) {
     await dlgAlert("Diesen Code gibt es nicht (mehr). Prüf die Schreibweise, oder frag noch einmal nach.", "Code ungültig");
     return;
@@ -4273,7 +4318,7 @@ async function codeEinloesen(code) {
   const ok = await dlgConfirm("Mit diesem Code bekommst du neue Lektionen in dein Konto. Übernehmen?" +
     (stand !== null ? "\n\nDie nächsten Lektionen schaltet dein:e Lehrer:in nach und nach frei." : ""),
     { title: "Geteilte Lektion", okLabel: "Übernehmen" });
-  if (!ok) return;
+  if (!ok || !giltNoch()) return;
   /* „Lehrer gibt frei": Code und Stand wandern mit in den Bereich. Der Inhalt
      wird nur kopiert, damit der Datensatz selbst unveraendert bleibt. */
   const inhalt = daten.inhalt;
@@ -4281,7 +4326,7 @@ async function codeEinloesen(code) {
     inhalt.bereiche = inhalt.bereiche.map(x => (x && typeof x === "object")
       ? { ...x, lehrerCode: code, lehrerOffenBis: stand } : x);
   }
-  await verarbeiteImportDaten(inhalt);
+  await verarbeiteImportDaten(inhalt, kontoRef);
 }
 
 /* Holt den Freigabe-Stand einer Lehrer-Lektion nach. Ein einzelnes getDoc -
@@ -4293,6 +4338,9 @@ const LEHRER_ABFRAGE_ABSTAND_MS = 60000;
 const lehrerLetzteAbfrage = new Map();
 async function lehrerStandAktualisieren(b) {
   if (!lehrerGesteuert(b) || !fb || !db || offline) return;
+  const kontoRef = userDocRef;
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   const jetzt = Date.now();
   const zuletzt = lehrerLetzteAbfrage.get(b.id);
   if (zuletzt && jetzt - zuletzt < LEHRER_ABFRAGE_ABSTAND_MS) return;
@@ -4300,6 +4348,7 @@ async function lehrerStandAktualisieren(b) {
   const code = b.lehrerCode;
   let snap;
   try { snap = await fb.getDoc(fb.doc(db, "geteilteLektionen", code)); } catch (e) { return; }
+  if (!giltNoch()) return;
   if (!snap.exists()) return;
   const fg = snap.data().freigabe;
   const n = fg && Number.isInteger(fg.offenBis) ? Math.min(LEHRER_STAND_MAX, fg.offenBis) : 0;
@@ -4419,7 +4468,9 @@ function satzZuordnung(ziel, datei) {
 }
 function herkunftsSchluessel(c) { return c.quelleId || "w:" + c.wort; }
 
-async function satzZusammenfuehren(ziel, datei) {
+async function satzZusammenfuehren(ziel, datei, kontoRef = userDocRef) {
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return null;
   const d = satzUnterschied(ziel, datei);
   const neueLektionen = d.neueSets.filter(s => s.art === "lektion").length;
   let text = "Ausgabe Nr. " + (datei.satzVersion || 1) + " von „" + datei.name + "\".\n\n";
@@ -4477,7 +4528,7 @@ async function satzZusammenfuehren(ziel, datei) {
       "Meist stammt die Datei nicht aus derselben Reihe.\n\n" + text;
   }
   const ok = await dlgConfirm(text, { title: "Kartensatz aktualisieren?", okLabel: "Übernehmen" });
-  if (!ok) return null;
+  if (!ok || !giltNoch()) return null;
   if (lehrerWechsel) lehrerUebernehmen();
 
   /* 1. Karten: vorhandene behalten (mit Fortschritt), fehlende anlegen,
@@ -4553,7 +4604,9 @@ async function satzZusammenfuehren(ziel, datei) {
    Zusammenfuehrungs-Logik, keine zweite, moeglicherweise abweichende
    Fassung. `data` hat die Form {bereiche: [...]}, egal ob sie aus einer
    Datei oder aus einem per Link geteilten Fragment kommt. */
-async function verarbeiteImportDaten(data) {
+async function verarbeiteImportDaten(data, kontoRef = userDocRef) {
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   if (!data || !Array.isArray(data.bereiche)) {
     await dlgAlert("Das ist kein gültiger Lernkarten-Bestand.", "Import nicht möglich");
     return;
@@ -4593,7 +4646,8 @@ async function verarbeiteImportDaten(data) {
        wie bei jeder normalen Datei ein eigener Bereich. */
     const ziel = (b.satzId && b.gefuehrt) ? bereiche.find(x => x.satzId === b.satzId && istGefuehrt(x)) : null;
     if (!ziel) { anzulegen.push(b); continue; }
-    const bericht = await satzZusammenfuehren(ziel, b);
+    const bericht = await satzZusammenfuehren(ziel, b, kontoRef);
+    if (!giltNoch()) return;
     if (bericht) berichte.push({ name: ziel.name, bericht: bericht });
   }
   if (anzulegen.length === 0) {
@@ -4672,6 +4726,8 @@ async function verarbeiteImportDaten(data) {
 
 function importBackupFile(file) {
   if (!file) return;
+  const kontoRef = userDocRef;
+  if (!kontoRef || kontoWirdGeloescht) return;
   /* Zuerst die Groesse - das geht, ohne die Datei anzufassen. Eine 400-MB-
      Datei einzulesen und erst danach festzustellen, dass sie nicht passt,
      laesst das Handy vorher stehen. */
@@ -4683,6 +4739,7 @@ function importBackupFile(file) {
   }
   const reader = new FileReader();
   reader.onload = async () => {
+    if (userDocRef !== kontoRef || kontoWirdGeloescht) return;
     let data;
     try {
       data = JSON.parse(reader.result);
@@ -4694,7 +4751,7 @@ function importBackupFile(file) {
       await dlgAlert("Diese Datei ist keine gültige Lernkarten-Backup-Datei.", "Import nicht möglich");
       return;
     }
-    await verarbeiteImportDaten(data);
+    await verarbeiteImportDaten(data, kontoRef);
   };
   reader.readAsText(file);
 }
@@ -7388,6 +7445,9 @@ function renderUmzug() {
 
 async function umzugStarten() {
   if (!ui.umzug || ui.umzug.laeuft || !umzugBereiche || !userDocRef) return;
+  const kontoRef = userDocRef, umzug = ui.umzug;
+  const giltNoch = () => userDocRef === kontoRef && ui.umzug === umzug && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
 
   /* Karten-IDs waren bisher nur INNERHALB eines Bereichs eindeutig. In einer
      gemeinsamen Sammlung muessen sie es ueberall sein - sonst wuerde eine
@@ -7426,14 +7486,16 @@ async function umzugStarten() {
       const stapel = fb.writeBatch(db);
       ops.slice(i, i + 400).forEach(o => stapel.set(o.ref, o.daten));
       await stapel.commit();
-      ui.umzug.fertig = Math.min(i + 400, ops.length);
+      if (!giltNoch()) return;
+      umzug.fertig = Math.min(i + 400, ops.length);
       render();
     }
     /* Ganz zum Schluss die Markierung setzen. Bricht der Umzug vorher ab,
        bleibt das alte Format massgeblich und beim naechsten Start beginnt
        er einfach von vorn - doppelt geschriebene Karten sind harmlos, weil
        sie unter derselben ID landen. */
-    await fb.updateDoc(userDocRef, { schemaVersion: SCHEMA_VERSION });
+    await fb.updateDoc(kontoRef, { schemaVersion: SCHEMA_VERSION });
+    if (!giltNoch()) return; // der Snapshot kann den eigenen Umzug schon beendet haben
     ui.umzug = null;
     umzugBereiche = null;
     /* Nicht auf den naechsten Schnappschuss des Nutzerdokuments warten - der
@@ -7446,8 +7508,9 @@ async function umzugStarten() {
     sammlungenStarten();
     render();
   } catch (e) {
-    ui.umzug.laeuft = false;
-    ui.umzug.fehler = fehlerKlartext(e);   /* 3.17.16: statt Systemcode */
+    if (!giltNoch()) return;
+    umzug.laeuft = false;
+    umzug.fehler = fehlerKlartext(e);   /* 3.17.16: statt Systemcode */
     render();
   }
 }
@@ -7464,15 +7527,19 @@ let bestaetigungLaeuft = false;
 async function bestaetigungStillPruefen() {
   if (!currentUser || ui.authBusy || bestaetigungLaeuft) return;
   if (document.visibilityState !== "visible") return;
+  const user = currentUser, kontoRef = userDocRef;
+  const giltNoch = () => currentUser === user && userDocRef === kontoRef && !kontoWirdGeloescht;
   bestaetigungLaeuft = true;
   try {
-    await mitZeitlimit(currentUser.reload());
-    if (currentUser && currentUser.emailVerified) {
-      await mitZeitlimit(currentUser.getIdToken(true));
+    await mitZeitlimit(user.reload());
+    if (!giltNoch()) return;
+    if (user.emailVerified) {
+      await mitZeitlimit(user.getIdToken(true));
+      if (!giltNoch()) return;
       location.reload();
     }
   } catch (e) { /* still - der Knopf zeigt Fehler, das Nachsehen nicht */ }
-  bestaetigungLaeuft = false;
+  finally { if (giltNoch()) bestaetigungLaeuft = false; }
 }
 function bestaetigungBeobachten() {
   if (!bestaetigungTimer) bestaetigungTimer = setInterval(bestaetigungStillPruefen, 5000);
@@ -9410,6 +9477,8 @@ const FEEDBACK_STATUS = [
 ];
 
 async function feedbackLaden() {
+  const kontoRef = userDocRef, user = currentUser;
+  if (!kontoRef || !user || kontoWirdGeloescht) return;
   /* Kein "if (feedbackLaedt) return" mehr: ein Aufruf hier heisst jetzt immer
      "neuer Versuch, alten aufgeben" - siehe Kommentar bei feedbackLadeToken
      oben. Der einzige Ort, der einen bereits laufenden Versuch NICHT durch
@@ -9417,12 +9486,13 @@ async function feedbackLaden() {
      Seite), prueft feedbackLaedt schon selbst, bevor er hierher ruft
      (renderFeedbackSeite()). */
   const meinToken = ++feedbackLadeToken;
+  const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht && meinToken === feedbackLadeToken;
   feedbackLaedt = true;
   feedbackFehler = null;
   feedbackLadeLangsam = false;
   if (feedbackLadeTimer) clearTimeout(feedbackLadeTimer);
   feedbackLadeTimer = setTimeout(() => {
-    if (meinToken !== feedbackLadeToken) return;   // laengst ueberholt
+    if (!giltNoch()) return;
     feedbackLadeLangsam = true;
     zeichneIdeen();
   }, 9000);
@@ -9433,6 +9503,7 @@ async function feedbackLaden() {
        limit ab (Mengenbremse gegen Spam, der sonst jedes Oeffnen teuer macht).
        Folge bei mehr als 100 Ideen: die mit den wenigsten Stimmen fehlen. */
     const snap = await fb.getDocs(fb.query(fb.collection(db, "feedback"), fb.orderBy("votes", "desc"), fb.limit(FEEDBACK_LIMIT)));
+    if (!giltNoch()) return;
     const liste = [];
     snap.forEach(d => liste.push(Object.assign({ id: d.id }, d.data())));
     liste.sort((a, b) => (b.votes || 0) - (a.votes || 0) || ideeZeit(b) - ideeZeit(a));
@@ -9443,16 +9514,16 @@ async function feedbackLaden() {
     const eigene = new Set();
     await Promise.all(liste.map(async e => {
       try {
-        const v = await fb.getDoc(fb.doc(db, "feedback", e.id, "votes", currentUser.uid));
+        const v = await fb.getDoc(fb.doc(db, "feedback", e.id, "votes", user.uid));
         if (v.exists()) eigene.add(e.id);
       } catch (err) { /* eigene Stimme einzeln nicht ladbar - zeigt dann "nicht abgestimmt" */ }
     }));
-    if (meinToken !== feedbackLadeToken) return;    // ein neuerer Versuch laeuft laengst
+    if (!giltNoch()) return;
     feedbackListe = liste;
     feedbackEigeneVotes = eigene;
     feedbackEinblenden = true;
   } catch (e) {
-    if (meinToken !== feedbackLadeToken) return;
+    if (!giltNoch()) return;
     feedbackFehler = fehlerKlartext(e);
   }
   if (feedbackLadeTimer) { clearTimeout(feedbackLadeTimer); feedbackLadeTimer = null; }
@@ -9462,6 +9533,9 @@ async function feedbackLaden() {
 }
 
 async function feedbackEinreichen() {
+  const kontoRef = userDocRef;
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   if (feedbackEinreichtWird) return;   // Doppel-Tipp waehrend addDoc() laeuft
   const feldText = document.getElementById("fb-text");
   const feldBeschr = document.getElementById("fb-beschreibung");
@@ -9482,6 +9556,7 @@ async function feedbackEinreichen() {
   render();
   try {
     const ref = await fb.addDoc(fb.collection(db, "feedback"), neu);
+    if (!giltNoch()) return;
     /* 3.17.0: Die neue Idee steht sofort in der Liste (hervorgehoben), statt
        die ganze Liste zu verwerfen und neu zu laden.
        3.17.40 (G-057): erstelltAm ist hier noch die serverTimestamp-Sentinel
@@ -9501,6 +9576,7 @@ async function feedbackEinreichen() {
     ansagen("Danke! Deine Idee steht jetzt in der Liste.");
     if (!feedbackListe) await feedbackLaden();
   } catch (e) {
+    if (!giltNoch()) return;
     feedbackEinreichtWird = false;
     dlgAlert(fehlerKlartext(e), "Nicht gespeichert");
     render();
@@ -9508,6 +9584,9 @@ async function feedbackEinreichen() {
 }
 
 async function feedbackAbstimmen(id, will) {
+  const kontoRef = userDocRef;
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   const eintrag = feedbackListe && feedbackListe.find(e => e.id === id);
   if (!eintrag) return;
   const vorher = eintrag.votes || 0;
@@ -9526,6 +9605,7 @@ async function feedbackAbstimmen(id, will) {
     else { batch.delete(stimmDoc); batch.update(feedDoc, { votes: fb.increment(-1) }); }
     await batch.commit();
   } catch (e) {
+    if (!giltNoch()) return;
     eintrag.votes = vorher;
     if (will) feedbackEigeneVotes.delete(id); else feedbackEigeneVotes.add(id);
     zeichneIdeen();
@@ -9536,12 +9616,17 @@ async function feedbackAbstimmen(id, will) {
 }
 
 async function feedbackStatusAendern(id, status) {
+  const kontoRef = userDocRef;
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   try {
     await fb.updateDoc(fb.doc(db, "feedback", id), { status: status });
+    if (!giltNoch()) return;
     const e = feedbackListe && feedbackListe.find(x => x.id === id);
     if (e) e.status = status;
     zeichneIdeen();
   } catch (e) {
+    if (!giltNoch()) return;
     dlgAlert(fehlerKlartext(e), "Status nicht geändert");
   }
 }
@@ -9556,16 +9641,21 @@ async function feedbackStatusAendern(id, status) {
    blendet status "entfernt" aus - auch bei der Moderation, kein
    Wiederherstellen-Knopf. */
 async function feedbackLoeschen(id) {
+  const kontoRef = userDocRef;
+  const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+  if (!giltNoch()) return;
   const ok = await dlgConfirm("Diese Idee für alle entfernen?", { danger: true, okLabel: "Entfernen" });
-  if (!ok) return;
+  if (!ok || !giltNoch()) return;
   try {
     /* Titel und Beschreibung werden dabei geleert (firestore.rules erlaubt der
        Moderation genau das): sonst blieben entfernte Inhalte fuer jedes Konto
        ueber die Schnittstelle lesbar, nur die App blendete sie aus. */
     await fb.updateDoc(fb.doc(db, "feedback", id), { status: "entfernt", text: "", beschreibung: null });
+    if (!giltNoch()) return;
     if (feedbackListe) feedbackListe = feedbackListe.filter(e => e.id !== id);
     zeichneIdeen();
   } catch (e) {
+    if (!giltNoch()) return;
     dlgAlert(fehlerKlartext(e), "Nicht entfernt");
   }
 }

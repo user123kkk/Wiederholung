@@ -1,3 +1,18 @@
+## 3.17.56 – 29. September 2026
+
+**Verspätete Antworten bleiben bei ihrem Ursprungskonto.** Erzeugen,
+Freigeben und Beenden eines Teil-Codes sowie Lehrer-Abfragen verändern
+nach einem Kontowechsel weder Teilfelder noch Anzeige des neuen Kontos.
+Datei-/Code-Importe und mehrteilige Zusammenführungen prüfen dieselbe
+Herkunft; eine alte Migration beendet nicht den Umzug des Folgekontos.
+
+**Board und E-Mail-Bestätigung:** Alte Rückmeldungen leeren keinen neuen
+Ideenentwurf und setzen keine fremde Stimm-Anzeige zurück. Bestätigungs-
+und Versandaufträge verwenden bis zum Ende denselben Nutzer. Das neue
+Konto kann sofort selbst prüfen; die alte Antwort entsperrt seinen laufenden
+Auftrag nicht. Normale Abschlüsse und Fehlermeldungen bleiben erhalten.
+Lernstufen, Fälligkeiten und Freischaltregeln sind unverändert.
+
 ## 3.17.55 – 29. September 2026
 
 **Kein weißes Aufblitzen mehr beim Start der iPhone-App.** Die Aufnahme zeigt im Vollbild den ganzen Hintergrund um etwa 12 % zu Weiß verschoben, das Logo unverändert: iOS blendete eine noch leere Web-Ansicht ein. Die Seite wartete bei jedem Start zuerst aufs Netz. Der Service Worker liefert die Seite jetzt sofort aus dem Speicher und holt die neue Fassung im Hintergrund. Eine neue Version erscheint dadurch erst beim zweiten Start. Bestätigung am iPhone bleibt offen.

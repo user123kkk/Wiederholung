@@ -2,6 +2,20 @@
 
 ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
 
+### Aktueller Weiter-Auftrag — Runde 14
+
+Betreiber hat nach den Claude-Änderungen .52–.55 die Weiterarbeit verlangt.
+Runde 14 (G-102–G-106) ist wieder aufgenommen; aktuelle Arbeit steht oben
+in `plan/grossplan/LOGBUCH.md`. Der iPhone-Start ist laut Gerätebericht mit
+.55 bestätigt. Die folgenden Pause-/Übergabeabschnitte beschreiben den
+früheren Stand; nicht als aktuelle Sperre oder offenen iPhone-Fix lesen.
+
+**Runde14 abgenommen (.56):** 105/105 Testläufe, 13/13 Lernabnahme und
+Handy200/iPad150 Zufallstests grün. Unveränderter Original-Tempotest am
+Ladegerät grün, keine Grenze gelockert/kein Layout-Experiment übernommen.
+Aktuelle Nachweise stehen im obersten Logbuch. Nächste Runde genau
+G-107–G-111, zuerst G-110 kritisch. Kein Textlern-Bauauftrag.
+
 ### Runden: Ablauf, Gegenprüfung, neuer Zyklus
 
 Jede Runde nach `plan/grossplan/AUFTRAG.md` § 2, § 2a (Gegenprüfung,

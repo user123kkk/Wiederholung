@@ -788,8 +788,18 @@ Konsolen-Schritte K1 ff., Funktionen/Premium. **Wieder aufgenommen durch
 Die Einträge darunter bleiben als Verlauf gültig.
 
 **STAND 29.09.2026 abends: iPhone-Start am Gerät bestätigt (3.17.55).**
-Nächste Arbeit: Runde 14 (G-102 bis G-106) nach `grossplan/AUFTRAG.md`
-§ 2 + § 2a, sobald der Betreiber „weiter“ sagt.
+**Aktueller Weiter-Auftrag:** Runde 14 (G-102–G-106, 3.17.56) abgenommen;
+als Nächstes Runde15 mit genau G-107–G-111, zuerst kritischer G-110.
+Umsetzung und Gegenprüfung gemäß `grossplan/AUFTRAG.md` §2 + §2a.
+105/105 Testläufe, 13/13 Lernabnahme, Handy200/iPad150 je0 Befunde.
+Unveränderter Tempotest am Ladegerät grün: 3000 Karten geführt/eigen
+alle zehn Bewertungen unter100ms, keine Grenze gelockert. Frühere rote
+Messungen/Diagnose und beschreibende Grenzen bleiben im Logbuch. Mustersuche
+belegt G-107 (Auth, mittel), G-108 (private Entwürfe, hoch) und G-109
+(Inventar-Prüfwerkzeug, niedrig) sowie G-110 (bestätigter Auth-Dialog,
+Löschaufruf an B, kritisch) und G-111 (fremder Registrierungsnachtrag, hoch)
+für die Folgerunde; A5/A6 weiterhin offen.
+Die folgenden Pausen-/Startbefunde sind historisch; .52–.55 bleiben erhalten.
 
 **NACHTRAG (29.09.2026, Claude-Prüfung, 3.17.52):** Startbild-Name war auf
 iOS New York, im PNG Palatino; jetzt Georgia, 31 PNGs neu. `closeDialog`

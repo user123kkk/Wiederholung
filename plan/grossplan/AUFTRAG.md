@@ -62,7 +62,10 @@ ausdrücklichem Auftrag; niemals gleichzeitig an `app.js`/`styles.css`.
 ## 2. Ablauf einer Runde
 
 Eine Runde beginnt nur nach einem ausdrücklichen „weiter" des Betreibers.
-**Stand 29.09.2026: nach Runde 13 ausdrücklich pausiert.** Neuer Claude-Chat
+**Aktueller Stand 29.09.2026: vom Betreiber wieder aufgenommen.** Runde14
+G-102–G-106 abgenommen (.56), Ausgang `c4a2ccf`/.55; mit §2a-Gegenprüfung.
+Danach Runde15: genau G-107–G-111, zuerst kritischer G-110.
+**Historische Pause 29.09.2026:** Nach Runde 13 pausiert. Neuer Claude-Chat
 prüft gezielt Runde 13 und den weiterhin falschen iPhone-Start gemäß
 [`../onboarding/CLAUDE-HANDOFF-2026-09-29.md`](../onboarding/CLAUDE-HANDOFF-2026-09-29.md).
 Runde 14 erst nach erneutem ausdrücklichem Weiter-Auftrag beginnen.

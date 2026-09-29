@@ -2,6 +2,179 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Runde 14 abgenommen: G-102–G-106, 3.17.56
+
+**Geändert:** `app.js:3126/4129/4300/4339/4607/4727/7446/9479`
+(Bestätigung, Weitergabe/Lehrer, Import, Migration, Board), Versionen in
+`app.js`, `sw.js`, `index.html`, `CHANGELOG.md`; Nachweise/Regeln/Prüfstand
+unter `plan/`. Keine Lernregel-, Layout- oder Cloud-Regeländerung.
+**Entscheidung:** Betreiber bestätigt Ladegerät, Windows jetzt BatteryStatus2.
+Unveränderter Originaltest und Originalgrenze bestehen: 3000 geführt
+57/0/0/0/0ms, eigen 0/0/0/0/0ms (Summe langer Aufgaben, CPU4×), genau
+eine Bewertung je Tastendruck. Kein App-Fix oder Kalibrierungs-Trick nötig.
+105/105 Exit0; nur den roten Test frisch ausgeführt, 104 identische grüne
+Logs bewahrt. Neue vollständige Ausgabe gelesen, alte rote Logs bleiben
+historische Messungen. 13/13 Lernabnahme und Handy200/iPad150 je0 Befunde.
+Handy-Schreiben gezielt nachgemessen: Lage/Striche/Vollbild/Undo erhalten,
+Kontrast0; 60 Bewegungen1525ms, ein Frameintervall448ms. Das ist eine
+beschreibende Grenze, keine Behauptung „alle Bilder flüssig“ und kein
+belegter Konto-Fix-Rückschritt. Rohlog `%TEMP%/adrabic-r14-schreiben-netz.log`.
+Gesamtlog `%TEMP%/adrabic-r14-netz-gesamt.log`, Einzelprotokolle weiterhin
+`adrabic-pruefstand-gesamt/a4b32726402d316c`.
+**Gegenprüfung:** Gesamter Herkunfts-Diff gegen `c4a2ccf`, normale frühe
+Rückkehr/Busy-Abschlüsse, Token-Retry/Codekollision, Mehrfachimport und
+500-Karten-Migration; 51 normale/Fehler-/Kontowechselfälle. Feste Altstände
+`5de6969` und `c4a2ccf` belegen die konkreten alten Konto-Mutationen.
+Keine offenen Promises als Erfolg festgeschrieben; .52-Dialogauflösung bleibt.
+LEHREN§14: Syntax, Versionen/CSP/APP_SHELL erneut grün; Sprünge, Kontrast,
+a11y und große Screens in der Gesamtfolge gelesen. Keine neuen Cloud-Felder,
+kein neuer Datenfluss, keine neue Handlung. `git diff --check` ohne Befund.
+**Offen:** G-107–G-111 für Runde15, zuerst kritischer G-110. G-109 verhindert
+die Aussage „vollständiges Textinventar“ trotz Exit0. Geräteprüfung iPad-
+Teilfenster/Drehen im Boot und Betreiber-Konsole bleiben offen; Textpläne
+sind kein Bauauftrag. Claude-Gesamtprüfung gemäß §2c erst nach Abschluss.
+**Nächster Schritt:** Diese Runde auf main committen/pushen, dann genau
+G-107–G-111 bearbeiten; kein Hosting-Deploy.
+**Kriterien:** A1 nein (fünf neue Aufgaben) · A2 unverändert · A3 unverändert
+· A4 grün im Prüfstand · A5 nein (kritische/hohe Nachfunde) · A6 0.
+
+### 2026-09-29 — Runde 14: Gesamtfolge gelesen, Tempo weiter offen
+
+**Geändert:** Nur Diagnosewerkzeuge und Befund-/Statusdateien seit der
+eingefrorenen App 3.17.56; Produktfingerprint weiterhin
+`a4b32726402d316cf32dff747287e07d4cb989b3067fed208fdc8687f5874eeb`.
+**Entscheidung:** Alle 105 vollständigen Ausgaben gelesen, 104 Exit 0.
+13er-Lernabnahme mit identischen Quell-/Test-Hashes übernommen: 13/13 grün.
+G-037 bleibt rot, 150ms gesamt, 192ms isoliert, fester Altstand
+`c4a2ccf` 272ms; Grenze 100ms bleibt. Diagnosevarianten nur in gerouteter
+Testquelle: Modusleisten-Hülle erhalten 142ms, Viewport in rAF 660ms,
+Auslassen bei fester Kartenansicht 702ms; keine davon übernommen.
+Chrome-Timeline: Keydown 147ms, darin Style 50ms und Layout 38ms.
+Profiler/Tracing kosten selbst Zeit, keine Abnahme daraus behauptet.
+Ein Diagnose-Replace war nicht eindeutig und brach vor Browserstart ab;
+auf die eindeutige renderMain-Stelle begrenzt. Produkt blieb unverändert.
+Feste Alt-Gegenproben für G-108 (vier Fälle), G-110 (zwei vollständige
+App-Fälle) und G-111 bestätigen dieselben Fehler in `c4a2ccf`.
+Keine Produktionsprofile oder echten Konten benutzt.
+**Offen:** Tempo-Freigabe, abschließende §2a-/§14-Abnahme und Commit.
+Zufallstests seriell abgeschlossen: Handy 200/Seed1402 und
+iPad150/Seed1403 jeweils 0 Befunde, vollständige Ausgaben gelesen.
+Logs `%TEMP%/adrabic-r14-affe-handy.log` und `adrabic-r14-affe-ipad.log`.
+Zwischenzeitlich fünf reine Textplan-Commits bis `073209a` hinzugekommen;
+kein Produkt-/Prüfstandwechsel. Beide Textlern-Pläne ausdrücklich Entwürfe,
+kein Bauauftrag; laufender Zyklus weiterhin zuerst.
+Ursprünglich grün geprüfter Stand `a5ea99c` / .47 jetzt ebenfalls rot,
+469ms; Testdatei seitdem unverändert, CSS-Diff nur Boot-Schrift/Höhe.
+Offizieller DevTools-Benchmark, Quellen-SHA256
+`dbfbeadbdd81924267dd4312f57be1005b237d66d9f7a6d76d153bc034d485f7`:
+Chrome154, 1× 522,5/679; 4× 57/67,5, offizielles Low-Ziel264.
+Kein Pauschalurteil über Ursache oder Freigabe daraus. Zweiter Benchmark
+1×505/331,5 und 4×46,5/29,5; Kalibrierung1,37×, Kontrollen280/291,5/223,5
+statt Ziel264±10. Nicht stabil, keine Freigabe daraus. Windows meldet
+Akkubetrieb17%, WMI798MHz, Schema Ausbalanciert. Netzbetrieb als nächste
+kontrollierte Bedingung angefragt; keine Energieeinstellung verändert.
+Feste rote Messungen und 100ms-Grenze bleiben.
+Erster Benchmark-Aufruf scheiterte vor Messung an Playwrights Behandlung
+einer Funktionsdeklaration als Ausdruck; eindeutig geklammerte IIFE korrigiert.
+Folgerunde genau G-107–G-111;
+keine davon als korrigiert melden. Gerätepunkt iPad-Boot bleibt offen.
+**Nächster Schritt:** CPU-Kalibrierung kontrollieren und Zusatzvergleich
+im Netzbetrieb messen; zunächst nur den roten Originaltest wiederholen.
+Bei unverändertem Produktfingerprint 104 grüne Prüfungen, 13er-Abnahme
+und beide Zufallstests bewahren. Keine nächste Code-Runde vor K6-Freigabe.
+**Gegenprüfung:** Produktdiff der Herkunftsprüfungen, normale Rückkehr/
+Busy-Abschlüsse, Token-Retry/Codekollision, 500-Karten-Migration und feste
+Gegenproben gelesen. Kein Lernregel-/Viewport-/Start-Cache-Diff.
+G-110 im eigenen Befund zuvor nur hoch gewichtet; konkreter fremder
+Auth-Löschauftrag ist kritisch wie G-098, Priorität korrigiert.
+§14-Punkte10/11 bereits grün am gleichen Fingerprint, neue Diagnose-
+Skripte syntaktisch grün, `git diff --check` ohne Befund. Punkt6/12
+(Tempo) noch nicht erfüllt: kein Commit, Push oder Deploy.
+Eigene Testprozesse nach vollständiger Zuordnung beendet: Server8099
+(PID21984), Demo-Emulator22844/Java12452, temporäre Wachhaltung23204.
+Keine fremden Browser-/App-Prozesse oder Windows-Energieschemata geändert.
+Für den Netzvergleich Prüfstand neu starten; vorhandene Logs bleiben liegen.
+**Kriterien:** A1 nein · A2 unverändert · A3 unverändert · A4 noch nein
+(Tempo) · A5 nein (neue kritische/hohe Funde) · A6 0.
+
+### 2026-09-29 — Runde 14 aufgenommen: Konto-Fortsetzungen G-102–G-106
+
+**Geändert:** Zunächst nur Logbuch/Planstatus. Ausgangscommit `c4a2ccf`,
+App 3.17.55; Arbeitsbaum sauber und `origin/main` aktuell.
+**Entscheidung:** Betreiber fordert Weiterarbeit am geänderten Repo.
+Claude-Korrekturen .52–.55 übernommen, Start am iPhone laut Gerätebericht
+bestätigt. Eigener Dialog-Promise-Fehler aus Runde 13 in .52 korrigiert;
+neue frühe Rückkehr ausdrücklich auf beendete Aufträge prüfen (§ 2a).
+Genau fünf Aufgaben: G-102 Weitergabe/Lehrer-Stand, G-103 Import,
+G-104 Migration, G-105 Board, G-106 Bestätigung. Keine Lernregeländerung.
+Erweiterte Alt-Gegenprobe `5de6969`: alle drei Datei/Code/Mehrfach-Importe
+erzeugen Inhalte in B (42→44 Dokumente); echter App-Umzug setzt B schon
+bei 399/500 Karten auf Schema 2. Normaler 500-Karten-Umzug grün.
+Korrekturen lokal umgesetzt; sieben bestehende Befund-Werkzeuge grün,
+51 neue normale/Fehler-/Token-Fortsetzungsfälle grün. Vollständige App:
+A→B-Bestätigung entsperrt B; alte Antwort lässt B-Auftrag bis zu dessen
+eigener Antwort busy. Gegenprobe `c4a2ccf` belegt drei alte Busy-Blockaden.
+Eigener Diff-Fund beim Hochzählen: global ersetzter historischer SW-
+Kommentar .55→.56, zurückgenommen. Erstlauf beendet, Abnahme zählt nur
+für den danach eingefrorenen Quellstand. Keine Änderung am Cache-Verhalten.
+Weitere Mustersuche: `konto_authrest.js --befund` belegt vier Nachbarpfade
+mit B-Reload, Info/Busy-Verlust oder fremdem Reauth. G-107 mittel in die
+Folgerunde aufgenommen; keine B-Datenlöschung behauptet. .56-Produkt
+bleibt für die laufende 105er-Folge unverändert eingefroren.
+Weitere vollständige App-Probe belegt G-108 hoch: private A-Kartentexte
+bleiben nach Auth in B offen; aus Bearbeiten wird unbemerkt Neuanlage,
+Speichern schreibt tatsächlich nach B. Zwei Kartenfälle bestanden als
+Fehlernachweis; angrenzender Ideenfall rot wegen geschlossener Einstellungen,
+Messung auf Wiederöffnen korrigiert, noch nicht neu gelaufen.
+Gesamtfolge meldet `t_bestand_tempo` rot (150ms, Grenze 100ms). Ursache
+noch nicht belegt; isolierter Lauf/Altvergleich nach serieller Folge,
+keine Testgrenze lockern und keine Gesamtfreigabe.
+Vorbereitung der Folgerunde ohne Änderung am eingefrorenen Produkt:
+`konto_authrest_normal.js` prüft elf normale Erfolg-/Fehlerpfade, darunter
+Gast→Registrierung und Konto→Abmeldung nach Löschen mit/ohne Reauth.
+Alle elf bestehen im Bestand; sie müssen nach G-107 weiterhin bestehen.
+Zwölfter Fall ergänzt und bestanden: Registrierungs-Promise vor Auth-
+Benachrichtigung, Profilantwort danach. Diese erwartete Reihenfolge darf
+die künftige Herkunftsprüfung nicht versehentlich abbrechen.
+Nach Erweiterung um normale E-Mail/Google/Apple-Erfolge, Fehler und
+Popup-Abbruch jetzt 18 normale Auth-Fälle bestanden, Originalfunktionen/VM.
+Angrenzende Auth-Mustersuche ergänzt G-107 um E-Mail/Google/Apple:
+drei kontrollierte späte Fehlerantworten setzen B-Fehler/Busy fremd zurück.
+Damit sieben belegte Wege derselben Aufgabe; Produkt weiter eingefroren.
+Logsichtung ergänzt G-109 niedrig: `t_inventar2` liest verborgenes
+Fehlerdialog-Markup (leere Texte) und stoppt den Einstieg vor der Probekarte.
+Prüfstand-Korrektur für Folgerunde, keine vollständige Inventarabnahme zählen.
+Weitere Microtask-Probe belegt G-110 hoch: Auth-Dialog bereits bestätigt,
+dann A→B vor seiner Fortsetzung. Originalcode ruft deleteUser(B) bzw.
+signOut im B-Kontext auf. Nur kontrollierte SDK-Funktionen, keine echte
+Kontolöschung. Kontext muss vor dem Dialog erfasst werden; Folgerunde.
+Frische Schreibausgabe .56: alle Flächen/Knöpfe im Bild, Kontrast 0,
+Striche/Vollbild/Undo erhalten. CPU 4×, 60 Bewegungen: Handy 4762ms,
+24 Pausen/bis100ms; klein 3001ms, 2/bis67ms; iPad1785ms, 0 Pausen.
+Keine pauschale Tempoabnahme; isolierter Handy-/Altvergleich nach Folge.
+Gesamtfolge abgeschlossen: 104/105 Exit 0, nur G-037-Messung rot.
+Alle vollständigen Logs gelesen, beschreibende Grenzen oben festgehalten.
+Eigener Wiederholungsstart ohne CHROMIUM scheiterte vor dem Browserstart;
+keine Messung. Originalrot als `t_bestand_tempo.erstlauf.log` bewahrt,
+korrekten Chrome 154.0.8037.58 gesetzt; erneuter Lauf nur des roten Tests.
+Isolierter Lauf weiter rot: 192ms; fester Altstand `c4a2ccf` ebenfalls
+rot, 272ms. Kein belegter .56-Rückschritt, Ursache/Tempoabnahme weiter offen.
+Profiler zur Diagnose gestartet; feste Grenze unverändert.
+Korrigierte vollständige Entwurfsprobe belegt vier Fälle: Neuanlage,
+Bearbeitung, wiedergeöffneter Ideenentwurf und fremde Karten-Auswahl.
+G-110 jetzt auch vollständige App: lokale SDK-Attrappe löscht/meldet B ab.
+Neue hohe Aufgabe G-111: nach fehlgeschlagener A-Registrierung übernimmt
+allgemeiner Nachtrag A-Namen in B-SDK-Profil und startet dessen Mail.
+Erster Probeaufbau ließ Gast-Onboarding aktiv, vor SDK abgebrochen;
+korrigiert und Formular-ID geprüft. Weitere Schreibfehler-Hypothese im
+Aufbau nicht bestätigt, B-eigener Start-Write räumt die Meldung auf.
+**Offen:** Tempoabnahme dieser Runde, § 2a, A1/A5/A6; G-107–G-111 Folgerunde.
+Echter iPad-Fenster-/Dreh-Start bleibt Gerätepunkt, Q1 ungebaut.
+**Nächster Schritt:** Laufende 105er-Gesamtfolge vollständig lesen; danach
+roten Geschwindigkeitstest seriell gegen aktuellen und festen Altstand
+prüfen, anschließend Abnahme/Zufallstests und Gegenprüfung abschließen.
+
+
 ### 2026-09-29 — iPhone-Start am Gerät bestätigt (3.17.55)
 
 **Geändert:** `plan/grossplan/LOGBUCH.md`, `plan/PLAN.md`.

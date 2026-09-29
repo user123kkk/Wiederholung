@@ -27,6 +27,19 @@ CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node t_sprung.js
 Fotos landen in `$PRUEF_BILDER` (Standard: `<tmp>/adrabic-pruefbilder`).
 `node_modules/` und `package*.json` nicht einchecken.
 
+Auf diesem Windows-Rechner liegt der geprüfte Chrome unter
+`C:\Program Files\Google\Chrome\Application\chrome.exe` (29.09.: 154.0.8037.58).
+In **jedem neuen PowerShell-Prozess** vor Browserprüfungen setzen:
+
+```powershell
+$env:CHROMIUM = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+node plan/werkzeuge/pruefstand/alle_pruefen.js --fortsetzen
+```
+
+Die Umgebungsvariable eines vorherigen Tool-Aufrufs wird nicht automatisch
+übernommen. Ein fehlgeschlagener Browserstart liefert keine Messung; die
+vorherige echte Fehlerausgabe vor Wiederholung zusätzlich bewahren.
+
 Gesamtlauf: `node alle_pruefen.js`, oder die 13 Lernrunden-Tests separat mit
 `node abnahme_runde.js` und die übrigen mit `node alle_pruefen.js --ohne-runde`.
 Der zweite Befehl behauptet ausdrücklich keine vollständige Gesamtabnahme.
