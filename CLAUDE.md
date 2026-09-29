@@ -50,6 +50,10 @@ Pflicht in jeder Session:
 
    Ein Bedenken, das er *vor* einer Anweisung äußert, ist kein Bauauftrag.
    Echte Fehler, die dabei auffallen, werden trotzdem sofort behoben.
+   **Umgekehrt genauso:** Ein Einwand, eine Frage oder Kritik ist auch kein
+   Auftrag zum Streichen oder Ändern. Eigenes Urteil nennen und dabei
+   bleiben, bis er ausdrücklich entscheidet (Betreiber 29.09.2026, „fest
+   notieren“; `plan/LEHREN.md` § 1.1).
    Einzelheiten: `plan/LEHREN.md` § 1.
 2. **Religiöser Rahmen:** Es gilt ausschließlich **Quran und Sunnah nach dem
    Verständnis der Salaf as-Salih**. Gemeint sind die drei ersten Generationen
