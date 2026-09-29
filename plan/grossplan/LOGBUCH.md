@@ -2,6 +2,27 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Gerätebefund 3.17.52: Start flackert weiter; Betreiber stellt zurück
+
+**Geändert:** nur `plan/grossplan/LOGBUCH.md`, `plan/PLAN.md`.
+**Entscheidung:** Betreiber hat 3.17.52 veröffentlicht (Server liefert
+`app.js?v=3.17.52`, geprüft) und die Home-Bildschirm-App neu installiert.
+Befund: „beim Laden flickert es und das sind wieder 2 sachen“. Aufnahmen
+kann er nicht schicken; Rückfragen (zwei Logos gleichzeitig oder Sprung,
+Richtung, Ladebildschirm oder Übergang zur Startseite) beantwortete er nicht
+und sagte „lass sein“. Damit ist der Schrift-Fix am Gerät **nicht** als
+Lösung bestätigt. Ohne Bild oder Beschreibung keine weitere Änderung:
+jede weitere Geometrie- oder Offset-Änderung wäre geraten. Chrome-Bildfolge
+(414×896, live) zeigt Ladebildschirm → Einstieg ohne doppeltes Logo; das
+bildet weder das native iOS-Startbild noch WebKit ab.
+**Offen:** Tatsächliche Ursache des Flackerns am iPhone. Noch nicht
+ausgeschlossen: Höhe des HTML-Boot im Standalone-Modus (.49 nur simuliert),
+Neumontage/Glühen beim Übergang, Übergang zur Einstiegsseite. Braucht ein
+Bildschirmfoto im Moment des Flackerns (Seitentaste + Lauter) oder einen
+Satz zur Richtung. Vom Betreiber zurückgestellt; nicht ungefragt fortsetzen.
+**Nächster Schritt:** Keiner, bis der Betreiber den Start wieder aufgreift.
+Großplan bleibt vor Runde 14 pausiert.
+
 ### 2026-09-29 — Claude-Prüfung: Startbild-Schrift und Dialog-Promise (3.17.52)
 
 **Geändert:** `styles.css:3218` (`.boot__marke` Georgia statt

@@ -793,7 +793,10 @@ aus Runde 13 löst sein Promise wieder immer auf. Foto IMG_4397 ist vom
 28.09. (vor .49) und zeigt ein natives Startbild aus 3.13.1. **Offen:**
 Hosting-Deploy 3.17.52 und iPhone-Kaltstart nach Neuinstallation durch den
 Betreiber. Großplan weiter vor Runde 14 pausiert. Details im obersten
-Eintrag von `grossplan/LOGBUCH.md`.
+Eintrag von `grossplan/LOGBUCH.md`. **Gerätebefund danach:** .52
+veröffentlicht, App neu installiert, Start flackert weiter („2 Sachen“).
+Ohne Bild/Beschreibung nicht weiter geraten; Betreiber: „lass sein“ —
+Start-Befund zurückgestellt, offen.
 
 **AKTUELL (29.09.2026, Pause): Runde 13 abgeschlossen; 3.17.51 mit
 `f550897` auf `main`/`origin/main` gepusht. Großplan vor Runde 14 ausdrücklich
