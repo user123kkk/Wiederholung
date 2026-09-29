@@ -787,6 +787,14 @@ Konsolen-Schritte K1 ff., Funktionen/Premium. **Wieder aufgenommen durch
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
+**NACHTRAG (29.09.2026, Claude-Prüfung, 3.17.52):** Startbild-Name war auf
+iOS New York, im PNG Palatino; jetzt Georgia, 31 PNGs neu. `closeDialog`
+aus Runde 13 löst sein Promise wieder immer auf. Foto IMG_4397 ist vom
+28.09. (vor .49) und zeigt ein natives Startbild aus 3.13.1. **Offen:**
+Hosting-Deploy 3.17.52 und iPhone-Kaltstart nach Neuinstallation durch den
+Betreiber. Großplan weiter vor Runde 14 pausiert. Details im obersten
+Eintrag von `grossplan/LOGBUCH.md`.
+
 **AKTUELL (29.09.2026, Pause): Runde 13 abgeschlossen; 3.17.51 mit
 `f550897` auf `main`/`origin/main` gepusht. Großplan vor Runde 14 ausdrücklich
 angehalten.** Betreiber sieht .51 auf seinem Gerät und meldet den Start

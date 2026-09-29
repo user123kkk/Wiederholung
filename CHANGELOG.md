@@ -1,3 +1,7 @@
+## 3.17.52 – 29. September 2026
+
+**Startbild und Ladebildschirm setzen den Namen in derselben Schrift.** Der Name „Adrabic“ auf dem Ladebildschirm nutzte `ui-serif`: auf dem iPhone „New York“, auf dem Windows-Rechner, der die Startbilder fotografiert, „Palatino Linotype“. Das Betreiberfoto IMG_4397 zeigt genau diese zwei Schriften übereinander. Der Name steht jetzt in Georgia, die auf iOS und Windows vorhanden ist; alle 31 Startbilder sind neu erzeugt und neu versioniert. `t_boot_geometrie.js` vergleicht zusätzlich den Namen pixelweise und prüft die tatsächlich benutzte Schrift. Bestätigung am echten iPhone bleibt offen.
+
 ## 3.17.51 – 29. September 2026
 
 **Konto- und Bereichslöschungen schützen das Folgekonto.** Nutzer-Fallbacks, Vollschreiben und Bereich-Löschungen brechen nach einem Kontowechsel ihre Fortsetzung ab. Eine laufende Konto-Löschung bindet Abfragen, Stimm-Merker, erneute Anmeldung und Auth-Löschung an dasselbe Konto; nach Zeitlimit werden weitere Schritte gestoppt. Nach erfolgreicher Löschung lädt eine neue Anmeldung ohne Seiten-Neuladen.

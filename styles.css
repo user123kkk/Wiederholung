@@ -3215,7 +3215,12 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
 .boot__marke {
   position: absolute; left: 0; right: 0;
   top: calc(50% + 64px);
-  font-family: var(--font-text); font-size: 1.5rem; font-weight: 600;
+  /* 3.17.52: nicht --font-text. Dessen ui-serif ist auf iOS "New York", auf
+     dem Windows-Rechner, der die Startbilder fotografiert, gibt es sie nicht
+     (dort Palatino Linotype). Foto IMG_4397: HTML-Name in New York, PNG-Name
+     in Palatino - beim Ueberblenden doppelt. Georgia liegt auf iOS und
+     Windows als dieselbe Schrift vor; nur deshalb hier fest. */
+  font-family: Georgia, serif; font-size: 1.5rem; font-weight: 600;
   letter-spacing: 0.02em; color: var(--text-1);
 }
 /* Die Linie: 44px Spur, darin wandert ein heller Abschnitt. Sie wartet

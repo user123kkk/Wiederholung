@@ -2,6 +2,57 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Claude-Prüfung: Startbild-Schrift und Dialog-Promise (3.17.52)
+
+**Geändert:** `styles.css:3218` (`.boot__marke` Georgia statt
+`--font-text`), alle 31 `splash/*.png` neu erzeugt, `index.html` (31
+Startbild-URLs und zwei Asset-Querys auf 3.17.52), `app.js:19` (Version),
+`app.js:12469` (`closeDialog` löst das eigene Promise immer auf),
+`sw.js:10`, `CHANGELOG.md`, `plan/werkzeuge/pruefstand/t_boot_geometrie.js`
+(Namensvergleich und tatsächliche Schrift per CDP),
+`plan/werkzeuge/pruefstand/t_dialog_timer.js` (erwartet Auflösung),
+`plan/LEHREN.md` § 11/§ 15.
+**Entscheidung:** Foto IMG_4397 datiert 28.09. 07:37, also vor .49/.50/.51.
+Es zeigt den .51-Zustand nicht. Ebenen vermessen: Die schwache Ebene
+entspricht pixelgenau dem PNG aus 3.13.1 (`e969263`): Name x 307–489,
+y 1045–1080 gegenüber aktuellem PNG x 318–508. Die helle HTML-Ebene lag
+48 Gerätepixel (24 CSS-px) höher als beide PNGs. Das passt zum svh-Befund,
+den .49 simuliert behebt. Das Gerät zeigte also damals ein natives Startbild
+aus 3.13.1, obwohl der Server neuere Bilder hatte. Ob Hosting-Stand oder
+iOS-Speicher die Ursache war, ist aus dem Foto nicht zu trennen. Live-Server
+heute: `index.html` identisch mit Repo .51, PNG unter `?v=3.17.51` gleich
+dem Repo-PNG. Dritter, noch in .51 bestehender Befund: HTML-Name auf iOS in
+New York (`ui-serif`), PNG-Name in Palatino Linotype (Windows-Generator).
+Die Glyphen im Foto unterscheiden sich sichtbar. Fix: nur `.boot__marke`
+auf Georgia, auf iOS und Windows vorhanden. Keine Offsets, keine
+Höhenänderung, keine Onboarding-Änderung.
+Runde 13 unabhängig gelesen (`git diff 5de6969..f550897 -- app.js`). Neuer
+Fund: `closeDialog` kehrte bei einem zwischenzeitlich geöffneten neuen
+Dialog zurück, ohne das alte Promise aufzulösen; dessen Aufrufer wartete
+für immer. `t_dialog_timer.js` schrieb das mit `antworten===0` fest. Fix:
+neuen Dialog weiter unberührt lassen, altes Promise immer auflösen.
+Übrige Runde-13-Stellen (patchDoc/persistAll/Nutzerdokument/Bereich-
+Löschung mit `giltNoch`, `kontoLoeschKontext`, leeres E-Mail-Feld) ohne
+weiteren Fund.
+**Prüfung:** `t_boot_geometrie` Gegenprobe mit .51-PNGs rot (Name
+152.5–260 gegen 159–254.5), nach Neuerzeugung grün für fünf Größen, Schrift
+laut CDP `Georgia-Bold`, svh-Simulation weiter 24px. `t_dialog_timer`:
+erweiterte Erwartung gegen .51-Code rot, mit Fix grün. Grün außerdem
+`t_klein_boot`, `t_start`, `t_einstieg_lage`,
+`t_einstieg_g083_039_040_041_044`, `t_konto_dialog`,
+`t_konto_loeschwechsel`, `t_konto_stapel`, `pruefe_stand.mjs`,
+`node --check app.js`. Nicht gelaufen: `t_einstieg`, `t_sprung`, `t_a11y`,
+`t_kontrast` (Lauf vom Betreiber abgebrochen), kein Gesamtlauf, keine
+13er-Abnahme (Lernrunde nicht berührt).
+**Offen:** Echter iPhone-Kaltstart mit 3.17.52. Ohne ihn ist der Start
+nicht abgenommen. Georgia auf iOS gegen Georgia auf Windows nur nach
+Schriftgleichheit angenommen, nicht am Gerät gemessen. Ob iOS das
+Startbild einer bereits installierten App erneuert, ist unbelegt; der
+Geräteschritt entfernt und installiert die App deshalb neu. Hosting-Deploy
+3.17.52 durch den Betreiber. Großplan bleibt vor Runde 14 pausiert.
+**Nächster Schritt:** Betreiber-Gerätetest nach „Was Du noch tun musst";
+mit neuem Foto oder Bildschirmaufnahme gezielt nachmessen.
+
 ### 2026-09-29 — Betreiber pausiert; gezielte Übergabe an Claude
 
 **Geändert:** `plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md` neu;

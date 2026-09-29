@@ -1,5 +1,8 @@
 /* Loading-Pruefung: statisches Startbild gegen HTML, ohne Firebase.
-   Die Pixelmessung begrenzt sich auf das Zeichen (Schriften sind OS-abhaengig). */
+   Zeichen und Name werden pixelweise verglichen. Der Name darf nur mit einer
+   Schrift gesetzt sein, die auf iOS und dem Windows-Generator dieselbe ist
+   (3.17.52: ui-serif war auf iOS New York, im PNG Palatino - Foto IMG_4397).
+   Gegenprobe: Startbilder aus 3.17.51 (f550897) muessen beim Namen abweichen. */
 const {start,OUT} = require('./lib');
 const fs = require('fs'), path = require('path');
 const assert = require('node:assert/strict');
@@ -28,13 +31,29 @@ assert.ok(startLinks.every(x=>x.endsWith('?v='+version)),'Startbilder ohne aktue
         async function bbox(src){const img=new Image();img.src=src;await img.decode();const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const x=c.getContext('2d');x.drawImage(img,0,0);const dat=x.getImageData(0,0,c.width,c.height).data;let minX=Infinity,minY=Infinity,maxX=0,maxY=0;
           for(let y=Math.floor((h/2-80)*d);y<(h/2+65)*d;y++)for(let xx=Math.floor((w/2-65)*d);xx<(w/2+65)*d;xx++){const i=(y*c.width+xx)*4;if(dat[i]>170&&dat[i+1]>170&&dat[i+2]>160){minX=Math.min(minX,xx);maxX=Math.max(maxX,xx);minY=Math.min(minY,y);maxY=Math.max(maxY,y);}}
           return [minX/d,minY/d,(maxX+1)/d,(maxY+1)/d];}
-        return {splash:await bbox(a),html:await bbox(b)};
+        async function textbox(src){const img=new Image();img.src=src;await img.decode();const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const x=c.getContext('2d');x.drawImage(img,0,0);const dat=x.getImageData(0,0,c.width,c.height).data;let minX=Infinity,minY=Infinity,maxX=0,maxY=0;
+          for(let y=Math.floor((h/2+60)*d);y<(h/2+110)*d;y++)for(let xx=0;xx<c.width;xx++){const i=(y*c.width+xx)*4;if(dat[i]>150&&dat[i+1]>150&&dat[i+2]>140){minX=Math.min(minX,xx);maxX=Math.max(maxX,xx);minY=Math.min(minY,y);maxY=Math.max(maxY,y);}}
+          return [minX/d,minY/d,(maxX+1)/d,(maxY+1)/d];}
+        return {splash:await bbox(a),html:await bbox(b),nameSplash:await textbox(a),nameHtml:await textbox(b)};
       },['data:image/png;base64,'+alt.toString('base64'),'data:image/png;base64,'+png.toString('base64'),w,h,d]);
       console.log(JSON.stringify({geraet:`${w}x${h}`,lage,pixel}));
       assert.equal(lage.w,76,'Boot-Zeichen fehlt oder hat falsche Groesse');
       for(let i=0;i<4;i++) {
         assert.ok(Number.isFinite(pixel.splash[i]) && Number.isFinite(pixel.html[i]),'Zeichen nicht gefunden');
         assert.ok(Math.abs(pixel.splash[i]-pixel.html[i])<=1,`${w}x${h}: Startbild und HTML versetzt`);
+        assert.ok(Number.isFinite(pixel.nameSplash[i]) && Number.isFinite(pixel.nameHtml[i]),'Name nicht gefunden');
+        assert.ok(Math.abs(pixel.nameSplash[i]-pixel.nameHtml[i])<=1,`${w}x${h}: Name in Startbild und HTML verschieden`);
+      }
+      if(w===414&&d===2){
+        // Tatsaechlich benutzte Schrift, nicht nur die Angabe im CSS.
+        const cdp=await ctx.newCDPSession(p);await cdp.send('DOM.enable');await cdp.send('CSS.enable');
+        const {root}=await cdp.send('DOM.getDocument');const {nodeId}=await cdp.send('DOM.querySelector',{nodeId:root.nodeId,selector:'.boot__marke'});
+        const {fonts}=await cdp.send('CSS.getPlatformFontsForNode',{nodeId});
+        const familie=await p.evaluate(()=>getComputedStyle(document.querySelector('.boot__marke')).fontFamily);
+        console.log('Boot-Name Schrift:',familie,JSON.stringify(fonts));
+        assert.match(familie,/^Georgia,/,'Boot-Name muss mit Georgia beginnen (auf iOS und Windows vorhanden)');
+        assert.doesNotMatch(familie,/ui-serif|-apple-system|system-ui/,'Boot-Name mit Systemschrift: iOS und Generator setzen verschieden');
+        assert.ok(fonts.length===1&&/Georgia/.test(fonts[0].familyName),'Generator hat nicht Georgia benutzt');
       }
       await ctx.close();
     }

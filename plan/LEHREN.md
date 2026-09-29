@@ -1216,6 +1216,15 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
     254868 kann `100svh` trotz `viewport-fit=cover` verkürzen. Boot nutzt nur
     im Standalone-Modus `100vh`, passend zum bildschirmgroßen PNG. Nicht
     pauschal die Höhen anderer Ansichten ändern oder Geräte-Offsets addieren.
+  - **Keine Systemschrift auf dem Startbild** (3.17.52). `ui-serif`,
+    `system-ui`, `-apple-system` lösen auf iOS und auf dem Windows-Generator
+    zu verschiedenen Schriften auf (New York vs. Palatino). Jeder Text im
+    `.boot` braucht eine Schrift, die auf beiden Systemen dieselbe ist
+    (Georgia). `t_boot_geometrie.js` prüft die benutzte Schrift per CDP.
+  - **Ein Gerätefoto zuerst datieren und jede Ebene einzeln vermessen**
+    (29.09.2026). IMG_4397 stammte vom 28.09. 07:37, also vor .49. Die
+    schwache Ebene passte pixelgenau zum PNG aus 3.13.1, die helle zum HTML.
+    Erst diese Zuordnung trennt natives Startbild, HTML-Paint und Schrift.
 - **Kalender-Erinnerung** läuft über `.ics` (`text/calendar`). iOS muss das am
   Gerät bestätigen (offen beim Betreiber).
 
@@ -1344,6 +1353,14 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+29.09.2026, Claude-Prüfung 3.17.52: (1) Der Name auf dem Ladebildschirm stand
+in `ui-serif`: auf dem iPhone New York, im PNG Palatino. `t_boot_geometrie`
+schloss Schrift ausdrücklich aus und konnte das nicht finden. Regel § 11.
+(2) Runde 13 (`closeDialog`) verwarf beim Schutz vor alten Timern auch das
+Auflösen des eigenen Promise, und der Test schrieb `antworten===0` fest.
+Regel: Ein Schutz vor fremder Wirkung darf die eigene Fortsetzung nicht
+abschneiden; Tests prüfen beides.
 
 29.09.2026, Betreiber-Rückmeldung zu 3.17.51: iPhone-Start weiterhin falsch.
 Neu erzeugte/versionierte PNGs (.47/.48) und simulierte svh-Korrektur (.49)

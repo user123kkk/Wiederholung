@@ -1,5 +1,7 @@
 /* Echter closeDialog-Callback: alter Austritts-Timer darf einen spaeter
-   geoeffneten Dialog nicht entfernen. Altstand fest 5de6969. */
+   geoeffneten Dialog nicht entfernen, muss aber sein eigenes Promise
+   aufloesen (3.17.52: 3.17.51 liess den Aufrufer sonst ewig warten).
+   Altstand fest 5de6969. */
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const {execFileSync}=require('node:child_process');
 const repo=path.join(__dirname,'../../..');
@@ -13,6 +15,6 @@ for(const alt of [true,false]){
  vm.createContext(sandbox);vm.runInContext(source.slice(von,bis),sandbox);
  sandbox.closeDialog(true);sandbox.ui.dialog=b;timer();
  if(alt){assert.equal(sandbox.ui.dialog,null);assert.equal(renders,1);assert.equal(antworten,1);}
- else{assert.equal(sandbox.ui.dialog,b);assert.equal(renders,0);assert.equal(antworten,0);}
- console.log(alt?'OK  Gegenprobe: alter Timer entfernt neuen Dialog.':'OK  Alter Timer laesst neuen Dialog unveraendert.');
+ else{assert.equal(sandbox.ui.dialog,b);assert.equal(renders,0);assert.equal(antworten,1,'alter Dialog muss aufgeloest werden');}
+ console.log(alt?'OK  Gegenprobe: alter Timer entfernt neuen Dialog.':'OK  Alter Timer laesst neuen Dialog unveraendert und loest den alten auf.');
 }

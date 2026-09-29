@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.51";
+const APP_VERSION = "3.17.52";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -12466,9 +12466,14 @@ function closeDialog(result) {
   const dlg = app.querySelector(".dlg");
   const huelle = dlg && dlg.parentElement && dlg.parentElement.classList.contains("dlg-backdrop") ? dlg.parentElement : null;
   spielAustrittsAnimation(dlg, huelle, () => {
-    if (ui.dialog !== d) return; // alter Timer darf keinen neuen Dialog schliessen
-    ui.dialog = null;
-    render();
+    // Alter Timer darf keinen neuen Dialog schliessen - sein eigenes Promise
+    // muss er trotzdem aufloesen, sonst wartet der Aufrufer fuer immer
+    // (3.17.52). Nach einem Kontowechsel ist es schon aufgeloest; ein
+    // zweites resolve() wirkt nicht.
+    if (ui.dialog === d) {
+      ui.dialog = null;
+      render();
+    }
     d.resolve(result);
   });
 }
