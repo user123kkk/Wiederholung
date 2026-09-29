@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.17.54";
+const CACHE_NAME = "adrabic-3.17.55";
 
 /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
    unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
@@ -198,6 +198,16 @@ self.addEventListener("fetch", event => {
     });
     const netzOderNichts = netz.catch(() => null);
     event.waitUntil(netzOderNichts);
+    /* 3.17.55: Die Seite selbst kommt sofort aus dem Cache, das Netz
+       aktualisiert sie im Hintergrund fuer den naechsten Start. Vorher
+       wartete jeder Start aufs Netz; so lange war die Web-Ansicht der
+       iPhone-App leer, und iOS blendete sie weiss ueber das Startbild
+       (Aufnahme 29.09.: Hintergrund 17 -> 46, Logo unveraendert = 12 %
+       Weiss). Preis: eine neue Version erscheint erst beim zweiten Start. */
+    if (req.mode === "navigate") {
+      const sofort = await caches.match(req);
+      if (sofort) return sofort;
+    }
     const zeitlimit = new Promise(ok => setTimeout(() => ok(undefined), NETZ_ZEITLIMIT_MS));
     const erste = await Promise.race([netzOderNichts, zeitlimit]);
     if (erste) return erste;                       // Netz war rechtzeitig da

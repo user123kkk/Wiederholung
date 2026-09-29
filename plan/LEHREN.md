@@ -1221,6 +1221,11 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
     HTML zuerst 45 Gerätepixel höher, dann richtig. Boot nimmt jetzt
     `screen.*` (nur bei `navigator.standalone`), wie schon die Leiste 3.6.14.
     Simulationen müssen den **Viewport** verkürzen, nicht nur eine Einheit.
+  - **Weißer Schleier beim Start = leere Web-Ansicht** (3.17.55). Hebt ein
+    Gerätebild den ganzen Hintergrund an, das Weiß aber kaum, ist es eine
+    Überblendung mit Weiß: Die Seite war noch nicht da. Hilft keine Farbe im
+    HTML; die Seite muss sofort kommen (Service Worker: Navigation aus dem
+    Cache, Netz im Hintergrund).
   - **Keine Systemschrift auf dem Startbild** (3.17.52). `ui-serif`,
     `system-ui`, `-apple-system` lösen auf iOS und auf dem Windows-Generator
     zu verschiedenen Schriften auf (New York vs. Palatino). Jeder Text im
@@ -1358,6 +1363,12 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+29.09.2026, 3.17.53/.54: Weißes Aufblitzen am iPhone zweimal falsch
+eingeordnet (erst iOS-Animation, dann fehlende HTML-Farbe). Erst die
+Rechnung am Vollbild (12 % Weiß) zeigte die leere Web-Ansicht; Ursache war
+„Netz zuerst“ für die Seite. Regel § 11: Gerätebilder rechnerisch zerlegen,
+bevor gebaut wird.
 
 29.09.2026, Claude-Prüfung 3.17.52: (1) Der Name auf dem Ladebildschirm stand
 in `ui-serif`: auf dem iPhone New York, im PNG Palatino. `t_boot_geometrie`

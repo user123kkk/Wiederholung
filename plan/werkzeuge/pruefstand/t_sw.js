@@ -3,7 +3,8 @@
 /* G-029/G-068 (TECHNIK-4/TECHNIK-11): Service Worker (sw.js).
    A) unveraenderliche URLs (app.js?v=…, styles.css?v=…, firebase-*.js) sind
       "Cache zuerst" - nach einer Aufwaermrunde loest kein Reload mehr eine
-      Netzanfrage dafuer aus; die Navigation (index.html) bleibt "Netz zuerst".
+      Netzanfrage dafuer aus; die Navigation (index.html) fragt weiter das
+      Netz - seit 3.17.55 im Hintergrund, die Antwort kommt aus dem Cache (D).
    B) eine neue, noch nicht zwischengespeicherte Version (neues ?v=) wird
       trotzdem vom Netz geholt - "Cache zuerst" heisst nicht "nur Cache".
    C) fehlt beim Installieren einer neuen Version eine Kerndatei (app.js),
@@ -140,10 +141,31 @@ async function stationB(b) {
   await ctx.route('**/index.html', r => r.fulfill({ status: 200, contentType: 'text/html', body: neuHtml }));
   await ctx.route(u => u.pathname.endsWith('/app.js') && u.searchParams.get('v') === 'TEST',
     r => { appJsTestTreffer++; r.fulfill({ status: 200, contentType: 'text/javascript', body: APP_JS_ECHT }); });
+  /* 3.17.55: Die Seite kommt zuerst aus dem Cache, das Netz aktualisiert sie
+     im Hintergrund - die neue Version erscheint beim ZWEITEN Laden. */
+  await p.reload({ waitUntil: 'load' });
+  await p.waitForTimeout(1200);
   await p.reload({ waitUntil: 'load' });
   await p.waitForTimeout(1200);
   await ctx.close();
   return appJsTestTreffer > 0;
+}
+
+/* Station D (3.17.55): Antwortet das Netz fuer die Seite langsam, muss die
+   zwischengespeicherte Seite trotzdem sofort kommen. Aufnahme 29.09.: solange
+   die Seite fehlte, blendete iOS eine leere weisse Ansicht ein. */
+async function stationD(b, swText) {
+  const { ctx, p } = await neuerKontext(b, { swText });
+  await ladenBisKontrolliert(p);
+  await p.reload({ waitUntil: 'load' });
+  await p.waitForTimeout(1200);
+  await ctx.route(u => u.hostname === '127.0.0.1' && u.pathname.endsWith('/index.html'),
+    async r => { await new Promise(ok => setTimeout(ok, 3000)); r.continue().catch(() => {}); });
+  const t0 = Date.now();
+  await p.reload({ waitUntil: 'domcontentloaded' });
+  const ms = Date.now() - t0;
+  await ctx.close();
+  return ms;
 }
 
 /* Station C: eine neue Version, deren app.js?v=<neu> mit 500 antwortet, darf
@@ -194,6 +216,15 @@ async function stationC(b, { versagt, swBasis, marker }) {
   const bTreffer = await stationB(b);
   console.log('B: neue app.js?v=TEST vom Netz geholt?', bTreffer);
   pruefe(bTreffer, 'B: eine neue, noch nicht zwischengespeicherte app.js?v=TEST wird vom Netz geholt');
+
+  // --- Station D: Seite ohne Warten aufs Netz ---
+  const dMs = await stationD(b, null);
+  console.log('D: Seite trotz 3 s Netz nach', dMs, 'ms');
+  pruefe(dMs < 1500, 'D: Seite kommt bei langsamem Netz sofort aus dem Cache');
+  const SW_354 = execSync('git show 696e5bf:sw.js', { cwd: REPO, encoding: 'utf8' });
+  const dAlt = await stationD(b, SW_354);
+  console.log('Gegenprobe D (sw.js 3.17.54-alt, 696e5bf):', dAlt, 'ms');
+  pruefe(dAlt >= 2500, 'Gegenprobe D: alte sw.js wartet aufs Netz (muss ROT sein)');
 
   // --- Station C: scheiternde Installation ---
   const cFail = await stationC(b, { versagt: true, swBasis: SW_NEU, marker: 'c-fail' });

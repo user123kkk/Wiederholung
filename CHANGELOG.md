@@ -1,3 +1,7 @@
+## 3.17.55 – 29. September 2026
+
+**Kein weißes Aufblitzen mehr beim Start der iPhone-App.** Die Aufnahme zeigt im Vollbild den ganzen Hintergrund um etwa 12 % zu Weiß verschoben, das Logo unverändert: iOS blendete eine noch leere Web-Ansicht ein. Die Seite wartete bei jedem Start zuerst aufs Netz. Der Service Worker liefert die Seite jetzt sofort aus dem Speicher und holt die neue Fassung im Hintergrund. Eine neue Version erscheint dadurch erst beim zweiten Start. Bestätigung am iPhone bleibt offen.
+
 ## 3.17.54 – 29. September 2026
 
 **Kein heller Moment vor dem ersten Bild.** Die Seitenfarbe steht jetzt schon im HTML selbst, nicht erst im Stylesheet. Bis `styles.css` geladen war, hatte das allererste Bild der iPhone-App keine eigene Hintergrundfarbe. Chromium zeigt über alle Einzelbilder des Starts keinen hellen Moment; Bestätigung am iPhone bleibt offen.

@@ -2,6 +2,30 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Weißes Aufblitzen: Seite sofort aus dem Cache (3.17.55)
+
+**Geändert:** `sw.js` (fetch-Handler: Navigation mit Cache-Treffer sofort
+aus dem Cache, Netz aktualisiert im Hintergrund), `app.js:19`, `sw.js:8`,
+`index.html` (Versionen), `CHANGELOG.md`,
+`plan/werkzeuge/pruefstand/t_sw.js` (Station B lädt zweimal, neue Station D
+mit Gegenprobe gegen `696e5bf`), `plan/LEHREN.md` § 11/§ 15.
+**Entscheidung:** Betreiber-Bild aus Aufnahme von 3.17.54: Vollbild, eckig
+(also nach der iOS-Animation), Hintergrund 45–50 statt 17, Logo 245
+unverändert. Das ist rechnerisch genau 12 % Weiß über allem: iOS blendet
+eine noch leere Web-Ansicht ein. Die Inline-Farbe aus .54 kann nicht
+greifen, solange kein HTML da ist. Ursache: Navigation war „Netz zuerst“,
+jeder Start wartete auf den Server. Jetzt Cache zuerst für die Seite.
+Preis: eine neue Version erscheint erst beim zweiten Start (Betreiber im
+Bericht genannt). Frühere Begründung „online sofort neueste Version“ damit
+bewusst aufgegeben, weil sie den Start sichtbar schlechter machte.
+**Prüfung:** `t_sw.js` 0 Funde: A (Navigation fragt weiter das Netz), B
+(neue Version beim zweiten Laden), C, D: Seite trotz 3 s Netz nach 150 ms,
+Gegenprobe alte sw.js 3192 ms. `t_start`, `t_boot_geometrie`,
+`pruefe_stand.mjs`, `node --check app.js sw.js` grün.
+**Offen:** iPhone-Kaltstart. Nach dem Deploy lädt der erste Start noch mit
+altem Worker; Prüfung ab dem zweiten Start.
+**Nächster Schritt:** Betreiber veröffentlicht, startet zweimal.
+
 ### 2026-09-29 — Verdachts-Fix: Hintergrund vor styles.css (3.17.54)
 
 **Geändert:** `index.html:98` (Inline-Style: `html` Hintergrund #111010,
