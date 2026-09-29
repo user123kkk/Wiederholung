@@ -16,7 +16,7 @@ const { chromium } = require('playwright');
 const { APP, AUTH, FS } = require('./stubs');
 const { vollerStore } = require('./lib');
 
-const BASE = 'http://127.0.0.1:8099/index.html';
+const BASE = 'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html';
 
 async function neuerKontext(b, { standalone }) {
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true });

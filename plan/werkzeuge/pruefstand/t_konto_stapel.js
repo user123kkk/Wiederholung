@@ -42,7 +42,7 @@ export function writeBatch(...args){
       const lauf=fall==='vollschreiben'?persistAllAusfuehren():patchDoc({'bereiche.b1':LOESCHEN});
       lauf.then(()=>{window.__FERTIG=true;},e=>{window.__FEHLER=String(e);window.__FERTIG=true;});
      }};`}));
-   await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
+   await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
    await p.evaluate(f=>window.__PRUEF.starten(f),fall);await p.waitForFunction(()=>typeof window.__FREIGABE==='function');
    await p.evaluate(()=>{const s=window.__FB;s.user={uid:'u2',email:'b@example.com',emailVerified:true,getIdToken:()=>Promise.resolve('tok')};for(const cb of s.authListeners)cb(s.user);});
    await p.waitForFunction(()=>window.__PRUEF.bereit());

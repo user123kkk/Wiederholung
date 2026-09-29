@@ -101,7 +101,7 @@ async function seiteMitInit(browser, opt) {
   await p.addInitScript(i => {
     window.__START_USER = i.user; window.__START_STORE = i.store;
   }, { user: initUser, store: vollerStore() });
-  await p.goto('http://127.0.0.1:8099/index.html', { waitUntil: 'load' });
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html', { waitUntil: 'load' });
   await p.waitForTimeout(1600);
   return { ctx, p, start };
 }

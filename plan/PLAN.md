@@ -785,10 +785,16 @@ erstellen (`grossplan/AUFTRAG.md` § 4a).
   [`texte-lernen/WIEDERHOLEN.md`](texte-lernen/WIEDERHOLEN.md). **Beginnen mit
   Stufe 0** (KONZEPT § 12), dann Stufe für Stufe mit Gegenprüfung
   (`grossplan/AUFTRAG.md` § 2a). Logbuch: `texte-lernen/LOGBUCH.md`.
-- **Stand:** Stufe 0 erledigt (29.09.2026): Quran-Quelle Tanzil Uthmani,
-  Dateien unter `quran/`, Prüfsumme, 114/6236, Code-Liste geprüft.
-  **Als Nächstes Stufe 1** – Einzelheiten im obersten Eintrag von
+- **Stand:** Stufe 0 und Stufe 1 erledigt (29.09.2026). **3.18.0** auf
+  `main`: Texte werden geladen, gespeichert, gesichert und eingespielt, ohne
+  als Karten aufzutauchen; neue Regeln (textId, Einwilligung, Regler).
+  **Als Nächstes Stufe 2** – Einzelheiten im obersten Eintrag von
   `texte-lernen/LOGBUCH.md`.
+- **Wartet auf Betreiber:** Firestore-Regeln veröffentlichen **vor** dem
+  Hosting von 3.18.0 (`firebase deploy --only firestore:rules`).
+- **Parallel:** Großplan-Runde 15 (3.17.57) läuft in einer anderen Session
+  im Worktree `C:/Users/USER/Wiederholung-r15`; Tests dort auf Port 8099,
+  hier auf 8199 (`PRUEF_PORT`).
 - Ausgangsstand: `main` = 3.17.56 (`a4b5677`), live veröffentlicht.
 - **Codex-Runde 15 (unfertig, 3.17.57) ist gesichert, nicht verworfen:**
   `git stash list` → „Codex Runde 15 unfertig …“ und zusätzlich

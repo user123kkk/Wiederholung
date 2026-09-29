@@ -26,7 +26,7 @@ const { execSync } = require('child_process');
 const path = require('path');
 
 const REPO = path.join(__dirname, '..', '..', '..');
-const BASE = 'http://127.0.0.1:8099/index.html';
+const BASE = 'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html';
 const APP_JS_ALT = execSync('git show dd81f95:app.js', { cwd: REPO, maxBuffer: 1024 * 1024 * 20 }).toString();
 
 async function neuerKontext(b, opt = {}) {

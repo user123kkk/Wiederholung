@@ -513,6 +513,38 @@ await pruefe("R08 Epoche nicht bei bestehendem Verlauf entfernen", "nein", () =>
   verlaufEpoche: deleteField()
 }));
 
+/* ================= TEXTE AUSWENDIG LERNEN (3.18.0) =================
+   plan/texte-lernen/KONZEPT.md § 7.3 und § 13. Gegenprobe: mit den Regeln
+   vor 3.18.0 (REGELN_DATEI) muessen T01, T05, T08, T09, T12 scheitern. */
+await pruefe("T01 Textzeile mit textId anlegen", "ja", () => setDoc(k("z1"), { ...karte("b1"), textId: "t1" }));
+await pruefe("T02 textId zu lang", "nein", () => setDoc(k("z2"), { ...karte("b1"), textId: "x".repeat(201) }));
+await pruefe("T03 textId keine Zeichenkette", "nein", () => setDoc(k("z3"), { ...karte("b1"), textId: 5 }));
+await pruefe("T04 Textzeile im fremden Konto", "nein", () => setDoc(doc(dbFremd, "users", UID, "karten", "z4"), { ...karte("b1"), textId: "t1" }));
+await pruefe("T05 Textzeile fest bewerten (Stufe 7, 2099-12-31)", "ja", () => updateDoc(k("z1"), {
+  stufe: 7, nextReview: "2099-12-31", ersteBewertung: heute, rueckfaelle: 0, maxStufe: 7 }));
+await pruefe("T06 Gewoehnliche Karte weiter ohne textId", "ja", () => setDoc(k("c9"), karte("b1")));
+await pruefe("T07 Text als Set anlegen (Map-Inhalt ungeprueft)", "ja", () => updateDoc(b("b1"), {
+  "sets.t1": { name: "Text", order: 1, art: "text", quelleId: null, cardIds: ["z1"], nummerAb: 1,
+               quelle: "tanzil", kreisTage: 7, kreisPos: null, kreisTag: null, festErgebnisse: "" } }));
+await pruefe("T08 Einwilligung setzen", "ja", () => updateDoc(u(), { texteEinwilligung: heute }));
+await pruefe("T09 Einwilligung widerrufen (null)", "ja", () => updateDoc(u(), { texteEinwilligung: null }));
+await pruefe("T10 Einwilligung kein Datum", "nein", () => updateDoc(u(), { texteEinwilligung: "ja" }));
+await pruefe("T11 Einwilligung im fremden Konto", "nein", () => updateDoc(doc(dbFremd, "users", UID), { texteEinwilligung: heute }));
+await pruefe("T12 Regler setzen", "ja", () => updateDoc(b("b1"), { abstandFaktor: 0.9, festErgebnisse: "1101" }));
+await pruefe("T13 Regler Faktor 1 (ganze Zahl)", "ja", () => updateDoc(b("b1"), { abstandFaktor: 1 }));
+await pruefe("T14 Regler unter 0,5", "nein", () => updateDoc(b("b1"), { abstandFaktor: 0.4 }));
+await pruefe("T15 Regler ueber 1,0", "nein", () => updateDoc(b("b1"), { abstandFaktor: 1.1 }));
+await pruefe("T16 Regler kein Zahlwert", "nein", () => updateDoc(b("b1"), { abstandFaktor: "0.9" }));
+await pruefe("T17 Ergebnisse mit anderen Zeichen", "nein", () => updateDoc(b("b1"), { festErgebnisse: "1a0" }));
+await pruefe("T18 Ergebnisse laenger als 50", "nein", () => updateDoc(b("b1"), { festErgebnisse: "1".repeat(51) }));
+await pruefe("T19 Regler loeschen", "ja", () => updateDoc(b("b1"), { abstandFaktor: deleteField(), festErgebnisse: deleteField() }));
+await pruefe("T20 Textzeile loeschen", "ja", () => deleteDoc(k("z1")));
+await pruefe("T21 Textzeile mit 1208 Zeichen (Aya 2:282)", "ja", () => setDoc(k("z5"), { ...karte("b1"), textId: "t1", wort: "x".repeat(1208) }));
+await pruefe("T22 Textzeile ueber 1500 Zeichen", "nein", () => setDoc(k("z6"), { ...karte("b1"), textId: "t1", wort: "x".repeat(1501) }));
+await pruefe("T23 Karte ohne textId mit 1208 Zeichen", "nein", () => setDoc(k("z7"), { ...karte("b1"), wort: "x".repeat(1208) }));
+await pruefe("T24 Karte mit textId null und 1208 Zeichen", "nein", () => setDoc(k("z8"), { ...karte("b1"), textId: null, wort: "x".repeat(1208) }));
+await pruefe("T25 Lange Zeile: textId nachtraeglich entfernen", "nein", () => updateDoc(k("z5"), { textId: deleteField() }));
+
 console.log("\n" + ok + " von " + (ok + fehl) + " Pruefungen wie erwartet.");
 if (fehler.length) { console.log("\nABWEICHUNGEN:"); fehler.forEach(f => console.log("  " + f)); }
 await env.cleanup();

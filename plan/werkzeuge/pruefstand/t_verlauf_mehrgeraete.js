@@ -54,7 +54,7 @@ async function seite(b,sources,ctx){
       fehler:()=>schreibFehler,gesehen:lernAbhaken,gesehenZurueck:lernRueckgaengig,
       undo:undoLastGrade,reset:verlaufZuruecksetzen,zeichnen:()=>startDrillWithCards(currentBereich().karten,'Pruefung',true)};`}));
   await p.route('**/verses.quran.foundation/**',r=>r.abort());
-  await p.goto('http://127.0.0.1:8099/index.html');
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
   await p.waitForFunction(()=>window.__PRUEF?.bereit(),null,{timeout:15000});
   await p.waitForFunction(()=>!document.querySelector('.boot'));
   return p;

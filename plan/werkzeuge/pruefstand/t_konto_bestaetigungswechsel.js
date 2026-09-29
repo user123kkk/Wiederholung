@@ -26,7 +26,7 @@ export function sendEmailVerification(user){
      const lauf=fall==='knopf'?pruefeBestaetigung():fall==='still'?bestaetigungStillPruefen():doResendVerification();
      const uid=currentUser.uid;lauf.then(()=>{window.__FERTIG=window.__FERTIG||{};window.__FERTIG[uid]=true;});
     }};`}));
-  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit()==='u1');
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit()==='u1');
   await p.evaluate(f=>window.__PRUEF.starten(f),fall);
   await p.waitForFunction(f=>typeof (f==='senden'?window.__MAIL_ANTWORTEN?.u1:window.__RELOAD_ANTWORTEN?.u1)==='function',fall);
   await p.evaluate(()=>{const s=window.__FB;s.user={uid:'u2',email:'b@example.com',emailVerified:false,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};s.authListeners.forEach(cb=>cb(s.user));});

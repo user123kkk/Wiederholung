@@ -25,7 +25,7 @@ const alt=gegenprobe?execFileSync('git',['show','c3a6aec:app.js'],{cwd:path.join
           await r.fulfill({contentType:'text/javascript',body:source+'\nwindow.__PRUEF_RETRY=abgelehntesNachholen;window.__PRUEF_FEHLER=()=>schreibFehler;'});
         });
       const p=await ctx.newPage();p.fehler=[];p.on('pageerror',e=>p.fehler.push(e.message));
-      await p.goto('http://127.0.0.1:8099/index.html');await p.waitForTimeout(1400);
+      await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForTimeout(1400);
       await aktion(p,'start-session',null,700);
       const wort=await p.locator('.study-word').textContent();
       const id=await p.evaluate(w=>[...window.__FB.store].find(([k,v])=>k.startsWith('users/u1/karten/')&&v.wort===w)[0].split('/').pop(),wort);

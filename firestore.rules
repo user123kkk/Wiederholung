@@ -97,7 +97,8 @@ service cloud.firestore {
        nicht mehr beschrieben werden — löschen ist erlaubt. Sonst wäre es die
        offene Tür, durch die beliebige Daten ins Nutzerdokument kämen. */
     function nutzerFelder() {
-      return ['name', 'streak', 'settings', 'schemaVersion', 'verlauf', 'verlaufEpoche', 'bereiche'];
+      return ['name', 'streak', 'settings', 'schemaVersion', 'verlauf', 'verlaufEpoche', 'bereiche',
+              'texteEinwilligung'];
     }
 
     function streakOk(s) {
@@ -136,7 +137,10 @@ service cloud.firestore {
           && (!pruefen.hasAny(['streak'])        || streakOk(d.streak))
           && (!pruefen.hasAny(['settings'])      || settingsOk(d.settings))
           && (!pruefen.hasAny(['verlaufEpoche']) || text(d.verlaufEpoche, 80))
-          && (!pruefen.hasAny(['verlauf'])       || (d.verlauf is map && d.verlauf.size() <= 400));
+          && (!pruefen.hasAny(['verlauf'])       || (d.verlauf is map && d.verlauf.size() <= 400))
+          /* 3.18.0 (Texte auswendig lernen): Datum der Einwilligung oder
+             null (widerrufen). Loeschbar wie die Teilen-Felder unten. */
+          && (!pruefen.hasAny(['texteEinwilligung']) || !('texteEinwilligung' in d) || datumOderNull(d.texteEinwilligung));
     }
 
     // Ein Reset wechselt die Kennung nur zusammen mit einem leeren Verlauf.
@@ -169,7 +173,7 @@ service cloud.firestore {
 
       function bereichFelder() {
         return ['name', 'order', 'gefuehrt', 'satzId', 'satzVersion', 'sets', 'teilCode',
-                'teilFreigabe', 'lehrerCode', 'lehrerOffenBis'];
+                'teilFreigabe', 'lehrerCode', 'lehrerOffenBis', 'abstandFaktor', 'festErgebnisse'];
       }
 
       /* `karten` steht bewusst NICHT in der Liste. Seit 2.0.0 liegt jede
@@ -195,7 +199,14 @@ service cloud.firestore {
                Stand. 1000 wie beim Datensatz selbst. */
             && (!pruefen.hasAny(['teilFreigabe'])   || !('teilFreigabe' in d)   || zahlOderNull(d.teilFreigabe, 0, 1000))
             && (!pruefen.hasAny(['lehrerCode'])     || !('lehrerCode' in d)     || textOderNull(d.lehrerCode, 20))
-            && (!pruefen.hasAny(['lehrerOffenBis']) || !('lehrerOffenBis' in d) || zahlOderNull(d.lehrerOffenBis, 0, 1000));
+            && (!pruefen.hasAny(['lehrerOffenBis']) || !('lehrerOffenBis' in d) || zahlOderNull(d.lehrerOffenBis, 0, 1000))
+            /* 3.18.0: Regler der Karten (texte-lernen/WIEDERHOLEN.md § 6).
+               abstandFaktor verkuerzt Abstaende hoechstens auf die Haelfte;
+               festErgebnisse sind die letzten 50 Antworten als 1/0. */
+            && (!pruefen.hasAny(['abstandFaktor'])  || !('abstandFaktor' in d)  ||
+                (d.abstandFaktor is number && d.abstandFaktor >= 0.5 && d.abstandFaktor <= 1))
+            && (!pruefen.hasAny(['festErgebnisse']) || !('festErgebnisse' in d) ||
+                (text(d.festErgebnisse, 50) && d.festErgebnisse.matches('^[01]*$')));
       }
 
       match /bereiche/{bid} {
@@ -218,14 +229,17 @@ service cloud.firestore {
       function kartenFelder() {
         return ['wort', 'uebersetzung', 'extra', 'stufe', 'nextReview',
                 'ersteBewertung', 'rueckfaelle', 'quelleId', 'maxStufe',
-                'order', 'bereichId'];
+                'order', 'bereichId', 'textId'];
       }
 
       /* `order` ist absichtlich unbegrenzt: ordnungVorn() in app.js setzt
          -Date.now(), um eine neue Karte vorn einzusortieren. Die Zahl sagt
          nur etwas über die Reihenfolge aus und kann nichts verfälschen. */
       function kartenWerte(d, pruefen) {
-        return (!pruefen.hasAny(['wort'])           || text(d.wort, 1000))
+        /* 3.18.0: Textzeilen (mit textId) bis 1500 Zeichen - die laengste
+           Aya hat 1208 (app.js, MAX_ZEILE). Karten bleiben bei 1000. */
+        return (!pruefen.hasAny(['wort', 'textId']) || text(d.wort, 1000)
+                  || (d.get('textId', null) != null && text(d.wort, 1500)))
             && (!pruefen.hasAny(['uebersetzung'])   || text(d.uebersetzung, 1000))
             && (!pruefen.hasAny(['extra'])          || textOderNull(d.extra, 5000))
             && (!pruefen.hasAny(['stufe'])          || zahl(d.stufe, 0, 12))
@@ -235,7 +249,10 @@ service cloud.firestore {
             && (!pruefen.hasAny(['rueckfaelle'])    || zahl(d.rueckfaelle, 0, 100000))
             && (!pruefen.hasAny(['quelleId'])       || textOderNull(d.quelleId, 200))
             && (!pruefen.hasAny(['order'])          || d.order is int)
-            && (!pruefen.hasAny(['bereichId'])      || text(d.bereichId, 200));
+            && (!pruefen.hasAny(['bereichId'])      || text(d.bereichId, 200))
+            /* 3.18.0: Verweis einer Textzeile auf ihren Text (Id im sets-Feld
+               des Bereichs). Gewoehnliche Karten tragen das Feld nicht. */
+            && (!pruefen.hasAny(['textId'])         || !('textId' in d) || textOderNull(d.textId, 200));
       }
 
       match /karten/{cid} {

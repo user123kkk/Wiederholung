@@ -44,7 +44,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const REPO = path.join(__dirname, '..', '..', '..');
-const BASE = 'http://127.0.0.1:8099/index.html';
+const BASE = 'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html';
 const APP_JS_ECHT = fs.readFileSync(path.join(REPO, 'app.js'), 'utf8');
 const INDEX_ECHT = fs.readFileSync(path.join(REPO, 'index.html'), 'utf8');
 const SW_NEU = fs.readFileSync(path.join(REPO, 'sw.js'), 'utf8'); // die gerade geaenderte Datei

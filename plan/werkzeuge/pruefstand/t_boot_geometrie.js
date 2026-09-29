@@ -21,8 +21,8 @@ assert.ok(startLinks.every(x=>x.endsWith('?v='+version)),'Startbilder ohne aktue
       await p.route('**/www.gstatic.com/**',()=>{});
       const link = startLinks.find(x=>x.startsWith(`./splash/splash-${w*d}x${h*d}.png?`));
       assert.ok(link,`${w}x${h}: Startbild-Link fehlt`);
-      assert.equal((await p.request.get(new URL(link,'http://127.0.0.1:8099/index.html').href)).status(),200,'Startbild unter Versionsadresse nicht erreichbar');
-      await p.goto('http://127.0.0.1:8099/index.html');
+      assert.equal((await p.request.get(new URL(link,'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html').href)).status(),200,'Startbild unter Versionsadresse nicht erreichbar');
+      await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
       await p.addStyleTag({content:'*,*::before,*::after{animation-play-state:paused!important;animation-delay:0s!important}.boot__linie{visibility:hidden!important}'});
       const lage=await p.evaluate(()=>{const r=document.querySelector('.boot__zeichen').getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height};});
       const png=await p.screenshot({path:path.join(OUT,`boot-${w}x${h}.png`)});
@@ -68,7 +68,7 @@ assert.ok(startLinks.every(x=>x.endsWith('?v='+version)),'Startbilder ohne aktue
       await p.route('**/index.html',r=>r.fulfill({contentType:'text/html',body:abbild(html)}));
       await p.route('**/styles.css?*',r=>r.fulfill({contentType:'text/css',body:abbild(css)}));
       await p.route('**/www.gstatic.com/**',()=>{});
-      await p.goto('http://127.0.0.1:8099/index.html');
+      await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
       const lage=await p.evaluate(()=>{
         const b=document.querySelector('.boot').getBoundingClientRect();
         const z=document.querySelector('.boot__zeichen').getBoundingClientRect();
@@ -100,7 +100,7 @@ assert.ok(startLinks.every(x=>x.endsWith('?v='+version)),'Startbilder ohne aktue
       await p.route('**/index.html',r=>r.fulfill({contentType:'text/html',body:an(quelleHtml)}));
       await p.route('**/styles.css?*',r=>r.fulfill({contentType:'text/css',body:an(quelleCss)}));
       await p.route('**/www.gstatic.com/**',()=>{});
-      await p.goto('http://127.0.0.1:8099/index.html');
+      await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
       const lage=await p.evaluate(()=>({hoehe:document.querySelector('.boot').getBoundingClientRect().height,
         zeichen:document.querySelector('.boot__zeichen').getBoundingClientRect().y,
         marke:document.querySelector('.boot__marke').getBoundingClientRect().y}));

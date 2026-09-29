@@ -3,7 +3,7 @@ const { APP, AUTH, FS } = require('./stubs');
 const fs = require('fs');
 const path = require('path');
 
-const BASE = 'http://127.0.0.1:8099/index.html';
+const BASE = 'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html';
 const OUT = process.env.PRUEF_BILDER || path.join(require('os').tmpdir(), 'adrabic-pruefbilder');
 fs.mkdirSync(OUT, { recursive: true });
 

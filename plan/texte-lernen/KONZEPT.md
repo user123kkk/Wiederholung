@@ -216,6 +216,23 @@ fällige Zeilen als Karten abfragen. Schutz:
 - Changelog: „Nach dem Update jedes Gerät einmal öffnen.“
 Restrisiko: eine frische Zeile wird einmal als Karte bewertet; die neue
 Version setzt `stufe > 7` auf 7. Nichts wird gelöscht.
+**Ergänzt in Stufe 1:** Eine alte Version zeigt einen Text außerdem als
+„eigene“ Speicherkarte (ihr `normSet` kennt die Art „text“ nicht). Nur wenn
+man dort diese Speicherkarte ändert, schreibt sie `art: "eigen"` zurück und
+der Kreis geht verloren; die Zeilen bleiben. Im Probelauf nur beim Betreiber,
+nur bis zum zweiten Start.
+
+### 7.6 Im Speicher: getrennte Listen (Stufe 1)
+
+In der Cloud bleiben Zeilen Karten-Dokumente und Texte Einträge in `sets`
+(§ 7.1, § 7.2). **Im Speicher** trennt `bereichAufteilen()` beim Laden:
+`b.karten`/`b.sets` enthalten nur Karten und Speicherkarten, `b.zeilen`/
+`b.texte` nur Texte. Statt an rund 35 Stellen `!c.textId` zu filtern (§ 14
+„A“), sieht damit jede Karten-Stelle Textzeilen gar nicht – auch Code aus
+späteren Runden. Die Schreib- und Ladewege („F“) nehmen beide Listen mit:
+`bereichFelder`, `persistAllAusfuehren`, `umzugStarten`,
+`verarbeiteImportDaten`, Snapshot-Teilabgleich. Neue Bereiche, die ohne
+`zeilen`/`texte` entstehen, werden überall mit `|| []` gelesen.
 
 ---
 

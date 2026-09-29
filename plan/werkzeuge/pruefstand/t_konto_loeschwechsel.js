@@ -29,7 +29,7 @@ export function getDocs(q){const result=originalGetDocs(q);
     window.__HALT_QUERY=true;const konto=typeof kontoLoeschKontext==='function'?kontoLoeschKontext():undefined;
     (async()=>{await kontoDatenLoeschen(konto);await kontoAuthLoeschen(konto);})().then(()=>{window.__FERTIG=true;},e=>{window.__ABBRUCH=e.code;window.__FERTIG=true;});
    }};`}));
-  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
   await p.evaluate(()=>window.__PRUEF.start());await p.waitForFunction(()=>typeof window.__FREIGABE==='function');
   await p.evaluate(()=>{const s=window.__FB;s.user={uid:'u2',email:'b@example.com',emailVerified:true,getIdToken:()=>Promise.resolve('tok')};for(const cb of s.authListeners)cb(s.user);});
   await p.evaluate(()=>window.__FREIGABE());await p.waitForFunction(()=>window.__FERTIG);await p.waitForTimeout(100);

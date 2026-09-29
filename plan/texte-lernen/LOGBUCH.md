@@ -2,6 +2,88 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-29 — Stufe 1: Daten, Regeln, Schalter, Ausschluss (3.18.0)
+
+**Geändert:**
+- `app.js`: `normCard` (+`textId`, Stufe von Zeilen ≤ 7, Zeilen bis
+  `MAX_ZEILE` 1500), `normSet`/`normTextSet`/`normErgebnisse`/`normRegler`/
+  `bereichAufteilen` (neu, nach `sternIcon`), `kartenFelder` (`textId` nur
+  bei Zeilen), `setFelder`/`textSetFelder`, `bereichFelder` (Zeilen, Texte,
+  Regler), `normBereiche`, `bereicheMapToArray`, `bereicheAusSammlungen`,
+  Snapshot-Teilabgleich in `sammlungenStarten`, `persistAllAusfuehren`,
+  `verarbeiteImportDaten` (neue Nummern für Zeilen/Texte, `textId` und
+  `kreisPos` umgeschrieben), `deleteBereich` (Bereich nur mit Text gilt
+  nicht als leer), `umzugStarten`; Konstanten `SET_ART_TEXT`,
+  `TEXT_FEST_STUFE`, `TEXT_FEST_DATUM`, `KREIS_TAGE_*`, `MAX_ZEILE`;
+  Schalter `texteFreigeschaltet()` (nach `istBetreiber`). Version 3.18.0
+  (`app.js`, `sw.js`, `index.html` ×2), `CHANGELOG.md`.
+- `firestore.rules`: `nutzerFelder` + `texteEinwilligung` (Datum/null,
+  löschbar); `bereichFelder` + `abstandFaktor` (Zahl 0,5–1), `festErgebnisse`
+  (≤ 50 aus 0/1); `kartenFelder` + `textId` (≤ 200, löschbar); `wort` bis
+  1500 nur mit `textId`, Länge wird auch geprüft, wenn sich `textId` ändert.
+- `plan/phase-1-datenzugriff/regeln-pruefung.mjs`: T01–T25.
+- Prüfstand: `text_lib.js`, `t_text_felder.js`, `t_text_ausschluss.js` (neu);
+  alle Tests lesen den Port aus `PRUEF_PORT` (Standard 8099, 23 Dateien,
+  nur die URL) – nötig, weil eine parallele Session (Großplan-Runde 15,
+  eigener Worktree) Port 8099 belegt.
+- `plan/texte-lernen/KONZEPT.md` § 7.5 (Restrisiko Set-Art), § 7.6 (neu),
+  `plan/LEHREN.md` § 15 (Backslash-Vorfall).
+**Entscheidung:**
+- *Getrennte Listen im Speicher* (§ 7.6) statt 35 einzelner
+  `!c.textId`-Filter. Grund: robust auch für künftigen Karten-Code; weniger
+  Stellen (nur die Lade- und Schreibwege) statt vieler. Speicherung in der
+  Cloud wie im Plan.
+- *Neue Felder nur, wenn gesetzt* (`textId`, Regler). So schreiben normale
+  Karten und Bereiche auch vor dem Regel-Deploy fehlerfrei (LEHREN § 8.1).
+- *Zeilen bis 1500 Zeichen* statt Aya 2:282 zu teilen (Abweichung von
+  § 7.4 für Quran-Texte): Eine Aya bleibt ein Lernschritt (T2), die
+  Aya-Nummern bleiben durchgehend. Eigene Texte über 1500: Stufe 2 bietet
+  Teilen an.
+- *`sure` im Text-Set* (nur bei `quelle: "tanzil"`), damit „weicht vom
+  Original ab“ (§ 9.5) die Aya finden kann. Set-Inhalte prüfen die Regeln
+  nicht, keine Regeländerung nötig.
+- *Schalter* `texteFreigeschaltet()` ist bewusst strenger als
+  `istBetreiber()` (auch bei leerer Liste aus). Er steuert nur das Angebot;
+  Laden und Schreiben funktionieren für jedes Konto.
+- *Einwilligung:* In Stufe 1 nur Regel und Regeltest; Lesen/Schreiben kommt
+  mit dem Einwilligungs-Dialog in Stufe 2.
+- *`portion`* (WIEDERHOLEN.md § 10) wird nirgends sonst beschrieben – nicht
+  angelegt. Bei Bedarf in Stufe 4.
+**Tests:** Regeln 204/204 (Emulator); Gegenprobe mit Regeln aus `48002ad`:
+7 abgelehnt (T01, T05, T08, T09, T12, T13, T21), wie erwartet.
+`t_text_felder.js` OK in allen fünf Wegen (Neuladen, Vollschreiben, Import,
+Umzug, Snapshot-Echo); `--gegenprobe` (app.js `48002ad`): alle fünf rot.
+`t_text_ausschluss.js`: Konto mit Text zeigt Lernen/Verwalten/Fortschritt
+Wort für Wort gleich wie ohne, Runde „Karte 1 von 12“ in beiden, Suche und
+Duplikat-Warnung finden keine Zeile; `--gegenprobe`: 10 Unterschiede
+(u. a. „Karte 1 von 18“, „50 Karten“). Regressionen (Chrome 154,
+Windows, Port 8199, Quellstand `99601bb6…`): `abnahme_runde.js` 13/13 OK
+(Ausgaben „(lesen)“ gelesen), `t_sprung`, `t_kontrast`, `t_a11y`,
+`t_einstieg` (alle Geräte, 0 Sprünge, 0 Kontrastfunde), `t_quran_datei`,
+`t_daten`, `t_persist`, `t_import_doppelt`, `t_import_stapel`,
+`t_karten_snapshot`, `t_bereiche`, `t_konto_stapel` – alle Exit 0.
+`pruefe_stand.mjs` grün, `node --check app.js` sauber.
+**Gegenprüfung:** gelesen: kompletter `git diff app.js` (Stellen oben),
+`firestore.rules`-Diff, alle Aufrufer von `kartenFelder`/`pfadKarte` mit
+ganzem Wert (5594, 5013, 4607 … schreiben nur über `kartenFelder`;
+`persistCardGrade` nur Einzelfelder), `kontoDatenLoeschen` und
+`kartenEinesBereichsLoeschen` (löschen per Sammlung bzw. `bereichId` –
+Zeilen gehen mit), `exportBackup` (serialisiert `bereiche` samt
+`zeilen`/`texte`). Gefunden und behoben: (1) Regel ließ eine lange Zeile
+durch, wenn nur `textId` gelöscht wurde (T25 rot → Prüfung auch bei
+`textId`-Änderung); (2) zwei Regex ohne Backslash (LEHREN § 15);
+(3) `deleteBereich` hielt einen Bereich nur mit Text für leer und löschte
+ohne Sicherung. Nicht geprüft: echtes Firebase, echtes iPhone.
+**Offen:**
+- **Betreiber:** Regeln veröffentlichen, **vor** dem Hosting von 3.18.0
+  (PLAN „Was Du noch tun musst“).
+- Parallele Großplan-Runde 15 (3.17.57) in `C:/Users/USER/Wiederholung-r15`;
+  wer zuerst pusht, auf den rebased der andere. Version springt nie zurück.
+- Löschen-Dialog und Konto-Löschen nennen Texte noch nicht (Stufe 2).
+**Nächster Schritt:** Regressionen auswerten, dann Commit 3.18.0 und
+Stufe 2 (Anlegen selbst/Quran, Einwilligung, Bearbeiten, Löschen,
+Sicherung, Datenschutzerklärung).
+
 ### 2026-09-29 — Stufe 0: Quran-Quelle, Datei, Prüfsumme, Code-Stellen, Fixtures
 
 **Geändert:** `quran/tanzil-uthmani.txt`, `quran/tanzil-quran-data.xml`

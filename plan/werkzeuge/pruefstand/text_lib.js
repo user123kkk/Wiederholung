@@ -1,0 +1,78 @@
+/* Gemeinsame Bausteine der Tests fuer "Texte auswendig lernen"
+   (plan/texte-lernen/KONZEPT.md § 13). Kein religioeser Wortlaut: Textzeilen
+   in diesen Tests sind neutrale Testsaetze oder kommen unveraendert aus
+   quran/tanzil-uthmani.txt (LEHREN § 2). */
+const fs = require('node:fs'), path = require('node:path');
+const { execFileSync } = require('node:child_process');
+const { vollerStore, tag } = require('./lib');
+const { APP, AUTH, FS } = require('./stubs');
+
+const repo = path.join(__dirname, '../../..');
+const BASE = 'http://127.0.0.1:' + (process.env.PRUEF_PORT || 8099) + '/index.html';
+/* Letzter Stand vor Stufe 1 - fuer Gegenproben (LEHREN § 5.3: nie HEAD). */
+const VOR_STUFE_1 = '48002ad';
+
+function appQuelle(commit) {
+  return commit ? execFileSync('git', ['show', commit + ':app.js'], { cwd: repo, encoding: 'utf8' })
+                : fs.readFileSync(path.join(repo, 'app.js'), 'utf8');
+}
+
+/* vollerStore plus ein Text mit 10 Zeilen in Bereich b1:
+   z0-z3 fest (Stufe 7, 2099-12-31), z4-z6 frisch und heute faellig,
+   z7 frisch seit 20 Tagen ueberfaellig, z8-z9 neu. Dazu Kreis- und
+   Reglerfelder mit Werten, die nicht den Startwerten entsprechen - so faellt
+   auf, wenn ein Weg sie durch Startwerte ersetzt. */
+/* Zeile 10 ist 1216 Zeichen lang: laenger als eine Karte (1000), kuerzer
+   als MAX_ZEILE (1500) - wie Aya 2:282 mit 1208 Zeichen. */
+function textWort(i) {
+  return i === 9 ? 'Lange Testzeile ' + 'x'.repeat(1200) : 'Testzeile ' + (i + 1) + ' eins zwei drei';
+}
+function textStore(opt = {}) {
+  const store = vollerStore(opt);
+  const ids = [];
+  for (let i = 0; i < 10; i++) {
+    const id = 'z' + i; ids.push(id);
+    let stufe, next, erste;
+    if (i < 4) { stufe = 7; next = '2099-12-31'; erste = tag(-40); }
+    else if (i < 7) { stufe = i - 3; next = tag(0); erste = tag(-5); }
+    else if (i === 7) { stufe = 0; next = tag(-20); erste = tag(-25); }
+    else { stufe = 0; next = tag(0); erste = null; }
+    store['users/u1/karten/' + id] = {
+      wort: opt.wortVon ? opt.wortVon(i) : textWort(i),
+      uebersetzung: '', extra: null, stufe, nextReview: next, ersteBewertung: erste,
+      rueckfaelle: i === 2 ? 3 : 0, quelleId: null, maxStufe: stufe, order: i, bereichId: 'b1', textId: 't1' };
+  }
+  const b1 = store['users/u1/bereiche/b1'];
+  b1.sets = { ...b1.sets, t1: { name: 'Testtext', order: 9, art: 'text', quelleId: null, cardIds: ids,
+    nummerAb: 3, quelle: 'tanzil', sure: 2, kreisTage: 9, kreisPos: 'z2', kreisTag: tag(-1), festErgebnisse: '10110' } };
+  b1.abstandFaktor = 0.8;
+  b1.festErgebnisse = '1110';
+  return store;
+}
+
+/* Seite mit echter app.js (oder einem festen alten Stand) und Zugriff auf
+   die inneren Funktionen ueber window.__PRUEF. Service Worker gesperrt,
+   damit die Umleitung von app.js greift (LEHREN § 15, 26.09.). */
+async function seiteMitApp(browser, store, { commit, zusatz = '', viewport = { width: 390, height: 844 } } = {}) {
+  const ctx = await browser.newContext({ viewport, serviceWorkers: 'block', deviceScaleFactor: 1 });
+  const p = await ctx.newPage();
+  p.fehler = [];
+  p.on('pageerror', e => p.fehler.push(e.message));
+  await p.addInitScript(s => { window.__START_STORE = s; window.__START_USER = { uid: 'u1', email: 'a@example.com', displayName: 'Test', emailVerified: true, metadata: { creationTime: 'Mon, 03 Aug 2026 10:00:00 GMT' } }; }, store);
+  await p.route('**/www.gstatic.com/**', r => r.fulfill({ contentType: 'text/javascript',
+    body: r.request().url().includes('auth') ? AUTH : r.request().url().includes('firestore') ? FS : APP }));
+  await p.route('**/app.js?*', r => r.fulfill({ contentType: 'text/javascript', body: appQuelle(commit) + `
+    window.__PRUEF = { bereit: () => bereiche !== null && !document.querySelector('.boot'),
+      bereiche: () => JSON.parse(JSON.stringify(bereiche)),
+      ${zusatz} };` }));
+  await p.goto(BASE);
+  await p.waitForFunction(() => window.__PRUEF && window.__PRUEF.bereit(), null, { timeout: 15000 });
+  await p.waitForTimeout(600);
+  return { ctx, p };
+}
+
+async function storeLesen(p) {
+  return p.evaluate(() => Object.fromEntries([...window.__FB.store.entries()].map(([k, v]) => [k, JSON.parse(JSON.stringify(v))])));
+}
+
+module.exports = { textWort, textStore, seiteMitApp, storeLesen, appQuelle, VOR_STUFE_1, BASE };

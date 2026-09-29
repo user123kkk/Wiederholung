@@ -1,3 +1,14 @@
+## 3.18.0 – 29. September 2026
+
+**Vorbereitung für „Texte auswendig lernen“ (Stufe 1, noch unsichtbar).**
+Die App kann jetzt Texte und ihre Zeilen laden, speichern, sichern und
+wieder einspielen, ohne dass sie irgendwo als Karten auftauchen: nicht in
+der Runde, nicht in Zählungen, Suche, Üben oder Statistik. Zu sehen gibt es
+noch nichts; das Anlegen folgt in der nächsten Stufe, zuerst nur im Konto
+des Betreibers. Für Karten ändert sich nichts. Neue Firestore-Regeln
+(Zeilenverweis, Einwilligung, Karten-Regler) müssen **vor** dieser Version
+veröffentlicht werden. Nach dem Update jedes Gerät einmal öffnen.
+
 ## 3.17.56 – 29. September 2026
 
 **Verspätete Antworten bleiben bei ihrem Ursprungskonto.** Erzeugen,

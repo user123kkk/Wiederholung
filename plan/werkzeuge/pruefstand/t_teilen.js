@@ -6,7 +6,7 @@
 const { start, neueSeite, aktion, vollerStore, tag } = require('./lib');
 const { APP, AUTH, FS } = require('./stubs');
 
-const BASE = 'http://127.0.0.1:8099/index.html';
+const BASE = 'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html';
 
 const nutzer = { uid: 'u1', email: 'test@example.com', displayName: 'Test', emailVerified: true,
   providerData: [{ providerId: 'password' }], metadata: { creationTime: 'Mon, 03 Aug 2026 10:00:00 GMT', lastSignInTime: new Date().toUTCString() } };

@@ -11,7 +11,7 @@ const path = require('path');
   const p = await ctx.newPage();
   await p.route('**/www.gstatic.com/**', () => {});             // antwortet nie
   await p.route('**/verses.quran.foundation/**', r => r.abort());
-  await p.goto('http://127.0.0.1:8099/index.html');
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
   await p.waitForTimeout(8500);
   const lage = () => p.evaluate(() => { const z = document.querySelector('.boot__zeichen-hof').getBoundingClientRect(); const m = document.querySelector('.boot__marke').getBoundingClientRect(); return Math.round(z.top) + '/' + Math.round(m.top); });
   const vorher = await lage();

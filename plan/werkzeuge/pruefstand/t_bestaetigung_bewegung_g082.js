@@ -13,7 +13,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 const REPO = path.join(__dirname, '..', '..', '..');
-const BASE = 'http://127.0.0.1:8099/index.html';
+const BASE = 'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html';
 let CSS_ALT = null;
 try { CSS_ALT = execSync('git show 5ad0a11:styles.css', { cwd: REPO, encoding: 'utf8' }); }
 catch (e) { console.log('Kein Git-Stand 5ad0a11 fuer styles.css gefunden - Gegenprobe entfaellt:', e.message); }

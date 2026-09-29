@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.56";
+const APP_VERSION = "3.18.0";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -74,6 +74,14 @@ function istAutor() { return true; }
 const BETREIBER_UIDS = ["pitcQCAowlSOMjCvJ4xKSnuGVXi1"];
 function istBetreiber() {
   return BETREIBER_UIDS.length === 0 || !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);
+}
+/* 3.18.0: Probelauf "Texte auswendig lernen" und Karten-Regler
+   (texte-lernen/WIEDERHOLEN.md § 8): vier Wochen nur im Konto des Betreibers.
+   Anders als istBetreiber() auch dann aus, wenn die Liste leer ist. Die
+   Daten selbst (Textzeilen, Texte) laedt und schreibt die App fuer jedes
+   Konto richtig - der Schalter entscheidet nur, was angeboten wird. */
+function texteFreigeschaltet() {
+  return !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);
 }
 
 /* ---------- XSS-Schutz ---------- */
@@ -173,6 +181,10 @@ function genId() {
    stehen: Was hier geprueft wird, prueft der Browser - und der gehoert dem
    Nutzer. Wird hier etwas geaendert, dort mitaendern. */
 const MAX_WORT = 1000;     // wort und uebersetzung
+/* 3.18.0: Eine Textzeile darf laenger sein als eine Karte. Die laengste Aya
+   (2:282) hat 1208 Zeichen; geteilt stimmten die Aya-Nummern nicht mehr
+   (texte-lernen/KONZEPT.md § 7.4). Wie firestore.rules, kartenWerte. */
+const MAX_ZEILE = 1500;
 const MAX_EXTRA = 5000;    // Beispielsatz, Grammatik, Bild-Link oder Notiz
 const FEEDBACK_LIMIT = 100; // Ideen je Abfrage - dieselbe Zahl steht in firestore.rules (feedback list)
 function kuerze(s, max) { return String(s === undefined || s === null ? "" : s).slice(0, max); }
@@ -224,9 +236,9 @@ function normCard(c) {
   let erste = null;
   if (/^\d{4}-\d{2}-\d{2}$/.test(c.ersteBewertung)) erste = c.ersteBewertung;
   else if (c.ersteBewertung === undefined && stufe > 0) erste = LEGACY_FIRST_GRADE;
-  return {
+  const karte = {
     id: typeof c.id === "string" && c.id ? c.id : genId(),
-    wort: kuerze(c.wort, MAX_WORT),
+    wort: kuerze(c.wort, textIdVon(c) ? MAX_ZEILE : MAX_WORT),
     uebersetzung: kuerze(c.uebersetzung, MAX_WORT),
     extra: typeof c.extra === "string" ? c.extra.slice(0, MAX_EXTRA) : "",
     stufe: stufe,
@@ -250,8 +262,20 @@ function normCard(c) {
     maxStufe: Math.max(
       Number.isInteger(c.maxStufe) && c.maxStufe >= 0 ? Math.min(c.maxStufe, MAX_STUFE) : 0,
       Number.isInteger(c.stufe) && c.stufe >= 0 ? Math.min(c.stufe, MAX_STUFE) : 0
-    )
+    ),
+    /* 3.18.0 (Texte auswendig lernen): Eine Textzeile ist ein Karten-Dokument
+       mit dem Verweis auf ihren Text. Fehlte das Feld hier, verloere jede
+       Zeile es beim naechsten Laden und wuerde zur gewoehnlichen Karte. */
+    textId: textIdVon(c)
   };
+  /* Textzeilen kennen nur frisch 0-6 und fest 7 (texte-lernen/WIEDERHOLEN.md
+     § 1). Hat eine aeltere App-Version eine Zeile als Karte bewertet, steht
+     sie hoeher - dann gilt sie als fest (KONZEPT § 7.5). */
+  if (karte.textId && karte.stufe > TEXT_FEST_STUFE) karte.stufe = TEXT_FEST_STUFE;
+  return karte;
+}
+function textIdVon(c) {
+  return c && typeof c.textId === "string" && c.textId ? c.textId.slice(0, 200) : null;
 }
 function istNeueKarte(c) { return !c.ersteBewertung; }
 
@@ -445,6 +469,16 @@ async function hinweisGefuehrt(was) {
    Datenstaende vor 2.3.0 kennen das Feld nicht; sie gelten deshalb als
    "eigen" und verhalten sich damit exakt wie bisher. */
 const SET_ARTEN = ["kategorie", "lektion", "eigen"];
+/* 3.18.0 (Texte auswendig lernen, plan/texte-lernen/KONZEPT.md): Ein Text
+   ist ein Set dieser Art, seine Zeilen sind Karten mit textId. Bewusst NICHT
+   in SET_ARTEN - das ist die Liste, aus der man Speicherkarten-Arten waehlt. */
+const SET_ART_TEXT = "text";
+/* Eine Textzeile ist frisch (Stufe 0-6 = Tage am Stueck sicher) oder fest
+   (Stufe 7). Feste Zeilen bekommen ein Faelligkeitsdatum, das nie kommt:
+   Wann sie drankommen, entscheidet der Kreis - und eine aeltere App-Version,
+   die Zeilen fuer Karten haelt, fragt sie so nie ab (KONZEPT § 7.5). */
+const TEXT_FEST_STUFE = 7;
+const TEXT_FEST_DATUM = "2099-12-31";
 /* 2.11.0: Reihenfolge der Abschnitte im Verwalten-Tab. Lektionen zuerst -
    sie sind der Weg. Kategorien danach, die sind zum Nachschlagen. Eigene
    zuletzt, weil sie am Anfang leer sind und erst mit der Zeit wachsen. */
@@ -592,8 +626,11 @@ function sternIcon(gefuellt, pop) {
   return iconSvg("stern", "star" + (gefuellt ? " filled" : "") + (pop ? " pop" : ""));
 }
 function normSet(s) {
-  const art = SET_ARTEN.indexOf(s.art) !== -1 ? s.art : "eigen";
-  return {
+  /* 3.18.0: "text" ist keine waehlbare Speicherkarten-Art (SET_ARTEN bleibt
+     die Auswahlliste), muss hier aber erhalten bleiben - sonst wuerde aus
+     jedem Text still eine eigene Speicherkarte. */
+  const art = SET_ARTEN.indexOf(s.art) !== -1 || s.art === SET_ART_TEXT ? s.art : "eigen";
+  const set = {
     id: typeof s.id === "string" && s.id ? s.id : genId(),
     name: typeof s.name === "string" && s.name ? s.name.slice(0, 40) : "Speicherkarte",
     art: art,
@@ -602,6 +639,51 @@ function normSet(s) {
     quelleId: typeof s.quelleId === "string" && s.quelleId ? s.quelleId : null,
     cardIds: (Array.isArray(s.cardIds) ? s.cardIds : []).filter(x => typeof x === "string" && x)
   };
+  if (art === SET_ART_TEXT) Object.assign(set, normTextSet(s));
+  return set;
+}
+/* Felder eines Textes (KONZEPT § 7.2, WIEDERHOLEN.md § 3). Startwerte:
+   Kreis 7 Tage, noch keine Position, noch keine Antworten. */
+const KREIS_TAGE_START = 7, KREIS_TAGE_MIN = 3, KREIS_TAGE_MAX = 30;
+const FEST_ERGEBNISSE_MAX = 50;
+function normTextSet(s) {
+  return {
+    nummerAb: Number.isInteger(s.nummerAb) && s.nummerAb >= 1 ? s.nummerAb : 1,
+    quelle: s.quelle === "tanzil" ? "tanzil" : null,
+    /* Nur bei mitgeliefertem Text: die Sure, aus der er stammt - damit die
+       App eine geaenderte Aya mit dem Original vergleichen kann (§ 9.5). */
+    sure: s.quelle === "tanzil" && Number.isInteger(s.sure) && s.sure >= 1 && s.sure <= 114 ? s.sure : null,
+    kreisTage: Number.isInteger(s.kreisTage) ? Math.min(KREIS_TAGE_MAX, Math.max(KREIS_TAGE_MIN, s.kreisTage)) : KREIS_TAGE_START,
+    kreisPos: typeof s.kreisPos === "string" && s.kreisPos ? s.kreisPos : null,
+    kreisTag: typeof s.kreisTag === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s.kreisTag) ? s.kreisTag : null,
+    festErgebnisse: normErgebnisse(s.festErgebnisse)
+  };
+}
+function normErgebnisse(e) {
+  return typeof e === "string" ? e.replace(/[^01]/g, "").slice(-FEST_ERGEBNISSE_MAX) : "";
+}
+/* Bereichsfelder des Karten-Reglers (WIEDERHOLEN.md § 6): nur gesetzt, wenn
+   vorhanden - ein Bereich ohne Regler traegt die Felder nicht, und seine
+   Schreibvorgaenge brauchen die neuen Regeln nicht. */
+function normRegler(b) {
+  const r = {};
+  if (b && typeof b.abstandFaktor === "number" && isFinite(b.abstandFaktor))
+    r.abstandFaktor = Math.min(1, Math.max(0.5, Math.round(b.abstandFaktor * 10) / 10));
+  const e = normErgebnisse(b && b.festErgebnisse);
+  if (e) r.festErgebnisse = e;
+  return r;
+}
+/* 3.18.0: Karten und Textzeilen stehen in der Cloud in derselben Sammlung,
+   Speicherkarten und Texte im selben sets-Feld. Im Speicher trennt diese
+   Funktion sie: b.karten und b.sets enthalten danach nur Karten und
+   Speicherkarten, b.zeilen und b.texte nur Texte. So sieht jede Stelle, die
+   Karten abfragt, zaehlt oder anzeigt, Textzeilen gar nicht erst - auch
+   Stellen, die spaeter dazukommen (texte-lernen/KONZEPT.md § 14, "A"). */
+function bereichAufteilen(karten, sets) {
+  const out = { karten: [], zeilen: [], sets: [], texte: [] };
+  for (const c of karten) (c.textId ? out.zeilen : out.karten).push(c);
+  for (const st of sets) (st.art === SET_ART_TEXT ? out.texte : out.sets).push(st);
+  return out;
 }
 /* Lehrer-Bindung eines Bereichs (siehe lehrerGesteuert): nur mit gueltigem
    Code-Format und ganzzahligem Stand, sonst gar nicht. Gibt ein Objekt zum
@@ -626,17 +708,22 @@ function normBereiche(arr) {
         satzId: typeof b.satzId === "string" && b.satzId ? b.satzId : null,
         satzVersion: Number.isInteger(b.satzVersion) && b.satzVersion > 0 ? b.satzVersion : 0,
         ...normLehrerBindung(b),
-        karten: (Array.isArray(b.karten) ? b.karten : [])
-          .filter(c => c && typeof c === "object" && c.wort != null && c.uebersetzung != null)
-          .map(normCard),
-        sets: (Array.isArray(b.sets) ? b.sets : [])
-          .filter(s => s && typeof s === "object")
-          .slice(0, MAX_SETS)
-          .map(normSet)
+        ...normRegler(b),
+        /* 3.18.0: Eine Sicherung traegt Zeilen und Texte in eigenen Listen;
+           zusammengefuehrt und neu aufgeteilt, damit auch eine Zeile, die
+           in "karten" steht, wieder zur Zeile wird. */
+        ...bereichAufteilen(
+          (Array.isArray(b.karten) ? b.karten : []).concat(Array.isArray(b.zeilen) ? b.zeilen : [])
+            .filter(c => c && typeof c === "object" && c.wort != null && c.uebersetzung != null)
+            .map(normCard),
+          (Array.isArray(b.sets) ? b.sets : []).concat(Array.isArray(b.texte) ? b.texte : [])
+            .filter(s => s && typeof s === "object")
+            .slice(0, MAX_SETS)
+            .map(normSet))
       });
     }
   }
-  if (out.length === 0) out.push({ id: genId(), name: "Vokabeln", karten: [], sets: [] });
+  if (out.length === 0) out.push({ id: genId(), name: "Vokabeln", karten: [], sets: [], zeilen: [], texte: [] });
   return out;
 }
 /* 3.17.41 (G-079, DATEN-15): Nur fuer den Import gedacht. normBereiche()
@@ -682,7 +769,11 @@ function kartenFelder(c, order) {
     rueckfaelle: c.rueckfaelle || 0,
     quelleId: c.quelleId || null,
     maxStufe: c.maxStufe || 0,
-    order: order
+    order: order,
+    /* 3.18.0: nur bei Textzeilen. Gewoehnliche Karten tragen das Feld nicht -
+       so schreibt eine Karte auch dann noch, wenn die Regeln mit textId noch
+       nicht veroeffentlicht sind (plan/LEHREN.md § 8.1). */
+    ...(c.textId ? { textId: c.textId } : {})
   };
 }
 /* Eine Speicherkarte in der Form, wie sie in der Cloud steht. Wie bei den
@@ -693,14 +784,25 @@ function setFelder(st, order) {
     name: st.name, order: order,
     art: st.art || "eigen",
     quelleId: st.quelleId || null,
-    cardIds: st.cardIds
+    cardIds: st.cardIds,
+    /* 3.18.0: Texte tragen Nummerierung, Quelle und den Kreis
+       (texte-lernen/WIEDERHOLEN.md § 3). Fehlten sie hier, loeschte jedes
+       Vollschreiben den Kreis. */
+    ...(st.art === SET_ART_TEXT ? textSetFelder(st) : {})
   };
 }
+/* Ueber normTextSet, damit nie ein undefined-Wert an Firestore geht (das
+   lehnt der Schreibvorgang ab) - auch nicht fuer einen frisch gebauten Text. */
+function textSetFelder(st) { return normTextSet(st); }
 function bereichFelder(b, order) {
   const kartenMap = {};
   b.karten.forEach((c, ci) => { kartenMap[c.id] = kartenFelder(c, ci); });
+  /* 3.18.0: Textzeilen und Texte liegen im Speicher getrennt von Karten und
+     Speicherkarten (bereichAufteilen), in der Cloud aber am selben Ort. */
+  (b.zeilen || []).forEach((c, ci) => { kartenMap[c.id] = kartenFelder(c, ci); });
   const setsMap = {};
-  (Array.isArray(b.sets) ? b.sets : []).forEach((st, si) => {
+  const alleSets = (Array.isArray(b.sets) ? b.sets : []).concat(b.texte || []);
+  alleSets.forEach((st, si) => {
     setsMap[st.id] = setFelder(st, si);
   });
   const felder = {
@@ -714,6 +816,8 @@ function bereichFelder(b, order) {
      Deshalb gehoeren die Felder des Code-Teilens dazu, sobald sie gesetzt sind:
      sonst loeschte z. B. ein Update des Kartensatzes die Lehrer-Bindung. */
   if (b.teilCode) felder.teilCode = b.teilCode;
+  /* 3.18.0: Regler der Karten (WIEDERHOLEN.md § 6) - nur, wenn gesetzt. */
+  Object.assign(felder, normRegler(b));
   if (Number.isInteger(b.teilFreigabe)) felder.teilFreigabe = b.teilFreigabe;
   if (b.lehrerCode) {
     felder.lehrerCode = b.lehrerCode;
@@ -728,16 +832,16 @@ function bereicheMapToArray(mapObj) {
     const kartenMap = b.karten && typeof b.karten === "object" ? b.karten : {};
     const karten = Object.keys(kartenMap).map(cid => {
       const c = kartenMap[cid] || {};
-      return { card: normCard({ id: cid, wort: c.wort, uebersetzung: c.uebersetzung, extra: c.extra, stufe: c.stufe, nextReview: c.nextReview, ersteBewertung: c.ersteBewertung, rueckfaelle: c.rueckfaelle, quelleId: c.quelleId, maxStufe: c.maxStufe }), order: Number.isFinite(c.order) ? c.order : 0 };
+      return { card: normCard({ id: cid, wort: c.wort, uebersetzung: c.uebersetzung, extra: c.extra, stufe: c.stufe, nextReview: c.nextReview, ersteBewertung: c.ersteBewertung, rueckfaelle: c.rueckfaelle, quelleId: c.quelleId, maxStufe: c.maxStufe, textId: c.textId }), order: Number.isFinite(c.order) ? c.order : 0 };
     }).sort((x, y) => x.order - y.order).map(x => x.card);
     const setsMap = b.sets && typeof b.sets === "object" ? b.sets : {};
     const sets = Object.keys(setsMap).map(sid => {
       const s = setsMap[sid] || {};
-      return { set: normSet({ id: sid, name: s.name, art: s.art, quelleId: s.quelleId, cardIds: s.cardIds }), order: Number.isFinite(s.order) ? s.order : 0 };
+      return { set: normSet({ ...s, id: sid }), order: Number.isFinite(s.order) ? s.order : 0 };
     }).sort((x, y) => x.order - y.order).map(x => x.set);
-    return { id: id, name: typeof b.name === "string" && b.name ? b.name.slice(0, 40) : "Vokabeln", gefuehrt: b.gefuehrt === true, satzId: typeof b.satzId === "string" && b.satzId ? b.satzId : null, satzVersion: Number.isInteger(b.satzVersion) ? b.satzVersion : 0, karten: karten, sets: sets, order: Number.isFinite(b.order) ? b.order : 0 };
+    return { id: id, name: typeof b.name === "string" && b.name ? b.name.slice(0, 40) : "Vokabeln", gefuehrt: b.gefuehrt === true, satzId: typeof b.satzId === "string" && b.satzId ? b.satzId : null, satzVersion: Number.isInteger(b.satzVersion) ? b.satzVersion : 0, ...normRegler(b), ...bereichAufteilen(karten, sets), order: Number.isFinite(b.order) ? b.order : 0 };
   }).sort((x, y) => x.order - y.order).map(({ order, ...rest }) => rest);
-  return list.length ? list : [{ id: genId(), name: "Vokabeln", karten: [], sets: [] }];
+  return list.length ? list : [{ id: genId(), name: "Vokabeln", karten: [], sets: [], zeilen: [], texte: [] }];
 }
 /* ---------- 2.8.0: Tagesprotokoll ----------
    Bis 2.7.0 speicherte die App nur den AKTUELLEN Zustand jeder Karte. Damit
@@ -1872,7 +1976,7 @@ function bereicheAusSammlungen(bDocs, kDocs) {
     const setsMap = b.sets && typeof b.sets === "object" ? b.sets : {};
     const sets = Object.keys(setsMap).map(sid => {
       const st = setsMap[sid] || {};
-      return { set: normSet({ id: sid, name: st.name, art: st.art, quelleId: st.quelleId, cardIds: st.cardIds }), ord: Number.isFinite(st.order) ? st.order : 0 };
+      return { set: normSet({ ...st, id: sid }), ord: Number.isFinite(st.order) ? st.order : 0 };
     }).sort((x, y) => x.ord - y.ord).map(x => x.set);
     return {
       id: b.id,
@@ -1886,11 +1990,12 @@ function bereicheAusSammlungen(bDocs, kDocs) {
       teilCode: typeof b.teilCode === "string" && b.teilCode ? b.teilCode : null,
       teilFreigabe: Number.isInteger(b.teilFreigabe) ? b.teilFreigabe : null,
       ...normLehrerBindung(b),
-      karten: karten, sets: sets,
+      ...normRegler(b),
+      ...bereichAufteilen(karten, sets),
       order: Number.isFinite(b.order) ? b.order : 0
     };
   }).sort((x, y) => x.order - y.order).map(({ order, ...rest }) => rest);
-  return list.length ? list : [{ id: genId(), name: "Vokabeln", karten: [], sets: [] }];
+  return list.length ? list : [{ id: genId(), name: "Vokabeln", karten: [], sets: [], zeilen: [], texte: [] }];
 }
 
 function datenZusammenbauen() {
@@ -1945,7 +2050,8 @@ function sammlungenStarten() {
         const alt = rohIndex.get(k.id);
         const b = bereiche.find(b => b.id === k.bereichId);
         return art === "modified" && alt && alt.bereichId === k.bereichId && alt.order === k.order &&
-          (!b || b.karten.some(c => c.id === k.id));
+          !!alt.textId === !!k.textId &&
+          (!b || (k.textId ? (b.zeilen || []) : b.karten).some(c => c.id === k.id));
       })) {
         let geaendert = false;
         for (const { k } of neu) {
@@ -1953,11 +2059,13 @@ function sammlungenStarten() {
           for (const f of Object.keys(rohIndex.get(k.id))) delete rohIndex.get(k.id)[f];
           Object.assign(rohIndex.get(k.id), k);
           const b = bereiche.find(b => b.id === k.bereichId);
-          const i = b ? b.karten.findIndex(c => c.id === k.id) : -1;
+          /* 3.18.0: Textzeilen stehen in b.zeilen (bereichAufteilen). */
+          const liste = b ? (k.textId ? (b.zeilen || []) : b.karten) : null;
+          const i = liste ? liste.findIndex(c => c.id === k.id) : -1;
           if (i < 0) continue; // verwaiste Karte ohne Bereich, wie im Vollaufbau
-          const c = normCard(k), alt = b.karten[i];
+          const c = normCard(k), alt = liste[i];
           if (Object.keys(c).some(f => c[f] !== alt[f])) {
-            b.karten[i] = c;
+            liste[i] = c;
             if (Number.isFinite(k.order)) ordnungGespeichert.set(c, k.order);
             geaendert = true;
           }
@@ -2604,6 +2712,7 @@ async function persistAllAusfuehren() {
       const { karten, ...felder } = bereichFelder(b, bi);
       ops.push({ ref: bereichRef(b.id), daten: felder });
       b.karten.forEach((c, ci) => ops.push({ ref: karteRef(c.id), daten: { ...kartenFelder(c, ci), bereichId: b.id } }));
+      (b.zeilen || []).forEach((c, ci) => ops.push({ ref: karteRef(c.id), daten: { ...kartenFelder(c, ci), bereichId: b.id } }));
     });
     /* 3.17.41 (G-022): alle Stapel sofort anlegen, dann gemeinsam warten -
        sonst stand bei Abbruch nur ein Teil in der Offline-Warteschlange
@@ -4622,6 +4731,8 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef) {
   let kartenGesamt = 0;
   for (const b of data.bereiche) {
     if (b && typeof b === "object" && Array.isArray(b.karten)) kartenGesamt += b.karten.length;
+    /* 3.18.0: Textzeilen sind ebenfalls Karten-Dokumente. */
+    if (b && typeof b === "object" && Array.isArray(b.zeilen)) kartenGesamt += b.zeilen.length;
   }
   if (kartenGesamt > IMPORT_MAX_KARTEN) {
     await dlgAlert("Das enthält " + kartenGesamt + " Karten. Eingespielt werden bis zu " +
@@ -4698,10 +4809,24 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef) {
       b.karten.forEach(c => { c.quelleId = c.quelleId || c.id || ("q-" + genId()); });
     }
     b.karten.forEach(c => { const altId = c.id; c.id = frisch(); nummernTausch.set(altId, c.id); });
+    (b.zeilen || []).forEach(c => { const altId = c.id; c.id = frisch(); nummernTausch.set(altId, c.id); });
     (b.sets || []).forEach(st => {
       st.id = frisch();
       st.cardIds = st.cardIds.map(x => nummernTausch.get(x)).filter(Boolean);
     });
+    /* 3.18.0: Texte bekommen wie Speicherkarten neue Nummern; die Zeilen
+       zeigen danach auf die neue Text-Nummer, der Kreis auf die neue
+       Zeilen-Nummer. Eine Zeile ohne ihren Text wird nicht eingespielt. */
+    const textTausch = new Map();
+    (b.texte || []).forEach(st => {
+      const altId = st.id;
+      st.id = frisch();
+      textTausch.set(altId, st.id);
+      st.cardIds = st.cardIds.map(x => nummernTausch.get(x)).filter(Boolean);
+      st.kreisPos = st.kreisPos ? (nummernTausch.get(st.kreisPos) || null) : null;
+    });
+    b.zeilen = (b.zeilen || []).filter(c => textTausch.has(c.textId));
+    b.zeilen.forEach(c => { c.textId = textTausch.get(c.textId); });
     const neu = {
       id: genId(), name: name,
       /* 2.3.0: Schreibschutz, Kennung und Nummer kommen aus der Datei. Ein
@@ -4713,7 +4838,9 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef) {
       /* 3.7.0: kommt der Satz ueber einen Code mit „Lehrer gibt frei", steht
          die Bindung schon am Bereich (siehe codeEinloesen). */
       ...(b.gefuehrt === true ? normLehrerBindung(b) : {}),
-      karten: b.karten, sets: b.sets || []
+      ...normRegler(b),
+      karten: b.karten, sets: b.sets || [],
+      zeilen: b.zeilen || [], texte: b.texte || []
     };
     bereiche.push(neu);
     patch[pfadBereich(neu.id)] = bereichFelder(neu, bereiche.length - 1);
@@ -4838,7 +4965,7 @@ async function deleteBereich() {
      Speicherkarte) hat nichts, was ein Backup oder das Abtippen des Namens
      schuetzen koennte - vorher lud die App trotzdem eine Datei herunter und
      verlangte den Namen ("Es werden 0 Karte(n) ... geloescht"). */
-  if (b.karten.length === 0 && !(b.sets || []).length) {
+  if (b.karten.length === 0 && !(b.sets || []).length && !(b.texte || []).length && !(b.zeilen || []).length) {
     const ok = await dlgConfirm("„" + b.name + "“ ist leer." + (b.teilCode ? " Der Code " + b.teilCode + " funktioniert danach nicht mehr." : ""), { title: "Bereich löschen?", okLabel: "Löschen", danger: true });
     if (!ok || !giltNoch()) return;
     await bereichEntfernen(b);
@@ -7473,6 +7600,7 @@ async function umzugStarten() {
     const felder = bereichFelder(b, bi);
     ops.push({ ref: bereichRef(b.id), daten: { name: felder.name, order: felder.order, sets: felder.sets } });
     b.karten.forEach((c, ci) => ops.push({ ref: karteRef(c.id), daten: { ...kartenFelder(c, ci), bereichId: b.id } }));
+    (b.zeilen || []).forEach((c, ci) => ops.push({ ref: karteRef(c.id), daten: { ...kartenFelder(c, ci), bereichId: b.id } }));
   });
 
   ui.umzug.laeuft = true;

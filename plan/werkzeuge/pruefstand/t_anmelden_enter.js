@@ -11,7 +11,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const REPO = path.join(__dirname, '..', '..', '..');
-const BASE = 'http://127.0.0.1:8099/index.html';
+const BASE = 'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html';
 let APP_ALT = null;
 try { APP_ALT = execSync('git show 1c8aaa1:app.js', { cwd: REPO, encoding: 'utf8' }); }
 catch (e) { console.log('Kein Git-Stand 1c8aaa1 fuer app.js gefunden - Gegenprobe entfaellt:', e.message); }

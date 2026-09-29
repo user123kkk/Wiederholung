@@ -1612,6 +1612,17 @@ Vor 04:00 zeigten die kalendertäglichen Fixture-Daten zusätzlich keine
 fälligen Karten. Kein solcher Lauf gilt als grün. Fixtures folgen jetzt
 dem bestehenden Lerntag; `t_pruefdatum.js` prüft dessen Grenze (§ 5.4).
 
+29.09.2026, Texte Stufe 1, eigener Fehler vor dem Commit: Zwei per Skript
+eingefügte reguläre Ausdrücke verloren ihren Backslash (`/^\d{4}…/` wurde zu
+`/^d{4}…/`, `/\s+/` zu `/s+/`). Die Shell bzw. ein zusätzliches Escaping in
+Heredoc/`node -e` schluckte `\\`. `node --check` findet das nicht – der
+Ausdruck ist gültig, nur falsch. Gefunden hat es erst der Test
+(`kreisTag fehlt`). Regel: Code mit Backslashes über das Write-Werkzeug in
+eine Datei schreiben, nicht über Shell-Heredoc oder `node -e`; danach die
+eingefügten Regex per `git diff | grep '\\'` gegenlesen (§ 3.3, § 5.3).
+Außerdem wandelte `sed -i` unter Git-Bash CRLF-Dateien in LF um – für Git
+harmlos (autocrlf), aber Werkzeuge, die Bytes vergleichen, sehen es.
+
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 
 28.09.2026, bis 3.17.49, G-099: Schneller kurzer Wisch links wechselnd ohne
