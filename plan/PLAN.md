@@ -775,6 +775,28 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
+**JETZT (29.09.2026 abends, Betreiber-Entscheidung): Bau „Texte auswendig
+lernen“ und neues Wiederholen – vor weiteren Codex-Runden.**
+Reihenfolge laut Betreiber: 1. dieser Bau, 2. danach die Codex-Runden
+(Runde 15 fortsetzen), 3. danach das ganze Tool neu prüfen und neue Runden
+erstellen (`grossplan/AUFTRAG.md` § 4a).
+
+- Plan: [`texte-lernen/KONZEPT.md`](texte-lernen/KONZEPT.md) und
+  [`texte-lernen/WIEDERHOLEN.md`](texte-lernen/WIEDERHOLEN.md). **Beginnen mit
+  Stufe 0** (KONZEPT § 12), dann Stufe für Stufe mit Gegenprüfung
+  (`grossplan/AUFTRAG.md` § 2a). Logbuch: `texte-lernen/LOGBUCH.md`.
+- Ausgangsstand: `main` = 3.17.56 (`a4b5677`), live veröffentlicht.
+- **Codex-Runde 15 (unfertig, 3.17.57) ist gesichert, nicht verworfen:**
+  `git stash list` → „Codex Runde 15 unfertig …“ und zusätzlich
+  `grossplan/runde15-unfertig.patch` (gegen `a4b5677`). Nicht anwenden,
+  solange der Texte-Bau läuft; danach mit `git apply --3way` einspielen und
+  Konflikte lösen.
+- Offen, **nicht** Teil des Baus: kurzes weißes Aufblitzen beim Start
+  (Betreiber 29.09. abends, nach 3.17.56). Vermutung: Service Worker nach
+  Pause kalt – unbelegt. Braucht Antwort „jedes Mal oder manchmal“ und ein
+  Bild; siehe `grossplan/LOGBUCH.md`.
+
+
 **Werkzeug G-117 (29.09.2026):** `veroeffentlichen.bat` prüft und veröffentlicht
 den frisch geholten `origin/main` aus einer eigenen temporären Kopie; lokale
 Entwürfe bleiben erhalten. Neun isolierte Nachweise grün, kein echter Deploy

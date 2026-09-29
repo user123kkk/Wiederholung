@@ -1,0 +1,1465 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index ae8539f..8698e56 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,3 +1,7 @@
++## 3.17.57 – 29. September 2026
++
++**Runde 15: Kontowechsel.** Bereits bestätigte Lösch-/Abmeldedialoge und spätere Anmelde-, Registrierungs- und Passwortantworten gehören zu ihrem ursprünglichen Auftrag. Ein Registrierungsnachtrag ändert nur das angeforderte Konto. Private Karten-/Ideenentwürfe und Auswahl werden beim Kontowechsel geleert. Die eigene Registrierung und „Adresse falsch? Neu anfangen“ bleiben erhalten.
++
+ ## 3.17.56 – 29. September 2026
+ 
+ **Verspätete Antworten bleiben bei ihrem Ursprungskonto.** Erzeugen,
+diff --git a/CLAUDE.md b/CLAUDE.md
+index d0e150c..ce8e47e 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -2,10 +2,10 @@
+ 
+ ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
+ 
+-### Aktueller Weiter-Auftrag — Runde 14
++### Aktueller Weiter-Auftrag — Runde 15
+ 
+ Betreiber hat nach den Claude-Änderungen .52–.55 die Weiterarbeit verlangt.
+-Runde 14 (G-102–G-106) ist wieder aufgenommen; aktuelle Arbeit steht oben
++Runde 14 (G-102–G-106) ist abgeschlossen; aktuelle Arbeit steht oben
+ in `plan/grossplan/LOGBUCH.md`. Der iPhone-Start ist laut Gerätebericht mit
+ .55 bestätigt. Die folgenden Pause-/Übergabeabschnitte beschreiben den
+ früheren Stand; nicht als aktuelle Sperre oder offenen iPhone-Fix lesen.
+@@ -14,7 +14,16 @@ früheren Stand; nicht als aktuelle Sperre oder offenen iPhone-Fix lesen.
+ Handy200/iPad150 Zufallstests grün. Unveränderter Original-Tempotest am
+ Ladegerät grün, keine Grenze gelockert/kein Layout-Experiment übernommen.
+ Aktuelle Nachweise stehen im obersten Logbuch. Nächste Runde genau
+-G-107–G-111, zuerst G-110 kritisch. Kein Textlern-Bauauftrag.
++G-107–G-111 wurde begonnen, zuerst G-110 kritisch. Kein Textlern-Bauauftrag.
++
++**Runde15, Abnahme unterbrochen:** Genau diese fünf Aufgaben umgesetzt (Entwurf3.17.57),
++gezielte Gegenproben grün, vollständige Abnahme noch offen. Kein Commit
++oder Hosting-Deploy dieser Runde. Maßgeblich ist der oberste Logbucheintrag.
++Eigener Normalfall mit verzögerter Löschquittung nach rotem Test korrigiert;
++neue106er-Folge nach32 Ergebnissen beendet (30 grün, Tempo rot, ein
++Zeitlimit nach langer Rechner-/Tool-Unterbrechung). Windows ACLineStatus0.
++Keine Freigabe aus dem früheren grünen Netzlauf ableiten. Prüfprozesse
++beendet; identischen Stand mit `--fortsetzen` wieder aufnehmen, siehe Logbuch.
+ 
+ ### Runden: Ablauf, Gegenprüfung, neuer Zyklus
+ 
+diff --git a/app.js b/app.js
+index 1cfc77e..63e3aac 100644
+--- a/app.js
++++ b/app.js
+@@ -16,7 +16,7 @@ const firebaseConfig = {
+ 
+ /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
+    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
+-const APP_VERSION = "3.17.56";
++const APP_VERSION = "3.17.57";
+ 
+ const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
+ /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
+@@ -1060,12 +1060,6 @@ let listenFenster = { start: 0, anzahl: 0 };
+ /* ---------- Zustand ---------- */
+ let currentUser = null;      // Firebase-User
+ let displayName = "";
+-/* 3.17.38 (G-054, KONTO-15): Trägt einen Namen über den naechsten
+-   onAuthStateChanged-Wechsel hinweg - dort wird ui.authEingabe sonst
+-   unbedingt geleert. Nur kontoVertipptNeuAnfangen() setzt das, wenn das
+-   unbestaetigte Konto geloescht und direkt der Registrieren-Bildschirm
+-   gezeigt wird (Name bleibt, E-Mail nicht). */
+-let authEingabeNameNachtrag = null;
+ let bereiche = null;         // Array [{name, karten:[]}] – null solange Cloud-Daten noch nicht geladen
+ let cloudDocExists = false;
+ let syncError = null;
+@@ -1441,6 +1435,7 @@ let ui = {
+   authInfo: null,
+   authBusy: false,
+   authBusyWas: null,
++  authAuftrag: null,
+   /* 3.4.0: Was im Anmeldeformular schon getippt ist. render() ersetzt den
+      ganzen Inhalt von #app - ohne diesen Zwischenspeicher waren E-Mail und
+      Passwort nach jeder Fehlermeldung und jedem Wechsel Anmelden/Konto
+@@ -1797,9 +1792,11 @@ function ausweisErneuernUndNeuLaden() {
+   try { schonVersucht = sessionStorage.getItem(TOKEN_ERNEUERT_KEY) === "1"; } catch (e) {}
+   if (schonVersucht || !currentUser || !currentUser.emailVerified) return false;
+   try { sessionStorage.setItem(TOKEN_ERNEUERT_KEY, "1"); } catch (e) {}
+-  currentUser.getIdToken(true)
+-    .then(() => { location.reload(); })
+-    .catch(() => { render(); });
++  const user = currentUser, ref = userDocRef;
++  const giltNoch = () => currentUser === user && userDocRef === ref && !kontoWirdGeloescht;
++  user.getIdToken(true)
++    .then(() => { if (giltNoch()) location.reload(); })
++    .catch(() => { if (giltNoch()) render(); });
+   return true;
+ }
+ /* 17.09.2026: derselbe veraltete Ausweis trifft auch das SCHREIBEN, nicht nur
+@@ -2079,19 +2076,35 @@ async function initFirebase() {
+     /* 3.17.38 (G-050, KONTO-11): vor den Resets unten sichern - beide werden
+        gleich unbedingt geleert (ui.registrierungZeitlimit hier, ui.authEingabe
+        weiter unten). Siehe die Verwendung im if(user)-Zweig. */
+-    const registrierungNachholen = !!ui.registrierungZeitlimit;
+-    const registrierungName = (ui.authEingabe && ui.authEingabe.name) || "";
++    const auftrag = ui.authAuftrag;
++    const eigeneRegistrierung = !!(auftrag && auftrag.art === "registrieren" && user && auth.currentUser === user &&
++      (auftrag.registriert ? user === auftrag.registriert :
++        (user.email || "").toLowerCase() === auftrag.email.toLowerCase()));
++    const eigeneAdressAbmeldung = !!(auftrag && auftrag.art === "adresse" &&
++      auftrag.loescht && !user && currentUser === auftrag.user);
++    const registrierungNachholen = eigeneRegistrierung && !!ui.registrierungZeitlimit;
++    const registrierungName = eigeneRegistrierung ? auftrag.name : "";
++    const adressName = eigeneAdressAbmeldung ? auftrag.name : "";
++    // Die eigene Abmeldung kann vor der deleteUser-Quittung kommen. Bereits
++    // jetzt das Formular waehlen, damit render() keinen neuen Einstieg anlegt.
++    if (eigeneAdressAbmeldung) {
++      ui.authMode = "register";
++      ui.authGewaehlt = true;
++    }
+     ui.registrierungZeitlimit = false;
+-    // Alte Konto-Auftraege duerfen die neue Anmeldung nicht blockieren.
+-    // Beim ersten Registrieren (vorher kein User) laeuft der Mailversand
+-    // noch: dessen Busy-Merker bleibt bis zum normalen Abschluss erhalten.
+-    if (currentUser) {
++    if (!eigeneRegistrierung && !eigeneAdressAbmeldung) ui.authAuftrag = null;
++    // Nur die eigene Registrierung darf ueber ihren Auth-Callback weiterlaufen.
++    if (!eigeneRegistrierung) {
+       ui.authBusy = false;
+       ui.authBusyWas = null;
+       ui.authError = null;
+       ui.authInfo = null;
+     }
+     currentUser = user;
++    if (eigeneRegistrierung || eigeneAdressAbmeldung) {
++      auftrag.user = user;
++      auftrag.ref = null;
++    }
+     bestaetigungLaeuft = false;
+     lehrerLetzteAbfrage.clear();
+     haltenAbbrechen(); // ein begonnenes Halten gehoert zum bisherigen Konto
+@@ -2135,12 +2148,48 @@ async function initFirebase() {
+     feedbackLadeLangsam = false;
+     feedbackLaedt = false;
+     feedbackLadeToken++;   // ein noch laufender Versuch des vorigen Kontos zaehlt nicht mehr
++    feedbackEntwurf = { text: "", beschreibung: "" };
++    feedbackFormFehler = false;
++    ui.feedbackForm = false;
+     ui.session = null;
+     ui.editId = null;
+-    /* 3.17.38 (G-054): normalerweise leer - authEingabeNameNachtrag traegt
+-       nur nach kontoVertipptNeuAnfangen() einen Namen ueber diesen Wechsel. */
+-    ui.authEingabe = { name: authEingabeNameNachtrag || "", email: "", pass: "" };
+-    authEingabeNameNachtrag = null;
++    ui.karteSheet = false;
++    ui.cardDetailId = null;
++    ui.seite = null;
++    resetFormDraft();
++    editRueckkehrY = null;
++    ui.selectMode = false;
++    ui.selectedIds = new Set();
++    ui.searchQuery = "";
++    ui.searchAll = false;
++    ui.kartenSeite = 0;
++    ui.wahlSheet = null;
++    ui.setArtSheetId = null;
++    ui.bereichSheet = false;
++    ui.bereichMehr = false;
++    ui.drillOpen = false;
++    ui.drillSetIds = new Set();
++    ui.drillVon = null;
++    ui.drillBis = null;
++    ui.drillAnker = null;
++    ui.lernSetId = null;
++    ui.lernOffen = new Set();
++    ui.lernLetzte = null;
++    ui.lernFokusNach = null;
++    ui.openSetId = null;
++    ui.zuletztSetId = null;
++    ui.setsOffen = false;
++    ui.setsArtWahl = false;
++    ui.gemerktRunde = new Set();
++    ui.merkPop = null;
++    ui.springZu = null;
++    ui.springOben = false;
++    ui.toast = null;
++    hwStrokes = [];
++    hwDrawing = false;
++    hwFullscreen = false;
++    /* Den Namen nur ueber die eigene Loeschung in das Gastformular tragen. */
++    ui.authEingabe = { name: adressName, email: "", pass: "" };
+     ui.authFeldFehler = null;
+     ui.authPassSichtbar = false;
+     ui.askImport = false;
+@@ -2167,13 +2216,14 @@ async function initFirebase() {
+         fb.sendEmailVerification(user).catch(() => {});
+         if (!user.displayName && registrierungName) {
+           fb.updateProfile(user, { displayName: registrierungName })
+-            .then(() => { if (currentUser === user) displayName = registrierungName; }).catch(() => {});
++            .then(() => { if (ui.authAuftrag === auftrag && currentUser === user && auth.currentUser === user) displayName = registrierungName; }).catch(() => {});
+         }
+         ui.authError = null;
+         ui.authInfo = "Konto angelegt.";
+         ansagen(ui.authInfo);
+       }
+       userDocRef = fb.doc(db, "users", user.uid);
++      if (eigeneRegistrierung) auftrag.ref = userDocRef;
+       bereicheColRef = fb.collection(userDocRef, "bereiche");
+       kartenColRef = fb.collection(userDocRef, "karten");
+       let letzterNutzerKopf = null;
+@@ -2987,6 +3037,22 @@ function val(id) {
+   return el ? el.value : "";
+ }
+ 
++/* Ein Auftrag kann das eigene Registrieren oder Loeschen ueberleben, aber
++   keinen fremden Kontowechsel und keinen neu begonnenen Auth-Auftrag. */
++function authAuftragStarten(art, daten = {}) {
++  const auftrag = Object.assign({ art, user: currentUser, ref: userDocRef }, daten);
++  ui.authAuftrag = auftrag;
++  return auftrag;
++}
++function authAuftragGilt(auftrag) {
++  return ui.authAuftrag === auftrag && !kontoWirdGeloescht &&
++    ((currentUser === auftrag.user && userDocRef === auftrag.ref) ||
++      (auftrag.art === "adresse" && auftrag.loescht && !currentUser && !userDocRef));
++}
++function registrierungGilt(auftrag, user) {
++  return ui.authAuftrag === auftrag && !kontoWirdGeloescht && auth.currentUser === user &&
++    (authAuftragGilt(auftrag) || currentUser === user);
++}
+ async function doLogin() {
+   /* 3.17.38 (G-053, KONTO-14): Enter in JEDEM Feld sendet jetzt ueber ein
+      <form> ab (submit-Delegation an body) - ohne diese Sperre koennte ein
+@@ -2995,6 +3061,7 @@ async function doLogin() {
+   if (ui.authBusy) return;
+   const email = val("a-email").trim();
+   const pass = val("a-pass");
++  const auftrag = authAuftragStarten("login");
+   ui.authError = null; ui.authInfo = null; ui.authBusy = true;
+   /* 3.17.38 (G-050): ein alter Merker aus einem abgebrochenen
+      Registrieren-Versuch gilt nur fuer GENAU das naechste
+@@ -3004,8 +3071,10 @@ async function doLogin() {
+   try {
+     await mitZeitlimit(fb.signInWithEmailAndPassword(auth, email, pass));
+   } catch (e) {
++    if (!authAuftragGilt(auftrag)) return;
+     ui.authError = authErrorText(e);
+   }
++  if (!authAuftragGilt(auftrag)) return;
+   ui.authBusy = false;
+   render();
+ }
+@@ -3023,18 +3092,24 @@ async function doLogin() {
+    pageshow/persisted-Handler unten den Fall ab, in dem jemand zurueckgeht,
+    ohne fertig zu sein. */
+ async function doGoogleLogin() {
++  if (ui.authBusy) return;
++  const auftrag = authAuftragStarten("google");
+   ui.authError = null; ui.authInfo = null; ui.authBusy = true;
+   ui.registrierungZeitlimit = false;   /* 3.17.38 (G-050): siehe doLogin(). */
+   render();
+   try {
+     await fb.signInWithPopup(auth, new fb.GoogleAuthProvider());
+   } catch (e) {
++    if (!authAuftragGilt(auftrag)) return;
+     if (e && e.code !== "auth/popup-closed-by-user") ui.authError = authErrorText(e);
+   }
++  if (!authAuftragGilt(auftrag)) return;
+   ui.authBusy = false;
+   render();
+ }
+ async function doAppleLogin() {
++  if (ui.authBusy) return;
++  const auftrag = authAuftragStarten("apple");
+   ui.authError = null; ui.authInfo = null; ui.authBusy = true;
+   ui.registrierungZeitlimit = false;   /* 3.17.38 (G-050): siehe doLogin(). */
+   render();
+@@ -3044,8 +3119,10 @@ async function doAppleLogin() {
+     provider.addScope("name");
+     await fb.signInWithPopup(auth, provider);
+   } catch (e) {
++    if (!authAuftragGilt(auftrag)) return;
+     if (e && e.code !== "auth/popup-closed-by-user") ui.authError = authErrorText(e);
+   }
++  if (!authAuftragGilt(auftrag)) return;
+   ui.authBusy = false;
+   render();
+ }
+@@ -3082,6 +3159,7 @@ async function doRegister() {
+     return;
+   }
+   ui.authFeldFehler = null;
++  const auftrag = authAuftragStarten("registrieren", { name, email });
+   ui.authBusy = true; render();
+   /* 3.17.38 (G-050, KONTO-11): eigener try/catch nur um den ersten Schritt -
+      laeuft GENAU der ins Zeitlimit (mitZeitlimit wirft dann
+@@ -3094,22 +3172,29 @@ async function doRegister() {
+   try {
+     cred = await mitZeitlimit(fb.createUserWithEmailAndPassword(auth, email, pass));
+   } catch (e) {
++    if (!authAuftragGilt(auftrag)) return;
+     ui.authError = authErrorText(e);
+     if (e && e.code === "auth/network-request-failed") ui.registrierungZeitlimit = true;
+     ui.authBusy = false;
+     render();
+     return;
+   }
++  if (ui.authAuftrag !== auftrag) return;
++  auftrag.registriert = cred.user;
++  if (!registrierungGilt(auftrag, cred.user)) return;
+   try {
+     displayName = name;
+     await mitZeitlimit(fb.updateProfile(cred.user, { displayName: name }));
++    if (!registrierungGilt(auftrag, cred.user)) return;
+     /* C4: Nach der Registrierung eine Bestätigungs-E-Mail schicken. Die App
+        sperrt sich selbst, bis emailVerified wahr ist (siehe renderAuth). */
+     await mitZeitlimit(fb.sendEmailVerification(cred.user));
++    if (!registrierungGilt(auftrag, cred.user)) return;
+     /* 3.17.3: Der Rest (Posteingang, Spam) steht fest auf dem
+        Bestaetigungs-Bildschirm - hier nicht noch einmal. */
+     ui.authInfo = "Konto angelegt.";
+   } catch (e) {
++    if (!registrierungGilt(auftrag, cred.user)) return;
+     ui.authError = authErrorText(e);
+   }
+   ui.authBusy = false;
+@@ -3179,23 +3264,28 @@ async function doResendVerification() {
+    geloescht. */
+ async function kontoVertipptNeuAnfangen() {
+   if (!currentUser || ui.authBusy) return;
++  const nutzer = currentUser;
++  const auftrag = authAuftragStarten("adresse", { name: nutzer.displayName || "" });
+   const ok = await dlgConfirm(
+     "Dieses noch nicht bestätigte Konto wird gelöscht. Danach kannst du dich mit der richtigen Adresse neu registrieren.",
+     { title: "Adresse falsch?", okLabel: "Konto löschen", danger: true });
+-  if (!ok) return;
+-  const nutzer = currentUser;
+-  /* Name bleibt fuer den Registrieren-Bildschirm erhalten (authEingabeNameNachtrag,
+-     siehe onAuthStateChanged) - nur die vertippte Adresse soll weg. */
+-  authEingabeNameNachtrag = nutzer.displayName || "";
++  if (!authAuftragGilt(auftrag)) return;
++  if (!ok) { ui.authAuftrag = null; return; }
++  /* Der Auftrag traegt den Namen nur ueber seine eigene Abmeldung. */
+   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+   try {
+     try {
++      auftrag.loescht = true;
+       await fb.deleteUser(nutzer);
+     } catch (e) {
++      if (!authAuftragGilt(auftrag)) return;
+       if (!e || e.code !== "auth/requires-recent-login") throw e;
+-      if (!(await kontoNeuAnmelden())) { authEingabeNameNachtrag = null; ui.authBusy = false; render(); return; }
++      const angemeldet = await kontoNeuAnmelden();
++      if (!authAuftragGilt(auftrag)) return;
++      if (!angemeldet) { ui.authAuftrag = null; ui.authBusy = false; render(); return; }
+       await fb.deleteUser(nutzer);
+     }
++    if (!authAuftragGilt(auftrag)) return;
+     /* onAuthStateChanged raeumt currentUser/ui.authEingabe auf (mit dem
+        gemerkten Namen) - hier nur noch Modus und authGewaehlt, die dieser
+        Reset nicht anfasst. Ohne authGewaehlt zeigt render() bei
+@@ -3204,7 +3294,8 @@ async function kontoVertipptNeuAnfangen() {
+     ui.authMode = "register";
+     ui.authGewaehlt = true;
+   } catch (e) {
+-    authEingabeNameNachtrag = null;
++    if (!authAuftragGilt(auftrag)) return;
++    ui.authAuftrag = null;
+     ui.authError = fehlerKlartext(e);
+   }
+   ui.authBusy = false;
+@@ -3222,11 +3313,14 @@ async function doReset() {
+     return;
+   }
+   ui.authFeldFehler = null;
++  const auftrag = authAuftragStarten("reset");
+   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
+   try {
+     await mitZeitlimit(fb.sendPasswordResetEmail(auth, email));
++    if (!authAuftragGilt(auftrag)) return;
+     ui.authInfo = "Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach.";
+   } catch (e) {
++    if (!authAuftragGilt(auftrag)) return;
+     ui.authError = authErrorText(e);
+   }
+   ui.authBusy = false;
+@@ -3244,6 +3338,9 @@ async function doReset() {
+    verlieren koennte, und "Abmelden" ist der Weg zurueck, wenn man sich bei
+    der Adresse vertippt hat - eine Rueckfrage waere dort nur Reibung. */
+ async function doLogout() {
++  if (!currentUser) return;
++  const user = currentUser, ref = userDocRef;
++  const giltNoch = () => currentUser === user && auth.currentUser === user && userDocRef === ref && !kontoWirdGeloescht;
+   if (currentUser && currentUser.emailVerified) {
+     /* 3.17.15 (Station 15): Wer mit Google/Apple angemeldet ist, hat kein
+        Passwort - der Satz nennt den Weg, den es wirklich gibt. */
+@@ -3256,8 +3353,9 @@ async function doLogout() {
+       (offline ? "\n\nDu bist gerade offline: Was du seit der letzten Verbindung gelernt " +
+         "hast, wird erst übertragen, wenn du dich hier wieder anmeldest." : ""),
+       { title: "Abmelden?", okLabel: "Abmelden", danger: true });
+-    if (!ok) return;
++    if (!ok || !giltNoch()) return;
+   }
++  if (!giltNoch()) return;
+   verlaufJetztSchreiben();
+   fb.signOut(auth);
+ }
+diff --git a/index.html b/index.html
+index 9ef1a10..51f8cb1 100644
+--- a/index.html
++++ b/index.html
+@@ -61,37 +61,37 @@
+      aus manifest.json (background_color + Symbol).
+      Neu erzeugen, wenn sich .boot aendert: README.md, "Startbilder".
+      Nicht in APP_SHELL (sw.js): iOS laedt nur das eine passende Bild. -->
+-<link rel="apple-touch-startup-image" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1320x2868.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1206x2622.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1290x2796.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1179x2556.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1284x2778.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1170x2532.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1125x2436.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1080x2340.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2688.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-828x1792.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2208.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-750x1334.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-640x1136.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2064x2752.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2752x2064.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2048x2732.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2732x2048.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2420.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2420x1668.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2388.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2388x1668.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1640x2360.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2360x1640.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2224.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2224x1668.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1620x2160.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2160x1620.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1536x2048.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png?v=3.17.56">
+-<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png?v=3.17.56">
++<link rel="apple-touch-startup-image" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1320x2868.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1206x2622.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1290x2796.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1179x2556.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1284x2778.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1170x2532.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1125x2436.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1080x2340.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2688.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-828x1792.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2208.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-750x1334.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-640x1136.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2064x2752.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2752x2064.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2048x2732.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2732x2048.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2420.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2420x1668.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2388.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2388x1668.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1640x2360.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2360x1640.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2224.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2224x1668.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1620x2160.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2160x1620.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1536x2048.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png?v=3.17.57">
++<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png?v=3.17.57">
+ <!-- Kritischer First-Paint-Teil des Boot-Screens: dieselbe Geometrie wie
+      die .boot-Regeln in styles.css, damit das Icon nicht erst nach dem
+      Stylesheet-Laden aus dem Dokumentfluss in die Mitte springt. -->
+@@ -123,7 +123,7 @@
+   } catch (e) {}
+ })();
+ </script>
+-<link rel="stylesheet" href="./styles.css?v=3.17.56">
++<link rel="stylesheet" href="./styles.css?v=3.17.57">
+ <script>
+ /* 2.20.0: Läuft, BEVOR das erste Bild steht.
+ 
+@@ -215,6 +215,6 @@
+      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
+      die die App innerhalb der letzten Stunde offen hatten, an der alten
+      app.js fest, auch nach einem Reload. -->
+-<script type="module" src="./app.js?v=3.17.56"></script>
++<script type="module" src="./app.js?v=3.17.57"></script>
+ </body>
+ </html>
+diff --git a/plan/LEHREN.md b/plan/LEHREN.md
+index 81ae571..de08c07 100644
+--- a/plan/LEHREN.md
++++ b/plan/LEHREN.md
+@@ -1038,6 +1038,22 @@ Richtungen: Was kann jemand an **eigenen** Daten verbiegen, und was an denen
+   Übergänge (Gast→eigenes neues Konto, eigenes Löschen→Gast) getrennt von
+   fremdem Kontowechsel prüfen, nicht jede Auth-Änderung blind abbrechen.
+ 
++- **Runde 15:** Auth-Aufträge bekommen eine eigene Identität. Ein Wechsel
++  A→B→A macht die alte Antwort nicht wieder gültig. Die eigene Registrierung
++  darf sowohl vor als auch nach ihrem Auth-Callback fortsetzen; SDK-User und
++  Auftragsidentität prüfen. Name/E-Mail für den Zeitlimit-Nachtrag beim Start
++  sichern, nicht aus dem späteren Formular. Auch dessen Profil-UI-Fortsetzung
++  an den Auftrag binden. Eigene Adresslöschung mit Auth-Callback vor und nach
++  der SDK-Quittung abnehmen; fremde Abmeldung nicht mit dem Namen versehen.
++  Das Registrierformular bereits im eigenen Abmelde-Callback wählen: Eine
++  verzögerte Löschquittung darf zwischenzeitlich keinen neuen Einstieg anlegen.
++
++- **Runde 15, G-112:** Auch das Ersetzen eines Dialogs muss den bisherigen
++  Aufrufer als Abbruch auflösen, bevor dessen Referenz überschrieben wird.
++  Nicht nur `closeDialog`/Auth-Reset prüfen. Im Solltest ist die erste Promise
++  beendet (Confirmfalse/Promptnull/Alertundefined), der zweite Dialog bleibt
++  erhalten. Eine weiterhin offene Promise ist nur ein Alt-Fehlerbeleg.
++
+ - **29.09.2026, G-106:** Bestätigungsprüfung/erneutes Senden und ihre
+   Timer-Sperre an den ursprünglichen User binden. Alte reload-Antworten
+   dürfen weder den Token eines Folgekontos erneuern noch dessen Seite neu
+@@ -1433,6 +1449,56 @@ rot korrigiert: doppelter Datei-Patch abgelehnt (keine Änderung), Tool-Treffer
+ als Array, Mock-Zeilenumbruch und cmd-Argumentquotierung. Keine echte
+ Veröffentlichung durch diese Tests und keine rote Probe als bestanden melden.
+ 
++29.09.2026, K10-Kopieranleitung: „unten den gesamten aktuellen Regeltext“
++stand in einer Datei, die dort nur Anleitung enthielt. Betreiber-Screenshot
++meldet Fehler ab487, echte Regeldatei hat481 Zeilen; Editor-Paste unbekannt.
++Anleitung eindeutig gemacht: direkten Raw-Inhalt von firestore.rules geben,
++Editor vollständig ersetzen, keine Anweisungen/Markdown mitkopieren (§8).
++Aus dem Screenshot allein weder Kopierursache noch Fehler in Regeln behaupten.
++
++29.09.2026, Runde15-Abnahme: direkter Windows-Netzstatus0 trotz früherer
++Angabe zum Ladegerät. Originaltempo130ms rot;45s angeforderte Wartezeit
++dauerte957,672s, UI-Gegenprobe nach993s Zeitlimit. Ursache nicht bewiesen,
++keinen Geräte-/Tool-Aussetzer als bestandenen Lauf oder alleinigen Appfehler
++werten.32 protokollierte Ergebnisse,30 grün; aktuelle Logs/Checkpoint
++gesichert, eigene Prüfprozesse beendet. Nur identisch grüne Ergebnisse beim
++stabilen Wiedereinstieg übernehmen; beide rote und fehlende neu (§5).
++
++29.09.2026, eigene Runde15-Regression: Bei 25ms verzögerter Löschquittung
++kam die eigene Abmeldung zuerst. render() legte einen Einstieg an, bevor
++die Fortsetzung das Registrierformular wählte; der neue Normalfall wurde
++rot. Modus/Wahl bereits im zugehörigen Auth-Callback gesetzt; echte App
++mit 0/25ms Quittung danach grün. Gesamtfolge beendet und frischer Stand
++`d17b05f425891265df6ca56b2e9badfb4cbce3ef9250ba46a31f45fce6c8cdab`
++neu gestartet. Keine alte grüne Gesamtabnahme behaupten (§8.3).
++
++29.09.2026, Mustersuche: SDK zeigt bereits B, bevor App-Auth-Callback A
++ablöst. Drei Token-/Bestätigungsfortsetzungen lösen in dieser Lücke eine
++Navigation aus. Originalfunktionen, drei normale und drei Wechsel-Fälle
++gegen aktuellen Stand und fest `a4b5677` belegen es. Mittlere Folgerunden-
++Aufgabe, keine Datenlöschung behauptet; SDK- und App-User gemeinsam prüfen.
++
++29.09.2026, Runde15-Mustersuche G-112: `openDialog` überschreibt die einzige
++Referenz auf den alten Aufrufer. Dessen Promise bleibt bei Confirm, Prompt
++und Alert unbeendet; selbst nach Abschluss des zweiten Dialogs. Original-
++Funktion und fester Altstand `a4b5677` belegen es. Mittlere Aufgabe für die
++Folgerunde, §8.3; keine neue Datenlöschung behauptet.
++
++29.09.2026, Runde15: neuer Inventartest verwendete zunächst den vermuteten
++Aktionsnamen `einstieg-plan-speichern`. Der echte Code heißt `einstieg-fertig`;
++der Test brach rot ab, keine App geändert und keine Abnahme behauptet.
++Aktionsnamen/Endzustände am Code lesen, sichtbare Texte und erreichten
++Abschluss verlangen (§5.3). Eigene Werkzeugfehler vor Änderungen:
++nicht passende Patch-Kontexte/mehrfache Dateioperation abgelehnt, fehlende
++Diagnosedateinamen geraten. Vor weiteren Zugriffen `rg --files`/exakte
++Quellzeilen lesen; keine Änderung aus fehlgeschlagenen Patches behaupten.
++
++29.09.2026, Runde15-Gegenprüfung: Nachtrags-Profilanzeige zunächst nur an
++User-Objekt gebunden; für A→B→A um Auftragsidentität ergänzt (§8.3).
++Begonnene Gesamtfolge abgebrochen, danach endgültiger Quellstand frisch.
++Ein neuer Testwrapper führt externe Prüfquellen aus: `--fortsetzen` muss
++deren Hashes mitprüfen, sonst wäre eine veränderte Probe fälschlich bewahrt.
++Runner erweitert; unverändert grüne Quellen nicht grundlos wiederholen (§5.3).
+ 
+ 29.09.2026, Runde14 am Ladegerät: unveränderter Original-Tempotest grün,
+ zehn Bewertungen3000 Karten geführt/eigen maximal57ms (Grenze100ms,
+diff --git a/plan/PLAN.md b/plan/PLAN.md
+index 9cc6e7e..4793e1a 100644
+--- a/plan/PLAN.md
++++ b/plan/PLAN.md
+@@ -795,7 +795,25 @@ Die Einträge darunter bleiben als Verlauf gültig.
+ 
+ **STAND 29.09.2026 abends: iPhone-Start am Gerät bestätigt (3.17.55).**
+ **Aktueller Weiter-Auftrag:** Runde 14 (G-102–G-106, 3.17.56) abgenommen;
+-als Nächstes Runde15 mit genau G-107–G-111, zuerst kritischer G-110.
++Veröffentlichung von .56 über GitHub Actions „Veroeffentlichen“ möglich:
++Workflow holt `main`, lokale uncommittete Runde15 bleibt erhalten. K10-Regeln
++vor K11-Hosting, falls noch nicht veröffentlicht; kein Deploy vom Agenten.
++**K11 Runde14 bestätigt:** Betreiber startete GitHub-Lauf7, abgeschlossen
++29.09.18:31Berlin/success. Öffentliche HTTP-Prüfung liefert App und beide
++HTML-Versionsquerys3.17.56. Konkretes verbleibendes Betreibersymptom noch
++unbekannt; K10-Regeln dadurch nicht bestätigt. Lokale Batch-Sperre bleibt.
++Runde15 mit genau G-107–G-111 ist umgesetzt (Entwurf3.17.57), Abnahme unterbrochen.
++Noch kein Commit/Freigabe dieser Runde; erster106er-Lauf nach ergänzter
++Auftragsbindung beendet. Zweiter Lauf fand eigene Regression bei verzögerter
++Löschquittung; korrigiert, dritte Folge frisch gestartet. Tempotest dort rot,
++Windows meldet inzwischen wieder Akkubetrieb. Ladezustand angefragt;
++keine Grenze gelockert. Direkte Netzabfrage ACLineStatus0; zusätzlich
++Wartezeit45s→957s und Test-Zeitlimit. Lauf/Prüfprozesse beendet;32 Ergebnisse,
++30 grün/zwei rot. Nächster Schritt: stabiler Laptop, Netzstatus prüfen,
++Server/Emulator starten und `alle_pruefen.js --fortsetzen` am selben Stand;
++30 aktuelle grüne Proben erhalten. Stand/Logs oben im Logbuch.
++Mustersuche bestätigt G-112 mittel (Dialogersatz lässt alten Aufrufer offen)
++für die Folgerunde; weitere Hypothesen erst nach Gegenprobe einstufen.
+ Umsetzung und Gegenprüfung gemäß `grossplan/AUFTRAG.md` §2 + §2a.
+ 105/105 Testläufe, 13/13 Lernabnahme, Handy200/iPad150 je0 Befunde.
+ Unveränderter Tempotest am Ladegerät grün: 3000 Karten geführt/eigen
+diff --git a/plan/grossplan/AUFGABEN.md b/plan/grossplan/AUFGABEN.md
+index 5b15ecd..ee62189 100644
+--- a/plan/grossplan/AUFGABEN.md
++++ b/plan/grossplan/AUFGABEN.md
+@@ -145,6 +145,8 @@ Beleg und Abnahme: [Nachlese](befunde/NACHLESE-2026-09-28.md).
+ | G-106 | Alte Bestätigungsprüfung erneuert B-Token und lädt dessen Seite neu; alte Versandmeldung erscheint in B | mittel | Agent | Sol/Astra | erledigt (3.17.56): drei Fortsetzungen und echte B-Busy-Sperre geprüft, volle Regression grün; Altstand c4a2ccf rot |
+ | G-107 | Weitere alte Auth-Fortsetzungen laden B neu, überschreiben dessen Info/Busy oder starten Reauth für B | mittel | Agent | Astra | offen: konto_authrest.js --befund belegt Lese-Token, Registrierung, Reset und „Adresse falsch“; Folgerunde nach G-102–G-106 |
+ | G-109 | Inventartest Teil 2 liest verborgenes Fehlerdialog-Markup und beendet den Einstieg vor der Probekarte | niedrig | Agent | Sol | offen: t_inventar2 protokolliert leere Übersichten und endet bei null; Sichtbarkeit und erreichte Endzustände prüfen; Folgerunde |
++| G-112 | Neuer Dialog ersetzt den bisherigen, ohne dessen Aufrufer als Abbruch aufzulösen | mittel | Agent | Sol | offen: dialog_ersetzt.js --befund und feste Gegenprobe a4b5677; Confirm/Prompt/Alert bleiben offen. Abnahme verlangt abgeschlossene erste Promise mit false/null/undefined und unveränderten zweiten Dialog; Folgerunde nach Runde15 |
++| G-116 | Token-/Bestätigungsantwort lädt die Seite trotz bereits gewechseltem SDK-User neu, bevor der App-Auth-Callback eintrifft | mittel | Agent | Sol/Astra | offen: konto_sdk_vor_callback.js --befund / --gegenprobe a4b5677; drei normale Navigationen erhalten, drei SDK-Wechsel ohne App-Callback abbrechen. Keine fremde Datenlöschung behauptet; Folgerunde |
+ | G-117 | Veröffentlichungs-Batch blockiert wegen lokaler Entwürfe auch den freigegebenen Stand auf main | Betreiber 29.09.: ausdrücklich veroeffentlichen.bat | Agent | Sol | erledigt (Werkzeug, 29.09.): origin/main als saubere temporäre Kopie prüfen/veröffentlichen, Arbeitsbaum erhalten; neun isolierte Nachweise ohne echten Deploy grün. Runde15 bleibt offen. |
+ 
+ ## D. Wartet auf den Betreiber
+diff --git a/plan/grossplan/AUFTRAG.md b/plan/grossplan/AUFTRAG.md
+index 6ca9de3..6cc4960 100644
+--- a/plan/grossplan/AUFTRAG.md
++++ b/plan/grossplan/AUFTRAG.md
+@@ -64,7 +64,11 @@ ausdrücklichem Auftrag; niemals gleichzeitig an `app.js`/`styles.css`.
+ Eine Runde beginnt nur nach einem ausdrücklichen „weiter" des Betreibers.
+ **Aktueller Stand 29.09.2026: vom Betreiber wieder aufgenommen.** Runde14
+ G-102–G-106 abgenommen (.56), Ausgang `c4a2ccf`/.55; mit §2a-Gegenprüfung.
+-Danach Runde15: genau G-107–G-111, zuerst kritischer G-110.
++Runde15: genau G-107–G-111 umgesetzt, Entwurf3.17.57; vollständige Abnahme
++unterbrochen, noch nicht committet. Zuerst kritischer G-110 korrigiert.
++Windows erkennt aktuell keinen Netzanschluss; Originaltempo rot und ein
++Zeitlimit nach langer Unterbrechung.30 aktuelle grüne Ergebnisse erhalten,
++mit `--fortsetzen` am identischen Stand fortfahren; Details im obersten Logbuch.
+ **Historische Pause 29.09.2026:** Nach Runde 13 pausiert. Neuer Claude-Chat
+ prüft gezielt Runde 13 und den weiterhin falschen iPhone-Start gemäß
+ [`../onboarding/CLAUDE-HANDOFF-2026-09-29.md`](../onboarding/CLAUDE-HANDOFF-2026-09-29.md).
+diff --git a/plan/grossplan/LOGBUCH.md b/plan/grossplan/LOGBUCH.md
+index 44e7b57..b483602 100644
+--- a/plan/grossplan/LOGBUCH.md
++++ b/plan/grossplan/LOGBUCH.md
+@@ -22,6 +22,148 @@ Firestore-Regeln K10 sind produktiv weiter unbestätigt.
+ Abnahme am gespeicherten Checkpoint fortsetzen; vorher G-117 auf dem echten
+ `origin/main` noch einmal ohne Deploy mit `-NurPruefen` gegenprüfen.
+ 
++### 2026-09-29 — Runde14 erfolgreich live, GitHub-Lauf7 bestätigt
++
++**Geändert:** Nur Dokumentation, kein weiterer Deploy ausgelöst.
++**Entscheidung:** GitHub-API bestätigt Lauf36598237625/#7 vom29.09.,
++Commit8ae1bdd: abgeschlossen/success. Standprüfung und Hosting-Deploy beide
++success, Abschluss16:31:18UTC (18:31:18Berlin). Unabhängige öffentliche
++HTTP-Prüfung mit Cache-Control:no-cache: app.js APP_VERSION3.17.56;
++index.html app.js/styles.css beide v3.17.56. K11 für Runde14 damit erledigt.
++Der lokale Batch-Abbruch bleibt wegen des ungeprüften Runde15-Entwurfs
++erwartet; er widerlegt den erfolgreichen GitHub-Deploy nicht. Kein lokales
++Reset/Stash und keine Umgehung der Veröffentlichungssperre.
++**Offen:** Betreiber sagt weiterhin „geht ned“, konkrete verbleibende
++Fehlermeldung/App-Version noch unbekannt. Produktions-Firestore-Regeln K10
++weiter unbestätigt: erfolgreicher Hosting-Workflow veröffentlicht keine Regeln.
++Runde15-Abnahme/Commit unverändert offen; App-/Browsercache nicht gelöscht.
++**Nächster Schritt:** Verbleibendes Symptom zuordnen (lokales Batchfenster
++oder App-Version/Funktion); keine erneute Veröffentlichung ohne neuen Grund.
++Danach Runde15-Abnahme nach gespeichertem Checkpoint fortsetzen.
++
++### 2026-09-29 — Regel-Editor meldet Fehler hinter dem Ende der Datei
++
++**Geändert:** `plan/grossplan/KONSOLE.md` K10 nennt jetzt ausschließlich
++`firestore.rules`, direkten Raw-Link und vollständigen Ersatz im Editor.
++Mehrdeutiges „unten den gesamten aktuellen Regeltext“ entfernt: Der Abschnitt
++enthielt nur Anleitung, keinen vollständigen Regeltext. Keine Regel geändert.
++**Entscheidung:** Screenshot meldet Syntax-/Tokenfehler ab487; lokale und
++`origin/main`-Regeln haben481 Zeilen, identische lokale Datei ohne Diff.
++Zusätzlich kopierter Text ist eine naheliegende Erklärung, aber der Inhalt
++des Firebase-Editors liegt nicht vor; konkrete Kopierursache nicht behaupten.
++Dem Betreiber direkten Regeltext geben und sämtliche alten Editorinhalte
++ersetzen lassen. Nicht die Regeln ändern, um einen unbekannten Paste zu heilen.
++**Offen:** Im Projekt lernkarte-925c2 → Firestore Database → Regeln: ganzen
++Editorinhalt durch Raw-Datei ersetzen, Veröffentlichen. Erfolg: kein roter
++Syntaxfehler, aktuelle Veröffentlichungszeit und `verlaufEpocheOk` vorhanden.
++Produktionsregeln nicht durch Agent veröffentlicht; K10 bleibt unbestätigt.
++**Nächster Schritt:** Runde15-Abnahme nach bestehendem Checkpoint fortsetzen;
++K10/K11 bleiben gesonderte Betreiber-Schritte.
++
++### 2026-09-29 — Veröffentlichung von Runde14 trotz lokalem Runde15-Entwurf
++
++**Geändert:** Nur Dokumentation; keine lokalen Änderungen gelöscht,
++verschoben, gestasht oder ungeprüft committet. `veroeffentlichen.bat` und
++`.github/workflows/veroeffentlichen.yml` gelesen; `origin/main` frisch geholt.
++**Entscheidung:** Der gezeigte Batch-Abbruch schützt korrekt vor dem lokalen
++Entwurf3.17.57. GitHub-Workflow „Veroeffentlichen“ holt ausschließlich `main`
++(App3.17.56), prüft dessen Stand und veröffentlicht nur Hosting. Damit kann
++Runde14 veröffentlicht werden, ohne die offene Runde15 anzutasten. Nicht
++die Batch-Sperre umgehen oder ihre Aufforderung zum Löschen befolgen.
++**Offen:** Betreiber kann K11 über GitHub → Actions → Veroeffentlichen →
++Run workflow/main auslösen, Erfolg grüner Lauf/App3.17.56. Workflow braucht
++das vorhandene Repository-Secret FIREBASE_SERVICE_ACCOUNT; dessen Zustand
++hier nicht geprüft. K10 zuerst, falls aktuelle Regeln noch nicht veröffentlicht
++sind (`verlaufEpocheOk`). Kein Deploy ausgelöst. Runde15-Abnahme bleibt offen.
++**Nächster Schritt:** Runde15-Abnahme wie im folgenden Checkpoint fortsetzen;
++30 aktuelle grüne Tests behalten. Veröffentlichung ist ein eigener Betreiber-
++Schritt und hebt die Test-/Commit-Sperre des lokalen Entwurfs nicht auf.
++
++### 2026-09-29 — Abnahme unterbrochen: Windows erkennt keinen Netzanschluss
++
++**Geändert:** Keine weitere Produktänderung nach dem eigenen Formular-Fix
++`app.js:2091`. Dokumentation in `PLAN.md`, `CLAUDE.md`, `AUFTRAG.md`,
++`LEHREN.md` und Nachprüfung aktualisiert. Entwurf3.17.57 bleibt uncommittet.
++**Entscheidung:** Windows GetSystemPowerStatus erfolgreich: ACLineStatus0,
++BatteryFlag1/76%; später WMI BatteryStatus1/74%. Frühere Angabe des Betreibers
++zum Ladegerät ersetzt diese aktuelle Messung nicht; keine Aussage darüber,
++welches Kabel physisch steckt. Optionaler Hinweis zur Laptop-Ladeanzeige
++steht noch unbeantwortet. Die angeforderten45s Tool-Wartezeit dauerten
++957,672s; UTC14:27:09→14:43:54. Ursache der Unterbrechung nicht festgestellt.
++`t_einstieg_g083_039_040_041_044.js` bestand seinen aktuellen UI-Teil, erreichte
++die feste Alt-Gegenprobe aber nicht vollständig und wurde nach993s mit
++Zeitlimit beendet. Das ist keine bestandene Gesamtprobe und kein alleiniger
++Beleg einer App-Regression. Lauf danach beendet; eigene Browser/Server8099,
++Demo-Emulator8081 und temporären Wachhalter beendet. Nutzerprozesse unberührt.
++**Gegenprüfung:** Aktueller App-Diff erneut vollständig gelesen;
++0/25ms normale Löschquittung und14 Wechsel-/ABA-Fälle in echter App grün.
++Syntax/Versionen/CSP/APP_SHELL grün. Im aktuellen106er-Lauf32 Ergebnisse:
++30 Exit0, Tempotest130ms/100ms rot, vorgenannter Test Zeitlimit. Alle32
++Ausgaben vollständig gelesen oder inhaltlich bytegleich mit zuvor gelesener
++Ausgabe verglichen (nur Prozessmetadaten ausgeschlossen). Teiltest
++`t_fehler_fokus.js` beim Stoppen ohne Ergebnis; nicht als geprüft zählen.
++**Offen:** Gesamtabnahme,77er-Wrapper,13er-Lernabnahme und beide Affen am
++endgültigen Fingerprint; drei vorbereitete Browser-Hypothesen weiterhin
++unbestätigt. G-112/G-116 mittel separat belegt und offen. A5/A6 nicht erfüllt.
++Kein Commit, Push oder Deploy von3.17.57; gepushter Stand weiterhin .56
++`a4b5677`. K10/K11, Gerätetests und Textlern-Entscheidung unverändert offen.
++**Nächster Schritt:** Bei stabilem Laptop zuerst echten Netzstatus prüfen,
++lokalen Server/Emulator neu starten. Dann `$env:CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'`
++und `node plan/werkzeuge/pruefstand/alle_pruefen.js --fortsetzen`: nur bei
++identischem Fingerprint `d17b05f425891265df6ca56b2e9badfb4cbce3ef9250ba46a31f45fce6c8cdab`
++werden30 grüne aktuelle Läufe bewahrt. Beide roten und alle fehlenden frisch;
++Grenzen unverändert, keine blinden Leistungswiederholungen. Logs in
++`%TEMP%/adrabic-pruefstand-gesamt/d17b05f425891265`, Gesamtlog
++`%TEMP%/adrabic-r15-gesamt-quittung.log`, Leseliste
++`%TEMP%/adrabic-r15-quittung-gelesen.json`. Nach grün13er-Abnahme aus frischen
++Gesamtlogs übernehmen, Affe Handy200 Seed1502/iPad150 Seed1503, vorbereitete
++Hypothesen kontrolliert prüfen; erst dann §2a/§14 und Commit/Push .57.
++**Kriterien:** A1 offen · A2/A3 unverändert · A4 offen · A5 offen · A6 0.
++
++### 2026-09-29 — Runde 15 umgesetzt, vollständige Abnahme läuft
++
++**Geändert:** `app.js` Auth-Aufträge, Auth-Reset, Token-Rückkehr,
++Registrierungsnachtrag, Adressdialog/Abmelden; Versionen `app.js`, `sw.js`,
++`index.html`, `CHANGELOG.md` (Entwurf3.17.57). `t_inventar2.js` liest sichtbare
++Texte und erreicht über echte Aktionen den fertigen Plan/Registrierformular.
++Neue `t_konto_fortsetzungen.js` samt sieben Prüfquellen; Runner hasht auch
++ausgeführte Wrapper-Abhängigkeiten. Regeln und Lernalgorithmen unverändert.
++**Entscheidung:** Runde14 mit `a4b5677` gepusht; jetzt genau G-107–G-111.
++18 normale VM-Fälle grün, sieben alte Auth-Fortsetzungen plus A→B→A in
++vollständiger App, private Karten-/Ideenentwürfe/Auswahl, fremde Profile und
++bereits bestätigte Auth-Dialoge gezielt grün. Fester Altstand `c4a2ccf` belegt
++die konkreten alten Wirkungen. Normaler Inventarrundgang bis fertigem Plan
++und Kontoformular grün, erste falsche Aktionsannahme vorher rot korrigiert.
++**Gegenprüfung:** Frühe Rückkehr mit eigener Registrierung (SDK-Promise vor
++Auth-Callback) und eigener Löschung getrennt geprüft. Nachtrags-Profilanzeige
++zusätzlich an Auftragsidentität gebunden; erste Gesamtfolge deshalb beendet.
++Die frische endgültige106er-Folge läuft, Log `%TEMP%/adrabic-r15-gesamt-final.log`.
++Kein Hosting-Deploy, keine Produktionskonten. Vorläufige Ergebnisse sind keine
++Gesamtabnahme; Lernabnahme/Zufallstests und Acht-Bereiche-Nachprüfung folgen.
++**Offen:** Vollständige106er-Ausgaben, §2a-/§14-Abnahme, A5/A6; iPad-Teilfenster/
++Drehen im Boot, Konsolenschritte und Textlern-Entscheidung weiterhin offen.
++Mustersuche: G-112 mittel neu bestätigt (drei Dialogarten, fester Altstand
++`a4b5677`): Ersetzen lässt alten Aufrufer hängen. Separat für die Folgerunde,
++nicht als sechste Aufgabe in Runde15 bauen. Weitere Dialog-/Zähler-/Clipboard-
++Hypothesen haben kontrollierte Proben, sind noch nicht als Fehler abgenommen.
++**Nächster Schritt:** Lauf vollständig lesen, rote Befunde klären; erst bei
++bestandener Abnahme Runde15 committen/pushen, danach Plan fortsetzen.
++**Abnahme-Korrektur:** 77er-Wrapper rot: eigene Löschung mit 25ms Quittung
++startete im vorgezogenen Auth-Callback den Einstieg. `app.js:2091` wählt
++das Registrierformular jetzt bereits dort. Beide normalen App-Fälle 0/25ms
++grün; erste14 Wechsel-/ABA-Fälle weiterhin grün. Lauf beendet; neue106er-
++Folge `%TEMP%/adrabic-r15-gesamt-quittung.log`, Produktfingerprint
++`d17b05f425891265df6ca56b2e9badfb4cbce3ef9250ba46a31f45fce6c8cdab`.
++**Leistungsgrenze erneut offen:** Frischer Original-Tempotest rot bei130ms
++(Grenze100ms unverändert). Danach Windows BatteryStatus1/78%, CPU798MHz,
++34% Gesamtlast, laufender ChatGPT-Prozess244% in der Mehrkern-Anzeige.
++Das ist ein anderer Rechnerzustand als der grüne Netzlauf; keine Kausalität
++oder App-Regression allein daraus behaupten. Betreiber um Laptop-Ladeanzeige
++gebeten; übrige Tests laufen weiter. Keine Leistungsgrenze ändern und keinen
++fremden Prozess schließen. Rote Messung bleibt erhalten; erneute Abnahme
++erst bei nachvollziehbar verändertem Zustand, nicht blind bis grün.
++**Kriterien:** A1 offen · A2/A3 unverändert · A4 läuft · A5 offen · A6 0.
++
+ ### 2026-09-29 — Runde 14 abgenommen: G-102–G-106, 3.17.56
+ 
+ **Geändert:** `app.js:3126/4129/4300/4339/4607/4727/7446/9479`
+diff --git a/plan/grossplan/befunde/NACHPRUEFUNG-RUNDE-15.md b/plan/grossplan/befunde/NACHPRUEFUNG-RUNDE-15.md
+new file mode 100644
+index 0000000..1272fae
+--- /dev/null
++++ b/plan/grossplan/befunde/NACHPRUEFUNG-RUNDE-15.md
+@@ -0,0 +1,73 @@
++# Nachprüfung Runde 15 — 3.17.57 (Abnahme unterbrochen)
++
++Ausgang `a4b5677` /3.17.56. Eingefrorener Produkt-/Lib-/Stub-Stand:
++`d17b05f425891265df6ca56b2e9badfb4cbce3ef9250ba46a31f45fce6c8cdab`.
++Keine Produktionskonten, kein Hosting-Deploy. Dies ist noch keine Freigabe.
++
++## Gegenprüfung §2a
++
++Vollständiger App-Diff gelesen: Herkunft vor bestätigtem Auth-Dialog,
++Auftragsidentität statt bloßer UID, frühe Rückkehr bei fremder Antwort,
++eigene Registrierung vor/nach Auth-Callback und eigene Adresslöschung.
++Das SDK kann schon auf B zeigen, bevor der App-Callback B meldet; Abmelden
++prüft deshalb beide User. Ein alter UI-Nachtrag darf auch bei A→B→A nicht
++zurückkehren. Eigene Löschung trägt nur ihren Namen ins Gastformular.
++Private Entwürfe, Auswahl und zugehörige Blätter werden zusammen geleert;
++Cloud-Echo desselben Kontos bleibt ein anderer Pfad. Lernalgorithmen unverändert.
++
++Gezielte ursprüngliche18 Normalfälle grün. Neuer Gesamt-Test enthält
++zusätzlich App-/SDK-Fälle, A→B→A, Auth-Callback vor/nach Löschquittung,
++SDK-Wechsel vor App-Callback, Namens-Nachtrag und feste Alt-Gegenproben
++`c4a2ccf`. Alle77 Fälle sind erst nach der endgültigen Gesamtfolge abzunehmen.
++
++Eigene Regression im neuen Normalfall: 25ms verzögerte Löschquittung
++ließ im früheren Auth-Callback einen neuen Einstieg entstehen. Formularwahl
++in diesen Callback vorgezogen; echte App bei 0/25ms danach grün. Vorherige
++Gesamtfolge beendet. Neue106er-Folge enthält diese Korrektur.
++
++G-109: verborgenen Fehlerdialog als Inventarwurzel ausgeschlossen; echte
++Aktionen bis zum fertigen Plan und Kontoformular, nicht heuristische
++Knopftexte. Erster eigener Test erwartete einen nicht existierenden
++Aktionsnamen; rot abgebrochen, am echten `einstieg-fertig` korrigiert.
++Gesonderter vollständiger Rundgang grün. `t_dialog_timer` muss weiterhin
++den alten Aufrufer auflösen, nicht dessen Promise hängenlassen.
++
++## Acht Bereiche — frischer Durchgang
++
++| Bereich | Gelesen/geprüft | Ergebnis / noch fehlender Beleg |
++|---|---|---|
++| Konto | Auth-Reset, Auftragshilfen, Registrierung/Timeout/Profil/Mail, Reset, Popup, Adresslöschung, Abmelden, übrige Prompt-/Confirm-Aufrufer | Fünf geplante Korrekturen gezielt grün;77er-Gesamttest läuft. Übrige Bearbeitungsdialoge als Hypothese mit tatsächlicher SDK-Bootstrap-Lücke prüfen; keinen fremden Datenverlust aus einer VM mit künstlich geladenem B behaupten. |
++| Daten | Kartenformular, Duplikat-Dialog, Bereich-/Set-Handlungen, `patchDoc`, Nutzer-Fallback, gezieltes Speichern und Captures aus Runde14 | Herkunft in mehrstufigen SDK-Writes erhalten. Bestätigte Bearbeitungsdialoge brauchen zusätzliche Gegenprobe. |
++| Lernen | App-Diff, Tages-/Bereichszähler, `heuteAnteil`, Start/Bewertung/Undo, Auth-Reset der flüchtigen Durchsicht | Keine Lernregeländerung. Bereichszähler bleibt im Auth-Reset unangetastet: mit zwei nichtleeren Bereichen prüfen, ob B A-Antworten anzeigt. Frische13er-Abnahme folgt aus identischen Gesamtlogs. |
++| Einstieg | aktuelle Aktion `einstieg-fertig`, Wahl/Probekarte, Plan-Aufbau, fertiger Plan, Kontoformular, .52–.55-Startcode | Inventar vollständig, Boot-Geometrie in106er-Folge grün. Bestätigter iPhone-Start unverändert; iPad-Teilfenster/Drehen während Boot weiterhin offen. |
++| Regeln | eigene UID, Bereich/Karte, Feldpositivlisten, Share-Owner, Stimmen, Reset-Kennung und Diff | Regeln/Cloud-Felder unverändert;179/179 historische Regelabnahme weiterhin gültig, keine frisch wiederholte behauptet. Produktionsregelstand K10 nicht bestätigt. |
++| Technik | vier Versionen/31 Splash-Querys, CSP/APP_SHELL, Navigation im SW, HTTP-Cache/Hosting-ignore, Prüfstand-Fingerprints | Syntax/Standprüfer grün; Boot/Cache-Strategie aus .55 erhalten. Testwrapper muss ausgeführte Quellen mithashen; Quellenänderung während eines Testlaufs darf nicht bewahrt werden. |
++| Rest/UI | Board-Entwurf und Konto-Reset, Einstellungen/Blätter, Auswahl, Schreibcanvas, Kontrast/A11y, große Screens | B erbt keine privaten A-Entwürfe/Auswahl. Frische große Ansichten/Kontrast/Scroll-/Schreibwerte und beide Affen noch abschließend lesen. |
++| Produkt | PLAN/AUFTRAG, Betreiberentscheidungen E01–E19, Konsolenschritte K1–K13, Textlern-Entwürfe | Keine neue Funktion, Lernmethode, religiösen Inhalte oder Datenflüsse. Vorschläge bleiben Fragen. Claude-Gesamtprüfung erst nach A1–A6 oder erneutem Anhalten. |
++
++## Messwerte und Grenzen
++
++Vorheriger Lauf (Produktfingerprint `bcd4901ed58fbebc`, später geändert):
++Original-Tempoabnahme bei CPU4×: 3000 geführt50/0/0/0/0ms,
++eigen59/0/0/0/0ms, unveränderte Grenze100ms;6000 geführt70ms.
++Rundenstart lange Aufgaben138–218ms: beschreibende Grenze, kein Versprechen
++vollständiger Flüssigkeit. Leistungsprüfung isoliert, kein Profiling/Tracing.
++
++Aktueller Lauf `d17b05f425891265` rot bei130ms/100ms Grenze. Anschließende
++Rechnerkontrolle: BatteryStatus1 (Akkubetrieb), CPU798MHz,34% Gesamtlast.
++Frühere grüne Messung ersetzt diese Abnahme nicht. Übrige Prüfungen laufen;
++Laptop-Ladeanzeige vom Betreiber angefragt. Kein Leistungsfix aufgrund einer
++unbewiesenen Ursache und keine Grenzänderung.
++
++Gesamtlog `%TEMP%/adrabic-r15-gesamt-quittung.log`, Einzelprotokolle
++`%TEMP%/adrabic-pruefstand-gesamt/d17b05f425891265`.
++A5/A6 erst nach vollständiger Abnahme und geprüften Hypothesen festlegen.
++
++Letzter Stand:32 Ergebnisse,30 Exit0; Tempotest rot und Test G083/039/040/041/044
++mit Zeitlimit nach957s statt45s Wartezeit. Aktueller UI-Teil dieses Tests
++grün, feste Alt-Gegenprobe unvollständig. Keine Abnahme daraus ableiten.
++Prüfprozesse beendet; Wiedereinstieg mit gleichem Fingerprint und
++`alle_pruefen.js --fortsetzen` erhält nur30 tatsächlich grüne aktuelle Läufe.
++Alle32 Ausgaben gelesen bzw. exakt mit vollständig gelesenen Vorläufen
++verglichen. Aktuelle Quelle benötigt weiterhin77er-Wrapper/Lernabnahme/Affen.
++Direkte Windows-Netzabfrage ACLineStatus0; Ladeanzeige angefragt.
+diff --git a/plan/grossplan/befunde/werkzeuge/dialog_ersetzt.js b/plan/grossplan/befunde/werkzeuge/dialog_ersetzt.js
+new file mode 100644
+index 0000000..f3ddd7e
+--- /dev/null
++++ b/plan/grossplan/befunde/werkzeuge/dialog_ersetzt.js
+@@ -0,0 +1,20 @@
++/* Neue Dialoge muessen einen bisherigen Aufrufer als Abbruch aufloesen.
++   --befund zeigt den haengenden alten Aufrufer, --gegenprobe fest a4b5677.
++   Der Sollzustand verlangt immer eine beendete alte Promise. */
++const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
++const repo=path.join(__dirname,'../../../..'),alt=process.argv.includes('--befund')||process.argv.includes('--gegenprobe');
++const source=process.argv.includes('--gegenprobe')?require('node:child_process').execFileSync('git',['show','a4b5677:app.js'],{cwd:repo,encoding:'utf8'}):fs.readFileSync(path.join(repo,'app.js'),'utf8');
++function lesen(a,b){const x=source.indexOf(a),y=source.indexOf(b,x);assert.ok(x>=0&&y>x);return source.slice(x,y);}
++(async()=>{for(const kind of ['confirm','prompt','alert']){
++ const ctx=vm.createContext({ui:{dialog:null},render(){},requestAnimationFrame(){},document:{getElementById(){return null;}}});
++ vm.runInContext(lesen('function dialogResult(d, ok)','function dlgAlert(')+lesen('function openDialog(cfg)','/* Beobachtung 19/9:'),ctx);
++ let beendet=false,wert;
++ const erster=ctx.openDialog({kind,text:'Erste Frage',value:'Privat A'}).then(x=>{beendet=true;wert=x;});
++ const zweiter=ctx.openDialog({kind:'confirm',text:'Zweite Frage'});
++ const d=ctx.ui.dialog;await new Promise(r=>setImmediate(r));
++ assert.equal(beendet,!alt,'Der bisherige Aufrufer muss abgeschlossen sein');
++ if(!alt){await erster;assert.equal(wert,kind==='confirm'?false:kind==='prompt'?null:undefined);}
++ assert.equal(ctx.ui.dialog,d);assert.equal(d.text,'Zweite Frage');
++ d.resolve(true);assert.equal(await zweiter,true);
++ console.log(JSON.stringify({kind,ersterBeendet:beendet,abbruchwert:wert,zweiterErhalten:true,alt}));
++}})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_adressdialog.js b/plan/grossplan/befunde/werkzeuge/konto_adressdialog.js
+index abb42e6..efff67d 100644
+--- a/plan/grossplan/befunde/werkzeuge/konto_adressdialog.js
++++ b/plan/grossplan/befunde/werkzeuge/konto_adressdialog.js
+@@ -10,7 +10,9 @@ const source=process.argv.includes('--gegenprobe')?require('node:child_process')
+  const ctx=vm.createContext({console,currentUser:{uid:'a',emailVerified:fall==='abmelden',displayName:'A'},userDocRef:{},kontoWirdGeloescht:false,offline:false,auth:{},authEingabeNameNachtrag:null,
+   ui:{authBusy:false,authEingabe:{}},dlgConfirm:()=>new Promise(ok=>bestaetigen=ok),render(){},verlaufJetztSchreiben(){},fehlerKlartext:()=> 'Fehler',
+   fb:{deleteUser:async user=>geloescht.push(user.uid),signOut:async()=>abgemeldet.push(ctx.currentUser.uid)}});
+- vm.runInContext(source.slice(a,b),ctx);
++ Object.defineProperty(ctx.auth,'currentUser',{get:()=>ctx.currentUser});
++ const h=source.indexOf('function authAuftragStarten('),z=source.indexOf('async function doLogin()',h);
++ vm.runInContext((h>=0?source.slice(h,z):'')+source.slice(a,b),ctx);
+  const lauf=fall==='adresse'?ctx.kontoVertipptNeuAnfangen():ctx.doLogout();assert.equal(typeof bestaetigen,'function');
+  // Aufloesen legt die Fortsetzung in die Microtask-Warteschlange. Ein
+  // synchroner Kontowechsel kommt zuvor; Dialogabbruch ist jetzt zu spaet.
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_adressdialog_app.js b/plan/grossplan/befunde/werkzeuge/konto_adressdialog_app.js
+index e16623b..ae82fa1 100644
+--- a/plan/grossplan/befunde/werkzeuge/konto_adressdialog_app.js
++++ b/plan/grossplan/befunde/werkzeuge/konto_adressdialog_app.js
+@@ -9,21 +9,21 @@ assert.ok(AUTH.includes('export function deleteUser(){')&&AUTH.includes('export
+ const sdk=AUTH.replace('export function deleteUser(){','function originalDeleteUser(){').replace('export function signOut(){','function originalSignOut(){')+`
+ export function deleteUser(user){S.deleteUids=S.deleteUids||[];S.deleteUids.push(user.uid);return originalDeleteUser();}
+ export function signOut(auth){S.signOutUids=S.signOutUids||[];S.signOutUids.push(S.user?.uid);return originalSignOut();}`;
+-(async()=>{const browser=await start();try{for(const fall of ['adresse','abmelden']){
++(async()=>{const browser=await start();try{for(const fall of ['adresse','abmelden','abmelden-sdk']){
+  const store=vollerStore();for(const[k,v]of Object.entries({...store}))if(k.startsWith('users/u1'))store[k.replace('users/u1','users/u2')]=structuredClone(v);
+  const ctx=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}),p=await ctx.newPage(),errors=[];
+  p.on('pageerror',e=>errors.push(e.message));
+- await p.addInitScript(([s,fall])=>{window.__START_STORE=s;window.__START_USER={uid:'u1',email:'a@example.com',displayName:'A',emailVerified:fall==='abmelden'};},[store,fall]);
++ await p.addInitScript(([s,fall])=>{window.__START_STORE=s;window.__START_USER={uid:'u1',email:'a@example.com',displayName:'A',emailVerified:fall!=='adresse'};},[store,fall]);
+  await p.route('**/www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('auth')?sdk:r.request().url().includes('firestore')?FS:APP}));
+  await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:source+`
+  window.__PRUEF={bereit:()=>currentUser?.uid==='u1'&&!!userDocRef,
+  starten:fall=>{(fall==='adresse'?kontoVertipptNeuAnfangen():doLogout()).then(()=>window.__DIALOG_FERTIG=true);},
+- bestaetigenUndWechsel:()=>{const d=ui.dialog;d.resolve(dialogResult(d,true));
+-  const s=window.__FB;s.user={uid:'u2',email:'b@example.com',displayName:'B',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};s.authListeners.forEach(cb=>cb(s.user));}};` }));
++ bestaetigenUndWechsel:nurSDK=>{const d=ui.dialog;d.resolve(dialogResult(d,true));
++  const s=window.__FB;s.user={uid:'u2',email:'b@example.com',displayName:'B',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};if(!nurSDK)s.authListeners.forEach(cb=>cb(s.user));}};` }));
+  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
+  await p.evaluate(f=>window.__PRUEF.starten(f),fall);await p.waitForSelector('.dlg');
+- await p.evaluate(()=>window.__PRUEF.bestaetigenUndWechsel());await p.waitForFunction(()=>window.__DIALOG_FERTIG===true);
++ await p.evaluate(n=>window.__PRUEF.bestaetigenUndWechsel(n),fall==='abmelden-sdk');await p.waitForFunction(()=>window.__DIALOG_FERTIG===true);
+  const stand=await p.evaluate(()=>({user:window.__FB.user?.uid||null,geloescht:window.__FB.deleteUids||[],abgemeldet:window.__FB.signOutUids||[]}));
+- assert.deepEqual(stand.geloescht,alt&&fall==='adresse'?['u2']:[]);assert.deepEqual(stand.abgemeldet,alt&&fall==='abmelden'?['u2']:[]);
++ assert.deepEqual(stand.geloescht,alt&&fall==='adresse'?['u2']:[]);assert.deepEqual(stand.abgemeldet,alt&&fall!=='adresse'?['u2']:[]);
+  assert.equal(stand.user,alt?null:'u2');assert.deepEqual(errors,[]);console.log(JSON.stringify({fall,stand,alt}));await ctx.close();
+  }}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_authrest.js b/plan/grossplan/befunde/werkzeuge/konto_authrest.js
+index 829ae79..bc045f4 100644
+--- a/plan/grossplan/befunde/werkzeuge/konto_authrest.js
++++ b/plan/grossplan/befunde/werkzeuge/konto_authrest.js
+@@ -23,7 +23,8 @@ function lesen(von,bis){const a=source.indexOf(von),b=source.indexOf(bis,a);asse
+   fall==='google'?lesen('async function doGoogleLogin()','async function doAppleLogin()'):
+   fall==='apple'?lesen('async function doAppleLogin()','/* Beobachtung des Betreibers'):
+   lesen('async function kontoVertipptNeuAnfangen()','async function doReset()');
+- vm.runInContext(code,ctx);
++ const helfer=source.includes('function authAuftragStarten(')?lesen('function authAuftragStarten(','async function doLogin()'):'';
++ vm.runInContext(helfer+code,ctx);
+  const lauf=fall==='lese-token'?ctx.ausweisErneuernUndNeuLaden():fall==='registrierung'?ctx.doRegister():fall==='reset'?ctx.doReset():fall==='login'?ctx.doLogin():fall==='google'?ctx.doGoogleLogin():fall==='apple'?ctx.doAppleLogin():ctx.kontoVertipptNeuAnfangen();
+  const ablehnung=['adresse-neu','login','google','apple'].includes(fall);
+  await new Promise(resolve=>setImmediate(resolve));assert.equal(typeof(ablehnung?nein:ok),'function','Haltepunkt fehlt');
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_authrest_app.js b/plan/grossplan/befunde/werkzeuge/konto_authrest_app.js
+new file mode 100644
+index 0000000..4967fd7
+--- /dev/null
++++ b/plan/grossplan/befunde/werkzeuge/konto_authrest_app.js
+@@ -0,0 +1,98 @@
++/* G-107: echte App/Auth-Callbacks, alte Antworten nach A -> B und A -> B -> A.
++   --gegenprobe: fest c4a2ccf, erwartet jeweils den konkreten alten Fehler. */
++const {start,vollerStore}=require('../../../werkzeuge/pruefstand/lib');
++const {APP,AUTH,FS}=require('../../../werkzeuge/pruefstand/stubs');
++const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
++const repo=path.join(__dirname,'../../../..'),alt=process.argv.includes('--gegenprobe');
++const source=alt?require('node:child_process').execFileSync('git',['show','c4a2ccf:app.js'],{cwd:repo,encoding:'utf8'}):fs.readFileSync(path.join(repo,'app.js'),'utf8');
++let sdk=AUTH;
++for(const name of ['signInWithEmailAndPassword','signInWithPopup','sendPasswordResetEmail','updateProfile','deleteUser']){
++ const von='export function '+name+'(';
++ assert.ok(sdk.includes(von),'SDK-Grenze fehlt: '+name);
++ sdk=sdk.replace(von,'function original_'+name+'(');
++ sdk+=`\nexport function ${name}(...args){
++  if('${name}'==='deleteUser'&&window.__DELETE_ACK_MS)return original_${name}(...args).then(()=>new Promise(ok=>setTimeout(ok,window.__DELETE_ACK_MS)));
++  if(window.__HALTE_ART==='${name}')return new Promise((ok,nein)=>{window.__HALTE_ANTWORT={ok,nein};});
++  return original_${name}(...args);
++ }`;
++}
++(async()=>{const browser=await start();try{
++ for(const aba of [false,true])for(const fall of ['token','registrierung','reset','adresse','login','google','apple']){
++  // Der Altbeleg reicht fuer A -> B; A -> B -> A ist eine zusaetzliche
++  // Abnahme des Auftragsmerkers, kein behaupteter Altfehler fuer alle Pfade.
++  if(alt&&aba)continue;
++  const store=vollerStore();for(const[k,v]of Object.entries({...store}))if(k.startsWith('users/u1'))store[k.replace('users/u1','users/u2')]=structuredClone(v);
++  const ctx=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}),p=await ctx.newPage(),errors=[];
++  let navigation=0;p.on('framenavigated',f=>{if(f===p.mainFrame())navigation++;});p.on('pageerror',e=>errors.push(e.message));
++  const gast=['registrierung','reset','login','google','apple'].includes(fall);
++  await p.addInitScript(([s,gast])=>{window.__START_STORE=s;window.__START_USER=gast?null:{uid:'u1',email:'a@example.com',displayName:'A',emailVerified:false};},[store,gast]);
++  await p.route('**/www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('auth')?sdk:r.request().url().includes('firestore')?FS:APP}));
++  await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:source+`
++   window.__PRUEF={bereit:()=>auth&&window.__FB.authListeners.length>0,
++    starten:fall=>{
++     if(['registrierung','reset','login','google','apple'].includes(fall)){
++      ui.einstieg=null;ui.authGewaehlt=true;ui.authMode=fall==='registrierung'?'register':fall==='reset'?'reset':'login';
++      ui.authEingabe={name:'Name A',email:'a@example.com',pass:'passwort'};render();
++     }
++     const art={registrierung:'updateProfile',reset:'sendPasswordResetEmail',adresse:'deleteUser',login:'signInWithEmailAndPassword',google:'signInWithPopup',apple:'signInWithPopup'}[fall];
++     window.__HALTE_ART=art;
++     if(fall==='token'){
++      currentUser.emailVerified=true;currentUser.getIdToken=()=>new Promise(ok=>window.__HALTE_ANTWORT={ok});
++      ausweisErneuernUndNeuLaden();window.__LAUF_FERTIG=true;
++     }else{
++      const fn={registrierung:doRegister,reset:doReset,adresse:kontoVertipptNeuAnfangen,login:doLogin,google:doGoogleLogin,apple:doAppleLogin}[fall];
++      fn().then(()=>window.__LAUF_FERTIG=true);
++      if(fall==='adresse')ui.dialog.resolve(dialogResult(ui.dialog,true));
++     }
++    },
++    wechseln:aba=>{
++     const a=currentUser,s=window.__FB;
++     const melden=u=>{s.user=u;s.authListeners.forEach(cb=>cb(u));};
++     melden({uid:'u2',email:'b@example.com',displayName:'B',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()});
++     if(aba)melden(a);
++     ui.authBusy=true;ui.authInfo='Neuer Auftrag wartet';ui.authError=null;render();
++    },
++    stand:()=>({busy:ui.authBusy,info:ui.authInfo,fehler:ui.authError,mail:window.__FB.sendEmailVerificationCalls||0,dialog:!!ui.dialog})};` }));
++  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());await p.waitForTimeout(80);
++  await p.evaluate(f=>window.__PRUEF.starten(f),fall);await p.waitForFunction(()=>!!window.__HALTE_ANTWORT);
++  // Registrierung: den normalen eigenen Auth-Callback vor dem Fremdwechsel
++  // wirklich laufen lassen. Damit prueft dies mehr als die isolierte VM.
++  await p.waitForTimeout(80);await p.evaluate(a=>window.__PRUEF.wechseln(a),aba);
++  const navVor=navigation;
++  await p.evaluate(f=>{
++   if(['adresse','login','google','apple'].includes(f))window.__HALTE_ANTWORT.nein({code:f==='adresse'?'auth/requires-recent-login':'auth/network-request-failed'});
++   else window.__HALTE_ANTWORT.ok();
++  },fall);
++  if(alt&&fall==='adresse')await p.waitForSelector('.dlg');
++  else if(fall!=='token')await p.waitForFunction(()=>window.__LAUF_FERTIG===true);
++  await p.waitForTimeout(100);
++  if(alt&&fall==='token'){assert.ok(navigation>navVor,'Alter Token muss B neu laden');console.log(JSON.stringify({fall,alt,reloads:navigation-navVor}));}
++  else{
++   const st=await p.evaluate(()=>window.__PRUEF.stand());
++   if(alt){
++    if(fall==='adresse')assert.equal(st.dialog,true,'Alter Auftrag muss B zur Reauth fragen');
++    else{assert.equal(st.busy,false);if(fall==='registrierung')assert.equal(st.mail,1);else if(fall==='reset')assert.notEqual(st.info,'Neuer Auftrag wartet');else assert.ok(st.fehler);}
++   }else{assert.equal(navigation,navVor);assert.equal(st.busy,true);assert.equal(st.info,'Neuer Auftrag wartet');assert.equal(st.fehler,null);assert.equal(st.mail,0);assert.equal(st.dialog,false);}
++   console.log(JSON.stringify({fall,aba,alt,st}));
++  }
++  assert.deepEqual(errors,[]);await ctx.close();
++ }
++ if(!alt)for(const quittung of [0,25]){
++  const ctx=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}),p=await ctx.newPage(),errors=[];
++  p.on('pageerror',e=>errors.push(e.message));
++  await p.addInitScript(ms=>{window.__DELETE_ACK_MS=ms;window.__START_STORE={};window.__START_USER={uid:'u1',email:'vertippt@example.com',displayName:'Name A',emailVerified:false};},quittung);
++  await p.route('**/www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('auth')?sdk:r.request().url().includes('firestore')?FS:APP}));
++  await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:source+`
++   window.__PRUEF={bereit:()=>currentUser?.uid==='u1'&&!!userDocRef,
++    loeschen:()=>{kontoVertipptNeuAnfangen().then(()=>window.__LAUF_FERTIG=true);ui.dialog.resolve(dialogResult(ui.dialog,true));},
++    stand:()=>({busy:ui.authBusy,user:currentUser?.uid||null,modus:ui.authMode,gewaehlt:ui.authGewaehlt})};` }));
++  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
++  await p.evaluate(()=>window.__PRUEF.loeschen());await p.waitForFunction(()=>window.__LAUF_FERTIG===true);
++  await p.locator('#a-name').waitFor({state:'visible'});
++  const st=await p.evaluate(()=>window.__PRUEF.stand());
++  assert.deepEqual(st,{busy:false,user:null,modus:'register',gewaehlt:true});
++  assert.equal(await p.locator('#a-name').inputValue(),'Name A');assert.equal(await p.locator('#a-email').inputValue(),'');
++  assert.equal(await p.evaluate(()=>window.__FB.geloescht),true);assert.deepEqual(errors,[]);
++  console.log(JSON.stringify({fall:'eigene-adressloeschung',quittung,st}));await ctx.close();
++ }
++}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_authrest_normal.js b/plan/grossplan/befunde/werkzeuge/konto_authrest_normal.js
+index 413e039..8ab5f7b 100644
+--- a/plan/grossplan/befunde/werkzeuge/konto_authrest_normal.js
++++ b/plan/grossplan/befunde/werkzeuge/konto_authrest_normal.js
+@@ -19,8 +19,9 @@ function lesen(von,bis){const a=source.indexOf(von),b=source.indexOf(bis,a);asse
+    signInWithEmailAndPassword:async()=>{anmelden++;if(fall==='login-fehler')throw Error('alt');return {user};},
+    signInWithPopup:async()=>{anmelden++;if(fall==='google-abbruch')throw {code:'auth/popup-closed-by-user'};if(fall==='apple-fehler')throw Error('alt');return {user};},
+    GoogleAuthProvider:class{},OAuthProvider:class{addScope(){}},
+-   deleteUser:async()=>{geloescht++;if(geloescht===1&&fall!=='adresse-neu')throw {code:'auth/requires-recent-login'};sdkUser=null;ctx.currentUser=null;ctx.userDocRef=null;ctx.ui.authEingabe={name:ctx.authEingabeNameNachtrag};ctx.authEingabeNameNachtrag=null;}}});
++   deleteUser:async()=>{geloescht++;if(geloescht===1&&fall!=='adresse-neu')throw {code:'auth/requires-recent-login'};sdkUser=null;ctx.currentUser=null;ctx.userDocRef=null;ctx.ui.authEingabe={name:ctx.ui.authAuftrag?.name||ctx.authEingabeNameNachtrag};ctx.authEingabeNameNachtrag=null;}}});
+  const istRegister=['register','register-vor-auth','profil-fehler','mail-fehler','register-fehler'].includes(fall),istToken=fall.startsWith('token'),istReset=fall.startsWith('reset'),istLogin=fall.startsWith('login'),istGoogle=fall.startsWith('google'),istApple=fall.startsWith('apple');
++ if(source.includes('function authAuftragStarten('))vm.runInContext(lesen('function authAuftragStarten(','async function doLogin()'),ctx);
+  vm.runInContext(istToken?lesen('function ausweisErneuernUndNeuLaden()','/* 17.09.2026:'):istRegister?lesen('async function doRegister()','/* 2.11.4:'):istReset?lesen('async function doReset()','/* 3.12.0: Abmelden'):istLogin?lesen('async function doLogin()','/* Offene Frage 13'):istGoogle?lesen('async function doGoogleLogin()','async function doAppleLogin()'):istApple?lesen('async function doAppleLogin()','/* Beobachtung des Betreibers'):lesen('async function kontoVertipptNeuAnfangen()','async function doReset()'),ctx);
+  if(istToken){assert.equal(ctx.ausweisErneuernUndNeuLaden(),true);await new Promise(r=>setImmediate(r));assert.equal(reload,fall==='token'?1:0);}
+  else if(istRegister){await ctx.doRegister();const erfolgreich=fall==='register'||fall==='register-vor-auth';assert.equal(ctx.ui.authBusy,false);assert.equal(profil,fall==='register-fehler'?0:1);assert.equal(mail,fall==='register-fehler'||fall==='profil-fehler'?0:1);assert.equal(ctx.ui.authInfo,erfolgreich?'Konto angelegt.':null);assert.equal(ctx.ui.authError,erfolgreich?null:'Auth-Fehler');}
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_clipboard_app.js b/plan/grossplan/befunde/werkzeuge/konto_clipboard_app.js
+new file mode 100644
+index 0000000..85e7d5a
+--- /dev/null
++++ b/plan/grossplan/befunde/werkzeuge/konto_clipboard_app.js
+@@ -0,0 +1,33 @@
++/* Spaete Clipboard-Antwort: alter Kopierdialog darf B weder eine fremde
++   Fehlermeldung zeigen noch mit seinem Timer neu zeichnen. SDK/Clipboard
++   kontrolliert, keine Produktionskonten und keine echte Zwischenablage.
++   --befund aktuell, --gegenprobe fester Stand a4b5677. */
++const {start,vollerStore}=require('../../../werkzeuge/pruefstand/lib');
++const {APP,AUTH,FS}=require('../../../werkzeuge/pruefstand/stubs');
++const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
++const repo=path.join(__dirname,'../../../..'),alt=process.argv.includes('--befund')||process.argv.includes('--gegenprobe');
++const source=process.argv.includes('--gegenprobe')?require('node:child_process').execFileSync('git',['show','a4b5677:app.js'],{cwd:repo,encoding:'utf8'}):fs.readFileSync(path.join(repo,'app.js'),'utf8');
++(async()=>{const b=await start();try{for(const fall of ['fehler','timer']){
++ const store=vollerStore();for(const[k,v]of Object.entries({...store}))if(k.startsWith('users/u1'))store[k.replace('users/u1','users/u2')]=structuredClone(v);
++ const ctx=await b.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}),p=await ctx.newPage(),errors=[];
++ p.on('pageerror',e=>errors.push(e.message));
++ await p.addInitScript(s=>{window.__START_STORE=s;window.__START_USER={uid:'u1',email:'a@example.com',emailVerified:true};
++  Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>new Promise((ok,nein)=>window.__COPY={ok,nein})}});},store);
++ await p.route('**/www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('auth')?AUTH:r.request().url().includes('firestore')?FS:APP}));
++ await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:source+`
++  const pruefRender=render;render=()=>{window.__RENDERC=(window.__RENDERC||0)+1;return pruefRender();};
++  window.__PRUEF={bereit:uid=>currentUser?.uid===uid&&bereiche!==null&&!document.querySelector('.boot'),
++   dialog:()=>{openDialog({kind:'code',title:'Teilen',text:'Code A',code:'TEST-ABCDE'});},
++   wechsel:()=>{const s=window.__FB;s.user={uid:'u2',email:'b@example.com',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};s.authListeners.forEach(cb=>cb(s.user));},
++   eigenerDialog:()=>{dlgAlert('Eigene Meldung B');},
++   stand:()=>({text:ui.dialog?.text||null,render:window.__RENDERC||0})};` }));
++ await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit('u1'));
++ await p.evaluate(()=>window.__PRUEF.dialog());await p.locator('[data-action="code-copy-clipboard"]').click();await p.waitForFunction(()=>!!window.__COPY);
++ await p.evaluate(()=>window.__PRUEF.wechsel());await p.waitForFunction(()=>window.__PRUEF.bereit('u2'));await p.waitForTimeout(150);
++ await p.evaluate(()=>window.__PRUEF.eigenerDialog());await p.waitForTimeout(250);
++ await p.evaluate(f=>{window.__RENDERC=0;if(f==='fehler')window.__COPY.nein(Error('Kopieren abgelehnt'));else window.__COPY.ok();},fall);
++ await p.waitForTimeout(fall==='timer'?2200:120);
++ const st=await p.evaluate(()=>window.__PRUEF.stand());
++ assert.equal(st.text,alt&&fall==='fehler'?'Konnte nicht in die Zwischenablage kopieren.':'Eigene Meldung B');
++ assert.equal(st.render,alt?1:0);assert.deepEqual(errors,[]);console.log(JSON.stringify({fall,st,alt}));await ctx.close();
++}}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_heute_app.js b/plan/grossplan/befunde/werkzeuge/konto_heute_app.js
+new file mode 100644
+index 0000000..05e2611
+--- /dev/null
++++ b/plan/grossplan/befunde/werkzeuge/konto_heute_app.js
+@@ -0,0 +1,28 @@
++/* Sitzungsspezifischer Bereichszaehler beim Kontowechsel. Zwei nichtleere
++   Bereiche erzwingen die Bereichsanzeige, statt den globalen Verlauf zu lesen.
++   --befund aktuell; --gegenprobe fester Stand a4b5677. Nur SDK-Attrappe. */
++const {start,vollerStore,tag}=require('../../../werkzeuge/pruefstand/lib');
++const {APP,AUTH,FS}=require('../../../werkzeuge/pruefstand/stubs');
++const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
++const repo=path.join(__dirname,'../../../..'),alt=process.argv.includes('--befund')||process.argv.includes('--gegenprobe');
++const source=process.argv.includes('--gegenprobe')?require('node:child_process').execFileSync('git',['show','a4b5677:app.js'],{cwd:repo,encoding:'utf8'}):fs.readFileSync(path.join(repo,'app.js'),'utf8');
++(async()=>{const b=await start();try{
++ const store=vollerStore();store['users/u1/karten/k40']={...store['users/u1/karten/k4'],wort:'Zweites Gebiet',bereichId:'b2',order:0};
++ for(const[k,v]of Object.entries({...store}))if(k.startsWith('users/u1'))store[k.replace('users/u1','users/u2')]=structuredClone(v);
++ delete store['users/u2'].verlauf[tag(0)];
++ const ctx=await b.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}),p=await ctx.newPage(),errors=[];
++ p.on('pageerror',e=>errors.push(e.message));
++ await p.addInitScript(s=>{window.__START_STORE=s;window.__START_USER={uid:'u1',email:'a@example.com',emailVerified:true};},store);
++ await p.route('**/www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('auth')?AUTH:r.request().url().includes('firestore')?FS:APP}));
++ await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:source+`
++  window.__PRUEF={bereit:uid=>currentUser?.uid===uid&&bereiche!==null&&bereiche.length===2&&bereiche.every(x=>x.karten.length>0)&&!document.querySelector('.boot'),
++   zaehlen:()=>{bereichHeuteZaehle('b1',1);render();},
++   stand:()=>heuteAnteil(currentBereich().karten,currentBereich().id),
++   wechsel:()=>{const s=window.__FB;s.user={uid:'u2',email:'b@example.com',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};s.authListeners.forEach(cb=>cb(s.user));}};` }));
++ await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit('u1'));
++ await p.evaluate(()=>window.__PRUEF.zaehlen());assert.equal((await p.evaluate(()=>window.__PRUEF.stand())).getan,1);
++ await p.evaluate(()=>window.__PRUEF.wechsel());await p.waitForFunction(()=>window.__PRUEF.bereit('u2'));
++ const stand=await p.evaluate(()=>window.__PRUEF.stand());assert.equal(stand.getan,alt?1:0);assert.deepEqual(errors,[]);
++ await p.evaluate(()=>window.__PRUEF.zaehlen());const eigeneBAntwort=await p.evaluate(()=>window.__PRUEF.stand());assert.equal(eigeneBAntwort.getan,alt?2:1);
++ console.log(JSON.stringify({stand,eigeneBAntwort,alt}));await ctx.close();
++}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_registrierungsnachtrag_app.js b/plan/grossplan/befunde/werkzeuge/konto_registrierungsnachtrag_app.js
+index f8acf62..4d14c7a 100644
+--- a/plan/grossplan/befunde/werkzeuge/konto_registrierungsnachtrag_app.js
++++ b/plan/grossplan/befunde/werkzeuge/konto_registrierungsnachtrag_app.js
+@@ -6,21 +6,31 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
+ const repo=path.join(__dirname,'../../../..'),alt=process.argv.includes('--befund')||process.argv.includes('--gegenprobe');
+ const source=process.argv.includes('--gegenprobe')?require('node:child_process').execFileSync('git',['show','c4a2ccf:app.js'],{cwd:repo,encoding:'utf8'}):fs.readFileSync(path.join(repo,'app.js'),'utf8');
+ assert.ok(AUTH.includes('export function createUserWithEmailAndPassword(a, email){'),'SDK-Grenze fehlt');
+-const sdk=AUTH.replace('export function createUserWithEmailAndPassword(a, email){','function originalCreateUser(a, email){')+`
+-export function createUserWithEmailAndPassword(a,email){if(window.__REG_FAIL)return Promise.reject({code:'auth/network-request-failed'});return originalCreateUser(a,email);}`;
+-(async()=>{const browser=await start();try{
++const sdk=AUTH.replace('export function createUserWithEmailAndPassword(a, email){','function originalCreateUser(a, email){')
++ .replace('export function updateProfile(u, p){','function originalProfile(u, p){')+`
++export function createUserWithEmailAndPassword(a,email){if(window.__REG_FAIL)return Promise.reject({code:'auth/network-request-failed'});return originalCreateUser(a,email);}
++export function updateProfile(u,p){const r=originalProfile(u,p);return window.__PROFILE_HALT?r.then(()=>new Promise(ok=>window.__PROFILE_QUITTUNG=ok)):r;}`;
++(async()=>{const browser=await start();try{for(const fall of ['fremd','aba']){
+  const store=vollerStore();for(const[k,v]of Object.entries({...store}))if(k.startsWith('users/u1'))store[k.replace('users/u1','users/u2')]=structuredClone(v);
+  const ctx=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}),p=await ctx.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));
+  await p.addInitScript(s=>{window.__START_STORE=s;window.__START_USER=null;},store);
+  await p.route('**/www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('auth')?sdk:r.request().url().includes('firestore')?FS:APP}));
+  await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:source+`
+  window.__PRUEF={starten:()=>{ui.einstieg=null;ui.authGewaehlt=true;ui.authMode='register';ui.authEingabe={name:'Privater Name A',email:'a@example.com',pass:'passwort'};render();if(!document.getElementById('a-name'))throw Error('Registrierformular fehlt');window.__REG_FAIL=true;doRegister().then(()=>window.__REG_FERTIG=true);},
+- wechsel:()=>{const s=window.__FB;s.user={uid:'u2',email:'b@example.com',displayName:'',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};s.authListeners.forEach(cb=>cb(s.user));},
++ wechsel:eigen=>{const s=window.__FB;window.__PROFILE_HALT=eigen;s.user={uid:eigen?'neu1':'u2',email:eigen?'a@example.com':'b@example.com',displayName:'',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};s.authListeners.forEach(cb=>cb(s.user));},
++ aba:()=>{const s=window.__FB,a=s.user;a.displayName='Neuer Name A';s.user={uid:'u2',email:'b@example.com',emailVerified:true};s.authListeners.forEach(cb=>cb(s.user));s.user=a;s.authListeners.forEach(cb=>cb(a));},
++ neueAnzeige:()=>{displayName='Neuer Name A';},anzeige:()=>displayName,
+  marker:()=>ui.registrierungZeitlimit};` }));
+  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF&&window.__FB?.authListeners?.length>0);await p.waitForTimeout(40);
+  await p.evaluate(()=>window.__PRUEF.starten());await p.waitForFunction(()=>window.__REG_FERTIG===true);assert.equal(await p.evaluate(()=>window.__PRUEF.marker()),true);
+- await p.evaluate(()=>window.__PRUEF.wechsel());await p.waitForTimeout(50);
++ await p.evaluate(e=>window.__PRUEF.wechsel(e),fall==='aba');await p.waitForTimeout(50);
++ if(fall==='aba'){
++  await p.waitForFunction(()=>!!window.__PROFILE_QUITTUNG);
++  await p.evaluate(()=>window.__PRUEF.aba());await p.waitForTimeout(80);
++  await p.evaluate(()=>{window.__PRUEF.neueAnzeige();window.__PROFILE_QUITTUNG();});await p.waitForTimeout(50);
++ }
+  const stand=await p.evaluate(()=>({user:window.__FB.user.uid,name:window.__FB.user.displayName,mail:window.__FB.sendEmailVerificationCalls||0,profil:window.__FB.updateProfileCalls||0}));
+- assert.equal(stand.user,'u2');assert.equal(stand.name,alt?'Privater Name A':'');assert.equal(stand.mail,alt?1:0);assert.equal(stand.profil,alt?1:0);assert.deepEqual(errors,[]);
+- console.log(JSON.stringify({stand,alt}));await ctx.close();
+- }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
++ if(fall==='fremd'){assert.equal(stand.user,'u2');assert.equal(stand.name,alt?'Privater Name A':'');assert.equal(stand.mail,alt?1:0);assert.equal(stand.profil,alt?1:0);}
++ else{assert.equal(stand.user,'neu1');assert.equal(stand.name,'Neuer Name A');assert.equal(stand.mail,1);assert.equal(stand.profil,1);assert.equal(await p.evaluate(()=>window.__PRUEF.anzeige()),alt?'Privater Name A':'Neuer Name A');}
++ assert.deepEqual(errors,[]);console.log(JSON.stringify({fall,stand,alt}));await ctx.close();
++ }}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_rest_dialoge_app.js b/plan/grossplan/befunde/werkzeuge/konto_rest_dialoge_app.js
+new file mode 100644
+index 0000000..f8cbeb1
+--- /dev/null
++++ b/plan/grossplan/befunde/werkzeuge/konto_rest_dialoge_app.js
+@@ -0,0 +1,39 @@
++/* Verbliebene Bearbeitungsdialoge: nach bereits aufgeloester Antwort kommt
++   Auth B vor der Microtask. Tatsachliche SDK-Bootstrap-Luecke beibehalten:
++   kein kuenstlich synchron geladener B-Bestand, kein B-Datenverlust behauptet.
++   --befund erwartet die alte TypeError-Fortsetzung; --gegenprobe fest .56. */
++const {start,vollerStore}=require('../../../werkzeuge/pruefstand/lib');
++const {APP,AUTH,FS}=require('../../../werkzeuge/pruefstand/stubs');
++const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
++const repo=path.join(__dirname,'../../../..'),alt=process.argv.includes('--befund')||process.argv.includes('--gegenprobe');
++const source=process.argv.includes('--gegenprobe')?require('node:child_process').execFileSync('git',['show','a4b5677:app.js'],{cwd:repo,encoding:'utf8'}):fs.readFileSync(path.join(repo,'app.js'),'utf8');
++(async()=>{const b=await start();try{for(const fall of ['karte','duplikat','auswahl','bereich-neu','bereich-name','reihenfolge','set-neu','set-name','set-loeschen']){
++ const store=vollerStore();for(const[k,v]of Object.entries({...store}))if(k.startsWith('users/u1'))store[k.replace('users/u1','users/u2')]=structuredClone(v);
++ const ctx=await b.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}),p=await ctx.newPage(),errors=[];
++ p.on('pageerror',e=>errors.push(e.message));
++ await p.addInitScript(s=>{window.__START_STORE=s;window.__START_USER={uid:'u1',email:'a@example.com',emailVerified:true};},store);
++ await p.route('**/www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('auth')?AUTH:r.request().url().includes('firestore')?FS:APP}));
++ await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:source+`
++  window.__PRUEF={bereit:uid=>currentUser?.uid===uid&&bereiche!==null&&!document.querySelector('.boot'),
++   starten:fall=>{
++    ui.tab='verwalten';ui.selectedIds=new Set(['k0']);
++    if(fall==='duplikat'){ui.karteSheet=true;ui.editId=null;formDraft={wort:findCard('k0').wort,ueb:'Privater Text A',extra:''};}
++    render();
++    const f={karte:()=>deleteCard('k0'),duplikat:()=>submitCardForm(),auswahl:()=>deleteSelectedCards(),
++     'bereich-neu':()=>addBereich(),'bereich-name':()=>renameBereich(),reihenfolge:()=>reverseOrder(),
++     'set-neu':()=>saveSelectedToSet('__new__'),'set-name':()=>renameSet('s5'),'set-loeschen':()=>deleteSet('s5')}[fall];
++    f().then(()=>window.__JOB_END=true).catch(e=>{window.__JOB_ERROR={name:e.name,text:e.message};window.__JOB_END=true;});
++   },bestaetigenUndWechsel:()=>{
++    const d=ui.dialog;if(d.kind==='prompt')d.value='Neuer Name A';d.resolve(dialogResult(d,true));
++    const s=window.__FB;s.user={uid:'u2',email:'b@example.com',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};s.authListeners.forEach(cb=>cb(s.user));
++   }};` }));
++ await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit('u1'));
++ const datenB=()=>p.evaluate(()=>[...window.__FB.store.entries()].filter(([k])=>k.startsWith('users/u2/karten/')||k.startsWith('users/u2/bereiche/')));
++ const vorher=await datenB();await p.evaluate(f=>window.__PRUEF.starten(f),fall);await p.waitForSelector('.dlg');
++ await p.evaluate(()=>window.__PRUEF.bestaetigenUndWechsel());await p.waitForFunction(()=>window.__JOB_END===true);
++ await p.waitForFunction(()=>window.__PRUEF.bereit('u2'));
++ const fehler=await p.evaluate(()=>window.__JOB_ERROR||null);
++ if(alt)assert.equal(fehler?.name,'TypeError');else assert.equal(fehler,null);
++ assert.deepEqual(await datenB(),vorher,'Keine B-Datenmutation behaupten');assert.deepEqual(errors,[]);
++ console.log(JSON.stringify({fall,fehler,bDatenErhalten:true,alt}));await ctx.close();
++}}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/grossplan/befunde/werkzeuge/konto_sdk_vor_callback.js b/plan/grossplan/befunde/werkzeuge/konto_sdk_vor_callback.js
+new file mode 100644
+index 0000000..ae021c0
+--- /dev/null
++++ b/plan/grossplan/befunde/werkzeuge/konto_sdk_vor_callback.js
+@@ -0,0 +1,25 @@
++/* SDK ist schon B, App-Auth-Callback noch A: alte Token-Antwort darf keine
++   Navigation ausloesen. Kontrollierte Reihenfolge, Originalfunktionen;
++   --befund aktuell, --gegenprobe fest a4b5677. Normale Navigation bleibt. */
++const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
++const repo=path.join(__dirname,'../../../..'),alt=process.argv.includes('--befund')||process.argv.includes('--gegenprobe');
++const source=process.argv.includes('--gegenprobe')?require('node:child_process').execFileSync('git',['show','a4b5677:app.js'],{cwd:repo,encoding:'utf8'}):fs.readFileSync(path.join(repo,'app.js'),'utf8');
++function lesen(a,b){const x=source.indexOf(a),y=source.indexOf(b,x);assert.ok(x>=0&&y>x);return source.slice(x,y);}
++(async()=>{for(const wechsel of [false,true])for(const fall of ['lese-token','manuell','still']){
++ let quittung,neuLaden=0;
++ const a={uid:'a',emailVerified:fall==='lese-token',reload:async()=>{a.emailVerified=true;},getIdToken:()=>new Promise(ok=>quittung=ok)};
++ let sdkUser=a;
++ const ctx=vm.createContext({currentUser:a,userDocRef:{},kontoWirdGeloescht:false,bestaetigungLaeuft:false,
++  auth:{get currentUser(){return sdkUser;}},ui:{authBusy:false,authError:null,authInfo:null},
++  TOKEN_ERNEUERT_KEY:'test',sessionStorage:{getItem:()=>null,setItem(){}},mitZeitlimit:p=>p,
++  location:{reload:()=>neuLaden++},render(){},authErrorText:()=> 'Fehler',document:{visibilityState:'visible'}});
++ vm.runInContext(fall==='lese-token'?lesen('function ausweisErneuernUndNeuLaden()','/* 17.09.2026:'):
++  fall==='manuell'?lesen('async function pruefeBestaetigung()','async function doResendVerification()'):
++  lesen('async function bestaetigungStillPruefen()','function bestaetigungBeobachten()'),ctx);
++ const lauf=fall==='lese-token'?ctx.ausweisErneuernUndNeuLaden():fall==='manuell'?ctx.pruefeBestaetigung():ctx.bestaetigungStillPruefen();
++ await new Promise(r=>setImmediate(r));assert.equal(typeof quittung,'function');
++ if(wechsel)sdkUser={uid:'b'};
++ quittung();if(fall!=='lese-token')await lauf;await new Promise(r=>setImmediate(r));
++ assert.equal(neuLaden,!wechsel||alt?1:0);assert.equal(ctx.currentUser.uid,'a','App-Callback wurde bewusst noch nicht geliefert');
++ console.log(JSON.stringify({fall,wechsel,sdk:sdkUser.uid,app:ctx.currentUser.uid,neuLaden,alt}));
++}})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/werkzeuge/pruefstand/alle_pruefen.js b/plan/werkzeuge/pruefstand/alle_pruefen.js
+index 9e8b9b2..fdfe64a 100644
+--- a/plan/werkzeuge/pruefstand/alle_pruefen.js
++++ b/plan/werkzeuge/pruefstand/alle_pruefen.js
+@@ -22,6 +22,17 @@ const datei=path.join(ordner,'stand.json');
+ const ergebnisse=process.argv.includes('--fortsetzen')&&fs.existsSync(datei)?JSON.parse(fs.readFileSync(datei,'utf8')):{kennung,tests:{}};
+ if(ergebnisse.kennung!==kennung)throw new Error('Pruefstand gehoert zu anderem Quellstand');
+ let aktiv=null;
++// Ein Wrapper ist nur zusammen mit seinen wirklich ausgefuehrten Quellen
++// derselbe Test. Sonst koennte --fortsetzen alte gruene Hilfsproben bewahren.
++function quellHash(f){
++ const quelle=fs.readFileSync(path.join(__dirname,f));
++ const hash=createHash('sha256').update(quelle);
++ if(f==='t_konto_fortsetzungen.js'){
++  const namen=[...new Set([...quelle.toString().matchAll(/\['(konto_[^']+\.js)'/g)].map(m=>m[1]))].sort();
++  for(const name of namen)hash.update(name).update(fs.readFileSync(path.join(__dirname,'../../grossplan/befunde/werkzeuge',name)));
++ }
++ return hash.digest('hex');
++}
+ function stoppen(child){
+  if(!child||child.exitCode!==null)return;
+  if(process.platform==='win32'){
+@@ -30,6 +41,7 @@ function stoppen(child){
+ }
+ process.on('SIGINT',()=>{stoppen(aktiv);process.exit(130);});
+ async function lauf(f){
++ const quelltext=quellHash(f);
+  const log=path.join(ordner,f+'.log'),strom=fs.createWriteStream(log);
+  const t=Date.now();let zeitlimit=false;
+  const child=spawn(process.execPath,['--require',path.join(__dirname,'pruef_cleanup.js'),f],{cwd:__dirname,env:process.env,windowsHide:true});aktiv=child;
+@@ -38,21 +50,22 @@ async function lauf(f){
+  let fehler=null;child.on('error',e=>{fehler=e.message;});
+  const ende=await new Promise(ok=>child.on('close',(code,signal)=>ok({code,signal})));
+  clearTimeout(timer);aktiv=null;await new Promise(ok=>strom.end(ok));
+- const result={...ende,zeitlimit,fehler,sekunden:Math.round((Date.now()-t)/1000),quelltext:createHash('sha256').update(fs.readFileSync(path.join(__dirname,f))).digest('hex')};
++ const quellGeaendert=quelltext!==quellHash(f);
++ const result={...ende,zeitlimit,fehler,sekunden:Math.round((Date.now()-t)/1000),quelltext,quellGeaendert};
+  fs.appendFileSync(log,'\nProzess: '+JSON.stringify(result)+'\n');
+  ergebnisse.tests[f]=result;fs.writeFileSync(datei,JSON.stringify(ergebnisse,null,2));
+- console.log(`${ende.code===0&&!zeitlimit?'EXIT 0':'ROT'} ${f} (${result.sekunden}s)${zeitlimit?' ZEITLIMIT':''}`);
+- if(ende.code!==0||zeitlimit)console.log(fs.readFileSync(log,'utf8').split('\n').filter(x=>/Error|FEHL|ROT|Prozess/.test(x)).slice(0,5).join('\n'));
++ console.log(`${ende.code===0&&!zeitlimit&&!quellGeaendert?'EXIT 0':'ROT'} ${f} (${result.sekunden}s)${zeitlimit?' ZEITLIMIT':''}${quellGeaendert?' QUELLE GEAENDERT':''}`);
++ if(ende.code!==0||zeitlimit||quellGeaendert)console.log(fs.readFileSync(log,'utf8').split('\n').filter(x=>/Error|FEHL|ROT|Prozess/.test(x)).slice(0,5).join('\n'));
+ }
+ (async()=>{
+  console.log('Quellstand: '+kennung+'\nLogs: '+ordner+'\nTests: '+dateien.length);
+  if(process.argv.includes('--ohne-runde'))console.log('13 Runden-Tests ausgelassen: separat mit abnahme_runde.js pruefen.');
+  for(const f of dateien){
+-  const alt=ergebnisse.tests[f],hash=createHash('sha256').update(fs.readFileSync(path.join(__dirname,f))).digest('hex');
+-  if(process.argv.includes('--fortsetzen')&&alt?.code===0&&!alt.zeitlimit&&alt.quelltext===hash){console.log('BEWAHRT '+f);continue;}
++  const alt=ergebnisse.tests[f],hash=quellHash(f);
++  if(process.argv.includes('--fortsetzen')&&alt?.code===0&&!alt.zeitlimit&&!alt.quellGeaendert&&alt.quelltext===hash){console.log('BEWAHRT '+f);continue;}
+   await lauf(f);
+  }
+- const rot=dateien.filter(f=>ergebnisse.tests[f]?.code!==0||ergebnisse.tests[f]?.zeitlimit);
++ const rot=dateien.filter(f=>ergebnisse.tests[f]?.code!==0||ergebnisse.tests[f]?.zeitlimit||ergebnisse.tests[f]?.quellGeaendert);
+  console.log(`\n${dateien.length-rot.length}/${dateien.length} Exit 0; ${rot.length} rot. Ausgaben noch lesen: ${ordner}`);
+  process.exitCode=rot.length?1:0;
+ })().catch(e=>{console.error(e);stoppen(aktiv);process.exitCode=1;});
+diff --git a/plan/werkzeuge/pruefstand/t_inventar2.js b/plan/werkzeuge/pruefstand/t_inventar2.js
+index 770e6b9..f3c94cb 100644
+--- a/plan/werkzeuge/pruefstand/t_inventar2.js
++++ b/plan/werkzeuge/pruefstand/t_inventar2.js
+@@ -1,12 +1,19 @@
+-/* Inventar Teil 2: Blaetter, Rundenende, Einstieg. */
++/* Inventar Teil 2: sichtbares Rundenende und jeder echte Einstiegsschritt.
++   Leere Texte oder ein unvollstaendiger Rundgang sind ein Fehler (G-109). */
++const assert = require('node:assert/strict');
+ const { start, neueSeite, aktion, foto, GERAETE } = require('./lib');
+ const text = p => p.evaluate(() => {
++  const sichtbar = e => {
++    const r = e.getBoundingClientRect();
++    return r.width > 0 && r.height > 0 && !e.closest('[aria-hidden="true"]');
++  };
++  const root = [...document.querySelectorAll('.blatt.offen, .sheet.offen, [role="dialog"]')]
++    .find(sichtbar) || document.getElementById('app');
+   const out = [];
+-  const root = document.querySelector('.blatt.offen, .sheet.offen, [role="dialog"]:not([aria-hidden="true"])') || document.getElementById('app');
+   root.querySelectorAll('h1,h2,h3,.eyebrow,p,button,.liste-zeile__text,.badge,strong,label,li').forEach(e => {
+-    const r = e.getBoundingClientRect(); if (!r.width || !r.height) return;
+-    if (e.closest('[aria-hidden="true"]')) return;
+-    const t = (e.innerText || '').replace(/\s+/g, ' ').trim(); if (!t || t.length > 160) return;
++    if (!sichtbar(e)) return;
++    const t = (e.innerText || '').replace(/\s+/g, ' ').trim();
++    if (!t || t.length > 160) return;
+     if (e.parentElement && e.parentElement.closest('p,button,li,label,h1,h2,h3')) return;
+     out.push(e.tagName.toLowerCase() + ': ' + t);
+   });
+@@ -14,25 +21,46 @@ const text = p => p.evaluate(() => {
+ });
+ (async () => {
+   const b = await start();
+-  const { p } = await neueSeite(b, GERAETE.handy, { warte: 1800 });
+-  const zeig = async (n) => { await p.waitForTimeout(700); await foto(p, 'inv2-' + n); console.log('\n=== ' + n); console.log((await text(p)).join('\n')); };
+-  await aktion(p, 'tab-lernen', null, 800); await aktion(p, 'start-session', null, 800);
+-  for (let i = 0; i < 14 && await p.$('#app .study-flaeche'); i++) { await p.click('#app .study-flaeche'); await p.waitForTimeout(500); await p.click('#app .btn-known'); await p.waitForTimeout(450); }
+-  await p.waitForTimeout(1500); await zeig('rundenende');
+-  await p.context().close();
+-  const { p: q } = await neueSeite(b, GERAETE.handy, { warte: 1800, user: null });
+-  for (let s = 0; s < 12; s++) {
+-    await q.waitForTimeout(2500);
+-    console.log('\n=== einstieg ' + s); console.log((await text(q)).join('\n'));
+-    await foto(q, 'inv2-einstieg-' + s);
+-    const weiter = await q.evaluate(() => {
+-      const kand = [...document.querySelectorAll('button')].filter(x => x.offsetParent && !x.disabled);
+-      const w = kand.find(x => /weiter|los|starten|fertig|speichern|verstanden|plan/i.test(x.innerText)) || null;
+-      if (!w) { const opt = kand.find(x => x.closest('.einstieg-wahl, .einstieg-optionen, [role="radiogroup"], ul')); if (opt) { opt.click(); return 'wahl:' + opt.innerText.trim().slice(0, 30); } return null; }
+-      w.click(); return w.innerText.trim().slice(0, 30);
+-    });
+-    console.log('-> ' + weiter);
+-    if (!weiter) break;
+-  }
+-  await b.close();
+-})();
++  try {
++    const { p } = await neueSeite(b, GERAETE.handy, { warte: 1800 });
++    const zeig = async (seite, n) => {
++      await seite.waitForTimeout(700);
++      const inventar = await text(seite);
++      assert.ok(inventar.length > 0, 'Leeres sichtbares Inventar: ' + n);
++      assert.deepEqual(seite.fehler, []);
++      await foto(seite, 'inv2-' + n);
++      console.log('\n=== ' + n + '\n' + inventar.join('\n'));
++    };
++    await aktion(p, 'tab-lernen', null, 800);
++    await aktion(p, 'start-session', null, 800);
++    for (let i = 0; i < 40 && !(await p.locator('#app .ende').count()); i++) {
++      await p.keyboard.press('Space'); await p.waitForTimeout(350);
++      await p.keyboard.press('3'); await p.waitForTimeout(450);
++    }
++    await p.waitForSelector('#app .ende');
++    await zeig(p, 'rundenende');
++    await p.context().close();
++    const { p: q } = await neueSeite(b, GERAETE.handy, { warte: 1800, user: null });
++    const klick = async (action, id = null) => {
++      const sel = '[data-action="' + action + '"]' + (id === null ? '' : '[data-id="' + id + '"]');
++      await q.locator(sel).first().click();
++      await q.waitForTimeout(900);
++    };
++    await q.waitForTimeout(3500); await zeig(q, 'einstieg-0');
++    await klick('einstieg-weiter'); await zeig(q, 'einstieg-1');
++    await klick('einstieg-ziel'); await klick('einstieg-weiter'); await zeig(q, 'einstieg-2');
++    await klick('einstieg-huerde'); await klick('einstieg-weiter'); await zeig(q, 'einstieg-3a');
++    await klick('einstieg-aufdecken'); await zeig(q, 'einstieg-3b');
++    await klick('einstieg-bewerten', 'Sicher'); await zeig(q, 'einstieg-3c');
++    await klick('einstieg-weiter'); await zeig(q, 'einstieg-4');
++    await klick('einstieg-schrift'); await klick('einstieg-weiter'); await zeig(q, 'einstieg-5');
++    await klick('einstieg-runde'); await klick('einstieg-weiter'); await zeig(q, 'einstieg-6');
++    await klick('einstieg-anker'); await klick('einstieg-weiter');
++    await q.waitForTimeout(7000);
++    await q.locator('[data-action="einstieg-fertig"]').waitFor({ state: 'visible' });
++    await zeig(q, 'einstieg-7-fertiger-plan');
++    await klick('einstieg-fertig');
++    await q.locator('#a-name').waitFor({ state: 'visible' });
++    await zeig(q, 'plan-speichern');
++  } finally { await b.close(); }
++})().catch(e => { console.error(e); process.exitCode = 1; });
+diff --git a/plan/werkzeuge/pruefstand/t_konto_fortsetzungen.js b/plan/werkzeuge/pruefstand/t_konto_fortsetzungen.js
+new file mode 100644
+index 0000000..a9d902f
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/t_konto_fortsetzungen.js
+@@ -0,0 +1,19 @@
++/* Runde15: konkrete Kontowechselfehler und normale Abschluesse.
++   Vollstaendige Browserfaelle plus isolierte Promise-Reihenfolgen; feste
++   Alt-Gegenproben zeigen die Wirkung, statt bloess alten Quelltext zu suchen. */
++const {spawnSync}=require('node:child_process');
++const path=require('node:path');
++const ordner=path.join(__dirname,'../../grossplan/befunde/werkzeuge');
++for(const [name,args] of [
++ ['konto_authrest_normal.js',[]],['konto_authrest.js',[]],['konto_authrest.js',['--gegenprobe']],
++ ['konto_adressdialog.js',[]],['konto_adressdialog.js',['--gegenprobe']],
++ ['konto_adressdialog_app.js',[]],['konto_adressdialog_app.js',['--gegenprobe']],
++ ['konto_entwuerfe.js',[]],['konto_entwuerfe.js',['--gegenprobe']],
++ ['konto_registrierungsnachtrag_app.js',[]],['konto_registrierungsnachtrag_app.js',['--gegenprobe']],
++ ['konto_authrest_app.js',[]],['konto_authrest_app.js',['--gegenprobe']]
++]){
++ console.log('\n== '+name+' '+args.join(' '));
++ const r=spawnSync(process.execPath,[path.join(ordner,name),...args],{encoding:'utf8',env:process.env,timeout:180000,windowsHide:true});
++ process.stdout.write(r.stdout||'');process.stderr.write(r.stderr||'');
++ if(r.error||r.status!==0){console.error(r.error||('Exit '+r.status));process.exit(1);}
++}
+diff --git a/sw.js b/sw.js
+index dbe2e79..6d4b195 100644
+--- a/sw.js
++++ b/sw.js
+@@ -7,7 +7,7 @@
+    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
+    sonst behalten Nutzer:innen alte Dateien im Cache. */
+ 
+-const CACHE_NAME = "adrabic-3.17.56";
++const CACHE_NAME = "adrabic-3.17.57";
+ 
+ /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
+    unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */

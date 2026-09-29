@@ -1,10 +1,10 @@
 # Texte auswendig lernen – Plan
 
-**Status:** fertig geplant, **kein Bauauftrag vor Stufe 0** (§ 12). Offene
-Frage Q1 (`plan/PLAN.md`) und Idee F-12 (`plan/grossplan/FUNKTIONEN.md`)
-sind damit beantwortet. Gebaut wird erst, wenn der laufende Codex-Zyklus
-samt Claude-Gesamtprüfung (`grossplan/AUFTRAG.md` § 2c) fertig ist – nie
-gleichzeitig mit Codex an `app.js`/`styles.css`.
+**Status:** **Bauauftrag** (Betreiber 29.09.2026 abends: „lass anfangen mit
+dem neuen großen Bau“). Beginn mit Stufe 0 (§ 12). Der Bau kommt **vor**
+weiteren Codex-Runden; Codex-Runde 15 ist gesichert (`plan/PLAN.md`). Nie
+gleichzeitig mit Codex an `app.js`/`styles.css`. Offene Frage Q1 und Idee
+F-12 sind damit beantwortet.
 
 Zweite Datei: [`WIEDERHOLEN.md`](WIEDERHOLEN.md) – wie Texte (und Karten)
 wiederholt werden. Beide gelten zusammen; bei Widerspruch gilt
@@ -443,5 +443,6 @@ app.js`); Stellen aus späteren Runden kommen dazu.
 
 ## 17. Nächster Schritt
 
-Nichts vom Betreiber nötig. Stufe 0 beginnt nach dem laufenden
-Codex-Zyklus und der Claude-Gesamtprüfung.
+Stufe 0 (§ 12). Logbuch: [`LOGBUCH.md`](LOGBUCH.md), Format wie in
+`CLAUDE.md`. Nach jeder Stufe: Version, Changelog, Tests, Commit auf
+`main`; der Betreiber veröffentlicht.
