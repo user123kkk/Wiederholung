@@ -2,6 +2,19 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — iPhone-Start am Gerät bestätigt (3.17.55)
+
+**Geändert:** `plan/grossplan/LOGBUCH.md`, `plan/PLAN.md`.
+**Entscheidung:** Betreiber nach Deploy und Neustart: „ja endlich weg“.
+Doppelbild (3.17.52 Schrift, 3.17.53 Höhe) und weißes Aufblitzen
+(3.17.55 Seite aus dem Cache) am echten iPhone bestätigt. Der Startbefund
+aus der Übergabe vom 29.09. ist damit abgeschlossen. 3.17.54 (Inline-Farbe)
+bleibt als harmlose Absicherung drin.
+**Offen:** Nicht geprüft: iPad mit geteiltem Fenster, Drehen während des
+Ladens. Großplan: Runde 14 (G-102 bis G-106) wartet auf Betreiber-„weiter“.
+**Nächster Schritt:** Runde 14 nach `AUFTRAG.md` § 2 mit Gegenprüfung § 2a,
+sobald der Betreiber Codex startet.
+
 ### 2026-09-29 — Weißes Aufblitzen: Seite sofort aus dem Cache (3.17.55)
 
 **Geändert:** `sw.js` (fetch-Handler: Navigation mit Cache-Treffer sofort

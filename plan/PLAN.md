@@ -787,6 +787,10 @@ Konsolen-Schritte K1 ff., Funktionen/Premium. **Wieder aufgenommen durch
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
+**STAND 29.09.2026 abends: iPhone-Start am Gerät bestätigt (3.17.55).**
+Nächste Arbeit: Runde 14 (G-102 bis G-106) nach `grossplan/AUFTRAG.md`
+§ 2 + § 2a, sobald der Betreiber „weiter“ sagt.
+
 **NACHTRAG (29.09.2026, Claude-Prüfung, 3.17.52):** Startbild-Name war auf
 iOS New York, im PNG Palatino; jetzt Georgia, 31 PNGs neu. `closeDialog`
 aus Runde 13 löst sein Promise wieder immer auf. Foto IMG_4397 ist vom
