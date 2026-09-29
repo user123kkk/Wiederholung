@@ -1,176 +1,476 @@
-# Texte auswendig lernen (Quran-Verse, Hadithe, Gedichte) – Plan
+# Texte auswendig lernen – Plan
 
-**Status:** Plan, **kein Bauauftrag**. Gehört zur offenen Frage Q1
-(`plan/PLAN.md`) und zu F-12 (`plan/grossplan/FUNKTIONEN.md`). Gebaut wird
-erst nach den Betreiber-Entscheidungen in § 6, und erst wenn der laufende
-Codex-Zyklus samt Claude-Gesamtprüfung (`grossplan/AUFTRAG.md` § 2c)
-abgeschlossen ist – nie parallel zu Codex an `app.js`/`styles.css`.
+**Status:** Plan, **kein Bauauftrag**. Offene Frage Q1 (`plan/PLAN.md`),
+Idee F-12 (`plan/grossplan/FUNKTIONEN.md`). Gebaut wird erst nach den
+Entscheidungen in § 10, und erst wenn der laufende Codex-Zyklus samt
+Claude-Gesamtprüfung (`grossplan/AUFTRAG.md` § 2c) fertig ist – nie
+gleichzeitig mit Codex an `app.js`/`styles.css`.
 
-Rahmen (`plan/LEHREN.md` § 2): Wortlaut von Quran und Hadith verfasst kein
-Agent; er kommt von den Nutzenden bzw. vom Betreiber. Religiöse Angaben über
-Nutzende werden nicht gespeichert. Die bestehende Lernlogik für Karten
-(Stufen, Intervalle, Freischalten) bleibt unverändert.
+Grenzen, die immer gelten (`plan/LEHREN.md` § 2): Den Wortlaut von Quran
+und Hadith schreibt kein Agent; er kommt von den Nutzenden. Die bestehende
+Lernlogik für Karten (Stufen, Abstände, Freischalten) bleibt, wie sie ist.
+
+---
+
+## 0. In einfachen Worten
+
+- In einem Bereich kann man neben Karten jetzt auch einen **Text** anlegen:
+  einen Vers-Abschnitt, ein Gedicht, einen Hadith. Man fügt ihn ein, jede
+  Zeile wird ein Lernschritt.
+- **Neu lernen** geht Zeile für Zeile. Erst liest man die Zeile, dann sieht
+  man nur noch die ersten Buchstaben jedes Wortes, dann gar nichts mehr und
+  sagt sie auswendig. Nach jeder neuen Zeile sagt man alles bisher Gelernte
+  am Stück auf.
+- **Gelernt** ist eine Zeile, wenn man sie einmal ohne Hilfe fließend
+  aufsagen kann. Ab dann kommt sie wieder – wie Karten, erst oft, dann
+  seltener.
+- Beim **Wiederholen** kommt der Text **der Reihe nach**, nie durcheinander.
+  Hakt eine Zeile, tippt man nur diese an; nur sie kommt früher wieder.
+- Kann man schon einen Teil (z. B. 15 von 30 Versen), markiert man ihn beim
+  Anlegen. Er wird dann nur kurz geprüft, neu gelernt wird ab Zeile 16.
+- Jeden Tag: erst das Wiederholen, dann ein paar neue Zeilen (Standard 3).
+- Recht: Ein Quran-Text im Konto kann etwas über den Glauben verraten. Das
+  ist geprüft (§ 9); gelöst mit einem kurzen Satz beim ersten Text und einem
+  Absatz in der Datenschutzerklärung.
+- Gebaut wird in sieben Stufen (§ 11), jede mit eigenem Test.
 
 ---
 
 ## 1. Gedanken des Betreibers (29.09.2026, frei gesprochen)
 
-Sinngemäß festgehalten. Der Betreiber betont: **das sind Gedanken, keine
-Vorschläge oder Beschlüsse**, und vermutlich nicht vollständig.
+Sinngemäß festgehalten. Ausdrücklich **Gedanken, keine Vorschläge oder
+Beschlüsse**, vermutlich unvollständig.
 
 - Heute: ein Bereich mit allem aus dem Medina-Buch, Band 1.
-- Wunsch: Quran-Verse auswendig lernen; ebenso Texte aus Büchern, z. B.
+- Wunsch: Quran-Verse auswendig lernen; auch Texte aus Büchern, z. B.
   Hadith-Sammlungen. Dialoge eher nicht.
 - Beim Anlegen muss der Text sinnvoll „in eine Karte passen“.
 - Abfragen: unsicher, ob Zufall oder feste Reihenfolge besser ist.
 - Stufen/Wiederholung: unsicher, ob sie sich übertragen lassen. Für viele
-  ist unklar, wann etwas „gelernt“ ist. Gedanke: gelernt ist es, wenn man es
-  **fließend** aufsagen kann – ab dann ist Wiederholung sinnvoll.
-- Gedanke (ausdrücklich kein Vorschlag): beim Anlegen eine Kategorie wählen
-  (Grammatik, Vokabeln, Verse/Gedichte …), je Kategorie andere Funktionen
-  bzw. Muster. Aber nicht zu kompliziert.
-- Einheit: Zeile für Zeile. Offen: Wenn von 30 Versen 15 sitzen – wieder bei
-  1 anfangen oder an einem gewählten Abschnitt?
-- Methode, die er kennt: Zeile 1 lesen bis sie sitzt, dann Zeile 2, dann
-  1+2 zusammen, dann Zeile 3 dazu usw. Weitere Methoden einbinden wäre ein
-  echter Mehrwert.
-- Ziel: echten Mehrwert liefern.
+  ist unklar, wann etwas „gelernt“ ist. Gedanke: wenn man es **fließend**
+  aufsagen kann – ab dann ist Wiederholung sinnvoll.
+- Gedanke (kein Vorschlag): beim Anlegen eine Kategorie wählen (Grammatik,
+  Vokabeln, Verse/Gedichte …), je Kategorie andere Funktionen. Nicht zu
+  kompliziert.
+- Einheit: Zeile für Zeile. Offen: Wenn von 30 Versen 15 sitzen – bei 1
+  anfangen oder an einer gewählten Stelle?
+- Eine Methode, die er **kennt, aber selbst nicht nutzt**: Zeile 1 lernen,
+  dann Zeile 2, dann 1+2 zusammen, dann Zeile 3 dazu usw. Methoden
+  einzubauen wäre ein echter Mehrwert.
+- Ziel: echter Mehrwert. Texte in der App werden am Ende noch einmal
+  gemeinsam umformuliert, wie bei früheren Funktionen.
 
 ---
 
-## 2. Was die Recherche sagt (29.09.2026)
+## 2. Recherche (für die bauenden Agenten)
 
-| Befund | Quelle | Folgerung für die App |
+| Befund | Quelle | Folgerung |
 |---|---|---|
-| **Kumulatives Wiederholen** (Zeile 1, dann 1–2, dann 1–3 …) hält die Reihenfolge; jede Zeile wird Hinweis für die nächste. Belegt für Reihenfolge-Gedächtnis, auch bei Kindern. | [PubMed 37768613](https://pubmed.ncbi.nlm.nih.gov/37768613/), [PMC4416471](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4416471/) | Die Methode des Betreibers ist gut belegt → Kern des Neu-Lernens. |
-| **Selbst abrufen schlägt Wiederlesen**: Prosa nach einer Woche 61 % (dreimal abgerufen) gegen 40 % (viermal gelesen). Wiederleser schätzen sich am besten ein und behalten am wenigsten. | [Roediger & Karpicke 2006](https://journals.sagepub.com/doi/10.1111/j.1467-9280.2006.01693.x) | Üben heißt aufsagen, nicht lesen. Lesen nur als erster Schritt. „Fließend gelesen“ ist kein „gelernt“. |
-| **Nachlassende Hilfen** (erst voller Text, dann weniger, bis nichts): Methode der schwindenden Hinweise; Belege gemischt, aber für wortgetreues Lernen verbreitet. | [Glisky u. a. 1986](https://link.springer.com/rwe/10.1007/978-0-387-79948-3_1101) | Hilfestufen: voller Text → Anfangsbuchstaben → nichts. |
-| **Anfangsbuchstaben-Methode**: nur erster Buchstabe jedes Wortes; Hinweis ohne Lösung, erzwingt Abruf. | [Bible Memory Goal](https://www.biblememorygoal.com/memory-methods/first-letter-bible-memory-method-explained/) (Praxis, keine Studie) | Mittlere Hilfestufe. Für Arabisch: erster Buchstabe je Wort, Harakat weg. |
-| **Sabaq, Sabqi, Manzil**: jeden Tag neu (3–5 Zeilen zu Beginn), kürzlich Gelerntes (1–4 Wochen), alles Ältere; Wiederholen **vor** Neuem. | [The Hifz Project](https://thehifzproject.com/articles/sabaq-sabqi-manzil), [MaktabPro](https://www.maktabpro.com/blog/sabaq-sabqi-manzil) | Nur die Methodik übernehmen: Tagesablauf „erst wiederholen, dann neu“. Passt zu den Stufen: frisch = Sabqi, gefestigt = Manzil. |
-| **Texte nicht zufällig mischen**: Gedichte in fester Reihenfolge üben; beim Abfragen einer Zeile die vorherigen Zeilen als Hinweis zeigen, nie die folgende. | [SuperMemo-Blog](https://thesupermemoblog.wordpress.com/2010/02/28/memorizing-poems-with-spaced-repetition/), [Borretti](https://borretti.me/article/effective-spaced-repetition) (Praxis) | Beantwortet die Frage „Zufall oder Reihenfolge“: **innerhalb eines Textes Reihenfolge**. Mischen nur zwischen verschiedenen Texten. |
-
-Grenze: Die Belege zur Anfangsbuchstaben-Methode und zum Mischen sind
-Praxiswissen, keine kontrollierten Studien. Kumulatives Wiederholen und
-Abrufen statt Lesen sind gut belegt.
+| Kumulatives Wiederholen (1, dann 1–2, dann 1–3 …) sichert die Reihenfolge; jede Zeile wird Hinweis für die nächste. | [PubMed 37768613](https://pubmed.ncbi.nlm.nih.gov/37768613/), [PMC4416471](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4416471/) | Kern des Neu-Lernens (§ 5.3). |
+| Selbst abrufen schlägt Wiederlesen: Prosa nach einer Woche 61 % gegen 40 %. Wiederleser schätzen sich am besten ein und behalten am wenigsten. | [Roediger & Karpicke 2006](https://journals.sagepub.com/doi/10.1111/j.1467-9280.2006.01693.x) | Lesen nur als erste Hilfestufe; „gelernt“ nur nach Aufsagen ohne Hilfe. |
+| Nachlassende Hilfen (voll → weniger → nichts); Belege gemischt. | [Glisky u. a. 1986](https://link.springer.com/rwe/10.1007/978-0-387-79948-3_1101) | Drei Hilfestufen (§ 5.3). |
+| Anfangsbuchstaben: Hinweis ohne Lösung, erzwingt Abruf (Praxiswissen). | [Bible Memory Goal](https://www.biblememorygoal.com/memory-methods/first-letter-bible-memory-method-explained/) | Mittlere Hilfestufe. |
+| Tagesablauf beim Quran-Auswendiglernen: neu, kürzlich Gelerntes, Älteres; Wiederholen vor Neuem; Anfänger 3–5 Zeilen am Tag. | [The Hifz Project](https://thehifzproject.com/articles/sabaq-sabqi-manzil), [MaktabPro](https://www.maktabpro.com/blog/sabaq-sabqi-manzil) | Nur die Methodik: „erst wiederholen, dann neu“, Standard 3 Zeilen. |
+| Texte in fester Reihenfolge üben; beim Abfragen vorherige Zeilen als Hinweis, nie die folgende (Praxiswissen). | [SuperMemo-Blog](https://thesupermemoblog.wordpress.com/2010/02/28/memorizing-poems-with-spaced-repetition/), [Borretti](https://borretti.me/article/effective-spaced-repetition) | Reihenfolge innerhalb eines Textes fest (§ 5.5). |
+| Auch indirekt sensible Daten fallen unter Art. 9 DSGVO. | [EuGH C-184/20](https://www.activemind.legal/de/guides/urteil-eugh-sensible-daten/) | § 9. |
 
 ---
 
-## 3. Empfehlung in einem Satz
+## 3. Grundentscheidung und warum
 
-Ein **Text** ist neben der Karte eine zweite Art Inhalt in einem Bereich. Er
-besteht aus **Zeilen**. Neu gelernt wird **kumulativ mit nachlassenden
-Hilfen**. Wiederholt wird **in Reihenfolge und im Zusammenhang**, gesteuert
-von denselben Stufen wie bei Karten.
+Ein **Text** ist in einem Bereich die zweite Art Inhalt neben der Karte.
+Er besteht aus **Zeilen**. Jede Zeile hat ihren eigenen Lernstand, gesteuert
+von denselben Stufen und Abständen wie Karten (`intervalForStufe`,
+`app.js:122`). Neu gelernt wird kumulativ mit nachlassenden Hilfen;
+wiederholt wird in Reihenfolge und im Zusammenhang.
 
-Warum nicht die Kategorie-Idee mit vielen Typen (Grammatik, Vokabeln …):
-Grammatik und Vokabeln lernen sich heute schon gleich (Frage → Antwort); nur
-Texte brauchen etwas anderes. Zwei Arten („Karte“, „Text“) statt vieler hält
-das Anlegen einfach (Hick's Law, LEHREN § 6.9). Die Kategorie-Idee bleibt als
-Variante in § 6 zur Entscheidung.
+Warum nicht viele Kategorien (Grammatik, Vokabeln, Verse …): Grammatik und
+Vokabeln lernen sich heute gleich (Frage → Antwort). Nur Texte brauchen
+einen anderen Ablauf. Zwei Arten halten das Anlegen einfach (LEHREN § 6.9).
+Kategorien bleiben als Möglichkeit für später (T1).
 
----
-
-## 4. So würde es sich anfühlen (Ablauf)
-
-### 4.1 Anlegen
-1. Im Bereich „Neu“ → Auswahl **Karte** oder **Text**.
-2. Text: Titel (z. B. „Gedicht X“, frei), Text einfügen. **Jede Zeile wird
-   eine Zeile im Text** (Zeilenumbruch = Grenze). Vorschau zeigt die Zeilen
-   nummeriert; zwei Zeilen zusammenfügen oder eine teilen per Tippen.
-3. Optional je Zeile eine Übersetzung/Notiz (zweites Feld, wie bei Karten).
-4. **Teilwissen**: „Diese Zeilen kann ich schon“ – Zeilen markieren (z. B.
-   1–15). Sie starten direkt in der Wiederholung (Stufe 1), neu gelernt wird
-   ab der ersten nicht markierten Zeile. Beantwortet „15 von 30“: nicht bei 1
-   neu anfangen, aber die 15 bekannten kommen sofort zur Kontrolle.
-
-### 4.2 Neu lernen (Tagesportion, „Sabaq“)
-- Tagesportion: Standard 3 neue Zeilen, einstellbar (1–10).
-- Je neue Zeile drei Hilfestufen:
-  1. **Lesen**: Zeile voll sichtbar, laut lesen.
-  2. **Anfangsbuchstaben**: nur erster Buchstabe je Wort; aufsagen, dann
-     aufdecken, selbst prüfen.
-  3. **Ohne Hilfe**: Zeile verdeckt; aufsagen, aufdecken, selbst bewerten.
-- **Kumulativ**: Nach jeder neuen Zeile die ganze bisherige Portion am Stück
-  ohne Hilfe aufsagen (1, 1–2, 1–3). Die vorherige Zeile steht dabei als
-  Hinweis darüber (grau), nie die nächste.
-- **„Gelernt“** heißt (Gedanke des Betreibers, belegt durch Abruf-Forschung):
-  die Portion **einmal fließend ohne Hilfe** aufgesagt, selbst bewertet mit
-  „Sicher“. Erst dann gehen die Zeilen in die Wiederholung (Stufe 1). Bei
-  „Nicht“/„Fast“ zurück auf Hilfestufe 2 für die hakenden Zeilen.
-
-### 4.3 Wiederholen („Sabqi“ und „Manzil“)
-- Fällig ist eine **Zeile** (eigene Stufe, eigenes Datum – dieselben
-  Intervalle wie Karten: 1, 2, 3, 6, 10 … bis 180 Tage).
-- Abgefragt wird ein **Abschnitt**: zusammenhängende fällige Zeilen eines
-  Textes, davor bis zu 2 Zeilen als Hinweis. Innerhalb eines Textes immer in
-  Reihenfolge; verschiedene Texte dürfen gemischt werden.
-- Bewertung pro Abschnitt: „Sicher“ → alle Zeilen +1 Stufe. Hakt es, tippt
-  man die hakenden Zeilen an: nur diese „Nicht“ (−2) bzw. „Fast“ (−1), die
-  übrigen +1. So bleibt eine einzige schwache Zeile nicht in einem langen
-  Abschnitt versteckt.
-- Tagesreihenfolge: **erst wiederholen, dann neu** (Hifz-Praxis).
-
-### 4.4 Fortschritt
-- Pro Text: Balken aus Zeilen (neu / im Lernen / frisch / fester /
-  gefestigt / dauerhaft) – dieselben sechs Zustände wie Karten, keine Zahlen
-  zur Stufe (Betreiber 24.09.: System nicht offenlegen).
-- „Heute: 12 Zeilen wiederholen, 3 neue“.
+Warum Zeilen als Karten-Dokumente (§ 6): Speicherung, Mehrgeräte-Abgleich,
+Offline, Rückgängig, Sicherung und Löschen sind für Karten schon gebaut und
+in den Runden 12/13 gehärtet. Ein zweites, eigenes Speichersystem würde all
+diese Fehler neu ermöglichen.
 
 ---
 
-## 5. Technik und Risiken
+## 4. Begriffe
 
-| Thema | Plan | Risiko / offen |
+| Begriff | Bedeutung |
+|---|---|
+| Text | Titel + geordnete Liste von Zeilen, gehört zu genau einem Bereich |
+| Zeile | kleinste Lerneinheit; ein Karten-Dokument mit `textId` |
+| Portion | die neuen Zeilen eines Tages (Standard 3) |
+| Abschnitt | beim Wiederholen: zusammenhängende fällige Zeilen eines Textes |
+| Hinweiszeilen | bis zu 2 Zeilen **vor** einem Abschnitt, grau, nur zur Orientierung |
+| Hilfestufe | 1 Lesen · 2 Anfangsbuchstaben · 3 ohne Hilfe |
+
+---
+
+## 5. Regeln des Systems
+
+### 5.1 Zustände einer Zeile
+
+Dieselben sechs Zustände wie Karten (`KARTEN_ZUSTAENDE`, `app.js:3723`):
+neu (nie bewertet) → im Lernen (Stufe 0) → frisch (1–3) → wird fester (4–6)
+→ gefestigt (7–9) → dauerhaft (10+). Keine Stufenzahlen sichtbar
+(Betreiber 24.09.2026).
+
+### 5.2 Tagesplan eines Textes
+
+1. **Wiederholen zuerst:** alle Zeilen mit `nextReview <= heute` und
+   `ersteBewertung` gesetzt, in Textreihenfolge, zu Abschnitten gruppiert
+   (§ 5.5).
+2. **Dann neu:** die nächsten nie bewerteten Zeilen in Textreihenfolge, bis
+   die Tagesportion erreicht ist. Gezählt wird, wie viele Zeilen dieses Textes
+   heute `ersteBewertung == heute` bekommen haben.
+3. Neue Zeilen erst, wenn alle fälligen Wiederholungen dieses Textes erledigt
+   sind (Hifz-Praxis). Überspringen: ein Knopf „Trotzdem neu lernen“ – nicht
+   versteckt, aber nachrangig.
+4. Ein Text ohne fällige und ohne neue Zeilen zeigt „Heute fertig“.
+
+### 5.3 Neu lernen (Portion)
+
+Für jede neue Zeile i der Portion:
+1. Hilfestufe 1: Zeile voll sichtbar, Knopf „Weiter“.
+2. Hilfestufe 2: Anfangsbuchstaben (§ 8.3); Knopf „Aufdecken“, danach
+   „Konnte ich“ / „Noch nicht“. „Noch nicht“ → zurück zu Stufe 1 dieser Zeile.
+3. Hilfestufe 3: Zeile verdeckt, Hinweiszeile i−1 sichtbar; „Aufdecken“,
+   dann „Konnte ich“ / „Noch nicht“ (→ zurück zu Stufe 2).
+4. **Kumulativ:** Die bisherigen Zeilen der Portion (1..i) ohne Hilfe am
+   Stück aufsagen, dann aufdecken und bewerten: „Fließend“ / „Hakt“. Bei
+   „Hakt“ tippt man die hakende(n) Zeile(n) an → diese wieder ab Stufe 2,
+   danach erneut kumulativ.
+5. Nach der letzten Zeile und „Fließend“: **gelernt**. Jede Zeile der Portion
+   bekommt `ersteBewertung = heute`, `stufe = 1`, `maxStufe = max(…,1)`,
+   `nextReview = nextReviewForStufe(1)` (`app.js:130`). Verlauf: je Zeile
+   einmal „n“ (§ 5.7).
+6. Abbruch mitten in der Portion: nichts wird gespeichert, die Zeilen bleiben
+   neu. (Keine halben Zustände in der Cloud.)
+
+### 5.4 Teilwissen beim Anlegen
+
+„Diese Zeilen kann ich schon“ – Bereich von Zeilen markieren. Diese Zeilen
+werden sofort **fällig zur Kontrolle**: `ersteBewertung = heute`,
+`stufe = 0`, `nextReview = heute`. Die erste Wiederholung zeigt dann, ob sie
+wirklich sitzen („Sicher“ → Stufe 1 usw.). Neu gelernt wird ab der ersten
+nicht markierten Zeile. (T6)
+
+### 5.5 Wiederholen
+
+- **Abschnitte bilden:** fällige Zeilen in Textreihenfolge; aufeinander
+  folgende Zeilen bilden einen Abschnitt, höchstens 7 Zeilen (T12). Vor
+  jedem Abschnitt bis zu 2 Hinweiszeilen (die direkt vorhergehenden, auch
+  wenn nicht fällig). Nie die folgende Zeile zeigen.
+- **Ablauf je Abschnitt:** Hinweiszeilen sichtbar, Abschnitt verdeckt →
+  auswendig aufsagen → „Aufdecken“ → bewerten.
+- **Bewertung:** „Sicher“ gilt für alle Zeilen. Oder hakende Zeilen antippen
+  und je Zeile „Fast“ oder „Nicht“ wählen; nicht angetippte Zeilen gelten
+  als „Sicher“. Wirkung je Zeile genau wie bei Karten
+  (`app.js:5808–5832`): Sicher +1 Stufe, Fast −1 und morgen wieder, Nicht −2
+  und heute noch einmal.
+- „Nicht“-Zeilen kommen am Ende derselben Sitzung noch einmal (als eigener
+  Abschnitt mit Hinweiszeilen), wie Karten mit `nextReview = heute`.
+- **Reihenfolge der Texte** in einer Sitzung: nach Dringlichkeit (ältestes
+  `nextReview` zuerst); innerhalb eines Textes immer Textreihenfolge.
+
+### 5.6 Tageslimit und Sitzungsgröße
+
+- Neue Zeilen: je Text die Tagesportion (T7). Sie zählt **nicht** gegen das
+  bestehende Kartenlimit – getrennte Welten, keine Überraschung.
+- Wiederholen: kein Limit; bei sehr vielen fälligen Zeilen gilt
+  `settings.sitzungsLimit` sinngemäß als Zahl der **Abschnitte**.
+
+### 5.7 Serie, Tagesprotokoll, Fortschritt
+
+- Jede bewertete Zeile zählt wie eine Karte ins Tagesprotokoll
+  (`verlaufZaehle`, `app.js:801`): neu gelernt = „n“, wiederholt = „w“.
+  Damit hält Textlernen die Serie (T8) ohne neue Logik.
+- Fortschritt: pro Text ein Balken aus Zeilen in den sechs Zuständen;
+  Kartenstatistik ohne Textzeilen (sonst verzerrt ein 286-Vers-Text die
+  Vokabelzahlen). Kalender und Woche nutzen das Protokoll und zählen beides.
+
+### 5.8 Rückgängig
+
+Wie bei Karten (`undoLastGrade`, `app.js:5914`), aber für einen ganzen
+Abschnitt bzw. eine ganze Portion: `lastAction` speichert den Vorzustand
+**aller** betroffenen Zeilen und nimmt die Protokollzähler je Zeile zurück.
+
+### 5.9 Bearbeiten und Löschen
+
+- Zeile ändern: Lernstand bleibt, außer der Text wird stark verändert
+  (T13: bei Änderung Lernstand behalten oder zurücksetzen – Empfehlung
+  behalten; man merkt es beim nächsten Wiederholen).
+- Zeile einfügen: neu. Zeilen zusammenfügen: niedrigster Lernstand gewinnt.
+  Zeile teilen: beide Teile behalten den Lernstand.
+- Text löschen: alle Zeilen-Dokumente und der Text weg, mit derselben
+  Sicherung wie Bereich löschen (Backup anbieten, Titel eintippen;
+  `deleteBereich`, `app.js:~4771`).
+
+---
+
+## 6. Speicherung und Datenmodell
+
+### 6.1 Zeile = Karten-Dokument
+
+`users/{uid}/karten/{cid}` wie heute, dazu ein Feld:
+
+| Feld | Inhalt |
+|---|---|
+| `wort` | die Zeile (bis 1000 Zeichen, wie heute) |
+| `uebersetzung` | Übersetzung/Notiz, darf leer sein |
+| `extra` | optional, wie heute |
+| `textId` | **neu**: Id des Textes; fehlt bei normalen Karten |
+| übrige | `stufe`, `nextReview`, `ersteBewertung`, `maxStufe`, `rueckfaelle`, `order`, `bereichId` wie heute |
+
+`kartenFelder()` (`app.js:677`) nimmt `textId` auf; alle Wege, die Karten
+schreiben, laufen darüber.
+
+### 6.2 Text = Speicherkarte der Art „text“
+
+Im Bereichsdokument unter `sets` (Map, heute bis 500 Einträge):
+`{ name: Titel, order, art: "text", cardIds: [Zeilen-Ids in Reihenfolge],
+portion: 3 }`. Die Reihenfolge der Zeilen ist allein `cardIds`.
+`SET_ARTEN` (`app.js:447`) bekommt „text“; Anzeige- und Erklärungslisten
+(`SET_ARTEN_ANZEIGE`, `SET_ART_TITEL`, `SET_ART_ERKLAERUNG`) ebenso.
+
+### 6.3 Firestore-Regeln
+
+- `kartenFelder()` in `firestore.rules:~224`: `textId` ergänzen,
+  `kartenWerte`: `textOderNull(d.textId, 200)`.
+- `sets` wird heute nur als Map mit Größe geprüft – keine Änderung nötig.
+  `portion` im Set: prüfen, ob Set-Inhalte irgendwo validiert werden
+  (`grep setFelder`), sonst keine Regel nötig.
+- Emulator-Test: neue Karte mit/ohne `textId`, zu langes `textId`, fremdes
+  Konto. Gegenprobe gegen die alten Regeln (muss `textId` ablehnen).
+- **Reihenfolge beim Veröffentlichen:** erst Regeln, dann Hosting.
+
+### 6.4 Grenzen
+
+- Bereichsdokument 1 MiB: 286 Zeilen-Ids (Al-Baqara) ≈ 6 KB – unkritisch.
+  Obergrenze je Text: 1000 Zeilen (Prüfung beim Anlegen).
+- Eine Zeile über 1000 Zeichen: beim Anlegen ablehnen und anbieten zu teilen.
+
+### 6.5 Keine Migration
+
+Bestehende Karten haben kein `textId` und bleiben unverändert. Ältere
+App-Versionen auf anderen Geräten sehen Textzeilen als normale Karten – bis
+zum nächsten Start mit neuer Version (Service Worker, zweiter Start). Das ist
+harmlos, weil nichts verloren geht; im Changelog nennen.
+
+---
+
+## 7. Stellen im bestehenden Code (alle anfassen)
+
+Jede Stelle, die `b.karten` durchläuft, muss entscheiden, ob Textzeilen
+dazugehören. Helfer: `istTextZeile(c) = !!c.textId`. Liste (vor dem Bau per
+`grep -n "\.karten"` vervollständigen, LEHREN § 6.2):
+
+| Stelle | Heute | Mit Texten |
 |---|---|---|
-| Datenmodell | Text = Dokument unter `users/{uid}/…` mit Titel und Zeilenliste; Zeile mit `id`, `text`, `notiz`, `stufe`, `maxStufe`, `nextReview`, `ersteBewertung`. Große Texte (Al-Baqara 286 Verse) in Teildokumente, Firestore 1 MB je Dokument. | Muss mit dem Vorgehen bei Karten (eigene Dokumente, `patchDoc`) zusammenpassen; Codex liest das erst beim Bau. |
-| Firestore-Regeln | neue Sammlung/Felder in der Positivliste (LEHREN § 8.1), Emulator-Test, Regel-Deploy **vor** Hosting. | Betreiber-Schritt. |
-| **Datenschutz** | Quran-Text im Konto kann als Angabe zur Religion gelesen werden (DSGVO Art. 9, besondere Kategorie). Minderung: kein Feld „Quran“, keine Quellen-Kennzeichnung, Text ist Inhalt wie jede Karte; Datenschutzerklärung ergänzen. | **Rechtsprüfung durch einen Menschen nötig**, bevor gebaut wird (LEHREN § 12). |
-| Arabisch | RTL, Harakat erhalten, Quran-Schrift (`fonts/UthmanicHafs1Ver18.ttf`) wählbar, Anfangsbuchstabe ohne Harakat. | Ein Wort = Leerzeichen-Grenze; Sonderzeichen (Waqf-Zeichen) prüfen. |
-| Mehrere Geräte, offline, Rückgängig | wie bei Karten (Runden 12/13): atomare Änderungen, Kontowechsel-Schutz. | Aufwendigster Teil; Astra. |
-| Sicherung/Export, Teilen, Lehrer-Code | Texte in Backup/Export aufnehmen; Teilen/Lehrer erst in späterer Stufe. | Entscheidung, ob in Stufe 1. |
-| Serie/Tageszähler | Zählt eine Textwiederholung zur Serie? | Entscheidung. |
-| Nicht bauen | Spracherkennung beim Aufsagen, automatisches Laden von Quran-Text aus dem Netz, religiöse Beispieltexte durch Agenten. | – |
+| `dueCardsFor` (`app.js:3605`) | fällige Karten | Textzeilen **ausschließen** |
+| `freieIdsFor` / Lektionen (`app.js:338–386`) | Freischalten in geführten Bereichen | Textzeilen nie Teil von Lektionen; unberührt |
+| `startSession`, `renderSession` | Kartenabfrage | unverändert; Texte eigene Sitzung |
+| Üben/Drill (`UEBEN_GRUPPEN`, `drillGruppenKarten` `app.js:5237–5260`) | alle Karten | Textzeilen ausschließen |
+| Fortschritt, `stufenVerteilung` (`app.js:3885`) | alle Karten | ohne Textzeilen; Texte eigener Block |
+| Verwalten-Liste (`renderVerwaltenListe` `app.js:11376`) | alle Karten | Textzeilen nicht als Karten; Texte eigener Abschnitt |
+| Suche | alle Karten | Treffer in Textzeilen zeigen den Text |
+| Duplikat-Warnung (`findeDuplikat` `app.js:5492`) | über alle Karten | Textzeilen ausnehmen |
+| Speicherkarten-Panel (`renderSetsPanel` `app.js:11733`) | drei Arten | „text“ nicht als normale Speicherkarte zeigen |
+| Sicherung `exportBackup` (`app.js:4006`) | ganzer Bereich | enthält Texte automatisch (Felder prüfen) |
+| Einspielen `verarbeiteImportDaten` (`app.js:4607`) | Karten/Sets | `textId` und Set-Art „text“ annehmen; Ids beim Einspielen neu vergeben und `cardIds` mitziehen |
+| Weitergabe/Code-Teilen `baueWeitergabeBereich` (`app.js:4045`) | Lektionen ohne Lernstand | Texte vorerst **nicht** weitergeben (T11) |
+| Bereich löschen, Konto löschen | Karten einzeln löschen | Textzeilen sind Karten → schon abgedeckt; testen |
+| Karte verschieben zwischen Bereichen | `patchDoc` | Textzeilen nicht einzeln verschiebbar; ganzer Text nur als Ganzes (später) |
+| Tageszähler je Bereich (`bereichHeuteZaehle`) | Karten | Zeilen zählen mit |
 
 ---
 
-## 6. Entscheidungen des Betreibers (vor dem Bau)
+## 8. Oberfläche
 
-Jede mit Empfehlung; entscheidet allein der Betreiber.
+### 8.1 Bildschirme
 
-| Nr | Frage | Möglichkeiten | Empfehlung |
-|---|---|---|---|
-| T1 | Wie wählt man beim Anlegen? | a) zwei Arten „Karte“/„Text“; b) Kategorien (Grammatik, Vokabeln, Verse …) mit eigenen Mustern | a – nur Texte lernen sich anders; b später möglich |
-| T2 | Einheit | Zeile (Umbruch beim Einfügen) mit Zusammenfügen/Teilen | so |
-| T3 | Neu lernen | kumulativ mit drei Hilfestufen (§ 4.2) | so |
-| T4 | Reihenfolge | innerhalb eines Textes fest, zwischen Texten gemischt | so (Recherche § 2) |
-| T5 | Wann „gelernt“ | Portion einmal fließend ohne Hilfe, „Sicher“ | so |
-| T6 | Teilwissen | bekannte Zeilen markieren → direkt Wiederholung | so |
-| T7 | Tagesportion neu | 3 Zeilen, einstellbar 1–10 | 3 |
-| T8 | Serie | Textwiederholung zählt zur Serie | ja |
-| T9 | Premium | kostenlos oder Premium | kostenlos (F-12); religiöses Lernen nicht hinter Bezahlung |
-| T10 | Rechtsprüfung Art. 9 | vor dem Bau durch Anwalt/Datenschutz | Pflicht |
-| T11 | Teilen/Lehrer-Code für Texte | Stufe 1 oder später | später |
+1. **Anlegen-Auswahl** (Blatt): „Karte“ / „Text“. Nur zwei Knöpfe.
+2. **Text anlegen:** Titel, großes Eingabefeld (Einfügen), darunter
+   Vorschau der Zeilen nummeriert; je Zeile: zusammenfügen mit nächster,
+   teilen; Bereich „kann ich schon“ markieren; Knopf „Anlegen“.
+3. **Lernen-Tab:** unter den Karten ein Block „Texte“: je Text Titel,
+   Fortschrittsbalken, „Heute: X wiederholen, Y neu“ oder „Heute fertig“.
+4. **Text-Sitzung:** eine Zeile bzw. ein Abschnitt groß, Hinweiszeilen grau
+   darüber; unten die Knöpfe des jeweiligen Schritts (§ 5.3/5.5).
+5. **Text-Ansicht** (Verwalten): alle Zeilen mit Zustand-Punkt; Bearbeiten,
+   Löschen.
+
+### 8.2 Zustände, die jeder Bildschirm können muss (LEHREN § 5.5)
+
+leer · 1 Zeile · 286 Zeilen · sehr lange Zeile · Arabisch mit Harakat ·
+offline · Speicherfehler · hell/dunkel · reduzierte Bewegung · kleines Handy
+320 px · iPad hoch/quer · Tastatur offen beim Einfügen.
+
+### 8.3 Arabisch
+
+- Richtung je Zeile mit `istArabisch` (`app.js:269`); Quran-Schrift wie bei
+  Karten nach Einstellung.
+- Anfangsbuchstaben: Wort = Trennung an Leerzeichen; vom ersten Buchstaben
+  alle Harakat und Quran-Zeichen entfernen (U+0610–061A, U+064B–065F, U+0670,
+  U+06D6–06ED); Waqf-Zeichen als eigenes „Wort“ weglassen. Gegenprobe mit
+  echtem Vers-Text aus einem Test-Fixture, das die Nutzerin/der Betreiber
+  liefert – der Agent erzeugt keinen.
+- Nicht-arabische Texte: erster Buchstabe + Satzzeichen bleiben.
+
+### 8.4 Regeln aus dem README/LEHREN
+
+Ein delegierter Klick-Listener über `data-action` (neue Aktionen z. B.
+`text-anlegen`, `text-lernen`, `text-weiter`, `text-aufdecken`,
+`text-bewerten`, `text-zeile-hakt`); Eintrittsbewegungen nur `@keyframes`;
+nichts erscheint nachträglich unter dem Finger (§ 6.1); Zustand in `ui`,
+nicht nur im DOM (§ 6.3); eine Aufgabe pro Bildschirm.
 
 ---
 
-## 7. Bauplan (nach Entscheidung, als eigener Zyklus)
+## 9. Rechtliche Prüfung (durch den Agenten, 29.09.2026)
 
-Jede Stufe eine Runde nach `grossplan/AUFTRAG.md` § 2 mit Gegenprüfung § 2a.
+**Frage:** Wird mit einem Quran- oder Hadith-Text im Konto eine besondere
+Kategorie personenbezogener Daten (Religion, Art. 9 DSGVO) verarbeitet?
 
-| Stufe | Inhalt | Abnahme | Modell |
-|---|---|---|---|
-| 0 | Entscheidungen T1–T11, Rechtsprüfung | alle beantwortet, in `ENTSCHEIDUNGEN.md` | – |
-| 1 | Datenmodell, Regeln, Emulator-Tests, Datenschutzerklärung | Regeln-Test grün inkl. Gegenprobe; Kontowechsel/offline/zwei Geräte mit echtem SDK gegen Emulator | Astra |
-| 2 | Anlegen/Bearbeiten, Zeilen teilen/zusammenfügen, Teilwissen, Backup/Export | 30-Zeilen-Text arabisch mit Harakat anlegen, bearbeiten, exportieren, wieder einlesen: identisch | Sol mittel |
-| 3 | Neu lernen (§ 4.2) | Durchlauf 3 Zeilen mit allen Hilfestufen; „Nicht“ führt zurück; Ergebnisse gespeichert; reduzierte Bewegung, kleine/große Bildschirme | Sol mittel |
-| 4 | Wiederholen (§ 4.3) | Abschnitte in Reihenfolge, Hinweiszeilen davor, nie danach; Einzelzeilen-Bewertung verändert nur diese Zeilen; Intervalle wie Karten | Astra |
-| 5 | Fortschritt, Serie, Tageszähler | Zahlen stimmen mit gespeicherten Zeilen überein; keine Stufenzahlen sichtbar | Sol niedrig |
-| 6 | Gesamtprüfung | Prüfstand grün, Affe mit Texten, Claude-Gesamtprüfung (§ 2c), iPhone-Test durch Betreiber | Astra + Claude |
+**Bewertung:** Ja, möglicherweise. Der EuGH (C-184/20, 01.08.2022) zählt
+auch Daten dazu, aus denen sich eine sensible Information **indirekt**
+ergibt. Ein gespeicherter Quran-Text kann auf den Glauben schließen lassen,
+auch wenn die App nichts dazu fragt. Dasselbe gilt schon heute für Karten
+aus dem Medina-Buch; mit Texten wird es deutlicher.
+
+**Lösung (in den Bau eingeplant):**
+1. **Einwilligung** (Art. 9 Abs. 2 lit. a): beim ersten Text einmalig ein
+   kurzer Satz mit Knopf, sinngemäß: „Deine Texte speichern wir in deinem
+   Konto, nur für dich. Aus ihnen kann man auf deine Überzeugungen schließen.
+   Einverstanden?“ Wortlaut stimmt der Betreiber ab. Zustimmung als
+   Zeitstempel im Nutzerdokument (neues Feld → Regel).
+2. **Datenschutzerklärung:** Absatz zu Texten, Einwilligung, Widerruf
+   (= Texte löschen), gleiche Speicherorte wie Karten.
+3. **Datensparsam:** kein Feld „Quran“ o. ä., keine Auswertung von Inhalten,
+   kein Teilen von Texten in Stufe 1, keine Statistik über Inhalte.
+
+**Restrisiko:** Eine KI-Prüfung ersetzt keine Prüfung durch einen Anwalt.
+Nach Betreiber-Entscheidung vom 29.09.2026 wird trotzdem gebaut.
 
 ---
 
-## 8. Nächster Schritt
+## 10. Entscheidungen des Betreibers
 
-Betreiber beantwortet T1–T11 (einfach „alles wie empfohlen“ oder einzelne
-Abweichungen) und veranlasst die Rechtsprüfung T10. Bis dahin wird nichts
-gebaut.
+Einfach „alles wie empfohlen“ oder einzelne Nummern ändern.
+
+| Nr | Frage in einfachen Worten | Empfehlung |
+|---|---|---|
+| T1 | Beim Anlegen nur „Karte“ oder „Text“ wählen – oder viele Kategorien? | nur Karte/Text |
+| T2 | Jede Zeile beim Einfügen wird ein Lernschritt? | ja |
+| T3 | Neu lernen mit Lesen → Anfangsbuchstaben → ohne Hilfe, und das Bisherige immer am Stück? | ja |
+| T4 | Wiederholen immer der Reihe nach, verschiedene Texte dürfen gemischt werden? | ja |
+| T5 | „Gelernt“ = einmal fließend ohne Hilfe aufgesagt? | ja |
+| T6 | Schon Gekonntes beim Anlegen markieren, es wird nur kurz geprüft? | ja |
+| T7 | Wie viele neue Zeilen am Tag? | 3, änderbar 1–10 |
+| T8 | Zählt Textlernen für die Serie (Tage am Stück)? | ja |
+| T9 | Kostenlos oder Premium? | kostenlos |
+| T10 | Einmaliger Einverständnis-Satz beim ersten Text (§ 9)? | ja |
+| T11 | Texte teilen / Lehrer-Code? | später |
+| T12 | Wie viele Zeilen höchstens in einem Wiederhol-Abschnitt? | 7 |
+| T13 | Zeile geändert: Lernstand behalten? | behalten |
+| T14 | Texte auch in geführten Bereichen (vom Lehrer)? | nein, nur eigene Bereiche |
+
+---
+
+## 11. Bauplan
+
+Jede Stufe ist eine Runde nach `grossplan/AUFTRAG.md` § 2 mit Gegenprüfung
+§ 2a; eine Version je Stufe. Nach Stufe 6 Claude-Gesamtprüfung (§ 2c).
+
+### Stufe 0 – Vorbereitung
+- Entscheidungen T1–T14 in `grossplan/ENTSCHEIDUNGEN.md` übernehmen.
+- `grep -n "\.karten" app.js` → Tabelle § 7 vervollständigen, fehlende
+  Stellen als Aufgaben `TX-…` in `grossplan/AUFGABEN.md`.
+- Fixture: kurzer arabischer Text mit Harakat, vom Betreiber geliefert;
+  zusätzlich ein nichtreligiöser deutscher Gedichttext (gemeinfrei).
+- **Abnahme:** Tabelle vollständig mit Zeilennummern; Fixtures liegen in
+  `plan/werkzeuge/pruefstand/fixtures/`.
+
+### Stufe 1 – Daten und Regeln (Modell: Astra)
+- `textId` in `kartenFelder()`, Regeln § 6.3, Einwilligungsfeld § 9.
+- Set-Art „text“ in allen Listen (§ 6.2).
+- `istTextZeile` und Ausschluss an allen Stellen aus § 7 (nur Ausschluss,
+  noch keine Oberfläche).
+- **Tests:** Regeln-Emulator (neu: `textId` ok, zu lang, fremdes Konto;
+  Gegenprobe alte Regeln lehnen ab); `t_text_ausschluss.js`: Bereich mit
+  Karten + Textzeilen → Kartenabfrage, Üben, Statistik, Duplikat zählen nur
+  Karten (Gegenprobe gegen Stand vor Stufe 1 zählt Textzeilen mit);
+  Mehrgeräte/Offline mit echtem SDK gegen Emulator (wie Runde 12).
+- **Abnahme:** alle grün; `abnahme_runde.js` 13/13 (Kartenrunde unverändert).
+
+### Stufe 2 – Anlegen, Bearbeiten, Löschen, Sicherung (Modell: Sol mittel)
+- Bildschirme 8.1 Nr. 1, 2, 5; Einwilligung beim ersten Text.
+- Einfügen → Zeilen; zusammenfügen/teilen; „kann ich schon“ (§ 5.4).
+- Löschen mit Sicherung; Export/Import (§ 7).
+- **Tests:** `t_text_anlegen.js`: 30 Zeilen Arabisch mit Harakat anlegen,
+  Zeilen 1–15 markieren → 15 fällig heute, 15 neu; bearbeiten; löschen
+  entfernt alle Zeilen-Dokumente; Export → Import ergibt identischen Text
+  mit neuen Ids und richtiger Reihenfolge; Zeile > 1000 Zeichen abgelehnt;
+  Einwilligung genau einmal. Alle Bildschirmzustände § 8.2.
+- **Abnahme:** grün; Datenschutzerklärung im selben Commit.
+
+### Stufe 3 – Neu lernen (Modell: Sol mittel)
+- Text-Sitzung Neu-Lernen § 5.3, Anfangsbuchstaben § 8.3.
+- **Tests:** `t_text_neu.js`: Portion 3 Zeilen komplett; „Noch nicht“ führt
+  eine Stufe zurück; „Hakt“ bei Zeile 2 nur diese wiederholen; Abbruch
+  speichert nichts; nach Abschluss je Zeile Stufe 1 und Protokoll „n“ +3;
+  Rückgängig nimmt alles zurück. Anfangsbuchstaben-Test mit Fixture:
+  Harakat entfernt, Wortzahl gleich. Reduzierte Bewegung, 320 px, iPad.
+- **Abnahme:** grün; Gerätetest durch Betreiber (Aufsagen fühlt sich
+  richtig an).
+
+### Stufe 4 – Wiederholen (Modell: Astra)
+- Abschnitte § 5.5, Bewertung je Zeile, „Nicht“ am Ende erneut.
+- Tagesplan § 5.2 inkl. „erst wiederholen“.
+- **Tests:** `t_text_wiederholen.js`: fällige Zeilen 3,4,5,9 → Abschnitte
+  [3–5] mit Hinweis 1–2 und [9] mit Hinweis 7–8; nie Zeile 6 bzw. 10
+  sichtbar; nur angetippte Zeilen verlieren Stufen; Abstände wie Karten
+  (`intervalForStufe`); Texte nach Dringlichkeit; 286-Zeilen-Text
+  Leistung (CPU 4×, kein Bild > 50 ms beim Aufbau); zwei Geräte bewerten
+  denselben Text.
+- **Abnahme:** grün, Affe mit Texten 0 Befunde.
+
+### Stufe 5 – Fortschritt und Lernen-Tab (Modell: Sol niedrig)
+- Block „Texte“ im Lernen-Tab, Balken je Text, Kartenstatistik ohne Zeilen,
+  Serie über Protokoll.
+- **Tests:** Zahlen stimmen mit gespeicherten Zeilen; keine Stufenzahlen im
+  DOM; Serie hält an einem Tag nur mit Textwiederholung.
+
+### Stufe 6 – Gesamtprüfung
+- Voller Prüfstand, `abnahme_runde.js`, Affe Handy 200 / iPad 150 mit
+  Texten, Kontrast/A11y, Gerätetest iPhone durch den Betreiber.
+- Texte in der App gemeinsam mit dem Betreiber umformulieren.
+- Claude-Gesamtprüfung nach `AUFTRAG.md` § 2c.
+
+---
+
+## 12. Was nicht gebaut wird
+
+- Spracherkennung beim Aufsagen.
+- Automatisches Laden von Quran- oder Hadith-Text aus dem Netz.
+- Religiöse Beispieltexte durch Agenten.
+- Teilen von Texten (bis T11 anders entschieden).
+- Viele Kategorien beim Anlegen (bis T1 anders entschieden).
+
+---
+
+## 13. Offen / Risiken
+
+- Die Tabelle § 7 ist aus einer ersten Code-Durchsicht; Stufe 0 muss sie
+  mit `grep` vervollständigen. Stellen, die dort fehlen, sind das größte
+  Risiko (Textzeilen tauchen als Karten auf).
+- Ältere App-Versionen auf anderen Geräten (§ 6.5).
+- Das Gefühl beim Aufsagen lässt sich nur am Gerät prüfen.
+
+## 14. Nächster Schritt
+
+Betreiber beantwortet T1–T14. Danach Stufe 0, sobald der laufende
+Codex-Zyklus und die Claude-Prüfung abgeschlossen sind.
