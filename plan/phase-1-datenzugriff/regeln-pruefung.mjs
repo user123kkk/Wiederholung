@@ -40,11 +40,17 @@
    Erweiterung hier auch diese Zahl nachziehen, sonst wiederholt sich genau
    das.
 
+   Stand 29.09.2026: 179 Faelle. Der vorherige Code enthielt bereits 171
+   (18 weitere Board-/Teilen-/Audit-Faelle seit dem historischen Stand oben).
+   Acht neue R01-R08 pruefen Reset-Kennung, alte Offline-Differenzen und
+   normale Einstellungen. RULES_PORT kann den lokalen Emulator-Port setzen
+   (Standard weiterhin 8085); niemals gegen das Produktivprojekt ausfuehren.
+
    Beim Lesen der Emulator-Ausgabe nicht erschrecken: abgewiesene Faelle
    melden oft zusaetzlich "evaluation error". Das ist normal. Die Regelsprache
    wertet beide Seiten eines && aus und schluckt den Fehler, wenn die andere
    Seite ohnehin false ist - z.B. wenn stufe ein Text ist und deshalb die
-   Zahlenpruefung stolpert. Entscheidend ist allein, dass alle 153 Faelle so
+   Zahlenpruefung stolpert. Entscheidend ist allein, dass alle 179 Faelle so
    ausgehen wie erwartet.
    ============================================================ */
 
@@ -77,7 +83,7 @@ const RULES_TEXT = readFileSync(process.env.RULES_FILE || "/home/user/Wiederholu
 
 const env = await initializeTestEnvironment({
   projectId: "wiederholung-test",
-  firestore: { host: "127.0.0.1", port: 8085, rules: RULES_TEXT }
+  firestore: { host: "127.0.0.1", port: Number(process.env.RULES_PORT || 8085), rules: RULES_TEXT }
 });
 
 const db      = env.authenticatedContext(UID, { email_verified: true }).firestore();
@@ -478,6 +484,34 @@ await pruefe("P4 Stimme zurueckziehen korrekt (Stimm-Dok loeschen + votes-1)", "
        Erstellers. Das ist heute schon in der Datenschutzerklaerung so
        beschrieben (REGELN-11), aber als offener Punkt hier vermerkt, weil
        er zur selben Fallgruppe gehoert. */
+
+/* G-075/3.17.50: Die Epoche begrenzt offline gespeicherte Differenzen nach
+   einem Reset. Eigene neue Antwort, alter Client-Patch und fremde Daten
+   getrennt pruefen; bestehende Konten haben zunaechst keine Kennung. */
+await pruefe("R01 Anfangsepoche auf bestehendem Konto", "ja", () => updateDoc(u(), {
+  verlaufEpoche: "", ["verlauf." + heute + ".w"]: increment(1)
+}));
+await pruefe("R02 Reset wechselt Epoche und leert Verlauf atomar", "ja", () => updateDoc(u(), {
+  verlaufEpoche: "reset-neu", verlauf: {}
+}));
+await pruefe("R03 Altes Offline-Undo nach Reset", "nein", () => updateDoc(u(), {
+  verlaufEpoche: "", ["verlauf." + heute + ".w"]: increment(-1)
+}));
+await pruefe("R04 Alte Offline-Antwort nach Reset", "nein", () => updateDoc(u(), {
+  verlaufEpoche: "", ["verlauf." + heute + ".w"]: increment(1)
+}));
+await pruefe("R05 Neue Antwort mit aktueller Epoche", "ja", () => updateDoc(u(), {
+  verlaufEpoche: "reset-neu", ["verlauf." + heute + ".w"]: increment(1)
+}));
+await pruefe("R06 Unverwandte Einstellungen ohne Epochenfeld", "ja", () => updateDoc(u(), {
+  "settings.thema": "hell"
+}));
+await pruefe("R07 Epoche darf keine Zahl sein", "nein", () => updateDoc(u(), {
+  verlaufEpoche: 123, verlauf: {}
+}));
+await pruefe("R08 Epoche nicht bei bestehendem Verlauf entfernen", "nein", () => updateDoc(u(), {
+  verlaufEpoche: deleteField()
+}));
 
 console.log("\n" + ok + " von " + (ok + fehl) + " Pruefungen wie erwartet.");
 if (fehler.length) { console.log("\nABWEICHUNGEN:"); fehler.forEach(f => console.log("  " + f)); }

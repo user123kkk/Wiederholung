@@ -24,7 +24,7 @@ Dateien:
 | [`ENTSCHEIDUNGEN.md`](ENTSCHEIDUNGEN.md) | was nur der Betreiber entscheidet – mit Pro, Contra, Empfehlung |
 | [`KONSOLE.md`](KONSOLE.md) | was nur der Betreiber in Firebase/Google Cloud klicken kann – Schritt für Schritt |
 | [`FUNKTIONEN.md`](FUNKTIONEN.md) | neue Funktionen und Premium: Körbe „jetzt", „später Premium", „lieber nicht" |
-| [`UEBERGABE.md`](UEBERGABE.md) | Vorlage, mit der eine Aufgabe an Sonnet oder Haiku geht |
+| [`UEBERGABE.md`](UEBERGABE.md) | Vorlage für eine ausdrücklich beauftragte Codex-Übergabe |
 | [`LOGBUCH.md`](LOGBUCH.md) | jede Runde, letzter Eintrag zuerst |
 
 Die Befunde, aus denen `AUFGABEN.md` entstanden ist, stehen in
@@ -62,10 +62,11 @@ ausdrücklichem Auftrag; niemals gleichzeitig an `app.js`/`styles.css`.
 ## 2. Ablauf einer Runde
 
 Eine Runde beginnt nur nach einem ausdrücklichen „weiter" des Betreibers.
-**Stand 28.09.2026: pausiert nach dem Ladebildschirm-Fix.** G-075 und
-Nachprüfung A5/A6 werden bis zur Wiederaufnahme nicht begonnen. Die neue Idee
-„Quran oder andere Texte auswendig lernen" wird zuerst als Produktfrage
-besprochen, ohne Lernlogik oder religiösen Wortlaut zu bauen.
+**Stand 28.09.2026: wieder aufgenommen.** Der Betreiber hat ausdrücklich
+„mach weiter“ verlangt, einschließlich Fehlersuche außerhalb der bekannten
+Liste. G-075 wird abgeschlossen, danach folgt die Nachprüfung A5/A6. Neue
+Befunde mit Beleg und Abnahme aufnehmen; keine ungefragten Funktionen bauen.
+Q1 bleibt offen: keine Text-Lernlogik und keinen religiösen Wortlaut bauen.
 
 1. **Einlesen:** `AGENTS.md`/`CLAUDE.md` → `plan/LEHREN.md` → diese Datei →
    `LOGBUCH.md` (letzter Eintrag) → `AUFGABEN.md`. `git pull origin main`.
@@ -170,4 +171,4 @@ Die frühere Claude-Routine „Adrabic Großplan – Nachtschicht"
 Schalterzustand ist hier nicht einsehbar. Sie darf aus dieser Planfassung
 keine neue Runde ableiten. Der Betreiber muss sie in claude.ai → Routines
 anhalten, falls sie dort noch aktiv ist. In Codex wird kein Ersatz-Zeitplan
-angelegt. Nach dem Ladebildschirm-Fix warten G-075 und A5/A6 auf „weiter".
+angelegt. Der Betreiber hat G-075 und A5/A6 am 28.09.2026 wieder freigegeben.

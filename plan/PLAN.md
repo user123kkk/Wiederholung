@@ -782,25 +782,29 @@ die Kriterien erreicht … nachts von allein". Alles steht in
 [`grossplan/`](grossplan/): Auftrag, Codex-Modellwahl nach Aufgabe,
 Abnahmekriterien A1–A6, 133 Befunde aus 8
 Prüfbereichen, Aufgabenliste G-001 ff., Betreiber-Fragen E-01 ff.,
-Konsolen-Schritte K1 ff., Funktionen/Premium. **Nach der aktuellen Pause nur
-auf ausdrückliches „weiter" eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRAG.md)
+Konsolen-Schritte K1 ff., Funktionen/Premium. **Wieder aufgenommen durch
+„mach weiter“ am 28.09.2026: eine Runde nach [`grossplan/AUFTRAG.md`](grossplan/AUFTRAG.md)
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (28.09.2026): Runde 12 Teil 1 abgeschlossen; Korrektur 3.17.49
-für die installierte iOS-Boot-Höhe, Veröffentlichung offen.** Screenshot
-IMG_4397 zeigt den Höhenversatz trotz 3.17.48. Nur Standalone-Boot nutzt
-jetzt `100vh`; die svh/vh-Abweichung wird mit Gegenprobe simuliert. Die
-Startbild-URLs bleiben versioniert. Der installierte iPhone-Kaltstart bleibt
-am echten Gerät zu prüfen. Nach dem
-Fix **anhalten**: G-075, A5/A6 und Runde 13 erst auf ein neues „weiter".
-Vorher die offene Produktfrage Q1 (Quran/fortlaufende Texte auswendig lernen)
-mit dem Betreiber erörtern, nichts dazu bauen. Eine eventuell noch aktive
-externe Claude-Nachtroutine muss der Betreiber separat beenden.
-**Wartet auf Betreiber:** 3.17.49 veröffentlichen, K11 und Kaltstart der
-installierten iPhone-App prüfen, G-042-Rest (Zeitgrenze,
-Datenschutz-Satz). **Wartet auf Betreiber:** Gerätetest Drehen (iPhone),
-E-19 (Geste für „Fast", Empfehlung: lieber nicht).
+**AKTUELL (29.09.2026): Runde 12 Teil 2, 3.17.50 noch nicht committet.**
+G-075 atomare Tageszähler einschließlich Reset-Kennung; G-093 verspätete
+Bewertungsantwort beim Kontowechsel; G-094 aktive Karte/Canvas erhalten;
+G-095 sichtbare Reset-Ablehnung; G-099 fortlaufendes Wisch-Tempo.
+Echte SDK-Mehrgeräte-Prüfung grün, Regeln 179/179; frische Lernrunden-Abnahme
+läuft, abgebrochene Nachtläufe zählen nicht. G-096 korrigiert Messungen und
+Fixture-Lerntage. Neue bestätigte hohe Funde G-097/G-098 gehören in die
+folgende Runde (Nutzer-Fallback/Konto-Löschung). A5/A6 weiterhin offen;
+keine Freigabe des gesamten Großplans. Stand/Nächster Schritt im Logbuch.
+Die iOS-Korrektur 3.17.49 (`100vh` nur im Standalone-Boot, versionierte
+Startbilder) ist im Stand enthalten; installierten iPhone-Kaltstart noch
+am Gerät bestätigen. Q1 (Quran/fortlaufende Texte) ungeklärt, nichts bauen.
+Eine eventuell aktive externe Claude-Nachtroutine separat beenden.
+**Wartet auf Betreiber:** nach Commit und Abschluss der Folgerunde zuerst
+K10 (aktuelle Firestore-Regeln), dann K11 (Hosting); alte Regeln lehnen das
+neue Zählerfeld ab. Beide Geräte aktualisieren, Kaltstart und Drehen am
+iPhone prüfen. G-042-Rest (Zeitgrenze/Datenschutz-Satz) bleibt offen.
+E-19 ist seit 27.09. entschieden: Geste für „Fast“ lassen.
 Davor 3.17.39:
 3.17.39: Karte drehen auf dem iPhone (Spiegelschrift, Linie; G-091, G-092) –
 am Gerät zu bestätigen. Davor 3.17.38:

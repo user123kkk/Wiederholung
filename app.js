@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.49";
+const APP_VERSION = "3.17.50";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -749,27 +749,30 @@ function bereicheMapToArray(mapObj) {
    Wiederholungen, n = zum ersten Mal gelernte Karten. Zwei Zahlen pro Tag,
    120 Tage aufgehoben - das sind ein paar Kilobyte.
 
-   Das Protokoll ist Anzeige, nichts haengt daran. Deshalb wird es gebuendelt
-   geschrieben (siehe verlaufSpeichernBald) statt bei jeder Karte einzeln;
-   geht beim Schliessen der Seite einmal ein Eintrag verloren, ist das kein
-   Schaden. */
+   Seit 2.14.0 haengt auch die Serie daran. Deshalb geht die erste Lern-
+   Antwort sofort raus, weitere Differenzen gebuendelt; Schliessen der Runde
+   und Hintergrundwechsel leeren die Warteschlange (verlaufJetztSchreiben). */
 const VERLAUF_TAGE = 120;
 let verlauf = {};
 let verlaufTimer = null;
-/* 2.16.0: Die Tage, die DIESES Geraet selbst gezaehlt hat.
-
-   Bis 2.13.1 war das Protokoll reine Anzeige - ging ein Eintrag verloren,
-   fehlte ein Balken. Seit 2.14.0 haengt die SERIE daran: Ein Tag im Protokoll
-   ist ein Tag der Serie. Der Schnappschuss aus der Wolke ERSETZTE aber das
-   ganze Protokoll. Stand der heutige Eintrag noch in der Warteschlange (er
-   ging gebuendelt raus, siehe verlaufSpeichernBald) oder war sein Schreiben
-   einmal fehlgeschlagen, dann war der Tag damit weg - und die Serie fiel um
-   genau eins, ohne dass jemand etwas getan haette.
-
-   Gemerkt werden nur SELBST gezaehlte Tage. So kann ein fremder Stand nichts
-   wegwerfen, was hier gerade entstanden ist - und "Verlauf zuruecksetzen"
-   bleibt trotzdem ein echtes Loeschen. */
-let verlaufEigene = new Set();
+/* 3.17.50 (G-075): Nur noch ungesendete Differenzen merken. Bereits an das
+   SDK uebergebene increments stehen in dessen lokalem Snapshot, auch offline.
+   Sie dort noch einmal zu addieren wuerde doppelt zaehlen. Ganze Tageswerte
+   oder Math.max verlieren dagegen Antworten anderer Geraete. */
+let verlaufOffen = {};
+let verlaufStand = {};
+let verlaufGeneration = 0;   // spaete Antworten nach Konto-Wechsel/Reset verwerfen
+let verlaufEpoche = "";     // serverseitige Grenze gegen Writes vor einem Reset
+function verlaufEpocheUebernehmen(data) {
+  const epoche = data && typeof data.verlaufEpoche === "string" ? data.verlaufEpoche : "";
+  if (epoche === verlaufEpoche) return;
+  verlaufEpoche = epoche;
+  verlaufGeneration++;
+  verlaufOffen = {};
+  verlaufAbgelehnt = false;
+  if (verlaufTimer) clearTimeout(verlaufTimer);
+  verlaufTimer = null;
+}
 function normVerlauf(v) {
   const out = {};
   if (!v || typeof v !== "object") return out;
@@ -804,7 +807,7 @@ function verlaufZaehle(art) {
   const ersterHeute = art !== "u" && !tagGelernt(verlauf[t]);
   if (!verlauf[t]) verlauf[t] = { w: 0, n: 0 };
   verlauf[t][art] = (verlauf[t][art] || 0) + 1;
-  verlaufEigene.add(t);
+  verlaufDeltaMerken(t, art, 1);
   /* Der ERSTE Eintrag eines Tages entscheidet, ob der Tag fuer die Serie
      zaehlt - der geht sofort raus. Alles Weitere aendert nur noch Balken und
      wird wie bisher gebuendelt geschrieben. */
@@ -818,38 +821,23 @@ function bereichHeuteZaehle(bid, delta) {
   const n = ui.heuteJeBereich.n;
   n[bid] = Math.max(0, (n[bid] || 0) + delta);
 }
-/* Wolkenstand und eigenes Protokoll zusammenlegen statt ersetzen: je Tag die
-   groessere Zahl, aber nur fuer Tage, die dieses Geraet selbst gezaehlt hat. */
-function verlaufZusammen(lokal, wolke) {
-  const out = {};
-  for (const k of Object.keys(wolke)) {
-    out[k] = { w: wolke[k].w, n: wolke[k].n };
-    if (wolke[k].u) out[k].u = wolke[k].u;
-  }
-  for (const k of verlaufEigene) {
-    const a = lokal[k];
-    if (!a) continue;
-    const b = out[k];
-    out[k] = b ? { w: Math.max(a.w, b.w), n: Math.max(a.n, b.n) } : { w: a.w, n: a.n };
-    const u = Math.max((a && a.u) || 0, (b && b.u) || 0);
-    if (u > 0) out[k].u = u;
+function verlaufDeltaMerken(tag, art, delta) {
+  const e = verlaufOffen[tag] || (verlaufOffen[tag] = {});
+  e[art] = (e[art] || 0) + delta;
+}
+/* SDK-Snapshot enthaelt gesendete lokale increments bereits. Nur noch
+   nicht uebergebene/abgelehnte Differenzen kommen fuer die Anzeige dazu. */
+function verlaufZusammen(wolke) {
+  const out = normVerlauf(wolke);
+  const grenze = dateInDays(-VERLAUF_TAGE);
+  for (const [tag, delta] of Object.entries(verlaufOffen)) {
+    if (tag < grenze) continue;
+    const e = out[tag] || (out[tag] = { w: 0, n: 0 });
+    for (const art of ["w", "n", "u"]) {
+      if (delta[art]) e[art] = Math.max(0, (e[art] || 0) + delta[art]);
+    }
   }
   return out;
-}
-/* Was nur hier steht, geht danach an die Wolke - sonst fehlt derselbe Tag auf
-   dem naechsten Geraet wieder. */
-function verlaufNachschicken(wolke) {
-  if (!userDocRef || !fb.FieldPath) return;
-  const args = [];
-  for (const k of verlaufEigene) {
-    const a = verlauf[k];
-    if (!a) continue;
-    const b = wolke[k];
-    if (b && b.w >= a.w && b.n >= a.n && (b.u || 0) >= (a.u || 0)) continue;
-    args.push(new fb.FieldPath("verlauf", k), a);
-  }
-  if (args.length === 0) return;
-  fb.updateDoc(userDocRef, ...args).catch(() => {});
 }
 function verlaufSpeichernBald() {
   if (verlaufTimer) return;
@@ -859,49 +847,63 @@ function verlaufSpeichernBald() {
    Runde und wenn die App in den Hintergrund geht, geht er sofort raus -
    danach kann das System die Seite jederzeit beenden. */
 function verlaufJetztSchreiben() {
-  if (!verlaufTimer) return;
-  clearTimeout(verlaufTimer);
+  if (verlaufTimer) clearTimeout(verlaufTimer);
   verlaufTimer = null;
   persistVerlauf();
 }
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") verlaufJetztSchreiben();
 });
-/* 2.10.2: Nur der heutige Eintrag geht raus, nicht das ganze Protokoll.
-   Frueher schrieb die App bei jeder Karte alle 120 Tage zurueck - wer in der
-   Konsole aufraeumte, hatte alles Sekunden spaeter wieder da.
-
-   Die Tagesschluessel (2026-09-07) taugen nicht als Feldpfad in Punktschreib-
-   weise, deshalb FieldPath. Fehlt der aus irgendeinem Grund, bleibt es beim
-   alten Weg - lieber schreiben als verlieren. */
+/* Atomare Differenzen je Tag/Antwortart, nie den gesamten Tagesstand.
+   Auch Rueckgaengig ueber Mitternacht schreibt seinen urspruenglichen Tag.
+   Firestore legt increments offline dauerhaft ab; seine ausstehende Promise
+   darf nicht als Fehlschlag gelten oder einen zweiten Versand ausloesen. */
 function persistVerlauf() {
-  if (!userDocRef) return;
-  const t = todayStr();
-  const heute = verlauf[t];
-  if (!heute) return;
-  /* 2.16.0: Der Fehler wird nicht mehr verschluckt. Fehlt das Nutzerdokument
-     noch, wird es angelegt und der Tag danach erneut geschrieben - genau wie
-     bei Serie und Einstellungen. Sonst waere der erste Lerntag eines neuen
-     Kontos still verloren, und mit ihm der Anfang der Serie. */
-  if (fb.FieldPath) {
-    fb.updateDoc(userDocRef, new fb.FieldPath("verlauf", t), heute)
-      .then(schreibErfolg)
-      .catch(async e => {
-        if (e && e.code === "not-found") {
-          if (kontoWirdGeloescht) return;
-          try {
-            await fb.setDoc(userDocRef, { name: displayName, schemaVersion: SCHEMA_VERSION }, { merge: true });
-            await fb.updateDoc(userDocRef, new fb.FieldPath("verlauf", t), heute);
-            schreibErfolg();
-            return;
-          } catch (e2) { saveFehler(e2); return; }
-        }
-        if (e && e.code === "permission-denied") verlaufAbgelehnt = true;   /* 3.17.28, abgelehntesNachholen */
-        saveFehler(e);
-      });
-  } else {
-    fb.updateDoc(userDocRef, { verlauf: verlauf }).catch(() => {});
+  if (!userDocRef || kontoWirdGeloescht) return;
+  const delta = verlaufOffen;
+  const args = [];
+  for (const [tag, e] of Object.entries(delta)) {
+    for (const art of ["w", "n", "u"]) {
+      if (e[art]) args.push(new fb.FieldPath("verlauf", tag, art), fb.increment(e[art]));
+    }
   }
+  if (args.length === 0) return;
+  args.push(new fb.FieldPath("verlaufEpoche"), verlaufEpoche);
+  verlaufOffen = {};
+  const ref = userDocRef, generation = verlaufGeneration, name = displayName;
+  const giltNoch = () => userDocRef === ref && verlaufGeneration === generation && !kontoWirdGeloescht;
+  fb.updateDoc(ref, ...args).catch(async e => {
+    if (e && e.code === "not-found" && giltNoch()) {
+      await fb.setDoc(ref, { name: name, schemaVersion: SCHEMA_VERSION }, { merge: true });
+      if (giltNoch()) return fb.updateDoc(ref, ...args);
+      return;
+    }
+    throw e;
+  }).then(() => { if (giltNoch()) schreibErfolg(); }).catch(async e => {
+    if (!giltNoch()) return;
+    // Ein fremder Reset macht alte Differenzen ungueltig. Nach echter
+    // Server-Ablehnung erst dessen Epoche lesen, bevor etwas nachgeholt wird.
+    if (e && e.code === "permission-denied") {
+      try {
+        const snap = await (fb.getDocFromServer || fb.getDoc)(ref);
+        if (!giltNoch()) return;
+        verlaufEpocheUebernehmen(snap.data());
+        if (!giltNoch()) {
+          verlaufStand = normVerlauf(snap.data() && snap.data().verlauf);
+          verlauf = verlaufZusammen(verlaufStand);
+          return;
+        }
+      } catch (_) { /* Andere Ablehnungen bleiben sichtbar und nachholbar. */ }
+      if (!giltNoch()) return;
+    }
+    // Nur eine vom Server ABGELEHNTE Differenz erneut merken, nicht offline.
+    for (const [tag, x] of Object.entries(delta)) {
+      for (const art of ["w", "n", "u"]) if (x[art]) verlaufDeltaMerken(tag, art, x[art]);
+    }
+    verlauf = verlaufZusammen(verlaufStand);
+    if (e && e.code === "permission-denied") verlaufAbgelehnt = true;
+    saveFehler(e);
+  });
 }
 /* Alte Tage in der Cloud wegraeumen. Laeuft einmal beim Laden, weil der
    Speicher sie da ohnehin schon verworfen hat und sie sonst nie jemand
@@ -920,14 +922,22 @@ function verlaufAufraeumen(roh) {
    in die Firebase-Konsole muss: Von dort aus verliert man gegen ein
    laufendes Geraet, das seinen Speicherstand zurueckschreibt. */
 async function verlaufZuruecksetzen() {
+  const kontoRef = userDocRef;
   const tage = Object.keys(verlauf).length;
   const ok = await dlgConfirm("Das Tagesprotokoll von " + mz(tage, "Tag", "Tagen") + " wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an.\n\nDeine Karten und ihr Lernstand bleiben unberührt.",
     { title: "Aufzeichnung zurücksetzen?", okLabel: "Löschen", danger: true });
-  if (!ok) return;
+  if (!ok || userDocRef !== kontoRef || kontoWirdGeloescht) return;
   if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
   verlauf = {};
-  verlaufEigene = new Set();   // sonst holte der naechste Schnappschuss alles zurueck
-  if (userDocRef) fb.updateDoc(userDocRef, { verlauf: {} }).catch(() => {});
+  verlaufOffen = {};
+  verlaufStand = {};
+  verlaufGeneration++;
+  verlaufEpoche = typeof crypto.randomUUID === "function" ? crypto.randomUUID() : genId() + genId();
+  verlaufAbgelehnt = false;
+  const ref = userDocRef, generation = verlaufGeneration;
+  if (ref) fb.updateDoc(ref, { verlauf: {}, verlaufEpoche: verlaufEpoche })
+    .then(() => { if (userDocRef === ref && verlaufGeneration === generation) schreibErfolg(); })
+    .catch(e => { if (userDocRef === ref && verlaufGeneration === generation && !kontoWirdGeloescht) saveFehler(e); });
   render();
 }
 /* Summe der letzten n Tage (heute eingeschlossen). */
@@ -1809,7 +1819,10 @@ function ausweisErneuernFuerSchreiben() {
   if (schonVersucht || !currentUser || !currentUser.emailVerified) return false;
   try { sessionStorage.setItem(TOKEN_ERNEUERT_SCHREIBEN_KEY, "1"); } catch (e) {}
   /* 3.17.28: mit frischem Ausweis die abgelehnten Bewertungen nachschicken. */
-  currentUser.getIdToken(true).then(abgelehntesNachholen).catch(() => {});
+  const user = currentUser;
+  user.getIdToken(true).then(() => {
+    if (currentUser === user) abgelehntesNachholen();
+  }).catch(() => {});
   return true;
 }
 function snapFehler(err) {
@@ -2072,6 +2085,9 @@ async function initFirebase() {
     currentUser = user;
     if (user) speicherDauerhaftAnfragen();
     listenerLoesen();
+    userDocRef = null;
+    bereicheColRef = null;
+    kartenColRef = null;
     bereiche = null;
     rohBereiche = null;
     rohKarten = null;
@@ -2082,7 +2098,13 @@ async function initFirebase() {
     streak = normStreak(null);
     settings = normSettings(null);
     verlauf = {};
-    verlaufEigene = new Set();
+    verlaufOffen = {};
+    verlaufStand = {};
+    verlaufGeneration++;
+    verlaufEpoche = "";
+    verlaufAbgelehnt = false;
+    abgelehnteBewertungen.clear();
+    if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
     cloudDocExists = false;
     feedbackListe = null;
     feedbackEigeneVotes = new Set();
@@ -2133,7 +2155,15 @@ async function initFirebase() {
       userDocRef = fb.doc(db, "users", user.uid);
       bereicheColRef = fb.collection(userDocRef, "bereiche");
       kartenColRef = fb.collection(userDocRef, "karten");
-      unsubscribeSnapshot = fb.onSnapshot(userDocRef, snap => {
+      let letzterNutzerKopf = null;
+      unsubscribeSnapshot = fb.onSnapshot(userDocRef, { includeMetadataChanges: true }, snap => {
+        if (kontoWirdGeloescht) return;
+        const data = snap.data();
+        verlaufEpocheUebernehmen(data);
+        // Das SDK kennt auch offline bereits uebergebene increments. Deren
+        // Echo fuer den Zaehler verarbeiten, ohne alle Screens neu aufzubauen.
+        verlaufStand = normVerlauf(data && data.verlauf);
+        verlauf = verlaufZusammen(verlaufStand);
         /* 18.09.2026, Serie "aendert sich unberechenbar": Diese Zeile sollte
            nur das Echo der EIGENEN, in dieser Sitzung schon verarbeiteten
            Schreibaktion ignorieren (sonst wuerde jede eigene Aenderung den
@@ -2152,8 +2182,9 @@ async function initFirebase() {
            Frischeres zu schuetzen, also wird auch eine noch ausstehende
            Momentaufnahme diesmal verarbeitet statt verworfen. */
         if (snap.metadata.hasPendingWrites && cloudDocExists) return; // eigenes Echo ignorieren
-        if (kontoWirdGeloescht) return; // Konto loeschung: kein automatisches Neuanlegen
-        const data = snap.data();
+        const kopf = JSON.stringify(data && [data.name, data.settings, data.streak, data.schemaVersion]);
+        const nurVerlauf = cloudDocExists && kopf === letzterNutzerKopf;
+        letzterNutzerKopf = kopf;
         syncError = null;
         if (!data) {
           cloudDocExists = false;
@@ -2198,9 +2229,6 @@ async function initFirebase() {
         settings = normSettings(data.settings);
         themaAnwenden();          // 2.20.0: gilt auch auf einem neuen Gerät sofort
         streak = normStreak(data.streak);
-        const wolkenVerlauf = normVerlauf(data.verlauf);
-        verlauf = verlaufZusammen(verlauf, wolkenVerlauf);
-        verlaufNachschicken(wolkenVerlauf);
         verlaufAufraeumen(data.verlauf);
         serieSockelSichern();
         serieSockelNachziehen();
@@ -2208,7 +2236,9 @@ async function initFirebase() {
           ui.umzug = null;
           sammlungenStarten();
           evaluateStreakForNewDay();
-          render();
+          // Eine reine Zaehler-Bestaetigung darf die laufende Karte/Zeichen-
+          // flaeche nicht ersetzen und einen Strich oder Wisch abbrechen.
+          if (!nurVerlauf || !ui.session) render();
           return;
         }
         /* Daten liegen noch im alten Format. Ab hier wird nichts geschrieben,
@@ -2568,7 +2598,9 @@ function abgelehntesNachholen() {
    Fortschritt eines anderen ausloeschen - auch nicht, wenn eine Karte offline
    bewertet und die Aenderung erst spaeter hochgeladen wird. */
 function persistCardGrade(bereichId, cardId, fields) {
-  if (!kartenColRef) return;
+  if (!kartenColRef || kontoWirdGeloescht) return;
+  const kontoRef = userDocRef;
+  const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
   fb.updateDoc(karteRef(cardId), {
     stufe: fields.stufe,
     nextReview: fields.nextReview,
@@ -2586,7 +2618,8 @@ function persistCardGrade(bereichId, cardId, fields) {
        Hoechststand wieder 1, und die Lektion ging zu, die laengst offen war.
        Genau der Fall, den "einmal erreicht" verhindern sollte. */
     maxStufe: Number.isInteger(fields.maxStufe) ? fields.maxStufe : 0
-  }).then(schreibErfolg).catch(e => {
+  }).then(() => { if (giltNoch()) schreibErfolg(); }).catch(e => {
+    if (!giltNoch()) return;   // spaete Rueckmeldung des vorigen Kontos
     /* 3.17.28: Eine ABGELEHNTE Bewertung nimmt Firestore auch lokal zurueck -
        die Karte ist dann wieder faellig, als waere nie bewertet worden. Nach
        dem Erneuern des Ausweises wird sie nachgeschickt (abgelehntesNachholen). */
@@ -3165,6 +3198,7 @@ async function doLogout() {
       { title: "Abmelden?", okLabel: "Abmelden", danger: true });
     if (!ok) return;
   }
+  verlaufJetztSchreiben();
   fb.signOut(auth);
 }
 
@@ -5252,7 +5286,7 @@ function toggleLernNotiz(id) {
 function lernAbhaken(id) {
   const card = findCard(id);
   if (!card || !istNeueKarte(card)) return;
-  ui.lernLetzte = { cardId: card.id, prevStufe: card.stufe, prevNextReview: card.nextReview, prevErsteBewertung: card.ersteBewertung, verlaufTag: todayStr() };
+  ui.lernLetzte = { cardId: card.id, prevStufe: card.stufe, prevNextReview: card.nextReview, prevErsteBewertung: card.ersteBewertung, verlaufTag: todayStr(), verlaufEpoche: verlaufEpoche };
   card.ersteBewertung = todayStr();
   card.stufe = 0;
   card.nextReview = todayStr();
@@ -5290,10 +5324,11 @@ function lernRueckgaengig() {
   /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
      das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
   const vt = l.verlaufTag;
-  if (vt && verlauf[vt] && (verlauf[vt].n || 0) > 0) {
+  if (vt && l.verlaufEpoche === verlaufEpoche && verlauf[vt] && (verlauf[vt].n || 0) > 0) {
     verlauf[vt].n--;
+    verlaufDeltaMerken(vt, "n", -1);
     bereichHeuteZaehle(currentBereich().id, -1);
-    if (vt === todayStr()) persistVerlauf();
+    persistVerlauf();
   }
   ui.lernLetzte = null;
   render();
@@ -5629,6 +5664,7 @@ function gradeCard(kind) {
       /* 3.17.6: welcher Tageszaehler gleich hochgeht - Rueckgaengig nimmt
          genau den wieder zurueck (Betreiber: "man hat es ja nicht gewollt"). */
       verlaufTag: todayStr(),
+      verlaufEpoche: verlaufEpoche,
       verlaufArt: warNeu ? "n" : "w"
     };
     // B3: ab jetzt gilt die Karte als eingeführt und zählt gegen das Tageslimit
@@ -5756,14 +5792,14 @@ function undoLastGrade() {
   /* 3.17.6: Auch das Tagesprotokoll vergisst die Antwort. Vorher blieb sie
      gezaehlt - der Fortschritt zeigte nach jedem Rueckgaengig eine Antwort zu
      viel, und ein versehentlich bewerteter erster Tag zaehlte fuer die Serie.
-     Sofort geschrieben, nicht gebuendelt: verlaufZusammen nimmt je Tag die
-     groessere Zahl, ein spaeter Schnappschuss mit dem alten Stand saehe sonst
-     groesser aus. */
+     Sofort als atomare negative Differenz geschrieben, auch wenn seit der
+     Antwort ein neuer Lerntag begonnen hat. */
   const va = s.lastAction.verlaufArt, vt = s.lastAction.verlaufTag;
-  if (va && vt && verlauf[vt] && (verlauf[vt][va] || 0) > 0) {
+  if (va && vt && s.lastAction.verlaufEpoche === verlaufEpoche && verlauf[vt] && (verlauf[vt][va] || 0) > 0) {
     verlauf[vt][va]--;
+    verlaufDeltaMerken(vt, va, -1);
     bereichHeuteZaehle(s.bereichId, -1);
-    if (vt === todayStr()) persistVerlauf();
+    persistVerlauf();
   }
   if (s.zaehler && s.letzteArt && s.zaehler[s.letzteArt] > 0) s.zaehler[s.letzteArt]--;
   s.letzteArt = null;
@@ -5858,6 +5894,16 @@ const WISCH_WEG = 0.26;          /* Anteil der Kartenbreite (max. 100 px) */
 const WISCH_TEMPO = 0.45;        /* px/ms fuer einen Fling */
 const WISCH_FLING_MIN = 40;      /* px, damit ein Zucken kein Fling ist */
 function wischSchwelle(breite) { return Math.min(100, breite * WISCH_WEG); }
+/* 3.17.50 (G-099): Ein gleitendes Fenster statt eines Sprungs des
+   Ausgangspunkts nach 80ms. Sonst entschied bei 55px/114ms die letzte
+   13.75px-Teilbewegung allein und ein gueltiger Fling fiel durch.
+   Der Punkt beim Loslassen beruecksichtigt auch anschliessendes Stillhalten. */
+function wischTempo(w, x, t) {
+  w.spur.push({ x: x, t: t });
+  while (w.spur.length > 2 && t - w.spur[0].t > 80) w.spur.shift();
+  const a = w.spur[0], dt = t - a.t;
+  return dt > 16 ? (x - a.x) / dt : w.tempo;
+}
 app.addEventListener("pointerdown", e => {
   /* 3.12.0: gezogen wird die Karte selbst (.study-flaeche), nicht mehr die
      ganze Buehne samt Knoepfen - der Stapel dahinter bleibt liegen, wie bei
@@ -5867,7 +5913,7 @@ app.addEventListener("pointerdown", e => {
   if (e.target.closest("button, a, canvas, input, textarea")) return;
   const t = performance.now();
   wischStart = { x: e.clientX, y: e.clientY, karte, breite: karte.getBoundingClientRect().width, id: e.pointerId,
-    erfasst: false, dx: 0, zeit: t, spurX: e.clientX, spurT: t, tempo: 0, bereit: false };
+    erfasst: false, dx: 0, zeit: t, spur: [{ x: e.clientX, t: t }], tempo: null, bereit: false };
 });
 app.addEventListener("pointermove", e => {
   if (!wischStart || e.pointerId !== wischStart.id) return;
@@ -5892,10 +5938,7 @@ app.addEventListener("pointermove", e => {
   const t = performance.now();
   /* Tempo ueber die letzten ~80 ms, nicht ueber den ganzen Weg - wer
      langsam ansetzt und dann schnippt, meint das Schnippen. */
-  if (t - wischStart.spurT > 16) {
-    wischStart.tempo = (e.clientX - wischStart.spurX) / (t - wischStart.spurT);
-    if (t - wischStart.spurT > 80) { wischStart.spurX = e.clientX; wischStart.spurT = t; }
-  }
+  wischStart.tempo = wischTempo(wischStart, e.clientX, t);
   wischStart.dx = dx;
   const bereit = Math.abs(dx) >= wischSchwelle(wischStart.breite);
   if (bereit && !wischStart.bereit) fuehlbar(6);
@@ -5918,7 +5961,9 @@ function wischEnde(e) {
   if (!wischStart || e.pointerId !== wischStart.id) return;
   const { karte, breite, erfasst, dx, zeit } = wischStart;
   /* Ohne eigene Tempo-Messung (sehr kurze Geste) zaehlt der Schnitt. */
-  const tempo = wischStart.tempo || dx / Math.max(1, performance.now() - zeit);
+  const ende = performance.now();
+  const gemessen = wischTempo(wischStart, wischStart.x + dx, ende);
+  const tempo = gemessen === null ? dx / Math.max(1, ende - zeit) : gemessen;
   wischStart = null;
   if (wischFrame) { cancelAnimationFrame(wischFrame); wischFrame = null; }
   if (!erfasst) return;

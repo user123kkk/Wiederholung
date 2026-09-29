@@ -556,6 +556,26 @@ Belegte Fälle:
 
 ### 5.4 Die Attrappe muss so streng sein wie die Wirklichkeit
 
+- **29.09.2026, G-096:** Testkarten müssen denselben Lerntag ab 04:00 Uhr
+  wie die App verwenden, einschließlich Tages-Offsets und lokaler Zeitzone.
+  Ein Kalenderdatum vor 04:00 macht heute fällige Testkarten erst morgen
+  fällig. Zeitpunkte 00:00, 03:59, 04:00 und 23:59 gezielt prüfen.
+  Ein Dialog-Test darf dessen bestätigungsabhängige Promise nicht abwarten,
+  bevor er den Bestätigungsknopf betätigt; die eigentliche Wirkung danach prüfen.
+
+- **3.17.50:** Mehrgeräte-Increments mit dem echten SDK und lokalen
+  Firestore-Regeln prüfen. Ein Stub beweist weder persistente Offline-Writes
+  noch deren lokales Echo oder Rollback nach einer Regel-Ablehnung.
+  SDK-Tests mit umgeleiteten Modulen müssen beim Neustart dieselbe
+  Instrumentierung behalten: Service Worker gezielt blockieren und separat
+  prüfen. Datenbereitheit allein bedeutet nicht, dass der Boot-Screen weg ist.
+- **3.17.50, G-096:** Der erste Style-Abgleich kann in Headless-Chromium erst
+  bei der Messung eine 0,01-ms-Animation starten. Im Modus „ruhig“ ist deren
+  Startdeckkraft kein belegter absichtlicher Wartezustand. Nur Animationen
+  ohne Delay mit Enddeckkraft 1 und noch nicht beendetem Sofort-Start dürfen
+  aus dieser Deckkraftmessung ausgenommen werden. Gegenprobe: echte
+  CSS-Verzögerungen wieder einschalten; der Test muss weiterhin rot werden.
+
 - *Station 1:* Die Attrappe ließ unbestätigte Konten lesen, die echten Regeln
   nicht. Der Test schaltete deshalb das Thema falsch um. Korrigiert: Der Stub
   spiegelt die Regeln.
@@ -955,6 +975,41 @@ Richtungen: Was kann jemand an **eigenen** Daten verbiegen, und was an denen
 
 ### 8.3 Snapshot-Echos
 
+- **29.09.2026, G-075/Reset-Nachprüfung:** Atomare negative Differenzen
+  allein reichen nicht: fremder Reset plus altes Offline-Undo erzeugte im
+  unveröffentlichten Fix −1 und hätte eine neue Antwort verschluckt.
+  Jeden Reset mit neuer Kennung atomar schreiben, diese an jede Differenz
+  binden und alte Kennungen serverseitig ablehnen. Alte Undo-Aktionen dürfen
+  auch nach neuen Antworten den neuen Verlauf nicht korrigieren. Nach einer
+  Ablehnung zuerst die Server-Kennung prüfen, bevor ein Retry gemerkt wird.
+  Neues Feld benötigt Regeln, echte SDK-/Emulator-Abnahme und ausdrücklich
+  **Regeln vor Hosting**. Ein grüner Test zählt nur, wenn die vorbereitende
+  Bewertung tatsächlich bestätigt wurde; abgewiesene Klicks sind kein Beleg.
+
+- **3.17.50, G-075:** Gemeinsame Zähler über atomare positive/negative
+  Differenzen ändern, niemals über ganze Tageswerte oder `Math.max`.
+  Gesendete Differenzen stehen bereits im SDK-Snapshot, auch offline;
+  zusätzlich addiert werden nur ungesendete oder tatsächlich abgelehnte.
+  Metadata-Bestätigungen berücksichtigen; ausstehende Offline-Promises sind
+  kein Fehler. Rückgängig korrigiert den ursprünglichen Lerntag.
+- **3.17.50, G-093:** Rückmeldungen und Wiederholungslisten gehören zum
+  ursprünglichen Konto. Vor Erfolg, Fehler und Token-Nachholen dieselbe
+  Konto-Referenz prüfen, beim Auth-Wechsel die Wiederholungsliste leeren.
+  Späte Ablehnungen dürfen niemals Karten des nächsten Kontos verändern.
+  Dokument-/Sammlungsreferenzen beim Auth-Wechsel vor dem Neuaufbau leeren;
+  auch Abmelden ohne Folgekonto ist ein eigener Testfall.
+  **G-097 (noch offen bei 3.17.50):** Bei `not-found` nicht nach einem
+  `await` erneut die globale Nutzer-Referenz lesen. Ziel und Name vor Beginn
+  erfassen, jeden weiteren Schritt an dieselbe Referenz binden.
+  **G-098 (noch offen bei 3.17.50):** Die Löschsperre ebenfalls an ein
+  Konto binden. Erfolg darf die nächste Anmeldung nicht dauerhaft sperren;
+  Freigabe eines Folgekontos darf alte Lösch-Fortsetzungen nicht fortsetzen.
+- **3.17.50, G-094/G-095:** Ein reines Zähler-Update darf die aktive Karte
+  oder Zeichenfläche nicht ersetzen. Identität der DOM-Knoten mit echtem
+  SDK prüfen. Ablehnungen beim Verlauf-Reset sichtbar melden; nicht mit
+  leerem `catch` verschlucken. Reset und Kontowechsel entwerten alte
+  Zähler-Rückmeldungen über eine Generation.
+
 - `hasPendingWrites` soll das Echo **eigener** Schreibvorgänge ignorieren.
 - Es blockte aber die **erste** Momentaufnahme nach einem Neustart, wenn noch
   ein ungesendeter Schreibvorgang aus der letzten Sitzung lag.
@@ -1233,10 +1288,72 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 - Wischgesten werten den zuletzt selbst gemessenen Weg aus, nie die Koordinaten von `pointercancel` (die sind 0). Abbruch = zurückfedern, nie bewerten.
 - Eine laufende CSS-Animation überschreibt ein Inline-`transform`: beim Greifen `animation: none` setzen.
 - Gesten mit echten Touch-Ereignissen (CDP) testen, nicht mit Maus: `t_wischen.js`.
+- **3.17.50, G-099:** Tempo über ein fortlaufendes Zeitfenster messen, nicht
+  den Ausgangspunkt periodisch auf die letzte Bewegung springen lassen.
+  Ein verspätetes Einzelereignis entschied sonst trotz schneller Geste
+  allein. Aufgezeichnete Pointer-Zeiten im echten Listener erneut abspielen;
+  Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
 
+29.09.2026, eigener Fehler im unveröffentlichten G-075-Fix: Atomare Zähler
+ohne Reset-Kennung ließen ein altes Offline-Undo nach fremdem Reset zu.
+Echter SDK-/Emulator-Test: Server `w:-1`; nächste Antwort wäre verloren.
+Mit verbindlicher Reset-Kennung und Regel-Ablehnung bleibt `w:0`, nächste
+Antwort `w:1`. Der erste Testversuch wartete auf den Dialog vor dessen
+Bestätigung, der zweite hatte eine noch nicht übergebene Bewertung; beide
+Messfehler korrigiert und vorbereitenden Serverstand explizit geprüft (§ 5.4/8.3).
+
+29.09.2026, eigener Prüfstand-Fehler, G-096: Abnahme über Nacht unterbrochen;
+zwei Prozesse ohne vollständige Ausgabe liefen in Zeitüberschreitungen.
+Vor 04:00 zeigten die kalendertäglichen Fixture-Daten zusätzlich keine
+fälligen Karten. Kein solcher Lauf gilt als grün. Fixtures folgen jetzt
+dem bestehenden Lerntag; `t_pruefdatum.js` prüft dessen Grenze (§ 5.4).
+
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
+
+28.09.2026, bis 3.17.49, G-099: Schneller kurzer Wisch links wechselnd ohne
+Bewertung; Touch-Spur zeigt abrupten Tempo-Neustart nach 80ms und Entscheidung
+über letzte 13,75px. Derselbe Listener bewertet außerdem nach Stillhalten
+eine kurze Geste. Fortlaufendes Fenster samt Loslass-Punkt; Altstand-Gegenprobe
+und echte CDP-Gesten prüfen (§ 4.x). Keine Wischgrenze verändert.
+
+28.09.2026, G-098, offen bei 3.17.50: Nach Konto-Löschen bleibt die alte
+Löschsperre gesetzt. Nächste Anmeldung lädt ohne Reload keine Daten.
+Laufzeit-Gegenprobe bestätigt. Sperren gehören zum ursprünglichen Konto;
+alte asynchrone Löschschritte vor Freigabe eines Folgekontos binden (§ 8.3).
+
+28.09.2026, bis 3.17.49, G-075: Zwei Geräte mit 5 Offline- und 3 Online-
+Antworten ergaben nur 5 statt 8. Ganze Tageswerte/Max-Merge verloren fremde
+Beiträge. Atomare Differenzen mit echtem SDK prüfen (§ 8.3).
+
+28.09.2026, bis 3.17.49, G-093: Eine abgelehnte Kartenbewertung vor oder
+nach Kontowechsel konnte beim Nachholen das nächste Konto verändern.
+Beide Fälle im alten Commit reproduziert. Konto-Referenz und Listenbindung
+prüfen, Auth-Wechsel leert alte Ablehnungen (§ 8.3).
+
+28.09.2026, bis 3.17.49, G-094/G-095: Bestätigte Zähler-Snapshots ersetzten
+die Zeichenfläche einer laufenden Runde; abgelehnter Verlauf-Reset blieb
+ohne Meldung. Mit echtem SDK, DOM-Identität und Regel-Ablehnung nachgewiesen.
+Nur Zähler ändern ohne Neuaufbau; Reset-Fehler sichtbar melden (§ 8.3).
+
+28.09.2026, neuer Fund G-097, noch offen bei 3.17.50: Nutzer-Dokument-
+Fallback verwendet nach abgewarteter `not-found`-Antwort die inzwischen
+gewechselte globale Referenz. Kontrollierter Test mit echtem
+Funktionsquelltext schreibt Neuanlage und alten Einstellungs-Patch in B.
+Jeden asynchronen Folgeschritt an sein Ursprungskonto binden (§ 8.3).
+
+28.09.2026, eigener Prüfstand-Fehler, G-096: „ruhig“ meldete im aktuellen
+und alten Code die Deckkraft des noch ausstehenden 0,01-ms-Startbilds als
+Verzögerung. Messung präzisiert; echte wieder eingeschaltete Delays ergeben
+weiterhin vier Befunde. Eigene Testaufbaufehler: Neustart bekam wegen des
+Service Workers uninstrumentierten Code; Daten waren vor Boot-Ende bereit.
+SDK-Test blockiert SW und wartet zusätzlich auf Boot-Ende (§ 5.4).
+Die Abmelde-Gegenprobe suchte zunächst einen sichtbaren Dialog; auf dem
+Einstieg wird dieser DOM-Knoten nicht aufgebaut. Korrigiert: tatsächlichen
+Speicherfehler-Zustand prüfen, statt sein Rendern vorauszusetzen (§ 5.3).
+Der X-Test behandelte ein fehlendes Nullfeld zunächst als NaN. Erwartete
+Antwortzahl mit denselben optionalen Arten wie `normVerlauf` prüfen (§ 5.4).
 
 28.09.2026, eigener Arbeitsfehler vor Commit 3.17.49: Ein Patch ohne
 Kontext fügte den neuen Changelog-Eintrag unten statt oben ein. Die

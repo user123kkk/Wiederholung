@@ -2,6 +2,122 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Runde 12 Teil 2: Reset-Grenzfall korrigiert, frische Abnahme
+
+**Geändert:** `app.js:765`/`:850` (Reset-Kennung an Differenzen und
+Server-Kennung vor Retry), `:924` (konto-gebundener Reset), `:5289`/`:5798`
+(Kennung an beiden Undo-Aktionen); `firestore.rules:100`/`:142`/`:160`
+(Positivliste/Reset-Grenze); `datenschutzerklaerung.html:130` (technische
+Kennung im vorhandenen Tagesprotokoll), `CHANGELOG.md`. Prüfstand:
+`t_verlauf_mehrgeraete.js --reset-undo`, `t_pruefdatum.js`, `lib.js:10`,
+`regeln-pruefung.mjs` (R01–R08, aktueller Kopf 179 statt veralteter 153).
+Plan, Nachlese, Lehren und K10/K11 nachgezogen.
+**Entscheidung:** Der echte Mehrgeräte-Test fand im eigenen unveröffentlichten
+G-075-Fix Server `w:-1`: bestätigte Antwort auf A, A offline, Reset auf B,
+altes Undo auf A. Neue Antwort wäre verschluckt. Keine Freigabe allein durch
+Clamping der Anzeige. Reset-Kennung begrenzt alte Writes serverseitig.
+SDK-Abnahme: alter Offline-Undo → null, neue Antwort → eins; altes Undo
+nach empfangenem Reset lässt drei neue Antworten stehen; alte persistente
+SDK-Writes nach Cache-Neustart werden verworfen, neue Antwort zählt.
+Normale SDK-Fälle einschließlich sichtbar abgelehntem Reset weiterhin grün,
+vorheriger Speicherfehler im Test ausdrücklich null geprüft.
+Regeln **179/179**: vor der Erweiterung tatsächlich 171 Fälle, alte Kopfzahl
+153 war seit weiteren Änderungen nicht aktualisiert. Regeltest lokal auf
+8081, eigenes Projekt `wiederholung-test`, SDK-Test `demo-adrabic-pruefung`;
+keine Produktivdaten. Windows führt denselben Regel-Prüfcode direkt aus,
+keinen unnötigen Linux-/Build-Umweg.
+Nacht-Unterbrechung erzeugte zwei leere Zeitüberschreitungen; diese Läufe
+zählen nicht. Fixture-Datum jetzt bestehender Lerntag ab 04:00, Grenze
+gezielt geprüft. Zwei Fehler des erweiterten Tests korrigiert: Dialog-Promise
+vor Bestätigung blockierte; App-Warteschlange musste vor SDK-Warten explizit
+übergeben werden. Kein Produktverhalten wegen einer falschen Messung geändert.
+**Abnahme:** Frischer Lauf **13/13 grün**. Vollständige Lese-Ausgaben geprüft:
+Rundenende auf Handy/klein/iPad mit 12 Karten und Limit 10+2; Undo kehrt zur
+offenen Karte zurück, Fertig im Bild, Kontrast 0, kein horizontaler Überstand.
+Üben: neun Karten, zwölf Bewertungen, neun sicher/drei nicht, neue Runde
+startet wieder mit neun. Schreiben auf drei Größen: Lage beim ersten Strich
+unverändert, Vollbild-Tinte/Undo erhalten, Bewertungszeile sichtbar; CPU 4×,
+60 Bewegungen in 1016/1073/1028ms, jeweils keine Frames über 34ms in diesem
+Lauf. Keine Zusicherung für andere Geräte/Lasten.
+A11y grün, Kontrast 0; Affe Handy 200 (1202) und iPad 150 (1203) jeweils
+0 Befunde. Große Ansicht nach Reset-Erweiterung frisch grün: iPad quer und
+Desktop, jeweils 14 Screens, Kontrast 0, kein Überstand/unter Leiste/lange
+Zeilen; Blätter 460px, keine JS-Fehler. Syntax/Version/CSP/APP_SHELL/Diff grün.
+**Offen:** 3.17.50 noch nicht committet/gepusht/veröffentlicht.
+Hohe Funde G-097/G-098 nächste Runde, G-013-Rest. Nach den Änderungen an
+der gemeinsamen SDK-Attrappe müssen gemäß LEHREN §15 auch sämtliche
+`t_*.js` gesichtet/ausgeführt werden; nicht durch die 13er-Auswahl ersetzt.
+K10 **vor** K11 zwingend: alte Regeln lehnen `verlaufEpoche` ab. Alte Clients
+erhalten die neue Reset-Logik erst mit App-Update. iPhone-Kaltstart/Drehung,
+G-042-Betreiberrest, Q1 offen. Gesamt-A5/A6 nicht erfüllt.
+**Kriterien:** A1 insgesamt offen (G-097/G-098), A4 Pflichtfolge grün;
+A5/A6 nicht bestanden. Keine pauschale Freigabe oder Fehlerfreiheit behauptet.
+**Nächster Schritt:** Teil 2 committen/pushen. Danach nächste Runde mit
+G-097/G-098 und G-013-Rest, anschließend vollständige Prüfstand-Sichtung
+und achtteilige Nachprüfung. Hosting noch nicht veröffentlichen.
+
+---
+
+### 2026-09-28 — Runde 12 Teil 2: Mehrgeräte-Fix geprüft, Veröffentlichung noch gesperrt
+
+**Geändert:** `app.js:762`/`:850` (atomare Tagesdifferenzen), `:897`
+(Reset-Fehler), `:1793`/`:2059`/`:2569` (Konto-Bindung), `:2128`/`:2207`
+(SDK-Metadaten und Erhalt aktiver Karte/Canvas), beide Undo-Wege.
+`app.js:5869` (G-099, fortlaufendes Wisch-Tempo samt Stillhalten),
+`t_wisch_tempo.js` (aufgezeichnete Ereignisse im echten Listener).
+`app.js`/`sw.js`/`index.html`/`CHANGELOG.md` auf 3.17.50, neue Prüfungen
+`t_verlauf_mehrgeraete.js`, `t_konto_schreibantwort.js`; Messkorrekturen in
+`t_a11y.js`, `t_x_mitten.js`, `t_wischen.js`, vollständige Abnahmelogs im
+Temp-Ordner `adrabic-rundenabnahme`. `LEHREN.md`, Nachlese, Aufgaben und
+Prüfstand-Anleitung nachgezogen.
+**Entscheidung:** SDK 10.14.1 und lokale Firestore-Regeln statt nur Stub
+für G-075. Altstand ergibt 5 statt 8, neuer Stand 8; Offline-Neustart,
+mehrfaches Nachholen, w/n/u, beide Undo-Wege über Tageswechsel, echte
+Regel-Ablehnung, Reset und Canvas-/Kartenidentität bestanden. G-093 mit
+Ablehnung vor/nach Kontowechsel und nach Abmeldung: Altstand reproduziert,
+neuer Stand isoliert alle drei Fälle. Neue Fehler G-094/G-095 behoben.
+Kontrast 0; A11y grün, Gegenprobe mit echten Delays rot (4 Befunde).
+Boot-Geometrie fünf Größen einschließlich svh/vh-Gegenprobe grün.
+`t_gross_alle` iPad quer/Desktop ohne Kontrast-/Überstand-/Überdeckungsfund.
+Affe Handy 200 (Seed 1202), iPad 150 (Seed 1203): jeweils 0 Befunde.
+**Offen:** Nicht committet, nicht gepusht, nicht veröffentlicht. Der zweite
+serielle Abnahmelauf meldete einen wechselnden Fling-Fehler links;
+einzeln waren alle sieben Wischfälle grün. Keine Freigabe durch bloßes
+Wiederholen: empfangene Touch-Zeiten und Zustände messen. Der erste Lauf
+hatte zusätzlich einen leeren Prozessabbruch beim Wischen sowie die
+belegte NaN-Messung eines fehlenden Nullfelds im X-Test; X ist korrigiert
+und im Folgelauf grün. G-097 zusätzlich bestätigt: Nutzer-Fallback
+schreibt nach Auth-Wechsel Neuanlage und alten Patch auf B; neuer
+kontrollierter Funktionstest ist rot. Weitere Kontofolgen werden geprüft.
+**Nachtrag:** Touch-Spur bestätigt echten Fehler G-099, keine Freigabe
+durch Wiederholen. Fortlaufendes Tempo-Fenster repariert; alter Listener
+verfehlt beide aufgezeichneten schnellen Gesten und bewertet nach Stillhalten,
+neuer Listener korrekt. CDP sieben Fälle grün, erneute Gesamtabnahme läuft.
+G-098 ebenfalls bestätigt: erfolgreiche Konto-Löschung lässt Folgeanmeldung
+durch alte Löschsperre am Boot hängen. Aufgabe für die folgende Runde.
+Loading-Kaltstart am echten iPhone, K11, G-042-Betreiberrest, Q1 offen.
+A1/A4/A5/A6 nicht abgeschlossen; keine abgeschlossene achtteilige Nachprüfung.
+**Nächster Schritt:** Gesamtabnahme abschließen. Erst nach grüner Abnahme
+Teil 2 committen und pushen, dann G-097/G-098 und den G-013-Rest in der
+folgenden Runde bearbeiten.
+
+---
+
+### 2026-09-28 — Runde 12 Fortsetzung läuft: Mehrgeräte-Tagesprotokoll
+
+**Geändert:** `plan/grossplan/AUFTRAG.md`, `plan/PLAN.md` (Wiederaufnahme).
+**Entscheidung:** Betreiber: „mach weiter“, mit ständiger Fehlersuche auch
+außerhalb der bekannten Liste. G-075 ist weiterhin im Code vorhanden:
+ganze Tageswerte und Math.max verlieren Beiträge anderer Geräte. Prüfen und
+reparieren, anschließend die acht Prüfbereiche neu durchgehen. Q1 bleibt
+eine offene Produktfrage, ohne Implementierungsauftrag.
+**Offen:** G-075 in Bearbeitung; iPhone-Bestätigung für 3.17.49 weiterhin
+offen, A5/A6 nicht erfüllt. Kein erneutes Nachfragen zur Wiederaufnahme.
+**Nächster Schritt:** Mehrgeräte-/Offline-/Rückgängig-Fälle nachstellen und
+die atomare Zählung einschließlich SDK-Snapshot-Verhalten abnehmen.
+
+---
+
 ### 2026-09-28 — Screenshot belegt Boot-Höhenversatz (3.17.49)
 
 **Geändert:** `index.html:100` (kritische Standalone-Boot-Regel und Versionen),
@@ -74,7 +190,7 @@ Version 3.17.47; iPhone-Kaltstartprüfung weiterhin offen.
 |---|---|
 | Historische Routine | `trig_01L6Ves47R3gsG5kvqQVmyQA` „Adrabic Großplan – Nachtschicht", 23:07 · 2:07 · 5:07 (Berlin); extern, Status unbekannt, Betreiber beendet sie gegebenenfalls |
 | Stand der Kriterien | A1 ☐ · A2 ☑ · A3 ☑ · A4 ☑ (Runde 12 Teil 1) · A5 ☐ · A6 ☐ |
-| Nächste Runde | Pause vor G-075, A5/A6 und Runde 13; nur nach ausdrücklichem „weiter" |
+| Nächste Runde | Wieder aufgenommen: G-075, danach frische Nachprüfung A5/A6 |
 
 ---
 

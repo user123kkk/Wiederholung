@@ -44,14 +44,30 @@ const { pruefeKontrast } = require('./kontrast');
           }
         }
         const op = parseFloat(getComputedStyle(el).opacity);
-        if (op < 1) {
+        // Headless-Chromium kann eine neue Animation erst bei diesem Style-
+        // Abgleich starten. Eine auf 0.01ms reduzierte Animation OHNE Delay,
+        // deren Endzustand opacity=1 ist, wartet nicht absichtlich. Echte
+        // Delays bleiben oben messbar; statische Deckkraft bleibt ein Fund.
+        const sofortSichtbar = el.getAnimations().some(a => {
+          const t = a.effect.getTiming(), k = a.effect.getKeyframes();
+          return t.duration <= 0.01 && !t.delay && k.length &&
+            Number(k[k.length - 1].opacity) === 1 && (a.pending || a.currentTime <= 0.01);
+        });
+        if (op < 1 && !sofortSichtbar) {
           const e = bez(el) + ' opacity=' + op.toFixed(2);
           if (!window.__verzoegert.includes(e)) window.__verzoegert.push(e);
         }
       }
     };
     let timer = null;
-    if (app) new MutationObserver(() => { clearTimeout(timer); timer = setTimeout(messen, 50); }).observe(app, { childList: true, subtree: true });
+    if (app) new MutationObserver(() => {
+      // Neue Animationen koennen erst beim spaeten ersten Style-Abgleich
+      // entstehen. Dessen Start vor die 50ms-Messfrist setzen, sonst liest
+      // getComputedStyle bei der Messung selbst das 0.01ms-Startbild aus.
+      app.getBoundingClientRect();
+      if (app.firstElementChild) getComputedStyle(app.firstElementChild).opacity;
+      clearTimeout(timer); timer = setTimeout(messen, 50);
+    }).observe(app, { childList: true, subtree: true });
   });
   const a11y = async name => {
     const r = await p.evaluate(() => {

@@ -10,6 +10,10 @@
    Endet mit Code 1, sobald ein Test rot ist. Ein roter Test wird behoben
    oder begruendet - nie ignoriert (LEHREN § 5.3). */
 const { spawnSync } = require('child_process');
+const fs = require('node:fs');
+const path = require('node:path');
+const LOGS = path.join(require('node:os').tmpdir(), 'adrabic-rundenabnahme');
+fs.mkdirSync(LOGS, { recursive: true });
 const PRUEFUNGEN = [
   ['t_runde_lage.js',      'Knopf immer im Bild, Seite scrollt nie (4 Handygroessen, lange Notiz/Antwort)'],
   ['t_sprung.js',          'Karte springt nicht: Aufdecken und Karte zu Karte, 4 Geraete'],
@@ -34,12 +38,18 @@ for (const [datei, was, lesen] of PRUEFUNGEN) {
   const t0 = Date.now();
   const r = spawnSync('node', [datei], { cwd: __dirname, encoding: 'utf8', timeout: 600000, env: process.env });
   const aus = (r.stdout || '') + (r.stderr || '');
+  fs.writeFileSync(path.join(LOGS, datei + '.log'), aus + '\nProzess: ' + JSON.stringify({status:r.status,signal:r.signal,error:r.error?.message}), 'utf8');
   const ok = r.status === 0 && !/\bFEHL\b|PAGEERROR|Error:/.test(aus);
   if (!ok) rot++;
   zeilen.push((ok ? 'OK    ' : 'FEHLER') + '  ' + datei.padEnd(22) + was + '  (' + Math.round((Date.now() - t0) / 1000) + ' s)');
   console.log(zeilen[zeilen.length - 1]);
-  if (!ok) console.log('        ' + aus.split('\n').filter(z => /FEHL|Error|PAGEERROR/.test(z)).slice(0, 6).join('\n        '));
+  if (!ok) {
+    console.log('        ' + aus.split('\n').filter(z => /FEHL|Error|PAGEERROR/.test(z)).slice(0, 6).join('\n        '));
+    if (r.error || r.signal) console.log('        Prozess: ' + (r.error?.message || r.signal));
+    if (!aus.trim()) console.log('        Keine Testausgabe; Exitstatus: ' + r.status);
+  }
   if (lesen) console.log('        ' + aus.split('\n').filter(z => z.trim() && !/agent-proxy|www\.google|For details/.test(z)).slice(0, 12).join('\n        '));
 }
 console.log('\n' + (rot ? rot + ' von ' + PRUEFUNGEN.length + ' ROT - nicht veroeffentlichen.' : 'Alle ' + PRUEFUNGEN.length + ' Pruefungen gruen.'));
+console.log('Vollstaendige Einzeltest-Ausgaben: ' + LOGS);
 process.exit(rot ? 1 : 0);

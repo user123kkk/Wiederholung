@@ -201,7 +201,9 @@ export function writeBatch(){ const ops = []; return {
     try { ops.forEach(f => f()); } catch(e){ return Promise.reject(e); } melden(); return Promise.resolve();
   } }; }
 export function runTransaction(db, fn){ return fn({ get: getDoc, set: (r,d,o)=>_set(r,d,o), update: (r,...a)=>_update(r,...a), delete: r=>S.store.delete(r.path) }).then(v => { melden(); return v; }); }
-export function onSnapshot(ref, cb, err){
+export function onSnapshot(ref, optionsOrCb, cbOrErr, err){
+  const cb = typeof optionsOrCb === 'function' ? optionsOrCb : cbOrErr;
+  if (typeof optionsOrCb === 'function') err = cbOrErr;
   // wie firestore.rules: ohne bestaetigte E-Mail kein Lesen
   if (S.user && S.user.emailVerified === false && err) { setTimeout(() => err(Object.assign(new Error('x'), { code: 'permission-denied' })), 20); return () => {}; }
   if (window.__SNAP_FAIL && err) { setTimeout(() => err(Object.assign(new Error('x'), { code: window.__SNAP_FAIL })), 20); return () => {}; }

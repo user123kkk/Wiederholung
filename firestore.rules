@@ -97,7 +97,7 @@ service cloud.firestore {
        nicht mehr beschrieben werden — löschen ist erlaubt. Sonst wäre es die
        offene Tür, durch die beliebige Daten ins Nutzerdokument kämen. */
     function nutzerFelder() {
-      return ['name', 'streak', 'settings', 'schemaVersion', 'verlauf', 'bereiche'];
+      return ['name', 'streak', 'settings', 'schemaVersion', 'verlauf', 'verlaufEpoche', 'bereiche'];
     }
 
     function streakOk(s) {
@@ -135,7 +135,18 @@ service cloud.firestore {
           && (!pruefen.hasAny(['schemaVersion']) || zahl(d.schemaVersion, 0, 99))
           && (!pruefen.hasAny(['streak'])        || streakOk(d.streak))
           && (!pruefen.hasAny(['settings'])      || settingsOk(d.settings))
+          && (!pruefen.hasAny(['verlaufEpoche']) || text(d.verlaufEpoche, 80))
           && (!pruefen.hasAny(['verlauf'])       || (d.verlauf is map && d.verlauf.size() <= 400));
+    }
+
+    // Ein Reset wechselt die Kennung nur zusammen mit einem leeren Verlauf.
+    // Alte offline gespeicherte Increments tragen ihre alte Kennung: sie
+    // duerfen den geloeschten Verlauf weder wiederbeleben noch negativ machen.
+    // Fehlende Kennung ist die Anfangsepoche fuer bestehende Konten.
+    function verlaufEpocheOk() {
+      return request.resource.data.get('verlaufEpoche', '') == resource.data.get('verlaufEpoche', '')
+        || (request.resource.data.get('verlauf', null) is map
+            && request.resource.data.verlauf.size() == 0);
     }
 
     match /users/{uid} {
@@ -149,6 +160,7 @@ service cloud.firestore {
       allow update: if eigenesKonto(uid) && vorhanden()
                     && beruehrt().hasOnly(nutzerFelder())
                     && (!beruehrt().hasAny(['bereiche']) || !('bereiche' in request.resource.data))
+                    && verlaufEpocheOk()
                     && nutzerWerte(request.resource.data, beruehrt());
 
       /* ============================================================

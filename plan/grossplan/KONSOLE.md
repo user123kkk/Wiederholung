@@ -148,6 +148,18 @@ zurücksetzen". Zeigt eine Vorlage kein Textfeld: nur den Betreff eintragen.
 **Woran man es merkt:** Testmail zeigt Betreff und Text wie oben, Umlaute richtig.
 
 ### K10 – Regeln veröffentlichen
+**Für 3.17.50 gilt zwingend: zuerst Regeln, danach Hosting.** Das neue
+Tagesprotokoll schreibt `verlaufEpoche`; die bisherigen Regeln erlauben
+dieses Feld nicht. Im Repo-Ordner `firebase deploy --only firestore:rules`
+ausführen oder unten den gesamten aktuellen Regeltext einsetzen. Erfolg:
+Deploy meldet erfolgreich veröffentlichte Firestore-Regeln; im Editor steht
+`verlaufEpocheOk` und die aktuelle Veröffentlichungszeit. Dann K11 ausführen.
+Anschließend eine Antwort geben und die App neu öffnen: Der Zähler bleibt
+erhalten, keine Meldung „Nicht gespeichert“. Beide Geräte auf 3.17.50
+aktualisieren, bevor ein Mehrgeräte-Reset geprüft wird; alte Clients tragen
+noch keine Kennung an ihren Writes. Die ältere Reihenfolge für 3.17.40
+darunter bleibt nur als historischer Hinweis bestehen.
+
 Nur, wenn eine Runde `firestore.rules` geändert hat (steht dann im Logbuch und
 in der Antwort).
 - **Vom PC:** im Repo-Ordner `firebase deploy --only firestore:rules`.
@@ -156,7 +168,7 @@ in der Antwort).
   einfügen → **Veröffentlichen**.
 - **Woran man es merkt:** Oben im Regel-Editor steht die heutige Uhrzeit; die
   Funktion aus dem Logbuch geht.
-- **Reihenfolge ab 3.17.40 (G-016, G-057): App und Regeln direkt
+- **Historische Reihenfolge 3.17.40 (G-016, G-057): App und Regeln direkt
   nacheinander.** Die neuen Regeln erlauben das Ideen-Board nur mit höchstens
   100 Einträgen je Abfrage (ältere Apps würden abgelehnt), und die neue App
   schreibt einen Server-Zeitstempel, den erst die neuen Regeln annehmen.

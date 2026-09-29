@@ -30,12 +30,9 @@ const wortStufe = (p, w) => p.evaluate(w => { const k = [...window.__FB.store.ke
       bewertet.push(await p.evaluate(() => document.querySelector('.study-word').textContent));
       await aktion(p, 'reveal', null, 700);
       /* die letzte Antwort kurz vor dem X: ihr Protokoll-Eintrag waere
-         sonst noch 2 s gebuendelt. ACHTUNG (LEHREN 5.3/5.4): Dieser Punkt
-         schlaegt in der Attrappe auch mit dem alten Code nicht an - sie meldet
-         jedes eigene Schreiben als neuen Stand (ohne hasPendingWrites), und
-         verlaufNachschicken() schickt daraufhin den ganzen Tag. Echtes
-         Firebase ignoriert dieses Echo. Der Punkt prueft hier also nur, dass
-         nichts fehlt, nicht das sofortige Schreiben selbst. */
+         sonst noch 2 s gebuendelt. Hier wird der gespeicherte Wert gemessen;
+         Offline-Echo und Mehrgeraete werden separat mit dem echten SDK in
+         t_verlauf_mehrgeraete.js geprueft. */
       await aktion(p, 'grade-known', null, i < 2 ? 2500 : 150);
     }
     await aktion(p, 'end-session', null, 300);
@@ -43,7 +40,10 @@ const wortStufe = (p, w) => p.evaluate(w => { const k = [...window.__FB.store.ke
     const stufen = await Promise.all(bewertet.map(w => wortStufe(p, w)));
     pruef(stufen.every(s => s.split('/')[1] > heute), 'A: bewertete Karten im Speicher nicht mehr faellig (' + stufen.join(', ') + ')');
     pruef(nach.faellig === vor.faellig - 3, 'A: faellig ' + vor.faellig + ' -> ' + nach.faellig);
-    pruef(nach.verlaufHeute !== 'null' && JSON.parse(nach.verlaufHeute).w + JSON.parse(nach.verlaufHeute).n === 3, 'A: Tagesprotokoll sofort nach X komplett: ' + nach.verlaufHeute);
+    // Atomare Updates legen nur tatsaechlich gezaehlte Arten an. Eine fehlende
+    // Art bedeutet wie in normVerlauf() null Antworten, nicht NaN.
+    const tagNachX = JSON.parse(nach.verlaufHeute);
+    pruef(tagNachX !== null && (tagNachX.w || 0) + (tagNachX.n || 0) === 3, 'A: Tagesprotokoll sofort nach X komplett: ' + nach.verlaufHeute);
     pruef(nach.serie === vor.serie + 1, 'A: Serie ' + vor.serie + ' -> ' + nach.serie);
     await aktion(p, 'start-session', null, 900);
     const neu = [];

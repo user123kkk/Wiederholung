@@ -128,7 +128,9 @@
     <div class="card">
       <p class="hint">Bereiche, Karten, Kartensätze, Lernstufen, Fälligkeiten, deine Lern-Serie,
       das Tagesprotokoll und deine Einstellungen werden in der Firestore-Datenbank (Google)
-      gespeichert, damit sie über mehrere Geräte hinweg verfügbar sind. Die Zugriffsregeln der
+      gespeichert, damit sie über mehrere Geräte hinweg verfügbar sind. Zum Tagesprotokoll gehört
+      eine zufällige Kennung, damit alte Offline-Übertragungen nach dem Zurücksetzen nicht wieder
+      in die Aufzeichnung gelangen. Die Zugriffsregeln der
       Datenbank (<code>firestore.rules</code>) lassen jedes Konto ausschließlich an die eigenen
       Daten – andere Nutzer:innen können sie nicht einsehen. Ausnahmen gibt es zwei: Kartensätze,
       die du selbst per Code teilst (unten), und das Feedback-Board (Punkt 6) – dort ist

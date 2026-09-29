@@ -30,6 +30,9 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-006 | Geteilte Sätze verwaisen und überleben „Konto löschen" (Regel `list` nach Besitzer + Löschen über Besitzer + Reihenfolge) | REGELN-3 | hoch | A | O | P2 | erledigt (3.17.30) |
 | G-007 | Serie bleibt bei 121 Tagen stehen (Protokoll 120 Tage, Sockel wird nicht nachgezogen) | LERNEN-1 | hoch | A¹ | O | P5 | erledigt (3.17.32; die Fassung aus 3.17.31 war falsch und ist zurückgenommen) |
 | G-008 | Prüfskript in den Veröffentlichen-Knopf und die `.bat` einbauen (bricht vor dem Deploy ab) | TECHNIK-2, -14 | hoch | A | H | P1 | erledigt (3.17.30) |
+| G-093 | Abgelehnte Bewertung des alten Kontos kann beim Nachholen das nächste Konto ändern | [Nachlese 28.09.](befunde/NACHLESE-2026-09-28.md) | hoch | A | Astra | P13 | erledigt (3.17.50), drei kontrollierte Auth-Folgen und 13er-Abnahme grün |
+| G-097 | Nutzer-Dokument-Fallback kann nach Kontowechsel Einstellungen/Serienfelder des alten Kontos ins neue schreiben | [Nachlese 28.09.](befunde/NACHLESE-2026-09-28.md) | hoch | A | Astra | P13 | offen: verspätete not-found-Antwort reproduziert, neuer Test rot; folgende Runde |
+| G-098 | Nach erfolgreichem Konto-Löschen bleibt die nächste Anmeldung durch alte Löschsperre am Boot hängen | [Nachlese 28.09.](befunde/NACHLESE-2026-09-28.md) | hoch | A | Sol/Astra | P13 | offen: Gegenprobe bestätigt; Folgeanmeldung und alte Lösch-Fortsetzungen prüfen |
 ¹ G-007: Der Prüfer hat „Betreiber" vorgeschlagen, weil `serieAktuell` Lernlogik ist. **Urteil des Dirigenten:** Die Regel der Serie (was zählt, wie viel verziehen wird) ändert sich nicht. Die Zahl hört nur durch einen Speicherfehler auf zu wachsen, nichts in der App verspricht eine Obergrenze. Das ist ein Fehler wie 3.17.28 (Sockel-Tag), und Fehler werden sofort behoben (`CLAUDE.md` Grundsatz 1). Mit Testfällen vorab, eigener Commit.
 
 ## B. Mittel
@@ -101,7 +104,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-072 | Zwei tote CSP-Hashes (+ `csp-build` mitzählen) | TECHNIK-16 | A | H | P1 | erledigt (3.17.30) |
 | G-073 | Rechtsseiten: Querverweis Datenschutz → Impressum | TECHNIK-18 | A | H | P1 | erledigt (3.17.30) |
 | G-074 | Unnötige Bytes: 147-KB-Favicon, ungenutzte Dateien im Vorabspeicher | TECHNIK-19 | A | H | P11 | erledigt (3.17.36): Vorabspeicher ohne `icon.svg`/`flower-isolated.png`; Tab-Symbol bleibt `desktop-icon.png` – liegt wegen Manifest ohnehin im Vorabspeicher, Tausch spart nichts |
-| G-075 | Tagesprotokoll zählt bei zwei Geräten/offline zu wenig (`increment`) | LERNEN-8 | A | O | P13 | offen |
+| G-075 | Tagesprotokoll zählt bei zwei Geräten/offline zu wenig (`increment`) | LERNEN-8 | A | O | P13 | erledigt (3.17.50): SDK-Mehrgeräte-/Reset-Prüfung und 13er-Abnahme grün; 179/179 Regeln; K10 vor K11 offen |
 | G-076 | Zweiter Tab ohne Offline-Speicher (Mehr-Tab-Manager) | LERNEN-9 | A | S | P13 | erledigt (3.17.42), am echten Projekt mit zwei Tabs zu prüfen |
 | G-077 | Speicherkarten-Liste überschreibt sich auf zwei Geräten (`arrayUnion`/`arrayRemove`) | LERNEN-10, DATEN-14 | A | S | P4 | erledigt (3.17.33) |
 | G-078 | Kommentar zur Lektions-Schwelle nennt Stufe 2 statt 1 | LERNEN-12 | A | H | P5 | erledigt (3.17.30) |
@@ -119,6 +122,17 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-091 | „… wird fester" beim Drehen (Punkte/Schrift): Verdacht – `karte-hebt` skaliert die Karte auf 1,035, Safari zeigt währenddessen ein skaliertes Bild und rechnet am Ende scharf nach. Verdachts-Fix: Anheben ohne Skalieren, eigener Commit. Am iPhone nicht nachstellbar | Betreiber 26.09.2026 | A | O | – | **zurückgenommen (3.17.40):** „wird fester" war der Name des Lernstands in der gespiegelten Kopfzeile (G-092), nicht kräftiger werdende Schrift – das Skalieren ist wieder da |
 | G-092 | iPhone: „Tippen zum Umdrehen" und Kopfzeile (Punkte, „NEU") spiegelverkehrt auf der Rückseite; Linie steht beim Drehen gerade in der schrägen Karte – Safari legt absolut positionierte/animierte Kinder auf eigene Ebenen, `backface-visibility`/3D der Seite gilt für sie nicht. Fix: `backface-visibility` an jedem Kind, Vorderseite ab 90° (15 % der Zeit, nachgerechnet) `hidden`; Einstiegskärtchen mit abgesichert, Linie wächst erst nach 540 ms | Betreiber-Screenshots 26.09.2026 (3.17.37) | A | O | – | 3.17.39: Kinder mit backface + Vorderseite ab 90° `visibility` → Betreiber am iPhone: „steht kurz immer noch rückwärts", Linie kam spät. **3.17.40:** Vorderseite über opacity (synchron mit der Drehung, 0 ab 90°), Linie ohne eigene Bewegung sofort Teil der Rückseite. Am iPhone bestätigen |
 | G-085 | Search Console: „/" in der Sitemap, aber `noindex` | TECHNIK-17 | B | H | – | wartet: mit Phase 6 (Empfehlung des Prüfers) |
+
+## Neue Funde der Runde 12 (28.09.2026)
+
+Beleg und Abnahme: [Nachlese](befunde/NACHLESE-2026-09-28.md).
+
+| ID | Titel | Schwere | Entscheidet | Modell | Status |
+|---|---|---|---|---|---|
+| G-094 | Tageszähler-Snapshot ersetzt aktive Karte/Zeichenfläche | mittel | Agent | Sol/Astra | erledigt (3.17.50), echter SDK-Knotentest und 13er-Abnahme grün |
+| G-095 | Verlauf-Reset verschluckt Regel-Ablehnung | mittel | Agent | Sol | erledigt (3.17.50), echter SDK-Resettest und 13er-Abnahme grün |
+| G-096 | Prüfstand: Sofort-Animation, fehlendes Nullfeld und Lerntag vor 04:00 falsch gemessen; CDP-Fehler nicht sauber weitergegeben | niedrig | Agent | Sol | erledigt (Prüfstand): Gegenprobe/Fixture-Grenze und frische Abnahme grün; Nacht-Unterbrechung nicht als grün gewertet |
+| G-099 | Wisch-Tempo springt nach 80ms auf eine einzelne Teilbewegung; Stillhalten nach kurzem Wisch bewertet trotzdem | mittel | Agent | Sol | erledigt (3.17.50), Browser-/aufgezeichnete Gegenprobe und 13er-Abnahme grün |
 
 ## D. Wartet auf den Betreiber
 

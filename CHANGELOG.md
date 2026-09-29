@@ -1,3 +1,11 @@
+## 3.17.50 – 29. September 2026
+
+**Antworten mehrerer Geräte werden zusammengezählt.** Das Tagesprotokoll schreibt atomare Differenzen statt ganze Tageswerte. Offline-Antworten, Rückgängig über den Tageswechsel und abgelehnte Übertragungen werden dabei berücksichtigt. Reine Zähler-Bestätigungen ersetzen während einer Runde weder Karte noch Zeichenfläche. Eine verspätete Bewertung eines vorherigen Kontos wird nicht im nächsten Konto erneut gesendet. Scheitert „Aufzeichnung zurücksetzen“, zeigt die App den Speicherfehler an. Stufen, Fälligkeiten und Wiederholungsregeln bleiben unverändert.
+
+**Kurzes schnelles Wischen wird gleichmäßiger erkannt.** Die Geschwindigkeit wird über ein fortlaufendes Zeitfenster gemessen. Ein einzelnes später verarbeitetes Touch-Ereignis bestimmt sie dadurch nicht mehr allein. Kurzes Wischen mit anschließendem Stillhalten bewertet beim Loslassen keine Karte; ein Systemabbruch federt weiterhin zurück.
+
+**Zurückgesetztes Tagesprotokoll bleibt zurückgesetzt.** Eine neue Kennung grenzt alte Offline-Differenzen ab. Die Firestore-Regeln weisen diese nach einem Reset ab; ein altes Rückgängig kann dadurch keine negativen Zähler erzeugen oder neue Antworten abziehen. Vor dieser App-Version zuerst die Regeln veröffentlichen (K10), danach Hosting (K11).
+
 ## 3.17.49 – 28. September 2026
 
 **Ladebildschirm in der installierten App auf voller Bildschirmhöhe.** Das iPhone-Foto zeigt Startbild und HTML-Logo übereinander mit Höhenversatz. Nur der Boot-Screen verwendet im Standalone-Modus jetzt `100vh` statt `100svh`; WebKit kann bei `svh` die Statusleistenhöhe abziehen. Der Browser behält seine bisherige Höhe. Die Regression simuliert die verkürzte Höhe und reproduziert mit dem alten Code den Versatz von 24 CSS-Pixeln; Bestätigung am echten iPhone bleibt offen.
