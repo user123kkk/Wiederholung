@@ -2,6 +2,24 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Verdachts-Fix: Hintergrund vor styles.css (3.17.54)
+
+**Geändert:** `index.html:98` (Inline-Style: `html` Hintergrund #111010,
+hell #f2ece0), Versionen in `app.js:19`, `sw.js:10`, `index.html`,
+`CHANGELOG.md`.
+**Entscheidung:** Betreiber: Start blitzt nach 3.17.53 weiter kurz hell.
+Chromium-Screencast des Live-Stands (Erststart und zweiter Start, je ~150
+Bilder): mittlere Helligkeit 17–35, kein heller Einzelbild-Sprung. Also
+iOS-spezifisch. Einzige Lücke in der App: das erste Bild vor `styles.css`
+hatte keine eigene Hintergrundfarbe. Als **Verdachts-Fix** gekennzeichnet
+(LEHREN § 1.3), eigener Commit, leicht zurückzunehmen.
+**Prüfung:** `pruefe_stand.mjs`, `node --check`, `t_boot_geometrie`,
+`t_start`, `t_klein_boot` grün.
+**Offen:** Wirkung am iPhone. Ist der helle Moment weiter da und liegt in
+der iOS-Öffnungsanimation (Fenster mit runden Ecken), ist er von iOS und
+nicht aus der App behebbar.
+**Nächster Schritt:** Betreiber-Kaltstart nach Deploy.
+
 ### 2026-09-29 — Gerätebefund 3.17.53; Codex-Rundenregeln ergänzt
 
 **Geändert:** `plan/grossplan/AUFTRAG.md` (§ 2 Status, neu § 2a

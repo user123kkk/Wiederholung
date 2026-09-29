@@ -1,3 +1,7 @@
+## 3.17.54 – 29. September 2026
+
+**Kein heller Moment vor dem ersten Bild.** Die Seitenfarbe steht jetzt schon im HTML selbst, nicht erst im Stylesheet. Bis `styles.css` geladen war, hatte das allererste Bild der iPhone-App keine eigene Hintergrundfarbe. Chromium zeigt über alle Einzelbilder des Starts keinen hellen Moment; Bestätigung am iPhone bleibt offen.
+
 ## 3.17.53 – 29. September 2026
 
 **Ladebildschirm der iPhone-App springt nicht mehr.** Die Bildschirmaufnahme vom 29.09. zeigt das HTML-Logo im ersten Bild etwa 24 Punkte über dem Startbild; danach rutschte es an die richtige Stelle. Die installierte App meldet beim ersten Bild eine um die Statusleiste kürzere Höhe – auch für `100vh`, nicht nur `svh`. Der Ladebildschirm nimmt in der iPhone-App jetzt die Bildschirmhöhe aus `screen.*`; Android und Browser bleiben unverändert. Neues kleines Kopfskript mit eigenem CSP-Hash. Bestätigung am echten iPhone bleibt offen.
