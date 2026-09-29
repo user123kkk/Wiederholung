@@ -1345,6 +1345,14 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 
 ## 15. Vorfall-Liste
 
+29.09.2026, Betreiber-Rückmeldung zu 3.17.51: iPhone-Start weiterhin falsch.
+Neu erzeugte/versionierte PNGs (.47/.48) und simulierte svh-Korrektur (.49)
+sind keine erfolgreiche Geräteabnahme. Ursache weiterhin offen; bestehende
+Regel §1.3 ausdrücklich anwenden: Chromium/Simulation und echtes installiertes
+iPhone trennen. Großplan auf Betreiberwunsch pausiert; neue gezielte
+Claude-Übergabe `onboarding/CLAUDE-HANDOFF-2026-09-29.md`, kein weiterer
+Verdachts-Fix und keine Produktänderung in der pausierten Runde 14.
+
 29.09.2026, eigener Berichtsfehler: CPU-4×-Zeichnen voreilig pauschal ohne
 Bildpausen beschrieben, weil der Abnahme-Runner nur Handy-Zeilen zeigte.
 Vollständiges Log: kleines Handy 1×83ms, iPad 124 Pausen bis 217ms.

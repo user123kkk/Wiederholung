@@ -787,12 +787,18 @@ Konsolen-Schritte K1 ff., Funktionen/Premium. **Wieder aufgenommen durch
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (29.09.2026): Runde 12 Teil 2 abgeschlossen, 3.17.50 mit
-`5de6969` auf main gepusht; Runde 13 läuft.**
+**AKTUELL (29.09.2026, Pause): Runde 13 abgeschlossen; 3.17.51 mit
+`f550897` auf `main`/`origin/main` gepusht. Großplan vor Runde 14 ausdrücklich
+angehalten.** Betreiber sieht .51 auf seinem Gerät und meldet den Start
+weiterhin falsch. Neuer Claude-Chat soll den Start und Runde 13 gezielt
+prüfen, keine abgeschlossenen Aufgaben grundlos doppeln und Runde 14 nicht
+automatisch beginnen. Verbindliche aktuelle Übergabe:
+[`onboarding/CLAUDE-HANDOFF-2026-09-29.md`](onboarding/CLAUDE-HANDOFF-2026-09-29.md).
+Nur Plandateien/Übergabe nachgetragen, keine Produktänderung für Runde 14.
 **3.17.51** repariert die fünf Konto-/Feld-Aufgaben; kontrollierte Abnahmen,
 91 übrige Scripte, frische 13er-Abnahme sowie Handy 200/iPad 150 Schritte
 grün. Beschreibende Leistungsgrenzen im Logbuch; kein pauschales
-Flüssigkeitsversprechen. Abgenommen, Commit/Push stehen unmittelbar an.
+Flüssigkeitsversprechen. Abgenommen und gepusht; keine Gesamtfreigabe.
 G-075 atomare Tageszähler einschließlich Reset-Kennung; G-093 verspätete
 Bewertungsantwort beim Kontowechsel; G-094 aktive Karte/Canvas erhalten;
 G-095 sichtbare Reset-Ablehnung; G-099 fortlaufendes Wisch-Tempo.
@@ -800,7 +806,7 @@ Echte SDK-Mehrgeräte-Prüfung grün, Regeln 179/179, frische Lernrunden-Abnahme
 13/13 grün; A11y/Kontrast/große Ansicht und beide Affen grün.
 Abgebrochene Nachtläufe zählen nicht. G-096 korrigiert Messungen und
 Fixture-Lerntage. Neue bestätigte hohe Funde G-097/G-098 gehören in die
-laufende Runde 13 (Nutzer-Fallback/Konto-Löschung), ergänzt um belegte
+abgeschlossene Runde 13 (Nutzer-Fallback/Konto-Löschung), ergänzt um belegte
 G-100/G-101 (Bereich-Löschung/Vollschreiben nach Kontowechsel) und G-013-Rest.
 A5/A6 weiterhin offen; Musterprüfung belegt zusätzlich G-102/G-103
 (Weitergabe-Antwort und Dateilesen nach Kontowechsel), dazu G-104
@@ -808,13 +814,16 @@ A5/A6 weiterhin offen; Musterprüfung belegt zusätzlich G-102/G-103
 G-105/G-106 (Board- und Bestätigungsrückmeldungen), genau fünf für Runde 14;
 keine Freigabe des gesamten Großplans. Stand/Nächster Schritt im Logbuch.
 Die iOS-Korrektur 3.17.49 (`100vh` nur im Standalone-Boot, versionierte
-Startbilder) ist im Stand enthalten; installierten iPhone-Kaltstart noch
-am Gerät bestätigen. Q1 (Quran/fortlaufende Texte) ungeklärt, nichts bauen.
+Startbilder) ist im Stand enthalten; Betreiber meldet den installierten
+iPhone-Start weiterhin fehlerhaft. Bisherige Simulation beweist die Ursache
+auf diesem Gerät nicht. Q1 (Quran/fortlaufende Texte) ungeklärt, nichts bauen.
 Eine eventuell aktive externe Claude-Nachtroutine separat beenden.
-**Wartet auf Betreiber:** nach Commit und Abschluss der Folgerunde zuerst
+**Wartet auf Betreiber:** neue gezielte Claude-Prüfung mit aktuellem
+Übergabe-Prompt starten. .51 laut Betreiber bereits am Gerät; tatsächlicher
+K10-Regelstand nicht bestätigt. Bei der nächsten Veröffentlichung zuerst
 K10 (aktuelle Firestore-Regeln), dann K11 (Hosting); alte Regeln lehnen das
-neue Zählerfeld ab. Beide Geräte aktualisieren, Kaltstart und Drehen am
-iPhone prüfen. G-042-Rest (Zeitgrenze/Datenschutz-Satz) bleibt offen.
+neue Zählerfeld ab. Geräte-Kaltstart und Drehen bleiben offen.
+G-042-Rest (Zeitgrenze/Datenschutz-Satz) bleibt offen.
 E-19 ist seit 27.09. entschieden: Geste für „Fast“ lassen.
 Davor 3.17.39:
 3.17.39: Karte drehen auf dem iPhone (Spiegelschrift, Linie; G-091, G-092) –

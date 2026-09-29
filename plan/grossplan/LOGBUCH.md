@@ -2,6 +2,30 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Betreiber pausiert; gezielte Übergabe an Claude
+
+**Geändert:** `plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md` neu;
+`CLAUDE.md`, `plan/PLAN.md`, `plan/grossplan/AUFTRAG.md`,
+`befunde/NACHLESE-2026-09-29.md`, `befunde/NACHPRUEFUNG-2026-09-29.md`
+und `plan/LEHREN.md` Status/Verweis nachgetragen. Nur Dokumentation,
+keine weitere App-Version und keine Produktänderung für Runde 14.
+**Entscheidung:** Runde 13 ist mit `f550897` (.51) auf `origin/main`.
+Die unmittelbar vor dem Commit verfassten „noch nicht committet“-Angaben
+im älteren Eintrag sind damit überholt. Betreiber sieht .51 am Gerät,
+Start weiterhin falsch. Großplan ausdrücklich vor Runde 14 pausiert;
+Claude soll unabhängig gezielt Start/Runde 13 prüfen. Übergabe enthält
+.42–.51, konkrete Fixversuche, Simulation vs. Gerät, gültige Logs,
+Leistungsgrenzen und bereits bekannte G-102–G-106. Erweiterte Import-/App-
+Migrationsproben ausdrücklich noch nicht ausgeführt. Kein erneuter Gesamt-
+lauf für reine Übergabe. Eigener Wachhalte-Helfer, lokaler Server :8099 und
+Emulator :8081 zur Pause beendet; globale Energieeinstellungen unverändert.
+**Offen:** Echte Start-Ursache auf dem iPhone; kein erfolgreicher Geräte-Fix
+behauptet. K10-Regel-Deploy nicht bestätigt, Codex selbst hat nichts
+veröffentlicht. A1/A5/A6 weiterhin nicht erfüllt, G-102–G-106 nicht bauen
+ohne Wiederaufnahme; Q1 weiter ungeklärt.
+**Nächster Schritt:** Neuer Claude-Code-Chat liest aktuelle Übergabe und
+prüft gezielt den Start sowie den Diff von Runde 13. Großplan bleibt pausiert.
+
 ### 2026-09-29 — Runde 13: Konto-Fortsetzungen und Reset-Leerfeld
 
 **Geändert:** `app.js:2711` (G-097 Nutzer-Fallback), `:2405` (G-100

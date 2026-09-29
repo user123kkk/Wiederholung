@@ -2,7 +2,16 @@
 
 ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
 
-### Aktuelle ChatGPT-Übergabe vom 27.09.2026
+### Aktuelle Claude-Übergabe und Pause vom 29.09.2026
+
+Der Betreiber hält nach Runde 13 (3.17.51, `f550897`) an und lässt Claude
+gezielt prüfen: **[`plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md`](plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md) vollständig lesen.**
+Der Start ist laut Betreiber auf dem iPhone weiterhin falsch. Die neue
+Übergabe beschreibt alle bisherigen Versuche und gültige Tests samt Grenzen.
+Runde 14 nicht automatisch beginnen; abgeschlossene Arbeit nicht grundlos
+wiederholen. Die folgende ältere Übergabe ergänzt die UI-Vorgeschichte.
+
+### Historische ChatGPT-Übergabe vom 27.09.2026
 
 Wenn die nächste Session an den aktuellen Onboarding/UI-Problemen arbeitet, zusätzlich **[`plan/onboarding/CHATGPT-HANDOFF-2026-09-27.md`](plan/onboarding/CHATGPT-HANDOFF-2026-09-27.md) komplett lesen**. Dort stehen die konkreten Änderungen 3.17.44–3.17.46, der noch offene Loading-Screen-Befund, die aktuelle Scroll-/Kartenlogik und die Regressionen, die in dieser Session entstanden sind.
 

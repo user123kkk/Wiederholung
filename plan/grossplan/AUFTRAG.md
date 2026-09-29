@@ -62,7 +62,11 @@ ausdrücklichem Auftrag; niemals gleichzeitig an `app.js`/`styles.css`.
 ## 2. Ablauf einer Runde
 
 Eine Runde beginnt nur nach einem ausdrücklichen „weiter" des Betreibers.
-**Stand 28.09.2026: wieder aufgenommen.** Der Betreiber hat ausdrücklich
+**Stand 29.09.2026: nach Runde 13 ausdrücklich pausiert.** Neuer Claude-Chat
+prüft gezielt Runde 13 und den weiterhin falschen iPhone-Start gemäß
+[`../onboarding/CLAUDE-HANDOFF-2026-09-29.md`](../onboarding/CLAUDE-HANDOFF-2026-09-29.md).
+Runde 14 erst nach erneutem ausdrücklichem Weiter-Auftrag beginnen.
+**Historischer Auftrag 28.09.2026:** Der Betreiber hatte ausdrücklich
 „mach weiter“ verlangt, einschließlich Fehlersuche außerhalb der bekannten
 Liste. G-075 wird abgeschlossen, danach folgt die Nachprüfung A5/A6. Neue
 Befunde mit Beleg und Abnahme aufnehmen; keine ungefragten Funktionen bauen.

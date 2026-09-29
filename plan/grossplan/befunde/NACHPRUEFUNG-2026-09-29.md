@@ -2,6 +2,11 @@
 
 ## Durchgang auf 3.17.51: A5 nicht bestanden
 
+Statusnachtrag 29.09.: App-Commit `f550897` gepusht, Runde 13 abgeschlossen,
+Runde 14 ausdrücklich pausiert. Betreiber meldet Start weiterhin falsch.
+Korrektur einer stehen gebliebenen Tabellenzeile: die neue vollständige
+13er-Folge ist inzwischen abgeschlossen, wie im Absatz darunter beschrieben.
+
 Produktstand `e9bfc140b1c5b853ae53eea110907c92faf3dc62bc41c4496fc264ef77fae48a`.
 91 übrige Prüfscripte vollständig ausgeführt, Ausgaben gelesen; beschreibende
 Altdiagnosen nicht als scharfe Verhaltensabnahme gezählt. Lernrunden-Abnahme
@@ -14,7 +19,7 @@ Die Nachprüfung bleibt wegen der neuen hohen Funde ausdrücklich negativ.
 |---|---|---|
 | Konto | Reauth, Löschung/Timeout, Nutzer-Fallback, A→B→Abmelden, Folgeanmeldung | Korrekturen grün; zusätzlicher alter Migrationsauftrag G-104 hoch, kontrollierte echte Funktion schreibt B-Schema und verwirft dessen Umzug |
 | Daten | Datei-/Code-Import, Zusammenführung, Weitergabe/Retry, Unter-Sammlungen | G-102/G-103 hoch neu bestätigt; Weitergabe verändert B-Teilfelder, FileReader erzeugt B-Bereich/Karte; Lehrer-Abruf verändert bei gleichem Code B-Stand |
-| Lernen | Zähler, Reset/Undo, Karten/Canvas-Identität, Seriengrenzen, echte Touch-Abläufe | SDK-Mehrgeräte-Test grün; Lernregel unverändert; vollständige neue 13er-Folge noch erforderlich |
+| Lernen | Zähler, Reset/Undo, Karten/Canvas-Identität, Seriengrenzen, echte Touch-Abläufe | SDK-Mehrgeräte-Test grün; Lernregel unverändert; neue vollständige 13er-Folge grün, beschreibende Leistungsgrenzen im Logbuch |
 | Einstieg | kurze/lange Ansichten, Auswahl, Aufdecken, fertiger Plan, Feldfehler/Fokus | G-039-Gegenprobe nach Messkorrektur tatsächlich 205→165; aktueller Stand grün, natürlicher Dokumentfluss ohne Footer-Overlay |
 | Regeln | eigene UID, Bereich/Karte, Besitzer-Weitergabe, Stimmen, Reset-Kennung | Aktuelle Regeln unverändert, 179/179 aus Runde 12 gültig; SDK-Zähler-/Reset-Ablauf auf diesem Stand erneut grün; kein Produktionsregelstand behauptet |
 | Technik | Versionen/CSP/APP_SHELL, SW-Ausfall/Update, Hosting-ignore/Workflow, Offline | Standprüfer grün; SW behält alten Cache bei fehlender Kerndatei; manuelles Hosting, keine automatische Veröffentlichung beim Push |
