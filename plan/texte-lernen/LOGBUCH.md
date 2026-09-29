@@ -60,8 +60,10 @@ Testcode gegen Befund (prüft Byte-Gleichheit, nicht nur Zeilenzahl – eine
 geänderte Harakat fällt auf), Quelldatei-Kopf/Lizenzblock, `firebase.json`
 (`quran/` wird ausgeliefert, nicht in `ignore`; Standard-Cache-Header). Nach
 dem Commit: `git archive` (so exportiert `veroeffentlichen.ps1`) mit
-`core.autocrlf=true` liefert dieselbe Prüfsumme – Ergebnis im nächsten
-Eintrag. Gefunden: nichts Weiteres.
+`core.autocrlf=true` liefert dieselbe Prüfsumme (`e3438d3`: `6933e133…`,
+Metadaten `8867c1d8…`). Gegenprobe: frischer Klon, Zeile `quran/** -text`
+entfernt, gleiches `git archive` → `9e1a1336…` (Windows-Zeilenenden, rot).
+Die Zeile in `.gitattributes` ist also nötig. Gefunden: nichts Weiteres.
 **Offen:** (1) Darstellung des Tanzil-Textes mit der vorhandenen Schrift
 `UthmanicHafs1Ver18.ttf` (King-Fahd-Kodierung) – in Stufe 2 am Bildschirm
 prüfen (§ 8.3). (2) Quellenangabe + Link im Impressum und unter der
