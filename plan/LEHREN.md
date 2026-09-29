@@ -1213,9 +1213,14 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
   - PNG und HTML im selben mobilen Kontext pixelweise vergleichen; eine
     Chromium-Messung ersetzt keine Bestätigung der installierten iOS-App.
   - Installierten iOS-Modus getrennt von Browser-Viewports prüfen: WebKit
-    254868 kann `100svh` trotz `viewport-fit=cover` verkürzen. Boot nutzt nur
-    im Standalone-Modus `100vh`, passend zum bildschirmgroßen PNG. Nicht
+    254868 kann `100svh` trotz `viewport-fit=cover` verkürzen. Nicht
     pauschal die Höhen anderer Ansichten ändern oder Geräte-Offsets addieren.
+  - **Korrektur 3.17.53:** Auch `100vh` ist im ersten Bild der installierten
+    App um die Statusleiste zu kurz (848 statt 896); der Wechsel von svh auf
+    vh in .49 half deshalb nicht. Belegt durch Bildschirmaufnahme 29.09.:
+    HTML zuerst 45 Gerätepixel höher, dann richtig. Boot nimmt jetzt
+    `screen.*` (nur bei `navigator.standalone`), wie schon die Leiste 3.6.14.
+    Simulationen müssen den **Viewport** verkürzen, nicht nur eine Einheit.
   - **Keine Systemschrift auf dem Startbild** (3.17.52). `ui-serif`,
     `system-ui`, `-apple-system` lösen auf iOS und auf dem Windows-Generator
     zu verschiedenen Schriften auf (New York vs. Palatino). Jeder Text im

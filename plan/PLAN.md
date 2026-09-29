@@ -796,7 +796,10 @@ Betreiber. Großplan weiter vor Runde 14 pausiert. Details im obersten
 Eintrag von `grossplan/LOGBUCH.md`. **Gerätebefund danach:** .52
 veröffentlicht, App neu installiert, Start flackert weiter („2 Sachen“).
 Ohne Bild/Beschreibung nicht weiter geraten; Betreiber: „lass sein“ —
-Start-Befund zurückgestellt, offen.
+Start-Befund zurückgestellt, offen. **Danach Aufnahme-Bilder erhalten:**
+HTML zeichnet erst 24 pt zu hoch (auch 100vh im ersten Bild zu kurz).
+**3.17.53** nimmt die Boot-Höhe aus `screen.*`. Offen: Deploy und
+iPhone-Kaltstart durch den Betreiber.
 
 **AKTUELL (29.09.2026, Pause): Runde 13 abgeschlossen; 3.17.51 mit
 `f550897` auf `main`/`origin/main` gepusht. Großplan vor Runde 14 ausdrücklich

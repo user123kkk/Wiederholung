@@ -3186,9 +3186,12 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   display: grid; place-items: center;
 }
 /* Installiertes iOS: svh kann die Statusleiste abziehen (WebKit 254868).
-   Nur der Boot-Screen braucht die volle Startbild-Hoehe; Browser behalten svh. */
+   Nur der Boot-Screen braucht die volle Startbild-Hoehe; Browser behalten svh.
+   3.17.53: Auch 100vh ist beim ersten Bild um die Statusleiste zu kurz
+   (Aufnahme 29.09.). --boot-h setzt das Kopfskript in index.html aus
+   screen.*; 100vh bleibt nur Rueckfall. */
 @media (display-mode: standalone) {
-  .boot { min-height: 100vh; }
+  .boot { min-height: var(--boot-h, 100vh); }
 }
 .boot__zeichen-hof::before {
   content: ""; position: absolute; inset: -34px;

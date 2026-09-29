@@ -85,5 +85,34 @@ assert.ok(startLinks.every(x=>x.endsWith('?v='+version)),'Startbilder ohne aktue
     assert.equal(standalone.zeichen-alt.zeichen,24,'Gegenprobe reproduziert den Hoehenversatz nicht');
     assert.equal(standalone.marke-alt.marke,24,'Gegenprobe reproduziert den Namensversatz nicht');
     console.log('WebKit-Hoehenfehler simuliert:',JSON.stringify({browser,standalone,alt}));
+    // 3.17.53: Aufnahme 29.09. - im ersten Bild der installierten App ist die
+    // ganze Hoehe (auch 100vh) 848 statt 896, der Bildschirm aber 896.
+    // Simuliert: Viewport 848, screen 896, navigator.standalone, Standalone-
+    // Medienzweig an. Gegenprobe: index.html/styles.css aus 3.17.52 (242b0c6).
+    const {execFileSync}=require('node:child_process');
+    const repo=path.join(__dirname,'../../..');
+    const altStand=d=>execFileSync('git',['show','242b0c6:'+d],{cwd:repo,encoding:'utf8'});
+    async function ersterBildLage(quelleHtml,quelleCss,ios=true){
+      const ctx=await b.newContext({viewport:{width:414,height:848},screen:{width:414,height:896},isMobile:true,hasTouch:true});
+      if(ios) await ctx.addInitScript(()=>Object.defineProperty(navigator,'standalone',{get:()=>true}));
+      const p=await ctx.newPage();
+      const an=q=>q.replace(/\(display-mode:\s*standalone\)/g,'all');
+      await p.route('**/index.html',r=>r.fulfill({contentType:'text/html',body:an(quelleHtml)}));
+      await p.route('**/styles.css?*',r=>r.fulfill({contentType:'text/css',body:an(quelleCss)}));
+      await p.route('**/www.gstatic.com/**',()=>{});
+      await p.goto('http://127.0.0.1:8099/index.html');
+      const lage=await p.evaluate(()=>({hoehe:document.querySelector('.boot').getBoundingClientRect().height,
+        zeichen:document.querySelector('.boot__zeichen').getBoundingClientRect().y,
+        marke:document.querySelector('.boot__marke').getBoundingClientRect().y}));
+      await ctx.close();return lage;
+    }
+    const erstNeu=await ersterBildLage(html,css), erstAlt=await ersterBildLage(altStand('index.html'),altStand('styles.css'));
+    const erstAndroid=await ersterBildLage(html,css,false);
+    console.log('Erstes Bild iOS-App simuliert:',JSON.stringify({neu:erstNeu,alt352:erstAlt,ohneStandalone:erstAndroid}));
+    assert.equal(erstNeu.hoehe,896,'Erstes Bild: Boot nicht auf Bildschirmhoehe');
+    assert.equal(erstNeu.zeichen,896/2-38,'Erstes Bild: Zeichen nicht in Startbild-Lage');
+    assert.equal(erstNeu.marke,896/2+64,'Erstes Bild: Name nicht in Startbild-Lage');
+    assert.equal(erstNeu.zeichen-erstAlt.zeichen,24,'Gegenprobe 3.17.52 zeigt den Versatz der Aufnahme nicht');
+    assert.equal(erstAndroid.hoehe,848,'Ohne navigator.standalone (Android) muss 100vh bleiben');
   }finally{await b.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

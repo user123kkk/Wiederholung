@@ -1,3 +1,7 @@
+## 3.17.53 – 29. September 2026
+
+**Ladebildschirm der iPhone-App springt nicht mehr.** Die Bildschirmaufnahme vom 29.09. zeigt das HTML-Logo im ersten Bild etwa 24 Punkte über dem Startbild; danach rutschte es an die richtige Stelle. Die installierte App meldet beim ersten Bild eine um die Statusleiste kürzere Höhe – auch für `100vh`, nicht nur `svh`. Der Ladebildschirm nimmt in der iPhone-App jetzt die Bildschirmhöhe aus `screen.*`; Android und Browser bleiben unverändert. Neues kleines Kopfskript mit eigenem CSP-Hash. Bestätigung am echten iPhone bleibt offen.
+
 ## 3.17.52 – 29. September 2026
 
 **Startbild und Ladebildschirm setzen den Namen in derselben Schrift.** Der Name „Adrabic“ auf dem Ladebildschirm nutzte `ui-serif`: auf dem iPhone „New York“, auf dem Windows-Rechner, der die Startbilder fotografiert, „Palatino Linotype“. Das Betreiberfoto IMG_4397 zeigt genau diese zwei Schriften übereinander. Der Name steht jetzt in Georgia, die auf iOS und Windows vorhanden ist; alle 31 Startbilder sind neu erzeugt und neu versioniert. `t_boot_geometrie.js` vergleicht zusätzlich den Namen pixelweise und prüft die tatsächlich benutzte Schrift. Bestätigung am echten iPhone bleibt offen.

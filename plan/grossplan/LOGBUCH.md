@@ -2,6 +2,41 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Bildschirmaufnahme belegt Boot-Sprung; Höhe aus screen.* (3.17.53)
+
+**Geändert:** `index.html:100` (Standalone-Regel `var(--boot-h,100vh)`) und
+neues Kopfskript nach dem Inline-Style (setzt `--boot-h` aus `screen.*`,
+nur `navigator.standalone`), `styles.css:3190`, `firebase.json` (zweiter
+sha256-Hash in beiden `script-src`), `app.js:19`, `sw.js:10`, alle
+Versions-URLs in `index.html`, `CHANGELOG.md`,
+`plan/werkzeuge/pruefstand/t_boot_geometrie.js` (Erstbild-Simulation),
+`plan/LEHREN.md` § 11 (Korrektur).
+**Entscheidung:** Betreiber schickte doch Bilder aus einer Aufnahme von
+3.17.52 (Chat, 828×1792). Vermessen: natives Startbild Logo y 834–963,
+Name 1041–1079 – Schrift jetzt gleich, Fix .52 wirkt. Überblendbilder:
+zweite Ebene Name 996–1034, also 45 Gerätepixel (≈23 pt) höher. Bild mit
+Ladelinie (sicher HTML): wieder 834–963. Das HTML zeichnet also zuerst zu
+hoch und rutscht dann an die richtige Stelle. Ursache: im ersten Bild ist
+der ganze Viewport 848 statt 896, damit auch 100vh; .49 (svh→vh) konnte das
+nicht beheben, und sein Test verkürzte nur svh. Fix: Boot-Höhe aus
+`screen.*` wie bei der Leiste seit 3.6.14, Querformat über min/max. Nur
+`navigator.standalone === true` (iOS); Android-Standalone und Browser
+unverändert. Separates Skript, damit das Themen-Skript auf allen Seiten
+denselben Hash behält. Startbilder unverändert (Geometrie gleich), nur
+neue Versions-Query.
+**Prüfung:** `t_boot_geometrie` neu: Viewport 848/screen 896 mit
+`navigator.standalone` → Boot 896, Zeichen 410, Name 512; Gegenprobe
+`242b0c6` → 848/386/488 (24 px höher, wie Aufnahme); ohne standalone 848.
+Übrige Teile weiter grün. `t_klein_boot`, `t_start`, `t_einstieg_lage`,
+`pruefe_stand.mjs` (inkl. CSP-Hashes), `node --check` grün.
+**Offen:** Bestätigung am iPhone nach Deploy (Kaltstart). iPad in Stage
+Manager/geteiltem Fenster: dort ist screen größer als das Fenster, Boot
+würde zu hoch – ungeprüft, Startbilder setzen ohnehin Vollbild voraus.
+Drehen während des Ladens rechnet nicht neu. Hosting-Deploy durch den
+Betreiber (enthält die neue CSP; keine Regeländerung).
+**Nächster Schritt:** Betreiber veröffentlicht 3.17.53 und startet die App
+kalt; bei weiterem Doppelbild erneut Bilder vermessen.
+
 ### 2026-09-29 — Gerätebefund 3.17.52: Start flackert weiter; Betreiber stellt zurück
 
 **Geändert:** nur `plan/grossplan/LOGBUCH.md`, `plan/PLAN.md`.
