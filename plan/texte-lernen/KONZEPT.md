@@ -426,8 +426,13 @@ echtes Können halten, bei Texten wie bei Karten.
 Der Betreiber verlangt sie ausdrücklich; gebaut wird trotzdem erst nach
 einem fertigen Konzept und seinem „ja“ dazu.
 
-Recherche-Fragen (vor jedem Bau, mit Quellen, Ergebnis in
-`plan/texte-lernen/WIEDERHOLEN.md`):
+**Grundsatz (Betreiber):** kein abgehakter Punkt und nicht auf einzelne
+Studien gestützt, sondern ein Mehrwert, der funktioniert – bewährt in der
+Praxis und von der App an echten Ergebnissen selbst geprüft.
+**Erster Entwurf:** [`WIEDERHOLEN.md`](WIEDERHOLEN.md) (drei Töpfe, Kreis,
+Selbstregelung, Probelauf im Betreiberkonto).
+
+Fragen, die der Entwurf beantworten muss:
 
 1. **Alles behalten:** Wie sorgen bewährte Methoden dafür, dass ältere
    Teile nicht verblassen? (Beim Quran-Auswendiglernen: tägliche Rotation
