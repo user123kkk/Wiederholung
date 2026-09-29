@@ -14,7 +14,9 @@ const lage = (p, t) => p.evaluate(t => ({
 }), t);
 const wortStufe = (p, w) => p.evaluate(w => { const k = [...window.__FB.store.keys()].find(k => k.includes('/karten/') && window.__FB.store.get(k).wort === w); const s = window.__FB.store.get(k); return s.stufe + '/' + s.nextReview; }, w);
 (async () => {
+  console.log('Start: Browser fuer X-Abnahme oeffnen');
   const b = await start();
+  console.log('Browser bereit');
   const heute = tag(0);
   let fehler = 0;
   const pruef = (ok, text) => { if (!ok) fehler++; console.log((ok ? 'OK  ' : 'FEHL') + ' ' + text); };
@@ -23,6 +25,7 @@ const wortStufe = (p, w) => p.evaluate(w => { const k = [...window.__FB.store.ke
   {
     const store = vollerStore(); store['users/u1'].streak = { sockel: 0, sockelBis: tag(-999), beste: 11 };
     const { p } = await neueSeite(b, GERAETE.handy, { store, warte: 1500 });
+    console.log('Fall A: App geladen');
     const vor = await lage(p, heute);
     await aktion(p, 'start-session', null, 900);
     const bewertet = [];
@@ -34,6 +37,7 @@ const wortStufe = (p, w) => p.evaluate(w => { const k = [...window.__FB.store.ke
          Offline-Echo und Mehrgeraete werden separat mit dem echten SDK in
          t_verlauf_mehrgeraete.js geprueft. */
       await aktion(p, 'grade-known', null, i < 2 ? 2500 : 150);
+      console.log('Fall A: Antwort ' + (i + 1) + ' gegeben');
     }
     await aktion(p, 'end-session', null, 300);
     const nach = await lage(p, heute);
@@ -55,6 +59,7 @@ const wortStufe = (p, w) => p.evaluate(w => { const k = [...window.__FB.store.ke
   /* Fall B */
   {
     const { p } = await neueSeite(b, GERAETE.handy, { warte: 1500 });
+    console.log('Fall B: App geladen');
     const cdp = await p.context().newCDPSession(p);
     await aktion(p, 'start-session', null, 1200);
     const wort = await p.evaluate(() => document.querySelector('.study-word').textContent);

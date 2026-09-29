@@ -14,6 +14,21 @@ const fs = require('node:fs');
 const path = require('node:path');
 const LOGS = path.join(require('node:os').tmpdir(), 'adrabic-rundenabnahme');
 fs.mkdirSync(LOGS, { recursive: true });
+const {createHash}=require('node:crypto');
+const repo=path.join(__dirname,'../../..');
+const sha=s=>createHash('sha256').update(s).digest('hex');
+const stand=createHash('sha256');
+for(const f of ['app.js','index.html','styles.css','sw.js','firestore.rules',
+ 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js']){
+ stand.update(f).update(fs.readFileSync(path.join(repo,f)));
+}
+const kennung=stand.digest('hex');
+const standOrdner=path.join(require('node:os').tmpdir(),'adrabic-pruefstand-gesamt',kennung.slice(0,16));
+fs.mkdirSync(standOrdner,{recursive:true});
+const standDatei=path.join(standOrdner,'stand.json');
+const ergebnisse=fs.existsSync(standDatei)?JSON.parse(fs.readFileSync(standDatei,'utf8')):{kennung,tests:{}};
+if(ergebnisse.kennung!==kennung)throw new Error('Abnahme gehoert zu anderem Quellstand');
+console.log('Quellstand: '+kennung);
 const PRUEFUNGEN = [
   ['t_runde_lage.js',      'Knopf immer im Bild, Seite scrollt nie (4 Handygroessen, lange Notiz/Antwort)'],
   ['t_sprung.js',          'Karte springt nicht: Aufdecken und Karte zu Karte, 4 Geraete'],
@@ -36,12 +51,23 @@ let rot = 0;
 const zeilen = [];
 for (const [datei, was, lesen] of PRUEFUNGEN) {
   const t0 = Date.now();
-  const r = spawnSync('node', [datei], { cwd: __dirname, encoding: 'utf8', timeout: 600000, env: process.env });
-  const aus = (r.stdout || '') + (r.stderr || '');
-  fs.writeFileSync(path.join(LOGS, datei + '.log'), aus + '\nProzess: ' + JSON.stringify({status:r.status,signal:r.signal,error:r.error?.message}), 'utf8');
+  const quelltext=sha(fs.readFileSync(path.join(__dirname,datei)));
+  const vorher=ergebnisse.tests[datei],log=path.join(standOrdner,datei+'.log');
+  const bewahrt=process.argv.includes('--fortsetzen')&&vorher?.code===0&&vorher.abnahmeOk!==false&&!vorher.zeitlimit&&vorher.quelltext===quelltext&&fs.existsSync(log);
+  let r,aus;
+  if(bewahrt){r={status:0};aus=fs.readFileSync(log,'utf8');}
+  else {
+    r = spawnSync('node', ['--require',path.join(__dirname,'pruef_cleanup.js'),datei], { cwd: __dirname, encoding: 'utf8', timeout: 600000, env: process.env });
+    aus = (r.stdout || '') + (r.stderr || '');
+    const result={code:r.status,abnahmeOk:r.status===0&&!/\bFEHL\b|PAGEERROR|Error:/.test(aus),signal:r.signal,fehler:r.error?.message,zeitlimit:!!r.error,sekunden:Math.round((Date.now()-t0)/1000),quelltext};
+    fs.writeFileSync(log,aus+'\nProzess: '+JSON.stringify(result),'utf8');
+    ergebnisse.tests[datei]=result;
+    fs.writeFileSync(standDatei,JSON.stringify(ergebnisse,null,2));
+  }
+  fs.writeFileSync(path.join(LOGS,datei+'.log'),aus,'utf8');
   const ok = r.status === 0 && !/\bFEHL\b|PAGEERROR|Error:/.test(aus);
   if (!ok) rot++;
-  zeilen.push((ok ? 'OK    ' : 'FEHLER') + '  ' + datei.padEnd(22) + was + '  (' + Math.round((Date.now() - t0) / 1000) + ' s)');
+  zeilen.push((ok ? (bewahrt?'BEWAHRT':'OK    ') : 'FEHLER') + '  ' + datei.padEnd(22) + was + '  (' + Math.round((Date.now() - t0) / 1000) + ' s)');
   console.log(zeilen[zeilen.length - 1]);
   if (!ok) {
     console.log('        ' + aus.split('\n').filter(z => /FEHL|Error|PAGEERROR/.test(z)).slice(0, 6).join('\n        '));

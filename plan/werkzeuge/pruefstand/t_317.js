@@ -14,11 +14,15 @@ const fs = require('fs');
   console.log('Hinweis 1:', await hinweis()); await foto(p, 'n-hinweis1-' + thema);
   await aktion(p, 'hinweis-weg', null, 700); console.log('Hinweis 2:', await hinweis()); await foto(p, 'n-hinweis2-' + thema);
   // Erinnerung
+  // Ein Hinweis ist nicht garantiert die Erinnerung. Die feste Zeile in
+  // Einstellungen bleibt unabhaengig von der Hinweis-Reihenfolge erreichbar.
+  await aktion(p, 'einstellungen', null, 800);
   const dl = p.waitForEvent('download', { timeout: 5000 }).catch(() => null);
   await aktion(p, 'erinnerung-auf', null, 700); await foto(p, 'n-erinnerung-' + thema);
   await aktion(p, 'erinnerung-zeit', '19:30', 900);
   const d = await dl; if (d) { const pfad = await d.path(); const ics = fs.readFileSync(pfad, 'utf8'); console.log('ICS:', d.suggestedFilename(), ics.includes('RRULE:FREQ=DAILY'), (ics.match(/DTSTART:\S+/) || [])[0]); }
   console.log('Toast:', await p.evaluate(() => (document.querySelector('.toast') || {}).innerText));
+  await aktion(p, 'einstellungen-zu', null, 700);
   console.log('Hinweis 3:', await hinweis());
   await aktion(p, 'hinweis-weg', null, 700).catch(() => {}); console.log('Hinweis 4:', await hinweis());
   // Ideen

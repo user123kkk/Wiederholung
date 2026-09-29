@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.17.50";
+const APP_VERSION = "3.17.51";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -2083,6 +2083,16 @@ async function initFirebase() {
     const registrierungName = (ui.authEingabe && ui.authEingabe.name) || "";
     ui.registrierungZeitlimit = false;
     currentUser = user;
+    haltenAbbrechen(); // ein begonnenes Halten gehoert zum bisherigen Konto
+    // Ein Dialog gehoert zum bisherigen Konto. Sofort ohne Austritts-
+    // animation abbrechen; die alte Promise darf keinen neuen Auftrag starten.
+    const alterDialog = ui.dialog;
+    ui.dialog = null;
+    if (alterDialog && typeof alterDialog.resolve === "function") {
+      alterDialog.resolve(dialogResult(alterDialog, false));
+    }
+    kontoWirdGeloescht = false;
+    ui.kontoLoeschenBusy = false;
     if (user) speicherDauerhaftAnfragen();
     listenerLoesen();
     userDocRef = null;
@@ -2393,7 +2403,9 @@ function tiefSetzen(obj, pfad, wert) {
 }
 
 async function patchDoc(patch) {
-  if (!userDocRef || bereiche === null) return;
+  if (!userDocRef || bereiche === null || kontoWirdGeloescht) return;
+  const kontoRef = userDocRef;
+  const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
   if (!patch || Object.keys(patch).length === 0) return;
 
   /* Ein Dokument darf im selben Schwung nur einmal vorkommen. Beim
@@ -2487,6 +2499,7 @@ async function patchDoc(patch) {
     for (let k = 0; k < teile.length; k++) {
       const teil = teile[k];
       const e = await laeufe[k];
+      if (!giltNoch()) return;
       if (!e) continue;
       {
         if (!e || e.code !== "not-found" || kontoWirdGeloescht) throw e;
@@ -2502,42 +2515,53 @@ async function patchDoc(patch) {
            Der Snapshot bringt danach den Stand der Cloud. */
         if (vollSchreiben) {
           await vollSchreiben.catch(() => {});
+          if (!giltNoch()) return;
           await stapelSchreiben(teil);
+          if (!giltNoch()) return;
           continue;
         }
         const fehlt = new Set();
         for (const op of teil) {
           if (op.art !== "update") continue;
           const s = await fb.getDoc(op.ref);
+          if (!giltNoch()) return;
           if (!s.exists()) fehlt.add(op);
         }
         const rest = teil.filter(op => !fehlt.has(op));
         if (!fehlt.size) throw e;
         console.warn("patchDoc: " + fehlt.size + " Aenderung(en) an geloeschten Dokumenten verworfen");
         if (rest.length) await stapelSchreiben(rest);
+        if (!giltNoch()) return;
       }
     }
     /* Firestore loescht Unter-Sammlungen NICHT mit. Die Karten eines
        geloeschten Bereichs muessen einzeln weg, sonst bleiben sie fuer immer
        liegen und zaehlen bei jedem Start als Leseeinheit mit. */
-    for (const bid of bereichLoeschungen) await kartenEinesBereichsLoeschen(bid);
-    schreibErfolg();
+    for (const bid of bereichLoeschungen) {
+      if (!giltNoch()) return;
+      await kartenEinesBereichsLoeschen(bid);
+    }
+    if (giltNoch()) schreibErfolg();
   } catch (e) {
-    saveFehler(e);
+    if (giltNoch()) saveFehler(e);
   }
 }
 
 async function kartenEinesBereichsLoeschen(bid) {
-  if (!kartenColRef) return;
+  if (!kartenColRef || kontoWirdGeloescht) return;
+  const kontoRef = userDocRef, sammlung = kartenColRef;
+  const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
   try {
-    const treffer = await fb.getDocs(fb.query(kartenColRef, fb.where("bereichId", "==", bid)));
+    const treffer = await fb.getDocs(fb.query(sammlung, fb.where("bereichId", "==", bid)));
+    if (!giltNoch()) return;
     const docs = treffer.docs;
     for (let i = 0; i < docs.length; i += 400) {
       const stapel = fb.writeBatch(db);
       docs.slice(i, i + 400).forEach(d => stapel.delete(d.ref));
       await stapel.commit();
+      if (!giltNoch()) return;
     }
-  } catch (e) { saveFehler(e); }
+  } catch (e) { if (giltNoch()) saveFehler(e); }
 }
 
 /* Vollstaendiges Schreiben. Bewusst nur wenige Aufrufer, alle mit demselben
@@ -2553,11 +2577,14 @@ function persistAll() {
   return lauf;
 }
 async function persistAllAusfuehren() {
-  if (!userDocRef || bereiche === null) return;
+  if (!userDocRef || bereiche === null || kontoWirdGeloescht) return;
+  const kontoRef = userDocRef;
+  const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
   try {
-    await fb.setDoc(userDocRef, {
+    await fb.setDoc(kontoRef, {
       name: displayName, streak: streak, settings: settings, schemaVersion: SCHEMA_VERSION
     }, { merge: true });
+    if (!giltNoch()) return;
     const ops = [];
     bereiche.forEach((b, bi) => {
       /* 3.17.30: alle Bereichsfelder ausser den Karten (die sind eigene
@@ -2577,8 +2604,8 @@ async function persistAllAusfuehren() {
       laeufe.push(stapel.commit());
     }
     await Promise.all(laeufe);
-    schreibErfolg();
-  } catch (e) { saveFehler(e); }
+    if (giltNoch()) schreibErfolg();
+  } catch (e) { if (giltNoch()) saveFehler(e); }
 }
 
 /* 3.17.28: Bewertungen und Tagesprotokoll, die mit veraltetem Ausweis
@@ -2682,19 +2709,23 @@ function persistSettings() {
    Jetzt wird im ersten Fall das Dokument angelegt und danach neu geschrieben,
    im zweiten erscheint die Meldung wie bei den Karten auch. */
 async function schreibeInsNutzerdokument(patch) {
-  if (!userDocRef) return;
+  if (!userDocRef || kontoWirdGeloescht) return;
+  const ref = userDocRef, name = displayName;
+  const giltNoch = () => userDocRef === ref && !kontoWirdGeloescht;
   try {
-    await fb.updateDoc(userDocRef, patch);
-    schreibErfolg();
+    await fb.updateDoc(ref, patch);
+    if (giltNoch()) schreibErfolg();
   } catch (e) {
+    if (!giltNoch()) return;
     if (e && e.code === "not-found") {
       if (kontoWirdGeloescht) return;
       try {
-        await fb.setDoc(userDocRef, { name: displayName, schemaVersion: SCHEMA_VERSION }, { merge: true });
-        await fb.updateDoc(userDocRef, patch);
-        schreibErfolg();
+        await fb.setDoc(ref, { name: name, schemaVersion: SCHEMA_VERSION }, { merge: true });
+        if (!giltNoch()) return;
+        await fb.updateDoc(ref, patch);
+        if (giltNoch()) schreibErfolg();
         return;
-      } catch (e2) { saveFehler(e2); return; }
+      } catch (e2) { if (giltNoch()) saveFehler(e2); return; }
     }
     saveFehler(e);
   }
@@ -3162,6 +3193,15 @@ async function kontoVertipptNeuAnfangen() {
 async function doReset() {
   if (ui.authBusy) return;   /* 3.17.38 (G-053): siehe doLogin(). */
   const email = val("a-email").trim();
+  if (!email) {
+    ui.authError = null; ui.authInfo = null;
+    ui.authFeldFehler = { email: true };
+    render();
+    const feld = document.getElementById("a-email");
+    if (feld) feld.focus();
+    return;
+  }
+  ui.authFeldFehler = null;
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
     await mitZeitlimit(fb.sendPasswordResetEmail(auth, email));
@@ -3217,7 +3257,18 @@ async function geteiltLoeschen(code) {
   try { await fb.deleteDoc(fb.doc(db, "geteilteLektionen", code)); }
   catch (e) { if (!e || (e.code !== "permission-denied" && e.code !== "not-found")) throw e; }
 }
-async function kontoDatenLoeschen() {
+/* Ein Loeschauftrag gehoert bis zum letzten Schritt genau einem Konto.
+   Nach Wechsel/Abmeldung oder Zeitlimit darf keine Fortsetzung neu ansetzen. */
+function kontoLoeschKontext() {
+  const konto = { user: currentUser, ref: userDocRef,
+    bereiche: bereicheColRef, karten: kartenColRef, abgebrochen: false };
+  konto.gilt = () => !konto.abgebrochen && !!konto.user &&
+    currentUser === konto.user && userDocRef === konto.ref;
+  konto.pruefen = () => { if (!konto.gilt()) throw { code: "konto-gewechselt" }; };
+  return konto;
+}
+async function kontoDatenLoeschen(konto = kontoLoeschKontext()) {
+  konto.pruefen();
   if (!userDocRef || !bereicheColRef || !kartenColRef) return;
   /* Erst die Sperre, dann die Live-Listener abmelden - in dieser
      Reihenfolge kann keine der drei "not-found -> neu anlegen"-Stellen
@@ -3227,8 +3278,9 @@ async function kontoDatenLoeschen() {
   kontoWirdGeloescht = true;
   listenerLoesen();
   const [bereicheSnap, kartenSnap] = await Promise.all([
-    fb.getDocs(bereicheColRef), fb.getDocs(kartenColRef)
+    fb.getDocs(konto.bereiche), fb.getDocs(konto.karten)
   ]);
+  konto.pruefen();
   /* 3.17.24: Per Code geteilte Kartensaetze liegen ausserhalb von users/{uid}
      (geteilteLektionen/{code}, mit ownerUid). Sie muessen VOR dem Konto weg -
      danach erlaubt die Regel das Loeschen niemandem mehr. Die
@@ -3246,13 +3298,15 @@ async function kontoDatenLoeschen() {
      bleibt es beim Weg ueber teilCode wie bisher (LEHREN § 8.4). */
   try {
     const eigene = await fb.getDocs(fb.query(fb.collection(db, "geteilteLektionen"),
-      fb.where("ownerUid", "==", currentUser.uid)));
+      fb.where("ownerUid", "==", konto.user.uid)));
+    konto.pruefen();
     eigene.docs.forEach(d => codes.add(d.id));
   } catch (e) {
     if (!e || e.code !== "permission-denied") throw e;
     console.warn("geteilteLektionen: Abfrage nach Besitzer abgelehnt (Regel noch nicht veroeffentlicht?)");
   }
-  for (const code of codes) await geteiltLoeschen(code);
+  konto.pruefen();
+  for (const code of codes) { await geteiltLoeschen(code); konto.pruefen(); }
   /* Ebenso die Stimm-Merker im Ideen-Board: feedback/{id}/votes/{uid} traegt
      die Konto-Kennung als Dokument-ID. Die Stimmenzahl selbst ist anonym und
      bleibt. Loeschen eines fehlenden Merkers erlaubt die Regel (nur uid). */
@@ -3264,7 +3318,9 @@ async function kontoDatenLoeschen() {
     const teile = [fb.collection(db, "feedback"), fb.orderBy(fb.documentId()), fb.limit(FEEDBACK_LIMIT)];
     if (letzteIdee) teile.push(fb.startAfter(letzteIdee));
     const seite = await fb.getDocs(fb.query(...teile));
-    await Promise.all(seite.docs.map(d => fb.deleteDoc(fb.doc(db, "feedback", d.id, "votes", currentUser.uid))));
+    konto.pruefen();
+    await Promise.all(seite.docs.map(d => fb.deleteDoc(fb.doc(db, "feedback", d.id, "votes", konto.user.uid))));
+    konto.pruefen();
     if (seite.docs.length < FEEDBACK_LIMIT) break;
     letzteIdee = seite.docs[seite.docs.length - 1];
   }
@@ -3273,8 +3329,10 @@ async function kontoDatenLoeschen() {
     const stapel = fb.writeBatch(db);
     alle.slice(i, i + 400).forEach(d => stapel.delete(d.ref));
     await stapel.commit();
+    konto.pruefen();
   }
-  await fb.deleteDoc(userDocRef);
+  await fb.deleteDoc(konto.ref);
+  konto.pruefen();
 }
 /* 3.17.38 (G-011, KONTO-2): eigenes Zeitlimit fuer kontoDatenLoeschen() als
    Ganzes - deleteDoc()/writeBatch().commit() loesen laut Firestore-Doku erst
@@ -3314,38 +3372,46 @@ function kontoLoeschenFehlerText(e) {
    Google oder Apple angemeldet war, hat keins und konnte sein Konto nach
    ein paar Minuten nicht mehr loeschen. Gibt false zurueck, wenn man
    abbricht. */
-async function kontoNeuAnmelden() {
-  const anbieter = ((currentUser && currentUser.providerData) || []).map(x => x && x.providerId);
+async function kontoNeuAnmelden(konto = kontoLoeschKontext()) {
+  konto.pruefen();
+  const anbieter = ((konto.user && konto.user.providerData) || []).map(x => x && x.providerId);
   if (anbieter.includes("password") || !anbieter.length) {
     const pass = await dlgPrompt(
       "Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht wird.",
       "", { title: "Passwort bestätigen", okLabel: "Weiter", type: "password" });
     if (!pass) return false;
-    await fb.reauthenticateWithCredential(currentUser, fb.EmailAuthProvider.credential(currentUser.email, pass));
+    konto.pruefen();
+    await fb.reauthenticateWithCredential(konto.user, fb.EmailAuthProvider.credential(konto.user.email, pass));
+    konto.pruefen();
     return true;
   }
   const google = anbieter.includes("google.com");
   const ok = await dlgConfirm("Aus Sicherheitsgründen meldest du dich noch einmal bei " + (google ? "Google" : "Apple") +
     " an. Erst danach wird gelöscht.", { title: "Noch einmal anmelden", okLabel: "Weiter" });
   if (!ok) return false;
+  konto.pruefen();
   let provider;
   if (google) provider = new fb.GoogleAuthProvider();
   else { provider = new fb.OAuthProvider("apple.com"); provider.addScope("email"); }
   try {
-    await fb.reauthenticateWithPopup(currentUser, provider);
+    await fb.reauthenticateWithPopup(konto.user, provider);
+    konto.pruefen();
   } catch (e) {
     if (e && (e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request")) return false;
     throw e;
   }
   return true;
 }
-async function kontoAuthLoeschen() {
+async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+  konto.pruefen();
   try {
-    await fb.deleteUser(currentUser);
+    await fb.deleteUser(konto.user);
   } catch (e) {
     if (!e || e.code !== "auth/requires-recent-login") throw e;
-    if (!(await kontoNeuAnmelden())) throw e;
-    await fb.deleteUser(currentUser);
+    konto.pruefen();
+    if (!(await kontoNeuAnmelden(konto))) throw e;
+    konto.pruefen();
+    await fb.deleteUser(konto.user);
   }
 }
 /* 3.12.0: Das Loeschen des Kontos hat eine eigene Seite (Einstellungen ->
@@ -3368,6 +3434,7 @@ function kontoLoeschenBereit() {
 }
 async function kontoLoeschenAusfuehren() {
   if (!currentUser || ui.kontoLoeschenBusy || !kontoLoeschenBereit()) return;
+  const konto = kontoLoeschKontext();
   /* 3.17.38 (G-011, KONTO-2): offline ganz vorn abfangen, noch vor der
      Neu-Anmeldung - ohne Verbindung loesen deleteDoc/writeBatch().commit()
      sonst nie auf (dokumentiertes Firestore-Verhalten mit
@@ -3385,8 +3452,10 @@ async function kontoLoeschenAusfuehren() {
      jetzt nicht mehr weg, nur weil die Uhr "frisch genug" sagt.
      Abbruch oder falsches Passwort: nichts passiert. */
   try {
-    if (!(await kontoNeuAnmelden())) return;
+    if (!(await kontoNeuAnmelden(konto))) return;
+    konto.pruefen();
   } catch (e) {
+    if (!konto.gilt()) return;
     await dlgAlert(kontoLoeschenFehlerText(e), "Nicht gelöscht");
     return;
   }
@@ -3395,11 +3464,15 @@ async function kontoLoeschenAusfuehren() {
   try {
     /* 3.17.38 (G-011, KONTO-2): kontoDatenLoeschen() als Ganzes gegen ein
        eigenes, grosszuegiges Zeitlimit - siehe mitLoeschenZeitlimit(). */
-    await mitLoeschenZeitlimit(kontoDatenLoeschen());
-    await kontoAuthLoeschen();
+    await mitLoeschenZeitlimit(kontoDatenLoeschen(konto));
+    konto.pruefen();
+    await kontoAuthLoeschen(konto);
     /* Erfolg: fb.deleteUser meldet auch ab, onAuthStateChanged raeumt den
        Rest auf (currentUser wird null, die App zeigt den Einstieg). */
   } catch (e) {
+    const warEigenesKonto = konto.gilt();
+    konto.abgebrochen = true;
+    if (!warEigenesKonto) return;
     ui.kontoLoeschenBusy = false; render();
     await dlgAlert(kontoLoeschenFehlerText(e), "Löschen fehlgeschlagen");
     /* Die Live-Listener wurden in kontoDatenLoeschen() abgemeldet und
@@ -4697,6 +4770,8 @@ async function renameBereich() {
   render();
 }
 async function deleteBereich() {
+  const kontoRef = userDocRef;
+  const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
   if (bereiche.length <= 1) {
     await dlgAlert("Der letzte verbleibende Bereich kann nicht gelöscht werden.", "Nicht möglich");
     return;
@@ -4708,7 +4783,7 @@ async function deleteBereich() {
      verlangte den Namen ("Es werden 0 Karte(n) ... geloescht"). */
   if (b.karten.length === 0 && !(b.sets || []).length) {
     const ok = await dlgConfirm("„" + b.name + "“ ist leer." + (b.teilCode ? " Der Code " + b.teilCode + " funktioniert danach nicht mehr." : ""), { title: "Bereich löschen?", okLabel: "Löschen", danger: true });
-    if (!ok) return;
+    if (!ok || !giltNoch()) return;
     await bereichEntfernen(b);
     return;
   }
@@ -4728,7 +4803,7 @@ async function deleteBereich() {
     'sieh in deinen Downloads nach, dass die Datei wirklich da ist.\n\n' +
     'Tipp zum Bestätigen den Namen des Bereichs ein: ' + b.name,
     "", { title: "Bereich löschen?", okLabel: "Endgültig löschen", danger: true });
-  if (eingabe === null) return;
+  if (eingabe === null || !giltNoch()) return;
   /* 3.17.33 (DATEN-19): Harakat, Alif-Formen und Gross/klein zaehlen nicht - hinsehen ja, Harakat tippen nein. */
   if (vergleichsWort(eingabe) !== vergleichsWort(b.name)) {
     await dlgAlert("Der Name stimmt nicht überein – es wurde nichts gelöscht.", "Abgebrochen");
@@ -4737,6 +4812,8 @@ async function deleteBereich() {
   await bereichEntfernen(b);
 }
 async function bereichEntfernen(b) {
+  const kontoRef = userDocRef;
+  const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
   /* 3.17.24: Ein geteilter Satz endet mit dem Bereich - sonst liefe sein Code
      weiter, ohne dass es in der App noch einen Weg gaebe, ihn zu beenden.
      DATEN-6/§ 6.8 (25.09.2026): was scheitern kann, kommt zuerst - vorher
@@ -4749,7 +4826,9 @@ async function bereichEntfernen(b) {
     }
     try {
       await mitZeitlimit(geteiltLoeschen(b.teilCode));
+      if (!giltNoch()) return;
     } catch (e) {
+      if (!giltNoch()) return;
       await dlgAlert(fehlerKlartext(e) + " Der Bereich wurde nicht gelöscht.", "Nicht gelöscht");
       return;
     }
@@ -7567,8 +7646,12 @@ function renderAuth() {
       (nameFehler ? ' aria-invalid="true" aria-describedby="a-name-fehler"' : '') + '>';
     html += '</div>';
   }
-  html += '<div class="field"><label for="a-email">E-Mail</label>';
-  html += '<input type="email" id="a-email" autocomplete="email" inputmode="email"></div>';
+  const emailFehler = !!(ui.authFeldFehler && ui.authFeldFehler.email);
+  html += '<div class="field"><label for="a-email">E-Mail' +
+    '<span id="a-email-fehler" class="opt' + (emailFehler ? ' opt--fehler' : '') + '">' +
+    (emailFehler ? ' \u2013 bitte ausf\u00fcllen' : '') + '</span></label>';
+  html += '<input type="email" id="a-email" autocomplete="email" inputmode="email"' +
+    (emailFehler ? ' aria-invalid="true" aria-describedby="a-email-fehler"' : '') + '></div>';
   if (m !== "reset") {
     html += '<div class="field"><label for="a-pass">Passwort' +
       (m === "register" ? ' <span class="opt">\u2013 mindestens 6 Zeichen</span>' : '') + '</label>';
@@ -7676,6 +7759,16 @@ function renderAuth() {
       name.removeAttribute("aria-describedby");
       const fehlerEl = document.getElementById("a-name-fehler");
       if (fehlerEl) { fehlerEl.classList.remove("opt--fehler"); fehlerEl.textContent = "\u2013 wird in der App angezeigt"; }
+    }
+  });
+  const email = document.getElementById("a-email");
+  if (email) email.addEventListener("input", () => {
+    if (ui.authFeldFehler && ui.authFeldFehler.email) {
+      ui.authFeldFehler.email = false;
+      email.removeAttribute("aria-invalid");
+      email.removeAttribute("aria-describedby");
+      const hinweis = document.getElementById("a-email-fehler");
+      if (hinweis) { hinweis.classList.remove("opt--fehler"); hinweis.textContent = ""; }
     }
   });
 }
@@ -12373,6 +12466,7 @@ function closeDialog(result) {
   const dlg = app.querySelector(".dlg");
   const huelle = dlg && dlg.parentElement && dlg.parentElement.classList.contains("dlg-backdrop") ? dlg.parentElement : null;
   spielAustrittsAnimation(dlg, huelle, () => {
+    if (ui.dialog !== d) return; // alter Timer darf keinen neuen Dialog schliessen
     ui.dialog = null;
     render();
     d.resolve(result);

@@ -787,14 +787,25 @@ Konsolen-Schritte K1 ff., Funktionen/Premium. **Wieder aufgenommen durch
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**AKTUELL (29.09.2026): Runde 12 Teil 2, 3.17.50 noch nicht committet.**
+**AKTUELL (29.09.2026): Runde 12 Teil 2 abgeschlossen, 3.17.50 mit
+`5de6969` auf main gepusht; Runde 13 läuft.**
+**3.17.51** repariert die fünf Konto-/Feld-Aufgaben; kontrollierte Abnahmen,
+91 übrige Scripte, frische 13er-Abnahme sowie Handy 200/iPad 150 Schritte
+grün. Beschreibende Leistungsgrenzen im Logbuch; kein pauschales
+Flüssigkeitsversprechen. Abgenommen, Commit/Push stehen unmittelbar an.
 G-075 atomare Tageszähler einschließlich Reset-Kennung; G-093 verspätete
 Bewertungsantwort beim Kontowechsel; G-094 aktive Karte/Canvas erhalten;
 G-095 sichtbare Reset-Ablehnung; G-099 fortlaufendes Wisch-Tempo.
-Echte SDK-Mehrgeräte-Prüfung grün, Regeln 179/179; frische Lernrunden-Abnahme
-läuft, abgebrochene Nachtläufe zählen nicht. G-096 korrigiert Messungen und
+Echte SDK-Mehrgeräte-Prüfung grün, Regeln 179/179, frische Lernrunden-Abnahme
+13/13 grün; A11y/Kontrast/große Ansicht und beide Affen grün.
+Abgebrochene Nachtläufe zählen nicht. G-096 korrigiert Messungen und
 Fixture-Lerntage. Neue bestätigte hohe Funde G-097/G-098 gehören in die
-folgende Runde (Nutzer-Fallback/Konto-Löschung). A5/A6 weiterhin offen;
+laufende Runde 13 (Nutzer-Fallback/Konto-Löschung), ergänzt um belegte
+G-100/G-101 (Bereich-Löschung/Vollschreiben nach Kontowechsel) und G-013-Rest.
+A5/A6 weiterhin offen; Musterprüfung belegt zusätzlich G-102/G-103
+(Weitergabe-Antwort und Dateilesen nach Kontowechsel), dazu G-104
+(alter Migrationsstapel markiert B-Umzug als fertig), außerdem mittlere
+G-105/G-106 (Board- und Bestätigungsrückmeldungen), genau fünf für Runde 14;
 keine Freigabe des gesamten Großplans. Stand/Nächster Schritt im Logbuch.
 Die iOS-Korrektur 3.17.49 (`100vh` nur im Standalone-Boot, versionierte
 Startbilder) ist im Stand enthalten; installierten iPhone-Kaltstart noch

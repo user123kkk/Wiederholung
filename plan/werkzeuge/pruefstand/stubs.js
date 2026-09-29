@@ -38,7 +38,11 @@ export function createUserWithEmailAndPassword(a, email){
   if (window.__CREATE_USER_VERZOEGERUNG_MS) return new Promise(ok => setTimeout(() => ok(anlegen()), window.__CREATE_USER_VERZOEGERUNG_MS));
   return Promise.resolve(anlegen());
 }
-export function sendPasswordResetEmail(){ return Promise.resolve(); }
+export function sendPasswordResetEmail(a,email){
+  S.resetAnfragen = S.resetAnfragen || []; S.resetAnfragen.push(email);
+  if (S.authFail) return Promise.reject(Object.assign(new Error('x'),{code:S.authFail}));
+  return Promise.resolve();
+}
 export function sendEmailVerification(){
   S.protokoll.push('sendEmailVerification'); S.sendEmailVerificationCalls = (S.sendEmailVerificationCalls || 0) + 1;
   if (S.authFail) return Promise.reject(Object.assign(new Error('x'),{code:S.authFail})); return Promise.resolve();

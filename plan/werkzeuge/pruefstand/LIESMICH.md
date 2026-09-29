@@ -27,6 +27,20 @@ CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node t_sprung.js
 Fotos landen in `$PRUEF_BILDER` (Standard: `<tmp>/adrabic-pruefbilder`).
 `node_modules/` und `package*.json` nicht einchecken.
 
+Gesamtlauf: `node alle_pruefen.js`, oder die 13 Lernrunden-Tests separat mit
+`node abnahme_runde.js` und die übrigen mit `node alle_pruefen.js --ohne-runde`.
+Der zweite Befehl behauptet ausdrücklich keine vollständige Gesamtabnahme.
+`--fortsetzen` bewahrt nur Exit-0-Ergebnisse desselben Produkt-/Stub-/Lib-
+Quellstands mit identischem Testtext; rote/unvollständige Fälle laufen neu.
+Ausgaben unter `<tmp>/adrabic-pruefstand-gesamt/<Quellstand>` lesen.
+Exit 0 allein bewertet keine beschreibenden Messungen oder Gegenproben.
+Auch `abnahme_runde.js --fortsetzen` nutzt denselben Quellstand und Test-Hash;
+bereits gültige Fälle bleiben erhalten, fehlende/rote laufen neu. Vollständige
+Ausgaben bleiben zusätzlich pro Quellstand erhalten; alte Daten ohne Hash
+werden nicht übernommen. Standby-Abbrüche sind keine bestandenen Tests.
+Ein Preload schließt nur die frisch vom fehlerhaften Test gestarteten Browser;
+der Fehler bleibt im Log und der Prozess endet mit Exit 1.
+
 ## Mehrgeräte-Zähler und Kontowechsel (3.17.50)
 
 `t_verlauf_mehrgeraete.js` verwendet das echte Firebase-JS-SDK 10.14.1

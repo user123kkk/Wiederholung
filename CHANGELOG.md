@@ -1,3 +1,11 @@
+## 3.17.51 – 29. September 2026
+
+**Konto- und Bereichslöschungen schützen das Folgekonto.** Nutzer-Fallbacks, Vollschreiben und Bereich-Löschungen brechen nach einem Kontowechsel ihre Fortsetzung ab. Eine laufende Konto-Löschung bindet Abfragen, Stimm-Merker, erneute Anmeldung und Auth-Löschung an dasselbe Konto; nach Zeitlimit werden weitere Schritte gestoppt. Nach erfolgreicher Löschung lädt eine neue Anmeldung ohne Seiten-Neuladen.
+
+**Alte Löschdialoge werden beim Kontowechsel abgebrochen.** Eine begonnene Halte-Aktion endet ebenfalls. Der verzögerte Schließ-Schritt eines alten Dialogs kann keinen neuen Dialog mehr entfernen.
+
+**Leeres E-Mail-Feld beim Passwort-Link wird direkt markiert.** Die App fragt Firebase erst mit einer ausgefüllten Adresse. Der Fehler steht am Feld, das den Fokus erhält; beim Tippen verschwindet er ohne Verschiebung des Knopfs.
+
 ## 3.17.50 – 29. September 2026
 
 **Antworten mehrerer Geräte werden zusammengezählt.** Das Tagesprotokoll schreibt atomare Differenzen statt ganze Tageswerte. Offline-Antworten, Rückgängig über den Tageswechsel und abgelehnte Übertragungen werden dabei berücksichtigt. Reine Zähler-Bestätigungen ersetzen während einer Runde weder Karte noch Zeichenfläche. Eine verspätete Bewertung eines vorherigen Kontos wird nicht im nächsten Konto erneut gesendet. Scheitert „Aufzeichnung zurücksetzen“, zeigt die App den Speicherfehler an. Stufen, Fälligkeiten und Wiederholungsregeln bleiben unverändert.

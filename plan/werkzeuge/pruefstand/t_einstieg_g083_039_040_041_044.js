@@ -260,12 +260,14 @@ async function pruefeKnopfHoehe(b, vp, label) {
       await klick(p, '[data-action="einstieg-weiter"]');
       await klick(p, '[data-action="einstieg-ziel"]', 300);
       await klick(p, '[data-action="einstieg-weiter"]');
+      await klick(p, '[data-action="einstieg-huerde"][data-id="keine"]', 300);
       await klick(p, '[data-action="einstieg-weiter"]');
       const vor = await probeTop(p);
       await klick(p, '[data-action="einstieg-aufdecken"]', 700);
       const nach = await probeTop(p);
       const gleich = vor !== null && nach !== null && Math.abs(vor - nach) <= 1;
-      if (gleich) { console.log('  unerwartet: alter Stand hat den Sprung nicht (G-039)'); altFunde++; }
+      if (vor === null || nach === null) { console.log('FEHLER  Gegenprobe G-039 erreicht die Probekarte nicht'); altFunde++; }
+      else if (gleich) { console.log('  unerwartet: alter Stand hat den Sprung nicht (G-039)'); altFunde++; }
       else console.log('  ok (=Fehler im Altstand): Probekarte springt beim Aufdecken (' + vor + ' -> ' + nach + ')');
       const hatKarteDreh = await p.evaluate(() => !!document.querySelector('.einstieg-karte .karte-dreh--wende'));
       if (hatKarteDreh) { console.log('  unerwartet: alter Stand hat karte-dreh--wende schon (G-040)'); altFunde++; }

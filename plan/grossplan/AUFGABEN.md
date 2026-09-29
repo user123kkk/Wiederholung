@@ -31,8 +31,12 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-007 | Serie bleibt bei 121 Tagen stehen (Protokoll 120 Tage, Sockel wird nicht nachgezogen) | LERNEN-1 | hoch | A¹ | O | P5 | erledigt (3.17.32; die Fassung aus 3.17.31 war falsch und ist zurückgenommen) |
 | G-008 | Prüfskript in den Veröffentlichen-Knopf und die `.bat` einbauen (bricht vor dem Deploy ab) | TECHNIK-2, -14 | hoch | A | H | P1 | erledigt (3.17.30) |
 | G-093 | Abgelehnte Bewertung des alten Kontos kann beim Nachholen das nächste Konto ändern | [Nachlese 28.09.](befunde/NACHLESE-2026-09-28.md) | hoch | A | Astra | P13 | erledigt (3.17.50), drei kontrollierte Auth-Folgen und 13er-Abnahme grün |
-| G-097 | Nutzer-Dokument-Fallback kann nach Kontowechsel Einstellungen/Serienfelder des alten Kontos ins neue schreiben | [Nachlese 28.09.](befunde/NACHLESE-2026-09-28.md) | hoch | A | Astra | P13 | offen: verspätete not-found-Antwort reproduziert, neuer Test rot; folgende Runde |
-| G-098 | Nach erfolgreichem Konto-Löschen bleibt die nächste Anmeldung durch alte Löschsperre am Boot hängen | [Nachlese 28.09.](befunde/NACHLESE-2026-09-28.md) | hoch | A | Sol/Astra | P13 | offen: Gegenprobe bestätigt; Folgeanmeldung und alte Lösch-Fortsetzungen prüfen |
+| G-097 | Nutzer-Dokument-Fallback kann nach Kontowechsel Einstellungen/Serienfelder des alten Kontos ins neue schreiben | [Nachlese 28.09.](befunde/NACHLESE-2026-09-28.md) | hoch | A | Astra | P13 | erledigt (3.17.51), vier kontrollierte Abnahmen und vollständige Regression grün |
+| G-098 | Alte Konto-Löschfortsetzung kann nach Wechsel Nutzer-Dokument/Auth des neuen Kontos löschen; Folgeanmeldung nach erfolgreicher Löschung blockiert | t_konto_loeschwechsel.js / Nachlese | kritisch | A | Astra | P13 | erledigt (3.17.51), kontrollierte Abnahmen und vollständige Regression grün |
+| G-100 | Bereich-Löschung setzt nach Konto-Wechsel mit den Karten des neuen Kontos fort | t_konto_stapel.js / t_konto_dialog.js --gegenprobe (5de6969) | kritisch | A | Astra | P13 | erledigt (3.17.51), Stapel/Dialog/Timer und vollständige Regression grün |
+| G-102 | Späte Weitergabe-Antwort verändert Teil-Code/Freigabe des nächsten Kontos | [Nachlese 29.09.](befunde/NACHLESE-2026-09-29.md) | hoch | A | Astra | P15 | offen: drei tatsächliche B-Dokumentänderungen kontrolliert belegt; Runde 14 |
+| G-103 | Backup-Dateilesen von A importiert nach Kontowechsel Inhalte in B | [Nachlese 29.09.](befunde/NACHLESE-2026-09-29.md) | hoch | A | Sol/Astra | P15 | offen: Bereich/Karte tatsächlich in B angelegt; Runde 14 |
+| G-104 | Alte Datenmigration markiert wartendes Folgekonto als umgezogen und verwirft dessen Umzug | konto_umzug.js / Nachlese 29.09. | hoch | A | Astra | P15 | offen: kontrollierter echter Funktionscode schreibt schemaVersion von B; Runde 14 |
 ¹ G-007: Der Prüfer hat „Betreiber" vorgeschlagen, weil `serieAktuell` Lernlogik ist. **Urteil des Dirigenten:** Die Regel der Serie (was zählt, wie viel verziehen wird) ändert sich nicht. Die Zahl hört nur durch einen Speicherfehler auf zu wachsen, nichts in der App verspricht eine Obergrenze. Das ist ein Fehler wie 3.17.28 (Sockel-Tag), und Fehler werden sofort behoben (`CLAUDE.md` Grundsatz 1). Mit Testfällen vorab, eigener Commit.
 
 ## B. Mittel
@@ -42,7 +46,7 @@ werden in derselben Runde gemacht (eine Version, ein Test-Durchgang).
 | G-010 | Firebase-Sprache nicht gesetzt → englische Mails/Seiten: `auth.languageCode = "de"` | KONTO-1 | A | H | P6 | erledigt (3.17.30) |
 | G-011 | Konto löschen: offline sperren, Zeitlimit für die Löschschritte | KONTO-2 | A | S | P7 | erledigt (3.17.38) |
 | G-012 | „Passwort vergessen": vorsichtiger Erfolgstext (Enumeration) | KONTO-3 | A | H | P6 | erledigt (3.17.30) |
-| G-013 | Fehlende Auth-Fehlercodes in Worten + Leerfeld-Prüfung bei „Link zusenden" | KONTO-4 | A | S | P6 | teilweise (3.17.30): Texte erledigt, Leerfeld-Prüfung offen |
+| G-013 | Fehlende Auth-Fehlercodes in Worten + Leerfeld-Prüfung bei „Link zusenden" | KONTO-4 | A | S | P6 | erledigt (3.17.51), Leerfeld/Fokus/ARIA/Enter und vollständige Regression grün |
 | G-014 | Stimmen im Board ohne eigene Stimme ±1 manipulierbar → Regel mit `existsAfter` | REGELN-2 | A | O | P8 | erledigt (3.17.30) |
 | G-015 | Moderation löscht Idee → Stimm-Merker mit Kennung bleiben: Status „entfernt" statt Löschen | REGELN-4 | A | S | P8 | erledigt (3.17.40): Weg (a) + bei der Abnahme ergänzt: „entfernen" leert Titel/Beschreibung (sonst über die Schnittstelle lesbar); Merker unter FRÜHER gelöschten Ideen bleiben (nicht mehr auffindbar); Datenschutz Punkt 6 ergänzt |
 | G-016 | Mengenbremse: Board nur `limit(100)`, Text nicht leer, geteilter Satz mit Größen-/Formprüfung | REGELN-5 (Regelteil) | A | O | P8 | erledigt (3.17.38): Regel (list nur limit ≤ 100, Text nicht leer, Form des geteilten Bereichs) + App (`limit(100)`, seitenweises Löschen der Merker); keine Kartenzahl-Grenze (1 MiB begrenzt ohnehin). **Regel-Deploy erst nach 3.17.38 live (K10)** |
@@ -133,6 +137,9 @@ Beleg und Abnahme: [Nachlese](befunde/NACHLESE-2026-09-28.md).
 | G-095 | Verlauf-Reset verschluckt Regel-Ablehnung | mittel | Agent | Sol | erledigt (3.17.50), echter SDK-Resettest und 13er-Abnahme grün |
 | G-096 | Prüfstand: Sofort-Animation, fehlendes Nullfeld und Lerntag vor 04:00 falsch gemessen; CDP-Fehler nicht sauber weitergegeben | niedrig | Agent | Sol | erledigt (Prüfstand): Gegenprobe/Fixture-Grenze und frische Abnahme grün; Nacht-Unterbrechung nicht als grün gewertet |
 | G-099 | Wisch-Tempo springt nach 80ms auf eine einzelne Teilbewegung; Stillhalten nach kurzem Wisch bewertet trotzdem | mittel | Agent | Sol | erledigt (3.17.50), Browser-/aufgezeichnete Gegenprobe und 13er-Abnahme grün |
+| G-101 | Vollschreiben fährt nach alter Nutzer-Write-Antwort mit neuen globalen Kontoreferenzen fort | mittel | Agent | Sol/Astra | erledigt (3.17.51), kontrollierte Stapel-Abnahme und vollständige Regression grün |
+| G-105 | Alte Board-Antwort leert Entwurf/Formular oder verändert Stimm-Anzeige des Folgekontos | mittel | Agent | Sol/Astra | offen: konto_board.js belegt beide Zustandsverluste; Runde 14 |
+| G-106 | Alte Bestätigungsprüfung erneuert B-Token und lädt dessen Seite neu; alte Versandmeldung erscheint in B | mittel | Agent | Sol/Astra | offen: konto_bestaetigung.js belegt drei Fortsetzungen; Runde 14 |
 
 ## D. Wartet auf den Betreiber
 

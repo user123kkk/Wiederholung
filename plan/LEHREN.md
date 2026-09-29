@@ -643,7 +643,12 @@ zuerst: Sie sind am häufigsten aufgetreten.
     **unter bzw. neben** der Handlung.
   - Wechselnde Beschriftungen haben feste Breite: beide Wörter übereinander,
     `.merk-btn__wort`.
-  - Der Weiter-Knopf im Einstieg steht unten fest.
+  - Der Weiter-Knopf steht auf kurzen Einstiegsscreens unten. Seit 3.17.44
+    wachsen lange Screens samt Weiter-Fuß im normalen Dokumentfluss;
+    keinen sticky/festen Fuß zurückbauen, der Auswahl oder Echo überlagert.
+    Ein zusätzlicher Echo-Satz kann dort die Dokumenthöhe ändern. Entscheidend
+    sind erreichbare Inhalte und keine Überlagerung, nicht identische
+    Dokumentkoordinaten bei unterschiedlich hohem Inhalt (Übergabe 27.09.).
   - **Ein Knopf, der an der Stelle eines gerade gedrückten erscheint, nimmt
     nicht sofort Tipps an** – schon gar nicht, solange er noch unsichtbar
     einblendet. *Vorfall 3.17.25:* „Antwort zeigen" → an derselben Stelle
@@ -975,6 +980,50 @@ Richtungen: Was kann jemand an **eigenen** Daten verbiegen, und was an denen
 
 ### 8.3 Snapshot-Echos
 
+- **29.09.2026, G-106:** Bestätigungsprüfung/erneutes Senden und ihre
+  Timer-Sperre an den ursprünglichen User binden. Alte reload-Antworten
+  dürfen weder den Token eines Folgekontos erneuern noch dessen Seite neu
+  laden; alte Versandmeldungen gehören nicht in dessen UI.
+
+- **29.09.2026, G-105:** Auch Rückmeldungen zu öffentlichen Board-Writes
+  gehören zu ihrem Ursprungskonto. Alte Erfolge dürfen keinen neuen Entwurf
+  leeren/Formular schließen; alte Fehler keine neue Stimm-Anzeige korrigieren.
+  Kontext vor erstem Write binden und sowohl Erfolg als auch Fehler prüfen.
+
+- **29.09.2026, G-104:** Datenmigrationen binden Konto und Umzugszustand
+  vor dem ersten Stapel. Nach jedem Await prüfen, auch vor der abschließenden
+  Schema-Markierung: ein A-Stapel darf niemals den B-Umzug als fertig markieren
+  oder dessen Zustand verwerfen. Wechsel zu fertigem und migrierendem B prüfen.
+- **29.09.2026, G-102/G-103:** Ein geschützter SDK-Helper reicht nicht,
+  wenn der äußere Auftrag erst nach einer alten Antwort neu hineinläuft.
+  Herkunft am Beginn des gesamten Teilen-/Import-Auftrags erfassen, auch
+  beim Start des FileReader. Jede Fortsetzung vor weiteren Writes,
+  Bestätigungen, Token-Retry und UI-Mutation daran binden. Dialog-Abbruch
+  schützt bereits laufende Netzantworten oder dialoglose Imports nicht.
+
+- **3.17.51, G-100 UI-Abnahme:** Konto-Bindung beginnt vor dem Dialog,
+  nicht erst im SDK-Helper. Ein alter Bereich-Löschdialog blieb auf B
+  bedienbar und löschte dort 40 Karten. Beim Auth-Wechsel Dialog-Promises
+  als Abbruch auflösen und gehaltene Aktionen abbrechen; nach jeder
+  Bestätigung das Ursprungskonto prüfen. Verzögerte Schließ-Callbacks
+  dürfen nur ihren eigenen noch aktiven Dialog entfernen. Im UI-Test
+  ausdrücklich das Ende des Boot-Overlays prüfen: geladene Daten allein
+  bedeuten noch keine bedienbare Oberfläche.
+
+- **3.17.51, G-098:** Die Löschsperre beim Auth-Wechsel freigeben, aber
+  erst den gesamten Löschauftrag konto-gebunden machen. Eine alte Abfrage
+  setzte sonst mit `currentUser.uid`/`userDocRef` von B fort und löschte
+  Nutzer-Dokument und Auth von B. Reauth-Prompts, geteilte Sätze, Stimmen,
+  Stapel, Nutzerdokument und Auth tragen denselben ursprünglichen Kontext.
+  Nach jedem Await prüfen; Zeitlimit markiert den Auftrag als abgebrochen,
+  damit eine spätere SDK-Antwort keine weiteren Schritte startet.
+
+- **29.09.2026, G-100/G-101:** Auch Bereich-Löschung und Vollschreiben sind
+  mehrstufig. Eine alte Stapel-Bestätigung darf keine neue globale Sammlung
+  auswählen: Gegenprobe löschte nach Wechsel 40 Karten des neuen Kontos.
+  Ursprungsreferenz vor erstem Await erfassen, nach jedem Await Gültigkeit
+  prüfen, auch vor Unter-Sammlungs-Löschungen, Fallbacks und Rückmeldungen.
+
 - **29.09.2026, G-075/Reset-Nachprüfung:** Atomare negative Differenzen
   allein reichen nicht: fremder Reset plus altes Offline-Undo erzeugte im
   unveröffentlichten Fix −1 und hätte eine neue Antwort verschluckt.
@@ -1295,6 +1344,81 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+29.09.2026, eigener Berichtsfehler: CPU-4×-Zeichnen voreilig pauschal ohne
+Bildpausen beschrieben, weil der Abnahme-Runner nur Handy-Zeilen zeigte.
+Vollständiges Log: kleines Handy 1×83ms, iPad 124 Pausen bis 217ms.
+Aussage sofort berichtigt; jede beschreibende Ausgabe vollständig lesen,
+auch alle Geräte, bevor Flüssigkeit behauptet wird (§ 5.3/5.4).
+
+29.09.2026, Prüfstand durch Windows-Standby unterbrochen: X ohne Ausgabe
+im Zeitlimit, später Schreiben nach fast 2h40. Systemereignisse belegen
+Energiesparen während der Läufe. Keine App-Korrektur daraus ableiten;
+Abbruch bleibt rot. Fortsetzen nur mit identischem Produkt-/Helper- und
+Test-Hash, gültigen vollständigen Ausgaben; fehlende/rote erneut (§ 5.3).
+
+29.09.2026, neuer Musterfund G-106: Alte A-Bestätigungsprüfung erneuerte
+B-Token und lud B-Seite neu, alter Versand ersetzte B-Info. Echter
+Funktionscode mit kontrollierten Antworten. User bis zum Ende binden (§ 8.3).
+Eigener Messfehler zuerst: Endkommentar existierte schon vor dem gewünschten
+Funktionsbeginn; `slice` war leer. Endmarkierung erst ab Start suchen und
+Funktionsvorhandensein verlangen; Test brach rot ab, kein falscher Erfolg (§ 5.4).
+
+29.09.2026, neuer Musterfund G-105: Alter Board-Erfolg leerte den ungesendeten
+B-Entwurf und schloss dessen Formular; alte Ablehnung entfernte dessen
+Stimm-Anzeige. Kontrollierter echter Funktionscode, keine Server-Stimme
+verändert behauptet. Konto-Kontext auch bei UI-Rückmeldungen prüfen (§ 8.3).
+
+29.09.2026, neuer Musterfund G-104: `umzugStarten` schrieb nach altem
+A-Stapel `schemaVersion: 2` in B und verwarf dessen wartenden Umzug.
+Kontrollierter echter Funktionscode belegt Write und Zustandsverlust;
+Ursprungskonto und ursprünglichen Umzugszustand bis zum Ende binden (§ 8.3).
+
+29.09.2026, Prüfstand-Sichtung G-039-Gegenprobe: Alter Ablauf wählte keine
+Hürde, blieb deshalb auf dem gesperrten Schritt und meldete `null → null`
+fälschlich als Kartensprung. Hürde auswählen, echte Kartenpositionen
+verlangen; fehlende Elemente sind Messfehler, kein positiver Fehlernachweis
+(§ 5.3/5.4). Geänderter Einzeltest muss erneut laufen, App unverändert.
+
+29.09.2026, Dokumentations-Widerspruch erkannt: §6.1 verlangte weiter
+pauschal einen festen Weiter-Knopf, obwohl 3.17.44 den sticky-Fuß wegen
+Überlagerungen bewusst entfernte. Lange Hürden-Screens wachsen jetzt
+normal; kurze halten den Fuß unten. Lehre an Code/Übergabe angeglichen,
+kein alter Overlay-Fix zurückgebaut (§ 3.5/6.1).
+
+29.09.2026, neue Musterfunde G-102/G-103: Späte Antworten beim Erzeugen,
+Freigeben und Beenden änderten jeweils Teil-Felder von B. Angehaltenes
+FileReader-Lesen importierte nach Wechsel Datei-Inhalt von A in B (42→44
+Unterdokumente). Äußere Aufträge waren nicht konto-gebunden; der inzwischen
+geschützte Helper erfasste B als scheinbar neuen Auftrag. Herkunft am
+Beginn und nach jedem Await prüfen (§ 8.3); Fixes folgen in Runde 14.
+
+29.09.2026, G-100 UI-Nachprüfung: Löschdialog von A überlebte den Wechsel
+zu B; Bestätigung löschte Bereich und 40 Karten von B. Ein alter
+Austritts-Callback konnte außerdem den neuen Dialog entfernen.
+Auth-Wechsel löst alte Dialoge als Abbruch auf und beendet Halten;
+Fortsetzungen prüfen das Ursprungskonto, Timer ihre Dialog-Identität (§ 8.3).
+Eigener erster Dialogtest wartete nur 500ms: Boot war noch aktiv, der Klick
+erreichte den Dialog nicht. Boot-Ende und Eingabefeld jetzt explizit geprüft;
+dieser erste Versuch zählt nicht als Gegenprobe.
+
+29.09.2026, G-098 ergänzt: Kontrolliert angehaltene Konto-Abfrage von A,
+Auth-Wechsel zu B und anschließende Freigabe löschten im Stand 5de6969
+Nutzer-Dokument und Auth von B. Mit ursprünglichem Löschkontext bleiben
+B-Dokument/Auth/40 Karten erhalten; alte Fortsetzung bricht ab (§ 8.3).
+
+29.09.2026, Gesamt-Prüfstand: `t_317.js` erwartete einen dynamischen
+Erinnerungshinweis an fester Position und fand deshalb keinen Knopf.
+Erinnerung über feste Einstellungszeile prüfen, Hinweis-Reihenfolge nicht
+als feste Navigation voraussetzen. Alte Skripte ohne finally ließen bei
+unbehandeltem Testfehler Browser offen; gemeinsamer Preload schließt nur
+die vom jeweiligen Test gestarteten Browser und erhält Exit 1 (§ 5.3).
+
+29.09.2026, neue Funde G-100/G-101 im Stand 3.17.50: Nach verspäteter
+Bereich-Stapelbestätigung wurden Karten im inzwischen angemeldeten Konto B
+gelöscht (40 → 0); Vollschreiben erzeugte Stapel mit Referenzen von B.
+`t_konto_stapel.js --gegenprobe` reproduziert beide Fälle im festen Commit
+`5de6969`. § 8.3 verlangt Bindung jeder Fortsetzung an den Ursprung.
 
 29.09.2026, eigener Fehler im unveröffentlichten G-075-Fix: Atomare Zähler
 ohne Reset-Kennung ließen ein altes Offline-Undo nach fremdem Reset zu.

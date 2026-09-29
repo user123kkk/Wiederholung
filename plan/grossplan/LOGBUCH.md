@@ -2,6 +2,144 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Runde 13: Konto-Fortsetzungen und Reset-Leerfeld
+
+**Geändert:** `app.js:2711` (G-097 Nutzer-Fallback), `:2405` (G-100
+Bereich-Stapel/Unter-Sammlung), `:2579` (G-101 Vollschreiben), `:3262`
+(G-098 Löschkontext mit Reauth/Auth/Timeout), `:3193`/`:7649`
+(G-013 Feldfehler/ARIA/Fokus), `:2086`/`:4772`/`:12463` (Dialog/Halten und
+Bereichsbestätigung beim Kontowechsel, alter Schließ-Timer).
+`app.js`/`sw.js`/`index.html`/`CHANGELOG.md` auf Entwurf 3.17.51.
+Neue Prüfungen `t_konto_stapel.js`, `t_konto_loeschwechsel.js`,
+`t_reset_leerfeld.js`; Reset-Aufrufe im Stub protokolliert.
+`alle_pruefen.js` mit Quellstand/Einzeltest-Hash, vollständigen Logs,
+Timeout und Fortsetzen bestandener unveränderter Fälle; `pruef_cleanup.js`
+schließt ausschließlich vom Test gestartete Browser bei unhandled Fehlern.
+`t_317.js` öffnet die Erinnerung über den festen Einstellungsweg.
+Aufgaben G-100/G-101 vor Änderung am Produktcode aufgenommen.
+**Entscheidung:** 3.17.50 ist mit Commit `5de6969` auf `origin/main` gepusht,
+Pflichtfolge grün, kein Hosting-/Regel-Deploy. Fünf Aufgaben dieser Runde:
+G-097/G-098/G-100/G-101 (gemeinsame Konto-Fortsetzungen), G-013-Leerfeldrest.
+Neue Gegenprobe mit echtem App-Code im festen Stand `5de6969`: angehaltene
+Bestätigung der Bereich-Löschung von A; Auth-Wechsel zu B; Freigabe der alten
+Antwort löscht **alle 40 Karten von B** (G-100, kritisch). Vollschreiben
+setzt nach altem Nutzer-Write mit Stapeln im neuen Konto fort (G-101,
+mittel: ungewollte Writes belegt, keine veränderten Inhalte behauptet).
+Priorität deshalb zuerst Kontobindung in sämtlichen Fortsetzungen, dann
+G-013. Abnahme nicht auf Hauptschalter/Happy Path beschränken.
+Kontrollierte Gegenprobe ergänzt: alte Konto-Löschung nach erster A-Abfrage
+und Auth-Wechsel löschte Nutzer-Dokument **und Auth von B**; damit G-098
+kritisch, nicht nur ein Boot-Hänger. Neu: B-Dokument/Auth/40 Karten erhalten,
+alte Fortsetzung mit internem Konto-Abbruch beendet. Folgeanmeldung ohne
+Reload grün. Vier G-097-Races und beide Stapel-Races grün. G-013:
+Leer/Whitespace ohne SDK-Aufruf; Fokus/ARIA, keine Knopfverschiebung,
+Tippen löscht Fehler; Enter schickt genau eine getrimmte Anfrage.
+Bisherige Löschabnahme G-011/G-051 grün: Reauth vor commit/deleteUser,
+offline kein Write, Timeout beendet busy mit Klartext; feste Alt-Gegenprobe
+3/3. Passwort-Abbruch/falsch/korrekt und Google-Abbruch/Erfolg gelesen.
+Zusätzliche G-100-Abnahme: Ein auf A geöffneter Löschdialog blieb nach
+vollständigem Laden von B bedienbar und löschte dessen Bereich/40 Karten.
+Auth-Wechsel bricht alte Dialoge und begonnenes Halten sofort ab;
+Bereich-Löschung prüft ihr Ursprungskonto auch nach Bestätigung/Code-Löschung.
+Ein alter Schließ-Timer darf keinen neu geöffneten Dialog entfernen.
+`t_konto_dialog.js --gegenprobe` und `t_dialog_timer.js` belegen Altfehler
+und Korrektur. Eigener Messfehler im ersten Dialogtest: Daten waren geladen,
+das Boot-Overlay aber noch sichtbar; 500ms allein beweisen keine Bedienbarkeit.
+Jetzt ausdrücklich auf Boot-Ende warten und vorhandenes Eingabefeld sowie
+beendeten Löschauftrag prüfen. Kein Produktfix aus der fehlerhaften Messung.
+Vollständige Auswahl jetzt: **104 `t_*.js`**, davon 13 separat in der Pflicht-
+Lernrunden-Abnahme, 91 übrige seriell. Noch keine Gesamtfreigabe.
+Der während der zusätzlichen UI-Korrektur laufende alte Prüflauf wurde
+beendet und zählt nicht für die neue Fassung. Frischer kompletter Lauf:
+Quellstand `e9bfc140b1c5b853ae53eea110907c92faf3dc62bc41c4496fc264ef77fae48a`;
+Logs im Temp-Unterordner `adrabic-pruefstand-gesamt/e9bfc140b1c5b853`.
+Sichtung der beschreibenden Einstiegs-Ausgabe: Hürden-Auswahl verschiebt
+den Weiter-Knopf im langen Dokument um 39px (Handy). Das ist nach bewusster
+sticky-Rücknahme 3.17.44 erlaubt; die maßgebliche Abnahme G-083 prüft
+natürliches Wachsen/Scrollen und keine Überlagerung. Nicht mit erneutem
+festem Fuß den alten Overlay-Fehler zurückbauen. Historische pauschale
+Formulierung in LEHREN §6.1 entsprechend präzisiert; kein Produktcode-Fix.
+Weitere Messkorrektur aus vollständiger Log-Sichtung: G-039-Alt-Gegenprobe
+in `t_einstieg_g083_039_040_041_044.js` übersprang die Hürden-Auswahl und
+meldete `null→null` als Kartensprung. Auswahl ergänzt, fehlende Positionen
+nun expliziter Testfehler. Produkt unverändert; diesen geänderten Einzeltest
+nach der laufenden Folge erneut ausführen, alten Erfolg nicht übernehmen.
+Erster Fund im Testlauf: `t_317.js` erwartete die Erinnerung als zweiten
+Hinweis, obwohl Hinweise dynamisch priorisiert sind. Kein App-Fix: fester
+Einstellungsweg, unveränderte ICS-/Board-Prüfung; danach Exit 0.
+Historische Inventar-Diagnose `t_inventar2.js` endet zwar mit Exit 0,
+liefert aber leere Bestandsausgaben und einen nicht erreichten Knopf.
+Sie wird als Diagnose gesichtet/ausgeführt, nicht als erfolgreiche
+Onboarding-/Rundenende-Abnahme gewertet; dafür zählen die gezielten
+aktuellen Einstiegs- und 13 Lernrunden-Tests. Skriptanzahl und aussagekräftige
+Verhaltensabnahme ausdrücklich unterscheiden.
+Weitere Diagnosegrenzen: `t_lernen_start.js` nennt die Bereichsauswahl
+„Hauptknopf“; daraus keine Sichtbarkeitsabnahme des Rundenknopfs ableiten.
+`t_runde_rest.js` meldet beim alten Mausablauf links „NICHTS“, ohne vor
+dieser Geste eine offene Karte sicherzustellen und ohne neue Bewertung
+zu messen. Das ist kein Nachweis eines Touch-Fehlers; Links/Abbruch/Tempo
+werden ausdrücklich mit echten CDP-Touch-Fällen in der Pflichtabnahme
+geprüft. Keine Wischgrenzen wegen einer solchen Ausgabe verändern.
+Ein unterbrochener Gesamtlauf wird nur mit identischem Produkt-/Stub-/Lib-
+Quellstand und identischem Einzeltest fortgesetzt. Gegenprobe/Messausgaben
+weiter selbst lesen: Exit 0 ist allein keine Abnahme.
+Zusätzliche Musterprüfung außerhalb der bisherigen Liste: vollständiger
+App-Code mit kontrollierter SDK-Antwort belegt G-102 in drei Weitergabe-
+Wegen (B-Code ersetzt, Freigabe 1→2, eigener Code entfernt). Echtes
+verzögertes FileReader-Lesen belegt G-103: Datei von A erzeugt Bereich/Karte
+unter B, Unterdokumente 42→44. Nachlese 29.09. und reproduzierbare Werkzeuge
+aufgenommen. Keine neuen Funktionen; beide mechanischen Fixes in Runde 14,
+damit Runde 13 bei ihren fünf Aufgaben bleibt. A1/A5/A6 nicht erfüllt.
+Beschreibende CPU-4×-Messung: erster Rundenstart 424ms Blockade/450ms Bild,
+Verwalten-Wechsel bis 417ms Bildpause, Ende 85ms/83ms. Kein JS-Fehler;
+damit aber keine pauschale Flüssigkeitsfreigabe. Beobachtung in Nachlese,
+isolierter Vergleich/Profil nach den hohen Konto-Funden; Ursache oder
+aktueller Rückschritt noch nicht belegt. Kein ungeprüfter Motion-Fix.
+**Offen:** 3.17.51 nicht committet/gepusht/veröffentlicht. Vollständige
+91er-Folge abgeschlossen, alle Exit 0 und Ausgaben gesichtet; geänderter
+G-039-Test separat frisch wiederholt: Altposition 205→165, aktuell grün.
+Frische fortsetzbare 13er-Abnahme vollständig grün und alle beschreibenden
+Geräte-Ausgaben gelesen; Handy-Affe 200/Seed 1302 und iPad-Affe 150/Seed
+1303 jeweils 0 Befunde. Achtteilige Nachprüfung dokumentiert, A5/A6 nicht
+bestanden wegen neuer hoher Aufgaben. Noch keine Gesamtfreigabe.
+Weiterer bestätigter Musterfund G-104: echte Migrationsfunktion markiert
+nach A-Stapel wartenden B-Umzug als fertig (schemaVersion: 2), B-Zustand
+verworfen. Kontrollierte VM-Ausführung, keine Aussage eines echten SDK-
+Migrationstests. Weitere echte Funktions-Gegenproben: Lehrer-Stand von B
+steigt bei gleichem Code nach A-Antwort 1→3 (G-102); alter Board-Erfolg
+leert B-Entwurf und schließt Formular, alte Ablehnung verändert B-Stimm-
+Anzeige (G-105 mittel); alte Bestätigungsprüfung erneuert B-Token/lädt
+Seite neu, alter Versand ersetzt B-Info (G-106 mittel). Runde 14 umfasst
+genau G-102–G-106. Erste frische 13er-Abnahme: 12 grün, X-Test ohne Ausgabe
+im Prozess-Zeitlimit (656s), keine belegte Produktursache. Vollständige
+Wiederholung gestartet; X mit Zwischenmeldungen nach 30s grün,
+Daten/Serie/Wisch+sofort-X erhalten. Erster Lauf bleibt ausdrücklich rot.
+Ursache anschließend belegt: Windows-Systemereignisse dokumentieren Standby
+05:16→05:27 sowie 05:43→08:22; zweiter Lauf wurde beim Schreiben unterbrochen.
+Vorübergehender eigener Wachhalte-Prozess verhindert nur automatischen
+Standby, weiterer Rechnerunterbruch trotzdem beobachtet. Keine globale
+Energieeinstellung geändert. Abnahme deshalb mit Produkt-/Helper- und
+Einzeltest-Hash fortsetzbar gemacht: keine historischen Logs ohne Hash
+übernehmen, nur gültige unveränderte Fälle bewahren; rote/fehlende frisch.
+Neuer Abnahmelauf vollständig grün. Unterbrüche zählen nicht als
+Produktfehler und nicht als erfolgreiche Abnahme. Schreiben: eine 83ms-
+Pause am kleinen Handy, iPad 124 Pausen bis 217ms. Voreilige pauschale
+Flüssigkeitsaussage umgehend berichtigt und in LEHREN aufgenommen.
+Isolierte aktuelle iPad-Wiederholung: 60 Bewegungen/1918ms, 0 Bilder >34ms,
+Tinte/Vollbild/Fokus und Kontrast korrekt. Vergleich vor Runde 13 läuft;
+Altvergleich `5de6969`: 60 Bewegungen/8004ms, 59 Bilder >34ms bis 217ms.
+Lange Pausen treten also auch vor Runde 13 auf; Ursache nicht belegt,
+schwankende Messung bleibt sichtbar, kein ungeprüfter Zeichen-/Motion-Fix.
+§14 geprüft: keine neuen Cloud-Felder, Datenflüsse oder Handlungen; keine
+Lernregel verändert. Syntax/Version/CSP/APP_SHELL und Diff-Prüfung grün.
+**Kriterien:** A1 nein (G-102–G-106), A2/A3 Planlisten gepflegt, A4 funktionelle
+Prüffolge grün mit obiger Leistungsgrenze, A5 nein, A6 nein (0 Durchgänge).
+Veröffentlichung erst nach dieser Runde: K10 vor K11, iPhone-Kaltstart offen.
+**Nächster Schritt:** Vergleich abschließen, Runde 13 committen/pushen;
+danach genau G-102–G-106 in Runde 14 mechanisch binden und abnehmen.
+
+---
+
 ### 2026-09-29 — Runde 12 Teil 2: Reset-Grenzfall korrigiert, frische Abnahme
 
 **Geändert:** `app.js:765`/`:850` (Reset-Kennung an Differenzen und
