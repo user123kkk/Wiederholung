@@ -1,0 +1,110 @@
+{
+  "quelle": "quran/tanzil-uthmani.txt (Tanzil Uthmani 1.1, CC BY 3.0)",
+  "hinweis": "Nur Fundstellen und Pruefsummen, kein Wortlaut. Neu erzeugen mit quran_stellen_erzeugen.js.",
+  "stellen": [
+    {
+      "sure": 1,
+      "aya": 1,
+      "grund": "Sure 1, Aya 1: Basmala als eigene Aya; Tatweel vor hochgestelltem Alif",
+      "woerter": 4,
+      "zeichen": 39,
+      "sha256": "1ad501ee473ec3953c6d669513e2ae2550ad333577aef0f156926b52f6972b61"
+    },
+    {
+      "sure": 1,
+      "aya": 2,
+      "grund": "Sure 1 vollstaendig",
+      "woerter": 4,
+      "zeichen": 38,
+      "sha256": "463f13295bc7d90e0ea221942d7b39359a137da8686420b58f63d0774eebda09"
+    },
+    {
+      "sure": 1,
+      "aya": 3,
+      "grund": "kurze Aya (2 Woerter)",
+      "woerter": 2,
+      "zeichen": 24,
+      "sha256": "29fdcd850fbbaf0e4b6bb93077b4fb2c6cdbcc2d8d1826a3b8f24131bc7621c5"
+    },
+    {
+      "sure": 1,
+      "aya": 4,
+      "grund": "Sure 1 vollstaendig",
+      "woerter": 3,
+      "zeichen": 24,
+      "sha256": "f19e0a517a68a043e08be6066abc107fff347f785c2ec1efe8b7364663923ee2"
+    },
+    {
+      "sure": 1,
+      "aya": 5,
+      "grund": "Sure 1 vollstaendig",
+      "woerter": 4,
+      "zeichen": 40,
+      "sha256": "c44ba775d0ba7689a0d97e83a27cd9b5d917cb569f98013518018b591b42c015"
+    },
+    {
+      "sure": 1,
+      "aya": 6,
+      "grund": "Sure 1 vollstaendig",
+      "woerter": 3,
+      "zeichen": 34,
+      "sha256": "e257cf2a178fab0948da4af9d74b8b6152ba03a5d8c0e7179f46203cd3864c39"
+    },
+    {
+      "sure": 1,
+      "aya": 7,
+      "grund": "Sure 1 vollstaendig",
+      "woerter": 9,
+      "zeichen": 90,
+      "sha256": "4a564d7b057f073d907a3faad63bd2b01eeee4c509d505e5ecf03ec803397eea"
+    },
+    {
+      "sure": 2,
+      "aya": 1,
+      "grund": "Aya 1 einer Sure mit vorangestellter Basmala (Quelldatei so)",
+      "woerter": 5,
+      "zeichen": 45,
+      "sha256": "371e9a8d6963be0dd3327d88fa2577d25a027e3c408a75c7b84bdb51aaf9b04f"
+    },
+    {
+      "sure": 2,
+      "aya": 2,
+      "grund": "Wort nur aus Waqf-Zeichen (faellt bei Anfangsbuchstaben weg)",
+      "woerter": 9,
+      "zeichen": 62,
+      "sha256": "5d9fdbf423d4759bfb1781fd1043209b994972c8c986d0dd124029581b18a6ce"
+    },
+    {
+      "sure": 2,
+      "aya": 282,
+      "grund": "laengste Aya, ueber 1000 Zeichen (KONZEPT Par. 7.4)",
+      "woerter": 144,
+      "zeichen": 1208,
+      "sha256": "4be616c8efe4a5dd79034487b171637907bcf03b3772ac15e07c5d1e33842b89"
+    },
+    {
+      "sure": 7,
+      "aya": 206,
+      "grund": "Sajda-Zeichen",
+      "woerter": 12,
+      "zeichen": 107,
+      "sha256": "43478a69e696c6833a3250395dec7fed6131aec9db0d3e8f555dd40e6c817a89"
+    },
+    {
+      "sure": 9,
+      "aya": 1,
+      "grund": "Sure ohne Basmala",
+      "woerter": 9,
+      "zeichen": 87,
+      "sha256": "d18402a276407219dcaeb5cb91cb19ddaa8a92fe282eedc6c0028f83d40e5766"
+    },
+    {
+      "sure": 114,
+      "aya": 6,
+      "grund": "letzte Aya",
+      "woerter": 3,
+      "zeichen": 26,
+      "sha256": "afe439d2346201551930d0c231ab3a35f2c90f1a5ebb09fc797707059732d756"
+    }
+  ]
+}

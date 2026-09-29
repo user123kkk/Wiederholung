@@ -273,6 +273,27 @@ nur gedimmt); Zustand in `ui`; ein Bildschirm, eine Aufgabe.
 
 ## 9. Quran mitliefern
 
+**Stand Stufe 0 (29.09.2026):** Quelle ist **Tanzil Uthmani 1.1**. Die
+Entwickler-Seite des King-Fahd-Komplexes war erneut nicht erreichbar
+(Verbindung abgelehnt bzw. Zeitüberschreitung); ihre Bedingungen bleiben
+unbelegt. Der Betreiber hat die Zustimmung zu den Tanzil-Nutzungsbedingungen
+im Chat erteilt. Dateien unverändert im Repo:
+
+- `quran/tanzil-uthmani.txt` – SHA-256
+  `6933e133dd56db778c801bf738848454e43648105a151e8d84d86a7cae39ec5f`,
+  Format `sure|aya|text`, Lizenzblock am Ende. Geladen mit den
+  Standard-Einstellungen der Seite (Pausenzeichen, Sajda-Zeichen,
+  Tatweel an; Rub-Zeichen aus).
+- `quran/tanzil-quran-data.xml` – Metadaten mit arabischen Surennamen
+  (Lizenz „cc-by“), SHA-256
+  `8867c1d88191472adec9db694b3cd9f135b1a2ef580574d32cf888dcb22c5c7a`.
+
+**Kein JSON** (Abweichung von Punkt 3 unten): Die App liest die
+Originaldatei selbst (zeilenweise, Trennzeichen `|`). Nur so gelten
+Prüfsumme und Lizenz („CHANGING IT IS NOT ALLOWED“) wörtlich.
+`.gitattributes`: `quran/** -text`, damit Git unter Windows keine
+Zeilenenden umwandelt. Test: `t_quran_datei.js`.
+
 1. **Quelle:** bevorzugt der Text des King-Fahd-Komplexes (Mushaf
    al-Madinah, Hafs) – passt zur Schrift der App. **Voraussetzung:**
    Nutzungsbedingungen belegt (Stufe 0 legt Bedingungen und Prüfsumme ins
@@ -400,8 +421,22 @@ bei 286 Zeilen kein Bild > 50 ms.
 | `renderKontoLoeschen` | A in der Kartenzahl, Texte eigens nennen |
 | `currentCards`, `findCard` | U (liefern alles; Aufrufer entscheiden) |
 
-Stufe 0 prüft die Liste erneut (`grep -n "\.karten\b\|currentCards()"
-app.js`); Stellen aus späteren Runden kommen dazu.
+**Stufe 0 (29.09.2026, Stand `653d17d`, 3.17.56):** Liste erneut per
+Skript geprüft (jede Zeile mit `.karten` oder `currentCards()` ihrer
+Funktion zugeordnet): dieselben 51 Funktionen, keine neue. `freieIdsFor`
+liest `b.karten` nicht selbst (nur über `offeneLektionIds`), bleibt U.
+
+**Zusätzlich gefunden** – Stellen, die nicht `.karten` lesen, aber Felder
+still verwerfen oder Texte falsch anbieten würden:
+
+| Stelle | Problem | Behandlung |
+|---|---|---|
+| `normCard` | baut jede Karte mit fester Feldliste neu – `textId` fiele weg (Start, Snapshot, Import) | F |
+| `normSet` | unbekannte `art` wird zu `"eigen"` – ein Text würde still zur Speicherkarte | F: `"text"` zulassen, Kreisfelder, `nummerAb`, `quelle` durchreichen |
+| `bereicheAusSammlungen`, `bereicheMapToArray` | rufen `normSet({id, name, art, quelleId, cardIds})` mit fester Liste; Bereichsfelder `abstandFaktor`/`festErgebnisse` fehlen | F |
+| `SET_ARTEN` in `setArtSheet` und `setArtAendern` | würde „text“ als wählbare Speicherkarten-Art anbieten | T: `"text"` nicht in die wählbare Liste, eigene Konstante |
+| Snapshot-Teilabgleich in `sammlungenStarten` | vergleicht `normCard`-Felder | U, sobald `normCard` `textId` trägt |
+| `MAX_WORT` = 1000 (App) und `text(d.wort, 1000)` (Regeln) | Aya 2:282 hat 1208 Zeichen (einzige über 1000) | § 7.4: beim Anlegen an einer Wortgrenze in zwei Zeilen teilen; zusammengesetzt bleibt der Text unverändert, beide Zeilen zeigen Aya 282 |
 
 ---
 
@@ -443,6 +478,6 @@ app.js`); Stellen aus späteren Runden kommen dazu.
 
 ## 17. Nächster Schritt
 
-Stufe 0 (§ 12). Logbuch: [`LOGBUCH.md`](LOGBUCH.md), Format wie in
+Stufe 0 erledigt (29.09.2026). Weiter mit **Stufe 1** (§ 12). Logbuch: [`LOGBUCH.md`](LOGBUCH.md), Format wie in
 `CLAUDE.md`. Nach jeder Stufe: Version, Changelog, Tests, Commit auf
 `main`; der Betreiber veröffentlicht.

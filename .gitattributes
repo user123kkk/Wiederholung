@@ -2,3 +2,8 @@
 # Vorher lag veroeffentlichen.bat mit CRLF im Repo - Git fuer Windows meldete sie
 # dann als "geaendert", und die Sperre "lokale Aenderungen" brach den Deploy ab.
 *.bat text eol=crlf
+
+# Quran-Quelldateien (Tanzil) bleiben Byte fuer Byte unveraendert: keine
+# Zeilenende-Umwandlung, sonst stimmt die Pruefsumme nicht mehr
+# (plan/texte-lernen/KONZEPT.md Par. 9, Lizenz: Aendern nicht erlaubt).
+quran/** -text

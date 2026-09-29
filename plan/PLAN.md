@@ -785,6 +785,10 @@ erstellen (`grossplan/AUFTRAG.md` § 4a).
   [`texte-lernen/WIEDERHOLEN.md`](texte-lernen/WIEDERHOLEN.md). **Beginnen mit
   Stufe 0** (KONZEPT § 12), dann Stufe für Stufe mit Gegenprüfung
   (`grossplan/AUFTRAG.md` § 2a). Logbuch: `texte-lernen/LOGBUCH.md`.
+- **Stand:** Stufe 0 erledigt (29.09.2026): Quran-Quelle Tanzil Uthmani,
+  Dateien unter `quran/`, Prüfsumme, 114/6236, Code-Liste geprüft.
+  **Als Nächstes Stufe 1** – Einzelheiten im obersten Eintrag von
+  `texte-lernen/LOGBUCH.md`.
 - Ausgangsstand: `main` = 3.17.56 (`a4b5677`), live veröffentlicht.
 - **Codex-Runde 15 (unfertig, 3.17.57) ist gesichert, nicht verworfen:**
   `git stash list` → „Codex Runde 15 unfertig …“ und zusätzlich
