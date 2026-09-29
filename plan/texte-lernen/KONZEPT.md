@@ -113,6 +113,9 @@ diese Fehler neu ermöglichen.
 
 ### 5.1 Zustände einer Zeile
 
+**Für Texte gilt `WIEDERHOLEN.md` § 1** (neu · frisch · fest). Der Absatz
+unten beschreibt nur die Karten.
+
 Dieselben sechs Zustände wie Karten (`KARTEN_ZUSTAENDE`, `app.js:3723`):
 neu (nie bewertet) → im Lernen (Stufe 0) → frisch (1–3) → wird fester (4–6)
 → gefestigt (7–9) → dauerhaft (10+). Keine Stufenzahlen sichtbar
@@ -159,6 +162,9 @@ wirklich sitzen („Sicher“ → Stufe 1 usw.). Neu gelernt wird ab der ersten
 nicht markierten Zeile. (T6)
 
 ### 5.5 Wiederholen
+
+**Ersetzt durch [`WIEDERHOLEN.md`](WIEDERHOLEN.md)** (neu/frisch/fest, Kreis,
+Nachbarn). Die Punkte unten gelten nur, wo `WIEDERHOLEN.md` nichts sagt.
 
 - **Abschnitte bilden:** fällige Zeilen in Textreihenfolge; aufeinander
   folgende Zeilen bilden einen Abschnitt (Größe: T12, offen bis § 16). Vor
@@ -373,11 +379,11 @@ sagte, hat der Agent nach Empfehlung entschieden (markiert mit *).
 | T5 | Gelernt = einmal fließend ohne Hilfe | ja |
 | T6 | Schon Gekonntes markieren | ja* |
 | T7 | Neue Zeilen pro Tag | **keine Einstellung.** Man lernt, so viel man will; nach 3 neuen Zeilen ein ruhiger Satz „Für heute ist das gut – weiter geht es trotzdem“.* |
-| T8 | Serie | ja; **Ehrlichkeit** gehört ins Neu-Denken (§ 16) – für Texte **und** Karten |
+| T8 | Serie | ja; Regel bleibt wie heute, Texte zählen gleich; Ehrlichkeit über Kreis und eigene Zahl (`WIEDERHOLEN.md` § 7) |
 | T9 | Preis | kostenlos |
 | T10 | Einverständnis beim ersten Text (§ 9) | ja* |
 | T11 | Teilen/Lehrer-Code | später |
-| T12 | Abschnittsgröße beim Wiederholen | offen → Teil des Neu-Denkens (§ 16); Betreiber: „man kann aufhören, wann man will“ |
+| T12 | Abschnittsgröße beim Wiederholen | bis 5 Zeilen, jederzeit aufhören (`WIEDERHOLEN.md` § 4) |
 | T13 | Lernstand bei geänderter Zeile | bleibt |
 | T14 | Texte in vom Lehrer vorgegebenen Bereichen | nein, nur eigene Bereiche* |
 | T15 | Quran in der App mitliefern (Sure wählen und lernen) | **ja, gewünscht** → § 15 |
@@ -501,6 +507,8 @@ Jede Stufe ist eine Runde nach `grossplan/AUFTRAG.md` § 2 mit Gegenprüfung
   richtig an).
 
 ### Stufe 4 – Wiederholen (Modell: Astra)
+- Nach `WIEDERHOLEN.md` §§ 1–5 und 7: Zustände, Kreis, Nachbarn, Tagesmenge,
+  Kontrollfrage; Tests `WIEDERHOLEN.md` § 9.
 - Abschnitte § 5.5, Bewertung je Zeile, „Nicht“ am Ende erneut.
 - Tagesplan § 5.2 inkl. „erst wiederholen“.
 - **Tests:** `t_text_wiederholen.js`: fällige Zeilen 3,4,5,9 → Abschnitte
@@ -510,6 +518,11 @@ Jede Stufe ist eine Runde nach `grossplan/AUFTRAG.md` § 2 mit Gegenprüfung
   Leistung (CPU 4×, kein Bild > 50 ms beim Aufbau); zwei Geräte bewerten
   denselben Text.
 - **Abnahme:** grün, Affe mit Texten 0 Befunde.
+
+### Stufe 4b – Regler für Karten (Modell: Astra)
+- `WIEDERHOLEN.md` § 6, nur hinter dem Probelauf-Schalter (§ 8).
+- **Abnahme:** `t_regler_karten.js` grün inkl. Gegenprobe; `abnahme_runde.js`
+  13/13 für Konten ohne Schalter.
 
 ### Stufe 5 – Fortschritt und Lernen-Tab (Modell: Sol niedrig)
 - Block „Texte“ im Lernen-Tab, Balken je Text, Kartenstatistik ohne Zeilen,

@@ -1,150 +1,214 @@
 # Wiederholen neu gedacht – für Texte und Karten
 
-**Status:** erster Entwurf, **kein Bauauftrag**. Gehört zu T16 in
-`KONZEPT.md`. Ändert die Lernlogik – gebaut wird erst nach ausdrücklichem
-„ja“ des Betreibers zu diesem Entwurf und nach einem Probelauf (§ 6).
+**Status:** Entwurf, fertig zur Umsetzung nach dem laufenden Codex-Zyklus.
+**Kein Bauauftrag vor Stufe 0** in `KONZEPT.md` § 11. Ändert die Lernlogik
+– auf ausdrücklichen Wunsch des Betreibers (29.09.2026) und zuerst nur im
+Probelauf in seinem Konto (§ 8).
 
-## Grundsatz des Betreibers (29.09.2026)
+Der Betreiber hat die Einzelentscheidungen dem Agenten überlassen („ich
+vertrau dir, bessere alles aus, prüfe nach Lücken“). Er selbst prüft im
+Probelauf.
 
-> „Nicht basierend auf irgendeiner Studie, welche sich am Ende oft als falsch
-> interpretiert, falsch gemessen, falscher Kontext herausgestellt hat. Ein
-> Mehrwert, der Wert liefert und funktioniert.“
+## Grundsatz des Betreibers
 
-Daraus folgen drei Regeln für alles hier:
+> „Nicht basierend auf irgendeiner Studie … Ein Mehrwert, der Wert liefert
+> und funktioniert.“ – „Soll einfach perfekt sein, was angehängte Sachen
+> angeht wie Serie. Die Methode soll funktionieren, sicher.“
 
-1. **Bewährt in der Praxis** zählt, nicht eine einzelne Studie: Was viele
-   Menschen über lange Zeit erfolgreich machen (Quran-Auswendiglernen seit
-   Jahrhunderten; Karteikarten mit wachsenden Abständen seit Jahrzehnten).
-2. **Die App beweist es selbst:** Sie misst an den eigenen Antworten der
-   Nutzenden, ob Gelerntes wirklich sitzt, und stellt sich nach. Kein
-   festes Versprechen aus einem Paper, sondern ein Regler, der auf echte
-   Ergebnisse reagiert.
-3. **Erst am Betreiber, dann für alle:** Probelauf über Wochen (§ 6), bevor
-   es veröffentlicht wird.
+Drei Regeln:
+
+1. **Bewährt in der Praxis** zählt: So wird der Quran seit Jahrhunderten
+   auswendig gelernt – täglich Neues, täglich das Frische, im Kreis alles
+   Alte.
+2. **Die App prüft sich selbst:** Sie misst an den echten Antworten, ob
+   Altes sitzt, und stellt sich nach.
+3. **Erst beim Betreiber, dann für alle** (Probelauf § 8).
 
 ## In einfachen Worten
 
-- Alles Gelernte liegt in **drei Töpfen**: **Neu** (heute gelernt),
-  **Frisch** (die letzten Tage) und **Fest** (alles Ältere).
-- Jeden Tag kommt **aus jedem Topf etwas**, in dieser Reihenfolge: erst ein
-  Stück vom Festen, dann das Frische, dann Neues. So verblasst nichts, auch
-  wenn man woanders weitermacht.
-- Der Topf **Fest** läuft im **Kreis**: Jeden Tag kommt das nächste Stück,
-  bis alles einmal dran war, dann von vorn. Bei einem Text heißt das: Alle
-  Ayat kommen regelmäßig dran, der Reihe nach, nie nur die neuesten.
-- Die App **zählt mit**, wie oft du etwas aus dem Topf Fest wirklich
-  sicher kannst. Hakt es oft, wird der Kreis **kürzer**, das Alte kommt also
-  öfter. Sitzt fast alles, wird er **länger**. Das passt sich dir an, ganz
-  von selbst, ohne Einstellung.
-- Was hakt, rutscht zurück in **Frisch** und kommt ein paar Tage täglich,
-  bis es wieder sitzt.
-- **Ehrlich bleiben:** Du bewertest dich weiter selbst. Wer nur drückt,
-  merkt es an seinen eigenen Zahlen. Dazu kleine Stichproben, siehe § 5.
+- Jede Zeile eines Textes ist entweder **neu**, **frisch** oder **fest**.
+- **Frisch** = gerade gelernt oder gehakt. Kommt **jeden Tag**, bis sie
+  7 Tage hintereinander sicher war. Dann ist sie fest.
+- **Fest** = sitzt. Alle festen Zeilen kommen **im Kreis** dran: jeden Tag
+  das nächste Stück, der Reihe nach, bis der ganze Text durch ist, dann von
+  vorn. So wird nichts vergessen, auch wenn man woanders weiterlernt.
+- **Hakt eine feste Zeile**, wird sie wieder frisch. Sie kommt dann täglich,
+  aber **immer zusammen mit der Zeile davor und danach**. Die Reihenfolge
+  bleibt also erhalten; man sagt nie eine Aya losgelöst auf.
+- **Die App zählt mit**, wie viele feste Zeilen wirklich sitzen. Hakt es
+  oft, kommt der Kreis schneller wieder vorbei. Sitzt fast alles, langsamer.
+- **Tage verpasst?** Kein Berg an Rückstand. Der Kreis wartet einfach und
+  macht dort weiter, wo du warst.
+- **Zu viel für heute?** Dann schlägt die App vor, heute nichts Neues zu
+  lernen, sondern das Alte zu halten.
 
-## 1. Warum das hilft (die Frage des Betreibers)
+---
 
-„Wer ein paar Ayat kann und woanders weitermacht, wird bei den ersten
-schwächer.“ – Genau das passiert bei reinem Karten-Wiederholen mit immer
-größeren Abständen: Ein gut gekonnter Vers kommt erst nach Monaten wieder,
-und in einem langen Text hängt jeder Vers am vorherigen. Der Kreis im Topf
-Fest sorgt dafür, dass **jedes Stück in einer festen, überschaubaren Zeit
-wiederkommt** und immer im Zusammenhang mit seinen Nachbarn.
+## 1. Zustände einer Textzeile
 
-## 2. Die drei Töpfe genau
-
-| Topf | Was drin ist | Wann es drankommt | Wie |
-|---|---|---|---|
-| Neu | heute zum ersten Mal gelernt | heute | Lernen wie in `KONZEPT.md` § 5.3 |
-| Frisch | gelernt in den letzten Tagen, oder zurückgerutscht | jeden Tag, bis es 7 Tage am Stück sicher war (Startwert) | Texte: das ganze frische Stück am Stück aufsagen; Karten: wie heute |
-| Fest | alles, was Frisch geschafft hat | im Kreis: jeden Tag das nächste Stück | Texte: in Reihenfolge, Abschnitt für Abschnitt; Karten: siehe § 4 |
-
-Tagesreihenfolge: **Fest → Frisch → Neu.** Man kann jederzeit aufhören;
-was nicht dran war, bleibt für morgen vorn in der Schlange.
-
-## 3. Der Kreis und wie er sich anpasst
-
-- **Kreislänge** = in wie vielen Tagen alles Feste einmal dran ist.
-  Startwert: 7 Tage bei Texten, 30 Tage bei Karten.
-- **Tagesstück** = alles Feste geteilt durch die Kreislänge, bei Texten auf
-  ganze Abschnitte gerundet (nie mitten im Satz trennen).
-- **Messen:** Jede Antwort im Topf Fest ist „sicher“ oder „hakt“. Die App
-  rechnet über die letzten 50 Antworten eines Textes bzw. Bereichs die
-  Quote „sicher“.
-- **Nachstellen**, einmal pro Kreis:
-  - Quote unter 85 %: Kreis ein Viertel kürzer (Altes kommt öfter).
-  - Quote über 95 %: Kreis ein Viertel länger (weniger Arbeit).
-  - dazwischen: bleibt.
-  - Grenzen: Texte 3–30 Tage, Karten 7–180 Tage.
-- **Wächst der Stoff** (neue Ayat werden fest), wird das Tagesstück größer.
-  Wird es zu groß (Startwert: mehr als 20 Minuten geschätzt), schlägt die
-  App vor, weniger Neues zu lernen, statt das Alte zu vernachlässigen. Das
-  ist genau der Punkt, an dem Menschen beim Auswendiglernen sonst Altes
-  verlieren.
-
-Die Zahlen 85 %, 95 %, 7, 30, 20 Minuten sind **Startwerte für den
-Probelauf**, keine Wahrheit. Sie werden am echten Gebrauch nachgestellt
-(§ 6).
-
-## 4. Karten
-
-Zwei Wege, der Betreiber wählt nach dem Probelauf:
-
-- **A – Karten bleiben wie heute** (wachsende Abstände bis 180 Tage), nur
-  mit dem Regler aus § 3: Sinkt die eigene Quote bei gefestigten Karten
-  unter 85 %, werden die Abstände für diese Person kürzer. Vorteil: kleinste
-  Änderung, bestehende Lernstände bleiben gültig.
-- **B – Karten auch in die drei Töpfe.** Vorteil: eine Methode für alles,
-  ein Tagesplan. Nachteil: größerer Umbau; bestehende Stufen müssen in Töpfe
-  übersetzt werden (Stufe 0–3 → Frisch, 4+ → Fest).
-
-Empfehlung: **erst A**, B nur, wenn der Probelauf zeigt, dass die Töpfe bei
-Texten wirklich besser tragen.
-
-## 5. Ehrlichkeit
-
-Selbstbewertung bleibt – eine App kann nicht hören, was man aufsagt. Aber:
-
-1. **Denkpause:** „Aufdecken“ erscheint erst nach kurzer Zeit (etwa
-   1 Sekunde pro 3 Wörter, höchstens 5 Sekunden). Wer ehrlich aufsagt,
-   merkt davon nichts; wer nur durchtippt, wird gebremst.
-2. **Stichprobe bei Texten:** Gelegentlich (etwa jeder zehnte Abschnitt)
-   statt „Aufdecken“: „Wie geht es weiter?“ mit drei Möglichkeiten für das
-   nächste Wort. Falsch gewählt → zählt als „hakt“.
-3. **Eigene Zahlen sichtbar:** „Von deinen festen Ayat sitzen gerade 9 von
-   10.“ Wer schummelt, sieht es selbst.
-4. **Serie** zählt nur Tage, an denen der Topf Fest angefasst wurde (nicht
-   nur Neues oder nur Üben).
-
-Punkt 1 und 4 würden auch für Karten gelten (Entscheidung E-W4).
-
-## 6. Probelauf, bevor es alle bekommen
-
-- Eingebaut hinter einem Schalter, nur im Konto des Betreibers sichtbar
-  (`BETREIBER_UIDS`, `app.js:74`).
-- Mindestens 4 Wochen mit echtem Stoff (z. B. eine Sure + der Medina-
-  Bereich).
-- Die App zeigt dem Betreiber wöchentlich: Quote Fest, Kreislänge, Zeit pro
-  Tag. Das Logbuch hält es fest.
-- **Erfolg** heißt: nach 4 Wochen sitzen die ältesten Ayat so sicher wie
-  die neuen (Quote Fest ≥ 90 %), und die tägliche Zeit bleibt tragbar.
-  Sonst Startwerte ändern und weiter prüfen – nicht veröffentlichen.
-
-## 7. Entscheidungen des Betreibers
-
-| Nr | Frage | Empfehlung |
+| Zustand | Bedeutung | Gespeichert als (Karten-Dokument, `KONZEPT.md` § 6) |
 |---|---|---|
-| E-W1 | Drei Töpfe mit Kreis für Texte, wie oben? | ja |
-| E-W2 | Karten: Weg A (Regler) oder B (auch Töpfe)? | erst A |
-| E-W3 | Probelauf 4 Wochen nur in deinem Konto, bevor andere es bekommen? | ja |
-| E-W4 | Denkpause vor dem Aufdecken auch bei Karten? | ja |
-| E-W5 | Serie nur mit Wiederholen von Altem? | ja |
+| neu | nie gelernt | `ersteBewertung = null` |
+| frisch (k) | gelernt oder gehakt; k = Tage hintereinander sicher, 0–6 | `stufe = k` (0–6), `nextReview` = heute bzw. morgen |
+| fest | 7 Tage hintereinander sicher | `stufe = 7`, `nextReview` = nicht benutzt (Kreis entscheidet) |
 
-## 8. Was noch fehlt, bevor gebaut wird
+`maxStufe` hält wie heute den Höchststand. In der Oberfläche nur drei
+Wörter: **neu · frisch · fest** (keine Zahlen, Betreiber 24.09.2026).
 
-- Genaue Regeln für den Übergang Frisch → Fest und zurück, als
-  Zustandstabelle wie `KONZEPT.md` § 5.
-- Speicherung von Kreislänge und Quote (pro Text / pro Bereich; neue Felder
-  → Regeln, Datenschutz).
-- Wie der Tagesplan in der Oberfläche aussieht (ein Knopf „Heute“ für
-  alles?).
-- Bauplan-Stufen dafür in `KONZEPT.md` § 11 einarbeiten.
+## 2. Übergänge
+
+| Von | Ereignis | Nach |
+|---|---|---|
+| neu | beim Neu-Lernen fließend aufgesagt (`KONZEPT.md` § 5.3) | frisch (0), `nextReview` = morgen |
+| neu | beim Anlegen als „kann ich schon“ markiert | frisch (0), `nextReview` = heute |
+| frisch (k) | heute sicher | frisch (k+1), morgen wieder; bei k+1 = 7 → fest |
+| frisch (k) | heute gehakt | frisch (0), morgen wieder |
+| fest | im Kreis sicher | bleibt fest |
+| fest | im Kreis gehakt | frisch (0), morgen wieder |
+| frisch/fest | Tag verpasst | nichts ändert sich; frische Zeilen bleiben fällig |
+
+Eine frische Zeile wird höchstens einmal pro Tag gezählt (mehrfach üben
+ist erlaubt, zählt aber nicht doppelt).
+
+## 3. Der Kreis (feste Zeilen)
+
+Gespeichert je Text in seinem Set (`sets.<id>` im Bereichsdokument,
+`KONZEPT.md` § 6.2):
+
+| Feld | Inhalt | Start |
+|---|---|---|
+| `kreisTage` | in wie vielen Tagen der Kreis einmal durch alle festen Zeilen geht | 7 |
+| `kreisPos` | Id der nächsten festen Zeile im Kreis | erste feste Zeile |
+| `kreisTag` | Datum, an dem das heutige Stück zuletzt erledigt wurde | – |
+| `festErgebnisse` | letzte 50 Kreis-Antworten als Zeichenkette aus `1`/`0` | leer |
+
+- **Heutiges Stück:** ab `kreisPos` die nächsten
+  `ceil(anzahlFest / kreisTage)` festen Zeilen in Textreihenfolge,
+  aufgerundet auf ganze Abschnitte (§ 4), am Textende weiter am Anfang.
+- **Erledigt** ist ein Abschnitt, sobald er bewertet ist: `kreisPos` rückt
+  weiter. Aufhören ist jederzeit möglich; der Rest kommt morgen zuerst.
+- **Verpasste Tage:** `kreisPos` bleibt stehen. Kein Rückstand wird
+  aufgehäuft.
+- **Nachstellen**, jedes Mal wenn `kreisPos` über das Textende läuft:
+  Anteil `1` in `festErgebnisse` (mindestens 20 Antworten nötig)
+  - unter 85 % → `kreisTage` × 0,75 (abgerundet, mindestens 3);
+  - über 95 % → `kreisTage` × 1,25 (aufgerundet, höchstens 30);
+  - sonst gleich.
+- **Mehrere Geräte:** Die Kreisfelder schreibt `patchDoc` gezielt
+  (`sets.<id>.kreisPos` usw.). Gleichzeitiges Wiederholen auf zwei Geräten
+  kann ein Stück doppelt oder `festErgebnisse` um einen Eintrag kürzer
+  machen – beides harmlos, nichts geht verloren. Test § 9.
+
+## 4. Abschnitte und Reihenfolge
+
+- Ein **Abschnitt** sind bis zu 5 aufeinander folgende Zeilen (Startwert;
+  kürzer, wenn eine Zeile länger als 200 Zeichen ist).
+- Über jedem Abschnitt stehen grau die **2 Zeilen davor** als Einstieg.
+  Die Zeile danach ist nie sichtbar.
+- **Frische Zeilen mitten im festen Text** (gehakte Aya 12 von 30): Sie
+  werden aufgesagt als Block **11–13**, mit 9–10 grau darüber. Bewertet wird
+  nur die frische Zeile; die Nachbarn zählen nicht und ändern sich nicht.
+  Liegen frische Zeilen nah beieinander (Abstand ≤ 2), werden ihre Blöcke
+  zu einem zusammengelegt.
+- **Tagesreihenfolge je Text:** zuerst das Kreis-Stück (fest), dann die
+  frischen Blöcke, dann Neues. Texte nie gemischt: ein Text nach dem anderen
+  (T4), der mit der ältesten fälligen Arbeit zuerst.
+
+## 5. Tagesmenge
+
+- Geschätzte Zeit je Zeile: 10 Sekunden plus 1 Sekunde je 10 Zeichen.
+- Liegt die Zeit für Kreis-Stück + frische Zeilen über **20 Minuten**,
+  zeigt die App beim Neu-Lernen: „Heute lieber das Gelernte halten“ –
+  Neues bleibt möglich, wird aber nicht angeboten.
+- Nach 3 neuen Zeilen eines Textes am Tag: ruhiger Satz „Für heute ist das
+  gut“; weiterlernen möglich (T7).
+
+## 6. Karten (Weg A: Regler, kein Umbau)
+
+Karten behalten ihre Stufen und Abstände (`intervalForStufe`,
+`app.js:122`). Neu nur ein **Regler je Bereich**:
+
+- Gezählt werden Antworten auf Karten, die vor der Antwort Stufe ≥ 7 hatten
+  (gefestigt/dauerhaft). Letzte 50 als `1`/`0` im Bereichsdokument
+  (`festErgebnisse`).
+- `abstandFaktor` im Bereichsdokument, Start 1,0, Bereich 0,5–1,0:
+  - Anteil sicher unter 85 % (mind. 20 Antworten) → Faktor − 0,1;
+  - über 95 % → Faktor + 0,1 (höchstens 1,0);
+  - geprüft nach jeweils 20 neuen Antworten.
+- Neue Abstände = `intervalForStufe(stufe) × abstandFaktor`, gerundet,
+  mindestens 1 Tag. Bestehende `nextReview` bleiben; der Faktor gilt ab der
+  nächsten Bewertung. Nichts wird entwertet.
+- Warum nur nach unten: Längere Abstände als heute (bis 180 Tage) sind nicht
+  nötig; es geht darum, Vergessen früh aufzufangen.
+- Karten in die drei Zustände zu nehmen (Weg B) wird nur geprüft, wenn der
+  Probelauf zeigt, dass es bei Texten deutlich besser trägt.
+
+## 7. Serie und Ehrlichkeit
+
+- **Serie:** Regel bleibt, wie sie ist (`tagGelernt`, `app.js:798`): Ein
+  Tag zählt, wenn wiederholt oder neu gelernt wurde. Jede bewertete
+  Textzeile zählt dafür wie eine Karte („w“ oder „n“). Keine neue Regel,
+  keine Überraschung.
+- **Keine Denkpause, kein Zwang.** Aufdecken geht wie heute sofort.
+- **Ehrlich wird es durch das System selbst:** Wer beim Kreis „sicher“
+  drückt, obwohl es hakt, macht nur seinen eigenen Kreis länger und
+  vergisst mehr – und sieht das in der eigenen Zahl.
+- **Eigene Zahl sichtbar** je Text: „Von deinen festen Zeilen sitzen 9 von
+  10.“ (aus `festErgebnisse`; erst ab 20 Antworten).
+- **Kurze Kontrollfrage bei Texten:** etwa bei jedem zehnten Kreis-
+  Abschnitt statt „Aufdecken“ zuerst: „Wie geht es weiter?“ mit drei
+  Wörtern aus demselben Text zur Auswahl (das richtige ist das erste Wort
+  der verdeckten Zeile). Falsch → diese Zeile zählt als gehakt. Danach
+  normal aufdecken. Kein Timer, kein Punktestand.
+
+## 8. Probelauf
+
+- Alles aus diesem Dokument hinter einem Schalter, nur für
+  `BETREIBER_UIDS` (`app.js:74`). Andere Konten sehen weder Texte noch
+  Regler.
+- Mindestens 4 Wochen mit echtem Stoff (eine Sure und der Medina-Bereich).
+- Einstellungen → nur für den Betreiber: eine Zeile je Text/Bereich mit
+  Quote, `kreisTage`, `abstandFaktor`, geschätzter Tageszeit. Wöchentlich
+  ins Logbuch übertragen.
+- **Erfolg:** nach 4 Wochen Quote fest ≥ 90 % bei den ältesten Zeilen, Zeit
+  pro Tag für den Betreiber tragbar. Sonst Startwerte ändern, weiter prüfen,
+  nicht veröffentlichen.
+- Freigabe für alle: nur auf ausdrückliches „ja“ des Betreibers.
+
+## 9. Tests (zusätzlich zu `KONZEPT.md` § 11)
+
+- `t_text_zustaende.js`: jede Zeile der Tabelle § 2 einzeln, Gegenprobe
+  „ohne Umsetzung rot“.
+- `t_text_kreis.js`: 30 feste Zeilen, `kreisTage` 7 → 5 Zeilen pro Tag,
+  nach 6 Tagen einmal durch; verpasste Tage verschieben nichts; Nachstellen
+  bei 80 % → 5, bei 97 % → 9; Grenzen 3/30.
+- `t_text_nachbarn.js`: gehakte Zeile 12 → Block 11–13 mit 9–10 grau, nie
+  14 sichtbar; nur 12 ändert den Zustand; Zeilen 12 und 14 gehakt → ein
+  Block 11–15.
+- `t_regler_karten.js`: 20 Antworten auf Stufe-≥7-Karten, 70 % sicher →
+  Faktor 0,9, neue Abstände verkürzt; bestehende `nextReview` unverändert;
+  Konto ohne Schalter: keine Änderung (Gegenprobe).
+- Mehrgeräte: zwei Kontexte, derselbe Text, gleichzeitig Kreis → keine
+  verlorene Zeile, Test mit echtem SDK gegen den Emulator.
+
+## 10. Neue gespeicherte Felder (Regeln, Datenschutz)
+
+| Wo | Feld | Regel |
+|---|---|---|
+| Set eines Textes (`sets.<id>`) | `kreisTage`, `kreisPos`, `kreisTag`, `festErgebnisse`, `portion` | `sets` wird nur als Map geprüft – vor dem Bau `firestore.rules` lesen und bestätigen |
+| Bereichsdokument | `abstandFaktor` (Zahl 0,5–1,0), `festErgebnisse` (Text ≤ 50) | `bereichFelder()` und `bereichWerte()` ergänzen, Emulator-Test |
+| Karten-Dokument | `textId` | `KONZEPT.md` § 6.3 |
+
+Datenschutzerklärung: Lernstatistik je Bereich/Text, nur im eigenen Konto,
+keine Auswertung durch den Betreiber.
+
+## 11. Entscheidungen (29.09.2026)
+
+| Nr | Frage | Entschieden |
+|---|---|---|
+| E-W1 | Neu/frisch/fest mit Kreis für Texte | ja (Agent, Betreiber vertraut) |
+| E-W2 | Karten: nur Regler (Weg A) | ja (Agent) |
+| E-W3 | Probelauf 4 Wochen nur im Betreiberkonto | **ja (Betreiber)** |
+| E-W4 | Denkpause vor dem Aufdecken | **nein** – Betreiber: „man kann doch umdrehen, wann man will“; stattdessen seltene Kontrollfrage bei Texten (§ 7) |
+| E-W5 | Serie | Regel bleibt wie heute, Texte zählen gleich (§ 7) |
+| E-W6 | Hakende Zeile im Zusammenhang wiederholen | ja – Betreiber-Einwand „stört das nicht die Reihenfolge?“ (§ 4) |
