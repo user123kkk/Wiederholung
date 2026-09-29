@@ -50,7 +50,7 @@ Drei Regeln:
 |---|---|---|
 | neu | nie gelernt | `ersteBewertung = null` |
 | frisch (k) | gelernt oder gehakt; k = Tage hintereinander sicher, 0–6 | `stufe = k` (0–6), `nextReview` = heute bzw. morgen |
-| fest | 7 Tage hintereinander sicher | `stufe = 7`, `nextReview` = nicht benutzt (Kreis entscheidet) |
+| fest | 7 Tage hintereinander sicher | `stufe = 7`, `nextReview = 2099-12-31` (Kreis entscheidet; schützt vor alten App-Versionen, `KONZEPT.md` § 7.5) |
 
 `maxStufe` hält wie heute den Höchststand. In der Oberfläche nur drei
 Wörter: **neu · frisch · fest** (keine Zahlen, Betreiber 24.09.2026).
@@ -94,6 +94,13 @@ Gespeichert je Text in seinem Set (`sets.<id>` im Bereichsdokument,
   - unter 85 % → `kreisTage` × 0,75 (abgerundet, mindestens 3);
   - über 95 % → `kreisTage` × 1,25 (aufgerundet, höchstens 30);
   - sonst gleich.
+- **Rückgängig** nach einem Kreis-Abschnitt stellt die Zeilen **und**
+  `kreisPos`, `kreisTag`, `festErgebnisse` zurück (alles in einem
+  `lastAction`).
+- **Zeile gelöscht**, auf die `kreisPos` zeigt: `kreisPos` rückt auf die
+  nächste vorhandene feste Zeile (am Ende: erste feste Zeile).
+- **Noch keine festen Zeilen:** kein Kreis-Stück; `kreisPos` wird gesetzt,
+  sobald die erste Zeile fest wird.
 - **Mehrere Geräte:** Die Kreisfelder schreibt `patchDoc` gezielt
   (`sets.<id>.kreisPos` usw.). Gleichzeitiges Wiederholen auf zwei Geräten
   kann ein Stück doppelt oder `festErgebnisse` um einen Eintrag kürzer
@@ -145,10 +152,12 @@ Karten behalten ihre Stufen und Abstände (`intervalForStufe`,
 
 ## 7. Serie und Ehrlichkeit
 
-- **Serie:** Regel bleibt, wie sie ist (`tagGelernt`, `app.js:798`): Ein
-  Tag zählt, wenn wiederholt oder neu gelernt wurde. Jede bewertete
-  Textzeile zählt dafür wie eine Karte („w“ oder „n“). Keine neue Regel,
-  keine Überraschung.
+- **Serie:** Regel bleibt, wie sie ist: Ein Tag zählt, wenn wiederholt
+  oder neu gelernt wurde. Jede bewertete Textzeile schreibt ins
+  Tagesprotokoll die eigene Art **„t“**; `tagGelernt` zählt `w + n + t`.
+  Eigene Art, damit der Fortschrittsring der Karten (`heuteAnteil`, nutzt
+  nur `w`/`n`) nicht durch Textantworten verfälscht wird. Keine
+  Regeländerung (`verlauf` wird nur als Map geprüft).
 - **Denkpause nur bei Texten** (E-W4): „Aufdecken“ erscheint erst nach
   einer Zeit, die zum Aufsagen ohnehin nötig ist – 0,4 Sekunden je Wort der
   verdeckten Zeilen, mindestens 1, höchstens 6 Sekunden. Der Knopf ist in
