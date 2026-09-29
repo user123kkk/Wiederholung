@@ -64,7 +64,10 @@ ausdrücklichem Auftrag; niemals gleichzeitig an `app.js`/`styles.css`.
 Eine Runde beginnt nur nach einem ausdrücklichen „weiter" des Betreibers.
 **Aktueller Stand 29.09.2026: vom Betreiber wieder aufgenommen.** Runde14
 G-102–G-106 abgenommen (.56), Ausgang `c4a2ccf`/.55; mit §2a-Gegenprüfung.
-Danach Runde15: genau G-107–G-111, zuerst kritischer G-110.
+Runde 15 (G-107–G-111) von Claude auf Betreiber-Auftrag abgeschlossen und
+als 3.18.3 veröffentlicht (Stand im obersten Logbuch-Eintrag). Nächste Runde:
+G-112, G-116 und die neuen Funde G-118 ff. aus der Claude-Prüfung, nach
+Schwere. Parallel läuft der Bau „Texte lernen“ (eigene Session, `AGENTS.md`).
 **Historische Pause 29.09.2026:** Nach Runde 13 pausiert. Neuer Claude-Chat
 prüft gezielt Runde 13 und den weiterhin falschen iPhone-Start gemäß
 [`../onboarding/CLAUDE-HANDOFF-2026-09-29.md`](../onboarding/CLAUDE-HANDOFF-2026-09-29.md).

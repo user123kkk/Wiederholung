@@ -1012,6 +1012,15 @@ Richtungen: Was kann jemand an **eigenen** Daten verbiegen, und was an denen
 
 ### 8.3 Snapshot-Echos
 
+- **Runde 15, Claude-Gegenprüfung (3.18.3):** Auftragsidentität als
+  „Besitz“ der Anmelde-Oberfläche ist richtig, aber ein Auth-Callback, der den
+  laufenden Auftrag als fremd verwirft, kann auch von einem **eigenen**
+  früheren Versuch stammen (Zeitlimit, Konto entsteht später doch). Die
+  Fortsetzung für das Konto, das dieser Aufruf nachweislich selbst angelegt hat
+  (`cred.user === auth.currentUser`, kein neuer Auftrag begonnen), darf deshalb
+  weiterlaufen. Jede neue Herkunftsprüfung auch gegen „zwei eigene Versuche
+  hintereinander“ testen, nicht nur gegen fremden Kontowechsel.
+
 - **Runde 14, G-111:** Nachholen einer verspäteten Registrierung an den
   konkreten eigenen Versuch und die angeforderte Adresse binden. Ein
   allgemeiner „Zeitlimit“-Merker darf weder Mail noch Profiländerung für
@@ -1037,6 +1046,22 @@ Richtungen: Was kann jemand an **eigenen** Daten verbiegen, und was an denen
   freigeben oder Reauth für B beginnen. Bei Auth-Aufträgen absichtliche
   Übergänge (Gast→eigenes neues Konto, eigenes Löschen→Gast) getrennt von
   fremdem Kontowechsel prüfen, nicht jede Auth-Änderung blind abbrechen.
+
+- **Runde 15:** Auth-Aufträge bekommen eine eigene Identität. Ein Wechsel
+  A→B→A macht die alte Antwort nicht wieder gültig. Die eigene Registrierung
+  darf sowohl vor als auch nach ihrem Auth-Callback fortsetzen; SDK-User und
+  Auftragsidentität prüfen. Name/E-Mail für den Zeitlimit-Nachtrag beim Start
+  sichern, nicht aus dem späteren Formular. Auch dessen Profil-UI-Fortsetzung
+  an den Auftrag binden. Eigene Adresslöschung mit Auth-Callback vor und nach
+  der SDK-Quittung abnehmen; fremde Abmeldung nicht mit dem Namen versehen.
+  Das Registrierformular bereits im eigenen Abmelde-Callback wählen: Eine
+  verzögerte Löschquittung darf zwischenzeitlich keinen neuen Einstieg anlegen.
+
+- **Runde 15, G-112:** Auch das Ersetzen eines Dialogs muss den bisherigen
+  Aufrufer als Abbruch auflösen, bevor dessen Referenz überschrieben wird.
+  Nicht nur `closeDialog`/Auth-Reset prüfen. Im Solltest ist die erste Promise
+  beendet (Confirmfalse/Promptnull/Alertundefined), der zweite Dialog bleibt
+  erhalten. Eine weiterhin offene Promise ist nur ein Alt-Fehlerbeleg.
 
 - **29.09.2026, G-106:** Bestätigungsprüfung/erneutes Senden und ihre
   Timer-Sperre an den ursprünglichen User binden. Alte reload-Antworten
@@ -1422,6 +1447,27 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 
 ## 15. Vorfall-Liste
 
+29.09.2026, Runde 15 (Codex-Entwurf, Claude-Gegenprüfung): Die neue
+Auftragsbindung brach die Registrierung ab, wenn nach einem Zeitlimit mit
+korrigierter Adresse neu registriert wurde und das erste Konto später doch
+entstand. Das neue Konto bekam weder Namen noch Bestätigungs-Mail. Gefunden
+nur durch eine frische Prüfung ohne Arbeitsverlauf, nicht durch die 77
+eigenen Fälle. Behoben in 3.18.3, Test `t_konto_registrierung_neuversuch.js`
+mit Gegenprobe (§ 8.3, `AUFTRAG.md` § 2a: frische Session bei Astra-Stufe).
+
+29.09.2026, Runde 15 blieb viele Stunden offen: Umsetzung fertig, dann
+wiederholte Gesamtläufe und Untersuchung von Netzteil/Akku/Prozessortakt
+statt Abschluss; unfertiger Stand lag uncommittet im gemeinsamen Ordner und
+sperrte den Veröffentlichen-Knopf (G-117). Logbuch-Einträge mit
+zusammengeklebten Zahlen („Handy200/iPad150“) waren für den Betreiber
+unlesbar. Regeln dazu in `AGENTS.md` § 1–3 (eigener Worktree, einmal gesamt
+testen, lesbar schreiben).
+
+29.09.2026, parallele Sessions: 3.18.0 zählte die 31 Startbild-Querys nicht
+mit, `t_boot_geometrie.js` wäre rot gewesen; nur eine Auswahl der Tests war
+gelaufen. In 3.18.2 nachgezogen. Bei jeder Version
+alle Stellen zählen (§ 4.1) und vor dem Push die Gesamtfolge (§ 5.1).
+
 29.09.2026, G-117: Der Betreiber wollte weiter den Batch-Knopf verwenden;
 mehrfache GitHub-Umleitungen lösten seinen lokalen Abbruch nicht. Batch
 veröffentlicht jetzt nur eine geprüfte Kopie von origin/main, statt lokale
@@ -1433,6 +1479,56 @@ rot korrigiert: doppelter Datei-Patch abgelehnt (keine Änderung), Tool-Treffer
 als Array, Mock-Zeilenumbruch und cmd-Argumentquotierung. Keine echte
 Veröffentlichung durch diese Tests und keine rote Probe als bestanden melden.
 
+29.09.2026, K10-Kopieranleitung: „unten den gesamten aktuellen Regeltext“
+stand in einer Datei, die dort nur Anleitung enthielt. Betreiber-Screenshot
+meldet Fehler ab487, echte Regeldatei hat481 Zeilen; Editor-Paste unbekannt.
+Anleitung eindeutig gemacht: direkten Raw-Inhalt von firestore.rules geben,
+Editor vollständig ersetzen, keine Anweisungen/Markdown mitkopieren (§8).
+Aus dem Screenshot allein weder Kopierursache noch Fehler in Regeln behaupten.
+
+29.09.2026, Runde15-Abnahme: direkter Windows-Netzstatus0 trotz früherer
+Angabe zum Ladegerät. Originaltempo130ms rot;45s angeforderte Wartezeit
+dauerte957,672s, UI-Gegenprobe nach993s Zeitlimit. Ursache nicht bewiesen,
+keinen Geräte-/Tool-Aussetzer als bestandenen Lauf oder alleinigen Appfehler
+werten.32 protokollierte Ergebnisse,30 grün; aktuelle Logs/Checkpoint
+gesichert, eigene Prüfprozesse beendet. Nur identisch grüne Ergebnisse beim
+stabilen Wiedereinstieg übernehmen; beide rote und fehlende neu (§5).
+
+29.09.2026, eigene Runde15-Regression: Bei 25ms verzögerter Löschquittung
+kam die eigene Abmeldung zuerst. render() legte einen Einstieg an, bevor
+die Fortsetzung das Registrierformular wählte; der neue Normalfall wurde
+rot. Modus/Wahl bereits im zugehörigen Auth-Callback gesetzt; echte App
+mit 0/25ms Quittung danach grün. Gesamtfolge beendet und frischer Stand
+`d17b05f425891265df6ca56b2e9badfb4cbce3ef9250ba46a31f45fce6c8cdab`
+neu gestartet. Keine alte grüne Gesamtabnahme behaupten (§8.3).
+
+29.09.2026, Mustersuche: SDK zeigt bereits B, bevor App-Auth-Callback A
+ablöst. Drei Token-/Bestätigungsfortsetzungen lösen in dieser Lücke eine
+Navigation aus. Originalfunktionen, drei normale und drei Wechsel-Fälle
+gegen aktuellen Stand und fest `a4b5677` belegen es. Mittlere Folgerunden-
+Aufgabe, keine Datenlöschung behauptet; SDK- und App-User gemeinsam prüfen.
+
+29.09.2026, Runde15-Mustersuche G-112: `openDialog` überschreibt die einzige
+Referenz auf den alten Aufrufer. Dessen Promise bleibt bei Confirm, Prompt
+und Alert unbeendet; selbst nach Abschluss des zweiten Dialogs. Original-
+Funktion und fester Altstand `a4b5677` belegen es. Mittlere Aufgabe für die
+Folgerunde, §8.3; keine neue Datenlöschung behauptet.
+
+29.09.2026, Runde15: neuer Inventartest verwendete zunächst den vermuteten
+Aktionsnamen `einstieg-plan-speichern`. Der echte Code heißt `einstieg-fertig`;
+der Test brach rot ab, keine App geändert und keine Abnahme behauptet.
+Aktionsnamen/Endzustände am Code lesen, sichtbare Texte und erreichten
+Abschluss verlangen (§5.3). Eigene Werkzeugfehler vor Änderungen:
+nicht passende Patch-Kontexte/mehrfache Dateioperation abgelehnt, fehlende
+Diagnosedateinamen geraten. Vor weiteren Zugriffen `rg --files`/exakte
+Quellzeilen lesen; keine Änderung aus fehlgeschlagenen Patches behaupten.
+
+29.09.2026, Runde15-Gegenprüfung: Nachtrags-Profilanzeige zunächst nur an
+User-Objekt gebunden; für A→B→A um Auftragsidentität ergänzt (§8.3).
+Begonnene Gesamtfolge abgebrochen, danach endgültiger Quellstand frisch.
+Ein neuer Testwrapper führt externe Prüfquellen aus: `--fortsetzen` muss
+deren Hashes mitprüfen, sonst wäre eine veränderte Probe fälschlich bewahrt.
+Runner erweitert; unverändert grüne Quellen nicht grundlos wiederholen (§5.3).
 
 29.09.2026, Runde14 am Ladegerät: unveränderter Original-Tempotest grün,
 zehn Bewertungen3000 Karten geführt/eigen maximal57ms (Grenze100ms,

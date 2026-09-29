@@ -2,19 +2,23 @@
 
 ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
 
-### Aktueller Weiter-Auftrag — Runde 14
+## Für jede KI (Claude, Codex, ChatGPT …): auch [`AGENTS.md`](AGENTS.md) lesen
 
-Betreiber hat nach den Claude-Änderungen .52–.55 die Weiterarbeit verlangt.
-Runde 14 (G-102–G-106) ist wieder aufgenommen; aktuelle Arbeit steht oben
-in `plan/grossplan/LOGBUCH.md`. Der iPhone-Start ist laut Gerätebericht mit
-.55 bestätigt. Die folgenden Pause-/Übergabeabschnitte beschreiben den
-früheren Stand; nicht als aktuelle Sperre oder offenen iPhone-Fix lesen.
+Dort steht, wie mehrere KIs parallel arbeiten (eigener Git-Worktree,
+Versionsnummer und Prüfstand-Port absprechen), wie eine Runde zu Ende gebracht
+wird und wie Logbuch-Einträge lesbar bleiben. Diese `CLAUDE.md` gilt für
+**alle** KIs, nicht nur für Claude.
 
-**Runde14 abgenommen (.56):** 105/105 Testläufe, 13/13 Lernabnahme und
-Handy200/iPad150 Zufallstests grün. Unveränderter Original-Tempotest am
-Ladegerät grün, keine Grenze gelockert/kein Layout-Experiment übernommen.
-Aktuelle Nachweise stehen im obersten Logbuch. Nächste Runde genau
-G-107–G-111, zuerst G-110 kritisch. Kein Textlern-Bauauftrag.
+### Aktueller Stand (29.09.2026 abends) — zwei Sessions parallel
+
+- **Texte auswendig lernen** (Stufen aus `plan/texte-lernen/KONZEPT.md`):
+  eigene Session, Logbuch `plan/texte-lernen/LOGBUCH.md`, Versionen ab 3.18.0.
+- **Großplan Runde 15** (G-107–G-111, Konto-Fortsetzungen, 3.17.57): auf
+  Betreiber-Auftrag von Claude fertiggestellt und gegengeprüft, zusätzlich
+  Prüfung der Codex-Versionen 3.17.42–3.17.56. Stand im obersten Eintrag von
+  `plan/grossplan/LOGBUCH.md`.
+- Der iPhone-Start ist seit 3.17.55 am Gerät bestätigt. Die Pause- und
+  Übergabeabschnitte weiter unten sind **Verlauf**, keine aktuelle Sperre.
 
 ### Runden: Ablauf, Gegenprüfung, neuer Zyklus
 
@@ -23,7 +27,7 @@ Pflicht), § 2b (sparsam ohne Qualitätsverlust); am Ende aller Runden § 2c
 (Codex schreibt Übergabe, Claude prüft gesammelt); danach § 4a (neuer
 Zyklus aus dem aktuellen Stand, nur auf Betreiber-„weiter“).
 
-### Aktuelle Claude-Übergabe und Pause vom 29.09.2026
+### Verlauf: Claude-Übergabe und Pause vom 29.09.2026
 
 Der Betreiber hält nach Runde 13 (3.17.51, `f550897`) an und lässt Claude
 gezielt prüfen: **[`plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md`](plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md) vollständig lesen.**

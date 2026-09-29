@@ -23,7 +23,8 @@ function lesen(von,bis){const a=source.indexOf(von),b=source.indexOf(bis,a);asse
   fall==='google'?lesen('async function doGoogleLogin()','async function doAppleLogin()'):
   fall==='apple'?lesen('async function doAppleLogin()','/* Beobachtung des Betreibers'):
   lesen('async function kontoVertipptNeuAnfangen()','async function doReset()');
- vm.runInContext(code,ctx);
+ const helfer=source.includes('function authAuftragStarten(')?lesen('function authAuftragStarten(','async function doLogin()'):'';
+ vm.runInContext(helfer+code,ctx);
  const lauf=fall==='lese-token'?ctx.ausweisErneuernUndNeuLaden():fall==='registrierung'?ctx.doRegister():fall==='reset'?ctx.doReset():fall==='login'?ctx.doLogin():fall==='google'?ctx.doGoogleLogin():fall==='apple'?ctx.doAppleLogin():ctx.kontoVertipptNeuAnfangen();
  const ablehnung=['adresse-neu','login','google','apple'].includes(fall);
  await new Promise(resolve=>setImmediate(resolve));assert.equal(typeof(ablehnung?nein:ok),'function','Haltepunkt fehlt');

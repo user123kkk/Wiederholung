@@ -241,3 +241,21 @@ Bewusst so seit dem Wisch-Bau („Fast hat keine Wischrichtung", Kommentar bei
 - Wischen nach oben ginge, ist aber schräg leicht mit links/rechts zu
   verwechseln, und der Knopf liegt mittig unter dem Daumen.
 - **Empfehlung: lieber nicht.** **Entschieden 27.09.2026 (Betreiber: „alles klar, lassen wir"):** keine Geste, nichts bauen.
+
+### E-20 – Antworten eines zweiten Geräts nach „Verlauf zurücksetzen" (G-127, 30.09.2026)
+Seit 3.17.50 trägt jeder Zähler im Verlauf eine Reset-Kennung. Setzt man den
+Verlauf auf Gerät A zurück, lehnt der Server danach alle Antworten mit der
+alten Kennung ab. Gerät B, das gerade offline war oder den Reset noch nicht
+kennt, verwirft seine Antworten dann. Das betrifft auch Antworten, die B
+**nach** dem Reset gegeben hat. War das die einzige Runde des Tages auf B,
+fehlt der Tag in der Serie.
+- Dafür, sie auf die neue Kennung umzubuchen: Nichts, was man wirklich gelernt
+  hat, geht verloren. Die Serie stimmt auch bei zwei Geräten.
+- Dagegen: Wer zurücksetzt, will meist einen leeren Verlauf. Umgebuchte
+  Antworten von vor dem Reset würden ihn sofort wieder füllen. Sauber trennen
+  lässt sich nur mit einem Zeitstempel je Antwort. Dafür braucht es ein neues
+  Feld, neue Regeln und einen Regel-Deploy. Der Fall ist selten: Man setzt
+  zurück, während ein zweites Gerät offline lernt.
+- **Empfehlung: vorerst so lassen.** Nur bauen, wenn Du zwei Geräte parallel
+  nutzt und das schon einmal passiert ist. Die Lernlogik selbst ist nicht
+  betroffen, nur welche Tage die Serie zählt.

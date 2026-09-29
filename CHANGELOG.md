@@ -1,3 +1,6 @@
+## 3.18.3 – 30. September 2026
+
+**Kontowechsel (Großplan-Runde 15).** Späte Antworten von Anmelden, Registrieren, Passwort-Zurücksetzen und „Adresse falsch? Neu anfangen“ wirken nur noch auf das Konto, für das sie gestartet wurden. Ein schon bestätigter Lösch- oder Abmeldedialog kann nach einem Kontowechsel nichts mehr am neuen Konto auslösen. Ein Registrierungsnachtrag nach Zeitlimit ändert nur das angeforderte Konto. Private Entwürfe (Karte, Idee), Auswahl, offene Blätter, die Adresse auf der Löschseite und das Erinnerungsblatt werden beim Kontowechsel geleert. Wer sich nach einem Zeitlimit mit korrigierter Adresse neu registriert, bekommt Namen und Bestätigungs-Mail für das neue Konto.
 ## 3.18.2 – 30. September 2026
 
 **Texte anlegen (Stufe 2, nur im Probelauf beim Betreiber).** Im

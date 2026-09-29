@@ -2,6 +2,75 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-30 — Runde 15 abgeschlossen (3.18.3) und Prüfung der Codex-Versionen 3.17.42–3.17.56
+
+**Auftrag:** Betreiber 29.09. abends: Runde 15 durch Claude, Agenten verteilen,
+die Codex-Arbeit von .42 bis .56 prüfen, dabei die parallele Texte-lernen-
+Session beobachten, und eine Anleitung für alle KIs ins Repo schreiben.
+
+**Geändert:**
+- `app.js`: Codex-Entwurf G-107–G-111 übernommen (Auth-Aufträge, Auth-Reset,
+  Adressdialog, Abmelden, Registrierungsnachtrag). Dazu drei Korrekturen aus
+  der Gegenprüfung: `registrierungGilt` und Übernahme des Auftrags in
+  `doRegister` (Neuversuch nach Zeitlimit), `auftrag.loescht` nur während
+  `deleteUser`, Auth-Reset leert `kontoLoeschenEmail` und das Erinnerungsblatt.
+- Versionen 3.18.3 in `app.js`, `sw.js`, `index.html` (beide `?v=` und 31
+  Startbild-Links), `CHANGELOG.md`.
+- Neuer Test `plan/werkzeuge/pruefstand/t_konto_registrierung_neuversuch.js`,
+  dazu die Codex-Werkzeuge unter `befunde/werkzeuge/` und `t_konto_fortsetzungen.js`.
+- `AGENTS.md` neu und versioniert (aus `.gitignore` genommen), `CLAUDE.md`
+  Kopf aufgeräumt, `LEHREN.md` § 8.3 und § 15, `AUFGABEN.md` (G-107–G-111
+  erledigt, neu G-118–G-130), `AUFTRAG.md` § 2, `PLAN.md`,
+  `befunde/NACHPRUEFUNG-RUNDE-15.md`.
+
+**Entscheidung:**
+- Eigener Git-Worktree `Wiederholung-r15` statt des gemeinsamen Ordners, weil
+  die Texte-Session gleichzeitig an `app.js` arbeitete. Versionen abgesprochen:
+  Texte 3.18.0 und 3.18.2, Runde 15 zuerst 3.18.3; weil die Texte-Session
+  3.18.2 vorher veröffentlicht hat, erneut rebased und als 3.18.3 abgeschlossen. Prüfstand-Ports 8099 (hier) und
+  8199 (Texte).
+- Die unfertige Codex-Runde war inhaltlich brauchbar. Die frische Prüfung
+  ohne Arbeitsverlauf fand trotzdem eine Rückstufung, die keiner der 77
+  eigenen Codex-Fälle abdeckte (Neuversuch mit korrigierter Adresse). Behoben
+  statt zurückgenommen, weil die Ursache eng begrenzt ist.
+- Prüfung .42–.56 mit vier Prüfern (zwei für Datenlogik, zwei für
+  Oberfläche/Tempo/Werkzeug). Jeder übernommene Fund wurde am Code
+  nachgelesen. Kein kritischer Fund offen. Mittel: G-119 (Mitscrollen im
+  Plan-Aufbau nicht unterbrechbar), G-123 (Lehrer-Freigabe kann hängen),
+  G-126 (volles Neuzeichnen mitten in der Runde nach Server-Bestätigung).
+  G-127 berührt Serien-Daten und wartet deshalb auf den Betreiber.
+
+**Gegenprüfung:** App-Diff vollständig selbst gelesen, dazu ein frischer
+Prüfer ohne Verlauf (Normalfälle, veralteter Auftrag, Reset-Block, entfernte
+Variable, Awaits, Lernlogik). Funde F1–F3 behoben, F4/F5 als G-130.
+Gegenprobe F1: ohne die Übernahme-Zeile bekommt das neue Konto keine Mail
+(rot), mit ihr Name, Mail und „Konto angelegt.“ (grün).
+`t_konto_fortsetzungen.js` vor und nach der Korrektur mit gleicher Ausgabe grün.
+
+**Tests auf dem Stand 3.18.1 (vor dem zweiten Rebase, Quellstand `7c56d851`):** Gesamtfolge 110 von 110
+grün (alle Tests einschließlich der 13 Lernrunden-Tests). Zwei Unterbrechungen
+(Sitzungsgrenze, Internet) kosteten nur Zeit; grüne Ergebnisse desselben
+Quellstands wurden mit `--fortsetzen` übernommen, nichts Rotes. Der eine rote
+Lauf lag am nicht gestarteten Emulator (Port 8081), danach grün. Gelesen:
+Sprünge überall 0, Kontrast 0 Funde, a11y 0 Funde, große Bildschirme ok,
+Tempo 3000 Karten unter 100 ms je Bewertung (Laptop am Netz).
+Zufallstests: Handy 200 Schritte (Seed 1512) und iPad 150 Schritte (Seed 1513), je 0 Befunde.
+NACH_REBASE
+
+**Offen:**
+- Veröffentlichen (Hosting) macht der Betreiber. Vorher müssen die Firestore-
+  Regeln aus 3.18.0 (Texte-Session) veröffentlicht sein; Runde 15 selbst
+  ändert keine Regeln.
+- Gerätetest am iPhone für Registrieren und „Adresse falsch?“ bleibt beim
+  Betreiber; der Prüfstand hat kein echtes Firebase-Auth.
+- A5/A6 nicht erfüllt (neue mittlere Funde).
+
+**Nächster Schritt:** Nächste Runde mit G-112, G-116, G-119, G-123, G-126
+(nach Schwere, höchstens fünf). E-20 (G-127) dem Betreiber vorlegen.
+
+**Kriterien:** A1 nein · A2 E-20 neu vorgelegt · A3 unverändert
+· A4 grün · A5 nein · A6 0.
+
 ### 2026-09-29 — G-117: Veröffentlichungs-Batch aus sauberem main
 
 **Geändert:** `veroeffentlichen.bat:1`, `plan/werkzeuge/veroeffentlichen.ps1:1`,
@@ -21,6 +90,148 @@ Firestore-Regeln K10 sind produktiv weiter unbestätigt.
 **Nächster Schritt:** Nach diesem getrennten Werkzeug-Commit die Runde15-
 Abnahme am gespeicherten Checkpoint fortsetzen; vorher G-117 auf dem echten
 `origin/main` noch einmal ohne Deploy mit `-NurPruefen` gegenprüfen.
+
+### 2026-09-29 — Runde14 erfolgreich live, GitHub-Lauf7 bestätigt
+
+**Geändert:** Nur Dokumentation, kein weiterer Deploy ausgelöst.
+**Entscheidung:** GitHub-API bestätigt Lauf36598237625/#7 vom29.09.,
+Commit8ae1bdd: abgeschlossen/success. Standprüfung und Hosting-Deploy beide
+success, Abschluss16:31:18UTC (18:31:18Berlin). Unabhängige öffentliche
+HTTP-Prüfung mit Cache-Control:no-cache: app.js APP_VERSION3.17.56;
+index.html app.js/styles.css beide v3.17.56. K11 für Runde14 damit erledigt.
+Der lokale Batch-Abbruch bleibt wegen des ungeprüften Runde15-Entwurfs
+erwartet; er widerlegt den erfolgreichen GitHub-Deploy nicht. Kein lokales
+Reset/Stash und keine Umgehung der Veröffentlichungssperre.
+**Offen:** Betreiber sagt weiterhin „geht ned“, konkrete verbleibende
+Fehlermeldung/App-Version noch unbekannt. Produktions-Firestore-Regeln K10
+weiter unbestätigt: erfolgreicher Hosting-Workflow veröffentlicht keine Regeln.
+Runde15-Abnahme/Commit unverändert offen; App-/Browsercache nicht gelöscht.
+**Nächster Schritt:** Verbleibendes Symptom zuordnen (lokales Batchfenster
+oder App-Version/Funktion); keine erneute Veröffentlichung ohne neuen Grund.
+Danach Runde15-Abnahme nach gespeichertem Checkpoint fortsetzen.
+
+### 2026-09-29 — Regel-Editor meldet Fehler hinter dem Ende der Datei
+
+**Geändert:** `plan/grossplan/KONSOLE.md` K10 nennt jetzt ausschließlich
+`firestore.rules`, direkten Raw-Link und vollständigen Ersatz im Editor.
+Mehrdeutiges „unten den gesamten aktuellen Regeltext“ entfernt: Der Abschnitt
+enthielt nur Anleitung, keinen vollständigen Regeltext. Keine Regel geändert.
+**Entscheidung:** Screenshot meldet Syntax-/Tokenfehler ab487; lokale und
+`origin/main`-Regeln haben481 Zeilen, identische lokale Datei ohne Diff.
+Zusätzlich kopierter Text ist eine naheliegende Erklärung, aber der Inhalt
+des Firebase-Editors liegt nicht vor; konkrete Kopierursache nicht behaupten.
+Dem Betreiber direkten Regeltext geben und sämtliche alten Editorinhalte
+ersetzen lassen. Nicht die Regeln ändern, um einen unbekannten Paste zu heilen.
+**Offen:** Im Projekt lernkarte-925c2 → Firestore Database → Regeln: ganzen
+Editorinhalt durch Raw-Datei ersetzen, Veröffentlichen. Erfolg: kein roter
+Syntaxfehler, aktuelle Veröffentlichungszeit und `verlaufEpocheOk` vorhanden.
+Produktionsregeln nicht durch Agent veröffentlicht; K10 bleibt unbestätigt.
+**Nächster Schritt:** Runde15-Abnahme nach bestehendem Checkpoint fortsetzen;
+K10/K11 bleiben gesonderte Betreiber-Schritte.
+
+### 2026-09-29 — Veröffentlichung von Runde14 trotz lokalem Runde15-Entwurf
+
+**Geändert:** Nur Dokumentation; keine lokalen Änderungen gelöscht,
+verschoben, gestasht oder ungeprüft committet. `veroeffentlichen.bat` und
+`.github/workflows/veroeffentlichen.yml` gelesen; `origin/main` frisch geholt.
+**Entscheidung:** Der gezeigte Batch-Abbruch schützt korrekt vor dem lokalen
+Entwurf3.17.57. GitHub-Workflow „Veroeffentlichen“ holt ausschließlich `main`
+(App3.17.56), prüft dessen Stand und veröffentlicht nur Hosting. Damit kann
+Runde14 veröffentlicht werden, ohne die offene Runde15 anzutasten. Nicht
+die Batch-Sperre umgehen oder ihre Aufforderung zum Löschen befolgen.
+**Offen:** Betreiber kann K11 über GitHub → Actions → Veroeffentlichen →
+Run workflow/main auslösen, Erfolg grüner Lauf/App3.17.56. Workflow braucht
+das vorhandene Repository-Secret FIREBASE_SERVICE_ACCOUNT; dessen Zustand
+hier nicht geprüft. K10 zuerst, falls aktuelle Regeln noch nicht veröffentlicht
+sind (`verlaufEpocheOk`). Kein Deploy ausgelöst. Runde15-Abnahme bleibt offen.
+**Nächster Schritt:** Runde15-Abnahme wie im folgenden Checkpoint fortsetzen;
+30 aktuelle grüne Tests behalten. Veröffentlichung ist ein eigener Betreiber-
+Schritt und hebt die Test-/Commit-Sperre des lokalen Entwurfs nicht auf.
+
+### 2026-09-29 — Abnahme unterbrochen: Windows erkennt keinen Netzanschluss
+
+**Geändert:** Keine weitere Produktänderung nach dem eigenen Formular-Fix
+`app.js:2091`. Dokumentation in `PLAN.md`, `CLAUDE.md`, `AUFTRAG.md`,
+`LEHREN.md` und Nachprüfung aktualisiert. Entwurf3.17.57 bleibt uncommittet.
+**Entscheidung:** Windows GetSystemPowerStatus erfolgreich: ACLineStatus0,
+BatteryFlag1/76%; später WMI BatteryStatus1/74%. Frühere Angabe des Betreibers
+zum Ladegerät ersetzt diese aktuelle Messung nicht; keine Aussage darüber,
+welches Kabel physisch steckt. Optionaler Hinweis zur Laptop-Ladeanzeige
+steht noch unbeantwortet. Die angeforderten45s Tool-Wartezeit dauerten
+957,672s; UTC14:27:09→14:43:54. Ursache der Unterbrechung nicht festgestellt.
+`t_einstieg_g083_039_040_041_044.js` bestand seinen aktuellen UI-Teil, erreichte
+die feste Alt-Gegenprobe aber nicht vollständig und wurde nach993s mit
+Zeitlimit beendet. Das ist keine bestandene Gesamtprobe und kein alleiniger
+Beleg einer App-Regression. Lauf danach beendet; eigene Browser/Server8099,
+Demo-Emulator8081 und temporären Wachhalter beendet. Nutzerprozesse unberührt.
+**Gegenprüfung:** Aktueller App-Diff erneut vollständig gelesen;
+0/25ms normale Löschquittung und14 Wechsel-/ABA-Fälle in echter App grün.
+Syntax/Versionen/CSP/APP_SHELL grün. Im aktuellen106er-Lauf32 Ergebnisse:
+30 Exit0, Tempotest130ms/100ms rot, vorgenannter Test Zeitlimit. Alle32
+Ausgaben vollständig gelesen oder inhaltlich bytegleich mit zuvor gelesener
+Ausgabe verglichen (nur Prozessmetadaten ausgeschlossen). Teiltest
+`t_fehler_fokus.js` beim Stoppen ohne Ergebnis; nicht als geprüft zählen.
+**Offen:** Gesamtabnahme,77er-Wrapper,13er-Lernabnahme und beide Affen am
+endgültigen Fingerprint; drei vorbereitete Browser-Hypothesen weiterhin
+unbestätigt. G-112/G-116 mittel separat belegt und offen. A5/A6 nicht erfüllt.
+Kein Commit, Push oder Deploy von3.17.57; gepushter Stand weiterhin .56
+`a4b5677`. K10/K11, Gerätetests und Textlern-Entscheidung unverändert offen.
+**Nächster Schritt:** Bei stabilem Laptop zuerst echten Netzstatus prüfen,
+lokalen Server/Emulator neu starten. Dann `$env:CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'`
+und `node plan/werkzeuge/pruefstand/alle_pruefen.js --fortsetzen`: nur bei
+identischem Fingerprint `d17b05f425891265df6ca56b2e9badfb4cbce3ef9250ba46a31f45fce6c8cdab`
+werden30 grüne aktuelle Läufe bewahrt. Beide roten und alle fehlenden frisch;
+Grenzen unverändert, keine blinden Leistungswiederholungen. Logs in
+`%TEMP%/adrabic-pruefstand-gesamt/d17b05f425891265`, Gesamtlog
+`%TEMP%/adrabic-r15-gesamt-quittung.log`, Leseliste
+`%TEMP%/adrabic-r15-quittung-gelesen.json`. Nach grün13er-Abnahme aus frischen
+Gesamtlogs übernehmen, Affe Handy200 Seed1502/iPad150 Seed1503, vorbereitete
+Hypothesen kontrolliert prüfen; erst dann §2a/§14 und Commit/Push .57.
+**Kriterien:** A1 offen · A2/A3 unverändert · A4 offen · A5 offen · A6 0.
+
+### 2026-09-29 — Runde 15 umgesetzt, vollständige Abnahme läuft
+
+**Geändert:** `app.js` Auth-Aufträge, Auth-Reset, Token-Rückkehr,
+Registrierungsnachtrag, Adressdialog/Abmelden; Versionen `app.js`, `sw.js`,
+`index.html`, `CHANGELOG.md` (Entwurf3.17.57). `t_inventar2.js` liest sichtbare
+Texte und erreicht über echte Aktionen den fertigen Plan/Registrierformular.
+Neue `t_konto_fortsetzungen.js` samt sieben Prüfquellen; Runner hasht auch
+ausgeführte Wrapper-Abhängigkeiten. Regeln und Lernalgorithmen unverändert.
+**Entscheidung:** Runde14 mit `a4b5677` gepusht; jetzt genau G-107–G-111.
+18 normale VM-Fälle grün, sieben alte Auth-Fortsetzungen plus A→B→A in
+vollständiger App, private Karten-/Ideenentwürfe/Auswahl, fremde Profile und
+bereits bestätigte Auth-Dialoge gezielt grün. Fester Altstand `c4a2ccf` belegt
+die konkreten alten Wirkungen. Normaler Inventarrundgang bis fertigem Plan
+und Kontoformular grün, erste falsche Aktionsannahme vorher rot korrigiert.
+**Gegenprüfung:** Frühe Rückkehr mit eigener Registrierung (SDK-Promise vor
+Auth-Callback) und eigener Löschung getrennt geprüft. Nachtrags-Profilanzeige
+zusätzlich an Auftragsidentität gebunden; erste Gesamtfolge deshalb beendet.
+Die frische endgültige106er-Folge läuft, Log `%TEMP%/adrabic-r15-gesamt-final.log`.
+Kein Hosting-Deploy, keine Produktionskonten. Vorläufige Ergebnisse sind keine
+Gesamtabnahme; Lernabnahme/Zufallstests und Acht-Bereiche-Nachprüfung folgen.
+**Offen:** Vollständige106er-Ausgaben, §2a-/§14-Abnahme, A5/A6; iPad-Teilfenster/
+Drehen im Boot, Konsolenschritte und Textlern-Entscheidung weiterhin offen.
+Mustersuche: G-112 mittel neu bestätigt (drei Dialogarten, fester Altstand
+`a4b5677`): Ersetzen lässt alten Aufrufer hängen. Separat für die Folgerunde,
+nicht als sechste Aufgabe in Runde15 bauen. Weitere Dialog-/Zähler-/Clipboard-
+Hypothesen haben kontrollierte Proben, sind noch nicht als Fehler abgenommen.
+**Nächster Schritt:** Lauf vollständig lesen, rote Befunde klären; erst bei
+bestandener Abnahme Runde15 committen/pushen, danach Plan fortsetzen.
+**Abnahme-Korrektur:** 77er-Wrapper rot: eigene Löschung mit 25ms Quittung
+startete im vorgezogenen Auth-Callback den Einstieg. `app.js:2091` wählt
+das Registrierformular jetzt bereits dort. Beide normalen App-Fälle 0/25ms
+grün; erste14 Wechsel-/ABA-Fälle weiterhin grün. Lauf beendet; neue106er-
+Folge `%TEMP%/adrabic-r15-gesamt-quittung.log`, Produktfingerprint
+`d17b05f425891265df6ca56b2e9badfb4cbce3ef9250ba46a31f45fce6c8cdab`.
+**Leistungsgrenze erneut offen:** Frischer Original-Tempotest rot bei130ms
+(Grenze100ms unverändert). Danach Windows BatteryStatus1/78%, CPU798MHz,
+34% Gesamtlast, laufender ChatGPT-Prozess244% in der Mehrkern-Anzeige.
+Das ist ein anderer Rechnerzustand als der grüne Netzlauf; keine Kausalität
+oder App-Regression allein daraus behaupten. Betreiber um Laptop-Ladeanzeige
+gebeten; übrige Tests laufen weiter. Keine Leistungsgrenze ändern und keinen
+fremden Prozess schließen. Rote Messung bleibt erhalten; erneute Abnahme
+erst bei nachvollziehbar verändertem Zustand, nicht blind bis grün.
+**Kriterien:** A1 offen · A2/A3 unverändert · A4 läuft · A5 offen · A6 0.
 
 ### 2026-09-29 — Runde 14 abgenommen: G-102–G-106, 3.17.56
 

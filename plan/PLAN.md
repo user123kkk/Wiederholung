@@ -795,15 +795,14 @@ erstellen (`grossplan/AUFTRAG.md` § 4a).
   Nachholliste: Eintrag „Pause“ in `texte-lernen/LOGBUCH.md`.
 - **Wartet auf Betreiber:** Firestore-Regeln veröffentlichen **vor** dem
   Hosting von 3.18.0 (`firebase deploy --only firestore:rules`).
-- **Parallel:** Großplan-Runde 15 (3.17.57) läuft in einer anderen Session
-  im Worktree `C:/Users/USER/Wiederholung-r15`; Tests dort auf Port 8099,
-  hier auf 8199 (`PRUEF_PORT`).
+- **Parallel (Betreiber 29.09. abends: „runde 15 sollst du bitte machen“):**
+  Großplan-Runde 15 ist in einer eigenen Claude-Session im Worktree
+  `C:/Users/USER/Wiederholung-r15` gebaut und als **3.18.3** auf `main`
+  gebracht (Codex-Entwurf + Gegenprüfung + Fix). Tests dort auf Port 8099,
+  Texte-Bau auf 8199 (`PRUEF_PORT`). Regeln für parallele KIs: `AGENTS.md`.
 - Ausgangsstand: `main` = 3.17.56 (`a4b5677`), live veröffentlicht.
-- **Codex-Runde 15 (unfertig, 3.17.57) ist gesichert, nicht verworfen:**
-  `git stash list` → „Codex Runde 15 unfertig …“ und zusätzlich
-  `grossplan/runde15-unfertig.patch` (gegen `a4b5677`). Nicht anwenden,
-  solange der Texte-Bau läuft; danach mit `git apply --3way` einspielen und
-  Konflikte lösen.
+- Codex-Runde 15: der gesicherte Patch `grossplan/runde15-unfertig.patch`
+  ist eingespielt und in 3.18.3 aufgegangen; nicht noch einmal anwenden.
 - **Erledigt (29.09. abends):** Anmeldeproblem des Betreibers – er hatte
   eine falsche Adresse benutzt; am PC ging es. Kein App-Fehler belegt.
   **Befund für die nächste Prüfrunde:** Bei einem unbekannten Fehlercode
@@ -821,8 +820,7 @@ erstellen (`grossplan/AUFTRAG.md` § 4a).
 **Werkzeug G-117 (29.09.2026):** `veroeffentlichen.bat` prüft und veröffentlicht
 den frisch geholten `origin/main` aus einer eigenen temporären Kopie; lokale
 Entwürfe bleiben erhalten. Neun isolierte Nachweise grün, kein echter Deploy
-durch den Werkzeugtest. Die App auf `main` bleibt 3.17.56; Runde15 (3.17.57)
-ist lokal noch in der Abnahme. K10-Regeln bleiben produktiv unbestätigt.
+durch den Werkzeugtest. K10-Regeln bleiben produktiv unbestätigt.
 
 **GROSSPLAN (seit 25.09.2026, abends) – das ist jetzt die laufende Arbeit.**
 Betreiber: „ich möchte einen krassen perfekten Plan … die Arbeit an ein
@@ -836,18 +834,14 @@ Konsolen-Schritte K1 ff., Funktionen/Premium. **Wieder aufgenommen durch
 § 2**, Stand im obersten Eintrag von [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 Die Einträge darunter bleiben als Verlauf gültig.
 
-**STAND 29.09.2026 abends: iPhone-Start am Gerät bestätigt (3.17.55).**
-**Aktueller Weiter-Auftrag:** Runde 14 (G-102–G-106, 3.17.56) abgenommen;
-als Nächstes Runde15 mit genau G-107–G-111, zuerst kritischer G-110.
-Umsetzung und Gegenprüfung gemäß `grossplan/AUFTRAG.md` §2 + §2a.
-105/105 Testläufe, 13/13 Lernabnahme, Handy200/iPad150 je0 Befunde.
-Unveränderter Tempotest am Ladegerät grün: 3000 Karten geführt/eigen
-alle zehn Bewertungen unter100ms, keine Grenze gelockert. Frühere rote
-Messungen/Diagnose und beschreibende Grenzen bleiben im Logbuch. Mustersuche
-belegt G-107 (Auth, mittel), G-108 (private Entwürfe, hoch) und G-109
-(Inventar-Prüfwerkzeug, niedrig) sowie G-110 (bestätigter Auth-Dialog,
-Löschaufruf an B, kritisch) und G-111 (fremder Registrierungsnachtrag, hoch)
-für die Folgerunde; A5/A6 weiterhin offen.
+**STAND GROSSPLAN (29.09.2026, spät): Runde 15 (G-107–G-111) fertig als 3.18.3.**
+Claude hat den unfertigen Codex-Entwurf übernommen, gegengeprüft (frische
+Prüfung ohne Arbeitsverlauf), eine Rückstufung bei der Registrierung behoben
+und die Codex-Versionen 3.17.42–3.17.56 nachgeprüft. Neue Funde G-118 bis
+G-130 in `grossplan/AUFGABEN.md`; nächste Runde: G-112, G-116, G-119, G-123,
+G-126 nach Schwere. G-127 wartet auf den Betreiber (Serien-Daten).
+Einzelheiten im obersten Eintrag von `grossplan/LOGBUCH.md`.
+iPhone-Start seit 3.17.55 am Gerät bestätigt. A5/A6 weiterhin offen.
 Die folgenden Pausen-/Startbefunde sind historisch; .52–.55 bleiben erhalten.
 
 **NACHTRAG (29.09.2026, Claude-Prüfung, 3.17.52):** Startbild-Name war auf
