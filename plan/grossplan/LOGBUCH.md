@@ -2,6 +2,33 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-29 — Gerätebefund 3.17.53; Codex-Rundenregeln ergänzt
+
+**Geändert:** `plan/grossplan/AUFTRAG.md` (§ 2 Status, neu § 2a
+Gegenprüfung mit Modell je Schritt, § 2b sparsam ohne Qualitätsverlust,
+§ 4a neuer Zyklus), `CLAUDE.md` (Verweis), lokale `AGENTS.md` (Verweis;
+bleibt per `.gitignore` unversioniert).
+**Entscheidung:** Betreiber-Bilder aus einer Aufnahme von 3.17.53
+vermessen: Bild 6/8 Hintergrund (16,14,17)/(18,16,18) wie Startbild
+(17,16,16), ein Logo an der Startbild-Stelle – Doppelbild weg. Bild 7 ist
+flächig ~11 Stufen heller, inklusive Glühen und Verlauf in gleicher Form;
+das Fenster hat noch runde Ecken, der Home-Bildschirm ist sichtbar: iOS-
+Öffnungsanimation, in der iOS das Startbild zeigt. Kein App-Inhalt ist in
+diesem Moment gezeichnet; keine App-Änderung ohne weiteren Beleg. Ein echtes
+Aufblitzen **nach** der Animation (Vollbild, eckig) ist nicht belegt.
+Betreiber-Wunsch „Codex soll Runden korrekt machen und prüfen, Modell je
+Schritt, nach allen Runden neue Runden aus dem Stand, sparsam ohne
+Qualitätsverlust“ als Regeln festgehalten. Anlass und Beispiele: .49-Test
+simulierte nur `svh`, Runde-13-Test schrieb einen Hänger fest. Eine
+Komplett-Nachprüfung aller früheren ChatGPT-/Codex-Runden hat der Betreiber
+offen gelassen („oder ne egal“); sie ist als neunter Prüfbereich in § 4a
+für den nächsten Zyklus vorgesehen, nicht jetzt begonnen.
+**Offen:** Aufblitzen am Gerät, falls nach der Öffnungsanimation – braucht
+ein Bild aus der Aufnahme mit eckigem Vollbild. Runde 14 pausiert bis
+Betreiber-„weiter“.
+**Nächster Schritt:** Auf Betreiber warten: Bild des Aufblitzens oder
+„weiter“ für Runde 14 nach § 2/§ 2a.
+
 ### 2026-09-29 — Bildschirmaufnahme belegt Boot-Sprung; Höhe aus screen.* (3.17.53)
 
 **Geändert:** `index.html:100` (Standalone-Regel `var(--boot-h,100vh)`) und

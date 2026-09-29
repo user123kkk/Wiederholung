@@ -2,6 +2,12 @@
 
 ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
 
+### Runden: Ablauf, Gegenprüfung, neuer Zyklus
+
+Jede Runde nach `plan/grossplan/AUFTRAG.md` § 2, § 2a (Gegenprüfung,
+Pflicht), § 2b (sparsam ohne Qualitätsverlust); nach A6 § 4a (neuer Zyklus
+aus dem aktuellen Stand, nur auf Betreiber-„weiter“).
+
 ### Aktuelle Claude-Übergabe und Pause vom 29.09.2026
 
 Der Betreiber hält nach Runde 13 (3.17.51, `f550897`) an und lässt Claude

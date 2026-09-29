@@ -66,6 +66,9 @@ Eine Runde beginnt nur nach einem ausdrücklichen „weiter" des Betreibers.
 prüft gezielt Runde 13 und den weiterhin falschen iPhone-Start gemäß
 [`../onboarding/CLAUDE-HANDOFF-2026-09-29.md`](../onboarding/CLAUDE-HANDOFF-2026-09-29.md).
 Runde 14 erst nach erneutem ausdrücklichem Weiter-Auftrag beginnen.
+**Claude-Prüfung erledigt (3.17.52/.53, Logbuch 29.09.):** Startbild-Schrift,
+Dialog-Hänger aus Runde 13, Boot-Höhe aus `screen.*`. Ab Runde 14 gilt
+§ 2a (Gegenprüfung) und § 2b; nach A6 § 4a.
 **Historischer Auftrag 28.09.2026:** Der Betreiber hatte ausdrücklich
 „mach weiter“ verlangt, einschließlich Fehlersuche außerhalb der bekannten
 Liste. G-075 wird abgeschlossen, danach folgt die Nachprüfung A5/A6. Neue
@@ -103,6 +106,68 @@ Q1 bleibt offen: keine Text-Lernlogik und keinen religiösen Wortlaut bauen.
    Beleg), neue Fehlerart zusätzlich in `LEHREN.md` (§ 15).
 8. **Ende prüfen** (Abschnitt 4). Erfüllt → Abschlussbericht, Routine
    abschalten. Nicht erfüllt → nächste Runde.
+
+---
+
+## 2a. Gegenprüfung jeder Runde (seit 29.09.2026, Pflicht)
+
+Anlass: Die Claude-Prüfung vom 29.09. fand in fertig gemeldeten Runden zwei
+Fehler mit grünen Tests. (1) .49 „behob“ den iPhone-Start, der Test
+verkürzte aber nur `svh`, nicht den Viewport; am Gerät blieb der Sprung.
+(2) Runde 13 schrieb einen Hänger (`closeDialog` löste sein Promise nie
+auf) als erwartetes Verhalten in `t_dialog_timer.js` fest. Beides fällt nur
+auf, wenn jemand die Runde **gegen den Befund** liest, nicht gegen den
+eigenen Bericht.
+
+Vor dem Commit einer Runde, als eigener Schritt nach Schritt 4:
+
+1. **Diff lesen, nicht den Bericht.** `git diff` der Runde vollständig. Je
+   Änderung fragen: Was passiert bei Fehler, Kontowechsel, offline,
+   Doppeltipp, abgebrochenem Dialog? Jede neue frühe Rückkehr (`return`)
+   prüfen: Schneidet sie eine Fortsetzung ab, die laufen muss (Promise,
+   Busy-Merker, Render)?
+2. **Test gegen den Befund prüfen.** Stellt die Gegenprobe genau das nach,
+   was der Betreiber gesehen hat (Maß, Richtung, Zeitpunkt)? Eine
+   Simulation bildet die **Ursache** nach (hier: Viewport), nicht nur das
+   vermutete Symptom (hier: eine CSS-Einheit). Kann der Test das Gegenteil
+   des Gewollten festschreiben? Jeden Erwartungswert einzeln begründen.
+3. **Gegenprobe rot, Fix grün** – gegen einen festen Commit vor der Runde
+   (`git show <hash>:datei`), nie gegen `HEAD`.
+4. **Gerätebefunde bleiben offen**, bis der Betreiber Bilder schickt.
+   Bilder vermessen (Pixelzeilen je Ebene, `plan/LEHREN.md` § 11), nicht
+   schätzen. Fotos zuerst datieren: Welche Version lief da?
+5. Eigene Zeile im Logbuch: `Gegenprüfung: <was gelesen, was gefunden>`.
+   „Nichts gefunden“ nur mit Liste des Gelesenen.
+
+Bei Aufgaben der Stufe Astra (Datenlogik, Regeln, iOS) macht die
+Gegenprüfung möglichst eine **frische Session**, die nur Befund, Diff und
+Tests bekommt, nicht den Arbeitsverlauf. Ein frischer Blick findet mehr.
+
+### Modell je Schritt einer Runde
+
+| Schritt | Modell (Empfehlung) |
+|---|---|
+| Einlesen, Aufgaben wählen, Logbuch/Plan schreiben | Sol niedrig |
+| Logs sichten, feste Textersetzung | Luna niedrig |
+| Umsetzung | nach § 1, je Aufgabe |
+| Gegenprüfung (§ 2a) | eine Stufe über der Umsetzung, mindestens Sol mittel; Astra bei Daten, Regeln, iOS |
+| Nachprüfung A5/A6, neuer Zyklus (§ 6) | Astra mittel |
+
+## 2b. Sparsam, ohne an der Qualität zu sparen
+
+Gespart wird an **Wiederholung**, nie an Prüfung:
+
+- Gezielt lesen: `grep -n`, dann die Stelle mit Umgebung. Nicht ganze
+  Dateien, die die Aufgabe nicht berührt. Alte Befunddateien nur, wenn die
+  Aufgabe sie nennt.
+- Grüne Tests desselben Quellstands nicht erneut laufen lassen
+  (`alle_pruefen.js --fortsetzen`, `abnahme_runde.js --fortsetzen` prüfen
+  Quell- und Test-Hash). Nach jeder Code-, Attrappen- oder Teständerung
+  frisch laufen lassen.
+- Ausgaben gelaufener Tests **vollständig** lesen (LEHREN § 5.3).
+- Nie gespart: Gegenprobe, angrenzende Zustände nach UI-Änderung (Übergabe
+  27.09. § 8), § 2a, `pruefe_stand.mjs`, `node --check`.
+- Logbuch knapp, aber mit Zahlen: was gemessen, womit, was nicht geprüft.
 
 ---
 
@@ -164,6 +229,30 @@ Was die Schleife **nicht** fertig machen kann (und deshalb nicht Teil der
 Kriterien ist, sondern Betreiber-Liste): Entscheidungen, Konsolen-Klicks,
 Gerätetest am echten iPhone, Veröffentlichen, Rechtsprüfung durch einen
 Menschen. Diese stehen im Abschlussbericht unter „Was Du noch tun musst".
+
+---
+
+## 4a. Nach A6: neuer Zyklus aus dem aktuellen Stand
+
+Betreiber 29.09.2026: Wenn alle Runden fertig sind, sollen neue Runden aus
+dem dann aktuellen Stand entstehen. Ziel ist, die App immer wieder zu prüfen
+und zu ergänzen. Ablauf, **nur nach ausdrücklichem „weiter“ / „neue
+Runden“** des Betreibers:
+
+1. Abschlussbericht des Zyklus ins Logbuch (A1–A6, offene Betreiber-Punkte).
+2. **Frische Prüfung aller acht Bereiche** wie in `befunde/`, gegen den
+   aktuellen Code, nicht gegen alte Befunde. Dazu ein neunter Bereich:
+   „Gegenprüfung der letzten Runden“ – Diffs seit dem letzten Zyklus nach
+   § 2a lesen.
+3. Jeder Fund mit Beleg (Datei:Zeile, Test oder Messung) und Schwere wird
+   eine neue `G-`Aufgabe in `AUFGABEN.md`, fortlaufend nummeriert. Ideen
+   ohne Fehler gehen nach `FUNKTIONEN.md` („jetzt“, „später Premium“,
+   „lieber nicht“) – gebaut wird eine Funktion nur nach Betreiber-Entscheid.
+4. Neue Zeile „Zyklus N“ im Logbuch, Kriterien A1–A6 gelten neu.
+5. Runden wie in § 2, bis A6 wieder erfüllt ist.
+
+Nie Teil eines Zyklus ohne Betreiber-Entscheid: Lernregeln, religiöser
+Wortlaut, Quran-/Text-Lernfunktion (Q1), neue Datenflüsse.
 
 ---
 
