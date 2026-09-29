@@ -149,7 +149,13 @@ Karten behalten ihre Stufen und Abstände (`intervalForStufe`,
   Tag zählt, wenn wiederholt oder neu gelernt wurde. Jede bewertete
   Textzeile zählt dafür wie eine Karte („w“ oder „n“). Keine neue Regel,
   keine Überraschung.
-- **Keine Denkpause, kein Zwang.** Aufdecken geht wie heute sofort.
+- **Denkpause nur bei Texten** (E-W4): „Aufdecken“ erscheint erst nach
+  einer Zeit, die zum Aufsagen ohnehin nötig ist – 0,4 Sekunden je Wort der
+  verdeckten Zeilen, mindestens 1, höchstens 6 Sekunden. Der Knopf ist in
+  dieser Zeit sichtbar, aber gedimmt, und wird ohne Sprung aktiv (LEHREN
+  § 6.1: nichts taucht unter dem Finger auf). Wer ehrlich aufsagt, ist
+  in dieser Zeit sowieso noch beim Sprechen und wartet nie. Bei **Karten
+  keine** Denkpause: viele Karten weiß man in unter einer Sekunde.
 - **Ehrlich wird es durch das System selbst:** Wer beim Kreis „sicher“
   drückt, obwohl es hakt, macht nur seinen eigenen Kreis länger und
   vergisst mehr – und sieht das in der eigenen Zahl.
@@ -209,6 +215,6 @@ keine Auswertung durch den Betreiber.
 | E-W1 | Neu/frisch/fest mit Kreis für Texte | ja (Agent, Betreiber vertraut) |
 | E-W2 | Karten: nur Regler (Weg A) | ja (Agent) |
 | E-W3 | Probelauf 4 Wochen nur im Betreiberkonto | **ja (Betreiber)** |
-| E-W4 | Denkpause vor dem Aufdecken | **nein** – Betreiber: „man kann doch umdrehen, wann man will“; stattdessen seltene Kontrollfrage bei Texten (§ 7) |
+| E-W4 | Denkpause vor dem Aufdecken | **nur bei Texten** (Betreiber: „die Idee ist doch gut für Quran; bei Karten weiß ich viele in unter 1 Sekunde“), dazu seltene Kontrollfrage (§ 7). Erst zu schnell gestrichen – Einwand war eine Frage, kein Beschluss (CLAUDE.md, Grundsatz 1). |
 | E-W5 | Serie | Regel bleibt wie heute, Texte zählen gleich (§ 7) |
 | E-W6 | Hakende Zeile im Zusammenhang wiederholen | ja – Betreiber-Einwand „stört das nicht die Reihenfolge?“ (§ 4) |
