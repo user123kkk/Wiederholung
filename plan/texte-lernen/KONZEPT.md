@@ -161,7 +161,7 @@ nicht markierten Zeile. (T6)
 ### 5.5 Wiederholen
 
 - **Abschnitte bilden:** fällige Zeilen in Textreihenfolge; aufeinander
-  folgende Zeilen bilden einen Abschnitt, höchstens 7 Zeilen (T12). Vor
+  folgende Zeilen bilden einen Abschnitt (Größe: T12, offen bis § 16). Vor
   jedem Abschnitt bis zu 2 Hinweiszeilen (die direkt vorhergehenden, auch
   wenn nicht fällig). Nie die folgende Zeile zeigen.
 - **Ablauf je Abschnitt:** Hinweiszeilen sichtbar, Abschnitt verdeckt →
@@ -173,13 +173,15 @@ nicht markierten Zeile. (T6)
   und heute noch einmal.
 - „Nicht“-Zeilen kommen am Ende derselben Sitzung noch einmal (als eigener
   Abschnitt mit Hinweiszeilen), wie Karten mit `nextReview = heute`.
-- **Reihenfolge der Texte** in einer Sitzung: nach Dringlichkeit (ältestes
-  `nextReview` zuerst); innerhalb eines Textes immer Textreihenfolge.
+- **Reihenfolge der Texte** (T4): ein Text nach dem anderen, jeder als
+  geschlossener Block in Textreihenfolge; nie gemischt. Welcher Text zuerst
+  kommt: der mit dem ältesten `nextReview`.
 
 ### 5.6 Tageslimit und Sitzungsgröße
 
-- Neue Zeilen: je Text die Tagesportion (T7). Sie zählt **nicht** gegen das
-  bestehende Kartenlimit – getrennte Welten, keine Überraschung.
+- Neue Zeilen (T7): keine Einstellung, kein hartes Limit. Nach 3 neuen
+  Zeilen eines Textes an einem Tag ein ruhiger Satz, dass es für heute gut
+  ist; weiterlernen bleibt möglich. Zählt nicht gegen das Kartenlimit.
 - Wiederholen: kein Limit; bei sehr vielen fälligen Zeilen gilt
   `settings.sitzungsLimit` sinngemäß als Zahl der **Abschnitte**.
 
@@ -357,28 +359,94 @@ Nach Betreiber-Entscheidung vom 29.09.2026 wird trotzdem gebaut.
 
 ---
 
-## 10. Entscheidungen des Betreibers
+## 10. Entscheidungen des Betreibers (29.09.2026)
 
-Einfach „alles wie empfohlen“ oder einzelne Nummern ändern.
+Antworten des Betreibers, wo er „check ich nicht“ oder „entscheide du“
+sagte, hat der Agent nach Empfehlung entschieden (markiert mit *).
 
-| Nr | Frage in einfachen Worten | Empfehlung |
+| Nr | Frage | Entschieden |
 |---|---|---|
-| T1 | Beim Anlegen nur „Karte“ oder „Text“ wählen – oder viele Kategorien? | nur Karte/Text |
-| T2 | Jede Zeile beim Einfügen wird ein Lernschritt? | ja |
-| T3 | Neu lernen mit Lesen → Anfangsbuchstaben → ohne Hilfe, und das Bisherige immer am Stück? | ja |
-| T4 | Wiederholen immer der Reihe nach, verschiedene Texte dürfen gemischt werden? | ja |
-| T5 | „Gelernt“ = einmal fließend ohne Hilfe aufgesagt? | ja |
-| T6 | Schon Gekonntes beim Anlegen markieren, es wird nur kurz geprüft? | ja |
-| T7 | Wie viele neue Zeilen am Tag? | 3, änderbar 1–10 |
-| T8 | Zählt Textlernen für die Serie (Tage am Stück)? | ja |
-| T9 | Kostenlos oder Premium? | kostenlos |
-| T10 | Einmaliger Einverständnis-Satz beim ersten Text (§ 9)? | ja |
-| T11 | Texte teilen / Lehrer-Code? | später |
-| T12 | Wie viele Zeilen höchstens in einem Wiederhol-Abschnitt? | 7 |
-| T13 | Zeile geändert: Lernstand behalten? | behalten |
-| T14 | Texte auch in geführten Bereichen (vom Lehrer)? | nein, nur eigene Bereiche |
+| T1 | Anlegen: nur „Karte“ oder „Text“? | Karte/Text |
+| T2 | Jede Zeile ein Lernschritt? | ja* |
+| T3 | Neu lernen: lesen → Anfangsbuchstaben → ohne Hilfe, Bisheriges am Stück | ja, später am Gerät nachschärfen |
+| T4 | Reihenfolge | **nur Reihenfolge, nirgends gemischt** – auch nicht zwischen Texten in einer Sitzung: ein Text nach dem anderen, jeder als Block. Kein Mischen im Üben-Modus. |
+| T5 | Gelernt = einmal fließend ohne Hilfe | ja |
+| T6 | Schon Gekonntes markieren | ja* |
+| T7 | Neue Zeilen pro Tag | **keine Einstellung.** Man lernt, so viel man will; nach 3 neuen Zeilen ein ruhiger Satz „Für heute ist das gut – weiter geht es trotzdem“.* |
+| T8 | Serie | ja; **Ehrlichkeit** gehört ins Neu-Denken (§ 16) – für Texte **und** Karten |
+| T9 | Preis | kostenlos |
+| T10 | Einverständnis beim ersten Text (§ 9) | ja* |
+| T11 | Teilen/Lehrer-Code | später |
+| T12 | Abschnittsgröße beim Wiederholen | offen → Teil des Neu-Denkens (§ 16); Betreiber: „man kann aufhören, wann man will“ |
+| T13 | Lernstand bei geänderter Zeile | bleibt |
+| T14 | Texte in vom Lehrer vorgegebenen Bereichen | nein, nur eigene Bereiche* |
+| T15 | Quran in der App mitliefern (Sure wählen und lernen) | **ja, gewünscht** → § 15 |
+| T16 | Wiederholen für alles neu denken | **ja, gewünscht** → § 16, vor dem Bau |
 
----
+Außerdem (Betreiber): Im Projekt steckt viel mehr – Namen, Gestaltung,
+Methoden –, alles nach den Regeln des Repos und mit der Zeit mehr.
+
+## 15. Quran in der App mitliefern (T15)
+
+**Wunsch des Betreibers:** Den Quran nicht selbst eintippen müssen, sondern
+eine Sure wählen und lernen. Der Quran ist unverfälscht bewahrt und überall
+frei verfügbar; auch viele Bücher werden von ihren Autoren frei gegeben.
+
+**Einordnung:** Das ist kein Verfassen religiöser Inhalte durch einen Agenten
+(LEHREN § 2 Punkt 1), sondern das unveränderte Übernehmen eines geprüften
+Textes. Bedingungen:
+
+1. **Quelle** passend zum Rahmen (Quran und Sunnah nach dem Verständnis der
+   Salaf): Kandidat ist der Text des King-Fahd-Komplexes (Mushaf al-Madinah,
+   Hafs), dessen Schrift die App schon nutzt (`fonts/UthmanicHafs1Ver18.ttf`).
+   Die Quelle bestätigt der Betreiber vor dem Bau.
+2. **Lizenz** vor dem Bau nachlesen und ins Logbuch (darf man den Text in
+   einer App ausliefern, unverändert?).
+3. **Unverändert:** Datei so übernehmen, wie sie kommt; Prüfsumme festhalten;
+   ein Test vergleicht Stichproben (Anzahl Suren 114, Verse 6236).
+4. **Selbst ausliefern**, nicht von einem fremden Server laden (LEHREN § 12:
+   fremde Server bekommen die IP-Adresse). Als Datei im Repo, erst beim
+   Öffnen der Sure-Auswahl geladen, danach offline verfügbar.
+5. **Anlegen aus dem Quran:** Sure wählen, optional Versbereich → wird ein
+   Text wie in § 5; jeder Vers eine Zeile, Versnummer sichtbar. Der Text ist
+   danach eine normale Kopie im Konto (Datenschutz § 9 gilt).
+6. **Hadith- und andere Bücher:** später, einzeln je Buch, nur mit klarer
+   Freigabe des Autors bzw. Verlags.
+
+## 16. Neu denken: eine Wiederholungs-Methode für alles (T16)
+
+**Wunsch des Betreibers:** Das Wiederholen komplett neu durchdenken – eine
+Methode, die Karten, Texte und alles, was dazugehört, verbindet. Seine Frage:
+Wie hat man am Ende wirklich **alle** Ayat ohne Probleme im Kopf? Wer ein
+paar Ayat kann und woanders weitermacht, wird bei den ersten schwächer.
+Außerdem: Die Serie soll ehrlich bleiben – niemand soll sie mit Drücken ohne
+echtes Können halten, bei Texten wie bei Karten.
+
+**Das ist eine Änderung der Lernlogik** (heute tabu, LEHREN § 1/Konzept § 7).
+Der Betreiber verlangt sie ausdrücklich; gebaut wird trotzdem erst nach
+einem fertigen Konzept und seinem „ja“ dazu.
+
+Recherche-Fragen (vor jedem Bau, mit Quellen, Ergebnis in
+`plan/texte-lernen/WIEDERHOLEN.md`):
+
+1. **Alles behalten:** Wie sorgen bewährte Methoden dafür, dass ältere
+   Teile nicht verblassen? (Beim Quran-Auswendiglernen: tägliche Rotation
+   durch alles Gelernte; in der Forschung: verteiltes Wiederholen.) Wie
+   verbindet man beides – feste Rotation für Texte, Abstände für Karten, oder
+   eines für alles?
+2. **Wo anfangen, wo weitermachen:** feste Reihenfolge durch eine Sure,
+   Stelle merken, Rückkehr nach Pausen.
+3. **Wie viel am Stück:** Abschnittsgröße (T12), jederzeit aufhören können
+   ohne Nachteil.
+4. **Ehrlichkeit:** Wege gegen „drücken ohne können“ – z. B. Aufdecken erst
+   nach kurzer Denkzeit, Stichprobe „sag das nächste Wort“, oder nur ein
+   Hinweis. Abwägen gegen Nerven (Betreiber-Grundsatz „ohne Nerven“).
+5. **Karten mit einbeziehen:** Was davon verbessert auch das Karten-
+   Wiederholen, ohne bestehende Lernstände zu entwerten?
+
+Ergebnis: zwei bis drei Varianten, einfach erklärt, mit Empfehlung; dann
+entscheidet der Betreiber. Erst danach werden § 5 und der Bauplan § 11
+angepasst.
 
 ## 11. Bauplan
 
@@ -472,5 +540,8 @@ Jede Stufe ist eine Runde nach `grossplan/AUFTRAG.md` § 2 mit Gegenprüfung
 
 ## 14. Nächster Schritt
 
-Betreiber beantwortet T1–T14. Danach Stufe 0, sobald der laufende
-Codex-Zyklus und die Claude-Prüfung abgeschlossen sind.
+1. Recherche § 16 (Wiederholen neu denken) und § 15 (Quran-Quelle,
+   Lizenz) – nur Plandateien, geht parallel zu Codex.
+2. Betreiber entscheidet die Varianten aus § 16 und bestätigt die Quelle.
+3. § 5 und Bauplan § 11 anpassen; Stufe 0, sobald der Codex-Zyklus und
+   die Claude-Prüfung abgeschlossen sind.
