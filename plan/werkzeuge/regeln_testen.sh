@@ -24,6 +24,8 @@
 #                 Default: $HOME/.cache/adrabic-regeln-emu — wird bei
 #                 Bedarf angelegt und wiederverwendet, kein npm install bei
 #                 spaeteren Laeufen, wenn node_modules schon da ist.
+#   PRUEFDATEI    anderes Pruefskript statt regeln-pruefung.mjs, z. B.
+#                 plan/texte-lernen/mehrgeraete-pruefung.mjs (30.09.2026).
 #   REGELN_DATEI  Pfad zu einer firestore.rules, die statt der Repo-Datei
 #                 geprueft werden soll (Gegenprobe gegen eine aeltere
 #                 Fassung). Default: firestore.rules dieses Repos.
@@ -35,7 +37,7 @@
 set -euo pipefail
 
 REPO_WURZEL="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PRUEFDATEI="$REPO_WURZEL/plan/phase-1-datenzugriff/regeln-pruefung.mjs"
+PRUEFDATEI="${PRUEFDATEI:-$REPO_WURZEL/plan/phase-1-datenzugriff/regeln-pruefung.mjs}"
 EMU_ORDNER="${REGELN_EMU:-$HOME/.cache/adrabic-regeln-emu}"
 REGELN_DATEI="${REGELN_DATEI:-$REPO_WURZEL/firestore.rules}"
 
@@ -88,9 +90,10 @@ JSON
 # regeln-pruefung.mjs aus dem Repo in die Emulator-Umgebung kopieren, damit
 # es dort dieselben node_modules (firebase, @firebase/rules-unit-testing)
 # findet wie ein lokal per npm install angelegtes Skript.
-cp "$PRUEFDATEI" "$EMU_ORDNER/regeln-pruefung.mjs"
+PRUEFNAME="$(basename "$PRUEFDATEI")"
+cp "$PRUEFDATEI" "$EMU_ORDNER/$PRUEFNAME"
 
 cd "$EMU_ORDNER"
 RULES_FILE="$REGELN_DATEI" \
   ./node_modules/.bin/firebase emulators:exec --only firestore \
-    --project wiederholung-test "node regeln-pruefung.mjs"
+    --project wiederholung-test "node $PRUEFNAME"

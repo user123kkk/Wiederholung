@@ -2,6 +2,27 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Mehrgeräte-Test und Regeln im Emulator (Cloud)
+
+**Geändert:** `plan/texte-lernen/mehrgeraete-pruefung.mjs` (neu);
+`plan/werkzeuge/regeln_testen.sh`: `PRUEFDATEI` wählt ein anderes
+Prüfskript (Vorgabe unverändert `regeln-pruefung.mjs`).
+**Ergebnis:** Java und Firestore-Emulator laufen im Container (Download
+über den Proxy ging). `regeln_testen.sh`: **204 von 204** wie erwartet
+(die Regeln aus 3.18.0 samt Text-Fällen). Mehrgeräte (WIEDERHOLEN § 9):
+zwei Verbindungen desselben Kontos bewerten gleichzeitig denselben
+Kreis-Abschnitt (eine mit „Hakt“ bei z2), so wie `patchDoc` schreibt –
+keine Zeile verloren (cardIds 30, alle 30 Dokumente), Text-Felder
+unberührt, jede Zeile stimmig (Stufe + Fälligkeit vom selben Gerät),
+Protokoll `t` = 10 (beide Geräte), Kreis bei z5. Gegenprobe: ein Gerät,
+das das ganze Set neu schreibt, verliert `cardIds` – gemeldet.
+Aufruf: `PRUEFDATEI=plan/texte-lernen/mehrgeraete-pruefung.mjs bash
+plan/werkzeuge/regeln_testen.sh`.
+**Offen:** Emulator-Lauf unter Windows (am Laptop) ist nicht nötig – er
+läuft hier; im Stichwort-Ablauf nicht enthalten.
+**Nächster Schritt:** unverändert – Betreiber am Laptop („ladegerät“ /
+„mach weiter, bin auf dem laptop“).
+
 ### 2026-09-30 — Nur für den Betreiber: geprüft und abgesichert (3.18.8)
 
 **Betreiber:** „alles mit Quran/Auswendiglernen soll nur für mich sichtbar
