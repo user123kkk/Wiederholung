@@ -2,6 +2,34 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stichwort „ladegerät“ am Laptop: erster Windows-Lauf, NICHT veröffentlicht
+
+**Stand:** 3.18.8 / `ec54f17`. Vorher auf dem Laptop: alter, nie gepushter
+Commit `a20e1fe` (3.18.4 Stufe 3) und uncommitteter Entwurf 3.18.5 – beides
+durch Upstream überholt, nichts gelöscht: Tag `sicherung-laptop-3.18.4-a20e1fe`
+und `git stash` „Laptop-Entwurf 3.18.5 vor Pull 2026-09-30“ (nur lokal).
+**Ergebnis Gesamtlauf:** 118/121 Exit 0, am Ladegerät. `t_nur_betreiber` und
+`t_bestand_tempo` grün. Rot, einzeln geprüft (LEHREN § 5.3):
+- `t_konto.js`: Timeout (Eingabefeld noch `disabled`) nur im Gesamtlauf;
+  einzeln Exit 0 – Lastwackler, kein App-Fehler.
+- `t_verlauf_mehrgeraete.js`: `ECONNREFUSED 127.0.0.1:8081` – Skriptlücke,
+  kein Emulator gestartet. Mit Emulator Exit 0.
+- `t_text_tempo.js`: **echter Befund.** Auf ruhigem Laptop 3 von 3 Läufen rot:
+  längste Aufgabe 230/263/250 ms (> 200 ms), bei „Verwalten“ und „Text öffnen
+  (286)“. Entspricht dem Cloud-Befund (Stufe 7). Grenze nicht gelockert.
+**Geändert:** `plan/werkzeuge/ladegeraet.ps1`: startet vor Schritt 3 den
+Firestore-Emulator (eigener Ordner `%TEMP%\adrabic-ladegeraet-emu`, Port 8081,
+Demo-Projekt) und beendet ihn am Ende; Affe-Aufruf mit `2>&1` lief unter
+PowerShell 5.1 mit `ErrorActionPreference=Stop` Gefahr abzubrechen – dort
+lokal auf `Continue`.
+**Entscheidung:** Nichts veröffentlicht (weder Regeln noch Hosting), weil
+nicht alles grün. Online bleibt der bisherige Stand.
+**Offen:** Tempo „Verwalten“/„Text öffnen“ mit Sure 2 unter 200 ms bringen
+(Idee aus Stufe 7: Liste nachladen, erst 40 Zeilen). Betrifft nur das
+Betreiber-Konto, ist aber eine Freigabebedingung.
+**Nächster Schritt:** Tempo-Befund `t_text_tempo.js` beheben, dann erneut
+„ladegerät“.
+
 ### 2026-09-30 — Mehrgeräte-Test und Regeln im Emulator (Cloud)
 
 **Geändert:** `plan/texte-lernen/mehrgeraete-pruefung.mjs` (neu);

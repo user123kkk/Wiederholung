@@ -14,6 +14,7 @@ param(
 # -NurPruefen: 1-4, nichts veroeffentlichen.
 $ErrorActionPreference = 'Stop'
 $server = $null
+$emu = $null
 $ergebnis = 1
 $bericht = New-Object System.Collections.Generic.List[string]
 function Schritt([string]$t) { Write-Host ''; Write-Host ('=== ' + $t + ' ==='); $bericht.Add($t) }
@@ -67,6 +68,25 @@ try {
     $server = Start-Process -FilePath $py -ArgumentList '-3', '-m', 'http.server', '8199', '--bind', '127.0.0.1' -WorkingDirectory $repo -WindowStyle Hidden -PassThru
     Start-Sleep -Seconds 2
 
+    # t_verlauf_mehrgeraete.js braucht den Firestore-Emulator auf 127.0.0.1:8081
+    # (nur Demo-Projekt, keine Produktivdaten). Eigener Ordner mit eigener
+    # firebase.json, damit die Hosting-Einstellungen des Repos unberuehrt bleiben.
+    $null = Werkzeug 'java.exe' 'Java fehlt (Firestore-Emulator fuer t_verlauf_mehrgeraete).'
+    $fb = Werkzeug 'firebase.cmd' 'Firebase-Werkzeuge fehlen. Einmalig: npm install -g firebase-tools'
+    $emuOrdner = Join-Path $env:TEMP 'adrabic-ladegeraet-emu'
+    New-Item -ItemType Directory -Force -Path $emuOrdner | Out-Null
+    $regeln = (Join-Path $repo 'firestore.rules') -replace '\\', '/'
+    $emuJson = '{ "firestore": { "rules": "' + $regeln + '" }, "emulators": { "firestore": { "host": "127.0.0.1", "port": 8081 }, "ui": { "enabled": false }, "hub": { "port": 4410 }, "logging": { "port": 4510 } } }'
+    [System.IO.File]::WriteAllText((Join-Path $emuOrdner 'firebase.json'), $emuJson)
+    $emu = Start-Process -FilePath $fb -ArgumentList 'emulators:start', '--only', 'firestore', '--project', 'demo-adrabic-pruefung' -WorkingDirectory $emuOrdner -WindowStyle Hidden -PassThru
+    $bereit = $false
+    for ($i = 0; $i -lt 60 -and -not $bereit; $i++) {
+        Start-Sleep -Seconds 1
+        try { Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8081/' -TimeoutSec 2 | Out-Null; $bereit = $true } catch { }
+    }
+    if (-not $bereit) { throw 'Firestore-Emulator startet nicht (Port 8081).' }
+    Write-Host 'Firestore-Emulator laeuft (8081).'
+
     Schritt '3/6 Pruefstand (alle Tests, dauert)'
     Push-Location -LiteralPath $pruef
     try {
@@ -80,7 +100,11 @@ try {
     Push-Location -LiteralPath $pruef
     try {
         foreach ($lauf in @(@('handy', '200', '7'), @('ipad', '150', '11'))) {
-            $aus = (& $node 'affe.js' $lauf[0] $lauf[1] $lauf[2] 2>&1) -join "`n"
+            # PowerShell 5.1: 2>&1 macht jede stderr-Zeile zum Fehlerobjekt, unter
+            # 'Stop' braeche das hier ab. Nur fuer diesen Aufruf lockern.
+            $ErrorActionPreference = 'Continue'
+            $aus = (& $node 'affe.js' $lauf[0] $lauf[1] $lauf[2] 2>&1 | ForEach-Object { "$_" }) -join "`n"
+            $ErrorActionPreference = 'Stop'
             $zeile = ($aus -split "`n" | Where-Object { $_ -match 'Befunde:' } | Select-Object -Last 1)
             Write-Host $zeile
             if ($zeile -notmatch 'Befunde: 0$') { Write-Host $aus; throw ('Affe ' + $lauf[0] + ' hat Befunde. Nichts veroeffentlicht.') }
@@ -113,6 +137,8 @@ try {
     Write-Host ('ABGEBROCHEN: ' + $_.Exception.Message)
 } finally {
     if ($server -and -not $server.HasExited) { Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue }
+    # firebase.cmd startet node und java als Kindprozesse: ganzen Baum beenden.
+    if ($emu -and -not $emu.HasExited) { & taskkill.exe /PID $emu.Id /T /F 2>$null | Out-Null }
     Write-Host ''
     Write-Host ('Schritte: ' + ($bericht -join ' | '))
 }
