@@ -64,7 +64,9 @@ ausdrücklichem Auftrag; niemals gleichzeitig an `app.js`/`styles.css`.
 Eine Runde beginnt nur nach einem ausdrücklichen „weiter" des Betreibers.
 **Aktueller Stand 29.09.2026: vom Betreiber wieder aufgenommen.** Runde14
 G-102–G-106 abgenommen (.56), Ausgang `c4a2ccf`/.55; mit §2a-Gegenprüfung.
-Danach Runde15: genau G-107–G-111, zuerst kritischer G-110.
+Danach Runde15: genau G-107–G-111, zuerst kritischer G-110, dazu G-118
+(Betreiber 30.09.). **Reihenfolge und angefangene Runde-15-Arbeit (Zweig
+`runde15`, nur lokal):** [`../STAND.md`](../STAND.md).
 **Historische Pause 29.09.2026:** Nach Runde 13 pausiert. Neuer Claude-Chat
 prüft gezielt Runde 13 und den weiterhin falschen iPhone-Start gemäß
 [`../onboarding/CLAUDE-HANDOFF-2026-09-29.md`](../onboarding/CLAUDE-HANDOFF-2026-09-29.md).

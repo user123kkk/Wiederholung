@@ -146,6 +146,8 @@ Beleg und Abnahme: [Nachlese](befunde/NACHLESE-2026-09-28.md).
 | G-107 | Weitere alte Auth-Fortsetzungen laden B neu, überschreiben dessen Info/Busy oder starten Reauth für B | mittel | Agent | Astra | offen: konto_authrest.js --befund belegt Lese-Token, Registrierung, Reset und „Adresse falsch“; Folgerunde nach G-102–G-106 |
 | G-109 | Inventartest Teil 2 liest verborgenes Fehlerdialog-Markup und beendet den Einstieg vor der Probekarte | niedrig | Agent | Sol | offen: t_inventar2 protokolliert leere Übersichten und endet bei null; Sichtbarkeit und erreichte Endzustände prüfen; Folgerunde |
 | G-117 | Veröffentlichungs-Batch blockiert wegen lokaler Entwürfe auch den freigegebenen Stand auf main | Betreiber 29.09.: ausdrücklich veroeffentlichen.bat | Agent | Sol | erledigt (Werkzeug, 29.09.): origin/main als saubere temporäre Kopie prüfen/veröffentlichen, Arbeitsbaum erhalten; neun isolierte Nachweise ohne echten Deploy grün. Runde15 bleibt offen. |
+| G-118 | Verwalten → Karte erstellen: Tippen ins Feld „Wort“ (nicht Übersetzung) scrollt die Seite nach oben weg | Betreiber 30.09.2026 | Agent | Sol | offen: Scroll beim Fokus prüfen, angrenzend Übersetzung, kurze Viewports, iOS-Tastatur; Runde 15 |
+| G-119 | Verwalten-Reiter stockt beim ersten Zeigen über 200 ms (CPU 4×, 40 arabische Kartenzeilen, Layout der King-Fahd-Schrift), alle Konten | `t_text_tempo.js` Schritt Verwalten; Gegenprobe Konto u1 201–252 ms (Laptop 30.09.) | Agent | Sol/Astra | offen: Betreiber 30.09. „A“ = jetzt beheben, vor Veröffentlichung Texte (Stufe 7); `t_nur_betreiber`/`t_bestand_tempo` gegenprüfen |
 
 ## D. Wartet auf den Betreiber
 
