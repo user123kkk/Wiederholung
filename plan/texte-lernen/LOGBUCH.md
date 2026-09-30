@@ -2,6 +2,50 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stufe 3: Neu lernen (3.18.3), Gesamtlauf in der Cloud
+
+**Geändert:**
+- `app.js`: Block „Neu lernen (Stufe 3)“ nach `renderTextAnsicht` (aus
+  `entwurf-stufe3/s3_block.js` + `s3_render.js`; Regex der
+  Anfangsbuchstaben als `\u`-Escapes, Auftrag als `<h1>`), neu
+  `textLernenGueltig()` (Konto, Reiter, Schalter, Text/Zeile noch da);
+  Protokollart „t“ in `normVerlauf`, `tagGelernt` (w+n+t), 3 Art-Listen;
+  `ui.textLernen`; `imModus` + Inhalt in `renderMain`; Ansicht-Schlüssel,
+  Tiefe, `tabSchonAktiv`; 4 Reset-Stellen + Widerruf; Knopf „Neu lernen“ in
+  der Text-Ansicht; 11 Klick-Fälle. Version 3.18.3 (`app.js`, `sw.js`,
+  `index.html` inkl. Startbild-Links), `CHANGELOG.md`.
+- `styles.css`: Block aus `entwurf-stufe3/s3.css`; Knopfreihe mit
+  `padding: 0 var(--space-3)` (bei 320 px brach „Noch nicht“ um, Knopf
+  3 px höher → Sprung beim Aufdecken, von `t_text_neu` gefunden).
+- Prüfstand: `t_text_neu.js`, `t_anfangsbuchstaben.js` (neu).
+**Entscheidung:** Neu lernen ist ein Modus im Verwalten-Reiter (keine
+Navigation, feste Knopfreihe), weil der Text dort geöffnet wird. Der Entwurf
+wurde sonst unverändert übernommen.
+**Tests:** `t_text_neu` OK bei 390×844 und 320×568 (Schritte 1–8,
+Denkpause mit echtem Tipp an die Stelle – `p.click` wartet bei
+`aria-disabled` selbst und hätte die Sperre verdeckt –, Sperre nach dem
+Aufdecken, Hakt, Rückgängig, Abbruch speichert nichts, Seite nie höher als
+der Bildschirm, eine `h1`); Gegenprobe ohne `verlaufZaehle("t")` rot.
+`t_anfangsbuchstaben` OK (13 Stellen aus der Fixture + deutscher Satz);
+Gegenprobe ohne Entfernen der Zeichen rot. Gesamtlauf (Cloud-Container,
+Linux-Chromium): 108/113 Exit 0. Rot: `t_boot_geometrie`, `t_dreh_lage`
+(Gegenprobe), `t_quran_datei` (Browser-Teil „offline trotzdem Netz“),
+`t_sw`, `t_verlauf_mehrgeraete` – **alle fünf genauso rot auf unverändertem
+3.18.2** (git worktree, Port 8299): Umgebung (Schriften, Proxy), nicht
+Stufe 3. `t_bestand_tempo` in dieser Umgebung grün.
+**Befund (Frage an den Betreiber, nicht gebaut):** Anfangsbuchstaben nach
+§ 8.3 zeigen bei Wörtern mit Artikel immer ٱ (1:1 → „ب ٱ ٱ ٱ“). Dafür, den
+Artikel zu überspringen: echte Gedächtnisstütze. Dagegen: Abweichung vom
+Plan, eigene Regel für ال/ٱل. Empfehlung: im Probelauf so lassen, nach
+Rückmeldung entscheiden.
+**Offen:**
+- **Betreiber:** Regeln aus 3.18.0 vor dem Hosting veröffentlichen.
+- Die fünf umgebungsbedingt roten Tests sowie `t_bestand_tempo` am Laptop
+  (Ladegerät) nachprüfen, bevor veröffentlicht wird.
+- Echtes iPhone: Lern-Ansicht, lange Aya, Denkpause.
+**Nächster Schritt:** Stufe 4 (Wiederholen, `WIEDERHOLEN.md` § 1–5, § 7
+Kontrollfrage; Tests § 9).
+
 ### 2026-09-30 — Stufe 2: Anlegen, Einwilligung, Bearbeiten, Löschen (3.18.2)
 
 **Geändert:**

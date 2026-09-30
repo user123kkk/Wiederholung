@@ -1,3 +1,16 @@
+## 3.18.3 – 30. September 2026
+
+**Texte neu lernen (Stufe 3, nur im Probelauf beim Betreiber).** In der
+Text-Ansicht führt „Neu lernen“ Zeile für Zeile durch drei Hilfen: lesen,
+mit Anfangsbuchstaben aufsagen, ohne Hilfe aufsagen. Danach werden alle
+heute neuen Zeilen dieses Textes am Stück aufgesagt; was hakt, wird
+angetippt und noch einmal geübt. Erst „Fließend“ speichert: Die Zeile ist
+dann frisch und kommt morgen wieder. „Aufdecken“ wird nach einer kurzen
+Denkpause aktiv, die zur Länge der Zeile passt. Abbrechen speichert nichts,
+„Rückgängig“ nimmt das Lernen einer Zeile zurück. Gelernte Textzeilen
+zählen für die Serie, aber nicht für den Kartenring. Für Karten ändert sich
+nichts.
+
 ## 3.18.2 – 30. September 2026
 
 **Texte anlegen (Stufe 2, nur im Probelauf beim Betreiber).** Im
