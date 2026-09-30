@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.5";
+const APP_VERSION = "3.18.6";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -294,8 +294,25 @@ function istNeueKarte(c) { return !c.ersteBewertung; }
 const ARAB_ZEICHEN = /[\u0600-\u06FF\u0750-\u077F]/;
 function istArabisch(text) { return ARAB_ZEICHEN.test(String(text || "")); }
 /* Liefert die Attribute fuer ein Textelement - leer, wenn es kein Arabisch ist. */
-function schriftAttr(text) {
-  return istArabisch(text) ? ' class="arabic" lang="ar" dir="rtl"' : "";
+/* 3.18.6: Zeichen, die UthmanicHafs1Ver18 als Platzhalterkreis zeichnet
+   (fontTools: gleicher Umriss wie der Kreis, LEHREN § 15). Elemente mit
+   einem davon bekommen Amiri Quran (styles.css, .arabic-tanzil). */
+const KREIS_ZEICHEN = /[\u06DF\u06E3\u06EB]/;
+/* Ein Text erscheint einheitlich: hat eine seiner Zeilen ein Kreiszeichen,
+   steht der ganze Text in Amiri Quran (Container mit .text-tanzil) - sonst
+   wechselten sich in einer Sure zwei Schriftstile Zeile fuer Zeile ab. */
+function textSchriftKlasse(woerter) { return woerter.some(w => KREIS_ZEICHEN.test(w)) ? " text-tanzil" : ""; }
+function tanzilSchriftMarkieren(wurzel) {
+  for (const el of wurzel.querySelectorAll(".arabic")) {
+    if (el.closest(".text-tanzil") || KREIS_ZEICHEN.test(el.value || el.textContent)) el.classList.add("arabic-tanzil");
+  }
+}
+/* 3.18.6: klassen = die eigenen Klassen des Elements. Vorher stand an vier
+   Stellen class="..." + schriftAttr() - ein ZWEITES class-Attribut, das der
+   Browser verwirft: Textzeilen bekamen nie die Quran-Schrift (Stufe 2-4). */
+function schriftAttr(text, klassen) {
+  const k = klassen ? klassen + " " : "";
+  return istArabisch(text) ? ' class="' + k + 'arabic" lang="ar" dir="rtl"' : (klassen ? ' class="' + klassen + '"' : "");
 }
 function istVerbrannt(c) { return (c.rueckfaelle || 0) >= LEECH_SCHWELLE; }
 
@@ -8626,6 +8643,7 @@ function renderMain() {
   const altBar = app.querySelector(":scope > .appbar");
   const altNav = app.querySelector(":scope > .nav");
   app.innerHTML = html;
+  tanzilSchriftMarkieren(app);
   huelleBehalten(altBar, ":scope > .appbar");
   huelleBehalten(altNav, ":scope > .nav");
   /* 22.09.2026 (Block 15): Der gleitende Reiter-Anzeiger. Er ist ein
@@ -11970,12 +11988,12 @@ function renderTextAnlegen() {
   }
   /* Schritt "pruefen": nummerierte Vorschau, je Zeile zusammenfuegen/teilen. */
   html += '<p class="hint">' + mz(a.zeilen.length, "Zeile", "Zeilen") + '. Zusammenfügen oder teilen, bis jede Zeile ein Stück ist, das du am Stück aufsagen willst.</p>';
-  html += '<ol class="text-vorschau">';
+  html += '<ol class="text-vorschau' + textSchriftKlasse(a.zeilen) + '">';
   a.zeilen.forEach((w, i) => {
     const zuLang = w.length > MAX_ZEILE;
     html += '<li class="text-vorschau__zeile' + (zuLang ? ' text-vorschau__zeile--lang' : '') + '">' +
       '<span class="text-vorschau__nr">' + (i + 1) + '</span>' +
-      '<span class="text-vorschau__text"' + schriftAttr(w) + '>' + esc(w) + '</span>' +
+      '<span' + schriftAttr(w, "text-vorschau__text") + '>' + esc(w) + '</span>' +
       '<span class="text-vorschau__knoepfe">' +
       (i < a.zeilen.length - 1 ? '<button class="ghost" data-action="text-zusammen" data-id="' + i + '" aria-label="Zeile ' + (i + 1) + ' mit der nächsten zusammenfügen">Zusammen</button>' : '') +
       (w.indexOf(" ") !== -1 ? '<button class="ghost" data-action="text-teilen" data-id="' + i + '" aria-label="Zeile ' + (i + 1) + ' teilen">Teilen</button>' : '') +
@@ -12008,7 +12026,7 @@ function renderTextAnsicht() {
      jedes Neuzeichnen hier haette sonst wieder geladen. Die Ansicht geht
      auch ohne Datei; es fehlt dann nur "weicht vom Original ab". */
   if (t.quelle === "tanzil" && !quranFehler) quranLaden();
-  let html = '<div class="text-seite">';
+  let html = '<div class="text-seite' + textSchriftKlasse(zeilen.map(z => z.wort)) + '">';
   html += textSeitenKopf(t.name, "text-schliessen");
   html += '<p class="hint">' + (t.quelle === "tanzil" ? mz(zeilen.length, "Aya", "Ayat") : mz(zeilen.length, "Zeile", "Zeilen")) +
     ' · ' + n.neu + ' neu · ' + n.frisch + ' frisch · ' + n.fest + ' fest</p>';
@@ -12026,7 +12044,7 @@ function renderTextAnsicht() {
     const weicht = original !== undefined && original !== z.wort;
     html += '<button class="liste-zeile text-zeile" data-action="text-zeile" data-id="' + esc(z.id) + '" aria-label="' + zeilenWort(t) + ' ' + nr + ', ' + zeilenZustand(z) + (weicht ? ', weicht vom Original ab' : '') + '">' +
       '<span class="text-zeile__nr">' + nr + '</span>' +
-      '<span class="text-zeile__text"' + schriftAttr(z.wort) + '>' + esc(z.wort) + '</span>' +
+      '<span' + schriftAttr(z.wort, "text-zeile__text") + '>' + esc(z.wort) + '</span>' +
       '<span class="text-zeile__stand">' + textZustandBadge(zeilenZustand(z)) +
       (weicht ? '<span class="text-zeile__abweichung">weicht vom Original ab</span>' : '') + '</span></button>';
   });
@@ -12508,7 +12526,7 @@ function renderTextWdh(tl, b, t) {
     mitte: '<span class="modebar__titel" dir="auto">' + esc(t.name) + '</span>',
     anteil: tl.plan.length ? tl.pos / tl.plan.length : 1,
     rechts: tl.letzte ? '<button class="icon-btn" data-action="text-wdh-rueckgaengig" aria-label="Letzte Bewertung rückgängig machen">' + ikon("rueckgaengig") + '</button>' : "" });
-  html += '<div class="text-buehne">';
+  html += '<div class="text-buehne' + textSchriftKlasse(zeilen.map(z => z.wort)) + '">';
   let knoepfe = "";
   if (tl.schritt === "wdhFertig") {
     const n = textZahlen(b, t);
@@ -12531,7 +12549,9 @@ function renderTextWdh(tl, b, t) {
   html += '<h1 class="text-buehne__auftrag">' + auftrag + '</h1>';
   /* Zwei Zeilen davor grau als Einstieg, nie die Zeile danach (§ 4). */
   html += zeilen.slice(Math.max(0, i0 - 2), Math.max(0, i0)).map(z => textZeileHtml(z, "hinweis", nrVon(z.id), wortName)).join("");
-  for (const id of st.ids) {
+  /* Bei der Kontrollfrage nur Einstieg + drei Woerter: gefragt ist das erste
+     Wort; die verdeckten Zeilen schoben die Wahl bei 320 x 568 aus dem Bild. */
+  for (const id of tl.schritt === "kontrolle" ? [] : st.ids) {
     const z = zeilen.find(x => x.id === id);
     if (!z) continue;
     if (tl.schritt === "wdhHakt") {
@@ -12544,7 +12564,7 @@ function renderTextWdh(tl, b, t) {
   }
   if (tl.schritt === "kontrolle") {
     html += '<div class="text-kontrolle">' + tl.kontrolle.woerter.map(w =>
-      '<button class="secondary lg full" data-action="text-kontrolle" data-id="' + esc(w) + '"' + schriftAttr(w) + '>' + esc(w) + '</button>').join("") + '</div>';
+      '<button' + schriftAttr(w, "secondary lg full") + ' data-action="text-kontrolle" data-id="' + esc(w) + '">' + esc(w) + '</button>').join("") + '</div>';
     knoepfe = '<button class="lg full gedimmt" aria-disabled="true" data-action="nichts">Aufdecken</button>';
   } else if (tl.schritt === "wdhHakt") {
     knoepfe = '<button class="lg full" data-action="text-wdh-hakt-weiter"' + (tl.hakt.size ? '' : ' disabled') + '>Weiter</button>';
@@ -12563,7 +12583,7 @@ function textZeileHtml(z, art, nr, wortName) {
   const inhalt = art === "verdeckt" ? '<span class="text-buehne__verdeckt">' + '· · ·' + '</span>'
     : art === "buchstaben" ? esc(anfangsbuchstaben(z.wort)) : esc(z.wort);
   const label = art === "verdeckt" ? ' aria-label="' + wortName + ' ' + nr + ', verdeckt"' : '';
-  return '<p class="text-buehne__zeile text-buehne__zeile--' + art + '"' + schriftAttr(z.wort) + label + '>' + inhalt + '</p>';
+  return '<p' + schriftAttr(z.wort, "text-buehne__zeile text-buehne__zeile--" + art) + label + '>' + inhalt + '</p>';
 }
 function renderTextLernen() {
   const tl = ui.textLernen, b = currentBereich(), t = findText(b, tl.textId);
@@ -12576,7 +12596,7 @@ function renderTextLernen() {
   let html = modeBar({ zu: "text-lernen-zu", zuLabel: "Neu lernen beenden",
     mitte: '<span class="modebar__titel" dir="auto">' + esc(t.name) + '</span>',
     anteil: zeilen.length ? (n.frisch + n.fest) / zeilen.length : 0 });
-  html += '<div class="text-buehne">';
+  html += '<div class="text-buehne' + textSchriftKlasse(zeilen.map(z => z.wort)) + '">';
   let knoepfe = "";
   const denk = tl.frei ? "" : ' gedimmt" aria-disabled="true';
   const aufdecken = '<button class="lg full' + denk + '" data-action="text-aufdecken">Aufdecken</button>';

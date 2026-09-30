@@ -2,6 +2,56 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Quran-Schrift: Amiri Quran für Kreiszeichen, Schrift an Textzeilen (3.18.6)
+
+**Betreiber:** „weiß nicht ob A oder C … soll perfekt sein, sonst mach wie
+du magst“. **Entschieden: A.**
+**Geprüft vor der Entscheidung:**
+- C (King-Fahd-Text zur King-Fahd-Schrift) wäre das Original-Paar, aber
+  Quelle (qurancomplex.gov.sa) und tanzil.net aus dem Container nicht
+  erreichbar, Lizenz des King-Fahd-Textes ungeprüft, Tausch der ganzen
+  Textquelle samt Prüfsumme/Tests. Nicht jetzt.
+- A: `@fontsource/amiri-quran` 5.3.0 (npm, OFL 1.1), arabische Teilmenge
+  `amiri-quran-arabic-400-normal.woff2`, 45 KB, SHA-256 `35f4f02b…e733e`.
+  fontTools: alle 69 Zeichen des Tanzil-Textes vorhanden, U+06DF/06E3/06EB
+  als kleine Zeichen (keine Platzhalter). Sichtvergleich 1:1, 2:2, 2:5,
+  2:6, 7:206, 11:41: Amiri Quran fehlerfrei, King-Fahd mit ◌ in 2:5, 2:6,
+  11:41.
+- B (Umlenken auf U+06E0) verworfen: falsches Zeichen für die echten 66
+  U+06E0.
+**Geändert:**
+- `fonts/AmiriQuran-arabisch.woff2`, `fonts/AmiriQuran-OFL.txt` (neu);
+  `sw.js` `ZUSATZ` (offline); `styles.css` `@font-face 'AmiriQuranTanzil'`
+  + `.arabic.arabic-tanzil`; `impressum.html` Absatz Amiri Quran mit
+  Lizenzlink.
+- `app.js`: `KREIS_ZEICHEN`, `tanzilSchriftMarkieren(app)` nach
+  `app.innerHTML` in `render()` – jedes `.arabic`-Element mit einem der drei
+  Zeichen ganz in Amiri Quran (nie zwei Schriften in einem Wort: zerreißt
+  die Verbindungen). Gilt auch für Karten (auch dort war der Kreis ein
+  Fehler für alle).
+- **Zweiter Fehler, schon seit Stufe 2:** `schriftAttr` lieferte ein eigenes
+  `class`, an 4 Stellen stand davor schon `class="…"` → der Browser verwarf
+  es, Textzeilen standen in einer Ersatzschrift (FreeSerif/Liberation).
+  `schriftAttr(text, klassen)`; Vorschau, Text-Ansicht, Lern-Bühne,
+  Kontrollfrage umgestellt. LEHREN § 15.
+- Folgen sichtbar gemacht: verdeckte Punkte arabischer Zeilen rechts
+  (`plaintext` machte sie links); Kontrollfrage zeigt nur Einstieg + drei
+  Wörter (bei 320×568 lagen sie sonst unter fünf verdeckten Zeilen).
+- Prüfstand: `t_quran_schrift.js` (neu). Version 3.18.6, Changelog.
+**Tests:** `t_quran_schrift` grün (CDP: Zeilen mit Kreiszeichen nur
+„Amiri Quran“, ohne nur „KFGQPC HAFS Uthmanic Script“, Karte ebenso;
+Gegenprobe ohne Markieren rot). Bildschirmfotos 390/320: kein ◌, Seite =
+Bildschirmhöhe. Weitere Läufe: nächster Absatz bzw. Commit.
+- *Einheitlich je Text:* Hat eine Zeile eines Textes ein Kreiszeichen,
+  steht der **ganze Text** in Amiri Quran (`textSchriftKlasse` am
+  Container: Text-Ansicht, Lern-Bühne, Vorschau) – sonst wechselten in
+  einer Sure die Schriftstile Zeile für Zeile. Sure 1 (ohne solche
+  Zeichen) bleibt King-Fahd; `t_quran_schrift` prüft beides.
+**Offen:** Echtes iPhone: Eindruck Amiri Quran (Betreiber).
+**Nächster Schritt:** Stufe 6: Lernen-Tab-Block „Texte“, Fortschritt,
+Probelauf-Zeile in den Einstellungen (KONZEPT § 8.1 Punkt 3,
+WIEDERHOLEN § 8), Test `t_text_fortschritt.js`.
+
 ### 2026-09-30 — Stufe 5: Karten-Regler (3.18.5)
 
 **Geändert:** `app.js`: `nextReviewForStufe(stufe, faktor)` (Faktor < 1

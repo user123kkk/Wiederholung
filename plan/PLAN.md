@@ -791,7 +791,7 @@ erstellen (`grossplan/AUFTRAG.md` § 4a).
   Stufe 2 (3.18.2) und **Stufe 3 Neu lernen (3.18.3)** auf `main`.
   Gesamtlauf in der Cloud 108/113; die 5 roten sind auf 3.18.2 genauso rot
   (Umgebung). **Nicht veröffentlichen**, bis sie und `t_bestand_tempo` am
-  Laptop grün sind. **Stufe 4 Wiederholen (3.18.4)** auf `main`. **Offen beim Betreiber: Quran-Schrift zeichnet ◌ (Logbuch 30.09. Stufe 4).** Nächster Schritt: Stufe 5 (Karten-Regler).
+  Laptop grün sind. **Stufe 4 Wiederholen (3.18.4)** auf `main`. Stufe 5 Karten-Regler (3.18.5), Quran-Schrift-Korrektur (3.18.6, Amiri Quran für ◌-Zeichen). Nächster Schritt: Stufe 6 (Lernen-Tab, Fortschritt).
 - **Wartet auf Betreiber:** Firestore-Regeln veröffentlichen **vor** dem
   Hosting von 3.18.0 (`firebase deploy --only firestore:rules`).
 - **Parallel:** Großplan-Runde 15 (3.17.57) läuft in einer anderen Session

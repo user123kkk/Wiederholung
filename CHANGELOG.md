@@ -1,3 +1,15 @@
+## 3.18.6 – 30. September 2026
+
+**Quran-Text ohne Platzhalterkreise.** Die King-Fahd-Schrift zeichnet drei
+Zeichen des Tanzil-Textes (unter anderem die kleine runde Null, etwa in
+أُو۟لَٰٓئِكَ) als gestrichelten Kreis – betroffen waren 2240 Ayat. Ein Text,
+der eines dieser Zeichen enthält, erscheint jetzt ganz in der freien
+Schrift Amiri Quran (mitgeliefert, SIL Open Font License, im Impressum
+genannt); alles andere sieht aus wie bisher. Das gilt auch für Karten mit
+solchen Wörtern. Außerdem standen die Zeilen von Texten bisher gar nicht in
+der Quran-Schrift (ein doppeltes Klassen-Attribut) – behoben. Bei der
+Kontrollfrage stehen die drei Wörter jetzt direkt unter dem Einstieg.
+
 ## 3.18.5 – 30. September 2026
 
 **Karten-Regler (Stufe 5, nur im Probelauf beim Betreiber).** Die App
