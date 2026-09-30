@@ -6,21 +6,23 @@ Logbüchern. Wer eine Stufe oder Runde beendet, zieht diese Datei nach.
 Ältere „AKTUELL“-Absätze in `CLAUDE.md` und `plan/PLAN.md` sind Geschichte.
 Wo sie von dieser Datei abweichen, gilt diese Datei.
 
-Stand: 30.09.2026, `main` = 3.18.9 (nicht veröffentlicht). Online ist die
+Stand: 30.09.2026, `main` = 3.18.10 (nicht veröffentlicht). Online ist die
 zuletzt vom Betreiber eingespielte Fassung (vor 3.18.x).
 
 ---
 
-## 1. Reihenfolge (Betreiber 30.09.2026)
+## 1. Reihenfolge (Betreiber 30.09.2026, abends geändert)
 
 1. **Texte auswendig lernen fertig machen** (Abschnitt 2), bis zur
    Veröffentlichung im Probelauf.
-2. **Runde 15** des Großplans (Abschnitt 3): Fehler und Überprüfung der
-   ganzen App.
-3. **Weitere Runden** bis A1–A6 (`grossplan/AUFTRAG.md` § 4), dann die
-   Claude-Gesamtprüfung (§ 2c).
-4. **Neuer Zyklus von vorn** (§ 4a): alles frisch prüfen, neuer Plan, Arbeit
-   auf Agenten verteilt. Das gilt für Claude **und** Codex.
+2. **Zyklus 2** ([`zyklus-2/AUFTRAG.md`](zyklus-2/AUFTRAG.md)): die ganze
+   App von vorn bis hinten neu prüfen, Plan, Arbeit auf Agenten verteilt,
+   dann in Paketen umsetzen. Gilt für Claude **und** Codex.
+
+**Runde 15 und die weiteren Runden entfallen** (Betreiber: „runde 15 können
+wir vergessen“). Ihre offenen Befunde (G-107–G-111, G-110 kritisch, G-118)
+sind Paket A von Zyklus 2 und kommen dort vor allem Neuen. Abschnitt 3 unten
+bleibt als Verweis auf die angefangene Arbeit.
 
 Die Beispiele des Betreibers sind Hinweise, keine Vorschrift und nicht der
 einzige Schwerpunkt. Kleine Ruckler und Kleinigkeiten werden in den Runden
@@ -74,7 +76,7 @@ Eine Freigabe für andere gibt es nur auf sein ausdrückliches „ja“.
 
 ---
 
-## 3. Großplan, Runde 15
+## 3. Großplan, Runde 15 (entfällt, Arbeitsstand für Zyklus 2 Paket A)
 
 Ablauf jeder Runde: [`grossplan/AUFTRAG.md`](grossplan/AUFTRAG.md) § 2
 (Ablauf), § 2a (Gegenprüfung, Pflicht), § 2b (sparsam, ohne an Prüfung zu

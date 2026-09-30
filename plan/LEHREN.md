@@ -585,6 +585,13 @@ Belegte Fälle:
   Abnahme. G-109 (29.09.): verborgenes Fehlerformular lieferte leere Texte,
   Einstieg-Heuristik stoppte vor der Probekarte, trotzdem Exit 0.
 - Ein Test, der dauerhaft rot ist, ist wertlos, weil ihn niemand mehr ansieht.
+- **Tempo erst zerlegen, dann bauen** (30.09.2026, G-119). Drei Anläufe
+  mit Vermutungen brachten nichts; erst Chrome-Trace (`x_tempo_spur.js`)
+  und CPU-Profil zeigten die Ursachen. Am Laptop (i5-8365U, „Ausbalanciert“)
+  misst derselbe Ablauf unter CPU 4× mal 97, mal 259 ms. Wirkung einer
+  Änderung deshalb **abwechselnd gegen den Vorstand** messen
+  (`x_ab_tempo.js`, mindestens 8 Paare, Median und Zahl über der Grenze),
+  nie mit einzelnen Läufen vorher/nachher.
 
 ### 5.4 Die Attrappe muss so streng sein wie die Wirklichkeit
 
@@ -734,6 +741,16 @@ halten.
   - Eine Bewegung pro Ursache, 150–450 ms.
 - Lange Listen: höchstens die ersten ~14 Zeilen animieren, dazu
   `content-visibility` (3.17.6).
+- **Nach `innerHTML` keine Maße lesen** (`scrollY`, `innerHeight`,
+  `visualViewport`, `getBoundingClientRect`, `offset*`). Jedes Lesen zwingt
+  den Browser, die ganze neue Seite sofort im Klick zu setzen. 3.18.10:
+  `syncAppbarKante` (86 ms) und `syncTastatur` (58 ms) im Verwalten-Wechsel,
+  CPU 4×. Werte aus Ereignissen merken oder im nächsten
+  `requestAnimationFrame` lesen (läuft vor dem Malen desselben Bildes).
+- **Web-Schriften vor dem ersten Zeigen laden** (`document.fonts.load` im
+  Leerlauf), sonst setzt der Browser mit `font-display: swap` erst eine
+  Ersatzschrift und dann alles ein zweites Mal – sichtbar als Umspringen
+  (3.18.10, `schriftVorwaermen`).
 - `prefers-reduced-motion`:
   - Bewegung aus, **Inhalt trotzdem erreichbar**. Was nur durch eine
     Animation sichtbar wird (z. B. die Rückseite einer drehenden Karte),
@@ -1633,6 +1650,16 @@ Commit in der Gegenprüfung gefunden. Regel § 6.7 gilt auch für Aufrufe aus
 `render()`: ein Fehlerzustand muss den nächsten Versuch sperren. (3) Die
 Backslash-Regel von oben galt auch für `bash`-Heredocs mit Testcode – beim
 selben Arbeitsgang zweimal wieder passiert; Write-Werkzeug benutzen.
+
+30.09.2026, G-119 (3.18.10): `t_text_tempo` blieb nach drei vermuteten
+Fixes rot. Ursachen erst per Trace/Profil belegt: Schrift-Wechsel setzte die
+Seite doppelt, `render()` las nach `innerHTML` Fenstermaße (erzwungenes
+Setzen im Klick), die Text-Ansicht setzte 40 Ayat in einem Bild. Regel § 5.3
+(zerlegen, A/B) und § 6.4 (keine Maße nach `innerHTML`, Schrift vorladen).
+Eigener Fehler dabei: eine per Python-Heredoc eingefügte Zeile mit `'\n'`
+wurde zu einem echten Zeilenumbruch im JS-String (Syntaxfehler in einer
+Messhilfe). Gleiche Klasse wie die Backslash-Regel oben: Code mit Escapes
+nur über Write/Edit.
 
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 

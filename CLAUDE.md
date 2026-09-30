@@ -4,7 +4,8 @@
 
 Eine Übersicht für Claude und Codex (`AGENTS.md` verweist genauso). Sie
 enthält die Reihenfolge des Betreibers vom 30.09.2026: erst Texte lernen
-fertig, dann Runde 15, dann weitere Runden, dann ein neuer Zyklus. Außerdem
+fertig, dann Zyklus 2 (`plan/zyklus-2/AUFTRAG.md`: die ganze App neu
+prüfen, Runde 15 entfällt, ihre Befunde sind dort Paket A). Außerdem
 steht dort, was bei Texte lernen fertig und was offen ist, und wo lokale
 Sicherungen liegen. Ältere „AKTUELL“-Absätze weiter unten sind Geschichte.
 Wo sie von `STAND.md` abweichen, gilt `STAND.md`.

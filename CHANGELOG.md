@@ -1,3 +1,15 @@
+## 3.18.10 – 30. September 2026
+
+**Arabische Schrift springt nicht mehr um, Wechsel nach Verwalten ruhiger.**
+Die arabische Schrift lädt jetzt im Leerlauf nach dem Start, sobald das
+Konto arabische Karten hat – vorher erst beim ersten Zeigen: Die Liste
+stand kurz in einer Ersatzschrift und wurde dann ein zweites Mal gesetzt.
+Beim Neuzeichnen liest die App keine Fenstermaße mehr mitten im Klick
+(Kante unter der Kopfleiste aus dem Scroll-Ereignis, Fensterabgleich im
+nächsten Bild vor dem Malen). Im Probelauf beim Betreiber: lange Texte
+zeigen die ersten Zeilen zu dritt je Bild statt 40 auf einmal; Sure 2 zu
+öffnen stockt nicht mehr über 200 ms.
+
 ## 3.18.9 – 30. September 2026
 
 **Lange Texte öffnen schneller (nur im Probelauf beim Betreiber).** Die

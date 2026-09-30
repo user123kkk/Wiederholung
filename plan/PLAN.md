@@ -775,7 +775,11 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**JETZT (29.09.2026 abends, Betreiber-Entscheidung): Bau „Texte auswendig
+**Maßgeblich ist [`STAND.md`](STAND.md)** (30.09.2026 abends): erst Texte
+auswendig lernen veröffentlichen, dann [`zyklus-2/AUFTRAG.md`](zyklus-2/AUFTRAG.md).
+Runde 15 entfällt; der folgende Absatz ist Geschichte.
+
+**Früher (29.09.2026 abends, Betreiber-Entscheidung): Bau „Texte auswendig
 lernen“ und neues Wiederholen – vor weiteren Codex-Runden.**
 Reihenfolge laut Betreiber: 1. dieser Bau, 2. danach die Codex-Runden
 (Runde 15 fortsetzen), 3. danach das ganze Tool neu prüfen und neue Runden

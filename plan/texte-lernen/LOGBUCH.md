@@ -2,6 +2,37 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — 3.18.10 G-119 Weg 2: Ursachen zerlegt und behoben, Test weiter knapp
+
+**Betreiber:** „2“ (weiter umbauen statt veröffentlichen).
+**Ursachen (Chrome-Trace `x_tempo_spur.js`, CPU-Profil, CPU 4×):**
+(1) arabische Schrift lud erst beim ersten Zeigen: Liste erst in
+Ersatzschrift gesetzt, nach dem Laden ein zweites Mal (Verwalten Layout
+138 + 50 ms, Text-Ansicht 103 + 171 ms); (2) `render()` las nach `innerHTML`
+`scrollY` (`syncAppbarKante`, 86 ms) und `innerHeight`/`visualViewport`
+(`syncTastatur`, 58 ms) – erzwungenes Setzen im Klick; (3) 40 Ayat im ersten
+Bild der Text-Ansicht (Layout 198 ms am Stück).
+**Geändert:** `app.js` `schriftVorwaermen()` (nach `tanzilSchriftMarkieren`,
+Aufruf in `renderMain`), `appbarKanteSetzen`/`appbarGescrollt`,
+`viewportSyncImBild()` vor `syncViewportGap`, `TEXT_ZEILEN_ERST/BILD/ANFANG`
+(erst 3, dann 3 je Bild bis 40, dann 60er); Version 3.18.10 (`app.js`,
+`sw.js`, `index.html` inkl. Startbild-Links), Changelog. Messhilfen
+`plan/werkzeuge/pruefstand/x_tempo_spur.js`, `x_ab_tempo.js`.
+**Gemessen:** A/B abwechselnd gegen HEAD (3.18.9), 8 Paare: Verwalten
+Median 247 → 210 ms (über 200: 8 → 4), Text öffnen 216 → 155 (6 → 1).
+Zerlegte Varianten (ohne Ziehgriff-SVG, ohne Punkte): kein messbarer
+Unterschied. Derselbe Ablauf schwankt am Laptop 97–259 ms (i5-8365U,
+„Ausbalanciert“). Gesamtlauf `alle_pruefen.js`: **119/121**. Rot:
+`t_verlauf_mehrgeraete` (kein Emulator, wie bekannt, `ladegeraet.ps1` startet
+ihn) und `t_text_tempo` (Text öffnen 235 ms, Verwalten 204; im selben Lauf
+auch Aufdecken 188, alles langsamer). `t_nur_betreiber` grün: normales Konto
+Pixel gleich 3.17.56. Grenze nicht gelockert.
+**Offen:** `t_text_tempo` besteht am Laptop nur manchmal. Weitere Kürzung
+bei Verwalten hieße, die Kartenliste für alle Konten umzubauen (weniger
+Zeilen im ersten Bild); dafür gibt es keinen einzelnen teuren Teil mehr.
+Betreiber-Frage in der Antwort vom 30.09.
+**Nächster Schritt:** Entscheidung des Betreibers; danach „ladegerät“.
+
 ### 2026-09-30 — G-119 Verwalten-Tempo: Ursache belegt, Messung am Laptop zu unruhig
 
 **Betreiber:** „A“, also Verwalten-Tempo jetzt beheben.

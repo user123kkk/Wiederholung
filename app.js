@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.9";
+const APP_VERSION = "3.18.10";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -310,6 +310,42 @@ function tanzilSchriftMarkieren(wurzel) {
   for (const el of wurzel.querySelectorAll(".arabic")) {
     if (el.closest(".text-tanzil") || KREIS_ZEICHEN.test(el.value || el.textContent)) el.classList.add("arabic-tanzil");
   }
+}
+/* 3.18.10 (G-119): Die arabischen Schriften laden sonst erst, wenn das erste
+   arabische Wort im Bild steht. Chrome-Trace (CPU 4x, Sure 2): Verwalten
+   setzte die Liste erst in einer Ersatzschrift (Layout 138 ms), nach dem
+   Laden noch einmal; die Text-Ansicht genauso mit Amiri Quran (Layout
+   103 + 171 ms). Zu sehen war das als kurzes Umspringen der Schrift
+   (font-display: swap). Deshalb: sobald das Konto arabische Karten hat,
+   die Schrift im Leerlauf nach dem Start laden und einmal unsichtbar ein
+   Wort setzen - dann steht die Schrift bereit, bevor jemand Verwalten
+   oeffnet. Amiri nur im Probelauf (texteFreigeschaltet, Betreiber
+   30.09.2026). Angezeigt wird nichts; das Element ist sofort wieder weg. */
+let schriftVorgewaermt = null;
+function schriftVorwaermen() {
+  if (!currentUser || schriftVorgewaermt === currentUser.uid) return;
+  const arabKarten = bereiche.some(b => (b.karten || []).some(c => istArabisch(c.wort)));
+  const texte = texteFreigeschaltet() && bereiche.some(b => (b.texte || []).length);
+  if (!arabKarten && !texte) return;
+  schriftVorgewaermt = currentUser.uid;
+  const schriften = ["UthmanicHafs"].concat(texte ? ["AmiriQuranTanzil"] : []);
+  const wort = "كَلِمَةٌ";
+  const leerlauf = fn => window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 300);
+  leerlauf(() => {
+    const geladen = document.fonts && document.fonts.load
+      ? Promise.all(schriften.map(f => document.fonts.load("1em '" + f + "'", wort).catch(() => null)))
+      : Promise.resolve();
+    geladen.then(() => leerlauf(() => {
+      const d = document.createElement("div");
+      d.setAttribute("aria-hidden", "true");
+      d.style.cssText = "position:absolute;left:-10000px;top:0;visibility:hidden;pointer-events:none";
+      d.innerHTML = '<span class="arabic">' + wort + '</span>' +
+        (texte ? '<span class="arabic arabic-tanzil">' + wort + '</span>' : "");
+      document.body.appendChild(d);
+      void d.offsetHeight;
+      d.remove();
+    }));
+  });
 }
 /* 3.18.6: klassen = die eigenen Klassen des Elements. Vorher stand an vier
    Stellen class="..." + schriftAttr() - ein ZWEITES class-Attribut, das der
@@ -8436,9 +8472,19 @@ function huelleBehalten(alt, auswahl) {
 }
 /* Die Kante unter der Kopfleiste erscheint, sobald etwas darunter durchlaeuft
    (styles.css: .appbar.scrolled) - bisher setzte sie nie ein Skript. */
-function syncAppbarKante() {
+/* 3.18.10 (G-119): render() liest scrollY nicht mehr selbst. Direkt nach
+   innerHTML zwang das Lesen den Browser, die ganze neue Seite sofort im
+   Klick zu setzen (CPU-Profil Verwalten: 86 ms in dieser Funktion, CPU 4x).
+   Der Wert kommt jetzt aus dem Scroll-Ereignis; aendert ein Neuzeichnen die
+   Lage (kuerzere Seite, scrollTo), folgt ohnehin ein Scroll-Ereignis. */
+let appbarGescrollt = false;
+function appbarKanteSetzen() {
   const bar = document.querySelector(".appbar");
-  if (bar) bar.classList.toggle("scrolled", window.scrollY > 4);
+  if (bar) bar.classList.toggle("scrolled", appbarGescrollt);
+}
+function syncAppbarKante() {
+  appbarGescrollt = window.scrollY > 4;
+  appbarKanteSetzen();
 }
 window.addEventListener("scroll", syncAppbarKante, { passive: true });
 
@@ -8649,6 +8695,7 @@ function renderMain() {
   app.innerHTML = html;
   tanzilSchriftMarkieren(app);
   textZeilenNachladenBeobachten();
+  schriftVorwaermen();
   huelleBehalten(altBar, ":scope > .appbar");
   huelleBehalten(altNav, ":scope > .nav");
   /* 22.09.2026 (Block 15): Der gleitende Reiter-Anzeiger. Er ist ein
@@ -8670,7 +8717,7 @@ function renderMain() {
      scrollen und per Wischen wechseln. */
   const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit);
   document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
-  syncAppbarKante();
+  appbarKanteSetzen();
   /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
      das ist im selben render()-Aufruf noch der eben angeklickte Oeffner
      (prevActive, oben schon fuers Eingabefeld-Halten berechnet). */
@@ -8699,8 +8746,13 @@ function renderMain() {
   /* E7: Faktor am Container, damit ihn jede .arabic-Stelle darunter erbt. */
   app.style.setProperty("--arab-scale", String(arabFaktor()));
   /* Beobachtung 18: Tab-Wechsel kann den Scroll-/Layoutzustand aendern,
-     ohne ein resize-Event auszuloesen - hier zur Sicherheit erneut syncen. */
-  if (typeof syncViewportGap === "function") syncViewportGap();
+     ohne ein resize-Event auszuloesen - hier zur Sicherheit erneut syncen.
+     3.18.10 (G-119): im naechsten Bild-Rueckruf statt sofort. Sofort las
+     innerHeight/visualViewport direkt nach innerHTML und zwang den Browser,
+     die neue Seite mitten im Klick zu setzen (CPU-Profil: 58 ms). Der
+     Rueckruf laeuft vor dem Malen desselben Bildes - die neue Seite und der
+     Abgleich erscheinen weiter zusammen. */
+  viewportSyncImBild();
   tickCountups();
 
   if (!prevActiveId && prevGriff) {
@@ -12032,8 +12084,13 @@ function textKannSchonFeld(anzahl, ab) {
    Platzhalter haelt die Hoehe der fehlenden Zeilen (64 px wie
    contain-intrinsic-size), damit die Seite beim Nachladen nicht springt.
    Wie weit schon gezeichnet ist, gilt je Text bis ein anderer geoeffnet wird -
-   ein Neuzeichnen verliert die nachgeladenen Zeilen nicht. */
-const TEXT_ZEILEN_ERST = 40, TEXT_ZEILEN_PORTION = 60, TEXT_ZEILE_HOEHE = 64;
+   ein Neuzeichnen verliert die nachgeladenen Zeilen nicht.
+   3.18.10 (G-119): Auch 40 Zeilen auf einmal waren zu viel. Teuer ist nur,
+   was im Bild steht (die Zeilen haben content-visibility): die ersten Ayat
+   in Amiri Quran kosteten im Trace 198 ms Layout am Stueck. Deshalb kommen
+   die ersten 40 Zeilen zu dritt, eine Portion je Bild - oben steht nach
+   zwei Bildern alles, was man sieht; danach wie bisher 60er-Portionen. */
+const TEXT_ZEILEN_ERST = 3, TEXT_ZEILEN_BILD = 3, TEXT_ZEILEN_ANFANG = 40, TEXT_ZEILEN_PORTION = 60, TEXT_ZEILE_HOEHE = 64;
 let textAnsichtFuer = null, textAnsichtBis = TEXT_ZEILEN_ERST, textZeilenBeobachter = null;
 function textAnsichtZeilenHtml(t, zeilen, von, bis) {
   let html = "";
@@ -12057,7 +12114,7 @@ function textAnsichtPlatzhalter(rest) {
    nachladen. Ohne IntersectionObserver (sehr alte Browser) alles zeichnen. */
 function textZeilenNachladenBeobachten() {
   if (textZeilenBeobachter) { textZeilenBeobachter.disconnect(); textZeilenBeobachter = null; }
-  /* Text geschlossen: beim naechsten Oeffnen wieder mit 40 Zeilen anfangen. */
+  /* Text geschlossen: beim naechsten Oeffnen wieder von vorn portionieren. */
   if (!ui.textAnsicht) textAnsichtFuer = null;
   const rest = app.querySelector(".text-zeilen__rest");
   if (!rest) return;
@@ -12067,7 +12124,7 @@ function textZeilenNachladenBeobachten() {
     const platz = app.querySelector(".text-zeilen__rest");
     if (!t || !platz || textAnsichtFuer !== t.id) return false;
     const zeilen = textZeilenVon(b, t);
-    const von = textAnsichtBis, bis = Math.min(zeilen.length, von + TEXT_ZEILEN_PORTION);
+    const von = textAnsichtBis, bis = Math.min(zeilen.length, von + (von < TEXT_ZEILEN_ANFANG ? TEXT_ZEILEN_BILD : TEXT_ZEILEN_PORTION));
     textAnsichtBis = bis;
     platz.insertAdjacentHTML("beforebegin", textAnsichtZeilenHtml(t, zeilen, von, bis));
     tanzilSchriftMarkieren(platz.parentNode);
@@ -13917,6 +13974,12 @@ window.addEventListener("resize", () => {
      niedrigeres Fenster) - dann gilt der aktuelle Wert, keine Luecke. */
 const VV_GAP_MAX = 100;
 let maxViewportHeight = 0, maxViewportBreite = 0;
+let viewportSyncGeplant = false;
+function viewportSyncImBild() {
+  if (viewportSyncGeplant) return;
+  viewportSyncGeplant = true;
+  requestAnimationFrame(() => { viewportSyncGeplant = false; syncViewportGap(); });
+}
 function syncViewportGap() {
   /* 3.6.14: Home-Bildschirm-App auf dem iPhone/iPad (nur dort gibt es
      navigator.standalone). Die Hoehe des Geraetes steht fest in screen.* -
