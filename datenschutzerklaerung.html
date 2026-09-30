@@ -49,7 +49,7 @@
     <div class="card">
       <p class="hint">Dein <strong>Name</strong> (frei wählbar, nur zur Begrüßung in der App) und
       deine <strong>E-Mail-Adresse</strong> – für die Anmeldung und um dein Passwort zurücksetzen
-      zu können. Deine <strong>Lerninhalte</strong> – Bereiche, Karten, Lernstufen, Fälligkeiten,
+      zu können. Deine <strong>Lerninhalte</strong> – Bereiche, Karten, Texte, Lernstufen, Fälligkeiten,
       deine Serie – liegen in der Firestore-Datenbank (Google), erreichbar nur für dich, außer du
       teilst selbst einen Kartensatz per Code (Punkt 5); die Zugriffsregeln dafür liegen in
       <code>firestore.rules</code>. Auf deinem Gerät bleiben nur ein paar Einstellungen und
@@ -147,6 +147,21 @@
       beenden" wählst, den Bereich löschst oder dein Konto löschst; Kopien, die andere schon
       eingelöst haben, liegen dann in deren Konten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b
       DSGVO.</p>
+      <p class="hint" style="margin-top:var(--space-3)"><strong>Texte auswendig lernen:</strong>
+      Legst du einen Text an – selbst eingefügt oder eine Sure aus dem mitgelieferten
+      Quran-Text –, werden seine Zeilen, ihr Lernstand und die Reihenfolge der Wiederholung in
+      deinem Konto gespeichert, genauso geschützt wie deine Karten. Dazu gehört eine kleine
+      Lernstatistik je Text und je Bereich: die letzten höchstens 50 Antworten auf schon
+      gefestigte Zeilen bzw. Karten und ein daraus berechneter Abstandswert. Sie steuert nur, wann
+      in deinem Konto wiederholt wird; niemand wertet Inhalte oder Statistik aus, auch der Betreiber
+      nicht. Weil solche Texte etwas über deinen Glauben verraten können (besondere Kategorie nach
+      Art. 9 DSGVO), fragt die App vor dem ersten Text nach deiner ausdrücklichen Einwilligung und
+      speichert das Datum dazu. Rechtsgrundlage ist Art. 9 Abs. 2 lit. a DSGVO. Widerrufen kannst
+      du jederzeit unter Einstellungen → Daten; dann werden alle deine Texte gelöscht (vorher lädt
+      die App eine Sicherung herunter). Texte lassen sich nicht teilen. Der mitgelieferte
+      Quran-Text liegt als Datei auf dem Server dieser App, wird erst geladen, wenn du „Sure aus
+      dem Quran“ öffnest, und danach für die Offline-Nutzung auf deinem Gerät zwischengespeichert;
+      dabei entstehen nur die üblichen Server-Logdaten (Punkt 3).</p>
     </div>
   </div>
 
@@ -330,7 +345,7 @@
     </div>
   </div>
 
-  <p class="hint rechtsseite__fuss">Stand: 26. September 2026</p>
+  <p class="hint rechtsseite__fuss">Stand: 29. September 2026</p>
   <div class="rechtsfuss"><a href="./datenschutzerklaerung.html" aria-current="page">Datenschutz</a><span class="rechtsfuss__trenner" aria-hidden="true">·</span><a href="./impressum.html">Impressum</a></div>
 </div>
 </body>

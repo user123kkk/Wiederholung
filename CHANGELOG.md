@@ -1,3 +1,20 @@
+## 3.18.2 – 30. September 2026
+
+**Texte anlegen (Stufe 2, nur im Probelauf beim Betreiber).** Im
+Verwalten-Tab fragt „Neu“ jetzt: Karte, Text einfügen oder Sure aus dem
+Quran. Ein eingefügter Text wird Zeile für Zeile aufgeteilt; in der Vorschau
+lassen sich Zeilen zusammenfügen oder teilen. Eine Sure kommt unverändert aus
+dem mitgelieferten Tanzil-Text, ganz oder von–bis. Was man schon kann, wird
+beim Anlegen markiert. Die Text-Ansicht zeigt jede Zeile mit neu, frisch oder
+fest; Zeilen lassen sich ändern (der Lernstand bleibt), bei eigenen Texten
+auch einfügen und löschen, bei Suren auf das Original zurücksetzen. Vor dem
+ersten Text fragt die App einmal nach der Einwilligung; widerrufen lässt sie
+sich in den Einstellungen (dann werden alle Texte gelöscht, vorher kommt eine
+Sicherung). Datenschutzerklärung (Punkt 5) und Impressum (Quellenangabe)
+ergänzt. Löschen eines Bereichs und des Kontos nennen Texte eigens.
+Startbilder tragen wieder die aktuelle Versionsnummer (fehlte in 3.18.0).
+Für Karten ändert sich nichts.
+
 ## 3.18.0 – 29. September 2026
 
 **Vorbereitung für „Texte auswendig lernen“ (Stufe 1, noch unsichtbar).**

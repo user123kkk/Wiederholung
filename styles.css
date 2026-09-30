@@ -5252,3 +5252,33 @@ button[data-action="reset-leech"] {
   min-width: var(--tap);
   min-height: var(--tap);
 }
+
+/* ---------- 3.18.1: Texte auswendig lernen (Stufe 2) ----------
+   Nur bestehende Token; Zeilen wie .liste-zeile, lange Listen mit
+   content-visibility (LEHREN § 6.4). */
+.text-kopf { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4); }
+.text-kopf h2 { margin: 0; font-size: 1.15rem; min-width: 0; overflow-wrap: anywhere; }
+.text-von-bis { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); align-items: end; }
+.text-von-bis .field { margin-top: 0; }
+.text-quelle { margin-top: var(--space-4); }
+.text-quelle a { color: inherit; text-decoration: underline; }
+.text-vorschau { list-style: none; margin: 0 0 var(--space-4); padding: 0; }
+.text-vorschau__zeile {
+  display: grid; grid-template-columns: 2.2em 1fr; gap: 2px var(--space-3);
+  padding: var(--space-3) 0; border-bottom: 1px solid var(--border);
+  content-visibility: auto; contain-intrinsic-size: auto 72px;
+}
+.text-vorschau__nr { color: var(--text-2); font-variant-numeric: tabular-nums; }
+.text-vorschau__text { overflow-wrap: anywhere; }
+.text-vorschau__knoepfe { grid-column: 2; display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.text-vorschau__knoepfe button { min-height: 44px; }
+.text-vorschau__zeile .opt--fehler { grid-column: 2; }
+.text-zeilen .text-zeile {
+  display: grid; grid-template-columns: 2.2em 1fr auto; align-items: start; gap: var(--space-3);
+  text-align: start; content-visibility: auto; contain-intrinsic-size: auto 64px;
+}
+.text-zeile__nr { color: var(--text-2); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.text-zeile__text { overflow-wrap: anywhere; min-width: 0; }
+.text-zeile__stand { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.text-zeile__abweichung { font-size: 0.78rem; color: var(--text-2); text-align: end; }
+.text-loeschen { margin-top: var(--space-5); }

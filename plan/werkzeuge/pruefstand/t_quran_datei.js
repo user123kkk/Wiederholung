@@ -80,5 +80,74 @@ for (const [name, bytes] of Object.entries(gegen)) {
   else { rot++; console.log('FEHLER Gegenprobe blieb gruen: ' + name); }
 }
 
-console.log(rot ? 'ROT (' + rot + ')' : 'OK');
-process.exitCode = rot ? 1 : 0;
+/* Stufe 2: im Browser anlegen (echte app.js, echter Service Worker).
+   Sure 1 und Sure 2 ganz; jede Aya Byte fuer Byte wie in der Quelldatei,
+   2:282 ungeteilt. Danach offline neu laden: die Datei kommt aus dem
+   Speicher des Service Workers. --nur-datei ueberspringt diesen Teil. */
+async function imBrowser() {
+  const { start, neueSeite, GERAETE, vollerStore, tag } = require('./lib');
+  const { BETREIBER_UID } = require('./text_lib');
+  const ayat = text.toString('utf8').split('\n').filter(l => l && l[0] !== '#').map(l => l.split('|'));
+  const sure = n => ayat.filter(p => +p[0] === n).map(p => p[2]);
+  const fehler = [];
+  const store = {};
+  for (const [k, v] of Object.entries(vollerStore())) store[k.replace('users/u1', 'users/' + BETREIBER_UID)] = v;
+  const U = 'users/' + BETREIBER_UID;
+  store[U].texteEinwilligung = tag(0);
+  const browser = await start();
+  try {
+    const { ctx, p } = await neueSeite(browser, GERAETE.handy, { store, user: { uid: BETREIBER_UID, email: 'b@example.com',
+      displayName: 'Test', emailVerified: true, metadata: { creationTime: 'Mon, 03 Aug 2026 10:00:00 GMT' } } });
+    await p.waitForFunction(() => navigator.serviceWorker && navigator.serviceWorker.controller, null, { timeout: 15000 });
+    const klick = async (sel, w = 600) => { await p.click(sel); await p.waitForTimeout(w); };
+    const quranSeite = async () => {
+      await klick('[data-action="tab-verwalten"]');
+      await klick('[data-action="neu-wahl"]');
+      await klick('[data-action="text-neu"][data-id="quran"]');
+      await p.waitForSelector('#t-sure', { timeout: 20000 });
+    };
+    const zeilenVon = async nr => {
+      const s = await p.evaluate(() => Object.fromEntries([...window.__FB.store.entries()]));
+      const set = Object.values(s[U + '/bereiche/b1'].sets).find(x => x.art === 'text' && x.sure === nr);
+      return set ? { set, woerter: set.cardIds.map(id => (s[U + '/karten/' + id] || {}).wort) } : null;
+    };
+    for (const nr of [1, 2]) {
+      await quranSeite();
+      await p.selectOption('#t-sure', String(nr)); await p.waitForTimeout(500);
+      await klick('[data-action="text-anlegen"]', 1500);
+      const r = await zeilenVon(nr);
+      const soll = sure(nr);
+      if (!r) { fehler.push('Sure ' + nr + ': kein Text'); continue; }
+      if (r.woerter.length !== soll.length) fehler.push('Sure ' + nr + ': ' + r.woerter.length + ' statt ' + soll.length + ' Ayat');
+      if (r.woerter.some((w, i) => w !== soll[i])) fehler.push('Sure ' + nr + ': Wortlaut weicht von der Quelldatei ab');
+      if (r.set.nummerAb !== 1 || r.set.quelle !== 'tanzil') fehler.push('Sure ' + nr + ': nummerAb/quelle');
+      if (nr === 2 && (r.woerter[281] || '').length !== 1208) fehler.push('2:282 nicht ungeteilt (' + (r.woerter[281] || '').length + ')');
+      await klick('[data-action="text-schliessen"]');
+    }
+    /* Offline: dieselbe Adresse, die quranLaden() holt, muss der Service
+       Worker aus seinem Speicher liefern. (Ein Neuladen offline geht im
+       Pruefstand nicht: die Firebase-Attrappe kommt ueber page.route und
+       liegt nie im Speicher des Workers.) */
+    const version = /const APP_VERSION = "([0-9.]+)";/.exec(fs.readFileSync(path.join(repo, 'app.js'), 'utf8'))[1];
+    await ctx.setOffline(true);
+    const offline = await p.evaluate(async v => {
+      const r = await fetch('./quran/tanzil-uthmani.txt?v=' + encodeURIComponent(v)).catch(e => null);
+      const m = await fetch('./quran/tanzil-quran-data.xml?v=' + encodeURIComponent(v)).catch(e => null);
+      return { text: r && r.ok ? (await r.text()).length : 0, meta: m && m.ok ? (await m.text()).length : 0 };
+    }, version);
+    if (offline.text !== text.toString('utf8').length || offline.meta !== meta.toString('utf8').length)
+      fehler.push('Offline: Quran-Datei nicht aus dem Speicher (' + JSON.stringify(offline) + ')');
+    const ohneVersion = await p.evaluate(async () => { const r = await fetch('./quran/tanzil-uthmani.txt?v=anders').catch(() => null); return !!(r && r.ok); });
+    if (ohneVersion) fehler.push('Messfehler: offline trotzdem Netz erreichbar');
+    if (p.fehler.length) fehler.push('Seitenfehler: ' + p.fehler.slice(0, 3).join(' | '));
+    await ctx.close();
+  } finally { await browser.close(); }
+  console.log(fehler.length ? 'ROT Browser:\n  ' + fehler.join('\n  ') : 'Browser: Sure 1 (7) und Sure 2 (286) wortgleich angelegt, offline verfuegbar');
+  return fehler.length;
+}
+
+(async () => {
+  if (!process.argv.includes('--nur-datei')) rot += await imBrowser();
+  console.log(rot ? 'ROT (' + rot + ')' : 'OK');
+  process.exitCode = rot ? 1 : 0;
+})().catch(e => { console.error(e); process.exitCode = 1; });

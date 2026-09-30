@@ -53,15 +53,26 @@ function textStore(opt = {}) {
 /* Seite mit echter app.js (oder einem festen alten Stand) und Zugriff auf
    die inneren Funktionen ueber window.__PRUEF. Service Worker gesperrt,
    damit die Umleitung von app.js greift (LEHREN § 15, 26.09.). */
-async function seiteMitApp(browser, store, { commit, zusatz = '', viewport = { width: 390, height: 844 } } = {}) {
+/* opt.uid: Konto-Kennung. Texte bietet die App nur dem Betreiber an
+   (texteFreigeschaltet); dann wird der Store auf diese Kennung umgeschrieben. */
+const BETREIBER_UID = 'pitcQCAowlSOMjCvJ4xKSnuGVXi1';
+/* opt.ersetze: [alt, neu] - Gegenprobe: eine Stelle der app.js gezielt
+   entfernen; bricht ab, wenn die Stelle nicht gefunden wird (LEHREN § 15, 27.09.). */
+async function seiteMitApp(browser, store, { commit, zusatz = '', viewport = { width: 390, height: 844 }, uid = 'u1', ersetze = null } = {}) {
+  if (uid !== 'u1') store = Object.fromEntries(Object.entries(store).map(([k, v]) => [k.replace(/^users\/u1(?=\/|$)/, 'users/' + uid), v]));
   const ctx = await browser.newContext({ viewport, serviceWorkers: 'block', deviceScaleFactor: 1 });
   const p = await ctx.newPage();
   p.fehler = [];
   p.on('pageerror', e => p.fehler.push(e.message));
-  await p.addInitScript(s => { window.__START_STORE = s; window.__START_USER = { uid: 'u1', email: 'a@example.com', displayName: 'Test', emailVerified: true, metadata: { creationTime: 'Mon, 03 Aug 2026 10:00:00 GMT' } }; }, store);
+  await p.addInitScript(([s, uid]) => { window.__START_STORE = s; window.__START_USER = { uid: uid, email: 'a@example.com', displayName: 'Test', emailVerified: true, metadata: { creationTime: 'Mon, 03 Aug 2026 10:00:00 GMT' } }; }, [store, uid]);
   await p.route('**/www.gstatic.com/**', r => r.fulfill({ contentType: 'text/javascript',
     body: r.request().url().includes('auth') ? AUTH : r.request().url().includes('firestore') ? FS : APP }));
-  await p.route('**/app.js?*', r => r.fulfill({ contentType: 'text/javascript', body: appQuelle(commit) + `
+  let quelle = appQuelle(commit).replace(/\r\n/g, '\n');
+  for (const [alt, neu] of (ersetze && !Array.isArray(ersetze[0]) ? [ersetze] : (ersetze || []))) {
+    if (!quelle.includes(alt)) throw new Error('Gegenprobe: Stelle nicht gefunden: ' + alt.slice(0, 60));
+    quelle = quelle.replace(alt, neu);
+  }
+  await p.route('**/app.js?*', r => r.fulfill({ contentType: 'text/javascript', body: quelle + `
     window.__PRUEF = { bereit: () => bereiche !== null && !document.querySelector('.boot'),
       bereiche: () => JSON.parse(JSON.stringify(bereiche)),
       ${zusatz} };` }));
@@ -75,4 +86,4 @@ async function storeLesen(p) {
   return p.evaluate(() => Object.fromEntries([...window.__FB.store.entries()].map(([k, v]) => [k, JSON.parse(JSON.stringify(v))])));
 }
 
-module.exports = { textWort, textStore, seiteMitApp, storeLesen, appQuelle, VOR_STUFE_1, BASE };
+module.exports = { BETREIBER_UID, textWort, textStore, seiteMitApp, storeLesen, appQuelle, VOR_STUFE_1, BASE };

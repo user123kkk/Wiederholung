@@ -788,10 +788,11 @@ erstellen (`grossplan/AUFTRAG.md` § 4a).
 - **Stand:** Stufe 0 und Stufe 1 erledigt (29.09.2026). **3.18.0** auf
   `main`: Texte werden geladen, gespeichert, gesichert und eingespielt, ohne
   als Karten aufzutauchen; neue Regeln (textId, Einwilligung, Regler).
-  **Stufe 2 (3.18.2) fertig, aber lokal und noch nicht committet** – wartet
-  auf den vollständigen Gesamtlauf am Ladegerät. **Pause auf Betreiber-Wunsch
-  (30.09.); weiter bei „los weiter“** nach dem obersten Eintrag „Pause“ in
-  `texte-lernen/LOGBUCH.md` (Schritte 1–5, danach Stufe 3).
+  **Stufe 2 (3.18.2) auf `main`, gezielte Tests grün, Gesamtlauf und
+  Tempotest noch offen (Laptop im Akkubetrieb).** Betreiber 30.09.: „hier
+  weiterarbeiten, später beim Aufladen an den nötigen Stellen prüfen“.
+  **Nicht veröffentlichen**, bis der Gesamtlauf am Ladegerät grün ist.
+  Nachholliste: Eintrag „Pause“ in `texte-lernen/LOGBUCH.md`.
 - **Wartet auf Betreiber:** Firestore-Regeln veröffentlichen **vor** dem
   Hosting von 3.18.0 (`firebase deploy --only firestore:rules`).
 - **Parallel:** Großplan-Runde 15 (3.17.57) läuft in einer anderen Session

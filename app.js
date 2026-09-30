@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.0";
+const APP_VERSION = "3.18.2";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1606,6 +1606,12 @@ let ui = {
      null = zu. Eigenes Feld statt Wiederverwendung von wahlSheet: die Art
      haengt an einer bestimmten Zeile, nicht an einer app-weiten Einstellung. */
   setArtSheetId: null,
+  /* 3.18.1 (Texte, Stufe 2): Blatt "Karte oder Text", Anlege-Seite (Entwurf
+     mit uid des Kontos), offene Text-Ansicht (Id), Blatt fuer eine Zeile. */
+  neuWahl: false,
+  textAnlegen: null,
+  textAnsicht: null,
+  zeileEdit: null,
   /* 3.3.1: Das Karten-Formular liegt jetzt in einem Blatt, nicht mehr fest
      oben auf dem Verwalten-Bildschirm. Video 1: "the settings is just
      settings and the notes editor is just a notes editor - we don't throw in
@@ -1767,7 +1773,7 @@ function renderToast() {
   /* Bei offenem Blatt steht die Meldung oben - unten lag sie auf dem Formular
      und fing die Taps darauf ab. */
   const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId ||
-    ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog);
+    ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit);
   /* 3.17.35 (TECHNIK-8): role/aria-live entfernt - die Ansage uebernimmt
      #ansage (index.html, zeigeToast()). aria-hidden verhindert, dass dieses
      Element zusaetzlich vorgelesen wird. */
@@ -2311,12 +2317,13 @@ async function initFirebase() {
            Frischeres zu schuetzen, also wird auch eine noch ausstehende
            Momentaufnahme diesmal verarbeitet statt verworfen. */
         if (snap.metadata.hasPendingWrites && cloudDocExists) return; // eigenes Echo ignorieren
-        const kopf = JSON.stringify(data && [data.name, data.settings, data.streak, data.schemaVersion]);
+        const kopf = JSON.stringify(data && [data.name, data.settings, data.streak, data.schemaVersion, data.texteEinwilligung || null]);
         const nurVerlauf = cloudDocExists && kopf === letzterNutzerKopf;
         letzterNutzerKopf = kopf;
         syncError = null;
         if (!data) {
           cloudDocExists = false;
+          texteEinwilligung = null;
           bereiche = normBereiche(null);
           streak = normStreak(null);
           /* 3.9.9, Pruefung P7: Nur hier - es gibt kein Cloud-Dokument, das
@@ -2355,6 +2362,8 @@ async function initFirebase() {
            naechsten Sitzung damit wieder zur Verfuegung. */
         try { sessionStorage.removeItem(TOKEN_ERNEUERT_KEY); } catch (e) {}
         if (typeof data.name === "string" && data.name) displayName = data.name;
+        /* 3.18.1: Einwilligung fuer Texte (KONZEPT § 10). */
+        texteEinwilligung = /^\d{4}-\d{2}-\d{2}$/.test(data.texteEinwilligung || "") ? data.texteEinwilligung : null;
         settings = normSettings(data.settings);
         themaAnwenden();          // 2.20.0: gilt auch auf einem neuen Gerät sofort
         streak = normStreak(data.streak);
@@ -4920,6 +4929,8 @@ function selectBereich(bereichId) {
   if (ui.seite === "lektionen" && lektionenVon(bereiche.find(b => b.id === bereichId)).length === 0) ui.seite = null;
   ui.editId = null;
   ui.cardDetailId = null;
+  /* 3.18.1: Texte gehoeren zu ihrem Bereich. */
+  ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; 
   resetFormDraft();
   ui.searchQuery = "";
   ui.kartenSeite = 0;
@@ -4980,8 +4991,14 @@ async function deleteBereich() {
      druecken, ein Name nicht: dafuer muss man hinsehen. Dreimal nachfragen
      haette nichts gebracht, das klickt man genauso weg. */
   exportBackup(true);
+  /* 3.18.2: Texte sind keine Karten (bereichAufteilen) - eigens nennen,
+     sonst stand bei einem Bereich nur mit Text "Es werden 0 Karten". */
+  const texteHier = (b.texte || []).length;
+  const wasWeg = [];
+  if (b.karten.length || !texteHier) wasWeg.push(mz(b.karten.length, "Karte", "Karten"));
+  if (texteHier) wasWeg.push(mz(texteHier, "Text", "Texte"));
   const eingabe = await dlgPrompt(
-    (b.karten.length === 1 ? 'Eine Karte wird' : 'Es werden ' + b.karten.length + ' Karten') + ' mit ' + (b.karten.length === 1 ? 'ihrem' : 'ihrem gesamten') + ' Lernstand gelöscht. Das lässt sich nicht rückgängig machen.\n\n' +
+    wasWeg.join(" und ") + ' mit dem gesamten Lernstand ' + (b.karten.length + texteHier === 1 ? 'wird' : 'werden') + ' gelöscht. Das lässt sich nicht rückgängig machen.\n\n' +
     (b.teilCode ? 'Der Code ' + b.teilCode + ' funktioniert danach nicht mehr.\n\n' : '') +
     'Ein Backup dieses Bereichs wurde gerade zum Herunterladen angeboten – ' +
     'sieh in deinen Downloads nach, dass die Datei wirklich da ist.\n\n' +
@@ -8506,6 +8523,8 @@ function renderMain() {
   html += erinnerungSheet();
   html += setArtSheet();
   html += karteSheet();
+  html += neuWahlSheet();
+  html += zeileEditSheet();
   html += cardDetailSheet();
   html += renderDialog();          // D2 – liegt als Overlay ueber allem
   html += renderToast();
@@ -8521,9 +8540,11 @@ function renderMain() {
   const sess = ui.session;
   const ansichtSchluessel = [ui.einstellungen ? "e" : "", ui.seite || "", ui.tab, imModus ? "m" : "",
     imModus && sess ? (sess.queue && sess.queue[0]) + "|" + sess.revealed + "|" + (sess.extraOpen ? 1 : 0) : "",
-    imModus ? (ui.lernSetId || "") : ""].join("/");
+    imModus ? (ui.lernSetId || "") : "",
+    ui.textAnlegen ? "ta-" + ui.textAnlegen.weg + "-" + ui.textAnlegen.schritt : "", ui.textAnsicht || ""].join("/");
   const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
-    ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : ""].join("/");
+    ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
+    ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : ""].join("/");
   /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
      kein .view - dann ist alles neu. */
   const warAnsicht = !!app.querySelector(":scope > .view");
@@ -8536,7 +8557,7 @@ function renderMain() {
   /* 3.7.1: Richtung des Seitenwechsels. Tiefer hinein (Einstellungen, Unterseite,
      Runde) kommt der Inhalt von rechts, zurueck von links; zwischen den drei
      Reitern schiebt er in Richtung des Reiters. styles.css liest das Attribut. */
-  const tiefe = (ui.einstellungen ? 1 : 0) + (ui.seite ? 1 : 0) + (imModus ? 1 : 0);
+  const tiefe = (ui.einstellungen ? 1 : 0) + (ui.seite ? 1 : 0) + (imModus ? 1 : 0) + (ui.textAnlegen || ui.textAnsicht ? 1 : 0);
   const reiter = ["lernen", "fortschritt", "verwalten"].indexOf(ui.tab);
   let richtung = "";
   if (ansichtNeu && warAnsicht) {
@@ -8572,7 +8593,7 @@ function renderMain() {
   }
   /* 3.17.14: + erinnerungSheet - sonst liess sich die Seite dahinter
      scrollen und per Wischen wechseln. */
-  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog);
+  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit);
   document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
   syncAppbarKante();
   /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
@@ -9123,6 +9144,9 @@ function renderEinstellungen() {
   html += '<div class="liste">';
   html += einstZeile({ action: "einst-seite", id: "kartensaetze", icon: "teilen",
     text: "Kartensatz per Code" });
+  /* 3.18.1: Widerruf der Einwilligung fuer Texte (KONZEPT § 10) - nur, wenn
+     sie erteilt ist. */
+  if (texteEinwilligung) html += einstZeile({ action: "texte-widerrufen", icon: "tafel", text: "Texte: Einwilligung widerrufen", wert: "erteilt" });
   html += einstZeile({ action: "einst-seite", id: "daten", icon: "sichern", text: "Sichern & einspielen",
     /* 3.17.14: ausgeschrieben - "vor 3 Tg." war die einzige Abkuerzung der App. */
     wert: alter === null ? "noch nie" : alter === 0 ? "heute" : alter === 1 ? "gestern" : "vor " + alter + " Tagen" });
@@ -9328,6 +9352,9 @@ function renderKontoLoeschen() {
   html += '<li><strong>' + karten + '</strong> Karte' + (karten === 1 ? '' : 'n') + ' mit ihrem Lernstand' +
     (gesessen > 0 ? ' – <strong>' + gesessen + '</strong> davon saßen schon einmal' : '') + '</li>';
   html += '<li><strong>' + bereiche.length + '</strong> Bereich' + (bereiche.length === 1 ? '' : 'e') + ' mit allen Speicherkarten</li>';
+  /* 3.18.2: Texte sind keine Karten (bereichAufteilen) - eigens nennen. */
+  const texteAnzahl = bereiche.reduce((n, b) => n + (b.texte || []).length, 0);
+  if (texteAnzahl) html += '<li><strong>' + texteAnzahl + '</strong> ' + (texteAnzahl === 1 ? 'Text' : 'Texte') + ' mit ihrem Lernstand</li>';
   html += '<li>' + (serie > 0 ? 'Deine Serie von <strong>' + serie + '</strong> Tag' + (serie === 1 ? '' : 'en') : 'Deine Serie') +
     ' und <strong>' + tage + '</strong> Tag' + (tage === 1 ? '' : 'e') + ' Aufzeichnung</li>';
   html += '<li>Dein Konto – die Anmeldung mit ' + esc((currentUser && currentUser.email) || "") + '</li>';
@@ -9429,6 +9456,21 @@ document.addEventListener("input", e => {
      offen ist) wieder der Platzhalter 20:00 im Feld, "Uebernehmen" legte dann
      eine falsche Zeit an (Befund REST-11). */
   else if (t.id === "erinnerung-zeit") ui.erinnerungZeit = t.value;
+  /* 3.18.1: Entwuerfe der Texte (Stufe 2) ueberleben jedes Neuzeichnen. */
+  else if (t.id === "t-titel" && ui.textAnlegen) ui.textAnlegen.titel = t.value;
+  else if (t.id === "t-roh" && ui.textAnlegen) ui.textAnlegen.roh = t.value;
+  else if (t.id === "z-wort" && ui.zeileEdit) ui.zeileEdit.wort = t.value;
+});
+/* 3.18.1: Auswahlfelder der Anlege-Seite zeichnen erst beim Festlegen neu
+   (change), nicht bei jedem Tastendruck. */
+document.addEventListener("change", e => {
+  const t = e.target, a = ui.textAnlegen;
+  if (!t || !t.id || !a) return;
+  const zahl = parseInt(t.value, 10);
+  if (t.id === "t-sure" && zahl >= 1 && zahl <= 114) { a.sure = zahl; a.von = 1; a.bis = null; a.kann = 0; render(); }
+  else if (t.id === "t-von" && zahl >= 1) { a.von = zahl; if (a.bis && a.bis < zahl) a.bis = zahl; a.kann = 0; render(); }
+  else if (t.id === "t-bis" && zahl >= 1) { a.bis = zahl; a.kann = 0; render(); }
+  else if (t.id === "t-kann" && zahl >= 0) { a.kann = zahl; }
 });
 
 /* ---------- Feedback-Board ----------
@@ -11461,12 +11503,539 @@ function markiere(text, tokens) {
   return out + esc(roh.slice(pos));
 }
 
+/* ---------- 3.18.1: Texte anlegen, ansehen, bearbeiten ----------
+   plan/texte-lernen/KONZEPT.md § 8 (Stufe 2). Ein Text ist ein Set der Art
+   "text" in b.texte, seine Zeilen sind Karten-Dokumente mit textId in
+   b.zeilen (bereichAufteilen, 3.18.0). Angeboten wird das alles nur, solange
+   texteFreigeschaltet() gilt (Probelauf, WIEDERHOLEN.md § 8).
+
+   Religioeser Wortlaut kommt hier nie von der App: entweder tippt ihn die
+   Person selbst, oder er stammt unveraendert aus quran/tanzil-uthmani.txt
+   (LEHREN § 2, KONZEPT § 9). */
+const TEXT_MAX_ZEILEN = 1000;
+const QURAN_TEXT_URL = "./quran/tanzil-uthmani.txt";
+const QURAN_META_URL = "./quran/tanzil-quran-data.xml";
+const QURAN_LADE_ZEITLIMIT_MS = 20000;
+/* Die Quellenangabe verlangt die Lizenz (Tanzil: Quelle nennen und auf
+   tanzil.net verlinken). Steht unter der Sure-Auswahl, in der Text-Ansicht
+   eines mitgelieferten Textes und im Impressum. */
+const QURAN_QUELLE_HTML = 'Quran-Text: <a href="https://tanzil.net" target="_blank" rel="noopener">Tanzil Project</a> (Uthmani 1.1), unverändert, Lizenz CC BY 3.0.';
+
+/* Einwilligung (KONZEPT § 10, Art. 9 DSGVO): Datum oder null. Kommt aus dem
+   Nutzerdokument; ohne sie legt die App keinen Text an. */
+let texteEinwilligung = null;
+const TEXT_EINWILLIGUNG_SATZ =
+  "Texte, die du hier speicherst – etwa aus dem Quran oder aus Hadith-Büchern –, können etwas über deinen Glauben verraten. " +
+  "Sie liegen nur in deinem Konto, niemand wertet sie aus. " +
+  "Du kannst die Einwilligung jederzeit in den Einstellungen widerrufen; dann werden alle Texte gelöscht.";
+
+function findText(b, id) { return ((b && b.texte) || []).find(t => t.id === id) || null; }
+function textZeilenVon(b, t) {
+  const nachId = new Map(((b && b.zeilen) || []).map(z => [z.id, z]));
+  return t.cardIds.map(id => nachId.get(id)).filter(Boolean);
+}
+/* Drei Woerter, keine Zahlen (WIEDERHOLEN.md § 1). */
+function zeilenZustand(z) {
+  if (!z.ersteBewertung) return "neu";
+  return z.stufe >= TEXT_FEST_STUFE ? "fest" : "frisch";
+}
+function textZahlen(b, t) {
+  const n = { neu: 0, frisch: 0, fest: 0 };
+  for (const z of textZeilenVon(b, t)) n[zeilenZustand(z)]++;
+  return n;
+}
+function zeilenNummer(t, i) { return (t.nummerAb || 1) + i; }
+/* Bei einer Sure heisst die Zeile Aya. */
+function zeilenWort(t) { return t.quelle === "tanzil" ? "Aya" : "Zeile"; }
+
+/* ---------- mitgelieferter Quran ----------
+   Geladen erst, wenn jemand "Sure aus dem Quran" oeffnet - nicht beim Start
+   und nicht in APP_SHELL (1,4 MB). Die URL traegt ?v=APP_VERSION; der
+   Service Worker liefert solche Adressen danach aus seinem Speicher, also
+   auch offline (sw.js, isUnveraenderlich). Gelesen wird die Originaldatei
+   selbst, Zeile fuer Zeile "sure|aya|text" - keine umgewandelte Kopie. */
+let quranDaten = null;     // { suren: [{ nr, name, ayat: [text, ...] }] }
+let quranLaedt = false;
+let quranFehler = null;
+function quranLaden() {
+  if (quranDaten || quranLaedt) return;
+  quranLaedt = true;
+  quranFehler = null;
+  const v = "?v=" + encodeURIComponent(APP_VERSION);
+  const holen = url => fetch(url + v).then(r => { if (!r.ok) throw new Error("http " + r.status); return r.text(); });
+  let uhr = null;
+  const zeitlimit = new Promise((_, nein) => { uhr = setTimeout(() => nein(new Error("zeitlimit")), QURAN_LADE_ZEITLIMIT_MS); });
+  Promise.race([Promise.all([holen(QURAN_TEXT_URL), holen(QURAN_META_URL)]), zeitlimit])
+    .then(([txt, xml]) => { quranDaten = quranLesen(txt, xml); })
+    .catch(e => {
+      quranFehler = offline || (e && e.message !== "zeitlimit" && !navigator.onLine)
+        ? "Ohne Verbindung geht das beim ersten Mal nicht – danach auch offline."
+        : e && e.message === "zeitlimit" ? "Das Laden dauert zu lange." : "Der Quran-Text ließ sich nicht laden.";
+    })
+    .finally(() => { clearTimeout(uhr); quranLaedt = false; render(); });
+}
+function quranLesen(txt, xml) {
+  const doc = new DOMParser().parseFromString(xml, "application/xml");
+  const suren = [...doc.querySelectorAll("suras > sura")].map(s => ({
+    nr: parseInt(s.getAttribute("index"), 10),
+    name: s.getAttribute("name") || "",
+    soll: parseInt(s.getAttribute("ayas"), 10),
+    ayat: []
+  }));
+  for (const zeile of txt.split("\n")) {
+    if (!zeile || zeile.charAt(0) === "#") continue;
+    const teile = zeile.split("|");
+    if (teile.length !== 3) continue;
+    const sure = suren[parseInt(teile[0], 10) - 1];
+    if (sure) sure.ayat.push(teile[2]);
+  }
+  /* Eine unvollstaendige Datei (abgebrochener Download) wird nicht benutzt -
+     sonst entstuende ein Text, dem Ayat fehlen. */
+  if (suren.length !== 114 || suren.some(s => s.ayat.length !== s.soll)) throw new Error("unvollstaendig");
+  return { suren: suren };
+}
+function quranAya(sure, aya) {
+  const s = quranDaten && quranDaten.suren[sure - 1];
+  return s ? s.ayat[aya - 1] : undefined;
+}
+
+/* ---------- Einwilligung ---------- */
+async function texteEinwilligungHolen() {
+  if (texteEinwilligung) return true;
+  const kontoRef = userDocRef;
+  if (!kontoRef) return false;
+  const ok = await dlgConfirm(TEXT_EINWILLIGUNG_SATZ, { title: "Texte speichern", okLabel: "Einverstanden" });
+  if (!ok || userDocRef !== kontoRef || kontoWirdGeloescht) return false;
+  const heute = todayStr();
+  texteEinwilligung = heute;
+  /* Nicht abwarten: offline bestaetigt Firestore erst spaeter. Eine
+     Ablehnung (z. B. Regeln noch nicht veroeffentlicht) nimmt die
+     Einwilligung zurueck und meldet sich wie jeder Schreibfehler. */
+  fb.updateDoc(kontoRef, { texteEinwilligung: heute }).catch(e => {
+    if (userDocRef !== kontoRef) return;
+    texteEinwilligung = null;
+    saveFehler(e);
+    render();
+  });
+  return true;
+}
+
+/* ---------- Anlegen ---------- */
+function textAnlegenStarten(weg) {
+  ui.neuWahl = false;
+  const b = currentBereich();
+  if (!texteFreigeschaltet() || istGefuehrt(b)) { render(); return; }
+  const kontoRef = userDocRef;
+  texteEinwilligungHolen().then(ok => {
+    if (!ok || userDocRef !== kontoRef) { render(); return; }
+    ui.textAnsicht = null;
+    ui.textAnlegen = { uid: currentUser ? currentUser.uid : null, weg: weg, schritt: "eingeben", titel: "", roh: "", zeilen: [], kann: 0,
+      sure: 1, von: 1, bis: null, fehler: null };
+    if (weg === "quran") quranLaden();
+    window.scrollTo(0, 0);
+    render();
+  });
+}
+/* Eingefuegter Text -> Zeilen: jede nicht leere Zeile ein Lernschritt. */
+function rohZuZeilen(roh) {
+  return String(roh || "").split(/\r?\n/).map(z => z.replace(/\s+/g, " ").trim()).filter(Boolean);
+}
+/* Teilt eine Zeile an der Wortgrenze, die der Mitte am naechsten liegt. */
+function zeileTeilen(zeile) {
+  const mitte = zeile.length / 2;
+  let beste = -1;
+  for (let i = zeile.indexOf(" "); i !== -1; i = zeile.indexOf(" ", i + 1)) {
+    if (beste === -1 || Math.abs(i - mitte) < Math.abs(beste - mitte)) beste = i;
+  }
+  if (beste === -1) return null;
+  return [zeile.slice(0, beste).trim(), zeile.slice(beste + 1).trim()];
+}
+function textAnlegenPruefen() {
+  const a = ui.textAnlegen;
+  a.zeilen = rohZuZeilen(a.roh);
+  a.fehler = null;
+  if (!a.zeilen.length) { a.fehler = "Füge zuerst einen Text ein."; render(); return; }
+  if (a.zeilen.length > TEXT_MAX_ZEILEN) { a.fehler = "Höchstens " + TEXT_MAX_ZEILEN + " Zeilen je Text."; render(); return; }
+  a.kann = Math.min(a.kann, a.zeilen.length);
+  a.schritt = "pruefen";
+  window.scrollTo(0, 0);
+  render();
+}
+function textQuranGrenzen() {
+  const a = ui.textAnlegen;
+  const s = quranDaten && quranDaten.suren[a.sure - 1];
+  if (!s) return null;
+  const von = Math.max(1, Math.min(s.ayat.length, a.von || 1));
+  const bis = Math.max(von, Math.min(s.ayat.length, a.bis || s.ayat.length));
+  return { s: s, von: von, bis: bis };
+}
+function textAnlegenAusfuehren() {
+  const a = ui.textAnlegen;
+  const b = currentBereich();
+  if (!a || !texteFreigeschaltet() || istGefuehrt(b)) return;
+  let texte, name, nummerAb = 1, quelle = null, sure = null;
+  if (a.weg === "quran") {
+    const g = textQuranGrenzen();
+    if (!g) return;
+    texte = g.s.ayat.slice(g.von - 1, g.bis);
+    nummerAb = g.von; quelle = "tanzil"; sure = g.s.nr;
+    /* Der Name ist der arabische Surenname aus der Quelldatei, dazu die
+       Nummern - kein Wortlaut der App. */
+    /* Der arabische Name steht in Richtungs-Klammern (U+2068/U+2069), sonst
+       dreht die Schreibrichtung Nummer und Ayat-Bereich um. */
+    name = ("Sure " + g.s.nr + " ⁨" + g.s.name + "⁩" +
+      (g.von > 1 || g.bis < g.s.ayat.length ? " · " + g.von + "–" + g.bis : "")).slice(0, 40);
+  } else {
+    texte = a.zeilen;
+    name = (a.titel || "").trim().slice(0, 40) || "Text";
+  }
+  if (!texte.length || texte.length > TEXT_MAX_ZEILEN) return;
+  if (texte.some(w => w.length > MAX_ZEILE)) { a.fehler = "Eine Zeile ist zu lang – teile sie."; render(); return; }
+  if ((b.sets || []).length + (b.texte || []).length >= MAX_SETS) {
+    dlgAlert("In diesem Bereich ist kein Platz mehr für einen weiteren Text.", "Nicht möglich");
+    return;
+  }
+  const heute = todayStr();
+  const tid = genId();
+  const kann = Math.min(a.kann || 0, texte.length);
+  /* "Kann ich schon": diese Zeilen sind ab heute frisch und heute faellig
+     (WIEDERHOLEN.md § 2) - so zeigt der erste Durchgang gleich, ob es stimmt. */
+  const zeilen = texte.map((w, i) => normCard({
+    id: genId(), wort: w, uebersetzung: "", extra: "", stufe: 0, nextReview: heute,
+    ersteBewertung: i < kann ? heute : null, rueckfaelle: 0, quelleId: null, maxStufe: 0, textId: tid
+  }));
+  const text = normSet({ id: tid, name: name, art: SET_ART_TEXT, cardIds: zeilen.map(z => z.id),
+    nummerAb: nummerAb, quelle: quelle, sure: sure });
+  const patch = {};
+  patch[pfadSet(b.id, tid)] = setFelder(text, (b.sets || []).length + (b.texte || []).length);
+  zeilen.forEach((z, i) => { patch[pfadKarte(b.id, z.id)] = kartenFelder(z, i); });
+  b.texte = (b.texte || []).concat([text]);
+  b.zeilen = (b.zeilen || []).concat(zeilen);
+  patchDoc(patch);
+  ui.textAnlegen = null;
+  ui.textAnsicht = tid;
+  window.scrollTo(0, 0);
+  zeigeToast("Text angelegt");
+  render();
+}
+
+/* ---------- Bearbeiten, Einfuegen, Loeschen ---------- */
+function zeileSpeichern() {
+  const b = currentBereich(), e = ui.zeileEdit;
+  const t = e && findText(b, e.textId);
+  /* Eigene Texte: Leerraum zusammenfassen. Suren: nur Raender abschneiden -
+     "Original wiederherstellen" muss den Wortlaut der Quelle genau treffen. */
+  const roh = String((e && e.wort) || "");
+  const wort = (t && t.quelle ? roh.trim() : roh.replace(/\s+/g, " ").trim()).slice(0, MAX_ZEILE);
+  if (t && e.neuNach && !t.quelle) {
+    /* Neue Zeile: entsteht erst jetzt, mit dem getippten Wortlaut - wer
+       abbricht, hinterlaesst nichts. */
+    if (!wort) { e.fehler = true; render(); return; }
+    if (t.cardIds.length >= TEXT_MAX_ZEILEN) { ui.zeileEdit = null; render(); return; }
+    const neu = normCard({ id: genId(), wort: wort, uebersetzung: "", extra: "", stufe: 0, nextReview: todayStr(),
+      ersteBewertung: null, rueckfaelle: 0, quelleId: null, maxStufe: 0, textId: t.id });
+    const i = t.cardIds.indexOf(e.neuNach);
+    t.cardIds.splice(i === -1 ? t.cardIds.length : i + 1, 0, neu.id);
+    b.zeilen = (b.zeilen || []).concat([neu]);
+    /* Die Reihenfolge ist die ganze Liste - in der Mitte einfuegen geht nicht
+       mit arrayUnion (das haengt nur hinten an). */
+    patchDoc({ [pfadKarte(b.id, neu.id)]: kartenFelder(neu, t.cardIds.length - 1),
+      [pfadSet(b.id, t.id) + ".cardIds"]: t.cardIds.slice() });
+    ui.zeileEdit = null;
+    render();
+    return;
+  }
+  const z = e && (b.zeilen || []).find(x => x.id === e.id);
+  if (!t || !z) { ui.zeileEdit = null; render(); return; }
+  if (!wort) { e.fehler = true; render(); return; }
+  /* T13: Der Lernstand bleibt - nur der Wortlaut aendert sich. */
+  if (wort !== z.wort) {
+    z.wort = wort;
+    patchDoc({ [pfadKarte(b.id, z.id) + ".wort"]: wort });
+  }
+  ui.zeileEdit = null;
+  render();
+}
+function zeileOriginal() {
+  const b = currentBereich(), e = ui.zeileEdit;
+  const t = e && findText(b, e.textId);
+  if (!t || t.quelle !== "tanzil") return;
+  const i = t.cardIds.indexOf(e.id);
+  const original = quranAya(t.sure, zeilenNummer(t, i));
+  if (original === undefined) return;
+  e.wort = original;
+  zeileSpeichern();
+}
+function zeileEinfuegen() {
+  const b = currentBereich(), e = ui.zeileEdit;
+  const t = e && findText(b, e.textId);
+  if (!t || t.quelle || e.neuNach || t.cardIds.length >= TEXT_MAX_ZEILEN) return;
+  ui.zeileEdit = { id: null, neuNach: e.id, textId: t.id, wort: "", fehler: false, uid: e.uid };
+  render();
+}
+/* Zeigt kreisPos auf eine geloeschte Zeile, rueckt er auf die naechste feste
+   (am Ende: die erste feste) - KONZEPT § 15. */
+function kreisPosNachLoeschen(b, t, weg) {
+  if (t.kreisPos !== weg) return t.kreisPos;
+  const zeilen = textZeilenVon(b, t);
+  const ab = zeilen.findIndex(z => z.id === weg);
+  const fest = z => z.id !== weg && zeilenZustand(z) === "fest";
+  const danach = zeilen.slice(ab + 1).find(fest) || zeilen.find(fest);
+  return danach ? danach.id : null;
+}
+async function zeileLoeschen() {
+  const b = currentBereich(), e = ui.zeileEdit;
+  const t = e && findText(b, e.textId);
+  if (!t || t.quelle) return;
+  if (t.cardIds.length <= 1) { ui.zeileEdit = null; textLoeschen(t.id); return; }
+  const kontoRef = userDocRef;
+  const ok = await dlgConfirm("Die Zeile und ihr Lernstand werden gelöscht.", { title: "Zeile löschen?", okLabel: "Löschen", danger: true });
+  if (!ok || userDocRef !== kontoRef) return;
+  const kreisPos = kreisPosNachLoeschen(b, t, e.id);
+  const patch = { [pfadKarte(b.id, e.id)]: LOESCHEN, [pfadSet(b.id, t.id) + ".cardIds"]: LISTE_WEG([e.id]) };
+  if (kreisPos !== t.kreisPos) patch[pfadSet(b.id, t.id) + ".kreisPos"] = kreisPos;
+  t.cardIds = t.cardIds.filter(x => x !== e.id);
+  t.kreisPos = kreisPos;
+  b.zeilen = (b.zeilen || []).filter(z => z.id !== e.id);
+  patchDoc(patch);
+  ui.zeileEdit = null;
+  render();
+}
+async function textLoeschen(tid) {
+  const b = currentBereich(), t = findText(b, tid);
+  if (!t) return;
+  const kontoRef = userDocRef;
+  const ok = await dlgConfirm("„" + t.name + "“ mit " + mz(t.cardIds.length, "Zeile", "Zeilen") +
+    " und dem ganzen Lernstand wird gelöscht. Das lässt sich nicht rückgängig machen.",
+    { title: "Text löschen?", okLabel: "Löschen", danger: true });
+  if (!ok || userDocRef !== kontoRef) return;
+  textEntfernen(b, t);
+  ui.textAnsicht = null;
+  ui.zeileEdit = null;
+  render();
+}
+function textEntfernen(b, t) {
+  const patch = { [pfadSet(b.id, t.id)]: LOESCHEN };
+  const ids = new Set(t.cardIds);
+  for (const z of (b.zeilen || [])) if (z.textId === t.id) { ids.add(z.id); }
+  for (const id of ids) patch[pfadKarte(b.id, id)] = LOESCHEN;
+  b.texte = (b.texte || []).filter(x => x.id !== t.id);
+  b.zeilen = (b.zeilen || []).filter(z => z.textId !== t.id);
+  patchDoc(patch);
+}
+/* Widerruf (KONZEPT § 10): alle Texte loeschen, vorher eine Sicherung
+   herunterladen (wie beim Loeschen eines Bereichs), Einwilligung null. */
+async function texteWiderrufen() {
+  const kontoRef = userDocRef;
+  if (!kontoRef) return;
+  const anzahl = bereiche.reduce((n, b) => n + (b.texte || []).length, 0);
+  const ok = await dlgConfirm(anzahl
+    ? "Dann werden alle " + mz(anzahl, "Text", "Texte") + " samt Lernstand gelöscht. Vorher lädt die App eine Sicherung herunter."
+    : "Die Einwilligung wird zurückgenommen.",
+    { title: "Einwilligung widerrufen?", okLabel: anzahl ? "Widerrufen und löschen" : "Widerrufen", danger: anzahl > 0 });
+  if (!ok || userDocRef !== kontoRef) return;
+  if (anzahl) exportBackup(false);
+  for (const b of bereiche) for (const t of (b.texte || []).slice()) textEntfernen(b, t);
+  texteEinwilligung = null;
+  fb.updateDoc(kontoRef, { texteEinwilligung: null }).catch(e => { if (userDocRef === kontoRef) saveFehler(e); });
+  ui.textAnsicht = null; ui.textAnlegen = null; ui.zeileEdit = null;
+  zeigeToast(anzahl ? "Widerrufen – Texte gelöscht" : "Widerrufen");
+  render();
+}
+
+/* ---------- 3.18.1: Oberflaeche der Texte (Stufe 2) ----------
+   Anlegen und die Text-Ansicht sind eigene Seiten im Verwalten-Tab (ein
+   Bildschirm, eine Aufgabe - LEHREN § 6.9); die Auswahl "Karte oder Text"
+   und das Bearbeiten einer Zeile sind Blaetter wie das Karten-Blatt. */
+function textSeitenKopf(titel, zurueckAktion) {
+  return '<div class="text-kopf"><button class="ghost" data-action="' + zurueckAktion + '">' +
+    ikon("zurueck", "i-sm") + ' Zurück</button><h2 dir="auto">' + esc(titel) + '</h2></div>';
+}
+function textZustandBadge(zustand) {
+  const klasse = zustand === "neu" ? "zustand-neu" : zustand === "frisch" ? "zustand-frisch" : "zustand-gefestigt";
+  return '<span class="badge ' + klasse + '">' + zustand + '</span>';
+}
+
+/* Im Verwalten-Tab ueber der Kartenliste: die Texte dieses Bereichs. */
+function renderTexteBlock(b) {
+  const texte = b.texte || [];
+  if (!texte.length || !texteFreigeschaltet()) return "";
+  let html = '<div class="sektion"><div class="eyebrow">Texte</div><div class="liste">';
+  for (const t of texte) {
+    const n = textZahlen(b, t);
+    const teile = [];
+    if (n.neu) teile.push(n.neu + " neu");
+    if (n.frisch) teile.push(n.frisch + " frisch");
+    if (n.fest) teile.push(n.fest + " fest");
+    html += '<button class="liste-zeile" data-action="text-oeffnen" data-id="' + esc(t.id) + '">' +
+      ikon("tafel", "i-sm") +
+      '<span class="liste-zeile__text" dir="auto">' + esc(t.name) + '</span>' +
+      '<span class="liste-zeile__wert">' + esc(teile.join(" · ")) + '</span>' +
+      ikon("chevronRechts", "i-sm") + '</button>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function renderTextAnlegen() {
+  const a = ui.textAnlegen;
+  let html = '<div class="text-seite">';
+  if (a.weg === "quran") {
+    html += textSeitenKopf("Sure aus dem Quran", "text-anlegen-zu");
+    if (!quranDaten) {
+      if (quranFehler) {
+        html += '<p class="hint">' + esc(quranFehler) + '</p>';
+        html += '<button class="secondary" data-action="quran-neu-laden">Erneut versuchen</button>';
+      } else {
+        html += '<p class="hint" aria-live="polite">Quran-Text wird geladen …</p>';
+      }
+      return html + '</div>';
+    }
+    const g = textQuranGrenzen();
+    html += '<div class="field"><label for="t-sure">Sure</label><select id="t-sure">';
+    for (const s of quranDaten.suren) {
+      html += '<option value="' + s.nr + '"' + (s.nr === g.s.nr ? " selected" : "") + '>' + s.nr + ' · ' + esc(s.name) + '</option>';
+    }
+    html += '</select></div>';
+    html += '<div class="text-von-bis">';
+    html += '<div class="field"><label for="t-von">Von Aya</label><input type="number" id="t-von" inputmode="numeric" min="1" max="' + g.s.ayat.length + '" value="' + g.von + '"></div>';
+    html += '<div class="field"><label for="t-bis">Bis Aya</label><input type="number" id="t-bis" inputmode="numeric" min="1" max="' + g.s.ayat.length + '" value="' + g.bis + '"></div>';
+    html += '</div>';
+    html += textKannSchonFeld(g.bis - g.von + 1, g.von);
+    html += '<p class="field__hilfe">' + mz(g.bis - g.von + 1, "Aya", "Ayat") + ' – jede wird ein Lernschritt.</p>';
+    html += '<button class="lg full" data-action="text-anlegen">Text anlegen</button>';
+    html += '<p class="field__hilfe text-quelle">' + QURAN_QUELLE_HTML + '</p>';
+    return html + '</div>';
+  }
+  html += textSeitenKopf("Text einfügen", "text-anlegen-zu");
+  if (a.schritt === "eingeben") {
+    html += '<div class="field"><label for="t-titel">Titel <span class="opt">– optional</span></label>' +
+      '<input type="text" id="t-titel" maxlength="40" value="' + esc(a.titel) + '"></div>';
+    html += '<div class="field"><label for="t-roh">Text' + (a.fehler ? '<span class="opt opt--fehler"> – ' + esc(a.fehler) + '</span>' : '') + '</label>' +
+      '<textarea id="t-roh" rows="10" dir="auto" placeholder="Jede Zeile wird ein Lernschritt.">' + esc(a.roh) + '</textarea></div>';
+    html += '<button class="lg full" data-action="text-pruefen">Weiter</button>';
+    return html + '</div>';
+  }
+  /* Schritt "pruefen": nummerierte Vorschau, je Zeile zusammenfuegen/teilen. */
+  html += '<p class="hint">' + mz(a.zeilen.length, "Zeile", "Zeilen") + '. Zusammenfügen oder teilen, bis jede Zeile ein Stück ist, das du am Stück aufsagen willst.</p>';
+  html += '<ol class="text-vorschau">';
+  a.zeilen.forEach((w, i) => {
+    const zuLang = w.length > MAX_ZEILE;
+    html += '<li class="text-vorschau__zeile' + (zuLang ? ' text-vorschau__zeile--lang' : '') + '">' +
+      '<span class="text-vorschau__nr">' + (i + 1) + '</span>' +
+      '<span class="text-vorschau__text"' + schriftAttr(w) + '>' + esc(w) + '</span>' +
+      '<span class="text-vorschau__knoepfe">' +
+      (i < a.zeilen.length - 1 ? '<button class="ghost" data-action="text-zusammen" data-id="' + i + '" aria-label="Zeile ' + (i + 1) + ' mit der nächsten zusammenfügen">Zusammen</button>' : '') +
+      (w.indexOf(" ") !== -1 ? '<button class="ghost" data-action="text-teilen" data-id="' + i + '" aria-label="Zeile ' + (i + 1) + ' teilen">Teilen</button>' : '') +
+      '</span>' + (zuLang ? '<span class="opt opt--fehler">zu lang – bitte teilen</span>' : '') + '</li>';
+  });
+  html += '</ol>';
+  html += textKannSchonFeld(a.zeilen.length, 1);
+  html += '<div class="dlg-actions"><button data-action="text-anlegen"' + (a.zeilen.some(w => w.length > MAX_ZEILE) ? ' disabled' : '') + '>Text anlegen</button>' +
+    '<button class="secondary" data-action="text-zurueck-eingeben">Ändern</button></div>';
+  return html + '</div>';
+}
+/* T6: Was man schon kann, wird frisch statt neu (WIEDERHOLEN.md § 2). */
+function textKannSchonFeld(anzahl, ab) {
+  const a = ui.textAnlegen;
+  let html = '<div class="field"><label for="t-kann">Kann ich schon</label><select id="t-kann">';
+  html += '<option value="0"' + (!a.kann ? " selected" : "") + '>Nichts davon</option>';
+  for (let i = 1; i <= anzahl; i++) {
+    html += '<option value="' + i + '"' + (a.kann === i ? " selected" : "") + '>bis ' + (ab + i - 1) + (i === anzahl ? " (alles)" : "") + '</option>';
+  }
+  return html + '</select></div>';
+}
+
+function renderTextAnsicht() {
+  const b = currentBereich();
+  const t = findText(b, ui.textAnsicht);
+  if (!t) return "";
+  const zeilen = textZeilenVon(b, t);
+  const n = textZahlen(b, t);
+  /* Nur ein Versuch: nach einem Fehler nie automatisch erneut (LEHREN § 6.7) -
+     jedes Neuzeichnen hier haette sonst wieder geladen. Die Ansicht geht
+     auch ohne Datei; es fehlt dann nur "weicht vom Original ab". */
+  if (t.quelle === "tanzil" && !quranFehler) quranLaden();
+  let html = '<div class="text-seite">';
+  html += textSeitenKopf(t.name, "text-schliessen");
+  html += '<p class="hint">' + (t.quelle === "tanzil" ? mz(zeilen.length, "Aya", "Ayat") : mz(zeilen.length, "Zeile", "Zeilen")) +
+    ' · ' + n.neu + ' neu · ' + n.frisch + ' frisch · ' + n.fest + ' fest</p>';
+  html += '<div class="liste text-zeilen">';
+  zeilen.forEach((z, i) => {
+    const nr = zeilenNummer(t, i);
+    const original = t.quelle === "tanzil" ? quranAya(t.sure, nr) : undefined;
+    const weicht = original !== undefined && original !== z.wort;
+    html += '<button class="liste-zeile text-zeile" data-action="text-zeile" data-id="' + esc(z.id) + '" aria-label="' + zeilenWort(t) + ' ' + nr + ', ' + zeilenZustand(z) + (weicht ? ', weicht vom Original ab' : '') + '">' +
+      '<span class="text-zeile__nr">' + nr + '</span>' +
+      '<span class="text-zeile__text"' + schriftAttr(z.wort) + '>' + esc(z.wort) + '</span>' +
+      '<span class="text-zeile__stand">' + textZustandBadge(zeilenZustand(z)) +
+      (weicht ? '<span class="text-zeile__abweichung">weicht vom Original ab</span>' : '') + '</span></button>';
+  });
+  html += '</div>';
+  if (t.quelle === "tanzil") html += '<p class="field__hilfe text-quelle">' + QURAN_QUELLE_HTML + '</p>';
+  html += '<button class="secondary full text-loeschen" data-action="text-loeschen" data-id="' + esc(t.id) + '">' + ikon("muell", "i-sm") + ' Text löschen</button>';
+  return html + '</div>';
+}
+
+function neuWahlSheet() {
+  if (!ui.neuWahl) return "";
+  let html = '<div class="dlg-backdrop" data-action="neu-wahl-zu" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-label="Neu anlegen">';
+  html += '<h3>Neu anlegen</h3><div class="sheet-liste"><div class="liste" style="background:transparent;border:0">';
+  html += '<button class="liste-zeile" data-action="karte-neu">' + ikon("plus", "i-sm") + '<span class="liste-zeile__text">Karte</span></button>';
+  html += '<button class="liste-zeile" data-action="text-neu" data-id="selbst">' + ikon("stift", "i-sm") + '<span class="liste-zeile__text">Text einfügen</span></button>';
+  html += '<button class="liste-zeile" data-action="text-neu" data-id="quran">' + ikon("tafel", "i-sm") + '<span class="liste-zeile__text">Sure aus dem Quran</span></button>';
+  html += '</div></div>';
+  html += '<p class="field__hilfe" style="margin-top:var(--space-4)">Ein Text wird Zeile für Zeile auswendig gelernt, immer in seiner Reihenfolge.</p>';
+  html += '<div class="dlg-actions"><button class="secondary" data-action="neu-wahl-zu">Abbrechen</button></div>';
+  return html + '</div></div>';
+}
+
+function zeileEditSheet() {
+  const e = ui.zeileEdit;
+  if (!e) return "";
+  const b = currentBereich(), t = findText(b, e.textId);
+  if (!t) return "";
+  const neu = !!e.neuNach;
+  const i = t.cardIds.indexOf(neu ? e.neuNach : e.id);
+  const nr = zeilenNummer(t, i);
+  const original = !neu && t.quelle === "tanzil" ? quranAya(t.sure, nr) : undefined;
+  let html = '<div class="dlg-backdrop" data-action="nichts" role="presentation">';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="zeile-titel">';
+  html += '<h3 id="zeile-titel">' + (neu ? 'Neue Zeile nach ' + nr : zeilenWort(t) + ' ' + nr) + '</h3>';
+  html += '<div class="field"><label for="z-wort">Wortlaut' + (e.fehler ? '<span class="opt opt--fehler"> – bitte ausfüllen</span>' : '') + '</label>' +
+    '<textarea id="z-wort" rows="4" dir="auto" maxlength="' + MAX_ZEILE + '"' + (istArabisch(e.wort) ? ' class="arabic" lang="ar"' : '') + '>' + esc(e.wort) + '</textarea></div>';
+  if (!neu) html += '<p class="field__hilfe">Der Lernstand der Zeile bleibt, wenn du den Wortlaut änderst.</p>';
+  html += '<div class="dlg-actions"><button data-action="zeile-speichern">Speichern</button>' +
+    '<button class="secondary" data-action="zeile-zu">Abbrechen</button></div>';
+  if (original !== undefined && original !== e.wort) {
+    html += '<button class="ghost full" data-action="zeile-original">Original wiederherstellen</button>';
+  }
+  if (!t.quelle && !neu) {
+    html += '<div class="dlg-actions"><button class="ghost" data-action="zeile-einfuegen">Neue Zeile danach</button>' +
+      '<button class="danger" data-action="zeile-loeschen">Zeile löschen</button></div>';
+  }
+  return html + '</div></div>';
+}
+
 function renderVerwalten() {
   const cards = currentCards();
   const bAkt = currentBereich();
   const gefuehrt = istGefuehrt(bAkt);
   const editing = ui.editId ? findCard(ui.editId) : null;
   let html = "";
+  /* 3.18.1: Anlegen und Text-Ansicht sind eigene Seiten (Stufe 2). Ein
+     Entwurf gehoert zu dem Konto, in dem er begonnen wurde (LEHREN § 8.3,
+     G-108): nach einem Kontowechsel wird er verworfen, nicht gezeigt. */
+  const uidJetzt = currentUser ? currentUser.uid : null;
+  if (ui.textAnlegen && (ui.textAnlegen.uid !== uidJetzt || !texteFreigeschaltet() || gefuehrt)) ui.textAnlegen = null;
+  if (ui.zeileEdit && ui.zeileEdit.uid !== uidJetzt) ui.zeileEdit = null;
+  if (ui.textAnlegen) return renderTextAnlegen();
+  if (ui.textAnsicht) {
+    const seite = texteFreigeschaltet() ? renderTextAnsicht() : "";
+    if (seite) return seite;
+    ui.textAnsicht = null;
+  }
   /* 2.3.0: In einem gefuehrten Satz gibt es kein Formular. Ein ausgegrautes
      Formular waere schlechter als keins - es sieht aus, als waere etwas
      kaputt. Stattdessen steht hier in zwei Zeilen, was Sache ist.
@@ -11491,9 +12060,17 @@ function renderVerwalten() {
      grosse Knopf war die lauteste Flaeche auf einem Bildschirm, der gerade
      etwas anderes tut. */
   if (!ui.selectMode) {
-    html += '<button class="lg full" data-action="karte-neu">' +
-      ikon("plus", "i-sm") + ' Karte hinzuf\u00fcgen</button>';
+    /* 3.18.1: Im Probelauf fragt "Neu" zuerst: Karte oder Text (KONZEPT
+       § 8.1). Alle anderen sehen den Knopf wie bisher. */
+    if (texteFreigeschaltet()) {
+      html += '<button class="lg full" data-action="neu-wahl" aria-haspopup="dialog">' +
+        ikon("plus", "i-sm") + ' Neu</button>';
+    } else {
+      html += '<button class="lg full" data-action="karte-neu">' +
+        ikon("plus", "i-sm") + ' Karte hinzuf\u00fcgen</button>';
+    }
     html += '<div style="height:var(--stack)"></div>';
+    html += renderTexteBlock(bAkt);
   }
   return html + renderVerwaltenListe(cards, gefuehrt);
 }
@@ -12799,6 +13376,9 @@ function schliesseObersteEbene() {
   }
   if (ui.bereichMehr) { schliesse(() => { ui.bereichMehr = false; render(); }); return true; }
   if (ui.cardDetailId) { schliesse(() => { ui.cardDetailId = null; render(); }); return true; }
+  /* 3.18.1: Blaetter der Texte (Stufe 2). */
+  if (ui.zeileEdit) { schliesse(() => { ui.zeileEdit = null; render(); }); return true; }
+  if (ui.neuWahl) { schliesse(() => { ui.neuWahl = false; render(); }); return true; }
   if (ui.bereichSheet) { schliesse(() => { ui.bereichSheet = false; render(); }); return true; }
   return false;
 }
@@ -13038,7 +13618,8 @@ document.addEventListener("DOMContentLoaded", () => {
 function tabSchonAktiv(id) {
   return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
     !ui.wahlSheet && !ui.erinnerungSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
-    !ui.bereichMehr && !ui.cardDetailId && !ui.dialog;
+    !ui.bereichMehr && !ui.cardDetailId && !ui.dialog &&
+    !ui.neuWahl && !ui.textAnlegen && !ui.textAnsicht && !ui.zeileEdit;
 }
 function nachObenBlaettern() {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -13385,10 +13966,10 @@ document.body.addEventListener("click", e => {
        stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
     case "tab-lernen":
       if (tabSchonAktiv("lernen")) { nachObenBlaettern(); break; }
-      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "tab-fortschritt":
       if (tabSchonAktiv("fortschritt")) { nachObenBlaettern(); break; }
-      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "trotzdem-ueben":
       ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null;
@@ -13399,7 +13980,7 @@ document.body.addEventListener("click", e => {
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
     case "tab-verwalten":
       if (tabSchonAktiv("verwalten")) { nachObenBlaettern(); break; }
-      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
+      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
     case "lern-set": startLernen(btn.dataset.id); break;
     case "lern-haken": lernAbhaken(btn.dataset.id); break;
     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;
@@ -13415,7 +13996,44 @@ document.body.addEventListener("click", e => {
     case "undo-grade": undoLastGrade(); break;
     case "end-session": endSession(); break;
     case "submit-card": submitCardForm(); break;
+    /* 3.18.1: Texte (Stufe 2, texte-lernen/KONZEPT.md § 8). */
+    case "neu-wahl": ui.neuWahl = true; render(); break;
+    case "neu-wahl-zu": schliesseObersteEbene(); break;
+    case "text-neu": textAnlegenStarten(btn.dataset.id === "quran" ? "quran" : "selbst"); break;
+    case "text-anlegen-zu": ui.textAnlegen = null; window.scrollTo(0, 0); render(); break;
+    case "text-pruefen": if (ui.textAnlegen) textAnlegenPruefen(); break;
+    case "text-zurueck-eingeben":
+      if (ui.textAnlegen) { ui.textAnlegen.roh = ui.textAnlegen.zeilen.join("\n"); ui.textAnlegen.schritt = "eingeben"; render(); }
+      break;
+    case "text-zusammen": {
+      const a = ui.textAnlegen, i = parseInt(btn.dataset.id, 10);
+      if (a && a.zeilen[i + 1] !== undefined) { a.zeilen.splice(i, 2, a.zeilen[i] + " " + a.zeilen[i + 1]); a.kann = Math.min(a.kann, a.zeilen.length); render(); }
+      break;
+    }
+    case "text-teilen": {
+      const a = ui.textAnlegen, i = parseInt(btn.dataset.id, 10);
+      const teile = a && a.zeilen[i] !== undefined ? zeileTeilen(a.zeilen[i]) : null;
+      if (teile && a.zeilen.length < TEXT_MAX_ZEILEN) { a.zeilen.splice(i, 1, teile[0], teile[1]); render(); }
+      break;
+    }
+    case "text-anlegen": textAnlegenAusfuehren(); break;
+    case "quran-neu-laden": quranLaden(); render(); break;
+    case "text-oeffnen": ui.textAnsicht = btn.dataset.id; window.scrollTo(0, 0); render(); break;
+    case "text-schliessen": ui.textAnsicht = null; ui.zeileEdit = null; window.scrollTo(0, 0); render(); break;
+    case "text-zeile": {
+      const z = (currentBereich().zeilen || []).find(x => x.id === btn.dataset.id);
+      if (z) { ui.zeileEdit = { id: z.id, textId: z.textId, wort: z.wort, fehler: false, uid: currentUser ? currentUser.uid : null }; render(); }
+      break;
+    }
+    case "zeile-speichern": zeileSpeichern(); break;
+    case "zeile-zu": schliesseObersteEbene(); break;
+    case "zeile-original": zeileOriginal(); break;
+    case "zeile-einfuegen": zeileEinfuegen(); break;
+    case "zeile-loeschen": zeileLoeschen(); break;
+    case "text-loeschen": textLoeschen(btn.dataset.id); break;
+    case "texte-widerrufen": texteWiderrufen(); break;
     case "karte-neu":
+      ui.neuWahl = false;
       ui.editId = null; resetFormDraft(); ui.karteSheet = true;
       render(); fokusInsWortfeld(); break;
     case "karte-sheet-zu":
