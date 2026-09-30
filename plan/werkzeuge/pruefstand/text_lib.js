@@ -76,7 +76,7 @@ const FEST = { stufe: 7, next: '2099-12-31', erste: '2026-01-01' };
 const BETREIBER_UID = 'pitcQCAowlSOMjCvJ4xKSnuGVXi1';
 /* opt.ersetze: [alt, neu] - Gegenprobe: eine Stelle der app.js gezielt
    entfernen; bricht ab, wenn die Stelle nicht gefunden wird (LEHREN § 15, 27.09.). */
-async function seiteMitApp(browser, store, { commit, zusatz = '', viewport = { width: 390, height: 844 }, uid = 'u1', ersetze = null } = {}) {
+async function seiteMitApp(browser, store, { commit, zusatz = '', viewport = { width: 390, height: 844 }, uid = 'u1', ersetze = null, base = BASE } = {}) {
   if (uid !== 'u1') store = Object.fromEntries(Object.entries(store).map(([k, v]) => [k.replace(/^users\/u1(?=\/|$)/, 'users/' + uid), v]));
   const ctx = await browser.newContext({ viewport, serviceWorkers: 'block', deviceScaleFactor: 1 });
   const p = await ctx.newPage();
@@ -94,7 +94,7 @@ async function seiteMitApp(browser, store, { commit, zusatz = '', viewport = { w
     window.__PRUEF = { bereit: () => bereiche !== null && !document.querySelector('.boot'),
       bereiche: () => JSON.parse(JSON.stringify(bereiche)),
       ${zusatz} };` }));
-  await p.goto(BASE);
+  await p.goto(base);
   await p.waitForFunction(() => window.__PRUEF && window.__PRUEF.bereit(), null, { timeout: 15000 });
   await p.waitForTimeout(600);
   return { ctx, p };

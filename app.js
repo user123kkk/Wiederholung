@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.7";
+const APP_VERSION = "3.18.8";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -303,6 +303,10 @@ const KREIS_ZEICHEN = /[\u06DF\u06E3\u06EB]/;
    wechselten sich in einer Sure zwei Schriftstile Zeile fuer Zeile ab. */
 function textSchriftKlasse(woerter) { return woerter.some(w => KREIS_ZEICHEN.test(w)) ? " text-tanzil" : ""; }
 function tanzilSchriftMarkieren(wurzel) {
+  /* Betreiber 30.09.2026: alles rund um Quran/Auswendiglernen nur fuer ihn,
+     bis er es ausprobiert hat - auch diese Schrift-Korrektur (sie aenderte
+     sonst Karten anderer Konten). Andere sehen alles wie in 3.17.56. */
+  if (!texteFreigeschaltet()) return;
   for (const el of wurzel.querySelectorAll(".arabic")) {
     if (el.closest(".text-tanzil") || KREIS_ZEICHEN.test(el.value || el.textContent)) el.classList.add("arabic-tanzil");
   }

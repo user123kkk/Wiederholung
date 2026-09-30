@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.18.7";
+const CACHE_NAME = "adrabic-3.18.8";
 
 /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
    unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
@@ -54,7 +54,7 @@ const ZUSATZ = [
   "./icon-192.png",
   "./icon-512.png",
   "./fonts/UthmanicHafs1Ver18.ttf",     // 3.17.24: Quran-Schrift, selbst ausgeliefert
-  "./fonts/AmiriQuran-arabisch.woff2"   // 3.18.7: fuer Zeichen, die UthmanicHafs als Kreis zeichnet
+  "./fonts/AmiriQuran-arabisch.woff2"   // 3.18.8: fuer Zeichen, die UthmanicHafs als Kreis zeichnet
 ];
 const APP_SHELL = KERN.concat(ZUSATZ);
 

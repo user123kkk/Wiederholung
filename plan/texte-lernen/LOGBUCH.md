@@ -2,6 +2,42 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Nur für den Betreiber: geprüft und abgesichert (3.18.8)
+
+**Betreiber:** „alles mit Quran/Auswendiglernen soll nur für mich sichtbar
+sein – ein Freund nutzt die Seite schon, keine Lust, dass dort etwas kommt,
+das ich noch nicht ausprobiert habe.“ Gilt **für längere Zeit**, Freigabe
+nur auf sein ausdrückliches „ja“.
+**Geprüft:** Alle Stellen aus Stufe 1–7 hängen an `texteFreigeschaltet()`
+(Neu-Knopf/Anlegen, Text-Ansicht, Neu lernen, Wiederholen, Lernen-Tab-Block,
+Probelauf-Werte, Karten-Regler, Einwilligung/Widerruf). **Eine Ausnahme
+gefunden:** die Schrift-Korrektur 3.18.6 (`tanzilSchriftMarkieren`) galt für
+alle – eine Karte mit U+06DF hätte bei anderen plötzlich anders
+ausgesehen. Jetzt nur im Probelauf. `styles.css` gegenüber 3.17.56: nur
+Zusätze, neue Klassen nur in Text-Bildschirmen.
+**Geändert:** `app.js` (`tanzilSchriftMarkieren` früh raus ohne Schalter),
+Version 3.18.8, Changelog; Prüfstand `t_nur_betreiber.js` (neu),
+`text_lib.js` (`seiteMitApp` mit `base`).
+**Test `t_nur_betreiber.js`:** normales Konto (mit Quran-Wort auf einer
+Karte) einmal gegen die veröffentlichte 3.17.56 (eigener Server auf
+`git worktree` von `a4b5677`), einmal gegen den aktuellen Stand – Lernen,
+Runde, Runde aufgedeckt, Fortschritt, Verwalten, Anlegen, Einstellungen, je
+390 und 1440 px: HTML (ohne Versionsnummer) und Pixel gleich. Pixel zählen
+ab > 24 Farbstufen Abweichung: runde Ränder schwanken zwischen Läufen um bis
+zu 12 (gemessen), echte Änderungen um Hunderte. Vor dem Messen wird die
+King-Fahd-Schrift sicher geladen (sonst zeichnete einmal die Ersatzschrift).
+4 Läufe hintereinander grün. Gegenproben: Betreiber-Konto 6 Unterschiede;
+ohne die neue Sperre 4 Unterschiede (Quran-Karte).
+**Bewusst gelassen (Urteil, Betreiber kann anders entscheiden):**
+Impressum (Amiri-Quran-Hinweis) und Datenschutzerklärung (Abschnitt Texte,
+seit 3.18.2) sind für alle lesbar. Dafür: Sie beschreiben nur, was die App
+kann und ausliefert (die Schriftdatei liegt im Offline-Speicher aller), und
+ein Rechtstext, der später fehlt, ist das größere Risiko. Dagegen: Ein
+aufmerksamer Leser könnte die Funktion dort erahnen. Keine Funktion, nichts
+zum Ausprobieren – daher belassen.
+**Nächster Schritt:** unverändert – Betreiber am Laptop: „mach weiter, bin
+auf dem laptop“ bzw. Stichwort „ladegerät“ (CLAUDE.md).
+
 ### 2026-09-30 — Stufe 7: Gesamtprüfung (Cloud) + Stichwort „ladegerät“
 
 **Geändert:**

@@ -1,3 +1,10 @@
+## 3.18.8 – 30. September 2026
+
+**Texte und Quran bleiben ganz beim Betreiber.** Auch die Schrift-Korrektur
+aus 3.18.6 gilt jetzt nur im Probelauf; alle anderen Konten sehen jeden
+Bildschirm genau wie in 3.17.56 (neuer Prüfstand-Test vergleicht es Pixel
+für Pixel mit der veröffentlichten Fassung).
+
 ## 3.18.7 – 30. September 2026
 
 **Texte im Lernen-Tab (Stufe 6, nur im Probelauf beim Betreiber).** Unter

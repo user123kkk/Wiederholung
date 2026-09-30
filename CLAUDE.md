@@ -4,7 +4,8 @@
 
 ### Stichwort „ladegerät“ (Betreiber 30.09.2026)
 
-Schreibt der Betreiber **„ladegerät“**, dann ist gemeint: Laptop hängt am
+Schreibt der Betreiber **„ladegerät“** oder **„mach weiter, bin auf dem
+laptop“** (gleichbedeutend), dann ist gemeint: Laptop hängt am
 Strom, jetzt alles prüfen und – nur wenn alles grün ist – veröffentlichen.
 Das Stichwort **ist** seine Freigabe für Regeln und Hosting. Ablauf:
 
