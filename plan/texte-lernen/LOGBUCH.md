@@ -2,6 +2,30 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stufe 5: Karten-Regler (3.18.5)
+
+**Geändert:** `app.js`: `nextReviewForStufe(stufe, faktor)` (Faktor < 1
+kürzt, mindestens 1 Tag); `gradeCard` ruft im Probelauf `reglerAntwort`
+vor der Stufenänderung und nutzt den Faktor bei „Sicher“;
+`undoLastGrade` → `reglerZurueck`; neuer Block „Karten-Regler (Stufe 5)“
+vor `gradeKnown`. Version 3.18.5, Changelog. Prüfstand:
+`t_regler_karten.js` (neu).
+**Entscheidung:** Gezählt werden Antworten auf Karten mit Stufe ≥ 7 *vor*
+der Antwort, nur in der Runde (nicht Üben). Nach 20 solchen Antworten
+Prüfung (< 85 % → −0,1, > 95 % → +0,1, Grenzen 0,5/1,0), **danach wird das
+Fenster geleert** – ohne eigenes Zählfeld (hätte eine Regeländerung
+gebraucht) wäre „20 neue Antworten seit der letzten Prüfung“ nicht
+erkennbar. Das Fenster ist damit 20 statt 50 Antworten. Rückgängig stellt
+Faktor und Fenster zurück (Faktor 1 statt „fehlt“ ist gleichbedeutend).
+Datenschutz deckt „Lernstatistik je Bereich“ schon ab (3.18.2).
+**Tests:** `t_regler_karten` grün: 70 % → 0,9, gespeichert; Stufe 8 mit
+Faktor 55 statt 61 Tage (Streuung im Test aus); Rückgängig auch der
+20. Antwort; Karte außerhalb unverändert; Gegenprobe Konto ohne
+Probelauf: kein Feld, 61 Tage. `abnahme_runde.js` **13/13 grün**.
+**Offen:** wie Stufe 4 (Laptop-Gesamtlauf, Regeln).
+**Nächster Schritt:** Schrift-Korrektur (Entscheidung A, Eintrag darüber
+folgt), danach Stufe 6.
+
 ### 2026-09-30 — Stufe 4: Wiederholen (3.18.4) + Befund Quran-Schrift
 
 **Geändert:**

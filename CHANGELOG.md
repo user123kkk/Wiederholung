@@ -1,3 +1,13 @@
+## 3.18.5 – 30. September 2026
+
+**Karten-Regler (Stufe 5, nur im Probelauf beim Betreiber).** Die App
+zählt, ob gefestigte Karten beim Wiederholen wirklich sitzen. Sitzen von
+20 solchen Antworten weniger als 85 %, kommen gefestigte Karten in diesem
+Bereich künftig etwas früher wieder (bis höchstens auf die Hälfte des
+Abstands); sitzen mehr als 95 %, wird das schrittweise wieder
+zurückgenommen. Bestehende Termine bleiben, Rückgängig nimmt auch den
+Regler zurück. Für alle anderen Konten ändert sich nichts.
+
 ## 3.18.4 – 30. September 2026
 
 **Texte wiederholen (Stufe 4, nur im Probelauf beim Betreiber).** In der

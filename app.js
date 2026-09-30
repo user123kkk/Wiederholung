@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.4";
+const APP_VERSION = "3.18.5";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -136,8 +136,10 @@ function intervalForStufe(stufe) {
    ±15 % streuen den Stapel auseinander, ohne den Rhythmus zu zerstoeren.
    Nur beim Bewerten verwendet; beim manuellen Setzen einer Stufe im Formular
    gilt bewusst das glatte Intervall, damit die Beschriftung dort stimmt. */
-function nextReviewForStufe(stufe) {
-  const tage = intervalForStufe(stufe);
+function nextReviewForStufe(stufe, faktor) {
+  /* 3.18.5 (WIEDERHOLEN.md § 6): Regler je Bereich, nur im Probelauf -
+     kuerzt den Abstand, nie unter 1 Tag. Ohne Faktor wie immer. */
+  const tage = faktor && faktor < 1 ? Math.max(1, Math.round(intervalForStufe(stufe) * faktor)) : intervalForStufe(stufe);
   const jitter = Math.round(tage * (Math.random() * 0.3 - 0.15));
   /* Der Deckel bleibt hart: sonst haette die oberste Stufe mit Streuung
      wieder bis zu 207 Tage und die Zusage "spaetestens nach einem halben
@@ -5957,9 +5959,13 @@ function gradeCard(kind) {
     };
     // B3: ab jetzt gilt die Karte als eingeführt und zählt gegen das Tageslimit
     if (istNeueKarte(card)) card.ersteBewertung = todayStr();
+    /* 3.18.5: Regler (nur Probelauf) - vor der Bewertung, damit die
+       Stufe von vorher zaehlt; Rueckgaengig stellt ihn mit zurueck. */
+    const reglerB = texteFreigeschaltet() ? bereiche.find(x => x.id === s.bereichId) : null;
+    if (reglerB) s.lastAction.prevRegler = reglerAntwort(reglerB, card.stufe, kind === "known");
     if (kind === "known") {
       card.stufe = Math.min(card.stufe + 1, MAX_STUFE);
-      card.nextReview = nextReviewForStufe(card.stufe);
+      card.nextReview = nextReviewForStufe(card.stufe, reglerB ? reglerB.abstandFaktor : undefined);
       card.maxStufe = Math.max(card.maxStufe || 0, card.stufe);
     } else if (kind === "almost") {
       card.stufe = Math.max(0, card.stufe - 1);
@@ -6060,6 +6066,39 @@ function bewertenZuFrueh() {
   const s = ui.session;
   return !!(s && s.aufgedecktUm && Date.now() - s.aufgedecktUm < BEWERTEN_SPERRE_MS);
 }
+/* ---------- 3.18.5: Karten-Regler (Stufe 5) ----------
+   WIEDERHOLEN.md § 6, nur im Probelauf (texteFreigeschaltet). Gezaehlt
+   werden Antworten auf Karten, die VOR der Antwort gefestigt waren
+   (Stufe >= 7). Nach je 20 solchen Antworten: unter 85 % sicher -> Faktor
+   - 0,1 (hoechstens bis 0,5), ueber 95 % -> + 0,1 (hoechstens 1,0). Danach
+   beginnt das Fenster neu: Ohne eigenes Zaehlfeld (Regeln) waere "20 neue
+   Antworten seit der letzten Pruefung" sonst nicht erkennbar. Bestehende
+   Faelligkeiten bleiben; der Faktor gilt ab der naechsten Bewertung. */
+const REGLER_STUFE = 7, REGLER_ANTWORTEN = 20, REGLER_UNTER = 0.85, REGLER_UEBER = 0.95;
+function reglerAntwort(b, stufeVorher, sicher) {
+  if (stufeVorher < REGLER_STUFE) return null;
+  const vorher = { bid: b.id, abstandFaktor: b.abstandFaktor, festErgebnisse: b.festErgebnisse };
+  let e = (b.festErgebnisse || "") + (sicher ? "1" : "0");
+  let f = typeof b.abstandFaktor === "number" ? b.abstandFaktor : 1;
+  if (e.length >= REGLER_ANTWORTEN) {
+    const anteil = e.split("").filter(x => x === "1").length / e.length;
+    if (anteil < REGLER_UNTER) f = Math.max(0.5, Math.round((f - 0.1) * 10) / 10);
+    else if (anteil > REGLER_UEBER) f = Math.min(1, Math.round((f + 0.1) * 10) / 10);
+    e = "";
+  }
+  b.festErgebnisse = e;
+  b.abstandFaktor = f;
+  patchDoc({ [pfadBereich(b.id) + ".festErgebnisse"]: e, [pfadBereich(b.id) + ".abstandFaktor"]: f });
+  return vorher;
+}
+function reglerZurueck(v) {
+  const b = bereiche.find(x => x.id === v.bid);
+  if (!b) return;
+  b.abstandFaktor = v.abstandFaktor;
+  b.festErgebnisse = v.festErgebnisse;
+  patchDoc({ [pfadBereich(b.id) + ".festErgebnisse"]: v.festErgebnisse || "",
+    [pfadBereich(b.id) + ".abstandFaktor"]: typeof v.abstandFaktor === "number" ? v.abstandFaktor : 1 });
+}
 function gradeKnown() { gradeCard("known"); }
 function gradeAlmost() { gradeCard("almost"); }
 function gradeUnknown() { gradeCard("unknown"); }
@@ -6077,6 +6116,7 @@ function undoLastGrade() {
     card.maxStufe = s.lastAction.prevMaxStufe;
   }
   s.queue = s.lastAction.prevQueue;
+  if (s.lastAction.prevRegler) reglerZurueck(s.lastAction.prevRegler);
   /* 3.17.6: Auch das Tagesprotokoll vergisst die Antwort. Vorher blieb sie
      gezaehlt - der Fortschritt zeigte nach jedem Rueckgaengig eine Antwort zu
      viel, und ein versehentlich bewerteter erster Tag zaehlte fuer die Serie.
