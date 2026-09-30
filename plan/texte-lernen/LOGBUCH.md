@@ -18,8 +18,13 @@ Teuer ist das **erste Setzen arabischer Zeilen in der Quran-Schrift**
   Vorwärmen läuft dann mitten in die Schritte – 237–282 ms, schlechter.
 **Stand:** `app.js` unverändert (3.18.8). Cloud-Container war grün, der
 Laptop ist unter 4× Drosselung langsamer – Grenze bleibt 200 ms.
-**Offen (Betreiber-Frage):** Weg wählen – siehe Antwort vom 30.09.
-**Nächster Schritt:** Entscheidung des Betreibers abwarten.
+Dritter Versuch (nur `document.fonts.load` früh, Betreiber): 245–307 ms,
+kein Gewinn, zurückgenommen.
+**Entscheidung Betreiber (30.09.):** Weg A – Grenze bleibt, Text-Ansicht lädt
+Zeilen nach (erst ~40, Rest beim Scrollen). Kleine Ruckler anderswo erst in
+den Runden.
+**Nächster Schritt:** Weg A bauen, dann `t_text_tempo` + Nachbar-Tests
+(`t_text_*`, `t_nur_betreiber`), dann „ladegerät“.
 
 ### 2026-09-30 — Stichwort „ladegerät“ am Laptop: erster Windows-Lauf, NICHT veröffentlicht
 

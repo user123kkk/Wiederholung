@@ -2,6 +2,21 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-09-30 — Betreiber: Reihenfolge und neuer Befund für Runde 15
+
+**Betreiber (30.09., sinngemäß):** Erst „Texte auswendig lernen“ fertig
+machen. Danach Runde 15 (Fehler und Überprüfung der ganzen App). Nach allen
+Runden: noch einmal von vorn, neuer Plan, Arbeit auf Agenten verteilt – gilt
+für Claude **und** Codex. Seine Beispiele sind keine Vorschrift und nicht der
+einzige Schwerpunkt; kleine Ruckler/Kleinigkeiten werden in den Runden mit
+erledigt, nicht vorgezogen.
+**Befund für Runde 15 (nicht jetzt bauen):** Verwalten → Karte erstellen:
+Tippt man in das Feld **Wort** (nicht Übersetzung), scrollt die Seite nach
+oben weg. Scroll-Verhalten beim Fokus prüfen (angrenzend: Übersetzung, kurze
+Viewports, iOS-Tastatur).
+**Nächster Schritt:** Texte lernen (`plan/texte-lernen/LOGBUCH.md`), dann
+Runde 15.
+
 ### 2026-09-29 — G-117: Veröffentlichungs-Batch aus sauberem main
 
 **Geändert:** `veroeffentlichen.bat:1`, `plan/werkzeuge/veroeffentlichen.ps1:1`,
