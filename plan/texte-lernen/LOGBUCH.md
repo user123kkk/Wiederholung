@@ -2,6 +2,126 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stufe 2: Anlegen, Einwilligung, Bearbeiten, Löschen (3.18.2)
+
+**Geändert:**
+- `app.js`: neuer Block „Texte anlegen, ansehen, bearbeiten“ vor
+  `renderVerwalten` (`findText`, `textZeilenVon`, `zeilenZustand`,
+  `quranLaden`/`quranLesen`/`quranAya`, `texteEinwilligungHolen`,
+  `textAnlegenStarten`/`-Pruefen`/`-Ausfuehren`, `zeileSpeichern`,
+  `zeileOriginal`, `zeileEinfuegen`, `zeileLoeschen`, `textLoeschen`,
+  `textEntfernen`, `texteWiderrufen`) und Oberfläche (`renderTexteBlock`,
+  `renderTextAnlegen`, `renderTextAnsicht`, `neuWahlSheet`,
+  `zeileEditSheet`); `renderVerwalten` (Seiten, Knopf „Neu“, Texte-Block);
+  `ui` (+`neuWahl`, `textAnlegen`, `textAnsicht`, `zeileEdit`); Overlay-
+  Listen (`renderToast`, `renderMain` ×4, `schliesseObersteEbene`,
+  `tabSchonAktiv`); Tab-Handler ×3 und `selectBereich` setzen Text-Seiten
+  zurück; Klick-Verteiler (22 neue Aktionen); `input`- und neuer
+  `change`-Listener; Nutzerdokument-Snapshot liest `texteEinwilligung`;
+  `renderEinstellungen` (Widerruf), `renderKontoLoeschen` und
+  `deleteBereich` nennen Texte. Version 3.18.2 an allen Stellen inkl. 31
+  Startbild-Links (in 3.18.0 vergessen, siehe unten).
+- `styles.css`: Block „Texte auswendig lernen (Stufe 2)“ am Ende.
+- `datenschutzerklaerung.html` Punkt 5 (Absatz „Texte auswendig lernen“,
+  Art. 9 Abs. 2 lit. a, Widerruf, Lernstatistik, Quran-Datei) und „Kurz
+  gesagt“, Stand 29.09.; `impressum.html` Abschnitt „Quran-Text“
+  (Quellenangabe laut Tanzil-Lizenz).
+- Prüfstand: `t_text_anlegen.js`, `t_text_einwilligung.js`,
+  `t_quran_fehler.js` (neu), `t_quran_datei.js` (Browser-Teil),
+  `text_lib.js` (`uid`, `ersetze` für Gegenproben).
+**Entscheidung:**
+- *Auswahl in einem Blatt:* „Neu“ zeigt drei Zeilen – Karte, Text einfügen,
+  Sure aus dem Quran – statt Karte/Text und danach noch einmal zwei Wege
+  (Hick: eine Entscheidung statt zwei). Nur mit `texteFreigeschaltet()`;
+  alle anderen sehen weiter „Karte hinzufügen“.
+- *Anlegen und Text-Ansicht als Seiten* im Verwalten-Tab (großes Textfeld,
+  lange Listen), Auswahl und Zeile-Bearbeiten als Blätter.
+- *Einwilligung* wird gefragt, sobald man einen der beiden Text-Wege wählt;
+  Schreiben ohne `await` (offline), Ablehnung nimmt sie zurück und meldet
+  sich wie jeder Schreibfehler. Satz ohne religiösen Wortlaut.
+- *Surenname* aus der Metadaten-Datei, Titel „Sure 2 ‹البقرة› · 1–10“ mit
+  Richtungs-Klammern (U+2068/2069), sonst drehte die Schreibrichtung die
+  Zahlen (am Bildschirm gesehen).
+- *Bei Suren* kein Einfügen/Löschen einzelner Ayat (Nummerierung), aber
+  Bearbeiten und „Original wiederherstellen“; beim Speichern nur Ränder
+  abschneiden, damit das Original genau getroffen wird.
+- *Neue Zeile* entsteht erst beim Speichern (vorher legte „Neue Zeile
+  danach“ sofort eine Zeile „…“ an).
+- *Schrift:* Alle 68 Zeichen des Tanzil-Textes zeichnet
+  `UthmanicHafs1Ver18.ttf` selbst (CDP `getPlatformFontsForNode`,
+  Gegenprobe: eine Ziffer fällt auf Times New Roman zurück und wird
+  gemeldet). Offen aus § 8.3 damit erledigt.
+- *Konto-Bindung* der Entwürfe (`uid` in `textAnlegen`/`zeileEdit`): heute
+  verwirft schon der Probelauf-Schalter den Entwurf in einem fremden Konto;
+  die Bindung zählt nach der Freigabe für alle (Test stellt das nach).
+**Tests:** `t_text_anlegen.js` OK (30 Quellzeilen Sure 2, Zusammen/Teilen,
+kann-ich-schon 15/15, Bearbeiten mit gleichem Lernstand, Einfügen an
+Position 2, Zeile löschen, echter Download → echtes Dateifeld: gleicher
+Wortlaut und Stand, neue Nummern, Text löschen ohne Reste, Konto ohne
+Probelauf sieht nichts). `t_text_einwilligung.js` OK; Gegenprobe ohne
+Konto-Bindung: Entwurf in B sichtbar (rot wie erwartet).
+`t_quran_datei.js` OK: Sure 1 (7) und Sure 2 (286) wortgleich, 2:282 mit
+1208 Zeichen ungeteilt, offline liefert der Service Worker beide Dateien.
+`t_quran_fehler.js` OK (2 Ladeversuche); Gegenprobe ohne Sperre: 484
+Versuche. `t_text_felder`, `t_text_ausschluss` weiter OK. Gesamtlauf:
+nächster Eintrag.
+**Gegenprüfung:** gelesen: `git diff app.js` ohne Kommentare (alle neuen
+Funktionen, Listener, Overlay-Listen), Bildschirmfotos (Verwalten, Auswahl,
+Einwilligung, Sure-Seite, Text-Ansicht, Zeile). Gefunden und behoben vor
+dem Commit: (1) **Endlosschleife**: scheiterte das Laden bei offener
+Sure-Ansicht, lud jedes Neuzeichnen erneut (LEHREN § 6.7) – jetzt nur
+auf Knopfdruck; (2) „Original wiederherstellen“ hätte Leerraum
+zusammengefasst (im Tanzil-Text heute ohne Folgen, geprüft: keine
+doppelten oder besonderen Leerzeichen); (3) Blatt „Neue Zeile“ ohne
+Konto-Kennung wurde sofort verworfen (Test fand es); (4) verdrehter Titel;
+(5) „Von/Bis Aya“ nicht auf einer Höhe (`.field + .field`).
+**Korrektur zu 3.18.0:** Die 31 Startbild-Links standen noch auf
+`?v=3.17.56`; `t_boot_geometrie.js` verlangt die aktuelle Version. Gefunden
+hat es die parallele Runde-15-Session, weil ich nur eine Auswahl der Tests
+hatte laufen lassen. In 3.18.2 behoben; LEHREN § 15.
+**Offen:**
+- **Betreiber:** Regeln (aus 3.18.0) vor dem Hosting veröffentlichen.
+- Datenschutzerklärung: Rechtsprüfung durch eine echte Person (wie J1/F5).
+- Echtes iPhone: Darstellung der Sure, Tastatur über dem großen Textfeld.
+**Nächster Schritt:** siehe Eintrag „Pause“ direkt darunter (gehört zeitlich
+nach diesem Eintrag, steht wegen des Zusammenhangs hier).
+
+### 2026-09-30 — Pause auf Betreiber-Wunsch („mach später, wenn ich Laptop lade“)
+
+**Geändert:** `plan/texte-lernen/entwurf-stufe3/` (Entwurf Stufe 3, noch
+**nicht** in `app.js`: `s3_block.js` Logik, `s3_render.js` Sitzung,
+`s3.css`, `ersetze.js` Hilfsskript für Ersetzungen mit CRLF).
+**Stand:** Stufe 2 (3.18.2) ist in `app.js`, `styles.css`, `index.html`,
+`sw.js`, `CHANGELOG.md`, Datenschutz, Impressum fertig und **lokal, nicht
+committet**. Alle Text-Tests grün (`t_text_anlegen`, `t_text_einwilligung`,
+`t_text_felder`, `t_text_ausschluss`, `t_quran_datei`, `t_quran_fehler`).
+Gesamtlauf `alle_pruefen.js` zweimal unterbrochen (Internet/Session weg,
+dann Pause): 25 bzw. 37 von 111 Tests liefen; rot nur `t_bestand_tempo.js`
+(200 ms statt ≤ 100 ms) – gemessen im **Akkubetrieb bei 22 %**, bekannte
+Messbedingung (LEHREN § 5.3), noch nicht bewertet.
+**Entscheidung:** Kein Commit ohne vollständigen Gesamtlauf (Lehre aus
+3.18.0). Deshalb wartet 3.18.2 lokal.
+**Offen:** Betreiber veröffentlicht Regeln aus 3.18.0 (unverändert offen).
+Parallele Runde-15-Session hat 3.18.1 reserviert; vor dem Commit `git
+fetch`, bei neuem `origin/main` rebasen und Version über dessen Nummer
+setzen (alle Stellen inkl. 31 Startbild-Links).
+**Nächster Schritt (bei „los weiter“, Laptop am Ladegerät):**
+1. Server: `py -3 -m http.server 8199 --bind 127.0.0.1` im Repo.
+2. `PRUEF_PORT=8199`, `CHROMIUM=C:\Program Files\Google\Chrome\Application\chrome.exe`,
+   `node plan/werkzeuge/pruefstand/alle_pruefen.js --fortsetzen`.
+3. `t_bestand_tempo.js` einzeln am Ladegerät; bei Rot gegen `a828371`
+   (3.18.0) und `a4b5677` (3.17.56) unter gleichen Bedingungen vergleichen.
+4. Alles grün → Logbuch-Tests ergänzen, Commit 3.18.2, Push.
+5. Stufe 3: Entwurf aus `entwurf-stufe3/` einbauen – dazu Protokollart
+   „t“ in `normVerlauf`, `verlaufZusammen`, `persistVerlauf` (Art-Listen
+   `["w","n","u"]` → `+ "t"`) und `tagGelernt` (w+n+t); `imModus` um
+   `ui.textLernen`, Knopf „Neu lernen“ in der Text-Ansicht, Klick-Fälle
+   (`text-lernen-*`, `text-aufdecken`, `text-konnte`, `text-am-stueck`,
+   `text-zeile-hakt`, `text-hakt-weiter`), `ui.textLernen` mit uid-Bindung,
+   Auftrag als `<h1>`. Tests `t_text_neu.js`, `t_anfangsbuchstaben.js`
+   (Fixture aus `fixtures/quran-stellen.json`), Kontrast des gedimmten
+   Knopfs prüfen.
+
 ### 2026-09-29 — Stufe 1: Daten, Regeln, Schalter, Ausschluss (3.18.0)
 
 **Geändert:**

@@ -1623,6 +1623,17 @@ eingefügten Regex per `git diff | grep '\\'` gegenlesen (§ 3.3, § 5.3).
 Außerdem wandelte `sed -i` unter Git-Bash CRLF-Dateien in LF um – für Git
 harmlos (autocrlf), aber Werkzeuge, die Bytes vergleichen, sehen es.
 
+30.09.2026, Texte Stufe 1/2, eigene Fehler: (1) 3.18.0 zählte die 31
+Startbild-Links nicht mit; `t_boot_geometrie.js` verlangt sie, lief aber
+nicht, weil nur eine Auswahl der Tests lief. Regel wie § 15 (27.09.):
+vor jeder Version den **ganzen** Prüfstand (`alle_pruefen.js`), nicht eine
+Liste. (2) Eine offene Ansicht rief bei jedem Neuzeichnen ein Laden auf,
+das nach einem Fehler nicht gesperrt war – 484 Versuche in Sekunden. Vor dem
+Commit in der Gegenprüfung gefunden. Regel § 6.7 gilt auch für Aufrufe aus
+`render()`: ein Fehlerzustand muss den nächsten Versuch sperren. (3) Die
+Backslash-Regel von oben galt auch für `bash`-Heredocs mit Testcode – beim
+selben Arbeitsgang zweimal wieder passiert; Write-Werkzeug benutzen.
+
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 
 28.09.2026, bis 3.17.49, G-099: Schneller kurzer Wisch links wechselnd ohne

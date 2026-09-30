@@ -1,0 +1,34 @@
+
+/* ---------- 3.18.3: Text-Sitzung, Neu lernen (Stufe 3) ----------
+   Wie die Runde (3.17.29): Die Sitzung passt genau in den Bildschirm, der
+   Text scrollt in seiner Buehne, die Knoepfe stehen unten fest. Jeder
+   Schritt tauscht nur Beschriftungen, nie die Lage (LEHREN § 6.1). */
+.view--modus:has(> .text-buehne) { height: 100svh; min-height: 0; overflow: hidden; }
+html.ref-hoehe .view--modus:has(> .text-buehne) { height: var(--ref-h); }
+.text-buehne {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch; padding: var(--space-4) 0;
+}
+.text-buehne__titel { font-size: 1.3rem; margin: var(--space-6) 0 var(--space-2); }
+.text-buehne__auftrag { font-size: 1rem; font-weight: 600; color: var(--text-2); margin: 0 0 var(--space-4); }
+.text-buehne__nr { font-size: 0.85rem; color: var(--text-2); margin: var(--space-4) 0 var(--space-1); }
+.text-buehne__zeile { margin: 0 0 var(--space-3); font-size: 1.35rem; line-height: 1.9; overflow-wrap: anywhere; }
+.text-buehne__zeile.arabic { font-size: calc(1.6rem * var(--arab-scale, 1)); line-height: 2.1; }
+.text-buehne__zeile--hinweis { color: var(--text-2); font-size: 1rem; }
+.text-buehne__zeile--hinweis.arabic { font-size: calc(1.15rem * var(--arab-scale, 1)); }
+.text-buehne__zeile--verdeckt { color: var(--text-2); letter-spacing: 0.3em; }
+.text-buehne__wahl {
+  display: grid; grid-template-columns: 2.2em 1fr; gap: var(--space-3); width: 100%; text-align: start;
+  background: transparent; border: 1px solid var(--border); border-radius: var(--r-md);
+  padding: var(--space-2) var(--space-3); margin-bottom: var(--space-2); min-height: 44px; color: inherit;
+  box-shadow: none; font-weight: inherit;
+}
+.text-buehne__wahl.aktiv { border-color: var(--text-1); background: var(--surface-raised); }
+.text-buehne__wahl .text-buehne__zeile { margin: 0; font-size: 1.1rem; }
+.text-knoepfe {
+  flex: none; display: flex; gap: var(--space-3);
+  padding: var(--space-3) 0 calc(var(--sab) + var(--space-5));
+  min-height: calc(var(--ctrl-lg) + var(--space-3) + var(--space-5));
+}
+.text-knoepfe > button { flex: 1 1 0; min-height: var(--ctrl-lg); }
+button.gedimmt { opacity: 0.45; }
