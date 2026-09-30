@@ -64,6 +64,22 @@ const lang = fest(12, [6]);
 const ab = L.abschnitteBilden(lang, [...Array(12).keys()]);
 pruefe(JSON.stringify(ab) === JSON.stringify([[0, 1, 2, 3, 4], [5], [6], [7, 8, 9, 10, 11]]), 'Abschnitte: ' + JSON.stringify(ab));
 
+// Kontrollfrage (WIEDERHOLEN.md § 7): etwa jeder zehnte Abschnitt, drei
+// verschiedene Woerter aus demselben Text, das richtige dabei.
+let gefragt = 0;
+for (let i = 0; i < 2000; i++) if (L.kontrollfrageFaellig('id' + i, '2026-10-01')) gefragt++;
+pruefe(gefragt > 140 && gefragt < 260, 'Kontrollfrage bei ' + gefragt + ' von 2000 statt etwa 200');
+const kz = ['alpha beta gamma', 'delta epsilon', 'zeta eta'].map((w, i) => ({ id: 'k' + i, wort: w }));
+const k = L.kontrollWoerter(kz, kz[1], '2026-10-01');
+pruefe(k && k.richtig === 'delta' && k.woerter.length === 3 && new Set(k.woerter).size === 3 && k.woerter.includes('delta'), 'Kontrollwoerter: ' + JSON.stringify(k));
+pruefe(L.kontrollWoerter([{ id: 'a', wort: 'eins zwei' }], { id: 'a', wort: 'eins zwei' }, '2026-10-01') === null, 'Kontrollfrage trotz weniger als 3 Woertern');
+
+// Tagesmenge (§ 5): 10 s je Zeile plus 1 s je 10 Zeichen
+pruefe(L.zeileSekunden({ wort: 'x'.repeat(50) }) === 15, 'Zeit je Zeile: ' + L.zeileSekunden({ wort: 'x'.repeat(50) }));
+const viel = Array.from({ length: 120 }, (_, i) => ({ id: 'v' + i, wort: 'x'.repeat(40), stufe: 1, ersteBewertung: '2026-09-01', nextReview: '2026-10-01' }));
+const arbeit = L.textHeuteArbeit(viel, { kreisTage: 7 }, '2026-10-01');
+pruefe(arbeit.sekunden > 20 * 60, 'Tagesmenge: 120 frische Zeilen nur ' + arbeit.sekunden + ' s');
+
 if (gegenprobe) {
   console.log(fehler.length ? 'Gegenprobe wie erwartet rot (' + fehler[0] + ')' : 'FEHLER Gegenprobe: keine Befunde');
   process.exitCode = fehler.length ? 0 : 1;

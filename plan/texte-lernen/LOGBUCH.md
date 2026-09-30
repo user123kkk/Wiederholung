@@ -2,6 +2,67 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stufe 4: Wiederholen – Zustände, Kreis, Nachbarn, Tagesmenge, Kontrollfrage (3.18.5)
+
+**Geändert:**
+- `app.js`: Block „Wiederholen – Rechenlogik“ (`zeileFrischFaellig`,
+  `abschnitteBilden`, `kreisGroesse`, `kreisRestHeute`, `kreisStueck`,
+  `kreisWeiter`, `kreisNachstellen`, `frischBloecke`, `zeileNachAntwort`,
+  `zeileSekunden`, `textHeuteArbeit`, `kontrollfrageFaellig`,
+  `kontrollWoerter`), Block „Wiederholen – Sitzung“
+  (`wdhAufgabenBauen`, `textWiederholenStarten`, `wdhAufgabeBeginnen`,
+  `wdhFrageWaehlen`, `wdhAufdecken`, `wdhAntwort`, `wdhHaktWeiter`,
+  `wdhSpeichern`, `wdhRueckgaengig`, `textWdhEnde`), `renderTextWdh`;
+  `normTextSet` + `portion`; Denkpause-Timer für beide Sitzungen und
+  gesperrt während offener Kontrollfrage; `renderMain` (`ui.textWdh`,
+  Konto-Bindung); Text-Ansicht: „Wiederholen · etwa N Min.“ vor „Neu
+  lernen“, über 20 Min. „Heute lieber das Gelernte halten“ + „Trotzdem neu
+  lernen“; 8 Klick-Fälle. Version 3.18.5, Changelog.
+- `styles.css`: Block „Wiederholen (Stufe 4)“.
+- Prüfstand: `text_lib.js` `logikLaden()` (echte Funktionen per
+  Quelltext), `t_text_kreis.js`, `t_text_nachbarn.js`,
+  `t_text_zustaende.js`, `t_text_wiederholen.js` (neu).
+**Entscheidung:**
+- *`portion`* (in WIEDERHOLEN.md § 10 genannt, sonst nicht beschrieben) =
+  was vom heutigen Kreis-Stück noch offen ist. Ohne das bekäme man nach
+  einem Abbruch am selben Tag ein volles zweites Stück.
+- *Abschnitt* endet an einer Lücke (nicht feste Zeile), nach 5 Zeilen oder
+  an einer Zeile über 200 Zeichen (die steht allein) – „kürzer, wenn eine
+  Zeile länger als 200 Zeichen ist“.
+- *Kreis-Stück* wird auf ganze Abschnitte aufgerundet (Plan); bei wenigen
+  festen Zeilen kann ein Tag mehr als `ceil(fest/kreisTage)` bringen, der
+  Kreis ist dann früher durch – gewollt.
+- *Nachbarn* nur, wenn sie gelernt sind (nie eine neue Zeile zeigen).
+- *Kontrollfrage* über eine Prüfsumme aus Position und Tag (etwa jede
+  zehnte, gemessen 7–13 %), damit sie beim Neuzeichnen stabil bleibt; falsch
+  → erste Zeile zählt als gehakt; ohne 3 verschiedene Wörter keine Frage.
+- *Protokoll*: jede bewertete Zeile einmal „t“, Nachbarn nicht.
+- *Übergreifende Reihenfolge* mehrerer Texte (ältester zuerst) kommt mit dem
+  Lernen-Tab in Stufe 6; hier startet man je Text.
+**Tests:** `t_text_kreis.js` OK (30 Zeilen/7 Tage = 5 je Tag, 6 Tage je
+einmal, Pause ohne Rückstand, Rest am selben Tag, Nachstellen 80 %→5,
+97 %→9, Grenzen, Abschnitte, Kontrollfrage-Häufigkeit und Wörter,
+Tagesmenge); Gegenprobe (floor statt ceil) rot. `t_text_nachbarn.js` OK
+(11–13 mit 9–10 grau, 11–15, getrennte Blöcke, neuer Nachbar, Textanfang);
+Gegenprobe ohne Zusammenlegen rot. `t_text_zustaende.js` OK (alle
+Übergänge § 2); Gegenprobe ohne Rückfallzähler rot.
+`t_text_wiederholen.js` OK (Reihenfolge der Knöpfe, erzwungene
+Kontrollfrage, Kreis 1–5 → kreisPos 6/portion 0/„11111“/t = 5, Block 9–11
+mit Hinweis 7–8, 12 bleibt verborgen, Hakt nur an bewerteten Zeilen,
+10 wird fest, 11 frisch 0, Nachbar unverändert, Rückgängig, Ende ohne
+weitere Arbeit, feste Zeile gehakt → frisch, Rückfall + 1, Kreis weiter).
+Regressionen: nächster Eintrag bzw. Nachholliste.
+**Gegenprüfung:** gelesen: beide neuen Blöcke, Einbaustellen, Fotos
+(Ansicht, Frage, nach falscher Antwort, Block verdeckt/offen). Gefunden:
+Testhilfe für die Kontrollfrage lief im Seiten- statt im Modulbereich
+(wäre an einem Tag mit Frage abgestürzt) → über `zusatz`; die Frage wird
+jetzt im Test erzwungen, damit der Weg jedes Mal läuft.
+**Offen:** Mehrgeräte-Test mit echtem SDK gegen den Emulator
+(WIEDERHOLEN.md § 9) – Nachholliste am Ladegerät. Push wartet auf
+Großplan-Runde 15.
+**Nächster Schritt:** Stufe 5 (Karten-Regler, WIEDERHOLEN.md § 6,
+`t_regler_karten.js`).
+
 ### 2026-09-30 — Stufe 3: Neu lernen, Anfangsbuchstaben, Denkpause (3.18.4)
 
 **Geändert:**

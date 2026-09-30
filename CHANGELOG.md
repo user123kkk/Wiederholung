@@ -1,3 +1,17 @@
+## 3.18.5 – 30. September 2026
+
+**Texte wiederholen (Stufe 4, nur im Probelauf beim Betreiber).** Jede
+Zeile ist neu, frisch oder fest. Frische Zeilen kommen jeden Tag, bis sie
+sieben Tage am Stück saßen; dann sind sie fest. Feste Zeilen kommen im
+Kreis: jeden Tag das nächste Stück, der Reihe nach, bis der Text durch ist,
+dann von vorn. Wer Tage verpasst, bekommt keinen Rückstand – der Kreis
+wartet. Hakt es oft, wird der Kreis kürzer, sitzt fast alles, länger.
+Eine frische Zeile wird immer mit der Zeile davor und danach aufgesagt.
+Etwa jedes zehnte Stück fragt vorher kurz „Wie geht es weiter?“. Sind
+heute mehr als 20 Minuten Wiederholung fällig, schlägt die App vor, heute
+nichts Neues zu lernen. Rückgängig ist für den letzten Abschnitt möglich.
+Für Karten ändert sich nichts.
+
 ## 3.18.4 – 30. September 2026
 
 **Texte neu lernen (Stufe 3, nur im Probelauf beim Betreiber).** In der

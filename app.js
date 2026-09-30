@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.4";
+const APP_VERSION = "3.18.5";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -656,7 +656,9 @@ function normTextSet(s) {
     kreisTage: Number.isInteger(s.kreisTage) ? Math.min(KREIS_TAGE_MAX, Math.max(KREIS_TAGE_MIN, s.kreisTage)) : KREIS_TAGE_START,
     kreisPos: typeof s.kreisPos === "string" && s.kreisPos ? s.kreisPos : null,
     kreisTag: typeof s.kreisTag === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s.kreisTag) ? s.kreisTag : null,
-    festErgebnisse: normErgebnisse(s.festErgebnisse)
+    festErgebnisse: normErgebnisse(s.festErgebnisse),
+    /* 3.18.5: was vom heutigen Kreis-Stueck noch offen ist (am Tag kreisTag). */
+    portion: Number.isInteger(s.portion) && s.portion >= 0 ? s.portion : 0
   };
 }
 function normErgebnisse(e) {
@@ -1622,6 +1624,8 @@ let ui = {
   zeileEdit: null,
   /* 3.18.3: laufende Sitzung "Neu lernen" eines Textes (Stufe 3). */
   textLernen: null,
+  /* 3.18.5: laufende Wiederhol-Sitzung eines Textes (Stufe 4). */
+  textWdh: null,
   /* 3.3.1: Das Karten-Formular liegt jetzt in einem Blatt, nicht mehr fest
      oben auf dem Verwalten-Bildschirm. Video 1: "the settings is just
      settings and the notes editor is just a notes editor - we don't throw in
@@ -4942,7 +4946,7 @@ function selectBereich(bereichId) {
   ui.editId = null;
   ui.cardDetailId = null;
   /* 3.18.1: Texte gehoeren zu ihrem Bereich (3.18.3: auch die Sitzung). */
-  ui.textLernen = null;
+  ui.textLernen = null; ui.textWdh = null;
   ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; 
   resetFormDraft();
   ui.searchQuery = "";
@@ -8406,8 +8410,9 @@ function renderMain() {
   /* 3.18.3: Die Text-Sitzung gehoert zu dem Konto, in dem sie begann
      (LEHREN § 8.3), und nur in den Probelauf. */
   if (ui.textLernen && (ui.textLernen.uid !== (currentUser ? currentUser.uid : null) || !texteFreigeschaltet())) ui.textLernen = null;
+  if (ui.textWdh && (ui.textWdh.uid !== (currentUser ? currentUser.uid : null) || !texteFreigeschaltet())) ui.textWdh = null;
   const imModus = (ui.tab === "lernen" && !!(ui.session || ui.lernSetId) && !ui.einstellungen) ||
-    (!!ui.textLernen && !ui.einstellungen);
+    ((!!ui.textLernen || !!ui.textWdh) && !ui.einstellungen);
 
   /* Erst den Inhalt bauen. Die Modi geben ihre Leiste selbst aus, deshalb
      muss das Geruest wissen, ob es ueberhaupt eines zeichnen soll. */
@@ -8419,6 +8424,7 @@ function renderMain() {
   viewZusatz = "";
   if (ui.einstellungen) inhalt = renderEinstellungen();
   else if (ui.textLernen) inhalt = renderTextLernen();
+  else if (ui.textWdh) inhalt = renderTextWdh();
   else inhalt = ui.tab === "lernen" ? renderLernen()
               : ui.tab === "fortschritt" ? renderFortschritt()
               : renderVerwalten();
@@ -8560,7 +8566,8 @@ function renderMain() {
     imModus && sess ? (sess.queue && sess.queue[0]) + "|" + sess.revealed + "|" + (sess.extraOpen ? 1 : 0) : "",
     imModus ? (ui.lernSetId || "") : "",
     ui.textAnlegen ? "ta-" + ui.textAnlegen.weg + "-" + ui.textAnlegen.schritt : "", ui.textAnsicht || "",
-    ui.textLernen ? ui.textLernen.fokus + "|" + ui.textLernen.schritt + "|" + (ui.textLernen.aufgedeckt ? 1 : 0) : ""].join("/");
+    ui.textLernen ? ui.textLernen.fokus + "|" + ui.textLernen.schritt + "|" + (ui.textLernen.aufgedeckt ? 1 : 0) : "",
+    ui.textWdh ? ui.textWdh.nr + "|" + (ui.textWdh.schritt || "") + "|" + (ui.textWdh.aufgedeckt ? 1 : 0) : ""].join("/");
   const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
     ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
     ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : ""].join("/");
@@ -11980,9 +11987,19 @@ function renderTextAnsicht() {
   html += textSeitenKopf(t.name, "text-schliessen");
   html += '<p class="hint">' + (t.quelle === "tanzil" ? mz(zeilen.length, "Aya", "Ayat") : mz(zeilen.length, "Zeile", "Zeilen")) +
     ' · ' + n.neu + ' neu · ' + n.frisch + ' frisch · ' + n.fest + ' fest</p>';
+  /* 3.18.5: zuerst Wiederholen (Kreis + frische Bloecke), dann Neues
+     (WIEDERHOLEN.md § 4). Ueber 20 Minuten Wiederholarbeit wird Neues nicht
+     angeboten, bleibt aber moeglich (§ 5). */
+  const arbeit = textHeuteArbeit(zeilen, t, todayStr());
+  const offen = arbeit.kreis.length + arbeit.bloecke.length;
+  if (offen) html += '<button class="lg full text-wiederholen" data-action="text-wiederholen" data-id="' + esc(t.id) + '">' +
+    'Wiederholen · etwa ' + Math.max(1, Math.round(arbeit.sekunden / 60)) + ' Min.</button>';
   /* 3.18.3: Neu lernen (Stufe 3) - ab der ersten neuen Zeile. */
   const erste = naechsteNeueZeile(b, t, null);
-  if (erste) html += '<button class="lg full text-neu-lernen" data-action="text-lernen" data-id="' + esc(t.id) + '">' +
+  if (erste && arbeit.sekunden > TAGESZEIT_HALTEN_S) {
+    html += '<p class="hint">Heute lieber das Gelernte halten.</p>' +
+      '<button class="ghost" data-action="text-lernen" data-id="' + esc(t.id) + '">Trotzdem neu lernen</button>';
+  } else if (erste) html += '<button class="' + (offen ? 'secondary ' : '') + 'lg full text-neu-lernen" data-action="text-lernen" data-id="' + esc(t.id) + '">' +
     'Neu lernen · ' + zeilenWort(t) + ' ' + zeilenNummer(t, zeilen.indexOf(erste)) + '</button>';
   html += '<div class="liste text-zeilen">';
   zeilen.forEach((z, i) => {
@@ -12105,6 +12122,7 @@ function amStueckZeilen(b, t, tl) {
 }
 
 function textLernenStarten(tid) {
+  if (ui.textWdh) { if (denkpauseUhr) { clearTimeout(denkpauseUhr); denkpauseUhr = null; } ui.textWdh = null; }
   const b = currentBereich(), t = findText(b, tid);
   if (!t || !texteFreigeschaltet()) return;
   const z = naechsteNeueZeile(b, t, null);
@@ -12126,8 +12144,10 @@ function denkpauseStarten(tl, zeilen) {
   tl.frei = false;
   denkpauseUhr = setTimeout(() => {
     denkpauseUhr = null;
-    if (ui.textLernen !== tl) return;
+    if (ui.textLernen !== tl && ui.textWdh !== tl) return;
     tl.frei = true;
+    /* Waehrend die Kontrollfrage offen ist, bleibt "Aufdecken" gesperrt. */
+    if (tl.frage && tl.frage.gewaehlt === null) return;
     const k = document.querySelector('[data-action="text-aufdecken"]');
     if (k) { k.classList.remove("gedimmt"); k.removeAttribute("aria-disabled"); }
   }, ms);
@@ -12312,6 +12332,431 @@ function renderTextLernen() {
       knoepfe = !tl.aufgedeckt ? aufdecken
         : '<button class="secondary lg full" data-action="text-konnte" data-id="nein">Noch nicht</button>' +
           '<button class="lg full" data-action="text-konnte" data-id="ja">Konnte ich</button>';
+    }
+  }
+  html += '</div>';
+  html += '<div class="text-knoepfe">' + knoepfe + '</div>';
+  return html;
+}
+
+/* ---------- 3.18.5: Wiederholen - Rechenlogik (Stufe 4) ----------
+   plan/texte-lernen/WIEDERHOLEN.md § 1-5. Reine Funktionen ohne Oberflaeche
+   und ohne Speichern, damit t_text_kreis/t_text_nachbarn/t_text_zustaende
+   sie einzeln pruefen koennen.
+
+   Zeilen kommen immer in Textreihenfolge (textZeilenVon). Zustaende:
+   neu (ersteBewertung null), frisch (Stufe 0-6), fest (Stufe 7). */
+const ABSCHNITT_MAX = 5;            // § 4: bis zu 5 Zeilen am Stueck
+const ABSCHNITT_LANG = 200;         // § 4: eine laengere Zeile steht allein
+const NACHSTELLEN_MIN_ANTWORTEN = 20;
+const TAGESZEIT_HALTEN_S = 20 * 60; // § 5: ueber 20 Minuten -> heute halten
+
+/* § 2: faellig ist eine frische Zeile, deren Tag gekommen ist. Feste Zeilen
+   entscheidet der Kreis, nicht nextReview. */
+function zeileFrischFaellig(z, heute) {
+  return zeilenZustand(z) === "frisch" && z.nextReview <= heute;
+}
+
+/* § 4: Abschnitte aus aufeinanderfolgenden Zeilen einer Liste von Indizes
+   (in Textreihenfolge). Eine Luecke im Text beendet den Abschnitt. */
+function abschnitteBilden(zeilen, indizes) {
+  const out = [];
+  let akt = [];
+  for (const i of indizes) {
+    const lang = zeilen[i].wort.length > ABSCHNITT_LANG;
+    const luecke = akt.length && i !== akt[akt.length - 1] + 1;
+    if (akt.length && (luecke || lang || akt.length >= ABSCHNITT_MAX || zeilen[akt[0]].wort.length > ABSCHNITT_LANG)) {
+      out.push(akt); akt = [];
+    }
+    akt.push(i);
+  }
+  if (akt.length) out.push(akt);
+  return out;
+}
+
+/* § 3: das heutige Kreis-Stueck. Ab kreisPos die naechsten ceil(fest/kreisTage)
+   festen Zeilen (an diesem Tag schon erledigte abgezogen: portion), am
+   Textende weiter am Anfang, aufgerundet auf ganze Abschnitte.
+   Ergebnis: Liste von Abschnitten (Listen von Indizes). */
+function kreisGroesse(anzahlFest, kreisTage) {
+  return anzahlFest ? Math.ceil(anzahlFest / Math.max(1, kreisTage)) : 0;
+}
+function kreisRestHeute(t, anzahlFest, heute) {
+  const voll = kreisGroesse(anzahlFest, t.kreisTage);
+  return t.kreisTag === heute ? Math.max(0, Number.isInteger(t.portion) ? t.portion : 0) : voll;
+}
+function kreisStueck(zeilen, t, heute) {
+  const fest = [];
+  zeilen.forEach((z, i) => { if (zeilenZustand(z) === "fest") fest.push(i); });
+  if (!fest.length) return [];
+  let rest = kreisRestHeute(t, fest.length, heute);
+  if (rest <= 0) return [];
+  let start = fest.findIndex(i => zeilen[i].id === t.kreisPos);
+  if (start === -1) start = 0;
+  /* Der Reihe nach ab start, hoechstens einmal rundherum. */
+  const reihe = [];
+  for (let k = 0; k < fest.length; k++) reihe.push(fest[(start + k) % fest.length]);
+  /* Am Textende beginnt ein neuer Abschnitt (reihe springt zurueck). */
+  const teile = [];
+  let lauf = [];
+  for (const i of reihe) { if (lauf.length && i < lauf[lauf.length - 1]) { teile.push(lauf); lauf = []; } lauf.push(i); }
+  if (lauf.length) teile.push(lauf);
+  const abschnitte = teile.flatMap(teil => abschnitteBilden(zeilen, teil));
+  const out = [];
+  for (const a of abschnitte) {
+    if (rest <= 0) break;
+    out.push(a);
+    rest -= a.length;
+  }
+  return out;
+}
+/* Nach einem erledigten Abschnitt: die naechste feste Zeile hinter ihm (am
+   Ende die erste). Ueberlaeuft der Kreis das Textende, meldet umlauf = true. */
+function kreisWeiter(zeilen, abschnitt) {
+  const letzte = abschnitt[abschnitt.length - 1];
+  const fest = [];
+  zeilen.forEach((z, i) => { if (zeilenZustand(z) === "fest") fest.push(i); });
+  const danach = fest.find(i => i > letzte);
+  if (danach !== undefined) return { pos: zeilen[danach].id, umlauf: false };
+  return { pos: fest.length ? zeilen[fest[0]].id : null, umlauf: true };
+}
+/* § 3 Nachstellen, jedes Mal wenn der Kreis ueber das Textende laeuft. */
+function kreisNachstellen(kreisTage, ergebnisse) {
+  const e = String(ergebnisse || "");
+  if (e.length < NACHSTELLEN_MIN_ANTWORTEN) return kreisTage;
+  const anteil = e.split("").filter(x => x === "1").length / e.length;
+  if (anteil < 0.85) return Math.max(KREIS_TAGE_MIN, Math.floor(kreisTage * 0.75));
+  if (anteil > 0.95) return Math.min(KREIS_TAGE_MAX, Math.ceil(kreisTage * 1.25));
+  return kreisTage;
+}
+
+/* § 4: Bloecke fuer frische Zeilen. Eine frische Zeile i wird mit ihren
+   Nachbarn i-1 und i+1 aufgesagt (nur gelernte, nie neue), darueber grau die
+   zwei Zeilen vor dem Block. Liegen frische Zeilen nah (Abstand <= 2),
+   werden ihre Bloecke zusammengelegt. Bewertet werden nur die frischen. */
+function frischBloecke(zeilen, heute) {
+  const gelernt = i => i >= 0 && i < zeilen.length && zeilenZustand(zeilen[i]) !== "neu";
+  const faellig = [];
+  zeilen.forEach((z, i) => { if (zeileFrischFaellig(z, heute)) faellig.push(i); });
+  const bloecke = [];
+  for (const i of faellig) {
+    const letzter = bloecke[bloecke.length - 1];
+    if (letzter && i - letzter.frisch[letzter.frisch.length - 1] <= 2) letzter.frisch.push(i);
+    else bloecke.push({ frisch: [i] });
+  }
+  return bloecke.map(b => {
+    const von = gelernt(b.frisch[0] - 1) ? b.frisch[0] - 1 : b.frisch[0];
+    const bis = gelernt(b.frisch[b.frisch.length - 1] + 1) ? b.frisch[b.frisch.length - 1] + 1 : b.frisch[b.frisch.length - 1];
+    const zeigen = [];
+    for (let i = von; i <= bis; i++) zeigen.push(i);
+    const hinweis = [von - 2, von - 1].filter(i => i >= 0);
+    return { zeigen: zeigen, frisch: b.frisch, hinweis: hinweis };
+  });
+}
+
+/* § 2: Uebergaenge. Gibt die neuen Felder zurueck (nichts wird veraendert). */
+function zeileNachAntwort(z, sicher, heute, morgen) {
+  const zustand = zeilenZustand(z);
+  if (zustand === "fest") {
+    if (sicher) return null;                                   // bleibt fest
+    return { stufe: 0, nextReview: morgen, rueckfaelle: (z.rueckfaelle || 0) + 1, maxStufe: z.maxStufe || 0 };
+  }
+  if (!sicher) return { stufe: 0, nextReview: morgen, rueckfaelle: z.rueckfaelle || 0, maxStufe: z.maxStufe || 0 };
+  const k = Math.min(TEXT_FEST_STUFE, (z.stufe || 0) + 1);
+  return { stufe: k, nextReview: k >= TEXT_FEST_STUFE ? TEXT_FEST_DATUM : morgen,
+    rueckfaelle: z.rueckfaelle || 0, maxStufe: Math.max(z.maxStufe || 0, k) };
+}
+
+/* § 5: geschaetzte Zeit: 10 s je Zeile plus 1 s je 10 Zeichen. */
+function zeileSekunden(z) { return 10 + Math.ceil(z.wort.length / 10); }
+function textHeuteArbeit(zeilen, t, heute) {
+  const kreis = kreisStueck(zeilen, t, heute);
+  const bloecke = frischBloecke(zeilen, heute);
+  let s = 0;
+  for (const a of kreis) for (const i of a) s += zeileSekunden(zeilen[i]);
+  for (const b of bloecke) for (const i of b.zeigen) s += zeileSekunden(zeilen[i]);
+  return { kreis: kreis, bloecke: bloecke, sekunden: s };
+}
+
+/* § 7: Kontrollfrage - drei Woerter aus demselben Text, das richtige ist das
+   erste Wort der ersten verdeckten Zeile. Die zwei anderen: aehnliche Laenge,
+   nach vergleichsWort verschieden. Weniger als 3 verschiedene -> keine Frage.
+   Welche Abschnitte gefragt werden: etwa jeder zehnte, fest aus Position
+   und Tag (so bleibt die Frage beim Neuzeichnen dieselbe). */
+function kontrollfrageFaellig(posId, heute) {
+  let h = 0;
+  const s = String(posId) + "|" + heute;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h % 10 === 0;
+}
+function kontrollWoerter(zeilen, richtigeZeile, heute) {
+  const erstes = w => zeileWoerter(w)[0] || "";
+  const richtig = erstes(richtigeZeile.wort);
+  if (!richtig) return null;
+  const schon = new Set([vergleichsWort(richtig)]);
+  const kandidaten = [];
+  for (const z of zeilen) for (const w of zeileWoerter(z.wort)) {
+    const v = vergleichsWort(w);
+    if (!v || schon.has(v)) continue;
+    schon.add(v);
+    kandidaten.push(w);
+  }
+  if (kandidaten.length < 2) return null;
+  kandidaten.sort((a, b) => Math.abs(a.length - richtig.length) - Math.abs(b.length - richtig.length) || (a < b ? -1 : 1));
+  const falsch = kandidaten.slice(0, 2);
+  /* Reihenfolge fest aus Tag und Wort, damit die richtige nicht immer vorn steht. */
+  const alle = [richtig].concat(falsch);
+  let h = 0;
+  for (const c of heute + richtig) h = (h * 33 + c.charCodeAt(0)) >>> 0;
+  const r = h % 3;
+  return { richtig: richtig, woerter: alle.slice(r).concat(alle.slice(0, r)) };
+}
+
+/* ---------- 3.18.5: Wiederholen - Sitzung (Stufe 4) ----------
+   WIEDERHOLEN.md § 2-5, § 7. Reihenfolge je Text: zuerst das Kreis-Stueck
+   (feste Zeilen), dann die frischen Bloecke. Jede Aufgabe: Hinweiszeilen
+   grau, die Zeilen verdeckt, Denkpause, bei etwa jedem zehnten Kreis-
+   Abschnitt vorher "Wie geht es weiter?", dann Aufdecken und "Sicher" /
+   "Hakt" (Hakt: die hakenden Zeilen antippen). Gespeichert wird je Aufgabe;
+   Rueckgaengig nimmt die letzte Aufgabe samt Kreis-Feldern zurueck.
+
+   ui.textWdh = { uid, textId, aufgaben: [{ art: "kreis"|"frisch", zeigen,
+   bewerten, hinweis }], nr, aufgedeckt, aufgedecktAm, denkBis, frei,
+   frage: null | { richtig, woerter, gewaehlt }, hakt: Set, letzte, erledigt } */
+
+function wdhAufgabenBauen(b, t) {
+  const zeilen = textZeilenVon(b, t);
+  const heute = todayStr();
+  const arbeit = textHeuteArbeit(zeilen, t, heute);
+  const id = i => zeilen[i].id;
+  const aufgaben = [];
+  for (const a of arbeit.kreis) {
+    const von = a[0];
+    aufgaben.push({ art: "kreis", zeigen: a.map(id), bewerten: a.map(id),
+      hinweis: [von - 2, von - 1].filter(i => i >= 0).map(id) });
+  }
+  for (const bl of arbeit.bloecke) {
+    aufgaben.push({ art: "frisch", zeigen: bl.zeigen.map(id), bewerten: bl.frisch.map(id), hinweis: bl.hinweis.map(id) });
+  }
+  return aufgaben;
+}
+function textWiederholenStarten(tid) {
+  const b = currentBereich(), t = findText(b, tid);
+  if (!t || !texteFreigeschaltet()) return;
+  const aufgaben = wdhAufgabenBauen(b, t);
+  if (!aufgaben.length) { zeigeToast("Heute nichts zu wiederholen"); render(); return; }
+  ui.zeileEdit = null;
+  ui.textWdh = { uid: currentUser ? currentUser.uid : null, textId: t.id, aufgaben: aufgaben, nr: 0,
+    aufgedeckt: false, aufgedecktAm: 0, denkBis: 0, frei: true, frage: null, hakt: new Set(), letzte: null, erledigt: 0 };
+  wdhAufgabeBeginnen();
+  window.scrollTo(0, 0);
+  render();
+}
+function wdhAufgabe() { const w = ui.textWdh; return w && w.aufgaben[w.nr]; }
+function wdhAufgabeBeginnen() {
+  const w = ui.textWdh, a = wdhAufgabe();
+  if (!a) return;
+  const b = currentBereich(), t = findText(b, w.textId);
+  const zeilen = textZeilenVon(b, t);
+  w.aufgedeckt = false;
+  w.hakt = new Set();
+  w.frage = null;
+  if (a.art === "kreis" && kontrollfrageFaellig(a.zeigen[0], todayStr())) {
+    const k = kontrollWoerter(zeilen, textLernenZeile(b, a.zeigen[0]), todayStr());
+    if (k) w.frage = { richtig: k.richtig, woerter: k.woerter, gewaehlt: null };
+  }
+  denkpauseStarten(w, a.zeigen.map(id => textLernenZeile(b, id)).filter(Boolean));
+}
+/* Kontrollfrage: falsch -> die erste Zeile zaehlt als gehakt. Kein Timer,
+   kein Punktestand (WIEDERHOLEN.md § 7). */
+function wdhFrageWaehlen(wort) {
+  const w = ui.textWdh, a = wdhAufgabe();
+  if (!w || !w.frage || w.frage.gewaehlt !== null) return;
+  w.frage.gewaehlt = wort;
+  if (wort !== w.frage.richtig) w.hakt.add(a.zeigen[0]);
+  render();
+}
+function wdhAufdecken() {
+  const w = ui.textWdh;
+  if (!w || w.aufgedeckt || !w.frei || Date.now() < w.denkBis) return;
+  if (w.frage && w.frage.gewaehlt === null) return;
+  w.aufgedeckt = true;
+  w.aufgedecktAm = Date.now();
+  render();
+}
+function wdhZuFrueh() {
+  const w = ui.textWdh;
+  return !w || !w.aufgedeckt || Date.now() - w.aufgedecktAm < BEWERTEN_SPERRE_MS;
+}
+/* "Sicher": alle bewerteten Zeilen sicher - ausser denen, die die
+   Kontrollfrage schon als gehakt markiert hat. "Hakt": auswaehlen. */
+function wdhAntwort(sicher) {
+  const w = ui.textWdh, a = wdhAufgabe();
+  if (wdhZuFrueh() || !a || w.schritt === "hakt") return;
+  if (!sicher) {
+    if (a.bewerten.length === 1) { w.hakt.add(a.bewerten[0]); wdhSpeichern(); return; }
+    w.schritt = "hakt"; render(); return;
+  }
+  wdhSpeichern();
+}
+function wdhHaktWeiter() {
+  const w = ui.textWdh;
+  if (!w || w.schritt !== "hakt" || w.hakt.size === 0) return;
+  w.schritt = null;
+  wdhSpeichern();
+}
+function wdhSpeichern() {
+  const w = ui.textWdh, a = wdhAufgabe();
+  const b = currentBereich(), t = findText(b, w.textId);
+  if (!a || !t) { textWdhEnde(); return; }
+  const heute = todayStr(), morgen = dateInDays(1);
+  const patch = {};
+  const vorherZeilen = [];
+  const vorherText = { kreisPos: t.kreisPos, kreisTag: t.kreisTag, kreisTage: t.kreisTage, portion: t.portion, festErgebnisse: t.festErgebnisse };
+  let ergebnisse = t.festErgebnisse || "";
+  for (const id of a.bewerten) {
+    const z = textLernenZeile(b, id);
+    if (!z) continue;
+    const sicher = !w.hakt.has(id);
+    if (a.art === "kreis") ergebnisse = (ergebnisse + (sicher ? "1" : "0")).slice(-FEST_ERGEBNISSE_MAX);
+    const neu = zeileNachAntwort(z, sicher, heute, morgen);
+    if (neu) {
+      vorherZeilen.push({ id: z.id, felder: { stufe: z.stufe, nextReview: z.nextReview, rueckfaelle: z.rueckfaelle, maxStufe: z.maxStufe } });
+      Object.assign(z, neu);
+      const pfad = pfadKarte(b.id, z.id);
+      for (const [f, v] of Object.entries(neu)) patch[pfad + "." + f] = v;
+    }
+    verlaufZaehle("t");
+  }
+  const zeilen = textZeilenVon(b, t);
+  const sp = f => pfadSet(b.id, t.id) + "." + f;
+  if (a.art === "kreis") {
+    const letzterIndex = zeilen.findIndex(z => z.id === a.bewerten[a.bewerten.length - 1]);
+    const weiter = kreisWeiter(zeilen, [letzterIndex]);
+    const fest = zeilen.filter(z => zeilenZustand(z) === "fest").length;
+    const voll = kreisGroesse(fest + a.bewerten.filter(id => w.hakt.has(id)).length, t.kreisTage);
+    const bisher = t.kreisTag === heute ? (Number.isInteger(t.portion) ? t.portion : 0) : voll;
+    t.portion = Math.max(0, bisher - a.bewerten.length);
+    t.kreisTag = heute;
+    t.festErgebnisse = ergebnisse;
+    t.kreisPos = weiter.pos;
+    if (weiter.umlauf) t.kreisTage = kreisNachstellen(t.kreisTage, ergebnisse);
+    Object.assign(patch, { [sp("kreisPos")]: t.kreisPos, [sp("kreisTag")]: t.kreisTag, [sp("portion")]: t.portion,
+      [sp("festErgebnisse")]: t.festErgebnisse, [sp("kreisTage")]: t.kreisTage });
+  } else if (!t.kreisPos) {
+    /* Die erste feste Zeile eines Textes setzt den Kreis an (§ 3). */
+    const erste = zeilen.find(z => zeilenZustand(z) === "fest");
+    if (erste) { t.kreisPos = erste.id; patch[sp("kreisPos")] = t.kreisPos; }
+  }
+  patchDoc(patch);
+  w.letzte = { nr: w.nr, zeilen: vorherZeilen, text: vorherText, tag: heute, anzahl: a.bewerten.length };
+  w.erledigt++;
+  w.nr++;
+  if (w.nr < w.aufgaben.length) wdhAufgabeBeginnen();
+  verlaufSpeichernBald();
+  render();
+}
+function wdhRueckgaengig() {
+  const w = ui.textWdh;
+  if (!w || !w.letzte) return;
+  const b = currentBereich(), t = findText(b, w.textId);
+  if (!t) return;
+  const l = w.letzte, patch = {};
+  for (const x of l.zeilen) {
+    const z = textLernenZeile(b, x.id);
+    if (!z) continue;
+    Object.assign(z, x.felder);
+    for (const [f, v] of Object.entries(x.felder)) patch[pfadKarte(b.id, z.id) + "." + f] = v;
+  }
+  for (const [f, v] of Object.entries(l.text)) {
+    t[f] = v;
+    patch[pfadSet(b.id, t.id) + "." + f] = v === undefined ? null : v;
+  }
+  patchDoc(patch);
+  const e = verlauf[l.tag];
+  if (e && e.t) e.t = Math.max(0, e.t - l.anzahl);
+  verlaufDeltaMerken(l.tag, "t", -l.anzahl);
+  verlaufJetztSchreiben();
+  w.nr = l.nr;
+  w.erledigt = Math.max(0, w.erledigt - 1);
+  w.letzte = null;
+  w.schritt = null;
+  wdhAufgabeBeginnen();
+  render();
+}
+function textWdhEnde() {
+  if (denkpauseUhr) { clearTimeout(denkpauseUhr); denkpauseUhr = null; }
+  const w = ui.textWdh;
+  ui.textWdh = null;
+  if (w) ui.textAnsicht = w.textId;
+  verlaufJetztSchreiben();
+  window.scrollTo(0, 0);
+  render();
+}
+
+/* Die Wiederhol-Sitzung - derselbe Aufbau wie "Neu lernen" (Buehne, feste
+   Knopfreihe unten). */
+function renderTextWdh() {
+  const w = ui.textWdh, b = currentBereich(), t = findText(b, w.textId);
+  if (!t) return "";
+  const zeilen = textZeilenVon(b, t);
+  const nrVon = id => zeilenNummer(t, zeilen.findIndex(z => z.id === id));
+  const wortName = zeilenWort(t);
+  const rechts = w.letzte
+    ? '<button class="icon-btn" data-action="wdh-rueckgaengig" aria-label="Letzten Abschnitt rückgängig">' + ikon("rueckgaengig") + '</button>'
+    : null;
+  let html = modeBar({ zu: "wdh-zu", zuLabel: "Wiederholen beenden",
+    mitte: '<span class="modebar__titel" dir="auto">' + esc(t.name) + '</span>',
+    anteil: w.aufgaben.length ? w.nr / w.aufgaben.length : 1, rechts: rechts });
+  html += '<div class="text-buehne">';
+  let knoepfe = "";
+  const a = wdhAufgabe();
+  if (!a) {
+    const arbeit = textHeuteArbeit(zeilen, t, todayStr());
+    html += '<h1 class="text-buehne__titel">Für heute wiederholt</h1>';
+    html += '<p class="hint">' + mz(w.erledigt, "Abschnitt", "Abschnitte") + ' – ' +
+      (textZahlen(b, t).fest ? 'der Kreis macht morgen weiter.' : 'morgen kommt das Frische wieder.') + '</p>';
+    if (arbeit.kreis.length + arbeit.bloecke.length === 0 && naechsteNeueZeile(b, t, null)) {
+      knoepfe = '<button class="secondary lg full" data-action="wdh-zu">Fertig</button>' +
+        '<button class="lg full" data-action="text-lernen" data-id="' + esc(t.id) + '">Neu lernen</button>';
+    } else knoepfe = '<button class="lg full" data-action="wdh-zu">Fertig</button>';
+    return html + '</div><div class="text-knoepfe">' + knoepfe + '</div>';
+  }
+  const denk = w.frei ? "" : ' gedimmt" aria-disabled="true';
+  const auftrag = w.schritt === "hakt" ? 'Tipp an, wo es gehakt hat.'
+    : w.frage && w.frage.gewaehlt === null ? 'Wie geht es weiter?'
+    : a.art === "kreis" ? 'Aus dem Gedächtnis aufsagen.' : 'Mit den Nachbarzeilen aufsagen.';
+  html += '<h1 class="text-buehne__auftrag">' + auftrag + '</h1>';
+  for (const id of a.hinweis) { const z = textLernenZeile(b, id); if (z) html += textZeileHtml(z, "hinweis", nrVon(id), wortName); }
+  if (w.schritt === "hakt") {
+    for (const id of a.bewerten) {
+      const z = textLernenZeile(b, id); if (!z) continue;
+      const an = w.hakt.has(id);
+      html += '<button class="text-buehne__wahl' + (an ? ' aktiv' : '') + '" data-action="wdh-zeile-hakt" data-id="' + esc(id) + '" aria-pressed="' + an + '">' +
+        '<span class="text-zeile__nr">' + nrVon(id) + '</span>' + textZeileHtml(z, "offen", nrVon(id), wortName) + '</button>';
+    }
+    knoepfe = '<button class="lg full" data-action="wdh-hakt-weiter"' + (w.hakt.size ? '' : ' disabled') + '>Weiter</button>';
+  } else {
+    for (const id of a.zeigen) {
+      const z = textLernenZeile(b, id); if (!z) continue;
+      const nachbar = a.bewerten.indexOf(id) === -1;
+      html += textZeileHtml(z, w.aufgedeckt ? (nachbar ? "nachbar" : "offen") : "verdeckt", nrVon(id), wortName);
+    }
+    if (w.frage && w.frage.gewaehlt === null) {
+      html += '<div class="text-frage" role="group" aria-label="Wie geht es weiter?">';
+      for (const wort of w.frage.woerter) {
+        html += '<button class="secondary text-frage__wort" data-action="wdh-frage" data-id="' + esc(wort) + '"' + schriftAttr(wort) + '>' + esc(wort) + '</button>';
+      }
+      html += '</div>';
+    } else if (w.frage && !w.aufgedeckt) {
+      html += '<p class="hint" aria-live="polite">' + (w.frage.gewaehlt === w.frage.richtig ? 'Richtig.' : 'Richtig wäre „' + esc(w.frage.richtig) + '“ – die Zeile kommt morgen wieder.') + '</p>';
+    }
+    if (!w.aufgedeckt) {
+      const gesperrt = w.frage && w.frage.gewaehlt === null;
+      knoepfe = '<button class="lg full study-aufdecken' + (gesperrt ? ' gedimmt" aria-disabled="true' : denk) + '" data-action="text-aufdecken">Aufdecken</button>';
+    } else {
+      knoepfe = '<button class="secondary lg full" data-action="wdh-antwort" data-id="hakt">Hakt</button>' +
+        '<button class="lg full" data-action="wdh-antwort" data-id="sicher">Sicher</button>';
     }
   }
   html += '</div>';
@@ -14337,7 +14782,19 @@ document.body.addEventListener("click", e => {
     case "text-lernen": textLernenStarten(btn.dataset.id); break;
     case "text-lernen-zu": textLernenEnde(); break;
     case "text-lernen-schritt": if (ui.textLernen) textLernenSchritt(btn.dataset.id === "buchstaben" ? "buchstaben" : "lesen"); break;
-    case "text-aufdecken": textAufdecken(); break;
+    case "text-aufdecken": if (ui.textWdh) wdhAufdecken(); else textAufdecken(); break;
+    /* 3.18.5: Wiederholen (Stufe 4). */
+    case "text-wiederholen": textWiederholenStarten(btn.dataset.id); break;
+    case "wdh-zu": textWdhEnde(); break;
+    case "wdh-frage": wdhFrageWaehlen(btn.dataset.id); break;
+    case "wdh-antwort": wdhAntwort(btn.dataset.id === "sicher"); break;
+    case "wdh-zeile-hakt": {
+      const w = ui.textWdh;
+      if (w && w.schritt === "hakt") { if (w.hakt.has(btn.dataset.id)) w.hakt.delete(btn.dataset.id); else w.hakt.add(btn.dataset.id); render(); }
+      break;
+    }
+    case "wdh-hakt-weiter": wdhHaktWeiter(); break;
+    case "wdh-rueckgaengig": wdhRueckgaengig(); break;
     case "text-konnte": if (ui.textLernen) textKonnte(btn.dataset.id === "ja"); break;
     case "text-am-stueck": if (ui.textLernen) textAmStueck(btn.dataset.id === "fliessend"); break;
     case "text-zeile-hakt": {
