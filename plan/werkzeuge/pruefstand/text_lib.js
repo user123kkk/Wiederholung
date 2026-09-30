@@ -50,6 +50,24 @@ function textStore(opt = {}) {
   return store;
 }
 
+/* Stufe 4: Text t1 mit n Zeilen; zustand(i) liefert {stufe, next, erste}.
+   Kurze Testsaetze, damit Abschnitte volle 5 Zeilen haben. */
+function zeilenStore(n, zustand, opt = {}) {
+  const store = textStore(opt);
+  for (const k of Object.keys(store)) if (/\/karten\/z\d+$/.test(k)) delete store[k];
+  const ids = [];
+  for (let i = 0; i < n; i++) {
+    const id = 'z' + i, z = zustand(i); ids.push(id);
+    store['users/u1/karten/' + id] = { wort: opt.wort ? opt.wort(i) : 'Satz ' + (i + 1) + ' alpha beta', uebersetzung: '', extra: null,
+      stufe: z.stufe, nextReview: z.next, ersteBewertung: z.erste, rueckfaelle: 0, quelleId: null,
+      maxStufe: z.stufe, order: i, bereichId: 'b1', textId: 't1' };
+  }
+  const t1 = store['users/u1/bereiche/b1'].sets.t1;
+  Object.assign(t1, { cardIds: ids, nummerAb: 1, quelle: null, sure: null, kreisTage: 7, kreisPos: null, kreisTag: null, festErgebnisse: '' }, opt.set || {});
+  return store;
+}
+const FEST = { stufe: 7, next: '2099-12-31', erste: '2026-01-01' };
+
 /* Seite mit echter app.js (oder einem festen alten Stand) und Zugriff auf
    die inneren Funktionen ueber window.__PRUEF. Service Worker gesperrt,
    damit die Umleitung von app.js greift (LEHREN § 15, 26.09.). */
@@ -86,4 +104,4 @@ async function storeLesen(p) {
   return p.evaluate(() => Object.fromEntries([...window.__FB.store.entries()].map(([k, v]) => [k, JSON.parse(JSON.stringify(v))])));
 }
 
-module.exports = { BETREIBER_UID, textWort, textStore, seiteMitApp, storeLesen, appQuelle, VOR_STUFE_1, BASE };
+module.exports = { BETREIBER_UID, textWort, textStore, zeilenStore, FEST, seiteMitApp, storeLesen, appQuelle, VOR_STUFE_1, BASE };

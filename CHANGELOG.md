@@ -1,3 +1,18 @@
+## 3.18.4 – 30. September 2026
+
+**Texte wiederholen (Stufe 4, nur im Probelauf beim Betreiber).** In der
+Text-Ansicht steht „Wiederholen“, sobald etwas fällig ist. Zuerst kommt das
+heutige Stück des Kreises: Alle festen Zeilen werden der Reihe nach
+wiederholt, bis der ganze Text durch ist, dann von vorn. Danach kommen die
+frischen Zeilen, jede zusammen mit der Zeile davor und danach, zwei Zeilen
+davor stehen grau als Einstieg. „Hakt“ macht eine Zeile wieder frisch; eine
+frische Zeile, die sieben Tage hintereinander saß, wird fest. Hakt es im
+Kreis oft, kommt er schneller wieder vorbei, sitzt fast alles, langsamer.
+Verpasste Tage häufen nichts an. Ab und zu fragt die App vor dem Aufdecken
+„Wie geht es weiter?“. Ist heute schon viel fällig, rät die Text-Ansicht,
+das Gelernte zu halten. Rückgängig nimmt die letzte Bewertung samt Kreis
+zurück. Für Karten ändert sich nichts.
+
 ## 3.18.3 – 30. September 2026
 
 **Texte neu lernen (Stufe 3, nur im Probelauf beim Betreiber).** In der

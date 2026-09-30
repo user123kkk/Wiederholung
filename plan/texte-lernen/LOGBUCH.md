@@ -2,6 +2,73 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stufe 4: Wiederholen (3.18.4) + Befund Quran-Schrift
+
+**Geändert:**
+- `app.js`: Block „Wiederholen (Stufe 4)“ vor `textZeileHtml`
+  (`istFest`, `kreisAbschnitte`, `frischeBloecke`, `inAbschnitte`,
+  `textWdhPlan`, `textWdhSekunden`/`textZuVielHeute`, `kreisNachstellen`,
+  `kontrollWahl`, `textWdhStarten`/`-Stueck`/`-Antwort`/`-Bewerten`/
+  `-Rueckgaengig`, `textKontrolle`, `renderTextWdh`); `ui.kreisHeute`;
+  Text-Ansicht: „Wiederholen“ (wenn fällig), „Neu lernen“ danach
+  zweitrangig, bei > 20 min Hinweis „Heute lieber das Gelernte halten“;
+  `renderTextLernen` verzweigt bei `art: "wdh"`; 5 Klick-Fälle,
+  `text-zeile-hakt` auch im Schritt `wdhHakt`. Version 3.18.4, Changelog.
+- `styles.css`: `.text-kontrolle`.
+- Prüfstand: `t_text_kreis.js`, `t_text_nachbarn.js`,
+  `t_text_zustaende.js`, `kreis_sim.js` (Zusatz: Tag durchspielen),
+  `text_lib.js` (`zeilenStore`, `FEST`, `opt.wort`).
+- `plan/LEHREN.md` § 15: Zeile zum Schrift-Befund.
+**Entscheidung:**
+- *Tagesstück nicht auf 5er-Abschnitte aufgerundet* (Abweichung vom Wortlaut
+  WIEDERHOLEN § 3): genau `ceil(fest/kreisTage)` Zeilen, diese in Abschnitte
+  geteilt. Wörtlich wurden aus 2 Zeilen am Tag 5 und ein kleiner Text lief
+  in 2 statt 7 Tagen durch; `kreisTage` hätte seinen Sinn verloren.
+- *Abschnitt:* bis 5 aufeinanderfolgende Zeilen, eine Zeile > 200 Zeichen
+  steht allein, am Textende beginnt ein neuer Abschnitt.
+- *Heute schon erledigte Kreis-Zeilen* nur im Speicher (`ui.kreisHeute`);
+  gespeichert ist `kreisTag` = ganzes Tagesstück erledigt. Neustart am
+  selben Tag auf einem anderen Gerät → schlimmstenfalls mehr Wiederholung,
+  nie weniger. Kein neues Cloud-Feld, keine Regeländerung.
+- *Nachbarn* nur gelernte Zeilen (eine neue Zeile kann man nicht aufsagen).
+- *Nur eine zu bewertende Zeile im Stück* → „Hakt“ bewertet direkt, ohne
+  Auswahl-Schritt.
+- *Kontrollfrage* bei jedem 10. Kreis-Abschnitt (Zähler im Speicher), nur
+  wenn der Text ≥ 3 verschiedene erste Wörter hat.
+**Tests:** `t_text_kreis`, `t_text_nachbarn`, `t_text_zustaende` grün, je
+mit roter Gegenprobe (ohne Weiterrücken / ohne Zusammenlegen / Schwelle 8).
+Dazu grün: `t_text_neu`, `t_anfangsbuchstaben`, `t_text_anlegen`,
+`t_text_einwilligung`, `t_text_felder`, `t_text_ausschluss`,
+`t_quran_fehler`, `t_serie`, `t_sprung`, `t_kontrast`, `t_a11y`,
+`t_doppeltipp`. Bildschirmfotos 390/320 (Ansicht, Kontrollfrage, offen):
+Seite = Bildschirmhöhe.
+**Befund (wichtig, betrifft schon Stufe 2):** Die King-Fahd-Schrift
+`UthmanicHafs1Ver18.ttf` zeichnet U+06DF (kleine hohe runde Null, 3988× in
+2240 Ayat), U+06E3 und U+06EB als **gestrichelten Kreis ◌** (fontTools:
+gleicher Umriss 96,-210,1351,1045; Bildschirmfoto bestätigt). Beispiel
+أُو۟لَٰٓئِكَ, كَفَرُوا۟. Nur im Probelauf sichtbar. Die Prüfung aus Stufe 2
+sah nur, *welche* Schrift zeichnet (LEHREN § 15). **Nicht selbst
+behoben**, weil die Wahl der Ersatz-Glyphe die Darstellung des Wortlauts
+betrifft (CLAUDE.md Grundsatz 2) – Frage an den Betreiber:
+- A (Empfehlung): eine Tanzil-taugliche freie Quran-Schrift mitliefern
+  (z. B. Amiri Quran, OFL) nur für Tanzil-Text; Wortlaut unverändert,
+  alle Zeichen richtig. Kosten: eine Schriftdatei mehr (Größe prüfen),
+  Lizenz ins Impressum.
+- B: nur in der Anzeige U+06DF auf die Glyphe U+06E0 der King-Fahd-Schrift
+  umlenken. Klein, aber U+06E0 ist eigentlich die *rechteckige* Null – die
+  66 echten U+06E0 sähen dann gleich aus. Nicht empfohlen.
+- C: King-Fahd-Text statt Tanzil (Lizenz/Quelle neu prüfen). Groß.
+**Offen:**
+- **Betreiber:** Schrift-Frage A/B/C; Regeln aus 3.18.0 veröffentlichen.
+- Laptop: Gesamtlauf und `t_bestand_tempo` (5 Tests sind in der Cloud
+  umgebungsbedingt rot, siehe Stufe 3).
+- Mehrgeräte-Test mit echtem SDK gegen den Emulator (WIEDERHOLEN § 9) –
+  braucht Emulator, am Laptop.
+**Nächster Schritt:** Stufe 5: Karten-Regler (WIEDERHOLEN § 6, Test
+`t_regler_karten.js`). Vorüberlegung: Ohne neues Cloud-Feld gibt es keinen
+Zähler „20 neue Antworten seit der letzten Prüfung“ → nach jeder Prüfung
+`festErgebnisse` leeren (Fenster = die letzten 20 seit der Prüfung).
+
 ### 2026-09-30 — Stufe 3: Neu lernen (3.18.3), Gesamtlauf in der Cloud
 
 **Geändert:**

@@ -5316,3 +5316,8 @@ html.ref-hoehe .view--modus:has(> .text-buehne) { height: var(--ref-h); }
 }
 .text-knoepfe > button { flex: 1 1 0; min-height: var(--ctrl-lg); padding: 0 var(--space-3); } /* 320 px: sonst bricht "Noch nicht" um, der Knopf wird 3 px hoeher */
 button.gedimmt { opacity: 0.45; }
+
+/* ---------- 3.18.4: Wiederholen (Stufe 4) ----------
+   Kontrollfrage: drei Woerter untereinander, unter den verdeckten Zeilen. */
+.text-kontrolle { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
+.text-kontrolle > button.arabic { font-size: calc(1.3rem * var(--arab-scale, 1)); }
