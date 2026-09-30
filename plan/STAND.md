@@ -59,6 +59,11 @@ Eine Freigabe für andere gibt es nur auf sein ausdrückliches „ja“.
   (Weg A)**, obwohl es den Verwalten-Reiter aller Konten berührt. Danach
   `t_nur_betreiber.js` erneut prüfen: Er vergleicht Pixel mit 3.17.56, eine
   gewollte Tempo-Änderung ohne sichtbare Änderung muss dort gleich bleiben.
+- Stand 30.09. abends: Die Ursache ist belegt (einmalige Einrichtung der
+  Schrift beim ersten Wort). Ein Entwurf liegt in
+  `texte-lernen/entwurf-g119/`. Die Messung schwankt am Laptop aber
+  ±60–80 ms, die Grenze liegt im Rauschen. Der Betreiber entscheidet, wie
+  weiter (Logbuch).
 - Danach das Stichwort „ladegerät“ (`CLAUDE.md`): alle Tests, Affe mit
   Texten, dann Regeln und Hosting.
 

@@ -1,0 +1,51 @@
+﻿diff --git a/app.js b/app.js
+index c7e5145..411869a 100644
+--- a/app.js
++++ b/app.js
+@@ -311,6 +311,38 @@ function tanzilSchriftMarkieren(wurzel) {
+     if (el.closest(".text-tanzil") || KREIS_ZEICHEN.test(el.value || el.textContent)) el.classList.add("arabic-tanzil");
+   }
+ }
++/* 3.18.10 (G-119): Das erste Wort in der King-Fahd-Schrift kostet einmalig
++   viel - der Browser richtet dabei die Formtabellen der Schrift ein,
++   unabhaengig davon, wie viele Zeilen folgen. Fiel das in den ersten Wechsel
++   nach Verwalten, stockte die Seite ueber 200 ms (t_text_tempo, CPU 4x;
++   mit einem vorab gesetzten Wort 97-120 ms statt 193-220 ms). Deshalb einmal
++   je Start, sobald das Konto arabische Karten hat: ein Wort unsichtbar
++   ausserhalb des Bildes setzen, in einer eigenen kleinen Aufgabe nach dem
++   ersten Bild. Im Probelauf beim Betreiber auch die Amiri-Quran-Schrift.
++   Nichts wird angezeigt; das Element ist sofort wieder weg. */
++let schriftVorgewaermt = false;
++function schriftVorwaermen() {
++  if (schriftVorgewaermt || !currentUser) return;
++  if (!currentCards().some(c => istArabisch(c.wort)) && !(texteFreigeschaltet() && ((currentBereich() || {}).texte || []).length)) return;
++  schriftVorgewaermt = true;
++  const wort = "كَلِمَةٌ";
++  const tanzil = texteFreigeschaltet();
++  /* Erst die Datei laden (sonst setzte die Ersatzschrift das Wort und die
++     Einrichtung fiele doch in den ersten Wechsel), dann in eigener Aufgabe. */
++  const schriften = ["UthmanicHafs"].concat(tanzil ? ["AmiriQuranTanzil"] : []);
++  const geladen = document.fonts && document.fonts.load
++    ? Promise.all(schriften.map(f => document.fonts.load("1em '" + f + "'", wort).catch(() => null)))
++    : Promise.resolve();
++  geladen.then(() => setTimeout(() => {
++    const d = document.createElement("div");
++    d.setAttribute("aria-hidden", "true");
++    d.style.cssText = "position:absolute;left:-10000px;top:0;visibility:hidden;pointer-events:none";
++    d.innerHTML = '<span class="arabic">' + wort + '</span>' + (tanzil ? '<span class="arabic arabic-tanzil">' + wort + '</span>' : "");
++    document.body.appendChild(d);
++    void d.offsetHeight;
++    d.remove();
++  }, 0));
++}
+ /* 3.18.6: klassen = die eigenen Klassen des Elements. Vorher stand an vier
+    Stellen class="..." + schriftAttr() - ein ZWEITES class-Attribut, das der
+    Browser verwirft: Textzeilen bekamen nie die Quran-Schrift (Stufe 2-4). */
+@@ -8649,6 +8681,7 @@ function renderMain() {
+   app.innerHTML = html;
+   tanzilSchriftMarkieren(app);
+   textZeilenNachladenBeobachten();
++  schriftVorwaermen();
+   huelleBehalten(altBar, ":scope > .appbar");
+   huelleBehalten(altNav, ":scope > .nav");
+   /* 22.09.2026 (Block 15): Der gleitende Reiter-Anzeiger. Er ist ein

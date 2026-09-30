@@ -2,6 +2,29 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — G-119 Verwalten-Tempo: Ursache belegt, Messung am Laptop zu unruhig
+
+**Betreiber:** „A“, also Verwalten-Tempo jetzt beheben.
+**Ursache (belegt):** Das erste Wort in der King-Fahd-Schrift kostet einmalig
+die Einrichtung der Schrift. Die Menge der Zeilen spielt dabei keine Rolle.
+Kontrolliert: Setzt man vor dem Wechsel ein einziges Wort unsichtbar, fällt
+die zweite Aufgabe bei Verwalten von 193–220 auf 97–120 ms (je 2–3 Läufe).
+40 vorgewärmte Zeilen bringen nicht mehr als ein Wort.
+**Entwurf (nicht in `app.js`):**
+[`entwurf-g119/schrift-vorwaermen.diff`](entwurf-g119/schrift-vorwaermen.diff).
+`schriftVorwaermen()` nach dem ersten `render()`. Nur bei Konten mit
+arabischen Karten: erst `document.fonts.load`, dann ein Wort unsichtbar
+setzen. Beim Betreiber zusätzlich die Amiri-Schrift.
+**Warum nicht übernommen:** Mit dem Entwurf blieb `t_text_tempo` in 9 von 10
+Läufen rot. Verwalten liegt jetzt bei 119–253 ms. Die neue Spitze ist „Text
+öffnen“ mit 204–328 ms, dort nur Layout der ersten langen Ayat in Amiri.
+Erst 15 statt 40 Zeilen zu zeichnen änderte nichts Messbares. Derselbe
+unveränderte Schritt schwankt zwischen Läufen um ±60–80 ms. Die Grenze von
+200 ms unter CPU 4× liegt auf diesem Laptop im Rauschen. Ob der Entwurf
+wirkt, lässt sich so nicht sauber belegen. `app.js` bleibt bei 3.18.9.
+**Offen:** Betreiber-Frage, wie weiter (Antwort vom 30.09.).
+**Nächster Schritt:** Entscheidung abwarten.
+
 ### 2026-09-30 — 3.18.9 Weg A: Text-Ansicht lädt Zeilen nach (nicht veröffentlicht)
 
 **Geändert:** `app.js` – `textAnsichtZeilenHtml`, `textAnsichtPlatzhalter`,
