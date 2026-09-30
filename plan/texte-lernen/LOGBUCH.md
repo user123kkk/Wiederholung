@@ -2,6 +2,29 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — 3.18.9 Weg A: Text-Ansicht lädt Zeilen nach (nicht veröffentlicht)
+
+**Geändert:** `app.js` – `textAnsichtZeilenHtml`, `textAnsichtPlatzhalter`,
+`textZeilenNachladenBeobachten` vor `renderTextAnsicht`; Aufruf in `render()`
+nach `tanzilSchriftMarkieren(app)`. Erst 40 Zeilen, dann 60er-Portionen über
+IntersectionObserver (1000 px Vorlauf, je ein Bild Abstand); Platzhalter hält
+die Höhe (64 px/Zeile), Seite springt nicht. Zeichenstand gilt je Text, bis er
+geschlossen wird. Version 3.18.9 (`app.js`, `sw.js`, `index.html`), Changelog.
+**Gemessen (Laptop, Strom, CPU 4×):** „Text öffnen (286)“ vorher 245–307 ms,
+jetzt 101–233, meist < 200. Scrollen bis Zeile 286: alle 286 da, Platzhalter
+weg, Aufgaben ≤ 145 ms. `t_text_*` (9), `t_quran_*` (3), `t_nur_betreiber`,
+`t_regler_karten`: alle Exit 0.
+**Befund, der bleibt:** `t_text_tempo` weiter rot wegen Schritt **Verwalten**
+(Betreiber 172–353 ms). Gegenprobe normales Konto `u1`, gleicher Bestand:
+Verwalten 201–252 ms – das Stocken gibt es also **schon für alle Konten**
+(Layout der 40 arabischen Kartenzeilen in der King-Fahd-Schrift beim ersten
+Zeigen; JS nur ~90 ms). Kein Text-Thema; Beheben änderte den Verwalten-Reiter
+aller Konten → Runde 15 (Betreiber-Reihenfolge).
+**Offen:** Freigabe hängt an `t_text_tempo` (Grenze 200 ms, nicht gelockert).
+Betreiber-Frage: Verwalten-Tempo jetzt vorziehen oder Test-Schritt „Verwalten“
+bis Runde 15 als bekannten Altbefund führen.
+**Nächster Schritt:** Entscheidung des Betreibers; danach „ladegerät“.
+
 ### 2026-09-30 — Tempo-Befund `t_text_tempo` untersucht (Laptop, am Strom)
 
 **Ursache gemessen (Chrome-Trace, CPU 4×):** Die langen Aufgaben bei

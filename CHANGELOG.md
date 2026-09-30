@@ -1,3 +1,11 @@
+## 3.18.9 – 30. September 2026
+
+**Lange Texte öffnen schneller (nur im Probelauf beim Betreiber).** Die
+Text-Ansicht zeichnet erst 40 Zeilen und lädt den Rest in 60er-Portionen,
+bevor er ins Bild scrollt; die Seitenhöhe bleibt dabei gleich. Sure 2
+(286 Ayat) stockte beim Öffnen sonst über 200 ms. Für andere Konten ändert
+sich nichts.
+
 ## 3.18.8 – 30. September 2026
 
 **Texte und Quran bleiben ganz beim Betreiber.** Auch die Schrift-Korrektur

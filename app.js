@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.8";
+const APP_VERSION = "3.18.9";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -8648,6 +8648,7 @@ function renderMain() {
   const altNav = app.querySelector(":scope > .nav");
   app.innerHTML = html;
   tanzilSchriftMarkieren(app);
+  textZeilenNachladenBeobachten();
   huelleBehalten(altBar, ":scope > .appbar");
   huelleBehalten(altNav, ":scope > .nav");
   /* 22.09.2026 (Block 15): Der gleitende Reiter-Anzeiger. Er ist ein
@@ -12025,6 +12026,71 @@ function textKannSchonFeld(anzahl, ab) {
   return html + '</select></div>';
 }
 
+/* 3.18.9: Lange Texte (Sure 2: 286 Ayat) zeichnen erst 40 Zeilen, der Rest
+   kommt in 60er-Portionen, bevor er ins Bild scrollt. Das erste Setzen in der
+   Quran-Schrift ist teuer (t_text_tempo: ueber 200 ms am Stueck). Der
+   Platzhalter haelt die Hoehe der fehlenden Zeilen (64 px wie
+   contain-intrinsic-size), damit die Seite beim Nachladen nicht springt.
+   Wie weit schon gezeichnet ist, gilt je Text bis ein anderer geoeffnet wird -
+   ein Neuzeichnen verliert die nachgeladenen Zeilen nicht. */
+const TEXT_ZEILEN_ERST = 40, TEXT_ZEILEN_PORTION = 60, TEXT_ZEILE_HOEHE = 64;
+let textAnsichtFuer = null, textAnsichtBis = TEXT_ZEILEN_ERST, textZeilenBeobachter = null;
+function textAnsichtZeilenHtml(t, zeilen, von, bis) {
+  let html = "";
+  for (let i = von; i < bis; i++) {
+    const z = zeilen[i];
+    const nr = zeilenNummer(t, i);
+    const original = t.quelle === "tanzil" ? quranAya(t.sure, nr) : undefined;
+    const weicht = original !== undefined && original !== z.wort;
+    html += '<button class="liste-zeile text-zeile" data-action="text-zeile" data-id="' + esc(z.id) + '" aria-label="' + zeilenWort(t) + ' ' + nr + ', ' + zeilenZustand(z) + (weicht ? ', weicht vom Original ab' : '') + '">' +
+      '<span class="text-zeile__nr">' + nr + '</span>' +
+      '<span' + schriftAttr(z.wort, "text-zeile__text") + '>' + esc(z.wort) + '</span>' +
+      '<span class="text-zeile__stand">' + textZustandBadge(zeilenZustand(z)) +
+      (weicht ? '<span class="text-zeile__abweichung">weicht vom Original ab</span>' : '') + '</span></button>';
+  }
+  return html;
+}
+function textAnsichtPlatzhalter(rest) {
+  return rest > 0 ? '<div class="text-zeilen__rest" aria-hidden="true" style="height:' + (rest * TEXT_ZEILE_HOEHE) + 'px"></div>' : "";
+}
+/* Nach jedem render(): den Platzhalter beobachten, 1000 px vor dem Bild
+   nachladen. Ohne IntersectionObserver (sehr alte Browser) alles zeichnen. */
+function textZeilenNachladenBeobachten() {
+  if (textZeilenBeobachter) { textZeilenBeobachter.disconnect(); textZeilenBeobachter = null; }
+  /* Text geschlossen: beim naechsten Oeffnen wieder mit 40 Zeilen anfangen. */
+  if (!ui.textAnsicht) textAnsichtFuer = null;
+  const rest = app.querySelector(".text-zeilen__rest");
+  if (!rest) return;
+  const nachladen = () => {
+    const b = currentBereich();
+    const t = findText(b, ui.textAnsicht);
+    const platz = app.querySelector(".text-zeilen__rest");
+    if (!t || !platz || textAnsichtFuer !== t.id) return false;
+    const zeilen = textZeilenVon(b, t);
+    const von = textAnsichtBis, bis = Math.min(zeilen.length, von + TEXT_ZEILEN_PORTION);
+    textAnsichtBis = bis;
+    platz.insertAdjacentHTML("beforebegin", textAnsichtZeilenHtml(t, zeilen, von, bis));
+    tanzilSchriftMarkieren(platz.parentNode);
+    if (bis >= zeilen.length) { platz.remove(); return false; }
+    platz.style.height = ((zeilen.length - bis) * TEXT_ZEILE_HOEHE) + "px";
+    return true;
+  };
+  if (!("IntersectionObserver" in window)) { while (nachladen()); return; }
+  textZeilenBeobachter = new IntersectionObserver(eintraege => {
+    if (!eintraege.some(e => e.isIntersecting)) return;
+    /* Portion fuer Portion, je ein Bild dazwischen. */
+    requestAnimationFrame(() => {
+      if (!textZeilenBeobachter) return;
+      const platz = nachladen() && app.querySelector(".text-zeilen__rest");
+      if (!platz) { textZeilenBeobachter.disconnect(); textZeilenBeobachter = null; return; }
+      /* Neu anmelden: liegt der Platzhalter noch im Bereich, meldet der
+         Beobachter das sonst nie wieder (er meldet nur Wechsel). */
+      textZeilenBeobachter.unobserve(platz);
+      textZeilenBeobachter.observe(platz);
+    });
+  }, { rootMargin: "1000px 0px" });
+  textZeilenBeobachter.observe(rest);
+}
 function renderTextAnsicht() {
   const b = currentBereich();
   const t = findText(b, ui.textAnsicht);
@@ -12047,16 +12113,9 @@ function renderTextAnsicht() {
   if (zuViel && n.neu > 0) html += '<p class="hint">Heute lieber das Gelernte halten.</p>';
   if (n.neu > 0) html += '<button class="' + (faellig ? 'secondary ' : '') + 'lg full text-neu-lernen" data-action="text-lernen" data-id="' + esc(t.id) + '">Neu lernen</button>';
   html += '<div class="liste text-zeilen">';
-  zeilen.forEach((z, i) => {
-    const nr = zeilenNummer(t, i);
-    const original = t.quelle === "tanzil" ? quranAya(t.sure, nr) : undefined;
-    const weicht = original !== undefined && original !== z.wort;
-    html += '<button class="liste-zeile text-zeile" data-action="text-zeile" data-id="' + esc(z.id) + '" aria-label="' + zeilenWort(t) + ' ' + nr + ', ' + zeilenZustand(z) + (weicht ? ', weicht vom Original ab' : '') + '">' +
-      '<span class="text-zeile__nr">' + nr + '</span>' +
-      '<span' + schriftAttr(z.wort, "text-zeile__text") + '>' + esc(z.wort) + '</span>' +
-      '<span class="text-zeile__stand">' + textZustandBadge(zeilenZustand(z)) +
-      (weicht ? '<span class="text-zeile__abweichung">weicht vom Original ab</span>' : '') + '</span></button>';
-  });
+  if (textAnsichtFuer !== t.id) { textAnsichtFuer = t.id; textAnsichtBis = TEXT_ZEILEN_ERST; }
+  html += textAnsichtZeilenHtml(t, zeilen, 0, Math.min(zeilen.length, textAnsichtBis));
+  html += textAnsichtPlatzhalter(zeilen.length - textAnsichtBis);
   html += '</div>';
   if (t.quelle === "tanzil") html += '<p class="field__hilfe text-quelle">' + QURAN_QUELLE_HTML + '</p>';
   html += '<button class="secondary full text-loeschen" data-action="text-loeschen" data-id="' + esc(t.id) + '">' + ikon("muell", "i-sm") + ' Text löschen</button>';
