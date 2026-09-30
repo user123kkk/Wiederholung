@@ -29,12 +29,17 @@ Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIE
   wie der bestehende Verwalten-Reiter. Abhilfe wäre nachgeladene Liste
   (erst 40 Zeilen, Rest beim Scrollen) – lohnt erst, wenn es am echten
   Gerät spürbar ist. Am Laptop/iPhone nachmessen.
-- Voller Gesamtlauf: nächster Eintrag.
+- Voller Gesamtlauf (Stand `7264af9`, 3.18.7): **115/120 Exit 0**. Rot nur
+  die 5 umgebungsbedingten (`t_boot_geometrie`, `t_dreh_lage`,
+  `t_quran_datei` „offline trotzdem Netz“, `t_sw`, `t_verlauf_mehrgeraete`).
+  `t_sw` wegen der neuen Schrift in `APP_SHELL` extra verglichen: die 9
+  FEHLER-Zeilen sind **wortgleich** mit dem Lauf auf unverändertem 3.18.2.
+  Am Laptop müssen alle 120 grün sein (Stichwort „ladegerät“).
 **Nicht gemacht:** Mehrgeräte-Test gegen den Emulator (WIEDERHOLEN § 9) –
 kein Emulator im Container; am Laptop mit `regeln_testen.sh`-Umgebung
 nachholen. `ladegeraet.ps1` lief nie unter Windows (keine PowerShell im
 Container) – der erste Lauf mit dem Stichwort ist sein Test.
-**Nächster Schritt:** Gesamtlauf auswerten; danach Stufe 8 = Probelauf
+**Nächster Schritt:** Betreiber: Stichwort „ladegerät“ am Laptop. Danach Stufe 8 = Probelauf
 (4 Wochen, Betreiber lernt echt; wöchentlich die Probelauf-Werte aus den
 Einstellungen ins Logbuch).
 
