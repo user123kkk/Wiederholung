@@ -86,4 +86,39 @@ async function storeLesen(p) {
   return p.evaluate(() => Object.fromEntries([...window.__FB.store.entries()].map(([k, v]) => [k, JSON.parse(JSON.stringify(v))])));
 }
 
-module.exports = { BETREIBER_UID, textWort, textStore, seiteMitApp, storeLesen, appQuelle, VOR_STUFE_1, BASE };
+/* Rechenlogik der Texte ohne Browser: die echten Funktionen aus app.js
+   (Quelltext-Ausschnitte) in einem eigenen Kontext. ersetze wie bei
+   seiteMitApp fuer Gegenproben. */
+function logikLaden({ commit, ersetze } = {}) {
+  const vm = require('node:vm');
+  let q = appQuelle(commit).replace(/\r\n/g, '\n');
+  for (const [alt, neu] of (ersetze || [])) {
+    if (!q.includes(alt)) throw new Error('Gegenprobe: Stelle nicht gefunden: ' + alt.slice(0, 60));
+    q = q.replace(alt, neu);
+  }
+  const stueck = (anfang, ende) => {
+    const i = q.indexOf(anfang);
+    if (i === -1) throw new Error('nicht gefunden: ' + anfang);
+    const j = q.indexOf(ende, i + anfang.length);
+    if (j === -1) throw new Error('Ende nicht gefunden: ' + ende);
+    return q.slice(i, j);
+  };
+  const zeile = anfang => stueck(anfang, '\n') + '\n';
+  const code = [
+    zeile('const TEXT_FEST_STUFE'), zeile('const TEXT_FEST_DATUM'),
+    zeile('const KREIS_TAGE_START'), zeile('const FEST_ERGEBNISSE_MAX'),
+    zeile('const ARAB_ZEICHEN'), 'function istArabisch(text) { return ARAB_ZEICHEN.test(String(text || "")); }\n',
+    zeile('const ARAB_OHNE_BUCHSTABE'),
+    stueck('function zeileWoerter(zeile) {', '\n}') + '\n}\n',
+    stueck('function zeilenZustand(z) {', '\n}') + '\n}\n',
+    stueck('/* ---------- 3.18.5: Wiederholen - Rechenlogik', '/* ---------- 3.18.5: Wiederholen - Sitzung'),
+    'function vergleichsWort(w) { return String(w).normalize("NFD").replace(/[\\u0610-\\u061A\\u064B-\\u065F\\u0670]/g, "").toLowerCase(); }\n',
+    'this.L = { zeilenZustand, abschnitteBilden, kreisStueck, kreisWeiter, kreisNachstellen, kreisGroesse, frischBloecke, zeileNachAntwort, zeileSekunden, textHeuteArbeit, kontrollWoerter, kontrollfrageFaellig, TEXT_FEST_DATUM };'
+  ].join('\n');
+  const ctx = {};
+  vm.createContext(ctx);
+  vm.runInContext(code, ctx);
+  return ctx.L;
+}
+
+module.exports = { BETREIBER_UID, textWort, textStore, seiteMitApp, storeLesen, appQuelle, logikLaden, VOR_STUFE_1, BASE };

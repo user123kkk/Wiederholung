@@ -1634,6 +1634,15 @@ Commit in der Gegenprüfung gefunden. Regel § 6.7 gilt auch für Aufrufe aus
 Backslash-Regel von oben galt auch für `bash`-Heredocs mit Testcode – beim
 selben Arbeitsgang zweimal wieder passiert; Write-Werkzeug benutzen.
 
+30.09.2026, Texte Stufe 3: (1) Das Write-/Edit-Werkzeug schrieb `\uXXXX` in
+regulären Ausdrücken als echte Zeichen (unsichtbare Harakat im Quelltext,
+Bereichsgrenzen kaum lesbar). Funktioniert zufällig, ist aber nicht prüfbar.
+Regel: Escapes über Zeichencodes schreiben (`String.fromCharCode(92)+"u…"`)
+und danach mit `grep` am Quelltext prüfen. (2) Playwrights `click()` wartet
+bei `aria-disabled="true"`, bis das Element frei ist – ein Test, der einen
+**frühen** Tipp prüfen will, muss `element.click()` im Seitenkontext
+auslösen (§ 5.3: erst die Messung prüfen).
+
 Kurzform: *was – Ursache – Regel*. Neue Vorfälle unten anhängen.
 
 28.09.2026, bis 3.17.49, G-099: Schneller kurzer Wisch links wechselnd ohne

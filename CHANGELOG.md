@@ -1,3 +1,16 @@
+## 3.18.4 – 30. September 2026
+
+**Texte neu lernen (Stufe 3, nur im Probelauf beim Betreiber).** In der
+Text-Ansicht startet „Neu lernen“ bei der ersten neuen Zeile: lesen, mit
+Anfangsbuchstaben aufsagen, ohne Hilfe aufsagen – danach alles, was heute
+neu dazukam, am Stück. „Aufdecken“ wartet eine kurze Denkpause (so lange,
+wie das Aufsagen ohnehin dauert). Wo es hakt, tippt man die Zeilen an und
+übt sie noch einmal. Erst „Fließend“ speichert die Zeile; Rückgängig ist
+möglich, Abbrechen speichert nichts. Nach drei neuen Zeilen sagt die App
+ruhig, dass es für heute gut ist. Gelernte Textzeilen zählen für die Serie,
+im Kalender und bei den Antworten der Woche – nicht im Ring der Karten.
+Für Karten ändert sich nichts.
+
 ## 3.18.2 – 30. September 2026
 
 **Texte anlegen (Stufe 2, nur im Probelauf beim Betreiber).** Im

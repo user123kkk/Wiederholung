@@ -37,8 +37,8 @@ function renderTextLernen() {
       '<button class="' + (weitere && heute < NEU_GUT_FUER_HEUTE ? 'secondary ' : '') + 'lg full" data-action="text-lernen-zu">Für heute aufhören</button>';
   } else if (tl.schritt === "amStueck" || tl.schritt === "hakt") {
     const reihe = amStueckZeilen(b, t, tl);
-    html += '<p class="text-buehne__auftrag">' + (tl.schritt === "hakt" ? 'Tipp an, wo es gehakt hat.'
-      : reihe.length > 1 ? 'Alles von heute am Stück aufsagen.' : 'Noch einmal ohne Hilfe aufsagen.') + '</p>';
+    html += '<h1 class="text-buehne__auftrag">' + (tl.schritt === "hakt" ? 'Tipp an, wo es gehakt hat.'
+      : reihe.length > 1 ? 'Alles von heute am Stück aufsagen.' : 'Noch einmal ohne Hilfe aufsagen.') + '</h1>';
     html += hinweis(reihe[0].id, 2);
     for (const z of reihe) {
       if (tl.schritt === "hakt") {
@@ -56,7 +56,7 @@ function renderTextLernen() {
     const z = textLernenZeile(b, tl.fokus);
     if (!z) return html + '</div>';
     const auftrag = { lesen: 'Lesen – laut, bis es sich vertraut anfühlt.', buchstaben: 'Mit den Anfangsbuchstaben aufsagen.', ohne: 'Ohne Hilfe aufsagen.' }[tl.schritt];
-    html += '<p class="text-buehne__auftrag">' + auftrag + '</p>';
+    html += '<h1 class="text-buehne__auftrag">' + auftrag + '</h1>';
     html += hinweis(z.id, tl.schritt === "ohne" ? 1 : 2);
     html += '<p class="text-buehne__nr">' + wortName + ' ' + nrVon(z.id) + '</p>';
     if (tl.schritt === "lesen") {

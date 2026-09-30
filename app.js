@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.2";
+const APP_VERSION = "3.18.4";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -857,6 +857,9 @@ function bereicheMapToArray(mapObj) {
    Antwort sofort raus, weitere Differenzen gebuendelt; Schliessen der Runde
    und Hintergrundwechsel leeren die Warteschlange (verlaufJetztSchreiben). */
 const VERLAUF_TAGE = 120;
+/* Antwortarten im Tagesprotokoll: w wiederholt, n neu, u geuebt, t Textzeile
+   (3.18.3). Jede Stelle, die Differenzen sammelt oder schreibt, nimmt alle. */
+const VERLAUF_ARTEN = ["w", "n", "u", "t"];
 let verlauf = {};
 let verlaufTimer = null;
 /* 3.17.50 (G-075): Nur noch ungesendete Differenzen merken. Bereits an das
@@ -887,6 +890,7 @@ function normVerlauf(v) {
     out[k] = { w: Number.isInteger(e.w) && e.w > 0 ? e.w : 0,
                n: Number.isInteger(e.n) && e.n > 0 ? e.n : 0 };
     if (Number.isInteger(e.u) && e.u > 0) out[k].u = e.u;   /* 3.16.0: geuebt, siehe tagGelernt */
+    if (Number.isInteger(e.t) && e.t > 0) out[k].t = e.t;   /* 3.18.3: Textzeilen, siehe tagGelernt */
   }
   return out;
 }
@@ -899,8 +903,12 @@ function normVerlauf(v) {
    zu wiederholen, verlernt dabei genau das, wofuer sie da ist.
    Deshalb fragt jede Stelle, die wissen will, ob an einem Tag gelernt
    wurde, diese Funktion - und nicht mehr, ob es den Eintrag gibt. */
+/* 3.18.3 (Texte, WIEDERHOLEN.md § 7): Eine gelernte oder wiederholte
+   Textzeile (t) zaehlt fuer die Serie wie eine Karte - die Regel bleibt
+   dieselbe. Eigene Art, damit der Karten-Ring (heuteAnteil: nur w/n) nicht
+   durch Textantworten verfaelscht wird. */
 function tagGelernt(e) {
-  return !!e && ((e.w || 0) + (e.n || 0)) > 0;
+  return !!e && ((e.w || 0) + (e.n || 0) + (e.t || 0)) > 0;
 }
 function verlaufZaehle(art) {
   const t = todayStr();
@@ -937,7 +945,7 @@ function verlaufZusammen(wolke) {
   for (const [tag, delta] of Object.entries(verlaufOffen)) {
     if (tag < grenze) continue;
     const e = out[tag] || (out[tag] = { w: 0, n: 0 });
-    for (const art of ["w", "n", "u"]) {
+    for (const art of VERLAUF_ARTEN) {
       if (delta[art]) e[art] = Math.max(0, (e[art] || 0) + delta[art]);
     }
   }
@@ -967,7 +975,7 @@ function persistVerlauf() {
   const delta = verlaufOffen;
   const args = [];
   for (const [tag, e] of Object.entries(delta)) {
-    for (const art of ["w", "n", "u"]) {
+    for (const art of VERLAUF_ARTEN) {
       if (e[art]) args.push(new fb.FieldPath("verlauf", tag, art), fb.increment(e[art]));
     }
   }
@@ -1002,7 +1010,7 @@ function persistVerlauf() {
     }
     // Nur eine vom Server ABGELEHNTE Differenz erneut merken, nicht offline.
     for (const [tag, x] of Object.entries(delta)) {
-      for (const art of ["w", "n", "u"]) if (x[art]) verlaufDeltaMerken(tag, art, x[art]);
+      for (const art of VERLAUF_ARTEN) if (x[art]) verlaufDeltaMerken(tag, art, x[art]);
     }
     verlauf = verlaufZusammen(verlaufStand);
     if (e && e.code === "permission-denied") verlaufAbgelehnt = true;
@@ -1612,6 +1620,8 @@ let ui = {
   textAnlegen: null,
   textAnsicht: null,
   zeileEdit: null,
+  /* 3.18.3: laufende Sitzung "Neu lernen" eines Textes (Stufe 3). */
+  textLernen: null,
   /* 3.3.1: Das Karten-Formular liegt jetzt in einem Blatt, nicht mehr fest
      oben auf dem Verwalten-Bildschirm. Video 1: "the settings is just
      settings and the notes editor is just a notes editor - we don't throw in
@@ -3986,14 +3996,16 @@ function renderKalender(tage) {
     const d = new Date(start); d.setDate(d.getDate() + i);
     const iso = fmtDate(d);
     const e = verlauf[iso];
-    const menge = e ? (e.w || 0) + (e.n || 0) : 0;
+    /* 3.18.3: Textzeilen (t) mit - ein Tag, der die Serie haelt
+       (tagGelernt), darf im Kalender nicht leer aussehen. */
+    const menge = e ? (e.w || 0) + (e.n || 0) + (e.t || 0) : 0;
     const zukunft = iso > heuteIso;
     /* Vier Stufen. Feiner waere bei 11 Pixeln nicht mehr unterscheidbar. */
     const stufe = zukunft ? "x" : menge === 0 ? 0 : menge < 10 ? 1 : menge < 25 ? 2 : menge < 50 ? 3 : 4;
     html += '<div class="kal-tag s' + stufe + (iso === heuteIso ? " heute" : "") +
       /* 3.17.9 (Station 9): lesbares Datum statt "2026-09-20", und es sind
-         Antworten (w + n), keine Karten - dieselbe Zahl wie "Antworten diese
-         Woche" darueber. */
+         Antworten (w + n, seit 3.18.3 auch t), keine Karten - dieselbe Zahl
+         wie "Antworten diese Woche" darueber. */
       '" title="' + esc(tagKurz(iso) + (zukunft ? "" : ": " + menge + (menge === 1 ? " Antwort" : " Antworten"))) + '"></div>';
   }
   html += '</div>';
@@ -4929,7 +4941,8 @@ function selectBereich(bereichId) {
   if (ui.seite === "lektionen" && lektionenVon(bereiche.find(b => b.id === bereichId)).length === 0) ui.seite = null;
   ui.editId = null;
   ui.cardDetailId = null;
-  /* 3.18.1: Texte gehoeren zu ihrem Bereich. */
+  /* 3.18.1: Texte gehoeren zu ihrem Bereich (3.18.3: auch die Sitzung). */
+  ui.textLernen = null;
   ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; 
   resetFormDraft();
   ui.searchQuery = "";
@@ -8390,7 +8403,11 @@ function renderMain() {
 
      Sichtbar bleibt eine einzige Ausnahme: die Warnung, dass gerade nicht
      gespeichert wird. Die darf kein Modus verstecken. */
-  const imModus = ui.tab === "lernen" && !!(ui.session || ui.lernSetId) && !ui.einstellungen;
+  /* 3.18.3: Die Text-Sitzung gehoert zu dem Konto, in dem sie begann
+     (LEHREN § 8.3), und nur in den Probelauf. */
+  if (ui.textLernen && (ui.textLernen.uid !== (currentUser ? currentUser.uid : null) || !texteFreigeschaltet())) ui.textLernen = null;
+  const imModus = (ui.tab === "lernen" && !!(ui.session || ui.lernSetId) && !ui.einstellungen) ||
+    (!!ui.textLernen && !ui.einstellungen);
 
   /* Erst den Inhalt bauen. Die Modi geben ihre Leiste selbst aus, deshalb
      muss das Geruest wissen, ob es ueberhaupt eines zeichnen soll. */
@@ -8401,6 +8418,7 @@ function renderMain() {
      geleert, damit ein Wunsch nie in die naechste Ansicht hinueberreicht. */
   viewZusatz = "";
   if (ui.einstellungen) inhalt = renderEinstellungen();
+  else if (ui.textLernen) inhalt = renderTextLernen();
   else inhalt = ui.tab === "lernen" ? renderLernen()
               : ui.tab === "fortschritt" ? renderFortschritt()
               : renderVerwalten();
@@ -8541,7 +8559,8 @@ function renderMain() {
   const ansichtSchluessel = [ui.einstellungen ? "e" : "", ui.seite || "", ui.tab, imModus ? "m" : "",
     imModus && sess ? (sess.queue && sess.queue[0]) + "|" + sess.revealed + "|" + (sess.extraOpen ? 1 : 0) : "",
     imModus ? (ui.lernSetId || "") : "",
-    ui.textAnlegen ? "ta-" + ui.textAnlegen.weg + "-" + ui.textAnlegen.schritt : "", ui.textAnsicht || ""].join("/");
+    ui.textAnlegen ? "ta-" + ui.textAnlegen.weg + "-" + ui.textAnlegen.schritt : "", ui.textAnsicht || "",
+    ui.textLernen ? ui.textLernen.fokus + "|" + ui.textLernen.schritt + "|" + (ui.textLernen.aufgedeckt ? 1 : 0) : ""].join("/");
   const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
     ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
     ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : ""].join("/");
@@ -10136,7 +10155,8 @@ function letzteWoche() {
   for (let i = dow + 1; i <= dow + 7; i++) {
     const e = verlauf[dateInDays(-i)];
     if (tagGelernt(e)) tage++;
-    if (e) { antworten += (e.w || 0) + (e.n || 0); neu += e.n || 0; geuebt += e.u || 0; }
+    /* 3.18.3: Textzeilen zaehlen als Antworten wie im Kalender (renderKalender). */
+    if (e) { antworten += (e.w || 0) + (e.n || 0) + (e.t || 0); neu += e.n || 0; geuebt += e.u || 0; }
   }
   const montag = dateInDays(-dow);
   return { tage, antworten, neu, geuebt, woche: montag, dow };
@@ -11683,7 +11703,7 @@ function textAnlegenAusfuehren() {
        Nummern - kein Wortlaut der App. */
     /* Der arabische Name steht in Richtungs-Klammern (U+2068/U+2069), sonst
        dreht die Schreibrichtung Nummer und Ayat-Bereich um. */
-    name = ("Sure " + g.s.nr + " ⁨" + g.s.name + "⁩" +
+    name = ("Sure " + g.s.nr + " \u2068" + g.s.name + "\u2069" +
       (g.von > 1 || g.bis < g.s.ayat.length ? " · " + g.von + "–" + g.bis : "")).slice(0, 40);
   } else {
     texte = a.zeilen;
@@ -11960,6 +11980,10 @@ function renderTextAnsicht() {
   html += textSeitenKopf(t.name, "text-schliessen");
   html += '<p class="hint">' + (t.quelle === "tanzil" ? mz(zeilen.length, "Aya", "Ayat") : mz(zeilen.length, "Zeile", "Zeilen")) +
     ' · ' + n.neu + ' neu · ' + n.frisch + ' frisch · ' + n.fest + ' fest</p>';
+  /* 3.18.3: Neu lernen (Stufe 3) - ab der ersten neuen Zeile. */
+  const erste = naechsteNeueZeile(b, t, null);
+  if (erste) html += '<button class="lg full text-neu-lernen" data-action="text-lernen" data-id="' + esc(t.id) + '">' +
+    'Neu lernen · ' + zeilenWort(t) + ' ' + zeilenNummer(t, zeilen.indexOf(erste)) + '</button>';
   html += '<div class="liste text-zeilen">';
   zeilen.forEach((z, i) => {
     const nr = zeilenNummer(t, i);
@@ -12016,6 +12040,283 @@ function zeileEditSheet() {
       '<button class="danger" data-action="zeile-loeschen">Zeile löschen</button></div>';
   }
   return html + '</div></div>';
+}
+
+/* ---------- 3.18.3: Neu lernen (Stufe 3) ----------
+   plan/texte-lernen/KONZEPT.md § 5: Fuer jede neue Zeile drei Hilfestufen -
+   lesen, Anfangsbuchstaben, ohne Hilfe -, danach alle heute neu gelernten
+   Zeilen dieses Textes am Stueck. Erst "Fliessend" macht die Zeile frisch
+   (Stufe 0, morgen faellig, WIEDERHOLEN.md § 2) und zaehlt einmal im
+   Tagesprotokoll als "t" (WIEDERHOLEN.md § 7). Abbrechen vorher speichert
+   nichts.
+
+   Zustand in ui.textLernen (LEHREN § 6.3), gebunden an das Konto (uid):
+     textId, id (die neue Zeile), fokus (die Zeile, die gerade geuebt wird),
+     schritt: "lesen" | "buchstaben" | "ohne" | "amStueck" | "hakt" | "gelernt",
+     aufgedeckt, aufgedecktAm, denkBis, frei, hakt (Set), nachueben (Ids),
+     letzte (fuer Rueckgaengig). */
+const DENKPAUSE_JE_WORT_MS = 400, DENKPAUSE_MIN_MS = 1000, DENKPAUSE_MAX_MS = 6000;
+const NEU_GUT_FUER_HEUTE = 3;     // T7: danach ein ruhiger Satz, weiterlernen bleibt moeglich
+let denkpauseUhr = null;
+
+/* Anfangsbuchstaben (KONZEPT § 8.3): Woerter = Trennung an Leerzeichen. Bei
+   Arabisch der erste Grundbuchstabe ohne Harakat, Quran-Zeichen und Tatweel;
+   Woerter nur aus solchen Zeichen (Waqf-, Sajda-Zeichen) fallen weg. Sonst
+   der erste Buchstabe, Satzzeichen davor und dahinter bleiben. */
+const ARAB_OHNE_BUCHSTABE = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g;
+function anfangsbuchstaben(zeile) {
+  return String(zeile || "").split(" ").map(w => {
+    if (!w) return "";
+    if (istArabisch(w)) return w.replace(ARAB_OHNE_BUCHSTABE, "").charAt(0);
+    const b = w.match(/[\p{L}\p{N}]/u);
+    if (!b) return w;
+    const vorn = (w.match(/^\p{P}+/u) || [""])[0], hinten = (w.match(/\p{P}+$/u) || [""])[0];
+    return vorn + b[0] + hinten;
+  }).filter(Boolean).join(" ");
+}
+/* Woerter, die man aufsagt - fuer die Denkpause. */
+function zeileWoerter(zeile) {
+  return String(zeile || "").split(" ").filter(w => w && (!istArabisch(w) || w.replace(ARAB_OHNE_BUCHSTABE, "")));
+}
+/* WIEDERHOLEN.md § 7: 0,4 s je Wort der verdeckten Zeilen, 1-6 s. */
+function denkpauseMs(zeilen) {
+  const n = zeilen.reduce((s, z) => s + zeileWoerter(z.wort).length, 0);
+  return Math.min(DENKPAUSE_MAX_MS, Math.max(DENKPAUSE_MIN_MS, n * DENKPAUSE_JE_WORT_MS));
+}
+
+function textLernenZeile(b, id) { return ((b && b.zeilen) || []).find(z => z.id === id) || null; }
+/* Heute neu gelernt = heute zum ersten Mal "fliessend" und deshalb morgen
+   faellig. "Kann ich schon" beim Anlegen ist heute faellig und zaehlt nicht
+   (das wird wiederholt, nicht neu gelernt). */
+function heuteNeuGelernt(z) {
+  return z.ersteBewertung === todayStr() && z.stufe === 0 && z.nextReview === dateInDays(1);
+}
+function naechsteNeueZeile(b, t, nachId) {
+  const zeilen = textZeilenVon(b, t);
+  const ab = nachId ? zeilen.findIndex(z => z.id === nachId) + 1 : 0;
+  return zeilen.slice(ab).find(z => zeilenZustand(z) === "neu") || zeilen.find(z => zeilenZustand(z) === "neu") || null;
+}
+/* Die Zeilen am Stueck: alle heute neu gelernten dieses Textes bis zur
+   aktuellen, in Textreihenfolge, dazu die aktuelle. */
+function amStueckZeilen(b, t, tl) {
+  const zeilen = textZeilenVon(b, t);
+  const bis = zeilen.findIndex(z => z.id === tl.id);
+  return zeilen.slice(0, bis + 1).filter(z => z.id === tl.id || heuteNeuGelernt(z));
+}
+
+function textLernenStarten(tid) {
+  const b = currentBereich(), t = findText(b, tid);
+  if (!t || !texteFreigeschaltet()) return;
+  const z = naechsteNeueZeile(b, t, null);
+  if (!z) { zeigeToast("Alle Zeilen sind gelernt"); render(); return; }
+  ui.zeileEdit = null;
+  ui.textLernen = { uid: currentUser ? currentUser.uid : null, textId: t.id, id: z.id, fokus: z.id,
+    schritt: "lesen", aufgedeckt: false, aufgedecktAm: 0, denkBis: 0, frei: true,
+    hakt: new Set(), nachueben: [], letzte: null };
+  window.scrollTo(0, 0);
+  render();
+}
+/* Denkpause: "Aufdecken" steht von Anfang an da, nur gedimmt, und wird ohne
+   Sprung aktiv (LEHREN § 6.1). Der Timer setzt denselben Zustand, den auch
+   ein spaeteres Neuzeichnen liest (§ 6.4). */
+function denkpauseStarten(tl, zeilen) {
+  if (denkpauseUhr) clearTimeout(denkpauseUhr);
+  const ms = denkpauseMs(zeilen);
+  tl.denkBis = Date.now() + ms;
+  tl.frei = false;
+  denkpauseUhr = setTimeout(() => {
+    denkpauseUhr = null;
+    if (ui.textLernen !== tl) return;
+    tl.frei = true;
+    const k = document.querySelector('[data-action="text-aufdecken"]');
+    if (k) { k.classList.remove("gedimmt"); k.removeAttribute("aria-disabled"); }
+  }, ms);
+}
+function textLernenSchritt(schritt) {
+  const tl = ui.textLernen, b = currentBereich(), t = tl && findText(b, tl.textId);
+  if (!t) { ui.textLernen = null; render(); return; }
+  tl.schritt = schritt;
+  tl.aufgedeckt = false;
+  if (schritt === "buchstaben" || schritt === "ohne") denkpauseStarten(tl, [textLernenZeile(b, tl.fokus)].filter(Boolean));
+  else if (schritt === "amStueck") denkpauseStarten(tl, amStueckZeilen(b, t, tl));
+  else tl.frei = true;
+  render();
+}
+function textAufdecken() {
+  const tl = ui.textLernen;
+  if (!tl || tl.aufgedeckt || !tl.frei || Date.now() < tl.denkBis) return;
+  tl.aufgedeckt = true;
+  tl.aufgedecktAm = Date.now();
+  render();
+}
+/* Nach dem Aufdecken stehen an derselben Stelle neue Knoepfe - sie nehmen
+   erst nach BEWERTEN_SPERRE_MS Tipps an (LEHREN § 6.1, 3.17.25). */
+function textBewertenZuFrueh() {
+  const tl = ui.textLernen;
+  return !tl || !tl.aufgedeckt || Date.now() - tl.aufgedecktAm < BEWERTEN_SPERRE_MS;
+}
+function textKonnte(ok) {
+  const tl = ui.textLernen;
+  if (textBewertenZuFrueh()) return;
+  if (tl.schritt === "buchstaben") textLernenSchritt(ok ? "ohne" : "lesen");
+  else if (tl.schritt === "ohne") {
+    if (!ok) { textLernenSchritt("buchstaben"); return; }
+    const naechste = tl.nachueben.shift();
+    if (naechste) { tl.fokus = naechste; textLernenSchritt("buchstaben"); return; }
+    tl.fokus = tl.id;
+    textLernenSchritt("amStueck");
+  }
+}
+function textAmStueck(fliessend) {
+  const tl = ui.textLernen;
+  if (textBewertenZuFrueh() || tl.schritt !== "amStueck") return;
+  if (!fliessend) { tl.hakt = new Set(); tl.schritt = "hakt"; render(); return; }
+  textGelernt();
+}
+function textHaktWeiter() {
+  const tl = ui.textLernen;
+  if (!tl || tl.schritt !== "hakt" || tl.hakt.size === 0) return;
+  const b = currentBereich(), t = findText(b, tl.textId);
+  const reihe = amStueckZeilen(b, t, tl).map(z => z.id).filter(id => tl.hakt.has(id));
+  tl.fokus = reihe.shift();
+  tl.nachueben = reihe;
+  textLernenSchritt("buchstaben");
+}
+/* Schritt 5: die Zeile wird frisch. Gespeichert wird nur hier. */
+function textGelernt() {
+  const tl = ui.textLernen, b = currentBereich(), t = findText(b, tl.textId);
+  const z = textLernenZeile(b, tl.id);
+  if (!t || !z) { ui.textLernen = null; render(); return; }
+  tl.letzte = null;
+  if (zeilenZustand(z) === "neu") {
+    const vorher = { stufe: z.stufe, nextReview: z.nextReview, ersteBewertung: z.ersteBewertung, maxStufe: z.maxStufe };
+    z.stufe = 0; z.nextReview = dateInDays(1); z.ersteBewertung = todayStr(); z.maxStufe = Math.max(0, z.maxStufe || 0);
+    const pfad = pfadKarte(b.id, z.id);
+    patchDoc({ [pfad + ".stufe"]: z.stufe, [pfad + ".nextReview"]: z.nextReview,
+      [pfad + ".ersteBewertung"]: z.ersteBewertung, [pfad + ".maxStufe"]: z.maxStufe });
+    verlaufZaehle("t");
+    tl.letzte = { id: z.id, vorher: vorher, tag: todayStr() };
+  }
+  tl.schritt = "gelernt";
+  tl.aufgedeckt = false;
+  verlaufJetztSchreiben();
+  render();
+}
+/* Schritt 8: Rueckgaengig nach "Fliessend" - die Zeile ist wieder neu, das
+   Protokoll des Tages, an dem gelernt wurde, eins weniger. */
+function textLernenRueckgaengig() {
+  const tl = ui.textLernen;
+  if (!tl || !tl.letzte) return;
+  const b = currentBereich(), z = textLernenZeile(b, tl.letzte.id);
+  if (!z) return;
+  const v = tl.letzte.vorher;
+  Object.assign(z, v);
+  const pfad = pfadKarte(b.id, z.id);
+  patchDoc({ [pfad + ".stufe"]: v.stufe, [pfad + ".nextReview"]: v.nextReview,
+    [pfad + ".ersteBewertung"]: v.ersteBewertung, [pfad + ".maxStufe"]: v.maxStufe });
+  const e = verlauf[tl.letzte.tag];
+  if (e && e.t > 0) e.t--;
+  verlaufDeltaMerken(tl.letzte.tag, "t", -1);
+  verlaufJetztSchreiben();
+  tl.letzte = null;
+  tl.fokus = tl.id;
+  textLernenSchritt("amStueck");
+}
+function textLernenWeiter() {
+  const tl = ui.textLernen, b = currentBereich(), t = tl && findText(b, tl.textId);
+  if (!t) { ui.textLernen = null; render(); return; }
+  const z = naechsteNeueZeile(b, t, tl.id);
+  if (!z) { textLernenEnde(); zeigeToast("Alle Zeilen sind gelernt"); return; }
+  Object.assign(tl, { id: z.id, fokus: z.id, hakt: new Set(), nachueben: [], letzte: null });
+  textLernenSchritt("lesen");
+}
+function textLernenEnde() {
+  if (denkpauseUhr) { clearTimeout(denkpauseUhr); denkpauseUhr = null; }
+  const tl = ui.textLernen;
+  ui.textLernen = null;
+  if (tl) ui.textAnsicht = tl.textId;
+  verlaufJetztSchreiben();
+  window.scrollTo(0, 0);
+  render();
+}
+
+/* Die Text-Sitzung (KONZEPT § 8.1 Punkt 4): Zeile bzw. Abschnitt gross,
+   Hinweiszeilen grau darueber, Knoepfe unten an festem Platz - jeder
+   Schritt hat dieselbe Knopfreihe mit zwei Plaetzen, nichts springt. */
+function textZeileHtml(z, art, nr, wortName) {
+  const inhalt = art === "verdeckt" ? '<span class="text-buehne__verdeckt">' + '· · ·' + '</span>'
+    : art === "buchstaben" ? esc(anfangsbuchstaben(z.wort)) : esc(z.wort);
+  const label = art === "verdeckt" ? ' aria-label="' + wortName + ' ' + nr + ', verdeckt"' : '';
+  return '<p class="text-buehne__zeile text-buehne__zeile--' + art + '"' + schriftAttr(z.wort) + label + '>' + inhalt + '</p>';
+}
+function renderTextLernen() {
+  const tl = ui.textLernen, b = currentBereich(), t = findText(b, tl.textId);
+  if (!t) return "";
+  const zeilen = textZeilenVon(b, t);
+  const nrVon = id => zeilenNummer(t, zeilen.findIndex(z => z.id === id));
+  const wortName = zeilenWort(t);
+  const n = textZahlen(b, t);
+  let html = modeBar({ zu: "text-lernen-zu", zuLabel: "Neu lernen beenden",
+    mitte: '<span class="modebar__titel" dir="auto">' + esc(t.name) + '</span>',
+    anteil: zeilen.length ? (n.frisch + n.fest) / zeilen.length : 0 });
+  html += '<div class="text-buehne">';
+  let knoepfe = "";
+  const denk = tl.frei ? "" : ' gedimmt" aria-disabled="true';
+  /* Dieselbe ruhige Flaeche wie "Antwort zeigen" in der Runde (3.17.26):
+     die Bewertungsknoepfe, die ihn abloesen, sind ebenfalls keine Fuellung. */
+  const aufdecken = '<button class="lg full study-aufdecken' + denk + '" data-action="text-aufdecken">Aufdecken</button>';
+  /* Bis zu zwei Zeilen davor als Einstieg (KONZEPT § 4), nie die folgende. */
+  const hinweis = (bisId, anzahl) => {
+    const i = zeilen.findIndex(z => z.id === bisId);
+    return zeilen.slice(Math.max(0, i - anzahl), i).map(z => textZeileHtml(z, "hinweis", nrVon(z.id), wortName)).join("");
+  };
+  if (tl.schritt === "gelernt") {
+    const heute = zeilen.filter(heuteNeuGelernt).length;
+    const weitere = !!naechsteNeueZeile(b, t, tl.id);
+    html += '<h1 class="text-buehne__titel">' + (tl.letzte ? wortName + ' ' + nrVon(tl.letzte.id) + ' sitzt' : 'Sitzt') + '</h1>';
+    html += '<p class="hint">' + (heute >= NEU_GUT_FUER_HEUTE ? 'Für heute ist das gut. Morgen kommt alles noch einmal.'
+      : 'Morgen kommt ' + (heute === 1 ? 'sie' : 'alles') + ' noch einmal.') + '</p>';
+    if (tl.letzte) html += '<button class="ghost" data-action="text-lernen-rueckgaengig">' + ikon("rueckgaengig", "i-sm") + ' Rückgängig</button>';
+    knoepfe = (weitere ? '<button class="' + (heute >= NEU_GUT_FUER_HEUTE ? 'secondary' : '') + ' lg full" data-action="text-lernen-weiter">Nächste ' + wortName + '</button>' : '') +
+      '<button class="' + (weitere && heute < NEU_GUT_FUER_HEUTE ? 'secondary ' : '') + 'lg full" data-action="text-lernen-zu">Für heute aufhören</button>';
+  } else if (tl.schritt === "amStueck" || tl.schritt === "hakt") {
+    const reihe = amStueckZeilen(b, t, tl);
+    html += '<h1 class="text-buehne__auftrag">' + (tl.schritt === "hakt" ? 'Tipp an, wo es gehakt hat.'
+      : reihe.length > 1 ? 'Alles von heute am Stück aufsagen.' : 'Noch einmal ohne Hilfe aufsagen.') + '</h1>';
+    html += hinweis(reihe[0].id, 2);
+    for (const z of reihe) {
+      if (tl.schritt === "hakt") {
+        const an = tl.hakt.has(z.id);
+        html += '<button class="text-buehne__wahl' + (an ? ' aktiv' : '') + '" data-action="text-zeile-hakt" data-id="' + esc(z.id) + '" aria-pressed="' + an + '">' +
+          '<span class="text-zeile__nr">' + nrVon(z.id) + '</span>' + textZeileHtml(z, "offen", nrVon(z.id), wortName) + '</button>';
+      } else html += textZeileHtml(z, tl.aufgedeckt ? "offen" : "verdeckt", nrVon(z.id), wortName);
+    }
+    if (tl.schritt === "hakt") {
+      knoepfe = '<button class="lg full" data-action="text-hakt-weiter"' + (tl.hakt.size ? '' : ' disabled') + '>Diese üben</button>';
+    } else if (!tl.aufgedeckt) knoepfe = aufdecken;
+    else knoepfe = '<button class="secondary lg full" data-action="text-am-stueck" data-id="hakt">Hakt</button>' +
+      '<button class="lg full" data-action="text-am-stueck" data-id="fliessend">Fließend</button>';
+  } else {
+    const z = textLernenZeile(b, tl.fokus);
+    if (!z) return html + '</div>';
+    const auftrag = { lesen: 'Lesen – laut, bis es sich vertraut anfühlt.', buchstaben: 'Mit den Anfangsbuchstaben aufsagen.', ohne: 'Ohne Hilfe aufsagen.' }[tl.schritt];
+    html += '<h1 class="text-buehne__auftrag">' + auftrag + '</h1>';
+    html += hinweis(z.id, tl.schritt === "ohne" ? 1 : 2);
+    html += '<p class="text-buehne__nr">' + wortName + ' ' + nrVon(z.id) + '</p>';
+    if (tl.schritt === "lesen") {
+      html += textZeileHtml(z, "offen", nrVon(z.id), wortName);
+      knoepfe = '<button class="lg full" data-action="text-lernen-schritt" data-id="buchstaben">Weiter</button>';
+    } else {
+      if (tl.schritt === "buchstaben" && !tl.aufgedeckt) html += textZeileHtml(z, "buchstaben", nrVon(z.id), wortName);
+      else html += textZeileHtml(z, tl.aufgedeckt ? "offen" : "verdeckt", nrVon(z.id), wortName);
+      knoepfe = !tl.aufgedeckt ? aufdecken
+        : '<button class="secondary lg full" data-action="text-konnte" data-id="nein">Noch nicht</button>' +
+          '<button class="lg full" data-action="text-konnte" data-id="ja">Konnte ich</button>';
+    }
+  }
+  html += '</div>';
+  html += '<div class="text-knoepfe">' + knoepfe + '</div>';
+  return html;
 }
 
 function renderVerwalten() {
@@ -14032,6 +14333,21 @@ document.body.addEventListener("click", e => {
     case "zeile-loeschen": zeileLoeschen(); break;
     case "text-loeschen": textLoeschen(btn.dataset.id); break;
     case "texte-widerrufen": texteWiderrufen(); break;
+    /* 3.18.3: Neu lernen (Stufe 3). */
+    case "text-lernen": textLernenStarten(btn.dataset.id); break;
+    case "text-lernen-zu": textLernenEnde(); break;
+    case "text-lernen-schritt": if (ui.textLernen) textLernenSchritt(btn.dataset.id === "buchstaben" ? "buchstaben" : "lesen"); break;
+    case "text-aufdecken": textAufdecken(); break;
+    case "text-konnte": if (ui.textLernen) textKonnte(btn.dataset.id === "ja"); break;
+    case "text-am-stueck": if (ui.textLernen) textAmStueck(btn.dataset.id === "fliessend"); break;
+    case "text-zeile-hakt": {
+      const tl = ui.textLernen;
+      if (tl && tl.schritt === "hakt") { if (tl.hakt.has(btn.dataset.id)) tl.hakt.delete(btn.dataset.id); else tl.hakt.add(btn.dataset.id); render(); }
+      break;
+    }
+    case "text-hakt-weiter": textHaktWeiter(); break;
+    case "text-lernen-weiter": textLernenWeiter(); break;
+    case "text-lernen-rueckgaengig": textLernenRueckgaengig(); break;
     case "karte-neu":
       ui.neuWahl = false;
       ui.editId = null; resetFormDraft(); ui.karteSheet = true;

@@ -1,0 +1,8 @@
+
+/* ---------- 3.18.5: Wiederholen (Stufe 4) ---------- */
+.text-buehne__zeile--nachbar { color: var(--text-2); }
+.text-frage { display: grid; gap: var(--space-2); margin-top: var(--space-4); }
+.text-frage__wort { min-height: var(--ctrl-lg); font-size: 1.2rem; }
+.text-frage__wort.arabic { font-size: calc(1.4rem * var(--arab-scale, 1)); }
+.text-wiederholen { margin-top: var(--space-4); }
+.text-neu-lernen { margin-top: var(--space-3); }

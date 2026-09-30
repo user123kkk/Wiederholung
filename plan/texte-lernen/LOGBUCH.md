@@ -2,6 +2,62 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stufe 3: Neu lernen, Anfangsbuchstaben, Denkpause (3.18.4)
+
+**Geändert:**
+- `app.js`: Tagesprotokoll-Art „t“ (`VERLAUF_ARTEN` statt dreier Listen in
+  `verlaufZusammen`/`persistVerlauf`, `normVerlauf` behält `t`,
+  `tagGelernt` = w+n+t); Kalender (`menge`) und `letzteWoche`
+  (`antworten`) zählen `t` mit, damit ein Serientag nicht leer aussieht.
+  Neuer Block „Neu lernen (Stufe 3)“ vor `renderVerwalten`:
+  `anfangsbuchstaben`, `zeileWoerter`, `denkpauseMs`, `heuteNeuGelernt`,
+  `naechsteNeueZeile`, `amStueckZeilen`, `textLernenStarten`,
+  `denkpauseStarten`, `textLernenSchritt`, `textAufdecken`,
+  `textBewertenZuFrueh`, `textKonnte`, `textAmStueck`, `textHaktWeiter`,
+  `textGelernt`, `textLernenRueckgaengig`, `textLernenWeiter`,
+  `textLernenEnde`, `renderTextLernen`. `renderMain`: `imModus` auch mit
+  `ui.textLernen` (Konto-Bindung, nur im Probelauf), Schlüssel für
+  Bewegungen. `ui.textLernen`; `selectBereich` beendet die Sitzung; Knopf
+  „Neu lernen · Zeile N“ in der Text-Ansicht; 11 Klick-Fälle.
+  Version 3.18.4 (3.18.3 = Großplan-Runde 15), alle 33 `?v=`, Changelog.
+- `styles.css`: Block „Text-Sitzung, Neu lernen (Stufe 3)“; gedimmter
+  „Aufdecken“ = Stil `study-aufdecken` mit leiserer Schrift.
+- Prüfstand: `t_text_neu.js`, `t_anfangsbuchstaben.js` (neu).
+**Entscheidung:**
+- „Heute neu gelernt“ = `ersteBewertung` heute **und** morgen fällig; so
+  zählen Zeilen aus „kann ich schon“ (heute fällig) nicht zum Am-Stück-Block.
+- Gespeichert wird nur bei „Fließend“; Rückgängig stellt die Zeile auf neu
+  und zieht `t` am Lerntag wieder ab (Differenz −1, wie bei Karten).
+- Denkpause: Knopf steht von Anfang an da, `aria-disabled`, der Timer setzt
+  nur Klasse/Attribut am vorhandenen Knopf – kein Neuzeichnen, kein Sprung
+  (gemessen 0 px). Bewerten nach dem Aufdecken erst nach
+  `BEWERTEN_SPERRE_MS` (wie Karten, 3.17.25).
+- Tagesmengen-Hinweis „Heute lieber das Gelernte halten“
+  (WIEDERHOLEN.md § 5) braucht die Wiederholzeit von Kreis und frischen
+  Zeilen – kommt mit Stufe 4. Hier nur der ruhige Satz nach 3 Zeilen (T7).
+- Karten-Ring (`heuteAnteil`) bleibt bei w/n (Plan § 15).
+**Tests:** `t_text_neu.js` OK (Hilfestufen samt „Noch nicht“, Denkpause,
+Sperre, Knopf 0 px, Fließend → frisch/morgen/t=1, Rückgängig → neu/t=0,
+Hakt an Zeile 1 übt nur sie, Abbrechen speichert nichts, Hinweiszeile nur
+davor, „Für heute ist das gut“ nach 3, Serie mit nur Textzeile);
+Gegenprobe ohne Denkpausen-Sperre: rot. `t_anfangsbuchstaben.js` OK
+(13 Stichproben, alle 6236 Ayat nur Grundbuchstaben, Deutsch mit
+Satzzeichen); Gegenprobe ohne Entfernen der Zeichen: 10 Befunde.
+Kontrast „Aufdecken“: gedimmt 5,49:1/6,34:1, frei 12,93:1/15,95:1
+(dunkel/hell). Regressionen: nächster Eintrag bzw. Nachholliste.
+**Gegenprüfung:** gelesen: neuer Block, Klick-Fälle, `renderMain`-Änderung,
+Protokoll-Änderungen samt aller Stellen, die `w`/`n` summieren (`grep`:
+Kalender, `letzteWoche`, `heuteAnteil` – letzterer bewusst ohne `t`).
+Bildschirmfotos aller Schritte in hell und dunkel. Gefunden: gedimmter Knopf
+im hellen Thema zu blass (Deckkraft 0,45) → Stil ohne Deckkraft, gemessen.
+Ein vermeintlicher Fehler („Aufdecken wirkt in der Denkpause“) war ein
+Messfehler: Playwrights `click` wartet bei `aria-disabled` von selbst.
+**Offen:** Tagesmengen-Hinweis (Stufe 4). Gesamtlauf/Tempotest am Ladegerät
+(Nachholliste „Pause“). Push wartet auf Großplan-Runde 15 (3.18.3), dann
+rebasen.
+**Nächster Schritt:** Stufe 4 (Wiederholen: Zustände, Kreis, Nachbarn,
+Tagesmenge, Kontrollfrage; WIEDERHOLEN.md § 1–5, § 7, Tests § 9).
+
 ### 2026-09-30 — Stufe 2: Anlegen, Einwilligung, Bearbeiten, Löschen (3.18.2)
 
 **Geändert:**

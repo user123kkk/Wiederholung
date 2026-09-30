@@ -19,7 +19,7 @@ let denkpauseUhr = null;
    Arabisch der erste Grundbuchstabe ohne Harakat, Quran-Zeichen und Tatweel;
    Woerter nur aus solchen Zeichen (Waqf-, Sajda-Zeichen) fallen weg. Sonst
    der erste Buchstabe, Satzzeichen davor und dahinter bleiben. */
-const ARAB_OHNE_BUCHSTABE = /[ؐ-ًؚ-ٰٟۖ-ۭـ]/g;
+const ARAB_OHNE_BUCHSTABE = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g;
 function anfangsbuchstaben(zeile) {
   return String(zeile || "").split(" ").map(w => {
     if (!w) return "";
