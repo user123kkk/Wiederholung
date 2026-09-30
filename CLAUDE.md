@@ -2,6 +2,29 @@
 
 ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
 
+### Stichwort „ladegerät“ (Betreiber 30.09.2026)
+
+Schreibt der Betreiber **„ladegerät“**, dann ist gemeint: Laptop hängt am
+Strom, jetzt alles prüfen und – nur wenn alles grün ist – veröffentlichen.
+Das Stichwort **ist** seine Freigabe für Regeln und Hosting. Ablauf:
+
+1. Im Repo auf dem Laptop (Windows, PowerShell):
+   `powershell -ExecutionPolicy Bypass -File plan\werkzeuge\ladegeraet.ps1`
+   (dasselbe wie Doppelklick auf `ladegeraet.bat`). Das Skript: Stand =
+   `origin/main` → Strom da? → alle `t_*.js` (inkl. 13 Rundentests,
+   `t_bestand_tempo`) → Affe mit Texten Handy 200 / iPad 150 → **erst
+   dann** `firebase deploy --only firestore:rules` → Hosting über
+   `veroeffentlichen.ps1`. Bricht beim ersten Rot ab, ohne zu veröffentlichen.
+2. Ausgabe **lesen**, nicht nur den Exit-Code: Rote Tests einzeln nachsehen
+   (`<tmp>/adrabic-pruefstand-gesamt/<Quellstand>/*.log`) und gegen den
+   Vorstand prüfen (LEHREN § 5.3). Echter Fehler → beheben, committen,
+   Stichwort-Ablauf neu. Skriptfehler (es lief bis 30.09. nie unter Windows)
+   → Skript reparieren, Logbuch.
+3. Ergebnis in `plan/texte-lernen/LOGBUCH.md` eintragen (Version, Commit,
+   was lief, was online ist) und dem Betreiber kurz melden.
+
+Nur prüfen ohne Veröffentlichen: `ladegeraet.ps1 -NurPruefen`.
+
 ### AKTUELL (30.09.2026): Texte auswendig lernen — hier weitermachen
 
 Bei „weiter“/„leg los“: **`plan/texte-lernen/LOGBUCH.md` oberster Eintrag,

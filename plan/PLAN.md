@@ -791,7 +791,7 @@ erstellen (`grossplan/AUFTRAG.md` § 4a).
   Stufe 2 (3.18.2) und **Stufe 3 Neu lernen (3.18.3)** auf `main`.
   Gesamtlauf in der Cloud 108/113; die 5 roten sind auf 3.18.2 genauso rot
   (Umgebung). **Nicht veröffentlichen**, bis sie und `t_bestand_tempo` am
-  Laptop grün sind. **Stufe 4 Wiederholen (3.18.4)** auf `main`. Stufe 5 Karten-Regler (3.18.5), Quran-Schrift-Korrektur (3.18.6, Amiri Quran für ◌-Zeichen). Stufe 6 Lernen-Tab (3.18.7). Nächster Schritt: Stufe 7 (Gesamtprüfung, Affe mit Texten).
+  Laptop grün sind. **Stufe 4 Wiederholen (3.18.4)** auf `main`. Stufe 5 Karten-Regler (3.18.5), Quran-Schrift-Korrektur (3.18.6, Amiri Quran für ◌-Zeichen). Stufe 6 Lernen-Tab (3.18.7). Stufe 7 Gesamtprüfung in der Cloud (Affe mit Texten 0 Befunde). **Am Laptop: Stichwort „ladegerät“** (CLAUDE.md) prüft alles und veröffentlicht. Danach Stufe 8: Probelauf 4 Wochen.
 - **Wartet auf Betreiber:** Firestore-Regeln veröffentlichen **vor** dem
   Hosting von 3.18.0 (`firebase deploy --only firestore:rules`).
 - **Parallel:** Großplan-Runde 15 (3.17.57) läuft in einer anderen Session

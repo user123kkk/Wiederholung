@@ -1,6 +1,6 @@
 // Zufallstester: klickt N-mal auf sichtbare Bedienelemente und sammelt Fehler.
 // node affe.js <geraet> <schritte> <seed>
-const { start, neueSeite, GERAETE } = require('./lib');
+const { start, neueSeite, GERAETE, tag } = require('./lib');
 const geraet = process.argv[2] || 'handy';
 const SCHRITTE = +(process.argv[3] || 250);
 let seed = +(process.argv[4] || 1);
@@ -8,10 +8,18 @@ const zufall = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return s
 const VERBOTEN = ['logout', 'delete-account', 'import-trigger', 'export-backup', 'export-backup-current', 'konto-backup',
   'seite-neu-laden', 'start-neu-versuchen', 'hw-fullscreen', 'open-error-modal', 'feedback-submit', 'feedback-delete',
   'google-login', 'apple-login', 'code-copy-clipboard', 'link-copy-clipboard', 'teile-lektion-link'];
+const TEXTE = process.env.AFFE_TEXTE === '1';
+// Im Texte-Modus nicht gleich alle Texte weg (Widerruf, Loeschen), sonst endet der Test dort.
+if (TEXTE) VERBOTEN.push('texte-widerrufen', 'text-loeschen');
 
 (async () => {
   const b = await start();
-  const { p } = await neueSeite(b, GERAETE[geraet], { warte: 1800 });
+  /* AFFE_TEXTE=1: Betreiber-Konto mit Testtext und Einwilligung (Texte
+     lernen, Stufe 7) - sonst wie immer das Testkonto ohne Texte. */
+  const { p } = process.env.AFFE_TEXTE === '1'
+    ? await (async () => { const T = require('./text_lib'); const s = T.textStore(); s['users/u1'].texteEinwilligung = tag(0);
+        const g = GERAETE[geraet]; return T.seiteMitApp(b, s, { uid: T.BETREIBER_UID, viewport: { width: g.width, height: g.height } }); })()
+    : await neueSeite(b, GERAETE[geraet], { warte: 1800 });
   p.on('dialog', d => d.dismiss().catch(() => {}));
   const verlauf = [];
   const befunde = new Map();
@@ -27,7 +35,10 @@ const VERBOTEN = ['logout', 'delete-account', 'import-trigger', 'export-backup',
       await p.evaluate((t) => { const f = [...document.querySelectorAll('input[type=text], input:not([type]), textarea')].filter(x => x.offsetParent); if (f.length) { const x = f[Math.floor(Math.random() * f.length)]; x.value = t; x.dispatchEvent(new Event('input', { bubbles: true })); } }, ['كتاب', 'Test', '', 'x'.repeat(50)][i % 4]);
     }
     if (!kandidaten.length) { await p.keyboard.press('Escape'); await p.waitForTimeout(150); continue; }
-    const k = Math.floor(zufall() * kandidaten.length);
+    /* Texte-Modus: Text-Aktionen zu 60 % bevorzugt, sonst traf der Zufall
+       die Text-Bildschirme kaum (7-10 von 200 Schritten). */
+    const textK = TEXTE ? kandidaten.map((x, j) => /^(text|zeile|quran)/.test(x) ? j : -1).filter(j => j >= 0) : [];
+    const k = textK.length && zufall() < 0.6 ? textK[Math.floor(zufall() * textK.length)] : Math.floor(zufall() * kandidaten.length);
     verlauf.push(kandidaten[k]);
     try {
       await p.click('[data-affe="' + k + '"]', { timeout: 1500 });
@@ -48,6 +59,7 @@ const VERBOTEN = ['logout', 'delete-account', 'import-trigger', 'export-backup',
       if (!befunde.has(key)) befunde.set(key, { f: key + ' ' + (await p.evaluate(() => { const w = innerWidth; return [...document.querySelectorAll('body *')].filter(e => e.getBoundingClientRect().right > w + 1).slice(0, 4).map(e => e.className || e.tagName).join(' | '); })), weg: verlauf.slice(-6) });
     }
   }
+  if (process.env.AFFE_TEXTE === '1') console.log('Texte-Aktionen:', verlauf.filter(v => /^(text|zeile|neu-wahl|quran)/.test(v)).length, [...new Set(verlauf.filter(v => /^(text|zeile|neu-wahl|quran)/.test(v)).map(v => v.split(':')[0]))].join(' '));
   console.log(geraet, 'Schritte:', SCHRITTE, 'Befunde:', befunde.size);
   for (const [k, v] of befunde) console.log('---\n' + v.f.slice(0, 600) + '\n  Weg: ' + v.weg.join(' > '));
   await b.close();

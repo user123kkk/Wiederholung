@@ -2,6 +2,42 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stufe 7: Gesamtprüfung (Cloud) + Stichwort „ladegerät“
+
+**Geändert:**
+- `plan/werkzeuge/pruefstand/affe.js`: `AFFE_TEXTE=1` = Betreiber-Konto mit
+  Testtext und Einwilligung; Text-Aktionen zu 60 % bevorzugt, Widerruf und
+  „Text löschen“ ausgeschlossen (sonst endete der Lauf dort); zählt die
+  Text-Aktionen. Ohne Schalter unverändert.
+- `plan/werkzeuge/pruefstand/t_text_tempo.js` (neu): Sure 2 (286 Ayat),
+  CPU 4×, lange Aufgaben je Schritt.
+- `plan/werkzeuge/ladegeraet.ps1`, `ladegeraet.bat` (neu), `CLAUDE.md`
+  Abschnitt „Stichwort ladegerät“: am Laptop Stand → Strom → alle Tests →
+  Affe mit Texten → Regeln → Hosting; Abbruch beim ersten Rot.
+**Ergebnisse (Cloud-Container):**
+- Affe mit Texten: Handy 200 (Seed 7: 149 Text-Aktionen; Seed 23: 133),
+  iPad 150 (92), klein 150 (100) – **0 Befunde**. Erreicht: Wiederholen,
+  Aufdecken, Hakt/Fließend, Rückgängig, Kontrollfrage, Neu lernen, Zeile
+  bearbeiten/Original, Anlegen-Wahl, Lernen-Tab.
+- `t_text_tempo`: keine Aufgabe > 200 ms. Aufgaben > 50 ms (CPU 4×):
+  Verwalten 94/79, Text öffnen 95/56/104, Wiederholen 56, Beenden 57/62,
+  Lernen-Tab 60. Aufgeschlüsselt: JS für die Text-Ansicht 2,4 ms, Plan
+  0,3 ms, Markieren 0,9 ms, `render()` 45 ms – der Rest ist Satz/Layout
+  von 286 arabischen Zeilen durch den Browser (Zeilen haben schon
+  `content-visibility`). **Befund, nicht behoben:** Ziel „kein Bild
+  > 50 ms“ (KONZEPT § 13) im Container nicht erreicht; gleiche Größenordnung
+  wie der bestehende Verwalten-Reiter. Abhilfe wäre nachgeladene Liste
+  (erst 40 Zeilen, Rest beim Scrollen) – lohnt erst, wenn es am echten
+  Gerät spürbar ist. Am Laptop/iPhone nachmessen.
+- Voller Gesamtlauf: nächster Eintrag.
+**Nicht gemacht:** Mehrgeräte-Test gegen den Emulator (WIEDERHOLEN § 9) –
+kein Emulator im Container; am Laptop mit `regeln_testen.sh`-Umgebung
+nachholen. `ladegeraet.ps1` lief nie unter Windows (keine PowerShell im
+Container) – der erste Lauf mit dem Stichwort ist sein Test.
+**Nächster Schritt:** Gesamtlauf auswerten; danach Stufe 8 = Probelauf
+(4 Wochen, Betreiber lernt echt; wöchentlich die Probelauf-Werte aus den
+Einstellungen ins Logbuch).
+
 ### 2026-09-30 — Stufe 6: Lernen-Tab, Fortschritt, Probelauf-Werte (3.18.7)
 
 **Geändert:** `app.js`: Block „Lernen-Tab und Probelauf-Werte (Stufe 6)“
