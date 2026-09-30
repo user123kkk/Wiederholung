@@ -2,6 +2,25 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Tempo-Befund `t_text_tempo` untersucht (Laptop, am Strom)
+
+**Ursache gemessen (Chrome-Trace, CPU 4×):** Die langen Aufgaben bei
+„Verwalten“ und „Text öffnen“ sind fast nur Layout, nicht Skript. Verwalten
+hat nur ~1000 Elemente (40 Kartenzeilen, `content-visibility` greift schon).
+Teuer ist das **erste Setzen arabischer Zeilen in der Quran-Schrift**
+(Formberechnung, `BeginRemoteFontLoad` im selben Bild): Layout 116 ms kalt,
+42 ms, wenn dieselben Wörter vorher einmal gesetzt wurden.
+**Versucht und zurückgenommen:**
+- `syncAppbarKante` per `requestAnimationFrame` (Verdacht doppeltes Layout):
+  4 Läufe weiter 234–293 ms, kein Gewinn.
+- Vorwärmen der eigenen Textzeilen im Leerlauf nach dem Start (nur
+  Betreiber, 20er-Portionen): Test klickt direkt nach dem Laden, das
+  Vorwärmen läuft dann mitten in die Schritte – 237–282 ms, schlechter.
+**Stand:** `app.js` unverändert (3.18.8). Cloud-Container war grün, der
+Laptop ist unter 4× Drosselung langsamer – Grenze bleibt 200 ms.
+**Offen (Betreiber-Frage):** Weg wählen – siehe Antwort vom 30.09.
+**Nächster Schritt:** Entscheidung des Betreibers abwarten.
+
 ### 2026-09-30 — Stichwort „ladegerät“ am Laptop: erster Windows-Lauf, NICHT veröffentlicht
 
 **Stand:** 3.18.8 / `ec54f17`. Vorher auf dem Laptop: alter, nie gepushter
