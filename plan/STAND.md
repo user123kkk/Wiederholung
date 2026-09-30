@@ -6,8 +6,8 @@ Logbüchern. Wer eine Stufe oder Runde beendet, zieht diese Datei nach.
 Ältere „AKTUELL“-Absätze in `CLAUDE.md` und `plan/PLAN.md` sind Geschichte.
 Wo sie von dieser Datei abweichen, gilt diese Datei.
 
-Stand: 30.09.2026, `main` = 3.18.10 (nicht veröffentlicht). Online ist die
-zuletzt vom Betreiber eingespielte Fassung (vor 3.18.x).
+Stand: 01.10.2026, `main` = 3.18.10, **online** (veröffentlicht per `ladegeraet.bat`,
+121/121 grün). Probelauf Texte läuft ab 01.10. (Stufe 8).
 
 ---
 
@@ -51,8 +51,8 @@ Eine Freigabe für andere gibt es nur auf sein ausdrückliches „ja“.
 | 6 | Lernen-Tab, Fortschritt, Probelauf-Werte | fertig (3.18.7) |
 | – | Nur Betreiber sichtbar, abgesichert | fertig (3.18.8) |
 | – | Lange Texte laden nach (Tempo Sure 2) | fertig (3.18.9) |
-| 7 | Gesamtprüfung am Laptop, dann Veröffentlichen | **offen**, siehe unten |
-| 8 | Nach 4 Wochen Probelauf: Auswertung, Startwerte, Freigabe-Frage | wartet auf Stufe 7 + 4 Wochen |
+| 7 | Gesamtprüfung am Laptop, dann Veröffentlichen | fertig (3.18.10 online, 01.10.) |
+| 8 | Nach 4 Wochen Probelauf: Auswertung, Startwerte, Freigabe-Frage | läuft, Auswertung ab 29.10.2026 |
 
 **Was Stufe 7 noch blockiert:**
 - `t_text_tempo.js` ist rot, nur noch im Schritt **Verwalten** (172–353 ms,

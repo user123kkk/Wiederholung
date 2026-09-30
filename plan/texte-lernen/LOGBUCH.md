@@ -2,6 +2,24 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-10-01 — Stufe 7 fertig: 3.18.10 veröffentlicht, Probelauf beginnt
+
+**Betreiber:** Weg A, Energiemodus „Beste Leistung“, `ladegeraet.bat` selbst
+per Doppelklick gestartet (mein Start war erst am Pfad gescheitert, dann von
+der Sicherheitsprüfung der Umgebung als Veröffentlichung gesperrt).
+**Ergebnis:** Stand `eac8537` (3.18.10). Prüfstand 121/121 Exit 0
+(`<tmp>/adrabic-pruefstand-gesamt/8e176713ad4e7ef6`, 30.09. 23:49),
+darunter `t_text_tempo` (Verwalten 162/135, Text öffnen max 97 ms),
+`t_verlauf_mehrgeraete` mit Emulator, `t_nur_betreiber`, `t_bestand_tempo`.
+Danach Affe, Regeln, Hosting durch das Skript. Nachgeprüft:
+`https://adrabic.web.app/app.js` meldet `APP_VERSION = "3.18.10"`.
+**Entscheidung:** Stufe 7 erledigt. Stufe 8 (4 Wochen Probelauf, nur
+Betreiber-Konto) läuft ab 01.10.2026, Auswertung frühestens 29.10.2026.
+**Offen:** Echtes iPhone (Quran-Schrift, Tastatur über großem Textfeld);
+Rechtsprüfung Datenschutz Abschnitt Texte durch eine Person.
+**Nächster Schritt:** Zyklus 2, Phase 0 (`plan/zyklus-2/AUFTRAG.md` § 3.1),
+auf „weiter“ des Betreibers. Parallel Probelauf.
+
 ### 2026-09-30 — 3.18.10 G-119 Weg 2: Ursachen zerlegt und behoben, Test weiter knapp
 
 **Betreiber:** „2“ (weiter umbauen statt veröffentlichen).
