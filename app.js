@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.6";
+const APP_VERSION = "3.18.7";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -9222,6 +9222,8 @@ function renderEinstellungen() {
     wert: alter === null ? "noch nie" : alter === 0 ? "heute" : alter === 1 ? "gestern" : "vor " + alter + " Tagen" });
   html += '</div></div>';
 
+  html += probelaufWerte();
+
   /* ---------- Hilfe ---------- */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Hilfe</div>';
@@ -10049,6 +10051,8 @@ function renderLernen() {
   /* Der Nachklang gilt nur, solange es noch keine eigene Karte gibt. Sobald
      eine da ist, ist er erledigt - und zwar dauerhaft, nicht nur versteckt. */
   if (cards.length > 0) nachklangLoeschen();
+  /* 3.18.7: Ein Bereich nur mit Texten ist nicht "leer" (Stufe 6). */
+  if (cards.length === 0 && lernenTexte(b)) return html + lernenGruss() + lernenTexte(b) + lernenSerie();
   if (cards.length === 0) {
     const kannAnlegen = !istGefuehrt(b);
     /* 3.9.10: Der Nachklang des Einstiegs - genau hier und nirgends sonst.
@@ -10124,6 +10128,7 @@ function renderLernen() {
      nicht Aufgabe. 3.12.0: mit der Woche als Punkten (Duolingo zeigt dort
      die Tage der Woche; hier sind es die letzten sieben Tage aus dem
      Tagesprotokoll - gezaehlt, nicht behauptet). --- */
+  html += lernenTexte(b);
   html += lernenSerie();
 
   /* Wiederholungen, die heute in ANDEREN Bereichen faellig sind.
@@ -12135,7 +12140,7 @@ function textLernenGueltig() {
   const tl = ui.textLernen;
   if (!tl) return false;
   const b = currentBereich();
-  if (ui.tab !== "verwalten" || tl.uid !== (currentUser ? currentUser.uid : null) || !texteFreigeschaltet() ||
+  if ((ui.tab !== "verwalten" && ui.tab !== "lernen") || ui.session || tl.uid !== (currentUser ? currentUser.uid : null) || !texteFreigeschaltet() ||
       !findText(b, tl.textId) || !textLernenZeile(b, tl.id)) {
     if (denkpauseUhr) { clearTimeout(denkpauseUhr); denkpauseUhr = null; }
     ui.textLernen = null;
@@ -12261,7 +12266,7 @@ function textLernenEnde() {
   if (denkpauseUhr) { clearTimeout(denkpauseUhr); denkpauseUhr = null; }
   const tl = ui.textLernen;
   ui.textLernen = null;
-  if (tl) ui.textAnsicht = tl.textId;
+  if (tl && ui.tab === "verwalten") ui.textAnsicht = tl.textId;
   verlaufJetztSchreiben();
   window.scrollTo(0, 0);
   render();
@@ -12516,6 +12521,65 @@ function textWdhRueckgaengig() {
   tl.letzte = null;
   tl.pos = l.pos;
   textWdhStueck();
+}
+
+/* ---------- 3.18.7: Lernen-Tab und Probelauf-Werte (Stufe 6) ----------
+   KONZEPT § 8.1 Punkt 3: je Text Titel, Balken neu/frisch/fest aus den
+   GESPEICHERTEN Zustaenden, "Heute: etwa N Minuten" oder "Heute fertig",
+   eigene Zahl ab 20 Antworten. Ein Tipp startet, was heute dran ist: erst
+   Wiederholen, sonst Neu lernen (WIEDERHOLEN § 4). */
+function textSitztSatz(t) {
+  const e = t.festErgebnisse || "";
+  if (e.length < KREIS_MIN_ANTWORTEN) return "";
+  const sitzt = Math.round(e.split("").filter(x => x === "1").length / e.length * 10);
+  return "Von deinen festen " + (zeilenWort(t) === "Aya" ? "Ayat" : "Zeilen") + " sitzen " + sitzt + " von 10.";
+}
+function lernenTexte(b) {
+  if (!texteFreigeschaltet() || !b || !(b.texte || []).length) return "";
+  const heute = todayStr();
+  let html = '<section class="texte-lernen" aria-labelledby="texte-lernen-titel"><h2 id="texte-lernen-titel" class="texte-lernen__titel">Texte</h2><div class="liste">';
+  for (const t of b.texte) {
+    const zeilen = textZeilenVon(b, t);
+    if (!zeilen.length) continue;
+    const n = textZahlen(b, t);
+    const sek = textWdhSekunden(b, t, heute);
+    const status = sek > 0 ? "Heute: etwa " + mz(Math.max(1, Math.round(sek / 60)), "Minute", "Minuten")
+      : n.frisch + n.fest === 0 ? "Noch nichts gelernt" : n.neu > 0 ? "Wiederholt – Neues möglich" : "Heute fertig";
+    const anteil = x => (x / zeilen.length * 100).toFixed(2) + "%";
+    const satz = textSitztSatz(t);
+    html += '<button class="liste-zeile texte-lernen__zeile" data-action="text-heute" data-id="' + esc(t.id) + '">' +
+      '<span class="texte-lernen__kopf"><span class="liste-zeile__text" dir="auto">' + esc(t.name) + '</span>' +
+      '<span class="liste-zeile__wert">' + status + '</span></span>' +
+      '<span class="texte-lernen__balken" role="img" aria-label="' + n.neu + ' neu, ' + n.frisch + ' frisch, ' + n.fest + ' fest">' +
+      '<span class="texte-lernen__fest" style="width:' + anteil(n.fest) + '"></span>' +
+      '<span class="texte-lernen__frisch" style="width:' + anteil(n.frisch) + '"></span></span>' +
+      (satz ? '<span class="texte-lernen__satz">' + satz + '</span>' : '') + '</button>';
+  }
+  return html + '</div></section>';
+}
+/* Tipp im Lernen-Tab: Faelliges zuerst, sonst Neues, sonst die Ansicht. */
+function textHeute(tid) {
+  const b = currentBereich(), t = findText(b, tid);
+  if (!t) return;
+  if (textWdhPlan(b, t, todayStr()).length) textWdhStarten(tid);
+  else if (textZahlen(b, t).neu > 0) textLernenStarten(tid);
+  else { ui.tab = "verwalten"; ui.textAnsicht = tid; window.scrollTo(0, 0); render(); }
+}
+/* WIEDERHOLEN § 8: nur fuer den Betreiber - die Werte, die er woechentlich
+   ins Logbuch uebertraegt. Hier duerfen Methoden-Zahlen stehen (sonst nie,
+   LEHREN § 6.9): es ist die Auswertung des Probelaufs, keine Oberflaeche
+   fuer Lernende. */
+function probelaufWerte() {
+  if (!texteFreigeschaltet() || !bereiche) return "";
+  const quote = e => e && e.length ? "sitzen " + Math.round(e.split("").filter(x => x === "1").length / e.length * 100) + "\u00a0% von\u00a0" + e.length : "noch keine Antworten";
+  let html = '<div class="sektion"><div class="eyebrow">Probelauf (nur du)</div><div class="liste probelauf">';
+  for (const b of bereiche) {
+    if (b.karten.length) html += '<div class="liste-zeile probelauf__zeile"><span class="liste-zeile__text" dir="auto">' + esc(b.name) + '</span>' +
+      '<span class="liste-zeile__wert">Faktor ' + String(typeof b.abstandFaktor === "number" ? b.abstandFaktor : 1).replace(".", ",") + ' · ' + quote(b.festErgebnisse) + '</span></div>';
+    for (const t of (b.texte || [])) html += '<div class="liste-zeile probelauf__zeile"><span class="liste-zeile__text" dir="auto">' + esc(t.name) + '</span>' +
+      '<span class="liste-zeile__wert">Kreis ' + t.kreisTage + '\u00a0Tage · ' + quote(t.festErgebnisse) + ' · heute etwa ' + Math.round(textWdhSekunden(b, t, todayStr()) / 60) + '\u00a0Min.</span></div>';
+  }
+  return html + '</div></div>';
 }
 
 function renderTextWdh(tl, b, t) {
@@ -14698,6 +14762,7 @@ document.body.addEventListener("click", e => {
     case "text-oeffnen": ui.textAnsicht = btn.dataset.id; window.scrollTo(0, 0); render(); break;
     case "text-lernen": ui.textAnsicht = btn.dataset.id; textLernenStarten(btn.dataset.id); break;
     case "text-lernen-zu": textLernenEnde(); break;
+    case "text-heute": textHeute(btn.dataset.id); break;
     case "text-wdh-start": ui.textAnsicht = btn.dataset.id; textWdhStarten(btn.dataset.id); break;
     case "text-wdh": textWdhAntwort(btn.dataset.id === "fliessend"); break;
     case "text-wdh-hakt-weiter": if (ui.textLernen && ui.textLernen.schritt === "wdhHakt" && ui.textLernen.hakt.size) textWdhBewerten(); break;

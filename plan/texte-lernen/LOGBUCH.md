@@ -2,6 +2,39 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-09-30 — Stufe 6: Lernen-Tab, Fortschritt, Probelauf-Werte (3.18.7)
+
+**Geändert:** `app.js`: Block „Lernen-Tab und Probelauf-Werte (Stufe 6)“
+vor `renderTextWdh` (`textSitztSatz`, `lernenTexte`, `textHeute`,
+`probelaufWerte`); `renderLernen`: `lernenTexte(b)` vor der Serie, ein
+Bereich nur mit Texten zeigt Gruß + Texte + Serie statt „Noch nichts“;
+`renderEinstellungen`: `probelaufWerte()` vor „Hilfe“;
+`textLernenGueltig` erlaubt den Modus auch im Lernen-Tab (nicht während
+einer Karten-Runde); `textLernenEnde` öffnet die Text-Ansicht nur im
+Verwalten-Tab; Klick `text-heute`. `styles.css`: `.texte-lernen*`,
+`.probelauf__zeile`, Desktop-Raster rechte Spalte (LEHREN § 6.2).
+Version 3.18.7, Changelog. Prüfstand: `t_text_fortschritt.js` (neu).
+**Entscheidung:**
+- Balken nur fest + frisch gefüllt, neu = Spur (drei Wörter stehen im
+  `aria-label`, keine Zahlen in der Anzeige).
+- Status: „Heute: etwa N Minuten“ (WIEDERHOLEN § 5-Schätzung) / „Heute
+  fertig“ / „Wiederholt – Neues möglich“ / „Noch nichts gelernt“.
+- Ein Tipp: Fälliges zuerst, sonst Neu lernen, sonst Text-Ansicht.
+- Probelauf-Zeilen zeigen Methoden-Zahlen – bewusst, nur für den
+  Betreiber (Auswertung § 8), sonst gilt LEHREN § 6.9 weiter.
+**Tests:** `t_text_fortschritt` grün (Balken 40/40, Minuten, Wiederholen
+aus dem Lernen-Tab bis „Fertig“, Ring unverändert, `t` > 0, Serie zählt,
+Probelauf-Zeilen, Desktop Spalte 2, Konto ohne Probelauf nichts;
+Gegenprobe ohne Block rot). Bildschirmfotos Lernen/Einstellungen 390 px.
+Regression grün: `t_lernen_start`, `t_start`, `t_a11y`, `t_kontrast`,
+`t_sprung`, `t_serie`, `t_doppeltipp`, alle `t_text_*`, `t_quran_schrift`,
+`t_regler_karten`.
+**Offen:** wie zuvor (Laptop-Gesamtlauf, Regeln, iPhone-Eindruck).
+**Nächster Schritt:** Stufe 7 (KONZEPT § 12): Gesamtprüfung – voller
+Prüfstand, Zufallstest („Affe“) Handy 200 / iPad 150 mit Texten, CPU 4×
+bei 286 Zeilen kein Bild > 50 ms, danach Übergabe/Claude-Prüfung nach
+`grossplan/AUFTRAG.md` § 2c. Dann Probelauf starten (4 Wochen, Stufe 8).
+
 ### 2026-09-30 — Quran-Schrift: Amiri Quran für Kreiszeichen, Schrift an Textzeilen (3.18.6)
 
 **Betreiber:** „weiß nicht ob A oder C … soll perfekt sein, sonst mach wie

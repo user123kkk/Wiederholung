@@ -4934,6 +4934,7 @@ button.halten:disabled {
   .view--lernen > .stapel { grid-column: 1; grid-row: span 4; margin-bottom: var(--stack); }
   .view--lernen > .startliste,
   .view--lernen > .serie-karte,
+  .view--lernen > .texte-lernen,   /* 3.18.7: Texte (Stufe 6), rechte Spalte wie die Serie */
   .view--lernen > .hinweis,   /* 3.17.17 (Station 17): die Hinweise (3.17.0) fehlten hier -
                                  sie spannten ueber beide Spalten und schoben die Serie
                                  unter den Stapel, rechts oben blieb es leer */
@@ -5337,3 +5338,16 @@ button.gedimmt { opacity: 0.45; }
    Kontrollfrage: drei Woerter untereinander, unter den verdeckten Zeilen. */
 .text-kontrolle { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
 .text-kontrolle > button.arabic { font-size: calc(1.3rem * var(--arab-scale, 1)); }
+
+/* ---------- 3.18.7: Texte im Lernen-Tab (Stufe 6) ---------- */
+.texte-lernen { margin-top: var(--stack); }
+.texte-lernen__titel { font-size: 1rem; font-weight: 600; color: var(--text-2); margin: 0 0 var(--space-2); }
+.texte-lernen__zeile { flex-wrap: wrap; row-gap: var(--space-2); }
+.texte-lernen__kopf { display: flex; align-items: baseline; gap: var(--space-3); width: 100%; min-width: 0; }
+.texte-lernen__kopf .liste-zeile__text { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.texte-lernen__balken { display: flex; width: 100%; height: 6px; border-radius: 3px; overflow: hidden; background: var(--stufe-0); }
+.texte-lernen__fest { background: var(--stufe-4); }
+.texte-lernen__frisch { background: var(--stufe-2-fest); }
+.texte-lernen__satz { width: 100%; font-size: 0.85rem; color: var(--text-2); }
+.probelauf__zeile { cursor: default; flex-wrap: wrap; }
+.probelauf__zeile .liste-zeile__wert { white-space: normal; }

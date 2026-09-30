@@ -1,3 +1,13 @@
+## 3.18.7 – 30. September 2026
+
+**Texte im Lernen-Tab (Stufe 6, nur im Probelauf beim Betreiber).** Unter
+den Karten steht ein Block „Texte“: je Text ein Balken aus neu, frisch und
+fest, dazu „Heute: etwa 5 Minuten“ oder „Heute fertig“ und ab 20 Antworten
+„Von deinen festen Ayat sitzen 9 von 10“. Ein Tipp startet, was heute dran
+ist – erst Wiederholen, sonst Neu lernen. Ein Bereich nur mit Texten gilt
+nicht mehr als leer. In den Einstellungen stehen für den Probelauf die
+Werte je Bereich und Text (Regler, Kreis, Quote, Zeit).
+
 ## 3.18.6 – 30. September 2026
 
 **Quran-Text ohne Platzhalterkreise.** Die King-Fahd-Schrift zeichnet drei
