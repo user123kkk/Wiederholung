@@ -2,6 +2,18 @@
 
 ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
 
+### AKTUELL (30.09.2026): Texte auswendig lernen — hier weitermachen
+
+Bei „weiter“/„leg los“: **`plan/texte-lernen/LOGBUCH.md` oberster Eintrag,
+Feld „Nächster Schritt“** – dort steht die Stufe und die konkrete Aufgabe.
+Plan: `plan/texte-lernen/KONZEPT.md` § 12 (Stufen) und `WIEDERHOLEN.md`.
+Betreiber 30.09.: Texte bleiben **für längere Zeit nur in seinem Konto**
+(`texteFreigeschaltet()`/`BETREIBER_UIDS`), keine Freigabe für andere ohne
+sein ausdrückliches „ja“. Er veröffentlicht Regeln und Hosting selbst; am
+Ende jeder Antwort „Was Du noch tun musst“. Cloud-Container: 5 Tests sind
+dort umgebungsbedingt rot (Logbuch 30.09., Stufe 3) – nicht als eigenen
+Fehler werten, aber gegen den Vorstand gegenprüfen.
+
 ### Aktueller Weiter-Auftrag — Runde 14
 
 Betreiber hat nach den Claude-Änderungen .52–.55 die Weiterarbeit verlangt.
