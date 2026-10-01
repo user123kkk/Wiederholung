@@ -1,33 +1,75 @@
 # Zyklus 2 – was nur der Betreiber entscheidet
 
-Stand 01.10.2026. Jede Frage hat eine Empfehlung. **Einfachste Antwort:
-„alles wie empfohlen“.** Sonst nur die Nummern nennen, bei denen Du es anders
-willst (z. B. „Z1 a, Z11 nein, Rest wie empfohlen“).
-
-Solange eine Frage offen ist, bleibt die zugehörige Aufgabe in
-`AUFGABEN.md` auf `wartet Zn` und wird nicht gebaut. Ausführliches Dafür und
+Stand 01.10.2026. **Der Betreiber hat am 01.10.2026 geantwortet: „alles, was du
+empfiehlst“** – mit zwei Anmerkungen (Z6, Z10). Die Spalte „Antwort“ gilt.
+Offen sind nur noch **Z6b** und **V8** (unten). Was offen ist, wird nicht
+gebaut. Ausführliches Dafür und
 Dagegen steht im genannten Befundblock unter `befunde/`.
 
 | Nr | Frage | Empfehlung | Antwort |
 |---|---|---|---|
-| **Z1** | **Fortschritt-Tab.** Er zählt Fleiß statt Können, hat keine Handlung und zeigt kein arabisches Wort. (a) nur Fehler beheben, (b) umbauen zu „Was du schon kannst“: ein Satz statt einer Zahl, zuletzt fester gewordene Wörter, nächstes Ziel, Sorgenkinder, (c) Tab abschaffen und Inhalte verlegen. `befunde/FORT.md` § 4 | **b**, in zwei Schritten: erst Fehler, dann Umbau | offen |
-| **Z2** | Die rote/grüne Pille „↓ 20 %“ im Fortschritt bestraft gutes Lernen (FORT-1). Weg damit? | **ja**, Pille weg, Zahl klein | offen |
-| **Z3** | Neben der Kartenzahl steht eine arabische Zier-Ziffer; die Quran-Schrift macht daraus das Versende-Zeichen (FORT-2). Weglassen? | **ja**, weglassen | offen |
-| **Z4** | „sitzt“ bedeutet im Fortschritt drei verschiedene Dinge (FORT-6). Umbenennen, Regel bleibt? Wortlaut zeige ich Dir vor dem Bau | **ja** | offen |
-| **Z5** | Lernen und Fortschritt spielen bei jedem Reiterwechsel die volle Eintritts-Bewegung (BEW-7). Nur noch einmal je App-Start? | **ja** | offen |
-| **Z6** | Die Serie reißt still, wenn zwei Tage nichts fällig war (LERN-1). Ein Satz an genau dem Tag, an dem es zählt; Regel bleibt? | **ja**, nur der Satz | offen |
-| **Z7** | Nach langer Pause ein Knopf „heute nur 20“ (LERN-11)? | **später** | offen |
-| **Z8** | „Aufzeichnung zurücksetzen“ löscht auch die Serie, sagt es aber nicht (EINST-1). Text ehrlich machen baue ich sofort. Soll die Funktion bleiben? | **bleiben** | offen |
-| **Z9** | Neue Einstellungen (`befunde/EINST.md`, Vorschlagsliste): **V1** Name ändern, **V2** Passwort ändern, **V4** zuletzt geöffneten Bereich merken, **V3** Schrift „Sehr groß“ (wenn es auf kleinen Handys passt), **V8** Rundengröße „5“ | **V1, V2, V4 ja; V3 ja nach Messung; V8 Deine Wahl** (berührt das tägliche Maß). Alle anderen Vorschläge nicht | offen |
-| **Z10** | „Hilfe“ enthält keine Hilfe (EINST-12). Eine kurze Hilfe-Seite, dazu „App installieren“? Den Text lieferst Du, ich mache einen Entwurf zum Abnicken | **ja** | offen |
-| **Z11** | „Alle auswählen“ im Auswahlmodus von Verwalten (VERW-11), nur für gezeigte Karten, Löschen ab 20 Karten mit getipptem Wort | **ja** | offen |
-| **Z12** | Datenschutzerklärung an den Code angleichen (CODE-1, CODE-9): beim Start gehen mehr Verbindungen zu Google, als der Text nennt. Nur Text ändern, Technik nicht anfassen; gehört mit in die Rechtsprüfung durch eine Person | **ja**, Text ändern | offen |
-| **Z13** | Ein Wort überall: „Sicherung“ statt „Backup“ (CODE-8)? | **ja**, „Sicherung“ | offen |
-| **Z14** | `CLAUDE.md` und `PLAN.md` aufräumen: alte „AKTUELL“-Absätze verschieben, drei überholte Dateien löschen, alte Pläne in einen Archiv-Ordner (CODE-5, CODE-13). Nichts geht verloren | **ja** | offen |
-| **Z15** | Einstieg, „Dein Plan entsteht“: dieselbe Sache wird zweimal abgehakt (EIN-9). Die doppelte feste Zeile weglassen, Länge bleibt? | **ja** | offen |
-| **Z16** | Einstieg → Konto: Rahmen wechselt (anderer Zurück-Knopf, neue Zählung) (EIN-10). Nur das Formular direkt aus dem Einstieg angleichen? | **ja** | offen |
-| **Z17** | Vorbild-Bilder: Auswahl im Einstieg als dunkle Karte mit Haken, wie bei marhaba? (`VORBILD-MARHABA.md` § 5) | **heutige Form behalten**; ich zeige Dir vorher ein Vergleichsbild, wenn Du magst | offen |
-| **Z18** | Vorbild-Bilder: Am Ende des Einstiegs dieselbe Leiste noch einmal mit „Dein Stand“ zeigen? | **ja**, klein | offen |
+| **Z1** | **Fortschritt-Tab.** Er zählt Fleiß statt Können, hat keine Handlung und zeigt kein arabisches Wort. (a) nur Fehler beheben, (b) umbauen zu „Was du schon kannst“: ein Satz statt einer Zahl, zuletzt fester gewordene Wörter, nächstes Ziel, Sorgenkinder, (c) Tab abschaffen und Inhalte verlegen. `befunde/FORT.md` § 4 | **b**, in zwei Schritten: erst Fehler, dann Umbau | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z2** | Die rote/grüne Pille „↓ 20 %“ im Fortschritt bestraft gutes Lernen (FORT-1). Weg damit? | **ja**, Pille weg, Zahl klein | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z3** | Neben der Kartenzahl steht eine arabische Zier-Ziffer; die Quran-Schrift macht daraus das Versende-Zeichen (FORT-2). Weglassen? | **ja**, weglassen | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z4** | „sitzt“ bedeutet im Fortschritt drei verschiedene Dinge (FORT-6). Umbenennen, Regel bleibt? Wortlaut zeige ich Dir vor dem Bau | **ja** | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z5** | Lernen und Fortschritt spielen bei jedem Reiterwechsel die volle Eintritts-Bewegung (BEW-7). Nur noch einmal je App-Start? | **ja** | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z6** | Die Serie reißt still, wenn zwei Tage nichts fällig war (LERN-1). Ein Satz an genau dem Tag, an dem es zählt; Regel bleibt? | **ja**, nur der Satz | **Satz allein reicht dem Betreiber nicht** – sein Gedanke: „wenn nichts fällig ist und man nichts bearbeiten kann, wieso sollte die Serie beendet sein?“ → siehe **Z6b** unten |
+| **Z7** | Nach langer Pause ein Knopf „heute nur 20“ (LERN-11)? | **später** | **später** (01.10.) |
+| **Z8** | „Aufzeichnung zurücksetzen“ löscht auch die Serie, sagt es aber nicht (EINST-1). Text ehrlich machen baue ich sofort. Soll die Funktion bleiben? | **bleiben** | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z9** | Neue Einstellungen (`befunde/EINST.md`, Vorschlagsliste): **V1** Name ändern, **V2** Passwort ändern, **V4** zuletzt geöffneten Bereich merken, **V3** Schrift „Sehr groß“ (wenn es auf kleinen Handys passt), **V8** Rundengröße „5“ | **V1, V2, V4 ja; V3 ja nach Messung; V8 Deine Wahl** (berührt das tägliche Maß). Alle anderen Vorschläge nicht | **V1, V2, V4 ja; V3 ja nach Messung** (01.10.). V8 („5 Karten“) noch offen – nicht bauen |
+| **Z10** | „Hilfe“ enthält keine Hilfe (EINST-12). Eine kurze Hilfe-Seite, dazu „App installieren“? Den Text lieferst Du, ich mache einen Entwurf zum Abnicken | **ja** | **ja** (01.10.) – Betreiber: „Hilfeseite, alles soll perfekt sein“. Entwurf zeigen, erst nach seinem Ja einbauen |
+| **Z11** | „Alle auswählen“ im Auswahlmodus von Verwalten (VERW-11), nur für gezeigte Karten, Löschen ab 20 Karten mit getipptem Wort | **ja** | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z12** | Datenschutzerklärung an den Code angleichen (CODE-1, CODE-9): beim Start gehen mehr Verbindungen zu Google, als der Text nennt. Nur Text ändern, Technik nicht anfassen; gehört mit in die Rechtsprüfung durch eine Person | **ja**, Text ändern | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z13** | Ein Wort überall: „Sicherung“ statt „Backup“ (CODE-8)? | **ja**, „Sicherung“ | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z14** | `CLAUDE.md` und `PLAN.md` aufräumen: alte „AKTUELL“-Absätze verschieben, drei überholte Dateien löschen, alte Pläne in einen Archiv-Ordner (CODE-5, CODE-13). Nichts geht verloren | **ja** | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z15** | Einstieg, „Dein Plan entsteht“: dieselbe Sache wird zweimal abgehakt (EIN-9). Die doppelte feste Zeile weglassen, Länge bleibt? | **ja** | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z16** | Einstieg → Konto: Rahmen wechselt (anderer Zurück-Knopf, neue Zählung) (EIN-10). Nur das Formular direkt aus dem Einstieg angleichen? | **ja** | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z17** | Vorbild-Bilder: Auswahl im Einstieg als dunkle Karte mit Haken, wie bei marhaba? (`VORBILD-MARHABA.md` § 5) | **heutige Form behalten**; ich zeige Dir vorher ein Vergleichsbild, wenn Du magst | **wie empfohlen** (Betreiber 01.10.2026) |
+| **Z18** | Vorbild-Bilder: Am Ende des Einstiegs dieselbe Leiste noch einmal mit „Dein Stand“ zeigen? | **ja**, klein | **wie empfohlen** (Betreiber 01.10.2026) |
+
+## Noch offen: zwei Fragen
+
+**Z6b – Serie an Tagen, an denen nichts fällig ist** (Lernlogik, deshalb nur
+mit ausdrücklichem „Z6b ja“ des Betreibers bauen).
+
+Heute: Ein Tag zählt nur, wenn eine fällige oder neue Karte gelernt wurde.
+Ist zwei Tage nichts fällig, reißt die Serie, obwohl man nichts tun konnte
+(`befunde/LERN.md`, LERN-1, gemessen). „Trotzdem üben“ rettet sie nicht.
+
+Vorschlag (Empfehlung: **ja**): **Ruhetag.** Öffnet man die App an einem Tag,
+an dem in keinem Bereich etwas fällig ist, wird der Tag als Ruhetag gemerkt.
+Ein Ruhetag zählt die Serie **nicht hoch**, lässt sie aber **nicht reißen**
+und verbraucht auch den einen verziehenen Tag nicht.
+
+- Dafür: genau der Gedanke des Betreibers; niemand verliert die Serie ohne
+  eigenes Versäumnis; die Zahl bleibt ehrlich („Tage gelernt“ wächst nur
+  durch Lernen).
+- Dagegen: Die Serie heißt dann nicht mehr streng „jeden Tag gelernt“; wer
+  die App an so einem Tag gar nicht öffnet, verliert sie weiter (die App
+  kann nicht wissen, was an einem Tag fällig war, an dem sie zu war).
+
+So wird es gebaut, falls „ja“ (für Codex, Modell Astra mittel):
+1. Beim Laden und beim Tageswechsel: Ist `currentUser` da, sind die Daten
+   geladen und in **allen** Bereichen keine Karte fällig (und im
+   Betreiber-Konto kein Text fällig), dann einmal je Tag
+   `verlaufZaehle("r")`-artig einen Marker `r: 1` ins Tagesprotokoll von
+   heute schreiben (atomar wie die anderen Zähler, LEHREN § 8.3, G-075).
+2. `serieAktuell()`: Ein Tag mit `r` und ohne `w + n + t` wird beim
+   Rückwärtszählen **übersprungen** (weder gezählt noch Lücke, kein Joker).
+   `tagGelernt()` bleibt unverändert. Kopfkommentar von `serieAktuell`
+   mitziehen (LEHREN § 3.2).
+3. Prüfen, dass `firestore.rules` den Schlüssel `r` im `verlauf` zulässt;
+   sonst Regel + Emulator-Test + Vermerk „Regeln vor Hosting“.
+4. Tests: `t_serie.js` erweitern (Ruhetag hält, zählt nicht, zwei Ruhetage
+   halten, Ruhetag + ausgelassener Tag verbraucht den Joker, Tag ohne Öffnen
+   reißt wie bisher), Gegenprobe gegen den Stand davor; `abnahme_runde.js`
+   13/13; `t_serie_lang.js`, `t_serie_warnung.js`.
+5. Alle Texte über die Serie suchen und anpassen (LEHREN § 7.3); der Satz
+   aus LERN-1 entfällt dann.
+6. Fortschritt-Raster: Ruhetag nicht als „gelernt“ zeichnen.
+
+**V8 – Rundengröße „5 Karten“** zusätzlich anbieten? Keine Empfehlung,
+Geschmack des Betreibers. Offen, nicht bauen.
 
 ## Was Du am Gerät prüfen musst (kann kein Agent)
 

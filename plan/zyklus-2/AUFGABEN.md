@@ -1,10 +1,10 @@
 # Zyklus 2 – Aufgaben
 
-Erzeugt am 01.10.2026 aus `befunde/*.md` (acht Prüfer, Stand 3.18.10). **Die Einzelheiten jeder Aufgabe stehen im Befundblock** (`befunde/<Datei>`, Überschrift `#### <Kennung>`): Beleg mit Datei:Zeile, Vorschlag, Abnahme. Diese Liste legt nur Reihenfolge, Modell und Status fest.
+Erzeugt am 01.10.2026 (ab jetzt von Hand pflegen) aus `befunde/*.md` (acht Prüfer, Stand 3.18.10). **Die Einzelheiten jeder Aufgabe stehen im Befundblock** (`befunde/<Datei>`, Überschrift `#### <Kennung>`): Beleg mit Datei:Zeile, Vorschlag, Abnahme. Diese Liste legt nur Reihenfolge, Modell und Status fest.
 
 Wie gearbeitet wird: [`CODEX-START.md`](CODEX-START.md). Was der Betreiber entscheidet: [`ENTSCHEIDUNGEN.md`](ENTSCHEIDUNGEN.md).
 
-**Status:** `offen` · `in Arbeit` · `erledigt (Version)` · `trifft nicht zu (Grund)` · `zurück (Grund)` · `wartet Zn` (Betreiber-Entscheidung Zn fehlt – nicht bauen).
+**Status:** `offen` · `in Arbeit` · `erledigt (Version)` · `trifft nicht zu (Grund)` · `zurück (Grund)` · `später (Zn)` (Betreiber hat verschoben – nicht bauen). Die Antworten des Betreibers vom 01.10.2026 („alles wie empfohlen“) stehen in der Spalte „Hinweis“ und in `ENTSCHEIDUNGEN.md`.
 
 **Modell** = Empfehlung für Codex (GPT-6 Luna/Sol/Astra, Denkstufe), siehe `CODEX-START.md` § 2.
 
@@ -41,25 +41,26 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | B6 | EIN-6 | mittel | Auf kleinen Handys liegt der Hauptknopf auf den meisten Einstiegs-Bildschirmen unter dem Rand – wegen 60 px reserviertem Leerraum darunter | `befunde/EIN.md` | Sol mittel | offen |  |
 | B7 | EIN-7 | niedrig | Der Weiter-Knopf springt bei jedem Schritt 26 px zur Seite und blendet ab | `befunde/EIN.md` | Sol niedrig | offen |  |
 | B8 | EIN-8 | niedrig | Gast-Start: Ladebild wird ohne Übergang hart durch „Willkommen" ersetzt | `befunde/EIN.md` | Sol niedrig | offen |  |
-| B9 | EIN-9 | niedrig | „Dein Plan entsteht …" hakt dieselbe Sache zweimal ab | `befunde/EIN.md` | Sol niedrig | wartet Z15 |  |
-| B10 | EIN-10 | niedrig | Am Übergang zum Konto wechselt der Rahmen (anderer Zurück-Knopf, neue Zählung „Schritt 1 von 2") | `befunde/EIN.md` | Sol mittel | wartet Z16 |  |
+| B9 | EIN-9 | niedrig | „Dein Plan entsteht …" hakt dieselbe Sache zweimal ab | `befunde/EIN.md` | Sol niedrig | offen | Z15: wie empfohlen |
+| B10 | EIN-10 | niedrig | Am Übergang zum Konto wechselt der Rahmen (anderer Zurück-Knopf, neue Zählung „Schritt 1 von 2") | `befunde/EIN.md` | Sol mittel | offen | Z16: nur das Formular direkt aus dem Einstieg |
 | B11 | EIN-11 | niedrig | Antworten eines abgebrochenen Einstiegs füllen den nächsten Durchgang vor | `befunde/EIN.md` | Sol niedrig | offen | nur Antworten; Nachklang-Zeitgrenze nicht |
 | B12 | EIN-12 | niedrig | Kommentare beschreiben einen Stand, den es nicht mehr gibt; ein Scroll-Zweig ohne Wirkung | `befunde/EIN.md` | Luna niedrig | offen |  |
+| B13 | Z18 | niedrig | Am Ende des Einstiegs dieselbe Leiste klein noch einmal als „Dein Stand“ zeigen | `VORBILD-MARHABA.md` § 3 Muster 11, `ENTSCHEIDUNGEN.md` Z18 | Sol mittel | offen | Z18: ja, klein; keine Zahl, keine neue Speicherung |
 
 ## Paket C – Verwalten und Fortschritt
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
 | C1 | G-118 | mittel | Tippen ins Feld „Wort“ scrollt die Seite weg (Ursache in `befunde/VERW.md`, Abschnitt G-118) | `befunde/VERW.md` | Sol mittel | offen | Gerätetest G1 nach dem Fix |
-| C2 | FORT-1 | hoch | Die größte Zahl und die Pille belohnen Vergessen und bestrafen gutes Lernen | `befunde/FORT.md` | Sol niedrig | wartet Z2 |  |
-| C3 | FORT-2 | hoch | Neben der Kartenzahl steht ein Versende-Zeichen aus dem Quran | `befunde/FORT.md` | Sol niedrig | wartet Z3 |  |
+| C2 | FORT-1 | hoch | Die größte Zahl und die Pille belohnen Vergessen und bestrafen gutes Lernen | `befunde/FORT.md` | Sol niedrig | offen | Z2: wie empfohlen |
+| C3 | FORT-2 | hoch | Neben der Kartenzahl steht ein Versende-Zeichen aus dem Quran | `befunde/FORT.md` | Sol niedrig | offen | Z3: wie empfohlen |
 | C4 | FORT-3 | hoch | Der Bereich oben im Kopf gilt für die Zahlen darunter nicht | `befunde/FORT.md` | Sol niedrig | offen |  |
 | C5 | FORT-4 | mittel | Nach einer langen Pause sagt der Tab etwas Falsches oder gar nichts | `befunde/FORT.md` | Sol niedrig | offen | Pausensatz im Logbuch zitieren |
 | C6 | FORT-5 | mittel | Große Null im Stoff und falsche Mehrzahl | `befunde/FORT.md` | Luna niedrig | offen |  |
-| C7 | FORT-6 | mittel | „sitzt“ heißt drei verschiedene Dinge, und das schwächste steht am größten da | `befunde/FORT.md` | Sol niedrig | wartet Z4 |  |
+| C7 | FORT-6 | mittel | „sitzt“ heißt drei verschiedene Dinge, und das schwächste steht am größten da | `befunde/FORT.md` | Sol niedrig | offen | Z4: wie empfohlen |
 | C8 | FORT-7 | mittel | Das Raster ist kaum zu lesen | `befunde/FORT.md` | Sol mittel | offen |  |
-| C9 | FORT-8 | mittel | Auf dem ganzen Tab gibt es keine Handlung | `befunde/FORT.md` | Sol mittel | wartet Z1 |  |
-| C10 | FORT-9 | mittel | Was der Tab sagt, steht zum Teil schon auf Lernen | `befunde/FORT.md` | Sol mittel | wartet Z1 |  |
+| C9 | FORT-8 | mittel | Auf dem ganzen Tab gibt es keine Handlung | `befunde/FORT.md` | Sol mittel | offen | Z1: Weg b – gehört zum Umbau (C-Umbau), nach den Fehlern |
+| C10 | FORT-9 | mittel | Was der Tab sagt, steht zum Teil schon auf Lernen | `befunde/FORT.md` | Sol mittel | offen | Z1: Weg b – gehört zum Umbau (C-Umbau), nach den Fehlern |
 | C11 | VERW-1 | mittel | G-021 „Suchpuffer wächst mit der Kartenzahl“ steht als erledigt da, ist aber nie in den Code gekommen | `befunde/VERW.md` | Astra mittel | offen |  |
 | C12 | VERW-2 | mittel | Geänderte Karte geht beim Bearbeiten mit Escape oder Wischen still verloren | `befunde/VERW.md` | Sol niedrig | offen |  |
 | C13 | VERW-3 | mittel | „Ablegen“ in eine Speicherkarte zeigt kein Ergebnis | `befunde/VERW.md` | Sol niedrig | offen |  |
@@ -76,7 +77,8 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | C24 | VERW-5 | niedrig | Auswahlmodus und Suche überleben den Weg über „Fortschritt“, nicht über „Lernen“ | `befunde/VERW.md` | Sol niedrig | offen |  |
 | C25 | VERW-8 | niedrig | Erklärtexte der Speicherkarten-Gruppen stimmen im eigenen Bereich nicht | `befunde/VERW.md` | Luna niedrig | offen |  |
 | C26 | VERW-9 | niedrig | Kleinere Uneinheitlichkeiten und Reste | `befunde/VERW.md` | Sol niedrig | offen |  |
-| C27 | VERW-11 | niedrig | Im Auswahlmodus fehlt „Alle auswählen“ | `befunde/VERW.md` | Sol niedrig | wartet Z11 |  |
+| C27 | VERW-11 | niedrig | Im Auswahlmodus fehlt „Alle auswählen“ | `befunde/VERW.md` | Sol niedrig | offen | Z11: wie empfohlen |
+| C28 | Z1-Umbau | mittel | Fortschritt-Tab umbauen zu „Was du schon kannst“ (Weg b) | `befunde/FORT.md` § 4 (b) | Astra mittel | offen | erst nach allen FORT-Fehlern; eigener Commit; Wortlaut (Z4) und Aufbau dem Betreiber als Fotos zeigen, bevor veröffentlicht wird |
 
 ## Paket D – Bewegung und Flüssigkeit
 
@@ -88,7 +90,7 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | D4 | BEW-4 | mittel | Übungs-Chips: jeder Tipp lässt alle Haken neu aufploppen und schiebt die Nachbarn 20 px | `befunde/BEW.md` | Sol niedrig | offen |  |
 | D5 | BEW-5 | mittel | Beim Start jeder Runde leuchtet die ganze Bühne als heller Kasten auf, und die Seite schiebt zusätzlich seitlich | `befunde/BEW.md` | Sol niedrig | offen |  |
 | D6 | BEW-6 | mittel | Am Rundenende ist „Fertig" 1,3 Sekunden unsichtbar | `befunde/BEW.md` | Sol niedrig | offen |  |
-| D7 | BEW-7 | mittel | Lernen und Fortschritt spielen bei jedem Besuch die volle Eintritts-Choreografie | `befunde/BEW.md` | Sol mittel | wartet Z5 |  |
+| D7 | BEW-7 | mittel | Lernen und Fortschritt spielen bei jedem Besuch die volle Eintritts-Choreografie | `befunde/BEW.md` | Sol mittel | offen | Z5: wie empfohlen |
 | D8 | BEW-8 | mittel | Sanftes Scrollen läuft trotz „Bewegung reduzieren" | `befunde/BEW.md` | Sol niedrig | offen |  |
 | D9 | BEW-9 | mittel | Wischen zwischen Reitern: alte Seite fliegt ganz hinaus, die neue ploppt aus 26 px herein | `befunde/BEW.md` | Sol mittel | offen |  |
 | D10 | BEW-10 | mittel | Einstieg, Plan: das automatische Mitscrollen lässt sich nicht anhalten | `befunde/BEW.md` | Sol niedrig | offen |  |
@@ -108,15 +110,15 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | E4 | EINST-4 | mittel | „← Zurück“ auf Datenschutz/Impressum lädt die App neu – Einstieg und Formular sind weg | `befunde/EINST.md` | Sol niedrig | offen | Code jetzt; Gerätetest G7 |
 | E5 | EINST-5 | mittel | Backup gilt als „heute gesichert“, auch wenn keine Datei ankam | `befunde/EINST.md` | Sol niedrig | offen | Code jetzt; Gerätetest G5 |
 | E6 | EINST-6 | mittel | Tägliche Erinnerung – auf Android und in der iPhone-App ungeprüft, drei kleine Fehler | `befunde/EINST.md` | Sol niedrig | offen | Code jetzt; Gerätetest G6 |
-| E7 | LERN-1 | mittel | Die Serie reißt ohne Warnung, wenn zwei Tage hintereinander nichts fällig ist | `befunde/LERN.md` | Sol niedrig | wartet Z6 |  |
+| E7 | LERN-1 | mittel | Die Serie reißt ohne Warnung, wenn zwei Tage hintereinander nichts fällig ist | `befunde/LERN.md` | Sol niedrig | offen | Z6: Regel wird geändert, sobald Betreiber Z6b bestätigt (ENTSCHEIDUNGEN); bis dahin nicht bauen |
 | E8 | LERN-2 | mittel | Der Meilenstein-Hinweis bleibt für immer stehen und sperrt alle anderen Hinweise | `befunde/LERN.md` | Sol niedrig | offen | Ablauf nach einem Tag jetzt; Verlegen nicht |
 | E9 | EINST-7 | niedrig | Lange Wörter ohne Leerzeichen laufen aus der Karte (Ideen-Board, Profilname) | `befunde/EINST.md` | Sol niedrig | offen |  |
 | E10 | EINST-8 | niedrig | Leistenfarbe springt beim Start von #111010 auf #0e0e12 | `befunde/EINST.md` | Sol niedrig | offen |  |
 | E11 | EINST-9 | niedrig | Nach dem Löschen des Kontos sagt die App nichts | `befunde/EINST.md` | Sol niedrig | offen |  |
 | E12 | EINST-10 | niedrig | Neu-Anmelden vor dem Löschen hat kein Zeitlimit und keine Rückmeldung | `befunde/EINST.md` | Sol niedrig | offen |  |
 | E13 | EINST-11 | niedrig | Drei Kleinigkeiten auf 320 px | `befunde/EINST.md` | Sol niedrig | offen |  |
-| E14 | EINST-12 | niedrig | Der Abschnitt „Hilfe“ enthält keine Hilfe | `befunde/EINST.md` | Sol mittel | wartet Z10 |  |
-| E15 | EINST-13 | niedrig | Der Name lässt sich nach der Anmeldung nicht mehr ändern | `befunde/EINST.md` | Sol niedrig | wartet Z9 |  |
+| E14 | EINST-12 | niedrig | Der Abschnitt „Hilfe“ enthält keine Hilfe | `befunde/EINST.md` | Sol mittel | offen | Z10: ja, „soll perfekt sein“ – Entwurf (Aufbau + Wortlaut) dem Betreiber zeigen, erst nach seinem Ja einbauen |
+| E15 | EINST-13 | niedrig | Der Name lässt sich nach der Anmeldung nicht mehr ändern | `befunde/EINST.md` | Sol niedrig | offen | Z9: V1 Name ändern – ja |
 | E16 | EINST-14 | niedrig | Aufräumen im Einstellungs-Code | `befunde/EINST.md` | Sol niedrig | offen |  |
 | E17 | EINST-15 | niedrig | Google-Konto löschen am iPhone – Popup startet erst nach der Dialog-Bewegung | `befunde/EINST.md` | Sol niedrig | offen | erst nach Gerätetest G4 |
 | E18 | LERN-3 | niedrig | „Trotzdem üben“ wirft einen in den Verwalten-Reiter, „Abbrechen“ lässt einen dort stehen | `befunde/LERN.md` | Sol niedrig | offen |  |
@@ -127,28 +129,31 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | E23 | LERN-8 | niedrig | Rundenende mit Rundenlimit sagt „Geschafft“ und darunter „10 Karten geschafft.“ | `befunde/LERN.md` | Luna niedrig | offen |  |
 | E24 | LERN-9 | niedrig | Im Üben deckt ein Tipp irgendwo auf, im Lernen nur die Karte oder der Knopf | `befunde/LERN.md` | Sol niedrig | offen |  |
 | E25 | LERN-10 | niedrig | „Für heute durch“ mit vollem Ring und Haken, auch wenn heute gar nichts gelernt wurde | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E26 | LERN-11 | niedrig | Nach langer Pause steht nur eine große Zahl da | `befunde/LERN.md` | Sol niedrig | wartet Z7 |  |
+| E26 | LERN-11 | niedrig | Nach langer Pause steht nur eine große Zahl da | `befunde/LERN.md` | Sol niedrig | später (Z7) | Z7: wie empfohlen |
 | E27 | LERN-12 | niedrig | „Heute auch fällig: Bereich X (3)“ lässt sich nicht antippen | `befunde/LERN.md` | Sol niedrig | offen |  |
 | E28 | LERN-13 | niedrig | Nachts begrüßt die App mit „Gute Nacht“ | `befunde/LERN.md` | Luna niedrig | offen |  |
 | E29 | LERN-14 | niedrig | Die Flamme steht für die Serie und für „oft vergessen“ | `befunde/LERN.md` | Sol niedrig | offen |  |
+| E30 | V2 | niedrig | Passwort ändern (nur E-Mail-Konten) | `befunde/EINST.md` Vorschlagsliste V2 | Sol mittel | offen | Z9: ja |
+| E31 | V4 | niedrig | Zuletzt geöffneten Bereich merken (nur Gerät) | `befunde/EINST.md` Vorschlagsliste V4 | Sol niedrig | offen | Z9: ja; neuer localStorage-Schlüssel → Datenschutzerklärung Punkt 7 |
+| E32 | V3 | niedrig | Arabische Schrift: Stufe „Sehr groß“ | `befunde/EINST.md` Vorschlagsliste V3 | Sol mittel | offen | Z9: nur bauen, wenn jede Karte/Liste auf 320 px ohne Überlauf bleibt (messen); sonst `trifft nicht zu` |
 
 ## Paket F – Aufräumen (Code, Texte, Repo)
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
-| F1 | CODE-1 | mittel | Datenschutzerklärung sagt „beim Start eine Sache von außen“ – auf Handys und in Safari sind es vier | `befunde/CODE.md` | Sol mittel | wartet Z12 |  |
+| F1 | CODE-1 | mittel | Datenschutzerklärung sagt „beim Start eine Sache von außen“ – auf Handys und in Safari sind es vier | `befunde/CODE.md` | Sol mittel | offen | Z12: nur Text der Datenschutzerklärung (Weg a) |
 | F2 | CODE-2 | mittel | Neun Klick-Zweige ohne Knopf – darunter ein ganzer toter Funktionsweg („Serie fortsetzen“) | `befunde/CODE.md` | Sol niedrig | offen |  |
 | F3 | CODE-3 | mittel | Umschalter „alle Bereiche / dieser Bereich“ im Fortschritt ist tot, Rechenwege und Stil liegen noch da | `befunde/CODE.md` | Sol niedrig | offen |  |
 | F4 | CODE-4 | mittel | Kommentare beschreiben Regeln, die es nicht mehr gibt (Tageslimit, Zwei-Tipp-Auswahl, startDrill, Link-Teilen) | `befunde/CODE.md` | Luna niedrig | offen |  |
-| F5 | CODE-5 | mittel | CLAUDE.md und PLAN.md widersprechen STAND.md – vier alte „AKTUELL“-Aufträge stehen vor den Dauerregeln | `befunde/CODE.md` | Sol mittel | wartet Z14 |  |
+| F5 | CODE-5 | mittel | CLAUDE.md und PLAN.md widersprechen STAND.md – vier alte „AKTUELL“-Aufträge stehen vor den Dauerregeln | `befunde/CODE.md` | Sol mittel | offen | Z14: wie empfohlen |
 | F6 | CODE-6 | niedrig | „Zuletzt benutzte Speicherkarte vorschlagen“ (3.5.0) ist seit 3.17.10 still verloren | `befunde/CODE.md` | Sol niedrig | offen |  |
 | F7 | CODE-7 | niedrig | Texte beim Teilen und in Listen stimmen bei genau einer Lektion oder Karte nicht | `befunde/CODE.md` | Luna niedrig | offen |  |
 | F8 | CODE-8 | niedrig | Alter Produktname „Lernkarten“ und Wortmischung Backup / Sichern / Sicherung | `befunde/CODE.md` | Sol niedrig | offen | „Lernkarten“ → Adrabic jetzt; Wort „Sicherung“ wartet auf Z13 |
-| F9 | CODE-9 | niedrig | Datenschutzerklärung benutzt andere Namen als die App und widerspricht sich in zwei Sätzen | `befunde/CODE.md` | Sol niedrig | wartet Z12 |  |
+| F9 | CODE-9 | niedrig | Datenschutzerklärung benutzt andere Namen als die App und widerspricht sich in zwei Sätzen | `befunde/CODE.md` | Sol niedrig | offen | Z12: mit CODE-1 in einem Zug |
 | F10 | CODE-10 | niedrig | Bildschirmwechsel räumt an fünf Stellen von Hand auf – jede Liste ist anders | `befunde/CODE.md` | Sol mittel | offen |  |
 | F11 | CODE-11 | niedrig | Tote Reste der alten Stufen-Auswahl beim Üben und weitere stillgelegte Zweige | `befunde/CODE.md` | Sol niedrig | offen |  |
 | F12 | CODE-12 | niedrig | Rund 30 CSS-Klassen, die app.js und die HTML-Seiten nie erzeugen | `befunde/CODE.md` | Sol mittel | offen |  |
-| F13 | CODE-13 | niedrig | Veraltete und doppelte Dateien im Repo – Vorschlag für eine aufgeräumte Struktur | `befunde/CODE.md` | Sol mittel | wartet Z14 |  |
+| F13 | CODE-13 | niedrig | Veraltete und doppelte Dateien im Repo – Vorschlag für eine aufgeräumte Struktur | `befunde/CODE.md` | Sol mittel | offen | Z14: wie empfohlen |
 
 ## Doppelt gemeldet (einmal beheben)
 
