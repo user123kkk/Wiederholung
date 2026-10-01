@@ -10,22 +10,44 @@ nicht anders entschieden.** Was unklar ist, wird nicht geraten, sondern als
 
 ## 1. Für den Betreiber: so startest Du Codex
 
+Codex macht **alles**: die Fehler und auch die 18 entschiedenen Punkte des
+Betreibers (sie stehen als Aufgaben in den Paketen). Claude wird dafür nicht
+gebraucht.
+
 1. Codex im Ordner `C:\Users\USER\Wiederholung` öffnen (oder das Repo
-   `user123kkk/Wiederholung` anhängen). Der Laptop sollte am Netzteil sein.
-2. Modell und Denkstufe wählen, wie in der Tabelle in § 2 für das Paket steht.
-3. Genau diesen Text einfügen und nur den Buchstaben anpassen:
+   `user123kkk/Wiederholung` anhängen).
+2. Modell und Denkstufe wählen (Tabelle in § 2).
+3. Den Text für das Paket einfügen (unten). **Ein Paket je Chat**, in der
+   Reihenfolge A, B, C, D, E, F. A zuerst, weil dort der kritische Fehler
+   G-110 liegt.
+4. Codex meldet am Ende „Paket X fertig, Version …“ oder „Paket X
+   angehalten, weil …“. Bei „angehalten“ steht dabei, was zu tun ist.
+5. Veröffentlichen: zuhause, Netzteil dran, Doppelklick auf
+   `ladegeraet.bat`. Das Skript prüft alles und veröffentlicht nur bei Grün.
+   Das geht nach jedem Paket oder nach mehreren zusammen.
 
-   > Lies `AGENTS.md` und danach `plan/zyklus-2/CODEX-START.md` vollständig.
-   > Arbeite **Paket A** aus `plan/zyklus-2/AUFGABEN.md` ab, genau nach
-   > CODEX-START § 3 bis § 7. Nichts anderes. Nicht veröffentlichen.
+Die Texte zum Einfügen (nur kopieren, nichts ändern):
 
-4. Ein Paket je Chat. Ist das Paket fertig, meldet Codex „Paket X fertig“
-   mit Version. Dann neuen Chat für das nächste Paket.
-5. Reihenfolge: **A, B, C, D, E, F.** Nicht überspringen. A zuerst, weil dort
-   der kritische Fehler G-110 liegt.
-6. Nach jedem Paket (oder spätestens nach A, C und F) einmal Claude öffnen
-   und schreiben: „Prüf Paket X“. Claude liest den Diff gegen die Befunde
-   (`plan/grossplan/AUFTRAG.md` § 2c). Danach „ladegerät“ zum Veröffentlichen.
+- **Paket A** (Astra, mittel):
+
+  > Lies `AGENTS.md` und danach `plan/zyklus-2/CODEX-START.md` vollständig. Arbeite **Paket A** aus `plan/zyklus-2/AUFGABEN.md` ab, genau nach CODEX-START § 3 bis § 7. Nichts anderes. Nicht veröffentlichen.
+
+- **Paket B** (Sol, mittel): derselbe Text mit **Paket B**.
+- **Paket C** (Sol, mittel): derselbe Text mit **Paket C**, dazu der Satz
+  „Die Zeile Z1-Umbau auslassen.“ Danach ein eigener Chat (Astra, mittel):
+
+  > Lies `AGENTS.md` und danach `plan/zyklus-2/CODEX-START.md` vollständig. Arbeite nur die Zeile **Z1-Umbau** aus Paket C in `plan/zyklus-2/AUFGABEN.md` ab, genau nach CODEX-START § 3 bis § 7. Zeig mir Fotos des neuen Tabs, bevor Du committest. Nicht veröffentlichen.
+
+- **Paket D** (Sol, mittel): derselbe Text mit **Paket D**.
+- **Paket E** (Sol, mittel): derselbe Text mit **Paket E**.
+- **Paket F** (Sol, niedrig): derselbe Text mit **Paket F**.
+- **Danach, Nachprüfung** (Astra, mittel):
+
+  > Lies `AGENTS.md` und `plan/zyklus-2/CODEX-START.md`. Mach die Nachprüfung nach `plan/zyklus-2/AUFTRAG.md` § 3.6: jede Zeile in `AUFGABEN.md` gegen den Code prüfen, dazu die Listen „Nicht mehr geprüft“ am Ende jeder Datei in `plan/zyklus-2/befunde/` abarbeiten. Neue Funde als neue Zeilen in `AUFGABEN.md`. Nichts bauen.
+
+Bricht ein Chat ab oder geht es später weiter: denselben Text noch einmal
+einfügen. Codex sieht in `AUFGABEN.md`, was `erledigt` ist, und macht bei
+der ersten `offen`-Zeile des Pakets weiter.
 
 ## 2. Welches Modell, welcher Aufwand
 
@@ -36,15 +58,17 @@ das für die schwerste Aufgabe darin reicht:
 | Paket | Inhalt | Modell für den Chat | Denkstufe |
 |---|---|---|---|
 | A | Daten, Regeln, Kontowechsel | GPT-6 Astra | mittel |
-| B | Onboarding | GPT-6 Sol (EIN-1 mit Astra, eigener Chat) | mittel |
-| C | Verwalten, Fortschritt | GPT-6 Sol; Umbau Fortschritt (Entscheidung Z1, Weg b) mit Astra | mittel |
+| B | Onboarding | GPT-6 Sol | mittel |
+| C | Verwalten, Fortschritt | GPT-6 Sol; Zeile „Z1-Umbau“ in eigenem Chat mit Astra | mittel |
 | D | Bewegung | GPT-6 Sol | mittel |
-| E | Lernen, Einstellungen, Konto | GPT-6 Sol (EINST-2 mit Astra) | niedrig bis mittel |
-| F | Aufräumen | GPT-6 Sol; reine Text- und Kommentar-Aufgaben reichen mit Luna | niedrig |
+| E | Lernen, Einstellungen, Konto | GPT-6 Sol | mittel |
+| F | Aufräumen | GPT-6 Sol | niedrig |
+| Nachprüfung | alles gegenlesen | GPT-6 Astra | mittel |
 
-Faustregel, wenn Du unsicher bist: **Sol mittel**. Astra nur für A und die
-drei genannten Aufgaben. Hochgehen, wenn Codex zweimal an derselben Aufgabe
-scheitert (dann trägt es `zurück` ein und Du startest die Aufgabe mit Astra).
+Faustregel, wenn Du unsicher bist: **Sol mittel**. Astra für A, den Umbau des
+Fortschritt-Tabs und die Nachprüfung. Scheitert Codex zweimal an einer
+Aufgabe, trägt es `zurück` ein; diese Zeilen am Ende in einem Chat mit Astra
+nachholen („Arbeite alle Zeilen mit Status zurück ab“).
 Das ist eine Empfehlung, keine Zusage über Kosten oder Qualität; die Abnahme
 (§ 5) gilt für jedes Modell gleich.
 
@@ -61,8 +85,12 @@ Das ist eine Empfehlung, keine Zusage über Kosten oder Qualität; die Abnahme
 
 ## 4. Je Aufgabe, in der Reihenfolge der Tabelle
 
-Nur Aufgaben mit Status `offen`. `wartet Zn` wird übersprungen, außer
-`ENTSCHEIDUNGEN.md` zeigt bei Zn eine Antwort des Betreibers.
+Nur Aufgaben mit Status `offen`. `später (Zn)` wird übersprungen. Steht in
+der Spalte „Hinweis“ eine Bedingung („bis dahin nicht bauen“, „erst nach
+seinem Ja“), gilt sie: nur vorbereiten, was der Hinweis erlaubt, den Entwurf
+dem Betreiber im Chat zeigen und die Zeile auf
+`zurück (wartet auf Betreiber)` setzen. Die Antworten des Betreibers stehen
+in `ENTSCHEIDUNGEN.md`; was dort offen ist (Z6b, V8), wird nicht gebaut.
 
 1. **Befundblock lesen:** `plan/zyklus-2/befunde/<Datei>`, Überschrift
    `#### <Kennung>`. Er nennt Beleg, Vorschlag und Abnahme. Die Spalte
@@ -93,7 +121,12 @@ Nur Aufgaben mit Status `offen`. `wartet Zn` wird übersprungen, außer
 3. Eine Version für das ganze Paket: `APP_VERSION` (`app.js`), `CACHE_NAME`
    (`sw.js`), **alle** `?v=`-Stellen in `index.html` (auch die 31
    Startbild-Links), `CHANGELOG.md` oben. `node plan/werkzeuge/pruefe_stand.mjs`.
-4. **Ganzer Prüfstand:** `node plan/werkzeuge/pruefstand/alle_pruefen.js`,
+4. **Netzteil prüfen:**
+   `powershell -c "(Get-CimInstance Win32_Battery).BatteryStatus"` muss `2`
+   liefern. Auf Akku: bis hierher arbeiten (bauen, Einzeltests), dann
+   anhalten und melden „Paket X gebaut, Gesamtlauf braucht Netzteil“. Keine
+   Version ohne Gesamtlauf committen.
+   **Ganzer Prüfstand:** `node plan/werkzeuge/pruefstand/alle_pruefen.js`,
    dann Affe (`node affe.js handy 200 7`, `node affe.js ipad 150 7`). Ausgaben
    vollständig lesen (LEHREN § 5.3). Rot heißt: beheben oder als Messfehler
    belegen, sonst kein Commit. Tempo-Tests am Netzteil, Vergleich nur mit
@@ -137,8 +170,9 @@ sauber ist, der Prüfstand nicht startet oder Daten verloren gehen könnten.
 
 ## 8. Fertig ist Zyklus 2, wenn
 
-- jede Zeile in `AUFGABEN.md` `erledigt`, `trifft nicht zu` oder `wartet Zn`
-  (mit Vermerk „Betreiber hat abgelehnt/verschoben“) ist;
-- Claude jedes Paket gegengelesen hat;
+- jede Zeile in `AUFGABEN.md` `erledigt`, `trifft nicht zu` oder
+  `später (Zn)` ist und keine mehr auf `zurück` steht;
+- jedes Paket seine Gegenprüfung (§ 5 Punkt 1) im Logbuch hat. Ein zweiter
+  Blick durch Claude ist erwünscht, aber keine Bedingung;
 - eine frische Nachprüfung aller Bereiche zweimal hintereinander keinen neuen
   kritischen oder hohen Fund bringt (`AUFTRAG.md` § 3.6).

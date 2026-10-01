@@ -14,7 +14,7 @@ Zyklus 2: Prüfung fertig (8 Prüfer, 103 neue Funde, keiner kritisch; dazu
 G-107–G-111 und G-118). Plan steht: [`zyklus-2/AUFGABEN.md`](zyklus-2/AUFGABEN.md)
 (Pakete A–F), [`zyklus-2/CODEX-START.md`](zyklus-2/CODEX-START.md) (so
 arbeitet Codex), [`zyklus-2/ENTSCHEIDUNGEN.md`](zyklus-2/ENTSCHEIDUNGEN.md)
-(18 Fragen an den Betreiber, offen). **Nächster Schritt: Paket A.**
+(beantwortet 01.10.: alles wie empfohlen; offen nur Z6b und V8). **Nächster Schritt: Paket A mit Codex.**
 
 ---
 
@@ -113,8 +113,8 @@ Logbuch: [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 
 | Nr | Was | Wer | Wann |
 |---|---|---|---|
-| 1 | Zyklus 2, Pakete A–F (`zyklus-2/AUFGABEN.md`), je Paket prüfen und per „ladegerät“ veröffentlichen | Codex baut, Claude prüft, Betreiber veröffentlicht | jetzt |
-| 2 | 18 Entscheidungen (`zyklus-2/ENTSCHEIDUNGEN.md`) | Betreiber, einmal | vor Paket C |
+| 1 | Zyklus 2, Pakete A–F (`zyklus-2/AUFGABEN.md`) nach `zyklus-2/CODEX-START.md`, je Paket per `ladegeraet.bat` veröffentlichen | Codex baut und prüft gegen, Betreiber veröffentlicht | jetzt |
+| 2 | Entscheidungen (`zyklus-2/ENTSCHEIDUNGEN.md`): beantwortet 01.10., offen nur Z6b (Ruhetag) und V8 | Betreiber | vor Paket E |
 | 3 | Gerätetests G1–G7 am iPhone (`zyklus-2/ENTSCHEIDUNGEN.md`) | Betreiber | je nach Paket |
 | 4 | Nachprüfung Zyklus 2: frische Prüfung, zweimal ohne neuen kritischen/hohen Fund | Claude | nach Paket F |
 | 5 | Probelauf Texte auswerten, Startwerte, Freigabe-Frage | Betreiber schickt Foto, Claude wertet aus | ab 29.10.2026 |
