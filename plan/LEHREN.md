@@ -360,6 +360,11 @@ Vorlagen wird **selektiv** übernommen, mit Diff gegen den Bestand.
 **Regel:** Vor einem neuen Bauteil in `styles.css` und `app.js` nach einem
 vorhandenen suchen.
 
+Auch SDK-Attrappen zählen: vor einer neuen exportierten Funktion den ganzen
+Template-String in `stubs.js` durchsuchen. `node --check stubs.js` prüft nur
+den umgebenden String, nicht das darin stehende Modul. Dessen Inhalt zusätzlich
+mit `node --input-type=module --check` parsen (01.10.2026, Paket A).
+
 ### 3.8 Beim Entfernen alle Aufrufer mitnehmen
 
 *3.6.13:* Der tote Aufruf `teilLinkPruefenUndVerarbeiten` warf bei jedem
@@ -377,6 +382,9 @@ gehören hinter einen bewussten Schalter oder werden nach der Messung entfernt.
 Das Format steht in `CLAUDE.md`. Dazu:
 
 - Auch „geprüft, nichts zu tun" ist ein Eintrag.
+- Nach maschinellen Statusänderungen die tatsächlich geänderten Tabellenzeilen
+  und den Diff lesen; die Zahl der Treffer muss stimmen. Ein Regex mit `$`
+  und ausgeschlossenem `\r` trifft CRLF-Zeilen nicht (01.10.2026, Paket A).
 - „AKTUELL" in `PLAN.md` ist der erste Satz, den die nächste Session liest. Er
   muss den **jetzigen** Stand nennen und sagen, was beim Betreiber offen ist.
 - Jede offene Betreiber-Entscheidung kommt in die Tabelle „Offene Fragen" in
@@ -396,6 +404,13 @@ Das Format steht in `CLAUDE.md`. Dazu:
 - Keine Modellnamen in Commits oder App-Code. Ausnahme: die vom Betreiber
   ausdrücklich gewünschte Codex-Modellwahl in `plan/grossplan/AUFTRAG.md`.
 - Nie `--force` auf `main`.
+- Beim Ausschneiden eines Patches nur echte Hunk-Zeilen (`^@@ `) als Grenzen
+  nehmen; `@@` kommt auch innerhalb derselben Kopfzeile vor. Erst
+  `git apply --check`, dann anwenden (01.10.2026, Paket A).
+- JavaScript fuer `node -e` in PowerShell mit echten Shell-Regeln quotieren:
+  innerhalb eines einfach quotierten Arguments jedes `'` verdoppeln. Ein
+  JSON-String ist keine Shell-Quotierung. Patch-Anker vorher woertlich lesen,
+  auch wenn nur eine Dokumentationsregel ergaenzt wird.
 
 ---
 
@@ -557,6 +572,34 @@ Was gemessen wird:
   Bereits bestandene Einzeltests dürfen aus ihren vollständigen Logs
   ausgewertet werden; dies ausdrücklich von einem erneuten Lauf unterscheiden.
 - Neue Browser-Tests schließen den Browser in `finally`, auch bei Assertions.
+- Neue SW-/Offline-Prüfstände zuerst an einem erfolgreichen Update mit
+  anschließendem Offline-Start bestätigen. Lokale App-Dateien über einen echten
+  HTTP-Server liefern: Playwright-Routen können den Offline-Schalter umgehen
+  oder vor dem Worker abbrechen. Cache vorhanden heißt noch nicht aktiver
+  Controller. Ein roter Normalfall sperrt die Abnahme, auch wenn die alte
+  Fehler-Gegenprobe anschlägt (01.10.2026, Paket A).
+- SW-Pruefungen warten auf `activated` und darauf, dass Controller und
+  aktive Registrierung derselbe Worker sind. Bei dieser Playwright-Fassung
+  wertet `waitForFunction(async ...)` die Promise als wahr aus, statt bei
+  einem falschen Ergebnis weiter zu pollen. Asynchrone Cache-/SDK-Bedingungen
+  deshalb mit wiederholtem, jeweils abgewartetem `page.evaluate` pruefen.
+  SDK-Cache-Eintraege an ihren Request-URLs nachweisen; ein nackter Request
+  kann wegen `Vary` nicht passen. Die Nutzbarkeit beweist erst der echte
+  Offline-Neustart, nicht die blosse Existenz des Eintrags.
+- Flüchtige Boot-Knoten taugen nicht zur Unterscheidung von App-Fallback und
+  eigenständiger HTML-Seite; einen bleibenden App-Knoten prüfen. Browser-Fixtures
+  wählen die echten UI-Schalter aus dem Code, keine erfundenen View-Namen.
+- Nach einer Zugriffssperre auch bestehende Import-Regressionen auf passende
+  Berechtigung und Einwilligung pruefen. Ein Feld-Erhalt-Test braucht ein
+  berechtigtes Konto; Sperrfaelle separat pruefen. Keine Feld-, Mengen- oder
+  Verweis-Erwartung lockern (01.10.2026, Paket A).
+- Fehlermeldungen nach einer Ausweis-Erneuerung und nach dauerhafter Ablehnung
+  getrennt prüfen. Geometriemessungen mit der festen Gegenprobe vergleichen:
+  ein bestehender Offline-Banner verschiebt das ganze Formular, ohne dass ein
+  neuer Hinweis den Knopf innerhalb des Formulars verschiebt.
+- `waitForPendingWrites` umfasst keine erst nach Ablehnung begonnene
+  Reparatur-Transaktion. Deren bestätigten Serverstand abwarten, nicht einen
+  zunächst noch leeren Fehlermarker als Abschluss werten (01.10.2026, Paket A).
 - Bei geänderter Oberfläche Verhalten prüfen (Überlappung, Antippbarkeit),
   keine überholten Layout-Puffer verlangen (Runde 12).
 
@@ -1831,3 +1874,12 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 | 27.09. (Runde 10, Handwerker) | `t_a11y.js` rot („keine Aktion start-session") | Die Übergabe sagte pauschal „0–4 Uhr UTC → `TZ=Asia/Tokyo`"; der Handwerker setzte es um 17:37 UTC – in Tokio war es dann 2:37, also genau in der Lücke | Die Zone nur setzen, wenn es **im Container** gerade 0–4 Uhr ist, und dann eine Zone wählen, in der es nach 4 Uhr ist (`date -u` vorher). In Übergaben die Bedingung ausschreiben |
 | 30.09. (Texte Stufe 4, eigener Fund zu Stufe 2) | Quran-Text (Tanzil) zeigt in 2240 von 6236 Ayat einen gestrichelten Kreis ◌ statt der kleinen runden Null (U+06DF, dazu U+06E3, U+06EB) | Stufe 2 prüfte nur, **welche Schrift** jedes Zeichen zeichnet (CDP `getPlatformFontsForNode`: UthmanicHafs für alle 68) – nicht, **was** sie zeichnet. Die King-Fahd-Schrift hat für diese Codepunkte als Glyphe einen Platzhalterkreis | Schriftabdeckung heißt nicht richtige Darstellung: jede Glyphe, die ein Text braucht, einmal **einzeln sehen** (Bildschirmfoto) und auffällige Glyphen maschinell suchen (fontTools: gleiche Umrisse/Größe wie der Platzhalter). Bildschirmfotos echter Stellen gehören zur Abnahme jeder Stufe, die Text zeigt |
 | 30.09. (Texte, eigener Fehler seit Stufe 2) | Textzeilen standen nie in der Quran-Schrift, sondern in einer Ersatzschrift | `'<span class="x"' + schriftAttr(t)` – `schriftAttr` liefert selbst `class="arabic"`; das **zweite** `class`-Attribut verwirft der Browser still. Tests prüften Wortlaut und Lage, nie die gezeichnete Schrift | Eine Hilfsfunktion, die Attribute zurückgibt, bekommt die eigenen Klassen als Parameter (`schriftAttr(text, klassen)`). Bei Schrift-/Darstellungsfragen `CSS.getPlatformFontsForNode` am **echten** Element messen, nachdem die Schriften geladen sind (`t_quran_schrift.js`) |
+| 01.10. (Paket A, eigener Vorabfehler) | Ausgeschnittener Auth-Patch war ungueltig; git apply --check lehnte ihn vor jeder Aenderung ab | Zweites Vorkommen von @@ innerhalb einer Hunk-Kopfzeile als Grenze genommen | Nur ^@@ -Zeilen als Hunk-Grenzen; Vorpruefung vor Anwendung (§ 3.11) |
+| 01.10. (Paket A, eigener SW-Pruefaufbau) | Rechtsseiten-Fallback mit fluechtigem Boot-Knoten gemessen; Routen lieferten trotz Offline oder brachen vor dem Worker ab; echte Normal-Update-Kontrolle weiter rot | DOM-Marker und Netzsimulation bildeten den echten Worker nicht verlässlich ab; Normal-Kontrolle nicht zuerst abgesichert | Bleibender App-Knoten, echter lokaler HTTP-Server, erfolgreicher Update-/Offline-Normalfall zuerst (§ 5.3). A7/A13 zuerst zurueck; ausdruecklich beauftragte Fortsetzung nimmt sie nach korrigiertem Aufbau ab |
+| 01.10. (Paket A, eigene SW-Fortsetzung) | Async-Wartebedingungen liefen vor Aktivierung weiter; SDK-Cache-Abfrage trotz vorhandener URL falsch; Datenschutz-Titel falsch erwartet; Diagnose-Ausdruck/PowerShell-Quote vor Lauf abgelehnt | Promise im lokalen Playwright-Poller wahr, nackter Request trifft Vary nicht; h1 und Shell-Syntax nicht exakt gelesen | Abgewartetes evaluate-Polling und Controller-Identitaet, Cache-Keys plus echter Offline-Start, echter h1 Datenschutz, strukturierter Patch (§ 5.3). Beide festen Gegenproben und neue Normal-/Abbruch-/Rechtsseiten-Proben danach gruen |
+| 01.10. (Paket A, eigene Abschluss-Diagnose) | Erstes Log-Leseskript mit fehlerhafter PowerShell-Quote abgelehnt; anschliessend ungenauen Dokumentationsanker verwendet | Innere einfache Quotes nicht verdoppelt; Abschnittsname geraten | Echte PowerShell-Quotierung und vorher gelesener exakter Patch-Anker (§ 3.11); beides korrigiert, keine Produkt-/Testquelle geaendert und kein Ergebnis verloren |
+| 01.10. (Paket A, eigener Feedback-Pruefaufbau) | Erster Dialogtest wartete nach der Ausweis-Erneuerung auf den falschen Banner; Formular ueber erfundenes ui.view gewaehlt; Geometrietest verlangte global 0 px trotz bestehendem Offline-Banner | Reale Auth-/UI-Zweige und Vorstand nicht vor Erwartungswert gelesen | Echte UI-Schalter, beide Auth-Fehlerzweige, Lage innerhalb des Formulars und feste Alt-Gegenprobe (§ 5.3). Vorstand und neuer Stand zeigen bei 320 px denselben globalen Versatz 104.15625 px |
+| 01.10. (Paket A, eigener Attrappen-/SDK-Messfehler) | runTransaction doppelt in den SDK-String eingefuegt: neue Browser-Tests konnten nicht starten; Altfeld-Reparatur vor ihrem Serverabschluss gelesen | Vorhandene exportierte Funktion uebersehen; waitForPendingWrites fuer spaeter beginnende Transaktion gehalten | Bestehende Attrappe verwenden, eingebettete Module separat parsen (§ 3.7), bestaetigten Reparatur-Serverstand abwarten (§ 5.3). Doppeldefinition sofort entfernt, Funktions- und SDK-Proben danach gruen |
+| 01.10. (Paket A, eigener Doku-Vorabfehler) | Erste maschinelle Statusänderung traf keine der elf CRLF-Tabellenzeilen; vor Abschluss im Diff bemerkt | Regex-Zeilenende schloss CR aus | Statuszeilen strukturiert ändern, genau elf Treffer verlangen und Ergebnis/Diff lesen (§ 3.10); Tabelle danach korrekt in Arbeit |
+| 01.10. (Paket A, eigene Abnahme-Luecke) | Gesamtlauf: t_text_felder erwartet Textimport im normalen Konto u1 und wird nach A8 rot | Bestehenden Feld-Erhalt-Test nicht auf die neue Betreiber-/Einwilligungs-Sperre abgestimmt; erster Fixture-Nachlauf uebersah, dass Store-Leeren die Einwilligung entfernt, und wartete im Dialog | Berechtigtes Betreiber-Fixture, echte erneute Zustimmung nach Store-Leeren, alle bisherigen Mengen/Felder/Verweise erhalten; normale/abgelehnte/geteilte Importe bleiben separat gesperrt (§ 5.3) |
+| 01.10. (Paket A, eigener K10-Doku-Vorabfehler) | Zwei nicht vorhandene Regel-Funktionsnamen als Erfolgskontrolle genannt; rg vor Abschluss ohne Treffer | Namen vor dem konkreten Regel-Diff geraten | Erfolg am tatsaechlichen feedback/votes-Regelblock mit get/getAfter und +1/-1 nachweisen (§ 3.2); vor Commit korrigiert |

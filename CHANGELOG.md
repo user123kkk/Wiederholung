@@ -1,3 +1,19 @@
+## 3.18.11 – 1. Oktober 2026
+
+**Paket A: Kontowechsel und Datenspeicherung abgesichert.** Alte Dialoge und
+Auth-Antworten wirken nicht auf das Folge-Konto; private Entwuerfe werden
+beim Wechsel geleert. Ideenstimmen und ihre Merker werden gemeinsam
+geschrieben, auch beim Konto-Loeschen. Ein Backup spielt Texte nur mit
+gueltiger Einwilligung ein. Einstellungen werden einzeln gespeichert und
+ueberschreiben keine anderen Einstellungen eines zweiten Geraets.
+
+Nach einem abgebrochenen Update bleibt die alte App offline startfaehig.
+Impressum und Datenschutz sind offline lesbar und werden online sofort
+aktualisiert. Speicherfehler nennen die passende Handlung; Ideen lassen
+sich nur online einreichen und bleiben bei Zeitlimit als Entwurf erhalten.
+Der Inventar-Test verlangt den vollstaendigen Rundgang bis zum Endzustand.
+Noch offene Runde-15-Befunde sind getrennt und ohne Kennungskollision gesichert.
+
 ## 3.18.10 – 30. September 2026
 
 **Arabische Schrift springt nicht mehr um, Wechsel nach Verwalten ruhiger.**

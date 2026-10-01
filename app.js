@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.10";
+const APP_VERSION = "3.18.11";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1227,12 +1227,6 @@ let listenFenster = { start: 0, anzahl: 0 };
 /* ---------- Zustand ---------- */
 let currentUser = null;      // Firebase-User
 let displayName = "";
-/* 3.17.38 (G-054, KONTO-15): Trägt einen Namen über den naechsten
-   onAuthStateChanged-Wechsel hinweg - dort wird ui.authEingabe sonst
-   unbedingt geleert. Nur kontoVertipptNeuAnfangen() setzt das, wenn das
-   unbestaetigte Konto geloescht und direkt der Registrieren-Bildschirm
-   gezeigt wird (Name bleibt, E-Mail nicht). */
-let authEingabeNameNachtrag = null;
 let bereiche = null;         // Array [{name, karten:[]}] – null solange Cloud-Daten noch nicht geladen
 let cloudDocExists = false;
 let syncError = null;
@@ -1568,14 +1562,14 @@ function setThema(id) {
   if (!THEMEN.some(x => x.id === id)) return;
   settings.thema = id;
   themaAnwenden();
-  persistSettings();
+  persistSettings("thema");
   render();
 }
 function setSitzungsLimit(id) {
   if (!SITZUNGS_LIMITS.some(x => x.id === id)) return;
   if (id === settings.sitzungsLimit) return;
   settings.sitzungsLimit = id;
-  persistSettings();
+  persistSettings("sitzungsLimit");
   render();
 }
 /* 3.10.2: Die auf dem Geraet gespeicherte Wahl gilt, bis die Cloud antwortet.
@@ -1608,6 +1602,7 @@ let ui = {
   authInfo: null,
   authBusy: false,
   authBusyWas: null,
+  authAuftrag: null,
   /* 3.4.0: Was im Anmeldeformular schon getippt ist. render() ersetzt den
      ganzen Inhalt von #app - ohne diesen Zwischenspeicher waren E-Mail und
      Passwort nach jeder Fehlermeldung und jedem Wechsel Anmelden/Konto
@@ -1974,9 +1969,11 @@ function ausweisErneuernUndNeuLaden() {
   try { schonVersucht = sessionStorage.getItem(TOKEN_ERNEUERT_KEY) === "1"; } catch (e) {}
   if (schonVersucht || !currentUser || !currentUser.emailVerified) return false;
   try { sessionStorage.setItem(TOKEN_ERNEUERT_KEY, "1"); } catch (e) {}
-  currentUser.getIdToken(true)
-    .then(() => { location.reload(); })
-    .catch(() => { render(); });
+  const user = currentUser, ref = userDocRef;
+  const giltNoch = () => currentUser === user && userDocRef === ref && !kontoWirdGeloescht;
+  user.getIdToken(true)
+    .then(() => { if (giltNoch()) location.reload(); })
+    .catch(() => { if (giltNoch()) render(); });
   return true;
 }
 /* 17.09.2026: derselbe veraltete Ausweis trifft auch das SCHREIBEN, nicht nur
@@ -2260,19 +2257,35 @@ async function initFirebase() {
     /* 3.17.38 (G-050, KONTO-11): vor den Resets unten sichern - beide werden
        gleich unbedingt geleert (ui.registrierungZeitlimit hier, ui.authEingabe
        weiter unten). Siehe die Verwendung im if(user)-Zweig. */
-    const registrierungNachholen = !!ui.registrierungZeitlimit;
-    const registrierungName = (ui.authEingabe && ui.authEingabe.name) || "";
+    const auftrag = ui.authAuftrag;
+    const eigeneRegistrierung = !!(auftrag && auftrag.art === "registrieren" && user && auth.currentUser === user &&
+      (auftrag.registriert ? user === auftrag.registriert :
+        (user.email || "").toLowerCase() === auftrag.email.toLowerCase()));
+    const eigeneAdressAbmeldung = !!(auftrag && auftrag.art === "adresse" &&
+      auftrag.loescht && !user && currentUser === auftrag.user);
+    const registrierungNachholen = eigeneRegistrierung && !!ui.registrierungZeitlimit;
+    const registrierungName = eigeneRegistrierung ? auftrag.name : "";
+    const adressName = eigeneAdressAbmeldung ? auftrag.name : "";
+    // Die eigene Abmeldung kann vor der deleteUser-Quittung kommen. Bereits
+    // jetzt das Formular waehlen, damit render() keinen neuen Einstieg anlegt.
+    if (eigeneAdressAbmeldung) {
+      ui.authMode = "register";
+      ui.authGewaehlt = true;
+    }
     ui.registrierungZeitlimit = false;
-    // Alte Konto-Auftraege duerfen die neue Anmeldung nicht blockieren.
-    // Beim ersten Registrieren (vorher kein User) laeuft der Mailversand
-    // noch: dessen Busy-Merker bleibt bis zum normalen Abschluss erhalten.
-    if (currentUser) {
+    if (!eigeneRegistrierung && !eigeneAdressAbmeldung) ui.authAuftrag = null;
+    // Nur die eigene Registrierung darf ueber ihren Auth-Callback weiterlaufen.
+    if (!eigeneRegistrierung) {
       ui.authBusy = false;
       ui.authBusyWas = null;
       ui.authError = null;
       ui.authInfo = null;
     }
     currentUser = user;
+    if (eigeneRegistrierung || eigeneAdressAbmeldung) {
+      auftrag.user = user;
+      auftrag.ref = null;
+    }
     bestaetigungLaeuft = false;
     lehrerLetzteAbfrage.clear();
     haltenAbbrechen(); // ein begonnenes Halten gehoert zum bisherigen Konto
@@ -2316,12 +2329,51 @@ async function initFirebase() {
     feedbackLadeLangsam = false;
     feedbackLaedt = false;
     feedbackLadeToken++;   // ein noch laufender Versuch des vorigen Kontos zaehlt nicht mehr
+    feedbackEntwurf = { text: "", beschreibung: "" };
+    feedbackFormFehler = false;
+    ui.feedbackForm = false;
     ui.session = null;
     ui.editId = null;
-    /* 3.17.38 (G-054): normalerweise leer - authEingabeNameNachtrag traegt
-       nur nach kontoVertipptNeuAnfangen() einen Namen ueber diesen Wechsel. */
-    ui.authEingabe = { name: authEingabeNameNachtrag || "", email: "", pass: "" };
-    authEingabeNameNachtrag = null;
+    ui.karteSheet = false;
+    ui.cardDetailId = null;
+    ui.seite = null;
+    resetFormDraft();
+    editRueckkehrY = null;
+    ui.selectMode = false;
+    ui.selectedIds = new Set();
+    ui.searchQuery = "";
+    ui.searchAll = false;
+    ui.kartenSeite = 0;
+    ui.wahlSheet = null;
+    ui.setArtSheetId = null;
+    ui.bereichSheet = false;
+    ui.bereichMehr = false;
+    ui.drillOpen = false;
+    ui.drillSetIds = new Set();
+    ui.drillVon = null;
+    ui.drillBis = null;
+    ui.drillAnker = null;
+    ui.lernSetId = null;
+    ui.lernOffen = new Set();
+    ui.lernLetzte = null;
+    ui.lernFokusNach = null;
+    ui.openSetId = null;
+    ui.zuletztSetId = null;
+    ui.setsOffen = false;
+    ui.setsArtWahl = false;
+    ui.gemerktRunde = new Set();
+    ui.merkPop = null;
+    ui.springZu = null;
+    ui.springOben = false;
+    ui.toast = null;
+    hwStrokes = [];
+    hwDrawing = false;
+    hwFullscreen = false;
+    ui.kontoLoeschenEmail = "";
+    ui.erinnerungSheet = false;
+    ui.erinnerungZeit = null;
+    /* Den Namen nur ueber die eigene Loeschung in das Gastformular tragen. */
+    ui.authEingabe = { name: adressName, email: "", pass: "" };
     ui.authFeldFehler = null;
     ui.authPassSichtbar = false;
     ui.askImport = false;
@@ -2348,13 +2400,14 @@ async function initFirebase() {
         fb.sendEmailVerification(user).catch(() => {});
         if (!user.displayName && registrierungName) {
           fb.updateProfile(user, { displayName: registrierungName })
-            .then(() => { if (currentUser === user) displayName = registrierungName; }).catch(() => {});
+            .then(() => { if (ui.authAuftrag === auftrag && currentUser === user && auth.currentUser === user) displayName = registrierungName; }).catch(() => {});
         }
         ui.authError = null;
         ui.authInfo = "Konto angelegt.";
         ansagen(ui.authInfo);
       }
       userDocRef = fb.doc(db, "users", user.uid);
+      if (eigeneRegistrierung) auftrag.ref = userDocRef;
       bereicheColRef = fb.collection(userDocRef, "bereiche");
       kartenColRef = fb.collection(userDocRef, "karten");
       let letzterNutzerKopf = null;
@@ -2500,7 +2553,10 @@ function saveFehler(e) {
   }
   if (saveWarned) { render(); return; }
   saveWarned = true;
-  dlgAlert("Deine letzte Änderung ist nicht in der Cloud angekommen – " + schreibFehlerText(schreibFehler) + ". Die App versucht es weiter, sobald die Verbindung steht.", "Nicht gespeichert");
+  const naechsterSchritt = schreibFehler === "permission-denied" && schreibFehlerAusweisErneuert
+    ? "Versuch die letzte Änderung noch einmal zu speichern."
+    : "Lade ein Backup herunter, bevor du weiterlernst.";
+  dlgAlert("Deine letzte Änderung ist nicht in der Cloud angekommen – " + schreibFehlerText(schreibFehler) + ". " + naechsterSchritt, "Nicht gespeichert");
 }
 function schreibErfolg() { saveWarned = false; if (schreibFehler) { schreibFehler = null; render(); } }
 
@@ -2890,9 +2946,10 @@ function persistStreak(felder) {
   }
   schreibeInsNutzerdokument(patch);
 }
-function persistSettings() {
+function persistSettings(feld) {
   if (!userDocRef) return;
-  schreibeInsNutzerdokument({ settings: settings });
+  if (!["thema", "sitzungsLimit", "arabGroesse", "lastBackup"].includes(feld)) return;
+  schreibeInsNutzerdokument({ ["settings." + feld]: settings[feld] });
 }
 /* 2.11.3: Serie, Einstellungen und Tagesprotokoll gingen bisher mit einem
    stillen .catch(() => {}) raus. Zwei Faelle verschluckte das:
@@ -2913,6 +2970,28 @@ async function schreibeInsNutzerdokument(patch) {
     if (giltNoch()) schreibErfolg();
   } catch (e) {
     if (!giltNoch()) return;
+    /* Alte unbekannte Teilfelder verletzen settingsOk.hasOnly. Nur dann
+       einmal die Map bereinigen: aus dem aktuellen Serverstand, innerhalb
+       einer Transaktion, damit kein fremder Einstellungswechsel verlorengeht. */
+    const settingsFelder = ["thema", "sitzungsLimit", "arabGroesse", "lastBackup"];
+    const keys = Object.keys(patch);
+    if (e && e.code === "permission-denied" && keys.length &&
+        keys.every(k => k.startsWith("settings.") && settingsFelder.includes(k.slice(9)))) {
+      try {
+        await fb.runTransaction(db, async tx => {
+          if (!giltNoch()) throw { code: "konto-gewechselt" };
+          const snap = await tx.get(ref);
+          if (!giltNoch()) throw { code: "konto-gewechselt" };
+          const server = snap.exists() && snap.data().settings;
+          if (!server || !Object.keys(server).some(k => !settingsFelder.includes(k))) throw e;
+          const bereinigt = normSettings(server);
+          for (const k of keys) bereinigt[k.slice(9)] = patch[k];
+          tx.update(ref, { settings: bereinigt });
+        });
+        if (giltNoch()) schreibErfolg();
+        return;
+      } catch (e2) { if (giltNoch()) saveFehler(e2); return; }
+    }
     if (e && e.code === "not-found") {
       if (kontoWirdGeloescht) return;
       try {
@@ -3172,6 +3251,24 @@ function val(id) {
   return el ? el.value : "";
 }
 
+/* Ein Auftrag kann das eigene Registrieren oder Loeschen ueberleben, aber
+   keinen fremden Kontowechsel und keinen neu begonnenen Auth-Auftrag. */
+function authAuftragStarten(art, daten = {}) {
+  const auftrag = Object.assign({ art, user: currentUser, ref: userDocRef }, daten);
+  ui.authAuftrag = auftrag;
+  return auftrag;
+}
+function authAuftragGilt(auftrag) {
+  return ui.authAuftrag === auftrag && !kontoWirdGeloescht &&
+    ((currentUser === auftrag.user && userDocRef === auftrag.ref) ||
+      (auftrag.art === "adresse" && auftrag.loescht && !currentUser && !userDocRef));
+}
+/* Nach createUser ist cred.user der Beweis: Das SDK zeigt auf GENAU das Konto,
+   das dieser Auftrag angelegt hat. Ein fremder Wechsel aendert auth.currentUser
+   oder ersetzt den Auftrag (Login, Callback eines anderen Kontos). */
+function registrierungGilt(auftrag, user) {
+  return ui.authAuftrag === auftrag && !kontoWirdGeloescht && auth.currentUser === user;
+}
 async function doLogin() {
   /* 3.17.38 (G-053, KONTO-14): Enter in JEDEM Feld sendet jetzt ueber ein
      <form> ab (submit-Delegation an body) - ohne diese Sperre koennte ein
@@ -3180,6 +3277,7 @@ async function doLogin() {
   if (ui.authBusy) return;
   const email = val("a-email").trim();
   const pass = val("a-pass");
+  const auftrag = authAuftragStarten("login");
   ui.authError = null; ui.authInfo = null; ui.authBusy = true;
   /* 3.17.38 (G-050): ein alter Merker aus einem abgebrochenen
      Registrieren-Versuch gilt nur fuer GENAU das naechste
@@ -3189,8 +3287,10 @@ async function doLogin() {
   try {
     await mitZeitlimit(fb.signInWithEmailAndPassword(auth, email, pass));
   } catch (e) {
+    if (!authAuftragGilt(auftrag)) return;
     ui.authError = authErrorText(e);
   }
+  if (!authAuftragGilt(auftrag)) return;
   ui.authBusy = false;
   render();
 }
@@ -3208,18 +3308,24 @@ async function doLogin() {
    pageshow/persisted-Handler unten den Fall ab, in dem jemand zurueckgeht,
    ohne fertig zu sein. */
 async function doGoogleLogin() {
+  if (ui.authBusy) return;
+  const auftrag = authAuftragStarten("google");
   ui.authError = null; ui.authInfo = null; ui.authBusy = true;
   ui.registrierungZeitlimit = false;   /* 3.17.38 (G-050): siehe doLogin(). */
   render();
   try {
     await fb.signInWithPopup(auth, new fb.GoogleAuthProvider());
   } catch (e) {
+    if (!authAuftragGilt(auftrag)) return;
     if (e && e.code !== "auth/popup-closed-by-user") ui.authError = authErrorText(e);
   }
+  if (!authAuftragGilt(auftrag)) return;
   ui.authBusy = false;
   render();
 }
 async function doAppleLogin() {
+  if (ui.authBusy) return;
+  const auftrag = authAuftragStarten("apple");
   ui.authError = null; ui.authInfo = null; ui.authBusy = true;
   ui.registrierungZeitlimit = false;   /* 3.17.38 (G-050): siehe doLogin(). */
   render();
@@ -3229,8 +3335,10 @@ async function doAppleLogin() {
     provider.addScope("name");
     await fb.signInWithPopup(auth, provider);
   } catch (e) {
+    if (!authAuftragGilt(auftrag)) return;
     if (e && e.code !== "auth/popup-closed-by-user") ui.authError = authErrorText(e);
   }
+  if (!authAuftragGilt(auftrag)) return;
   ui.authBusy = false;
   render();
 }
@@ -3267,6 +3375,7 @@ async function doRegister() {
     return;
   }
   ui.authFeldFehler = null;
+  const auftrag = authAuftragStarten("registrieren", { name, email });
   ui.authBusy = true; render();
   /* 3.17.38 (G-050, KONTO-11): eigener try/catch nur um den ersten Schritt -
      laeuft GENAU der ins Zeitlimit (mitZeitlimit wirft dann
@@ -3279,22 +3388,36 @@ async function doRegister() {
   try {
     cred = await mitZeitlimit(fb.createUserWithEmailAndPassword(auth, email, pass));
   } catch (e) {
+    if (!authAuftragGilt(auftrag)) return;
     ui.authError = authErrorText(e);
     if (e && e.code === "auth/network-request-failed") ui.registrierungZeitlimit = true;
     ui.authBusy = false;
     render();
     return;
   }
+  /* Claude-Pruefung Runde 15: Ein spaet doch noch angelegtes Konto aus einem
+     frueheren Versuch mit Zeitlimit (andere Adresse) meldet sich per Callback
+     und verwirft dabei diesen Auftrag. Hat seitdem niemand einen neuen Auftrag
+     begonnen (null) und zeigt das SDK auf das hier angelegte Konto, gehoert
+     die Fortsetzung weiter hierher - sonst bekaeme dieses Konto weder Namen
+     noch Bestaetigungs-Mail. */
+  if (ui.authAuftrag === null && auth.currentUser === cred.user && !kontoWirdGeloescht) { ui.authAuftrag = auftrag; ui.authBusy = true; }
+  if (ui.authAuftrag !== auftrag) return;
+  auftrag.registriert = cred.user;
+  if (!registrierungGilt(auftrag, cred.user)) return;
   try {
     displayName = name;
     await mitZeitlimit(fb.updateProfile(cred.user, { displayName: name }));
+    if (!registrierungGilt(auftrag, cred.user)) return;
     /* C4: Nach der Registrierung eine Bestätigungs-E-Mail schicken. Die App
        sperrt sich selbst, bis emailVerified wahr ist (siehe renderAuth). */
     await mitZeitlimit(fb.sendEmailVerification(cred.user));
+    if (!registrierungGilt(auftrag, cred.user)) return;
     /* 3.17.3: Der Rest (Posteingang, Spam) steht fest auf dem
        Bestaetigungs-Bildschirm - hier nicht noch einmal. */
     ui.authInfo = "Konto angelegt.";
   } catch (e) {
+    if (!registrierungGilt(auftrag, cred.user)) return;
     ui.authError = authErrorText(e);
   }
   ui.authBusy = false;
@@ -3364,23 +3487,32 @@ async function doResendVerification() {
    geloescht. */
 async function kontoVertipptNeuAnfangen() {
   if (!currentUser || ui.authBusy) return;
+  const nutzer = currentUser;
+  const auftrag = authAuftragStarten("adresse", { name: nutzer.displayName || "" });
   const ok = await dlgConfirm(
     "Dieses noch nicht bestätigte Konto wird gelöscht. Danach kannst du dich mit der richtigen Adresse neu registrieren.",
     { title: "Adresse falsch?", okLabel: "Konto löschen", danger: true });
-  if (!ok) return;
-  const nutzer = currentUser;
-  /* Name bleibt fuer den Registrieren-Bildschirm erhalten (authEingabeNameNachtrag,
-     siehe onAuthStateChanged) - nur die vertippte Adresse soll weg. */
-  authEingabeNameNachtrag = nutzer.displayName || "";
+  if (!authAuftragGilt(auftrag)) return;
+  if (!ok) { ui.authAuftrag = null; return; }
+  /* Der Auftrag traegt den Namen nur ueber seine eigene Abmeldung. */
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
     try {
+      auftrag.loescht = true;
       await fb.deleteUser(nutzer);
     } catch (e) {
+      if (!authAuftragGilt(auftrag)) return;
+      /* Waehrend der Neu-Anmeldung wird nichts geloescht: eine Abmeldung in
+         dieser Zeit ist nicht die eigene Loeschung. */
+      auftrag.loescht = false;
       if (!e || e.code !== "auth/requires-recent-login") throw e;
-      if (!(await kontoNeuAnmelden())) { authEingabeNameNachtrag = null; ui.authBusy = false; render(); return; }
+      const angemeldet = await kontoNeuAnmelden();
+      if (!authAuftragGilt(auftrag)) return;
+      if (!angemeldet) { ui.authAuftrag = null; ui.authBusy = false; render(); return; }
+      auftrag.loescht = true;
       await fb.deleteUser(nutzer);
     }
+    if (!authAuftragGilt(auftrag)) return;
     /* onAuthStateChanged raeumt currentUser/ui.authEingabe auf (mit dem
        gemerkten Namen) - hier nur noch Modus und authGewaehlt, die dieser
        Reset nicht anfasst. Ohne authGewaehlt zeigt render() bei
@@ -3389,7 +3521,8 @@ async function kontoVertipptNeuAnfangen() {
     ui.authMode = "register";
     ui.authGewaehlt = true;
   } catch (e) {
-    authEingabeNameNachtrag = null;
+    if (!authAuftragGilt(auftrag)) return;
+    ui.authAuftrag = null;
     ui.authError = fehlerKlartext(e);
   }
   ui.authBusy = false;
@@ -3407,11 +3540,14 @@ async function doReset() {
     return;
   }
   ui.authFeldFehler = null;
+  const auftrag = authAuftragStarten("reset");
   ui.authError = null; ui.authInfo = null; ui.authBusy = true; render();
   try {
     await mitZeitlimit(fb.sendPasswordResetEmail(auth, email));
+    if (!authAuftragGilt(auftrag)) return;
     ui.authInfo = "Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach.";
   } catch (e) {
+    if (!authAuftragGilt(auftrag)) return;
     ui.authError = authErrorText(e);
   }
   ui.authBusy = false;
@@ -3429,6 +3565,9 @@ async function doReset() {
    verlieren koennte, und "Abmelden" ist der Weg zurueck, wenn man sich bei
    der Adresse vertippt hat - eine Rueckfrage waere dort nur Reibung. */
 async function doLogout() {
+  if (!currentUser) return;
+  const user = currentUser, ref = userDocRef;
+  const giltNoch = () => currentUser === user && auth.currentUser === user && userDocRef === ref && !kontoWirdGeloescht;
   if (currentUser && currentUser.emailVerified) {
     /* 3.17.15 (Station 15): Wer mit Google/Apple angemeldet ist, hat kein
        Passwort - der Satz nennt den Weg, den es wirklich gibt. */
@@ -3441,8 +3580,9 @@ async function doLogout() {
       (offline ? "\n\nDu bist gerade offline: Was du seit der letzten Verbindung gelernt " +
         "hast, wird erst übertragen, wenn du dich hier wieder anmeldest." : ""),
       { title: "Abmelden?", okLabel: "Abmelden", danger: true });
-    if (!ok) return;
+    if (!ok || !giltNoch()) return;
   }
+  if (!giltNoch()) return;
   verlaufJetztSchreiben();
   fb.signOut(auth);
 }
@@ -3513,8 +3653,8 @@ async function kontoDatenLoeschen(konto = kontoLoeschKontext()) {
   konto.pruefen();
   for (const code of codes) { await geteiltLoeschen(code); konto.pruefen(); }
   /* Ebenso die Stimm-Merker im Ideen-Board: feedback/{id}/votes/{uid} traegt
-     die Konto-Kennung als Dokument-ID. Die Stimmenzahl selbst ist anonym und
-     bleibt. Loeschen eines fehlenden Merkers erlaubt die Regel (nur uid). */
+     die Konto-Kennung als Dokument-ID. DATEN-1: Merker und eigene Stimme
+     gemeinsam entfernen, wie beim normalen Zurueckziehen der Stimme. */
   /* 3.17.38 (G-016): seitenweise zu je FEEDBACK_LIMIT - die Regel erlaubt
      kein Auflisten ohne limit, und bei mehr Ideen muss trotzdem JEDER eigene
      Merker weg (Datenschutzerklaerung: alles, was ein Konto hinterlaesst). */
@@ -3524,8 +3664,17 @@ async function kontoDatenLoeschen(konto = kontoLoeschKontext()) {
     if (letzteIdee) teile.push(fb.startAfter(letzteIdee));
     const seite = await fb.getDocs(fb.query(...teile));
     konto.pruefen();
-    await Promise.all(seite.docs.map(d => fb.deleteDoc(fb.doc(db, "feedback", d.id, "votes", konto.user.uid))));
-    konto.pruefen();
+    for (const d of seite.docs) {
+      const merkerRef = fb.doc(db, "feedback", d.id, "votes", konto.user.uid);
+      const merker = await fb.getDoc(merkerRef);
+      konto.pruefen();
+      if (!merker.exists()) continue;
+      const stapel = fb.writeBatch(db);
+      stapel.delete(merkerRef);
+      stapel.update(d.ref, { votes: fb.increment(-1) });
+      await stapel.commit();
+      konto.pruefen();
+    }
     if (seite.docs.length < FEEDBACK_LIMIT) break;
     letzteIdee = seite.docs[seite.docs.length - 1];
   }
@@ -3802,7 +3951,7 @@ function setArabGroesse(id) {
   if (!ARAB_STUFEN.some(x => x.id === id)) return;
   if (id === settings.arabGroesse) return;
   settings.arabGroesse = id;
-  persistSettings();
+  persistSettings("arabGroesse");
   render();
 }
 /* ---------- E4/D10: Zahlen für den Fortschritts-Tab ----------
@@ -4200,7 +4349,7 @@ function exportBackup(onlyCurrent) {
     /* Nur das Voll-Backup zaehlt - ein Export eines einzelnen Bereichs
        sichert eben nicht alles. */
     settings.lastBackup = todayStr();
-    persistSettings();
+    persistSettings("lastBackup");
     try { localStorage.setItem(LAST_BACKUP_KEY, todayStr()); } catch (e) {}
   }
   render();
@@ -4511,7 +4660,7 @@ async function codeEinloesen(code, kontoRef = userDocRef) {
     inhalt.bereiche = inhalt.bereiche.map(x => (x && typeof x === "object")
       ? { ...x, lehrerCode: code, lehrerOffenBis: stand } : x);
   }
-  await verarbeiteImportDaten(inhalt, kontoRef);
+  await verarbeiteImportDaten(inhalt, kontoRef, true);
 }
 
 /* Holt den Freigabe-Stand einer Lehrer-Lektion nach. Ein einzelnes getDoc -
@@ -4789,7 +4938,7 @@ async function satzZusammenfuehren(ziel, datei, kontoRef = userDocRef) {
    Zusammenfuehrungs-Logik, keine zweite, moeglicherweise abweichende
    Fassung. `data` hat die Form {bereiche: [...]}, egal ob sie aus einer
    Datei oder aus einem per Link geteilten Fragment kommt. */
-async function verarbeiteImportDaten(data, kontoRef = userDocRef) {
+async function verarbeiteImportDaten(data, kontoRef = userDocRef, geteilt = false) {
   const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
   if (!giltNoch()) return;
   if (!data || !Array.isArray(data.bereiche)) {
@@ -4820,6 +4969,20 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef) {
      Einstellungs-Bildschirm stehen und saehe von 120 neuen Karten nichts. */
   ui.einstellungen = false;
   const imported = normBereicheImport(data.bereiche);
+  /* DATEN-4: Auch Sicherungen koennen Glaubens-Daten enthalten. Vor jedem
+     Schreibweg einmal pruefen; geteilte Saetze enthalten nur Karten.
+     Nach dem Dialog die urspruengliche Konto-Referenz erneut pruefen. */
+  const hatTexte = imported.some(b => b.zeilen.length || b.texte.length);
+  let texteAusgelassen = false;
+  if (hatTexte) {
+    const erlaubt = !geteilt && texteFreigeschaltet() && (texteEinwilligung || await texteEinwilligungHolen());
+    if (!giltNoch()) return;
+    if (!erlaubt) {
+      imported.forEach(b => { b.zeilen = []; b.texte = []; });
+      texteAusgelassen = true;
+    }
+  }
+  const textHinweis = texteAusgelassen ? " Texte wurden nicht eingespielt." : "";
 
   /* 2.5.0: Erst pruefen, was davon Nachschub für einen schon vorhandenen
      Satz ist. Nur der Rest wird als neuer Bereich angelegt. */
@@ -4843,8 +5006,9 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef) {
       const r = berichte[0].bericht;
       await dlgAlert('„' + berichte[0].name + '" ist aktualisiert: ' +
         mz(r.neu.length, 'Karte', 'Karten') + ' dazu, ' + r.aktualisiert.length + ' berichtigt, ' + r.entfernt.length + ' weggefallen. ' +
-        'Dein Lernstand ist unverändert.', "Kartensatz aktualisiert");
+        'Dein Lernstand ist unverändert.' + textHinweis, "Kartensatz aktualisiert");
     }
+    else if (texteAusgelassen) await dlgAlert("Texte wurden nicht eingespielt.", "Eingespielt");
     return;
   }
   imported.length = 0;
@@ -4924,7 +5088,7 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef) {
   patchDoc(patch);
   render();
   const kartenImport = imported.reduce((sum, b) => sum + b.karten.length, 0);
-  dlgAlert(mz(imported.length, "Bereich", "Bereiche") + " mit " + (imported.length === 1 ? "" : "insgesamt ") + mz(kartenImport, "Karte", "Karten") + " eingespielt.", "Eingespielt");
+  dlgAlert(mz(imported.length, "Bereich", "Bereiche") + " mit " + (imported.length === 1 ? "" : "insgesamt ") + mz(kartenImport, "Karte", "Karten") + " eingespielt." + textHinweis, "Eingespielt");
 }
 
 function importBackupFile(file) {
@@ -9632,9 +9796,12 @@ function renderFeedbackSeite() {
     html += '<textarea id="fb-beschreibung" rows="2" maxlength="500">' + esc(feedbackEntwurf.beschreibung) + '</textarea></div>';
     html += '<div class="form-actions">';
     html += '<button class="' + (feedbackEinreichtWird ? "busy" : "") + '" data-action="feedback-submit"' +
-      (feedbackEinreichtWird ? ' disabled' : '') + '>Einreichen</button>';
+      (feedbackEinreichtWird || offline ? ' disabled' : '') +
+      (offline ? ' title="Zum Einreichen brauchst du eine Verbindung"' : '') + '>Einreichen</button>';
     html += '<button class="secondary" data-action="feedback-form-zu">Abbrechen</button>';
-    html += '</div></div>';
+    html += '</div>';
+    if (offline) html += '<p class="hint">Zum Einreichen brauchst du eine Verbindung.</p>';
+    html += '</div>';
   }
   html += '</div>';
   if (feedbackDanke) {
@@ -9835,7 +10002,7 @@ async function feedbackEinreichen() {
   const kontoRef = userDocRef;
   const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
   if (!giltNoch()) return;
-  if (feedbackEinreichtWird) return;   // Doppel-Tipp waehrend addDoc() laeuft
+  if (feedbackEinreichtWird || offline) return;   // Doppel-Tipp / ohne Netz
   const feldText = document.getElementById("fb-text");
   const feldBeschr = document.getElementById("fb-beschreibung");
   const text = feldText ? feldText.value.trim() : "";
@@ -9854,7 +10021,7 @@ async function feedbackEinreichen() {
   feedbackEinreichtWird = true;
   render();
   try {
-    const ref = await fb.addDoc(fb.collection(db, "feedback"), neu);
+    const ref = await mitZeitlimit(fb.addDoc(fb.collection(db, "feedback"), neu));
     if (!giltNoch()) return;
     /* 3.17.0: Die neue Idee steht sofort in der Liste (hervorgehoben), statt
        die ganze Liste zu verwerfen und neu zu laden.

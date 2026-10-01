@@ -15,19 +15,19 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
-| A1 | G-110 | kritisch | Bestätigter Dialog + Kontowechsel löscht das falsche Konto | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | offen | aus Zweig `runde15` übertragen |
-| A2 | G-107 | hoch | Alte Auth-Antworten wirken auf das Folgekonto (4 Pfade) | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | offen | aus Zweig `runde15` übertragen |
-| A3 | G-108 | hoch | Kartenentwurf von Konto A landet in Konto B | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | offen | aus Zweig `runde15` übertragen |
-| A4 | G-111 | hoch | Registrierungs-Nachtrag ändert Profil des Folgekontos | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | offen | aus Zweig `runde15` übertragen |
-| A5 | G-109 | mittel | Prüfstand: `t_inventar2` meldet Exit 0 ohne vollständigen Rundgang | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | offen | aus Zweig `runde15` übertragen |
-| A6 | DATEN-1 | mittel | Ideen-Board – ein Konto kann jede Idee beliebig hochzählen oder fremde auf 0 drehen (G-014-Schutz lässt sich in zwei Schritten umgehen) | `befunde/DATEN.md` | Astra mittel | offen |  |
-| A7 | DATEN-3 | mittel | Nach einem abgebrochenen Update startet die App offline nicht mehr – sie bleibt für immer auf „Adrabic startet“ | `befunde/DATEN.md` | Astra mittel | offen |  |
-| A8 | DATEN-4 | mittel | Nach „Einwilligung widerrufen“ holt „Sicherung einspielen“ alle Texte ohne Einwilligung zurück in die Cloud | `befunde/DATEN.md` | Astra mittel | offen |  |
-| A9 | DATEN-5 | mittel | Funde aus dem Zweig `runde15` stehen nicht in `main`, und ihre Nummern kollidieren (G-118, G-119) | `befunde/DATEN.md` | Sol niedrig | offen |  |
-| A10 | DATEN-2 | niedrig | Fehlermeldung „Die App versucht es weiter, sobald die Verbindung steht“ ist bei echten Ablehnungen falsch und widerspricht dem Banner | `befunde/DATEN.md` | Luna niedrig | offen |  |
-| A11 | DATEN-6 | niedrig | „Idee einreichen“ hat weder Zeitlimit noch Offline-Sperre – der Knopf kann endlos drehen | `befunde/DATEN.md` | Sol niedrig | offen |  |
-| A12 | DATEN-7 | niedrig | Einstellungen gehen als ganzes Objekt in die Cloud – ein Gerät, das offline war, überschreibt die Wahl eines anderen | `befunde/DATEN.md` | Astra mittel | offen |  |
-| A13 | DATEN-8 | niedrig | Offline zeigt „Impressum“/„Datenschutz“ die App statt der Seite; online immer die Fassung vom letzten Besuch | `befunde/DATEN.md` | Sol niedrig | offen |  |
+| A1 | G-110 | kritisch | Bestätigter Dialog + Kontowechsel löscht das falsche Konto | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | aus 4462fac übertragen; Dialog-/SDK-Wechsel-Proben grün |
+| A2 | G-107 | hoch | Alte Auth-Antworten wirken auf das Folgekonto (4 Pfade) | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | aus 4462fac übertragen; normale und verspätete Auth-Fortsetzungen grün |
+| A3 | G-108 | hoch | Kartenentwurf von Konto A landet in Konto B | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | aus 4462fac übertragen; private Entwürfe/Selektion nach Wechsel leer |
+| A4 | G-111 | hoch | Registrierungs-Nachtrag ändert Profil des Folgekontos | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | aus 4462fac übertragen; fremder Nachtrag, A→B→A und Neuversuch grün |
+| A5 | G-109 | mittel | Prüfstand: `t_inventar2` meldet Exit 0 ohne vollständigen Rundgang | `grossplan/AUFGABEN.md`, `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | vollständiger Rundgang und feste Gegenprobe c4b1c30 grün; Wrapper-Hash aus Zweig übernommen |
+| A6 | DATEN-1 | mittel | Ideen-Board – ein Konto kann jede Idee beliebig hochzählen oder fremde auf 0 drehen (G-014-Schutz lässt sich in zwei Schritten umgehen) | `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | 210/210 Regeln; echte SDK-Kontodatenlöschung zieht eigene Stimmen atomar ab; Regeln vor späterem Hosting |
+| A7 | DATEN-3 | mittel | Nach einem abgebrochenen Update startet die App offline nicht mehr – sie bleibt für immer auf „Adrabic startet“ | `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | Fortsetzung ausdrücklich beauftragt; echter Worker: Normal-/Abbruch-Update, Offline-Start unter / und index.html sowie gleiche HTML-Version grün; feste Gegenprobe c4b1c30 |
+| A8 | DATEN-4 | mittel | Nach „Einwilligung widerrufen“ holt „Sicherung einspielen“ alle Texte ohne Einwilligung zurück in die Cloud | `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | Widerruf, Abbruch, Zustimmung, normales Konto und geteilter Satz grün; Gegenprobe c4b1c30 |
+| A9 | DATEN-5 | mittel | Funde aus dem Zweig `runde15` stehen nicht in `main`, und ihre Nummern kollidieren (G-118, G-119) | `befunde/DATEN.md` | Sol niedrig | erledigt (3.18.11) | 15 Original-Restzeilen mit R15-Präfix in RUNDE15-REST.md gesichert, aktueller Code nachgelesen |
+| A10 | DATEN-2 | niedrig | Fehlermeldung „Die App versucht es weiter, sobald die Verbindung steht“ ist bei echten Ablehnungen falsch und widerspricht dem Banner | `befunde/DATEN.md` | Luna niedrig | erledigt (3.18.11) | Dialog/Banner für erneuerten Ausweis und dauerhafte Ablehnung gleich; feste Gegenprobe grün |
+| A11 | DATEN-6 | niedrig | „Idee einreichen“ hat weder Zeitlimit noch Offline-Sperre – der Knopf kann endlos drehen | `befunde/DATEN.md` | Sol niedrig | erledigt (3.18.11) | Offline-Sperre und echte 12 s geprüft, Entwurf erhalten; 24 Formular-Konfigurationen grün |
+| A12 | DATEN-7 | niedrig | Einstellungen gehen als ganzes Objekt in die Cloud – ein Gerät, das offline war, überschreibt die Wahl eines anderen | `befunde/DATEN.md` | Astra mittel | erledigt (3.18.11) | echtes SDK/zwei Offline-Caches, Altfeld-Transaktion und Kontowechsel grün |
+| A13 | DATEN-8 | niedrig | Offline zeigt „Impressum“/„Datenschutz“ die App statt der Seite; online immer die Fassung vom letzten Besuch | `befunde/DATEN.md` | Sol niedrig | erledigt (3.18.11) | beide Rechtsseiten vor erstem Besuch offline lesbar, erste Online-Antwort frisch; kein App-Fallback für fremde Pfade; feste Gegenprobe c4b1c30 |
 
 ## Paket B – Onboarding
 
@@ -156,6 +156,14 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | F13 | CODE-13 | niedrig | Veraltete und doppelte Dateien im Repo – Vorschlag für eine aufgeräumte Struktur | `befunde/CODE.md` | Sol mittel | offen | Z14: wie empfohlen |
 
 ## Doppelt gemeldet (einmal beheben)
+
+**A9-Sicherung:** Die 15 Restbefunde des Zweigs `4462fac` sind unter eindeutigen
+Kennungen R15-112, R15-116 und R15-118–R15-130 in
+[`RUNDE15-REST.md`](RUNDE15-REST.md) gesichert und am aktuellen Code nachgelesen.
+Das sind Folgeaufträge nach eigener Zuordnung, keine zusätzlichen Arbeiten
+dieses Paket-A-Chats. Die beiden Bedeutungen der bisherigen Nummern 118/119
+bleiben dadurch getrennt. B5/D10 und B12 mit den dort genannten Dopplungen
+abgleichen; nicht zweimal beheben.
 
 - BEW-1 und VERW-10: Blätter schließen ohne Bewegung. Behoben wird in D (BEW-1); VERW-10 danach auf `erledigt` setzen.
 - BEW-10 und EIN-5: Mitscrollen im Plan lässt sich nicht anhalten. Behoben wird in B (EIN-5).

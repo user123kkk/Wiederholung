@@ -22,6 +22,16 @@ const datei=path.join(ordner,'stand.json');
 const ergebnisse=process.argv.includes('--fortsetzen')&&fs.existsSync(datei)?JSON.parse(fs.readFileSync(datei,'utf8')):{kennung,tests:{}};
 if(ergebnisse.kennung!==kennung)throw new Error('Pruefstand gehoert zu anderem Quellstand');
 let aktiv=null;
+// Uebernommener runde15-Wrapper: sein Quellstand umfasst alle Hilfsproben.
+function quellHash(f){
+ const quelle=fs.readFileSync(path.join(__dirname,f));
+ const hash=createHash('sha256').update(quelle);
+ if(f==='t_konto_fortsetzungen.js'){
+  const namen=[...new Set([...quelle.toString().matchAll(/\['(konto_[^']+\.js)'/g)].map(m=>m[1]))].sort();
+  for(const name of namen)hash.update(name).update(fs.readFileSync(path.join(__dirname,'../../grossplan/befunde/werkzeuge',name)));
+ }
+ return hash.digest('hex');
+}
 function stoppen(child){
  if(!child||child.exitCode!==null)return;
  if(process.platform==='win32'){
@@ -38,7 +48,7 @@ async function lauf(f){
  let fehler=null;child.on('error',e=>{fehler=e.message;});
  const ende=await new Promise(ok=>child.on('close',(code,signal)=>ok({code,signal})));
  clearTimeout(timer);aktiv=null;await new Promise(ok=>strom.end(ok));
- const result={...ende,zeitlimit,fehler,sekunden:Math.round((Date.now()-t)/1000),quelltext:createHash('sha256').update(fs.readFileSync(path.join(__dirname,f))).digest('hex')};
+ const result={...ende,zeitlimit,fehler,sekunden:Math.round((Date.now()-t)/1000),quelltext:quellHash(f)};
  fs.appendFileSync(log,'\nProzess: '+JSON.stringify(result)+'\n');
  ergebnisse.tests[f]=result;fs.writeFileSync(datei,JSON.stringify(ergebnisse,null,2));
  console.log(`${ende.code===0&&!zeitlimit?'EXIT 0':'ROT'} ${f} (${result.sekunden}s)${zeitlimit?' ZEITLIMIT':''}`);
@@ -48,7 +58,7 @@ async function lauf(f){
  console.log('Quellstand: '+kennung+'\nLogs: '+ordner+'\nTests: '+dateien.length);
  if(process.argv.includes('--ohne-runde'))console.log('13 Runden-Tests ausgelassen: separat mit abnahme_runde.js pruefen.');
  for(const f of dateien){
-  const alt=ergebnisse.tests[f],hash=createHash('sha256').update(fs.readFileSync(path.join(__dirname,f))).digest('hex');
+  const alt=ergebnisse.tests[f],hash=quellHash(f);
   if(process.argv.includes('--fortsetzen')&&alt?.code===0&&!alt.zeitlimit&&alt.quelltext===hash){console.log('BEWAHRT '+f);continue;}
   await lauf(f);
  }

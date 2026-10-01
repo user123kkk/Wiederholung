@@ -6,15 +6,31 @@ Logbüchern. Wer eine Stufe oder Runde beendet, zieht diese Datei nach.
 Ältere „AKTUELL“-Absätze in `CLAUDE.md` und `plan/PLAN.md` sind Geschichte.
 Wo sie von dieser Datei abweichen, gilt diese Datei.
 
-Stand: 01.10.2026, `main` = 3.18.10, **online** (veröffentlicht per `ladegeraet.bat`,
-121/121 grün). Probelauf Texte läuft ab 01.10. (Stufe 8). Betreiber tut
+Stand: 01.10.2026, `main` = **3.18.11, Paket A abgenommen**;
+**online bleibt 3.18.10** (veröffentlicht per `ladegeraet.bat`, 121/121 grün).
+Probelauf Texte läuft ab 01.10. (Stufe 8). Betreiber tut
 dabei nichts außer lernen; am 29.10. „Auswertung“ + Foto der Probelauf-Werte
 aus den Einstellungen (`texte-lernen/WIEDERHOLEN.md` § 8).
 Zyklus 2: Prüfung fertig (8 Prüfer, 103 neue Funde, keiner kritisch; dazu
 G-107–G-111 und G-118). Plan steht: [`zyklus-2/AUFGABEN.md`](zyklus-2/AUFGABEN.md)
 (Pakete A–F), [`zyklus-2/CODEX-START.md`](zyklus-2/CODEX-START.md) (so
 arbeitet Codex), [`zyklus-2/ENTSCHEIDUNGEN.md`](zyklus-2/ENTSCHEIDUNGEN.md)
-(beantwortet 01.10.: alles wie empfohlen; offen nur Z6b und V8). **Nächster Schritt: Paket A mit Codex.**
+(beantwortet 01.10.: alles wie empfohlen; offen nur Z6b und V8).
+**Paket A fertig, 3.18.11, nicht veröffentlicht:** alle 13 Zeilen erledigt.
+Vorhandenen Zwischenstand nach Pull auf `90d7aaa` vollständig erhalten;
+Netzteil danach gemessen (`BatteryStatus=2`). Gesamtlauf einschließlich
+gezieltem Nachlauf **130/130 grün**, Rundenabnahme **13/13** am selben
+Quellstand; Affe mit Texten Handy 200/iPad 150 jeweils **0 Befunde**;
+Regeln **210/210**. Gegenprüfung und LEHREN-Checkliste dokumentiert.
+A7/A13: Normal-/Abbruch-Update, Offline-Start und beide Rechtsseiten grün.
+Bestehender Tempo-Ausreißer in Verwalten per A/B gegen `c4b1c30` belegt,
+keine neue Paket-A-Regression; keine vollständige Ruckelfreiheit behauptet.
+Commit/Push direkt auf main; kein Deploy, kein Paket B begonnen.
+**Nächster Bauauftrag:** Paket B in einem neuen Chat, nur auf „B weiter“
+bzw. den Paket-B-Starttext aus CODEX-START. Die restlichen Pakete bleiben offen.
+Die neuen Firestore-Regeln müssen vor einer späteren Hosting-Veröffentlichung
+eingespielt werden. Einzelheiten und vollständige Log-Pfade:
+[`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md), oberster Eintrag.
 
 ---
 

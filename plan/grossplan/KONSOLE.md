@@ -148,6 +148,16 @@ zurücksetzen". Zeigt eine Vorlage kein Textfeld: nur den Betreff eintragen.
 **Woran man es merkt:** Testmail zeigt Betreff und Text wie oben, Umlaute richtig.
 
 ### K10 – Regeln veröffentlichen
+**Zyklus 2 Paket A, 3.18.11 (01.10.2026): weiterhin offen, nicht veröffentlicht.**
+Vor dem späteren Hosting müssen auch die Regeln für atomare Ideenstimmen und
+Stimm-Merker eingespielt werden. Der Betreiber löst dies am Netzteil über
+`ladegeraet.bat` aus; `plan/werkzeuge/ladegeraet.ps1` prüft zuerst und spielt
+danach Regeln vor Hosting ein. Erfolg: Regel-Deploy bestätigt, aktuelle
+Regelzeit sichtbar; unter `feedback/{id}/votes/{uid}` steht die Paarung von
+`getAfter(...).data.votes` mit `get(...).data.votes + 1` bzw. `- 1` im
+veröffentlichten Regeltext. Bis zum Veröffentlichungsauftrag bleibt
+dieser Schritt offen; Commit/Push von Paket A führen ihn nicht aus.
+
 **Seit 3.17.50 gilt zwingend: zuerst Regeln, danach Hosting.** Das neue
 Tagesprotokoll schreibt `verlaufEpoche`; die bisherigen Regeln erlauben
 dieses Feld nicht. Im Repo-Ordner `firebase deploy --only firestore:rules`

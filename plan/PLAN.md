@@ -775,8 +775,16 @@ Festgelegt vom Betreiber am 12.09.2026:
 
 ## Wo eine neue Session anfängt
 
-**Maßgeblich ist [`STAND.md`](STAND.md)** (30.09.2026 abends): erst Texte
-auswendig lernen veröffentlichen, dann [`zyklus-2/AUFTRAG.md`](zyklus-2/AUFTRAG.md).
+**Maßgeblich ist [`STAND.md`](STAND.md)** (01.10.2026): Texte sind online;
+Zyklus 2 Paket A ist mit Version 3.18.11 am Netzteil abgenommen:
+130/130 Gesamtlauf einschließlich gezieltem Nachlauf, 13/13 Rundenabnahme,
+Affe mit Texten Handy 200/iPad 150 jeweils 0 Befunde, Regeln 210/210.
+Alle 13 Zeilen einschließlich A7/A13 erledigt; Commit/Push auf main,
+nicht veröffentlicht. Paket B erst im nächsten beauftragten Chat.
+Abnahme, A/B-Einordnung des bestehenden Tempo-Ausreißers und offene
+Regel-Veröffentlichung stehen im
+[`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md), oberster Eintrag. Keine
+Veröffentlichung beauftragt.
 Runde 15 entfällt; der folgende Absatz ist Geschichte.
 
 **Früher (29.09.2026 abends, Betreiber-Entscheidung): Bau „Texte auswendig

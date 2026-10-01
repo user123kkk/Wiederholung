@@ -386,7 +386,28 @@ await pruefe("M13 Alte Idee mit Text-Datum: abstimmen geht weiter", "ja", async 
 });
 await pruefe("M14 Eigenen Merker unter entfernter Idee loeschen (Konto-Loeschen)", "ja", async () => {
   const st = writeBatch(db); st.set(fbv("e3", UID), {}); st.update(fb1("e3"), { votes: increment(1) }); await st.commit();
-  return deleteDoc(fbv("e3", UID));
+  const loeschen = writeBatch(db); loeschen.delete(fbv("e3", UID)); loeschen.update(fb1("e3"), { votes: increment(-1) }); return loeschen.commit();
+});
+/* DATEN-1: Die Bindung gilt auch vom Merker zum Zaehler. Andernfalls
+   umgehen getrennte Schreibvorgaenge den bestehenden G-014-Schutz. */
+await setDoc(fb1("daten1-v1"), feedbackDaten());
+await pruefe("DATEN-1 V1 erste ehrliche Stimme", "ja", async () => {
+  const st = writeBatch(db); st.set(fbv("daten1-v1", UID), {}); st.update(fb1("daten1-v1"), { votes: increment(1) }); return st.commit();
+});
+await pruefe("DATEN-1 V1 Merker allein loeschen (Mehrfachstimme)", "nein", () => deleteDoc(fbv("daten1-v1", UID)));
+await pruefe("DATEN-1 V1 zweite Stimme nach Umgehungsversuch", "nein", async () => {
+  const st = writeBatch(db); st.set(fbv("daten1-v1", UID), {}); st.update(fb1("daten1-v1"), { votes: increment(1) }); return st.commit();
+});
+await env.withSecurityRulesDisabled(async ctx => {
+  await setDoc(doc(ctx.firestore(), "feedback", "daten1-v2"), feedbackDaten({ votes: 3 }));
+});
+await pruefe("DATEN-1 V2 fremden Merker ohne Stimme anlegen", "nein", () => setDoc(fbv("daten1-v2", FREMD, dbFremd), {}));
+await pruefe("DATEN-1 V2 fremde Stimmen danach abziehen", "nein", async () => {
+  const st = writeBatch(dbFremd); st.delete(fbv("daten1-v2", FREMD, dbFremd)); st.update(fb1("daten1-v2", dbFremd), { votes: increment(-1) }); return st.commit();
+});
+await pruefe("DATEN-1 verwaisten eigenen Merker loeschen", "ja", async () => {
+  await env.withSecurityRulesDisabled(ctx => setDoc(doc(ctx.firestore(), "feedback", "daten1-weg", "votes", UID), {}));
+  return deleteDoc(fbv("daten1-weg", UID));
 });
 
 /* ================= NACHTRAG 25.09.2026 (G-055): Randfaelle aus dem Audit =================

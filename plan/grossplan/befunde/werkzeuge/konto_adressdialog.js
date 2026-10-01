@@ -10,7 +10,9 @@ const source=process.argv.includes('--gegenprobe')?require('node:child_process')
  const ctx=vm.createContext({console,currentUser:{uid:'a',emailVerified:fall==='abmelden',displayName:'A'},userDocRef:{},kontoWirdGeloescht:false,offline:false,auth:{},authEingabeNameNachtrag:null,
   ui:{authBusy:false,authEingabe:{}},dlgConfirm:()=>new Promise(ok=>bestaetigen=ok),render(){},verlaufJetztSchreiben(){},fehlerKlartext:()=> 'Fehler',
   fb:{deleteUser:async user=>geloescht.push(user.uid),signOut:async()=>abgemeldet.push(ctx.currentUser.uid)}});
- vm.runInContext(source.slice(a,b),ctx);
+ Object.defineProperty(ctx.auth,'currentUser',{get:()=>ctx.currentUser});
+ const h=source.indexOf('function authAuftragStarten('),z=source.indexOf('async function doLogin()',h);
+ vm.runInContext((h>=0?source.slice(h,z):'')+source.slice(a,b),ctx);
  const lauf=fall==='adresse'?ctx.kontoVertipptNeuAnfangen():ctx.doLogout();assert.equal(typeof bestaetigen,'function');
  // Aufloesen legt die Fortsetzung in die Microtask-Warteschlange. Ein
  // synchroner Kontowechsel kommt zuvor; Dialogabbruch ist jetzt zu spaet.

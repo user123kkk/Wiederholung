@@ -7,7 +7,7 @@
    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
    sonst behalten Nutzer:innen alte Dateien im Cache. */
 
-const CACHE_NAME = "adrabic-3.18.10";
+const CACHE_NAME = "adrabic-3.18.11";
 
 /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
    unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
@@ -39,8 +39,8 @@ const VERSION = CACHE_NAME.replace("adrabic-", "");
    laufen kann (leere Seite ohne HTML/Gestaltung/Logik). Fehlt eine davon beim
    Vorabspeichern, MUSS die ganze Installation scheitern - siehe install()
    weiter unten, wo genau deshalb kein .catch() mehr dabei ist. ZUSATZ sind
-   Icons/Schriften: fehlen sie, sieht die App nur schlechter aus, startet aber
-   noch - dafuer bleibt das Einzeln-mit-catch aus 3.0.0. */
+   Icons/Schriften/Rechtsseiten: fehlen sie, bleibt die App startfaehig;
+   dafuer bleibt das Einzeln-mit-catch aus 3.0.0. */
 const KERN = [
   "./",
   "./index.html",
@@ -48,6 +48,8 @@ const KERN = [
   "./app.js?v=" + VERSION
 ];
 const ZUSATZ = [
+  "./impressum.html",
+  "./datenschutzerklaerung.html",
   "./manifest.json",
   "./desktop-icon.png",
   "./apple-touch-icon.png",
@@ -126,10 +128,11 @@ function isCacheable(url) {
       Cache, geht dann also folgerichtig aufs Netz);
    3. eigene Herkunft unter /fonts/ (die Quran-Schrift).
 
-   Alles andere (Navigationen, manifest.json, Bilder, Sonstiges) bleibt beim
-   bisherigen "Zuerst Netz"-Pfad. */
+   Alles andere bleibt beim "Zuerst Netz"-Pfad, ausser den unten gesondert
+   behandelten App-Startseiten. Rechtsseiten fragen immer zuerst das Netz. */
 const FIREBASEJS_VERSION_PFAD = /^\/firebasejs\/\d+[\w.-]*\//;
 const SCHRIFTEN_PFAD = new URL("./fonts/", self.location).pathname;   // relativ zu sw.js, nicht fest "/fonts/"
+const APP_START_PFADE = [new URL("./", self.location).pathname, new URL("./index.html", self.location).pathname];
 function isUnveraenderlich(url) {
   if (url.origin === self.location.origin) {
     return url.searchParams.has("v") || url.pathname.startsWith(SCHRIFTEN_PFAD);
@@ -143,6 +146,7 @@ self.addEventListener("fetch", event => {
 
   const url = new URL(req.url);
   if (!isCacheable(url)) return;         // Auth-/Firestore-Aufrufe durchreichen
+  const appStart = req.mode === "navigate" && url.origin === self.location.origin && APP_START_PFADE.includes(url.pathname);
 
   if (isUnveraenderlich(url)) {
     event.respondWith((async () => {
@@ -187,25 +191,33 @@ self.addEventListener("fetch", event => {
        im Cache lag. Antwortet das Netz nicht binnen NETZ_ZEITLIMIT_MS und
        liegt die Datei im Cache, gilt der Cache; die Netz-Antwort wird trotzdem
        abgewartet und aktualisiert ihn fuer den naechsten Start. */
-    const netz = fetch(netzAnfrage).then(res => {
+    const netz = fetch(netzAnfrage).then(async res => {
       /* Nur eine ECHTE Antwort landet im eigenen Cache - eine 404/500
          dort abzulegen wuerde denselben Fehler einbauen, den no-store
          gerade am Browser-Cache vorbei vermeidet. */
       if (res.ok) {
         const copy = res.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+        /* DATEN-3: Eine neue Startseite gehoert zum neuen Worker/Cache.
+           Solange dessen Installation fehlt, muss die alte Seite zu ihren
+           gespeicherten Skripten passen. Die schliessende Quote verhindert
+           auch Verwechslungen von Versionspraefixen. */
+        const html = appStart ? await copy.clone().text() : "";
+        if (!appStart || html.includes('app.js?v=' + VERSION + '"') || html.includes("app.js?v=" + VERSION + "'")) {
+          await caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+        }
       }
       return res;
     });
     const netzOderNichts = netz.catch(() => null);
     event.waitUntil(netzOderNichts);
-    /* 3.17.55: Die Seite selbst kommt sofort aus dem Cache, das Netz
+    /* 3.17.55: Die App-Startseite kommt sofort aus dem Cache, das Netz
        aktualisiert sie im Hintergrund fuer den naechsten Start. Vorher
        wartete jeder Start aufs Netz; so lange war die Web-Ansicht der
        iPhone-App leer, und iOS blendete sie weiss ueber das Startbild
        (Aufnahme 29.09.: Hintergrund 17 -> 46, Logo unveraendert = 12 %
-       Weiss). Preis: eine neue Version erscheint erst beim zweiten Start. */
-    if (req.mode === "navigate") {
+       Weiss). DATEN-3: Eine neue App-Version kommt erst nach erfolgreicher
+       Worker-Installation; HTML-Korrekturen derselben Version bleiben cachebar. */
+    if (appStart) {
       const sofort = await caches.match(req);
       if (sofort) return sofort;
     }
@@ -218,11 +230,11 @@ self.addEventListener("fetch", event => {
       const spaet = await netzOderNichts;
       if (spaet) return spaet;
     }
-    /* Nur beim Aufruf der Seite selbst auf index.html ausweichen.
+    /* Nur beim App-Start unter ./ oder ./index.html auf index.html ausweichen.
        Früher galt das für JEDE fehlgeschlagene Anfrage – dann bekam
        der Browser für eine fehlende JavaScript-Datei HTML zurück und
        stürzte mit einem unverständlichen Syntaxfehler ab. */
-    if (req.mode === "navigate") {
+    if (appStart) {
       const index = await caches.match("./index.html");
       if (index) return index;
     }

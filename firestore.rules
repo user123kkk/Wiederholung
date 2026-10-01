@@ -114,9 +114,9 @@ service cloud.firestore {
         && (!('lastEvaluatedDate' in s) || datumOderNull(s.lastEvaluatedDate));
     }
 
-    /* Anders als bei der Serie ist hasOnly hier gefahrlos: persistSettings()
-       schreibt das Feld immer als Ganzes neu, ein altes Teilfeld kann also
-       nicht stehenbleiben und den nächsten Schreibvorgang blockieren. */
+    /* Einstellungen werden einzeln geschrieben. Unbekannte Altfelder
+       bereinigt die App nach Ablehnung einmal anhand des aktuellen
+       Serverstands in einer Transaktion; hasOnly bleibt die Positivliste. */
     function settingsOk(s) {
       return s is map
         && s.keys().hasOnly(['arabGroesse', 'lastBackup', 'thema', 'sitzungsLimit'])
@@ -482,11 +482,18 @@ service cloud.firestore {
          Dokument-IDs (= Konto-Kennungen) nie aufgelistet werden koennen. */
       match /votes/{uid} {
         allow get: if angemeldetBestaetigt() && request.auth.uid == uid;
-        /* 25.09.2026 (G-014/REGELN-4): nur unter einer Idee, die es gibt */
+        /* DATEN-1: Auch der Merker darf nur gemeinsam mit der passenden
+           Zaehleraenderung geschrieben werden, sonst sind Doppelstimmen
+           und das Abziehen fremder Stimmen in zwei Schritten moeglich. */
         allow create: if angemeldetBestaetigt() && request.auth.uid == uid
                       && request.resource.data.size() == 0
-                      && exists(/databases/$(database)/documents/feedback/$(id));
-        allow delete: if angemeldetBestaetigt() && request.auth.uid == uid;
+                      && exists(/databases/$(database)/documents/feedback/$(id))
+                      && getAfter(/databases/$(database)/documents/feedback/$(id)).data.votes
+                         == get(/databases/$(database)/documents/feedback/$(id)).data.votes + 1;
+        allow delete: if angemeldetBestaetigt() && request.auth.uid == uid
+                      && (!exists(/databases/$(database)/documents/feedback/$(id))
+                          || getAfter(/databases/$(database)/documents/feedback/$(id)).data.votes
+                             == get(/databases/$(database)/documents/feedback/$(id)).data.votes - 1);
       }
     }
 

@@ -10,7 +10,7 @@ const bestaetigung=lesen('async function pruefeBestaetigung()','/* 3.17.38 (G-05
  lesen('async function bestaetigungStillPruefen()','function bestaetigungBeobachten()');
 const tick=()=>new Promise(ok=>setImmediate(ok));
 const fehler={code:'permission-denied'};
-function grund(){return {console,Blob,Date,Math,Set,Object,kontoWirdGeloescht:false,
+function grund(){return {console,Blob,Date,Math,Set,Object,kontoWirdGeloescht:false,offline:false,
  userDocRef:{path:'users/a'},currentUser:{uid:'a'},db:{},ui:{authBusy:false},
  render(){},ansagen(){},fuehlbar(){},mitZeitlimit:p=>p,fehlerKlartext:()=> 'Ablehnung',authErrorText:()=> 'Ablehnung'};}
 function wechsel(ctx){ctx.userDocRef={path:'users/b'};ctx.currentUser={uid:'b',emailVerified:true,getIdToken:async()=>{throw new Error('Fremder Token-Aufruf');}};}

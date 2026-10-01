@@ -126,29 +126,25 @@ async function stationA(b, swText) {
   return { ...zaehler };
 }
 
-/* Station B: der Server liefert eine index.html mit einem NEUEN ?v= aus
-   (noch nicht im Cache) - die dazugehoerige app.js?v=TEST muss trotz
-   "Cache zuerst" vom Netz geholt werden. */
+/* Station B: eine neue, noch nicht gespeicherte app.js?v=TEST muss trotz
+   "Cache zuerst" vom Netz geholt werden. DATEN-3 verhindert inzwischen,
+   dass neue HTML-Versionen den alten Cache vergiften; deshalb die neue
+   Ressourcen-URL direkt anfordern. Der echte Versionswechsel und der
+   Rechtsseiten-Rueckfall werden in t_sw_paket_a.js getrennt geprueft. */
 async function stationB(b) {
   const { ctx, p } = await neuerKontext(b);
   await ladenBisKontrolliert(p);
   await p.reload({ waitUntil: 'load' });             // app.js/styles.css der jetzigen VERSION ins Cache
   await p.waitForTimeout(1200);
-  const neuHtml = INDEX_ECHT
-    .replace(/app\.js\?v=[^"']+/, 'app.js?v=TEST')
-    .replace(/styles\.css\?v=[^"']+/, 'styles.css?v=TEST');
   let appJsTestTreffer = 0;
-  await ctx.route('**/index.html', r => r.fulfill({ status: 200, contentType: 'text/html', body: neuHtml }));
   await ctx.route(u => u.pathname.endsWith('/app.js') && u.searchParams.get('v') === 'TEST',
     r => { appJsTestTreffer++; r.fulfill({ status: 200, contentType: 'text/javascript', body: APP_JS_ECHT }); });
-  /* 3.17.55: Die Seite kommt zuerst aus dem Cache, das Netz aktualisiert sie
-     im Hintergrund - die neue Version erscheint beim ZWEITEN Laden. */
-  await p.reload({ waitUntil: 'load' });
-  await p.waitForTimeout(1200);
-  await p.reload({ waitUntil: 'load' });
-  await p.waitForTimeout(1200);
+  const antwort = await p.evaluate(() => fetch('./app.js?v=TEST').then(r => r.text()));
+  const ersterAbruf = appJsTestTreffer;
+  await p.waitForTimeout(200); // laufendes cache.put abschliessen lassen
+  const zweiteAntwort = await p.evaluate(() => fetch('./app.js?v=TEST').then(r => r.text()));
   await ctx.close();
-  return appJsTestTreffer > 0;
+  return ersterAbruf === 1 && appJsTestTreffer === 1 && antwort === APP_JS_ECHT && zweiteAntwort === APP_JS_ECHT;
 }
 
 /* Station D (3.17.55): Antwortet das Netz fuer die Seite langsam, muss die

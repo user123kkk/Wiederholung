@@ -4,11 +4,14 @@
    (3) Sicherung -> Einspielen (neue Nummern, Verweise umgeschrieben),
    (4) Umzug aus dem alten Format (bereicheMapToArray <- bereichFelder),
    (5) Bewertungs-Echo aus dem Snapshot (Teilabgleich).
-   Echte app.js, Firebase-Attrappe.
+   Echte app.js, Firebase-Attrappe. Textimport im Betreiber-Konto mit
+   Einwilligung; normale Konten prueft t_import_einwilligung. Das vorherige
+   Leeren des Stores entfernt auch die Einwilligung: vor Import neu zustimmen.
    --gegenprobe: derselbe Ablauf mit app.js aus 48002ad (vor Stufe 1) muss
    an mindestens vier der fuenf Wege scheitern. */
 const { start } = require('./lib');
-const { textWort, textStore, seiteMitApp, storeLesen, VOR_STUFE_1 } = require('./text_lib');
+const { textWort, textStore, seiteMitApp, storeLesen, VOR_STUFE_1, BETREIBER_UID } = require('./text_lib');
+const U = 'users/' + BETREIBER_UID;
 
 const gegenprobe = process.argv.includes('--gegenprobe');
 const zusatz = `
@@ -48,7 +51,9 @@ function pruefeBereich(b, name, fehler, { neueIds } = {}) {
   const browser = await start();
   const wege = {};
   try {
-    const { ctx, p } = await seiteMitApp(browser, textStore(), { commit: gegenprobe ? VOR_STUFE_1 : null, zusatz });
+    const store = textStore();
+    store['users/u1'].texteEinwilligung = '2026-09-01';
+    const { ctx, p } = await seiteMitApp(browser, store, { uid: BETREIBER_UID, commit: gegenprobe ? VOR_STUFE_1 : null, zusatz });
 
     // (1) Neuladen
     let f = [];
@@ -62,24 +67,32 @@ function pruefeBereich(b, name, fehler, { neueIds } = {}) {
     await p.evaluate(() => window.__PRUEF.vollschreiben());
     const s = await storeLesen(p);
     for (let i = 0; i < 10; i++) {
-      const z = s['users/u1/karten/z' + i];
+      const z = s[U + '/karten/z' + i];
       if (!z) { f.push('Vollschreiben: z' + i + ' fehlt'); continue; }
       if (z.textId !== 't1') f.push('Vollschreiben: z' + i + ' textId = ' + z.textId);
     }
-    const kz = Object.entries(s).filter(([k, v]) => k.startsWith('users/u1/karten/') && 'textId' in v && !/\/z\d$/.test(k));
+    const kz = Object.entries(s).filter(([k, v]) => k.startsWith(U + '/karten/') && 'textId' in v && !/\/z\d$/.test(k));
     if (kz.length) f.push('Vollschreiben: ' + kz.length + ' gewoehnliche Karten tragen textId');
-    const bd = s['users/u1/bereiche/b1'] || {};
+    const bd = s[U + '/bereiche/b1'] || {};
     const t1 = (bd.sets || {}).t1 || {};
     for (const [k, v] of Object.entries(ERWARTET_TEXT)) if (t1[k] !== v) f.push('Vollschreiben: sets.t1.' + k + ' = ' + JSON.stringify(t1[k]));
     if (t1.art !== 'text') f.push('Vollschreiben: sets.t1.art = ' + t1.art);
     if (bd.abstandFaktor !== 0.8 || bd.festErgebnisse !== '1110') f.push('Vollschreiben: Regler ' + bd.abstandFaktor + '/' + bd.festErgebnisse);
-    if ('abstandFaktor' in (s['users/u1/bereiche/b2'] || {})) f.push('Vollschreiben: Regler an Bereich ohne Regler');
+    if ('abstandFaktor' in (s[U + '/bereiche/b2'] || {})) f.push('Vollschreiben: Regler an Bereich ohne Regler');
     for (const [k, v] of Object.entries((bd.sets || {}))) if (v.art !== 'text' && TEXT_FELDER.some(x => x in v)) f.push('Vollschreiben: Kreisfelder an Speicherkarte ' + k);
     wege.vollschreiben = f;
 
     // (3) Sicherung -> Einspielen
     f = [];
-    await p.evaluate(() => window.__PRUEF.importieren({ bereiche: [JSON.parse(JSON.stringify(window.__PRUEF.bereiche().find(b => b.id === 'b1')))] }));
+    await p.evaluate(() => {
+      window.__PRUEF.importieren({ bereiche: [JSON.parse(JSON.stringify(window.__PRUEF.bereiche().find(b => b.id === 'b1')))] })
+        .then(() => { window.__FELDER_IMPORT_FERTIG = true; });
+    });
+    if (!gegenprobe) {
+      await p.locator('.dlg').filter({ hasText: 'Texte speichern' }).waitFor();
+      await p.locator('[data-action="dlg-ok"]').click();
+    }
+    await p.waitForFunction(() => window.__FELDER_IMPORT_FERTIG);
     await p.waitForTimeout(500);
     const nachImport = await p.evaluate(() => window.__PRUEF.bereiche());
     const kopie = nachImport.find(b => b.name === 'Medina Buch 1 (2)');
