@@ -6,7 +6,7 @@ Nur gelesen und gemessen, kein Code geändert. Eigene Skripte unter
 `~/.cache/adrabic-regeln-emu/node_modules`, Ports 8187/4487/4587, Regeldatei
 `firestore.rules` des Repos unverändert gelesen, Projekt `wiederholung-test`.
 
-*(Datei wird laufend ergänzt; Reihenfolge nach Schwere am Ende.)*
+Reihenfolge der neuen Funde: mittel (DATEN-1, -3, -4, -5), dann niedrig (DATEN-2, -6, -7, -8).
 
 ---
 
@@ -209,6 +209,36 @@ Gelesen: `git show 4462fac -- app.js sw.js`, `plan/grossplan/runde15-unfertig.pa
   `sets.*` mit `art: "text"` im Store; mit Einwilligung → Texte da. Konto
   ohne Freischaltung: Datei mit Texten → nur Karten eingespielt.
 
+#### DATEN-5: Funde aus dem Zweig `runde15` stehen nicht in `main`, und ihre Nummern kollidieren (G-118, G-119)
+- Art: Aufräumen
+- Schwere: mittel
+- Beleg: `git -C C:\Users\USER\Wiederholung-r15 show HEAD:plan/grossplan/AUFGABEN.md`,
+  Zeilen 148–163: G-112, G-116, G-118–G-130 (Zweig). `main`
+  `plan/grossplan/AUFGABEN.md:149–150` vergibt G-118 (Verwalten-Scroll) und
+  G-119 (Verwalten-Tempo) anders; G-112, G-116, G-120–G-130 fehlen in `main`
+  ganz (`grep` ohne Treffer). Drei davon am aktuellen Code nachgelesen und
+  noch vorhanden: Zweig-G-112 (`app.js:14100–14108`, neuer Dialog ersetzt den
+  alten, dessen Aufrufer wartet für immer – trifft z. B. `saveFehler` →
+  `dlgAlert` über einer offenen Rückfrage), Zweig-G-123 (`app.js:4415–4438`
+  und `firestore.rules:360`: nach Zeitlimit hat der Server N, die App N−1,
+  jedes weitere „Freigeben“ wird dauerhaft abgelehnt – Sackgasse für
+  Lehrer:innen), Zweig-G-126 (`app.js:2386–2389`, volles `render()` mitten in
+  der Runde nach Server-Bestätigung). Verifiziert durch Lesen; die übrigen
+  (G-116, G-124, G-127, G-128, G-130) nicht einzeln nachgeprüft.
+- Warum es stört: Der Zweig liegt nur auf dem Laptop. Wird nur „G-107–G-111“
+  übertragen, gehen rund zwölf belegte Funde verloren, darunter eine echte
+  Sackgasse (Lehrer-Freigabe). Zwei Listen mit derselben Nummer für
+  Verschiedenes führen zu falschen „erledigt“-Einträgen.
+- Vorschlag: Vor Paket A die Zweig-Liste nach `plan/zyklus-2/AUFGABEN.md`
+  übernehmen, mit neuen Nummern (ab G-131 oder eigenes Präfix), je Zeile mit
+  „im Stand 3.18.10 noch vorhanden: ja/nein“. Zweig-G-112 und -G-123 gehören
+  inhaltlich zu Paket A (Daten sicher).
+- Entscheidet: Agent
+- Aufwand: klein
+- Abnahme: Jede Zeile G-112, G-116, G-118–G-130 des Zweigs hat in `main`
+  genau einen Eintrag mit eindeutiger Nummer; `grep -c "G-118"` zeigt in
+  `main` nur noch eine Bedeutung.
+
 #### DATEN-2: Fehlermeldung „Die App versucht es weiter, sobald die Verbindung steht“ ist bei echten Ablehnungen falsch und widerspricht dem Banner
 - Art: Fehler
 - Schwere: niedrig
@@ -229,3 +259,127 @@ Gelesen: `git show 4462fac -- app.js sw.js`, `plan/grossplan/runde15-unfertig.pa
 - Aufwand: klein
 - Abnahme: `grep -n "versucht es weiter" app.js` leer; Prüfstand `__FB.fail`
   mit `permission-denied` zweimal → Dialog und Banner sagen dasselbe.
+
+#### DATEN-6: „Idee einreichen“ hat weder Zeitlimit noch Offline-Sperre – der Knopf kann endlos drehen
+- Art: Fehler
+- Schwere: niedrig
+- Beleg: `app.js:9854–9857` – `feedbackEinreichtWird = true; … await fb.addDoc(…)`
+  ohne `mitZeitlimit`; der Knopf `app.js:9634–9635` wird nur über
+  `feedbackEinreichtWird` gesperrt, nicht bei `offline` (anders als „Code
+  erzeugen“, `offlineAttr`, `app.js:9429`). Mit dauerhaftem Offline-Speicher
+  (`app.js:2233`) löst ein Schreibvorgang erst nach der Server-Bestätigung
+  auf (so auch der Kommentar `app.js:3542–3546`). **Vermutung** zur
+  sichtbaren Wirkung: nicht mit echtem SDK gemessen, die Attrappe bestätigt
+  sofort.
+- Warum es stört: Offline oder bei hängendem Netz dreht „Einreichen“ ohne
+  Ende; die Idee geht später still raus (LEHREN § 6.7: jedes Warten hat ein
+  Zeitlimit).
+- Vorschlag: Knopf offline sperren wie die Teilen-Knöpfe und `addDoc` in
+  `mitZeitlimit` legen; bei Zeitlimit Entwurf behalten und Meldung in Worten.
+- Entscheidet: Agent
+- Aufwand: klein
+- Abnahme: Prüfstand mit hängendem `addDoc`: nach 12 s ist der Knopf wieder
+  bedienbar, Entwurf noch da; offline ist der Knopf gesperrt mit Hinweis.
+
+#### DATEN-7: Einstellungen gehen als ganzes Objekt in die Cloud – ein Gerät, das offline war, überschreibt die Wahl eines anderen
+- Art: Fehler
+- Schwere: niedrig
+- Beleg: `app.js:2893–2896` – `schreibeInsNutzerdokument({ settings: settings })`
+  schreibt immer alle vier Felder (`normSettings`, `app.js:1195–1200`).
+  Serie und Tagesprotokoll schreiben dagegen gezielt (`persistStreak`,
+  `app.js:2885–2892`; `persistVerlauf`). Der Regelkommentar
+  `firestore.rules:117–119` setzt das Ganz-Schreiben sogar voraus.
+  Verifiziert durch Lesen; nicht mit zwei Geräten gemessen.
+- Warum es stört: Handy stellt auf „Hell“, das iPad (offline, alter Stand)
+  ändert die Rundengröße – beim Hochladen ist das Handy wieder „Dunkel“,
+  und `lastBackup` springt auf den alten Wert zurück.
+- Vorschlag: Nur das geänderte Feld schreiben (`"settings.thema": …`). Dabei
+  beachten: `settingsOk` prüft mit `hasOnly` die ganze Map – liegt in einem
+  alten Konto noch ein fremdes Teilfeld, lehnt die Regel dann jedes
+  Einzelfeld-Schreiben ab. Also erst im Emulator mit einem Altfeld prüfen
+  oder bei `permission-denied` einmal ganz schreiben.
+- Entscheidet: Agent
+- Aufwand: klein (mit Emulator-Fall mittel)
+- Abnahme: Emulator/SDK-Test wie `t_verlauf_mehrgeraete.js`: Gerät A ändert
+  `thema`, Gerät B offline `sitzungsLimit` → nach Abgleich beide Werte da.
+
+#### DATEN-8: Offline zeigt „Impressum“/„Datenschutz“ die App statt der Seite; online immer die Fassung vom letzten Besuch
+- Art: Fehler
+- Schwere: niedrig
+- Beleg: `sw.js:225–228` – jede fehlgeschlagene Navigation fällt auf
+  `./index.html` zurück; die Rechtsseiten stehen nicht in `ZUSATZ`
+  (`sw.js:50–58`). `sw.js:208–211` liefert eine einmal besuchte Seite immer
+  zuerst aus dem Cache, die neue kommt erst beim Aufruf danach. Aus dem Code
+  gelesen, **nicht gemessen**.
+- Warum es stört: Offline tippt man auf „Datenschutz“ und landet wieder im
+  Startbildschirm der App (unter der Adresse der Rechtsseite). Eine
+  geänderte Datenschutzerklärung sieht ein wiederkehrender Besucher erst
+  beim zweiten Öffnen.
+- Vorschlag: `impressum.html` und `datenschutzerklaerung.html` in `ZUSATZ`
+  aufnehmen; Rückfall auf `index.html` nur für `./` und `./index.html`; für
+  die Rechtsseiten „Netz zuerst“ (wie vor 3.17.55), weil dort kein
+  iOS-Startbild im Spiel ist.
+- Entscheidet: Agent
+- Aufwand: klein
+- Abnahme: `t_sw.js` erweitert: offline `impressum.html` → Inhalt enthält
+  „Impressum“; nach Änderung der Datei zeigt der erste Online-Aufruf die neue.
+
+---
+
+## Geprüft ohne Fund
+
+- **Einstellungen:** `normSettings` (`app.js:1184–1201`) liefert genau die vier
+  Felder aus `settingsOk` (`firestore.rules:120–129`).
+- **Nutzerdokument:** geschrieben werden `name`, `streak` (neun Schlüssel,
+  Grenze 20), `settings`, `schemaVersion`, `verlauf`, `verlaufEpoche`,
+  `texteEinwilligung` – alle in `nutzerFelder()`; `bereiche` nur löschbar.
+- **Bereich:** `bereichFelder` (`app.js:856–886`) samt `normRegler` und
+  Lehrer-/Teilen-Feldern deckt sich mit `bereichFelder()`/`bereichWerte` der
+  Regeln (Faktor 0,5–1, Ergebnisse `[01]{0,50}`).
+- **Karte/Textzeile:** `kartenFelder` (`app.js:823–837`) gegen `kartenWerte`
+  (1000/1500 Zeichen, `textId` nur bei Zeilen, Stufe ≤ 12).
+- **Tagesprotokoll:** atomare `increment` mit Epoche, Reset mit neuer Kennung,
+  Ablehnungspfad liest erst den Server (`app.js:1028–1109`,
+  `firestore.rules:150–154`).
+- **Ideen-Board anlegen/moderieren:** Felder und `serverTimestamp` passen zur
+  Regel; Rückmeldungen sind an das Konto gebunden (`app.js:9834–9960`).
+- **Geteilte Sätze:** kein freies Auflisten, Überschreiben fremder Codes
+  abgelehnt (E20), Freigabe nur aufwärts; `teileLektionCode` schreibt erst
+  nach Erfolg an den Bereich.
+- **Konto löschen, alle Orte:** Neu-Anmeldung zuerst, dann geteilte Sätze
+  (über `teilCode` und Abfrage nach `ownerUid`), Stimm-Merker seitenweise,
+  Bereiche, Karten samt Textzeilen, Nutzerdokument, zuletzt Auth; jeder
+  Schritt an `kontoLoeschKontext` gebunden (`app.js:3467–3541`, `3640–3690`).
+- **Schreibwege und Kontowechsel:** `patchDoc`, `persistAll`,
+  `persistCardGrade`, `schreibeInsNutzerdokument`, Import, Code einlösen,
+  Teilen, Board prüfen nach jedem `await` das Ursprungskonto.
+- **Texte:** Entwürfe und laufendes Lernen tragen die `uid`
+  (`app.js:12263`, `12891–12893`).
+- **CSP, Hashes, `APP_SHELL`, Versionen:** `node plan/werkzeuge/pruefe_stand.mjs`
+  → „Alles in Ordnung“ (alle drei HTML-Seiten, zwei Hashes, drei
+  modulepreload-Links). Fremde Quellen nur gstatic/Google-Anmeldung.
+- **`localStorage`:** fünf Schlüssel in Benutzung (`adrabic-thema`,
+  `-last-backup`, `-hinweise`, `-einstieg-antworten`, `-einstieg-nachklang`),
+  alle in Datenschutz Punkt 7; `sessionStorage` dort allgemein genannt.
+  Randnotiz: der Altschlüssel `lernkarten-app-v1` (`app.js:1873`) wird nur
+  gelesen, nie gelöscht.
+- **Service Worker Normalfall:** Update gelingt → offline startet die neue
+  Version aus dem Cache (`swprobe.cjs`, Durchgang „normal“).
+- **Schon bekannt, weiter offen:** E-03 (Offline-Kopie der Lerndaten im
+  Gerätespeicher fehlt in der Datenschutzerklärung), E-06 (offene App erfährt
+  nichts von neuer Version), G-059 (COOP-Header).
+
+## Nicht mehr geprüft
+
+- Voller Regeltest (`bash plan/werkzeuge/regeln_testen.sh`, 204 Fälle) – nur
+  die eigene Stimmen-Probe lief; Java und Emulator sind auf dem Laptop
+  startbar.
+- Mehrgeräte und Offline mit echtem SDK (nur Code gelesen).
+- Zweig-Funde G-116, G-124, G-127, G-128, G-130 am aktuellen Code.
+- Schlüssel von `baueWeitergabeBereich` einzeln gegen die Regel, Ganzzahl bei
+  `order` nach Ziehen/Sortieren, Umzug (Schema 1 → 2), Lehrer-Stand-Abfrage.
+- Laden des Quran-Texts (Zeitlimit, Fehlerpfad), übrige Fehler-/Zeitlimit-
+  Pfade außerhalb von Anmeldung, Board und Teilen.
+- DATEN-6 und DATEN-8 im Browser; echtes iPhone.
+
+Emulator-Prozesse beendet (kein `java.exe`, Ports 8187/4487/4587/8188 frei).

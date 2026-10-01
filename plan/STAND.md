@@ -10,8 +10,11 @@ Stand: 01.10.2026, `main` = 3.18.10, **online** (veröffentlicht per `ladegeraet
 121/121 grün). Probelauf Texte läuft ab 01.10. (Stufe 8). Betreiber tut
 dabei nichts außer lernen; am 29.10. „Auswertung“ + Foto der Probelauf-Werte
 aus den Einstellungen (`texte-lernen/WIEDERHOLEN.md` § 8).
-Zyklus 2 Phase 1 (Prüfung mit 8 Lese-Agenten) läuft seit 01.10., Befunde in
-`zyklus-2/befunde/`.
+Zyklus 2: Prüfung fertig (8 Prüfer, 103 neue Funde, keiner kritisch; dazu
+G-107–G-111 und G-118). Plan steht: [`zyklus-2/AUFGABEN.md`](zyklus-2/AUFGABEN.md)
+(Pakete A–F), [`zyklus-2/CODEX-START.md`](zyklus-2/CODEX-START.md) (so
+arbeitet Codex), [`zyklus-2/ENTSCHEIDUNGEN.md`](zyklus-2/ENTSCHEIDUNGEN.md)
+(18 Fragen an den Betreiber, offen). **Nächster Schritt: Paket A.**
 
 ---
 
@@ -58,21 +61,6 @@ Eine Freigabe für andere gibt es nur auf sein ausdrückliches „ja“.
 | 7 | Gesamtprüfung am Laptop, dann Veröffentlichen | fertig (3.18.10 online, 01.10.) |
 | 8 | Nach 4 Wochen Probelauf: Auswertung, Startwerte, Freigabe-Frage | läuft, Auswertung ab 29.10.2026 |
 
-**Was Stufe 7 noch blockiert:**
-- `t_text_tempo.js` ist rot, nur noch im Schritt **Verwalten** (172–353 ms,
-  Grenze 200 ms). Mit einem normalen Konto sind es 201–252 ms, das Stocken
-  ist also älter und betrifft alle Konten. **Betreiber 30.09.: jetzt beheben
-  (Weg A)**, obwohl es den Verwalten-Reiter aller Konten berührt. Danach
-  `t_nur_betreiber.js` erneut prüfen: Er vergleicht Pixel mit 3.17.56, eine
-  gewollte Tempo-Änderung ohne sichtbare Änderung muss dort gleich bleiben.
-- Stand 30.09. abends: Die Ursache ist belegt (einmalige Einrichtung der
-  Schrift beim ersten Wort). Ein Entwurf liegt in
-  `texte-lernen/entwurf-g119/`. Die Messung schwankt am Laptop aber
-  ±60–80 ms, die Grenze liegt im Rauschen. Der Betreiber entscheidet, wie
-  weiter (Logbuch).
-- Danach das Stichwort „ladegerät“ (`CLAUDE.md`): alle Tests, Affe mit
-  Texten, dann Regeln und Hosting.
-
 **Bleibt offen, blockiert nicht:**
 - Echtes iPhone: Eindruck der Quran-Schrift, Tastatur über großem Textfeld.
 - Datenschutzerklärung Abschnitt Texte: Rechtsprüfung durch eine echte
@@ -90,11 +78,11 @@ Logbuch: [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 - Runde 15 = G-107–G-111, zuerst **G-110 (kritisch)**. Dazu kommt der neue
   Befund **G-118**: Verwalten → Karte erstellen, Tippen ins Feld „Wort“
   scrollt die Seite nach oben weg.
-- **Angefangene Arbeit liegt nur auf dem Laptop:** Zweig `runde15` im
+- **Angefangene Arbeit:** Zweig `runde15` im
   Ordner `C:\Users\USER\Wiederholung-r15`, Commit `4462fac` „WIP Runde 15“
-  (29.09., 29 Dateien, auf dem alten Stand 3.18.2). Nie gepusht. Nicht
-  löschen. Zu Beginn von Runde 15 zuerst lesen und auf den aktuellen `main`
-  übertragen, statt neu anzufangen.
+  (29.09., 29 Dateien, auf dem alten Stand 3.18.2). Seit 01.10. auch als
+  `origin/runde15` gepusht. Nicht löschen. In Paket A zuerst lesen und auf
+  den aktuellen `main` übertragen, statt neu anzufangen.
 
 ---
 
@@ -118,3 +106,17 @@ Logbuch: [`grossplan/LOGBUCH.md`](grossplan/LOGBUCH.md).
 - `git stash` „Laptop-Entwurf 3.18.5 vor Pull 2026-09-30“: alter Entwurf
   von Stufe 4/5, durch `60c383b`/`15413f3` überholt.
 - Zweig `runde15` (siehe Abschnitt 3).
+
+---
+
+## 6. Gesamtplan – was bis „fertig“ noch kommt
+
+| Nr | Was | Wer | Wann |
+|---|---|---|---|
+| 1 | Zyklus 2, Pakete A–F (`zyklus-2/AUFGABEN.md`), je Paket prüfen und per „ladegerät“ veröffentlichen | Codex baut, Claude prüft, Betreiber veröffentlicht | jetzt |
+| 2 | 18 Entscheidungen (`zyklus-2/ENTSCHEIDUNGEN.md`) | Betreiber, einmal | vor Paket C |
+| 3 | Gerätetests G1–G7 am iPhone (`zyklus-2/ENTSCHEIDUNGEN.md`) | Betreiber | je nach Paket |
+| 4 | Nachprüfung Zyklus 2: frische Prüfung, zweimal ohne neuen kritischen/hohen Fund | Claude | nach Paket F |
+| 5 | Probelauf Texte auswerten, Startwerte, Freigabe-Frage | Betreiber schickt Foto, Claude wertet aus | ab 29.10.2026 |
+| 6 | Rechtsprüfung der Datenschutzerklärung durch eine Person (J1/F5, Texte, Z12) | Betreiber | offen |
+| 7 | Später, nur auf Betreiber-„ja“ (`grossplan/FUNKTIONEN.md`): Liste einfügen (F-1), ohne Harakat abfragen (F-2), zweite Richtung (F-5), neue Startseite, eigene Domain mit Absender für E-Mails, Apple-Anmeldung, Texte teilen, weitere Bücher | Betreiber entscheidet | nach Zyklus 2 |
