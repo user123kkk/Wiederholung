@@ -21,5 +21,19 @@ Lesereihenfolge:
 5. Gegenprüfung jeder Aufgabe: `plan/grossplan/AUFTRAG.md` § 2a (Pflicht),
    § 2b (sparsam, nie an Prüfung sparen), § 3 (wann fertig).
 
+**Stichworte des Betreibers.** Sie gelten sofort, ohne Rückfrage:
+
+- **„A weiter“** (oder B, C, D, E, F): Dieses Paket fortsetzen. Einen
+  vorhandenen uncommitteten Stand behalten, nie verwerfen. Zuerst die
+  Zeilen mit Status `zurück`, dann die `offen`en, nach
+  `plan/zyklus-2/CODEX-START.md` § 3 bis § 7. Nicht veröffentlichen. Läuft der
+  Laptop auf Akku, nur bauen und Einzeltests, dann melden.
+- **„Netzteil dran“:** Netzteil prüfen (`BatteryStatus` = 2), dann das Paket
+  abschließen: Gesamtlauf, Gegenprüfung, Version, Commit, Push auf `main`.
+  Nicht veröffentlichen.
+- **„Was jetzt?“:** In höchstens fünf Zeilen: was fertig ist, was offen ist,
+  was als Nächstes dran ist, welchen Text der Betreiber einfügen soll.
+- **Nie ein neues Paket beginnen**, solange ein früheres uncommittet ist.
+
 „Texte auswendig lernen“ läuft im Probelauf nur im Betreiber-Konto
 (`plan/texte-lernen/`); dort nichts umbauen.
