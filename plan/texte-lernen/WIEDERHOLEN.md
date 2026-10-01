@@ -183,8 +183,12 @@ Karten behalten ihre Stufen und Abstände (`intervalForStufe`,
   Regler.
 - Mindestens 4 Wochen mit echtem Stoff (eine Sure und der Medina-Bereich).
 - Einstellungen → nur für den Betreiber: eine Zeile je Text/Bereich mit
-  Quote, `kreisTage`, `abstandFaktor`, geschätzter Tageszeit. Wöchentlich
-  ins Logbuch übertragen.
+  Quote, `kreisTage`, `abstandFaktor`, geschätzter Tageszeit.
+  **Vereinfacht 01.10.2026** (Betreiber: „too much information … kein Plan,
+  was du auswertest“): kein wöchentliches Übertragen. Der Betreiber lernt
+  nur. Am 29.10.2026 schreibt er „Auswertung“ und schickt ein Foto dieses
+  Blocks; der Agent liest die Werte ab, prüft sie gegen „Erfolg“ unten und
+  legt ihm genau eine Frage vor (Startwerte ändern / verlängern / freigeben).
 - **Erfolg:** nach 4 Wochen Quote fest ≥ 90 % bei den ältesten Zeilen, Zeit
   pro Tag für den Betreiber tragbar. Sonst Startwerte ändern, weiter prüfen,
   nicht veröffentlichen.

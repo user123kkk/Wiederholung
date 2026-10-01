@@ -7,7 +7,11 @@ Logbüchern. Wer eine Stufe oder Runde beendet, zieht diese Datei nach.
 Wo sie von dieser Datei abweichen, gilt diese Datei.
 
 Stand: 01.10.2026, `main` = 3.18.10, **online** (veröffentlicht per `ladegeraet.bat`,
-121/121 grün). Probelauf Texte läuft ab 01.10. (Stufe 8).
+121/121 grün). Probelauf Texte läuft ab 01.10. (Stufe 8). Betreiber tut
+dabei nichts außer lernen; am 29.10. „Auswertung“ + Foto der Probelauf-Werte
+aus den Einstellungen (`texte-lernen/WIEDERHOLEN.md` § 8).
+Zyklus 2 Phase 1 (Prüfung mit 8 Lese-Agenten) läuft seit 01.10., Befunde in
+`zyklus-2/befunde/`.
 
 ---
 
