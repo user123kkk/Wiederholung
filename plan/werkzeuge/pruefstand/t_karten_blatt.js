@@ -1,6 +1,7 @@
 /* Station 11: Karten-Blaetter - anlegen, bearbeiten, loeschen, Detail. */
 const { start, neueSeite, aktion, foto, GERAETE } = require('./lib');
 const { pruefeKontrast } = require('./kontrast');
+const assert = require('node:assert/strict');
 (async () => {
   const b = await start();
   for (const g of (process.argv[2] || 'handy,klein,ipad').split(',')) {
@@ -60,7 +61,13 @@ const { pruefeKontrast } = require('./kontrast');
       if (g === 'handy') await foto(p, 'k11-detail');
       await aktion(p, 'card-detail-bearbeiten', await p.evaluate(() => document.querySelector('[data-action="card-detail-bearbeiten"]').dataset.id), 800);
       out.push('Bearbeiten: ' + await p.evaluate(() => ['f-wort', 'f-ueb', 'f-extra', 'f-stufe'].map(i => { const e = document.getElementById(i); return e ? (e.tagName === 'SELECT' ? e.options[e.selectedIndex].text : e.value) : '-'; }).join(' / ')));
-      await p.fill('#f-ueb', 'Moschee (Gebetshaus)'); await aktion(p, 'submit-card', null, 800);
+      await p.fill('#f-ueb', 'Moschee (Gebetshaus)');
+      await p.keyboard.press('Escape'); await p.waitForTimeout(600);
+      assert.ok((await p.locator('.dlg').last().innerText()).includes('Änderungen verwerfen?'), 'C12 geänderte Karte ohne Rückfrage geschlossen');
+      await p.locator('.dlg').last().getByRole('button', {name:'Abbrechen', exact:true}).click();
+      await p.waitForTimeout(600);
+      assert.equal(await p.locator('#f-ueb').inputValue(), 'Moschee (Gebetshaus)', 'C12 Entwurf nach Abbrechen verloren');
+      await aktion(p, 'submit-card', null, 800);
       out.push('  gespeichert: Blatt zu ' + await p.evaluate(() => !document.querySelector('.dlg #f-wort')) + ' | Liste zeigt ' + await p.evaluate(() => document.querySelectorAll('#karten-liste > .card-row')[3].innerText.replace(/\s+/g, ' ')));
       // Loeschen aus dem Detail
       const n2 = await anzahl();

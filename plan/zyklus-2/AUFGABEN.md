@@ -54,33 +54,33 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
-| C1 | G-118 | mittel | Tippen ins Feld „Wort“ scrollt die Seite weg (Ursache in `befunde/VERW.md`, Abschnitt G-118) | `befunde/VERW.md` | Sol mittel | offen | Gerätetest G1 nach dem Fix |
-| C2 | FORT-1 | hoch | Die größte Zahl und die Pille belohnen Vergessen und bestrafen gutes Lernen | `befunde/FORT.md` | Sol niedrig | offen | Z2: wie empfohlen |
-| C3 | FORT-2 | hoch | Neben der Kartenzahl steht ein Versende-Zeichen aus dem Quran | `befunde/FORT.md` | Sol niedrig | offen | Z3: wie empfohlen |
-| C4 | FORT-3 | hoch | Der Bereich oben im Kopf gilt für die Zahlen darunter nicht | `befunde/FORT.md` | Sol niedrig | offen |  |
-| C5 | FORT-4 | mittel | Nach einer langen Pause sagt der Tab etwas Falsches oder gar nichts | `befunde/FORT.md` | Sol niedrig | offen | Pausensatz im Logbuch zitieren |
-| C6 | FORT-5 | mittel | Große Null im Stoff und falsche Mehrzahl | `befunde/FORT.md` | Luna niedrig | offen |  |
-| C7 | FORT-6 | mittel | „sitzt“ heißt drei verschiedene Dinge, und das schwächste steht am größten da | `befunde/FORT.md` | Sol niedrig | offen | Z4: wie empfohlen |
-| C8 | FORT-7 | mittel | Das Raster ist kaum zu lesen | `befunde/FORT.md` | Sol mittel | offen |  |
+| C1 | G-118 | mittel | Tippen ins Feld „Wort“ scrollt die Seite weg (Ursache in `befunde/VERW.md`, Abschnitt G-118) | `befunde/VERW.md` | Sol mittel | erledigt (3.18.13) | ausdrücklich wiederaufgenommen; 32 Zustände und Randfälle grün, verbundenes Wortfeld auch bei Echo/Fehler/Dialogabbruch, Fokus ohne Scrollen, Scrollen nur im Blatt; Gegenprobe b60abf4; berührte Regression und Runde 13/13 grün; Gerätetest G1 bleibt offen; Paketabschluss grün |
+| C2 | FORT-1 | hoch | Die größte Zahl und die Pille belohnen Vergessen und bestrafen gutes Lernen | `befunde/FORT.md` | Sol niedrig | erledigt (3.18.13) | Z2: wie empfohlen; Gegenprobe b60abf4 rot, 12 angrenzende Zustände und Wochenkopf/Fortschritt/Sprung/Kontrast/a11y grün; Paketabschluss grün |
+| C3 | FORT-2 | hoch | Neben der Kartenzahl steht ein Versende-Zeichen aus dem Quran | `befunde/FORT.md` | Sol niedrig | erledigt (3.18.13) | Z3: wie empfohlen; Zierziffer und CSS entfernt; Gegenprobe rot, 16 Zustände sowie Fortschritt/Sprung/Kontrast/a11y grün; Paketabschluss grün |
+| C4 | FORT-3 | hoch | Der Bereich oben im Kopf gilt für die Zahlen darunter nicht | `befunde/FORT.md` | Sol niedrig | erledigt (3.18.13) | Variante A; Gegenprobe rot, 16 Zustände/Bereichwechsel sowie Fortschritt/Sprung/Kontrast/a11y grün; Paketabschluss grün |
+| C5 | FORT-4 | mittel | Nach einer langen Pause sagt der Tab etwas Falsches oder gar nichts | `befunde/FORT.md` | Sol niedrig | erledigt (3.18.13) | Pausensatz im Logbuch; Gegenprobe rot, 16 Zustände, Wochenkopf/Fortschritt/Sprung/Kontrast/a11y und Runde 13/13 grün; Paketabschluss grün |
+| C6 | FORT-5 | mittel | Große Null im Stoff und falsche Mehrzahl | `befunde/FORT.md` | Luna niedrig | erledigt (3.18.13) | Gegenprobe rot; 16 Zustände neue 1/40 und einmal Nicht, C5-Integration, Fortschritt/Sprung/Kontrast/a11y grün; Paketabschluss grün |
+| C7 | FORT-6 | mittel | „sitzt“ heißt drei verschiedene Dinge, und das schwächste steht am größten da | `befunde/FORT.md` | Sol niedrig | erledigt (3.18.13) | Z4: wie empfohlen; Wörter und Stufe-1-Kommentar, keine Regeländerung; 16 Zustände inkl. geführt/Meilenstein, Lernen-Start/Fortschritt/Sprung/Kontrast/a11y grün |
+| C8 | FORT-7 | mittel | Das Raster ist kaum zu lesen | `befunde/FORT.md` | Sol mittel | erledigt (3.18.13) | Gegenprobe rot; Raster volle Breite, Kontrast hell 5,42/dunkel 5,17; 16 Zustände leer/4/12 Wochen, Fortschritt/Sprung/Kontrast/a11y grün |
 | C9 | FORT-8 | mittel | Auf dem ganzen Tab gibt es keine Handlung | `befunde/FORT.md` | Sol mittel | offen | Z1: Weg b – gehört zum Umbau (C-Umbau), nach den Fehlern |
 | C10 | FORT-9 | mittel | Was der Tab sagt, steht zum Teil schon auf Lernen | `befunde/FORT.md` | Sol mittel | offen | Z1: Weg b – gehört zum Umbau (C-Umbau), nach den Fehlern |
-| C11 | VERW-1 | mittel | G-021 „Suchpuffer wächst mit der Kartenzahl“ steht als erledigt da, ist aber nie in den Code gekommen | `befunde/VERW.md` | Astra mittel | offen |  |
-| C12 | VERW-2 | mittel | Geänderte Karte geht beim Bearbeiten mit Escape oder Wischen still verloren | `befunde/VERW.md` | Sol niedrig | offen |  |
-| C13 | VERW-3 | mittel | „Ablegen“ in eine Speicherkarte zeigt kein Ergebnis | `befunde/VERW.md` | Sol niedrig | offen |  |
-| C14 | VERW-6 | mittel | Leerer Bereich in Verwalten ist eine kahle Zeile – der gebaute Leerzustand wird fast nie gezeigt | `befunde/VERW.md` | Sol niedrig | offen |  |
-| C15 | VERW-7 | mittel | Hinweis im geführten Satz verweist auf einen Knopf „+ Bereich“ oben, den es nicht gibt | `befunde/VERW.md` | Luna niedrig | offen |  |
-| C16 | VERW-10 | mittel | Blätter und Dialoge schließen ohne Bewegung – 200 ms Stillstand, dann weg | `befunde/VERW.md` | Sol niedrig | offen |  |
-| C17 | FORT-10 | niedrig | Die ältesten Tage fallen aus dem Raster | `befunde/FORT.md` | Sol niedrig | offen |  |
-| C18 | FORT-11 | niedrig | Tage, an denen nur Texte gelernt wurden, sind im Raster leer (nur Betreiber-Konto) | `befunde/FORT.md` | Sol niedrig | offen |  |
-| C19 | FORT-12 | niedrig | Aus „Karten, die nicht klappen“ führt Bearbeiten weg und nicht zurück; Zähler löschen ohne Rückweg | `befunde/FORT.md` | Sol mittel | offen |  |
-| C20 | FORT-13 | niedrig | Auf iPad und Computer sieht der Tab leer aus | `befunde/FORT.md` | Sol mittel | offen |  |
-| C21 | FORT-14 | niedrig | Das Aufdecken des Rasters sieht man nicht, das Band kommt spät | `befunde/FORT.md` | Sol niedrig | offen |  |
-| C22 | FORT-15 | niedrig | Kleinigkeiten und toter Code rund um den Tab | `befunde/FORT.md` | Sol niedrig | offen | ohne Teil (e) |
-| C23 | VERW-4 | niedrig | Verschieben, Löschen mehrerer Karten und Löschen einer Karte ohne Rückmeldung | `befunde/VERW.md` | Sol niedrig | offen |  |
-| C24 | VERW-5 | niedrig | Auswahlmodus und Suche überleben den Weg über „Fortschritt“, nicht über „Lernen“ | `befunde/VERW.md` | Sol niedrig | offen |  |
-| C25 | VERW-8 | niedrig | Erklärtexte der Speicherkarten-Gruppen stimmen im eigenen Bereich nicht | `befunde/VERW.md` | Luna niedrig | offen |  |
-| C26 | VERW-9 | niedrig | Kleinere Uneinheitlichkeiten und Reste | `befunde/VERW.md` | Sol niedrig | offen |  |
-| C27 | VERW-11 | niedrig | Im Auswahlmodus fehlt „Alle auswählen“ | `befunde/VERW.md` | Sol niedrig | offen | Z11: wie empfohlen |
+| C11 | VERW-1 | mittel | G-021 „Suchpuffer wächst mit der Kartenzahl“ steht als erledigt da, ist aber nie in den Code gekommen | `befunde/VERW.md` | Astra mittel | erledigt (3.18.13) | Gegenprobe 72.026, Fix zweite Suche 4.229 normalize-Aufrufe; Verwalten/Sprung/Kontrast/a11y grün; historische Meldung sichtbar korrigiert |
+| C12 | VERW-2 | mittel | Geänderte Karte geht beim Bearbeiten mit Escape oder Wischen still verloren | `befunde/VERW.md` | Sol niedrig | erledigt (3.18.13) | Gegenprobe rot; 12 Zustände Escape/CDP-Wischen, unverändert/geändert, Stand und direkte Abbrechen-Handlung grün; Kartenblatt/Snapshot/Sprung/Kontrast/a11y grün |
+| C13 | VERW-3 | mittel | „Ablegen“ in eine Speicherkarte zeigt kein Ergebnis | `befunde/VERW.md` | Sol niedrig | erledigt (3.18.13) | Gegenprobe rot; 12 Zustände Ziel offen/im Bild, Ansage, War schon drin, zwei Pfeiltasten mit Doppelanzeige grün; Verwalten/Sprung/Kontrast/a11y grün |
+| C14 | VERW-6 | mittel | Leerer Bereich in Verwalten ist eine kahle Zeile – der gebaute Leerzustand wird fast nie gezeigt | `befunde/VERW.md` | Sol niedrig | erledigt (3.18.13) | Bereichswechsel leert Suche; Leerzustand in 16 Konfigurationen grün |
+| C15 | VERW-7 | mittel | Hinweis im geführten Satz verweist auf einen Knopf „+ Bereich“ oben, den es nicht gibt | `befunde/VERW.md` | Luna niedrig | erledigt (3.18.13) | zwei falsche Knopfhinweise ersetzt; feste Text-Gegenprobe geprüft |
+| C16 | VERW-10 | mittel | Blätter und Dialoge schließen ohne Bewegung – 200 ms Stillstand, dann weg | `befunde/VERW.md` | Sol niedrig | zurück (D1 zuständig, siehe Doppelt gemeldet) | kein Paket D begonnen |
+| C17 | FORT-10 | niedrig | Die ältesten Tage fallen aus dem Raster | `befunde/FORT.md` | Sol niedrig | erledigt (3.18.13) | 84 Kalenderfälle und 16 weitere Zustände grün, ältester Tag erhalten |
+| C18 | FORT-11 | niedrig | Tage, an denen nur Texte gelernt wurden, sind im Raster leer (nur Betreiber-Konto) | `befunde/FORT.md` | Sol niedrig | zurück (nach Probelauf 29.10.) | Texte unverändert |
+| C19 | FORT-12 | niedrig | Aus „Karten, die nicht klappen“ führt Bearbeiten weg und nicht zurück; Zähler löschen ohne Rückweg | `befunde/FORT.md` | Sol mittel | erledigt (3.18.13) | Rückweg und kontogebundenes Undo; Entwurf auch bei Escape/Abbruch/Neuzeichnen erhalten; 16 Zustände grün |
+| C20 | FORT-13 | niedrig | Auf iPad und Computer sieht der Tab leer aus | `befunde/FORT.md` | Sol mittel | erledigt (3.18.13) | vorhandene Details ab 720 px offen; 16 Zustände grün |
+| C21 | FORT-14 | niedrig | Das Aufdecken des Rasters sieht man nicht, das Band kommt spät | `befunde/FORT.md` | Sol niedrig | erledigt (3.18.13) | tatsächliche Raster-/Band-/Balkenenden in 16 Zuständen grün |
+| C22 | FORT-15 | niedrig | Kleinigkeiten und toter Code rund um den Tab | `befunde/FORT.md` | Sol niedrig | zurück (Teil a gehört F3; b/c/d abgenommen 3.18.13) | ohne Teil (e) |
+| C23 | VERW-4 | niedrig | Verschieben, Löschen mehrerer Karten und Löschen einer Karte ohne Rückmeldung | `befunde/VERW.md` | Sol niedrig | erledigt (3.18.13) | Verschieben und Einzel-/Mehrfachlöschen mit Rückmeldung; 16 Zustände grün |
+| C24 | VERW-5 | niedrig | Auswahlmodus und Suche überleben den Weg über „Fortschritt“, nicht über „Lernen“ | `befunde/VERW.md` | Sol niedrig | erledigt (3.18.13) | Suche und Auswahl über Lernen/Fortschritt gleich zurückgesetzt; 16 Zustände grün |
+| C25 | VERW-8 | niedrig | Erklärtexte der Speicherkarten-Gruppen stimmen im eigenen Bereich nicht | `befunde/VERW.md` | Luna niedrig | erledigt (3.18.13) | Hinweise nur im geführten Bereich; 16 Zustände grün |
+| C26 | VERW-9 | niedrig | Kleinere Uneinheitlichkeiten und Reste | `befunde/VERW.md` | Sol niedrig | erledigt (3.18.13) | gültiges letztes Ziel, Detailwege, gelöschte Karte/erhaltener Entwurf; 16 Zustände grün |
+| C27 | VERW-11 | niedrig | Im Auswahlmodus fehlt „Alle auswählen“ | `befunde/VERW.md` | Sol niedrig | erledigt (3.18.13) | Z11: sichtbare Seite, Keine, Fremd-/Schloss-/Leertreffer und 20-Karten-Löschbestätigung in 16 Zuständen grün; Paketabschluss grün |
 | C28 | Z1-Umbau | mittel | Fortschritt-Tab umbauen zu „Was du schon kannst“ (Weg b) | `befunde/FORT.md` § 4 (b) | Astra mittel | offen | erst nach allen FORT-Fehlern; eigener Commit; Wortlaut (Z4) und Aufbau dem Betreiber als Fotos zeigen, bevor veröffentlicht wird |
 
 ## Paket D – Bewegung und Flüssigkeit

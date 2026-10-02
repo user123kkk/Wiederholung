@@ -1,6 +1,7 @@
 /* Station 9: Fortschritt - Kennzahlen, Zustaende, Kalender, Vorschau, schwierige Karten. */
 const { start, neueSeite, aktion, foto, GERAETE, vollerStore, tag } = require('./lib');
 const { pruefeKontrast } = require('./kontrast');
+const assert = require('node:assert/strict');
 (async () => {
   const b = await start();
   const eine = vollerStore({ leer: true });
@@ -24,7 +25,15 @@ const { pruefeKontrast } = require('./kontrast');
           for (const seite of ['lektionen', 'leeches', 'vorschau']) {
             const da = await p.$('[data-action="fort-seite"][data-id="' + seite + '"]');
             if (!da) { console.log('    Seite', seite, 'FEHLT'); continue; }
-            await da.click(); await p.waitForTimeout(900);
+            if (GERAETE[g].width >= 720) {
+              const index = ['lektionen', 'leeches', 'vorschau'].indexOf(seite);
+              const offen = p.locator('.fort-details > section').nth(index);
+              assert.ok(await offen.isVisible(), 'Unterseiten-Inhalt muss auf breitem Bildschirm offen stehen: ' + seite);
+              assert.ok((await offen.innerText()).length > 30);
+              // Unterseiten selbst weiterhin vollständig prüfen, zusätzlich zum sichtbaren Inhalt.
+              await da.evaluate(el => el.click());
+            } else await da.click();
+            await p.waitForTimeout(900);
             const t = await p.evaluate(() => document.querySelector('#app .view').innerText.replace(/\s+/g, ' ').trim().slice(0, 300));
             const k2 = await pruefeKontrast(p, seite);
             const zurueck = await p.evaluate(() => { const z = document.querySelector('[data-action="seite-zu"], [data-action="fort-zurueck"], .seitenkopf button, .appbar [data-action*="zurueck"]'); return z ? z.dataset.action : null; });

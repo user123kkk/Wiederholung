@@ -561,6 +561,11 @@ Was gemessen wird:
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
 
+- Scroll-Lage vor Tastaturereignissen erst nach abgeschlossenen
+  Inhaltsänderungen erfassen. Verschwindet beim ersten Speichern ein hoher
+  Leerzustand, begrenzt der Browser die bisherige Scroll-Lage auf die neue
+  Dokumenthöhe. Öffnen, Speichern und Tastaturbewegung getrennt messen und
+  dieselbe Folge am gesicherten Ausgangsstand prüfen (02.10.2026, C1).
 - Laufzeitprüfungen ohne konkurrierende Browser-Tests ausführen; feste
   Grenzen nicht wegen eines langsamen Parallel-Laufs lockern.
 - Bei einem Rechnerwechsel Browser, Netz-/Akkubetrieb und unabhängige
@@ -764,6 +769,11 @@ zuerst: Sie sind am häufigsten aufgetreten.
 
 ### 6.3 Zustand gehört in `ui`, nie nur ins DOM
 
+- Ein globales Formular braucht seine Eingabe- und Entwurf-Handler in jeder
+  Ansicht, die es öffnet. Wird ein Blatt aus Fortschritt geöffnet, dürfen
+  diese Handler nicht nur an `ui.tab === "verwalten"` hängen. Abnahme auch
+  dort mit geändertem Text, Escape/Abbruch und Neuzeichnen (02.10., C12/C19).
+
 `render()` ersetzt `#app` komplett. Alles, was nur im DOM steht, ist danach
 weg.
 
@@ -777,6 +787,12 @@ weg.
 
 Getippte Eingaben, Schalter, Fokus, Scroll-Lage und „schon gezeigt"-Merker
 halten.
+
+Bleibt ein Blatt erstmals im DOM erhalten, alle Schließpfade mit einem
+Dialog darüber prüfen. Ein allgemeines `.dlg` trifft das Blatt darunter;
+dessen Austrittsstil bleibt dann erhalten, statt beim Neuaufbau zu
+verschwinden. Der Bestätigungsdialog wird über seinen eigenen
+`aria-labelledby`-Wert gewählt (02.10.2026, C1-Fortsetzung).
 
 ### 6.4 Bewegung
 
@@ -1489,6 +1505,68 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+03.10.2026, Paket-C-Gesamtlauf über Mitternacht: `t_serie_lang` erzeugte
+Kalenderdaten um Mittag, die simulierte App verwendete vor 04:00 aber den
+vorherigen Lerntag. Beleg 00:07: alte Testbasis 2026-10-03, lib.tag(0)
+2026-10-02; schon T5 war 4 statt 5, T200 199 statt 200. Daten des Tests
+an die vorhandene gemeinsame Lerntagsfunktion gebunden. Erwartungswerte
+200/199/48 und Produktlogik unverändert; ursprüngliche Ausgabe bewahren
+und nur diesen geänderten Test am identischen Produktstand nachlaufen lassen.
+
+02.10.2026, Paket-C-Abschluss, Prüfaufbau: `t_nur_betreiber` fror sämtliche
+normalen Bildschirme auf 3.17.56 ein und meldete die freigegebenen C1/C4/C7-
+Änderungen rot. Historischen Fehlerbericht bewahrt. Die aktuelle Abnahme
+isoliert die Textfreigabe: derselbe Quellstand mit erzwungen ausgeschaltetem
+Schalter gegen die echte Freigabe, alle sieben Stationen bei 390/1440 px,
+HTML und Pixel unverändert streng. Betreiber-, Schrift- und erzwungene
+Normal-Konto-Freigabe müssen Unterschiede erkennen. Historischer Vergleich
+bleibt mit `--historisch` erhalten; keine Produktänderung am Text-Probelauf.
+
+02.10.2026, Paket-C-Abschluss, Gegenprüfung C12/C19: Das Kartenblatt über
+Fortschritt hielt den Rückweg, aber seine Eingabe-Handler wurden nur in
+Verwalten verbunden. Geänderte Übersetzung plus Escape schloss ohne Rückfrage;
+auch ein Neuzeichnen hätte den Text verloren. Reale UI-Probe bestätigte den
+Fehler vor der Korrektur. Bestehende Handler auch bei ui.karteSheet verbinden,
+C19-Abnahme um Escape/Abbruch und Neuzeichnen erweitert (§6.3). Begonnenen
+Gesamtlauf bewahrt und beendet; korrigierten Quellstand vollständig neu prüfen.
+
+02.10.2026, C1-Fortsetzung, eigener Folgefehler: Das dauerhaft verbundene
+Kartenblatt behielt nach Duplikat-Abbruch die Austrittsstile. `closeDialog`
+wählte mit `.dlg` das Kartenblatt darunter; bisher verdeckte der Neuaufbau
+den falschen Zielknoten. Neue Sichtbarkeitsprobe rot, Schließen auf den
+eigenen `aria-labelledby="dlg-title"`-Dialog begrenzt (§6.3). Die Dauer und
+der Bewegungsweg bleiben unverändert; kein Paket D begonnen.
+Vorheriger Fehler-Test erwartete außerdem einen frei gewählten Fehlercode
+in `__FB.fail`; die Attrappe liefert dort immer permission-denied. Den
+echten erneuerten und den dauerhaft abgelehnten Zweig unterscheiden (§5.4).
+
+02.10.2026, C1-Fortsetzung, eigener Prüfaufbau: Der erweiterte Leertest
+verglich die Scroll-Lage vor dem ersten Speichern (112 px) mit der Lage
+nach Tastaturereignissen (0 px). Diagnose am gesicherten Paket-C-Ausgang
+und am Fix: beide wechseln bereits beim Speichern von 680 auf 568 px
+Dokumenthöhe; das Öffnen und die Tastatur verändern die Lage nicht.
+Messphasen getrennt (§5.3), keine Produktänderung aus dem Messfehler.
+Der zwischenzeitlich beendete lokale Server lieferte zuvor
+ERR_CONNECTION_REFUSED; dieser Lauf ist kein Befund. Server neu gestartet.
+Einige Lesebefehle nannten nicht vorhandene Tests beziehungsweise nutzten
+einen Windows-Glob als rg-Pfad. Tatsächliche Dateiliste gelesen; daraus
+keine Produktänderung und keine erfolgreiche Prüfung abgeleitet (§3.2).
+
+02.10.2026, Paket C, C11 / G-021: Der Bericht von 3.17.33 behauptete einen
+mitwachsenden Suchpuffer, aber `dbc8ef7:app.js` enthält weiter `size > 4000`.
+Die behauptete Änderung war nicht im gespeicherten Produktcode angekommen.
+1500 Karten mit Notiz: zweite gleiche Suche weiterhin 72.026 normalize-Aufrufe.
+Bestehende Regeln §1.3/§3.2/§5.3: tatsächlichen Diff und Abnahme lesen, nie
+einen Bericht als Beleg übernehmen. Falsche Erledigt-Meldung und Changelog
+sichtbar korrigieren; neue Probe gegen festen Vorstand b60abf4.
+
+02.10.2026, Paket C, C1: Zwei lokale Versuche verhinderten den Neuaufbau
+des Wortfelds nach Hinzufügen nicht. Erst render in submitCardForm,
+dann render in zeigeToast unterdrückt, Identitätsprobe blieb rot.
+Bestehende Regeln §3.4/§5.3: vollständigen Render-/Snapshot-Pfad verfolgen,
+DOM-Identität messen. Nach zwei Versuchen gemäß CODEX-START §6 zurück;
+Patch gesichert und ausschließlich eigene Produktänderungen zurückgenommen.
 
 01.10.2026, Paket-B-Version: Cache-Präfix beim Ersetzen als adrabic-v statt
 adrabic angenommen; Standprüfung rot, weil sw.js unverändert blieb.

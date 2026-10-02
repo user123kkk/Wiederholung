@@ -2,6 +2,485 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-03 — Vorhandenen Paket-C-Stand abgeschlossen, 3.18.13
+
+**Geändert:** Den gesamten vorhandenen Stand erhalten und als 3.18.13
+abgeschlossen: `app.js:19`, `sw.js:10`, alle 33 `?v=`-Stellen in
+`index.html` (einschließlich 31 Startbilder), `CHANGELOG.md`.
+22 Aufgaben C1–C8, C11–C15, C17, C19–C21 und C23–C27 lokal abgenommen;
+C22 nur b/c/d. Sechs vorhandene neue C-Abnahmedateien mit aufgenommen.
+Beim Gegenlesen zusätzlich `app.js:9163`: Eingabe-Handler des vorhandenen
+Kartenblatts auch über Fortschritt verbinden. `t_paket_c_weiter.js:149`
+prüft Escape/Rückfrage, Abbruch und Neuzeichnen ohne Entwurfsverlust.
+`alle_pruefen.js` erhält für die gebündelten C-Dateien ausreichende
+Prozesszeit (weiter 60 Minuten, verw 20 Minuten); keine Assertion,
+Messgrenze oder Wartebedingung gelockert. Dokumentation in LEHREN,
+PLAN, STAND, beiden Aufgabenlisten und Changelog nachgezogen.
+
+**Entscheidung:** Ausdrücklicher Betreiberauftrag: den uncommitteten C-Stand
+abschließen, keine weitere Aufgabe bauen, Z1 auslassen, kein anderes Paket,
+nicht veröffentlichen. Deshalb vorhandenen Stand weder gepullt noch
+zurückgesetzt. Sicherung vor dem Abschluss:
+`%TEMP%/paket-c-vor-abschluss-20261002-223602/`.
+Gegen diese Sicherung sind CSS, vier geänderte Bestandstests und fünf der
+sechs neuen C-Tests bytegleich; app.js unterscheidet sich nur durch Version
+und die eine C12/C19-Handlerbedingung. Der sechste C-Test wurde um genau die
+Entwurfsregression erweitert. Alle alten Logbuch-Einträge, Fehlversuche,
+Patch und Gegenproben bleiben erhalten. `git fetch origin main` bestätigte
+denselben Vorstand b60abf4. Commit/Push direkt auf main, kein Deploy.
+
+**Gegenprüfung nach Großplan § 2a / § 3:** Vollständigen app.js-/styles.css-Diff
+gegen G-118, FORT-1–7, FORT-10/12–15 und VERW-1–9/11 gelesen; alle vier
+geänderten Bestandstests, alle sechs neuen C-Tests und Dokumentations-Diffs
+geprüft. Je Aufgabe:
+C1 dauerhaft verbundenes Wortfeld, Fokus ohne Scrollen, Nachführen nur im Blatt;
+C2 Antwortenzahl klein ohne Erfolgswertung; C3 Quran-Zierziffer entfernt;
+C4 globaler Kopf; C5 ehrliche Pause und bestehender Rundenweg;
+C6 Null/Einzahl/Mehrzahl; C7 nur bestätigter Wortlaut, keine Lernregel;
+C8 binäres Raster in voller Breite und beschriftet;
+C11 realer Puffer für die Kartenzahl aller Bereiche;
+C12 geänderte Entwürfe bei Escape/Wischen; C13 sichtbares Ablegeziel und Ansage;
+C14 echte Leeransicht nach Bereichswechsel; C15 vorhandener Bereichsweg;
+C17 ältester Kalendertag; C19 Rückweg und kontogebundenes Undo;
+C20 vorhandene Inhalte auf großen Bildschirmen offen;
+C21 tatsächliche Animationsenden; C22 ausschließlich b/c/d;
+C23 Ansagen bei Verschieben/Löschen; C24 beide Rückwege gleich;
+C25 Hinweise nur geführt; C26 gültiges letztes Ziel, Detailwege und verschwundene
+Karte ohne Entwurfsverlust; C27 nur sichtbare bearbeitbare IDs.
+Frühe Rückkehr beim verschwundenen Kartenziel erhält den Entwurf;
+Undo überschreibt keine neueren Rückfälle. Asynchrone Dialogfortsetzungen
+prüfen Konto/Bereich/Auswahl. Feste Gegenproben b60abf4 vollständig gelesen;
+C2 nochmals frisch rot bestätigt, C15 als Textvergleich. C12/C19-
+Zusammenspiel war tatsächlich fehlerhaft: UI-Probe vor Korrektur schloss die
+geänderte Übersetzung mit Escape ohne Rückfrage. Nach der begrenzten
+Handlerkorrektur gezielte C19-Matrix und vollständige C-Matrix grün.
+Gerätebefund G1 bleibt ausdrücklich offen.
+
+**Gesamtlauf:** Netzteil mehrfach BatteryStatus=2; Chrome 154.0.8037.93,
+CHROMIUM in jedem Browseraufruf gesetzt, lokaler Server 8099.
+Echte SDK-Prüfungen gegen lokalen Firestore-Emulator 8081, ausschließlich
+Demo-Projekt. Endstand **137/137 grün**, einschließlich zweier gezielter
+Nachläufe, alle vollständigen Einzel-Ausgaben gelesen.
+Quellhash `dc1761b67cbaa64ba48440d114490d8f9e9ebf3a7446b506575dec9cf4b357f2`.
+Logs `%TEMP%/adrabic-pruefstand-gesamt/dc1761b67cbaa64b/`.
+Angefangenen Lauf vor der C19-Korrektur bewahrt; danach korrigierten
+Produktstand vollständig geprüft. Nach Anpassung der Starterzeit nur exakt
+passende grüne Quell-/Test-Hashes fortgesetzt.
+C1 32 Zustände plus Duplikatabbruch/Write-Ablehnung/Offline-Rückkehr;
+C2 zwölf Zustände; C12/C13/C14 zusammen 40; C17 84 Kalenderfälle;
+`t_paket_c_weiter` 256 Aufgaben-Konfigurationen (1200 Sekunden), alles grün.
+C11 zweite Suche 4.229 statt 72.026 normalize-Aufrufe.
+Rasterkontrast hell 5,42/dunkel 5,17; volle verfügbare Breite.
+Rundenabnahme **13/13 grün** aus identischen Produkt-/Test-Hashes;
+auch Rundenende, Üben und Schreiben vollständig gelesen.
+Affe mit Textfällen (AFFE_TEXTE=1), Startwert 7: **Handy 200/iPad 150,
+jeweils 0 Befunde**, 106/126 Textaktionen; beide vollständigen Ausgaben gelesen.
+Zusatzlogs `%TEMP%/paket-c-final-{rundenabnahme,affe-handy,affe-ipad}.log`
+und `paket-c-final-C2-gegenprobe.log`.
+Syntax, Version, alle 33 Dateiversionen, CSP/APP_SHELL und diff --check grün.
+
+**Belegte Prüfaufbaufehler, keine Produktänderung:** Erster vollständiger
+Lauf 135/137. `t_nur_betreiber` fror normale Bildschirme auf 3.17.56 ein
+und meldete freigegebene C1/C4/C7-Änderungen rot. Historischen Bericht unter
+`%TEMP%/paket-c-abschluss-nur-betreiber-historisch.log` bewahrt;
+`--historisch` bleibt abrufbar. Aktuelle Abnahme isoliert den Textschalter
+am selben Quellstand: erzwungen aus gegen reale Freigabe, unverändert
+strenger HTML-/Pixelvergleich, sieben Stationen bei 390/1440 px.
+Beide normal grün; Betreiber-Gegenprobe sechs Unterschiede, entsperrte
+Schrift vier, erzwungene Normal-Konto-Freigabe sechs. Keine Station ausgelassen.
+`t_serie_lang` verwendete vor 04:00 das Kalenderdatum statt des Lerntags.
+Beleg 00:07: 2026-10-03 gegen 2026-10-02; T5=4 und T200=199.
+Gemeinsame vorhandene lib.tag-Funktion benutzt, Erwartungswerte unverändert:
+200/199/48 im Nachlauf exakt erreicht. Alten vollständigen Bericht
+`%TEMP%/paket-c-abschluss-serie-lang-alte-testbasis.log` und Stand-JSON
+`paket-c-abschluss-gesamt-vor-nachlauf.json` bewahrt.
+Nur die beiden geänderten Tests frisch nachgelaufen; keine grünen Tests
+desselben Stands wiederholt, keine Lernregel geändert.
+
+**Tempo und Grenzen:** Texttempo CPU4×, 286 Ayat: längste Aufgabe 132 ms,
+keine über 200 ms. Scrollen Verwalten/Fortschritt/Einstellungen:
+keine Bilder über 34 ms, max. 19/19/18 ms. Schreiben CPU4×:
+keine Bilder über 34 ms, Lage unverändert. Beschreibende Tempoausgaben
+melden weiterhin kurze Blockaden: Rundenstart 125 ms, Fortschritt 183 ms,
+Verwalten 194 ms, Rundenende 125 ms. Kein roter Tempo-Grenztest;
+keine vollständige Ruckelfreiheit und keine echte iOS-Abnahme behauptet.
+
+**LEHREN § 14, Punkt für Punkt:**
+
+1. Codepfade selbst gelesen, einschließlich Dialog-/Snapshot-/Auth-Fortsetzungen;
+   C12/C19-Regressionsursache gefunden und geprüft.
+2. Muster im Repo gesucht: Fokus/Scrollen/Blattaufbau, Entwurfsbindung,
+   Auswahlreset, Suchpuffer, Fortschrittsbegriffe, Kalender und alte Knopfhinweise.
+3. Betroffene Texte/Kommentare und sichtbar falsche G-021-Meldung korrigiert;
+   historische Meldungen erhalten.
+4. Vorhandenes Kartenblatt wiederverwendet, neue C-Aktionen in Handlern und
+   Auswahl-/Dialog-/Rasterlisten geprüft, keine neue Einstellung oder Speicherung.
+5. Entwurf in formDraft, Auswahl und Ansichten in ui; C19 Neuzeichnen hält Eingabe.
+6. Sprung/Kontrast/Breiten/hell/dunkel/reduzierte Bewegung/leer/voll geprüft;
+   CPU4× und tatsächliche Animationsenden gelesen, Grenzen siehe oben.
+7. Einzahl/Mehrzahl, Nutzertexte und Ansagen gelesen, keine neuen Systemcodes
+   oder religiösen Texte.
+8. Keine neuen Cloud-Felder oder Regeln; bestehende echte SDK-Regressionen grün.
+9. Kein neuer Datenfluss/localStorage-Schlüssel; keine Datenschutzänderung nötig.
+10. node --check app.js und sw.js grün; geänderte Prüfskripte syntaktisch grün.
+11. APP_VERSION/CACHE_NAME/alle 33 URLs/CHANGELOG einheitlich 3.18.13;
+    pruefe_stand einschließlich CSP und APP_SHELL grün.
+12. Berührte Tests und vollständiger Prüfstand 137/137, Runde 13/13,
+    beide Affenläufe; Originalfehlerberichte und Gegenproben gelesen.
+13. Logbuch, PLAN „AKTUELL“, STAND und beide Aufgabenlisten aktualisiert.
+14. G1 und künftiger Regeln-Deploy als bedingte Betreiber-Schritte
+    dokumentiert; jetzt wird nichts veröffentlicht.
+
+**Offen:** G1 bis zur echten iPhone-Bestätigung (Safari und installierte App)
+nach einer späteren Veröffentlichung. C16/D1; C18 erst nach dem Text-Probelauf
+am 29.10.; C22(a)/F3, Teil e ausgeschlossen. Z1 mit C9/C10/C28 ausgelassen.
+Kein anderes Paket begonnen. Online bleibt 3.18.10. Die bereits in Paket A
+geänderten Firestore-Regeln müssen vor späterem Hosting eingespielt werden
+(`ladegeraet.ps1`); in diesem Abschluss keine Regeländerung.
+
+**Nächster Schritt:** Keine weitere Aufgabe ohne neuen Auftrag beginnen.
+G1 nach einer späteren Veröffentlichung am echten iPhone mit datierter Version
+prüfen: Verwalten oben/gescrollt, Wortfeld, arabische Tastatur mit Vorschlägen,
+zweimal Enter. Seite muss stehen, Blatt über der Tastatur bleiben.
+
+### 2026-10-02 — Nur C1 wiederaufgenommen, lokale Abnahme grün
+
+**Geändert:** `app.js:6033` entfernt den doppelten Aufbau nach der Meldung;
+`6079/6087/9096/9174` fokussieren ohne Scrollen. `8648/8770/9025`
+behalten das neue Kartenblatt durchgehend verbunden, begrenzt auf dasselbe
+Konto und denselben Bereich. Werte, Fehler und Meldung werden im erhaltenen
+Blatt aktualisiert; Eingabe-/Enter-Handler werden nicht doppelt gebunden.
+`14308/14366` prüfen nur einmal je Fokus/Tastaturöffnung und scrollen nur
+das Blatt, nur bei verdecktem Feld. Viewport-scroll löst kein Nachscrollen
+aus. `14463` schließt nur den Bestätigungsdialog über dem erhaltenen Blatt.
+`t_paket_c.js` prüft diese Ursachen und Randfälle; LEHREN nachgezogen.
+**Entscheidung:** Auf ausdrücklichen Auftrag nur C1 nachholen. Die beiden
+alten Fehlversuche im Logbuch und ihr Patch wurden vor dem Bau gelesen.
+Alle vorhandenen uncommitteten Änderungen erhalten; deshalb kein Pull und
+kein Zurücksetzen. Ausgang zusätzlich vollständig gesichert unter
+`%TEMP%/c1-ausgang-20261002-194156/`. Kein Z1, kein anderes Paket, kein Deploy.
+**Prüfung:** Feste Gegenprobe b60abf4 bestätigt Fokus ohne preventScroll,
+ersetztes Wortfeld und acht scrollIntoView-Aufrufe. Neuer Stand **32 Zustände
+grün**: 390/320/iPad820/Desktop1440, hell/dunkel, bewegt/ruhig, leer/voll.
+Hinzufügen und Enter legen je eine Karte an; Pflichtfehler, fremdes Echo,
+vier Größenwechsel, Viewport-scroll, Fokuswechsel und erneutes Öffnen der
+Tastatur erhalten das Feld. MutationObserver bestätigt: auch keine kurze
+DOM-Trennung. Duplikatabbruch, dauerhafte Schreibablehnung und Offline-
+Rückkehr grün. Foto der sichtbaren Notiz im 320-px-Blatt gelesen.
+Logs `%TEMP%/c1-final-abnahme-2.log`, `c1-final-altbefund.log` und
+`c1-rand-gegenprobe.log`; Fehlversuche und Diagnosen ebenfalls bewahrt.
+**Eigene Korrekturen:** Leertest maß Inhaltsverkürzung statt Tastaturbewegung
+(Ausgang und Fix identisch 680→568 px, Scroll-Lage 112→0 bereits beim
+Speichern). Messphasen getrennt. Die Attrappe liefert bei fail immer
+permission-denied; dauerhaft abgelehnten Zweig korrekt vorbereitet.
+Der neu erhaltene Knoten machte den falschen closeDialog-Zielknoten sichtbar:
+Rand-Gegenprobe rot, begrenzter Zielselektor grün. Keine Schließdauer geändert.
+**Gegenprüfung:** Eigenen vollständigen Diff gegen G-118 gelesen:
+submitCardForm/zeigeToast/patchDoc/Sammlungs-Snapshots/renderMain,
+Blatt-Markup und Handler, Viewport/Fokus-Timer sowie Dialog-Schließpfad.
+Fallback bei fehlendem/anderem Blatt baut regulär neu; Auth-Wechsel entfernt
+den privaten Entwurf. Abgelöste/anders fokussierte Felder werden vom Timer
+nicht mehr gescrollt. Keine Lernregel, keine Cloud-Felder, keine lokalen
+Speicherschlüssel und kein Umbau des Text-Probelaufs. Alle unberührten
+vorhandenen Änderungen vor der Dokumentation bytegleich mit der Sicherung.
+**Regression:** Dialog-Timer, Kartenblatt, Karten-Snapshots, Verwalten,
+Kontrast, a11y und Kontowechsel-Entwürfe grün. Frische Rundenabnahme
+**13/13 grün**, alle 13 Einzel-Ausgaben vollständig gelesen; einschließlich
+Rundenende/Üben/Schreiben, sichtbarer Zeichenfläche und CPU4× ohne Bilder
+über 34 ms beim Zeichnen. Geprüfter Quellstand:
+`165fc6b7fe35caed1080aa950c4a3340d8138a5ab559996863c69a8403de3026`.
+Affe Handy200/iPad150 mit Startwert 7 jeweils **0 Befunde**; vollständige
+Ausgaben gelesen. Syntax, Versions-/CSP-Prüfung und `git diff --check` grün.
+Logs `%TEMP%/c1-final-*.log`, Runden-Einzelprotokolle unter
+`%TEMP%/adrabic-pruefstand-gesamt/165fc6b7fe35caed/`.
+**Tempo:** Acht abwechselnde A/B-Paare mit je drei Speichervorgängen,
+CPU4×, Netzteil (BatteryStatus=2), Chrome 154.0.8037.93. Vergleich mit dem
+gesicherten lokalen Ausgang einschließlich der vorherigen Paket-C-Arbeit:
+Klick-Median 129→62 ms, Maximum 206→135 ms; Longtask-Median 131→73 ms,
+Maximum 208→139 ms, über 100 ms 17/24→3/24. Keine vollständige
+Ruckelfreiheit behauptet. Vollständige Ausgabe `c1-final-tempo.log` gelesen.
+**Offen:** C1 ist lokal einzeln abgenommen. Noch keine
+Gesamtabnahme des Pakets, keine neue Version, kein Commit/Push. Version bleibt
+3.18.12. G1 bleibt bis zur echten iPhone-Bestätigung offen. C16/D1,
+C18/nach 29.10., C22(a)/F3 und Z1 bleiben wie im vorherigen Auftrag.
+**Nächster Schritt:** Vorhandenen uncommitteten Paket-C-Stand behalten;
+Paketabschluss braucht einen eigenen Auftrag. G1 nach einer späteren
+Veröffentlichung am echten iPhone prüfen, in Safari und installierter App:
+Verwalten oben/gescrollt, Wortfeld, arabische Tastatur samt Vorschlägen und
+zweimal Enter. Seite muss stehen und das Blatt über der Tastatur bleiben.
+Keine weitere Aufgabe begonnen; Z1 weiterhin ausgelassen.
+
+### 2026-10-02 — Paket C lokal angehalten, C27 einzeln grün
+
+**Geändert:** C27 Alle/Keine für die tatsächlich sichtbare Seite; fremde und
+gesperrte Karten ausgeschlossen, andere Seiten behalten ihre Auswahl.
+Ab 20 Karten verlangt Löschen das Wort „Löschen“. Leere Treffer deaktivieren
+Alle, ohne eine bestehende Auswahl zu löschen; Leistenhöhe bleibt gleich.
+21 Aufgaben einzeln grün: C2–C8, C11–C15, C17, C19–C21, C23–C27.
+C22 b/c/d grün; a ausdrücklich F3, e ausgeschlossen.
+**Prüfung:** C27 feste Gegenprobe b60abf4 rot; 16 Zustände inklusive 200
+Karten/Seitenwechsel, falsche/richtige Löschbestätigung, Fremd-/Schloss- und
+Leertreffer grün. Berührte Verwalten-Prüfung, Sprung, Kontrast und a11y grün,
+Ausgaben vollständig gelesen; Foto der festen Auswahlleiste bei 320 px gelesen.
+**Abschlussprüfung:** Frische Rundenabnahme **13/13 grün**, alle 13
+Einzelausgaben vollständig gelesen, einschließlich der beschreibenden
+Rundenende-/Üben-/Schreiben-Ausgaben. Schreiben CPU 4× bei Handy/klein/iPad:
+0 Bilder über 34 ms, Lage unverändert; keine allgemeine Tempo-Abnahme des
+gesamten Pakets behauptet. Quellhash
+`21515fd15b6ef4e081b6c7b4b161f501973d3c1e7e15283d869ba2ed993472f7`;
+Logs `%TEMP%/adrabic-pruefstand-gesamt/21515fd15b6ef4e0/` und
+`%TEMP%/paket-c-abschluss-runde.log`. Affe **Handy 200/iPad 150, Seed 7,
+je 0 Befunde** (normaler Kartenlauf, kein AFFE_TEXTE); beide vollständigen
+Logs `%TEMP%/paket-c-abschluss-affe-{handy,ipad}.log` gelesen.
+Netzteil BatteryStatus=2, Syntax/Stand/CSP/APP_SHELL und diff --check grün.
+**Gegenprüfung:** Gesamten app.js-/styles.css-Diff gegen FORT-1–7,
+FORT-10/12–15 und VERW-1–9/11 sowie G-118 gelesen, dazu alle Änderungen
+der bestehenden Tests, historische G-021-Korrektur und Dokumentation.
+C2 Antwortzahl ohne Erfolgsversprechen; C3 keine Quran-Zierziffer; C4 globaler
+Kopf; C5 ehrliche Pause; C6 Null/Plural; C7 nur bestätigter Wortlaut, keine
+Lernregel; C8 binäres Raster, Texte unverändert; C11 realer Suchpuffer;
+C12 Entwurf/Abbruch; C13 Ziel/Ansage; C14 echte Leeransicht; C15 vorhandener
+Bereichsweg; C17 Wochenrand; C19 Rückweg und kontogebundenes Undo;
+C20 bestehende Inhalte offen; C21 tatsächliche Animationsenden;
+C22 nur b/c/d; C23 Rückmeldung; C24 beide Rückwege; C25 eigene/geführte
+Hinweise; C26 vorhandene Wege und verschwundene Karte; C27 sichtbare IDs.
+Auch die sechs neuen Paket-C-Abnahmedateien vollständig gegen ihre Befunde
+gelesen; C1 bleibt ausdrücklich rot, kein Test verschweigt diesen Befund.
+Frühe Rückkehr beim verschwundenen Kartenziel erhält den Entwurf; Undo
+überschreibt keine neueren Rückfälle. Asynchrone Bestätigungen prüfen Konto,
+Bereich und Auswahl. Keine neuen Cloud-Felder/localStorage-Schlüssel oder
+Regeln, kein Umbau des Text-Probelaufs. Keine weiteren Paketaufgaben gebaut.
+**LEHREN § 14:** 1 Codepfade gelesen; 2 Muster gesucht; 3 Texte/Kommentare
+nachgezogen; 4 neue Aktionen/rasterschlüssel in vorhandenen Listen; 5 Auswahl
+und Entwurf in ui/formDraft; 6 Sprung/Kontrast/Breiten geprüft, Schreiben
+CPU 4× grün, keine allgemeine Tempo- oder echte iOS-Abnahme behauptet;
+7 Plural geprüft; 8 keine neuen
+Cloud-Felder/Regeln; 9 kein neuer Datenfluss; 10 Syntax grün; 11 bestehende
+3.18.12 samt CSP/APP_SHELL grün; 12 Einzelprüfungen grün außer bekanntem C1,
+frische Runde/Affe siehe Abschlussprüfung, Gesamtlauf noch ausstehend;
+13 Logbuch/STAND/Aufgaben nachgezogen; 14 nächster Auftrag unten. Dies ist
+die Gegenprüfung des Zwischenstands, keine Commit-Freigabe.
+**Offen:** C1 bleibt rot (erneuter Nachweis: `%TEMP%/paket-c-abschluss-C1.log`),
+nach zwei Fehlversuchen kein dritter Anlauf (§ 6). C16/D1, C18/nach 29.10.,
+C22(a)/F3 zurückgestellt. C9/C10/C28 als Z1 ausgelassen. Deshalb kein
+Gesamtlauf/Versionsabschluss behauptet, kein Commit/Push/Deploy; Version
+bleibt 3.18.12. Arbeitsstand vollständig uncommittet erhalten. Nächster
+Auftrag: C1 in neuem Astra-Chat mit diesem vorhandenen Arbeitsstand nachholen.
+
+### 2026-10-02 — C19–C26 einzeln abgenommen, C27 in Abnahme
+
+**Geändert:** C19 Bearbeiten über Fortschritt und Zähler-Undo (6 Sekunden,
+kontogebunden, neue Rückfallzählung bleibt erhalten). C20 vorhandene Inhalte
+ab 720 px offen, keine erzwungene Kastenhöhe. C21 Kalender-Spalten 380 ms
+gesamt, Band 350 ms; offene Detailbalken ebenfalls kurz. C22 b/c/d tote
+Klassen/Kommentare bereinigt und Kalender-Symbol. C23 Erfolgsansagen für
+Verschieben/Einzel-/Mehrfachlöschen und ehrlicher Verschiebehinweis. C24
+gemeinsamer Such-/Auswahlreset für beide Rückwege. C25 Hinweise nur geführt.
+C26 letztes gültiges Ablegeziel zuerst/vorausgewählt, Standpunkte/Detail aus
+Speicherkarte, Griff-Tipp ignoriert, gelöschte Karte mit erhaltenem Entwurf,
+lange Detailnotiz scrollt in sich, Knöpfe bleiben sichtbar.
+**Prüfung:** Feste Gegenproben b60abf4 jeweils rot; je 16 Zustände grün,
+Fortschritt/Verwalten/Kartenblatt/Snapshot passend zur Stelle und Sprung,
+Kontrast (0 Funde), a11y grün. Vollständige C19–C26-Logs gelesen, Fotos
+iPad sowie Detailnotiz 320/1440 gelesen. C19-Test irrtümlich auf ein nicht
+vorhandenes Formular gezielt, dann mit echter submit-card-Aktion geprüft;
+Fehllogs bewahrt. C20 alter Test klickte auf nun versteckte Navigationszeile:
+zusätzliche Prüfung offener Inhalte, alle Unterseiten weiterhin geprüft.
+C21 erster Fix ließ letzte Vorschau-Balken durch spätere CSS-Regeln laufen;
+zweiter Fix ordnet den scoped Override danach, 600-ms-Abnahme grün.
+**Entscheidung:** C22(a) bleibt gemäß Doppelt-gemeldet-Liste für F3, kein F
+begonnen; Teil e ausdrücklich ausgeschlossen. C26 nimmt den im Befund
+erlaubten Nutzungsweg für zuletztSetId, kein neuer Speicher.
+**Offen:** C27 erster Fix Höhenwechsel, zweiter Fix feste schmale Zeilen.
+Danach Testdatenfehler: 160 lokale Zusatzkarten fehlten im Attrappen-Store
+und verschwanden beim Echo; vollständige Store-Fixture korrigiert, kein
+dritter Produktfix. Alle/Page/20-Karten-Löschen in 16 Zuständen grün,
+Fremd-/Schloss-/Leertreffer-Nachprüfung läuft. Kein Commit/Deploy.
+
+### 2026-10-02 — C17 einzeln abgenommen
+
+**Geändert:** Tage bis Sonntag in der Wochenzahl mitrechnen, Grenzen 4/12
+unverändert. Gegenprobe b60abf4: am Montag fehlt tag(-25).
+**Prüfung:** 84 Zustände (7 Wochentage, 390/320/iPad, Themen/ruhig) grün.
+Fortschritt leer/eine/voll, Sprung, Kontrast (0 Funde), a11y grün;
+vollständige `%TEMP%/paket-c-C17-*.log` gelesen.
+**Offen:** C19/C20 Einzelabnahmen laufen; C21 feste Gegenprobe rot.
+Kein Commit/Deploy.
+
+### 2026-10-02 — C15 einzeln abgenommen, C16/C18 zurückgestellt
+
+**Geändert:** Beide veralteten „+ Bereich“-Hinweise nennen Bereichsname →
+„Bereich anlegen“. Keine zusätzliche Aktion.
+**Prüfung:** Feste Textgegenprobe b60abf4 zwei Treffer, jetzt null; Syntax,
+Verwalten, geführte Zustände (16), Sprung, Kontrast (0 Funde), a11y grün.
+Vollständige `%TEMP%/paket-c-C15-*.log` gelesen.
+**Entscheidung:** C16 ist laut Doppelt-gemeldet-Liste D1 zugeordnet; kein D
+begonnen. C18 verlangt ausdrücklich Ende des Probelaufs; bis 29.10. kein
+Text-Umbau. Beide als zurück mit Grund geführt.
+**Offen:** C17-Abnahme läuft; C19-Gegenprobe b60abf4 rot (Rückweg Verwalten).
+Kein Commit/Deploy.
+
+### 2026-10-02 — C14 einzeln abgenommen, C15 Textgegenprobe
+
+**Geändert:** Ein Leerzustand mit Code- und Dateiimport, eine Hauptaktion;
+Bereichwechsel setzt die globale Suche zurück. Aktive globale Suche aus
+einem leeren Bereich bleibt möglich, Leeren zeigt wieder den Leerzustand.
+**Prüfung:** Gegenprobe b60abf4 rot. 16 Zustände einschließlich Desktop,
+globale Suche und echte Code-Eingabe grün. Verwalten, Sprung, Kontrast
+(0 Funde), a11y grün; vollständige C14-Logs und Fotos 320/1440 gelesen.
+C15-Gegenprobe am festen b60abf4: zwei Verweise auf nicht vorhandenen
+„+ Bereich“-Knopf. Beide durch den vorhandenen Weg über Bereichsnamen ersetzen.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C13 einzeln abgenommen, C14 Gegenprobe
+
+**Geändert:** Ablegen öffnet und zeigt das Ziel, Kurzmeldung nennt Anzahl und
+Speicherkarte; bei 0 neuen Karten „War schon drin“. Beim Sortieren bleibt der
+Fokus in der betroffenen Liste, auch wenn dieselbe Karte zweimal sichtbar ist.
+**Prüfung:** Gegenprobe b60abf4 rot. Erster Fix zeigte in der beschreibenden
+Verwalten-Ausgabe eine abweichende zweite Sortierung: Fokus fand die Karte
+zuerst in der nun offenen Speicherkarte. Zweiter Fix begrenzt den Selektor
+auf Hauptliste bzw. konkrete Speicherkarte. Test um echte Sortierassertion
+erweitert; offene Panel-Vorbedingung an genehmigtes Verhalten angepasst.
+12 Zustände mit sichtbarem Ziel/Ansage/0-neu/zweimal Pfeiltaste grün;
+Verwalten, Sprung, Kontrast (0 Funde), a11y grün. Vollständige Ausgaben
+`%TEMP%/paket-c-C13-*.log` gelesen, erster Lauf bewahrt, zweiter `-2`.
+C14-Gegenprobe rot: globale Suche bleibt nach Bereichwechsel aktiv.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C12 einzeln abgenommen, C13 Gegenprobe
+
+**Geändert:** Bearbeiten-Entwurf mit gespeicherter Karte vergleichen, auch
+Stand; Auswahlstand über Neuzeichnen bewahren. Escape/Wischen fragen bei
+Änderung, unverändert schließen sie direkt. Knopf Abbrechen bleibt direkt.
+Dialogfortsetzung an Konto, Edit-ID und konkreten Entwurf gebunden.
+**Prüfung:** Gegenprobe b60abf4 rot. Erster Versuch zeigte auch am Abbrechen-
+Knopf die Rückfrage; zweiten Versuch auf diesen Klickpfad begrenzt.
+Jetzt **12 Zustände grün**: Escape/CDP-Touch, Dialog abbrechen/verwerfen,
+Wort/Übersetzung/Notiz/Stand erhalten, Cloud unverändert ohne Speichern.
+Erweiterter Kartenblatt-Test, Snapshot, Sprung, Kontrast (0 Funde), a11y grün.
+Vollständige Ausgaben `%TEMP%/paket-c-C12-*.log` gelesen; erster Fehllauf
+bewahrt, zweiter mit Suffix `-2`. C13-Gegenprobe rot: Speicherkartenpanel bleibt zu.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C11 einzeln abgenommen, C12 Gegenprobe
+
+**Geändert:** Suchpuffergrenze mindestens 4000, sonst viermal Kartenzahl aller
+Bereiche. G-021 und Changelog 3.17.33 sichtbar korrigiert; Vorfall in LEHREN.
+**Prüfung:** Gegenprobe b60abf4 zweite Suche 72.026 normalize-Aufrufe, Fix
+**4.229** (<6000), echte 1500 Karten mit Notiz und sichtbare Treffer.
+Verwalten Suche/Auswahl/Speicherkarten, Sprung, Kontrast (0 Funde), a11y grün.
+Vollständige Ausgaben `%TEMP%/paket-c-C11-*.log` gelesen. Batterie erneut 2.
+C12-Gegenprobe rot: geänderter Entwurf über Escape ohne Rückfrage geschlossen.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C8 einzeln abgenommen, C11 Gegenprobe
+
+**Geändert:** Kalender mit Mo/Mi/Fr, Monatskürzeln, Legende, zwei Zuständen,
+feinem Rand für leere Tage und voller Breite. Keine Text-Lernlogik angefasst.
+**Prüfung:** Gegenprobe b60abf4 rot (23,9 % Breite). Fix in 16 Zuständen mit
+leerem/4-/12-Wochen-Raster grün; gelernt/leer 5,42:1 hell, 5,17:1 dunkel,
+100 % Rasterbreite. 320px-Foto nach abgeschlossener Bewegung gelesen.
+Fortschritt, Sprung, Kontrast (0 Funde), a11y grün. Vollständige Ausgaben
+`%TEMP%/paket-c-C8-*.log` gelesen.
+**Entscheidung:** C9/C10 als Bestandteile des ausgeschlossenen Z1-Umbaus
+ausgelassen. Weiter nur Paket C. C11-Gegenprobe b60abf4 rot: 72.026
+normalize-Aufrufe bei zweiter gleicher Suche über 1500 Karten mit Notiz.
+Historischen Commit geprüft: feste Grenze tatsächlich unverändert.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C7 einzeln abgenommen, C8 Gegenprobe
+
+**Geändert:** Karten „schon einmal gewusst“, Lektionen „einmal geschafft“;
+derselbe Wortlaut in Meilenstein, geführten Speicherkarten, Freischalthinweis
+und Kontolösch-Zusammenfassung. Stufe-1-Kommentar berichtigt, keine Regeländerung.
+**Prüfung:** Gegenprobe b60abf4 rot; 16 Zustände einschließlich Meilenstein und
+geführtem Satz grün. Lernen-Start leer/eine/erste Runde/voll/erledigt/Serie/
+zwei Bereiche, Fortschritt, Sprung, Kontrast (0 Funde), a11y grün. Fotos
+gelesen, `saß/saßen/Lektion.*sitzt` ohne Treffer. Vollständige Ausgaben
+`%TEMP%/paket-c-C7-*.log` gelesen. Fehlaufruf eines nicht vorhandenen Tests
+als eigene Logdatei bewahrt; vorhandener Test `t_lernen_start` danach grün.
+C8-Gegenprobe rot: Raster nutzt nur 23,9 % seiner Breite.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C6 einzeln abgenommen, C7 Gegenprobe
+
+**Geändert:** Keine große Null; vorhandener Stand-Satz und sekundärer Weg
+zur Runde bei noch nicht gewussten Karten. Mehrzahl über `mz`.
+**Prüfung:** Gegenprobe b60abf4 rot, Fix in 16 Zuständen mit 1/40 neuen Karten
+und Einzelkarte nach Nicht grün. C5-Integration, Fortschritt leer/eine/voll,
+Sprung, Kontrast (0 Funde), a11y grün; 320px-Foto gelesen, kein Überlauf.
+Vollständige Ausgaben `%TEMP%/paket-c-C6-*.log` gelesen.
+**Entscheidung:** C7-Wortlaut vorab im Chat gezeigt und Z4 freigegeben:
+Karten „schon einmal gewusst“, Lektionen „einmal geschafft“. Nur Wörter,
+Regeln unverändert; Gegenprobe C7 b60abf4 rot.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C5 einzeln abgenommen, C6 Gegenprobe
+
+**Geändert:** Nie gelernt/Pause/aktiv anhand Protokoll und erster Bewertung
+unterschieden. Pausensatz und Runde starten; vorhandene Lernregeln unverändert.
+C6-Gegenprobe b60abf4 rot: große Null bei neuen Karten.
+**Prüfung:** C5 in 16 Zuständen mit Pause30/100, bewerteten Karten ohne
+Protokoll und echtem Anfang grün; Knopf startet Runde. Wochenkopf,
+Fortschritt leer/eine/voll, Sprung, Kontrast (0 Funde), a11y grün.
+Rundenabnahme **13/13 grün**, vollständige 13 Protokolle gelesen, Quellstand
+`7e600022291915aa649c91827f1e92ecbafec125eb812b8de500f4f6c6447f55`.
+Logs `%TEMP%/paket-c-C5-*.log` und gleichnamiger Quellstandordner unter
+`%TEMP%/adrabic-pruefstand-gesamt/`.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C4 einzeln abgenommen, C5 Gegenprobe
+
+**Geändert:** Hauptkopf „Fortschritt“, Lektionen-Zeile mit Bereichsnamen.
+Globale Zahlen unverändert. Gegenprobe C5 rot: Pausensatz fehlt nach 30 Tagen.
+**Prüfung:** C4 in 16 Zuständen und nach Bereichwechsel grün; Fortschritt
+leer/eine/voll, Sprung, Kontrast (0 Funde), a11y grün. Vollständige Ausgaben
+unter `%TEMP%/paket-c-C4-*.log` gelesen.
+**Entscheidung:** C5-Wortlaut vor dem Bau im Chat gezeigt: „Dein bisheriger
+Fortschritt bleibt. Starte mit einer Runde wieder ein.“ Knopf „Runde starten“.
+Unterscheidung nie/Pause anhand gesamtem Protokoll und erster Bewertung.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C3 einzeln abgenommen, C4 Gegenprobe
+
+**Geändert:** Quran-Zierziffer aus dem Stoffzähler entfernt, dazu die
+unbenutzten Ziffern-CSS-Regeln. C4-Gegenprobe b60abf4 rot: Bereichspille im
+Fortschritt sichtbar, obwohl die Zahlen alle Bereiche umfassen.
+**Prüfung:** C3 in 16 Zuständen grün, 320px-Foto gelesen; Fortschritt
+leer/eine/voll, Sprung, Kontrast (0 Funde), a11y grün. Vollständige Ausgaben
+unter `%TEMP%/paket-c-C3-*.log` gelesen. Syntax grün.
+**Offen:** Paketabschluss/C1 unverändert offen, kein Commit/Deploy.
+
+### 2026-10-02 — C2 einzeln abgenommen, C3 Gegenprobe
+
+**Geändert:** Antwortzahl als kleine sachliche Zeile; Vergleichspille entfernt.
+Wochenkopf-Test prüft weiterhin alle Zustände, jetzt ohne Vergleich und mit
+exakter Antwortsumme. C3-Gegenprobe gegen b60abf4 zeigt die Zierziffer rot.
+**Prüfung:** C2 in 12 Zuständen grün; `t_wochen_kopf`, `t_fortschritt`,
+`t_sprung`, `t_kontrast` (0 Funde) und `t_a11y` grün. Vollständige Ausgaben
+gelesen, gesichert unter `%TEMP%/paket-c-C2-*.log`.
+**Offen:** Paketabschluss bleibt offen; C1 zurück, kein Commit/Deploy.
+
+### 2026-10-02 — Paket C begonnen, C1 zurück, C2 Gegenprobe
+
+**Geändert:** Zwei neue Tests unter `plan/werkzeuge/pruefstand/`:
+`t_paket_c.js` (C1) und `t_paket_c_fort.js` (C2), feste Gegenprobe b60abf4.
+Produktdateien nach den C1-Versuchen wieder unverändert.
+**Entscheidung:** Nur C ohne Z1-Umbau. Start sauber auf main, Pull aktuell,
+Syntax/Stand grün, BatteryStatus=2. C1-Gegenprobe zeigt Fokus ohne
+preventScroll. Zwei Versuche scheitern an der Identität des Wortfelds nach
+Hinzufügen; gemäß §6 zurück. Eigene Änderungen vollständig als
+`%TEMP%/paket-c-C1-versuch.patch` gesichert, dann nur diese zurückgenommen.
+Kein fremder Arbeitsstand vorhanden oder verworfen. C2-Gegenprobe rot:
+trend-pill weiterhin vorhanden. Unterbrechung durch Betreiber, danach
+unveränderte Testdateien erhalten und fortgesetzt.
+**Offen:** C1-Abnahme rot, kein Paketabschluss/Commit möglich. C9/C10 gehören
+laut Hinweis zum ausgeschlossenen Umbau; C16 laut Dopplungsliste nach D;
+C18 laut Befund erst nach dem Text-Probelauf. Keine anderen Pakete begonnen.
+**Nächster Schritt:** C2 und weitere freigegebene C-Zeilen der Reihe nach.
+
+
 ### 2026-10-02 — Paket B fertig, 3.18.12; kein Deploy
 
 **Geändert:** B6 zuerst behoben; B1–B13 des vorhandenen Arbeitsstands

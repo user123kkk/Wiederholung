@@ -1,6 +1,7 @@
 /* Station 10: Verwalten - Liste, Suche, Auswahl, Sortieren, Speicherkarten. */
 const { start, neueSeite, aktion, foto, GERAETE } = require('./lib');
 const { pruefeKontrast } = require('./kontrast');
+const assert = require('node:assert/strict');
 (async () => {
   const b = await start();
   for (const g of (process.argv[2] || 'handy,klein,ipad').split(',')) {
@@ -30,7 +31,8 @@ const { pruefeKontrast } = require('./kontrast');
       // Auswahl
       await aktion(p, 'bereich-mehr-auf', null, 600); await aktion(p, 'bereich-mehr-auswaehlen', null, 900);
       const zeile = n => p.evaluate(n => { const z = document.querySelectorAll('#karten-liste > .card-row')[n]; return z ? Math.round(z.getBoundingClientRect().top) : null; }, n);
-      const leer = await p.evaluate(() => { const l = document.querySelector('.select-actionbar'); return l ? l.innerText.replace(/\s+/g, ' ') + ' | gesperrt: ' + [...l.querySelectorAll('button')].every(k => k.disabled) : 'KEINE LEISTE'; });
+      const leer = await p.evaluate(() => { const l = document.querySelector('.select-actionbar'); return l ? l.innerText.replace(/\s+/g, ' ') + ' | gesperrt: ' + [...l.querySelectorAll('button:not([data-action="auswahl-alle"])')].every(k => k.disabled) : 'KEINE LEISTE'; });
+      assert.ok(!(await p.locator('[data-action="auswahl-alle"]').isDisabled()), 'Alle muss bei leerer Auswahl erreichbar sein');
       out.push('Auswahl gestartet: ' + leer + ' | Karte hinzufuegen sichtbar: ' + await p.evaluate(() => !!document.querySelector('#app [data-action="karte-neu"]')));
       const z0 = await zeile(2);
       await p.evaluate(() => document.querySelectorAll('#karten-liste > .card-row')[0].click()); await p.waitForTimeout(500);
@@ -63,12 +65,14 @@ const { pruefeKontrast } = require('./kontrast');
       const fok = await p.evaluate(() => { const a = document.activeElement; return a && a.classList.contains('drag-handle') ? a.closest('.card-row').dataset.cardid : (a ? a.tagName + '.' + a.className : null); });
       await p.keyboard.press('ArrowDown'); await p.waitForTimeout(700);
       const nach2 = await p.evaluate(() => [...document.querySelectorAll('#karten-liste > .card-row')].slice(0, 3).map(r => r.dataset.cardid).join(','));
+      const idsVor = vor.split(',');
+      assert.equal(nach2, [idsVor[1], idsVor[2], idsVor[0]].join(','), 'C13 zwei Pfeiltasten müssen die Hauptliste sortieren, auch wenn dieselbe Karte in einer Speicherkarte sichtbar ist');
       out.push('Pfeil runter: ' + vor + ' -> ' + nach + ' -> zweimal ' + nach2 + ' | Fokus danach auf ' + fok);
       out.push('X in leerer Suche sichtbar: ' + await p.evaluate(() => { const x = document.getElementById('f-search-clear'); return !!x && x.offsetParent !== null; }));
       // Speicherkarten-Panel
       const sets = await p.evaluate(() => { const s = document.querySelector('.sets-kopf, [data-action="toggle-sets"]'); return s ? s.innerText.replace(/\s+/g, ' ') : null; });
       const vorSets = await zeile(0);
-      await aktion(p, 'toggle-sets', null, 800);
+      if (await p.locator('[data-action="toggle-sets"]').getAttribute('aria-expanded') === 'false') await aktion(p, 'toggle-sets', null, 800);
       const offen = await p.evaluate(() => document.querySelectorAll('.set-row, .set-block').length);
       out.push('Speicherkarten-Kopf: ' + JSON.stringify(sets) + ' | aufgeklappt: ' + offen + ' Eintraege | erste Kartenzeile ' + vorSets + ' -> ' + await zeile(0));
       const k1 = await pruefeKontrast(p, 'sets'); out.push('  Kontrast offen ' + (k1.length ? JSON.stringify(k1.map(f => f.text + ' ' + f.kontrast + ' ' + f.klasse)) : 0));

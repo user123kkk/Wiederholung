@@ -6,7 +6,7 @@ Logbüchern. Wer eine Stufe oder Runde beendet, zieht diese Datei nach.
 Ältere „AKTUELL“-Absätze in `CLAUDE.md` und `plan/PLAN.md` sind Geschichte.
 Wo sie von dieser Datei abweichen, gilt diese Datei.
 
-Stand: 02.10.2026, `main` = **3.18.12, Paket B abgenommen**;
+Stand: 03.10.2026, `main` = **3.18.13, vorhandener Paket-C-Stand abgenommen**;
 **online bleibt 3.18.10** (veröffentlicht per `ladegeraet.bat`, 121/121 grün).
 Probelauf Texte läuft ab 01.10. (Stufe 8). Betreiber tut
 dabei nichts außer lernen; am 29.10. „Auswertung“ + Foto der Probelauf-Werte
@@ -16,6 +16,25 @@ G-107–G-111 und G-118). Plan steht: [`zyklus-2/AUFGABEN.md`](zyklus-2/AUFGABEN
 (Pakete A–F), [`zyklus-2/CODEX-START.md`](zyklus-2/CODEX-START.md) (so
 arbeitet Codex), [`zyklus-2/ENTSCHEIDUNGEN.md`](zyklus-2/ENTSCHEIDUNGEN.md)
 (beantwortet 01.10.: alles wie empfohlen; offen nur Z6b und V8).
+**Vorhandener Paket-C-Stand abgeschlossen, 3.18.13 (03.10.):** Alle Änderungen
+erhalten; 22 Aufgaben lokal abgenommen, C22 nur b/c/d. C1 mit 32 Zuständen
+und Randfällen grün. Die beiden alten C1-Fehlversuche und ihr Patch bleiben
+dokumentiert und bewahrt. Gegenprüfung fand zusätzlich den fehlenden
+Entwurfs-Handler im Kartenblatt über Fortschritt (C12/C19); begrenzt korrigiert,
+Escape/Abbruch/Neuzeichnen in 16 Zuständen grün.
+C16 gehört zu D1, C18 wartet bis nach dem Probelauf am 29.10., C22(a) auf F3.
+Z1 einschließlich C9/C10/C28 auf Betreiberauftrag ausgelassen. Kein anderes
+Paket begonnen. Netzteil mehrfach bestätigt, Gesamtlauf mit gezielten
+Nachläufen **137/137 grün**, Runde **13/13** mit identischen Hashes,
+Affe mit Textfällen Handy200/iPad150 je **0 Befunde**, Startwert 7.
+Alle vollständigen Ausgaben gelesen. Zwei Prüfaufbaufehler belegt und
+korrigiert: eingefrorene normale Oberfläche vor Paket C und falsche
+Test-Datumsbasis vor 04:00. Originalberichte bewahrt, keine Testgrenze
+gelockert. Version/Syntax/CSP/APP_SHELL grün; Gegenprüfung und LEHREN § 14
+Punkt für Punkt dokumentiert. Commit/Push direkt auf main; kein Deploy.
+G1 am echten iPhone bleibt offen. Keine vollständige Ruckelfreiheit behauptet.
+Einzelheiten und Prüfstand im
+[`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md), oberster Eintrag.
 **Paket B fertig, 3.18.12, nicht veröffentlicht:** B6 zuerst behoben und
 abgenommen; alle 13 Zeilen erledigt. Vorhandenen Arbeitsstand vollständig
 erhalten. Netzteil bestätigt (BatteryStatus=2). Gesamtlauf einschließlich
@@ -26,7 +45,7 @@ Ein Tempo-Ausreißer (Verwalten 203 ms) gesichert: acht A/B-Paare gegen
 erreicht, kurze Pausen bis 174 ms; keine vollständige Ruckelfreiheit oder
 echte iOS-Abnahme behauptet. Gegenprüfung/LEHREN-Checkliste dokumentiert.
 Commit/Push direkt auf main. Kein anderes Paket begonnen, kein Deploy.
-Einzelheiten: oberster Eintrag in [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md).
+Einzelheiten: Paket-B-Eintrag in [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md).
 **Paket A fertig, 3.18.11, nicht veröffentlicht:** alle 13 Zeilen erledigt.
 Vorhandenen Zwischenstand nach Pull auf `90d7aaa` vollständig erhalten;
 Netzteil danach gemessen (`BatteryStatus=2`). Gesamtlauf einschließlich
@@ -37,8 +56,9 @@ A7/A13: Normal-/Abbruch-Update, Offline-Start und beide Rechtsseiten grün.
 Bestehender Tempo-Ausreißer in Verwalten per A/B gegen `c4b1c30` belegt,
 keine neue Paket-A-Regression; keine vollständige Ruckelfreiheit behauptet.
 Commit/Push direkt auf main; kein Deploy; damals noch kein Paket B begonnen.
-**Nächster möglicher Bauauftrag:** Paket C nach einem neuen Auftrag.
-Die restlichen Pakete bleiben offen; in diesem Chat wurde nur B abgeschlossen.
+**Nächster Schritt:** Vorhandener Paket-C-Stand ist abgeschlossen.
+Keine weitere Aufgabe ohne neuen
+Auftrag beginnen. Z1 bleibt ein eigener, ausdrücklich beauftragter Chat.
 Die neuen Firestore-Regeln müssen vor einer späteren Hosting-Veröffentlichung
 eingespielt werden. Einzelheiten und vollständige Log-Pfade:
 [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md), oberster Eintrag.

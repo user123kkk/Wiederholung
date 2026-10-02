@@ -1,9 +1,14 @@
 /* Betreiber 30.09.2026: "alles mit Auswendiglernen und Quran soll nur fuer
-   mich sichtbar sein - ein Freund nutzt die Seite schon." Dieser Test zeigt
-   ein normales Konto (kein Probelauf) einmal mit der VEROEFFENTLICHTEN
+   mich sichtbar sein - ein Freund nutzt die Seite schon."
+   Historischer Vergleich (--historisch): normales Konto mit der VEROEFFENTLICHTEN
    Fassung (3.17.56, eigener Server auf einem git-worktree dieses Commits)
    und einmal mit dem aktuellen Stand - und verlangt: jeder Bildschirm
    gleich, im HTML (ohne Versionsnummer) und Pixel fuer Pixel.
+   Seit Paket C (02.10.2026) sind normale Bildschirme ausdruecklich geaendert.
+   Die regulaere Abnahme isoliert deshalb die Textfreigabe im aktuellen
+   Quellstand: Schalter erzwungen aus gegen reale Freigabe. Alle sieben
+   Bildschirme bleiben im HTML und Pixelvergleich; die Gegenproben muessen
+   weiterhin Betreiber-Freigabe und eine entsperrte Schrift erkennen.
    Im Konto liegt eine Karte mit einem Quran-Wort mit U+06DF (2:5, erstes
    Wort, unveraendert aus quran/tanzil-uthmani.txt) - die Schrift-Korrektur
    3.18.6 darf dort nichts aendern.
@@ -15,7 +20,10 @@ const fs = require('node:fs'), path = require('node:path'), os = require('node:o
 const { execFileSync, spawn } = require('node:child_process');
 const { start, vollerStore } = require('./lib');
 const { seiteMitApp, BETREIBER_UID } = require('./text_lib');
-const VEROEFFENTLICHT = 'a4b5677';   // 3.17.56, letzter Hosting-Stand
+const VEROEFFENTLICHT = 'a4b5677';   // 3.17.56, Hosting-Stand der damaligen Text-Abnahme
+const historisch = process.argv.includes('--historisch');
+const OHNE_TEXTE = ['function texteFreigeschaltet() {\n  return !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);\n}',
+  'function texteFreigeschaltet() {\n  return false;\n}'];
 const repo = path.join(__dirname, '../../..');
 const PORT_ALT = 8298;
 const WORT = fs.readFileSync(path.join(repo, 'quran/tanzil-uthmani.txt'), 'utf8').split('\n')
@@ -87,7 +95,9 @@ async function pixelDiff(browser, a, b) {
   return n;
 }
 async function vergleich(browser, uid, viewport, baseNeu, ersetze) {
-  const alt = await bilder(browser, 'http://127.0.0.1:' + PORT_ALT + '/index.html', VEROEFFENTLICHT, uid, viewport);
+  const alt = historisch
+    ? await bilder(browser, 'http://127.0.0.1:' + PORT_ALT + '/index.html', VEROEFFENTLICHT, uid, viewport)
+    : await bilder(browser, baseNeu, null, uid, viewport, OHNE_TEXTE);
   const neu = await bilder(browser, baseNeu, null, uid, viewport, ersetze);
   const befunde = [];
   if (alt.map(x => x.name).join() !== neu.map(x => x.name).join()) befunde.push('Bildschirme: ' + alt.map(x => x.name).join() + ' / ' + neu.map(x => x.name).join());
@@ -120,15 +130,22 @@ async function vergleich(browser, uid, viewport, baseNeu, ersetze) {
     for (const vp of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
       const r = await vergleich(browser, 'u1', vp, baseNeu);
       console.log('(lesen) normales Konto ' + vp.width + ': ' + r.anzahl + ' Bildschirme, ' + (r.befunde.length ? r.befunde.length + ' Unterschiede' : 'alle gleich'));
+      if (r.anzahl !== 7) fehler.push(vp.width + ': Rundgang unvollstaendig: ' + r.anzahl + ' statt 7 Bildschirme');
       fehler.push(...r.befunde.map(x => vp.width + ': ' + x));
     }
     const g = await vergleich(browser, BETREIBER_UID, { width: 390, height: 844 }, baseNeu);
     console.log('Gegenprobe Betreiber-Konto: ' + g.befunde.length + ' Unterschiede (erwartet > 0)');
-    if (!g.befunde.length) fehler.push('Gegenprobe: Betreiber sieht dasselbe wie 3.17.56 - Test misst nichts');
+    if (!g.befunde.length) fehler.push('Gegenprobe: Betreiber sieht dasselbe ohne Textfreigabe - Test misst nichts');
     const s = await vergleich(browser, 'u1', { width: 390, height: 844 }, baseNeu, ['  if (!texteFreigeschaltet()) return;\n  for (const el of wurzel', '  for (const el of wurzel']);
     console.log('Gegenprobe ohne Sperre der Schrift-Korrektur: ' + s.befunde.length + ' Unterschiede (erwartet > 0): ' + s.befunde.join(' | ').slice(0, 200));
     if (!s.befunde.length) fehler.push('Gegenprobe: Schrift-Korrektur fuer alle bliebe unbemerkt');
+    if (!historisch) {
+      const offen = await vergleich(browser, 'u1', { width: 390, height: 844 }, baseNeu,
+        [OHNE_TEXTE[0], 'function texteFreigeschaltet() {\n  return true;\n}']);
+      console.log('Gegenprobe Textfreigabe fuer normales Konto: ' + offen.befunde.length + ' Unterschiede (erwartet > 0)');
+      if (!offen.befunde.length) fehler.push('Gegenprobe: Textfreigabe fuer alle bliebe unbemerkt');
+    }
   } catch (e) { fehler.push('Abbruch: ' + e.message.split('\n')[0]); } finally { await browser.close(); server.kill(); }
   if (fehler.length) { console.log('FEHLER:\n' + fehler.join('\n')); process.exitCode = 1; }
-  else console.log('OK t_nur_betreiber: normales Konto sieht jeden Bildschirm wie im veroeffentlichten 3.17.56');
+  else console.log('OK t_nur_betreiber: ' + (historisch ? 'normales Konto sieht jeden Bildschirm wie in 3.17.56' : 'Textfreigabe aendert keinen der sieben Bildschirme normaler Konten; HTML und Pixel gleich'));
 })();

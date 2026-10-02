@@ -26,17 +26,17 @@ const FAELLE = [
   {
     name: 'b) letzte 7 Tage UND 8-13 Tage davor',
     verlauf: Object.assign(verlaufAus(bereich([0, 6]), { w: 5, n: 1 }), verlaufAus(bereich([8, 13]), { w: 5, n: 1 })),
-    erwartet: { kopf: true, pill: true, satz: false, zahl: true }
+    erwartet: { kopf: true, pill: false, satz: false, zahl: false, antworten: 42 }
   },
   {
     name: 'c) nur letzte 7 Tage, nichts davor',
     verlauf: verlaufAus(bereich([0, 6]), { w: 5, n: 1 }),
-    erwartet: { kopf: true, pill: false, satz: false, zahl: true }
+    erwartet: { kopf: true, pill: false, satz: false, zahl: false, antworten: 42 }
   },
   {
-    name: 'd) gar kein Verlauf',
+    name: 'd) kein Verlauf, aber bewertete Karten',
     verlauf: {},
-    erwartet: { kopf: false, pill: false, satz: false, zahl: false }
+    erwartet: { kopf: false, pill: false, satz: true, zahl: false }
   }
 ];
 
@@ -56,8 +56,9 @@ const FAELLE = [
       return {
         text: block ? block.innerText.replace(/\s+/g, ' ').trim() : null,
         grossZahl: !!(block && block.querySelector('.gross-zahl')),
+        kopf: !!(block && block.querySelector('.wochen-kopf')),
         pill: !!(block && block.querySelector('.trend-pill')),
-        satz: !!(block && [...block.querySelectorAll('.stat-sub')].some(e => e.textContent.includes('noch keine Antwort'))),
+        satz: !!(block && [...block.querySelectorAll('.stat-sub')].some(e => e.textContent.includes('Dein bisheriger Fortschritt bleibt.'))),
         kalTop: kal ? kal.getBoundingClientRect().top : null
       };
     });
@@ -72,16 +73,15 @@ const FAELLE = [
       console.log('  ', ok ? 'OK  ' : 'FEHL', bez, '- erwartet', soll, '- ist', ist);
     };
     pruef('grosse Zahl (.gross-zahl)', stand.grossZahl, f.erwartet.zahl);
+    pruef('Wochenkopf', stand.kopf, f.erwartet.kopf);
     pruef('Trend-Pille (.trend-pill)', stand.pill, f.erwartet.pill);
-    pruef('Pause-Satz (.stat-sub "noch keine Antwort")', stand.satz, f.erwartet.satz);
-    if (f.erwartet.zahl) {
+    pruef('C5 wahrer Pause-Satz', stand.satz, f.erwartet.satz);
+    if (f.erwartet.antworten) {
+      pruef('C2 unveränderte Antwortenzahl, klein dargestellt', stand.text.includes(f.erwartet.antworten + ' Antworten in den letzten 7 Tagen'), true);
       pruef('Beschriftung "in den letzten 7 Tagen"', stand.text.includes('in den letzten 7 Tagen'), true);
       pruef('kein "diese Woche" im Text', stand.text.includes('diese Woche'), false);
     }
-    if (f.erwartet.pill) {
-      pruef('Pillentext "zu den 7 Tagen davor"', stand.text.includes('zu den 7 Tagen davor'), true);
-      pruef('kein "zur Vorwoche" im Text', stand.text.includes('zur Vorwoche'), false);
-    }
+    pruef('C2 kein wertender Vergleich', /zu den 7 Tagen davor|zur Vorwoche/.test(stand.text), false);
     await p.context().close();
   }
   await b.close();

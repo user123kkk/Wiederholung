@@ -1,3 +1,19 @@
+## 3.18.13 – 3. Oktober 2026
+
+**Paket C: Verwalten und Fortschritt verbessert.** Das neue Kartenblatt
+bleibt beim Hinzufügen und bei Cloud-Echos verbunden; Fokus und Tastatur
+scrollen nur bei Bedarf im Blatt. Die Bestätigung am echten iPhone (G1)
+bleibt offen. Bearbeitete Entwürfe werden bei Escape und Wischen geschützt.
+Ablegen, Verschieben und Löschen geben Rückmeldung; Alle/Keine wählt nur
+die gezeigten Karten, Löschen ab 20 Karten verlangt eine Wortbestätigung.
+Suchpuffer, Leerzustände, Speicherkarten und lange Detailnotizen korrigiert.
+
+Fortschritt zeigt ehrliche Wörter und einen passenden Kopf, keine
+Vergleichspille oder Quran-Zierziffer. Das Raster nutzt die Breite, ist
+beschriftet und behält die ältesten Tage. Pausen, Rückwege, Zähler-Undo
+und offene Inhalte auf großen Bildschirmen verbessert. Z1 bleibt ausgelassen;
+C16/D1, C18 nach dem Probelauf und C22(a)/F3 bleiben offen.
+
 ## 3.18.12 – 2. Oktober 2026
 
 **Paket B: Einstieg bis zur ersten eigenen Karte verbessert.** Der gewählte
@@ -430,6 +446,12 @@ bestätigen – im Prüfstand (Chromium) tritt der Fehler nicht auf.
   mehr, es geht zurück zur Übersicht.
 
 ## 3.17.33 – 26. September 2026
+
+**Korrektur vom 2. Oktober 2026 (Paket C, abgenommen in 3.18.13):** Die folgende
+Meldung zum Suchpuffer war falsch. Der damalige Commit enthielt weiter die
+feste Grenze 4000; nur der Bericht behauptete einen wachsenden Puffer.
+C11 koppelt die Grenze jetzt an die Kartenzahl aller Bereiche. Die übrigen
+historischen Meldungen bleiben erhalten; die lokale Paketabnahme ist grün.
 
 **Großplan, Runde 3: Suche, Merken, Bereich löschen, Serien-Warnung.**
 

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.12";
+const APP_VERSION = "3.18.13";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -388,9 +388,9 @@ function istGefuehrt(b) { return !!(b && b.gefuehrt); }
 
    Jetzt gilt schlicht:
        Lektion 1 ist offen.
-       Lektion N ist offen, sobald Lektion N-1 sitzt.
+       Lektion N ist offen, sobald Lektion N-1 einmal geschafft ist.
 
-   Und "sitzt" heisst: jede ihrer Karten war SCHON EINMAL auf Stufe 2
+   Und "einmal geschafft" heisst: jede ihrer Karten war SCHON EINMAL auf Stufe 1
    (maxStufe), nicht: steht gerade darauf. Das ist der entscheidende Punkt -
    so kann eine einmal geoeffnete Lektion nie wieder zugehen. Wer bei einer
    alten Karte ehrlich "Nicht" drueckt, verliert nichts.
@@ -416,7 +416,7 @@ function lektionSitzt(b, set, byId) { return lektionOffeneKarten(b, set, byId).l
    Lernenden, die App liest nur seine Zahl. */
 function lehrerGesteuert(b) { return !!(b && b.gefuehrt && b.lehrerCode); }
 
-/* Die Nummern der offenen Lektionen. Sobald eine nicht sitzt, ist Schluss -
+/* Die Nummern der offenen Lektionen. Sobald eine nicht einmal geschafft ist, ist Schluss -
    die Reihenfolge der Liste ist der Weg. */
 function offeneLektionIds(b) {
   const lek = lektionenVon(b);
@@ -507,7 +507,7 @@ function kartenBearbeitbar(b) { return !istGefuehrt(b || currentBereich()); }
 function setBearbeitbar(s, b) { return !istGefuehrt(b || currentBereich()) || s.art === "eigen"; }
 async function hinweisGefuehrt(was) {
   await dlgAlert(was + ' geht in „' + currentBereich().name + '" nicht: Das ist ein geführter Kartensatz, ' +
-    'er soll bei allen gleich bleiben. Für eigene Karten leg dir über „+ Bereich" oben einen eigenen Bereich an.',
+    'er soll bei allen gleich bleiben. Für eigene Karten tippe oben auf den Bereichsnamen und dann auf „Bereich anlegen“.',
     "Geführter Kartensatz");
 }
 /* Speicherkarte = benannte Merkliste. Sie speichert NUR Karten-IDs, keine Kopien
@@ -542,7 +542,7 @@ const TEXT_FEST_DATUM = "2099-12-31";
    sie sind der Weg. Kategorien danach, die sind zum Nachschlagen. Eigene
    zuletzt, weil sie am Anfang leer sind und erst mit der Zeit wachsen. */
 const SET_ARTEN_ANZEIGE = ["lektion", "kategorie", "eigen"];
-/* Ab dieser je erreichten Stufe (maxStufe) gilt eine Karte als sitzend.
+/* Ab dieser je erreichten Stufe (maxStufe) wurde eine Karte einmal gewusst.
    Stufe 1 heisst: mindestens einmal mit "Sicher" bewertet. (Bis 3.17.29
    stand hier "Stufe 2" - der Wert ist aber 1, der Kommentar war veraltet.) */
 const LEKTION_STUFE = 1;
@@ -606,6 +606,7 @@ const ICON_PFADE = {
   rueckgaengig:'<path d="M8.5 13.5 4 9l4.5-4.5"/><path d="M4 9h11a5 5 0 0 1 0 10h-4.5"/>',
   ueben:       '<path d="M17 2.5 20.5 6 17 9.5"/><path d="M3.5 12v-2a4 4 0 0 1 4-4h13"/><path d="M7 21.5 3.5 18 7 14.5"/><path d="M20.5 12v2a4 4 0 0 1-4 4h-13"/>',
   serie:       '<path d="M12 22c3.9 0 7-2.7 7-6.5 0-4-3-6.4-4.1-9.4-.6 2-1.6 3-2.6 3.7C11 8 11 6 9 2.5c0 3.6-4 5.4-4 13C5 19.3 8.1 22 12 22z"/>',
+  kalender:    '<rect x="3" y="5" width="18" height="16" rx="2"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><path d="M3 10h18"/>',
   sichern:     '<path d="M12 3.5v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20.5h16"/>',
   /* 3.12.0: Briefumschlag fuer den Bestaetigungs-Bildschirm. */
   brief:       '<rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3.8 7.2 12 13l8.2-5.8"/>',
@@ -1810,8 +1811,8 @@ function ansagen(text) {
     });
   });
 }
-function zeigeToast(text) {
-  ui.toast = { text: text };
+function zeigeToast(text, rueckgaengig = null) {
+  ui.toast = { text: text, rueckgaengig: rueckgaengig };
   ansagen(text);
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
@@ -1825,7 +1826,7 @@ function zeigeToast(text) {
     const ok = app.querySelector(".karte-kopf__ok");     // 3.17.37 (G-089)
     if (ok) ok.classList.remove("karte-kopf__ok--an");
     letzterOverlaySchluessel = null;
-  }, 2600);
+  }, rueckgaengig ? 6000 : 2600);
   render();
 }
 function renderToast() {
@@ -1840,16 +1841,18 @@ function renderToast() {
   /* 3.17.35 (TECHNIK-8): role/aria-live entfernt - die Ansage uebernimmt
      #ansage (index.html, zeigeToast()). aria-hidden verhindert, dass dieses
      Element zusaetzlich vorgelesen wird. */
-  return '<div class="toast-wrap' + (blattOffen ? ' toast-wrap--oben' : '') + '"><div class="toast" aria-hidden="true">' +
-    ikon("fertig", "i-sm") + '<span>' + esc(ui.toast.text) + '</span></div></div>';
+  return '<div class="toast-wrap' + (blattOffen ? ' toast-wrap--oben' : '') + '"><div class="toast' +
+    (ui.toast.rueckgaengig ? ' toast--aktion' : '') + '">' + ikon("fertig", "i-sm") +
+    '<span aria-hidden="true">' + esc(ui.toast.text) + '</span>' +
+    (ui.toast.rueckgaengig ? '<button class="ghost" data-action="toast-rueckgaengig">Rückgängig</button>' : '') + '</div></div>';
 }
 
 /* ---------- Formular-Entwurf ----------
    render() baut das gesamte DOM neu. Ohne diesen Zwischenspeicher waere jede
    halb getippte Vokabel weg, sobald irgendetwas anderes ein render() ausloest -
    zum Beispiel ein Datensatz, der aus der Cloud hereinkommt. */
-let formDraft = { wort: "", ueb: "", extra: "" };
-function resetFormDraft() { formDraft = { wort: "", ueb: "", extra: "" }; ui.karteFeldFehler = null; }
+let formDraft = { wort: "", ueb: "", extra: "", stufe: null };
+function resetFormDraft() { formDraft = { wort: "", ueb: "", extra: "", stufe: null }; ui.karteFeldFehler = null; }
 
 /* 16.09.2026 (Beobachtung 3): Wohin nach dem Bearbeiten einer Karte
    zurueckgesprungen wird. editCard() springt zum Formular an den
@@ -3968,7 +3971,7 @@ function setArabGroesse(id) {
 /* Welche Karten zaehlen: alle Bereiche zusammen oder nur der offene?
    2.3.0: Gesperrte Karten bleiben draussen. Sonst stuenden bei einem frisch
    eingespielten Satz 500 Karten in der Gruppe "neu" und der Fortschritt saehe
-   aus, als haette man nichts geschafft - obwohl die erste Lektion sitzt. */
+   aus, als haette man nichts geschafft - obwohl die erste Lektion einmal geschafft ist. */
 function statsCards() {
   if (bereiche === null) return [];
   const quelle = ui.statsScope === "bereich" ? [currentBereich()] : bereiche;
@@ -4187,9 +4190,8 @@ function kalenderText(anzahl, start, heuteIso) {
   return "An " + gelernt + " von " + bisher + " Tagen gelernt";
 }
 
-/* Kalenderraster: sieben Zeilen (Wochentage), eine Spalte je Woche. Die
-   Faerbung richtet sich nach der Menge des Tages, in vier groben Stufen -
-   feiner waere nicht lesbar. */
+/* Kalenderraster: sieben beschriftete Zeilen, eine Spalte je Woche.
+   Zwei Zustaende zeigen, ob an diesem Tag Karten gelernt wurden. */
 function renderKalender(tage) {
   /* Das Raster hat sieben Zeilen (Mo..So) und volle Spalten. Deshalb wird
      vom SONNTAG DIESER WOCHE aus zurueckgerechnet - sonst bricht die letzte
@@ -4200,22 +4202,33 @@ function renderKalender(tage) {
   const dow = heute.getDay() === 0 ? 7 : heute.getDay();      // Mo=1 .. So=7
   const ende = new Date(heute); ende.setDate(ende.getDate() + (7 - dow));
   const start = new Date(ende); start.setDate(start.getDate() - (wochen * 7 - 1));
-  let html = '<div class="kal" role="img" aria-label="' + esc(kalenderText(wochen * 7, start, heuteIso)) + '">';
+  let html = '<div class="kal-layout" style="--kal-wochen:' + wochen + '">';
+  html += '<div class="kal-monate" aria-hidden="true">';
+  const monate = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+  let letzterMonat = -1;
+  for (let w = 0; w < wochen; w++) {
+    const d = new Date(start); d.setDate(d.getDate() + w * 7 + 6);
+    if (d.getMonth() !== letzterMonat) {
+      html += '<span style="grid-column:' + (w + 1) + '">' + monate[d.getMonth()] + '</span>';
+      letzterMonat = d.getMonth();
+    }
+  }
+  html += '</div><div class="kal-wochentage" aria-hidden="true"><span style="grid-row:1">Mo</span><span style="grid-row:3">Mi</span><span style="grid-row:5">Fr</span></div>';
+  html += '<div class="kal" role="img" aria-label="' + esc(kalenderText(wochen * 7, start, heuteIso)) + '">';
   for (let i = 0; i < wochen * 7; i++) {
     const d = new Date(start); d.setDate(d.getDate() + i);
     const iso = fmtDate(d);
     const e = verlauf[iso];
     const menge = e ? (e.w || 0) + (e.n || 0) : 0;
     const zukunft = iso > heuteIso;
-    /* Vier Stufen. Feiner waere bei 11 Pixeln nicht mehr unterscheidbar. */
-    const stufe = zukunft ? "x" : menge === 0 ? 0 : menge < 10 ? 1 : menge < 25 ? 2 : menge < 50 ? 3 : 4;
+    const stufe = zukunft ? "x" : menge > 0 ? 1 : 0;
     html += '<div class="kal-tag s' + stufe + (iso === heuteIso ? " heute" : "") +
       /* 3.17.9 (Station 9): lesbares Datum statt "2026-09-20", und es sind
          Antworten (w + n), keine Karten - dieselbe Zahl wie "Antworten diese
          Woche" darueber. */
-      '" title="' + esc(tagKurz(iso) + (zukunft ? "" : ": " + menge + (menge === 1 ? " Antwort" : " Antworten"))) + '"></div>';
+      '" style="--kal-verzug:' + Math.round(Math.floor(i / 7) * 200 / Math.max(1, wochen - 1)) + 'ms" title="' + esc(tagKurz(iso) + (zukunft ? "" : ": " + menge + (menge === 1 ? " Antwort" : " Antworten"))) + '"></div>';
   }
-  html += '</div>';
+  html += '</div><div class="kal-legende"><span><i class="kal-schluessel gelernt" aria-hidden="true"></i> Gelernt</span><span><i class="kal-schluessel" aria-hidden="true"></i> Nicht gelernt</span></div></div>';
   return html;
 }
 
@@ -4273,15 +4286,28 @@ function resetRueckfaelle(bereichId, cardId) {
   const b = bereiche.find(x => x.id === bereichId);
   const c = b && b.karten.find(x => x.id === cardId);
   if (!c) return;
+  const vorher = c.rueckfaelle;
+  const konto = userDocRef;
   c.rueckfaelle = 0;
   patchDoc({ [pfadKarte(bereichId, cardId) + ".rueckfaelle"]: 0 });
-  render();
+  zeigeToast("Zähler zurückgesetzt", () => {
+    if (userDocRef !== konto || kontoWirdGeloescht) return;
+    const aktuell = bereiche?.find(x => x.id === bereichId)?.karten.find(x => x.id === cardId);
+    if (!aktuell || aktuell.rueckfaelle !== 0) { render(); return; }
+    aktuell.rueckfaelle = vorher;
+    patchDoc({ [pfadKarte(bereichId, cardId) + ".rueckfaelle"]: vorher });
+    render();
+  });
 }
-/* Aus dem Fortschritts-Tab direkt zur Karte springen: Bereich wechseln,
-   Verwalten oeffnen, Formular mit der Karte fuellen. */
+/* Karten-Blatt ueber dem Fortschritt oeffnen; andere Einstiege wechseln
+   wie bisher nach Verwalten. */
 function editCardInBereich(bereichId, cardId) {
   if (!bereiche.some(x => x.id === bereichId)) return;
   ui.bereichId = bereichId;
+  if (ui.tab === "fortschritt" && (!ui.seite || ui.seite === "leeches")) {
+    editCard(cardId);
+    return;
+  }
   /* 3.2.0: Ein Reiterwechsel verlaesst auch eine offene Unterseite - sonst
      traegt die Kopfzeile den Titel der Seite, aus der man gerade kommt. */
   ui.seite = null;
@@ -5167,6 +5193,7 @@ function selectBereich(bereichId) {
   ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; 
   resetFormDraft();
   ui.searchQuery = "";
+  ui.searchAll = false;
   ui.kartenSeite = 0;
   ui.selectMode = false;
   ui.selectedIds = new Set();
@@ -5278,6 +5305,13 @@ async function bereichEntfernen(b) {
 }
 
 /* ---------- Mehrfachauswahl ---------- */
+function verwaltenAuswahlZuruecksetzen() {
+  ui.searchQuery = "";
+  ui.kartenSeite = 0;
+  ui.searchAll = false;
+  ui.selectMode = false;
+  ui.selectedIds = new Set();
+}
 async function reverseOrder() {
   const cards = currentCards();
   if (cards.length < 2) return;
@@ -5296,8 +5330,31 @@ function toggleSelectMode() {
   ui.drillOpen = false;
   render();
 }
+function sichtbareAuswahlIds() {
+  return [...app.querySelectorAll('#karten-liste > [data-action="toggle-card-select"]')].map(el => el.dataset.id);
+}
+function aktualisiereAuswahlLeiste() {
+  const alle = app.querySelector('[data-action="auswahl-alle"]');
+  if (!alle) return;
+  const ids = sichtbareAuswahlIds();
+  const alleGewaehlt = ids.length > 0 && ids.every(id => ui.selectedIds.has(id));
+  alle.textContent = alleGewaehlt ? "Keine" : "Alle";
+  alle.setAttribute("aria-label", alleGewaehlt ? "Gezeigte Karten abwählen" : "Alle gezeigten Karten auswählen");
+  alle.disabled = ids.length === 0;
+  app.querySelectorAll('.select-actionbar button:not([data-action="auswahl-alle"])').forEach(k => { k.disabled = ui.selectedIds.size === 0; });
+  app.querySelector('.select-actionbar strong').textContent = String(ui.selectedIds.size);
+}
+function waehleSichtbareKarten() {
+  if (!ui.selectMode) return;
+  const ids = sichtbareAuswahlIds();
+  const abwaehlen = ids.length > 0 && ids.every(id => ui.selectedIds.has(id));
+  ids.forEach(id => { if (abwaehlen) ui.selectedIds.delete(id); else ui.selectedIds.add(id); });
+  app.querySelectorAll('#karten-liste > [data-action="toggle-card-select"] input').forEach(el => {
+    el.checked = ui.selectedIds.has(el.closest('[data-id]').dataset.id);
+  });
+  aktualisiereAuswahlLeiste();
+}
 function toggleCardSelected(id) {
-  const vorher = ui.selectedIds.size;
   if (ui.selectedIds.has(id)) ui.selectedIds.delete(id);
   else ui.selectedIds.add(id);
   const nachher = ui.selectedIds.size;
@@ -5315,19 +5372,24 @@ function toggleCardSelected(id) {
   if (!kasten || !zaehler) { render(); return; }
   kasten.checked = ui.selectedIds.has(id);
   zaehler.textContent = String(nachher);
-  if ((vorher === 0) !== (nachher === 0)) {
-    app.querySelectorAll(".select-actionbar button").forEach(k => { k.disabled = nachher === 0; });
-  }
+  aktualisiereAuswahlLeiste();
 }
 async function deleteSelectedCards() {
   const n = ui.selectedIds.size;
   if (n === 0) return;
   if (!kartenBearbeitbar()) { await hinweisGefuehrt("Karten löschen"); return; }
-  const ok = await dlgConfirm((n === 1 ? "Die Karte wird" : n + " Karten werden") + " endgültig gelöscht. Das lässt sich nicht rückgängig machen.",
-    { title: "Karten löschen?", okLabel: "Endgültig löschen", danger: true });
-  if (!ok) return;
   const b = currentBereich();
   const geloescht = new Set(ui.selectedIds);
+  const konto = userDocRef;
+  const text = (n === 1 ? "Die Karte wird" : n + " Karten werden") + " endgültig gelöscht. Das lässt sich nicht rückgängig machen.";
+  const opts = { title: "Karten löschen?", okLabel: "Endgültig löschen", danger: true };
+  const antwort = n >= 20 ? await dlgPrompt(text + '\n\nTipp zum Bestätigen „Löschen“ ein.', "", opts) : await dlgConfirm(text, opts);
+  if (userDocRef !== konto || kontoWirdGeloescht || currentBereich() !== b ||
+      ui.selectedIds.size !== geloescht.size || [...geloescht].some(id => !ui.selectedIds.has(id))) return;
+  if (n >= 20) {
+    if (antwort === null) return;
+    if (antwort.trim() !== "Löschen") { await dlgAlert("Das Wort stimmt nicht überein – es wurde nichts gelöscht.", "Abgebrochen"); return; }
+  } else if (!antwort) return;
   const cards = b.karten;
   for (let i = cards.length - 1; i >= 0; i--) {
     if (geloescht.has(cards[i].id)) cards.splice(i, 1);
@@ -5342,7 +5404,7 @@ async function deleteSelectedCards() {
   });
   ui.selectedIds = new Set();
   patchDoc(patch);
-  render();
+  zeigeToast(mz(geloescht.size, "Karte", "Karten") + " gelöscht");
 }
 /* A3 (1.9.0): Das Ziel wird ueber seine ID gesucht, nicht mehr ueber den
    Namen. Zwei gleichnamige Bereiche konnten sonst entstehen (normBereiche
@@ -5384,7 +5446,7 @@ function moveSelectedCardsTo(targetId) {
   ui.selectedIds = new Set();
   ui.selectMode = false;
   patchDoc(patch);
-  render();
+  zeigeToast(mz(moved.length, "Karte", "Karten") + " nach „" + target.name + "“ verschoben");
 }
 
 /* ---------- Speicherkarten (benannte Merklisten aus ausgewählten Karten) ---------- */
@@ -5482,6 +5544,7 @@ async function saveSelectedToSet(targetId) {
   ui.selectedIds = new Set();
   ui.selectMode = false;
   ui.openSetId = set.id;
+  ui.setsOffen = true;
   ui.zuletztSetId = set.id;
   const b = currentBereich();
   /* 3.17.33 (LERNEN-10): siehe karteMerken - nur die tatsaechlich neuen IDs
@@ -5491,7 +5554,8 @@ async function saveSelectedToSet(targetId) {
   } else if (neuDazu.length) {
     patchDoc({ [pfadSet(b.id, set.id) + ".cardIds"]: LISTE_DAZU(neuDazu) });
   }
-  render();
+  springeZu("set-" + set.id);
+  zeigeToast(neuDazu.length ? mz(neuDazu.length, "Karte", "Karten") + " in „" + set.name + "“" : "War schon drin – „" + set.name + "“");
   if (uebersprungen > 0) {
     dlgAlert((uebersprungen === 1 ? "Eine gesperrte Karte aus der Auswahl wurde" : uebersprungen + " gesperrte Karten aus der Auswahl wurden") + " übersprungen.", "Teilweise abgelegt");
   }
@@ -5750,7 +5814,7 @@ async function startLernen(setId) {
   if (setGesperrt(set)) {
     await dlgAlert(lehrerGesteuert(currentBereich())
       ? '„' + set.name + '" schaltet dein:e Lehrer:in frei.'
-      : '„' + set.name + '" wird frei, sobald die Lektion davor sitzt.', "Noch nicht dran");
+      : '„' + set.name + '" wird frei, sobald die Lektion davor einmal geschafft ist.', "Noch nicht dran");
     return;
   }
   if (lernKarten(set).length === 0) {
@@ -5905,6 +5969,10 @@ async function submitCardForm() {
   const patch = {};
   if (ui.editId) {
     const card = findCard(ui.editId);
+    if (!card) {
+      await dlgAlert("Die Karte gibt es nicht mehr. Dein Entwurf bleibt im Blatt.", "Karte gelöscht");
+      return;
+    }
     if (card) {
       const pfad = pfadKarte(bereich.id, card.id);
       /* E6: Wer eine verbrannte Karte umformuliert, hat genau das getan, was
@@ -5962,8 +6030,9 @@ async function submitCardForm() {
   resetFormDraft();
   patchDoc(patch);
   const toastText = warEdit ? "Änderung gespeichert" : "Karte gespeichert";
+  /* zeigeToast zeichnet bereits neu; ein zweiter Aufbau bringt nichts und
+     unterbricht den Schreibfluss nach dem Hinzufuegen nochmals. */
   zeigeToast(toastText);
-  render();
   /* D1: Fokus zurueck ins Wort-Feld, damit man mehrere Vokabeln
      hintereinander eingeben kann, ohne jedes Mal hineinzutippen.
      Nur beim Neuanlegen - wer eine bestehende Karte bearbeitet hat, wollte
@@ -5996,7 +6065,7 @@ function editCard(id) {
   ui.karteSheet = true;
   ui.karteFeldFehler = null;
   const c = findCard(id);
-  formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra } : { wort: "", ueb: "", extra: "" };
+  formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra, stufe: c.stufe } : { wort: "", ueb: "", extra: "", stufe: null };
   render();
   /* 3.3.1: Kein Sprung mehr nach oben. Das Formular kam bis dahin oben auf
      der Seite - jetzt kommt es von unten, und die Liste bleibt genau dort
@@ -6007,7 +6076,7 @@ function editCard(id) {
    da, der Fokus muss also jedes Mal neu gesetzt werden. */
 function fokusInsWortfeld() {
   const el = document.getElementById("f-wort");
-  if (el) el.focus();
+  if (el) el.focus({ preventScroll: true });
 }
 /* 9: nach einer fehlgeschlagenen Pruefung ins erste leere Pflichtfeld,
    nicht immer ins Wort-Feld - sonst landet der Fokus am falschen Feld,
@@ -6015,21 +6084,33 @@ function fokusInsWortfeld() {
 function fokusInsErstesFehlerfeld() {
   const id = (ui.karteFeldFehler && ui.karteFeldFehler.wort) ? "f-wort" : "f-ueb";
   const el = document.getElementById(id);
-  if (el) el.focus();
+  if (el) el.focus({ preventScroll: true });
 }
 /* 3.17.11 (Pruefschleife, Station 11): Eine angefangene NEUE Karte ging
    beim Schliessen still verloren - "Fertig", Escape oder Wischen, und das
    Getippte war weg. Beim Bearbeiten heisst der Knopf "Abbrechen", dort ist
    Verwerfen gemeint und bleibt ohne Rueckfrage. */
 function karteEntwurfOffen() {
-  return !ui.editId && ui.karteSheet &&
-    !!((formDraft.wort || "").trim() || (formDraft.ueb || "").trim() || (formDraft.extra || "").trim());
+  if (!ui.karteSheet) return false;
+  if (ui.editId) {
+    const c = findCard(ui.editId);
+    if (!c) return true; // Der noch sichtbare Entwurf darf nicht still verloren gehen.
+    return (formDraft.wort || "") !== (c.wort || "") ||
+      (formDraft.ueb || "") !== (c.uebersetzung || "") ||
+      (formDraft.extra || "") !== (c.extra || "") ||
+      (formDraft.stufe ?? c.stufe) !== c.stufe;
+  }
+  return !!((formDraft.wort || "").trim() || (formDraft.ueb || "").trim() || (formDraft.extra || "").trim());
 }
 async function karteEntwurfVerwerfenFragen() {
+  const editId = ui.editId, entwurf = formDraft, kontoRef = userDocRef;
   const w = (formDraft.wort || "").trim(), u = (formDraft.ueb || "").trim();
-  const ok = await dlgConfirm((w || u ? "„" + (w || u) + "“ ist noch nicht hinzugefügt." : "Die Notiz ist noch nicht hinzugefügt.") +
-    " Verworfen ist es weg.", { title: "Angefangene Karte verwerfen?", okLabel: "Verwerfen", danger: true });
+  const text = editId ? "Deine Änderungen sind noch nicht gespeichert. Verworfen sind sie weg." :
+    (w || u ? "„" + (w || u) + "“ ist noch nicht hinzugefügt." : "Die Notiz ist noch nicht hinzugefügt.") + " Verworfen ist es weg.";
+  const ok = await dlgConfirm(text, { title: editId ? "Änderungen verwerfen?" : "Angefangene Karte verwerfen?", okLabel: "Verwerfen", danger: true });
+  if (userDocRef !== kontoRef || kontoWirdGeloescht || formDraft !== entwurf || ui.editId !== editId || !ui.karteSheet) return;
   if (!ok) { fokusInsWortfeld(); return; }
+  if (editId) { cancelEdit(); return; }
   resetFormDraft();
   schliesseObersteEbene();
 }
@@ -6052,7 +6133,7 @@ async function deleteCard(id) {
     patch[pfadSet(b.id, st.id) + ".cardIds"] = st.cardIds;
   });
   patchDoc(patch);
-  render();
+  zeigeToast("Karte gelöscht");
 }
 
 /* ---------- Lern-Session ---------- */
@@ -6198,7 +6279,7 @@ function gradeCard(kind) {
       card.stufe = Math.max(0, card.stufe - 2);
       card.nextReview = todayStr();
       /* E6: Nur ein echter Rueckfall zaehlt - "Nicht" bei einer Karte, die
-         schon einmal saß. Eine Karte, die man beim allerersten Anblick nicht
+         schon einmal gewusst wurde. Eine Karte, die man beim allerersten Anblick nicht
          weiß, ist kein Rueckfall, sondern normal. "Fast" zaehlt ebenfalls
          nicht: da war die Erinnerung ja da.
 
@@ -8521,7 +8602,7 @@ function cardDetailSheet() {
   if (!c) return "";
   const b = currentBereich();
   let html = '<div class="dlg-backdrop" data-action="card-detail-zu" role="presentation">';
-  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="card-detail-titel">';
+  html += '<div class="dlg dlg--card-detail" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="card-detail-titel">';
   html += '<h3 id="card-detail-titel"' + (istArabisch(c.wort) ? ' class="arabic" lang="ar" dir="rtl"' : '') + '>' + esc(c.wort) + '</h3>';
   html += '<p class="dlg-text" style="margin-bottom:var(--space-3)">' + esc(c.uebersetzung) + '</p>';
   if (c.extra) html += '<div class="extra-note-voll" style="margin-bottom:var(--space-4)">' + renderExtra(c.extra, [], !!c.quelleId) + '</div>';
@@ -8564,7 +8645,8 @@ function karteSheet() {
   if (istGefuehrt(currentBereich())) return "";
 
   const fehler = ui.karteFeldFehler || {};
-  let html = '<div class="dlg-backdrop" data-action="nichts" role="presentation">';
+  const neuKennung = !ui.editId ? JSON.stringify([currentUser.uid, currentBereich().id]) : null;
+  let html = '<div class="dlg-backdrop"' + (neuKennung ? ' data-karte-neu="' + esc(neuKennung) + '"' : '') + ' data-action="nichts" role="presentation">';
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="karte-sheet-titel">';
   /* 3.17.37 (G-089, Betreiber-Screenshot 26.09.2026): Die Bestaetigung steht
      im Kopf neben dem Titel. Als Meldung oben am Rand lag sie ueber "Neue
@@ -8607,7 +8689,8 @@ function karteSheet() {
     html += '<div class="field"><label for="f-stufe">Stand</label>';
     html += '<select id="f-stufe">' + UEBEN_GRUPPEN.map(g => {
       const hier = editing.stufe >= g.von && editing.stufe <= g.bis;
-      return '<option value="' + (hier ? editing.stufe : g.von) + '"' + (hier ? ' selected' : '') + '>' + esc(g.label) + '</option>';
+      const wert = hier ? editing.stufe : g.von;
+      return '<option value="' + wert + '"' + (wert === (formDraft.stufe ?? editing.stufe) ? ' selected' : '') + '>' + esc(g.label) + '</option>';
     }).join("") + '</select></div>';
   }
   html += '<div class="dlg-actions">';
@@ -8679,6 +8762,42 @@ function huelleBehalten(alt, auswahl) {
   alt.className = neu.className;
   alt.replaceChildren(...neu.childNodes);
   neu.replaceWith(alt);
+}
+/* G-118: Das neue Kartenformular bleibt durchgehend verbunden, auch bei
+   Toasts und Cloud-Echos. Herausnehmen und wieder einsetzen wuerde auf iOS
+   die Tastatur trotzdem schliessen. Nur Geschwister werden neu aufgebaut;
+   Feldwerte, Fehler und Bestaetigung folgen weiter dem aktuellen Zustand. */
+function hauptInhaltSetzen(html) {
+  const alt = app.querySelector(":scope > [data-karte-neu]");
+  if (!alt) { app.innerHTML = html; return; }
+  const vorlage = document.createElement("template");
+  vorlage.innerHTML = html;
+  const neu = vorlage.content.querySelector("[data-karte-neu]");
+  if (!neu || neu.dataset.karteNeu !== alt.dataset.karteNeu) {
+    app.innerHTML = html;
+    return;
+  }
+  for (const id of ["f-wort", "f-ueb", "f-extra"]) {
+    const feld = alt.querySelector("#" + id), ziel = neu.querySelector("#" + id);
+    if (feld.value !== ziel.value) feld.value = ziel.value;
+    for (const attr of ["aria-invalid", "aria-describedby"]) {
+      if (ziel.hasAttribute(attr)) feld.setAttribute(attr, ziel.getAttribute(attr));
+      else feld.removeAttribute(attr);
+    }
+  }
+  for (const sel of ["#f-wort-fehler", "#f-ueb-fehler", ".karte-kopf__ok"]) {
+    const vorher = alt.querySelector(sel), nachher = neu.querySelector(sel);
+    vorher.className = nachher.className;
+    vorher.innerHTML = nachher.innerHTML;
+  }
+  alt.style.animation = "none";
+  alt.querySelector(".dlg").style.animation = "none";
+  for (const kind of [...app.childNodes]) if (kind !== alt) kind.remove();
+  let nachBlatt = false;
+  for (const kind of [...vorlage.content.childNodes]) {
+    if (kind === neu) { nachBlatt = true; continue; }
+    app.insertBefore(kind, nachBlatt ? null : alt);
+  }
 }
 /* Die Kante unter der Kopfleiste erscheint, sobald etwas darunter durchlaeuft
    (styles.css: .appbar.scrolled) - bisher setzte sie nie ein Skript. */
@@ -8811,6 +8930,7 @@ function renderMain() {
        steht. */
     html += appBar({
       ansicht: ansicht,
+      titel: ui.tab === "fortschritt" ? "Fortschritt" : null,
       aktion: '<button class="icon-btn appbar__einstellungen" data-action="einstellungen" aria-label="Einstellungen">' +
         ikon("zahnrad", "i-sm") + '</button>'
     });
@@ -8902,7 +9022,8 @@ function renderMain() {
      ihr Inhalt wird ersetzt. */
   const altBar = app.querySelector(":scope > .appbar");
   const altNav = app.querySelector(":scope > .nav");
-  app.innerHTML = html;
+  hauptInhaltSetzen(html);
+  aktualisiereAuswahlLeiste();
   tanzilSchriftMarkieren(app);
   textZeilenNachladenBeobachten();
   schriftVorwaermen();
@@ -8972,7 +9093,7 @@ function renderMain() {
   if (prevActiveId) {
     const again = document.getElementById(prevActiveId);
     if (again && typeof again.focus === "function") {
-      again.focus();
+      if (again !== document.activeElement) again.focus({ preventScroll: true });
       if (prevSelStart !== null && typeof again.setSelectionRange === "function") {
         try { again.setSelectionRange(prevSelStart, prevSelStart); } catch (e) {}
       }
@@ -9039,10 +9160,10 @@ function renderMain() {
   if (ui.dialog) setupDialog();     // D2
   if (ui.seite === "konto-loeschen") kontoLoeschenVerbinden();
 
-  if (ui.tab === "verwalten") {
+  if (ui.tab === "verwalten" || ui.karteSheet) {
     ["f-wort", "f-ueb"].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener("keydown", e => {
+      if (el) el.onkeydown = e => {
         if (e.key !== "Enter" || e.isComposing) return;
         /* 3.17.11: Enter im Wort-Feld heisst "weiter", solange die
            Uebersetzung fehlt - vorher speicherte es sofort und empfing einen
@@ -9050,17 +9171,17 @@ function renderMain() {
         if (id === "f-wort" && !val("f-ueb").trim()) {
           e.preventDefault();
           const ueb = document.getElementById("f-ueb");
-          if (ueb) ueb.focus();
+          if (ueb) ueb.focus({ preventScroll: true });
           return;
         }
         submitCardForm();
-      });
+      };
     });
     /* Jede Eingabe sofort in den Entwurf spiegeln, damit ein render()
        dazwischen nichts loeschen kann. */
     [["f-wort", "wort"], ["f-ueb", "ueb"], ["f-extra", "extra"]].forEach(([id, key]) => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener("input", e => {
+      if (el) el.oninput = e => {
         formDraft[key] = e.target.value;
         /* 9: Fehler verschwindet, sobald man tippt - ohne render(), damit
            Fokus und Schreibfluss nicht unterbrochen werden. */
@@ -9071,8 +9192,10 @@ function renderMain() {
           const fehlerEl = document.getElementById(id + "-fehler");
           if (fehlerEl) { fehlerEl.textContent = ""; fehlerEl.classList.remove("opt--fehler"); }
         }
-      });
+      };
     });
+    const stufeFeld = document.getElementById("f-stufe");
+    if (stufeFeld) stufeFeld.addEventListener("change", e => { formDraft.stufe = Number(e.target.value); });
     /* 2.21.0: ersetzt den alten Einzel-Listener auf <select id="drill-source">
        - jetzt ein Radiopaar fuer den Modus plus beliebig viele Checkboxen
        fuer die Speicherkarten-Mehrfachauswahl. */
@@ -9281,7 +9404,7 @@ function renderFaden(b, due) {
   const fehlen = lektionOffeneKarten(b, akt);
   if (fehlen.length === 0 && naechste) {
     /* Kann nur eintreten, wenn die naechste Lektion selbst leer ist. */
-    html += '<p class="due-info">' + ikon("haken", "i-sm") + ' „' + esc(akt.name) + '“ sitzt.</p>';
+    html += '<p class="due-info">' + ikon("haken", "i-sm") + ' „' + esc(akt.name) + '“ einmal geschafft.</p>';
     html += '<p class="hint" style="padding:0">„' + esc(naechste.name) + '" ist frei.</p>';
     return html;
   }
@@ -9689,7 +9812,7 @@ function renderKontoLoeschen() {
   const gesessen = gesesseneKarten();
   const serie = serieAktuell();
   html += '<li><strong>' + karten + '</strong> Karte' + (karten === 1 ? '' : 'n') + ' mit ihrem Lernstand' +
-    (gesessen > 0 ? ' – <strong>' + gesessen + '</strong> davon saßen schon einmal' : '') + '</li>';
+    (gesessen > 0 ? ' – <strong>' + gesessen + '</strong> davon hast du schon einmal gewusst' : '') + '</li>';
   html += '<li><strong>' + bereiche.length + '</strong> Bereich' + (bereiche.length === 1 ? '' : 'e') + ' mit allen Speicherkarten</li>';
   /* 3.18.2: Texte sind keine Karten (bereichAufteilen) - eigens nennen. */
   const texteAnzahl = bereiche.reduce((n, b) => n + (b.texte || []).length, 0);
@@ -10197,13 +10320,15 @@ const WAHLEN = {
     titel: "Verschieben nach", action: "auswahl-ziel-bereich",
     liste: () => bereiche.filter(b => b.id !== ui.bereichId).map(b => ({ id: b.id, label: b.name })),
     wert: () => null,
-    hilfe: 'Die Karten wandern mit ihrem Lernstand in den gewählten Bereich.'
+    hilfe: 'Die Karten wandern mit ihrem Lernstand in den gewählten Bereich und werden aus Speicherkarten dieses Bereichs genommen.'
   },
   speicherkarte: {
     titel: "In Speicherkarte ablegen", action: "auswahl-ziel-set",
     liste: () => [{ id: "__new__", label: "＋ Neue Speicherkarte" }]
-      .concat(currentSets().filter(x => setBearbeitbar(x)).map(x => ({ id: x.id, label: x.name }))),
-    wert: () => null,
+      .concat(currentSets().filter(x => setBearbeitbar(x))
+        .sort((a, b) => Number(b.id === ui.zuletztSetId) - Number(a.id === ui.zuletztSetId))
+        .map(x => ({ id: x.id, label: x.name }))),
+    wert: () => currentSets().some(x => x.id === ui.zuletztSetId && setBearbeitbar(x)) ? ui.zuletztSetId : null,
     hilfe: 'Die Karten bleiben, wo sie sind – die Speicherkarte merkt sich nur, welche es sind.'
   },
   limit: {
@@ -10510,7 +10635,7 @@ function lernenHinweis() {
     /* 3.17.40 (G-061): Die Marke (erreicht) loest den Hinweis nur noch aus,
        der Text nennt wie der Fortschritt die echte Zahl (gesessen) - sonst
        standen zwei verschiedene Zahlen fuer denselben Sachverhalt da. */
-    return hinweisKarte("meilenstein", "haken", '<strong>' + mz(gesessen, "Karte", "Karten") + '</strong> saßen schon einmal. So viel hast du schon geschafft.', null, true);
+    return hinweisKarte("meilenstein", "haken", 'Du hast <strong>' + mz(gesessen, "Karte", "Karten") + '</strong> schon einmal gewusst. So viel hast du schon geschafft.', null, true);
   }
   /* 3 - Wochenrueckblick (Mo-Mi) */
   const lw = letzteWoche();
@@ -10854,7 +10979,7 @@ function startListe() {
 
 /* E4/D10: der Fortschritts-Tab.
    Ohne sichtbaren Fortschritt fehlt der Grund weiterzumachen - und die
-   Vorschau warnt vor einem 300er-Tag, bevor er da ist. */
+   Vorschau zeigt die anstehenden Wiederholungen. */
 /* ---------- 3.16.0: ein Block fuer die Zeit ----------
    Betreiber am 24.09.2026: "hicks law und simple pro tab [...] sachen im
    doppelt gemoppelt raus". Bis 3.15 standen hier vier Bloecke fuer "wann":
@@ -10865,8 +10990,8 @@ function startListe() {
      Woche   - "52 Antworten in den letzten 7 Tagen" + Vergleich (rollende
                7-Tage-Summe, keine Kalenderwoche; 3.17.34, REST-4)
      Wochen  - Kalender + "221 Antworten · 25 Karten zum ersten Mal"
-   Woche und Wochen sind jetzt EIN Block: oben die eine Zahl mit Richtung,
-   darunter das Raster. Die Summe ueber vier Wochen ist weg - sie sagte in
+   Woche und Wochen sind EIN Block. Seit Paket C steht die Antwortenzahl
+   klein ohne Bewertung ueber dem Raster. Die Summe ueber vier Wochen ist weg - sie sagte in
    anderer Form, was das Raster zeigt.
    Der Hinweis "Serie fortsetzen" (fortschrittHeute) ist mit weg: er hing an
    streak.gerissenAm, und das setzt seit 2.14.0 niemand mehr (siehe
@@ -10875,7 +11000,8 @@ function startListe() {
 function fortschrittWochen() {
   let html = "";
   const diese = verlaufSumme(7);
-  const letzte = verlaufSummeSpanne(7, 14);
+  const hatBisherGelernt = Object.keys(verlauf).length > 0 ||
+    (bereiche || []).some(b => b.karten.some(c => !!c.ersteBewertung));
   /* 2.13.0: Das Raster waechst mit. Zwoelf leere Wochen am ersten Tag sehen
      aus wie ein Fehler; vier Wochen mit einem hellen Kaestchen sehen aus wie
      ein Anfang. Gezeigt wird ab der ersten Woche mit einem Eintrag,
@@ -10885,34 +11011,19 @@ function fortschrittWochen() {
     const alter = Math.round((new Date(todayStr()) - new Date(k)) / 86400000);
     if (alter > tageTief) tageTief = alter;
   }
-  const wochen = Math.min(12, Math.max(4, Math.ceil((tageTief + 1) / 7)));
-  const zeitraum = verlaufSumme(wochen * 7);
+  const tagDerWoche = new Date(todayStr()).getDay() || 7;
+  const wochen = Math.min(12, Math.max(4, Math.ceil((tageTief + 1 + (7 - tagDerWoche)) / 7)));
   html += '<div class="stat-block">';
   html += '<h3>Die letzten ' + wochen + ' Wochen</h3>';
   if (diese.gesamt > 0) {
-    /* Die Zahl zaehlt beim Anzeigen von 0 hoch (tickCountups()). */
     html += '<div class="wochen-kopf">';
-    html += '<p class="gross-zahl" style="margin:0" data-countup="' + diese.gesamt + '"><strong>0</strong>' +
-      '<span>' + (diese.gesamt === 1 ? 'Antwort' : 'Antworten') + ' in den letzten 7 Tagen</span></p>';
-    /* Eine Richtung nur, wenn es etwas zu vergleichen gibt. "Die 7 Tage davor
-       waren leer" war eine Pille, die nichts sagte. */
-    if (letzte.gesamt > 0) {
-      const delta = diese.gesamt - letzte.gesamt;
-      const pct = Math.round((delta / letzte.gesamt) * 100);
-      const richtung = delta > 0 ? "trend-up" : delta < 0 ? "trend-down" : "trend-flat";
-      const pfeil = delta > 0 ? "\u2191" : delta < 0 ? "\u2193" : "\u2192";
-      html += '<span class="trend-pill ' + richtung + '">' + pfeil + ' ' + Math.abs(pct) + ' % zu den 7 Tagen davor</span>';
-    }
+    html += '<p class="stat-sub">' + mz(diese.gesamt, 'Antwort', 'Antworten') + ' in den letzten 7 Tagen</p>';
     html += '</div>';
-  } else if (letzte.gesamt > 0) {
-    /* 3.17.34 (REST-4): diese.gesamt===0 nach einer Pause zeigte trotzdem
-       "0 Antworten diese Woche" mit einer roten "-100 %"-Pille - eine Zahl,
-       die Stillstand liest (LEHREN 7.1), und eine Pille ohne Aussage, denn
-       "diese Woche" ist ohnehin nur eine rollende 7-Tage-Summe, keine
-       Kalenderwoche (verlaufSumme/verlaufSummeSpanne). Statt Zahl und Pille
-       steht hier derselbe ruhige Satz, an der Stelle, wo sonst der Kopf
-       steht - damit der Kalender darunter nicht springt (LEHREN 6.1). */
-    html += '<p class="stat-sub">In den letzten 7 Tagen noch keine Antwort \u2013 eine Runde reicht f\u00fcr den Anfang.</p>';
+  } else if (hatBisherGelernt) {
+    /* Auch nach mehr als zwölf Wochen bleibt der bisherige Fortschritt.
+       Das sichtbare Raster ist kein Nachweis, dass noch nie gelernt wurde. */
+    html += '<p class="stat-sub">Dein bisheriger Fortschritt bleibt. Starte mit einer Runde wieder ein.</p>';
+    html += '<button class="secondary" data-action="fort-runde">Runde starten</button>';
   }
   html += renderKalender(wochen * 7);
   /* 3.16.0: Ueben steht als eine leise Zeile darunter - nur, wenn diese
@@ -10921,7 +11032,7 @@ function fortschrittWochen() {
     html += '<p class="stat-sub wochen-ueben">' + ikon("ueben", "i-sm") + ' Dazu <strong>' + diese.u + '</strong> Antwort' +
       (diese.u === 1 ? '' : 'en') + ' im \u00dcben</p>';
   }
-  if (zeitraum.gesamt === 0 && zeitraum.u === 0) {
+  if (!hatBisherGelernt) {
     html += '<p class="stat-sub" style="margin-top:var(--space-3)">Noch nichts aufgezeichnet \u2013 ab dem ersten gelernten Tag f\u00fcllt sich das Raster.</p>';
   }
   html += '</div>';
@@ -10939,10 +11050,11 @@ function fortschrittStoff(cards) {
   html += '<h3>Dein Stoff</h3>';
   /* maxStufe kann nicht fallen - anders als der Stapelbalken darunter, der
      schwankt, sobald man etwas vergisst. Deshalb steht diese Zahl oben. */
-  html += '<p class="gross-zahl"><strong>' + gesessen + '</strong>' +
-    '<span class="arab-ziffer" lang="ar" dir="rtl">' + arabZahl(gesessen) + '</span>' +
-    /* 3.17.9: Einzahl ("1 von 1 Karten saßen" gemessen). */
-    ' <span>von ' + gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' ' + (gesessen === 1 ? 'saß' : 'saßen') + ' schon einmal</span></p>';
+  if (gesessen > 0) {
+    html += '<p class="gross-zahl"><strong>' + gesessen + '</strong>' +
+      ' <span>von ' + mz(gesamt, 'Karte', 'Karten') + ' schon einmal gewusst</span></p>';
+  }
+  const weiter = gesessen === 0 ? '<button class="secondary" data-action="fort-runde">Runde starten</button>' : '';
   /* 22.09.2026 (Block 16): Hier stand "Diese Woche N neue dazu." - dieselbe
      Zaehlung ("Karten zum ersten Mal gesehen") steht schon zweimal weiter
      oben auf demselben Bildschirm: in "Heute" fuer heute und in "Die letzten
@@ -10958,7 +11070,7 @@ function fortschrittStoff(cards) {
   if (belegt.length < 2) {
     html += '<p class="stat-sub">' + (gesamt === 1 ? 'Deine Karte ist' : 'Alle ' + gesamt + ' Karten sind') + ' gerade <strong>' +
       esc(belegt.length ? belegt[0].label : "neu") + '</strong>.</p>';
-    return html + '</div>';
+    return html + weiter + '</div>';
   }
   /* 3.16.0: ohne "Wie fest es gerade sitzt:" - Band und Legende sagen es. */
   html += '<div class="stat-bar" role="img" aria-label="' +
@@ -10991,6 +11103,7 @@ function fortschrittStoff(cards) {
       '<strong>' + g.anzahl + '</strong> ' + esc(g.label) + '</span>';
   });
   html += '</div>';
+  html += weiter;
   html += '</div>';
   return html;
 }
@@ -11013,7 +11126,7 @@ function fortschrittLektionen(nurBereich) {
     /* 3.17.9 (Station 9): keine zweite Ueberschrift "Lektionen" - die Seite
        heisst schon so (Kopfzeile). */
     const fertig = lekF.filter(x => lektionSitzt(bF, x)).length;
-    html += '<p class="stat-sub">' + fertig + ' von ' + lekF.length + (fertig === 1 ? ' sitzt' : ' sitzen') + '</p>';
+    html += '<p class="stat-sub">' + fertig + ' von ' + lekF.length + ' einmal geschafft</p>';
     html += '<div class="lekt-leiste">';
     for (const st of lekF) {
       const karten = setCards(st);
@@ -11049,9 +11162,9 @@ function fortschrittLektionen(nurBereich) {
    Zusaetzliches zeigen will, nimmt eine neue Seite statt einer neuen Zeile.
 
    Auf dem Tab bleibt jetzt nur, was die Frage "wie stehe ich gerade da"
-   beantwortet - Serie, heute, die letzten Wochen, der Stoff. Alles, was eine
+   beantwortet - die letzten Wochen und der Stoff. Alles, was eine
    LISTE ist (Lektionen, Karten die nicht klappen, die naechsten sieben Tage),
-   ist eine eigene Seite hinter einer Zeile. Nichts ist geloescht, nichts hat
+   ist am Handy eine eigene Seite hinter einer Zeile, ab 720 px offen sichtbar. Nichts hat
    seine Logik geaendert: dieselben Funktionen, ein anderer Ort.
    ========================================================================= */
 
@@ -11060,10 +11173,9 @@ function renderFortschritt() {
 
   /* 3.16.0: kein Umschalter "Alle Bereiche | Nur X" mehr. Die Zeit (Woche,
      Kalender) gehoert ohnehin keinem Bereich, und der Stoff zaehlt alle
-     Karten - wie bisher voreingestellt. Einen Bereich waehlt man oben in der
-     Kopfzeile; ein zweiter Bereichswaehler auf demselben Bildschirm war
-     eine Entscheidung zu viel (Hick). Lektionen gehoeren zum offenen
-     Bereich und stehen deshalb unten als Zeile, sobald er welche hat. */
+     Karten - wie bisher voreingestellt. Der Kopf nennt deshalb Fortschritt.
+     Lektionen gehoeren zum offenen Bereich und nennen ihn in ihrer Zeile;
+     ein zweiter Bereichswaehler wird nicht wieder eingebaut. */
   ui.statsScope = "alle";
   const cards = statsCards();
   let html = "";
@@ -11097,13 +11209,13 @@ function renderFortschritt() {
   const zeigtLektionen = lekF.length > 0;
 
   if (zeigtLektionen || leeches.length > 0 || hatVorschau) {
-    html += '<div class="sektion" style="margin-top:var(--stack)">';
+    html += '<div class="sektion fort-details-nav" style="margin-top:var(--stack)">';
     html += '<div class="eyebrow">Genauer ansehen</div>';
     html += '<div class="liste">';
     if (zeigtLektionen) {
       const fertig = lekF.filter(x => lektionSitzt(currentBereich(), x)).length;
-      html += einstZeile({ action: "fort-seite", id: "lektionen", icon: "ordner", text: "Lektionen",
-        wert: fertig + " von " + lekF.length + (fertig === 1 ? " sitzt" : " sitzen") });
+      html += einstZeile({ action: "fort-seite", id: "lektionen", icon: "ordner", text: "Lektionen · " + currentBereich().name,
+        wert: fertig + " von " + lekF.length + " einmal geschafft" });
     }
     if (leeches.length > 0) {
       html += einstZeile({ action: "fort-seite", id: "leeches", icon: "warnung",
@@ -11111,10 +11223,15 @@ function renderFortschritt() {
     }
     if (hatVorschau) {
       const summe = tage7.reduce((a, x) => a + x.anzahl, 0);
-      html += einstZeile({ action: "fort-seite", id: "vorschau", icon: "serie",
+      html += einstZeile({ action: "fort-seite", id: "vorschau", icon: "kalender",
         text: "Die nächsten 7 Tage", wert: summe + (summe === 1 ? " Karte" : " Karten") });
     }
     html += '</div></div>';
+    html += '<div class="fort-details">';
+    if (zeigtLektionen) html += '<section><h3>Lektionen · ' + esc(currentBereich().name) + '</h3>' + renderFortschrittSeite("lektionen") + '</section>';
+    if (leeches.length > 0) html += '<section><h3>Karten, die nicht klappen</h3>' + renderFortschrittSeite("leeches") + '</section>';
+    if (hatVorschau) html += '<section><h3>Die nächsten 7 Tage</h3>' + renderFortschrittSeite("vorschau") + '</section>';
+    html += '</div>';
   }
 
   return html;
@@ -11703,7 +11820,8 @@ function suchFeld(text) {
   if (!f) {
     const t = suchNorm(roh).text;
     f = { text: t, woerter: t.split(/[^\p{L}\p{N}]+/u).filter(Boolean) };
-    if (suchPuffer.size > 4000) suchPuffer.clear();
+    const gesamtKarten = (bereiche || []).reduce((n, b) => n + b.karten.length, 0);
+    if (suchPuffer.size > Math.max(4000, 4 * gesamtKarten)) suchPuffer.clear();
     suchPuffer.set(roh, f);
   }
   return f;
@@ -13119,7 +13237,7 @@ function renderVerwalten() {
     const offen = lekt.filter(x => !setGesperrt(x, bAkt)).length;
     html += '<div class="satz-banner"><strong>' + esc(bAkt.name) + '</strong> · ' +
       offen + ' von ' + lekt.length + ' Lektionen frei' +
-      '<br>Die Karten stehen fest. Eigene legst du in einem eigenen Bereich an (oben „+ Bereich").</div>';
+      '<br>Die Karten stehen fest. Für eigene Karten tippe oben auf den Bereichsnamen und dann auf „Bereich anlegen“.</div>';
     return html + renderVerwaltenListe(cards, gefuehrt);
   }
   /* 3.3.1: Hier stand bis 3.3.0 das ganze Formular - drei Felder, eine
@@ -13250,7 +13368,8 @@ function renderVerwaltenListe(cards, gefuehrt) {
     const n = ui.selectedIds.size;
     const aus = n === 0 ? ' disabled' : '';
     html += '<div class="select-actionbar">';
-    html += '<span class="select-actionbar__zahl"><strong>' + n + '</strong> ausgewählt</span>';
+    html += '<span class="select-actionbar__wahl"><button class="ghost" data-action="auswahl-alle">Alle</button>' +
+      '<span class="select-actionbar__zahl"><strong>' + n + '</strong> ausgewählt</span></span>';
     html += '<span class="select-actionbar__knoepfe">';
     if (bereiche.length > 1 && kartenBearbeitbar()) {
       html += '<button class="ghost" data-action="auswahl-verschieben"' + aus + '>' + ikon("verschieben", "i-sm") + ' Verschieben</button>';
@@ -13268,8 +13387,13 @@ function renderVerwaltenListe(cards, gefuehrt) {
      Suchfeld: Die Handy-Tastatur haengt dann mit ihrem halbfertigen Wort an
      einem Feld, das es nicht mehr gibt, und schiebt beim naechsten Zeichen
      ihre Reste verdreht ins neue hinein - aus "sonne" wurde "snn". */
-  if (cards.length === 0 && !ui.searchAll) {
-    html += '<p class="hint">Noch keine Karten vorhanden.</p>';
+  if (cards.length === 0 && (!ui.searchAll || !suchTokens(ui.searchQuery).length)) {
+    html += '<div class="empty"><div class="empty__icon">' + ikon("karten", "i-xl") + '</div>';
+    html += '<div class="empty__titel">Noch keine Karten</div>';
+    html += '<p class="empty__text">Fang mit einer eigenen Karte an – oder spiel einen fertigen Kartensatz ein.</p>';
+    html += '<div class="empty__aktionen"><button class="secondary" data-action="code-einloesen-start">' +
+      ikon("einspielen", "i-sm") + ' Kartensatz per Code</button>';
+    html += '<button class="ghost" data-action="import-trigger">Datei einspielen</button></div></div>';
   } else {
     html += '<div class="search-wrap">' + ikon("suche", "i-such");
     /* 3.17.18: aria-label - der Platzhalter allein wird nicht von jedem
@@ -13329,10 +13453,9 @@ function kartenListeInhalt() {
   }
 
   if (shownCards.length === 0) {
-    /* Zwei verschiedene Leerzustaende, nicht einer: "nichts gefunden" und
-       "noch nichts da" verlangen verschiedene naechste Schritte. */
+    /* Der leere Bereich steht in renderVerwaltenListe; hier nur Suchtreffer. */
+    if (!tokens.length) return "";
     html += '<div class="empty">';
-    if (tokens.length) {
       html += '<div class="empty__icon">' + ikon("suche", "i-xl") + '</div>';
       html += '<div class="empty__titel">Keine Treffer</div>';
       html += '<p class="empty__text">Nichts passt zu \u201e' + esc(ui.searchQuery) + '\u201c.' +
@@ -13342,21 +13465,6 @@ function kartenListeInhalt() {
         html += '<button class="ghost" data-action="search-scope" data-scope="alle">In allen Bereichen suchen</button>';
       }
       html += '</div>';
-    } else {
-      html += '<div class="empty__icon">' + ikon("karten", "i-xl") + '</div>';
-      html += '<div class="empty__titel">Noch keine Karten</div>';
-      /* 3.3.1: Stand "Leg OBEN deine erste Karte an" - das stimmte, solange
-         das Formular oben auf der Seite klebte. Jetzt steht die Handlung
-         hier, wo der leere Zustand sie ohnehin braucht (Video 1: ein leerer
-         Bildschirm zeigt auf die eine Handlung, statt sie zu beschreiben). */
-      html += '<p class="empty__text">Fang mit einer eigenen Karte an \u2013 oder spiel einen ' +
-        'fertigen Kartensatz ein.</p>';
-      html += '<div class="empty__aktionen">';
-      html += '<button data-action="karte-neu">' + ikon("plus", "i-sm") + ' Erste Karte anlegen</button>';
-      html += '<button class="secondary" data-action="import-trigger">' +
-        ikon("einspielen", "i-sm") + ' Kartensatz einspielen</button>';
-      html += '</div>';
-    }
     html += '</div>';
     return html;
   }
@@ -13478,6 +13586,7 @@ function kartenListeInhalt() {
 
 /* Nur die Liste erneuern, ohne das Suchfeld anzufassen. */
 function zeichneKartenListe() {
+  if (currentBereich().karten.length === 0 && !suchTokens(ui.searchQuery).length) { render(); return; }
   const kasten = document.getElementById("karten-liste");
   if (!kasten) { render(); return; }
   /* 3.17.10 (Station 10): Ein neuer Suchstand ist kein neuer Bildschirm.
@@ -13486,6 +13595,7 @@ function zeichneKartenListe() {
      Liste ununterbrochen. */
   app.classList.add("still-ansicht");
   kasten.innerHTML = kartenListeInhalt();
+  aktualisiereAuswahlLeiste();
 }
 
 /* C2: Blaettern zwischen den Seiten der Kartenliste. */
@@ -13551,7 +13661,7 @@ function renderSetsPanel() {
     html += '<div class="set-gruppe">';
     html += '<div class="set-gruppe-kopf">' + iconSvg(art) + ' ' + SET_ART_TITEL[art] +
       '<span class="badge">' + gruppe.length + '</span></div>';
-    html += '<p class="hint" style="padding:4px 0 2px; font-size:0.84rem">' + SET_ART_ERKLAERUNG[art] + '</p>';
+    if (gefuehrt) html += '<p class="hint" style="padding:4px 0 2px; font-size:0.84rem">' + SET_ART_ERKLAERUNG[art] + '</p>';
     html += '<div class="set-liste" data-gruppe="' + art + '">';
     gruppe.forEach((s, i) => { html += setBlock(s, b, frei, gefuehrt, i + 1, gruppe.length); });
     html += '</div></div>';
@@ -13575,7 +13685,7 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
      Tippen - es gibt hier nichts zu entscheiden. */
   if (gefuehrt && s.art === "lektion") {
     html += '<span class="lock-anzeige" title="' +
-      (zu ? (lehrerGesteuert(b) ? 'Wird von deiner Lehrperson freigeschaltet' : 'Wird frei, sobald die Lektion davor sitzt') : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
+      (zu ? (lehrerGesteuert(b) ? 'Wird von deiner Lehrperson freigeschaltet' : 'Wird frei, sobald die Lektion davor einmal geschafft ist') : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
   }
   /* Beobachtung 7: derselbe Fund wie bei kartenTagsHtml() - ein arabisch
      benannter Kategorie-/Lektionsname lief hier bisher ohne eigene Schrift/
@@ -13593,7 +13703,7 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
     html += '<span class="badge">gesperrt</span>';
   } else if (nurAnzeige) {
     const fest = cards.filter(c => (c.maxStufe || 0) >= LEKTION_STUFE || istVerbrannt(c)).length;
-    html += '<span class="badge">' + fest + ' / ' + cards.length + ' sitzen</span>';
+    html += '<span class="badge">' + fest + ' / ' + cards.length + ' schon einmal gewusst</span>';
     html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" aria-label="Karten anzeigen" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
   } else {
     if (cards.length > 0) html += '<button class="ghost" data-action="drill-set" data-id="' + esc(s.id) + '" title="Diese Auswahl üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
@@ -13626,14 +13736,15 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
         const kartenZu = frei !== null && !frei.has(c.id);
         const hervor = frei !== null && !kartenZu && s.art !== "lektion";
         html += '<div class="card-row' + (kartenZu ? " card-locked" : "") + (hervor ? " card-frei" : "") + '"' +
-          (eigenerBesitz ? ' data-cardid="' + esc(c.id) + '"' : '') + '>';
+          (eigenerBesitz ? ' data-cardid="' + esc(c.id) + '"' : '') +
+          ' data-action="card-detail" data-id="' + esc(c.id) + '" style="cursor:pointer">';
         /* 2.6.0: Griff zum Sortieren INNERHALB dieser Speicherkarte. Er
            veraendert nur cardIds, nie die Reihenfolge des Bereichs. */
         if (eigenerBesitz) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(c.wort) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + (ci + 1) + ' von ' + cards.length + '">' + ikon("griff", "i-sm") + '</span>';
         html += '<div class="words"><div class="wort' + (istArabisch(c.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(c.wort) + '</div>';
         html += '<div class="uebersetzung">' + esc(c.uebersetzung) + '</div>' + kartenTagsHtml(c.id, b, s.id) + '</div>';
         if (kartenZu) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">' + ikon("schloss", "i-sm") + '</span>';
-        html += zustandBadge(c);
+        html += '<span class="card-row__stand">' + zustandPunkte(c) + '</span>';
         if (eigenerBesitz) html += '<button class="ghost" data-action="remove-from-set" data-set="' + esc(s.id) + '" data-id="' + esc(c.id) + '" title="Aus dieser Speicherkarte entfernen (Karte bleibt im Bereich)" aria-label="Aus dieser Speicherkarte entfernen">' + ikon("schliessen", "i-sm") + '</button>';
         html += '</div>';
       });
@@ -13985,7 +14096,8 @@ app.addEventListener("keydown", e => {
   render();
   const fokusSelektor = art === "set"
     ? '.set-block[data-setid="' + CSS.escape(fokusId) + '"] .drag-handle'
-    : '.card-row[data-cardid="' + CSS.escape(fokusId) + '"] .drag-handle';
+    : (setid ? '#set-' + CSS.escape(setid) + ' .set-cards > ' : '#karten-liste > ') +
+      '.card-row[data-cardid="' + CSS.escape(fokusId) + '"] .drag-handle';
   const neuerGriff = document.querySelector(fokusSelektor);
   if (neuerGriff) neuerGriff.focus();
 });
@@ -14193,7 +14305,7 @@ function viewportSyncImBild() {
   viewportSyncGeplant = true;
   requestAnimationFrame(() => { viewportSyncGeplant = false; syncViewportGap(); });
 }
-function syncViewportGap() {
+function syncViewportGap(ereignis) {
   /* 3.6.14: Home-Bildschirm-App auf dem iPhone/iPad (nur dort gibt es
      navigator.standalone). Die Hoehe des Geraetes steht fest in screen.* -
      dort NICHT aus innerHeight ableiten, das schwankt (848/896, je nachdem ob
@@ -14206,7 +14318,7 @@ function syncViewportGap() {
      innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
      viel kleiner) bleibt der Zustand, wie er ist. */
   const root = document.documentElement;
-  syncTastatur();
+  if (!ereignis || ereignis.type !== "scroll") syncTastatur();
   if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
     const ref = Math.max(screen.width, screen.height);
     const diff = ref - window.innerHeight;
@@ -14251,6 +14363,7 @@ function syncViewportGap() {
    Zahl 0, nicht "ein bisschen". */
 const TASTATUR_MIN = 120;
 let tastaturSprung = null;
+let tastaturFeld = null;
 function syncTastatur() {
   const vv = window.visualViewport;
   let hoch = 0;
@@ -14259,14 +14372,16 @@ function syncTastatur() {
     if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
   }
   document.documentElement.style.setProperty("--tastatur", hoch + "px");
-  /* Das Feld, in dem gerade getippt wird, muss sichtbar bleiben. Das Blatt
-     ist jetzt kuerzer, also kann sein Inhalt unter seiner eigenen Unterkante
-     liegen - es scrollt selbst (overflow-y:auto), aber von allein scrollt es
-     nicht dorthin, wo der Cursor steht. iOS uebernimmt das nur fuer normale
-     Seiten zuverlaessig, nicht fuer ein Feld in einem position:fixed-Blatt. */
+  /* G-118: Nur einmal je Fokus/Tastatur-Oeffnen pruefen. Niemals Vorfahren
+     mit scrollIntoView verschieben oder auf vv.scroll erneut scrollen. */
+  if (!hoch) {
+    clearTimeout(tastaturSprung);
+    tastaturFeld = null;
+    return;
+  }
   if (hoch > 0) {
     const feld = document.activeElement;
-    if (feld && feld.closest && feld.closest(".dlg")) {
+    if (feld && feld.closest && feld.closest(".dlg") && feld !== tastaturFeld) {
       /* Kurze Verzoegerung statt requestAnimationFrame: Die Tastatur faehrt
          ueber rund eine Viertelsekunde ein und meldet dabei MEHRERE
          resize-Ereignisse. Wer beim ersten davon misst, scrollt auf einen
@@ -14276,16 +14391,21 @@ function syncTastatur() {
          Browser haelt es an, solange die Seite nicht sichtbar ist.) */
       clearTimeout(tastaturSprung);
       tastaturSprung = setTimeout(() => {
-        /* Ohne "smooth": Das Blatt ist gerade erst auf seine neue Hoehe
-           gesprungen, ein weiches Nachfahren danach sieht aus wie ein
-           zweiter, verspaeteter Ruck. Und mehrere resize-Ereignisse
-           hintereinander wuerden eine laufende weiche Bewegung ohnehin
-           immer wieder abbrechen. */
-        try { feld.scrollIntoView({ block: "center" }); } catch (e) {}
+        if (!feld.isConnected || document.activeElement !== feld) return;
+        tastaturFeld = feld;
+        const blatt = feld.closest(".dlg"), r = feld.getBoundingClientRect();
+        const sicht = window.visualViewport;
+        const unten = Math.min(blatt.getBoundingClientRect().bottom, sicht.height + sicht.offsetTop);
+        if (r.bottom > unten) blatt.scrollTop += r.bottom - unten + 12;
       }, 80);
     }
   }
 }
+document.addEventListener("focusin", () => {
+  tastaturFeld = null;
+  clearTimeout(tastaturSprung);
+  viewportSyncImBild();
+});
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", syncViewportGap);
@@ -14338,7 +14458,9 @@ function spielAustrittsAnimation(dlg, huelle, danach) {
 function closeDialog(result) {
   const d = ui.dialog;
   if (!d) return;
-  const dlg = app.querySelector(".dlg");
+  /* G-118: Das Kartenblatt bleibt jetzt erhalten. Deshalb nur den eigenen
+     Bestaetigungsdialog schliessen, niemals das Blatt darunter ausblenden. */
+  const dlg = app.querySelector('.dlg[aria-labelledby="dlg-title"]');
   const huelle = dlg && dlg.parentElement && dlg.parentElement.classList.contains("dlg-backdrop") ? dlg.parentElement : null;
   spielAustrittsAnimation(dlg, huelle, () => {
     // Alter Timer darf keinen neuen Dialog schliessen - sein eigenes Promise
@@ -14706,6 +14828,7 @@ function nachObenBlaettern() {
 }
 
 document.body.addEventListener("click", e => {
+  if (e.target.closest(".drag-handle")) return;
   const btn = e.target.closest("[data-action]");
   if (!btn) return;
   switch (btn.dataset.action) {
@@ -15055,9 +15178,11 @@ document.body.addEventListener("click", e => {
        stehen (siehe selectBereich() fuer denselben Fund beim Bereichswechsel). */
     case "tab-lernen":
       if (tabSchonAktiv("lernen")) { nachObenBlaettern(); break; }
-      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.searchQuery = ""; ui.kartenSeite = 0; ui.searchAll = false; ui.selectMode = false; ui.selectedIds = new Set(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+      verwaltenAuswahlZuruecksetzen();
+      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "tab-fortschritt":
       if (tabSchonAktiv("fortschritt")) { nachObenBlaettern(); break; }
+      verwaltenAuswahlZuruecksetzen();
       ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
     case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
     case "trotzdem-ueben":
@@ -15067,6 +15192,15 @@ document.body.addEventListener("click", e => {
       break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
+    case "toast-rueckgaengig": {
+      const rueckgaengig = ui.toast?.rueckgaengig;
+      ui.toast = null;
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = null;
+      app.querySelector(".toast-wrap")?.remove();
+      if (rueckgaengig) rueckgaengig();
+      break;
+    }
     case "tab-verwalten":
       if (tabSchonAktiv("verwalten")) { nachObenBlaettern(); break; }
       ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
@@ -15076,6 +15210,11 @@ document.body.addEventListener("click", e => {
     case "lern-undo": lernRueckgaengig(); break;
     case "lern-ende": endeLernen(); break;
     case "start-session": startSession(); break;
+    case "fort-runde":
+      ui.tab = "lernen"; ui.seite = null;
+      if (dueCards().length > 0) startSession();
+      else { window.scrollTo(0, 0); render(); }
+      break;
     case "reveal": revealAnswer(); break;
     case "toggle-extra": toggleExtra(); break;
     case "grade-known": if (!bewertenZuFrueh()) gradeKnown(); break;
@@ -15146,6 +15285,7 @@ document.body.addEventListener("click", e => {
       ui.editId = null; resetFormDraft(); ui.karteSheet = true;
       render(); fokusInsWortfeld(); break;
     case "karte-sheet-zu":
+      if (ui.editId) { cancelEdit(); break; }
       /* 3.17.11: "Fertig" mit vollstaendiger Karte fuegt sie hinzu und
          schliesst - "fertig" heisst nicht "wegwerfen". Klappt das Speichern
          nicht (Duplikat abgelehnt), bleibt das Blatt offen. */
@@ -15167,6 +15307,7 @@ document.body.addEventListener("click", e => {
     case "delete-card": deleteCard(btn.dataset.id); break;
     case "reverse-order": reverseOrder(); break;
     case "toggle-select-mode": toggleSelectMode(); break;
+    case "auswahl-alle": waehleSichtbareKarten(); break;
     /* C2: Blaettern. Nach oben scrollen, sonst steht man nach dem Klick
        mitten in der neuen Seite, ohne zu sehen, dass sie gewechselt hat. */
     case "seite-zurueck": ui.kartenSeite = Math.max(0, ui.kartenSeite - 1); window.scrollTo(0, 0); render(); break;

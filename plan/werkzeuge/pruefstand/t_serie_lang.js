@@ -4,11 +4,12 @@
    ins Protokoll. Der Store wird von Lauf zu Lauf weitergegeben - samt dem,
    was die App selbst geschrieben hat (Sockel, Aufraeumen des Protokolls).
    Aufruf: node t_serie_lang.js  (Gegenprobe: mit altem Code bleibt es bei 121) */
-const { start, neueSeite, vollerStore, GERAETE } = require('./lib');
+const { start, neueSeite, vollerStore, GERAETE, tag } = require('./lib');
 
 function tagAb(offset) {
-  const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + offset);
-  return d.toISOString().slice(0, 10);
+  // Dieselbe 4-Uhr-Grenze wie die Seite und alle anderen Store-Daten.
+  // Kalenderdatum um 00-04 Uhr lag sonst einen Tag vor dem simulierten Lerntag.
+  return tag(offset);
 }
 
 async function lauf(b, name, tageGesamt, luecken, erwartet) {
