@@ -6,7 +6,10 @@ Wie gearbeitet wird: [`CODEX-START.md`](CODEX-START.md). Was der Betreiber entsc
 
 **Status:** `offen` · `in Arbeit` · `erledigt (Version)` · `trifft nicht zu (Grund)` · `zurück (Grund)` · `später (Zn)` (Betreiber hat verschoben – nicht bauen). Die Antworten des Betreibers vom 01.10.2026 („alles wie empfohlen“) stehen in der Spalte „Hinweis“ und in `ENTSCHEIDUNGEN.md`.
 
-**Modell** = Empfehlung für Codex (GPT-6 Luna/Sol/Astra, Denkstufe), siehe `CODEX-START.md` § 2.
+**Modell** = Empfehlung für Codex (GPT-6 Luna / GPT-6.1 Sol / GPT-6 Astra,
+Denkstufe), siehe `CODEX-START.md` § 2. Seit 01.10.2026 steht „Sol“ bei
+offenen oder fortzusetzenden Aufgaben für GPT-6.1 Sol. Erledigte Einträge
+und historische Prüfberichte behalten ihre damalige Bedeutung.
 
 
 ## Paket A – Daten sicher (zuerst, vor allem Neuen)
@@ -33,19 +36,19 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
-| B1 | EIN-1 | hoch | Der Nachklang („Dein Plan steht. Jetzt deine erste eigene Karte." + Wenn-dann-Satz) erscheint nach der Kontoerstellung nie | `befunde/EIN.md` | Astra mittel | offen |  |
-| B2 | EIN-2 | mittel | Probekarte springt beim Antippen doch noch 25 px – wenn „Ich vergesse Wörter schnell wieder" gewählt ist (G-039 nur halb behoben) | `befunde/EIN.md` | Sol niedrig | offen |  |
-| B3 | EIN-3 | mittel | Auf dem iPad ändert der Weiter-Knopf Breite und Lage, sobald man etwas wählt (97 bis 246 px statt der gewollten 420 px) | `befunde/EIN.md` | Sol niedrig | offen |  |
-| B4 | EIN-4 | mittel | „Plan speichern" → „Ich habe schon ein Konto" → „Neues Konto anlegen" wirft den fertigen Plan weg | `befunde/EIN.md` | Sol niedrig | offen |  |
-| B5 | EIN-5 | mittel | Das automatische Scrollen auf dem fertigen Plan lässt sich 3,6 s lang nicht anhalten | `befunde/EIN.md` | Sol niedrig | offen |  |
-| B6 | EIN-6 | mittel | Auf kleinen Handys liegt der Hauptknopf auf den meisten Einstiegs-Bildschirmen unter dem Rand – wegen 60 px reserviertem Leerraum darunter | `befunde/EIN.md` | Sol mittel | offen |  |
-| B7 | EIN-7 | niedrig | Der Weiter-Knopf springt bei jedem Schritt 26 px zur Seite und blendet ab | `befunde/EIN.md` | Sol niedrig | offen |  |
-| B8 | EIN-8 | niedrig | Gast-Start: Ladebild wird ohne Übergang hart durch „Willkommen" ersetzt | `befunde/EIN.md` | Sol niedrig | offen |  |
-| B9 | EIN-9 | niedrig | „Dein Plan entsteht …" hakt dieselbe Sache zweimal ab | `befunde/EIN.md` | Sol niedrig | offen | Z15: wie empfohlen |
-| B10 | EIN-10 | niedrig | Am Übergang zum Konto wechselt der Rahmen (anderer Zurück-Knopf, neue Zählung „Schritt 1 von 2") | `befunde/EIN.md` | Sol mittel | offen | Z16: nur das Formular direkt aus dem Einstieg |
-| B11 | EIN-11 | niedrig | Antworten eines abgebrochenen Einstiegs füllen den nächsten Durchgang vor | `befunde/EIN.md` | Sol niedrig | offen | nur Antworten; Nachklang-Zeitgrenze nicht |
-| B12 | EIN-12 | niedrig | Kommentare beschreiben einen Stand, den es nicht mehr gibt; ein Scroll-Zweig ohne Wirkung | `befunde/EIN.md` | Luna niedrig | offen |  |
-| B13 | Z18 | niedrig | Am Ende des Einstiegs dieselbe Leiste klein noch einmal als „Dein Stand“ zeigen | `VORBILD-MARHABA.md` § 3 Muster 11, `ENTSCHEIDUNGEN.md` Z18 | Sol mittel | offen | Z18: ja, klein; keine Zahl, keine neue Speicherung |
+| B1 | EIN-1 | hoch | Der Nachklang („Dein Plan steht. Jetzt deine erste eigene Karte." + Wenn-dann-Satz) erscheint nach der Kontoerstellung nie | `befunde/EIN.md` | Astra mittel | erledigt (3.18.12) | Neu-/Bestandskonto und erste Karte grün; Paketabschluss grün |
+| B2 | EIN-2 | mittel | Probekarte springt beim Antippen doch noch 25 px – wenn „Ich vergesse Wörter schnell wieder" gewählt ist (G-039 nur halb behoben) | `befunde/EIN.md` | Sol niedrig | erledigt (3.18.12) | Karte vor/nach gleich auf 320/360/390/820; Umfeld und Pflichtregressionen grün |
+| B3 | EIN-3 | mittel | Auf dem iPad ändert der Weiter-Knopf Breite und Lage, sobald man etwas wählt (97 bis 246 px statt der gewollten 420 px) | `befunde/EIN.md` | Sol niedrig | erledigt (3.18.12) | iPad hoch/quer 420 px stabil vor/nach Wahl; Umfeld und Pflichtregressionen grün |
+| B4 | EIN-4 | mittel | „Plan speichern" → „Ich habe schon ein Konto" → „Neues Konto anlegen" wirft den fertigen Plan weg | `befunde/EIN.md` | Sol niedrig | erledigt (3.18.12) | Formular/Rückweg mit denselben Antworten grün; Umfeld und Pflichtregressionen grün |
+| B5 | EIN-5 | mittel | Das automatische Scrollen auf dem fertigen Plan lässt sich 3,6 s lang nicht anhalten | `befunde/EIN.md` | Sol niedrig | erledigt (3.18.12) | wheel/touchstart/keydown, Normalfahrt, Rückweg grün; Umfeld und Pflichtregressionen grün |
+| B6 | EIN-6 | mittel | Auf kleinen Handys liegt der Hauptknopf auf den meisten Einstiegs-Bildschirmen unter dem Rand – wegen 60 px reserviertem Leerraum darunter | `befunde/EIN.md` | Sol mittel | erledigt (3.18.12) | Fortsetzung: 375-Runde Unterkante 663,297 <= 667; 390-Hürden scrollHeight 844; feste Alt-Gegenprobe rot; Paketabschluss grün |
+| B7 | EIN-7 | niedrig | Der Weiter-Knopf springt bei jedem Schritt 26 px zur Seite und blendet ab | `befunde/EIN.md` | Sol niedrig | erledigt (3.18.12) | Bildmessung, 192 angrenzende Zustände und Pflichtregressionen grün; Paketabschluss grün |
+| B8 | EIN-8 | niedrig | Gast-Start: Ladebild wird ohne Übergang hart durch „Willkommen" ersetzt | `befunde/EIN.md` | Sol niedrig | erledigt (3.18.12) | Boot-Ausblendung, Einstieg, Startbilder, Umfeld und Pflichtregressionen grün; Paketabschluss grün |
+| B9 | EIN-9 | niedrig | „Dein Plan entsteht …" hakt dieselbe Sache zweimal ab | `befunde/EIN.md` | Sol niedrig | erledigt (3.18.12) | Z15: Liste ohne Doppelung, bisherige 6720 ms erhalten; Umfeld und Pflichtregressionen grün |
+| B10 | EIN-10 | niedrig | Am Übergang zum Konto wechselt der Rahmen (anderer Zurück-Knopf, neue Zählung „Schritt 1 von 2") | `befunde/EIN.md` | Sol mittel | erledigt (3.18.12) | Z16: nur direktes Formular; 12 Rahmen-/Fehler-Konfigurationen, Umfeld und Pflichtregressionen grün |
+| B11 | EIN-11 | niedrig | Antworten eines abgebrochenen Einstiegs füllen den nächsten Durchgang vor | `befunde/EIN.md` | Sol niedrig | erledigt (3.18.12) | nur Antworten beim frischen Start gelöscht; Neuladen-Abnahme, Umfeld und Pflichtregressionen grün |
+| B12 | EIN-12 | niedrig | Kommentare beschreiben einen Stand, den es nicht mehr gibt; ein Scroll-Zweig ohne Wirkung | `befunde/EIN.md` | Luna niedrig | erledigt (3.18.12) | Kommentare/Dauer korrigiert; Textabnahme, Scrollregression, Umfeld und Pflichtregressionen grün |
+| B13 | Z18 | niedrig | Am Ende des Einstiegs dieselbe Leiste klein noch einmal als „Dein Stand“ zeigen | `VORBILD-MARHABA.md` § 3 Muster 11, `ENTSCHEIDUNGEN.md` Z18 | Sol mittel | erledigt (3.18.12) | Z18: klein, Anfangsstand neu, keine Zahl/neue Speicherung; 12 Konfigurationen, Umfeld und Pflichtregressionen grün |
 
 ## Paket C – Verwalten und Fortschritt
 

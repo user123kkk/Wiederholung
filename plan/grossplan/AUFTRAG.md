@@ -41,10 +41,14 @@ für den Nutzer beim Start einer Session; ein laufender Chat schaltet sein
 eigenes Modell nicht selbst um. Bei begrenztem Kontingent mit dem leichtesten
 passenden Modell beginnen und bei einem nachgewiesenen Problem hochgehen.
 
+Seit 01.10.2026 (Hinweis des Betreibers) bedeutet „Sol“ bei neuen Aufträgen
+GPT-6.1 Sol. Historische Modellangaben bleiben historisch; für Zyklus 2
+gilt die konkrete Pakettabelle in `../zyklus-2/CODEX-START.md` § 2.
+
 | Aufgabe | Codex-Empfehlung | Wann höher gehen |
 |---|---|---|
 | feste Textersetzung, Log-Sichtung, klarer Einzeltest | GPT-6 Luna, niedrig | mehrere abhängige Dateien oder unklarer Befund → Sol |
-| normale Codeänderung, UI-Fix, Regression, Plandateien | GPT-6 Sol, niedrig; bei mehreren Codepfaden mittel | wiederholte Fehlversuche oder Architekturfragen → Astra |
+| normale Codeänderung, UI-Fix, Regression, Plandateien | GPT-6.1 Sol, niedrig; bei mehreren Codepfaden mittel | wiederholte Fehlversuche oder Architekturfragen → Astra |
 | mehrgerätefähige Datenlogik, Firestore-Regeln, schwer reproduzierbares iOS-Verhalten, abschließende Sicherheitsprüfung | GPT-6 Astra, niedrig oder mittel je nach Befund | höhere Denkstufe nur, wenn die konkrete Analyse sie braucht |
 
 Für G-075 ist wegen konkurrierender Geräte und Rückgängig Astra sinnvoll;

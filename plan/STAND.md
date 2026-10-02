@@ -6,7 +6,7 @@ Logbüchern. Wer eine Stufe oder Runde beendet, zieht diese Datei nach.
 Ältere „AKTUELL“-Absätze in `CLAUDE.md` und `plan/PLAN.md` sind Geschichte.
 Wo sie von dieser Datei abweichen, gilt diese Datei.
 
-Stand: 01.10.2026, `main` = **3.18.11, Paket A abgenommen**;
+Stand: 02.10.2026, `main` = **3.18.12, Paket B abgenommen**;
 **online bleibt 3.18.10** (veröffentlicht per `ladegeraet.bat`, 121/121 grün).
 Probelauf Texte läuft ab 01.10. (Stufe 8). Betreiber tut
 dabei nichts außer lernen; am 29.10. „Auswertung“ + Foto der Probelauf-Werte
@@ -16,6 +16,17 @@ G-107–G-111 und G-118). Plan steht: [`zyklus-2/AUFGABEN.md`](zyklus-2/AUFGABEN
 (Pakete A–F), [`zyklus-2/CODEX-START.md`](zyklus-2/CODEX-START.md) (so
 arbeitet Codex), [`zyklus-2/ENTSCHEIDUNGEN.md`](zyklus-2/ENTSCHEIDUNGEN.md)
 (beantwortet 01.10.: alles wie empfohlen; offen nur Z6b und V8).
+**Paket B fertig, 3.18.12, nicht veröffentlicht:** B6 zuerst behoben und
+abgenommen; alle 13 Zeilen erledigt. Vorhandenen Arbeitsstand vollständig
+erhalten. Netzteil bestätigt (BatteryStatus=2). Gesamtlauf einschließlich
+gezieltem Nachlauf **131/131 grün**, Rundenabnahme **13/13** mit identischen
+Hashes; Affe mit Texten Handy200/iPad150 jeweils **0 Befunde**.
+Ein Tempo-Ausreißer (Verwalten 203 ms) gesichert: acht A/B-Paare gegen
+07c7568 ohne Verschlechterung, Nachlauf 170 ms. Einstieg CPU4× vollständig
+erreicht, kurze Pausen bis 174 ms; keine vollständige Ruckelfreiheit oder
+echte iOS-Abnahme behauptet. Gegenprüfung/LEHREN-Checkliste dokumentiert.
+Commit/Push direkt auf main. Kein anderes Paket begonnen, kein Deploy.
+Einzelheiten: oberster Eintrag in [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md).
 **Paket A fertig, 3.18.11, nicht veröffentlicht:** alle 13 Zeilen erledigt.
 Vorhandenen Zwischenstand nach Pull auf `90d7aaa` vollständig erhalten;
 Netzteil danach gemessen (`BatteryStatus=2`). Gesamtlauf einschließlich
@@ -25,9 +36,9 @@ Regeln **210/210**. Gegenprüfung und LEHREN-Checkliste dokumentiert.
 A7/A13: Normal-/Abbruch-Update, Offline-Start und beide Rechtsseiten grün.
 Bestehender Tempo-Ausreißer in Verwalten per A/B gegen `c4b1c30` belegt,
 keine neue Paket-A-Regression; keine vollständige Ruckelfreiheit behauptet.
-Commit/Push direkt auf main; kein Deploy, kein Paket B begonnen.
-**Nächster Bauauftrag:** Paket B in einem neuen Chat, nur auf „B weiter“
-bzw. den Paket-B-Starttext aus CODEX-START. Die restlichen Pakete bleiben offen.
+Commit/Push direkt auf main; kein Deploy; damals noch kein Paket B begonnen.
+**Nächster möglicher Bauauftrag:** Paket C nach einem neuen Auftrag.
+Die restlichen Pakete bleiben offen; in diesem Chat wurde nur B abgeschlossen.
 Die neuen Firestore-Regeln müssen vor einer späteren Hosting-Veröffentlichung
 eingespielt werden. Einzelheiten und vollständige Log-Pfade:
 [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md), oberster Eintrag.

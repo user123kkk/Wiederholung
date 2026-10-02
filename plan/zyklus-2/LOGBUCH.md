@@ -2,6 +2,329 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-02 — Paket B fertig, 3.18.12; kein Deploy
+
+**Geändert:** B6 zuerst behoben; B1–B13 des vorhandenen Arbeitsstands
+vollständig erhalten und abgenommen. Aufgaben auf erledigt (3.18.12),
+STAND/PLAN/Changelog nachgezogen. Eigene temporäre Prüfhilfen nach
+%TEMP%/paket-b-pruefhilfen gesichert und aus scratchpad entfernt.
+**Entscheidung:** Nur Paket B. Netzteil BatteryStatus=2 vor Fortsetzung,
+Tempo und Abschluss; HEAD/origin/main vor Commit unverändert 07c7568.
+Commit/Push direkt auf main, keine Veröffentlichung. Vorhandene Änderungen
+an Modellhinweisen/Dokumentation mit erhalten; keine weiteren Pakete begonnen.
+
+**Prüfung:** Gesamtlauf mit identischem Fingerprint
+afc7570ffdcd75c0edfe8be7a08d7f67a09755d85bcf3b4308ff7eb3993d416d
+einschließlich gezieltem Nachlauf **131/131 grün**, alle vollständigen
+Ausgaben gelesen. Rundenabnahme --fortsetzen **13/13**, gespeicherte
+Quell-/Test-Hashes passen; keine unnötige Wiederholung grüner Fälle.
+Affe nacheinander, AFFE_TEXTE=1, Seed7: Handy200 **0 Befunde**
+(143 Texte-Aktionen), iPad150 **0 Befunde** (126 Texte-Aktionen).
+Syntax/Stand/CSP/Cache grün, alle 33 index.html-Querys auf 3.18.12.
+B6: 375×667 kurze Schritte im Bild, Runde Unterkante 663,297;
+390×844 Hürden ohne Wahl scrollHeight844. G-083 und 192 angrenzende
+Zustände grün. Echos dürfen im Dokumentfluss wachsen; kein sticky-Fuß.
+
+**Tempo-Ausreißer belegt:** t_text_tempo zunächst Verwalten203 ms >200.
+Original erhalten in %TEMP%/paket-b-fort-text-tempo-rot.log.
+x_ab_tempo.js 8 07c7568 am Netzteil, abwechselnd alt/neu:
+Verwalten alt130/131/137/148/150/151/153/168 (Median150),
+neu112/115/121/137/139/140/156/163 (Median139); jeweils0/8 >200.
+Textöffnen alt Median135, neu126; jeweils0/8 >200.
+Keine belegte Paket-B-Verschlechterung. Nachlauf unverändert maximal170 ms,
+Exit0; Grenze200 unverändert. Kein Tempo-Code außerhalb B geändert.
+Einstieg CPU4× vollständig bis „Dein Plan steht“ auf 375/390/820:
+maximale Longtasks145/174/130 ms, maximale Bildabstände159,3/175,1/122 ms.
+Das sind messbare Pausen; vollständige Ruckelfreiheit nicht behauptet.
+Auch die beschreibenden übrigen Tempo-Ausgaben enthalten kurze Blockaden.
+
+**Gegenprüfung (§ 2a):** Produktdiff vollständig gegen EIN-1–12 und Z18
+gelesen, dazu t_paket_b.js und feste Alt-Gegenproben07c7568.
+B1 Frischkonto-Merker am Auth-Wechsel zurückgesetzt, Bestand weiter leer;
+B2 Untertitel hält Kartenlage; B3 Breite420 hoch/quer stabil;
+B4 frühe Rückkehr behält fertigen Plan; B5 Abbruch entfernt RAF/Listener,
+Normalfahrt bleibt, Formularrückweg ohne Fahrt; B6 echte Viewports,
+Schriften/Bilddurchlauf abgewartet, strikte Grenze statt gelockerter Toleranz;
+B7 Fuß von Eintrittsbewegung ausgenommen, echte Klick-Bildmessung;
+B8 Timer prüft denselben Boot-Knoten und rendert aktuellen Zustand;
+B9/Z15 Doppelung weg, Dauer6720 ms erhalten; B10/Z16 nur direktes Formular,
+Bestätigung unverändert; B11 frischer Start löscht nur Antwortenschlüssel;
+B12 Kommentare/Dauer passen; B13/Z18 wiederverwendete kleine Leiste,
+Anfangsstand ohne Zielhaken, neue Zahl oder Speicherung.
+Neue Rückkehr-/Timerpfade gegen Fehler/Kontowechsel/Abbruch gelesen,
+Pflichtregressionen/Fehlerformulare grün. Keine neue Abweichung vom Auftrag.
+Fotos375-Willkommen/Runde,390-Hürden,820-Runde sowie Formular/Plan
+visuell gelesen: keine Überlagerung; lange Inhalte bleiben scrollbar.
+Keine Lernlogik, religiösen Texte, Cloud-Felder, Regeln oder Rechtstexte geändert.
+D10 ist derselbe Scrollbefund wie B5; Paket D bleibt hier unbearbeitet.
+
+**LEHREN §14, Punkt für Punkt:**
+1 Codepfade/Diff gelesen; 2 Muster im Repo gesucht; 3 Texte/Kommentare
+nachgezogen; 4 vorhandene Bauteile/Handlungen, kein neuer persistenter Speicher;
+5 Merker im bestehenden UI-Zustand bzw. Konto-Ladezustand;
+6 Breiten/Themen/reduzierte Bewegung, Sprung/Kontrast und CPU4× gemessen,
+Pausen ausdrücklich beziffert; 7 Wortlaut/Mehrzahl geprüft, keine Methoden-Zahl;
+8 keine neuen Cloud-Felder oder Regeländerung; 9 kein neuer persistenter
+Datenfluss, Datenschutzerklärung unverändert; 10 Syntax grün;
+11 Version/Cache/33 Querys/Changelog/CSP grün; 12 Tests131/131,
+Runde13/13 und Affe0/0; 13 Logbuch/STAND/PLAN/Aufgaben nachgezogen;
+14 Gerätepunkt mit konkreten Schritten dokumentiert, kein Deploy beauftragt.
+
+**Offen:** Kein weiterer Paket-B-Codepunkt. Echtes iOS/Gefühl/E-Mail-Zustellung
+nicht durch Chromium bestätigt. Nach einer späteren Betreiber-Veröffentlichung:
+Gaststart in installierter iPhone-App öffnen (weicher Boot-Übergang),
+Einstieg bis „Runde“ durchgehen (auf SE Hauptknopf sichtbar), auf fertigem
+Plan während der Fahrt nach oben wischen (Position bleibt beim Finger),
+Formular → Anmeldung → Registrierung → Zurück (derselbe Plan erhalten).
+Version/Bilder beim Gerätetest festhalten. Bekannte übrige Pakete und offene
+Betreiberentscheidungen bleiben offen; nichts davon vorgezogen.
+Regeln aus Paket A weiterhin vor einer späteren Hosting-Veröffentlichung
+einspielen lassen (ladegeraet übernimmt das). Hier kein Deploy.
+**Logs:** %TEMP%/adrabic-pruefstand-gesamt/afc7570ffdcd75c0;
+%TEMP%/paket-b-fort-{gesamt-nachlauf,tempo-ab,einstieg-tempo,affe-handy,affe-ipad}.log;
+Einzel-/Alt-/Umfeldlogs in den vorherigen Einträgen. Bilder unter
+%TEMP%/adrabic-pruefbilder/paket-b-*.png.
+**Nächster Schritt:** Paket B auf main committen/pushen, dann anhalten.
+Ein neues Paket braucht einen neuen Auftrag. Nicht veröffentlichen.
+
+### 2026-10-02 — Netzteil bestätigt, Paket-B-Abschluss fortgesetzt
+
+**Geändert:** Produktstand unverändert, alle uncommittierten Änderungen behalten.
+**Entscheidung:** Betreiber meldet „netzteil ist dran“; BatteryStatus=2.
+Server8099 und Firestore-Emulator8081 wieder gestartet. Gesamtlauf
+--fortsetzen bestätigt denselben Fingerprint afc7570ffdcd75c0 und bewahrt
+73 grüne Tests; die restlichen 58 laufen frisch.
+**Offen:** Restlauf, CPU-4×, Affe, Schlussprüfung und Commit/Push.
+**Nächster Schritt:** Nur Paket B abschließen, keine Veröffentlichung.
+
+### 2026-10-02 — Paket B gebaut, Abschluss wartet auf Netzteil
+
+**Geändert:** Keine weitere Produktänderung. Uncommittierten Stand erhalten;
+B6 behoben, alle 13 Einzelabnahmen grün, Version 3.18.12 vorbereitet.
+**Entscheidung:** Nach Unterbrechung keine laufenden Prüfdienste mehr.
+Netzteilprüfung liefert BatteryStatus=1, Ladestand 93 %. Deshalb nach
+CODEX-START § 5.4 keinen weiteren Gesamtlauf/Tempo-Test/Commit auf Akku.
+Betreiber hat GPT-6.1 gewählt und sparsames Vorgehen gewünscht.
+**Prüfung:** 73/131 Gesamttests am identischen Fingerprint
+afc7570ffdcd75c0edfe8be7a08d7f67a09755d85bcf3b4308ff7eb3993d416d
+mit Exit 0 gespeichert, keine gespeicherten roten Tests. Alle 73 Ausgaben
+vollständig gelesen, zuletzt t_leiste.js. Bereits grüne Fälle per
+--fortsetzen behalten; kein vollständiger Gesamterfolg behauptet.
+Produktdiff/Tests erneut gegen EIN-1–12 und Z15/Z16/Z18 gelesen:
+Frischkonto-Merker beim Auth-Wechsel zurückgesetzt, Rückplan erhalten,
+Boot-Timer an seinen Knoten gebunden, Scroll-Abbruch und Dauer passend,
+B6 echte Viewports/Schriftbereitschaft, strikte Unterkante ohne Toleranz.
+Keine zusätzlichen Paketänderungen nötig; Gerätegefühl bleibt ungeprüft.
+**Offen:** Restliche 58 Tests, CPU-4×-Einstiegsmessung und Bilder
+(scratchpad/b-tempo.cjs vorbereitet), Affe Handy200/iPad150 mit Texten,
+Rundenabnahme --fortsetzen, abschließende LEHREN-Checkliste, Status/Commit/Push.
+Logs: %TEMP%/adrabic-pruefstand-gesamt/afc7570ffdcd75c0.
+Eigene scratchpad-Hilfen vor Commit entfernen; keine vorhandenen Dateien löschen.
+**Nächster Schritt:** Betreiber schreibt „Netzteil dran“. Dann BatteryStatus=2
+prüfen, Server8099/Firestore-Emulator8081 starten und denselben Lauf fortsetzen.
+Kein anderes Paket, keine Veröffentlichung.
+
+### 2026-10-02 — Paket-B-Prüflauf nach Nutzungslimit fortgesetzt
+
+**Geändert:** Keine Produktänderung seit Fingerprint afc7570ffdcd75c0.
+**Entscheidung:** Unterbrechung beendete Server, Emulator und Prüfprozess.
+Lokale Dienste wieder gestartet, danach alle_pruefen.js --fortsetzen:
+elf erfolgreiche Tests mit identischen Quell-/Test-Hashes bewahrt, die
+fehlenden laufen frisch. BatteryStatus=2. Betreiber wünscht sparsames
+Vorgehen; keine unnötigen Wiederholungen, vorgeschriebene Abnahmen bleiben.
+**Offen:** Gesamtlauf, dessen Auswertung und Paketabschluss laufen noch.
+**Nächster Schritt:** Paket B abschließen, kein anderes Paket, kein Deploy.
+
+### 2026-10-01 — Paket B fortgesetzt, B6 abgenommen; Gesamtlauf läuft
+
+**Geändert:** Vorhandenen uncommittierten Stand vollständig erhalten.
+B6 in styles.css: Fußpadding 16 px, unter 761 px 12 px und leeren
+Konto-Link-Platz einschließlich Flex-Abstand ausblenden. Der echte Link
+auf Willkommen bleibt. t_paket_b.js wartet bei B6 auf Schrift/Bilddurchlauf,
+Unterkante auf 375 px wird strikt <= Fensterhöhe geprüft. Paketversion
+3.18.12 in app.js, sw.js, allen 33 index.html-Querys und CHANGELOG.
+**Entscheidung:** Betreiber beauftragt ausdrücklich B6/Status zurück und
+Abschluss des vorhandenen Pakets. Deshalb kein Verwerfen und kein Pull
+über den Arbeitsstand; fetch bestätigt HEAD = origin/main = 07c7568.
+Netzteil zweimal BatteryStatus=2. Keine Veröffentlichung.
+**Abnahme B6:** Fester Vorstand 07c7568 mit zwei echten Befunden rot,
+neuer Stand auf 320/360/375/390/820 grün. 375×667 Unterkanten für
+Willkommen/Ziel/Karte/Schrift/Runde: 628,938/607,672/635,484/607,672/663,297.
+390×844 Hürden: scrollHeight = innerHeight = 844; Knopflage wie die kurzen
+Schritte (0,203 px Rundung). 192 angrenzende Zustände (390/320/iPad,
+hell/dunkel, ruhig/bewegt, 0–7 leer/voll) ohne Überlagerung, Querscrollen
+oder Seitenfehler. G-039/040/041/044/083 samt festen Gegenproben grün.
+Logs: %TEMP%/paket-b-fort-{B6-alt,umfeld,g083}.log.
+**Offen:** Gesamtlauf 131 Tests gestartet mit Fingerprint
+afc7570ffdcd75c0edfe8be7a08d7f67a09755d85bcf3b4308ff7eb3993d416d
+unter %TEMP%/adrabic-pruefstand-gesamt/afc7570ffdcd75c0.
+Danach Ausgaben lesen, Affe Handy200/iPad150, Gegenprüfung und Commit/Push.
+Kein anderes Paket beginnen. Gerätebestätigung bleibt von Chromium getrennt.
+**Nächster Schritt:** Lauf vollständig auswerten und Paket B abschließen.
+
+### 2026-10-01 — Modellhinweise um GPT-6.1 Sol aktualisiert
+
+**Geändert:** Auf Betreiberhinweis die Sol-Empfehlungen in CODEX-START
+(Starttexte, Pakettabelle, Faustregel) und grossplan/AUFTRAG auf GPT-6.1 Sol
+umgestellt; Kürzel in AUFGABEN für offene/fortzusetzende Aufgaben definiert.
+**Entscheidung:** Neue Sol-Arbeit mit GPT-6.1 Sol; Astra/Luna und Denkstufen
+beibehalten. Historische Berichte nicht umgeschrieben. Quelle geprüft:
+[OpenAI-Modellbeschreibung](https://developers.openai.com/api/docs/models/gpt-6.1-sol).
+**Offen:** Paket B weiterhin uncommittiert bei B6 angehalten, siehe unten.
+Keine Produktänderung, keine neue Paketabnahme, kein Commit/Push/Deploy.
+**Nächster Schritt:** B6 wie im folgenden Eintrag nachholen.
+**Prüfung:** Modellverweise und Dokumentdiff gelesen, git diff --check grün;
+für diese reine Planänderung keine Produktprüfungen wiederholt.
+
+### 2026-10-01 — Paket B angehalten bei B6, uncommittiert; Ausgang 07c7568 / 3.18.11
+
+**Geändert:** Nur Paket B: Nachklang, Probekartenhöhe, iPad-Fußbreite,
+Plan-Rückweg, Scroll-Abbruch, Knopfbewegung, Gast-Boot, doppelte Aufbauzeilen,
+direkter Formularrahmen, frischer Antwortenspeicher, Kommentare/Scroll-Dauer,
+kleine Stand-Leiste. t_paket_b.js mit festen Gegenproben gegen 07c7568.
+**Entscheidung:** Sauberer main, Pull aktuell, Syntax/Stand grün; lokaler
+Server 8099 und geprüfter Chrome starten. BatteryStatus=2.
+B1-Gegenprobe rot: Nachklang fehlt nach neuer Registrierung.
+Neue Abnahme grün: Satz nach 3,5 s sichtbar, erste Karte löscht ihn;
+Bestandskonto löscht beide Schlüssel. G-042-Bestandsregression grün.
+**Offen:** B6 nach zwei gescheiterten Änderungen zurück. B1–B5/B7–B13
+haben grüne Einzelabnahmen und bleiben wegen fehlendem Paketabschluss
+`in Arbeit`, nicht als veröffentlichte/committierte Version erledigt.
+Gesamtlauf 131 Tests, Affe Handy 200/iPad 150, CPU-4×-Prüfung und neue
+Paketversion vor Commit/Push ausstehend. Diese Schritte wurden wegen der
+weiter roten B6-Abnahme nicht als grüne Paketabnahme ausgegeben.
+Keine Veröffentlichung, kein Commit/Push, Version weiterhin 3.18.11.
+**Nächster Schritt:** In neuem Chat (Astra mittel empfohlen) B6/Status
+zurück nachholen, alle vorhandenen Änderungen behalten. Danach Paket B
+gemäß CODEX-START § 5 abschließen. Kein anderes Paket beginnen.
+
+B13/Z18: einstiegLeiste wiederverwendet, klein auf dem fertigen Plan;
+Anfangsstand neu, spätere Punkte ungefüllt, kein erreichter Zielhaken.
+Keine Zahl und keine neue Speicherung (localStorage vor/nach identisch).
+Zwölf Konfigurationen 390/320/iPad, tatsächlich hell/dunkel, ruhig/bewegt,
+einschließlich sichtbarer Leiste/Kontrast/Seitenfehler grün. Fotos von
+Formular und Plan hell/dunkel visuell gelesen (keine Überlagerung).
+Umfeld/Pflichtregressionen grün (B13-*.log).
+
+**Gegenprüfung:** Gesamten Produktdiff gegen EIN-1 bis EIN-12 und Z18 gelesen.
+Neue frühe Rückkehr in mode-register erhält den Rückplan; Boot-Timer prüft
+denselben Knoten und rendert den dann aktuellen Zustand. Frischkonto-Merker
+wird beim Auth-Wechsel gelöscht; Bestandskonto-Caches werden weiter geleert.
+Scroll-Abbruch entfernt Listener/RAF, Rückweg startet keine neue Fahrt.
+Z15 erhält Dauer trotz kürzerer Liste; Z16 betrifft nur das direkte Formular.
+Z18 zeigt Anfang statt gelernter Karten. Keine Änderung an Lernlogik,
+religiösem Wortlaut, Cloud-Feldern, Regeln oder Rechtstexten.
+Tests gegen den Befund gelesen: Themenquelle korrigiert; B7 zusätzlich mit
+echtem Weiter-Klick statt neuem Fixture. Fester Vorstand zeigt x=38→12,
+Deckkraft 0,6→1; die neue Abnahme verlangt jedes Bild x=12/Deckkraft 1.
+B6-Abnahme bleibt ausdrücklich rot; keine Testgrenze gelockert.
+
+**LEHREN § 14, Punkt für Punkt (kein Commit):**
+1 Codepfade gelesen; 2 Muster im Repo gesucht; 3 betroffene Kommentare
+korrigiert; 4 vorhandene Handlungen/Bauteile, kein neuer persistenter Speicher;
+5 UI-Merker im bestehenden Zustand; 6 Breiten/Themen/reduzierte Bewegung,
+Sprung/Kontrast gemessen, CPU 4× noch vor Paketabschluss nötig;
+7 vorhandener Wortlaut, keine neue Methoden-Zahl; 8 keine neuen Cloud-Felder;
+9 kein neuer persistenter Datenfluss; 10 Syntax grün; 11 bisherige Version
+konsistent, neue Paketversion ausstehend; 12 Einzel-/Pflichttests grün außer
+B6, Paketgesamtlauf/Affe ausstehend; 13 Logbuch/Stand/Plan nachgezogen;
+14 Betreiber bekommt den nächsten Starttext und den Anhaltegrund.
+
+**Endstand-Prüfungen:** Alle 13 festen Gegenproben rot wie erwartet.
+Aktuelle B-Abnahmen: zwölf grün, nur B6 rot (375-Runde 675,297 >667,
+390-Hürden scrollHeight 852 >844). G-039/040/041/044/083 und G-042
+mit ihren festen Gegenproben erneut grün; Syntax/Versions-/CSP-Prüfung grün.
+Logs: %TEMP%/paket-b-final-{abnahmen,gegenproben,g083,bestand}.log;
+nach B7-Testschärfung zusätzlich paket-b-end-{abnahmen,B7-alt}.log.
+
+B12/EIN-12: Veraltete Aussagen zu Überspringen, Hero-Drehung, sticky-Fuß,
+Kartenbauteil, Ringdauer und zweimaligem Haken korrigiert. Aufbau-Scroll
+nutzt einstiegBauDauerFuer statt fest sechs Punkten; scrollY erst im RAF,
+alter ui.einstiegBauScrollStartTop vollständig entfernt. Text-Gegenprobe
+rot; Textabnahme, B5-Scrollregression, Umfeld und Pflichtregressionen grün
+(B12-*.log). Übriges position:sticky betrifft Verwalten, nicht den Einstieg.
+
+B11/EIN-11: Beim frischen render()-Start auf Bildschirm 0 nur den
+Antwortenschlüssel entfernen. Keine Nachklang-Zeitgrenze eingebaut.
+Feste Gegenprobe rot, Schriftwahl und Neuladen mit anschließendem null
+grün; Umfeld und Pflichtregressionen grün (B11-*.log).
+
+B10/EIN-10/Z16: einstiegKopf mit Rückaktion/Name wiederverwendet, direktes
+Registrierungsformular in derselben solo/einstieg-Struktur; separate Zählung
+entfällt nur dort. Bestätigung nicht angefasst. Feste erweiterte Gegenprobe
+07c7568 rot (Formularkopf fehlt). Aktuell alle zwölf Konfigurationen:
+390/320 Kopf x=12 y=28, iPad x=70 y=28 vor/nach, auch nach leeren
+Pflichtfeldern und Rückweg. Umfeld/Pflichtregressionen/t_konto grün
+(B10-*.log). Rahmen bleibt auch bei Neuzeichnen nach Feldfehler erhalten.
+
+B9/EIN-9/Z15: Je erster Hürde schrift/zeit/dran die doppelte feste Zeile
+weggelassen, übrige Hürden behalten alle festen Zeilen. Keine neuen Texte.
+Z15-Dauer explizit erhalten: 6720 ms vor/nach Wegfall, Ring/Timer verwenden
+dieselbe Dauerfunktion. Gegenprobe rot, Abnahme/192 Zustände/Pflichtregressionen
+grün (B9-*.log). B12 zieht den noch fest auf sechs gerechneten Scroll-Zweig nach.
+
+B7/EIN-7: Eintritt auf direkte Inhaltskinder begrenzt, Fuß ausgeschlossen.
+Gegenprobe 07c7568 rot; 20 Bilder nach Schrittwechsel x=12 und Deckkraft=1.
+192 Zustände mit tatsächlich geprüftem Thema, Pflichtregressionen grün.
+B8/EIN-8: vorhandenes Boot auch beim Gast ausblenden, 300 ms ohne Mindesthalt;
+Timer prüft denselben DOM-Knoten und zeichnet den aktuellen Zustand.
+Feste Gegenprobe rot, aktuelle Folge boot/boot--exit/Einstieg grün.
+Umfeld, t_sprung/t_kontrast/t_a11y, t_boot_geometrie und t_einstieg grün
+(B7-/B8-*.log). t_einstieg beschreibt bestehende Echo-Verschiebungen:
+Hürden Handy 39 px, kleines Handy Ziel 4 px; kein Kontrast-/Quer-/Seitenfund.
+
+B6/EIN-6 zurück nach zwei Änderungsversuchen (§ 6). Versuch 1:
+Leerplatz unter 760 px entfernt, Fußpadding space-4; auf 375×667 Runde
+675,297 px, auf 390×844 Hürden scrollHeight 852. Diagnose belegt:
+Leerplatz tatsächlich 0, Padding 16; die Abnahme bleibt rot.
+Versuch 2: derselbe Padding-Weg mit space-2 (8 px): Runde 667,297 px,
+Hürden weiter 852 statt 844. Kein dritter Versuch; nur die beiden
+B6-Änderungen zurückgenommen, B2/B3 vollständig erhalten. Neuer
+scharfer B6-Test bleibt bestehen, keine Grenze gelockert oder übersprungen.
+Logs: %TEMP%/paket-b-B6-B6.log, B6-diagnose.log, B6-neu-B6.log.
+Paket wird mit B7 fortgesetzt; wegen offener roter B6-Abnahme kein Commit.
+
+**Korrektur Umfeld-Messung B2–B5:** Der neue Gast-Test übergab thema wie
+ein Kontotest an fullerStore; Gäste lesen jedoch die lokale Wahl. Die mit
+hell beschrifteten Fälle waren deshalb ebenfalls dunkel. Die Zahlen
+192 Zustände waren richtig, die Themenabdeckung war nicht belegt. Test
+setzt nun adrabic-thema und verlangt data-thema === thema. Betroffene
+Umfeld-Abnahmen werden frisch wiederholt; vorhandene t_kontrast-Läufe
+prüften reale Kontothemen und bleiben davon getrennt. Keine alte
+hell/dunkel-Behauptung als aktuelle Abnahme verwenden.
+
+B5/EIN-5/R15-119 (D10-Dopplung): Eingabe-Abbruch für beide Scroll-Schleifen,
+Listener bei Ende/Abbruch entfernt; Formular-Rückweg startet die Fahrt nicht
+erneut. Gegenprobe 07c7568: wheel lässt Aufbau-RAF weiterlaufen, fertiger
+Plan zieht nach Eingabe auf 259 px. Neue Abnahme wheel/touchstart/keydown,
+echtes Mausrad, Normalfahrt bis unten und Rückweg oben grün. 192 angrenzende
+Zustände und t_sprung/t_kontrast/t_a11y grün. Keine Dauer/Kurve verändert.
+
+B4/EIN-4: mode-register erhält den fertigen EinstiegZurueck-Plan und
+wechselt nur zum Registrierungsformular. Feste Gegenprobe 07c7568 zeigt
+Ziel-Neustart statt Plan speichern; neue Abnahme Formular/Rückweg/Antworten
+grün. 192 angrenzende Zustände und t_sprung/t_kontrast/t_a11y grün.
+Neuer Paket-Test unterbindet Worker-Registrierung, damit feste Quellen
+auch nach Neuladen gelten; echte Worker bleiben separat geprüft.
+
+B3/EIN-3: CSS-Fußbreite 100%, weiterhin max. 420 px. Feste Gegenprobe:
+97–246 px auf iPad; aktuelle Abnahme 0–7 auf 820/1180 px jeweils 420 px,
+links 200/380 px, Auswahl ändert Breite/Lage nicht. 192 angrenzende
+Zustände und t_sprung/t_kontrast/t_a11y grün (B3-*.log).
+
+B2/EIN-2: feste Gegenprobe 07c7568 zeigt bei vergessen auf 320/360/390
+jeweils -24,703125 px, keine/iPad unverändert. Untertitel reserviert jetzt
+zwei Zeilen nur für vergessen; Abnahme auf 320/360/390/820 jeweils 0 px.
+Bestehende G-039/040/041/044/083-Abnahme samt 5ad0a11-Gegenprobe grün;
+t_sprung (alle vier Geräte), t_kontrast (0 Funde), t_a11y grün.
+Angrenzende 390/320/iPad, hell/dunkel, ruhig/bewegt, leer/voll laufen.
+Nachlauf: alle 12 Konfigurationen, jeweils 0–7 leer/voll (192 Zustände),
+ohne Querscrollen, Überlagerung oder Seitenfehler grün (B2-umfeld.log).
+Eigener Prüfaufbau B4/B10: Fixture zeichnete den Plan unmittelbar vor
+Plan speichern; echte 400-ms-Sperre ignorierte den Tipp. Jetzt 450 ms
+abgewartet. Korrigierte feste Gegenprobe B4 endet tatsächlich bei Ziel,
+B10 zeigt das fehlende Kopf-Markup auf dem Formular, beide rot.
+
 ### 2026-10-01 — Paket A fertig am Netzteil, 3.18.11, nicht veröffentlicht
 
 **Geändert:** Vorhandenen uncommitteten Paket-A-Stand vollständig fortgesetzt,

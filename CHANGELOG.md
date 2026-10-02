@@ -1,3 +1,18 @@
+## 3.18.12 – 2. Oktober 2026
+
+**Paket B: Einstieg bis zur ersten eigenen Karte verbessert.** Der gewählte
+Wenn-dann-Satz bleibt nach der Kontoerstellung bis zur ersten Karte sichtbar.
+Die Probekarte springt beim Aufdecken nicht mehr, der Weiter-Knopf behält
+auf dem iPad seine Breite und bewegt sich beim Schrittwechsel nicht mit.
+Auf kurzen Bildschirmen entfällt der leere Platz unter dem Knopf.
+
+Der fertige Plan bleibt beim Wechsel zwischen Anmeldung und Registrierung
+erhalten; eigenes Scrollen beendet die automatische Fahrt. Gäste bekommen
+den vorhandenen Übergang vom Ladebild. Der Plan-Aufbau enthält keine
+doppelten Angaben, behält seine Dauer und zeigt am Ende klein „Dein Stand“.
+Das anschließende Formular übernimmt den Einstiegsrahmen. Ein neuer
+Durchgang beginnt ohne alte Schrift-/Rundenantworten.
+
 ## 3.18.11 – 1. Oktober 2026
 
 **Paket A: Kontowechsel und Datenspeicherung abgesichert.** Alte Dialoge und

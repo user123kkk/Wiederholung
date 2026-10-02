@@ -32,15 +32,15 @@ Die Texte zum Einfügen (nur kopieren, nichts ändern):
 
   > Lies `AGENTS.md` und danach `plan/zyklus-2/CODEX-START.md` vollständig. Arbeite **Paket A** aus `plan/zyklus-2/AUFGABEN.md` ab, genau nach CODEX-START § 3 bis § 7. Nichts anderes. Nicht veröffentlichen.
 
-- **Paket B** (Sol, mittel): derselbe Text mit **Paket B**.
-- **Paket C** (Sol, mittel): derselbe Text mit **Paket C**, dazu der Satz
+- **Paket B** (GPT-6.1 Sol, mittel): derselbe Text mit **Paket B**.
+- **Paket C** (GPT-6.1 Sol, mittel): derselbe Text mit **Paket C**, dazu der Satz
   „Die Zeile Z1-Umbau auslassen.“ Danach ein eigener Chat (Astra, mittel):
 
   > Lies `AGENTS.md` und danach `plan/zyklus-2/CODEX-START.md` vollständig. Arbeite nur die Zeile **Z1-Umbau** aus Paket C in `plan/zyklus-2/AUFGABEN.md` ab, genau nach CODEX-START § 3 bis § 7. Zeig mir Fotos des neuen Tabs, bevor Du committest. Nicht veröffentlichen.
 
-- **Paket D** (Sol, mittel): derselbe Text mit **Paket D**.
-- **Paket E** (Sol, mittel): derselbe Text mit **Paket E**.
-- **Paket F** (Sol, niedrig): derselbe Text mit **Paket F**.
+- **Paket D** (GPT-6.1 Sol, mittel): derselbe Text mit **Paket D**.
+- **Paket E** (GPT-6.1 Sol, mittel): derselbe Text mit **Paket E**.
+- **Paket F** (GPT-6.1 Sol, niedrig): derselbe Text mit **Paket F**.
 - **Danach, Nachprüfung** (Astra, mittel):
 
   > Lies `AGENTS.md` und `plan/zyklus-2/CODEX-START.md`. Mach die Nachprüfung nach `plan/zyklus-2/AUFTRAG.md` § 3.6: jede Zeile in `AUFGABEN.md` gegen den Code prüfen, dazu die Listen „Nicht mehr geprüft“ am Ende jeder Datei in `plan/zyklus-2/befunde/` abarbeiten. Neue Funde als neue Zeilen in `AUFGABEN.md`. Nichts bauen.
@@ -55,17 +55,24 @@ Die Spalte „Modell“ in `AUFGABEN.md` nennt die Empfehlung je Aufgabe. Ein Ch
 schaltet sein Modell nicht selbst um. Deshalb gilt je Paket **ein** Modell,
 das für die schwerste Aufgabe darin reicht:
 
+**Aktualisiert 01.10.2026 auf Hinweis des Betreibers:** GPT-6.1 Sol ist
+verfügbar und ersetzt GPT-6 Sol in den Empfehlungen für neue Sol-Arbeit.
+„Sol“ in noch offenen Aufgaben bedeutet ab jetzt **GPT-6.1 Sol**;
+„Astra“ bleibt GPT-6 Astra, „Luna“ bleibt GPT-6 Luna. Historische Berichte
+und erledigte Aufgaben werden dadurch nicht nachträglich umgedeutet.
+Grundlage: [offizielle Modellbeschreibung](https://developers.openai.com/api/docs/models/gpt-6.1-sol).
+
 | Paket | Inhalt | Modell für den Chat | Denkstufe |
 |---|---|---|---|
 | A | Daten, Regeln, Kontowechsel | GPT-6 Astra | mittel |
-| B | Onboarding | GPT-6 Sol | mittel |
-| C | Verwalten, Fortschritt | GPT-6 Sol; Zeile „Z1-Umbau“ in eigenem Chat mit Astra | mittel |
-| D | Bewegung | GPT-6 Sol | mittel |
-| E | Lernen, Einstellungen, Konto | GPT-6 Sol | mittel |
-| F | Aufräumen | GPT-6 Sol | niedrig |
+| B | Onboarding | GPT-6.1 Sol | mittel |
+| C | Verwalten, Fortschritt | GPT-6.1 Sol; Zeile „Z1-Umbau“ in eigenem Chat mit Astra | mittel |
+| D | Bewegung | GPT-6.1 Sol | mittel |
+| E | Lernen, Einstellungen, Konto | GPT-6.1 Sol | mittel |
+| F | Aufräumen | GPT-6.1 Sol | niedrig |
 | Nachprüfung | alles gegenlesen | GPT-6 Astra | mittel |
 
-Faustregel, wenn Du unsicher bist: **Sol mittel**. Astra für A, den Umbau des
+Faustregel, wenn Du unsicher bist: **GPT-6.1 Sol mittel**. Astra für A, den Umbau des
 Fortschritt-Tabs und die Nachprüfung. Scheitert Codex zweimal an einer
 Aufgabe, trägt es `zurück` ein; diese Zeilen am Ende in einem Chat mit Astra
 nachholen („Arbeite alle Zeilen mit Status zurück ab“).

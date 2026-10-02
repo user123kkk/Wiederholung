@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.11";
+const APP_VERSION = "3.18.12";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1229,6 +1229,7 @@ let currentUser = null;      // Firebase-User
 let displayName = "";
 let bereiche = null;         // Array [{name, karten:[]}] – null solange Cloud-Daten noch nicht geladen
 let cloudDocExists = false;
+let cloudKontoFrisch = false; // EIN-1: eigenes Startdokument ist kein Bestandskonto
 let syncError = null;
 /* 3.6.9: Offline war bisher unsichtbar - die App laeuft dann weiter (Service
    Worker + Firestore-Cache), aber wer im Zug lernt, erfuhr nirgends, ob seine
@@ -2321,6 +2322,7 @@ async function initFirebase() {
     abgelehnteBewertungen.clear();
     if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
     cloudDocExists = false;
+    cloudKontoFrisch = false;
     feedbackListe = null;
     feedbackEigeneVotes = new Set();
     feedbackFehler = null;
@@ -2443,6 +2445,7 @@ async function initFirebase() {
         syncError = null;
         if (!data) {
           cloudDocExists = false;
+          cloudKontoFrisch = true;
           texteEinwilligung = null;
           bereiche = normBereiche(null);
           streak = normStreak(null);
@@ -2463,7 +2466,7 @@ async function initFirebase() {
           render();
           return;
         }
-        if (!cloudDocExists) {
+        if (!cloudDocExists && !cloudKontoFrisch) {
           /* 3.17.42 (G-042, Befund EINSTIEG-7 - nur der mechanische Teil):
              Bestandskonto, gerade angemeldet. Der Zwischenspeicher aus einem
              GAST-Einstieg auf diesem Geraet (Antworten, Wenn-dann-Satz)
@@ -6777,7 +6780,8 @@ function tickCountups() {
 
    Was bleibt (NEUAUFBAU-3.md Abschnitt 5): keine erfundene Zahl, keine
    Wirkungszusage. Jede Angabe ueber Abstaende kommt aus intervalForStufe() -
-   gerechnet, nicht abgeschrieben. Ueberspringen auf jedem Fragebildschirm.
+   gerechnet, nicht abgeschrieben. Pflichtfragen brauchen eine Antwort;
+   Zurueck bleibt auf jedem Fragebildschirm erreichbar.
    Kein Ausrufezeichen. Die Lernlogik wird nirgends beruehrt. */
 const EINSTIEG_LETZTER = 7;
 
@@ -6857,16 +6861,16 @@ function einstiegWegAbstand(i) { return Math.sqrt(intervalForStufe(i)); }
 /* Die waagerechte Leiste (Bildschirm 1 und nach "Sicher"): Punkte, die sich
    fuellen, Pfeile dazwischen, vier Worte darunter - kein Zeitstrahl mit
    Zahlen. Das Ziel "sitzt" traegt einen Haken und leuchtet einmal auf. */
-function einstiegLeiste(spaeter) {
-  let h = '<div class="einstieg-leiste' + (spaeter ? ' einstieg-leiste--spaeter' : '') + '" role="img" ' +
-    'aria-label="Der Weg eines Wortes: neu, frisch gelernt, wird fester, gefestigt – jedes Mal mit mehr Abstand">';
+function einstiegLeiste(spaeter, stand = false) {
+  let h = '<div class="einstieg-leiste' + (spaeter ? ' einstieg-leiste--spaeter' : '') + (stand ? ' einstieg-leiste--stand' : '') + '" role="img" ' +
+    'aria-label="' + (stand ? 'Dein Stand: neu. ' : '') + 'Der Weg eines Wortes: neu, frisch gelernt, wird fester, gefestigt – jedes Mal mit mehr Abstand">';
   EINSTIEG_WEG.forEach((p, i) => {
     if (i > 0) {
       h += '<span class="einstieg-leiste__stueck" style="--w:' + einstiegWegAbstand(i).toFixed(2) + ';--i:' + i + '"></span>';
     }
-    h += '<span class="einstieg-leiste__punkt' + (p.ziel ? ' einstieg-leiste__punkt--ziel' : '') + '" ' +
-      'style="--i:' + i + ';--fuellung:' + p.fuellung + '">' +
-      (p.ziel ? ikon("haken", "i-sm") : '') +
+    h += '<span class="einstieg-leiste__punkt' + (p.ziel && !stand ? ' einstieg-leiste__punkt--ziel' : '') + '" ' +
+      'style="--i:' + i + ';--fuellung:' + (stand && i > 0 ? 'transparent' : p.fuellung) + '">' +
+      (p.ziel && !stand ? ikon("haken", "i-sm") : '') +
       (p.wort ? '<span class="einstieg-leiste__wort">' + esc(p.wort) + '</span>' : '') + '</span>';
   });
   h += '</div>';
@@ -6922,8 +6926,8 @@ function einstiegKarteWort(groesse) {
     'style="transform:scale(' + faktor + ')">' + esc(EINSTIEG_BEISPIEL.arab) + '</div>';
 }
 
-/* Die Karte auf dem ersten Bildschirm: sie dreht sich hin und zurueck (zeigt
-   die Uebersetzung kurz, endet wieder auf Arabisch) - darunter waechst die
+/* Die Karte auf dem ersten Bildschirm: sie dreht sich einmal und bleibt
+   auf der Uebersetzung stehen - darunter waechst die
    Leiste der Abstaende. Das ist die "Demo" (Cal AI) ohne Video: die App in
    Aktion, bevor irgendetwas gefragt wird.
    3.17.20 (offene Frage 16, Betreiber-Bedenken 24.09.2026: "wenn man slow
@@ -7093,11 +7097,11 @@ function einstiegFreiVerbinden() {
 /* Oben: Zurueck und ein duenner Balken - bei allen drei Vorbildern gleich.
    Keine Zahl ("Schritt 3 von 7"), nur die Strecke. Der Balken waechst von
    seinem letzten Stand aus, nicht von null. */
-function einstiegKopf(e) {
+function einstiegKopf(e, zurueckAktion = "einstieg-zurueck", zurueckLabel = "Zurück") {
   const bis = e.schritt / EINSTIEG_LETZTER;
   const von = typeof e.balkenVorher === "number" ? e.balkenVorher : bis;
   return '<div class="einstieg-kopf">' +
-    '<button type="button" class="ghost einstieg-kopf__zurueck" data-action="einstieg-zurueck" aria-label="Zurück">' +
+    '<button type="button" class="ghost einstieg-kopf__zurueck" data-action="' + zurueckAktion + '" aria-label="' + esc(zurueckLabel) + '">' +
       ikon("zurueck") + '</button>' +
     '<div class="einstieg-fortschritt" role="progressbar" aria-label="Fortschritt" aria-valuemin="0" ' +
       'aria-valuemax="' + EINSTIEG_LETZTER + '" aria-valuenow="' + e.schritt + '">' +
@@ -7143,15 +7147,16 @@ function einstiegWahlFehlt(e) {
   const pruefung = e && EINSTIEG_PFLICHT[e.schritt];
   return pruefung ? !pruefung(e) : false;
 }
-/* zusatz: HTML, das NOCH INNERHALB des unten fest stehenden (position:
-   sticky) Bereichs landet - z. B. die Vertrauens-Zeile auf dem letzten
+/* zusatz: HTML, das innerhalb des Fussbereichs im Dokumentfluss landet,
+   z. B. die fruehere Vertrauens-Zeile auf dem letzten
    Bildschirm. 3.17.21, echter Fund (Betreiber 24.09.2026): "Kostenlos.
    Keine Werbung, keine Cookies." stand bisher als eigener Absatz NACH
    diesem ganzen Block. .einstieg-aktion hat "margin-top: auto" und schiebt
    sich damit im Flex-Layout ganz nach unten - alles, was danach in derselben
    Spalte folgt, landet dadurch NOCH weiter unten, meist unter dem sichtbaren
    Bildschirmrand. Der Satz stand am aeussersten Rand, kaum lesbar/erreichbar.
-   Jetzt steht er IM selben stehenden Block wie der Knopf, direkt darunter. */
+   Seit 3.17.22 ist der Satz entfernt; andere Zusätze bleiben im selben
+   Block wie der Knopf. Seit 3.17.44 wächst dieser im Dokumentfluss. */
 function einstiegFuss(weiterLabel, weiterAktion, klasse, zusatz) {
   const e = ui.einstieg;
   /* Die Hinweiszeile steht NUR auf Bildschirmen mit Pflicht. Sie haelt ihren
@@ -7179,7 +7184,8 @@ function einstiegFuss(weiterLabel, weiterAktion, klasse, zusatz) {
     /* 3.17.42 (G-083): zusatz steckt jetzt in einem reservierten Platz
        (min-height, styles.css) statt direkt im Block - so ist die
        Gesamthoehe des Fussbereichs auch dann gleich, wenn nur EIN Bildschirm
-       (0: "Ich habe schon ein Konto") etwas hineinschreibt. */
+       (0: "Ich habe schon ein Konto") etwas hineinschreibt.
+       EIN-6: Auf kurzen Fenstern entfaellt der leere Platz; der Link bleibt. */
     '<div class="einstieg-neben-platz"' + (zusatz ? '' : ' aria-hidden="true"') + '>' + (zusatz || "") + '</div>' +
     '</div>';
 }
@@ -7236,14 +7242,21 @@ function einstiegBauListe(e) {
   const huerde = EINSTIEG_HUERDEN.find(h => e.huerden.includes(h.id) && h.kurz);
   if (huerde) punkte.push("Eingerichtet: " + huerde.kurz);
   const limit = einstiegLimit(e);
-  punkte.push("Schrift: " + labelVon(ARAB_STUFEN, einstiegGroesse(e), "Normal"));
-  punkte.push("Runde: " + (String(limit) === "alle" ? "alle fälligen Karten" : "bis zu " + limit + " Karten"));
-  punkte.push("Zeitpunkt: " + einstiegZeitpunkt(e));
+  if (huerde?.id !== "schrift") punkte.push("Schrift: " + labelVon(ARAB_STUFEN, einstiegGroesse(e), "Normal"));
+  if (huerde?.id !== "zeit") punkte.push("Runde: " + (String(limit) === "alle" ? "alle fälligen Karten" : "bis zu " + limit + " Karten"));
+  if (huerde?.id !== "dran") punkte.push("Zeitpunkt: " + einstiegZeitpunkt(e));
   punkte.push("Wiederholungen: rechnet Adrabic");
   return punkte;
 }
 function einstiegBauDauer(anzahl) {
   return EINSTIEG_BAU_VORLAUF_MS + anzahl * EINSTIEG_BAU_SCHRITT_MS + EINSTIEG_BAU_NACHLAUF_MS;
+}
+function einstiegBauDauerFuer(e) {
+  const huerde = EINSTIEG_HUERDEN.find(h => e.huerden.includes(h.id) && h.kurz);
+  /* Z15: Eine doppelte feste Zeile entfällt; ihre Zeit bleibt als Ruhe
+     nach der Liste erhalten. Kein zusätzlicher oder erfundener Punkt. */
+  const entfaellt = huerde && ["schrift", "zeit", "dran"].includes(huerde.id);
+  return einstiegBauDauer(einstiegBauListe(e).length + (entfaellt ? 1 : 0));
 }
 function einstiegZeitpunkt(e) {
   if (e.anker === "eigen") return e.ankerFrei ? "wenn ich " + e.ankerFrei : "noch offen";
@@ -7260,6 +7273,10 @@ function einstiegTimerStoppen() {
    erscheinenden Punkt. Nicht bei reduced-motion und nur solange derselbe
    Aufbau läuft. */
 function einstiegBauScrollStoppen() {
+  if (ui.einstiegScrollAbbruch) {
+    for (const typ of ["touchstart", "wheel", "keydown"]) window.removeEventListener(typ, ui.einstiegScrollAbbruch);
+    ui.einstiegScrollAbbruch = null;
+  }
   if (ui.einstiegBauScrollRaf) {
     cancelAnimationFrame(ui.einstiegBauScrollRaf);
     ui.einstiegBauScrollRaf = null;
@@ -7269,29 +7286,35 @@ function einstiegBauScrollStoppen() {
     ui.einstiegPlanScrollRaf = null;
   }
 }
+function einstiegScrollAbbruchVerbinden() {
+  ui.einstiegScrollAbbruch = einstiegBauScrollStoppen;
+  for (const typ of ["touchstart", "wheel", "keydown"]) window.addEventListener(typ, ui.einstiegScrollAbbruch, { passive: true });
+}
 function einstiegBauAutoScroll() {
   einstiegBauScrollStoppen();
   if (einstiegBewegungReduziert()) return;
+  einstiegScrollAbbruchVerbinden();
   /* Ein einziger kontinuierlicher Follow-Loop statt mehrerer scrollIntoView()
      Aufrufe. Die alten Aufrufe haben sich gegenseitig abgebrochen und dadurch
      auf iOS wie Ruckeln/Stop-and-go ausgesehen. */
   const started = performance.now();
-  const dauer = EINSTIEG_BAU_VORLAUF_MS + 6 * EINSTIEG_BAU_SCHRITT_MS + EINSTIEG_BAU_NACHLAUF_MS;
+  const dauer = einstiegBauDauerFuer(ui.einstieg);
+  let startTop;
   const tick = now => {
     if (!ui.einstieg || ui.einstieg.schritt !== EINSTIEG_LETZTER || ui.einstieg.planGebaut) {
-      ui.einstiegBauScrollRaf = null;
+      einstiegBauScrollStoppen();
       return;
     }
     const t = Math.min(1, (now - started) / dauer);
     const ease = t * t * (3 - 2 * t);
     const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-    const startTop = ui.einstiegBauScrollStartTop ?? window.scrollY;
+    // Erst im Animationsbild lesen, nicht direkt nach innerHTML.
+    if (startTop === undefined) startTop = window.scrollY;
     const ziel = startTop + (max - startTop) * ease;
     window.scrollTo(0, ziel);
     if (t < 1) ui.einstiegBauScrollRaf = requestAnimationFrame(tick);
-    else ui.einstiegBauScrollRaf = null;
+    else einstiegBauScrollStoppen();
   };
-  ui.einstiegBauScrollStartTop = window.scrollY;
   ui.einstiegBauScrollRaf = requestAnimationFrame(tick);
 }
 function einstiegPlanAutoScroll() {
@@ -7301,6 +7324,7 @@ function einstiegPlanAutoScroll() {
   const wege = document.querySelector('.einstieg-wege');
   const aktion = document.querySelector('.einstieg-aktion');
   if (!leiter || !wege || !aktion) return;
+  einstiegScrollAbbruchVerbinden();
   /* Auch hier genau eine Bewegung: nicht drei smooth-scrolls, die sich
      gegenseitig abbrechen. Der Zielpunkt wandert mit dem fertigen Plan. */
   const started = performance.now();
@@ -7316,7 +7340,7 @@ function einstiegPlanAutoScroll() {
     const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     window.scrollTo(0, startTop + (max - startTop) * ease);
     if (t < 1) ui.einstiegPlanScrollRaf = requestAnimationFrame(tick);
-    else ui.einstiegPlanScrollRaf = null;
+    else einstiegBauScrollStoppen();
   };
   ui.einstiegPlanScrollRaf = requestAnimationFrame(tick);
 }
@@ -7373,7 +7397,7 @@ function renderEinstieg() {
     /* 3.17.42 (G-083, Befund EINSTIEG-12): "Ich habe schon ein Konto" steht
        jetzt als zusatz IN der stehenden Flaeche (einstiegFuss), nicht mehr
        als eigenes Element danach. Vorher machte genau dieses zusaetzliche
-       Element Bildschirm 0 hoeher als 1-6 (sticky haengt am Fuss, mehr
+       Element Bildschirm 0 hoeher als 1-6 (damals sticky am Fuss, mehr
        Inhalt darunter zieht die Oberkante des Knopfs nach oben) - der
        reservierte Platz (.einstieg-neben-platz, styles.css) ist jetzt auf
        jedem Bildschirm gleich hoch, egal ob er etwas enthaelt. */
@@ -7438,7 +7462,7 @@ function renderEinstieg() {
           ? 'So arbeitet Adrabic gegen das Vergessen. Tipp die Karte an, um sie umzudrehen.'
           : 'Tipp die Karte an, um sie umzudrehen.')
       : 'Wie sicher warst du?';
-    html += '<p class="subtitle">' + esc(subtitle) + '</p>';
+    html += '<p class="subtitle' + (e.huerden.includes("vergessen") ? ' einstieg-probe-untertitel' : '') + '">' + esc(subtitle) + '</p>';
     /* 3.17.42 (Dirigent bei der Abnahme): kein "Tippen zum Umdrehen" auf der
        Karte - der Untertitel sagt es schon (Wortlaut aus
        plan/onboarding/WORTLAUT.md), doppelt waere Rauschen (LEHREN § 6.9).
@@ -7534,7 +7558,7 @@ function renderEinstieg() {
        Punkte und der Timer in app.js dieselbe Zeit benutzen - drei
        Zahlenreihen, die sich frueher nur zufaellig trafen. */
     const punkte = einstiegBauListe(e);
-    const dauer = einstiegBauDauer(punkte.length);
+    const dauer = einstiegBauDauerFuer(e);
     html += '<div class="einstieg-bau" style="--bau-schritt:' + EINSTIEG_BAU_SCHRITT_MS + 'ms;' +
       '--bau-vorlauf:' + EINSTIEG_BAU_VORLAUF_MS + 'ms;--bau-dauer:' + dauer + 'ms">';
     html += '<div class="einstieg-bau__ring" aria-hidden="true">' +
@@ -7571,6 +7595,8 @@ function renderEinstieg() {
     html += einstiegKachel("Schrift", labelVon(ARAB_STUFEN, groesse, "Normal"), 1);
     html += einstiegKachel("Ziel", ziel, 2);
     html += '</div>';
+    // Z18: derselbe Weg als kleiner Anfangsstand, ohne gelernte Karten vorzutäuschen.
+    html += '<div class="einstieg-stand"><p class="hint">Dein Stand</p>' + einstiegLeiste(false, true) + '</div>';
     html += einstiegLeiter();
     /* 3.11.0: die zwei Wege zu Karten, beim Namen genannt. Betreiber am
        24.09.2026, aus einem TikTok-Befund: "hab in einem tiktok video gesehen,
@@ -7603,7 +7629,7 @@ function renderEinstieg() {
   app.style.setProperty("--arab-scale", String(arabFaktor()));
   e.balkenVorher = e.schritt / EINSTIEG_LETZTER;
   einstiegFreiVerbinden();
-  if (e.schritt === EINSTIEG_LETZTER && e.planGebaut && neu) {
+  if (e.schritt === EINSTIEG_LETZTER && e.planGebaut && neu && !e.planRueckkehr) {
     einstiegBauScrollStoppen();
     einstiegPlanAutoScroll();
   }
@@ -7644,7 +7670,7 @@ function renderEinstieg() {
       e.planGebaut = true;
       e.gezeigt = -1;
       render();
-    }, einstiegBauDauer(einstiegBauListe(e).length));
+    }, einstiegBauDauerFuer(e));
   }
 }
 
@@ -7681,6 +7707,7 @@ function einstiegWieder() {
   ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null;
   e.richtung = "zurueck";
   e.gezeigt = -2;
+  e.planRueckkehr = e.schritt === EINSTIEG_LETZTER;
   ui.einstieg = e;
   window.scrollTo(0, 0);
   render();
@@ -7743,10 +7770,25 @@ function render() {
      habe schon ein Konto" und "Plan speichern"). Siehe die Begruendung am
      frueheren Merker oben bei EINSTIEG_ANTWORT_KEY. */
   if (currentUser === null && ui.einstieg === null && !ui.authGewaehlt) {
+    try { localStorage.removeItem(EINSTIEG_ANTWORT_KEY); } catch (err) {}
     ui.einstieg = einstiegNeu(0);
   }
   if (currentUser === null) bestaetigungBeenden();
-  if (currentUser === null && ui.einstieg) { renderEinstieg(); return; }
+  if (currentUser === null && ui.einstieg) {
+    const boot = app.querySelector(".boot");
+    if (boot) {
+      if (!boot.classList.contains("boot--exit")) {
+        boot.classList.add("boot--exit");
+        setTimeout(() => {
+          if (app.querySelector(".boot") !== boot) return;
+          boot.remove();
+          render();
+        }, 300);
+      }
+      return;
+    }
+    renderEinstieg(); return;
+  }
   if (currentUser === null) { renderAuth(); return; }
   /* C4: E-Mail muss bestätigt sein, bevor der Rest der App zugreifbar ist.
      Ohne das kann sich jeder mit einer erfundenen Adresse registrieren. */
@@ -8081,18 +8123,21 @@ function renderAuth() {
      "Save your progress"). Derselbe Knopf, dasselbe Formular - nur die
      Ueberschrift sagt, wozu. */
   const ausEinstieg = m === "register" && ui.authAusEinstieg;
-  let html = '<div class="solo">';
+  let html = '<div class="solo' + (ausEinstieg ? ' einstieg-solo' : '') + '">';
   /* 3.10.3: Rueckweg in den Einstieg, solange man aus ihm kommt - zum Plan
      (nach "Plan speichern") bzw. zu Bildschirm 1 (nach "Ich habe schon ein
      Konto"). Beim Zuruecksetzen des Passworts nicht: dort fuehrt der Weg
      zurueck zur Anmeldung. */
-  if (ui.einstiegZurueck && m !== "reset") {
+  if (!ausEinstieg && ui.einstiegZurueck && m !== "reset") {
     const zumPlan = ui.einstiegZurueck.schritt === EINSTIEG_LETZTER;
     html += '<div class="einstieg-rueckweg">' +
       '<button type="button" class="ghost einstieg-rueckweg__knopf" data-action="einstieg-wieder">' +
       ikon("zurueck") + '<span>' + (zumPlan ? "Zurück zum Plan" : "Zurück zum Einstieg") + '</span></button></div>';
   }
-  html += soloMarke(m === "register" ? (ausEinstieg ? "Plan speichern" : "Konto anlegen")
+  if (ausEinstieg) {
+    html += einstiegKopf(ui.einstiegZurueck, "einstieg-wieder", "Zurück zum Plan");
+    html += '<div class="einstieg"><h1>Plan speichern</h1>';
+  } else html += soloMarke(m === "register" ? "Konto anlegen"
         : m === "reset" ? "Passwort zur\u00fccksetzen" : "Anmelden",
         m === "register" ? "Schritt 1 von 2 \u00b7 Konto" : null);
   html += '<p class="subtitle" style="margin-bottom:var(--space-6)">' +
@@ -8214,6 +8259,7 @@ function renderAuth() {
   html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
   html += '<a href="./impressum.html">Impressum</a>';
   html += '</div>';
+  if (ausEinstieg) html += '</div>';
   html += '</div>';
   app.innerHTML = html;
 
@@ -14681,6 +14727,12 @@ document.body.addEventListener("click", e => {
        Zurueck-Pfeil fuehrt trotzdem hin. */
     case "mode-register":
       ui.authError = null; ui.authInfo = null; ui.authFeldFehler = null;
+      if (ui.einstiegZurueck && ui.einstiegZurueck.schritt === EINSTIEG_LETZTER) {
+        ui.authMode = "register";
+        ui.authAusEinstieg = true;
+        render();
+        break;
+      }
       ui.authGewaehlt = false;
       ui.einstiegZurueck = null;
       ui.einstieg = einstiegNeu(1);
@@ -14725,7 +14777,10 @@ document.body.addEventListener("click", e => {
            ohne Aufbau herein. Wer den Plan-Bildschirm nach hinten verlaesst,
            gibt ihn auf - also wird der Merker hier geloescht und der Aufbau
            laeuft mit den neuen Antworten noch einmal. */
-        if (ui.einstieg.schritt === EINSTIEG_LETZTER) ui.einstieg.planGebaut = false;
+        if (ui.einstieg.schritt === EINSTIEG_LETZTER) {
+          ui.einstieg.planGebaut = false;
+          ui.einstieg.planRueckkehr = false;
+        }
         ui.einstieg.richtung = "zurueck";
         ui.einstieg.schritt = Math.max(0, ui.einstieg.schritt - 1);
         window.scrollTo(0, 0);

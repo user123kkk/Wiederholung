@@ -1929,8 +1929,8 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
 /* ---- 3.12.0: Die Karte der Runde -----------------------------------------
    Betreiber am 24.09.2026: „vom onboarding sieht man so design bzw
    animationen und so kaum was im tool." Am Bildschirm gemessen: Im Einstieg
-   liegt das Wort auf einer Karte, die sich umdreht (16b, .einstieg-probe,
-   einstieg-aufklappen); in der echten Runde stand es frei in einer leeren
+   liegt das Wort auf einer Karte, die sich umdreht (16b, .einstieg-karte,
+   karte-dreh); in der echten Runde stand es frei in einer leeren
    schwarzen Fläche. Jetzt ist es dieselbe Karte:
 
      .study-buehne    hält Karte und Stapel zusammen
@@ -3553,7 +3553,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
    keine zweite Handlung.
 
    Bewegung (3.10.3, Betreiber: „effekte alles hochdingsen"): Jede Bewegung
-   läuft EINMAL (höchstens zweimal, beim Aufleuchten) und endet in Ruhe – nie
+   läuft EINMAL und endet in Ruhe – nie
    Dauerbewegung. Was neu entsteht, kommt gestaffelt: Zeilen, Echo, Kacheln,
    die Leiter mit ihren Punkten. Der Wert einer Antwort bekommt einen kleinen
    Moment (Haken springt, Zeile leuchtet auf). Bei prefers-reduced-motion
@@ -3581,15 +3581,16 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
      sich der Auto-Rand auf und der komplette Einstieg darf natuerlich
      wachsen/scrollen. Kein Overlay, kein z-index, kein verdeckter Inhalt. */
   margin-top: auto;
-  padding-top: var(--space-6);
+  /* EIN-6: Auch bei 844 px braucht die lange Huerdenliste die acht Pixel. */
+  padding-top: var(--space-4);
   padding-bottom: calc(var(--sab) + var(--space-6));
 }
 .solo.einstieg-solo { padding-bottom: 0; }
 /* Ohne Knopf (Plan entsteht) braucht der Bildschirm den Abstand selbst. */
 .einstieg:not(:has(> .einstieg-aktion)) { padding-bottom: calc(var(--sab) + var(--space-9)); }
-.einstieg--start   { animation: enter-rise var(--dur-slow) var(--ease-out) both; }
-.einstieg--vor     { animation: enter-vor var(--dur-slow) var(--ease-out) both; }
-.einstieg--zurueck { animation: enter-zurueck var(--dur-slow) var(--ease-out) both; }
+.einstieg--start > :not(.einstieg-aktion)   { animation: enter-rise var(--dur-slow) var(--ease-out) both; }
+.einstieg--vor > :not(.einstieg-aktion)     { animation: enter-vor var(--dur-slow) var(--ease-out) both; }
+.einstieg--zurueck > :not(.einstieg-aktion) { animation: enter-zurueck var(--dur-slow) var(--ease-out) both; }
 
 .einstieg h1 {
   font-size: clamp(1.5rem, 4.5vw + 0.5rem, 2rem);
@@ -3600,6 +3601,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
    Bildschirmleser) – ein Rahmen darum wäre nur Lärm. */
 .einstieg h1:focus { outline: none; }
 .einstieg .subtitle { margin-bottom: var(--space-4); }
+.einstieg-probe-untertitel { min-height: 2lh; }
 .einstieg .hint { padding-top: 0; }
 /* 3.11.0: Spalte statt Reihe. .form-actions ist eine Reihe mit Umbruch - der
    Sperr-Hinweis (.einstieg-sperre) landete darin NEBEN dem Knopf und rutschte
@@ -3618,6 +3620,12 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
    unter den Finger). Die Randbreite liegt jetzt am Platzhalter, nicht mehr
    am Inhalt, sonst zaehlte sie doppelt. */
 .einstieg-neben-platz { margin-top: var(--space-4); min-height: var(--tap); }
+/* EIN-6: Der Fuss bleibt im Fluss; auf kurzen Fenstern entfaellt nur der leere
+   Konto-Link-Platz (einschliesslich seines Flex-Abstands). */
+@media (max-height: 760px) {
+  .einstieg > .einstieg-aktion { padding-top: var(--space-3); }
+  .einstieg-neben-platz:empty { display: none; }
+}
 .einstieg-neben { margin-top: 0; }
 /* Trefferflaeche wie der Rest (Satz 3): .linklike ist sonst nur 36 px hoch. */
 .einstieg-neben .linklike { min-height: var(--tap); }
@@ -3915,7 +3923,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
    3.10.3: keine Zahlen mehr. Punkte, die sich von „neu" bis „sitzt" füllen
    (die Lernstufen-Rampe --stufe-0 … --accent, app.js setzt --fuellung),
    Pfeile dazwischen, die Abstände wachsen (--w). Links nach rechts
-   gestaffelt; am Ziel ein Haken, der zweimal aufleuchtet. */
+   gestaffelt; am Ziel ein Haken, der einmal aufleuchtet. */
 .einstieg-leiste {
   --basis: 0ms;
   display: flex; align-items: center;
@@ -3994,6 +4002,9 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 }
 .einstieg-leiste__punkt:first-child .einstieg-leiste__wort { left: 0; transform: none; }
 .einstieg-leiste__punkt--ziel .einstieg-leiste__wort { left: auto; right: 0; transform: none; color: var(--text-1); }
+.einstieg-stand { max-width: 360px; margin: var(--space-4) 0; }
+.einstieg-stand .einstieg-leiste { margin: var(--space-3) 2px var(--space-6); }
+.einstieg-leiste--stand .einstieg-leiste__punkt:last-child .einstieg-leiste__wort { left: auto; right: 0; transform: none; }
 
 /* ---- Die Probefläche (Bildschirm 4 und 5) --------------------------------
    Kein Kasten im Kasten (Abschnitt 6): eine ruhige, leicht abgesetzte Fläche,
@@ -4135,7 +4146,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 
 /* ---- Bildschirm 8a: der Plan entsteht (Cal AI) ---------------------------
    Der Ring füllt sich in derselben Zeit, in der die Punkte sich abhaken
-   (app.js, EINSTIEG_BAU_MS = 2300 ms). Keine Prozentzahl. */
+   (app.js, einstiegBauDauerFuer; CSS-Variable --bau-dauer). Keine Prozentzahl. */
 .einstieg-bau { text-align: center; padding-top: var(--space-6); }
 .einstieg-bau__ring {
   position: relative;
@@ -4250,7 +4261,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 /* Die Leiter: derselbe Weg wie die Leiste, senkrecht und ohne Datum. Die
    Linie zeichnet sich von oben nach unten, die Sprossen folgen, ihre Punkte
    füllen sich (--fuellung) – der Abstand wächst mit (--abstand). Am Ziel
-   „sitzt" ein Haken, der zweimal aufleuchtet. */
+   „sitzt" ein Haken, der einmal aufleuchtet. */
 .einstieg-leiter {
   list-style: none;
   position: relative;
@@ -4890,7 +4901,7 @@ button.halten:disabled {
   .einstieg-hero__seite .arabic { font-size: 3.6rem; }
   /* Der Hauptknopf soll auf 720 px nicht über die ganze Breite laufen — ein
      Knopf, der breiter als lesbar ist, sieht nach Platzhalter aus. */
-  .einstieg-aktion { max-width: 420px; margin-left: auto; margin-right: auto; }
+  .einstieg-aktion { width: 100%; max-width: 420px; margin-left: auto; margin-right: auto; }
 }
 
 /* ---- 3.12.0: Die App auf dem Tablet --------------------------------------

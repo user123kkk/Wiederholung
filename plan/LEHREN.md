@@ -572,6 +572,10 @@ Was gemessen wird:
   Bereits bestandene Einzeltests dürfen aus ihren vollständigen Logs
   ausgewertet werden; dies ausdrücklich von einem erneuten Lauf unterscheiden.
 - Neue Browser-Tests schließen den Browser in `finally`, auch bei Assertions.
+- Geometrie nach einem Neuzeichnen erst nach geladenen Schriften und einem
+  abgeschlossenen Stil-/Bilddurchlauf messen. Auch reduzierte Bewegung mit
+  0,01 ms kann beim ersten Lesen noch den Start-Transform zeigen (01.10., B6).
+  Die feste Alt-Gegenprobe muss danach weiterhin den echten Fehler zeigen.
 - Neue SW-/Offline-Prüfstände zuerst an einem erfolgreichen Update mit
   anschließendem Offline-Start bestätigen. Lokale App-Dateien über einen echten
   HTTP-Server liefern: Playwright-Routen können den Offline-Schalter umgehen
@@ -637,6 +641,10 @@ Belegte Fälle:
   nie mit einzelnen Läufen vorher/nachher.
 
 ### 5.4 Die Attrappe muss so streng sein wie die Wirklichkeit
+
+- Gastseiten lesen ihr Thema aus localStorage, Kontoseiten aus settings.
+  Bei Themenprüfungen die passende Quelle setzen und html[data-thema]
+  ausdrücklich prüfen; eine Fallbeschriftung belegt keine Themenwahl.
 
 - **29.09.2026, G-096:** Testkarten müssen denselben Lerntag ab 04:00 Uhr
   wie die App verwenden, einschließlich Tages-Offsets und lokaler Zeitzone.
@@ -1481,6 +1489,36 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+01.10.2026, Paket-B-Version: Cache-Präfix beim Ersetzen als adrabic-v statt
+adrabic angenommen; Standprüfung rot, weil sw.js unverändert blieb.
+Exakte Deklaration gelesen und gezielt korrigiert, vor jedem Gesamtlauf.
+Bestehende Regel § 4.1: tatsächliche Versionsdeklarationen lesen und prüfen.
+
+01.10.2026, Paket B fortgesetzt: B6 maß direkt nach render() teilweise noch
+den 8-px-Startversatz der 0,01-ms-Bewegung. Schriften und Bilddurchlauf
+abgewartet; feste Gegenprobe 07c7568 bleibt mit zwei echten Fehlern rot.
+Abnahme für 375 px sogar auf exakt Unterkante <= Fensterhöhe verschärft.
+Ursache des verbleibenden Produktfehlers: 760-px-Regel erreicht 844-px-Fall
+nicht; 16 px Fußpadding lassen auf 667 px noch 0,297 px Überstand.
+Gemessen statt erneut blind justiert (§ 5.3).
+
+01.10.2026, Paket B, eigener Umfeld-Test: Thema nur an fullerStore gegeben,
+obwohl Gastseiten ihre Farbe aus localStorage lesen; hell war tatsächlich
+dunkel. Lokale Themenwahl setzen und am echten html[data-thema] verlangen
+(§ 5.3/5.4). Frühere Umfeld-Angaben sichtbar im Logbuch korrigiert;
+betroffene Messungen neu, keine Produktänderung aus dem Prüfaufbau.
+
+01.10.2026, Paket B, eigener Prüfaufbau: zunächst eine nicht vorhandene
+Anker-ID und einen erfundenen Neu-Knopf verwendet. Keine Produktänderung
+daraus abgeleitet; tatsächliche Aktionen/Feld-IDs gelesen und korrigiert
+(§ 1.3/5.3). Danach feste B1-Gegenprobe mit fehlendem Nachklang rot,
+Neu-/Bestandskonto und erste Karte nach Korrektur grün.
+
+01.10.2026, Paket B, eigener Prüfaufbau B4/B10: nach unmittelbar gesetztem
+Plan blockierte die echte 400-ms-Doppeltippsperre Plan speichern. Fixture
+wartet jetzt 450 ms wie die Bedienung; beide festen Gegenproben treffen
+danach den tatsächlichen Befund (§ 5.3), kein Produktfix aus dem Messfehler.
 
 29.09.2026, G-117: Der Betreiber wollte weiter den Batch-Knopf verwenden;
 mehrfache GitHub-Umleitungen lösten seinen lokalen Abbruch nicht. Batch

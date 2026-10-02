@@ -4,6 +4,14 @@ Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
 Zuletzt geändert: 18. September 2026 (Google-Login bestätigt, Umzug auf adrabic.web.app)
 
+**AKTUELL (02.10.2026):** Zyklus 2, Paket B fertig, Version 3.18.12.
+B6 zuerst behoben, alle 13 Zeilen erledigt. Gesamtlauf 131/131,
+Rundenabnahme 13/13, Affe Handy200/iPad150 jeweils 0 Befunde;
+Gegenprüfung und LEHREN-Checkliste dokumentiert. Vorhandenen Stand erhalten,
+Commit/Push auf main am Netzteil. Kein anderes Paket begonnen,
+nicht veröffentlicht; echtes iOS bleibt gesondert zu prüfen.
+Maßgeblich: [`STAND.md`](STAND.md) und [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md).
+
 ---
 
 ## Wie diese Datei zu lesen ist
