@@ -32,6 +32,9 @@ Dagegen steht im genannten Befundblock unter `befunde/`.
 **Z6b – Serie an Tagen, an denen nichts fällig ist** (Lernlogik, deshalb nur
 mit ausdrücklichem „Z6b ja“ des Betreibers bauen).
 
+**Antwort Betreiber 04.10.2026: „ruhetag ja“.** Z6b ist damit entschieden,
+E7 ist zum Bauen freigegeben (Bauanleitung unten). Offen bleibt nur V8.
+
 Heute: Ein Tag zählt nur, wenn eine fällige oder neue Karte gelernt wurde.
 Ist zwei Tage nichts fällig, reißt die Serie, obwohl man nichts tun konnte
 (`befunde/LERN.md`, LERN-1, gemessen). „Trotzdem üben“ rettet sie nicht.

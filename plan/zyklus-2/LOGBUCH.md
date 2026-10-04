@@ -2,6 +2,20 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-04 — Entscheidung Z6b: Ruhetag ja
+
+**Geändert:** `ENTSCHEIDUNGEN.md` (Antwort eingetragen), `AUFGABEN.md` E7 von
+`zurück (wartet auf Z6b ja)` auf `offen`. Kein Produktcode.
+**Entscheidung:** Betreiber im Chat wörtlich „ruhetag ja“. Damit ist die
+Serie-Regel für Tage ohne fällige Karte freigegeben, genau in der Form aus
+`ENTSCHEIDUNGEN.md` Z6b (Ruhetag zählt nicht hoch, reißt nicht, verbraucht
+den verziehenen Tag nicht). Nicht sofort gebaut: Lernlogik, braucht
+Regelprüfung, Gegenprobe und einen frischen Gesamtlauf am Netzteil.
+**Offen:** E7 bauen. V8 („5 Karten“) weiter unbeantwortet; Betreiber hat die
+Frage nicht verstanden, wurde neu erklärt. E17 wartet auf G4.
+**Nächster Schritt:** auf „E weiter“ E7 nach CODEX-START § 4 bauen und als
+eigene Version abschließen.
+
 ### 2026-10-04 — Paket E abgeschlossen, 3.18.15 (Claude Code nach Übergabe)
 
 **Geändert:** keine Produkt-, Attrappen- oder Testquelle seit Start des
