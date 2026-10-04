@@ -1,5 +1,114 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**04.10.2026: Paket D D1–D11 abgenommen, Version 3.18.14.**
+Vorhandenen Stand einschließlich der begonnenen Version vollständig erhalten.
+D1–D9/D11 erledigt (3.18.14); D10 bleibt trifft nicht zu (B5/3.18.12).
+Frischer Gesamtlauf 138/138, Handy-Affe 200/iPad-Affe 150 mit Startwert 7
+je 0 Befunde, separate frische Runde 13/13; sämtliche Ausgaben gelesen.
+Zehn Gegenproben am festen 50d15ce am jeweiligen Befund rot, Fix grün.
+Gegenprüfung und LEHREN §14 Punkt für Punkt im aktuellen Zyklus-Logbuch.
+BatteryStatus 2, Server 8099 erreichbar; Syntax/Version/CSP/APP_SHELL grün.
+Commit/Push direkt auf main nach Abschlussprüfung, kein Deploy.
+
+**Betreiberentscheidung 04.10. ersetzt alle älteren nächsten Messaufträge:**
+D12, D13, D14 und D15 bleiben zurück. Dort nichts bauen oder weiter messen,
+kein Capture-Build, keine neue Fotoserie. Die vorhandenen D12/D13/D15-Proben
+bleiben unverändert einzeln aufrufbar; ZURUECK-Liste im Standardlauf erhalten.
+Kein anderer Test ausgelassen/gelockert. Echtes D9-Gerätegefühl, G1 und
+D15-iPhone-Start bleiben offen. Kein Paket E beginnen.
+Nächster Betreiberschritt: ladegeraet.bat; danach iPhone-App ganz schließen,
+neu öffnen und den Übergang vom Ladebild zur App für D15 ansehen.
+Belege: C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-04-Abschluss/.
+Die folgenden Absätze bleiben als historischer Verlauf erhalten.
+
+**D15 04.10.: Capture-Messweg kritisch geprüft, Build nicht begonnen.**
+Beide Sperren an der gepinnten Quelle bestätigt (noperspective nur per
+ANGLE-Patch erhaltbar; im headless Prüfstand kein Window-Swap, also kein
+Abschnittsende). Toolchain fehlt ganz. Vorhandene kalte Spuren: Zielshader
+21–22 Prozent der späten Kompilierzeit (24,5 von 113,6 ms), ohne alle
+Schatten an Navigation/Startliste weiter 72,0 ms Bildlücke; erlaubt wären
+höchstens 56 ms. Die Capture-Daten können BEW-15 nicht entscheiden.
+Pause hängt am ersten Zeichnen der App-Ansicht direkt nach `render()`.
+Nächster Schritt ist eine andere, konkret vorhergesagte Messung:
+[D15-CAPTURE-KRITIK-2026-10-04.md](zyklus-2/D15-CAPTURE-KRITIK-2026-10-04.md) § 6.
+Kein Browser, keine Installation, kein Produktentwurf, keine Abnahme
+gelockert. D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen.
+BatteryStatus 2. Sicherung:
+C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-04-D15-Capture-Kritik/.
+Nicht veröffentlicht. Die älteren Absätze darunter bleiben als Verlauf.
+**Achtung, ungeklärt:** 04.10. 00:27 hat ein anderer Prozess `app.js`,
+`sw.js`, `index.html`, `CHANGELOG.md` auf 3.18.14 gesetzt und
+`t_paket_d.js` geändert (D12/D13/D15 laufen ohne Argument nicht mehr mit).
+Gesamtlauf dazu 00:28 begonnen, nach fünf Tests bei `t_anmelden`
+abgebrochen; keine Abnahme, kein Commit. Nicht von der Claude-Sitzung ab
+00:30:53 und laut Codex nicht vom Capture-Chat; zeitlich passt eine um
+00:30:29 gelöschte frühere Claude-Sitzung (nicht beweisbar).
+Einzelheiten und Korrektur: D15-CAPTURE-KRITIK § 7.
+
+**D15-Capture konkret vorbereitet, noch nicht gestartet:** Neun feste
+Originaleingaben/1.631.860 Bytes und zehn zusätzliche gepinnte Primärquellen
+mit SHA256 gesichert; Offline-Float32-Leser erhält Bitwörter und verwirft
+falsche Hashes/Bereiche. Neue Voraussetzungen belegt: Standard-ANGLE-Capture
+schaltet die vom Zielshader verlangte noperspective-Erweiterung ab;
+Frame-Abschluss überspringt nicht-Window-Swaps. Separate passende Build,
+Caps-Erhaltung und Offscreen-ShareGroup-/Abschlussbeleg fehlen noch.
+Messweg mit Build-Grundgerüst, Draw-/Uniform-/Attributauftrag und strengen
+Pixelkontrollen: [D15-CAPTURE-MESSWEG-2026-10-03.md](zyklus-2/D15-CAPTURE-MESSWEG-2026-10-03.md).
+Keine Installation/Browserprobe/Produktänderung, keine Abnahme gelockert.
+D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen.
+Server HTTP 200/19.539 Bytes, BatteryStatus 1 (54 Prozent). Nicht veröffentlicht.
+
+
+Abschluss nach Datumswechsel am 04.10.2026: Vorbereitung samt vollständigem
+geändertem/unversioniertem Arbeitsbaum dauerhaft unter
+C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Capture-Vorbereitung/
+gesichert: 98 Dateien / 5.222.564 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale und frühere Sicherungen erhalten. Diese Abschlussdokumentation
+liegt zusätzlich separat unter sicherungsabschluss/ mit eigenem Hashmanifest.
+Fünf Produktbytehashes gleich; neue Python-Syntax/Offline-Leserprüfungen und
+git diff --check grün. Kein Browser-/Gesamt-/Tempo-Test, keine Veröffentlichung.
+Beim ersten Diffdruck brach Python-cp1252 am Pfeilzeichen ab; anschließend
+mit PYTHONIOENCODING=utf-8 vollständigen eigenen Dokumentdiff gelesen.
+Die Dateien waren unverändert gültig; kein Ergebnis aus dem Abbruch abgeleitet.
+
+**D15-Erfassbarkeit 03.10., ohne Browserlauf:** Exaktes CDP-Protokoll
+mit 52 Domains/580 Methoden geprüft; keine deklarierte Methode für Skias
+interne Uniform-/Attributwerte. Passend gepinntes ANGLE kann Uniform-Payloads
+mit Capture-Build erfassen; Standardoption false, Mock ohne Erfassung.
+Installierte Capture-Unterstützung nicht belegt; vier Capture-Marker in
+chrome.dll fehlen (begrenzter Beleg, keine vollständige Build-Analyse).
+RenderDoc/apitrace in PATH, Standardpfaden und geprüften Installations-
+registern nicht gefunden. Kein neuer Foto-/ENV-Versuch, keine Installation.
+Konkreter Haltepunkt: zusätzliche Capture-fähige Messumgebung fehlt.
+Details: [D15-ERFASSBARKEIT-2026-10-03.md](zyklus-2/D15-ERFASSBARKEIT-2026-10-03.md).
+D bleibt angehalten; D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen,
+G1 offen. Alle Daten erhalten, Produkt unverändert, Server HTTP 200,
+BatteryStatus 1. Keine Veröffentlichung.
+
+
+Erfassbarkeitsprüfung, vollständige gepinnte Quellen/Protokolldomains,
+begrenztes Binary-/Werkzeuginventar, feste Eingangsdaten und vollständiger
+geänderter/unversionierter Arbeitsbaum zusätzlich dauerhaft unter
+C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Erfassbarkeit-233845/
+gesichert: 141 Dateien / 3.661.949 Bytes, sämtliche Quell-/Kopie-SHA256 gleich.
+Originale und frühere Sicherungen erhalten. Abschlussdokumentation separat
+unter sicherungsabschluss/ mit Hashmanifest. Aktuelle Python-Syntax,
+Quellen-SHA256 und git diff --check grün; Produktbytehashes unverändert.
+Kein neuer Produkt-/Gesamt-/Tempo-Test.
+
+**D15-Zeichenwegprüfung 03.10., nur offline:** Einzelkontur bietet keine
+Deckungsgleichheit; analytischer Differenzclip verwendet erneut GrRRectEffect;
+getrennte Masken benötigen unbewiesene Parameter-/Rundungs-/Kompositionsgleichheit.
+Rundrechtecke haben mehrere interne Zeichenwege, nicht pauschal einen einzigen.
+Idealisierter Austausch der äußeren Ellipsenregel durch Radialregel:
+88/88 vorhandene Modellwerte verschieden, keine GPU-/RGB-Abnahme daraus.
+Kein belegter günstiger pixelgleicher Ersatz. D bleibt nach §6 angehalten;
+keine nächste Blindprobe. Wiederaufnahme nur mit konkret steuerbarem Zeichenweg
+samt Gleichheitsbeleg oder begründeter Erfassung fehlender GPU-Daten.
+Details: [D15-ZEICHENWEG-2026-10-03.md](zyklus-2/D15-ZEICHENWEG-2026-10-03.md).
+D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen. Alles erhalten;
+Produkt unverändert, Server HTTP 200, Akku BatteryStatus 1. Nicht veröffentlicht.
+
 **Diese Datei zuerst lesen** (Claude und Codex gleich). Sie ist die eine
 Übersicht über den aktuellen Stand. Einzelheiten stehen in den verlinkten
 Logbüchern. Wer eine Stufe oder Runde beendet, zieht diese Datei nach.
@@ -8,6 +117,216 @@ Wo sie von dieser Datei abweichen, gilt diese Datei.
 
 Stand: 03.10.2026, `main` = **3.18.13, vorhandener Paket-C-Stand abgenommen**;
 **online bleibt 3.18.10** (veröffentlicht per `ladegeraet.bat`, 121/121 grün).
+
+Neue Quellwegprüfung, feste Offline-Eingaben, frühere Dokumentstände und
+vollständiger geänderter/unversionierter Arbeitsbaum zusätzlich dauerhaft
+unter C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Zeichenweg-232324/
+gesichert: 75 Dateien / 2.573.768 Bytes, sämtliche Quell-/Kopie-SHA256 gleich.
+Originale und ältere Sicherungen bleiben erhalten. Endgültige Dokumentation
+separat unter sicherungsabschluss/ mit eigenem Hashmanifest.
+
+**D15-Deckungsprüfung 03.10., nur vorhandene Daten:** Paint-Filter jetzt
+auch aus ursprünglicher binärer Picture gelesen: Inset-Paint Weiß,
+SrcIn-Farbfilter 14/255, kein Blur. SVG-Paint exakt gleiche Alpha-Zahl.
+Gepinnte Skia-Quelle und gespeicherter Shader belegen Produkt aus äußerer
+Ellipse-/fwidth-Deckung und invertierter innerer Radialdeckung. SVG verliert
+72 Originalpixel, fügt 14 hinzu und mischt 239 anders. Davon 22 Fehlerpunkte
+sicher unterhalb seiner Fläche; ursprüngliche Deckungsregel dort positiv.
+Kein neuer Browser, kein Foto, keine Alternative oder Produktänderung.
+Paint-Lücke geschlossen; vollständige GPU-Parameter/Deckung und pixelgleicher
+anderer Zeichenweg fehlen weiterhin. Keine neue Farb-/Pfadserie oder aus
+Endbildern rückgerechnete Referenzmaske. Details:
+[`D15-DECKUNG-2026-10-03.md`](zyklus-2/D15-DECKUNG-2026-10-03.md).
+D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen. Server 8099
+HTTP 200, BatteryStatus 1. Keine Veröffentlichung.
+
+Offline-Deckungsprüfung, gepinnte Primärquellen, feste Eingaben und
+vollständiger Arbeitsbaum zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Deckung-223800/`
+gesichert: 137 Dateien / 33.180.459 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale und ältere Sicherungen bleiben erhalten; endgültige
+Abschlussdokumentation separat unter `sicherungsabschluss/` mit Hashmanifest.
+
+**D15-Fortsetzung 03.10.: Zeichenblock belegt, Alternative abgelehnt.**
+Kleine feste Navigation reproduziert Befehle 0–28 der gespeicherten
+Picture und exakt den bekannten Shaderhash. Befehl 26 gehört zum Rahmen;
+ohne ihn bleibt der Shader. Nur Inset-Block 19–25 entfernen, bei exakt
+gleicher übriger Befehlsliste: Shader fehlt; Original davor/danach vorhanden.
+Eigene und ältere Messfalle sichtbar korrigiert: `--kante:none` macht die
+gesamte Schattenliste ungültig, entfernt damit auch Außenschatten. Saubere
+Gegenprobe mit `box-shadow:var(--shadow-lg)` bestätigt den Inset-Block.
+Ein geometrisch abgeleiteter SVG-Randpfad ohne diesen Shader verändert
+325 Pixel bis sechs Kanalstufen; abgelehnt, ausschließlich TEMP, keine
+weitere Variante. Nächster Schritt nur offline: ursprüngliche Deckungs-/
+Mischregel samt fehlenden Paint-/Uniformdaten gegen diese Fehlerpunkte
+klären. Details in [`D15-OPERATION-2026-10-03.md`](zyklus-2/D15-OPERATION-2026-10-03.md).
+Produktbytehashes gleich; D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen,
+G1 offen. Server HTTP 200, BatteryStatus 1. Kein anderer Paketauftrag,
+kein Gesamtlauf, keine Version, Commit/Push/Veröffentlichung.
+
+Ältere Abschnitte unten bleiben als Verlauf erhalten; diese Korrektur
+ersetzt ihre Zuordnung von Befehl 26 und ihrer `--kante:none`-Gegenprobe.
+
+Neue D15-Diagnose, feste Eingaben, frühere Dokumentstände und vollständiger
+Arbeitsbaum zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Operation-221300/`
+gesichert: 503 Dateien / 151.843.659 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale und frühere Sicherungen bleiben erhalten. Nachgezogene
+Abschlussdokumentation separat unter `sicherungsabschluss/` mit Hashmanifest.
+
+**Kritische Prüfung 03.10., ohne neue Browsermessung:** D12-Coverage ist
+Debug-Aufzählung, keine vollständige Zeichenliste. Echter Root-Pass:
+16 rote Hintergrundquads gegenüber vier grünen; Breitenunterschied bestätigt.
+Viewport beim Copy-Zeichendurchgang bereits groß; 29.033/29.323 Fehlerpixel
+abseits neuer senkrechter Kachelnähte. Starke historische Fehler bleiben
+ohne zeitgleiche Spuren. Keine neue D12-Blindprobe. Im selben Paket D15:
+inverse Innenkantenoperation in gespeicherter Picture genau bestimmt,
+Befehl 26 (`drawPath`, `InverseWinding`, `#11FFFFFF`). Nächste prüfbare
+Frage: erzeugt diese Operation im Original-Clipkontext den bekannten Shader?
+Nur isolierte Diagnose, erst bei bestätigtem Shader eine pixelgleiche
+Alternative untersuchen. Details und Stoppbedingungen in
+[`D-KRITISCHE-PRUEFUNG-2026-10-03.md`](zyklus-2/D-KRITISCHE-PRUEFUNG-2026-10-03.md).
+Produkt unverändert, D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen,
+G1 offen. Server HTTP 200, Akku BatteryStatus 1. Keine Veröffentlichung.
+
+Kritische Prüfung, verwendete Eingaben und vollständiger Arbeitsbaum
+zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Kritische-Pruefung-204600/`
+gesichert: 71 Dateien / 400.703.495 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale bleiben erhalten; Abschlussdokumentation separat unter
+`sicherungsabschluss/` mit eigenem Hashmanifest.
+
+**Neueste begrenzte Probe:** Starke historische Fehler nicht reproduziert.
+Konto-Ziel nur bekannter Einzelkanalwert, Korall-Ziel exakt referenzgleich.
+Je ein frischer Prozess; Laufzeiten überlappten, keine unabhängige kalte
+Abnahme. Vorher-/Nachher-Daten und Quads gesichert, Produktbytehashes gleich.
+Keine weitere Ein-Pixel-Schleife. Paket D nach CODEX-START §6 angehalten;
+ohne neue belegbare Ursachenfrage keine weitere Blindprobe. D12/D13/D15
+zurück, D14 geschützt, Z1 ausgelassen, G1 offen. Server 8099 HTTP 200,
+BatteryStatus 1. Grenzen und Rohdaten oben in D-URSACHEN-2026-10-03.md.
+
+Die begrenzte Probe und der Arbeitsbaum sind zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Starke-Probe-202831/`
+gesichert: 262 Dateien / 158.800.888 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale erhalten; Abschlussdokumentation separat unter
+`sicherungsabschluss/` mit eigenem Manifest.
+
+**Neueste starke Pixel-Auswertung:** Konto-Löschen umfasst neben sechs
+Rundkantenpunkten vor allem Backup-Schrift/Mischpixel: 1.196 von 1.339
+Pixeln über einer Kanalstufe im Backup-Knopf. Zwölf vorhandene Direktfotos
+und beide Rundgangkontrollen vollständig referenzgleich. Korall bleibt ein
+eigener 8×4-Block am unteren Kontolistenrand; seine zehn Farben sonst im
+Bild nicht vorhanden. Den beiden historischen starken roten Bildern fehlt
+zeitgleiche DOM-/GPU-Diagnose. Kein Ursachenfix aus grünen Ersatzdaten;
+nur beim tatsächlich starken Rot weiter zuordnen, sonst §6 anhalten.
+Details oben in [`zyklus-2/D-URSACHEN-2026-10-03.md`](zyklus-2/D-URSACHEN-2026-10-03.md).
+Offline-Belege dauerhaft unter `C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Starke-Pixel-200644/`:
+116 Dateien / 26.858.870 Bytes, SHA256 vollständig gleich; Originale erhalten.
+**Nachgezogene Quellenkontrolle:** auch der unveränderte gesicherte Vorstand
+erzeugt dasselbe vollständige rote Einstellungs-PNG wie der D12-Entwurf.
+Beide Quellen lieferten zuvor dasselbe grüne PNG. Quelle durch feste SHA256
+belegt, DOM/Animationen gleich, unveränderte Assertion rot. Der Ein-Pixel-
+Fehler tritt somit ohne D12-Änderung auf; kein Produktfix daraus begründet.
+Interner Kanalwertwechsel und starke historische Fehler bleiben ungeklärt;
+D12/D13 zurück. Einzelheiten im neuesten Quellenabschnitt von
+[`zyklus-2/D12-PIXEL-2026-10-03.md`](zyklus-2/D12-PIXEL-2026-10-03.md).
+Neue Quellenkontrolle dauerhaft gesichert:
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Quellenkontrolle-192919/`,
+190 Dateien / 105.902.459 Bytes, SHA256 vollständig gleich; beide Quellen enthalten.
+**Neuester Schritt, Ein-Pixel-Diagnose:** tatsächliches Hintergrund-Quad
+lokalisiert. Originallauf ohne Vorab-Fläche und ohne frühere Rasterwiedergaben
+beide exakt derselbe einzelne Kanalwert rot. Sechs isolierte A/B/A-Reihen
+erklären historischen grünen Wert nicht. Raster-PNGs sind Wiedergaben,
+keine GPU-Texturkopien. [`zyklus-2/D12-PIXEL-2026-10-03.md`](zyklus-2/D12-PIXEL-2026-10-03.md)
+enthält Daten und nächsten Ursachenauftrag. D12/D13 weiterhin zurück,
+Produkt bytegleich, Server 8099 HTTP 200; keine Abnahmeänderung.
+Neue Pixel-Belege samt Arbeitsbaum dauerhaft gesichert:
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Pixel-185851/`,
+467 Dateien / 239.073.370 Bytes, SHA256 vollständig gleich; Originale erhalten.
+**Nächster Chat:** genaue Übergabe mit erstem Arbeitsauftrag und Werkzeugfallen:
+[`zyklus-2/D-UEBERGABE-2026-10-03.md`](zyklus-2/D-UEBERGABE-2026-10-03.md).
+Alle bisherigen `paket-d*`-TEMP-Belege zusätzlich dauerhaft außerhalb des
+Repos gesichert: `C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Uebergabe/`.
+4.848 Dateien, Quell-/Kopie-SHA256 vollständig gleich; aktueller Arbeitsbaum
+und Git-Diff enthalten. Originale unverändert erhalten.
+**Neueste Fortsetzung 03.10., Kachelbreite:** vorhandene D12-Spuren zeigen
+2×-Raster vor physischer Viewportänderung im roten Lauf, danach im grünen.
+Browserquellen derselben Revision erklären 224 gegenüber 800 Pixel Breite.
+Nur die physische Fläche vorab setzen bleibt trotzdem rot: 33/34 gezielte
+erste Fotos gleich, Einstellungen 320/dunkel/voll mit einem anderen
+Kanalwert. Volle gezeichnete Breite 640 bereits belegt. Starke historische
+Korall-/Konto-Fehler bleiben ungeklärt; keine Prüfaufbaukorrektur oder
+Gesamtabnahme. Bericht: [`zyklus-2/D12-KACHELBREITE-2026-10-03.md`](zyklus-2/D12-KACHELBREITE-2026-10-03.md).
+Produktdateien bytegleich erhalten, Server 8099 HTTP 200. Paket D weiterhin
+angehalten; D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen.
+Neue Belege dauerhaft unter `C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Kachelbreite-175521/`:
+909 Dateien / 570.954.170 Bytes, SHA256 vollständig gleich; Originale erhalten.
+**Vorherige Ursachenprüfung 03.10.:** D12 feste Kachelhöhe 448 bleibt rot
+(29.323 Pixel; tatsächliche Breite 224 statt grün 800). Historischer
+8×4-Korallfehler und Konto-Löschen weiter ungeklärt. D15 frühere LI-/`.view`-
+Zuordnung korrigiert: numerisch gleiche getrennte Rasterzähler waren kein
+Beleg. Vollständige Treiberspur: zehn Shaderkompilierungen tragen 80,905 ms
+zum 91,043-ms-Flush bei. Gemeinsamen Innenkanten-Shader kalt A/B/A isoliert;
+nur Navigation entfernen verschiebt ihn, beide Innenkanten entfernen lässt
+ihn entfallen, Original bringt ihn zurück. Sichtbare Änderung und weitere
+kalte Pausen bleiben; reine Diagnose, keine Produktabnahme. Details und
+feste Trace-Hashes im neuesten Abschnitt `zyklus-2/D-URSACHEN-2026-10-03.md`.
+Alle Quellen/Entwürfe erhalten; D12/D13/D15 zurück, D14 geschützt.
+**Paket D ausdrücklich fortgesetzt, uncommittet; Abschluss angehalten:** Vorhandenen Stand
+erhalten. Server auf Betreiberauftrag neu gestartet, HTTP 200/19.539 Bytes
+geprüft. D1–D6 lokal abgenommen: Blatt-Austritt, ruhendes Randscrollen,
+grüner Bewertungsring, stabile Übungs-Chips und ruhiger Modusstart.
+Pflichtregression grün, D3-/D5-/D6-Runde jeweils 13/13 grün; Fertig-Knopf
+nach 400 ms sichtbar. D7: erste Choreografie ≤1200 ms, Wiederbesuch
+≤2 Bewegungen/300 ms in 24 Zuständen grün, Regression und Runde 13/13 grün.
+D8 berücksichtigt reduzierte Bewegung in allen vier Scrollwegen;
+24 Zustände und Runde 13/13 grün. D9: weite Touch-Eintritte ohne leeres
+Zwischenbild, 24 Zustände und Pflichtregression grün; Gerätegefühl offen.
+D10 bereits durch B5 behoben; B5 und alle Einstiegstests erneut grün.
+D11 Toast-Austritt 160 ms/≥5 Bilder, 24 Zustände und Regression grün.
+D12 zurück: 24 Zustände grün, aber Fotovergleich auf „Konto löschen“
+320/dunkel rot, Ursache ungeklärt; nur eigenen Versuch zurückgenommen.
+D13 zurück wegen ungeklärtem vorgeschriebenem Foto-Prüfaufbau.
+D14 zurück: benannte „Rechtsseiten“-Größen gehören zum geschützten Textlernen.
+D15 zurück: erster Fix besteht die Bildfolge nicht (Deckkraft-Sprung 0,59);
+nur eigenen Versuch zurückgenommen. Beide Entwürfe und Bilder gesichert.
+Erneute Fortsetzung 03.10.: D12-Direktkontrollen und echter 320/dunkel-
+Foto-Rundgang pixelgleich; Gesamtvergleich erneut rot auf Einstellungen
+390/dunkel/leer (8×4-Pixel-Bereich), Ursache weiterhin ungeklärt.
+D13-Entwurf mit 15 Rohzeiten/24 Zuständen grün, Gesamtfoto-Abnahme fehlt.
+D15 zweiter Produktversuch mit pausiertem Fade ebenfalls rot (Sprung 0,595).
+Neue Entwürfe und Bilder erhalten, nur neue Produktversuche zurückgenommen.
+D14-Probelauf-Sperre bleibt. Server bereits HTTP 200, Netzteil BatteryStatus 2.
+Paketabschluss nach §5 offen; keine Version, kein Commit/Push/Deploy.
+Weitere Ursachenprüfung 03.10.: Arbeitsbaum vollständig gesichert und
+Produktdateien bytegleich erhalten. D12: 28 Kontrollbilder sowie der
+unveränderte 390/dunkel/leer-Rundgang pixelgleich; historische Fehlerpixel
+weiter ungeklärt. D13 deshalb weiter zurück, D14 unverändert gesperrt.
+D15: gesicherter zweiter Entwurf kalt mit langen GPU-Aufgaben (86,5/45,6 ms),
+zwei warme Starts derselben Quelle ohne diese Fade-Pausen; unabhängige
+Kontrollfläche viermal grün. Kalte Startabnahme und Gerätewirkung offen,
+kein dritter Produktfix. Server HTTP 200, Netzteil BatteryStatus 2.
+Kein anderes Paket beginnen.
+Instrumentierte Fortsetzung 03.10.: Gesamter Foto-Rundgang beim ersten Rot
+angehalten (Rundenende 390/hell/voll, 77.992 Pixel, maximal zwei Kanalstufen).
+DOM, Animationen, Ebenen und GPU-Spur gesichert. Unveränderte Ausgangsquelle
+zeigt ebenfalls ein transientes Fehlerfoto; drei Folgefotos exakt gleich.
+Gezielter D12-Nachlauf 16/16 Fotos gleich, keine Gesamtfoto-Abnahme.
+D15: echte kalte Bildfolge zeigt sichtbaren Aufholsprung nach GPU-Rasterung;
+warme Kontrollen bleiben keine kalte Abnahme. Keine Produktänderung.
+D12–D15 und Paketabschluss weiter zurück; alle Belege erhalten.
+Z1 weiterhin ausgelassen, G1 offen. Einzelheiten oben im Zyklus-2-Logbuch.
+Weitere Auswertung 03.10.: Gesicherte rote/grüne DOMSnapshots inklusive
+Malreihenfolge gleich; während der Aufnahme Raster-Umskalierung und
+verschiedene GPU-Renderpässe belegt, genaue Fehlerpixel-Ursache weiterhin offen.
+Native Pixelskalen-Gegenprobe verändert selbst die Darstellung und bleibt
+reine Diagnose. Ausführliche Quads-/Skia-Kontrolle 16/16 gleich, keine
+Gesamtfoto-Abnahme. D15 Detailspur erneut kalt mit 158-ms-Bildpause und
+sichtbarem Aufholsprung, diesmal ohne rAF-Schritt >0,2. Teurer GPU-Flush
+belegt, einzelne Zeichen-/Treiberoperation ungeklärt; kein dritter Fix.
+Beweislücken und nächste gezielte Schritte in
+`zyklus-2/D-URSACHEN-2026-10-03.md`. Produktdateien bytegleich erhalten;
+D12–D15 und Paketabschluss bleiben zurück, keine Veröffentlichung.
 Probelauf Texte läuft ab 01.10. (Stufe 8). Betreiber tut
 dabei nichts außer lernen; am 29.10. „Auswertung“ + Foto der Probelauf-Werte
 aus den Einstellungen (`texte-lernen/WIEDERHOLEN.md` § 8).
@@ -56,9 +375,21 @@ A7/A13: Normal-/Abbruch-Update, Offline-Start und beide Rechtsseiten grün.
 Bestehender Tempo-Ausreißer in Verwalten per A/B gegen `c4b1c30` belegt,
 keine neue Paket-A-Regression; keine vollständige Ruckelfreiheit behauptet.
 Commit/Push direkt auf main; kein Deploy; damals noch kein Paket B begonnen.
-**Nächster Schritt:** Vorhandener Paket-C-Stand ist abgeschlossen.
-Keine weitere Aufgabe ohne neuen
-Auftrag beginnen. Z1 bleibt ein eigener, ausdrücklich beauftragter Chat.
+**Nächster Schritt:** Paket D bei D12 fortsetzen; vorhandenen uncommitteten
+Stand erhalten.
+Fortsetzung im selben Chat: detailliertes Rot auf Antwort belegt andere
+Rasterkacheln (224×256 statt 800×448) bei gleichem DOM; isolierter Verlauf
+ebenfalls rasterabhängig. Animations-Ebenen-Gegenprobe 0→98→0 Fehlerpixel
+beim Freigeben/Wiederhalten, DOM gleich. Feste Emulationsskala verändert
+selbst das Bild und ist verworfen. Alter 8×4-Korallfehler bleibt ungeklärt.
+D15 alte Raster-ID-Zuordnung unbestätigt; gemeinsame inverse Innenkanten-
+Shaderoperation nun kalt isoliert. Nächster Schritt: gespeicherte Picture
+pixelgleich mit anderem Zeichenweg prüfen, Compilerzeiten und kalte
+Bildfolge gegen Original vergleichen. Erst nach belegter Erhaltung der
+Darstellung Produktentwurf und vollständige Abnahme; kein dritter Verdachtsfix.
+Alle Belege erhalten, kein Gesamtfoto-Erfolg und kein Paketabschluss;
+konkrete Gegenproben und nächste Lücken im obersten Zyklus-2-Logbuch.
+Z1 bleibt ein eigener, ausdrücklich beauftragter Chat.
 Die neuen Firestore-Regeln müssen vor einer späteren Hosting-Veröffentlichung
 eingespielt werden. Einzelheiten und vollständige Log-Pfade:
 [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md), oberster Eintrag.

@@ -561,6 +561,110 @@ Was gemessen wird:
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
 
+- Vor aufwendiger Messinfrastruktur den Anteil der Zielgröße am ganzen
+  Fehler gegen die Abnahmegrenze rechnen. D15: vier Schritte verfolgten
+  einen einzelnen Shader, der 21–22 Prozent der späten Kompilierzeit trägt
+  (rund 24 von 112–117 ms); ohne alle Schatten an Navigation/Startliste
+  bleibt eine Bildlücke von 72 ms, erlaubt wären bei 280 ms linear
+  höchstens 56 ms. Eine isolierte Einzeloperation ist noch keine
+  abnahmeentscheidende Ursache. Vorhandene Gegenproben als Stoppkriterium
+  lesen, nicht nur als Beleg der Zuordnung (04.10.2026,
+  `zyklus-2/D15-CAPTURE-KRITIK-2026-10-04.md`).
+- Zwei `requestAnimationFrame` nach `render()` warten nicht auf das erste
+  Zeichnen im GPU-Prozess. Belegt: rAF-Abstand 156 ms und Bildlücke 178 ms
+  direkt nach `render()`, während die Ansicht noch Deckkraft 0 hat.
+- Headless-Start hat keinen Window-Swap: Der Prüfstand startet ohne
+  `headless: false`, die gepinnte Chromium-Quelle lässt
+  `PbufferGLSurfaceEGL::SwapBuffers` nicht zu. ANGLE-Capture schlösse dort
+  keinen Abschnitt und schriebe nichts.
+- Native Capture-Unterstützung belegt noch keinen unveränderten Zeichenweg.
+  In gepinntem ANGLE schaltet Capture u.a. noperspective aus und verändert
+  Compile/Link; Window-Swaps schließen Abschnitte ab, nicht-Window-Swaps
+  werden ignoriert. Shader/Caps, tatsächliche ShareGroup und Abschluss
+  vor Übernahme beweisen. Framezahl nicht mit Browserbild gleichsetzen;
+  Capture-Zeiten keine kalte Tempoabnahme. Datei-SHA256 und exakte Shader-
+  Tracebytes getrennt halten: CRLF-Datei kann anderen Bytehash haben.
+
+- Ein verkürztes Paint-JSON kann Farbfilter und Mask-/Bildfilter weglassen.
+  Opakes Weiß im CommandLog beweist keine opake Zeichenfarbe. Im D15-Beleg
+  liefert erst die binäre Picture den SrcIn-Farbfilter mit 14/255 und den
+  fehlenden Blur. Readerformat nach der exakt gepinnten Skia-Revision prüfen:
+  Effektflag 0x2, Pfadtabelle optional, Dateioffsets keine Paint-Semantik.
+  Gleiche Alpha und ideale Fläche garantieren keine gleiche Kombination
+  von geglätteten Deckungen. Aus gemischten 8-Bit-Endbildern keine originale
+  Alpha-Maske behaupten; geometrisch abgeleitete Shaderparameter als Modell
+  kennzeichnen, solange direkte GPU-Werte/Präzision fehlen.
+
+- Eine Diagnose mit CSS-Variablen wird am tatsächlich berechneten Stil
+  und an der vollständigen Zeichenliste geprüft. `none` ist kein einzelner
+  Eintrag einer Schatten-Kommaliste: `--kante:none` macht
+  `box-shadow:var(--kante),var(--shadow-lg)` insgesamt ungültig. Damit
+  werden auch Außenschatten entfernt. Zum Isolieren des Inset-Schattenblocks
+  ausdrücklich die verbleibende gültige Schattenliste setzen und erhaltene
+  Operationen nachweisen. Ein Shaderquellhash benennt noch keine einzelne
+  CSS-Operation; im D15-Beleg Rahmenbefehl 26 ausgeschlossen, Block 19–25
+  über exakte vollständige Listendifferenzen zugeordnet. Gleiche analytische
+  Fläche ist keine Pixelgleichheit bei unterschiedlichen AA-/Mischregeln.
+
+- `coverage_tiles` aus `PictureLayerImpl::AsValueInto` ist eine separate
+  Debug-Aufzählung, keine vollständige Liste tatsächlich gezeichneter
+  Quads. Im D12-Gegenbeleg vier/zwei Coverage-Einträge, aber 16/vier echte
+  Hintergrundquads. Vollständige Abdeckung aus dem zugehörigen Renderpass
+  samt SharedQuadState prüfen. Nähe zu einem Copy-Ereignis ohne Pass-ID
+  bleibt eine zeitliche Zuordnung und liefert keine Rohtexturpixel.
+- Große JSON-Dateien mit eingebetteten Bildern vor der Ausgabe strukturiert
+  lesen und nur benötigte Felder ausgeben. `Get-Content -Raw` gefolgt von
+  `Select-Object -First 1` kürzt einen einzelnen großen String nicht.
+  Shell-Parameter wie `-ErrorAction` gehören nicht an native Programme
+  wie `rg`; bei Lesefehlern keine Aussage aus fehlendem Ergebnis ableiten.
+
+- `LayerTree.replaySnapshot` liefert eine neue Wiedergabe, keine Rohkopie
+  der im ersten Foto gezeichneten GPU-Textur. Ressourcen-ID, Maßstab und
+  Pixelmittelpunkt getrennt belegen. Ein DOM-Rechteck oder transparenter
+  Renderpass über dem Pixel beweist kein dort zeichnendes Quad. Grüne
+  Pixel aus einer anderen Ansicht ersetzen keine zeitgleiche grüne Spur.
+- GPU-Kacheln über die explizite `coverage_tiles.tile.id_ref` mit dem
+  Zeigeranteil des zugehörigen `cc::Tile/Zeiger` verbinden; ein fehlendes
+  Präfix darf keine scheinbar leeren Kachellisten erzeugen. Rastermaßstab
+  und physische Viewportänderung zeitlich getrennt prüfen. Volle Breite
+  beweist keine Pixelgleichheit: D12-Vorab-Fläche bleibt bei 320 Pixeln
+  mit einem Kanalwert rot. Auch ein einzelner Wert bleibt Abnahmefehler.
+- Numerisch gleiche Client-/Decoder-Raster-IDs verbinden keine Aufträge:
+  getrennte Zähler, mögliche vorzeitige Rückgaben und Aufteilung prüfen.
+  Zeitnahe Picture-Befehle und Compileroperationen sind von späteren
+  DOMSnapshots zu unterscheiden. Eine kalte CSS-Einzelprobe, die denselben
+  Shader nur auf ein späteres Zeichenziel verschiebt, ist keine Behebung.
+  Shaderquellhash, Einzelzeiten und echte Bilder im Original/Variante/
+  Original vergleichen. Entfernte sichtbare Kanten sind Diagnose, keine
+  Produktabnahme (03.10.2026, D15-Innenkanten-Gegenprobe).
+- Ausführliche Grafikspuren auf die Vorher-/Nachher-Marken des betroffenen
+  Fotos prüfen: Picture-Kategorien können den Trace-Puffer vor diesem
+  Foto füllen; eine gültige JSON-Datei garantiert keine vollständige Spur.
+  Python-JSON unter Windows ausdrücklich als UTF-8 lesen. Beendete
+  Animationen nicht pauschal für Fotos canceln: D12-Gegenprobe bei gleichem
+  DOM/Stilen 0→98→0 Fehlerpixel beim Freigeben/Wiederhalten, mit geänderten
+  GPU-Ebenen. Emulationsskala kann trotz gleicher DOM-Messung andere Bilder
+  liefern. Die früher berichteten D15-Zuordnungen zu unterschiedlichen
+  DOM-Ebenen sind unbestätigte Zahlenkandidaten, kein Ursachenbeleg
+  (03.10.2026, weitere Fortsetzung; getrennte Zähler erkannt).
+- Ein rAF-Verlauf ohne Deckkraftschritt über der Grenze kann trotz echter
+  kalter Bildpause rot sein. Die gelieferten Browserbilder auswerten;
+  rAF-Grün nicht als Bildabnahme ausgeben. GPU-Flush plus Shader-Cache-
+  Ereignisse benennt noch keinen teuren Shader oder eine CSS-Ursache.
+  Auch eine Aufnahme-Umskalierung, die bei roten **und** grünen Bildern
+  vorkommt, erklärt allein keine Fehlerpixel (03.10.2026, D12/D15-Detailspur).
+- Beendete DOM-Animationen und identische berechnete Stile belegen noch
+  keinen pixelgleichen Screenshot. Das erste abweichende Bild samt
+  zeitgleichen DOM-/Animations-/GPU-Daten erhalten; Folgefotos dienen nur
+  der Diagnose und ersetzen die fehlgeschlagene Abnahme nicht. Ein
+  transienter Fehler auch mit unveränderter Quelle erklärt ohne weiteren
+  Nachweis keine früheren Fehlerpixel (03.10.2026, D12).
+- Eine rAF-Deckkraftliste ist keine vollständige Bildfolge. Bei Lücken die
+  tatsächlich gelieferten Browserbilder mit Zeitstempeln und einer Spur von
+  Hauptthread, GPU und Compositor zusammen prüfen. Den kalten Grafikstart
+  gegen denselben unveränderten Quellstand im selben Browser nach dem ersten
+  Zeichnen vergleichen. Eine grüne warme Kontrolle ersetzt keine kalte
+  Startabnahme und keine Geräteabnahme (03.10.2026, D15).
 - Scroll-Lage vor Tastaturereignissen erst nach abgeschlossenen
   Inhaltsänderungen erfassen. Verschwindet beim ersten Speichern ein hoher
   Leerzustand, begrenzt der Browser die bisherige Scroll-Lage auf die neue
@@ -1506,6 +1610,123 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 
 ## 15. Vorfall-Liste
 
+03.10.2026, D12 feste Quellenkontrolle: historischen Foto-Quellenhash mit
+beiden gesicherten Quellen verbunden. Vorstand und Entwurf lieferten zuvor
+dasselbe grüne PNG; unveränderter Vorstand jetzt exakt dasselbe rote PNG
+wie Entwurf, bei gleichem DOM/Animationen. Ein-Pixel-Abweichung tritt ohne
+D12-Änderung auf, kein Produktfix daraus begründet. Interner Kanalwertwechsel
+und starke historische Fehler bleiben ungeklärt, Assertion unverändert rot.
+Eigener Offline-Auswerter las stand.json zunächst ohne UTF-8 und brach ab;
+alte Datei/Fehlerlog erhalten, korrigierte Auswertung separat gespeichert.
+Bestehende §5.3-Regel zum UTF-8-Lesen befolgen; keine neue Doppelregel.
+
+03.10.2026, D12-Ein-Pixel-Fortsetzung: tatsächliche Quad-Abdeckung grenzt
+den Fehler auf die Hintergrundtextur ein; Ebenen-Wiedergaben ausdrücklich
+als Wiedergaben, nicht echte 2×-GPU-Texturpixel eingeordnet. Isolierte
+A/B/A-Proben und zwei App-Gegenproben erhalten; Original ohne Vorab-Fläche
+und ohne frühere Rasterwiedergaben beide mit genau einem Kanalwert rot.
+Eigene Ad-hoc-Ausgaben scheiterten an fehlendem args.snapshot, vermutetem
+Browsercachepfad und PowerShell-Quoting; keine Messung daraus, tatsächlichen
+Browserpfad aus Beleg gelesen und strukturierten Auswerter verwendet.
+Andere Vorab-Höhe veränderte die echten Kacheln nicht; fehlende Wirkung
+explizit markiert. Kein Produktfix, keine Prüfaufbaukorrektur (§5.3).
+
+03.10.2026, D12-Kachelbreiten-Diagnose: Kommandozeilenabfrage ohne
+`--enable-automation` vor Messung abgebrochen; korrigiert in allen Varianten.
+`--disable-threaded-compositing` liefert keine Aufnahme; Teilbelege erhalten.
+Eigener Coverage-Auswerter verglich nackte Zeigerreferenz mit präfixierter
+Tile-ID und fand keine Kacheln; auf denselben referenzierten Zeiger
+korrigiert, altes Ergebnis erhalten, neues Ergebnis separat gespeichert.
+Keine Schlussfolgerung aus den leeren Listen. Vorab-Fläche erklärt und
+verändert die Kachelbreite, bleibt aber im strengen ersten Foto rot
+(ein Kanalwert, volle Breite bereits erfasst). 33/34 gezielte Fotos gleich
+sind keine Gesamtabnahme. Keine Produktänderung, keine Toleranz (§5.3).
+
+03.10.2026, D12/D15 weitere Ursachenprüfung: Das eigene Rasterwerkzeug
+verband getrennte CPU-/GPU-Zähler allein über gleiche Zahlen. Frühere
+LI-/`.view`-Behauptung sichtbar korrigiert; historische Berichte erhalten,
+Werkzeug liefert ausdrücklich unbestätigte Kandidaten in neue Dateien.
+Neue vollständige kalte Ganesh-/ANGLE-Spur zerlegt 91,043-ms-Flush in zehn
+Shaderkompilierungen (80,905 ms). Innenkanten-Shader an Navigation und
+Startliste durch gezieltes kaltes A/B/A isoliert, aber Entfernung verändert
+Gestaltung und lässt weitere Pausen bestehen; keine Produktkorrektur.
+Eigene Diagnoseabbrüche: fehlende historische boot-raster.json, Snapshot
+ohne args.snapshot, Flush vor späterer Bildmarke; Ausgaben/Teilbelege
+bewahrt, fehlende Daten explizit markiert und Zeitphasen getrennt (§5.3).
+D12 feste Mindestkachelhöhe bleibt rot, tatsächliche Breite weiterhin
+224 statt 800. Starke historische Fehler nicht durch ±1-Verlauf erklärt.
+Keine Toleranz, keine Abnahme durch Folgefotos, keine Produktänderung.
+
+03.10.2026, D12/D15-Detailauswertung: Rote/grüne DOMSnapshots mit
+Malreihenfolge sind identisch; Screenshot ändert Rasterbereich und GPU-
+Renderpässe. Ursache der Fehlerpixel damit nicht vollständig belegt.
+Native Pixelskala 2 als reine Diagnose verändert selbst SVG-/Textpixel,
+daher keine Prüfaufbau-Korrektur übernommen. D15 neue kalte Detailspur
+zeigt 158,42 ms Bildpause und sichtbaren Aufholsprung, obwohl rAF keinen
+Schritt >0,2 liefert. GPU-Flush belegt, Shader-/CSS-Zuordnung fehlt (§5.3).
+Zwei Leseversuche erwarteten Playwright-Einzeldateien; tatsächliche
+gebündelte coreBundle.js danach per rg-Dateiliste gefunden (§3.2).
+Keine Produktänderung, alte und neue Belege bewahrt.
+
+03.10.2026, instrumentierte D12-/D15-Fortsetzung: Der ungefilterte
+Fotovergleich scheitert auf Rundenende 390/hell/voll, obwohl alle
+erfassten Animationen beendet sind. Die unveränderte Ausgangsquelle
+zeigt auf Kartensätze ebenfalls ein transientes Fehlerfoto; drei
+Folgefotos sind pixelgleich zum historischen Vorher-Bild. Erfasste
+Geometrien/Stile vor/nach Screenshot identisch, nur HTML-Serialisierung
+eines verborgenen Felds ändert sich. Gleicher D12-Entwurf im gezielten
+Nachlauf 16/16 pixelgleich, DOM am Rundenende identisch zur roten Probe.
+Ursache der historischen Fehler nicht damit bewiesen; §5.3, keine
+Toleranz und kein grünes Gesamtfoto-Ergebnis behaupten. D15-Auswertung
+der gesicherten kalten Bilder bestätigt sichtbaren Aufholsprung des
+Titels nach langen GPU-Aufgaben; zusammengesetzte Helligkeit nicht
+mit isolierter Deckkraft verwechseln, warme Kontrollen keine kalte Abnahme.
+
+03.10.2026, Paket-D-Ursachenprüfung: Die bisherige D15-Abnahme setzte
+rAF-Abtastungen mit gezeichneten Bildern gleich. Neue Browserbilder zeigen
+auch echte Bildpausen; deshalb erklärt eine Abtastlücke allein das Rot nicht.
+Die vollständige Spur zeigt beim kalten Start desselben gesicherten zweiten
+Entwurfs GPU-Rasterarbeit von 86,5 ms und einen Renderdurchgang von 45,6 ms.
+Zwei anschließende Starts mit identischen Quellen im selben Browser haben
+weder diese langen GPU-Aufgaben noch rAF-Lücken über 50 ms beim Fade.
+Eine unabhängige lineare Fläche läuft viermal mit höchstens 20,5 ms
+Bildabstand. Das grenzt den kalten Grafikaufbau als Ursache ein; keine
+warme Kontrolle als erfolgreiche kalte Abnahme werten (§5.3/§5.6).
+Die D12-Fehlerbilder bleiben erhalten. 28 neue Kontrollbilder und der
+unveränderte 390/dunkel/leer-Rundgang sind pixelgleich mit dem alten
+Vorstand, erklären die damaligen abweichenden Pixel aber nicht.
+Ohne zeitgleiche DOM-/GPU-Daten des Fehlerbilds keine Ursache behaupten.
+
+03.10.2026, Paket-D-Fortsetzung: Zweiter D15-Fix pausierte die neue
+Fade-Animation bis nach dem ersten Stil-Durchlauf. Trotzdem Bildfolge rot:
+0,237793→0,832793 über 166,6 ms; weder Ursache noch Gerätewirkung belegt.
+Grenze 0,2 unverändert, Entwurf gesichert, nach zwei Produktversuchen
+zurückgenommen (CODEX-START §6, bestehende Regeln §5.3/§5.6).
+D12-Direktkontrollen und Rundgang 320/dunkel bestanden, ganzer Vergleich
+scheiterte anschließend auf Einstellungen 390/dunkel/leer an einem
+8×4-Pixel-Bereich. RGBA-/RGB-Daten und Bildausschnitt statt nur PNG-Bytes
+prüfen; ohne Ursache keinen Messfehler behaupten (§5.3). Frühere Bilder
+bewahrt. D13-Entwurf mit 15 Rohzeiten bleibt wegen fehlender belastbarer
+Foto-Abnahme gesichert, nicht als fertig im Produkt.
+
+03.10.2026, Paket D11, eigener erster Fix: `animation:none` und neue
+opacity-Transition im selben Stil-Durchlauf blendeten den Toast weiter
+hart aus. Die echte Bildfolge zeigte 1→0 ohne Zwischenwert; kein grünes
+Ergebnis behauptet. Zweiter Anlauf beendet zuerst den gehaltenen Eintritt
+durch Lesen der berechneten Deckkraft am schon 2,6 s bestehenden Toast,
+dann beginnt die Transition (§6.4). Kein Maßlesen nach neuem `innerHTML`,
+keine gelockerte Grenze: weiterhin mindestens fünf Austrittsbilder.
+
+03.10.2026, Paket D, eigener Prüfaufbau: Die erste D3-CSSOM-Probe suchte
+nur den Selektor für „Sicher“; derselbe Selektor existierte noch als reine
+Rahmenfarbe und verdeckte die fehlende Animationsregel. Probe auf die
+konkrete `animation`-Deklaration präzisiert (bei `var()` im Shorthand ist
+`style.animationName` leer): fester Altstand 50d15ce
+jetzt rot mit „CSSOM-Ring fehlt known“. Keine Produktänderung aus dem
+ersten grünen Ergebnis abgeleitet (§5.3: Test muss anschlagen können).
+Ein Status-Patch mit rückwärts angeordneten Hunks wurde vor jeder Änderung
+abgelehnt; Hunks in Dateireihenfolge angewendet (§3.10/3.11).
+
 03.10.2026, Paket-C-Gesamtlauf über Mitternacht: `t_serie_lang` erzeugte
 Kalenderdaten um Mittag, die simulierte App verwendete vor 04:00 aber den
 vorherigen Lerntag. Beleg 00:07: alte Testbasis 2026-10-03, lib.tag(0)
@@ -1999,3 +2220,19 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 | 01.10. (Paket A, eigener Doku-Vorabfehler) | Erste maschinelle Statusänderung traf keine der elf CRLF-Tabellenzeilen; vor Abschluss im Diff bemerkt | Regex-Zeilenende schloss CR aus | Statuszeilen strukturiert ändern, genau elf Treffer verlangen und Ergebnis/Diff lesen (§ 3.10); Tabelle danach korrekt in Arbeit |
 | 01.10. (Paket A, eigene Abnahme-Luecke) | Gesamtlauf: t_text_felder erwartet Textimport im normalen Konto u1 und wird nach A8 rot | Bestehenden Feld-Erhalt-Test nicht auf die neue Betreiber-/Einwilligungs-Sperre abgestimmt; erster Fixture-Nachlauf uebersah, dass Store-Leeren die Einwilligung entfernt, und wartete im Dialog | Berechtigtes Betreiber-Fixture, echte erneute Zustimmung nach Store-Leeren, alle bisherigen Mengen/Felder/Verweise erhalten; normale/abgelehnte/geteilte Importe bleiben separat gesperrt (§ 5.3) |
 | 01.10. (Paket A, eigener K10-Doku-Vorabfehler) | Zwei nicht vorhandene Regel-Funktionsnamen als Erfolgskontrolle genannt; rg vor Abschluss ohne Treffer | Namen vor dem konkreten Regel-Diff geraten | Erfolg am tatsaechlichen feedback/votes-Regelblock mit get/getAfter und +1/-1 nachweisen (§ 3.2); vor Commit korrigiert |
+
+| 03.10. (Paket D, eigener Diagnose-Ablaufmangel) | Zweite Grafikprobe gestartet, obwohl erster Prozess noch nicht als beendet bestätigt war; Laufzeiten überlappen | Rückgabe mit session_id als Abschluss behandelt | Vor nächster GPU-Probe vollständigen Prozessabschluss abwarten; überlappende Läufe nicht als unabhängige kalte Messung verwenden. Rohdaten behalten und Begrenzung dokumentieren (§ 5.3) |
+
+| 03.10. (Paket D, kritische Prüfung und eigene Lesefehler) | Coverage-Debugdaten zu stark als vollständige Zeichenliste bezeichnet; rg mit PowerShell-Parameter abgelehnt; große Picture-JSON unnötig als Base64 ausgegeben | Debug-Inventar und echte Quads verwechselt, native Parameter und Ein-String-Ausgabe nicht getrennt | Echten Renderpass prüfen, Korrektur sichtbar dokumentieren; JSON strukturiert und mit begrenzten Feldern lesen (§ 5.3). Originale erhalten, keine Produktänderung aus diesen Fehlern |
+
+| 03.10. (Paket D, eigene Schattenisolierung und Pfadzuordnung) | Befehl 26 zu eng als Inset-Innenkante bezeichnet; --kante:none für bloßes Entfernen einer Innenkante gehalten; TEMP zunächst relativ im Repo gesucht | CSS-Farbe/Geometrie nicht bis zur Einzeloperation geprüft, Variablenersetzung machte ganze Kommaliste ungültig, tatsächlichen TEMP-Stamm nicht aufgelöst | Berechneten Stil und vollständige Befehlsdifferenz prüfen: 26 ist Rahmen, Block 19–25 ist Inset; gültige verbleibende Schattenliste verwenden. Frühere Interpretation sichtbar korrigieren, rote alternative Pixel nicht angleichen; tatsächliches $env:TEMP verwenden (§ 5.3) |
+
+| 03.10. (Paket D, eigener Offline-Leser) | rg-Optionen hinter --, Wildcardpfad nicht aufgelöst; Reader zuerst falsches Effektbit, Pflichtpfad und identische Dateioffsets erwartet | Einzelne Formatannahmen vor vollständiger Quellenprüfung eingesetzt | Optionen vor -- und konkrete Suchwurzeln; gepinnte Formatdefinition lesen, Assertions für echte Fälle; nur Dateioffsets aus semantischem Vergleich trennen. Fehler vor Ergebnisausgabe korrigiert, frühere Fassungen erhalten, keine Pixelprüfung gelockert (§ 5.3) |
+
+| 03.10. (D15-Capture-Vorbereitung, eigener Kopierfehler) | CRLF-Shaderdatei mit LF-Tracehash verglichen, Assertion stoppt | Dateiform und exakte Eventbytes verwechselt | Beide unverändert erhalten, Tracequelle separat extrahieren und Hashidentitäten trennen; 37 CRLF belegt (§5.3). Ein fehlender bestand.json-Pfad lieferte keinen Befund; vorhandenes auswertung.json gelesen |
+
+| 04.10. (D15-Abschluss, eigener Ausgabefehler) | Diffdruck bricht an Pfeilzeichen mit UnicodeEncodeError ab | Python-stdout war cp1252 | PYTHONIOENCODING=utf-8 setzen, vollständigen Diff erneut lesen; keine Dateibeschädigung oder erfolgreiche Prüfung aus dem Abbruch behaupten (§5.3) |
+
+| 04.10. (D15, kritische Prüfung des Capture-Messwegs) | Vier Arbeitsschritte und eine Build-Vorbereitung galten einem Shader, dessen Vermeidung die Abnahme nicht erreichen kann | Kausale Zuordnung (Block 19–25) mit Abnahmerelevanz verwechselt; Anteil 21–22 Prozent und die 72-ms-Lücke der Variante nie gegen die Grenze 0,2 gerechnet | Anteil am Gesamtfehler zuerst rechnen, Gegenprobe als Stoppkriterium lesen (§5.3). Capture-Build nicht begonnen; Vorbereitung erhalten. Eigener Lesefehler: `Get-ChildItem -Include` lieferte auch für die bekannte chrome.dll nichts; keine Aussage daraus |
+
+| 04.10. (D15, eigener Zuordnungsfehler) | Fremde Änderung von 00:27 als „während dieser Sitzung“ und „wohl Codex“ gemeldet; Betreiber fragte Codex deshalb unnötig | Eigenen Sitzungsbeginn (00:30:53) nicht nachgesehen, laufende Codex-Prozesse für einen Beleg gehalten | Vor „wer war das“: eigene erste Zeitmarke, Änderungszeiten und gelöschte/andere Sitzungen prüfen; Verdacht als Verdacht kennzeichnen (§1.3). Sichtbar korrigiert in D15-CAPTURE-KRITIK § 7 |

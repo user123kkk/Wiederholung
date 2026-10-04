@@ -4,15 +4,20 @@ Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
 Zuletzt geändert: 18. September 2026 (Google-Login bestätigt, Umzug auf adrabic.web.app)
 
-**AKTUELL (03.10.2026):** Zyklus 2, vorhandener Paket-C-Stand abgeschlossen,
-3.18.13. Alle vorherigen Änderungen erhalten; 22 Aufgaben lokal abgenommen,
-C22 nur b/c/d. C1 32 Zustände und Randfälle grün, C12/C19-Entwurfsregression
-beim Gegenlesen korrigiert. Gesamtlauf mit gezielten Nachläufen 137/137,
-Runde 13/13 aus identischen Hashes, Affe mit Textfällen Handy200/iPad150 je
-0 Befunde, Startwert 7; alle Ausgaben gelesen. Prüfaufbaukorrekturen und
-LEHREN-Checkliste dokumentiert. Commit/Push direkt auf main, nicht
-veröffentlicht; online 3.18.10. Echter iPhone-Test G1 bleibt offen.
-Z1 ausgelassen; C16/D1, C18 nach 29.10., C22(a)/F3 zurückgestellt.
+**AKTUELL (04.10.2026):** Zyklus 2, Paket D D1–D11 abgenommen, 3.18.14.
+Vorhandenen Arbeitsbaum und begonnene Version vollständig erhalten;
+D1–D9/D11 erledigt (3.18.14), D10 bleibt trifft nicht zu (B5/3.18.12).
+Frischer Gesamtlauf 138/138, separat frische Runde 13/13,
+Affe Handy200/iPad150 jeweils 0 Befunde mit Startwert 7;
+sämtliche Ausgaben gelesen. Zehn feste Gegenproben 50d15ce rot,
+Fix grün; Gegenprüfung und LEHREN §14 einzeln im Zyklus-Logbuch.
+Commit/Push direkt auf main nach Abschlussprüfung, nicht veröffentlicht.
+Online-Stand dadurch nicht geändert. D12–D15 bleiben ausdrücklich zurück:
+nichts bauen/weiter messen, kein Capture-Build, keine neue Fotoserie.
+Echtes D9-Gerätegefühl, G1 und D15-iPhone-Start bleiben offen.
+Betreiber: ladegeraet.bat; iPhone-App ganz schließen/neu öffnen und
+Übergang vom Ladebild zur App für D15 ansehen. Kein Paket E beginnen.
+Z1 ausgelassen; C18 nach 29.10., C22(a)/F3 zurückgestellt.
 Kein anderes Paket und keine weitere Aufgabe ohne neuen Auftrag.
 Die Regeln aus Paket A müssen vor späterem Hosting eingespielt werden.
 Maßgeblich: [`STAND.md`](STAND.md) und [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md).

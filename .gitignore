@@ -16,3 +16,6 @@ firestore-debug.log
 # Lokale Agenten-Konfiguration und erzeugte Linkliste (auch Hosting-ausgeschlossen).
 /.claude/settings.local.json
 /plan/werkzeuge/splash-links.txt
+
+# Lokaler Python-Bytecode der bewahrten Diagnosewerkzeuge; Quellen bleiben versioniert.
+/plan/werkzeuge/pruefstand/__pycache__/

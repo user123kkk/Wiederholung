@@ -8,6 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { cssStruktur } from "./css_struktur.mjs";
 
 // Repo-Wurzel: zwei Ordner über dieser Datei (plan/werkzeuge/ -> Wurzel).
 // Per PRUEF_WURZEL überschreibbar (fuer die Gegenprobe in einer Kopie).
@@ -43,6 +44,12 @@ function hinweis(text) {
 }
 
 // ---------- 1. Version an vier Stellen ----------
+
+for (const f of ["styles.css"]) {
+  const cssFehler = cssStruktur(lies(f));
+  if (cssFehler.length) cssFehler.forEach(e => fehler(f + ": " + e));
+  else ok(f + ": CSS-Regelklammern und Keyframe-Struktur stimmen.");
+}
 
 let version = null;
 {

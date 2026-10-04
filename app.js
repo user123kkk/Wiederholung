@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.13";
+const APP_VERSION = "3.18.14";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1599,6 +1599,7 @@ themaAnwenden();
 try { localStorage.removeItem("adrabic-bewegung"); } catch (e) {}
 
 let ui = {
+  choreografieBesucht: new Set(), // Nur im Arbeitsspeicher, einmal je App-Start.
   authMode: "login",         // "login" | "register" | "reset"
   authError: null,
   authInfo: null,
@@ -1788,8 +1789,7 @@ let ui = {
 
 /* ---------- 3.0.0: Toast ----------
    Hoechstens einer gleichzeitig; ein neuer verdraengt den alten. Der Timer
-   loest ein render() aus, mehr braucht es nicht - die Meldung steht in ui
-   und verschwindet damit von selbst aus dem naechsten Aufbau. */
+   blendet nur die Meldung aus; ein offenes Formular bleibt unangetastet. */
 let toastTimer = null;
 /* 3.17.35 (TECHNIK-8), aus zeigeToast() herausgezogen in 3.17.37 (G-087):
    #ansage liegt ausserhalb von #app und bleibt bei jedem render() dasselbe
@@ -1822,7 +1822,19 @@ function zeigeToast(text, rueckgaengig = null) {
        Tippen neu (das Eingabefeld war danach ein anderes Element, auf iOS geht
        dabei die Tastatur zu). Die Meldung wird direkt aus dem Bild genommen. */
     const el = app.querySelector(".toast-wrap");
-    if (el) el.remove();
+    if (el) {
+      const toast = el.querySelector(".toast");
+      if (toast && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        toast.style.animation = "none";
+        // Den gehaltenen Eintritt beenden, bevor die neue Transition beginnt.
+        // Der Toast steht schon 2,6 s; hier wird kein neuer Bildschirm gesetzt.
+        void getComputedStyle(toast).opacity;
+        toast.style.transition = "opacity 160ms linear";
+        toast.style.opacity = "0";
+        // Nur die erfasste alte Hülle entfernen, niemals die nächste Meldung.
+        setTimeout(() => el.remove(), 160);
+      } else el.remove();
+    }
     const ok = app.querySelector(".karte-kopf__ok");     // 3.17.37 (G-089)
     if (ok) ok.classList.remove("karte-kopf__ok--an");
     letzterOverlaySchluessel = null;
@@ -4128,6 +4140,9 @@ function arabZahl(n) {
    starten oben eine Sitzung, waehrend man unten in der Kartenliste steht.
    Ohne den Sprung sieht es aus, als sei nichts passiert. */
 function springeZu(id) { ui.springZu = id; ui.springOben = false; }
+function scrollArt() {
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+}
 /* 2.16.0: Ein MODUSWECHSEL ist etwas anderes als ein Sprung innerhalb der
    Seite. Ueben, Abfrage und Durchsicht tauschen den ganzen Bildschirm aus -
    dann ist die Frage "steht das Ziel schon im Bild?" sinnlos: An derselben
@@ -4158,9 +4173,7 @@ function sprungAusfuehren() {
        einem hohen Kasten nur die Mitte. */
     if (ganzNachOben) {
       window.scrollTo({ top: 0, behavior: sanft ? "smooth" : "auto" });
-      el.classList.remove("aufleuchten");
-      void el.offsetWidth;
-      el.classList.add("aufleuchten");
+      // Modusstart: die neue Karte zeigt den Wechsel, nicht die ganze Bühne.
       return;
     }
     const r = el.getBoundingClientRect();
@@ -6216,7 +6229,7 @@ function revealAnswer() {
 function scrollGradeRowIntoView() {
   requestAnimationFrame(() => {
     const el = document.querySelector(".grade-row") || document.querySelector(".study-answer");
-    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: scrollArt(), block: "nearest" });
   });
 }
 function toggleExtra() {
@@ -6666,6 +6679,7 @@ const REITER_FLING_MIN = 24;    /* Mindestweite, damit ein Tippler nicht als Fli
 let reiterWisch = null;
 let reiterWischAktiv = false;
 let reiterWischFrame = null;
+let reiterWischRichtung = "";
 
 function reiterWischMoeglich(e) {
   if (e.pointerType === "mouse") return false;
@@ -6745,21 +6759,54 @@ function reiterWischEnde(e) {
   const knopf = zielTab ? document.querySelector('.nav__tab[data-action="tab-' + zielTab + '"]') : null;
 
   if (knopf) {
-    /* Wie beim Karten- und Blatt-Wischen: Nichts verschwindet mitten in der
-       Bewegung. Die Ansicht fliegt in derselben Richtung ganz aus dem Bild,
-       ERST danach kommt der eigentliche Wechsel (derselbe Knopf, dieselben
-       Aufraeumarbeiten wie ein Tipp auf die Leiste). Ohne diesen Schritt
-       waere der Uebergang ein Schnitt mitten im Ziehen - genau das macht
-       eine Geste billig statt fluessig. */
+    /* Beide Seiten bewegen sich gleichzeitig: die neue kommt hinter der
+       gezogenen Seite herein. Der normale Reiterknopf übernimmt weiterhin
+       den Wechsel samt Aufräumen. Die reine Bildkopie lebt nur 200 ms im
+       App-Knoten; jedes Neuzeichnen (auch Kontowechsel) entfernt sie. */
     reiterWischAktiv = true;
+    const ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const breite = window.innerWidth;
+    const weg = new DOMMatrixReadOnly(getComputedStyle(ansicht).transform).m41;
+    let kopie = null;
+    if (!ruhig) {
+      const rect = ansicht.getBoundingClientRect();
+      kopie = ansicht.cloneNode(true);
+      const original = [ansicht, ...ansicht.querySelectorAll("*")];
+      const kopierte = [kopie, ...kopie.querySelectorAll("*")];
+      original.forEach((el, n) => {
+        const stil = getComputedStyle(el), k = kopierte[n];
+        k.style.opacity = stil.opacity;
+        k.style.transform = stil.transform;
+        k.style.animation = "none";
+        k.style.transition = "none";
+        k.removeAttribute("id"); k.removeAttribute("data-action");
+        k.removeAttribute("data-countup"); k.removeAttribute("autofocus");
+      });
+      kopie.dataset.wischKopie = "";
+      kopie.setAttribute("aria-hidden", "true");
+      kopie.inert = true;
+      Object.assign(kopie.style, {position: "fixed", top: rect.top + "px",
+        left: (rect.left - weg) + "px", width: rect.width + "px",
+        height: rect.height + "px", margin: "0", pointerEvents: "none", zIndex: "1"});
+    }
+    reiterWischRichtung = dx < 0 ? "wisch-vor" : "wisch-zurueck";
+    const eintritt = Math.min(breite, Math.max(200, breite * 0.6, breite - Math.abs(weg)));
+    app.style.setProperty("--wisch-start", ((dx < 0 ? 1 : -1) * eintritt) + "px");
+    reiterWischKlickSperre = false;
+    knopf.click();
+    reiterWischRichtung = "";
     reiterWischKlickSperre = true;
-    ansicht.style.transition = "transform 200ms var(--ease-out)";
-    ansicht.style.transform = "translateX(" + (dx < 0 ? "-100%" : "100%") + ")";
+    if (kopie) {
+      kopie.style.setProperty("--wisch-alt-start", weg + "px");
+      kopie.style.setProperty("--wisch-alt-ende", (weg + (dx < 0 ? -breite : breite)) + "px");
+      kopie.style.animation = "wisch-abgang 200ms linear both";
+      app.appendChild(kopie);
+    }
     setTimeout(() => {
+      if (kopie) kopie.remove();
       reiterWischKlickSperre = false;
       reiterWischAktiv = false;
-      knopf.click();
-    }, 190);
+    }, ruhig ? 0 : 200);
     return;
   }
 
@@ -6793,8 +6840,8 @@ app.addEventListener("pointercancel", reiterWischEnde);
    (ob es zum Wechsel reicht oder zurueckfedert) zusaetzlich das Kartenblatt
    geoeffnet, weil der Browser nach dem pointerup noch einen eigenen
    click schickt. Bei einem geglueckten Wechsel liegt diese Zeile ausserdem
-   bis zu 190ms lang noch im Dokument (Ausflug-Animation, siehe oben) - ohne
-   die Sperre koennte der Klick genau dort landen.
+   waehrend des Uebergangs als reine Bildkopie im Dokument - ohne die Sperre
+   koennte der Klick auf der neuen Seite landen.
 
    In der Erfassungsphase (capture), damit die Sperre VOR den beiden
    delegierten Klick-Listenern am body greift. */
@@ -9003,6 +9050,13 @@ function renderMain() {
   letzterOverlaySchluessel = overlaySchluessel;
   app.classList.toggle("still-ansicht", !ansichtNeu);
   app.classList.toggle("still-overlay", !overlayNeu);
+  const choreografieTab = !ui.einstellungen && !ui.seite && !imModus &&
+    !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
+    ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
+  if (ansichtNeu) {
+    app.classList.toggle("schon-besucht", !!choreografieTab && ui.choreografieBesucht.has(choreografieTab));
+    if (choreografieTab) ui.choreografieBesucht.add(choreografieTab);
+  }
   /* 3.7.1: Richtung des Seitenwechsels. Tiefer hinein (Einstellungen, Unterseite,
      Runde) kommt der Inhalt von rechts, zurueck von links; zwischen den drei
      Reitern schiebt er in Richtung des Reiters. styles.css liest das Attribut. */
@@ -9013,6 +9067,7 @@ function renderMain() {
     if (tiefe !== letzteTiefe) richtung = tiefe > letzteTiefe ? "vor" : "zurueck";
     else if (reiter !== letzterReiter) richtung = reiter > letzterReiter ? "vor" : "zurueck";
   }
+  if (ansichtNeu && reiterWischRichtung) richtung = reiterWischRichtung;
   letzteTiefe = tiefe; letzterReiter = reiter;
   if (richtung) app.dataset.richtung = richtung; else delete app.dataset.richtung;
 
@@ -9142,14 +9197,14 @@ function renderMain() {
            Nach oben geht es nur, wenn ALLES abgehakt ist - dort steht dann
            "Durchgearbeitet" mit dem Knopf zur Abfrage. */
         if (!ziel && !alle.some(offen)) {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ top: 0, behavior: scrollArt() });
           return;
         }
       }
       if (!ziel) return;
       const r = ziel.getBoundingClientRect();
       if (r.top < 60 || r.bottom > window.innerHeight - 60) {
-        ziel.scrollIntoView({ block: "center", behavior: "smooth" });
+        ziel.scrollIntoView({ block: "center", behavior: scrollArt() });
       }
     });
   }
@@ -13337,7 +13392,7 @@ function renderVerwaltenListe(cards, gefuehrt) {
         const aktiv = gruppen.has(i);
         return '<button type="button" class="stufe-chip' + (aktiv ? " aktiv" : "") +
           '" data-action="stufe-chip" data-gruppe="' + i + '" aria-pressed="' + (aktiv ? "true" : "false") +
-          '">' + (aktiv ? ikon("haken", "i-sm") : '') + esc(g.label) + '</button>';
+          '">' + ikon("haken", "i-sm") + esc(g.label) + '</button>';
       }).join("");
       html += '</div>';
       anzahl = drillGruppenKarten(gruppen).length;
@@ -14113,6 +14168,15 @@ app.addEventListener("keydown", e => {
    Nur fuer echte Maeuse (pointerType "mouse") - auf dem Handy bleibt es beim
    gewohnten Wischen mit dem Finger, das soll unangetastet bleiben. */
 let edgeScrollMouseY = null;
+let edgeScrollRaf = null;
+function edgeScrollInRandzone() {
+  return edgeScrollMouseY !== null &&
+    (edgeScrollMouseY < 70 || edgeScrollMouseY > window.innerHeight - 70);
+}
+function edgeScrollStoppen() {
+  if (edgeScrollRaf !== null) cancelAnimationFrame(edgeScrollRaf);
+  edgeScrollRaf = null;
+}
 document.addEventListener("pointermove", e => {
   if (e.pointerType !== "mouse") return;
   /* 3.6.13: Steht die Maus auf der Navigationsleiste oder der Kopfzeile, wird
@@ -14120,13 +14184,18 @@ document.addEventListener("pointermove", e => {
      unteren Rand - wer einen Tab antippte, sah die Seite unter der Maus
      wegrutschen. */
   edgeScrollMouseY = e.target && e.target.closest && e.target.closest(".nav, .appbar, .modebar") ? null : e.clientY;
+  if (edgeScrollInRandzone()) {
+    if (edgeScrollRaf === null) edgeScrollRaf = requestAnimationFrame(edgeScrollTick);
+  } else edgeScrollStoppen();
 });
 /* Verlaesst die Maus das Fenster (Tab-Wechsel, zweiter Bildschirm), kommen
    keine neuen pointermove-Ereignisse mehr - ohne dieses Zuruecksetzen wuerde
    mit dem letzten bekannten Wert fuer immer weitergescrollt. */
-document.addEventListener("pointerleave", () => { edgeScrollMouseY = null; });
+document.addEventListener("pointerleave", () => { edgeScrollMouseY = null; edgeScrollStoppen(); });
 
 function edgeScrollTick() {
+  edgeScrollRaf = null;
+  if (!edgeScrollInRandzone()) return;
   const tag = document.activeElement && document.activeElement.tagName;
   /* Vier Faelle, in denen Rand-Scrollen mehr schaden als nuetzen wuerde:
      - dragState: das Kartenziehen hat sein eigenes Rand-Scrollen (siehe
@@ -14154,9 +14223,8 @@ function edgeScrollTick() {
     }
     if (dy !== 0) window.scrollBy(0, dy);
   }
-  requestAnimationFrame(edgeScrollTick);
+  edgeScrollRaf = requestAnimationFrame(edgeScrollTick);
 }
-requestAnimationFrame(edgeScrollTick);
 
 /* ---------- Handschrift-Canvas: Zeichnen per Zeigegerät (Maus/Touch/Stylus) ---------- */
 /* Die Striche werden NICHT in Pixeln gespeichert, sondern als Anteil der
@@ -14450,10 +14518,18 @@ function spielAustrittsAnimation(dlg, huelle, danach) {
   const reduziert = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!dlg || reduziert || dlg.dataset.schliesst) { danach(); return; }
   dlg.dataset.schliesst = "1";
-  dlg.style.transition = "transform 200ms var(--ease-out)";
-  dlg.style.transform = "translateY(105%)";
-  if (huelle) { huelle.style.transition = "opacity 200ms"; huelle.style.opacity = "0"; }
-  setTimeout(danach, 190);
+  // Beendete Eintrittsanimationen halten sonst transform/opacity fest.
+  dlg.style.animation = "none";
+  dlg.style.transition = "transform 200ms cubic-bezier(.3,0,.8,.15), opacity 200ms cubic-bezier(.3,0,.8,.15)";
+  const mittig = matchMedia("(min-width: 600px)").matches;
+  dlg.style.transform = mittig ? "scale(.96)" : "translateY(105%)";
+  if (mittig) dlg.style.opacity = "0";
+  if (huelle) {
+    huelle.style.animation = "none";
+    huelle.style.transition = "opacity 200ms cubic-bezier(.3,0,.8,.15)";
+    huelle.style.opacity = "0";
+  }
+  setTimeout(danach, 200);
 }
 function closeDialog(result) {
   const d = ui.dialog;
@@ -14824,7 +14900,7 @@ function tabSchonAktiv(id) {
     !ui.neuWahl && !ui.textAnlegen && !ui.textAnsicht && !ui.zeileEdit && !ui.textLernen;
 }
 function nachObenBlaettern() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: scrollArt() });
 }
 
 document.body.addEventListener("click", e => {

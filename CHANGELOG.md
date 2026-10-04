@@ -1,3 +1,26 @@
+## 3.18.14 – 4. Oktober 2026
+
+**Paket D: Bewegung ruhiger und Übergänge korrigiert.** Blätter und Dialoge fahren
+beim Schließen wirklich weg, statt kurz einzufrieren; am großen Bildschirm
+blendet der mittige Dialog aus. Die Meldung unten blendet aus, statt hart
+zu verschwinden. Beim Wischen zwischen den Reitern kommt die neue Seite
+hinter der alten herein, ohne leeres Zwischenbild.
+
+Lernen und Fortschritt zeigen ihre Eintrittsbewegung nur noch beim ersten
+Besuch nach dem Start, kürzer und ohne doppeltes Aufleuchten. Am Rundenende
+ist „Fertig“ ohne Wartezeit eingeblendet und spätestens nach 400 ms sichtbar.
+Beim Start einer Runde leuchtet nicht mehr die
+ganze Bühne auf. „Sicher“ hat wieder seinen Lichtring. Die Übungs-Chips
+bleiben beim Antippen an ihrem Platz. Sanftes Scrollen beachtet „Bewegung
+reduzieren“. Die Schleife für das Rand-Scrollen läuft nur noch, wenn die
+Maus am Rand steht.
+
+Zurückgestellt: totes CSS rund um Bewegung (D12), Bewegungs-Token (D13),
+Größen am Token-Satz vorbei (D14, wartet auf den Probelauf Texte) und das
+Ausblenden des Ladebildschirms (D15, kalte Startabnahme und iPhone-Blick offen).
+Diese vier Aufgaben bleiben unverändert zurück; ihre Entwürfe und Proben
+sind erhalten und nicht Bestandteil dieser Produktversion.
+
 ## 3.18.13 – 3. Oktober 2026
 
 **Paket C: Verwalten und Fortschritt verbessert.** Das neue Kartenblatt

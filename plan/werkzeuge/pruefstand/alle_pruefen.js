@@ -26,6 +26,7 @@ let aktiv=null;
 function quellHash(f){
  const quelle=fs.readFileSync(path.join(__dirname,f));
  const hash=createHash('sha256').update(quelle);
+ if(f==='t_paket_d.js')hash.update('css_struktur.mjs').update(fs.readFileSync(path.join(__dirname,'../css_struktur.mjs')));
  if(f==='t_konto_fortsetzungen.js'){
   const namen=[...new Set([...quelle.toString().matchAll(/\['(konto_[^']+\.js)'/g)].map(m=>m[1]))].sort();
   for(const name of namen)hash.update(name).update(fs.readFileSync(path.join(__dirname,'../../grossplan/befunde/werkzeuge',name)));
@@ -44,10 +45,10 @@ async function lauf(f){
  const t=Date.now();let zeitlimit=false;
  const child=spawn(process.execPath,['--require',path.join(__dirname,'pruef_cleanup.js'),f],{cwd:__dirname,env:process.env,windowsHide:true});aktiv=child;
  child.stdout.pipe(strom,{end:false});child.stderr.pipe(strom,{end:false});
- // Paket C prueft viele Aufgaben in jeweils 16 Konfigurationen in einer
+ // Paket C/D pruefen viele Aufgaben mit Zustandsmatrizen in einer
  // Datei. Nur das Prozess-Zeitlimit muss deren Gesamtumfang abdecken;
  // Assertions, Messgrenzen und Wartebedingungen bleiben unveraendert.
- const limit=f==='t_paket_c_weiter.js'?3600000:f==='t_paket_c_verw.js'?1200000:600000;
+ const limit=f==='t_paket_c_weiter.js'?3600000:f==='t_paket_d.js'?1800000:f==='t_paket_c_verw.js'?1200000:600000;
  const timer=setTimeout(()=>{zeitlimit=true;stoppen(child);},limit);
  let fehler=null;child.on('error',e=>{fehler=e.message;});
  const ende=await new Promise(ok=>child.on('close',(code,signal)=>ok({code,signal})));

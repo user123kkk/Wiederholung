@@ -95,6 +95,15 @@ const { pruefeKontrast } = require('./kontrast');
   await aktion(p, 'end-session', null, 800);
   await aktion(p, 'tab-fortschritt', null, 1200); await a11y('fortschritt');
   await aktion(p, 'tab-verwalten', null, 1000); await a11y('verwalten');
+  await p.evaluate(() => window.scrollTo(0, 900));
+  const scrollVor = await p.evaluate(() => scrollY);
+  if (scrollVor <= 100) throw new Error('D8 Scrollprobe hat keinen Scrollweg');
+  const scrollNach = await p.evaluate(async () => {
+    document.querySelector('[data-action="tab-verwalten"]').click();
+    await new Promise(requestAnimationFrame); return scrollY;
+  });
+  zeilen.push('aktiver Reiter ruhig: scrollY ' + scrollVor + ' -> ' + scrollNach + ' im ersten Bild');
+  if (scrollNach !== 0) funde++;
   await aktion(p, 'karte-neu', null, 800); await a11y('karte-blatt'); await p.keyboard.press('Escape'); await p.waitForTimeout(500);
   await aktion(p, 'bereich-sheet-auf', null, 700); await a11y('bereich-blatt'); await p.keyboard.press('Escape'); await p.waitForTimeout(500);
   await aktion(p, 'einstellungen', null, 900); await a11y('einstellungen');

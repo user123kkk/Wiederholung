@@ -647,6 +647,11 @@ hr, .rule { border: 0; height: 1px; background: var(--border-subtle); }
 #app { overflow-x: clip; }   /* die 20 px Einschub sollen keine Querleiste erzeugen */
 #app[data-richtung="vor"] .view { animation: enter-vor var(--dur-slow) var(--ease-out) both; }
 #app[data-richtung="zurueck"] .view { animation: enter-zurueck var(--dur-slow) var(--ease-out) both; }
+@keyframes enter-wisch-vor { from { transform: translateX(var(--wisch-start)); opacity: 1; } to { transform: translateX(0); opacity: 1; } }
+@keyframes enter-wisch-zurueck { from { transform: translateX(var(--wisch-start)); opacity: 1; } to { transform: translateX(0); opacity: 1; } }
+@keyframes wisch-abgang { from { transform: translateX(var(--wisch-alt-start)); } to { transform: translateX(var(--wisch-alt-ende)); } }
+#app[data-richtung="wisch-vor"] > .view { animation: enter-wisch-vor 200ms linear both; }
+#app[data-richtung="wisch-zurueck"] > .view { animation: enter-wisch-zurueck 200ms linear both; }
 
 /* Im Modus gibt es weder AppBar noch Navigation — nur die Modusleiste oben.
    Der Inhalt bekommt dadurch fast den ganzen Bildschirm. */
@@ -1656,7 +1661,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   stroke-dasharray: 1; stroke-dashoffset: var(--ziel, 1);
   filter: drop-shadow(0 0 6px var(--accent-border));
 }
-#app:not(.still-ansicht) .ring__fuellung { animation: ring-fuellen 1100ms var(--ease-out) 250ms both; }
+#app:not(.still-ansicht) .ring__fuellung { animation: ring-fuellen 600ms var(--ease-out) 250ms both; }
 @keyframes ring-fuellen { from { stroke-dashoffset: 1; } to { stroke-dashoffset: var(--ziel, 1); } }
 .stapel__mitte { position: relative; display: flex; flex-direction: column; align-items: center; color: var(--accent); }
 .stapel__mitte .i-xl { width: 46px; height: 46px; stroke-width: 1.8; }
@@ -1680,14 +1685,14 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   background-size: 250% 100%; background-position: 130% 0;
   pointer-events: none;
 }
-#app:not(.still-ansicht) .stapel__start::after { animation: einstieg-schimmer 1100ms var(--ease-out) 1300ms both; }
+#app:not(.still-ansicht) .stapel__start::after { animation: einstieg-schimmer 400ms var(--ease-out) 600ms both; }
 
 /* Die Serie mit der Woche. */
 .serie-karte--woche { flex-direction: column; align-items: stretch; gap: var(--space-4); }
 .serie-karte__kopf { display: flex; align-items: center; gap: var(--space-4); }
 .serie-karte--woche .serie-zahl { align-items: center; color: var(--accent); }
 .serie-karte--woche .serie-zahl .i { transform-origin: 50% 90%; }
-#app:not(.still-ansicht) .serie-karte--woche .serie-zahl .i { animation: einstieg-flamme 700ms var(--ease-spring) 700ms 2 both; }
+#app:not(.still-ansicht) .serie-karte--woche .serie-zahl .i { animation: einstieg-flamme 400ms var(--ease-spring) 600ms both; }
 .woche { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--space-1); }
 .woche__tag { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .woche__punkt {
@@ -1702,7 +1707,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .woche__kurz { font-size: var(--fs-micro); font-weight: 600; color: var(--text-3); }
 .woche__tag.heute .woche__kurz { color: var(--text-1); }
 #app:not(.still-ansicht) .woche__tag .woche__punkt {
-  animation: einstieg-punkt 380ms var(--ease-spring) backwards;
+  animation: einstieg-punkt-ruhig 300ms var(--ease-out) backwards;
   animation-delay: calc(var(--n, 0) * 55ms + 380ms);
 }
 
@@ -1727,7 +1732,7 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
   background: var(--accent);
   transform-origin: left center; transform: scaleX(var(--bis, 0));
 }
-#app:not(.still-ansicht) .startliste__balken span { animation: fortschritt-waechst 700ms var(--ease-out) 300ms both; }
+#app:not(.still-ansicht) .startliste__balken span { animation: fortschritt-waechst 600ms var(--ease-out) 300ms both; }
 .startliste__schritte { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
 .startliste__schritt {
   width: 100%;
@@ -1804,6 +1809,7 @@ button.startliste__schritt { cursor: pointer; }
                     das Wort bleibt stehen, weil es stehen geblieben IST.
    Beides sind @keyframes, keine Transitions - render() ersetzt das Markup,
    auf frischen Elementen laufen Transitions nicht (Abschnitt 3). */
+#app[data-richtung] .view--modus,
 .view--modus { animation: none; }
 .study-card.zugedeckt .study-word {
   animation: enter-rise var(--dur-base) var(--ease-out) both;
@@ -2180,8 +2186,6 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
 /* 3.17.26: Einladen-Puls entfernt - er kam genau waehrend des Erinnerns
    (Betreiber: "umdrehen nicht gezwungen"). Den Hinweis gibt "Tippen zum
    Umdrehen" auf der ersten Karte. */
-  100% { box-shadow: 0 0 0 0 transparent, inset 0 0 0 1px transparent; }
-}
 .karte-geist--known .karte-seite   { animation: geist-glanz-gut 260ms var(--ease-out) both; }
 .karte-geist--unknown .karte-seite { animation: geist-glanz-nicht 260ms var(--ease-out) both; }
 .karte-geist--almost .karte-seite  { animation: geist-glanz 260ms var(--ease-out) both; }
@@ -2313,8 +2317,8 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
   animation: einstieg-kachel 420ms var(--ease-spring) backwards;
   animation-delay: calc(var(--i, 0) * 90ms + 820ms);
 }
-.ende--neu .ende__serie .i { animation: einstieg-flamme 700ms var(--ease-spring) 1400ms 2 both; }
-.ende--neu .ende__aktionen { animation: enter-rise 360ms var(--ease-out) 1300ms backwards; }
+.ende--neu .ende__serie .i { animation: einstieg-flamme 400ms var(--ease-spring) 800ms both; }
+.ende--neu .ende__aktionen { animation: enter-rise 360ms var(--ease-out) backwards; }
 
 .drill-banner, .satz-banner, .leech-banner, .merk-hinweis {
   font-size: var(--fs-xs); line-height: 1.5;
@@ -2400,7 +2404,9 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
 .segment__teil input:checked + span { background: var(--surface-raised); color: var(--text-1); box-shadow: var(--kante), 0 1px 3px rgba(0, 0, 0, 0.25); }
 .segment__teil input:focus-visible + span { outline: 2px solid var(--accent-border); outline-offset: 2px; }
 .stufe-chip { display: inline-flex; align-items: center; gap: 6px; transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
-.stufe-chip .i { width: 14px; height: 14px; animation: enter-pop 220ms var(--ease-spring) both; }
+.stufe-chip .i { width: 14px; height: 14px; }
+.stufe-chip:not(.aktiv) .i { visibility: hidden; }
+#app:not(.still-ansicht) .stufe-chip.aktiv .i { animation: enter-pop 220ms var(--ease-spring) both; }
 .drill-zahl { font-size: var(--fs-sm); color: var(--text-2); margin: 0 0 var(--space-3); }
 .drill-zahl strong { color: var(--text-1); font-variant-numeric: tabular-nums; }
 .drill-schreiben { margin-bottom: var(--space-2); }
@@ -4462,7 +4468,7 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
    von unten. */
 #app:not(.still-ansicht) .view > .serie-karte,
 #app:not(.still-ansicht) .view > .stat-block {
-  animation: einstieg-kachel 440ms var(--ease-spring) backwards;
+  animation: einstieg-kachel 440ms var(--ease-out) backwards;
 }
 #app:not(.still-ansicht) .view > .stat-block:nth-of-type(1) { animation-delay: 80ms; }
 #app:not(.still-ansicht) .view > .stat-block:nth-of-type(2) { animation-delay: 150ms; }
@@ -4471,12 +4477,12 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 #app:not(.still-ansicht) .view > .stat-block:nth-of-type(5) { animation-delay: 360ms; }
 .heute-bar span, .lekt-bar span { transform-origin: left center; }
 #app:not(.still-ansicht) .heute-bar span,
-#app:not(.still-ansicht) .lekt-bar span { animation: einstieg-wachsen 900ms var(--ease-out) 350ms backwards; }
+#app:not(.still-ansicht) .lekt-bar span { animation: einstieg-wachsen 600ms var(--ease-out) 350ms backwards; }
 .stat-bar { transform-origin: left center; }
 #app:not(.still-ansicht) .stat-bar { animation: einstieg-wachsen 350ms var(--ease-out) backwards; }
 #app:not(.still-ansicht) .kal-tag { animation: enter-fade 180ms var(--ease-out) var(--kal-verzug, 0ms) backwards; }
 .spark-fill { transform-origin: bottom center; }
-#app:not(.still-ansicht) .spark-fill { animation: spark-wachsen 700ms var(--ease-spring) backwards; }
+#app:not(.still-ansicht) .spark-fill { animation: spark-wachsen 600ms var(--ease-out) backwards; }
 #app:not(.still-ansicht) .spark-fill:nth-child(2) { animation-delay: 50ms; }
 #app:not(.still-ansicht) .spark-fill:nth-child(3) { animation-delay: 100ms; }
 #app:not(.still-ansicht) .spark-fill:nth-child(4) { animation-delay: 150ms; }
@@ -4487,6 +4493,12 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 #app:not(.still-ansicht) .fort-details .spark-fill { animation-duration: 350ms; animation-delay: 0ms; }
 @keyframes spark-wachsen { from { transform: scaleY(0); } }
 #app:not(.still-ansicht) .lekt-kachel { animation: einstieg-zeile 320ms var(--ease-out) backwards; }
+
+/* Z5: Nur der erste Besuch zeigt die Choreografie. Der Seitenwechsel bleibt.
+   Die Klasse gilt ausschließlich für Lernen/Fortschritt außerhalb des Modus. */
+#app.schon-besucht > .view *,
+#app.schon-besucht > .view *::before,
+#app.schon-besucht > .view *::after { animation: none !important; }
 
 /* Verwalten: die ersten Zeilen der Liste kommen nacheinander – nur die
    ersten vierzehn, der Rest steht einfach da (eine Liste mit hundert

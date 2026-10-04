@@ -2,6 +2,1372 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-04 — Paket D D1–D11 abgeschlossen, 3.18.14
+
+**Geändert:** vorhandenen Arbeitsstand vollständig erhalten und für den
+Abschluss übernommen: app.js:19/1602/1822/4143/6761/9053/13392/14171/14517,
+styles.css:2181 (D3 und Bewegungsregeln D5–D9), sw.js:10, sämtliche 33
+Versions-URLs in index.html:64 ff.; css_struktur.mjs, pruefe_stand.mjs und
+D-Abnahme/Wrapper/a11y-Erweiterung. CHANGELOG.md:1 gegen den tatsächlichen
+Diff korrigiert: keine pauschale Flüssigkeitsbehauptung, D6 ohne Verzögerung
+eingeblendet/≥0,9 nach 400 ms, D15 offen. AUFGABEN D1–D9/D11 auf
+erledigt (3.18.14), D10 bleibt trifft nicht zu (B5/3.18.12).
+STAND und PLAN „AKTUELL“ nachgezogen. Sämtliche bereits vorhandenen
+Diagnosequellen/-berichte bleiben erhalten; sie sind keine Produktfixes
+für D12–D15. .gitignore:22 ignoriert nur den vorhandenen lokalen
+Python-Bytecode im Prüfstand; nicht gelöscht, Quellen bleiben versioniert,
+Hosting schließt plan/** bereits auf beiden Sites aus.
+
+**Entscheidung:** Betreiber 04.10. schließt ausdrücklich nur die gebauten
+D1–D11 ab. D12, D13, D14, D15 bleiben zurück; nichts gebaut, nichts weiter
+gemessen, kein Capture-Build und keine neue Fotoserie für diese Aufgaben.
+Die vorhandene ZURUECK-Liste und sämtliche D12/D13/D15-Proben in
+t_paket_d.js sind bytegleich erhalten, standardmäßig ausgenommen und
+einzeln aufrufbar. Kein anderer Test ausgelassen, gelöscht oder gelockert.
+Kein Reset, Clean, Pull oder Wiederherstellen; keine neue Produktänderung
+während des Abschlusses. Kein Paket E. Veröffentlichung bleibt beim Betreiber.
+
+**Prüfung:** BatteryStatus durchgehend 2 (anfangs 89, zuletzt 100 Prozent),
+Server 8099 HTTP 200. Chrome 154.0.8037.93, Firebase-Attrappe, kein
+WebKit/echtes Gerät. Frisch, ohne --fortsetzen:
+
+- alle_pruefen.js: 138/138 Exit 0, kein Zeitlimit/roter Prozess;
+  jede vollständige Ausgabe gelesen, einschließlich beschreibender Proben.
+- affe.js handy 200 7: 200 Schritte, 0 Befunde; vollständige Ausgabe gelesen.
+- affe.js ipad 150 7: 150 Schritte, 0 Befunde; vollständige Ausgabe gelesen.
+- abnahme_runde.js separat frisch: 13/13 grün, alle 13 vollständigen
+  Einzeltest-Ausgaben gelesen; Schreiben CPU 4× auf allen drei Breiten
+  0 Bilder >34 ms, Zeichenfläche/Knöpfe im Bild, Tinte erhalten.
+- Gegenproben D1–D9/D11 separat mit --alt am festen 50d15ce:
+  alle zehn am konkreten Befund rot (Exit 1), vollständige Ausgaben gelesen.
+  D1 kein berechneter Austritt; D2 61 statt 0; D3 verwaiste Keyframe/Klammer;
+  D4 Chipsprung; D5 Bühnen-Aufleuchten; D6 Deckkraft 0 nach 400 ms;
+  D7 doppelte Feier; D8 900 statt 0; D9 leeres Zwischenbild;
+  D11 keine fünf Austrittsbilder. Dies sind erwartete Altstandfehler,
+  keine roten Produktabnahmen und keine Messfehler-Erklärung.
+
+Belege separat vom abgebrochenen Lauf:
+C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-04-Abschluss/
+(adrabic-pruefstand-gesamt/9802e0dd7279f524/, beide Affenlogs,
+frische-rundenabnahme/, gegenproben-50d15ce/).
+Produkt-/Prüfstandkennung beider frischen Läufe:
+9802e0dd7279f524672568bf788d79594a51ae4f9e61cab288b848d2421fb7b9.
+App/CSS/SW/HTML und t_paket_d.js nach den Läufen bytegleich zu Beginn
+des frischen Gesamtlaufs; Syntax, Standprüfung und bisher versionierter
+Diff-Whitespace grün. Erst die Indexprüfung einschließlich vorher
+unversionierter Dateien meldet vier bereits vorhandene zusätzliche
+EOF-Leerzeilen in D-KRITISCHE-PRUEFUNG, D15-CAPTURE-MESSWEG,
+D15-DECKUNG und D15-OPERATION. Bewusst unverändert erhalten, keine
+Produkt-/Teständerung oder rote Abnahme daraus; Indexausgabe gesichert.
+
+**Gegenprüfung nach Großplan § 2a (D1–D11, Punkt für Punkt):**
+Vollständigen Produktdiff gegen 50d15ce gelesen (app.js, styles.css, sw.js,
+index.html, CHANGELOG), außerdem t_paket_d.js, t_a11y.js, Gesamtprüfer,
+css_struktur.mjs und dessen Einbindung in pruefe_stand.mjs; die Befundblöcke
+BEW-1 bis BEW-11 jeweils gegen tatsächlichen Code und Erwartungswerte gelesen.
+Keine Lernregel, Cloud-Regel, neue persistente Speicherung oder Datenübertragung.
+
+1. D1: berechnete Transformation/Deckkraft statt Inline-Stil geprüft;
+   Blatt und Hülle lösen haltende Eintrittsanimationen, 200-ms-Austritt,
+   Desktop scale(.96), reduziert sofort. Fehlender/abgelöster Dialog und
+   Doppelschließen rufen die Fortsetzung weiter auf. closeDialog löst auch
+   das alte Promise auf, ohne einen neuen Dialog zu schließen.
+2. D2: RAF beginnt nur in der 70-px-Mausrandzone, Mitte/pointerleave bauen
+   ihn ab; Leerlauf Handy/Desktop 0. Bestehende Sperren für Ziehen, Schreiben,
+   Dialog und Eingabefelder gelesen. Eigenes Zieh-Scrollen bleibt getrennt.
+3. D3: zwei verwaiste CSS-Zeilen entfernt; Strukturprüfung erkennt sie,
+   CSSOM fordert die konkrete Animation für alle drei Bewertungsarten.
+   Berechneter grüner Schatten am pausierten 60-ms-Bild geprüft, nicht nur
+   Selektorfund. Reduzierte Bewegung bleibt über die zentrale Regel aus.
+4. D4: Hakenplatz immer vorhanden, inaktiv unsichtbar; Umschalten desselben
+   Bildschirms ohne neues Poppen. Test misst x/y/Breite ±1 px und maximal
+   einen Pop. Leere Auswahl bleibt ohne Chips; Zustand weiter in ui.
+5. D5: nur die drei Modusstarts scrollen ohne Bühnen-Aufleuchten;
+   Richtungsselektor überstimmt nicht mehr animation:none am Modus.
+   Test fordert gestarteten Modus und keine zweite Bühnen-/Seitenbewegung
+   für Runde, Üben und Durchsicht. Leere Konten haben keinen Startknopf.
+6. D6: nur Verzögerung am Ende entfernt, 360-ms-Eintritt bleibt.
+   ≥0,9 Deckkraft nach 400 ms ist das Befundkriterium; deshalb Changelog
+   von „sofort sichtbar“ auf „ohne Wartezeit eingeblendet“ berichtigt.
+7. D7: Besuchsmerker im Arbeitsspeicher unter ui, nur neue normale
+   Lernen-/Fortschrittansicht zählt. Wiederbesuche ohne Kinderchoreografie,
+   erster Besuch ≤1200 ms, Wiederbesuch ≤2 Bewegungen/300 ms; Flamme einmal.
+   Kontowechsel/Render baut private Kopien ab, kein neuer lokaler Schlüssel.
+8. D8: vier smooth-Wege auf scrollArt umgestellt; zentrale Sprunghilfe
+   war schon geschützt. Echter aktiver Reitertipp 900→0 im ersten Bild
+   bei reduziert, normal zunächst >0 und danach Ziel 0; keine bloße
+   Prüfung eines gesetzten Optionswertes.
+9. D9: neue Seite kommt weit mit Deckkraft 1, alte Seite gleichzeitig
+   als eingefrorene inert/aria-hidden Bildkopie ohne IDs/Handlungen.
+   Bildkopie nur in #app, nach 200 ms/jedem Render weg; Layoutlesung vor
+   Neuaufbau. Test: echte CDP-Touchzüge in beide Richtungen, kurze/weite
+   Züge, Rand, kein leeres Zwischenbild, normaler Reitertipp ≤30 px.
+   Abbruchpfad bleibt unverändert; echtes iPhone-Gefühl bleibt offen.
+10. D10: kein Produktdiff; B5/3.18.12 bereits vorhanden. Touch-, Rad- und
+    Tastaturabbruch sowie cancelAnimationFrame im echten Einstiegscode
+    gelesen. B5 und sämtliche Einstiegstests im frischen Lauf prüfen es.
+11. D11: alter Toast endet linear in 160 ms, reduziert sofort; hält
+    Eintritt nicht fest, ≥5 Zwischenbilder. Kein render/innerHTML beim
+    Ablauf, kein Feldverlust; erfasste alte Hülle kann neue Meldung nicht
+    entfernen. Neuer Toast nach 2650 ms ist eigener Gegenfall.
+
+§2a.3: historische Gegenproben an festem 50d15ce, niemals HEAD.
+D10 ist bereits vor diesem Paket behoben und hat deshalb keine erfundene
+rote D-Gegenprobe. §2a.4: Chrome-Emulation ist kein WebKit/echtes Gerät;
+D9-Gerätegefühl, G1 und D15-iPhone-Start bleiben offen. D12–D15 sind durch
+Betreiberentscheidung zurück, keine weitere Messung oder Produktänderung.
+
+**LEHREN § 14 — Checkliste vor diesem Commit:**
+
+1. Codepfade selbst gelesen: renderMain, ui-Besuchsmerker, Reiterwischen,
+   Sprunghilfen/Scrollwege, Maus-Randscrollen, spielAustrittsAnimation,
+   closeDialog und Toast-Ablauf; zugehörige CSS-Regeln gegen Befund geprüft.
+2. Mustersuche im Repo: RAF-/Scrollschleifen, smooth-Wege, Hakenmarkierungen,
+   Modusstarts, gehaltene Animationen und Austritt; eigenständige Zieh-,
+   Einstiegs- und Kartenkopf-Rückmeldungen nicht pauschal umgebaut.
+3. Changelog gegen Diff korrigiert (D6-Sichtbarkeit und offenes D15);
+   Aufgaben, STAND, PLAN und aktuelles Logbuch nachgezogen. Historische
+   Diagnoseberichte bleiben erhalten und sind keine neuen Arbeitsaufträge.
+4. Keine neuen Blätter, Handlungen, Rasterkinder oder Einstellungen.
+   CSS-Strukturhilfe im Standprüfer; D-Abnahme durch t_*.js im Gesamtprüfer.
+   Die vorhandene ZURUECK-Liste bleibt unverändert/Einzelaufruf möglich.
+5. Besuchsmerker in ui.choreografieBesucht; Toastzustand in ui.toast;
+   reine Austrittskopie hat keinen Bedienzustand und wird bei Render entfernt.
+6. Sprung/Kontrast/a11y und Breitenmatrizen grün. Schreiben und Scrollen
+   bei CPU 4× ohne Bilder >34 ms; Texttempo maximal 169 ms, Grenze 200.
+   Beschreibende Kalt-/Erstbesuchsproben zeigen weiter Pausen:
+   t_fluessig erstes Fortschritt/Verwalten max. 283/300-ms-Bild,
+   t_fluessig_gross erstes Fortschrittbild 520 ms, Ende 216-ms-Bild.
+   Kein Urteil „durchgehend ruckelfrei“, kein ungeprüfter Tempo-Fix;
+   Geräte-/kalte Startabnahme bleibt offen, keine neue D15-Messung.
+7. Keine neuen Produkttexte oder Methoden-Zahlen; vorhandene
+   Einzahl/Mehrzahl und Nutzeransagen in den beschreibenden Ausgaben gelesen.
+8. Keine neuen Cloud-Felder, firestore.rules unverändert. Regeln aus A
+   bleiben Veröffentlichungspflicht des Betreibers über ladegeraet.bat.
+9. Kein neuer Datenfluss/localStorage-Schlüssel; Datenschutz unverändert.
+10. node --check app.js sw.js sowie separate Prüfung sw.js grün.
+11. APP_VERSION/CACHE_NAME und alle 33 ?v=-Stellen =3.18.14, CHANGELOG oben;
+    pruefe_stand.mjs grün einschließlich CSS-Struktur, aller HTML-CSP,
+    APP_SHELL, Firebase-Vorladen und csp-build.
+12. Frischer Gesamtprüfstand 138/138, alle Ausgaben vollständig gelesen;
+    affe handy 200 7 / ipad 150 7 und frische Runde 13/13 separat dokumentiert.
+    Keine Assertion gelöscht/gelockert, kein anderer Test ausgelassen.
+13. Logbuch im CLAUDE-Format, PLAN „AKTUELL“ und STAND aktualisiert;
+    D12–D15 zurück, D9-Gerätegefühl/G1 offen, kein Paket E begonnen.
+14. Betreiberantwort endet mit „Was Du noch tun musst“:
+    ladegeraet.bat, danach iPhone-App ganz schließen/neu öffnen und
+    für D15 Übergang vom Ladebild zur App ansehen.
+
+**Kriterien:** D1–D9/D11 gegen ihren BEW-Befund abgenommen; D10 bereits
+B5. Kein pauschaler Abschluss aller Zyklus-/Geräteaufgaben oder A1–A6
+behauptet. Abnahme aus Großplan §3 angewandt (echter Codepfad,
+Randfälle/Regression, feste rote Gegenprobe, keine verletzte Lernlogik).
+
+**Offen:** D12–D15 bewusst zurück; vorhandene Entwürfe/Fehlbelege bleiben
+erhalten, keine neue Messfrage als Auftrag. Echtes D9-Gerätegefühl und G1
+bleiben offen. D15 kalte Start-/Geräteabnahme nicht durch warme Kontrollen
+ersetzt. Veröffentlichung steht aus; Regeln aus Paket A vor Hosting
+durch ladegeraet.bat. Keine Veröffentlichung/kein Deploy durch Codex.
+
+**Abschlussweg:** Dokument-/Indexprüfung, Commit direkt auf main und Push;
+keine Veröffentlichung. Danach anhalten.
+**Nächster Schritt:** Betreiber: ladegeraet.bat; auf dem iPhone App
+ganz schließen, neu öffnen und den Übergang vom Ladebild zur App für D15
+ansehen. Kein Paket E ohne eigenen Auftrag.
+
+
+
+### 2026-10-04 — Paket D: Betreiberauftrag zum Abschluss D1–D11
+
+**Geändert:** `CHANGELOG.md:1` gegen den Produktdiff berichtigt: Fertig
+blendet ohne Verzögerung ein (≥0,9 nach 400 ms), D15 ist weiterhin offen.
+Vorhandene Version 3.18.14 in `app.js:19`, `sw.js:10`, `index.html:64`
+übernommen; kein Reset, Clean, Pull oder Wiederherstellen.
+**Entscheidung:** ausdrücklicher Betreiberauftrag 04.10.: ausschließlich
+die gebauten Aufgaben D1–D11 abschließen. D12, D13, D14 und D15 bleiben
+zurück; dort nichts bauen oder weiter messen, kein Capture-Build, keine
+neue Fotoserie. Dies ersetzt die bisherigen nächsten Messaufträge.
+Die vorhandene ZURUECK-Liste in `t_paket_d.js` bleibt unverändert:
+D12/D13/D15 sind nicht im Produkt, laufen im Standardlauf nicht mit und
+bleiben einzeln aufrufbar. Kein anderer Test wird ausgelassen oder gelockert.
+**Prüfung:** Pflichtdateien vollständig gelesen, Produktdiff und D-Abnahmen
+gelesen. BatteryStatus 2 (89 Prozent); Server 8099 HTTP 200. App/SW-Syntax,
+Standprüfung einschließlich CSS-Struktur/CSP/APP_SHELL grün; alle 33
+Versions-URLs (31 Startbilder, CSS, JS) tragen 3.18.14. Gesamtlauf wird
+frisch begonnen, ohne --fortsetzen; danach beide Affen und Runde 13/13.
+**Offen:** Abschlussprüfung und Gegenprüfung; D12–D15 zurück, Gerätegefühl
+D9 und iPhone-Start D15 offen. Veröffentlichung nur durch den Betreiber
+mit `ladegeraet.bat`; kein Deploy durch diesen Chat, kein Paket E.
+**Nächster Schritt:** frischen Gesamtlauf vollständig lesen und bei Rot
+Ursache belegen/beheben oder Messfehler belegen; sonst anhalten ohne Commit.
+
+### 2026-10-04 — Paket D: Capture-Messweg kritisch geprüft, Build nicht begonnen
+
+**Geändert:** neu `plan/zyklus-2/D15-CAPTURE-KRITIK-2026-10-04.md`;
+`plan/LEHREN.md` § 5.3 (drei Regeln) und § 15 (eine Zeile); STAND,
+Übergabe und D15-Hinweis in AUFGABEN nachgezogen. Außerhalb des Repos
+TEMP `paket-d15-kritik-20261004/` (Offline-Auswerter und Ergebnis).
+Kein Produktcode, kein Test, kein Browserlauf, keine Installation.
+**Entscheidung:** Beide Capture-Sperren an der gepinnten ANGLE-Quelle
+bestätigt: noperspective wird in `Context.cpp:4639` ohne eigene Bedingung
+abgeschaltet (nur per Quellpatch erhaltbar); ein Abschnitt endet nur über
+einen Window-Swap (`Context.cpp:9771–9781`, `Surface.cpp:347/359`), den
+es im headless gestarteten Prüfstand nicht gibt (`lib.js:136`,
+`gl_surface_egl.cc:1081–1084`). Toolchain fehlt vollständig, Laptop an
+der Untergrenze. **Entscheidend:** Vorhandene kalte Spuren zeigen, dass
+der Zielshader 21–22 Prozent der späten Kompilierzeit trägt (24,5 von
+113,6 ms; 14 Kompilierungen) und dass ohne alle Schatten an Navigation
+und Startliste weiter 72,0 ms Bildlücke bleiben, bei nur 24,1 ms Flush.
+Erlaubt wären bei 280 ms linear höchstens 56 ms. Die Capture-Rohwerte
+können die BEW-15-Abnahme damit nicht tragen; der Build ist nicht
+begründet und wurde nicht begonnen (Urteil „lieber nicht“, LEHREN § 1.1).
+Die Pause hängt am ersten Zeichnen der App-Ansicht direkt nach
+`render()` (rAF-Abstand 156,2 ms, Bildlücke 178,4 ms bei Deckkraft 0).
+**Gegenprüfung:** jede Quellzeile selbst gelesen (lokale Kopien mit
+SHA256 im Bericht), jede Zahl aus `auswertung.json` mit Eingabe-Hashes;
+Rechenwerte als Rechnung bezeichnet. Frühere Berichte nicht
+umgeschrieben, Widersprüche im neuen Bericht benannt. Nicht geprüft:
+Bildhelligkeit dieser vier Läufe, Zerlegung der rund 48 ms außerhalb des
+Raster-Flushes, ShareGroup-Zuordnung in Chromium (Quellen nicht geladen).
+**Fremde Änderung bemerkt:** 00:27:19–00:27:52 änderte ein anderer
+Prozess `app.js` (nur Version → 3.18.14), `sw.js`, `index.html`,
+`CHANGELOG.md` (Eintrag „3.18.14 – Paket D“) und `t_paket_d.js`
+(D12/D13/D15 laufen ohne Argument nicht mehr mit). Nicht von dieser
+Sitzung, nicht angefasst, nicht zurückgenommen; Einzelheiten und Hashes
+in D15-CAPTURE-KRITIK § 7. Kein Commit dazu, `main` = `50d15ce`.
+Die Übergabe-Hashes für `app.js`/`sw.js`/`index.html` gelten damit nicht
+mehr. Betreiber muss klären, welcher Chat das war.
+**Korrektur 00:50, eigener Fehler:** „während dieser Sitzung“ und der
+Verdacht auf Codex waren ungeprüft. Diese Sitzung begann erst 00:30:53;
+die Änderung lag davor. Codex (Chat Capture-Vorbereitung) verneint.
+Zeitlich passt eine vom Betreiber um 00:30:29 gelöschte frühere
+Claude-Sitzung (Beginn 00:19:54); sie hat sehr wahrscheinlich die Version
+gesetzt und um 00:28:00 einen Gesamtlauf begonnen, der bei `t_anmelden`
+um 00:30:20 abbrach (TEMP `adrabic-pruefstand-gesamt/9802e0dd7279f524/`).
+Nicht beweisbar, Transkript gelöscht. Keine Gesamtabnahme von 3.18.14.
+**Offen:** D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen.
+Betreiber entscheidet, ob der Capture-Build trotz dieses Urteils gewollt
+ist (dann: Visual Studio 2026 mit Administratorrechten, ≥ 100 GB, zwei
+ANGLE-Patches). BatteryStatus 2, kein Gesamt-/Tempo-Lauf. Kein
+Paketabschluss, keine Version, Commit, Push oder Veröffentlichung.
+**Nächster Schritt:** die eine Frage aus D15-CAPTURE-KRITIK § 6 messen:
+kalt Original/Diagnose/Original mit `x_d_ursachen.js boot`, ob die
+Einblendung lückenlos bleibt, wenn während des ersten Zeichnens der
+App-Ansicht keine Deckkraft-Bewegung läuft. Vorhersage und Abbruchregel
+stehen dort. Erst danach ein Produktentwurf.
+
+### 2026-10-03 — Paket D: Capture-Messweg konkret vorbereitet
+
+**Geändert:** D15-CAPTURE-MESSWEG-2026-10-03.md, Offline-Leser
+plan/werkzeuge/pruefstand/x_d15_capture_payload.py; STAND, Übergabe,
+D15-Hinweis und LEHREN nachgezogen. Neun feste Originaleingaben (1.631.860
+Bytes), zehn zusätzliche gepinnte Quellen und Offline-Prüfung außerhalb
+des Repos erhalten. Keine Produktänderung oder Capture-Aufnahme.
+**Entscheidung:** Standard-ANGLE-Capture nicht blind starten: Context.cpp
+schaltet noperspective aus, das die Originalquelle verlangt. onPreSwap
+überspringt vorhandene nicht-Window-Surfaces. Eigene separate Build mit
+Caps-Erhaltung und belegtem ShareGroup-Abschluss ist Voraussetzung;
+Build-Grundgerüst, feste Eingabe, erforderliche Drawdaten und Null-Pixel-
+Kontrollen im Messweg konkret beschrieben. Keine native Erfassung behauptet.
+**Prüfung:** neun Eingabe-/zehn Quellenhashes gleich, fünf Produktbytehashes
+gleich, Python-Syntax und bestehende App-/SW-/Standprüfung grün.
+Offline-Leser: vier Float32-Bitwörter einschließlich negativer Null/NaN
+erhalten; sechs ungültige Hash-/Bereichsfälle abgewiesen. Das sind
+synthetische Leserprüfungen, keine GPU-/Bild-/Tempoabnahme.
+**Korrektur:** erster Kopierlauf verglich CRLF-Shaderdatei mit LF-Tracehash;
+Assertion stoppte. Exakte Tracequelle separat extrahiert, beide Dateien/
+Hashes erhalten; 37 CRLF erklären Differenz. Frühere Skriptfassung behalten.
+Anfangs nicht vorhandenes Operation/bestand.json gelesen; auswertung.json
+danach verwendet, keine Aussage aus dem fehlenden Pfad.
+**Gegenprüfung:** §2a/§2b/§3, BEW-15 und Datenumfang gegen tatsächliche
+Quellen gelesen: Caps/Framegrenze ausdrücklich gesperrt, Drawbeleg nicht
+durch Shaderhash ersetzt, keine Toleranz/Maskierung/warme Abnahme.
+**Offen:** Build-Toolchain und beide Capture-Voraussetzungen; D12/D13/D15
+weiter zurück, D14 geschützt, Z1 ausgelassen, G1 offen. BatteryStatus 1,
+Server HTTP 200/19.539 Bytes. Kein Paketabschluss, Version/Commit/Push/Deploy.
+**Nächster Schritt:** separate passende Build vorbereiten, zuerst Caps-
+Erhaltung und Offscreen-ShareGroup-/Abschlussbeleg klären, erst dann
+gezielte Originalerfassung nach D15-CAPTURE-MESSWEG §3–5.
+
+
+Abschluss nach Datumswechsel am 04.10.2026: Vorbereitung samt vollständigem
+geändertem/unversioniertem Arbeitsbaum dauerhaft unter
+C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Capture-Vorbereitung/
+gesichert: 98 Dateien / 5.222.564 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale und frühere Sicherungen erhalten. Diese Abschlussdokumentation
+liegt zusätzlich separat unter sicherungsabschluss/ mit eigenem Hashmanifest.
+Fünf Produktbytehashes gleich; neue Python-Syntax/Offline-Leserprüfungen und
+git diff --check grün. Kein Browser-/Gesamt-/Tempo-Test, keine Veröffentlichung.
+Beim ersten Diffdruck brach Python-cp1252 am Pfeilzeichen ab; anschließend
+mit PYTHONIOENCODING=utf-8 vollständigen eigenen Dokumentdiff gelesen.
+Die Dateien waren unverändert gültig; kein Ergebnis aus dem Abbruch abgeleitet.
+
+### 2026-10-03 — Paket D: Erfassbarkeit geprüft, fehlende Capture-Umgebung bestimmt
+
+**Geändert:** nur Dokumentation und Offline-Helfer. **D15-Erfassbarkeit 03.10., ohne Browserlauf:** Exaktes CDP-Protokoll
+mit 52 Domains/580 Methoden geprüft; keine deklarierte Methode für Skias
+interne Uniform-/Attributwerte. Passend gepinntes ANGLE kann Uniform-Payloads
+mit Capture-Build erfassen; Standardoption false, Mock ohne Erfassung.
+Installierte Capture-Unterstützung nicht belegt; vier Capture-Marker in
+chrome.dll fehlen (begrenzter Beleg, keine vollständige Build-Analyse).
+RenderDoc/apitrace in PATH, Standardpfaden und geprüften Installations-
+registern nicht gefunden. Kein neuer Foto-/ENV-Versuch, keine Installation.
+Konkreter Haltepunkt: zusätzliche Capture-fähige Messumgebung fehlt.
+Details: [D15-ERFASSBARKEIT-2026-10-03.md](D15-ERFASSBARKEIT-2026-10-03.md).
+D bleibt angehalten; D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen,
+G1 offen. Alle Daten erhalten, Produkt unverändert, Server HTTP 200,
+BatteryStatus 1. Keine Veröffentlichung.
+
+**Prüfung:** exakt gepinnte CDP-/ANGLE-Quellen, Hashinventare und begrenzte
+lokale Werkzeug-/Binary-Prüfung. GL-Aufrufpayload von finalen GPU-Konstanten/
+Deckung unterschieden. Eigene 404-Pfadannahmen sichtbar korrigiert, Originale
+behalten. Gegenprüfung §2a/§2b/§3 im Bericht. Keine Aufgabe erledigt.
+
+
+Erfassbarkeitsprüfung, vollständige gepinnte Quellen/Protokolldomains,
+begrenztes Binary-/Werkzeuginventar, feste Eingangsdaten und vollständiger
+geänderter/unversionierter Arbeitsbaum zusätzlich dauerhaft unter
+C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Erfassbarkeit-233845/
+gesichert: 141 Dateien / 3.661.949 Bytes, sämtliche Quell-/Kopie-SHA256 gleich.
+Originale und frühere Sicherungen erhalten. Abschlussdokumentation separat
+unter sicherungsabschluss/ mit Hashmanifest. Aktuelle Python-Syntax,
+Quellen-SHA256 und git diff --check grün; Produktbytehashes unverändert.
+Kein neuer Produkt-/Gesamt-/Tempo-Test.
+
+### 2026-10-03 — Paket D: Ersatzzeichenwege eingegrenzt, Haltepunkt bestätigt
+
+**Geändert:** nur Dokumentation und separate Offline-Auswertung, kein Browser
+oder Produktentwurf. **D15-Zeichenwegprüfung 03.10., nur offline:** Einzelkontur bietet keine
+Deckungsgleichheit; analytischer Differenzclip verwendet erneut GrRRectEffect;
+getrennte Masken benötigen unbewiesene Parameter-/Rundungs-/Kompositionsgleichheit.
+Rundrechtecke haben mehrere interne Zeichenwege, nicht pauschal einen einzigen.
+Idealisierter Austausch der äußeren Ellipsenregel durch Radialregel:
+88/88 vorhandene Modellwerte verschieden, keine GPU-/RGB-Abnahme daraus.
+Kein belegter günstiger pixelgleicher Ersatz. D bleibt nach §6 angehalten;
+keine nächste Blindprobe. Wiederaufnahme nur mit konkret steuerbarem Zeichenweg
+samt Gleichheitsbeleg oder begründeter Erfassung fehlender GPU-Daten.
+Details: [D15-ZEICHENWEG-2026-10-03.md](D15-ZEICHENWEG-2026-10-03.md).
+D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen. Alles erhalten;
+Produkt unverändert, Server HTTP 200, Akku BatteryStatus 1. Nicht veröffentlicht.
+
+**Prüfung:** exakt gepinnte Primärquellen gelesen, neue Quellen-SHA256 geprüft.
+22 gespeicherte Modellpunkte in vier Phasen gegen idealisierte Radialregel;
+88 Unterschiede, ausdrücklich keine gerenderte Maskenabnahme. Quellen erlauben
+mehrere RRect-Wege; zu pauschale erste Chat-Formulierung präzisiert.
+Gegenprüfung §2a/§2b/§3 dokumentiert. app.js/sw.js-Syntax und Standprüfung grün;
+Produktbytehashes gleich. Keine neue Gesamt-/Tempo-Prüfung auf Akku.
+
+
+Neue Quellwegprüfung, feste Offline-Eingaben, frühere Dokumentstände und
+vollständiger geänderter/unversionierter Arbeitsbaum zusätzlich dauerhaft
+unter C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Zeichenweg-232324/
+gesichert: 75 Dateien / 2.573.768 Bytes, sämtliche Quell-/Kopie-SHA256 gleich.
+Originale und ältere Sicherungen bleiben erhalten. Endgültige Dokumentation
+separat unter sicherungsabschluss/ mit eigenem Hashmanifest.
+
+### 2026-10-03 — Paket D: Paint-Lücke geschlossen, verlorene AA-Deckung offline belegt
+
+**Geändert:** nur Dokumentation und separate Offline-Auswerter. Bericht
+[`D15-DECKUNG-2026-10-03.md`](D15-DECKUNG-2026-10-03.md), STAND, Übergabe,
+Ursachen, D15-Hinweis und LEHREN ergänzt; alte Dokumentstände erhalten.
+**Entscheidung:** Browser-DEPS pinnt Skia exakt. Binäre historische Picture
+selbst gelesen: drawDRRect 23 mit Weiß/SrcIn-Farbfilter 14/255, ohne Blur;
+vollständige semantische Paint-Gleichheit zu A1/B/A2/A3. SVG gleiche Alpha.
+325 Fehler in 72 fehlende, 14 zusätzliche und 239 andere Mischpixel getrennt.
+22 Originalpixel unterhalb SVG-Support; alle vier Ableitungsphasen des aus
+Quelle/Geometrie abgeleiteten Modells dort positiv. Zwei unterschiedliche
+geglättete Deckungen werden multipliziert. Modell ausdrücklich kein exakter
+GPU-/RGB-Ersatz; vollständige Uniform-/Attributwerte in Spur nicht enthalten.
+**Offen:** unterstützter anderer Zeichenweg muss konkrete Deckung und
+Mischkontext erhalten; kein belegter Ersatz. SVG bleibt abgelehnt, §6.
+Keine weitere Browserprobe ohne entsprechende Ableitung/prüfbare Daten.
+D12/D13 unverändert zurück, D14 geschützt, Z1 ausgelassen, G1 offen.
+**Prüfung:** ausschließlich vorhandene Bilder/Pictures/Shader plus passende
+Primärquellen. Eigene rg-/Parser-Vorabfehler durch Assertions abgefangen,
+Quelle gelesen und echte Bit-/Nullpfad-/Dateioffsetfälle korrigiert;
+alle früheren Leserfassungen behalten, keine Pixelgrenze gelockert.
+Gegenprüfung §2a/§2b/§3: Paint-Lücke wirklich geschlossen, Grenzen und
+fehlende Gerätedaten sichtbar, keine abgeschlossene Aufgabe behauptet.
+Produktbytehashes gleich, Server HTTP 200, Akku BatteryStatus 1.
+Kein neuer Browser/Foto/Produktentwurf, anderes Paket, Version, Commit/Push/Deploy.
+
+Abschlussprüfung: sechs aktuelle Offline-Quellen syntaktisch gültig;
+erneut gelesene Pictures gleich gespeicherter Auswertung, native
+CommandLog-Anzahlen und unterstützte Paint-Farben geprüft; git diff --check
+grün. Kein neuer Produkt-/Gesamtlauf, Hashes unverändert.
+
+Offline-Deckungsprüfung, gepinnte Primärquellen, feste Eingaben und
+vollständiger Arbeitsbaum zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Deckung-223800/`
+gesichert: 137 Dateien / 33.180.459 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale und ältere Sicherungen bleiben erhalten; endgültige
+Abschlussdokumentation separat unter `sicherungsabschluss/` mit Hashmanifest.
+
+### 2026-10-03 — Paket D: Inset-Zeichenblock kausal isoliert, pixelungleiche Alternative angehalten
+
+**Geändert:** nur Dokumentation und separate TEMP-Diagnose. Neue feste
+CSS-Navigation, frische vollständig nacheinander abgeschlossene Prozesse,
+echte Bilder/Spuren und zeitgleiche gespeicherte Pictures. Neuer Bericht
+[`D15-OPERATION-2026-10-03.md`](D15-OPERATION-2026-10-03.md); STAND,
+Übergabe, Ursachen, D15-Hinweis und LEHREN nachgezogen. Alle alten Daten,
+Helferfassungen und Dokumentstände erhalten.
+**Entscheidung:** Befehle 0–28 exakt historisch, bekannter Shaderhash erneut.
+A1/B/A2 entfernt allein Rahmenbefehl 26; Shader bleibt. A2/D/A3 entfernt
+allein Inset-Zeichenblock 19–25; restliche Liste exakt gleich, Shader fehlt
+und kehrt im Original zurück. Originalbilder A1/A2/A3 null Fehlerpixel.
+Eigene C-Probe und ältere globale Probe falsch isoliert: `--kante:none`
+ergibt vollständig `box-shadow:none`. Sichtbar korrigiert und Rohdaten
+behalten. D verwendet gültige Außenschattenliste. Eine abgeleitete SVG-
+Randfläche E vermeidet Shader, verändert 325 Pixel bis sechs Stufen:
+streng abgelehnt, kein Produktentwurf und keine weitere Variante.
+**Offen:** originale Deckungs-/Mischregel und fehlende Paint-/Uniformdaten
+gegen E-Fehlerpunkte offline klären; vollständige kalte/Geräteabnahme fehlt.
+D12/D13-Beleglücke unverändert; D14 geschützt, Z1 ausgelassen, G1 offen.
+**Nächster Schritt:** gespeicherte Daten zu dieser Deckungsregel lesen,
+keine Browser-/Farb-/Pfadserie. Nach §6 keine rote Alternative übernehmen.
+Gegenprüfung §2a/§2b/§3: vollständige Listendifferenzen und Hashes selbst
+ausgewertet, kein Ursachenbeleg aus fehlender Datei oder CPU-Replay,
+keine gelockerte Abnahme. Produktbytehashes gleich, Server HTTP 200,
+BatteryStatus 1. Kein anderes Paket, keine Version, Commit/Push/Deploy.
+
+Abschlussprüfung grün: app.js/sw.js-Syntax, neue Diagnosequellen,
+pruefe_stand.mjs und git diff --check. Kein Gesamtlauf auf Akku.
+Ein Dokumentations-Patch ohne passenden Anker wurde vor Änderung abgelehnt,
+anschließend korrigiert; keine Daten verloren.
+
+Neue D15-Diagnose, feste Eingaben, frühere Dokumentstände und vollständiger
+Arbeitsbaum zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-D15-Operation-221300/`
+gesichert: 503 Dateien / 151.843.659 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale und frühere Sicherungen bleiben erhalten. Nachgezogene
+Abschlussdokumentation separat unter `sicherungsabschluss/` mit Hashmanifest.
+
+### 2026-10-03 — Paket D: kritische Rohdatenprüfung, konkrete Operation statt Blindprobe
+
+**Geändert:** nur Dokumentation. Neuer Bericht
+[`D-KRITISCHE-PRUEFUNG-2026-10-03.md`](D-KRITISCHE-PRUEFUNG-2026-10-03.md),
+STAND, Übergabe, Ursachen und LEHREN nachgezogen. Alle alten Daten erhalten.
+Offline-Auswerter unter TEMP `paket-d-kritische-pruefung-20261003-204600/`.
+**Entscheidung:** D12 zuerst gegen Rohspuren/Browserquelle geprüft.
+Coverage-Debugliste sichtbar korrigiert (vier/zwei gegenüber echten
+16/vier Hintergrundquads). Beim Copy-Zeichendurchgang bereits 780×1688
+und 2×; 29.033/29.323 Fehlerpixel abseits innerer senkrechter Quadgrenzen.
+Keine pauschale Frühaufnahme-/Naht-Erklärung und keine Rohtextur behauptet.
+D15-Picture selbst gelesen: Befehl 26 inverse Innenkante, 79 Befehle
+gesamt. Genau diese Operation mit ihrem Clipkontext als nächste
+Shader-Ursachenfrage benannt; Zusammenhang noch nicht bewiesen.
+**Offen:** D12/D13 starke Pixelursache und trennende GPU-Texturdaten fehlen,
+D15 Einzeloperation/Alternative/kalte Startabnahme, D14 geschützt, Z1
+ausgelassen, G1 offen. Keine Browserprobe, kein Produktfix oder anderes Paket.
+**Nächster Schritt:** nur isolierte D15-Operation aus fester Picture prüfen,
+bekannten Shaderhash verlangen, bei fehlender Übereinstimmung beenden;
+keine neue D12-Schleife. Gegenprüfung §2a/§2b/§3: Rohdaten statt Bericht,
+Abnahme unverändert, keine Aufgabe erledigt. Syntax und Standprüfung grün,
+Produktbytehashes gleich, Server HTTP 200, Akku BatteryStatus 1.
+Eigene rg-Parameterverwechslung und unnötige Roh-Picture-Base64-Ausgabe
+beim Lesen liefern keine Befunde; LEHREN nachgezogen. Kein Commit/Push/Deploy.
+
+Kritische Prüfung, verwendete Eingaben und vollständiger Arbeitsbaum
+zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Kritische-Pruefung-204600/`
+gesichert: 71 Dateien / 400.703.495 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale bleiben erhalten; Abschlussdokumentation separat unter
+`sicherungsabschluss/` mit eigenem Hashmanifest.
+
+### 2026-10-03 — Paket D: begrenzte starke Probe ohne Reproduktion
+
+Zwei benannte historische Fehlerwege, historische D12-Entwurfsquelle,
+je ein neuer Browserprozess; keine Produkt- oder Abnahmeänderung.
+Konto-Ziel nach 13 ersten Fotos nur ein Kanalwert rot, Korall-Ziel nach
+fünf ersten Fotos exakt gleich. Kein instrumentiertes starkes Rot und
+damit kein neuer Ursachenbeleg. Rohbilder, DOM, Fotomarken und Quads
+erhalten; keine Ein-Pixel-Schleife oder weitere Variante begonnen.
+Diagnosewrapper nur unter TEMP, Fortsetzen nach früherem Rot explizit
+keine Abnahme. HTML-Attributnormalisierung und überlappende Prozesslaufzeiten
+offen dokumentiert; eigenes Ablaufproblem in LEHREN. Akku BatteryStatus 1,
+Server HTTP 200. Produktbytehashes unverändert. Gegenprüfung §2a/§2b/§3:
+keine Aufgabe erledigt, keine neue Toleranz/Referenz/Maskierung. Nach §6
+angehalten; fachliche Prüfung erhaltener Daten als nächster sinnvoller
+Schritt, keine weitere Blindprobe. Details oben in
+[`D-URSACHEN-2026-10-03.md`](D-URSACHEN-2026-10-03.md).
+D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen. Kein anderes
+Paket, keine Version, Commit/Push/Veröffentlichung. Originale erhalten.
+
+Die begrenzte Probe und der Arbeitsbaum sind zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Starke-Probe-202831/`
+gesichert: 262 Dateien / 158.800.888 Bytes, alle Quell-/Kopie-SHA256 gleich.
+Originale erhalten; Abschlussdokumentation separat unter
+`sicherungsabschluss/` mit eigenem Manifest.
+
+### 2026-10-03 — Paket D weiter: starke Konto-/Korallpixel offline getrennt
+
+Ein-Pixel-Schleife auf Betreiberauftrag liegen gelassen. Ausschließlich
+vorhandene starke Fehler, zwölf Direktfotos, zwei Rundgangkontrollen und
+gesicherte grüne DOM-Daten ausgewertet. Server HTTP 200, BatteryStatus 2.
+Konto: 70.880 Fehlerpixel unverändert, sechs stärkste geometrisch an
+Rundkanten; dennoch nur 59/1.339 stärkere Pixel nahe geprüften Konturen.
+1.196/1.339 im Backup-Knopf, viele in dessen Schrift, 1.152 in allen
+Kanälen heller. Keine Rundkanten-Erklärung auf den gesamten Fehler übertragen.
+Zwölf Direktfotos und beide Rundgangkontrollen vollständig referenzgleich.
+Korall: 32 Pixel am unteren Kontolistenrand; zehn Farben ausschließlich
+in diesem Block. Keine Ressourcenzuordnung aus späterem grünem DOM behauptet.
+
+Entscheidende Beleglücke: beiden historischen starken roten Bildern fehlt
+zeitgleiche DOM-/GPU-Diagnose. Grüne Spuren/Wiedergaben ersetzen sie nicht.
+Konkrete nächste Datenanforderung und Zählungen oben in
+[`D-URSACHEN-2026-10-03.md`](D-URSACHEN-2026-10-03.md), Auswerter/Ergebnisse
+unter TEMP `paket-d-starke-pixel-20261003-200644/`. Keine neue Browserreihe,
+kein Verdachtsfix, keine Toleranz oder neue Referenz. Gegenprüfung §2a/§2b/§3:
+nur konkrete Ursachenfrage, keine Abnahme oder Erledigung aus Kontrollbildern.
+Produktbytehashes erhalten; D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen,
+G1 offen. Paket D nach §6 angehalten; kein Commit/Push/Veröffentlichen.
+
+Neue Offline-Auswertung samt verwendeten Originalbildern, grünen
+DOM-Kontrollen und 48 Arbeitsbaumdateien dauerhaft gesichert unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Starke-Pixel-200644/`:
+116 Dateien / 26.858.870 Bytes, alle Quell-/Kopie-SHA256 gleich. Originale
+und frühere Sicherungen erhalten. Abschlussdokumentation separat unter
+`sicherungsabschluss/` mit eigenem Manifest. `git diff --check` grün,
+beide vollständigen Produkthashes gleich, Server abschließend HTTP 200.
+
+### 2026-10-03 — Paket D weiter: Ein-Pixel-Fehler auch mit unverändertem Vorstand
+
+Auf erneutes „weiter“ Ursachenfrage bewusst begrenzt: Tritt derselbe Fehler
+ohne D12-Quellenänderung auf? Zuerst vorhandene PNGs/stand.json-Hashes
+zusammengeführt: Vorstand und Entwurf lieferten früher exakt dasselbe
+grüne Einstellungs-PNG. Gesicherter Vorstand ist bytegleich zum erhaltenen
+Arbeitsbaum; vollständige Quellenhashes im Bericht. Danach nur ein gezielter
+strenger Vorstandslauf, ohne Vorab-Fläche und ohne frühere Rasterwiedergaben.
+Acht erste Fotos gleich, Einstellungen als neuntes Foto rot: derselbe
+einzelne Kanalwert an (546,112); vollständiges PNG bytegleich zum roten
+Entwurf. Vorher-/Nachher-DOM, gehaltene Animationen, Viewport und Scroll
+jeweils gleich. Originale Belege und vollständiger Fehlerlog erhalten.
+
+Damit tritt die Ein-Pixel-Abweichung ohne D12-Änderung auf; kein Produktfix
+daraus begründet. Interner Kanalwertwechsel und starke historische
+32-Korall-/70.880-Konto-Fehler ungeklärt; keine Toleranz oder neue Referenz.
+Gegenprüfung §2a/§2b/§3: feste Quellenbelege, Assertion schlägt an, keine
+Erledigung/Abnahme. Eigener UTF-8-Auswerterfehler sichtbar in LEHREN §15.
+[`D12-PIXEL-2026-10-03.md`](D12-PIXEL-2026-10-03.md), Quellenabschnitt,
+enthält vollständige SHA256. Produktdateien bytegleich, Server HTTP 200.
+D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen. Paket D bleibt
+angehalten; keine Version, kein Commit/Push/Veröffentlichen.
+
+Quellenkontrolle dauerhaft gesichert unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Quellenkontrolle-192919/`:
+190 Dateien / 105.902.459 Bytes, alle Quell-/Kopie-SHA256 gleich. Beide
+Quelldateisätze und alle 48 geänderten/unversionierten Projektdateien enthalten;
+Originale und frühere Sicherungen erhalten. Abschlussdokumentation separat
+unter `sicherungsabschluss/` mit eigenem Manifest. `git diff --check` grün,
+Server abschließend HTTP 200; keine Gesamt- oder Geräteabnahme behauptet.
+
+### 2026-10-03 — Paket D weiter: gezeichnete Quelle des Ein-Pixel-Fehlers
+
+Auf „weiter“ im selben Chat zuerst vorhandene Ressourcen/Quads des roten
+Einstellungsfotos ausgewertet. Server 8099 HTTP 200, BatteryStatus 2.
+Keine Produktänderung; vollständige app.js/styles.css-Übergabehashes gleich.
+Pixelmittelpunkt (546,5;112,5): Hintergrundressource 400 zeichnet, Kopfleiste
+endet oberhalb, Ansichts-Pass enthält dort kein Quad. Raster-PNGs entstehen
+durch spätere Ebenenwiedergabe; keine Rohkopien dieser GPU-Textur.
+
+Sechs isolierte A/B/A-Reihen mit festen Trace-Hashes: Kopfleiste,
+Vorab-Höhe, echte GPU-Kachelhöhe, Vorab-Fläche, Viewportfoto und kurze
+Dokumenthöhe. Alle reproduzieren den roten Kanalwert, keine erklärt den
+historischen grünen Wert. Vergleich kleinerer Bilder nur diagnostisch;
+historische Ganzseitenabnahme unverändert. Danach zwei gezielte App-Läufe:
+Original ohne Vorab-Fläche und ohne frühere Rasterwiedergaben beide acht
+erste Fotos gleich, neuntes Foto Einstellungen exakt ein Kanalwert rot.
+DOM/Animationen/Viewports gleich; sofort vor Konto-Löschen angehalten.
+
+Gegenprüfung §2a/§2b/§3: ausschließlich konkrete D12/D13-Ursachenfrage,
+unveränderte Assertion schlägt an, kein erledigter Status oder Produktfix.
+Starke historische Fehler und grüne Einstellungs-Spur weiter ungeklärt.
+Eigene Diagnoseabbrüche in LEHREN §15 erfasst. Bericht und nächster
+Ursachenauftrag: [`D12-PIXEL-2026-10-03.md`](D12-PIXEL-2026-10-03.md).
+D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen. Paket D nach
+CODEX-START §6 angehalten; keine Version, kein Commit/Push/Veröffentlichen.
+
+Abschlussprüfung grün: Syntax der neuen Diagnosehilfe, `pruefe_stand.mjs`,
+`git diff --check`; beide Produkthashes vollständig gleich, Server HTTP 200.
+Alle neuen Belege und 48 geänderten/unversionierten Arbeitsbaumdateien
+zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Pixel-185851/`:
+467 Dateien / 239.073.370 Bytes, sämtliche Quell-/Kopie-SHA256 gleich.
+Originale und alte Sicherungen erhalten. Nachgezogene Abschlussdokumentation
+separat unter `sicherungsabschluss/` mit eigenem Manifest erhalten.
+
+### 2026-10-03 — Paket D weiter: Kachelbreite eingegrenzt, Vorab-Fläche bleibt rot
+
+Pflichtdateien vollständig gelesen, danach obersten Logbucheintrag,
+Übergabe und Ursachenbericht. Alle 43 übernommenen Arbeitsbaumdateien
+mit SHA256 und Git-Diff unter TEMP `paket-d-kachelbreite-20261003-175521/`
+gesichert. Server 8099 bereits HTTP 200/19.539 Bytes, BatteryStatus 2.
+Produktdateien app.js/styles.css behalten die Übergabehashes vollständig.
+
+Zuerst vorhandene grüne/rote D12-Spuren ausgewertet: 2×-Raster im roten
+Lauf vor physischer Viewportvergrößerung, im grünen danach. Quellen der
+installierten Browserrevision erklären 224 gegenüber 800 Pixel Breite.
+Interner Setter und starke historische Fehlerpixel bleiben unbelegt.
+Abgeleitete isolierte Proben und gezielte App-Proben nur als Diagnose:
+Vorab-Fläche erhält gemessenes DOM/Animationen, 33/34 erste historische
+Fotos gleich. Einstellungen 320/dunkel/voll bleibt rot, ein Kanalwert
+an (546,112), trotz voller gezeichneter Kachelbreite 640. Sofort angehalten,
+Konto-Löschen nicht erreicht. Originale PNGs, Marken, Ressourcen, Quads,
+Trace-SHA256 und fehlgeschlagene Ansätze erhalten. Keine Folgefoto-Abnahme.
+
+Gegenprüfung §2a/§2b/§3: neue Dateien betreffen ausschließlich die konkrete
+D12/D13-Ursachenfrage; keine Produktkorrektur und kein erledigter Status.
+Unveränderte strenge Assertion schlägt an. Keine Gesamt-, Tempo- oder
+Geräteabnahme aus gefilterten Proben; angrenzende Zustände bleiben offen.
+Eigene Diagnosefehler in LEHREN §5.3/§15 festgehalten. Bericht und nächster
+Arbeitsauftrag: [`D12-KACHELBREITE-2026-10-03.md`](D12-KACHELBREITE-2026-10-03.md).
+D12/D13/D15 zurück, D14 geschützt, Z1 ausgelassen, G1 offen. Paket D
+angehalten; keine Version, kein Commit/Push und keine Veröffentlichung.
+
+Abschlussprüfung: Syntax beider neuen JS-Diagnosehilfen und app.js/sw.js,
+`pruefe_stand.mjs`, `git diff --check` grün; beide Produkthashes vollständig
+gleich, Server weiterhin HTTP 200. Neue Belege und übernommener Arbeitsbaum
+zusätzlich dauerhaft unter
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Kachelbreite-175521/`:
+909 Dateien / 570.954.170 Bytes, alle Quell-/Kopie-SHA256 gleich, Originale
+erhalten. Abschluss dieser Sicherung separat unter `sicherungsabschluss/`
+mit eigenem Manifest, damit vorherige Dokumentkopien erhalten bleiben.
+
+### 2026-10-03 — Übergabe für den nächsten Paket-D-Chat gesichert
+
+Auf Betreiberauftrag eine genaue Fortsetzungshilfe geschrieben:
+[`D-UEBERGABE-2026-10-03.md`](D-UEBERGABE-2026-10-03.md). Sie enthält
+Lesereihenfolge, Status und Grenzen, vollständige Produkthashes, genaue
+rote/grüne Belegpfade, erste konkrete D12-Frage, feste D15-A/B/A-Spuren,
+Shaderhash, Werkzeugparameter und Fallen beim erneuten Ausführen.
+Kein neuer Produktversuch, keine neue Messung, keine Änderung der Abnahme.
+
+Alle vorhandenen TEMP-Einträge `paket-d*` einschließlich Entwürfen und
+abgebrochenen Läufen zusätzlich dauerhaft nach
+`C:/Users/USER/Desktop/Wiederholung-Belege/Paket-D-2026-10-03-Uebergabe/`
+kopiert. Dort `temp/` mit ursprünglicher Struktur und `arbeitsbaum/` mit
+allen geänderten/unversionierten Projektdateien; dazu Git-Diff, Status,
+HEAD und Manifest. **4.848 Dateien / 2.652.609.778 Bytes, alle Quell-/Kopie-
+SHA256 gleich.** Originale nicht verschoben oder gelöscht. Die Sicherung
+enthält den Stand beim Schreiben der Übergabe; anschließende Dokumentation
+dieses Sicherungsabschlusses wird separat unter `abschlussdokumentation/`
+mit eigenem Hashmanifest ergänzt. STAND verlinkt diese Übergabe.
+D12/D13/D15 bleiben zurück, D14 geschützt, Z1 ausgelassen, G1 offen;
+kein Commit, Push oder Veröffentlichen. Keine Paketabschluss-Abnahme.
+
+### 2026-10-03 — Paket D weiter: einzelne Innenkanten-Shaderoperation kalt isoliert
+
+**Erhalten:** Pflichtlektüre und obersten vorherigen Eintrag gelesen;
+übernommenen Arbeitsbaum mit Manifest unter
+`C:/Users/USER/AppData/Local/Temp/paket-d-fortsetzung-20261003-150412/`
+gesichert. Server 8099 bereits HTTP 200, BatteryStatus 2. Keine
+Produktänderung, Version, Commit, Push oder Veröffentlichung. Diagnosehilfen
+und Dokumentation ergänzt; alle bisherigen Entwürfe, roten Bilder und
+abgebrochenen Ausgaben erhalten. D14-Probelauf geschützt, Z1 ausgelassen,
+G1 offen. Kein anderes Paket begonnen.
+
+**Bewiesen, D12/D13:** Historische Fehler vollständig ausgezählt:
+Korallbereich 32 Pixel bei (520,1814)–(528,1818), exakt gleicher 8×4-
+Ausschnitt nur im Nachher-Fehlerort gefunden. Konto-Löschen 70.880 Pixel
+bis sieben Kanalstufen, sechs stärkere Punkte lokalisiert. Keine vollständige
+Erklärung durch die bisherige ±1-Verlaufprobe. Neue konkrete Mindest-
+Kachelhöhenprobe 448 scheitert bei unverändertem gemessenem DOM weiterhin:
+29.323 Pixel, tatsächlich 224×448 statt grüner 800×448. Beide Bildmarken
+vollständig. Drei gleiche Folgefotos nur Diagnose, kein Gesamtfoto-Erfolg.
+Keine Toleranz, Maske, ausgelassene Abnahmestufe oder Fotoaufbau-Korrektur.
+
+**Korrektur, D15:** Die alten LI-/`.view`-Zuordnungen waren numerische
+Kandidaten aus getrennten Rasterzählern, kein belegter CPU-/GPU-Auftrag.
+Ursachenzuordnung zurückgenommen; alte Berichte erhalten, Werkzeug
+kennzeichnet neue Kandidaten und ersetzt keine historischen Ergebnisse.
+Spätere DOM-Aufnahme nicht mit zeitgleicher Picture-Liste gleichgesetzt.
+
+**Bewiesen, D15:** Startlisten-Verlauf allein und 56-px-Navigationsschatten
+allein lassen den langen kalten Flush bestehen. Vollständige Picture-Spur
+mit 128-MiB-Puffer und beiden Marken; neue Ganesh-/ANGLE-Spur liefert
+einzelne Compileraufrufe: 91,043-ms-Flush, zehn Shaderkompilierungen
+zusammen 80,905 ms. Teuerste einzelne `FillRRectOp`-Kompilierung 24,467 ms.
+Nur Navigations-Innenkante entfernt: derselbe Shaderquellhash erscheint
+später erneut, Arbeit nur verschoben. Feste kalte A/B/A-Probe, gleiche
+Instrumentierung, jeweils frischer Prozess: beide Innenkanten an Navigation
+und Startliste entfernen lässt denselben Shader entfallen; Original bringt
+ihn zurück. Späte Flushes 94,361/34,959 ms, 24,059 ms, 89,278/35,394 ms.
+Gemeinsame Zeichen-/Treiberoperation nun belegt. Weitere Shaderkombinationen
+ändern sich ebenfalls; nicht sämtliche Ersparnis einer Operation zugeordnet.
+Variante hat weiterhin echte kalte Pausen und verändert sichtbare Kanten.
+Kein dritter Produktversuch und keine Produkt-/Geräteabnahme.
+
+**Prüfaufbaufehler:** Fehlende historische boot-raster.json, Snapshot ohne
+args.snapshot und Flush vor späterer Bildmarke zunächst falsch vorausgesetzt;
+Abbrüche/Teilbelege erhalten und Auswertungen explizit korrigiert. Vollständige
+Shadertexte aus Trace-Datei gezielt ausgewertet, nachdem Konsolenausgabe
+abgeschnitten wurde. Stand/Version/Syntax und Erhaltungsprüfung siehe
+abschließende Prüfnotiz unten; keine breite Produktregression erneut
+behauptet, da Produktdateien unverändert sind.
+
+**Ungeklärt / konkreter nächster Schritt:** D12 beide tatsächlichen
+Rasterdimensionen mit unverändertem Maßstab und End-Animationsebenen
+festhalten; beim ersten starken Korallfehler zeitgleiche vollständige
+Quads/Ressourcen sichern. Erst nach Ursachenbeleg Fotoaufbau korrigieren
+und sämtliche Zustände streng vergleichen. D15 gespeicherte Innenkanten-
+Picture als isolierte feste Grafikprobe pixelgleich mit anderem Zeichenweg
+prüfen; kaltes Original/Variante/Original samt Shaderhash und Bildfolge.
+Erst danach Produktentwurf mit fester Vorher-Gegenprobe und kompletter
+echter kalter Abnahme. Alle Belegpfade und genaue Grenzen im neuesten
+Abschnitt [`D-URSACHEN-2026-10-03.md`](D-URSACHEN-2026-10-03.md).
+D12/D13/D15 und Paketabschluss bleiben zurück.
+
+**Abschließende Prüfung:** app.js/sw.js, drei JS- und sieben Python-
+Diagnosehilfen syntaktisch grün; Stand/Version/CSP/APP_SHELL sowie
+`git diff --check` grün. Erhaltungsprüfung: alle 34 übernommenen Dateien
+vorhanden und ihre Sicherungs-Hashes unverändert; nur fünf Dokumente und
+zwei vorhandene Diagnosehilfen fortgeschrieben. Produktdateien bytegleich;
+übrige vorhandene Dateien unverändert. Manifest und
+`erhaltungspruefung-fortsetzung.json` im genannten Sicherungsordner.
+Server erneut HTTP 200/19.539 Bytes, BatteryStatus 2.
+
+### 2026-10-03 — Paket D im selben Chat fortgesetzt: Rasterkacheln und Animations-Ebenen belegt
+
+**Erhalten:** Alle vorhandenen uncommitteten Änderungen, Entwürfe und Belege
+behalten; zusätzliche Sicherung mit Manifest unter
+`C:/Users/USER/AppData/Local/Temp/paket-d-weiter-erhaltung-20261003-142449/`.
+Server 8099 HTTP 200, BatteryStatus 2. app.js/styles.css behalten SHA256
+F27C45E7… und 78C0B553…; keine Produktänderung, Version, Commit, Push oder
+Veröffentlichung. Diagnosehilfen ergänzt, keine Foto-Assertion gelockert.
+
+**Bewiesen, D12/D13:** Eine neue detaillierte rote Antwortaufnahme gegen
+die bereits vorhandene pixelgleiche Quads-Kontrolle ausgewertet: 41.727
+Fehlerpixel, alle 86 DOM-Elemente gleich, vier Animationen beendet.
+GPU-Rasterkacheln rot 224×256, grün 800×448, Maßstab beidseits 2×2;
+abschließender Pass 52/12 Quads. Hintergrundabweichungen beginnen an den
+abweichenden Kachelgrenzen. Isolierter originaler Hintergrundverlauf in
+zwei frischen Browserprozessen: gleiches DOM, andere Rasteraufteilung,
+40.809 Fehlerpixel bis eine Kanalstufe. Displayliste enthält Dither.
+Rasterabhängigkeit dieser Verlaufklasse unabhängig vom Produktentwurf
+belegt; keine pauschale Erklärung des alten starken 8×4-Korallfehlers.
+
+Feste Emulations-Viewport-Skala geprüft und verworfen: gleiches gemessenes
+DOM und richtige Bildgröße, dennoch 1.243.305 andere Pixel. Wiederherstellen
+liefert null Fehlerpixel. Kein neuer Foto-Standard daraus gemacht.
+Gezielte Animations-Gegenprobe direkt am ersten Rot auf Feedback:
+End-Animationen gehalten → freigegeben → wieder gehalten, gemessenes DOM
+gleich; Fehlerpixel 0 → 98 → 0. GPU-Ebenen `.view`/`.ideen-leer` verschwinden
+beim Freigeben und werden wieder hergestellt. Einfaches Canceln ändert
+selbst das Bild und ist damit ebenfalls kein belegter Aufnahme-Fix.
+Ausgefilterte Zustände zählen weiter nicht; keine Gesamtabnahme behauptet.
+
+**Bewiesen, D15:** Alte 88,298-ms-Rasterarbeit über Raster-ID bis LI-Ebene
+verfolgt. Zusätzlicher kalter Browser mit derselben gesicherten zweiten
+Quelle: 90 echte Bilder, 109,28-ms-Pause, Titelschritt 105,33 in 12,63 ms.
+Jetzt 95,788-ms-Flush an `.view`, nicht derselben LI-Ebene. Die konkrete
+DOM-Ebene ist deshalb keine belastbare einzelne Ursache. DOM-Ziele,
+Raster-Displaylisten und vollständige Bildfolge gesichert. Keine warme
+Abnahme, kein dritter Produktversuch. Die einzelne gemeinsame Skia-/
+Treiberoperation bleibt ungeklärt.
+
+**Prüfaufbaufehler:** Picture-Kategorien füllten den Trace-Puffer vor den
+späten Fotos; deren PNGs/Displaylisten bleiben gültige einzelne Belege,
+die späte GPU-Spur ist unvollständig. Vorhandene vollständige grüne
+Quads-Spur verwendet. Python-Auswertung zunächst wegen Windows-Codierung,
+dann fehlender Marken abgebrochen; beide Logs bewahrt, UTF-8 und vollständige
+Vergleichsspur korrigiert. Ein Animationslauf scheitert schon auf Lektionen,
+bevor die Antwort-Gegenprobe eingreift; bewahrt, Folgewerkzeug greift nun
+gezielt am ersten Rot. Keine dieser Änderungen ist Produktabnahme.
+
+**Offen / nächster konkreter Schritt:** Aufnahmeweg mit unveränderten
+End-Animationsebenen und stabiler Rasteraufteilung gegen die gesicherte
+rote Aufteilung prüfen; den 8×4-Korallbereich beim ersten Auftreten mit
+zugehörigen Ressourcen/Quads sichern. Erst dann Fotoaufbau korrigieren und
+alle Zustände streng vor/nach vergleichen. D15 die gemeinsame einzelne
+Zeichen-/Treiberoperation isolieren, feste Alt-Gegenprobe und echte kalte
+Bildabnahme vor jeder Korrektur. Belegpfade und genaue Ergebnisse in
+[`D-URSACHEN-2026-10-03.md`](D-URSACHEN-2026-10-03.md), erster Abschnitt.
+Syntax der fünf berührten/neuen JS-Hilfen, Stand/Version/CSP/APP_SHELL
+und `git diff --check` grün. D12/D13/D15 zurück, D14-Probelauf geschützt,
+Z1 ausgelassen, G1 offen; kein anderes Paket und kein Paketabschluss.
+
+### 2026-10-03 — Paket D: rote/grüne Daten verglichen; Aufnahme- und GPU-Lücken konkretisiert
+
+**Geändert:** AGENTS.md, STAND.md, CLAUDE.md, LEHREN.md und CODEX-START.md
+vollständig gelesen, danach den vorher obersten Eintrag; Aufgaben,
+Entscheidungen, Zyklus-Auftrag, BEW-12–15 und Großplan §2a/2b/3 gelesen.
+Alle 20 anfänglich geänderten/unversionierten Dateien mit SHA256-Manifest
+gesichert: `C:/Users/USER/AppData/Local/Temp/paket-d-analyse-20261003-134349/`.
+Server 8099 bereits HTTP 200/19.539 Bytes, kein Neustart nötig; BatteryStatus 2.
+Kein Pull und keine Produktänderung. Neue Offline-Auswertungen und
+Diagnosehilfen ausschließlich unter `plan/werkzeuge/pruefstand/`.
+Die beiden vorhandenen Instrumentierungswerkzeuge können optional über
+`D_GPU_KATEGORIEN` ausführlichere Spuren aufnehmen; Standardablauf und
+Foto-Assertion unverändert. Beweisbericht: [`D-URSACHEN-2026-10-03.md`](D-URSACHEN-2026-10-03.md).
+
+**Bewiesen, D12/D13:** Die beiden gesicherten instrumentierten roten
+Aufnahmen gegen die bereits vorhandene pixelgleiche Kontrolle ausgewertet.
+DOM/Stile/Geometrien/Pseudoelemente und normalisierter DOMSnapshot mit
+Malreihenfolge gleich; Rundenende alle 60 Elemente gleich, alle sieben
+Animationen beendet. Ebenenabmessungen/Transformationen gleich; ein
+Malzähler 20/22. Während der Fotoaufnahme Rasterbereich 390×844 →
+780×1688 → 390×844; unterschiedliche interne Renderpässe:
+Rundenende rot 49/grün 14 Quads, Kartensätze rot zusätzliche 4/4/47,
+grün 9. Das belegt den Eingriff der Aufnahme in den Grafikaufbau,
+aber nicht die einzelne Operation hinter den Fehlerpixeln.
+
+Neue Frage native Pixelskala 2: ausschließlich Diagnose-Browser-Flag,
+keine Produktänderung. Gegenprobe bereits auf Lernen rot, 24.535 Pixel,
+maximal 217/220/222 Kanalstufen; drei Folgefotos gleich zum Fehler.
+Diese Variante ist kein geeigneter Prüfaufbau-Fix; vollständig bewahrt.
+Neue Frage konkrete Quads/Skia-Operation: erweiterte Detailspur des
+unveränderten D12-Entwurfs auf dem gezielten 390/hell/bewegt/voll-Weg.
+16/16 Fotos gleich; ausführliche grüne Spur gesichert. Kein detailliertes
+rotes Bild in diesem Lauf. Alle 35 ausgefilterten Zustände null Fotos;
+keine Gesamtfoto-Abnahme. Nicht denselben Gesamtvergleich erneut gestartet,
+weil die vom Betreiber verlangte Ursachenklärung vor Korrektur noch fehlt.
+
+**Bewiesen, D15:** Alte kalte GPU-Aufgaben offline zerlegt: 85,678 ms
+Raster-Endarbeit enthält 85,666 ms Flush; Cache-Aufrufe selbst nur
+Mikrosekunden, dazu ANGLE-Arbeit bis 21,899 ms. Shader-Kompilierung damit
+nicht direkt bewiesen. Neue Frage nach benannter Shader-/Treiberoperation:
+unveränderte gesicherte zweite Quelle, neuer Browser, erweiterte Grafikspur.
+Kalt 92 echte Bilder, warme Kontexte 104/104. Kalt Raster-Endarbeit
+88,298/35,563 ms, Renderpass 43,185 ms; Bildpause 158,42 ms und sichtbarer
+Titelschritt 91,62. Warme Titelschritte höchstens 13,97/14,04, keine
+Bildpause >50 ms. Diesmal kein rAF-Deckkraftschritt >0,2 trotz roter
+echter Bildfolge. Keine isolierte Deckkraft aus Titelhelligkeit ableiten.
+Auch Detailspur benennt innerhalb der 88,298 ms nur den 88,289-ms-Flush,
+keinen Shader und kein CSS-Ziel. Kein dritter Produktfix, keine kalte Abnahme.
+
+**Offen:** D12 genaue Raster-/Mischoperation und historische Konto-/8×4-
+Fehlerpixel; D13 wartet auf belastbaren Gesamtvergleich. D15 Zuordnung
+des kalten Flushs zu einer konkreten Zeichenoperation plus kalte Abnahme;
+Gerätewirkung offen. D14 wegen Text-Probelauf zurück. D1–D11 erhalten,
+Z1 ausgelassen, G1 offen. Keine Version, kein Commit/Push/Deploy.
+
+**Nächster Schritt:** D12 die jetzt erfassten Detaildaten am ersten roten
+Aufnahmebild mit der vorhandenen grünen Detailspur vergleichen und die
+abweichende Operation durch feste Aufnahme-Gegenprobe isolieren; erst
+dann Prüfaufbau korrigieren und alle Fotozustände prüfen. D15 die teure
+Rasterressource mit DOM-Ziel/Zeichenoperation verbinden, diese gezielt
+unter wirklich kalten Browserstarts isolieren; erst bei Beleg minimal
+korrigieren. Genaue Pfade, Grenzen und Gegenproben im Beweisbericht.
+
+**Erhaltung/Prüfung:** Alle 20 Anfangsdateien vorhanden; 14 bytegleich.
+Nur die vier nachgezogenen Plandateien und die zwei optional erweiterten
+Diagnosewerkzeuge unterscheiden sich von der Anfangssicherung; Originale
+dort erhalten. Produktdateien app.js/styles.css exakt mit den bisherigen
+SHA256-Werten f27c45e7…d60ebf und 78c0b553…40cdea. Manifest der Nachprüfung
+`paket-d-analyse-20261003-134349/erhaltung-nachher.json` im TEMP.
+JavaScript-Syntax der vier berührten/neuen JS-Hilfen und AST-Syntax aller
+neun Python-Auswertungen grün. Standprüfung mit Version/CSP/APP_SHELL/
+CSS-Struktur und `git diff --check` grün. Alle vollständigen Diagnose-
+Ausgaben gelesen; keine Testgrenze verändert. Abschließend HTTP
+200/19.539 Bytes und BatteryStatus 2. §5-Gesamtabnahme/Affe nicht erfüllt
+und nicht als gelaufen eingetragen; kein Paketabschluss.
+
+### 2026-10-03 — Paket D: erstes instrumentiertes Fehlerfoto gesichert; D15-Bildsprung bestätigt
+
+**Geändert:** AGENTS.md, STAND.md, CLAUDE.md, LEHREN.md und CODEX-START.md
+vollständig gelesen, danach den vorher obersten Eintrag. Aufgaben,
+Entscheidungen, Zyklus-Auftrag, BEW-12–15 und Großplan §2a/2b/3 gelesen.
+Alle anfänglich geänderten und unversionierten Dateien mit SHA256-Manifest
+gesichert: `C:/Users/USER/AppData/Local/Temp/paket-d-instrumentiert-20261003-131651/`.
+Kein Pull und keine Produktänderung. Server 8099 HTTP 200/19.539 Bytes,
+Neustart nicht nötig; BatteryStatus 2. Syntax und Standprüfung grün.
+
+`plan/werkzeuge/pruefstand/x_paket_d_fotos.js` hat jetzt eine optionale
+Diagnose über `D_FOTO_DIAGNOSE`: dieselbe Reihenfolge, Stabilisierung und
+unveränderte strenge Foto-Assertion. Das neue `x_d_foto_instrument.js`
+sichert vor/nach jedem Foto DOM, berechnete Stile, Pseudoelemente,
+Geometrie, Animationen und DOMSnapshot samt Malreihenfolge. Durchgehende
+GPU-/Compositor-/Hauptthread-Spur und Ebenen bleiben auch bei Rot erhalten.
+Drei Folgefotos nach Rot dienen ausschließlich der Diagnose; sie ersetzen
+nie das erste Fehlerfoto oder die fehlgeschlagene Assertion.
+Auswertung: `x_d_foto_auswerten.py` und `x_d15_spuren_auswerten.py`.
+Alle Werkzeuge liegen unter dem Hosting-ausgeschlossenen `plan/`.
+
+**D12/D13:** Ungefilterten gesamten Rundgang mit gesichertem D12-Entwurf
+gestartet. Erste 15 Fotos exakt gleich; beim 16. Foto gemäß §6 angehalten:
+`390-hell-bewegt-voll-ende`, 77.992 verschiedene RGB-Pixel,
+Bereich (0,0)–(780,1056), maximal R/G/B 1/2/1 Kanalstufen Unterschied.
+Erstes Fehlerbild, Vorher-/Nachher-DOM, Animationen, Ebenen und GPU-Spur
+gesichert unter `paket-d-fotos/d12-20261003-stand1/instrumentiert-20261003-1319/`
+im TEMP. Vollständiges Log: `paket-d-foto-instrumentiert-20261003-1319.log`.
+Alle sieben erfassten Animationen am Fehlerfoto sind beendet.
+
+Gezielte Kontrolle mit der unveränderten gesicherten Ausgangsquelle und
+dem gleichen echten Weg 390/hell/bewegt/voll scheitert nach neun gleichen
+Fotos auf `einst-kartensaetze`: 20.283 Pixel, Bereich (0,112)–(780,911),
+maximal eine Kanalstufe. Drei direkt anschließende Bilder sind jeweils
+pixelgleich zum historischen Vorher-Bild. Vor/nach Screenshot sind alle
+erfassten Geometrien und berechneten Stile identisch; einzig die HTML-
+Serialisierung des verborgenen Importfelds wechselt von `display:none`
+zu `display: none;`. Die Seitenanimation ist schon vor dem Foto beendet.
+Auch Ausgangsquelle kann somit ein transient abweichendes Foto liefern.
+Das erklärt noch nicht die historischen Konto-/Einstellungen-Fehlerpixel.
+Keinen Messfehler oder bestimmten GPU-Mechanismus als Ursache behauptet.
+Kontrollen und Trace: `instrumentiert-vorstand-20261003-1325/` im gleichen
+Foto-Verzeichnis, Log `paket-d-foto-vorstand-20261003-1325.log` im TEMP.
+
+Gezielter zweiter Lauf desselben unveränderten D12-Entwurfs und Wegs:
+alle 16 Fotos 390/hell/bewegt/voll exakt gleich. Erfasstes DOM vor dem
+Rundenende identisch zum ersten roten Lauf. Dies ist eine gezielte Kontrolle,
+keine Gesamtfoto-Abnahme. Daten `instrumentiert-entwurf-kontrolle-20261003-1331/`,
+Log `paket-d-foto-entwurf-kontrolle-20261003-1331.log` im TEMP.
+Keine Toleranz, Maske, Testlöschung oder zusätzliche Produktänderung.
+D12/D13 bleiben zurück; den D13-Entwurf nicht wieder eingebaut.
+
+**D15:** Gesicherte drei Bildfolgen und Traces aus
+`paket-d-ursachen-messung-1791025838429/0/`, `/1/`, `/2/` erneut ausgewertet,
+ohne neue Browser-/Produktversuche. Zeitachsen über die gesicherte
+Performance-Metrik NavigationStart und timeOrigin verbunden. Kalt:
+GPU-Rasterung beginnt bei 1192,8 ms und dauert 85,7 ms (umgebende
+GPU-Aufgabe 86,5 ms), Renderdurchgang bei 1297,5 ms dauert 45,6 ms,
+weitere Rasterung bei 1351,5 ms dauert 36,4 ms. Echte Browserbilder haben
+92,6/71,1 ms Abstand; Titel „Dein Start“ bleibt dabei noch dunkel.
+Zwischen Bildern 61/62 steigt dessen gemittelte Helligkeit von 31,35
+auf 122,88 über 11,0 ms. Das ist ein sichtbarer Aufholsprung, keine bloße
+rAF-Abtastlücke. rAF derselben kalten Quelle zeigt weiterhin 116,5 ms
+Lücke und Deckkraftschritt 0,4161. Warme Kontrollen haben keine Bildpausen
+über 50 ms; größter Titelschritt im gleichen Zeitfenster jeweils 14,04.
+Zusammengesetzte Titelhelligkeit ist keine isolierte Elementdeckkraft und
+keine kalte Abnahme. Keine Aussage über Shader-Ursache oder iOS-Wirkung.
+Auswertung mit allen Einzelwerten:
+`C:/Users/USER/AppData/Local/Temp/paket-d15-auswertung-20261003-1328/`,
+vollständige Ausgabe `paket-d15-auswertung-20261003-1328.log` im TEMP.
+Erste Auswertung ebenfalls erhalten (`paket-d15-auswertung-20261003-1322/`).
+Kein dritter Verdachts-Fix nach den zwei gescheiterten Produktversuchen.
+
+**Entscheidung/Gegenprüfung:** Foto-Assertion bleibt strikt und rot;
+gezielte grüne Folgefotos erfüllen BEW-12 nicht. Zeitgleiche Daten der
+neuen Fehlerbilder sind gesichert; historische Herkunft bleibt offen.
+BEW-15 gegen echte Bilder und GPU-Spuren gelesen: warme Kontrollen
+ersetzen keine kalte Startabnahme. D14 bleibt wegen geschütztem Text-
+Probelauf zurück, D1–D11 erhalten. Z1 ausgelassen, G1 offen.
+Keine erfüllte §5-Gesamtabnahme, keine Version, kein Commit/Push/Deploy.
+
+**Offen:** D12-Gesamtfotovergleich und Ursache der historischen Abweichung,
+darauf wartend D13. D15 kalte Startabnahme und gezielte Behebung des
+nachgewiesenen Grafikaufbaus; Gerätewirkung offen. D14 erst nach Probelauf.
+
+**Erhaltung/Prüfung:** Alle 17 Anfangsdateien bleiben vorhanden; außer den
+vier nachgezogenen Plandateien und dem optional instrumentierten
+Fotowerkzeug bytegleich zur Anfangssicherung. app.js SHA256
+`f27c45e7c7f34959dbc5a205daab1a3996801899c6ee21128e32195001d60ebf`,
+styles.css SHA256
+`78c0b553cf62855e0edc07b2b15746198432d9ea52708647e8546171ce40cdea`.
+Neue JavaScript-/Python-Hilfsquellen syntaktisch geprüft; Standprüfung
+einschließlich Version/CSP/APP_SHELL und `git diff --check` grün.
+Gefilterter Kontrolllauf beendet, vollständige Ausgabe gelesen; die
+35 ausgeschlossenen Zustände haben keine Fotos und zählen nicht als Abnahme.
+Server abschließend HTTP 200/19.539 Bytes, BatteryStatus 2.
+
+**Nächster Schritt:** Gesicherte D12-Fehlerbilder samt DOM-/Animations-/GPU-
+Spuren gegen die identischen grünen Kontrollen auswerten, bevor der
+Foto-Prüfaufbau geändert wird. D15 nur am belegten Grafikaufbau weiter
+untersuchen; keine dritte Verdachtsänderung. Paketabschluss bleibt gesperrt.
+
+### 2026-10-03 — Paket D: Foto-Kontrollen erhalten; kalten Grafikaufbau bei D15 eingegrenzt
+
+**Geändert:** AGENTS.md, STAND.md, CLAUDE.md, LEHREN.md und CODEX-START.md
+vollständig gelesen, danach den vorher obersten Eintrag; Aufgaben,
+Entscheidungen, Zyklus-Auftrag, BEW-12–15 und Großplan §2a/2b/3 geprüft.
+Alle geänderten und unversionierten Dateien vor der ersten Änderung kopiert:
+`C:/Users/USER/AppData/Local/Temp/paket-d-ursachen-20261003-125845/`.
+Kein Pull und keine Produktänderung. Server 8099 bereits HTTP 200,
+19.539 Bytes; Neustart unnötig. BatteryStatus 2. Syntax und Standprüfung grün.
+Neue Diagnosewerkzeuge: `plan/werkzeuge/pruefstand/x_d_ursachen.js`,
+`x_d_bilddaten.py` und `x_d15_kalibrierung.js` im selben Ordner.
+
+**D12/D13:** Historische RGB-Differenzen erneut untersucht und verstärkt
+abgebildet. Konto-löschen: 70.880 Pixel, höchstens sieben Kanalstufen,
+über Schatten-/Textbereiche verteilt. Einstellungen: weiterhin genau
+8×4 Pixel bei (520,1814), korallfarbenes Rechteck an der Unterkante der
+Kontoliste. Keine passende sichtbare DOM-Fläche in den neuen Kontrollen;
+dies beweist die Herkunft im historischen Fehlerbild nicht.
+Zwei Kontrollfolgen mit beiden gesicherten D12-Quellen liefern insgesamt
+28 pixelgleiche Bilder, einschließlich Wiederholungen und Fokus-Aufhebung.
+Die zweite Folge enthält auch die Zwischenfotos des ursprünglichen Wegs.
+Alle neuen Einstellungen-Bilder sind mit dem alten Vorher-Bild pixelgleich;
+auch der unveränderte originale 390/dunkel/bewegt/leer-Rundgang vollständig
+grün. Vollständige Ausgabe gelesen. Kein grüner Gesamtfotovergleich und
+keine nachgewiesene Ursache der historischen Abweichung; D12/D13 bleiben
+zurück. Keine PNG-/Pixel-Toleranz, kein Maskieren, kein weiterer Entwurf.
+
+Kontrolldaten und Bilder:
+`C:/Users/USER/AppData/Local/Temp/paket-d-ursachen-messung-1791025271648/`
+und `paket-d-ursachen-messung-1791025479009/` im selben TEMP-Ordner.
+Originaler Kontrollrundgang:
+`paket-d-fotos/d12-20261003-stand1/ursache-kontrolle-20261003-1320/`.
+Frühere vor/nach-Bilder und Entwürfe unangetastet.
+
+**D15:** Ausschließlich den gesicherten zweiten Entwurf durch Quellenumleitung
+gemessen. Drei erste Diagnoseläufe sichern 92/91/94 echte Browserbilder,
+rAF-Werte und Traces. Zeitursprung ab dem zweiten Lauf mitgesichert.
+Korrektur der ersten Interpretation: Ein rAF-Loch ist keine vollständige
+Bildfolge; die echten Browserbilder enthalten ebenfalls Pausen. Deshalb
+die frühere rote Abnahme nicht allein als Abtastfehler erklären.
+Die vollständigere Spur enthält zusätzlich Hauptthread-/GPU-Aufgaben.
+Sie zeigt 25,4 ms Layout, 87,8 ms GPU-Rasterung und 43,9 ms für einen
+GPU-Renderdurchgang beim ersten Zeichnen der Folgeseite.
+
+Kontrollierter Nachlauf: **identische gesicherte Quelle, gleicher Browser**,
+drei frische Kontexte nacheinander. Kalt: 95 Browserbilder, Fade-rAF-Lücke
+116,5 ms mit Deckkraft 0,0594107 auf 0,475482; GPU-Rasterung 86,5 ms,
+Renderdurchgang 45,6 ms. Zwei anschließende warme Kontrollen: 105/104 Bilder,
+keine Fade-rAF-Lücke über 50 ms und keine dieser GPU-Aufgaben über 20 ms.
+Das grenzt den kalten Grafikaufbau als Ursache ein. Die übrige Quelle und
+der Messaufbau sind gleich. Keine warme Kontrolle ersetzt die vorgeschriebene
+kalte Startabnahme. Keine vollständige Ruckelfreiheit oder iOS-Wirkung behauptet.
+Unabhängige lineare Kontrollfläche mit gleicher 280-ms-Dauer und pausiertem
+Start: vier Läufe, maximaler Bildabstand 20,5/17/19,4/20,5 ms, höchster
+Deckkraftschritt jeweils unter 0,061; Grenze 0,2 unverändert.
+
+Spuren, Bilder und Zeitdaten:
+`C:/Users/USER/AppData/Local/Temp/paket-d-ursachen-messung-1791025309661/`,
+`paket-d-ursachen-messung-1791025525860/`,
+`paket-d-ursachen-messung-1791025760604/` sowie der kontrollierte Dreierlauf
+`paket-d-ursachen-messung-1791025838429/0/`, `/1/`, `/2/` im selben TEMP.
+Unabhängige Kontrolle: `paket-d15-kalibrierung-1791025703848/`.
+
+**Entscheidung/Gegenprüfung:** Befundabnahmen gegen die Diagnose gelesen:
+Kontrollbilder erfüllen noch nicht den D12-Gesamtvergleich; eine rAF-Liste
+ersetzt keine D15-Bildfolge. Alte Entwürfe nur gelesen/umgeleitet, nicht
+erneut ins Produkt eingebaut. Nach zwei gescheiterten Produktversuchen
+kein weiterer Verdachts-Fix. D14 bleibt wegen des geschützten Text-Probelaufs
+zurück. D1–D11 erhalten. Keine §5-Gesamtabnahme, Version, Commit, Push oder
+Veröffentlichung; Z1 ausgelassen, G1 offen. LEHREN §5.3/§15 ergänzt.
+
+**Offen:** Historische D12-Fotoabweichung ursächlich nicht belegt, deshalb
+D13 nicht abgenommen. D15 braucht eine belastbare kalte Bildfolge und eine
+Behebung am nachgewiesenen Grafikaufbau; Gerätewirkung bleibt offen.
+D14 erst nach dem Probelauf. Paketabschluss nach §3–§7 nicht erfüllt.
+
+**Erhaltung:** app.js SHA256
+`f27c45e7c7f34959dbc5a205daab1a3996801899c6ee21128e32195001d60ebf`,
+styles.css SHA256
+`78c0b553cf62855e0edc07b2b15746198432d9ea52708647e8546171ce40cdea`,
+beide wie vor dieser Fortsetzung. Alle Anfangsdateien vorhanden und außer
+den ausdrücklich nachgezogenen Plandateien bytegleich. Keine Testgrenze geändert.
+
+**Nächster Schritt:** D12 im instrumentierten gesamten Foto-Rundgang mit
+DOM-/Animations-/GPU-Daten beim ersten abweichenden Bild fassen; erst danach
+D13. Bei D15 kalten Grafikaufbau gezielt prüfen, keinen dritten Verdachts-Fix.
+
+### 2026-10-03 — Paket D erneut fortgesetzt; rote Foto-/Startabnahme verhindert Abschluss
+
+**Geändert:** Vorhandenen Arbeitsbaum und alle früheren Belege erhalten.
+AGENTS.md und CODEX-START.md vollständig, dazu STAND, CLAUDE, LEHREN,
+Zyklus-Auftrag, Aufgaben, Entscheidungen, BEW-12–15 und Großplan §2a/2b/3
+gelesen. Kein Pull in den ausdrücklich zu erhaltenden Arbeitsbaum.
+Anfangssicherung `%TEMP%/paket-d-fortsetzung-20261003/`.
+Server 8099 bereits erreichbar: HTTP 200, 19.539 Bytes; kein Neustart nötig.
+BatteryStatus 2. Syntax und Standprüfung vor der Produktänderung grün.
+
+**D12:** Gesicherten früheren Entwurf über Quellenumleitung geprüft.
+Zwölf direkte Konto-löschen-Fotos aus je zwei Besuchen beider Quellen
+pixelgleich; sämtliche berechneten Stile und Elementgeometrien gleich.
+Diagnosequelle `plan/werkzeuge/pruefstand/x_d12_diagnose.js`, Daten und Bilder
+`%TEMP%/paket-d-d12-diagnose-20261003/`. Zusätzlich den tatsächlichen
+Foto-Rundgang 320/dunkel/bewegt/voll gegen die alten Vorher-Fotos geprüft:
+unveränderte Quelle und D12-Entwurf jeweils vollständig grün.
+Diese Kontrollen erklären die ursprünglichen 70.880 abweichenden Pixel
+noch nicht; keine pauschale Messfehlerbehauptung.
+Ganzer Vergleich mit demselben D12-Entwurf danach erneut rot, diesmal
+`390-dunkel-bewegt-leer-einstellungen`: Unterschied innerhalb (520,1814)
+bis (528,1818), RGB-Maxima 219/141/128, identische Bildgröße 780×2198.
+Pixel und Ausschnitt angesehen; kein bloßer Unterschied der PNG-Kodierung.
+Ursache ungeklärt. Lauf endet gemäß §6, kein grüner Gesamtfotovergleich.
+Neue Fotos bleiben unter `%TEMP%/paket-d-fotos/d12-20261003-stand1/`
+in `kontrolle-unveraendert`, `kontrolle-entwurf`, `nach-fortsetzung`.
+Frühere `vor`-/`nach`-Ordner unverändert; keine Toleranz hinzugefügt.
+
+**D13:** Entwurf der vorgeschriebenen fünf Dauern und beiden Kurven mit
+`plan/werkzeuge/d13_tokenleiter.mjs` erstellt: 136 Deklarationen umgestellt,
+15 statt 111 rohe Zeitangaben. Sonderzeiten: reduzierte Bewegung,
+Kartendrehungen, Halte-Knöpfe und Ladeschleifen. Verzögerungen und an den
+Plan-Aufbau gekoppelte Zeiten bleiben exakt; alte Token bleiben definiert.
+Text-Probelauf ab `.text-kopf` bytegleich. Struktur-/Syntax-/Standprüfung
+grün, D13-Umfeldmatrix 24/24 grün, vollständige Ausgabe gelesen.
+Noch keine Abnahme: belastbarer Gesamtfotovergleich fehlt; Entwurf
+wird bewahrt und nicht im Produkt behalten. Kein Token-Grenzwert gelockert.
+
+**D14:** Befund erneut am aktuellen Code gelesen. Die angeblichen
+Rechtsseiten-Schriften 1,15/1,35/1,1/0,85 rem gehören weiterhin zu
+`.text-kopf`, `.text-buehne__zeile`, `.text-buehne__wahl` und
+`.texte-lernen__satz`. Die vollständige Schrift-Token-Abnahme widerspricht
+CODEX-START §7 (Text-Probelauf bis 29.10. unverändert). Keine Text-Stile
+geändert, keine vollständige D14-Erledigung behauptet.
+
+**D15:** Zweiter Produktversuch auf Grundlage des gesicherten ersten
+Entwurfs: Folgeseiten-Fade zunächst pausiert, Stil im rAF hergestellt,
+im nächsten rAF gestartet. Dauer weiterhin aus berechnetem Boot-CSS.
+Bildfolge erneut rot: Deckkraft 0,237793 bei 1262,7 ms, 0,832793 bei
+1429,3 ms, Sprung 0,595 über unveränderter Grenze 0,2.
+Nach zwei gescheiterten Produktversuchen gemäß §6 zurückgenommen.
+Zweiter Entwurf `%TEMP%/paket-d-d15-zweiter-versuch-20261003/`;
+gemeinsamer D12-/D13-Entwurf samt Hilfsquellen
+`%TEMP%/paket-d-d12-d13-fortsetzung-abgelehnt-20261003/`.
+Keine Behauptung über eine echte iOS-Bildfolge oder die Ursache der Pause.
+
+**Entscheidung:** Rote bzw. nicht erfüllte Abnahmen verhindern den
+Paketabschluss. Nur eigene neue Produktversuche zurücknehmen; D1–D11 und
+alle schon vorhandenen Dateien unverändert erhalten. Keine Version,
+kein Commit, Push oder Deploy. Keine neue Aufgabe/Paket begonnen.
+Z1 ausgelassen, G1 offen. LEHREN §15 um die eigenen Befunde ergänzt.
+
+**Offen:** D12-/D13-Gesamtfotovergleich, D14 nach geschütztem Probelauf,
+D15 nach zwei gescheiterten Versuchen. §5-Gesamtlauf/Affe und vollständige
+Commit-Checkliste sind deshalb nicht als bestanden eingetragen.
+
+**Erhaltung abschließend geprüft:** app.js SHA256
+`f27c45e7c7f34959dbc5a205daab1a3996801899c6ee21128e32195001d60ebf`,
+styles.css SHA256
+`78c0b553cf62855e0edc07b2b15746198432d9ea52708647e8546171ce40cdea`,
+jeweils exakt wie die Anfangssicherung dieser Fortsetzung.
+Produkt- und Hilfsquellen-Syntax, Standprüfung einschließlich Version/CSP/
+APP_SHELL/CSS-Struktur sowie `git diff --check` grün. Alle zu Beginn
+geänderten/unversionierten Dateien bleiben vorhanden; neue Hilfsquellen
+bleiben ebenfalls erhalten. Keine vorhandene Testgrenze verändert.
+
+**Nächster Schritt:** D12-/D13-Fotoprüfaufbau ursächlich klären und D15
+gegen tatsächliche Bildfolge prüfen; erst bei grüner Abnahme Paket D
+abschließen. D14-Sperre respektieren, keine Veröffentlichung.
+
+### 2026-10-03 — Paket D fortgesetzt; D12–D15 zurück, Abschluss angehalten
+
+**Geändert:** Alle abgenommenen D1–D9-/D11-Änderungen und sämtliche anderen
+uncommitteten Dateien erhalten. Nur die eigenen, nicht abgenommenen
+D12-/D15-Versuche aus der vorher gesicherten D11-Fassung zurückgenommen.
+Abgelehnte Entwürfe unverändert unter `%TEMP%/paket-d-d12-abgelehnt-20261003/`
+und `%TEMP%/paket-d-d15-abgelehnt-20261003/` bewahrt; ihre Ausgangsfassung
+unter `%TEMP%/paket-d-d12-vor-20261003/`. Aufgabenliste und Stand nachgezogen.
+
+**Entscheidung:** CODEX-START §6: keine ungeklärte rote Abnahme als fertig
+melden. D12-Fotovergleich an `320-dunkel-bewegt-voll-einst-konto-loeschen`
+rot. PNGs angesehen und RGBA-Daten geprüft: 70.880 abweichende Bildpunkte,
+maximal 7 Kanalstufen, also keine bloße PNG-Komprimierungsabweichung.
+Ursache nicht belegt; sämtliche 460 Vorher-Bilder und vorhandenen Nachher-
+Bilder unter `%TEMP%/paket-d-fotos/d12-20261003-stand1/` bleiben erhalten.
+D13-Gegenprobe gegen festen Commit 50d15ce ebenfalls rot: 111 rohe Zeiten.
+Vorgeschriebenen Fotovergleich nicht durch Toleranzen ersetzt; solange dessen
+Prüfaufbau ungeklärt ist, keine breite mechanische Umstellung begonnen.
+D14-Beleg nachgelesen: Die als Rechtsseiten genannten Größen stehen im
+Textlernen-Abschnitt. Vorschlag und geschützter Probelauf widersprechen
+sich; kein Umbau und keine behauptete vollständige Token-Abnahme.
+
+**D15:** Feste Gegenprobe 50d15ce rot: CSS 320 ms, Timer 280 ms.
+Erster Fix las die CSS-Dauer für beide Startwege und blendete die Folgeseite
+ab 0 ein. Dauer-Abnahme grün, Bildfolge rot (Deckkraft-Sprung 0,59).
+Diagnostischer Nachlauf desselben unveränderten Fixes: 0,0596 → 0,6542
+zwischen 1210,8 und 1377,3 ms. Dieser Nachlauf ist kein zweiter Produktfix;
+er belegt keine Ursache und keine tatsächliche iOS-Bildfolge. Assertion
+nur um die fehlschlagenden Messpaare ergänzt, Grenze 0,2 unverändert.
+Eigenen Versuch gemäß §4.6/§6 zurückgenommen; D15 nicht fertig.
+
+**Offen:** D12–D15 zurück; Gegenprüfung/Paketabschluss einschließlich
+Gesamtlauf, Affe, Version, Commit und Push noch offen. Netzteil weiterhin
+BatteryStatus 2/95 %. Unabhängige Server-Probe erneut HTTP 200/19.539 Bytes.
+Z1 ausgelassen, G1 offen, Text-Probelauf unverändert. Kein Deploy.
+
+**Erhaltung geprüft:** app.js und styles.css nach beiden Rücknahmen per
+SHA256 exakt identisch mit der gesicherten, lokal abgenommenen D11-Fassung.
+Syntax beider Produktdateien und beider neuer Prüfdateien grün;
+Standprüfung einschließlich CSS-Struktur, Version/CSP/APP_SHELL grün,
+`git diff --check` ohne Fund. Kein vorhandener Regressionstest entfernt,
+keine Messgrenze gelockert. Die neuen D12/D13/D15-Gegenproben bleiben
+absichtlich rot, solange ihre Aufgaben zurückgestellt sind.
+
+**Gegenprüfung (Zwischenstand, kein Paketabschluss):** Vollständigen aktuellen
+Produkt-Diff sowie Standprüfer, Wrapper, a11y-Erweiterung und LEHREN-Diff
+gelesen und mit BEW-1–BEW-15 abgeglichen. D1 beendet gehaltene Animationen;
+D2 startet nur in aktiver Maus-Randzone; D3 entfernt die verwaiste Klammer;
+D4 reserviert Haken; D5 entfernt nur Modus-Aufleuchten; D6 zeigt Aktionen
+ohne Verzögerung; D7 merkt nur Besuche im RAM; D8 berücksichtigt reduzierte
+Bewegung; D9 erhält den normalen Reiter-Klick und entfernt seine inerte
+Bildkopie; D10 wurde nicht doppelt gebaut; D11 entfernt nur die erfasste
+alte Meldung. Keine Lernregel, Datenstruktur oder Cloud-Regel geändert.
+Die volle §5-/LEHREN-§14-Abnahme ist wegen der offenen roten Abnahmen
+ausdrücklich nicht als erfüllt eingetragen.
+
+**Nächster Schritt:** Nur Paket D fortsetzen: zuerst zurückgestellte
+Foto-Abnahme D12/D13 ursächlich klären, D14-Befund abgrenzen, D15-Bildfolge
+belegen und abnehmen. Vorhandenen Arbeitsbaum und alle Belege erhalten.
+
+### 2026-10-03 — Paket D ausdrücklich fortgesetzt, Server wieder startklar
+
+**Geändert:** Vorhandenen D1-Entwurf und alle uncommitteten Dateien erhalten.
+Lokalen Python-http.server-Prozess 19776 beendet und denselben Server auf
+127.0.0.1:8099 aus dem Repo neu gestartet (PID 2612, verborgen).
+Serverausgaben unter `%TEMP%/paket-d-server-20261003/`.
+
+**Entscheidung:** Betreiber beauftragt Server-Neustart und anschließend
+„D weiter“. Deshalb vorhandenen Paket-D-Stand fortsetzen, nicht verwerfen
+oder erneut pullen. Kombinierter Neustartbefehl von Werkzeugrichtlinie
+abgelehnt; eng begrenztes Stoppen des zuvor identifizierten PID und eigener
+Serverstart getrennt erfolgreich. Unabhängige HTTP-Probe: 200, 19.539 Bytes,
+`app.js?v=3.18.13` vorhanden. Syntax und Standprüfung grün. D1-Abnahme:
+32 Zustände (390/320/820/1440, leer/voll, hell/dunkel, bewegt/ruhig), je
+Knopf/Escape/Hintergrund/Bestätigungsdialog grün. Regression läuft.
+
+**Offen:** D12–D15; Z1 ausgelassen,
+G1 offen, keine Veröffentlichung. Abschluss erst nach § 5.
+
+**D1-Abnahme nachgereicht:** Dialogtimer, Kartenblatt (Handy/klein/iPad,
+Fehler, Duplikat, Entwurf, Bearbeiten/Löschen), Kontodialog, Sprung auf vier
+Geräten (alle 0 px), Kontrast (0 Funde) und a11y (0 Funde) vollständig gelesen,
+grün. Ausgaben `%TEMP%/paket-d-einzel-20261003/D1-*.log`.
+D1 und doppelte C16 lokal abgenommen; Paketabschluss weiterhin offen.
+
+**Prüfaufbau-Korrektur:** D3 zuerst nur Selektor gefunden (weitere Regel
+setzt dessen Rahmenfarbe). Konkrete animation-Deklaration jetzt gefordert;
+Gegenprobe 50d15ce rot: CSSOM-Ring known fehlt. Neue Strukturprüfung
+erkennt außerdem beide verwaisten Klammer-/Keyframezeilen. Noch kein
+D3-Produktfix vor D2-Abschluss. Vorab abgelehnter Status-Patch mit
+rückwärts angeordneten Hunks korrigiert. LEHREN §15 ergänzt; bestehende
+Regeln §5.3 und §3.10/3.11 gelten, keine neue Ausnahme.
+
+**D2:** `app.js` Rand-Scrollen nur nach Mausbewegung in 70-px-Randzone
+starten; außerhalb/pointerleave cancelAnimationFrame. Feste Gegenprobe
+50d15ce: 61 Rückrufe/s im Leerlauf; Fix Handy/Desktop 0. Desktop unten
+scrollt, Mitte und pointerleave stoppen. Muster: Zieh-Autoscroll bleibt
+separat, bereits an aktive Geste gebunden. Sprung/Kontrast/a11y grün,
+vollständige Ausgaben `%TEMP%/paket-d-einzel-20261003/D2-*.log` gelesen.
+
+**D3:** Zwei verwaiste Keyframe-/Klammerzeilen entfernt; alle drei
+Bewertungsanimationen im CSSOM vorhanden. Strukturprüfung in Standprüfung
+aufgenommen. Fester Altstand rot, 24 Zustände grün; g-60-Foto zeigt grünen
+Ring. Bild/Sprung/Kontrast/a11y und Runde 13/13 grün, sämtliche Ausgaben
+gelesen. Runden-Quellhash `534794d936acb8e8e09a591f5cb174960e80bb78ce43ba3d83d09bd888c54b8d`.
+
+**D4:** Haken immer im Markup, inaktive unsichtbar; Pop nur beim neuen
+Bildschirm, nicht beim Umschalten desselben. Feste Gegenprobe 50d15ce rot
+„Chip springt“, 24 Zustände grün (±1 px und höchstens ein Pop).
+Mustersuche: anderer bedingter Haken im Einstellungs-Segment gehört nicht
+zu Chips; kein gleicher Breitenfehler geändert. Üben/Sprung/Kontrast/a11y
+grün; vollständige Ausgaben D4-*.log gelesen. Auswahl zählt unverändert
+40 → 9 Karten, Übung endet und lässt sich wiederholen.
+
+**D5:** `springeNachOben` bei den drei Modusstarts nur scrollen, kein
+Aufleuchten der Bühne; Modus-Animation gewinnt gegen Richtungsselektor.
+Fester Altstand rot „Bühne leuchtet auf“. 24 Zustände, jeweils Runde,
+Üben und Durchsicht (leere Konten ohne Startknopf), grün. Mustersuche:
+genau diese drei Modusstarts; `springeZu` behält gezielte Rückmeldung.
+Kontrast/a11y und Runde 13/13 grün, vollständige Ausgaben gelesen.
+Runden-Quellhash `ef48ad556ebc3851360ad44fc6cf10fa27d4a649bc6d4e3425b2898fb704389d`.
+
+**D6:** Nur 1300-ms-Verzögerung am Rundenende entfernt; Eintritt bleibt.
+Altstand Deckkraft 0 nach 400 ms, Fix in 24 Zuständen ≥0,9. Mustersuche:
+andere 1300-ms-Verzögerung am Lernstart gehört zu D7, nicht vorgezogen.
+Flüssig-Ende erreicht Abschluss, Konsole sauber (CPU-4-Messhinweis:
+55-ms-Blockade/50-ms-Bild, keine Tempo-Vergleichsbehauptung).
+Kontrast/a11y und Runde 13/13 grün; vollständige Ausgaben gelesen.
+Runden-Quellhash `24e25a13d087c3ad2bdd31cd4739ea99c50828f92f795baa77a0292da1d06b0e`.
+
+**D7:** Z5 umgesetzt, Besuchsmerker nur in `ui` im Arbeitsspeicher, kein
+Speicher-/Cloud-Feld. Choreografie nur erster Besuch von Lernen/Fortschritt;
+bei Wiederbesuch nur Seitenwechsel. Ring/Balken/Spark ≤600 ms, Lichtstreif
+kürzer, Wochenpunkte/Blöcke ruhig, Flamme einmal (auch Rundenende).
+Altstand doppelte Feier rot; 24 Zustände erster Besuch ≤1200 ms,
+Wiederbesuch ≤2 Bewegungen/300 ms, grün. Mustersuche: Einstieg-Flamme
+bleibt eigenständiger Paket-B-Ablauf; Kalender bereits durch C21 kürzer,
+nicht zurückgebaut. Lernen-Start/Fortschritt alle Zustände CLS/Kontrast 0,
+kein Querscrollen; Kontrast/a11y und Runde 13/13 grün, Ausgaben gelesen.
+Runden-Quellhash `7c6afb9301d5758d7020897c3bcfd1bcc2983719953c4a20464400d24b52de33`.
+Gesamtprüfer berücksichtigt neue große D-Matrix mit 30 Minuten
+Prozesszeitlimit und Hash der CSS-Strukturhilfe; Messgrenzen unverändert.
+
+**D8:** Vier ungeschützte smooth-Scrollwege verwenden `scrollArt()`;
+vorhandene Sprung-Hilfe bleibt bereits geschützt. Altstand beim aktiven
+Reitertipp 900 statt 0 px, Fix in 24 Zuständen grün; normale Bewegung
+bleibt sanft. a11y prüft denselben echten Tipp im ersten Bild (900→0).
+Sprung/Kontrast/a11y und Runde 13/13 grün, alle Ausgaben gelesen.
+Runden-Quellhash `31b30435b5097dc53143c99da4209b3d63381f4c9f096a75bd5127dd9571b05c`.
+
+**D9:** Eigene weite Wisch-Keyframes mit Deckkraft 1; mindestens 200 px
+und 60–100 % Fensterbreite, auch beim weiten Zug. Leistentipp bleibt 26 px.
+Vorher 26 px/0,6 (50d15ce), nachher 24 Zustände mit sechs echten
+Touchwechseln plus Rand/zu kurz grün. Alte Seite gleichzeitig als eingefrorene,
+inert/aria-hidden Bildkopie ohne IDs/Handlungen; nach 200 ms oder jedem
+Neuzeichnen entfernt, kein privater Rest außerhalb von #app.
+Gegenlesen entfernte eine sofortige Layout-Messung nach Neuaufbau und
+ergänzte den weiten Zug (180 px); endgültige Matrix erneut vollständig grün.
+Mustersuche: Karten-/Blattwischen sind getrennte Gesten; deren Wege nicht
+in D9 geändert. Scrollen CPU4: 0 Bilder >34 ms, Maxima 18–19 ms, keine
+Blockaden (Messhinweis, keine A/B-Tempo-Behauptung). Leiste/Sprung/Kontrast/
+a11y vollständig gelesen und grün; `D9-final-*.log` im Einzeltestordner.
+Gerätegefühl am iPhone weiterhin nicht bestätigt; G1 bleibt offen.
+
+**D10:** Befund bereits durch B5 behoben, deshalb trifft nicht zu; keine
+zweite Änderung. Abbruch-Listener touchstart/wheel/keydown sowie beide
+RAF-Abbauwege nachgelesen. B5 (auch echtes Mausrad, ununterbrochene Fahrt,
+Rückweg) und sämtliche vier `t_einstieg*.js` grün, Ausgaben vollständig
+gelesen. D9-Sprung/Kontrast/a11y gelten am unveränderten Produktquellstand.
+Beschreibende Hürdenwahl-Messung 39 px auf Handys schon im festen Vorstand:
+CRLF-Hash von 50d15ce `dc1761b67cbaa64ba48440d114490d8f9e9ebf3a7446b506575dec9cf4b357f2`,
+vollständiges altes Einstieg-Log gelesen; kein neuer D-Rückschritt.
+Layouttest zeigt scrollbare lange Seiten, kein verdeckter Fuß, Kontrast/
+Querscrollen 0; nicht als überall unveränderliche Knopfhöhe ausgegeben.
+
+**D11:** Toast 160 ms linear ausblenden, reduziert sofort entfernen.
+Feste Gegenprobe ohne Austrittsbilder rot. Erster Fix scheiterte an
+haltender Eintrittsanimation: Diagnoselauf desselben unveränderten Fixes
+zeigt 1→0 ohne Zwischenwert. Zweiter Fix beendet die Animation mit eigenem
+Stil-Durchlauf am längst bestehenden Toast (kein neues innerHTML).
+24 Zustände ≥5 Austrittsbilder grün; ältere erfasste Hülle entfernt keine
+neue Meldung. Mustersuche: Blatt/Dialog haben eigenen Austritt D1,
+Bestätigung im Kartenkopf bleibt eigene Rückmeldung, nicht der Toast.
+Dialogtimer/Kartenblatt/Sprung/Kontrast/a11y vollständig gelesen und grün;
+Ausgaben `D11-*.log`. Kommentare und LEHREN §15 nachgezogen.
+
+**D12-Versuch (anschließend zurückgenommen, siehe oberster Eintrag):** Feste Gegenprobe 50d15ce rot am toten Lernbalken-
+Übergang. Vorher 460 Fotos in 36 Zuständen (Haupt-/Unterseiten, Blatt,
+Runde/Antwort/Ende, sämtliche Einstiegsschritte und Kontoformulare),
+`%TEMP%/paket-d-fotos/d12-20261003-stand1/vor/`; Lernen-Foto auch angesehen.
+Aktuellen app.js-/styles.css-Hash vor Übernahme gegen Fotobasis geprüft;
+gesicherter Vorstand `%TEMP%/paket-d-d12-vor-20261003/`.
+Benannte tote Übergänge/Unterzeilen/bootIn entfernt, Boot und Stapel unter
+Erhalt sämtlicher wirksamer Geometrie zusammengelegt. iOS-Standalone-Höhe
+erhalten. Sichtbare erste 14 Zeilen im rAF markieren (alle Maße lesen,
+dann Klassen schreiben), unsichtbare Platzhalter ohne eigene Animation.
+24 Zustände grün; Text-Probelauf-CSS bytegleich zum gesicherten Vorstand.
+Pixelvergleich und Pflichtregression einschließlich Runde noch offen.
+
+**Nächster Schritt:** D12-Abnahme abschließen. D1–D9 und D11 lokal abgenommen,
+D10 bereits durch B5 erledigt;
+Paketabschluss nach §5 weiterhin offen.
+
+### 2026-10-03 — Paket D bei D1 angehalten: lokaler Prüfstand antwortet nicht vollständig
+
+**Geändert:** `app.js:14449` lokaler D1-Entwurf: haltende Eintrittsanimationen
+vor dem Austritt abschalten, beschleunigende Kurve, mittige Dialoge mit
+Maßstab/Deckkraft, Entfernen nach 200 statt 190 ms. Neue Gegenprobe und
+Abnahme `plan/werkzeuge/pruefstand/t_paket_d.js` gegen festen Commit
+`50d15ce7b5ab59a2fd016d6faddb3b7c1417d425` (3.18.13).
+`AUFGABEN.md` D1 zurück; keine weitere D-Aufgabe geändert. Entwurf und Test
+bleiben uncommittet erhalten; keine Version hochgezählt.
+
+**Entscheidung:** AGENTS, CODEX-START, STAND, CLAUDE, LEHREN, Zyklus-Auftrag,
+Aufgaben, Entscheidungen und BEW-Befunde gelesen. Arbeitsbaum vor Beginn
+sauber, main; `git pull --ff-only origin main` bereits aktuell.
+Syntax app.js/sw.js und `pruefe_stand.mjs` vor Änderung grün.
+Chrome vorhanden; Batterie meldet 2 bei 95 %. Port 8099 zunächst erreichbar.
+D1-Gegenprobe am festen Vorstand endet rot mit
+„D1 390/knopf: kein berechneter Austritt“ (echter Befund, berechneter
+Transform). Danach scheitert die neue Abnahme bereits bei `page.goto`
+mit `net::ERR_EMPTY_RESPONSE`. Unabhängiges `Invoke-WebRequest` bestätigt
+„The response ended prematurely. (ResponseEnded)“. Listener ist der
+vorhandene Python-http.server-Prozess 19776 auf 127.0.0.1:8099.
+Damit ist keine Abnahme des Fixes erfolgt. Gemäß CODEX-START § 6 hält das
+ganze Paket an, wenn der Prüfstand nicht startet. Keine Testgrenze geändert.
+
+**Offen:** D1-Fix vollständig abnehmen (32 Zustände, je vier Schließwege),
+berührte Tests sowie Sprung/Kontrast/a11y; danach D2–D15 in Tabellenfolge,
+Gegenprüfung, LEHREN § 14, Version, Gesamtlauf, Runde/Affe, Commit und Push.
+C16 erst nach erfolgreicher D1-Abnahme erledigt setzen. Z1 ausgelassen,
+G1 offen, Text-Probelauf unverändert. Kein Commit, Push oder Deploy.
+
+**Nächster Schritt:** Lokalen Prüfstand-Server auf Port 8099 wieder
+funktionsfähig starten; dann ausdrücklich Paket D fortsetzen, vorhandenen
+Entwurf erhalten und D1 zuerst grün abnehmen.
+
 ### 2026-10-03 — Vorhandenen Paket-C-Stand abgeschlossen, 3.18.13
 
 **Geändert:** Den gesamten vorhandenen Stand erhalten und als 3.18.13
