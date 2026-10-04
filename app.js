@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.14";
+const APP_VERSION = "3.18.15";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -979,7 +979,8 @@ function verlaufZaehle(art) {
   /* Der ERSTE Eintrag eines Tages entscheidet, ob der Tag fuer die Serie
      zaehlt - der geht sofort raus. Alles Weitere aendert nur noch Balken und
      wird wie bisher gebuendelt geschrieben. */
-  if (ersterHeute) persistVerlauf(); else verlaufSpeichernBald();
+  if (ersterHeute) { checkStreakOnSessionComplete(); persistVerlauf(); }
+  else verlaufSpeichernBald();
 }
 /* 3.17.34 (REST-1): Gegenstueck zu verlaufZaehle, aber je Bereich und nur
    im Arbeitsspeicher (ui.heuteJeBereich) - siehe Kommentar dort und bei
@@ -1085,14 +1086,15 @@ function verlaufAufraeumen(roh) {
   for (const k of alt) { args.push(new fb.FieldPath("verlauf", k), fb.deleteField()); }
   fb.updateDoc(userDocRef, ...args).catch(() => {});
 }
-/* Das Tagesprotokoll loeschen. Nur die Anzeige - Karten, Stufen und
+/* Das Tagesprotokoll und damit die aktuelle Serie loeschen. Karten, Stufen und
    Faelligkeiten bleiben unangetastet. Steht in der App, damit niemand dafuer
    in die Firebase-Konsole muss: Von dort aus verliert man gegen ein
    laufendes Geraet, das seinen Speicherstand zurueckschreibt. */
 async function verlaufZuruecksetzen() {
   const kontoRef = userDocRef;
   const tage = Object.keys(verlauf).length;
-  const ok = await dlgConfirm("Das Tagesprotokoll von " + mz(tage, "Tag", "Tagen") + " wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an.\n\nDeine Karten und ihr Lernstand bleiben unberührt.",
+  const serie = serieAktuell();
+  const ok = await dlgConfirm("Das Tagesprotokoll von " + mz(tage, "Tag", "Tagen") + " wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an. Deine Serie von " + mz(serie, "Tag", "Tagen") + " fängt ebenfalls bei null an.\n\nDeine Karten und ihr Lernstand bleiben unberührt.",
     { title: "Aufzeichnung zurücksetzen?", okLabel: "Löschen", danger: true });
   if (!ok || userDocRef !== kontoRef || kontoWirdGeloescht) return;
   if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
@@ -1176,7 +1178,8 @@ function normStreak(s) {
 const ARAB_STUFEN = [
   { id: "klein",  label: "Klein",  faktor: 0.85 },
   { id: "normal", label: "Normal", faktor: 1 },
-  { id: "gross",  label: "Groß",   faktor: 1.3 }
+  { id: "gross",  label: "Groß",   faktor: 1.3 },
+  { id: "sehrgross", label: "Sehr groß", faktor: 1.6 }
 ];
 function arabFaktor() {
   const st = ARAB_STUFEN.find(x => x.id === settings.arabGroesse);
@@ -1558,10 +1561,11 @@ function themaAnwenden() {
      Skript im Kopf der Seite, damit beim Start nichts umspringt. */
   try { localStorage.setItem("adrabic-thema", settings.thema); } catch (e) {}
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", t === "hell" ? "#f2ece0" : "#0e0e12");
+  if (meta) meta.setAttribute("content", t === "hell" ? "#f2ece0" : "#111010");
 }
 function setThema(id) {
   if (!THEMEN.some(x => x.id === id)) return;
+  if (id === settings.thema) return;
   settings.thema = id;
   themaAnwenden();
   persistSettings("thema");
@@ -1656,7 +1660,7 @@ let ui = {
      sondern eine neue Seite. Beide Bildschirme sind jetzt eine Liste von
      Zeilen, und was frueher darunter stand, steht auf der Seite dahinter.
      null = die Uebersicht selbst. */
-  seite: null,               // "sichern" | "einspielen" | "verlauf" | "lektionen" | "leeches" | "vorschau"
+  seite: null,               // Unterseite, z. B. "daten", "lektionen", "leeches", "vorschau"
   /* Die drei kleinen Entscheidungen (Helligkeit, Schriftgroesse, Karten pro
      Sitzung) brauchen keine eigene Seite - sie haben zwei bis vier Antworten.
      Die kommen als Blatt von unten, mit der Erklaerung dort, wo entschieden
@@ -1741,6 +1745,7 @@ let ui = {
      Ein Reiter ist ein Ort, an den man oft geht; hierher geht man selten. */
   einstellungen: false,
   drillOpen: false,           // Auswahl für Übungsmodus sichtbar?
+  drillRueckkehrTab: null,    // E18: Herkunft der Auswahl, getrennt vom Stufenbereich drillVon
   drillSource: "stufen",      // "stufen" oder "sets" (siehe drillSetIds)
   drillSetIds: new Set(),     // 2.21.0: im "sets"-Modus die angehakten Speicherkarten (mehrere möglich)
   /* 10 (17.09.2026): der Stufenbereich als Chip-Reihe statt zweier
@@ -1948,6 +1953,7 @@ let fb = {}; // Firestore-/Auth-Funktionen nach dem Laden
    wieder hin, weil ein fehlendes Dokument fuer sie sonst "frisches Konto,
    erster Start" bedeutet. */
 let kontoWirdGeloescht = false;
+let kontoLoeschMeldung = null;
 
 /* Rohstaende der beiden Sammlungen. Die Anzeige braucht beide, deshalb wird
    erst zusammengesetzt, wenn von jeder mindestens ein Stand da ist - sonst
@@ -2095,7 +2101,10 @@ function datenZusammenbauen() {
   const brauchteRender = !!syncError || ladeLangsam || !!ui.umzug;
   bereiche = bereicheAusSammlungen(rohBereiche, rohKarten);
   /* A3: nur zuruecksetzen, wenn der offene Bereich wirklich weg ist. */
-  if (!bereiche.some(b => b.id === ui.bereichId)) ui.bereichId = bereiche[0].id;
+  if (!bereiche.some(b => b.id === ui.bereichId)) {
+    ui.bereichId = bereiche[0].id;
+    bereichGeraetMerken(ui.bereichId);
+  }
   syncError = null;
   if (ladeTimer) { clearTimeout(ladeTimer); ladeTimer = null; }
   ladeLangsam = false;
@@ -2270,6 +2279,9 @@ async function initFirebase() {
   }
 
   fb.onAuthStateChanged(auth, user => {
+    const loeschErfolg = !user && kontoLoeschMeldung &&
+      currentUser === kontoLoeschMeldung.user && verlaufGeneration === kontoLoeschMeldung.generation;
+    kontoLoeschMeldung = null;
     /* 3.17.38 (G-050, KONTO-11): vor den Resets unten sichern - beide werden
        gleich unbedingt geleert (ui.registrierungZeitlimit hier, ui.authEingabe
        weiter unten). Siehe die Verwendung im if(user)-Zweig. */
@@ -2298,6 +2310,7 @@ async function initFirebase() {
       ui.authInfo = null;
     }
     currentUser = user;
+    ui.bereichId = bereichGeraetLesen();
     if (eigeneRegistrierung || eigeneAdressAbmeldung) {
       auftrag.user = user;
       auftrag.ref = null;
@@ -2366,6 +2379,7 @@ async function initFirebase() {
     ui.bereichSheet = false;
     ui.bereichMehr = false;
     ui.drillOpen = false;
+    ui.drillRueckkehrTab = null;
     ui.drillSetIds = new Set();
     ui.drillVon = null;
     ui.drillBis = null;
@@ -2540,6 +2554,7 @@ async function initFirebase() {
       }, snapFehler);
     }
     render();
+    if (loeschErfolg) zeigeToast("Dein Konto ist gelöscht.");
   });
 }
 
@@ -3472,6 +3487,9 @@ async function pruefeBestaetigung() {
   }
   ui.authBusy = false;
   render();
+  requestAnimationFrame(() => {
+    if (giltNoch()) document.querySelector('.auth-meldung')?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+  });
 }
 async function doResendVerification() {
   if (!currentUser) return;
@@ -3572,6 +3590,55 @@ async function doReset() {
   render();
   /* 3.17.37 (G-087): siehe doRegister(). */
   if (ui.authInfo) ansagen(ui.authInfo);
+}
+/* E15/Z9: vorhandenes Cloud-Feld und Auth-Profil. Jeder Folgeschritt bleibt
+   an das ursprüngliche Konto gebunden; ein teilweise gespeicherter Name
+   wird ausdrücklich genannt, statt einen vollständigen Erfolg zu behaupten. */
+async function kontoNameAendern() {
+  if (!currentUser || !userDocRef || kontoWirdGeloescht || ui.authBusy) return;
+  const auftrag = authAuftragStarten("name");
+  if (!navigator.onLine) { await dlgAlert("Keine Verbindung. Verbinde dich mit dem Internet und versuch es erneut.", "Name ändern"); return; }
+  const eingabe = await dlgPrompt("Wie soll dein Name angezeigt werden?", displayName, {title:"Name ändern",okLabel:"Speichern"});
+  if (!authAuftragGilt(auftrag) || eingabe === null) return;
+  const name = eingabe.trim();
+  if (!name || name.length > 200) { await dlgAlert("Gib einen Namen mit 1 bis 200 Zeichen ein.", "Name ändern"); return; }
+  if (name === displayName && auftrag.user.displayName === name) return;
+  ui.authBusy = true; render();
+  let gespeichert = false;
+  try {
+    await mitZeitlimit(fb.updateDoc(auftrag.ref, {name}));
+    if (!authAuftragGilt(auftrag)) return;
+    gespeichert = true;
+    displayName = name;
+    await mitZeitlimit(fb.updateProfile(auftrag.user, {displayName:name}));
+    if (!authAuftragGilt(auftrag)) return;
+    ui.authBusy = false; render(); zeigeToast("Dein Name ist gespeichert.");
+  } catch (e) {
+    if (!authAuftragGilt(auftrag)) return;
+    ui.authBusy = false; render();
+    await dlgAlert((gespeichert ? "Dein Name ist im Konto gespeichert. Das Anmeldeprofil konnte noch nicht aktualisiert werden. " : "Für deinen Namen fehlt noch die Speicherbestätigung. ") + authErrorText(e), "Name ändern");
+  }
+}
+/* E30/Z9: vorhandene Firebase-Mail, ausschließlich für Passwort-Konten. */
+async function kontoPasswortAendern() {
+  if (!currentUser || !userDocRef || kontoWirdGeloescht || ui.authBusy ||
+      !(currentUser.providerData || []).some(x => x.providerId === "password")) return;
+  const auftrag = authAuftragStarten("passwort");
+  const email = auftrag.user.email;
+  if (!navigator.onLine) { await dlgAlert("Keine Verbindung. Verbinde dich mit dem Internet und versuch es erneut.", "Passwort ändern"); return; }
+  const ok = await dlgConfirm("Wir schicken dir an " + email + " eine E-Mail. Über den Link kannst du ein neues Passwort festlegen.", {title:"Passwort ändern",okLabel:"E-Mail anfordern"});
+  if (!ok || !authAuftragGilt(auftrag)) return;
+  ui.authBusy = true; ui.authBusyWas = "passwort"; render();
+  try {
+    await mitZeitlimit(fb.sendPasswordResetEmail(auth, email));
+    if (!authAuftragGilt(auftrag)) return;
+    ui.authBusy = false; ui.authBusyWas = null; render();
+    await dlgAlert("Wenn es zu " + email + " ein Passwort-Konto gibt, ist eine E-Mail unterwegs. Öffne den Link, um dein Passwort zu ändern. Schau auch im Spam nach.", "E-Mail angefordert");
+  } catch (e) {
+    if (!authAuftragGilt(auftrag)) return;
+    ui.authBusy = false; ui.authBusyWas = null; render();
+    await dlgAlert(authErrorText(e), "Passwort ändern");
+  }
 }
 /* 3.12.0: Abmelden fragt nach. Betreiber am 24.09.2026: "wen man sich
    abmelden will oder loeschen und sowas risko bitte nicht so einfach zu
@@ -3753,7 +3820,7 @@ async function kontoNeuAnmelden(konto = kontoLoeschKontext()) {
       "", { title: "Passwort bestätigen", okLabel: "Weiter", type: "password" });
     if (!pass) return false;
     konto.pruefen();
-    await fb.reauthenticateWithCredential(konto.user, fb.EmailAuthProvider.credential(konto.user.email, pass));
+    await mitZeitlimit(fb.reauthenticateWithCredential(konto.user, fb.EmailAuthProvider.credential(konto.user.email, pass)));
     konto.pruefen();
     return true;
   }
@@ -3776,6 +3843,7 @@ async function kontoNeuAnmelden(konto = kontoLoeschKontext()) {
 }
 async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
   konto.pruefen();
+  const generation = verlaufGeneration;
   try {
     await fb.deleteUser(konto.user);
   } catch (e) {
@@ -3784,6 +3852,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
     if (!(await kontoNeuAnmelden(konto))) throw e;
     konto.pruefen();
     await fb.deleteUser(konto.user);
+  }
+  if (!konto.abgebrochen) {
+    try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
+  }
+  if (!konto.abgebrochen && auth.currentUser === null) {
+    if (currentUser === konto.user && verlaufGeneration === generation)
+      kontoLoeschMeldung = { user: konto.user, generation: generation };
+    else if (currentUser === null && verlaufGeneration === generation + 1)
+      zeigeToast("Dein Konto ist gelöscht.");
   }
 }
 /* 3.12.0: Das Loeschen des Kontos hat eine eigene Seite (Einstellungen ->
@@ -3823,11 +3900,16 @@ async function kontoLoeschenAusfuehren() {
      ersten unumkehrbaren Schritt steht - die Neu-Anmeldung faellt deshalb
      jetzt nicht mehr weg, nur weil die Uhr "frisch genug" sagt.
      Abbruch oder falsches Passwort: nichts passiert. */
+  ui.kontoLoeschenBusy = true; render();
   try {
-    if (!(await kontoNeuAnmelden(konto))) return;
+    if (!(await kontoNeuAnmelden(konto))) {
+      if (konto.gilt()) { ui.kontoLoeschenBusy = false; render(); }
+      return;
+    }
     konto.pruefen();
   } catch (e) {
     if (!konto.gilt()) return;
+    ui.kontoLoeschenBusy = false; render();
     await dlgAlert(kontoLoeschenFehlerText(e), "Nicht gelöscht");
     return;
   }
@@ -3873,11 +3955,23 @@ async function kontoLoeschenPerTastatur() {
    im falschen, ohne dass jemand etwas merkte. Eine ID zeigt entweder auf
    denselben Bereich wie vorher oder auf gar keinen; im zweiten Fall faellt
    die App sichtbar auf den ersten Bereich zurueck. */
+/* E31/Z9: pro Konto ein Gerätemerkzeichen; der Wert ist nur eine Bereichs-ID.
+   Nicht in der Cloud. Ungültige/gelöschte IDs fallen auf den ersten Bereich. */
+function bereichGeraetKey() { return currentUser ? "adrabic-bereich-" + currentUser.uid : null; }
+function bereichGeraetLesen() {
+  const key = bereichGeraetKey();
+  try { return key ? localStorage.getItem(key) : null; } catch (e) { return null; }
+}
+function bereichGeraetMerken(id) {
+  const key = bereichGeraetKey();
+  try { if (key) localStorage.setItem(key, id); } catch (e) {}
+}
 function currentBereich() {
   if (bereiche === null || bereiche.length === 0) return null;
   const b = bereiche.find(x => x.id === ui.bereichId);
   if (b) return b;
   ui.bereichId = bereiche[0].id;
+  bereichGeraetMerken(ui.bereichId);
   return bereiche[0];
 }
 function currentCards() { return currentBereich().karten; }
@@ -4317,6 +4411,7 @@ function resetRueckfaelle(bereichId, cardId) {
 function editCardInBereich(bereichId, cardId) {
   if (!bereiche.some(x => x.id === bereichId)) return;
   ui.bereichId = bereichId;
+  bereichGeraetMerken(bereichId);
   if (ui.tab === "fortschritt" && (!ui.seite || ui.seite === "leeches")) {
     editCard(cardId);
     return;
@@ -4377,7 +4472,7 @@ function dateiSpeichern(daten, dateiname) {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 function exportBackup(onlyCurrent) {
   const data = {
@@ -4386,7 +4481,7 @@ function exportBackup(onlyCurrent) {
     bereiche: onlyCurrent ? [currentBereich()] : bereiche
   };
   const nameSlug = onlyCurrent ? "-" + slugName(currentBereich().name) : "";
-  dateiSpeichern(data, "lernkarten-backup" + nameSlug + "-" + todayStr() + ".json");
+  dateiSpeichern(data, "adrabic-backup" + nameSlug + "-" + todayStr() + ".json");
   if (!onlyCurrent) {
     /* Nur das Voll-Backup zaehlt - ein Export eines einzelnen Bereichs
        sichert eben nicht alles. */
@@ -5188,6 +5283,7 @@ async function addBereich() {
 function selectBereich(bereichId) {
   if (!bereiche.some(b => b.id === bereichId)) return;
   ui.bereichId = bereichId;
+  bereichGeraetMerken(bereichId);
   lehrerStandAktualisieren(bereiche.find(b => b.id === bereichId));
   ui.bereichSheet = false;     // 3.0.0: Das Sheet hat seine Aufgabe erfuellt.
   /* Sonst bleibt der Einstellungs-Bildschirm stehen: Der Bereich wechselt im
@@ -5645,8 +5741,9 @@ function availableStufen() {
   const set = new Set(uebbareKarten().map(c => c.stufe));
   return [...set].sort((a, b) => a - b);
 }
-function openDrillPicker(source) {
+function openDrillPicker(source, rueckkehrTab = null) {
   ui.drillOpen = true;
+  ui.drillRueckkehrTab = rueckkehrTab;
   ui.selectMode = false;
   /* 2.21.0: source ist die ID EINER Speicherkarte (Schnellzugriff "🔁 Üben"
      direkt an der Speicherkarte) - die kommt dann im "sets"-Modus schon
@@ -5780,6 +5877,7 @@ function startDrillWithCards(cards, label, handwriting) {
     drillLabel: label
   };
   ui.drillOpen = false;
+  ui.drillRueckkehrTab = null;
   /* 3.2.0: Ein Reiterwechsel verlaesst auch eine offene Unterseite - sonst
      traegt die Kopfzeile den Titel der Seite, aus der man gerade kommt. */
   ui.seite = null;
@@ -6448,6 +6546,7 @@ function undoLastGrade() {
     persistVerlauf();
   }
   if (s.zaehler && s.letzteArt && s.zaehler[s.letzteArt] > 0) s.zaehler[s.letzteArt]--;
+  s.zurueckVon = s.letzteArt;
   s.letzteArt = null;
   s.zug = (s.zug || 0) + 1;
   s.lastAction = null;
@@ -6478,6 +6577,9 @@ document.addEventListener("keydown", e => {
      Tastatur allein - vorher bewertete "3" die Karte dahinter. */
   if (document.querySelector(".dlg") || document.documentElement.classList.contains("blatt-offen")) return;
   const s = ui.session;
+  if (e.ctrlKey || e.altKey || e.metaKey) return;
+  if (e.key === "Escape") { e.preventDefault(); endSession(); return; }
+  if (e.key === "Backspace") { e.preventDefault(); undoLastGrade(); return; }
   if (s.queue.length === 0) return;
   /* 3.17.5: Steht der Fokus auf einem Knopf oder Link (per Tab erreicht),
      loesen Enter/Leertaste DEN aus - wie ueberall im Web. Vorher fing dieser
@@ -6486,8 +6588,8 @@ document.addEventListener("keydown", e => {
   if ((e.key === " " || e.key === "Enter") && (tag === "BUTTON" || tag === "A" || tag === "SELECT")) return;
   if (e.key === " " || e.key === "Enter") {
     e.preventDefault();
-    /* 2.15.0: Im Uebungsmodus traegt die Leertaste durch: aufdecken, dann
-       weiter. Nur eine Bewegung, kein Zielen auf Knoepfe. */
+    /* Lernen und Üben: Leertaste/Enter decken auf. Die Bewertung erfolgt
+       mit 1/2/3 oder den Pfeiltasten; Backspace holt die Karte zurück. */
     if (!s.revealed) revealAnswer();
     return;
   }
@@ -7753,6 +7855,7 @@ function renderEinstieg() {
   }
 
   html += '</div></div>';
+  html += renderToast();
   app.innerHTML = html;
   app.style.setProperty("--arab-scale", String(arabFaktor()));
   e.balkenVorher = e.schritt / EINSTIEG_LETZTER;
@@ -8383,9 +8486,9 @@ function renderAuth() {
      eigenen, alltagssprachlichen Bildschirm in der App selbst) - dessen
      Inhalt steht jetzt als "Kurz gesagt" oben in derselben Seite. */
   html += '<div class="rechtsfuss" style="margin-top:var(--space-5)">';
-  html += '<a href="./datenschutzerklaerung.html">Datenschutz</a>';
+  html += '<a href="./datenschutzerklaerung.html" target="_blank" rel="noopener">Datenschutz</a>';
   html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
-  html += '<a href="./impressum.html">Impressum</a>';
+  html += '<a href="./impressum.html" target="_blank" rel="noopener">Impressum</a>';
   html += '</div>';
   if (ausEinstieg) html += '</div>';
   html += '</div>';
@@ -8956,7 +9059,7 @@ function renderMain() {
           titel: "Einstellungen",
           zurueck: "einstellungen-zu"
         });
-    html += '<div class="view' + viewZusatz + '">' + kopf + inhalt + '</div>';
+    html += '<div class="view view--einstellungen' + viewZusatz + '">' + kopf + inhalt + '</div>';
     html += navLeiste();
   } else if (ui.seite) {
     /* Unterseite eines Reiters (gerade nur Fortschritt). Die Navigation
@@ -9540,20 +9643,15 @@ function merkSetOeffnen() {
 /* Die Titel der Unterseiten. Eine Stelle, damit Kopfzeile und Zeile nicht
    auseinanderlaufen. */
 const SEITEN_TITEL = {
-  /* 3.13.0: Sichern, Einspielen und Aufzeichnung auf EINER Seite "Daten" -
-     siehe renderEinstellungen. Die alten drei Namen bleiben als Titel
-     stehen, falls ein alter Verweis sie noch oeffnet (sie zeigen dieselbe
-     Seite). */
+  /* Sichern, Einspielen und Aufzeichnung stehen auf einer Seite "Daten".
+     Die früheren Aliasnamen haben keine Aufrufer mehr. */
   daten: "Sichern & einspielen",
-  sichern: "Sichern & einspielen",
   /* 3.11.0: eigene Seite. Bis dahin lag "Code einloesen" unten auf
      "Einspielen" und "Per Code teilen" unten auf "Sichern" - zwei Haelften
      derselben Sache, versteckt hinter zwei Begriffen, die von Backups
      sprechen. Siehe renderEinstellungen. */
   kartensaetze: "Kartensatz per Code",
   "konto-loeschen": "Konto löschen",
-  einspielen: "Sichern & einspielen",
-  verlauf: "Sichern & einspielen",
   lektionen: "Lektionen",
   leeches: "Karten, die nicht klappen",
   vorschau: "Die n\u00e4chsten 7 Tage",
@@ -9563,7 +9661,7 @@ const SEITEN_TITEL = {
 /* Eine Zeile der Uebersicht: Symbol, Beschriftung, aktueller Stand, Pfeil. */
 function einstZeile(cfg) {
   return '<button class="liste-zeile" data-action="' + cfg.action + '"' +
-    (cfg.id ? ' data-id="' + esc(cfg.id) + '"' : '') + '>' +
+    (cfg.id ? ' data-id="' + esc(cfg.id) + '"' : '') + (cfg.disabled ? ' disabled' : '') + '>' +
     ikon(cfg.icon, "i-sm") +
     '<span class="liste-zeile__text">' + esc(cfg.text) + '</span>' +
     (cfg.wert ? '<span class="liste-zeile__wert">' + esc(cfg.wert) + '</span>' : '') +
@@ -9614,24 +9712,11 @@ function renderEinstellungen() {
      du."
 
      Hick-Hyman: die Zeit bis zur Wahl waechst mit der Zahl der Moeglich-
-     keiten (log2(n+1)). Bis 3.12 standen hier 6 Abschnitte mit 11 Zeilen
-     plus einer Konto-ID, die jeder sah (BETREIBER_UIDS ist leer, siehe oben).
-     Jetzt 4 Abschnitte mit 8 Zeilen:
-
-       Lernen   Karten pro Sitzung, Arabische Schrift, Helligkeit
-                (Darstellung war ein eigener Abschnitt fuer zwei Zeilen; beide
-                Einstellungen betreffen das, was man beim Lernen sieht)
-       Daten    Kartensätze teilen/uebernehmen, Sichern & einspielen
-                (Sichern, Datei einspielen und Aufzeichnung waren drei Zeilen
-                mit drei Seiten - jetzt eine Seite, drei Karten darauf;
-                "Verlauf zuruecksetzen" braucht praktisch niemand und muss
-                deshalb keine eigene Zeile belegen)
-       Hilfe    Ideen & Vorschlaege, Fehler melden
-       Konto    Abmelden, Konto loeschen
-
-     Die Konto-ID ist als Kleingedrucktes in den Fuss gewandert (einstFuss) -
-     sie braucht nur, wer sie fuer BETREIBER_UIDS nachschlaegt.
-     Nichts ist weggefallen: jede Handlung ist weiter erreichbar. */
+     keiten (log2(n+1)). Vier Abschnitte: Lernen (Karten pro Runde,
+     Schrift, Helligkeit, Erinnerung), Daten (Kartensatz per Code,
+     Sichern & einspielen; ggf. Texte-Einwilligung), Rückmeldung
+     (Ideen, Fehler, Installationsanleitung), Konto (Name, ggf. Passwort,
+     Abmelden, Löschen). Erklärungen stehen an der jeweiligen Handlung. */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Lernen</div>';
   html += '<div class="liste">';
@@ -9647,7 +9732,7 @@ function renderEinstellungen() {
     const erinnert = hinweisSpeicher().erinnerung;
     html += einstZeile({ action: "erinnerung-auf", icon: "serie", text: "Tägliche Erinnerung",
       /* 3.17.14: "aus" statt leer - jede andere Zeile zeigt ihren Stand. */
-      wert: erinnert ? erinnert.replace(/^0/, "") + " Uhr" : "aus" });
+      wert: erinnert ? "Vorlage für " + erinnert.replace(/^0/, "") + " Uhr" : "aus" });
   }
   html += '</div></div>';
 
@@ -9669,9 +9754,9 @@ function renderEinstellungen() {
 
   html += probelaufWerte();
 
-  /* ---------- Hilfe ---------- */
+  /* ---------- Rückmeldung und Installation (Z10) ---------- */
   html += '<div class="sektion">';
-  html += '<div class="eyebrow">Hilfe</div>';
+  html += '<div class="eyebrow">Rückmeldung</div>';
   html += '<div class="liste">';
   /* 22.09.2026: Ideen & Vorschlaege steht NEBEN Fehler melden, ersetzt es
      nicht - ein Fehlerbericht ("Login geht nicht", mit Kontaktweg) passt
@@ -9679,12 +9764,17 @@ function renderEinstellungen() {
      plan/feedback-board/AUFTRAG.md. */
   html += einstZeile({ action: "einst-seite", id: "feedback", icon: "stern", text: "Ideen & Vorschläge" });
   html += einstZeile({ action: "open-error-modal", icon: "warnung", text: "Fehler melden" });
+  html += einstZeile({ action: "installation-hilfe", icon: "karten", text: "App auf den Home-Bildschirm legen" });
   html += '</div></div>';
 
   /* ---------- Konto ---------- */
   html += '<div class="sektion">';
   html += '<div class="eyebrow">Konto</div>';
   html += '<div class="liste">';
+  html += einstZeile({ action: "konto-name", icon: "konto", text: ui.authBusy && ui.authBusyWas !== "passwort" ? "Name wird gespeichert …" : "Name ändern", disabled: ui.authBusy });
+  if ((currentUser.providerData || []).some(x => x.providerId === "password")) {
+    html += einstZeile({ action: "konto-passwort", icon: "konto", text: ui.authBusyWas === "passwort" ? "E-Mail wird angefordert …" : "Passwort ändern", disabled: ui.authBusy });
+  }
   html += '<button class="liste-zeile gefahr" data-action="logout">' + ikon("abmelden", "i-sm") +
     '<span class="liste-zeile__text">Abmelden</span></button>';
   /* 3.12.0: keine Loeschen-Zeile mehr, die selbst etwas tut - nur ein Weg
@@ -9718,18 +9808,12 @@ function kontoSeit() {
    dort sucht man sie, wenn man sie braucht. */
 function einstFuss() {
   let html = '<div class="rechtsfuss" style="margin-top:var(--space-6)">';
-  html += '<a href="./datenschutzerklaerung.html">Datenschutz</a>';
+  html += '<a href="./datenschutzerklaerung.html" target="_blank" rel="noopener">Datenschutz</a>';
   html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
-  html += '<a href="./impressum.html">Impressum</a>';
+  html += '<a href="./impressum.html" target="_blank" rel="noopener">Impressum</a>';
   html += '</div>';
   html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-4)">' +
     'Adrabic ' + APP_VERSION + '</p>';
-  /* 3.13.0: die Konto-ID stand bis hier als eigene Zeile im Abschnitt Konto -
-     sichtbar fuer alle, solange BETREIBER_UIDS leer ist. Gebraucht wird sie
-     nur einmal, zum Eintragen dort. Jetzt Kleingedrucktes, markierbar. */
-  if (BETREIBER_UIDS.length === 0 && currentUser) {
-    html += '<p class="hint einst-id">Konto-ID <span>' + esc(currentUser.uid) + '</span></p>';
-  }
   return html;
 }
 
@@ -9742,7 +9826,7 @@ function renderEinstellungenSeite(id) {
 
   /* 3.13.0: "daten" fasst die frueheren Seiten sichern, einspielen und
      verlauf zusammen - gleiche Karten, gleiche Knoepfe, eine Seite. */
-  if (id === "daten" || id === "sichern" || id === "einspielen" || id === "verlauf") {
+  if (id === "daten") {
     const alter = daysSinceLastBackup();
     const tage = Object.keys(verlauf).length;
     html += '<div class="card">';
@@ -9774,7 +9858,7 @@ function renderEinstellungenSeite(id) {
     html += '<h3>Aufzeichnung</h3>';
     html += '<p class="hint">Das Tagesprotokoll trägt Kalender, Wochenzahlen und die Serie – ' +
       'aufgezeichnet ' + (tage === 1 ? 'ist' : 'sind') + ' <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
-      'Zurücksetzen betrifft nur die Anzeige: deine Karten und ihr Lernstand bleiben.</p>';
+      'Beim Zurücksetzen fängt auch deine Serie bei null an. Deine Karten und ihr Lernstand bleiben.</p>';
     html += '<div class="form-actions">';
     html += '<button class="ghost" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") +
       '>Aufzeichnung zurücksetzen</button>';
@@ -9879,8 +9963,8 @@ function renderKontoLoeschen() {
 
   html += '<div class="card" style="margin-top:var(--stack)">';
   html += '<h3>Erst sichern</h3>';
-  html += '<p class="hint">' + (alter === 0 ? 'Heute schon gesichert. ' : '') +
-    'Die Datei bleibt auf deinem Gerät. Mit ihr kannst du alles in ein neues Konto einspielen.</p>';
+  html += '<p class="hint konto-sicherhinweis">' + (alter === 0 ? 'Heute schon gesichert. ' : '') +
+    'Die Datei bleibt auf deinem Gerät. Mit ihr kannst du alles in ein neues Konto einspielen. Prüf, ob die Datei in deinen Downloads liegt.</p>';
   html += '<div class="form-actions"><button class="secondary" data-action="konto-backup">' +
     ikon("sichern", "i-sm") + ' Backup herunterladen</button></div>';
   html += '</div>';
@@ -10592,7 +10676,7 @@ function renderLernen() {
   if (offen.length > 0) {
     html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
       ikon("lernen", "i-sm") + '<div class="banner__text">Heute auch f\u00e4llig: ' +
-      offen.map(x => '<strong>' + esc(x.bereich.name) + '</strong> (' + x.offen + ')').join(", ") +
+      offen.map(x => '<button class="tiny-link lernen-bereich-link" data-action="select-bereich" data-bid="' + esc(x.bereich.id) + '">' + esc(x.bereich.name) + ' (' + x.offen + ')</button>').join(", ") +
       '</div></div>';
   }
 
@@ -10686,7 +10770,15 @@ function lernenHinweis() {
   /* 2 - Meilenstein */
   const gesessen = gesesseneKarten();
   const erreicht = MEILENSTEINE.filter(m => gesessen >= m).pop() || 0;
+  if (sp.meilensteinTag && sp.meilensteinTag !== heute) {
+    Object.assign(sp, hinweisMerken({
+      meilenstein: Math.max(sp.meilenstein || 0, sp.meilensteinOffen || 0),
+      meilensteinTag: null, meilensteinOffen: null
+    }));
+  }
   if (erreicht > (sp.meilenstein || 0)) {
+    if (sp.meilensteinTag !== heute || sp.meilensteinOffen !== erreicht)
+      hinweisMerken({ meilensteinTag: heute, meilensteinOffen: erreicht });
     /* 3.17.40 (G-061): Die Marke (erreicht) loest den Hinweis nur noch aus,
        der Text nennt wie der Fortschritt die echte Zahl (gesessen) - sonst
        standen zwei verschiedene Zahlen fuer denselben Sachverhalt da. */
@@ -10793,7 +10885,9 @@ function erinnerungSheet() {
    mit, § 12). */
 function erinnerungIcs(hhmm, seq) {
   const [hh, mm] = hhmm.split(":").map(x => String(parseInt(x, 10) || 0).padStart(2, "0"));
-  const d = new Date(); d.setDate(d.getDate() + 1);
+  const d = new Date();
+  const start = new Date(d); start.setHours(Number(hh), Number(mm), 0, 0);
+  if (start <= d) d.setDate(d.getDate() + 1);
   const tag = d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
   const jetzt = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
   const adresse = location.origin + location.pathname;
@@ -10834,7 +10928,9 @@ function erinnerungHerunterladen(hhmm) {
   hinweisMerken({ erinnerung: hhmm, erinnerungSeq: seq });
   ui.erinnerungSheet = false;
   ui.erinnerungZeit = null;
-  zeigeToast("Erinnerung für " + hhmm.replace(/^0/, "") + " Uhr – öffne die Datei, um sie in den Kalender zu übernehmen.");
+  zeigeToast(ios
+    ? "Bestätige den Termin für " + hhmm.replace(/^0/, "") + " Uhr im Kalender."
+    : "Datei für " + hhmm.replace(/^0/, "") + " Uhr erstellt – öffne sie und bestätige den Termin im Kalender.");
   render();
 }
 
@@ -10859,7 +10955,7 @@ function erinnerungHerunterladen(hhmm) {
 /* 3.17.35 (REST-10): h2 statt h1 - die Seite hat ihr h1 schon in der Kopfzeile (Bereichsname); zwei h1 verwirrten Bildschirmleser. Aussehen gleich (.lernen-gruss__titel setzt die Groesse). */
 function lernenGruss() {
   const std = new Date().getHours();
-  const gruss = std < 5 ? "Gute Nacht" : std < 11 ? "Guten Morgen" : std < 17 ? "Guten Tag" : "Guten Abend";
+  const gruss = std < 5 ? "Hallo" : std < 11 ? "Guten Morgen" : std < 17 ? "Guten Tag" : "Guten Abend";
   const name = (displayName || "").trim().split(/\s+/)[0];
   /* 3.17.40 (G-066): Das angezeigte Datum folgt dem Lerntag (logicalToday,
      DAY_START_HOUR = 4), nicht der echten Uhrzeit - sonst zeigten Kopfzeile
@@ -10905,11 +11001,16 @@ function lernenStapel(b, cards, due, neuImStapel) {
   let html = "";
   if (due.length === 0) {
     const morgen = vorschau7(cards)[1].anzahl;
+    const heuteGelernt = tagGelernt(verlauf[todayStr()]);
+    const naechster = vorschau7(cards).slice(1).find(x => x.anzahl > 0);
+    const ruheText = naechster
+      ? 'Die nächsten Karten kommen am ' + new Date(naechster.tag + 'T12:00:00').toLocaleDateString('de-DE', {weekday:'long'}) + '.'
+      : 'Im Moment ist keine Runde nötig. Die nächsten Karten kommen von selbst.';
     html += '<div class="stapel stapel--fertig">';
-    html += '<div class="stapel__ring">' + ringSvg(1) +
-      '<div class="stapel__mitte">' + ikon("haken", "i-xl") + '</div></div>';
-    html += '<div class="stapel__titel">Für heute durch</div>';
-    html += '<div class="stapel__was">' + (morgen > 0
+    html += '<div class="stapel__ring">' + ringSvg(heuteGelernt ? 1 : 0) +
+      '<div class="stapel__mitte">' + (heuteGelernt ? ikon("haken", "i-xl") : '') + '</div></div>';
+    html += '<div class="stapel__titel">' + (heuteGelernt ? 'Für heute durch' : 'Heute ist nichts fällig') + '</div>';
+    html += '<div class="stapel__was">' + (!heuteGelernt ? esc(ruheText) : morgen > 0
       ? 'Morgen ' + (morgen === 1 ? 'kommt' : 'kommen') + ' <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
       : 'In \u201e' + esc(b.name) + '\u201c ist nichts mehr f\u00e4llig. Der n\u00e4chste Schwung kommt von selbst.') + '</div>';
     /* 3.16.0: oeffnet das Ueben direkt, statt nur den Reiter zu wechseln -
@@ -11372,7 +11473,7 @@ function renderFortschrittSeite(id) {
    siehe renderSession, Begruendung bei der Notiz. */
 function leechHinweis(card, platz) {
   return '<div class="leech-banner' + (platz ? ' study-extra--platz" aria-hidden="true' : '') + '">' +
-    ikon("serie", "i-sm") + '<span>Schon <strong>' + card.rueckfaelle + '-mal</strong> vergessen. ' +
+    ikon("warnung", "i-sm") + '<span>Schon <strong>' + card.rueckfaelle + '-mal</strong> vergessen. ' +
     'Formuliere sie um oder teile sie in zwei Karten.</span></div>';
   /* 3.15.0: zwei kurze Saetze statt vier. Der Rest ("im Verwalten-Tab",
      "frisst Lernzeit", "Zaehlung beginnt von vorn") stand auf jeder dieser
@@ -11414,6 +11515,8 @@ function renderSession() {
      "Nicht" dieselbe Karte als einzige wieder, ist sie trotzdem neu. */
   const anzeige = card.id + ":" + (s.zug || 0);
   const neueKarte = s.anzeigeId !== anzeige;
+  const zurueckVon = s.zurueckVon;
+  s.zurueckVon = null;
   const frischAufgedeckt = !neueKarte && s.revealed && !s.anzeigeOffen;
   s.anzeigeId = anzeige;
   s.anzeigeOffen = s.revealed;
@@ -11448,7 +11551,7 @@ function renderSession() {
       : "Karte " + Math.min(fertig + 1, gesamt) + " von " + gesamt,
     anteil: anteilJetzt,
     rechts: s.lastAction
-      ? '<button class="icon-btn" data-action="undo-grade" aria-label="Letzte Bewertung r\u00fcckg\u00e4ngig machen">' +
+      ? '<button class="icon-btn" data-action="undo-grade" aria-keyshortcuts="Backspace" aria-label="Letzte Bewertung r\u00fcckg\u00e4ngig machen">' +
         ikon("rueckgaengig") + '</button>'
       : null
   });
@@ -11528,12 +11631,12 @@ function renderSession() {
      aus Versehen aufdecken") galt einem Tipp IRGENDWO auf dem Bildschirm;
      die Karte anzutippen ist eine Absicht, und Aufdecken bewertet nichts.
      So machen es Anki (Tipp auf die Karte) und Quizlet (Tipp dreht). Bei
-     Handschrift bleibt es beim "Fertig" der Zeichenleiste, im Ueben deckt
-     ohnehin ein Tipp irgendwo auf (document.body-Listener weiter unten). */
+     Handschrift bleibt es beim "Fertig" der Zeichenleiste. Im Üben gelten
+     dieselben Ziele: Karte oder Aufdecken-Knopf. */
   const tippbar = !s.revealed && !s.handwriting;   /* 3.15.0: auch im Ueben */
   html += '<div class="study-flaeche' + (s.revealed ? ' study-flaeche--offen' : '') +
     (!s.revealed && !s.handwriting ? ' study-flaeche--wartet' : '') +
-    (neueKarte ? ' study-flaeche--kommt' : '') + (frischAufgedeckt ? ' study-flaeche--dreht' : '') + '"' +
+    (zurueckVon ? ' study-flaeche--zurueck-' + zurueckVon : neueKarte ? ' study-flaeche--kommt' : '') + (frischAufgedeckt ? ' study-flaeche--dreht' : '') + '"' +
     (tippbar ? ' data-action="reveal"' : '') + '>';
   html += '<div class="karte-dreh' + (frischAufgedeckt ? ' karte-dreh--wende' : '') + '">';
   if (!s.revealed || frischAufgedeckt) {
@@ -11606,6 +11709,8 @@ function renderSession() {
       html += s.revealed
         ? '<button class="ghost" data-action="toggle-extra">' + (s.extraOpen ? "Notiz verbergen" : "Notiz anzeigen") + '</button>'
         : '<button class="ghost platz-leer" tabindex="-1" aria-hidden="true">' + (s.extraOpen ? "Notiz verbergen" : "Notiz anzeigen") + '</button>';
+    } else {
+      html += '<span class="platz-leer" aria-hidden="true"></span>';
     }
     /* 2.11.0/2.21.0: "Merken" genau dort, wo einem auffaellt, dass eine Karte
        schwer ist - auch im Uebungsmodus, denn es aendert nur die
@@ -11637,7 +11742,7 @@ function renderSession() {
     if (s.handwriting) {
       /* Bei Handschrift deckt "Fertig" in der Zeichenleiste auf. */
     } else {
-      html += '<button class="lg full study-aufdecken" data-action="reveal">Antwort zeigen</button>';
+      html += '<button class="lg full study-aufdecken" data-action="reveal" aria-keyshortcuts="Space Enter">Antwort zeigen<kbd class="study-taste" aria-hidden="true">Leertaste</kbd></button>';
     }
   } else {
     html += '<div class="grade-row">';
@@ -11662,9 +11767,9 @@ function renderSession() {
        ich es?" - nicht "wann will ich sie wiedersehen?". Die Vorlesefassung
        (aria-label) sagt weiter, was passiert. */
     const u = s.isDrill;
-    html += '<button class="btn-unknown" style="--n:0" data-action="grade-unknown" aria-label="Nicht gewusst \u2013 kommt gleich noch einmal">Nicht</button>';
-    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-label="' + (u ? 'Fast gewusst \u2013 f\u00fcr diese Runde durch' : 'Fast gewusst \u2013 kommt morgen wieder') + '">Fast</button>';
-    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-label="' + (u ? 'Sicher gewusst \u2013 f\u00fcr diese Runde durch' : 'Sicher gewusst \u2013 kommt sp\u00e4ter wieder') + '">Sicher</button>';
+    html += '<button class="btn-unknown" style="--n:0" data-action="grade-unknown" aria-keyshortcuts="1 ArrowLeft" aria-label="Nicht gewusst \u2013 kommt gleich noch einmal">Nicht<kbd class="study-taste" aria-hidden="true">1</kbd></button>';
+    html += '<button class="btn-almost" style="--n:1" data-action="grade-almost" aria-keyshortcuts="2 ArrowDown" aria-label="' + (u ? 'Fast gewusst \u2013 f\u00fcr diese Runde durch' : 'Fast gewusst \u2013 kommt morgen wieder') + '">Fast<kbd class="study-taste" aria-hidden="true">2</kbd></button>';
+    html += '<button class="btn-known" style="--n:2" data-action="grade-known" aria-keyshortcuts="3 ArrowRight" aria-label="' + (u ? 'Sicher gewusst \u2013 f\u00fcr diese Runde durch' : 'Sicher gewusst \u2013 kommt sp\u00e4ter wieder') + '">Sicher<kbd class="study-taste" aria-hidden="true">3</kbd></button>';
     html += '</div>';
   }
 
@@ -11708,7 +11813,7 @@ function renderRundenEnde(s, gesamt) {
   html += '<p class="hint ende__satz">' + (s.isDrill
     ? gesamt + ' Karte' + (gesamt === 1 ? '' : 'n') + ' ge\u00fcbt \u00b7 ' + esc(s.drillLabel)
     : offenHeute > 0
-      ? (gesamt === 1 ? 'Eine Karte geschafft.' : gesamt + ' Karten geschafft.')
+      ? (gesamt === 1 ? 'Eine Karte in dieser Runde.' : gesamt + ' Karten in dieser Runde.')
       : (gesamt === 1 ? 'Die Karte für heute ist durch.' : 'Alle ' + gesamt + ' Karten für heute durch.')) + '</p>';
   html += '<div class="ende__kacheln">';
   html += '<div class="ende__kachel ende__kachel--sicher" style="--i:0"><strong>' + z.known + '</strong><span>sicher</span></div>';
@@ -13881,38 +13986,6 @@ function autoScrollTick() {
   autoScrollRAF = requestAnimationFrame(autoScrollTick);
 }
 
-/* 2.3.0: Die Art-Auswahl steht in jeder Speicherkarten-Zeile. Ein einziger
-   delegierter Listener statt eines je Zeile - sonst muesste nach jedem
-   Neuzeichnen alles neu verdrahtet werden. */
-/* 2.15.0: Auf dem Handy gibt es keine Leertaste - dort traegt ein Tipp
-   irgendwo auf die Karte. Ausgenommen ist alles, was selbst etwas tut:
-   Knoepfe, Eingabefelder, das Zeichenfeld der Handschrift.
-   2.21.1: "irgendwo" galt bisher nur INNERHALB von .study-card - auf dem
-   Handy ist die Karte aber oft nicht bildschirmfuellend, darunter blieb ein
-   leerer Streifen, in dem ein Tipp wirkungslos war. Waehrend einer
-   Uebungsrunde zeigt der Bildschirm ohnehin nur die Karte (Kopfzeile und
-   Tabs sind ausgeblendet, siehe imModus), darum darf der ganze
-   Anwendungsbereich zaehlen, nicht nur das Kartenpanel selbst.
-   2.21.6: Trotzdem blieb ein Streifen wirkungslos - #app (= .container) hat
-   selbst KEINE feste Hoehe, es ist nur so hoch wie sein Inhalt. Auf einem
-   hohen Handy-Bildschirm mit kurzem Karteninhalt bleibt darunter ein
-   Streifen nacktes <body> uebrig, der gar nicht mehr zu #app gehoert - ein
-   Tipp dort erreicht diesen Listener also nie, ganz gleich wie weit
-   gefasst er innerhalb von #app ist. <body> traegt dagegen immer die volle
-   Bildschirmhoehe (min-height:100vh/100dvh), deshalb haengt der Listener
-   jetzt dort statt an #app - das schliesst die Luecke endgueltig. */
-document.body.addEventListener("click", e => {
-  const s = ui.session;
-  if (!s || !s.isDrill || s.queue.length === 0) return;
-  /* Handschrift: dort deckt "Fertig" auf. Ein Tipp neben das Zeichenfeld
-     waere sonst genau der Fehlgriff, der die Loesung verraet, bevor man sie
-     geschrieben hat. */
-  if (s.handwriting && !s.revealed) return;
-  if (e.target.closest("button, a, input, select, textarea, canvas, .hw-toolbar, .modebar")) return;
-  /* 3.15.0: nur noch aufdecken - weiter geht es ueber die Bewertung. */
-  if (!s.revealed && !e.target.closest(".study-flaeche")) revealAnswer();
-});
-
 /* Gemeinsamer Aktivierungspunkt fuer Maus (sofort) und Touch/Stift (nach
    dem Halten) - haelt dragState-Aufbau, setPointerCapture und Rand-Scrollen
    an einer Stelle, statt sie zweimal zu pflegen. */
@@ -14775,6 +14848,24 @@ document.addEventListener("keydown", e => {
    auch wenn zwischenzeitlich ein render() den Knopf (z.B. in den
    Einstellungen) neu aufgebaut hat und die Elementreferenz verwaist waere. */
 let errorModalOeffner = null, errorModalOeffnerSel = null;
+function errorBerichtText() {
+  return document.getElementById("error-description").value.trim() + "\n\n—\n" +
+    "Adrabic " + APP_VERSION + (displayName ? " · " + displayName : "") + "\n" +
+    "Gerät: " + (navigator.userAgent || "") + " · " + window.innerWidth + "×" + window.innerHeight;
+}
+async function errorBerichtKopieren() {
+  if (!document.getElementById("error-description").value.trim()) { errorFeldFehlerZeigen(); return; }
+  const text = errorBerichtText();
+  const status = document.getElementById("error-copy-status");
+  try {
+    await navigator.clipboard.writeText(text);
+    status.textContent = "Text kopiert. Schick ihn an die Adresse im Impressum.";
+  } catch (_) {
+    const feld = document.getElementById("error-mail-text");
+    feld.value = text; feld.hidden = false; feld.focus(); feld.select();
+    status.textContent = "Kopiere den markierten Text und schick ihn an die Adresse im Impressum.";
+  }
+}
 function openErrorModal() {
   const modal = document.getElementById("errorModal");
   if (modal) {
@@ -14866,18 +14957,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const subject = encodeURIComponent("Fehler gemeldet");
     /* 3.17.14: statt Name/E-Mail-Feldern die Angaben, die beim Nachstellen
        helfen - sie stehen sichtbar im Entwurf und lassen sich dort loeschen. */
-    const body = encodeURIComponent(
-      description + "\n\n—\n" +
-      "Adrabic " + APP_VERSION + (displayName ? " · " + displayName : "") + "\n" +
-      "Gerät: " + (navigator.userAgent || "") + " · " + window.innerWidth + "×" + window.innerHeight
-    );
+    const body = encodeURIComponent(errorBerichtText());
 
     window.location.href = "mailto:" +
       String.fromCharCode(97,100,114,97,98,105,99,46,100,101,64,103,109,97,105,108,46,99,111,109) +
       "?subject=" + subject + "&body=" + body;
     /* 3.17.14: Text NICHT leeren - oeffnet sich kein Mailprogramm (am PC
        haeufig), waere die Beschreibung sonst weg. */
-    closeErrorModal();
+    form.querySelector('[data-action="close-error-modal"]').textContent = "Fertig";
   });
 });
 
@@ -15264,7 +15351,7 @@ document.body.addEventListener("click", e => {
     case "trotzdem-ueben":
       ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null;
       ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null;
-      openDrillPicker();
+      openDrillPicker(null, "lernen");
       break;
     case "edit-leech": editCardInBereich(btn.dataset.bid, btn.dataset.id); break;
     case "reset-leech": resetRueckfaelle(btn.dataset.bid, btn.dataset.id); break;
@@ -15401,7 +15488,10 @@ document.body.addEventListener("click", e => {
     case "auswahl-ziel-bereich": ui.wahlSheet = null; moveSelectedCardsTo(btn.dataset.id); break;
     case "auswahl-ziel-set": ui.wahlSheet = null; render(); saveSelectedToSet(btn.dataset.id); break;
     case "open-drill": openDrillPicker(); break;
-    case "close-drill": ui.drillOpen = false; render(); break;
+    case "close-drill":
+      ui.drillOpen = false;
+      if (ui.drillRueckkehrTab) ui.tab = ui.drillRueckkehrTab;
+      ui.drillRueckkehrTab = null; render(); break;
     case "drill-nochmal": {
       const alt = ui.session;
       if (!alt || !alt.isDrill) break;
@@ -15479,8 +15569,14 @@ document.body.addEventListener("click", e => {
       if (el) el.click();
       break;
     }
+    case "konto-name": kontoNameAendern(); break;
+    case "konto-passwort": kontoPasswortAendern(); break;
+    case "installation-hilfe":
+      dlgAlert("iPhone · Safari\n1. Öffne Adrabic in Safari.\n2. Öffne das Seitenmenü und tippe auf Teilen (oder direkt auf Teilen).\n3. Wähle Zu Home-Bildschirm hinzufügen, aktiviere Als Web-App öffnen und tippe auf Hinzufügen.\n\nAndroid · Chrome\n1. Öffne Adrabic in Chrome.\n2. Öffne das Dreipunktmenü und wähle Installieren und Verknüpfung erstellen → Installieren.\n3. Folge den Schritten auf dem Bildschirm.", "App auf den Home-Bildschirm legen");
+      break;
     case "open-error-modal": openErrorModal(); break;
     case "close-error-modal": closeErrorModal(); break;
+    case "error-copy": errorBerichtKopieren(); break;
     case "feedback-submit": feedbackEinreichen(); break;
     case "feedback-form-auf":
       ui.feedbackForm = true; feedbackDanke = false; render();

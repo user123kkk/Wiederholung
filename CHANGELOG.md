@@ -1,3 +1,31 @@
+## 3.18.15 – 4. Oktober 2026
+
+**Paket E: Einstellungen und Lernen verbessert.** Fehlerberichte bleiben zum
+Kopieren offen; Rechtsseiten öffnen separat. Zurücksetzen nennt den Verlust
+der Serie, Kontolöschung meldet den Erfolg und begrenzt die erneute Anmeldung
+zeitlich. Sicherung und Erinnerungsdatei geben vorsichtige Hinweise zur
+Prüfung auf dem Gerät. Lange Wörter und schmale Einstellungszeilen umbrechen.
+Der Abschnitt heißt „Rückmeldung“ und enthält Installationsschritte für
+Safari am iPhone und Chrome unter Android. Name und Passwort lassen sich
+über die vorhandenen Kontoabläufe ändern; der zuletzt geöffnete Bereich
+wird auf dem Gerät pro Konto gemerkt. Arabische Schrift erhält „Sehr groß“
+(1,6-fach), auf 320 Pixeln mit Karten, Listen und Einstieg geprüft.
+
+Meilensteinhinweise laufen nach einem Tag ab. Üben kehrt nach Abbruch zum
+vorigen Reiter zurück. Der beste Lauf zieht nach der ersten Bewertung nach;
+„Merken“ bleibt an derselben Stelle. Escape beendet, Backspace nimmt zurück,
+und zurückgeholte Karten kommen aus ihrer vorherigen Flugrichtung.
+Hintergrundtipps decken beim Üben nicht mehr auf. Ruhetage erhalten einen
+ehrlichen Leerzustand, andere fällige Bereiche sind direkt erreichbar;
+Rundenende, Nachtgruß und Warnsymbol wurden berichtigt.
+
+E2 war bereits durch A3 behoben. E7 wartet auf Z6b, E17 auf Gerätetest G4,
+E26 bleibt später. D12–D15 und der Text-Probelauf bleiben unverändert.
+Abnahme am Netzteil: Gesamtlauf 139/139, Handy-Affe 200 und iPad-Affe 150
+je 0 Befunde, frische Rundenabnahme 13/13, 28 Gegenproben am festen Vorstand
+8762d38 am jeweiligen Befund rot. Geräteprüfungen G5/G6/G7 bleiben offen.
+Nicht veröffentlicht.
+
 ## 3.18.14 – 4. Oktober 2026
 
 **Paket D: Bewegung ruhiger und Übergänge korrigiert.** Blätter und Dialoge fahren

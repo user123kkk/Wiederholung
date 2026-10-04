@@ -57,11 +57,15 @@ const { pruefeKontrast } = require('./kontrast');
       await p.evaluate(() => { const orig = Object.getOwnPropertyDescriptor(Location.prototype, 'href'); window.__mail = null; });
       await p.click('#errorForm button[type=submit]'); await p.waitForTimeout(600);
       out.push('  nach Absenden: offen ' + await p.evaluate(() => document.getElementById('errorModal').getAttribute('aria-hidden') === 'false') + ' | Text behalten "' + await p.evaluate(() => document.getElementById('error-description').value) + '"');
+      // E3: mailto lässt das Formular offen; die nächste Handlung beginnt nach Fertig.
+      await aktion(p, 'close-error-modal', null, 550);
       // Idee einreichen
       await aktion(p, 'einst-seite', 'feedback', 900);
       const ideeKnopf = await p.evaluate(() => { const k = [...document.querySelectorAll('#app button')].find(x => /Idee einreichen/.test(x.innerText)); if (k) { k.click(); return k.dataset.action; } return null; });
       await p.waitForTimeout(700);
-      out.push('Idee einreichen (' + ideeKnopf + '): ' + await blatt());
+      const formularSichtbar = await p.locator('#fb-text').isVisible();
+      if (!formularSichtbar) throw new Error('Ideenformular nach Fehlerbericht nicht sichtbar');
+      out.push('Idee einreichen (' + ideeKnopf + '): Formular sichtbar ' + formularSichtbar);
       if (g === 'handy' && thema === 'dunkel') await foto(p, 'e14-idee');
       await p.keyboard.press('Escape'); await p.waitForTimeout(500);
       await aktion(p, 'einstellungen', null, 700);

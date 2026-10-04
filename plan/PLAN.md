@@ -4,22 +4,34 @@ Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
 Zuletzt geändert: 18. September 2026 (Google-Login bestätigt, Umzug auf adrabic.web.app)
 
-**AKTUELL (04.10.2026):** Zyklus 2, Paket D D1–D11 abgenommen, 3.18.14.
-Vorhandenen Arbeitsbaum und begonnene Version vollständig erhalten;
-D1–D9/D11 erledigt (3.18.14), D10 bleibt trifft nicht zu (B5/3.18.12).
-Frischer Gesamtlauf 138/138, separat frische Runde 13/13,
-Affe Handy200/iPad150 jeweils 0 Befunde mit Startwert 7;
-sämtliche Ausgaben gelesen. Zehn feste Gegenproben 50d15ce rot,
-Fix grün; Gegenprüfung und LEHREN §14 einzeln im Zyklus-Logbuch.
-Commit/Push direkt auf main nach Abschlussprüfung, nicht veröffentlicht.
-Online-Stand dadurch nicht geändert. D12–D15 bleiben ausdrücklich zurück:
-nichts bauen/weiter messen, kein Capture-Build, keine neue Fotoserie.
-Echtes D9-Gerätegefühl, G1 und D15-iPhone-Start bleiben offen.
-Betreiber: ladegeraet.bat; iPhone-App ganz schließen/neu öffnen und
-Übergang vom Ladebild zur App für D15 ansehen. Kein Paket E beginnen.
-Z1 ausgelassen; C18 nach 29.10., C22(a)/F3 zurückgestellt.
-Kein anderes Paket und keine weitere Aufgabe ohne neuen Auftrag.
-Die Regeln aus Paket A müssen vor späterem Hosting eingespielt werden.
+**AKTUELL (04.10.2026):** Zyklus 2, **Paket E abgeschlossen, 3.18.15**,
+committet und auf main gepusht, **nicht veröffentlicht**. Gesamtlauf 139/139,
+Affen 0 Befunde, Runde 13/13, 28 Gegenproben rot am Vorstand. Beim Betreiber
+offen: `ladegeraet.bat` (veröffentlichen), danach Gerätetests G5/G6/G7 und
+G4; Entscheidung Z6b (E7) und V8. D12–D15 bleiben zurück. Kein Paket F ohne
+sein Stichwort. Die folgenden Absätze sind Verlauf.
+**Verlauf 04.10., Auftrag „E weiter“.**
+**20:00 Uhr: auf Betreiberwunsch angehalten, Claude-Code-Übergabe erstellt.**
+83/139 Gesamttests fertig und vollständig gelesen; t_paket_c_fort unterbrochen.
+Keine Prüfprozesse mehr aktiv. E-Stand bleibt uncommittet, kein Commit/Push/Deploy.
+Fortsetzung ab dort gemäß
+[`zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md`](zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md),
+nur auf neuen Fortsetzungsauftrag. Folgende Absätze sind der Vor-Pausenstand.
+D/3.18.14 laut Betreiber abgeschlossen, gepusht und veröffentlicht;
+D12–D15 bleiben zurück, nichts weiter bauen oder messen.
+Paket E uncommittet in Arbeit: E1–E6, E8–E16, E18–E25 und E27–E29
+sowie E30–E32 lokal gebaut/geprüft; 25 betroffene Einzeltests grün,
+einschließlich aller 13 Lernrunden-Tests. Version 3.18.15 vorbereitet.
+E2 war bereits durch A3 gelöst. E7 wartet auf Z6b ja, E17 auf G4,
+E26 bleibt später (Z7). Text-Probelauf unverändert.
+Nach „netzteil an“ BatteryStatus 2: frischer 139-Test-Gesamtlauf läuft.
+E5-Absatzbreite nach neuem Befund korrigiert, große Bildschirmprobe wieder null.
+Veralteten SDK-Anker der Kontohilfsprobe korrigiert; Schutzfälle/Gegenproben grün.
+Doppeltipp-Ladefehler durch SW-Abrufabbruch auf beiden Versionen reproduziert,
+unveränderter Einzellauf und finaler Gesamtlauf-Doppeltipp ohne Fehler.
+Danach Affen und Runden-Wrapper/Gegenprüfung/Paketabschluss.
+Kein Commit/Push und keine Veröffentlichung.
+Kein anderes Paket beginnen, solange E uncommittet ist.
 Maßgeblich: [`STAND.md`](STAND.md) und [`zyklus-2/LOGBUCH.md`](zyklus-2/LOGBUCH.md).
 
 ---

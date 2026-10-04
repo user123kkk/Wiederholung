@@ -45,10 +45,10 @@ async function lauf(f){
  const t=Date.now();let zeitlimit=false;
  const child=spawn(process.execPath,['--require',path.join(__dirname,'pruef_cleanup.js'),f],{cwd:__dirname,env:process.env,windowsHide:true});aktiv=child;
  child.stdout.pipe(strom,{end:false});child.stderr.pipe(strom,{end:false});
- // Paket C/D pruefen viele Aufgaben mit Zustandsmatrizen in einer
+ // Paket C/D/E pruefen viele Aufgaben mit Zustandsmatrizen in einer
  // Datei. Nur das Prozess-Zeitlimit muss deren Gesamtumfang abdecken;
  // Assertions, Messgrenzen und Wartebedingungen bleiben unveraendert.
- const limit=f==='t_paket_c_weiter.js'?3600000:f==='t_paket_d.js'?1800000:f==='t_paket_c_verw.js'?1200000:600000;
+ const limit=f==='t_paket_c_weiter.js'?3600000:(f==='t_paket_d.js'||f==='t_paket_e.js')?1800000:f==='t_paket_c_verw.js'?1200000:600000;
  const timer=setTimeout(()=>{zeitlimit=true;stoppen(child);},limit);
  let fehler=null;child.on('error',e=>{fehler=e.message;});
  const ende=await new Promise(ok=>child.on('close',(code,signal)=>ok({code,signal})));

@@ -5,9 +5,9 @@ const {APP,AUTH,FS}=require('../../../werkzeuge/pruefstand/stubs');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const repo=path.join(__dirname,'../../../..'),alt=process.argv.includes('--befund')||process.argv.includes('--gegenprobe');
 const source=process.argv.includes('--gegenprobe')?require('node:child_process').execFileSync('git',['show','c4a2ccf:app.js'],{cwd:repo,encoding:'utf8'}):fs.readFileSync(path.join(repo,'app.js'),'utf8');
-assert.ok(AUTH.includes('export function deleteUser(){')&&AUTH.includes('export function signOut(){'),'SDK-Haltepunkte fehlen');
-const sdk=AUTH.replace('export function deleteUser(){','function originalDeleteUser(){').replace('export function signOut(){','function originalSignOut(){')+`
-export function deleteUser(user){S.deleteUids=S.deleteUids||[];S.deleteUids.push(user.uid);return originalDeleteUser();}
+assert.ok(AUTH.includes('export function deleteUser(')&&AUTH.includes('export function signOut('),'SDK-Haltepunkte fehlen');
+const sdk=AUTH.replace('export function deleteUser(','function originalDeleteUser(').replace('export function signOut(','function originalSignOut(')+`
+export function deleteUser(user){S.deleteUids=S.deleteUids||[];S.deleteUids.push(user.uid);return originalDeleteUser(user);}
 export function signOut(auth){S.signOutUids=S.signOutUids||[];S.signOutUids.push(S.user?.uid);return originalSignOut();}`;
 (async()=>{const browser=await start();try{for(const fall of ['adresse','abmelden','abmelden-sdk']){
  const store=vollerStore();for(const[k,v]of Object.entries({...store}))if(k.startsWith('users/u1'))store[k.replace('users/u1','users/u2')]=structuredClone(v);

@@ -1,5 +1,10 @@
 # Hinweise für Claude Code
 
+**04.10.2026: Paket E abgeschlossen (3.18.15), nicht veröffentlicht.** Die
+Übergabe [`plan/zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md`](plan/zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md)
+ist abgearbeitet und nur noch Verlauf. Aktueller Stand: STAND und
+`plan/zyklus-2/LOGBUCH.md`, oberster Eintrag.
+
 ## Zuerst: [`plan/STAND.md`](plan/STAND.md) – aktueller Stand und Reihenfolge
 
 Eine Übersicht für Claude und Codex (`AGENTS.md` verweist genauso). Sie

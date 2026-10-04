@@ -2,6 +2,287 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-04 — Paket E abgeschlossen, 3.18.15 (Claude Code nach Übergabe)
+
+**Geändert:** keine Produkt-, Attrappen- oder Testquelle seit Start des
+dritten Gesamtlaufs; Quellkennung unverändert f53f4c89e4421ee3. Nur
+Abschlussdokumentation: AUFGABEN (28 Zeilen auf `erledigt (3.18.15)`, genau
+28 Treffer geprüft), CHANGELOG-Kopf und Abnahmeabsatz, STAND, PLAN, CLAUDE.md,
+dieses Logbuch.
+**Entscheidung:** Betreiberauftrag: Paket E an der dokumentierten Stelle
+fortsetzen, Prüfstand mit `--fortsetzen`, danach Paketabschluss mit Commit
+und Push auf main. D12–D15 bleiben zurück. Nicht veröffentlichen.
+BatteryStatus vor jedem Lauf 2, Server 8099 HTTP 200, CHROMIUM je Aufruf
+gesetzt, kein paralleler Browserlauf.
+**Prüfung:**
+- Gesamtlauf `alle_pruefen.js --fortsetzen`: 83 bewahrt, 56 neu, Ergebnis
+  **139/139 Exit 0**. Alle 56 neuen Logs vollständig gelesen (unter anderem
+  t_paket_c_weiter 1201 s, t_paket_d 1154 s, t_paket_e 887 s mit 29 Abnahmen).
+  14 beschreibende Ausgaben zeilenweise gegen die abgenommenen D-Logs
+  (9802e0dd7279f524) verglichen. Unterschiede nur: Merken-Breite und Lage der
+  Nebenaktionen (E20), Limittext (E23), Erinnerungs-Toast (E6), zufällige
+  Kartenreihenfolge, Tempozahlen. „Wisch links: NICHTS“ steht gleich im D-Log.
+  t_sprung viermal 0, t_text_tempo größte Aufgabe 147 ms (Grenze 200 ms),
+  t_scrollen 0 Ruckler. Keine Aussage „ruckelfrei“ daraus.
+- Affe mit Startwert 7: Handy 200 Schritte 0 Befunde, iPad 150 Schritte
+  0 Befunde.
+- `abnahme_runde.js` frisch ohne `--fortsetzen`: **13/13 grün**. 13 Einzellogs
+  gegen die Gesamtlogs verglichen: gleich bis auf zufällige Kartenreihenfolge.
+  t_doppeltipp 80/150/250 ms → Karte 1, 700 ms → Karte 2, keine
+  Skriptlademeldung.
+- `gegenproben.js`: **28/28** am festen 8762d38 rot, je AssertionError mit
+  der Befundmeldung der Aufgabe; ganze Ausgabe gelesen.
+- `node --check` app.js/sw.js/t_paket_e.js/stubs.js/alle_pruefen.js,
+  `pruefe_stand.mjs` (3.18.15, CSP, APP_SHELL), `git diff --check`: grün.
+  index.html 33 Stellen 3.18.15, keine 3.18.14 mehr. origin/main nach Fetch
+  weiter 8762d38.
+**Gegenprüfung (grossplan/AUFTRAG § 2a), frischer Blick:** Produktdiff
+(app.js, styles.css, index.html, Datenschutz, sw.js), Attrappe und
+t_paket_e.js vollständig gelesen, gegen Befunde EINST/LERN und Z9/Z10.
+Geprüft ohne Fund: Wischen nach Rückgängig (`animation: none` beim Greifen
+hebt das gehaltene `both` auf), Tastatur-Guards vor Escape/Backspace
+(Eingabefeld, Dialog, Blatt), `data-bid` am neuen Bereichsknopf,
+Ring-Erwartung E25 (`--ziel` = 1 − Anteil), Kontobindung bei Name, Passwort
+und Löschmeldung, frühe Rückkehr mit Busy-Rücknahme in
+`kontoLoeschenAusfuehren`. Zwei kleine Beobachtungen, **nicht gebaut**
+(CODEX-START § 7), für die Nachprüfung:
+1. E19: Die erste Bewertung des Tages hebt „Bester Lauf“. Rückgängig danach
+   senkt den Rekord nicht. Lernt man an dem Tag nichts mehr, bleibt der Rekord
+   um 1 zu hoch. Umsetzung entspricht dem Vorschlag in LERN-4.
+2. E3: Nach „Weiter zur E-Mail“ bleiben Beschriftung „Fertig“, Statuszeile
+   und das eingeblendete Kopierfeld bis zum Neuladen stehen, auch nach
+   Schließen und erneutem Öffnen.
+**LEHREN § 14:** 1 Codepfade gelesen, nicht nur Kommentare. 2 Muster im Repo
+gesucht (Rechtslinks sechs Stellen, Schriftstufen gemeinsam). 3 Texte und
+Kommentare nachgezogen (Serie im Reset-Dialog und Hinweis, Tastatur,
+Einstellungs-Abschnitte). 4 neue Handlungen im einen delegierten Listener;
+kein neues Blatt, kein neues Rasterkind. 5 Zustand in `ui`/Sitzung/Speicher
+(`drillRueckkehrTab`, `zurueckVon`, Hinweismerker). 6 Sprung 0, Kontrast 0,
+320 bis 1440 px geprüft; CPU-4×-Werte beschreibend gelesen. 7 `mz()` für
+Tage, keine Firebase-Codes im Text. 8 keine neuen Cloud-Felder,
+`firestore.rules` unverändert. 9 neuer Geräteschlüssel `adrabic-bereich-<uid>`
+steht in der Datenschutzerklärung Punkt 7 im selben Commit. 10 Syntax grün.
+11 Version an vier Stellen, 33 URLs, Changelog, CSP, APP_SHELL grün.
+12 Gesamtlauf, Affen, Runde 13/13. 13 Logbuch, PLAN, STAND, AUFGABEN.
+14 „Was Du noch tun musst“ in der Antwort.
+**Belege:** C:/Users/USER/Desktop/Wiederholung-Belege/Paket-E-2026-10-04-Abschluss/
+(`dritter-Gesamtlauf-fortgesetzt-139-von-139`, `affe-handy-200-7.log`,
+`affe-ipad-150-7.log`, `abnahme_runde-frisch.log` samt 13 Einzellogs,
+`gegenproben-lauf.log`, `gegenproben-8762d38`).
+**Offen:** E7 wartet auf „Z6b ja“, E17 auf Gerätetest G4, E26 später (Z7),
+V8 nicht freigegeben. G5/G6/G7 am echten Gerät nach Veröffentlichung.
+D12–D15 zurück. Ursprüngliche Transportursache der einmaligen
+SW-Skriptlademeldung (zweiter Lauf) ungeklärt, seither nicht wieder
+aufgetreten. Beobachtungen 1 und 2 oben. Online bleibt der Stand des
+Betreibers; 3.18.15 ist nicht veröffentlicht.
+**Nächster Schritt:** Betreiber veröffentlicht mit `ladegeraet.bat`. Danach
+auf sein Stichwort Paket F; nicht von selbst beginnen.
+
+### 2026-10-04, 20:00 — Betreiberpause; exakte Übergabe an Claude Code
+
+**Geändert:** CLAUDE-HANDOFF-2026-10-04-PAKET-E.md neu; Verweise in
+CLAUDE.md, STAND und PLAN. Keine Produkt-/Prüfquelle seit Start des dritten
+Gesamtlaufs geändert. Uncommitteten E-Stand vollständig erhalten.
+**Entscheidung:** Betreiber bittet wegen 5 % verbleibender Nutzung um
+Anhalten und Übernahme durch Claude Code. Geprüften Wrapperprozess und
+seinen Browserbaum gezielt beendet; kein E-Prüfprozess mehr aktiv.
+**Prüfung:** dritter Lauf 83/139 fertig, alle 83 vollständigen Logs gelesen,
+keine roten fertigen Tests. Letzter Abschluss t_paket_c.js (208 s),
+t_paket_c_fort.js unterbrochen, keine Abnahme daraus. BatteryStatus 2.
+Snapshot einschließlich Teil-Ausgabe im Abschluss-Belegordner unter
+dritter-Gesamtlauf-bei-Betreiberpause; ursprünglicher TEMP-Stand erhalten.
+**Offen:** übrige 56 Gesamttests, beide Affen, frischer 13/13-Wrapper,
+finale Gegenproben/Gegenprüfung/LEHREN §14 und Commit/Push. E7/E17 zurück,
+E26 später, Geräteabnahmen und D12–D15 unverändert. Nicht veröffentlicht.
+**Nächster Schritt:** auf ausdrücklichen Fortsetzungsauftrag die Übergabe
+lesen und bei unverändertem Quellstand alle_pruefen.js --fortsetzen;
+keinen bereits grünen Lauf neu anfangen, keine uncommittete Arbeit verwerfen.
+
+### 2026-10-04 — Paket E am Netzteil: frischer Abschlusslauf
+
+**Geändert:** erhaltenen E-Stand übernommen, keine anderen Paketaufgaben.
+E5-Nachkorrektur: app.js Absatzkonto-sicherhinweis, styles.css max-width
+48em, t_paket_e.js misst fünf Breiten. Neue eigene Regression in LEHREN.
+**Entscheidung:** „netzteil an“ bestätigt den zuvor angeforderten Abschluss,
+BatteryStatus 2, zunächst 61 Prozent; ausdrücklich kein Veröffentlichen.
+main und origin/main nach Fetch identisch (8762d38). Version 3.18.15 bleibt.
+**Prüfung/Gegenprüfung:** Syntax/Standprüfung grün, Server HTTP 200.
+Produktdiff erneut vollständig gegen EINST/LERN/Z9/Z10 gelesen:
+UID/Generationsbindung, frühe Rückkehr/Busy, Abbruch/offline/Teilerfolg,
+zentrale Handlungen/Schriftwahl, Text- und Datenschutznachträge geprüft.
+Erster frischer Gesamtlauf 4d41a7da9066a404 bewusst angehalten:
+t_gross_alle meldet Konto löschen auf beiden großen Breiten lange Zeilen 1,
+gegenüber 0 im abgenommenen D-Log. Der verlängerte Downloads-Absatz ist die
+Ursache; alleiniger Exit 0 hätte den neuen Befund verdeckt. Nur diesen Absatz
+begrenzt. E5 danach 320/390/820/1180/1440: 18,97/24,04/48/48/48 Schriftbreiten,
+kein Überlauf; t_gross_alle frisch auf beiden großen Breiten wieder alle
+Kontrast/Quer/Überdeckung/lange-Zeilen-Werte 0. Keine Grenze gelockert.
+Die 39 px in der beschreibenden Einstieg-Auswahlprobe sind bytegleich zu D,
+kein neuer E-Sprung. Beschreibende Tempowerte nicht als ruckelfrei ausgeben.
+Ersten angehaltenen Lauf und damaligen Produktdiff getrennt erhalten unter
+C:/Users/USER/Desktop/Wiederholung-Belege/Paket-E-2026-10-04-Abschluss/.
+Zweiter Gesamtlauf ebenfalls angehalten, vollständige 81 fertige Logs gelesen
+und getrennt erhalten: t_konto_fortsetzungen scheiterte am alten
+parameterlosen deleteUser-Anker der Hilfsprobe konto_adressdialog_app.js.
+Testanbindung am Exportnamen und Nutzerweitergabe korrigiert, keine
+Schutzassertion geändert. Frischer Einzelwrapper samt festen alten
+Gegenproben vollständig grün.
+Doppeltipp: ursprünglicher 80-ms-Fall hatte korrekte Karte 1, aber native
+SW-Skriptabrufmeldung, trotz Exit 0. Vier Diagnosefälle auf eigenem HTTP-Port:
+8762d38 und aktueller Stand normal ohne Fehler; absichtlich abgebrochener
+sw.js-Abruf auf beiden erzeugt exakt dieselbe native Konsolenmeldung und
+register-TypeError, Karte bleibt 1. Das belegt den Fehlerpfad, nicht die
+genaue Transportursache des ursprünglichen Abbruchs. Unverändertes
+t_doppeltipp anschließend frisch 80/150/250→1, 700→2, keine Seitenfehler.
+Keine Meldung gefiltert und kein Produkt-SW geändert. Diagnosequelle und
+Einzellog im Abschluss-Belegordner; im finalen Gesamtlauf erneut prüfen.
+Jetzt dritter frischer Gesamtlauf, ohne --fortsetzen, 139 Tests, Quellkennung
+f53f4c89e4421ee34b97574ca6b1da1cad6d08930eba5256dd333329a6b55b7f.
+**Offen:** vollständige Logs lesen, beide Affen, frischer 13/13-Rundenwrapper,
+feste Gegenproben, Abschlussgegenprüfung/LEHREN §14, Commit/Push auf main.
+E7/Z6b, E17/G4, E26/Z7, G5/G6/G7 und D12–D15 bleiben unverändert offen/zurück.
+**Nächster Schritt:** laufenden frischen Prüfstand abnehmen, dann Paket E
+abschließen. Nicht veröffentlichen.
+
+### 2026-10-04 — Paket E lokal abgenommen; Abschluss wartet auf Netzteil
+
+**Geändert:** app.js, styles.css, index.html und Datenschutzerklärung Punkt 7;
+28 freigegebene Produktaufgaben gebaut. E2 war bereits A3/3.18.11.
+Neue Einzelabnahmen t_paket_e.js (29 Aufgaben einschließlich E2), festes
+Gegenprobe-Commit 8762d38; kein HEAD-Vergleich. Attrappe ergänzt um gezielt
+hängende Reauth/Cloud/Profil/Reset-Antworten und zwei Lösch-Callback-Reihenfolgen.
+Standardverhalten erhalten; verzögertes Löschen von A überschreibt B nicht.
+t_einstellungen.js schließt das jetzt absichtlich offen bleibende Mailformular
+und prüft das anschließende echte Ideenformular ausdrücklich sichtbar.
+alle_pruefen.js gibt ausschließlich dem neuen Paket-E-Test 30 Minuten wie D,
+keine bestehende Prüfgrenze verändert und keinen Test entfernt/ausgelassen.
+Aufgaben, STAND, PLAN und eigene Fehler in LEHREN nachgezogen.
+Version 3.18.15 samt Cache, allen 33 Versions-URLs und Changelog vorbereitet
+nach CODEX-START §5.3; noch kein Commit und keine Gesamtabnahme dieser Version.
+
+**Entscheidung:** ausdrückliches „E weiter“ ersetzt die ältere E-Sperre.
+D/3.18.14 laut Betreiber abgeschlossen, gepusht und veröffentlicht.
+Anfangs sauberer main, Pull unverändert, Syntax/Standprüfung grün,
+Server 8099 HTTP 200. BatteryStatus durchgehend 1 (zuletzt 61 Prozent):
+nur Bau und Einzeltests; kein Gesamtlauf, Affe, Tempo-Abschluss, Commit,
+Push oder Veröffentlichung. E7 ohne Z6b ja zurück, E17 ohne Gerätetest G4
+zurück, E26 später Z7; V8 nicht freigegeben. D12–D15 und die Text-Probelauf-
+Implementierung unverändert; keine neue Paketarbeit.
+Z10 aus ENTSCHEIDUNGEN hat ausdrücklich Vorrang vor dem alten E14-Hinweis:
+keine Hilfe-Seite/Entwurfsfreigabe, nur Rückmeldung und Installationszeile.
+Bestehende Dialoge, Aktionen, Cloudfelder und Firebase-Resetmail genutzt.
+E31 führt nur die lokale Bereichs-ID pro UID ein; Datenschutz im selben Stand.
+Keine neue Cloudstruktur, Datenbankregel oder arabische/religiöse Formulierung.
+Bestehende Regeln erlauben Name 1–200 Zeichen und arabGroesse bis 20 Zeichen;
+sehrgross fällt darunter. firestore.rules unverändert.
+
+**Prüfung:** sämtliche endgültigen 25 betroffenen Einzeltest-Ausgaben vollständig
+gelesen, alle Exit 0. Die erste Folge stoppte sofort bei t_sprung rot;
+Ursache und Korrektur siehe Gegenprüfung/LEHREN, danach frisch grün.
+
+- Lernrunde, einzeln (13): t_runde_lage, t_sprung, t_sprung_ueben, t_wischen,
+  t_wischen_schraeg, t_doppeltipp, t_x_mitten, t_abgelehnt, t_undo_verlauf,
+  t_serie, t_rundenende, t_ueben, t_schreiben.
+- Weitere zwölf: t_einstellungen (maßgeblich Folgelauf), t_fehler_melden,
+  t_daten, t_bestaetigung, t_konto_nach_loeschen, t_konto_loeschwechsel,
+  t_konto_bestaetigungswechsel, t_settings_kontowechsel, t_gruss_datum,
+  t_hick, t_kontrast, t_a11y.
+
+Die 13 Einzeltests ersetzen nicht den vorgeschriebenen frischen
+abnahme_runde.js-Wrapper beim Paketabschluss. t_schreiben enthält CPU-4×-
+Messungen; auf Akku mit anderen Prüfungen keine Tempo-Abnahme daraus.
+E-Abnahmen gezielt einzeln, kein Gesamtaufruf von alle_pruefen.js oder
+standardmäßig vollständigem t_paket_e.js auf Akku. Oberflächenzustände auf
+320/390/iPad, hell/dunkel und bei Bewegungsänderung reduziert/bewegt;
+leer/voll, Abbruch, Fehler und Kontowechsel wie unten. E32 erst als
+Prüfkandidat ohne Produktänderung auf 320 px gemessen, danach eingebaut
+und endgültig mit langen Inhalten erneut geprüft. Acht PNG-Belege; tatsächlich
+angesehen: Einstellungen 320 hell, Installation 320 hell/dunkel, Desktoprunde
+offen. Texte lesbar, Dialog scrollbar, Bestätigung erreichbar.
+
+**Gegenprüfung nach grossplan/AUFTRAG §2a/§2b/§3:** vollständigen Produktdiff
+und neuen Prüfstand gelesen, jede Aufgabe gegen ihren gelesenen Befund geprüft.
+Vorhandene Regressionen erhalten, E21-Grenze nicht gelockert. Feste Altproben
+waren am konkreten Befund rot; reine Text-/Aufräumaufgaben zusätzlich am
+Ausgangsquelltext geprüft. E2 zeigt auf dem Ausgang bereits grün, daher kein
+unnötiger Produktfix. Lokales Ergebnis je Aufgabe:
+
+| Aufgabe | Diff gegen Befund und Abnahme |
+|---|---|
+| E1 | Reset nennt konkrete Serie 21 und null; zwölf Zustände/Abbruch erhalten Serie. Alt verschweigt Verlust. |
+| E2 | Bestehender Auth-Reset leert sämtliche Felder; Löschung A → B in sechs Zuständen bereits am Ausgang grün. Trifft nicht zu. |
+| E3 | Mailto bleibt offen, Kopierweg/markierbares Textfeld nach Ablehnung; zwölf Zustände, Entwurf erhalten, Knopf stabil. Alt schließt. |
+| E4 | Sechs App-Rechtslinks mit target blank/noopener; kompletter Einstieg auf drei Breiten, beide Popups, Name/Adresse erhalten. Alt ersetzt App. G7 offen. |
+| E5 | Blob-URL erst nach 60 s freigeben; Download angeboten und Downloads-Prüfsatz. Alt sofort widerrufen. G5 offen. |
+| E6 | Zukünftige Uhrzeit heute, vergangene morgen; ICS angeboten, Zeile Vorlage, vorsichtige Gerätetexte. Alt startet immer morgen. G6 offen. |
+| E8 | Erster Anzeigetag/Schwelle im vorhandenen Hinweismerkzeichen; Folgetag beendet Meilenstein. Montag → Dienstag/Mittwoch Rückblick in sechs Zuständen. Alt blockiert. |
+| E9 | overflow-wrap an Profilname, Löschliste und Ideenworten; 40/100 Zeichen in sechs Breiten/Themen passen. Alt läuft über. |
+| E10 | Dunkle theme-color #111010 statt #0e0e12; Browsermeta geprüft. Alt falsche Farbe. |
+| E11 | Erfolg an UID/Generation gebunden, Toast auch im Einstieg; zwölf Breiten/Themen/Callback-Reihenfolgen und spätes A nach B grün. Alt schweigt. |
+| E12 | Busy vor Passwortabfrage, vorhandenes 12-s-Limit um Reauth; tatsächlicher Zeitablauf, gesperrter Knopf, kein Delete und keine späte Fortsetzung. Alt keine Rückmeldung. |
+| E13 | Nur Werte von Einstellungs-Knopfzeilen umbrechen (Text-Probelauf-Zeile ausgenommen), Reset 44 px, Antwort sichtbar scrollen. Alt auf 320: Wert abgeschnitten, 36 px, Unterkante 754,53 >568; neu 551,53 und alle sechs Zustände grün. |
+| E14 | Z10: Rückmeldung + vorhandener Dialog mit drei Schritten je Plattform. Zwölf Zustände/Schließen grün; Herstelleranleitungen geprüft. Alt keine Installationshandlung. |
+| E15 | Name per bestehendem Prompt, Cloud dann Auth-Profil, Zeitlimit/UID-Schutz. Sechs Zustände, Abbruch/leer/offline, Cloudfehler, ehrlicher Teilerfolg/Wiederholung, spätes A ohne B-Fortsetzung grün. Alt keine Namensänderung. |
+| E16 | Überholte Kommentare/Aliasse und ungenutzte ID-Regeln entfernt, Backupname adrabic, gleiche Themenwahl ohne Cloudschreibaufruf. Tote Namen am Ausgang belegt; neue Probe grün. |
+| E18 | Eigener Rückkehrreiter statt bestehendem numerischen drillVon; Abbruch aus Lernen/Verwalten in sechs Zuständen richtig. Alt falscher Reiter. |
+| E19 | Rekord bei erster gezählter Bewertung mit vorhandener Funktion nachziehen; eine Bewertung, X, Rekord 12 lokal/cloud statt alter 10. Keine neue Serienregel. Serie/Undo grün. |
+| E20 | Feste zwei Slots inkl. leerem Platzhalter; zwölf Karten mit/ohne Notiz, vor/nach Aufdecken, zwölf Zustände: Merken höchstens 1 px, Alt 67,15 px. |
+| E21 | Escape beendet und speichert, Backspace nimmt zurück, sichtbare/ARIA-Tasten und Kommentare. Echter Space/3/Backspace/3/Escape-Verlauf genau eine Antwort. Erste Marken erhöhten Zeile 60→75,75 px und erzeugten −5 px; live CSS-Ausblendung belegte Ursache. Absolut im Knopf korrigiert; frischer Sprungtest viermal 0. |
+| E22 | Letzte Bewertungsart vor Löschen merken; jeweilige Geist-Keyframes reverse, reduzierte Bewegung none. Drei Richtungen × Bewegung grün; Alt karte-kommt. Nur fertige 0,01-ms-Reste anderer Animationen, keine laufende Rückkehr bei reduce. |
+| E23 | Limittext „Karten in dieser Runde“ ohne zweites geschafft. Quelltextprobe und Rundenende auf drei Geräten grün. |
+| E24 | Alten Hintergrund-Listener entfernt, vorhandene Kartendelegation behalten. Body-Tipp geschlossen, Karte öffnet; Alt Body-Tipp öffnet. Üben/Hick/Sprung grün. |
+| E25 | Ruhetag ohne Tageslernen: leerer Ring/kein Haken/echte nächste Fälligkeit; mit Tageslernen voller Ring. Zwölf Zustände grün; Alt unverdientes Lob. |
+| E27 | Andere fällige Bereiche als vorhandene select-bereich-Knöpfe, mindestens 44 px; zwölf Zustände tatsächlicher Wechsel. Alt nicht antippbar. |
+| E28 | Nachtgruß Hallo; Ausgang Gute Nacht durch Text-/Datumsprobe ersetzt. |
+| E29 | Vorhandenes Warnsymbol für häufig vergessen; Quelltextprobe statt zweiter Serienflamme grün. |
+| E30 | Nur password-Provider, bestehende Resetmail mit Bestätigung/Busy/Limit/UID-Schutz. Mail/Abbruch/Fehler, Google/Apple ohne Zeile, spätes A ohne Dialog in B grün. Alt keine Handlung. |
+| E31 | adrabic-bereich-UID nur Bereichs-ID; Lesen bei Auth, gültiger Fallback, Schreiben bei Auswahl, eigene Löschung räumt auf. Neustart b2, gelöschte ID b1, anderes Konto b1. Alt vergisst. Datenschutz Punkt 7 ergänzt. |
+| E32 | Sehr groß 1,6 in gemeinsamer Auswahl; 40 vorhandene Karten je Thema inkl. langer Notiz/Antwort, Liste/Einstieg auf 320 ohne Überlauf/Knöpfe außerhalb; acht angrenzende Zustände mit gespeicherter Wahl grün. Alt Stufe fehlt. |
+
+E14 Quellen, am 04.10.2026 gelesen und mit Manifest/Apple-Web-App-Meta abgeglichen:
+[Apple iPhone-Handbuch](https://support.apple.com/de-de/guide/iphone/iphea86e5236/ios)
+und [Google Chrome-Hilfe](https://support.google.com/chrome/answer/9658361?co=GENIE.Platform%3DAndroid&hl=de).
+Keine Behauptung, eine Kalenderdatei sei bereits ein eingerichteter Termin.
+
+Belege: C:/Users/USER/Desktop/Wiederholung-Belege/Paket-E-2026-10-04-Akku/.
+25 Testlogs, maßgeblich t_einstellungen-folgelauf.js.log, E32-final.log,
+quellen.json/quellen-folgelauf.json, acht PNGs und sprung-diagnose.js.
+Das erste rote Sprunglog wurde versehentlich überschrieben; die vier schon
+vollständig gelesenen Ergebniszeilen sind als ausdrücklich gekennzeichnete
+Abschrift t_sprung-erster-roter-lauf.txt erhalten, nicht als Original.
+Prüfläufe vor abschließender Versionsvorbereitung; unterschiedliche lokale
+Quellenstände dokumentiert. Kein frischer Gesamtstand oder Tempovergleich
+behauptet. Nach Versionsvorbereitung: Syntax von App/SW/neuem E-Test/Attrappe/
+Gesamtwrapper grün; pruefe_stand.mjs vollständig grün (3.18.15, CSS-Struktur,
+Version, CSP, APP_SHELL und SDK-Vorablinks), git diff --check grün.
+Letzte Akkuprüfung: BatteryStatus 1, 60 Prozent. Kein Paketabschluss behauptet.
+
+**LEHREN §14, Vorprüfung (vor Commit am Netzteil erneut):**
+1 Codepfade gelesen; 2 gleiche Muster im Repo gesucht; 3 Texte/Kommentare
+nachgezogen; 4 zentrale Schriftwahl, Aktionen, Auth-Reset und Testliste
+berücksichtigt; 5 dauerhafter Zustand in bestehenden ui-/Auth-/Speicherpfaden,
+kein neuer alleiniger DOM-Zustand; 6 Sprung/Kontrast/Breiten lokal grün,
+CPU-4×-Tempo und echtes Gerätegefühl offen; 7 Einzahl/Mehrzahl geprüft,
+Fehlertexte ohne Firebase-Codes; 8 keine neuen Cloudfelder/Regeln;
+9 Datenschutzerklärung um lokalen Bereichsspeicher ergänzt;
+10 Syntax grün; 11 Version/Cache/33 URLs/Changelog/CSP/APP_SHELL grün;
+12 betroffene 25 Einzeltests grün, Gesamtlauf/Affen/frischer Rundenwrapper
+noch offen; 13 Logbuch/PLAN/STAND/Aufgaben aktualisiert;
+14 Betreiber muss Netzteil anschließen und „Netzteil dran“ einfügen.
+Quellenhashes nach Versionsvorbereitung: quellen-version-vorbereitet.json.
+Prüfstand unter Windows weiter mit CHROMIUM=C:/Program Files/Google/Chrome/
+Application/chrome.exe und bestehendem Server 8099.
+
+**Offen:** frischer gesamter Prüfstand, beide Affen, separater frischer
+13/13-Rundenwrapper und eventuelle notwendige Fehlerkorrekturen am Netzteil;
+abschließende Gegenprüfung/LEHREN §14 vor Commit, Commit/Push auf main.
+E7/Z6b, E17/G4 und E26/Z7 bleiben wie oben; G5/G6/G7 nach späterer
+Betreiber-Veröffentlichung auf echten Geräten. Keine weitere Aufgabe bauen.
+
+**Nächster Schritt:** Betreiber fügt „Netzteil dran“ ein. BatteryStatus 2
+prüfen, vorhandenen Stand behalten, Paket E bis Commit/Push abschließen.
+Nicht veröffentlichen.
+
 ### 2026-10-04 — Paket D D1–D11 abgeschlossen, 3.18.14
 
 **Geändert:** vorhandenen Arbeitsstand vollständig erhalten und für den

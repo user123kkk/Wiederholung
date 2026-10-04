@@ -107,38 +107,38 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
-| E1 | EINST-1 | hoch | „Aufzeichnung zurücksetzen“ löscht die Serie, der Dialog verschweigt es | `befunde/EINST.md` | Sol niedrig | offen | Text ehrlich machen (a) jetzt; Zeile behalten |
-| E2 | EINST-2 | mittel | Nach „Konto löschen“ trägt das nächste Konto die Kopfzeile „Konto löschen“ | `befunde/EINST.md` | Astra mittel | offen |  |
-| E3 | EINST-3 | mittel | „Fehler melden“ ist ohne Mail-Programm eine Sackgasse | `befunde/EINST.md` | Sol niedrig | offen | zweiter Weg: Text zum Kopieren anzeigen |
-| E4 | EINST-4 | mittel | „← Zurück“ auf Datenschutz/Impressum lädt die App neu – Einstieg und Formular sind weg | `befunde/EINST.md` | Sol niedrig | offen | Code jetzt; Gerätetest G7 |
-| E5 | EINST-5 | mittel | Backup gilt als „heute gesichert“, auch wenn keine Datei ankam | `befunde/EINST.md` | Sol niedrig | offen | Code jetzt; Gerätetest G5 |
-| E6 | EINST-6 | mittel | Tägliche Erinnerung – auf Android und in der iPhone-App ungeprüft, drei kleine Fehler | `befunde/EINST.md` | Sol niedrig | offen | Code jetzt; Gerätetest G6 |
-| E7 | LERN-1 | mittel | Die Serie reißt ohne Warnung, wenn zwei Tage hintereinander nichts fällig ist | `befunde/LERN.md` | Sol niedrig | offen | Z6: Regel wird geändert, sobald Betreiber Z6b bestätigt (ENTSCHEIDUNGEN); bis dahin nicht bauen |
-| E8 | LERN-2 | mittel | Der Meilenstein-Hinweis bleibt für immer stehen und sperrt alle anderen Hinweise | `befunde/LERN.md` | Sol niedrig | offen | Ablauf nach einem Tag jetzt; Verlegen nicht |
-| E9 | EINST-7 | niedrig | Lange Wörter ohne Leerzeichen laufen aus der Karte (Ideen-Board, Profilname) | `befunde/EINST.md` | Sol niedrig | offen |  |
-| E10 | EINST-8 | niedrig | Leistenfarbe springt beim Start von #111010 auf #0e0e12 | `befunde/EINST.md` | Sol niedrig | offen |  |
-| E11 | EINST-9 | niedrig | Nach dem Löschen des Kontos sagt die App nichts | `befunde/EINST.md` | Sol niedrig | offen |  |
-| E12 | EINST-10 | niedrig | Neu-Anmelden vor dem Löschen hat kein Zeitlimit und keine Rückmeldung | `befunde/EINST.md` | Sol niedrig | offen |  |
-| E13 | EINST-11 | niedrig | Drei Kleinigkeiten auf 320 px | `befunde/EINST.md` | Sol niedrig | offen |  |
-| E14 | EINST-12 | niedrig | Der Abschnitt „Hilfe“ enthält keine Hilfe | `befunde/EINST.md` | Sol mittel | offen | Z10: ja, „soll perfekt sein“ – Entwurf (Aufbau + Wortlaut) dem Betreiber zeigen, erst nach seinem Ja einbauen |
-| E15 | EINST-13 | niedrig | Der Name lässt sich nach der Anmeldung nicht mehr ändern | `befunde/EINST.md` | Sol niedrig | offen | Z9: V1 Name ändern – ja |
-| E16 | EINST-14 | niedrig | Aufräumen im Einstellungs-Code | `befunde/EINST.md` | Sol niedrig | offen |  |
-| E17 | EINST-15 | niedrig | Google-Konto löschen am iPhone – Popup startet erst nach der Dialog-Bewegung | `befunde/EINST.md` | Sol niedrig | offen | erst nach Gerätetest G4 |
-| E18 | LERN-3 | niedrig | „Trotzdem üben“ wirft einen in den Verwalten-Reiter, „Abbrechen“ lässt einen dort stehen | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E19 | LERN-4 | niedrig | „Bester Lauf“ zieht nur am Rundenende nach | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E20 | LERN-5 | niedrig | „Merken“ springt zwischen Karten mit und ohne Notiz 68 px zur Seite | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E21 | LERN-6 | niedrig | Tastatur in der Runde: Escape tut nichts, Rückgängig hat keine Taste, zwei Kommentare beschreiben altes Verhalten | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E22 | LERN-7 | niedrig | Nach „Rückgängig“ steigt die Karte vom Stapel auf, statt von dort zurückzukommen, wohin sie flog | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E23 | LERN-8 | niedrig | Rundenende mit Rundenlimit sagt „Geschafft“ und darunter „10 Karten geschafft.“ | `befunde/LERN.md` | Luna niedrig | offen |  |
-| E24 | LERN-9 | niedrig | Im Üben deckt ein Tipp irgendwo auf, im Lernen nur die Karte oder der Knopf | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E25 | LERN-10 | niedrig | „Für heute durch“ mit vollem Ring und Haken, auch wenn heute gar nichts gelernt wurde | `befunde/LERN.md` | Sol niedrig | offen |  |
+| E1 | EINST-1 | hoch | „Aufzeichnung zurücksetzen“ löscht die Serie, der Dialog verschweigt es | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | Serie samt Zahl genannt; zwölf Zustände/Abbruch grün; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E2 | EINST-2 | mittel | Nach „Konto löschen“ trägt das nächste Konto die Kopfzeile „Konto löschen“ | `befunde/EINST.md` | Astra mittel | trifft nicht zu (bereits A3/3.18.11) | Auth-Reset leert sämtliche genannten Felder; echte Löschung A → Anmeldung B in sechs Zuständen am festen 8762d38 grün |
+| E3 | EINST-3 | mittel | „Fehler melden“ ist ohne Mail-Programm eine Sackgasse | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | zwölf Zustände: offen, Knopf stabil, Clipboard und manueller Kopierweg grün; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E4 | EINST-4 | mittel | „← Zurück“ auf Datenschutz/Impressum lädt die App neu – Einstieg und Formular sind weg | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | vollständiger Einstieg, beide Rechtsseiten separat, Name/Adresse erhalten; G7 offen; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E5 | EINST-5 | mittel | Backup gilt als „heute gesichert“, auch wenn keine Datei ankam | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | Blob 60 s erhalten, Download angeboten, Prüfsatz sichtbar; G5 offen; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E6 | EINST-6 | mittel | Tägliche Erinnerung – auf Android und in der iPhone-App ungeprüft, drei kleine Fehler | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | ICS heute/morgen, neutraler Vorlagenstatus grün; G6 offen; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E7 | LERN-1 | mittel | Die Serie reißt ohne Warnung, wenn zwei Tage hintereinander nichts fällig ist | `befunde/LERN.md` | Sol niedrig | zurück (wartet auf Z6b ja) | weder Serie-Regel noch ersetzter Warnsatz gebaut; ausdrückliche Freigabe fehlt |
+| E8 | LERN-2 | mittel | Der Meilenstein-Hinweis bleibt für immer stehen und sperrt alle anderen Hinweise | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | Meilenstein endet am Folgetag; Dienstag/Mittwoch Rückblick in sechs Zuständen grün; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E9 | EINST-7 | niedrig | Lange Wörter ohne Leerzeichen laufen aus der Karte (Ideen-Board, Profilname) | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | 40/100 Zeichen ohne Leerzeichen passen auf 320/390/iPad, hell/dunkel; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E10 | EINST-8 | niedrig | Leistenfarbe springt beim Start von #111010 auf #0e0e12 | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | dunkle theme-color durchgehend #111010; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E11 | EINST-9 | niedrig | Nach dem Löschen des Kontos sagt die App nichts | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | Toast/Ansage bei beiden Callback-Reihenfolgen; spätes A nach B ohne fremden Erfolg; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E12 | EINST-10 | niedrig | Neu-Anmelden vor dem Löschen hat kein Zeitlimit und keine Rückmeldung | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | echter 12-s-Abbruch, Busy, keine Löschung; späte Antwort wirkungslos; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E13 | EINST-11 | niedrig | Drei Kleinigkeiten auf 320 px | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | voller Wert, Reset mindestens 44 px, Bestätigungsantwort im Bild; sechs Zustände; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E14 | EINST-12 | niedrig | Der Abschnitt „Hilfe“ enthält keine Hilfe | `befunde/EINST.md` | Sol mittel | erledigt (3.18.15) | Z10 hat Vorrang: Rückmeldung und Installationszeile, keine Hilfe-Seite; zwölf Zustände grün, Herstellerquellen im Log; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E15 | EINST-13 | niedrig | Der Name lässt sich nach der Anmeldung nicht mehr ändern | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | Z9: Name in Cloud/Profil, Abbruch/offline/Teilfehler/Kontowechsel geprüft; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E16 | EINST-14 | niedrig | Aufräumen im Einstellungs-Code | `befunde/EINST.md` | Sol niedrig | erledigt (3.18.15) | Kommentare/Aliasse/tote ID-Regeln bereinigt; gleicher Themenwert ohne Schreibaufruf; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E17 | EINST-15 | niedrig | Google-Konto löschen am iPhone – Popup startet erst nach der Dialog-Bewegung | `befunde/EINST.md` | Sol niedrig | zurück (wartet auf Gerätetest G4) | erst nach Gerätetest G4 |
+| E18 | LERN-3 | niedrig | „Trotzdem üben“ wirft einen in den Verwalten-Reiter, „Abbrechen“ lässt einen dort stehen | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | Abbrechen kehrt zum Ausgangsreiter zurück; sechs Zustände; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E19 | LERN-4 | niedrig | „Bester Lauf“ zieht nur am Rundenende nach | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | erste Bewertung mit anschließendem X: Rekord 12 lokal und gespeichert; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E20 | LERN-5 | niedrig | „Merken“ springt zwischen Karten mit und ohne Notiz 68 px zur Seite | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | Merken auf zwölf Karten mit/ohne Notiz stabil, zwölf Zustände; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E21 | LERN-6 | niedrig | Tastatur in der Runde: Escape tut nichts, Rückgängig hat keine Taste, zwei Kommentare beschreiben altes Verhalten | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | Space/3/Backspace/3/Escape und Verlauf grün; verursachter Sprung belegt behoben; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E22 | LERN-7 | niedrig | Nach „Rückgängig“ steigt die Karte vom Stapel auf, statt von dort zurückzukommen, wohin sie flog | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | drei Rückkehrrichtungen reverse; reduzierte Bewegung ohne Rückkehranimation; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E23 | LERN-8 | niedrig | Rundenende mit Rundenlimit sagt „Geschafft“ und darunter „10 Karten geschafft.“ | `befunde/LERN.md` | Luna niedrig | erledigt (3.18.15) | Limittext ohne doppeltes geschafft, Rundenende grün; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E24 | LERN-9 | niedrig | Im Üben deckt ein Tipp irgendwo auf, im Lernen nur die Karte oder der Knopf | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | Üben: Hintergrund deckt nicht auf, Karte deckt auf; Lernrunden-Regression grün; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E25 | LERN-10 | niedrig | „Für heute durch“ mit vollem Ring und Haken, auch wenn heute gar nichts gelernt wurde | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | Ruhetag leerer Ring, nach Lernen voller Ring; zwölf Zustände; Gegenprüfung/25 Einzeltests siehe Logbuch |
 | E26 | LERN-11 | niedrig | Nach langer Pause steht nur eine große Zahl da | `befunde/LERN.md` | Sol niedrig | später (Z7) | Z7: wie empfohlen |
-| E27 | LERN-12 | niedrig | „Heute auch fällig: Bereich X (3)“ lässt sich nicht antippen | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E28 | LERN-13 | niedrig | Nachts begrüßt die App mit „Gute Nacht“ | `befunde/LERN.md` | Luna niedrig | offen |  |
-| E29 | LERN-14 | niedrig | Die Flamme steht für die Serie und für „oft vergessen“ | `befunde/LERN.md` | Sol niedrig | offen |  |
-| E30 | V2 | niedrig | Passwort ändern (nur E-Mail-Konten) | `befunde/EINST.md` Vorschlagsliste V2 | Sol mittel | offen | Z9: ja |
-| E31 | V4 | niedrig | Zuletzt geöffneten Bereich merken (nur Gerät) | `befunde/EINST.md` Vorschlagsliste V4 | Sol niedrig | offen | Z9: ja; neuer localStorage-Schlüssel → Datenschutzerklärung Punkt 7 |
-| E32 | V3 | niedrig | Arabische Schrift: Stufe „Sehr groß“ | `befunde/EINST.md` Vorschlagsliste V3 | Sol mittel | offen | Z9: nur bauen, wenn jede Karte/Liste auf 320 px ohne Überlauf bleibt (messen); sonst `trifft nicht zu` |
+| E27 | LERN-12 | niedrig | „Heute auch fällig: Bereich X (3)“ lässt sich nicht antippen | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | direkter Bereichswechsel und mindestens 44 px; zwölf Zustände; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E28 | LERN-13 | niedrig | Nachts begrüßt die App mit „Gute Nacht“ | `befunde/LERN.md` | Luna niedrig | erledigt (3.18.15) | Nachtgruß Hallo; Text-/Datumsprobe grün; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E29 | LERN-14 | niedrig | Die Flamme steht für die Serie und für „oft vergessen“ | `befunde/LERN.md` | Sol niedrig | erledigt (3.18.15) | Warnsymbol statt Serienflamme; Quelltextprobe grün; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E30 | V2 | niedrig | Passwort ändern (nur E-Mail-Konten) | `befunde/EINST.md` Vorschlagsliste V2 | Sol mittel | erledigt (3.18.15) | Z9: nur Passwort-Konten; Abbruch/Mail/Fehler/späte A-Antwort geprüft; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E31 | V4 | niedrig | Zuletzt geöffneten Bereich merken (nur Gerät) | `befunde/EINST.md` Vorschlagsliste V4 | Sol niedrig | erledigt (3.18.15) | Z9: Gerätekennung pro Konto; Neustart/entfernte ID/Kontowechsel grün; Datenschutz Punkt 7 ergänzt; Gegenprüfung/25 Einzeltests siehe Logbuch |
+| E32 | V3 | niedrig | Arabische Schrift: Stufe „Sehr groß“ | `befunde/EINST.md` Vorschlagsliste V3 | Sol mittel | erledigt (3.18.15) | Z9: 1,6-fach; 40 Karten je Thema, Listen/Einstieg auf 320 px ohne Überlauf, acht angrenzende Zustände grün; Gegenprüfung/25 Einzeltests siehe Logbuch |
 
 ## Paket F – Aufräumen (Code, Texte, Repo)
 

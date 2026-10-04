@@ -41,6 +41,7 @@ export function createUserWithEmailAndPassword(a, email){
 export function sendPasswordResetEmail(a,email){
   S.resetAnfragen = S.resetAnfragen || []; S.resetAnfragen.push(email);
   if (S.authFail) return Promise.reject(Object.assign(new Error('x'),{code:S.authFail}));
+  if (S.resetHaengt) return new Promise(ok=>{S.resetFreigeben=ok;});
   return Promise.resolve();
 }
 export function sendEmailVerification(){
@@ -48,13 +49,26 @@ export function sendEmailVerification(){
   if (S.authFail) return Promise.reject(Object.assign(new Error('x'),{code:S.authFail})); return Promise.resolve();
 }
 export function signOut(){ S.user = null; feuer(); return Promise.resolve(); }
-export function updateProfile(u, p){ S.protokoll.push('updateProfile'); S.updateProfileCalls = (S.updateProfileCalls || 0) + 1; Object.assign(u, p); return Promise.resolve(); }
+export function updateProfile(u, p){
+  S.protokoll.push('updateProfile'); S.updateProfileCalls = (S.updateProfileCalls || 0) + 1;
+  if (S.profileFail) return Promise.reject(Object.assign(new Error('x'), {code:S.profileFail}));
+  if (S.profileHaengt) return new Promise(ok=>{S.profileFreigeben=()=>{Object.assign(u,p);ok();};});
+  Object.assign(u, p); return Promise.resolve();
+}
 export function signInWithPopup(){ return Promise.reject(Object.assign(new Error('x'),{code:'auth/popup-closed-by-user'})); }
 export function signInWithRedirect(){ return Promise.reject(new Error('stub')); }
 export function getRedirectResult(){ return Promise.resolve(null); }
-export function deleteUser(){ S.protokoll.push('deleteUser'); S.geloescht = true; S.user = null; feuer(); return Promise.resolve(); }
+export function deleteUser(u){
+  S.protokoll.push('deleteUser');
+  const fertig=()=>{S.geloescht=true;if(!u||S.user===u)S.user=null;};
+  if(S.deleteUserHaengt)return new Promise(ok=>{S.deleteUserFreigeben=()=>{fertig();feuer();ok();};});
+  fertig();
+  if(S.deleteUserCallbackSofort){for(const cb of S.authListeners)cb(S.user);}else feuer();
+  return Promise.resolve();
+}
 export function reauthenticateWithCredential(){
   S.protokoll.push('reauth'); S.reauth = (S.reauth || 0) + 1;
+  if (S.reauthHaengt) return new Promise(ok=>{S.reauthFreigeben=ok;});
   if (S.reauthFail) return Promise.reject(Object.assign(new Error('x'), { code: 'auth/invalid-credential' })); return Promise.resolve();
 }
 export function reauthenticateWithPopup(u, p){
@@ -184,7 +198,11 @@ function _update(ref, a, ...rest){ if (S.fail) throw Object.assign(new Error('fa
   else { for (const k of Object.keys(a)) setzeTief(d, k.split('.'), a[k]); }
   S.store.set(ref.path, d); }
 export function setDoc(ref, data, opt){ try { _set(ref, data, opt); } catch(e){ return Promise.reject(e); } melden(ref.path); return Promise.resolve(); }
-export function updateDoc(ref, ...args){ try { _update(ref, ...args); } catch(e){ return Promise.reject(e); } melden(ref.path); return Promise.resolve(); }
+export function updateDoc(ref, ...args){
+  S.updateDocCalls=(S.updateDocCalls||0)+1;
+  if(S.updateDocHaengt)return new Promise(ok=>{S.updateDocFreigeben=()=>{_update(ref,...args);melden(ref.path);ok();};});
+  try { _update(ref, ...args); } catch(e){ return Promise.reject(e); } melden(ref.path); return Promise.resolve();
+}
 export function deleteDoc(ref){ S.protokoll.push('deleteDoc'); S.store.delete(ref.path); melden(); return Promise.resolve(); }
 export function addDoc(col, data){ const r = doc(col); S.addDocAufrufe = (S.addDocAufrufe || 0) + 1; if (S.addDocHaengt) return new Promise(ok => { S.addDocFreigeben = () => { _set(r, data); melden(); ok(r); }; }); _set(r, data); melden(); return Promise.resolve(r); }
 export function getDoc(ref){ if (S.failGet) return Promise.reject(Object.assign(new Error('Failed to get document because the client is offline.'), { code: 'unavailable' })); return Promise.resolve(dsnap(ref.path)); }

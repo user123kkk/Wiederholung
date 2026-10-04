@@ -1,5 +1,56 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**04.10.2026: Paket E abgenommen, Version 3.18.15, nicht veröffentlicht.**
+28 Aufgaben erledigt (E1, E3–E6, E8–E16, E18–E25, E27–E32); E2 trifft nicht
+zu (A3). Gesamtlauf 139/139 (83 bewahrt, 56 mit --fortsetzen am
+unveränderten Quellstand f53f4c89e4421ee3), Handy-Affe 200/iPad-Affe 150
+mit Startwert 7 je 0 Befunde, frische Runde 13/13, 28 Gegenproben am festen
+8762d38 am Befund rot. Sämtliche Ausgaben gelesen, beschreibende Werte gegen
+die D-Logs verglichen. Gegenprüfung und LEHREN §14 im Zyklus-Logbuch.
+Commit/Push direkt auf main, kein Deploy. Offen: E7 (Z6b), E17 (G4),
+E26 (Z7), V8, Geräteabnahmen G5/G6/G7, D12–D15 zurück. Zwei kleine
+Beobachtungen aus der Gegenprüfung (E19 Rekord nach Rückgängig, E3
+Formularreste) stehen im Logbuch, nicht gebaut. Nächster Betreiberschritt:
+ladegeraet.bat. Kein Paket F ohne sein Stichwort.
+Die folgenden Absätze sind Verlauf.
+
+**04.10.2026, 20:00: auf Betreiberwunsch angehalten, Übergabe an Claude Code.**
+E-Stand/3.18.15 bleibt uncommittet; kein Commit, Push oder Veröffentlichen.
+Prüfstand samt Browsern beendet. Dritter frischer Gesamtlauf: 83/139 fertig,
+alle 83 Logs vollständig gelesen, keine roten abgeschlossenen Tests.
+t_paket_c_fort.js unterbrochen. Auf Fortsetzungsauftrag bei unverändertem
+Quellstand mit --fortsetzen ab genau dort weiterarbeiten; danach Affen,
+frischer Rundenwrapper, Gegenproben/Checkliste und Commit/Push.
+Exakte Befehle, Quellen/Logs und geklärte Funde:
+[`zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md`](zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md).
+D12–D15/E7/E17 bleiben zurück; E26 später. Kein anderes Paket beginnen.
+Die folgenden E-Absätze beschreiben den Stand vor dieser ausdrücklichen Pause.
+
+**04.10.2026: Paket E lokal gebaut und geprüft, uncommittet.**
+Betreiber bestätigt D als 3.18.14 abgeschlossen, gepusht und veröffentlicht.
+Dieser neue Auftrag ersetzt die ältere E-Sperre darunter. D12–D15 bleiben
+zurück; keine Änderung oder weitere Diagnose daran. Ausgang 8762d38,
+Arbeitsbaum anfangs sauber, Pull unverändert, Syntax/Standprüfung grün,
+Server 8099 HTTP 200. Nach „netzteil an“ BatteryStatus 2: Paketabschluss läuft,
+frischer Gesamtlauf mit 139 Tests (f53f4c89e4421ee3). Noch kein Commit/Push.
+Ersten Lauf wegen zu breitem E5-Absatz angehalten, Hinweis korrigiert;
+große Bildschirmprobe wieder null Befunde. Zweiten Lauf wegen veralteten
+SDK-Ankers im Kontotest angehalten; Anbindung korrigiert, alte/neue Schutzfälle
+grün. Doppeltipp-Skriptladefehler auf beiden Versionen durch abgebrochenen
+SW-Abruf reproduziert; unveränderter frischer Einzeltest ohne Fehler.
+Finaler Gesamtlauf prüft dies erneut; ursprünglicher Transportabbruch ungeklärt.
+E1 lokal abgenommen; E2 bereits durch A3 behoben (sechs aktuelle Gegenfälle).
+E3–E6, E8–E16, E18–E25 und E27–E32 gebaut und gezielt geprüft;
+25 betroffene Einzeltests grün, darunter die 13 Lernrunden-Tests.
+Paketversion 3.18.15 vorbereitet, noch ohne Gesamtlauf/Commit/Push.
+E32: 1,6-fach nach 320-Pixel-Prüfung mit
+40 Karten, Listen und Einstiegsauswahl; lange Inhalte/Knöpfe geprüft.
+E7 wartet auf „Z6b ja“, E17 auf G4; V8 bleibt offen. Text-Probelauf unverändert.
+E26 bleibt später (Z7). Nächster Schritt: laufende frische Gesamtabnahme,
+Affen/Runden-Wrapper, Gegenprüfung/LEHREN §14,
+Commit und Push; nicht veröffentlichen. Vorhandenen Stand erhalten.
+Einzelheiten: `zyklus-2/LOGBUCH.md`, oberster Eintrag.
+
 **04.10.2026: Paket D D1–D11 abgenommen, Version 3.18.14.**
 Vorhandenen Stand einschließlich der begonnenen Version vollständig erhalten.
 D1–D9/D11 erledigt (3.18.14); D10 bleibt trifft nicht zu (B5/3.18.12).
