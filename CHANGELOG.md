@@ -1,3 +1,16 @@
+## 3.18.16 – 4. Oktober 2026
+
+**Ruhetag: Die Serie endet nicht mehr an Tagen, an denen nichts fällig ist
+(E7, Betreiber: „ruhetag ja“).** Bisher riss die Serie nach zwei Tagen ohne
+fällige Karte, obwohl es nichts zu lernen gab. Öffnest du die App an einem
+Tag, an dem in keinem Bereich etwas fällig ist, merkt das Tagesprotokoll
+jetzt einen Ruhetag. Er zählt die Serie nicht hoch, beendet sie nicht und
+verbraucht den einen verziehenen Tag nicht. Der Lernen-Bildschirm sagt an so
+einem Tag „Deine Serie bleibt.“ Ein Tag, an dem die App zu blieb, zählt wie
+bisher als ausgelassen. Im Kalender und in „Tage gelernt“ erscheint ein
+Ruhetag nicht als gelernt. Die Datenschutzerklärung (Punkt 5) nennt den
+Vermerk. Regeln unverändert.
+
 ## 3.18.15 – 4. Oktober 2026
 
 **Paket E: Einstellungen und Lernen verbessert.** Fehlerberichte bleiben zum

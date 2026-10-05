@@ -14,7 +14,7 @@ async function seite(b,vp,opt={}) {
     if(opt.zeit)await ctx.addInitScript(iso=>{const Echt=Date;window.__zeitE=new Echt(iso).getTime();window.Date=class extends Echt{constructor(...a){super(...(a.length?a:[window.__zeitE]));}static now(){return window.__zeitE;}};},opt.zeit);
     for(const f of ['app.js','styles.css','index.html']) {
       let body=alt?execFileSync('git',['show','8762d38:'+f],{cwd:repo,encoding:'utf8',maxBuffer:4e6}):fs.readFileSync(path.join(repo,f),'utf8');
-      if(f==='app.js') body+='\nwindow.__E={render,verlaufZuruecksetzen,serieAktuell,kontoLoeschenAusfuehren,kontoDatenLoeschen,kontoAuthLoeschen,erinnerungIcs,erinnerungHerunterladen,dateiSpeichern,lernenHinweis,hinweisSpeicher,get streak(){return streak;},get ui(){return ui;}};';
+      if(f==='app.js') body+='\nwindow.__E={render,verlaufZuruecksetzen,serieAktuell,kontoLoeschenAusfuehren,kontoDatenLoeschen,kontoAuthLoeschen,erinnerungIcs,erinnerungHerunterladen,dateiSpeichern,lernenHinweis,hinweisSpeicher,ruhetagPruefen:typeof ruhetagPruefen==="function"?ruhetagPruefen:null,get verlauf(){return verlauf;},get streak(){return streak;},get ui(){return ui;}};';
       if(f==='app.js'&&opt.kandidat)body+='\nif(!ARAB_STUFEN.some(x=>x.id==="sehrgross"))ARAB_STUFEN.push({id:"sehrgross",label:"Sehr groß",faktor:1.6});';
       await ctx.route(u=>u.hostname==='127.0.0.1'&&u.pathname.endsWith('/'+f),r=>r.fulfill({body,contentType:f.endsWith('.js')?'text/javascript':f.endsWith('.css')?'text/css':'text/html'}));
     }
@@ -104,7 +104,9 @@ async function e8(b) {
     assert.match(await p.evaluate(()=>__E.lernenHinweis()),/meilenstein/);
     const gespeichert=await p.evaluate(()=>__E.hinweisSpeicher());
     assert.equal(gespeichert.meilensteinTag,tag(0),'E8 erster Anzeigetag gespeichert');
-    await p.evaluate(()=>{const d=JSON.parse(localStorage.getItem('adrabic-hinweise'));const tag=new Date();tag.setDate(tag.getDate()-1);d.meilensteinTag=tag.getFullYear()+'-'+String(tag.getMonth()+1).padStart(2,'0')+'-'+String(tag.getDate()).padStart(2,'0');localStorage.setItem('adrabic-hinweise',JSON.stringify(d));});
+    // Gestern nach dem Lerntag der App (ab 04:00, lib.tag), nicht nach dem
+    // Kalender: zwischen 0 und 4 Uhr ist Kalender-gestern der Lerntag heute.
+    await p.evaluate(gestern=>{const d=JSON.parse(localStorage.getItem('adrabic-hinweise'));d.meilensteinTag=gestern;localStorage.setItem('adrabic-hinweise',JSON.stringify(d));},tag(-1));
     assert.ok(!(await p.evaluate(()=>__E.lernenHinweis())).includes('meilenstein'),'E8 gestriger Hinweis verdrängt andere');
     console.log('E8 erster Tag gemerkt; gestriger Meilenstein läuft ab');
   } finally {await ctx.close();}
@@ -121,6 +123,81 @@ async function e8(b) {
       console.log(`E8 ${vp.width}/${thema}: Montag gezeigt, Dienstag/Mittwoch Rückblick`);
     } finally {await s.ctx.close();}
   }
+}
+/* E7/Z6b (Betreiber 04.10.2026 „ruhetag ja“): Ein Tag, an dem in keinem
+   Bereich etwas fällig ist und die App geöffnet wird, zählt nicht hoch,
+   lässt die Serie aber nicht reißen und verbraucht den verziehenen Tag nicht. */
+const KEIN_SOCKEL_E7={sockel:0,sockelBis:'2020-01-01'};
+function e7Verlauf(gelernt,ruhe) {
+  const v={};for(const o of gelernt)v[tag(-o)]={w:1,n:0};for(const o of ruhe)v[tag(-o)]={w:0,n:0,r:1};return v;
+}
+function reihe(a,z){const x=[];for(let i=a;i<=z;i++)x.push(i);return x;}
+async function e7(b) {
+  // 1. Die Messung aus LERN-1: 10 Tage gelernt, drei Tage nichts fällig.
+  const store=vollerStore();store['users/u1'].streak=KEIN_SOCKEL_E7;store['users/u1'].verlauf={};
+  for(let i=25;i<=30;i++)store['users/u1'].verlauf['2026-09-'+i]={w:1,n:0};
+  for(let i=1;i<=4;i++)store['users/u1'].verlauf['2026-10-0'+i]={w:1,n:0};
+  for(const[k,v]of Object.entries(store))if(k.includes('/karten/')){v.nextReview='2026-10-08';v.ersteBewertung='2026-09-20';}
+  const {p,ctx}=await seite(b,GERAETE.handy,{store,zeit:'2026-10-05T12:00:00'});
+  try {
+    const serie=()=>p.evaluate(()=>{__E.render();return __E.serieAktuell();});
+    assert.equal(await p.evaluate(()=>Object.keys(__E.verlauf).filter(k=>__E.verlauf[k].w).length),10,'Prüfaufbau: zehn gelernte Tage geladen');
+    for(const d of ['2026-10-05','2026-10-06','2026-10-07']) {
+      await p.evaluate(d=>{window.__zeitE=new Date(d+'T12:00:00').getTime();if(__E.ruhetagPruefen)__E.ruhetagPruefen();},d);
+      await p.waitForTimeout(150);
+      assert.equal(await serie(),10,'E7 Serie reißt ohne fällige Karte am '+d);
+      if(alt)continue;   // Vorstand: maßgeblich ist die reißende Serie am dritten Tag
+      assert.equal(await p.evaluate(d=>(__FB.store.get('users/u1').verlauf[d]||{}).r,d),1,'E7 Ruhetag nicht gespeichert am '+d);
+      assert.equal(await p.evaluate(d=>{const e=__FB.store.get('users/u1').verlauf[d];return (e.w||0)+(e.n||0)+(e.t||0);},d),0,'Ruhetag zählt nicht als gelernt');
+    }
+    assert.match(await p.locator('.stapel__was').innerText(),/Deine Serie bleibt/);
+    await p.evaluate(()=>{__E.ruhetagPruefen();__E.ruhetagPruefen();});await p.waitForTimeout(150);
+    assert.equal(await p.evaluate(()=>__FB.store.get('users/u1').verlauf['2026-10-07'].r),1,'Ruhetag je Tag nur einmal');
+    // Tag, an dem wieder etwas fällig ist: kein Ruhetag, Serie steht noch.
+    await p.evaluate(()=>{window.__zeitE=new Date('2026-10-08T12:00:00').getTime();__E.ruhetagPruefen();});await p.waitForTimeout(150);
+    assert.equal(await p.evaluate(()=>__FB.store.get('users/u1').verlauf['2026-10-08']),undefined,'fälliger Tag ist kein Ruhetag');
+    assert.equal(await serie(),10);
+    assert.deepEqual(p.fehler,[]);
+    console.log('E7 LERN-1-Messung: drei Tage ohne Fällige, Serie 10 bleibt, je Tag ein Ruhetag; fälliger Tag ohne Marker');
+  } finally {await ctx.close();}
+  if(alt)return;
+  // 2. Regel einzeln, über die echte Anzeige (Karten fällig: kein automatischer Marker).
+  const faelle=[
+    ['zwei Ruhetage halten',e7Verlauf(reihe(3,12),[1,2]),10],
+    ['Ruhetag heute zählt nicht hoch',e7Verlauf(reihe(1,5),[0]),5],
+    ['Ruhetag und ein ausgelassener Tag: verziehen',e7Verlauf(reihe(3,12),[2]),10],
+    ['Ruhetag, dann zwei Tage ohne Öffnen: reißt wie bisher',e7Verlauf(reihe(4,13),[1]),0],
+    ['Ruhetag verbraucht den verziehenen Tag nicht',e7Verlauf([...reihe(3,7),...reihe(9,15)],[1,2]),12],
+    ['ohne Ruhetag unverändert: zwei Tage offen',e7Verlauf(reihe(3,12),[]),0]
+  ];
+  for(const[name,verlauf,erwartet]of faelle) {
+    const s=vollerStore();s['users/u1'].verlauf=verlauf;s['users/u1'].streak=KEIN_SOCKEL_E7;
+    const x=await seite(b,GERAETE.handy,{store:s});
+    try {
+      assert.equal(await x.p.evaluate(()=>Number(document.querySelector('.serie-zahl strong')?.textContent.trim()||0)),erwartet,'E7 '+name);
+      assert.equal(await x.p.evaluate(d=>(__FB.store.get('users/u1').verlauf[d]||{}).r||0,tag(0)),name.includes('heute')?1:0,'E7 kein Marker bei fälligen Karten: '+name);
+      console.log('E7 '+name+': '+erwartet);
+    } finally {await x.ctx.close();}
+  }
+  // 3. Wann der Marker entsteht.
+  const basis=()=>{const s=vollerStore();s['users/u1'].streak=KEIN_SOCKEL_E7;s['users/u1'].verlauf=e7Verlauf(reihe(1,5),[]);
+    for(const[k,v]of Object.entries(s))if(k.includes('/karten/')){v.nextReview=tag(3);v.ersteBewertung=tag(-9);}return s;};
+  const marker=async(name,store,soll)=>{
+    const x=await seite(b,GERAETE.handy,{store});
+    try {
+      await x.p.waitForTimeout(300);
+      assert.equal(await x.p.evaluate(d=>(__FB.store.get('users/u1').verlauf[d]||{}).r||0,tag(0)),soll,'E7 Marker: '+name);
+      if(soll){await x.p.reload();await x.p.waitForTimeout(1800);assert.equal(await x.p.evaluate(d=>__FB.store.get('users/u1').verlauf[d].r,tag(0)),1,'E7 Neustart zählt den Ruhetag doppelt');}
+      assert.deepEqual(x.p.fehler,[]);console.log('E7 Marker '+name+': '+soll);
+    } finally {await x.ctx.close();}
+  };
+  await marker('nichts fällig, Serie 5',basis(),1);
+  const anderer=basis();anderer['users/u1/karten/x1']={...anderer['users/u1/karten/k1'],bereichId:'b2',nextReview:tag(0),ersteBewertung:tag(-2)};
+  await marker('anderer Bereich hat Fälliges',anderer,0);
+  const ohneSerie=basis();ohneSerie['users/u1'].verlauf={};
+  await marker('keine Serie',ohneSerie,0);
+  const gelernt=basis();gelernt['users/u1'].verlauf[tag(0)]={w:1,n:0};
+  await marker('heute schon gelernt',gelernt,0);
 }
 async function e9(b) {
   for(const vp of [{...GERAETE.handy,width:320,height:568},GERAETE.handy,GERAETE.ipad])for(const thema of ['hell','dunkel']) {
@@ -507,10 +584,10 @@ async function e3(b) {
   }
 }
 (async()=>{
-  const pruefungen={E1:e1,E2:e2,E3:e3,E4:e4,E5:e5,E6:e6,E8:e8,E9:e9,E10:e10,E11:e11,E12:e12,E13:e13,E14:e14,E15:e15,E16:e16,E18:e18,E19:e19,E20:e20,E21:e21,E22:e22,E23:e23,E24:e24,E25:e25,E27:e27,E28:e28,E29:e29,E30:e30,E31:e31,E32:e32};
+  const pruefungen={E1:e1,E2:e2,E3:e3,E4:e4,E5:e5,E6:e6,E7:e7,E8:e8,E9:e9,E10:e10,E11:e11,E12:e12,E13:e13,E14:e14,E15:e15,E16:e16,E18:e18,E19:e19,E20:e20,E21:e21,E22:e22,E23:e23,E24:e24,E25:e25,E27:e27,E28:e28,E29:e29,E30:e30,E31:e31,E32:e32};
   if(aufgabe&&!pruefungen[aufgabe])throw new Error('Kein Bauauftrag/keine Probe für '+aufgabe);
   const b=await start();try {
     for(const name of aufgabe?[aufgabe]:Object.keys(pruefungen))await pruefungen[name](b);
-    if(!aufgabe)console.log('Paket E: '+Object.keys(pruefungen).length+' lokale Abnahmen; E7 wartet auf Z6b ja, E17 auf G4, E26 später Z7.');
+    if(!aufgabe)console.log('Paket E: '+Object.keys(pruefungen).length+' lokale Abnahmen; E17 wartet auf G4, E26 später Z7.');
   } finally {await b.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

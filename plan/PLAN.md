@@ -4,12 +4,15 @@ Grundlage: [`../KONZEPT.md`](../KONZEPT.md)
 Angelegt: 12. September 2026
 Zuletzt geändert: 18. September 2026 (Google-Login bestätigt, Umzug auf adrabic.web.app)
 
-**AKTUELL (04.10.2026):** Zyklus 2, **Paket E abgeschlossen, 3.18.15**,
-committet und auf main gepusht, **nicht veröffentlicht**. Gesamtlauf 139/139,
-Affen 0 Befunde, Runde 13/13, 28 Gegenproben rot am Vorstand. Beim Betreiber
-offen: `ladegeraet.bat` (veröffentlichen), danach Gerätetests G5/G6/G7 und
-G4; Entscheidung Z6b (E7) und V8. D12–D15 bleiben zurück. Kein Paket F ohne
-sein Stichwort. Die folgenden Absätze sind Verlauf.
+**AKTUELL (05.10.2026):** Zyklus 2, **Paket E einschließlich E7 abgeschlossen,
+3.18.16**, Abschluss mit Commit/Push direkt auf main, **nicht veröffentlicht**.
+Gesamtlauf 139/139, Affen 0 Befunde, frische Runde 13/13; E7-Gegenprobe am
+festen 8762d38 rot (Serie 0 statt 10). Z6b umgesetzt, V8 nein. Beim Betreiber
+offen: `ladegeraet.bat`, falls er veröffentlichen möchte; danach Gerätetests
+G5/G6/G7 und G4. Ruhetag setzt Öffnen der App voraus, Rückwärtsrechnen
+abgelehnt; neuer Datenschutz-Satz Teil der offenen Rechtsprüfung.
+D12–D15 bleiben zurück, E17 wartet auf G4, E26 später (Z7). Kein Paket F
+ohne „F weiter“. Die folgenden Absätze sind Verlauf.
 **Verlauf 04.10., Auftrag „E weiter“.**
 **20:00 Uhr: auf Betreiberwunsch angehalten, Claude-Code-Übergabe erstellt.**
 83/139 Gesamttests fertig und vollständig gelesen; t_paket_c_fort unterbrochen.

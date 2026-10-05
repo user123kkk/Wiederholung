@@ -1,5 +1,28 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**05.10.2026: E7 abgeschlossen, Version 3.18.16, nicht veröffentlicht.**
+Uncommittete Übergabearbeit vollständig behalten und abgenommen. Gesamtlauf
+139/139 Exit 0 am unveränderten Quellstand bdfec355e529485d; sämtliche Logs
+gelesen und gegen den abgenommenen E-Stand verglichen. Frische Runde 13/13,
+Handy-Affe 200 und iPad-Affe 150 mit Startwert 7 je 0 Befunde. E7-Gegenprobe
+am festen 8762d38 rot: am 07.10. Serie 0 statt 10. Gegenprüfung und
+LEHREN §14 im Zyklus-Logbuch. Abschluss mit Commit/Push direkt auf main;
+kein Deploy. Z6b umgesetzt, V8 nein. E17 wartet auf G4, E26 später (Z7),
+G5/G6/G7 und Rechtsprüfung offen; D12–D15 bleiben zurück.
+Ruhetag nur bei geöffneter App; Rückwärtsrechnen ausdrücklich abgelehnt.
+Nächster Betreiberschritt: ladegeraet.bat selbst starten, wenn er
+veröffentlichen möchte. Paket F erst auf „F weiter“. Folgendes ist Verlauf.
+
+**05.10.2026, 01:10: E7 (Ruhetag) gebaut, 3.18.16 vorbereitet, uncommittet.**
+Betreiber 04.10.: „ruhetag ja“ (Z6b), „5 nein“ (V8), „E weiter“. Gegenprobe
+am festen 8762d38 rot, neue Abnahme E7 und t_serie 14/14 grün. Frischer
+Gesamtlauf bdfec355e529485d lief um 01:09 noch (114 grün, t_paket_e rot
+durch E8-Datumsfixture nach Mitternacht; Fixture korrigiert, Nachlauf offen).
+Betreiber kann sich bei Claude gleich nicht mehr anmelden. Genaue Stelle und
+Befehle für die Fortsetzung:
+[`zyklus-2/CODEX-HANDOFF-2026-10-05-E7.md`](zyklus-2/CODEX-HANDOFF-2026-10-05-E7.md).
+Kein Commit/Push/Deploy bisher. Nichts verwerfen, kein Paket F vorher.
+
 **04.10.2026: Paket E abgenommen, Version 3.18.15, nicht veröffentlicht.**
 28 Aufgaben erledigt (E1, E3–E6, E8–E16, E18–E25, E27–E32); E2 trifft nicht
 zu (A3). Gesamtlauf 139/139 (83 bewahrt, 56 mit --fortsetzen am

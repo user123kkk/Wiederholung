@@ -14,9 +14,11 @@ const { start, neueSeite, vollerStore, tag, GERAETE } = require('./lib');
    1 = gestern, usw. Nicht genannte Offsets bleiben ohne Eintrag (Luecke -
    auch "vor dem Beginn des Verlaufs" zaehlt als Luecke, siehe Kommentar in
    app.js). */
-function verlaufAus(gelernteOffsets) {
+function verlaufAus(gelernteOffsets, ruheOffsets) {
   const v = {};
   for (const off of gelernteOffsets) v[tag(-off)] = { w: 1, n: 0 };
+  /* E7/Z6b: Ruhetag - App geoeffnet, nichts faellig (Marke r, nichts gelernt). */
+  for (const off of (ruheOffsets || [])) v[tag(-off)] = { w: 0, n: 0, r: 1 };
   return v;
 }
 function bereich(offsets) { const a = []; for (let i = offsets[0]; i <= offsets[1]; i++) a.push(i); return a; }
@@ -90,6 +92,38 @@ const FAELLE = [
     verlauf: verlaufAus(bereich([0, 29])),
     streak: { sockel: 100, sockelBis: tag(-30) },
     erwartet: 130
+  },
+  /* E7/Z6b (3.18.16, Betreiber "ruhetag ja" 04.10.2026). Gegenprobe gegen den
+     festen Stand davor: t_paket_e.js E7 --alt (8762d38). */
+  {
+    name: 'Ruhetag: zwei Ruhetage hintereinander halten die Serie',
+    verlauf: verlaufAus(bereich([3, 12]), [1, 2]),
+    streak: KEIN_SOCKEL,
+    erwartet: 10
+  },
+  {
+    name: 'Ruhetag heute zaehlt nicht hoch',
+    verlauf: verlaufAus(bereich([1, 5]), [0]),
+    streak: KEIN_SOCKEL,
+    erwartet: 5
+  },
+  {
+    name: 'Ruhetag und ein ausgelassener Tag - der wird verziehen',
+    verlauf: verlaufAus(bereich([3, 12]), [2]),
+    streak: KEIN_SOCKEL,
+    erwartet: 10
+  },
+  {
+    name: 'Ruhetag, davor zwei Tage ohne Oeffnen - reisst wie bisher',
+    verlauf: verlaufAus(bereich([4, 13]), [1]),
+    streak: KEIN_SOCKEL,
+    erwartet: 0
+  },
+  {
+    name: 'Ruhetage verbrauchen den verziehenen Tag nicht (Luecke Tag 8, 5 Tage danach)',
+    verlauf: verlaufAus([...bereich([3, 7]), ...bereich([9, 15])], [1, 2]),
+    streak: KEIN_SOCKEL,
+    erwartet: 12
   }
 ];
 

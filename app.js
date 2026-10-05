@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.15";
+const APP_VERSION = "3.18.16";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -948,9 +948,14 @@ function normVerlauf(v) {
                n: Number.isInteger(e.n) && e.n > 0 ? e.n : 0 };
     if (Number.isInteger(e.u) && e.u > 0) out[k].u = e.u;   /* 3.16.0: geuebt, siehe tagGelernt */
     if (Number.isInteger(e.t) && e.t > 0) out[k].t = e.t;   /* 3.18.3: Textzeilen, siehe tagGelernt */
+    if (Number.isInteger(e.r) && e.r > 0) out[k].r = e.r;   /* E7: Ruhetag, siehe ruhetagPruefen */
   }
   return out;
 }
+/* Die Arten im Tagesprotokoll: w Wiederholung, n neue Karte, u geuebt,
+   t Textzeile, r Ruhetag (E7). Eine Stelle, damit Zusammenfuehren und
+   Schreiben dieselbe Liste benutzen. */
+const VERLAUF_ARTEN = ["w", "n", "u", "t", "r"];
 /* 3.16.0: Das Protokoll zaehlt auch Antworten im UEBEN (u), damit der
    Fortschritt zeigen kann, wie viel geuebt wurde (offene Frage 15,
    Betreiber am 24.09.2026: "mach einfach"). Die Entscheidung dazu: Ein Tag,
@@ -1002,7 +1007,7 @@ function verlaufZusammen(wolke) {
   for (const [tag, delta] of Object.entries(verlaufOffen)) {
     if (tag < grenze) continue;
     const e = out[tag] || (out[tag] = { w: 0, n: 0 });
-    for (const art of ["w", "n", "u", "t"]) {
+    for (const art of VERLAUF_ARTEN) {
       if (delta[art]) e[art] = Math.max(0, (e[art] || 0) + delta[art]);
     }
   }
@@ -1022,7 +1027,36 @@ function verlaufJetztSchreiben() {
 }
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") verlaufJetztSchreiben();
+  /* E7: Wer die App ueber den Tageswechsel offen laesst und zurueckkommt. */
+  else ruhetagPruefen();
 });
+/* E7 / Z6b (Betreiber 04.10.2026 "ruhetag ja" - Lernlogik, deshalb nur mit
+   ausdruecklicher Erlaubnis): Wird die App an einem Tag geoeffnet, an dem in
+   KEINEM Bereich etwas faellig ist, merkt das Tagesprotokoll einen Ruhetag
+   (r). serieAktuell() ueberspringt ihn: er zaehlt nicht hoch, beendet die
+   Serie nicht und verbraucht den verziehenen Tag nicht. Vorher riss die
+   Serie nach zwei solchen Tagen, obwohl es nichts zu lernen gab (LERN-1).
+   Ein Tag, an dem die App zu blieb, bleibt eine Luecke wie bisher - was an
+   so einem Tag faellig war, laesst sich nachtraeglich nicht feststellen.
+   Geschrieben wird nur, wenn es etwas zu halten gibt (Serie > 0): bei
+   Serie 0 aendert ein Ruhetag am Ergebnis nichts, und ein leeres neues
+   Konto schriebe sonst jeden Tag. Einmal je Tag; ein zweites Geraet kann r
+   auf 2 heben, gelesen wird nur r > 0. */
+function ruhetagPruefen() {
+  if (!currentUser || !userDocRef || kontoWirdGeloescht || !cloudDocExists || ui.umzug) return;
+  if (bereiche === null || rohBereiche === null || rohKarten === null) return;
+  const t = todayStr();
+  const e = verlauf[t];
+  if (e && (e.r > 0 || tagGelernt(e))) return;
+  if (bereiche.some(b => dueCardsFor(b).length > 0)) return;
+  if (texteFreigeschaltet() &&
+      bereiche.some(b => (b.texte || []).some(x => textWdhPlan(b, x, t).length > 0))) return;
+  if (serieAktuell() < 1) return;
+  if (!verlauf[t]) verlauf[t] = { w: 0, n: 0 };
+  verlauf[t].r = 1;
+  verlaufDeltaMerken(t, "r", 1);
+  persistVerlauf();
+}
 /* Atomare Differenzen je Tag/Antwortart, nie den gesamten Tagesstand.
    Auch Rueckgaengig ueber Mitternacht schreibt seinen urspruenglichen Tag.
    Firestore legt increments offline dauerhaft ab; seine ausstehende Promise
@@ -1032,7 +1066,7 @@ function persistVerlauf() {
   const delta = verlaufOffen;
   const args = [];
   for (const [tag, e] of Object.entries(delta)) {
-    for (const art of ["w", "n", "u", "t"]) {
+    for (const art of VERLAUF_ARTEN) {
       if (e[art]) args.push(new fb.FieldPath("verlauf", tag, art), fb.increment(e[art]));
     }
   }
@@ -1067,7 +1101,7 @@ function persistVerlauf() {
     }
     // Nur eine vom Server ABGELEHNTE Differenz erneut merken, nicht offline.
     for (const [tag, x] of Object.entries(delta)) {
-      for (const art of ["w", "n", "u", "t"]) if (x[art]) verlaufDeltaMerken(tag, art, x[art]);
+      for (const art of VERLAUF_ARTEN) if (x[art]) verlaufDeltaMerken(tag, art, x[art]);
     }
     verlauf = verlaufZusammen(verlaufStand);
     if (e && e.code === "permission-denied") verlaufAbgelehnt = true;
@@ -2109,6 +2143,7 @@ function datenZusammenbauen() {
   if (ladeTimer) { clearTimeout(ladeTimer); ladeTimer = null; }
   ladeLangsam = false;
   evaluateStreakForNewDay();
+  ruhetagPruefen();
   if (vorher !== null && !brauchteRender &&
       JSON.stringify([bereiche, streak, ui.bereichId]) === vorher) return;
   render();
@@ -2526,6 +2561,7 @@ async function initFirebase() {
           ui.umzug = null;
           sammlungenStarten();
           evaluateStreakForNewDay();
+          ruhetagPruefen();
           // Eine reine Zaehler-Bestaetigung darf die laufende Karte/Zeichen-
           // flaeche nicht ersetzen und einen Strich oder Wisch abbrechen.
           if (!nurVerlauf || !ui.session) render();
@@ -3108,6 +3144,12 @@ function evaluateStreakForNewDay() {
    Ein Tag zaehlt, wenn an ihm gelernt wurde - eine Karte in irgendeinem
    Bereich genuegt, das Rundenlimit spielt keine Rolle.
 
+   E7/Z6b (3.18.16, Betreiber-Freigabe "ruhetag ja" am 04.10.2026): Ein
+   Ruhetag - App geoeffnet, in keinem Bereich etwas faellig - wird beim
+   Zaehlen uebersprungen. Er zaehlt nicht mit, beendet die Serie nicht und
+   verbraucht den verziehenen Tag nicht (ruhetagPruefen, Marke r im
+   Tagesprotokoll). tagGelernt() bleibt unveraendert.
+
    3.17.20 (offene Frage 18, Betreiber-Freigabe "ja mach" am 24.09.2026 -
    Lernlogik, deshalb nur mit ausdruecklicher Erlaubnis geaendert): Der
    Joker laedt sich nach SERIE_JOKER_TAGE gelernten Tagen wieder auf, statt
@@ -3167,6 +3209,9 @@ function serieAktuell(info) {
       if (info && !info.anker && d <= info.grenze) { info.anker = d; info.tageDavor = tage; }
       tage++; seitJoker++; continue;
     }
+    /* E7/Z6b: Ruhetag (nichts faellig, App geoeffnet) - weder gezaehlt noch
+       Luecke; der verziehene Tag bleibt unberuehrt. Siehe ruhetagPruefen. */
+    if (verlauf[d] && verlauf[d].r > 0) continue;
     /* Ein ausgelassener Tag unterbricht die Serie nicht - Krankheit, Reise,
        ein voller Tag - solange seit dem letzten verziehenen Tag genug
        gelernt wurde. Reicht es nicht, endet die Zaehlung hier. */
@@ -11006,11 +11051,13 @@ function lernenStapel(b, cards, due, neuImStapel) {
     const ruheText = naechster
       ? 'Die nächsten Karten kommen am ' + new Date(naechster.tag + 'T12:00:00').toLocaleDateString('de-DE', {weekday:'long'}) + '.'
       : 'Im Moment ist keine Runde nötig. Die nächsten Karten kommen von selbst.';
+    /* E7: nur am gemerkten Ruhetag (in keinem Bereich etwas faellig). */
+    const ruhetag = !heuteGelernt && verlauf[todayStr()] && verlauf[todayStr()].r > 0 && serieAktuell() > 0;
     html += '<div class="stapel stapel--fertig">';
     html += '<div class="stapel__ring">' + ringSvg(heuteGelernt ? 1 : 0) +
       '<div class="stapel__mitte">' + (heuteGelernt ? ikon("haken", "i-xl") : '') + '</div></div>';
     html += '<div class="stapel__titel">' + (heuteGelernt ? 'Für heute durch' : 'Heute ist nichts fällig') + '</div>';
-    html += '<div class="stapel__was">' + (!heuteGelernt ? esc(ruheText) : morgen > 0
+    html += '<div class="stapel__was">' + (!heuteGelernt ? esc(ruheText) + (ruhetag ? ' Deine Serie bleibt.' : '') : morgen > 0
       ? 'Morgen ' + (morgen === 1 ? 'kommt' : 'kommen') + ' <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
       : 'In \u201e' + esc(b.name) + '\u201c ist nichts mehr f\u00e4llig. Der n\u00e4chste Schwung kommt von selbst.') + '</div>';
     /* 3.16.0: oeffnet das Ueben direkt, statt nur den Reiter zu wechseln -

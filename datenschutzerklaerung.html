@@ -130,7 +130,9 @@
       das Tagesprotokoll und deine Einstellungen werden in der Firestore-Datenbank (Google)
       gespeichert, damit sie über mehrere Geräte hinweg verfügbar sind. Zum Tagesprotokoll gehört
       eine zufällige Kennung, damit alte Offline-Übertragungen nach dem Zurücksetzen nicht wieder
-      in die Aufzeichnung gelangen. Die Zugriffsregeln der
+      in die Aufzeichnung gelangen. Öffnest du die App an einem Tag, an dem nichts fällig ist,
+      vermerkt das Tagesprotokoll diesen Tag als Ruhetag, damit deine Serie dadurch nicht endet.
+      Die Zugriffsregeln der
       Datenbank (<code>firestore.rules</code>) lassen jedes Konto ausschließlich an die eigenen
       Daten – andere Nutzer:innen können sie nicht einsehen. Ausnahmen gibt es zwei: Kartensätze,
       die du selbst per Code teilst (unten), und das Feedback-Board (Punkt 6) – dort ist

@@ -2,6 +2,115 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-05 — E7 Ruhetag abgenommen, 3.18.16 (Codex nach Übergabe)
+
+**Geändert:** Übernommener Produktstand unverändert erhalten: `app.js:951`
+(`r` normalisieren, zentrale `VERLAUF_ARTEN`), `app.js:1045`
+(`ruhetagPruefen`), Aufrufe beim Laden, Nutzer-Snapshot und Sichtbarwerden,
+`app.js:3212` (Ruhetage überspringen), `app.js:11054` (Satz auf Lernen).
+Version in app.js/sw.js/index.html, CHANGELOG, Datenschutz Punkt 5;
+E7-Abnahme und E8-Lerntag-Fixture in t_paket_e.js, fünf Fälle in t_serie.js.
+AGENTS-Verweis, Übergabe und Entscheidung V8 aus dem uncommitteten Stand
+mitgenommen. Eigene Änderungen nur Abschlussdokumentation: AUFGABEN E7,
+STAND, PLAN AKTUELL, dieses Logbuch, LEHREN E8-Nachlauf, Überschrift und
+Umsetzungsnotiz in ENTSCHEIDUNGEN. Keine Produkt-/Attrappen-/Teständerung
+seit dem finalen Gesamtlauf.
+**Entscheidung:** Auftrag, genau an CODEX-HANDOFF-2026-10-05-E7 fortzusetzen,
+nichts verwerfen, nicht veröffentlichen. Z6b „ruhetag ja“, V8 „5 nein“.
+Marker nur bei bestehender Serie: Serie 0 braucht keinen täglichen Write.
+Commit/Push direkt auf main gemäß Übergabe. Netzteil BatteryStatus 2;
+Server 8099 verfügbar, CHROMIUM je Aufruf gesetzt, Browserläufe seriell.
+**Prüfung:**
+
+- Übernommener Gesamtlauf: **139/139 Exit 0**, kein Zeitlimit/abnahmeOk=false,
+  Quellstand bdfec355e529485d7cf4304414e65913fa4554c34f977268e1fa1a335e8e8a69.
+  Alle 139 Logs gelesen und zeilenweise gegen den abgenommenen E-Lauf
+  verglichen. Unterschiede: E7-Abnahmen/fünf Serienfälle, Datum, Version,
+  zufällige Karten und Laufzeiten; keine neue beschreibende Regression.
+  E8-Fixture folgt tag(-1), Nachlauf t_paket_e 914 s grün.
+- Tempo-Rot 204 ms aus dem ersten Lauf durch die übergebene Messung
+  x_ab_tempo.js 8 1242368 geprüft (Werkzeug verwendet oberen Median):
+  Verwalten alt 141/143/158/173/176/217/220/241 ms, Median 176, 3 über 200;
+  neu 145/145/145/148/157/166/180/185 ms, Median 157, 0 über 200.
+  Text-Median alt 142, neu 111 ms. A/B aus der Übergabe, nicht neu gemessen;
+  keine E7-Verschlechterung erkennbar, Grenze unverändert. Finaler Nachlauf
+  t_text_tempo max. 182 ms grün. t_bestand_tempo bei Bewertungen max. 60 ms
+  (vorher 85); t_fluessig nennt beschreibend 221 ms beim Reiterwechsel.
+  Daraus keine Aussage „ruckelfrei“.
+- Frische Affen: Handy **200**, iPad **150**, Startwert 7, je **0 Befunde**.
+- Frische abnahme_runde ohne --fortsetzen: **13/13 grün**; alle 13
+  Einzellogs vollständig gelesen und gegen die Gesamtlogs verglichen.
+  Unterschiede nur Kartenreihenfolge/Wortlänge, Zeit und Wischweg 68/69 px.
+  Sprünge auf Lernen/Üben überall 0, Kontrast 0, kein Überlauf; Schreiben
+  mit CPU 4× 0 Bilder über 34 ms. Doppeltipp 80/150/250 ms bleibt Karte 1,
+  700 ms Karte 2. Keine Skriptlademeldung.
+- Frische Gegenprobe E7 --alt am festen **8762d38**: Exit 1 mit genau
+  „E7 Serie reißt ohne fällige Karte am 2026-10-07“, actual 0, expected 10.
+  Neuer Stand: drei Tage Serie 10, sechs Regelfälle, vier Markerfälle grün;
+  t_serie 14/14 einschließlich Joker und Tagen ohne Öffnen.
+- node --check app.js/sw.js/t_paket_e.js/t_serie.js, pruefe_stand.mjs
+  (3.18.16, CSP, APP_SHELL), git diff --check grün. Fetch: origin/main
+  unverändert bbb9b88 vor Abschluss; kein fremder uncommitteter Stand
+  verworfen. Abschluss direkt auf main, Remote-Hash danach prüfen.
+**Gegenprüfung (grossplan/AUFTRAG §2a):** gesamten Diff gegen LERN-1 und
+Z6b gelesen, alle Erwartungen mit der freigegebenen Regel verglichen.
+ruhetagPruefen schreibt nur nach geladenem Nutzerdokument UND beiden
+Sammlungen, bei fehlenden fälligen Karten in sämtlichen Bereichen und
+fehlenden fälligen Textzeilen im Betreiber-Konto; nie bei Löschung/Umzug,
+Serie 0 oder bereits gelerntem Tag. Gleicher Tag/Neuladen erzeugt keinen
+zweiten Write; zwei Geräte können r auf 2 heben, gelesen wird r > 0.
+Normalisierung, Zusammenführen und alle Schreib-/Ablehnungszweige tragen r
+mit, Kontoreferenz/Generation/Epoche schützen alte Fortsetzungen; Reset
+entfernt r. tagGelernt und Kalender zählen r nicht, Joker bleibt unberührt.
+Frühe Rückkehr beendet nur die optionale Prüfung, keine Busy-/Dialog-
+Fortsetzung. Firestore-Regeln erlauben bereits die freie verlauf-Map
+(Typ Map, höchstens 400 Tage), daher keine neue Regel/kein Regel-Deploy.
+SDK-Mehrgeräte-/Reset-/Offline-Regressionen im Gesamtlauf grün. Kein
+Produktfix aus der Gegenprüfung nötig, Text-Probelauf unverändert.
+**LEHREN §14, einzeln:**
+
+1. Tatsächliche Lese-/Schreib-/Serienpfade und Aufrufe gelesen.
+2. Repo-Suche nach Serie, tagGelernt, Verlauf und Ruhetag; alle Zählerlisten
+   auf dieselbe zentrale Liste gebracht, Kalender/Lerntage geprüft.
+3. Serienkommentar, Lernen-Satz, CHANGELOG und Datenschutz mitgezogen.
+4. Keine neue Handlung/kein Blatt; r in Normalisierung und sämtlichen
+   zentralen Merge-/Write-/Nachhol-Listen.
+5. Zustand in verlauf/verlaufOffen, kein ausschließliches DOM-Merkmal.
+6. Gesamtlauf auf 320/390/iPad/Desktop, hell/dunkel/reduce/leer/voll;
+   Sprung/Kontrast und CPU-4×-Ausgaben gelesen, Tempo-A/B oben begrenzt.
+7. Ein Satz „Deine Serie bleibt.“; keine Codes oder Intervallzahlen.
+8. Neues Unterfeld r im vorhandenen freien Verlauf: Regel am Code geprüft,
+   firestore.rules unverändert; daher kein geänderter Regel-Emulatortest.
+9. Datenschutzerklärung Punkt 5 im selben Commit.
+10. Syntaxprüfungen sauber.
+11. 3.18.16 an vier Stellen, alle 33 Versions-URLs, Changelog/CSP/APP_SHELL
+    durch Standprüfung bestätigt.
+12. E7, Serie, 139 Gesamttests, Affen und frische Runde 13/13 abgenommen.
+13. AUFGABEN, Logbuch, STAND, PLAN und entschiedene Fragen aktualisiert.
+14. Antwort nennt „Was Du noch tun musst“; Veröffentlichung bleibt Betreiber.
+**Kriterien:** K1–K6 für E7 erfüllt; A4 grün. A1/A2/A5/A6 für den ganzen
+Zyklus bleiben offen (F, zurückgestellte Befunde und Nachprüfung);
+Geräte-/Rechtsabnahmen sind keine durch diese Tests erledigten Aufgaben.
+**Eigene Prüfdiagnose korrigiert:** erster Hashvergleich betrachtete nur
+die Testdatei, obwohl Konto-/D-Wrapper Hilfsquellen einbeziehen. Danach die
+echte Hashbildung aus alle_pruefen.js gelesen: alle 139 Testhashes samt
+Hilfsquellen und Produkt-/Attrappenhash stimmen. Keine Quelle geändert,
+kein Test daraus neu gestartet. Logbuch/PLAN anfangs am falschen Stamm
+gesucht; tatsächliche Pfade mit rg --files ermittelt (§3.2/§3.11).
+**Belege:** C:/Users/USER/Desktop/Wiederholung-Belege/Paket-E-2026-10-05-E7/
+(gesamtlauf-139, logvergleich.txt, affe-handy-200-7.log,
+affe-ipad-150-7.log, runde-frisch.log, runde-frisch-einzellogs,
+gegenprobe-E7-8762d38.log). Vorherige Rundenlogs separat erhalten.
+**Offen:** Ruhetag greift nur an Tagen, an denen die App geöffnet wird;
+Rückwärtsrechnen hat der Betreiber mit „egal dann“ abgelehnt, nicht bauen.
+Neuer Datenschutz-Satz gehört in die offene Rechtsprüfung durch eine Person.
+E17 wartet auf G4, E26 später Z7; G5/G6/G7 am Gerät nach Veröffentlichung,
+D12–D15 bleiben zurück. Kleine E19-/E3-Beobachtungen aus 04.10. bleiben
+für die Nachprüfung erhalten. Keine Veröffentlichung in dieser Sitzung.
+**Nächster Schritt:** Betreiber startet ladegeraet.bat selbst, wenn er
+veröffentlichen möchte; in der App muss danach 3.18.16 stehen. Paket F
+erst nach „F weiter“, vorher nichts Neues beginnen.
+
 ### 2026-10-04 — Entscheidung Z6b: Ruhetag ja
 
 **Geändert:** `ENTSCHEIDUNGEN.md` (Antwort eingetragen), `AUFGABEN.md` E7 von

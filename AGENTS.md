@@ -2,6 +2,12 @@
 
 Dieselben Regeln wie für Claude. Diese Datei verweist nur, sie ersetzt nichts.
 
+**05.10.2026, zuerst lesen, falls `git status` uncommittete Dateien zeigt:**
+[`plan/zyklus-2/CODEX-HANDOFF-2026-10-05-E7.md`](plan/zyklus-2/CODEX-HANDOFF-2026-10-05-E7.md).
+E7 (Ruhetag, 3.18.16) ist gebaut und geprüft, aber noch nicht committet;
+dort steht die genaue Stelle. Ist „3.18.16“ schon in `git log`, ist das
+erledigt und dieser Absatz nur Verlauf.
+
 **Aktueller Auftrag (seit 01.10.2026): Zyklus 2.** Genau so vorgehen, wie
 [`plan/zyklus-2/CODEX-START.md`](plan/zyklus-2/CODEX-START.md) es vorschreibt.
 Dort steht, was zuerst zu lesen ist, welches Paket dran ist, wie jede Aufgabe

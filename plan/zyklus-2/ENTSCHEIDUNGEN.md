@@ -2,7 +2,7 @@
 
 Stand 01.10.2026. **Der Betreiber hat am 01.10.2026 geantwortet: „alles, was du
 empfiehlst“** – mit zwei Anmerkungen (Z6, Z10). Die Spalte „Antwort“ gilt.
-Offen sind nur noch **Z6b** und **V8** (unten). Was offen ist, wird nicht
+Seit 04.10.2026 ist nichts mehr offen: **Z6b ja**, **V8 nein** (unten). Was offen ist, wird nicht
 gebaut. Ausführliches Dafür und
 Dagegen steht im genannten Befundblock unter `befunde/`.
 
@@ -16,7 +16,7 @@ Dagegen steht im genannten Befundblock unter `befunde/`.
 | **Z6** | Die Serie reißt still, wenn zwei Tage nichts fällig war (LERN-1). Ein Satz an genau dem Tag, an dem es zählt; Regel bleibt? | **ja**, nur der Satz | **Satz allein reicht dem Betreiber nicht** – sein Gedanke: „wenn nichts fällig ist und man nichts bearbeiten kann, wieso sollte die Serie beendet sein?“ → siehe **Z6b** unten |
 | **Z7** | Nach langer Pause ein Knopf „heute nur 20“ (LERN-11)? | **später** | **später** (01.10.) |
 | **Z8** | „Aufzeichnung zurücksetzen“ löscht auch die Serie, sagt es aber nicht (EINST-1). Text ehrlich machen baue ich sofort. Soll die Funktion bleiben? | **bleiben** | **wie empfohlen** (Betreiber 01.10.2026) |
-| **Z9** | Neue Einstellungen (`befunde/EINST.md`, Vorschlagsliste): **V1** Name ändern, **V2** Passwort ändern, **V4** zuletzt geöffneten Bereich merken, **V3** Schrift „Sehr groß“ (wenn es auf kleinen Handys passt), **V8** Rundengröße „5“ | **V1, V2, V4 ja; V3 ja nach Messung; V8 Deine Wahl** (berührt das tägliche Maß). Alle anderen Vorschläge nicht | **V1, V2, V4 ja; V3 ja nach Messung** (01.10.). V8 („5 Karten“) noch offen – nicht bauen |
+| **Z9** | Neue Einstellungen (`befunde/EINST.md`, Vorschlagsliste): **V1** Name ändern, **V2** Passwort ändern, **V4** zuletzt geöffneten Bereich merken, **V3** Schrift „Sehr groß“ (wenn es auf kleinen Handys passt), **V8** Rundengröße „5“ | **V1, V2, V4 ja; V3 ja nach Messung; V8 Deine Wahl** (berührt das tägliche Maß). Alle anderen Vorschläge nicht | **V1, V2, V4 ja; V3 ja nach Messung** (01.10.). V8 („5 Karten“): **nein** (04.10.) |
 | **Z10** | **Hilfe, geändert am 01.10.2026 (gilt vor der Zeile EINST-12 in `AUFGABEN.md`):** keine Hilfe-Seite. Nur (1) den Abschnitt „Hilfe“ in „Rückmeldung“ umbenennen, (2) eine Zeile „App auf den Home-Bildschirm legen“ mit drei kurzen Schritten (iPhone Safari und Android Chrome; jede Aussage am Code und an der Anleitung des Herstellers prüfen). | **Rückmeldung + Installationszeile** | **ja** (Betreiber 01.10.: „ok“) |
 | **Z11** | „Alle auswählen“ im Auswahlmodus von Verwalten (VERW-11), nur für gezeigte Karten, Löschen ab 20 Karten mit getipptem Wort | **ja** | **wie empfohlen** (Betreiber 01.10.2026) |
 | **Z12** | Datenschutzerklärung an den Code angleichen (CODE-1, CODE-9): beim Start gehen mehr Verbindungen zu Google, als der Text nennt. Nur Text ändern, Technik nicht anfassen; gehört mit in die Rechtsprüfung durch eine Person | **ja**, Text ändern | **wie empfohlen** (Betreiber 01.10.2026) |
@@ -27,13 +27,17 @@ Dagegen steht im genannten Befundblock unter `befunde/`.
 | **Z17** | Vorbild-Bilder: Auswahl im Einstieg als dunkle Karte mit Haken, wie bei marhaba? (`VORBILD-MARHABA.md` § 5) | **heutige Form behalten**; ich zeige Dir vorher ein Vergleichsbild, wenn Du magst | **wie empfohlen** (Betreiber 01.10.2026) |
 | **Z18** | Vorbild-Bilder: Am Ende des Einstiegs dieselbe Leiste noch einmal mit „Dein Stand“ zeigen? | **ja**, klein | **wie empfohlen** (Betreiber 01.10.2026) |
 
-## Noch offen: zwei Fragen
+## Entschieden am 04.10.2026: zwei Fragen
 
 **Z6b – Serie an Tagen, an denen nichts fällig ist** (Lernlogik, deshalb nur
 mit ausdrücklichem „Z6b ja“ des Betreibers bauen).
 
 **Antwort Betreiber 04.10.2026: „ruhetag ja“.** Z6b ist damit entschieden,
-E7 ist zum Bauen freigegeben (Bauanleitung unten). Offen bleibt nur V8.
+E7 ist zum Bauen freigegeben (Bauanleitung unten). V8 siehe unten.
+
+**Umgesetzt und abgenommen in 3.18.16 (05.10.2026).** Der Marker wird nur
+bei bestehender Serie geschrieben; bei Serie 0 wäre er wirkungslos und
+würde leere Konten täglich beschreiben. Gegenprüfung und Belege im Logbuch.
 
 Heute: Ein Tag zählt nur, wenn eine fällige oder neue Karte gelernt wurde.
 Ist zwei Tage nichts fällig, reißt die Serie, obwohl man nichts tun konnte
@@ -72,7 +76,10 @@ So wird es gebaut, falls „ja“ (für Codex, Modell Astra mittel):
 6. Fortschritt-Raster: Ruhetag nicht als „gelernt“ zeichnen.
 
 **V8 – Rundengröße „5 Karten“** zusätzlich anbieten? Keine Empfehlung,
-Geschmack des Betreibers. Offen, nicht bauen.
+Geschmack des Betreibers.
+
+**Antwort Betreiber 04.10.2026: „5 nein“.** Nicht bauen. Es bleibt bei
+10 · 20 · 30 · Alle. Damit ist in dieser Datei keine Frage mehr offen.
 
 ## Was Du am Gerät prüfen musst (kann kein Agent)
 
