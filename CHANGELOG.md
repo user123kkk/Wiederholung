@@ -1,3 +1,15 @@
+## 3.18.20 – 6. Oktober 2026
+
+**Verschiebe-Griff: Die Seite schießt nicht mehr davon, wenn man zu früh
+loszieht.** Wer den Griff einer Karte berührte und den Finger bewegte, bevor
+die kurze Halte-Anzeige fertig war, scrollte die Seite (so ist es gedacht).
+Nach dem Loslassen lief sie aber manchmal bis zu 2000 Pixel weiter. Ursache:
+Das Tempo für das Auslaufen wurde aus zwei direkt aufeinander folgenden
+Bewegungen gerechnet; liefert das Handy mehrere im selben Augenblick, kam ein
+Vielfaches des echten Tempos heraus. Jetzt zählt der Weg der letzten Zehntel-
+sekunde, und das Auslaufen hat eine Obergrenze. Halten und Ziehen selbst ist
+unverändert.
+
 ## 3.18.19 – 6. Oktober 2026
 
 **Zwei Kleinigkeiten, die der Betreiber am iPhone bemerkt hat.**

@@ -1,6 +1,6 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
-**06.10.2026, nachts: 3.18.19 auf main, nicht veröffentlicht.** Zwei
+**06.10.2026, nachts: 3.18.20 auf main (Verschiebe-Griff läuft nach frühem Losziehen nicht mehr davon), davor 3.18.19, nicht veröffentlicht.** Zwei
 Meldungen des Betreibers vom iPhone behoben: Handschrift aus dem Vollbild
 bleibt nach dem Verkleinern sichtbar; Tippen neben „Karte anlegen“ und „Code
 einlösen“ schließt wie Herunterwischen. Gezielt geprüft und Runden-Abnahme,

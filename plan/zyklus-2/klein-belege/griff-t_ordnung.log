@@ -1,0 +1,5 @@
+OK   Pfeil runter: k0,k1,k2 -> k1,k0,k2 | Kartendokumente geschrieben: 2
+OK   nochmal runter: k1,k2,k0 | Kartendokumente geschrieben: 2
+OK   wieder hoch: k1,k0,k2 | Kartendokumente geschrieben: 2
+OK   Cloud-Ordnung k0=1 k1=0 k2=2 k3=3 | Kartendokumente geschrieben: 0
+keine Fehler

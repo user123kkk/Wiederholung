@@ -2,6 +2,44 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-06 — Verschiebe-Griff: Auslaufen nach frühem Losziehen, 3.18.20
+
+**Geändert:** `app.js`, Scroll-Übernahme am Griff (`pointermove`-Handler und
+`endDrag`): statt je Ereignis geglätteter Geschwindigkeit eine Spur der
+letzten 100 ms (`SCROLL_SPUR_MS`), Tempo beim Loslassen über das ganze
+Fenster, mindestens ein Bild (16 ms), Obergrenze `SCROLL_TEMPO_MAX` 3 px/ms.
+Version, CHANGELOG. Neu `t_griff_scrollen.js`, Diagnose `x_griff_probe.js`.
+
+**Entscheidung:** Betreiber 06.10.: Bildschirm „spinnt“, wenn man am Griff
+loszieht, bevor die Animation fertig ist. Erst nachgestellt, dann behoben
+(kein Verdachts-Fix; am Griff gab es schon vier vergebliche Anläufe,
+LEHREN § 3.4). Messung mit echten Touch-Ereignissen: Finger 96 px, Seite
+folgt 96 px; nach dem Loslassen lief sie 44 px (Bewegungen einzeln), 98 px
+(zu zweit), **2021 px** (zu viert im selben Augenblick, Einzelschritte bis
+322 px). Ursache: `dt = max(1, …)` bei zwei Ereignissen mit derselben
+Zeitmarke macht aus 24 px Weg 24 px/ms. Dieselbe Klasse wie G-099 beim
+Wischen der Karte; gleiche Lösung (fortlaufendes Fenster). Die Obergrenze
+ist ein Schutz, kein Ersatz für die richtige Rechnung.
+
+**Prüfungen:** `t_griff_scrollen.js`: Bündel 1/2/4/6 laufen 45/97/193/210 px
+aus, größter Schritt 16 px; Halten und Ziehen verschiebt die Zeile von Platz
+8 auf 9, Seite 0 px. Gegenprobe am festen d8839b2: 2021 px bei Bündel 4 und
+6. `t_ordnung`, `t_verwalten`, `t_scrollen`, `t_liste_lang` grün, Ausgaben
+gleich dem Gesamtlauf von 3.18.18. Kein Gesamtlauf (Betreiber-Vorgabe für
+kleine Fixes, Eintrag 3.18.19); die Runde ist nicht berührt.
+
+**LEHREN § 14:** 1 Codepfad gelesen (Halten, Übernahme, Auslaufen, endDrag).
+2 Muster: dieselbe Rechnung gibt es sonst nur beim Karten-Wischen, dort seit
+G-099 richtig. 3 Kommentar an der Stelle. 4–5 nichts Neues. 6 kein Sprung:
+Seite folgt dem Finger genau. 7–9 entfällt. 10–11 grün. 12 gezielt. 13 hier.
+
+**Offen:** Am iPhone bestätigen: Griff berühren, sofort wischen, loslassen;
+die Seite läuft kurz aus und bleibt stehen. Chromium zeigt den Fehler nur,
+wenn Ereignisse gebündelt kommen; ob das iPhone genau so bündelt, ist
+plausibel, aber nicht am Gerät gemessen.
+
+**Nächster Schritt:** „In der Liste zeigen“ im Karten-Blatt.
+
 ### 2026-10-06 — Zwei Kleinigkeiten vom iPhone, 3.18.19
 
 **Geändert:** `app.js`: `drawStrokes` passt Striche aus einer höheren Fläche

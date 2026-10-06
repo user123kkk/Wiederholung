@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.20";
+const APP_VERSION = "3.18.19";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -13953,8 +13953,6 @@ let holdKandidat = null; // { handle, row, art, inSet, pointerId, startX, startY
 let scrollUebernahme = null; // { pointerId, lastY } - manuelles Scrollen, siehe Kommentar oben
 const HOLD_DAUER = 350;     // ms bis Halten das Ziehen aktiviert
 const HOLD_TOLERANZ = 10;   // px Bewegung, die einen Halte-Versuch als Scrollen erkennt und abbricht
-const SCROLL_SPUR_MS = 100;    // Fenster, ueber das das Tempo der Scroll-Uebernahme gemessen wird
-const SCROLL_TEMPO_MAX = 3;    // px/ms, Obergrenze fuer das Auslaufen nach dem Loslassen
 
 function updateDragPosition(y) {
   if (!dragState) return;
@@ -14062,7 +14060,7 @@ app.addEventListener("pointermove", e => {
          nachholen, ab hier per scrollUebernahme normal weiterverfolgen. */
       const nachholen = holdKandidat.startY - e.clientY;
       holdAbbrechen();
-      scrollUebernahme = { pointerId: e.pointerId, lastY: e.clientY, lastT: performance.now(), spur: [{ t: performance.now(), y: e.clientY }] };
+      scrollUebernahme = { pointerId: e.pointerId, lastY: e.clientY, lastT: performance.now(), v: 0 };
       window.scrollBy(0, nachholen);
       return;
     }
@@ -14071,17 +14069,9 @@ app.addEventListener("pointermove", e => {
     const jetzt = performance.now();
     const dy = scrollUebernahme.lastY - e.clientY;
     window.scrollBy(0, dy);
-    /* 3.18.20 (Betreiber 06.10.2026: "spinnt", wenn man am Griff zu frueh
-       loszieht): Die Geschwindigkeit fuer das Auslaufen wurde je Ereignis als
-       Weg durch Zeit gerechnet. Das iPhone liefert mehrere Bewegungen im
-       selben Augenblick; mit einer Millisekunde als kleinstem Abstand ergab
-       das ein Vielfaches des echten Tempos, und die Seite schoss nach dem
-       Loslassen bis zu 2000 px weiter (x_griff_probe.js). Jetzt nur die Spur
-       der letzten 100 ms merken; gerechnet wird beim Loslassen ueber das
-       ganze Fenster (siehe endDrag) - wie beim Wischen der Karte (G-099). */
-    const spur = scrollUebernahme.spur;
-    spur.push({ t: jetzt, y: e.clientY });
-    while (spur.length > 2 && jetzt - spur[0].t > SCROLL_SPUR_MS) spur.shift();
+    /* Geschwindigkeit (px/ms), geglaettet - fuer das Auslaufen nach dem Loslassen. */
+    const dt = Math.max(1, jetzt - scrollUebernahme.lastT);
+    scrollUebernahme.v = 0.6 * (dy / dt) + 0.4 * scrollUebernahme.v;
     scrollUebernahme.lastT = jetzt;
     scrollUebernahme.lastY = e.clientY;
   }
@@ -14174,11 +14164,7 @@ function endDrag(e) {
     /* 3.6.13: Das Scrollen ueber den Ziehgriff lief ohne Schwung - der Finger
        hob ab, die Seite stand. Jetzt laeuft sie mit der zuletzt gemessenen
        Geschwindigkeit aus, wie natives Scrollen. */
-    /* Tempo ueber das Fenster der Spur, nie ueber weniger als ein Bild, und
-       gedeckelt: schneller als so laeuft auch natives Scrollen nicht los. */
-    const spur = scrollUebernahme.spur, a = spur[0], z = spur[spur.length - 1];
-    const roh = (a.y - z.y) / Math.max(16, z.t - a.t);
-    const v = Math.max(-SCROLL_TEMPO_MAX, Math.min(SCROLL_TEMPO_MAX, roh));
+    const v = scrollUebernahme.v;
     const still = performance.now() - scrollUebernahme.lastT > 80;   // Finger lag zuletzt still
     scrollUebernahme = null;
     if (!still && Math.abs(v) > 0.15) scrollAuslaufen(v);
