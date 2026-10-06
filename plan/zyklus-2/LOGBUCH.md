@@ -2,6 +2,64 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-06 — „In der Kartenliste zeigen“, Texte-Wortlaut, 3.18.21
+
+**Geändert:** `app.js`: `ui.cardDetailAusSet`; `case "card-detail"` merkt, ob
+das Blatt aus einer Speicherkarte (`.set-cards`) kam; `cardDetailSheet()`
+zeigt dann im Nebenweg „In der Kartenliste zeigen“; neuer
+`case "card-detail-in-liste"` (Blatt zu, Suche leer, Seite berechnen);
+neue Funktion `zeigeKartenzeile(id)`; Zeilen der Hauptliste tragen
+`id="karte-zeile-<id>"`. `neuWahlSheet()`: Erklärzeile.
+`TEXT_EINWILLIGUNG_SATZ` neu gefasst. `styles.css`: `.dlg-nebenweg` bricht um,
+Knöpfe darin mindestens 44 px. `datenschutzerklaerung.html` Punkt 5 und
+Standdatum. Version, CHANGELOG. Neu `t_liste_zeigen.js`,
+`BETREIBER-2026-10-06.md` (alle Wünsche und Entscheidungen dieser zwei Tage).
+
+**Entscheidung:** Betreiber wollte „Doppelklick“ zum Sprung an die
+Listenposition. Gebaut als Knopf im Karten-Blatt: Der erste Tipp öffnet
+schon das Blatt, und Doppeltipp war am Handy unzuverlässig und wurde in
+3.0.41 ersetzt (LEHREN § 3.4). Er hat „wie du magst“ gesagt. Der Knopf
+erscheint nur, wenn das Blatt aus einer Speicherkarte kam (Hick: in der
+Liste selbst steht man schon dort).
+Eigener Fund beim Bauen: `springeZu()` landet in langen Listen daneben. Die
+Zeilen haben `content-visibility: auto` und bis zum Zeichnen eine geschätzte
+Höhe; ein weicher Sprung über hundert Zeilen endete 826 px zu weit. Deshalb
+`zeigeKartenzeile()`: ohne Gleiten hinspringen, im nächsten Bild prüfen und
+nachsetzen (höchstens fünfmal), dann aufleuchten. `springeZu()` selbst ist
+unverändert; ob es an seinen bisherigen Stellen (Speicherkarten-Block,
+Übungsauswahl) dasselbe Problem hat, ist nicht geprüft → Offen.
+Texte: Betreiber zur Probelauf-Sperre „ned so wild“; Wortlaut-Änderungen
+sind damit erlaubt. Einwilligung: Der Test `t_text_einwilligung` verlangt,
+dass der Satz den Glauben und den Widerruf nennt. Mein erster Wortlaut („was
+du glaubst“) fiel dort durch; richtig so, der Test schützt die informierte
+Einwilligung. Endfassung nennt „deinem Glauben“. Test unverändert.
+
+**Prüfungen:** `t_liste_zeigen.js` Handy, klein (ruhig), iPad und Handy mit
+220 Karten (Seite 2 von 3) grün; Gegenprobe am festen b710e6f: Knopf fehlt.
+`t_karten_blatt`, `t_verwalten`, `t_liste_lang`, `t_text_anlegen`,
+`t_kontrast`, `t_a11y`, `t_paket_f_texte`, `t_paket_f_umfeld`: Ausgaben gleich
+dem Gesamtlauf von 3.18.18. `t_text_einwilligung`, `t_import_einwilligung`,
+`t_gross_alle`, `t_neben_tippen` grün. `pruefe_stand.mjs` (CSP-Hashes der
+Rechtsseite), `node --check`, `git diff --check` grün. Kein Gesamtlauf
+(kleine Änderung); er läuft mit der nächsten Version, die Lernlogik ändert.
+
+**LEHREN § 14:** 1 Codepfade gelesen (Liste, Seiten, Suche, springeZu).
+2 Muster: alle Aufrufer von `springeZu` angesehen, nur der neue Weg braucht
+Zeilen der langen Liste. 3 Kommentare am Nebenweg und an der Einwilligung.
+4 neue Handlung im delegierten Listener; kein neues Blatt. 5 Zustand in
+`ui.cardDetailAusSet`. 6 kein Querüberlauf, 44 px, drei Breiten, ruhig.
+7 ein Satz, kein Systemwort. 8 kein Cloud-Feld. 9 kein neuer Datenfluss; der
+geänderte Einwilligungssatz steht im selben Commit in der
+Datenschutzerklärung. 10–11 grün. 12 gezielt. 13 hier, STAND.
+
+**Offen:** Rechtsprüfung des neuen Einwilligungssatzes durch eine Person.
+`springeZu()` in langen Listen prüfen. Betreiber-Entscheidung „reihenfolge
+ja“ (E-05) bauen, mit vollem Prüfumfang. Runde über alle Bereiche. Vorlage
+zur Texte-Methode (Anfangsbuchstaben a oder b) und Durchsicht „Texte top“.
+Alles einzeln in `BETREIBER-2026-10-06.md`.
+
+**Nächster Schritt:** Reihenfolge bei Rundenlimit bauen (E-05).
+
 ### 2026-10-06 — Verschiebe-Griff: Auslaufen nach frühem Losziehen, 3.18.20
 
 **Geändert:** `app.js`, Scroll-Übernahme am Griff (`pointermove`-Handler und

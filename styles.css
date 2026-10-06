@@ -3325,7 +3325,9 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   overscroll-behavior: contain;
   animation: sheet-up var(--dur-slow) var(--ease-out) both;
 }
-.dlg-nebenweg { display: flex; justify-content: center; margin-top: var(--space-3); }
+.dlg-nebenweg { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-3); }
+/* 3.18.21: Trefferflaeche wie ueberall mindestens 44 px. */
+.dlg-nebenweg button { min-height: 44px; }
 /* Der Griff oben: sagt ohne Worte, dass das hier von unten gekommen ist. */
 .dlg::before {
   content: ""; display: block; width: 36px; height: 4px;

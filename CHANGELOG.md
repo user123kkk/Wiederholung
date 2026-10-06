@@ -1,3 +1,22 @@
+## 3.18.21 – 6. Oktober 2026
+
+**Von der Speicherkarte zur Karte in der Liste, und zwei Texte freundlicher.**
+
+- **„In der Kartenliste zeigen“:** Öffnest du in einer Speicherkarte
+  (Lektion, Kategorie, eigene) eine Karte, steht im Blatt unten ein leiser
+  Knopf. Er schließt das Blatt, leert eine laufende Suche, blättert bei
+  langen Listen auf die richtige Seite und zeigt die Karte in der Liste des
+  Bereichs; die Zeile leuchtet einmal auf. Die Knöpfe unten im Karten-Blatt
+  sind jetzt mindestens 44 Pixel hoch.
+- **„Neu anlegen“ erklärt, was ein Text ist:** „Ein Text ist zum Beispiel ein
+  Hadith oder ein Gedicht. Er wird Zeile für Zeile auswendig gelernt …“
+  (nur im Betreiber-Konto sichtbar, Probelauf).
+- **Einwilligung für Texte neu gefasst.** Gleicher Inhalt, anderer Ton: Der
+  Satz warnt nicht mehr davor, dass Texte „etwas über deinen Glauben
+  verraten“, sondern sagt, dass sie zu deinem Glauben gehören und das Gesetz
+  solche Angaben besonders schützt. Die Datenschutzerklärung (Punkt 5) ist
+  entsprechend angeglichen. Die Prüfung durch eine Person steht weiter aus.
+
 ## 3.18.20 – 6. Oktober 2026
 
 **Verschiebe-Griff: Die Seite schießt nicht mehr davon, wenn man zu früh

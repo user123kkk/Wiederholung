@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.21";
+const APP_VERSION = "3.18.20";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -1724,7 +1724,6 @@ let ui = {
      von editId: Ansehen und Bearbeiten sind unterschiedliche Handlungen, die
      Ansicht soll nicht ungefragt in den Bearbeiten-Modus wechseln. */
   cardDetailId: null,
-  cardDetailAusSet: false,   // 3.18.21: Karten-Blatt aus einer Speicherkarte geoeffnet -> "In der Kartenliste zeigen"
   askImport: false,          // alte lokale Daten anbieten
   searchQuery: "",           // Suchtext im Verwalten-Tab (nicht gespeichert, nur UI-Zustand)
   searchAll: false,          // D7: false = nur dieser Bereich, true = alle Bereiche
@@ -4239,31 +4238,6 @@ function arabZahl(n) {
    starten oben eine Sitzung, waehrend man unten in der Kartenliste steht.
    Ohne den Sprung sieht es aus, als sei nichts passiert. */
 function springeZu(id) { ui.springZu = id; ui.springOben = false; }
-/* 3.18.21: Zur Zeile einer Karte in der Liste des Bereichs. Eigener Weg statt
-   springeZu(): Die Zeilen zeichnen sich erst, wenn sie ins Bild kommen
-   (content-visibility, styles.css), und haben bis dahin eine geschaetzte
-   Hoehe. Ein einzelner, weicher Sprung ueber hundert Zeilen landet deshalb
-   daneben (gemessen: 826 px zu weit bei 220 Karten). Darum ohne Gleiten
-   hinspringen und im naechsten Bild nachsetzen, bis die Zeile wirklich im
-   Bild steht (hoechstens fuenfmal), dann einmal aufleuchten. */
-function zeigeKartenzeile(id) {
-  let versuche = 0;
-  const setzen = () => {
-    const el = document.getElementById("karte-zeile-" + id);
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const imBild = r.top >= 60 && r.bottom <= (window.innerHeight || 800) - 40;
-    if (!imBild && versuche++ < 5) {
-      el.scrollIntoView({ block: "center", behavior: "auto" });
-      requestAnimationFrame(setzen);
-      return;
-    }
-    el.classList.remove("aufleuchten");
-    void el.offsetWidth;            // Neustart der Animation erzwingen
-    el.classList.add("aufleuchten");
-  };
-  requestAnimationFrame(setzen);
-}
 function scrollArt() {
   return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
 }
@@ -8787,16 +8761,10 @@ function cardDetailSheet() {
   html += '<button class="secondary" data-action="card-detail-zu">Schließen</button>';
   html += '</div>';
   /* Leise, unter den Hauptknoepfen: Loeschen ist selten und hat ohnehin eine
-     eigene Rueckfrage. Kein "danger" - der ist Bestaetigungsdialogen vorbehalten.
-     3.18.21: "In der Kartenliste zeigen" nur, wenn das Blatt aus einer
-     Speicherkarte kam - in der Liste selbst steht man schon bei der Karte. */
-  if (ui.cardDetailAusSet || kartenBearbeitbar(b)) {
-    html += '<div class="dlg-nebenweg">';
-    if (ui.cardDetailAusSet) html += '<button class="ghost" data-action="card-detail-in-liste" data-id="' + esc(c.id) + '">' +
-      ikon("karten", "i-sm") + ' In der Kartenliste zeigen</button>';
-    if (kartenBearbeitbar(b)) html += '<button class="ghost" data-action="card-detail-loeschen" data-id="' + esc(c.id) + '">' +
-      ikon("muell", "i-sm") + ' Karte löschen</button>';
-    html += '</div>';
+     eigene Rueckfrage. Kein "danger" - der ist Bestaetigungsdialogen vorbehalten. */
+  if (kartenBearbeitbar(b)) {
+    html += '<div class="dlg-nebenweg"><button class="ghost" data-action="card-detail-loeschen" data-id="' + esc(c.id) + '">' +
+      ikon("muell", "i-sm") + ' Karte löschen</button></div>';
   }
   html += '</div></div>';
   return html;
@@ -12182,13 +12150,8 @@ const QURAN_QUELLE_HTML = 'Quran-Text: <a href="https://tanzil.net" target="_bla
    Nutzerdokument; ohne sie legt die App keinen Text an. */
 let texteEinwilligung = null;
 const TEXT_EINWILLIGUNG_SATZ =
-  /* 3.18.21 (Betreiber 06.10.2026: "klingt nach die App ist nicht fuer
-     Muslime gedacht"): gleicher Inhalt, anderer Ton - der Glaube ist hier
-     kein Risiko, vor dem gewarnt wird, sondern der Grund, warum das Gesetz
-     eine ausdrueckliche Zustimmung verlangt. Rechtspruefung durch eine
-     Person steht aus (wie fuer die ganze Datenschutzerklaerung). */
-  "Deine Texte gehören dir. Texte aus dem Quran oder aus Hadith-Büchern gehören zu deinem Glauben; solche Angaben schützt das Gesetz besonders. " +
-  "Deshalb fragt die App einmal, ob sie deine Texte in deinem Konto speichern darf. Niemand sonst sieht sie, niemand wertet sie aus. " +
+  "Texte, die du hier speicherst – etwa aus dem Quran oder aus Hadith-Büchern –, können etwas über deinen Glauben verraten. " +
+  "Sie liegen nur in deinem Konto, niemand wertet sie aus. " +
   "Du kannst die Einwilligung jederzeit in den Einstellungen widerrufen; dann werden alle Texte gelöscht.";
 
 function findText(b, id) { return ((b && b.texte) || []).find(t => t.id === id) || null; }
@@ -13377,7 +13340,7 @@ function neuWahlSheet() {
   html += '<button class="liste-zeile" data-action="text-neu" data-id="selbst">' + ikon("stift", "i-sm") + '<span class="liste-zeile__text">Text einfügen</span></button>';
   html += '<button class="liste-zeile" data-action="text-neu" data-id="quran">' + ikon("tafel", "i-sm") + '<span class="liste-zeile__text">Sure aus dem Quran</span></button>';
   html += '</div></div>';
-  html += '<p class="field__hilfe" style="margin-top:var(--space-4)">Ein Text ist zum Beispiel ein Hadith oder ein Gedicht. Er wird Zeile für Zeile auswendig gelernt, immer in seiner Reihenfolge.</p>';
+  html += '<p class="field__hilfe" style="margin-top:var(--space-4)">Ein Text wird Zeile für Zeile auswendig gelernt, immer in seiner Reihenfolge.</p>';
   html += '<div class="dlg-actions"><button class="secondary" data-action="neu-wahl-zu">Abbrechen</button></div>';
   return html + '</div></div>';
 }
@@ -13746,7 +13709,7 @@ function kartenListeInhalt() {
          Bearbeiten- und Loeschen-Knopf liegen als eigene data-action-Elemente
          DARIN und haben Vorrang (closest() findet das naechste zuerst). */
       html += '<div class="' + zeilenKlasse + '"' + (draggable ? ' data-cardid="' + esc(c.id) + '"' : '') +
-        (!fremd ? ' id="karte-zeile-' + esc(c.id) + '" data-action="card-detail" data-id="' + esc(c.id) + '" style="cursor:pointer"' : '') + '>';
+        (!fremd ? ' data-action="card-detail" data-id="' + esc(c.id) + '" style="cursor:pointer"' : '') + '>';
       if (draggable) html += '<span class="drag-handle" tabindex="0" role="button" title="Ziehen zum Sortieren, oder mit den Pfeiltasten" aria-label="' + esc(c.wort) + ' verschieben – Pfeiltasten nach oben oder unten, Position ' + (start + i + 1) + ' von ' + shownCards.length + '">' + ikon("griff", "i-sm") + '</span>';
       else if (ui.selectMode && kartenZu) html += '<span class="lock-anzeige" title="Gesperrt – lässt sich nicht auswählen" aria-hidden="true">' + ikon("schloss", "i-sm") + '</span>';
     }
@@ -15346,25 +15309,7 @@ document.body.addEventListener("click", e => {
        Tipp hinein nicht bis zum Hintergrund durchschlaegt und schliesst. */
     case "bereich-sheet-auf": ui.bereichSheet = true; render(); break;
     case "bereich-sheet-zu": schliesseObersteEbene(); break;
-    case "card-detail": ui.cardDetailId = btn.dataset.id; ui.cardDetailAusSet = !!btn.closest(".set-cards"); render(); break;
-    /* 3.18.21 (Betreiber 06.10.2026): aus einer Speicherkarte zur Karte in der
-       Liste des Bereichs. Kein Doppeltipp (der erste Tipp oeffnet schon das
-       Blatt, und Doppeltipp war am Handy unzuverlaessig, 3.0.41), sondern ein
-       leiser Knopf im Blatt. Eine laufende Suche wird geleert, sonst waere
-       die Karte womoeglich ausgefiltert; bei langen Listen kommt die Seite,
-       auf der sie liegt. Hinbringen und Aufleuchten: zeigeKartenzeile(). */
-    case "card-detail-in-liste": {
-      const id = btn.dataset.id;
-      const platz = currentCards().findIndex(c => c.id === id);
-      ui.cardDetailId = null; ui.cardDetailAusSet = false;
-      if (platz !== -1) {
-        ui.searchQuery = ""; ui.searchAll = false;
-        ui.kartenSeite = currentCards().length > SEITEN_SCHWELLE ? Math.floor(platz / SEITE_GROESSE) : 0;
-      }
-      render();
-      if (platz !== -1) zeigeKartenzeile(id);
-      break;
-    }
+    case "card-detail": ui.cardDetailId = btn.dataset.id; render(); break;
     case "card-detail-zu": schliesseObersteEbene(); break;
     case "card-detail-bearbeiten": ui.cardDetailId = null; editCard(btn.dataset.id); break;
     case "card-detail-loeschen": ui.cardDetailId = null; render(); deleteCard(btn.dataset.id); break;
