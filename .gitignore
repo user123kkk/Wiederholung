@@ -35,3 +35,10 @@ plan/zyklus-2/paket-f-belege/f-umfeld/
 plan/zyklus-2/paket-f-belege/einzel-1/
 plan/zyklus-2/paket-f-belege/einzel-2/
 plan/zyklus-2/paket-f-belege/f12-vor/
+
+# D12: Vergleichsbilder und laufender Sicherungsstempel bleiben lokal (Kopie unter Desktop/Wiederholung-Belege).
+plan/zyklus-2/d12-belege/sicht-voll/
+plan/zyklus-2/d12-belege/sicht-probe/
+plan/zyklus-2/d12-belege/aktuell.json
+plan/zyklus-2/d12-belege/gesamtlauf.pid
+plan/zyklus-2/d12-belege/d12-sicht-voll.pid

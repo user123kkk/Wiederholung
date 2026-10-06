@@ -297,8 +297,8 @@ async function d15(b) {
 }
 const faelle={D1:d1,D2:d2,D3:d3,D4:d4,D5:d5,D6:d6,D7:d7,D8:d8,D9:d9,D11:d11,D12:d12,D13:d13,D15:d15};
 if(aufgabe)assert.ok(faelle[aufgabe],'Unbekannte D-Probe: '+aufgabe);
-// D12/D13/D15 stehen in AUFGABEN.md auf "zurück" und sind nicht im Produkt.
+// D13/D15 stehen in AUFGABEN.md auf "zurück" und sind nicht im Produkt.
 // Ihre Proben bleiben unverändert erhalten und laufen nur auf ausdrücklichen
 // Aufruf (node t_paket_d.js D12). Der Gesamtlauf prüft die gebauten Aufgaben.
-const ZURUECK=['D12','D13','D15'];
+const ZURUECK=['D13','D15']; // D12 seit 3.18.18 im Produkt und im Gesamtlauf
 (async()=>{const b=await start();try {for(const [nr,test] of Object.entries(faelle))if(aufgabe?aufgabe===nr:!ZURUECK.includes(nr))await test(b);}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

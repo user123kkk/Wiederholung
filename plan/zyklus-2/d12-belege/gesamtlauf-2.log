@@ -1,0 +1,151 @@
+Quellstand: ef8d760d7190268abdb66a7dbdcba1ac750218b637de8bb80ef0480f01cf7cbf
+Logs: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\ef8d760d7190268a
+Tests: 146
+BEWAHRT t_317.js
+BEWAHRT t_a11y.js
+BEWAHRT t_abgelehnt.js
+BEWAHRT t_abstimmen_fehler.js
+BEWAHRT t_anfangsbuchstaben.js
+BEWAHRT t_anmelden.js
+BEWAHRT t_anmelden_enter.js
+BEWAHRT t_ansage.js
+BEWAHRT t_ansage2.js
+BEWAHRT t_bereiche.js
+BEWAHRT t_bestaetigung.js
+BEWAHRT t_bestaetigung_bewegung_g082.js
+BEWAHRT t_bestaetigung_neu.js
+BEWAHRT t_bestand_tempo.js
+BEWAHRT t_bild.js
+BEWAHRT t_board_limit.js
+BEWAHRT t_board_moderation.js
+BEWAHRT t_boot_geometrie.js
+BEWAHRT t_csp.js
+BEWAHRT t_daten.js
+BEWAHRT t_dialog_timer.js
+BEWAHRT t_doppeltipp.js
+BEWAHRT t_dreh.js
+BEWAHRT t_dreh_lage.js
+BEWAHRT t_einst.js
+BEWAHRT t_einst_oben.js
+BEWAHRT t_einstellungen.js
+BEWAHRT t_einstieg.js
+BEWAHRT t_einstieg_bestandskonto_g042.js
+BEWAHRT t_einstieg_g083_039_040_041_044.js
+BEWAHRT t_einstieg_lage.js
+BEWAHRT t_erinnerung_uid.js
+BEWAHRT t_erinnerung_zeit.js
+BEWAHRT t_feedback_ansichten.js
+BEWAHRT t_feedback_speichern.js
+BEWAHRT t_fehler_fokus.js
+BEWAHRT t_fehler_melden.js
+BEWAHRT t_fluessig.js
+BEWAHRT t_fluessig_ende.js
+BEWAHRT t_fluessig_gross.js
+BEWAHRT t_fortschritt.js
+BEWAHRT t_fotos_runde.js
+BEWAHRT t_gross.js
+BEWAHRT t_gross_alle.js
+BEWAHRT t_gruss_datum.js
+BEWAHRT t_hero_dreh.js
+BEWAHRT t_heute_bereich.js
+BEWAHRT t_hick.js
+BEWAHRT t_idee_zeit.js
+BEWAHRT t_import_doppelt.js
+BEWAHRT t_import_einwilligung.js
+BEWAHRT t_import_stapel.js
+BEWAHRT t_inventar.js
+BEWAHRT t_inventar2.js
+BEWAHRT t_inventar2_gegenprobe.js
+BEWAHRT t_karte_kopf.js
+BEWAHRT t_karten_blatt.js
+BEWAHRT t_karten_snapshot.js
+BEWAHRT t_klein_boot.js
+BEWAHRT t_konto.js
+BEWAHRT t_konto_bestaetigungswechsel.js
+BEWAHRT t_konto_dialog.js
+BEWAHRT t_konto_fortsetzungen.js
+BEWAHRT t_konto_loeschen2.js
+BEWAHRT t_konto_loeschwechsel.js
+BEWAHRT t_konto_nach_loeschen.js
+BEWAHRT t_konto_nutzerfallback.js
+BEWAHRT t_konto_registrierung_neuversuch.js
+BEWAHRT t_konto_schreibantwort.js
+BEWAHRT t_konto_stapel.js
+BEWAHRT t_kontrast.js
+BEWAHRT t_laden_parallel.js
+BEWAHRT t_leiste.js
+BEWAHRT t_lernen_start.js
+BEWAHRT t_liste_lang.js
+BEWAHRT t_loeschen_teilen.js
+BEWAHRT t_meilenstein.js
+BEWAHRT t_merken_zwei.js
+BEWAHRT t_notfound.js
+BEWAHRT t_nur_betreiber.js
+BEWAHRT t_ordnung.js
+BEWAHRT t_paket_b.js
+EXIT 0 t_paket_c.js (209s)
+EXIT 0 t_paket_c_fort.js (31s)
+EXIT 0 t_paket_c_kalendertage.js (199s)
+EXIT 0 t_paket_c_suchpuffer.js (3s)
+EXIT 0 t_paket_c_verw.js (273s)
+EXIT 0 t_paket_c_weiter.js (1181s)
+EXIT 0 t_paket_d.js (1209s)
+EXIT 0 t_paket_e.js (914s)
+EXIT 0 t_paket_f_bilder.js (84s)
+EXIT 0 t_paket_f_css.js (0s)
+EXIT 0 t_paket_f_ebenen.js (61s)
+EXIT 0 t_paket_f_netz.js (20s)
+EXIT 0 t_paket_f_struktur.js (0s)
+EXIT 0 t_paket_f_texte.js (3s)
+EXIT 0 t_paket_f_umfeld.js (99s)
+EXIT 0 t_persist.js (8s)
+EXIT 0 t_pruefdatum.js (0s)
+EXIT 0 t_querschnitt.js (23s)
+EXIT 0 t_quran_datei.js (13s)
+EXIT 0 t_quran_fehler.js (11s)
+EXIT 0 t_quran_schrift.js (78s)
+EXIT 0 t_registrieren_zeitlimit.js (72s)
+EXIT 0 t_regler_karten.js (8s)
+EXIT 0 t_reset_leerfeld.js (5s)
+EXIT 0 t_ring.js (8s)
+EXIT 0 t_runde_gefuehl.js (8s)
+EXIT 0 t_runde_lage.js (81s)
+EXIT 0 t_runde_rest.js (74s)
+EXIT 0 t_rundenende.js (116s)
+EXIT 0 t_schreiben.js (83s)
+EXIT 0 t_scrollen.js (18s)
+EXIT 0 t_serie.js (22s)
+EXIT 0 t_serie_lang.js (180s)
+EXIT 0 t_serie_warnung.js (8s)
+EXIT 0 t_settings_kontowechsel.js (1s)
+EXIT 0 t_settings_mehrgeraete.js (11s)
+EXIT 0 t_sicher.js (13s)
+EXIT 0 t_sprung.js (80s)
+EXIT 0 t_sprung_ueben.js (47s)
+EXIT 0 t_start.js (24s)
+EXIT 0 t_sw.js (30s)
+EXIT 0 t_sw_paket_a.js (17s)
+EXIT 0 t_teilen.js (23s)
+EXIT 0 t_text_anlegen.js (29s)
+EXIT 0 t_text_ausschluss.js (14s)
+EXIT 0 t_text_einwilligung.js (25s)
+EXIT 0 t_text_felder.js (5s)
+EXIT 0 t_text_fortschritt.js (21s)
+EXIT 0 t_text_kreis.js (8s)
+EXIT 0 t_text_nachbarn.js (29s)
+EXIT 0 t_text_neu.js (127s)
+EXIT 0 t_text_tempo.js (21s)
+EXIT 0 t_text_zustaende.js (83s)
+EXIT 0 t_ueben.js (30s)
+EXIT 0 t_ueben_auswahl.js (21s)
+EXIT 0 t_undo_verlauf.js (25s)
+EXIT 0 t_verlauf_mehrgeraete.js (10s)
+EXIT 0 t_verwalten.js (50s)
+EXIT 0 t_wisch_tempo.js (0s)
+EXIT 0 t_wischen.js (38s)
+EXIT 0 t_wischen_schraeg.js (51s)
+EXIT 0 t_wochen_kopf.js (14s)
+EXIT 0 t_x_mitten.js (29s)
+EXIT 0 t_zahlen.js (10s)
+
+146/146 Exit 0; 0 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\ef8d760d7190268a

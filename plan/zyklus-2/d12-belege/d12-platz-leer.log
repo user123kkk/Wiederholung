@@ -1,0 +1,9 @@
+verschieden: 8
+animation-fill-mode | alt: both | neu: none
+animation-name | alt: enter-rise | neu: none
+animation-timing-function | alt: cubic-bezier(0.2, 0.8, 0.2, 1) | neu: ease
+inline-size | alt: 113.391px | neu: 49.4531px
+perspective-origin | alt: 56.6875px 14.3438px | neu: 24.7188px 14.3438px
+transform | alt: matrix(1, 0, 0, 1, 0, 0) | neu: none
+transform-origin | alt: 56.6953px 14.3438px | neu: 24.7266px 14.3438px
+width | alt: 113.391px | neu: 49.4531px

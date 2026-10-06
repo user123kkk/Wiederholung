@@ -1,3 +1,19 @@
+## 3.18.18 – 6. Oktober 2026
+
+**Aufgeräumt: Bewegungsregeln, die nie liefen (D12).** Zu sehen ist nichts
+Neues, alle Bildschirme sehen im Endzustand aus wie vorher.
+
+- Entfernt sind Übergänge an Elementen, die bei jeder Änderung neu gezeichnet
+  werden und deshalb nie sichtbar liefen (Balken in „Durchgehen“, „Heute“
+  und im Fortschritt, die Karten der Durchsicht).
+- Doppelte Regeln für den Stapel auf Lernen und für den Ladebildschirm sind
+  zu je einer zusammengelegt; die alte, überschriebene Einblendung des
+  Ladebildschirms ist weg.
+- Die unsichtbare Platzhalter-Antwort auf der Karte bewegt sich nicht mehr
+  mit.
+- Verwalten: Nacheinander herein kommen nur noch die Zeilen, die im Bild
+  sind. Zeilen unter dem Bildrand stehen einfach da.
+
 ## 3.18.17 – 5. Oktober 2026
 
 **Paket F: aufgeräumt, Wörter vereinheitlicht, Datenschutzerklärung an die

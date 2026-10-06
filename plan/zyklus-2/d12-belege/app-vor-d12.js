@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.18";
+const APP_VERSION = "3.18.17";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -9170,19 +9170,6 @@ function renderMain() {
   const altBar = app.querySelector(":scope > .appbar");
   const altNav = app.querySelector(":scope > .nav");
   hauptInhaltSetzen(html);
-  if (ansichtNeu && ui.tab === "verwalten" && !ui.einstellungen && !ui.seite && !imModus) {
-    const zeilen = [...app.querySelectorAll("#karten-liste > .card-row")].slice(0, 14);
-    requestAnimationFrame(() => {
-      // Maße erst im Animationsbild, sämtliche Zeilen lesen vor dem Schreiben.
-      const hoehe = window.innerHeight;
-      const sichtbar = zeilen.filter(el => {
-        if (!el.isConnected) return false;
-        const r = el.getBoundingClientRect();
-        return r.bottom > 0 && r.top < hoehe;
-      });
-      sichtbar.forEach(el => el.classList.add("card-row--eintritt"));
-    });
-  }
   aktualisiereAuswahlLeiste();
   tanzilSchriftMarkieren(app);
   textZeilenNachladenBeobachten();

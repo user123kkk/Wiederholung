@@ -2,6 +2,66 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-06 — D12 nachgeholt und abgenommen, 3.18.18
+
+**Geändert:** `styles.css`: tote Übergänge an `.modebar__fortschritt`,
+`.lern-balken span`, `.lern-karte`, `.heute-bar span`, `.stat-seg` entfernt;
+doppelte Regeln `.stapel` und `.boot` zusammengelegt; `@keyframes bootIn` und
+die erste, überschriebene `.boot--exit`-Fassung entfernt; gesetzte und wieder
+genommene Animationen an `.grade-row` und `.study-card.zugedeckt .study-word`
+entfernt; `.platz-leer` ohne Animation; gestaffelter Eintritt in Verwalten
+nur für `.card-row--eintritt`. `app.js` (`renderMain`): markiert im ersten
+Animationsbild die sichtbaren unter den ersten vierzehn Zeilen. Version in
+app.js, sw.js, 33 Stellen index.html, CHANGELOG. `t_paket_d.js`: D12 läuft
+im Gesamtlauf mit. `x_paket_f_sicht.js`: alte app.js für die Alt-Durchgänge
+und vorher festgelegte Stil-Ausnahmen. Neu `x_d12_platz_leer.js`,
+`d12-sicherung.mjs`, `D12-UEBERGABE-2026-10-06.md`, `d12-belege/`.
+
+**Entscheidung:** Betreiber 05.10. „mach“ zu „heute F, danach D12“. Der
+gesicherte Entwurf vom 03.10. wurde per Dreiwege-Zusammenführung auf 802c56a
+übertragen (keine Konflikte) und Zeile für Zeile gegen BEW-12 gelesen. Die
+betroffenen Elemente entstehen nur über HTML-Neuzeichnen und werden nie an
+Ort und Stelle geändert; ihre Übergänge konnten nicht laufen. D12 stand
+zurück, weil der Fotovergleich mit GPU-Raster rot war. Mit dem Messgerät
+von F12 (Software-Raster, Kontrolle Alt gegen Alt, Toleranz 0) und vor dem
+Lauf festgelegten Ausnahmen (`transition*`, `animation*`, Klasse
+`card-row--eintritt`): Fotos in 30/36 Konfigurationen gleich bei gleicher
+Kontrolle, 796 Fotos; die 6 Gast-Konfigurationen mit Bewegung sind wie bei
+F12 nicht messbar. Stile gleich bis auf `.study-answer.platz-leer`: dort
+`transform: none` statt einer wirkungslosen Matrix, Folge der entfernten
+unsichtbaren Bewegung (`d12-platz-leer.log`). Das Messgerät endet formal mit
+Exit 1 (diese Stelle und die Zufallstreffer im Einstieg); so berichtet,
+nicht umgedeutet. Die alten starken D12-Fehler (32 Korallpixel, 70.880
+Pixel) traten mit Software-Raster nicht auf; erklärt sind sie damit nicht,
+nur nicht reproduziert.
+
+**Prüfungen (Quellstand ef8d760d7190268a, BatteryStatus 2):**
+`t_paket_d.js D12` am Vorstand 802c56a rot, mit D12 in 24 Zuständen grün.
+Gesamtlauf: um 18:50 auf Betreiberwunsch bei 82/146 angehalten, um 21:12 mit
+`--fortsetzen` am unveränderten Quellstand fortgesetzt: **146/146 Exit 0**.
+Runde **13/13** (`abnahme_runde.js --fortsetzen`, dieselben 13 Läufe
+dieses Quellstands). Affe mit Texten Handy 200 und iPad 150, Startwert 7:
+**je 0 Befunde**. Alle Logs gegen den F-Lauf cd7e88bc verglichen: Unterschiede
+nur Datum, zufällige Codes und Karten, Messwerte. `pruefe_stand.mjs`,
+`node --check`, `git diff --check` grün.
+
+**LEHREN § 14:** 1 Codepfade gelesen (Erzeugung der betroffenen Elemente).
+2 Muster: alle im Befund genannten Stellen am aktuellen Code gesucht.
+3 Kommentare zu Stapel, Bewertungszeile und Verwalten-Liste nachgezogen.
+4–5 nichts Neues. 6 Sprung, Kontrast, Großansicht, Flüssigkeit im
+Gesamtlauf grün. 7–9 keine Texte, Felder oder Datenflüsse. 10–11 Syntax und
+Version grün. 12 Gesamtlauf, Runde, Affen. 13 dieser Eintrag, STAND, PLAN.
+
+**Offen:** Verwalten am echten iPhone ansehen: Die ersten Zeilen sollen
+beim Wechsel in den Reiter ruhig hereinkommen, ohne Aufblitzen (die Klasse
+wird erst im ersten Animationsbild gesetzt; in Chromium grün, WebKit kann
+der Prüfstand nicht). D13, D15 zurück; D14, C18 bis 29.10. gesperrt.
+Veröffentlichen von E, F und D12 durch den Betreiber („ladegerät“).
+
+**Nächster Schritt:** Betreiber veröffentlicht. Danach Z1-Umbau im eigenen
+Chat oder „Prüfstand schneller“ (Vorschlag vom 06.10. im Chat: Tests ohne
+Zeitmessung nebeneinander, Runden-Tests nicht doppelt).
+
 ### 2026-10-06 — Paket F abgenommen, 3.18.17 (Claude, Fortsetzung am Laptop)
 
 **Geändert:** Uncommitteten F-Stand vom 05.10. vollständig behalten.

@@ -1,5 +1,13 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**06.10.2026, abends: D12 abgenommen, Version 3.18.18, nicht veröffentlicht.**
+Der Halt von 18:50 (nächster Absatz) ist erledigt: Gesamtlauf am selben
+Quellstand fortgesetzt, 146/146 Exit 0, Runde 13/13, Affen je 0 Befunde.
+Commit und Push auf main. Online ist weiter 3.18.14; E, F und D12
+veröffentlicht der Betreiber mit „ladegerät“. Einzelheiten im
+Zyklus-Logbuch, oberster Eintrag. Offen: D13, D15 zurück; D14, C18 bis
+29.10.; Z1-Umbau im eigenen Chat; Nachprüfung; Gerätetests; Rechtsprüfung.
+
 **06.10.2026, 18:50: D12 angehalten auf Wunsch des Betreibers.** Paket F bleibt
 fertig auf main (802c56a, 3.18.17). D12 liegt als Entwurf 3.18.18 uncommittet im
 Ordner `Desktop\Wiederholung`, Gesamtlauf bei 82/146 gestoppt, alle 82 grün.

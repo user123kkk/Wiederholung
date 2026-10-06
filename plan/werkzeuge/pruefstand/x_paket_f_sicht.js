@@ -19,10 +19,18 @@ const kontrolle=process.argv.includes('--kontrolle');
 // F_SICHT_NEU nur für die Gegenprobe des Messgeräts (absichtlich veränderte Datei).
 const cssAlt=fs.readFileSync(altDatei,'utf8'),cssNeu=fs.readFileSync(process.env.F_SICHT_NEU||path.join(repo,'styles.css'),'utf8');
 assert.notEqual(cssAlt,cssNeu,'Vorstand und Arbeitsbaum sind gleich: nichts zu vergleichen');
+/* Für Aufgaben, die auch app.js ändern oder Bewegungsangaben absichtlich entfernen (D12):
+   F_SICHT_ALT_APP   alte app.js für die Alt-Durchgänge,
+   F_SICHT_STIL_OHNE Eigenschaften (Anfang des Namens, mit | getrennt), die im Stilvergleich
+                     ausgenommen sind; vor dem Lauf festlegen und im Log nennen,
+   F_SICHT_KLASSE_OHNE Klassennamen, die in der Elementbeschreibung nicht zählen. */
+const appAlt=process.env.F_SICHT_ALT_APP?fs.readFileSync(process.env.F_SICHT_ALT_APP,'utf8'):null;
+const stilOhne=(process.env.F_SICHT_STIL_OHNE||'').split('|').filter(Boolean);
+const klasseOhne=(process.env.F_SICHT_KLASSE_OHNE||'').split('|').filter(Boolean);
 const basis={zeitMs:Date.now(),voll:vollerStore(),leer:vollerStore({leer:true})};
 let fotos=0,stile=0,schwankung=0,nichtMessbar=0;const rot=[];
 
-async function seite(b,vp,opt,css){
+async function seite(b,vp,opt,css,app){
   return neueSeite(b,vp,{...opt,vorher:async ctx=>{
     await ctx.addInitScript(zeitMs=>{
       navigator.serviceWorker.register=()=>Promise.reject(new Error('Foto ohne Worker'));
@@ -31,6 +39,7 @@ async function seite(b,vp,opt,css){
       let seed=7;Math.random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
     },basis.zeitMs);
     await ctx.route(u=>u.hostname==='127.0.0.1'&&u.pathname.endsWith('/styles.css'),r=>r.fulfill({body:css,contentType:'text/css'}));
+    if(app)await ctx.route(u=>u.hostname==='127.0.0.1'&&u.pathname.endsWith('/app.js'),r=>r.fulfill({body:app,contentType:'text/javascript'}));
   }});
 }
 /* Ein Zustand: ruhigstellen, Stile lesen, in Fensterhöhen fotografieren. */
@@ -56,18 +65,18 @@ async function zustand(p,name,liste){
     const e=document.documentElement,alt=e.style.visibility;e.style.visibility='hidden';
     requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.visibility=alt;requestAnimationFrame(()=>requestAnimationFrame(r));}));
   }));
-  const stil=await p.evaluate(()=>{
+  const stil=await p.evaluate(([stilOhne,klasseOhne])=>{
     const hash=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16);};
     // Chrome zählt eigene Eigenschaften (--x) je Seite in anderer Reihenfolge auf: sortieren.
-    const lies=(el,pseudo)=>{const cs=getComputedStyle(el,pseudo);if(pseudo&&cs.content==='none')return '';const e=[];for(let i=0;i<cs.length;i++)e.push(cs[i]+':'+cs.getPropertyValue(cs[i]));return e.sort().join(';');};
+    const lies=(el,pseudo)=>{const cs=getComputedStyle(el,pseudo);if(pseudo&&cs.content==='none')return '';const e=[];for(let i=0;i<cs.length;i++){if(stilOhne.some(a=>cs[i].startsWith(a)))continue;e.push(cs[i]+':'+cs.getPropertyValue(cs[i]));}return e.sort().join(';');};
     const out=[];let n=0;
     for(const el of document.documentElement.querySelectorAll('*')){
       if(el.closest('head'))continue;
-      const wer=(n++)+' '+el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+(typeof el.className==='string'&&el.className?'.'+el.className.trim().replace(/\s+/g,'.'):'');
+      const wer=(n++)+' '+el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+(typeof el.className==='string'&&el.className?'.'+el.className.trim().split(/\s+/).filter(k=>!klasseOhne.includes(k)).join('.'):'');
       out.push([wer,hash(lies(el,null)+'|'+lies(el,'::before')+'|'+lies(el,'::after'))]);
     }
     return {out,roh:{html:lies(document.documentElement,null),body:lies(document.body,null)}};
-  });
+  },[stilOhne,klasseOhne]);
   const lage=await p.evaluate(()=>({y:scrollY,h:innerHeight,H:document.documentElement.scrollHeight}));
   const stufen=[lage.y];
   for(let y=0;y<lage.H-lage.h;y+=lage.h)if(!stufen.includes(y))stufen.push(y);
@@ -166,6 +175,7 @@ async function vergleich(browser,prefix,x,y,marke){
 }
 (async()=>{const b=await chromium.launch({...(process.env.CHROMIUM?{executablePath:process.env.CHROMIUM}:{}),args:(process.env.F_SICHT_ARGS||'').split(' ').filter(Boolean)});try{
   console.log('Browser '+b.version()+', Zusatzschalter: '+(process.env.F_SICHT_ARGS||'keine'));
+  console.log('Alt-CSS '+altDatei+(appAlt?', Alt-app.js '+process.env.F_SICHT_ALT_APP:'')+'; Stil ohne: '+(stilOhne.join(', ')||'nichts')+'; Klassen ohne: '+(klasseOhne.join(', ')||'nichts'));
   const faelle=[];
   for(const vp of [GERAETE.handy,{...GERAETE.handy,width:320,height:568},GERAETE.ipad])
   for(const thema of ['hell','dunkel'])for(const ruhig of [false,true]){
@@ -175,12 +185,12 @@ async function vergleich(browser,prefix,x,y,marke){
   for(const f of faelle){
     const prefix=[f.vp.width,f.thema,f.ruhig?'ruhig':'bewegt',f.gast?'gast':f.leer?'leer':'voll'].join('-');
     if(process.env.F_FOTO_FILTER&&!prefix.includes(process.env.F_FOTO_FILTER))continue;
-    const gang=async css=>{
+    const gang=async(css,app)=>{
       let opt;
       if(f.gast)opt={user:null,store:{},thema:f.thema,ruhig:f.ruhig,ls:{'adrabic-thema':f.thema}};
       else{const store=JSON.parse(JSON.stringify(f.leer?basis.leer:basis.voll));store['users/u1'].settings.thema=f.thema;
         opt={thema:f.thema,ruhig:f.ruhig,leer:f.leer,store,ls:{'adrabic-thema':f.thema}};}
-      const {p,ctx}=await seite(b,f.vp,opt,css);const liste=[];
+      const {p,ctx}=await seite(b,f.vp,opt,css,app);const liste=[];
       try{
         assert.equal(await p.evaluate(()=>document.documentElement.dataset.thema),f.thema,'Thema '+prefix);
         if(f.gast)await gastgang(p,liste);else await rundgang(p,f.leer,liste);
@@ -188,11 +198,11 @@ async function vergleich(browser,prefix,x,y,marke){
       }finally{await ctx.close();}
       return liste;
     };
-    const alt=await gang(cssAlt),neu=await gang(cssNeu);
+    const alt=await gang(cssAlt,appAlt),neu=await gang(cssNeu);
     let befunde=await vergleich(b,prefix,alt,neu,'alt-neu');
     let zusatz='';
     if(kontrolle){
-      const k=await vergleich(b,prefix,alt,await gang(cssAlt),'alt-alt');schwankung+=k.length;
+      const k=await vergleich(b,prefix,alt,await gang(cssAlt,appAlt),'alt-alt');schwankung+=k.length;
       /* Ein Foto, das schon Alt gegen Alt schwankt, misst nichts: Es wird als
          „nicht messbar“ ausgewiesen statt der Änderung zugerechnet. Stilbefunde
          und Fotos mit gleicher Kontrolle bleiben streng. */

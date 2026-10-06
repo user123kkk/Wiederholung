@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: F12-Fotovergleich rot
+
+32 !== 0
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_paket_f_sicht.js:220:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 32,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

@@ -61,3 +61,94 @@ ersten gelernten Karte, auch nach einer 20er-Runde.
 Prüfstand mit 1100 fälligen Karten, Einstellung „Alle“: zweiter Knopf da,
 Runde zeigt „Karte 1 von 20“, `settings.sitzungsLimit` unverändert,
 `abnahme_runde.js` 13/13. Bei 25 fälligen: kein zweiter Knopf.
+
+---
+
+## Nachtrag 06.10.2026 abends: Welche Karten zuerst? Recherche und Empfehlung
+
+Betreiber: „ich hab keinen Plan … finde einen Kompromiss, der nicht schadet
+und sinnvoll ist“. Das ersetzt die Empfehlung „c“ oben; sie war aus dem Bauch.
+
+### Was im Repo schon dazu steht
+
+- `grossplan/befunde/LERNEN.md` LERNEN-4 (gemessen): Limit 10, oben 10 heute
+  fällige, darunter 20 seit 20–58 Tagen überfällige. Dran kamen nur die
+  oberen. Der Prüfer empfahl „am längsten überfällig zuerst“.
+- `grossplan/ENTSCHEIDUNGEN.md` E-05: dieselbe Frage, Empfehlung „ja“,
+  Spalte „Entschieden“ leer. Sie ist also nie entschieden worden.
+- `befunde/LERN.md` LERN-11: Nach langer Pause wären das die am längsten
+  vergessenen Karten, die erste Runde würde die härteste.
+- Code: Abstand je Stufe wächst mit Faktor 1,8, höchstens 180 Tage. „Sicher“
+  +1 Stufe, „Fast“ −1, „Nicht“ −2. Was länger als 14 Tage überfällig ist,
+  gilt für die Serie schon als „liegengeblieben“ (`LIEGENGEBLIEBEN_TAGE`).
+
+### Was die Quellen sagen
+
+- Anki-Handbuch, „Review sort order“: Standard ist „am längsten wartend
+  zuerst“, empfohlen, wenn man aktuell ist oder nur wenig Rückstand hat. Für
+  großen Rückstand nennt es „Relative overdueness“: zuerst, was man am
+  wahrscheinlichsten schon vergessen hat.
+  https://docs.ankiweb.net/deck-options.html
+- Anki-Forum, Simulationen von L. M. Sherlock (FSRS), zitiert von Expertium:
+  Bei begrenzter Zahl an Wiederholungen pro Tag schneidet „am längsten
+  fällig zuerst“ mit am schlechtesten ab. Besser ist die umgekehrte
+  Richtung: zuerst, was man gerade noch weiß und als Nächstes verlieren
+  würde. Begründung dort: Wer immer das am tiefsten Vergessene zuerst nimmt,
+  lässt die frisch fälligen Karten liegen, und die verfallen währenddessen.
+  https://forums.ankiweb.net/t/ordering-request-reverse-relative-overdueness/50051
+
+Einordnung: Das Handbuch und die Simulationen widersprechen sich für großen
+Rückstand. Die Simulationen sind keine begutachtete Studie und im Forum ohne
+Zahlen wiedergegeben. Sie passen aber zur Vergessenskurve: Eine Karte, die
+schon vergessen ist, verliert durch einen weiteren Tag nichts mehr. Eine
+Karte, die gerade fällig wurde, verliert jeden Tag etwas.
+
+### Empfehlung: „zuerst, was heute am meisten zu verlieren hat“
+
+Wiederholungen werden vor dem Abschneiden auf die Rundengröße so sortiert:
+
+1. nach dem Anteil, um den eine Karte überfällig ist, gemessen an ihrem
+   eigenen Abstand (Tage überfällig geteilt durch Abstand der Stufe),
+   **kleinster Anteil zuerst**;
+2. bei Gleichstand die Karte mit dem **kürzeren Abstand** zuerst;
+3. neue Karten wie heute danach.
+
+Danach wird wie bisher gemischt. Es ändert sich also nur, **welche** Karten
+in eine begrenzte Runde kommen, nicht ihre Reihenfolge in der Runde. Stufen,
+Abstände und Bewertung bleiben unberührt. Ohne Limit („Alle“) ändert sich
+gar nichts.
+
+Was das in den zwei Fällen bedeutet:
+
+- **Alltag, etwas mehr fällig als die Rundengröße:** Alle sind heute fällig
+  geworden, Anteil 0. Dann kommen die mit kurzem Abstand zuerst, also das
+  frisch Gelernte. Das ist richtig: Eine Karte mit einem Tag Abstand
+  verdoppelt ihre Wartezeit, wenn sie einen Tag liegen bleibt; eine Karte mit
+  60 Tagen Abstand merkt einen Tag kaum.
+- **Nach 60 Tagen Pause:** Eine Karte mit 60 Tagen Abstand ist um das
+  Einfache überfällig und oft noch zu retten; an ihr hängen Monate Arbeit.
+  Eine Karte mit 2 Tagen Abstand ist um das Dreißigfache überfällig und so
+  gut wie sicher weg; sie fällt heute wie morgen auf Stufe 0 zurück. Zuerst
+  kommen also die festen Karten. Die erste Runde nach der Pause ist damit
+  die mit den besten Aussichten, nicht die härteste (Einwand LERN-11).
+
+Was dagegen spricht, und was davon bleibt:
+
+- LERNEN-4 („alte Karten kommen nie dran“): Wer dauerhaft nur eine begrenzte
+  Runde macht und täglich mehr fällig bekommt, als hineinpasst, lässt die
+  lange vergessenen hinten liegen. Das trifft aber Karten, die ohnehin wie
+  neu gelernt werden müssen, und sie stehen weiter vor den wirklich neuen.
+  Mit „Weiterlernen“ oder „Alle“ kommen sie am selben Tag dran.
+- Es beruht auf einem Modell (Vergessenskurve, Abstand als Maß für die
+  Festigkeit), nicht auf Messungen dieser App.
+- Der Kommentar „die 10 dringendsten“ in `startSession` stimmt dann
+  inhaltlich und wird in diesem Sinn umgeschrieben.
+
+**Urteil:** Das ist die Wahl, die bei wenig Rückstand nichts verschlechtert
+und bei viel Rückstand am meisten rettet. „Am längsten überfällig zuerst“
+(alte Empfehlung E-05) rate ich nach der Recherche ab.
+
+Entscheiden muss der Betreiber (Lernlogik). Sagt er „Reihenfolge ja“, wird
+es mit eigenem Test gebaut (Fall aus LERNEN-4 und Fall „60 Tage Pause“),
+dazu Runden-Abnahme und Gesamtlauf. Der Knopf „Erst einmal 20“ (E26) baut
+darauf auf und bleibt eine eigene Entscheidung.

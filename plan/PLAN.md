@@ -7,15 +7,15 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
-Paket F abgeschlossen auf main, 3.18.17, nicht veröffentlicht. Online ist
+Paket F (3.18.17) und D12 (3.18.18) abgeschlossen auf main, nicht veröffentlicht. Online ist
 3.18.14. Einzelheiten: [Logbuch](zyklus-2/LOGBUCH.md), oberster Eintrag,
 [Aufgaben](zyklus-2/AUFGABEN.md).
 
 ## Reihenfolge
 
-1. D12 nachholen nach [Vorbereitung](zyklus-2/D12-D13-NACHHOLEN.md); D13 nur
+1. D12 ist erledigt (3.18.18). D13 nach [Vorbereitung](zyklus-2/D12-D13-NACHHOLEN.md) nur
    mit Gegensehen am iPhone.
-2. Betreiber veröffentlicht E und F mit „ladegerät“.
+2. Betreiber veröffentlicht E, F und D12 mit „ladegerät“.
 3. Fortschritt-Umbau Z1 (C9/C10/C28) im eigenen Chat, Fotos vor dem Commit.
 4. Nachprüfung nach [Zyklus-Auftrag](zyklus-2/AUFTRAG.md) §3.6.
 5. Text-Probelauf bis 29.10.2026 unverändert lassen; danach Auswertung,

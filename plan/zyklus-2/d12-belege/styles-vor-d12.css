@@ -930,6 +930,7 @@ html.ref-hoehe .view--modus:has(> .study-card:not(.study-card--schreiben)) { hei
 .modebar__fortschritt {
   position: fixed; top: var(--sat); left: 0; z-index: calc(var(--z-nav) + 1);
   height: 2px; background: var(--accent);
+  transition: width var(--dur-slow) var(--ease-out);
 }
 
 
@@ -1567,15 +1568,12 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 /* Die Stapel-Karte: der eine Ort auf dem Startbildschirm, an dem es
    weitergeht. Der Akzent trägt hier die Handlung (Satz 1). */
 .stapel {
-  position: relative; overflow: hidden;
-  background:
-    radial-gradient(90% 60% at 50% 0%, var(--accent-bg-strong), transparent 70%),
-    linear-gradient(180deg, var(--accent-bg) 0%, transparent 58%), var(--surface);
+  background: linear-gradient(180deg, var(--accent-bg) 0%, transparent 58%), var(--surface);
   border: 1px solid var(--accent-border);
   border-radius: var(--r-lg);
-  padding: var(--space-6) var(--space-5) var(--space-5);
+  padding: var(--space-6) var(--space-5);
   text-align: center;
-  box-shadow: var(--kante), var(--shadow-md);
+  animation: enter-rise var(--dur-slow) var(--ease-out) both;
 }
 .stapel__zahl {
   font-family: var(--font-text);
@@ -1609,7 +1607,14 @@ button.liste-zeile:active { transform: none; background: var(--surface-raised); 
 .lernen-gruss__titel { margin: var(--space-1) 0 0; font-size: clamp(1.5rem, 3vw + 0.9rem, 2rem); }
 #app:not(.still-ansicht) .lernen-gruss { animation: enter-rise var(--dur-slow) var(--ease-out) both; }
 
-
+.stapel {
+  position: relative; overflow: hidden;
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  background:
+    radial-gradient(90% 60% at 50% 0%, var(--accent-bg-strong), transparent 70%),
+    linear-gradient(180deg, var(--accent-bg) 0%, transparent 58%), var(--surface);
+  box-shadow: var(--kante), var(--shadow-md);
+}
 #app:not(.still-ansicht) .stapel { animation: einstieg-kachel 460ms var(--ease-spring) 60ms both; }
 .stapel__ring {
   position: relative;
@@ -1768,14 +1773,16 @@ button.startliste__schritt { cursor: pointer; }
    ergaenzt hatte. Das las sich wie ein Sprung, nicht wie eine Antwort.
 
    Jetzt bewegt sich genau das, was neu ist:
-     neue Karte  -> die Karte samt Wort wandert ein (.study-flaeche--kommt)
+     neue Karte  -> das Wort wandert ein (.zugedeckt, von app.js gesetzt)
      Aufdecken   -> nur Antwort, Notiz und Bewertungszeile wandern ein,
                     das Wort bleibt stehen, weil es stehen geblieben IST.
    Beides sind @keyframes, keine Transitions - render() ersetzt das Markup,
    auf frischen Elementen laufen Transitions nicht (Abschnitt 3). */
 #app[data-richtung] .view--modus,
 .view--modus { animation: none; }
-
+.study-card.zugedeckt .study-word {
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
+}
 .study-card__mitte {
   flex: 1 1 auto;
   display: flex; flex-direction: column; justify-content: center;
@@ -1820,6 +1827,7 @@ button.startliste__schritt { cursor: pointer; }
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
   padding-bottom: var(--space-2);
+  animation: enter-rise var(--dur-base) var(--ease-out) both;
 }
 .grade-row button {
   flex-direction: column; gap: 2px;
@@ -1899,7 +1907,7 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
    renderSession): eine neue Karte steigt vom Stapel auf (--kommt), beim
    Aufdecken klappt sie um (--dreht), die Antwort schiebt sich unter einer
    Linie herein, die sich von der Mitte aus zieht. */
-
+.study-card.zugedeckt .study-word { animation: none; }
 .study-card__mitte { justify-content: center; gap: var(--space-5); }
 /* 3.15.0: drei Zeilen - die Karte in der Mitte bleibt stehen, egal was
    darunter steht (app.js, renderSession). */
@@ -2182,9 +2190,10 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
   to   { transform: translateX(-56px); opacity: 0; }
 }
 
-/* Die drei Bewertungen blenden zugleich ein, wenn aufgedeckt wird.
-   Beim übrigen Neuzeichnen steht die Zeile ruhig. */
-
+/* Die drei Bewertungen kommen nacheinander herein, wie die Antwortzeilen im
+   Einstieg – und nur dann, wenn gerade aufgedeckt wurde (sonst stünden sie
+   bei jedem Neuzeichnen wieder in Bewegung). */
+.grade-row { animation: none; }
 .grade-row button { position: relative; overflow: hidden; }
 /* 3.17.26: alle drei zugleich, nur Einblenden, mit der Drehung (kein
    Nacheinander mehr - das wirkte wie Aufploppen). */
@@ -2422,6 +2431,7 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
 .lern-balken span {
   display: block; height: 100%; background: var(--accent);
   border-radius: var(--r-full);
+  transition: width var(--dur-slow) var(--ease-out);
 }
 
 .lern-raster {
@@ -2434,6 +2444,8 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-md);
   padding: var(--space-4);
+  transition: opacity var(--dur-base) var(--ease-out),
+              background var(--dur-base) var(--ease-out);
 }
 .lern-karte.ist-gelernt { opacity: 0.42; background: transparent; }
 .lern-nr {
@@ -2832,6 +2844,7 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   display: block; height: 100%;
   background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, transparent), var(--accent));
   border-radius: var(--r-full);
+  transition: width var(--dur-slow) var(--ease-out);
 }
 
 /* Stufenband. */
@@ -2840,7 +2853,7 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
   overflow: hidden; background: var(--bg-sunken);
   margin-bottom: var(--space-3);
 }
-.stat-seg { height: 100%; }
+.stat-seg { height: 100%; transition: width var(--dur-slow) var(--ease-out); }
 /* 3.17.40 (G-062/REST-8): "neu" (--stufe-0) war im dunklen Thema auf dem
    Band unsichtbar (1,2:1) - das Band schien erst bei einem Zehntel
    anzufangen. Heller faerben geht nicht: neu ist die unterste Stufe der
@@ -3076,21 +3089,20 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
 
 .boot {
   min-height: 100svh;   /* Beobachtung 13 */
-  position: relative;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 0; padding: var(--space-7);
+  gap: var(--space-5); padding: var(--space-7);
   text-align: center;
-  animation: none;
+  animation: bootIn .4s var(--ease-out);
 }
-
+@keyframes bootIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
 .boot__mark {
   color: var(--accent); position: relative;
   width: 84px; height: 84px;
   display: flex; align-items: center; justify-content: center;
 }
 .boot__mark .i { width: 72px; height: 72px; }
-
+.boot--exit { opacity: 0; transform: scale(.96); transition: opacity .28s ease, transform .28s ease; }
 .boot__text { font-size: var(--fs-sm); color: var(--text-2); }
 
 /* 3.13.0: Der Ladebildschirm (app.js, bootBild; dasselbe Markup in
@@ -3102,7 +3114,11 @@ input.schalter:focus-visible { outline: 2px solid var(--accent-border); outline-
    erscheint erst, wenn das Laden spuerbar dauert.
    Das Zeichen sitzt genau in der Bildschirmmitte (der Name haengt darunter,
    absolut gesetzt) - wie bei einem nativen Startbildschirm. */
-
+.boot {
+  position: relative;
+  gap: 0; padding: var(--space-7);
+  animation: none;
+}
 .boot__zeichen-hof {
   position: relative;
   width: 96px; height: 96px;
@@ -4433,13 +4449,13 @@ input.arabic { font-size: calc(1.1rem * var(--arab-scale, 1)); min-height: 56px;
 #app.schon-besucht > .view *::before,
 #app.schon-besucht > .view *::after { animation: none !important; }
 
-/* Verwalten: nur sichtbare Zeilen unter den ersten vierzehn kommen
-   nacheinander. app.js markiert sie im ersten Animationsbild; außerhalb
-   des Bildes und beim späteren Scrollen steht die Liste ruhig da. */
+/* Verwalten: die ersten Zeilen der Liste kommen nacheinander – nur die
+   ersten vierzehn, der Rest steht einfach da (eine Liste mit hundert
+   Einträgen, die zwei Sekunden lang einfliegt, ist Wartezeit). */
 /* 3.17.6 (Fluessig-Messung): nur die ersten vierzehn - wie der Satz oben
    sagt. Bis hier traf die Regel JEDE Zeile, der Rest startete nur spaeter
    (Standardwert --n: 14): bei 400 Karten 400 gleichzeitige Animationen. */
-#app:not(.still-ansicht) #karten-liste > .card-row--eintritt:nth-child(-n+14) {
+#app:not(.still-ansicht) #karten-liste > .card-row:nth-child(-n+14) {
   animation: einstieg-zeile 300ms var(--ease-out) backwards;
   animation-delay: calc(var(--n, 14) * 28ms + 60ms);
 }
@@ -5200,7 +5216,7 @@ label .opt.opt--fehler, .card label .opt.opt--fehler { color: var(--negative); f
 .hw-toolbar button:disabled { opacity: 0.62; }
 
 /* 3.17.26: haelt Platz, ohne sichtbar oder bedienbar zu sein */
-.platz-leer { visibility: hidden; pointer-events: none; animation: none; }
+.platz-leer { visibility: hidden; pointer-events: none; }
 
 /* Ab der Schwelle zaehlt das Loslassen - die Karte zeigt es deutlich. */
 .study-flaeche.wisch-bereit .karte-seite { filter: brightness(1.06); }

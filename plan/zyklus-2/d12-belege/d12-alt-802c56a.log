@@ -1,0 +1,10 @@
+AssertionError [ERR_ASSERTION]: D12 toter Übergang: .lern-balken span
+    at d12 (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_d.js:256:12)
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_d.js:304:137 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
