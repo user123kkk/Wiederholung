@@ -51,7 +51,7 @@ Anmeldeformular. Der Betreiber will davor einen **kurzen, geführten Einstieg**,
 der auf etwas hinarbeitet — nicht eine Folie mit allen Funktionen.
 
 Das Ziel ist **eine einzige erste Handlung**: die erste eigene Karte
-(`plan/redesign-oberflaeche/LOGBUCH.md`, v3.6.11: „Erste Karte anlegen" ist der
+(`plan/archiv/redesign-oberflaeche/LOGBUCH.md`, v3.6.11: „Erste Karte anlegen" ist der
 Hauptknopf des leeren Lernen-Bildschirms). Alles im Einstieg dient diesem Weg:
 verstehen, was passiert → die App auf sich einstellen → anmelden → erste Karte.
 

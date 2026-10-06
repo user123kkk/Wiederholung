@@ -3,7 +3,7 @@
 Stand geprüft: `app.js` 3.17.29, `firestore.rules` wie im Repo, `firebase.json`, `datenschutzerklaerung.html` (Stand 24.09.2026).
 
 **Emulator lief.** Gestartet mit firebase-tools (neueste Version aus npm) und Firestore-Emulator v1.22.0 (Download über den Proxy hat geklappt). Java 21 (`/usr/bin/java`). Alles liegt im Scratchpad unter `audit/REGELN/emu/`, im Repo wurde nichts installiert.
-- `plan/phase-1-datenzugriff/regeln-pruefung.mjs` gegen die aktuellen Regeln: **132 von 132 wie erwartet**.
+- `plan/werkzeuge/regeln/regeln-pruefung.mjs` gegen die aktuellen Regeln: **132 von 132 wie erwartet**.
 - Eigene Zusatzfälle stehen in `audit/REGELN/extra.mjs`. Ergebnis gegen die Regeln im Repo: `audit/REGELN/aus-ist.txt`. Ergebnis gegen einen Regelvorschlag: `audit/REGELN/aus-vorschlag.txt`, der Vorschlag selbst in `audit/REGELN/rules-vorschlag.rules`.
 - Prüfstand-Test: `audit/REGELN/t_notfound.js`.
 
@@ -20,7 +20,7 @@ Stand geprüft: `app.js` 3.17.29, `firestore.rules` wie im Repo, `firebase.json`
     - vorher b2 `{"gefuehrt":false,"satzId":"quran-1","satzVersion":3,"teilCode":"KLMNP-QRSTU","teilFreigabe":2}`, nachher b2 `{"name":"Quran-Wörter","order":1}`;
     - vorher b3 `{"gefuehrt":true,…,"lehrerCode":"ABCDE-FGHJK","lehrerOffenBis":2}`, nachher b3 `{"name":"Lehrer-Satz","order":2}`;
     - der gelöschte b1 ist wieder da.
-  - Ausgelöst wird das von jedem `update` in `patchDoc` auf ein Dokument, das es nicht mehr gibt. Beispiele: Umbenennen, Speicherkarten, `lehrerOffenBis`, Teilen beenden. Realistisch ist das bei zwei Geräten oder bei einer Offline-Warteschlange. Wie oft das vorkommt, ist Vermutung. Phase 5 (`plan/phase-5-recht/LOGBUCH.md:516`) hatte es nur als ungeprüfte Möglichkeit vermerkt. Neu ist jetzt der Nachweis und der größere Schaden (Teil- und Lehrer-Felder gab es damals noch nicht).
+  - Ausgelöst wird das von jedem `update` in `patchDoc` auf ein Dokument, das es nicht mehr gibt. Beispiele: Umbenennen, Speicherkarten, `lehrerOffenBis`, Teilen beenden. Realistisch ist das bei zwei Geräten oder bei einer Offline-Warteschlange. Wie oft das vorkommt, ist Vermutung. Phase 5 (`plan/archiv/phase-5-recht/LOGBUCH.md:516`) hatte es nur als ungeprüfte Möglichkeit vermerkt. Neu ist jetzt der Nachweis und der größere Schaden (Teil- und Lehrer-Felder gab es damals noch nicht).
 - Warum es stört:
   - Ein geführter Satz wird still frei bearbeitbar.
   - Die Lehrer-Freigaben sind weg.
@@ -264,7 +264,7 @@ Geprüft ohne Fund:
   - HSTS ohne `preload`: `.app` ist als ganze Top-Level-Domain im Browser-Preload, also ohne Wirkung für `web.app`. Erst bei eigener Domain relevant.
   - Permissions-Policy (Kamera/Mikrofon/Ort aus) passt, die App braucht nichts davon.
   - `frame-src`/`script-src` für den Google-Popup sind vollständig (§ 9.2).
-  - `authDomain` auf `firebaseapp.com` ist bewusst so (`plan/redesign-oberflaeche/LOGBUCH.md:963`). Es wird nur `signInWithPopup` benutzt, kein Redirect.
+  - `authDomain` auf `firebaseapp.com` ist bewusst so (`plan/archiv/redesign-oberflaeche/LOGBUCH.md:963`). Es wird nur `signInWithPopup` benutzt, kein Redirect.
   - Hosting-`ignore` schließt `plan/`, `*.md`, `*.bat`, `firestore.rules` und Punktdateien aus.
 - **Datenschutzerklärung gegen die Cloud-Felder:** Name, E-Mail, Bereiche, Karten, Speicherkarten, Stufen, Fälligkeiten, Serie, Tagesprotokoll, Einstellungen, geteilte Sätze samt Zeit/Kennung/Freigabe, Board-Titel/Beschreibung/Zeit/Status/Stimmenzahl, Stimm-Merker mit Kennung: alles genannt. Lücken nur in REGELN-6/-11.
 - **Nicht prüfbar von hier:** ob die Regeln aus dem Repo **live** in der Konsole stehen, welcher Tarif (Spark/Blaze) gilt, ob E-Mail-Enumeration-Schutz und die Einschränkung des Browser-Keys aktiv sind. Das sind Konsolen-Blicke für den Betreiber.

@@ -76,7 +76,7 @@ nicht mehr aus; kein Text; Hinweis nach 9 s kürzer), `APP_VERSION` 3.13.0.
   iOS-Startbild nahtlos übergeht; Kartenstapel aus 3.12.1 verworfen (ließ sich
   nicht als Startbild fotografieren, war Unterhaltung statt Marke). Startbilder
   nur dunkel (Standard-Fassung), nicht in `APP_SHELL`.
-- `plan/redesign-oberflaeche/stilprobe.html` nutzt noch alte Klassennamen –
+- `plan/archiv/redesign-oberflaeche/stilprobe.html` nutzt noch alte Klassennamen –
   alte Stilprobe, nicht ausgeliefert, bewusst nicht angefasst.
 
 **Geprüft (Chromium, 390 px, hell + dunkel):** Plaketten, Fortschritt-Legende

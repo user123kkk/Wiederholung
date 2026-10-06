@@ -144,19 +144,19 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
-| F1 | CODE-1 | mittel | Datenschutzerklärung sagt „beim Start eine Sache von außen“ – auf Handys und in Safari sind es vier | `befunde/CODE.md` | Sol mittel | offen | Z12: nur Text der Datenschutzerklärung (Weg a) |
-| F2 | CODE-2 | mittel | Neun Klick-Zweige ohne Knopf – darunter ein ganzer toter Funktionsweg („Serie fortsetzen“) | `befunde/CODE.md` | Sol niedrig | offen |  |
-| F3 | CODE-3 | mittel | Umschalter „alle Bereiche / dieser Bereich“ im Fortschritt ist tot, Rechenwege und Stil liegen noch da | `befunde/CODE.md` | Sol niedrig | offen |  |
-| F4 | CODE-4 | mittel | Kommentare beschreiben Regeln, die es nicht mehr gibt (Tageslimit, Zwei-Tipp-Auswahl, startDrill, Link-Teilen) | `befunde/CODE.md` | Luna niedrig | offen |  |
-| F5 | CODE-5 | mittel | CLAUDE.md und PLAN.md widersprechen STAND.md – vier alte „AKTUELL“-Aufträge stehen vor den Dauerregeln | `befunde/CODE.md` | Sol mittel | offen | Z14: wie empfohlen |
-| F6 | CODE-6 | niedrig | „Zuletzt benutzte Speicherkarte vorschlagen“ (3.5.0) ist seit 3.17.10 still verloren | `befunde/CODE.md` | Sol niedrig | offen |  |
-| F7 | CODE-7 | niedrig | Texte beim Teilen und in Listen stimmen bei genau einer Lektion oder Karte nicht | `befunde/CODE.md` | Luna niedrig | offen |  |
-| F8 | CODE-8 | niedrig | Alter Produktname „Lernkarten“ und Wortmischung Backup / Sichern / Sicherung | `befunde/CODE.md` | Sol niedrig | offen | „Lernkarten“ → Adrabic jetzt; Wort „Sicherung“ wartet auf Z13 |
-| F9 | CODE-9 | niedrig | Datenschutzerklärung benutzt andere Namen als die App und widerspricht sich in zwei Sätzen | `befunde/CODE.md` | Sol niedrig | offen | Z12: mit CODE-1 in einem Zug |
-| F10 | CODE-10 | niedrig | Bildschirmwechsel räumt an fünf Stellen von Hand auf – jede Liste ist anders | `befunde/CODE.md` | Sol mittel | offen |  |
-| F11 | CODE-11 | niedrig | Tote Reste der alten Stufen-Auswahl beim Üben und weitere stillgelegte Zweige | `befunde/CODE.md` | Sol niedrig | offen |  |
-| F12 | CODE-12 | niedrig | Rund 30 CSS-Klassen, die app.js und die HTML-Seiten nie erzeugen | `befunde/CODE.md` | Sol mittel | offen |  |
-| F13 | CODE-13 | niedrig | Veraltete und doppelte Dateien im Repo – Vorschlag für eine aufgeräumte Struktur | `befunde/CODE.md` | Sol mittel | offen | Z14: wie empfohlen |
+| F1 | CODE-1 | mittel | Datenschutzerklärung sagt „beim Start eine Sache von außen“ – auf Handys und in Safari sind es vier | `befunde/CODE.md` | Sol mittel | erledigt (3.18.17) | Z12: nur Text der Datenschutzerklärung (Weg a) |
+| F2 | CODE-2 | mittel | Neun Klick-Zweige ohne Knopf – darunter ein ganzer toter Funktionsweg („Serie fortsetzen“) | `befunde/CODE.md` | Sol niedrig | erledigt (3.18.17) |  |
+| F3 | CODE-3 | mittel | Umschalter „alle Bereiche / dieser Bereich“ im Fortschritt ist tot, Rechenwege und Stil liegen noch da | `befunde/CODE.md` | Sol niedrig | erledigt (3.18.17) |  |
+| F4 | CODE-4 | mittel | Kommentare beschreiben Regeln, die es nicht mehr gibt (Tageslimit, Zwei-Tipp-Auswahl, startDrill, Link-Teilen) | `befunde/CODE.md` | Luna niedrig | erledigt (3.18.17) |  |
+| F5 | CODE-5 | mittel | CLAUDE.md und PLAN.md widersprechen STAND.md – vier alte „AKTUELL“-Aufträge stehen vor den Dauerregeln | `befunde/CODE.md` | Sol mittel | erledigt (3.18.17) | Z14: wie empfohlen |
+| F6 | CODE-6 | niedrig | „Zuletzt benutzte Speicherkarte vorschlagen“ (3.5.0) ist seit 3.17.10 still verloren | `befunde/CODE.md` | Sol niedrig | trifft nicht zu (bereits C26, 3.18.13; 16 Nachprüfungen grün) |  |
+| F7 | CODE-7 | niedrig | Texte beim Teilen und in Listen stimmen bei genau einer Lektion oder Karte nicht | `befunde/CODE.md` | Luna niedrig | erledigt (3.18.17) |  |
+| F8 | CODE-8 | niedrig | Alter Produktname „Lernkarten“ und Wortmischung Backup / Sichern / Sicherung | `befunde/CODE.md` | Sol niedrig | erledigt (3.18.17) | Z13 entschieden: Sicherung; interne Schlüssel/Format erhalten |
+| F9 | CODE-9 | niedrig | Datenschutzerklärung benutzt andere Namen als die App und widerspricht sich in zwei Sätzen | `befunde/CODE.md` | Sol niedrig | erledigt (3.18.17) | Z12: mit CODE-1 in einem Zug |
+| F10 | CODE-10 | niedrig | Bildschirmwechsel räumt an fünf Stellen von Hand auf – jede Liste ist anders | `befunde/CODE.md` | Sol mittel | erledigt (3.18.17) |  |
+| F11 | CODE-11 | niedrig | Tote Reste der alten Stufen-Auswahl beim Üben und weitere stillgelegte Zweige | `befunde/CODE.md` | Sol niedrig | erledigt (3.18.17) |  |
+| F12 | CODE-12 | niedrig | Rund 30 CSS-Klassen, die app.js und die HTML-Seiten nie erzeugen | `befunde/CODE.md` | Sol mittel | erledigt (3.18.17) | rote Vollseitenfotos als Messfehler belegt; Stile 36/36 gleich, Fotos 30/36 gleich mit Kontrolle, 6 Gast-Konfigurationen mit Bewegung nicht messbar; siehe Logbuch 06.10. |
+| F13 | CODE-13 | niedrig | Veraltete und doppelte Dateien im Repo – Vorschlag für eine aufgeräumte Struktur | `befunde/CODE.md` | Sol mittel | erledigt (3.18.17) | Z14: wie empfohlen |
 
 ## Doppelt gemeldet (einmal beheben)
 

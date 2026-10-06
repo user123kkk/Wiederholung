@@ -2,7 +2,7 @@
 # ============================================================
 # regeln_testen.sh — Firestore-Regeln im Emulator pruefen (Linux)
 #
-# Wofuer: fuehrt plan/phase-1-datenzugriff/regeln-pruefung.mjs gegen einen
+# Wofuer: fuehrt plan/werkzeuge/regeln/regeln-pruefung.mjs gegen einen
 # echten Firestore-Emulator aus. Nur so ist geprueft, dass firestore.rules
 # tatsaechlich das tut, was gewollt ist — nicht nur, dass es syntaktisch
 # gueltig ist.
@@ -37,7 +37,7 @@
 set -euo pipefail
 
 REPO_WURZEL="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PRUEFDATEI="${PRUEFDATEI:-$REPO_WURZEL/plan/phase-1-datenzugriff/regeln-pruefung.mjs}"
+PRUEFDATEI="${PRUEFDATEI:-$REPO_WURZEL/plan/werkzeuge/regeln/regeln-pruefung.mjs}"
 EMU_ORDNER="${REGELN_EMU:-$HOME/.cache/adrabic-regeln-emu}"
 REGELN_DATEI="${REGELN_DATEI:-$REPO_WURZEL/firestore.rules}"
 

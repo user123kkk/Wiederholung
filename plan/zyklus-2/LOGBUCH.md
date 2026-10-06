@@ -2,6 +2,112 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-06 — Paket F abgenommen, 3.18.17 (Claude, Fortsetzung am Laptop)
+
+**Geändert:** Uncommitteten F-Stand vom 05.10. vollständig behalten.
+Dazu: `styles.css` F12 wieder eingesetzt (31 tote Klassen, `.card.card` hält
+die Spezifität). `app.js`: F10 `ui.drillOpen` aus `ebenenSchliessen()`
+heraus und wieder an den acht Stellen wie in 5af78a0; F4 Kommentar bei
+`case "stufe-chip"`; `APP_VERSION`. `sw.js` `CACHE_NAME`, `index.html` 33
+Versionsstellen, `CHANGELOG.md` oben. Texte: 38 falsch umgeschriebene
+Dateinamen in zwölf Dateien zurückgestellt, `befunde/CODE.md` wörtlich wie
+5af78a0, `plan/archiv/ueberholt/` gelöscht (Z14). Tests: neu
+`x_paket_f_sicht.js`, `x_paket_f_stil_diagnose.js`; `t_paket_f_bilder.js`
+mit Software-Raster; `t_paket_f_ebenen.js` um die echte Klickfolge
+erweitert; `t_feedback_speichern.js` Wortlaut „Sicherung“. Doku: LEHREN
+§ 3.7a, § 5.3, § 15; AUFGABEN F1–F5, F7–F13; STAND, PLAN; neu
+`D12-D13-NACHHOLEN.md`, `E26-VORSCHLAG.md`, `GERAETETESTS-ZETTEL.md`.
+
+**Entscheidung:** F12 war nie rot wegen des CSS. Im Ordner
+`fotos/f12-voll-1` ist das „falsche“ Bild mit neuem CSS bytegleich zu einem
+Bild mit altem CSS (117F870B/CD32F2E9): Das Vollseitenfoto hat bei gleicher
+Quelle zwei Fassungen. Abnahme deshalb wie im Befund genannt („wie
+`t_nur_betreiber.js`“): Fensterfotos, RGBA, Toleranz 0, Software-Raster,
+Kontrolle Alt gegen Alt, dazu die berechneten Stile aller Elemente.
+Ergebnis am Endstand (`f12-sicht-voll-3.log`): Stile 36/36 gleich; Fotos
+30/36 gleich bei gleicher Kontrolle (alle 18 ruhigen, alle 12 Konto-
+Konfigurationen mit Bewegung); 6 Gast-Konfigurationen mit Bewegung per Foto
+nicht messbar, weil dieselben Stellen in vier Wiederholungen auch Alt gegen
+Alt schwanken (`f12-sicht-gast-bewegt-wiederholung.log`). Das Messgerät
+endet dort mit Exit 1; das ist so berichtet und nicht umgedeutet.
+Gegenprobe des Geräts mit 1 px geänderter Regel rot. Keine Grenze gelockert.
+F10: Eine Aufräum-Aufgabe ändert kein Verhalten, deshalb zurück auf das
+Verhalten von 5af78a0. Z14 sagt „löschen“, also gelöscht statt archiviert.
+
+**Prüfungen (Quellstand cd7e88bcd1ba1daa, BatteryStatus 2):**
+Gesamtlauf 05.10. 20:15–22:36: 145/146, rot nur `t_feedback_speichern.js`
+(verlangte den alten Satz „Lade ein Backup herunter“; F8/Z13). Erwartung
+nachgezogen, Gegenprobe am festen c4b1c30 verlangt weiter „Backup“ und ist
+grün; Nachlauf mit `--fortsetzen`: **146/146 Exit 0**. Runde **13/13**.
+Affe mit Texten Handy 200 und iPad 150, Startwert 7: je **0 Befunde**.
+`pruefe_stand.mjs`, `node --check`, `git diff --check` grün. Verweis-
+Inventar ohne Fund. Alle 146 Logs gegen den E-Lauf bdfec355 verglichen:
+Unterschiede sind Datum/Wochentag, zufällige Teilen-Codes und Karten, der
+neue Wortlaut und Messwerte. Zwei beschreibende Ausreißer einzeln geklärt:
+`t_anmelden` einmal „Knopf-Sprung −4“ (klein/dunkel), in drei Wiederholungen
+0; `t_fluessig` einmal 490 ms Bildlücke auf Fortschritt, in drei
+Wiederholungen 195–247 ms wie im E-Lauf. `x_ab_tempo.js 8 5af78a0`:
+Verwalten Median alt 163/neu 145, Text alt 101/neu 124, keiner über 200.
+Am 06.10. 17:02 Quellstand erneut berechnet: unverändert.
+
+**Eigene Fehler dieser Sitzung** (in LEHREN § 15): Stilvergleich ohne
+Sortierung; Schritt „unsichtbar/sichtbar zeichnen“ nur an einer
+Konfiguration erprobt, ein 55-Minuten-Lauf verworfen; Backslash-Verlust in
+einem Heredoc beim Testumbau, von `node --check` gefangen. Sicherungs-
+schleife und Server liefen als Werkzeug-Hintergrundaufgaben in ein
+2-Stunden-Limit; Server und Gesamtlauf danach losgelöst gestartet.
+
+**LEHREN § 14:** 1 Codepfade gelesen (F10, F11, Reihenfolge fälliger
+Karten). 2 Muster gesucht (alter Wortlaut in Tests, umgeschriebene
+Dateinamen). 3 Kommentare nachgezogen (F4). 4 keine neuen Blätter oder
+Handlungen. 5 kein neuer Zustand. 6 Sprung/Kontrast/Großansicht im
+Gesamtlauf grün, drei Breiten, hell/dunkel. 7 Einzahl geprüft (F7).
+8 keine Cloud-Felder, Regeln unverändert. 9 kein neuer Datenfluss; die
+Datenschutzerklärung beschreibt Bestehendes genauer. 10–11 Syntax und
+Version grün. 12 Gesamtlauf, Runde, Affen. 13 dieser Eintrag, STAND, PLAN.
+14 „Was Du noch tun musst“ in der Antwort.
+
+**Offen:** Veröffentlichen von E und F durch den Betreiber („ladegerät“);
+Regeln sind unverändert. Gerätetests G1–G7 (`GERAETETESTS-ZETTEL.md`).
+Rechtsprüfung der Datenschutzerklärung durch eine Person. Dritte überholte
+Datei aus Z14, `plan/texte-lernen/entwurf-g119/`, nicht angefasst (Ordner
+gesperrt): Betreiber entscheidet. Beobachtung, nicht gebaut: Der Kommentar
+in `startSession` verspricht „die 10 dringendsten“, genommen werden die
+ersten nach Kartenreihenfolge (E-05, Lernlogik; `E26-VORSCHLAG.md`).
+D13–D15, E17, E26, C18, Z1 unverändert offen.
+
+**Nächster Schritt:** D12 nachholen nach `D12-D13-NACHHOLEN.md` (Betreiber
+05.10.: „mach“), eigener Commit. Danach auf sein Stichwort veröffentlichen.
+
+### 2026-10-05 — Paket F gebaut, Einzelabnahme beendet, Abschluss am Laptop
+
+**Geändert:** F1/F9 Datenschutztext; F2/F3 tote Aktionen/Serienweg/Filter;
+F4 Kommentare; F5 CLAUDE/PLAN gestrafft und Originale archiviert;
+F7/F8 Einzahl und Sicherungswortlaut; F10 gemeinsame Schließliste;
+F11 tote Übungsfelder/Funktionen; F12 CSS-Versuch nach zwei roten vollen Fotovergleichen zurückgenommen;
+F13 Archiv/Ideen/Werkzeuge und Verweise/README. F6 schon C26/3.18.13.
+**Entscheidung:** Nur F, keine neue Version/Commit/Push/Veröffentlichung hier.
+Ausgang main 5af78a0/3.18.16 sauber, Pull unverändert, Startprüfungen grün.
+Tatsächlich Windows/PowerShell, BatteryStatus=1; kein Gesamtlauf auf Akku.
+plan/texte-lernen bleibt vollständig unverändert, inklusive altem Entwurf.
+**Prüfungen:** Frische Folge einzel-2: 15 Aufrufe Exit 0, Runde 13/13, beide Affen mit Textaktionen null Befunde; Zusatzmatrix 24/24 grün; alle Ausgaben gelesen. F1/F9 echte SDK-Abrufe/Gegenprobe; F2/F3/F4/F11 feste
+Struktur-Gegenproben; F3 zwölf exakte Fotos; F6 16 Zustände;
+F7/F8 Text/Download/Gegenprobe; F10 zwölf Zustände; F12 48 Hauptfotos
+exakt gleich und CSS-Gegenprobe. Nach F2/F3 Sprung/Kontrast/a11y grün.
+F13 43 Skripte Syntax grün, keine neuen defekten Markdown-/Modulverweise.
+Alle Original-Logs und Bilder unter paket-f-belege, Sicherung alle 30 s.
+**Gegenprüfung:** F-Diff gegen CODE gelesen: Wortersetzungsartikel,
+URL-Normalisierung des Umzugsskripts und extensionlose Module korrigiert;
+unbeabsichtigte Änderungen an sw/pruefe_stand/Tempotest zurückgenommen.
+Durable Betreiber-Konto-Regel in CLAUDE erhalten. Kein Lernlogik-Umbau,
+keine Datenfeld-/Schlüsseländerung. Finaler Produkt-/CSS-Diff vollständig gegen CODE gelesen; Ergebnisse je Aufgabe in PAKET-F-GEGENPRUEFUNG.md.
+**Offen:** F12 zurück (zwei volle Fotovergleiche rot, 30551 Pixel im ersten Fall); Paketgesamtlauf/Tempo/Geräteabnahme am Netzteil, Rechtsprüfung.
+F13 -NurPruefen stoppt am vorgesehenen uncommitteten Entwurf, daher offen.
+Ein historischer Analytics-Markdownverweis war bereits im Ausgang defekt;
+als später mit der Statistik gelöschte Datei gekennzeichnet.
+**Nächster Schritt:** [PAKET-F-FORTSETZUNG.md](PAKET-F-FORTSETZUNG.md),
+aktuelle Prüflogs. Änderungen erhalten; keine Aufgabe endgültig fertig melden.
+
 ### 2026-10-05 — E7 Ruhetag abgenommen, 3.18.16 (Codex nach Übergabe)
 
 **Geändert:** Übernommener Produktstand unverändert erhalten: `app.js:951`
@@ -2870,7 +2976,7 @@ direkt auf main committen/pushen. Nicht veröffentlichen.
 (`t_feedback_speichern.js`, `t_feedback_ansichten.js`,
 `t_settings_mehrgeraete.js`, `t_settings_kontowechsel.js`, `stubs.js`,
 `alle_pruefen.js` – Wrapper-Hilfsquellen mit hashen);
-`plan/grossplan/befunde/werkzeuge/runde14_fortsetzungen.js:13`
+`plan/werkzeuge/befund-skripte/runde14_fortsetzungen.js:13`
 (Fixture kennt offline), `LEHREN.md` §§ 3.7/3.11/5.3/15,
 `AUFGABEN.md`, `plan/STAND.md`, `plan/PLAN.md`.
 
@@ -3079,3 +3185,8 @@ Beispiel-Statistik, religiöse Zielliste und Lehrstoff ausdrücklich nicht.
 Zwei Gestaltungsfragen an den Betreiber stehen in `VORBILD-MARHABA.md` § 5
 und kommen gesammelt in Phase 2.
 **Nächster Schritt:** Nach Texte-Veröffentlichung Phase 0 (`AUFTRAG.md` § 3.1).
+
+Schlussprüfung F: einzel-2 alle15 Aufrufe Exit0, Runde13/13, Affen200/150
+Seed7 mit Textaktionen je0Befunde; alle Outputs vollständig gelesen.
+Zusatzmatrix f-umfeld24/24 grün. git diff --check grün. Finale Gegenprüfung
+je Aufgabe: PAKET-F-GEGENPRUEFUNG.md. Abschluss bleibt am Laptop offen.

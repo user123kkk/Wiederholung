@@ -64,12 +64,13 @@ const zusatz = `formular:()=>{ui.einstellungen=true;ui.seite='feedback';ui.feedb
       await zweite.p.locator('#dlg-title').filter({hasText:'Nicht gespeichert'}).waitFor();
       const dialog=await zweite.p.locator('.dlg').innerText();
       assert.equal(dialog.includes('versucht es weiter'),alt);
-      if(!alt)assert.match(dialog,/Lade ein Backup herunter, bevor du weiterlernst/);
+      if(!alt)assert.match(dialog,/Lade eine Sicherung herunter, bevor du weiterlernst/);
       await zweite.p.locator('[data-action="dlg-ok"]').click();
       await zweite.p.evaluate(()=>window.__PRUEF.schreiben());
-      assert.match(await zweite.p.locator('#app').innerText(),/Lade ein Backup herunter, bevor du weiterlernst/);
+      // F8/Z13 (3.18.17): „Sicherung“ statt „Backup“; der Altstand c4b1c30 sagt weiter „Backup“.
+      assert.match(await zweite.p.locator('#app').innerText(),alt?/Lade ein Backup herunter, bevor du weiterlernst/:/Lade eine Sicherung herunter, bevor du weiterlernst/);
       assert.deepEqual(zweite.p.fehler,[]);
-      console.log('OK dauerhafte Ablehnung: '+(alt?'Gegenprobe verspricht weiter falschen Retry':'Dialog und Banner nennen Backup'));
+      console.log('OK dauerhafte Ablehnung: '+(alt?'Gegenprobe verspricht weiter falschen Retry':'Dialog und Banner nennen die Sicherung'));
     }finally{await zweite.ctx.close();}
   }finally{await b.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

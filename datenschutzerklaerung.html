@@ -52,8 +52,9 @@
       zu können. Deine <strong>Lerninhalte</strong> – Bereiche, Karten, Texte, Lernstufen, Fälligkeiten,
       deine Serie – liegen in der Firestore-Datenbank (Google), erreichbar nur für dich, außer du
       teilst selbst einen Kartensatz per Code (Punkt 5); die Zugriffsregeln dafür liegen in
-      <code>firestore.rules</code>. Auf deinem Gerät bleiben nur ein paar Einstellungen und
-      Merkzeichen (Punkt 7) und die App-Dateien selbst, damit sie offline startet.</p>
+      <code>firestore.rules</code>. Auf deinem Gerät liegen außerdem eine Kopie deiner Lerninhalte
+      im Browser-Speicher (IndexedDB), Einstellungen und Merkzeichen (Punkt 7) und die
+      App-Dateien selbst, damit du die App auch offline nutzen kannst.</p>
       <p class="hint" style="margin-top:var(--space-3)">Keine Werbung, keine Cookies, keine
       Auswertung deines Nutzungsverhaltens, keine Weitergabe deiner Lerninhalte. Löschen kannst du dein Konto jederzeit selbst
       (Einstellungen → Konto löschen), mitnehmen jederzeit als Datei (Einstellungen → Sichern &amp;
@@ -135,7 +136,7 @@
       Die Zugriffsregeln der
       Datenbank (<code>firestore.rules</code>) lassen jedes Konto ausschließlich an die eigenen
       Daten – andere Nutzer:innen können sie nicht einsehen. Ausnahmen gibt es zwei: Kartensätze,
-      die du selbst per Code teilst (unten), und das Feedback-Board (Punkt 6) – dort ist
+      die du selbst per Code teilst (unten), und „Ideen &amp; Vorschläge“ (Punkt 6) – dort ist
       Sichtbarkeit für alle angemeldeten Konten gerade der Zweck. Rechtsgrundlage ist Art. 6
       Abs. 1 lit. b DSGVO.</p>
       <p class="hint" style="margin-top:var(--space-3)"><strong>Kartensatz per Code teilen:</strong>
@@ -168,9 +169,9 @@
   </div>
 
   <div class="sektion">
-    <div class="eyebrow">6. Feedback-Board</div>
+    <div class="eyebrow">6. Ideen &amp; Vorschläge</div>
     <div class="card">
-      <p class="hint">In den Einstellungen gibt es ein Feedback-Board: Du kannst Vorschläge
+      <p class="hint">In den Einstellungen gibt es „Ideen &amp; Vorschläge“: Du kannst Vorschläge
       einreichen und für die Vorschläge anderer abstimmen. Gespeichert werden dabei der von dir
       eingegebene Titel, eine optionale Beschreibung, der Zeitpunkt und ein Status (offen /
       geplant / umgesetzt / abgelehnt / entfernt). Entfernt der Betreiber einen Vorschlag,
@@ -207,7 +208,7 @@
         <li>die gewählte Helligkeit, damit die App beim Start sofort richtig aussieht</li>
         <li>die Kennung des zuletzt geöffneten Bereichs, getrennt für jedes angemeldete Konto,
         damit du auf diesem Gerät dort weiterlernen kannst; im Merkzeichen steht nur die Bereichs-ID</li>
-        <li>das Datum deines letzten Backups</li>
+        <li>das Datum deiner letzten Sicherung</li>
         <li>welche Hinweise der App du schon gesehen oder weggetippt hast, damit derselbe Hinweis
         nicht immer wieder erscheint, und – falls du eine eingerichtet hast – die Uhrzeit deiner
         Kalender-Erinnerung</li>
@@ -244,10 +245,15 @@
   <div class="sektion">
     <div class="eyebrow">9. Fremde Server beim Laden der App</div>
     <div class="card">
-      <p class="hint">Beim Start lädt die App eine Sache von außen: das Firebase-SDK von
-      <code>gstatic.com</code> – die Bausteine für Anmeldung und Datenbank von Google, das hier
-      ohnehin als Auftragsverarbeiter tätig ist (Punkt 8). Dabei erfährt Google technisch bedingt
-      deine IP-Adresse. Die arabische Schrift liefert die App selbst aus, ohne fremden Server.</p>
+      <p class="hint">Beim Start lädt die App das Firebase-SDK von
+      <code>www.gstatic.com</code> – die Bausteine für Anmeldung und Datenbank von Google (Punkt 8).
+      Auf Handys und in Safari lädt der Anmeldebaustein außerdem Dateien von
+      <code>apis.google.com</code>, ein unsichtbares Anmeldefenster von
+      <code>lernkarte-925c2.firebaseapp.com</code> und stellt eine Verbindung zu
+      <code>www.googleapis.com</code> her. Das geschieht bereits beim Start, auch wenn du
+      „Mit Google“ nicht antippst oder dich mit E-Mail anmeldest. Dabei erfährt Google
+      technisch bedingt deine IP-Adresse. Die arabische Schrift liefert die App selbst aus,
+      ohne fremden Server.</p>
       <p class="hint" style="margin-top:var(--space-3)"><strong>Bilder in Karten:</strong> Trägst du
       in einer Karte einen Bild-Link ein, lädt die App das Bild direkt von dem Server, den du
       angegeben hast; dieser erfährt dabei deine IP-Adresse. Bei Karten aus einem Kartensatz, den
@@ -263,9 +269,10 @@
     <div class="card">
       <p class="hint">Diese App setzt <strong>keine Cookies</strong>. Die Anmeldung (Firebase
       Authentication) speichert den angemeldeten Zustand technisch über den Browser-eigenen
-      Speicher (IndexedDB), nicht über Cookies. Die einzige weitere Speicherung im Browser sind
-      die unter Punkt 7 genannten Einträge in <code>localStorage</code> und
-      <code>sessionStorage</code>. Es
+      Speicher (IndexedDB), nicht über Cookies. Auch eine Kopie deiner Lerninhalte wird
+      in IndexedDB gespeichert, damit sie offline verfügbar ist. Dazu kommen die unter
+      Punkt 7 genannten Einträge in <code>localStorage</code> und <code>sessionStorage</code>
+      und die zwischengespeicherten App-Dateien. Es
       gibt keine Cookies oder vergleichbaren Technologien zu Marketing-, Analyse- oder
       Tracking-Zwecken.</p>
     </div>
@@ -293,10 +300,10 @@
       <p class="hint">Deine Daten werden gespeichert, solange dein Konto besteht. Löschst du dein
       Konto (Einstellungen → Konto löschen), werden dein Nutzerkonto und alle zugehörigen Inhalte
       sofort und unwiderruflich entfernt – auch Kartensätze, die du per Code geteilt hast, und
-      deine Stimm-Merker im Feedback-Board. Kopien, die andere schon eingelöst haben, liegen in
+      deine Stimm-Merker in „Ideen &amp; Vorschläge“. Kopien, die andere schon eingelöst haben, liegen in
       deren Konten. Formular-Nachrichten werden von dieser App nicht
       gespeichert – sie landen ausschließlich in deinem E-Mail-Programm bzw. im Postfach des
-      Betreibers. Feedback-Board-Vorschläge (Punkt 6) sind davon unabhängig, da sie nicht an ein
+      Betreibers. Vorschläge unter „Ideen &amp; Vorschläge“ (Punkt 6) sind davon unabhängig, da sie nicht an ein
       Konto geknüpft sind – sie bleiben grundsätzlich bestehen, auch wenn das einreichende Konto
       längst gelöscht ist, unabhängig von ihrem Status. Der Betreiber entfernt Einträge nach
       eigenem Ermessen und ohne laufende Überwachungspflicht (siehe Punkt 6).</p>
@@ -312,11 +319,11 @@
         <li><strong>Berichtigung</strong> (Art. 16 DSGVO) unrichtiger Daten</li>
         <li><strong>Löschung</strong> (Art. 17 DSGVO) – in der App unter Einstellungen → Konto
         löschen sofort selbst möglich, oder auf Anfrage per E-Mail. Ausnahme: einzelne
-        Feedback-Board-Vorschläge (Punkt 6) lassen sich mangels Kontobezug nicht gezielt
+        Vorschläge unter „Ideen &amp; Vorschläge“ (Punkt 6) lassen sich mangels Kontobezug nicht gezielt
         zuordnen – siehe dort</li>
         <li><strong>Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO)</li>
         <li><strong>Datenübertragbarkeit</strong> (Art. 20 DSGVO) – in der App unter Einstellungen
-        → Sichern kannst du alle deine Daten jederzeit selbst als Datei herunterladen</li>
+        → Sichern &amp; einspielen kannst du alle deine Daten jederzeit selbst als Datei herunterladen</li>
         <li><strong>Widerspruch</strong> (Art. 21 DSGVO) gegen eine Verarbeitung, die auf
         berechtigtem Interesse beruht</li>
         <li><strong>Beschwerde bei einer Aufsichtsbehörde</strong> (Art. 77 DSGVO). Zuständig am
@@ -334,7 +341,8 @@
     <div class="eyebrow">14. Datensicherheit</div>
     <div class="card">
       <p class="hint">Die Übertragung erfolgt verschlüsselt über HTTPS. Die Zugriffsregeln der
-      Datenbank sind so eingestellt, dass jedes Konto ausschließlich an die eigenen Daten kommt.
+      Datenbank sind so eingestellt, dass jedes Konto ausschließlich an die eigenen Daten kommt,
+      außer den in Punkt 5 und 6 genannten Fällen.
       Passwörter werden ausschließlich von Firebase Authentication verwaltet und liegen nirgends
       im Klartext vor.</p>
     </div>
@@ -349,7 +357,7 @@
     </div>
   </div>
 
-  <p class="hint rechtsseite__fuss">Stand: 29. September 2026</p>
+  <p class="hint rechtsseite__fuss">Stand: 5. Oktober 2026</p>
   <div class="rechtsfuss"><a href="./datenschutzerklaerung.html" aria-current="page">Datenschutz</a><span class="rechtsfuss__trenner" aria-hidden="true">·</span><a href="./impressum.html">Impressum</a></div>
 </div>
 </body>

@@ -2,8 +2,8 @@
 
 Grundlage: `app.js` (Stand im Repo, Firebase-SDK 10.14.1 = `@firebase/auth` 1.7.9,
 zum Nachlesen der Fehlercodes entpackt unter `scratchpad/audit/KONTO/package/`),
-`datenschutzerklaerung.html`, `firebase.json`, `plan/phase-2-konto/*`,
-`plan/redesign-oberflaeche/LOGBUCH.md` (Block 14, Vorlagen-Sperre), CHANGELOG.
+`datenschutzerklaerung.html`, `firebase.json`, `plan/archiv/phase-2-konto/*`,
+`plan/archiv/redesign-oberflaeche/LOGBUCH.md` (Block 14, Vorlagen-Sperre), CHANGELOG.
 
 Einschränkung der Recherche: `firebase.google.com`, `support.google.com`,
 `cloud.google.com` und `adrabic.web.app` sind vom Netz dieser Umgebung aus
@@ -299,7 +299,7 @@ nachsehen".
 #### KONTO-10: E-Mail-Vorlagen lassen sich im Projekt nicht speichern – Ursache ungeklärt, Support nie angefragt
 - Art: Unvollständig
 - Schwere: mittel
-- Beleg: `plan/redesign-oberflaeche/LOGBUCH.md` (Nachtrag 22.09.2026): Beim Speichern
+- Beleg: `plan/archiv/redesign-oberflaeche/LOGBUCH.md` (Nachtrag 22.09.2026): Beim Speichern
   von Betreff/Text kam „Aktualisierungen von E-Mail-Vorlagen sind für dieses
   Projekt derzeit nicht verfügbar. Wenden Sie sich an Firebase-Support." Nur der
   Absendername ließ sich speichern. Eine Recherche am 25.09.2026 findet keine

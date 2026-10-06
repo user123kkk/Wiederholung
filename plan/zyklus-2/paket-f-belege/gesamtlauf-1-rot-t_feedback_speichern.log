@@ -1,0 +1,19 @@
+OK Meldungen gleich; offline gesperrt; nach 12s bedienbar, Entwurf erhalten; spaete Antwort ohne UI-Wirkung
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Lade ein Backup herunter, bevor du weiterlernst/. Input:
+
+'Nicht gespeichert\n' +
+  'Deine letzte Änderung ist nicht in der Cloud angekommen – die Anmeldung wurde abgelehnt. Lade eine Sicherung herunter, bevor du weiterlernst.\n' +
+  'OK'
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_feedback_speichern.js:67:22 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'Nicht gespeichert\n' +
+    'Deine letzte Änderung ist nicht in der Cloud angekommen – die Anmeldung wurde abgelehnt. Lade eine Sicherung herunter, bevor du weiterlernst.\n' +
+    'OK',
+  expected: /Lade ein Backup herunter, bevor du weiterlernst/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":19,"quelltext":"6bfd62d678ce3e2ca3a844cfc5882b95aa1fb9fc99b5560646939208b2d8136f"}

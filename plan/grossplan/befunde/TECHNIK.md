@@ -51,7 +51,7 @@ Stand: 25.09.2026, Code 3.17.29 (`9884a3a`). Nichts im Repo geändert. Eigene Sk
 - Schwere: mittel
 - Beleg: `sw.js:99-146`: „Zuerst Netz, dann Cache“ für **alle** Anfragen, mit `NETZ_ZEITLIMIT_MS = 4000` (`sw.js:86`). Betroffen sind auch `app.js?v=3.17.29`, `styles.css?v=3.17.29` und `https://www.gstatic.com/firebasejs/10.14.1/*.js` (`app.js:1864-1866`). Diese URLs tragen ihre Version und ändern ihren Inhalt nie. Bei „Lie-Fi“ (Verbindung da, aber langsam) wartet so jeder Start bis zu 4 s je Datei. **verifiziert (Code)**, die Wartezeit auf echtem Lie-Fi ist nicht gemessen.
 - Warum es stört: Der Start fühlt sich in U-Bahn und Funkloch langsam an, obwohl alles im Cache liegt. Die Begründung für „Netz zuerst“ („online sieht man immer sofort die neueste Version“, `sw.js:99-100`) gilt für diese Dateien nicht, weil eine neue Version eine neue URL hat.
-- Vorschlag: In `sw.js` für drei Fälle „Cache zuerst, sonst Netz (und ablegen)“: gleiche Herkunft mit `?v=` in der Query, `www.gstatic.com/firebasejs/<version>/`, dazu `fonts/`. Navigationen, `manifest.json`, Bilder und alles andere bleiben unverändert bei „Netz zuerst“. Beobachtung 16 (`plan/beobachtungen-lernwerkzeug.md:1019`) wurde mit dem Zeitlimit gelöst. Der Vorschlag ist neu, weil er nur unveränderliche URLs betrifft.
+- Vorschlag: In `sw.js` für drei Fälle „Cache zuerst, sonst Netz (und ablegen)“: gleiche Herkunft mit `?v=` in der Query, `www.gstatic.com/firebasejs/<version>/`, dazu `fonts/`. Navigationen, `manifest.json`, Bilder und alles andere bleiben unverändert bei „Netz zuerst“. Beobachtung 16 (`plan/archiv/beobachtungen-lernwerkzeug.md:1019`) wurde mit dem Zeitlimit gelöst. Der Vorschlag ist neu, weil er nur unveränderliche URLs betrifft.
 - Entscheidet: Agent
 - Umsetzung: Sonnet
 - Abnahme: Prüfstand mit echter Service-Worker-Steuerung: Beim zweiten Laden erzeugen `app.js?v=…` und `firebase-*.js` keine Netzanfrage (Netzmitschnitt von Server bzw. CDP `Network.requestWillBeSent` mit `fromServiceWorker`). Wird `index.html` mit neuem `?v=` ausgeliefert, holt die App die neue `app.js` vom Netz.
@@ -130,7 +130,7 @@ Stand: 25.09.2026, Code 3.17.29 (`9884a3a`). Nichts im Repo geändert. Eigene Sk
 #### TECHNIK-12: Manifest: zwei gleich große „any“-Symbole, keins für Android-Formen (maskable)
 - Art: Verbesserung
 - Schwere: niedrig
-- Beleg: `manifest.json:15-33`: `desktop-icon.png` 512 `any` (rund, transparente Ecken) **und** `icon-512.png` 512 `any` (Quadrat, randlos). Welches Android nimmt, ist nicht festgelegt. Nimmt es das runde, entsteht ein Kreis auf weißem Grund in der Adaptiv-Form (**Vermutung**, nicht am Gerät geprüft). Laut Beobachtung 18 (`plan/beobachtungen-lernwerkzeug.md:1024`) wurde `"any maskable"` **in einer Angabe** bewusst entfernt. Neu ist hier der Vorschlag eines **getrennten** Eintrags. Nachgesehen: `icon-192.png`/`icon-512.png` sind randlos, die Blüte liegt deutlich innerhalb der Sicherheitszone (Mittelpunktabstand der äußersten Ecke ≈ 50/96 px < 40 % Radius-Zone von 77 px).
+- Beleg: `manifest.json:15-33`: `desktop-icon.png` 512 `any` (rund, transparente Ecken) **und** `icon-512.png` 512 `any` (Quadrat, randlos). Welches Android nimmt, ist nicht festgelegt. Nimmt es das runde, entsteht ein Kreis auf weißem Grund in der Adaptiv-Form (**Vermutung**, nicht am Gerät geprüft). Laut Beobachtung 18 (`plan/archiv/beobachtungen-lernwerkzeug.md:1024`) wurde `"any maskable"` **in einer Angabe** bewusst entfernt. Neu ist hier der Vorschlag eines **getrennten** Eintrags. Nachgesehen: `icon-192.png`/`icon-512.png` sind randlos, die Blüte liegt deutlich innerhalb der Sicherheitszone (Mittelpunktabstand der äußersten Ecke ≈ 50/96 px < 40 % Radius-Zone von 77 px).
 - Warum es stört: Auf Android kann das installierte Symbol verkleinert in einem weißen Kreis erscheinen statt randlos dunkel.
 - Vorschlag: `desktop-icon.png` aus dem Manifest nehmen oder auf eine andere Größe beschränken. Dazu ein eigener Eintrag `{ "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }`, `any` bleibt daneben bestehen.
 - Entscheidet: Agent
@@ -162,7 +162,7 @@ Stand: 25.09.2026, Code 3.17.29 (`9884a3a`). Nichts im Repo geändert. Eigene Sk
 - Schwere: niedrig
 - Beleg: `.github/workflows/veroeffentlichen.yml:38` nur `--only hosting`. LEHREN § 4.5: Regeln brauchen `firebase deploy --only firestore:rules` vom PC oder die Konsole, `firebase login` geht aus der Agentenumgebung nicht. **verifiziert**
 - Warum es stört: Jede neue Regel hängt am PC oder an der Konsole des Betreibers. Bis dahin ist die zugehörige Funktion kaputt (§ 8.4, Vorfall 3.0.27: drei Tage).
-- Vorschlag: `workflow_dispatch.inputs.was` mit `hosting` (Standard) | `regeln` | `beides`. Für `regeln`/`beides` läuft vorher der Emulator-Test `plan/phase-1-datenzugriff/regeln-pruefung.mjs` (Java per `actions/setup-java`), bei Rot wird abgebrochen. Konsole: Das Dienstkonto braucht zusätzlich die Rolle „Firebase Rules Admin“.
+- Vorschlag: `workflow_dispatch.inputs.was` mit `hosting` (Standard) | `regeln` | `beides`. Für `regeln`/`beides` läuft vorher der Emulator-Test `plan/werkzeuge/regeln/regeln-pruefung.mjs` (Java per `actions/setup-java`), bei Rot wird abgebrochen. Konsole: Das Dienstkonto braucht zusätzlich die Rolle „Firebase Rules Admin“.
 - Entscheidet: Betreiber (neue Funktion, Konsole)
 - Umsetzung: Sonnet
 - Abnahme: Lauf mit `was=regeln`: Der Emulator-Test ist grün, danach „Deploy complete“ für `firestore:rules`. In der Konsole unter Firestore → Regeln steht der Zeitstempel des Laufs.
@@ -171,7 +171,7 @@ Stand: 25.09.2026, Code 3.17.29 (`9884a3a`). Nichts im Repo geändert. Eigene Sk
 #### TECHNIK-16: Zwei tote Freigaben in der CSP
 - Art: Verbesserung
 - Schwere: niedrig
-- Beleg: `firebase.json:59`/`:118`: `sha256-uMYZ…` (altes Thema-Skript, `plan/phase-5-recht/LOGBUCH.md:279`) und `sha256-68Cs…` (Kontaktformular von `landing.html`, `CHANGELOG.md:1956`). Keine ausgelieferte Seite hat noch ein Skript mit diesen Hashes (Nachrechnung aller `*.html`, siehe TECHNIK-1). `landing.html` ist entfernt (LEHREN § 3.5). **verifiziert**
+- Beleg: `firebase.json:59`/`:118`: `sha256-uMYZ…` (altes Thema-Skript, `plan/archiv/phase-5-recht/LOGBUCH.md:279`) und `sha256-68Cs…` (Kontaktformular von `landing.html`, `CHANGELOG.md:1956`). Keine ausgelieferte Seite hat noch ein Skript mit diesen Hashes (Nachrechnung aller `*.html`, siehe TECHNIK-1). `landing.html` ist entfernt (LEHREN § 3.5). **verifiziert**
 - Warum es stört: Eine CSP soll nur erlauben, was läuft. Tote Hashes verwirren beim nächsten CSP-Fund, siehe TECHNIK-1: Man hält `uMYZ` leicht für den Hash der Rechtsseiten.
 - Vorschlag: Beide Hashes aus beiden Sites streichen, `csp-build` in `index.html:2` hochzählen (§ 4.3). Das am besten zusammen mit TECHNIK-1 erledigen und danach `pruefe_version` auf ungenutzte Hashes prüfen lassen.
 - Entscheidet: Agent
@@ -181,7 +181,7 @@ Stand: 25.09.2026, Code 3.17.29 (`9884a3a`). Nichts im Repo geändert. Eigene Sk
 #### TECHNIK-17: Suchmaschinen: „/“ steht in der Sitemap, ist aber „noindex“
 - Art: Verbesserung
 - Schwere: niedrig
-- Beleg: `sitemap.xml:4` `https://adrabic.web.app/`. „/“ liefert `index.html` mit `<meta name="robots" content="noindex, nofollow">` (`index.html:18`). `robots.txt:2` sperrt nur `/index.html` und nicht „/“. Die Search Console meldet so etwas als Fehler „Eingereichte URL als noindex gekennzeichnet“. Umgekehrt kann Google bei `/index.html` (verlinkt aus beiden Rechtsseiten, „← Zurück“) das `noindex` nie lesen, weil `robots.txt` das Abrufen verbietet. Die URL kann dann ohne Inhalt im Index landen. Bekannt als „zur Kenntnis“ (`plan/phase-6-startseite/LOGBUCH.md:211`). Neu sind hier die konkreten Folgen in der Search Console. **verifiziert (Dateien)**
+- Beleg: `sitemap.xml:4` `https://adrabic.web.app/`. „/“ liefert `index.html` mit `<meta name="robots" content="noindex, nofollow">` (`index.html:18`). `robots.txt:2` sperrt nur `/index.html` und nicht „/“. Die Search Console meldet so etwas als Fehler „Eingereichte URL als noindex gekennzeichnet“. Umgekehrt kann Google bei `/index.html` (verlinkt aus beiden Rechtsseiten, „← Zurück“) das `noindex` nie lesen, weil `robots.txt` das Abrufen verbietet. Die URL kann dann ohne Inhalt im Index landen. Bekannt als „zur Kenntnis“ (`plan/archiv/phase-6-startseite/LOGBUCH.md:211`). Neu sind hier die konkreten Folgen in der Search Console. **verifiziert (Dateien)**
 - Warum es stört: Ein Dauerfehler in der Search Console, und die Rechtsseiten sind die einzigen indexierbaren Seiten.
 - Vorschlag: Bis Phase 6 „/“ aus `sitemap.xml` nehmen und `Disallow: /index.html` streichen (das `noindex` reicht und wird dann gelesen). Mit Phase 6 neu entscheiden.
 - Entscheidet: Betreiber (Phase 6 zurückgestellt)
@@ -248,7 +248,7 @@ Geprüft ohne Fund:
 - **`t_kontrast.js` (Handy, beide Themen):** 0 Funde. Zusätzlich iPad hoch in beiden Themen und alle Geräte im dunklen Thema: 0 Funde.
 - **Header:** HSTS, `nosniff`, `X-Frame-Options DENY`, `frame-ancestors 'none'`, `Referrer-Policy`, `Permissions-Policy`. `sw.js` `no-cache`, HTML `max-age=0, must-revalidate`, beide Sites gleich.
 - **`ignore` in `firebase.json`:** `plan/**`, `**/*.md`, `**/.*` (deckt `.github`, `.firebase`, `.claude` ab). Außer `*.zip` (TECHNIK-9) keine Lücke gefunden.
-- **Manifest `id`** `/adrabic/wiederholung/`: bewusst so gelassen (`plan/phase-0-bestand/LOGBUCH.md:193`), nicht angefasst. `start_url`/`scope` passen. `display_override` ist vorhanden. `theme_color`/`background_color` gleich `--ink-900` `#111010`.
+- **Manifest `id`** `/adrabic/wiederholung/`: bewusst so gelassen (`plan/archiv/phase-0-bestand/LOGBUCH.md:193`), nicht angefasst. `start_url`/`scope` passen. `display_override` ist vorhanden. `theme_color`/`background_color` gleich `--ink-900` `#111010`.
 - **`index.html` Meta:** `color-scheme dark` nur bis `styles.css` greift, danach setzt `:root[data-thema]` `color-scheme` (`styles.css:289/302`), also kein Fehler. `theme-color` wird vom Kopfskript und von `app.js:1338` nachgezogen.
 - **Rechtsseiten:** „← Zurück“ führt auf `./index.html`, dieselbe `.rechtsseite`-Gestaltung, `lang="de"`, `canonical`/`og:url` auf `adrabic.web.app`. Die localStorage-Schlüssel im Code (`adrabic-thema`, `-einstieg-antworten`, `-einstieg-nachklang`, `-hinweise` samt Erinnerungszeit, `-last-backup`, sessionStorage `-selbstheilung`/`-token-erneuert*`) sind alle in Punkt 7 beschrieben. Nur gelöscht werden `adrabic-bewegung`, `adrabic-statistik-aus`, `debugNav`. Nur gelesen wird `lernkarten-app-v1` (Übernahme aus Altversion).
 - **Workflow:** läuft nur auf Knopfdruck, `concurrency` verhindert doppelte Deploys, das Fehlen des Secrets wird klar gemeldet. **`.bat`:** bricht bei Git-Fehlern ab, pausiert am Ende.

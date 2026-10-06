@@ -160,7 +160,7 @@ aus der Geschichte:
   18 wird. (Frühere Angabe hier, „Betreiber 16, Vater haftet", war
   unvollständig – das Alter des Betreibers selbst war schon am 22.09.2026 auf
   18 korrigiert worden, siehe `PLAN.md`.) Details:
-  `plan/phase-5-recht/PRUEFUNG-2026-09-24.md` Frage 1.
+  `plan/archiv/phase-5-recht/PRUEFUNG-2026-09-24.md` Frage 1.
 - Der Agent gibt keine Rechtsberatung, sondern nur Hinweise, und bewertet
   eine mitgeteilte rechtliche Konstruktion nicht von sich aus (§ 12,
   Vorfall 24.09.2026 – ein Agent hatte die Eintragung des Vaters ungefragt
@@ -365,6 +365,18 @@ Template-String in `stubs.js` durchsuchen. `node --check stubs.js` prüft nur
 den umgebenden String, nicht das darin stehende Modul. Dessen Inhalt zusätzlich
 mit `node --input-type=module --check` parsen (01.10.2026, Paket A).
 
+### 3.7a Beim Verschieben nur echte Pfadverweise umschreiben
+
+*05.10.2026, F13:* Das Umzugsskript ersetzte jeden Treffer eines alten
+Namens, auch nackte Dateinamen. Aus „`sw.js` speichert `icon.svg` vorab“
+wurde im Changelog „… speichert `plan/archiv/bilder/icon.svg` vorab“ (38
+Stellen in 12 Dateien); im Befund CODE-13 stand danach der neue Pfad als
+alter Fundort. **Regeln:** Umgeschrieben werden Markdown-Links und
+Verzeichnispfade, keine nackten Dateinamen. Befund-Dateien bleiben wörtlich,
+sie beschreiben den Zustand vor der Änderung. Nach dem Lauf den Diff der
+Texte lesen, nicht nur das Verweis-Inventar. Und: Lautet die Entscheidung
+des Betreibers „löschen“, wird gelöscht, nicht archiviert (Z14).
+
 ### 3.8 Beim Entfernen alle Aufrufer mitnehmen
 
 *3.6.13:* Der tote Aufruf `teilLinkPruefenUndVerarbeiten` warf bei jedem
@@ -560,6 +572,35 @@ Was gemessen wird:
 | Farben aus Screenshots | Pixel auslesen (Pillow): 3.8.7 Leiste RGB 48 vs. 25 |
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
+
+- **Rotes Vergleichsfoto zuerst gegen die Bilder des Vorstands halten**
+  (05.10.2026, F12). Zwei volle Fotovergleiche galten als Beleg gegen eine
+  CSS-Bereinigung. Die Dateihashes zeigten: Das „falsche“ Bild mit neuem
+  CSS war bytegleich zu einem Bild mit altem CSS aus demselben Aufnahmelauf
+  (bewegt/ruhig desselben Bildschirms). Das Foto hat bei gleicher Quelle
+  zwei Fassungen. Vor „die Änderung verändert Pixel“ deshalb: Hash des roten
+  Bildes in allen Vorstand-Bildern suchen und den Vorstand zweimal aufnehmen
+  (Alt gegen Alt). Schwankt Alt gegen Alt, misst das Gerät nichts.
+- **Vergleichsfotos mit Software-Raster aufnehmen** (`--disable-gpu`). Mit
+  GPU-Raster schwanken hier auch Fensterfotos derselben Quelle (Rauschen im
+  Hintergrundverlauf ±1, an Rundungen bis 17 Stufen; in einer leeren
+  Konfiguration 1–2 von 12 Fotos). Mit Software-Raster waren Alt gegen Alt
+  in 30 von 36 Konfigurationen gleich. Die sechs Gast-Konfigurationen mit
+  Bewegung (Einstieg) schwanken weiter, in jeder Wiederholung an denselben
+  Stellen: Ebenen behalten das Raster aus der laufenden Bewegung. Solche
+  Fotos sind nicht messbar; dort tragen die berechneten Stile und die
+  ruhigen Konfigurationen. Die Toleranz bleibt 0; das Gerät muss mit einer
+  absichtlich geänderten Regel rot werden (Gegenprobe).
+- **Ein neuer Schritt im Messgerät wird an allen Arten von Konfigurationen
+  erprobt, bevor ein langer Lauf startet** (05.10.2026). „Einmal unsichtbar
+  und wieder sichtbar zeichnen“ half in der einen erprobten Konfiguration
+  und machte alle ruhigen Alt gegen Alt rot (Fokus weg, bis 753134 Pixel).
+  Kosten: ein verworfener 55-Minuten-Lauf.
+- **Totes CSS zusätzlich über berechnete Stile abnehmen:** je Zustand alle
+  Elemente samt `::before`/`::after`, alt gegen neu. Das hängt nicht am
+  Raster. Die Einträge vor dem Vergleich sortieren: Chrome zählt eigene
+  Eigenschaften (`--x`) je Seite in anderer Reihenfolge auf, sonst ist jedes
+  Element „anders“ (`x_paket_f_sicht.js`).
 
 - Vor aufwendiger Messinfrastruktur den Anteil der Zielgröße am ganzen
   Fehler gegen die Abnahmegrenze rechnen. D15: vier Schritte verfolgten
@@ -1137,7 +1178,7 @@ nachweislich tut.
 **Regeln:**
 
 - Neues Feld in einem Dokument → Regel anpassen →
-  `plan/phase-1-datenzugriff/regeln-pruefung.mjs` erweitern → im Emulator
+  `plan/werkzeuge/regeln/regeln-pruefung.mjs` erweitern → im Emulator
   laufen lassen (Java nötig) → Betreiber deployt (§ 4.5).
 - Beim Suchen der Ursache eingrenzen: Was geht, was geht nicht? Dann das
   kleinste scheiternde Dokument und Feld finden.
@@ -2252,3 +2293,15 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 | 05.10. (E7-Gesamtlauf über Mitternacht, Prüfaufbau E8) | t_paket_e rot: „E8 gestriger Hinweis verdrängt andere“, am Vorabend grün | Fixture setzte „gestern“ nach dem Kalender; vor 04:00 ist das der Lerntag heute der App, der Meilenstein also noch nicht abgelaufen | Bestehende Regel § 5.4 (G-096): Testdaten folgen dem Lerntag (lib.tag). Fixture auf tag(-1), keine Erwartung geändert, nur dieser Test am gleichen Produktstand nachgelaufen. Nachlauf t_paket_e Exit 0 (914 s), Gesamtlauf 139/139 Exit 0; alle Logs gelesen und gegen den abgenommenen E-Stand verglichen. Kein Produktfehler, nicht E7 |
 
 | 05.10. (E7-Abschluss, eigene Prüfdiagnose) | Ad-hoc-Hashprüfung meldete fälschlich eine geänderte Konto-Testquelle; Logbuch/PLAN zunächst am falschen Stamm gesucht | Hash nur über Testdatei statt über die zusätzlichen Wrapper-Hilfsquellen gebildet; Pfade angenommen | Bestehende §3.2/§3.11: tatsächlichen Runner/Pfad lesen. Hashbildung aus alle_pruefen.js einschließlich Konto-Hilfsproben und css_struktur.mjs übernommen, alle 139 Testhashes und Produkt-/Attrappenhash unverändert; Pfade mit rg --files gefunden. Keine Quelle geändert, keine grüne Prüfung neu gestartet |
+
+| 05.10. (Paket F, eigene Bau-/Prüfaufbaufehler) | Patch-Hunks/Anker zunächst falsch; Windows-rg-Glob mehrfach nicht aufgelöst; F7-Fixture schnitt dieselbe Kartenliste mehrfach; Wortersetzung Backup→Sicherung ließ falsche Artikel; F13 normalisierte relative URL-Literale und übersah extensionlose Module | Text-/Pfadähnlichkeit zu breit als Semantik behandelt | Vorhandene Anker und Suchwurzeln lesen; unveränderte Fixture-Basis benutzen; Wortlaut mit Artikeln/Pronomen lesen. Verzeichnisumzug nur echte Pfade umbasieren, Slash/Modulauflösung erhalten. Beim vollständigen Difflesen entdeckt, unbeabsichtigte sw/pruefe_stand/Tempotest-Änderungen vollständig zurückgenommen, verschobene Werkzeuge aus festem Original mit gezielten Pfadänderungen hergestellt; 42 Syntaxprüfungen und Verweisinventar neu grün. Frühere rote Logs erhalten; keine Testgrenze gelockert (§3.2/§3.3/§5.3). |
+
+| 05.10. (F12, nicht bestandene Aufräum-Abnahme) | 48 Hauptfotos exakt gleich, vollständiger Fotovergleich aber zweimal rot: zuerst 30551 Pixel im Lernen-Foto, zweiter Lauf zwei Konfigurationen grün und dritter Fall rot | Ursache des Rasterunterschieds nicht belegt; unbenutzte Selektoren garantieren keine grünen Browserbilder | Nach CODEX-START §6 nur F12 zurückgenommen, Quellen/Bilder/Logs beider Versuche erhalten. Keine Pixeltoleranz, kein Weglassen des roten Tests, kein D12–D15-Diagnoseauftrag daraus. Paketabschluss bleibt gesperrt (§5.3/§11). |
+
+| 05.10. (F-Zusatzprüfung, eigener Aufbaufehler) | t_paket_f_umfeld verlangte auf Daten die Knopfbeschriftung der Konto-Löschseite | Zwei Seiten haben bewusst unterschiedliche Handlungen: Alles sichern / Sicherung herunterladen | Tatsächliche Daten-Erklärung und Löschseiten-Knopf getrennt prüfen; keine Produktänderung und keine Testgrenze geändert. Roter Erstlauf separat erhalten (§5.3). |
+
+| 05.10. (F12, zweiter Durchgang) | Zwei rote Fotovergleiche waren ein Messfehler: rotes Bild mit neuem CSS bytegleich zu einem Vorstand-Bild (117F870B/CD32F2E9 in `fotos/f12-voll-1`) | Vollseitenfoto mit GPU-Raster hat bei gleicher Quelle zwei Fassungen; Hashes der roten Bilder wurden nicht mit dem Vorstand verglichen | § 5.3: Hash im Vorstand suchen, Alt gegen Alt, Software-Raster, berechnete Stile. F12 wieder eingesetzt und mit `x_paket_f_sicht.js` abgenommen; die roten Läufe bleiben als Beleg erhalten, keine Toleranz |
+
+| 05.10. (F12, eigene Aufbaufehler am neuen Messgerät) | Stilvergleich meldete jedes Element als anders; Fensterfotos schwankten Alt gegen Alt | Reihenfolge der `--x`-Eigenschaften je Seite verschieden; GPU-Raster | Einträge sortiert, `--disable-gpu`; Gegenprobe mit 1 px geänderter Regel rot. Kein Ergebnis aus den fehlerhaften Probeläufen übernommen (§ 5.3) |
+
+| 05.10. (F13, Gegenprüfung) | Changelog und elf weitere Texte nannten `plan/archiv/bilder/icon.svg` als früher ausgelieferte Datei; Befund CODE-13 umgeschrieben; zwei überholte Dateien archiviert statt gelöscht | Umzugsskript ersetzte nackte Dateinamen; Entscheidung Z14 nicht wörtlich gelesen | § 3.7a. 38 Stellen zurückgestellt und gegen 5af78a0 geprüft, CODE.md wörtlich wiederhergestellt, beide Dateien gelöscht (Inhalt bleibt in 5af78a0) |

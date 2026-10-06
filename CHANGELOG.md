@@ -1,3 +1,40 @@
+## 3.18.17 – 5. Oktober 2026
+
+**Paket F: aufgeräumt, Wörter vereinheitlicht, Datenschutzerklärung an die
+App angeglichen.** An Lernstufen, Fälligkeiten, Serie und Freischalten ändert
+sich nichts.
+
+- **Ein Wort: „Sicherung“** statt „Backup“ in allen Meldungen, Knöpfen und
+  Hinweisen (Betreiber: „Sicherung“). Die Datei heißt jetzt
+  `adrabic-sicherung-….json`. Ältere Dateien lassen sich weiter einspielen,
+  das Format ist unverändert. Die Fehlermeldungen beim Einspielen sagen
+  „Sicherungsdatei“ statt „Lernkarten-Backup-Datei“.
+- **Einzahl stimmt:** Beim Teilen steht bei genau einer Lektion „1 Lektion.
+  „…“ ist offen.“ statt „1 Lektionen … der Rest kommt gesperrt an“. Auch
+  „1 Karte, noch keine davon gelernt“, „1 von 1 Lektion frei“ und der
+  Hinweis am Fortschrittsbalken.
+- **Datenschutzerklärung:** Punkt 9 nennt jetzt alle Verbindungen beim Start.
+  Auf Handys und in Safari lädt der Anmeldebaustein zusätzlich von
+  `apis.google.com`, `lernkarte-925c2.firebaseapp.com` und
+  `www.googleapis.com`, auch ohne Tipp auf „Mit Google“. „Kurz gesagt“ und
+  Punkt 10 nennen die Kopie der Lerninhalte im Browser-Speicher. Punkt 6
+  heißt wie in der App „Ideen & Vorschläge“, Punkt 13 „Sichern & einspielen“,
+  Punkt 14 nennt die zwei Ausnahmen aus Punkt 5 und 6. An der Technik ist
+  nichts geändert. Die Prüfung durch eine Person steht weiter aus.
+- **Toter Code entfernt:** neun Klick-Zweige ohne Knopf, der Weg „Serie
+  fortsetzen“, der alte Umschalter „alle Bereiche / dieser Bereich“ im
+  Fortschritt, Reste der alten Stufen-Auswahl beim Üben und rund 30
+  CSS-Klassen, die keine Seite erzeugt. Alle Bildschirme sehen aus wie vorher
+  (Fotovergleich und berechnete Stile, hell und dunkel, drei Breiten).
+- **Bildschirmwechsel:** Reiter und Bereichswechsel schließen offene Blätter
+  jetzt über eine gemeinsame Liste statt über fünf verschiedene.
+- Kommentare beschreiben wieder, was der Code tut (Tageslimit, Zwei-Tipp-
+  Auswahl, Link-Teilen).
+- Repo: abgeschlossene Phasen liegen unter `plan/archiv/`, Ideen unter
+  `plan/ideen/`, Prüfskripte unter `plan/werkzeuge/`. `CLAUDE.md` enthält nur
+  noch Dauerregeln. `icon.svg` und `flower-isolated.png` werden nicht mehr
+  mit ausgeliefert.
+
 ## 3.18.16 – 4. Oktober 2026
 
 **Ruhetag: Die Serie endet nicht mehr an Tagen, an denen nichts fällig ist
@@ -296,7 +333,7 @@ Lernstufen, Fälligkeiten und Freischaltregeln sind unverändert.
 - Der automatische Onboarding-Scroll verwendet nicht mehr mehrere scrollIntoView-Aufrufe, die sich gegenseitig abbrechen. Aufbau und fertiger Plan folgen jeweils einer einzigen kontrollierten Bewegung.
 - Loading-First-Paint weiter abgesichert: Das statische Boot-Markup trägt seinen Zustand bereits im HTML und die kritische Geometrie verwendet keine erst später definierten CSS-Variablen.
 - Wichtiger offener Punkt dokumentiert: iOS kann vor dem HTML den separaten apple-touch-startup-image-Splash zeigen. Diese PNGs müssen bei einer Änderung des Boot-Layouts mit plan/werkzeuge/startbilder.js neu erzeugt werden; sonst kann der sichtbare Übergang Splash → HTML weiterhin wie ein Positionssprung wirken.
-- Claude-Code-Übergabe ergänzt: plan/onboarding/CHATGPT-HANDOFF-2026-09-27.md.
+- Claude-Code-Übergabe ergänzt: plan/archiv/onboarding/CHATGPT-HANDOFF-2026-09-27.md.
 
 APP_VERSION, CACHE_NAME und beide Versions-Querys in index.html stehen auf 3.17.46.
 ## 3.17.45 – 27. September 2026
@@ -635,7 +672,7 @@ Pfeile mehr.** Rückmeldung des Betreibers zu 3.17.27/28.
 des Betreibers – „Karten, die ich bewertet habe, kamen wieder, wenn ich
 mitten im Lernen auf das X drücke, und die Serie ist nicht hochgegangen."
 Alle Stellen geprüft, an denen eine Runde endet oder gespeichert wird
-(`plan/audit/LOGBUCH.md`, Eintrag 3.17.28).
+(`plan/archiv/audit/LOGBUCH.md`, Eintrag 3.17.28).
 
 - **Wischen und gleich X:** Die Wisch-Bewertung wird 150 ms verzögert
   gebucht (die Karte fliegt erst weg). Wer in dieser Zeit X drückte, verlor
@@ -670,7 +707,7 @@ Alle Stellen geprüft, an denen eine Runde endet oder gespeichert wird
 ## 3.17.26 – 25. September 2026
 
 **Lernrunde ruhiger: eine Bewegung pro Tipp, nichts taucht nachträglich auf.**
-Umgesetzt nach der Messung vom 25.09. (V1–V6, `plan/audit/LOGBUCH.md`).
+Umgesetzt nach der Messung vom 25.09. (V1–V6, `plan/archiv/audit/LOGBUCH.md`).
 
 - Kein pulsierender Leuchtring mehr um die zugedeckte Karte – er kam genau
   während des Erinnerns.
@@ -697,7 +734,7 @@ Absicht und bleiben ohne Sperre. Neuer Test `t_doppeltipp.js`.
 ## 3.17.24 – 24. September 2026
 
 **Rechtsprüfung: App und Datenschutzerklärung stimmen jetzt überein.**
-Umgesetzt nach `plan/phase-5-recht/PRUEFUNG-2026-09-24.md` (Betreiber: „ja").
+Umgesetzt nach `plan/archiv/phase-5-recht/PRUEFUNG-2026-09-24.md` (Betreiber: „ja").
 
 - **Quran-Schrift selbst ausgeliefert** (`fonts/UthmanicHafs1Ver18.ttf`)
   statt von `verses.quran.foundation`. Bisher bekam dieser Server die
@@ -1816,7 +1853,7 @@ Bewusst ehrlich: Dieser Fund erklärt einen echten, jetzt behobenen Defekt in de
 
 **Beobachtung 19/9 (zweite Hälfte): Blätter (`.dlg` – Bereichs-, Karten-, Wahl-, Speicherkarten-, Detail- und Bestätigungs-Blatt) bekommen jetzt eine Austrittsbewegung, einen Fokus-Fang und eine Fokus-Rückgabe.** Die erste Hälfte (Escape schließt jedes Blatt) war seit v3.6.13 erledigt, die Bewegung dabei fehlte aber – ein Blatt verschwand abrupt, außer beim Wegwischen mit dem Finger, das schon eine eigene Austrittsanimation hatte. Jetzt läuft dieselbe Bewegung (200ms nach unten aus dem Bild, `translateY(105%)`) auch bei Escape, Hintergrund-Tipp und den „Fertig"/„Schließen"/„Abbrechen"-Knöpfen – ein Wegwischen animiert nicht doppelt, weil ein Merker (`dataset.schliesst`) eine schon laufende Bewegung erkennt. Zusätzlich: Tab hält den Fokus jetzt innerhalb eines offenen Blatts (vorher konnte Tab in die dahinterliegende, für Maus/Touch unerreichbare Seite springen – ein Widerspruch zu `aria-modal="true"`), und nach dem Schließen kehrt der Fokus zum Knopf zurück, der das Blatt geöffnet hat, statt im Nichts zu stehen. Mit Playwright gegen eine Firebase-Attrappe geprüft (Fokus beim Öffnen/Schließen, Tab-Fang, Animations-Zeitpunkt); ohne echtes Gerät bleibt offen, ob sich die Bewegung auf einem echten Bildschirm genauso rund anfühlt wie im Probelauf.
 
-Bewusst nicht angefasst in dieser Runde (weiterhin offen, siehe `plan/beobachtungen-lernwerkzeug.md`): Punkt 13 (Über-Scrolling, unbestätigter Verdachtsfix), Punkt 16 (Firebase-Fehler nach Browser-Zurück, Ursache weiter ungeklärt) und Punkt 19/13 (Renderkosten der Verwalten-Liste bei vielen Karten) – für alle drei bräuchte jede weitere Änderung entweder einen echten Gerätetest oder eine eigene, größere Freigabe.
+Bewusst nicht angefasst in dieser Runde (weiterhin offen, siehe `plan/archiv/beobachtungen-lernwerkzeug.md`): Punkt 13 (Über-Scrolling, unbestätigter Verdachtsfix), Punkt 16 (Firebase-Fehler nach Browser-Zurück, Ursache weiter ungeklärt) und Punkt 19/13 (Renderkosten der Verwalten-Liste bei vielen Karten) – für alle drei bräuchte jede weitere Änderung entweder einen echten Gerätetest oder eine eigene, größere Freigabe.
 
 ## 3.9.2 – 23. September 2026
 
@@ -1852,7 +1889,7 @@ Dazu: `datenschutzerklaerung.html` um einen Abschnitt zum neuen Feedback-Board e
 
 ## 3.8.4 – 22. September 2026
 
-**Neu: Feedback-Board unter Einstellungen → Hilfe → „Ideen & Vorschläge"** (`plan/feedback-board/AUFTRAG.md`). Betreiber-Anstoß: ein TikTok-Erfahrungsbericht, dass ein öffentliches Board mit Abstimmen mehr echte Rückmeldung bringt als E-Mails. Steht **neben** „Fehler melden", ersetzt es nicht — ein Fehlerbericht mit Kontaktweg passt schlecht in eine öffentliche, hochvotbare Liste.
+**Neu: Feedback-Board unter Einstellungen → Hilfe → „Ideen & Vorschläge"** (`plan/archiv/feedback-board/AUFTRAG.md`). Betreiber-Anstoß: ein TikTok-Erfahrungsbericht, dass ein öffentliches Board mit Abstimmen mehr echte Rückmeldung bringt als E-Mails. Steht **neben** „Fehler melden", ersetzt es nicht — ein Fehlerbericht mit Kontaktweg passt schlecht in eine öffentliche, hochvotbare Liste.
 
 - **Vorschläge einreichen, alle sehen die Liste, sortiert nach Stimmen.** Betreiber kann den Status setzen (Offen/Geplant/Umgesetzt/Abgelehnt) und Einträge löschen.
 - **Bewusst keine Konto-Kennung am Vorschlag** — Betreiber-Vorgabe: „niemand kann auf die Daten der anderen zugreifen". Ohne gespeicherte uid gibt es strukturell nichts zu lesen, auch mit Entwicklerwerkzeugen nicht. Konsequenz: nur die Moderation kann Einträge löschen oder ihren Status ändern, nicht die einreichende Person selbst — der Preis für echte Anonymität.
@@ -1869,7 +1906,7 @@ Dazu: `datenschutzerklaerung.html` um einen Abschnitt zum neuen Feedback-Board e
 
 ## 3.8.2 – 22. September 2026
 
-**Das Wischen zwischen den Reitern neu gefasst — folgt jetzt 1:1 dem Finger** (Block 17, `plan/redesign-oberflaeche`). Betreiber zu Block 15: „das wischen ist sehr unangenehm und schwer, will wirklich was flüssiges".
+**Das Wischen zwischen den Reitern neu gefasst — folgt jetzt 1:1 dem Finger** (Block 17, `plan/archiv/redesign-oberflaeche`). Betreiber zu Block 15: „das wischen ist sehr unangenehm und schwer, will wirklich was flüssiges".
 
 - **Ursache gefunden:** Die erste Fassung dämpfte die Bewegung auf 42 % der Fingerbewegung (`REITER_WIDERSTAND`) — der Inhalt blieb sichtbar hinter dem Finger zurück. Genau zwei andere Wisch-Gesten dieser App (Karte zum Bewerten wegwischen, Blatt nach unten wegwischen) machen das nicht — sie folgen 1:1. Die Reiter-Geste ist jetzt an dasselbe, bereits bewährte Muster angeglichen.
 - **1:1-Verfolgung.** Der Inhalt hängt direkt am Finger, kein Nachlaufen. Nur am echten Rand (erster/letzter Reiter, kein Ziel dahinter) bremst eine mildere elastische Näherung (0.3 statt vorher 0.105 – die alte Randbremse war so steif, dass sie sich wie eine Wand anfühlte).
@@ -1883,7 +1920,7 @@ Keine Lernlogik angefasst. Geprüft gegen die echte `app.js` mit nachgestellten 
 
 ## 3.8.1 – 22. September 2026
 
-**Die Bildschirmtastatur verdeckt kein Blatt mehr; eine doppelte Zahl im Fortschritt ist raus** (Block 16, `plan/redesign-oberflaeche`).
+**Die Bildschirmtastatur verdeckt kein Blatt mehr; eine doppelte Zahl im Fortschritt ist raus** (Block 16, `plan/archiv/redesign-oberflaeche`).
 
 **Tastatur (Betreiber-Screenshot, iPhone 11).** Beim Anlegen einer Karte schob sich die Tastatur über das Blatt: vom Formular war noch das erste Feld zu sehen, „Übersetzung" stand halb unter der Tastaturkante, die Knöpfe „Hinzufügen"/„Fertig" waren gar nicht erreichbar. Ursache ist eine Eigenheit von iOS – die Tastatur verkleinert nur den **sichtbaren** Bereich (`visualViewport`), nicht das Layout. Ein Element mit `position:fixed` hängt aber am Layout, für den Browser stand das Blatt also weiterhin korrekt „unten am Bildschirm"; dieses Unten lag nur hinter der Tastatur. `dvh` hilft dabei nicht, die Einheit folgt dem Ein- und Ausklappen der Browserleisten, nicht der Tastatur.
 
@@ -1896,7 +1933,7 @@ Keine Lernlogik angefasst. Geprüft gegen die echte `app.js` mit nachgestellten 
 
 ## 3.8.0 – 22. September 2026
 
-**Ruhe und Fluss** (Block 15, `plan/redesign-oberflaeche`). Zusammenhängende Rückmeldung des Betreibers zu 3.7.6 mit Screenshot: Verwalten „unübersichtlich", Tabwechsel „sieht billig aus", „jede Seite ist gefühlt ein hard reset", „nicht jeder Button muss extra nochmal umrundet sein oder einen Glanz tragen", „es soll zu meinem Icon passen". Alles in diesem Durchgang, ohne die bestehende Gestalt zu ersetzen – der Komplett-Neuaufbau vom Vortag (4.0.0) bleibt zurückgenommen.
+**Ruhe und Fluss** (Block 15, `plan/archiv/redesign-oberflaeche`). Zusammenhängende Rückmeldung des Betreibers zu 3.7.6 mit Screenshot: Verwalten „unübersichtlich", Tabwechsel „sieht billig aus", „jede Seite ist gefühlt ein hard reset", „nicht jeder Button muss extra nochmal umrundet sein oder einen Glanz tragen", „es soll zu meinem Icon passen". Alles in diesem Durchgang, ohne die bestehende Gestalt zu ersetzen – der Komplett-Neuaufbau vom Vortag (4.0.0) bleibt zurückgenommen.
 
 **Verwalten entrümpelt**
 - Die Überschrift „Karten in „Bereich" (17)" ist weg. Der Bereichsname steht schon oben im Umschalter, die Zahl gleich darunter – sie sagte nichts, was nicht zweimal danebenstand. Die zwei Nebenhandlungen (Üben, Mehr) stehen jetzt rechtsbündig für sich.
@@ -1920,7 +1957,7 @@ Keine Lernlogik angefasst. Geprüft mit einem Probelauf gegen die echte `app.js`
 
 ## 3.7.6 – 22. September 2026
 
-**Anmelden im Flugmodus hing endlos; Knopf-Glanz gedämpft; Google-Knopf im gesperrten Zustand kein grauer Fleck mehr.** Betreiber-Test am echten Handy im Flugmodus zeigte drei echte Probleme (Block 14, `plan/redesign-oberflaeche`):
+**Anmelden im Flugmodus hing endlos; Knopf-Glanz gedämpft; Google-Knopf im gesperrten Zustand kein grauer Fleck mehr.** Betreiber-Test am echten Handy im Flugmodus zeigte drei echte Probleme (Block 14, `plan/archiv/redesign-oberflaeche`):
 
 - **Zeitlimit für Anmelde-Aktionen:** `doLogin`, `doRegister`, `doReset`, `pruefeBestaetigung`, `doResendVerification` liefen ohne Netz unbegrenzt weiter ("lädt alles die ganze Zeit") – Firebase Auth wirft `network-request-failed` nicht in jeder Netz-Ausfall-Art (z. B. WLAN mit Router, aber ohne Internet) schnell genug. Neue Hilfsfunktion `mitZeitlimit()` (`app.js`) bricht nach 12s selbst ab und zeigt dieselbe "Keine Verbindung"-Meldung wie ein echter Netzfehler. Bewusst **nicht** an Google/Apple-Anmeldung (`signInWithPopup`) angewendet – die wartet auf eine echte Person in einem fremden Fenster, ein Zeitlimit dort würde eine laufende, gültige Anmeldung abbrechen.
 - **Knopf-Glanz aus 3.7.5 gedämpft:** Rückmeldung "sieht nach zu viel aus" – die Lichtkante auf dem gefüllten Knopf war mit 0.5 Deckkraft/10px Schatten zu kräftig und wirkte wie ein Bildfehler statt Tiefe. Jetzt deutlich leiser (0.22 Deckkraft/6px).
@@ -1933,7 +1970,7 @@ Keine Lernlogik angefasst. Geprüft mit einem Probelauf gegen die echte `app.js`
 
 ## 3.7.5 – 22. September 2026
 
-**Sichtbarer Tiefe-Durchgang über Schrift, Fortschritt, Einstellungen, Verwalten und den Google-Knopf** (Block 13, `plan/redesign-oberflaeche`). Rückmeldung zu Block 12: eine reine Hover-Konsistenz-Korrektur „sieht gleich aus" – zu Recht, sie war auch nur dafür gedacht. Dieser Durchgang bringt echte, sichtbare Veränderung, ohne die vier Sätze der Gestaltung zu brechen (keine neue Farbe, keine zweite Fläche in einer Fläche, ein gefüllter Knopf pro Bildschirm):
+**Sichtbarer Tiefe-Durchgang über Schrift, Fortschritt, Einstellungen, Verwalten und den Google-Knopf** (Block 13, `plan/archiv/redesign-oberflaeche`). Rückmeldung zu Block 12: eine reine Hover-Konsistenz-Korrektur „sieht gleich aus" – zu Recht, sie war auch nur dafür gedacht. Dieser Durchgang bringt echte, sichtbare Veränderung, ohne die vier Sätze der Gestaltung zu brechen (keine neue Farbe, keine zweite Fläche in einer Fläche, ein gefüllter Knopf pro Bildschirm):
 
 - **Neuer Token `--sheen`** (`styles.css`): ein weicher Lichtschein von oben, liegt zusätzlich zur Flächenfarbe auf jeder erhobenen Fläche (`.card`, `.liste`, `#karten-liste`, `.stat-block`, `.serie-karte`, `.lekt-kachel`) – dieselbe Tiefe, die Kopfzeile/Navigation/Sheets durch `backdrop-filter` schon haben, jetzt auch dort, wo kein Weichzeichner möglich ist.
 - **Der eine gefüllte Knopf pro Bildschirm** bekommt eine Lichtkante und einen weichen Schatten in der Akzentfarbe – vorher flache Fläche ohne Tiefe. Die stillen Stufen (secondary/ghost/danger) bleiben bewusst flach.
@@ -1942,17 +1979,17 @@ Keine Lernlogik angefasst. Geprüft mit einem Probelauf gegen die echte `app.js`
 - **Google-Anmeldeknopf:** lief bisher als gewöhnlicher `.secondary`-Knopf mit. Jetzt eine helle Fläche nach Googles eigenen Branding-Vorgaben (offizielle Farben, echtes mehrfarbiges „G") – dadurch auch von selbst erkennbar am dunklen Grund, statt in der Knopf-Stufenleiter unterzugehen.
 - **Überschriften** (h1–h4) von Schriftschnitt 600 auf 700 – bei der dünneren Serifenschrift wirkte 600 auf Handy-Größen eher hell als betont.
 
-Nichts an Lernlogik geändert. Geprüft in `stilprobe.html`, hell und dunkel, keine Konsolenfehler. Details, inklusive der bewusst nicht übernommenen Punkte, in `plan/redesign-oberflaeche/LOGBUCH.md`.
+Nichts an Lernlogik geändert. Geprüft in `stilprobe.html`, hell und dunkel, keine Konsolenfehler. Details, inklusive der bewusst nicht übernommenen Punkte, in `plan/archiv/redesign-oberflaeche/LOGBUCH.md`.
 
 ## 3.7.4 – 22. September 2026
 
-**Verwalten-Kartenliste bekommt am Desktop eine Hover-Rückmeldung.** Jede Zeile trägt seit Langem `cursor:pointer` und öffnet per Klick das Detail-Blatt (`app.js:7303`), aber anders als jeder andere klickbare Zeilentyp der App (`.liste-zeile`, `.pill`, `.seg`, `.stufe-chip`, …) zeigte sie vor dem Klick keine Reaktion – nur beim Tippen selbst (`:active`). Nachgezogen mit derselben, bereits überall genutzten `@media (hover: hover) and (pointer: fine)`-Absicherung, betrifft also nur echte Mauszeiger, keine Touch-Geräte. Erster Fund einer eigenen UX-Sichtung (`plan/redesign-oberflaeche/PRINZIPIEN.md`, „Eigene UX-Sichtung 22.09.2026") – Block 12 des Nebenstrangs `redesign-oberflaeche`.
+**Verwalten-Kartenliste bekommt am Desktop eine Hover-Rückmeldung.** Jede Zeile trägt seit Langem `cursor:pointer` und öffnet per Klick das Detail-Blatt (`app.js:7303`), aber anders als jeder andere klickbare Zeilentyp der App (`.liste-zeile`, `.pill`, `.seg`, `.stufe-chip`, …) zeigte sie vor dem Klick keine Reaktion – nur beim Tippen selbst (`:active`). Nachgezogen mit derselben, bereits überall genutzten `@media (hover: hover) and (pointer: fine)`-Absicherung, betrifft also nur echte Mauszeiger, keine Touch-Geräte. Erster Fund einer eigenen UX-Sichtung (`plan/archiv/redesign-oberflaeche/PRINZIPIEN.md`, „Eigene UX-Sichtung 22.09.2026") – Block 12 des Nebenstrangs `redesign-oberflaeche`.
 
 Außerdem: `index.html` hatte die Versions-Abfrage von `app.js` noch auf 3.7.2 stehen, obwohl `app.js`/`sw.js` schon bei 3.7.3 waren (Lücke aus der letzten Veröffentlichung) – jetzt wieder synchron.
 
 ## 3.7.3 – 22. September 2026
 
-**Die aktive Fläche der Navigationsleiste gleitet jetzt in Wechselrichtung ein**, statt hart umzuschalten – kleine, in sich geschlossene Ergänzung nach einem Video-Vergleich (`plan/redesign-oberflaeche/PRINZIPIEN.md`, „Video 4"). Nur die Bottom-Nav betroffen, keine Lernlogik.
+**Die aktive Fläche der Navigationsleiste gleitet jetzt in Wechselrichtung ein**, statt hart umzuschalten – kleine, in sich geschlossene Ergänzung nach einem Video-Vergleich (`plan/archiv/redesign-oberflaeche/PRINZIPIEN.md`, „Video 4"). Nur die Bottom-Nav betroffen, keine Lernlogik.
 
 ## 3.7.2 – 19. September 2026
 
@@ -1962,7 +1999,7 @@ Nichts an Lernlogik oder am Lehrer-Weg („Code erzeugen" / selbst freigeben) ge
 
 ## 3.7.1 – 19. September 2026
 
-**Ruhiger: weniger Symbole in Verwalten, Blätter lassen sich wegwischen, Seitenwechsel mit Richtung.** Nach Betreiber-Wunsch „die App cleaner fühlen lassen" (Rückblick auf die Icon-/Bewegungs-Tipps der TikTok-Sammlung, `plan/redesign-oberflaeche/BILDER-BEFUND.md`).
+**Ruhiger: weniger Symbole in Verwalten, Blätter lassen sich wegwischen, Seitenwechsel mit Richtung.** Nach Betreiber-Wunsch „die App cleaner fühlen lassen" (Rückblick auf die Icon-/Bewegungs-Tipps der TikTok-Sammlung, `plan/archiv/redesign-oberflaeche/BILDER-BEFUND.md`).
 
 - **Verwalten:** Stift und Mülleimer sind aus jeder Kartenzeile verschwunden (bei 24 Karten 48 Symbole weniger). Zeile antippen öffnet wie bisher das Detail-Blatt; dort stehen jetzt „Bearbeiten" und leise darunter „Karte löschen" (mit der bekannten Rückfrage). Ziehgriff und Stufen-Badge bleiben.
 - **Blätter wegwischen (wie in iOS):** Jedes Blatt und jeder Dialog folgt dem Finger, wenn man es oben nach unten zieht; weit (90 px) oder schnell genug schließt es, sonst federt es zurück. Nur mit einem Finger, nur wenn das Blatt oben steht, nie über Eingabefeldern, waagerecht/nach oben gibt die Geste auf. Wirkt wie Escape (ein Eingabe-Dialog gilt als abgebrochen, ein halb getipptes Karten-Formular bleibt als Entwurf). Bei „Bewegung reduzieren" ohne Ausfahren.
@@ -1973,14 +2010,14 @@ Nichts an Lernlogik oder am Lehrer-Weg („Code erzeugen" / selbst freigeben) ge
 
 ## 3.7.0 – 19. September 2026
 
-**„Lehrer gibt frei": Beim Teilen per Code entscheidet die teilende Person, wann die nächste Lektion aufgeht.** Betreiber-Freigabe vom 19.09.2026 (`plan/lehrer-modus/GERUEST.md`, Abschnitte L und M), einschließlich der Änderung an der Freischalt-Berechnung – die einzige Ausnahme von „Lernlogik tabu", nur für diese eine Berechnung.
+**„Lehrer gibt frei": Beim Teilen per Code entscheidet die teilende Person, wann die nächste Lektion aufgeht.** Betreiber-Freigabe vom 19.09.2026 (`plan/ideen/lehrer-modus/GERUEST.md`, Abschnitte L und M), einschließlich der Änderung an der Freischalt-Berechnung – die einzige Ausnahme von „Lernlogik tabu", nur für diese eine Berechnung.
 
 - **Zwei Arten, zu teilen** (Einstellungen → Sichern → „Per Code teilen"): „Code – Fortschritt schaltet frei" (wie bisher: die Lernenden schalten sich durch Lernen selbst frei) und neu „Code – ich gebe frei". Bei der zweiten ist zu Beginn nur die erste Lektion offen; der Knopf „Nächste Lektion freigeben" öffnet die nächste, dazu steht „Freigegeben: Lektion 3 von 12". Einmal freigegeben bleibt freigegeben, es gibt kein Zurück.
 - **Empfänger:** Wer einen solchen Code einlöst, merkt sich Code und zuletzt bekannten Stand am Bereich. Der Stand wird beim Start, beim Wechsel in den Bereich und bei der Rückkehr in die App per einzelnem Abruf nachgeholt (höchstens einmal pro Minute und Bereich, kein Dauer-Listener). Offline gilt der letzte bekannte Stand; er steigt nur, sinkt nie. Wird das Teilen beendet, bleibt der Stand stehen. Der Lernfortschritt schaltet in einem Lehrer-Satz nichts frei; Hinweistexte („wird frei, sobald die Lektion davor sitzt") nennen dort die Lehrperson.
 - **Kein Rückkanal:** Die teilende Person erfährt weiterhin nichts über die Lernenden – die App liest nur ihre Zahl.
 - **Satz ohne Lehrer-Bindung verhält sich exakt wie vorher** (Datei-Weitergabe, Fortschritts-Codes). Ein Kartensatz-Update lässt die Bindung bestehen; löst jemand mit einem Fortschritts-Satz später einen Lehrer-Code zum selben Satz ein, wird er umgestellt (mit Hinweis).
 - **Fehler behoben, der schon vorher bestand:** Der aktive Code am Bereich (`teilCode`) wurde nach einem Neustart nicht wieder geladen – „Teilen beenden" war dann nicht mehr erreichbar. Außerdem lehnte `firestore.rules` das Löschen dieses Feldes ab („Teilen beenden" schrieb mit `permission-denied`, der Datensatz wurde gelöscht, das Feld blieb).
-- **`firestore.rules` muss neu deployt werden** (`firebase deploy --only "firestore:rules"`, nicht Teil von `veroeffentlichen.bat`), sonst schlägt „Nächste Lektion freigeben" mit `permission-denied` fehl. Regelprüfung im Emulator: 106 von 106 (`plan/phase-1-datenzugriff/regeln-pruefung.mjs`, Fälle L01–L30).
+- **`firestore.rules` muss neu deployt werden** (`firebase deploy --only "firestore:rules"`, nicht Teil von `veroeffentlichen.bat`), sonst schlägt „Nächste Lektion freigeben" mit `permission-denied` fehl. Regelprüfung im Emulator: 106 von 106 (`plan/werkzeuge/regeln/regeln-pruefung.mjs`, Fälle L01–L30).
 
 ## 3.6.14 – 19. September 2026
 
@@ -1990,7 +2027,7 @@ Jetzt wird sie dort von oben verankert, mit der festen Gerätehöhe aus `screen.
 
 ## 3.6.13 – 19. September 2026
 
-**Gesamtprüfung „Reibungsfreiheit": 19 gemeldete Unsauberkeiten, der Großteil behoben** (Belege und Messwerte: `plan/beobachtungen-lernwerkzeug.md`, Beobachtung 19).
+**Gesamtprüfung „Reibungsfreiheit": 19 gemeldete Unsauberkeiten, der Großteil behoben** (Belege und Messwerte: `plan/archiv/beobachtungen-lernwerkzeug.md`, Beobachtung 19).
 
 - **Grüner Kasten weg.** Das Debug-Overlay aus 3.6.4/3.6.5 blieb über `localStorage` für immer an, deckte die Kopfzeile ab und erzwang bei jedem Scroll-Ereignis ein Layout – Scrollen war dadurch etwa 9× langsamer. Entfernt, der Merker wird einmalig gelöscht, der 7×-Tap auf die Versionsnummer tut nichts mehr.
 - **Seitenwechsel ohne Blinken.** Eintrittsbewegungen laufen nur noch, wenn wirklich etwas Neues erscheint (andere Seite, andere Karte, neues Blatt). Cloud-Stand ohne Klick, Tipp auf den aktiven Tab und Umschalter zeichnen still. Kopfzeile und Navigationsleiste bleiben als Element stehen (nur der Inhalt wird getauscht), damit ihr Weichzeichner nicht neu aufblitzt. Der Seitenwechsel blendet aus halber statt aus voller Durchsichtigkeit ein.
@@ -2061,13 +2098,13 @@ Debug-Overlay (Beobachtung 18) auch ohne URL-Parameter aktivierbar: 7× auf die 
 
 **Kritisch, behoben:** App startete nach v3.6.0 gar nicht mehr (`SyntaxError` durch typografische statt normale Anführungszeichen in `app.js`, drei Stellen). Zusätzlich fehlte Cache-Busting für `app.js` – Browser hielten die kaputte Version bis zu eine Stunde im Cache fest. `index.html` bindet `app.js` jetzt mit Versions-Query ein (`?v=…`), muss künftig bei jeder Version mitgezogen werden (siehe `README.md`).
 
-**Noch ungelöst: Navigationsleiste springt vertikal auf dem Handy.** Drei Anläufe, keiner hat die Ursache getroffen: (1) Bereichs-Pill-Breite fest gemacht – falsches Element. (2) `visualViewport`-Sync gegen Adressleisten-Dynamik – scheidet aus, weil Betreiber es als Standalone-Home-Bildschirm-App nutzt (keine Browser-Toolbar). Geprüft und ausgeschlossen: `body`-Höhe (schon korrekt), Containing-Block durch Transform/Filter auf einem Elternelement. Debug-Overlay (`?debug=nav` in der URL) eingebaut, um die nächste Diagnose auf echte Messwerte statt Screenshots zu stützen. Details in `plan/beobachtungen-lernwerkzeug.md` Punkt 18.
+**Noch ungelöst: Navigationsleiste springt vertikal auf dem Handy.** Drei Anläufe, keiner hat die Ursache getroffen: (1) Bereichs-Pill-Breite fest gemacht – falsches Element. (2) `visualViewport`-Sync gegen Adressleisten-Dynamik – scheidet aus, weil Betreiber es als Standalone-Home-Bildschirm-App nutzt (keine Browser-Toolbar). Geprüft und ausgeschlossen: `body`-Höhe (schon korrekt), Containing-Block durch Transform/Filter auf einem Elternelement. Debug-Overlay (`?debug=nav` in der URL) eingebaut, um die nächste Diagnose auf echte Messwerte statt Screenshots zu stützen. Details in `plan/archiv/beobachtungen-lernwerkzeug.md` Punkt 18.
 
 ### Geändert (Code-basiertes Teilen – Rückfall von Link-Teilen, wegen Skalierbarkeit)
 
 **Die Version 3.5.3 führte Link-basiertes Teilen ein, bei dem der ganze Kartensatz im URL-Fragment komprimiert mitgegeben wird.** Diese Architektur stößt ab ca. 1000–1500 Karten an ihre Grenze (URLs sind in der Praxis auf 2000–8000 Zeichen begrenzt, abhängig von Browser und Messenger); für größere Sätze funktioniert das Teilen dann gar nicht mehr, weil die Größenwarnung allein das Problem nicht löst – der Fragment muss kürzer werden, nicht nur die Warnung prägnanter.
 
-**Jetzt zurück zu Code-basiertem Teilen (Abschnitt H aus `plan/lehrer-modus/GERUEST.md`, vorbereitet in 3.5.2):** Der Sender erzeugt einen kurzen, kryptographisch sicheren 10-stelligen Code (z. B. `2AKB3-DQMN7`), und die Lektion wird in Firestore unter diesem Code gespeichert. Der Code ist die einzige Zugriffsschranke – wer ihn kennt, kann lesen. Das skaliert bis 3000+ Karten ohne Größenlimit und ist strukturell nicht invasiv: keine langen URLs, keine Fragment-Garbage im Browser-Verlauf, keine Abhängigkeit von Link-Fähigkeiten in Messengern. Ein neuer Versuch mit demselben Code durch eine andere Person wirkt sich nicht aus (jeder Zugriff ist individuell, nur der Code wird geteilt). Widerruf ist anders als beim Link-Fragment möglich – der Sender kann den Code jederzeit per Klick wieder löschen.
+**Jetzt zurück zu Code-basiertem Teilen (Abschnitt H aus `plan/ideen/lehrer-modus/GERUEST.md`, vorbereitet in 3.5.2):** Der Sender erzeugt einen kurzen, kryptographisch sicheren 10-stelligen Code (z. B. `2AKB3-DQMN7`), und die Lektion wird in Firestore unter diesem Code gespeichert. Der Code ist die einzige Zugriffsschranke – wer ihn kennt, kann lesen. Das skaliert bis 3000+ Karten ohne Größenlimit und ist strukturell nicht invasiv: keine langen URLs, keine Fragment-Garbage im Browser-Verlauf, keine Abhängigkeit von Link-Fähigkeiten in Messengern. Ein neuer Versuch mit demselben Code durch eine andere Person wirkt sich nicht aus (jeder Zugriff ist individuell, nur der Code wird geteilt). Widerruf ist anders als beim Link-Fragment möglich – der Sender kann den Code jederzeit per Klick wieder löschen.
 
 **Abhängigkeiten:** Neue Firestore-Sammlung `geteilteLektionen/{code}` mit Regel in `firestore.rules` (ownerUid prüfung, inhalt muss map sein). Außerdem Rückkehr zur beständigen Zustandsverwaltung über `teilCode` im Bereichsdokument statt ephemerer URL-Teile – dient der Verwaltung von aktiven Codes, damit nicht aus Versehen mehrere Codes für denselben Bereich entstehen.
 
@@ -2085,23 +2122,23 @@ Debug-Overlay (Beobachtung 18) auch ohne URL-Parameter aktivierbar: 7× auf die 
 
 ### Neu (Lektion per Link teilen – live, nicht mehr nur Entwurf)
 
-**Ersetzt den Code-Entwurf aus 3.5.2 komplett**, der eine neue Firestore-Regel gebraucht hätte. Stattdessen trägt ein geteilter Link den ganzen Lektionsinhalt komprimiert in sich selbst (URL-Fragment, alles nach `#` – das geht nie an einen Server, taucht also auch nicht in Zugriffs-Logs auf). Damit entfällt jede neue Firestore-Sammlung und jeder Lesezugriff über Kontogrenzen hinweg: strukturell derselbe, längst unbedenkliche Fall wie der bestehende Datei-Export, nur per Link statt Datei. Ein angetippter Link fragt beim Öffnen von selbst „Lektion übernehmen?"; alternativ gibt es „Link einlösen" in Einstellungen → Einspielen zum manuellen Einfügen. Kein Widerruf möglich (wie bei einer verschickten Datei auch nicht), und eine Größengrenze für sehr große Kartensätze mit klarer Meldung statt stillem Scheitern. Details, Architekturbegründung und die zugehörige Entscheidung zur Minderjährigen-Frage in `plan/lehrer-modus/GERUEST.md`, Abschnitt J.
+**Ersetzt den Code-Entwurf aus 3.5.2 komplett**, der eine neue Firestore-Regel gebraucht hätte. Stattdessen trägt ein geteilter Link den ganzen Lektionsinhalt komprimiert in sich selbst (URL-Fragment, alles nach `#` – das geht nie an einen Server, taucht also auch nicht in Zugriffs-Logs auf). Damit entfällt jede neue Firestore-Sammlung und jeder Lesezugriff über Kontogrenzen hinweg: strukturell derselbe, längst unbedenkliche Fall wie der bestehende Datei-Export, nur per Link statt Datei. Ein angetippter Link fragt beim Öffnen von selbst „Lektion übernehmen?"; alternativ gibt es „Link einlösen" in Einstellungen → Einspielen zum manuellen Einfügen. Kein Widerruf möglich (wie bei einer verschickten Datei auch nicht), und eine Größengrenze für sehr große Kartensätze mit klarer Meldung statt stillem Scheitern. Details, Architekturbegründung und die zugehörige Entscheidung zur Minderjährigen-Frage in `plan/ideen/lehrer-modus/GERUEST.md`, Abschnitt J.
 
 ## 3.5.2 – 18. September 2026
 
 ### Geändert (Kartensatz-Weitergabe für alle geöffnet)
 
-**„Kartensatz zum Weitergeben" war bisher an eine feste Nutzernummer (den Betreiber) gebunden.** Die ursprüngliche Sorge dahinter – aus Versehen geteilte halbfertige Sätze, und Kennungs-Kollisionen, wenn mehrere Leute denselben `satzId` exportieren – ist inzwischen an anderer Stelle separat abgedeckt: ein Bestätigungsdialog zeigt vor jedem Export genau, was rausgeht, und ein geführter (importierter) Bereich lässt sich ohnehin nicht weitergeben, nur ein frisch selbst angelegter mit neuer, zufälliger Kennung. Auf Betreiber-Entscheidung ist die Funktion jetzt für jedes Konto sichtbar, nicht nur für eines – kostenlos, mit einem möglichen späteren Bezahl-Baustein als offenem Punkt in `plan/monetarisierung/GERUEST.md`. Details und die Verbindung zur Lehrer-/Klassenraum-Idee in `plan/lehrer-modus/GERUEST.md`.
+**„Kartensatz zum Weitergeben" war bisher an eine feste Nutzernummer (den Betreiber) gebunden.** Die ursprüngliche Sorge dahinter – aus Versehen geteilte halbfertige Sätze, und Kennungs-Kollisionen, wenn mehrere Leute denselben `satzId` exportieren – ist inzwischen an anderer Stelle separat abgedeckt: ein Bestätigungsdialog zeigt vor jedem Export genau, was rausgeht, und ein geführter (importierter) Bereich lässt sich ohnehin nicht weitergeben, nur ein frisch selbst angelegter mit neuer, zufälliger Kennung. Auf Betreiber-Entscheidung ist die Funktion jetzt für jedes Konto sichtbar, nicht nur für eines – kostenlos, mit einem möglichen späteren Bezahl-Baustein als offenem Punkt in `plan/ideen/monetarisierung/GERUEST.md`. Details und die Verbindung zur Lehrer-/Klassenraum-Idee in `plan/ideen/lehrer-modus/GERUEST.md`.
 
 ### Vorbereitet, nicht aktiv (Komfort-Entwurf: Lektion per Code teilen)
 
-**Zwei neue, mit „Entwurf" gekennzeichnete Karten** in den Einstellungen (Sichern → „Per Code teilen", Einspielen → „Code einlösen") bereiten die Komfortversion aus `plan/lehrer-modus/GERUEST.md` (Abschnitt H/I) vor: eine Lektion über einen Code teilen, ohne dass der Sender je erfährt, wer oder ob sie eingelöst wurde. **Funktioniert absichtlich noch nicht** – `firestore.rules` ist unverändert, jeder Versuch schlägt mit `permission-denied` fehl, bis die dort dokumentierte neue Regel bewusst nachgezogen wird (offene Rechtsfrage zu Minderjährigen, siehe Gerüst). Code-seitig vorbereitet: `baueWeitergabeBereich()` und `verarbeiteImportDaten()` aus dem bestehenden Datei-Export/-Import herausgezogen, damit beide Wege exakt denselben Inhalt erzeugen bzw. gleich verarbeiten.
+**Zwei neue, mit „Entwurf" gekennzeichnete Karten** in den Einstellungen (Sichern → „Per Code teilen", Einspielen → „Code einlösen") bereiten die Komfortversion aus `plan/ideen/lehrer-modus/GERUEST.md` (Abschnitt H/I) vor: eine Lektion über einen Code teilen, ohne dass der Sender je erfährt, wer oder ob sie eingelöst wurde. **Funktioniert absichtlich noch nicht** – `firestore.rules` ist unverändert, jeder Versuch schlägt mit `permission-denied` fehl, bis die dort dokumentierte neue Regel bewusst nachgezogen wird (offene Rechtsfrage zu Minderjährigen, siehe Gerüst). Code-seitig vorbereitet: `baueWeitergabeBereich()` und `verarbeiteImportDaten()` aus dem bestehenden Datei-Export/-Import herausgezogen, damit beide Wege exakt denselben Inhalt erzeugen bzw. gleich verarbeiten.
 
 ## 3.5.1 – 18. September 2026
 
 ### Behoben (Serie/Streak zeigte nach dem Neustart manchmal einen falschen, sich selbst korrigierenden Wert)
 
-**Auf Betreiber-Meldung „meine Streak ändert sich ständig, unberechenbar"**: Der Firestore-Listener auf das Nutzerdokument ignorierte bisher jede Momentaufnahme mit einem noch nicht bestätigten Schreibvorgang (`hasPendingWrites`) – gedacht, um das Echo der eigenen, gerade selbst ausgelösten Änderung zu überspringen. Das blockte aber auch die allererste Momentaufnahme nach einem Neustart, wenn zu diesem Zeitpunkt noch ein ungesendeter Schreibvorgang aus der letzten Sitzung im Offline-Speicher lag (z. B. App bei schlechtem Netz geschlossen, kurz nach der ersten Kartenbewertung des Tages) – Serie und Verlauf blieben dann auf ihrem leeren Startwert stehen, bis der Schreibvorgang online ging und sich die Zahl scheinbar von selbst korrigierte. Die Bedingung greift jetzt nur noch, wenn in dieser Sitzung schon einmal echte Daten geladen wurden (`cloudDocExists`) – die eigentliche Streak-Berechnung selbst blieb unverändert. Details, inklusive einer geprüften und verworfenen zweiten Theorie, in `plan/beobachtungen-lernwerkzeug.md`, Punkt 17.
+**Auf Betreiber-Meldung „meine Streak ändert sich ständig, unberechenbar"**: Der Firestore-Listener auf das Nutzerdokument ignorierte bisher jede Momentaufnahme mit einem noch nicht bestätigten Schreibvorgang (`hasPendingWrites`) – gedacht, um das Echo der eigenen, gerade selbst ausgelösten Änderung zu überspringen. Das blockte aber auch die allererste Momentaufnahme nach einem Neustart, wenn zu diesem Zeitpunkt noch ein ungesendeter Schreibvorgang aus der letzten Sitzung im Offline-Speicher lag (z. B. App bei schlechtem Netz geschlossen, kurz nach der ersten Kartenbewertung des Tages) – Serie und Verlauf blieben dann auf ihrem leeren Startwert stehen, bis der Schreibvorgang online ging und sich die Zahl scheinbar von selbst korrigierte. Die Bedingung greift jetzt nur noch, wenn in dieser Sitzung schon einmal echte Daten geladen wurden (`cloudDocExists`) – die eigentliche Streak-Berechnung selbst blieb unverändert. Details, inklusive einer geprüften und verworfenen zweiten Theorie, in `plan/archiv/beobachtungen-lernwerkzeug.md`, Punkt 17.
 
 ## 3.5.0 – 18. September 2026
 
@@ -2111,11 +2148,11 @@ Debug-Overlay (Beobachtung 18) auch ohne URL-Parameter aktivierbar: 7× auf die 
 
 **Beim Ablegen ausgewählter Karten in einer Speicherkarte war „＋ Neue Speicherkarte" immer die Vorauswahl** – auch wenn schon Speicherkarten existierten, obwohl die häufigste Handlung ist, weiter in die zuletzt benutzte abzulegen (Smart Defaults, Video 3, in `PRINZIPIEN.md` als „passt" eingestuft, bisher nirgends umgesetzt). Die Auswahlliste merkt sich jetzt innerhalb der Sitzung, welche Speicherkarte zuletzt benutzt wurde, und schlägt sie beim nächsten Mal direkt vor.
 
-Details, Begründung und Betreiber-Entscheidung (offene Frage 6, dauerhaft) in `plan/redesign-oberflaeche/LOGBUCH.md`.
+Details, Begründung und Betreiber-Entscheidung (offene Frage 6, dauerhaft) in `plan/archiv/redesign-oberflaeche/LOGBUCH.md`.
 
 ### Neu (zweite Adresse: adrabic.web.app)
 
-**Die App ist jetzt zusätzlich unter `https://adrabic.web.app/` erreichbar**, neben der bisherigen `lernkarte-925c2.web.app`. Reine Hosting-Konfiguration (`firebase.json`), keine Code-Änderung – deshalb ohne eigene Versionsnummer hier vermerkt. Details und offene Betreiber-Schritte (Authorized Domains, API-Key-Freigabe) in `plan/phase-4-domain-hosting/LOGBUCH.md`, Eintrag 18.09.2026.
+**Die App ist jetzt zusätzlich unter `https://adrabic.web.app/` erreichbar**, neben der bisherigen `lernkarte-925c2.web.app`. Reine Hosting-Konfiguration (`firebase.json`), keine Code-Änderung – deshalb ohne eigene Versionsnummer hier vermerkt. Details und offene Betreiber-Schritte (Authorized Domains, API-Key-Freigabe) in `plan/archiv/phase-4-domain-hosting/LOGBUCH.md`, Eintrag 18.09.2026.
 
 ## 3.4.12 – 18. September 2026
 
@@ -2161,7 +2198,7 @@ Details, Begründung und Betreiber-Entscheidung (offene Frage 6, dauerhaft) in `
 
 **Auf dem Anmelde- und Registrieren-Bildschirm stehen jetzt zwei weitere Knöpfe: „Mit Google anmelden" und „Mit Apple anmelden", getrennt durch eine Linie von E-Mail und Passwort.** Beide laufen über dasselbe Firebase-Authentication-Popup-Verfahren wie die bestehende E-Mail-Anmeldung – dieselbe Datenbank, dieselben Zugriffsregeln, dasselbe Nutzerkonto (`users/{uid}`). Ein Konto, das über Google oder Apple entsteht, braucht keine zusätzliche Bestätigungs-E-Mail: Beide Anbieter haben die E-Mail-Adresse bereits selbst bestätigt, das übernimmt Firebase automatisch. Bricht jemand das Anmeldefenster ab, erscheint keine Fehlermeldung – das ist kein Fehler, sondern ein bewusster Rückzieher. Betrifft nur den Anmeldebildschirm; an Lernlogik, Datenbank-Regeln oder bestehenden E-Mail-Konten ändert sich nichts.
 
-**Voraussetzung, die nur der Betreiber selbst erledigen kann:** In der Firebase-Konsole müssen die Anbieter Google und Apple unter Authentication → Sign-in method erst eingeschaltet werden – ohne das zeigen die neuen Knöpfe nur eine Fehlermeldung. Für Apple zusätzlich ein Apple-Developer-Konto samt Service-ID/Key (siehe `plan/redesign-oberflaeche/LOGBUCH.md`, Eintrag vom 17.09.2026).
+**Voraussetzung, die nur der Betreiber selbst erledigen kann:** In der Firebase-Konsole müssen die Anbieter Google und Apple unter Authentication → Sign-in method erst eingeschaltet werden – ohne das zeigen die neuen Knöpfe nur eine Fehlermeldung. Für Apple zusätzlich ein Apple-Developer-Konto samt Service-ID/Key (siehe `plan/archiv/redesign-oberflaeche/LOGBUCH.md`, Eintrag vom 17.09.2026).
 
 ## 3.4.5 – 17. September 2026
 
@@ -2209,7 +2246,7 @@ Die Toast-Funktion `zeigeToast()` existierte bereits seit 3.0.0, wurde aber nie 
 
 **Passwort anzeigen.** Im Passwortfeld steht rechts ein Auge. Antippen zeigt das Passwort im Klartext, nochmal antippen verbirgt es wieder. Am Handy vertippt man sich bei verdeckten Passwörtern leicht. Der Knopf ist 44 × 44 px groß (so groß wie jeder andere Knopf) und hat für Bildschirmleser die Beschriftung „Passwort anzeigen" bzw. „Passwort verbergen".
 
-Grundlage: die Bildersammlung des Betreibers (108 Bilder), ausgewertet in `plan/redesign-oberflaeche/BILDER-BEFUND.md`. Beide Punkte stehen dort als Bild 23 und 24.
+Grundlage: die Bildersammlung des Betreibers (108 Bilder), ausgewertet in `plan/archiv/redesign-oberflaeche/BILDER-BEFUND.md`. Beide Punkte stehen dort als Bild 23 und 24.
 
 ## 3.3.2 – 17. September 2026
 
@@ -2371,7 +2408,7 @@ Rückmeldung des Betreibers: „In den Einstellungen ist alles so chaotisch, unt
 
 ### Neu (Arbeitsmittel, wird nicht ausgeliefert)
 
-- **`plan/redesign-oberflaeche/probelauf.mjs`.** `index.html` braucht Firebase von `gstatic.com`; wo das nicht erreichbar ist, bleibt die App bei „Start fehlgeschlagen" stehen und jede Gestaltungsänderung wäre ungeprüft. Das Skript fängt die drei Firebase-Module ab, liefert Attrappen mit erfundenen Daten und lichtet dann zehn Bildschirme der **echten** App ab — dieselben `render()`-Funktionen, dieselben Handler, dieselbe `styles.css`. Es schreibt nichts.
+- **`plan/archiv/redesign-oberflaeche/probelauf.mjs`.** `index.html` braucht Firebase von `gstatic.com`; wo das nicht erreichbar ist, bleibt die App bei „Start fehlgeschlagen" stehen und jede Gestaltungsänderung wäre ungeprüft. Das Skript fängt die drei Firebase-Module ab, liefert Attrappen mit erfundenen Daten und lichtet dann zehn Bildschirme der **echten** App ab — dieselben `render()`-Funktionen, dieselben Handler, dieselbe `styles.css`. Es schreibt nichts.
   Zusätzlich misst es an jedem Bildschirm, wie viel Platz unter dem letzten Element bleibt, und meldet es als Fehler, wenn weniger als die Höhe der Navigationsleiste übrig ist. Ein Bild kann das verschleiern (eine `position:fixed`-Leiste wandert im Vollseiten-Bild an eine erfundene Stelle), eine Zahl nicht.
 
 ---
@@ -2401,7 +2438,7 @@ Rückmeldung des Betreibers: „In den Einstellungen ist alles so chaotisch, unt
 
 ### Neu (Arbeitsmittel, wird nicht ausgeliefert)
 
-- **`plan/redesign-oberflaeche/stilprobe.html`.** Die echte App lässt sich ohne Firebase-Anmeldung nicht ansehen — wer an der Gestaltung arbeitet, sieht sonst nur den Ladebildschirm und gestaltet blind. Die Stilprobe zeigt alle Bausteine aus `styles.css` mit erfundenem Inhalt nebeneinander, inklusive eines absichtlich falsch verschachtelten Kastens als Prüfung für Satz 2. Sie definiert selbst keine Farben, Größen oder Abstände und steht bewusst **nicht** in `APP_SHELL`.
+- **`plan/archiv/redesign-oberflaeche/stilprobe.html`.** Die echte App lässt sich ohne Firebase-Anmeldung nicht ansehen — wer an der Gestaltung arbeitet, sieht sonst nur den Ladebildschirm und gestaltet blind. Die Stilprobe zeigt alle Bausteine aus `styles.css` mit erfundenem Inhalt nebeneinander, inklusive eines absichtlich falsch verschachtelten Kastens als Prüfung für Satz 2. Sie definiert selbst keine Farben, Größen oder Abstände und steht bewusst **nicht** in `APP_SHELL`.
 
 ---
 
@@ -2413,7 +2450,7 @@ Rückmeldung des Betreibers: „In den Einstellungen ist alles so chaotisch, unt
 
 ### Verbessert (ungeprüfter Verdachts-Fix)
 
-- **Browser-Zurück-Ladefehler: `preconnect` zu gstatic.com ergänzt.** Beobachtung 16 aus `plan/beobachtungen-lernwerkzeug.md`. `initFirebase()` startet die Verbindung zu `gstatic.com` bisher erst beim dynamischen Import, mitten im Skript — bestätigt reproduziert wurde der Fehler nach einer echten Browser-Zurück-Navigation (kein bfcache, echtes Neuladen, also priorisiert der Browser die neue Verbindung womöglich anders als beim ersten Aufruf). `<link rel="preconnect">`/`dns-prefetch` in `index.html` bauen die Verbindung schon beim HTML-Parsen auf, parallel statt erst danach. **Nicht bestätigt** — reine Verbindungs-Vorbereitung, kein Verhaltensänderung an der bestehenden Selbstheilung/Retry-Logik, trivial rückgängig zu machen.
+- **Browser-Zurück-Ladefehler: `preconnect` zu gstatic.com ergänzt.** Beobachtung 16 aus `plan/archiv/beobachtungen-lernwerkzeug.md`. `initFirebase()` startet die Verbindung zu `gstatic.com` bisher erst beim dynamischen Import, mitten im Skript — bestätigt reproduziert wurde der Fehler nach einer echten Browser-Zurück-Navigation (kein bfcache, echtes Neuladen, also priorisiert der Browser die neue Verbindung womöglich anders als beim ersten Aufruf). `<link rel="preconnect">`/`dns-prefetch` in `index.html` bauen die Verbindung schon beim HTML-Parsen auf, parallel statt erst danach. **Nicht bestätigt** — reine Verbindungs-Vorbereitung, kein Verhaltensänderung an der bestehenden Selbstheilung/Retry-Logik, trivial rückgängig zu machen.
 
 ---
 
@@ -2421,11 +2458,11 @@ Rückmeldung des Betreibers: „In den Einstellungen ist alles so chaotisch, unt
 
 ### Verbessert (ungeprüfter Verdachts-Fix)
 
-- **Over-Scrolling: `dvh` durch `svh` ersetzt.** Beobachtung 13 aus `plan/beobachtungen-lernwerkzeug.md`. Verdacht: `100dvh` folgt live der tatsächlich sichtbaren Höhe und wächst, sobald die Werkzeugleiste des mobilen Browsers beim Scrollen einklappt — dadurch taucht während des Scrollens zusätzlicher Leerraum auf, den es beim Laden der Seite noch nicht gab. `100svh` (kleinstmögliche Höhe, Leiste immer eingerechnet) bleibt beim Scrollen konstant. Betrifft `body`, `.view--modus`, `.study-card` (beide Stellen) und `.boot`. **Nicht am echten Gerät bestätigt** — auf ausdrücklichen Wunsch des Betreibers als Versuch umgesetzt, per Git jederzeit rückgängig zu machen, falls es die Sache nicht löst oder etwas anderes verschiebt.
+- **Over-Scrolling: `dvh` durch `svh` ersetzt.** Beobachtung 13 aus `plan/archiv/beobachtungen-lernwerkzeug.md`. Verdacht: `100dvh` folgt live der tatsächlich sichtbaren Höhe und wächst, sobald die Werkzeugleiste des mobilen Browsers beim Scrollen einklappt — dadurch taucht während des Scrollens zusätzlicher Leerraum auf, den es beim Laden der Seite noch nicht gab. `100svh` (kleinstmögliche Höhe, Leiste immer eingerechnet) bleibt beim Scrollen konstant. Betrifft `body`, `.view--modus`, `.study-card` (beide Stellen) und `.boot`. **Nicht am echten Gerät bestätigt** — auf ausdrücklichen Wunsch des Betreibers als Versuch umgesetzt, per Git jederzeit rückgängig zu machen, falls es die Sache nicht löst oder etwas anderes verschiebt.
 
 ### Verbessert
 
-- **Arabische Kategorie-/Lektionsnamen: eigene Schrift und Richtung nachgetragen.** Beobachtung 7 aus `plan/beobachtungen-lernwerkzeug.md`. Anders als Wort/Übersetzung/Notiz liefen Namen von Kategorien, Lektionen und eigenen Speicherkarten bisher immer in der normalen Schrift und Leserichtung mit, auch wenn sie arabisch benannt waren — dadurch sah arabischer Text an diesen Stellen "verbuggt" aus. Jetzt bekommen sie automatisch dieselbe Sonderbehandlung wie Wort/Übersetzung (eigene Schriftart, `dir="rtl"`), wenn der Name arabische Zeichen enthält: in der Karten-Tag-Zeile (`kartenTagsHtml()`, z. B. „Schwierige Wörter") und im Namen einer Speicherkarte in Verwalten (`setBlock()`). Rein textabhängig erkannt, kein neues Feld — betrifft nur Namen, die tatsächlich arabisch geschrieben sind.
+- **Arabische Kategorie-/Lektionsnamen: eigene Schrift und Richtung nachgetragen.** Beobachtung 7 aus `plan/archiv/beobachtungen-lernwerkzeug.md`. Anders als Wort/Übersetzung/Notiz liefen Namen von Kategorien, Lektionen und eigenen Speicherkarten bisher immer in der normalen Schrift und Leserichtung mit, auch wenn sie arabisch benannt waren — dadurch sah arabischer Text an diesen Stellen "verbuggt" aus. Jetzt bekommen sie automatisch dieselbe Sonderbehandlung wie Wort/Übersetzung (eigene Schriftart, `dir="rtl"`), wenn der Name arabische Zeichen enthält: in der Karten-Tag-Zeile (`kartenTagsHtml()`, z. B. „Schwierige Wörter") und im Namen einer Speicherkarte in Verwalten (`setBlock()`). Rein textabhängig erkannt, kein neues Feld — betrifft nur Namen, die tatsächlich arabisch geschrieben sind.
 
 ---
 
@@ -2433,7 +2470,7 @@ Rückmeldung des Betreibers: „In den Einstellungen ist alles so chaotisch, unt
 
 ### Verbessert
 
-- **Verwalten: Scroll-Position nach dem Bearbeiten bleibt erhalten.** Beobachtung 3 aus `plan/beobachtungen-lernwerkzeug.md`. Bisher sprang die Seite beim Bearbeiten einer Karte an den Anfang (damit das Formular sichtbar ist) und blieb dort auch nach „Speichern"/„Abbrechen" stehen — wer weiter unten in der Liste war, musste erneut dorthin scrollen. Jetzt merkt sich `editCard()` die Position vor dem Sprung und `submitCardForm()`/`cancelEdit()` springen beim Bearbeiten einer bestehenden Karte dorthin zurück. Gilt nur fürs Bearbeiten, nicht fürs Neuanlegen (dort bleibt der Fokus wie gehabt im Wort-Feld oben) und nicht für den Sprung aus dem Fortschritts-Tab (`editCardInBereich`) — der hatte vorher ohnehin keine sinnvolle Position in Verwalten.
+- **Verwalten: Scroll-Position nach dem Bearbeiten bleibt erhalten.** Beobachtung 3 aus `plan/archiv/beobachtungen-lernwerkzeug.md`. Bisher sprang die Seite beim Bearbeiten einer Karte an den Anfang (damit das Formular sichtbar ist) und blieb dort auch nach „Speichern"/„Abbrechen" stehen — wer weiter unten in der Liste war, musste erneut dorthin scrollen. Jetzt merkt sich `editCard()` die Position vor dem Sprung und `submitCardForm()`/`cancelEdit()` springen beim Bearbeiten einer bestehenden Karte dorthin zurück. Gilt nur fürs Bearbeiten, nicht fürs Neuanlegen (dort bleibt der Fokus wie gehabt im Wort-Feld oben) und nicht für den Sprung aus dem Fortschritts-Tab (`editCardInBereich`) — der hatte vorher ohnehin keine sinnvolle Position in Verwalten.
 
 ---
 
@@ -2441,7 +2478,7 @@ Rückmeldung des Betreibers: „In den Einstellungen ist alles so chaotisch, unt
 
 ### Neu
 
-- **Verwalten: Detailansicht beim Antippen einer Karte.** Beobachtung 1 aus `plan/beobachtungen-lernwerkzeug.md`, auf ausdrückliche Freigabe umgesetzt. Tippen auf eine Kartenzeile (außerhalb von Ziehgriff, Bearbeiten- und Löschen-Knopf) öffnet ein Blatt mit Wort, Übersetzung, vollständiger Notiz (nicht mehr abgeschnitten wie in der Listenvorschau), Zustand und Speicherkarten-Zugehörigkeit, plus einem Knopf direkt ins Bearbeiten-Formular. Reine Lesehülle nach dem bestehenden `.dlg`-Muster (wie das Bereichs-Sheet) — keine zweite Bearbeiten-Logik. Per Escape oder Tippen daneben wieder zu.
+- **Verwalten: Detailansicht beim Antippen einer Karte.** Beobachtung 1 aus `plan/archiv/beobachtungen-lernwerkzeug.md`, auf ausdrückliche Freigabe umgesetzt. Tippen auf eine Kartenzeile (außerhalb von Ziehgriff, Bearbeiten- und Löschen-Knopf) öffnet ein Blatt mit Wort, Übersetzung, vollständiger Notiz (nicht mehr abgeschnitten wie in der Listenvorschau), Zustand und Speicherkarten-Zugehörigkeit, plus einem Knopf direkt ins Bearbeiten-Formular. Reine Lesehülle nach dem bestehenden `.dlg`-Muster (wie das Bereichs-Sheet) — keine zweite Bearbeiten-Logik. Per Escape oder Tippen daneben wieder zu.
 
 ---
 
@@ -2556,7 +2593,7 @@ Rückmeldung des Betreibers: „In den Einstellungen ist alles so chaotisch, unt
 
 - **Ungewollter Autofokus nach dem Bearbeiten einer Karte (Beobachtung 4, 15.09.2026).** `submitCardForm()` fokussiert nach dem Speichern das Wort-Feld, damit man beim Neuanlegen mehrere Vokabeln hintereinander eintippen kann – dieser Fokus-Rücksprung lief aber auch nach dem Bearbeiten einer bestehenden Karte, wo er nur die Tastatur ungewollt öffnete. Fokus läuft jetzt nur noch beim Neuanlegen.
 
-Freigegeben vom Betreiber für diesen einen Durchgang (drei markierte Punkte aus `plan/beobachtungen-lernwerkzeug.md`) – die übrigen Beobachtungen bleiben unangetastet, bis eine weitere Freigabe kommt.
+Freigegeben vom Betreiber für diesen einen Durchgang (drei markierte Punkte aus `plan/archiv/beobachtungen-lernwerkzeug.md`) – die übrigen Beobachtungen bleiben unangetastet, bis eine weitere Freigabe kommt.
 
 ---
 
@@ -2689,7 +2726,7 @@ Freigegeben vom Betreiber für diesen einen Durchgang (drei markierte Punkte aus
   Wort der Karte.
 
 Alle vier Funde und Korrekturen sind Teil von Phase 9 (Barrierefreiheit,
-`plan/phase-9-barrierefreiheit/`) – siehe dort für den vollständigen Befund,
+`plan/archiv/phase-9-barrierefreiheit/`) – siehe dort für den vollständigen Befund,
 auch zu dem, was diese Version **nicht** löst.
 
 ## 3.0.24 – 13. September 2026
@@ -2763,7 +2800,7 @@ auch zu dem, was diese Version **nicht** löst.
   keine Verweis mehr auf eine Datei, die es nicht mehr gibt.
 
 Damit ist die Entscheidung „womit fängt ein Neuer an" wieder offen (siehe
-`plan/landing-page-strategie/STRATEGIE.md`, 2.1) – diesmal mit der Vorgabe,
+`plan/ideen/landing-page-strategie/STRATEGIE.md`, 2.1) – diesmal mit der Vorgabe,
 dass ein eigener Kartensatz, falls gewünscht, vom Betreiber selbst geschrieben
 oder mindestens freigegeben wird, nicht vom Agenten.
 
@@ -2843,7 +2880,7 @@ eingespielt.
   `light dark`.
 
 Headline, Handlungsaufruf und Aufbau der Seite bleiben unverändert: Der
-Umbau wartet auf eine offene Entscheidung (`plan/landing-page-strategie/STRATEGIE.md`,
+Umbau wartet auf eine offene Entscheidung (`plan/ideen/landing-page-strategie/STRATEGIE.md`,
 Abschnitt 2.1).
 
 ## 3.0.19 – 13. September 2026
@@ -2856,7 +2893,7 @@ Abschnitt 2.1).
   durch „Auf jedem Gerät dort weitermachen, wo du aufgehört hast — alles
   wird synchronisiert". Reine Textkorrektur, keine Änderung an der
   Gestaltung oder am Aufbau der Seite: Der Umbau der Startseite wartet
-  bewusst auf die Strategie (`plan/landing-page-strategie/`).
+  bewusst auf die Strategie (`plan/ideen/landing-page-strategie/`).
 
 ## 3.0.18 – 13. September 2026
 

@@ -1,0 +1,10 @@
+F7 1 ["1 Karten, 1 Lektionen. Nur „Lektion 1\" ist offen, der Rest kommt gesperrt an.\n\nDie Lektionen schalten sich durch den Lernfortschritt selbst frei.\n\nDu siehst nicht, wer den Code benutzt. Du kannst das Teilen jederzeit beenden.\n\nDas wird Veröffentlichung Nr. 1.","Medina Buch 1 · 1 von 1 Lektionen freiDie Karten stehen fest. Für eigene Karten tippe oben auf den Bereichsnamen und dann auf „Bereich anlegen“. Üben MehrSpeicherkarten1 Geführter Kartensatz – die Karten und ihre Reihenfolge stehen fest. Hervorgehoben ist, was freigeschaltet ist.كِتَابٌBuchPlural: كُتُبٌDein Stoff1 neu1 wird festerRunde starten","Stufen oder Speicherkarten beliebig oft üben","Weitere Handlungen für diesen Bereich","neu: 1 Karten (noch nie abgefragt)","wird fester: 1 Karten (kommt schon seltener)","noch nie abgefragt","kommt schon seltener"]
+AssertionError [ERR_ASSERTION]: F7 falsche Mehrzahl
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_f_texte.js:20:25 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

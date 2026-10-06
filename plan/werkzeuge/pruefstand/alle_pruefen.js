@@ -29,7 +29,7 @@ function quellHash(f){
  if(f==='t_paket_d.js')hash.update('css_struktur.mjs').update(fs.readFileSync(path.join(__dirname,'../css_struktur.mjs')));
  if(f==='t_konto_fortsetzungen.js'){
   const namen=[...new Set([...quelle.toString().matchAll(/\['(konto_[^']+\.js)'/g)].map(m=>m[1]))].sort();
-  for(const name of namen)hash.update(name).update(fs.readFileSync(path.join(__dirname,'../../grossplan/befunde/werkzeuge',name)));
+  for(const name of namen)hash.update(name).update(fs.readFileSync(path.join(__dirname,'../befund-skripte',name)));
  }
  return hash.digest('hex');
 }

@@ -1,6 +1,6 @@
 # Aufgaben – die ganze Liste
 
-Stand 25.09.2026, aus 133 Funden in [`befunde/`](befunde/) (8 Bereiche). Doppelte
+Stand 25.09.2026, aus 133 Funden in [`befunde/`](befunde) (8 Bereiche). Doppelte
 Funde sind zusammengelegt: Mehrere Prüfer haben dasselbe unabhängig
 gefunden, das spricht für den Fund. **Die Abnahme jeder Aufgabe steht im
 Befund** (Zeile „Abnahme"). Der Dirigent prüft sie selbst (`AUFTRAG.md` § 3).

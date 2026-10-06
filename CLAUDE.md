@@ -1,9 +1,4 @@
-# Hinweise für Claude Code
-
-**04.10.2026: Paket E abgeschlossen (3.18.15), nicht veröffentlicht.** Die
-Übergabe [`plan/zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md`](plan/zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md)
-ist abgearbeitet und nur noch Verlauf. Aktueller Stand: STAND und
-`plan/zyklus-2/LOGBUCH.md`, oberster Eintrag.
+# Hinweise für Claude Code und Codex
 
 ## Zuerst: [`plan/STAND.md`](plan/STAND.md) – aktueller Stand und Reihenfolge
 
@@ -12,7 +7,7 @@ enthält die Reihenfolge des Betreibers vom 30.09.2026: erst Texte lernen
 fertig, dann Zyklus 2 (`plan/zyklus-2/AUFTRAG.md`: die ganze App neu
 prüfen, Runde 15 entfällt, ihre Befunde sind dort Paket A). Außerdem
 steht dort, was bei Texte lernen fertig und was offen ist, und wo lokale
-Sicherungen liegen. Ältere „AKTUELL“-Absätze weiter unten sind Geschichte.
+Sicherungen liegen. Historische Arbeitsaufträge stehen im Archiv.
 Wo sie von `STAND.md` abweichen, gilt `STAND.md`.
 
 ## Vor allem anderen: [`plan/LEHREN.md`](plan/LEHREN.md) lesen
@@ -41,66 +36,26 @@ Das Stichwort **ist** seine Freigabe für Regeln und Hosting. Ablauf:
 
 Nur prüfen ohne Veröffentlichen: `ladegeraet.ps1 -NurPruefen`.
 
-### AKTUELL (30.09.2026): Texte auswendig lernen — hier weitermachen
+## Verbindlicher Arbeitsablauf
 
-Bei „weiter“/„leg los“: **`plan/texte-lernen/LOGBUCH.md` oberster Eintrag,
-Feld „Nächster Schritt“** – dort steht die Stufe und die konkrete Aufgabe.
-Plan: `plan/texte-lernen/KONZEPT.md` § 12 (Stufen) und `WIEDERHOLEN.md`.
-Betreiber 30.09.: Texte bleiben **für längere Zeit nur in seinem Konto**
-(`texteFreigeschaltet()`/`BETREIBER_UIDS`), keine Freigabe für andere ohne
-sein ausdrückliches „ja“. Er veröffentlicht Regeln und Hosting selbst; am
-Ende jeder Antwort „Was Du noch tun musst“. Cloud-Container: 5 Tests sind
-dort umgebungsbedingt rot (Logbuch 30.09., Stufe 3) – nicht als eigenen
-Fehler werten, aber gegen den Vorstand gegenprüfen.
+Bei „leg los“ oder „weiter“ zuerst [plan/STAND.md](plan/STAND.md), dann das
+Logbuch der laufenden Phase lesen. Für Zyklus 2 gelten
+[CODEX-START.md](plan/zyklus-2/CODEX-START.md) und die Aufgabenliste.
+Der konkrete Betreiberauftrag bestimmt Paket und Umfang.
+Historische Aufträge und Übergaben stehen vollständig im
+[Archiv](plan/archiv/CLAUDE-verlauf-2026-10-05.md).
 
-### Aktueller Weiter-Auftrag — Runde 14
+Pflicht: LEHREN vollständig vor der ersten Änderung, §14 vor jedem Commit.
+Jede neue Fehlerart als Regel und Vorfall in LEHREN dokumentieren.
+UI-/Bewegungsänderungen auch auf angrenzenden Bildschirmen prüfen: kurze und
+lange Viewports, Scrollposition, Karte und Bewertung, Plan-Aufbau und fertiger
+Plan, iOS First Paint. Ein neuer Sprung oder Ruckler verhindert die Abnahme.
+Geräteabnahme und Chromium-Prüfung ausdrücklich unterscheiden.
 
-Betreiber hat nach den Claude-Änderungen .52–.55 die Weiterarbeit verlangt.
-Runde 14 (G-102–G-106) ist wieder aufgenommen; aktuelle Arbeit steht oben
-in `plan/grossplan/LOGBUCH.md`. Der iPhone-Start ist laut Gerätebericht mit
-.55 bestätigt. Die folgenden Pause-/Übergabeabschnitte beschreiben den
-früheren Stand; nicht als aktuelle Sperre oder offenen iPhone-Fix lesen.
-
-**Runde14 abgenommen (.56):** 105/105 Testläufe, 13/13 Lernabnahme und
-Handy200/iPad150 Zufallstests grün. Unveränderter Original-Tempotest am
-Ladegerät grün, keine Grenze gelockert/kein Layout-Experiment übernommen.
-Aktuelle Nachweise stehen im obersten Logbuch. Nächste Runde genau
-G-107–G-111, zuerst G-110 kritisch. Kein Textlern-Bauauftrag.
-
-### Runden: Ablauf, Gegenprüfung, neuer Zyklus
-
-Jede Runde nach `plan/grossplan/AUFTRAG.md` § 2, § 2a (Gegenprüfung,
-Pflicht), § 2b (sparsam ohne Qualitätsverlust); am Ende aller Runden § 2c
-(Codex schreibt Übergabe, Claude prüft gesammelt); danach § 4a (neuer
-Zyklus aus dem aktuellen Stand, nur auf Betreiber-„weiter“).
-
-### Aktuelle Claude-Übergabe und Pause vom 29.09.2026
-
-Der Betreiber hält nach Runde 13 (3.17.51, `f550897`) an und lässt Claude
-gezielt prüfen: **[`plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md`](plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md) vollständig lesen.**
-Der Start ist laut Betreiber auf dem iPhone weiterhin falsch. Die neue
-Übergabe beschreibt alle bisherigen Versuche und gültige Tests samt Grenzen.
-Runde 14 nicht automatisch beginnen; abgeschlossene Arbeit nicht grundlos
-wiederholen. Die folgende ältere Übergabe ergänzt die UI-Vorgeschichte.
-
-### Historische ChatGPT-Übergabe vom 27.09.2026
-
-Wenn die nächste Session an den aktuellen Onboarding/UI-Problemen arbeitet, zusätzlich **[`plan/onboarding/CHATGPT-HANDOFF-2026-09-27.md`](plan/onboarding/CHATGPT-HANDOFF-2026-09-27.md) komplett lesen**. Dort stehen die konkreten Änderungen 3.17.44–3.17.46, der noch offene Loading-Screen-Befund, die aktuelle Scroll-/Kartenlogik und die Regressionen, die in dieser Session entstanden sind.
-
-**Besonders wichtig:** UI-/Motion-Fixes erzeugen hier leicht neue Fehler. Nicht nur die gemeldete Stelle prüfen: angrenzende Screens, kurze/lange Viewports, Scrollposition, Karte → Bewertung, Plan-Aufbau, fertiger Plan und iOS First Paint nach jeder Änderung erneut prüfen. Ein Fix, der einen neuen Ruckler/Overlay/Sprung erzeugt, ist zurückzunehmen oder lokal anders zu lösen.
-
-Dort steht jeder Fehler, der in diesem Projekt schon passiert ist, samt der
-Regel, die ihn verhindert. Das umfasst Code, Firebase, Regeln, E-Mails,
-Hosting, iOS, Texte, Recht und den Umgang mit dem Betreiber. Der Betreiber
-(24.09.2026): „soll zukünftig direkt korrekt sein … das kann ich mir einfach
-nicht leisten."
-
-Pflicht in jeder Session:
-
-- `plan/LEHREN.md` **vor der ersten Änderung** lesen.
-- Vor jedem Commit die **Checkliste in § 14** dort durchgehen.
-- Jeder neue Fehler, auch ein eigener, kommt dort hinein: als Regel im
-  passenden Abschnitt und als Zeile in der Vorfall-Liste (§ 15).
+Texte auswendig lernen bleiben im Probelauf nur im Betreiber-Konto.
+Keine Freigabe für andere ohne sein ausdrückliches Ja; unter
+`plan/texte-lernen/` während des Probelaufs nichts umbauen. Aktueller
+Probelaufstand und Auswertungstermin stehen in STAND.
 
 ## Zwei Grundsätze des Betreibers (24.09.2026, ausdrücklich „notieren")
 
@@ -138,20 +93,10 @@ Dann ist **immer** das gemeint: die Arbeit aus `plan/` an genau der Stelle
 fortsetzen, an der die letzte Session aufgehört hat. Nicht nachfragen, nicht
 neu planen, nicht auf einen Auftrag warten.
 
-**So findest du die Stelle — in dieser Reihenfolge:**
-
-1. [`plan/PLAN.md`](plan/PLAN.md) lesen. Der Abschnitt **„Wo eine neue Session
-   anfängt"** nennt die nächste Phase. Die Statusspalte sagt, was `fertig` ist.
-2. Den `AUFTRAG.md` dieser Phase lesen — er sagt, was zu tun ist und woran die
-   Phase fertig ist.
-3. Den `LOGBUCH.md` dieser Phase lesen, **letzter Eintrag zuerst**. Das Feld
-   **„Nächster Schritt"** ist die konkrete Aufgabe.
-4. Arbeiten. Nach jedem Arbeitsschritt das Logbuch fortschreiben und
-   `plan/PLAN.md` nachziehen.
-
-Steht bei der Phase eine offene Frage als Sperre (`plan/PLAN.md`, Abschnitt
-„Offene Fragen"), dann diese Phase **nicht** beginnen — die nächste
-unblockierte Phase nehmen und im Logbuch vermerken, warum.
+Die Stelle steht in [plan/STAND.md](plan/STAND.md) und im obersten Eintrag
+des laufenden Logbuchs. [plan/PLAN.md](plan/PLAN.md) enthält die Übersicht
+und offenen Fragen. Vorhandenen Arbeitsstand erhalten; den konkreten
+Fortsetzungsauftrag und seine Prüfpflichten befolgen.
 
 ## Die Grundregel
 
@@ -163,7 +108,7 @@ Weiter gilt durchgehend (Konzept-Abschnitt 7):
 
 - Keine Funktion des Lernwerkzeugs anfassen — mit einer dauerhaften Ausnahme
   seit 18.09.2026 (Betreiber-Entscheidung, `KONZEPT.md` §7,
-  `plan/PLAN.md` offene Frage 6): Bedienung/Optik dürfen für **Design- und
+  `plan/archiv/PLAN-verlauf.md` offene Frage 6): Bedienung/Optik dürfen für **Design- und
   Verbesserungszwecke** angefasst werden, solange nichts komplett verändert
   wird. Die Lernlogik selbst bleibt tabu.
 - Nichts wieder einbauen, was bewusst entfernt wurde. **Der Code ist

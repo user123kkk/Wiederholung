@@ -401,7 +401,7 @@ mit neuem Foto oder Bildschirmaufnahme gezielt nachmessen.
 
 ### 2026-09-29 — Betreiber pausiert; gezielte Übergabe an Claude
 
-**Geändert:** `plan/onboarding/CLAUDE-HANDOFF-2026-09-29.md` neu;
+**Geändert:** `plan/archiv/onboarding/CLAUDE-HANDOFF-2026-09-29.md` neu;
 `CLAUDE.md`, `plan/PLAN.md`, `plan/grossplan/AUFTRAG.md`,
 `befunde/NACHLESE-2026-09-29.md`, `befunde/NACHPRUEFUNG-2026-09-29.md`
 und `plan/LEHREN.md` Status/Verweis nachgetragen. Nur Dokumentation,
@@ -1561,7 +1561,7 @@ AUTH_ERRORS ~2566, Sprache 1873, Texte 2754/6918/6983), `styles.css` (577,
 `.github/workflows/veroeffentlichen.yml`, `.gitignore`, `CHANGELOG.md`,
 `plan/LEHREN.md` (§ 8.1a, § 8.1b, § 14 Punkt 11, § 15), Prüfstand
 (`t_notfound.js`, `t_teilen.js`, `t_csp.js`, `t_loeschen_teilen.js`),
-`plan/phase-1-datenzugriff/regeln-pruefung.mjs`, `plan/werkzeuge/`
+`plan/werkzeuge/regeln/regeln-pruefung.mjs`, `plan/werkzeuge/`
 (`pruefe_stand.mjs`, `regeln_testen.sh`).
 
 **Entscheidung:** G-007 (Serie bleibt bei 121 Tagen) als **Fehler** eingestuft,

@@ -1,0 +1,52 @@
+.stack > * + * => [entfernt]
+.stack-tight > * + * => [entfernt]
+hr, .rule => hr
+#app.still-ansicht .view,
+#app.still-ansicht .stapel,
+#app.still-ansicht .empty,
+#app.still-ansicht .drill-picker,
+#app.still-ansicht .done-box .emoji,
+#app.still-ansicht .anim-rise,
+#app.still-ansicht .anim-fade,
+#app.still-ansicht .study-card.zugedeckt .study-word,
+#app.still-ansicht .study-answer,
+#app.still-ansicht .study-extra,
+#app.still-ansicht .grade-row,
+#app.still-overlay .dlg-backdrop,
+#app.still-overlay .dlg,
+#app.still-overlay .toast => #app.still-ansicht .view, #app.still-ansicht .stapel, #app.still-ansicht .empty, #app.still-ansicht .drill-picker, #app.still-ansicht .anim-rise, #app.still-ansicht .study-card.zugedeckt .study-word, #app.still-ansicht .study-answer, #app.still-ansicht .study-extra, #app.still-ansicht .grade-row, #app.still-overlay .dlg-backdrop, #app.still-overlay .dlg, #app.still-overlay .toast
+.anim-fade => [entfernt]
+button.icon-btn.on-surface => [entfernt]
+.wahl-reihe => [entfernt]
+.card--raised => [entfernt]
+.card--accent => [entfernt]
+.card--flush => [entfernt]
+.card:not(.card--flush) .card,
+.card:not(.card--flush) .liste => .card .card, .card .liste
+.card:not(.card--flush) > .card:first-of-type,
+.card:not(.card--flush) > .liste:first-of-type => .card > .card:first-of-type, .card > .liste:first-of-type
+.card:not(.card--flush) .card + .card,
+.card:not(.card--flush) .liste + .liste => .card .card + .card, .card .liste + .liste
+.badge.positiv => [entfernt]
+.badge.negativ => [entfernt]
+.progress-note => [entfernt]
+.weiter-hinweis => [entfernt]
+.grade-row .sub => [entfernt]
+.done-box => [entfernt]
+.done-box .emoji => [entfernt]
+.done-box .emoji .i => [entfernt]
+.done-box h2 => [entfernt]
+.grade-row button .sub => [entfernt]
+.drill-banner, .satz-banner, .leech-banner, .merk-hinweis => .satz-banner, .leech-banner, .merk-hinweis
+.drill-banner => [entfernt]
+.lern-kopf => [entfernt]
+.lern-kopf > div:last-child => [entfernt]
+.card-tags-inline => [entfernt]
+.skeleton-zeile => [entfernt]
+.skeleton-zeile:last-child => [entfernt]
+.topbar => [entfernt]
+.topbar .who => [entfernt]
+.topbar .who strong => [entfernt]
+.sync-dot => [entfernt]
+.einstieg-frage-klein => [entfernt]
+F12: 35 Regelblöcke bereinigt, Struktur grün.

@@ -162,7 +162,7 @@ Nicht geprüft: echtes iOS (Kalender-Import über `data:`-Adresse), echtes Fireb
 #### REST-16: Echte Push-Erinnerung (Web Push) als Premium-Kandidat
 - Art: Premium
 - Schwere: niedrig
-- Beleg: `app.js:8931-8935` und `plan/audit/LOGBUCH.md:1661`: Push abgelehnt, weil Server (FCM + Cloud Functions, Blaze) nötig. Neues Argument: iOS unterstützt Web Push seit 16.4 für Home-Bildschirm-Apps; eine Push-Erinnerung kann **klug** sein (nur wenn heute noch nichts gelernt und etwas fällig ist), was ein .ics nie kann.
+- Beleg: `app.js:8931-8935` und `plan/archiv/audit/LOGBUCH.md:1661`: Push abgelehnt, weil Server (FCM + Cloud Functions, Blaze) nötig. Neues Argument: iOS unterstützt Web Push seit 16.4 für Home-Bildschirm-Apps; eine Push-Erinnerung kann **klug** sein (nur wenn heute noch nichts gelernt und etwas fällig ist), was ein .ics nie kann.
 - Warum es stört: Der Kalendereintrag erinnert auch an Tagen, an denen schon gelernt wurde – nach wenigen Tagen wird er weggeklickt (Gewöhnung).
 - Vorschlag: Später, zusammen mit Premium: Cloud Function (geplant, stündlich) liest nur „heute gelernt?“ + Push-Abo; Opt-in-Schalter in Einstellungen „Tägliche Erinnerung“.
 - Entscheidet: Betreiber (neue Funktion, Recht, Konsole/Blaze)

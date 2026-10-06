@@ -1,0 +1,15 @@
+390-hell-ruhig-voll: 16 Zustände, 34 Fotos, 4594 Elementstile – ROT 390-hell-ruhig-voll-lernen alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-fortschritt alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-fort-lektionen alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-fort-leeches alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-fort-vorschau alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-verwalten alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-kartenblatt alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-ueben alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einstellungen alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einst-kartensaetze alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einst-daten alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einst-feedback alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einst-konto-loeschen alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-runde alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-antwort alt-neu: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-ende alt-neu: berechneter Stil anders bei 0 body | Kontrolle Alt/Alt: 390-hell-ruhig-voll-lernen alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-fortschritt alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-fort-lektionen alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-fort-leeches alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-fort-vorschau alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-verwalten alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-kartenblatt alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-ueben alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einstellungen alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einst-kartensaetze alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einst-daten alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einst-feedback alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-einst-konto-loeschen alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-runde alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-antwort alt-alt: berechneter Stil anders bei 0 body; 390-hell-ruhig-voll-ende alt-alt: berechneter Stil anders bei 0 body
+
+Gesamt: 34 Fensterfotos, 4594 Elementstile, 16 Abweichungen Alt/Neu, 16 Schwankungen Alt/Alt
+AssertionError [ERR_ASSERTION]: F12-Fotovergleich rot
+
+16 !== 0
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_paket_f_sicht.js:186:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 16,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

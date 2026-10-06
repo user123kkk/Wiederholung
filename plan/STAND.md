@@ -1,5 +1,28 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**06.10.2026: Paket F abgenommen, Version 3.18.17, nicht veröffentlicht.**
+F1–F5 und F7–F13 erledigt, F6 trifft nicht zu. F12 wieder eingesetzt: Die
+roten Fotovergleiche waren ein Messfehler (Beleg und neue Abnahme im
+Zyklus-Logbuch, oberster Eintrag). Gesamtlauf 146/146, Runde 13/13,
+Handy-Affe 200 und iPad-Affe 150 je 0 Befunde, Quellstand cd7e88bcd1ba1daa.
+Zweite Gegenprüfung in `zyklus-2/PAKET-F-GEGENPRUEFUNG.md`. Commit und Push
+auf main, kein Deploy. Online ist weiter 3.18.14; E und F veröffentlicht
+der Betreiber mit „ladegerät“. Regeln unverändert.
+Als Nächstes: D12 nachholen (`zyklus-2/D12-D13-NACHHOLEN.md`), dann Z1-Umbau
+im eigenen Chat, dann Nachprüfung. Offen beim Betreiber: Gerätetests
+(`zyklus-2/GERAETETESTS-ZETTEL.md`), Rechtsprüfung, `entwurf-g119` löschen
+oder nicht. Die folgenden Absätze sind Verlauf.
+
+**05.10.2026: Paket F vorbereitet, uncommittet; F12 zurück, Laptop-Abnahme offen.**
+Ausgang main 5af78a0/3.18.16 sauber und unverändert gepullt; Startprüfungen
+grün. Nur Paket F; keine Veröffentlichung, Version, Commit oder Push hier.
+Der endgültige Abschluss erfolgt nach vollständiger Abnahme am Laptop.
+Fortschritt, offene Prüfungen und nächste konkrete Schritte:
+[Paket-F-Fortsetzung](zyklus-2/PAKET-F-FORTSETZUNG.md).
+Diff und geänderte Dateien werden alle 30 Sekunden im Repo gesichert;
+Prüflogs liegen unter `zyklus-2/paket-f-belege/`.
+Die folgenden Arbeitsstände sind Verlauf.
+
 **05.10.2026: E7 abgeschlossen, Version 3.18.16, nicht veröffentlicht.**
 Uncommittete Übergabearbeit vollständig behalten und abgenommen. Gesamtlauf
 139/139 Exit 0 am unveränderten Quellstand bdfec355e529485d; sämtliche Logs

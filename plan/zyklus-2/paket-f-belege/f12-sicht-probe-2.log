@@ -1,0 +1,15 @@
+390-hell-ruhig-leer: 9 Zustände, 12 Fotos, 1121 Elementstile – ROT 390-hell-ruhig-leer-lernen alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-lernen y=0 alt-neu: 9843 Pixel anders; 390-hell-ruhig-leer-fortschritt alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-fortschritt y=0 alt-neu: 102 Pixel anders; 390-hell-ruhig-leer-verwalten alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-kartenblatt alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-einstellungen alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-einst-kartensaetze alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-einst-daten alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-einst-feedback alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-einst-konto-loeschen alt-neu: berechneter Stil anders bei 0 body [html: ] [body: ] | Kontrolle Alt/Alt: 390-hell-ruhig-leer-lernen alt-alt: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-lernen y=0 alt-alt: 9843 Pixel anders; 390-hell-ruhig-leer-fortschritt alt-alt: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer-fortschritt y=0 alt-alt: 102 Pixel anders; 390-hell-ruhig-leer-verwalten alt-alt: berechneter Stil anders bei 0 body [html: ] [body: ]; 390-hell-ruhig-leer
+
+Gesamt: 12 Fensterfotos, 1121 Elementstile, 11 Abweichungen Alt/Neu, 11 Schwankungen Alt/Alt
+AssertionError [ERR_ASSERTION]: F12-Fotovergleich rot
+
+11 !== 0
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_paket_f_sicht.js:189:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 11,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

@@ -1,0 +1,5 @@
+Browser 154.0.8037.93, Zusatzschalter: --disable-gpu
+390-hell-ruhig-leer: 9 Zustände, 12 Fotos, 1121 Elementstile – ROT 390-hell-ruhig-leer-einst-kartensaetze alt-neu: berechneter Stil anders bei 10 div.card; 390-hell-ruhig-leer-einst-kartensaetze y=0 alt-neu: 103252 Pixel anders; 390-hell-ruhig-leer-einst-daten alt-neu: berechneter Stil anders bei 0 body [html nur a: block-size:902.781px / height:902.781px / perspective-origin:195px 451.391px / transform-origin:195px 451.391px | nur b: block-size:905.781px / height:905.781px / perspective-origin:195px 452.891px / transform-origin:195px 452.891px | Anzahl 610/610] [body nur a: block-size:902.
+Gesamt: 12 Fensterfotos, 1121 Elementstile, 8 Abweichungen Alt/Neu
+AssertionError [ERR_ASSERTION]: F12-Fotovergleich rot
+8 !== 0

@@ -1,0 +1,36 @@
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CLAUDE.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/LEHREN.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/PLAN.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/STAND.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/grossplan/befunde/NACHLESE-2026-09-29.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/phase-1-datenzugriff/regeln-pruefung.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/werkzeuge/pruefe_stand.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/werkzeuge/pruefstand/t_bestand_tempo.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/werkzeuge/pruefstand/t_konto_fortsetzungen.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/zyklus-2/LOGBUCH.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sw.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CLAUDE.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/LEHREN.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/PLAN.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/STAND.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/grossplan/befunde/NACHLESE-2026-09-29.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/phase-1-datenzugriff/regeln-pruefung.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/werkzeuge/pruefe_stand.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/werkzeuge/pruefstand/t_bestand_tempo.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/werkzeuge/pruefstand/t_konto_fortsetzungen.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/zyklus-2/CLAUDE-HANDOFF-2026-10-04-PAKET-E.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plan/zyklus-2/LOGBUCH.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sw.js', LF will be replaced by CRLF the next time Git touches it
+{
+  "zip": "plan\\zyklus-2\\paket-f-belege\\PAKET-F-FORTSETZUNG-2026-10-05.zip",
+  "sha256": "e8020c0445d35ac197e8846a15da054fcf8af5140335daf5d80a56106733cc3a",
+  "dateien": 1406,
+  "geloescht": 92,
+  "bytes": 109061957,
+  "crc_und_sha256": "gr\u00fcn"
+}

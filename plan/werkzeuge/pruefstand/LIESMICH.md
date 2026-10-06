@@ -1,6 +1,6 @@
 # Prüfstand (Playwright, Firebase-Attrappen und lokaler Emulator)
 
-Für die Prüfschleife (`plan/audit/AUFTRAG.md`). Liegt unter `plan/`, wird also
+Für die Prüfschleife (`plan/archiv/audit/AUFTRAG.md`). Liegt unter `plan/`, wird also
 nicht ausgeliefert.
 
 - `stubs.js` – zustandsbehafteter Nachbau von Firebase App/Auth/Firestore; wird

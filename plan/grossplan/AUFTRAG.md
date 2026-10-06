@@ -28,7 +28,7 @@ Dateien:
 | [`LOGBUCH.md`](LOGBUCH.md) | jede Runde, letzter Eintrag zuerst |
 
 Die Befunde, aus denen `AUFGABEN.md` entstanden ist, stehen in
-[`befunde/`](befunde/): acht Prüfbereiche, jeder Fund mit Beleg aus dem Code.
+[`befunde/`](befunde): acht Prüfbereiche, jeder Fund mit Beleg aus dem Code.
 
 ---
 
@@ -73,7 +73,7 @@ Danach Runde15: genau G-107–G-111, zuerst kritischer G-110, dazu G-118
 `runde15`, nur lokal):** [`../STAND.md`](../STAND.md).
 **Historische Pause 29.09.2026:** Nach Runde 13 pausiert. Neuer Claude-Chat
 prüft gezielt Runde 13 und den weiterhin falschen iPhone-Start gemäß
-[`../onboarding/CLAUDE-HANDOFF-2026-09-29.md`](../onboarding/CLAUDE-HANDOFF-2026-09-29.md).
+[`../onboarding/CLAUDE-HANDOFF-2026-09-29.md`](../archiv/onboarding/CLAUDE-HANDOFF-2026-09-29.md).
 Runde 14 erst nach erneutem ausdrücklichem Weiter-Auftrag beginnen.
 **Claude-Prüfung erledigt (3.17.52/.53, Logbuch 29.09.):** Startbild-Schrift,
 Dialog-Hänger aus Runde 13, Boot-Höhe aus `screen.*`. Ab Runde 14 gilt
@@ -230,7 +230,7 @@ Gespart wird an **Wiederholung**, nie an Prüfung:
   `abnahme_runde.js` komplett grün; bei mehr als drei Aufgaben der Affe
   (`node affe.js handy 150 <runde>`), 0 Befunde oder jeder begründet.
 - Geänderte `firestore.rules`: Emulator-Test
-  (`plan/phase-1-datenzugriff/regeln-pruefung.mjs`) grün, Schritt in
+  (`plan/werkzeuge/regeln/regeln-pruefung.mjs`) grün, Schritt in
   `KONSOLE.md` und unter „Was Du noch tun musst".
 
 Ist ein Test rot, der vorher grün war: Runde wird nicht veröffentlicht, bis

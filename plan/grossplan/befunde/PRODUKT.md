@@ -3,8 +3,8 @@
 Kürzel: PRODUKT. Kein Code-Audit. Nichts im Repo geändert.
 
 Gelesen: `CLAUDE.md`, `plan/LEHREN.md` (komplett), `KONZEPT.md`, `plan/PLAN.md` (Später, Offene Fragen,
-Nebenstränge, AKTUELL), `plan/monetarisierung/` (AUFTRAG, GERUEST, LOGBUCH), `plan/lehrer-modus/GERUEST.md`
-(A0–M), `plan/landing-page-strategie/STRATEGIE.md` (1.2–1.4, 2.6), `plan/beobachtungen-lernwerkzeug.md`
+Nebenstränge, AKTUELL), `plan/ideen/monetarisierung/` (AUFTRAG, GERUEST, LOGBUCH), `plan/ideen/lehrer-modus/GERUEST.md`
+(A0–M), `plan/ideen/landing-page-strategie/STRATEGIE.md` (1.2–1.4, 2.6), `plan/archiv/beobachtungen-lernwerkzeug.md`
 (20, 21), `plan/onboarding/PSYCHOLOGIE.md`, `firestore.rules`, `.github/workflows/veroeffentlichen.yml`.
 Einen Überblick über `app.js` 3.17.29 habe ich mir über alle `data-action`-Namen, die `render*`-Funktionen,
 das Kartenmodell und die Regeln verschafft.
@@ -358,7 +358,7 @@ Regeln), 19 (KI-Karten: § 1.6), 20 (Wurzel-Feld: § 3.5), 11b (eigene Aufnahmen
 ohne Migration bestehender Daten. Es gibt also **keinen Code, der jetzt gebaut werden muss.** Vorzubereiten
 sind Entscheidungen, damit der spätere Bau nicht falsch anfängt.
 
-**Jetzt festhalten (in `plan/monetarisierung/GERUEST.md`, kein Code):**
+**Jetzt festhalten (in `plan/ideen/monetarisierung/GERUEST.md`, kein Code):**
 1. **Die Berechtigung liegt nie in einem Dokument, das das Konto selbst schreiben darf.** Also **nicht**
    in `users/{uid}` (`nutzerFelder()`, firestore.rules:99) und nicht in `settings`: Ein Feld `premium` dort
    in die Positivliste aufzunehmen, hieße, dass sich jeder selbst freischaltet. Stattdessen eine eigene

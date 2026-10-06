@@ -1,0 +1,31 @@
+OK    styles.css: CSS-Regelklammern und Keyframe-Struktur stimmen.
+OK    Version 3.18.16: CACHE_NAME in sw.js stimmt.
+OK    Version 3.18.16: styles.css?v=... in index.html genau einmal vorhanden.
+OK    Version 3.18.16: app.js?v=... in index.html genau einmal vorhanden.
+OK    CHANGELOG.md: erste Überschrift beginnt mit "## 3.18.16 ".
+OK    node --check app.js erfolgreich.
+OK    node --check sw.js erfolgreich.
+OK    firebase.json: 2 sha256-Hashes in script-src gefunden.
+OK    index.html Skript #1: Hash steht in der CSP.
+OK    index.html Skript #2: Hash steht in der CSP.
+OK    impressum.html Skript #1: Hash steht in der CSP.
+OK    datenschutzerklaerung.html Skript #1: Hash steht in der CSP.
+OK    APP_SHELL: ./index.html vorhanden.
+OK    APP_SHELL: ./styles.css?v=... (VERSION) vorhanden.
+OK    APP_SHELL: ./app.js?v=... (VERSION) vorhanden.
+OK    APP_SHELL: ./impressum.html vorhanden.
+OK    APP_SHELL: ./datenschutzerklaerung.html vorhanden.
+OK    APP_SHELL: ./manifest.json vorhanden.
+OK    APP_SHELL: ./desktop-icon.png vorhanden.
+OK    APP_SHELL: ./apple-touch-icon.png vorhanden.
+OK    APP_SHELL: ./icon-192.png vorhanden.
+OK    APP_SHELL: ./icon-512.png vorhanden.
+OK    APP_SHELL: ./fonts/UthmanicHafs1Ver18.ttf vorhanden.
+OK    APP_SHELL: ./fonts/AmiriQuran-arabisch.woff2 vorhanden.
+OK    index.html: alle drei Firebase-modulepreload-Links vorhanden (firebase-app.js, firebase-auth.js, firebase-firestore.js).
+OK    index.html: modulepreload firebase-app.js Version 10.14.1 stimmt mit app.js überein.
+OK    index.html: modulepreload firebase-auth.js Version 10.14.1 stimmt mit app.js überein.
+OK    index.html: modulepreload firebase-firestore.js Version 10.14.1 stimmt mit app.js überein.
+OK    csp-build-Prüfung: kein offener Widerspruch (firebase.json/index.html).
+
+Alles in Ordnung.

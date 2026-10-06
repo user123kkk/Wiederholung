@@ -3,7 +3,7 @@
    Alt-Gegenproben zeigen die Wirkung, statt bloess alten Quelltext zu suchen. */
 const {spawnSync}=require('node:child_process');
 const path=require('node:path');
-const ordner=path.join(__dirname,'../../grossplan/befunde/werkzeuge');
+const ordner=path.join(__dirname,'../befund-skripte');
 for(const [name,args] of [
  ['konto_authrest_normal.js',[]],['konto_authrest.js',[]],['konto_authrest.js',['--gegenprobe']],
  ['konto_adressdialog.js',[]],['konto_adressdialog.js',['--gegenprobe']],

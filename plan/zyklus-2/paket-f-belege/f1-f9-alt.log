@@ -1,0 +1,10 @@
+{"mobile":false,"hosts":["www.gstatic.com"],"errors":[]}
+AssertionError [ERR_ASSERTION]: Datenschutz nennt Host nicht: www.gstatic.com
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_f_netz.js:23:30 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

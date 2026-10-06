@@ -1,0 +1,80 @@
+{
+  "neueDefekteVerweise": [],
+  "vorherBereitsDefekt": [
+    {
+      "file": "plan/archiv/audit/LOGBUCH.md",
+      "url": "../../ideen/analytics/INTERESSENABWAEGUNG.md",
+      "target": "plan/ideen/analytics/INTERESSENABWAEGUNG.md"
+    }
+  ],
+  "moduleMissing": [
+    {
+      "file": "plan/werkzeuge/befund-skripte/cpu_kalibrierung.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_adressdialog_app.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_adressdialog_app.js",
+      "target": "werkzeuge/pruefstand/stubs"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_authrest_app.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_authrest_app.js",
+      "target": "werkzeuge/pruefstand/stubs"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_entwuerfe.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_entwuerfe.js",
+      "target": "werkzeuge/pruefstand/stubs"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_import.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_import.js",
+      "target": "werkzeuge/pruefstand/stubs"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_registrierungsnachtrag_app.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_registrierungsnachtrag_app.js",
+      "target": "werkzeuge/pruefstand/stubs"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_umzug_app.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_umzug_app.js",
+      "target": "werkzeuge/pruefstand/stubs"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_weitergabe.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/konto_weitergabe.js",
+      "target": "werkzeuge/pruefstand/stubs"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/schreiben_vergleich.js",
+      "target": "werkzeuge/pruefstand/lib"
+    },
+    {
+      "file": "plan/werkzeuge/befund-skripte/schreiben_vergleich.js",
+      "target": "werkzeuge/pruefstand/t_schreiben"
+    }
+  ]
+}

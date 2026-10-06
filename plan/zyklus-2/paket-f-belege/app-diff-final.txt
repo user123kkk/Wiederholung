@@ -1,0 +1,824 @@
+diff --git a/app.js b/app.js
+index 5556df4..7cce2c7 100644
+--- a/app.js
++++ b/app.js
+@@ -36,7 +36,7 @@ const app = document.getElementById("app");
+ document.addEventListener("touchstart", () => {}, { passive: true });
+ 
+ /* ---------- Wer darf Kartensätze weitergeben? ----------
+-   Bis 3.5.1 war "Backup zum Weitergeben" an eine feste Nutzernummer (den
++   Bis 3.5.1 war "Sicherung zum Weitergeben" an eine feste Nutzernummer (den
+    Betreiber) gebunden - aus Sorge vor zwei Dingen: aus Versehen geteilte
+    halbfertige Saetze, und Kennungs-Kollisionen, wenn mehrere Leute
+    denselben satzId exportieren.
+@@ -49,7 +49,7 @@ document.addEventListener("touchstart", () => {}, { passive: true });
+    laesst sich gar nicht weitergeben - nur ein frisch selbst angelegter
+    Bereich, der beim ersten Teilen eine neue, zufaellige Kennung bekommt.
+ 
+-   Moeglicher spaeterer Bezahl-Baustein (siehe plan/monetarisierung/
++   Moeglicher spaeterer Bezahl-Baustein (siehe plan/ideen/monetarisierung/
+    GERUEST.md): wird erst gebaut, wenn der Betreiber diesen Strang
+    startet - heute kostenlos fuer alle. */
+ function istAutor() { return true; }
+@@ -135,7 +135,7 @@ function intervalForStufe(stufe) {
+    immer am selben Tag zurueck - 200er-Tage wechseln sich mit 0er-Tagen ab.
+    ±15 % streuen den Stapel auseinander, ohne den Rhythmus zu zerstoeren.
+    Nur beim Bewerten verwendet; beim manuellen Setzen einer Stufe im Formular
+-   gilt bewusst das glatte Intervall, damit die Beschriftung dort stimmt. */
++   gilt bewusst das glatte Intervall ohne zufaellige Streuung. */
+ function nextReviewForStufe(stufe, faktor) {
+   /* 3.18.5 (WIEDERHOLEN.md § 6): Regler je Bereich, nur im Probelauf -
+      kuerzt den Abstand, nie unter 1 Tag. Ohne Faktor wie immer. */
+@@ -220,13 +220,13 @@ function shuffled(arr) {
+ }
+ 
+ /* ---------- Datenvalidierung ---------- */
+-/* B3: Damit ein Tageslimit fuer NEUE Karten ueberhaupt moeglich ist, muss "neu"
+-   von "vergessen" unterscheidbar sein. Beides steht sonst auf Stufe 0.
++/* B3: ersteBewertung unterscheidet neue von schon eingefuehrten Karten.
++   Beides kann auf Stufe 0 stehen; das Feld steuert den Zustand, die
++   Protokollart n/w und das Lektions-Schloss.
+    ersteBewertung = null heisst: diese Karte wurde noch nie bewertet.
+    Fuer Karten aus der Zeit vor 1.6.0 gibt es das Feld nicht. Regel dafuer:
+    Stufe > 0 → wurde offensichtlich schon einmal bewertet, Datum aber unbekannt →
+-   Platzhalter. Stufe 0 → gilt als neu und laeuft einmalig durch das Tageslimit.
+-   Das ist gewollt: sonst braechte das Limit beim ersten grossen Import nichts. */
++   Platzhalter. Stufe 0 → gilt als noch nie bewertet. */
+ const LEGACY_FIRST_GRADE = "1970-01-01"; // "schon bewertet, Datum unbekannt"
+ /* E6: Ab wie vielen Rueckfaellen gilt eine Karte als "verbrannt"? Anki nennt
+    solche Karten leeches. Wenige davon fressen sonst einen Grossteil der
+@@ -406,7 +406,7 @@ function lektionOffeneKarten(b, set, byId = new Map(b.karten.map(c => [c.id, c])
+ }
+ function lektionSitzt(b, set, byId) { return lektionOffeneKarten(b, set, byId).length === 0; }
+ /* ---------- 3.7.0: „Lehrer gibt frei" ----------
+-   plan/lehrer-modus/GERUEST.md, Abschnitte L und M. Wurde ein Satz ueber einen
++   plan/ideen/lehrer-modus/GERUEST.md, Abschnitte L und M. Wurde ein Satz ueber einen
+    Code uebernommen, dessen Ersteller die Freischaltung selbst in der Hand
+    behaelt, traegt der Bereich `lehrerCode` (der Code) und `lehrerOffenBis`
+    (zuletzt bekannter Stand: die ersten N Lektionen sind offen). Dann - und nur
+@@ -549,8 +549,8 @@ const LEKTION_STUFE = 1;
+ /* ---------- 2.13.1: liegengebliebene Karten ----------
+    Die Serie zaehlt ueber ALLE Bereiche. Damit konnte ein einziger Bereich mit
+    wochenalten Karten sie sofort zerreissen - und zwar ohne dass jemand etwas
+-   falsch gemacht haette: Es genuegte, ein altes Backup einzuspielen, und die
+-   Serie war weg, weil dessen Karten alle seit Wochen ueberfaellig waren.
++   falsch gemacht haette: Es genuegte, eine alte Sicherung einzuspielen, und die
++   Serie war weg, weil deren Karten alle seit Wochen ueberfaellig waren.
+ 
+    Deshalb: Was laenger als so viele Tage ueberfaellig ist, gilt als
+    liegengeblieben. Es bricht die Serie nicht und blockiert sie nicht. Wer
+@@ -1221,7 +1221,7 @@ function arabFaktor() {
+ }
+ function normSettings(s) {
+   const g = s && ARAB_STUFEN.some(x => x.id === s.arabGroesse) ? s.arabGroesse : "normal";
+-  /* D5 (1.8.0): Datum des letzten Voll-Backups. Lag frueher in localStorage
++  /* D5 (1.8.0): Datum der letzten Vollsicherung. Lag frueher in localStorage
+      und war damit geraetelokal - auf einem neuen Handy hiess es immer "noch
+      nie gesichert", was aussieht, als waeren die Daten weg. */
+   const b = s && /^\d{4}-\d{2}-\d{2}$/.test(s.lastBackup) ? s.lastBackup : null;
+@@ -1282,7 +1282,7 @@ let offlineCacheAktiv = false;
+    angefragt wurde - hoechstens einmal pro Seitenleben, siehe
+    speicherDauerhaftAnfragen(). */
+ let speicherAngefragt = false;
+-/* Feedback-Board (22.09.2026, plan/feedback-board/AUFTRAG.md): oeffentliche
++/* Feedback-Board (22.09.2026, plan/archiv/feedback-board/AUFTRAG.md): oeffentliche
+    Sammlung "feedback", losgeloest vom eigenen Konto wie geteilteLektionen.
+    null = noch nicht geladen (Seite wurde noch nicht geoeffnet). */
+ let feedbackListe = null;
+@@ -1330,14 +1330,6 @@ let ladeTimer = null;
+    startWaechter() unten beim Start. */
+ let ersterRender = false;
+ let ladeLangsam = false;
+-/* Lehrer-Modus, Kernablauf (siehe plan/lehrer-modus/GERUEST.md, Abschnitt J):
+-   Ein per Link geteilter Kartensatz steckt komplett im URL-Fragment, nicht
+-   in der Datenbank - deshalb wird er schon beim Laden der Seite ausgelesen,
+-   lange bevor ein Nutzer eingeloggt ist. Verarbeitet wird er erst, sobald
+-   bereiche geladen sind (siehe teilLinkPruefen in initFirebase). null,
+-   sobald erledigt oder abgelehnt - sonst fragt jeder Re-Render erneut. */
+-/* Wird nicht mehr benoetigt: Code-basiertes Teilen hat keine URL-Fragment-Links */
+-// let ausstehenderTeilLink = leseTeilLinkAusHash();
+ /* E8: Merkt sich, ob GERADE der Ladebildschirm steht - siehe render(). Ohne
+    das trifft der Wechsel zur echten App die Blüten-Animation an einem
+    zufälligen Punkt ihres Zyklus und schneidet sie hart ab; das sah nach
+@@ -1725,7 +1717,6 @@ let ui = {
+   /* 9 (17.09.2026): leeres Pflichtfeld beim Kartenformular meldet sich direkt
+      am Feld, nicht im Dialog - siehe submitCardForm/karteSheet(). */
+   karteFeldFehler: null,
+-  statsScope: "alle",        // "alle" = alle Bereiche zusammen, "bereich" = nur der offene
+   session: null,
+   editId: null,
+   /* 16.09.2026: Die Detailansicht einer Karte in Verwalten (Beobachtung 1) -
+@@ -1779,16 +1770,9 @@ let ui = {
+      Ein Reiter ist ein Ort, an den man oft geht; hierher geht man selten. */
+   einstellungen: false,
+   drillOpen: false,           // Auswahl für Übungsmodus sichtbar?
+-  drillRueckkehrTab: null,    // E18: Herkunft der Auswahl, getrennt vom Stufenbereich drillVon
++  drillRueckkehrTab: null,    // E18: Reiter, aus dem die Uebungsauswahl geoeffnet wurde
+   drillSource: "stufen",      // "stufen" oder "sets" (siehe drillSetIds)
+   drillSetIds: new Set(),     // 2.21.0: im "sets"-Modus die angehakten Speicherkarten (mehrere möglich)
+-  /* 10 (17.09.2026): der Stufenbereich als Chip-Reihe statt zweier
+-     Klapplisten - von/bis stehen direkt hier, nicht mehr in zwei <select>.
+-     drillAnker ist der erste angetippte Wert des laufenden Zwei-Tipp-Vorgangs;
+-     null = der naechste Tipp startet eine neue Auswahl. Siehe waehleStufe(). */
+-  drillVon: null,
+-  drillBis: null,
+-  drillAnker: null,
+   openSetId: null,            // Speicherkarte, deren Kartenliste aufgeklappt ist
+   /* 18.09.2026, Smart Defaults (Video 3, PRINZIPIEN.md: "passt"): Wer schon
+      einmal in einer Sitzung Karten in eine bestehende Speicherkarte gelegt
+@@ -1813,7 +1797,7 @@ let ui = {
+      stehen jetzt in diesem Blatt, das nur bei Bedarf kommt. */
+   bereichMehr: false,
+   /* 3.0.0: Kurze Rueckmeldung fuer Handlungen, die bisher stumm waren
+-     (Backup heruntergeladen, Reihenfolge umgekehrt). { text, bis }.
++     (Sicherung heruntergeladen, Reihenfolge umgekehrt). { text, bis }.
+      Ausdruecklich NUR fuer Erfolge: Was anhaelt - ein Schreibfehler, eine
+      abgerissene Verbindung - gehoert in ein Banner, das stehen bleibt, nicht
+      in eine Meldung, die von selbst verschwindet. */
+@@ -2034,7 +2018,7 @@ function ausweisErneuernUndNeuLaden() {
+ }
+ /* 17.09.2026: derselbe veraltete Ausweis trifft auch das SCHREIBEN, nicht nur
+    das Laden - saveFehler() zeigte dafuer bisher nur den rohen Fehlercode und
+-   den Rat, ein Backup herunterzuladen, ohne je den Ausweis zu erneuern. Ein
++   den Rat, eine Sicherung herunterzuladen, ohne je den Ausweis zu erneuern. Ein
+    Neuladen wie beim Lesen ist hier aber die falsche Medizin: Es wuerde eine
+    noch nicht gespeicherte Karte im offenen Formular mitreissen. Deshalb nur
+    der Ausweis-Refresh, ohne reload - die naechsten Schreibversuche nutzen ihn
+@@ -2416,9 +2400,6 @@ async function initFirebase() {
+     ui.drillOpen = false;
+     ui.drillRueckkehrTab = null;
+     ui.drillSetIds = new Set();
+-    ui.drillVon = null;
+-    ui.drillBis = null;
+-    ui.drillAnker = null;
+     ui.lernSetId = null;
+     ui.lernOffen = new Set();
+     ui.lernLetzte = null;
+@@ -2575,7 +2556,7 @@ async function initFirebase() {
+           : (data.bereiche && typeof data.bereiche === "object" ? bereicheMapToArray(data.bereiche) : normBereiche(null));
+         /* Der Umzug laeuft von selbst los. Ein Knopf mit Erklaerung davor
+            haette bedeutet, dass jeder, der die App benutzt, erst verstehen
+-           muss, was ein Datenformat ist. Ein erzwungenes Backup ist auch
++           muss, was ein Datenformat ist. Eine erzwungene Sicherung ist auch
+            nicht noetig: Der alte Datensatz wird nicht angeruehrt und liegt
+            danach unveraendert daneben.
+            ui.umzug dient zugleich als Sperre - der Schnappschuss kann
+@@ -2624,7 +2605,7 @@ function saveFehler(e) {
+   saveWarned = true;
+   const naechsterSchritt = schreibFehler === "permission-denied" && schreibFehlerAusweisErneuert
+     ? "Versuch die letzte Änderung noch einmal zu speichern."
+-    : "Lade ein Backup herunter, bevor du weiterlernst.";
++    : "Lade eine Sicherung herunter, bevor du weiterlernst.";
+   dlgAlert("Deine letzte Änderung ist nicht in der Cloud angekommen – " + schreibFehlerText(schreibFehler) + ". " + naechsterSchritt, "Nicht gespeichert");
+ }
+ function schreibErfolg() { saveWarned = false; if (schreibFehler) { schreibFehler = null; render(); } }
+@@ -2952,9 +2933,8 @@ function persistCardGrade(bereichId, cardId, fields) {
+   fb.updateDoc(karteRef(cardId), {
+     stufe: fields.stufe,
+     nextReview: fields.nextReview,
+-    /* B3: gehoert zum Bewerten dazu - sonst gilt eine heute eingefuehrte Karte
+-       auf dem naechsten Geraet wieder als neu und frisst das Tageslimit ein
+-       zweites Mal. */
++    /* B3: gehoert zum Bewerten dazu, damit eine eingefuehrte Karte auf
++       dem naechsten Geraet nicht wieder als neu gilt. */
+     ersteBewertung: fields.ersteBewertung === undefined ? null : fields.ersteBewertung,
+     /* E6: gehoert in denselben Schreibvorgang, sonst koennen Stufe und
+        Rueckfallzaehler auseinanderlaufen. */
+@@ -2975,27 +2955,6 @@ function persistCardGrade(bereichId, cardId, fields) {
+     saveFehler(e);
+   });
+ }
+-/* 2.9.0: Einen Riss zuruecknehmen. Zwei Tage lang, danach nicht mehr.
+-   Gedacht fuer den Fall, dass die Serie an etwas gerissen ist, das mit dem
+-   Lernen nichts zu tun hatte - ein zweiter Bereich, der nach einem Import
+-   noch herumstand, ein zweites Geraet. Ohne diesen Knopf bleibt nur der Weg
+-   ueber die Firebase-Konsole. */
+-function streakRissZurueckliegtInTagen() {
+-  if (!streak.gerissenAm || !streak.vorher) return null;
+-  return streak.gerissenAm >= dateInDays(-2) ? streak.gerissenAm : null;
+-}
+-async function streakFortsetzen() {
+-  if (!streakRissZurueckliegtInTagen()) return;
+-  const ok = await dlgConfirm("Die Serie stand bei " + streak.vorher +
+-    " und ist am " + fmtDatum(streak.gerissenAm) + " gerissen. Auf diesen Stand zurücksetzen?",
+-    { title: "Serie fortsetzen?", okLabel: "Fortsetzen" });
+-  if (!ok) return;
+-  serieSockelSetzen(streak.vorher);
+-  streak.gerissenAm = null;
+-  streak.vorher = 0;
+-  persistStreak(["gerissenAm", "vorher"]);
+-  render();
+-}
+ /* ---------- 2.10.2: nur schreiben, was sich geaendert hat ----------
+    Vorher schrieb jeder Anlass den KOMPLETTEN Serien-Stand aus dem Speicher
+    zurueck - auch die blosse Tagespruefung, die nur ein Datum setzt. War die
+@@ -3307,7 +3266,7 @@ function authErrorText(e) {
+   /* 3.17.15: Rueckfall ohne Systemcode (fehlerKlartext loggt ihn). */
+   return (e && AUTH_ERRORS[e.code]) || fehlerKlartext(e);
+ }
+-/* 22.09.2026 (Block 14, plan/redesign-oberflaeche): Betreiber-Meldung vom
++/* 22.09.2026 (Block 14, plan/archiv/redesign-oberflaeche): Betreiber-Meldung vom
+    Handy im Flugmodus - der Anmelden-Knopf drehte sich unbegrenzt weiter,
+    "laedt alles die ganze zeit". Firebase Auth wirft "network-request-failed"
+    normalerweise selbst, aber offenbar nicht zuverlaessig schnell genug bei
+@@ -3919,7 +3878,7 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+      2. die E-Mail tippen: ein Name laesst sich nicht blind druecken
+         (dieselbe Begruendung wie beim Bereich, deleteBereich)
+      3. gedrueckt halten: ein versehentlicher Tipp loest nichts aus
+-   Das Backup wird weiter vorher angeboten - jetzt aber als eigener Knopf auf
++   Die Sicherung wird weiter vorher angeboten - jetzt aber als eigener Knopf auf
+    der Seite und noch einmal unmittelbar vor dem Loeschen. */
+ const KONTO_LOESCHEN_HALTEN_MS = 1800;
+ function kontoLoeschenBereit() {
+@@ -4119,13 +4078,13 @@ function setArabGroesse(id) {
+    der A4 (Vollueberschreiben) noch offen ist. Was sich nicht ableiten laesst,
+    steht deshalb hier auch nicht. */
+ 
+-/* Welche Karten zaehlen: alle Bereiche zusammen oder nur der offene?
++/* Alle freigegebenen Karten aus allen Bereichen zaehlen.
+    2.3.0: Gesperrte Karten bleiben draussen. Sonst stuenden bei einem frisch
+    eingespielten Satz 500 Karten in der Gruppe "neu" und der Fortschritt saehe
+    aus, als haette man nichts geschafft - obwohl die erste Lektion einmal geschafft ist. */
+ function statsCards() {
+   if (bereiche === null) return [];
+-  const quelle = ui.statsScope === "bereich" ? [currentBereich()] : bereiche;
++  const quelle = bereiche;
+   const out = [];
+   for (const b of quelle) {
+     const frei = freieIdsFor(b);
+@@ -4398,9 +4357,8 @@ function tagKurz(iso) {
+   return Number(p[2]) + "." + Number(p[1]) + ".";
+ }
+ 
+-/* Vorschau auf die naechsten sieben Tage. Gezaehlt werden nur Wiederholungen:
+-   Wann eine neue Karte drankommt, entscheidet das Tageslimit und nicht ihr
+-   Faelligkeitsdatum - sie hier mitzuzaehlen ergaebe eine Zahl, die nie eintritt.
++/* Vorschau auf die naechsten sieben Tage. Gezaehlt werden nur Wiederholungen;
++   neue Karten sind noch nicht eingefuehrt und haben keinen Wiederholungsabstand.
+    Der heutige Balken enthaelt auch alles Ueberfaellige aus der Vergangenheit. */
+ function vorschau7(cards) {
+   const t = todayStr();
+@@ -4421,7 +4379,7 @@ function vorschau7(cards) {
+    bereichsuebergreifend sein kann und die Knoepfe wissen muessen, wohin. */
+ function verbrannteKarten() {
+   if (bereiche === null) return [];
+-  const quelle = ui.statsScope === "bereich" ? [currentBereich()] : bereiche;
++  const quelle = bereiche;
+   const out = [];
+   for (const b of quelle) {
+     const frei = freieIdsFor(b);
+@@ -4486,8 +4444,8 @@ const LAST_BACKUP_KEY = "adrabic-last-backup";
+    einem neuen Handy hiess es deshalb immer "noch nie gesichert", was aussieht,
+    als waeren die Daten weg.
+    Der localStorage wird weiter GELESEN, damit ein altes Datum nicht verloren
+-   geht, aber nur als Rueckfallebene. Geschrieben wird es beim naechsten
+-   Backup ohnehin in die Cloud - eine eigene Umzugsroutine waere zusaetzlicher
++   geht, aber nur als Rueckfallebene. Geschrieben wird es bei der naechsten
++   Sicherung ohnehin in die Cloud - eine eigene Umzugsroutine waere zusaetzlicher
+    Schreibzugriff fuer einen einzigen Wert. */
+ function lastBackupDate() {
+   if (settings.lastBackup) return settings.lastBackup;
+@@ -4526,9 +4484,9 @@ function exportBackup(onlyCurrent) {
+     bereiche: onlyCurrent ? [currentBereich()] : bereiche
+   };
+   const nameSlug = onlyCurrent ? "-" + slugName(currentBereich().name) : "";
+-  dateiSpeichern(data, "adrabic-backup" + nameSlug + "-" + todayStr() + ".json");
++  dateiSpeichern(data, "adrabic-sicherung" + nameSlug + "-" + todayStr() + ".json");
+   if (!onlyCurrent) {
+-    /* Nur das Voll-Backup zaehlt - ein Export eines einzelnen Bereichs
++    /* Nur die Vollsicherung zaehlt - ein Export eines einzelnen Bereichs
+        sichert eben nicht alles. */
+     settings.lastBackup = todayStr();
+     persistSettings("lastBackup");
+@@ -4588,7 +4546,9 @@ function weitergabeBestaetigung(b, version, modus) {
+   const lektionen = lektionenVon(b);
+   const ohneLektion = b.karten.filter(c => !lektionen.some(s => s.cardIds.indexOf(c.id) !== -1)).length;
+   const eigeneAnzahl = (b.sets || []).filter(s => (s.art || "eigen") === "eigen").length;
+-  let txt = b.karten.length + ' Karten, ' + lektionen.length + ' Lektionen. Nur „' + lektionen[0].name + '" ist offen, der Rest kommt gesperrt an.';
++  let txt = mz(b.karten.length, 'Karte', 'Karten') + ', ' + mz(lektionen.length, 'Lektion', 'Lektionen') + '. ' +
++    (lektionen.length === 1 ? '„' + lektionen[0].name + '“ ist offen.' :
++      'Nur „' + lektionen[0].name + '“ ist offen, der Rest kommt gesperrt an.');
+   if (ohneLektion > 0) {
+     txt += '\n\nAchtung: ' + mz(ohneLektion, 'Karte liegt', 'Karten liegen') + ' in keiner Lektion. ' + (ohneLektion === 1 ? 'Die bleibt' : 'Die bleiben') + ' beim Empfänger für immer gesperrt.';
+   }
+@@ -4895,8 +4855,8 @@ async function zeigeTeileCode(code) {
+ 
+ /* ---------- 2.5.0: Nachschub für einen vorhandenen Kartensatz ----------
+ 
+-   Bis 2.4.0 legte jeder Import einen NEUEN Bereich an. Fuer ein normales
+-   Backup ist das richtig - es schuetzt davor, dass eine alte Datei einen
++   Bis 2.4.0 legte jeder Import einen NEUEN Bereich an. Fuer eine normale
++   Sicherung ist das richtig - es schuetzt davor, dass eine alte Datei einen
+    neueren Stand ueberbuegelt. Fuer die zweite Ausgabe eines weitergegebenen
+    Kartensatzes ist es fatal: Wer Lektion 6-10 nachbekommt, haette danach
+    zweimal "Medina 1", die ersten 125 Karten doppelt, und seinen Lernstand
+@@ -4948,7 +4908,7 @@ function satzUnterschied(ziel, datei) {
+ /* Karten des Ziels nach Herkunfts-Nummer.
+ 
+    2.10.0: Fehlt die Herkunfts-Nummer, wird ersatzweise das arabische Wort
+-   genommen. Grund: Eine Datei, die aus einem normalen Backup stammt, hat
++   genommen. Grund: Eine Datei, die aus einer normalen Sicherung stammt, hat
+    keine Herkunfts-Nummern - traf sie auf einen gefuehrten Satz, passte KEINE
+    einzige Karte, und das Zusammenfuehren tauschte alle 133 gegen 133 neue
+    aus. Fuer den Lernenden hiess das: Lernstand weg. Mit dem Wort als
+@@ -5036,7 +4996,7 @@ async function satzZusammenfuehren(ziel, datei, kontoRef = userDocRef) {
+     text = "Diese Ausgabe hast du schon (Nr. " + (ziel.satzVersion || 0) + ").\n\n" + text;
+   }
+   /* 2.10.0: Notbremse. Faellt mehr als die Haelfte weg, stimmt mit der Datei
+-     etwas nicht - etwa ein normales Backup, das auf einen gefuehrten Satz
++     etwas nicht - etwa eine normale Sicherung, die auf einen gefuehrten Satz
+      trifft. Lieber einmal zu viel gefragt als ein Lernstand weniger. */
+   if (d.entfernt.length > ziel.karten.length / 2 && ziel.karten.length > 0) {
+     text = "Achtung: " + d.entfernt.length + " von " + ziel.karten.length +
+@@ -5114,17 +5074,13 @@ async function satzZusammenfuehren(ziel, datei, kontoRef = userDocRef) {
+   return d;
+ }
+ 
+-/* Herausgezogen aus importBackupFile(), damit der Link-Entwurf aus
+-   lehrer-modus/GERUEST.md (teilLinkPruefenUndVerarbeiten(), Abschnitt J)
+-   denselben Weg nimmt wie ein Datei-Import - dieselben Grenzen, dieselbe
+-   Zusammenfuehrungs-Logik, keine zweite, moeglicherweise abweichende
+-   Fassung. `data` hat die Form {bereiche: [...]}, egal ob sie aus einer
+-   Datei oder aus einem per Link geteilten Fragment kommt. */
++/* Datei-Import und per Code geteilter Kartensatz nutzen dieselben Grenzen
++   und dieselbe Zusammenfuehrung. data hat die Form {bereiche: [...]}. */
+ async function verarbeiteImportDaten(data, kontoRef = userDocRef, geteilt = false) {
+   const giltNoch = () => !!kontoRef && userDocRef === kontoRef && !kontoWirdGeloescht;
+   if (!giltNoch()) return;
+   if (!data || !Array.isArray(data.bereiche)) {
+-    await dlgAlert("Das ist kein gültiger Lernkarten-Bestand.", "Import nicht möglich");
++    await dlgAlert("Das ist kein gültiger Adrabic-Bestand.", "Import nicht möglich");
+     return;
+   }
+   /* Anzahl pruefen, bevor normBereiche den ganzen Bestand aufbaut und
+@@ -5172,7 +5128,7 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef, geteilt = fals
+   const berichte = [];
+   for (const b of imported) {
+     /* 2.11.5: Zusammengefuehrt wird nur, was auch als Kartensatz gedacht
+-       war. Ein gewoehnliches Backup traegt zwar dieselbe Kennung - es ist
++       war. Eine gewoehnliche Sicherung traegt zwar dieselbe Kennung - sie ist
+        aber der Arbeitsstand des Autors samt seiner eigenen Speicherkarten,
+        und die haben im Satz eines anderen nichts verloren. Es entsteht dann
+        wie bei jeder normalen Datei ein eigener Bereich. */
+@@ -5225,7 +5181,7 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef, geteilt = fals
+        (§ 12, LG Muenchen I). Ohne eigene quelleId (weil der Absender sie z. B.
+        ueber das SDK auf null gesetzt hat) wuerde die alte id nach dem
+        Tauschen unwiderruflich verloren gehen und die Karte faelschlich als
+-       "eigen" gelten. Ein normales Backup (kein satzId, nicht gefuehrt) ist
++       "eigen" gelten. Eine normale Sicherung (kein satzId, nicht gefuehrt) ist
+        der eigene Arbeitsstand und bleibt unangetastet. */
+     if (b.gefuehrt || b.satzId) {
+       b.karten.forEach(c => { c.quelleId = c.quelleId || c.id || ("q-" + genId()); });
+@@ -5251,8 +5207,8 @@ async function verarbeiteImportDaten(data, kontoRef = userDocRef, geteilt = fals
+     b.zeilen.forEach(c => { c.textId = textTausch.get(c.textId); });
+     const neu = {
+       id: genId(), name: name,
+-      /* 2.3.0: Schreibschutz, Kennung und Nummer kommen aus der Datei. Ein
+-         normales Backup hat sie nicht - dann entsteht wie bisher ein ganz
++      /* 2.3.0: Schreibschutz, Kennung und Nummer kommen aus der Datei. Eine
++         normale Sicherung hat sie nicht - dann entsteht wie bisher ein ganz
+          gewoehnlicher, frei bearbeitbarer Bereich. */
+       gefuehrt: b.gefuehrt === true,
+       satzId: b.satzId || null,
+@@ -5293,11 +5249,11 @@ function importBackupFile(file) {
+     try {
+       data = JSON.parse(reader.result);
+     } catch (e) {
+-      await dlgAlert("Diese Datei ist keine gültige Backup-Datei (kein lesbares JSON).", "Import nicht möglich");
++      await dlgAlert("Diese Datei ist keine gültige Sicherungsdatei (kein lesbares JSON).", "Import nicht möglich");
+       return;
+     }
+     if (!data || !Array.isArray(data.bereiche)) {
+-      await dlgAlert("Diese Datei ist keine gültige Lernkarten-Backup-Datei.", "Import nicht möglich");
++      await dlgAlert("Diese Datei ist keine gültige Sicherungsdatei.", "Import nicht möglich");
+       return;
+     }
+     await verarbeiteImportDaten(data, kontoRef);
+@@ -5325,15 +5281,30 @@ async function addBereich() {
+   selectBereich(b.id);
+   if (gabEsSchon) zeigeToast("„" + n + "“ gibt es schon – geöffnet");
+ }
++/* F10: gemeinsame Liste fuer Bereichs- und Reiterwechsel. Ein Bereichswechsel
++   behaelt seine Unterseite, solange sie im neuen Bereich weiter passt. */
++function ebenenSchliessen(seiteBehalten = false) {
++  ui.einstellungen = false;
++  if (!seiteBehalten) ui.seite = null;
++  ui.wahlSheet = null;
++  ui.setArtSheetId = null;
++  ui.karteSheet = false;
++  ui.bereichSheet = false;
++  ui.bereichMehr = false;
++  ui.cardDetailId = null;
++  ui.neuWahl = false;
++  ui.textAnlegen = null;
++  ui.textAnsicht = null;
++  ui.zeileEdit = null;
++  ui.textLernen = null;
++  ui.drillOpen = false;
++}
+ function selectBereich(bereichId) {
+   if (!bereiche.some(b => b.id === bereichId)) return;
+   ui.bereichId = bereichId;
+   bereichGeraetMerken(bereichId);
+   lehrerStandAktualisieren(bereiche.find(b => b.id === bereichId));
+-  ui.bereichSheet = false;     // 3.0.0: Das Sheet hat seine Aufgabe erfuellt.
+-  /* Sonst bleibt der Einstellungs-Bildschirm stehen: Der Bereich wechselt im
+-     Hintergrund, aber man sieht es erst nach "Fertig". */
+-  ui.einstellungen = false;
++  ebenenSchliessen(true);
+   ui.session = null;
+   /* Die Speicherkarte gehoert zu ihrem Bereich - nach einem Wechsel zeigte
+      die Durchsicht sonst auf eine Auswahl, die es hier nicht gibt. */
+@@ -5342,23 +5313,15 @@ function selectBereich(bereichId) {
+   /* 3.17.34 (REST-6): Die Lektionen-Seite gehoert zum Bereich - ohne Lektionen stand dort sonst eine leere Seite. */
+   if (ui.seite === "lektionen" && lektionenVon(bereiche.find(b => b.id === bereichId)).length === 0) ui.seite = null;
+   ui.editId = null;
+-  ui.cardDetailId = null;
+-  /* 3.18.1: Texte gehoeren zu ihrem Bereich. */
+-  ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; 
+   resetFormDraft();
+   ui.searchQuery = "";
+   ui.searchAll = false;
+   ui.kartenSeite = 0;
+   ui.selectMode = false;
+   ui.selectedIds = new Set();
+-  ui.drillOpen = false;
+   ui.drillSource = "stufen";
+   ui.drillSetIds = new Set();
+-  ui.drillVon = null;
+-  ui.drillBis = null;
+-  ui.drillAnker = null;
+   ui.openSetId = null;
+-  ui.setArtSheetId = null;
+   /* 15.09.2026: Ohne das blieb die Seite auf der Scroll-Position des vorigen
+      Bereichs stehen - wer unten in "Medina" war und zu einem anderen
+      Bereich wechselte, landete dort ebenfalls unten statt oben. */
+@@ -5388,7 +5351,7 @@ async function deleteBereich() {
+   }
+   const b = currentBereich();
+   /* 3.17.12 (Station 12): Ein leerer Bereich (keine Karte, keine
+-     Speicherkarte) hat nichts, was ein Backup oder das Abtippen des Namens
++     Speicherkarte) hat nichts, was eine Sicherung oder das Abtippen des Namens
+      schuetzen koennte - vorher lud die App trotzdem eine Datei herunter und
+      verlangte den Namen ("Es werden 0 Karte(n) ... geloescht"). */
+   if (b.karten.length === 0 && !(b.sets || []).length && !(b.texte || []).length && !(b.zeilen || []).length) {
+@@ -5399,7 +5362,7 @@ async function deleteBereich() {
+   }
+   /* 2.11.0: Zwei Sicherungen statt einer Nachfrage, die man wegtippt.
+ 
+-     Erstens laedt die App vorher ein Backup dieses Bereichs herunter - ohne
++     Erstens laedt die App vorher eine Sicherung dieses Bereichs herunter - ohne
+      zu fragen. Es kostet nichts und ist im Ernstfall alles.
+ 
+      Zweitens muss der Name getippt werden. Ein „Ja"-Knopf laesst sich blind
+@@ -5415,7 +5378,7 @@ async function deleteBereich() {
+   const eingabe = await dlgPrompt(
+     wasWeg.join(" und ") + ' mit dem gesamten Lernstand ' + (b.karten.length + texteHier === 1 ? 'wird' : 'werden') + ' gelöscht. Das lässt sich nicht rückgängig machen.\n\n' +
+     (b.teilCode ? 'Der Code ' + b.teilCode + ' funktioniert danach nicht mehr.\n\n' : '') +
+-    'Ein Backup dieses Bereichs wurde gerade zum Herunterladen angeboten – ' +
++    'Eine Sicherung dieses Bereichs wurde gerade zum Herunterladen angeboten – ' +
+     'sieh in deinen Downloads nach, dass die Datei wirklich da ist.\n\n' +
+     'Tipp zum Bestätigen den Namen des Bereichs ein: ' + b.name,
+     "", { title: "Bereich löschen?", okLabel: "Endgültig löschen", danger: true });
+@@ -5801,7 +5764,6 @@ function openDrillPicker(source, rueckkehrTab = null) {
+     ui.drillSource = "stufen";
+     ui.drillSetIds = new Set();
+   }
+-  setzeVollenStufenBereich();
+   /* 3.15.0: jeder Stand einzeln an/aus (ui.drillGruppen, Indizes in
+      UEBEN_GRUPPEN) - zu Beginn alle, zu denen es Karten gibt. */
+   ui.drillGruppen = new Set(UEBEN_GRUPPEN.map((g, i) => i).filter(i => uebbareKarten().some(c => c.stufe >= UEBEN_GRUPPEN[i].von && c.stufe <= UEBEN_GRUPPEN[i].bis)));
+@@ -5811,22 +5773,10 @@ function openDrillPicker(source, rueckkehrTab = null) {
+   springeZu("drill-box");
+   render();
+ }
+-/* 10: Vorbelegung wie frueher bei den zwei <select> - der ganze verfuegbare
+-   Bereich ist zu Beginn markiert, nicht nur eine Stufe. */
+-function setzeVollenStufenBereich() {
+-  const stufen = availableStufen();
+-  ui.drillVon = stufen.length ? stufen[0] : null;
+-  ui.drillBis = stufen.length ? stufen[stufen.length - 1] : null;
+-  ui.drillAnker = null;
+-}
+-/* 10: Erster Tipp auf einen Chip beginnt eine neue Auswahl (nur diese eine
+-   Stufe), der zweite Tipp spannt den Bereich zwischen beiden auf - danach
+-   startet der naechste Tipp wieder neu. Die Reihenfolge der beiden Tipps
+-   spielt keine Rolle, min/max richten sich selbst aus. */
+ /* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
+    mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
+    Intern bleibt es ein Stufenbereich: von/bis sind die Grenzen der
+-   gewaehlten Zustaende, startDrill() filtert wie bisher nach c.stufe.
++   gewaehlten Zustaende; startDrillGruppen filtert nach c.stufe.
+    Betreiber am 24.09.2026: "Sachen wie die knoepfe dicher, wo steht in x tagen, diese zahlen entfernen. Kein bock dass man mein system leicht herauskriegen kann." */
+ /* 3.13.0: dieselben Grenzen wie KARTEN_ZUSTAENDE. "neu" und "im Lernen"
+    liegen beide auf Stufe 0 und lassen sich nach der Stufe nicht trennen -
+@@ -5838,15 +5788,7 @@ const UEBEN_GRUPPEN = [
+   { label: "gefestigt",       von: 7,  bis: 9 },
+   { label: "dauerhaft",       von: 10, bis: MAX_STUFE }
+ ];
+-function stufenBereichName(von, bis) {
+-  const g = UEBEN_GRUPPEN.filter(x => x.von <= bis && x.bis >= von);
+-  if (!g.length) return "";
+-  /* 3.14.0: alles gewaehlt - "neu & im Lernen bis dauerhaft" brach im
+-     Ueben-Banner auf zwei Zeilen um und sagte nur "alle". */
+-  if (g.length === UEBEN_GRUPPEN.length) return "alle Karten";
+-  return g.length === 1 ? g[0].label : g[0].label + " bis " + g[g.length - 1].label;
+-}
+-/* 3.15.0: waehleStufe() (Zwei-Tipp-Bereich) entfernt - die Chips schalten
++/* 3.15.0: Zwei-Tipp-Bereich entfernt - die Chips schalten
+    jetzt einzeln an/aus, siehe case "stufe-chip" und startDrillGruppen(). */
+ /* 3.15.0: Ueben nach gewaehlten Staenden (Indizes in UEBEN_GRUPPEN). */
+ function gruppenName(gruppen) {
+@@ -6154,7 +6096,7 @@ async function submitCardForm() {
+           card.stufe = newStufe;
+           card.nextReview = newStufe === 0 ? todayStr() : dateInDays(intervalForStufe(newStufe));
+           /* Wer hier von Hand eine Stufe setzt, erklaert die Karte als bekannt.
+-             Sie darf dann nicht mehr als "neu" durch das Tageslimit laufen. */
++             Sie gilt dann nicht mehr als neu. */
+           if (newStufe > 0 && istNeueKarte(card)) card.ersteBewertung = todayStr();
+           patch[pfad + ".stufe"] = card.stufe;
+           patch[pfad + ".nextReview"] = card.nextReview;
+@@ -6418,7 +6360,7 @@ function gradeCard(kind) {
+       verlaufEpoche: verlaufEpoche,
+       verlaufArt: warNeu ? "n" : "w"
+     };
+-    // B3: ab jetzt gilt die Karte als eingeführt und zählt gegen das Tageslimit
++    // B3: ab jetzt gilt die Karte als eingefuehrt; das Protokoll zaehlt sie einmal als n.
+     if (istNeueKarte(card)) card.ersteBewertung = todayStr();
+     /* 3.18.5: Regler (nur Probelauf) - vor der Bewertung, damit die
+        Stufe von vorher zaehlt; Rueckgaengig stellt ihn mit zurueck. */
+@@ -6488,7 +6430,7 @@ function gradeCard(kind) {
+    Bis 3.13 verschwand die Karte beim Knopfdruck einfach (render() ersetzt
+    das Markup), nur beim Wischen flog sie weg. Jetzt fliegt sie bei jedem
+    Weg gleich: Sicher nach rechts, Nicht nach links (wie das Wischen), Fast
+-   sinkt nach unten weg, im Ueben ("weiter") nach links oben. Die naechste
++   sinkt nach unten weg. Die naechste
+    Karte steigt gleichzeitig vom Stapel auf (.study-flaeche--kommt) - aus
+    zwei Bewegungen wird ein Wechsel.
+    Technik: render() ersetzt #app, also wird VOR dem Neuzeichnen eine Kopie
+@@ -8485,7 +8427,7 @@ function renderAuth() {
+      wo man hinsieht, und nichts bewegt sich. */
+   if (ui.authError) html += '<div class="error-box auth-meldung" role="alert">' + ikon("warnung", "i-sm") +
+     '<div class="banner__text">' + esc(ui.authError) + '</div></div>';
+-  /* 3.17.37 (G-087): role="status" entfernt, siehe renderVerification(). */
++  /* 3.17.37 (G-087): role="status" entfernt, siehe renderPendingVerification(). */
+   if (ui.authInfo) html += '<div class="info-box auth-meldung">' + ikon("haken", "i-sm") +
+     '<div class="banner__text">' + esc(ui.authInfo) + '</div></div>';
+ 
+@@ -8920,7 +8862,7 @@ function bannerSchreibfehler() {
+   }
+   return bannerFehler("Nicht gespeichert:",
+     'Änderungen kommen gerade nicht in der Cloud an – ' + esc(schreibFehlerText(schreibFehler)) + '. ' +
+-    'Lade ein Backup herunter, bevor du weiterlernst.');
++    'Lade eine Sicherung herunter, bevor du weiterlernst.');
+ }
+ 
+ let letzterAnsichtSchluessel = null, letzterOverlaySchluessel = null;
+@@ -9071,7 +9013,7 @@ function renderMain() {
+     }
+ 
+     const backupAge = ui.einstellungen ? 0 : daysSinceLastBackup();
+-    /* 3.12.0: erst ab zehn Karten. Vorher stand "Du hast noch nie ein Backup
++    /* 3.12.0: erst ab zehn Karten. Vorher stand "Du hast noch nie eine Sicherung
+        heruntergeladen" schon ueber dem allerersten, leeren Bildschirm nach
+        der Anmeldung - eine Mahnung, bevor es irgendetwas zu verlieren gibt,
+        und direkt neben der Start-Liste die zweite Aufgabe, die keine ist. */
+@@ -9079,8 +9021,8 @@ function renderMain() {
+     if (kartenGesamt >= 10 && (backupAge === null || backupAge >= 14)) {
+       kopf += '<div class="banner-info banner-leise">' + ikon("sichern", "i-sm") +
+         '<div class="banner__text">' +
+-        (backupAge === null ? "Du hast noch nie ein Backup heruntergeladen."
+-                            : "Dein letztes Backup ist " + backupAge + " Tage her.") +
++        (backupAge === null ? "Du hast noch nie eine Sicherung heruntergeladen."
++                            : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
+         ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
+     }
+   } else if (schreibFehler) {
+@@ -9405,9 +9347,6 @@ function renderMain() {
+     document.querySelectorAll('input[name="drill-mode"]').forEach(el => {
+       el.addEventListener("change", e => {
+         ui.drillSource = e.target.value;
+-        /* 10: wie vorher bei den zwei <select> - "Nach Stufen" beginnt
+-           jedesmal wieder beim vollen Bereich, keine Reste vom letzten Mal. */
+-        if (ui.drillSource === "stufen") setzeVollenStufenBereich();
+         render();
+       });
+     });
+@@ -9561,7 +9500,7 @@ function renderFaden(b, due) {
+     html += '<p class="hint" style="padding:0 0 12px">' +
+       (angefangen > 0
+         ? 'Noch ' + ungelernt.length + ' von ' + inLektion.length + ' Karten.'
+-        : inLektion.length + ' Karten, noch keine davon gelernt.') + '</p>';
++        : mz(inLektion.length, 'Karte', 'Karten') + ', noch keine davon gelernt.') + '</p>';
+     html += '<button data-action="lern-set" data-id="' + esc(akt.id) + '">' +
+       (angefangen > 0 ? "Weiter durchgehen" : "Durchgehen") + '</button>';
+     if (wiederholungen.length > 0) {
+@@ -9667,7 +9606,7 @@ function merkSetOeffnen() {
+    Gesammelt ist hier alles, was man selten tut und einmal einstellt. Die
+    Ordnung folgt der Frage, WORAN man dreht: erst wie es aussieht, dann die
+    eigenen Daten, dann das Konto. Jeder Abschnitt sagt in einem Satz, was
+-   er bewirkt - gerade Backup und Import sind Handlungen, die man nicht
++   er bewirkt - gerade Sicherung und Import sind Handlungen, die man nicht
+    rückgängig macht. */
+ /* ============================================================================
+    EINSTELLUNGEN — 3.2.0: eine Liste, keine Wand
+@@ -9693,7 +9632,7 @@ const SEITEN_TITEL = {
+   daten: "Sichern & einspielen",
+   /* 3.11.0: eigene Seite. Bis dahin lag "Code einloesen" unten auf
+      "Einspielen" und "Per Code teilen" unten auf "Sichern" - zwei Haelften
+-     derselben Sache, versteckt hinter zwei Begriffen, die von Backups
++     derselben Sache, versteckt hinter zwei Begriffen, die von Sicherungen
+      sprechen. Siehe renderEinstellungen. */
+   kartensaetze: "Kartensatz per Code",
+   "konto-loeschen": "Konto löschen",
+@@ -9806,7 +9745,7 @@ function renderEinstellungen() {
+   /* 22.09.2026: Ideen & Vorschlaege steht NEBEN Fehler melden, ersetzt es
+      nicht - ein Fehlerbericht ("Login geht nicht", mit Kontaktweg) passt
+      schlecht in eine oeffentliche, hochvotbare Liste. Siehe
+-     plan/feedback-board/AUFTRAG.md. */
++     plan/archiv/feedback-board/AUFTRAG.md. */
+   html += einstZeile({ action: "einst-seite", id: "feedback", icon: "stern", text: "Ideen & Vorschläge" });
+   html += einstZeile({ action: "open-error-modal", icon: "warnung", text: "Fehler melden" });
+   html += einstZeile({ action: "installation-hilfe", icon: "karten", text: "App auf den Home-Bildschirm legen" });
+@@ -9876,11 +9815,11 @@ function renderEinstellungenSeite(id) {
+     const tage = Object.keys(verlauf).length;
+     html += '<div class="card">';
+     html += '<h3>Sichern</h3>';
+-    html += '<p class="hint">Ein Backup ist eine Datei auf deinem Gerät. Sie hängt an nichts – ' +
++    html += '<p class="hint">Eine Sicherung ist eine Datei auf deinem Gerät. Sie hängt an nichts – ' +
+       'geht das Konto verloren, ist sie das Einzige, was bleibt.</p>';
+     html += '<div class="' + (alter === null || alter >= 14 ? "banner-info" : "banner-info banner-leise") +
+       '" style="margin:var(--space-4) 0 0">' + ikon("sichern", "i-sm") + '<div class="banner__text">' +
+-      (alter === null ? "Du hast noch nie ein Backup heruntergeladen."
++      (alter === null ? "Du hast noch nie eine Sicherung heruntergeladen."
+        : alter === 0 ? "Zuletzt gesichert: heute."
+        : "Zuletzt gesichert vor " + alter + " Tag" + (alter === 1 ? "" : "en") + ".") + '</div></div>';
+     html += '<div class="form-actions">';
+@@ -9891,7 +9830,7 @@ function renderEinstellungenSeite(id) {
+ 
+     html += '<div class="card" style="margin-top:var(--stack)">';
+     html += '<h3>Einspielen</h3>';
+-    html += '<p class="hint">Eine Backup-Datei oder einen Kartensatz laden. Gehört die Datei zu einem ' +
++    html += '<p class="hint">Eine Sicherungsdatei oder einen Kartensatz laden. Gehört die Datei zu einem ' +
+       'Satz, den du schon hast, wird er ergänzt – dein Lernstand bleibt. Einen <strong>Code</strong> ' +
+       'löst du unter „Kartensatz per Code“ ein.</p>';
+     html += '<div class="form-actions">';
+@@ -9926,7 +9865,7 @@ function renderEinstellungenSeite(id) {
+ 
+     if (!istGefuehrt(b)) {
+       /* Lehrer-Modus, Kernablauf - siehe teileLektionCode() in app.js und
+-         plan/lehrer-modus/GERUEST.md, Abschnitt H. Code-basiertes Teilen skaliert
++         plan/ideen/lehrer-modus/GERUEST.md, Abschnitt H. Code-basiertes Teilen skaliert
+          bis 3000+ Karten und ist nicht invasiv – kein URL-Fragment, nur kurze Codes.
+          Der Datei-Knopf "Kartensatz zum Weitergeben" ist seit 3.7.2 weg: derselbe
+          Inhalt laeuft ueber "Code – Fortschritt schaltet frei". */
+@@ -9979,7 +9918,7 @@ function renderEinstellungenSeite(id) {
+ }
+ 
+ /* 3.12.0: die Loeschen-Seite. Erst steht da, WAS verschwindet - in Zahlen
+-   aus dem eigenen Konto, nicht als allgemeiner Satz. Dann das Backup, dann
++   aus dem eigenen Konto, nicht als allgemeiner Satz. Dann die Sicherung, dann
+    die zwei Huerden. Der Knopf ist gesperrt, bis die Adresse stimmt; gehalten
+    fuellt er sich von links nach rechts (styles.css, .halten). */
+ function renderKontoLoeschen() {
+@@ -10011,7 +9950,7 @@ function renderKontoLoeschen() {
+   html += '<p class="hint konto-sicherhinweis">' + (alter === 0 ? 'Heute schon gesichert. ' : '') +
+     'Die Datei bleibt auf deinem Gerät. Mit ihr kannst du alles in ein neues Konto einspielen. Prüf, ob die Datei in deinen Downloads liegt.</p>';
+   html += '<div class="form-actions"><button class="secondary" data-action="konto-backup">' +
+-    ikon("sichern", "i-sm") + ' Backup herunterladen</button></div>';
++    ikon("sichern", "i-sm") + ' Sicherung herunterladen</button></div>';
+   html += '</div>';
+ 
+   html += '<div class="card" style="margin-top:var(--stack)">';
+@@ -10120,7 +10059,7 @@ document.addEventListener("change", e => {
+ });
+ 
+ /* ---------- Feedback-Board ----------
+-   Oeffentliche Liste mit Vorschlaegen und Abstimmen (plan/feedback-board/
++   Oeffentliche Liste mit Vorschlaegen und Abstimmen (plan/archiv/feedback-board/
+    AUFTRAG.md). Bewusst KEINE Konto-Kennung am Vorschlag - niemand sieht, wer
+    was vorgeschlagen hat, auch der Betreiber nicht (siehe firestore.rules).
+    Deshalb auch kein "eigenen Vorschlag loeschen": das ist der Preis fuer
+@@ -10584,7 +10523,7 @@ function setArtSheet() {
+    Datenschutzerklaerung (impressum.html-Nachbar, Phase 5) sagten im Kern
+    dasselbe unter zwei verschiedenen Namen ("Datenschutz" hier,
+    "Datenschutzerklaerung" dort) - verwirrend statt hilfreich, siehe
+-   plan/phase-5-recht/LOGBUCH.md. Der Inhalt steht jetzt als Abschnitt
++   plan/archiv/phase-5-recht/LOGBUCH.md. Der Inhalt steht jetzt als Abschnitt
+    "Kurz gesagt" oben in datenschutzerklaerung.html, ein einziges Ziel
+    fuer beide Bildschirme (renderAuth, renderEinstellungen). */
+ 
+@@ -10675,7 +10614,7 @@ function renderLernen() {
+       /* 3.11.0: "Kartensatz per Code" steht jetzt VOR der Datei und als
+          .secondary statt .ghost. Derselbe Grund wie auf dem Plan-Bildschirm
+          (TikTok-Befund, 24.09.2026): der Code ist der Weg, den jemand ohne
+-         eigenen Stoff wirklich gehen kann - eine Backup-Datei hat am ersten
++         eigenen Stoff wirklich gehen kann - eine Sicherungsdatei hat am ersten
+          Tag niemand. Als .ghost war er der leiseste von drei Knoepfen. */
+       html += '<button class="secondary" data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
+         ' Kartensatz per Code</button>';
+@@ -11282,7 +11221,7 @@ function fortschrittStoff(cards) {
+     if (g.anzahl === 0) return;
+     const p = (g.anzahl / gesamt) * 100;
+     html += '<div class="stat-seg" style="width:' + p.toFixed(2) + '%; background:' + g.farbe + '" title="' +
+-      esc(g.label + ": " + g.anzahl + " Karten (" + g.erklaerung + ")") + '"></div>';
++      esc(g.label + ": " + mz(g.anzahl, "Karte", "Karten") + " (" + g.erklaerung + ")") + '"></div>';
+   });
+   html += '</div>';
+   /* 3.16.0: Legende in zwei Spalten, ohne Erklaerzeile, und nur Staende,
+@@ -11379,7 +11318,6 @@ function renderFortschritt() {
+      Karten - wie bisher voreingestellt. Der Kopf nennt deshalb Fortschritt.
+      Lektionen gehoeren zum offenen Bereich und nennen ihn in ihrer Zeile;
+      ein zweiter Bereichswaehler wird nicht wieder eingebaut. */
+-  ui.statsScope = "alle";
+   const cards = statsCards();
+   let html = "";
+ 
+@@ -11465,7 +11403,7 @@ function renderFortschrittSeite(id) {
+       html += '<div class="leech-row">';
+       html += '<div class="words"><div class="wort' + (istArabisch(x.card.wort) ? ' arabic" lang="ar" dir="rtl' : '') + '">' + esc(x.card.wort) + '</div>' +
+         '<div class="uebersetzung">' + esc(x.card.uebersetzung) +
+-        (ui.statsScope === "alle" && bereiche.length > 1 ? ' · ' + esc(x.bereich.name) : '') + '</div></div>';
++        (bereiche.length > 1 ? ' · ' + esc(x.bereich.name) : '') + '</div></div>';
+       html += '<span class="leech-badge">' + x.card.rueckfaelle + '×</span>';
+       html += '<button class="ghost" data-action="edit-leech" data-bid="' + esc(x.bereich.id) + '" data-id="' + esc(x.card.id) + '" title="Karte umformulieren oder aufteilen" aria-label="Karte bearbeiten">' + ikon("stift", "i-sm") + '</button>';
+       html += '<button class="ghost" data-action="reset-leech" data-bid="' + esc(x.bereich.id) + '" data-id="' + esc(x.card.id) + '" title="Zähler auf 0 setzen – die Karte bleibt unverändert" aria-label="Rückfallzähler zurücksetzen">' + ikon("umkehren", "i-sm") + '</button>';
+@@ -13443,7 +13381,7 @@ function renderVerwalten() {
+     const lekt = lektionenVon(bAkt);
+     const offen = lekt.filter(x => !setGesperrt(x, bAkt)).length;
+     html += '<div class="satz-banner"><strong>' + esc(bAkt.name) + '</strong> · ' +
+-      offen + ' von ' + lekt.length + ' Lektionen frei' +
++      offen + ' von ' + mz(lekt.length, 'Lektion', 'Lektionen') + ' frei' +
+       '<br>Die Karten stehen fest. Für eigene Karten tippe oben auf den Bereichsnamen und dann auf „Bereich anlegen“.</div>';
+     return html + renderVerwaltenListe(cards, gefuehrt);
+   }
+@@ -15371,8 +15309,6 @@ document.body.addEventListener("click", e => {
+     case "skip-import": ui.askImport = false; persistAll(); render(); break;
+     case "select-bereich": selectBereich(btn.dataset.bid); break;
+     case "add-bereich": addBereich(); break;
+-    case "rename-bereich": renameBereich(); break;
+-    case "delete-bereich": deleteBereich(); break;
+     case "bereich-mehr-auf": ui.bereichMehr = true; render(); break;
+     case "bereich-mehr-zu": schliesseObersteEbene(); break;
+     /* Jede Zeile im Blatt schliesst es zuerst, bevor sie die eigentliche
+@@ -15389,14 +15325,13 @@ document.body.addEventListener("click", e => {
+     case "tab-lernen":
+       if (tabSchonAktiv("lernen")) { nachObenBlaettern(); break; }
+       verwaltenAuswahlZuruecksetzen();
+-      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; ui.tab = "lernen"; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
++      ebenenSchliessen(); ui.tab = "lernen"; ui.editId = null; resetFormDraft(); window.scrollTo(0, 0); render(); break;
+     case "tab-fortschritt":
+       if (tabSchonAktiv("fortschritt")) { nachObenBlaettern(); break; }
+       verwaltenAuswahlZuruecksetzen();
+-      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); ui.drillOpen = false; window.scrollTo(0, 0); render(); break;
+-    case "stats-scope": ui.statsScope = btn.dataset.scope === "bereich" ? "bereich" : "alle"; render(); break;
++      ebenenSchliessen(); ui.tab = "fortschritt"; ui.session = null; ui.lernSetId = null; ui.editId = null; resetFormDraft(); window.scrollTo(0, 0); render(); break;
+     case "trotzdem-ueben":
+-      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null;
++      ebenenSchliessen();
+       ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null;
+       openDrillPicker(null, "lernen");
+       break;
+@@ -15413,7 +15348,7 @@ document.body.addEventListener("click", e => {
+     }
+     case "tab-verwalten":
+       if (tabSchonAktiv("verwalten")) { nachObenBlaettern(); break; }
+-      ui.einstellungen = false; ui.seite = null; ui.wahlSheet = null; ui.setArtSheetId = null; ui.karteSheet = false; ui.bereichSheet = false; ui.bereichMehr = false; ui.cardDetailId = null; ui.neuWahl = false; ui.textAnlegen = null; ui.textAnsicht = null; ui.zeileEdit = null; ui.textLernen = null; ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
++      ebenenSchliessen(); ui.tab = "verwalten"; ui.session = null; ui.lernSetId = null; window.scrollTo(0, 0); render(); break;
+     case "lern-set": startLernen(btn.dataset.id); break;
+     case "lern-haken": lernAbhaken(btn.dataset.id); break;
+     case "lern-notiz": toggleLernNotiz(btn.dataset.id); break;
+@@ -15430,7 +15365,6 @@ document.body.addEventListener("click", e => {
+     case "grade-known": if (!bewertenZuFrueh()) gradeKnown(); break;
+     case "grade-almost": if (!bewertenZuFrueh()) gradeAlmost(); break;
+     case "grade-unknown": if (!bewertenZuFrueh()) gradeUnknown(); break;
+-    case "grade-weiter": if (!bewertenZuFrueh()) gradeCard("weiter"); break;   // Nachbesserung: nur im Übungsmodus sichtbar
+     case "undo-grade": undoLastGrade(); break;
+     case "end-session": endSession(); break;
+     case "submit-card": submitCardForm(); break;
+@@ -15504,7 +15438,6 @@ document.body.addEventListener("click", e => {
+         break;
+       }
+       schliesseObersteEbene(); break;
+-    case "edit-card": editCard(btn.dataset.id); break;
+     /* D7: Sprung in den fremden Bereich. Nutzt dieselbe Funktion wie der
+        Fortschritts-Tab - dort wechselt sie schon seit 1.7.0 den Bereich,
+        oeffnet Verwalten und fuellt das Formular. */
+@@ -15513,9 +15446,6 @@ document.body.addEventListener("click", e => {
+     case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
+     case "toggle-sets": ui.setsOffen = !ui.setsOffen; render(); break;
+     case "toggle-set-art": ui.setsArtWahl = !ui.setsArtWahl; render(); break;
+-    case "cancel-edit": cancelEdit(); break;
+-    case "delete-card": deleteCard(btn.dataset.id); break;
+-    case "reverse-order": reverseOrder(); break;
+     case "toggle-select-mode": toggleSelectMode(); break;
+     case "auswahl-alle": waehleSichtbareKarten(); break;
+     /* C2: Blaettern. Nach oben scrollen, sonst steht man nach dem Klick
+@@ -15607,7 +15537,6 @@ document.body.addEventListener("click", e => {
+     case "lehrer-freigeben": lehrerFreigeben(); break;
+     case "beende-teilen-code": beendeTeilenCode(); break;
+     case "code-einloesen-start": codeEinloesenStart(); break;
+-    case "streak-fortsetzen": streakFortsetzen(); break;
+     case "verlauf-reset": verlaufZuruecksetzen(); break;
+     case "karte-merken": karteMerken(btn.dataset.id); break;
+     case "merk-oeffnen": merkSetOeffnen(); break;

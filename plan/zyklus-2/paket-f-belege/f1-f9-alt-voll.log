@@ -1,0 +1,11 @@
+{"mobile":false,"hosts":["www.gstatic.com"],"errors":[]}
+{"mobile":true,"hosts":["apis.google.com","lernkarte-925c2.firebaseapp.com","www.googleapis.com","www.gstatic.com"],"errors":[]}
+AssertionError [ERR_ASSERTION]: Datenschutz nennt Host nicht: www.gstatic.com
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_f_netz.js:27:31 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

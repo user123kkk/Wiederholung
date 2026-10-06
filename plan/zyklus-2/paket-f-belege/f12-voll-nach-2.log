@@ -1,0 +1,12 @@
+390-hell-bewegt-voll vergleichen grün
+390-hell-bewegt-leer vergleichen grün
+AssertionError [ERR_ASSERTION]: Foto verändert: 390-hell-ruhig-voll-lernen
+    at foto (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_paket_f_fotos.js:57:12)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_paket_f_fotos.js:68:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

@@ -19,3 +19,19 @@ firestore-debug.log
 
 # Lokaler Python-Bytecode der bewahrten Diagnosewerkzeuge; Quellen bleiben versioniert.
 /plan/werkzeuge/pruefstand/__pycache__/
+
+plan/archiv/redesign-oberflaeche/.probelauf/
+
+# Lokale Notfallsicherungen auf Betreiberauftrag; Übergabe/Prüflogs bleiben sichtbar.
+plan/zyklus-2/paket-f-belege/sicherungen/
+plan/zyklus-2/paket-f-belege/PAKET-F-FORTSETZUNG-2026-10-05.zip
+
+# Paket F: Bilder und Rohläufe (rund 200 MB) liegen dauerhaft unter
+# Desktop/Wiederholung-Belege/Paket-F-2026-10-06-Abschluss; Logs bleiben im Repo.
+plan/zyklus-2/paket-f-belege/fotos/
+plan/zyklus-2/paket-f-belege/f12-sicht/
+plan/zyklus-2/paket-f-belege/bilder/
+plan/zyklus-2/paket-f-belege/f-umfeld/
+plan/zyklus-2/paket-f-belege/einzel-1/
+plan/zyklus-2/paket-f-belege/einzel-2/
+plan/zyklus-2/paket-f-belege/f12-vor/

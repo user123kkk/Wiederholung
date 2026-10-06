@@ -1,0 +1,16 @@
+
+=== 1/6 Stand ===
+From https://github.com/user123kkk/Wiederholung
+ * branch            main       -> FETCH_HEAD
+
+ABGEBROCHEN: Lokale Aenderungen an App- oder Testdateien - erst sichern oder verwerfen:
+ M app.js
+ M plan/werkzeuge/pruefstand/LIESMICH.md
+ M plan/werkzeuge/pruefstand/alle_pruefen.js
+ M plan/werkzeuge/pruefstand/t_a11y.js
+ M plan/werkzeuge/pruefstand/t_bestand_tempo.js
+ M plan/werkzeuge/pruefstand/t_konto_fortsetzungen.js
+ M styles.css
+ M sw.js
+
+Schritte: 1/6 Stand

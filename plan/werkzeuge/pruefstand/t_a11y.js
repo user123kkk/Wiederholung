@@ -14,7 +14,7 @@ const { pruefeKontrast } = require('./kontrast');
     /* G-086: t_a11y.js sah nur LAUFENDE Bewegung. G-043 fiel nur auf, weil
        Inhalte per animation-delay/transition-delay bzw. mit Deckkraft < 1
        60-1300 ms warten, ehe sie erscheinen. Messmethode aus
-       plan/grossplan/befunde/werkzeuge/g043_verzoegerung.js unveraendert
+       plan/werkzeuge/befund-skripte/g043_verzoegerung.js unveraendert
        uebernommen (Abstand hier 50 statt 30 ms, s. u.): nach dem Aufbau pruefen, ob delay > 0 und
        currentTime < delay (Animation wartet noch), zusaetzlich ob die
        berechnete Deckkraft in dem Moment < 1 ist - fuer sichtbaren Inhalt

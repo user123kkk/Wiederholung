@@ -1,8 +1,10 @@
-# Wiederholung
+# Adrabic
 
 Karteikarten mit Wiederholung nach Stufen – für arabische Vokabeln und alles
 andere, was sitzen soll. Läuft als PWA im Browser, funktioniert offline,
 synchronisiert über Firebase.
+
+Aktueller Arbeitsstand: [`plan/STAND.md`](plan/STAND.md). Dauerregeln: [`CLAUDE.md`](CLAUDE.md).
 
 ## Dateien
 
@@ -13,7 +15,7 @@ synchronisiert über Firebase.
 | `app.js` | Die gesamte Funktionalität: Lernlogik, Firebase, Anzeige |
 | `sw.js` | Service Worker. Speichert die App-Hülle, damit sie offline startet |
 | `manifest.json` | Installierbarkeit als App |
-| `icon.svg` | App-Symbol (Browser-Tab, Startbildschirm) |
+| `desktop-icon.png`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png` | Aktuelle App-Symbole |
 | `firestore.rules` | Zugriffsregeln der Datenbank |
 | `impressum.html`, `datenschutzerklaerung.html` | Rechtstexte, ohne Anmeldung erreichbar (Phase 5) |
 | `veroeffentlichen.bat` | Für den Betreiber (Windows): Doppelklick holt `origin/main`, prüft und veröffentlicht dessen separate Kopie auf Firebase Hosting. Lokale Entwürfe bleiben erhalten. Wird selbst nicht ausgeliefert (siehe `firebase.json`) |
@@ -43,7 +45,7 @@ Der eigentliche Schutz liegt an zwei anderen Stellen: `firestore.rules`
 (wer welche Daten lesen/schreiben darf – s. u.) und die
 Website-Einschränkung des Browser-Keys in der Google-Cloud-Konsole
 (nur `adrabic.web.app`/`lernkarte-925c2.web.app` dürfen den Key benutzen,
-siehe `plan/phase-4-domain-hosting/LOGBUCH.md` – dort auch ein
+siehe `plan/archiv/phase-4-domain-hosting/LOGBUCH.md` – dort auch ein
 dokumentierter Fund vom 12.09.2026: der zunächst unbeschränkte Key wurde
 tatsächlich von Dritten für fremde Maps-Anfragen missbraucht, seit der
 Einschränkung nicht mehr). Ein echtes Geheimnis (z. B. ein Firebase-Admin-
@@ -118,11 +120,10 @@ Drei Dinge, die leicht zu übersehen sind:
   sich nicht mitvergrößern, wenn jemand die Schrift größer stellt – sonst wird
   aus einer größeren Schrift eine leerere Seite.
 
-**Ansehen, ohne sich anzumelden:** `plan/redesign-oberflaeche/stilprobe.html`
-zeigt alle Bausteine aus `styles.css` nebeneinander mit erfundenem Inhalt.
-Die Datei wird nicht ausgeliefert (steht nicht in `APP_SHELL`) und definiert
-selbst keine Farben oder Größen – was dort hässlich aussieht, wird in
-`styles.css` geändert, nicht dort.
+**Historische Stilprobe:** plan/archiv/redesign-oberflaeche/stilprobe.html
+bewahrt die damalige Bausteinübersicht mit erfundenem Inhalt. Sie verwendet
+die aktuelle styles.css und wird nicht ausgeliefert; ihr älteres Markup
+ersetzt keine Abnahme der aktuellen App im Prüfstand.
 
 ## Wenn du am Markup arbeitest
 

@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: Übungsauswahl gehört nicht in die Schließliste
+
+false !== true
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_f_ebenen.js:29:13 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

@@ -1,0 +1,30 @@
+START f-texte
+ENDE f-texte Exit 0
+START f-ebenen
+ENDE f-ebenen Exit 0
+START f-netz
+ENDE f-netz Exit 0
+START kontrast
+ENDE kontrast Exit 0
+START a11y
+ENDE a11y Exit 0
+START gross-alle
+ENDE gross-alle Exit 0
+START ueben
+ENDE ueben Exit 0
+START ueben-auswahl
+ENDE ueben-auswahl Exit 0
+START import-stapel
+ENDE import-stapel Exit 0
+START import-doppelt
+ENDE import-doppelt Exit 0
+START import-einwilligung
+ENDE import-einwilligung Exit 0
+START konto-fortsetzungen
+ENDE konto-fortsetzungen Exit 0
+START runde
+ENDE runde Exit 0
+START affe-handy
+ENDE affe-handy Exit 0
+START affe-ipad
+ENDE affe-ipad Exit 0

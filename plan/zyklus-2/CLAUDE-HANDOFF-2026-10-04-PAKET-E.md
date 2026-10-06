@@ -72,7 +72,7 @@ Pause einschließlich angefangener C-fort-Ausgabe separat gesichert:
    dritten Lauf auf beiden großen Breiten überall 0 Befunde.
 2. Zweiter Lauf: t_konto_fortsetzungen suchte den alten `deleteUser()`-
    Testanker; E11-Attrappe nimmt den Nutzer entgegen. Hilfsprobe
-   `plan/grossplan/befunde/werkzeuge/konto_adressdialog_app.js` am Exportnamen
+   `plan/werkzeuge/befund-skripte/konto_adressdialog_app.js` am Exportnamen
    umbenannt und Nutzer ans Original weitergereicht. Keine Schutzassertion
    gelockert. Vollständiger Wrapper samt alten Gegenproben im dritten Lauf
    grün, Log vollständig gelesen.

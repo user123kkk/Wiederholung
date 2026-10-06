@@ -90,7 +90,7 @@ Nicht prüfbar: echtes iOS/Android (Tastatur, Zurück-Geste, Gefühl der Bewegun
 #### EINSTIEG-9: Das Handy-Zurück verlässt den Einstieg (und die App) statt einen Schritt zurückzugehen
 - Art: Fehlt
 - Schwere: mittel
-- Beleg: `app.js` benutzt `history.pushState`/`popstate` nirgends (grep ohne Treffer, auch `plan/beobachtungen-lernwerkzeug.md:574`). Der Einstieg hat nur den eigenen Pfeil (`einstieg-zurueck`). Escape tut im Einstieg nichts (gemessen). Vermutung (am Gerät nicht prüfbar): Android-Zurück in der installierten App schließt sie auf Bildschirm 5, Ziel und Hürden sind weg (nur im Arbeitsspeicher), beim nächsten Öffnen beginnt alles bei Willkommen. Dasselbe gilt für Blätter und Unterseiten der App.
+- Beleg: `app.js` benutzt `history.pushState`/`popstate` nirgends (grep ohne Treffer, auch `plan/archiv/beobachtungen-lernwerkzeug.md:574`). Der Einstieg hat nur den eigenen Pfeil (`einstieg-zurueck`). Escape tut im Einstieg nichts (gemessen). Vermutung (am Gerät nicht prüfbar): Android-Zurück in der installierten App schließt sie auf Bildschirm 5, Ziel und Hürden sind weg (nur im Arbeitsspeicher), beim nächsten Öffnen beginnt alles bei Willkommen. Dasselbe gilt für Blätter und Unterseiten der App.
 - Warum es stört: Die Zurück-Geste ist die häufigste Bedienung am Handy. Ein Einstieg, der dabei alles verwirft, ist eine Abbruchstelle, die der Betreiber nicht sieht.
 - Vorschlag: Eine kleine, zentrale Verlaufs-Schicht: je Einstiegs-Schritt bzw. offenem Blatt `history.pushState({ebene})`, dazu ein `popstate`-Listener, der `einstieg-zurueck` bzw. `schliesseObersteEbene()` aufruft. Zuerst nur für den Einstieg, mit Gerätetest. Escape im Einstieg = Zurück.
 - Entscheidet: Betreiber (Architektur, berührt bfcache-Verhalten)

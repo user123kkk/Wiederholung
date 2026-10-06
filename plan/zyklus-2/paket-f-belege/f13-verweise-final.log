@@ -1,0 +1,11 @@
+{
+  "neueDefekteVerweise": [],
+  "vorherBereitsDefekt": [
+    {
+      "file": "plan/archiv/audit/LOGBUCH.md",
+      "url": "../../ideen/analytics/INTERESSENABWAEGUNG.md",
+      "target": "plan/ideen/analytics/INTERESSENABWAEGUNG.md"
+    }
+  ],
+  "moduleMissing": []
+}

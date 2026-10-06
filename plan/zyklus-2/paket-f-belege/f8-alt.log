@@ -1,0 +1,12 @@
+F8 Dateiname adrabic-backup-2026-10-05.json
+AssertionError [ERR_ASSERTION]: F8 Dateiname
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_f_texte.js:25:3
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:541:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

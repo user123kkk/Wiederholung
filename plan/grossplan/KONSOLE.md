@@ -200,7 +200,7 @@ GitHub → Repo `Wiederholung` → **Actions** → „Veroeffentlichen" → **Ru
 (oder am PC Doppelklick auf `veroeffentlichen.bat`: prüft/veröffentlicht eine
 separate Kopie des aktuellen `origin/main`, erhält lokale Entwürfe und zeigt
 Version/Commit vor dem Upload). Voraussetzung für den GitHub-Weg einmalig: Secret
-`FIREBASE_SERVICE_ACCOUNT` (Schritte in `plan/audit/LOGBUCH.md`, 25.09.2026).
+`FIREBASE_SERVICE_ACCOUNT` (Schritte in `plan/archiv/audit/LOGBUCH.md`, 25.09.2026).
 **Woran man es merkt:** In der App unter Einstellungen steht die neue Version.
 
 ### K12 – Liegt eine ZIP-Datei öffentlich?
