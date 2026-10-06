@@ -1,5 +1,12 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**06.10.2026, 18:50: D12 angehalten auf Wunsch des Betreibers.** Paket F bleibt
+fertig auf main (802c56a, 3.18.17). D12 liegt als Entwurf 3.18.18 uncommittet im
+Ordner `Desktop\Wiederholung`, Gesamtlauf bei 82/146 gestoppt, alle 82 grün.
+Nichts verwerfen. Genaue Stelle und Befehle:
+[D12-Übergabe](zyklus-2/D12-UEBERGABE-2026-10-06.md). Kopie außerhalb des Repos:
+`Desktop\Wiederholung-Belege\D12-2026-10-06-angehalten\`.
+
 **06.10.2026: Paket F abgenommen, Version 3.18.17, nicht veröffentlicht.**
 F1–F5 und F7–F13 erledigt, F6 trifft nicht zu. F12 wieder eingesetzt: Die
 roten Fotovergleiche waren ein Messfehler (Beleg und neue Abnahme im
