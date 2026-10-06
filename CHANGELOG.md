@@ -1,3 +1,21 @@
+## 3.18.19 – 6. Oktober 2026
+
+**Zwei Kleinigkeiten, die der Betreiber am iPhone bemerkt hat.**
+
+- **Handschrift im Vollbild blieb nach dem Verkleinern unsichtbar.** Wer im
+  Üben mit Handschrift im Vollbild schrieb und dann verkleinerte (oder im
+  Vollbild „Fertig“ tippte), sah seine Schrift nicht mehr; im Vollbild war
+  sie wieder da. Die Striche lagen in der kleinen Ansicht unter dem Rand,
+  weil die Vollbild-Fläche am Handy viel höher ist. Jetzt werden sie
+  gleichmäßig verkleinert und mittig eingepasst, die Grundlinie bleibt
+  dieselbe. Betraf jedes Handy und das iPad.
+- **Tippen neben das Blatt schließt jetzt auch bei „Karte anlegen“ und „Code
+  einlösen“.** Wie beim Herunterwischen: Ein leeres Blatt schließt sofort.
+  Ist schon eine Karte angefangen, kommt die bekannte Rückfrage „Angefangene
+  Karte verwerfen?“. Der Code-Dialog bleibt stehen, sobald etwas getippt ist.
+  Rückfragen wie „Wirklich löschen?“ schließen weiterhin nicht durch
+  Danebentippen.
+
 ## 3.18.18 – 6. Oktober 2026
 
 **Aufgeräumt: Bewegungsregeln, die nie liefen (D12).** Zu sehen ist nichts

@@ -2,6 +2,69 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-06 — Zwei Kleinigkeiten vom iPhone, 3.18.19
+
+**Geändert:** `app.js`: `drawStrokes` passt Striche aus einer höheren Fläche
+in die flachere ein (jeder Strich merkt sich `form` = Höhe/Breite seiner
+Fläche, gesetzt in `pointerdown` von `setupHandwritingCanvas`). Hintergrund
+des Karten-Blatts trägt `data-action="karte-sheet-neben"` und ruft
+`schliesseObersteEbene()`; Hintergrund des Dialogs trägt
+`data-action="dlg-neben"`, das nur einen Eingabe-Dialog mit leerem Feld wie
+„Abbrechen“ schließt. Zwei Kommentare an diesen Stellen neu gefasst. Version
+in app.js, sw.js, 33 Stellen index.html, CHANGELOG. Neue Tests
+`t_schreiben_vollbild.js`, `t_neben_tippen.js`; Belege `klein-belege/`.
+
+**Entscheidung:** Beides vom Betreiber am 06.10. gemeldet. Handschrift ist
+ein Fehler: Striche sind als Anteil der Breite gespeichert, die Vollbild-
+Fläche ist am Handy 1,7- bis 1,8-mal so hoch wie breit, die kleine nur 0,55;
+was im Vollbild bei 70 Prozent der Höhe geschrieben wurde, lag verkleinert
+unter dem Rand. „Daneben tippen“ war eine bewusste Entscheidung von früher
+(keine halb getippte Karte verlieren). Sie bleibt in der Sache erhalten:
+Der Tipp nimmt den vorhandenen Weg von Escape und Herunterwischen, also bei
+angefangener Karte die vorhandene Rückfrage. Der Vorschlag des Betreibers
+„Entwurf bleibt liegen“ ist nicht gebaut (neues Verhalten bei Bearbeiten,
+Bereichs- und Kontowechsel); er hat dem einfachen Weg zugestimmt. Das
+Blatt der Texte (`zeileEditSheet`) ist unverändert (Probelauf).
+
+**Prüfumfang, Betreiber 06.10.:** „will nicht zwingend Affentests und alles
+drum und dran für so einen kleinen Fix“. Deshalb kein Gesamtlauf und kein
+Affe vor diesem Commit, sondern gezielt. Der volle Lauf kommt vor dem
+Veröffentlichen ohnehin durch `ladegeraet.ps1`. Das gilt für kleine
+Verdrahtungen an vorhandenen Wegen, nicht für Pakete und nicht für die
+Lernlogik.
+
+**Prüfungen (BatteryStatus 2):** `t_schreiben_vollbild.js` Handy, klein,
+iPad grün; Gegenprobe am festen 802c56a zeigt verkleinert 0 Tinte auf allen
+drei Geräten. `t_neben_tippen.js` grün auf drei Geräten (leer schließt, mit
+Text Rückfrage und Text bleibt, Code leer schließt, Code mit Text bleibt,
+Rückfrage „Abmelden“ bleibt); Gegenprobe 802c56a: schließt nicht. Dazu
+`t_karten_blatt`, `t_dialog_timer`, `t_konto_dialog`, `t_schreiben`,
+`t_kontrast`, `t_a11y`, `t_paket_f_ebenen` grün, Ausgaben gleich dem
+Gesamtlauf von 3.18.18 bis auf die zufällige Karte. Runden-Abnahme frisch
+**13/13** (erster Lauf 12/13: `t_wischen` meldete bei richtigem Verhalten einen Konsolenfehler beim Abruf des Service-Worker-Skripts, denselben abgebrochenen Abruf wie schon in Paket E belegt; zwei Einzelläufe und der Nachlauf mit `--fortsetzen` grün, rotes Original `t_wischen-rot-erstlauf.log`), `t_sprung` darin grün. `pruefe_stand.mjs`, `node --check`,
+`git diff --check` grün.
+
+**LEHREN § 14:** 1 Codepfade gelesen (`schliesseObersteEbene`,
+`karteEntwurfVerwerfenFragen`, `renderDialog`, `drawStrokes`). 2 Muster:
+alle Stellen mit `dlg-backdrop` und mit `data-action="nichts"` angesehen.
+3 beide Kommentare, die das alte Verhalten begründeten, nachgezogen.
+4 zwei neue Handlungen im einen delegierten Listener. 5 Zustand bleibt in
+`ui`/`hwStrokes`. 6 Sprung, Kontrast, drei Breiten grün. 7–9 kein neuer
+Text, kein Feld, kein Datenfluss. 10–11 grün. 12 gezielte Tests und
+Runden-Abnahme, siehe oben. 13 dieser Eintrag, STAND.
+
+**Offen:** Am iPhone ansehen: Vollbild schreiben, verkleinern, Schrift ist
+da; auf dem iPad wird sie klein (die kleine Fläche ist dort sehr flach).
+Nächste Kleinigkeiten des Betreibers vom 06.10.: Verschiebe-Griff „spinnt“,
+wenn man vor Ende der Halte-Animation zieht (erst mit Touch-Test nachstellen;
+Verdacht: Auslaufen der nachgebauten Scroll-Übernahme, nicht belegt), und
+„In der Liste zeigen“ im Karten-Blatt. Danach „Runde über alle Bereiche“
+(Bereich für Bereich in einer Runde) und die Entscheidung zur Reihenfolge
+bei Rundenlimit (`E26-VORSCHLAG.md`, Nachtrag). Vorschlag „Prüfstand
+schneller“ offen.
+
+**Nächster Schritt:** Verschiebe-Griff nachstellen.
+
 ### 2026-10-06 — D12 nachgeholt und abgenommen, 3.18.18
 
 **Geändert:** `styles.css`: tote Übergänge an `.modebar__fortschritt`,

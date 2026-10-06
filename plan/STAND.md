@@ -1,5 +1,15 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**06.10.2026, nachts: 3.18.19 auf main, nicht veröffentlicht.** Zwei
+Meldungen des Betreibers vom iPhone behoben: Handschrift aus dem Vollbild
+bleibt nach dem Verkleinern sichtbar; Tippen neben „Karte anlegen“ und „Code
+einlösen“ schließt wie Herunterwischen. Gezielt geprüft und Runden-Abnahme,
+auf Betreiberwunsch ohne Gesamtlauf; den fährt „ladegerät“ vor dem
+Veröffentlichen. Online weiter 3.18.14. Offen und in dieser Reihenfolge
+gewünscht: Verschiebe-Griff, „In der Liste zeigen“, Runde über alle Bereiche,
+Entscheidung zur Kartenreihenfolge bei Rundenlimit. Einzelheiten im
+Zyklus-Logbuch, oberster Eintrag.
+
 **06.10.2026, abends: D12 abgenommen, Version 3.18.18, nicht veröffentlicht.**
 Der Halt von 18:50 (nächster Absatz) ist erledigt: Gesamtlauf am selben
 Quellstand fortgesetzt, 146/146 Exit 0, Runde 13/13, Affen je 0 Befunde.

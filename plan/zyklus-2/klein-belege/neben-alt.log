@@ -1,0 +1,3 @@
+ALT  handy: Karte leer schliesst false | mit Text Rueckfrage false, Text danach "Probe" | Code leer schliesst false | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt true
+ALT  klein: Karte leer schliesst false | mit Text Rueckfrage false, Text danach "Probe" | Code leer schliesst false | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt true
+ALT  ipad: Karte leer schliesst false | mit Text Rueckfrage false, Text danach "Probe" | Code leer schliesst false | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt true

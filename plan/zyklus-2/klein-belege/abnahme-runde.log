@@ -1,0 +1,55 @@
+Quellstand: 5d6454d00fdc5ded9983c28a145e299196b8cecb3d056a299f1f69f47da9c34e
+OK      t_runde_lage.js       Knopf immer im Bild, Seite scrollt nie (4 Handygroessen, lange Notiz/Antwort)  (81 s)
+OK      t_sprung.js           Karte springt nicht: Aufdecken und Karte zu Karte, 4 Geraete  (82 s)
+OK      t_sprung_ueben.js     dasselbe im Ueben  (48 s)
+FEHLER  t_wischen.js          Wischen: weit, schnell, direkt nach Aufdecken, zu kurz, Abbruch  (38 s)
+        FEHL schnell kurz links (Fling)     -> Karte 2 (soll 2) | Karte folgt dem Finger: - | CONSOLE: An unknown error occurred when fetching the script.
+OK      t_wischen_schraeg.js  Wischen schraeg / mit Daumen, Seite scrollt nicht mit  (51 s)
+OK      t_doppeltipp.js       schneller Doppeltipp bewertet nicht blind  (19 s)
+OK      t_x_mitten.js         X mitten in der Runde: nichts geht verloren, Serie +1  (29 s)
+OK      t_abgelehnt.js        von der Cloud abgelehnte Bewertung wird nachgeschickt  (6 s)
+OK      t_undo_verlauf.js     Rueckgaengig nimmt auch den Tageszaehler zurueck  (25 s)
+OK      t_serie.js            Serie: Luecken, Joker, Sockel  (22 s)
+OK      t_rundenende.js       Rundenende, Limit, Weiterlernen (lesen)  (115 s)
+        == handy
+          normal: Geschafft Alle 12 Karten für heute durch. 12 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+            Fertig-Knopf 475/519 von 844 | Kontrast 0 | quer false
+            Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+            Fertig -> Für heute durch
+          Limit 10: Geschafft 10 Karten in dieser Runde. 10 sicher 0 fast 0 nicht 4 Tage am Stück Heute sind noch 2 Karten offen. Fertig Weiterlernen Letzte Bewertung rückgängig | noch faellig laut Lernen: Knopf "Weiterlernen"
+            X oben am Ende: false | Weiterlernen -> "Karte 1 von 2" -> Ende: Geschafft Alle 2 Karten für heute durch. 2 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+          Ueben-Auswahl Aktionen: bereich-sheet-auf,einstellungen,karte-neu,open-drill,bereich-mehr-auf,stufe-chip,start-drill,close-drill,toggle-sets,search-clear,card-detail,select-bereich,add-bereich,tab-lernen,tab-fortschritt,tab-verwalten
+        == klein
+          normal: Geschafft Alle 12 Karten für heute durch. 12 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+            Fertig-Knopf 475/519 von 740 | Kontrast 0 | quer false
+            Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+OK      t_ueben.js            Ueben bewertet und endet (lesen)  (30 s)
+        Start: neu & im Lernen* | frisch gelernt* | wird fester* | gefestigt* | dauerhaft* => 40 Karten
+        Nur gefestigt: neu & im Lernen | frisch gelernt | wird fester | gefestigt* | dauerhaft => 9 Karten
+        Modebar: Übung – zählt nicht als WiederholungKarte 1 von 9 | Hinweis: undefined
+        Bewertungen: 12 | Ende: Übung fertig
+        9 Karten geübt · gefestigt
+        9
+        sicher
+        0
+        fast
+        3
+        nicht
+        Fertig
+OK      t_schreiben.js        Schreiben: Zeichenflaeche im Bild (lesen)  (83 s)
+        == handy
+          Start: {"wortOben":130,"flaeche":"236-436","leisteUnten":544,"fenster":844,"allesImBild":true,"scrollbar":false}
+          erster Strich: Tinte 0 -> 534 | Lage vorher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:172"}
+            nachher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:172"}
+          Vollbild: {"vollbild":true,"vorlage":"Tee","leisteImBild":true} | Tinte erhalten: 534
+          Strich im Vollbild: Tinte 534 -> 1063
+          Strich zurueck: Tinte 534
+          Vollbild nach Aufdecken: "Tee\n·\nشَايٌ"
+          Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"شَايٌ"}
+          Kontrast 0
+          Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1011 ms | Bilder > 34 ms: 0
+          ok
+
+1 von 13 ROT - nicht veroeffentlichen.
+Vollstaendige Einzeltest-Ausgaben: C:\Users\USER\AppData\Local\Temp\adrabic-rundenabnahme
+RUNDE Exit 1

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.18";
+const APP_VERSION = "3.18.19";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -8775,9 +8775,11 @@ function cardDetailSheet() {
    f-ueb, f-extra und f-stufe bleiben unveraendert - app.js liest sie
    direkt (siehe README, "Wenn du am Markup arbeitest").
 
-   Tippen neben das Blatt schliesst NICHT: Anders als bei einer Liste
-   kostet das hier eine halb getippte Karte. Dieselbe Entscheidung wie beim
-   Eingabe-Dialog (renderDialog). */
+   3.18.19 (Betreiber 06.10.2026): Tippen neben das Blatt nimmt denselben
+   Weg wie Escape und Herunterwischen (schliesseObersteEbene): ein leeres
+   Blatt schliesst, bei einer angefangenen Karte kommt die Rueckfrage
+   "Angefangene Karte verwerfen?". Bis dahin tat der Tipp gar nichts, damit
+   keine halb getippte Karte verloren geht - das leistet die Rueckfrage. */
 function karteSheet() {
   const editing = ui.editId ? findCard(ui.editId) : null;
   if (!ui.karteSheet && !editing) return "";
@@ -8785,7 +8787,7 @@ function karteSheet() {
 
   const fehler = ui.karteFeldFehler || {};
   const neuKennung = !ui.editId ? JSON.stringify([currentUser.uid, currentBereich().id]) : null;
-  let html = '<div class="dlg-backdrop"' + (neuKennung ? ' data-karte-neu="' + esc(neuKennung) + '"' : '') + ' data-action="nichts" role="presentation">';
+  let html = '<div class="dlg-backdrop"' + (neuKennung ? ' data-karte-neu="' + esc(neuKennung) + '"' : '') + ' data-action="karte-sheet-neben" role="presentation">';
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="karte-sheet-titel">';
   /* 3.17.37 (G-089, Betreiber-Screenshot 26.09.2026): Die Bestaetigung steht
      im Kopf neben dem Titel. Als Meldung oben am Rand lag sie ueber "Neue
@@ -14347,8 +14349,19 @@ function drawStrokes(ctx, canvas) {
   ctx.lineWidth = 4;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
+  /* 3.18.19 (Betreiber 06.10.2026, iPhone): Im Vollbild ist die Flaeche am
+     Handy viel hoeher als breit. Ein dort geschriebener Strich hat
+     Hoehenwerte, die in der kleinen Ansicht unter dem Rand liegen - nach dem
+     Verkleinern war die Schrift weg und kam erst im Vollbild wieder. Jeder
+     Strich kennt deshalb die Form der Flaeche, auf der er entstand
+     (stroke.form = Hoehe / Breite). Ist die jetzige Flaeche flacher, wird er
+     gleichmaessig verkleinert und mittig gesetzt; die Grundlinie bleibt
+     dieselbe, nichts wird gestaucht. */
+  const form = h / w;
   for (const stroke of hwStrokes) {
-    const pts = stroke.map(p => ({ x: p.x * w, y: p.y * w }));
+    const k = stroke.form > form ? form / stroke.form : 1;
+    const dx = (1 - k) / 2;
+    const pts = stroke.map(p => ({ x: (p.x * k + dx) * w, y: p.y * k * w }));
     if (pts.length === 1) {
       ctx.beginPath();
       ctx.arc(pts[0].x, pts[0].y, ctx.lineWidth / 2, 0, Math.PI * 2);
@@ -14387,7 +14400,10 @@ function setupHandwritingCanvas() {
     hwDrawing = true;
     canvas.setPointerCapture(e.pointerId);
     ersterStrich = hwStrokes.length === 0;
-    hwStrokes.push([posFromEvent(e)]);
+    const strich = [posFromEvent(e)];
+    const rect = canvas.getBoundingClientRect();
+    strich.form = rect.height / (rect.width || 1);   // siehe drawStrokes
+    hwStrokes.push(strich);
     drawStrokes(ctx, canvas);
   });
   canvas.addEventListener("pointermove", e => {
@@ -14651,10 +14667,13 @@ function dlgPrompt(text, defaultValue, opts) {
 function renderDialog() {
   const d = ui.dialog;
   if (!d) return "";
-  /* Bewusst KEIN Schliessen durch Klick auf den Hintergrund: auf dem Handy
-     trifft man den beim Scrollen zu leicht, und dann waere die Eingabe weg. */
-  let h = '<div class="dlg-backdrop">';
-  h += '<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-title">';
+  /* Kein Schliessen durch Klick auf den Hintergrund, solange etwas zu
+     verlieren ist: auf dem Handy trifft man den beim Scrollen zu leicht, und
+     dann waere die Eingabe weg. 3.18.19: Ein Eingabe-Dialog mit LEEREM Feld
+     schliesst beim Tippen daneben wie "Abbrechen" (case "dlg-neben");
+     Rueckfragen und Meldungen bleiben stehen. */
+  let h = '<div class="dlg-backdrop" data-action="dlg-neben">';
+  h += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="dlg-title">';
   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
 
   if (d.kind === "code-share") {
@@ -15519,6 +15538,10 @@ document.body.addEventListener("click", e => {
     case "remove-from-set": removeCardFromSet(btn.dataset.set, btn.dataset.id); break;
     case "dlg-ok": if (ui.dialog) closeDialog(dialogResult(ui.dialog, true)); break;
     case "dlg-cancel": if (ui.dialog) closeDialog(dialogResult(ui.dialog, false)); break;
+    case "dlg-neben":
+      if (ui.dialog && ui.dialog.kind === "prompt" && !(ui.dialog.value || "").trim()) closeDialog(dialogResult(ui.dialog, false));
+      break;
+    case "karte-sheet-neben": schliesseObersteEbene(); break;
     case "code-copy-clipboard":
       if (ui.dialog && ui.dialog.code) {
         navigator.clipboard.writeText(ui.dialog.code).then(() => {
