@@ -1,3 +1,30 @@
+## 3.18.24 – 7. Oktober 2026
+
+**Texte lernen, zweite Hilfestufe: der Anfang statt Anfangsbuchstaben
+(Betreiber: „bei Fatiha, Bismillah … kommt der Buchstabe ba und 3 alif“).**
+Beim Neu-Lernen einer Zeile zeigte die mittlere Stufe von jedem Wort den
+ersten Buchstaben. Im Arabischen beginnen sehr viele Wörter mit dem Artikel,
+die Hilfe sagte dort fast nichts. Jetzt steht der Anfang der Zeile da, so
+wie er geschrieben ist, der Rest bleibt verdeckt:
+
+- bis sechs Wörter: das erste Wort; längere Zeilen: die ersten zwei;
+- das Wort bleibt unverändert, mit allen Zeichen und in der Quran-Schrift;
+- der Auftrag heißt „Mit dem Anfang aufsagen.“;
+- gilt für jede Sprache gleich, auch für deutsche Texte.
+
+So wird beim Auswendiglernen üblicherweise geholfen: Jemand nennt den
+Anfang, man setzt fort. Wiederholen, Abstände und Bewertung sind
+unverändert. Texte sind weiter nur im Konto des Betreibers sichtbar.
+
+**Drei Kleinigkeiten (Betreiber, Fotos vom iPhone):**
+
+- Tippen neben ein Fenster schließt es jetzt überall: Hinweise (zum
+  Beispiel „App auf den Home-Bildschirm legen“) gehen zu, eine Rückfrage
+  gilt als „Abbrechen“. Nur eine Eingabe mit getipptem Text bleibt stehen.
+- Schalter „Mit Schreiben“: Unter dem Knopf schien ein Häkchen durch.
+- Rundenende, Kasten „Du hast dir … gemerkt“: Text links, Knopf rechts,
+  Abstand zum Satz darüber.
+
 ## 3.18.23 – 7. Oktober 2026
 
 **Eine Runde über alle Bereiche (Betreiber: „bei verschiedenen Bereichen

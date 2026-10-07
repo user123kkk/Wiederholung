@@ -2,6 +2,42 @@
 
 Letzter Eintrag zuerst. Plan: [`KONZEPT.md`](KONZEPT.md), [`WIEDERHOLEN.md`](WIEDERHOLEN.md).
 
+### 2026-10-07 — Hilfestufe 2: Anfang der Zeile statt Anfangsbuchstaben, 3.18.24
+
+**Betreiber:** 06.10. „bei Quran, Fatiha, Bismillah, Aufdecken kommt danach
+der Buchstabe ba und 3 alif … lieber besser gucken ob's Sinn macht“; zur
+Sperre des Probelaufs „ned so wild“; 07.10. auf die Frage a oder b: „3.
+soll perfekt sein einfach“. Meine Auslegung: keine Wahl zwischen a und b,
+sondern Auftrag, den besseren Weg zu bauen. Gebaut ist b, wie in
+`ANFANG-VORLAGE-2026-10-07.md` empfohlen und begründet.
+**Geändert:** `app.js`: `anfangsbuchstaben()` entfernt, neu
+`zeilenAnfang()`, `istAufsagWort()`, `ANFANG_KURZ_BIS = 6`;
+`zeileWoerter()` nutzt `istAufsagWort()` (gleiches Ergebnis);
+`textZeileHtml()` zeigt in Stufe 2 den Anfang und dahinter die Punkte;
+Auftrag „Mit dem Anfang aufsagen.“. Der Schritt heißt im Zustand weiter
+`buchstaben` (kein Umbau von Zustand, Klassen, Tests ohne Nutzen).
+`styles.css`: eine Regel für die Punkte. Version 3.18.24 in app.js, sw.js,
+33 Stellen index.html, CHANGELOG. Tests: `t_anfangsbuchstaben.js` heißt
+jetzt `t_zeilenanfang.js` und prüft die neue Fassung (die alte Funktion
+gibt es nicht mehr); `t_text_neu.js` erwartet Anfang und neuen Auftrag.
+Neu `x_anfang_foto.js` (Ansehen), `anfang-belege/` (24 Fotos, app-vor-24.js).
+`KONZEPT.md` § 0, § 2, § 4, § 5, § 8.3, § 12, § 13, § 14.
+**Entscheidung:** Zeile bis sechs Wörter: erstes Wort; länger: zwei
+Wörter; ein Wort: kein Anfang. Wörter unverändert aus der Zeile, nichts
+entfernt. Wiederholen, Abstände, Bewertung, Denkpause unberührt.
+**Probelauf:** Ab 07.10. (nach Veröffentlichung) wird anders neu gelernt.
+Die Auswertung am 29.10. misst das Wiederholen fester Zeilen; die
+Hilfestufe kommt nur beim Neu-Lernen vor. Trotzdem dort vermerken.
+**Geprüft bisher:** `t_zeilenanfang` (13 Quran-Stellen aus der Quelldatei,
+deutsche Sätze, Gegenprobe rot), `t_text_neu` grün. Fotos Sure 1 und
+2:1–6 bei 390 und 320: Wort steht rechts, Punkte links daneben, Quran-
+Schrift (UthmanicHafs bzw. Amiri Quran), kein Querscrollen, passt in die
+Höhe. Gesamtlauf, Runde, Affen: siehe Nachtrag.
+**Offen:** Echtes iPhone (Schrift, Zeilenumbruch bei zwei langen Wörtern).
+Ob „sechs“ passt, zeigt der Probelauf. „Texte top“-Durchsicht Punkte 1–6
+der Vorlage.
+**Nächster Schritt:** Gesamtlauf abwarten, dann Commit.
+
 ### 2026-10-01 — Stufe 7 fertig: 3.18.10 veröffentlicht, Probelauf beginnt
 
 **Betreiber:** Weg A, Energiemodus „Beste Leistung“, `ladegeraet.bat` selbst

@@ -25,7 +25,7 @@ verschieben sich durch Codex; beim Bau per Funktionsname suchen.
 - In einem eigenen Bereich kann man neben Karten einen **Text** anlegen:
   selbst einfügen oder **eine Sure aus dem mitgelieferten Quran wählen**.
   Jede Zeile bzw. Aya wird ein Lernschritt.
-- **Neu lernen:** lesen → nur Anfangsbuchstaben → ohne Hilfe; nach jeder
+- **Neu lernen:** lesen → mit dem Anfang der Zeile (seit 3.18.24, vorher Anfangsbuchstaben) → ohne Hilfe; nach jeder
   neuen Zeile alles heute Gelernte am Stück.
 - Danach ist jede Zeile **neu, frisch oder fest**. Frisches kommt täglich,
   Festes **im Kreis**, damit auch die ersten Ayat nie verblassen
@@ -75,7 +75,8 @@ angewandt; **Studie** = einzelne Untersuchung, Übertragbarkeit begrenzt;
 | Selbst abrufen schlägt Wiederlesen (Prosa, nach 1 Woche 61 % gegen 40 %) | [Roediger & Karpicke 2006](https://journals.sagepub.com/doi/10.1111/j.1467-9280.2006.01693.x) | Studie, oft wiederholt | Lesen nur als erste Hilfestufe |
 | Kumulatives Wiederholen hilft beim Behalten der Reihenfolge | [PubMed 37768613](https://pubmed.ncbi.nlm.nih.gov/37768613/) | Studie zum **Kurzzeit**gedächtnis bei Kindern – nur Hinweis | Neu-Lernen am Stück; getragen von der Praxis |
 | Nachlassende Hilfen | [Glisky u. a. 1986](https://link.springer.com/rwe/10.1007/978-0-387-79948-3_1101) | Studie, Ergebnisse gemischt | Hilfestufen; im Probelauf beobachten |
-| Anfangsbuchstaben als Hinweis | [Bible Memory Goal](https://www.biblememorygoal.com/memory-methods/first-letter-bible-memory-method-explained/) | Erfahrung | mittlere Hilfestufe |
+| Anfangsbuchstaben als Hinweis | [Bible Memory Goal](https://www.biblememorygoal.com/memory-methods/first-letter-bible-memory-method-explained/) | Erfahrung | mittlere Hilfestufe bis 3.18.23; ersetzt, siehe nächste Zeile |
+| Anfang nennen, der Lernende setzt fort | Praxis beim Quran-Auswendiglernen; [Tarteel](https://tarteel.ai/blog/can-you-at-least-tell-me-the-first-word/) | Erfahrung | mittlere Hilfestufe seit 3.18.24 (`ANFANG-VORLAGE-2026-10-07.md`) |
 | Texte in fester Reihenfolge, vorherige Zeilen als Hinweis, nie die folgende | [SuperMemo-Blog](https://thesupermemoblog.wordpress.com/2010/02/28/memorizing-poems-with-spaced-repetition/) | Erfahrung | T4, `WIEDERHOLEN.md` § 4 |
 | Tanzil-Quran-Text: in Apps nutzbar, **unverändert**, mit Quellenangabe und Link (CC BY 3.0) | [Tanzil Text License](https://tanzil.net/docs/text_license) | Lizenztext | Ersatzquelle (§ 9) |
 | King-Fahd-Komplex bietet den Text für Entwickler an (CSV, JSON …) | [qurancomplex.gov.sa/techquran/dev](https://qurancomplex.gov.sa/en/techquran/dev/) | Bedingungen **nicht einsehbar** (Seite am 29.09. vom Prüfsystem nicht erreichbar; Spiegel ohne Lizenzangabe) | § 9: in Stufe 0 klären |
@@ -109,7 +110,7 @@ lernens und wird von der App an echten Antworten **selbst überprüft**
 | Kreis | wie feste Zeilen der Reihe nach wiederkommen (`WIEDERHOLEN.md` § 3) |
 | Abschnitt | bis 5 zusammenhängende Zeilen, am Stück aufgesagt |
 | Hinweiszeilen | bis 2 Zeilen davor, grau |
-| Hilfestufe | 1 lesen · 2 Anfangsbuchstaben · 3 ohne Hilfe |
+| Hilfestufe | 1 lesen · 2 Anfang der Zeile · 3 ohne Hilfe |
 
 ---
 
@@ -118,7 +119,7 @@ lernens und wird von der App an echten Antworten **selbst überprüft**
 Für jede neue Zeile i (in Textreihenfolge):
 
 1. **Hilfestufe 1 – lesen:** Zeile voll sichtbar. Knopf „Weiter“.
-2. **Hilfestufe 2 – Anfangsbuchstaben** (§ 8.3). Aufsagen, „Aufdecken“
+2. **Hilfestufe 2 – Anfang der Zeile** (§ 8.3). Aufsagen, „Aufdecken“
    (mit Denkpause, `WIEDERHOLEN.md` § 7), dann „Konnte ich“ / „Noch nicht“.
    „Noch nicht“ → zurück zu Stufe 1.
 3. **Hilfestufe 3 – ohne Hilfe:** Zeile verdeckt, Hinweiszeile i−1 grau.
@@ -268,7 +269,15 @@ Bildschirmleser.
 - Richtung je Zeile über `istArabisch`; Quran-Schrift nach Einstellung.
   Mitgelieferter Text mit passender Schrift (King-Fahd-Text ↔
   `fonts/UthmanicHafs1Ver18.ttf`; bei Tanzil-Text Darstellung prüfen).
-- **Anfangsbuchstaben:** Wörter = Trennung an Leerzeichen. Aus jedem Wort
+- **Anfang der Zeile (seit 3.18.24, Betreiber 07.10.2026):** Hilfestufe 2
+  zeigt das erste Wort der Zeile, bei mehr als sechs Wörtern die ersten
+  zwei, unverändert mit allen Zeichen; der Rest ist verdeckt („· · ·“).
+  Wörter nur aus Lesezeichen zählen nicht, bleiben aber stehen. Eine Zeile
+  aus einem Wort bekommt keinen Anfang. Die Grenze „sechs“ ist eine
+  Setzung, kein Messwert. Grund für den Wechsel: Im Arabischen beginnen
+  sehr viele Wörter mit dem Artikel (Bismillah ergab „ب ا ا ا“), und ein
+  Buchstabe ohne Zeichen steht so in keiner Quelle.
+- **Anfangsbuchstaben (bis 3.18.23, nicht mehr im Code):** Wörter = Trennung an Leerzeichen. Aus jedem Wort
   der erste Grundbuchstabe, ohne Harakat und Quran-Zeichen
   (U+0610–061A, U+064B–065F, U+0670, U+06D6–06ED) und ohne Tatweel
   (U+0640). Wörter nur aus solchen Zeichen (Waqf-, Aya-Endzeichen) fallen
@@ -387,7 +396,7 @@ Jede Stufe eine Runde nach `grossplan/AUFTRAG.md` § 2 mit Gegenprüfung
 | 0 | Quran-Quelle und Bedingungen, Datei + Prüfsumme; § 14 gegen aktuellen Code prüfen; Fixtures | Bedingungen im Logbuch, Zählung 114/6236 | Sol mittel |
 | 1 | Daten, Regeln, Schalter, Ausschluss an allen Stellen § 14 | Regeln-Emulator mit Gegenprobe; `t_text_ausschluss`, `t_text_felder`; `abnahme_runde` 13/13 | Astra |
 | 2 | Anlegen (selbst/Quran), Einwilligung, Bearbeiten, Löschen, Sicherung, Datenschutzerklärung | `t_text_anlegen`, `t_quran_datei`, `t_text_einwilligung` | Sol mittel |
-| 3 | Neu lernen § 5, Anfangsbuchstaben, Denkpause | `t_text_neu`, `t_anfangsbuchstaben` | Sol mittel |
+| 3 | Neu lernen § 5, Anfang der Zeile (bis 3.18.23 Anfangsbuchstaben), Denkpause | `t_text_neu`, `t_zeilenanfang` | Sol mittel |
 | 4 | Wiederholen: Zustände, Kreis, Nachbarn, Tagesmenge, Kontrollfrage | `WIEDERHOLEN.md` § 9 | Astra |
 | 5 | Karten-Regler | `t_regler_karten` | Astra |
 | 6 | Lernen-Tab, Fortschritt, Serie, Probelauf-Anzeige | `t_text_fortschritt` | Sol niedrig |
@@ -407,7 +416,7 @@ Jede Stufe eine Runde nach `grossplan/AUFTRAG.md` § 2 mit Gegenprüfung
 | `t_quran_datei.js` | 114 Suren, 6236 Ayat, Prüfsumme, Stichproben; Sure 1 und 2 anlegen; offline nach erstem Laden | geänderte Datei → rot |
 | `t_text_einwilligung.js` | ohne Einwilligung kein Text; genau einmal gefragt; Widerruf löscht alle Texte | – |
 | `t_text_neu.js` | § 5 Schritte 1–8; Protokoll „t“ | Abbruch speichert nichts |
-| `t_anfangsbuchstaben.js` | Harakat/Waqf/Tatweel entfernt, Wortzahl stimmt, deutsch unverändert | – |
+| `t_zeilenanfang.js` (bis 3.18.23 `t_anfangsbuchstaben.js`) | Anfang ist der unveränderte Beginn der Zeile, 1 oder 2 Wörter, Lesezeichen zählen nicht, deutsch gleich | – |
 | `WIEDERHOLEN.md` § 9 | Zustände, Kreis, Nachbarn, Regler, Mehrgeräte | je Test |
 | `t_text_fortschritt.js` | Balken = gespeicherte Zustände; Kartenring zählt keine Textantworten; Serie hält mit nur Textwiederholung | – |
 | `t_text_alte_version.js` | alte `app.js` (fester Commit) mit Textzeilen im Konto: feste Zeilen nie fällig | – |
@@ -479,7 +488,7 @@ still verwerfen oder Texte falsch anbieten würden:
 | Probelauf nur beim Betreiber | Schalter an `BETREIBER_UIDS` |
 | Nach der Freigabe | Schalter entfernen, Changelog, Datenschutzerklärung aktuell |
 | Einwilligung widerrufen | alle Texte löschen, Backup anbieten |
-| Bildschirmleser | verdeckte Zeile als „verdeckt, Zeile 12“; Aufdecken per Knopf; Anfangsbuchstaben vorlesbar |
+| Bildschirmleser | verdeckte Zeile als „verdeckt, Zeile 12“; Aufdecken per Knopf; Anfang der Zeile vorlesbar, die Punkte dahinter nicht |
 
 ---
 

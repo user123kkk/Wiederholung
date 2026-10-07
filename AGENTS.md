@@ -43,3 +43,18 @@ Lesereihenfolge:
 
 „Texte auswendig lernen“ läuft im Probelauf nur im Betreiber-Konto
 (`plan/texte-lernen/`); dort nichts umbauen.
+
+## Klein-Weg (Betreiber 07.10.2026, fest)
+
+Kleinigkeiten dauern Minuten, nicht Stunden. Gilt für Aussehen, Abstand,
+Wortlaut und für ein vorhandenes Muster, das an weitere Stellen kommt
+(Beispiel: „Tippen daneben schließt“). Gilt **nicht** für Lernlogik,
+Regeln, Daten, neue Bildschirme.
+
+1. Sofort bauen, auch wenn gerade ein großer Lauf läuft – dann in einem
+   eigenen Schritt danach committen, nicht den Betreiber warten lassen.
+2. Nur die betroffenen Tests (die, die die Stelle nennen). Kein
+   Gesamtlauf, kein Affe, keine Rundenabnahme.
+3. Mehrere Kleinigkeiten = eine Version. Logbuch: wenige Zeilen.
+4. Der volle Lauf bleibt für Lernlogik, Pakete und vor dem Veröffentlichen.
+

@@ -60,7 +60,9 @@ async function lauf(browser, { ersetze, viewport } = {}) {
     await lage('Lesen');
     // 1. Anfangsbuchstaben, Denkpause, Sperre, "Noch nicht"
     await klick('[data-action="text-lernen-schritt"][data-id="buchstaben"]', 100);
-    pruefe((await p.textContent('.text-buehne__zeile--buchstaben')) === 'T 9 e z d', 'Anfangsbuchstaben: ' + await p.textContent('.text-buehne__zeile--buchstaben'));
+    /* Seit 3.18.24 der Anfang der Zeile (fuenf Woerter -> das erste), Rest Punkte. */
+    pruefe((await p.textContent('.text-buehne__zeile--buchstaben')) === 'Testzeile · · ·', 'Anfang der Zeile: ' + await p.textContent('.text-buehne__zeile--buchstaben'));
+    pruefe((await p.textContent('.text-buehne__auftrag')) === 'Mit dem Anfang aufsagen.', 'Auftrag: ' + await p.textContent('.text-buehne__auftrag'));
     await aufdecken('Buchstaben');
     await p.click('[data-action="text-konnte"][data-id="nein"]'); await p.waitForTimeout(100);
     pruefe(await schritt() === 'buchstaben', 'Tipp vor der Sperre wurde angenommen');

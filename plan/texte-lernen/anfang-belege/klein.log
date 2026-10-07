@@ -1,0 +1,52 @@
+EXIT 0 t_zeilenanfang.js
+(lesen) 1:1 -> 3 von 4 Woertern gezeigt, 28 Zeichen
+Gegenprobe (zaehlt bis 3): 22 Befunde (rot erwartet)
+OK t_zeilenanfang: 13 Quran-Stellen + deutsche Saetze
+EXIT 0 t_text_neu.js
+Gegenprobe ohne Protokoll "t": 3 Befunde (rot erwartet)
+OK t_text_neu: Schritte 1-8, Denkpause, Sperre, Lage 390/320, Abbruch
+EXIT 0 t_griff_scrollen.js
+OK   Buendel 4: Finger 96 px | Seite folgt 96 px | laeuft aus 162 px, groesster Schritt danach 13 px
+OK   Buendel 6: Finger 96 px | Seite folgt 96 px | laeuft aus 209 px, groesster Schritt danach 16 px
+OK   Halten und ziehen: Zeile folgt true | Platz 8 -> 9 | Seite bewegt 0 px
+EXIT 0 t_feedback_speichern.js
+OK Meldungen gleich; offline gesperrt; nach 12s bedienbar, Entwurf erhalten; spaete Antwort ohne UI-Wirkung
+OK dauerhafte Ablehnung: Dialog und Banner nennen die Sicherung
+EXIT 0 t_gross_alle.js
+  wahlblatt        Kontrast 0 | quer false | unter Leiste 0 | lange Zeilen 0 | Blatt 460 px
+  konto-loeschen   Kontrast 0 | quer false | unter Leiste 0 | lange Zeilen 0
+  ok
+EXIT 0 t_neben_tippen.js
+OK   klein: Karte leer schliesst true | mit Text Rueckfrage true, Text danach "Probe" | Code leer schliesst true | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt false
+     Rueckfrage bleibt false | noch angemeldet true | Hinweis zu true
+OK   ipad: Karte leer schliesst true | mit Text Rueckfrage true, Text danach "Probe" | Code leer schliesst true | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt false
+EXIT 0 t_schreiben.js
+  Kontrast 0
+  Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1011 ms | Bilder > 34 ms: 0
+  ok
+EXIT 0 t_schreiben_vollbild.js
+OK   handy: Form klein 0.55, Vollbild 1.83 | Vollbild Tinte 767 bei y 0.68-0.72 | verkleinert Tinte 233 bei x 0.42-0.58, y 0.68-0.72 | wieder Vollbild 767 | zweiter Strich klein 972, im Vollbild 1518
+OK   klein: Form klein 0.6, Vollbild 1.69 | Vollbild Tinte 711 bei y 0.68-0.72 | verkleinert Tinte 261 bei x 0.41-0.59, y 0.67-0.72 | wieder Vollbild 711 | zweiter Strich klein 941, im Vollbild 1415
+OK   ipad: Form klein 0.28, Vollbild 1.33 | Vollbild Tinte 1509 bei y 0.69-0.71 | verkleinert Tinte 294 bei x 0.45-0.55, y 0.68-0.71 | wieder Vollbild 1509 | zweiter Strich klein 1674, im Vollbild 304
+EXIT 0 t_ueben.js
+Noch eine Runde
+Nochmal: Übung – zählt nicht als WiederholungKarte 1 von 9
+keine Fehler
+EXIT 0 t_ueben_auswahl.js
+  Kontrast 0
+  Start: Schreiben aktiv true | Übung – zählt nicht als Wiederholung Karte 1 von 12
+  ok
+EXIT 1 t_verlauf_mehrgeraete.js
+    port: 8081
+  }
+}
+EXIT 0 t_paket_e.js
+E32 820/dunkel/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/dunkel/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+Paket E: 30 lokale Abnahmen; E17 wartet auf G4, E26 später Z7.
+EXIT 0 t_paket_c_weiter.js
+C22 grün 1440 hell true
+C22 grün 1440 dunkel false
+C22 grün 1440 dunkel true
+FERTIG
+Nachtrag 23:55: t_verlauf_mehrgeraete nach Neustart des Emulators gruen; t_paket_c_weiter gruen. Alle 13 betroffenen Tests gruen.

@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.24";
+const APP_VERSION = "3.18.23";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -12841,7 +12841,7 @@ function renderTextAnsicht() {
 
 /* ---------- 3.18.3: Neu lernen (Stufe 3) ----------
    plan/texte-lernen/KONZEPT.md § 5: Fuer jede neue Zeile drei Hilfestufen -
-   lesen, mit dem Anfang, ohne Hilfe -, danach alle heute neu gelernten
+   lesen, Anfangsbuchstaben, ohne Hilfe -, danach alle heute neu gelernten
    Zeilen dieses Textes am Stueck. Erst "Fliessend" macht die Zeile frisch
    (Stufe 0, morgen faellig, WIEDERHOLEN.md § 2) und zaehlt einmal im
    Tagesprotokoll als "t" (WIEDERHOLEN.md § 7). Abbrechen vorher speichert
@@ -12856,30 +12856,24 @@ const DENKPAUSE_JE_WORT_MS = 400, DENKPAUSE_MIN_MS = 1000, DENKPAUSE_MAX_MS = 60
 const NEU_GUT_FUER_HEUTE = 3;     // T7: danach ein ruhiger Satz, weiterlernen bleibt moeglich
 let denkpauseUhr = null;
 
-/* 3.18.24, Hilfestufe 2 (KONZEPT § 8.3, Betreiber 07.10.2026): der Anfang
-   der Zeile, unveraendert wie in der Quelle - das erste Wort, bei Zeilen
-   mit mehr als ANFANG_KURZ_BIS Woertern die ersten zwei. Der Rest bleibt
-   verdeckt. Vorher standen hier Anfangsbuchstaben; im Arabischen beginnen
-   zu viele Woerter mit dem Artikel (Bismillah ergab viermal fast nichts),
-   und ein einzelner Buchstabe ohne Zeichen steht so in keiner Quelle.
-   Woerter = Trennung an Leerzeichen; Woerter nur aus Quran-Lesezeichen
-   (Waqf, Sajda) zaehlen nicht, bleiben aber stehen, wo sie stehen. Eine
-   Zeile aus einem einzigen Wort bekommt keinen Anfang - sonst waere die
-   Stufe dasselbe wie Lesen. */
+/* Anfangsbuchstaben (KONZEPT § 8.3): Woerter = Trennung an Leerzeichen. Bei
+   Arabisch der erste Grundbuchstabe ohne Harakat, Quran-Zeichen und Tatweel;
+   Woerter nur aus solchen Zeichen (Waqf-, Sajda-Zeichen) fallen weg. Sonst
+   der erste Buchstabe, Satzzeichen davor und dahinter bleiben. */
 const ARAB_OHNE_BUCHSTABE = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g;
-const ANFANG_KURZ_BIS = 6;
-function istAufsagWort(w) { return !!w && (!istArabisch(w) || !!w.replace(ARAB_OHNE_BUCHSTABE, "")); }
-function zeilenAnfang(zeile) {
-  const teile = String(zeile || "").split(" ");
-  const n = zeileWoerter(zeile).length;
-  const zeigen = n <= 1 ? 0 : n <= ANFANG_KURZ_BIS ? 1 : 2;
-  let gezaehlt = 0, i = 0;
-  for (; i < teile.length && gezaehlt < zeigen; i++) if (istAufsagWort(teile[i])) gezaehlt++;
-  return teile.slice(0, i).join(" ");
+function anfangsbuchstaben(zeile) {
+  return String(zeile || "").split(" ").map(w => {
+    if (!w) return "";
+    if (istArabisch(w)) return w.replace(ARAB_OHNE_BUCHSTABE, "").charAt(0);
+    const b = w.match(/[\p{L}\p{N}]/u);
+    if (!b) return w;
+    const vorn = (w.match(/^\p{P}+/u) || [""])[0], hinten = (w.match(/\p{P}+$/u) || [""])[0];
+    return vorn + b[0] + hinten;
+  }).filter(Boolean).join(" ");
 }
 /* Woerter, die man aufsagt - fuer die Denkpause. */
 function zeileWoerter(zeile) {
-  return String(zeile || "").split(" ").filter(istAufsagWort);
+  return String(zeile || "").split(" ").filter(w => w && (!istArabisch(w) || w.replace(ARAB_OHNE_BUCHSTABE, "")));
 }
 /* WIEDERHOLEN.md § 7: 0,4 s je Wort der verdeckten Zeilen, 1-6 s. */
 function denkpauseMs(zeilen) {
@@ -13431,7 +13425,7 @@ function renderTextWdh(tl, b, t) {
    Schritt hat dieselbe Knopfreihe mit zwei Plaetzen, nichts springt. */
 function textZeileHtml(z, art, nr, wortName) {
   const inhalt = art === "verdeckt" ? '<span class="text-buehne__verdeckt">' + '· · ·' + '</span>'
-    : art === "buchstaben" ? esc(zeilenAnfang(z.wort)) + ' <span class="text-buehne__verdeckt" aria-hidden="true">· · ·</span>' : esc(z.wort);
+    : art === "buchstaben" ? esc(anfangsbuchstaben(z.wort)) : esc(z.wort);
   const label = art === "verdeckt" ? ' aria-label="' + wortName + ' ' + nr + ', verdeckt"' : '';
   return '<p' + schriftAttr(z.wort, "text-buehne__zeile text-buehne__zeile--" + art) + label + '>' + inhalt + '</p>';
 }
@@ -13484,7 +13478,7 @@ function renderTextLernen() {
   } else {
     const z = textLernenZeile(b, tl.fokus);
     if (!z) return html + '</div>';
-    const auftrag = { lesen: 'Lesen – laut, bis es sich vertraut anfühlt.', buchstaben: 'Mit dem Anfang aufsagen.', ohne: 'Ohne Hilfe aufsagen.' }[tl.schritt];
+    const auftrag = { lesen: 'Lesen – laut, bis es sich vertraut anfühlt.', buchstaben: 'Mit den Anfangsbuchstaben aufsagen.', ohne: 'Ohne Hilfe aufsagen.' }[tl.schritt];
     html += '<h1 class="text-buehne__auftrag">' + auftrag + '</h1>';
     html += hinweis(z.id, tl.schritt === "ohne" ? 1 : 2);
     html += '<p class="text-buehne__nr">' + wortName + ' ' + nrVon(z.id) + '</p>';
@@ -14856,8 +14850,9 @@ function renderDialog() {
   if (!d) return "";
   /* Kein Schliessen durch Klick auf den Hintergrund, solange etwas zu
      verlieren ist: auf dem Handy trifft man den beim Scrollen zu leicht, und
-     dann waere die Eingabe weg. 3.18.19/3.18.24: Alles andere schliesst
-     beim Tippen daneben wie "Abbrechen" (case "dlg-neben"). */
+     dann waere die Eingabe weg. 3.18.19: Ein Eingabe-Dialog mit LEEREM Feld
+     schliesst beim Tippen daneben wie "Abbrechen" (case "dlg-neben");
+     Rueckfragen und Meldungen bleiben stehen. */
   let h = '<div class="dlg-backdrop" data-action="dlg-neben">';
   h += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="dlg-title">';
   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
@@ -15743,12 +15738,7 @@ document.body.addEventListener("click", e => {
     case "dlg-ok": if (ui.dialog) closeDialog(dialogResult(ui.dialog, true)); break;
     case "dlg-cancel": if (ui.dialog) closeDialog(dialogResult(ui.dialog, false)); break;
     case "dlg-neben":
-      /* 3.18.24 (Betreiber 07.10.2026: "allgemein so, nicht nur an den zwei
-         Beispielen"): Tippen daneben schliesst jeden Dialog wie "Abbrechen" -
-         Hinweis und Code-Anzeige gehen zu, eine Rueckfrage gilt als nein. Nur
-         ein Eingabe-Dialog mit getipptem Text bleibt stehen (sonst waere die
-         Eingabe weg). */
-      if (ui.dialog && (ui.dialog.kind !== "prompt" || !(ui.dialog.value || "").trim())) closeDialog(dialogResult(ui.dialog, false));
+      if (ui.dialog && ui.dialog.kind === "prompt" && !(ui.dialog.value || "").trim()) closeDialog(dialogResult(ui.dialog, false));
       break;
     case "karte-sheet-neben": schliesseObersteEbene(); break;
     case "code-copy-clipboard":

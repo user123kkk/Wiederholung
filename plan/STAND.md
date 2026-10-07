@@ -1,5 +1,7 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**07.10.2026, 23:30: 3.18.24 auf main (Texte: Anfang der Zeile statt Anfangsbuchstaben; Tippen daneben schließt jedes Fenster; Schalter und Merk-Kasten). Geprüft: Logbuch Zyklus 2, oberster Eintrag. Nicht veröffentlicht. Ergebnis der Mehrwert-Runde: `zyklus-2/mehrwert/ERGEBNIS-2026-10-07.md`, neue Wünsche: `zyklus-2/BETREIBER-2026-10-07-NEU.md`.**
+
 **07.10.2026, 13:50: 3.18.23 auf main (eine Runde über alle Bereiche). Gesamtlauf 152/152 (nach Neustart des Laptops um 14:45; vorher war `t_paket_d` D11 rot, auch am Vorstand), Runde 13/13, Affen 0 Befunde. Nicht veröffentlicht.**
 
 **07.10.2026, 02:30: 3.18.22 auf main (Reihenfolge bei Rundenlimit, E-05). Gesamtlauf 151/151, Runde 13/13, Affen 0 Befunde; der Lauf deckt auch 3.18.19–3.18.21 ab. Nicht veröffentlicht, online ist 3.18.14.** Davor: **06.10.2026, nachts: 3.18.21 auf main („In der Kartenliste zeigen“, Texte-Wortlaut). Alle Wünsche und Entscheidungen des Betreibers vom 05./06.10.: `zyklus-2/BETREIBER-2026-10-06.md`. Davor 3.18.20 (Verschiebe-Griff läuft nach frühem Losziehen nicht mehr davon), davor 3.18.19, nicht veröffentlicht.** Zwei

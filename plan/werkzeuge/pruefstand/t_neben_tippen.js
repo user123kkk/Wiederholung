@@ -63,13 +63,21 @@ const offen = (p, sel) => p.locator(sel).count();
         await nebenTippen(p);
         const codeTextBleibt = await p.evaluate(() => { const e = document.getElementById('dlg-input'); return e ? e.value : null; });
         if (await offen(p, '#dlg-input')) await aktion(p, 'dlg-cancel', null, 500);
-        // 4. Rueckfrage (Abmelden) bleibt bei Tippen daneben stehen, wie bisher
+        // 4. Seit 3.18.24 (Betreiber 07.10.: "allgemein so"): Rueckfrage (Abmelden)
+        //    schliesst bei Tippen daneben und gilt als nein - man bleibt angemeldet.
         await aktion(p, 'seite-zu', null, 600);
-        let rueckfrageBleibt = null;
+        let rueckfrageBleibt = null, nochAngemeldet = null, hinweisZu = null;
         if (await offen(p, '[data-action="logout"]')) {
           await aktion(p, 'logout', null, 600);
-          if (await offen(p, '#dlg-title')) { await nebenTippen(p); rueckfrageBleibt = await offen(p, '#dlg-title') === 1; await aktion(p, 'dlg-cancel', null, 400); }
+          if (await offen(p, '#dlg-title')) { await nebenTippen(p); rueckfrageBleibt = await offen(p, '#dlg-title') === 1; if (rueckfrageBleibt) await aktion(p, 'dlg-cancel', null, 400);
+            nochAngemeldet = await offen(p, '[data-action="logout"]') === 1; }
         }
+        // 5. Hinweis (Anleitung "App auf den Home-Bildschirm legen") schliesst ebenfalls
+        if (await offen(p, '[data-action="installation-hilfe"]')) {
+          await aktion(p, 'installation-hilfe', null, 600);
+          if (await offen(p, '#dlg-title')) { await nebenTippen(p); hinweisZu = await offen(p, '#dlg-title') === 0; if (!hinweisZu) await aktion(p, 'dlg-ok', null, 400); }
+        }
+        console.log('     Rueckfrage bleibt ' + rueckfrageBleibt + ' | noch angemeldet ' + nochAngemeldet + ' | Hinweis zu ' + hinweisZu);
         const zeile = g + ': Karte leer schliesst ' + leerZu + ' | mit Text Rueckfrage ' + frage + ', Text danach "' + textDa + '" | Code leer schliesst ' + codeLeerZu + ' | Code mit Text bleibt "' + codeTextBleibt + '" | Rueckfrage bleibt ' + rueckfrageBleibt;
         console.log((alt ? 'ALT  ' : 'OK   ') + zeile);
         if (alt) {
@@ -81,7 +89,9 @@ const offen = (p, sel) => p.locator(sel).count();
           assert.equal(textDa, 'Probe', 'Text bleibt nach Abbrechen der Rueckfrage');
           assert.equal(codeLeerZu, true, 'leerer Code-Dialog schliesst bei Tippen daneben');
           assert.equal(codeTextBleibt, 'ABCDE', 'Code-Dialog mit Text bleibt offen');
-          if (rueckfrageBleibt !== null) assert.equal(rueckfrageBleibt, true, 'Rueckfrage schliesst nicht durch Tippen daneben');
+          assert.equal(rueckfrageBleibt, false, 'Rueckfrage schliesst durch Tippen daneben');
+          assert.equal(nochAngemeldet, true, 'Tippen neben die Rueckfrage gilt als nein');
+          assert.equal(hinweisZu, true, 'Hinweis schliesst durch Tippen daneben');
         }
         assert.deepEqual(p.fehler, []);
       } finally { await ctx.close(); }

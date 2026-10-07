@@ -2,6 +2,35 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-07 — 3.18.24: Texte Hilfestufe 2, drei Kleinigkeiten, Mehrwert-Runde
+
+**Geändert:** Texte: siehe `texte-lernen/LOGBUCH.md`, oberster Eintrag.
+Kleinigkeiten: `app.js` `case "dlg-neben"` (Tippen daneben schließt jeden
+Dialog wie Abbrechen; Eingabe mit Text bleibt), Kommentar in
+`renderDialog()`; `styles.css` `input.schalter::before { content: none }`,
+drei Regeln für `.merk-hinweis`; `t_neben_tippen.js` Fall 4 neu (Rückfrage
+schließt und gilt als nein), Fall 5 neu (Hinweis schließt). Neu
+`BETREIBER-2026-10-07-NEU.md`, `mehrwert/ERGEBNIS-2026-10-07.md`.
+**Entscheidung:** Betreiber 07.10.: Fenster sollen sich „allgemein“ durch
+Tippen daneben schließen, nicht nur an den zwei Beispielen vom 06.10. Der
+alte Testfall „Rückfrage bleibt stehen“ ist deshalb bewusst umgedreht.
+Eine Rückfrage zählt dabei immer als nein, es geht nichts verloren.
+**Prüfungen:** Gesamtlauf am Stand vor den drei Kleinigkeiten (Quellstand
+3742bb695303b1d2): 151/152, Runde 13/13, Affen Handy 200 / iPad 150 je 0
+Befunde. Rot blieb `t_paket_c_weiter` (Zeitmessung; war schon im Erstlauf
+von 3.18.23 rot und danach grün); `t_paket_e` hatte ich selbst
+abgeschossen, im Nachlauf grün. Nach den Kleinigkeiten nur die
+betroffenen Tests, Ergebnis in `texte-lernen/anfang-belege/klein.log`.
+**Kein voller Lauf am Endstand** (Betreiber: kleine Fixes ohne den ganzen
+Apparat); `ladegeraet.ps1` prüft vor dem Veröffentlichen alles neu.
+**Offen:** Hintergrund scrollt beim Herunterwischen eines Fensters mit
+(vom Betreiber am iPhone gesehen, im Prüfstand nicht nachstellbar, nicht
+angefasst). Mehrwert: zwei Berichte fehlen (Onboarding, Aussehen und
+Bewegung, am Nutzungslimit abgebrochen); die Fehlerliste dort ist nicht
+nachgestellt. N2–N8 aus `BETREIBER-2026-10-07-NEU.md`.
+**Nächster Schritt:** Veröffentlichen auf Stichwort. Danach Fehlerliste
+aus `mehrwert/ERGEBNIS-2026-10-07.md` nachstellen.
+
 ### 2026-10-07 — D11 nach Neustart grün, 3.18.23 abgenommen
 
 **Geändert:** nur Text: dieses Logbuch, `STAND.md`, `PLAN.md`, `LEHREN.md`
