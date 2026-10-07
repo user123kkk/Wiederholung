@@ -2,6 +2,67 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-07 — E-05 Reihenfolge bei Rundenlimit, 3.18.22
+
+**Geändert:** `app.js`: neue Funktion `nachDringlichkeit(due)` vor
+`startSession()`; `startSession()` sortiert damit, bevor es auf das
+Rundenlimit abschneidet. Kommentar an der Stelle neu (der alte versprach
+„die 10 dringendsten“, ohne zu sortieren). Version in app.js, sw.js, 33
+Stellen index.html, CHANGELOG. Neu `t_reihenfolge_limit.js`,
+`E05-UEBERGABE-2026-10-07.md`, `e05-belege/`. Außerdem, nur Text:
+`texte-lernen/ANFANG-VORLAGE-2026-10-07.md` (Vorlage a oder b, nicht gebaut).
+
+**Entscheidung:** Betreiber 06.10.: „reihenfolge ja i guess“, nachdem er
+„finde einen Kompromiss, der nicht schadet“ verlangt hatte. Lernlogik,
+deshalb voller Prüfumfang. Gebaut ist die Fassung aus `E26-VORSCHLAG.md`
+(Nachtrag): Wiederholungen nach dem Anteil, um den sie gemessen am eigenen
+Abstand überfällig sind, kleinster zuerst; bei Gleichstand der kürzere
+Abstand; neue Karten danach. Nicht „am längsten überfällig zuerst“ (alte
+Empfehlung E-05/LERNEN-4): Das hätte nach einer Pause die sicher
+vergessenen Karten vorgezogen und die noch rettbaren liegen lassen.
+Es ändert nur, **welche** Karten in eine begrenzte Runde kommen. In der
+Runde wird weiter gemischt; ohne Limit oder wenn alles hineinpasst, ändert
+sich nichts. Stufen, Abstände, Bewertung, Serie, Freischalten unberührt.
+Grenze, ehrlich: beruht auf dem Modell der Vergessenskurve und auf
+Simulationen aus der Anki-Gemeinschaft, nicht auf Messungen dieser App; das
+Anki-Handbuch empfiehlt für großen Rückstand das Gegenteil.
+
+**Prüfungen (Quellstand 6b07c2a930bb5248, BatteryStatus 2):**
+`t_reihenfolge_limit.js`: 1 Alltag (frisch 5, mittel 5, fest 0 von je 5);
+2 nach 60 Tagen Pause (fest 10, mittel 0, kurz 0); 3 Fall LERNEN-4 (heute
+fällige vor lange überfälligen); 4 nur überfällige, umgekehrt in der Liste
+(die zehn am wenigsten überfälligen); 5 neue hinter Wiederholungen (6/4);
+6 ohne Limit und Limit größer als fällig unverändert. Gegenprobe am festen
+8ac38a8 schlägt an den Fällen 1, 2 und 4 an.
+Gesamtlauf 06.10. 23:53 bis 07.10. 02:17: **151/151 Exit 0**. Runde
+**13/13** (`--fortsetzen`, dieselben Läufe dieses Quellstands). Affe mit
+Texten Handy 200 und iPad 150, Startwert 7: je **0 Befunde**.
+Alle 151 Logs gegen den Lauf von 3.18.18 (ef8d760d7190268a) verglichen.
+Anders nur: Datum und Wochentag, Gruß „Hallo“ statt „Guten Abend“ (Lauf
+nach Mitternacht), zufällige Codes und Karten, Messwerte, Versionsnummer,
+fünf neue Tests. Eine Auffälligkeit einzeln geklärt: `t_karte_kopf` zeigte
+in drei von sechs Zeilen `"ansage":""` statt „Karte gespeichert“. Die
+Ansage wird zwei Animationsbilder nach dem Speichern gesetzt
+(`ansagen()`), der Test liest nach 300 ms; in drei Wiederholungen am selben
+Stand stand der Text in allen 18 Zeilen. Kein Zusammenhang mit dieser
+Änderung; der Test wertet das Feld nicht.
+Der Lauf deckt auch 3.18.19 bis 3.18.21 ab, die nur gezielt geprüft waren.
+
+**LEHREN § 14:** 1 Codepfad gelesen (`dueCardsFor`, `startSession`,
+`intervalForStufe`, „Weiterlernen“). 2 Muster: einzige Stelle, die auf ein
+Limit abschneidet. 3 Kommentar, der das alte Verhalten falsch beschrieb,
+ersetzt. 4–5 nichts Neues. 6 Flüssigkeit und Tempo im Gesamtlauf grün.
+7 kein neuer Text in der App. 8 kein Feld. 9 kein Datenfluss. 10–11 grün.
+12 Gesamtlauf, Runde, Affen. 13 dieser Eintrag, ENTSCHEIDUNGEN, STAND, PLAN.
+
+**Offen:** Knopf „Erst einmal 20“ (E26) baut hierauf auf, eigene
+Entscheidung. Runde über alle Bereiche. Texte: Betreiber wählt a oder b
+(`texte-lernen/ANFANG-VORLAGE-2026-10-07.md`, Empfehlung b), dann Durchsicht
+„Texte top“. Recherche Abfragerichtung. Veröffentlichen durch den Betreiber.
+
+**Nächster Schritt:** Runde über alle Bereiche: erst den Rundencode auf
+Rückgängig, Zähler, Rundenende und Serie lesen, dann bauen.
+
 ### 2026-10-06 — „In der Kartenliste zeigen“, Texte-Wortlaut, 3.18.21
 
 **Geändert:** `app.js`: `ui.cardDetailAusSet`; `case "card-detail"` merkt, ob

@@ -15,7 +15,7 @@ in der nächsten Runde.
 | E-02 | „Passwort ändern" in Einstellungen | ja (a), E-Mail ändern erst bei Bedarf | – |
 | E-03 | Datenschutzerklärung an den Code angleichen | ja, Wortlaut unten | – |
 | E-04 | Rückfall reifer Karten ernster nehmen | ja, Weg (a) | – |
-| E-05 | Rundenlimit: dringendste zuerst | ja | **ja** (Betreiber 06.10.2026: „reihenfolge ja i guess“), in der Fassung aus `zyklus-2/E26-VORSCHLAG.md`, Nachtrag: am wenigsten überfällig im Verhältnis zum Abstand zuerst, nicht „am längsten überfällig“ |
+| E-05 | Rundenlimit: dringendste zuerst | ja | **ja** (Betreiber 06.10.2026: „reihenfolge ja i guess“), in der Fassung aus `zyklus-2/E26-VORSCHLAG.md`, Nachtrag: am wenigsten überfällig im Verhältnis zum Abstand zuerst, nicht „am längsten überfällig“. **Gebaut in 3.18.22.** |
 | E-06 | Neue Version still beim Zurückkehren laden | ja, ohne sichtbaren Hinweis | – |
 | E-07 | „Alles sichern" ehrlich benennen | ja, Weg (b) | – |
 | E-08 | Import-Grenze auf 5 000 | ja | – |

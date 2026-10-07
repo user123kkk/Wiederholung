@@ -1,3 +1,23 @@
+## 3.18.22 – 7. Oktober 2026
+
+**Begrenzte Runde: zuerst kommt, was heute am meisten zu verlieren hat
+(E-05, Betreiber: „reihenfolge ja“).** Betrifft nur, wer „Karten pro Runde“
+auf 10, 20 oder 30 gestellt hat und mehr Karten fällig hat, als in die Runde
+passen. Bisher kamen dann einfach die ersten Karten der Liste, auch wenn
+weiter unten dringendere lagen. Jetzt wählt die Runde nach Dringlichkeit:
+
+- **Im Alltag** zuerst das frisch Gelernte. Eine Karte, die erst einen Tag
+  alt ist, verträgt keinen Tag Verspätung; eine feste Karte merkt ihn kaum.
+- **Nach einer langen Pause** zuerst die festen Karten. Sie sind oft noch zu
+  retten, und an ihnen hängt die meiste Arbeit. Was nur kurz gelernt war und
+  seit Wochen liegt, ist ohnehin vergessen und kommt danach.
+- Neue Karten kommen wie bisher nach allen Wiederholungen.
+
+Ohne Limit („Alle“) oder wenn alles Fällige in die Runde passt, ändert sich
+nichts. In der Runde selbst ist weiter gemischt. Stufen, Abstände, Bewertung,
+Serie und Freischalten sind unverändert; „Weiterlernen“ holt wie bisher den
+Rest am selben Tag.
+
 ## 3.18.21 – 6. Oktober 2026
 
 **Von der Speicherkarte zur Karte in der Liste, und zwei Texte freundlicher.**

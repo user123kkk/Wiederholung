@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.22";
+const APP_VERSION = "3.18.21";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -6263,47 +6263,13 @@ async function deleteCard(id) {
 }
 
 /* ---------- Lern-Session ---------- */
-/* 3.18.22 (E-05 / LERNEN-4, Betreiber 06.10.2026: "reihenfolge ja"): Welche
-   Karten kommen in eine begrenzte Runde? Bis hier die ersten der Liste - der
-   Kommentar versprach "die dringendsten", gemessen kamen bei Limit 10 lange
-   ueberfaellige Karten nie dran. Jetzt: zuerst, was heute am meisten zu
-   verlieren hat.
-
-   Massstab ist, um welchen ANTEIL ihres eigenen Abstands eine Karte
-   ueberfaellig ist (Tage ueberfaellig / Abstand ihrer Stufe), kleinster
-   Anteil zuerst; bei Gleichstand der kuerzere Abstand.
-     - Alltag: alles ist heute faellig geworden (Anteil 0), dann zuerst das
-       frisch Gelernte. Eine Karte mit einem Tag Abstand vertraegt keinen Tag
-       Verspaetung, eine mit zwei Monaten merkt ihn kaum.
-     - Nach langer Pause: zuerst die festen Karten. Sie sind im Verhaeltnis
-       wenig ueberfaellig, oft noch zu retten, und an ihnen haengt die meiste
-       Arbeit. Was mit zwei Tagen Abstand seit Wochen liegt, ist ohnehin
-       vergessen und verliert durch einen weiteren Tag nichts.
-   Neue Karten bleiben hinter allen Wiederholungen (wie dueCardsFor). Die
-   Reihenfolge IN der Runde ist weiter gemischt; hier geht es nur darum, WER
-   hineinkommt. Stufen, Abstaende und Bewertung sind unberuehrt.
-   Abwaegung und Quellen: plan/zyklus-2/E26-VORSCHLAG.md (Nachtrag 06.10.). */
-function nachDringlichkeit(due) {
-  const heute = new Date(todayStr() + "T12:00:00").getTime();
-  const anteil = new Map();
-  for (const c of due) {
-    if (istNeueKarte(c)) continue;
-    const tage = Math.max(0, Math.round((heute - new Date(c.nextReview + "T12:00:00").getTime()) / 86400000));
-    anteil.set(c.id, tage / intervalForStufe(c.stufe));
-  }
-  const wdh = due.filter(c => !istNeueKarte(c));
-  /* Array.prototype.sort ist stabil: gleiche Dringlichkeit behaelt die Listenreihenfolge. */
-  wdh.sort((a, b) => (anteil.get(a.id) - anteil.get(b.id)) || (intervalForStufe(a.stufe) - intervalForStufe(b.stufe)));
-  return wdh.concat(due.filter(istNeueKarte));
-}
 function startSession() {
   let due = dueCards();
   if (due.length === 0) return;
-  /* Sitzungslimit: Passt nicht alles Faellige in die Runde, kommen die
-     dringendsten zuerst (nachDringlichkeit). Ohne Limit oder wenn alles
-     hineinpasst, aendert sich nichts. */
+  /* Sitzungslimit: schneidet am Ende ab, ohne Reihenfolge umzusortieren.
+     Wer 80 fällige hat und "10" wählt, sieht die 10 dringendsten, nicht 10 zufällige. */
   if (typeof settings.sitzungsLimit === "number" && due.length > settings.sitzungsLimit) {
-    due = nachDringlichkeit(due).slice(0, settings.sitzungsLimit);
+    due = due.slice(0, settings.sitzungsLimit);
   }
   springeNachOben("sitzung");
   /* 2.11.5: Die Durchsicht muss beendet werden, sonst passiert scheinbar

@@ -1,0 +1,8 @@
+ALT  1 Alltag, alle heute faellig: frisch 0/5, mittel 5/5, fest 5 (soll 5/5/0)
+ALT  2 nach 60 Tagen Pause: fest 0, mittel 0, kurz 10 (soll 10/0/0)
+OK   3 LERNEN-4, heute faellig vor lange ueberfaellig: heute 10, alt 0 (soll 10/0)
+ALT  4 nur ueberfaellige, umgekehrt in der Liste: die zehn am wenigsten ueberfaelligen 0/10
+OK   5 neue hinter Wiederholungen: wdh 6/6, neu 4 (soll 6/4)
+OK   6 ohne Limit: alle 10/10 in der Runde
+OK   6 Limit groesser als faellig: 8/8 in der Runde
+Gegenprobe: alter Stand nimmt die ersten der Liste (Faelle 1, 2, 4 schlagen an)
