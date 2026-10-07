@@ -2,6 +2,22 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-07 — D11 nach Neustart grün, 3.18.23 abgenommen
+
+**Geändert:** nur Text: dieses Logbuch, `STAND.md`, `PLAN.md`, `LEHREN.md`
+§ 5.3/§ 15; Beleg `runde-belege/gesamtlauf-10-fortsetzen.log`.
+**Entscheidung:** Der Betreiber hat den Laptop um 14:45 neu gestartet (er
+lief seit 01.10.). Danach derselbe Quellstand c00d9e558808a295, derselbe
+unveränderte Test: `t_paket_d.js` 250 Zustände grün, Gesamtlauf
+**152/152 Exit 0; 0 rot** (15:15, BatteryStatus 2, das Spiel lief dabei
+wieder). Damit war es der Zustand des Rechners nach sechs Tagen Laufzeit,
+nicht die App und nicht das Spiel. Was genau am Rechner hing, ist nicht
+gemessen. 3.18.23 ist mit Runde 13/13 und Affen 0 Befunde abgenommen.
+**Offen:** Veröffentlichen (Stichwort des Betreibers). E26, Recherche
+Abrufrichtung, `springeZu()` in langen Listen, D13/D15, D14/C18 nach 29.10.
+**Nächster Schritt:** Texte, Hilfestufe 2 (Betreiber 07.10.: „3. soll
+perfekt sein einfach“), Logbuch `texte-lernen/LOGBUCH.md`.
+
 ### 2026-10-07 — Eine Runde über alle Bereiche, 3.18.23
 
 **Geändert:** `app.js`: neu `offeneWiederholungen(b)`,

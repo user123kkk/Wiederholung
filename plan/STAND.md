@@ -1,6 +1,6 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
-**07.10.2026, 13:50: 3.18.23 auf main (eine Runde über alle Bereiche). Runde 13/13, Affen 0 Befunde, Gesamtlauf 151/152: `t_paket_d` D11 ist auf dem Laptop rot, auch am Vorstand 3.18.22, Ursache offen (Logbuch Zyklus 2, oberster Eintrag). Nicht veröffentlicht.**
+**07.10.2026, 13:50: 3.18.23 auf main (eine Runde über alle Bereiche). Gesamtlauf 152/152 (nach Neustart des Laptops um 14:45; vorher war `t_paket_d` D11 rot, auch am Vorstand), Runde 13/13, Affen 0 Befunde. Nicht veröffentlicht.**
 
 **07.10.2026, 02:30: 3.18.22 auf main (Reihenfolge bei Rundenlimit, E-05). Gesamtlauf 151/151, Runde 13/13, Affen 0 Befunde; der Lauf deckt auch 3.18.19–3.18.21 ab. Nicht veröffentlicht, online ist 3.18.14.** Davor: **06.10.2026, nachts: 3.18.21 auf main („In der Kartenliste zeigen“, Texte-Wortlaut). Alle Wünsche und Entscheidungen des Betreibers vom 05./06.10.: `zyklus-2/BETREIBER-2026-10-06.md`. Davor 3.18.20 (Verschiebe-Griff läuft nach frühem Losziehen nicht mehr davon), davor 3.18.19, nicht veröffentlicht.** Zwei
 Meldungen des Betreibers vom iPhone behoben: Handschrift aus dem Vollbild

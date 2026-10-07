@@ -803,6 +803,10 @@ Belegte Fälle:
   Millisekunden zählt, denselben Test unter denselben Bedingungen am
   Vorstand laufen lassen. Eine Ursache erst nennen, wenn sie gemessen ist.
   Die Grenze bleibt; der offene Test steht im Logbuch unter „Offen“.
+  Nachtrag 15:15: Nach einem Neustart des Laptops (er lief sechs Tage)
+  war derselbe Test sofort grün, 152/152. Bei unerklärlich roten
+  Bilderzähl-Tests, die auch am Vorstand rot sind, zuerst den Rechner neu
+  starten lassen, bevor Stunden in die Suche gehen.
 
 ### 5.4 Die Attrappe muss so streng sein wie die Wirklichkeit
 
@@ -2321,4 +2325,4 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 
 | 05.10. (F13, Gegenprüfung) | Changelog und elf weitere Texte nannten `plan/archiv/bilder/icon.svg` als früher ausgelieferte Datei; Befund CODE-13 umgeschrieben; zwei überholte Dateien archiviert statt gelöscht | Umzugsskript ersetzte nackte Dateinamen; Entscheidung Z14 nicht wörtlich gelesen | § 3.7a. 38 Stellen zurückgestellt und gegen 5af78a0 geprüft, CODE.md wörtlich wiederhergestellt, beide Dateien gelöscht (Inhalt bleibt in 5af78a0) |
 
-| 07.10. (3.18.23, D11 im Gesamtlauf) | `t_paket_d` D11 zehnmal rot, im frischen Browser nie; drei eigene Deutungen nacheinander falsch („Meldung zu früh entfernt“, „Spiel auf dem Laptop“, „Minuten-Sicherung“) und zwei davon dem Betreiber als wahrscheinlich gemeldet | Vermutung vor Messung genannt. Ursache bis heute offen | § 5.3 (Bilderzähl-Test rot). Vergleichslauf am Vorstand b45a13b ebenfalls rot, also nicht von 3.18.23. Grenze unverändert, Test bleibt offen |
+| 07.10. (3.18.23, D11 im Gesamtlauf) | `t_paket_d` D11 zehnmal rot, im frischen Browser nie; drei eigene Deutungen nacheinander falsch („Meldung zu früh entfernt“, „Spiel auf dem Laptop“, „Minuten-Sicherung“) und zwei davon dem Betreiber als wahrscheinlich gemeldet | Vermutung vor Messung genannt. Ursache bis heute offen | § 5.3 (Bilderzähl-Test rot). Vergleichslauf am Vorstand b45a13b ebenfalls rot, also nicht von 3.18.23. Grenze unverändert. Nach Neustart des Laptops grün (152/152) |
