@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.24";
+const APP_VERSION = "3.18.25";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -9889,9 +9889,9 @@ function renderEinstellungen() {
   html += '<div class="liste">';
   html += einstZeile({ action: "einst-seite", id: "kartensaetze", icon: "teilen",
     text: "Kartensatz per Code" });
-  /* 3.18.1: Widerruf der Einwilligung fuer Texte (KONZEPT § 10) - nur, wenn
-     sie erteilt ist. */
-  if (texteEinwilligung) html += einstZeile({ action: "texte-widerrufen", icon: "tafel", text: "Texte: Einwilligung widerrufen", wert: "erteilt" });
+  /* 3.18.25: Der Widerruf fuer Texte steht nicht mehr hier, sondern unten
+     auf der Seite "Sichern & einspielen" - mit Erklaerung. Der Betreiber
+     hatte die Zeile aus Versehen getippt (07.10.2026). */
   html += einstZeile({ action: "einst-seite", id: "daten", icon: "sichern", text: "Sichern & einspielen",
     /* 3.17.14: ausgeschrieben - "vor 3 Tg." war die einzige Abkuerzung der App. */
     wert: alter === null ? "noch nie" : alter === 0 ? "heute" : alter === 1 ? "gestern" : "vor " + alter + " Tagen" });
@@ -10008,6 +10008,15 @@ function renderEinstellungenSeite(id) {
     html += '<button class="ghost" data-action="verlauf-reset"' + (tage === 0 ? " disabled" : "") +
       '>Aufzeichnung zurücksetzen</button>';
     html += '</div></div>';
+    /* 3.18.25: Widerruf der Einwilligung fuer Texte (KONZEPT § 10) - nur,
+       wenn sie erteilt ist. Mit Erklaerung, was er tut. */
+    if (texteEinwilligung) {
+      html += '<div class="card" style="margin-top:var(--stack)"><h3>Texte</h3>';
+      html += '<p class="hint">Beim ersten Text hast du zugestimmt, dass die App deine Texte speichert. ' +
+        'Du kannst das zurücknehmen. Dann löscht die App alle deine Texte samt Lernstand und lädt vorher eine Sicherung herunter. ' +
+        'Deine Karten bleiben.</p>';
+      html += '<div class="form-actions"><button class="ghost" data-action="texte-widerrufen">Zustimmung zurücknehmen</button></div></div>';
+    }
     return html;
   }
 
@@ -12319,7 +12328,7 @@ const TEXT_EINWILLIGUNG_SATZ =
      Person steht aus (wie fuer die ganze Datenschutzerklaerung). */
   "Deine Texte gehören dir. Texte aus dem Quran oder aus Hadith-Büchern gehören zu deinem Glauben; solche Angaben schützt das Gesetz besonders. " +
   "Deshalb fragt die App einmal, ob sie deine Texte in deinem Konto speichern darf. Niemand sonst sieht sie, niemand wertet sie aus. " +
-  "Du kannst die Einwilligung jederzeit in den Einstellungen widerrufen; dann werden alle Texte gelöscht.";
+  "Du kannst die Einwilligung jederzeit in den Einstellungen unter „Sichern & einspielen“ widerrufen; dann werden alle Texte gelöscht.";
 
 function findText(b, id) { return ((b && b.texte) || []).find(t => t.id === id) || null; }
 function textZeilenVon(b, t) {

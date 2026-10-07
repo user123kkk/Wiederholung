@@ -2,6 +2,23 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — 3.18.25: Widerruf für Texte umgezogen (Klein-Weg)
+
+**Geändert:** `app.js`: Zeile `texte-widerrufen` von der Hauptseite der
+Einstellungen auf die Seite „Sichern & einspielen“ (eigene Karte „Texte“,
+zwei Sätze Erklärung, Knopf „Zustimmung zurücknehmen“);
+`TEXT_EINWILLIGUNG_SATZ` nennt den neuen Ort. Version, CHANGELOG.
+`t_text_einwilligung.js` Schritt 4 geht den neuen Weg.
+**Entscheidung:** Betreiber hatte die Zeile aus Versehen getippt und wollte
+die Funktion streichen. Nicht gestrichen (Widerruf muss möglich bleiben,
+DSGVO Art. 7), sondern entschärft; er: „ja bitte dann dort auch erklären“.
+**Prüfungen:** nur betroffene Tests, alle grün: t_daten, t_einst,
+t_import_doppelt, t_import_stapel, t_kontrast, t_paket_e,
+t_text_einwilligung.
+**Offen:** Datenschutzerklärung nennt den Ort des Widerrufs evtl. noch
+allgemein („Einstellungen“) – bei der Rechtsprüfung mitnehmen.
+**Nächster Schritt:** Veröffentlichen auf Stichwort.
+
 ### 2026-10-07 — 3.18.24: Texte Hilfestufe 2, drei Kleinigkeiten, Mehrwert-Runde
 
 **Geändert:** Texte: siehe `texte-lernen/LOGBUCH.md`, oberster Eintrag.

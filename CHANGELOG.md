@@ -1,3 +1,11 @@
+## 3.18.25 – 8. Oktober 2026
+
+**„Texte: Einwilligung widerrufen“ steht nicht mehr auf der Hauptseite der
+Einstellungen.** Dort tippte man sie zu leicht aus Versehen an. Sie steht
+jetzt unten unter „Sichern & einspielen“, heißt „Zustimmung zurücknehmen“
+und erklärt in zwei Sätzen, was passiert. Die Rückfrage mit Sicherung vor
+dem Löschen bleibt.
+
 ## 3.18.24 – 7. Oktober 2026
 
 **Texte lernen, zweite Hilfestufe: der Anfang statt Anfangsbuchstaben

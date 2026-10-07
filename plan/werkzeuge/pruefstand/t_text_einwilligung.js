@@ -68,8 +68,12 @@ const U = 'users/' + BETREIBER_UID;
     // 4. Widerruf
     await p2.click('[data-action="einstellungen"], [aria-label="Einstellungen"]').catch(() => {});
     await p2.waitForTimeout(700);
+    /* Seit 3.18.25 nicht mehr auf der Hauptseite (Fehltipp des Betreibers),
+       sondern unter "Sichern & einspielen", mit Erklaerung. */
+    pruefe(!(await p2.$('[data-action="texte-widerrufen"]')), '4: Widerruf steht noch auf der Hauptseite der Einstellungen');
+    await p2.click('[data-action="einst-seite"][data-id="daten"]'); await p2.waitForTimeout(600);
     let zeile = await p2.$('[data-action="texte-widerrufen"]');
-    pruefe(!!zeile, '4: keine Widerrufs-Zeile in den Einstellungen');
+    pruefe(!!zeile, '4: kein Widerruf unter Sichern & einspielen');
     if (zeile) {
       await zeile.click(); await p2.waitForTimeout(500);
       const [download] = await Promise.all([p2.waitForEvent('download', { timeout: 5000 }).catch(() => null),
