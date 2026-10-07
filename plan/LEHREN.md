@@ -573,6 +573,14 @@ Was gemessen wird:
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
 
+- **Vor jedem Prüfstand-Lauf fragen: Welchen Ordner liefert der Server auf
+  Port 8099?** (08.10.2026, 3.18.26). Auf dem Laptop gibt es zwei Checkouts
+  (der Ordner im Benutzerverzeichnis und der auf dem Desktop). Der Server
+  eines anderen Chats lief noch und lieferte dessen Ordner; fünf Tests
+  waren grün, hatten aber den alten Stand geprüft. Vor dem Lauf:
+  `curl -s http://127.0.0.1:8099/app.js | grep APP_VERSION` gegen die
+  eigene Version halten. Stimmt sie nicht: eigenen Server auf anderem Port
+  starten und `PRUEF_PORT` setzen, den fremden nicht beenden.
 - **Rotes Vergleichsfoto zuerst gegen die Bilder des Vorstands halten**
   (05.10.2026, F12). Zwei volle Fotovergleiche galten als Beleg gegen eine
   CSS-Bereinigung. Die Dateihashes zeigten: Das „falsche“ Bild mit neuem
@@ -2326,3 +2334,4 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 | 05.10. (F13, Gegenprüfung) | Changelog und elf weitere Texte nannten `plan/archiv/bilder/icon.svg` als früher ausgelieferte Datei; Befund CODE-13 umgeschrieben; zwei überholte Dateien archiviert statt gelöscht | Umzugsskript ersetzte nackte Dateinamen; Entscheidung Z14 nicht wörtlich gelesen | § 3.7a. 38 Stellen zurückgestellt und gegen 5af78a0 geprüft, CODE.md wörtlich wiederhergestellt, beide Dateien gelöscht (Inhalt bleibt in 5af78a0) |
 
 | 07.10. (3.18.23, D11 im Gesamtlauf) | `t_paket_d` D11 zehnmal rot, im frischen Browser nie; drei eigene Deutungen nacheinander falsch („Meldung zu früh entfernt“, „Spiel auf dem Laptop“, „Minuten-Sicherung“) und zwei davon dem Betreiber als wahrscheinlich gemeldet | Vermutung vor Messung genannt. Ursache bis heute offen | § 5.3 (Bilderzähl-Test rot). Vergleichslauf am Vorstand b45a13b ebenfalls rot, also nicht von 3.18.23. Grenze unverändert. Nach Neustart des Laptops grün (152/152) |
+| 08.10. (3.18.26, Klein-Weg) | Fünf betroffene Tests grün gemeldet, sie liefen aber gegen den Server eines anderen Chats mit dessen Ordner (3.18.25); aufgefallen erst, als eine eigene Messung die neue CSS-Regel nicht fand | Port 8099 war belegt und antwortete mit 200; nicht geprüft, welchen Stand er liefert | § 5.3 (Server-Ordner vor dem Lauf prüfen). Eigener Server auf 8097 mit `PRUEF_PORT`, alle fünf wiederholt, grün |

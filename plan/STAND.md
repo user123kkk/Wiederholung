@@ -1,5 +1,7 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**08.10.2026, vormittags: 3.18.26 auf main (Notiz mit arabischer Zeile rechtsläufig; Ersatzfarbe der Leisten für alte iPhones). Nur betroffene Tests. Nicht veröffentlicht. Zweiter Mehrwert-Chat eingearbeitet: 68 Fragen, Antworten des Betreibers („wie empfohlen“), offene Punkte und Pakete G0–Q in `zyklus-2/mehrwert/RUNDE-2-2026-10-08.md`.**
+
 **08.10.2026, 00:35: 3.18.25 auf main (Widerruf für Texte steht jetzt unter „Sichern & einspielen“). Nicht veröffentlicht.**
 
 **07.10.2026, 23:30: 3.18.24 auf main (Texte: Anfang der Zeile statt Anfangsbuchstaben; Tippen daneben schließt jedes Fenster; Schalter und Merk-Kasten). Geprüft: Logbuch Zyklus 2, oberster Eintrag. Nicht veröffentlicht. Ergebnis der Mehrwert-Runde: `zyklus-2/mehrwert/ERGEBNIS-2026-10-07.md`, neue Wünsche: `zyklus-2/BETREIBER-2026-10-07-NEU.md`.**

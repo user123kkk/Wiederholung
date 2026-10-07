@@ -9,6 +9,11 @@ E-10 b, E-16: F-1 und F-2 ja, Rest wie empfohlen". „Wie empfohlen" für alles
 geht auch. Die Schleife trägt es hier ein (Spalte „Entschieden") und baut es
 in der nächsten Runde.
 
+**08.10.2026:** Betreiber: „Wie von dir empfohlen“ für E-01 bis E-18.
+Abweichung E-07: alles mitsichern (nicht nur benennen). E-05 ist seit
+3.18.22 gebaut. Einzelheiten und alle weiteren Antworten:
+[`../zyklus-2/mehrwert/RUNDE-2-2026-10-08.md`](../zyklus-2/mehrwert/RUNDE-2-2026-10-08.md).
+
 | Nr | Frage | Empfehlung | Entschieden |
 |---|---|---|---|
 | E-01 | Passwort mind. 8 Zeichen | ja | – |

@@ -1,3 +1,15 @@
+## 3.18.26 – 8. Oktober 2026
+
+**Zwei Kleinigkeiten.**
+
+- Notiz einer Karte: Eine arabische Zeile in der Notiz steht jetzt rechts
+  und läuft von rechts nach links, eine deutsche bleibt links. Vorher stand
+  alles linksbündig, Satzzeichen arabischer Beispielsätze landeten auf der
+  falschen Seite. Gilt in der Lernrunde und in der Kartenansicht.
+- Kopfleiste, Navigation und Modusleiste haben eine feste Ersatzfarbe für
+  ältere Browser, die die halbdurchsichtige Mischung nicht kennen (iPhones
+  vor iOS 16.2). Auf aktuellen Geräten ändert sich nichts.
+
 ## 3.18.25 – 8. Oktober 2026
 
 **„Texte: Einwilligung widerrufen“ steht nicht mehr auf der Hauptseite der

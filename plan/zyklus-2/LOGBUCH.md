@@ -2,6 +2,34 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — 3.18.26: zwei Kleinigkeiten, Mehrwert zweiter Chat eingearbeitet
+
+**Geändert:** `styles.css`: `.study-extra` und `.extra-note-voll` mit
+`text-align: start; unicode-bidi: plaintext` (Notiz: Richtung je Absatz);
+vor den drei `color-mix`-Hintergründen von `.appbar`, `.nav`, `.modebar` je
+eine feste Ersatzfarbe. Version, CHANGELOG. Neu:
+`mehrwert/RUNDE-2-2026-10-08.md` (26 Agenten, 68 Fragen, Antworten,
+Paketreihenfolge). `LEHREN.md` § 5.3 und § 15 (Server-Ordner).
+`grossplan/ENTSCHEIDUNGEN.md`: Verweis auf die Antworten.
+**Entscheidung:** Betreiber 08.10.: „Wie von dir empfohlen“ für alle
+Fragen mit Empfehlung; „Kleinigkeiten nach dem Klein-Weg bauen, nichts
+veröffentlichen“. Nach dem Klein-Weg gebaut wurde nur, was Aussehen ohne
+Lernlogik, Regeln, Daten oder neue Bildschirme ist. Alles andere aus der
+Sammelfreigabe S1 (Wake Lock, Druck, Export, Bearbeiten in der Abfrage …)
+ist größer und steht als Pakete G0–Q in der neuen Datei. Die Korrektur
+gemischter Karten ist bewusst nicht klein: sie betrifft jede Karte.
+**Prüfungen:** `node --check`, `pruefe_stand.mjs` grün. Betroffene Tests
+auf eigenem Server (Port 8097, dieser Ordner): t_runde_rest, t_fotos_runde,
+t_sprung, t_kontrast, t_gross_alle, alle Exit 0; Logs in
+`klein-belege/26-*.log`. Eigene Messung: deutsche Notizzeile 17 px vom
+linken Rand, arabische 17 px vom rechten. Erster Lauf war ungültig (§ 15).
+Kein Gesamtlauf, keine Rundenabnahme. Ersatzfarbe auf altem iOS nicht
+geprüft (kein Gerät).
+**Offen:** Fragen 37, 38, 40, 4, 17, 35, 65 in der neuen Datei, Abschnitt 4.
+Durchsicht Platzierung/Animationen, Onboarding-Bericht mit Marhaba,
+Hintergrund-Scrollen am iPhone, D13, D15 nicht angefasst.
+**Nächster Schritt:** Veröffentlichen auf Stichwort. Danach Paket G0.
+
 ### 2026-10-08 — 3.18.25: Widerruf für Texte umgezogen (Klein-Weg)
 
 **Geändert:** `app.js`: Zeile `texte-widerrufen` von der Hauptseite der

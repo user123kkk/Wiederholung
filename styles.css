@@ -724,6 +724,7 @@ html.ref-hoehe .view--modus:has(> .study-card:not(.study-card--schreiben)) { hei
   /* 23.09.2026: wie bei .nav (dieselbe Begruendung dort) von 82% auf 95% -
      derselbe Bauteil soll nicht unterschiedlich hell aussehen, je nachdem
      ob gerade Inhalt oder eine leere Flaeche direkt darunter durchscheint. */
+  background: var(--bg);   /* 3.18.26: Ersatz fuer Browser ohne color-mix (iOS < 16.2) */
   background: color-mix(in srgb, var(--bg) 95%, transparent);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   backdrop-filter: saturate(180%) blur(14px);
@@ -820,6 +821,7 @@ html.ref-hoehe .view--modus:has(> .study-card:not(.study-card--schreiben)) { hei
      leer gegen ~rgb(48) ueber Karten). Bei 95% traegt der feste Flaechenton
      den Hauptanteil der Farbe, der Weichzeichner bleibt fuer die Kanten und
      etwas Sog, schlaegt aber nicht mehr so stark auf den Gesamtton durch. */
+  background: var(--surface);   /* 3.18.26: Ersatz fuer Browser ohne color-mix (iOS < 16.2) */
   background: color-mix(in srgb, var(--surface) 95%, transparent);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
@@ -919,6 +921,7 @@ html.ref-hoehe .view--modus:has(> .study-card:not(.study-card--schreiben)) { hei
   padding: var(--sat) calc(var(--gutter) + var(--sar)) 0 calc(var(--gutter) + var(--sal));
   display: flex; align-items: center; gap: var(--space-2);
   /* 23.09.2026: gleicher Grund wie bei .nav/.appbar - 86% auf 95%. */
+  background: var(--bg);   /* 3.18.26: Ersatz fuer Browser ohne color-mix (iOS < 16.2) */
   background: color-mix(in srgb, var(--bg) 95%, transparent);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   backdrop-filter: saturate(180%) blur(14px);
@@ -1797,7 +1800,9 @@ button.startliste__schritt { cursor: pointer; }
   font-size: var(--fs-md); color: var(--text-2); line-height: 1.6;
   background: var(--surface); border: 1px solid var(--border-subtle);
   border-radius: var(--r-md); padding: var(--space-4);
-  text-align: left;
+  /* 3.18.26: Richtung je Absatz aus dem Text selbst - eine arabische
+     Zeile in der Notiz steht rechts, eine deutsche links. */
+  text-align: start; unicode-bidi: plaintext;
   /* Die Notiz kommt aus einer <textarea> - ohne pre-wrap kollabiert der
      Browser jeden Zeilenumbruch zu einem Leerzeichen, und Absaetze gehen
      beim Anzeigen verloren (Beobachtung 15.09.2026). */
@@ -2622,6 +2627,7 @@ input.schalter::before { content: none; }
 .extra-note-voll {
   font-size: var(--fs-xs); color: var(--text-2); margin-top: var(--space-2);
   white-space: pre-wrap;
+  text-align: start; unicode-bidi: plaintext;   /* 3.18.26: wie .study-extra */
 }
 .dlg--card-detail .extra-note-voll {
   max-height: min(28svh, 240px); overflow-y: auto; overscroll-behavior: contain;
