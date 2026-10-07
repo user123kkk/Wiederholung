@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: D11 keine fünf Austrittsbilder: [{"t":2420.400000035763,"op":1},{"t":2438.2000000476837,"op":1},{"t":2455.600000023842,"op":1},{"t":2473.100000023842,"op":1},{"t":2491.400000035763,"op":1},{"t":2509.2000000476837,"op":1},{"t":2526.7000000476837,"op":1},{"t":2544.100000023842,"op":1},{"t":2562,"op":1},{"t":2580.100000023842,"op":1},{"t":2598.100000023842,"op":1},{"t":2616.5,"op":1},{"t":2634.2000000476837,"op":0.887006},{"t":2651.7000000476837,"op":0.778256},{"t":2669.7000000476837,"op":0.665131},{"t":2687.2000000476837,"op":0.555756}]
+    at C:\Users\USER\Desktop\Wiederholung-Belege\vergleich-b45a13b\plan\werkzeuge\pruefstand\t_paket_d.js:243:21
+    at async matrix (C:\Users\USER\Desktop\Wiederholung-Belege\vergleich-b45a13b\plan\werkzeuge\pruefstand\t_paket_d.js:136:50)
+    at async d11 (C:\Users\USER\Desktop\Wiederholung-Belege\vergleich-b45a13b\plan\werkzeuge\pruefstand\t_paket_d.js:235:24)
+    at async C:\Users\USER\Desktop\Wiederholung-Belege\vergleich-b45a13b\plan\werkzeuge\pruefstand\t_paket_d.js:304:131 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

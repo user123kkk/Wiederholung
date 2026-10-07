@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.23";
+const APP_VERSION = "3.18.22";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -3222,24 +3222,22 @@ function checkStreakOnSessionComplete() {
   const jetzt = serieAktuell();
   if (jetzt > (streak.beste || 0)) { streak.beste = jetzt; persistStreak(["beste"]); }
 }
-/* Wiederholungen, die heute in einem Bereich offen sind: faellig, freigegeben,
-   nicht liegengeblieben. Neue Karten stehen bewusst nicht drin.
-   Seit 3.18.23 dreifach gebraucht, immer dieselbe Menge: der Hinweis auf dem
-   Lernen-Tab ("Mit dabei: …" bzw. "Heute auch fällig: …"), die Zahl im
-   Stapel und die Abschnitte der Runde aus den anderen Bereichen
-   (rundeWeitereBereiche).
+/* Alle Bereiche, in denen heute noch eine WIEDERHOLUNG offen ist – nur noch
+   Grundlage für den Hinweis „Heute auch fällig: …" auf dem Lernen-Tab.
    3.17.19: Mit der Serie hat das seit 2.14.0 nichts mehr zu tun (die kommt
-   aus dem Tagesprotokoll, serieAktuell). */
-function offeneWiederholungen(b) {
-  const t = todayStr(), frei = freieIdsFor(b);
-  return b.karten.filter(c =>
-    !istNeueKarte(c) && c.nextReview <= t && !istLiegengeblieben(c) &&
-    (frei === null || frei.has(c.id)));
-}
+   aus dem Tagesprotokoll, serieAktuell); der alte Satz "Grundlage für die
+   Streak-Prüfung" hier war veraltet. Neue Karten stehen bewusst nicht drin. */
 function bereicheMitOffenem() {
   if (bereiche === null) return [];
+  const t = todayStr();
   return bereiche
-    .map(b => ({ bereich: b, offen: offeneWiederholungen(b).length }))
+    .map(b => {
+      const frei = freieIdsFor(b);
+      const offen = b.karten.filter(c =>
+        !istNeueKarte(c) && c.nextReview <= t && !istLiegengeblieben(c) &&
+        (frei === null || frei.has(c.id))).length;
+      return { bereich: b, offen: offen };
+    })
     .filter(x => x.offen > 0);
 }
 
@@ -6298,68 +6296,14 @@ function nachDringlichkeit(due) {
   wdh.sort((a, b) => (anteil.get(a.id) - anteil.get(b.id)) || (intervalForStufe(a.stufe) - intervalForStufe(b.stufe)));
   return wdh.concat(due.filter(istNeueKarte));
 }
-/* 3.18.23 (Betreiber 06.10.2026: "bei verschiedenen Bereichen einfacher Karten
-   lernen, anstatt immer wieder auf sie druecken zu muessen"): Eine Runde laeuft
-   Bereich fuer Bereich weiter. Zuerst das Faellige des offenen Bereichs; ist
-   danach in der Rundengroesse noch Platz, folgen die anderen Bereiche in ihrer
-   Reihenfolge - ohne Tipp, in derselben Runde.
-
-   Bewusst KEIN Mischen ueber Bereiche: Es ist immer genau ein Bereich offen
-   (ui.bereichId wandert mit). Damit rechnen Lektions-Schloss, Lehrer-Freigabe,
-   Merken, Regler und Speichern wie bisher je Bereich, und Rueckgaengig kann
-   den Schritt ueber die Grenze zuruecknehmen.
-
-   Aus den ANDEREN Bereichen kommt nur, was auch der Hinweis "Heute auch
-   faellig" nennt (offeneWiederholungen): faellige Wiederholungen, keine neuen
-   Karten und nichts Liegengebliebenes. Ein eingespielter Bereich mit 500
-   neuen oder wochenalten Karten haengt sich also nicht von selbst an (2.13.1).
-   Jeder Abschnitt: { bereichId, ids } (schon gemischt). */
-function rundeWeitereBereiche(platz) {
-  const hier = currentBereich().id, out = [];
-  for (const b of bereiche) {
-    if (b.id === hier || platz <= 0) continue;
-    let offen = offeneWiederholungen(b);
-    if (offen.length === 0) continue;
-    if (offen.length > platz) offen = nachDringlichkeit(offen).slice(0, platz);
-    platz -= offen.length;
-    out.push({ bereichId: b.id, ids: shuffled(offen.map(c => c.id)) });
-  }
-  return out;
-}
-function rundeRestAnzahl(s) { return (s.rest || []).reduce((n, a) => n + a.ids.length, 0); }
-/* Der laufende Abschnitt ist durch: den naechsten Bereich oeffnen. Karten, die
-   es inzwischen nicht mehr gibt (anderes Geraet), fallen aus der Zaehlung. */
-function rundeNaechsterBereich(s) {
-  while (s.queue.length === 0 && s.rest && s.rest.length) {
-    const a = s.rest.shift();
-    const b = bereiche.find(x => x.id === a.bereichId);
-    const ids = b ? a.ids.filter(id => b.karten.some(c => c.id === id)) : [];
-    s.total -= a.ids.length - ids.length;
-    if (ids.length === 0) continue;
-    ui.bereichId = b.id;
-    s.bereichId = b.id;
-    s.bereichIds.push(b.id);
-    s.queue = ids;
-    s.wechselZug = s.zug || 0;       // renderSession nennt auf dieser Karte einmal den Bereich
-    ansagen("Weiter mit " + b.name);
-  }
-}
 function startSession() {
   let due = dueCards();
+  if (due.length === 0) return;
   /* Sitzungslimit: Passt nicht alles Faellige in die Runde, kommen die
      dringendsten zuerst (nachDringlichkeit). Ohne Limit oder wenn alles
      hineinpasst, aendert sich nichts. */
-  const limit = typeof settings.sitzungsLimit === "number" ? settings.sitzungsLimit : Infinity;
-  if (due.length > limit) due = nachDringlichkeit(due).slice(0, limit);
-  const rest = rundeWeitereBereiche(limit - due.length);
-  /* Im offenen Bereich ist nichts (mehr) faellig, in einem anderen schon -
-     etwa "Weiterlernen" am Rundenende: dort anfangen. */
-  let erste = shuffled(due.map(c => c.id));
-  if (erste.length === 0) {
-    if (rest.length === 0) return;
-    const a = rest.shift();
-    ui.bereichId = a.bereichId;
-    erste = a.ids;
+  if (typeof settings.sitzungsLimit === "number" && due.length > settings.sitzungsLimit) {
+    due = nachDringlichkeit(due).slice(0, settings.sitzungsLimit);
   }
   springeNachOben("sitzung");
   /* 2.11.5: Die Durchsicht muss beendet werden, sonst passiert scheinbar
@@ -6369,8 +6313,7 @@ function startSession() {
   ui.lernSetId = null;
   ui.lernLetzte = null;
   ui.gemerktRunde = new Set();
-  ui.session = { queue: erste, total: erste.length + rest.reduce((n, a) => n + a.ids.length, 0), revealed: false, extraOpen: true, lastAction: null, isDrill: false,
-    bereichId: currentBereich().id, rest: rest, bereichIds: [currentBereich().id] };
+  ui.session = { queue: shuffled(due.map(c => c.id)), total: due.length, revealed: false, extraOpen: true, lastAction: null, isDrill: false, bereichId: currentBereich().id };
   render();
 }
 /* E5 (1.8.0): Beim Aufdecken das Vollbild verlassen.
@@ -6473,12 +6416,6 @@ function gradeCard(kind) {
          aufgeschlossen. */
       prevMaxStufe: card.maxStufe || 0,
       prevQueue: s.queue.slice(),
-      /* 3.18.23: Runde ueber mehrere Bereiche - Rueckgaengig muss auch den
-         Schritt in den naechsten Bereich zuruecknehmen koennen. */
-      prevBereichId: s.bereichId,
-      prevBereichIds: (s.bereichIds || []).slice(),
-      prevRest: (s.rest || []).map(a => ({ bereichId: a.bereichId, ids: a.ids.slice() })),
-      prevTotal: s.total,
       /* 3.17.6: welcher Tageszaehler gleich hochgeht - Rueckgaengig nimmt
          genau den wieder zurueck (Betreiber: "man hat es ja nicht gewollt"). */
       verlaufTag: todayStr(),
@@ -6546,9 +6483,6 @@ function gradeCard(kind) {
   hwStrokes = [];
   if (!s.isDrill) {
     if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
-    /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
-       Karte), dann in den naechsten Bereich der Runde weiterschalten. */
-    if (s.queue.length === 0) rundeNaechsterBereich(s);
     if (s.queue.length === 0) checkStreakOnSessionComplete();
   }
   render();
@@ -6636,18 +6570,6 @@ function gradeUnknown() { gradeCard("unknown"); }
 function undoLastGrade() {
   const s = ui.session;
   if (!s || !s.lastAction) return;
-  /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
-     zurueck - findCard() sucht im offenen Bereich. */
-  if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
-      bereiche.some(b => b.id === s.lastAction.prevBereichId)) {
-    ui.bereichId = s.bereichId = s.lastAction.prevBereichId;
-  }
-  if (s.lastAction.prevRest) {
-    s.rest = s.lastAction.prevRest;
-    s.bereichIds = s.lastAction.prevBereichIds;
-    s.total = s.lastAction.prevTotal;
-    s.wechselZug = null;
-  }
   const card = findCard(s.lastAction.cardId);
   if (card) {
     card.stufe = s.lastAction.prevStufe;
@@ -10820,10 +10742,7 @@ function renderLernen() {
   const offen = bereicheMitOffenem().filter(x => x.bereich.id !== currentBereich().id);
   if (offen.length > 0) {
     html += '<div class="banner-info banner-leise" style="margin-top:var(--stack)">' +
-      /* 3.18.23: Im Stapel sind diese Karten jetzt mitgezaehlt - der Satz
-         sagt, woher sie kommen. Im gefuehrten Satz (eigener Faden, eigene
-         Zahl) bleibt der alte Wortlaut. */
-      ikon("lernen", "i-sm") + '<div class="banner__text">' + (istGefuehrt(b) ? 'Heute auch f\u00e4llig: ' : 'Mit dabei: ') +
+      ikon("lernen", "i-sm") + '<div class="banner__text">Heute auch f\u00e4llig: ' +
       offen.map(x => '<button class="tiny-link lernen-bereich-link" data-action="select-bereich" data-bid="' + esc(x.bereich.id) + '">' + esc(x.bereich.name) + ' (' + x.offen + ')</button>').join(", ") +
       '</div></div>';
   }
@@ -11147,12 +11066,7 @@ function ringSvg(anteil, klasse) {
 function lernenStapel(b, cards, due, neuImStapel) {
   const h = heuteAnteil(cards, b.id);
   let html = "";
-  /* 3.18.23: Die Runde nimmt die faelligen Wiederholungen der anderen
-     Bereiche mit (rundeWeitereBereiche). Der Stapel zaehlt deshalb dasselbe
-     wie die Runde - eine Zahl, ein Knopf, auch wenn im offenen Bereich
-     selbst gerade nichts faellig ist. */
-  const andere = bereiche.reduce((n, x) => n + (x.id === b.id ? 0 : offeneWiederholungen(x).length), 0);
-  if (due.length === 0 && andere === 0) {
+  if (due.length === 0) {
     const morgen = vorschau7(cards)[1].anzahl;
     const heuteGelernt = tagGelernt(verlauf[todayStr()]);
     const naechster = vorschau7(cards).slice(1).find(x => x.anzahl > 0);
@@ -11185,10 +11099,10 @@ function lernenStapel(b, cards, due, neuImStapel) {
     return html;
   }
   /* --- Der Stapel. Die eine gefuellte Goldflaeche dieses Bildschirms. --- */
-  const wdh = due.length - neuImStapel + andere;
+  const wdh = due.length - neuImStapel;
   html += '<div class="stapel">';
   html += '<div class="stapel__ring">' + ringSvg(h.anteil) +
-    '<div class="stapel__mitte"><span class="stapel__zahl">' + (due.length + andere) + '</span>' +
+    '<div class="stapel__mitte"><span class="stapel__zahl">' + due.length + '</span>' +
     '<span class="stapel__einheit">f\u00e4llig</span></div></div>';
   /* 3.16.0: Unter "12 faellig" im Ring stand "Karten sind heute faellig ·
      von 40" - dasselbe Wort zweimal, dazu eine Gesamtzahl, die hier nichts
@@ -11656,7 +11570,7 @@ function renderSession() {
     return renderSession();
   }
 
-  const remaining = s.queue.length + rundeRestAnzahl(s);
+  const remaining = s.queue.length;
   const promptText = s.handwriting ? card.uebersetzung : card.wort;
   const promptArabic = !s.handwriting && istArabisch(promptText);
   const answerText = s.handwriting ? card.wort : card.uebersetzung;
@@ -11702,12 +11616,6 @@ function renderSession() {
          (startDrillWithCards() sagt denselben Text ueber #ansage an). */
       ? '<span class="mitte-wechsel"><span class="mitte-wechsel__a">\u00dcbung \u2013 z\u00e4hlt nicht als Wiederholung</span>' +
         '<span class="mitte-wechsel__b">Karte 1 von ' + gesamt + '</span></span>'
-      /* 3.18.23: erste Karte aus dem naechsten Bereich der Runde - die
-         Kopfzeile nennt ihn einmal und blendet dann in den Stand ueber,
-         derselbe Baustein wie beim Ueben. */
-      : !s.isDrill && s.wechselZug && s.wechselZug === (s.zug || 0) && !s.revealed
-      ? '<span class="mitte-wechsel"><span class="mitte-wechsel__a">' + esc(currentBereich().name) + '</span>' +
-        '<span class="mitte-wechsel__b">Karte ' + Math.min(fertig + 1, gesamt) + ' von ' + gesamt + '</span></span>'
       : "Karte " + Math.min(fertig + 1, gesamt) + " von " + gesamt,
     anteil: anteilJetzt,
     rechts: s.lastAction
@@ -11957,17 +11865,13 @@ function renderRundenEnde(s, gesamt) {
      Stueck" erschien deshalb nach keiner einzigen Runde. Heute gelernt heisst:
      heute steht etwas im Protokoll. */
   const serieHeute = !s.isDrill && tagGelernt(verlauf[todayStr()]) ? serieAktuell() : 0;
-  /* 3.18.23: lief die Runde ueber mehrere Bereiche, zaehlen "morgen" und
-     "heute noch offen" ueber alle Bereiche - die Runde war es auch. */
-  const rundenBereiche = s.bereichIds && s.bereichIds.length > 1 ? bereiche.filter(b => s.bereichIds.indexOf(b.id) !== -1) : [currentBereich()];
-  const morgen = vorschau7(rundenBereiche.reduce((alle, b) => alle.concat(b.karten), []))[1].anzahl;
+  const morgen = vorschau7(currentCards())[1].anzahl;
   /* 3.17.7 (Station 7): Mit einem Rundenlimit (10/20/30) stand hier "Alle 10
      Karten fuer heute durch", obwohl noch Karten faellig waren - und es gab
      keinen Weg weiter ausser zurueck auf den Lernen-Tab. Jetzt sagt der Satz,
      was stimmt, und ein zweiter Knopf fuehrt in die naechste Runde. "Fertig"
      bleibt der gefuellte: das Limit hat man sich selbst gesetzt. */
-  const offenHeute = s.isDrill ? 0 : dueCards().length +
-    bereiche.reduce((n, b) => n + (b.id === currentBereich().id ? 0 : offeneWiederholungen(b).length), 0);
+  const offenHeute = s.isDrill ? 0 : dueCards().length;
   let html = '<div class="ende' + (neu ? ' ende--neu' : '') + '">';
   html += '<div class="ende__haken" aria-hidden="true">' +
     '<svg class="i ende__zeichen" viewBox="0 0 24 24" focusable="false">' +

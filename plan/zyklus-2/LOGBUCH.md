@@ -2,6 +2,59 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-07 — Eine Runde über alle Bereiche, 3.18.23
+
+**Geändert:** `app.js`: neu `offeneWiederholungen(b)`,
+`rundeWeitereBereiche(platz)`, `rundeRestAnzahl(s)`,
+`rundeNaechsterBereich(s)`; `bereicheMitOffenem()` nutzt die erste.
+`startSession()` legt die Folgebereiche als `rest` an und beginnt im
+nächsten Bereich, wenn im offenen nichts fällig ist. `gradeCard()` wechselt
+nach der letzten Karte eines Abschnitts, `undoLastGrade()` stellt Bereich,
+Rest und Gesamtzahl wieder her. `renderSession()` zählt den Rest mit und
+nennt beim Wechsel einmal den Bereich. `renderRundenEnde()` zählt „heute
+noch offen“ und „morgen“ über alle Bereiche. `lernenStapel()`: Zahl und
+Knopf schließen die anderen Bereiche ein; Hinweis heißt dort „Mit dabei:“
+(im geführten Satz weiter „Heute auch fällig:“). Version in app.js, sw.js,
+33 Stellen index.html, CHANGELOG. Neu `t_runde_bereiche.js`,
+`x_toast_austritt.js` (Diagnose), `RUNDE-UEBERGABE-2026-10-07.md`,
+`runde-belege/`. `t_paket_d.js` D11: nur Zusatzausgabe in der
+Fehlermeldung (wer entfernt die Meldung), Ablauf und Grenze unverändert.
+`LEHREN.md` § 5.3, § 13, § 15.
+
+**Entscheidung:** Betreiber 06.10.: „bei verschiedenen Bereichen einfacher
+Karten lernen, anstatt immer wieder auf sie drücken zu müssen“, dann „fix
+die grenzen dann … nicht kompliziert für user machen“. Gebaut ist der
+einfachste Weg ohne neue Einstellung: Die Runde läuft Bereich für Bereich
+weiter, bis die Rundengröße voll ist. Nicht gemischt, weil Bereiche bei
+ihm Lektionen sind. Aus fremden Bereichen kommen nur fällige
+Wiederholungen (das, was der Hinweis schon nannte); neue Karten und
+Liegengebliebenes hängen sich nicht an. Die Rundengröße bleibt die eine
+Grenze. Stufen, Abstände, Bewertung, Serie, Freischalten unberührt.
+
+**Prüfungen (Quellstand c00d9e558808a295, BatteryStatus 2):**
+`t_runde_bereiche.js` Fälle 0–12 grün, Gegenprobe am festen b45a13b
+schlägt an. Runde **13/13**. Affe mit Texten Handy 200 und iPad 150,
+Startwert 7: je **0 Befunde**. Gesamtlauf **151/152**.
+
+**Offen:** `t_paket_d.js` D11 („fünf Austrittsbilder“ beim Ausblenden der
+Meldung) ist auf diesem Laptop heute zehnmal rot, **auch am Vorstand
+b45a13b** (`runde-belege/vergleich-alt-t_paket_d.log`). Es liegt also
+nicht an 3.18.23; die Ursache ist nicht gefunden. Gemessen: Meldung wird
+pünktlich vom eigenen Zeitgeber entfernt; nach vier Ausblendbildern rund
+90 ms keine Bilder; keine lange Aufgabe, kein langes Bild, kein
+Sichtwechsel (`runde-belege/d11-kette-diagnose.log`); in frischem Browser
+69 Seiten grün, D9→D11 grün; rot nur nach der ganzen Vorkette (rund 15
+Minuten, 200 Seiten). Ausgeschlossen: Spiel auf dem Laptop (Grafiklast
+0 %), Minuten-Sicherung (`gesamtlauf-9-ohne-sicherung.log`). Grenze nicht
+angefasst. `ladegeraet.ps1` bricht an diesem Test ab, solange er rot ist –
+veröffentlicht wird also erst, wenn er wieder grün läuft.
+Weiter offen wie zuvor: Texte a oder b, E26, Recherche Abrufrichtung,
+`springeZu()` in langen Listen, D13/D15, D14/C18 nach 29.10.
+
+**Nächster Schritt:** D11 nach einem Neustart des Laptops einmal laufen
+lassen (`node t_paket_d.js`, 17 Minuten). Grün: war der Rechnerzustand.
+Rot: Chrome-Spur (`x_tempo_spur.js`-Muster) im gealterten Browser ziehen.
+
 ### 2026-10-07 — E-05 Reihenfolge bei Rundenlimit, 3.18.22
 
 **Geändert:** `app.js`: neue Funktion `nachDringlichkeit(due)` vor

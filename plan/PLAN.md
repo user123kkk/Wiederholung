@@ -7,7 +7,7 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
-Paket F (3.18.17), D12 (3.18.18), vier Betreiber-Meldungen (3.18.19–3.18.21) und die Reihenfolge bei Rundenlimit (3.18.22) liegen auf main, nicht veröffentlicht. Was der Betreiber am 05./06.10. gewünscht und entschieden hat: [Liste](zyklus-2/BETREIBER-2026-10-06.md). Online ist
+Paket F (3.18.17), D12 (3.18.18), vier Betreiber-Meldungen (3.18.19–3.18.21) die Reihenfolge bei Rundenlimit (3.18.22) und die Runde über alle Bereiche (3.18.23) liegen auf main, nicht veröffentlicht. Offen: `t_paket_d` D11 rot auf dem Laptop, auch am Vorstand (Logbuch Zyklus 2). Was der Betreiber am 05./06.10. gewünscht und entschieden hat: [Liste](zyklus-2/BETREIBER-2026-10-06.md). Online ist
 3.18.14. Einzelheiten: [Logbuch](zyklus-2/LOGBUCH.md), oberster Eintrag,
 [Aufgaben](zyklus-2/AUFGABEN.md).
 

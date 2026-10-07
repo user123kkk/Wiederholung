@@ -1,0 +1,229 @@
+== D1 13:18:48
+D1 390 voll hell bewegt: 4 Schließwege grün
+D1 390 voll hell ruhig: 4 Schließwege grün
+D1 390 voll dunkel bewegt: 4 Schließwege grün
+D1 390 voll dunkel ruhig: 4 Schließwege grün
+D1 390 leer hell bewegt: 4 Schließwege grün
+D1 390 leer hell ruhig: 4 Schließwege grün
+D1 390 leer dunkel bewegt: 4 Schließwege grün
+D1 390 leer dunkel ruhig: 4 Schließwege grün
+D1 320 voll hell bewegt: 4 Schließwege grün
+D1 320 voll hell ruhig: 4 Schließwege grün
+D1 320 voll dunkel bewegt: 4 Schließwege grün
+D1 320 voll dunkel ruhig: 4 Schließwege grün
+D1 320 leer hell bewegt: 4 Schließwege grün
+D1 320 leer hell ruhig: 4 Schließwege grün
+D1 320 leer dunkel bewegt: 4 Schließwege grün
+D1 320 leer dunkel ruhig: 4 Schließwege grün
+D1 820 voll hell bewegt: 4 Schließwege grün
+D1 820 voll hell ruhig: 4 Schließwege grün
+D1 820 voll dunkel bewegt: 4 Schließwege grün
+D1 820 voll dunkel ruhig: 4 Schließwege grün
+D1 820 leer hell bewegt: 4 Schließwege grün
+D1 820 leer hell ruhig: 4 Schließwege grün
+D1 820 leer dunkel bewegt: 4 Schließwege grün
+D1 820 leer dunkel ruhig: 4 Schließwege grün
+D1 1440 voll hell bewegt: 4 Schließwege grün
+D1 1440 voll hell ruhig: 4 Schließwege grün
+D1 1440 voll dunkel bewegt: 4 Schließwege grün
+D1 1440 voll dunkel ruhig: 4 Schließwege grün
+D1 1440 leer hell bewegt: 4 Schließwege grün
+D1 1440 leer hell ruhig: 4 Schließwege grün
+D1 1440 leer dunkel bewegt: 4 Schließwege grün
+D1 1440 leer dunkel ruhig: 4 Schließwege grün
+== D2 13:22:09
+D2 390: Leerlauf 0, Rand-/Abbruchfälle grün
+D2 1440: Leerlauf 0, Rand-/Abbruchfälle grün
+== D3 13:22:19
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+== D4 13:23:03
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+== D5 13:24:25
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+== D6 13:25:37
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+== D7 13:26:40
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+== D8 13:29:29
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+== D9 13:30:44
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+== D11 13:35:07
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+AssertionError [ERR_ASSERTION]: D11 keine fünf Austrittsbilder: [{"t":2425.899999976158,"op":1},{"t":2444,"op":1},{"t":2461.899999976158,"op":1},{"t":2480.300000011921,"op":1},{"t":2498.300000011921,"op":1},{"t":2515.899999976158,"op":1},{"t":2534.300000011921,"op":1},{"t":2551.699999988079,"op":1},{"t":2569.5,"op":1},{"t":2587.5,"op":1},{"t":2604.899999976158,"op":1},{"t":2622.699999988079,"op":1},{"t":2640.399999976158,"op":0.889262},{"t":2658.300000011921,"op":0.776762},{"t":2676.599999964237,"op":0.663013},{"t":2695,"op":0.549263}] | entfernt/neu gesetzt: ["2781 remove [ement.remove (eval at evaluate (:311:30), <anonymous>:10:98) < http://127.0.0.1:8099/app.js?v=3.18.23:1859:29]"] | lang: [] 13:35:50
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_tmp_d.js:253:21
+    at async matrix (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_tmp_d.js:136:50)
+    at async d11 (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_tmp_d.js:235:24)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_tmp_d.js:314:192 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

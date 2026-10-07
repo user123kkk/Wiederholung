@@ -235,12 +235,22 @@ async function d9(b) {await matrix(b,async(p,{ruhig})=>{
 async function d11(b) {await matrix(b,async(p,{ruhig})=>{
   await p.evaluate(()=>{
     const start=performance.now();
+    /* 07.10.2026: Im langen Lauf dreimal rot, allein gruen - die Meldung war rund
+       80 ms nach Beginn des Ausblendens weg. Nur Protokoll fuer die Fehlermeldung:
+       wer setzt #app neu oder entfernt die Meldung, solange sie steht? Keine
+       Aenderung an Ablauf oder Grenze. */
+    window.__toastWeg=[];
+    const merke=wie=>{if(document.querySelector('.toast'))__toastWeg.push(Math.round(performance.now()-start)+' '+wie+' ['+(new Error().stack||'').split('\n').slice(2,7).map(z=>z.trim().replace(/^at /,'').slice(-60)).join(' < ')+']');};
+    const echtRemove=Element.prototype.remove;
+    Element.prototype.remove=function(){if(this.classList&&this.classList.contains('toast-wrap'))merke('remove');return echtRemove.call(this);};
+    const desc=Object.getOwnPropertyDescriptor(Element.prototype,'innerHTML'),appEl=document.getElementById('app');
+    Object.defineProperty(appEl,'innerHTML',{set(v){merke('innerHTML');desc.set.call(this,v);},get(){return desc.get.call(this);},configurable:true});
     __D.zeigeToast('D11 Test');window.__toastBilder=[];
     function messen(){const e=document.querySelector('.toast');if(!e)return;__toastBilder.push({t:performance.now()-start,op:+getComputedStyle(e).opacity});requestAnimationFrame(messen);}requestAnimationFrame(messen);
   });await p.waitForTimeout(2900);
   const xs=await p.evaluate(()=>__toastBilder.filter(x=>x.t>=2600&&x.op>0&&x.op<.95));
   assert.equal(await p.locator('.toast').count(),0,'D11 nicht entfernt');
-  if(!ruhig) assert.ok(xs.length>=5,'D11 keine fünf Austrittsbilder: '+JSON.stringify(await p.evaluate(()=>__toastBilder.slice(-16))));
+  if(!ruhig) assert.ok(xs.length>=5,'D11 keine fünf Austrittsbilder: '+JSON.stringify(await p.evaluate(()=>__toastBilder.slice(-16)))+' | entfernt/neu gesetzt: '+JSON.stringify(await p.evaluate(()=>__toastWeg)));
   await p.evaluate(()=>{__D.zeigeToast('Alte Meldung');setTimeout(()=>__D.zeigeToast('Neue Meldung'),2650);});
   await p.waitForTimeout(2850);
   assert.equal(await p.locator('.toast').innerText(),'Neue Meldung','D11 alter Timer entfernt neue Meldung');

@@ -1,0 +1,5 @@
+vorher null 
+ {"w":1} -> Rueckgaengig {"w":0}
+ {"w":2} -> Rueckgaengig {"w":1}
+ {"w":3} -> Rueckgaengig {"w":2}
+ danach {"w":3} | ok

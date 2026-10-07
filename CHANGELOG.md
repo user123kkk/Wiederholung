@@ -1,3 +1,31 @@
+## 3.18.23 – 7. Oktober 2026
+
+**Eine Runde über alle Bereiche (Betreiber: „bei verschiedenen Bereichen
+einfacher Karten lernen, anstatt immer wieder auf sie drücken zu müssen“).**
+Wer mehrere Bereiche hat, musste bisher nach jeder Runde von Hand in den
+nächsten Bereich wechseln. Jetzt läuft die Runde von selbst weiter:
+
+- „Runde starten“ nimmt zuerst alles Fällige im offenen Bereich. Ist danach
+  in der Rundengröße noch Platz, folgen die anderen Bereiche in ihrer
+  Reihenfolge, in derselben Runde und ohne Tipp. Beim Wechsel nennt die
+  Kopfzeile einmal den neuen Bereich.
+- Beispiel: 20 Karten pro Runde, zwei Bereiche mit je 15 fälligen. Die Runde
+  hat 20 Karten (15 und 5), danach holt „Weiterlernen“ die übrigen 10.
+- Aus den anderen Bereichen kommen nur fällige Wiederholungen, also genau
+  das, was der Hinweis „Heute auch fällig“ nennt. Neue Karten und lange
+  Liegengebliebenes eines anderen Bereichs hängen sich nicht von selbst an.
+- Bereiche werden nicht gemischt. Jede Karte bleibt in ihrem Bereich,
+  „Rückgängig“ funktioniert auch über den Wechsel hinweg.
+- Das Rundenende zählt über alle Bereiche: „Heute sind noch … Karten offen“
+  und „Morgen kommen … wieder“.
+- Der Lernen-Bildschirm zählt dasselbe wie die Runde: eine Zahl, ein Knopf.
+  Darunter steht, woher die Karten kommen („Mit dabei: Quran-Wörter (5)“).
+  Ist im offenen Bereich nichts fällig, in einem anderen aber schon, steht
+  dort trotzdem „Runde starten“ statt „Heute ist nichts fällig“.
+
+Wer nur einen Bereich hat, merkt keinen Unterschied. Stufen, Abstände,
+Bewertung, Serie und Freischalten sind unverändert.
+
 ## 3.18.22 – 7. Oktober 2026
 
 **Begrenzte Runde: zuerst kommt, was heute am meisten zu verlieren hat

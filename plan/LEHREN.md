@@ -789,6 +789,20 @@ Belegte Fälle:
   Änderung deshalb **abwechselnd gegen den Vorstand** messen
   (`x_ab_tempo.js`, mindestens 8 Paare, Median und Zahl über der Grenze),
   nie mit einzelnen Läufen vorher/nachher.
+- **Bilderzähl-Test rot: zuerst der Vorstand** (07.10.2026, 3.18.23).
+  `t_paket_d` D11 („fünf Austrittsbilder“) war an einem Tag zehnmal rot,
+  in einem frischen Browser (69 Seiten) nie. Derselbe lange Test am festen
+  Vorstand b45a13b: ebenfalls rot an D11. Damit ist belegt, dass es nicht
+  an der Änderung liegt – mehr nicht. Die Ursache ist **nicht gefunden**:
+  Hauptfaden frei (keine lange Aufgabe, kein langes Bild, Zeitgeber
+  pünktlich), nach vier Ausblendbildern kommen rund 90 ms keine Bilder;
+  nur in einem Browser, der schon rund 15 Minuten und 200 Seiten alt ist.
+  Zwei eigene Vermutungen waren falsch und wurden gemessen widerlegt: das
+  Spiel auf dem Laptop (Grafiklast 0 %) und die Minuten-Sicherung (ohne
+  sie ebenfalls rot). Regel: Wird ein Test rot, der Bilder oder
+  Millisekunden zählt, denselben Test unter denselben Bedingungen am
+  Vorstand laufen lassen. Eine Ursache erst nennen, wenn sie gemessen ist.
+  Die Grenze bleibt; der offene Test steht im Logbuch unter „Offen“.
 
 ### 5.4 Die Attrappe muss so streng sein wie die Wirklichkeit
 
@@ -1582,8 +1596,9 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
 | Speichern beim Lernen | jede Bewertung sofort (`persistCardGrade`); Wisch-Bewertung 150 ms verzögert → vor jedem Ende der Runde `wischNachholen()`; abgelehnte (`permission-denied`) Bewertungen werden nach Ausweis-Erneuerung nachgeschickt (3.17.28) | Firestore wiederholt eine **Ablehnung** nie selbst und nimmt sie lokal zurück – wer schreibt, muss selbst nachholen (§ 8.2) |
 | `evaluateStreakForNewDay()` | absichtlich stillgelegt (`if (false && …)`) | nicht „reparieren" |
 | `streak.lastCompletedDate` | tot seit 2.14.0 | nie wieder darauf bauen |
-| `bereicheMitOffenem()` | nur noch für den Hinweis „Heute auch fällig" | kein Serien-Bezug |
-| `SITZUNGS_LIMITS` | Limit gilt **je Runde**, danach „Weiterlernen" | die Serie hängt nicht am Limit |
+| `offeneWiederholungen(b)` / `bereicheMitOffenem()` | seit 3.18.23 **eine** Menge für drei Stellen: Hinweis auf Lernen („Mit dabei“ bzw. im geführten Satz „Heute auch fällig“), Zahl im Stapel, Abschnitte der Runde aus anderen Bereichen | kein Serien-Bezug; wer die Menge ändert, ändert alle drei |
+| `SITZUNGS_LIMITS` | Limit gilt **je Runde**, danach „Weiterlernen". Seit 3.18.22 wählt `nachDringlichkeit()`, wer hineinkommt; seit 3.18.23 läuft die Runde über alle Bereiche (`rundeWeitereBereiche`), das Limit zählt über alle zusammen | die Serie hängt nicht am Limit |
+| Runde über mehrere Bereiche (3.18.23) | es ist immer genau ein Bereich offen, `ui.bereichId` wandert mit (`rundeNaechsterBereich`); `lastAction` merkt Bereich und Rest für Rückgängig | nie über Bereiche mischen: Schloss, Lehrer-Freigabe, Merken, Regler, Speichern rechnen je Bereich |
 | `EINSTIEG_ZIELE` / `ui.einstieg` | Antworten nur im Arbeitsspeicher | nie speichern (§ 2) |
 | Nutzungsstatistik | **entfernt in 3.17.23** (Betreiber: „jede Spur“), Code, Schalter, CSP und Datenschutz-Abschnitt | nicht wieder einbauen ohne neue Betreiber-Entscheidung (§ 3.5) |
 | `APPLE_LOGIN_BEREIT` | `false` | erst mit Konsole |
@@ -2305,3 +2320,5 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 | 05.10. (F12, eigene Aufbaufehler am neuen Messgerät) | Stilvergleich meldete jedes Element als anders; Fensterfotos schwankten Alt gegen Alt | Reihenfolge der `--x`-Eigenschaften je Seite verschieden; GPU-Raster | Einträge sortiert, `--disable-gpu`; Gegenprobe mit 1 px geänderter Regel rot. Kein Ergebnis aus den fehlerhaften Probeläufen übernommen (§ 5.3) |
 
 | 05.10. (F13, Gegenprüfung) | Changelog und elf weitere Texte nannten `plan/archiv/bilder/icon.svg` als früher ausgelieferte Datei; Befund CODE-13 umgeschrieben; zwei überholte Dateien archiviert statt gelöscht | Umzugsskript ersetzte nackte Dateinamen; Entscheidung Z14 nicht wörtlich gelesen | § 3.7a. 38 Stellen zurückgestellt und gegen 5af78a0 geprüft, CODE.md wörtlich wiederhergestellt, beide Dateien gelöscht (Inhalt bleibt in 5af78a0) |
+
+| 07.10. (3.18.23, D11 im Gesamtlauf) | `t_paket_d` D11 zehnmal rot, im frischen Browser nie; drei eigene Deutungen nacheinander falsch („Meldung zu früh entfernt“, „Spiel auf dem Laptop“, „Minuten-Sicherung“) und zwei davon dem Betreiber als wahrscheinlich gemeldet | Vermutung vor Messung genannt. Ursache bis heute offen | § 5.3 (Bilderzähl-Test rot). Vergleichslauf am Vorstand b45a13b ebenfalls rot, also nicht von 3.18.23. Grenze unverändert, Test bleibt offen |

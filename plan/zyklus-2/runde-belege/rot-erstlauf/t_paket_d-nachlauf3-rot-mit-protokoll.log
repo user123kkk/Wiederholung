@@ -1,0 +1,217 @@
+D1 390 voll hell bewegt: 4 Schließwege grün
+D1 390 voll hell ruhig: 4 Schließwege grün
+D1 390 voll dunkel bewegt: 4 Schließwege grün
+D1 390 voll dunkel ruhig: 4 Schließwege grün
+D1 390 leer hell bewegt: 4 Schließwege grün
+D1 390 leer hell ruhig: 4 Schließwege grün
+D1 390 leer dunkel bewegt: 4 Schließwege grün
+D1 390 leer dunkel ruhig: 4 Schließwege grün
+D1 320 voll hell bewegt: 4 Schließwege grün
+D1 320 voll hell ruhig: 4 Schließwege grün
+D1 320 voll dunkel bewegt: 4 Schließwege grün
+D1 320 voll dunkel ruhig: 4 Schließwege grün
+D1 320 leer hell bewegt: 4 Schließwege grün
+D1 320 leer hell ruhig: 4 Schließwege grün
+D1 320 leer dunkel bewegt: 4 Schließwege grün
+D1 320 leer dunkel ruhig: 4 Schließwege grün
+D1 820 voll hell bewegt: 4 Schließwege grün
+D1 820 voll hell ruhig: 4 Schließwege grün
+D1 820 voll dunkel bewegt: 4 Schließwege grün
+D1 820 voll dunkel ruhig: 4 Schließwege grün
+D1 820 leer hell bewegt: 4 Schließwege grün
+D1 820 leer hell ruhig: 4 Schließwege grün
+D1 820 leer dunkel bewegt: 4 Schließwege grün
+D1 820 leer dunkel ruhig: 4 Schließwege grün
+D1 1440 voll hell bewegt: 4 Schließwege grün
+D1 1440 voll hell ruhig: 4 Schließwege grün
+D1 1440 voll dunkel bewegt: 4 Schließwege grün
+D1 1440 voll dunkel ruhig: 4 Schließwege grün
+D1 1440 leer hell bewegt: 4 Schließwege grün
+D1 1440 leer hell ruhig: 4 Schließwege grün
+D1 1440 leer dunkel bewegt: 4 Schließwege grün
+D1 1440 leer dunkel ruhig: 4 Schließwege grün
+D2 390: Leerlauf 0, Rand-/Abbruchfälle grün
+D2 1440: Leerlauf 0, Rand-/Abbruchfälle grün
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+D 390 hell bewegt voll grün
+D 390 hell bewegt leer grün
+D 390 hell ruhig voll grün
+D 390 hell ruhig leer grün
+D 390 dunkel bewegt voll grün
+D 390 dunkel bewegt leer grün
+D 390 dunkel ruhig voll grün
+D 390 dunkel ruhig leer grün
+D 320 hell bewegt voll grün
+D 320 hell bewegt leer grün
+D 320 hell ruhig voll grün
+D 320 hell ruhig leer grün
+D 320 dunkel bewegt voll grün
+D 320 dunkel bewegt leer grün
+D 320 dunkel ruhig voll grün
+D 320 dunkel ruhig leer grün
+D 820 hell bewegt voll grün
+D 820 hell bewegt leer grün
+D 820 hell ruhig voll grün
+D 820 hell ruhig leer grün
+D 820 dunkel bewegt voll grün
+D 820 dunkel bewegt leer grün
+D 820 dunkel ruhig voll grün
+D 820 dunkel ruhig leer grün
+D 390 hell bewegt voll grün
+AssertionError [ERR_ASSERTION]: D11 keine fünf Austrittsbilder: [{"t":2409.7999999523163,"op":1},{"t":2427.399999976158,"op":1},{"t":2445,"op":1},{"t":2463.399999976158,"op":1},{"t":2481.199999988079,"op":1},{"t":2499.099999964237,"op":1},{"t":2517.399999976158,"op":1},{"t":2534.5,"op":1},{"t":2553.199999988079,"op":1},{"t":2570.399999976158,"op":1},{"t":2588.699999988079,"op":1},{"t":2606.2999999523163,"op":1},{"t":2624.2999999523163,"op":0.888613},{"t":2642.199999988079,"op":0.776738},{"t":2660.199999988079,"op":0.663612},{"t":2678.199999988079,"op":0.551737}] | entfernt/neu gesetzt: ["2773 remove [ement.remove (eval at evaluate (:311:30), <anonymous>:10:98) < http://127.0.0.1:8099/app.js?v=3.18.23:1859:29]"]
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_d.js:253:21
+    at async matrix (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_d.js:136:50)
+    at async d11 (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_d.js:235:24)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_d.js:314:131 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":986,"quelltext":"cefaa39d9829fb3355c686915538b4fb2ea118aabc910a8ab085ae51b4392c51"}

@@ -22,6 +22,7 @@ oder religiösen Wortlaut berührt, steht dabei, was er wörtlich entschieden ha
 
 | Entscheidung (Wortlaut) | Bedeutung | Stand |
 |---|---|---|
+| „fix die grenzen dann … nicht kompliziert für user machen“ (07.10.) | Runde läuft über alle Bereiche weiter, Zahl im Stapel zählt alle mit; keine neue Einstellung | gebaut, 3.18.23 |
 | „reihenfolge ja i guess“ (06.10., nachts) | E-05/LERNEN-4: Bei Rundenlimit kommen zuerst die Wiederholungen, die im Verhältnis zu ihrem Abstand am wenigsten überfällig sind, bei Gleichstand der kürzere Abstand; neue Karten danach. Begründung und Quellen: `E26-VORSCHLAG.md`, Nachtrag. Lernlogik, deshalb voller Prüfumfang. | **gebaut, 3.18.22** (Gesamtlauf 151/151) |
 | „krieg alles hin sodass es perfekt ist … finde einen einfachen Weg“ zur Runde über alle Bereiche | Runde läuft Bereich für Bereich weiter (erst der offene, dann die anderen), keine Mischung. Vor dem Bauen den Rundencode auf Rückgängig, Zähler, Rundenende, Serie prüfen. Voller Prüfumfang. | offen |
 | Anfangsbuchstaben bei arabischem Text („Bismillah … Buchstabe ba und 3 alif“): „bei Wege, entweder a oder b natürlich“ | a) Artikel überspringen oder b) erstes Wort jeder Zeile zeigen. c) entfällt. Erst Vorlage mit Recherche, dann Entscheidung zwischen a und b. | Vorlage liegt vor: `texte-lernen/ANFANG-VORLAGE-2026-10-07.md`, Empfehlung b; wartet auf „a“ oder „b“ |
