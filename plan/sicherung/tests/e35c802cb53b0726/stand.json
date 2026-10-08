@@ -1,0 +1,13 @@
+{
+  "kennung": "e35c802cb53b07263b9c6623f24b3fc94f9bfb6d65a56095064f10ef63adc3e9",
+  "tests": {
+    "t_runde_lage.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 81,
+      "quelltext": "d31917c2b83238fda60dbc748df0515e1bc815b0e7ccdb10f39e4726f9f6feea"
+    }
+  }
+}
