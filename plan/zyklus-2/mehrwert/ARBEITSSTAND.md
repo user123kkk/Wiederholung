@@ -35,6 +35,18 @@ Pakete vor Kleinkram**, jede Minute sichern. Reihenfolge und Überblick:
   CHANGELOG (Entwurf unten), `pruefe_stand.mjs`, Commit, Push, danach
   `ladegeraet.ps1 -NurPruefen` am Netzteil.
 
+## Nachtrag 08.10., nachmittags
+
+- **3.18.27 ist auf `main`** (48bde8d), nicht veröffentlicht; die Abschnitte
+  unten über den „Entwurf“ beschreiben den Weg dorthin. Der getrennte
+  Ordner `Wiederholung-bew1` und der Patch sind damit überholt.
+- Offen vor dem Veröffentlichen: `ladegeraet.ps1 -NurPruefen` am Netzteil
+  (Gesamtlauf, Affen), eigene Tests für Export, Druck, Bildschirm-wach.
+- Neu vom Betreiber: Durchlauf „Verständlichkeit“ über das ganze Tool
+  (`GESAMTLISTE.md` Abschnitt 4a). Er schreibt später „weiter“.
+- Skriptpunkt: `ladegeraet.ps1` soll vor den zwei Emulator-Tests prüfen,
+  ob der Emulator noch antwortet.
+
 ## Wo der Code liegt
 
 - `main` (dieser Ordner und `origin/main`): App unverändert **3.18.26**.

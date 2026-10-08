@@ -71,6 +71,24 @@ Die Nummern in Klammern sind die Fragen aus Runde 2.
 | Hintergrund scrollt beim Herunterwischen (iPhone) | zurückgestellt |
 | Feinheiten beim App-Start am iPhone (D13, D15) | zurückgestellt |
 
+## 4a. Verständlichkeit des ganzen Tools (Betreiber 08.10.: „an sich ist das System ja nicht klar … ganzes Tool soll verständlich sein“)
+
+Bisher gab es Durchsichten zu Fehlern, Aussehen und Bewegung, aber keine
+mit der einen Frage: **Versteht ein Fremder ohne Erklärung, was das hier
+ist und was er als Nächstes tun soll?** Teile davon stehen schon in der
+Liste (Einstieg, Erklärung der drei Knöpfe, Auswahl „Neu anlegen“,
+Fremdentest), das Ganze nicht.
+
+| Was | Stand |
+|---|---|
+| Durchlauf „Verständlichkeit“ über jeden Bildschirm, nur lesen: Was ist das? Was soll ich tun? Welche Wörter versteht man nicht (Speicherkarte, Bereich, Lektion, Stufe-Wörter, Zeile/Aya, fällig, Üben gegen Lernen, Runde)? Ergebnis: Liste mit Vorschlag je Stelle | offen, ein eigener Bericht wie Schritt 2 |
+| Begriffe festlegen: ein Wort je Sache, überall gleich | offen, nach dem Bericht |
+| Kurze Erklärung an der Stelle, an der man sie braucht (nicht als Hilfeseite) | offen, nach dem Bericht |
+| Echte Probe: Fremdentest mit Freunden | wartet: nach Paket K |
+
+Reihenfolge: der Bericht kommt **vor** dem Einstieg (Abschnitt 5), weil
+der Einstieg genau das erklären muss, was der Bericht als unklar findet.
+
 ## 5. Einstieg (Onboarding)
 
 | Was | Stand |
@@ -155,7 +173,8 @@ lange Ayat stückweise, größere deutsche Schrift (erst, wenn jemand fragt).
 1. 3.18.27 fertig prüfen und auf `main` (Abschnitt 1).
 2. Rest Lernrunde und Lernregeln (Abschnitt 2, oberer Teil).
 3. Rest „Karten hinein und heraus“ (Abschnitt 3, was nicht wartet).
-4. Aussehen, Tippen, Einstieg (Abschnitte 4 und 5).
+4. Aussehen und Tippen (Abschnitt 4), dann der Durchlauf
+   „Verständlichkeit“ (4a), dann der Einstieg (5).
 5. Konto und Schutz (Abschnitt 6).
 6. Fremdentest.
 7. Ab 29.10. Texte (Abschnitt 7).
