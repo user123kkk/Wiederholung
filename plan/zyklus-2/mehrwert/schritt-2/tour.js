@@ -6,7 +6,9 @@ const fs = require('node:fs');
 const PS = path.resolve(__dirname, '../../../werkzeuge/pruefstand') + '/';
 const { start, neueSeite, GERAETE, vollerStore, OUT } = require(PS + 'lib');
 const [geraetName = 'handy', thema = 'dunkel', modus = 'voll'] = process.argv.slice(2);
-const GER = { ...GERAETE, mini: { width: 320, height: 568, touch: true, mobile: true, dpr: 2 } };
+/* safari: iPhone 390 breit im Browser mit Leisten (sichtbare Hoehe rund 664), so kommt ein Fremder per Link an. */
+const GER = { ...GERAETE, mini: { width: 320, height: 568, touch: true, mobile: true, dpr: 2 },
+  safari: { width: 390, height: 664, touch: true, mobile: true, dpr: 2 } };
 const vp = { ...GER[geraetName], dpr: 1 };
 const prefix = [geraetName, thema, modus].join('-');
 const zeilen = [];
@@ -15,7 +17,8 @@ let nr = 0;
 function aus(o) { zeilen.push(o); console.log(JSON.stringify(o)); }
 
 async function animationen(p) {
-  return p.evaluate(() => document.getAnimations().map(a => {
+  /* Nur laufende/wartende: beendete mit fill bleiben sonst in der Liste. */
+  return p.evaluate(() => document.getAnimations().filter(a => a.playState !== 'finished').map(a => {
     const t = a.effect && a.effect.getComputedTiming ? a.effect.getComputedTiming() : {};
     const el = a.effect && a.effect.target;
     const pe = a.effect && a.effect.pseudoElement;
@@ -50,7 +53,9 @@ async function zustand(p) {
     const sichtbar = e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden'; };
     const akt = [...new Set([...document.querySelectorAll('[data-action]')].filter(sichtbar).map(e => e.dataset.action + (e.dataset.id ? ':' + e.dataset.id : '')))];
     const h1 = [...document.querySelectorAll('h1')].filter(sichtbar).map(e => e.textContent.trim().slice(0, 60));
-    return { h1, hoehe: document.documentElement.scrollHeight, fenster: innerHeight, quer: document.documentElement.scrollWidth > innerWidth,
+    const k = [...document.querySelectorAll('.einstieg-aktion button, .study-aufdecken, .grade-row button, [data-action="start-session"]')].filter(sichtbar)[0];
+    const kr = k ? k.getBoundingClientRect() : null;
+    return { h1, knopf: kr ? { text: k.textContent.trim().slice(0, 24), oben: Math.round(kr.top), unten: Math.round(kr.bottom), links: Math.round(kr.left), breite: Math.round(kr.width), scrollY: Math.round(scrollY) } : null, hoehe: document.documentElement.scrollHeight, fenster: innerHeight, quer: document.documentElement.scrollWidth > innerWidth,
       aktionen: akt.slice(0, 80) };
   });
 }
