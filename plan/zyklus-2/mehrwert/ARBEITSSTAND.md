@@ -17,18 +17,23 @@ Pakete vor Kleinkram**, jede Minute sichern. Reihenfolge und Überblick:
   `t_paket_f_texte`, `pruefe_stand.mjs`, `t_paket_d.js D1` mit der
   schärferen Abnahme (vier Lagen). `austritt.js` am Entwurf: 12–13
   Zwischenlagen beim Schließen (`schritt-2/daten/austritt-entwurf.log`).
-- **Läuft gerade** (Server 8098 im Entwurfs-Ordner, Logs in
-  `%TEMP%\entwurf\`): `t_paket_c_weiter`, danach `t_karten_blatt`,
-  `t_neben_tippen`, `t_dialog_timer`, `t_rundenende`, `t_fluessig_ende`,
-  `t_einstellungen`, `t_einst`, `t_einst_oben`, `t_verwalten`, `t_ueben`,
-  `t_sprung`, `t_kontrast`, `t_a11y`, `t_daten`, `t_hick`, `t_zahlen`,
+- **13:43 Uhr: alle 27 betroffenen bestehenden Tests am Entwurf Exit 0**
+  (`t_paket_d D1`, `t_paket_c_weiter`, `t_karten_blatt`, `t_neben_tippen`,
+  `t_dialog_timer`, `t_rundenende`, `t_fluessig_ende`, `t_einstellungen`,
+  `t_einst`, `t_einst_oben`, `t_verwalten`, `t_ueben`, `t_sprung`,
+  `t_kontrast`, `t_a11y`, `t_daten`, `t_hick`, `t_zahlen`,
   `t_undo_verlauf`, `t_runde_lage`, `t_fotos_runde`, `t_sicher`,
-  `t_doppeltipp`, `t_wischen`, `t_ansage`, `t_gross_alle`, `t_schreiben`.
-- **Noch nicht gelaufen:** `abnahme_runde.js` (13, Pflicht, weil Rundenende
-  und Bewertung berührt sind), Gesamtlauf, Affen am Entwurf.
-- **Deshalb ist 3.18.27 noch nicht auf `main`.** Version, CHANGELOG
-  (Entwurf des Textes: unten in dieser Datei) und Commit erst, wenn die
-  Liste oben und die Rundenabnahme grün sind.
+  `t_doppeltipp`, `t_wischen`, `t_ansage`, `t_gross_alle`, `t_schreiben`).
+  Logs in `%TEMP%\entwurf\`. Die beschreibenden Ausgaben sind **noch
+  nicht einzeln gelesen** (LEHREN § 5.3), nur die Exit-Codes.
+- **Läuft seit 13:44:** `abnahme_runde.js` am Entwurf (Log
+  `%TEMP%\entwurfbnahme_runde.log`).
+- **Noch nicht gelaufen:** Gesamtlauf und Affen am Entwurf.
+- **Deshalb ist 3.18.27 noch nicht auf `main`.** Nächste Schritte: Ausgaben
+  lesen, Rundenabnahme 13/13, dann Version (alle Stellen mit 3.18.26 in
+  `index.html` – auch die 31 Startbild-Links –, `sw.js`, `app.js`),
+  CHANGELOG (Entwurf unten), `pruefe_stand.mjs`, Commit, Push, danach
+  `ladegeraet.ps1 -NurPruefen` am Netzteil.
 
 ## Wo der Code liegt
 
