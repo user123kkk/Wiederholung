@@ -80,6 +80,22 @@
       "zeitlimit": false,
       "sekunden": 22,
       "quelltext": "45c5995a002b1e7b023014e42ad40b7462695ef400d9b558ae2b764eedac1e7f"
+    },
+    "t_rundenende.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 115,
+      "quelltext": "ca52ce639ac146d0c75d951834256896681008f7aa3b67ee32a03cc378484599"
+    },
+    "t_ueben.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 31,
+      "quelltext": "7bf90c4d5e1af879c34e3fa3daed50b8fcd98cb96cd07dd2ca5b452a2bd3addd"
     }
   }
 }
