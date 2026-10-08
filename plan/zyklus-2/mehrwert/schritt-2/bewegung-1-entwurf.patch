@@ -1,8 +1,41 @@
 diff --git a/app.js b/app.js
-index 8acb637..92e1861 100644
+index 8acb637..7510c1b 100644
 --- a/app.js
 +++ b/app.js
-@@ -5802,6 +5802,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
+@@ -1770,6 +1770,7 @@ let ui = {
+   /* 2.19.0: Einstellungen sind ein eigener Bildschirm, kein vierter Reiter.
+      Ein Reiter ist ein Ort, an den man oft geht; hierher geht man selten. */
+   einstellungen: false,
++  listeSheet: null,           // Paket I: Blatt "Liste einfuegen" {text, stufe, erg, meldung, bereichId}
+   drillOpen: false,           // Auswahl für Übungsmodus sichtbar?
+   drillRueckkehrTab: null,    // E18: Reiter, aus dem die Uebungsauswahl geoeffnet wurde
+   drillSource: "stufen",      // "stufen" oder "sets" (siehe drillSetIds)
+@@ -1873,7 +1874,7 @@ function renderToast() {
+   /* Bei offenem Blatt steht die Meldung oben - unten lag sie auf dem Formular
+      und fing die Taps darauf ab. */
+   const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId ||
+-    ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit);
++    ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit || ui.listeSheet);
+   /* 3.17.35 (TECHNIK-8): role/aria-live entfernt - die Ansage uebernimmt
+      #ansage (index.html, zeigeToast()). aria-hidden verhindert, dass dieses
+      Element zusaetzlich vorgelesen wird. */
+@@ -2419,6 +2420,7 @@ async function initFirebase() {
+     hwFullscreen = false;
+     ui.kontoLoeschenEmail = "";
+     ui.erinnerungSheet = false;
++    ui.listeSheet = null;
+     ui.erinnerungZeit = null;
+     /* Den Namen nur ueber die eigene Loeschung in das Gastformular tragen. */
+     ui.authEingabe = { name: adressName, email: "", pass: "" };
+@@ -5327,6 +5329,7 @@ function ebenenSchliessen(seiteBehalten = false) {
+   ui.textAnsicht = null;
+   ui.zeileEdit = null;
+   ui.textLernen = null;
++  ui.listeSheet = null;
+ }
+ function selectBereich(bereichId) {
+   if (!bereiche.some(b => b.id === bereichId)) return;
+@@ -5802,6 +5805,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
       weiter unten. Wer ihn dort drueckte, sah gar nichts passieren. */
    springeZu("drill-box");
    render();
@@ -10,7 +43,7 @@ index 8acb637..92e1861 100644
  }
  /* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
     mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
-@@ -6059,6 +6060,50 @@ function lernRueckgaengig() {
+@@ -6059,6 +6063,165 @@ function lernRueckgaengig() {
  function vergleichsWort(w) {
    return suchNorm(String(w).trim(), true).text.replace(/\s+/g, " ").trim();
  }
@@ -58,10 +91,153 @@ index 8acb637..92e1861 100644
 +  return aus;
 +}
 +//LISTE-LESEN-ENDE
++/* 3.18.27 (Paket I, F-1): Blatt "Liste einfuegen". Zwei Stufen in einem
++   Blatt: einfuegen, dann Vorschau - geschrieben wird erst nach der Vorschau.
++   Der Text liegt in ui.listeSheet.text (nicht nur im Feld), damit ein
++   Neuzeichnen ihn nicht loescht (LEHREN 6.3). Alle neuen Karten kommen in
++   den Bereich, der beim Oeffnen offen war; wechselt er, wird nichts angelegt. */
++function listeAuf() {
++  if (!kartenBearbeitbar()) { ui.bereichMehr = false; hinweisGefuehrt("Karten anlegen oder ändern"); return; }
++  ui.bereichMehr = false;
++  ui.listeSheet = { text: "", stufe: "eingabe", erg: null, meldung: "", bereichId: currentBereich().id };
++  render();
++}
++function listeEntwurfOffen() {
++  return !!(ui.listeSheet && (ui.listeSheet.text || "").trim());
++}
++async function listeVerwerfenFragen() {
++  const blatt = ui.listeSheet;
++  const ok = await dlgConfirm("Deine eingefügte Liste geht dabei verloren.", { title: "Liste verwerfen?", okLabel: "Verwerfen", danger: true });
++  if (!ok || ui.listeSheet !== blatt) return;
++  ui.listeSheet = null;
++  render();
++}
++function listeVorschau() {
++  const l = ui.listeSheet;
++  if (!l) return;
++  const feld = document.getElementById("liste-text");
++  if (feld) l.text = feld.value;
++  l.meldung = "";
++  const b = currentBereich();
++  if (!b || b.id !== l.bereichId) { ui.listeSheet = null; render(); return; }
++  const erg = listeLesen(l.text, MAX_WORT, MAX_EXTRA);
++  if (erg.zuViele) l.meldung = "Das sind " + erg.zuViele + " Zeilen. Auf einmal gehen höchstens " + LISTE_MAX_ZEILEN + ".";
++  else if (!erg.karten.length && !erg.fehler.length) l.meldung = "Füg zuerst deine Liste ein.";
++  else if (!erg.karten.length) l.meldung = "Keine Zeile ließ sich lesen. Zwischen Wort und Übersetzung gehört ein Tab, ein Strichpunkt oder „ – “.";
++  if (l.meldung) { render(); return; }
++  /* Doppelte: was es im Bereich schon gibt und was in der Liste selbst
++     zweimal steht. Uebersprungen, nicht ueberschrieben. */
++  const neu = [], gesehen = [];
++  let doppelt = 0;
++  for (const k of erg.karten) {
++    if (findeDuplikat(k.wort, null) || findeDuplikat(k.wort, null, gesehen)) { doppelt++; continue; }
++    gesehen.push({ id: "liste-" + k.nr, wort: k.wort, uebersetzung: k.uebersetzung });
++    neu.push(k);
++  }
++  if (currentCards().length + neu.length > IMPORT_MAX_KARTEN) {
++    l.meldung = "Damit hätte dieser Bereich mehr als " + IMPORT_MAX_KARTEN + " Karten. Teil die Liste auf mehrere Bereiche auf.";
++    render(); return;
++  }
++  l.erg = { neu: neu, doppelt: doppelt, fehler: erg.fehler, getauscht: erg.getauscht };
++  l.stufe = "vorschau";
++  render();
++}
++function listeAnlegen() {
++  const l = ui.listeSheet;
++  if (!l || l.stufe !== "vorschau" || !l.erg || !l.erg.neu.length) return;
++  if (!kartenBearbeitbar()) { hinweisGefuehrt("Karten anlegen oder ändern"); return; }
++  const bereich = currentBereich();
++  if (!bereich || bereich.id !== l.bereichId) { ui.listeSheet = null; render(); return; }
++  /* Reihenfolge wie in der Liste: die erste Zeile steht danach oben. */
++  const basis = ordnungVorn() - l.erg.neu.length;
++  const patch = {}, karten = [];
++  l.erg.neu.forEach((k, i) => {
++    const neu = { id: genId(), wort: k.wort, uebersetzung: k.uebersetzung, extra: k.extra, stufe: 0,
++      nextReview: todayStr(), ersteBewertung: null, rueckfaelle: 0 };
++    karten.push(neu);
++    patch[pfadKarte(bereich.id, neu.id)] = kartenFelder(neu, basis + i);
++  });
++  bereich.karten.unshift(...karten);
++  const anzahl = karten.length;
++  ui.listeSheet = null;
++  patchDoc(patch);
++  zeigeToast(mz(anzahl, "Karte", "Karten") + " angelegt");
++}
++function listeSheetHtml() {
++  const l = ui.listeSheet;
++  if (!l) return "";
++  let html = '<div class="dlg-backdrop" data-action="liste-zu" role="presentation">';
++  html += '<div class="dlg dlg--liste" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="liste-titel">';
++  html += '<h3 id="liste-titel">Liste einfügen</h3>';
++  if (l.stufe !== "vorschau") {
++    html += '<p class="hint">Eine Zeile je Karte: erst das Wort, dann die Übersetzung – getrennt durch Tab, Strichpunkt oder „ – “. Eine dritte Spalte wird zur Notiz.</p>';
++    html += '<div class="field"><label for="liste-text">Deine Liste</label>' +
++      '<textarea id="liste-text" class="liste-text" rows="8" dir="auto" autocomplete="off" autocapitalize="off" spellcheck="false"' +
++      (l.meldung ? ' aria-invalid="true" aria-describedby="liste-meldung"' : '') +
++      ' placeholder="Wort ; Übersetzung ; Notiz">' + esc(l.text) + '</textarea>';
++    html += '<p class="field__fehler" id="liste-meldung" role="alert">' + esc(l.meldung || "") + '</p></div>';
++    html += '<div class="dlg-actions"><button class="secondary" data-action="liste-zu">Abbrechen</button>' +
++      '<button data-action="liste-vorschau">Vorschau</button></div>';
++  } else {
++    const e = l.erg, b = currentBereich();
++    html += '<p class="liste-summe"><strong>' + mz(e.neu.length, "neue Karte", "neue Karten") + '</strong> für „' + esc(b ? b.name : "") + '“.</p>';
++    let info = "";
++    if (e.getauscht) info += '<li>Spalten getauscht: Das arabische Wort steht vorne.</li>';
++    if (e.doppelt) info += '<li>' + mz(e.doppelt, "Zeile", "Zeilen") + ' gibt es schon – ' + (e.doppelt === 1 ? "sie wird" : "sie werden") + ' übersprungen.</li>';
++    if (e.fehler.length) {
++      const nummern = e.fehler.slice(0, 8).map(f => f.nr).join(", ") + (e.fehler.length > 8 ? " …" : "");
++      info += '<li>' + mz(e.fehler.length, "Zeile", "Zeilen") + ' ohne lesbare Übersetzung (Zeile ' + nummern + ') – ' +
++        (e.fehler.length === 1 ? "sie wird" : "sie werden") + ' ausgelassen.</li>';
++    }
++    if (info) html += '<ul class="liste-info">' + info + '</ul>';
++    if (e.neu.length) {
++      html += '<div class="liste-probe" aria-label="Die ersten Karten">';
++      e.neu.slice(0, 5).forEach(k => {
++        html += '<div class="liste-probe__zeile"><span class="liste-probe__wort" dir="auto">' + esc(k.wort) + '</span>' +
++          '<span class="liste-probe__ueb" dir="auto">' + esc(k.uebersetzung) + '</span></div>';
++      });
++      if (e.neu.length > 5) html += '<p class="hint liste-probe__rest">und ' + mz(e.neu.length - 5, "weitere", "weitere") + '</p>';
++      html += '</div>';
++    }
++    html += '<div class="dlg-actions"><button class="secondary" data-action="liste-zurueck">Zurück</button>' +
++      '<button data-action="liste-anlegen"' + (e.neu.length ? '' : ' disabled') + '>' +
++      (e.neu.length ? mz(e.neu.length, "Karte", "Karten") + ' anlegen' : 'Nichts anzulegen') + '</button></div>';
++  }
++  html += '</div></div>';
++  return html;
++}
  function findeDuplikat(wort, exceptId, cards) {
    const key = vergleichsWort(wort);
    return (cards || currentCards()).find(c => c.id !== exceptId && vergleichsWort(c.wort) === key) || null;
-@@ -9288,7 +9333,11 @@ function renderMain() {
+@@ -8852,6 +9015,10 @@ function bereichMehrSheet() {
+     html += '<button class="liste-zeile" data-action="bereich-mehr-umkehren" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' +
+       ikon("umkehren", "i-sm") + '<span class="liste-zeile__text">Reihenfolge umkehren</span></button>';
+   }
++  if (!gefuehrt) {
++    html += '<button class="liste-zeile" data-action="liste-auf" title="Viele Karten auf einmal aus einer Liste anlegen">' +
++      ikon("einspielen", "i-sm") + '<span class="liste-zeile__text">Liste einfügen</span></button>';
++  }
+   if (!gefuehrt) {
+     html += '<button class="liste-zeile" data-action="bereich-mehr-umbenennen" title="Bereich umbenennen">' +
+       ikon("stift", "i-sm") + '<span class="liste-zeile__text">Bereich umbenennen</span></button>';
+@@ -9254,6 +9421,7 @@ function renderMain() {
+   html += bereichMehrSheet();
+   html += wahlSheet();
+   html += erinnerungSheet();
++  html += listeSheetHtml();
+   html += setArtSheet();
+   html += karteSheet();
+   html += neuWahlSheet();
+@@ -9278,7 +9446,7 @@ function renderMain() {
+     ui.textLernen ? "tl-" + ui.textLernen.schritt + "-" + ui.textLernen.fokus : ""].join("/");
+   const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
+     ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
+-    ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : ""].join("/");
++    ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : "", ui.listeSheet ? "liste-" + ui.listeSheet.stufe : ""].join("/");
+   /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
+      kein .view - dann ist alles neu. */
+   const warAnsicht = !!app.querySelector(":scope > .view");
+@@ -9288,7 +9456,11 @@ function renderMain() {
    letzterOverlaySchluessel = overlaySchluessel;
    app.classList.toggle("still-ansicht", !ansichtNeu);
    app.classList.toggle("still-overlay", !overlayNeu);
@@ -74,7 +250,16 @@ index 8acb637..92e1861 100644
      !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
      ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
    if (ansichtNeu) {
-@@ -14671,7 +14720,15 @@ function syncViewportGap(ereignis) {
+@@ -9352,7 +9524,7 @@ function renderMain() {
+   }
+   /* 3.17.14: + erinnerungSheet - sonst liess sich die Seite dahinter
+      scrollen und per Wischen wechseln. */
+-  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit);
++  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit || ui.listeSheet);
+   document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
+   appbarKanteSetzen();
+   /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
+@@ -14671,7 +14843,15 @@ function syncViewportGap(ereignis) {
       innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
       viel kleiner) bleibt der Zustand, wie er ist. */
    const root = document.documentElement;
@@ -90,7 +275,7 @@ index 8acb637..92e1861 100644
    if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
      const ref = Math.max(screen.width, screen.height);
      const diff = ref - window.innerHeight;
-@@ -14717,7 +14774,7 @@ function syncViewportGap(ereignis) {
+@@ -14717,7 +14897,7 @@ function syncViewportGap(ereignis) {
  const TASTATUR_MIN = 120;
  let tastaturSprung = null;
  let tastaturFeld = null;
@@ -99,7 +284,7 @@ index 8acb637..92e1861 100644
    const vv = window.visualViewport;
    let hoch = 0;
    if (vv) {
-@@ -14725,6 +14782,10 @@ function syncTastatur() {
+@@ -14725,6 +14905,10 @@ function syncTastatur() {
      if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
    }
    document.documentElement.style.setProperty("--tastatur", hoch + "px");
@@ -110,7 +295,18 @@ index 8acb637..92e1861 100644
    /* G-118: Nur einmal je Fokus/Tastatur-Oeffnen pruefen. Niemals Vorfahren
       mit scrollIntoView verschieben oder auf vv.scroll erneut scrollen. */
    if (!hoch) {
-@@ -14799,21 +14860,34 @@ function openDialog(cfg) {
+@@ -14754,6 +14938,10 @@ function syncTastatur() {
+     }
+   }
+ }
++/* Paket I: getippte oder eingefuegte Liste sofort im Zustand halten. */
++document.addEventListener("input", e => {
++  if (ui.listeSheet && e.target && e.target.id === "liste-text") ui.listeSheet.text = e.target.value;
++});
+ document.addEventListener("focusin", () => {
+   tastaturFeld = null;
+   clearTimeout(tastaturSprung);
+@@ -14799,21 +14987,34 @@ function openDialog(cfg) {
     dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
     ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
     (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
@@ -155,7 +351,7 @@ index 8acb637..92e1861 100644
    setTimeout(danach, 200);
  }
  function closeDialog(result) {
-@@ -14885,7 +14959,11 @@ function renderDialog() {
+@@ -14885,7 +15086,11 @@ function renderDialog() {
      /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
         (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
         Übersetzung" ...), doppelt zu tippen waere nur eine Fehlerquelle. */
@@ -168,7 +364,39 @@ index 8acb637..92e1861 100644
    }
    h += '<div class="dlg-actions">';
    if (d.kind === "code-share") {
-@@ -15691,7 +15769,10 @@ document.body.addEventListener("click", e => {
+@@ -14935,6 +15140,10 @@ function schliesseObersteEbene() {
+   /* 3.17.14 (Station 14): Das Erinnerungs-Blatt (3.17.0) fehlte hier - Escape
+      und Wischen nach unten schlossen es nicht. */
+   if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; ui.erinnerungZeit = null; render(); }); return true; }
++  if (ui.listeSheet) {
++    if (listeEntwurfOffen()) { listeVerwerfenFragen(); return true; }
++    schliesse(() => { ui.listeSheet = null; render(); }); return true;
++  }
+   if (ui.karteSheet || ui.editId) {
+     if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
+     schliesse(cancelEdit); return true;
+@@ -15198,7 +15407,7 @@ function tabSchonAktiv(id) {
+   return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
+     !ui.wahlSheet && !ui.erinnerungSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
+     !ui.bereichMehr && !ui.cardDetailId && !ui.dialog &&
+-    !ui.neuWahl && !ui.textAnlegen && !ui.textAnsicht && !ui.zeileEdit && !ui.textLernen;
++    !ui.neuWahl && !ui.textAnlegen && !ui.textAnsicht && !ui.zeileEdit && !ui.textLernen && !ui.listeSheet;
+ }
+ function nachObenBlaettern() {
+   window.scrollTo({ top: 0, behavior: scrollArt() });
+@@ -15565,6 +15774,11 @@ document.body.addEventListener("click", e => {
+     case "bereich-mehr-auswaehlen": ui.bereichMehr = false; toggleSelectMode(); break;
+     case "bereich-mehr-umkehren": ui.bereichMehr = false; reverseOrder(); break;
+     case "bereich-mehr-umbenennen": ui.bereichMehr = false; renameBereich(); break;
++    case "liste-auf": listeAuf(); break;
++    case "liste-zu": schliesseObersteEbene(); break;
++    case "liste-vorschau": listeVorschau(); break;
++    case "liste-zurueck": if (ui.listeSheet) { ui.listeSheet.stufe = "eingabe"; ui.listeSheet.erg = null; render(); } break;
++    case "liste-anlegen": listeAnlegen(); break;
+     case "bereich-mehr-loeschen": ui.bereichMehr = false; deleteBereich(); break;
+     /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
+        ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
+@@ -15691,7 +15905,10 @@ document.body.addEventListener("click", e => {
      case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
      case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
      case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
@@ -265,3 +493,26 @@ index f305b1a..abba734 100644
          } else assert.ok(bilder.length<=2,'D1 ruhig ohne Wartezeit');
        }
        assert.deepEqual(p.fehler,[]);
+diff --git a/styles.css b/styles.css
+index 0af0a68..e5f482f 100644
+--- a/styles.css
++++ b/styles.css
+@@ -3339,6 +3339,18 @@ input.schalter::before { content: none; }
+   overscroll-behavior: contain;
+   animation: sheet-up var(--dur-slow) var(--ease-out) both;
+ }
++/* 3.18.27 (Paket I): Blatt "Liste einfuegen". Das Feld ist bewusst nicht in
++   der arabischen Schrift gesetzt: es enthaelt beide Sprachen gemischt. */
++.liste-text { min-height: 9.5em; font-size: var(--fs-base); line-height: 1.5; resize: vertical; unicode-bidi: plaintext; }
++.liste-summe { margin: var(--space-2) 0 var(--space-3); }
++.liste-info { margin: 0 0 var(--space-4); padding-left: 1.2em; color: var(--text-2); font-size: var(--fs-sm); }
++.liste-info li + li { margin-top: var(--space-1); }
++.liste-probe { border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: var(--space-4); overflow: hidden; }
++.liste-probe__zeile { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); padding: var(--space-2) var(--space-3); }
++.liste-probe__zeile + .liste-probe__zeile { border-top: 1px solid var(--border-subtle); }
++.liste-probe__wort { font-weight: 600; overflow-wrap: anywhere; }
++.liste-probe__ueb { color: var(--text-2); overflow-wrap: anywhere; }
++.liste-probe__rest { padding: var(--space-2) var(--space-3); border-top: 1px solid var(--border-subtle); margin: 0; }
+ .dlg-nebenweg { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-3); }
+ /* 3.18.21: Trefferflaeche wie ueberall mindestens 44 px. */
+ .dlg-nebenweg button { min-height: 44px; }
