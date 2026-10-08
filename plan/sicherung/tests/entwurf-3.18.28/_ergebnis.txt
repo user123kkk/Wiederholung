@@ -24,3 +24,5 @@ EXIT 0 t_paket_c_verw
 EXIT 0 t_teilen
 EXIT 0 t_loeschen_teilen
 EXIT 0 t_querschnitt
+EXIT 0 t_einstieg
+EXIT 0 t_einstieg_lage

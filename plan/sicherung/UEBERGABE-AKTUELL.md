@@ -1,4 +1,4 @@
-# Übergabe – Stand von 08.10.2026 17:55 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 08.10.2026 17:57 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,20 +6,17 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `9165868 Werkzeug: Minuten-Sicherung sichert auch alle Testausgaben und schreibt die Uebergabe-Seite`
+- Zweig und letzter Commit: `main`, `7edd4d8 Minuten-Sicherung sichert auch den laufenden Chat woertlich (lokal, ausserhalb des Repos)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.27"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
- M AGENTS.md
  M CHANGELOG.md
- M CLAUDE.md
  M app.js
  M datenschutzerklaerung.html
  M index.html
- M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/pruefstand/t_paket_c_weiter.js
  M plan/werkzeuge/pruefstand/t_runde_bereiche.js
@@ -31,11 +28,11 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 1, chrome.exe 23 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 1, chrome.exe 24 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
-**entwurf-3.18.28**: 26 grün, 0 rot, zuletzt: EXIT 0 t_querschnitt
+**entwurf-3.18.28**: 28 grün, 0 rot, zuletzt: EXIT 0 t_einstieg_lage
 
 **ladegeraet-nurpruefen-3.18.27.log**: 153 grün, 3 rot
 ```
@@ -50,6 +47,10 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 08.10.2026
 
+- 17:58 Minuten-Sicherung sichert jetzt auch den laufenden Chat wörtlich
+  (jede Minute, nach `Desktop\Wiederholung-Belege\chats\`, außerhalb des
+  Repos, weil es öffentlich ist). Betreiber 17:57: „auch laufende
+  Aufgaben, ihren Stand, ihre Wege?“ Neu gestartet, läuft.
 - 17:55 Minuten-Sicherung erweitert und neu gestartet (Betreiber 17:52:
   „wirklich alles … selbst Tests … ich will ein klares: ist eingebaut“):
   sichert jetzt jede Minute auch alle Testausgaben (`plan/sicherung/tests/`,

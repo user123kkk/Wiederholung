@@ -8,6 +8,10 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 08.10.2026
 
+- 17:58 Minuten-Sicherung sichert jetzt auch den laufenden Chat wörtlich
+  (jede Minute, nach `Desktop\Wiederholung-Belege\chats\`, außerhalb des
+  Repos, weil es öffentlich ist). Betreiber 17:57: „auch laufende
+  Aufgaben, ihren Stand, ihre Wege?“ Neu gestartet, läuft.
 - 17:55 Minuten-Sicherung erweitert und neu gestartet (Betreiber 17:52:
   „wirklich alles … selbst Tests … ich will ein klares: ist eingebaut“):
   sichert jetzt jede Minute auch alle Testausgaben (`plan/sicherung/tests/`,
