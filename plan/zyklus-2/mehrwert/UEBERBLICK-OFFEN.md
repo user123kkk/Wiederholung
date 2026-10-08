@@ -20,12 +20,12 @@ Ahnung“ gesagt, also gilt sie, bis er etwas anderes sagt.
 | 1 | Bewegung 1 → 3.18.27 | siehe oben | danach noch einmal „ladegerät“ |
 | 2 | Platz 1 (klein) | abgeschnittene Texte in Fortschritt und Lektionen, Suchfeld-Text | nichts |
 | 3 | Paket I | Liste einfügen, Text-/CSV-Export, Druck, Backup sichert alles, Löschen mit „Rückgängig“ | nichts |
-| 4 | Tippen in Blättern | Tastatur, Knöpfe sichtbar (`schritt-2/TASTATUR-BLAETTER.md`) | **Bildschirmaufnahme vom iPhone** |
+| 4 | Tippen in Blättern | Blatt rutscht hoch und springt erst nach der Tastatur (`schritt-2/TASTATUR-BLAETTER.md`, V-1 bis V-3); Aufnahme ist ausgewertet | danach am iPhone ansehen |
 | 5 | Paket H | Karte in der Abfrage bearbeiten, verpatzte Karten am Rundenende, Runde fortsetzen, Bildschirm bleibt wach, Erklärung der drei Knöpfe | Wortlaut für die Erklärung |
 | 6 | Einstieg ruhiger | weniger Bewegung je Tipp, Wege vor die Leiter, „Dein Stand“ doppelt, Zurück-Taste | Satz statt „fang bei den Buchstaben an“; Gerätetest Zurück |
 | 7 | Paket G0, dann G | Lernlogik in eigene Datei mit Schnelltests; dann Kern-Umbau („Nicht“ dann „Sicher“, neue Karten zweimal, Tagesdeckel nach Pause) | nichts; voller Lauf |
 | 8 | Paket J | Mengenbremsen, Meldungen, App Check | Regeln einspielen, Firebase-Konsole |
-| 9 | Paket K | gemischte Karten, Schrift in der Notiz | „passt“ oder „dünner“ zum Wort |
+| 9 | Paket K | gemischte Karten, Schrift in der Notiz | nichts |
 | 10 | Paket L | E-Mail ändern, Bestätigungslink führt zurück, Google oben | Schritt in der Firebase-Konsole |
 | – | Fremdentest | Freunde, eine Woche | Freunde ansprechen (nach I und K) |
 | 11 | ab 29.10. | Auswertung Texte-Probelauf, dann Paket M (Texte), N (ohne Harakat, zweite Richtung), O (Regal, Buchstaben, Proberunde), P (öffentlich), Q (Lehrer) | Foto der Probelauf-Werte am 29.10.; Karten für Proberunde; Medina-Satz fertig |
@@ -41,8 +41,8 @@ Ahnung“ gesagt, also gilt sie, bis er etwas anderes sagt.
 ## Nur der Betreiber
 
 1. Lauf durchlaufen lassen (läuft).
-2. Bildschirmaufnahme: Tippen in „Karte anlegen“ und „Name ändern“.
-3. „passt“ oder „dünner“ zum arabischen Wort auf der Karte.
+2. (erledigt) Bildschirmaufnahme.
+3. (erledigt) Wort auf der Karte: bleibt, wie es ist.
 4. Elternteil als zweiten Eigentümer in der Firebase-Konsole.
 5. Freunde für den Test ansprechen (nach Paket I und K).
 6. Vor dem ersten Abo das Institut der Medina-Bücher schriftlich fragen.

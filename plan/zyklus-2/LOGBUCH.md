@@ -2,6 +2,30 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Bildschirmaufnahme ausgewertet, Überblick, Entwürfe (kein Commit an der App)
+
+**Geändert:** `mehrwert/UEBERBLICK-OFFEN.md` (neu, eine Seite: offen und
+Reihenfolge), `mehrwert/schritt-2/TASTATUR-BLAETTER.md` (Nachtrag V-1 bis
+V-3 aus der Aufnahme), `mehrwert/schritt-2/bewegung-1-entwurf.patch`
+(Entwurf aus dem getrennten Ordner `Wiederholung-bew1` neben dem Repo).
+**Entscheidung:** Betreiber 08.10.: „alle Mehrwert-Punkte und alle anderen
+offenen Punkte sollen noch gebaut werden“ – also die ganze Paketliste, in
+der empfohlenen Reihenfolge. Frage 24 (arabisches Wort zu fett?):
+„entscheide du“ → bleibt, wie es ist; das Foto zeigt klare Striche und
+Vokalzeichen. Die eigene Vermutung „Knöpfe unter dem Rand“ war falsch;
+die Aufnahme zeigt etwas anderes (Blatt rutscht hoch mit Lücke; Blatt
+springt erst nach der Tastatur).
+**Gebaut als Entwurf, ungeprüft im Browser:** A-1, A-2, A-3, schärferer
+D1-Test, `listeLesen()` mit `t_liste_lesen.js` (13 Fälle grün, ohne
+Browser). Eigener Fehler dabei: Unicode-Escapes wurden beim Einfügen zu
+echten Zeichen (unsichtbares Leerzeichen im Code); vor dem Test bemerkt,
+durch Escapes ersetzt (LEHREN § 15, Regel „Code mit Escapes nur über
+Write/Edit“ gilt weiter – hier half auch das nicht, deshalb gegenlesen).
+**Offen:** Der Gesamtlauf des Betreibers läuft (aus dem Desktop-Ordner),
+11:42 Uhr bei 92 von 152. Solange keine Browser-Tests. Danach: Entwurf
+messen, 3.18.27.
+**Nächster Schritt:** Ende des Laufs abwarten, Logs lesen.
+
 ### 2026-10-08 — Tippen in Blättern gemeldet, iPhone-Foto der Karte (nur Plan)
 
 **Geändert:** neu `mehrwert/schritt-2/TASTATUR-BLAETTER.md`.
