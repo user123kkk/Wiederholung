@@ -1,5 +1,7 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**08.10.2026, 17:40: 3.18.27 voll geprüft (153/156, drei Nachläufe grün, Affen 0), nicht veröffentlicht; online weiter 3.18.26. Im Hauptordner liegt uncommittet der Entwurf 3.18.28 (nur Wortlaute, „Speicherkarte“ → „Sammlung“; Patch `zyklus-2/mehrwert/verstaendlichkeit/woerter-3.18.28-entwurf.patch`), betroffene Tests laufen. Neue Regel LEHREN § 1.7. Tagesdeckel: erst rechnen. Einzelheiten: Logbuch Zyklus 2, oberste Einträge.**
+
 **08.10.2026, 15:00: Durchlauf „Verständlichkeit“ ist als Bericht fertig (nur am Code gelesen, nichts gebaut): `zyklus-2/mehrwert/verstaendlichkeit/BERICHT.md`, Funde VS-1 bis VS-10, sieben Fragen an den Betreiber. Voller Lauf `ladegeraet.ps1 -NurPruefen` an 3.18.27 seit 14:52 gestartet; Ergebnis im Logbuch Zyklus 2. `main` weiter 3.18.27, online 3.18.26.**
 
 **08.10.2026, 13:55: `main` = 3.18.27 (Liste einfügen, Export, Druck, Löschen mit Rückgängig, Rundenende, Blätter gleiten, zwei Lernregeln nur im Betreiber-Konto). Geprüft mit betroffenen Tests und Rundenabnahme 13/13, **kein Gesamtlauf, nicht veröffentlicht** – vor dem Veröffentlichen `ladegeraet.ps1 -NurPruefen`. Online ist 3.18.26 (Gesamtlauf 149/152 + drei Nachläufe grün, Affen 0). Alles Offene mit Reihenfolge: `zyklus-2/mehrwert/GESAMTLISTE.md`; zum Weiterbauen: `zyklus-2/mehrwert/ARBEITSSTAND.md`.**

@@ -2,6 +2,39 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Voller Lauf an 3.18.27: 153/156, drei Nachläufe grün, Affen 0 – nichts veröffentlicht
+
+**Geändert:** zehn Hilfsskripte unter `plan/werkzeuge/` (Port aus
+`PRUEF_PORT` statt fest 8099), dieses Logbuch, `plan/STAND.md`.
+**Was lief:** `ladegeraet.ps1 -NurPruefen`, 14:52–17:15, Netzteil, Stand
+74e0b5d (App 3.18.27), 156 Tests, Quellstand `7223038b21480566`, Logs
+`%TEMP%drabic-pruefstand-gesamtǒ3038b21480566\`. 153 Exit 0, drei
+rot; das Skript brach vor den Affen ab.
+**Die drei roten, einzeln nachgesehen:**
+- `t_paket_f_netz`, `t_konto_fortsetzungen`: `ERR_CONNECTION_REFUSED
+  127.0.0.1:8099`. Prüfaufbau, kein App-Fehler: Die Skripte riefen fest
+  Port 8099 auf, das Lauf-Skript liefert auf 8199. Am Vormittag waren sie
+  nur grün, weil der Server eines anderen Chats auf 8099 lief (und hätten
+  dann dessen Ordner geprüft, LEHREN § 5.3). Behoben in zehn Skripten;
+  beide einzeln auf 8199: Exit 0, Ausgaben gelesen („F1/F9 Abnahme grün“,
+  alle Konto-Fälle `aba:false`).
+- `t_griff_scrollen`: „Seite folgt dem Finger genau, 92 !== 96“ in Bündel
+  6. Dreimal einzeln: 3/3 Exit 0, je vier Bündel 96 px. Derselbe Test war
+  schon im Lauf an 3.18.26 einmal rot (0 !== 96) und einzeln grün. Ursache
+  nicht gefunden; tritt bisher nur mitten im langen Lauf auf. Grenze
+  unverändert.
+- Der Emulator hielt diesmal durch (beide Mehrgeräte-Tests grün).
+**Affen, von Hand nachgezogen (Port 8199, mit Texten):** Handy 200/7 und
+iPad 150/11 je 0 Befunde.
+**Entscheidung:** 3.18.27 gilt damit als geprüft. Veröffentlicht wird nur
+auf das Stichwort des Betreibers; weil 3.18.28 (Wortlaute) gleich folgt,
+lohnt das Stichwort erst danach.
+**Offen:** `t_griff_scrollen` im langen Lauf (zweimal rot, einzeln immer
+grün); Skriptpunkt Emulator-Prüfung bleibt.
+**Nächster Schritt:** Entwurf 3.18.28 ist im Hauptordner angewendet
+(uncommittet); betroffene Tests und `abnahme_runde.js` laufen
+(`%TEMP%\entwurf-3.18.28\_ergebnis.txt`).
+
 ### 2026-10-08 — Betreiber: alles wie empfohlen; Wortlaut-Entwurf 3.18.28; neue Regel § 1.7; Tagesdeckel zurückgenommen
 
 **Geändert:** `plan/LEHREN.md` (§ 1.7 neu, Vorfall in § 15),
