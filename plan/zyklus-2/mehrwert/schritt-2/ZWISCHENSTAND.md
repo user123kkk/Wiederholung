@@ -72,6 +72,49 @@ Bewegung, gemessen (Handy dunkel voll, Ende der letzten Animation):
 - Karte anlegen: Blatt auf 280 ms; **Schließen und Üben auf/zu: 0
   Animationen** (harter Wechsel, noch am Bild prüfen).
 
+## Nachtrag 2 (Rundgänge fertig, 13 Konfigurationen in `daten/`)
+
+Achtung: Die Zahlen im Abschnitt „Bewegung, gemessen“ oben stammen vom
+ersten Lauf, der auch schon beendete Animationen mitzählte. Gültig sind die
+Dateien in `daten/` (zweiter Lauf, nur laufende). Kurzfassung:
+`python auswerten.py <Filter> [-v]`.
+
+Funde Onboarding (am Code oder gemessen bestätigt):
+- **E-11, E-12, E-13 sind entschieden (08.10. „wie empfohlen“), aber nicht
+  gebaut.** Wege stehen weiter hinter der Leiter (`app.js` 7957–7975); kein
+  `popstate`/`pushState` in `app.js`; `einstieg-schimmer` läuft auf dem
+  Balken bei jedem Schritt (150 + 1100 ms), je Wahl laufen Blitz 600 ms,
+  Hüpfer 480 ms, Haken 200 ms, Echo 460 ms gleichzeitig.
+- **Höhe wie im iPhone-Browser (390×664, Näherung, Chromium):** „Weiter“
+  liegt unter dem Rand auf Hürden (713, schon ohne Wahl), Runde (687),
+  Zeitpunkt (755), Willkommen passt (630, aber „Ich habe schon ein Konto“
+  nicht). Bei 390×844: Zeitpunkt 759 statt 717 wie sonst (Seite 887 hoch).
+  320×568: nur „Ziel ohne Wahl“ passt.
+- Hürde „schrift“: Echo „Dann fang bei den Buchstaben an.“ und Aufbau-Zeile
+  „große Schrift, Buchstaben als Karten“ (`app.js` 1477–1479). Einen
+  Buchstaben-Satz gibt es nicht.
+- Plan: „Dein Stand“ (Leiste, alles leer) steht direkt über der Leiter, die
+  denselben Weg noch einmal zeigt. Die Leiste hat fünf Punkte und vier
+  Wörter (der zweite Punkt „im Lernen“ hat kein Wort).
+- Wartezeit: Aufbau 6,6 s ohne Abkürzung, danach Plan-Bewegung bis 3,4 s;
+  „Plan speichern“ blendet erst nach 1,1 s ein.
+- Gezählt bis zum Konto-Formular: 13 Tipps und 6,6 s Zwangspause; danach
+  3 Felder, Mail bestätigen, erste Karte (2 Felder).
+
+Funde Bewegung:
+- Karte-anlegen-Blatt schließt mit Escape ohne Bewegung; „Üben“ klappt in
+  Verwalten ohne Bewegung auf und zu und schiebt die Liste 620 px weg.
+  (Schließen über „Fertig“/Tippen daneben noch prüfen.)
+- Einstellungen: bei jeder Rückkehr von einer Unterseite laufen die
+  Eintrittsbewegungen der ganzen Liste neu (7 Animationen, 475 ms).
+- Rundenende 2,3 s, Start Lernen 1,0 s, Unterseiten 280 ms (eine Bewegung).
+
+Funde Platzierung (Handy dunkel, aus den Fotos):
+- Fortschritt, „Genauer ansehen“: Zeile „Lektionen · Medina Buch 1“ bricht
+  um, rechts abgeschnitten „2 von 3 einmal g…“.
+- Kein Fund: „Leertaste/1/2/3“ auf den Knöpfen sind nur im Prüfstand
+  sichtbar (Regel `hover: hover` und `pointer: fine`, `styles.css` 1856).
+
 ## Nächster Schritt
 
 1. Fotos des ersten Rundgangs ansehen, Funde zur Platzierung notieren.
