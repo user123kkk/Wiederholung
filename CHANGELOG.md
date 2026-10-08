@@ -1,3 +1,34 @@
+## 3.18.28 – 8. Oktober 2026
+
+**Klarere Wörter (Durchlauf „Verständlichkeit“, Betreiber 08.10.: „alles ja
+wie du empfiehlst“). Nur Wortlaut, keine Lernlogik.**
+
+- **„Speicherkarte“ heißt jetzt „Sammlung“**, überall. An der zugeklappten
+  Zeile steht, wozu sie da ist: „Karten, die du zusammen üben willst.“
+- **Bereich erklärt:** Im Bereich-Blatt steht ein Satz, was ein Bereich ist.
+  „Satz“ ist überall zu „Kartensatz“ ausgeschrieben.
+- **Üben** sagt jetzt, was es ist: „So oft du willst. Ändert nichts daran,
+  wann deine Karten wiederkommen.“
+- **Geführter Kartensatz:** Die Leiste der Durchsicht zählt „gesehen“ statt
+  „gelernt“ (der Satz darunter sagte schon, dass gesehen noch nicht gelernt
+  ist). Der Knopf heißt „Runde starten“ wie überall. Statt „Geh mit dem
+  Video mit.“ steht „Lies die Karten einmal durch, zum Beispiel neben deinem
+  Unterricht oder Video.“
+- **Ein Wort je Sache:** „Beste Serie“ (statt „Bester Lauf“), „Aufzeichnung“
+  (statt „Tagesprotokoll“), „dein:e Lehrer:in“ (statt „Lehrperson“),
+  „Ausgabe Nr.“ (statt „Veröffentlichung Nr.“), „Code einlösen“ auf jedem
+  Knopf, „Karte anlegen“ / „Anlegen“ (statt „hinzufügen“), „fällig“ am
+  Rundenende (statt „offen“), „Karten“ statt „Vokabeln“ in den Texten zu
+  Sammlungen.
+- Rundenende: „3 Karten noch nicht gewusst“ (statt „saßen noch nicht“).
+- „Mehr zu diesem Bereich“ (statt „Weitere Handlungen“); „Als Tabelle
+  speichern · ohne Lernstand“ (statt „Als Liste speichern · CSV“).
+- Einstieg, „Ich lese Arabisch noch schlecht“: „Die Schrift stellen wir groß.
+  Buchstaben kannst du wie Wörter als Karten anlegen.“ (statt „Dann fang bei
+  den Buchstaben an.“ – einen fertigen Buchstaben-Satz gibt es noch nicht).
+- Karte bearbeiten: unter „Stand“ steht „Nur ändern, wenn die Karte falsch
+  eingestuft ist.“
+
 ## 3.18.27 – 8. Oktober 2026
 
 **Viele Karten auf einmal, ruhigere Fenster, und der erste Teil der neuen

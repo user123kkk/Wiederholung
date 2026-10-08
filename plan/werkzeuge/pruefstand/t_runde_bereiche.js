@@ -104,7 +104,7 @@ const bewerte = async (p, art = 'known') => { await klick(p, 'reveal', 520); awa
       pruefe(z.total === 10 && z.rest === 'b2:3', '8 Limit 10 bei 7 + 7: Runde ' + z.total + ', Rest ' + z.rest);
       for (let i = 0; i < 10; i++) await bewerte(p);
       z = await stand(p);
-      pruefe(z.ende && /noch 4 Karten offen/.test(z.endeText.replace(/\s+/g, ' ')), '8 Rundenende nennt die offenen 4: "' + z.endeText.replace(/\s+/g, ' ').slice(0, 90) + '"');
+      pruefe(z.ende && /noch 4 Karten fällig/.test(z.endeText.replace(/\s+/g, ' ')), '8 Rundenende nennt die offenen 4: "' + z.endeText.replace(/\s+/g, ' ').slice(0, 90) + '"');
       await klick(p, 'start-session', 700);
       z = await stand(p);
       pruefe(z.total === 4 && z.bereich === 'b2', '8 Weiterlernen: ' + z.total + ' Karten im zweiten Bereich (' + z.bereich + ')');
@@ -117,7 +117,7 @@ const bewerte = async (p, art = 'known') => { await klick(p, 'reveal', 520); awa
       await klick(p, 'start-session', 700);
       for (let i = 0; i < 10; i++) await bewerte(p);
       let z = await stand(p);
-      pruefe(z.ende && z.bereich === 'b1' && /noch 4 Karten offen/.test(z.endeText.replace(/\s+/g, ' ')), '9 Ende im ersten Bereich, 4 im anderen offen');
+      pruefe(z.ende && z.bereich === 'b1' && /noch 4 Karten fällig/.test(z.endeText.replace(/\s+/g, ' ')), '9 Ende im ersten Bereich, 4 im anderen offen');
       await klick(p, 'start-session', 700);
       z = await stand(p);
       pruefe(z.total === 4 && z.bereich === 'b2', '9 Weiterlernen wechselt in den Bereich mit den offenen Karten (' + z.bereich + ', ' + z.total + ')');

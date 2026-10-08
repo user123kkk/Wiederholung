@@ -74,7 +74,7 @@ const faelle={
   for(const n of [1,40]){
    const html=await p.evaluate(n=>__C.stoff(Array.from({length:n},(_,i)=>({id:'n'+i,stufe:0,maxStufe:0,ersteBewertung:null}))),n);
    assert.ok(!/<strong>0<\/strong>/.test(html),'C6 grosse Null');
-   assert.ok(!/1 Karte saßen/.test(html),'C6 falsche Mehrzahl');
+   assert.ok(!/1 Karten noch nicht gewusst/.test(html),'C6 falsche Mehrzahl');
    assert.ok(/gerade/.test(html),'C6 Stand fehlt');
    await p.evaluate(n=>{
     const vorlage=__C.bereiche[0].karten[0];
@@ -88,7 +88,7 @@ const faelle={
    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'C6 importierte Karten überlaufen');
   }
   await p.evaluate(()=>{const c=__C.bereiche[0].karten[0];__C.bereiche[0].karten=[c];c.ersteBewertung='2026-09-01';__C.render();});
-  assert.ok(!/1 Karte saßen/.test(await p.locator('.view').innerText()),'C6 einmal Nicht: Mehrzahl');
+  assert.ok(!/1 Karten noch nicht gewusst/.test(await p.locator('.view').innerText()),'C6 einmal Nicht: Mehrzahl');
   assert.equal(await p.locator('.gross-zahl strong').filter({hasText:/^0$/}).count(),0,'C6 einmal Nicht: Null');
  },
  async C7(p){

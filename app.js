@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.27";
+const APP_VERSION = "3.18.28";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -755,7 +755,7 @@ function normSet(s) {
   const art = SET_ARTEN.indexOf(s.art) !== -1 || s.art === SET_ART_TEXT ? s.art : "eigen";
   const set = {
     id: typeof s.id === "string" && s.id ? s.id : genId(),
-    name: typeof s.name === "string" && s.name ? s.name.slice(0, 40) : "Speicherkarte",
+    name: typeof s.name === "string" && s.name ? s.name.slice(0, 40) : "Sammlung",
     art: art,
     /* Das Schloss haengt ausschliesslich an Lektionen. Stuende es auch an
        einer Kategorie, waere die Freigabe-Regel nicht mehr eindeutig. */
@@ -1191,7 +1191,7 @@ async function verlaufZuruecksetzen() {
   const kontoRef = userDocRef;
   const tage = Object.keys(verlauf).length;
   const serie = serieAktuell();
-  const ok = await dlgConfirm("Das Tagesprotokoll von " + mz(tage, "Tag", "Tagen") + " wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an. Deine Serie von " + mz(serie, "Tag", "Tagen") + " fängt ebenfalls bei null an.\n\nDeine Karten und ihr Lernstand bleiben unberührt.",
+  const ok = await dlgConfirm("Die Aufzeichnung von " + mz(tage, "Tag", "Tagen") + " wird gelöscht: Balken, Kalender und Wochenzahlen fangen bei null an. Deine Serie von " + mz(serie, "Tag", "Tagen") + " fängt ebenfalls bei null an.\n\nDeine Karten und ihr Lernstand bleiben unberührt.",
     { title: "Aufzeichnung zurücksetzen?", okLabel: "Löschen", danger: true });
   if (!ok || userDocRef !== kontoRef || kontoWirdGeloescht) return;
   if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
@@ -1539,7 +1539,7 @@ const EINSTIEG_HUERDEN = [
      Woerter als Karten anlegen (Wort-Feld nimmt jeden Text). */
   { id: "schrift", label: "Ich lese Arabisch noch schlecht oder gar nicht", icon: "auge",
     kurz: "große Schrift, Buchstaben als Karten",
-    echo: "Dann fang bei den Buchstaben an. Die Schrift stellen wir groß." },
+    echo: "Die Schrift stellen wir groß. Buchstaben kannst du wie Wörter als Karten anlegen." },
   /* 3.11.0: der ehrliche Ausweg. Seit dieser Fassung ist auf diesem
      Bildschirm eine Wahl Pflicht (siehe einstiegWahlFehlt) - ohne eine
      Antwort "nichts davon" waere das eine Falle: niemand darf gezwungen
@@ -4596,7 +4596,7 @@ function exportListe() {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
-  zeigeToast(mz(b.karten.length, "Karte", "Karten") + " als Liste gespeichert");
+  zeigeToast(mz(b.karten.length, "Karte", "Karten") + " als Tabelle gespeichert");
 }
 /* 3.18.27 (Paket I): Drucken. Die App selbst ist fuer den Bildschirm gebaut;
    gedruckt wird deshalb eine eigene, schlichte Tabelle, die nur fuer den
@@ -4658,14 +4658,14 @@ function exportBackup(onlyCurrent) {
    damit alle Wege dieselben Bedingungen stellen. */
 async function weitergabeMoeglich(b) {
   if (istGefuehrt(b)) {
-    await dlgAlert('„' + b.name + '" ist selbst ein geführter Satz. Weitergeben kann ihn nur, wer ihn zusammengestellt hat.',
+    await dlgAlert('„' + b.name + '" ist selbst ein geführter Kartensatz. Weitergeben kann ihn nur, wer ihn zusammengestellt hat.',
       "Nicht möglich");
     return false;
   }
   if (lektionenVon(b).length === 0) {
-    await dlgAlert('In „' + b.name + '" gibt es noch keine Speicherkarte der Art „Lektion". ' +
-      'Ohne Lektionen gäbe es nichts zum Freischalten – wer den Satz einspielt, hätte gar keine Karte zum Lernen.\n\n' +
-      'Leg im Verwalten-Tab unter „Speicherkarten“ mindestens eine Lektion an.', "Noch keine Lektionen");
+    await dlgAlert('In „' + b.name + '" gibt es noch keine Sammlung der Art „Lektion". ' +
+      'Ohne Lektionen gäbe es nichts zum Freischalten – wer den Kartensatz einspielt, hätte gar keine Karte zum Lernen.\n\n' +
+      'Leg im Verwalten-Tab unter „Sammlungen“ mindestens eine Lektion an.', "Noch keine Lektionen");
     return false;
   }
   return true;
@@ -4712,7 +4712,7 @@ function weitergabeBestaetigung(b, version, modus) {
     txt += '\n\nAchtung: ' + mz(ohneLektion, 'Karte liegt', 'Karten liegen') + ' in keiner Lektion. ' + (ohneLektion === 1 ? 'Die bleibt' : 'Die bleiben') + ' beim Empfänger für immer gesperrt.';
   }
   if (eigeneAnzahl > 0) {
-    txt += '\n\n' + mz(eigeneAnzahl, 'eigene Speicherkarte bleibt', 'eigene Speicherkarten bleiben') + ' zu Hause – weitergegeben werden nur Kategorien und Lektionen.';
+    txt += '\n\n' + mz(eigeneAnzahl, 'eigene Sammlung bleibt', 'eigene Sammlungen bleiben') + ' zu Hause – weitergegeben werden nur Kategorien und Lektionen.';
   }
   if (modus === "lehrer") {
     txt += '\n\nDu schaltest die Lektionen selbst frei, mit einem Klick. Was du freigibst, bleibt offen.';
@@ -4720,7 +4720,7 @@ function weitergabeBestaetigung(b, version, modus) {
     txt += '\n\nDie Lektionen schalten sich durch den Lernfortschritt selbst frei.';
   }
   txt += '\n\nDu siehst nicht, wer den Code benutzt. Du kannst das Teilen jederzeit beenden.';
-  txt += '\n\nDas wird Veröffentlichung Nr. ' + version + '.';
+  txt += '\n\nDas wird Ausgabe Nr. ' + version + '.';
   return txt;
 }
 
@@ -5125,7 +5125,7 @@ async function satzZusammenfuehren(ziel, datei, kontoRef = userDocRef) {
   if (d.neu.length) zeilen.push("• " + mz(d.neu.length, "Karte kommt", "Karten kommen") + " dazu" + (neueLektionen ? " (" + mz(neueLektionen, "neue Lektion", "neue Lektionen") + ", gesperrt)" : ""));
   if (d.aktualisiert.length) zeilen.push("• " + mz(d.aktualisiert.length, "Karte wird", "Karten werden") + " im Text berichtigt");
   if (d.entfernt.length) zeilen.push("• " + mz(d.entfernt.length, "Karte fällt", "Karten fallen") + " weg");
-  if (d.entfernteSets.length) zeilen.push("• " + mz(d.entfernteSets.length, "Speicherkarte fällt", "Speicherkarten fallen") + " weg");
+  if (d.entfernteSets.length) zeilen.push("• " + mz(d.entfernteSets.length, "Sammlung fällt", "Sammlungen fallen") + " weg");
   /* 2.11.5: Aendert sich nichts, gibt es auch nichts zu bestaetigen. Vorher
      stand da ein "Übernehmen" fuer einen Vorgang ohne Wirkung. */
   if (zeilen.length === 0 && (datei.satzVersion || 1) <= (ziel.satzVersion || 0)) {
@@ -5801,12 +5801,12 @@ async function saveSelectedToSet(targetId) {
   const uebersprungen = ui.selectedIds.size - ids.length;
   let set, neu = false;
   if (targetId === "__new__") {
-    const name = await dlgPrompt("Wie soll die neue Speicherkarte heißen?", "Schwierige Wörter",
-      { title: "Neue Speicherkarte", okLabel: "Anlegen" });
+    const name = await dlgPrompt("Wie soll die neue Sammlung heißen?", "Schwierige Wörter",
+      { title: "Neue Sammlung", okLabel: "Anlegen" });
     if (!name || !name.trim()) return;
     const n = name.trim().slice(0, 40);
     if (currentSets().some(s => s.name === n)) {
-      await dlgAlert('Eine Speicherkarte namens „' + n + '" existiert schon.', "Name schon vergeben");
+      await dlgAlert('Eine Sammlung namens „' + n + '" existiert schon.', "Name schon vergeben");
       return;
     }
     set = { id: genId(), name: n, art: "eigen", gesperrt: false, quelleId: null, cardIds: [] };
@@ -5815,7 +5815,7 @@ async function saveSelectedToSet(targetId) {
   } else {
     set = findSet(targetId);
     if (!set) return;
-    if (!setBearbeitbar(set)) { await hinweisGefuehrt("In diese Speicherkarte etwas ablegen"); return; }
+    if (!setBearbeitbar(set)) { await hinweisGefuehrt("In diese Sammlung etwas ablegen"); return; }
   }
   const known = new Set(set.cardIds);
   const neuDazu = [];
@@ -5853,14 +5853,14 @@ function setArtAendern(id, art) {
 async function renameSet(id) {
   const set = findSet(id);
   if (!set) return;
-  if (!setBearbeitbar(set)) { await hinweisGefuehrt("Diese Speicherkarte umbenennen"); return; }
-  const name = await dlgPrompt("Neuer Name für die Speicherkarte:", set.name,
-    { title: "Speicherkarte umbenennen", okLabel: "Speichern" });
+  if (!setBearbeitbar(set)) { await hinweisGefuehrt("Diese Sammlung umbenennen"); return; }
+  const name = await dlgPrompt("Neuer Name für die Sammlung:", set.name,
+    { title: "Sammlung umbenennen", okLabel: "Speichern" });
   if (!name || !name.trim()) return;
   const n = name.trim().slice(0, 40);
   if (n === set.name) return;
   if (currentSets().some(s => s !== set && s.name === n)) {
-    await dlgAlert('Eine Speicherkarte namens „' + n + '" existiert schon.', "Name schon vergeben");
+    await dlgAlert('Eine Sammlung namens „' + n + '" existiert schon.', "Name schon vergeben");
     return;
   }
   set.name = n;
@@ -5871,10 +5871,10 @@ async function deleteSet(id) {
   const sets = currentSets();
   const idx = sets.findIndex(s => s.id === id);
   if (idx === -1) return;
-  if (!setBearbeitbar(sets[idx])) { await hinweisGefuehrt("Diese Speicherkarte löschen"); return; }
-  const ok = await dlgConfirm('Die Speicherkarte „' + sets[idx].name +
-    '" wird gelöscht. Die Vokabeln selbst bleiben erhalten.',
-    { title: "Speicherkarte löschen?", okLabel: "Löschen", danger: true });
+  if (!setBearbeitbar(sets[idx])) { await hinweisGefuehrt("Diese Sammlung löschen"); return; }
+  const ok = await dlgConfirm('Die Sammlung „' + sets[idx].name +
+    '" wird gelöscht. Die Karten selbst bleiben erhalten.',
+    { title: "Sammlung löschen?", okLabel: "Löschen", danger: true });
   if (!ok) return;
   sets.splice(idx, 1);
   if (ui.openSetId === id) ui.openSetId = null;
@@ -5982,7 +5982,7 @@ async function startDrillGruppen(gruppen, handwriting) {
 async function startDrillFromSets(setIds, handwriting) {
   const gewaehlt = setIds.map(id => findSet(id)).filter(Boolean);
   if (gewaehlt.length === 0) {
-    await dlgAlert("Wähle mindestens eine Speicherkarte aus.", "Nichts ausgewählt");
+    await dlgAlert("Wähle mindestens eine Sammlung aus.", "Nichts ausgewählt");
     return;
   }
   const gesperrt = gewaehlt.find(s => setGesperrt(s));
@@ -6001,12 +6001,12 @@ async function startDrillFromSets(setIds, handwriting) {
   });
   const cards = [...byId.values()];
   if (cards.length === 0) {
-    await dlgAlert("Die ausgewählten Speicherkarten enthalten keine Karten (mehr).", "Nichts zu üben");
+    await dlgAlert("Die ausgewählten Sammlungen enthalten keine Karten (mehr).", "Nichts zu üben");
     return;
   }
   const label = gewaehlt.length === 1
-    ? "Speicherkarte: " + gewaehlt[0].name
-    : "Speicherkarten: " + gewaehlt.map(s => s.name).join(" + ");
+    ? "Sammlung: " + gewaehlt[0].name
+    : "Sammlungen: " + gewaehlt.map(s => s.name).join(" + ");
   startDrillWithCards(cards, label, handwriting);
 }
 function startDrillWithCards(cards, label, handwriting) {
@@ -9162,6 +9162,7 @@ function bereichSheet() {
   let html = '<div class="dlg-backdrop" data-action="bereich-sheet-zu" role="presentation">';
   html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-label="Bereich wählen">';
   html += '<h3>Bereich</h3>';
+  html += '<p class="dlg-text">Ein Bereich ist ein Stapel Karten zu einem Thema, zum Beispiel ein Buch oder ein Kurs.</p>';
   html += '<div class="sheet-liste"><div class="liste" style="background:transparent;border:0">';
   bereiche.forEach(b => {
     const d = dueCardsFor(b).length;
@@ -9191,8 +9192,8 @@ function bereichMehrSheet() {
   const cards = currentCards();
   const gefuehrt = istGefuehrt(currentBereich());
   let html = '<div class="dlg-backdrop" data-action="bereich-mehr-zu" role="presentation">';
-  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-label="Weitere Handlungen">';
-  html += '<h3>Weitere Handlungen</h3>';
+  html += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-label="Mehr zu diesem Bereich">';
+  html += '<h3>Mehr zu diesem Bereich</h3>';
   html += '<div class="sheet-liste"><div class="liste" style="background:transparent;border:0">';
   if (cards.length > 0) {
     html += '<button class="liste-zeile" data-action="bereich-mehr-auswaehlen">' +
@@ -9207,7 +9208,7 @@ function bereichMehrSheet() {
      zusammengestellt hat (wie beim Weitergeben). */
   if (cards.length > 0 && !gefuehrt) {
     html += '<button class="liste-zeile" data-action="liste-speichern" title="Alle Karten dieses Bereichs als Tabelle speichern">' +
-      ikon("sichern", "i-sm") + '<span class="liste-zeile__text">Als Liste speichern</span><span class="liste-zeile__wert">CSV</span></button>';
+      ikon("sichern", "i-sm") + '<span class="liste-zeile__text">Als Tabelle speichern</span><span class="liste-zeile__wert">ohne Lernstand</span></button>';
     html += '<button class="liste-zeile" data-action="bereich-drucken" title="Alle Karten dieses Bereichs drucken">' +
       ikon("lektion", "i-sm") + '<span class="liste-zeile__text">Drucken</span></button>';
   }
@@ -9339,13 +9340,13 @@ function karteSheet() {
       const hier = editing.stufe >= g.von && editing.stufe <= g.bis;
       const wert = hier ? editing.stufe : g.von;
       return '<option value="' + wert + '"' + (wert === (formDraft.stufe ?? editing.stufe) ? ' selected' : '') + '>' + esc(g.label) + '</option>';
-    }).join("") + '</select></div>';
+    }).join("") + '</select><p class="hint" style="padding:6px 0 0">Nur ändern, wenn die Karte falsch eingestuft ist.</p></div>';
   }
   html += '<div class="dlg-actions">';
   /* Kurze Beschriftungen: .dlg-actions macht beide Knoepfe gleich breit, und
      "Karte hinzufuegen" brach dabei auf zwei Zeilen um. Worum es geht, steht
      als Ueberschrift ueber dem Blatt - der Knopf muss es nicht wiederholen. */
-  html += '<button data-action="submit-card">' + (editing ? "Speichern" : "Hinzufügen") + '</button>';
+  html += '<button data-action="submit-card">' + (editing ? "Speichern" : "Anlegen") + '</button>';
   html += '<button class="secondary" data-action="karte-sheet-zu">' + (editing ? "Abbrechen" : "Fertig") + '</button>';
   html += '</div></div></div>';
   return html;
@@ -9942,7 +9943,7 @@ function renderDurchsicht(set) {
   html += modeBar({
     zu: "lern-ende",
     zuLabel: "Durchsicht beenden",
-    mitte: fertig + " von " + alle.length + " gelernt",
+    mitte: fertig + " von " + alle.length + " gesehen",
     anteil: alle.length ? fertig / alle.length : 0,
     rechts: ui.lernLetzte
       ? '<button class="icon-btn" data-action="lern-undo" aria-label="Letztes Abhaken zurücknehmen">' +
@@ -9964,10 +9965,10 @@ function renderDurchsicht(set) {
     html += '<div class="stapel" style="margin-top:var(--stack)">';
     html += '<div class="empty__titel">Durchgearbeitet</div>';
     html += '<p class="empty__text">Jetzt kommt die erste Abfrage – ab da kommen die Karten von selbst wieder.</p>';
-    html += '<button class="lg full" data-action="start-session">Abfrage starten</button>';
+    html += '<button class="lg full" data-action="start-session">Runde starten</button>';
     html += '</div>';
   } else {
-    html += '<p class="hint" style="margin-top:var(--space-4)">Geh mit dem Video mit. <strong>Gesehen</strong> ' +
+    html += '<p class="hint" style="margin-top:var(--space-4)">Lies die Karten einmal durch, zum Beispiel neben deinem Unterricht oder Video. <strong>Gesehen</strong> ' +
       'stellt die Karte für heute in die Abfrage – gelernt hast du sie erst, wenn du sie dort weißt.</p>';
   }
   html += '</div>';
@@ -10029,7 +10030,7 @@ function renderFaden(b, due) {
     html += '<p class="hint" style="padding:0 0 12px">' +
       (angefangen > 0
         ? 'Noch ' + ungelernt.length + ' von ' + inLektion.length + ' Karten.'
-        : mz(inLektion.length, 'Karte', 'Karten') + ', noch keine davon gelernt.') + '</p>';
+        : mz(inLektion.length, 'Karte', 'Karten') + ', noch keine davon gesehen.') + '</p>';
     html += '<button data-action="lern-set" data-id="' + esc(akt.id) + '">' +
       (angefangen > 0 ? "Weiter durchgehen" : "Durchgehen") + '</button>';
     if (wiederholungen.length > 0) {
@@ -10360,7 +10361,7 @@ function renderEinstellungenSeite(id) {
     html += '<div class="card" style="margin-top:var(--stack)">';
     html += '<h3>Einspielen</h3>';
     html += '<p class="hint">Eine Sicherungsdatei oder einen Kartensatz laden. Gehört die Datei zu einem ' +
-      'Satz, den du schon hast, wird er ergänzt – dein Lernstand bleibt. Einen <strong>Code</strong> ' +
+      'Kartensatz, den du schon hast, wird er ergänzt – dein Lernstand bleibt. Einen <strong>Code</strong> ' +
       'löst du unter „Kartensatz per Code“ ein.</p>';
     html += '<div class="form-actions">';
     html += '<button class="secondary" data-action="import-trigger">' + ikon("einspielen", "i-sm") +
@@ -10369,7 +10370,7 @@ function renderEinstellungenSeite(id) {
 
     html += '<div class="card" style="margin-top:var(--stack)">';
     html += '<h3>Aufzeichnung</h3>';
-    html += '<p class="hint">Das Tagesprotokoll trägt Kalender, Wochenzahlen und die Serie – ' +
+    html += '<p class="hint">Sie trägt Kalender, Wochenzahlen und die Serie – ' +
       'aufgezeichnet ' + (tage === 1 ? 'ist' : 'sind') + ' <strong>' + tage + '</strong> Tag' + (tage === 1 ? "" : "e") + '. ' +
       'Beim Zurücksetzen fängt auch deine Serie bei null an. Deine Karten und ihr Lernstand bleiben.</p>';
     html += '<div class="form-actions">';
@@ -10398,7 +10399,7 @@ function renderEinstellungenSeite(id) {
       'Seine Lektionen stehen danach bei dir – alles auf Anfang, du fängst selbst an.</p>';
     html += '<div class="form-actions">';
     html += '<button data-action="code-einloesen-start">' + ikon("einspielen", "i-sm") +
-      ' Code eingeben</button>';
+      ' Code einlösen</button>';
     html += '</div></div>';
 
     if (!istGefuehrt(b)) {
@@ -10474,7 +10475,7 @@ function renderKontoLoeschen() {
   const serie = serieAktuell();
   html += '<li><strong>' + karten + '</strong> Karte' + (karten === 1 ? '' : 'n') + ' mit ihrem Lernstand' +
     (gesessen > 0 ? ' – <strong>' + gesessen + '</strong> davon hast du schon einmal gewusst' : '') + '</li>';
-  html += '<li><strong>' + bereiche.length + '</strong> Bereich' + (bereiche.length === 1 ? '' : 'e') + ' mit allen Speicherkarten</li>';
+  html += '<li><strong>' + bereiche.length + '</strong> Bereich' + (bereiche.length === 1 ? '' : 'e') + ' mit allen Sammlungen</li>';
   /* 3.18.2: Texte sind keine Karten (bereichAufteilen) - eigens nennen. */
   const texteAnzahl = bereiche.reduce((n, b) => n + (b.texte || []).length, 0);
   if (texteAnzahl) html += '<li><strong>' + texteAnzahl + '</strong> ' + (texteAnzahl === 1 ? 'Text' : 'Texte') + ' mit ihrem Lernstand</li>';
@@ -10981,16 +10982,16 @@ const WAHLEN = {
     titel: "Verschieben nach", action: "auswahl-ziel-bereich",
     liste: () => bereiche.filter(b => b.id !== ui.bereichId).map(b => ({ id: b.id, label: b.name })),
     wert: () => null,
-    hilfe: 'Die Karten wandern mit ihrem Lernstand in den gewählten Bereich und werden aus Speicherkarten dieses Bereichs genommen.'
+    hilfe: 'Die Karten wandern mit ihrem Lernstand in den gewählten Bereich und werden aus Sammlungen dieses Bereichs genommen.'
   },
   speicherkarte: {
-    titel: "In Speicherkarte ablegen", action: "auswahl-ziel-set",
-    liste: () => [{ id: "__new__", label: "＋ Neue Speicherkarte" }]
+    titel: "In Sammlung ablegen", action: "auswahl-ziel-set",
+    liste: () => [{ id: "__new__", label: "＋ Neue Sammlung" }]
       .concat(currentSets().filter(x => setBearbeitbar(x))
         .sort((a, b) => Number(b.id === ui.zuletztSetId) - Number(a.id === ui.zuletztSetId))
         .map(x => ({ id: x.id, label: x.name }))),
     wert: () => currentSets().some(x => x.id === ui.zuletztSetId && setBearbeitbar(x)) ? ui.zuletztSetId : null,
-    hilfe: 'Die Karten bleiben, wo sie sind – die Speicherkarte merkt sich nur, welche es sind.'
+    hilfe: 'Die Karten bleiben, wo sie sind – die Sammlung merkt sich nur, welche es sind.'
   },
   limit: {
     titel: "Karten pro Runde", action: "set-sitzungslimit",
@@ -11159,7 +11160,7 @@ function renderLernen() {
       html += '<button class="ghost" data-action="import-trigger">Datei einspielen</button>';
     } else {
       html += '<button data-action="import-trigger">Kartensatz einspielen</button>';
-      html += '<button class="ghost" data-action="code-einloesen-start">Code eingeben</button>';
+      html += '<button class="ghost" data-action="code-einloesen-start">Code einlösen</button>';
     }
     html += '</div></div>';
     return html;
@@ -11604,7 +11605,7 @@ function lernenSerie() {
   html += '<span class="serie-text">' + (serie === 0
     ? 'Heute wird Tag 1'
     : 'Tag' + (serie === 1 ? '' : 'e') + ' am St\u00fcck') +
-    (streak.beste > serie ? '<br><span class="serie-beste">Bester Lauf: <strong>' + streak.beste + '</strong></span>' : '') + '</span>';
+    (streak.beste > serie ? '<br><span class="serie-beste">Beste Serie: <strong>' + streak.beste + '</strong></span>' : '') + '</span>';
   html += '</div>';
   /* 3.17.35 (REST-10): Der Bildschirmleser bekommt, was die Punkte zeigen. */
   let gelernt = 0;
@@ -12370,7 +12371,7 @@ function renderRundenEnde(s, gesamt) {
       '<span><strong>' + serieHeute + ' Tag' + (serieHeute === 1 ? '' : 'e') + '</strong> am Stück</span></div>';
   }
   if (offenHeute > 0) html += '<p class="hint ende__morgen" style="--i:4">Heute ' + (offenHeute === 1 ? 'ist' : 'sind') +
-    ' noch <strong>' + offenHeute + '</strong> Karte' + (offenHeute === 1 ? '' : 'n') + ' offen.</p>';
+    ' noch <strong>' + offenHeute + '</strong> Karte' + (offenHeute === 1 ? '' : 'n') + ' fällig.</p>';
   else if (!s.isDrill) html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
     ? 'Morgen ' + (morgen === 1 ? 'kommt' : 'kommen') + ' <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
     : 'Morgen ist nichts fällig. Die nächsten kommen von selbst.') + '</p>';
@@ -12381,7 +12382,7 @@ function renderRundenEnde(s, gesamt) {
     html += '<div class="ende__nicht" style="--i:5">';
     html += '<button class="ghost ende__nicht-kopf" data-action="ende-nicht" aria-expanded="' + (s.nichtOffen ? "true" : "false") + '">' +
       ikon(s.nichtOffen ? "chevronUnten" : "chevronRechts", "i-sm") + '<span>' +
-      (nichtKarten.length === 1 ? 'Eine Karte saß noch nicht' : nichtKarten.length + ' Karten saßen noch nicht') + '</span></button>';
+      (nichtKarten.length === 1 ? 'Eine Karte noch nicht gewusst' : nichtKarten.length + ' Karten noch nicht gewusst') + '</span></button>';
     if (s.nichtOffen) {
       html += '<ul class="ende__nicht-liste">';
       nichtKarten.slice(0, 40).forEach(k => {
@@ -13993,7 +13994,7 @@ function renderVerwalten() {
         ikon("plus", "i-sm") + ' Neu</button>';
     } else {
       html += '<button class="lg full" data-action="karte-neu">' +
-        ikon("plus", "i-sm") + ' Karte hinzuf\u00fcgen</button>';
+        ikon("plus", "i-sm") + ' Karte anlegen</button>';
     }
     html += '<div style="height:var(--stack)"></div>';
     html += renderTexteBlock(bAkt);
@@ -14020,7 +14021,7 @@ function renderVerwaltenListe(cards, gefuehrt) {
        ein Sprung ins Blatt waere hier eine unnoetige zweite Handlung. */
     html += '<button class="ghost" data-action="toggle-select-mode" title="Mehrfachauswahl beenden">' + ikon("schliessen", "i-sm") + ' Fertig</button>';
   } else {
-    if (cards.length > 0) html += '<button class="ghost" data-action="open-drill" title="Stufen oder Speicherkarten beliebig oft üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
+    if (cards.length > 0) html += '<button class="ghost" data-action="open-drill" title="Stufen oder Sammlungen beliebig oft üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
     /* Löschen gilt fuer den Bereich selbst, nicht fuer seine Karten - deshalb
        steht der Mehr-Knopf unconditional da, genau wie "Löschen" es vorher war.
        Was genau im Blatt steht, entscheidet weiterhin jede Zeile fuer sich. */
@@ -14041,13 +14042,13 @@ function renderVerwaltenListe(cards, gefuehrt) {
        zwei Reiter (Stand | Speicherkarten), Chips einzeln an/aus, eine Zahl,
        ein Schalter. Hick: weniger Entscheidungen auf einmal, und keine davon
        haengt von der Reihenfolge ab. */
-    html += '<div class="drill-kopf"><strong>Üben</strong><span>Zählt nicht für deine Wiederholungen</span></div>';
+    html += '<div class="drill-kopf"><strong>Üben</strong><span>So oft du willst. Ändert nichts daran, wann deine Karten wiederkommen.</span></div>';
     if (sets.length > 0) {
       html += '<div class="segment" role="radiogroup" aria-label="Wonach üben">';
       html += '<label class="segment__teil"><input type="radio" name="drill-mode" value="stufen"' +
         (ui.drillSource === "stufen" ? " checked" : "") + '><span>Nach Stand</span></label>';
       html += '<label class="segment__teil"><input type="radio" name="drill-mode" value="sets"' +
-        (ui.drillSource === "sets" ? " checked" : "") + '><span>Speicherkarten</span></label>';
+        (ui.drillSource === "sets" ? " checked" : "") + '><span>Sammlungen</span></label>';
       html += '</div>';
     }
     let anzahl = 0;
@@ -14108,7 +14109,7 @@ function renderVerwaltenListe(cards, gefuehrt) {
     if (bereiche.length > 1 && kartenBearbeitbar()) {
       html += '<button class="ghost" data-action="auswahl-verschieben"' + aus + '>' + ikon("verschieben", "i-sm") + ' Verschieben</button>';
     }
-    html += '<button class="ghost" data-action="auswahl-speicherkarte"' + aus + ' title="Ausgewählte Karten in einer Speicherkarte ablegen, um sie gezielt zu üben">' + ikon("stern", "i-sm") + ' Ablegen</button>';
+    html += '<button class="ghost" data-action="auswahl-speicherkarte"' + aus + ' title="Ausgewählte Karten in einer Sammlung ablegen, um sie gezielt zu üben">' + ikon("stern", "i-sm") + ' Ablegen</button>';
     if (kartenBearbeitbar()) html += '<button class="ghost" data-action="delete-selected"' + aus + '>' + ikon("muell", "i-sm") + ' Löschen</button>';
     html += '</span></div>';
   }
@@ -14371,11 +14372,11 @@ function renderSetsPanel() {
   let html = '<div class="sets-panel' + (ui.setsOffen ? " offen" : "") + '">';
   /* 2.2.0: Kopfzeile zum Auf- und Zuklappen. Zu ist der Normalzustand. */
   html += '<button class="secondary sets-kopf" data-action="toggle-sets" aria-expanded="' + (ui.setsOffen ? "true" : "false") + '">';
-  html += ikon(ui.setsOffen ? "chevronUnten" : "chevronRechts", "i-sm") + '<span>Speicherkarten</span>';
+  html += ikon(ui.setsOffen ? "chevronUnten" : "chevronRechts", "i-sm") + '<span>Sammlungen</span>';
   html += '<span class="badge">' + sets.length + '</span>';
   if (zuAnzahl > 0) html += '<span class="badge" title="' + mz(zuAnzahl, 'Lektion', 'Lektionen') + ' noch gesperrt">' + ikon("schloss", "i-sm") + ' ' + zuAnzahl + '</span>';
   html += '</button>';
-  if (!ui.setsOffen) { html += '</div>'; return html; }
+  if (!ui.setsOffen) { html += '<p class="hint" style="padding:6px 0 0">Karten, die du zusammen üben willst.</p></div>'; return html; }
   if (istAutor() && !gefuehrt) {
     html += '<button class="tiny-link" data-action="toggle-set-art" style="padding:6px 0">' +
       (ui.setsArtWahl ? "Arten fertig" : "Arten vergeben") + '</button>';
@@ -14383,7 +14384,7 @@ function renderSetsPanel() {
 
   if (!gruppen) {
     /* Der Normalfall: eine schlichte Liste, wie vor 2.3.0. */
-    html += '<p class="hint" style="padding:6px 0">Feste Auswahl an Vokabeln, jederzeit beliebig oft übbar. Reihenfolge per Griff ändern, auch mit den Pfeiltasten.</p>';
+    html += '<p class="hint" style="padding:6px 0">Karten, die du zusammen üben willst. Reihenfolge per Griff ändern, auch mit den Pfeiltasten.</p>';
     html += '<div class="set-liste" data-gruppe="alle">';
     sets.forEach((s, i) => { html += setBlock(s, b, frei, gefuehrt, i + 1, sets.length); });
     html += '</div></div>';
@@ -14419,7 +14420,7 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
      Tippen - es gibt hier nichts zu entscheiden. */
   if (gefuehrt && s.art === "lektion") {
     html += '<span class="lock-anzeige" title="' +
-      (zu ? (lehrerGesteuert(b) ? 'Wird von deiner Lehrperson freigeschaltet' : 'Wird frei, sobald die Lektion davor einmal geschafft ist') : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
+      (zu ? (lehrerGesteuert(b) ? 'Schaltet dein:e Lehrer:in frei' : 'Wird frei, sobald die Lektion davor einmal geschafft ist') : 'Freigeschaltet') + '">' + ikon("schloss", "i-sm") + '</span>';
   }
   /* Beobachtung 7: derselbe Fund wie bei kartenTagsHtml() - ein arabisch
      benannter Kategorie-/Lektionsname lief hier bisher ohne eigene Schrift/
@@ -14441,7 +14442,7 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
     html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" aria-label="Karten anzeigen" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
   } else {
     if (cards.length > 0) html += '<button class="ghost" data-action="drill-set" data-id="' + esc(s.id) + '" title="Diese Auswahl üben">' + ikon("ueben", "i-sm") + ' Üben</button>';
-    html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" title="Karten anzeigen" aria-label="' + (open ? "Karten dieser Speicherkarte verbergen" : "Karten dieser Speicherkarte anzeigen") + '" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
+    html += '<button class="ghost" data-action="toggle-set-open" data-id="' + esc(s.id) + '" title="Karten anzeigen" aria-label="' + (open ? "Karten dieser Sammlung verbergen" : "Karten dieser Sammlung anzeigen") + '" aria-expanded="' + (open ? "true" : "false") + '">' + ikon(open ? "chevronUnten" : "chevronRechts", "i-sm") + '</button>';
   }
   if (zeigtArtWahl(b)) {
     /* 10: Blatt statt Klappliste - drei Chips in jeder Zeile machten die
@@ -14449,20 +14450,20 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
        der aktuellen Art, der das Auswahl-Blatt oeffnet (wie bei Helligkeit). */
     const art = s.art || "eigen";
     html += '<button class="ghost" data-action="set-art-sheet-auf" data-id="' + esc(s.id) +
-      '" title="Art dieser Speicherkarte" aria-label="Art dieser Speicherkarte: ' + esc(SET_ART_TITEL[art]) + '">' +
+      '" title="Art dieser Sammlung" aria-label="Art dieser Sammlung: ' + esc(SET_ART_TITEL[art]) + '">' +
       ikon(art === "eigen" ? "stern" : art, "i-sm") + ' ' + esc(SET_ART_TITEL[art]) + '</button>';
   }
   if (eigenerBesitz) {
-    html += '<button class="ghost" data-action="rename-set" data-id="' + esc(s.id) + '" title="Umbenennen" aria-label="Speicherkarte umbenennen">' + ikon("stift", "i-sm") + '</button>';
-    html += '<button class="ghost" data-action="delete-set" data-id="' + esc(s.id) + '" title="Speicherkarte löschen (Vokabeln bleiben erhalten)" aria-label="Speicherkarte löschen">' + ikon("muell", "i-sm") + '</button>';
+    html += '<button class="ghost" data-action="rename-set" data-id="' + esc(s.id) + '" title="Umbenennen" aria-label="Sammlung umbenennen">' + ikon("stift", "i-sm") + '</button>';
+    html += '<button class="ghost" data-action="delete-set" data-id="' + esc(s.id) + '" title="Sammlung löschen (Karten bleiben erhalten)" aria-label="Sammlung löschen">' + ikon("muell", "i-sm") + '</button>';
   }
   html += '</div>';
   if (open) {
     html += '<div class="set-cards">';
     if (cards.length === 0) {
-      html += '<p class="hint">Keine Karten mehr in dieser Speicherkarte.</p>';
+      html += '<p class="hint">Keine Karten mehr in dieser Sammlung.</p>';
     } else {
-      if (eigenerBesitz && cards.length > 1) html += '<p class="hint" style="padding:6px 0">Ziehe am Griff, um die Reihenfolge in dieser Speicherkarte zu ändern, oder nutze am Griff die Pfeiltasten. Die Reihenfolge im Bereich bleibt unberührt.</p>';
+      if (eigenerBesitz && cards.length > 1) html += '<p class="hint" style="padding:6px 0">Ziehe am Griff, um die Reihenfolge in dieser Sammlung zu ändern, oder nutze am Griff die Pfeiltasten. Die Reihenfolge im Bereich bleibt unberührt.</p>';
       cards.forEach((c, ci) => {
         /* In einer Lektion sind ohnehin alle Karten gleich dran - dort waere
            eine Hervorhebung nur Unruhe. In den Kategorien steht dagegen alles
@@ -14479,7 +14480,7 @@ function setBlock(s, b, frei, gefuehrt, pos, gesamt) {
         html += '<div class="uebersetzung">' + esc(c.uebersetzung) + '</div>' + kartenTagsHtml(c.id, b, s.id) + '</div>';
         if (kartenZu) html += '<span class="badge" title="Noch in keiner freigeschalteten Lektion">' + ikon("schloss", "i-sm") + '</span>';
         html += '<span class="card-row__stand">' + zustandPunkte(c) + '</span>';
-        if (eigenerBesitz) html += '<button class="ghost" data-action="remove-from-set" data-set="' + esc(s.id) + '" data-id="' + esc(c.id) + '" title="Aus dieser Speicherkarte entfernen (Karte bleibt im Bereich)" aria-label="Aus dieser Speicherkarte entfernen">' + ikon("schliessen", "i-sm") + '</button>';
+        if (eigenerBesitz) html += '<button class="ghost" data-action="remove-from-set" data-set="' + esc(s.id) + '" data-id="' + esc(c.id) + '" title="Aus dieser Sammlung entfernen (Karte bleibt im Bereich)" aria-label="Aus dieser Sammlung entfernen">' + ikon("schliessen", "i-sm") + '</button>';
         html += '</div>';
       });
     }
