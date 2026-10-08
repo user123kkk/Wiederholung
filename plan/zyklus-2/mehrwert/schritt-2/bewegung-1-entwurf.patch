@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 8acb637..29e86fa 100644
+index 8acb637..92e1861 100644
 --- a/app.js
 +++ b/app.js
 @@ -5802,6 +5802,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
@@ -74,7 +74,43 @@ index 8acb637..29e86fa 100644
      !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
      ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
    if (ansichtNeu) {
-@@ -14799,21 +14848,34 @@ function openDialog(cfg) {
+@@ -14671,7 +14720,15 @@ function syncViewportGap(ereignis) {
+      innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
+      viel kleiner) bleibt der Zustand, wie er ist. */
+   const root = document.documentElement;
++  /* 3.18.27 (Aufnahme 08.10., V-1, Verdachts-Fix - am iPhone bestaetigen):
++     Verschiebt iOS bei offener Tastatur den sichtbaren Ausschnitt (Fokus ins
++     Feld "Notiz"), aendert sich offsetTop, aber es kommt nur "scroll". Die
++     Zahl --tastatur blieb dann die alte: das Blatt sass um den Versatz zu
++     hoch, darunter klaffte ein Streifen bis zur Tastatur. Deshalb hier nur
++     die Zahl nachziehen - kein Scrollen des Blatts (Verbot aus G-118 bleibt:
++     das steht weiter nur in syncTastatur). */
+   if (!ereignis || ereignis.type !== "scroll") syncTastatur();
++  else tastaturHoeheSetzen();
+   if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
+     const ref = Math.max(screen.width, screen.height);
+     const diff = ref - window.innerHeight;
+@@ -14717,7 +14774,7 @@ function syncViewportGap(ereignis) {
+ const TASTATUR_MIN = 120;
+ let tastaturSprung = null;
+ let tastaturFeld = null;
+-function syncTastatur() {
++function tastaturHoeheSetzen() {
+   const vv = window.visualViewport;
+   let hoch = 0;
+   if (vv) {
+@@ -14725,6 +14782,10 @@ function syncTastatur() {
+     if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
+   }
+   document.documentElement.style.setProperty("--tastatur", hoch + "px");
++  return hoch;
++}
++function syncTastatur() {
++  const hoch = tastaturHoeheSetzen();
+   /* G-118: Nur einmal je Fokus/Tastatur-Oeffnen pruefen. Niemals Vorfahren
+      mit scrollIntoView verschieben oder auf vv.scroll erneut scrollen. */
+   if (!hoch) {
+@@ -14799,21 +14860,34 @@ function openDialog(cfg) {
     dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
     ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
     (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
@@ -119,7 +155,20 @@ index 8acb637..29e86fa 100644
    setTimeout(danach, 200);
  }
  function closeDialog(result) {
-@@ -15691,7 +15753,10 @@ document.body.addEventListener("click", e => {
+@@ -14885,7 +14959,11 @@ function renderDialog() {
+     /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
+        (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
+        Übersetzung" ...), doppelt zu tippen waere nur eine Fehlerquelle. */
+-    h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" aria-labelledby="dlg-text" value="' + esc(d.value) + '">';
++    /* 3.18.27 (Aufnahme 08.10., V-3): Textfelder ohne Vorschlagszeile des
++       Systems ("Kontakt autom. ausfuellen" ueber der Tastatur bei "Name
++       aendern"). Passwortfelder bleiben, wie sie sind. */
++    h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" aria-labelledby="dlg-text"' +
++      (d.type === "password" ? '' : ' autocomplete="off"') + ' value="' + esc(d.value) + '">';
+   }
+   h += '<div class="dlg-actions">';
+   if (d.kind === "code-share") {
+@@ -15691,7 +15769,10 @@ document.body.addEventListener("click", e => {
      case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
      case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
      case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
