@@ -40,7 +40,7 @@ export function deleteDoc(ref,...args){return angehalten(ref,originalDeleteDoc(r
     const lauf=fall==='erzeugen'?teileLektionCode('lehrer'):fall==='freigeben'?lehrerFreigeben():beendeTeilenCode();
     lauf.then(()=>window.__FERTIG=true,e=>{window.__FEHLER=String(e);window.__FERTIG=true;});
    }};`}));
-  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
   // Beim Erzeugen braucht A noch keinen aktiven Code.
   await p.evaluate(f=>window.__PRUEF.starten(f),fall);await p.waitForFunction(()=>typeof window.__FREIGABE==='function');
   await p.evaluate(()=>{const s=window.__FB;s.user={uid:'u2',email:'b@example.com',emailVerified:true,getIdToken:()=>Promise.resolve('tok')};s.authListeners.forEach(cb=>cb(s.user));});

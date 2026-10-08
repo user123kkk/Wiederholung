@@ -17,7 +17,7 @@ const repo = path.join(__dirname,'../../..');
       const p = await ctx.newPage(), hosts = new Set(), errors = [];
       p.on('request',r => { const h = new URL(r.url()).hostname; if(h !== '127.0.0.1') hosts.add(h); });
       p.on('requestfailed',r => errors.push(r.url()+' '+r.failure().errorText));
-      await p.goto('http://127.0.0.1:8099/index.html'); await p.waitForTimeout(9000);
+      await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html'); await p.waitForTimeout(9000);
       console.log(JSON.stringify({mobile,hosts:[...hosts].sort(),errors}));
       assert(hosts.has('www.gstatic.com'),'Echtes Firebase-SDK nicht angefordert');
       if (errors.length) throw new Error('Startabrufe unvollständig: '+errors.join('; '));

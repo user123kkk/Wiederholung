@@ -11,14 +11,14 @@ const csp = fj.hosting[1].headers.find(h => h.source === '**').headers.find(h =>
     const p = await ctx.newPage();
     const meld = [];
     p.on('console', m => { if (/Content Security Policy|Refused/.test(m.text())) meld.push(m.text().slice(0, 160)); });
-    await p.route('**/127.0.0.1:8099/**', async r => {
+    await p.route('**/127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/**', async r => {
       const resp = await r.fetch();
       const h = { ...resp.headers(), 'content-security-policy': csp };
       r.fulfill({ response: resp, headers: h });
     });
     await p.route('**/www.gstatic.com/**', r => r.abort());
     await p.addInitScript(() => { try { localStorage.setItem('adrabic-thema', 'hell'); } catch (e) {} });
-    await p.goto('http://127.0.0.1:8099/' + seite, { waitUntil: 'load' });
+    await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/' + seite, { waitUntil: 'load' });
     await p.waitForTimeout(600);
     const r = await p.evaluate(() => ({ thema: document.documentElement.getAttribute('data-thema'), bg: getComputedStyle(document.body).backgroundColor, meta: document.querySelector('meta[name=theme-color]').content }));
     console.log(seite, JSON.stringify(r), meld.length ? '\n   CSP: ' + meld.join('\n   CSP: ') : 'keine CSP-Meldung');

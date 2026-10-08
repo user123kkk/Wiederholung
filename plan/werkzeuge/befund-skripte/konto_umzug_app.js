@@ -29,7 +29,7 @@ const legacy=(name,n)=>({name,schemaVersion:1,settings:{thema:'dunkel'},streak:{
   await p.route('**/www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('auth')?AUTH:r.request().url().includes('firestore')?sdk:APP}));
   await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:source+`
    window.__PRUEF={zustand:()=>({konto:currentUser?.uid,umzug:!!ui.umzug,karten:bereiche&&bereiche.reduce((n,b)=>n+b.karten.length,0)})};`}));
-  await p.goto('http://127.0.0.1:8099/index.html');
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
   if(fall==='normal'){
    await p.waitForFunction(()=>window.__PRUEF?.zustand().karten===500);
    assert.equal(await p.evaluate(()=>window.__FB.store.get('users/u1').schemaVersion),2);

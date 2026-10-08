@@ -21,7 +21,7 @@ export function updateProfile(u,p){const r=originalProfile(u,p);return window.__
  aba:()=>{const s=window.__FB,a=s.user;a.displayName='Neuer Name A';s.user={uid:'u2',email:'b@example.com',emailVerified:true};s.authListeners.forEach(cb=>cb(s.user));s.user=a;s.authListeners.forEach(cb=>cb(a));},
  neueAnzeige:()=>{displayName='Neuer Name A';},anzeige:()=>displayName,
  marker:()=>ui.registrierungZeitlimit};` }));
- await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF&&window.__FB?.authListeners?.length>0);await p.waitForTimeout(40);
+ await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF&&window.__FB?.authListeners?.length>0);await p.waitForTimeout(40);
  await p.evaluate(()=>window.__PRUEF.starten());await p.waitForFunction(()=>window.__REG_FERTIG===true);assert.equal(await p.evaluate(()=>window.__PRUEF.marker()),true);
  await p.evaluate(e=>window.__PRUEF.wechsel(e),fall==='aba');await p.waitForTimeout(50);
  if(fall==='aba'){

@@ -22,7 +22,7 @@ const source=process.argv.includes('--gegenprobe')?execFileSync('git',['show','c
      render();
     },ideeInB:()=>{ui.einstellungen=true;ui.seite='feedback';ui.feedbackForm=true;render();},
     speichern:()=>submitCardForm(),stand:()=>({edit:ui.editId,karte:ui.karteSheet,idee:ui.feedbackForm,auswahl:ui.selectMode,ids:[...ui.selectedIds],schreibFehler})};`}));
-  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
   await p.evaluate(f=>window.__PRUEF.oeffnen(f),fall);
   const feld=fall==='idee'?'#fb-text':'#f-wort';if(fall!=='auswahl')assert.equal(await p.locator(feld).inputValue(),fall==='idee'?'Private Idee A':'Private Karte A');
   await p.evaluate(()=>{const s=window.__FB;s.user={uid:'u2',email:'b@example.com',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};s.authListeners.forEach(cb=>cb(s.user));});

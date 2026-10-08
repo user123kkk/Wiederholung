@@ -53,7 +53,7 @@ for(const name of ['signInWithEmailAndPassword','signInWithPopup','sendPasswordR
      ui.authBusy=true;ui.authInfo='Neuer Auftrag wartet';ui.authError=null;render();
     },
     stand:()=>({busy:ui.authBusy,info:ui.authInfo,fehler:ui.authError,mail:window.__FB.sendEmailVerificationCalls||0,dialog:!!ui.dialog})};` }));
-  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());await p.waitForTimeout(80);
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());await p.waitForTimeout(80);
   await p.evaluate(f=>window.__PRUEF.starten(f),fall);await p.waitForFunction(()=>!!window.__HALTE_ANTWORT);
   // Registrierung: den normalen eigenen Auth-Callback vor dem Fremdwechsel
   // wirklich laufen lassen. Damit prueft dies mehr als die isolierte VM.
@@ -86,7 +86,7 @@ for(const name of ['signInWithEmailAndPassword','signInWithPopup','sendPasswordR
    window.__PRUEF={bereit:()=>currentUser?.uid==='u1'&&!!userDocRef,
     loeschen:()=>{kontoVertipptNeuAnfangen().then(()=>window.__LAUF_FERTIG=true);ui.dialog.resolve(dialogResult(ui.dialog,true));},
     stand:()=>({busy:ui.authBusy,user:currentUser?.uid||null,modus:ui.authMode,gewaehlt:ui.authGewaehlt})};` }));
-  await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
+  await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
   await p.evaluate(()=>window.__PRUEF.loeschen());await p.waitForFunction(()=>window.__LAUF_FERTIG===true);
   await p.locator('#a-name').waitFor({state:'visible'});
   const st=await p.evaluate(()=>window.__PRUEF.stand());

@@ -20,7 +20,7 @@ export function signOut(auth){S.signOutUids=S.signOutUids||[];S.signOutUids.push
  starten:fall=>{(fall==='adresse'?kontoVertipptNeuAnfangen():doLogout()).then(()=>window.__DIALOG_FERTIG=true);},
  bestaetigenUndWechsel:nurSDK=>{const d=ui.dialog;d.resolve(dialogResult(d,true));
   const s=window.__FB;s.user={uid:'u2',email:'b@example.com',displayName:'B',emailVerified:true,getIdToken:()=>Promise.resolve('tok'),reload:()=>Promise.resolve()};if(!nurSDK)s.authListeners.forEach(cb=>cb(s.user));}};` }));
- await p.goto('http://127.0.0.1:8099/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
+ await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');await p.waitForFunction(()=>window.__PRUEF?.bereit());
  await p.evaluate(f=>window.__PRUEF.starten(f),fall);await p.waitForSelector('.dlg');
  await p.evaluate(n=>window.__PRUEF.bestaetigenUndWechsel(n),fall==='abmelden-sdk');await p.waitForFunction(()=>window.__DIALOG_FERTIG===true);
  const stand=await p.evaluate(()=>({user:window.__FB.user?.uid||null,geloescht:window.__FB.deleteUids||[],abgemeldet:window.__FB.signOutUids||[]}));

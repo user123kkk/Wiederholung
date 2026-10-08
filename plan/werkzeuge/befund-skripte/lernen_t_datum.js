@@ -3,7 +3,7 @@
 const P = '/home/user/Wiederholung/plan/werkzeuge/pruefstand/';
 const { chromium } = require(P + 'node_modules/playwright');
 const { APP, AUTH, FS } = require(P + 'stubs');
-const BASE = 'http://127.0.0.1:8099/index.html';
+const BASE = 'http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html';
 
 function storeFuer(heute) {
   // heute = logischer Tag 'YYYY-MM-DD'; eine Karte faellig
