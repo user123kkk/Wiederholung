@@ -118,7 +118,7 @@ der Einstieg genau das erklären muss, was der Bericht als unklar findet.
 | „Fehlerbericht kopieren“, „Inhalt melden“ | offen |
 | App Check, erst im Beobachtungsmodus (58) | offen, braucht Firebase-Konsole |
 | Name ändern: zu einfach? (Deine Frage vom 07.10.) | offen: Abwägung fehlt noch |
-| Elternteil als zweiter Eigentümer (57) | wartet: Du |
+| Elternteil als zweiter Eigentümer (57) | eingetragen 08.10. (Einladung angenommen). 2FA am Zweitkonto hat der Betreiber vorerst zurückgestellt („kannst löschen“); Google sperrt ein Konto ohne 2FA aus der Firebase-Konsole, der Ersatzzugang ist dann bis zum Einschalten wertlos. Nicht mehr erinnern. |
 
 ## 7. Texte auswendig lernen – alles nach dem 29.10.
 
