@@ -36,3 +36,23 @@ anderen Ordner, LEHREN § 5.3):
 Fotos liegen nicht im Repo (zu groß); sie entstehen mit `tour.js` neu.
 Die Speicher-Schleife (jede Minute Commit und Push dieses Ordners) lief nur
 während der Arbeit und ist beendet.
+
+## Nachtrag 08.10., später: „Bewegung 1“ als Entwurf (ungeprüft)
+
+- Der Betreiber hat `ladegeraet.bat` aus `Desktop\Wiederholung` gestartet
+  (Stand c65fe6d, App 3.18.26). Solange der Lauf läuft: keine
+  Browser-Tests starten (er misst Zeiten).
+- Entwurf liegt im getrennten Ordner `C:\Users\USER\Wiederholung-bew1`
+  (git worktree, losgelöst) und als
+  [`bewegung-1-entwurf.patch`](bewegung-1-entwurf.patch) hier im Repo.
+  Inhalt: A-1 (Blatt gleitet beim Schließen, `element.animate` statt
+  Übergang im selben Schritt), A-2 (Üben-Auswahl und Speicherkarten blenden
+  beim Aufklappen kurz ein; die Liste darunter springt weiter), A-3
+  (Einstellungen: Eintritt nur beim ersten Besuch), D1-Test verlangt jetzt
+  mindestens vier Lagen. Nur `node --check`, **kein Browser-Test**.
+- Danach: Patch auf `main` anwenden, messen (`austritt.js` muss
+  Zwischenlagen zeigen; alter Stand muss im neuen D1-Test rot sein),
+  betroffene Tests, dann Version 3.18.27 mit voller Liste aus `CLAUDE.md`.
+  Weil Blätter überall vorkommen: vor dem Veröffentlichen der volle Lauf.
+- Hinweis: `netstat` ist auf diesem Laptop deutsch („ABHÖREN“, nicht
+  „LISTEN“); Abfragen danach anpassen.
