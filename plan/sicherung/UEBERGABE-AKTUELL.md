@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 01:53 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 01:55 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,17 +6,23 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `7a054e9 Sicherung 01:52 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `5c5027c Sicherung 01:54 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
-Keine. Alles ist committet.
+```
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+```
+
+Auf einem sauberen Stand desselben Commits wiederherstellen:
+`git apply --check plan/sicherung/entwurf-aktuell.patch`, dann `git apply plan/sicherung/entwurf-aktuell.patch`.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 26 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -25,7 +31,7 @@ Keine. Alles ist committet.
 EXIT 1 t_paket_e
 ```
 
-**ladegeraet-3.18.28.log**: 9 grün, 0 rot
+**ladegeraet-3.18.28.log**: 12 grün, 0 rot
 ```
 ```
 
@@ -33,6 +39,10 @@ EXIT 1 t_paket_e
 
 ## 09.10.2026
 
+- 02:02 Betreiber meldet: Plan im Einstieg ist weg nach Datenschutz/
+  Impressum und zurück. In `ALLES-OFFEN.md` § 3.2 eingetragen, mit Abgleich
+  (E4, G7, `app.js` 8966). Nichts gebaut: `ladegerät` läuft, und die
+  Ursache ist am Gerät noch nicht belegt.
 - 01:58 `zyklus-2/mehrwert/agentenberichte/ALLE-IDEEN.md` erzeugt: 338
   nummerierte Ideen wörtlich (Titel) aus 23 Berichten; 9 Berichte haben
   eine andere Form und sind noch ganz zu lesen, 2 sind leer. Der Abgleich
@@ -72,7 +82,3 @@ EXIT 1 t_paket_e
   darauf.
 - 17:50 Minuten-Sicherung läuft (`plan/werkzeuge/minuten_sicherung.sh`, im
   Hintergrund dieses Chats): jede Minute `plan/` und `CLAUDE.md` committen
-  und pushen, uncommitteter App-Entwurf als
-  `plan/sicherung/entwurf-aktuell.patch`. Erster Lauf 17:47 gesichert und
-  gepusht (758e1c5). Bekannte Lücke: geänderte Testdateien unter
-  `plan/werkzeuge` fehlen in diesem Patch (stehen im Patch unter

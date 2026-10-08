@@ -8,6 +8,10 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 09.10.2026
 
+- 02:02 Betreiber meldet: Plan im Einstieg ist weg nach Datenschutz/
+  Impressum und zurück. In `ALLES-OFFEN.md` § 3.2 eingetragen, mit Abgleich
+  (E4, G7, `app.js` 8966). Nichts gebaut: `ladegerät` läuft, und die
+  Ursache ist am Gerät noch nicht belegt.
 - 01:58 `zyklus-2/mehrwert/agentenberichte/ALLE-IDEEN.md` erzeugt: 338
   nummerierte Ideen wörtlich (Titel) aus 23 Berichten; 9 Berichte haben
   eine andere Form und sind noch ganz zu lesen, 2 sind leer. Der Abgleich

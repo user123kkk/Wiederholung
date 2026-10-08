@@ -96,6 +96,12 @@ abgehakt; hier wird das nicht doppelt geführt.
 | 07.10. | Name ändern: „sollte es so einfach sein?“ | Gesamtliste Abschnitt 6 | Urteil fehlt |
 | 07.10. | „überall geile bzw. cleane Animation“ | `schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md` | erster Teil in 3.18.27; Rest: Gesamtliste Abschnitt 4, D13 |
 
+**Neu gemeldet, 09.10.2026, 02:00 (Fehler):**
+
+| Wortlaut | Was das Repo dazu hat | Stand |
+|---|---|---|
+| „wenn ich einen Plan grad mache und erstelle, dann am Ende auf Datenschutz oder Impressum drücke, wieder zurück, ist der Plan weg“ (Version unbekannt) | Bekannt als E4 (`zyklus-2/AUFGABEN.md`), seit 3.18.15 als behoben geführt: Die Links öffnen in einem neuen Fenster (`app.js` 8966/8968), im Chromium-Test bleibt der Einstieg erhalten. Der Gerätetest dazu (G7) wurde nie gemacht. Der Plan liegt absichtlich nur im Arbeitsspeicher (Ziel-Antworten werden nicht gespeichert, LEHREN § 2). Vermutung, nicht gemessen: Am iPhone ersetzt die Rechtsseite die App oder der alte Reiter wird beim Zurückkommen neu geladen. | bauen: am iPhone nachstellen lassen (Safari oder installierte App?), dann Ursache beheben. Naheliegender Weg: Datenschutz und Impressum im Einstieg als Blatt in der App zeigen, ohne die Seite zu verlassen. E4 gilt bis dahin **nicht** als erledigt |
+
 ### 3.2a Wünsche zur Arbeitsweise (08.10.2026, abends)
 
 | Wortlaut (gekürzt) | Stand |
