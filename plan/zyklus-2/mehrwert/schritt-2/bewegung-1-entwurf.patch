@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 8acb637..2f10a5d 100644
+index 8acb637..361bacc 100644
 --- a/app.js
 +++ b/app.js
 @@ -1770,6 +1770,7 @@ let ui = {
@@ -27,7 +27,7 @@ index 8acb637..2f10a5d 100644
      ui.erinnerungZeit = null;
      /* Den Namen nur ueber die eigene Loeschung in das Gastformular tragen. */
      ui.authEingabe = { name: adressName, email: "", pass: "" };
-@@ -4505,6 +4507,58 @@ function dateiSpeichern(daten, dateiname) {
+@@ -4505,12 +4507,78 @@ function dateiSpeichern(daten, dateiname) {
    a.remove();
    setTimeout(() => URL.revokeObjectURL(url), 60000);
  }
@@ -86,7 +86,27 @@ index 8acb637..2f10a5d 100644
  function exportBackup(onlyCurrent) {
    const data = {
      exportedAt: new Date().toISOString(),
-@@ -5327,6 +5381,7 @@ function ebenenSchliessen(seiteBehalten = false) {
+     profil: displayName,
+     bereiche: onlyCurrent ? [currentBereich()] : bereiche
+   };
++  /* 3.18.27 (E-07, Betreiber 08.10.2026: "alles mitsichern"): Die volle
++     Sicherung traegt jetzt auch Tagesprotokoll, Serie und Einstellungen.
++     Erster Schritt: Sie stehen in der Datei, damit ab heute nichts mehr
++     fehlt. Eingespielt werden sie noch nicht - das Zurueckspielen beruehrt
++     die Serie und die Sperre gegen alte Zaehlerstaende (verlaufEpoche) und
++     kommt als eigener Schritt mit Emulator-Test. Der Import liest nur
++     "bereiche"; alte Fassungen der App ignorieren die neuen Felder. */
++  if (!onlyCurrent) {
++    data.format = 2;
++    data.appVersion = APP_VERSION;
++    data.verlauf = verlauf;
++    data.serie = streak;
++    data.einstellungen = settings;
++  }
+   const nameSlug = onlyCurrent ? "-" + slugName(currentBereich().name) : "";
+   dateiSpeichern(data, "adrabic-sicherung" + nameSlug + "-" + todayStr() + ".json");
+   if (!onlyCurrent) {
+@@ -5327,6 +5395,7 @@ function ebenenSchliessen(seiteBehalten = false) {
    ui.textAnsicht = null;
    ui.zeileEdit = null;
    ui.textLernen = null;
@@ -94,7 +114,7 @@ index 8acb637..2f10a5d 100644
  }
  function selectBereich(bereichId) {
    if (!bereiche.some(b => b.id === bereichId)) return;
-@@ -5802,6 +5857,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
+@@ -5802,6 +5871,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
       weiter unten. Wer ihn dort drueckte, sah gar nichts passieren. */
    springeZu("drill-box");
    render();
@@ -102,7 +122,7 @@ index 8acb637..2f10a5d 100644
  }
  /* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
     mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
-@@ -6059,6 +6115,165 @@ function lernRueckgaengig() {
+@@ -6059,6 +6129,165 @@ function lernRueckgaengig() {
  function vergleichsWort(w) {
    return suchNorm(String(w).trim(), true).text.replace(/\s+/g, " ").trim();
  }
@@ -268,7 +288,54 @@ index 8acb637..2f10a5d 100644
  function findeDuplikat(wort, exceptId, cards) {
    const key = vergleichsWort(wort);
    return (cards || currentCards()).find(c => c.id !== exceptId && vergleichsWort(c.wort) === key) || null;
-@@ -8852,6 +9067,19 @@ function bereichMehrSheet() {
+@@ -6250,18 +6479,41 @@ async function deleteCard(id) {
+   const card = findCard(id);
+   if (!card) return;
+   if (!kartenBearbeitbar()) { await hinweisGefuehrt("Karten löschen"); return; }
+-  const ok = await dlgConfirm('Die Karte „' + card.wort + '" (' + card.uebersetzung + ') wird gelöscht.',
+-    { title: "Karte löschen?", okLabel: "Löschen", danger: true });
+-  if (!ok) return;
++  /* 3.18.27 (E-09, Betreiber 08.10.2026 "wie empfohlen"): keine Rueckfrage
++     mehr bei einer einzelnen Karte - eine Rueckfrage tippt man weg. Dafuer
++     steht in der Meldung sechs Sekunden lang "Rueckgaengig"; das holt die
++     Karte mit Lernstand, Platz in der Liste und ihren Speicherkarten zurueck.
++     Die Mehrfachauswahl fragt weiter nach (deleteSelectedCards). */
+   const b = currentBereich();
+-  b.karten.splice(b.karten.findIndex(c => c.id === id), 1);
++  const kontoRef = userDocRef;
++  const index = b.karten.findIndex(c => c.id === id);
++  const order = ordnungGespeichert.get(card);
++  const inSets = currentSets().filter(st => st.cardIds.includes(id)).map(st => ({ id: st.id, stelle: st.cardIds.indexOf(id) }));
++  b.karten.splice(index, 1);
+   const patch = {};
+   patch[pfadKarte(b.id, id)] = LOESCHEN;
+   purgeFromSets([id]).forEach(st => {
+     patch[pfadSet(b.id, st.id) + ".cardIds"] = st.cardIds;
+   });
+   patchDoc(patch);
+-  zeigeToast("Karte gelöscht");
++  zeigeToast("Karte gelöscht", () => {
++    /* Nur im selben Konto und nur, solange es den Bereich noch gibt und die
++       Karte nicht anderswo wieder aufgetaucht ist (LEHREN 8.3). */
++    if (userDocRef !== kontoRef || kontoWirdGeloescht) return;
++    const ziel = (bereiche || []).find(x => x.id === b.id);
++    if (!ziel || ziel.karten.some(c => c.id === id)) return;
++    ziel.karten.splice(Math.min(index, ziel.karten.length), 0, card);
++    const zurueck = {};
++    zurueck[pfadKarte(ziel.id, id)] = kartenFelder(card, Number.isFinite(order) ? order : ordnungVorn());
++    inSets.forEach(alt => {
++      const st = (ziel.sets || []).find(x => x.id === alt.id);
++      if (!st || st.cardIds.includes(id)) return;
++      st.cardIds.splice(Math.min(alt.stelle, st.cardIds.length), 0, id);
++      zurueck[pfadSet(ziel.id, st.id) + ".cardIds"] = st.cardIds;
++    });
++    patchDoc(zurueck);
++    zeigeToast("Karte ist wieder da");
++  });
+ }
+ 
+ /* ---------- Lern-Session ---------- */
+@@ -8852,6 +9104,19 @@ function bereichMehrSheet() {
      html += '<button class="liste-zeile" data-action="bereich-mehr-umkehren" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' +
        ikon("umkehren", "i-sm") + '<span class="liste-zeile__text">Reihenfolge umkehren</span></button>';
    }
@@ -288,7 +355,7 @@ index 8acb637..2f10a5d 100644
    if (!gefuehrt) {
      html += '<button class="liste-zeile" data-action="bereich-mehr-umbenennen" title="Bereich umbenennen">' +
        ikon("stift", "i-sm") + '<span class="liste-zeile__text">Bereich umbenennen</span></button>';
-@@ -9254,6 +9482,7 @@ function renderMain() {
+@@ -9254,6 +9519,7 @@ function renderMain() {
    html += bereichMehrSheet();
    html += wahlSheet();
    html += erinnerungSheet();
@@ -296,7 +363,7 @@ index 8acb637..2f10a5d 100644
    html += setArtSheet();
    html += karteSheet();
    html += neuWahlSheet();
-@@ -9278,7 +9507,7 @@ function renderMain() {
+@@ -9278,7 +9544,7 @@ function renderMain() {
      ui.textLernen ? "tl-" + ui.textLernen.schritt + "-" + ui.textLernen.fokus : ""].join("/");
    const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
      ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
@@ -305,7 +372,7 @@ index 8acb637..2f10a5d 100644
    /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
       kein .view - dann ist alles neu. */
    const warAnsicht = !!app.querySelector(":scope > .view");
-@@ -9288,7 +9517,11 @@ function renderMain() {
+@@ -9288,7 +9554,11 @@ function renderMain() {
    letzterOverlaySchluessel = overlaySchluessel;
    app.classList.toggle("still-ansicht", !ansichtNeu);
    app.classList.toggle("still-overlay", !overlayNeu);
@@ -318,7 +385,7 @@ index 8acb637..2f10a5d 100644
      !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
      ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
    if (ansichtNeu) {
-@@ -9352,7 +9585,7 @@ function renderMain() {
+@@ -9352,7 +9622,7 @@ function renderMain() {
    }
    /* 3.17.14: + erinnerungSheet - sonst liess sich die Seite dahinter
       scrollen und per Wischen wechseln. */
@@ -327,7 +394,7 @@ index 8acb637..2f10a5d 100644
    document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
    appbarKanteSetzen();
    /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
-@@ -14671,7 +14904,15 @@ function syncViewportGap(ereignis) {
+@@ -14671,7 +14941,15 @@ function syncViewportGap(ereignis) {
       innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
       viel kleiner) bleibt der Zustand, wie er ist. */
    const root = document.documentElement;
@@ -343,7 +410,7 @@ index 8acb637..2f10a5d 100644
    if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
      const ref = Math.max(screen.width, screen.height);
      const diff = ref - window.innerHeight;
-@@ -14717,7 +14958,7 @@ function syncViewportGap(ereignis) {
+@@ -14717,7 +14995,7 @@ function syncViewportGap(ereignis) {
  const TASTATUR_MIN = 120;
  let tastaturSprung = null;
  let tastaturFeld = null;
@@ -352,7 +419,7 @@ index 8acb637..2f10a5d 100644
    const vv = window.visualViewport;
    let hoch = 0;
    if (vv) {
-@@ -14725,6 +14966,10 @@ function syncTastatur() {
+@@ -14725,6 +15003,10 @@ function syncTastatur() {
      if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
    }
    document.documentElement.style.setProperty("--tastatur", hoch + "px");
@@ -363,7 +430,7 @@ index 8acb637..2f10a5d 100644
    /* G-118: Nur einmal je Fokus/Tastatur-Oeffnen pruefen. Niemals Vorfahren
       mit scrollIntoView verschieben oder auf vv.scroll erneut scrollen. */
    if (!hoch) {
-@@ -14754,6 +14999,10 @@ function syncTastatur() {
+@@ -14754,6 +15036,10 @@ function syncTastatur() {
      }
    }
  }
@@ -374,7 +441,7 @@ index 8acb637..2f10a5d 100644
  document.addEventListener("focusin", () => {
    tastaturFeld = null;
    clearTimeout(tastaturSprung);
-@@ -14799,21 +15048,34 @@ function openDialog(cfg) {
+@@ -14799,21 +15085,34 @@ function openDialog(cfg) {
     dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
     ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
     (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
@@ -419,7 +486,7 @@ index 8acb637..2f10a5d 100644
    setTimeout(danach, 200);
  }
  function closeDialog(result) {
-@@ -14885,7 +15147,11 @@ function renderDialog() {
+@@ -14885,7 +15184,11 @@ function renderDialog() {
      /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
         (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
         Übersetzung" ...), doppelt zu tippen waere nur eine Fehlerquelle. */
@@ -432,7 +499,7 @@ index 8acb637..2f10a5d 100644
    }
    h += '<div class="dlg-actions">';
    if (d.kind === "code-share") {
-@@ -14935,6 +15201,10 @@ function schliesseObersteEbene() {
+@@ -14935,6 +15238,10 @@ function schliesseObersteEbene() {
    /* 3.17.14 (Station 14): Das Erinnerungs-Blatt (3.17.0) fehlte hier - Escape
       und Wischen nach unten schlossen es nicht. */
    if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; ui.erinnerungZeit = null; render(); }); return true; }
@@ -443,7 +510,7 @@ index 8acb637..2f10a5d 100644
    if (ui.karteSheet || ui.editId) {
      if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
      schliesse(cancelEdit); return true;
-@@ -15198,7 +15468,7 @@ function tabSchonAktiv(id) {
+@@ -15198,7 +15505,7 @@ function tabSchonAktiv(id) {
    return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
      !ui.wahlSheet && !ui.erinnerungSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
      !ui.bereichMehr && !ui.cardDetailId && !ui.dialog &&
@@ -452,7 +519,7 @@ index 8acb637..2f10a5d 100644
  }
  function nachObenBlaettern() {
    window.scrollTo({ top: 0, behavior: scrollArt() });
-@@ -15565,6 +15835,13 @@ document.body.addEventListener("click", e => {
+@@ -15565,6 +15872,13 @@ document.body.addEventListener("click", e => {
      case "bereich-mehr-auswaehlen": ui.bereichMehr = false; toggleSelectMode(); break;
      case "bereich-mehr-umkehren": ui.bereichMehr = false; reverseOrder(); break;
      case "bereich-mehr-umbenennen": ui.bereichMehr = false; renameBereich(); break;
@@ -466,7 +533,7 @@ index 8acb637..2f10a5d 100644
      case "bereich-mehr-loeschen": ui.bereichMehr = false; deleteBereich(); break;
      /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
         ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
-@@ -15691,7 +15968,10 @@ document.body.addEventListener("click", e => {
+@@ -15691,7 +16005,10 @@ document.body.addEventListener("click", e => {
      case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
      case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
      case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
@@ -668,6 +735,86 @@ index 0000000..afb22bf
 +  assert.equal(L('  كِتَابٌ ;  Buch  ').karten[0].uebersetzung, 'Buch');
 +});
 +console.log(n + ' Fälle grün');
+diff --git a/plan/werkzeuge/pruefstand/t_loeschen_rueckgaengig.js b/plan/werkzeuge/pruefstand/t_loeschen_rueckgaengig.js
+new file mode 100644
+index 0000000..014b807
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/t_loeschen_rueckgaengig.js
+@@ -0,0 +1,59 @@
++/* Paket I, E-09: Einzelkarte löschen ohne Rückfrage, "Rückgängig" holt sie
++   mit Lernstand, Platz und Speicherkarten zurück.
++   node t_loeschen_rueckgaengig.js   (Server und CHROMIUM wie in LIESMICH.md) */
++const assert = require('node:assert/strict');
++const { start, neueSeite, aktion, GERAETE, vollerStore } = require('./lib');
++
++const karte = (p, id) => p.evaluate(id => window.__FB.store.get('users/u1/karten/' + id) || null, id);
++const setIds = (p, sid) => p.evaluate(sid => window.__FB.store.get('users/u1/bereiche/b1').sets[sid].cardIds, sid);
++const reihe = p => p.evaluate(() => [...document.querySelectorAll('#karten-liste > .card-row')].slice(0, 8).map(z => z.textContent.slice(0, 24)));
++
++(async () => {
++  const b = await start();
++  try {
++    for (const vp of [GERAETE.handy, GERAETE.ipad]) {
++      const { p, ctx } = await neueSeite(b, vp, { store: vollerStore({}) });
++      try {
++        await aktion(p, 'tab-verwalten');
++        const vorKarte = await karte(p, 'k5');           // Stufe 2, 6 Rückfälle, in s1 und s5
++        const vorS1 = await setIds(p, 's1'), vorS5 = await setIds(p, 's5');
++        const vorReihe = await reihe(p);
++        assert.ok(vorKarte && vorS1.includes('k5') && vorS5.includes('k5'), 'Ausgang');
++
++        // Löschen über die Detailansicht: keine Rückfrage, Meldung mit Rückgängig
++        await aktion(p, 'card-detail', 'k5');
++        await aktion(p, 'card-detail-loeschen', 'k5', 500);
++        assert.equal(await p.locator('.dlg').count(), 0, 'keine Rückfrage, kein Blatt mehr offen');
++        assert.equal(await karte(p, 'k5'), null, 'Karte ist gelöscht');
++        assert.ok(!(await setIds(p, 's1')).includes('k5') && !(await setIds(p, 's5')).includes('k5'), 'aus Speicherkarten entfernt');
++        assert.match(await p.locator('.toast').textContent(), /Karte gelöscht/);
++        assert.equal(await p.locator('[data-action="toast-rueckgaengig"]').count(), 1, 'Rückgängig angeboten');
++
++        // Rückgängig
++        await aktion(p, 'toast-rueckgaengig', null, 600);
++        const nach = await karte(p, 'k5');
++        for (const f of ['wort', 'uebersetzung', 'extra', 'stufe', 'nextReview', 'ersteBewertung', 'rueckfaelle', 'order', 'bereichId'])
++          assert.deepEqual(nach[f], vorKarte[f], 'Feld ' + f + ' wieder wie vorher');
++        assert.deepEqual(await setIds(p, 's1'), vorS1, 'Lektion 1 wie vorher, gleiche Stelle');
++        assert.deepEqual(await setIds(p, 's5'), vorS5, 'eigene Speicherkarte wie vorher');
++        assert.deepEqual(await reihe(p), vorReihe, 'Liste in derselben Reihenfolge');
++        assert.match(await p.locator('.toast').textContent(), /wieder da/);
++
++        // Ohne Rückgängig bleibt sie gelöscht; die Meldung verschwindet von selbst
++        await aktion(p, 'card-detail', 'k6');
++        await aktion(p, 'card-detail-loeschen', 'k6', 500);
++        await p.waitForTimeout(6600);
++        assert.equal(await p.locator('[data-action="toast-rueckgaengig"]').count(), 0, 'Angebot nach sechs Sekunden weg');
++        assert.equal(await karte(p, 'k6'), null);
++
++        // Mehrfachauswahl fragt weiter nach (unverändert)
++        await p.evaluate(() => document.querySelector('[data-action="bereich-mehr-auf"]').click()); await p.waitForTimeout(500);
++        assert.equal(await p.locator('[data-action="bereich-mehr-auswaehlen"]').count(), 1);
++        await p.keyboard.press('Escape'); await p.waitForTimeout(400);
++
++        assert.deepEqual(p.fehler, []);
++        console.log('grün: ' + vp.width + '×' + vp.height);
++      } finally { await ctx.close(); }
++    }
++  } finally { await b.close(); }
++})().catch(e => { console.error(e); process.exitCode = 1; });
+diff --git a/plan/werkzeuge/pruefstand/t_paket_c_weiter.js b/plan/werkzeuge/pruefstand/t_paket_c_weiter.js
+index c223b13..491ae83 100644
+--- a/plan/werkzeuge/pruefstand/t_paket_c_weiter.js
++++ b/plan/werkzeuge/pruefstand/t_paket_c_weiter.js
+@@ -207,8 +207,8 @@ const faelle={
+   await p.getByRole('button',{name:'Endgültig löschen',exact:true}).click();await p.waitForTimeout(400);
+   assert.ok((await p.locator('#ansage').textContent()).includes('2 Karten gelöscht'),'C23 Mehrfachlöschen ohne Ansage');
+   assert.ok(!(await p.evaluate(()=>window.__FB.store.has('users/u1/karten/k2'))));
+-  await p.evaluate(()=>{__C.deleteCard('k4');});await p.waitForTimeout(300);
+-  await p.getByRole('button',{name:'Löschen',exact:true}).click();await p.waitForTimeout(400);
++  // 3.18.27 (E-09): Einzelkarte ohne Rückfrage, dafür „Rückgängig“ in der Meldung (t_loeschen_rueckgaengig.js).
++  await p.evaluate(()=>{__C.deleteCard('k4');});await p.waitForTimeout(400);
+   assert.ok((await p.locator('#ansage').textContent()).includes('Karte gelöscht'),'C23 Einzellöschen ohne Ansage');
+   assert.ok(!(await p.evaluate(()=>window.__FB.store.has('users/u1/karten/k4'))));
+  },
 diff --git a/plan/werkzeuge/pruefstand/t_paket_d.js b/plan/werkzeuge/pruefstand/t_paket_d.js
 index f305b1a..abba734 100644
 --- a/plan/werkzeuge/pruefstand/t_paket_d.js
