@@ -1,0 +1,82 @@
+diff --git a/app.js b/app.js
+index 8acb637..b624edc 100644
+--- a/app.js
++++ b/app.js
+@@ -5802,6 +5802,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
+      weiter unten. Wer ihn dort drueckte, sah gar nichts passieren. */
+   springeZu("drill-box");
+   render();
++  sanftEinblenden([document.getElementById("drill-box")]);
+ }
+ /* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
+    mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
+@@ -9288,7 +9289,11 @@ function renderMain() {
+   letzterOverlaySchluessel = overlaySchluessel;
+   app.classList.toggle("still-ansicht", !ansichtNeu);
+   app.classList.toggle("still-overlay", !overlayNeu);
+-  const choreografieTab = !ui.einstellungen && !ui.seite && !imModus &&
++  /* 3.18.27 (Fund A-3): Auch die Einstellungen spielen ihren Eintritt nur beim
++     ersten Besuch - vorher flogen Profil und Zeilen bei jeder Rueckkehr von
++     einer Unterseite neu ein (7 Animationen, 475 ms). */
++  const choreografieTab = ui.einstellungen && !ui.seite && !imModus ? "einstellungen" :
++    !ui.einstellungen && !ui.seite && !imModus &&
+     !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
+     ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
+   if (ansichtNeu) {
+@@ -14799,21 +14804,34 @@ function openDialog(cfg) {
+    dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
+    ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
+    (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
++/* 3.18.27 (Fund A-2): Was auf demselben Bildschirm aufklappt (Ueben-Auswahl,
++   Speicherkarten), blendet einmal kurz ein. Die CSS-Eintrittsanimation greift
++   dort nicht, weil der Bildschirm derselbe bleibt (still-ansicht). Nur
++   Deckkraft und 8 px Weg, wie enter-rise; der gedrueckte Knopf selbst bewegt
++   sich nicht. Bei reduzierter Bewegung nichts. */
++function sanftEinblenden(elemente) {
++  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
++  for (const el of elemente) {
++    if (el && el.animate) el.animate([{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }],
++      { duration: 200, easing: "cubic-bezier(0.20, 0.80, 0.20, 1)" });
++  }
++}
+ function spielAustrittsAnimation(dlg, huelle, danach) {
+   const reduziert = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+   if (!dlg || reduziert || dlg.dataset.schliesst) { danach(); return; }
+   dlg.dataset.schliesst = "1";
+-  // Beendete Eintrittsanimationen halten sonst transform/opacity fest.
+-  dlg.style.animation = "none";
+-  dlg.style.transition = "transform 200ms cubic-bezier(.3,0,.8,.15), opacity 200ms cubic-bezier(.3,0,.8,.15)";
++  /* 3.18.27 (Fund A-1, am iPhone bestaetigt: "es ist einfach weg"): Bisher
++     standen "animation: none", die Uebergangsregel und das Ziel im selben
++     Schritt - der Browser sprang in einem Bild ans Ziel und wartete dann
++     200 ms (gemessen: 361 -> 868 px ohne Zwischenlage). Jetzt eine eigene
++     Animation ueber element.animate(): sie startet beim gerade sichtbaren
++     Stand (auch mitten im Wegwischen) und liegt ueber der beendeten
++     Eintrittsanimation, ohne sie abschalten zu muessen. */
++  if (!dlg.animate) { danach(); return; }
+   const mittig = matchMedia("(min-width: 600px)").matches;
+-  dlg.style.transform = mittig ? "scale(.96)" : "translateY(105%)";
+-  if (mittig) dlg.style.opacity = "0";
+-  if (huelle) {
+-    huelle.style.animation = "none";
+-    huelle.style.transition = "opacity 200ms cubic-bezier(.3,0,.8,.15)";
+-    huelle.style.opacity = "0";
+-  }
++  const zeit = { duration: 200, easing: "cubic-bezier(.3,0,.8,.15)", fill: "forwards" };
++  dlg.animate(mittig ? [{ transform: "scale(.96)", opacity: 0 }] : [{ transform: "translateY(105%)" }], zeit);
++  if (huelle && huelle.animate) huelle.animate([{ opacity: 0 }], zeit);
+   setTimeout(danach, 200);
+ }
+ function closeDialog(result) {
+@@ -15691,7 +15709,10 @@ document.body.addEventListener("click", e => {
+     case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
+     case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
+     case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
+-    case "toggle-sets": ui.setsOffen = !ui.setsOffen; render(); break;
++    case "toggle-sets":
++      ui.setsOffen = !ui.setsOffen; render();
++      if (ui.setsOffen) sanftEinblenden([...app.querySelectorAll(".sets-panel.offen > :not(.sets-kopf)")]);
++      break;
+     case "toggle-set-art": ui.setsArtWahl = !ui.setsArtWahl; render(); break;
+     case "toggle-select-mode": toggleSelectMode(); break;
+     case "auswahl-alle": waehleSichtbareKarten(); break;
