@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 01:48 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 01:49 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,17 +6,22 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `bdea2b1 Sicherung 01:47 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `f7dab66 Sicherung 01:48 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
-Keine. Alles ist committet.
+```
+ M plan/ARBEITSPROTOKOLL.md
+```
+
+Auf einem sauberen Stand desselben Commits wiederherstellen:
+`git apply --check plan/sicherung/entwurf-aktuell.patch`, dann `git apply plan/sicherung/entwurf-aktuell.patch`.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 0, chrome.exe 15 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 23 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -25,16 +30,25 @@ Keine. Alles ist committet.
 EXIT 1 t_paket_e
 ```
 
-**ladegeraet-nurpruefen-3.18.27.log**: 153 grün, 3 rot
+**ladegeraet-3.18.28.log**: 4 grün, 0 rot
 ```
-ROT t_griff_scrollen.js (27s)
-ROT t_konto_fortsetzungen.js (2s)
-ROT t_paket_f_netz.js (1s)
-153/156 Exit 0; 3 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\7223038b21480566
-ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlicht.
 ```
 
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
+
+## 09.10.2026
+
+- 01:58 `zyklus-2/mehrwert/agentenberichte/ALLE-IDEEN.md` erzeugt: 338
+  nummerierte Ideen wörtlich (Titel) aus 23 Berichten; 9 Berichte haben
+  eine andere Form und sind noch ganz zu lesen, 2 sind leer. Der Abgleich
+  mit dem Katalog (187 Zeilen) steht noch aus.
+- 01:50 Betreiber: „ladegeraet“ (Stichwort, Freigabe für Regeln und
+  Hosting). `ladegeraet.ps1` gestartet an 3.18.28, Netzteil, Baum sauber.
+  Ausgabe: `%TEMP%/ladegeraet-3.18.28.log`. Achtung: Der Lauf überquert
+  04:00 (Wechsel des Lerntags); rote Datumstests danach einzeln prüfen
+  (LEHREN § 5.4). Er fragte auch „34? ich dachte über 60“: 34 sind
+  Berichte (einer je Agent), darin stecken die Ideen (Katalog: 187 Zeilen,
+  68 Fragen).
 
 ## 08.10.2026
 
@@ -67,17 +81,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   `plan/sicherung/entwurf-aktuell.patch`. Erster Lauf 17:47 gesichert und
   gepusht (758e1c5). Bekannte Lücke: geänderte Testdateien unter
   `plan/werkzeuge` fehlen in diesem Patch (stehen im Patch unter
-  `verstaendlichkeit/`); beim nächsten Neustart des Skripts beheben.
-  Betreiber 17:49: „ich hab Zweifel, ob du wirklich Sachen alle 60 Sek.
-  speicherst“ – deshalb Automatik statt Versprechen.
-- 17:47 Regel § 1.9, `BETREIBER-VERSTEHEN.md`, dieses Protokoll und die
-  Wünsche zur Arbeitsweise in `ALLES-OFFEN.md` § 3.2a eingetragen.
-- 17:45 Alle 43 lokalen Chats wörtlich gesichert nach
-  `Desktop\Wiederholung-Belege\chats\` (Werkzeug `chats_sichern.py`).
-- 17:43 Agentenberichte der Mehrwert-Runden gefunden (lokale Chat-Dateien,
-  Ordner `subagents`), 34 von 36 wörtlich nach
-  `zyklus-2/mehrwert/agentenberichte/`; zwei Agenten hatten keinen Bericht
-  (am Limit abgebrochen).
-- 17:39 `ALLES-OFFEN.md` angelegt: 450 Betreiber-Nachrichten gelesen und
-  gegen das Repo geprüft.
-- 17:27 Tests am Entwurf 3.18.28 gestartet (34 Tests, danach

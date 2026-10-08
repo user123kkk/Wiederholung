@@ -1,0 +1,25 @@
+﻿
+=== 1/6 Stand ===
+powershell.exe : From https://github.com/user123kkk/Wiederholung
+In Zeile:1 Zeichen:355
++ ... 18.28.log'; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...kk/Wiederholung:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+Stand: 3.18.28 / f7dab66d
+
+=== 2/6 Strom ===
+Am Ladegeraet.
+Firestore-Emulator laeuft (8081).
+
+=== 3/6 Pruefstand (alle Tests, dauert) ===
+Quellstand: d74ff6186ee9311de689df1731d50231fd36fca60153d72810d449d17507647c
+Logs: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\d74ff6186ee9311d
+Tests: 156
+EXIT 0 t_317.js (14s)
+EXIT 0 t_a11y.js (17s)
+EXIT 0 t_abgelehnt.js (6s)
+EXIT 0 t_abstimmen_fehler.js (13s)

@@ -6,6 +6,20 @@ gemessen wurde), dann committen und pushen. Neueste Zeile oben. Ist der
 Inhalt im Logbuch oder in `ALLES-OFFEN.md` angekommen, werden alte Zeilen
 gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
+## 09.10.2026
+
+- 01:58 `zyklus-2/mehrwert/agentenberichte/ALLE-IDEEN.md` erzeugt: 338
+  nummerierte Ideen wörtlich (Titel) aus 23 Berichten; 9 Berichte haben
+  eine andere Form und sind noch ganz zu lesen, 2 sind leer. Der Abgleich
+  mit dem Katalog (187 Zeilen) steht noch aus.
+- 01:50 Betreiber: „ladegeraet“ (Stichwort, Freigabe für Regeln und
+  Hosting). `ladegeraet.ps1` gestartet an 3.18.28, Netzteil, Baum sauber.
+  Ausgabe: `%TEMP%/ladegeraet-3.18.28.log`. Achtung: Der Lauf überquert
+  04:00 (Wechsel des Lerntags); rote Datumstests danach einzeln prüfen
+  (LEHREN § 5.4). Er fragte auch „34? ich dachte über 60“: 34 sind
+  Berichte (einer je Agent), darin stecken die Ideen (Katalog: 187 Zeilen,
+  68 Fragen).
+
 ## 08.10.2026
 
 - 19:15 3.18.28 auf `main` (9f2990a) und gepusht. Zweiter Lauf `t_paket_e`,
