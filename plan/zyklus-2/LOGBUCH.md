@@ -8,7 +8,7 @@ Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 `PRUEF_PORT` statt fest 8099), dieses Logbuch, `plan/STAND.md`.
 **Was lief:** `ladegeraet.ps1 -NurPruefen`, 14:52–17:15, Netzteil, Stand
 74e0b5d (App 3.18.27), 156 Tests, Quellstand `7223038b21480566`, Logs
-`%TEMP%\adrabic-pruefstand-gesamt\7223038b21480566\`. 153 Exit 0, drei
+`%TEMP%\adrabic-pruefstand-gesamt\7223038b21480566\`. 153 Exit 0, drei
 rot; das Skript brach vor den Affen ab.
 **Die drei roten, einzeln nachgesehen:**
 - `t_paket_f_netz`, `t_konto_fortsetzungen`: `ERR_CONNECTION_REFUSED
