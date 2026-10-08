@@ -2,6 +2,21 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Tippen in Blättern gemeldet, iPhone-Foto der Karte (nur Plan)
+
+**Geändert:** neu `mehrwert/schritt-2/TASTATUR-BLAETTER.md`.
+**Entscheidung:** Der Betreiber meint mit „Schreiben ist unzufriedigend“:
+wenn die Tastatur kommt und wo die Knöpfe dann stehen. Nicht gebaut, weil
+es nur am iPhone zu sehen ist; erst eine Bildschirmaufnahme, dann bauen.
+Sein Foto der Lernkarte (Frage 24, „Wort zu fett?“) ist da: Urteil Claude
+aus dem Foto: Strich und Vokalzeichen sind klar getrennt, nicht zu fett;
+Empfehlung „so lassen“. Er entscheidet. Sein Handy zeigte 3.18.23
+(Flugmodus), online ist 3.18.26 (`sw.js` abgerufen).
+**Offen:** Bildschirmaufnahme; Ergebnis von „ladegerät“ (er startet selbst).
+3.18.23 war also schon einmal online, obwohl `STAND.md` „nicht
+veröffentlicht“ sagt; nicht nachverfolgt.
+**Nächster Schritt:** nach dem Lauf Logs lesen, dann „Bewegung 1“.
+
 ### 2026-10-08 — Antwort des Betreibers auf Schritt 2 (nur Plan)
 
 **Geändert:** `mehrwert/schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md`, Nachtrag.
