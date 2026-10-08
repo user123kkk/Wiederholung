@@ -8,6 +8,22 @@
       "zeitlimit": false,
       "sekunden": 81,
       "quelltext": "d31917c2b83238fda60dbc748df0515e1bc815b0e7ccdb10f39e4726f9f6feea"
+    },
+    "t_sprung.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 80,
+      "quelltext": "fecd8b592b3769c3d85a2e32048e12a33c769b1d29674e806eb0481a610eb5c4"
+    },
+    "t_sprung_ueben.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 48,
+      "quelltext": "949645833d92fb63b3d0734827ec88a87364f54047033bed3b0ab181ced31059"
     }
   }
 }
