@@ -168,3 +168,12 @@ E30 google.com: passender Konto-Weg
 E30 apple.com: passender Konto-Weg
 E30 späte A-Mailantwort: B ohne fremden Dialog/Busy
 E31 Neustart b2, entfernte ID b1, anderes Konto b1
+E32 320/hell: 40 Karten und Liste ohne Überlauf
+E32 320/hell: Einstieg-Auswahl passt
+E32 320/dunkel: 40 Karten und Liste ohne Überlauf
+E32 320/dunkel: Einstieg-Auswahl passt
+E32 390/hell/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/hell/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/dunkel/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/dunkel/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/hell/bewegt: Wahl gespeichert, Karte/Knöpfe passen
