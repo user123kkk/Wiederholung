@@ -1,5 +1,7 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**08.10.2026, 18:15: Neu: `plan/ALLES-OFFEN.md` ist die eine Liste für alles Offene (alle 450 Betreiber-Nachrichten der lokalen Chats gegen das Repo geprüft; 96 Punkte Gesamtliste, 30 weitere offene, 72 unentschiedene Ideen). Regeln LEHREN § 1.7 und § 1.8.**
+
 **08.10.2026, 17:40: 3.18.27 voll geprüft (153/156, drei Nachläufe grün, Affen 0), nicht veröffentlicht; online weiter 3.18.26. Im Hauptordner liegt uncommittet der Entwurf 3.18.28 (nur Wortlaute, „Speicherkarte“ → „Sammlung“; Patch `zyklus-2/mehrwert/verstaendlichkeit/woerter-3.18.28-entwurf.patch`), betroffene Tests laufen. Neue Regel LEHREN § 1.7. Tagesdeckel: erst rechnen. Einzelheiten: Logbuch Zyklus 2, oberste Einträge.**
 
 **08.10.2026, 15:00: Durchlauf „Verständlichkeit“ ist als Bericht fertig (nur am Code gelesen, nichts gebaut): `zyklus-2/mehrwert/verstaendlichkeit/BERICHT.md`, Funde VS-1 bis VS-10, sieben Fragen an den Betreiber. Voller Lauf `ladegeraet.ps1 -NurPruefen` an 3.18.27 seit 14:52 gestartet; Ergebnis im Logbuch Zyklus 2. `main` weiter 3.18.27, online 3.18.26.**

@@ -225,6 +225,28 @@ Buchstaben an“ als falsch gemeldet (O-2); der Kommentar von 3.10.3 an der
 Stelle sagt, was gemeint war: Buchstaben lassen sich selbst als Karten
 anlegen.
 
+### 1.8 Jeder Wunsch kommt sofort in die eine Liste
+
+Betreiber 08.10.2026: „es gibt so viele Sachen, die ich mal angesprochen
+habe … ich dachte, ich kann mich darauf verlassen, wenn ich so eine Sache
+erwähne, dass das gespeichert wird“.
+
+**Regel:** Erwähnt der Betreiber einen Wunsch, eine Beschwerde, eine Idee
+oder eine Kleinigkeit, kommt sie **in derselben Antwort** in
+`plan/ALLES-OFFEN.md` (Datum, sein Wortlaut gekürzt, Stand), auch wenn
+nichts gebaut wird und auch wenn sie nur nebenbei fällt. Entscheidungen
+und Erledigtes werden dort nachgezogen, nichts wird gelöscht. Andere
+Dateien (Gesamtliste, Berichte, Logbuch) dürfen Einzelheiten tragen; ob
+etwas offen ist, steht dort.
+
+*Vorfall 08.10.2026:* Seine Wünsche standen fast alle im Repo, aber auf
+rund zehn Dateien verteilt; die „Gesamtliste“ enthielt nur das
+Entschiedene aus den Mehrwert-Runden. Auf die Frage „wie viel von allem“
+bekam er deshalb zuerst eine Zahl über 96 Punkte, während 30 weitere
+offene Punkte und 72 unentschiedene Ideen fehlten. Dazu: Die Berichte der
+Mehrwert-Agenten wurden nie wörtlich gesichert. **Auch daraus:** Ergebnisse
+von Agenten-Runden als Datei ins Repo, bevor zusammengefasst wird.
+
 ---
 
 ## 2. Religiöser Rahmen

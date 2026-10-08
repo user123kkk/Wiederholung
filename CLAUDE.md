@@ -10,6 +10,15 @@ steht dort, was bei Texte lernen fertig und was offen ist, und wo lokale
 Sicherungen liegen. Historische Arbeitsaufträge stehen im Archiv.
 Wo sie von `STAND.md` abweichen, gilt `STAND.md`.
 
+## Alles Offene: [`plan/ALLES-OFFEN.md`](plan/ALLES-OFFEN.md) (Betreiber 08.10.2026, fest)
+
+Die eine Liste für alles, was an der App noch gemacht, entschieden oder
+geprüft werden muss. Jeder Wunsch des Betreibers kommt **in derselben
+Antwort** dort hinein, auch wenn er nur nebenbei fällt (`plan/LEHREN.md`
+§ 1.8). Fragt er „was ist offen“ oder „wie viel ist fertig“, wird aus
+dieser Datei geantwortet. Empfehlungen vorher mit dem ganzen Repo und
+seinen Wünschen abgleichen (§ 1.7).
+
 ## Klein-Weg (Betreiber 07.10.2026, fest)
 
 Kleinigkeiten dauern Minuten, nicht Stunden. Gilt für Aussehen, Abstand,

@@ -2,6 +2,28 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Bestandsaufnahme: alles Offene in einer Liste (nur Plan)
+
+**Geändert:** neu `plan/ALLES-OFFEN.md`; `plan/LEHREN.md` § 1.8;
+`CLAUDE.md` (Verweis); `plan/STAND.md`.
+**Anlass:** Betreiber: Er weiß nicht mehr, was offen ist, und zweifelt, ob
+im Chat Erwähntes gespeichert wurde.
+**Was gemacht wurde:** Alle echten Betreiber-Nachrichten aus den lokalen
+Chat-Dateien gezogen (450, 11.09.–08.10., 43 Dateien) und gelesen; jeden
+Wunsch im Repo gesucht; alle Dateien mit Offenem zusammengeführt.
+**Ergebnis:** Fast nichts war verloren, aber es lag auf rund zehn Dateien.
+Die Gesamtliste (96) enthielt nicht: Reste aus Zyklus 2 (Z1-Umbau,
+Nachprüfung, D13–D15, C18, E17), elf Chat-Wünsche ohne Urteil oder Bau
+(unter anderem „Lernen soll maximal helfen“ N8, „Wort nicht wiederfinden“,
+ehrliches Bewerten bei Karten, Wortart an der Karte), Gerätetests, und 72
+unentschiedene Ideen aus dem Katalog.
+**Nicht prüfbar:** Chats außerhalb des Laptops (Tage ohne lokale Chats
+stehen in der Datei); die Agentenberichte der Mehrwert-Runden sind nicht
+wörtlich gesichert.
+**Offen:** Die 72 Ideen einzeln abwägen (Dafür, Dagegen, Urteil, mit
+Repo-Abgleich), wenn der Betreiber es will.
+**Nächster Schritt:** Tests am Entwurf 3.18.28 auswerten.
+
 ### 2026-10-08 — Voller Lauf an 3.18.27: 153/156, drei Nachläufe grün, Affen 0 – nichts veröffentlicht
 
 **Geändert:** zehn Hilfsskripte unter `plan/werkzeuge/` (Port aus
