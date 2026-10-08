@@ -35,6 +35,13 @@ Tests, danach Affen). Prozess: `cmd.exe … ladegeraet.bat`.
 | Paket I: Export, Druck | „Als Liste speichern“ (CSV mit Strichpunkt) und „Drucken“ (eigene Tabelle, `@media print`) unter „Mehr“, nur eigene Bereiche | nur Syntax |
 | Paket I: Löschen | Einzelkarte ohne Rückfrage, Meldung mit „Rückgängig“ (6 s) holt Karte, Platz und Speicherkarten zurück; `t_paket_c_weiter.js` C23 angepasst; neuer Test `t_loeschen_rueckgaengig.js` | nur Syntax |
 | Paket I: Backup | volle Sicherung schreibt zusätzlich `verlauf`, `serie`, `einstellungen`, `format: 2` | nur Syntax |
+| Paket H: Bildschirm wach | `bildschirmWach()` hält den Bildschirm während `ui.session` an (Wake Lock), neu geholt bei Rückkehr | nur Syntax |
+| Paket H: Rundenende | Karten, die nicht saßen, zum Aufklappen (`s.nichtMal`, `s.nichtKarten`, Handlung `ende-nicht`); Kacheln in Knopf-Reihenfolge Nicht/Fast/Sicher, „nicht“ zählt Karten (Frage 23) | nur Syntax; **berührt die Lernrunde → `abnahme_runde.js` 13/13 Pflicht** |
+
+Noch nicht gebaut aus Paket H (braucht den Browser zum Hinsehen, weil es
+die Lage in der Runde ändert): Karte in der Abfrage bearbeiten, „Runde
+fortsetzen“ am selben Tag, einmalige Erklärung der drei Knöpfe (Wortlaut
+vom Betreiber).
 
 ## Bewusst noch nicht gebaut (Paket I)
 

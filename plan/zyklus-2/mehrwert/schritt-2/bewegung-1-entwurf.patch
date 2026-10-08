@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 8acb637..6ff7b20 100644
+index 8acb637..3db11f4 100644
 --- a/app.js
 +++ b/app.js
 @@ -1770,6 +1770,7 @@ let ui = {
@@ -426,7 +426,7 @@ index 8acb637..6ff7b20 100644
    const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
      ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
 -    ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : ""].join("/");
-+    ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : "", ui.listeSheet ? "liste-" + ui.listeSheet.stufe : ""].join("/");
++    ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : "", ui.listeSheet ? "liste" : ""].join("/");
    /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
       kein .view - dann ist alles neu. */
    const warAnsicht = !!app.querySelector(":scope > .view");
