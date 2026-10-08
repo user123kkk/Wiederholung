@@ -45,10 +45,22 @@ G0 ist bewusst **nicht** als eigene Datei gebaut: Eine zweite Startdatei
 hieße `index.html`, `APP_SHELL` und Versions-Query anfassen, ohne dass der
 Nutzen größer wäre als mit den Marken. Kann später nachgezogen werden.
 
-Offen in Paket G (noch nicht gebaut, braucht eine genaue Festlegung):
-Frage 9 (neue Karten müssen in der Runde zweimal sitzen) und Frage 10
-(Tagesdeckel nach Pause, Fälligkeiten bleiben). Beides ändert, wie eine
-Runde zusammengestellt wird; erst Regel aufschreiben, dann bauen.
+| Paket G, Frage 9 | Neue Karte: erstes „Sicher“ hebt die Stufe nicht, Karte bleibt heute fällig und kommt in derselben Runde noch einmal (ans Ende gehängt); zweites „Sicher“ bringt Stufe 1 und „morgen“. „Fast“/„Nicht“ wie bisher. Abbruch dazwischen: Karte ist eingeführt, Stufe 0, heute fällig. **Nur im Betreiber-Konto** (`VORAB.neuZweimal`) | Regel grün im Schnelltest (12 Fälle); Runde noch nicht |
+
+So ist Frage 9 ausgelegt (Entscheidung lautete nur „müssen zweimal
+sitzen“): Die zweite Bewertung zählt im Tagesprotokoll als Wiederholung,
+nicht noch einmal als neue Karte. Das Freischalten der nächsten Lektion
+hängt am Höchststand und kommt damit erst nach dem zweiten „Sicher“.
+Dem Betreiber beim nächsten Bericht so sagen; er kann es mit einem Wort
+ändern.
+
+Offen in Paket G (noch nicht gebaut): **Frage 10** (Tagesdeckel nach Pause,
+Fälligkeiten bleiben). Braucht Zahlen und einen Satz auf dem
+Lernen-Bildschirm (ab wie vielen fälligen Karten, wie viele am Tag, was
+steht da). Vorschlag zum Vorlegen: greift ab mehr als 60 fälligen
+Wiederholungen; heute die 30 dringendsten (`nachDringlichkeit`), Rest
+bleibt fällig; nach den 30 steht „Für heute genug. Morgen geht es weiter.“
+mit leisem „Weiterlernen“. Wortlaut und Zahlen entscheidet der Betreiber.
 
 Noch nicht gebaut aus Paket H (braucht den Browser zum Hinsehen, weil es
 die Lage in der Runde ändert): Karte in der Abfrage bearbeiten, „Runde
