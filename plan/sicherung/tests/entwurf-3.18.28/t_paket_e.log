@@ -25,3 +25,25 @@ E3 320/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E3 320/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E3 320/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E3 820/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E4 390: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E4 320: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E4 820: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E5 320: Sicherungshinweis 18.97 Schriftbreiten, kein Überlauf
+E5 390: Sicherungshinweis 24.04 Schriftbreiten, kein Überlauf
+E5 820: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 1180: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 1440: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 Chromium: Datei angeboten, Blob 60 s erhalten, Prüfsatz sichtbar; iOS offen
+AssertionError [ERR_ASSERTION]: E6 Zeile behauptet keinen eingerichteten Termin
+    at Object.e6 [as E6] (C:\Users\USER\Wiederholung\plan\werkzeuge\pruefstand\t_paket_e.js:96:12)
+    at async C:\Users\USER\Wiederholung\plan\werkzeuge\pruefstand\t_paket_e.js:590:65 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'Tägliche Erinnerung\n19:30 Uhr, im Kalender',
+  expected: /Vorlage.*19:30/,
+  operator: 'match',
+  diff: 'simple'
+}
