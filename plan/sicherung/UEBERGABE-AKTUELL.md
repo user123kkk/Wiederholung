@@ -1,4 +1,4 @@
-# Übergabe – Stand von 08.10.2026 18:53 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 08.10.2026 18:54 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e2339d4 Sicherung 18:52 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `02bffc0 Sicherung 18:53 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.27"
 
@@ -17,6 +17,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M app.js
  M datenschutzerklaerung.html
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/pruefstand/t_paket_c_weiter.js
  M plan/werkzeuge/pruefstand/t_runde_bereiche.js
  M sw.js
@@ -27,11 +28,11 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 2, chrome.exe 23 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 1, chrome.exe 23 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
-**entwurf-3.18.28**: 33 grün, 1 rot, zuletzt: EXIT 1 t_paket_e
+**entwurf-3.18.28**: 34 grün, 1 rot, zuletzt: EXIT 0 abnahme_runde
 ```
 EXIT 1 t_paket_e
 ```
@@ -49,6 +50,13 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 08.10.2026
 
+- 18:56 Tests am Entwurf 3.18.28 fertig: 33 von 34 grün, `abnahme_runde.js`
+  13/13. Rot: `t_paket_e` E6 („Zeile behauptet keinen eingerichteten
+  Termin“). Echter Fehler im Entwurf, nicht im Test: „19:30 Uhr, im
+  Kalender“ behauptet einen Termin, den die App nicht kennt; „Vorlage für
+  19:30 Uhr“ war in Paket E bewusst so gewählt. Mein Vorschlag in der
+  Tabelle „Niedrig“ war nicht mit dem Repo abgeglichen (LEHREN § 1.7).
+  Zurückgenommen in `app.js` und CHANGELOG; `t_paket_e` läuft neu.
 - 17:58 Minuten-Sicherung sichert jetzt auch den laufenden Chat wörtlich
   (jede Minute, nach `Desktop\Wiederholung-Belege\chats\`, außerhalb des
   Repos, weil es öffentlich ist). Betreiber 17:57: „auch laufende
@@ -85,10 +93,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   Entwurf liegt uncommittet im Hauptordner, Patch unter
   `zyklus-2/mehrwert/verstaendlichkeit/woerter-3.18.28-entwurf.patch`.
 - 17:26 Voller Lauf an 3.18.27 ausgewertet: 153/156, drei Nachläufe grün,
-  Affen 0 Befunde. Zehn Hilfsskripte auf `PRUEF_PORT` umgestellt.
-- 14:52 Voller Lauf `ladegeraet.ps1 -NurPruefen` an 3.18.27 gestartet;
-  währenddessen Bericht „Verständlichkeit“ geschrieben.
-
-**Gerade offen:** Tests am Entwurf 3.18.28 laufen. Danach: Ausgaben lesen,
-3.18.28 auf `main`, Tagesdeckel rechnen, Katalog gegen Agentenberichte
-abgleichen.

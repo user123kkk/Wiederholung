@@ -35,3 +35,19 @@ OK      t_ueben.js            Ueben bewertet und endet (lesen)  (31 s)
         9
         sicher
         3 Karten noch nicht gewusst
+OK      t_schreiben.js        Schreiben: Zeichenflaeche im Bild (lesen)  (83 s)
+        == handy
+          Start: {"wortOben":130,"flaeche":"236-436","leisteUnten":544,"fenster":844,"allesImBild":true,"scrollbar":false}
+          erster Strich: Tinte 0 -> 534 | Lage vorher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:162"}
+            nachher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:162"}
+          Vollbild: {"vollbild":true,"vorlage":"Buch","leisteImBild":true} | Tinte erhalten: 534
+          Strich im Vollbild: Tinte 534 -> 1063
+          Strich zurueck: Tinte 534
+          Vollbild nach Aufdecken: "Buch\n·\nكِتَابٌ"
+          Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"كِتَابٌ"}
+          Kontrast 0
+          Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1016 ms | Bilder > 34 ms: 0
+          ok
+
+Alle 13 Pruefungen gruen.
+Vollstaendige Einzeltest-Ausgaben: C:\Users\USER\AppData\Local\Temp\adrabic-rundenabnahme

@@ -8,6 +8,13 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 08.10.2026
 
+- 18:56 Tests am Entwurf 3.18.28 fertig: 33 von 34 grün, `abnahme_runde.js`
+  13/13. Rot: `t_paket_e` E6 („Zeile behauptet keinen eingerichteten
+  Termin“). Echter Fehler im Entwurf, nicht im Test: „19:30 Uhr, im
+  Kalender“ behauptet einen Termin, den die App nicht kennt; „Vorlage für
+  19:30 Uhr“ war in Paket E bewusst so gewählt. Mein Vorschlag in der
+  Tabelle „Niedrig“ war nicht mit dem Repo abgeglichen (LEHREN § 1.7).
+  Zurückgenommen in `app.js` und CHANGELOG; `t_paket_e` läuft neu.
 - 17:58 Minuten-Sicherung sichert jetzt auch den laufenden Chat wörtlich
   (jede Minute, nach `Desktop\Wiederholung-Belege\chats\`, außerhalb des
   Repos, weil es öffentlich ist). Betreiber 17:57: „auch laufende

@@ -32,3 +32,4 @@ EXIT 0 t_fluessig_ende
 EXIT 0 t_paket_c_weiter
 EXIT 0 t_paket_d
 EXIT 1 t_paket_e
+EXIT 0 abnahme_runde
