@@ -114,6 +114,10 @@ while true; do
     rm -f "$S/UEBERGABE-AKTUELL.md.neu"
   fi
 
+  # 3a. Den laufenden Chat woertlich sichern (ausserhalb des Repos, weil
+  #     das Repo oeffentlich ist): Desktop/Wiederholung-Belege/chats/.
+  python plan/werkzeuge/chats_sichern.py --neu >/dev/null 2>&1
+
   # 4. Committen und pushen.
   if [ -n "$(git status --porcelain -- plan ':!plan/werkzeuge' CLAUDE.md AGENTS.md 2>/dev/null)" ]; then
     git add -A -- plan ':!plan/werkzeuge' CLAUDE.md AGENTS.md 2>/dev/null &&

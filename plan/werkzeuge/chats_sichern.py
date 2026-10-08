@@ -6,10 +6,14 @@
 #   py -3 plan\werkzeuge\chats_sichern.py
 # Ziel: Desktop\Wiederholung-Belege\chats\  (bewusst AUSSERHALB des Repos:
 # das Repo ist oeffentlich, in den Chats stehen persoenliche Angaben).
-import io, json, glob, os, re, sys
+import io, json, glob, os, re, sys, time
 
 quelle = os.path.expanduser(r"~\.claude\projects")
-ziel = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(r"~\Desktop\Wiederholung-Belege\chats")
+# "--neu": nur Chats, die in den letzten 15 Minuten geschrieben wurden
+# (fuer die Minuten-Sicherung; die Uebersicht bleibt dann unberuehrt).
+nur_neu = "--neu" in sys.argv
+args = [a for a in sys.argv[1:] if a != "--neu"]
+ziel = args[0] if args else os.path.expanduser(r"~\Desktop\Wiederholung-Belege\chats")
 os.makedirs(ziel, exist_ok=True)
 
 
@@ -25,6 +29,8 @@ anzahl = 0
 uebersicht = []
 for ordner in sorted(glob.glob(os.path.join(quelle, "*iederholung*"))):
     for datei in sorted(glob.glob(os.path.join(ordner, "*.jsonl"))):
+        if nur_neu and time.time() - os.path.getmtime(datei) > 900:
+            continue
         zeilen, erste, letzte, betreiber = [], "", "", 0
         for roh in io.open(datei, encoding="utf-8", errors="replace"):
             try:
@@ -56,6 +62,9 @@ for ordner in sorted(glob.glob(os.path.join(quelle, "*iederholung*"))):
         anzahl += 1
 
 uebersicht.sort()
+if nur_neu:
+    print(anzahl, "laufende Chats gesichert")
+    sys.exit(0)
 with io.open(os.path.join(ziel, "UEBERSICHT.md"), "w", encoding="utf-8", newline="\n") as f:
     f.write("# Gesicherte Chats\n\n| Beginn | Datei | Nachrichten Betreiber | Nachrichten gesamt |\n|---|---|---|---|\n")
     for erste, name, b, n in uebersicht:
