@@ -106,6 +106,7 @@ Die Nummern in Klammern sind die Fragen aus Runde 2.
 | Was | Stand |
 |---|---|
 | Auswertung des Probelaufs, Startwerte, Freigabe-Frage | wartet: 29.10., Dein Foto |
+| Auswahl „Neu anlegen“ erklärt nicht, was Karte, Text und Sure unterscheidet; „Zeile“ und „Aya“ unklar (Betreiber 08.10.: „wird doch ned klar“). Vorschlag: je Eintrag eine Unterzeile | wartet: Wortlaut bestätigen; bauen nach dem 29.10. |
 | „Kann ich schon“ wird sofort fest, der Kreis prüft nach (28) | offen |
 | Ein Kreis je Bereich über alle Texte (29) | offen |
 | Kurze Texte immer ganz (30) | offen |
