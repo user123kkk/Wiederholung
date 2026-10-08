@@ -82,9 +82,9 @@ Fremdentest), das Ganze nicht.
 | Was | Stand |
 |---|---|
 | Durchlauf „Verständlichkeit“ über jeden Bildschirm, nur lesen: Was ist das? Was soll ich tun? Welche Wörter versteht man nicht (Speicherkarte, Bereich, Lektion, Stufe-Wörter, Zeile/Aya, fällig, Üben gegen Lernen, Runde)? Ergebnis: Liste mit Vorschlag je Stelle | **Bericht fertig (08.10.), nur am Code gelesen:** `verstaendlichkeit/BERICHT.md`, Funde VS-1 bis VS-10 |
-| Begriffe festlegen: ein Wort je Sache, überall gleich | wartet: Deine Antworten (Bericht Abschnitt 4), vor allem „Speicherkarte“ |
-| Kurze Erklärung an der Stelle, an der man sie braucht (nicht als Hilfeseite) | wartet: Deine Antworten; Vorschläge je Stelle im Bericht |
-| Durchsicht im geführten Satz sagt „x von y gelernt“, meint „gesehen“ (VS-5) | offen, klein, ohne Dich |
+| Begriffe festlegen: ein Wort je Sache, überall gleich | fertig, 3.18.28 („Speicherkarte“ heißt „Sammlung“) |
+| Kurze Erklärung an der Stelle, an der man sie braucht (nicht als Hilfeseite) | teils fertig (3.18.28: Bereich, Sammlungen, Üben); offen: drei Knöpfe, antippbare Erklärungen, Verweis „Liste einfügen“ |
+| Durchsicht im geführten Satz sagt „x von y gelernt“, meint „gesehen“ (VS-5) | fertig, 3.18.28 |
 | Echte Probe: Fremdentest mit Freunden | wartet: nach Paket K |
 
 Reihenfolge: der Bericht kommt **vor** dem Einstieg (Abschnitt 5), weil
@@ -98,7 +98,7 @@ der Einstieg genau das erklären muss, was der Bericht als unklar findet.
 | Wege zu den Karten vor die Leiter, nichts doppelt (E-11) | offen |
 | „Dein Stand“ doppelt mit der Leiter; Leiste mit fünf Punkten, vier Wörtern | entschieden 08.10.: streichen, zusammen mit E-11/E-13 |
 | Zurück-Taste und -Geste im Einstieg (E-12) | offen, mit Gerätetest |
-| Satz „fang bei den Buchstaben an“ | E: im Entwurf 3.18.28 neu gefasst |
+| Satz „fang bei den Buchstaben an“ | fertig, 3.18.28 neu gefasst |
 | Schriftgröße und Rundengröße raus aus dem Einstieg (47) | offen |
 | Proberunde direkt nach dem ersten Bildschirm (45) | wartet: Karten von Dir |
 | Google über dem E-Mail-Formular (49) | offen |

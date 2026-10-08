@@ -8,6 +8,10 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 08.10.2026
 
+- 19:15 3.18.28 auf `main` (9f2990a) und gepusht. Zweiter Lauf `t_paket_e`,
+  `t_einstellungen`, `t_einst` grün. Logbuch, STAND, ALLES-OFFEN
+  nachgezogen. Patch `verstaendlichkeit/woerter-3.18.28-entwurf.patch` ist
+  damit überholt (bleibt als Beleg).
 - 18:56 Tests am Entwurf 3.18.28 fertig: 33 von 34 grün, `abnahme_runde.js`
   13/13. Rot: `t_paket_e` E6 („Zeile behauptet keinen eingerichteten
   Termin“). Echter Fehler im Entwurf, nicht im Test: „19:30 Uhr, im
@@ -55,6 +59,6 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 - 14:52 Voller Lauf `ladegeraet.ps1 -NurPruefen` an 3.18.27 gestartet;
   währenddessen Bericht „Verständlichkeit“ geschrieben.
 
-**Gerade offen:** Tests am Entwurf 3.18.28 laufen. Danach: Ausgaben lesen,
-3.18.28 auf `main`, Tagesdeckel rechnen, Katalog gegen Agentenberichte
-abgleichen.
+**Gerade offen:** nichts läuft. Als Nächstes: Katalog gegen die 34
+Agentenberichte abgleichen, Tagesdeckel rechnen, Schritt (b) der
+Verständlichkeit. Wartet auf den Betreiber: „ladegerät“.

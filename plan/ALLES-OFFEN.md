@@ -43,7 +43,7 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 | Was | Stand |
 |---|---|
 | 3.18.27: 15 Punkte (Liste einfügen, Export, Druck, Löschen mit Rückgängig, Rundenende, Bildschirm wach, Blätter gleiten, zwei Lernregeln nur im Betreiber-Konto u. a.) | fertig, voll geprüft 08.10., nicht online |
-| 3.18.28: klarere Wörter („Speicherkarte“ → „Sammlung“ u. a.) | gebaut, Tests laufen, nicht auf `main` |
+| 3.18.28: klarere Wörter („Speicherkarte“ → „Sammlung“ u. a.) | fertig, auf `main` (9f2990a), 34 betroffene Tests und Rundenabnahme grün; Gesamtlauf kommt mit „ladegerät“ |
 
 Online ist 3.18.26.
 

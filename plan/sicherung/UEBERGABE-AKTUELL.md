@@ -1,4 +1,4 @@
-# Übergabe – Stand von 08.10.2026 19:11 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 08.10.2026 19:13 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,20 +6,18 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `c0bffb2 Sicherung 19:10 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9f2990a 3.18.28: klarere Woerter (Speicherkarte heisst Sammlung, Bereich erklaert, Ueben, gefuehrter Kartensat`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
-- Version im letzten Commit: const APP_VERSION = "3.18.27"
+- Version im letzten Commit: const APP_VERSION = "3.18.28"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
- M CHANGELOG.md
- M app.js
- M datenschutzerklaerung.html
- M index.html
- M plan/werkzeuge/pruefstand/t_paket_c_weiter.js
- M plan/werkzeuge/pruefstand/t_runde_bereiche.js
- M sw.js
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
+ M plan/zyklus-2/LOGBUCH.md
+ M plan/zyklus-2/mehrwert/GESAMTLISTE.md
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
@@ -27,11 +25,11 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 1, chrome.exe 23 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 0, chrome.exe 15 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
-**entwurf-3.18.28**: 36 grün, 1 rot, zuletzt: EXIT 0 t_einstellungen (2. Lauf)
+**entwurf-3.18.28**: 37 grün, 1 rot, zuletzt: EXIT 0 t_einst (2. Lauf)
 ```
 EXIT 1 t_paket_e
 ```
@@ -49,6 +47,10 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 08.10.2026
 
+- 19:15 3.18.28 auf `main` (9f2990a) und gepusht. Zweiter Lauf `t_paket_e`,
+  `t_einstellungen`, `t_einst` grün. Logbuch, STAND, ALLES-OFFEN
+  nachgezogen. Patch `verstaendlichkeit/woerter-3.18.28-entwurf.patch` ist
+  damit überholt (bleibt als Beleg).
 - 18:56 Tests am Entwurf 3.18.28 fertig: 33 von 34 grün, `abnahme_runde.js`
   13/13. Rot: `t_paket_e` E6 („Zeile behauptet keinen eingerichteten
   Termin“). Echter Fehler im Entwurf, nicht im Test: „19:30 Uhr, im
@@ -88,7 +90,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 17:39 `ALLES-OFFEN.md` angelegt: 450 Betreiber-Nachrichten gelesen und
   gegen das Repo geprüft.
 - 17:27 Tests am Entwurf 3.18.28 gestartet (34 Tests, danach
-  `abnahme_runde.js`); Ergebnis: `%TEMP%\entwurf-3.18.28\_ergebnis.txt`.
-  Entwurf liegt uncommittet im Hauptordner, Patch unter
-  `zyklus-2/mehrwert/verstaendlichkeit/woerter-3.18.28-entwurf.patch`.
-- 17:26 Voller Lauf an 3.18.27 ausgewertet: 153/156, drei Nachläufe grün,

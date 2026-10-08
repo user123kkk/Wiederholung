@@ -2,6 +2,39 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — 3.18.28 auf main: klarere Wörter (nur Wortlaut), nicht veröffentlicht
+
+**Geändert:** `app.js` (Texte; „Speicherkarte“ → „Sammlung“ in 39 Strings,
+30 weitere Wortlaute, Einstiegs-Satz zu den Buchstaben), `sw.js`,
+`index.html` (33 Stellen), `CHANGELOG.md`, `datenschutzerklaerung.html`
+(ein Wort), Tests `t_runde_bereiche.js` („fällig“), `t_paket_c_weiter.js`
+(C6, neuer Wortlaut). Commit 9f2990a.
+**Entscheidung:** Betreiber 08.10.: Verständlichkeit „alles ja wie du
+empfiehlst“. Gebaut nach dem Klein-Weg (Wortlaut), weil Rundenende und
+Durchsicht berührt sind zusätzlich mit Rundenabnahme.
+**Geprüft (Chromium, Hauptordner, Port 8199, Server-Stand vorher
+nachgesehen):** 34 betroffene Tests Exit 0, `abnahme_runde.js` 13/13,
+`pruefe_stand.mjs` grün. Beschreibende Ausgaben gelesen bei `t_gross_alle`
+(lange Zeilen 0), `t_sprung` (alle 0), `t_kontrast` (0), `t_a11y` (keine
+Funde), `t_verwalten`, `t_ueben_auswahl`, `t_hick`. Ein Foto angesehen
+(Üben-Auswahl mit neuem Satz und „Sammlungen“).
+**Ein roter Test, echter Fehler im Entwurf:** `t_paket_e` E6. „19:30 Uhr,
+im Kalender“ behauptete einen Termin, den die App nicht kennt; „Vorlage
+für … Uhr“ war in Paket E bewusst gewählt. Zurückgenommen, zweiter Lauf
+`t_paket_e`, `t_einstellungen`, `t_einst`: Exit 0. Der Vorschlag war nicht
+mit dem Repo abgeglichen (LEHREN § 1.7).
+**Nicht gebaut aus der Tabelle:** „Datei einspielen“ länger beschriften
+(bricht auf kleinen Handys um), Punkte-Zahl Einstieg/Runde (gehört zu O-5).
+**Nicht geprüft:** Gesamtlauf und Affen an 3.18.28; echtes iPhone; die
+übrigen neuen Texte nicht einzeln am Bild gelesen.
+**Offen:** Schritt (b) der Verständlichkeit (Erklärung der drei Knöpfe,
+antippbare Erklärungen, Verweis „Liste einfügen“); Hinweis unter der
+zugeklappten Zeile „Sammlungen“ steht bündig am Rand, nicht eingerückt wie
+der Knopftext (am Foto gesehen, Geschmacksfrage, nicht geändert).
+**Nächster Schritt:** Der Betreiber kann „ladegerät“ schreiben (prüft alles
+an 3.18.28 und veröffentlicht 3.18.27 und 3.18.28). Danach Katalog gegen
+Agentenberichte, Tagesdeckel rechnen.
+
 ### 2026-10-08 — Bestandsaufnahme: alles Offene in einer Liste (nur Plan)
 
 **Geändert:** neu `plan/ALLES-OFFEN.md`; `plan/LEHREN.md` § 1.8;

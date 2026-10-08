@@ -35,3 +35,4 @@ EXIT 1 t_paket_e
 EXIT 0 abnahme_runde
 EXIT 0 t_paket_e (2. Lauf)
 EXIT 0 t_einstellungen (2. Lauf)
+EXIT 0 t_einst (2. Lauf)
