@@ -1,5 +1,7 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**08.10.2026, abends: Online ist 3.18.25 (abgerufen; Betreiber hat `veroeffentlichen.bat` gestartet, 3.18.26 war dabei noch nicht dabei). `main` = 3.18.26. Der Betreiber setzt die Mehrwert-Arbeit in einem neuen Chat fort: `zyklus-2/mehrwert/UEBERGABE-NEUER-CHAT-2026-10-08.md` (Leseliste, Reihenfolge, Erinnerungen). Alle 175 Ideen mit Stand: `zyklus-2/mehrwert/IDEEN-KATALOG-2026-10-08.md`.**
+
 **08.10.2026, vormittags: 3.18.26 auf main (Notiz mit arabischer Zeile rechtsläufig; Ersatzfarbe der Leisten für alte iPhones). Nur betroffene Tests. Nicht veröffentlicht. Zweiter Mehrwert-Chat eingearbeitet: 68 Fragen, Antworten des Betreibers („wie empfohlen“), offene Punkte und Pakete G0–Q in `zyklus-2/mehrwert/RUNDE-2-2026-10-08.md`.**
 
 **08.10.2026, 00:35: 3.18.25 auf main (Widerruf für Texte steht jetzt unter „Sichern & einspielen“). Nicht veröffentlicht.**
