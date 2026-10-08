@@ -3,3 +3,7 @@ OK      t_runde_lage.js       Knopf immer im Bild, Seite scrollt nie (4 Handygro
 OK      t_sprung.js           Karte springt nicht: Aufdecken und Karte zu Karte, 4 Geraete  (80 s)
 OK      t_sprung_ueben.js     dasselbe im Ueben  (48 s)
 OK      t_wischen.js          Wischen: weit, schnell, direkt nach Aufdecken, zu kurz, Abbruch  (38 s)
+OK      t_wischen_schraeg.js  Wischen schraeg / mit Daumen, Seite scrollt nicht mit  (51 s)
+OK      t_doppeltipp.js       schneller Doppeltipp bewertet nicht blind  (19 s)
+OK      t_x_mitten.js         X mitten in der Runde: nichts geht verloren, Serie +1  (29 s)
+OK      t_abgelehnt.js        von der Cloud abgelehnte Bewertung wird nachgeschickt  (7 s)

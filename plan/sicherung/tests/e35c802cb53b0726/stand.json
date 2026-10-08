@@ -24,6 +24,38 @@
       "zeitlimit": false,
       "sekunden": 48,
       "quelltext": "949645833d92fb63b3d0734827ec88a87364f54047033bed3b0ab181ced31059"
+    },
+    "t_wischen.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 38,
+      "quelltext": "cce5e8b4519173de5a94e1bb7d9f0c592819b61f5f65dcdb95204794dc7986a0"
+    },
+    "t_wischen_schraeg.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 51,
+      "quelltext": "ada2ba1f597ff996be979d8b845116f658305a78bfd0eb59da0ceb58a068936b"
+    },
+    "t_doppeltipp.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 19,
+      "quelltext": "c7845043b3b3025d035bc34d5c99cf800f2331ad73d9ad5ac876ff17b49eebd5"
+    },
+    "t_x_mitten.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 29,
+      "quelltext": "eb6ca98f44d833bafc686c39207f74a269a32aed31eda7ee296018adf99e7127"
     }
   }
 }
