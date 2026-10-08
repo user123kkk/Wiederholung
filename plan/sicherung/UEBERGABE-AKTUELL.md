@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 01:55 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 01:57 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `5c5027c Sicherung 01:54 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `c0ce781 Sicherung 01:56 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
@@ -22,7 +22,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 8 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -31,7 +31,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 EXIT 1 t_paket_e
 ```
 
-**ladegeraet-3.18.28.log**: 12 grün, 0 rot
+**ladegeraet-3.18.28.log**: 18 grün, 0 rot
 ```
 ```
 
@@ -39,6 +39,10 @@ EXIT 1 t_paket_e
 
 ## 09.10.2026
 
+- 02:07 Betreiber: Safari, Version .26. Ursache am Code gefunden: „← Zurück“
+  auf den Rechtsseiten ist ein Link auf `./index.html` und lädt im neuen
+  Reiter die App neu. In `ALLES-OFFEN.md` nachgetragen. Der Test zu E4
+  prüft diesen Weg nicht (LEHREN § 5.3: Test muss den echten Weg gehen).
 - 02:02 Betreiber meldet: Plan im Einstieg ist weg nach Datenschutz/
   Impressum und zurück. In `ALLES-OFFEN.md` § 3.2 eingetragen, mit Abgleich
   (E4, G7, `app.js` 8966). Nichts gebaut: `ladegerät` läuft, und die
@@ -78,7 +82,3 @@ EXIT 1 t_paket_e
   26 Läufe der letzten zwei Tage) und schreibt
   `plan/sicherung/UEBERGABE-AKTUELL.md`. Erster vollständiger Durchgang
   17:54 committet und gepusht (4fefe03). Patch enthält jetzt auch die
-  geänderten Testdateien (geprüft). `AGENTS.md` und `CLAUDE.md` verweisen
-  darauf.
-- 17:50 Minuten-Sicherung läuft (`plan/werkzeuge/minuten_sicherung.sh`, im
-  Hintergrund dieses Chats): jede Minute `plan/` und `CLAUDE.md` committen

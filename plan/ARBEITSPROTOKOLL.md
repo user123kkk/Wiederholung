@@ -8,6 +8,10 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 09.10.2026
 
+- 02:07 Betreiber: Safari, Version .26. Ursache am Code gefunden: „← Zurück“
+  auf den Rechtsseiten ist ein Link auf `./index.html` und lädt im neuen
+  Reiter die App neu. In `ALLES-OFFEN.md` nachgetragen. Der Test zu E4
+  prüft diesen Weg nicht (LEHREN § 5.3: Test muss den echten Weg gehen).
 - 02:02 Betreiber meldet: Plan im Einstieg ist weg nach Datenschutz/
   Impressum und zurück. In `ALLES-OFFEN.md` § 3.2 eingetragen, mit Abgleich
   (E4, G7, `app.js` 8966). Nichts gebaut: `ladegerät` läuft, und die
