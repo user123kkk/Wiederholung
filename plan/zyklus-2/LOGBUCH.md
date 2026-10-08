@@ -2,6 +2,37 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Schritt 2 der Mehrwert-Übergabe: zwei Berichte, nur gelesen (kein Code)
+
+**Geändert:** neu `mehrwert/schritt-2/` mit `BERICHT-ONBOARDING.md`,
+`BERICHT-AUSSEHEN-BEWEGUNG.md`, `ZWISCHENSTAND.md`, den Werkzeugen
+`tour.js`, `tour2.js`, `austritt.js`, `auswerten.py` und den Messdaten in
+`daten/`. `LEHREN.md` § 5.3 und § 15 (Bewegungstest muss Zwischenlagen
+verlangen). `STAND.md`, Übergabe. Kein App-Code, keine Version.
+**Entscheidung:** Betreiber 08.10.: „mach bei Schritt 2 weiter, Schritt 1
+(ladegerät) hole ich später nach“ und „speicher alles jede 60 sek“. Deshalb
+liegt alles im Repo statt im Zwischenordner, und eine Schleife hat den
+Ordner jede Minute committet und gepusht. Fotos liegen nicht im Repo
+(zu groß), sie entstehen mit `tour.js` neu.
+**Geprüft:** 13 Rundgänge, 341 Schritte (390×844, 390×664, 320×568, iPad,
+Desktop; dunkel/hell; voll/leer/Gast), eigener Server auf Port 8097 (8099
+liefert den anderen Ordner mit 3.18.25). Kein Querüberlauf, kein
+Konsolenfehler. Nur Chromium; kein iPhone, kein Gesamtlauf (nichts gebaut).
+**Wichtigste Funde:** (1) Blätter und Dialoge springen beim Schließen in
+einem Bild weg, statt zu gleiten; der D1-Test kann das nicht finden.
+(2) „Üben“ und „Speicherkarten“ klappen ohne Bewegung auf (Liste springt
+496 bzw. 778 px). (3) Einstellungen spielen den Eintritt bei jeder
+Rückkehr neu. (4) Einstieg: E-11, E-12, E-13 sind entschieden, aber nicht
+gebaut; bei 390×664 liegt „Weiter“ auf drei Bildschirmen unter dem Rand;
+das Echo „fang bei den Buchstaben an“ verspricht etwas, das es nicht gibt.
+**Offen:** Betreiber liest die zwei Berichte und sagt, welche Funde gebaut
+werden. A-1 vorher am iPhone ansehen. Erinnerungsliste unverändert
+(`mehrwert/RUNDE-2-2026-10-08.md` § 5b), „ladegerät“ steht aus.
+**Nächster Schritt:** Schritt 3 der Übergabe (Paket I: Liste einfügen,
+Export, Druck, Backup, Löschen mit Rückgängig), sobald der Betreiber es
+sagt; die Pakete „Bewegung 1“, „Platz 1“ und „Einstieg ruhiger“ aus den
+Berichten nach Paket H einordnen.
+
 ### 2026-10-08 — Antworten auf die offenen Mehrwert-Fragen eingetragen (nur Plan)
 
 **Geändert:** `mehrwert/RUNDE-2-2026-10-08.md`, neue Abschnitte 5a

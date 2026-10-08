@@ -573,6 +573,15 @@ Was gemessen wird:
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
 
+- **Ein Bewegungstest verlangt Zwischenlagen, nicht „irgendein Bild weicht
+  ab“** (08.10.2026, Durchsicht Bewegung). D1 („Blätter fahren beim
+  Schließen weg“) galt seit 3.18.14 als behoben. Der Test prüft, ob in
+  irgendeinem Bild eine Verschiebung steht; das erfüllt auch ein Blatt, das
+  in einem Bild von 361 auf 868 px springt und dann 200 ms wartet. Bild für
+  Bild gemessen gibt es keine Zwischenlage. Regel: Bei jeder Bewegung, die
+  gleiten soll, mindestens drei verschiedene Lagen zwischen Start und Ziel
+  verlangen, und die Gegenprobe muss ein Sprung sein, nicht nur „keine
+  Änderung“.
 - **Vor jedem Prüfstand-Lauf fragen: Welchen Ordner liefert der Server auf
   Port 8099?** (08.10.2026, 3.18.26). Auf dem Laptop gibt es zwei Checkouts
   (der Ordner im Benutzerverzeichnis und der auf dem Desktop). Der Server
@@ -2336,3 +2345,4 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 | 07.10. (3.18.23, D11 im Gesamtlauf) | `t_paket_d` D11 zehnmal rot, im frischen Browser nie; drei eigene Deutungen nacheinander falsch („Meldung zu früh entfernt“, „Spiel auf dem Laptop“, „Minuten-Sicherung“) und zwei davon dem Betreiber als wahrscheinlich gemeldet | Vermutung vor Messung genannt. Ursache bis heute offen | § 5.3 (Bilderzähl-Test rot). Vergleichslauf am Vorstand b45a13b ebenfalls rot, also nicht von 3.18.23. Grenze unverändert. Nach Neustart des Laptops grün (152/152) |
 | 08.10. (3.18.26, Klein-Weg) | Fünf betroffene Tests grün gemeldet, sie liefen aber gegen den Server eines anderen Chats mit dessen Ordner (3.18.25); aufgefallen erst, als eine eigene Messung die neue CSS-Regel nicht fand | Port 8099 war belegt und antwortete mit 200; nicht geprüft, welchen Stand er liefert | § 5.3 (Server-Ordner vor dem Lauf prüfen). Eigener Server auf 8097 mit `PRUEF_PORT`, alle fünf wiederholt, grün |
 | 08.10. (Online-Stand) | Dem Betreiber gemeldet „online ist 3.18.25, vermutlich falscher Ordner“; tatsächlich war 3.18.26 schon veröffentlicht | `app.js` vom Hosting abgerufen, das eine Stunde zwischengespeichert wird; Ursache geraten statt das Skript gelesen (es nimmt immer `origin/main`) | § 1.3. Online-Stand an `sw.js` prüfen (`no-cache`) und `Last-Modified` lesen; vor einer Vermutung das Skript lesen |
+| 08.10. (Durchsicht Bewegung, nur gelesen) | Blätter und Dialoge springen beim Schließen in einem Bild aus dem Bildschirm, obwohl D1 (3.18.14) als behoben abgenommen war | Der D1-Test verlangte nur „irgendein Bild mit Verschiebung“; ein Sprung erfüllt das. Ursache im Produkt vermutet, nicht gemessen: `animation: none`, Übergang und Ziel im selben Schritt (wie D11) | § 5.3 (Zwischenlagen verlangen). Nicht behoben, Fund A-1 in `zyklus-2/mehrwert/schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md`; vor dem Bau am iPhone ansehen |

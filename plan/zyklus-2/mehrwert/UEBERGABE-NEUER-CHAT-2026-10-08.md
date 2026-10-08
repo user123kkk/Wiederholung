@@ -40,7 +40,7 @@ dazwischen.
 | Schritt | Was | Hinweis |
 |---|---|---|
 | 1 | „ladegerät“: voller Lauf am Stand 3.18.26 (ist schon online) | Betreiber gibt das Stichwort |
-| 2 | Zwei Berichte, nur lesen: Onboarding (samt `../VORBILD-MARHABA.md` und App „Marhaba!“) und Durchsicht Aussehen/Bewegung über alle Bildschirme (N2, N3, N5, N6) | Funde als Liste, nichts bauen |
+| 2 | Zwei Berichte, nur lesen: Onboarding (samt `../VORBILD-MARHABA.md` und App „Marhaba!“) und Durchsicht Aussehen/Bewegung über alle Bildschirme (N2, N3, N5, N6) | **erledigt 08.10.:** [`schritt-2/BERICHT-ONBOARDING.md`](schritt-2/BERICHT-ONBOARDING.md), [`schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md`](schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md). Schritt 1 holt der Betreiber nach |
 | 3 | Paket I: Liste einfügen, Export, Druck, Backup, Löschen mit Rückgängig | sichtbar, keine Lernlogik |
 | 4 | Paket H: Bearbeiten in der Abfrage, verpatzte Karten am Rundenende, Runde fortsetzen, Bildschirm wach | Wortlaut zu Frage 21 vom Betreiber |
 | 5 | Paket G0: Lernlogik in eigene Datei, Schnelltests, allgemeiner Schalter | ohne sichtbare Änderung |
