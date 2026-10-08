@@ -8,6 +8,15 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 08.10.2026
 
+- 17:50 Minuten-Sicherung läuft (`plan/werkzeuge/minuten_sicherung.sh`, im
+  Hintergrund dieses Chats): jede Minute `plan/` und `CLAUDE.md` committen
+  und pushen, uncommitteter App-Entwurf als
+  `plan/sicherung/entwurf-aktuell.patch`. Erster Lauf 17:47 gesichert und
+  gepusht (758e1c5). Bekannte Lücke: geänderte Testdateien unter
+  `plan/werkzeuge` fehlen in diesem Patch (stehen im Patch unter
+  `verstaendlichkeit/`); beim nächsten Neustart des Skripts beheben.
+  Betreiber 17:49: „ich hab Zweifel, ob du wirklich Sachen alle 60 Sek.
+  speicherst“ – deshalb Automatik statt Versprechen.
 - 17:47 Regel § 1.9, `BETREIBER-VERSTEHEN.md`, dieses Protokoll und die
   Wünsche zur Arbeitsweise in `ALLES-OFFEN.md` § 3.2a eingetragen.
 - 17:45 Alle 43 lokalen Chats wörtlich gesichert nach

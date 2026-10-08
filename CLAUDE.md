@@ -27,6 +27,9 @@ seinen Wünschen abgleichen (§ 1.7).
   (`plan/LEHREN.md` § 1.9): Arbeitsschritte nach
   [`plan/ARBEITSPROTOKOLL.md`](plan/ARBEITSPROTOKOLL.md), Agentenberichte
   ungekürzt als Datei, Chats mit `plan\werkzeuge\chats_sichern.py` sichern.
+- **Zu Beginn jeder Session die Minuten-Sicherung starten** (im Hintergrund):
+  `bash plan/werkzeuge/minuten_sicherung.sh`. Sie committet und pusht jede
+  Minute `plan/` und legt den uncommitteten App-Entwurf als Patch ab.
 - Ihn nicht mit Formalitäten und unnötigen Fragen belasten: selbst
   entscheiden, was er nicht entscheiden muss (`plan/LEHREN.md` § 1.2), und
   es im Logbuch vermerken.
