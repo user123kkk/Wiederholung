@@ -1,4 +1,4 @@
-# Übergabe – Stand von 08.10.2026 18:06 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 08.10.2026 18:08 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `9b33bb4 Sicherung 18:05 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `386e87a Sicherung 18:07 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.27"
 
