@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 8acb637..7510c1b 100644
+index 8acb637..2f10a5d 100644
 --- a/app.js
 +++ b/app.js
 @@ -1770,6 +1770,7 @@ let ui = {
@@ -27,7 +27,66 @@ index 8acb637..7510c1b 100644
      ui.erinnerungZeit = null;
      /* Den Namen nur ueber die eigene Loeschung in das Gastformular tragen. */
      ui.authEingabe = { name: adressName, email: "", pass: "" };
-@@ -5327,6 +5329,7 @@ function ebenenSchliessen(seiteBehalten = false) {
+@@ -4505,6 +4507,58 @@ function dateiSpeichern(daten, dateiname) {
+   a.remove();
+   setTimeout(() => URL.revokeObjectURL(url), 60000);
+ }
++/* 3.18.27 (Paket I): der Bereich als Tabelle. Strichpunkt als Trenner und
++   ein BOM am Anfang, damit eine deutsche Tabellenkalkulation die Datei mit
++   Umlauten und arabischer Schrift richtig oeffnet. Nur Wort, Uebersetzung,
++   Notiz - kein Lernstand (dafuer ist die Sicherung da). */
++function listeAlsCsv(b) {
++  const NL = String.fromCharCode(13, 10), LF = String.fromCharCode(10), CR = String.fromCharCode(13);
++  const feld = v => {
++    v = String(v || "");
++    return v.includes('"') || v.includes(";") || v.includes(LF) || v.includes(CR) ? '"' + v.split('"').join('""') + '"' : v;
++  };
++  const zeilen = ["Wort;Übersetzung;Notiz"];
++  for (const c of b.karten) zeilen.push([feld(c.wort), feld(c.uebersetzung), feld(c.extra)].join(";"));
++  return String.fromCharCode(0xFEFF) + zeilen.join(NL) + NL;
++}
++function exportListe() {
++  const b = currentBereich();
++  if (!b || !b.karten.length || istGefuehrt(b)) return;
++  const blob = new Blob([listeAlsCsv(b)], { type: "text/csv;charset=utf-8" });
++  const url = URL.createObjectURL(blob);
++  const a = document.createElement("a");
++  a.href = url;
++  a.download = "adrabic-" + (slugName(b.name) || "karten") + "-" + todayStr() + ".csv";
++  document.body.appendChild(a);
++  a.click();
++  a.remove();
++  setTimeout(() => URL.revokeObjectURL(url), 60000);
++  zeigeToast(mz(b.karten.length, "Karte", "Karten") + " als Liste gespeichert");
++}
++/* 3.18.27 (Paket I): Drucken. Die App selbst ist fuer den Bildschirm gebaut;
++   gedruckt wird deshalb eine eigene, schlichte Tabelle, die nur fuer den
++   Druck in die Seite gehaengt und danach wieder entfernt wird (styles.css,
++   @media print). */
++function druckeBereich() {
++  const b = currentBereich();
++  if (!b || !b.karten.length || istGefuehrt(b) || typeof window.print !== "function") return;
++  const alt = document.getElementById("druck");
++  if (alt) alt.remove();
++  const blatt = document.createElement("div");
++  blatt.id = "druck";
++  let html = '<h1>' + esc(b.name) + '</h1><p class="druck__kopf">' + mz(b.karten.length, "Karte", "Karten") + ' · Adrabic</p>';
++  html += '<table><thead><tr><th>Wort</th><th>Übersetzung</th><th>Notiz</th></tr></thead><tbody>';
++  for (const c of b.karten) {
++    html += '<tr><td class="druck__wort" dir="auto">' + esc(c.wort) + '</td><td dir="auto">' + esc(c.uebersetzung) +
++      '</td><td dir="auto">' + esc(c.extra || "") + '</td></tr>';
++  }
++  html += '</tbody></table>';
++  blatt.innerHTML = html;
++  document.body.appendChild(blatt);
++  const weg = () => { window.removeEventListener("afterprint", weg); if (blatt.isConnected) blatt.remove(); };
++  window.addEventListener("afterprint", weg);
++  window.print();
++}
+ function exportBackup(onlyCurrent) {
+   const data = {
+     exportedAt: new Date().toISOString(),
+@@ -5327,6 +5381,7 @@ function ebenenSchliessen(seiteBehalten = false) {
    ui.textAnsicht = null;
    ui.zeileEdit = null;
    ui.textLernen = null;
@@ -35,7 +94,7 @@ index 8acb637..7510c1b 100644
  }
  function selectBereich(bereichId) {
    if (!bereiche.some(b => b.id === bereichId)) return;
-@@ -5802,6 +5805,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
+@@ -5802,6 +5857,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
       weiter unten. Wer ihn dort drueckte, sah gar nichts passieren. */
    springeZu("drill-box");
    render();
@@ -43,7 +102,7 @@ index 8acb637..7510c1b 100644
  }
  /* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
     mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
-@@ -6059,6 +6063,165 @@ function lernRueckgaengig() {
+@@ -6059,6 +6115,165 @@ function lernRueckgaengig() {
  function vergleichsWort(w) {
    return suchNorm(String(w).trim(), true).text.replace(/\s+/g, " ").trim();
  }
@@ -209,10 +268,19 @@ index 8acb637..7510c1b 100644
  function findeDuplikat(wort, exceptId, cards) {
    const key = vergleichsWort(wort);
    return (cards || currentCards()).find(c => c.id !== exceptId && vergleichsWort(c.wort) === key) || null;
-@@ -8852,6 +9015,10 @@ function bereichMehrSheet() {
+@@ -8852,6 +9067,19 @@ function bereichMehrSheet() {
      html += '<button class="liste-zeile" data-action="bereich-mehr-umkehren" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' +
        ikon("umkehren", "i-sm") + '<span class="liste-zeile__text">Reihenfolge umkehren</span></button>';
    }
++  /* 3.18.27 (Paket I): eigene Karten als Liste speichern oder drucken. Nur
++     bei eigenen Bereichen - ein gefuehrter Satz gehoert dem, der ihn
++     zusammengestellt hat (wie beim Weitergeben). */
++  if (cards.length > 0 && !gefuehrt) {
++    html += '<button class="liste-zeile" data-action="liste-speichern" title="Alle Karten dieses Bereichs als Tabelle speichern">' +
++      ikon("sichern", "i-sm") + '<span class="liste-zeile__text">Als Liste speichern</span><span class="liste-zeile__wert">CSV</span></button>';
++    html += '<button class="liste-zeile" data-action="bereich-drucken" title="Alle Karten dieses Bereichs drucken">' +
++      ikon("lektion", "i-sm") + '<span class="liste-zeile__text">Drucken</span></button>';
++  }
 +  if (!gefuehrt) {
 +    html += '<button class="liste-zeile" data-action="liste-auf" title="Viele Karten auf einmal aus einer Liste anlegen">' +
 +      ikon("einspielen", "i-sm") + '<span class="liste-zeile__text">Liste einfügen</span></button>';
@@ -220,7 +288,7 @@ index 8acb637..7510c1b 100644
    if (!gefuehrt) {
      html += '<button class="liste-zeile" data-action="bereich-mehr-umbenennen" title="Bereich umbenennen">' +
        ikon("stift", "i-sm") + '<span class="liste-zeile__text">Bereich umbenennen</span></button>';
-@@ -9254,6 +9421,7 @@ function renderMain() {
+@@ -9254,6 +9482,7 @@ function renderMain() {
    html += bereichMehrSheet();
    html += wahlSheet();
    html += erinnerungSheet();
@@ -228,7 +296,7 @@ index 8acb637..7510c1b 100644
    html += setArtSheet();
    html += karteSheet();
    html += neuWahlSheet();
-@@ -9278,7 +9446,7 @@ function renderMain() {
+@@ -9278,7 +9507,7 @@ function renderMain() {
      ui.textLernen ? "tl-" + ui.textLernen.schritt + "-" + ui.textLernen.fokus : ""].join("/");
    const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
      ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
@@ -237,7 +305,7 @@ index 8acb637..7510c1b 100644
    /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
       kein .view - dann ist alles neu. */
    const warAnsicht = !!app.querySelector(":scope > .view");
-@@ -9288,7 +9456,11 @@ function renderMain() {
+@@ -9288,7 +9517,11 @@ function renderMain() {
    letzterOverlaySchluessel = overlaySchluessel;
    app.classList.toggle("still-ansicht", !ansichtNeu);
    app.classList.toggle("still-overlay", !overlayNeu);
@@ -250,7 +318,7 @@ index 8acb637..7510c1b 100644
      !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
      ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
    if (ansichtNeu) {
-@@ -9352,7 +9524,7 @@ function renderMain() {
+@@ -9352,7 +9585,7 @@ function renderMain() {
    }
    /* 3.17.14: + erinnerungSheet - sonst liess sich die Seite dahinter
       scrollen und per Wischen wechseln. */
@@ -259,7 +327,7 @@ index 8acb637..7510c1b 100644
    document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
    appbarKanteSetzen();
    /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
-@@ -14671,7 +14843,15 @@ function syncViewportGap(ereignis) {
+@@ -14671,7 +14904,15 @@ function syncViewportGap(ereignis) {
       innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
       viel kleiner) bleibt der Zustand, wie er ist. */
    const root = document.documentElement;
@@ -275,7 +343,7 @@ index 8acb637..7510c1b 100644
    if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
      const ref = Math.max(screen.width, screen.height);
      const diff = ref - window.innerHeight;
-@@ -14717,7 +14897,7 @@ function syncViewportGap(ereignis) {
+@@ -14717,7 +14958,7 @@ function syncViewportGap(ereignis) {
  const TASTATUR_MIN = 120;
  let tastaturSprung = null;
  let tastaturFeld = null;
@@ -284,7 +352,7 @@ index 8acb637..7510c1b 100644
    const vv = window.visualViewport;
    let hoch = 0;
    if (vv) {
-@@ -14725,6 +14905,10 @@ function syncTastatur() {
+@@ -14725,6 +14966,10 @@ function syncTastatur() {
      if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
    }
    document.documentElement.style.setProperty("--tastatur", hoch + "px");
@@ -295,7 +363,7 @@ index 8acb637..7510c1b 100644
    /* G-118: Nur einmal je Fokus/Tastatur-Oeffnen pruefen. Niemals Vorfahren
       mit scrollIntoView verschieben oder auf vv.scroll erneut scrollen. */
    if (!hoch) {
-@@ -14754,6 +14938,10 @@ function syncTastatur() {
+@@ -14754,6 +14999,10 @@ function syncTastatur() {
      }
    }
  }
@@ -306,7 +374,7 @@ index 8acb637..7510c1b 100644
  document.addEventListener("focusin", () => {
    tastaturFeld = null;
    clearTimeout(tastaturSprung);
-@@ -14799,21 +14987,34 @@ function openDialog(cfg) {
+@@ -14799,21 +15048,34 @@ function openDialog(cfg) {
     dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
     ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
     (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
@@ -351,7 +419,7 @@ index 8acb637..7510c1b 100644
    setTimeout(danach, 200);
  }
  function closeDialog(result) {
-@@ -14885,7 +15086,11 @@ function renderDialog() {
+@@ -14885,7 +15147,11 @@ function renderDialog() {
      /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
         (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
         Übersetzung" ...), doppelt zu tippen waere nur eine Fehlerquelle. */
@@ -364,7 +432,7 @@ index 8acb637..7510c1b 100644
    }
    h += '<div class="dlg-actions">';
    if (d.kind === "code-share") {
-@@ -14935,6 +15140,10 @@ function schliesseObersteEbene() {
+@@ -14935,6 +15201,10 @@ function schliesseObersteEbene() {
    /* 3.17.14 (Station 14): Das Erinnerungs-Blatt (3.17.0) fehlte hier - Escape
       und Wischen nach unten schlossen es nicht. */
    if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; ui.erinnerungZeit = null; render(); }); return true; }
@@ -375,7 +443,7 @@ index 8acb637..7510c1b 100644
    if (ui.karteSheet || ui.editId) {
      if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
      schliesse(cancelEdit); return true;
-@@ -15198,7 +15407,7 @@ function tabSchonAktiv(id) {
+@@ -15198,7 +15468,7 @@ function tabSchonAktiv(id) {
    return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
      !ui.wahlSheet && !ui.erinnerungSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
      !ui.bereichMehr && !ui.cardDetailId && !ui.dialog &&
@@ -384,11 +452,13 @@ index 8acb637..7510c1b 100644
  }
  function nachObenBlaettern() {
    window.scrollTo({ top: 0, behavior: scrollArt() });
-@@ -15565,6 +15774,11 @@ document.body.addEventListener("click", e => {
+@@ -15565,6 +15835,13 @@ document.body.addEventListener("click", e => {
      case "bereich-mehr-auswaehlen": ui.bereichMehr = false; toggleSelectMode(); break;
      case "bereich-mehr-umkehren": ui.bereichMehr = false; reverseOrder(); break;
      case "bereich-mehr-umbenennen": ui.bereichMehr = false; renameBereich(); break;
 +    case "liste-auf": listeAuf(); break;
++    case "liste-speichern": ui.bereichMehr = false; render(); exportListe(); break;
++    case "bereich-drucken": ui.bereichMehr = false; render(); druckeBereich(); break;
 +    case "liste-zu": schliesseObersteEbene(); break;
 +    case "liste-vorschau": listeVorschau(); break;
 +    case "liste-zurueck": if (ui.listeSheet) { ui.listeSheet.stufe = "eingabe"; ui.listeSheet.erg = null; render(); } break;
@@ -396,7 +466,7 @@ index 8acb637..7510c1b 100644
      case "bereich-mehr-loeschen": ui.bereichMehr = false; deleteBereich(); break;
      /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
         ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
-@@ -15691,7 +15905,10 @@ document.body.addEventListener("click", e => {
+@@ -15691,7 +15968,10 @@ document.body.addEventListener("click", e => {
      case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
      case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
      case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
@@ -612,7 +682,7 @@ index f305b1a..abba734 100644
        }
        assert.deepEqual(p.fehler,[]);
 diff --git a/styles.css b/styles.css
-index 0af0a68..e5f482f 100644
+index 0af0a68..e8e9a4b 100644
 --- a/styles.css
 +++ b/styles.css
 @@ -3339,6 +3339,18 @@ input.schalter::before { content: none; }
@@ -634,3 +704,27 @@ index 0af0a68..e5f482f 100644
  .dlg-nebenweg { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-3); }
  /* 3.18.21: Trefferflaeche wie ueberall mindestens 44 px. */
  .dlg-nebenweg button { min-height: 44px; }
+@@ -5317,3 +5329,23 @@ button.gedimmt { opacity: 0.45; }
+ .texte-lernen__satz { width: 100%; font-size: 0.85rem; color: var(--text-2); }
+ .probelauf__zeile { cursor: default; flex-wrap: wrap; }
+ .probelauf__zeile .liste-zeile__wert { white-space: normal; }
++
++/* =========================================================================
++   DRUCK (3.18.27, Paket I)
++   Gedruckt wird nie die App, sondern die Tabelle, die druckeBereich() in
++   app.js fuer den Druck an den body haengt. Schwarz auf Weiss, ohne Flaechen.
++   ========================================================================= */
++#druck { display: none; }
++@media print {
++  html, body { background: #fff !important; color: #000 !important; }
++  body > *:not(#druck) { display: none !important; }
++  #druck { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 11pt; color: #000; }
++  #druck h1 { font-size: 16pt; margin: 0 0 2pt; color: #000; }
++  #druck .druck__kopf { font-size: 9pt; margin: 0 0 10pt; color: #444; }
++  #druck table { width: 100%; border-collapse: collapse; }
++  #druck th { text-align: left; font-size: 9pt; font-weight: 600; border-bottom: 1pt solid #000; padding: 3pt 6pt 3pt 0; }
++  #druck td { vertical-align: top; border-bottom: 0.5pt solid #bbb; padding: 4pt 6pt 4pt 0; overflow-wrap: anywhere; unicode-bidi: plaintext; }
++  #druck td.druck__wort { font-size: 15pt; width: 32%; }
++  #druck tr { break-inside: avoid; }
++  #druck thead { display: table-header-group; }
++}
