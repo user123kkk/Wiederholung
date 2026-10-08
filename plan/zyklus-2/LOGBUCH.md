@@ -2,6 +2,20 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Antwort des Betreibers auf Schritt 2 (nur Plan)
+
+**Geändert:** `mehrwert/schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md`, Nachtrag.
+**Entscheidung:** A-1 (Blätter springen beim Schließen weg) ist am iPhone
+bestätigt und wird als Fehler behoben. Auf „was soll gebaut werden“ kam
+„keine Ahnung“; es gilt die empfohlene Reihenfolge: ladegerät, „Bewegung 1“
+(A-1 bis A-4), Paket I. Der Betreiber startet `ladegeraet.bat` selbst
+(Netzteil steckt).
+**Offen:** Was er mit „dieses Schreiben in solchen Bereichen ist
+unzufriedigend“ meint; nachgefragt. Ergebnis des Laufs lesen und hier
+eintragen.
+**Nächster Schritt:** Nach dem Lauf Logs lesen (`<tmp>/adrabic-pruefstand-gesamt/`),
+dann „Bewegung 1“ bauen. Bis dahin keine App-Datei anfassen.
+
 ### 2026-10-08 — Schritt 2 der Mehrwert-Übergabe: zwei Berichte, nur gelesen (kein Code)
 
 **Geändert:** neu `mehrwert/schritt-2/` mit `BERICHT-ONBOARDING.md`,

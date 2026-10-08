@@ -164,3 +164,20 @@ Blätter und Dialoge überall vorkommen, und einen Blick am iPhone.
 
 Beide passen nach Schritt 4 der Übergabe (Paket H). Der Einstieg
 (Bericht 1) ist ein eigenes Paket.
+
+## Nachtrag 08.10., Antwort des Betreibers
+
+- **A-1 am iPhone bestätigt:** „es ist einfach weg“. Damit ist es ein
+  belegter Fehler, kein Geschmack. Er wird behoben (mechanisch, LEHREN
+  § 1.2), zusammen mit einem Test, der Zwischenlagen verlangt.
+- Dazu wörtlich: „an sich ist dieses Schreiben und so in solchen Bereichen
+  sehr unzufriedigend.“ **Noch unklar, was genau gemeint ist** (Tippen im
+  Blatt „Karte anlegen“, die Tastatur über dem Blatt, oder das Schreiben
+  von Hand beim Üben). Nachgefragt, nichts gebaut.
+- Zur Frage, was gebaut wird: „keine Ahnung“. Also gilt die Empfehlung:
+  erst „ladegerät“ (läuft am 08.10., Betreiber startet es selbst), dann
+  „Bewegung 1“ (A-1 bis A-4), dann Paket I. „Platz 1“ nach dem Klein-Weg
+  dazwischen. Der Einstieg wartet auf seine Karten (Paket O).
+- **Während „ladegerät“ läuft, keine App-Datei und kein Prüfstand-Test
+  anfassen:** Das Skript prüft den Arbeitsordner selbst (Server auf Port
+  8199 im Repo-Ordner) und misst Zeiten.
