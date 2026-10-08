@@ -7,3 +7,5 @@ OK      t_wischen_schraeg.js  Wischen schraeg / mit Daumen, Seite scrollt nicht 
 OK      t_doppeltipp.js       schneller Doppeltipp bewertet nicht blind  (19 s)
 OK      t_x_mitten.js         X mitten in der Runde: nichts geht verloren, Serie +1  (29 s)
 OK      t_abgelehnt.js        von der Cloud abgelehnte Bewertung wird nachgeschickt  (7 s)
+OK      t_undo_verlauf.js     Rueckgaengig nimmt auch den Tageszaehler zurueck  (26 s)
+OK      t_serie.js            Serie: Luecken, Joker, Sockel  (22 s)

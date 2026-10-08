@@ -56,6 +56,30 @@
       "zeitlimit": false,
       "sekunden": 29,
       "quelltext": "eb6ca98f44d833bafc686c39207f74a269a32aed31eda7ee296018adf99e7127"
+    },
+    "t_abgelehnt.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 7,
+      "quelltext": "70c0e5e9d7770d9e011b649f1632c92ab04077f570a6ac60cb612f9becf881ed"
+    },
+    "t_undo_verlauf.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 26,
+      "quelltext": "e28e2e31c7a9d064346d3d8b921038ac650ded0f854673408da5255a41e0221c"
+    },
+    "t_serie.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 22,
+      "quelltext": "45c5995a002b1e7b023014e42ad40b7462695ef400d9b558ae2b764eedac1e7f"
     }
   }
 }
