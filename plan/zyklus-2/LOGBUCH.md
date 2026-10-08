@@ -2,6 +2,31 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — 3.18.27 auf main: Paket I (Teil), H (Teil), G0, G Fragen 7 und 9, Bewegung 1 – nicht veröffentlicht
+
+**Geändert:** `app.js`, `styles.css`, `sw.js`, `index.html` (33 Stellen),
+`CHANGELOG.md`; Tests neu `t_liste_lesen.js`, `t_liste_einfuegen.js`,
+`t_loeschen_rueckgaengig.js`, `t_lernlogik.js`; angepasst `t_paket_d.js`
+(D1 verlangt vier Lagen), `t_paket_c_weiter.js` (C23: Einzelkarte fragt
+nicht mehr). Inhalt je Punkt: `CHANGELOG.md` 3.18.27 und
+`mehrwert/GESAMTLISTE.md` Abschnitt 1.
+**Entscheidung:** Betreiber 08.10.: alles bauen, große Pakete zuerst, er
+ist unterwegs. Lernregeln (Fragen 7, 9) nur im Betreiber-Konto
+(`VORAB`); Auslegung von Frage 9 steht in `mehrwert/ARBEITSSTAND.md`.
+V-1 (Tastatur) ist ein Verdachts-Fix, am iPhone zu bestätigen.
+**Geprüft (Chromium, Entwurfs-Ordner, Server 8098):** neue Tests grün
+(Liste 3 Größen + geführt, Löschen/Rückgängig 2 Größen, Leser 13 Fälle,
+Lernlogik 12 Fälle); 27 betroffene bestehende Tests Exit 0;
+`abnahme_runde.js` 13/13 (Quellstand af2a3888…, vor dem Hochzählen der
+Version); `austritt.js`: 12–13 Zwischenlagen; `pruefe_stand.mjs` grün am
+Stand mit Version. **Nicht geprüft:** Gesamtlauf und Affen an 3.18.27,
+die beschreibenden Ausgaben der 27 Tests nur stichprobenweise gelesen,
+Drucken und CSV nur als Code (kein eigener Test), Wake Lock nur als Code,
+echtes iPhone.
+**Offen:** voller Lauf `ladegeraet.ps1 -NurPruefen` am Netzteil vor jedem
+Veröffentlichen; eigene Tests für Export/Druck/Wake Lock; Gerätetest.
+**Nächster Schritt:** voller Lauf, dann Rest Paket H/G (GESAMTLISTE 2).
+
 ### 2026-10-08 — „ladegerät“ an 3.18.26: 149/152, drei Nachläufe grün, nichts neu veröffentlicht
 
 **Geändert:** nur dieses Logbuch und `mehrwert/ARBEITSSTAND.md`.

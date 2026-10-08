@@ -207,8 +207,8 @@ const faelle={
   await p.getByRole('button',{name:'Endgültig löschen',exact:true}).click();await p.waitForTimeout(400);
   assert.ok((await p.locator('#ansage').textContent()).includes('2 Karten gelöscht'),'C23 Mehrfachlöschen ohne Ansage');
   assert.ok(!(await p.evaluate(()=>window.__FB.store.has('users/u1/karten/k2'))));
-  await p.evaluate(()=>{__C.deleteCard('k4');});await p.waitForTimeout(300);
-  await p.getByRole('button',{name:'Löschen',exact:true}).click();await p.waitForTimeout(400);
+  // 3.18.27 (E-09): Einzelkarte ohne Rückfrage, dafür „Rückgängig“ in der Meldung (t_loeschen_rueckgaengig.js).
+  await p.evaluate(()=>{__C.deleteCard('k4');});await p.waitForTimeout(400);
   assert.ok((await p.locator('#ansage').textContent()).includes('Karte gelöscht'),'C23 Einzellöschen ohne Ansage');
   assert.ok(!(await p.evaluate(()=>window.__FB.store.has('users/u1/karten/k4'))));
  },

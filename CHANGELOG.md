@@ -1,3 +1,57 @@
+## 3.18.27 – 8. Oktober 2026
+
+**Viele Karten auf einmal, ruhigere Fenster, und der erste Teil der neuen
+Lernregeln (nur im Betreiber-Konto).**
+
+Neu:
+
+- **Liste einfügen** (Verwalten → „Mehr“): viele Karten auf einmal aus einer
+  eingefügten Liste. Eine Zeile je Karte, Wort und Übersetzung getrennt
+  durch Tab, Strichpunkt oder „ – “, eine dritte Spalte wird zur Notiz.
+  Steht Deutsch vorne, werden die Spalten getauscht. Vor dem Anlegen zeigt
+  eine Vorschau, wie viele Karten entstehen, welche es schon gibt und welche
+  Zeilen sich nicht lesen ließen. Höchstens 1000 Zeilen auf einmal.
+- **Als Liste speichern** und **Drucken** (Verwalten → „Mehr“): der Bereich
+  als Tabelle (CSV) oder auf Papier. Nur bei eigenen Bereichen.
+- **Karte löschen ohne Rückfrage, dafür „Rückgängig“:** Eine einzelne Karte
+  ist sofort gelöscht; sechs Sekunden lang holt „Rückgängig“ sie mit
+  Lernstand, Platz in der Liste und ihren Speicherkarten zurück. Die
+  Mehrfachauswahl fragt weiter nach.
+- **Rundenende zeigt, was nicht saß:** „3 Karten saßen noch nicht“ zum
+  Aufklappen. Die drei Kacheln stehen in der Reihenfolge der Knöpfe (Nicht,
+  Fast, Sicher), und „nicht“ zählt Karten statt Antworten.
+- **Der Bildschirm bleibt während einer Runde an**, wo das Gerät es kann.
+- **Die volle Sicherung enthält jetzt auch Kalender, Serie und
+  Einstellungen.** Eingespielt werden weiter nur die Karten; das
+  Zurückspielen der Serie folgt als eigener Schritt.
+
+Ruhiger:
+
+- **Blätter und Dialoge gleiten beim Schließen nach unten.** Bisher sprangen
+  sie in einem Bild aus dem Bildschirm (am iPhone bestätigt: „es ist einfach
+  weg“). Der Test dazu erkannte den Sprung nicht und verlangt jetzt
+  Zwischenlagen.
+- „Üben“ und „Speicherkarten“ blenden beim Aufklappen kurz ein.
+- Die Einstellungen spielen ihren Eintritt nur beim ersten Öffnen, nicht
+  mehr bei jeder Rückkehr von einer Unterseite.
+- Tastatur am iPhone (Verdachts-Fix nach einer Bildschirmaufnahme, am Gerät
+  zu bestätigen): Verschiebt das iPhone beim Wechsel in ein Feld den
+  Ausschnitt, bleibt das Blatt an der Tastatur, statt hochzurutschen und
+  einen Streifen freizulassen. „Name ändern“ zeigt keine Vorschlagszeile
+  des Systems mehr.
+
+Lernregeln, vorerst **nur im Betreiber-Konto** (Schalter `VORAB` in
+`app.js`; für alle erst nach seinem Ja):
+
+- „Nicht“ und danach „Sicher“ in derselben Runde: Die Stufe steigt nicht,
+  die Karte kommt morgen wieder. Bisher bekam ein eben vergessenes Wort
+  sofort wieder den vollen Abstand.
+- Eine neue Karte muss in der Runde zweimal sitzen: Das erste „Sicher“
+  bringt sie in derselben Runde noch einmal, erst das zweite auf „morgen“.
+
+Unter der Haube: Die Bewertungsregel steht als eigene Funktion in einem
+markierten Block und hat Schnelltests ohne Browser (`t_lernlogik.js`).
+
 ## 3.18.26 – 8. Oktober 2026
 
 **Zwei Kleinigkeiten.**

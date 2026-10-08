@@ -62,6 +62,8 @@ async function d1(b) {
         if(!ruhig) {
           assert.ok(bilder.some(x=>x.transform!=='none'&&x.transform!=='matrix(1, 0, 0, 1, 0, 0)'),`D1 ${vp.width}/${weg}: kein berechneter Austritt`);
           assert.ok(bilder.some(x=>x.opacity<.9),'D1 Hülle blendet aus');
+          // 08.10.2026 (Fund A-1): Ein Sprung ans Ziel hat nur zwei Lagen. Gleiten heißt Zwischenlagen.
+          assert.ok(new Set(bilder.map(x=>x.transform)).size>=4,`D1 ${vp.width}/${weg}: Blatt springt statt zu gleiten (${new Set(bilder.map(x=>x.transform)).size} Lagen)`);
         } else assert.ok(bilder.length<=2,'D1 ruhig ohne Wartezeit');
       }
       assert.deepEqual(p.fehler,[]);

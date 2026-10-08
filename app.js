@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.26";
+const APP_VERSION = "3.18.27";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -80,6 +80,20 @@ function istBetreiber() {
    Anders als istBetreiber() auch dann aus, wenn die Liste leer ist. Die
    Daten selbst (Textzeilen, Texte) laedt und schreibt die App fuer jedes
    Konto richtig - der Schalter entscheidet nur, was angeboten wird. */
+/* 3.18.27 (Paket G0, "allgemeiner Schalter", Betreiber 08.10.2026: jedes neue
+   Vorhaben erst im Betreiber-Konto, dann Tester, dann alle): Eine Zeile je
+   Vorhaben. "betreiber" = nur die Konten aus BETREIBER_UIDS, "alle" = fuer
+   jeden, alles andere (oder kein Eintrag) = aus. Freigeben heisst: den Wert
+   hier aendern - das ist eine Entscheidung des Betreibers, kein Aufraeumen. */
+const VORAB = {
+  nichtDannSicher: "betreiber",  // Frage 7: nach "Nicht" hebt "Sicher" in derselben Runde die Stufe nicht
+  neuZweimal: "betreiber"        // Frage 9: eine neue Karte muss in der Runde zweimal sitzen
+};
+function vorab(name) {
+  const wer = VORAB[name];
+  if (wer === "alle") return true;
+  return wer === "betreiber" && !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);
+}
 function texteFreigeschaltet() {
   return !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);
 }
@@ -92,6 +106,12 @@ function esc(s) {
 }
 
 /* ---------- Datum & Intervall ---------- */
+/* 3.18.27 (Paket G0): Zwischen den beiden Marken steht der rechnende Kern der
+   Lernlogik - Lerntag, Abstaende, Bewertungsregel. Er fasst weder Zustand
+   noch Bildschirm an und wird von plan/werkzeuge/pruefstand/t_lernlogik.js
+   ohne Browser geprueft (Sekunden statt Minuten). Wer hier etwas aendert,
+   aendert Lernlogik: nur mit Entscheidung des Betreibers und vollem Lauf. */
+//LERNLOGIK-ANFANG
 function fmtDate(d) {
   return d.getFullYear() + "-" +
     String(d.getMonth() + 1).padStart(2, "0") + "-" +
@@ -147,6 +167,49 @@ function nextReviewForStufe(stufe, faktor) {
      streut es weiter. */
   return dateInDays(Math.min(MAX_INTERVAL_DAYS, Math.max(1, tage + jitter)));
 }
+/* 3.18.27 (Paket G0): die Bewertungsregel, woertlich aus gradeCard()
+   herausgeloest - keine Aenderung am Verhalten. Aendert die Karte selbst.
+     Sicher: eine Stufe hoch, naechster Termin nach dem Abstand der neuen Stufe.
+     Fast:   eine Stufe zurueck, morgen wieder.
+     Nicht:  zwei Stufen zurueck, heute noch einmal; ein Rueckfall zaehlt nur
+             bei einer Karte, die schon einmal gewusst wurde (maxStufe >= 1). */
+function bewertungAnwenden(card, kind, faktor, nachNicht, erstesMalNeu) {
+  /* 3.18.27 (Paket G, Frage 9, Betreiber 08.10.2026 "wie empfohlen"): Eine
+     neue Karte muss in der Runde zweimal sitzen. Das erste "Sicher" bei einer
+     noch nie bewerteten Karte hebt die Stufe nicht; die Karte bleibt heute
+     faellig und kommt in derselben Runde noch einmal (gradeCard haengt sie
+     hinten an). Erst das zweite "Sicher" bringt Stufe 1 und "morgen".
+     Bricht man die Runde dazwischen ab, ist die Karte eingefuehrt, steht auf
+     Stufe 0 und ist weiter heute faellig. erstesMalNeu setzt gradeCard(). */
+  if (kind === "known" && erstesMalNeu) {
+    card.nextReview = todayStr();
+    return;
+  }
+  /* 3.18.27 (Paket G, Frage 7 / E-04 Weg a, Betreiber 08.10.2026 "wie
+     empfohlen"): Wurde die Karte in DIESER Runde schon einmal nicht gewusst,
+     hebt ein "Sicher" danach die Stufe nicht an. Sie bleibt auf der Stufe
+     nach dem Rueckfall und kommt morgen wieder; erst dann kann sie steigen.
+     Vorher bekam ein eben vergessenes Wort sofort wieder den vollen Abstand
+     (Stufe 8: 34 Tage, oberste Stufe: bis 164 Tage). nachNicht setzt
+     gradeCard(); ohne es gilt die Regel wie bisher. */
+  if (kind === "known" && nachNicht) {
+    card.nextReview = dateInDays(1);
+    return;
+  }
+  if (kind === "known") {
+    card.stufe = Math.min(card.stufe + 1, MAX_STUFE);
+    card.nextReview = nextReviewForStufe(card.stufe, faktor);
+    card.maxStufe = Math.max(card.maxStufe || 0, card.stufe);
+  } else if (kind === "almost") {
+    card.stufe = Math.max(0, card.stufe - 1);
+    card.nextReview = dateInDays(1);
+  } else {
+    card.stufe = Math.max(0, card.stufe - 2);
+    card.nextReview = todayStr();
+    if ((card.maxStufe || 0) >= 1) card.rueckfaelle = (card.rueckfaelle || 0) + 1;
+  }
+}
+//LERNLOGIK-ENDE
 /* 3.12.0: eine kurze Rueckmeldung zum Fuehlen, wo das Geraet sie kann
    (Android; iOS-Safari kennt navigator.vibrate nicht und bleibt still).
    Nie bei "Bewegung reduzieren" - wer Bewegung abbestellt, will auch kein
@@ -1770,6 +1833,7 @@ let ui = {
   /* 2.19.0: Einstellungen sind ein eigener Bildschirm, kein vierter Reiter.
      Ein Reiter ist ein Ort, an den man oft geht; hierher geht man selten. */
   einstellungen: false,
+  listeSheet: null,           // Paket I: Blatt "Liste einfuegen" {text, stufe, erg, meldung, bereichId}
   drillOpen: false,           // Auswahl für Übungsmodus sichtbar?
   drillRueckkehrTab: null,    // E18: Reiter, aus dem die Uebungsauswahl geoeffnet wurde
   drillSource: "stufen",      // "stufen" oder "sets" (siehe drillSetIds)
@@ -1873,7 +1937,7 @@ function renderToast() {
   /* Bei offenem Blatt steht die Meldung oben - unten lag sie auf dem Formular
      und fing die Taps darauf ab. */
   const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId ||
-    ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit);
+    ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit || ui.listeSheet);
   /* 3.17.35 (TECHNIK-8): role/aria-live entfernt - die Ansage uebernimmt
      #ansage (index.html, zeigeToast()). aria-hidden verhindert, dass dieses
      Element zusaetzlich vorgelesen wird. */
@@ -2419,6 +2483,7 @@ async function initFirebase() {
     hwFullscreen = false;
     ui.kontoLoeschenEmail = "";
     ui.erinnerungSheet = false;
+    ui.listeSheet = null;
     ui.erinnerungZeit = null;
     /* Den Namen nur ueber die eigene Loeschung in das Gastformular tragen. */
     ui.authEingabe = { name: adressName, email: "", pass: "" };
@@ -4505,12 +4570,78 @@ function dateiSpeichern(daten, dateiname) {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
+/* 3.18.27 (Paket I): der Bereich als Tabelle. Strichpunkt als Trenner und
+   ein BOM am Anfang, damit eine deutsche Tabellenkalkulation die Datei mit
+   Umlauten und arabischer Schrift richtig oeffnet. Nur Wort, Uebersetzung,
+   Notiz - kein Lernstand (dafuer ist die Sicherung da). */
+function listeAlsCsv(b) {
+  const NL = String.fromCharCode(13, 10), LF = String.fromCharCode(10), CR = String.fromCharCode(13);
+  const feld = v => {
+    v = String(v || "");
+    return v.includes('"') || v.includes(";") || v.includes(LF) || v.includes(CR) ? '"' + v.split('"').join('""') + '"' : v;
+  };
+  const zeilen = ["Wort;Übersetzung;Notiz"];
+  for (const c of b.karten) zeilen.push([feld(c.wort), feld(c.uebersetzung), feld(c.extra)].join(";"));
+  return String.fromCharCode(0xFEFF) + zeilen.join(NL) + NL;
+}
+function exportListe() {
+  const b = currentBereich();
+  if (!b || !b.karten.length || istGefuehrt(b)) return;
+  const blob = new Blob([listeAlsCsv(b)], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "adrabic-" + (slugName(b.name) || "karten") + "-" + todayStr() + ".csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  zeigeToast(mz(b.karten.length, "Karte", "Karten") + " als Liste gespeichert");
+}
+/* 3.18.27 (Paket I): Drucken. Die App selbst ist fuer den Bildschirm gebaut;
+   gedruckt wird deshalb eine eigene, schlichte Tabelle, die nur fuer den
+   Druck in die Seite gehaengt und danach wieder entfernt wird (styles.css,
+   @media print). */
+function druckeBereich() {
+  const b = currentBereich();
+  if (!b || !b.karten.length || istGefuehrt(b) || typeof window.print !== "function") return;
+  const alt = document.getElementById("druck");
+  if (alt) alt.remove();
+  const blatt = document.createElement("div");
+  blatt.id = "druck";
+  let html = '<h1>' + esc(b.name) + '</h1><p class="druck__kopf">' + mz(b.karten.length, "Karte", "Karten") + ' · Adrabic</p>';
+  html += '<table><thead><tr><th>Wort</th><th>Übersetzung</th><th>Notiz</th></tr></thead><tbody>';
+  for (const c of b.karten) {
+    html += '<tr><td class="druck__wort" dir="auto">' + esc(c.wort) + '</td><td dir="auto">' + esc(c.uebersetzung) +
+      '</td><td dir="auto">' + esc(c.extra || "") + '</td></tr>';
+  }
+  html += '</tbody></table>';
+  blatt.innerHTML = html;
+  document.body.appendChild(blatt);
+  const weg = () => { window.removeEventListener("afterprint", weg); if (blatt.isConnected) blatt.remove(); };
+  window.addEventListener("afterprint", weg);
+  window.print();
+}
 function exportBackup(onlyCurrent) {
   const data = {
     exportedAt: new Date().toISOString(),
     profil: displayName,
     bereiche: onlyCurrent ? [currentBereich()] : bereiche
   };
+  /* 3.18.27 (E-07, Betreiber 08.10.2026: "alles mitsichern"): Die volle
+     Sicherung traegt jetzt auch Tagesprotokoll, Serie und Einstellungen.
+     Erster Schritt: Sie stehen in der Datei, damit ab heute nichts mehr
+     fehlt. Eingespielt werden sie noch nicht - das Zurueckspielen beruehrt
+     die Serie und die Sperre gegen alte Zaehlerstaende (verlaufEpoche) und
+     kommt als eigener Schritt mit Emulator-Test. Der Import liest nur
+     "bereiche"; alte Fassungen der App ignorieren die neuen Felder. */
+  if (!onlyCurrent) {
+    data.format = 2;
+    data.appVersion = APP_VERSION;
+    data.verlauf = verlauf;
+    data.serie = streak;
+    data.einstellungen = settings;
+  }
   const nameSlug = onlyCurrent ? "-" + slugName(currentBereich().name) : "";
   dateiSpeichern(data, "adrabic-sicherung" + nameSlug + "-" + todayStr() + ".json");
   if (!onlyCurrent) {
@@ -5327,6 +5458,7 @@ function ebenenSchliessen(seiteBehalten = false) {
   ui.textAnsicht = null;
   ui.zeileEdit = null;
   ui.textLernen = null;
+  ui.listeSheet = null;
 }
 function selectBereich(bereichId) {
   if (!bereiche.some(b => b.id === bereichId)) return;
@@ -5802,6 +5934,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
      weiter unten. Wer ihn dort drueckte, sah gar nichts passieren. */
   springeZu("drill-box");
   render();
+  sanftEinblenden([document.getElementById("drill-box")]);
 }
 /* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
    mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
@@ -6059,6 +6192,165 @@ function lernRueckgaengig() {
 function vergleichsWort(w) {
   return suchNorm(String(w).trim(), true).text.replace(/\s+/g, " ").trim();
 }
+/* 3.18.27 (Paket I, F-1 "Liste einfuegen", erster Teil): macht aus
+   eingefuegtem Text Kartenzeilen. Reine Funktion ohne Zugriff auf Zustand
+   oder DOM - geprueft in plan/werkzeuge/pruefstand/t_liste_lesen.js.
+   - Eine Zeile = eine Karte: Wort, Uebersetzung, optional Notiz.
+   - Trenner wird fuer den ganzen Text erkannt: Tab (Tabellen, Anki, Quizlet),
+     sonst Strichpunkt, senkrechter Strich, " – ", " - " oder " = ".
+   - Steht das Arabische ueberwiegend in der zweiten Spalte, werden die
+     Spalten getauscht: vorne steht in dieser App das arabische Wort.
+   - Was sich nicht lesen laesst, kommt mit Zeilennummer und Grund zurueck;
+     nichts wird stillschweigend verworfen. */
+//LISTE-LESEN-ANFANG
+const LISTE_MAX_ZEILEN = 1000;
+const LISTE_TRENNER = ["\t", ";", "|", " – ", " - ", " = "];
+function listeLesen(text, maxWort, maxExtra) {
+  const arab = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+  const zeilen = String(text || "").replace(/\r\n?/g, "\n").split("\n")
+    .map((t, i) => ({ nr: i + 1, text: t.replace(/\u00A0/g, " ").trim() })).filter(z => z.text);
+  const aus = { karten: [], fehler: [], trenner: null, getauscht: false, zuViele: 0 };
+  if (!zeilen.length) return aus;
+  if (zeilen.length > LISTE_MAX_ZEILEN) { aus.zuViele = zeilen.length; return aus; }
+  let bester = null, treffer = 0;
+  for (const t of LISTE_TRENNER) {
+    const n = zeilen.filter(z => z.text.includes(t)).length;
+    if (n > treffer) { treffer = n; bester = t; }
+  }
+  aus.trenner = bester;
+  const roh = [];
+  for (const z of zeilen) {
+    const teile = bester ? z.text.split(bester).map(x => x.trim()) : [z.text];
+    const a = teile[0] || "", b = teile[1] || "";
+    const rest = !bester ? "" : teile.slice(2).filter(Boolean).join(bester === "\t" ? " \u00B7 " : bester.trim() + " ");
+    if (!a || !b) { aus.fehler.push({ nr: z.nr, text: z.text, grund: !bester || teile.length < 2 ? "kein Trenner" : "eine Seite fehlt" }); continue; }
+    roh.push({ nr: z.nr, a, b, rest });
+  }
+  const hinten = roh.filter(r => arab.test(r.b) && !arab.test(r.a)).length;
+  const vorn = roh.filter(r => arab.test(r.a) && !arab.test(r.b)).length;
+  aus.getauscht = hinten > vorn;
+  for (const r of roh) {
+    aus.karten.push({ nr: r.nr, wort: (aus.getauscht ? r.b : r.a).slice(0, maxWort), uebersetzung: (aus.getauscht ? r.a : r.b).slice(0, maxWort),
+      extra: r.rest.slice(0, maxExtra) });
+  }
+  return aus;
+}
+//LISTE-LESEN-ENDE
+/* 3.18.27 (Paket I, F-1): Blatt "Liste einfuegen". Zwei Stufen in einem
+   Blatt: einfuegen, dann Vorschau - geschrieben wird erst nach der Vorschau.
+   Der Text liegt in ui.listeSheet.text (nicht nur im Feld), damit ein
+   Neuzeichnen ihn nicht loescht (LEHREN 6.3). Alle neuen Karten kommen in
+   den Bereich, der beim Oeffnen offen war; wechselt er, wird nichts angelegt. */
+function listeAuf() {
+  if (!kartenBearbeitbar()) { ui.bereichMehr = false; hinweisGefuehrt("Karten anlegen oder ändern"); return; }
+  ui.bereichMehr = false;
+  ui.listeSheet = { text: "", stufe: "eingabe", erg: null, meldung: "", bereichId: currentBereich().id };
+  render();
+}
+function listeEntwurfOffen() {
+  return !!(ui.listeSheet && (ui.listeSheet.text || "").trim());
+}
+async function listeVerwerfenFragen() {
+  const blatt = ui.listeSheet;
+  const ok = await dlgConfirm("Deine eingefügte Liste geht dabei verloren.", { title: "Liste verwerfen?", okLabel: "Verwerfen", danger: true });
+  if (!ok || ui.listeSheet !== blatt) return;
+  ui.listeSheet = null;
+  render();
+}
+function listeVorschau() {
+  const l = ui.listeSheet;
+  if (!l) return;
+  const feld = document.getElementById("liste-text");
+  if (feld) l.text = feld.value;
+  l.meldung = "";
+  const b = currentBereich();
+  if (!b || b.id !== l.bereichId) { ui.listeSheet = null; render(); return; }
+  const erg = listeLesen(l.text, MAX_WORT, MAX_EXTRA);
+  if (erg.zuViele) l.meldung = "Das sind " + erg.zuViele + " Zeilen. Auf einmal gehen höchstens " + LISTE_MAX_ZEILEN + ".";
+  else if (!erg.karten.length && !erg.fehler.length) l.meldung = "Füg zuerst deine Liste ein.";
+  else if (!erg.karten.length) l.meldung = "Keine Zeile ließ sich lesen. Zwischen Wort und Übersetzung gehört ein Tab, ein Strichpunkt oder „ – “.";
+  if (l.meldung) { render(); return; }
+  /* Doppelte: was es im Bereich schon gibt und was in der Liste selbst
+     zweimal steht. Uebersprungen, nicht ueberschrieben. */
+  const neu = [], gesehen = [];
+  let doppelt = 0;
+  for (const k of erg.karten) {
+    if (findeDuplikat(k.wort, null) || findeDuplikat(k.wort, null, gesehen)) { doppelt++; continue; }
+    gesehen.push({ id: "liste-" + k.nr, wort: k.wort, uebersetzung: k.uebersetzung });
+    neu.push(k);
+  }
+  if (currentCards().length + neu.length > IMPORT_MAX_KARTEN) {
+    l.meldung = "Damit hätte dieser Bereich mehr als " + IMPORT_MAX_KARTEN + " Karten. Teil die Liste auf mehrere Bereiche auf.";
+    render(); return;
+  }
+  l.erg = { neu: neu, doppelt: doppelt, fehler: erg.fehler, getauscht: erg.getauscht };
+  l.stufe = "vorschau";
+  render();
+}
+function listeAnlegen() {
+  const l = ui.listeSheet;
+  if (!l || l.stufe !== "vorschau" || !l.erg || !l.erg.neu.length) return;
+  if (!kartenBearbeitbar()) { hinweisGefuehrt("Karten anlegen oder ändern"); return; }
+  const bereich = currentBereich();
+  if (!bereich || bereich.id !== l.bereichId) { ui.listeSheet = null; render(); return; }
+  /* Reihenfolge wie in der Liste: die erste Zeile steht danach oben. */
+  const basis = ordnungVorn() - l.erg.neu.length;
+  const patch = {}, karten = [];
+  l.erg.neu.forEach((k, i) => {
+    const neu = { id: genId(), wort: k.wort, uebersetzung: k.uebersetzung, extra: k.extra, stufe: 0,
+      nextReview: todayStr(), ersteBewertung: null, rueckfaelle: 0 };
+    karten.push(neu);
+    patch[pfadKarte(bereich.id, neu.id)] = kartenFelder(neu, basis + i);
+  });
+  bereich.karten.unshift(...karten);
+  const anzahl = karten.length;
+  ui.listeSheet = null;
+  patchDoc(patch);
+  zeigeToast(mz(anzahl, "Karte", "Karten") + " angelegt");
+}
+function listeSheetHtml() {
+  const l = ui.listeSheet;
+  if (!l) return "";
+  let html = '<div class="dlg-backdrop" data-action="liste-zu" role="presentation">';
+  html += '<div class="dlg dlg--liste" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="liste-titel">';
+  html += '<h3 id="liste-titel">Liste einfügen</h3>';
+  if (l.stufe !== "vorschau") {
+    html += '<p class="hint">Eine Zeile je Karte: erst das Wort, dann die Übersetzung – getrennt durch Tab, Strichpunkt oder „ – “. Eine dritte Spalte wird zur Notiz.</p>';
+    html += '<div class="field"><label for="liste-text">Deine Liste</label>' +
+      '<textarea id="liste-text" class="liste-text" rows="8" dir="auto" autocomplete="off" autocapitalize="off" spellcheck="false"' +
+      (l.meldung ? ' aria-invalid="true" aria-describedby="liste-meldung"' : '') +
+      ' placeholder="Wort ; Übersetzung ; Notiz">' + esc(l.text) + '</textarea>';
+    html += '<p class="field__fehler" id="liste-meldung" role="alert">' + esc(l.meldung || "") + '</p></div>';
+    html += '<div class="dlg-actions"><button class="secondary" data-action="liste-zu">Abbrechen</button>' +
+      '<button data-action="liste-vorschau">Vorschau</button></div>';
+  } else {
+    const e = l.erg, b = currentBereich();
+    html += '<p class="liste-summe"><strong>' + mz(e.neu.length, "neue Karte", "neue Karten") + '</strong> für „' + esc(b ? b.name : "") + '“.</p>';
+    let info = "";
+    if (e.getauscht) info += '<li>Spalten getauscht: Das arabische Wort steht vorne.</li>';
+    if (e.doppelt) info += '<li>' + mz(e.doppelt, "Zeile", "Zeilen") + ' gibt es schon – ' + (e.doppelt === 1 ? "sie wird" : "sie werden") + ' übersprungen.</li>';
+    if (e.fehler.length) {
+      const nummern = e.fehler.slice(0, 8).map(f => f.nr).join(", ") + (e.fehler.length > 8 ? " …" : "");
+      info += '<li>' + mz(e.fehler.length, "Zeile", "Zeilen") + ' ohne lesbare Übersetzung (Zeile ' + nummern + ') – ' +
+        (e.fehler.length === 1 ? "sie wird" : "sie werden") + ' ausgelassen.</li>';
+    }
+    if (info) html += '<ul class="liste-info">' + info + '</ul>';
+    if (e.neu.length) {
+      html += '<div class="liste-probe" aria-label="Die ersten Karten">';
+      e.neu.slice(0, 5).forEach(k => {
+        html += '<div class="liste-probe__zeile"><span class="liste-probe__wort" dir="auto">' + esc(k.wort) + '</span>' +
+          '<span class="liste-probe__ueb" dir="auto">' + esc(k.uebersetzung) + '</span></div>';
+      });
+      if (e.neu.length > 5) html += '<p class="hint liste-probe__rest">und ' + mz(e.neu.length - 5, "weitere", "weitere") + '</p>';
+      html += '</div>';
+    }
+    html += '<div class="dlg-actions"><button class="secondary" data-action="liste-zurueck">Zurück</button>' +
+      '<button data-action="liste-anlegen"' + (e.neu.length ? '' : ' disabled') + '>' +
+      (e.neu.length ? mz(e.neu.length, "Karte", "Karten") + ' anlegen' : 'Nichts anzulegen') + '</button></div>';
+  }
+  html += '</div></div>';
+  return html;
+}
 function findeDuplikat(wort, exceptId, cards) {
   const key = vergleichsWort(wort);
   return (cards || currentCards()).find(c => c.id !== exceptId && vergleichsWort(c.wort) === key) || null;
@@ -6250,18 +6542,41 @@ async function deleteCard(id) {
   const card = findCard(id);
   if (!card) return;
   if (!kartenBearbeitbar()) { await hinweisGefuehrt("Karten löschen"); return; }
-  const ok = await dlgConfirm('Die Karte „' + card.wort + '" (' + card.uebersetzung + ') wird gelöscht.',
-    { title: "Karte löschen?", okLabel: "Löschen", danger: true });
-  if (!ok) return;
+  /* 3.18.27 (E-09, Betreiber 08.10.2026 "wie empfohlen"): keine Rueckfrage
+     mehr bei einer einzelnen Karte - eine Rueckfrage tippt man weg. Dafuer
+     steht in der Meldung sechs Sekunden lang "Rueckgaengig"; das holt die
+     Karte mit Lernstand, Platz in der Liste und ihren Speicherkarten zurueck.
+     Die Mehrfachauswahl fragt weiter nach (deleteSelectedCards). */
   const b = currentBereich();
-  b.karten.splice(b.karten.findIndex(c => c.id === id), 1);
+  const kontoRef = userDocRef;
+  const index = b.karten.findIndex(c => c.id === id);
+  const order = ordnungGespeichert.get(card);
+  const inSets = currentSets().filter(st => st.cardIds.includes(id)).map(st => ({ id: st.id, stelle: st.cardIds.indexOf(id) }));
+  b.karten.splice(index, 1);
   const patch = {};
   patch[pfadKarte(b.id, id)] = LOESCHEN;
   purgeFromSets([id]).forEach(st => {
     patch[pfadSet(b.id, st.id) + ".cardIds"] = st.cardIds;
   });
   patchDoc(patch);
-  zeigeToast("Karte gelöscht");
+  zeigeToast("Karte gelöscht", () => {
+    /* Nur im selben Konto und nur, solange es den Bereich noch gibt und die
+       Karte nicht anderswo wieder aufgetaucht ist (LEHREN 8.3). */
+    if (userDocRef !== kontoRef || kontoWirdGeloescht) return;
+    const ziel = (bereiche || []).find(x => x.id === b.id);
+    if (!ziel || ziel.karten.some(c => c.id === id)) return;
+    ziel.karten.splice(Math.min(index, ziel.karten.length), 0, card);
+    const zurueck = {};
+    zurueck[pfadKarte(ziel.id, id)] = kartenFelder(card, Number.isFinite(order) ? order : ordnungVorn());
+    inSets.forEach(alt => {
+      const st = (ziel.sets || []).find(x => x.id === alt.id);
+      if (!st || st.cardIds.includes(id)) return;
+      st.cardIds.splice(Math.min(alt.stelle, st.cardIds.length), 0, id);
+      zurueck[pfadSet(ziel.id, st.id) + ".cardIds"] = st.cardIds;
+    });
+    patchDoc(zurueck);
+    zeigeToast("Karte ist wieder da");
+  });
 }
 
 /* ---------- Lern-Session ---------- */
@@ -6491,16 +6806,14 @@ function gradeCard(kind) {
        Stufe von vorher zaehlt; Rueckgaengig stellt ihn mit zurueck. */
     const reglerB = texteFreigeschaltet() ? bereiche.find(x => x.id === s.bereichId) : null;
     if (reglerB) s.lastAction.prevRegler = reglerAntwort(reglerB, card.stufe, kind === "known");
-    if (kind === "known") {
-      card.stufe = Math.min(card.stufe + 1, MAX_STUFE);
-      card.nextReview = nextReviewForStufe(card.stufe, reglerB ? reglerB.abstandFaktor : undefined);
-      card.maxStufe = Math.max(card.maxStufe || 0, card.stufe);
-    } else if (kind === "almost") {
-      card.stufe = Math.max(0, card.stufe - 1);
-      card.nextReview = dateInDays(1);
-    } else {
-      card.stufe = Math.max(0, card.stufe - 2);
-      card.nextReview = todayStr();
+    /* 3.18.27 (Paket G0): Die Regel selbst steht jetzt in
+       bewertungAnwenden() oben im Lernlogik-Block; die Begruendungen bleiben
+       hier stehen. */
+    const nochmalNeu = vorab("neuZweimal") && warNeu && kind === "known";
+    s.nochmalNeu = nochmalNeu;
+    bewertungAnwenden(card, kind, reglerB ? reglerB.abstandFaktor : undefined,
+      vorab("nichtDannSicher") && !!(s.nichtMal && s.nichtMal[card.id] > 0), nochmalNeu);
+    if (kind !== "known" && kind !== "almost") {
       /* E6: Nur ein echter Rueckfall zaehlt - "Nicht" bei einer Karte, die
          schon einmal gewusst wurde. Eine Karte, die man beim allerersten Anblick nicht
          weiß, ist kein Rueckfall, sondern normal. "Fast" zaehlt ebenfalls
@@ -6512,7 +6825,6 @@ function gradeCard(kind) {
          als "nicht mehr neu", und wer sie in der ersten Abfrage nicht wusste,
          sammelte Rueckfaelle fuer etwas, das er gerade zum ersten Mal
          gelesen hatte. Nach fuenf Malen waere sie "verbrannt" gewesen. */
-      if ((card.maxStufe || 0) >= 1) card.rueckfaelle = (card.rueckfaelle || 0) + 1;
     }
     /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
        danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
@@ -6530,6 +6842,15 @@ function gradeCard(kind) {
     s.zaehler = s.zaehler || { known: 0, almost: 0, unknown: 0 };
     s.zaehler[kind]++;
     s.letzteArt = kind;
+    /* 3.18.27 (Paket H, S1 "Rundenende zeigt verpatzte Karten"): nur fuer die
+       Anzeige am Ende. Wort und Uebersetzung werden mitgemerkt, weil die
+       Runde ueber mehrere Bereiche laufen kann. Beruehrt keine Stufe. */
+    if (kind === "unknown") {
+      s.nichtMal = s.nichtMal || {};
+      s.nichtKarten = s.nichtKarten || {};
+      s.nichtMal[card.id] = (s.nichtMal[card.id] || 0) + 1;
+      s.nichtKarten[card.id] = { wort: card.wort, uebersetzung: card.uebersetzung };
+    }
   }
   s.zug = (s.zug || 0) + 1;
   fuehlbar(kind === "known" ? 10 : kind === "unknown" ? [6, 30, 6] : 6);
@@ -6537,7 +6858,9 @@ function gradeCard(kind) {
   const id = s.queue.shift();
   // Nur „Nicht" hängt die Karte wieder hinten an. „Fast" ist morgen dran –
   // stünde sie auch heute noch einmal an, würde die Session nie enden.
-  if (kind === "unknown" && card) s.queue.push(id);
+  /* 3.18.27 (Frage 9): ebenso eine neue Karte nach ihrem ersten "Sicher". */
+  if ((kind === "unknown" || (!s.isDrill && s.nochmalNeu)) && card) s.queue.push(id);
+  s.nochmalNeu = false;
   /* 3.15.0: kein endloses Neumischen mehr - die Uebungsrunde endet wie
      eine Lernrunde, wenn jede Karte einmal mit Fast oder Sicher durch ist.
      "Noch eine Runde" auf dem Abschluss mischt neu (drill-nochmal). */
@@ -6672,6 +6995,7 @@ function undoLastGrade() {
     bereichHeuteZaehle(s.bereichId, -1);
     persistVerlauf();
   }
+  if (s.letzteArt === "unknown" && s.nichtMal && s.lastAction && s.nichtMal[s.lastAction.cardId] > 0) s.nichtMal[s.lastAction.cardId]--;
   if (s.zaehler && s.letzteArt && s.zaehler[s.letzteArt] > 0) s.zaehler[s.letzteArt]--;
   s.zurueckVon = s.letzteArt;
   s.letzteArt = null;
@@ -8112,7 +8436,33 @@ function bootBild() {
 }
 
 /* ---------- Rendering ---------- */
+/* 3.18.27 (Paket H, Sammelfreigabe S1 "Bildschirm wach halten"): Waehrend
+   einer Runde (Lernen oder Ueben) geht der Bildschirm nicht von selbst aus -
+   wer ueber ein Wort nachdenkt, tippt nicht. Nur waehrend ui.session, nur
+   solange die App sichtbar ist; das System gibt die Sperre beim Wechsel in
+   den Hintergrund selbst frei, beim Zurueckkommen wird sie neu geholt.
+   Geraete ohne diese Funktion: nichts passiert. Kein Datenfluss. */
+let wachSperre = null, wachGewollt = false;
+function bildschirmWach(an) {
+  wachGewollt = !!an;
+  if (!navigator.wakeLock || typeof navigator.wakeLock.request !== "function") return;
+  if (!wachGewollt) {
+    if (wachSperre && wachSperre !== "wartet") { const alt = wachSperre; wachSperre = null; alt.release().catch(() => {}); }
+    return;
+  }
+  if (wachSperre || document.visibilityState !== "visible") return;
+  wachSperre = "wartet";
+  navigator.wakeLock.request("screen").then(sperre => {
+    if (!wachGewollt) { wachSperre = null; sperre.release().catch(() => {}); return; }
+    wachSperre = sperre;
+    sperre.addEventListener("release", () => { if (wachSperre === sperre) wachSperre = null; });
+  }).catch(() => { wachSperre = null; });
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") bildschirmWach(wachGewollt);
+});
 function render() {
+  bildschirmWach(!!ui.session);
   ersterRender = true;
   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
      der Cloud), ist ein noch wartender Such-Timer gegenstandslos - der
@@ -8852,6 +9202,19 @@ function bereichMehrSheet() {
     html += '<button class="liste-zeile" data-action="bereich-mehr-umkehren" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' +
       ikon("umkehren", "i-sm") + '<span class="liste-zeile__text">Reihenfolge umkehren</span></button>';
   }
+  /* 3.18.27 (Paket I): eigene Karten als Liste speichern oder drucken. Nur
+     bei eigenen Bereichen - ein gefuehrter Satz gehoert dem, der ihn
+     zusammengestellt hat (wie beim Weitergeben). */
+  if (cards.length > 0 && !gefuehrt) {
+    html += '<button class="liste-zeile" data-action="liste-speichern" title="Alle Karten dieses Bereichs als Tabelle speichern">' +
+      ikon("sichern", "i-sm") + '<span class="liste-zeile__text">Als Liste speichern</span><span class="liste-zeile__wert">CSV</span></button>';
+    html += '<button class="liste-zeile" data-action="bereich-drucken" title="Alle Karten dieses Bereichs drucken">' +
+      ikon("lektion", "i-sm") + '<span class="liste-zeile__text">Drucken</span></button>';
+  }
+  if (!gefuehrt) {
+    html += '<button class="liste-zeile" data-action="liste-auf" title="Viele Karten auf einmal aus einer Liste anlegen">' +
+      ikon("einspielen", "i-sm") + '<span class="liste-zeile__text">Liste einfügen</span></button>';
+  }
   if (!gefuehrt) {
     html += '<button class="liste-zeile" data-action="bereich-mehr-umbenennen" title="Bereich umbenennen">' +
       ikon("stift", "i-sm") + '<span class="liste-zeile__text">Bereich umbenennen</span></button>';
@@ -9254,6 +9617,7 @@ function renderMain() {
   html += bereichMehrSheet();
   html += wahlSheet();
   html += erinnerungSheet();
+  html += listeSheetHtml();
   html += setArtSheet();
   html += karteSheet();
   html += neuWahlSheet();
@@ -9278,7 +9642,7 @@ function renderMain() {
     ui.textLernen ? "tl-" + ui.textLernen.schritt + "-" + ui.textLernen.fokus : ""].join("/");
   const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
     ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
-    ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : ""].join("/");
+    ui.neuWahl, ui.zeileEdit ? ui.zeileEdit.id : "", ui.listeSheet ? "liste" : ""].join("/");
   /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
      kein .view - dann ist alles neu. */
   const warAnsicht = !!app.querySelector(":scope > .view");
@@ -9288,7 +9652,11 @@ function renderMain() {
   letzterOverlaySchluessel = overlaySchluessel;
   app.classList.toggle("still-ansicht", !ansichtNeu);
   app.classList.toggle("still-overlay", !overlayNeu);
-  const choreografieTab = !ui.einstellungen && !ui.seite && !imModus &&
+  /* 3.18.27 (Fund A-3): Auch die Einstellungen spielen ihren Eintritt nur beim
+     ersten Besuch - vorher flogen Profil und Zeilen bei jeder Rueckkehr von
+     einer Unterseite neu ein (7 Animationen, 475 ms). */
+  const choreografieTab = ui.einstellungen && !ui.seite && !imModus ? "einstellungen" :
+    !ui.einstellungen && !ui.seite && !imModus &&
     !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
     ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
   if (ansichtNeu) {
@@ -9352,7 +9720,7 @@ function renderMain() {
   }
   /* 3.17.14: + erinnerungSheet - sonst liess sich die Seite dahinter
      scrollen und per Wischen wechseln. */
-  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit);
+  const overlayIstOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId || ui.karteSheet || ui.editId || ui.cardDetailId || ui.dialog || ui.neuWahl || ui.zeileEdit || ui.listeSheet);
   document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
   appbarKanteSetzen();
   /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
@@ -11989,9 +12357,13 @@ function renderRundenEnde(s, gesamt) {
       ? (gesamt === 1 ? 'Eine Karte in dieser Runde.' : gesamt + ' Karten in dieser Runde.')
       : (gesamt === 1 ? 'Die Karte für heute ist durch.' : 'Alle ' + gesamt + ' Karten für heute durch.')) + '</p>';
   html += '<div class="ende__kacheln">';
-  html += '<div class="ende__kachel ende__kachel--sicher" style="--i:0"><strong>' + z.known + '</strong><span>sicher</span></div>';
+  /* 3.18.27 (Frage 23, Betreiber 08.10.2026): Reihenfolge wie die Knoepfe
+     (Nicht, Fast, Sicher), und "nicht" zaehlt Karten statt Antworten - eine
+     Karte, die dreimal nicht sass, ist eine Karte. */
+  const nichtKarten = Object.keys(s.nichtMal || {}).filter(id => s.nichtMal[id] > 0).map(id => s.nichtKarten[id]).filter(Boolean);
+  html += '<div class="ende__kachel ende__kachel--nicht" style="--i:0"><strong>' + nichtKarten.length + '</strong><span>nicht</span></div>';
   html += '<div class="ende__kachel" style="--i:1"><strong>' + z.almost + '</strong><span>fast</span></div>';
-  html += '<div class="ende__kachel ende__kachel--nicht" style="--i:2"><strong>' + z.unknown + '</strong><span>nicht</span></div>';
+  html += '<div class="ende__kachel ende__kachel--sicher" style="--i:2"><strong>' + z.known + '</strong><span>sicher</span></div>';
   html += '</div>';
   if (serieHeute > 0) {
     html += '<div class="ende__serie" style="--i:3">' + ikon("serie", "i-lg") +
@@ -12002,6 +12374,24 @@ function renderRundenEnde(s, gesamt) {
   else if (!s.isDrill) html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
     ? 'Morgen ' + (morgen === 1 ? 'kommt' : 'kommen') + ' <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
     : 'Morgen ist nichts fällig. Die nächsten kommen von selbst.') + '</p>';
+  /* 3.18.27 (Paket H): die Karten, die in dieser Runde nicht sassen - zum
+     Aufklappen, damit der Abschluss ruhig bleibt. Zustand in der Runde
+     (s.nichtOffen), nicht im DOM. */
+  if (nichtKarten.length > 0) {
+    html += '<div class="ende__nicht" style="--i:5">';
+    html += '<button class="ghost ende__nicht-kopf" data-action="ende-nicht" aria-expanded="' + (s.nichtOffen ? "true" : "false") + '">' +
+      ikon(s.nichtOffen ? "chevronUnten" : "chevronRechts", "i-sm") + '<span>' +
+      (nichtKarten.length === 1 ? 'Eine Karte saß noch nicht' : nichtKarten.length + ' Karten saßen noch nicht') + '</span></button>';
+    if (s.nichtOffen) {
+      html += '<ul class="ende__nicht-liste">';
+      nichtKarten.slice(0, 40).forEach(k => {
+        html += '<li><span' + schriftAttr(k.wort, "ende__nicht-wort") + '>' + esc(k.wort) + '</span>' +
+          '<span class="ende__nicht-ueb" dir="auto">' + esc(k.uebersetzung) + '</span></li>';
+      });
+      html += '</ul>';
+    }
+    html += '</div>';
+  }
   html += gemerktHinweis();
   html += '<div class="empty__aktionen ende__aktionen">';
   html += '<button data-action="end-session">Fertig</button>';
@@ -14671,7 +15061,15 @@ function syncViewportGap(ereignis) {
      innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
      viel kleiner) bleibt der Zustand, wie er ist. */
   const root = document.documentElement;
+  /* 3.18.27 (Aufnahme 08.10., V-1, Verdachts-Fix - am iPhone bestaetigen):
+     Verschiebt iOS bei offener Tastatur den sichtbaren Ausschnitt (Fokus ins
+     Feld "Notiz"), aendert sich offsetTop, aber es kommt nur "scroll". Die
+     Zahl --tastatur blieb dann die alte: das Blatt sass um den Versatz zu
+     hoch, darunter klaffte ein Streifen bis zur Tastatur. Deshalb hier nur
+     die Zahl nachziehen - kein Scrollen des Blatts (Verbot aus G-118 bleibt:
+     das steht weiter nur in syncTastatur). */
   if (!ereignis || ereignis.type !== "scroll") syncTastatur();
+  else tastaturHoeheSetzen();
   if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
     const ref = Math.max(screen.width, screen.height);
     const diff = ref - window.innerHeight;
@@ -14717,7 +15115,7 @@ function syncViewportGap(ereignis) {
 const TASTATUR_MIN = 120;
 let tastaturSprung = null;
 let tastaturFeld = null;
-function syncTastatur() {
+function tastaturHoeheSetzen() {
   const vv = window.visualViewport;
   let hoch = 0;
   if (vv) {
@@ -14725,6 +15123,10 @@ function syncTastatur() {
     if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
   }
   document.documentElement.style.setProperty("--tastatur", hoch + "px");
+  return hoch;
+}
+function syncTastatur() {
+  const hoch = tastaturHoeheSetzen();
   /* G-118: Nur einmal je Fokus/Tastatur-Oeffnen pruefen. Niemals Vorfahren
      mit scrollIntoView verschieben oder auf vv.scroll erneut scrollen. */
   if (!hoch) {
@@ -14754,6 +15156,10 @@ function syncTastatur() {
     }
   }
 }
+/* Paket I: getippte oder eingefuegte Liste sofort im Zustand halten. */
+document.addEventListener("input", e => {
+  if (ui.listeSheet && e.target && e.target.id === "liste-text") ui.listeSheet.text = e.target.value;
+});
 document.addEventListener("focusin", () => {
   tastaturFeld = null;
   clearTimeout(tastaturSprung);
@@ -14799,21 +15205,34 @@ function openDialog(cfg) {
    dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
    ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
    (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
+/* 3.18.27 (Fund A-2): Was auf demselben Bildschirm aufklappt (Ueben-Auswahl,
+   Speicherkarten), blendet einmal kurz ein. Die CSS-Eintrittsanimation greift
+   dort nicht, weil der Bildschirm derselbe bleibt (still-ansicht). Nur
+   Deckkraft und 8 px Weg, wie enter-rise; der gedrueckte Knopf selbst bewegt
+   sich nicht. Bei reduzierter Bewegung nichts. */
+function sanftEinblenden(elemente) {
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  for (const el of elemente) {
+    if (el && el.animate) el.animate([{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }],
+      { duration: 200, easing: "cubic-bezier(0.20, 0.80, 0.20, 1)" });
+  }
+}
 function spielAustrittsAnimation(dlg, huelle, danach) {
   const reduziert = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!dlg || reduziert || dlg.dataset.schliesst) { danach(); return; }
   dlg.dataset.schliesst = "1";
-  // Beendete Eintrittsanimationen halten sonst transform/opacity fest.
-  dlg.style.animation = "none";
-  dlg.style.transition = "transform 200ms cubic-bezier(.3,0,.8,.15), opacity 200ms cubic-bezier(.3,0,.8,.15)";
+  /* 3.18.27 (Fund A-1, am iPhone bestaetigt: "es ist einfach weg"): Bisher
+     standen "animation: none", die Uebergangsregel und das Ziel im selben
+     Schritt - der Browser sprang in einem Bild ans Ziel und wartete dann
+     200 ms (gemessen: 361 -> 868 px ohne Zwischenlage). Jetzt eine eigene
+     Animation ueber element.animate(): sie startet beim gerade sichtbaren
+     Stand (auch mitten im Wegwischen) und liegt ueber der beendeten
+     Eintrittsanimation, ohne sie abschalten zu muessen. */
+  if (!dlg.animate) { danach(); return; }
   const mittig = matchMedia("(min-width: 600px)").matches;
-  dlg.style.transform = mittig ? "scale(.96)" : "translateY(105%)";
-  if (mittig) dlg.style.opacity = "0";
-  if (huelle) {
-    huelle.style.animation = "none";
-    huelle.style.transition = "opacity 200ms cubic-bezier(.3,0,.8,.15)";
-    huelle.style.opacity = "0";
-  }
+  const zeit = { duration: 200, easing: "cubic-bezier(.3,0,.8,.15)", fill: "forwards" };
+  dlg.animate(mittig ? [{ transform: "scale(.96)", opacity: 0 }] : [{ transform: "translateY(105%)" }], zeit);
+  if (huelle && huelle.animate) huelle.animate([{ opacity: 0 }], zeit);
   setTimeout(danach, 200);
 }
 function closeDialog(result) {
@@ -14885,7 +15304,11 @@ function renderDialog() {
     /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
        (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
        Übersetzung" ...), doppelt zu tippen waere nur eine Fehlerquelle. */
-    h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" aria-labelledby="dlg-text" value="' + esc(d.value) + '">';
+    /* 3.18.27 (Aufnahme 08.10., V-3): Textfelder ohne Vorschlagszeile des
+       Systems ("Kontakt autom. ausfuellen" ueber der Tastatur bei "Name
+       aendern"). Passwortfelder bleiben, wie sie sind. */
+    h += '<input type="' + (d.type === "password" ? "password" : "text") + '" id="dlg-input" aria-labelledby="dlg-text"' +
+      (d.type === "password" ? '' : ' autocomplete="off"') + ' value="' + esc(d.value) + '">';
   }
   h += '<div class="dlg-actions">';
   if (d.kind === "code-share") {
@@ -14935,6 +15358,10 @@ function schliesseObersteEbene() {
   /* 3.17.14 (Station 14): Das Erinnerungs-Blatt (3.17.0) fehlte hier - Escape
      und Wischen nach unten schlossen es nicht. */
   if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; ui.erinnerungZeit = null; render(); }); return true; }
+  if (ui.listeSheet) {
+    if (listeEntwurfOffen()) { listeVerwerfenFragen(); return true; }
+    schliesse(() => { ui.listeSheet = null; render(); }); return true;
+  }
   if (ui.karteSheet || ui.editId) {
     if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
     schliesse(cancelEdit); return true;
@@ -15198,7 +15625,7 @@ function tabSchonAktiv(id) {
   return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
     !ui.wahlSheet && !ui.erinnerungSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
     !ui.bereichMehr && !ui.cardDetailId && !ui.dialog &&
-    !ui.neuWahl && !ui.textAnlegen && !ui.textAnsicht && !ui.zeileEdit && !ui.textLernen;
+    !ui.neuWahl && !ui.textAnlegen && !ui.textAnsicht && !ui.zeileEdit && !ui.textLernen && !ui.listeSheet;
 }
 function nachObenBlaettern() {
   window.scrollTo({ top: 0, behavior: scrollArt() });
@@ -15565,6 +15992,13 @@ document.body.addEventListener("click", e => {
     case "bereich-mehr-auswaehlen": ui.bereichMehr = false; toggleSelectMode(); break;
     case "bereich-mehr-umkehren": ui.bereichMehr = false; reverseOrder(); break;
     case "bereich-mehr-umbenennen": ui.bereichMehr = false; renameBereich(); break;
+    case "liste-auf": listeAuf(); break;
+    case "liste-speichern": ui.bereichMehr = false; render(); exportListe(); break;
+    case "bereich-drucken": ui.bereichMehr = false; render(); druckeBereich(); break;
+    case "liste-zu": schliesseObersteEbene(); break;
+    case "liste-vorschau": listeVorschau(); break;
+    case "liste-zurueck": if (ui.listeSheet) { ui.listeSheet.stufe = "eingabe"; ui.listeSheet.erg = null; render(); } break;
+    case "liste-anlegen": listeAnlegen(); break;
     case "bereich-mehr-loeschen": ui.bereichMehr = false; deleteBereich(); break;
     /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
        ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
@@ -15691,7 +16125,10 @@ document.body.addEventListener("click", e => {
     case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
     case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
     case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
-    case "toggle-sets": ui.setsOffen = !ui.setsOffen; render(); break;
+    case "toggle-sets":
+      ui.setsOffen = !ui.setsOffen; render();
+      if (ui.setsOffen) sanftEinblenden([...app.querySelectorAll(".sets-panel.offen > :not(.sets-kopf)")]);
+      break;
     case "toggle-set-art": ui.setsArtWahl = !ui.setsArtWahl; render(); break;
     case "toggle-select-mode": toggleSelectMode(); break;
     case "auswahl-alle": waehleSichtbareKarten(); break;
@@ -15716,6 +16153,7 @@ document.body.addEventListener("click", e => {
       ui.drillOpen = false;
       if (ui.drillRueckkehrTab) ui.tab = ui.drillRueckkehrTab;
       ui.drillRueckkehrTab = null; render(); break;
+    case "ende-nicht": if (ui.session) { ui.session.nichtOffen = !ui.session.nichtOffen; render(); } break;
     case "drill-nochmal": {
       const alt = ui.session;
       if (!alt || !alt.isDrill) break;

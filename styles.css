@@ -2272,6 +2272,23 @@ button.study-aufdecken { background: var(--surface-raised); color: var(--text-1)
 }
 .ende__serie .i { color: var(--accent); transform-origin: 50% 90%; }
 .ende__morgen { margin-top: var(--space-4); }
+/* 3.18.27 (Paket H): Karten, die in der Runde nicht sassen. Zugeklappt eine
+   Zeile; aufgeklappt scrollt die Liste in sich, damit der Abschluss nie
+   hoeher wird als der Bildschirm (LEHREN 4.x). */
+.ende__nicht { margin-top: var(--space-3); }
+.ende__nicht-kopf { min-height: var(--tap); gap: var(--space-2); color: var(--text-2); font-size: var(--fs-sm); }
+.ende__nicht-liste {
+  list-style: none; margin: var(--space-2) 0 0; padding: 0; text-align: left;
+  max-height: 34vh; overflow-y: auto; overscroll-behavior: contain;
+  border: 1px solid var(--border-subtle); border-radius: var(--r-md);
+}
+.ende__nicht-liste li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); align-items: center; padding: var(--space-2) var(--space-3); }
+.ende__nicht-liste li + li { border-top: 1px solid var(--border-subtle); }
+.ende__nicht-wort { overflow-wrap: anywhere; }
+.ende__nicht-wort.arabic { font-size: calc(var(--fs-lg) * var(--arab-scale, 1)); text-align: right; }
+.ende__nicht-ueb { color: var(--text-2); font-size: var(--fs-sm); overflow-wrap: anywhere; }
+.ende--neu .ende__nicht { animation: einstieg-kachel 420ms var(--ease-spring) backwards; animation-delay: calc(5 * 90ms + 820ms); }
+
 .ende__aktionen { margin-top: var(--space-6); }
 .ende--neu .ende__kachel,
 .ende--neu .ende__serie,
@@ -3339,6 +3356,18 @@ input.schalter::before { content: none; }
   overscroll-behavior: contain;
   animation: sheet-up var(--dur-slow) var(--ease-out) both;
 }
+/* 3.18.27 (Paket I): Blatt "Liste einfuegen". Das Feld ist bewusst nicht in
+   der arabischen Schrift gesetzt: es enthaelt beide Sprachen gemischt. */
+.liste-text { min-height: 9.5em; font-size: var(--fs-base); line-height: 1.5; resize: vertical; unicode-bidi: plaintext; }
+.liste-summe { margin: var(--space-2) 0 var(--space-3); }
+.liste-info { margin: 0 0 var(--space-4); padding-left: 1.2em; color: var(--text-2); font-size: var(--fs-sm); }
+.liste-info li + li { margin-top: var(--space-1); }
+.liste-probe { border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: var(--space-4); overflow: hidden; }
+.liste-probe__zeile { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); padding: var(--space-2) var(--space-3); }
+.liste-probe__zeile + .liste-probe__zeile { border-top: 1px solid var(--border-subtle); }
+.liste-probe__wort { font-weight: 600; overflow-wrap: anywhere; }
+.liste-probe__ueb { color: var(--text-2); overflow-wrap: anywhere; }
+.liste-probe__rest { padding: var(--space-2) var(--space-3); border-top: 1px solid var(--border-subtle); margin: 0; }
 .dlg-nebenweg { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-3); }
 /* 3.18.21: Trefferflaeche wie ueberall mindestens 44 px. */
 .dlg-nebenweg button { min-height: 44px; }
@@ -5317,3 +5346,23 @@ button.gedimmt { opacity: 0.45; }
 .texte-lernen__satz { width: 100%; font-size: 0.85rem; color: var(--text-2); }
 .probelauf__zeile { cursor: default; flex-wrap: wrap; }
 .probelauf__zeile .liste-zeile__wert { white-space: normal; }
+
+/* =========================================================================
+   DRUCK (3.18.27, Paket I)
+   Gedruckt wird nie die App, sondern die Tabelle, die druckeBereich() in
+   app.js fuer den Druck an den body haengt. Schwarz auf Weiss, ohne Flaechen.
+   ========================================================================= */
+#druck { display: none; }
+@media print {
+  html, body { background: #fff !important; color: #000 !important; }
+  body > *:not(#druck) { display: none !important; }
+  #druck { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 11pt; color: #000; }
+  #druck h1 { font-size: 16pt; margin: 0 0 2pt; color: #000; }
+  #druck .druck__kopf { font-size: 9pt; margin: 0 0 10pt; color: #444; }
+  #druck table { width: 100%; border-collapse: collapse; }
+  #druck th { text-align: left; font-size: 9pt; font-weight: 600; border-bottom: 1pt solid #000; padding: 3pt 6pt 3pt 0; }
+  #druck td { vertical-align: top; border-bottom: 0.5pt solid #bbb; padding: 4pt 6pt 4pt 0; overflow-wrap: anywhere; unicode-bidi: plaintext; }
+  #druck td.druck__wort { font-size: 15pt; width: 32%; }
+  #druck tr { break-inside: avoid; }
+  #druck thead { display: table-header-group; }
+}
