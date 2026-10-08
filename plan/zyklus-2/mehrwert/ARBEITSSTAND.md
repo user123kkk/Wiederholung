@@ -38,6 +38,18 @@ Tests, danach Affen). Prozess: `cmd.exe … ladegeraet.bat`.
 | Paket H: Bildschirm wach | `bildschirmWach()` hält den Bildschirm während `ui.session` an (Wake Lock), neu geholt bei Rückkehr | nur Syntax |
 | Paket H: Rundenende | Karten, die nicht saßen, zum Aufklappen (`s.nichtMal`, `s.nichtKarten`, Handlung `ende-nicht`); Kacheln in Knopf-Reihenfolge Nicht/Fast/Sicher, „nicht“ zählt Karten (Frage 23) | nur Syntax; **berührt die Lernrunde → `abnahme_runde.js` 13/13 Pflicht** |
 
+| Paket G0 | Lernlogik-Kern zwischen Marken `//LERNLOGIK-ANFANG` … `-ENDE` in `app.js`; Bewertungsregel als `bewertungAnwenden()` herausgelöst (ohne Verhaltensänderung); allgemeiner Schalter `VORAB` / `vorab(name)` („betreiber“ / „alle“); Schnelltest `t_lernlogik.js` | **11 Fälle grün, ohne Browser**; Runde selbst noch nicht |
+| Paket G, Frage 7 | „Sicher“ nach „Nicht“ in derselben Runde hebt die Stufe nicht, Karte kommt morgen; **nur im Betreiber-Konto** (`VORAB.nichtDannSicher = "betreiber"`) | Regel grün im Schnelltest; Runde noch nicht |
+
+G0 ist bewusst **nicht** als eigene Datei gebaut: Eine zweite Startdatei
+hieße `index.html`, `APP_SHELL` und Versions-Query anfassen, ohne dass der
+Nutzen größer wäre als mit den Marken. Kann später nachgezogen werden.
+
+Offen in Paket G (noch nicht gebaut, braucht eine genaue Festlegung):
+Frage 9 (neue Karten müssen in der Runde zweimal sitzen) und Frage 10
+(Tagesdeckel nach Pause, Fälligkeiten bleiben). Beides ändert, wie eine
+Runde zusammengestellt wird; erst Regel aufschreiben, dann bauen.
+
 Noch nicht gebaut aus Paket H (braucht den Browser zum Hinsehen, weil es
 die Lage in der Runde ändert): Karte in der Abfrage bearbeiten, „Runde
 fortsetzen“ am selben Tag, einmalige Erklärung der drei Knöpfe (Wortlaut
