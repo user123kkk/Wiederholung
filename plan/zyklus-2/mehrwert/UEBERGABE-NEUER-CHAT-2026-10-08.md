@@ -19,10 +19,12 @@ welcher reihenfolge, ohne fehler, schnell, einfach.“
 
 ## Stand
 
-- `main` = 3.18.26. **Online ist 3.18.25** (am 08.10. abgerufen): Der
-  Betreiber hat `veroeffentlichen.bat` gestartet, vermutlich im
-  Desktop-Ordner, der noch auf 3.18.25 stand. 3.18.26 geht mit „ladegerät“
-  online.
+- `main` = 3.18.26, **online ist 3.18.26** (08.10., vom Betreiber mit
+  `veroeffentlichen.bat`). Davor lief kein Gesamtlauf: 3.18.24–3.18.26 sind
+  nur mit betroffenen Tests geprüft. „ladegerät“ holt den vollen Lauf nach.
+  Das Skript veröffentlicht immer den neuesten `origin/main`, egal aus
+  welchem Ordner. Eine erste Abfrage zeigte noch 3.18.25: Zwischenspeicher
+  des Hostings (`app.js` bis zu eine Stunde), kein Fehler.
 - Auf dem Laptop gibt es zwei Checkouts. Vor jedem Prüfstand-Lauf prüfen,
   welchen Ordner der Server auf Port 8099 liefert (`LEHREN.md` § 5.3,
   neuester Eintrag).
@@ -37,7 +39,7 @@ dazwischen.
 
 | Schritt | Was | Hinweis |
 |---|---|---|
-| 1 | „ladegerät“: voller Lauf und 3.18.26 online | Betreiber gibt das Stichwort |
+| 1 | „ladegerät“: voller Lauf am Stand 3.18.26 (ist schon online) | Betreiber gibt das Stichwort |
 | 2 | Zwei Berichte, nur lesen: Onboarding (samt `../VORBILD-MARHABA.md` und App „Marhaba!“) und Durchsicht Aussehen/Bewegung über alle Bildschirme (N2, N3, N5, N6) | Funde als Liste, nichts bauen |
 | 3 | Paket I: Liste einfügen, Export, Druck, Backup, Löschen mit Rückgängig | sichtbar, keine Lernlogik |
 | 4 | Paket H: Bearbeiten in der Abfrage, verpatzte Karten am Rundenende, Runde fortsetzen, Bildschirm wach | Wortlaut zu Frage 21 vom Betreiber |
@@ -66,7 +68,7 @@ werden paketweise mit dem Betreiber durchgegangen, nicht auf einmal.
 
 ## Erinnern (am Ende jeder Antwort, bis erledigt)
 
-1. „ladegerät“ am Netzteil (bringt 3.18.26 online).
+1. „ladegerät“ am Netzteil (voller Prüflauf; 3.18.26 ist schon online).
 2. Elternteil als zweiten Eigentümer eintragen – er wollte es „gleich“
    machen und **ausdrücklich erinnert werden**.
 3. iPhone-Foto: Ist das arabische Wort auf der Karte zu fett?
