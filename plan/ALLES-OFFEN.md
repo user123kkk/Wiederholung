@@ -25,9 +25,11 @@ wird. Erledigtes wird nicht gelöscht, sondern mit Version abgehakt.
   - Chats, die nicht auf dem Laptop liegen (Handy, Browser, Codex). An
     diesen Tagen gibt es keine lokalen Chats: 13.–16.09., 20.–21.09.,
     25.–28.09., 02.10.; am 24.09. nur drei Nachrichten.
-  - Die Berichte der Mehrwert-Agenten sind **nicht wörtlich gesichert**.
-    Der Ideen-Katalog wurde danach aus dem Chat zusammengeschrieben (steht
-    so in seinem Kopf). Dort können einzelne Ideen fehlen.
+  - Korrektur 08.10., abends: Die Berichte der Mehrwert-Agenten waren doch
+    noch da. 34 von 36 liegen jetzt wörtlich unter
+    `zyklus-2/mehrwert/agentenberichte/`. Der Ideen-Katalog ist eine
+    Zusammenfassung aus dem Chat; der Abgleich Katalog gegen Berichte steht
+    noch aus (Abschnitt 3.2a).
   - Lange Sprachnachrichten wurden bis 6000 Zeichen gelesen.
 
 Zeichen: **fertig** = gebaut und geprüft · **bauen** = entschieden, noch zu
@@ -93,6 +95,19 @@ abgehakt; hier wird das nicht doppelt geführt.
 | 08.10. | Tafsir as-Sa'di als Link an Quran-Zeilen (englisch, später deutsch) | Gesamtliste Abschnitt 7 | bauen, nach dem 29.10. |
 | 07.10. | Name ändern: „sollte es so einfach sein?“ | Gesamtliste Abschnitt 6 | Urteil fehlt |
 | 07.10. | „überall geile bzw. cleane Animation“ | `schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md` | erster Teil in 3.18.27; Rest: Gesamtliste Abschnitt 4, D13 |
+
+### 3.2a Wünsche zur Arbeitsweise (08.10.2026, abends)
+
+| Wortlaut (gekürzt) | Stand |
+|---|---|
+| „aus meinen Claude-Code-Chats die Chats speichern … das mit Agenten zum Mehrwert“ | fertig: 34 von 36 Agentenberichten wörtlich unter `zyklus-2/mehrwert/agentenberichte/` (zwei Agenten waren am Limit abgebrochen); alle 43 lokalen Chats wörtlich unter `Desktop\Wiederholung-Belege\chats\`; Werkzeug `plan/werkzeuge/chats_sichern.py` |
+| „eine Regel, etwas nicht auszulassen bzw. komplett so umzuschreiben, dass du nicht weißt, wovon ich rede“ | fertig: LEHREN § 1.9 |
+| „alle 60 Sek., egal was überprüft, gelesen, bearbeitet … wird, es wird festgehalten … später gelöscht … und Erklärung warum“ | fertig als Regel und Datei (`ARBEITSPROTOKOLL.md`); bauen: Automatik, die auch dann schreibt, wenn ein Agent es vergisst (Einhängepunkt im Werkzeug, erst gefahrlos testen) |
+| „was eingebaut haben, sodass man mich anhand des Repos besser direkt versteht“ | fertig: `plan/BETREIBER-VERSTEHEN.md`; wird nachgezogen, wenn er etwas korrigiert |
+| „einen Mod, der dir zulässt, andere Chats zu bedienen … Hauptsache, sowas verwirrt mich nicht“ | Lesen geht schon (alle Chats auf dem Laptop); bauen: Weg, einem anderen laufenden Chat einen Auftrag zu geben. Urteil fehlt: Was soll damit konkret passieren? Bis dahin gilt: ein Chat arbeitet, die anderen lesen `ALLES-OFFEN.md` |
+| „eine Sammlung, auf die ich mich immer und immer verlassen kann, ohne Zweifel“ | diese Datei; bauen: Abgleich der 187 Katalog-Zeilen gegen die 34 wörtlichen Agentenberichte, damit keine Idee fehlt |
+| „erledige sonst du alles, belaste mich nicht mit unnötigen Fragen und Formalitäten“ | gilt: `CLAUDE.md`, LEHREN § 1.2 |
+| „während sie falsch wörtlich gespeichert sind? Einiges fehlt?“ | offen: siehe Zeile darüber; bis zum Abgleich gilt der Katalog als Zusammenfassung, die Berichte als Quelle |
 
 ### 3.3 Gerätetests am iPhone (nur Du)
 

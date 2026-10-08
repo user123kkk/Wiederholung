@@ -19,6 +19,18 @@ Antwort** dort hinein, auch wenn er nur nebenbei fällt (`plan/LEHREN.md`
 dieser Datei geantwortet. Empfehlungen vorher mit dem ganzen Repo und
 seinen Wünschen abgleichen (§ 1.7).
 
+## Den Betreiber verstehen und nichts verlieren (Betreiber 08.10.2026, fest)
+
+- Vor der ersten Antwort [`plan/BETREIBER-VERSTEHEN.md`](plan/BETREIBER-VERSTEHEN.md)
+  lesen: wie er schreibt, was seine Wörter bedeuten, was er immer will.
+- Wörtlich sichern, nichts auslassen, laufend festhalten
+  (`plan/LEHREN.md` § 1.9): Arbeitsschritte nach
+  [`plan/ARBEITSPROTOKOLL.md`](plan/ARBEITSPROTOKOLL.md), Agentenberichte
+  ungekürzt als Datei, Chats mit `plan\werkzeuge\chats_sichern.py` sichern.
+- Ihn nicht mit Formalitäten und unnötigen Fragen belasten: selbst
+  entscheiden, was er nicht entscheiden muss (`plan/LEHREN.md` § 1.2), und
+  es im Logbuch vermerken.
+
 ## Klein-Weg (Betreiber 07.10.2026, fest)
 
 Kleinigkeiten dauern Minuten, nicht Stunden. Gilt für Aussehen, Abstand,

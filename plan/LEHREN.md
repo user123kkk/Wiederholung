@@ -247,6 +247,45 @@ offene Punkte und 72 unentschiedene Ideen fehlten. Dazu: Die Berichte der
 Mehrwert-Agenten wurden nie wörtlich gesichert. **Auch daraus:** Ergebnisse
 von Agenten-Runden als Datei ins Repo, bevor zusammengefasst wird.
 
+### 1.9 Wörtlich sichern, nichts auslassen, laufend festhalten
+
+Betreiber 08.10.2026: „es sollte auch eine Regel sein, etwas nicht
+auszulassen bzw. komplett so umzuschreiben, dass du nicht weißt, wovon ich
+rede … ich hasse Lücken … alle 60 Sekunden, egal was überprüft, gelesen,
+bearbeitet, geprüft oder sonstiges wird, es wird festgehalten … nichts
+soll verloren gehen und strukturiert soll es sein“.
+
+**Regeln:**
+
+1. **Erst wörtlich, dann zusammenfassen.** Berichte von Agenten, lange
+   Nachrichten des Betreibers und Messausgaben kommen ungekürzt als Datei
+   ins Repo (oder, wenn persönliche Angaben darin stehen, nach
+   `Desktop\Wiederholung-Belege\`), **bevor** eine Zusammenfassung
+   geschrieben wird. Jede Zusammenfassung nennt ihre wörtliche Quelle.
+2. **Seinen Wortlaut zitieren.** Wünsche werden mit seinen Worten
+   eingetragen (gekürzt ist erlaubt, umgedeutet nicht). Die Deutung steht
+   daneben und ist als Deutung erkennbar. Hilfe: `plan/BETREIBER-VERSTEHEN.md`.
+3. **Nichts auslassen.** Vor dem Absenden jeder Antwort: Ist jeder Satz
+   seiner Nachricht beantwortet oder in `plan/ALLES-OFFEN.md` eingetragen?
+4. **Laufend festhalten.** Während der Arbeit steht in
+   `plan/ARBEITSPROTOKOLL.md` spätestens nach jedem Arbeitsschritt (Ziel:
+   höchstens eine Minute Abstand), was gerade gelesen, geprüft, geändert
+   oder gemessen wurde, mit Uhrzeit; danach committen und pushen. Das
+   Protokoll ist ein Zwischenspeicher: Ist der Inhalt im Logbuch oder in
+   `ALLES-OFFEN.md` angekommen, werden alte Einträge gelöscht, mit einer
+   Zeile, wohin sie gewandert sind.
+5. **Chats sichern.** `py -3 plan\werkzeuge\chats_sichern.py` schreibt alle
+   lokalen Chats wörtlich nach `Desktop\Wiederholung-Belege\chats\`. Am
+   Ende jeder größeren Session ausführen. Nicht ins Repo: Es ist
+   öffentlich, und in den Chats stehen persönliche Angaben.
+6. **„Geht nicht“ erst nach dem Versuch.** *Vorfall 08.10.2026:* Dem
+   Betreiber gemeldet, die Agentenberichte der Mehrwert-Runden ließen sich
+   nicht nachholen. Sie lagen vollständig in den lokalen Chat-Dateien
+   (`~\.claude\projects\…\subagents\`); 34 von 36 sind jetzt wörtlich
+   unter `zyklus-2/mehrwert/agentenberichte/` (zwei Agenten waren am Limit
+   abgebrochen). Vor „verloren“ oder „unmöglich“: nachsehen, wo es noch
+   liegen könnte.
+
 ---
 
 ## 2. Religiöser Rahmen
