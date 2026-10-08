@@ -196,6 +196,35 @@ aus der Geschichte:
 - Die Freigabe steht **vor** dem Schreiben ins Repo, nicht danach.
 - Ausnahme: Testdaten unter `plan/werkzeuge/` (werden nicht ausgeliefert).
 
+### 1.7 Jede Empfehlung zuerst mit dem ganzen Repo abgleichen
+
+Betreiber 08.10.2026: „von nun an will ich, dass du deine Empfehlungen mit
+dem GESAMTEN REPO ABGLEICHST UND ZUSAMMENHANG MIT DEM, WAS ICH WILL“. Dazu:
+„ich zweifle sehr immer wieder an der Methodik“.
+
+**Regel:** Bevor eine Empfehlung an den Betreiber geht:
+
+- im Repo suchen (`grep` über `plan/`, `CHANGELOG.md`, Kommentare an der
+  Codestelle), was dazu schon entschieden, gemessen, gebaut oder bewusst
+  entfernt wurde, und die Fundstellen nennen;
+- prüfen, ob es etwas doppelt, was es schon gibt (zweiter Mechanismus,
+  zweites Wort, zweiter Knopf);
+- gegen seine Grundwünsche halten (§ 1.5: ruhig, ein Bildschirm eine
+  Aufgabe, nichts doppelt, keine Methoden-Zahlen, Gründe zum Zurückkommen
+  ohne Nerven);
+- bei Lernlogik: Zahlen nicht aus dem Bauch. Entweder gemessen oder
+  gerechnet (Schnelltest, Simulation mit genannten Annahmen) oder
+  ausdrücklich als ungeprüft gekennzeichnet.
+
+*Vorfälle 08.10.2026:* (1) Tagesdeckel „ab 60 fällig, 30 am Tag“ vorgelegt,
+übernommen aus einer Notiz der Vorsitzung, ohne Abgleich: Es gibt schon
+„Karten pro Runde“, `nachDringlichkeit` und `E26-VORSCHLAG.md`; ein zweiter
+Deckel mit eigenen Zahlen wäre ein zweiter Mechanismus für dieselbe Sache,
+und die Zahlen waren nicht gerechnet. Zurückgenommen. (2) „Fang bei den
+Buchstaben an“ als falsch gemeldet (O-2); der Kommentar von 3.10.3 an der
+Stelle sagt, was gemeint war: Buchstaben lassen sich selbst als Karten
+anlegen.
+
 ---
 
 ## 2. Religiöser Rahmen
@@ -2346,3 +2375,4 @@ konkurrierende Browser-Tests messen. Fehlerpfade neuer Browser-Tests brauchen
 | 08.10. (3.18.26, Klein-Weg) | Fünf betroffene Tests grün gemeldet, sie liefen aber gegen den Server eines anderen Chats mit dessen Ordner (3.18.25); aufgefallen erst, als eine eigene Messung die neue CSS-Regel nicht fand | Port 8099 war belegt und antwortete mit 200; nicht geprüft, welchen Stand er liefert | § 5.3 (Server-Ordner vor dem Lauf prüfen). Eigener Server auf 8097 mit `PRUEF_PORT`, alle fünf wiederholt, grün |
 | 08.10. (Online-Stand) | Dem Betreiber gemeldet „online ist 3.18.25, vermutlich falscher Ordner“; tatsächlich war 3.18.26 schon veröffentlicht | `app.js` vom Hosting abgerufen, das eine Stunde zwischengespeichert wird; Ursache geraten statt das Skript gelesen (es nimmt immer `origin/main`) | § 1.3. Online-Stand an `sw.js` prüfen (`no-cache`) und `Last-Modified` lesen; vor einer Vermutung das Skript lesen |
 | 08.10. (Durchsicht Bewegung, nur gelesen) | Blätter und Dialoge springen beim Schließen in einem Bild aus dem Bildschirm, obwohl D1 (3.18.14) als behoben abgenommen war | Der D1-Test verlangte nur „irgendein Bild mit Verschiebung“; ein Sprung erfüllt das. Ursache im Produkt vermutet, nicht gemessen: `animation: none`, Übergang und Ziel im selben Schritt (wie D11) | § 5.3 (Zwischenlagen verlangen). Nicht behoben, Fund A-1 in `zyklus-2/mehrwert/schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md`; vor dem Bau am iPhone ansehen |
+| 08.10. (Empfehlungen ohne Abgleich) | Tagesdeckel 60/30 und „Buchstaben-Satz stimmt nicht“ dem Betreiber vorgelegt, ohne das Repo dazu gelesen zu haben | Notiz der Vorsitzung bzw. eigener Bericht für den Stand gehalten | § 1.7. Beide zurückgenommen; Tagesdeckel wird erst gerechnet, dann empfohlen |

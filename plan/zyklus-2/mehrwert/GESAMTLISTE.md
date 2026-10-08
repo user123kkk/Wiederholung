@@ -33,7 +33,7 @@ Die Nummern in Klammern sind die Fragen aus Runde 2.
 
 | Was | Stand |
 |---|---|
-| Tagesdeckel nach einer Pause, Fälligkeiten bleiben (10) | wartet: Zahlen und Satz von Dir |
+| Tagesdeckel nach einer Pause, Fälligkeiten bleiben (10) | offen: erst rechnen (Simulation), dann Empfehlung; „60/30“ zurückgenommen (08.10.) |
 | Karte direkt in der Abfrage bearbeiten | offen |
 | Am selben Tag „Runde fortsetzen“ (22) | offen |
 | Einmalige Erklärung der drei Knöpfe (21) | wartet: Wortlaut von Dir |
@@ -54,7 +54,7 @@ Die Nummern in Klammern sind die Fragen aus Runde 2.
 | Einladungslink mit Code | offen |
 | Satz unter demselben Code nachliefern (61) | wartet: ein echter Lehrer |
 | Regal mit Sätzen zum Starten (18) | wartet: Dein Satz |
-| Medina-Kartensatz ins Regal, Playlist verlinkt | wartet: Du gibst ihn frei |
+| Medina-Kartensatz ins Regal, Playlist verlinkt (Link da: `verstaendlichkeit/BERICHT.md` § 7); Kartensatz bringt Video-Link mit, Lektion zeigt Knopf zum Video | wartet: Du gibst ihn frei |
 | Buchstaben-Satz zum Schreiben und Erkennen (19) | wartet: Umschrift von Dir |
 
 ## 4. Aussehen, Bewegung, Tippen
@@ -96,9 +96,9 @@ der Einstieg genau das erklären muss, was der Bericht als unklar findet.
 |---|---|
 | Weniger Bewegung je Tipp, Balken-Schimmer weg (E-13) | offen |
 | Wege zu den Karten vor die Leiter, nichts doppelt (E-11) | offen |
-| „Dein Stand“ doppelt mit der Leiter; Leiste mit fünf Punkten, vier Wörtern | wartet: Dein Ja zum Streichen |
+| „Dein Stand“ doppelt mit der Leiter; Leiste mit fünf Punkten, vier Wörtern | entschieden 08.10.: streichen, zusammen mit E-11/E-13 |
 | Zurück-Taste und -Geste im Einstieg (E-12) | offen, mit Gerätetest |
-| Satz „fang bei den Buchstaben an“ stimmt nicht | wartet: Wortlaut von Dir |
+| Satz „fang bei den Buchstaben an“ | E: im Entwurf 3.18.28 neu gefasst |
 | Schriftgröße und Rundengröße raus aus dem Einstieg (47) | offen |
 | Proberunde direkt nach dem ersten Bildschirm (45) | wartet: Karten von Dir |
 | Google über dem E-Mail-Formular (49) | offen |

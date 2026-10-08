@@ -2,6 +2,35 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Betreiber: alles wie empfohlen; Wortlaut-Entwurf 3.18.28; neue Regel § 1.7; Tagesdeckel zurückgenommen
+
+**Geändert:** `plan/LEHREN.md` (§ 1.7 neu, Vorfall in § 15),
+`mehrwert/verstaendlichkeit/BERICHT.md` (Abschnitte 5–7),
+`mehrwert/verstaendlichkeit/woerter-3.18.28-entwurf.patch`,
+`mehrwert/GESAMTLISTE.md`. App auf `main` unverändert 3.18.27.
+**Entscheidung:** Betreiber 16:40: Verständlichkeit „alles ja wie du
+empfiehlst“. 17:00: Playlist-Link geliefert; Einstieg „mach, wie es besser
+ist“; ab jetzt jede Empfehlung mit dem ganzen Repo und seinen Wünschen
+abgleichen (als Regel § 1.7 aufgenommen, weil er es ausdrücklich „von nun
+an“ verlangt). Tagesdeckel: Der Vorschlag „ab 60 fällig, 30 am Tag“ ist
+zurückgenommen. Abgleich: Es gibt schon „Karten pro Runde“ (10/20/30/Alle,
+Voreinstellung Alle), `nachDringlichkeit` (3.18.22) und die Vorlage
+`E26-VORSCHLAG.md`; Frage 10 in `RUNDE-2` verlangt nur „Deckel mit den
+dringendsten, Fälligkeiten bleiben“. Offen ist, ob ein fester Deckel den
+Rückstand überhaupt abbaut, wenn vergessene Karten am nächsten Tag
+zurückkommen. Das wird gerechnet, nicht geschätzt.
+**Gebaut (Entwurf, getrennter Ordner `Wiederholung-woerter`):** Wortlaute
+3.18.28, Inhalt im CHANGELOG des Patches. Nur `node --check` und
+`pruefe_stand.mjs`; kein Browser, solange der Lauf an 3.18.27 läuft.
+**Offen:** Lauf-Ergebnis; Entwurf testen (betroffene Tests,
+`abnahme_runde.js`), dann auf `main`; Schritt (b) mit neuer Bedienung.
+**Nächster Schritt:** nach dem Lauf: Simulation Tagesdeckel unter
+`plan/werkzeuge/` mit den echten Funktionen (`intervalForStufe`,
+`bewertungAnwenden`, `nachDringlichkeit`): Pause 30/60/120 Tage, 150/500/
+1500 Karten, Deckel 20/30/50/keiner; gemessen wird, wie viele Tage bis der
+Rückstand weg ist, wie viele Stufen verloren gehen und wie viel am Tag
+anfällt. Annahme über das Vergessen wird ausgeschrieben.
+
 ### 2026-10-08 — Durchlauf „Verständlichkeit“: Bericht, nur gelesen (kein Code); voller Lauf an 3.18.27 gestartet
 
 **Geändert:** neu `mehrwert/verstaendlichkeit/BERICHT.md`; nachgezogen

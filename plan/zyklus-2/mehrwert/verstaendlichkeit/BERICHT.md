@@ -270,3 +270,26 @@ Nicht umgesetzt aus der Tabelle: „Datei einspielen“ länger beschriften
 Punkte-Zahl Einstieg/Runde (gehört zu O-5).
 In der Datenschutzerklärung ist ein Wort mitgezogen („Speicherkarten“ →
 „Sammlungen“, Abschnitt Kartensatz per Code); sonst nichts daran.
+
+## 7. Betreiber 08.10., 17:00
+
+- **Playlist:** https://www.youtube.com/playlist?list=PLILZM7Z8mbfBYd02P9jVbgkW28Si122Ph
+  („MADINA BOOK 1“, Madrasatuna, 46 Lektionen). Er will seinen
+  Medina-Kartensatz später öffentlich zum Teil des Tools machen.
+- **VS-6 dazu:** Der allgemeine Satz bleibt für Sätze ohne Video. Kommt der
+  Medina-Satz ins Regal, bringt ein Kartensatz seinen Video-Link mit (neues
+  Feld, Regeln, Tests) und die Lektion zeigt einen Knopf zum Video. Eigener
+  Bauschritt, Gesamtliste Abschnitt 3.
+- **Einstieg:** „mach, wie es besser ist“. Nach Abgleich mit dem Repo
+  (Kommentar 3.10.3 bei `EINSTIEG_HUERDEN`: Buchstaben lassen sich selbst
+  als Karten anlegen): Der Satz heißt im Entwurf 3.18.28 „Die Schrift
+  stellen wir groß. Buchstaben kannst du wie Wörter als Karten anlegen.“
+  „Dein Stand“ über der Leiter fällt weg, aber zusammen mit E-11/E-13 im
+  Paket Einstieg, weil alle drei denselben Bildschirm und dieselben Tests
+  umbauen.
+- **Neue Regel:** Empfehlungen vorher mit dem ganzen Repo und seinen
+  Wünschen abgleichen (LEHREN § 1.7).
+- **Tagesdeckel:** Vorschlag „60/30“ zurückgenommen (nicht abgeglichen,
+  nicht gerechnet). Er will es „absolut perfekt“ und zweifelt an der
+  Methodik. Nächster Schritt: rechnen statt schätzen, siehe Logbuch.
+- Elternteil als zweiter Eigentümer: „so gut wie erledigt“.

@@ -1,8 +1,8 @@
 diff --git a/CHANGELOG.md b/CHANGELOG.md
-index 94221a9..3480c9a 100644
+index 94221a9..08955ff 100644
 --- a/CHANGELOG.md
 +++ b/CHANGELOG.md
-@@ -1,3 +1,32 @@
+@@ -1,3 +1,35 @@
 +## 3.18.28 – 8. Oktober 2026
 +
 +**Klarere Wörter (Durchlauf „Verständlichkeit“, Betreiber 08.10.: „alles ja
@@ -29,6 +29,9 @@ index 94221a9..3480c9a 100644
 +- „Mehr zu diesem Bereich“ (statt „Weitere Handlungen“); „Als Tabelle
 +  speichern · ohne Lernstand“ (statt „Als Liste speichern · CSV“).
 +- Tägliche Erinnerung zeigt „7 Uhr, im Kalender“ (statt „Vorlage für 7 Uhr“).
++- Einstieg, „Ich lese Arabisch noch schlecht“: „Die Schrift stellen wir groß.
++  Buchstaben kannst du wie Wörter als Karten anlegen.“ (statt „Dann fang bei
++  den Buchstaben an.“ – einen fertigen Buchstaben-Satz gibt es noch nicht).
 +- Karte bearbeiten: unter „Stand“ steht „Nur ändern, wenn die Karte falsch
 +  eingestuft ist.“
 +
@@ -36,7 +39,7 @@ index 94221a9..3480c9a 100644
  
  **Viele Karten auf einmal, ruhigere Fenster, und der erste Teil der neuen
 diff --git a/app.js b/app.js
-index b7f13b9..f2e7f56 100644
+index b7f13b9..21cf1c1 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -66,6 +69,15 @@ index b7f13b9..f2e7f56 100644
      { title: "Aufzeichnung zurücksetzen?", okLabel: "Löschen", danger: true });
    if (!ok || userDocRef !== kontoRef || kontoWirdGeloescht) return;
    if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
+@@ -1539,7 +1539,7 @@ const EINSTIEG_HUERDEN = [
+      Woerter als Karten anlegen (Wort-Feld nimmt jeden Text). */
+   { id: "schrift", label: "Ich lese Arabisch noch schlecht oder gar nicht", icon: "auge",
+     kurz: "große Schrift, Buchstaben als Karten",
+-    echo: "Dann fang bei den Buchstaben an. Die Schrift stellen wir groß." },
++    echo: "Die Schrift stellen wir groß. Buchstaben kannst du wie Wörter als Karten anlegen." },
+   /* 3.11.0: der ehrliche Ausweg. Seit dieser Fassung ist auf diesem
+      Bildschirm eine Wahl Pflicht (siehe einstiegWahlFehlt) - ohne eine
+      Antwort "nichts davon" waere das eine Falle: niemand darf gezwungen
 @@ -4596,7 +4596,7 @@ function exportListe() {
    a.click();
    a.remove();
