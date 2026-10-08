@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 8acb637..b624edc 100644
+index 8acb637..29e86fa 100644
 --- a/app.js
 +++ b/app.js
 @@ -5802,6 +5802,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
@@ -10,7 +10,58 @@ index 8acb637..b624edc 100644
  }
  /* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
     mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
-@@ -9288,7 +9289,11 @@ function renderMain() {
+@@ -6059,6 +6060,50 @@ function lernRueckgaengig() {
+ function vergleichsWort(w) {
+   return suchNorm(String(w).trim(), true).text.replace(/\s+/g, " ").trim();
+ }
++/* 3.18.27 (Paket I, F-1 "Liste einfuegen", erster Teil): macht aus
++   eingefuegtem Text Kartenzeilen. Reine Funktion ohne Zugriff auf Zustand
++   oder DOM - geprueft in plan/werkzeuge/pruefstand/t_liste_lesen.js.
++   - Eine Zeile = eine Karte: Wort, Uebersetzung, optional Notiz.
++   - Trenner wird fuer den ganzen Text erkannt: Tab (Tabellen, Anki, Quizlet),
++     sonst Strichpunkt, senkrechter Strich, " – ", " - " oder " = ".
++   - Steht das Arabische ueberwiegend in der zweiten Spalte, werden die
++     Spalten getauscht: vorne steht in dieser App das arabische Wort.
++   - Was sich nicht lesen laesst, kommt mit Zeilennummer und Grund zurueck;
++     nichts wird stillschweigend verworfen. */
++//LISTE-LESEN-ANFANG
++const LISTE_MAX_ZEILEN = 1000;
++const LISTE_TRENNER = ["\t", ";", "|", " – ", " - ", " = "];
++function listeLesen(text, maxWort, maxExtra) {
++  const arab = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
++  const zeilen = String(text || "").replace(/\r\n?/g, "\n").split("\n")
++    .map((t, i) => ({ nr: i + 1, text: t.replace(/\u00A0/g, " ").trim() })).filter(z => z.text);
++  const aus = { karten: [], fehler: [], trenner: null, getauscht: false, zuViele: 0 };
++  if (!zeilen.length) return aus;
++  if (zeilen.length > LISTE_MAX_ZEILEN) { aus.zuViele = zeilen.length; return aus; }
++  let bester = null, treffer = 0;
++  for (const t of LISTE_TRENNER) {
++    const n = zeilen.filter(z => z.text.includes(t)).length;
++    if (n > treffer) { treffer = n; bester = t; }
++  }
++  aus.trenner = bester;
++  const roh = [];
++  for (const z of zeilen) {
++    const teile = bester ? z.text.split(bester).map(x => x.trim()) : [z.text];
++    const a = teile[0] || "", b = teile[1] || "";
++    const rest = !bester ? "" : teile.slice(2).filter(Boolean).join(bester === "\t" ? " \u00B7 " : bester.trim() + " ");
++    if (!a || !b) { aus.fehler.push({ nr: z.nr, text: z.text, grund: !bester || teile.length < 2 ? "kein Trenner" : "eine Seite fehlt" }); continue; }
++    roh.push({ nr: z.nr, a, b, rest });
++  }
++  const hinten = roh.filter(r => arab.test(r.b) && !arab.test(r.a)).length;
++  const vorn = roh.filter(r => arab.test(r.a) && !arab.test(r.b)).length;
++  aus.getauscht = hinten > vorn;
++  for (const r of roh) {
++    aus.karten.push({ nr: r.nr, wort: (aus.getauscht ? r.b : r.a).slice(0, maxWort), uebersetzung: (aus.getauscht ? r.a : r.b).slice(0, maxWort),
++      extra: r.rest.slice(0, maxExtra) });
++  }
++  return aus;
++}
++//LISTE-LESEN-ENDE
+ function findeDuplikat(wort, exceptId, cards) {
+   const key = vergleichsWort(wort);
+   return (cards || currentCards()).find(c => c.id !== exceptId && vergleichsWort(c.wort) === key) || null;
+@@ -9288,7 +9333,11 @@ function renderMain() {
    letzterOverlaySchluessel = overlaySchluessel;
    app.classList.toggle("still-ansicht", !ansichtNeu);
    app.classList.toggle("still-overlay", !overlayNeu);
@@ -23,7 +74,7 @@ index 8acb637..b624edc 100644
      !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
      ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
    if (ansichtNeu) {
-@@ -14799,21 +14804,34 @@ function openDialog(cfg) {
+@@ -14799,21 +14848,34 @@ function openDialog(cfg) {
     dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
     ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
     (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
@@ -68,7 +119,7 @@ index 8acb637..b624edc 100644
    setTimeout(danach, 200);
  }
  function closeDialog(result) {
-@@ -15691,7 +15709,10 @@ document.body.addEventListener("click", e => {
+@@ -15691,7 +15753,10 @@ document.body.addEventListener("click", e => {
      case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
      case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
      case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
@@ -80,6 +131,78 @@ index 8acb637..b624edc 100644
      case "toggle-set-art": ui.setsArtWahl = !ui.setsArtWahl; render(); break;
      case "toggle-select-mode": toggleSelectMode(); break;
      case "auswahl-alle": waehleSichtbareKarten(); break;
+diff --git a/plan/werkzeuge/pruefstand/t_liste_lesen.js b/plan/werkzeuge/pruefstand/t_liste_lesen.js
+new file mode 100644
+index 0000000..afb22bf
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/t_liste_lesen.js
+@@ -0,0 +1,66 @@
++/* Paket I, F-1 "Liste einfuegen": prueft die reine Lesefunktion listeLesen()
++   aus app.js. Kein Browser noetig: node t_liste_lesen.js */
++const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
++const quelle = fs.readFileSync(path.resolve(__dirname, '../../../app.js'), 'utf8');
++const a = quelle.indexOf('//LISTE-LESEN-ANFANG'), e = quelle.indexOf('//LISTE-LESEN-ENDE');
++assert.ok(a > 0 && e > a, 'Marken um listeLesen nicht gefunden');
++const listeLesen = new Function(quelle.slice(a, e) + '\nreturn listeLesen;')();
++const L = t => listeLesen(t, 1000, 5000);
++let n = 0;
++function fall(name, tun) { tun(); n++; console.log('grün: ' + name); }
++
++fall('leer', () => {
++  assert.deepEqual(L('').karten, []); assert.deepEqual(L('  \n\n ').karten, []); assert.equal(L(null).trenner, null);
++});
++fall('Tab, drei Spalten, Windows-Zeilenenden', () => {
++  const r = L('كِتَابٌ\tBuch\tPlural: كُتُبٌ\r\nقَلَمٌ\tStift\r\n');
++  assert.equal(r.trenner, '\t'); assert.equal(r.karten.length, 2); assert.equal(r.getauscht, false);
++  assert.deepEqual(r.karten[0], { nr: 1, wort: 'كِتَابٌ', uebersetzung: 'Buch', extra: 'Plural: كُتُبٌ' });
++  assert.equal(r.karten[1].extra, '');
++});
++fall('Deutsch vorne wird getauscht', () => {
++  const r = L('Buch;كِتَابٌ\nStift;قَلَمٌ\nHaus;بَيْتٌ');
++  assert.equal(r.getauscht, true); assert.equal(r.karten[0].wort, 'كِتَابٌ'); assert.equal(r.karten[0].uebersetzung, 'Buch');
++});
++fall('Harakat bleiben Zeichen für Zeichen', () => {
++  const wort = 'مُعَلِّمٌ';
++  assert.equal(L(wort + ' - Lehrer').karten[0].wort, wort);
++  assert.equal([...L(wort + ' - Lehrer').karten[0].wort].length, [...wort].length);
++});
++fall('Gedankenstrich, Gleichheitszeichen, senkrechter Strich', () => {
++  assert.equal(L('بَابٌ – Tür\nبَيْتٌ – Haus').trenner, ' – ');
++  assert.equal(L('بَابٌ = Tür').karten[0].uebersetzung, 'Tür');
++  assert.equal(L('بَابٌ | Tür | Notiz').karten[0].extra, 'Notiz');
++});
++fall('Bindestrich im Wort ist kein Trenner', () => {
++  const r = L('Fajr-Gebet;صَلَاةُ الْفَجْرِ');
++  assert.equal(r.trenner, ';'); assert.equal(r.karten[0].uebersetzung, 'Fajr-Gebet');
++});
++fall('Zeilen ohne Trenner oder mit leerer Seite werden gemeldet, nicht verworfen', () => {
++  const r = L('كِتَابٌ;Buch\nnur ein Wort\n;Stift\nقَلَمٌ;\n\nبَيْتٌ;Haus');
++  assert.equal(r.karten.length, 2);
++  assert.deepEqual(r.fehler.map(f => [f.nr, f.grund]), [[2, 'kein Trenner'], [3, 'eine Seite fehlt'], [4, 'eine Seite fehlt']]);
++  assert.equal(r.karten[1].nr, 6);
++});
++fall('gar kein Trenner', () => {
++  const r = L('eins\nzwei'); assert.equal(r.trenner, null); assert.equal(r.karten.length, 0); assert.equal(r.fehler.length, 2);
++});
++fall('mehr als drei Spalten: Rest landet in der Notiz', () => {
++  assert.equal(L('a\tb\tc\td').karten[0].extra, 'c · d');
++});
++fall('Längen werden gekappt', () => {
++  const r = listeLesen('x'.repeat(50) + ';' + 'y'.repeat(50) + ';' + 'z'.repeat(50), 10, 20);
++  assert.equal(r.karten[0].wort.length, 10); assert.equal(r.karten[0].uebersetzung.length, 10); assert.equal(r.karten[0].extra.length, 20);
++});
++fall('zu viele Zeilen: nichts lesen, Zahl melden', () => {
++  const r = L(Array.from({ length: 1001 }, (_, i) => 'a' + i + ';b').join('\n'));
++  assert.equal(r.zuViele, 1001); assert.equal(r.karten.length, 0);
++  assert.equal(L(Array.from({ length: 1000 }, (_, i) => 'a' + i + ';b').join('\n')).karten.length, 1000);
++});
++fall('beide Spalten arabisch oder beide deutsch: nicht tauschen', () => {
++  assert.equal(L('كِتَابٌ;كُتُبٌ').getauscht, false); assert.equal(L('Buch;book').getauscht, false);
++});
++fall('geschütztes Leerzeichen und Leerraum am Rand', () => {
++  assert.equal(L('  كِتَابٌ ;  Buch  ').karten[0].uebersetzung, 'Buch');
++});
++console.log(n + ' Fälle grün');
 diff --git a/plan/werkzeuge/pruefstand/t_paket_d.js b/plan/werkzeuge/pruefstand/t_paket_d.js
 index f305b1a..abba734 100644
 --- a/plan/werkzeuge/pruefstand/t_paket_d.js
