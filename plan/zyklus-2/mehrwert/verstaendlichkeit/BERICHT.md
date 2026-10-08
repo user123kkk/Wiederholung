@@ -252,3 +252,21 @@ Bau in zwei Schritten: (a) reine Wortlaute (1, 2, 4, 5, 6, 7, VS-9, die
 Beschriftungen aus VS-8) als eine Version nach dem Klein-Weg; (b) was neue
 Bedienung ist (VS-3, antippbare Erklärungen VS-7, Verweis „Liste
 einfügen“ VS-8) mit Rundenabnahme.
+
+## 6. Stand Schritt (a), 08.10., 16:50
+
+Als Entwurf 3.18.28 gebaut im getrennten Ordner
+`C:\Users\USER\Wiederholung-woerter` (git worktree auf c6dcd75), derselbe
+Stand als Patch: `woerter-3.18.28-entwurf.patch` (auf sauberem `main`:
+`git apply --check`, dann `git apply`). Inhalt: CHANGELOG 3.18.28 im
+Patch. **Geprüft:** nur `node --check` und `pruefe_stand.mjs`.
+**Nicht geprüft:** nichts im Browser (der volle Lauf an 3.18.27 läuft
+noch). Danach: betroffene Tests am Entwurf (eigener Port), weil
+Rundenende und Durchsicht berührt sind auch `abnahme_runde.js`.
+Angepasste Tests: `t_runde_bereiche.js` („fällig“ statt „offen“),
+`t_paket_c_weiter.js` (C6, neuer Wortlaut).
+Nicht umgesetzt aus der Tabelle: „Datei einspielen“ länger beschriften
+(bricht auf kleinen Handys um; fällt mit dem Regal anders aus) und die
+Punkte-Zahl Einstieg/Runde (gehört zu O-5).
+In der Datenschutzerklärung ist ein Wort mitgezogen („Speicherkarten“ →
+„Sammlungen“, Abschnitt Kartensatz per Code); sonst nichts daran.
