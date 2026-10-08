@@ -142,3 +142,29 @@ E25 320/dunkel/Ruhetag: ehrlicher Ring und Text
 E25 390/hell/Ruhetag: ehrlicher Ring und Text
 E25 390/dunkel/Ruhetag: ehrlicher Ring und Text
 E25 820/hell/Ruhetag: ehrlicher Ring und Text
+E25 820/dunkel/Ruhetag: ehrlicher Ring und Text
+E25 320/hell/gelernt: ehrlicher Ring und Text
+E25 320/dunkel/gelernt: ehrlicher Ring und Text
+E25 390/hell/gelernt: ehrlicher Ring und Text
+E25 390/dunkel/gelernt: ehrlicher Ring und Text
+E25 820/hell/gelernt: ehrlicher Ring und Text
+E25 820/dunkel/gelernt: ehrlicher Ring und Text
+E27 320/hell/bewegt: Bereichsweg, 44 px
+E27 320/hell/ruhig: Bereichsweg, 44 px
+E27 320/dunkel/bewegt: Bereichsweg, 44 px
+E27 320/dunkel/ruhig: Bereichsweg, 44 px
+E27 390/hell/bewegt: Bereichsweg, 44 px
+E27 390/hell/ruhig: Bereichsweg, 44 px
+E27 390/dunkel/bewegt: Bereichsweg, 44 px
+E27 390/dunkel/ruhig: Bereichsweg, 44 px
+E27 820/hell/bewegt: Bereichsweg, 44 px
+E27 820/hell/ruhig: Bereichsweg, 44 px
+E27 820/dunkel/bewegt: Bereichsweg, 44 px
+E27 820/dunkel/ruhig: Bereichsweg, 44 px
+E28 Nachtgruß: Hallo
+E29 Rückfallhinweis mit Warnsymbol
+E30 password: passender Konto-Weg, Abbruch, Mail, Fehler
+E30 google.com: passender Konto-Weg
+E30 apple.com: passender Konto-Weg
+E30 späte A-Mailantwort: B ohne fremden Dialog/Busy
+E31 Neustart b2, entfernte ID b1, anderes Konto b1
