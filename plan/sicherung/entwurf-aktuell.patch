@@ -1,8 +1,8 @@
 diff --git a/CHANGELOG.md b/CHANGELOG.md
-index 94221a9..08955ff 100644
+index 94221a9..e0ff1df 100644
 --- a/CHANGELOG.md
 +++ b/CHANGELOG.md
-@@ -1,3 +1,35 @@
+@@ -1,3 +1,34 @@
 +## 3.18.28 – 8. Oktober 2026
 +
 +**Klarere Wörter (Durchlauf „Verständlichkeit“, Betreiber 08.10.: „alles ja
@@ -28,7 +28,6 @@ index 94221a9..08955ff 100644
 +- Rundenende: „3 Karten noch nicht gewusst“ (statt „saßen noch nicht“).
 +- „Mehr zu diesem Bereich“ (statt „Weitere Handlungen“); „Als Tabelle
 +  speichern · ohne Lernstand“ (statt „Als Liste speichern · CSV“).
-+- Tägliche Erinnerung zeigt „7 Uhr, im Kalender“ (statt „Vorlage für 7 Uhr“).
 +- Einstieg, „Ich lese Arabisch noch schlecht“: „Die Schrift stellen wir groß.
 +  Buchstaben kannst du wie Wörter als Karten anlegen.“ (statt „Dann fang bei
 +  den Buchstaben an.“ – einen fertigen Buchstaben-Satz gibt es noch nicht).
@@ -39,7 +38,7 @@ index 94221a9..08955ff 100644
  
  **Viele Karten auf einmal, ruhigere Fenster, und der erste Teil der neuen
 diff --git a/app.js b/app.js
-index b7f13b9..21cf1c1 100644
+index b7f13b9..9f9de1f 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -292,15 +291,6 @@ index b7f13b9..21cf1c1 100644
      html += '<button data-action="lern-set" data-id="' + esc(akt.id) + '">' +
        (angefangen > 0 ? "Weiter durchgehen" : "Durchgehen") + '</button>';
      if (wiederholungen.length > 0) {
-@@ -10245,7 +10246,7 @@ function renderEinstellungen() {
-     const erinnert = hinweisSpeicher().erinnerung;
-     html += einstZeile({ action: "erinnerung-auf", icon: "serie", text: "Tägliche Erinnerung",
-       /* 3.17.14: "aus" statt leer - jede andere Zeile zeigt ihren Stand. */
--      wert: erinnert ? "Vorlage für " + erinnert.replace(/^0/, "") + " Uhr" : "aus" });
-+      wert: erinnert ? erinnert.replace(/^0/, "") + " Uhr, im Kalender" : "aus" });
-   }
-   html += '</div></div>';
- 
 @@ -10360,7 +10361,7 @@ function renderEinstellungenSeite(id) {
      html += '<div class="card" style="margin-top:var(--stack)">';
      html += '<h3>Einspielen</h3>';

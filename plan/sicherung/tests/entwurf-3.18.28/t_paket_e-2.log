@@ -8,3 +8,25 @@ E1 320/dunkel/bewegt: Serie 21 genannt, Abbruch erhält Stand
 E1 320/dunkel/ruhig: Serie 21 genannt, Abbruch erhält Stand
 E1 820/hell/bewegt: Serie 21 genannt, Abbruch erhält Stand
 E1 820/hell/ruhig: Serie 21 genannt, Abbruch erhält Stand
+E1 820/dunkel/bewegt: Serie 21 genannt, Abbruch erhält Stand
+E1 820/dunkel/ruhig: Serie 21 genannt, Abbruch erhält Stand
+E2 390/hell: A gelöscht, B ohne alte Unterseite bedienbar
+E2 390/dunkel: A gelöscht, B ohne alte Unterseite bedienbar
+E2 320/hell: A gelöscht, B ohne alte Unterseite bedienbar
+E2 320/dunkel: A gelöscht, B ohne alte Unterseite bedienbar
+E2 820/hell: A gelöscht, B ohne alte Unterseite bedienbar
+E2 820/dunkel: A gelöscht, B ohne alte Unterseite bedienbar
+E3 390/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 390/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 390/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 390/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E4 390: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E4 320: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
