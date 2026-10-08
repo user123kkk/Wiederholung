@@ -223,3 +223,32 @@ kann.
 5. VS-5 zweiter Teil: „Abfrage starten“ → „Runde starten“?
 6. VS-6: Satz statt „Geh mit dem Video mit.“
 7. Tabelle „Niedrig“: „alles wie vorgeschlagen“ reicht.
+
+## 5. Entscheidung des Betreibers (08.10.2026, 16:40)
+
+„alles ja wie du empfiehlst“. Damit gilt:
+
+1. VS-1: „Speicherkarte“ heißt künftig **„Sammlung“**; ein Verb: „ablegen“;
+   Satz an der zugeklappten Zeile.
+2. VS-2: Satz zum Bereich wie vorgeschlagen; „Kartensatz“ nur für das, was
+   per Code kommt oder geht; kein nacktes „Satz“.
+3. VS-3: Erklärung der drei Knöpfe mit dem vorgeschlagenen Wortlaut,
+   einmal, wegtippbar, vor der Freigabe der zwei Lernregeln.
+4. VS-4: Satz zu „Üben“ wie vorgeschlagen, Ort bleibt.
+5. VS-5: „gesehen“ statt „gelernt“; „Abfrage starten“ → „Runde starten“.
+6. VS-6: „Lies die Karten einmal durch, zum Beispiel neben Deinem
+   Unterricht oder Video.“
+7. Tabelle „Niedrig“: wie vorgeschlagen. VS-7, VS-8, VS-9 nach den
+   Urteilen im Bericht; VS-10 im Paket Einstieg.
+
+Dazu vom Betreiber (Bildschirmfoto YouTube): Die Playlist zum
+Medina-Kartensatz heißt **„MADINA BOOK 1“**, Kanal **Madrasatuna ||
+مدرستنا**, 46 Lektionen (erste Videos: „Madinah Arabic course | Book 1 -
+LESSON 1 (part 1)“ 41:16, „(part 2)“ 28:13). Die Adresse selbst fehlt
+noch; sie wird gebraucht, sobald der Satz ins Regal kommt (Gesamtliste
+Abschnitt 3).
+
+Bau in zwei Schritten: (a) reine Wortlaute (1, 2, 4, 5, 6, 7, VS-9, die
+Beschriftungen aus VS-8) als eine Version nach dem Klein-Weg; (b) was neue
+Bedienung ist (VS-3, antippbare Erklärungen VS-7, Verweis „Liste
+einfügen“ VS-8) mit Rundenabnahme.
