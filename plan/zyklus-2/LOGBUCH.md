@@ -2,6 +2,34 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — „ladegerät“ an 3.18.26: 149/152, drei Nachläufe grün, nichts neu veröffentlicht
+
+**Geändert:** nur dieses Logbuch und `mehrwert/ARBEITSSTAND.md`.
+**Was lief:** Der Betreiber startete `ladegeraet.bat` aus `Desktop\Wiederholung`
+(Stand c65fe6d, App 3.18.26, Netzteil). Gesamtlauf 10:45–12:48 Uhr, 152
+Tests, 8815 s. Quellstand `27a90a0520157999`, Logs unter
+`%TEMP%\adrabic-pruefstand-gesamt\27a90a0520157999\`. 149 Exit 0, drei rot,
+das Skript brach deshalb vor den Affen ab und hat **nichts veröffentlicht**
+(online weiter 3.18.26 vom Morgen, `sw.js` abgerufen).
+**Die drei roten, einzeln nachgesehen:**
+- `t_settings_mehrgeraete`, `t_verlauf_mehrgeraete`: `ECONNREFUSED
+  127.0.0.1:8081` – der Firestore-Emulator war nicht mehr da. Das Skript
+  hatte ihn um 10:45 gestartet und als bereit gemeldet; warum er zwei
+  Stunden später fehlte, ist nicht geklärt. Kein App-Fehler. Emulator neu
+  gestartet, beide Tests einzeln: Exit 0, alle Zeilen „OK“.
+- `t_griff_scrollen`: „Seite folgt dem Finger genau, 0 !== 96“ im zweiten
+  Bündel. Direkt danach dreimal einzeln am selben Stand: 3/3 Exit 0, je
+  fünf Bündel „OK“. Ursache des einen roten Laufs nicht gefunden; während
+  des Laufs lief auf dem Laptop anderes (dieser Chat). Grenze unverändert.
+**Entscheidung:** Kein neuer Gesamtlauf nur für 3.18.26: Der Stand ist
+schon online, und die nächste Version braucht ohnehin den vollen Lauf.
+Offen als Skriptpunkt: Der Emulator überlebt den langen Lauf nicht
+zuverlässig; das Skript sollte vor den beiden Emulator-Tests prüfen, ob
+er noch antwortet, und ihn sonst neu starten.
+**Offen:** Affen Handy 200 / iPad 150 an 3.18.26 laufen nach (Ergebnis im
+nächsten Eintrag). Entwurf 3.18.27 im Browser prüfen.
+**Nächster Schritt:** Entwurf (`mehrwert/ARBEITSSTAND.md`) messen und testen.
+
 ### 2026-10-08 — Bildschirmaufnahme ausgewertet, Überblick, Entwürfe (kein Commit an der App)
 
 **Geändert:** `mehrwert/UEBERBLICK-OFFEN.md` (neu, eine Seite: offen und
