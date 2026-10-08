@@ -2,6 +2,28 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Durchlauf „Verständlichkeit“: Bericht, nur gelesen (kein Code); voller Lauf an 3.18.27 gestartet
+
+**Geändert:** neu `mehrwert/verstaendlichkeit/BERICHT.md`; nachgezogen
+`mehrwert/GESAMTLISTE.md` (4a), `mehrwert/ARBEITSSTAND.md`, `plan/STAND.md`.
+**Was lief:** Betreiber schrieb „weiter“. (1) `ladegeraet.ps1 -NurPruefen`
+um 14:52 gestartet (Netzteil, Stand 74e0b5d = App 3.18.27, 156 Tests,
+Quellstand `7223038b21480566`, Ausgabe `%TEMP%\ladegeraet-nurpruefen-3.18.27.log`).
+(2) Währenddessen ohne Browser: alle sichtbaren Texte aus `app.js` gezogen
+und je Bildschirm am Code gelesen.
+**Entscheidung:** Nichts gebaut, auch nicht den einen falschen Text
+(VS-5), solange der Lauf denselben Ordner prüft (der Server liefert ihn
+live aus). Zehn Funde VS-1 bis VS-10 und eine Tabelle kleiner
+Wort-Doppelungen; Kern: eigene Wörter (Speicherkarte, Bereich/Kartensatz,
+Üben, die drei Knöpfe) werden nicht dort erklärt, wo man ihnen begegnet;
+39 Erklärungen stehen nur als `title` und sind am Handy unsichtbar.
+**Nicht geprüft:** nichts im Browser angesehen, kein Fremder, kein iPhone;
+Texte auswendig lernen nur am Rand (Probelauf).
+**Offen:** Sieben Entscheidungen des Betreibers (Bericht Abschnitt 4).
+Klein und ohne ihn: Durchsicht „x von y gelernt“ → „gesehen“ (VS-5), nach
+dem Lauf. Ergebnis des Laufs: nächster Eintrag.
+**Nächster Schritt:** Lauf-Ausgabe lesen (rote einzeln, § 5.3), eintragen.
+
 ### 2026-10-08 — 3.18.27 auf main: Paket I (Teil), H (Teil), G0, G Fragen 7 und 9, Bewegung 1 – nicht veröffentlicht
 
 **Geändert:** `app.js`, `styles.css`, `sw.js`, `index.html` (33 Stellen),

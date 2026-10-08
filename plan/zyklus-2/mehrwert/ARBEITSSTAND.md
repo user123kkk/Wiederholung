@@ -47,6 +47,19 @@ Pakete vor Kleinkram**, jede Minute sichern. Reihenfolge und Überblick:
 - Skriptpunkt: `ladegeraet.ps1` soll vor den zwei Emulator-Tests prüfen,
   ob der Emulator noch antwortet.
 
+## Nachtrag 08.10., ab 14:50 („weiter“)
+
+- Voller Lauf `ladegeraet.ps1 -NurPruefen` an 3.18.27 läuft seit 14:52
+  (156 Tests, Logs `%TEMP%\adrabic-pruefstand-gesamt\7223038b21480566\`,
+  Ausgabe `%TEMP%\ladegeraet-nurpruefen-3.18.27.log`). Solange er läuft:
+  **keine Browser-Tests und keine Änderung an App- oder Testdateien in
+  diesem Ordner** (der Lauf-Server liefert ihn live aus).
+- Durchlauf „Verständlichkeit“ ist als Bericht fertig:
+  [`verstaendlichkeit/BERICHT.md`](verstaendlichkeit/BERICHT.md). Sieben
+  Fragen an den Betreiber (Abschnitt 4). Eine Kleinigkeit ohne ihn: VS-5,
+  „gesehen“ statt „gelernt“ (`app.js` 9945), nach dem Lauf.
+- Danach weiter nach `GESAMTLISTE.md`, „Reihenfolge“ Punkt 2.
+
 ## Wo der Code liegt
 
 - `main` (dieser Ordner und `origin/main`): App unverändert **3.18.26**.

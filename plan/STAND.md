@@ -1,5 +1,7 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**08.10.2026, 15:00: Durchlauf „Verständlichkeit“ ist als Bericht fertig (nur am Code gelesen, nichts gebaut): `zyklus-2/mehrwert/verstaendlichkeit/BERICHT.md`, Funde VS-1 bis VS-10, sieben Fragen an den Betreiber. Voller Lauf `ladegeraet.ps1 -NurPruefen` an 3.18.27 seit 14:52 gestartet; Ergebnis im Logbuch Zyklus 2. `main` weiter 3.18.27, online 3.18.26.**
+
 **08.10.2026, 13:55: `main` = 3.18.27 (Liste einfügen, Export, Druck, Löschen mit Rückgängig, Rundenende, Blätter gleiten, zwei Lernregeln nur im Betreiber-Konto). Geprüft mit betroffenen Tests und Rundenabnahme 13/13, **kein Gesamtlauf, nicht veröffentlicht** – vor dem Veröffentlichen `ladegeraet.ps1 -NurPruefen`. Online ist 3.18.26 (Gesamtlauf 149/152 + drei Nachläufe grün, Affen 0). Alles Offene mit Reihenfolge: `zyklus-2/mehrwert/GESAMTLISTE.md`; zum Weiterbauen: `zyklus-2/mehrwert/ARBEITSSTAND.md`.**
 
 **08.10.2026, neuer Chat: Schritt 2 der Mehrwert-Übergabe ist fertig (zwei Berichte, nur gelesen, kein Code): `zyklus-2/mehrwert/schritt-2/BERICHT-ONBOARDING.md` und `BERICHT-AUSSEHEN-BEWEGUNG.md`. Wichtigster Fund: Blätter gleiten beim Schließen nicht (Chromium gemessen, am iPhone ansehen). Schritt 1 („ladegerät“) holt der Betreiber nach. Als Nächstes Schritt 3 (Paket I), sobald er es sagt. `main` weiter 3.18.26.**

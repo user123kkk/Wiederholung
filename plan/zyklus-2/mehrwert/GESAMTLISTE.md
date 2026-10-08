@@ -81,9 +81,10 @@ Fremdentest), das Ganze nicht.
 
 | Was | Stand |
 |---|---|
-| Durchlauf „Verständlichkeit“ über jeden Bildschirm, nur lesen: Was ist das? Was soll ich tun? Welche Wörter versteht man nicht (Speicherkarte, Bereich, Lektion, Stufe-Wörter, Zeile/Aya, fällig, Üben gegen Lernen, Runde)? Ergebnis: Liste mit Vorschlag je Stelle | offen, ein eigener Bericht wie Schritt 2 |
-| Begriffe festlegen: ein Wort je Sache, überall gleich | offen, nach dem Bericht |
-| Kurze Erklärung an der Stelle, an der man sie braucht (nicht als Hilfeseite) | offen, nach dem Bericht |
+| Durchlauf „Verständlichkeit“ über jeden Bildschirm, nur lesen: Was ist das? Was soll ich tun? Welche Wörter versteht man nicht (Speicherkarte, Bereich, Lektion, Stufe-Wörter, Zeile/Aya, fällig, Üben gegen Lernen, Runde)? Ergebnis: Liste mit Vorschlag je Stelle | **Bericht fertig (08.10.), nur am Code gelesen:** `verstaendlichkeit/BERICHT.md`, Funde VS-1 bis VS-10 |
+| Begriffe festlegen: ein Wort je Sache, überall gleich | wartet: Deine Antworten (Bericht Abschnitt 4), vor allem „Speicherkarte“ |
+| Kurze Erklärung an der Stelle, an der man sie braucht (nicht als Hilfeseite) | wartet: Deine Antworten; Vorschläge je Stelle im Bericht |
+| Durchsicht im geführten Satz sagt „x von y gelernt“, meint „gesehen“ (VS-5) | offen, klein, ohne Dich |
 | Echte Probe: Fremdentest mit Freunden | wartet: nach Paket K |
 
 Reihenfolge: der Bericht kommt **vor** dem Einstieg (Abschnitt 5), weil
