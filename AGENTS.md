@@ -2,6 +2,23 @@
 
 Dieselben Regeln wie für Claude. Diese Datei verweist nur, sie ersetzt nichts.
 
+**Seit 08.10.2026, vor allem anderen (Betreiber: „ohne mich erklären zu
+müssen“):**
+
+1. [`plan/sicherung/UEBERGABE-AKTUELL.md`](plan/sicherung/UEBERGABE-AKTUELL.md)
+   lesen. Die Seite wird jede Minute automatisch neu geschrieben: Stand,
+   uncommittete Dateien, laufende Tests, letzte Ergebnisse, zuletzt Getanes.
+   Uncommittete Arbeit eines anderen Agenten liegt als
+   `plan/sicherung/entwurf-aktuell.patch` daneben, alle Testausgaben unter
+   `plan/sicherung/tests/`.
+2. Die Minuten-Sicherung selbst starten und laufen lassen:
+   `bash plan/werkzeuge/minuten_sicherung.sh` (im Hintergrund).
+3. [`plan/BETREIBER-VERSTEHEN.md`](plan/BETREIBER-VERSTEHEN.md) und
+   [`plan/ALLES-OFFEN.md`](plan/ALLES-OFFEN.md) lesen. Jeden Wunsch des
+   Betreibers in derselben Antwort in `ALLES-OFFEN.md` eintragen; jeden
+   Arbeitsschritt in `plan/ARBEITSPROTOKOLL.md`.
+4. Den Betreiber nicht nach dem Stand fragen. Er steht in diesen Dateien.
+
 **05.10.2026, zuerst lesen, falls `git status` uncommittete Dateien zeigt:**
 [`plan/zyklus-2/CODEX-HANDOFF-2026-10-05-E7.md`](plan/zyklus-2/CODEX-HANDOFF-2026-10-05-E7.md).
 E7 (Ruhetag, 3.18.16) ist gebaut und geprüft, aber noch nicht committet;

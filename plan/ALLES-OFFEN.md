@@ -108,6 +108,7 @@ abgehakt; hier wird das nicht doppelt geführt.
 | „eine Sammlung, auf die ich mich immer und immer verlassen kann, ohne Zweifel“ | diese Datei; bauen: Abgleich der 187 Katalog-Zeilen gegen die 34 wörtlichen Agentenberichte, damit keine Idee fehlt |
 | „erledige sonst du alles, belaste mich nicht mit unnötigen Fragen und Formalitäten“ | gilt: `CLAUDE.md`, LEHREN § 1.2 |
 | „während sie falsch wörtlich gespeichert sind? Einiges fehlt?“ | offen: siehe Zeile darüber; bis zum Abgleich gilt der Katalog als Zusammenfassung, die Berichte als Quelle |
+| „das Wichtigste ist, dass alles jede Minute gespeichert wird, wirklich alles … selbst Tests, alles, was eine KI auch nur anfasst … ich will ein klares: ist eingebaut“ (17:52) | fertig, eingebaut: `plan/werkzeuge/minuten_sicherung.sh` sichert jede Minute Entwurf, alle Testausgaben und die Übergabe-Seite nach `plan/sicherung/` und pusht. Grenze: läuft nur, solange der Laptop an ist und ein Chat sie gestartet hat |
 
 ### 3.3 Gerätetests am iPhone (nur Du)
 

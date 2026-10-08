@@ -1,4 +1,4 @@
-# Übergabe – Stand von 08.10.2026 17:53 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 08.10.2026 17:55 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,18 +6,21 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `c665c9b Sicherung 17:49 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9165868 Werkzeug: Minuten-Sicherung sichert auch alle Testausgaben und schreibt die Uebergabe-Seite`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.27"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
+ M AGENTS.md
  M CHANGELOG.md
+ M CLAUDE.md
  M app.js
  M datenschutzerklaerung.html
  M index.html
- M plan/werkzeuge/minuten_sicherung.sh
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/pruefstand/t_paket_c_weiter.js
  M plan/werkzeuge/pruefstand/t_runde_bereiche.js
  M sw.js
@@ -47,6 +50,14 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 08.10.2026
 
+- 17:55 Minuten-Sicherung erweitert und neu gestartet (Betreiber 17:52:
+  „wirklich alles … selbst Tests … ich will ein klares: ist eingebaut“):
+  sichert jetzt jede Minute auch alle Testausgaben (`plan/sicherung/tests/`,
+  26 Läufe der letzten zwei Tage) und schreibt
+  `plan/sicherung/UEBERGABE-AKTUELL.md`. Erster vollständiger Durchgang
+  17:54 committet und gepusht (4fefe03). Patch enthält jetzt auch die
+  geänderten Testdateien (geprüft). `AGENTS.md` und `CLAUDE.md` verweisen
+  darauf.
 - 17:50 Minuten-Sicherung läuft (`plan/werkzeuge/minuten_sicherung.sh`, im
   Hintergrund dieses Chats): jede Minute `plan/` und `CLAUDE.md` committen
   und pushen, uncommitteter App-Entwurf als

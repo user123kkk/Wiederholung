@@ -28,8 +28,13 @@ seinen Wünschen abgleichen (§ 1.7).
   [`plan/ARBEITSPROTOKOLL.md`](plan/ARBEITSPROTOKOLL.md), Agentenberichte
   ungekürzt als Datei, Chats mit `plan\werkzeuge\chats_sichern.py` sichern.
 - **Zu Beginn jeder Session die Minuten-Sicherung starten** (im Hintergrund):
-  `bash plan/werkzeuge/minuten_sicherung.sh`. Sie committet und pusht jede
-  Minute `plan/` und legt den uncommitteten App-Entwurf als Patch ab.
+  `bash plan/werkzeuge/minuten_sicherung.sh`. Sie schreibt jede Minute nach
+  `plan/sicherung/`: den uncommitteten Entwurf als Patch, alle
+  Testausgaben und die Seite
+  [`UEBERGABE-AKTUELL.md`](plan/sicherung/UEBERGABE-AKTUELL.md), und
+  committet und pusht `plan/`. Wer von Codex oder einem anderen Chat
+  kommt, liest zuerst diese Seite und fragt den Betreiber nicht nach dem
+  Stand.
 - Ihn nicht mit Formalitäten und unnötigen Fragen belasten: selbst
   entscheiden, was er nicht entscheiden muss (`plan/LEHREN.md` § 1.2), und
   es im Logbuch vermerken.

@@ -8,6 +8,14 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 08.10.2026
 
+- 17:55 Minuten-Sicherung erweitert und neu gestartet (Betreiber 17:52:
+  „wirklich alles … selbst Tests … ich will ein klares: ist eingebaut“):
+  sichert jetzt jede Minute auch alle Testausgaben (`plan/sicherung/tests/`,
+  26 Läufe der letzten zwei Tage) und schreibt
+  `plan/sicherung/UEBERGABE-AKTUELL.md`. Erster vollständiger Durchgang
+  17:54 committet und gepusht (4fefe03). Patch enthält jetzt auch die
+  geänderten Testdateien (geprüft). `AGENTS.md` und `CLAUDE.md` verweisen
+  darauf.
 - 17:50 Minuten-Sicherung läuft (`plan/werkzeuge/minuten_sicherung.sh`, im
   Hintergrund dieses Chats): jede Minute `plan/` und `CLAUDE.md` committen
   und pushen, uncommitteter App-Entwurf als
