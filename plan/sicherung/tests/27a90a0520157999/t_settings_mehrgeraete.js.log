@@ -1,0 +1,12 @@
+[TypeError: fetch failed] {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8081
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2021:16) {
+    errno: -4078,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 8081
+  }
+}
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1,"quelltext":"d1ab743ac317536eb5be5a2f1a8b735bf69aea1bb36f22062af29193aa5b8dea"}

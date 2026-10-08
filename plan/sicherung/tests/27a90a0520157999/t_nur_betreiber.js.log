@@ -1,0 +1,8 @@
+(lesen) normales Konto 390: 7 Bildschirme, alle gleich
+(lesen) normales Konto 1440: 7 Bildschirme, alle gleich
+Gegenprobe Betreiber-Konto: 6 Unterschiede (erwartet > 0)
+Gegenprobe ohne Sperre der Schrift-Korrektur: 4 Unterschiede (erwartet > 0): Verwalten HTML anders ab: …rcle></svg></span><div class="words"><div class="wort arabic" lang="ar" dir="rtl">أُو۟لَـٰٓئِكَ</div><div class="uebersetzung">Buch</div><di ⇄ …rcle></svg></span><div class=
+Gegenprobe Textfreigabe fuer normales Konto: 6 Unterschiede (erwartet > 0)
+OK t_nur_betreiber: Textfreigabe aendert keinen der sieben Bildschirme normaler Konten; HTML und Pixel gleich
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":131,"quelltext":"2dba4ae190726fe3b4a6f4d90326135b93443440e03d7e56626f2a9a74f6dbcb"}

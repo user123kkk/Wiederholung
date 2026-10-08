@@ -1,0 +1,19 @@
+Start: Browser fuer X-Abnahme oeffnen
+Browser bereit
+Fall A: App geladen
+Fall A: Antwort 1 gegeben
+Fall A: Antwort 2 gegeben
+Fall A: Antwort 3 gegeben
+OK   A: bewertete Karten im Speicher nicht mehr faellig (4/2026-10-15, 2/2026-10-10, 1/2026-10-09)
+OK   A: faellig 12 -> 9
+OK   A: Tagesprotokoll sofort nach X komplett: {"w":2,"n":1}
+OK   A: Serie 10 -> 11
+OK   A: neue Runde ohne die bewerteten Karten
+OK   A: Konsole sauber 
+Fall B: App geladen
+OK   B: Wischen + sofort X: 0/2026-10-08 -> 1/2026-10-09
+OK   B: Runde ist zu
+OK   B: Konsole sauber 
+alles ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":29,"quelltext":"eb6ca98f44d833bafc686c39207f74a269a32aed31eda7ee296018adf99e7127"}

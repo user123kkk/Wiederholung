@@ -1,0 +1,10 @@
+OK   1 Alltag, alle heute faellig: frisch 5/5, mittel 5/5, fest 0 (soll 5/5/0)
+OK   2 nach 60 Tagen Pause: fest 10, mittel 0, kurz 0 (soll 10/0/0)
+OK   3 LERNEN-4, heute faellig vor lange ueberfaellig: heute 10, alt 0 (soll 10/0)
+OK   4 nur ueberfaellige, umgekehrt in der Liste: die zehn am wenigsten ueberfaelligen 10/10
+OK   5 neue hinter Wiederholungen: wdh 6/6, neu 4 (soll 6/4)
+OK   6 ohne Limit: alle 10/10 in der Runde
+OK   6 Limit groesser als faellig: 8/8 in der Runde
+ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":14,"quelltext":"aa6fc8a64898817f8de494b120715be178c56ed8a2550ac220a96d73fc76f44a"}

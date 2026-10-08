@@ -1,0 +1,14 @@
+-- aktueller Stand: Anmeldung ins Bestandskonto --
+ok      adrabic-einstieg-antworten ist geloescht: null
+ok      adrabic-einstieg-nachklang ist geloescht: null
+Fehler auf der Seite: ok
+
+-- Einstellungen des Bestandskontos bleiben unangetastet (nicht ueberschrieben) --
+ok      Cloud-Einstellung arabGroesse bleibt "normal" (nicht vom Gast-Zwischenspeicher ueberschrieben): {"arabGroesse":"normal","thema":"dunkel","sitzungsLimit":"alle","lastBackup":"2026-10-03"}
+
+0 Fehler insgesamt auf dem aktuellen Stand.
+
+-- Gegenprobe gegen 5ad0a11 (muss rot sein) --
+  ok (=Fehler im Altstand): Schluessel bleiben liegen: {"antworten":"{\"arabGroesse\":\"gross\",\"sitzungsLimit\":10}","nachklang":null}
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":9,"quelltext":"e56eb189ab26d583922dae1a9ff3311351e7b731a08f1bb7c405c774f08daa5d"}

@@ -1,0 +1,27 @@
+A (neu): {"appJs":0,"stylesCss":0,"fbApp":0,"fbAuth":0,"fbFs":0,"navigation":1}
+ok      A: app.js?v=… kommt beim zweiten Reload aus dem Cache (keine Netzanfrage)
+ok      A: styles.css?v=… kommt beim zweiten Reload aus dem Cache (keine Netzanfrage)
+ok      A: firebase-*.js kommen beim zweiten Reload aus dem Cache (keine Netzanfrage)
+ok      A: index.html (Navigation) geht weiter ans Netz
+B: neue app.js?v=TEST vom Netz geholt? true
+ok      B: eine neue, noch nicht zwischengespeicherte app.js?v=TEST wird vom Netz geholt
+D: Seite trotz 3 s Netz nach 57 ms
+ok      D: Seite kommt bei langsamem Netz sofort aus dem Cache
+Gegenprobe D (sw.js 3.17.54-alt, 696e5bf): 3070 ms
+ok      Gegenprobe D: alte sw.js wartet aufs Netz (muss ROT sein)
+C (scheitert): {"vorher":{"caches":["adrabic-3.18.24"],"active":"http://127.0.0.1:8099/sw.js"},"neuerCacheName":"adrabic-3.17.35-c-fail","nachher":{"caches":["adrabic-3.18.24","adrabic-3.17.35-c-fail"],"installing":false,"waiting":false,"active":"http://127.0.0.1:8099/sw.js"},"appJsNeuImCache":false}
+ok      C: nach gescheiterter Installation ist weiterhin der alte Worker aktiv
+ok      C: nach gescheiterter Installation ist der alte Cache noch da
+ok      C: kein haengengebliebener installierender/wartender Worker nach dem Fehlschlag
+C (gelingt): {"vorher":{"caches":["adrabic-3.18.24"],"active":"http://127.0.0.1:8099/sw.js"},"neuerCacheName":"adrabic-3.17.35-c-ok","nachher":{"caches":["adrabic-3.17.35-c-ok"],"installing":false,"waiting":false,"active":"http://127.0.0.1:8099/sw.js?upd=c-ok"},"appJsNeuImCache":true}
+ok      C: nach gelungener Installation ist der neue Worker aktiv
+ok      C: nach gelungener Installation gibt es den neuen Cache
+ok      C: nach gelungener Installation ist der alte Cache weg
+ok      C: die neue app.js liegt nach gelungener Installation im Cache
+Gegenprobe A (alte sw.js): {"appJs":1,"stylesCss":1,"fbApp":1,"fbAuth":1,"fbFs":1,"navigation":1}
+ok      Gegenprobe A: die alte sw.js fragt beim zweiten Reload weiter das Netz (muss ROT sein)
+Gegenprobe C (alte sw.js): {"vorher":{"caches":["adrabic-3.18.24"],"active":"http://127.0.0.1:8099/sw.js"},"neuerCacheName":"adrabic-3.17.35-alt-fail","nachher":{"caches":["adrabic-3.17.35-alt-fail"],"installing":false,"waiting":false,"active":"http://127.0.0.1:8099/sw.js?upd=alt-fail"},"appJsNeuImCache":false}
+ok      Gegenprobe C: die alte sw.js aktiviert die neue Version trotz fehlender app.js und loescht den alten Cache (muss ROT sein)
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":30,"quelltext":"3fe687941e78f2a7cfcb1a9cd75608ee6cef51a478841f789485c09a7c03cef3"}

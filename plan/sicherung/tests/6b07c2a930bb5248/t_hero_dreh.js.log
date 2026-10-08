@@ -1,0 +1,8 @@
+frueh: {"hinten":false,"pressed":"false","transitions":0}
+nach Haltezeit: {"hinten":true,"pressed":"true","transitions":1}
+nach 1. Tipp: {"hinten":false,"pressed":"false","transitions":2}
+nach 2. Tipp: {"hinten":true,"pressed":"true","transitions":3}
+Konsole: ok
+Alles richtig.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":7,"quelltext":"690d80e4078615eef549d8eb5c62a1de07fecb7e5c9eed08ee08c069f89e4209"}

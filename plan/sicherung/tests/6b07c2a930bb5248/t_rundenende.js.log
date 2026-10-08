@@ -1,0 +1,26 @@
+== handy
+  normal: Geschafft Alle 12 Karten für heute durch. 12 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+    Fertig-Knopf 475/519 von 844 | Kontrast 0 | quer false
+    Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+    Fertig -> Für heute durch
+  Limit 10: Geschafft 10 Karten in dieser Runde. 10 sicher 0 fast 0 nicht 4 Tage am Stück Heute sind noch 2 Karten offen. Fertig Weiterlernen Letzte Bewertung rückgängig | noch faellig laut Lernen: Knopf "Weiterlernen"
+    X oben am Ende: false | Weiterlernen -> "Karte 1 von 2" -> Ende: Geschafft Alle 2 Karten für heute durch. 2 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+  Ueben-Auswahl Aktionen: bereich-sheet-auf,einstellungen,karte-neu,open-drill,bereich-mehr-auf,stufe-chip,start-drill,close-drill,toggle-sets,search-clear,card-detail,select-bereich,add-bereich,tab-lernen,tab-fortschritt,tab-verwalten
+== klein
+  normal: Geschafft Alle 12 Karten für heute durch. 12 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+    Fertig-Knopf 475/519 von 740 | Kontrast 0 | quer false
+    Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+    Fertig -> Für heute durch
+  Limit 10: Geschafft 10 Karten in dieser Runde. 10 sicher 0 fast 0 nicht 4 Tage am Stück Heute sind noch 2 Karten offen. Fertig Weiterlernen Letzte Bewertung rückgängig | noch faellig laut Lernen: Knopf "Weiterlernen"
+    X oben am Ende: false | Weiterlernen -> "Karte 1 von 2" -> Ende: Geschafft Alle 2 Karten für heute durch. 2 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+  Ueben-Auswahl Aktionen: bereich-sheet-auf,einstellungen,karte-neu,open-drill,bereich-mehr-auf,stufe-chip,start-drill,close-drill,toggle-sets,search-clear,card-detail,select-bereich,add-bereich,tab-lernen,tab-fortschritt,tab-verwalten
+== ipad
+  normal: Geschafft Alle 12 Karten für heute durch. 12 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+    Fertig-Knopf 477/521 von 1180 | Kontrast 0 | quer false
+    Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+    Fertig -> Für heute durch
+  Limit 10: Geschafft 10 Karten in dieser Runde. 10 sicher 0 fast 0 nicht 4 Tage am Stück Heute sind noch 2 Karten offen. Fertig Weiterlernen Letzte Bewertung rückgängig | noch faellig laut Lernen: Knopf "Weiterlernen"
+    X oben am Ende: false | Weiterlernen -> "Karte 1 von 2" -> Ende: Geschafft Alle 2 Karten für heute durch. 2 sicher 0 fast 0 nicht 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+  Ueben-Auswahl Aktionen: bereich-sheet-auf,einstellungen,karte-neu,open-drill,bereich-mehr-auf,stufe-chip,start-drill,close-drill,toggle-sets,search-clear,card-detail,select-bereich,add-bereich,tab-lernen,tab-fortschritt,tab-verwalten
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":115,"quelltext":"ca52ce639ac146d0c75d951834256896681008f7aa3b67ee32a03cc378484599"}

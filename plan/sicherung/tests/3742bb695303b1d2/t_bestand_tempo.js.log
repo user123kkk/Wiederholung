@@ -1,0 +1,32 @@
+App-Zeiten [{"name":"render","ms":2.599999999627471},{"name":"gradeCard","ms":19.09999999962747},{"name":"render","ms":2.7999999998137355}]
+App-Zeiten [{"name":"render","ms":5.900000000372529},{"name":"gradeCard","ms":9.200000000186265}]
+App-Zeiten [{"name":"render","ms":3.8999999994412065},{"name":"gradeCard","ms":8.399999999441206}]
+App-Zeiten [{"name":"render","ms":2.2000000001862645},{"name":"gradeCard","ms":4.5}]
+App-Zeiten [{"name":"render","ms":4.7999999998137355},{"name":"gradeCard","ms":7.599999999627471}]
+300 Karten, 15 Lektionen, gefuehrt | Runde starten: lange Aufgaben 94 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 0, 0, 0, 0, 0 ms
+App-Zeiten [{"name":"render","ms":2.2999999998137355},{"name":"gradeCard","ms":12.200000000186265},{"name":"render","ms":4.3999999994412065}]
+App-Zeiten [{"name":"render","ms":9.200000000186265},{"name":"gradeCard","ms":12.600000000558794}]
+App-Zeiten [{"name":"render","ms":6.8999999994412065},{"name":"gradeCard","ms":12.699999999254942}]
+App-Zeiten [{"name":"render","ms":8.200000000186265},{"name":"gradeCard","ms":10.600000000558794}]
+App-Zeiten [{"name":"render","ms":8.299999999813735},{"name":"gradeCard","ms":12.399999999441206}]
+1000 Karten, 50 Lektionen, gefuehrt | Runde starten: lange Aufgaben 102 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 0, 0, 0, 0, 0 ms
+App-Zeiten [{"name":"render","ms":4.1000000005587935},{"name":"gradeCard","ms":16.200000000186265},{"name":"render","ms":4.099999999627471}]
+App-Zeiten [{"name":"render","ms":6.8999999994412065},{"name":"gradeCard","ms":10.200000000186265}]
+App-Zeiten [{"name":"render","ms":4},{"name":"gradeCard","ms":6}]
+App-Zeiten [{"name":"render","ms":3.099999999627471},{"name":"gradeCard","ms":7.7999999998137355}]
+App-Zeiten [{"name":"render","ms":7.300000000745058},{"name":"gradeCard","ms":11.100000000558794}]
+3000 Karten, 150 Lektionen, gefuehrt | Runde starten: lange Aufgaben 91 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 0, 0, 0, 0, 0 ms
+App-Zeiten [{"name":"render","ms":8.300000000745058},{"name":"gradeCard","ms":25.300000000745058},{"name":"render","ms":2.900000000372529}]
+App-Zeiten [{"name":"render","ms":5.8999999994412065},{"name":"gradeCard","ms":10.700000000186265}]
+App-Zeiten [{"name":"render","ms":8.900000000372529},{"name":"gradeCard","ms":12}]
+App-Zeiten [{"name":"render","ms":2.6000000005587935},{"name":"gradeCard","ms":4.5}]
+App-Zeiten [{"name":"render","ms":2.3999999994412065},{"name":"gradeCard","ms":3.699999999254942}]
+3000 Karten, 150 Lektionen, eigen | Runde starten: lange Aufgaben 91 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 0, 0, 0, 0, 0 ms
+App-Zeiten [{"name":"render","ms":2.599999999627471},{"name":"gradeCard","ms":25},{"name":"render","ms":3}]
+App-Zeiten [{"name":"render","ms":2.199999999254942},{"name":"gradeCard","ms":3.599999999627471}]
+App-Zeiten [{"name":"render","ms":5.099999999627471},{"name":"gradeCard","ms":7.099999999627471}]
+App-Zeiten [{"name":"render","ms":3.900000000372529},{"name":"gradeCard","ms":7.7000000001862645}]
+App-Zeiten [{"name":"render","ms":13},{"name":"gradeCard","ms":17.200000000186265}]
+6000 Karten, 300 Lektionen, gefuehrt | Runde starten: lange Aufgaben 72 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 0, 0, 0, 50, 0 ms
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":67,"quelltext":"11c3dfa8f7a3637036446c18bcb807c97d5065d1e8eaaeb4d43d79afc5309fc0"}

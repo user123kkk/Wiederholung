@@ -1,0 +1,44 @@
+== handy
+  Tastatur: Leertaste deckt auf true, "3" -> "Karte 1 von 12" => "Karte 2 von 12"
+  Wisch rechts: bewertet (Karte 2 von 12 -> Karte 3 von 12)
+  kurzer Wisch: keine Bewertung, Karte zurueck: none
+  senkrecht: nichts
+  Wisch links: NICHTS
+  Rueckgaengig: "Karte 3 von 12" -> "Karte 2 von 12" | offen: true
+  Notiz: offen beim Aufdecken true | verbergen: karte 0, knoepfe 0, neben 0 | zeigen: karte 0, knoepfe 0, neben 0
+  Notiz nach Rueckgaengig offen: true (Knopf "Notiz verbergen")
+  Merken: karte 0, knoepfe 0, neben 0 | Knopf links/breite 199/176 -> 199/176 Gemerkt | Meldung: "Du hast 36 Karten schon einmal gewusst. So viel hast du schon geschafft."
+  Enter auf fokussiertem "undo-grade": wirkt (Karte 3 von 12 -> Karte 2 von 12)
+  "3" bei offenem Dialog: nichts (richtig)
+  Schliessen-Knopf heisst: "Runde beenden"
+  Kontrast 0 | ok
+== klein
+  Tastatur: Leertaste deckt auf true, "3" -> "Karte 1 von 12" => "Karte 2 von 12"
+  Wisch rechts: bewertet (Karte 2 von 12 -> Karte 3 von 12)
+  kurzer Wisch: keine Bewertung, Karte zurueck: none
+  senkrecht: nichts
+  Wisch links: NICHTS
+  Rueckgaengig: "Karte 3 von 12" -> "Karte 2 von 12" | offen: true
+  Notiz: offen beim Aufdecken true | verbergen: karte 0, knoepfe 0, neben 0 | zeigen: karte 0, knoepfe 0, neben 0
+  Notiz nach Rueckgaengig offen: true (Knopf "Notiz verbergen")
+  Merken: karte 0, knoepfe 0, neben 0 | Knopf links/breite 184/164 -> 184/164 Gemerkt | Meldung: "Du hast 36 Karten schon einmal gewusst. So viel hast du schon geschafft."
+  Enter auf fokussiertem "undo-grade": wirkt (Karte 9 von 12 -> Karte 8 von 12)
+  "3" bei offenem Dialog: nichts (richtig)
+  Schliessen-Knopf heisst: "Runde beenden"
+  Kontrast 0 | ok
+== ipad
+  Tastatur: Leertaste deckt auf true, "3" -> "Karte 1 von 12" => "Karte 2 von 12"
+  Wisch rechts: bewertet (Karte 2 von 12 -> Karte 3 von 12)
+  kurzer Wisch: keine Bewertung, Karte zurueck: none
+  senkrecht: nichts
+  Wisch links: NICHTS
+  Rueckgaengig: "Karte 3 von 12" -> "Karte 2 von 12" | offen: true
+  Notiz: offen beim Aufdecken true | verbergen: karte 0, knoepfe 0, neben 0 | zeigen: karte 0, knoepfe 0, neben 0
+  Notiz nach Rueckgaengig offen: true (Knopf "Notiz verbergen")
+  Merken: karte 0, knoepfe 0, neben 0 | Knopf links/breite 414/176 -> 414/176 Gemerkt | Meldung: "Du hast 36 Karten schon einmal gewusst. So viel hast du schon geschafft."
+  Enter auf fokussiertem "undo-grade": wirkt (Karte 11 von 12 -> Karte 10 von 12)
+  "3" bei offenem Dialog: nichts (richtig)
+  Schliessen-Knopf heisst: "Runde beenden"
+  Kontrast 0 | ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":75,"quelltext":"ff93d05b406e1f8b4a0257503108816f186445ebeb012cce79933a9b0423813c"}

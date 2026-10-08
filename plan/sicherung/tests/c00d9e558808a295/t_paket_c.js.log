@@ -1,0 +1,35 @@
+C1 grün 390 voll hell bewegt
+C1 grün 390 voll hell ruhig
+C1 Randfälle grün: Duplikatabbruch, abgelehnter Write, Offline/Rückkehr
+C1 grün 390 voll dunkel bewegt
+C1 grün 390 voll dunkel ruhig
+C1 grün 390 leer hell bewegt
+C1 grün 390 leer hell ruhig
+C1 grün 390 leer dunkel bewegt
+C1 grün 390 leer dunkel ruhig
+C1 grün 320 voll hell bewegt
+C1 grün 320 voll hell ruhig
+C1 grün 320 voll dunkel bewegt
+C1 grün 320 voll dunkel ruhig
+C1 grün 320 leer hell bewegt
+C1 grün 320 leer hell ruhig
+C1 grün 320 leer dunkel bewegt
+C1 grün 320 leer dunkel ruhig
+C1 grün 820 voll hell bewegt
+C1 grün 820 voll hell ruhig
+C1 grün 820 voll dunkel bewegt
+C1 grün 820 voll dunkel ruhig
+C1 grün 820 leer hell bewegt
+C1 grün 820 leer hell ruhig
+C1 grün 820 leer dunkel bewegt
+C1 grün 820 leer dunkel ruhig
+C1 grün 1440 voll hell bewegt
+C1 grün 1440 voll hell ruhig
+C1 grün 1440 voll dunkel bewegt
+C1 grün 1440 voll dunkel ruhig
+C1 grün 1440 leer hell bewegt
+C1 grün 1440 leer hell ruhig
+C1 grün 1440 leer dunkel bewegt
+C1 grün 1440 leer dunkel ruhig
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":210,"quelltext":"6cf6f9cc3316b35700b79415d0d0348de0908e6c53790b0aa96a032bf5ff0a87"}

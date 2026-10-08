@@ -1,0 +1,6 @@
+(lesen) 1:1 -> 1 von 4 Woertern gezeigt, 6 Zeichen
+(lesen) 1:1 -> 3 von 4 Woertern gezeigt, 28 Zeichen
+Gegenprobe (zaehlt bis 3): 22 Befunde (rot erwartet)
+OK t_zeilenanfang: 13 Quran-Stellen + deutsche Saetze
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":6,"quelltext":"b4c2a8e84e1279d2bab0c3f85c5a0cd4b3a817d972954e375d57a49bb600796b"}

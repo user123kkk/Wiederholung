@@ -1,0 +1,7 @@
+OK echte Widerrufs-Funktion: Texte weg, Einwilligung null, Sicherung davor erfasst.
+OK abgelehnt: {"zeilen":0,"texte":0}
+OK einverstanden: {"zeilen":10,"texte":1}
+OK normales-konto: {"zeilen":0,"texte":0}
+OK geteilt: {"zeilen":0,"texte":0}
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":15,"quelltext":"474f6dbf6ff54f0e1c5fea366bce3e17f597d2c9cc39dc6ce8b18646996c1b90"}

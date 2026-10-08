@@ -1,0 +1,15 @@
+Hinweis 1: hinweis--meilenstein: Du hast 36 Karten schon einmal gewusst. So viel hast du schon geschafft.
+Hinweis 2: hinweis--erinnerung: Jeden Tag zur selben Zeit hilft am meisten. Leg dir eine Erinnerung in den Kalender. Erinnerung einrichten Nicht jetzt
+ICS: adrabic-erinnerung.ics true DTSTART:20261008T193000
+Toast: Datei für 19:30 Uhr erstellt – öffne sie und bestätige den Termin im Kalender.
+Hinweis 3: hinweis--ideen: Was fehlt dir in Adrabic? Schlag es vor – die anderen stimmen mit ab. Idee einreichen Nicht jetzt
+Hinweis 4: -
+Einstellungen Erinnerung-Zeile: Tägliche Erinnerung Vorlage für 19:30 Uhr
+Ideen sofort (150ms): 3 Zeilen, Platzhalter 0
+Ideen: 5 Audio zur Aussprache Geplant | 3 Karten mit Bild Ein Foto zur Vokabel | SCHON UMGESETZT | Dunkler Modus
+Moderation sichtbar (Test-Konto ist nicht Betreiber): false
+nach Stimme: 4 aktiv=true
+nach Einreichen: Danke! Deine Idee steht jetzt in der Liste. | erste Zeile: 0 Wochenziel einstellen z.B. 5 Tage
+keine Fehler
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":13,"quelltext":"ba9ba2c8421f9974753bd48e9724d65c24cfc20eba4a1efc67ad86f09fdae06c"}

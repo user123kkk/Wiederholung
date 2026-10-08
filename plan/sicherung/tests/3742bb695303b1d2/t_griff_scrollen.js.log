@@ -1,0 +1,7 @@
+OK   Buendel 1: Finger 96 px | Seite folgt 96 px | laeuft aus 36 px, groesster Schritt danach 8 px
+OK   Buendel 2: Finger 96 px | Seite folgt 96 px | laeuft aus 82 px, groesster Schritt danach 8 px
+OK   Buendel 4: Finger 96 px | Seite folgt 96 px | laeuft aus 131 px, groesster Schritt danach 12 px
+OK   Buendel 6: Finger 96 px | Seite folgt 96 px | laeuft aus 225 px, groesster Schritt danach 21 px
+OK   Halten und ziehen: Zeile folgt true | Platz 8 -> 9 | Seite bewegt 0 px
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":32,"quelltext":"974d9bee99927e2b79627b2a46f4c02580d47459323fd271565402a80717b36f"}

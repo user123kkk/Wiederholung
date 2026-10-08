@@ -1,0 +1,9 @@
+ok     (a) neue Idee traegt ein Timestamp-Objekt im Store | "timestamp" millis=1791305951132
+ok     (b) die Zahl daraus ist ein gueltiger Zeitpunkt (aus der Naehe von jetzt) | 1791305951132
+ok     (c) Liste sortiert gemischt alt/neu richtig: frische Idee zuerst | ["Neue Idee (frisch)","Alte Idee (ISO-Text)"]
+ok     (d) alte Idee bleibt in der Liste | ["Neue Idee (frisch)","Alte Idee (ISO-Text)"]
+ok     (e) keine Seitenfehler | 
+ok     Gegenprobe c70729b: erstelltAm ist ISO-Text, kein Timestamp (muss ROT sein) | "string"
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":13,"quelltext":"08fc28e3b1723028d88ff9b037b0d5ba6add010f44c22470ab0ed896b51b7a69"}

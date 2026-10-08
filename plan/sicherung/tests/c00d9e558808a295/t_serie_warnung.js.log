@@ -1,0 +1,7 @@
+OK   a) 3 Tage gelernt, Luecke, 30 Tage gelernt, heute nichts - aeltere Luecke bricht morgen ab | erwartet Warnung: true (33 Tage) | gemessen: Heute zählt: Ohne eine Runde endet deine Serie von 33 Tagen. | Serie 33
+OK   b) 20 Tage ohne Luecke bis gestern, heute nichts - Normalfall, keine Warnung | erwartet Warnung: false | gemessen: (keine) | Serie 20
+OK   c) gestern und heute nichts, davor 10 Tage - bisheriger Fall bleibt erfasst | erwartet Warnung: true (10 Tage) | gemessen: Heute zählt: Ohne eine Runde endet deine Serie von 10 Tagen. | Serie 10
+OK   d) wie a), aber heute schon gelernt - keine Warnung | erwartet Warnung: false | gemessen: (keine) | Serie 34
+Alle Faelle richtig.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":7,"quelltext":"f2899bfda3a9bcb8963df54c1463fe7ada0d872503e580f78dd10608f43269e5"}

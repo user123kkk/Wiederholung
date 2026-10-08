@@ -1,0 +1,11 @@
+tab-fortschritt  57 ms JS, erstes Bild nach 200 ms
+tab-verwalten    58 ms JS, erstes Bild nach 167 ms
+tab-lernen       19 ms JS, erstes Bild nach 57 ms
+tab-verwalten    57 ms JS, erstes Bild nach 85 ms
+tab-fortschritt  29 ms JS, erstes Bild nach 60 ms
+tab-lernen       18 ms JS, erstes Bild nach 39 ms
+Selbstzeit Verwalten (ms): (program) 336.3, hauptInhaltSetzen 47.2, (app.js?v=3.18.26) 23.3, syncTastatur 5.0, (idle) 2.8, esc 2.8, querySelectorAll 1.7, dueCardsFor 1.7, renderMain 1.7, () 1.7, renderVerwaltenListe 1.6, querySelector 1.6
+Selbstzeit Fortschritt (ms): (program) 146.8, syncTastatur 15.6, hauptInhaltSetzen 14.2, lektionOffeneKarten 4.9, (garbage collector) 3.2, tagKurz 1.6, logicalToday 1.6, (app.js?v=3.18.26) 1.6, vorschau7 1.6, navLeiste 1.6, renderMain 1.6, wochentagKurz 1.6
+ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":5,"quelltext":"17e40f9c7c510d20b87077900964287ac0338d066114e223acaba4fb832d5e1e"}

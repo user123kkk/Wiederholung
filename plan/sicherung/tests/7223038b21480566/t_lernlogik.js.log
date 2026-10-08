@@ -1,0 +1,15 @@
+grün: Abstände je Stufe (Tabelle)
+grün: Lerntag beginnt um 4 Uhr
+grün: dateInDays über Monats- und Jahresgrenze
+grün: Sicher: eine Stufe hoch, Termin nach dem Abstand der neuen Stufe
+grün: Streuung: höchstens 15 Prozent, nie über 180, nie unter 1 Tag
+grün: Fast: eine Stufe zurück, morgen
+grün: Nicht: zwei Stufen zurück, heute; Rückfall nur nach erstem Wissen
+grün: Regler (Probelauf): Faktor kürzt den Abstand, nie unter einen Tag
+grün: IST-Stand vor Paket G (Frage 7): „Nicht“ dann „Sicher“ gibt sofort den vollen Abstand
+grün: Paket G, Frage 7: „Sicher“ nach „Nicht“ in derselben Runde hebt die Stufe nicht, Karte kommt morgen
+grün: Paket G, Frage 9: neue Karte – erstes „Sicher“ hebt nicht, bleibt heute fällig; zweites bringt Stufe 1 und morgen
+grün: Bewertung nach Mitternacht zählt zum Vortag
+12 Fälle grün
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":0,"quelltext":"e928974108c8a2e14c9902af02b4b2d070aeba7ed64a513d59621c9c32282638"}

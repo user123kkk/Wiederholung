@@ -1,0 +1,13 @@
+OK   normal      waagerecht rechts                    bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   normal      schraeg nach unten rechts (Daumen)   bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   normal      schraeg nach oben links              bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   normal      erst 10 px runter, dann seitlich     bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   normal      klar senkrecht (kein Wisch)          bewertet: false (soll false) | Seite gescrollt: 0 px
+OK   lange Notiz waagerecht rechts                    bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   lange Notiz schraeg nach unten rechts (Daumen)   bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   lange Notiz schraeg nach oben links              bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   lange Notiz erst 10 px runter, dann seitlich     bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   lange Notiz klar senkrecht (kein Wisch)          bewertet: false (soll false) | Seite gescrollt: 0 px
+alles ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":50,"quelltext":"ada2ba1f597ff996be979d8b845116f658305a78bfd0eb59da0ceb58a068936b"}

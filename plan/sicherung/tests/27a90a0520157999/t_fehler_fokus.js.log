@@ -1,0 +1,11 @@
+(a) 25x Tab: ausserhalb 0 (IM-DIALOG BUTTON, IM-DIALOG close-error-modal, IM-DIALOG A, IM-DIALOG error-copy, IM-DIALOG error-description)
+OK    (a) kein Tab verlaesst das offene Fehler-Modal
+(b) vorher open-error-modal | nach Escape open-error-modal | #app inert danach false
+OK    (b) Escape gibt den Fokus an den Oeffner zurueck
+OK    (d) #app ist nach dem Schliessen nicht mehr inert (Escape)
+(c) nach X-Knopf open-error-modal | #app inert danach false
+OK    (c) X-Knopf gibt den Fokus an den Oeffner zurueck
+OK    (d) #app ist nach dem Schliessen nicht mehr inert (X-Knopf)
+alle Pruefungen bestanden
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":14,"quelltext":"a050616efb461eaacec5ad611fb26560a0d205029c8c96cf65934fa1c0be8e30"}

@@ -1,0 +1,11 @@
+Dialog nach Abmelden: Abmelden?
+noch angemeldet: true
+Knopf gesperrt: true
+Knopf frei nach E-Mail: true
+nach kurzem Tipp geloescht? false
+nach halbem Halten geloescht? false
+nach vollem Halten geloescht? true
+danach Einstieg? true
+
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":12,"quelltext":"cad257c5610c9be255ab807bfb915f96716eb6f7adb15f1ba05ec31f8f62f6cb"}

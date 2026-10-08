@@ -1,0 +1,8 @@
+ok fremde Bewertung uebernommen, Bereich nicht neu aufgebaut
+ok eigenes Echo behaelt das bereits bewertete Kartenobjekt
+ok geaenderter Inhalt und entfernte optionale Felder
+ok Sortieren verwendet den vollstaendigen Aufbau
+ok Loeschen und Anlegen
+ok Verschieben und verwaiste Karten
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":4,"quelltext":"01f97c8e6aa4d22e801f16ccf5defcec1be8ad568b85dac4de9ee02bdbd407d8"}

@@ -1,0 +1,7 @@
+vorher null 
+ {"w":1} -> Rueckgaengig {"w":0}
+ {"w":2} -> Rueckgaengig {"w":1}
+ {"w":2,"n":1} -> Rueckgaengig {"w":2,"n":0}
+ danach {"w":2,"n":1} | ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":25,"quelltext":"e28e2e31c7a9d064346d3d8b921038ac650ded0f854673408da5255a41e0221c"}

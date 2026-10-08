@@ -1,0 +1,15 @@
+OK   Buendel 1: Finger 96 px | Seite folgt 0 px | laeuft aus 0 px, groesster Schritt danach 0 px
+AssertionError [ERR_ASSERTION]: Seite folgt dem Finger genau
+
+0 !== 96
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_griff_scrollen.js:62:16 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 96,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":9,"quelltext":"974d9bee99927e2b79627b2a46f4c02580d47459323fd271565402a80717b36f"}

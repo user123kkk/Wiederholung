@@ -1,0 +1,8 @@
+ok     (a) Meilenstein-Hinweis steht da | "Du hast 36 Karten schon einmal gewusst. So viel hast du schon geschafft."
+ok     (b) Fortschritt zeigt 36 | gelesen: 36
+ok     (c) Hinweis nennt dieselbe Zahl wie Fortschritt (nicht die Marke 25) | Hinweis: 36 <-> Fortschritt: 36
+ok     (d) keine Seitenfehler | 
+ok     Gegenprobe c70729b: Hinweis (Marke) und Fortschritt (echte Zahl) weichen ab (muss ROT sein) | Hinweis: 25 <-> Fortschritt: 36
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":7,"quelltext":"459e80a39816e16faa4a84203dabb6ca257e2a0a8854aefcc93a8bc7db84236b"}

@@ -1,0 +1,7 @@
+OK   zweiter Tipp nach 80 ms -> Karte 1 (soll 1)
+OK   zweiter Tipp nach 150 ms -> Karte 1 (soll 1)
+OK   zweiter Tipp nach 250 ms -> Karte 1 (soll 1)
+OK   zweiter Tipp nach 700 ms -> Karte 2 (soll 2)
+alles ok
+
+Prozess: {"code":0,"abnahmeOk":true,"signal":null,"zeitlimit":false,"sekunden":19,"quelltext":"c7845043b3b3025d035bc34d5c99cf800f2331ad73d9ad5ac876ff17b49eebd5"}

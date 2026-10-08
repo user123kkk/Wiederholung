@@ -1,0 +1,4 @@
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 170/93 | Text oeffnen (286): 110/116/62/100/124/55/54 | Wiederholen starten: 90 | Aufdecken: 82 | Fliessend: 55 | Beenden: 59/54/65 | Lernen-Tab: 60
+OK t_text_tempo: 286 Ayat, CPU 4x, keine Aufgabe > 200 ms
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":20,"quelltext":"e8fb11926a430b29d3df6b2f88dc0eee3103424e4b3efcd3ade9f3e60cb2b915"}

@@ -1,0 +1,7 @@
+ok     (a) Board laedt ohne Fehler, hoechstens 100 Ideen | {"zeilen":100,"fehler":false}
+ok     (b) nach dem Loeschen keine eigenen Stimm-Merker mehr | uebrig: 0
+ok     (c) keine Seitenfehler | 
+ok     Gegenprobe 1c8aaa1: Board scheitert an der Mengenbremse (muss ROT sein) | {"zeilen":0,"fehler":true}
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":20,"quelltext":"77d77c333a8752d8ab271509612cd12db4fe17b2d45d05a24573f484b2fa4c2e"}

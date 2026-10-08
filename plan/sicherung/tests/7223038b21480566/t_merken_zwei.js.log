@@ -1,0 +1,13 @@
+OK   Speicherkarte "Schwierige Wörter" angelegt
+OK   Nach (a): A drin
+OK   Nach (b): B im Store, Seite weiss nichts davon
+OK   Nach (c)/(d): A weiterhin drin
+OK   Nach (c)/(d): B weiterhin drin (nicht ueberschrieben)
+OK   Nach (c)/(d): C dazugekommen
+OK   Nach (e): A draussen
+OK   Nach (e): B weiterhin drin
+OK   Nach (e): C weiterhin drin
+OK   Keine Seitenfehler
+alles ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":5,"quelltext":"f2dcf8db73b72ebf0bd60fbcff569c678a09bf6d5fd846db3fd45fb873c195aa"}

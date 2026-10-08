@@ -1,0 +1,6 @@
+OK   Feld haelt 06:15 nach fremdem Neuzeichnen | 06:15
+OK   .ics traegt 0615 (DTSTART) | DTSTART:20261008T061500
+OK   Gegenprobe (alter Code) ist ROT: Feld springt zurueck | 20:00
+ALLE OK
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":11,"quelltext":"e9dd735034d35d59b963b6362bd23591eaa0bf4cd4404fc9e07462155d81fc63"}

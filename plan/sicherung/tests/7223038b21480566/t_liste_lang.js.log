@@ -1,0 +1,5 @@
+Ziehen: sortiert | k0,k1,k2,k3,k4,k5 -> k1,k0,k2,k3,k4,k5
+Ende: {"text":"لَيْلَةٌ Nacht","top":661,"hoehe":74,"fenster":844}
+ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":7,"quelltext":"d0b0d6ee3b414a53e4b6cd82fcce2e33fa0d8d49fcb9f4af4feaf6f88a8d2767"}

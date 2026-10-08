@@ -1,0 +1,20 @@
+OK   Code erzeugen: fragt nach
+OK   Code erzeugen: Fehlermeldung sichtbar
+OK   Code erzeugen: b1.teilCode NICHT gesetzt
+OK   Code erzeugen: kein Datensatz in geteilteLektionen
+OK   Code erzeugen: App zeigt kein "Dein Code"
+OK   Code erzeugen: Knopf "Code erzeugen" weiterhin da
+OK   Code erzeugen: keine Seitenfehler
+OK   Teilen beenden: Seite zeigt den bestehenden Code
+OK   Teilen beenden: Fehlermeldung sichtbar
+OK   Teilen beenden: b1.teilCode bleibt stehen
+OK   Teilen beenden: Datensatz in der Cloud bleibt
+OK   Teilen beenden: Knopf "Teilen beenden" bleibt da
+OK   Teilen beenden: keine Seitenfehler
+OK   Einloesen: kein Netzaufruf an bilder.example
+OK   Einloesen: Bild erscheint als Link, kein <img>
+OK   Einloesen: Karte hat eine quelleId (nicht null)
+OK   Einloesen: keine Seitenfehler
+alles ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":23,"quelltext":"157382c6d69277205f458932b7655d3e1658a9f417d7d624c65845bc504739f4"}

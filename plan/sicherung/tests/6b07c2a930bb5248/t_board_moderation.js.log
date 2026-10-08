@@ -1,0 +1,9 @@
+ok     (a) Idee verschwindet aus der Liste | Zeilen: 0
+ok     (b) Dokument besteht weiter, status "entfernt" | {"text":"","erstelltAm":"2026-09-20T10:00:00Z","votes":2,"status":"entfernt","beschreibung":null}
+ok     (b2) Titel und Beschreibung sind geleert | {"text":"","erstelltAm":"2026-09-20T10:00:00Z","votes":2,"status":"entfernt","beschreibung":null}
+ok     (c) keine Seitenfehler | 
+ok     (d) eigener Stimm-Merker unter der entfernten Idee ist weg | true
+ok     Gegenprobe c70729b: Dokument verschwindet ganz statt Status "entfernt" (muss ROT sein) | null
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":21,"quelltext":"6c0f3f466d0d0b03993503fe0d23bc73c1e01c5ea85e985589416da6b1daf47c"}

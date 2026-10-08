@@ -1,0 +1,15 @@
+-- aktueller Stand: Zeitlimit, Konto entsteht mit 13s Verzoegerung --
+ok      nach 12s zeigt der Fehler-Kasten das Zeitlimit: "Keine Verbindung – bitte Internet prüfen."
+  Protokoll: createUser > sendEmailVerification > updateProfile
+ok      genau ein sendEmailVerification-Aufruf: 1
+ok      displayName wurde nachgetragen: "Layla"
+ok      Bestaetigungsseite wird gezeigt
+ok      "Konto angelegt." statt der Zeitlimit-Meldung: info="Konto angelegt." fehler=null
+Fehler im aktuellen Stand: 0 | ok
+
+0 Fehler insgesamt auf dem aktuellen Stand.
+
+-- Gegenprobe gegen 1c8aaa1 (muss rot sein) --
+  ok (=Fehler im Altstand) : kein sendEmailVerification, Zeitlimit-Meldung bleibt stehen: "Keine Verbindung – bitte Internet prüfen."
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":72,"quelltext":"40d0389787c2e23db49ae072a9e4cfe3cfa1cf9fedcb81339a9c2a7a270a619d"}

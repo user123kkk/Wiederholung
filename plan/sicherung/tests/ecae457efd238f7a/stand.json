@@ -1,0 +1,13 @@
+{
+  "kennung": "ecae457efd238f7a6b9147d56780ae65d7642f730c9b0081b3473049afd22ff2",
+  "tests": {
+    "t_317.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 13,
+      "quelltext": "ba9ba2c8421f9974753bd48e9724d65c24cfc20eba4a1efc67ad86f09fdae06c"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+neu color=rgb(162, 160, 154) opacity=1.00 anim=enter-fade:finished:1,einstieg-punkt-ruhig:finished:1,enter-rise:finished:1
+frisch color=rgb(162, 160, 154) opacity=1.00 anim=enter-fade:finished:1,einstieg-punkt-ruhig:finished:1,enter-rise:finished:1
+fester color=rgb(162, 160, 154) opacity=1.00 anim=enter-fade:finished:1,einstieg-punkt-ruhig:finished:1,enter-rise:finished:1
+gefestigt color=rgb(245, 243, 236) opacity=1.00 anim=enter-fade:finished:1,einstieg-punkt-ruhig:finished:1,enter-rise:finished:1
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":8,"quelltext":"214530754a9905a16d89980f66f6dc25828615461350cef6d4680ea640fb25a5"}

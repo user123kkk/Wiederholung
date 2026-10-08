@@ -1,0 +1,185 @@
+E1 390/hell/bewegt: Serie 21 genannt, Abbruch erhält Stand
+E1 390/hell/ruhig: Serie 21 genannt, Abbruch erhält Stand
+E1 390/dunkel/bewegt: Serie 21 genannt, Abbruch erhält Stand
+E1 390/dunkel/ruhig: Serie 21 genannt, Abbruch erhält Stand
+E1 320/hell/bewegt: Serie 21 genannt, Abbruch erhält Stand
+E1 320/hell/ruhig: Serie 21 genannt, Abbruch erhält Stand
+E1 320/dunkel/bewegt: Serie 21 genannt, Abbruch erhält Stand
+E1 320/dunkel/ruhig: Serie 21 genannt, Abbruch erhält Stand
+E1 820/hell/bewegt: Serie 21 genannt, Abbruch erhält Stand
+E1 820/hell/ruhig: Serie 21 genannt, Abbruch erhält Stand
+E1 820/dunkel/bewegt: Serie 21 genannt, Abbruch erhält Stand
+E1 820/dunkel/ruhig: Serie 21 genannt, Abbruch erhält Stand
+E2 390/hell: A gelöscht, B ohne alte Unterseite bedienbar
+E2 390/dunkel: A gelöscht, B ohne alte Unterseite bedienbar
+E2 320/hell: A gelöscht, B ohne alte Unterseite bedienbar
+E2 320/dunkel: A gelöscht, B ohne alte Unterseite bedienbar
+E2 820/hell: A gelöscht, B ohne alte Unterseite bedienbar
+E2 820/dunkel: A gelöscht, B ohne alte Unterseite bedienbar
+E3 390/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 390/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 390/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 390/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E4 390: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E4 320: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E4 820: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E5 320: Sicherungshinweis 18.97 Schriftbreiten, kein Überlauf
+E5 390: Sicherungshinweis 24.04 Schriftbreiten, kein Überlauf
+E5 820: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 1180: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 1440: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 Chromium: Datei angeboten, Blob 60 s erhalten, Prüfsatz sichtbar; iOS offen
+E6 heute/morgen, ICS angeboten, neutraler Status; iOS/Android-Geräte offen
+E7 LERN-1-Messung: drei Tage ohne Fällige, Serie 10 bleibt, je Tag ein Ruhetag; fälliger Tag ohne Marker
+E7 zwei Ruhetage halten: 10
+E7 Ruhetag heute zählt nicht hoch: 5
+E7 Ruhetag und ein ausgelassener Tag: verziehen: 10
+E7 Ruhetag, dann zwei Tage ohne Öffnen: reißt wie bisher: 0
+E7 Ruhetag verbraucht den verziehenen Tag nicht: 12
+E7 ohne Ruhetag unverändert: zwei Tage offen: 0
+E7 Marker nichts fällig, Serie 5: 1
+E7 Marker anderer Bereich hat Fälliges: 0
+E7 Marker keine Serie: 0
+E7 Marker heute schon gelernt: 0
+E8 erster Tag gemerkt; gestriger Meilenstein läuft ab
+E8 320/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 320/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 390/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 390/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 820/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 820/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E9 320/hell: Profil und Board lange Wörter passen
+E9 320/dunkel: Profil und Board lange Wörter passen
+E9 390/hell: Profil und Board lange Wörter passen
+E9 390/dunkel: Profil und Board lange Wörter passen
+E9 820/hell: Profil und Board lange Wörter passen
+E9 820/dunkel: Profil und Board lange Wörter passen
+E10 theme-color entspricht dunklem Seitenhintergrund
+E11 320/hell/Callback nach Promise: Toast und Ansage
+E11 320/dunkel/Callback nach Promise: Toast und Ansage
+E11 390/hell/Callback nach Promise: Toast und Ansage
+E11 390/dunkel/Callback nach Promise: Toast und Ansage
+E11 820/hell/Callback nach Promise: Toast und Ansage
+E11 820/dunkel/Callback nach Promise: Toast und Ansage
+E11 320/hell/Callback vor Promise: Toast und Ansage
+E11 320/dunkel/Callback vor Promise: Toast und Ansage
+E11 390/hell/Callback vor Promise: Toast und Ansage
+E11 390/dunkel/Callback vor Promise: Toast und Ansage
+E11 820/hell/Callback vor Promise: Toast und Ansage
+E11 820/dunkel/Callback vor Promise: Toast und Ansage
+E11 alte Löschantwort nach Kontowechsel: B bleibt ohne fremden Erfolg
+E12 echter 12-s-Abbruch: Rückmeldung, gesperrter Knopf, keine Löschung
+E13 Messung 320 hell {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":551.53125,"bild":568}
+E13 320/hell: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 320 dunkel {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":551.53125,"bild":568}
+E13 320/dunkel: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 390 hell {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":661.28125,"bild":844}
+E13 390/hell: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 390 dunkel {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":661.28125,"bild":844}
+E13 390/dunkel: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 820 hell {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":650.28125,"bild":1180}
+E13 820/hell: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 820 dunkel {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":650.28125,"bild":1180}
+E13 820/dunkel: voller Wert, 44 px, Antwort sichtbar
+E14 320/hell/bewegt: beide Anleitungen, Rückweg
+E14 320/hell/ruhig: beide Anleitungen, Rückweg
+E14 320/dunkel/bewegt: beide Anleitungen, Rückweg
+E14 320/dunkel/ruhig: beide Anleitungen, Rückweg
+E14 390/hell/bewegt: beide Anleitungen, Rückweg
+E14 390/hell/ruhig: beide Anleitungen, Rückweg
+E14 390/dunkel/bewegt: beide Anleitungen, Rückweg
+E14 390/dunkel/ruhig: beide Anleitungen, Rückweg
+E14 820/hell/bewegt: beide Anleitungen, Rückweg
+E14 820/hell/ruhig: beide Anleitungen, Rückweg
+E14 820/dunkel/bewegt: beide Anleitungen, Rückweg
+E14 820/dunkel/ruhig: beide Anleitungen, Rückweg
+E15 320/hell: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 320/dunkel: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 390/hell: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 390/dunkel: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 820/hell: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 820/dunkel: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 Fehlergrenzen: Cloudfehler, Teilerfolg ehrlich, Wiederholung, spätes A ohne B-Fortsetzung
+E16 Aufräumen: Dateiname, Aliasse, ID und unveränderte Themenwahl
+E18 320/hell: Rückweg aus Lernen und Verwalten
+E18 320/dunkel: Rückweg aus Lernen und Verwalten
+E18 390/hell: Rückweg aus Lernen und Verwalten
+E18 390/dunkel: Rückweg aus Lernen und Verwalten
+E18 820/hell: Rückweg aus Lernen und Verwalten
+E18 820/dunkel: Rückweg aus Lernen und Verwalten
+E19 erste Bewertung und X: Rekord 12 lokal und gespeichert
+E20 320/hell/bewegt: 12 Karten, Merken stabil
+E20 320/hell/ruhig: 12 Karten, Merken stabil
+E20 320/dunkel/bewegt: 12 Karten, Merken stabil
+E20 320/dunkel/ruhig: 12 Karten, Merken stabil
+E20 390/hell/bewegt: 12 Karten, Merken stabil
+E20 390/hell/ruhig: 12 Karten, Merken stabil
+E20 390/dunkel/bewegt: 12 Karten, Merken stabil
+E20 390/dunkel/ruhig: 12 Karten, Merken stabil
+E20 820/hell/bewegt: 12 Karten, Merken stabil
+E20 820/hell/ruhig: 12 Karten, Merken stabil
+E20 820/dunkel/bewegt: 12 Karten, Merken stabil
+E20 820/dunkel/ruhig: 12 Karten, Merken stabil
+E21 Desktop: Space, 3, Backspace, 3, Escape und Protokoll
+E22 known/bewegt: fortschritt-waechst,geist-rechts
+E22 known/ruhig: fortschritt-waechst,enter-rise
+E22 unknown/bewegt: fortschritt-waechst,geist-links,enter-rise
+E22 unknown/ruhig: fortschritt-waechst
+E22 almost/bewegt: fortschritt-waechst,geist-sinkt
+E22 almost/ruhig: fortschritt-waechst
+E23 Limittext ohne doppeltes geschafft
+E24 Üben: Hintergrund bleibt geschlossen, Karte deckt auf
+E25 320/hell/Ruhetag: ehrlicher Ring und Text
+E25 320/dunkel/Ruhetag: ehrlicher Ring und Text
+E25 390/hell/Ruhetag: ehrlicher Ring und Text
+E25 390/dunkel/Ruhetag: ehrlicher Ring und Text
+E25 820/hell/Ruhetag: ehrlicher Ring und Text
+E25 820/dunkel/Ruhetag: ehrlicher Ring und Text
+E25 320/hell/gelernt: ehrlicher Ring und Text
+E25 320/dunkel/gelernt: ehrlicher Ring und Text
+E25 390/hell/gelernt: ehrlicher Ring und Text
+E25 390/dunkel/gelernt: ehrlicher Ring und Text
+E25 820/hell/gelernt: ehrlicher Ring und Text
+E25 820/dunkel/gelernt: ehrlicher Ring und Text
+E27 320/hell/bewegt: Bereichsweg, 44 px
+E27 320/hell/ruhig: Bereichsweg, 44 px
+E27 320/dunkel/bewegt: Bereichsweg, 44 px
+E27 320/dunkel/ruhig: Bereichsweg, 44 px
+E27 390/hell/bewegt: Bereichsweg, 44 px
+E27 390/hell/ruhig: Bereichsweg, 44 px
+E27 390/dunkel/bewegt: Bereichsweg, 44 px
+E27 390/dunkel/ruhig: Bereichsweg, 44 px
+E27 820/hell/bewegt: Bereichsweg, 44 px
+E27 820/hell/ruhig: Bereichsweg, 44 px
+E27 820/dunkel/bewegt: Bereichsweg, 44 px
+E27 820/dunkel/ruhig: Bereichsweg, 44 px
+E28 Nachtgruß: Hallo
+E29 Rückfallhinweis mit Warnsymbol
+E30 password: passender Konto-Weg, Abbruch, Mail, Fehler
+E30 google.com: passender Konto-Weg
+E30 apple.com: passender Konto-Weg
+E30 späte A-Mailantwort: B ohne fremden Dialog/Busy
+E31 Neustart b2, entfernte ID b1, anderes Konto b1
+E32 320/hell: 40 Karten und Liste ohne Überlauf
+E32 320/hell: Einstieg-Auswahl passt
+E32 320/dunkel: 40 Karten und Liste ohne Überlauf
+E32 320/dunkel: Einstieg-Auswahl passt
+E32 390/hell/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/hell/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/dunkel/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/dunkel/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/hell/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/hell/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/dunkel/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/dunkel/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+Paket E: 30 lokale Abnahmen; E17 wartet auf G4, E26 später Z7.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":914,"quelltext":"37360c30f595c8a68220407902db49198ca66b3b69f0107d7289f058842d8d4c"}

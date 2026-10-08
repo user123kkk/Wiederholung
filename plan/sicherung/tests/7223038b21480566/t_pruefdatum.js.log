@@ -1,0 +1,6 @@
+OK  Pruefdatum 0:00 -> 2026-09-28, auch +/-1 Tag.
+OK  Pruefdatum 3:59 -> 2026-09-28, auch +/-1 Tag.
+OK  Pruefdatum 4:00 -> 2026-09-29, auch +/-1 Tag.
+OK  Pruefdatum 23:59 -> 2026-09-29, auch +/-1 Tag.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":0,"quelltext":"94786584ca2b516ef029d71bc3c8ef4f4fff9d091811dd21757a2c555bac039a"}

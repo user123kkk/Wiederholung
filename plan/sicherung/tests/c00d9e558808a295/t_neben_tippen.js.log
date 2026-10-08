@@ -1,0 +1,5 @@
+OK   handy: Karte leer schliesst true | mit Text Rueckfrage true, Text danach "Probe" | Code leer schliesst true | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt true
+OK   klein: Karte leer schliesst true | mit Text Rueckfrage true, Text danach "Probe" | Code leer schliesst true | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt true
+OK   ipad: Karte leer schliesst true | mit Text Rueckfrage true, Text danach "Probe" | Code leer schliesst true | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt true
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":43,"quelltext":"75ad9d0bb08db73ea6fa4663104c96ed1b5f5107f8c0e1b7b927188c8cd80eb5"}

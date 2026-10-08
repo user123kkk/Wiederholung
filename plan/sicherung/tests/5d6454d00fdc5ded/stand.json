@@ -1,0 +1,109 @@
+{
+  "kennung": "5d6454d00fdc5ded9983c28a145e299196b8cecb3d056a299f1f69f47da9c34e",
+  "tests": {
+    "t_runde_lage.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 81,
+      "quelltext": "d31917c2b83238fda60dbc748df0515e1bc815b0e7ccdb10f39e4726f9f6feea"
+    },
+    "t_sprung.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 82,
+      "quelltext": "fecd8b592b3769c3d85a2e32048e12a33c769b1d29674e806eb0481a610eb5c4"
+    },
+    "t_sprung_ueben.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 48,
+      "quelltext": "949645833d92fb63b3d0734827ec88a87364f54047033bed3b0ab181ced31059"
+    },
+    "t_wischen.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 38,
+      "quelltext": "cce5e8b4519173de5a94e1bb7d9f0c592819b61f5f65dcdb95204794dc7986a0"
+    },
+    "t_wischen_schraeg.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 51,
+      "quelltext": "ada2ba1f597ff996be979d8b845116f658305a78bfd0eb59da0ceb58a068936b"
+    },
+    "t_doppeltipp.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 19,
+      "quelltext": "c7845043b3b3025d035bc34d5c99cf800f2331ad73d9ad5ac876ff17b49eebd5"
+    },
+    "t_x_mitten.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 29,
+      "quelltext": "eb6ca98f44d833bafc686c39207f74a269a32aed31eda7ee296018adf99e7127"
+    },
+    "t_abgelehnt.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 6,
+      "quelltext": "70c0e5e9d7770d9e011b649f1632c92ab04077f570a6ac60cb612f9becf881ed"
+    },
+    "t_undo_verlauf.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 25,
+      "quelltext": "e28e2e31c7a9d064346d3d8b921038ac650ded0f854673408da5255a41e0221c"
+    },
+    "t_serie.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 22,
+      "quelltext": "45c5995a002b1e7b023014e42ad40b7462695ef400d9b558ae2b764eedac1e7f"
+    },
+    "t_rundenende.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 115,
+      "quelltext": "ca52ce639ac146d0c75d951834256896681008f7aa3b67ee32a03cc378484599"
+    },
+    "t_ueben.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 30,
+      "quelltext": "7bf90c4d5e1af879c34e3fa3daed50b8fcd98cb96cd07dd2ca5b452a2bd3addd"
+    },
+    "t_schreiben.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 83,
+      "quelltext": "fae0a8f05d0769e2a19364f93e50002aad2ef328f6d40cd401cb96e2610aac97"
+    }
+  }
+}

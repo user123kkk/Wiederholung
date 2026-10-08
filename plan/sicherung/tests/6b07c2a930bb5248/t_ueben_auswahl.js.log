@@ -1,0 +1,26 @@
+== handy
+  Schalter an: true
+  nach Chip: Schalter true
+  Reiter Speicherkarten: Schalter true | Liste: Lektion 1 | Lektion 2 | Lektion 3 | Familie | Schwierig | Zahl 0 Karten
+  Satz gewaehlt: Schalter true | Zahl 12 Karten | Start-Knopf 611 -> 701 -> 701
+  Kontrast 0
+  Start: Schreiben aktiv true | Übung – zählt nicht als Wiederholung Karte 1 von 12
+  ok
+== klein
+  Schalter an: true
+  nach Chip: Schalter true
+  Reiter Speicherkarten: Schalter true | Liste: Lektion 1 | Lektion 2 | Lektion 3 | Familie | Schwierig | Zahl 0 Karten
+  Satz gewaehlt: Schalter true | Zahl 12 Karten | Start-Knopf 611 -> 701 -> 701
+  Kontrast 0
+  Start: Schreiben aktiv true | Übung – zählt nicht als Wiederholung Karte 1 von 12
+  ok
+== ipad
+  Schalter an: true
+  nach Chip: Schalter true
+  Reiter Speicherkarten: Schalter true | Liste: Lektion 1 | Lektion 2 | Lektion 3 | Familie | Schwierig | Zahl 0 Karten
+  Satz gewaehlt: Schalter true | Zahl 12 Karten | Start-Knopf 519 -> 713 -> 713
+  Kontrast 0
+  Start: Schreiben aktiv true | Übung – zählt nicht als Wiederholung Karte 1 von 12
+  ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":22,"quelltext":"c55de83aa2da22b45a29bd6310c13cd5b96adde9636ff810407ae14ff72d2984"}

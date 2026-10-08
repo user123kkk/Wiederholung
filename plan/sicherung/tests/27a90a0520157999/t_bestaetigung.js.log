@@ -1,0 +1,26 @@
+handy dunkel | im Fenster: true | Tipp-Feedback: true 
+  noch nicht: "Noch nicht bestätigt – öffne den Link in der E-Mail, dann geht es hier von selbst weiter." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  erneut: "Neue Bestätigungs-E-Mail ist unterwegs." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  Versandfehler: "Zu viele Versuche – warte kurz oder setz dein Passwort zurück." 
+  Prueffehler: "Keine Verbindung – bitte Internet prüfen." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  Weiterleitung: 2158 ms | Kontrast/Quer: 0 | ok
+handy hell | im Fenster: true | Tipp-Feedback: true 
+  noch nicht: "Noch nicht bestätigt – öffne den Link in der E-Mail, dann geht es hier von selbst weiter." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  erneut: "Neue Bestätigungs-E-Mail ist unterwegs." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  Versandfehler: "Zu viele Versuche – warte kurz oder setz dein Passwort zurück." 
+  Prueffehler: "Keine Verbindung – bitte Internet prüfen." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  Weiterleitung: 2166 ms | Kontrast/Quer: 0 | ok
+klein dunkel | im Fenster: true | Tipp-Feedback: true 
+  noch nicht: "Noch nicht bestätigt – öffne den Link in der E-Mail, dann geht es hier von selbst weiter." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  erneut: "Neue Bestätigungs-E-Mail ist unterwegs." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  Versandfehler: "Zu viele Versuche – warte kurz oder setz dein Passwort zurück." 
+  Prueffehler: "Keine Verbindung – bitte Internet prüfen." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  Weiterleitung: 2711 ms | Kontrast/Quer: 0 | ok
+ipad dunkel | im Fenster: true | Tipp-Feedback: true 
+  noch nicht: "Noch nicht bestätigt – öffne den Link in der E-Mail, dann geht es hier von selbst weiter." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  erneut: "Neue Bestätigungs-E-Mail ist unterwegs." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  Versandfehler: "Zu viele Versuche – warte kurz oder setz dein Passwort zurück." 
+  Prueffehler: "Keine Verbindung – bitte Internet prüfen." | Sprung: verification-check 0, resend-verification 0, logout 0 
+  Weiterleitung: 2709 ms | Kontrast/Quer: 0 | ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":42,"quelltext":"a1424057dc3ece57a7173bf5071943dc07becf28fbb844f2798a72ff1e8a8baf"}

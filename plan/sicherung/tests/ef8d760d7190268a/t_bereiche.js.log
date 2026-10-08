@@ -1,0 +1,44 @@
+== handy
+  Blatt: Bereich Medina Buch 1 12 fällig Quran-Wörter leer Bereich anlegen Schließen
+    Kontrast 0
+  Anlegen: Kopf "Test-Bereich" | Blatt zu true | Suche "undefined" | Auswahlmodus false | Inhalt: Karte hinzufügen Mehr Noch keine Karten Fang mit einer eigenen Karte an – oder spiel einen fertigen Kartensatz ein. Kart
+  Name existiert: Kopf "Medina Buch 1" | Rueckmeldung: „Medina Buch 1“ gibt es schon – geöffnet
+  Blatt mit leerem Bereich: Bereich Medina Buch 1 12 fällig Quran-Wörter leer Test-Bereich leer Bereich anlegen Schließen
+  Mehr (leerer Bereich): Weitere Handlungen Bereich umbenennen Bereich löschen Schließen
+  Umbenennen auf vorhandenen: Name schon vergeben Ein Bereich namens „Quran-Wörter" existiert schon. OK
+  Umbenannt: Kopf "Neuer Name"
+  Loeschen (leer): Downloads +0 | Bereich löschen? „Neuer Name“ ist leer. Abbrechen Löschen
+    danach Kopf "Quran-Wörter" | Bereiche: 2
+  Letzter Bereich, Mehr: Weitere Handlungen Mehrere Karten auswählen Reihenfolge umkehren Bereich umbenennen Schließen
+    Tipp auf Loeschen: Weitere Handlungen Mehrere Karten auswählen Reihenfolge umkehren Bereich umbenennen Schließen
+  ok
+== klein
+  Blatt: Bereich Medina Buch 1 12 fällig Quran-Wörter leer Bereich anlegen Schließen
+    Kontrast 0
+  Anlegen: Kopf "Test-Bereich" | Blatt zu true | Suche "undefined" | Auswahlmodus false | Inhalt: Karte hinzufügen Mehr Noch keine Karten Fang mit einer eigenen Karte an – oder spiel einen fertigen Kartensatz ein. Kart
+  Name existiert: Kopf "Medina Buch 1" | Rueckmeldung: „Medina Buch 1“ gibt es schon – geöffnet
+  Blatt mit leerem Bereich: Bereich Medina Buch 1 12 fällig Quran-Wörter leer Test-Bereich leer Bereich anlegen Schließen
+  Mehr (leerer Bereich): Weitere Handlungen Bereich umbenennen Bereich löschen Schließen
+  Umbenennen auf vorhandenen: Name schon vergeben Ein Bereich namens „Quran-Wörter" existiert schon. OK
+  Umbenannt: Kopf "Neuer Name"
+  Loeschen (leer): Downloads +0 | Bereich löschen? „Neuer Name“ ist leer. Abbrechen Löschen
+    danach Kopf "Quran-Wörter" | Bereiche: 2
+  Letzter Bereich, Mehr: Weitere Handlungen Mehrere Karten auswählen Reihenfolge umkehren Bereich umbenennen Schließen
+    Tipp auf Loeschen: Weitere Handlungen Mehrere Karten auswählen Reihenfolge umkehren Bereich umbenennen Schließen
+  ok
+== ipad
+  Blatt: Bereich Medina Buch 1 12 fällig Quran-Wörter leer Bereich anlegen Schließen
+    Kontrast 0
+  Anlegen: Kopf "Test-Bereich" | Blatt zu true | Suche "undefined" | Auswahlmodus false | Inhalt: Karte hinzufügen Mehr Noch keine Karten Fang mit einer eigenen Karte an – oder spiel einen fertigen Kartensatz ein. Kart
+  Name existiert: Kopf "Medina Buch 1" | Rueckmeldung: „Medina Buch 1“ gibt es schon – geöffnet
+  Blatt mit leerem Bereich: Bereich Medina Buch 1 12 fällig Quran-Wörter leer Test-Bereich leer Bereich anlegen Schließen
+  Mehr (leerer Bereich): Weitere Handlungen Bereich umbenennen Bereich löschen Schließen
+  Umbenennen auf vorhandenen: Name schon vergeben Ein Bereich namens „Quran-Wörter" existiert schon. OK
+  Umbenannt: Kopf "Neuer Name"
+  Loeschen (leer): Downloads +0 | Bereich löschen? „Neuer Name“ ist leer. Abbrechen Löschen
+    danach Kopf "Quran-Wörter" | Bereiche: 2
+  Letzter Bereich, Mehr: Weitere Handlungen Mehrere Karten auswählen Reihenfolge umkehren Bereich umbenennen Schließen
+    Tipp auf Loeschen: Weitere Handlungen Mehrere Karten auswählen Reihenfolge umkehren Bereich umbenennen Schließen
+  ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":76,"quelltext":"8c8315ec89f44961acb03cea960dd32b105b6d5af77ca26889e1660a2d9f2d21"}

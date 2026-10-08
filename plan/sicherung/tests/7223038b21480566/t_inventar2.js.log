@@ -1,0 +1,120 @@
+
+=== rundenende
+h2: Geschafft
+p: Alle 12 Karten für heute durch.
+strong: 0
+strong: 0
+strong: 12
+strong: 4 Tage
+p: Morgen kommen 7 Karten wieder.
+button: Fertig
+button: Letzte Bewertung rückgängig
+
+=== einstieg-0
+strong: Adrabic
+h1: Du hast es gelernt. Und es ist weg.
+p: Die Wörter von letzter Woche. Die Lektion von letztem Monat. Nicht, weil du zu langsam bist – sondern weil du sie nie wieder gesehen hast.
+button: كِتَابٌ Buch
+p: Adrabic bringt dir jedes Wort zurück. In wachsenden Abständen, so lange, bis es sitzt.
+button: Meinen Plan erstellen
+button: Ich habe schon ein Konto
+
+=== einstieg-1
+h1: Wofür lernst du Arabisch?
+p: Wähl alles, was passt.
+button: Quran und Sunnah verstehen
+button: Für meinen Kurs oder mein Buch
+button: Etwas anderes
+button: Weiter
+p: Wähl mindestens ein Ziel.
+
+=== einstieg-2
+h1: Was hat dich bisher gebremst?
+p: Wähl alles, was stimmt.
+button: Ich vergesse Wörter schnell wieder
+button: Ich weiß nicht, was ich wann wiederholen soll
+button: Ich bleibe nicht dran
+button: Mir fehlt die Zeit
+button: Ich lese Arabisch noch schlecht oder gar nicht
+button: Nichts davon
+button: Weiter
+p: Wähl, was stimmt – oder „Nichts davon“.
+
+=== einstieg-3a
+h1: Probier eine Karte.
+p: So arbeitet Adrabic gegen das Vergessen. Tipp die Karte an, um sie umzudrehen.
+button: كِتَابٌ
+
+=== einstieg-3b
+h1: Probier eine Karte.
+p: Wie sicher warst du?
+button: Nicht
+button: Fast
+button: Sicher
+
+=== einstieg-3c
+h1: Probier eine Karte.
+p: Wie sicher warst du?
+p: Dann kommt sie morgen wieder. Danach immer seltener.
+p: So macht Adrabic es mit jeder deiner Karten.
+button: Weiter
+
+=== einstieg-4
+h1: Kannst du das gut lesen?
+p: Tipp auf eine Größe – die Karte ändert sich sofort.
+button: Klein
+button: Normal
+button: Groß
+button: Sehr groß
+p: Änderbar in den Einstellungen.
+button: Weiter
+
+=== einstieg-5
+h1: Wie groß soll deine tägliche Runde sein?
+p: Eine Runde ist das, was du an einem Tag durchgehst – zuerst Wiederholungen, dann Neues.
+button: 10 Karten kurz
+button: 20 Karten normal
+button: 30 Karten gründlich
+button: Alle fälligen ohne Grenze
+p: Jeder Tag mit einer Runde zählt für deine Serie. Ein ausgelassener Tag reißt sie nicht.
+button: Weiter
+
+=== einstieg-6
+h1: Wann machst du deine Runde?
+p: Ein fester Punkt am Tag hält besser als ein guter Vorsatz.
+p: Wenn ich …, mache ich eine Runde.
+button: nach dem Fajr-Gebet
+button: nach dem Dhuhr-Gebet
+button: nach dem Asr-Gebet
+button: nach dem Maghrib-Gebet
+button: nach dem Ischa-Gebet
+button: eigene Situation …
+button: Weiter
+p: Wähl einen Zeitpunkt.
+
+=== einstieg-7-fertiger-plan
+h1: Dein Plan steht.
+p: Nach dem Fajr-Gebet mache ich eine Runde.
+p: Dein Stand
+li: heute neu angelegt
+li: morgen im Lernen
+li: in ein paar Tagen frisch gelernt
+li: nach etwa einer Woche wird fester
+li: nach ein paar Wochen gefestigt
+li: danach immer seltener bis es dauerhaft sitzt
+h2: Und so kommst du an deine Karten
+strong: Selbst anlegen.
+strong: Kartensatz per Code.
+button: Plan speichern
+
+=== plan-speichern
+h1: Plan speichern
+p: Einmal anlegen – dann ist dein Plan gespeichert.
+label: Dein Name – wird in der App angezeigt
+label: E-Mail
+label: Passwort – mindestens 6 Zeichen
+button: Konto anlegen
+button: Mit Google fortfahren
+button: Ich habe schon ein Konto
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":55,"quelltext":"302940fd88750e36b04cbef04abeef69efbf3cd1ab75f252a80911836abd88e2"}

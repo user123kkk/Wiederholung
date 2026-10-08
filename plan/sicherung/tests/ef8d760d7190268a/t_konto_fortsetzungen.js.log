@@ -1,0 +1,105 @@
+
+== konto_authrest_normal.js 
+{"fall":"token","reload":1,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"token-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"register","reload":0,"profil":1,"mail":1,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"register-vor-auth","reload":0,"profil":1,"mail":1,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"profil-fehler","reload":0,"profil":1,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"mail-fehler","reload":0,"profil":1,"mail":1,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"register-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"reset","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"reset-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"adresse-neu","reload":0,"profil":0,"mail":0,"geloescht":1,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"adresse-reauth","reload":0,"profil":0,"mail":0,"geloescht":2,"reauth":1,"anmelden":0,"busy":false}
+{"fall":"adresse-abbruch","reload":0,"profil":0,"mail":0,"geloescht":1,"reauth":1,"anmelden":0,"busy":false}
+{"fall":"login","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"login-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"google","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"google-abbruch","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"apple","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"apple-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+
+== konto_authrest.js 
+{"fall":"lese-token","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"registrierung","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"reset","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"adresse-neu","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"login","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"google","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"apple","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+
+== konto_authrest.js --gegenprobe
+{"fall":"lese-token","seiten":1,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"registrierung","seiten":0,"reauthB":0,"mailA":1,"info":"Konto angelegt.","busy":false}
+{"fall":"reset","seiten":0,"reauthB":0,"mailA":0,"info":"Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach.","busy":false}
+{"fall":"adresse-neu","seiten":0,"reauthB":1,"mailA":0,"info":"B wartet","busy":false}
+{"fall":"login","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","fehler":"Alter Auth-Fehler","busy":false}
+{"fall":"google","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","fehler":"Alter Auth-Fehler","busy":false}
+{"fall":"apple","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","fehler":"Alter Auth-Fehler","busy":false}
+
+== konto_adressdialog.js 
+{"fall":"adresse","geloescht":[],"abgemeldet":[],"alt":false}
+{"fall":"abmelden","geloescht":[],"abgemeldet":[],"alt":false}
+
+== konto_adressdialog.js --gegenprobe
+{"fall":"adresse","geloescht":["b"],"abgemeldet":[],"alt":true}
+{"fall":"abmelden","geloescht":[],"abgemeldet":["b"],"alt":true}
+
+== konto_adressdialog_app.js 
+{"fall":"adresse","stand":{"user":"u2","geloescht":[],"abgemeldet":[]},"alt":false}
+{"fall":"abmelden","stand":{"user":"u2","geloescht":[],"abgemeldet":[]},"alt":false}
+{"fall":"abmelden-sdk","stand":{"user":"u2","geloescht":[],"abgemeldet":[]},"alt":false}
+
+== konto_adressdialog_app.js --gegenprobe
+{"fall":"adresse","stand":{"user":null,"geloescht":["u2"],"abgemeldet":[]},"alt":true}
+{"fall":"abmelden","stand":{"user":null,"geloescht":[],"abgemeldet":["u2"]},"alt":true}
+{"fall":"abmelden-sdk","stand":{"user":null,"geloescht":[],"abgemeldet":["u2"]},"alt":true}
+
+== konto_entwuerfe.js 
+{"fall":"neue-karte","privaterEntwurfInB":false,"stand":{"edit":null,"karte":false,"idee":false,"auswahl":false,"ids":[],"schreibFehler":null},"alt":false}
+{"fall":"bearbeitung","privaterEntwurfInB":false,"stand":{"edit":null,"karte":false,"idee":false,"auswahl":false,"ids":[],"schreibFehler":null},"alt":false}
+{"fall":"idee","privaterEntwurfInB":false,"stand":{"edit":null,"karte":false,"idee":true,"auswahl":false,"ids":[],"schreibFehler":null},"alt":false}
+{"fall":"auswahl","stand":{"edit":null,"karte":false,"idee":false,"auswahl":false,"ids":[],"schreibFehler":null},"alt":false}
+
+== konto_entwuerfe.js --gegenprobe
+{"fall":"neue-karte","privaterEntwurfInB":true,"stand":{"edit":null,"karte":true,"auswahl":false,"ids":[],"schreibFehler":null},"alt":true}
+{"fall":"bearbeitung","privaterEntwurfInB":true,"stand":{"edit":null,"karte":true,"auswahl":false,"ids":[],"schreibFehler":null},"alt":true}
+{"fall":"idee","privaterEntwurfInB":true,"stand":{"edit":null,"karte":false,"idee":true,"auswahl":false,"ids":[],"schreibFehler":null},"alt":true}
+{"fall":"auswahl","stand":{"edit":null,"karte":false,"auswahl":true,"ids":["k0"],"schreibFehler":null},"alt":true}
+
+== konto_registrierungsnachtrag_app.js 
+{"fall":"fremd","stand":{"user":"u2","name":"","mail":0,"profil":0},"alt":false}
+{"fall":"aba","stand":{"user":"neu1","name":"Neuer Name A","mail":1,"profil":1},"alt":false}
+
+== konto_registrierungsnachtrag_app.js --gegenprobe
+{"fall":"fremd","stand":{"user":"u2","name":"Privater Name A","mail":1,"profil":1},"alt":true}
+{"fall":"aba","stand":{"user":"neu1","name":"Neuer Name A","mail":1,"profil":1},"alt":true}
+
+== konto_authrest_app.js 
+{"fall":"token","aba":false,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"registrierung","aba":false,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"reset","aba":false,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"adresse","aba":false,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"login","aba":false,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"google","aba":false,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"apple","aba":false,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"token","aba":true,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"registrierung","aba":true,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"reset","aba":true,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"adresse","aba":true,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"login","aba":true,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"google","aba":true,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"apple","aba":true,"alt":false,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":false}}
+{"fall":"eigene-adressloeschung","quittung":0,"st":{"busy":false,"user":null,"modus":"register","gewaehlt":true}}
+{"fall":"eigene-adressloeschung","quittung":25,"st":{"busy":false,"user":null,"modus":"register","gewaehlt":true}}
+
+== konto_authrest_app.js --gegenprobe
+{"fall":"token","alt":true,"reloads":1}
+{"fall":"registrierung","aba":false,"alt":true,"st":{"busy":false,"info":"Konto angelegt.","fehler":null,"mail":1,"dialog":false}}
+{"fall":"reset","aba":false,"alt":true,"st":{"busy":false,"info":"Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach.","fehler":null,"mail":0,"dialog":false}}
+{"fall":"adresse","aba":false,"alt":true,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":true}}
+{"fall":"login","aba":false,"alt":true,"st":{"busy":false,"info":"Neuer Auftrag wartet","fehler":"Keine Verbindung – bitte Internet prüfen.","mail":0,"dialog":false}}
+{"fall":"google","aba":false,"alt":true,"st":{"busy":false,"info":"Neuer Auftrag wartet","fehler":"Keine Verbindung – bitte Internet prüfen.","mail":0,"dialog":false}}
+{"fall":"apple","aba":false,"alt":true,"st":{"busy":false,"info":"Neuer Auftrag wartet","fehler":"Keine Verbindung – bitte Internet prüfen.","mail":0,"dialog":false}}
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":57,"quelltext":"b8c009c67d6ea9efa3a74ba451fb61680c578c54db8899cb44ae122f6bc6daed"}

@@ -1,0 +1,26 @@
+OK   0 Lernen zeigt 8 faellig (soll 8, wie die Runde)
+OK   0 Hinweis nennt die anderen Bereiche: "Mit dabei: Quran-Wörter (3), Eigenes (2) Lernen Fo"
+OK   1 Runde ueber drei Bereiche zaehlt 8 Karten (soll 8: 3+3+2, ohne neue und Liegengebliebene) | Rest b2:3,b3:2
+OK   1 Kopf zaehlt die ganze Runde: "Karte 1 von 8"
+OK   2 nach "Nicht" weiter im ersten Bereich (b1, Karte a2)
+OK   3 nach dem letzten "Sicher" im ersten Bereich: weiter im zweiten (b2, Karte b1)
+OK   3 Kopf nennt den neuen Bereich: "Quran-Wörter Karte 4 von 8"
+OK   4 Rueckgaengig fuehrt in den ersten Bereich zurueck (b1, Karte a2, Rest b2:3,b3:2, Stand 1/2026-10-08)
+OK   4 danach wieder im zweiten Bereich (b2)
+OK   5 dritter Bereich folgt (b3), Kopf "Eigenes Karte 7 von 8"
+OK   6 Rundenende: "Geschafft | "
+OK   7 gespeichert: alle acht Karten neu terminiert, neue und liegengebliebene Karten unberuehrt
+OK   7 jede Karte bleibt in ihrem Bereich
+OK   7 Tagesprotokoll zaehlt 9 Antworten ueber alle drei Bereiche ({"w":9,"n":0})
+OK   8 Limit 10 bei 7 + 7: Runde 10, Rest b2:3
+OK   8 Rundenende nennt die offenen 4: "Geschafft 10 Karten in dieser Runde. 10 sicher 0 fast 0 nicht 1 Tag am Stück Heute sind no"
+OK   8 Weiterlernen: 4 Karten im zweiten Bereich (b2)
+OK   9 Ende im ersten Bereich, 4 im anderen offen
+OK   9 Weiterlernen wechselt in den Bereich mit den offenen Karten (b2, 4)
+OK   11 offener Bereich leer, anderer mit 4: Stapel zeigt 4, Startknopf true
+OK   11 Runde startet im Bereich mit den faelligen Karten (b2, 4)
+OK   12 nichts faellig: ruhiger Zustand, kein Startknopf
+OK   10 ein Bereich: 6 Karten (4 Wiederholungen + 2 neue), kein Rest
+ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":50,"quelltext":"9322af51fadbe3265959aa670cfc1e82f40ec3f0e862fde8e26036eb23b9e13c"}

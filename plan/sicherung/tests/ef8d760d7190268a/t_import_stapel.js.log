@@ -1,0 +1,6 @@
+ok     alle Stapel sofort angelegt (>= 3 commit, Server antwortet nie) | commit: 3
+ok     keine Seitenfehler | 
+ok     Gegenprobe 3452fdc: nur der erste Stapel (muss ROT sein) | commit: 1
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":19,"quelltext":"a2af07a1b5068a2122e4e51f05b0dc8894779246593449828a5293be2e83cdc7"}

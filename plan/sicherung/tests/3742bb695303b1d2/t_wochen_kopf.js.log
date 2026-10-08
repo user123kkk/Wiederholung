@@ -1,0 +1,42 @@
+--- a) nur vor 8-13 Tagen gelernt - Pause seit einer Woche
+   Text: Die letzten 4 Wochen Dein bisheriger Fortschritt bleibt. Starte mit einer Runde wieder ein. Runde starten Sep Okt Mo Mi Fr Gelernt Nicht gelernt
+   Kalender-Lage (top): 265.734375
+   OK   grosse Zahl (.gross-zahl) - erwartet false - ist false
+   OK   Wochenkopf - erwartet false - ist false
+   OK   Trend-Pille (.trend-pill) - erwartet false - ist false
+   OK   C5 wahrer Pause-Satz - erwartet true - ist true
+   OK   C2 kein wertender Vergleich - erwartet false - ist false
+--- b) letzte 7 Tage UND 8-13 Tage davor
+   Text: Die letzten 4 Wochen 42 Antworten in den letzten 7 Tagen Sep Okt Mo Mi Fr Gelernt Nicht gelernt
+   Kalender-Lage (top): 200.328125
+   OK   grosse Zahl (.gross-zahl) - erwartet false - ist false
+   OK   Wochenkopf - erwartet true - ist true
+   OK   Trend-Pille (.trend-pill) - erwartet false - ist false
+   OK   C5 wahrer Pause-Satz - erwartet false - ist false
+   OK   C2 unveränderte Antwortenzahl, klein dargestellt - erwartet true - ist true
+   OK   Beschriftung "in den letzten 7 Tagen" - erwartet true - ist true
+   OK   kein "diese Woche" im Text - erwartet false - ist false
+   OK   C2 kein wertender Vergleich - erwartet false - ist false
+--- c) nur letzte 7 Tage, nichts davor
+   Text: Die letzten 4 Wochen 42 Antworten in den letzten 7 Tagen Sep Okt Mo Mi Fr Gelernt Nicht gelernt
+   Kalender-Lage (top): 200.328125
+   OK   grosse Zahl (.gross-zahl) - erwartet false - ist false
+   OK   Wochenkopf - erwartet true - ist true
+   OK   Trend-Pille (.trend-pill) - erwartet false - ist false
+   OK   C5 wahrer Pause-Satz - erwartet false - ist false
+   OK   C2 unveränderte Antwortenzahl, klein dargestellt - erwartet true - ist true
+   OK   Beschriftung "in den letzten 7 Tagen" - erwartet true - ist true
+   OK   kein "diese Woche" im Text - erwartet false - ist false
+   OK   C2 kein wertender Vergleich - erwartet false - ist false
+--- d) kein Verlauf, aber bewertete Karten
+   Text: Die letzten 4 Wochen Dein bisheriger Fortschritt bleibt. Starte mit einer Runde wieder ein. Runde starten Sep Okt Mo Mi Fr Gelernt Nicht gelernt
+   Kalender-Lage (top): 265.734375
+   OK   grosse Zahl (.gross-zahl) - erwartet false - ist false
+   OK   Wochenkopf - erwartet false - ist false
+   OK   Trend-Pille (.trend-pill) - erwartet false - ist false
+   OK   C5 wahrer Pause-Satz - erwartet true - ist true
+   OK   C2 kein wertender Vergleich - erwartet false - ist false
+
+Alle Pruefungen OK.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":16,"quelltext":"e448f959b874bf69734fca05046ae081f5d55d68ff57157317345fbb1fb5fe8c"}

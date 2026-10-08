@@ -1,0 +1,7 @@
+ok     (a) Kopf-Datum ist der Lerntag (Tag vor Mitternacht-Grenze bei 01:30) | Dienstag, 6. Oktober <-> Dienstag, 6. Oktober
+ok     (b) Serie markiert denselben Tag als "heute" | Di <-> Di
+ok     (c) keine Seitenfehler | 
+ok     Gegenprobe c70729b: Kopf-Datum weicht vom Lerntag ab (muss ROT sein) | Dienstag, 6. Oktober <-> Mittwoch, 7. Oktober
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":5,"quelltext":"965b314bbd29d5aadfe9dcc11ee891e08749d4fe34b37dee23a103d48092a702"}

@@ -1,0 +1,13 @@
+ok
+== handy
+  Offline: Offline – alles geht weiter und wird übertragen, sobald du wieder online bist. | h 67 | Inhalt 27 -> 27 (Sprung 0)
+    Kontrast 0
+  Wieder online: Banner weg true | Inhalt 27
+  Schreibfehler Dialog: Neue Karte Karte gespeichert Wort Übersetzung Notiz – optional Anlegen Fertig
+    Banner: Kurz nicht gespeichert: Die Anmeldung war veraltet und wurde gerade erneuert. Versuch die letzte Änderung noch einmal zu speichern.
+  Toast nach Erinnerung: Datei für 20:00 Uhr erstellt – öffne sie und bestätige den Termin im Kalender. @688
+  Prompt: Fokus im Feld dlg-input | Enter legt an: Tastatur
+  Confirm + Escape: war offen true | zu true | Bereich noch da: Tastatur
+  Start mit unavailable: Adrabic Adrabic startet Keine Verbindung zu deinen Daten Verbindungsproblem beim Laden der Daten. Neu laden Abmelden | Knoepfe Neu laden, Abmelden
+  Start mit permission-denied: Adrabic Du hast es gelernt. Und es ist weg. Die Wörter von letzter Woche. Die Lektion von letztem Monat. Nicht, weil du zu langsam bist – sondern weil du sie nie wieder gesehen hast. كِتَابٌ Buch neu frisch fester gefestigt Adrabic bringt dir jedes Wort zurück | Knoepfe كِتَابٌ
+Buch, Meinen Plan erstellen, Ich habe schon ein Konto

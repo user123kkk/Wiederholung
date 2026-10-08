@@ -1,0 +1,20 @@
+OK   Konto: eigene geteilte Saetze weg
+OK   Konto: verwaister eigener Satz (ohne teilCode am Bereich) weg
+OK   Konto: fremder geteilter Satz bleibt
+OK   Konto: eigener Stimm-Merker weg, fremder bleibt
+OK   Konto: Vorschlag selbst bleibt
+OK   Konto: users/u1 leer
+OK   Konto: Auth-Konto geloescht
+OK   Konto: keine Seitenfehler
+OK   Bereich: Rueckfrage nennt den Code (Bereich löschen? „Quran-Wörter“ ist leer. Der Code KLMNP-QRSTU funktioniert danach nicht m)
+OK   Bereich: geteilter Satz des Bereichs weg
+OK   Bereich: anderer eigener Satz bleibt
+OK   Bereich: keine Seitenfehler
+OK   Bild: fremdes nur als Link, kein <img>
+OK   Bild: fremdes nicht geladen
+OK   Bild: eigenes in der Liste nur als „Bild"
+OK   Bild: eigenes in der Kartenansicht als Bild
+OK   Bild: keine Seitenfehler
+alles ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":22,"quelltext":"45ebf65fd71645a2ffe9894eeb08cf3df6ee1b83785f9398e30bd4e37203da9f"}

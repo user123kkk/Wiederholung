@@ -1,0 +1,61 @@
+
+== konto_authrest_normal.js 
+{"fall":"token","reload":1,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"token-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"register","reload":0,"profil":1,"mail":1,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"register-vor-auth","reload":0,"profil":1,"mail":1,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"profil-fehler","reload":0,"profil":1,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"mail-fehler","reload":0,"profil":1,"mail":1,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"register-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"reset","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"reset-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"adresse-neu","reload":0,"profil":0,"mail":0,"geloescht":1,"reauth":0,"anmelden":0,"busy":false}
+{"fall":"adresse-reauth","reload":0,"profil":0,"mail":0,"geloescht":2,"reauth":1,"anmelden":0,"busy":false}
+{"fall":"adresse-abbruch","reload":0,"profil":0,"mail":0,"geloescht":1,"reauth":1,"anmelden":0,"busy":false}
+{"fall":"login","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"login-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"google","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"google-abbruch","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"apple","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+{"fall":"apple-fehler","reload":0,"profil":0,"mail":0,"geloescht":0,"reauth":0,"anmelden":1,"busy":false}
+
+== konto_authrest.js 
+{"fall":"lese-token","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"registrierung","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"reset","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"adresse-neu","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"login","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"google","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"apple","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+
+== konto_authrest.js --gegenprobe
+{"fall":"lese-token","seiten":1,"reauthB":0,"mailA":0,"info":"B wartet","busy":true}
+{"fall":"registrierung","seiten":0,"reauthB":0,"mailA":1,"info":"Konto angelegt.","busy":false}
+{"fall":"reset","seiten":0,"reauthB":0,"mailA":0,"info":"Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach.","busy":false}
+{"fall":"adresse-neu","seiten":0,"reauthB":1,"mailA":0,"info":"B wartet","busy":false}
+{"fall":"login","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","fehler":"Alter Auth-Fehler","busy":false}
+{"fall":"google","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","fehler":"Alter Auth-Fehler","busy":false}
+{"fall":"apple","seiten":0,"reauthB":0,"mailA":0,"info":"B wartet","fehler":"Alter Auth-Fehler","busy":false}
+
+== konto_adressdialog.js 
+{"fall":"adresse","geloescht":[],"abgemeldet":[],"alt":false}
+{"fall":"abmelden","geloescht":[],"abgemeldet":[],"alt":false}
+
+== konto_adressdialog.js --gegenprobe
+{"fall":"adresse","geloescht":["b"],"abgemeldet":[],"alt":true}
+{"fall":"abmelden","geloescht":[],"abgemeldet":["b"],"alt":true}
+
+== konto_adressdialog_app.js 
+page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8099/index.html
+Call log:
+[2m  - navigating to "http://127.0.0.1:8099/index.html", waiting until "load"[22m
+
+    at C:\Users\USER\Wiederholung\plan\werkzeuge\befund-skripte\konto_adressdialog_app.js:23:10 {
+  log: [
+    '  - navigating to "http://127.0.0.1:8099/index.html", waiting until "load"'
+  ],
+  name: 'Error'
+}
+Exit 1
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":2,"quelltext":"09739796f1cc6827601b973c5477c57f2bea146eab87c91540e7a613c83e3b61"}

@@ -1,0 +1,9 @@
+Passwort, alt, abbrechen   | Kontrast 0 | Frage: Passwort bestätigen Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht wird. Abbrechen Weiter | danach: – | Daten 43 Konto geloescht false | ok
+Passwort, alt, falsch      | Kontrast 0 | Frage: Passwort bestätigen Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht wird. Abbrechen Weiter | danach: Nicht gelöscht Falsches Passwort – es wurde nichts gelöscht. OK | Daten 43 Konto geloescht false | ok
+Passwort, alt, richtig     | Kontrast 0 | Frage: Passwort bestätigen Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht wird. Abbrechen Weiter | danach: – | Daten 0 Konto geloescht true | ok
+Google, alt, Fenster zu    | Kontrast 0 | Frage: Noch einmal anmelden Aus Sicherheitsgründen meldest du dich noch einmal bei Google an. Erst danach wird gelöscht. Abbrechen Weiter | danach: – | Daten 43 Konto geloescht false | ok
+Google, alt, angemeldet    | Kontrast 0 | Frage: Noch einmal anmelden Aus Sicherheitsgründen meldest du dich noch einmal bei Google an. Erst danach wird gelöscht. Abbrechen Weiter | danach: – | Daten 0 Konto geloescht true | ok
+Passwort, frisch           | Kontrast 0 | Frage: Passwort bestätigen Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht wird. Abbrechen Weiter | danach: Passwort bestätigen Aus Sicherheitsgründen wird dein Passwort noch einmal gebraucht, bevor das Konto endgültig gelöscht  | Daten 43 Konto geloescht false | ok
+Abmelden: Abmelden? Deine Karten und dein Lernstand bleiben im Konto gespeichert. Auf diesem Gerät meldest du dich danach mit E-Mail und Passwort wieder an. Abbrechen Abmelden | danach Einstieg true | ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":60,"quelltext":"043c7d9e543241f37b681f68ea41006a6477fc55b828c202425ef77ec45b05ef"}

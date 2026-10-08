@@ -1,0 +1,12 @@
+page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8099/index.html
+Call log:
+[2m  - navigating to "http://127.0.0.1:8099/index.html", waiting until "load"[22m
+
+    at C:\Users\USER\Wiederholung\plan\werkzeuge\pruefstand\t_paket_f_netz.js:20:15 {
+  log: [
+    '  - navigating to "http://127.0.0.1:8099/index.html", waiting until "load"'
+  ],
+  name: 'Error'
+}
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1,"quelltext":"a01d61ad3d392d463cc52b1a25f294bf75c9bba78aab9cce88ed5ca130821c2b"}

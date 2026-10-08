@@ -1,0 +1,37 @@
+handy dunkel leer | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":844} | ok
+    Vokabeln ¦ Vokabeln ¦ Dein Start ¦ 1 Erste Karte anlegen Ein Wort aus dem, was du gerade lernst. ¦ Kartensatz per Code ¦ Datei einspielen ¦ Lernen ¦ Fortschritt ¦ Verwalten
+handy dunkel eineKarte | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":844} | ok
+    Vokabeln ¦ Vokabeln ¦ Guten Morgen, Test ¦ Runde starten ¦ Dein Start ¦ 2 Erste Runde Umdrehen, bewerten – Adrabic merkt sich den Rest. ¦ Lernen ¦ Fortschritt ¦ Verwalten
+handy dunkel ersteRunde | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":844} | ok
+    Vokabeln ¦ Vokabeln ¦ Guten Morgen, Test ¦ Trotzdem üben ¦ Dein Start ¦ Lernen ¦ Fortschritt ¦ Verwalten
+handy dunkel voll | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
+    Medina Buch 1 ¦ Medina Buch 1 ¦ Guten Morgen, Test ¦ Runde starten ¦ Du hast 36 Karten schon einmal gewusst. So viel hast du schon geschafft. ¦ Lernen ¦ Fortschritt ¦ Verwalten
+handy dunkel erledigt | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
+    Medina Buch 1 ¦ Medina Buch 1 ¦ Guten Morgen, Test ¦ Trotzdem üben ¦ Du hast 36 Karten schon einmal gewusst. So viel hast du schon geschafft. ¦ Lernen ¦ Fortschritt ¦ Verwalten
+handy dunkel serie | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
+    Medina Buch 1 ¦ Medina Buch 1 ¦ Guten Morgen, Test ¦ Runde starten ¦ Du hast 36 Karten schon einmal gewusst. So viel hast du schon geschafft. ¦ Lernen ¦ Fortschritt ¦ Verwalten
+handy dunkel zweiBereiche | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
+    Medina Buch 1 ¦ Medina Buch 1 ¦ Guten Morgen, Test ¦ Runde starten ¦ Du hast 37 Karten schon einmal gewusst. So viel hast du schon geschafft. ¦ Mit dabei: Quran-Wörter (1) ¦ Quran-Wörter (1) ¦ Lernen ¦ Fortschritt ¦ Verwalten
+handy hell leer | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":844} | ok
+handy hell eineKarte | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":844} | ok
+handy hell ersteRunde | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":844} | ok
+handy hell voll | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
+handy hell erledigt | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
+handy hell serie | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
+handy hell zweiBereiche | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
+klein dunkel leer | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":740} | ok
+klein dunkel eineKarte | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":740} | ok
+klein dunkel ersteRunde | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":740} | ok
+klein dunkel voll | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":740} | ok
+klein dunkel erledigt | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":740} | ok
+klein dunkel serie | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":740} | ok
+klein dunkel zweiBereiche | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":740} | ok
+ipad dunkel leer | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":1180} | ok
+ipad dunkel eineKarte | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":1180} | ok
+ipad dunkel ersteRunde | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":1180} | ok
+ipad dunkel voll | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":1180} | ok
+ipad dunkel erledigt | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":1180} | ok
+ipad dunkel serie | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":1180} | ok
+ipad dunkel zweiBereiche | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":1180} | ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":106,"quelltext":"1185cd3153f97d2d8417748af6789775159e13ac4e2a35ebd789f943ca630c38"}

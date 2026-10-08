@@ -1,0 +1,8 @@
+Echte Datei: 114 Suren, 6236 Ayat, 13 Stichproben
+Gegenprobe rot wie erwartet (ein Zeichen (Shadda) entfernt): SHA-256 Text weicht ab; Stichprobe 1:1 weicht ab
+Gegenprobe rot wie erwartet (eine Zeile entfernt): SHA-256 Text weicht ab; Reihenfolge bei 2:95
+Gegenprobe rot wie erwartet (CRLF statt LF): SHA-256 Text weicht ab; Zeilenende CR gefunden
+Browser: Sure 1 (7) und Sure 2 (286) wortgleich angelegt, offline verfuegbar
+OK
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":12,"quelltext":"2cf88396d9981d60b01711fad5d1ed7466d66f8b03c071abcccf6ba25b48af72"}

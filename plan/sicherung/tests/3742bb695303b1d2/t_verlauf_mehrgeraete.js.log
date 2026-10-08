@@ -1,0 +1,10 @@
+OK  Zwei Geraete: 5 offline + 3 online = 8, beide Anzeigen gleich.
+OK  w/n/u werden getrennt und atomar addiert.
+OK  Offline-Neustart und wiederholtes Nachholen: keine verlorenen/doppelten Antworten.
+OK  Echte Bewertung/Rueckgaengig bewahrt fremde Antworten.
+OK  Beide Rueckgaengig-Wege korrigieren auch nach Tageswechsel den alten Tag.
+OK  Regeln-Ablehnung/SDK-Rollback/erneutes Senden: jede Antwort genau einmal.
+OK  Zaehler-Snapshots erhalten Karte und Zeichenflaeche in der laufenden Runde.
+OK  Reset: Ablehnung sichtbar, beide Geraete leer, anschliessend nur neue Antworten.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":11,"quelltext":"7e468891aff7dec61f7234549d9bd83daa048580cedae65644ca6159f05e9ed4"}

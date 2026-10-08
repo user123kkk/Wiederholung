@@ -1,0 +1,17 @@
+OK   (a) Fehlerzeile am Feld sichtbar | {"text":"","ariaInvalid":"true","fehlerSichtbar":true,"fokusImFeld":true,"modalOffen":true,"dlgDa":false}
+OK   (a) aria-invalid="true" | {"text":"","ariaInvalid":"true","fehlerSichtbar":true,"fokusImFeld":true,"modalOffen":true,"dlgDa":false}
+OK   (a) Fokus im Feld | {"text":"","ariaInvalid":"true","fehlerSichtbar":true,"fokusImFeld":true,"modalOffen":true,"dlgDa":false}
+OK   (a) kein Dialog (.dlg) | {"text":"","ariaInvalid":"true","fehlerSichtbar":true,"fokusImFeld":true,"modalOffen":true,"dlgDa":false}
+OK   (a) Modal bleibt offen | {"text":"","ariaInvalid":"true","fehlerSichtbar":true,"fokusImFeld":true,"modalOffen":true,"dlgDa":false}
+OK   (b) Fehlerzeile weg nach Tippen | {"text":"Beim Umdrehen flackert die Karte.","ariaInvalid":null,"fehlerSichtbar":false,"fokusImFeld":true,"modalOffen":true,"dlgDa":false}
+OK   (b) aria-invalid weg nach Tippen | {"text":"Beim Umdrehen flackert die Karte.","ariaInvalid":null,"fehlerSichtbar":false,"fokusImFeld":true,"modalOffen":true,"dlgDa":false}
+OK   (c) Text nach Esc + erneutem Oeffnen noch da | {"text":"Beim Umdrehen flackert die Karte.","ariaInvalid":null,"fehlerSichtbar":false,"fokusImFeld":true,"modalOffen":true,"dlgDa":false}
+OK   (d) mailto: ausgeloest | mailto:adrabic.de@gmail.com?subject=Fehler%20gemeldet&body=Beim%20Umdrehen%20flackert%20die%20Karte.%0A%0A%E2%80%94%0AAdrabic%203.18.26%20%C2%B7%20Test%0AGer%C3%A4t%3A%20Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20HeadlessChrome%2F154.0.0.0%20Safari%2F537.36%20%C2%B7%20390%C3%97844
+OK   (d) Text bleibt nach dem Absenden (3.17.14) | {"text":"Beim Umdrehen flackert die Karte.","ariaInvalid":null,"fehlerSichtbar":false,"fokusImFeld":false,"modalOffen":true,"dlgDa":false}
+OK   (d) kein Feldfehler mehr | {"text":"Beim Umdrehen flackert die Karte.","ariaInvalid":null,"fehlerSichtbar":false,"fokusImFeld":false,"modalOffen":true,"dlgDa":false}
+OK   (d) keine Seitenfehler
+OK   (e) Gegenprobe: alter Stand zeigt einen Dialog statt Feldfehler (muss ROT sein) | dlgDa=true
+OK   (e) Gegenprobe: alter Stand setzt den Text beim Schliessen zurueck (muss ROT sein) | text=""
+Alle Faelle richtig.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":13,"quelltext":"4f49bff6bc8a132fbab0b1ab05dcbd44aa8a741d6bdec9f69caaa7121445686b"}

@@ -1,0 +1,9 @@
+Mit modulepreload: Startzeiten { app: 1791383042813, auth: 1791383042817, firestore: 1791383042817 } | Spanne 4 ms
+Mit modulepreload: Lernen-Bildschirm sichtbar? true ok
+Ohne modulepreload (aktuelles app.js): Startzeiten { app: 1791383044781, auth: 1791383044782, firestore: 1791383044783 } | Spanne 2 ms
+Ohne modulepreload: Lernen-Bildschirm sichtbar? true ok
+GEGENPROBE altes app.js, ohne modulepreload: Startzeiten { app: 1791383046741, auth: 1791383047055, firestore: 1791383047382 } | Spanne 641 ms (erwartungsgemaess Wasserfall, ROT - Beleg der Testschaerfe)
+
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":7,"quelltext":"d233c53893e705af967ec8873941d301ca70a8bfcccea02e487a556c9223726a"}
