@@ -1,0 +1,11 @@
+{"name":"Hinweis wegtippen: Serien-Karte darunter","sel":".serie-karte","bilder":20,"verschiedeneLagen":1,"lagen":["700/1"]}
+{"name":"Bereichs-Blatt zu (Escape)","sel":".dlg","bilder":27,"verschiedeneLagen":3,"lagen":["520/1","860/1","weg"]}
+{"name":"Karte-anlegen-Blatt zu (Fertig)","sel":".dlg","bilder":27,"verschiedeneLagen":3,"lagen":["361/1","868/1","weg"]}
+{"name":"Karte-anlegen-Blatt zu (Escape)","sel":".dlg","bilder":27,"verschiedeneLagen":3,"lagen":["361/1","868/1","weg"]}
+{"name":"Karte-anlegen-Blatt zu (Tippen daneben)","sel":".dlg","bilder":27,"verschiedeneLagen":3,"lagen":["361/1","868/1","weg"]}
+{"name":"Ueben aufklappen: Suchfeld darunter","sel":".view input[type=\"text\"]","bilder":26,"verschiedeneLagen":2,"lagen":["260/1","756/1"]}
+{"name":"Ueben zuklappen: Suchfeld darunter","sel":".view input[type=\"text\"]","bilder":27,"verschiedeneLagen":2,"lagen":["756/1","260/1"]}
+{"name":"Speicherkarten aufklappen: Suchfeld darunter","sel":".view input[type=\"text\"]","bilder":27,"verschiedeneLagen":2,"lagen":["260/1","1038/1"]}
+{"name":"Speicherkarten zuklappen: Suchfeld darunter","sel":".view input[type=\"text\"]","bilder":27,"verschiedeneLagen":2,"lagen":["1038/1","260/1"]}
+{"name":"Abmelden-Dialog zu (Escape)","sel":".dlg","bilder":27,"verschiedeneLagen":3,"lagen":["615/1","855/1","weg"]}
+{"seitenfehler":[]}
