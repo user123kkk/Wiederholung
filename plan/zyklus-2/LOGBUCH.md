@@ -2,6 +2,20 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-08 — Antworten auf die offenen Mehrwert-Fragen eingetragen (nur Plan)
+
+**Geändert:** `mehrwert/RUNDE-2-2026-10-08.md`, neue Abschnitte 5a
+(Antworten zu 37, 38, 40, 4, 17, 35, 65; Fundstellen zur Medina-Freigabe;
+Tafsir-Wunsch) und 5b (Erinnerungsliste).
+**Entscheidung:** 37 zurückgestellt, 38 ja als Notiz auf Tipp, 40 nicht
+bauen. Medina: Weitergabe laut Institut nur nicht kommerziell; Kartensatz
+mit eigenen Bedeutungen vertretbar, solange kostenlos; Betreiber muss die
+Entscheidung vom 12.09. selbst aufheben. Tafsir nur als Link nach außen
+denkbar, nicht entschieden.
+**Offen:** Erinnerungsliste 5b. Betreiber will erinnert werden.
+**Nächster Schritt:** Veröffentlichen auf Stichwort; dann sagt er, ob G0
+oder Onboarding/Animationen zuerst.
+
 ### 2026-10-08 — 3.18.26: zwei Kleinigkeiten, Mehrwert zweiter Chat eingearbeitet
 
 **Geändert:** `styles.css`: `.study-extra` und `.extra-note-voll` mit
