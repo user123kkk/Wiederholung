@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 8acb637..361bacc 100644
+index 8acb637..a2f573d 100644
 --- a/app.js
 +++ b/app.js
 @@ -1770,6 +1770,7 @@ let ui = {
@@ -335,7 +335,41 @@ index 8acb637..361bacc 100644
  }
  
  /* ---------- Lern-Session ---------- */
-@@ -8852,6 +9104,19 @@ function bereichMehrSheet() {
+@@ -8112,7 +8364,33 @@ function bootBild() {
+ }
+ 
+ /* ---------- Rendering ---------- */
++/* 3.18.27 (Paket H, Sammelfreigabe S1 "Bildschirm wach halten"): Waehrend
++   einer Runde (Lernen oder Ueben) geht der Bildschirm nicht von selbst aus -
++   wer ueber ein Wort nachdenkt, tippt nicht. Nur waehrend ui.session, nur
++   solange die App sichtbar ist; das System gibt die Sperre beim Wechsel in
++   den Hintergrund selbst frei, beim Zurueckkommen wird sie neu geholt.
++   Geraete ohne diese Funktion: nichts passiert. Kein Datenfluss. */
++let wachSperre = null, wachGewollt = false;
++function bildschirmWach(an) {
++  wachGewollt = !!an;
++  if (!navigator.wakeLock || typeof navigator.wakeLock.request !== "function") return;
++  if (!wachGewollt) {
++    if (wachSperre && wachSperre !== "wartet") { const alt = wachSperre; wachSperre = null; alt.release().catch(() => {}); }
++    return;
++  }
++  if (wachSperre || document.visibilityState !== "visible") return;
++  wachSperre = "wartet";
++  navigator.wakeLock.request("screen").then(sperre => {
++    if (!wachGewollt) { wachSperre = null; sperre.release().catch(() => {}); return; }
++    wachSperre = sperre;
++    sperre.addEventListener("release", () => { if (wachSperre === sperre) wachSperre = null; });
++  }).catch(() => { wachSperre = null; });
++}
++document.addEventListener("visibilitychange", () => {
++  if (document.visibilityState === "visible") bildschirmWach(wachGewollt);
++});
+ function render() {
++  bildschirmWach(!!ui.session);
+   ersterRender = true;
+   /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
+      der Cloud), ist ein noch wartender Such-Timer gegenstandslos - der
+@@ -8852,6 +9130,19 @@ function bereichMehrSheet() {
      html += '<button class="liste-zeile" data-action="bereich-mehr-umkehren" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' +
        ikon("umkehren", "i-sm") + '<span class="liste-zeile__text">Reihenfolge umkehren</span></button>';
    }
@@ -355,7 +389,7 @@ index 8acb637..361bacc 100644
    if (!gefuehrt) {
      html += '<button class="liste-zeile" data-action="bereich-mehr-umbenennen" title="Bereich umbenennen">' +
        ikon("stift", "i-sm") + '<span class="liste-zeile__text">Bereich umbenennen</span></button>';
-@@ -9254,6 +9519,7 @@ function renderMain() {
+@@ -9254,6 +9545,7 @@ function renderMain() {
    html += bereichMehrSheet();
    html += wahlSheet();
    html += erinnerungSheet();
@@ -363,7 +397,7 @@ index 8acb637..361bacc 100644
    html += setArtSheet();
    html += karteSheet();
    html += neuWahlSheet();
-@@ -9278,7 +9544,7 @@ function renderMain() {
+@@ -9278,7 +9570,7 @@ function renderMain() {
      ui.textLernen ? "tl-" + ui.textLernen.schritt + "-" + ui.textLernen.fokus : ""].join("/");
    const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
      ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
@@ -372,7 +406,7 @@ index 8acb637..361bacc 100644
    /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
       kein .view - dann ist alles neu. */
    const warAnsicht = !!app.querySelector(":scope > .view");
-@@ -9288,7 +9554,11 @@ function renderMain() {
+@@ -9288,7 +9580,11 @@ function renderMain() {
    letzterOverlaySchluessel = overlaySchluessel;
    app.classList.toggle("still-ansicht", !ansichtNeu);
    app.classList.toggle("still-overlay", !overlayNeu);
@@ -385,7 +419,7 @@ index 8acb637..361bacc 100644
      !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
      ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
    if (ansichtNeu) {
-@@ -9352,7 +9622,7 @@ function renderMain() {
+@@ -9352,7 +9648,7 @@ function renderMain() {
    }
    /* 3.17.14: + erinnerungSheet - sonst liess sich die Seite dahinter
       scrollen und per Wischen wechseln. */
@@ -394,7 +428,7 @@ index 8acb637..361bacc 100644
    document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
    appbarKanteSetzen();
    /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
-@@ -14671,7 +14941,15 @@ function syncViewportGap(ereignis) {
+@@ -14671,7 +14967,15 @@ function syncViewportGap(ereignis) {
       innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
       viel kleiner) bleibt der Zustand, wie er ist. */
    const root = document.documentElement;
@@ -410,7 +444,7 @@ index 8acb637..361bacc 100644
    if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
      const ref = Math.max(screen.width, screen.height);
      const diff = ref - window.innerHeight;
-@@ -14717,7 +14995,7 @@ function syncViewportGap(ereignis) {
+@@ -14717,7 +15021,7 @@ function syncViewportGap(ereignis) {
  const TASTATUR_MIN = 120;
  let tastaturSprung = null;
  let tastaturFeld = null;
@@ -419,7 +453,7 @@ index 8acb637..361bacc 100644
    const vv = window.visualViewport;
    let hoch = 0;
    if (vv) {
-@@ -14725,6 +15003,10 @@ function syncTastatur() {
+@@ -14725,6 +15029,10 @@ function syncTastatur() {
      if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
    }
    document.documentElement.style.setProperty("--tastatur", hoch + "px");
@@ -430,7 +464,7 @@ index 8acb637..361bacc 100644
    /* G-118: Nur einmal je Fokus/Tastatur-Oeffnen pruefen. Niemals Vorfahren
       mit scrollIntoView verschieben oder auf vv.scroll erneut scrollen. */
    if (!hoch) {
-@@ -14754,6 +15036,10 @@ function syncTastatur() {
+@@ -14754,6 +15062,10 @@ function syncTastatur() {
      }
    }
  }
@@ -441,7 +475,7 @@ index 8acb637..361bacc 100644
  document.addEventListener("focusin", () => {
    tastaturFeld = null;
    clearTimeout(tastaturSprung);
-@@ -14799,21 +15085,34 @@ function openDialog(cfg) {
+@@ -14799,21 +15111,34 @@ function openDialog(cfg) {
     dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
     ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
     (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
@@ -486,7 +520,7 @@ index 8acb637..361bacc 100644
    setTimeout(danach, 200);
  }
  function closeDialog(result) {
-@@ -14885,7 +15184,11 @@ function renderDialog() {
+@@ -14885,7 +15210,11 @@ function renderDialog() {
      /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
         (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
         Übersetzung" ...), doppelt zu tippen waere nur eine Fehlerquelle. */
@@ -499,7 +533,7 @@ index 8acb637..361bacc 100644
    }
    h += '<div class="dlg-actions">';
    if (d.kind === "code-share") {
-@@ -14935,6 +15238,10 @@ function schliesseObersteEbene() {
+@@ -14935,6 +15264,10 @@ function schliesseObersteEbene() {
    /* 3.17.14 (Station 14): Das Erinnerungs-Blatt (3.17.0) fehlte hier - Escape
       und Wischen nach unten schlossen es nicht. */
    if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; ui.erinnerungZeit = null; render(); }); return true; }
@@ -510,7 +544,7 @@ index 8acb637..361bacc 100644
    if (ui.karteSheet || ui.editId) {
      if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
      schliesse(cancelEdit); return true;
-@@ -15198,7 +15505,7 @@ function tabSchonAktiv(id) {
+@@ -15198,7 +15531,7 @@ function tabSchonAktiv(id) {
    return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
      !ui.wahlSheet && !ui.erinnerungSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
      !ui.bereichMehr && !ui.cardDetailId && !ui.dialog &&
@@ -519,7 +553,7 @@ index 8acb637..361bacc 100644
  }
  function nachObenBlaettern() {
    window.scrollTo({ top: 0, behavior: scrollArt() });
-@@ -15565,6 +15872,13 @@ document.body.addEventListener("click", e => {
+@@ -15565,6 +15898,13 @@ document.body.addEventListener("click", e => {
      case "bereich-mehr-auswaehlen": ui.bereichMehr = false; toggleSelectMode(); break;
      case "bereich-mehr-umkehren": ui.bereichMehr = false; reverseOrder(); break;
      case "bereich-mehr-umbenennen": ui.bereichMehr = false; renameBereich(); break;
@@ -533,7 +567,7 @@ index 8acb637..361bacc 100644
      case "bereich-mehr-loeschen": ui.bereichMehr = false; deleteBereich(); break;
      /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
         ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
-@@ -15691,7 +16005,10 @@ document.body.addEventListener("click", e => {
+@@ -15691,7 +16031,10 @@ document.body.addEventListener("click", e => {
      case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
      case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
      case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
