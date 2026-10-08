@@ -1,0 +1,24 @@
+Knoepfe: []
+Plaketten: [ '12' ]
+Ueben-Chips: [
+  'neu & im Lernen*',
+  'frisch gelernt*',
+  'wird fester*',
+  'gefestigt*',
+  'dauerhaft*'
+] undefined
+nach Tipp auf 2. Chip: [
+  'neu & im Lernen*',
+  'frisch gelernt',
+  'wird fester*',
+  'gefestigt*',
+  'dauerhaft*'
+]
+Stand-Auswahl: [
+  'neu & im Lernen=0*',
+  'frisch gelernt=1',
+  'wird fester=4',
+  'gefestigt=7',
+  'dauerhaft=10'
+]
+keine Fehler
