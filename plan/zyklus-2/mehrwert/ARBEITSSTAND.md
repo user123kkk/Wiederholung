@@ -6,6 +6,30 @@ Sein Auftrag: alle Mehrwert-Punkte und alle offenen Punkte bauen, **große
 Pakete vor Kleinkram**, jede Minute sichern. Reihenfolge und Überblick:
 [`UEBERBLICK-OFFEN.md`](UEBERBLICK-OFFEN.md).
 
+## Stand 08.10., 13:25 Uhr (Betreiber verlässt um 13:55 das WLAN)
+
+- Gesamtlauf des Betreibers an 3.18.26 ist fertig: 149/152, drei
+  Nachläufe grün, Affen 0 Befunde (Logbuch Zyklus 2, oberster Eintrag).
+  Nichts neu veröffentlicht, online 3.18.26.
+- **Entwurf 3.18.27 im Browser geprüft, bisher grün:** `t_liste_einfuegen`
+  (3 Größen + geführt), `t_loeschen_rueckgaengig`, `t_liste_lesen` (13),
+  `t_lernlogik` (12), `t_paket_f_struktur`, `t_paket_f_css`,
+  `t_paket_f_texte`, `pruefe_stand.mjs`, `t_paket_d.js D1` mit der
+  schärferen Abnahme (vier Lagen). `austritt.js` am Entwurf: 12–13
+  Zwischenlagen beim Schließen (`schritt-2/daten/austritt-entwurf.log`).
+- **Läuft gerade** (Server 8098 im Entwurfs-Ordner, Logs in
+  `%TEMP%\entwurf\`): `t_paket_c_weiter`, danach `t_karten_blatt`,
+  `t_neben_tippen`, `t_dialog_timer`, `t_rundenende`, `t_fluessig_ende`,
+  `t_einstellungen`, `t_einst`, `t_einst_oben`, `t_verwalten`, `t_ueben`,
+  `t_sprung`, `t_kontrast`, `t_a11y`, `t_daten`, `t_hick`, `t_zahlen`,
+  `t_undo_verlauf`, `t_runde_lage`, `t_fotos_runde`, `t_sicher`,
+  `t_doppeltipp`, `t_wischen`, `t_ansage`, `t_gross_alle`, `t_schreiben`.
+- **Noch nicht gelaufen:** `abnahme_runde.js` (13, Pflicht, weil Rundenende
+  und Bewertung berührt sind), Gesamtlauf, Affen am Entwurf.
+- **Deshalb ist 3.18.27 noch nicht auf `main`.** Version, CHANGELOG
+  (Entwurf des Textes: unten in dieser Datei) und Commit erst, wenn die
+  Liste oben und die Rundenabnahme grün sind.
+
 ## Wo der Code liegt
 
 - `main` (dieser Ordner und `origin/main`): App unverändert **3.18.26**.
@@ -99,3 +123,59 @@ vom Betreiber).
    wird nur auf das Stichwort des Betreibers.
 7. Danach Paket H (Bearbeiten in der Abfrage, verpatzte Karten am
    Rundenende, Runde fortsetzen, Bildschirm wach).
+
+## Entwurf des CHANGELOG-Eintrags für 3.18.27
+
+### 3.18.27 – 8. Oktober 2026
+
+**Viele Karten auf einmal, ruhigere Fenster, und der erste Teil der neuen
+Lernregeln (nur im Betreiber-Konto).**
+
+Neu:
+
+- **Liste einfügen** (Verwalten → „Mehr“): viele Karten auf einmal aus einer
+  eingefügten Liste. Eine Zeile je Karte, Wort und Übersetzung getrennt
+  durch Tab, Strichpunkt oder „ – “, eine dritte Spalte wird zur Notiz.
+  Steht Deutsch vorne, werden die Spalten getauscht. Vor dem Anlegen zeigt
+  eine Vorschau, wie viele Karten entstehen, welche es schon gibt und welche
+  Zeilen sich nicht lesen ließen. Höchstens 1000 Zeilen auf einmal.
+- **Als Liste speichern** und **Drucken** (Verwalten → „Mehr“): der Bereich
+  als Tabelle (CSV) oder auf Papier. Nur bei eigenen Bereichen.
+- **Karte löschen ohne Rückfrage, dafür „Rückgängig“:** Eine einzelne Karte
+  ist sofort gelöscht; sechs Sekunden lang holt „Rückgängig“ sie mit
+  Lernstand, Platz in der Liste und ihren Speicherkarten zurück. Die
+  Mehrfachauswahl fragt weiter nach.
+- **Rundenende zeigt, was nicht saß:** „3 Karten saßen noch nicht“ zum
+  Aufklappen. Die drei Kacheln stehen in der Reihenfolge der Knöpfe (Nicht,
+  Fast, Sicher), und „nicht“ zählt Karten statt Antworten.
+- **Der Bildschirm bleibt während einer Runde an**, wo das Gerät es kann.
+- **Die volle Sicherung enthält jetzt auch Kalender, Serie und
+  Einstellungen.** Eingespielt werden weiter nur die Karten; das
+  Zurückspielen der Serie folgt als eigener Schritt.
+
+Ruhiger:
+
+- **Blätter und Dialoge gleiten beim Schließen nach unten.** Bisher sprangen
+  sie in einem Bild aus dem Bildschirm (am iPhone bestätigt: „es ist einfach
+  weg“). Der Test dazu erkannte den Sprung nicht und verlangt jetzt
+  Zwischenlagen.
+- „Üben“ und „Speicherkarten“ blenden beim Aufklappen kurz ein.
+- Die Einstellungen spielen ihren Eintritt nur beim ersten Öffnen, nicht
+  mehr bei jeder Rückkehr von einer Unterseite.
+- Tastatur am iPhone (Verdachts-Fix nach einer Bildschirmaufnahme, am Gerät
+  zu bestätigen): Verschiebt das iPhone beim Wechsel in ein Feld den
+  Ausschnitt, bleibt das Blatt an der Tastatur, statt hochzurutschen und
+  einen Streifen freizulassen. „Name ändern“ zeigt keine Vorschlagszeile
+  des Systems mehr.
+
+Lernregeln, vorerst **nur im Betreiber-Konto** (Schalter `VORAB` in
+`app.js`; für alle erst nach seinem Ja):
+
+- „Nicht“ und danach „Sicher“ in derselben Runde: Die Stufe steigt nicht,
+  die Karte kommt morgen wieder. Bisher bekam ein eben vergessenes Wort
+  sofort wieder den vollen Abstand.
+- Eine neue Karte muss in der Runde zweimal sitzen: Das erste „Sicher“
+  bringt sie in derselben Runde noch einmal, erst das zweite auf „morgen“.
+
+Unter der Haube: Die Bewertungsregel steht als eigene Funktion in einem
+markierten Block und hat Schnelltests ohne Browser (`t_lernlogik.js`).
