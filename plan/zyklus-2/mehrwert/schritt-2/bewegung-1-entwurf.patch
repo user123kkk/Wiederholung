@@ -1,8 +1,80 @@
 diff --git a/app.js b/app.js
-index 8acb637..3db11f4 100644
+index 8acb637..ace6db7 100644
 --- a/app.js
 +++ b/app.js
-@@ -1770,6 +1770,7 @@ let ui = {
+@@ -80,6 +80,19 @@ function istBetreiber() {
+    Anders als istBetreiber() auch dann aus, wenn die Liste leer ist. Die
+    Daten selbst (Textzeilen, Texte) laedt und schreibt die App fuer jedes
+    Konto richtig - der Schalter entscheidet nur, was angeboten wird. */
++/* 3.18.27 (Paket G0, "allgemeiner Schalter", Betreiber 08.10.2026: jedes neue
++   Vorhaben erst im Betreiber-Konto, dann Tester, dann alle): Eine Zeile je
++   Vorhaben. "betreiber" = nur die Konten aus BETREIBER_UIDS, "alle" = fuer
++   jeden, alles andere (oder kein Eintrag) = aus. Freigeben heisst: den Wert
++   hier aendern - das ist eine Entscheidung des Betreibers, kein Aufraeumen. */
++const VORAB = {
++  nichtDannSicher: "betreiber"   // Frage 7: nach "Nicht" hebt "Sicher" in derselben Runde die Stufe nicht
++};
++function vorab(name) {
++  const wer = VORAB[name];
++  if (wer === "alle") return true;
++  return wer === "betreiber" && !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);
++}
+ function texteFreigeschaltet() {
+   return !!(currentUser && BETREIBER_UIDS.indexOf(currentUser.uid) !== -1);
+ }
+@@ -92,6 +105,12 @@ function esc(s) {
+ }
+ 
+ /* ---------- Datum & Intervall ---------- */
++/* 3.18.27 (Paket G0): Zwischen den beiden Marken steht der rechnende Kern der
++   Lernlogik - Lerntag, Abstaende, Bewertungsregel. Er fasst weder Zustand
++   noch Bildschirm an und wird von plan/werkzeuge/pruefstand/t_lernlogik.js
++   ohne Browser geprueft (Sekunden statt Minuten). Wer hier etwas aendert,
++   aendert Lernlogik: nur mit Entscheidung des Betreibers und vollem Lauf. */
++//LERNLOGIK-ANFANG
+ function fmtDate(d) {
+   return d.getFullYear() + "-" +
+     String(d.getMonth() + 1).padStart(2, "0") + "-" +
+@@ -147,6 +166,38 @@ function nextReviewForStufe(stufe, faktor) {
+      streut es weiter. */
+   return dateInDays(Math.min(MAX_INTERVAL_DAYS, Math.max(1, tage + jitter)));
+ }
++/* 3.18.27 (Paket G0): die Bewertungsregel, woertlich aus gradeCard()
++   herausgeloest - keine Aenderung am Verhalten. Aendert die Karte selbst.
++     Sicher: eine Stufe hoch, naechster Termin nach dem Abstand der neuen Stufe.
++     Fast:   eine Stufe zurueck, morgen wieder.
++     Nicht:  zwei Stufen zurueck, heute noch einmal; ein Rueckfall zaehlt nur
++             bei einer Karte, die schon einmal gewusst wurde (maxStufe >= 1). */
++function bewertungAnwenden(card, kind, faktor, nachNicht) {
++  /* 3.18.27 (Paket G, Frage 7 / E-04 Weg a, Betreiber 08.10.2026 "wie
++     empfohlen"): Wurde die Karte in DIESER Runde schon einmal nicht gewusst,
++     hebt ein "Sicher" danach die Stufe nicht an. Sie bleibt auf der Stufe
++     nach dem Rueckfall und kommt morgen wieder; erst dann kann sie steigen.
++     Vorher bekam ein eben vergessenes Wort sofort wieder den vollen Abstand
++     (Stufe 8: 34 Tage, oberste Stufe: bis 164 Tage). nachNicht setzt
++     gradeCard(); ohne es gilt die Regel wie bisher. */
++  if (kind === "known" && nachNicht) {
++    card.nextReview = dateInDays(1);
++    return;
++  }
++  if (kind === "known") {
++    card.stufe = Math.min(card.stufe + 1, MAX_STUFE);
++    card.nextReview = nextReviewForStufe(card.stufe, faktor);
++    card.maxStufe = Math.max(card.maxStufe || 0, card.stufe);
++  } else if (kind === "almost") {
++    card.stufe = Math.max(0, card.stufe - 1);
++    card.nextReview = dateInDays(1);
++  } else {
++    card.stufe = Math.max(0, card.stufe - 2);
++    card.nextReview = todayStr();
++    if ((card.maxStufe || 0) >= 1) card.rueckfaelle = (card.rueckfaelle || 0) + 1;
++  }
++}
++//LERNLOGIK-ENDE
+ /* 3.12.0: eine kurze Rueckmeldung zum Fuehlen, wo das Geraet sie kann
+    (Android; iOS-Safari kennt navigator.vibrate nicht und bleibt still).
+    Nie bei "Bewegung reduzieren" - wer Bewegung abbestellt, will auch kein
+@@ -1770,6 +1821,7 @@ let ui = {
    /* 2.19.0: Einstellungen sind ein eigener Bildschirm, kein vierter Reiter.
       Ein Reiter ist ein Ort, an den man oft geht; hierher geht man selten. */
    einstellungen: false,
@@ -10,7 +82,7 @@ index 8acb637..3db11f4 100644
    drillOpen: false,           // Auswahl für Übungsmodus sichtbar?
    drillRueckkehrTab: null,    // E18: Reiter, aus dem die Uebungsauswahl geoeffnet wurde
    drillSource: "stufen",      // "stufen" oder "sets" (siehe drillSetIds)
-@@ -1873,7 +1874,7 @@ function renderToast() {
+@@ -1873,7 +1925,7 @@ function renderToast() {
    /* Bei offenem Blatt steht die Meldung oben - unten lag sie auf dem Formular
       und fing die Taps darauf ab. */
    const blattOffen = !!(ui.bereichSheet || ui.bereichMehr || ui.wahlSheet || ui.erinnerungSheet || ui.setArtSheetId ||
@@ -19,7 +91,7 @@ index 8acb637..3db11f4 100644
    /* 3.17.35 (TECHNIK-8): role/aria-live entfernt - die Ansage uebernimmt
       #ansage (index.html, zeigeToast()). aria-hidden verhindert, dass dieses
       Element zusaetzlich vorgelesen wird. */
-@@ -2419,6 +2420,7 @@ async function initFirebase() {
+@@ -2419,6 +2471,7 @@ async function initFirebase() {
      hwFullscreen = false;
      ui.kontoLoeschenEmail = "";
      ui.erinnerungSheet = false;
@@ -27,7 +99,7 @@ index 8acb637..3db11f4 100644
      ui.erinnerungZeit = null;
      /* Den Namen nur ueber die eigene Loeschung in das Gastformular tragen. */
      ui.authEingabe = { name: adressName, email: "", pass: "" };
-@@ -4505,12 +4507,78 @@ function dateiSpeichern(daten, dateiname) {
+@@ -4505,12 +4558,78 @@ function dateiSpeichern(daten, dateiname) {
    a.remove();
    setTimeout(() => URL.revokeObjectURL(url), 60000);
  }
@@ -106,7 +178,7 @@ index 8acb637..3db11f4 100644
    const nameSlug = onlyCurrent ? "-" + slugName(currentBereich().name) : "";
    dateiSpeichern(data, "adrabic-sicherung" + nameSlug + "-" + todayStr() + ".json");
    if (!onlyCurrent) {
-@@ -5327,6 +5395,7 @@ function ebenenSchliessen(seiteBehalten = false) {
+@@ -5327,6 +5446,7 @@ function ebenenSchliessen(seiteBehalten = false) {
    ui.textAnsicht = null;
    ui.zeileEdit = null;
    ui.textLernen = null;
@@ -114,7 +186,7 @@ index 8acb637..3db11f4 100644
  }
  function selectBereich(bereichId) {
    if (!bereiche.some(b => b.id === bereichId)) return;
-@@ -5802,6 +5871,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
+@@ -5802,6 +5922,7 @@ function openDrillPicker(source, rueckkehrTab = null) {
       weiter unten. Wer ihn dort drueckte, sah gar nichts passieren. */
    springeZu("drill-box");
    render();
@@ -122,7 +194,7 @@ index 8acb637..3db11f4 100644
  }
  /* 3.12.1: Gewaehlt wird ein Zustand (neu, wackelig, solide, fest), nicht
     mehr eine Stufe von 0 bis 12 - dieselben vier Woerter wie an jeder Karte.
-@@ -6059,6 +6129,165 @@ function lernRueckgaengig() {
+@@ -6059,6 +6180,165 @@ function lernRueckgaengig() {
  function vergleichsWort(w) {
    return suchNorm(String(w).trim(), true).text.replace(/\s+/g, " ").trim();
  }
@@ -288,7 +360,7 @@ index 8acb637..3db11f4 100644
  function findeDuplikat(wort, exceptId, cards) {
    const key = vergleichsWort(wort);
    return (cards || currentCards()).find(c => c.id !== exceptId && vergleichsWort(c.wort) === key) || null;
-@@ -6250,18 +6479,41 @@ async function deleteCard(id) {
+@@ -6250,18 +6530,41 @@ async function deleteCard(id) {
    const card = findCard(id);
    if (!card) return;
    if (!kartenBearbeitbar()) { await hinweisGefuehrt("Karten löschen"); return; }
@@ -335,7 +407,38 @@ index 8acb637..3db11f4 100644
  }
  
  /* ---------- Lern-Session ---------- */
-@@ -6530,6 +6782,15 @@ function gradeCard(kind) {
+@@ -6491,16 +6794,12 @@ function gradeCard(kind) {
+        Stufe von vorher zaehlt; Rueckgaengig stellt ihn mit zurueck. */
+     const reglerB = texteFreigeschaltet() ? bereiche.find(x => x.id === s.bereichId) : null;
+     if (reglerB) s.lastAction.prevRegler = reglerAntwort(reglerB, card.stufe, kind === "known");
+-    if (kind === "known") {
+-      card.stufe = Math.min(card.stufe + 1, MAX_STUFE);
+-      card.nextReview = nextReviewForStufe(card.stufe, reglerB ? reglerB.abstandFaktor : undefined);
+-      card.maxStufe = Math.max(card.maxStufe || 0, card.stufe);
+-    } else if (kind === "almost") {
+-      card.stufe = Math.max(0, card.stufe - 1);
+-      card.nextReview = dateInDays(1);
+-    } else {
+-      card.stufe = Math.max(0, card.stufe - 2);
+-      card.nextReview = todayStr();
++    /* 3.18.27 (Paket G0): Die Regel selbst steht jetzt in
++       bewertungAnwenden() oben im Lernlogik-Block; die Begruendungen bleiben
++       hier stehen. */
++    bewertungAnwenden(card, kind, reglerB ? reglerB.abstandFaktor : undefined,
++      vorab("nichtDannSicher") && !!(s.nichtMal && s.nichtMal[card.id] > 0));
++    if (kind !== "known" && kind !== "almost") {
+       /* E6: Nur ein echter Rueckfall zaehlt - "Nicht" bei einer Karte, die
+          schon einmal gewusst wurde. Eine Karte, die man beim allerersten Anblick nicht
+          weiß, ist kein Rueckfall, sondern normal. "Fast" zaehlt ebenfalls
+@@ -6512,7 +6811,6 @@ function gradeCard(kind) {
+          als "nicht mehr neu", und wer sie in der ersten Abfrage nicht wusste,
+          sammelte Rueckfaelle fuer etwas, das er gerade zum ersten Mal
+          gelesen hatte. Nach fuenf Malen waere sie "verbrannt" gewesen. */
+-      if ((card.maxStufe || 0) >= 1) card.rueckfaelle = (card.rueckfaelle || 0) + 1;
+     }
+     /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
+        danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
+@@ -6530,6 +6828,15 @@ function gradeCard(kind) {
      s.zaehler = s.zaehler || { known: 0, almost: 0, unknown: 0 };
      s.zaehler[kind]++;
      s.letzteArt = kind;
@@ -351,7 +454,7 @@ index 8acb637..3db11f4 100644
    }
    s.zug = (s.zug || 0) + 1;
    fuehlbar(kind === "known" ? 10 : kind === "unknown" ? [6, 30, 6] : 6);
-@@ -6672,6 +6933,7 @@ function undoLastGrade() {
+@@ -6672,6 +6979,7 @@ function undoLastGrade() {
      bereichHeuteZaehle(s.bereichId, -1);
      persistVerlauf();
    }
@@ -359,7 +462,7 @@ index 8acb637..3db11f4 100644
    if (s.zaehler && s.letzteArt && s.zaehler[s.letzteArt] > 0) s.zaehler[s.letzteArt]--;
    s.zurueckVon = s.letzteArt;
    s.letzteArt = null;
-@@ -8112,7 +8374,33 @@ function bootBild() {
+@@ -8112,7 +8420,33 @@ function bootBild() {
  }
  
  /* ---------- Rendering ---------- */
@@ -393,7 +496,7 @@ index 8acb637..3db11f4 100644
    ersterRender = true;
    /* C2: Wird aus anderem Anlass neu gezeichnet (Klick, Tabwechsel, Daten aus
       der Cloud), ist ein noch wartender Such-Timer gegenstandslos - der
-@@ -8852,6 +9140,19 @@ function bereichMehrSheet() {
+@@ -8852,6 +9186,19 @@ function bereichMehrSheet() {
      html += '<button class="liste-zeile" data-action="bereich-mehr-umkehren" title="Reihenfolge aller Karten in diesem Bereich einmalig umkehren">' +
        ikon("umkehren", "i-sm") + '<span class="liste-zeile__text">Reihenfolge umkehren</span></button>';
    }
@@ -413,7 +516,7 @@ index 8acb637..3db11f4 100644
    if (!gefuehrt) {
      html += '<button class="liste-zeile" data-action="bereich-mehr-umbenennen" title="Bereich umbenennen">' +
        ikon("stift", "i-sm") + '<span class="liste-zeile__text">Bereich umbenennen</span></button>';
-@@ -9254,6 +9555,7 @@ function renderMain() {
+@@ -9254,6 +9601,7 @@ function renderMain() {
    html += bereichMehrSheet();
    html += wahlSheet();
    html += erinnerungSheet();
@@ -421,7 +524,7 @@ index 8acb637..3db11f4 100644
    html += setArtSheet();
    html += karteSheet();
    html += neuWahlSheet();
-@@ -9278,7 +9580,7 @@ function renderMain() {
+@@ -9278,7 +9626,7 @@ function renderMain() {
      ui.textLernen ? "tl-" + ui.textLernen.schritt + "-" + ui.textLernen.fokus : ""].join("/");
    const overlaySchluessel = [ui.bereichSheet, ui.bereichMehr, ui.wahlSheet, ui.erinnerungSheet, ui.setArtSheetId,
      ui.karteSheet || !!ui.editId, ui.cardDetailId, ui.dialog ? ui.dialog.title : "", ui.toast ? ui.toast.text : "",
@@ -430,7 +533,7 @@ index 8acb637..3db11f4 100644
    /* Kommt die App von einem anderen Bildschirm (Boot, Anmeldung), gibt es noch
       kein .view - dann ist alles neu. */
    const warAnsicht = !!app.querySelector(":scope > .view");
-@@ -9288,7 +9590,11 @@ function renderMain() {
+@@ -9288,7 +9636,11 @@ function renderMain() {
    letzterOverlaySchluessel = overlaySchluessel;
    app.classList.toggle("still-ansicht", !ansichtNeu);
    app.classList.toggle("still-overlay", !overlayNeu);
@@ -443,7 +546,7 @@ index 8acb637..3db11f4 100644
      !ui.textAnlegen && !ui.textAnsicht && !ui.textLernen &&
      ["lernen", "fortschritt"].includes(ui.tab) ? ui.tab : null;
    if (ansichtNeu) {
-@@ -9352,7 +9658,7 @@ function renderMain() {
+@@ -9352,7 +9704,7 @@ function renderMain() {
    }
    /* 3.17.14: + erinnerungSheet - sonst liess sich die Seite dahinter
       scrollen und per Wischen wechseln. */
@@ -452,7 +555,7 @@ index 8acb637..3db11f4 100644
    document.documentElement.classList.toggle("blatt-offen", overlayIstOffen);
    appbarKanteSetzen();
    /* Beobachtung 19/9: Beim Wechsel zu->offen merken, wer den Fokus hatte -
-@@ -11989,9 +12295,13 @@ function renderRundenEnde(s, gesamt) {
+@@ -11989,9 +12341,13 @@ function renderRundenEnde(s, gesamt) {
        ? (gesamt === 1 ? 'Eine Karte in dieser Runde.' : gesamt + ' Karten in dieser Runde.')
        : (gesamt === 1 ? 'Die Karte für heute ist durch.' : 'Alle ' + gesamt + ' Karten für heute durch.')) + '</p>';
    html += '<div class="ende__kacheln">';
@@ -468,7 +571,7 @@ index 8acb637..3db11f4 100644
    html += '</div>';
    if (serieHeute > 0) {
      html += '<div class="ende__serie" style="--i:3">' + ikon("serie", "i-lg") +
-@@ -12002,6 +12312,24 @@ function renderRundenEnde(s, gesamt) {
+@@ -12002,6 +12358,24 @@ function renderRundenEnde(s, gesamt) {
    else if (!s.isDrill) html += '<p class="hint ende__morgen" style="--i:4">' + (morgen > 0
      ? 'Morgen ' + (morgen === 1 ? 'kommt' : 'kommen') + ' <strong>' + morgen + '</strong> Karte' + (morgen === 1 ? '' : 'n') + ' wieder.'
      : 'Morgen ist nichts fällig. Die nächsten kommen von selbst.') + '</p>';
@@ -493,7 +596,7 @@ index 8acb637..3db11f4 100644
    html += gemerktHinweis();
    html += '<div class="empty__aktionen ende__aktionen">';
    html += '<button data-action="end-session">Fertig</button>';
-@@ -14671,7 +14999,15 @@ function syncViewportGap(ereignis) {
+@@ -14671,7 +15045,15 @@ function syncViewportGap(ereignis) {
       innerHeight in der bekannten Naehe liegt; bei offener Tastatur (Hoehe
       viel kleiner) bleibt der Zustand, wie er ist. */
    const root = document.documentElement;
@@ -509,7 +612,7 @@ index 8acb637..3db11f4 100644
    if (navigator.standalone === true && window.matchMedia("(orientation: portrait)").matches) {
      const ref = Math.max(screen.width, screen.height);
      const diff = ref - window.innerHeight;
-@@ -14717,7 +15053,7 @@ function syncViewportGap(ereignis) {
+@@ -14717,7 +15099,7 @@ function syncViewportGap(ereignis) {
  const TASTATUR_MIN = 120;
  let tastaturSprung = null;
  let tastaturFeld = null;
@@ -518,7 +621,7 @@ index 8acb637..3db11f4 100644
    const vv = window.visualViewport;
    let hoch = 0;
    if (vv) {
-@@ -14725,6 +15061,10 @@ function syncTastatur() {
+@@ -14725,6 +15107,10 @@ function syncTastatur() {
      if (verdeckt > TASTATUR_MIN) hoch = Math.round(verdeckt);
    }
    document.documentElement.style.setProperty("--tastatur", hoch + "px");
@@ -529,7 +632,7 @@ index 8acb637..3db11f4 100644
    /* G-118: Nur einmal je Fokus/Tastatur-Oeffnen pruefen. Niemals Vorfahren
       mit scrollIntoView verschieben oder auf vv.scroll erneut scrollen. */
    if (!hoch) {
-@@ -14754,6 +15094,10 @@ function syncTastatur() {
+@@ -14754,6 +15140,10 @@ function syncTastatur() {
      }
    }
  }
@@ -540,7 +643,7 @@ index 8acb637..3db11f4 100644
  document.addEventListener("focusin", () => {
    tastaturFeld = null;
    clearTimeout(tastaturSprung);
-@@ -14799,21 +15143,34 @@ function openDialog(cfg) {
+@@ -14799,21 +15189,34 @@ function openDialog(cfg) {
     dataset.schliesst verhindert eine doppelte, verzoegernde Animation, wenn
     ein Wisch die Bewegung schon selbst gestartet hat. Reduzierte Bewegung
     (prefers-reduced-motion) oder kein sichtbares .dlg: sofort, ohne Wartezeit. */
@@ -585,7 +688,7 @@ index 8acb637..3db11f4 100644
    setTimeout(danach, 200);
  }
  function closeDialog(result) {
-@@ -14885,7 +15242,11 @@ function renderDialog() {
+@@ -14885,7 +15288,11 @@ function renderDialog() {
      /* aria-labelledby statt aria-label: der Text steht schon sichtbar da
         (d.text ist je nach Aufruf verschieden - "Neuer Name für ...", "Neue
         Übersetzung" ...), doppelt zu tippen waere nur eine Fehlerquelle. */
@@ -598,7 +701,7 @@ index 8acb637..3db11f4 100644
    }
    h += '<div class="dlg-actions">';
    if (d.kind === "code-share") {
-@@ -14935,6 +15296,10 @@ function schliesseObersteEbene() {
+@@ -14935,6 +15342,10 @@ function schliesseObersteEbene() {
    /* 3.17.14 (Station 14): Das Erinnerungs-Blatt (3.17.0) fehlte hier - Escape
       und Wischen nach unten schlossen es nicht. */
    if (ui.erinnerungSheet) { schliesse(() => { ui.erinnerungSheet = false; ui.erinnerungZeit = null; render(); }); return true; }
@@ -609,7 +712,7 @@ index 8acb637..3db11f4 100644
    if (ui.karteSheet || ui.editId) {
      if (karteEntwurfOffen()) { karteEntwurfVerwerfenFragen(); return true; }
      schliesse(cancelEdit); return true;
-@@ -15198,7 +15563,7 @@ function tabSchonAktiv(id) {
+@@ -15198,7 +15609,7 @@ function tabSchonAktiv(id) {
    return ui.tab === id && !ui.einstellungen && !ui.seite && !ui.session && !ui.lernSetId &&
      !ui.wahlSheet && !ui.erinnerungSheet && !ui.setArtSheetId && !ui.karteSheet && !ui.bereichSheet &&
      !ui.bereichMehr && !ui.cardDetailId && !ui.dialog &&
@@ -618,7 +721,7 @@ index 8acb637..3db11f4 100644
  }
  function nachObenBlaettern() {
    window.scrollTo({ top: 0, behavior: scrollArt() });
-@@ -15565,6 +15930,13 @@ document.body.addEventListener("click", e => {
+@@ -15565,6 +15976,13 @@ document.body.addEventListener("click", e => {
      case "bereich-mehr-auswaehlen": ui.bereichMehr = false; toggleSelectMode(); break;
      case "bereich-mehr-umkehren": ui.bereichMehr = false; reverseOrder(); break;
      case "bereich-mehr-umbenennen": ui.bereichMehr = false; renameBereich(); break;
@@ -632,7 +735,7 @@ index 8acb637..3db11f4 100644
      case "bereich-mehr-loeschen": ui.bereichMehr = false; deleteBereich(); break;
      /* 15.09.2026: window.scrollTo(0,0) in allen drei Tab-Wechseln ergaenzt -
         ohne das blieb die Seite auf der Scroll-Position des vorigen Tabs
-@@ -15691,7 +16063,10 @@ document.body.addEventListener("click", e => {
+@@ -15691,7 +16109,10 @@ document.body.addEventListener("click", e => {
      case "edit-card-in-bereich": editCardInBereich(btn.dataset.bereich, btn.dataset.id); break;
      case "search-scope": ui.searchAll = btn.dataset.scope === "alle"; ui.kartenSeite = 0; ui.selectMode = false; ui.selectedIds = new Set(); render(); break;
      case "search-clear": ui.searchQuery = ""; ui.kartenSeite = 0; render(); break;
@@ -644,7 +747,7 @@ index 8acb637..3db11f4 100644
      case "toggle-set-art": ui.setsArtWahl = !ui.setsArtWahl; render(); break;
      case "toggle-select-mode": toggleSelectMode(); break;
      case "auswahl-alle": waehleSichtbareKarten(); break;
-@@ -15716,6 +16091,7 @@ document.body.addEventListener("click", e => {
+@@ -15716,6 +16137,7 @@ document.body.addEventListener("click", e => {
        ui.drillOpen = false;
        if (ui.drillRueckkehrTab) ui.tab = ui.drillRueckkehrTab;
        ui.drillRueckkehrTab = null; render(); break;
@@ -652,6 +755,120 @@ index 8acb637..3db11f4 100644
      case "drill-nochmal": {
        const alt = ui.session;
        if (!alt || !alt.isDrill) break;
+diff --git a/plan/werkzeuge/pruefstand/t_lernlogik.js b/plan/werkzeuge/pruefstand/t_lernlogik.js
+new file mode 100644
+index 0000000..1d0f474
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/t_lernlogik.js
+@@ -0,0 +1,108 @@
++/* Paket G0: Schnelltests für den rechnenden Kern der Lernlogik (Lerntag,
++   Abstände, Bewertungsregel). Ohne Browser: node t_lernlogik.js
++   Der Block wird zwischen den Marken //LERNLOGIK-ANFANG und //LERNLOGIK-ENDE
++   aus app.js gelesen und mit einer festen Uhr und festem Zufall ausgeführt.
++   Diese Tests halten den HEUTIGEN Stand fest. Wer die Lernlogik ändert
++   (Paket G), ändert hier bewusst die Erwartung und nennt die Entscheidung. */
++const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
++const quelle = fs.readFileSync(path.resolve(__dirname, '../../../app.js'), 'utf8');
++const a = quelle.indexOf('//LERNLOGIK-ANFANG'), e = quelle.indexOf('//LERNLOGIK-ENDE');
++assert.ok(a > 0 && e > a, 'Marken um die Lernlogik nicht gefunden');
++const block = quelle.slice(a, e);
++assert.ok(!/\b(ui|document|window|app|bereiche|verlauf|localStorage)\b\s*[.\[]/.test(block.replace(/\/\*[\s\S]*?\*\//g, '')),
++  'Der Lernlogik-Block darf weder Zustand noch Bildschirm anfassen');
++
++/* Feste Uhr und fester Zufall. jetzt = lokale Zeit als "JJJJ-MM-TTTHH:MM". */
++function kern(jetzt, zufall = 0.5) {
++  const Echt = Date;
++  const fest = new Echt(jetzt + ':00').getTime();
++  class Uhr extends Echt { constructor(...x) { if (x.length) super(...x); else super(fest); } static now() { return fest; } }
++  const Zufall = Object.create(Math); Zufall.random = () => zufall;
++  return new Function('Date', 'Math', block +
++    '\nreturn { fmtDate, logicalToday, todayStr, dateInDays, intervalForStufe, nextReviewForStufe, bewertungAnwenden, MAX_STUFE, MAX_INTERVAL_DAYS, DAY_START_HOUR };')(Uhr, Zufall);
++}
++const karte = (stufe, mehr = {}) => ({ stufe, nextReview: '2026-01-01', maxStufe: stufe, rueckfaelle: 0, ...mehr });
++let n = 0;
++function fall(name, tun) { tun(); n++; console.log('grün: ' + name); }
++
++fall('Abstände je Stufe (Tabelle)', () => {
++  const k = kern('2026-10-08T12:00');
++  assert.deepEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(k.intervalForStufe), [1, 2, 3, 6, 10, 19, 34, 61, 110, 180, 180, 180]);
++  assert.equal(k.intervalForStufe(0), 1, 'Stufe 0 rechnet wie Stufe 1');
++  assert.equal(k.intervalForStufe(99), 180, 'über dem Deckel bleibt der Deckel');
++  assert.equal(k.MAX_STUFE, 12); assert.equal(k.MAX_INTERVAL_DAYS, 180);
++});
++fall('Lerntag beginnt um 4 Uhr', () => {
++  assert.equal(kern('2026-10-08T03:59').todayStr(), '2026-10-07');
++  assert.equal(kern('2026-10-08T04:00').todayStr(), '2026-10-08');
++  assert.equal(kern('2026-10-08T23:59').todayStr(), '2026-10-08');
++  assert.equal(kern('2026-10-08T00:00').todayStr(), '2026-10-07');
++  assert.equal(kern('2026-10-08T03:59').dateInDays(1), '2026-10-08');
++});
++fall('dateInDays über Monats- und Jahresgrenze', () => {
++  const k = kern('2026-12-31T12:00');
++  assert.equal(k.dateInDays(1), '2027-01-01'); assert.equal(k.dateInDays(-31), '2026-11-30'); assert.equal(k.dateInDays(0), '2026-12-31');
++});
++fall('Sicher: eine Stufe hoch, Termin nach dem Abstand der neuen Stufe', () => {
++  const k = kern('2026-10-08T12:00', 0.5);            // Zufall 0,5 = keine Streuung
++  const c = karte(0, { maxStufe: 0 }); k.bewertungAnwenden(c, 'known');
++  assert.deepEqual([c.stufe, c.nextReview, c.maxStufe, c.rueckfaelle], [1, '2026-10-09', 1, 0]);
++  const d = karte(4); k.bewertungAnwenden(d, 'known');
++  assert.deepEqual([d.stufe, d.nextReview], [5, k.dateInDays(10)]);
++  const o = karte(12); k.bewertungAnwenden(o, 'known');
++  assert.deepEqual([o.stufe, o.nextReview], [12, k.dateInDays(180)], 'oberste Stufe bleibt, Deckel 180 Tage');
++});
++fall('Streuung: höchstens 15 Prozent, nie über 180, nie unter 1 Tag', () => {
++  const unten = kern('2026-10-08T12:00', 0), oben = kern('2026-10-08T12:00', 0.999999);
++  const tage = (k, stufe) => { const c = karte(stufe - 1); k.bewertungAnwenden(c, 'known'); return Math.round((new Date(c.nextReview + 'T12:00:00') - new Date('2026-10-08T12:00:00')) / 86400000); };
++  assert.deepEqual([tage(unten, 8), tage(oben, 8)], [52, 70], 'Stufe 8: 61 Tage, minus 9 bis plus 9');
++  assert.deepEqual([tage(unten, 1), tage(oben, 1)], [1, 1], 'ein Tag streut nicht');
++  assert.deepEqual([tage(unten, 3), tage(oben, 3)], [3, 3], 'drei Tage streuen nicht (0,45 rundet auf 0)');
++  assert.equal(tage(oben, 12), 180, 'oben gekappt'); assert.equal(tage(unten, 12), 153, 'unten streut es weiter');
++});
++fall('Fast: eine Stufe zurück, morgen', () => {
++  const k = kern('2026-10-08T12:00');
++  const c = karte(5, { rueckfaelle: 2 }); k.bewertungAnwenden(c, 'almost');
++  assert.deepEqual([c.stufe, c.nextReview, c.maxStufe, c.rueckfaelle], [4, '2026-10-09', 5, 2]);
++  const u = karte(0); k.bewertungAnwenden(u, 'almost'); assert.equal(u.stufe, 0, 'nicht unter 0');
++});
++fall('Nicht: zwei Stufen zurück, heute; Rückfall nur nach erstem Wissen', () => {
++  const k = kern('2026-10-08T12:00');
++  const c = karte(5); k.bewertungAnwenden(c, 'unknown');
++  assert.deepEqual([c.stufe, c.nextReview, c.maxStufe, c.rueckfaelle], [3, '2026-10-08', 5, 1]);
++  const neu = karte(0, { maxStufe: 0 }); k.bewertungAnwenden(neu, 'unknown');
++  assert.deepEqual([neu.stufe, neu.rueckfaelle], [0, 0], 'neue Karte: kein Rückfall');
++  const eins = karte(1); k.bewertungAnwenden(eins, 'unknown'); assert.equal(eins.stufe, 0);
++});
++fall('Regler (Probelauf): Faktor kürzt den Abstand, nie unter einen Tag', () => {
++  const k = kern('2026-10-08T12:00', 0.5);
++  const c = karte(4); k.bewertungAnwenden(c, 'known', 0.5); assert.equal(c.nextReview, k.dateInDays(5));
++  const d = karte(0); k.bewertungAnwenden(d, 'known', 0.1); assert.equal(d.nextReview, k.dateInDays(1));
++  const o = karte(4); k.bewertungAnwenden(o, 'known', 1); assert.equal(o.nextReview, k.dateInDays(10), 'Faktor 1 = ohne Regler');
++});
++fall('IST-Stand vor Paket G (Frage 7): „Nicht“ dann „Sicher“ gibt sofort den vollen Abstand', () => {
++  const k = kern('2026-10-08T12:00', 0.5);
++  const c = karte(8); k.bewertungAnwenden(c, 'unknown'); k.bewertungAnwenden(c, 'known');
++  assert.deepEqual([c.stufe, c.nextReview], [7, k.dateInDays(34)], 'heute: Stufe 7, 34 Tage – das ändert Paket G');
++});
++fall('Paket G, Frage 7: „Sicher“ nach „Nicht“ in derselben Runde hebt die Stufe nicht, Karte kommt morgen', () => {
++  const k = kern('2026-10-08T12:00', 0.999999);
++  const c = karte(8); k.bewertungAnwenden(c, 'unknown'); k.bewertungAnwenden(c, 'known', undefined, true);
++  assert.deepEqual([c.stufe, c.nextReview, c.maxStufe, c.rueckfaelle], [6, '2026-10-09', 8, 1]);
++  const o = karte(12); k.bewertungAnwenden(o, 'unknown'); k.bewertungAnwenden(o, 'known', undefined, true);
++  assert.deepEqual([o.stufe, o.nextReview], [10, '2026-10-09'], 'oberste Stufe: morgen statt nach Monaten');
++  const neu = karte(0, { maxStufe: 0 }); k.bewertungAnwenden(neu, 'unknown'); k.bewertungAnwenden(neu, 'known', undefined, true);
++  assert.deepEqual([neu.stufe, neu.nextReview, neu.rueckfaelle], [0, '2026-10-09', 0], 'neue Karte bleibt auf 0 und kommt morgen');
++  // Am nächsten Tag ohne Rückfall steigt sie wieder normal
++  const morgen = kern('2026-10-09T12:00', 0.5); morgen.bewertungAnwenden(c, 'known');
++  assert.deepEqual([c.stufe, c.nextReview], [7, morgen.dateInDays(34)]);
++  // „Fast“ und „Nicht“ nach „Nicht“ bleiben wie immer
++  const f = karte(5); k.bewertungAnwenden(f, 'almost', undefined, true); assert.deepEqual([f.stufe, f.nextReview], [4, '2026-10-09']);
++  const x = karte(5); k.bewertungAnwenden(x, 'unknown', undefined, true); assert.deepEqual([x.stufe, x.nextReview], [3, '2026-10-08']);
++});
++fall('Bewertung nach Mitternacht zählt zum Vortag', () => {
++  const k = kern('2026-10-09T00:30');
++  const c = karte(3); k.bewertungAnwenden(c, 'unknown'); assert.equal(c.nextReview, '2026-10-08');
++  const f = karte(3); k.bewertungAnwenden(f, 'almost'); assert.equal(f.nextReview, '2026-10-09');
++});
++console.log(n + ' Fälle grün');
 diff --git a/plan/werkzeuge/pruefstand/t_liste_einfuegen.js b/plan/werkzeuge/pruefstand/t_liste_einfuegen.js
 new file mode 100644
 index 0000000..ecc0689
