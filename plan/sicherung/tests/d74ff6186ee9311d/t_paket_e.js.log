@@ -47,3 +47,37 @@ E7 Ruhetag verbraucht den verziehenen Tag nicht: 12
 E7 ohne Ruhetag unverändert: zwei Tage offen: 0
 E7 Marker nichts fällig, Serie 5: 1
 E7 Marker anderer Bereich hat Fälliges: 0
+E7 Marker keine Serie: 0
+E7 Marker heute schon gelernt: 0
+E8 erster Tag gemerkt; gestriger Meilenstein läuft ab
+E8 320/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 320/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 390/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 390/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 820/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 820/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E9 320/hell: Profil und Board lange Wörter passen
+E9 320/dunkel: Profil und Board lange Wörter passen
+E9 390/hell: Profil und Board lange Wörter passen
+E9 390/dunkel: Profil und Board lange Wörter passen
+E9 820/hell: Profil und Board lange Wörter passen
+E9 820/dunkel: Profil und Board lange Wörter passen
+E10 theme-color entspricht dunklem Seitenhintergrund
+E11 320/hell/Callback nach Promise: Toast und Ansage
+E11 320/dunkel/Callback nach Promise: Toast und Ansage
+E11 390/hell/Callback nach Promise: Toast und Ansage
+E11 390/dunkel/Callback nach Promise: Toast und Ansage
+E11 820/hell/Callback nach Promise: Toast und Ansage
+E11 820/dunkel/Callback nach Promise: Toast und Ansage
+E11 320/hell/Callback vor Promise: Toast und Ansage
+E11 320/dunkel/Callback vor Promise: Toast und Ansage
+E11 390/hell/Callback vor Promise: Toast und Ansage
+E11 390/dunkel/Callback vor Promise: Toast und Ansage
+E11 820/hell/Callback vor Promise: Toast und Ansage
+E11 820/dunkel/Callback vor Promise: Toast und Ansage
+E11 alte Löschantwort nach Kontowechsel: B bleibt ohne fremden Erfolg
+E12 echter 12-s-Abbruch: Rückmeldung, gesperrter Knopf, keine Löschung
+E13 Messung 320 hell {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":551.53125,"bild":568}
+E13 320/hell: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 320 dunkel {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":551.53125,"bild":568}
+E13 320/dunkel: voller Wert, 44 px, Antwort sichtbar
