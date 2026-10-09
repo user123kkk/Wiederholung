@@ -32,6 +32,54 @@
       "zeitlimit": false,
       "sekunden": 40,
       "quelltext": "cce5e8b4519173de5a94e1bb7d9f0c592819b61f5f65dcdb95204794dc7986a0"
+    },
+    "t_wischen_schraeg.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 52,
+      "quelltext": "ada2ba1f597ff996be979d8b845116f658305a78bfd0eb59da0ceb58a068936b"
+    },
+    "t_doppeltipp.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 21,
+      "quelltext": "c7845043b3b3025d035bc34d5c99cf800f2331ad73d9ad5ac876ff17b49eebd5"
+    },
+    "t_x_mitten.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 31,
+      "quelltext": "eb6ca98f44d833bafc686c39207f74a269a32aed31eda7ee296018adf99e7127"
+    },
+    "t_abgelehnt.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 7,
+      "quelltext": "70c0e5e9d7770d9e011b649f1632c92ab04077f570a6ac60cb612f9becf881ed"
+    },
+    "t_undo_verlauf.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 25,
+      "quelltext": "e28e2e31c7a9d064346d3d8b921038ac650ded0f854673408da5255a41e0221c"
+    },
+    "t_serie.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 25,
+      "quelltext": "45c5995a002b1e7b023014e42ad40b7462695ef400d9b558ae2b764eedac1e7f"
     }
   }
 }

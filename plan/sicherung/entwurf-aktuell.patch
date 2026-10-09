@@ -815,7 +815,7 @@ index 0000000..0c5faf2
 +  }finally{await b.close();}
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
-index 118e0da..923ba10 100644
+index 118e0da..7f557d6 100644
 --- a/plan/werkzeuge/regeln/regeln-pruefung.mjs
 +++ b/plan/werkzeuge/regeln/regeln-pruefung.mjs
 @@ -40,7 +40,8 @@
@@ -837,7 +837,17 @@ index 118e0da..923ba10 100644
     ausgehen wie erwartet.
     ============================================================ */
  
-@@ -133,13 +134,14 @@ await pruefe("N14 Speicherkarte loeschen", "ja", () => updateDoc(b("b1"), { "set
+@@ -85,6 +86,9 @@ const env = await initializeTestEnvironment({
+   projectId: "wiederholung-test",
+   firestore: { host: "127.0.0.1", port: Number(process.env.RULES_PORT || 8085), rules: RULES_TEXT }
+ });
++/* Auch ein erneut verwendeter lokaler Emulator braucht einen frischen
++   Testbestand. Nur dieses Testprojekt wird geleert, nicht andere Projekte. */
++await env.clearFirestore();
+ 
+ const db      = env.authenticatedContext(UID, { email_verified: true }).firestore();
+ const dbUnbes = env.authenticatedContext(UID, { email_verified: false }).firestore();
+@@ -133,13 +137,14 @@ await pruefe("N14 Speicherkarte loeschen", "ja", () => updateDoc(b("b1"), { "set
  
  await pruefe("N15 Karte anlegen", "ja", () => setDoc(k("c1"), karte("b1")));
  await pruefe("N16 Karte bewerten", "ja", () => updateDoc(k("c1"), {
@@ -854,7 +864,7 @@ index 118e0da..923ba10 100644
  await pruefe("N22 Karte mit Bild-Link in extra", "ja", () => updateDoc(k("c1"), { extra: "https://example.org/bild.png" }));
  
  await pruefe("N23 Import: Bereich und Karten in einem Stapel", "ja", async () => {
-@@ -178,12 +180,12 @@ await pruefe("M03 Fremde Karte schreiben", "nein", () => setDoc(doc(dbFremd, "us
+@@ -178,12 +183,12 @@ await pruefe("M03 Fremde Karte schreiben", "nein", () => setDoc(doc(dbFremd, "us
  await pruefe("M04 Ohne Anmeldung lesen", "nein", () => getDoc(doc(dbAnon, "users", UID)));
  await pruefe("M05 E-Mail nicht bestaetigt", "nein", () => updateDoc(doc(dbUnbes, "users", UID), { name: "X" }));
  
@@ -873,7 +883,7 @@ index 118e0da..923ba10 100644
  await pruefe("M12 Erfundenes Feld an der Karte", "nein", () => updateDoc(k("c1"), { freigeschaltet: true }));
  await pruefe("M13 Wort ueberlang", "nein", () => updateDoc(k("c1"), { wort: "a".repeat(1001) }));
  await pruefe("M14 Notiz ueberlang", "nein", () => updateDoc(k("c1"), { extra: "a".repeat(5001) }));
-@@ -566,6 +568,20 @@ await pruefe("T23 Karte ohne textId mit 1208 Zeichen", "nein", () => setDoc(k("z
+@@ -566,6 +571,20 @@ await pruefe("T23 Karte ohne textId mit 1208 Zeichen", "nein", () => setDoc(k("z
  await pruefe("T24 Karte mit textId null und 1208 Zeichen", "nein", () => setDoc(k("z8"), { ...karte("b1"), textId: null, wort: "x".repeat(1208) }));
  await pruefe("T25 Lange Zeile: textId nachtraeglich entfernen", "nein", () => updateDoc(k("z5"), { textId: deleteField() }));
  
