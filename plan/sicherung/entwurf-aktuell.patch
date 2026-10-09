@@ -475,7 +475,7 @@ index e9503f2..177c25f 100644
      const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
    }
 diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
-index 118e0da..210f80e 100644
+index 118e0da..6bb9177 100644
 --- a/plan/werkzeuge/regeln/regeln-pruefung.mjs
 +++ b/plan/werkzeuge/regeln/regeln-pruefung.mjs
 @@ -133,13 +133,14 @@ await pruefe("N14 Speicherkarte loeschen", "ja", () => updateDoc(b("b1"), { "set
@@ -512,3 +512,24 @@ index 118e0da..210f80e 100644
  await pruefe("M12 Erfundenes Feld an der Karte", "nein", () => updateDoc(k("c1"), { freigeschaltet: true }));
  await pruefe("M13 Wort ueberlang", "nein", () => updateDoc(k("c1"), { wort: "a".repeat(1001) }));
  await pruefe("M14 Notiz ueberlang", "nein", () => updateDoc(k("c1"), { extra: "a".repeat(5001) }));
+@@ -566,6 +567,20 @@ await pruefe("T23 Karte ohne textId mit 1208 Zeichen", "nein", () => setDoc(k("z
+ await pruefe("T24 Karte mit textId null und 1208 Zeichen", "nein", () => setDoc(k("z8"), { ...karte("b1"), textId: null, wort: "x".repeat(1208) }));
+ await pruefe("T25 Lange Zeile: textId nachtraeglich entfernen", "nein", () => updateDoc(k("z5"), { textId: deleteField() }));
+ 
++/* Kartenkonflikte: veraltete Aktionen und alte Clients duerfen nicht
++   ueberschreiben. Positivfaelle verhindern eine pauschale Schreibsperre. */
++await pruefe("K01 Karte ohne Kennung anlegen", "ja", () => setDoc(k("cas"), karte("b1")));
++await pruefe("K02 erste geschuetzte Antwort", "ja", () => updateDoc(k("cas"), { stufe: 1, bewertungsStand: "eins", bewertungsBasis: null }));
++await pruefe("K03 alte Ausgangskennung abweisen", "nein", () => updateDoc(k("cas"), { stufe: 2, bewertungsStand: "alt", bewertungsBasis: null }));
++await pruefe("K04 richtige Ausgangskennung", "ja", () => updateDoc(k("cas"), { stufe: 2, bewertungsStand: "zwei", bewertungsBasis: "eins" }));
++await pruefe("K05 doppeltes Schreiben aendert nichts", "ja", () => updateDoc(k("cas"), { stufe: 2, bewertungsStand: "zwei", bewertungsBasis: "eins" }));
++await pruefe("K06 gleiche Kennung mit anderem Wert", "nein", () => updateDoc(k("cas"), { stufe: 3, bewertungsStand: "zwei", bewertungsBasis: "zwei" }));
++await pruefe("K07 alte App ohne Kennungen", "nein", () => updateDoc(k("cas"), { stufe: 4 }));
++await pruefe("K08 Notiz ohne Kennungen", "ja", () => updateDoc(k("cas"), { extra: "bleibt erlaubt" }));
++await pruefe("K09 Kennung entfernen", "nein", () => updateDoc(k("cas"), { bewertungsStand: deleteField() }));
++await pruefe("K10 leere Kennung", "nein", () => updateDoc(k("cas"), { stufe: 3, bewertungsStand: "", bewertungsBasis: "zwei" }));
++await pruefe("K11 ungeschuetzte Altkarte bewerten", "nein", () => updateDoc(k("c9"), { stufe: 4 }));
++await pruefe("K12 eigenes Undo mit neuer Kennung", "ja", () => updateDoc(k("cas"), { stufe: 1, bewertungsStand: "undo", bewertungsBasis: "zwei" }));
+ console.log("\n" + ok + " von " + (ok + fehl) + " Pruefungen wie erwartet.");
+ if (fehler.length) { console.log("\nABWEICHUNGEN:"); fehler.forEach(f => console.log("  " + f)); }
+ await env.cleanup();
