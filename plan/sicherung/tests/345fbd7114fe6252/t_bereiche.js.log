@@ -1,0 +1,28 @@
+== handy
+  Blatt: Bereich Ein Bereich ist ein Stapel Karten zu einem Thema, zum Beispiel ein Buch oder ein Kurs. Medina Buch 1 12 fällig Quran-Wörter leer Bereich anlegen Schließen
+    Kontrast 0
+  Anlegen: Kopf "Test-Bereich" | Blatt zu true | Suche "undefined" | Auswahlmodus false | Inhalt: Karte anlegen Mehr Noch keine Karten Fang mit einer eigenen Karte an – oder spiel einen fertigen Kartensatz ein. Kartens
+  Name existiert: Kopf "Medina Buch 1" | Rueckmeldung: „Medina Buch 1“ gibt es schon – geöffnet
+  Blatt mit leerem Bereich: Bereich Ein Bereich ist ein Stapel Karten zu einem Thema, zum Beispiel ein Buch oder ein Kurs. Medina Buch 1 12 fällig Quran-Wörter leer Test-Bereich leer Bereich anlegen Schließen
+  Mehr (leerer Bereich): Mehr zu diesem Bereich Liste einfügen Bereich umbenennen Bereich löschen Schließen
+  Umbenennen auf vorhandenen: Name schon vergeben Ein Bereich namens „Quran-Wörter" existiert schon. OK
+  Umbenannt: Kopf "Neuer Name"
+  Loeschen (leer): Downloads +0 | Bereich löschen? „Neuer Name“ ist leer. Abbrechen Löschen
+    danach Kopf "Quran-Wörter" | Bereiche: 2
+  Letzter Bereich, Mehr: Mehr zu diesem Bereich Mehrere Karten auswählen Reihenfolge umkehren Als Tabelle speichern ohne Lernstand Drucken Liste einfügen Bereich umbenennen Schließen
+    Tipp auf Loeschen: Mehr zu diesem Bereich Mehrere Karten auswählen Reihenfolge umkehren Als Tabelle speichern ohne Lernstand Drucken Liste einfügen Bereich umbenennen Schließen
+  ok
+== klein
+  Blatt: Bereich Ein Bereich ist ein Stapel Karten zu einem Thema, zum Beispiel ein Buch oder ein Kurs. Medina Buch 1 12 fällig Quran-Wörter leer Bereich anlegen Schließen
+    Kontrast 0
+  Anlegen: Kopf "Test-Bereich" | Blatt zu true | Suche "undefined" | Auswahlmodus false | Inhalt: Karte anlegen Mehr Noch keine Karten Fang mit einer eigenen Karte an – oder spiel einen fertigen Kartensatz ein. Kartens
+  Name existiert: Kopf "Medina Buch 1" | Rueckmeldung: „Medina Buch 1“ gibt es schon – geöffnet
+  Blatt mit leerem Bereich: Bereich Ein Bereich ist ein Stapel Karten zu einem Thema, zum Beispiel ein Buch oder ein Kurs. Medina Buch 1 12 fällig Quran-Wörter leer Test-Bereich leer Bereich anlegen Schließen
+  Mehr (leerer Bereich): Mehr zu diesem Bereich Liste einfügen Bereich umbenennen Bereich löschen Schließen
+  Umbenennen auf vorhandenen: Name schon vergeben Ein Bereich namens „Quran-Wörter" existiert schon. OK
+  Umbenannt: Kopf "Neuer Name"
+  Loeschen (leer): Downloads +0 | Bereich löschen? „Neuer Name“ ist leer. Abbrechen Löschen
+    danach Kopf "Quran-Wörter" | Bereiche: 2
+  Letzter Bereich, Mehr: Mehr zu diesem Bereich Mehrere Karten auswählen Reihenfolge umkehren Als Tabelle speichern ohne Lernstand Drucken Liste einfügen Bereich umbenennen Schließen
+    Tipp auf Loeschen: Mehr zu diesem Bereich Mehrere Karten auswählen Reihenfolge umkehren Als Tabelle speichern ohne Lernstand Drucken Liste einfügen Bereich umbenennen Schließen
+  ok
