@@ -33,7 +33,7 @@ Die Nummern in Klammern sind die Fragen aus Runde 2.
 
 | Was | Stand |
 |---|---|
-| Tagesdeckel nach einer Pause, Fälligkeiten bleiben (10) | offen: erst rechnen (Simulation), dann Empfehlung; „60/30“ zurückgenommen (08.10.) |
+| Tagesdeckel nach einer Pause, Fälligkeiten bleiben (10) | Rechnung fertig (09.10.): 90 Vergleiche, Empfehlung freiwilliges Tagesziel und faire Auswahl; Bau wartet auf Zielgröße/Auswahl/Zählung, siehe `TAGESDECKEL-RECHNUNG-2026-10-09.md`; „60/30“ bleibt zurückgenommen |
 | Karte direkt in der Abfrage bearbeiten | offen |
 | Am selben Tag „Runde fortsetzen“ (22) | offen |
 | Einmalige Erklärung der drei Knöpfe (21) | wartet: Wortlaut von Dir |

@@ -1,5 +1,7 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026, Fortsetzung:** Tagesdeckel-Rechnung fertig, 90 Vergleiche mit je fünf Folgen über 180 Tage, echte Regeln aus 3.18.29. Bericht: `zyklus-2/mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md`. Ein fixer kleiner Deckel mit heutiger Reihenfolge kann ursprüngliche Karten monatelang liegen lassen; älteste zuerst verschiebt die Wartezeit zu anderen Karten. Empfehlung freiwilliges Tagesziel und faire Auswahl, keine erfundene optimale Zahl. Vor dem Bau Zielgröße/Auswahl/Zählung entscheiden. App unverändert; 3.18.29 wartet weiterhin auf Veröffentlichung. Betreiber möchte Änderungen sammeln, großer Lauf und Veröffentlichung später gemeinsam mit „ladegerät“.
+
 **09.10.2026: 3.18.29 behebt E4 erneut: Datenschutz und Impressum öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück erhält Plan und Eingaben. Feste Gegenprobe d64380a rot; vollständiger Einstieg bei 390/320/820, sechs Farb-/Gerätefälle, Fehler/Neuversuch, späte Antwort und drei betroffene Regressionen grün. Klein-Weg, kein Gesamtlauf, nicht veröffentlicht; online bleibt 3.18.28. iPhone-Abnahme G7 nach Veröffentlichung offen. Als Nächstes: Tagesdeckel erst durchrechnen, dann empfehlen (`ALLES-OFFEN.md`).**
 
 **09.10.2026, 04:38: Online ist 3.18.28 (enthält 3.18.27), veröffentlicht mit „ladegerät“: 156/156, Affen 0, Regeln eingespielt. Nichts Uncommittetes. Offen und Reihenfolge: `plan/ALLES-OFFEN.md`; Übergabe: `plan/sicherung/UEBERGABE-AKTUELL.md`.**

@@ -7,6 +7,13 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**Fortsetzung 09.10.2026:** Tagesdeckel-Rechnung und Empfehlung abgeschlossen;
+90 Vergleiche mit tatsächlichen Bewertungsregeln, reproduzierbares Werkzeug
+und Ergebnisse unter `zyklus-2/mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md`.
+Noch keine Lernregel geändert. Zielgröße, faire Auswahl und dauerhaftes
+Zählen müssen vor dem Bau feststehen. Betreiber sammelt Änderungen;
+„ladegerät“ für den gemeinsamen großen Abschluss später.
+
 **Aktualisierung 09.10.2026:** Maßgeblicher Stand 3.18.29 (E4: Rechtsseiten
 im vorhandenen Dialog, Plan und Formulare erhalten), nicht veröffentlicht.
 Online ist 3.18.28. Betroffene Tests grün, Klein-Weg; voller Lauf vor

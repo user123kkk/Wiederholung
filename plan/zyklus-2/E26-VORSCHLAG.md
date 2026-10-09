@@ -1,5 +1,13 @@
 # E26 „Erst einmal 20“ nach langer Pause – Vorschlag, 05.10.2026
 
+**Aktueller Stand 09.10.2026:** Der einzelne Knopf ist durch Frage 10
+(Tagesdeckel) aus der Mehrwert-Runde ersetzt. Tagesdeckel-Rechnung mit
+90 Vergleichen und Empfehlung fertig:
+[`mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md`](mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md).
+Die Sortierung aus dem Nachtrag ist seit 3.18.22 gebaut. Unter dauerhaft
+kleinem Deckel kann sie alte Karten sehr lange warten lassen. Der
+ursprüngliche Vorschlag unten ist Verlauf, keine neue Bauanweisung.
+
 Nur gelesen und aufgeschrieben, nichts gebaut. Betreiber 01.10.: „später“ (Z7).
 Diese Datei ist die Entscheidungsvorlage für später.
 

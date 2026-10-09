@@ -80,7 +80,8 @@ Der gleiche Quellstand liefert das gleiche Ergebnis.
 
 ## Berechnete Ergebnisse
 
-72 Vergleiche mit jeweils fünf Durchläufen erfolgreich abgeschlossen.
+90 Vergleiche mit jeweils fünf Durchläufen erfolgreich abgeschlossen
+(72 Tagesmengen-Vergleiche plus 18 Reihenfolge-Vergleiche).
 Die Selbstprüfung kontrolliert echte Stufenregeln, Kalenderwechsel,
 Betreiber-/Normalnutzer-Unterschied, reproduzierbare Folgen, neutrale Wirkung
 eines zu großen Deckels und unveränderte wartende Karten. Der vorhandene
@@ -124,10 +125,15 @@ Weitere Belastungsfälle:
   mehr als 1000 Antworten an einem Tag. Das Modell nimmt an, dass der
   Nutzer das durchhält; es ist deshalb keine Empfehlung für „Alle“.
 
-Der zusätzliche Vergleich „Älteste zuerst, 30“ wird nach Abschluss unten
-eingetragen. Er prüft die offene Frage, wie stark die Auswahl statt der
-Zahl den Rückstand beeinflusst. Daraus folgt keine Freigabe, die bestehende
-Sortierung zu ändern.
+Zusätzlicher Vergleich „Älteste zuerst, 30“: Im großen 85/10/5-Fall
+kommt die letzte ursprüngliche Karte in allen fünf Durchläufen an Tag 35
+zum ersten Mal dran, statt an Tag 158–177. Dafür steigt die Summe aller
+wartenden Kartentage von 41143,2 auf 60263,2: Während der alte Rückstand
+vorne drankommt, müssen andere Wiederholungen länger warten. Der
+ursprüngliche Rückstand allein wäre deshalb ein irreführendes Erfolgskriterium.
+Ohne gemessene Gedächtniswirkung kann aus diesem Modell weder die alte
+noch die neue Sortierung als überlegen freigegeben werden. Ein fairer
+Kompromiss benötigt beide Kriterien, nicht nur den letzten Erstbesuch.
 
 ## Empfehlung für die Umsetzung
 

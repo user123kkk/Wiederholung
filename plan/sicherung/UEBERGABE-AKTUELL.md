@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 19:11 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 19:13 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,16 +6,22 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `4953566 Sicherung 19:10 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `55992a0 Sicherung 19:12 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/PLAN.md
+ M plan/STAND.md
  A plan/werkzeuge/tagesdeckel_simulation.cjs
+ M plan/zyklus-2/E26-VORSCHLAG.md
+ M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
+ M plan/zyklus-2/mehrwert/GESAMTLISTE.md
  M plan/zyklus-2/mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md
- M plan/zyklus-2/mehrwert/tagesdeckel-ergebnis-2026-10-09.json
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
@@ -23,7 +29,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -44,6 +50,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- Codex Rechnung fertig: 90 Vergleiche, je fünf feste Folgen/180 Tage. 1100 Karten/60 Tage Pause, 85/10/5: Deckel 20 lässt nach 180 Tagen im Mittel 175,6 ursprüngliche Karten unbesucht; Deckel 30 letzter Erstbesuch Tag 158–177. Älteste zuerst/30 erreicht Tag 35, verursacht aber mehr gesamte Wartezeit (60263,2 statt 41143,2 Kartentage). Keine Aussage über echtes Behalten. Empfehlung und offene Bauentscheidungen im Rechnungsbericht, alle aktuellen Planzeiger nachgezogen; App unverändert. Selbstprüfung und Kern 12/12 grün. Nur neue Reihenfolge-Varianten zusätzlich gerechnet, erfolgreiche Tagesmengen nicht wiederholt.
 
 - Codex Tagesdeckel-Rechnung: sechs synthetische Szenarien, vier Tagesmengen, drei Antwortmuster, je fünf Folgen über 180 Tage. Nur Analysewerkzeug; App unverändert. Originaler Lernlogik-Schnelltest 12/12 grün. Zwei eigene langsame Rechenstarts ohne Ergebnis beendet und Laufzeit verbessert (Kern einmal kompilieren, keine Funktionserzeugung je Kartenbewertung); keine Ergebnisse aus abgebrochenen Läufen übernommen. Modellgrenzen und falsche Annahme „w = verschiedene Karten“ im neuen Rechnungsbericht dokumentiert. Abschließender Lauf läuft.
 
@@ -86,5 +94,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   eine andere Form und sind noch ganz zu lesen, 2 sind leer. Der Abgleich
   mit dem Katalog (187 Zeilen) steht noch aus.
 - 01:50 Betreiber: „ladegeraet“ (Stichwort, Freigabe für Regeln und
-  Hosting). `ladegeraet.ps1` gestartet an 3.18.28, Netzteil, Baum sauber.
-  Ausgabe: `%TEMP%/ladegeraet-3.18.28.log`. Achtung: Der Lauf überquert

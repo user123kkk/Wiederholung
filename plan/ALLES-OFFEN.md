@@ -79,7 +79,7 @@ abgehakt; hier wird das nicht doppelt geführt.
 |---|---|---|---|
 | 07.10. | „dass das Lernen wirklich hilft, egal ob Methoden geändert werden müssen … auch der Übungsmodus“ | `BETREIBER-2026-10-07-NEU.md` N8 | Urteil fehlt: Vorlage „Was hilft beim Lernen am meisten“ nie geschrieben |
 | 06.10. | „ich denk an ein Wort und kann es nicht wiederfinden … ob die Wiederholungsstrategie bearbeitet werden sollte“ | `BETREIBER-2026-10-06.md` | Urteil fehlt: Recherche mit Quellen steht aus; Vermutung Abfragerichtung (Gesamtliste: Deutsch → Arabisch) |
-| 08.10. | „ich zweifle sehr immer wieder an der Methodik“; Tagesdeckel „absolut perfekt“ | Logbuch 08.10. | bauen: erst rechnen (Simulation), dann Empfehlung |
+| 08.10. | „ich zweifle sehr immer wieder an der Methodik“; Tagesdeckel „absolut perfekt“ | Logbuch 08.10.; `zyklus-2/mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md` | Rechnung fertig 09.10.: 90 Vergleiche, je fünf Folgen über 180 Tage; feste kleine Deckel können alte Karten monatelang liegen lassen. Empfehlung freiwilliges Tagesziel, faire Auswahl, echte Tageszählung. Lernwirkung nicht gemessen; Zielgröße/Auswahl/Zählung vor Bau entscheiden |
 | 06.10. | „stelle sicher, dass dieses Quran-Dings bzw. Texte top 1 ist, perfekt“ | `BETREIBER-2026-10-06.md` | bauen: Gesamtdurchsicht Texte, nach dem 29.10. (Einzelpunkte: Gesamtliste Abschnitt 7) |
 | 29.09. | „keine Lust, dass Leute einfach was drücken für die Streak und dabei nicht ehrlich sind, dasselbe bei Karten … Weg oder Hinweis“ | für Texte: `texte-lernen/WIEDERHOLEN.md`; für Karten nirgends | Urteil fehlt (Karten) |
 | 06.10. | Karten-Blatt: „dachte daran, dass es ein Entwurf ist und bleibt“ | `BETREIBER-2026-10-06.md` | später (er stimmte dem einfachen Weg zu) |
