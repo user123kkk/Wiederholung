@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:06 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 22:07 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,20 +6,28 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `ffd7299 Sicherung 22:06 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `da979c8 Sicherung 22:07 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
- M AGENTS.md
+ A .agents/skills/adrabic-daten/SKILL.md
+ A .agents/skills/adrabic-daten/agents/openai.yaml
+ A .agents/skills/adrabic-lernbelege/SKILL.md
+ A .agents/skills/adrabic-lernbelege/agents/openai.yaml
+ A .agents/skills/adrabic-oberflaeche/SKILL.md
+ A .agents/skills/adrabic-oberflaeche/agents/openai.yaml
+ A .claude/skills/adrabic-daten/SKILL.md
+ A .claude/skills/adrabic-lernbelege/SKILL.md
+ A .claude/skills/adrabic-oberflaeche/SKILL.md
  M CHANGELOG.md
- M CLAUDE.md
  M app.js
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ A plan/werkzeuge/projekt_skills.mjs
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
@@ -32,7 +40,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 7, chrome.exe 14 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 7, chrome.exe 13 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
