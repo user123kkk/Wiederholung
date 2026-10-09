@@ -3,3 +3,16 @@ ok      signInWithEmailAndPassword genau einmal aufgerufen: 1
 -- Doppel-Enter sendet nur einmal --
 ok      trotz Doppel-Enter genau ein Aufruf: 1
 -- Passwort vergessen: Enter im E-Mail-Feld sendet ab --
+ok      Enter im E-Mail-Feld bei "Passwort vergessen" sendet ab: "Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach."
+-- Formular vorhanden, Absende-Knopf type=submit, Nebenknoepfe type=button --
+ok      <form data-action="login"> ist da
+ok      Absende-Knopf ist type=submit: submit
+ok      Google-Knopf ist type=button: button
+ok      Augen-Knopf ist type=button: button
+
+0 Fehler auf dem aktuellen Stand.
+
+-- Gegenprobe gegen 1c8aaa1 (muss rot sein) --
+  ok (=Fehler im Altstand) : Enter im E-Mail-Feld tut nichts, signInCalls=0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":20,"quelltext":"4fa5f7fc0fab6188385192fdbefbdfaee5203e0695b5ad4d7b747128bfe44a57"}
