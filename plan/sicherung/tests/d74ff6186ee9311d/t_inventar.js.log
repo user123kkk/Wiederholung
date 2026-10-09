@@ -1,0 +1,72 @@
+
+=== lernen (12 Elemente, Hoehe 908px)
+button.bereich-pill: Medina Buch 1
+h1.appbar__title: Medina Buch 1
+h2.lernen-gruss__titel: Hallo, Test
+span.badge: 8 Wiederholungen
+span.badge: 4 neu
+button.lg: Runde starten
+strong: 36 Karten
+strong: 4
+strong: 11
+button.nav__tab: Lernen
+button.nav__tab: Fortschritt
+button.nav__tab: Verwalten
+
+=== fortschritt (17 Elemente, Hoehe 1001px)
+h1.appbar__title: Fortschritt
+h3: Die letzten 5 Wochen
+p.stat-sub: 52 Antworten in den letzten 7 Tagen
+h3: Dein Stoff
+p.gross-zahl: 36 von 40 Karten schon einmal gewusst
+strong: 4
+strong: 12
+strong: 12
+strong: 9
+strong: 3
+div.eyebrow: GENAUER ANSEHEN
+button.liste-zeile: Lektionen · Medina Buch 1 2 von 3 einmal geschafft
+button.liste-zeile: Karten, die nicht klappen 2
+button.liste-zeile: Die nächsten 7 Tage 24 Karten
+button.nav__tab: Lernen
+button.nav__tab: Fortschritt
+button.nav__tab: Verwalten
+
+=== verwalten (10 Elemente, Hoehe 3966px)
+button.bereich-pill: Medina Buch 1
+h1.appbar__title: Verwalten
+button.lg: Karte anlegen
+button.ghost: Üben
+button.ghost: Mehr
+button.secondary: Sammlungen 5
+p.hint: Karten, die du zusammen üben willst.
+button.nav__tab: Lernen
+button.nav__tab: Fortschritt
+button.nav__tab: Verwalten
+
+=== einstellungen (22 Elemente, Hoehe 1203px)
+h1.appbar__title: Einstellungen
+strong: Test
+div.eyebrow: LERNEN
+button.liste-zeile: Karten pro Runde Alle
+button.liste-zeile: Arabische Schrift Normal
+button.liste-zeile: Helligkeit Dunkel
+button.liste-zeile: Tägliche Erinnerung aus
+div.eyebrow: DATEN
+button.liste-zeile: Kartensatz per Code
+button.liste-zeile: Sichern & einspielen vor 3 Tagen
+div.eyebrow: RÜCKMELDUNG
+button.liste-zeile: Ideen & Vorschläge
+button.liste-zeile: Fehler melden
+button.liste-zeile: App auf den Home-Bildschirm legen
+div.eyebrow: KONTO
+button.liste-zeile: Name ändern
+button.liste-zeile: Abmelden
+button.liste-zeile: Konto löschen
+p.hint: Adrabic 3.18.28
+button.nav__tab: Lernen
+button.nav__tab: Fortschritt
+button.nav__tab: Verwalten
+
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":11,"quelltext":"9616ec832c707b5788168f265652e93848a3912033947c36ad130fc57165921a"}

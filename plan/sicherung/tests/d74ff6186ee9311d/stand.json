@@ -384,6 +384,46 @@
       "fehler": null,
       "sekunden": 43,
       "quelltext": "0faede67e35a87dd53bd01e503ba0b4da7f0323f4f19a8609468bb16b0b9d9c8"
+    },
+    "t_idee_zeit.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 14,
+      "quelltext": "08fc28e3b1723028d88ff9b037b0d5ba6add010f44c22470ab0ed896b51b7a69"
+    },
+    "t_import_doppelt.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 13,
+      "quelltext": "7a6354769db830d70c07e2004a10911e1526bb3681897c6a574dcef14f83c86b"
+    },
+    "t_import_einwilligung.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 15,
+      "quelltext": "349656fdbac6d84aeaa5a6d5d191859135991f5a23d88ed245abd28d451400ed"
+    },
+    "t_import_stapel.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 19,
+      "quelltext": "a2af07a1b5068a2122e4e51f05b0dc8894779246593449828a5293be2e83cdc7"
+    },
+    "t_inventar.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 11,
+      "quelltext": "9616ec832c707b5788168f265652e93848a3912033947c36ad130fc57165921a"
     }
   }
 }

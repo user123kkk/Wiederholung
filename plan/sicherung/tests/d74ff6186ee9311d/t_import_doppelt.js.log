@@ -1,0 +1,8 @@
+ok     Bereich "A" vorhanden | Medina Buch 1, Quran-Wörter, A, A (2)
+ok     Bereich "A (2)" vorhanden (nicht verworfen) | Medina Buch 1, Quran-Wörter, A, A (2)
+ok     Kartenzahl = Summe (2 + 3 = 5) | 5
+ok     keine Seitenfehler | 
+ok     Gegenprobe 3452fdc: "A (2)" fehlt (muss ROT sein) | Medina Buch 1, Quran-Wörter, A
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":13,"quelltext":"7a6354769db830d70c07e2004a10911e1526bb3681897c6a574dcef14f83c86b"}
