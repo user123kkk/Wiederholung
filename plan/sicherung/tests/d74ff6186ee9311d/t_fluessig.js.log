@@ -1,0 +1,9 @@
+Runde starten                | laengste Blockade 217 ms (2x) | Ruckler 2 Bilder, max 248 ms
+Umdrehen 1                   | laengste Blockade 85 ms (1x) | Ruckler 2 Bilder, max 71 ms
+Bewerten 1                   | laengste Blockade – | Ruckler 1 Bilder, max 53 ms
+Umdrehen 2                   | laengste Blockade – | Ruckler 1 Bilder, max 36 ms
+Bewerten 2                   | laengste Blockade 83 ms (1x) | Ruckler 1 Bilder, max 71 ms
+Umdrehen 3                   | laengste Blockade – | Ruckler 1 Bilder, max 39 ms
+Bewerten 3                   | laengste Blockade – | Ruckler 1 Bilder, max 36 ms
+Runde beenden                | laengste Blockade 83 ms (1x) | Ruckler 1 Bilder, max 89 ms
+Tab Fortschritt              | laengste Blockade 290 ms (2x) | Ruckler 2 Bilder, max 354 ms
