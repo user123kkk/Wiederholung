@@ -14,6 +14,8 @@ Garantie „schadet niemandem“ lässt sich daraus nicht ableiten.
 
 Werkzeug: `plan/werkzeuge/tagesdeckel_simulation.cjs`.
 Aufruf: `node plan/werkzeuge/tagesdeckel_simulation.cjs`.
+Zusätzlicher Reihenfolge-Vergleich am selben Produktquellstand:
+`node plan/werkzeuge/tagesdeckel_simulation.cjs --reihenfolge`.
 Ergebnis: `tagesdeckel-ergebnis-2026-10-09.json`, einschließlich Version,
 SHA-256 der tatsächlich gerechneten `app.js` und aller Einzelvergleiche.
 Der gleiche Quellstand liefert das gleiche Ergebnis.
@@ -76,9 +78,91 @@ Der gleiche Quellstand liefert das gleiche Ergebnis.
    etwa beim Texte-Probelauf. Ein allgemeiner Schutz vor einer großen
    Tagesmenge ist ehrlicher als eine unbelegte Pausenerkennung.
 
-## Ergebnis und Empfehlung
+## Berechnete Ergebnisse
 
-Die vollständigen berechneten Werte und die abschließende Empfehlung
-werden nach der erfolgreichen Selbstprüfung in diesen Abschnitt übernommen.
-Bis dahin ist diese Datei ausdrücklich eine laufende Rechnung, keine
-Abnahme und keine Freigabe einer Lernregel.
+72 Vergleiche mit jeweils fünf Durchläufen erfolgreich abgeschlossen.
+Die Selbstprüfung kontrolliert echte Stufenregeln, Kalenderwechsel,
+Betreiber-/Normalnutzer-Unterschied, reproduzierbare Folgen, neutrale Wirkung
+eines zu großen Deckels und unveränderte wartende Karten. Der vorhandene
+Produkt-Schnelltest `t_lernlogik.js` ist zusätzlich mit 12/12 grün.
+
+Die folgende Tabelle verwendet ausschließlich den Modellfall 85/10/5.
+„Letzter Erstbesuch“ zählt ab dem ersten Rückkehrtag. Der Spitzenwert ist
+die größte Antwortzahl eines Tages aus den fünf Durchläufen.
+
+| Synthetischer Rückstand | Tagesauswahl | Letzter Erstbesuch des ursprünglichen Rückstands | Höchstens Antworten an einem Tag | Nach 180 Tagen noch nie besuchte ursprüngliche Karten, Mittel |
+|---|---|---|---|---|
+| 300 Karten, 20 Tage Pause; 250 anfangs fällig | Alle | Tag 1 | 265 | 0 |
+| derselbe | 20 | Tag 17–18 | 28 | 0 |
+| derselbe | 30 | Tag 11–12 | 38 | 0 |
+| derselbe | 60 | Tag 5–6 | 67 | 0 |
+| 1100 Karten, 60 Tage Pause; 1038 anfangs fällig | Alle | Tag 1 | 1092 | 0 |
+| derselbe | 20 | in keinem Durchlauf innerhalb von 180 Tagen | 25 | 175,6 |
+| derselbe | 30 | Tag 158–177 | 36 | 0 |
+| derselbe | 60 | Tag 42–49 | 68 | 0 |
+
+Das liegt auch an der heutigen Sortierung: frisch fällige Karten kommen
+vor lange liegenden. Wiederkehrende Karten verbrauchen Plätze, bevor der
+alte Rückstand vollständig besucht wird. Die naive Rechnung 1038/30 ≈ 35
+Tage trifft deshalb nicht zu. Im ungünstigeren Antwortmuster 60/20/20 bleiben
+mit Deckel 30 im Mittel 513,4 ursprüngliche Karten nach 180 Tagen unbesucht;
+selbst Deckel 60 lässt 267,2 unbesucht. Auch wenn alle Antworten Sicher
+sind, lässt Deckel 20 in vier von fünf Durchläufen ursprüngliche Karten
+bis zum Ende liegen. Die Nummer allein löst die Auswahlfrage nicht.
+
+Weitere Belastungsfälle:
+
+- 300 neue Karten mit Betreiber-Doppelabfrage, alle Sicher: Deckel 20
+  braucht 98–100 Tage, bis die letzte neue Karte zum ersten Mal drankommt;
+  vorhandene Wiederholungen haben Vorrang. 20 Karten am ersten Tag ergeben
+  dabei 40 Antworten. Für einen Normalnutzer ohne Vorabregel sind es 20.
+- Bei 5 neuen Karten pro Tag und Deckel 30 werden im 85/10/5-Modell von
+  895 hinzugekommenen Karten im Mittel nur 369,4 eingeführt; 525,6 warten
+  noch. Das ist keine gemessene Auslastung der Nutzer, sondern zeigt eine
+  mögliche dauerhaft zu große Stoffzufuhr.
+- „Alle“ trägt den Rückstand sofort ab, verlangt im großen Fall aber
+  mehr als 1000 Antworten an einem Tag. Das Modell nimmt an, dass der
+  Nutzer das durchhält; es ist deshalb keine Empfehlung für „Alle“.
+
+Der zusätzliche Vergleich „Älteste zuerst, 30“ wird nach Abschluss unten
+eingetragen. Er prüft die offene Frage, wie stark die Auswahl statt der
+Zahl den Rückstand beeinflusst. Daraus folgt keine Freigabe, die bestehende
+Sortierung zu ändern.
+
+## Empfehlung für die Umsetzung
+
+**Ein freiwilliges Tagesziel statt einer festen Sperre. Keine Fälligkeit
+umschreiben und keine wissenschaftlich optimale Deckelzahl behaupten.**
+Das Ziel entlastet die erste Rückkehr; „Weiterlernen“ bleibt erreichbar.
+Ein Ziel darf nie „alles erledigt“ oder „morgen ist alles gut“ behaupten,
+wenn weiterhin Karten fällig sind. Die bisher vorgeschlagene Formulierung
+„Für heute genug. Morgen geht es weiter.“ ist dafür zu absolut.
+
+Vorschlag für einen ehrlichen Abschluss: „Dein Tagesziel ist erreicht.
+Weitere Karten warten noch.“ Dazu sichtbares „Weiterlernen“ und die echte
+Restzahl. Dieser Wortlaut ist ein Vorschlag, keine Betreiber-Freigabe.
+
+Vor einem Bau sind drei Punkte konkret zu entscheiden:
+
+1. Zielgröße: an die vorhandene gewählte Rundengröße 10/20/30 koppeln;
+   bei „Alle“ eine begrenzte erste Runde anbieten. **Kein stiller neuer
+   Standard 30 ab Schwelle 60.** Wer mehr schafft, kann weiterlernen.
+   Ein gemessener persönlicher Bedarf und ein gewünschtes Tagespensum sind
+   verschieden; die App darf einen großen Rückstand nicht durch ein
+   steigendes Pflichtziel beantworten.
+2. Auswahl über alle freigegebenen Bereiche, einschließlich bisher
+   liegender Karten. Alte Karten dürfen nicht unbemerkt monatelang
+   ausgeschlossen bleiben. Ein fairer Anteil für den Rückstand oder eine
+   andere Reihenfolge muss eigens gegen aktuelle Fälligkeiten geprüft werden.
+   Die Lastrechnung kann deren Gedächtniswirkung nicht entscheiden.
+3. Zählen: Tagesziel zählt verschiedene bearbeitete Karten, alle Antworten
+   einer begonnenen Karte dürfen die Runde abschließen. Ein dauerhaftes
+   Tagesziel braucht dafür eine absichtlich entworfene Zählung mit
+   Neuladen, Rückgängig und zwei Geräten. Bestehende w/n-Zähler umdeuten
+   würde Kalender, Statistik und Synchronisierung beschädigen.
+
+**Bauzustand:** keine App- oder Datenänderung. Zahl, Wortlaut und Auswahl
+sind noch nicht freigegeben. Erst nach dieser Entscheidung ein kleiner
+Betreiber-Probelauf; Lernregeln und Datenänderungen brauchen ihre
+Gegenproben, Rundentest und abschließenden Gesamtlauf. „ladegerät“ darf
+mehrere fertig geprüfte Änderungen zusammen veröffentlichen.
