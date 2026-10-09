@@ -2,6 +2,44 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — Wiederholung der eigenen Modellfehler technisch verhindern
+
+**Auftrag:** „stelle sicher dass "solche Fehler" nicht wieder passieren“.
+Weiterer Auftrag währenddessen: zuerst diese Sicherungen abschließen,
+danach unbekannte Codefehler im übrigen Tool systematisch suchen und
+Verlässlichkeit belegen; wissenschaftliche Belege, wo sie sinnvoll sind.
+Beide Wortlaute vollständig in ALLES-OFFEN.
+**Gebaut:** unabhängiger Eingangsprüfer für die behauptete Karten-/Stufen-/
+Terminverteilung, eindeutige IDs und gültige Kalenderdaten. Der Simulator
+führt ihn, seine Negativfälle und den Audit tatsächlicher Codepfade vor
+dem langen Lauf aus. Ein Fehler verhindert neue Ergebnisse. Allgemeine
+Regeln vor Empfehlungen in EMPFEHLUNGEN-PRUEFEN, AGENTS, CLAUDE und LEHREN.
+Aussage, Beleg, Gegenargument und Geltungsgrenze dürfen nicht vermischt werden.
+**Geprüft:** 14 Eingangsfälle grün, einschließlich sieben absichtlicher
+Datenfehler und eines wirklich gestartet defekten Rechenkommandos in
+einer eigenen Testkopie. Dieses endet mit Exit 1 und Ungleichmäßige
+Terminphasen innerhalb Stufe 3; keine Ergebnisdatei erzeugt. Neun
+Original-Code-/Ergebnis-Auditfälle grün, Syntax/Diff grün. Modellversion 3
+nach Pflicht-Vorprüfungen komplett ausgeführt, 450 Einzelläufe einschließlich
+aller Zusammenfassungen exakt unverändert gegenüber Modellversion 2.
+Version-2-Daten separat erhalten. Neuer Hash der Eingangsprüfung, Grenzen
+der möglichen Lernbehauptungen und Pflicht-Audit im Ergebnis dokumentiert.
+Logs unter `plan/sicherung/tests/tagesdeckel-audit-2026-10-09/`.
+**Grenze:** Sprachliche Schlussfolgerungen lassen sich nicht vollständig
+automatisch prüfen. Regeln und technische Sperren reduzieren konkrete
+Wiederholungen; kein Versprechen allgemeiner Fehlerfreiheit.
+**Danach vorbereitet:** ZUVERLAESSIGKEIT-NACHPRUEFUNG nennt fünf geordnete
+Code-/Testdurchgänge, beginnt bei Speichern/Kontowechsel, behält alle sieben
+bisher nicht geprüften Befundabschnitte und die vollständige zweifache
+Nachprüfung. Originalstelle persistCardGrade bereits gelesen, vorhandenen
+Test t_konto_schreibantwort auf absichtlich verspätete Ablehnung vor/nach
+Kontowechsel und Abmeldung gelesen. Noch kein ganzer Datenweg neu abgenommen.
+**LEHREN § 14:** reine Prüfwerkzeuge/Arbeitsregeln/Plan, keine App-/Cloud-/
+UI-/Lernregeländerung und keine neue Version. Betroffene Gegenprüfungen,
+Syntax, Ergebnisvergleich und Dokumentation vollständig; keine großen
+Tests wiederholt. App 3.18.29, nichts veröffentlicht. Großer Lauf später
+gemeinsam mit „ladegerät“; Texte-Probelauf unverändert.
+
 ### 2026-10-09 — Korrektur: Tagesdeckel-Rechnung und eigene Empfehlung gegengeprüft
 
 **Auftrag:** „überprüfe alles, es sll perfekt sein, selbst deine wertlose

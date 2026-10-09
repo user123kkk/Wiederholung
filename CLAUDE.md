@@ -21,6 +21,12 @@ seinen Wünschen abgleichen (§ 1.7).
 
 ## Den Betreiber verstehen und nichts verlieren (Betreiber 08.10.2026, fest)
 
+Vor Empfehlungen und Simulationen zusätzlich
+[`plan/EMPFEHLUNGEN-PRUEFEN.md`](plan/EMPFEHLUNGEN-PRUEFEN.md) anwenden
+(Betreiber 09.10.2026). Technisch korrekte Zahlen belegen nur die geprüfte
+Fragestellung; Eingangsdaten, tatsächliche Codepfade und Aussagegrenzen
+sind vor dem Bericht zu prüfen.
+
 - Vor der ersten Antwort [`plan/BETREIBER-VERSTEHEN.md`](plan/BETREIBER-VERSTEHEN.md)
   lesen: wie er schreibt, was seine Wörter bedeuten, was er immer will.
 - Wörtlich sichern, nichts auslassen, laufend festhalten

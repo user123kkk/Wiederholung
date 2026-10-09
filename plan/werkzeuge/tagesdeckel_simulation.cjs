@@ -8,6 +8,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
+const {execFileSync} = require('node:child_process');
+const {pruefeEingaben} = require('./simulations_eingaben_pruefen.cjs');
 const root = path.resolve(__dirname, '../..');
 const source = fs.readFileSync(path.join(root, 'app.js'), 'utf8').replace(/\r\n/g, '\n');
 const start = source.indexOf('//LERNLOGIK-ANFANG');
@@ -158,6 +160,17 @@ function selfCheck() {
 }
 function main() {
 selfCheck();
+// Die behaupteten Eingangsdaten müssen stimmen, bevor der erste lange
+// Lauf beginnt und bevor eine Ergebnisdatei geschrieben werden kann.
+for (const scenario of scenarios) {
+  pruefeEingaben(initialCards(scenario), scenario, kernel(0).intervalForStufe,
+    date(scenario.fresh ? 0 : -(scenario.pause || 0)));
+}
+// Isolierte echte Auswahl-/Bewertungspfade und bekannte Negativfälle sind
+// Pflicht vor jedem neuen Ergebnis, keine nachträgliche freiwillige Prüfung.
+for (const script of ['t_simulations_eingaben.cjs', 'tagesdeckel_audit.cjs']) {
+  execFileSync(process.execPath, [path.join(__dirname, script)], {encoding: 'utf8', windowsHide: true});
+}
 const output = path.join(root, 'plan/zyklus-2/mehrwert/tagesdeckel-audit-ergebnis-2026-10-09.json');
 const sourceHash = crypto.createHash('sha256').update(source).digest('hex');
 const rows = [];
@@ -173,9 +186,13 @@ for (const scenario of scenarios) for (const policy of policies) for (const prof
     waitingCardDays: mean('waitingDays'), newIntroduced: mean('newIntroduced'),
     unintroduced: mean('unintroduced'), firstDay: runs[0].firstDay, runs});
 }
-const result = {modelVersion: 2, appVersion: source.match(/APP_VERSION\s*=\s*"([^"]+)"/)[1],
+const result = {modelVersion: 3, appVersion: source.match(/APP_VERSION\s*=\s*"([^"]+)"/)[1],
   sourceSha256LF: sourceHash,
   toolSha256LF: crypto.createHash('sha256').update(fs.readFileSync(__filename, 'utf8').replace(/\r\n/g, '\n')).digest('hex'),
+  inputGuardSha256LF: crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname, 'simulations_eingaben_pruefen.cjs'), 'utf8').replace(/\r\n/g, '\n')).digest('hex'),
+  inputCheck: 'passed', preflightAudit: 'passed',
+  claims: {scope: 'workload', memoryModel: false, voluntaryContinuation: false,
+    temporaryCap: false, recallBenefitValidated: false, optimalDailyAmountValidated: false},
   days: 180, seeds: [1,2,3,4,5], ownerRules: true, selfCheck: 'passed', rows};
 fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n');
 console.log('Selbstprüfung grün. ' + rows.length + ' Vergleiche, je 5 Durchläufe, 180 Tage.');

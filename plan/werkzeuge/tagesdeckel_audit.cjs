@@ -132,9 +132,14 @@ if (process.argv.includes('--ergebnis')) check('Alle 90 Ergebnisgruppen mit Quel
   const hash = text => crypto.createHash('sha256').update(text.replace(/\r\n/g, '\n')).digest('hex');
   const result = JSON.parse(fs.readFileSync(path.resolve(__dirname,
     '../zyklus-2/mehrwert/tagesdeckel-audit-ergebnis-2026-10-09.json'), 'utf8'));
-  assert.equal(result.modelVersion, 2);
+  assert.equal(result.modelVersion, 3);
   assert.equal(result.sourceSha256LF, hash(source));
   assert.equal(result.toolSha256LF, hash(fs.readFileSync(path.join(__dirname, 'tagesdeckel_simulation.cjs'), 'utf8')));
+  assert.equal(result.inputGuardSha256LF, hash(fs.readFileSync(path.join(__dirname, 'simulations_eingaben_pruefen.cjs'), 'utf8')));
+  assert.equal(result.inputCheck, 'passed');
+  assert.equal(result.preflightAudit, 'passed');
+  assert.deepEqual(result.claims, {scope: 'workload', memoryModel: false, voluntaryContinuation: false,
+    temporaryCap: false, recallBenefitValidated: false, optimalDailyAmountValidated: false});
   assert.equal(result.rows.length, 90);
   const keys = new Set();
   const mean = values => Math.round(values.reduce((a, b) => a + b, 0) / values.length * 10) / 10;
