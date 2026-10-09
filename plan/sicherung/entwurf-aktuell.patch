@@ -581,7 +581,7 @@ index a5e2674..7979e42 100644
  /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
     unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
 diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
-index e9503f2..35f657d 100644
+index e9503f2..13c4575 100644
 --- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 +++ b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 @@ -42,7 +42,7 @@ async function seite(b,sources,ctx){
@@ -607,27 +607,31 @@ index e9503f2..35f657d 100644
    return Object.fromEntries(['w','n','u'].map(k=>[k,Number(e[k]?.integerValue||0)]));
  }
 -(async()=>{
-+module.exports={seite,seed,fertig,rest,wert,ROOT,SDK,cloud};
++module.exports={seite,seed,fertig,rest,wert,ROOT,SDK,cloud,APP_SOURCE};
 +if(require.main===module)(async()=>{
    const sources={};for(const name of ['firebase-app.js','firebase-firestore.js']){
      const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
    }
 diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
 new file mode 100644
-index 0000000..bef7e7f
+index 0000000..9deb423
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
-@@ -0,0 +1,115 @@
+@@ -0,0 +1,134 @@
 +/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
 +   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
 +const assert=require('node:assert/strict');
 +const {start}=require('./lib');
-+const {seite,seed,fertig,rest,ROOT,SDK,cloud}=require('./diagnose_karten_konflikt');
++const {seite,seed,fertig,rest,ROOT,SDK,APP_SOURCE}=require('./diagnose_karten_konflikt');
 +async function server(id='k4') {
 +  const r=await rest(ROOT+'/users/u1/karten/'+id),d=await r.json();
 +  return Object.fromEntries(Object.entries(d.fields).map(([k,v])=>[k,v.stringValue??(v.integerValue!==undefined?Number(v.integerValue):null)]));
 +}
 +(async()=>{
++  const fs=require('node:fs'),path=require('node:path');
++  const sha=s=>require('node:crypto').createHash('sha256').update(s.replace(/\r\n/g,'\n')).digest('hex');
++  console.log('app.js SHA256 '+sha(APP_SOURCE));
++  console.log('firestore.rules SHA256 '+sha(fs.readFileSync(path.join(__dirname,'../../../firestore.rules'),'utf8')));
 +  const sources={};for(const name of ['firebase-app.js','firebase-firestore.js']){
 +    const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
 +  }
@@ -675,6 +679,21 @@ index 0000000..bef7e7f
 +        await reload.evaluate(()=>window.__PRUEF.pruefen());await fertig(reload);
 +        assert.equal(await reload.evaluate(()=>window.__PRUEF.aufbewahrt()[0].status),'konflikt');assert.deepEqual(await server(id),newer);
 +        assert.match(await reload.locator('[data-action="bewertung-sichern"]').innerText(),/sichern/);assert.deepEqual(reload.fehler,[]);
++        if(!gesehen){
++          await reload.emulateMedia({reducedMotion:'reduce'});
++          for(const size of [{width:390,height:844},{width:320,height:740},{width:768,height:1024},{width:1024,height:768}]){
++            await reload.setViewportSize(size);
++            for(const thema of ['hell','dunkel']){
++              await reload.evaluate(t=>document.documentElement.setAttribute('data-thema',t),thema);
++              const fits=await reload.evaluate(()=>{const button=document.querySelector('[data-action="bewertung-sichern"]'),box=button.closest('.banner-fehler').getBoundingClientRect();return box.left>=-1&&box.right<=innerWidth+1&&document.documentElement.scrollWidth<=innerWidth+1;});
++              assert.ok(fits,'Konflikthinweis passt '+size.width+' '+thema);
++            }
++          }
++          const ready=reload.waitForEvent('download');await reload.locator('[data-action="bewertung-sichern"]').click();const download=await ready;
++          const backup=JSON.parse(fs.readFileSync(await download.path(),'utf8'));assert.equal(backup.antworten[0].id,pending[0].id);
++          assert.deepEqual(backup.antworten[0].fields,pending[0].fields);assert.deepEqual(await server(id),newer);
++          console.log('GRUEN Konflikthinweis: vier Breiten, hell/dunkel, reduzierte Bewegung; Download vollstaendig');
++        }
 +      }finally{await reload.close();}
 +    });
 +    await fall('zwei Offline-Geraete: erste Antwort bleibt, zweite aufbewahrt',async(a,c)=>{

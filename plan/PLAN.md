@@ -7,6 +7,14 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**09.10.2026, 20:44 – Fix A14/A15 im Entwurf 3.18.30:**
+Serverseitiger Aktionsschutz, Undo-Prüfung und dauerhafte Konfliktkopien
+gebaut. 12 echte SDK-Schutzfälle und 222 Regeln-Prüfungen grün.
+Netzteil erkannt, frischer Gesamtlauf läuft. Abnahme/Gegenprüfung noch
+nicht vollständig; uncommittete App-Arbeit durch Minuten-Patch gesichert.
+Regeln vor Hosting erforderlich, ältere Clients müssen aktualisieren.
+Keine Veröffentlichung. Maßgeblich ist der neue oberste Stand-Eintrag.
+
 **09.10.2026, Restinventur abgeschlossen:** Gesehen-Undo und Offline-Gesehen
 bestätigen dieselben offenen A14/A15; keine zusätzlichen Doppelfunde.
 Fremde Löschung bleibt bei Offline-Bewertung/Gesehen auch nach Nachholen

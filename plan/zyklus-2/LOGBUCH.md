@@ -2,6 +2,29 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — Entwurf 3.18.30: Kartenkonflikte A14/A15
+
+**Auftrag:** Betreiber „mach“, anschließend ununterbrochen weiterarbeiten.
+**Geändert:** Ausgangs-/Aktionskennung für normale Karten, atomare Regel,
+beide Undo-Wege prüfen eigene Aktion; dauerhaft einzelne Antwortkopien
+pro Konto mit Prüfen/Download/ausdrücklichem Entfernen. Keine neue Lernregel.
+Datenschutz für neue lokale Kopien ergänzt, alte Clients beim Regelwechsel
+ausdrücklich beschrieben. Textzeilen bleiben beim bestehenden Probelauf.
+**Geprüft:** 12 echte SDK-Fälle, 222 Regeltests, bestehender Undo-Zähler und
+drei Kontowechsel-/Abmeldekontrollen grün. Einzelheiten und Grenzen in
+KARTEN-KONFLIKTE-2026-10-09, vollständige Einzel-Logs in sicherung/tests/
+karten-fix-2026-10-09. Storage-Fehler-Fixture auf Antwortschlüssel begrenzt;
+kein Nachweis eines gesamten Browser-Speicherausfalls.
+**Gegenprüfung bisher:** vier Bewertungs-Schreibwege, normale Feld-/Voll-
+Schreibwege, Kontokontext, feste Befunde und zwölf Regel-Positiv-/Negativfälle
+gegen Diff gelesen. Cache-/Pending-Snapshots dürfen keine Bestätigung sein.
+Unnötiges Neuzeichnen nach normaler Bestätigung vor Abschluss entfernt;
+ersten Gesamtlauf bewahrt und angehalten, finalen Stand frisch gestartet.
+**Offen:** Gesamtlauf 157 Tests, Rundenabnahme, Affen, sichtbarer Konflikthinweis
+auf vier Breiten/hell/dunkel und abschließende §14-Gegenprüfung.
+Neue Regeln müssen vor Hosting eingespielt werden. Noch kein App-Commit,
+keine Veröffentlichung; A14/A15 bleiben bis Abnahme offen.
+
 ### 2026-10-09 — Restinventur: Gesehen-Konflikte und fremde Löschung
 
 **Auftrag:** „weiter“, Caveman-Skill für kurze Chatantworten.
