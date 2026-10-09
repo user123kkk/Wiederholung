@@ -662,10 +662,10 @@ index e9503f2..811bd13 100644
    }
 diff --git a/plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js b/plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
 new file mode 100644
-index 0000000..2613809
+index 0000000..1ccd945
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
-@@ -0,0 +1,54 @@
+@@ -0,0 +1,56 @@
 +/* Diagnose abgelehnter Tagesantworten nach Neustart. Echter SDK und lokale
 +   Repo-Regeln; nur Demo-Emulator 8082. --schutz verlangt dauerhaften Erhalt.
 +   Keine Lernregel und keine Produktivdaten werden geaendert. */
@@ -684,7 +684,7 @@ index 0000000..2613809
 +  const browser = await start();
 +  const losses = [];
 +  try {
-+    for (const reject of [false, true]) {
++    for (const [reject, restart] of [[false, true], [true, false], [true, true]]) {
 +      await seed();
 +      let page = await seite(browser, sources);
 +      const context = page.context();
@@ -703,17 +703,19 @@ index 0000000..2613809
 +        assert.equal(before.local[day].w, 1);
 +        assert.equal((await cloud(day)).w, reject ? 0 : 1);
 +        assert.ok(before.card.bewertungsStand, 'Kartenbewertung wurde tatsaechlich bestaetigt');
-+        await page.close();
-+        page = await seite(browser, sources, context);
-+        await page.evaluate(() => {window.__PRUEF.nachholen(); window.__PRUEF.flush();});
++        if (restart) {
++          await page.close();
++          page = await seite(browser, sources, context);
++        }
++        await page.evaluate(() => {window.__PRUEF_ABLEHNEN = false; window.__PRUEF.nachholen(); window.__PRUEF.flush();});
 +        await fertig(page);
 +        const after = await page.evaluate(() => ({local: window.__PRUEF.verlauf(), pending: window.__PRUEF.offen(), card: window.__PRUEF.karte(), error: window.__PRUEF.fehler()}));
 +        assert.equal(after.card.bewertungsStand, before.card.bewertungsStand, 'Bestaetigte Karte bleibt erhalten');
 +        assert.deepEqual(page.fehler, []);
 +        const server = await cloud(day);
-+        console.log((reject ? 'BEFUND' : 'KONTROLLE') + ' ' + JSON.stringify({reject, day, before, after, server}));
-+        if (reject && server.w !== 1) losses.push('Bestaetigte Bewertung: abgelehnte Tagesantwort nach Neustart verloren');
-+        if (!reject) assert.equal(server.w, 1, 'Normale Tagesantwort nach Neustart erhalten');
++        console.log((reject && restart ? 'BEFUND' : 'KONTROLLE') + ' ' + JSON.stringify({reject, restart, day, before, after, server}));
++        if (reject && restart && server.w !== 1) losses.push('Bestaetigte Bewertung: abgelehnte Tagesantwort nach Neustart verloren');
++        if (!reject || !restart) assert.equal(server.w, 1, 'Tagesantwort im Kontrollfall erhalten');
 +      } finally {await context.close();}
 +    }
 +    if (process.argv.includes('--schutz')) assert.deepEqual(losses, [], 'Schutzpruefung: abgelehnte Tagesantwort dauerhaft erhalten');

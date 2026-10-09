@@ -1,0 +1,20 @@
+app.js SHA256 44c05375c7511ba420fbabe5b52cea6599ecf7c1ea3e67e77b52428aa30347d9
+KONTROLLE {"reject":false,"restart":true,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"b3c43adf-5697-4f80-9e8c-35f03f89be00"},"error":null},"after":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsStand":"b3c43adf-5697-4f80-9e8c-35f03f89be00","bewertungsBasis":null},"error":null},"server":{"w":1,"n":0,"u":0}}
+KONTROLLE {"reject":true,"restart":false,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{"2026-10-09":{"w":1}},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"bffbb3f5-7b39-4f13-93af-586eb549828d"},"error":"permission-denied"},"after":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"bffbb3f5-7b39-4f13-93af-586eb549828d"},"error":null},"server":{"w":1,"n":0,"u":0}}
+BEFUND {"reject":true,"restart":true,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{"2026-10-09":{"w":1}},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"60654161-3f10-4823-8d00-1245b85f04c9"},"error":"permission-denied"},"after":{"local":{},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsStand":"60654161-3f10-4823-8d00-1245b85f04c9","bewertungsBasis":null},"error":null},"server":{"w":0,"n":0,"u":0}}
+AssertionError [ERR_ASSERTION]: Schutzpruefung: abgelehnte Tagesantwort dauerhaft erhalten
++ actual - expected
+
++ [
++   'Bestaetigte Bewertung: abgelehnte Tagesantwort nach Neustart verloren'
++ ]
+- []
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_verlauf_neustart.js:53:51 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}

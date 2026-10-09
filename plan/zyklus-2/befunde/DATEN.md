@@ -402,6 +402,19 @@ DATEN-10. Fremde Löschung bleibt dagegen bei beiden Offline-Handlungen
 auch nach Nachholen erhalten; kein wiederbelebtes Dokument. Vollständige
 Ergänzung und Grenzen in KARTEN-KONFLIKTE-2026-10-09.
 
+#### DATEN-11: Abgelehnte Tagesantwort geht nach Neustart verloren
+
+**Schwere:** mittel. Echter SDK/Repo-Regeln am 09.10.2026 bestätigt.
+`persistVerlauf` hält abgelehnte Differenzen nur in `verlaufOffen`;
+Neustart leert sie. Bestätigte Kartenbewertung bleibt, Tagesantwort
+verschwindet und der Speicherfehler ist danach null. Feste Quelle
+591d03e samt eigenem gesicherten App-Patch; zwei Kontrollen erhalten
+die Tagesantwort ohne Ablehnung bzw. ohne Neustart. Schutzprüfung rot.
+Beleg, genaue Ablehnungsbedingung, Grenzen und Abnahme:
+[`../VERLAUF-NEUSTART-2026-10-09.md`](../VERLAUF-NEUSTART-2026-10-09.md).
+Kein fremder Reset im Fall; keine Freigabe zum Umbuchen alter Epochen.
+Noch nicht behoben.
+
 ## Nicht mehr geprüft
 
 - Voller Regeltest (`bash plan/werkzeuge/regeln_testen.sh`, 204 Fälle) – nur

@@ -33,6 +33,7 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | A13 | DATEN-8 | niedrig | Offline zeigt „Impressum“/„Datenschutz“ die App statt der Seite; online immer die Fassung vom letzten Besuch | `befunde/DATEN.md` | Sol niedrig | erledigt (3.18.11) | beide Rechtsseiten vor erstem Besuch offline lesbar, erste Online-Antwort frisch; kein App-Fallback für fremde Pfade; feste Gegenprobe c4b1c30 |
 | A14 | DATEN-9 | hoch | Altes Rückgängig überschreibt neuere fremde Kartenbewertung | `befunde/DATEN.md`, `KARTEN-KONFLIKTE-2026-10-09.md` | Astra mittel | offen | 09.10. echter SDK, feste Quelle 7142b93, Bewertungs-Undo und Gesehen-Undo rot; Lösungsentwurf vor Bau, keine erfundene Stufenregel |
 | A15 | DATEN-10 | hoch | Offline-Nachholen überschreibt spätere Online-Bewertung derselben Karte | `befunde/DATEN.md`, `KARTEN-KONFLIKTE-2026-10-09.md` | Astra mittel | offen | 09.10. echter SDK, feste Quelle 7142b93, Bewertung und Gesehen rot; fremde Löschung bleibt in beiden Kontrollen erhalten; Offline-Erhalt/Konfliktregel/alter Client zusammen lösen |
+| A16 | DATEN-11 | mittel | Abgelehnte Tagesantwort verschwindet nach Neustart trotz bestätigter Kartenbewertung | `befunde/DATEN.md`, `VERLAUF-NEUSTART-2026-10-09.md` | Astra mittel | offen | 09.10. echter SDK/Repo-Regeln, feste Entwurfsquelle 591d03e samt gesichertem App-Patch; Karte bleibt, Tageszähler und Fehler verschwinden. Kein fremder Reset im Fall. Erhalt und genau einmal Nachholen gemeinsam prüfen; noch nicht gebaut |
 
 ## Paket B – Onboarding
 

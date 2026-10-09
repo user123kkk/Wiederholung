@@ -4208,3 +4208,5 @@ Schlussprüfung F: einzel-2 alle15 Aufrufe Exit0, Runde13/13, Affen200/150
 Seed7 mit Textaktionen je0Befunde; alle Outputs vollständig gelesen.
 Zusatzmatrix f-umfeld24/24 grün. git diff --check grün. Finale Gegenprüfung
 je Aufgabe: PAKET-F-GEGENPRUEFUNG.md. Abschluss bleibt am Laptop offen.
+
+- 21:48 Codex: weitere offene Zuverlässigkeitsprüfung statt großer Abnahme. DATEN-11/A16 mittel bestätigt: echte SDK-Tageszähler-Ablehnung, Karte bestätigt, Neustart verliert Differenz und Fehlermeldung. Arbeitsbaum und feste Quelle 591d03e samt App-Patch gleiches Fehlerbild; erweiterte Kontrollen ohne Ablehnung und ohne Neustart jeweils korrekt w:1, Verlustfall w:0. Schutzprobe absichtlich Exit 1, ganze Ausgaben gelesen und im Repo gesichert. Fixture erzwingt echte Regelablehnung, kein echter Ausweisablauf behauptet. Kein Reset im Fall. Neue offene Aufgabe mit Abnahme und Grenzen; noch nicht gebaut. Großer gestoppter Lauf hatte 29/157 abgeschlossene Tests, alle Exit 0; kein Gesamturteil.
