@@ -928,6 +928,14 @@
       "fehler": null,
       "sekunden": 9,
       "quelltext": "b9257c12ffb87c932a0ffe195ed0cc8200be205bad53963b7ccfd23fe1a7d427"
+    },
+    "t_runde_lage.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 82,
+      "quelltext": "d31917c2b83238fda60dbc748df0515e1bc815b0e7ccdb10f39e4726f9f6feea"
     }
   }
 }
