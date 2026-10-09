@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026, 20:56 – Gegenprüfung A14/A15:**
+Entfernen schützt jetzt auch noch laufende/ungeprüfte Antworten.
+Beschädigte Kopien blockieren sicher und bleiben exportierbar, weitere
+gültige Kopien werden trotzdem geladen. Beide neuen SDK-Kontrollen grün;
+Konflikthinweis/Download/lokale Entfernung geprüft. Erste lange Läufe
+wegen Quelländerungen bewahrt und beendet. Jetzt frische Rundenabnahme
+an `00aeb59220794b38a`; danach 157 Tests am selben Stand. Weiter Entwurf
+3.18.30, kein App-Commit oder Deploy, Netzteil dran.
+
 **09.10.2026, 20:42 – technischer Fix A14/A15 gebaut, Entwurf 3.18.30:**
 Serverseitige Ausgangskennung verhindert veraltetes Überschreiben;
 alte Undo-Aktion wird blockiert. Abgelehnte Antworten bleiben über

@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 20:55 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 20:56 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `ddade85 Sicherung 20:55 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `c52bc2b Sicherung 20:56 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -18,6 +18,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
@@ -29,7 +31,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 9, chrome.exe 19 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 9, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -50,6 +52,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 20:56 Codex Gegenprüfung: normale Bestätigung zeichnet nicht zusätzlich neu. Automatisches Retry markiert die Antwort vor dem Schreiben wieder dauerhaft als unterwegs; Entfernen blockiert offene/ungeprüfte/laufende Antworten auch nach Dialog-Wartezeit. Beschädigte JSON-Kopie wird einzeln erhalten und exportiert, statt das Laden weiterer gültiger Antworten abzubrechen. Zwei neue echte SDK-Kontrollen grün: Offline-Neustart verhindert Entfernen ungeprüfter Antwort, spätere Bestätigung/Prüfung räumt sie auf; beschädigte Kopie bleibt zusammen mit weiterer gültiger Antwort downloadbar. Erste neue Neustart-Erwartung las Server vor Ende des expliziten Retry; WaitForPendingWrites nach dem Prüfen ergänzt, keine Assertion gelockert. Neuer Endstand app.js normalisiert SHA256 7d0de10b37278842d43c9c5ca385b3309a9752487251f6f0c9694030fc659dd3. Zwei frühe Gesamtläufe wegen dieser Gegenprüfungsänderungen bewahrt und beendet. Frische Rundenabnahme Quelle 00aeb59220794b38a läuft; danach Gesamtlauf mit ausschließlich gleichstandsgebundenen Runden-Ergebnissen. Konflikthinweis visuell auf laufender Runde angesehen, kein Scrollen/abgeschnittener Antwortknopf bei 414x896. Vier weitere Breiten, zwei Themen, reduziertes Bewegen, vollständiger Download sowie Abbrechen/Bestätigen lokaler Entfernung grün.
 
 - 20:42 Codex: A14/A15 als Entwurf 3.18.30 gebaut: eindeutige Aktions-/Ausgangskennung, atomare Firestore-Regel, beide Undo-Wege prüfen die eigene Aktion; einzelne dauerhafte Antwortkopien pro Konto/Aktion mit Prüfen/Download/ausdrücklichem Entfernen. Speicherfehler bucht keine neue Antwort, erfolgreiche Kontolöschung entfernt lokale Antwortkopien. Datenschutz und Übergang alter Clients dokumentiert. Echter SDK: 12 Schutzfälle grün, einschließlich Neustart, zwei Offline-Geräte, gleiche Werte, Löschung und echte Regelablehnung ohne doppelte Zählung. 222/222 Regeltests grün, bestehender Undo-Zähler-Test und Kontowechsel 3/3 grün. Erstes pauschales Storage-Fehler-Fixture störte den SDK; korrigiertes Fixture betrifft ausschließlich Antwortschlüssel, alle Erwartungen erhalten. Netzteil seit 20:40 erkannt (BatteryStatus 2). Standprüfung grün; frischer Gesamtlauf 157 Tests an Quelle 526cb2e58f6b890b gestartet. Noch kein App-Commit oder Deploy. SDK-Probe separat, da sie den eigenen Demo-Emulator benötigt. Logs in sicherung/tests/karten-fix-2026-10-09.
 
@@ -92,5 +96,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   0 Befunde; Regeln eingespielt; Hosting veröffentlicht. Abgerufen:
   `adrabic.web.app/sw.js` zeigt `adrabic-3.18.28`.
 - 04:30 „ladegerät“ an 3.18.28 endete 04:19 mit 155/156, nichts
-  veröffentlicht. Rot: `t_serie_lang` Fall 3 (47 statt 48), lief 04:01.
-  Einzeln 04:20 wieder rot. Ursache gerechnet und belegt: Der Test
