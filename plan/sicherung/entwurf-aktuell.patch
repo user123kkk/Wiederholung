@@ -1,3 +1,153 @@
+diff --git a/app.js b/app.js
+index 9f9de1f..1c1ab78 100644
+--- a/app.js
++++ b/app.js
+@@ -8824,6 +8824,8 @@ function authEingabenMerken() {
+ 
+ function renderAuth() {
+   authEingabenMerken();
++  const dialogWarOffen = !!app.querySelector('.dlg[aria-labelledby="dlg-title"]');
++  if (ui.dialog && !dialogWarOffen) sheetOeffnerSel = fokusSchluessel(document.activeElement);
+   const m = ui.authMode;
+   const sichtbar = ui.authPassSichtbar;
+   /* 3.10.0: Wer direkt aus dem Einstieg kommt, legt kein abstraktes Konto
+@@ -8963,13 +8965,25 @@ function renderAuth() {
+      eigenen, alltagssprachlichen Bildschirm in der App selbst) - dessen
+      Inhalt steht jetzt als "Kurz gesagt" oben in derselben Seite. */
+   html += '<div class="rechtsfuss" style="margin-top:var(--space-5)">';
+-  html += '<a href="./datenschutzerklaerung.html" target="_blank" rel="noopener">Datenschutz</a>';
++  html += '<a href="./datenschutzerklaerung.html" data-action="recht-zeigen" data-id="datenschutz">Datenschutz</a>';
+   html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
+-  html += '<a href="./impressum.html" target="_blank" rel="noopener">Impressum</a>';
++  html += '<a href="./impressum.html" data-action="recht-zeigen" data-id="impressum">Impressum</a>';
+   html += '</div>';
+   if (ausEinstieg) html += '</div>';
+   html += '</div>';
++  html += renderDialog();
+   app.innerHTML = html;
++  document.documentElement.classList.toggle("blatt-offen", !!ui.dialog);
++  app.classList.toggle("still-overlay", dialogWarOffen && !!ui.dialog);
++  if (ui.dialog) {
++    const dlg = app.querySelector('.dlg[aria-labelledby="dlg-title"]');
++    if (dlg) { dlg.setAttribute("tabindex", "-1"); dlg.focus({ preventScroll: true }); }
++    setupDialog();
++  } else if (dialogWarOffen && sheetOeffnerSel) {
++    const oeffner = document.querySelector(sheetOeffnerSel);
++    if (oeffner) oeffner.focus({ preventScroll: true });
++    sheetOeffnerSel = null;
++  }
+ 
+   /* Werte per Eigenschaft zurueck, nicht als value-Attribut ins HTML: ein
+      Passwort gehoert nicht in den Markup-Text. */
+@@ -10322,9 +10336,9 @@ function kontoSeit() {
+    dort sucht man sie, wenn man sie braucht. */
+ function einstFuss() {
+   let html = '<div class="rechtsfuss" style="margin-top:var(--space-6)">';
+-  html += '<a href="./datenschutzerklaerung.html" target="_blank" rel="noopener">Datenschutz</a>';
++  html += '<a href="./datenschutzerklaerung.html" data-action="recht-zeigen" data-id="datenschutz">Datenschutz</a>';
+   html += '<span class="rechtsfuss__trenner" aria-hidden="true">·</span>';
+-  html += '<a href="./impressum.html" target="_blank" rel="noopener">Impressum</a>';
++  html += '<a href="./impressum.html" data-action="recht-zeigen" data-id="impressum">Impressum</a>';
+   html += '</div>';
+   html += '<p class="hint" style="text-align:center;color:var(--text-3);margin-top:var(--space-4)">' +
+     'Adrabic ' + APP_VERSION + '</p>';
+@@ -15190,6 +15204,43 @@ try { localStorage.removeItem("debugNav"); } catch (e) {}
+    Der Zustand liegt in ui.dialog und nicht in einer eigenen Variablen: So
+    ueberlebt ein offener Dialog auch ein render(), das mitten hinein von
+    einem Cloud-Snapshot ausgeloest wird. */
++/* E4: Die Rechtsseiten bleiben die einzige Textquelle. Im vorhandenen Dialog
++   lesen, damit "Zurück" weder die App neu lädt noch den Plan verliert.
++   Keine Einstiegsantworten speichern. Späte Antworten gehören nur zu ihrem
++   eigenen, noch offenen Dialog; ein Ladefehler wird nicht automatisch wiederholt. */
++async function zeigeRecht(id) {
++  const seiten = { datenschutz: ["datenschutzerklaerung.html", "Datenschutz"], impressum: ["impressum.html", "Impressum"] };
++  const seite = seiten[id];
++  if (!seite) return;
++  openDialog({ kind: "recht", title: seite[1], text: "Wird geladen…", okLabel: "Zurück", rechtId: id });
++  const d = ui.dialog;
++  try {
++    const html = await mitZeitlimit(fetch("./" + seite[0]).then(r => {
++      if (!r.ok) throw new Error("Rechtsseite nicht verfügbar");
++      return r.text();
++    }), 12000);
++    if (ui.dialog !== d) return;
++    const doc = new DOMParser().parseFromString(html, "text/html");
++    const inhalt = doc.querySelector(".rechtsseite");
++    if (!inhalt) throw new Error("Rechtsinhalt fehlt");
++    inhalt.querySelectorAll(".rechtsseite__zurueck, h1, script").forEach(el => el.remove());
++    for (const a of inhalt.querySelectorAll("a[href]")) {
++      for (const [key, s] of Object.entries(seiten)) {
++        if (a.getAttribute("href") === "./" + s[0]) {
++          a.dataset.action = "recht-zeigen"; a.dataset.id = key;
++        }
++      }
++    }
++    d.html = inhalt.outerHTML;
++  } catch (err) {
++    if (ui.dialog !== d) return;
++    d.html = '<p role="status">Der Text konnte nicht geladen werden. Dein Plan und deine Eingaben bleiben erhalten.</p>' +
++      '<button class="secondary" data-action="recht-zeigen" data-id="' + esc(id) + '">Erneut versuchen</button>';
++  }
++  // Nur den geladenen Inhalt ersetzen: Rahmen, Fokus und Rückweg bleiben stehen.
++  const el = document.getElementById("dlg-recht-inhalt");
++  if (ui.dialog === d && el) el.innerHTML = d.html;
++}
+ function openDialog(cfg) {
+   return new Promise(resolve => {
+     ui.dialog = Object.assign({ value: "", okLabel: "OK", danger: false, resolve: resolve }, cfg);
+@@ -15288,10 +15339,12 @@ function renderDialog() {
+      dann waere die Eingabe weg. 3.18.19/3.18.24: Alles andere schliesst
+      beim Tippen daneben wie "Abbrechen" (case "dlg-neben"). */
+   let h = '<div class="dlg-backdrop" data-action="dlg-neben">';
+-  h += '<div class="dlg" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="dlg-title">';
++  h += '<div class="dlg' + (d.kind === "recht" ? ' dlg--recht' : '') + '" data-action="nichts" role="dialog" aria-modal="true" aria-labelledby="dlg-title">';
+   h += '<h3 id="dlg-title">' + esc(d.title) + '</h3>';
+ 
+-  if (d.kind === "code-share") {
++  if (d.kind === "recht") {
++    h += '<div class="dlg-recht-inhalt" id="dlg-recht-inhalt">' + (d.html || '<p role="status">' + esc(d.text) + '</p>') + '</div>';
++  } else if (d.kind === "code-share") {
+     /* 3.17.13 (Station 13): gross - der Code wird vorgelesen oder
+        abgetippt. Vorher 0.9em und "Klick ..." (am Handy tippt man).
+        Eingeloest wird er mit oder ohne Strich (codeEinloesenStart). */
+@@ -15316,7 +15369,7 @@ function renderDialog() {
+     h += '<button class="secondary" data-action="dlg-ok">Fertig</button>';
+     h += '<button data-action="code-copy-clipboard">Kopieren</button>';
+   } else {
+-    if (d.kind !== "alert") h += '<button class="secondary" data-action="dlg-cancel">Abbrechen</button>';
++    if (d.kind !== "alert" && d.kind !== "recht") h += '<button class="secondary" data-action="dlg-cancel">Abbrechen</button>';
+     h += '<button' + (d.danger ? ' class="danger"' : '') + ' data-action="dlg-ok">' + esc(d.okLabel) + '</button>';
+   }
+   h += '</div></div></div>';
+@@ -15637,6 +15690,10 @@ document.body.addEventListener("click", e => {
+   const btn = e.target.closest("[data-action]");
+   if (!btn) return;
+   switch (btn.dataset.action) {
++    case "recht-zeigen":
++      e.preventDefault();
++      zeigeRecht(btn.dataset.id);
++      break;
+     /* 3.17.38 (G-053, KONTO-14): "login"/"register"/"reset" liefen hier bis
+        3.17.37 direkt. Die Knoepfe stecken jetzt in einem <form
+        data-submit="...">, sind type="submit" - ein Klick loest zusaetzlich
+diff --git a/styles.css b/styles.css
+index b2cb7d8..297c36a 100644
+--- a/styles.css
++++ b/styles.css
+@@ -3403,6 +3403,13 @@ input.schalter::before { content: none; }
+ }
+ .dlg-actions button { flex: 1 1 0; }
+ 
++/* E4: Unveränderte Rechtsseiten im vorhandenen Dialog. Der Rückweg bleibt
++   sichtbar, während der lange Text in seinem eigenen Bereich scrollt. */
++.dlg--recht { display: flex; flex-direction: column; }
++.dlg-recht-inhalt { height: 55svh; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
++.dlg-recht-inhalt .rechtsseite { padding: 0; overflow-wrap: anywhere; }
++.dlg--recht .dlg-actions { flex-shrink: 0; margin-top: var(--space-3); }
++
+ /* Das Bereichs-Sheet: dieselbe Hülle, andere Füllung. */
+ .sheet-liste { margin: var(--space-4) calc(var(--space-5) * -1) 0; }
+ .sheet-liste .liste-zeile { border-radius: 0; padding-left: var(--space-5); padding-right: var(--space-5); }
 diff --git a/plan/werkzeuge/pruefstand/t_paket_e.js b/plan/werkzeuge/pruefstand/t_paket_e.js
 index 377447e..8d80b05 100644
 --- a/plan/werkzeuge/pruefstand/t_paket_e.js
