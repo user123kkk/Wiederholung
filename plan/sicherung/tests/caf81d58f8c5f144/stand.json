@@ -64,6 +64,22 @@
       "fehler": null,
       "sekunden": 20,
       "quelltext": "fcab627cf78d695574341fc1c347ed39fdb91ac25d53041c70b4c88cd1cfcd15"
+    },
+    "t_bereiche.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 78,
+      "quelltext": "8c8315ec89f44961acb03cea960dd32b105b6d5af77ca26889e1660a2d9f2d21"
+    },
+    "t_bestaetigung.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 43,
+      "quelltext": "a1424057dc3ece57a7173bf5071943dc07becf28fbb844f2798a72ff1e8a8baf"
     }
   }
 }
