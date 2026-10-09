@@ -607,14 +607,16 @@ index a5e2674..7979e42 100644
  /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
     unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
 diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
-index e9503f2..13c4575 100644
+index e9503f2..08a8640 100644
 --- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 +++ b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
-@@ -42,7 +42,7 @@ async function seite(b,sources,ctx){
+@@ -41,8 +41,8 @@ async function seite(b,sources,ctx){
+     const original=SDK+name+'?original=1';
      let body=`export * from ${JSON.stringify(original)}; import * as core from ${JSON.stringify(original)};`;
      if(name==='firebase-app.js')body+=`export function initializeApp(c){return core.initializeApp({...c,projectId:${JSON.stringify(PROJECT)}});}`;
-     if(name==='firebase-firestore.js')body+=`export function initializeFirestore(a,o){const db=core.initializeFirestore(a,o);core.connectFirestoreEmulator(db,'127.0.0.1',8082,{mockUserToken:{sub:'u1',email:'test@example.com',email_verified:true}});window.__PRUEF_DB=db;window.__PRUEF_SDK=core;return db;}
+-    if(name==='firebase-firestore.js')body+=`export function initializeFirestore(a,o){const db=core.initializeFirestore(a,o);core.connectFirestoreEmulator(db,'127.0.0.1',8082,{mockUserToken:{sub:'u1',email:'test@example.com',email_verified:true}});window.__PRUEF_DB=db;window.__PRUEF_SDK=core;return db;}
 -      export function updateDoc(ref,...args){if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}`;
++    if(name==='firebase-firestore.js')body+=`export function initializeFirestore(a,o){const db=core.initializeFirestore(a,o);core.connectFirestoreEmulator(db,'127.0.0.1',8082,{mockUserToken:{sub:'u1',email:'test@example.com',email_verified:true}});if(window.__PRUEF_START_OFFLINE)core.disableNetwork(db);window.__PRUEF_DB=db;window.__PRUEF_SDK=core;return db;}
 +      export function updateDoc(ref,...args){if(window.__PRUEF_KARTE_ABLEHNEN&&ref.path.includes('/karten/'))args[0]={...args[0],__pruef_verboten:true};if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}`;
      return r.fulfill({contentType:'text/javascript',body});
    });
@@ -640,10 +642,10 @@ index e9503f2..13c4575 100644
    }
 diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
 new file mode 100644
-index 0000000..cb7014b
+index 0000000..1deaa67
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
-@@ -0,0 +1,142 @@
+@@ -0,0 +1,160 @@
 +/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
 +   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
 +const assert=require('node:assert/strict');
@@ -666,7 +668,8 @@ index 0000000..cb7014b
 +  async function fall(name,test){
 +    if(einzel && name!==einzel)return;
 +    await seed();const a=await seite(b,sources),c=await seite(b,sources);
-+    try {await test(a,c);assert.deepEqual(a.fehler,[]);assert.deepEqual(c.fehler,[]);console.log('GRUEN '+name);}
++    const unberuehrt=await server('k6');
++    try {await test(a,c);assert.deepEqual(await server('k6'),unberuehrt);assert.deepEqual(a.fehler,[]);assert.deepEqual(c.fehler,[]);console.log('GRUEN '+name);}
 +    finally{await a.context().close();await c.context().close();}
 +  }
 +  async function grade(p,id='k4',kind='known'){
@@ -776,6 +779,23 @@ index 0000000..cb7014b
 +      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt().length===0);
 +      assert.equal((await server()).bewertungsStand,saved.id);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
 +      await a.evaluate(()=>window.__PRUEF.pruefen());await fertig(a);assert.equal((await server()).bewertungsStand,saved.id);
++    });
++    for(const defekt of [false,true])await fall(defekt?'beschaedigte Kopie blockiert sicher; weitere Antwort bleibt exportierbar':'Neustart offline: ungepruefte Antwort nicht entfernbar',async(a)=>{
++      await fertig(a);const before=await server();
++      await a.evaluate(defekt=>{if(defekt)localStorage.setItem('adrabic-bewertung-u1/kaputt','{ungueltig');return window.__PRUEF_SDK.disableNetwork(window.__PRUEF_DB);},defekt);
++      await a.evaluate(()=>{window.__PRUEF.starten();window.__PRUEF.bewerten('known');});const saved=await a.evaluate(()=>window.__PRUEF.aufbewahrt()[0]);
++      const ctx=a.context();await a.close();await ctx.addInitScript(()=>{window.__PRUEF_START_OFFLINE=true;});const reload=await seite(b,sources,ctx);
++      try {
++        assert.equal(await reload.evaluate(()=>window.__PRUEF.aufbewahrt()[0].id),saved.id);
++        assert.equal(await reload.evaluate(()=>window.__PRUEF.aufbewahrt()[0].status),'pruefen');
++        await reload.locator('[data-action="bewertung-verwerfen"]').click();assert.match(await reload.locator('.dlg').innerText(),/unterwegs|nicht geprüft/);
++        assert.equal(await reload.locator('[data-action="dlg-cancel"]').count(),0);await reload.locator('[data-action="dlg-ok"]').click();
++        assert.notEqual(await reload.evaluate(id=>localStorage.getItem('adrabic-bewertung-u1/'+id),saved.id),null);assert.deepEqual(await server(),before);
++        if(defekt){const ready=reload.waitForEvent('download');await reload.locator('[data-action="bewertung-sichern"]').click();const d=await ready;
++          const data=JSON.parse(fs.readFileSync(await d.path(),'utf8'));assert.equal(data.antworten[0].id,saved.id);assert.equal(data.beschaedigteKopien[0].inhalt,'{ungueltig');}
++        await reload.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(reload);await reload.evaluate(()=>window.__PRUEF.pruefen());
++        assert.equal((await server()).bewertungsStand,saved.id);assert.equal(await reload.evaluate(()=>window.__PRUEF.aufbewahrt().length),0);assert.deepEqual(reload.fehler,[]);
++      } finally {await reload.close();}
 +    });
 +    await fall('alte Clients abgewiesen; Notiz weiterhin erlaubt',async(a)=>{
 +      const before=await server();
