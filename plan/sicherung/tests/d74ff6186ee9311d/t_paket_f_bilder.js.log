@@ -8,3 +8,7 @@ F3 390 dunkel leer Fortschritt 0 Fehlerpixel
 F3 390 dunkel voll Fortschritt 0 Fehlerpixel
 F3 820 hell leer Fortschritt 0 Fehlerpixel
 F3 820 hell voll Fortschritt 0 Fehlerpixel
+F3 820 dunkel leer Fortschritt 0 Fehlerpixel
+F3 820 dunkel voll Fortschritt 0 Fehlerpixel
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":87,"quelltext":"358767f3586ac160fce9e192d41476f8c3ed0606326529e10776f74e96a90bcb"}
