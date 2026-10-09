@@ -1,0 +1,18 @@
+-- aktueller Stand --
+ok      Knopf "Adresse falsch? Neu anfangen" ist da
+ok      Rueckfrage nennt Loeschen und Neu-Registrieren: "Adresse falsch? Dieses noch nicht bestätigte Konto wird gelöscht. Danach kannst du dich mit der richtigen Adresse neu registrieren. Abbrechen Konto löschen"
+ok      fb.deleteUser wurde aufgerufen
+ok      Anmeldebildschirm steht im Modus Registrieren: register
+ok      E-Mail-Feld ist leer: ""
+ok      Name blieb erhalten: "Neu"
+Fehler im aktuellen Stand: 0 | ok
+-- Abbruch: Konto bleibt --
+ok      Abbruch: nichts geloescht
+ok      Abbruch: immer noch auf der Bestaetigungsseite
+
+0 Fehler insgesamt auf dem aktuellen Stand.
+
+-- Gegenprobe gegen 1c8aaa1 (muss rot sein) --
+  ok (=Fehler im Altstand) : Knopf gibt es dort noch nicht
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":11,"quelltext":"6b8b480226e68101a0eee1d8d5462f9d50ba9bb38d86dca78240e933f85d47be"}
