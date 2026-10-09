@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 19:18 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 19:20 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,15 +6,14 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `38705c0 Sicherung 19:17 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `0abfcbf Sicherung 19:19 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
- M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
+ M plan/werkzeuge/tagesdeckel_simulation.cjs
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
@@ -22,7 +21,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 4, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
