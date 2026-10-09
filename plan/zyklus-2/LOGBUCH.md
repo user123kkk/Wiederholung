@@ -2,6 +2,38 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — „ladegerät“: 3.18.28 online (enthält 3.18.27), 156/156, Affen 0
+
+**Geändert:** `plan/werkzeuge/pruefstand/t_serie_lang.js` (Uhr um
+Kalendertage verschieben), `plan/werkzeuge/ladegeraet.ps1` (Schalter
+`-Fortsetzen`), Plan-Dateien. App unverändert 3.18.28 (9f2990a).
+**Was lief:** Betreiber 01:48: „ladegeraet“. Erster Lauf 01:50–04:19,
+Quellstand `d74ff6186ee9311d`: 155/156, Skript brach ab, nichts
+veröffentlicht. Rot: `t_serie_lang` Fall 3 („150 Tage, Tag 100 und 101
+aus“, 47 statt 48), gelaufen 04:01; einzeln 04:20 wieder rot.
+**Ursache (gerechnet, dann mit dem berichtigten Test belegt):** `lib.js`
+verschiebt die Uhr der Seite um `Tage × 24 h`. Über das Ende der
+Sommerzeit (25.10.2026) zeigt die verschobene Uhr eine Stunde weniger;
+läuft der Test zwischen 04:00 und 05:00, liegt sie vor der 4-Uhr-Grenze
+und die Seite lebt einen Lerntag zurück, während die Testdaten
+Kalendertage zählen. Kein App-Fehler: Echte Nutzer springen nicht in der
+Zeit. Der Test übergibt jetzt den Versatz als Kalendertage; Erwartungen
+unverändert; 04:24 grün (3/3 Fälle), also zur selben Stunde, in der er
+vorher rot war.
+**Fortsetzung:** `ladegeraet.ps1 -Fortsetzen` (gleicher Quellstand, weil
+nur die Testdatei geändert ist): 155 bewahrt, `t_serie_lang` Exit 0,
+156/156; Affen Handy 200/7 und iPad 150/11 je 0 Befunde; Regeln
+eingespielt; Hosting veröffentlicht. Online geprüft über `sw.js`
+(`adrabic-3.18.28`).
+**Nicht geprüft:** echtes iPhone. `t_griff_scrollen` war in diesem Lauf
+grün (in den zwei Läufen davor je einmal rot, Ursache offen).
+**Offen:** `lib.js` selbst auf Kalendertage umstellen (betrifft auch
+`t_gruss_datum`, `t_paket_c_kalendertage`; gehört zum Quellstand, deshalb
+eigener Schritt mit Lauf); Plan weg nach „← Zurück“ auf den Rechtsseiten
+(`ALLES-OFFEN.md` § 3.2); Gerätetests.
+**Nächster Schritt:** Rechtsseiten-Rückweg beheben, Katalog gegen
+Agentenberichte, Tagesdeckel rechnen.
+
 ### 2026-10-08 — 3.18.28 auf main: klarere Wörter (nur Wortlaut), nicht veröffentlicht
 
 **Geändert:** `app.js` (Texte; „Speicherkarte“ → „Sammlung“ in 39 Strings,

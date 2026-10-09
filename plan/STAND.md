@@ -1,5 +1,7 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026, 04:38: Online ist 3.18.28 (enthält 3.18.27), veröffentlicht mit „ladegerät“: 156/156, Affen 0, Regeln eingespielt. Nichts Uncommittetes. Offen und Reihenfolge: `plan/ALLES-OFFEN.md`; Übergabe: `plan/sicherung/UEBERGABE-AKTUELL.md`.**
+
 **08.10.2026, 19:15: `main` = 3.18.28 (klarere Wörter, nur Wortlaut; 34 betroffene Tests und Rundenabnahme 13/13 grün, kein Gesamtlauf). 3.18.27 ist voll geprüft. Beides nicht veröffentlicht, online 3.18.26; „ladegerät“ prüft 3.18.28 ganz und veröffentlicht. Minuten-Sicherung läuft (`plan/sicherung/UEBERGABE-AKTUELL.md`).**
 
 **08.10.2026, 17:39: Neu: `plan/ALLES-OFFEN.md` ist die eine Liste für alles Offene (alle 450 Betreiber-Nachrichten der lokalen Chats gegen das Repo geprüft; 96 Punkte Gesamtliste, 30 weitere offene, 72 unentschiedene Ideen). Regeln LEHREN § 1.7 und § 1.8.**

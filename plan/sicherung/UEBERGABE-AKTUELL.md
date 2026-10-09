@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 04:35 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 04:37 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e75a343 Sicherung 04:34 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `3293056 Sicherung 04:36 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
@@ -16,7 +16,7 @@ Keine. Alles ist committet.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 2, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 0, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -28,6 +28,7 @@ EXIT 1 t_paket_e
 **ladegeraet-3.18.28-fortsetzen.log**: 1 grün, 0 rot
 ```
 156/156 Exit 0; 0 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\d74ff6186ee9311d
+FERTIG: 3.18.28 ist online. In der App unter Einstellungen pruefen.
 ```
 
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)

@@ -42,10 +42,10 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 | Was | Stand |
 |---|---|
-| 3.18.27: 15 Punkte (Liste einfügen, Export, Druck, Löschen mit Rückgängig, Rundenende, Bildschirm wach, Blätter gleiten, zwei Lernregeln nur im Betreiber-Konto u. a.) | fertig, voll geprüft 08.10., nicht online |
-| 3.18.28: klarere Wörter („Speicherkarte“ → „Sammlung“ u. a.) | fertig, auf `main` (9f2990a), 34 betroffene Tests und Rundenabnahme grün; Gesamtlauf kommt mit „ladegerät“ |
+| 3.18.27: 15 Punkte (Liste einfügen, Export, Druck, Löschen mit Rückgängig, Rundenende, Bildschirm wach, Blätter gleiten, zwei Lernregeln nur im Betreiber-Konto u. a.) | **online seit 09.10., 04:37** (mit 3.18.28) |
+| 3.18.28: klarere Wörter („Speicherkarte“ → „Sammlung“ u. a.) | **online seit 09.10., 04:37**; Gesamtlauf 156/156, Affen 0 |
 
-Online ist 3.18.26.
+Online ist 3.18.28 (09.10.2026). Dieser Abschnitt ist damit erledigt; neu Fertiges kommt hier wieder hinein.
 
 ## 2. Entschieden, zu bauen: 96 Punkte
 
@@ -292,4 +292,4 @@ Klassenraum, Urlaubsmodus, „Später“-Knopf, Abzeichen).
 | Unentschiedene Ideen (Abschnitt 4) | 72 |
 | Gerätetests und Betreiber-Schritte (3.3, 3.4) | nicht mitgezählt |
 
-Live (online) ist davon noch nichts; online ist 3.18.26.
+Stand 09.10., 04:38: Die ersten zwei Zeilen (19 Punkte) sind online (3.18.28).
