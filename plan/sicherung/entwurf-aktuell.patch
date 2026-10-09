@@ -642,10 +642,10 @@ index e9503f2..08a8640 100644
    }
 diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
 new file mode 100644
-index 0000000..b3125a2
+index 0000000..c22bf57
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
-@@ -0,0 +1,161 @@
+@@ -0,0 +1,166 @@
 +/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
 +   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
 +const assert=require('node:assert/strict');
@@ -705,6 +705,11 @@ index 0000000..b3125a2
 +      await a.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(a);
 +      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt()[0]?.status==='abgelehnt');assert.deepEqual(await server(id),newer);
 +      assert.equal(await a.evaluate(()=>window.__PRUEF.aufbewahrt()[0].id),pending[0].id);
++      if(!gesehen){
++        await a.screenshot({path:path.join(require('node:os').tmpdir(),'adrabic-karten-fix/konflikt-in-runde.png'),fullPage:true});
++        const lage=await a.evaluate(()=>{const el=document.querySelector('[data-action="reveal"]');const r=el?.getBoundingClientRect();return {hoehe:innerHeight,antwort:r?{top:r.top,bottom:r.bottom}:null,seitenhoehe:document.documentElement.scrollHeight};});
++        console.log('MESSUNG Konflikthinweis in laufender Runde '+JSON.stringify(lage));
++      }
 +      const ctx=a.context();await a.close();const reload=await seite(b,sources,ctx);
 +      try{assert.equal(await reload.evaluate(()=>window.__PRUEF.aufbewahrt()[0].id),pending[0].id);
 +        await reload.evaluate(()=>window.__PRUEF.pruefen());await fertig(reload);
