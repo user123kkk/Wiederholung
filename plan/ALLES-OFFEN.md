@@ -1,5 +1,7 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+09.10.2026, Betreiber: „Weiter gemäß AGENTS.md und aktueller Übergabe. A14/A15-Entwurf 3.18.30 behalten. Zuerst offene Aufgabe A16/DATEN-11 bearbeiten. Danach die bereits entschiedenen offenen Punkte gemäß Repo-Reihenfolge; kein neues Paket über uncommitteter Arbeit beginnen. Große Gesamtabnahme später gesammelt, nicht veröffentlichen. Minuten-Sicherung prüfen und laufen lassen. Passende Projekt-Skills nutzen. Caveman, selbstständig weiterarbeiten.“ Fortsetzung im bestehenden Entwurf: A16 zuerst; gezielte Datenabnahme, große Abnahme später. Weitere Pakete bleiben bis zum Abschluss des uncommitteten Datenpakets gesperrt; ihre Vorbereitung darf weitergehen.
+
 Angelegt 08.10.2026 auf Wunsch des Betreibers: „ich weiß nicht, was noch an
 der App gemacht werden muss … ich dachte, ich kann mich darauf verlassen,
 wenn ich eine Sache erwähne, dass das gespeichert wird“.

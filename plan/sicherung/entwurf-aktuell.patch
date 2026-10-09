@@ -297,7 +297,7 @@ index bc20801..e698a62 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..275dce4 100644
+index 4b6221e..11b7687 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -335,7 +335,202 @@ index 4b6221e..275dce4 100644
    };
  }
  /* Eine Speicherkarte in der Form, wie sie in der Cloud steht. Wie bei den
-@@ -2432,6 +2440,7 @@ async function initFirebase() {
+@@ -990,6 +998,138 @@ let verlaufOffen = {};
+ let verlaufStand = {};
+ let verlaufGeneration = 0;   // spaete Antworten nach Konto-Wechsel/Reset verwerfen
+ let verlaufEpoche = "";     // serverseitige Grenze gegen Writes vor einem Reset
++/* A16: Jeder Beitrag bleibt vor dem Buchen dauerhaft auf diesem Geraet.
++   Ein unveraenderlicher Beleg wird zusammen mit dem Increment geschrieben.
++   Ein zweiter Versand derselben Kennung wird atomar abgelehnt. */
++const verlaufAktionen = new Map();
++const verlaufLaeufe = new Set();
++const verlaufDefekte = new Map();
++let verlaufSpeicherFehler = false;
++let verlaufPrueft = false;
++function verlaufPraefix(uid) { return "adrabic-tagesantwort-" + uid + "/"; }
++function verlaufAktionenLaden(user) {
++  verlaufAktionen.clear(); verlaufLaeufe.clear(); verlaufDefekte.clear();
++  verlaufSpeicherFehler = false; verlaufPrueft = false;
++  if (!user) return;
++  try {
++    const prefix = verlaufPraefix(user.uid);
++    for (let i = 0; i < localStorage.length; i++) {
++      const key = localStorage.key(i);
++      if (!key?.startsWith(prefix)) continue;
++      const roh = localStorage.getItem(key);
++      let x;
++      try { x = JSON.parse(roh); } catch (_) {}
++      if (!x || x.uid !== user.uid || key !== prefix + x.id ||
++          typeof x.id !== "string" || !/^[A-Za-z0-9-]{1,100}$/.test(x.id) ||
++          typeof x.epoche !== "string" || x.epoche.length > 80 ||
++          !/^\d{4}-\d{2}-\d{2}$/.test(x.tag) || !VERLAUF_ARTEN.includes(x.art) ||
++          ![1, -1].includes(x.delta) ||
++          !["bereit", "offen", "pruefen", "abgelehnt", "veraltet"].includes(x.status)) {
++        verlaufDefekte.set(key, roh); verlaufSpeicherFehler = true; continue;
++      }
++      verlaufAktionen.set(x.id, { ...x, status: x.status === "offen" ? "pruefen" : x.status });
++    }
++  } catch (_) { verlaufSpeicherFehler = true; }
++}
++function verlaufAktionSpeichern(x) {
++  try { localStorage.setItem(verlaufPraefix(x.uid) + x.id, JSON.stringify(x)); return true; }
++  catch (_) { verlaufSpeicherFehler = true; return false; }
++}
++function verlaufAktionEntfernen(x) {
++  try { localStorage.removeItem(verlaufPraefix(x.uid) + x.id); verlaufAktionen.delete(x.id); }
++  catch (_) { x.status = "pruefen"; verlaufSpeicherFehler = true; }
++}
++function verlaufBeitragVorbereiten(tag, art, delta) {
++  if (!currentUser || !userDocRef || kontoWirdGeloescht || verlaufSpeicherFehler) return null;
++  const x = { id: bewertungsKennung(), uid: currentUser.uid, epoche: verlaufEpoche,
++    tag, art, delta, status: "bereit" };
++  if (!verlaufAktionSpeichern(x)) { render(); return null; }
++  // Erst der Aufrufer aktiviert den Beitrag nach erfolgreicher Kartenkopie.
++  return x;
++}
++function verlaufOffenAufbauen() {
++  verlaufOffen = {};
++  for (const x of verlaufAktionen.values()) {
++    if (x.epoche !== verlaufEpoche || !["bereit", "abgelehnt"].includes(x.status)) continue;
++    const e = verlaufOffen[x.tag] || (verlaufOffen[x.tag] = {});
++    e[x.art] = (e[x.art] || 0) + x.delta;
++  }
++}
++function verlaufBelegRef(ref, id) { return fb.doc(fb.collection(ref, "tagesantworten"), id); }
++function verlaufBelegDaten(x) { return { epoche: x.epoche, tag: x.tag, art: x.art, delta: x.delta }; }
++function verlaufAktionSchreiben(x) {
++  const ref = userDocRef, user = currentUser, generation = verlaufGeneration;
++  if (!ref || user?.uid !== x.uid || x.epoche !== verlaufEpoche ||
++      kontoWirdGeloescht || verlaufLaeufe.has(x.id) || x.status !== "bereit") return;
++  const gilt = () => userDocRef === ref && currentUser === user && verlaufGeneration === generation && !kontoWirdGeloescht;
++  x.status = "offen";
++  if (!verlaufAktionSpeichern(x)) { x.status = "bereit"; return; }
++  verlaufLaeufe.add(x.id);
++  const batch = fb.writeBatch(db);
++  batch.update(ref, new fb.FieldPath("verlauf", x.tag, x.art), fb.increment(x.delta),
++    new fb.FieldPath("verlaufEpoche"), x.epoche);
++  batch.set(verlaufBelegRef(ref, x.id), verlaufBelegDaten(x));
++  verlaufOffenAufbauen();
++  batch.commit().then(() => {
++    if (!gilt()) return;
++    verlaufAktionEntfernen(x);
++    schreibErfolg();
++  }).catch(async e => {
++    if (!gilt()) return;
++    // Auch eine verlorene Bestätigung kann einen zweiten Batch ablehnen.
++    try {
++      const beleg = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(verlaufBelegRef(ref, x.id)));
++      if (!gilt()) return;
++      if (beleg.exists() && JSON.stringify(beleg.data()) === JSON.stringify(verlaufBelegDaten(x))) {
++        verlaufAktionEntfernen(x); return;
++      }
++      const snap = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(ref));
++      if (!gilt()) return;
++      if ((snap.data()?.verlaufEpoche || "") !== x.epoche) {
++        x.status = "veraltet"; verlaufAktionSpeichern(x); render(); return;
++      }
++    } catch (_) { /* Originalbeitrag bleibt mit sichtbarer Ablehnung erhalten. */ }
++    if (!gilt()) return;
++    x.status = "abgelehnt"; verlaufAktionSpeichern(x);
++    verlaufOffenAufbauen(); verlauf = verlaufZusammen(verlaufStand);
++    verlaufAbgelehnt = true; saveFehler(e); render();
++  }).finally(() => { if (gilt()) verlaufLaeufe.delete(x.id); });
++}
++async function verlaufAktionenPruefen() {
++  const ref = userDocRef, user = currentUser;
++  if (!ref || !user || verlaufPrueft || kontoWirdGeloescht) return;
++  const gilt = () => userDocRef === ref && currentUser === user && !kontoWirdGeloescht;
++  verlaufPrueft = true;
++  try {
++    // Verlorene Offline-Promises: erst den SDK-Stapel beenden lassen.
++    if (fb.waitForPendingWrites) await mitZeitlimit(fb.waitForPendingWrites(db));
++    const snap = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(ref));
++    if (!gilt() || snap.metadata?.fromCache || snap.metadata?.hasPendingWrites) return;
++    const epoche = snap.data()?.verlaufEpoche || "";
++    verlaufEpocheUebernehmen(snap.data());
++    verlaufSpeicherFehler = verlaufDefekte.size > 0;
++    for (const x of [...verlaufAktionen.values()]) {
++      if (!gilt()) return;
++      if (verlaufLaeufe.has(x.id)) continue;
++      const beleg = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(verlaufBelegRef(ref, x.id)));
++      if (!gilt()) return;
++      if (beleg.metadata?.fromCache || beleg.metadata?.hasPendingWrites) continue;
++      if (beleg.exists()) {
++        const d = beleg.data();
++        if (d.epoche === x.epoche && d.tag === x.tag && d.art === x.art && d.delta === x.delta)
++          verlaufAktionEntfernen(x);
++        else { x.status = "veraltet"; verlaufAktionSpeichern(x); }
++      } else if (x.epoche !== epoche || x.tag < dateInDays(-VERLAUF_TAGE)) {
++        x.status = "veraltet"; verlaufAktionSpeichern(x);
++      } else {
++        x.status = "bereit";
++        if (verlaufAktionSpeichern(x)) verlaufAktionSchreiben(x);
++      }
++    }
++    if (gilt()) { verlaufOffenAufbauen(); verlauf = verlaufZusammen(verlaufStand); }
++  } catch (e) { if (gilt()) saveFehler(e); }
++  finally { if (gilt()) { verlaufPrueft = false; render(); } }
++}
+ function verlaufEpocheUebernehmen(data) {
+   const epoche = data && typeof data.verlaufEpoche === "string" ? data.verlaufEpoche : "";
+   if (epoche === verlaufEpoche) return;
+@@ -1034,8 +1174,10 @@ const VERLAUF_ARTEN = ["w", "n", "u", "t", "r"];
+ function tagGelernt(e) {
+   return !!e && ((e.w || 0) + (e.n || 0) + (e.t || 0)) > 0;
+ }
+-function verlaufZaehle(art) {
++function verlaufZaehle(art, beitrag) {
+   const t = todayStr();
++  beitrag = beitrag || verlaufBeitragVorbereiten(t, art, 1);
++  if (!beitrag) return false;
+   /* 3.16.0: "erster" heisst jetzt: erste LERN-Antwort des Tages. Hat man
+      vorher schon geuebt, gibt es den Eintrag bereits - der Tag zaehlt fuer
+      die Serie aber erst mit der ersten Wiederholung, und genau die muss
+@@ -1043,12 +1185,13 @@ function verlaufZaehle(art) {
+   const ersterHeute = art !== "u" && !tagGelernt(verlauf[t]);
+   if (!verlauf[t]) verlauf[t] = { w: 0, n: 0 };
+   verlauf[t][art] = (verlauf[t][art] || 0) + 1;
+-  verlaufDeltaMerken(t, art, 1);
++  verlaufDeltaMerken(t, art, 1, beitrag);
+   /* Der ERSTE Eintrag eines Tages entscheidet, ob der Tag fuer die Serie
+      zaehlt - der geht sofort raus. Alles Weitere aendert nur noch Balken und
+      wird wie bisher gebuendelt geschrieben. */
+   if (ersterHeute) { checkStreakOnSessionComplete(); persistVerlauf(); }
+   else verlaufSpeichernBald();
++  return true;
+ }
+ /* 3.17.34 (REST-1): Gegenstueck zu verlaufZaehle, aber je Bereich und nur
+    im Arbeitsspeicher (ui.heuteJeBereich) - siehe Kommentar dort und bei
+@@ -1058,9 +1201,12 @@ function bereichHeuteZaehle(bid, delta) {
+   const n = ui.heuteJeBereich.n;
+   n[bid] = Math.max(0, (n[bid] || 0) + delta);
+ }
+-function verlaufDeltaMerken(tag, art, delta) {
+-  const e = verlaufOffen[tag] || (verlaufOffen[tag] = {});
+-  e[art] = (e[art] || 0) + delta;
++function verlaufDeltaMerken(tag, art, delta, beitrag) {
++  const x = beitrag || verlaufBeitragVorbereiten(tag, art, delta);
++  if (!x) return false;
++  verlaufAktionen.set(x.id, x);
++  verlaufOffenAufbauen();
++  return true;
+ }
+ /* SDK-Snapshot enthaelt gesendete lokale increments bereits. Nur noch
+    nicht uebergebene/abgelehnte Differenzen kommen fuer die Anzeige dazu. */
+@@ -1115,9 +1261,11 @@ function ruhetagPruefen() {
+   if (texteFreigeschaltet() &&
+       bereiche.some(b => (b.texte || []).some(x => textWdhPlan(b, x, t).length > 0))) return;
+   if (serieAktuell() < 1) return;
++  const beitrag = verlaufBeitragVorbereiten(t, "r", 1);
++  if (!beitrag) return;
+   if (!verlauf[t]) verlauf[t] = { w: 0, n: 0 };
+   verlauf[t].r = 1;
+-  verlaufDeltaMerken(t, "r", 1);
++  verlaufDeltaMerken(t, "r", 1, beitrag);
+   persistVerlauf();
+ }
+ /* Atomare Differenzen je Tag/Antwortart, nie den gesamten Tagesstand.
+@@ -2432,6 +2580,7 @@ async function initFirebase() {
      verlaufEpoche = "";
      verlaufAbgelehnt = false;
      abgelehnteBewertungen.clear();
@@ -343,7 +538,7 @@ index 4b6221e..275dce4 100644
      if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
      cloudDocExists = false;
      cloudKontoFrisch = false;
-@@ -2840,6 +2849,21 @@ async function patchDoc(patch) {
+@@ -2840,6 +2989,21 @@ async function patchDoc(patch) {
      }
    }
  
@@ -365,7 +560,7 @@ index 4b6221e..275dce4 100644
    const liste = [...ops.values()];
    const stapelSchreiben = async (teil) => {
      const stapel = fb.writeBatch(db);
-@@ -2985,15 +3009,188 @@ let verlaufAbgelehnt = false;
+@@ -2985,15 +3149,188 @@ let verlaufAbgelehnt = false;
  function abgelehntesNachholen() {
    const liste = [...abgelehnteBewertungen.entries()];
    abgelehnteBewertungen.clear();
@@ -560,7 +755,7 @@ index 4b6221e..275dce4 100644
    const kontoRef = userDocRef;
    const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
    fb.updateDoc(karteRef(cardId), {
-@@ -3927,6 +4124,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+@@ -3927,6 +4264,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
    }
    if (!konto.abgebrochen) {
      try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
@@ -576,7 +771,7 @@ index 4b6221e..275dce4 100644
    }
    if (!konto.abgebrochen && auth.currentUser === null) {
      if (currentUser === konto.user && verlaufGeneration === generation)
-@@ -6125,17 +6331,27 @@ function toggleLernNotiz(id) {
+@@ -6125,17 +6471,27 @@ function toggleLernNotiz(id) {
  function lernAbhaken(id) {
    const card = findCard(id);
    if (!card || !istNeueKarte(card)) return;
@@ -607,7 +802,7 @@ index 4b6221e..275dce4 100644
    ui.lernFokusNach = card.id;
    /* 2.10.1: Auch das Durchgehen zaehlt fuer den Tag. Vorher sprang die
       Flamme nur am Ende einer Lernsession an - am ersten Tag mit einem neuen
-@@ -6150,15 +6366,20 @@ function lernRueckgaengig() {
+@@ -6150,15 +6506,20 @@ function lernRueckgaengig() {
    const l = ui.lernLetzte;
    if (!l) return;
    const card = findCard(l.cardId);
@@ -633,7 +828,7 @@ index 4b6221e..275dce4 100644
    }
    /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
       das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
-@@ -6773,6 +6994,8 @@ function gradeCard(kind) {
+@@ -6773,6 +7134,8 @@ function gradeCard(kind) {
       waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
    const card = findCard(s.queue[0]);
    if (card && !s.isDrill) {
@@ -642,7 +837,7 @@ index 4b6221e..275dce4 100644
      /* E6: vor der Aenderung merken - direkt darunter wird ersteBewertung
         gesetzt, danach waere die Karte nicht mehr als "neu" erkennbar. */
      const warNeu = istNeueKarte(card);
-@@ -6829,6 +7052,22 @@ function gradeCard(kind) {
+@@ -6829,6 +7192,22 @@ function gradeCard(kind) {
      /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
         danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
         als neu erkennbar. */
@@ -665,7 +860,7 @@ index 4b6221e..275dce4 100644
      verlaufZaehle(warNeu ? "n" : "w");
      bereichHeuteZaehle(s.bereichId, 1);
    }
-@@ -6868,7 +7107,6 @@ function gradeCard(kind) {
+@@ -6868,7 +7247,6 @@ function gradeCard(kind) {
    s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
    hwStrokes = [];
    if (!s.isDrill) {
@@ -673,7 +868,7 @@ index 4b6221e..275dce4 100644
      /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
         Karte), dann in den naechsten Bereich der Runde weiterschalten. */
      if (s.queue.length === 0) rundeNaechsterBereich(s);
-@@ -6959,6 +7197,22 @@ function gradeUnknown() { gradeCard("unknown"); }
+@@ -6959,6 +7337,22 @@ function gradeUnknown() { gradeCard("unknown"); }
  function undoLastGrade() {
    const s = ui.session;
    if (!s || !s.lastAction) return;
@@ -696,7 +891,7 @@ index 4b6221e..275dce4 100644
    /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
       zurueck - findCard() sucht im offenen Bereich. */
    if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
-@@ -7006,7 +7260,6 @@ function undoLastGrade() {
+@@ -7006,7 +7400,6 @@ function undoLastGrade() {
       stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
       sie beim Bewerten offen war. */
    s.extraOpen = true;
@@ -704,7 +899,7 @@ index 4b6221e..275dce4 100644
    render();
  }
  function endSession() {
-@@ -9520,6 +9773,7 @@ function renderMain() {
+@@ -9520,6 +9913,7 @@ function renderMain() {
  
    if (!imModus) {
      /* ---- Meldungen, die ueber allem stehen ---- */
@@ -712,7 +907,7 @@ index 4b6221e..275dce4 100644
      if (schreibFehler) kopf += bannerSchreibfehler();
      if (syncError) {
        kopf += bannerFehler("Verbindung:", esc(syncError) +
-@@ -9551,8 +9805,9 @@ function renderMain() {
+@@ -9551,8 +9945,9 @@ function renderMain() {
                              : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
          ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
      }
@@ -724,7 +919,7 @@ index 4b6221e..275dce4 100644
    }
  
    /* ---- Geruest ---- */
-@@ -16099,6 +16354,9 @@ document.body.addEventListener("click", e => {
+@@ -16099,6 +16494,9 @@ document.body.addEventListener("click", e => {
        if (dueCards().length > 0) startSession();
        else { window.scrollTo(0, 0); render(); }
        break;

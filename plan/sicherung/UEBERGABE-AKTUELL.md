@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:17 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 22:18 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `ae3421f Sicherung 22:17 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `0d3bc7e Sicherung 22:18 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  A plan/werkzeuge/projekt_skills.mjs
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
@@ -40,7 +42,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 10, chrome.exe 13 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 10, chrome.exe 12 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -61,6 +63,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- Codex Fortsetzung A16: Übergabe, Betreiberregeln, Lehren, Zyklus-Auftrag/Entscheidungen und DATEN-11-Beleg gelesen. A14/A15-Entwurf 3.18.30 erhalten. Minuten-Sicherung läuft bereits (zwei vorhandene Bash-Prozesspaare); keine zusätzliche Schleife gestartet. Syntax und Standprüfung grün. Daten-Skill angewandt; Ursache am tatsächlichen Verlauf-/Auth-/Undo-Pfad gelesen: nur flüchtige abgelehnte Differenzen. Entwurf für dauerhafte Beiträge mit unveränderlichen Serverbelegen und ursprünglichem Konto/Tag/Epoche; kein Gesamtlauf/Deploy.
 
 - 22:11 Codex: Skills-Auftrag abgeschlossen. Vollständige Git-Dateiliste mechanisch eingelesen (2171 Dateien/23,1 MB, keine Lesefehler), Hauptarchitektur, Arbeitsregeln und vorhandene Prüfwege inhaltlich abgeglichen; keine Behauptung, alle Logs semantisch auditiert zu haben. Offizielle Quellen zu Codex/Claude Skills, Firebase, Context7, Playwright, Superpowers, Anthropic, Serena, axe-core und Security verglichen. Drei kurze Projekt-Skills (Daten, Oberfläche, Lernbelege), gemeinsame Quelle .agents/skills und identische Claude-Spiegel eingerichtet; gezielte Auswahlregeln in AGENTS/CLAUDE. Projektprüfer fing falschen Gerätepfad ab, korrigiert; sechs offizielle YAML-Prüfungen, Pfad-/Spiegel-/Konfigurationsprüfung und Syntax/Diff grün. Beschreibungen insgesamt 635 Zeichen; keine gemessene Token-/Qualitätsersparnis oder Modell-Auswahlgarantie behauptet. Bericht plan/agenten/SKILLS-UND-PLUGINS.md enthält Empfehlungen, Gegenargumente und Grenzen. Keine externen Plugins installiert, keine App-Änderung oder Veröffentlichung. Neue Skill-/Werkzeugdateien per intent-to-add im Minuten-Patch; große App-Abnahme bleibt später, nächste App-Aufgabe A16.
 
@@ -103,5 +107,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex Abschluss: 3.18.29 als 2bdf83c auf main committet und gepusht. Fünf betroffene Testläufe grün (E4, Rechtsplan-Umfeld, Anmeldung-Enter, Einstellungen, Dialog-Timer); vollständige Logs gelesen und gesichert. Klein-Weg, kein Gesamtlauf, nicht veröffentlicht. Online bleibt laut letztem Veröffentlichungsbeleg 3.18.28. G7 am echten iPhone nach Veröffentlichung offen; nächste Arbeit Tagesdeckel-Rechnung. Details im Zyklus-Logbuch, Eintrag 3.18.29. Ein Plan-Schreibbefehl wurde wegen PowerShell-Quotierung vor Ausführung abgelehnt und korrigiert, ohne Dateiänderung aus dem Fehlversuch.
 
 - 15:50 Codex: E4 am festen d64380a rot (echter Zurück-Link, Formular fehlt). Neuer Weg: bestehender Dialog, unveränderte Rechtsseiten lokal laden, Rückweg bleibt sichtbar. E4 390/320/820 grün; Umfeld sechs Geräte-/Farbkombinationen grün, Fehler/Neuversuch und verspätete Antwort geprüft. iPad-Kontrastmeldung als Scroll-Clip belegt und alle sichtbaren Abschnitte durchgescrollt geprüft. 3.18.29 vorbereitet; Standprüfung grün. Betroffene Regressionen laufen; Akku BatteryStatus 1, Klein-Weg, kein Gesamtlauf/Deploy.
-
-- Codex, Auftrag „weiter“: Desktop-Checkout sauber auf d64380a / 3.18.28 aktualisiert. Übergabe, Betreiber-Verstehen, offene Liste, Grundregeln und E4-Befund gelesen. Minuten-Sicherung gestartet (Git Bash). E4 wieder offen: tatsächlichen Zurück-Weg prüfen, vorhandenen Dialog für Rechtsinhalt verwenden. Nicht veröffentlichen.
