@@ -256,6 +256,38 @@
       "fehler": null,
       "sekunden": 1,
       "quelltext": "8949f6d75b5b6b92e56c7e38dc3ff464c9ee7c8eac2446a5151e838f5d54018d"
+    },
+    "t_dreh.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 11,
+      "quelltext": "9f08c64f6ca244665cf14b0f8ee5a9656a625b7202fca31981c7a3328b61f303"
+    },
+    "t_dreh_lage.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 21,
+      "quelltext": "2023d94ed14e3d1fc7e5dc7c49fdf387e511b3c003dfc29a07d031ed54b523f2"
+    },
+    "t_einst.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 9,
+      "quelltext": "26079be519adbcf81b248c6d5131bcc624df055fa4ec6a46d87286278c45d2f5"
+    },
+    "t_einst_oben.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "f535b127efed6950f6f826a2084c0738b3c84438dcbae96bf3995f502590fb64"
     }
   }
 }

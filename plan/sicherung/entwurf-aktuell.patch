@@ -13,7 +13,7 @@ index bc20801..e698a62 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..e753fd6 100644
+index 4b6221e..54723ed 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -81,7 +81,7 @@ index 4b6221e..e753fd6 100644
    const liste = [...ops.values()];
    const stapelSchreiben = async (teil) => {
      const stapel = fb.writeBatch(db);
-@@ -2985,15 +3009,179 @@ let verlaufAbgelehnt = false;
+@@ -2985,15 +3009,188 @@ let verlaufAbgelehnt = false;
  function abgelehntesNachholen() {
    const liste = [...abgelehnteBewertungen.entries()];
    abgelehnteBewertungen.clear();
@@ -188,6 +188,10 @@ index 4b6221e..e753fd6 100644
 +async function bewertungsAktionenPruefen() {
 +  const ref = userDocRef, user = currentUser, sammlung = kartenColRef;
 +  if (!ref || !user || !sammlung) return;
++  try {
++    localStorage.getItem(bewertungsPraefix(user.uid));
++    bewertungsSpeicherFehler = bewertungsDefekte.size > 0;
++  } catch (e) { bewertungsSpeicherFehler = true; render(); return; }
 +  const giltNoch = () => userDocRef === ref && currentUser === user && !kontoWirdGeloescht;
 +  const liste = [...bewertungsAktionen.values()].filter(x => x.status !== "offen");
 +  for (const x of liste) {
@@ -258,7 +262,12 @@ index 4b6221e..e753fd6 100644
 +    const x = { id: bewertungsKennung(), uid: currentUser.uid, bereichId, cardId,
 +      basis: basis === undefined ? (card.bewertungsStand || null) : basis,
 +      fields: daten, wort: card.wort, zeit: Date.now(), status: "offen" };
-+    if (!bewertungsAktionMerken(x)) return null;
++    if (!bewertungsAktionMerken(x)) {
++      /* Noch keine Antwort gebucht oder geschrieben: dieser abgebrochene
++         Versuch darf spaeter nicht ohne Tagesantwort nachgeholt werden. */
++      bewertungsAktionen.delete(x.id);
++      return null;
++    }
 +    card.bewertungsBasis = x.basis;
 +    card.bewertungsStand = x.id;
 +    bewertungsAktionSchreiben(x);
@@ -267,7 +276,7 @@ index 4b6221e..e753fd6 100644
    const kontoRef = userDocRef;
    const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
    fb.updateDoc(karteRef(cardId), {
-@@ -3927,6 +4115,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+@@ -3927,6 +4124,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
    }
    if (!konto.abgebrochen) {
      try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
@@ -283,7 +292,7 @@ index 4b6221e..e753fd6 100644
    }
    if (!konto.abgebrochen && auth.currentUser === null) {
      if (currentUser === konto.user && verlaufGeneration === generation)
-@@ -6125,17 +6322,26 @@ function toggleLernNotiz(id) {
+@@ -6125,17 +6331,26 @@ function toggleLernNotiz(id) {
  function lernAbhaken(id) {
    const card = findCard(id);
    if (!card || !istNeueKarte(card)) return;
@@ -313,7 +322,7 @@ index 4b6221e..e753fd6 100644
    ui.lernFokusNach = card.id;
    /* 2.10.1: Auch das Durchgehen zaehlt fuer den Tag. Vorher sprang die
       Flamme nur am Ende einer Lernsession an - am ersten Tag mit einem neuen
-@@ -6150,15 +6356,20 @@ function lernRueckgaengig() {
+@@ -6150,15 +6365,20 @@ function lernRueckgaengig() {
    const l = ui.lernLetzte;
    if (!l) return;
    const card = findCard(l.cardId);
@@ -339,7 +348,7 @@ index 4b6221e..e753fd6 100644
    }
    /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
       das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
-@@ -6773,6 +6984,7 @@ function gradeCard(kind) {
+@@ -6773,6 +6993,7 @@ function gradeCard(kind) {
       waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
    const card = findCard(s.queue[0]);
    if (card && !s.isDrill) {
@@ -347,7 +356,7 @@ index 4b6221e..e753fd6 100644
      /* E6: vor der Aenderung merken - direkt darunter wird ersteBewertung
         gesetzt, danach waere die Karte nicht mehr als "neu" erkennbar. */
      const warNeu = istNeueKarte(card);
-@@ -6829,6 +7041,22 @@ function gradeCard(kind) {
+@@ -6829,6 +7050,22 @@ function gradeCard(kind) {
      /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
         danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
         als neu erkennbar. */
@@ -370,7 +379,7 @@ index 4b6221e..e753fd6 100644
      verlaufZaehle(warNeu ? "n" : "w");
      bereichHeuteZaehle(s.bereichId, 1);
    }
-@@ -6868,7 +7096,6 @@ function gradeCard(kind) {
+@@ -6868,7 +7105,6 @@ function gradeCard(kind) {
    s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
    hwStrokes = [];
    if (!s.isDrill) {
@@ -378,7 +387,7 @@ index 4b6221e..e753fd6 100644
      /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
         Karte), dann in den naechsten Bereich der Runde weiterschalten. */
      if (s.queue.length === 0) rundeNaechsterBereich(s);
-@@ -6959,6 +7186,22 @@ function gradeUnknown() { gradeCard("unknown"); }
+@@ -6959,6 +7195,22 @@ function gradeUnknown() { gradeCard("unknown"); }
  function undoLastGrade() {
    const s = ui.session;
    if (!s || !s.lastAction) return;
@@ -401,7 +410,7 @@ index 4b6221e..e753fd6 100644
    /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
       zurueck - findCard() sucht im offenen Bereich. */
    if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
-@@ -7006,7 +7249,6 @@ function undoLastGrade() {
+@@ -7006,7 +7258,6 @@ function undoLastGrade() {
       stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
       sie beim Bewerten offen war. */
    s.extraOpen = true;
@@ -409,7 +418,7 @@ index 4b6221e..e753fd6 100644
    render();
  }
  function endSession() {
-@@ -9520,6 +9762,7 @@ function renderMain() {
+@@ -9520,6 +9771,7 @@ function renderMain() {
  
    if (!imModus) {
      /* ---- Meldungen, die ueber allem stehen ---- */
@@ -417,7 +426,7 @@ index 4b6221e..e753fd6 100644
      if (schreibFehler) kopf += bannerSchreibfehler();
      if (syncError) {
        kopf += bannerFehler("Verbindung:", esc(syncError) +
-@@ -9551,8 +9794,9 @@ function renderMain() {
+@@ -9551,8 +9803,9 @@ function renderMain() {
                              : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
          ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
      }
@@ -429,7 +438,7 @@ index 4b6221e..e753fd6 100644
    }
  
    /* ---- Geruest ---- */
-@@ -16099,6 +16343,9 @@ document.body.addEventListener("click", e => {
+@@ -16099,6 +16352,9 @@ document.body.addEventListener("click", e => {
        if (dueCards().length > 0) startSession();
        else { window.scrollTo(0, 0); render(); }
        break;
@@ -642,10 +651,10 @@ index e9503f2..08a8640 100644
    }
 diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
 new file mode 100644
-index 0000000..0c8ded5
+index 0000000..8107abf
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
-@@ -0,0 +1,171 @@
+@@ -0,0 +1,175 @@
 +/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
 +   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
 +const assert=require('node:assert/strict');
@@ -773,10 +782,14 @@ index 0000000..0c8ded5
 +    await fall('voller Geraetespeicher bucht keine Antwort',async(a)=>{
 +      await fertig(a);
 +      const before=await server(),counts=await a.evaluate(()=>window.__PRUEF.verlauf());
-+      await a.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k.startsWith('adrabic-bewertung-'))throw new DOMException('voll','QuotaExceededError');return original.call(this,k,v);};window.__PRUEF.starten();window.__PRUEF.bewerten('known');});
++      await a.evaluate(()=>{const original=Storage.prototype.setItem;window.__PRUEF_STORAGE_ORIGINAL=original;Storage.prototype.setItem=function(k,v){if(k.startsWith('adrabic-bewertung-'))throw new DOMException('voll','QuotaExceededError');return original.call(this,k,v);};window.__PRUEF.starten();window.__PRUEF.bewerten('known');});
 +      await fertig(a);assert.deepEqual(await server(),before);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
 +      assert.equal(await a.evaluate(()=>window.__PRUEF.karte().stufe),before.stufe);
 +      assert.match(await a.locator('.banner-fehler').innerText(),/Gerätespeicher/);
++      assert.equal(await a.evaluate(()=>window.__PRUEF.aufbewahrt().length),0);
++      await a.evaluate(()=>{Storage.prototype.setItem=window.__PRUEF_STORAGE_ORIGINAL;return window.__PRUEF.pruefen();});await fertig(a);
++      assert.deepEqual(await server(),before);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
++      await grade(a);assert.equal((await server()).stufe,before.stufe+1);
 +    });
 +    await fall('echte Regeln-Ablehnung nachholen ohne doppelte Tagesantwort',async(a)=>{
 +      await a.evaluate(()=>{window.__PRUEF_KARTE_ABLEHNEN=true;window.__PRUEF.starten();window.__PRUEF.bewerten('known');});await fertig(a);
