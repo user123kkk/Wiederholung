@@ -180,3 +180,13 @@ BEWAHRT t_zeilenanfang.js
 
 === 4/6 Zufallstest mit Texten ===
 handy Schritte: 200 Befunde: 0
+ipad Schritte: 150 Befunde: 0
+
+=== 5/6 Firestore-Regeln ===
+
+=== Deploying to 'lernkarte-925c2'...
+
+i  deploying firestore
+i  firestore: ensuring required API firestore.googleapis.com is enabled...
+i  firestore: ensuring required API firestore.googleapis.com is enabled...
+i  cloud.firestore: checking firestore.rules for compilation errors...
