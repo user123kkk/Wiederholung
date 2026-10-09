@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 4b6221e..cfdd66d 100644
+index 4b6221e..5b6f1ca 100644
 --- a/app.js
 +++ b/app.js
 @@ -331,7 +331,12 @@ function normCard(c) {
@@ -58,7 +58,7 @@ index 4b6221e..cfdd66d 100644
    const liste = [...ops.values()];
    const stapelSchreiben = async (teil) => {
      const stapel = fb.writeBatch(db);
-@@ -2985,15 +3009,150 @@ let verlaufAbgelehnt = false;
+@@ -2985,15 +3009,153 @@ let verlaufAbgelehnt = false;
  function abgelehntesNachholen() {
    const liste = [...abgelehnteBewertungen.entries()];
    abgelehnteBewertungen.clear();
@@ -138,6 +138,7 @@ index 4b6221e..cfdd66d 100644
 +    const abgelehnt = abgelehnteBewertungen.get(x.cardId);
 +    if (abgelehnt?.aktion?.id === x.id) abgelehnteBewertungen.delete(x.cardId);
 +    schreibErfolg();
++    render();
 +  }).catch(e => {
 +    if (!giltNoch()) return;
 +    x.status = "abgelehnt";
@@ -156,6 +157,7 @@ index 4b6221e..cfdd66d 100644
 +    try {
 +      const snap = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(fb.doc(sammlung, x.cardId)));
 +      if (!giltNoch() || !bewertungsAktionen.has(x.id)) return;
++      if (snap.metadata?.hasPendingWrites || snap.metadata?.fromCache) continue;
 +      const data = snap.exists() ? snap.data() : null;
 +      if (data?.bewertungsStand === x.id) {
 +        bewertungsAktionEntfernen(x); // Bestätigung vor einem Neustart verloren.
@@ -185,9 +187,10 @@ index 4b6221e..cfdd66d 100644
 +}
 +function bewertungsBanner() {
 +  const n = [...bewertungsAktionen.values()].filter(x => x.status !== "offen").length;
++  const konflikte = [...bewertungsAktionen.values()].filter(x => x.status === "konflikt" || x.status === "geloescht").length;
 +  if (!n && !bewertungsSpeicherFehler) return "";
 +  return bannerFehler("Antworten aufbewahrt:",
-+    'Frühere Antworten sind noch nicht bestätigt oder passen nicht mehr zum aktuellen Kartenstand. ' +
++    esc(konflikte ? konflikte + " Antworten passen nicht mehr zum aktuellen Kartenstand. " : n + " Antworten sind noch nicht bestätigt. ") +
 +    '<button class="tiny-link" data-action="bewertung-pruefen">Prüfen</button> ' +
 +    '<button class="tiny-link" data-action="bewertung-sichern">Antworten sichern</button> ' +
 +    '<button class="tiny-link" data-action="bewertung-verwerfen">Vom Gerät entfernen</button>' +
@@ -215,7 +218,7 @@ index 4b6221e..cfdd66d 100644
    const kontoRef = userDocRef;
    const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
    fb.updateDoc(karteRef(cardId), {
-@@ -3927,6 +4086,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+@@ -3927,6 +4089,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
    }
    if (!konto.abgebrochen) {
      try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
@@ -231,7 +234,7 @@ index 4b6221e..cfdd66d 100644
    }
    if (!konto.abgebrochen && auth.currentUser === null) {
      if (currentUser === konto.user && verlaufGeneration === generation)
-@@ -6125,17 +6293,26 @@ function toggleLernNotiz(id) {
+@@ -6125,17 +6296,26 @@ function toggleLernNotiz(id) {
  function lernAbhaken(id) {
    const card = findCard(id);
    if (!card || !istNeueKarte(card)) return;
@@ -261,7 +264,7 @@ index 4b6221e..cfdd66d 100644
    ui.lernFokusNach = card.id;
    /* 2.10.1: Auch das Durchgehen zaehlt fuer den Tag. Vorher sprang die
       Flamme nur am Ende einer Lernsession an - am ersten Tag mit einem neuen
-@@ -6150,15 +6327,20 @@ function lernRueckgaengig() {
+@@ -6150,15 +6330,20 @@ function lernRueckgaengig() {
    const l = ui.lernLetzte;
    if (!l) return;
    const card = findCard(l.cardId);
@@ -287,7 +290,7 @@ index 4b6221e..cfdd66d 100644
    }
    /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
       das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
-@@ -6773,6 +6955,7 @@ function gradeCard(kind) {
+@@ -6773,6 +6958,7 @@ function gradeCard(kind) {
       waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
    const card = findCard(s.queue[0]);
    if (card && !s.isDrill) {
@@ -295,7 +298,7 @@ index 4b6221e..cfdd66d 100644
      /* E6: vor der Aenderung merken - direkt darunter wird ersteBewertung
         gesetzt, danach waere die Karte nicht mehr als "neu" erkennbar. */
      const warNeu = istNeueKarte(card);
-@@ -6829,6 +7012,22 @@ function gradeCard(kind) {
+@@ -6829,6 +7015,22 @@ function gradeCard(kind) {
      /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
         danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
         als neu erkennbar. */
@@ -318,7 +321,7 @@ index 4b6221e..cfdd66d 100644
      verlaufZaehle(warNeu ? "n" : "w");
      bereichHeuteZaehle(s.bereichId, 1);
    }
-@@ -6868,7 +7067,6 @@ function gradeCard(kind) {
+@@ -6868,7 +7070,6 @@ function gradeCard(kind) {
    s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
    hwStrokes = [];
    if (!s.isDrill) {
@@ -326,7 +329,7 @@ index 4b6221e..cfdd66d 100644
      /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
         Karte), dann in den naechsten Bereich der Runde weiterschalten. */
      if (s.queue.length === 0) rundeNaechsterBereich(s);
-@@ -6959,6 +7157,22 @@ function gradeUnknown() { gradeCard("unknown"); }
+@@ -6959,6 +7160,22 @@ function gradeUnknown() { gradeCard("unknown"); }
  function undoLastGrade() {
    const s = ui.session;
    if (!s || !s.lastAction) return;
@@ -349,7 +352,7 @@ index 4b6221e..cfdd66d 100644
    /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
       zurueck - findCard() sucht im offenen Bereich. */
    if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
-@@ -7006,7 +7220,6 @@ function undoLastGrade() {
+@@ -7006,7 +7223,6 @@ function undoLastGrade() {
       stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
       sie beim Bewerten offen war. */
    s.extraOpen = true;
@@ -357,7 +360,7 @@ index 4b6221e..cfdd66d 100644
    render();
  }
  function endSession() {
-@@ -9520,6 +9733,7 @@ function renderMain() {
+@@ -9520,6 +9736,7 @@ function renderMain() {
  
    if (!imModus) {
      /* ---- Meldungen, die ueber allem stehen ---- */
@@ -365,7 +368,7 @@ index 4b6221e..cfdd66d 100644
      if (schreibFehler) kopf += bannerSchreibfehler();
      if (syncError) {
        kopf += bannerFehler("Verbindung:", esc(syncError) +
-@@ -9551,8 +9765,9 @@ function renderMain() {
+@@ -9551,8 +9768,9 @@ function renderMain() {
                              : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
          ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
      }
@@ -377,7 +380,7 @@ index 4b6221e..cfdd66d 100644
    }
  
    /* ---- Geruest ---- */
-@@ -16099,6 +16314,9 @@ document.body.addEventListener("click", e => {
+@@ -16099,6 +16317,9 @@ document.body.addEventListener("click", e => {
        if (dueCards().length > 0) startSession();
        else { window.scrollTo(0, 0); render(); }
        break;
@@ -452,9 +455,18 @@ index fb68788..99c0eed 100644
      }
  
 diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
-index e9503f2..177c25f 100644
+index e9503f2..35f657d 100644
 --- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 +++ b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
+@@ -42,7 +42,7 @@ async function seite(b,sources,ctx){
+     let body=`export * from ${JSON.stringify(original)}; import * as core from ${JSON.stringify(original)};`;
+     if(name==='firebase-app.js')body+=`export function initializeApp(c){return core.initializeApp({...c,projectId:${JSON.stringify(PROJECT)}});}`;
+     if(name==='firebase-firestore.js')body+=`export function initializeFirestore(a,o){const db=core.initializeFirestore(a,o);core.connectFirestoreEmulator(db,'127.0.0.1',8082,{mockUserToken:{sub:'u1',email:'test@example.com',email_verified:true}});window.__PRUEF_DB=db;window.__PRUEF_SDK=core;return db;}
+-      export function updateDoc(ref,...args){if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}`;
++      export function updateDoc(ref,...args){if(window.__PRUEF_KARTE_ABLEHNEN&&ref.path.includes('/karten/'))args[0]={...args[0],__pruef_verboten:true};if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}`;
+     return r.fulfill({contentType:'text/javascript',body});
+   });
+   await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:APP_SOURCE+`
 @@ -54,6 +54,8 @@ async function seite(b,sources,ctx){
        nachholen:abgelehntesNachholen,verlauf:()=>JSON.parse(JSON.stringify(verlauf)),
        offen:()=>JSON.parse(JSON.stringify(typeof verlaufOffen==='undefined'?{}:verlaufOffen)),
@@ -475,10 +487,29 @@ index e9503f2..177c25f 100644
      const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
    }
 diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
-index 118e0da..6bb9177 100644
+index 118e0da..39516cd 100644
 --- a/plan/werkzeuge/regeln/regeln-pruefung.mjs
 +++ b/plan/werkzeuge/regeln/regeln-pruefung.mjs
-@@ -133,13 +133,14 @@ await pruefe("N14 Speicherkarte loeschen", "ja", () => updateDoc(b("b1"), { "set
+@@ -40,7 +40,8 @@
+    Erweiterung hier auch diese Zahl nachziehen, sonst wiederholt sich genau
+    das.
+ 
+-   Stand 29.09.2026: 179 Faelle. Der vorherige Code enthielt bereits 171
++   Stand 09.10.2026: 222 Faelle, zuletzt K01-K12 zum Kartenkonfliktschutz.
++   Historischer Stand 29.09.2026: 179 Faelle. Der vorherige Code enthielt bereits 171
+    (18 weitere Board-/Teilen-/Audit-Faelle seit dem historischen Stand oben).
+    Acht neue R01-R08 pruefen Reset-Kennung, alte Offline-Differenzen und
+    normale Einstellungen. RULES_PORT kann den lokalen Emulator-Port setzen
+@@ -50,7 +51,7 @@
+    melden oft zusaetzlich "evaluation error". Das ist normal. Die Regelsprache
+    wertet beide Seiten eines && aus und schluckt den Fehler, wenn die andere
+    Seite ohnehin false ist - z.B. wenn stufe ein Text ist und deshalb die
+-   Zahlenpruefung stolpert. Entscheidend ist allein, dass alle 179 Faelle so
++   Zahlenpruefung stolpert. Entscheidend ist allein, dass alle 222 Faelle so
+    ausgehen wie erwartet.
+    ============================================================ */
+ 
+@@ -133,13 +134,14 @@ await pruefe("N14 Speicherkarte loeschen", "ja", () => updateDoc(b("b1"), { "set
  
  await pruefe("N15 Karte anlegen", "ja", () => setDoc(k("c1"), karte("b1")));
  await pruefe("N16 Karte bewerten", "ja", () => updateDoc(k("c1"), {
@@ -495,7 +526,7 @@ index 118e0da..6bb9177 100644
  await pruefe("N22 Karte mit Bild-Link in extra", "ja", () => updateDoc(k("c1"), { extra: "https://example.org/bild.png" }));
  
  await pruefe("N23 Import: Bereich und Karten in einem Stapel", "ja", async () => {
-@@ -179,11 +180,11 @@ await pruefe("M04 Ohne Anmeldung lesen", "nein", () => getDoc(doc(dbAnon, "users
+@@ -179,11 +181,11 @@ await pruefe("M04 Ohne Anmeldung lesen", "nein", () => getDoc(doc(dbAnon, "users
  await pruefe("M05 E-Mail nicht bestaetigt", "nein", () => updateDoc(doc(dbUnbes, "users", UID), { name: "X" }));
  
  await pruefe("M06 Hoechststufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { maxStufe: 9999 }));
@@ -512,7 +543,7 @@ index 118e0da..6bb9177 100644
  await pruefe("M12 Erfundenes Feld an der Karte", "nein", () => updateDoc(k("c1"), { freigeschaltet: true }));
  await pruefe("M13 Wort ueberlang", "nein", () => updateDoc(k("c1"), { wort: "a".repeat(1001) }));
  await pruefe("M14 Notiz ueberlang", "nein", () => updateDoc(k("c1"), { extra: "a".repeat(5001) }));
-@@ -566,6 +567,20 @@ await pruefe("T23 Karte ohne textId mit 1208 Zeichen", "nein", () => setDoc(k("z
+@@ -566,6 +568,20 @@ await pruefe("T23 Karte ohne textId mit 1208 Zeichen", "nein", () => setDoc(k("z
  await pruefe("T24 Karte mit textId null und 1208 Zeichen", "nein", () => setDoc(k("z8"), { ...karte("b1"), textId: null, wort: "x".repeat(1208) }));
  await pruefe("T25 Lange Zeile: textId nachtraeglich entfernen", "nein", () => updateDoc(k("z5"), { textId: deleteField() }));
  
