@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 4b6221e..3f74435 100644
+index 4b6221e..afe65fd 100644
 --- a/app.js
 +++ b/app.js
 @@ -331,7 +331,12 @@ function normCard(c) {
@@ -215,3 +215,172 @@ index 4b6221e..3f74435 100644
    const kontoRef = userDocRef;
    const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
    fb.updateDoc(karteRef(cardId), {
+@@ -6125,13 +6284,14 @@ function toggleLernNotiz(id) {
+ function lernAbhaken(id) {
+   const card = findCard(id);
+   if (!card || !istNeueKarte(card)) return;
++  if (!bewertungDarfBeginnen(id)) return;
+   ui.lernLetzte = { cardId: card.id, prevStufe: card.stufe, prevNextReview: card.nextReview, prevErsteBewertung: card.ersteBewertung, verlaufTag: todayStr(), verlaufEpoche: verlaufEpoche };
+   card.ersteBewertung = todayStr();
+   card.stufe = 0;
+   card.nextReview = todayStr();
+   verlaufZaehle("n");
+   bereichHeuteZaehle(currentBereich().id, 1);
+-  persistCardGrade(currentBereich().id, card.id, {
++  ui.lernLetzte.bewertungsStand = persistCardGrade(currentBereich().id, card.id, {
+     stufe: card.stufe, nextReview: card.nextReview,
+     ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
+     maxStufe: card.maxStufe
+@@ -6150,6 +6310,11 @@ function lernRueckgaengig() {
+   const l = ui.lernLetzte;
+   if (!l) return;
+   const card = findCard(l.cardId);
++  if (!card || !bewertungDarfBeginnen(l.cardId)) return;
++  if (l.bewertungsStand && card.bewertungsStand !== l.bewertungsStand) {
++    dlgAlert("Die Karte wurde inzwischen geändert. Rückgängig würde diese Änderung überschreiben.", "Karte inzwischen geändert");
++    return;
++  }
+   if (card) {
+     card.stufe = l.prevStufe;
+     card.nextReview = l.prevNextReview;
+@@ -6158,7 +6323,7 @@ function lernRueckgaengig() {
+       stufe: card.stufe, nextReview: card.nextReview,
+       ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
+       maxStufe: card.maxStufe || 0
+-    });
++    }, l.bewertungsStand);
+   }
+   /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
+      das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
+@@ -6773,6 +6938,7 @@ function gradeCard(kind) {
+      waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
+   const card = findCard(s.queue[0]);
+   if (card && !s.isDrill) {
++    if (!bewertungDarfBeginnen(card.id)) return;
+     /* E6: vor der Aenderung merken - direkt darunter wird ersteBewertung
+        gesetzt, danach waere die Karte nicht mehr als "neu" erkennbar. */
+     const warNeu = istNeueKarte(card);
+@@ -6868,7 +7034,7 @@ function gradeCard(kind) {
+   s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
+   hwStrokes = [];
+   if (!s.isDrill) {
+-    if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
++    if (card) s.lastAction.bewertungsStand = persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
+     /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
+        Karte), dann in den naechsten Bereich der Runde weiterschalten. */
+     if (s.queue.length === 0) rundeNaechsterBereich(s);
+@@ -6959,6 +7125,14 @@ function gradeUnknown() { gradeCard("unknown"); }
+ function undoLastGrade() {
+   const s = ui.session;
+   if (!s || !s.lastAction) return;
++  const undoBereich = bereiche.find(b => b.id === (s.lastAction.prevBereichId || s.bereichId));
++  const undoKarte = undoBereich && undoBereich.karten.find(c => c.id === s.lastAction.cardId);
++  if (!undoKarte || !bewertungDarfBeginnen(undoKarte.id)) return;
++  if (s.lastAction.bewertungsStand && undoKarte.bewertungsStand !== s.lastAction.bewertungsStand) {
++    dlgAlert("Die Karte wurde inzwischen geändert. Rückgängig würde diese Änderung überschreiben.", "Karte inzwischen geändert");
++    return;
++  }
++  const bewertungsBasis = s.lastAction.bewertungsStand;
+   /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
+      zurueck - findCard() sucht im offenen Bereich. */
+   if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
+@@ -7006,7 +7180,7 @@ function undoLastGrade() {
+      stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
+      sie beim Bewerten offen war. */
+   s.extraOpen = true;
+-  if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
++  if (card && !s.isDrill) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 }, bewertungsBasis);
+   render();
+ }
+ function endSession() {
+@@ -9520,6 +9694,7 @@ function renderMain() {
+ 
+   if (!imModus) {
+     /* ---- Meldungen, die ueber allem stehen ---- */
++    kopf += bewertungsBanner();
+     if (schreibFehler) kopf += bannerSchreibfehler();
+     if (syncError) {
+       kopf += bannerFehler("Verbindung:", esc(syncError) +
+@@ -9551,8 +9726,9 @@ function renderMain() {
+                             : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
+         ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
+     }
+-  } else if (schreibFehler) {
+-    kopf += bannerSchreibfehler();
++  } else {
++    kopf += bewertungsBanner();
++    if (schreibFehler) kopf += bannerSchreibfehler();
+   }
+ 
+   /* ---- Geruest ---- */
+@@ -16099,6 +16275,9 @@ document.body.addEventListener("click", e => {
+       if (dueCards().length > 0) startSession();
+       else { window.scrollTo(0, 0); render(); }
+       break;
++    case "bewertung-pruefen": bewertungsAktionenPruefen(); break;
++    case "bewertung-sichern": dateiSpeichern({ version: 1, antworten: [...bewertungsAktionen.values()] }, "adrabic-aufbewahrte-antworten.json"); break;
++    case "bewertung-verwerfen": bewertungsAktionenVerwerfen(); break;
+     case "reveal": revealAnswer(); break;
+     case "toggle-extra": toggleExtra(); break;
+     case "grade-known": if (!bewertenZuFrueh()) gradeKnown(); break;
+diff --git a/firestore.rules b/firestore.rules
+index fb68788..99c0eed 100644
+--- a/firestore.rules
++++ b/firestore.rules
+@@ -229,7 +229,7 @@ service cloud.firestore {
+       function kartenFelder() {
+         return ['wort', 'uebersetzung', 'extra', 'stufe', 'nextReview',
+                 'ersteBewertung', 'rueckfaelle', 'quelleId', 'maxStufe',
+-                'order', 'bereichId', 'textId'];
++                'order', 'bereichId', 'textId', 'bewertungsStand', 'bewertungsBasis'];
+       }
+ 
+       /* `order` ist absichtlich unbegrenzt: ordnungVorn() in app.js setzt
+@@ -252,7 +252,22 @@ service cloud.firestore {
+             && (!pruefen.hasAny(['bereichId'])      || text(d.bereichId, 200))
+             /* 3.18.0: Verweis einer Textzeile auf ihren Text (Id im sets-Feld
+                des Bereichs). Gewoehnliche Karten tragen das Feld nicht. */
+-            && (!pruefen.hasAny(['textId'])         || !('textId' in d) || textOderNull(d.textId, 200));
++            && (!pruefen.hasAny(['textId'])         || !('textId' in d) || textOderNull(d.textId, 200))
++            && (!pruefen.hasAny(['bewertungsStand']) || (text(d.bewertungsStand, 100) && d.bewertungsStand.size() > 0))
++            && (!pruefen.hasAny(['bewertungsBasis']) || textOderNull(d.bewertungsBasis, 100));
++      }
++
++      /* Jede normale Kartenbewertung benennt den Stand, den sie ersetzt.
++         Auch ein altes Offline-Geraet kann dadurch keine spaetere Antwort
++         ueberschreiben. Textzeilen behalten ihre gesonderte Probelauf-Logik. */
++      function kartenBewertungsStandOk() {
++        let alt = resource.data.get('bewertungsStand', null);
++        let neu = request.resource.data.get('bewertungsStand', null);
++        let basis = request.resource.data.get('bewertungsBasis', null);
++        return resource.data.get('textId', null) != null
++            || !beruehrt().hasAny(['stufe', 'nextReview', 'ersteBewertung',
++                 'rueckfaelle', 'maxStufe', 'bewertungsStand', 'bewertungsBasis'])
++            || (neu != null && neu != alt && basis == alt);
+       }
+ 
+       match /karten/{cid} {
+@@ -266,7 +281,8 @@ service cloud.firestore {
+ 
+         allow update: if eigenesKonto(uid) && vorhanden()
+                       && beruehrt().hasOnly(kartenFelder())
+-                      && kartenWerte(request.resource.data, beruehrt());
++                      && kartenWerte(request.resource.data, beruehrt())
++                      && kartenBewertungsStandOk();
+       }
+     }
+ 
+diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
+index e9503f2..9588b2b 100644
+--- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
++++ b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
+@@ -72,7 +72,8 @@ async function cloud(tag){
+   const e=d.fields.verlauf?.mapValue.fields?.[tag]?.mapValue.fields||{};
+   return Object.fromEntries(['w','n','u'].map(k=>[k,Number(e[k]?.integerValue||0)]));
+ }
+-(async()=>{
++module.exports={seite,seed,fertig,rest,wert,ROOT,SDK,cloud};
++if(require.main===module)(async()=>{
+   const sources={};for(const name of ['firebase-app.js','firebase-firestore.js']){
+     const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
+   }
