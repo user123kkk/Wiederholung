@@ -80,6 +80,14 @@
       "zeitlimit": false,
       "sekunden": 25,
       "quelltext": "45c5995a002b1e7b023014e42ad40b7462695ef400d9b558ae2b764eedac1e7f"
+    },
+    "t_rundenende.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 117,
+      "quelltext": "ca52ce639ac146d0c75d951834256896681008f7aa3b67ee32a03cc378484599"
     }
   }
 }
