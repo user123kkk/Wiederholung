@@ -10,11 +10,18 @@ als gebaut geführt. Große Gesamtabnahme/Veröffentlichung später gesammelt.
 
 - Online laut letztem Veröffentlichungsbeleg: 3.18.28 mit 3.18.27.
 - Auf main: 3.18.29, Rechtsdialog erhält Plan und Eingaben.
-- Uncommittet: 3.18.30 für A14/A15; 16 echte SDK-Fälle und 222 Regeln grün,
+- Uncommittet: 3.18.30 für A14/A15 und den neu gebauten A16-Fix; große
+  Datenabnahme später gesammelt. A16: zwölf Kernfälle und vier ergänzte
+  Randfälle am endgültigen App-Stand grün, 238 Regeln grün. Frischer
+  gemeinsamer gezielter Abschlusslauf läuft nach Neustart des zuvor
+  überlasteten lokalen Demo-Emulators. Belege: VERLAUF-NEUSTART-2026-10-09.md.
+- Historischer A14/A15-Zwischenstand: 16 echte SDK-Fälle und 222 Regeln grün,
   Gesamtabnahme ausstehend. Gestoppter großer Lauf: 29/157 abgeschlossen,
   alle Exit 0; keine vollständige Abnahme. Entwurf unbedingt behalten.
-- A16 neu offen: abgelehnte Tagesantwort verschwindet nach Neustart;
-  feste Gegenprobe und zwei Kontrollen in VERLAUF-NEUSTART-2026-10-09.md.
+- A16 in Arbeit: dauerhafte Tageskopien mit atomaren Cloud-Belegen gebaut;
+  feste Verlust-Gegenprobe erhalten. Gesamtabnahme/Paketabschluss offen.
+- Nächste entschiedene Lernrunden-Punkte nur lesend vorbereitet:
+  VORBEREITUNG-LERNRUNDE-2026-10-09.md. Kein neuer Paketbau über dem Entwurf.
 - Tagesziel/Frage 10: Audit fertig, Empfehlung eines neuen dauerhaften
   Deckels zurückgenommen; gewünschtes Pensum, Zusatznutzen und
   Lernkriterium fehlen. Keine neue Tagesziel-Funktion bauen.

@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:50 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 22:53 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `106f7d3 Sicherung 22:49 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `112bdb1 Sicherung 22:52 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
@@ -34,6 +35,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
+ M plan/zyklus-2/mehrwert/UEBERBLICK-OFFEN.md
  M sw.js
 ```
 
@@ -42,7 +45,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 10, chrome.exe 0 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 10, chrome.exe 3 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -63,6 +66,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 22:52 Codex Prüfumgebung: gezielter Endstandlauf und Offline-Einzelprobe treffen SDK-Stapel-Zeitlimit 30 s. Tatsächliches Emulator-Rootlog (fast 800 MB) zeigt massenhaft „too many pending messagings in the back channel (10001)“, Kanalabbruch und NETWORK_ERROR; Ausschnitt in sicherung/tests/a16-emulator-netzfehler-ausschnitt.log gesichert, Ursprung nicht gelöscht. Nur lokalen Demo-Emulator 7936/10004 für demo-adrabic-karten-audit/8082 beendet und dieselbe Emulator-Version 1.22.0 mit INFO statt FINE neu gestartet; identische endgültige Repo-Regeln, keine Produktivdaten. Rote Läufe erhalten, keine Testgrenze gelockert. Frischer Nachlauf erforderlich; frühe grüne Fälle bleiben Einzelbelege, keine pauschale Gesamtaussage.
 
 - 22:47 Codex: alle vier ergänzten A16-Randfälle grün, einschließlich tatsächlicher Cloud-Beleglöschung. Unveränderter App-SHA 05269ebd; frischer vollständiger gezielter Lauf mit 17 SDK-Fällen (einschließlich Tageshinweis/Download/Entfernen), danach 16 A14/A15-Regressionsfälle und feste Gegenprobe gestartet. Vier Breiten im erneuten Sprungtest ohne Sprung. Minuten-Sicherung lief nachweislich, aber Log-Kopie mit einem cp-Prozess je Datei verzögerte Durchgänge mehrere Minuten. Nur Kopieraufruf auf find/-exec cp mit mehreren Dateien gebündelt, gleiche Filter/Ziele; bash -n grün. Alten einzelnen Sicherungsbaum außerhalb Git-Schreibschritt beendet, genau eine Schleife verborgen neu gestartet. Keine Sicherungsdateien gelöscht und kein neuer Paketbau.
 
@@ -105,5 +110,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex Audit auf ausdrücklichen Auftrag: Modell, Empfehlung, Originalcode und Betreiberentscheidungen kritisch gelesen. Fehler: i bestimmt zugleich Stufe und Terminphase; bei Stufe 3 sind alle ursprünglichen Termine auf derselben Phase statt gleichmäßig. Empfehlung „Tagesziel entlastet“ wurde nicht modelliert, Ziel an Rundengröße koppeln ist unbegründet, globale Mischung würde früherem Betreiberauftrag widersprechen. Historische Ergebnisse bleiben erhalten, korrigierter Lauf bekommt eigene Datei. Primärquellen Anki-Handbuch und Fachartikel geprüft; Quelle für konkrete optimale App-Zahl fehlt. Akku 34 %, nur Einzelprüfungen/Analyse, kein Gesamtlauf.
 
 - Codex Abschluss Tagesdeckel: Werkzeug/Aufgaben/Logbuch als c78e986 auf main gepusht; Bericht und JSON durch Minuten-Sicherung bereits auf main. Arbeitsbaum sauber, origin/main gleich. Tagesdeckel-Rechnung und Empfehlung fertig, Bau wartet auf die ausdrücklich offenen Ziel-/Auswahl-/Zählentscheidungen; Veröffentlichung weiterhin gesammelt später. Kein App-Versionswechsel, .29 lokal und .28 laut letztem Online-Beleg.
-
-- Codex Rechnung fertig: 90 Vergleiche, je fünf feste Folgen/180 Tage. 1100 Karten/60 Tage Pause, 85/10/5: Deckel 20 lässt nach 180 Tagen im Mittel 175,6 ursprüngliche Karten unbesucht; Deckel 30 letzter Erstbesuch Tag 158–177. Älteste zuerst/30 erreicht Tag 35, verursacht aber mehr gesamte Wartezeit (60263,2 statt 41143,2 Kartentage). Keine Aussage über echtes Behalten. Empfehlung und offene Bauentscheidungen im Rechnungsbericht, alle aktuellen Planzeiger nachgezogen; App unverändert. Selbstprüfung und Kern 12/12 grün. Nur neue Reihenfolge-Varianten zusätzlich gerechnet, erfolgreiche Tagesmengen nicht wiederholt.

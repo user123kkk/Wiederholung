@@ -13,8 +13,11 @@ als gebaut geführt. Große Gesamtabnahme/Veröffentlichung später gesammelt.
 - Uncommittet: 3.18.30 für A14/A15; 16 echte SDK-Fälle und 222 Regeln grün,
   Gesamtabnahme ausstehend. Gestoppter großer Lauf: 29/157 abgeschlossen,
   alle Exit 0; keine vollständige Abnahme. Entwurf unbedingt behalten.
-- A16 neu offen: abgelehnte Tagesantwort verschwindet nach Neustart;
-  feste Gegenprobe und zwei Kontrollen in VERLAUF-NEUSTART-2026-10-09.md.
+- A16 im Datenentwurf gebaut: dauerhafte Tagesbeiträge mit atomaren
+  Cloud-Belegen; 238 Regeln und bislang 16 gezielte SDK-Einzelfälle grün.
+  Frischer gemeinsamer Abschlusslauf läuft; große Abnahme später gesammelt.
+  Aktueller Nachweis: VERLAUF-NEUSTART-2026-10-09.md. Anschließende Lernrunde
+  nur lesend vorbereitet: VORBEREITUNG-LERNRUNDE-2026-10-09.md.
 - Tagesziel/Frage 10: Audit fertig, Empfehlung eines neuen dauerhaften
   Deckels zurückgenommen; gewünschtes Pensum, Zusatznutzen und
   Lernkriterium fehlen. Keine neue Tagesziel-Funktion bauen.
