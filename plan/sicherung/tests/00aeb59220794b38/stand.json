@@ -1,0 +1,21 @@
+{
+  "kennung": "00aeb59220794b38a51d7fc98b090e3b78d4c0276fec1a96fb9985639711b2f8",
+  "tests": {
+    "t_runde_lage.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 82,
+      "quelltext": "d31917c2b83238fda60dbc748df0515e1bc815b0e7ccdb10f39e4726f9f6feea"
+    },
+    "t_sprung.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 83,
+      "quelltext": "fecd8b592b3769c3d85a2e32048e12a33c769b1d29674e806eb0481a610eb5c4"
+    }
+  }
+}

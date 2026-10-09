@@ -642,14 +642,15 @@ index e9503f2..08a8640 100644
    }
 diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
 new file mode 100644
-index 0000000..c22bf57
+index 0000000..0c5faf2
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
-@@ -0,0 +1,166 @@
+@@ -0,0 +1,168 @@
 +/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
 +   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
 +const assert=require('node:assert/strict');
 +const {start}=require('./lib');
++const {pruefeKontrast}=require('./kontrast');
 +const {seite,seed,fertig,rest,ROOT,SDK,APP_SOURCE}=require('./diagnose_karten_konflikt');
 +async function server(id='k4') {
 +  const r=await rest(ROOT+'/users/u1/karten/'+id),d=await r.json();
@@ -723,6 +724,7 @@ index 0000000..c22bf57
 +              await reload.evaluate(t=>document.documentElement.setAttribute('data-thema',t),thema);
 +              const fits=await reload.evaluate(()=>{const button=document.querySelector('[data-action="bewertung-sichern"]'),box=button.closest('.banner-fehler').getBoundingClientRect();return box.left>=-1&&box.right<=innerWidth+1&&document.documentElement.scrollWidth<=innerWidth+1;});
 +              assert.ok(fits,'Konflikthinweis passt '+size.width+' '+thema);
++              assert.deepEqual(await pruefeKontrast(reload,'Konflikthinweis '+size.width+' '+thema),[]);
 +            }
 +          }
 +          const ready=reload.waitForEvent('download');await reload.locator('[data-action="bewertung-sichern"]').click();const download=await ready;
