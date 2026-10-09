@@ -1,3 +1,287 @@
+diff --git a/.agents/skills/adrabic-daten/SKILL.md b/.agents/skills/adrabic-daten/SKILL.md
+new file mode 100644
+index 0000000..8952377
+--- /dev/null
++++ b/.agents/skills/adrabic-daten/SKILL.md
+@@ -0,0 +1,36 @@
++---
++name: adrabic-daten
++description: "Adrabic: Firestore/Auth, Offline-Sync, Mehrgeräte-Konflikte, Rückgängig, Import/Export, Konto-Löschen oder Security Rules ändern/prüfen. Nicht für reine CSS-/Textänderungen oder Lernmengen-Empfehlungen."
++---
++
++# Datenwege in Adrabic
++
++Alle Pfade beziehen sich auf die Repo-Wurzel. Die geltenden Arbeits- und
++Freigaberegeln stehen in AGENTS.md/CLAUDE.md; dieser Skill ergänzt die Auswahl
++der Prüfmethode.
++
++- `app.js` nutzt Firebase-JS-SDK **10.14.1**, getrennte Karten-/Bereichsdokumente,
++  Auth und dauerhaften Firestore-Cache. `sw.js` hält die App-Hülle vor; SDK-Cache
++  und Service Worker sind verschiedene Mechanismen. Vor API-Änderungen die
++  tatsächlich eingebundene Version und deren offizielle Dokumentation prüfen.
++- Den betroffenen Schreib-/Leseweg samt Konto-/Snapshot-Wechsel verfolgen.
++  `plan/LEHREN.md` §§ 8, 13 nennen Ablehnungen, verspätete Antworten und Altbestand.
++  Bei neuen Datenflüssen `datenschutzerklaerung.html` mitprüfen (§ 12).
++- `plan/werkzeuge/pruefstand/stubs.js` prüft Bedienabläufe. Für Aussagen über
++  Server-Regeln, Ablehnung, Offline-Replay und Konflikte den **echten SDK** am
++  lokalen Demo-Emulator mit den aktuellen `firestore.rules` verwenden.
++  `plan/werkzeuge/pruefstand/LIESMICH.md` beschreibt die Umgebungen;
++  `karten_konflikte_sdk.js` und `t_verlauf_mehrgeraete.js` sind vorhandene Beispiele.
++  Projekt/Port vor Start und Reset aus dem jeweiligen Werkzeug lesen: 8081 und
++  8082 gehören zu verschiedenen Demo-Projekten. Auth-Attrappe ausdrücklich nennen.
++- Regeln gegen erlaubte **und** verbotene Zugriffe prüfen, einschließlich
++  create/update, Eigentümerwechsel und Altbestand. Vorhandener Regelprüfer:
++  `plan/werkzeuge/regeln/regeln-pruefung.mjs`; Startweg in
++  `plan/werkzeuge/regeln_testen.sh`. Admin-Seed ist kein Nachweis der Regeln.
++- Bei Verlust-/Doppelzählungsfehlern Konto, ursprünglichen Lerntag, Reset-Epoche,
++  Neustart und zweites Gerät passend zum Fehler prüfen. Unberührte Daten
++  kontrollieren; vorhandene feste Gegenprobe erhalten. Tests mit blockiertem
++  Service Worker belegen keinen PWA-Kaltstart.
++
++Belege müssen den getesteten Quellstand und die tatsächliche Prüfebene nennen.
++Ein neues SDK, Backend oder MCP ist keine Voraussetzung für diese Prüfungen.
+diff --git a/.agents/skills/adrabic-daten/agents/openai.yaml b/.agents/skills/adrabic-daten/agents/openai.yaml
+new file mode 100644
+index 0000000..0e754fe
+--- /dev/null
++++ b/.agents/skills/adrabic-daten/agents/openai.yaml
+@@ -0,0 +1,6 @@
++interface:
++  display_name: "Adrabic: Daten und Offline"
++  short_description: "Datenwege mit echtem SDK und Regeln prüfen"
++  default_prompt: "Nutze $adrabic-daten für den betroffenen Datenweg und seine passende Gegenprüfung."
++policy:
++  allow_implicit_invocation: true
+diff --git a/.agents/skills/adrabic-lernbelege/SKILL.md b/.agents/skills/adrabic-lernbelege/SKILL.md
+new file mode 100644
+index 0000000..86216a3
+--- /dev/null
++++ b/.agents/skills/adrabic-lernbelege/SKILL.md
+@@ -0,0 +1,34 @@
++---
++name: adrabic-lernbelege
++description: "Adrabic: Lernlogik, Wiederholungsplanung, Tagesziel/Weiterlernen, Lernsimulationen oder Empfehlungen zur Lernmenge untersuchen. Nicht für reine UI-Kleinigkeiten, Backup-Status oder ein technisches Daten-Retry ohne Lernregeländerung."
++---
++
++# Lernverhalten und belastbare Empfehlungen
++
++Alle Pfade beziehen sich auf die Repo-Wurzel. Vor Empfehlungen
++`plan/EMPFEHLUNGEN-PRUEFEN.md` und `plan/LEHREN.md` § 5.3 anwenden;
++vorhandene Entscheidungen in `plan/ALLES-OFFEN.md`,
++`plan/zyklus-2/ENTSCHEIDUNGEN.md` und der betroffenen Mehrwert-Aufgabe abgleichen.
++
++- Die untersuchte Variante genau benennen: Rundengröße, freiwilliges Tagesziel
++  mit Weiterlernen, dauerhafter Deckel und zeitlich begrenzter Rückkehrmodus
++  sind verschiedene Verhaltensweisen. Vorhandene Rundenbegrenzung beweist keine
++  geeignete Tagesmenge. Auswahl, 04:00-Lerntag, Fortschritt, Abbruch und
++  Freigaben im tatsächlichen `app.js`-Pfad verfolgen.
++- Für Tagesdeckel gibt es bereits
++  `plan/werkzeuge/tagesdeckel_simulation.cjs`,
++  `plan/werkzeuge/t_simulations_eingaben.cjs` und
++  `plan/werkzeuge/tagesdeckel_audit.cjs`. Vor einem langen Lauf erst die
++  Fragestellung gegen diese Modellgrenzen prüfen. Eingangsprüfung und bekannte
++  falsche Eingaben bleiben erhalten; Hashes und Einzelergebnisse sichern.
++- Synthetische Antwortquoten und Bestände als Annahmen markieren. Last,
++  Motivation und Erinnerungsleistung getrennt bewerten. Ohne Abrufmessung
++  oder passendes Gedächtnismodell keinen Lernwirkungsgewinn behaupten.
++- Fachliche Unsicherheit gezielt mit Primärquellen recherchieren; aktuelle
++  API-/Werkzeugfragen mit offiziellen Versionsdokumentationen prüfen.
++  Behauptung, Beleg/Annahme, Alternative und Geltungsgrenze zuordnen.
++  Lücken können ein Urteil zurückstellen; sie sind keine neue Baufreigabe.
++
++Der Betreiber-Probelauf `plan/texte-lernen/` behält seine bestehenden Grenzen.
++Für technische Datenverluste zusätzlich `adrabic-daten` verwenden, falls deren
++Schreib-/Synchronisationsverhalten Teil der Aufgabe ist.
+diff --git a/.agents/skills/adrabic-lernbelege/agents/openai.yaml b/.agents/skills/adrabic-lernbelege/agents/openai.yaml
+new file mode 100644
+index 0000000..7f64b5d
+--- /dev/null
++++ b/.agents/skills/adrabic-lernbelege/agents/openai.yaml
+@@ -0,0 +1,6 @@
++interface:
++  display_name: "Adrabic: Lernbelege"
++  short_description: "Lernempfehlungen an Verhalten und Belegen prüfen"
++  default_prompt: "Nutze $adrabic-lernbelege für die Lernfrage und prüfe Aussagegrenzen vor der Empfehlung."
++policy:
++  allow_implicit_invocation: true
+diff --git a/.agents/skills/adrabic-oberflaeche/SKILL.md b/.agents/skills/adrabic-oberflaeche/SKILL.md
+new file mode 100644
+index 0000000..0b0fbb1
+--- /dev/null
++++ b/.agents/skills/adrabic-oberflaeche/SKILL.md
+@@ -0,0 +1,36 @@
++---
++name: adrabic-oberflaeche
++description: "Adrabic: Oberfläche, CSS, Dialoge, arabische Schrift/RTL, Barrierefreiheit, iPhone/PWA oder Startbild ändern/prüfen. Nicht für reine Firestore-Regeln, Lernsimulationen oder Planpflege ohne UI-Änderung."
++---
++
++# Oberfläche und Geräte in Adrabic
++
++Alle Pfade beziehen sich auf die Repo-Wurzel. Für Umfang und Abnahme gelten
++AGENTS.md/CLAUDE.md einschließlich Klein-Weg.
++
++- Die App verwendet HTML, `styles.css` und Vanilla-JavaScript in `app.js`.
++  Vorhandene Gestaltung, Themen, Schriftgrößen und Bedienmuster fortführen.
++  `render()` ersetzt `#app`; Aktionen laufen über die zentrale `data-action`-
++  Delegation. Neue Knopf-Listener und Framework-Wechsel passen nicht zu diesem
++  Muster. Relevante Stolperstellen: `plan/LEHREN.md` §§ 6, 11, 13.
++- Passende vorhandene Tests zuerst über `rg` im
++  `plan/werkzeuge/pruefstand` suchen. Einrichtung und Windows-CHROMIUM stehen in
++  `plan/werkzeuge/pruefstand/LIESMICH.md`. Für kleine Abstände/Wörter nur die
++  betroffenen Tests; Lernlogik, Daten und neue Bildschirme fallen nicht darunter.
++- Bei betroffener Darstellung arabischen Text mit Harakat und gemischten
++  Zahlen/Richtungen prüfen; Themen, größere Schrift und schmale Breite wählen,
++  soweit der geänderte Bereich sie beeinflusst. Für Dialoge Tastatur/Fokus,
++  Scrollen, Schließen und laufende Eingaben berücksichtigen. Messung und
++  gezielte Bildschirmbilder zusammen beurteilen, nicht nur eine hübsche Ansicht.
++- `t_a11y.js`, `t_kontrast.js` und `t_boot_geometrie.js` sind vorhandene
++  Prüfeinstiege. Sie belegen ihre Kriterien, keine vollständige WCAG-Konformität.
++  Chromium-Viewport, WebKit-Browser und installierte iPhone-PWA sind getrennte
++  Nachweise. Offene echte Gerätebestätigung in `plan/zyklus-2/GERAETETESTS-ZETTEL.md`
++  belassen, wenn sie fehlt.
++- Bei Start-/Cache-Änderungen `index.html`, `sw.js`, `manifest.json`,
++  `firebase.json` und betroffene `splash/`-Links zusammen verfolgen.
++  `plan/werkzeuge/pruefe_stand.mjs` kontrolliert den Veröffentlichungsstand;
++  Version/Freigabe nach den bestehenden Regeln, nicht wegen dieses Skills.
++
++Neue Design- oder Browser-Plugins nur wählen, wenn eine benötigte Fähigkeit
++in den vorhandenen Werkzeugen fehlt.
+diff --git a/.agents/skills/adrabic-oberflaeche/agents/openai.yaml b/.agents/skills/adrabic-oberflaeche/agents/openai.yaml
+new file mode 100644
+index 0000000..0355b4b
+--- /dev/null
++++ b/.agents/skills/adrabic-oberflaeche/agents/openai.yaml
+@@ -0,0 +1,6 @@
++interface:
++  display_name: "Adrabic: Oberfläche und Geräte"
++  short_description: "Vorhandene UI-Muster und Gerätenachweise nutzen"
++  default_prompt: "Nutze $adrabic-oberflaeche für die betroffene Oberfläche und passende Geräteprüfung."
++policy:
++  allow_implicit_invocation: true
+diff --git a/.claude/skills/adrabic-daten/SKILL.md b/.claude/skills/adrabic-daten/SKILL.md
+new file mode 100644
+index 0000000..8952377
+--- /dev/null
++++ b/.claude/skills/adrabic-daten/SKILL.md
+@@ -0,0 +1,36 @@
++---
++name: adrabic-daten
++description: "Adrabic: Firestore/Auth, Offline-Sync, Mehrgeräte-Konflikte, Rückgängig, Import/Export, Konto-Löschen oder Security Rules ändern/prüfen. Nicht für reine CSS-/Textänderungen oder Lernmengen-Empfehlungen."
++---
++
++# Datenwege in Adrabic
++
++Alle Pfade beziehen sich auf die Repo-Wurzel. Die geltenden Arbeits- und
++Freigaberegeln stehen in AGENTS.md/CLAUDE.md; dieser Skill ergänzt die Auswahl
++der Prüfmethode.
++
++- `app.js` nutzt Firebase-JS-SDK **10.14.1**, getrennte Karten-/Bereichsdokumente,
++  Auth und dauerhaften Firestore-Cache. `sw.js` hält die App-Hülle vor; SDK-Cache
++  und Service Worker sind verschiedene Mechanismen. Vor API-Änderungen die
++  tatsächlich eingebundene Version und deren offizielle Dokumentation prüfen.
++- Den betroffenen Schreib-/Leseweg samt Konto-/Snapshot-Wechsel verfolgen.
++  `plan/LEHREN.md` §§ 8, 13 nennen Ablehnungen, verspätete Antworten und Altbestand.
++  Bei neuen Datenflüssen `datenschutzerklaerung.html` mitprüfen (§ 12).
++- `plan/werkzeuge/pruefstand/stubs.js` prüft Bedienabläufe. Für Aussagen über
++  Server-Regeln, Ablehnung, Offline-Replay und Konflikte den **echten SDK** am
++  lokalen Demo-Emulator mit den aktuellen `firestore.rules` verwenden.
++  `plan/werkzeuge/pruefstand/LIESMICH.md` beschreibt die Umgebungen;
++  `karten_konflikte_sdk.js` und `t_verlauf_mehrgeraete.js` sind vorhandene Beispiele.
++  Projekt/Port vor Start und Reset aus dem jeweiligen Werkzeug lesen: 8081 und
++  8082 gehören zu verschiedenen Demo-Projekten. Auth-Attrappe ausdrücklich nennen.
++- Regeln gegen erlaubte **und** verbotene Zugriffe prüfen, einschließlich
++  create/update, Eigentümerwechsel und Altbestand. Vorhandener Regelprüfer:
++  `plan/werkzeuge/regeln/regeln-pruefung.mjs`; Startweg in
++  `plan/werkzeuge/regeln_testen.sh`. Admin-Seed ist kein Nachweis der Regeln.
++- Bei Verlust-/Doppelzählungsfehlern Konto, ursprünglichen Lerntag, Reset-Epoche,
++  Neustart und zweites Gerät passend zum Fehler prüfen. Unberührte Daten
++  kontrollieren; vorhandene feste Gegenprobe erhalten. Tests mit blockiertem
++  Service Worker belegen keinen PWA-Kaltstart.
++
++Belege müssen den getesteten Quellstand und die tatsächliche Prüfebene nennen.
++Ein neues SDK, Backend oder MCP ist keine Voraussetzung für diese Prüfungen.
+diff --git a/.claude/skills/adrabic-lernbelege/SKILL.md b/.claude/skills/adrabic-lernbelege/SKILL.md
+new file mode 100644
+index 0000000..86216a3
+--- /dev/null
++++ b/.claude/skills/adrabic-lernbelege/SKILL.md
+@@ -0,0 +1,34 @@
++---
++name: adrabic-lernbelege
++description: "Adrabic: Lernlogik, Wiederholungsplanung, Tagesziel/Weiterlernen, Lernsimulationen oder Empfehlungen zur Lernmenge untersuchen. Nicht für reine UI-Kleinigkeiten, Backup-Status oder ein technisches Daten-Retry ohne Lernregeländerung."
++---
++
++# Lernverhalten und belastbare Empfehlungen
++
++Alle Pfade beziehen sich auf die Repo-Wurzel. Vor Empfehlungen
++`plan/EMPFEHLUNGEN-PRUEFEN.md` und `plan/LEHREN.md` § 5.3 anwenden;
++vorhandene Entscheidungen in `plan/ALLES-OFFEN.md`,
++`plan/zyklus-2/ENTSCHEIDUNGEN.md` und der betroffenen Mehrwert-Aufgabe abgleichen.
++
++- Die untersuchte Variante genau benennen: Rundengröße, freiwilliges Tagesziel
++  mit Weiterlernen, dauerhafter Deckel und zeitlich begrenzter Rückkehrmodus
++  sind verschiedene Verhaltensweisen. Vorhandene Rundenbegrenzung beweist keine
++  geeignete Tagesmenge. Auswahl, 04:00-Lerntag, Fortschritt, Abbruch und
++  Freigaben im tatsächlichen `app.js`-Pfad verfolgen.
++- Für Tagesdeckel gibt es bereits
++  `plan/werkzeuge/tagesdeckel_simulation.cjs`,
++  `plan/werkzeuge/t_simulations_eingaben.cjs` und
++  `plan/werkzeuge/tagesdeckel_audit.cjs`. Vor einem langen Lauf erst die
++  Fragestellung gegen diese Modellgrenzen prüfen. Eingangsprüfung und bekannte
++  falsche Eingaben bleiben erhalten; Hashes und Einzelergebnisse sichern.
++- Synthetische Antwortquoten und Bestände als Annahmen markieren. Last,
++  Motivation und Erinnerungsleistung getrennt bewerten. Ohne Abrufmessung
++  oder passendes Gedächtnismodell keinen Lernwirkungsgewinn behaupten.
++- Fachliche Unsicherheit gezielt mit Primärquellen recherchieren; aktuelle
++  API-/Werkzeugfragen mit offiziellen Versionsdokumentationen prüfen.
++  Behauptung, Beleg/Annahme, Alternative und Geltungsgrenze zuordnen.
++  Lücken können ein Urteil zurückstellen; sie sind keine neue Baufreigabe.
++
++Der Betreiber-Probelauf `plan/texte-lernen/` behält seine bestehenden Grenzen.
++Für technische Datenverluste zusätzlich `adrabic-daten` verwenden, falls deren
++Schreib-/Synchronisationsverhalten Teil der Aufgabe ist.
+diff --git a/.claude/skills/adrabic-oberflaeche/SKILL.md b/.claude/skills/adrabic-oberflaeche/SKILL.md
+new file mode 100644
+index 0000000..0b0fbb1
+--- /dev/null
++++ b/.claude/skills/adrabic-oberflaeche/SKILL.md
+@@ -0,0 +1,36 @@
++---
++name: adrabic-oberflaeche
++description: "Adrabic: Oberfläche, CSS, Dialoge, arabische Schrift/RTL, Barrierefreiheit, iPhone/PWA oder Startbild ändern/prüfen. Nicht für reine Firestore-Regeln, Lernsimulationen oder Planpflege ohne UI-Änderung."
++---
++
++# Oberfläche und Geräte in Adrabic
++
++Alle Pfade beziehen sich auf die Repo-Wurzel. Für Umfang und Abnahme gelten
++AGENTS.md/CLAUDE.md einschließlich Klein-Weg.
++
++- Die App verwendet HTML, `styles.css` und Vanilla-JavaScript in `app.js`.
++  Vorhandene Gestaltung, Themen, Schriftgrößen und Bedienmuster fortführen.
++  `render()` ersetzt `#app`; Aktionen laufen über die zentrale `data-action`-
++  Delegation. Neue Knopf-Listener und Framework-Wechsel passen nicht zu diesem
++  Muster. Relevante Stolperstellen: `plan/LEHREN.md` §§ 6, 11, 13.
++- Passende vorhandene Tests zuerst über `rg` im
++  `plan/werkzeuge/pruefstand` suchen. Einrichtung und Windows-CHROMIUM stehen in
++  `plan/werkzeuge/pruefstand/LIESMICH.md`. Für kleine Abstände/Wörter nur die
++  betroffenen Tests; Lernlogik, Daten und neue Bildschirme fallen nicht darunter.
++- Bei betroffener Darstellung arabischen Text mit Harakat und gemischten
++  Zahlen/Richtungen prüfen; Themen, größere Schrift und schmale Breite wählen,
++  soweit der geänderte Bereich sie beeinflusst. Für Dialoge Tastatur/Fokus,
++  Scrollen, Schließen und laufende Eingaben berücksichtigen. Messung und
++  gezielte Bildschirmbilder zusammen beurteilen, nicht nur eine hübsche Ansicht.
++- `t_a11y.js`, `t_kontrast.js` und `t_boot_geometrie.js` sind vorhandene
++  Prüfeinstiege. Sie belegen ihre Kriterien, keine vollständige WCAG-Konformität.
++  Chromium-Viewport, WebKit-Browser und installierte iPhone-PWA sind getrennte
++  Nachweise. Offene echte Gerätebestätigung in `plan/zyklus-2/GERAETETESTS-ZETTEL.md`
++  belassen, wenn sie fehlt.
++- Bei Start-/Cache-Änderungen `index.html`, `sw.js`, `manifest.json`,
++  `firebase.json` und betroffene `splash/`-Links zusammen verfolgen.
++  `plan/werkzeuge/pruefe_stand.mjs` kontrolliert den Veröffentlichungsstand;
++  Version/Freigabe nach den bestehenden Regeln, nicht wegen dieses Skills.
++
++Neue Design- oder Browser-Plugins nur wählen, wenn eine benötigte Fähigkeit
++in den vorhandenen Werkzeugen fehlt.
 diff --git a/CHANGELOG.md b/CHANGELOG.md
 index bc20801..e698a62 100644
 --- a/CHANGELOG.md
@@ -617,6 +901,63 @@ index a5e2674..7979e42 100644
  
  /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
     unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
+diff --git a/plan/werkzeuge/projekt_skills.mjs b/plan/werkzeuge/projekt_skills.mjs
+new file mode 100644
+index 0000000..ab96048
+--- /dev/null
++++ b/plan/werkzeuge/projekt_skills.mjs
+@@ -0,0 +1,51 @@
++// Gemeinsame Quelle .agents/skills; Claude-Spiegel ohne zusätzliche Abhängigkeiten.
++import fs from 'node:fs';
++import path from 'node:path';
++import assert from 'node:assert/strict';
++import {fileURLToPath} from 'node:url';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
++const names = ['adrabic-daten', 'adrabic-oberflaeche', 'adrabic-lernbelege'];
++const args = process.argv.slice(2);
++assert.ok(args.length <= 1 && (!args.length || ['--pruefen', '--schreiben'].includes(args[0])),
++  'Aufruf: node plan/werkzeuge/projekt_skills.mjs [--pruefen|--schreiben]');
++const write = args[0] === '--schreiben';
++const normal = text => text.replace(/\r\n/g, '\n');
++let descChars = 0, bodyBytes = 0;
++
++for (const name of names) {
++  const dir = path.join(root, '.agents/skills', name);
++  const bytes = fs.readFileSync(path.join(dir, 'SKILL.md'));
++  const text = normal(bytes.toString('utf8'));
++  const front = text.match(/^---\nname: ([a-z0-9-]+)\ndescription: ("[^\n]+")\n---\n/);
++  assert.ok(front, `${name}: erwartetes portables YAML fehlt`);
++  assert.equal(front[1], name, `${name}: Ordner und Skillname weichen ab`);
++  const desc = JSON.parse(front[2]); // JSON-String ist zugleich ein YAML-String.
++  assert.ok(desc.length > 0 && desc.length <= 1024, `${name}: Beschreibungslänge`);
++  const body = text.slice(front[0].length);
++  assert.ok(body.length && !body.includes('[TODO'), `${name}: unvollständiger Inhalt`);
++  // Nur als Repo-Pfad geschriebene Referenzen, keine Befehle/Abschnittsnummern.
++  for (const match of body.matchAll(/`((?:plan\/|\.agents\/|\.claude\/|splash\/)[^`\n]+)`/g)) {
++    assert.ok(fs.existsSync(path.join(root, match[1])), `${name}: Verweis fehlt: ${match[1]}`);
++  }
++  const yaml = normal(fs.readFileSync(path.join(dir, 'agents/openai.yaml'), 'utf8'));
++  assert.match(yaml, /allow_implicit_invocation: true/, `${name}: automatische Auswahl fehlt`);
++  const short = yaml.match(/short_description: ("[^\n]+")/);
++  assert.ok(short && JSON.parse(short[1]).length >= 25 && JSON.parse(short[1]).length <= 64,
++    `${name}: Kurzbeschreibung muss 25–64 Zeichen haben`);
++  assert.ok(yaml.includes(`$${name}`), `${name}: Standardprompt nennt Skill nicht`);
++  const mirror = path.join(root, '.claude/skills', name, 'SKILL.md');
++  if (write) {
++    fs.mkdirSync(path.dirname(mirror), {recursive: true});
++    // Ausschließlich diese drei verwalteten Spiegel; keine fremden Skills ändern.
++    fs.writeFileSync(mirror, bytes);
++  }
++  assert.ok(fs.existsSync(mirror), `${name}: Claude-Spiegel fehlt; --schreiben ausführen`);
++  assert.equal(normal(fs.readFileSync(mirror, 'utf8')), text,
++    `${name}: Claude-Spiegel veraltet; Quelle ändern, dann --schreiben`);
++  descChars += desc.length;
++  bodyBytes += Buffer.byteLength(body, 'utf8');
++  console.log(`OK ${name}: portable Metadaten, Repo-Verweise, automatische Auswahl erlaubt, Spiegel identisch`);
++}
++console.log(`3 Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
++console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
 diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 index e9503f2..811bd13 100644
 --- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
