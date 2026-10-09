@@ -584,6 +584,22 @@
       "fehler": null,
       "sekunden": 7,
       "quelltext": "214530754a9905a16d89980f66f6dc25828615461350cef6d4680ea640fb25a5"
+    },
+    "t_lernen_start.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 107,
+      "quelltext": "1185cd3153f97d2d8417748af6789775159e13ac4e2a35ebd789f943ca630c38"
+    },
+    "t_lernlogik.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 1,
+      "quelltext": "e928974108c8a2e14c9902af02b4b2d070aeba7ed64a513d59621c9c32282638"
     }
   }
 }
