@@ -142,3 +142,40 @@ BEWAHRT t_schreiben.js
 BEWAHRT t_schreiben_vollbild.js
 BEWAHRT t_scrollen.js
 BEWAHRT t_serie.js
+EXIT 0 t_serie_lang.js (184s)
+BEWAHRT t_serie_warnung.js
+BEWAHRT t_settings_kontowechsel.js
+BEWAHRT t_settings_mehrgeraete.js
+BEWAHRT t_sicher.js
+BEWAHRT t_sprung.js
+BEWAHRT t_sprung_ueben.js
+BEWAHRT t_start.js
+BEWAHRT t_sw.js
+BEWAHRT t_sw_paket_a.js
+BEWAHRT t_teilen.js
+BEWAHRT t_text_anlegen.js
+BEWAHRT t_text_ausschluss.js
+BEWAHRT t_text_einwilligung.js
+BEWAHRT t_text_felder.js
+BEWAHRT t_text_fortschritt.js
+BEWAHRT t_text_kreis.js
+BEWAHRT t_text_nachbarn.js
+BEWAHRT t_text_neu.js
+BEWAHRT t_text_tempo.js
+BEWAHRT t_text_zustaende.js
+BEWAHRT t_ueben.js
+BEWAHRT t_ueben_auswahl.js
+BEWAHRT t_undo_verlauf.js
+BEWAHRT t_verlauf_mehrgeraete.js
+BEWAHRT t_verwalten.js
+BEWAHRT t_wisch_tempo.js
+BEWAHRT t_wischen.js
+BEWAHRT t_wischen_schraeg.js
+BEWAHRT t_wochen_kopf.js
+BEWAHRT t_x_mitten.js
+BEWAHRT t_zahlen.js
+BEWAHRT t_zeilenanfang.js
+
+156/156 Exit 0; 0 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\d74ff6186ee9311d
+
+=== 4/6 Zufallstest mit Texten ===
