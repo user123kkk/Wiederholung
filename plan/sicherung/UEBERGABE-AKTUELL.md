@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 15:54 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 15:56 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e1650c4 Plan: Abschluss 3.18.29 und offene iPhone-Abnahme festhalten`
+- Zweig und letzter Commit: `main`, `1e69c4d Sicherung 15:55 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
