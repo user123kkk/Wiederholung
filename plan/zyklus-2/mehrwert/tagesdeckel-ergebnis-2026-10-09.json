@@ -1,0 +1,1960 @@
+{
+  "appVersion": "3.18.29",
+  "sourceSha256": "cb2c7f70dc6fd0539978a388239831b296fb5badb4415bf5a29e98ff2056e72f",
+  "days": 180,
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "ownerRules": true,
+  "selfCheck": "passed",
+  "rows": [
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Alle",
+      "ratings": "alle sicher",
+      "initialDue": 66,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 6.2,
+      "maxAnswers": 66,
+      "dueEnd": 1.6,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 66,
+        "answers": 66
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Alle",
+      "ratings": "85/10/5",
+      "initialDue": 66,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 9.3,
+      "maxAnswers": 71,
+      "dueEnd": 2.6,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 66,
+        "answers": 70
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Alle",
+      "ratings": "60/20/20",
+      "initialDue": 66,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 36.6,
+      "maxAnswers": 97,
+      "dueEnd": 23,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 66,
+        "answers": 80
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 20",
+      "ratings": "alle sicher",
+      "initialDue": 66,
+      "initialClearDays": [
+        13,
+        13,
+        13,
+        12,
+        13
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 6.2,
+      "maxAnswers": 20,
+      "dueEnd": 1.4,
+      "oldestDueDays": 0,
+      "waitingCardDays": 553,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 20",
+      "ratings": "85/10/5",
+      "initialDue": 66,
+      "initialClearDays": [
+        20,
+        20,
+        22,
+        20,
+        20
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 9.3,
+      "maxAnswers": 25,
+      "dueEnd": 2.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 1013,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 20,
+        "answers": 21
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 20",
+      "ratings": "60/20/20",
+      "initialDue": 66,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 29.2,
+      "answersPerDay": 24,
+      "maxAnswers": 32,
+      "dueEnd": 86.4,
+      "oldestDueDays": 180,
+      "waitingCardDays": 14984.6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 20,
+        "answers": 24
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 30",
+      "ratings": "alle sicher",
+      "initialDue": 66,
+      "initialClearDays": [
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 6.2,
+      "maxAnswers": 30,
+      "dueEnd": 1.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 174.8,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 30,
+        "answers": 30
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 30",
+      "ratings": "85/10/5",
+      "initialDue": 66,
+      "initialClearDays": [
+        10,
+        9,
+        10,
+        9,
+        10
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 9.3,
+      "maxAnswers": 35,
+      "dueEnd": 2.8,
+      "oldestDueDays": 0,
+      "waitingCardDays": 273,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 30,
+        "answers": 32
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 30",
+      "ratings": "60/20/20",
+      "initialDue": 66,
+      "initialClearDays": [
+        90,
+        84,
+        97,
+        91,
+        78
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 34,
+      "maxAnswers": 43,
+      "dueEnd": 26.4,
+      "oldestDueDays": 0,
+      "waitingCardDays": 4239.6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 30,
+        "answers": 36
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 60",
+      "ratings": "alle sicher",
+      "initialDue": 66,
+      "initialClearDays": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 6.2,
+      "maxAnswers": 60,
+      "dueEnd": 1.6,
+      "oldestDueDays": 0,
+      "waitingCardDays": 6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 60,
+        "answers": 60
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 60",
+      "ratings": "85/10/5",
+      "initialDue": 66,
+      "initialClearDays": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 9.3,
+      "maxAnswers": 64,
+      "dueEnd": 2.8,
+      "oldestDueDays": 0,
+      "waitingCardDays": 15.6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 60,
+        "answers": 63
+      }
+    },
+    {
+      "scenario": "Alltag 300, keine neuen",
+      "policy": "Deckel 60",
+      "ratings": "60/20/20",
+      "initialDue": 66,
+      "initialClearDays": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 36.6,
+      "maxAnswers": 77,
+      "dueEnd": 23,
+      "oldestDueDays": 0,
+      "waitingCardDays": 31.6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 66,
+        "admitted": 60,
+        "answers": 72
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Alle",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 6.3,
+      "maxAnswers": 250,
+      "dueEnd": 1.8,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 250
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Alle",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 9.5,
+      "maxAnswers": 265,
+      "dueEnd": 3,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 265
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Alle",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 37.4,
+      "maxAnswers": 309,
+      "dueEnd": 22.8,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 303
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 20",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 6.3,
+      "maxAnswers": 20,
+      "dueEnd": 1.8,
+      "oldestDueDays": 0,
+      "waitingCardDays": 1660.2,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 20",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        18,
+        18,
+        18,
+        17,
+        17
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 9.3,
+      "maxAnswers": 28,
+      "dueEnd": 3,
+      "oldestDueDays": 0,
+      "waitingCardDays": 2125.6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 20",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 35.4,
+      "answersPerDay": 24,
+      "maxAnswers": 30,
+      "dueEnd": 76.6,
+      "oldestDueDays": 200,
+      "waitingCardDays": 16062.8,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 30",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 6.3,
+      "maxAnswers": 30,
+      "dueEnd": 1.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 982,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 30
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 30",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        12,
+        11,
+        11,
+        11,
+        11
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 9.4,
+      "maxAnswers": 38,
+      "dueEnd": 2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 1194.4,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 31
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 30",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        122,
+        97,
+        119,
+        82,
+        135
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 33.9,
+      "maxAnswers": 43,
+      "dueEnd": 25.4,
+      "oldestDueDays": 3,
+      "waitingCardDays": 5578.8,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 32
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 60",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 6.3,
+      "maxAnswers": 60,
+      "dueEnd": 2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 412,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 60
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 60",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        6,
+        5,
+        6,
+        5,
+        5
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 9.4,
+      "maxAnswers": 67,
+      "dueEnd": 3.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 477.2,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 63
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, 300",
+      "policy": "Deckel 60",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        8,
+        7,
+        7,
+        7,
+        7
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 37.1,
+      "maxAnswers": 80,
+      "dueEnd": 23,
+      "oldestDueDays": 0,
+      "waitingCardDays": 642.4,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 70
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Alle",
+      "ratings": "alle sicher",
+      "initialDue": 1038,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 23.8,
+      "maxAnswers": 1038,
+      "dueEnd": 44.6,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 1038,
+        "answers": 1038
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Alle",
+      "ratings": "85/10/5",
+      "initialDue": 1038,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 35.6,
+      "maxAnswers": 1092,
+      "dueEnd": 41.4,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 1038,
+        "answers": 1091
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Alle",
+      "ratings": "60/20/20",
+      "initialDue": 1038,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 144.4,
+      "maxAnswers": 1263,
+      "dueEnd": 97.4,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 1038,
+        "answers": 1243
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 20",
+      "ratings": "alle sicher",
+      "initialDue": 1038,
+      "initialClearDays": [
+        null,
+        null,
+        172,
+        null,
+        null
+      ],
+      "untouchedInitial": 6,
+      "answersPerDay": 20,
+      "maxAnswers": 20,
+      "dueEnd": 46.6,
+      "oldestDueDays": 240,
+      "waitingCardDays": 51530.6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 20",
+      "ratings": "85/10/5",
+      "initialDue": 1038,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 175.6,
+      "answersPerDay": 21,
+      "maxAnswers": 25,
+      "dueEnd": 214.2,
+      "oldestDueDays": 240,
+      "waitingCardDays": 71129.2,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 20",
+      "ratings": "60/20/20",
+      "initialDue": 1038,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 612.2,
+      "answersPerDay": 24,
+      "maxAnswers": 30,
+      "dueEnd": 730.2,
+      "oldestDueDays": 240,
+      "waitingCardDays": 129981.2,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 20,
+        "answers": 24
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 30",
+      "ratings": "alle sicher",
+      "initialDue": 1038,
+      "initialClearDays": [
+        87,
+        87,
+        87,
+        88,
+        87
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 22.6,
+      "maxAnswers": 30,
+      "dueEnd": 20.6,
+      "oldestDueDays": 0,
+      "waitingCardDays": 27065.6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 30,
+        "answers": 30
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 30",
+      "ratings": "85/10/5",
+      "initialDue": 1038,
+      "initialClearDays": [
+        163,
+        159,
+        158,
+        159,
+        177
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 31,
+      "maxAnswers": 36,
+      "dueEnd": 30.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 41143.2,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 30,
+        "answers": 30
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 30",
+      "ratings": "60/20/20",
+      "initialDue": 1038,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 513.4,
+      "answersPerDay": 36.1,
+      "maxAnswers": 45,
+      "dueEnd": 578.6,
+      "oldestDueDays": 240,
+      "waitingCardDays": 112689.6,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 30,
+        "answers": 36
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 60",
+      "ratings": "alle sicher",
+      "initialDue": 1038,
+      "initialClearDays": [
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 23.7,
+      "maxAnswers": 60,
+      "dueEnd": 20.8,
+      "oldestDueDays": 0,
+      "waitingCardDays": 9291.2,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 60,
+        "answers": 60
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 60",
+      "ratings": "85/10/5",
+      "initialDue": 1038,
+      "initialClearDays": [
+        43,
+        42,
+        43,
+        49,
+        49
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 34.8,
+      "maxAnswers": 68,
+      "dueEnd": 26,
+      "oldestDueDays": 0,
+      "waitingCardDays": 12853.8,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 60,
+        "answers": 60
+      }
+    },
+    {
+      "scenario": "Pause 60 Tage, 1100",
+      "policy": "Deckel 60",
+      "ratings": "60/20/20",
+      "initialDue": 1038,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 267.2,
+      "answersPerDay": 72.1,
+      "maxAnswers": 83,
+      "dueEnd": 379.8,
+      "oldestDueDays": 240,
+      "waitingCardDays": 71125,
+      "newIntroduced": 0,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 1038,
+        "admitted": 60,
+        "answers": 71
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Alle",
+      "ratings": "alle sicher",
+      "initialDue": 300,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 16.7,
+      "maxAnswers": 600,
+      "dueEnd": 0,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 300,
+        "answers": 600
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Alle",
+      "ratings": "85/10/5",
+      "initialDue": 300,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 23.6,
+      "maxAnswers": 574,
+      "dueEnd": 3,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 300,
+        "answers": 564
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Alle",
+      "ratings": "60/20/20",
+      "initialDue": 300,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 76.9,
+      "maxAnswers": 556,
+      "dueEnd": 29,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 300,
+        "answers": 547
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 20",
+      "ratings": "alle sicher",
+      "initialDue": 300,
+      "initialClearDays": [
+        99,
+        100,
+        100,
+        99,
+        98
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 15.9,
+      "maxAnswers": 40,
+      "dueEnd": 3.4,
+      "oldestDueDays": 0,
+      "waitingCardDays": 12830.4,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 20,
+        "answers": 40
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 20",
+      "ratings": "85/10/5",
+      "initialDue": 300,
+      "initialClearDays": [
+        149,
+        156,
+        158,
+        147,
+        152
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 21,
+      "maxAnswers": 40,
+      "dueEnd": 9.4,
+      "oldestDueDays": 0,
+      "waitingCardDays": 19173.2,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 20,
+        "answers": 38
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 20",
+      "ratings": "60/20/20",
+      "initialDue": 300,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 173.2,
+      "answersPerDay": 24.4,
+      "maxAnswers": 38,
+      "dueEnd": 206.6,
+      "oldestDueDays": 180,
+      "waitingCardDays": 39914,
+      "newIntroduced": 126.8,
+      "unintroduced": 173.2,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 20,
+        "answers": 38
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 30",
+      "ratings": "alle sicher",
+      "initialDue": 300,
+      "initialClearDays": [
+        58,
+        59,
+        57,
+        58,
+        59
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 16.4,
+      "maxAnswers": 60,
+      "dueEnd": 4.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 7303.4,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 30,
+        "answers": 60
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 30",
+      "ratings": "85/10/5",
+      "initialDue": 300,
+      "initialClearDays": [
+        87,
+        88,
+        89,
+        87,
+        88
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 22.4,
+      "maxAnswers": 59,
+      "dueEnd": 5.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 10737.8,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 30,
+        "answers": 55
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 30",
+      "ratings": "60/20/20",
+      "initialDue": 300,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 113.2,
+      "answersPerDay": 36.6,
+      "maxAnswers": 57,
+      "dueEnd": 151.4,
+      "oldestDueDays": 180,
+      "waitingCardDays": 32604.4,
+      "newIntroduced": 186.8,
+      "unintroduced": 113.2,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 30,
+        "answers": 57
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 60",
+      "ratings": "alle sicher",
+      "initialDue": 300,
+      "initialClearDays": [
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 16.7,
+      "maxAnswers": 120,
+      "dueEnd": 0,
+      "oldestDueDays": 0,
+      "waitingCardDays": 2648.8,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 60,
+        "answers": 120
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 60",
+      "ratings": "85/10/5",
+      "initialDue": 300,
+      "initialClearDays": [
+        33,
+        34,
+        36,
+        33,
+        31
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 23.3,
+      "maxAnswers": 118,
+      "dueEnd": 4.6,
+      "oldestDueDays": 0,
+      "waitingCardDays": 3651.2,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 60,
+        "answers": 109
+      }
+    },
+    {
+      "scenario": "300 neue auf einmal",
+      "policy": "Deckel 60",
+      "ratings": "60/20/20",
+      "initialDue": 300,
+      "initialClearDays": [
+        119,
+        133,
+        135,
+        118,
+        123
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 67.3,
+      "maxAnswers": 110,
+      "dueEnd": 35.4,
+      "oldestDueDays": 0,
+      "waitingCardDays": 12442,
+      "newIntroduced": 300,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 300,
+        "admitted": 60,
+        "answers": 108
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Alle",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 47.8,
+      "maxAnswers": 250,
+      "dueEnd": 45.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 895,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 250
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Alle",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 66.8,
+      "maxAnswers": 265,
+      "dueEnd": 65.8,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 895,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 265
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Alle",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 194.6,
+      "maxAnswers": 309,
+      "dueEnd": 208.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 895,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 303
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 20",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 21.9,
+      "maxAnswers": 39,
+      "dueEnd": 576.4,
+      "oldestDueDays": 112,
+      "waitingCardDays": 54020.6,
+      "newIntroduced": 341.6,
+      "unintroduced": 553.4,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 20",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        18,
+        18,
+        18,
+        17,
+        17
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 22,
+      "maxAnswers": 31,
+      "dueEnd": 710.2,
+      "oldestDueDays": 140,
+      "waitingCardDays": 67393,
+      "newIntroduced": 204,
+      "unintroduced": 691,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 20",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 35.4,
+      "answersPerDay": 24,
+      "maxAnswers": 30,
+      "dueEnd": 971.6,
+      "oldestDueDays": 200,
+      "waitingCardDays": 96612.8,
+      "newIntroduced": 0,
+      "unintroduced": 895,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 30",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 33.2,
+      "maxAnswers": 58,
+      "dueEnd": 345.8,
+      "oldestDueDays": 65,
+      "waitingCardDays": 29477.4,
+      "newIntroduced": 578.8,
+      "unintroduced": 316.2,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 30
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 30",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        12,
+        11,
+        11,
+        11,
+        11
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 33.3,
+      "maxAnswers": 51,
+      "dueEnd": 550.8,
+      "oldestDueDays": 108,
+      "waitingCardDays": 49287,
+      "newIntroduced": 369.4,
+      "unintroduced": 525.6,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 31
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 30",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        122,
+        97,
+        119,
+        82,
+        135
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 36.1,
+      "maxAnswers": 43,
+      "dueEnd": 925.6,
+      "oldestDueDays": 177,
+      "waitingCardDays": 85998.4,
+      "newIntroduced": 23.8,
+      "unintroduced": 871.2,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 32
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 60",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 47.8,
+      "maxAnswers": 65,
+      "dueEnd": 45.4,
+      "oldestDueDays": 0,
+      "waitingCardDays": 442,
+      "newIntroduced": 895,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 60
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 60",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        6,
+        5,
+        6,
+        5,
+        5
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 64,
+      "maxAnswers": 86,
+      "dueEnd": 111.4,
+      "oldestDueDays": 13,
+      "waitingCardDays": 3234.8,
+      "newIntroduced": 842.8,
+      "unintroduced": 52.2,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 63
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 5 neue/Tag",
+      "policy": "Deckel 60",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        8,
+        7,
+        7,
+        7,
+        7
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 72.7,
+      "maxAnswers": 91,
+      "dueEnd": 771.6,
+      "oldestDueDays": 144,
+      "waitingCardDays": 63481,
+      "newIntroduced": 194.8,
+      "unintroduced": 700.2,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 70
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Alle",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 130.8,
+      "maxAnswers": 250,
+      "dueEnd": 124.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 2685,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 250
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Alle",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 180.8,
+      "maxAnswers": 265,
+      "dueEnd": 181.2,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 2685,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 265
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Alle",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 504.8,
+      "maxAnswers": 777,
+      "dueEnd": 590.6,
+      "oldestDueDays": 0,
+      "waitingCardDays": 0,
+      "newIntroduced": 2685,
+      "unintroduced": 0,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 250,
+        "answers": 303
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 20",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 21.9,
+      "maxAnswers": 39,
+      "dueEnd": 2366.4,
+      "oldestDueDays": 157,
+      "waitingCardDays": 215120.6,
+      "newIntroduced": 341.6,
+      "unintroduced": 2343.4,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 20",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        18,
+        18,
+        18,
+        17,
+        17
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 22,
+      "maxAnswers": 31,
+      "dueEnd": 2500.2,
+      "oldestDueDays": 166,
+      "waitingCardDays": 228493,
+      "newIntroduced": 204,
+      "unintroduced": 2481,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 20",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "untouchedInitial": 35.4,
+      "answersPerDay": 24,
+      "maxAnswers": 30,
+      "dueEnd": 2761.6,
+      "oldestDueDays": 200,
+      "waitingCardDays": 257712.8,
+      "newIntroduced": 0,
+      "unintroduced": 2685,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 20,
+        "answers": 20
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 30",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 33.2,
+      "maxAnswers": 58,
+      "dueEnd": 2140.2,
+      "oldestDueDays": 141,
+      "waitingCardDays": 190616,
+      "newIntroduced": 583,
+      "unintroduced": 2102,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 30
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 30",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        12,
+        11,
+        11,
+        11,
+        11
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 33.3,
+      "maxAnswers": 51,
+      "dueEnd": 2340.8,
+      "oldestDueDays": 156,
+      "waitingCardDays": 210387,
+      "newIntroduced": 369.4,
+      "unintroduced": 2315.6,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 31
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 30",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        122,
+        97,
+        119,
+        82,
+        135
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 36.1,
+      "maxAnswers": 43,
+      "dueEnd": 2715.6,
+      "oldestDueDays": 179,
+      "waitingCardDays": 247098.4,
+      "newIntroduced": 23.8,
+      "unintroduced": 2661.2,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 30,
+        "answers": 32
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 60",
+      "ratings": "alle sicher",
+      "initialDue": 250,
+      "initialClearDays": [
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 67.1,
+      "maxAnswers": 112,
+      "dueEnd": 1486.2,
+      "oldestDueDays": 95,
+      "waitingCardDays": 118292.2,
+      "newIntroduced": 1283.8,
+      "unintroduced": 1401.2,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 60
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 60",
+      "ratings": "85/10/5",
+      "initialDue": 250,
+      "initialClearDays": [
+        6,
+        5,
+        6,
+        5,
+        5
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 67.2,
+      "maxAnswers": 107,
+      "dueEnd": 1865.2,
+      "oldestDueDays": 121,
+      "waitingCardDays": 156839,
+      "newIntroduced": 879.2,
+      "unintroduced": 1805.8,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 63
+      }
+    },
+    {
+      "scenario": "Pause 20 Tage, plus 15 neue/Tag",
+      "policy": "Deckel 60",
+      "ratings": "60/20/20",
+      "initialDue": 250,
+      "initialClearDays": [
+        8,
+        7,
+        7,
+        7,
+        7
+      ],
+      "untouchedInitial": 0,
+      "answersPerDay": 72.7,
+      "maxAnswers": 91,
+      "dueEnd": 2561.6,
+      "oldestDueDays": 168,
+      "waitingCardDays": 224581,
+      "newIntroduced": 194.8,
+      "unintroduced": 2490.2,
+      "firstDay": {
+        "day": 1,
+        "due": 250,
+        "admitted": 60,
+        "answers": 70
+      }
+    }
+  ]
+}
