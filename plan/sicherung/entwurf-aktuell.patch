@@ -1739,7 +1739,7 @@ index 0000000..cb56164
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
-index 0000000..597e94f
+index 0000000..4e5ce2c
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 @@ -0,0 +1,230 @@
@@ -1945,8 +1945,8 @@ index 0000000..597e94f
 +        await p.setViewportSize(size);
 +        for(const theme of ['hell','dunkel']) {
 +          await p.evaluate(t=>document.documentElement.setAttribute('data-thema',t),theme);
-+          const fits = await p.evaluate(() => {const r=document.querySelector('.banner-fehler').getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&document.documentElement.scrollWidth<=innerWidth+1;});
-+          assert.ok(fits, 'Tageshinweis passt '+size.width+' '+theme);
++          const fits = await p.evaluate(() => {const r=document.querySelector('.banner-fehler').getBoundingClientRect(),knopf=document.querySelector('.btn-known').getBoundingClientRect();return {horizontal:r.left>=-1&&r.right<=innerWidth+1&&document.documentElement.scrollWidth<=innerWidth+1,seitenhoehe:document.documentElement.scrollHeight,hoehe:innerHeight,knopfUnten:knopf.bottom};});
++          assert.ok(fits.horizontal && fits.seitenhoehe<=fits.hoehe+1 && fits.knopfUnten<=fits.hoehe+1, 'Tageshinweis passt '+size.width+' '+theme+' '+JSON.stringify(fits));
 +          assert.deepEqual(await pruefeKontrast(p,'Tageshinweis '+size.width+' '+theme),[]);
 +        }
 +      }

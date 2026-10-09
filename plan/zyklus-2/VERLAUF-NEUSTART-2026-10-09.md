@@ -87,18 +87,39 @@ Quellstand des Abschlusslaufs (normalisiertes LF, SHA256):
 - App: `05269ebdb1d17a5a23e1ef8eeb048cc3745e866dbd8c4e94052e9789f1ccd0c8`.
 - Regeln: `6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3`.
 
-Gezielte Abschlussläufe laufen noch; maßgeblich werden deren vollständige
-Ausgaben unter `plan/sicherung/tests/a16-abschluss-*.log`. Erster A16-Lauf:
-12/12 SDK-Fälle grün. Regeln: 238/238 mit echten Repo-Regeln am Windows-
-Emulator, `a16-regeln-windows-1.log`. Der Regelprüfer nutzt Firestore 12.19.0,
+Gezielter A16-Abschlusslauf: **17/17 SDK-Fälle grün**, vollständige Ausgabe
+`plan/sicherung/tests/a16-frisch-sdk.log`. Geprüft: Ablehnung/Neustart und
+mehrfaches Nachholen, Neustart vor Bestätigung, verlorene lokale Quittung,
+ursprünglicher Lerntag, Reset eines zweiten SDK-Geräts, n/u/t/r am gemeinsamen
+Zähler, Storage-Fehler vor Bewertung, Undo und Konto A/B/A, simulierter
+Absturz vor dem Zwei-Sekunden-Versand, ungebuchte Reservierung, beschädigte
+Tageskopie, Tageshinweis/Download/lokales Entfernen und Kontodatenlöschung
+einschließlich Cloud-Belegen. Andere Karte k6 jeweils unverändert, außer
+der ausdrücklich geprüften Kontolöschung; keine JavaScript-Fehler.
+
+Regeln: **238/238** mit echten Repo-Regeln am Windows-Emulator,
+`a16-regeln-windows-1.log`. Der Regelprüfer nutzt Firestore 12.19.0,
 die App-Prüfung weiterhin den echten SDK 10.14.1; Auth ist dort eine
-Attrappe. Feste Quelle 591d03e bleibt als Verlust-Gegenprobe erhalten.
+Attrappe. A14/A15-Nachlauf und feste Gegenprobe werden separat abgeschlossen.
 
 Eigene Gegenprüfung fand im ersten Entwurf einen neuen Sprung von
 76–114 px: der bestehende Hinweis erschien bei jeder noch regulär
 gebündelten Antwort. `a16-t_sprung.log` bewahrt den roten Lauf. Ursache
-behoben, frische Prüfung auf vier Breiten läuft. Frühere Ergebnisse werden
-nicht als Abschluss des geänderten Quellstands übernommen.
+behoben, frische Prüfung auf vier Breiten ohne Sprung:
+`a16-abschluss-t_sprung.log`. Kontrast, a11y-Grundchecks, Undo-Tageszähler
+und drei verspätete Konto-/Abmeldeantworten ebenfalls grün; vollständige
+Ausgaben `a16-final-t_*.log` gelesen. Tageshinweis in vier Breiten und zwei
+Themen ohne horizontalen Überlauf/Kontrastfund; `a16-tageshinweis.png`
+visuell geprüft. Frühe Ergebnisse werden nicht als Abschluss des
+geänderten Quellstands übernommen.
+
+Ein späterer Nachlauf traf SDK-Zeitlimit und HTTP 500. Das tatsächliche
+Emulator-Rootlog zeigt wiederholte Rückkanalabbrüche mit über 10.000
+wartenden Nachrichten und NETWORK_ERROR; Ausschnitt unter
+`a16-emulator-netzfehler-ausschnitt.log`, rote Läufe erhalten. Frischer
+Demo-Emulator **1.22.0**, gleiche Port-/Projekt-/Regelquelle, INFO statt
+FINE, anschließend vollständiger 17-Fälle-Lauf grün. Testzeitlimit bleibt
+30 Sekunden; keine Erwartung wurde für den Emulatorfehler abgeschwächt.
 
 ### Grenzen und spätere gesammelte Abnahme
 
