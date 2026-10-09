@@ -144,3 +144,5 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 **Gerade offen:** nichts läuft. Als Nächstes: Katalog gegen die 34
 Agentenberichte abgleichen, Tagesdeckel rechnen, Schritt (b) der
 Verständlichkeit. Wartet auf den Betreiber: „ladegerät“.
+
+- 21:44 Codex: Betreiber verschiebt große Gesamtabnahme auf später/Ende. Nur eigenen Runner 2352 samt Testkindern gestoppt, sämtliche Ergebnisse erhalten. A14/A15 bleiben gebaut und gezielt geprüft, Abschluss ausstehend. Tagesziel-Frage anhand aktueller E26/Audit-Korrektur eingeordnet; keine neue Tagesziel-Funktion bauen. Als Nächstes weitere offene Zuverlässigkeitsprüfung lesend vorbereiten, ohne neues Paket über uncommittetem Entwurf zu bauen. Ein Plan-Schreibbefehl wurde vor Ausführung wegen PowerShell-Quotierung abgewiesen und korrigiert.

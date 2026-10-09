@@ -341,3 +341,6 @@ Klassenraum, Urlaubsmodus, „Später“-Knopf, Abzeichen).
 | Gerätetests und Betreiber-Schritte (3.3, 3.4) | nicht mitgezählt |
 
 Stand 09.10., 04:38: Die ersten zwei Zeilen (19 Punkte) sind online (3.18.28).
+
+- 21:44 Betreiber: „vorhin im anderen chat war das them was mit freiwilliges Tagesziel mit Weiterlernen … gehen wir in die richtige richtung? … ist es eine offene aufgabe?“ Einordnung: E26 bleibt zurück; Empfehlung eines neuen dauerhaften Tagesziels nach Audit zurückgenommen. A14/A15 sind eigenständige offene Datenfehler, keine Tagesziel-Funktion.
+- 21:44 Betreiber: „musst du nicht, wie gesagt es stehen noch viele punkte offen, musst keine ladegerat.bat machen für 3 stnden, machen wir am ende oder später“. Große Gesamtabnahme ausdrücklich verschoben; laufenden eigenen Gesamtlauf an caf81d58f8c5f144 beendet, Ergebnisse bewahrt. Kein Paketabschluss, App-Commit oder Deploy. Gezielte Belege und weitere Nachprüfung fortsetzen; vorhandenen App-Entwurf erhalten.

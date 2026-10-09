@@ -208,6 +208,22 @@
       "fehler": null,
       "sekunden": 90,
       "quelltext": "8090752cc7651f3fb0febf461526a5931bdf2cc3edc6a54ca7f91445cbdcfd36"
+    },
+    "t_einstieg.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 188,
+      "quelltext": "09dcae3704d801e506d0203752a0fa225e71c330f2dbe858ac4520cd1b8699d8"
+    },
+    "t_einstieg_bestandskonto_g042.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 9,
+      "quelltext": "e56eb189ab26d583922dae1a9ff3311351e7b731a08f1bb7c405c774f08daa5d"
     }
   }
 }
