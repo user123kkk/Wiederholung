@@ -49,3 +49,22 @@
   Idee einreichen (feedback-form-auf): Formular sichtbar true
   Andere Aktionen: wahl-sheet,erinnerung-auf,einst-seite,open-error-modal,installation-hilfe,konto-name,logout,recht-zeigen
   ok
+== ipad dunkel
+  Uebersicht:  | Kontrast 0 | quer false
+  Wahl limit: Karten pro Runde 10 20 30 Alle Bei „Alle“ zeigt eine Runde j | Kontrast 0 | nach Wahl Blatt offen true | Zeile "Karten pro Runde 10"
+  Wahl arab: Arabische Schrift بِسْمِ ٱللّٰهِ Klein Normal Groß Sehr groß | Kontrast 0 | nach Wahl Blatt offen true | Zeile "Arabische Schrift Klein"
+  Wahl thema: Helligkeit Dunkel Hell Automatisch Dunkel ist die Fassung, f | Kontrast 0 | nach Wahl Blatt offen true | Zeile "Helligkeit Hell"
+  Erinnerung: Tägliche Erinnerung Ein Eintrag in deinem Kalender, jeden Ta | Kontrast 0
+    Escape schliesst Erinnerung: true | blatt-offen vorher gemessen: true
+  Seite kartensaetze: Kartensatz übernehmen Hat dir jemand einen Code ge | Kontrast 0 | quer false
+  Seite daten: Sichern Eine Sicherung ist eine Datei auf deinem G | Kontrast 0 | quer false
+  Seite feedback: Was soll dazukommen? Stimm für die Ideen, die du w | Kontrast 0 | quer false
+  Seite konto-loeschen: Das lässt sich nicht rückgängig machen 40 Karten m | Kontrast 0 | quer false
+  Fehler melden: Fehler melden × Was ist passiert? Weiter zur E-Mail Abbrechen Dein E-Mail-Programm öffnet sich mit dem Text – abschicken tust du selbst. Genutzt wird er nur, um dir zu antworten (Datenschutz). Kein Mail-Programm aufgegangen? Text kopieren und an die Adresse im Impressum schicken. Text kopieren Fehlerbericht zum Kopieren | Felder: error-description,error-mail-text
+    Kontrast 0
+    nach Absenden: offen true | Text behalten "Beim Umdrehen flackert die Karte."
+  Idee einreichen (feedback-form-auf): Formular sichtbar true
+  Andere Aktionen: wahl-sheet,erinnerung-auf,einst-seite,open-error-modal,installation-hilfe,konto-name,logout,recht-zeigen
+  ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":89,"quelltext":"8090752cc7651f3fb0febf461526a5931bdf2cc3edc6a54ca7f91445cbdcfd36"}
