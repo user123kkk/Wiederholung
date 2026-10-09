@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 19:32 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 19:34 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,17 +6,26 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `b645bce Sicherung 19:31 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `e2f8081 Sicherung 19:33 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
-Keine. Alles ist committet.
+```
+ M AGENTS.md
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/werkzeuge/tagesdeckel_audit.cjs
+ M plan/werkzeuge/tagesdeckel_simulation.cjs
+```
+
+Auf einem sauberen Stand desselben Commits wiederherstellen:
+`git apply --check plan/sicherung/entwurf-aktuell.patch`, dann `git apply plan/sicherung/entwurf-aktuell.patch`.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -37,6 +46,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- Codex Auftrag „stelle sicher dass solche Fehler nicht wieder passieren“ wörtlich in ALLES-OFFEN gespeichert. Vorbeugung gebaut: unabhängige Eingangs-Sperre vor Tagesdeckel-Lauf, Tests mit ursprünglicher Index-Kopplung und weiteren absichtlichen Fehlern, Modellversion/Hash der Eingangsprüfung und ausdrückliche Erkenntnisgrenzen im Ergebnis. Allgemeine Regeln vor Empfehlungen in EMPFEHLUNGEN-PRUEFEN und AGENTS; Textempfehlungen bleiben menschlich/agentisch gegenzuprüfen, kein automatisches Wahrheitsversprechen. Einzeltests und neue Ergebnis-Provenienz noch zu prüfen.
 
 - Codex Audit abgeschlossen: alte Gegenprobe c78e986 rot, korrigierte 450 Modellläufe, neun Auditfälle einschließlich aller Ergebnis-Hashes/Einzelwerte grün. Browser t_runde_bereiche grün, vollständige Ausgaben gelesen (Rückgängig, Weiterlernen, persistierte Zuordnung, w=9 bei acht Karten). Standprüfung grün. Im korrigierten großen Modell bleiben bei Deckel 20 im Mittel 165,8 ursprüngliche Karten unbesucht; kein Lernwirkungsbeweis. Eigene Rundengröße-Tagesziel-Kopplung zurückgenommen; dauerhaften neuen Deckel vorerst nicht bauen, klar begrenzten Rückkehr-Probelauf mit Pensum/Zusatznutzen/Lernkriterium vorbereiten. Alle aktuellen Planzeiger korrigiert, Originalzahlen erhalten, Fehlerart in LEHREN aufgenommen. Keine App-/Versions-/Cloud-Änderung, kein Gesamtlauf oder Deploy.
 
@@ -79,5 +90,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   Reiter die App neu. In `ALLES-OFFEN.md` nachgetragen. Der Test zu E4
   prüft diesen Weg nicht (LEHREN § 5.3: Test muss den echten Weg gehen).
 - 02:02 Betreiber meldet: Plan im Einstieg ist weg nach Datenschutz/
-  Impressum und zurück. In `ALLES-OFFEN.md` § 3.2 eingetragen, mit Abgleich
-  (E4, G7, `app.js` 8966). Nichts gebaut: `ladegerät` läuft, und die

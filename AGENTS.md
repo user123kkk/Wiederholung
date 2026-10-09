@@ -33,6 +33,14 @@ abgenommen wird und wann angehalten wird. Nichts bauen, was nicht in
 
 Lesereihenfolge:
 
+**Simulationen und Empfehlungen (Betreiber 09.10.2026):** Vor Ergebnissen
+die behauptete Eingangsverteilung unabhängig prüfen und falsche Eingaben
+als Gegenprobe abweisen. Last ist kein Lernwirkungsnachweis. Empfehlungen
+nur für das tatsächlich geprüfte Verhalten; fehlende Belege ausdrücklich
+nennen. Pflicht: [`plan/EMPFEHLUNGEN-PRUEFEN.md`](plan/EMPFEHLUNGEN-PRUEFEN.md)
+und `LEHREN.md` § 5.3. Beim Tagesdeckel blockiert die Eingangsprüfung
+automatisch den Rechenlauf; ihre Negativfälle dürfen nicht entfernt werden.
+
 1. **[`plan/STAND.md`](plan/STAND.md)**: aktueller Stand und Reihenfolge.
 2. **[`CLAUDE.md`](CLAUDE.md)**: Grundsätze des Betreibers, Veröffentlichung,
    Dokumentationspflicht, Stichwort „ladegerät“. Gilt für jeden Agenten.

@@ -104,6 +104,8 @@ abgehakt; hier wird das nicht doppelt geführt.
 
 ### 3.2a Wünsche zur Arbeitsweise (08.10.2026, abends)
 
+**09.10.2026, Wiederholung verhindern:** „stelle sicher dass "solche Fehler" nicht wieder passieren“. Feste Regeln vor jeder Empfehlung, unabhängige Eingangsprüfung vor einer Simulation, bekannte falsche Eingaben als Negativfälle. Umsetzung: `EMPFEHLUNGEN-PRUEFEN.md`, Hinweis in AGENTS.md, automatische Eingangs-Sperre im Tagesdeckel-Werkzeug, Fehlertests und Ergebnisgrenzen. Kein Versprechen absoluter Fehlerfreiheit; Prüfungen laufen.
+
 **09.10.2026, Gegenprüfung:** „überprüfe alles, es sll perfekt sein, selbst deine wertlose empfehlung du ki.“ Auftrag: die gesamte Tagesdeckel-Vorlage einschließlich Rechnung, Annahmen, Codebezug und eigener Empfehlung kritisch prüfen, Fehler korrigieren und Grenzen belegen. Keine bloße Wiederholung grüner Modellläufe. Gefunden und korrigiert: gekoppelte Starttermine und nicht belegte Ziel-Empfehlung. Audit abgeschlossen, maßgeblich `zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`. Die ganze App ist damit noch nicht neu abgenommen; der gemeinsame große Lauf bleibt für „ladegerät“ vorgesehen.
 
 **09.10.2026, Fortsetzung:** „können wir nicht weiter arbeiten und am grosen stück machen wir ladgeraet? weiter“. Weiterarbeiten und mehrere Änderungen bündeln. Veröffentlichung und abschließender großer Lauf später gemeinsam über „ladegerät“. Als Nächstes wird die ausdrücklich offene Tagesdeckel-Simulation gerechnet; eine Deckelzahl ist damit noch nicht entschieden.
