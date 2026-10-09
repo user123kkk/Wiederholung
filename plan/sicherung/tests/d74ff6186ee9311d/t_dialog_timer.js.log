@@ -1,0 +1,4 @@
+OK  Gegenprobe: alter Timer entfernt neuen Dialog.
+OK  Alter Timer laesst neuen Dialog unveraendert und loest den alten auf.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1,"quelltext":"376244d6c0ed50290e673bebde16ed659549653fe362f40e8569f0bfd415695b"}

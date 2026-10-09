@@ -144,6 +144,62 @@
       "fehler": null,
       "sekunden": 4,
       "quelltext": "31f956b932beb693a0e8ee9cb07740e5782569e82f438651d46a96553465213e"
+    },
+    "t_daten.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 66,
+      "quelltext": "e0494d6e7c1873273864960d8b016471273de9a900a8f4e9dbabacc958cf9b6a"
+    },
+    "t_dialog_timer.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 1,
+      "quelltext": "376244d6c0ed50290e673bebde16ed659549653fe362f40e8569f0bfd415695b"
+    },
+    "t_doppeltipp.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 19,
+      "quelltext": "c7845043b3b3025d035bc34d5c99cf800f2331ad73d9ad5ac876ff17b49eebd5"
+    },
+    "t_dreh.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 10,
+      "quelltext": "9f08c64f6ca244665cf14b0f8ee5a9656a625b7202fca31981c7a3328b61f303"
+    },
+    "t_dreh_lage.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 20,
+      "quelltext": "2023d94ed14e3d1fc7e5dc7c49fdf387e511b3c003dfc29a07d031ed54b523f2"
+    },
+    "t_einst.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "26079be519adbcf81b248c6d5131bcc624df055fa4ec6a46d87286278c45d2f5"
+    },
+    "t_einst_oben.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "f535b127efed6950f6f826a2084c0738b3c84438dcbae96bf3995f502590fb64"
     }
   }
 }
