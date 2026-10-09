@@ -1,5 +1,31 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Aktuell 09.10.2026: ein Gesamtauftrag
+
+Der Betreiber bestätigt: weiterarbeiten an den offenen App-Punkten,
+Mehrwert-Ideen und Plänen; keine Pause. Aktuell bearbeitet wird deren
+Teil Schutz/Zuverlässigkeit (ALLES-OFFEN § 3.1), nach der Tagesdeckel-Prüfung.
+Die weitere Mehrwert-Arbeit bleibt Auftrag, sie wird nicht gleichzeitig
+als gebaut geführt. Große Gesamtabnahme/Veröffentlichung später gesammelt.
+
+- Online laut letztem Veröffentlichungsbeleg: 3.18.28 mit 3.18.27.
+- Auf main: 3.18.29, Rechtsdialog erhält Plan und Eingaben.
+- Uncommittet: 3.18.30 für A14/A15; 16 echte SDK-Fälle und 222 Regeln grün,
+  Gesamtabnahme ausstehend. Gestoppter großer Lauf: 29/157 abgeschlossen,
+  alle Exit 0; keine vollständige Abnahme. Entwurf unbedingt behalten.
+- A16 neu offen: abgelehnte Tagesantwort verschwindet nach Neustart;
+  feste Gegenprobe und zwei Kontrollen in VERLAUF-NEUSTART-2026-10-09.md.
+- Tagesziel/Frage 10: Audit fertig, Empfehlung eines neuen dauerhaften
+  Deckels zurückgenommen; gewünschtes Pensum, Zusatznutzen und
+  Lernkriterium fehlen. Keine neue Tagesziel-Funktion bauen.
+
+Maßgeblich: ../../ALLES-OFFEN.md und ../../STAND.md. Anschließend gilt
+weiter die entschiedene Mehrwert-Reihenfolge aus GESAMTLISTE.md; zuerst
+noch offene Lernrunde, dann Import/Backup, Darstellung/Einstieg und Konto.
+Wartende Inhalte, Texte-Probelauf bis 29.10. und Geräteprüfungen bleiben
+an ihre Bedingungen gebunden. Die folgenden Angaben vom 08.10. sind
+historischer Verlauf und keine Meldung aktuell laufender Tests.
+
 Für Claude **und** Codex. Der Betreiber ist am 08.10. ab etwa 11:50 für
 über eine Stunde weg und will, dass ohne Rückfrage weitergebaut wird.
 Sein Auftrag: alle Mehrwert-Punkte und alle offenen Punkte bauen, **große

@@ -1,6 +1,6 @@
 # Gesamtliste: alles, was dazukommt, überarbeitet oder gebaut wird
 
-Stand 08.10.2026, 13:40 Uhr. Eine Liste für den Betreiber. Quelle der
+Stand abgeglichen am 09.10.2026; ursprüngliche Liste vom 08.10., 13:40 Uhr. Quelle der
 Punkte: `RUNDE-2-2026-10-08.md` (68 Fragen, Sammelfreigaben), die zwei
 Berichte in `schritt-2/`, `grossplan/ENTSCHEIDUNGEN.md` (E-01 bis E-18).
 Technischer Stand zum Weiterbauen: `ARBEITSSTAND.md`.
@@ -9,25 +9,25 @@ Zeichen: **E** = als Entwurf gebaut, noch nicht auf `main` · **offen** =
 noch zu bauen · **wartet** = braucht etwas von Dir oder einen Termin.
 Die Nummern in Klammern sind die Fragen aus Runde 2.
 
-## 1. Kommt mit der nächsten Version (3.18.27) – ist als Entwurf gebaut
+## 1. Fertig in 3.18.27 – online mit 3.18.28
 
 | Was | Stand |
 |---|---|
-| Liste einfügen: viele Karten auf einmal, mit Vorschau (17) | E, im Browser grün |
-| Bereich als Liste speichern (CSV) und drucken | E |
-| Einzelne Karte löschen ohne Rückfrage, dafür „Rückgängig“ | E, im Browser grün |
-| Volle Sicherung enthält auch Kalender, Serie, Einstellungen (20) | E |
-| Rundenende zeigt die Karten, die nicht saßen | E |
-| Kacheln am Rundenende: Nicht / Fast / Sicher, „nicht“ zählt Karten (23) | E |
-| Bildschirm bleibt während der Runde an | E |
-| Blätter und Dialoge gleiten beim Schließen | E, gemessen |
-| „Üben“ und „Speicherkarten“ blenden beim Aufklappen ein | E |
-| Einstellungen fliegen nur beim ersten Öffnen ein | E |
-| iPhone: Blatt bleibt beim Feldwechsel an der Tastatur | E, am Gerät zu bestätigen |
-| „Name ändern“ ohne Vorschlagszeile des iPhones | E |
-| Lernregel: „Nicht“ dann „Sicher“ – Stufe steigt nicht, Karte morgen (7) | E, nur Dein Konto |
-| Lernregel: neue Karte muss in der Runde zweimal sitzen (9) | E, nur Dein Konto |
-| Schnelltests für die Lernlogik, Schalter „erst nur Betreiber“ | E, grün |
+| Liste einfügen: viele Karten auf einmal, mit Vorschau (17) | fertig, 3.18.27 |
+| Bereich als Liste speichern (CSV) und drucken | fertig, 3.18.27 |
+| Einzelne Karte löschen ohne Rückfrage, dafür „Rückgängig“ | fertig, 3.18.27 |
+| Volle Sicherung enthält auch Kalender, Serie, Einstellungen (20) | fertig, 3.18.27 |
+| Rundenende zeigt die Karten, die nicht saßen | fertig, 3.18.27 |
+| Kacheln am Rundenende: Nicht / Fast / Sicher, „nicht“ zählt Karten (23) | fertig, 3.18.27 |
+| Bildschirm bleibt während der Runde an | fertig, 3.18.27 |
+| Blätter und Dialoge gleiten beim Schließen | fertig, 3.18.27; Austritt gemessen |
+| „Üben“ und „Speicherkarten“ blenden beim Aufklappen ein | fertig, 3.18.27 |
+| Einstellungen fliegen nur beim ersten Öffnen ein | fertig, 3.18.27 |
+| iPhone: Blatt bleibt beim Feldwechsel an der Tastatur | gebaut, 3.18.27; Gerätetest offen |
+| „Name ändern“ ohne Vorschlagszeile des iPhones | fertig, 3.18.27 |
+| Lernregel: „Nicht“ dann „Sicher“ – Stufe steigt nicht, Karte morgen (7) | fertig, 3.18.27; weiterhin nur Dein Konto |
+| Lernregel: neue Karte muss in der Runde zweimal sitzen (9) | fertig, 3.18.27; weiterhin nur Dein Konto |
+| Schnelltests für die Lernlogik, Schalter „erst nur Betreiber“ | fertig, 3.18.27; Schnelltests grün |
 
 ## 2. Lernen und Lernrunde
 
@@ -65,7 +65,7 @@ Die Nummern in Klammern sind die Fragen aus Runde 2.
 | Abgeschnittene Texte: Fortschritt „Genauer ansehen“, Lektionen bei kleinem Handy, Suchfeld | offen, klein |
 | Hinweis wegtippen blendet aus | offen, klein |
 | Karten mit gemischtem Text: richtige Richtung und Schrift | offen (Paket K) |
-| Arabische Schrift in der Notiz | offen (Paket K) |
+| Arabische Schrift in der Notiz | fertig, 3.18.26; Richtung je Textzeile |
 | Hilfszeile zur arabischen Tastatur | offen |
 | Wort auf der Karte normal statt halbfett (24) | entschieden: bleibt |
 | Hintergrund scrollt beim Herunterwischen (iPhone) | zurückgestellt |
@@ -171,8 +171,8 @@ lange Ayat stückweise, größere deutsche Schrift (erst, wenn jemand fragt).
 
 ## Reihenfolge
 
-1. 3.18.27 fertig prüfen und auf `main` (Abschnitt 1).
-2. Rest Lernrunde und Lernregeln (Abschnitt 2, oberer Teil).
+1. Aktuell Schutz/Zuverlässigkeit: A14/A15 im erhaltenen Entwurf 3.18.30, A16 als neuer bestätigter Datenfund. 3.18.27/28 sind fertig und online laut letztem Veröffentlichungsbeleg. Große Abnahme/Veröffentlichung später gesammelt; siehe `../../STAND.md`.
+2. Anschließend Rest Lernrunde (Abschnitt 2, oberer Teil). Tagesziel-Empfehlung nach Audit zurückgenommen; wartende Lernregeln nicht ungefragt freigeben.
 3. Rest „Karten hinein und heraus“ (Abschnitt 3, was nicht wartet).
 4. Aussehen und Tippen (Abschnitt 4), dann der Durchlauf
    „Verständlichkeit“ (4a), dann der Einstieg (5).
