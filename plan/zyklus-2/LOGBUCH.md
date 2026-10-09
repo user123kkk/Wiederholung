@@ -2,6 +2,58 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — 3.18.29: Plan nach Datenschutz/Impressum erhalten (E4)
+
+**Geändert:** `app.js` (`renderAuth`, `einstFuss`, `zeigeRecht`, bestehender
+Dialog und Klick-Delegation), `styles.css` (scrollender Rechtsinhalt mit
+sichtbarem Rückweg), Version in `app.js`/`sw.js`/allen 33 Asset-Queries in
+`index.html`, `CHANGELOG.md`; E4-Test und neuer Umfeldtest
+`plan/werkzeuge/pruefstand/t_rechtsplan.js`.
+**Entscheidung:** Betreiber „weiter“ nach dem Vorschlag, den Plan-Verlust
+zu beheben, nicht zu veröffentlichen. Vorhandenen Dialog verwenden,
+unveränderten Inhalt aus den zwei bestehenden Rechtsseiten laden. Keine
+zweite Kopie der Rechtstexte, keine Einstiegsantworten speichern. Laden
+mit vorhandenem 12-s-Zeitlimit; Fehler hält Rückweg offen, Neuversuch nur
+auf Knopfdruck; späte Antwort an ihren Dialog gebunden. Querverweise bleiben
+ebenfalls im Dialog. Externe Links im eigenständigen Fehlerformular bleiben
+bei ihrem bisherigen Weg.
+**Was geprüft:** Eigener Server 8096 liefert diesen Desktop-Checkout;
+Standprüfung und JS-/CSS-Struktur grün. Feste Gegenprobe d64380a / 3.18.28
+rot: tatsächlicher „← Zurück“-Link im neuen Reiter verliert das Formular
+(0 statt 1). Der alte E4-Test hatte den Reiter geschlossen und den Fehler
+damit nicht geprüft. Neuer E4-Test: ganzer Einstieg, beide Rechtsseiten,
+vollständiger Plan plus Name, Adresse und Passwort bei 390/320/820 erhalten.
+Umfeld: 320/390/820 je hell und dunkel (hell mit reduzierter Bewegung),
+vollständiger Text gegen Original verglichen, alle Abschnitte durchgescrollt,
+Kontrast und Überlauf geprüft; sichtbarer Rückweg, Fokus im Dialog,
+Zurück/Escape/Tippen daneben, Einstellungen, Querverweis, 503/Neuversuch
+und verspätete Antwort grün. Bildschirmfoto 390/hell angesehen.
+Betroffene Regressionen `t_anmelden_enter`, `t_einstellungen` (vier Fälle),
+`t_dialog_timer` Exit 0; vollständige Ausgaben gelesen. Belege einschließlich
+roter Erstläufe: `plan/sicherung/tests/nachlauf-rechtsplan-2026-10-09/`.
+**Messkorrektur:** Allgemeiner Kontrastleser berücksichtigt keine Scroll-Clips;
+iPad-Meldung 1,89:1 lag vollständig außerhalb des Inhaltsfensters
+(Überschrift y=1058, Clip endet y=905). Im Umfeldtest alle Abschnitte
+durchscrollen und geometrisch sichtbare Texte prüfen; Grenze unverändert.
+**Gegenprüfung:** Vollständigen Diff gegen EINST-4 gelesen: Rückweg führt
+nicht mehr zu index.html; Dialog integriert sich über ui.dialog in alle
+bestehenden Overlay-/Schließlisten. Formularwerte bleiben in ui, Rechtstext
+in eigenem Dialogzustand. Fehler, alter Dialog, Doppeltipp, Abbruch und
+Querverweis gelesen und passende Fälle gemessen. Keine Lernlogik, Regeln,
+Cloud-Felder, Speicherschlüssel, religiösen oder rechtlichen Texte geändert.
+**LEHREN §14:** 1–5 Codepfad/Mustersuche/Kommentare/Overlayzustand geprüft;
+6 sichtbare Texte, Kontrast, Rückwege und Breiten geprüft (keine gesonderte
+CPU-Tempoabnahme); 7 Wortlaut ohne Methoden-Zahlen; 8–9 kein neuer
+Datenfluss; 10–11 Syntax/Version/CSP/APP_SHELL grün; 12 betroffene Tests
+nach Klein-Weg, keine Lernrunde berührt; 13 Plan/Stand/Liste/Logbuch
+nachgezogen; 14 Veröffentlichung und G7 als Betreiber-Schritte festgehalten.
+**Offen:** Echtes iPhone G7, insbesondere Safari und installierte App, nach
+Veröffentlichung: Plan bis „Plan speichern“, Namen tippen, beide Rechtslinks
+öffnen und „Zurück“ tippen; Plan und Name müssen erhalten bleiben. Kein
+Gesamtlauf/keine Affen (Klein-Weg), Akku BatteryStatus 1. Online 3.18.28.
+**Nächster Schritt:** Betreiber veröffentlicht bei Bedarf mit „ladegerät“
+am Netzteil; nächste Bauplanung ist die Rechnung zum Tagesdeckel.
+
 ### 2026-10-09 — „ladegerät“: 3.18.28 online (enthält 3.18.27), 156/156, Affen 0
 
 **Geändert:** `plan/werkzeuge/pruefstand/t_serie_lang.js` (Uhr um

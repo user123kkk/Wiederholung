@@ -7,6 +7,14 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**Aktualisierung 09.10.2026:** Maßgeblicher Stand 3.18.29 (E4: Rechtsseiten
+im vorhandenen Dialog, Plan und Formulare erhalten), nicht veröffentlicht.
+Online ist 3.18.28. Betroffene Tests grün, Klein-Weg; voller Lauf vor
+Veröffentlichung durch den Betreiber. Danach iPhone G7: Plan erstellen,
+Datenschutz und Impressum öffnen, jeweils „Zurück“ tippen; Plan und
+getippter Name müssen erhalten bleiben. Nächste Arbeit: Tagesdeckel
+durchrechnen und Empfehlung. Die folgenden Absätze sind Verlauf.
+
 Paket F (3.18.17), D12 (3.18.18), vier Betreiber-Meldungen (3.18.19–3.18.21) die Reihenfolge bei Rundenlimit (3.18.22) und die Runde über alle Bereiche (3.18.23) liegen auf main, nicht veröffentlicht. Gesamtlauf 152/152 nach Neustart des Laptops. Was der Betreiber am 05./06.10. gewünscht und entschieden hat: [Liste](zyklus-2/BETREIBER-2026-10-06.md). Online ist
 3.18.14. Einzelheiten: [Logbuch](zyklus-2/LOGBUCH.md), oberster Eintrag,
 [Aufgaben](zyklus-2/AUFGABEN.md).

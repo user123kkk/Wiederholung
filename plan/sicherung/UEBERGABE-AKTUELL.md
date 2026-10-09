@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 15:50 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 15:52 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `9065889 Sicherung 15:49 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `b9f04ba Sicherung 15:51 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
@@ -16,10 +16,12 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M CHANGELOG.md
  M app.js
  M index.html
- M plan/ARBEITSPROTOKOLL.md
- M plan/LEHREN.md
+ M plan/PLAN.md
+ M plan/STAND.md
  M plan/werkzeuge/pruefstand/t_paket_e.js
  A plan/werkzeuge/pruefstand/t_rechtsplan.js
+ M plan/zyklus-2/AUFGABEN.md
+ M plan/zyklus-2/LOGBUCH.md
  M styles.css
  M sw.js
 ```
@@ -29,7 +31,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 6, chrome.exe 11 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 6, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
