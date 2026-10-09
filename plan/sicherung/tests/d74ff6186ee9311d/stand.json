@@ -424,6 +424,30 @@
       "fehler": null,
       "sekunden": 11,
       "quelltext": "9616ec832c707b5788168f265652e93848a3912033947c36ad130fc57165921a"
+    },
+    "t_inventar2.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 54,
+      "quelltext": "302940fd88750e36b04cbef04abeef69efbf3cd1ab75f252a80911836abd88e2"
+    },
+    "t_inventar2_gegenprobe.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 40,
+      "quelltext": "50dd2bcd2388e0f1c254def9e8ca9c913ee37466b95f4f5f5586d6ab13debf8d"
+    },
+    "t_karte_kopf.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 44,
+      "quelltext": "e21a23f8fc70590b438da01ea1b9659c1cd39d3432f0e114dee481fb884682c4"
     }
   }
 }
