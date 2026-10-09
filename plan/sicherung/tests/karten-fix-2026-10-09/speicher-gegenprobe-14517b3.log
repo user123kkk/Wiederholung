@@ -1,0 +1,16 @@
+app.js SHA256 7d0de10b37278842d43c9c5ca385b3309a9752487251f6f0c9694030fc659dd3
+firestore.rules SHA256 216bdb9edf7a434e82c1c474749e17b9fbace0fbadf79bf79f6a850fc70ea825
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\karten_konflikte_sdk.js:132:14
+    at async fall (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\karten_konflikte_sdk.js:25:10)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\karten_konflikte_sdk.js:125:5 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
