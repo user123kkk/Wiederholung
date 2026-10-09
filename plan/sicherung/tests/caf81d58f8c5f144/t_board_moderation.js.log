@@ -1,0 +1,4 @@
+ok     (a) Idee verschwindet aus der Liste | Zeilen: 0
+ok     (b) Dokument besteht weiter, status "entfernt" | {"text":"","erstelltAm":"2026-09-20T10:00:00Z","votes":2,"status":"entfernt","beschreibung":null}
+ok     (b2) Titel und Beschreibung sind geleert | {"text":"","erstelltAm":"2026-09-20T10:00:00Z","votes":2,"status":"entfernt","beschreibung":null}
+ok     (c) keine Seitenfehler | 

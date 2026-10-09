@@ -96,6 +96,30 @@
       "fehler": null,
       "sekunden": 11,
       "quelltext": "6b8b480226e68101a0eee1d8d5462f9d50ba9bb38d86dca78240e933f85d47be"
+    },
+    "t_bestand_tempo.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 70,
+      "quelltext": "11c3dfa8f7a3637036446c18bcb807c97d5065d1e8eaaeb4d43d79afc5309fc0"
+    },
+    "t_bild.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "606aa62ebd6536920862b0eb430324343cf30dfcb577a15d601c0c828a085633"
+    },
+    "t_board_limit.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 20,
+      "quelltext": "77d77c333a8752d8ab271509612cd12db4fe17b2d45d05a24573f484b2fa4c2e"
     }
   }
 }
