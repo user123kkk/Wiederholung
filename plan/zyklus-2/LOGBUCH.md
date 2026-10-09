@@ -2,6 +2,62 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — Korrektur: Tagesdeckel-Rechnung und eigene Empfehlung gegengeprüft
+
+**Auftrag:** „überprüfe alles, es sll perfekt sein, selbst deine wertlose
+empfehlung du ki.“ Gesamte Tagesdeckel-Vorlage einschließlich eigener
+Empfehlung prüfen; nicht einfach weitere gleichartige grüne Läufe melden.
+**Nachgewiesene Fehler:** Der gleiche Index bestimmte Stufe und Terminphase;
+behauptete Gleichverteilung stimmte nicht, Stufe 3 vollständig synchron.
+Feste Gegenprobe c78e986 rot: 66 statt 37 anfangs fällig. Freiwilliges
+Weiterlernen war im Modell nicht enthalten, Rundengröße ist kein Tagesziel.
+Globales Ranking wäre zudem eine Abweichung von der Bereichsfolge,
+die der Betreiber am 06.10. freigegeben hat. Permanente Grenzen nicht mit
+Rückkehr-/Schwellenmodus gleichsetzen. Umfangreiche Laufzahlen allein
+hatten diese Begründungsfehler nicht abgesichert.
+**Korrigiert:** Terminphase je Stufe, ein Befehl für alle 90 Gruppen,
+alle 450 Einzelläufe gespeichert, Modellversion/App-/Werkzeughash mit
+vereinheitlichten Zeilenenden. Eigene Audit-Ergebnisdatei; ursprüngliche
+Rechnung und JSON als Verlauf erhalten. Neue isolierte Prüfung nutzt
+echte gradeCard/startSession/Bereichs-Funktionen statt nur Formelprüfungen.
+**Geprüft:** neun Auditfälle grün: Verteilung, neue Doppelabfrage,
+mehrfaches Nicht/Fast, Betreiber-/Normalnutzer-Unterschied, geöffneter
+Bereich zuerst, weitere Bereiche inkl. 14-/15-Tage-Grenze und Sperre,
+Zulassung vs. Antwortzahl, kleiner erster Tag gegen echtes gradeCard,
+sämtliche Ergebnisgruppen/Hashes/Einzelwert-Invarianten. Neue Rechnung
+90 Gruppen × fünf Folgen × 180 Kalendertage grün. Browser t_runde_bereiche
+am Desktop-Checkout Port 8096 grün; Ausgaben vollständig gelesen:
+Bereichswechsel, Rückgängig, persistierte Kartenzuordnung, neun Antworten
+bei acht Karten, Weiterlernen und Grenze des geöffneten Bereichs.
+pruefe_stand.mjs grün. Logs unter
+`plan/sicherung/tests/tagesdeckel-audit-2026-10-09/`.
+**Rechnung:** 1100 Karten/60 Tage Pause, jetzt 1051 anfangs fällig;
+nominal 85/10/5, permanenter Deckel 20 lässt nach 180 Tagen im Mittel
+165,8 ursprüngliche Karten unbesucht. Deckel 30 letzter Erstbesuch
+Tag 151–166. Älteste zuerst/30 erreicht Tag 36, verursacht aber mehr
+gesamte wartende Kartentage, 60261,8 statt 41388. Keine garantierten
+Realweltzahlen, keine gemessene Lernwirkung oder Überlegenheit.
+**Primärquellen:** offizielles Anki-Handbuch zu Daily Limits/Sort Order;
+Tabibian et al. Optimizing Human Learning. Quellen und begrenzte
+Ableitung im Auditbericht; Forumsaussage nicht als Validierung der
+Adrabic-Reihenfolge übernommen.
+**Urteil:** Empfehlung eines neuen dauerhaften Tagesziels an Rundengröße
+zurückgenommen. Derzeit keinen neuen dauerhaften Deckel bauen. Vorhandene
+begrenzte Runden haben bereits Weiterlernen; Zusatznutzen fehlt als Beleg.
+Abgegrenzter Rückkehr-Probelauf braucht gewünschtes Pensum, Belastungs-/
+Rückstands-/Abrufkriterium und gleichermaßen begrenzten Arbeitsaufwand.
+Keine neue Zahl vorgeschlagen; technische Bedingungen im Audit konkretisiert.
+**Gegenprüfung § 2a / LEHREN § 14:** alte Eingangsdaten gegen feste Quelle
+rot, neue Verteilung unabhängig geprüft; echte Datenpfade und Browser-
+Umfeld geprüft, Operatorentscheidung gegengehalten, alle Planzeiger
+nachgezogen. Neue Fehlerart in LEHREN § 5.3/15 festgehalten. Keine
+App-/UI-/Cloud-/Lernregeländerung, daher keine neue Version, kein kompletter
+App-Lauf/Deploy. Akku, große Abnahme weiter gesammelt mit „ladegerät“.
+**Offen:** optimale individuelle Menge und Gedächtniswirkung bleiben
+unbewiesen. E26 weiter zurück, keine Freigabe für neuen Lernregelbau.
+Maßgeblicher Bericht `mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`.
+Der darunter stehende erste Tagesdeckel-Eintrag ist überholter Verlauf.
+
 ### 2026-10-09 — Tagesdeckel gerechnet, keine Produktänderung
 
 **Auftrag:** Betreiber möchte weiterarbeiten und mehrere Änderungen für

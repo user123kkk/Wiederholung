@@ -1,5 +1,15 @@
 # E26 „Erst einmal 20“ nach langer Pause – Vorschlag, 05.10.2026
 
+**Korrektur nach Gegenprüfung 09.10.2026:** Maßgeblich
+[`mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`](mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md).
+Die erste Rechnung hatte verzerrte Starttermine; die Tagesziel-Kopplung ist
+zurückgenommen. Neuen dauerhaften Deckel derzeit nicht empfohlen.
+Auch das Urteil im damaligen Nachtrag, diese Reihenfolge verschlechtere
+bei wenig Rückstand nichts und rette am meisten, ist nicht nachgewiesen:
+Die App misst keine Erinnerungswahrscheinlichkeit. Der folgende Vorschlag
+bleibt vollständig als historische Abwägung erhalten; aktuelle Lernregeln
+werden ohne Freigabe nicht umgebaut.
+
 **Aktueller Stand 09.10.2026:** Der einzelne Knopf ist durch Frage 10
 (Tagesdeckel) aus der Mehrwert-Runde ersetzt. Tagesdeckel-Rechnung mit
 90 Vergleichen und Empfehlung fertig:

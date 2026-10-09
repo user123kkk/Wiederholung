@@ -108,11 +108,14 @@ hängt am Höchststand und kommt damit erst nach dem zweiten „Sicher“.
 Dem Betreiber beim nächsten Bericht so sagen; er kann es mit einem Wort
 ändern.
 
-**Aktualisierung 09.10.2026:** Frage 10 gerechnet: 90 Vergleiche,
-`TAGESDECKEL-RECHNUNG-2026-10-09.md` mit Quellhash und Modellgrenzen.
-Empfehlung freiwilliges Tagesziel, faire Bereichsauswahl, echte Tageszählung.
-Zielgröße/Auswahl/Zählung vor dem Bau entscheiden. Der nachfolgende Absatz
-ist ein historischer, am 08.10. zurückgenommener Vorschlag; 60/30 gilt nicht.
+**Korrektur 09.10.2026 nach Gegenprüfung:** Frage 10:
+`TAGESDECKEL-AUDIT-2026-10-09.md` ist maßgeblich. Gekoppelte Startphasen
+korrigiert; 450 Modellläufe, neun Auditfälle und Browser-Bereichsrunde grün.
+Neuer dauerhafter Deckel derzeit nicht empfohlen, Rundengröße nicht als
+Tagesziel umdeuten; Pensum, Zusatznutzen gegenüber vorhandenen Runden und
+Lernkriterium fehlen für einen Rückkehr-Probelauf. Bereichsfolge bleibt
+gemäß Betreiberentscheidung. Der nachfolgende Absatz ist ein historischer,
+am 08.10. zurückgenommener Vorschlag; 60/30 gilt nicht.
 
 Offen in Paket G (noch nicht gebaut): **Frage 10** (Tagesdeckel nach Pause,
 Fälligkeiten bleiben). Braucht Zahlen und einen Satz auf dem

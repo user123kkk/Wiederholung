@@ -7,6 +7,16 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**Korrektur 09.10.2026 nach Gegenprüfung:** Maßgeblich
+`zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`.
+Starttermine im Modell korrigiert, eigene Empfehlung kritisch geprüft.
+Kein neues dauerhaftes Tagesziel an Rundengröße koppeln. Vor dem Bau
+Nutzen gegenüber vorhandenen Runden und gewünschtes Pensum/Lernkriterium
+klären; Empfehlung eines neuen dauerhaften Deckels zurückgenommen.
+Neun Auditfälle, 450 korrigierte Modellläufe, Browser-Bereichsrunde und
+Standprüfung grün. Keine komplette neue App-Abnahme. Folgender Absatz
+ist Verlauf des ersten, anschließend korrigierten Berichts.
+
 **Fortsetzung 09.10.2026:** Tagesdeckel-Rechnung und Empfehlung abgeschlossen;
 90 Vergleiche mit tatsächlichen Bewertungsregeln, reproduzierbares Werkzeug
 und Ergebnisse unter `zyklus-2/mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md`.

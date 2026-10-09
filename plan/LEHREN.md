@@ -663,6 +663,15 @@ Was gemessen wird:
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
 
+- **09.10.2026, Tagesdeckel-Modell:** Ein gemeinsamer Index für Stufe und
+  Fälligkeitsphase kann ungewollte Tagesberge erzeugen. Jede behauptete
+  Eingangsverteilung je Gruppe prüfen, mit fester alter Gegenprobe. Eine
+  Lastsimulation ohne Vergessensmodell beweist keine Lernwirkung. Eine
+  Empfehlung für freiwilliges oder zeitweiliges Verhalten darf nicht als
+  geprüft gelten, wenn nur dauerhafte harte Grenzen simuliert wurden.
+  Werkzeughash, Modellversion und Einzelwerte sichern; ursprüngliche Zahlen
+  erhalten und Korrektur sichtbar verknüpfen, nicht still ersetzen.
+
 - **Rechtslinks mit dem wirklichen Rückweg prüfen**, nicht den neuen Reiter
   im Test schließen. E4 war seit 3.18.15 grün, obwohl der Link „← Zurück“
   die App neu lud. Der Test muss genau diesen Link bzw. den sichtbaren
@@ -1787,6 +1796,16 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+09.10.2026, Tagesdeckel-Gegenprüfung auf Betreiberauftrag: Die eigene
+Simulation verwendete i zugleich für Stufe und Termin; Stufe 3 war dadurch
+vollständig synchron statt gleichmäßig verteilt. Feste Gegenprobe c78e986
+rot (66 statt 37 anfangs fällig). Modell korrigiert; 450 Läufe neu gerechnet,
+Originaldaten erhalten. Empfehlung Rundengröße als Tagesziel zurückgenommen:
+dieses Verhalten wurde nicht simuliert und Bereichsmischung widerspräche
+der Freigabe vom 06.10. Neun Auditfälle und tatsächliche Browser-Bereichsrunde
+grün; keine Aussage über optimale Tageszahl/Behalten. Siehe § 5.3 und
+`zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`.
 
 09.10.2026, E4 wieder geöffnet: Der Betreiber meldete verlorenen Plan in
 Safari .26 nach Datenschutz/Impressum und „← Zurück“. Der grüne Test aus
