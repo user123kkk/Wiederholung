@@ -1345,6 +1345,21 @@ index a5e2674..7979e42 100644
  
  /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
     unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
+diff --git a/plan/werkzeuge/minuten_sicherung.sh b/plan/werkzeuge/minuten_sicherung.sh
+index 8784251..b0bc839 100644
+--- a/plan/werkzeuge/minuten_sicherung.sh
++++ b/plan/werkzeuge/minuten_sicherung.sh
+@@ -44,7 +44,9 @@ while true; do
+     [ -n "$(find "$d" -maxdepth 0 -mtime -2 2>/dev/null)" ] || continue
+     ziel="$S/tests/$(basename "$d")"
+     mkdir -p "$ziel"
+-    find "$d" -maxdepth 1 -type f -size -400k -exec cp -u {} "$ziel/" \; 2>/dev/null
++    # Unter Windows kostet jeder einzelne cp-Prozess merklich Zeit. Gleiche
++    # Dateien/Filter, aber mehrere Quellen je Aufruf statt ein Prozess je Log.
++    find "$d" -maxdepth 1 -type f -size -400k -exec cp -u -t "$ziel/" {} + 2>/dev/null
+   done
+   for f in "$tmp"/ladegeraet-*.log; do
+     [ -f "$f" ] || continue
 diff --git a/plan/werkzeuge/projekt_skills.mjs b/plan/werkzeuge/projekt_skills.mjs
 new file mode 100644
 index 0000000..ab96048
@@ -1724,10 +1739,10 @@ index 0000000..cb56164
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
-index 0000000..338975f
+index 0000000..597e94f
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
-@@ -0,0 +1,201 @@
+@@ -0,0 +1,230 @@
 +/* A16: echter SDK 10.14.1, Repo-Regeln, Demo-Emulator 8082.
 +   Auth-Attrappe und blockierter Service Worker: kein PWA-Kaltstartbeleg.
 +   --gegenprobe stellt die feste Entwurfsquelle 591d03e samt Patch her. */
@@ -1737,6 +1752,7 @@ index 0000000..338975f
 +const crypto = require('node:crypto');
 +const cp = require('node:child_process');
 +const {start, vollerStore} = require('./lib');
++const {pruefeKontrast} = require('./kontrast');
 +if (process.argv.includes('--gegenprobe')) {
 +  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'entwurf-a16-591d03e-'));
 +  fs.writeFileSync(path.join(dir, 'app.js'), cp.execFileSync('git', ['show', '591d03e:app.js']));
@@ -1916,6 +1932,34 @@ index 0000000..338975f
 +      assert.equal((await p.evaluate(() => window.__PRUEF.sicherung())).beschaedigteKopien[0].inhalt, '{ungueltig');
 +      await p.evaluate(() => {window.__PRUEF.starten();window.__PRUEF.bewerten('known');}); await fertig(p);
 +      assert.equal((await cloud(day)).w, 0);
++    });
++    await fall('Tageshinweis-Darstellung-und-Entfernen', async p => {
++      const day = await p.evaluate(() => window.__PRUEF.heute());await reject(p);
++      const saved = (await p.evaluate(() => window.__PRUEF.tagesantworten()))[0];
++      await p.evaluate(() => window.__PRUEF_SDK.updateDoc(window.__PRUEF_SDK.doc(window.__PRUEF_DB,'users/u1'), {verlauf:{},verlaufEpoche:'hinweis-reset'}));
++      await fertig(p);await retry(p);
++      if(await p.locator('[data-action="dlg-ok"]').count())await p.locator('[data-action="dlg-ok"]').click();
++      await p.evaluate(() => window.__PRUEF.starten());
++      await p.emulateMedia({reducedMotion:'reduce'});
++      for(const size of [{width:390,height:844},{width:320,height:740},{width:768,height:1024},{width:1024,height:768}]) {
++        await p.setViewportSize(size);
++        for(const theme of ['hell','dunkel']) {
++          await p.evaluate(t=>document.documentElement.setAttribute('data-thema',t),theme);
++          const fits = await p.evaluate(() => {const r=document.querySelector('.banner-fehler').getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&document.documentElement.scrollWidth<=innerWidth+1;});
++          assert.ok(fits, 'Tageshinweis passt '+size.width+' '+theme);
++          assert.deepEqual(await pruefeKontrast(p,'Tageshinweis '+size.width+' '+theme),[]);
++        }
++      }
++      await p.setViewportSize({width:390,height:844});
++      await p.screenshot({path:path.join(__dirname,'../../sicherung/tests/a16-tageshinweis.png'),fullPage:true});
++      const ready = p.waitForEvent('download');await p.locator('[data-action="bewertung-sichern"]').click();
++      const backup = JSON.parse(fs.readFileSync(await (await ready).path(),'utf8'));
++      assert.equal(backup.tagesantworten[0].id,saved.id);assert.equal(backup.tagesantworten[0].delta,1);
++      await p.locator('[data-action="bewertung-verwerfen"]').click();await p.locator('[data-action="dlg-cancel"]').click();
++      assert.equal((await p.evaluate(() => window.__PRUEF.tagesantworten())).length,1);
++      await p.locator('[data-action="bewertung-verwerfen"]').click();await p.locator('[data-action="dlg-ok"]').click();
++      assert.deepEqual(await p.evaluate(() => window.__PRUEF.tagesantworten()),[]);
++      assert.equal((await cloud(day)).w,0);
 +    });
 +    await fall('Kontoloeschung-entfernt-Cloudbelege', async p => {
 +      await p.evaluate(() => {window.__PRUEF.zaehle('u');window.__PRUEF.flush();}); await fertig(p);
