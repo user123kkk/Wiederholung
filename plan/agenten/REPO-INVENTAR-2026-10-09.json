@@ -1,0 +1,25 @@
+{
+  "files": 2171,
+  "bytes": 23106839,
+  "text_files": 2108,
+  "unique_text_sha256": 1492,
+  "groups": {
+    "app-root": 63,
+    "plan": 432,
+    "archiv": 40,
+    "sicherung": 1365,
+    "werkzeuge": 271
+  },
+  "features": {
+    "deployment": 58,
+    "firebase": 291,
+    "ui-rtl-ios": 274,
+    "learning-research": 144,
+    "browser-tests": 160,
+    "offline-cache": 297,
+    "skills-plugins": 3,
+    "new-framework": 3
+  },
+  "failures": [],
+  "evidence": "C:\\Users\\USER\\Desktop\\Wiederholung-Belege\\skills-2026-10-09\\repo-inventar.json"
+}
