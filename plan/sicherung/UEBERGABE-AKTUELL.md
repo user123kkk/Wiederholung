@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 04:37 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 04:39 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `3293056 Sicherung 04:36 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `f7eb210 Sicherung 04:38 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
@@ -16,7 +16,7 @@ Keine. Alles ist committet.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 0, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 0, chrome.exe 11 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -35,6 +35,10 @@ FERTIG: 3.18.28 ist online. In der App unter Einstellungen pruefen.
 
 ## 09.10.2026
 
+- 04:38 **3.18.28 ist online.** `ladegeraet.ps1 -Fortsetzen`: 155 bewahrt,
+  `t_serie_lang` Exit 0, zusammen 156/156; Affen Handy 200 und iPad 150 je
+  0 Befunde; Regeln eingespielt; Hosting veröffentlicht. Abgerufen:
+  `adrabic.web.app/sw.js` zeigt `adrabic-3.18.28`.
 - 04:30 „ladegerät“ an 3.18.28 endete 04:19 mit 155/156, nichts
   veröffentlicht. Rot: `t_serie_lang` Fall 3 (47 statt 48), lief 04:01.
   Einzeln 04:20 wieder rot. Ursache gerechnet und belegt: Der Test
@@ -74,7 +78,3 @@ FERTIG: 3.18.28 ist online. In der App unter Einstellungen pruefen.
 - 19:15 3.18.28 auf `main` (9f2990a) und gepusht. Zweiter Lauf `t_paket_e`,
   `t_einstellungen`, `t_einst` grün. Logbuch, STAND, ALLES-OFFEN
   nachgezogen. Patch `verstaendlichkeit/woerter-3.18.28-entwurf.patch` ist
-  damit überholt (bleibt als Beleg).
-- 18:56 Tests am Entwurf 3.18.28 fertig: 33 von 34 grün, `abnahme_runde.js`
-  13/13. Rot: `t_paket_e` E6 („Zeile behauptet keinen eingerichteten
-  Termin“). Echter Fehler im Entwurf, nicht im Test: „19:30 Uhr, im
