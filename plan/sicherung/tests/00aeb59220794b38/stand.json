@@ -88,6 +88,14 @@
       "zeitlimit": false,
       "sekunden": 117,
       "quelltext": "ca52ce639ac146d0c75d951834256896681008f7aa3b67ee32a03cc378484599"
+    },
+    "t_ueben.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 47,
+      "quelltext": "7bf90c4d5e1af879c34e3fa3daed50b8fcd98cb96cd07dd2ca5b452a2bd3addd"
     }
   }
 }

@@ -642,16 +642,16 @@ index e9503f2..08a8640 100644
    }
 diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
 new file mode 100644
-index 0000000..0c5faf2
+index 0000000..0c8ded5
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
-@@ -0,0 +1,168 @@
+@@ -0,0 +1,171 @@
 +/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
 +   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
 +const assert=require('node:assert/strict');
 +const {start}=require('./lib');
 +const {pruefeKontrast}=require('./kontrast');
-+const {seite,seed,fertig,rest,ROOT,SDK,APP_SOURCE}=require('./diagnose_karten_konflikt');
++const {seite,seed,fertig,rest,ROOT,SDK,APP_SOURCE,cloud}=require('./diagnose_karten_konflikt');
 +async function server(id='k4') {
 +  const r=await rest(ROOT+'/users/u1/karten/'+id),d=await r.json();
 +  return Object.fromEntries(Object.entries(d.fields).map(([k,v])=>[k,v.stringValue??(v.integerValue!==undefined?Number(v.integerValue):null)]));
@@ -782,10 +782,13 @@ index 0000000..0c5faf2
 +      await a.evaluate(()=>{window.__PRUEF_KARTE_ABLEHNEN=true;window.__PRUEF.starten();window.__PRUEF.bewerten('known');});await fertig(a);
 +      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt()[0]?.status==='abgelehnt');
 +      const saved=await a.evaluate(()=>window.__PRUEF.aufbewahrt()[0]),counts=await a.evaluate(()=>window.__PRUEF.verlauf());
++      const heute=await a.evaluate(()=>window.__PRUEF.heute());await a.evaluate(()=>window.__PRUEF.flush());await fertig(a);
++      const cloudVor=await cloud(heute);assert.equal(cloudVor.w,1);
 +      await a.evaluate(()=>{window.__PRUEF_KARTE_ABLEHNEN=false;return window.__PRUEF.pruefen();});await fertig(a);
 +      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt().length===0);
 +      assert.equal((await server()).bewertungsStand,saved.id);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
 +      await a.evaluate(()=>window.__PRUEF.pruefen());await fertig(a);assert.equal((await server()).bewertungsStand,saved.id);
++      await a.evaluate(()=>window.__PRUEF.flush());await fertig(a);assert.deepEqual(await cloud(heute),cloudVor);
 +    });
 +    for(const defekt of [false,true])await fall(defekt?'beschaedigte Kopie blockiert sicher; weitere Antwort bleibt exportierbar':'Neustart offline: ungepruefte Antwort nicht entfernbar',async(a)=>{
 +      await fertig(a);const before=await server();
