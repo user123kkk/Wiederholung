@@ -1,0 +1,9 @@
+OK   (a) #ansage traegt Meldungstext | Text="Karte gespeichert" | Toast="Karte gespeichert"
+OK   (a) #ansage hat role=status/aria-live=polite | role=status aria-live=polite
+OK   (c) sichtbare Meldung hat aria-hidden=true | aria-hidden=true
+OK   (c) sichtbare Meldung ohne role/aria-live | role=null aria-live=null
+OK   (b) #ansage bleibt dasselbe Element nach mehreren render()
+OK   (d) keine Seitenfehler
+Alle Faelle richtig.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":9,"quelltext":"c644f502f6f2e58775ce748adb40cb31b4e66fbf4137f8632d9a49c2f1feffb6"}

@@ -4,3 +4,7 @@ handy dunkel | Auge: text/falsch/x@y.de | Fehlertext: "E-Mail oder Passwort ist 
 handy hell | Auge: text/falsch/x@y.de | Fehlertext: "E-Mail oder Passwort ist falsch. Mit Google angelegt? Dann unten „Mit Google anmelden“." | Knopf-Sprung Fehler: 0 | Name-Fehler: true Sprung 0 | Reset: "Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach." | Kontrast/Quer: 0 | ok
   Neues Konto -> Einstieg: true | Plan-Knopf: Plan speichern
 klein dunkel | Auge: text/falsch/x@y.de | Fehlertext: "E-Mail oder Passwort ist falsch. Mit Google angelegt? Dann unten „Mit Google anmelden“." | Knopf-Sprung Fehler: 0 | Name-Fehler: true Sprung 0 | Reset: "Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach." | Kontrast/Quer: 0 | ok
+  Neues Konto -> Einstieg: true | Plan-Knopf: Plan speichern
+ipad dunkel | Auge: text/falsch/x@y.de | Fehlertext: "E-Mail oder Passwort ist falsch. Mit Google angelegt? Dann unten „Mit Google anmelden“." | Knopf-Sprung Fehler: 0 | Name-Fehler: true Sprung 0 | Reset: "Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach." | Kontrast/Quer: 0 | ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":117,"quelltext":"6e4406e9b2b1623ac600affd2f7ed6070946a1a122c3ed6616c10b3defe90fa0"}

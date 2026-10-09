@@ -1,0 +1,11 @@
+OK   (a) #ansage traegt die Anmelde-Info | ansage="Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach." box="Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach."
+OK   (a) .info-box ohne role/aria-live | role=null aria-live=null
+OK   (a) keine Seitenfehler
+OK   (b) #ansage traegt den Modus-Wechsel | ansage="Übung – zählt nicht als Wiederholung" el="Übung – zählt nicht als Wiederholung"
+OK   (b) .mitte-wechsel__a ohne role/aria-live | role=null aria-live=null
+OK   (b) keine Seitenfehler
+OK   (c) Gegenprobe Anmelde-Info: alter Stand bleibt stumm (muss ROT sein) | ansage="" box="Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach."
+OK   (c) Gegenprobe Modus-Wechsel: alter Stand bleibt stumm (muss ROT sein) | ansage="" el="Übung – zählt nicht als Wiederholung"
+Alle Faelle richtig.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":20,"quelltext":"fcab627cf78d695574341fc1c347ed39fdb91ac25d53041c70b4c88cd1cfcd15"}
