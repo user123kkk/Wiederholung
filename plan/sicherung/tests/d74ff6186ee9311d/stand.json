@@ -1056,6 +1056,46 @@
       "fehler": null,
       "sekunden": 31,
       "quelltext": "3fe687941e78f2a7cfcb1a9cd75608ee6cef51a478841f789485c09a7c03cef3"
+    },
+    "t_sw_paket_a.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 19,
+      "quelltext": "ade1cdfe6673d0807cb4174aff127c9f9b26e541df1b8e373946977530cf0ab5"
+    },
+    "t_teilen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 24,
+      "quelltext": "157382c6d69277205f458932b7655d3e1658a9f417d7d624c65845bc504739f4"
+    },
+    "t_text_anlegen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 31,
+      "quelltext": "8baeff0101a992329770ff1ed8bbcb1391756d341465a8a5e9d8569711ec858d"
+    },
+    "t_text_ausschluss.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 15,
+      "quelltext": "0d42b3fecf212a93e4513f59db2e33bcc498abe6c07c6d7da41842c765a8d659"
+    },
+    "t_text_einwilligung.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 26,
+      "quelltext": "13b1dd1e6a54187007d98eed83b90f16682b19f60d7dff3a27e3ff6db1d0a2f9"
     }
   }
 }
