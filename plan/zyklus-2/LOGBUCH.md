@@ -4210,3 +4210,22 @@ Zusatzmatrix f-umfeld24/24 grün. git diff --check grün. Finale Gegenprüfung
 je Aufgabe: PAKET-F-GEGENPRUEFUNG.md. Abschluss bleibt am Laptop offen.
 
 - 21:48 Codex: weitere offene Zuverlässigkeitsprüfung statt großer Abnahme. DATEN-11/A16 mittel bestätigt: echte SDK-Tageszähler-Ablehnung, Karte bestätigt, Neustart verliert Differenz und Fehlermeldung. Arbeitsbaum und feste Quelle 591d03e samt App-Patch gleiches Fehlerbild; erweiterte Kontrollen ohne Ablehnung und ohne Neustart jeweils korrekt w:1, Verlustfall w:0. Schutzprobe absichtlich Exit 1, ganze Ausgaben gelesen und im Repo gesichert. Fixture erzwingt echte Regelablehnung, kein echter Ausweisablauf behauptet. Kein Reset im Fall. Neue offene Aufgabe mit Abnahme und Grenzen; noch nicht gebaut. Großer gestoppter Lauf hatte 29/157 abgeschlossene Tests, alle Exit 0; kein Gesamturteil.
+## Nachprüfung Tageszähler, 09.10.2026
+
+A16/DATEN-11 mittel ist jetzt offen: bestätigte Karte bleibt erhalten,
+abgelehnte Tagesantwort verschwindet nach Neustart. Feste Gegenprobe
+591d03e mit dessen App-Patch und zwei erfolgreiche Kontrollen. Nachweis
+in VERLAUF-NEUSTART-2026-10-09.md; noch kein Produkt-Fix. Erhalt braucht
+Schutz vor doppeltem Nachholen und vor Wiederbeleben alter Reset-Epochen.
+Große Abnahme auf Betreiberwunsch verschoben, 29/157 abgeschlossen mit
+Exit 0; restliche Tests nicht geprüft, abgebrochener Test nicht bestanden.
+
+Import-/Lösch-/Rückwege im Originalcode nachgelesen: neue Import-IDs,
+Speicherkarten-Verweise, geführtes Zusammenführen, kontogebundener
+FileReader, explizite Löschungen. Aktueller t_daten-Log vollständig gelesen:
+Code/ungültiger Code/Lesefehler/Download/Einspielen/kaputtes JSON auf drei
+Geräten ohne JavaScript- oder gemeldeten Kontrastfehler. Dieser Test ist
+beschreibend und prüft nicht alle exportierten Felder oder Verlustfälle;
+kein umfassender Rundlauf-Nachweis daraus. Verbliebene R15-112/123/124/126
+Codepfade erneut gefunden, historische Belege behalten. Keine zusätzlichen
+Befunde allein aus Codeansicht als neu bestätigt gezählt. Kein neuer Bau.

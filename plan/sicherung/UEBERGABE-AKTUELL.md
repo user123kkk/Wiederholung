@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 21:47 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 21:49 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `a543a2f Sicherung 21:48 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `e781f1a Sicherung 21:48 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -18,10 +18,15 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/PLAN.md
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/LOGBUCH.md
+ M plan/zyklus-2/ZUVERLAESSIGKEIT-NACHPRUEFUNG.md
  M sw.js
 ```
 
@@ -30,7 +35,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 7, chrome.exe 14 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 7, chrome.exe 13 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 

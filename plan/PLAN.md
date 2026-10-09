@@ -7,6 +7,15 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+
+**09.10.2026 – große Abnahme auf Betreiberwunsch später:**
+A14/A15 als Entwurf 3.18.30 erhalten; 16 SDK-Fälle und 222 Regeln grün.
+Gesamtlauf beendet, 29/157 abgeschlossene Tests Exit 0. Kein App-Commit
+oder Deploy. Weitere gezielte Nachprüfung bestätigt A16/DATEN-11:
+abgelehnte Tagesantwort nach Neustart verloren, feste Gegenprobe rot.
+Noch nicht gebaut; VERLAUF-NEUSTART-2026-10-09.md nennt Abnahme und Grenzen.
+E26/Tagesziel bleibt nach korrigiertem Audit zurückgestellt. Die folgenden
+Gesamtlauf-Meldungen sind Verlauf; aktueller oberster STAND gilt.
 **09.10.2026, 20:44 – Fix A14/A15 im Entwurf 3.18.30:**
 Serverseitiger Aktionsschutz, Undo-Prüfung und dauerhafte Konfliktkopien
 gebaut. 12 echte SDK-Schutzfälle und 222 Regeln-Prüfungen grün.
