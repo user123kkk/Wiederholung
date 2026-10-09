@@ -663,6 +663,17 @@ Was gemessen wird:
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
 
+- **Rechtslinks mit dem wirklichen Rückweg prüfen**, nicht den neuen Reiter
+  im Test schließen. E4 war seit 3.18.15 grün, obwohl der Link „← Zurück“
+  die App neu lud. Der Test muss genau diesen Link bzw. den sichtbaren
+  Rückweg betätigen und den vollständigen Plan sowie die Eingaben prüfen.
+- **Scroll-Clips bei Kontrastmessungen beachten.** Ein Text kann innerhalb
+  des Viewports liegen und trotzdem vollständig außerhalb des sichtbaren
+  Inhaltsfensters sein. Am 09.10. meldete der allgemeine Leser auf iPad
+  1,89:1 für eine Überschrift bei y=1058, obwohl das Inhaltsfenster bei
+  y=905 endete. Alle Abschnitte durchscrollen, geometrisch sichtbare Texte
+  prüfen; die Kontrastgrenze bleibt unverändert.
+
 - **Ein Bewegungstest verlangt Zwischenlagen, nicht „irgendein Bild weicht
   ab“** (08.10.2026, Durchsicht Bewegung). D1 („Blätter fahren beim
   Schließen weg“) galt seit 3.18.14 als behoben. Der Test prüft, ob in
@@ -1776,6 +1787,16 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+09.10.2026, E4 wieder geöffnet: Der Betreiber meldete verlorenen Plan in
+Safari .26 nach Datenschutz/Impressum und „← Zurück“. Der grüne Test aus
+3.18.15 schloss stattdessen den neuen Reiter. Gegenprobe am festen d64380a
+verliert tatsächlich das Formular (0 statt 1). Vorhandenen Dialog nutzen,
+vollständigen Plan und alle drei Formularwerte nach dem sichtbaren Rückweg
+prüfen (§ 5.3). Eigene Umfeldprüfung meldete außerdem 1,89:1 für eine
+vollständig abgeschnittene Überschrift auf iPad; Geometrie belegt
+y=1058 außerhalb des Inhaltsfensters bis y=905. Durchscrollen und nur
+tatsächlich sichtbare Befunde übernehmen, keine Kontrastgrenze lockern.
 
 03.10.2026, D12 feste Quellenkontrolle: historischen Foto-Quellenhash mit
 beiden gesicherten Quellen verbunden. Vorstand und Entwurf lieferten zuvor

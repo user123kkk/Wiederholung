@@ -1,0 +1,13 @@
+AssertionError [ERR_ASSERTION]: E4 echter Zurück-Link verliert Plan und Formular
+
+0 !== 1
+
+    at Object.e4 [as E4] (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_e.js:60:18)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_paket_e.js:608:65 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
