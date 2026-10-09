@@ -47,3 +47,12 @@ KnopfHoehe/klein | Fehler auf der Seite: ok
 0 Fehler insgesamt auf dem aktuellen Stand.
 
 -- Gegenprobe gegen 5ad0a11 (muss rot sein) --
+  ok (=Fehler im Altstand): Probekarte springt beim Aufdecken (205 -> 165)
+  ok (=Fehler im Altstand): keine karte-dreh--wende, alte eigene Drehung
+  ok (=Fehler im Altstand): "Nichts davon" liegt buendig am Knopf, keine erkennbare Scroll-Reserve: {"keineBottom":717,"aktionTop":717} ohneScroll=142
+  ok (=Fehler im Altstand): "Fajr-Gebet" steht 2x auf dem Plan
+  ok (=Fehler im Altstand): Sticky-Fuss/fehlende Scroll-Logik: {"overlap":true,"scroll":142}
+
+0 unerwartete "schon gut"-Treffer im Altstand (soll 0 sein).
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":82,"quelltext":"d0b017f381c8c92884b055e3e1168b56c4870073f18d80d4eb06113a24861452"}
