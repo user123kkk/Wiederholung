@@ -1,0 +1,16 @@
+grün: leer
+grün: Tab, drei Spalten, Windows-Zeilenenden
+grün: Deutsch vorne wird getauscht
+grün: Harakat bleiben Zeichen für Zeichen
+grün: Gedankenstrich, Gleichheitszeichen, senkrechter Strich
+grün: Bindestrich im Wort ist kein Trenner
+grün: Zeilen ohne Trenner oder mit leerer Seite werden gemeldet, nicht verworfen
+grün: gar kein Trenner
+grün: mehr als drei Spalten: Rest landet in der Notiz
+grün: Längen werden gekappt
+grün: zu viele Zeilen: nichts lesen, Zahl melden
+grün: beide Spalten arabisch oder beide deutsch: nicht tauschen
+grün: geschütztes Leerzeichen und Leerraum am Rand
+13 Fälle grün
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":0,"quelltext":"477f22432a0b8234687499951de24c8c2053fdd720d9db05dded3299a7e559e5"}
