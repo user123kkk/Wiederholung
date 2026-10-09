@@ -1,0 +1,217 @@
+diff --git a/app.js b/app.js
+index 4b6221e..3f74435 100644
+--- a/app.js
++++ b/app.js
+@@ -331,7 +331,12 @@ function normCard(c) {
+     /* 3.18.0 (Texte auswendig lernen): Eine Textzeile ist ein Karten-Dokument
+        mit dem Verweis auf ihren Text. Fehlte das Feld hier, verloere jede
+        Zeile es beim naechsten Laden und wuerde zur gewoehnlichen Karte. */
+-    textId: textIdVon(c)
++    textId: textIdVon(c),
++    /* Technische Aktionskennung, keine Lernregel. Alte Karten haben null. */
++    ...(!textIdVon(c) && typeof c.bewertungsStand === "string" ? {
++      bewertungsStand: c.bewertungsStand,
++      bewertungsBasis: typeof c.bewertungsBasis === "string" ? c.bewertungsBasis : null
++    } : {})
+   };
+   /* Textzeilen kennen nur frisch 0-6 und fest 7 (texte-lernen/WIEDERHOLEN.md
+      § 1). Hat eine aeltere App-Version eine Zeile als Karte bewertet, steht
+@@ -896,7 +901,10 @@ function kartenFelder(c, order) {
+     /* 3.18.0: nur bei Textzeilen. Gewoehnliche Karten tragen das Feld nicht -
+        so schreibt eine Karte auch dann noch, wenn die Regeln mit textId noch
+        nicht veroeffentlicht sind (plan/LEHREN.md § 8.1). */
+-    ...(c.textId ? { textId: c.textId } : {})
++    ...(c.textId ? { textId: c.textId } : {}),
++    ...(!c.textId && c.bewertungsStand ? {
++      bewertungsStand: c.bewertungsStand, bewertungsBasis: c.bewertungsBasis || null
++    } : {})
+   };
+ }
+ /* Eine Speicherkarte in der Form, wie sie in der Cloud steht. Wie bei den
+@@ -2432,6 +2440,7 @@ async function initFirebase() {
+     verlaufEpoche = "";
+     verlaufAbgelehnt = false;
+     abgelehnteBewertungen.clear();
++    bewertungsAktionenLaden(user);
+     if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
+     cloudDocExists = false;
+     cloudKontoFrisch = false;
+@@ -2840,6 +2849,21 @@ async function patchDoc(patch) {
+     }
+   }
+ 
++  /* Auch Bearbeiten/Zuruecksetzen/Verschieben darf den Kartenschutz nicht
++     entfernen oder einen inzwischen fremden Lernstand ersetzen. */
++  for (const [key, op] of ops) {
++    if (!key.startsWith("k/") || op.art === "delete") continue;
++    const alt = (rohKarten || []).find(c => c.id === key.slice(2));
++    if (!alt || alt.textId || op.daten.textId) continue;
++    const aendertBewertung = BEWERTUNGS_FELDER.some(f => f in op.daten && op.daten[f] !== alt[f]);
++    if (aendertBewertung) {
++      op.daten.bewertungsBasis = alt.bewertungsStand || null;
++      op.daten.bewertungsStand = bewertungsKennung();
++    } else if (op.art === "set" && alt.bewertungsStand) {
++      op.daten.bewertungsStand = alt.bewertungsStand;
++      op.daten.bewertungsBasis = alt.bewertungsBasis || null;
++    }
++  }
+   const liste = [...ops.values()];
+   const stapelSchreiben = async (teil) => {
+     const stapel = fb.writeBatch(db);
+@@ -2985,15 +3009,150 @@ let verlaufAbgelehnt = false;
+ function abgelehntesNachholen() {
+   const liste = [...abgelehnteBewertungen.entries()];
+   abgelehnteBewertungen.clear();
+-  for (const [cardId, x] of liste) persistCardGrade(x.bereichId, cardId, x.fields);
++  for (const [cardId, x] of liste) {
++    if (x.aktion) bewertungsAktionSchreiben(x.aktion);
++    else persistCardGrade(x.bereichId, cardId, x.fields);
++  }
+   if (verlaufAbgelehnt) { verlaufAbgelehnt = false; persistVerlauf(); }
+ }
+-/* Gezieltes Speichern fuers Lernen: aendert nur die Stufe und das
+-   Faelligkeitsdatum dieser einen Karte. Dadurch kann ein Geraet nie den
+-   Fortschritt eines anderen ausloeschen - auch nicht, wenn eine Karte offline
+-   bewertet und die Aenderung erst spaeter hochgeladen wird. */
+-function persistCardGrade(bereichId, cardId, fields) {
++const BEWERTUNGS_FELDER = ["stufe", "nextReview", "ersteBewertung", "rueckfaelle", "maxStufe"];
++const bewertungsAktionen = new Map();
++const bewertungsLaeufe = new Set();
++let bewertungsSpeicherFehler = false;
++function bewertungsKennung() {
++  return typeof crypto.randomUUID === "function" ? crypto.randomUUID() : genId() + genId();
++}
++function bewertungsPraefix(uid) { return "adrabic-bewertung-" + uid + "/"; }
++function bewertungsAktionenLaden(user) {
++  bewertungsAktionen.clear();
++  bewertungsLaeufe.clear();
++  bewertungsSpeicherFehler = false;
++  if (!user) return;
++  try {
++    const prefix = bewertungsPraefix(user.uid);
++    for (let i = 0; i < localStorage.length; i++) {
++      const key = localStorage.key(i);
++      if (!key || !key.startsWith(prefix)) continue;
++      const x = JSON.parse(localStorage.getItem(key));
++      if (!x || x.uid !== user.uid || key !== prefix + x.id ||
++          typeof x.cardId !== "string" || !x.fields || typeof x.fields !== "object") {
++        bewertungsSpeicherFehler = true;
++        continue; // Beschaedigte Eintraege bleiben erhalten, nicht still loeschen.
++      }
++      bewertungsAktionen.set(x.id, { ...x, status: x.status === "offen" ? "pruefen" : x.status });
++    }
++  } catch (e) { bewertungsSpeicherFehler = true; }
++}
++function bewertungsAktionMerken(x) {
++  bewertungsAktionen.set(x.id, x);
++  try { localStorage.setItem(bewertungsPraefix(x.uid) + x.id, JSON.stringify(x)); return true; }
++  catch (e) { x.status = "speicher"; bewertungsSpeicherFehler = true; return false; }
++}
++function bewertungsAktionEntfernen(x) {
++  try {
++    localStorage.removeItem(bewertungsPraefix(x.uid) + x.id);
++    bewertungsAktionen.delete(x.id);
++  } catch (e) { x.status = "pruefen"; bewertungsSpeicherFehler = true; }
++}
++function bewertungsKarteBlockiert(id) {
++  return bewertungsSpeicherFehler || [...bewertungsAktionen.values()].some(x =>
++    x.cardId === id && x.status !== "offen");
++}
++function bewertungDarfBeginnen(id) {
++  if (!bewertungsKarteBlockiert(id)) return true;
++  dlgAlert("Eine frühere Antwort ist noch nicht geklärt. Sichere oder prüfe sie zuerst über den Hinweis oben.", "Antwort aufbewahrt");
++  return false;
++}
++/* Die Regeln vergleichen die Ausgangskennung atomar am Server. Das SDK
++   darf weiter offline schreiben; alte Aktionen koennen neuere nicht ersetzen.
++   Jeder Write bleibt separat auf dem Geraet, bis er bestaetigt wurde. */
++function bewertungsAktionSchreiben(x) {
++  if (!currentUser || currentUser.uid !== x.uid || !kartenColRef || kontoWirdGeloescht || bewertungsLaeufe.has(x.id)) return;
++  const ref = userDocRef, sammlung = kartenColRef;
++  const giltNoch = () => userDocRef === ref && !kontoWirdGeloescht && currentUser?.uid === x.uid;
++  bewertungsLaeufe.add(x.id);
++  fb.updateDoc(fb.doc(sammlung, x.cardId), {
++    ...x.fields, bewertungsStand: x.id, bewertungsBasis: x.basis
++  }).then(() => {
++    if (!giltNoch()) return;
++    bewertungsAktionEntfernen(x);
++    const abgelehnt = abgelehnteBewertungen.get(x.cardId);
++    if (abgelehnt?.aktion?.id === x.id) abgelehnteBewertungen.delete(x.cardId);
++    schreibErfolg();
++  }).catch(e => {
++    if (!giltNoch()) return;
++    x.status = "abgelehnt";
++    bewertungsAktionMerken(x);
++    if (e?.code === "permission-denied") abgelehnteBewertungen.set(x.cardId, { aktion: x });
++    saveFehler(e);
++  }).finally(() => { if (giltNoch()) bewertungsLaeufe.delete(x.id); });
++}
++async function bewertungsAktionenPruefen() {
++  const ref = userDocRef, user = currentUser, sammlung = kartenColRef;
++  if (!ref || !user || !sammlung) return;
++  const giltNoch = () => userDocRef === ref && currentUser === user && !kontoWirdGeloescht;
++  const liste = [...bewertungsAktionen.values()].filter(x => x.status !== "offen");
++  for (const x of liste) {
++    if (!giltNoch()) return;
++    try {
++      const snap = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(fb.doc(sammlung, x.cardId)));
++      if (!giltNoch() || !bewertungsAktionen.has(x.id)) return;
++      const data = snap.exists() ? snap.data() : null;
++      if (data?.bewertungsStand === x.id) {
++        bewertungsAktionEntfernen(x); // Bestätigung vor einem Neustart verloren.
++      } else if (data && (data.bewertungsStand || null) === x.basis) {
++        x.status = "offen";
++        if (bewertungsAktionMerken(x)) bewertungsAktionSchreiben(x);
++      } else {
++        x.status = data ? "konflikt" : "geloescht";
++        bewertungsAktionMerken(x); // Kein neuer Ausgangsstand, kein blindes Retry.
++      }
++    } catch (e) { if (giltNoch()) { x.status = "abgelehnt"; bewertungsAktionMerken(x); } }
++  }
++  if (giltNoch()) render();
++}
++async function bewertungsAktionenVerwerfen() {
++  const ref = userDocRef, user = currentUser;
++  const liste = [...bewertungsAktionen.values()].filter(x => x.status !== "offen");
++  if (!user || !liste.length) return;
++  const ja = await dlgConfirm("Diese aufbewahrten Antworten vom Gerät entfernen? Der aktuelle Lernstand in der Cloud bleibt erhalten. Lade bei Bedarf vorher die Antworten herunter.", { title: "Aufbewahrte Antworten", okLabel: "Vom Gerät entfernen", danger: true });
++  if (!ja || userDocRef !== ref || currentUser !== user) return;
++  for (const x of liste) {
++    if (bewertungsAktionen.get(x.id)?.status === "offen") continue;
++    bewertungsAktionEntfernen(x);
++    if (abgelehnteBewertungen.get(x.cardId)?.aktion?.id === x.id) abgelehnteBewertungen.delete(x.cardId);
++  }
++  render();
++}
++function bewertungsBanner() {
++  const n = [...bewertungsAktionen.values()].filter(x => x.status !== "offen").length;
++  if (!n && !bewertungsSpeicherFehler) return "";
++  return bannerFehler("Antworten aufbewahrt:",
++    'Frühere Antworten sind noch nicht bestätigt oder passen nicht mehr zum aktuellen Kartenstand. ' +
++    '<button class="tiny-link" data-action="bewertung-pruefen">Prüfen</button> ' +
++    '<button class="tiny-link" data-action="bewertung-sichern">Antworten sichern</button> ' +
++    '<button class="tiny-link" data-action="bewertung-verwerfen">Vom Gerät entfernen</button>' +
++    (bewertungsSpeicherFehler ? ' Der Gerätespeicher ist nicht verfügbar oder beschädigt; neue Bewertungen sind gesperrt.' : ''));
++}
++function persistCardGrade(bereichId, cardId, fields, basis) {
+   if (!kartenColRef || kontoWirdGeloescht) return;
++  const card = bereiche?.find(b => b.id === bereichId)?.karten.find(c => c.id === cardId);
++  const daten = {
++    stufe: fields.stufe, nextReview: fields.nextReview,
++    ersteBewertung: fields.ersteBewertung === undefined ? null : fields.ersteBewertung,
++    rueckfaelle: Number.isInteger(fields.rueckfaelle) ? fields.rueckfaelle : 0,
++    maxStufe: Number.isInteger(fields.maxStufe) ? fields.maxStufe : 0
++  };
++  if (card && !card.textId && currentUser) {
++    const x = { id: bewertungsKennung(), uid: currentUser.uid, bereichId, cardId,
++      basis: basis === undefined ? (card.bewertungsStand || null) : basis,
++      fields: daten, wort: card.wort, zeit: Date.now(), status: "offen" };
++    if (!bewertungsAktionMerken(x)) { render(); return null; }
++    card.bewertungsBasis = x.basis;
++    card.bewertungsStand = x.id;
++    bewertungsAktionSchreiben(x);
++    return x.id;
++  }
+   const kontoRef = userDocRef;
+   const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
+   fb.updateDoc(karteRef(cardId), {
