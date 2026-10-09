@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 07:18 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 15:39 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `554dc7c Sicherung 07:17 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `d64380a Sicherung 07:19 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
@@ -16,7 +16,7 @@ Keine. Alles ist committet.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 0, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 6, chrome.exe 0 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -25,10 +25,13 @@ Keine. Alles ist committet.
 EXIT 1 t_paket_e
 ```
 
-**ladegeraet-3.18.28-fortsetzen.log**: 1 grün, 0 rot
+**ladegeraet-nurpruefen-3.18.27.log**: 153 grün, 3 rot
 ```
-156/156 Exit 0; 0 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\d74ff6186ee9311d
-FERTIG: 3.18.28 ist online. In der App unter Einstellungen pruefen.
+ROT t_griff_scrollen.js (27s)
+ROT t_konto_fortsetzungen.js (2s)
+ROT t_paket_f_netz.js (1s)
+153/156 Exit 0; 3 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\7223038b21480566
+ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlicht.
 ```
 
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
