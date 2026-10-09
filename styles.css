@@ -3403,6 +3403,13 @@ input.schalter::before { content: none; }
 }
 .dlg-actions button { flex: 1 1 0; }
 
+/* E4: Unveränderte Rechtsseiten im vorhandenen Dialog. Der Rückweg bleibt
+   sichtbar, während der lange Text in seinem eigenen Bereich scrollt. */
+.dlg--recht { display: flex; flex-direction: column; }
+.dlg-recht-inhalt { height: 55svh; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.dlg-recht-inhalt .rechtsseite { padding: 0; overflow-wrap: anywhere; }
+.dlg--recht .dlg-actions { flex-shrink: 0; margin-top: var(--space-3); }
+
 /* Das Bereichs-Sheet: dieselbe Hülle, andere Füllung. */
 .sheet-liste { margin: var(--space-4) calc(var(--space-5) * -1) 0; }
 .sheet-liste .liste-zeile { border-radius: 0; padding-left: var(--space-5); padding-right: var(--space-5); }

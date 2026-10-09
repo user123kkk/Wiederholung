@@ -1,3 +1,7 @@
+## 3.18.29 – 9. Oktober 2026
+
+**Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
+
 ## 3.18.28 – 8. Oktober 2026
 
 **Klarere Wörter (Durchlauf „Verständlichkeit“, Betreiber 08.10.: „alles ja
