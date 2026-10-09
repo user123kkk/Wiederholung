@@ -299,7 +299,7 @@ index bc20801..28b32ea 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..b271606 100644
+index 4b6221e..110d85e 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -337,7 +337,7 @@ index 4b6221e..b271606 100644
    };
  }
  /* Eine Speicherkarte in der Form, wie sie in der Cloud steht. Wie bei den
-@@ -990,6 +998,152 @@ let verlaufOffen = {};
+@@ -990,11 +998,158 @@ let verlaufOffen = {};
  let verlaufStand = {};
  let verlaufGeneration = 0;   // spaete Antworten nach Konto-Wechsel/Reset verwerfen
  let verlaufEpoche = "";     // serverseitige Grenze gegen Writes vor einem Reset
@@ -490,7 +490,13 @@ index 4b6221e..b271606 100644
  function verlaufEpocheUebernehmen(data) {
    const epoche = data && typeof data.verlaufEpoche === "string" ? data.verlaufEpoche : "";
    if (epoche === verlaufEpoche) return;
-@@ -1034,8 +1188,10 @@ const VERLAUF_ARTEN = ["w", "n", "u", "t", "r"];
+   verlaufEpoche = epoche;
+   verlaufGeneration++;
++  verlaufLaeufe.clear();
+   verlaufOffen = {};
+   verlaufAbgelehnt = false;
+   if (verlaufTimer) clearTimeout(verlaufTimer);
+@@ -1034,8 +1189,10 @@ const VERLAUF_ARTEN = ["w", "n", "u", "t", "r"];
  function tagGelernt(e) {
    return !!e && ((e.w || 0) + (e.n || 0) + (e.t || 0)) > 0;
  }
@@ -502,7 +508,7 @@ index 4b6221e..b271606 100644
    /* 3.16.0: "erster" heisst jetzt: erste LERN-Antwort des Tages. Hat man
       vorher schon geuebt, gibt es den Eintrag bereits - der Tag zaehlt fuer
       die Serie aber erst mit der ersten Wiederholung, und genau die muss
-@@ -1043,12 +1199,13 @@ function verlaufZaehle(art) {
+@@ -1043,12 +1200,13 @@ function verlaufZaehle(art) {
    const ersterHeute = art !== "u" && !tagGelernt(verlauf[t]);
    if (!verlauf[t]) verlauf[t] = { w: 0, n: 0 };
    verlauf[t][art] = (verlauf[t][art] || 0) + 1;
@@ -517,7 +523,7 @@ index 4b6221e..b271606 100644
  }
  /* 3.17.34 (REST-1): Gegenstueck zu verlaufZaehle, aber je Bereich und nur
     im Arbeitsspeicher (ui.heuteJeBereich) - siehe Kommentar dort und bei
-@@ -1058,9 +1215,12 @@ function bereichHeuteZaehle(bid, delta) {
+@@ -1058,9 +1216,12 @@ function bereichHeuteZaehle(bid, delta) {
    const n = ui.heuteJeBereich.n;
    n[bid] = Math.max(0, (n[bid] || 0) + delta);
  }
@@ -533,7 +539,7 @@ index 4b6221e..b271606 100644
  }
  /* SDK-Snapshot enthaelt gesendete lokale increments bereits. Nur noch
     nicht uebergebene/abgelehnte Differenzen kommen fuer die Anzeige dazu. */
-@@ -1115,9 +1275,11 @@ function ruhetagPruefen() {
+@@ -1115,9 +1276,11 @@ function ruhetagPruefen() {
    if (texteFreigeschaltet() &&
        bereiche.some(b => (b.texte || []).some(x => textWdhPlan(b, x, t).length > 0))) return;
    if (serieAktuell() < 1) return;
@@ -546,7 +552,7 @@ index 4b6221e..b271606 100644
    persistVerlauf();
  }
  /* Atomare Differenzen je Tag/Antwortart, nie den gesamten Tagesstand.
-@@ -1126,50 +1288,7 @@ function ruhetagPruefen() {
+@@ -1126,50 +1289,7 @@ function ruhetagPruefen() {
     darf nicht als Fehlschlag gelten oder einen zweiten Versand ausloesen. */
  function persistVerlauf() {
    if (!userDocRef || kontoWirdGeloescht) return;
@@ -598,7 +604,15 @@ index 4b6221e..b271606 100644
  }
  /* Alte Tage in der Cloud wegraeumen. Laeuft einmal beim Laden, weil der
     Speicher sie da ohnehin schon verworfen hat und sie sonst nie jemand
-@@ -2431,7 +2550,9 @@ async function initFirebase() {
+@@ -1200,6 +1320,7 @@ async function verlaufZuruecksetzen() {
+   verlaufStand = {};
+   verlaufGeneration++;
+   verlaufEpoche = typeof crypto.randomUUID === "function" ? crypto.randomUUID() : genId() + genId();
++  verlaufLaeufe.clear();
+   verlaufAbgelehnt = false;
+   const ref = userDocRef, generation = verlaufGeneration;
+   if (ref) fb.updateDoc(ref, { verlauf: {}, verlaufEpoche: verlaufEpoche })
+@@ -2431,7 +2552,9 @@ async function initFirebase() {
      verlaufGeneration++;
      verlaufEpoche = "";
      verlaufAbgelehnt = false;
@@ -608,7 +622,7 @@ index 4b6221e..b271606 100644
      if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
      cloudDocExists = false;
      cloudKontoFrisch = false;
-@@ -2528,6 +2649,7 @@ async function initFirebase() {
+@@ -2528,6 +2651,7 @@ async function initFirebase() {
          if (kontoWirdGeloescht) return;
          const data = snap.data();
          verlaufEpocheUebernehmen(data);
@@ -616,7 +630,7 @@ index 4b6221e..b271606 100644
          // Das SDK kennt auch offline bereits uebergebene increments. Deren
          // Echo fuer den Zaehler verarbeiten, ohne alle Screens neu aufzubauen.
          verlaufStand = normVerlauf(data && data.verlauf);
-@@ -2840,6 +2962,21 @@ async function patchDoc(patch) {
+@@ -2840,6 +2964,21 @@ async function patchDoc(patch) {
      }
    }
  
@@ -638,7 +652,7 @@ index 4b6221e..b271606 100644
    const liste = [...ops.values()];
    const stapelSchreiben = async (teil) => {
      const stapel = fb.writeBatch(db);
-@@ -2985,15 +3122,220 @@ let verlaufAbgelehnt = false;
+@@ -2985,15 +3124,220 @@ let verlaufAbgelehnt = false;
  function abgelehntesNachholen() {
    const liste = [...abgelehnteBewertungen.entries()];
    abgelehnteBewertungen.clear();
@@ -867,7 +881,7 @@ index 4b6221e..b271606 100644
    const kontoRef = userDocRef;
    const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
    fb.updateDoc(karteRef(cardId), {
-@@ -3842,8 +4184,15 @@ async function kontoDatenLoeschen(konto = kontoLoeschKontext()) {
+@@ -3842,8 +4186,15 @@ async function kontoDatenLoeschen(konto = kontoLoeschKontext()) {
      await stapel.commit();
      konto.pruefen();
    }
@@ -883,7 +897,7 @@ index 4b6221e..b271606 100644
  }
  /* 3.17.38 (G-011, KONTO-2): eigenes Zeitlimit fuer kontoDatenLoeschen() als
     Ganzes - deleteDoc()/writeBatch().commit() loesen laut Firestore-Doku erst
-@@ -3927,6 +4276,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+@@ -3927,6 +4278,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
    }
    if (!konto.abgebrochen) {
      try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
@@ -899,7 +913,7 @@ index 4b6221e..b271606 100644
    }
    if (!konto.abgebrochen && auth.currentUser === null) {
      if (currentUser === konto.user && verlaufGeneration === generation)
-@@ -6125,17 +6483,29 @@ function toggleLernNotiz(id) {
+@@ -6125,17 +6485,29 @@ function toggleLernNotiz(id) {
  function lernAbhaken(id) {
    const card = findCard(id);
    if (!card || !istNeueKarte(card)) return;
@@ -933,7 +947,7 @@ index 4b6221e..b271606 100644
    ui.lernFokusNach = card.id;
    /* 2.10.1: Auch das Durchgehen zaehlt fuer den Tag. Vorher sprang die
       Flamme nur am Ende einer Lernsession an - am ersten Tag mit einem neuen
-@@ -6150,22 +6520,30 @@ function lernRueckgaengig() {
+@@ -6150,22 +6522,30 @@ function lernRueckgaengig() {
    const l = ui.lernLetzte;
    if (!l) return;
    const card = findCard(l.cardId);
@@ -971,9 +985,12 @@ index 4b6221e..b271606 100644
      bereichHeuteZaehle(currentBereich().id, -1);
      persistVerlauf();
    }
-@@ -6773,9 +7151,13 @@ function gradeCard(kind) {
+@@ -6772,10 +7152,16 @@ function gradeCard(kind) {
+   /* card kann fehlen, wenn die Karte auf einem anderen Geraet geloescht wurde,
       waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
    const card = findCard(s.queue[0]);
++  const drillBeitrag = s.isDrill && card ? verlaufBeitragVorbereiten(todayStr(), "u", 1) : null;
++  if (s.isDrill && card && !drillBeitrag) return;
    if (card && !s.isDrill) {
 +    if (!bewertungDarfBeginnen(card.id)) return;
 +    const vorherLetzte = s.lastAction;
@@ -985,7 +1002,7 @@ index 4b6221e..b271606 100644
      s.lastAction = {
        cardId: card.id,
        prevStufe: card.stufe,
-@@ -6829,7 +7211,23 @@ function gradeCard(kind) {
+@@ -6829,7 +7215,23 @@ function gradeCard(kind) {
      /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
         danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
         als neu erkennbar. */
@@ -1010,7 +1027,16 @@ index 4b6221e..b271606 100644
      bereichHeuteZaehle(s.bereichId, 1);
    }
    /* 3.12.0: nur fuer die Anzeige - der Abschluss zeigt, wie die Runde lief,
-@@ -6868,7 +7266,6 @@ function gradeCard(kind) {
+@@ -6837,7 +7239,7 @@ function gradeCard(kind) {
+      Beides beruehrt keine Stufe und keine Faelligkeit. */
+   /* 3.16.0: Uebungsantworten ins Tagesprotokoll (u) - fuer die Anzeige im
+      Fortschritt, nie fuer die Serie (tagGelernt). */
+-  if (s.isDrill && card && (kind === "known" || kind === "almost" || kind === "unknown")) verlaufZaehle("u");
++  if (s.isDrill && card && (kind === "known" || kind === "almost" || kind === "unknown")) verlaufZaehle("u", drillBeitrag);
+   if (card && (kind === "known" || kind === "almost" || kind === "unknown")) {   /* 3.15.0: auch im Ueben - fuer den Abschluss */
+     s.zaehler = s.zaehler || { known: 0, almost: 0, unknown: 0 };
+     s.zaehler[kind]++;
+@@ -6868,7 +7270,6 @@ function gradeCard(kind) {
    s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
    hwStrokes = [];
    if (!s.isDrill) {
@@ -1018,7 +1044,7 @@ index 4b6221e..b271606 100644
      /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
         Karte), dann in den naechsten Bereich der Runde weiterschalten. */
      if (s.queue.length === 0) rundeNaechsterBereich(s);
-@@ -6959,6 +7356,26 @@ function gradeUnknown() { gradeCard("unknown"); }
+@@ -6959,6 +7360,26 @@ function gradeUnknown() { gradeCard("unknown"); }
  function undoLastGrade() {
    const s = ui.session;
    if (!s || !s.lastAction) return;
@@ -1045,7 +1071,7 @@ index 4b6221e..b271606 100644
    /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
       zurueck - findCard() sucht im offenen Bereich. */
    if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
-@@ -6988,10 +7405,9 @@ function undoLastGrade() {
+@@ -6988,10 +7409,9 @@ function undoLastGrade() {
       viel, und ein versehentlich bewerteter erster Tag zaehlte fuer die Serie.
       Sofort als atomare negative Differenz geschrieben, auch wenn seit der
       Antwort ein neuer Lerntag begonnen hat. */
@@ -1057,7 +1083,7 @@ index 4b6221e..b271606 100644
      bereichHeuteZaehle(s.bereichId, -1);
      persistVerlauf();
    }
-@@ -7006,7 +7422,6 @@ function undoLastGrade() {
+@@ -7006,7 +7426,6 @@ function undoLastGrade() {
       stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
       sie beim Bewerten offen war. */
    s.extraOpen = true;
@@ -1065,7 +1091,7 @@ index 4b6221e..b271606 100644
    render();
  }
  function endSession() {
-@@ -9520,6 +9935,7 @@ function renderMain() {
+@@ -9520,6 +9939,7 @@ function renderMain() {
  
    if (!imModus) {
      /* ---- Meldungen, die ueber allem stehen ---- */
@@ -1073,7 +1099,7 @@ index 4b6221e..b271606 100644
      if (schreibFehler) kopf += bannerSchreibfehler();
      if (syncError) {
        kopf += bannerFehler("Verbindung:", esc(syncError) +
-@@ -9551,8 +9967,9 @@ function renderMain() {
+@@ -9551,8 +9971,9 @@ function renderMain() {
                              : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
          ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
      }
@@ -1085,7 +1111,7 @@ index 4b6221e..b271606 100644
    }
  
    /* ---- Geruest ---- */
-@@ -16099,6 +16516,9 @@ document.body.addEventListener("click", e => {
+@@ -16099,6 +16520,9 @@ document.body.addEventListener("click", e => {
        if (dueCards().length > 0) startSession();
        else { window.scrollTo(0, 0); render(); }
        break;
@@ -1096,20 +1122,22 @@ index 4b6221e..b271606 100644
      case "toggle-extra": toggleExtra(); break;
      case "grade-known": if (!bewertenZuFrueh()) gradeKnown(); break;
 diff --git a/datenschutzerklaerung.html b/datenschutzerklaerung.html
-index 515f172..24610ff 100644
+index 515f172..a83dbb4 100644
 --- a/datenschutzerklaerung.html
 +++ b/datenschutzerklaerung.html
-@@ -131,6 +131,10 @@
+@@ -131,7 +131,11 @@
        das Tagesprotokoll und deine Einstellungen werden in der Firestore-Datenbank (Google)
        gespeichert, damit sie über mehrere Geräte hinweg verfügbar sind. Zum Tagesprotokoll gehört
        eine zufällige Kennung, damit alte Offline-Übertragungen nach dem Zurücksetzen nicht wieder
+-      in die Aufzeichnung gelangen. Öffnest du die App an einem Tag, an dem nichts fällig ist,
 +      in die Aufzeichnung gelangen. Für jeden Tagesbeitrag wird außerdem ein Beleg mit einer
 +      zufälligen Antwortkennung, dem Lerntag, der Antwortart, der Zähldifferenz und der
 +      Reset-Kennung gespeichert. Er verhindert doppelte Zählung beim Nachholen. Die Belege
-+      bleiben bis zum Löschen des Kontos erhalten; sie enthalten keine Wörter oder Notizen. Alte Offline-Übertragungen dürfen nicht wieder
-       in die Aufzeichnung gelangen. Öffnest du die App an einem Tag, an dem nichts fällig ist,
++      bleiben bis zum Löschen des Kontos erhalten; sie enthalten keine Wörter oder Notizen.
++      Öffnest du die App an einem Tag, an dem nichts fällig ist,
        vermerkt das Tagesprotokoll diesen Tag als Ruhetag, damit deine Serie dadurch nicht endet.
        Die Zugriffsregeln der
+       Datenbank (<code>firestore.rules</code>) lassen jedes Konto ausschließlich an die eigenen
 @@ -209,6 +213,17 @@
          <li>die Kennung des zuletzt geöffneten Bereichs, getrennt für jedes angemeldete Konto,
          damit du auf diesem Gerät dort weiterlernen kannst; im Merkzeichen steht nur die Bereichs-ID</li>
@@ -1690,6 +1718,174 @@ index 0000000..cb56164
 +    });
 +  }finally{await b.close();}
 +})().catch(e=>{console.error(e);process.exitCode=1;});
+diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
+new file mode 100644
+index 0000000..1b354cc
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
+@@ -0,0 +1,162 @@
++/* A16: echter SDK 10.14.1, Repo-Regeln, Demo-Emulator 8082.
++   Auth-Attrappe und blockierter Service Worker: kein PWA-Kaltstartbeleg.
++   --gegenprobe stellt die feste Entwurfsquelle 591d03e samt Patch her. */
++const assert = require('node:assert/strict');
++const fs = require('node:fs');
++const path = require('node:path');
++const crypto = require('node:crypto');
++const cp = require('node:child_process');
++const {start, vollerStore} = require('./lib');
++if (process.argv.includes('--gegenprobe')) {
++  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'entwurf-a16-591d03e-'));
++  fs.writeFileSync(path.join(dir, 'app.js'), cp.execFileSync('git', ['show', '591d03e:app.js']));
++  cp.execFileSync('git', ['apply', '--include=app.js', '--unsafe-paths', '-'], {
++    cwd: dir, input: cp.execFileSync('git', ['show', '591d03e:plan/sicherung/entwurf-aktuell.patch'])
++  });
++  const sha = crypto.createHash('sha256').update(fs.readFileSync(path.join(dir, 'app.js'), 'utf8').replace(/\r\n/g, '\n')).digest('hex');
++  assert.equal(sha, '44c05375c7511ba420fbabe5b52cea6599ecf7c1ea3e67e77b52428aa30347d9');
++  const result = cp.spawnSync(process.execPath, [path.join(__dirname, 'diagnose_verlauf_neustart.js'), '--schutz'], {
++    env: {...process.env, PRUEF_APP_FILE: path.join(dir, 'app.js')}, encoding: 'utf8'
++  });
++  process.stdout.write(result.stdout); process.stderr.write(result.stderr);
++  assert.equal(result.status, 1);
++  assert.match(result.stdout + result.stderr, /abgelehnte Tagesantwort nach Neustart verloren/);
++  console.log('GRUEN feste Gegenprobe erkennt den urspruenglichen Verlust.');
++  process.exit(0);
++}
++const {seite, seed, fertig, rest, wert, ROOT, SDK, cloud, APP_SOURCE} = require('./diagnose_karten_konflikt');
++const sha = s => crypto.createHash('sha256').update(s.replace(/\r\n/g, '\n')).digest('hex');
++(async () => {
++  console.log('app.js SHA256 ' + sha(APP_SOURCE));
++  console.log('firestore.rules SHA256 ' + sha(fs.readFileSync(path.join(__dirname, '../../../firestore.rules'), 'utf8')));
++  const sources = {};
++  for (const name of ['firebase-app.js', 'firebase-firestore.js']) {
++    const r = await fetch(SDK + name); assert.ok(r.ok); sources[name] = await r.text();
++  }
++  const b = await start();
++  let passed = 0;
++  const single = process.argv.find(x => x.startsWith('--fall='))?.slice(7);
++  async function fall(name, test) {
++    if (single && name !== single) return;
++    await seed(); let p = await seite(b, sources); const ctx = p.context();
++    const other = await (await rest(ROOT + '/users/u1/karten/k6')).json();
++    const change = next => {p = next;};
++    try {
++      await test(p, ctx, change);
++      assert.deepEqual((await (await rest(ROOT + '/users/u1/karten/k6')).json()).fields, other.fields);
++      assert.deepEqual(p.fehler, []);
++      console.log('GRUEN ' + name + '; andere Karte k6 unveraendert'); passed++;
++    } finally { await ctx.close(); }
++  }
++  async function restart(p, ctx, change, uid) {
++    await p.close(); const next = await seite(b, sources, ctx, uid); change(next); return next;
++  }
++  async function reject(p, art = 'w') {
++    await p.evaluate(art => {
++      sessionStorage.setItem('adrabic-token-erneuert-schreiben', '1');
++      window.__PRUEF_ABLEHNEN = true;
++      if (art === 'w') {window.__PRUEF.starten(); window.__PRUEF.bewerten('known');}
++      else window.__PRUEF.zaehle(art);
++      window.__PRUEF.flush();
++    }, art);
++    await fertig(p);
++    await p.waitForFunction(() => window.__PRUEF.tagesantworten().some(x => x.status === 'abgelehnt'));
++  }
++  async function retry(p) {
++    await p.evaluate(async () => {window.__PRUEF_ABLEHNEN = false; await window.__PRUEF.tagespruefen();});
++    await fertig(p);
++  }
++  try {
++    await fall('Ablehnung-Neustart-mehrfach', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute()); await reject(p);
++      const card = await p.evaluate(() => window.__PRUEF.karte().bewertungsStand);
++      p = await restart(p, ctx, change);
++      assert.match(await p.evaluate(() => window.__PRUEF.banner()), /Antworten aufbewahrt/);
++      assert.equal((await p.evaluate(() => window.__PRUEF.sicherung())).tagesantworten[0].delta, 1);
++      assert.equal(await p.evaluate(() => window.__PRUEF.karte().bewertungsStand), card);
++      await retry(p); await retry(p); await retry(p);
++      assert.equal((await cloud(day)).w, 1);
++      assert.deepEqual(await p.evaluate(() => window.__PRUEF.tagesantworten()), []);
++    });
++    await fall('Neustart-vor-Bestaetigung-offline', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute());
++      await p.evaluate(async () => {await window.__PRUEF_SDK.disableNetwork(window.__PRUEF_DB); window.__PRUEF.starten(); window.__PRUEF.bewerten('known'); window.__PRUEF.flush();});
++      await p.waitForFunction(() => window.__PRUEF.tagesantworten().some(x => x.status === 'offen'));
++      assert.equal((await cloud(day)).w, 0);
++      p = await restart(p, ctx, change); await fertig(p); await retry(p);
++      assert.equal((await cloud(day)).w, 1); await retry(p); assert.equal((await cloud(day)).w, 1);
++    });
++    await fall('Bestaetigung-verloren', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute());
++      await p.evaluate(() => {
++        const remove = Storage.prototype.removeItem;
++        Storage.prototype.removeItem = function(key) {if (key.startsWith('adrabic-tagesantwort-')) throw new Error('Beleg bleibt lokal'); return remove.call(this, key);};
++        window.__PRUEF.starten(); window.__PRUEF.bewerten('known'); window.__PRUEF.flush();
++      });
++      await fertig(p); assert.equal((await cloud(day)).w, 1);
++      p = await restart(p, ctx, change); await retry(p); await retry(p);
++      assert.equal((await cloud(day)).w, 1);
++      assert.deepEqual(await p.evaluate(() => window.__PRUEF.tagesantworten()), []);
++    });
++    await fall('urspruenglicher-Lerntag', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute()); await reject(p);
++      p = await restart(p, ctx, change);
++      const next = new Date(day + 'T12:00:00'); next.setDate(next.getDate() + 1);
++      const tomorrow = next.toISOString().slice(0, 10);
++      await p.evaluate(tag => window.__PRUEF.tagSetzen(tag), tomorrow); await retry(p);
++      assert.equal((await cloud(day)).w, 1); assert.equal((await cloud(tomorrow)).w, 0);
++    });
++    await fall('fremder-Reset', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute()); await reject(p);
++      const c = await seite(b, sources);
++      try {
++        await c.evaluate(() => window.__PRUEF_SDK.updateDoc(window.__PRUEF_SDK.doc(window.__PRUEF_DB, 'users/u1'), {verlauf: {}, verlaufEpoche: 'fremder-reset'}));
++        await fertig(c);
++      } finally {await c.context().close();}
++      p = await restart(p, ctx, change); await retry(p); await retry(p);
++      assert.equal((await cloud(day)).w, 0);
++      assert.equal((await p.evaluate(() => window.__PRUEF.tagesantworten()))[0].status, 'veraltet');
++      assert.match(await p.evaluate(() => window.__PRUEF.banner()), /früheren Aufzeichnung/);
++    });
++    for (const art of ['n', 'u', 't', 'r']) await fall('Antwortart-' + art, async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute()); await reject(p, art);
++      p = await restart(p, ctx, change); await retry(p); await retry(p);
++      const data = await (await rest(ROOT + '/users/u1')).json();
++      assert.equal(Number(data.fields.verlauf.mapValue.fields[day].mapValue.fields[art].integerValue), 1);
++    });
++    await fall('Speicherfehler-keine-Bewertung', async p => {
++      const before = await p.evaluate(() => window.__PRUEF.karte());
++      await p.evaluate(() => {
++        const set = Storage.prototype.setItem;
++        window.__A16_SET = set;
++        Storage.prototype.setItem = function(key, val) {if (key.startsWith('adrabic-tagesantwort-')) throw new Error('voll'); return set.call(this, key, val);};
++        window.__PRUEF.starten(); window.__PRUEF.bewerten('known');
++      });
++      await fertig(p); assert.deepEqual(await p.evaluate(() => window.__PRUEF.karte()), before);
++      assert.equal((await cloud(await p.evaluate(() => window.__PRUEF.heute()))).w, 0);
++      await p.evaluate(() => {Storage.prototype.setItem = window.__A16_SET;}); await retry(p);
++      assert.deepEqual(await p.evaluate(() => window.__PRUEF.tagesantworten()), []);
++    });
++    await fall('Undo-Neustart', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute());
++      await p.evaluate(() => {window.__PRUEF.starten(); window.__PRUEF.bewerten('known'); window.__PRUEF.flush();});
++      await fertig(p); await p.waitForFunction(() => window.__PRUEF.aufbewahrt().length === 0);
++      assert.equal((await cloud(day)).w, 1);
++      await p.evaluate(() => {sessionStorage.setItem('adrabic-token-erneuert-schreiben', '1'); window.__PRUEF_ABLEHNEN = true; window.__PRUEF.undo();});
++      await fertig(p); await p.waitForFunction(() => window.__PRUEF.tagesantworten().some(x => x.status === 'abgelehnt' && x.delta === -1));
++      p = await restart(p, ctx, change); await retry(p); await retry(p); assert.equal((await cloud(day)).w, 0);
++    });
++    await fall('Kontowechsel-Ursprung-erhalten', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute()); await reject(p);
++      const store = vollerStore();
++      const writes = Object.entries(store).map(([k, v]) => ({update: {name: ROOT.replace('http://127.0.0.1:8082/v1/', '') + '/' + k.replace('users/u1', 'users/u2'), fields: wert(k === 'users/u1' ? {...v, verlauf: {}, streak: {sockel: 0, sockelBis: '2000-01-01'}} : v).mapValue.fields}}));
++      await rest(ROOT + ':commit', {method: 'POST', body: JSON.stringify({writes})});
++      p = await restart(p, ctx, change, 'u2');
++      assert.deepEqual(await p.evaluate(() => window.__PRUEF.tagesantworten()), []);
++      await retry(p); assert.equal((await cloud(day)).w, 0);
++      const data = await (await rest(ROOT + '/users/u2')).json(); assert.deepEqual(data.fields.verlauf.mapValue.fields || {}, {});
++      p = await restart(p, ctx, change, 'u1'); await retry(p); assert.equal((await cloud(day)).w, 1);
++    });
++    console.log(passed + ' A16 SDK-Faelle gruen. Keine Gesamtabnahme oder iPhone-Abnahme.');
++  } finally {await b.close();}
++})().catch(e => {console.error(e); process.exitCode = 1;});
 diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
 index 118e0da..59d7082 100644
 --- a/plan/werkzeuge/regeln/regeln-pruefung.mjs
