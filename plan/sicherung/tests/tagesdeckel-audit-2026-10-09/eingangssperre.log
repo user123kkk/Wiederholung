@@ -1,0 +1,9 @@
+OK verhindert: ursprüngliche Kopplung von Stufe und Termin
+OK verhindert: ein synchroner Tagesberg innerhalb einer Stufe
+OK verhindert: doppelte Karten-ID
+OK verhindert: fehlende Karte
+OK verhindert: nicht existierendes Kalenderdatum
+OK verhindert: Termin außerhalb des vorgesehenen Intervalls
+OK verhindert: falsche Stufenverteilung trotz gleichmäßiger Termine
+OK Rechenkommando blockiert alte Index-Kopplung vor Ergebnisdatei; Beleg: C:\Users\USER\AppData\Local\Temp\adrabic-simulations-sperre-Rgy9z1
+14 Eingangsprüfungen grün; absichtliche Fehler werden abgewiesen.

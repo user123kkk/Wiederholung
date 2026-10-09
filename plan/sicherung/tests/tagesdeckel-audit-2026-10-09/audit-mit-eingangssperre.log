@@ -1,0 +1,10 @@
+OK Terminphasen innerhalb jeder Stufe gleichmäßig, keine Kopplung
+OK Echtes gradeCard: neue Karte zweimal, n=1 und w=1
+OK Echtes gradeCard: wiederholtes Nicht, dann Fast beendet die Runde
+OK Echtes gradeCard: Betreiberregel und Normalnutzer unterscheiden sich
+OK Echtes startSession: geöffneter Bereich zuerst, kein globales Ranking
+OK Echte weitere Bereiche: Grenze 14 Tage, neue und gesperrte Karten ausgeschlossen
+OK Deckel zählt Zulassungen; mehrere Antworten verändern die Zulassung nicht
+OK Modell und echtes gradeCard liefern denselben ersten Tag bei allen Sicher
+OK Alle 90 Ergebnisgruppen mit Quelle, Werkzeug und Einzelwerten konsistent
+9 Auditfälle grün.
