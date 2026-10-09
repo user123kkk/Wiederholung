@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 19:39 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 19:41 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,15 +6,20 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `f40932e Sicherung 19:38 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9c6d885 Sicherung 19:40 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/PLAN.md
+ M plan/STAND.md
  M plan/werkzeuge/tagesdeckel_audit.cjs
  M plan/werkzeuge/tagesdeckel_simulation.cjs
+ M plan/zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
@@ -22,7 +27,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -43,6 +48,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- Codex Vorbeugung geprüft: 14 Eingangsfälle und neun Ergebnis-/Codeauditfälle grün. Absichtlich falsches echtes Rechenkommando in eigener Testkopie endet Exit 1 mit „Ungleichmäßige Terminphasen innerhalb Stufe 3“, keine Ergebnisdatei. Modellversion 3 nach Pflicht-Vorprüfungen neu gerechnet; Zahlen identisch mit Version 2, diese separat erhalten. Regeln dauerhaft in AGENTS/LEHREN/EMPFEHLUNGEN. Weiteren Betreiberauftrag wörtlich gesichert; fünf Durchgänge für unbekannte Codefehler/Nachprüfung konkret vorbereitet, sieben bisher ungeprüfte Befundabschnitte erfasst. Erste Originalstelle persistCardGrade gelesen (Kontoreferenz/späte Antwort/Nachholen); keine neue umfassende Abnahme behauptet. App unverändert, kein Gesamtlauf/Deploy.
 
 - Codex Auftrag „stelle sicher dass solche Fehler nicht wieder passieren“ wörtlich in ALLES-OFFEN gespeichert. Vorbeugung gebaut: unabhängige Eingangs-Sperre vor Tagesdeckel-Lauf, Tests mit ursprünglicher Index-Kopplung und weiteren absichtlichen Fehlern, Modellversion/Hash der Eingangsprüfung und ausdrückliche Erkenntnisgrenzen im Ergebnis. Allgemeine Regeln vor Empfehlungen in EMPFEHLUNGEN-PRUEFEN und AGENTS; Textempfehlungen bleiben menschlich/agentisch gegenzuprüfen, kein automatisches Wahrheitsversprechen. Einzeltests und neue Ergebnis-Provenienz noch zu prüfen.
 
@@ -85,5 +92,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 02:07 Betreiber: Safari, Version .26. Ursache am Code gefunden: „← Zurück“
   auf den Rechtsseiten ist ein Link auf `./index.html` und lädt im neuen
   Reiter die App neu. In `ALLES-OFFEN.md` nachgetragen. Der Test zu E4
-  prüft diesen Weg nicht (LEHREN § 5.3: Test muss den echten Weg gehen).
-- 02:02 Betreiber meldet: Plan im Einstieg ist weg nach Datenschutz/

@@ -1,5 +1,14 @@
 # Gegenprüfung der Tagesdeckel-Vorlage, 09.10.2026
 
+**Vorbeugung ergänzt auf Betreiberauftrag:** Modellversion 3 führt eine
+unabhängige Eingangssperre, ihre Negativfälle und den Original-Codeaudit
+automatisch vor dem langen Rechenlauf aus. 14 Eingangsprüfungen und neun
+Auditfälle grün. Das absichtlich wieder falsch gebaute echte Kommando
+bricht vor Erzeugung einer Ergebnisdatei ab. Modellzahlen unverändert;
+Version-2-Daten zusätzlich unter den Testbelegen erhalten. Ergebnis nennt
+den Hash der Eingangsprüfung und die nicht validierten Lernbehauptungen.
+Allgemeine Regeln: `plan/EMPFEHLUNGEN-PRUEFEN.md`.
+
 Auftrag: „überprüfe alles, es sll perfekt sein, selbst deine wertlose
 empfehlung du ki.“ Prüfumfang: die gesamte Tagesdeckel-Rechnung und ihre
 Empfehlung, tatsächliche Bewertungs-/Auswahlpfade, Gegenbeispiele,

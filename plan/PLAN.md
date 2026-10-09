@@ -7,6 +7,14 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**Weiterer Auftrag 09.10.2026:** Vorbeugung gegen die eigenen Modellfehler
+abgeschlossen: automatische Eingangssperre und Original-Codeaudit, 14
+Eingangsprüfungen/neun Auditfälle grün. Regeln vor jeder Empfehlung in
+`EMPFEHLUNGEN-PRUEFEN.md`. Danach unbekannte Codefehler systematisch suchen:
+`zyklus-2/ZUVERLAESSIGKEIT-NACHPRUEFUNG.md` legt Daten-/Konto-/Lern-/
+Backup-/UI-/Gerätedurchgänge und Nachweise fest. Erste Datenstelle gelesen;
+vollständige Nachprüfung bleibt offen. Kein App-/Lernregelumbau oder Deploy.
+
 **Korrektur 09.10.2026 nach Gegenprüfung:** Maßgeblich
 `zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`.
 Starttermine im Modell korrigiert, eigene Empfehlung kritisch geprüft.
