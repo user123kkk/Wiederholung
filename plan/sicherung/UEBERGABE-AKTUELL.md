@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 19:13 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 19:15 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,26 +6,13 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `55992a0 Sicherung 19:12 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `94a0c19 Abschluss der Tagesdeckel-Rechnung festhalten`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
-```
- M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
- M plan/PLAN.md
- M plan/STAND.md
- A plan/werkzeuge/tagesdeckel_simulation.cjs
- M plan/zyklus-2/E26-VORSCHLAG.md
- M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
- M plan/zyklus-2/mehrwert/GESAMTLISTE.md
- M plan/zyklus-2/mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md
-```
-
-Auf einem sauberen Stand desselben Commits wiederherstellen:
-`git apply --check plan/sicherung/entwurf-aktuell.patch`, dann `git apply plan/sicherung/entwurf-aktuell.patch`.
+Keine. Alles ist committet.
 
 ## Was gerade läuft
 
@@ -50,6 +37,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- Codex Abschluss Tagesdeckel: Werkzeug/Aufgaben/Logbuch als c78e986 auf main gepusht; Bericht und JSON durch Minuten-Sicherung bereits auf main. Arbeitsbaum sauber, origin/main gleich. Tagesdeckel-Rechnung und Empfehlung fertig, Bau wartet auf die ausdrücklich offenen Ziel-/Auswahl-/Zählentscheidungen; Veröffentlichung weiterhin gesammelt später. Kein App-Versionswechsel, .29 lokal und .28 laut letztem Online-Beleg.
 
 - Codex Rechnung fertig: 90 Vergleiche, je fünf feste Folgen/180 Tage. 1100 Karten/60 Tage Pause, 85/10/5: Deckel 20 lässt nach 180 Tagen im Mittel 175,6 ursprüngliche Karten unbesucht; Deckel 30 letzter Erstbesuch Tag 158–177. Älteste zuerst/30 erreicht Tag 35, verursacht aber mehr gesamte Wartezeit (60263,2 statt 41143,2 Kartentage). Keine Aussage über echtes Behalten. Empfehlung und offene Bauentscheidungen im Rechnungsbericht, alle aktuellen Planzeiger nachgezogen; App unverändert. Selbstprüfung und Kern 12/12 grün. Nur neue Reihenfolge-Varianten zusätzlich gerechnet, erfolgreiche Tagesmengen nicht wiederholt.
 
@@ -92,5 +81,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 01:58 `zyklus-2/mehrwert/agentenberichte/ALLE-IDEEN.md` erzeugt: 338
   nummerierte Ideen wörtlich (Titel) aus 23 Berichten; 9 Berichte haben
   eine andere Form und sind noch ganz zu lesen, 2 sind leer. Der Abgleich
-  mit dem Katalog (187 Zeilen) steht noch aus.
-- 01:50 Betreiber: „ladegeraet“ (Stichwort, Freigabe für Regeln und
