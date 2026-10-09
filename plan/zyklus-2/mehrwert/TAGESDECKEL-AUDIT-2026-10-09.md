@@ -18,6 +18,7 @@ Tagesdeckels. Mehr Modellläufe allein hätten das nicht korrigiert.
 | Antworten unabhängig von Wartezeit | Eine wartende Karte vergisst im Modell nichts zusätzlich. Weniger Antworten oder weniger Wartetage beweisen keine bessere Lernwirkung. | Keine Gedächtnis-Rangfolge oder optimale Tageszahl aus der Lastrechnung ableiten. |
 | Nach Nicht immer sofort Sicher angenommen | Mehrfaches Nicht und Fast nach Nicht fehlen in den Zahlen; reale Runden können länger dauern. | Günstige Annahme ausdrücklich beibehalten, echte Gegenfälle über gradeCard prüfen; Zahl gilt nicht als reale Obergrenze. |
 | Nur eine tägliche Auswahl, kein Weiterlernen | Meine Empfehlung mit freiwilligem Weiterlernen wurde nicht getestet. | Empfehlung nicht als Ergebnis der Rechnung ausgeben. |
+| Deckel alle 180 Tage statt nur bei Rückkehr/über einer Schwelle | Dauerhafter Deckel ist nicht identisch mit dem zurückgenommenen bedingten 60/30-Vorschlag oder einem zeitweiligen Rückkehrmodus. | Zahlen ausdrücklich auf den dauerhaften Modell-Deckel beschränken. Keine Aussage, ein bedingter oder vorübergehender Deckel hätte dieselben Zahlen. |
 | Tagesziel an Rundengröße gekoppelt | Länge einer Runde und gewünschte Tagesarbeit sind verschiedene Dinge. Die vorhandene Rundengröße wurde als passende Tagesmenge umgedeutet. | Diese Kopplung zurücknehmen. |
 | Globales Ranking empfohlen | Betreiber 06.10. wollte Bereich für Bereich, keine Mischung; im geöffneten Bereich sind auch neue Karten möglich, in weiteren nur zugelassene Wiederholungen. | Bereichsregel als Entscheidung erhalten. Ein anderes Ranking wäre ein eigener Lernlogik-Vorschlag. |
 | Fünf Folgen, nur zusammengefasste Zahlen gespeichert | Fünf synthetische Folgen ergeben keine Sicherheit über alle Nutzer. Verteilungen und Ausreißer sind im Mittel verdeckt. | Jeder Durchlauf wird mitgespeichert. Keine statistische Zuverlässigkeit oder Repräsentativität behaupten. |
@@ -57,9 +58,13 @@ Acht Auditfälle:
    jeweils mit und ohne Betreiber-Vorabregel. Dieser Abgleich beweist nur
    den geprüften Fall, nicht Gleichheit aller möglichen Runden.
 
-Das Browser-Umfeld `t_runde_bereiche.js` wird zusätzlich am aktuellen
-3.18.29 geprüft: Auswahl, Bereichswechsel, Rückgängig, persistierte
-Bewertungen und Zähler. Ergebnisse werden nach Ende unten eingetragen.
+Das Browser-Umfeld `t_runde_bereiche.js` ist zusätzlich am aktuellen
+3.18.29 grün: Auswahl, Bereichswechsel, Rückgängig, persistierte
+Bewertungen und Zähler; tatsächlicher Desktop-Checkout auf Port 8096,
+Chrome/Playwright mit Firebase-Attrappe. Keine echten Cloud-Daten benutzt.
+Die acht Auditfälle sind grün. Der zusätzliche Ergebnischeck kontrolliert
+Hashes, alle 90 eindeutigen Gruppen, sämtliche 450 Einzelläufe und
+Zähl-/Zusammenfassungs-Invarianten.
 
 ## Primärquellen statt Übertragung aus einem Forum
 
@@ -86,10 +91,39 @@ Rechnung keine lernwissenschaftlich optimale Auswahl oder Tagesmenge behaupten.
 
 Werkzeug: `node plan/werkzeuge/tagesdeckel_simulation.cjs`.
 Datei: `tagesdeckel-audit-ergebnis-2026-10-09.json`.
-90 Vergleichsgruppen, je fünf Folgen, je 180 Tage, gleiche explizite
-Antwortannahmen wie zuvor. Startphasen korrigiert, alle Einzelläufe mit
-App-/Werkzeughash gesichert. Kein privater Datenbestand verwendet.
-Lauf und Browser-Gegenprüfung sind noch nicht abgeschlossen.
+90 Vergleichsgruppen, je fünf Folgen, je 180 Tage erfolgreich abgeschlossen.
+Gleiche explizite Antwortannahmen wie zuvor. 85/10/5 und 60/20/20 bezeichnen
+Wahrscheinlichkeiten, keine exakt festgelegten Anteile in jeder kleinen Runde.
+Startphasen korrigiert, alle Einzelläufe mit App-/Werkzeughash gesichert.
+Kein privater Datenbestand verwendet.
+
+Für 1100 synthetische Karten nach 60 Tagen Pause sind jetzt 1051 anfangs
+fällig. Bei nominal 85/10/5:
+
+| Dauerhafte tägliche Auswahl | Letzter Erstbesuch des ursprünglichen Rückstands | Nach 180 Tagen noch nie besuchte ursprüngliche Karten, Mittel | Beobachteter größter Tageswert an Antworten | Wartende Kartentage insgesamt, Mittel |
+|---|---|---|---|---|
+| Alle | Tag 1 | 0 | 1107 | 0 |
+| 20, aktuelle Priorität | nicht innerhalb 180 Tagen | 165,8 | 25 | 71688,4 |
+| 30, aktuelle Priorität | Tag 151–166 | 0 | 35 | 41388 |
+| 60, aktuelle Priorität | Tag 42–49 | 0 | 68 | 13045,8 |
+| 30, älteste zuerst | Tag 36 | 0 | 36 | 60261,8 |
+
+Diese Werte sind Beobachtungen **innerhalb des Modells**, keine garantierten
+Obergrenzen für reale Runden. „Letzter Erstbesuch“ und wartende Kartentage
+bewerten verschiedene Dinge; keine dieser Größen allein entscheidet über
+Lernwirkung. Der korrigierte Aufbau behält das Rückstandsrisiko bei, aber
+die früheren exakten Zahlen gelten nicht für den korrigierten Aufbau.
+
+Zusätzliche Grenzen bleiben: synthetischer Anfangsbestand statt zuvor
+simuliertem Alltag; keine Gedächtnisabnahme während des Wartens; kein
+zeitliches Arbeitsbudget für Alle; kein mehrfaches Nicht im Rechenmodell;
+kein freiwilliges Weiterlernen; keine Prüfung tatsächlicher Nutzerreaktion;
+keine zwei Geräte. Somit ist kein Lernverfahren als „perfekt“ abgenommen.
+
+Belege unter `plan/sicherung/tests/tagesdeckel-audit-2026-10-09/`:
+ursprüngliche Gegenprobe rot, neuer Audit, korrigierter Rechenlauf,
+Browser-Bereichsrunde und Standprüfung. Originale alte Ergebnisdatei
+bleibt unverändert als Verlauf erhalten.
 
 ## Empfehlung nach der Gegenprüfung
 
