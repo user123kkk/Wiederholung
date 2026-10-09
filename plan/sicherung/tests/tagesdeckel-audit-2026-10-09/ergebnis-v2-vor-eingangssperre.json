@@ -1,19 +1,8 @@
 {
-  "modelVersion": 3,
+  "modelVersion": 2,
   "appVersion": "3.18.29",
   "sourceSha256LF": "297e398f177e960621d7fde0da83a55bebf251490d8756daca69098125453dd6",
-  "toolSha256LF": "9e11393019671687c19367b2118d3b8937143e16ae16844e1fd214eabc35ed0b",
-  "inputGuardSha256LF": "10907bafd14ed0d650fd563939bcc892931b061ad6853ffe5f41421d228c5c3c",
-  "inputCheck": "passed",
-  "preflightAudit": "passed",
-  "claims": {
-    "scope": "workload",
-    "memoryModel": false,
-    "voluntaryContinuation": false,
-    "temporaryCap": false,
-    "recallBenefitValidated": false,
-    "optimalDailyAmountValidated": false
-  },
+  "toolSha256LF": "8f2785bca8c311e62e1b22b89e1de51407d14afc92c8fb93addf6247e1e9da5e",
   "days": 180,
   "seeds": [
     1,

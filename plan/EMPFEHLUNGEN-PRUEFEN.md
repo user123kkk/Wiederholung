@@ -58,7 +58,8 @@ Pflichten:
 `node plan/werkzeuge/t_simulations_eingaben.cjs` prüft alle sechs
 Tagesdeckel-Szenarien und weist absichtliche Fehler ab, einschließlich
 der ursprünglichen Index-Kopplung. `tagesdeckel_simulation.cjs` führt
-die unabhängige Eingangsprüfung selbst vor dem langen Lauf aus.
+die unabhängige Eingangsprüfung, ihre Negativfälle und den Audit der
+Original-Codepfade selbst vor dem langen Lauf aus.
 Fehler verhindert die Erzeugung einer neuen Ergebnisdatei.
 
 `node plan/werkzeuge/tagesdeckel_audit.cjs --ergebnis` prüft danach

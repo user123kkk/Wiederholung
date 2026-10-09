@@ -663,6 +663,16 @@ Was gemessen wird:
 
 ### 5.3 Messfehler – der Test kann selbst falsch sein
 
+- **Vorbeugung fest, Betreiber 09.10.2026:**
+  [`EMPFEHLUNGEN-PRUEFEN.md`](EMPFEHLUNGEN-PRUEFEN.md) vor jeder Empfehlung
+  anwenden: Aussage, Beleg, Gegenargument und Geltungsgrenze zuordnen.
+  Beim Tagesdeckel läuft die unabhängige Eingangsprüfung einschließlich
+  falscher Stufen-/Terminverteilung und Negativfällen automatisch vor dem
+  langen Lauf; Original-Codepfade müssen davor ebenfalls grün sein.
+  Scheitert eine Voraussetzung, keine neue gültige Rechnung ausgeben.
+  Bloße Dokumentation ersetzt diese technische Sperre nicht. Sprachliche
+  Aussagen bleiben separat zu prüfen; Automatik garantiert keine Fehlerfreiheit.
+
 - **09.10.2026, Tagesdeckel-Modell:** Ein gemeinsamer Index für Stufe und
   Fälligkeitsphase kann ungewollte Tagesberge erzeugen. Jede behauptete
   Eingangsverteilung je Gruppe prüfen, mit fester alter Gegenprobe. Eine
@@ -1739,6 +1749,11 @@ Versions-Queries (§ 4.1). Phase 7 hat das HTML-Caching mit `max-age=0` gelöst.
 ---
 
 ## 14. Checkliste vor jedem Commit
+
+**Bei Rechnungen oder Empfehlungen zusätzlich vor dem Bericht:**
+[`EMPFEHLUNGEN-PRUEFEN.md`](EMPFEHLUNGEN-PRUEFEN.md) angewandt, jede zentrale
+Aussage an passenden Beleg/Gegenargument/Geltungsgrenze gebunden?
+Keine Ersatz-Aussage aus einer nicht geprüften Variante ableiten.
 
 Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 

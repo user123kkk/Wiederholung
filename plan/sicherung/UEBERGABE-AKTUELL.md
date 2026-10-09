@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 19:34 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 19:36 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,18 +6,19 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e2f8081 Sicherung 19:33 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `4a68ffc Sicherung 19:35 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
- M AGENTS.md
  M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
+ M plan/EMPFEHLUNGEN-PRUEFEN.md
+ M plan/LEHREN.md
  M plan/werkzeuge/tagesdeckel_audit.cjs
  M plan/werkzeuge/tagesdeckel_simulation.cjs
+ M plan/zyklus-2/mehrwert/tagesdeckel-audit-ergebnis-2026-10-09.json
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
