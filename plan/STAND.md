@@ -1,5 +1,18 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026 – Übergabe auf Wunsch des Betreibers:**
+Weiter im Ordner C:\Users\USER\Desktop\Wiederholung. Kein Stand verwerfen.
+A14/A15 liegen als gezielt geprüfter Entwurf 3.18.30 vor (16 SDK-Fälle,
+222 Regeln); große Gesamtabnahme ausdrücklich später gesammelt.
+Nächste konkrete offene Aufgabe A16/DATEN-11: abgelehnte Tagesantwort
+verschwindet nach Neustart trotz bestätigter Karte. Feste Gegenprobe,
+Kontrollen, Ursache und Abnahme in zyklus-2/VERLAUF-NEUSTART-2026-10-09.md.
+Technischen Erhalt mit genau einmal Nachholen vorbereiten/umsetzen,
+Konto/ursprünglichen Tag/Reset-Epoche erhalten, keine neue Lernregel.
+Danach entschiedene Mehrwert-Reihenfolge aus mehrwert/GESAMTLISTE.md.
+Aktuelle Sicherung und Patch: sicherung/UEBERGABE-AKTUELL.md und
+sicherung/entwurf-aktuell.patch. Nur ein Chat bearbeitet App-Dateien.
+
 **09.10.2026 – Betreiber verschiebt große Gesamtabnahme auf später/Ende:**
 Eigenen laufenden Gesamttest beendet, Ausgaben bewahrt. Keine Ladegerät-BAT,
 kein App-Commit oder Deploy. A14/A15 bleiben Entwurf 3.18.30 mit 16 echten
