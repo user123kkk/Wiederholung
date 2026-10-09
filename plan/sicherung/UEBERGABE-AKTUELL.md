@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 04:16 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 04:17 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `24dfde1 Sicherung 04:15 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `5148a08 Sicherung 04:16 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
@@ -16,7 +16,7 @@ Keine. Alles ist committet.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 19 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -25,7 +25,7 @@ Keine. Alles ist committet.
 EXIT 1 t_paket_e
 ```
 
-**ladegeraet-3.18.28.log**: 147 grün, 1 rot
+**ladegeraet-3.18.28.log**: 151 grün, 1 rot
 ```
 ROT t_serie_lang.js (184s)
 ```

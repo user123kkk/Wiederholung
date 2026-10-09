@@ -1184,6 +1184,30 @@
       "fehler": null,
       "sekunden": 11,
       "quelltext": "7e468891aff7dec61f7234549d9bd83daa048580cedae65644ca6159f05e9ed4"
+    },
+    "t_verwalten.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 50,
+      "quelltext": "50de0604955173a73b4678863088ac3b64b2432818472e15479348ad55ca1852"
+    },
+    "t_wisch_tempo.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 0,
+      "quelltext": "8e39b06ed00fc23c24b67e374692154d2211f4a9c999506b2445c4aa88861958"
+    },
+    "t_wischen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 39,
+      "quelltext": "cce5e8b4519173de5a94e1bb7d9f0c592819b61f5f65dcdb95204794dc7986a0"
     }
   }
 }

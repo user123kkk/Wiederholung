@@ -1,0 +1,8 @@
+OK  Tempo: aufgezeichnet links -> unknown.
+OK  Tempo: aufgezeichnet rechts -> known.
+OK  Tempo: kurz schnell, danach stillhalten -> keine Bewertung.
+OK  Tempo: kurz langsam -> keine Bewertung.
+OK  Tempo: Systemabbruch -> keine Bewertung.
+OK  Tempo: weit, langsam -> known.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":0,"quelltext":"8e39b06ed00fc23c24b67e374692154d2211f4a9c999506b2445c4aa88861958"}
