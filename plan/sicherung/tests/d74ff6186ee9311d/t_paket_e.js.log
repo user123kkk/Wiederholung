@@ -124,3 +124,22 @@ E20 390/hell/bewegt: 12 Karten, Merken stabil
 E20 390/hell/ruhig: 12 Karten, Merken stabil
 E20 390/dunkel/bewegt: 12 Karten, Merken stabil
 E20 390/dunkel/ruhig: 12 Karten, Merken stabil
+E20 820/hell/bewegt: 12 Karten, Merken stabil
+E20 820/hell/ruhig: 12 Karten, Merken stabil
+E20 820/dunkel/bewegt: 12 Karten, Merken stabil
+E20 820/dunkel/ruhig: 12 Karten, Merken stabil
+E21 Desktop: Space, 3, Backspace, 3, Escape und Protokoll
+E22 known/bewegt: fortschritt-waechst,geist-rechts
+E22 known/ruhig: fortschritt-waechst
+E22 unknown/bewegt: fortschritt-waechst,geist-links
+E22 unknown/ruhig: fortschritt-waechst
+E22 almost/bewegt: fortschritt-waechst,geist-sinkt
+E22 almost/ruhig: fortschritt-waechst
+E23 Limittext ohne doppeltes geschafft
+E24 Üben: Hintergrund bleibt geschlossen, Karte deckt auf
+E25 320/hell/Ruhetag: ehrlicher Ring und Text
+E25 320/dunkel/Ruhetag: ehrlicher Ring und Text
+E25 390/hell/Ruhetag: ehrlicher Ring und Text
+E25 390/dunkel/Ruhetag: ehrlicher Ring und Text
+E25 820/hell/Ruhetag: ehrlicher Ring und Text
+E25 820/dunkel/Ruhetag: ehrlicher Ring und Text
