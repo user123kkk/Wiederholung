@@ -31,3 +31,12 @@ C14 grün 320 hell true
 C14 grün 320 dunkel false
 C14 grün 320 dunkel true
 C14 grün 820 hell false
+C14 grün 820 hell true
+C14 grün 820 dunkel false
+C14 grün 820 dunkel true
+C14 grün 1440 hell false
+C14 grün 1440 hell true
+C14 grün 1440 dunkel false
+C14 grün 1440 dunkel true
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":275,"quelltext":"2cb6debf48f154196faba6906298c00bc97bff0748ae4c5a11e0b54b93fa6004"}
