@@ -1,0 +1,10 @@
+{"geraet":"414x896","lage":{"x":169,"y":410,"w":76,"h":76},"pixel":{"splash":[176,416.5,238,482],"html":[176,416.5,238,482],"nameSplash":[152.5,520.5,260,540],"nameHtml":[152.5,520.5,260,540]}}
+Boot-Name Schrift: Georgia, serif [{"familyName":"Georgia","postScriptName":"Georgia-Bold","isCustomFont":false,"glyphCount":7}]
+{"geraet":"390x844","lage":{"x":157,"y":384,"w":76,"h":76},"pixel":{"splash":[164,390.6666666666667,226,456],"html":[164,390.6666666666667,226,456],"nameSplash":[140.66666666666666,494.6666666666667,248,514.6666666666666],"nameHtml":[140.66666666666666,494.6666666666667,248,514.6666666666666]}}
+{"geraet":"375x667","lage":{"x":149.5,"y":295.5,"w":76,"h":76},"pixel":{"splash":[157,302.5,219,368],"html":[157,302.5,219,368],"nameSplash":[133,406.5,240.5,426],"nameHtml":[133,406.5,240.5,426]}}
+{"geraet":"820x1180","lage":{"x":372,"y":552,"w":76,"h":76},"pixel":{"splash":[379,558.5,441,624],"html":[379,558.5,441,624],"nameSplash":[355.5,662.5,463,682],"nameHtml":[355.5,662.5,463,682]}}
+{"geraet":"1180x820","lage":{"x":552,"y":372,"w":76,"h":76},"pixel":{"splash":[559,378.5,621,444],"html":[559,378.5,621,444],"nameSplash":[535.5,482.5,643,502],"nameHtml":[535.5,482.5,643,502]}}
+WebKit-Hoehenfehler simuliert: {"browser":{"hoehe":848,"zeichen":386,"marke":488},"standalone":{"hoehe":896,"zeichen":410,"marke":512},"alt":{"hoehe":848,"zeichen":386,"marke":488}}
+Erstes Bild iOS-App simuliert: {"neu":{"hoehe":896,"zeichen":410,"marke":512},"alt352":{"hoehe":848,"zeichen":386,"marke":488},"ohneStandalone":{"hoehe":848,"zeichen":386,"marke":488}}
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":13,"quelltext":"f6b68a6fd7b425e3a50cf042913caafdb55a7bb916fba7faffd03ff6fd016899"}
