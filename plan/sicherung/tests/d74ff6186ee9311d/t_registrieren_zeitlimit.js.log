@@ -10,3 +10,6 @@ Fehler im aktuellen Stand: 0 | ok
 0 Fehler insgesamt auf dem aktuellen Stand.
 
 -- Gegenprobe gegen 1c8aaa1 (muss rot sein) --
+  ok (=Fehler im Altstand) : kein sendEmailVerification, Zeitlimit-Meldung bleibt stehen: "Keine Verbindung – bitte Internet prüfen."
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":72,"quelltext":"40d0389787c2e23db49ae072a9e4cfe3cfa1cf9fedcb81339a9c2a7a270a619d"}
