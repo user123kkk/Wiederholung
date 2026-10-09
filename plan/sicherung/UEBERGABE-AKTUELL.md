@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 20:08 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 20:10 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,17 +6,24 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `0bbf6ab Sicherung 20:09 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `822efc5 Sicherung 20:09 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
-Keine. Alles ist committet.
+```
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
+```
+
+Auf einem sauberen Stand desselben Commits wiederherstellen:
+`git apply --check plan/sicherung/entwurf-aktuell.patch`, dann `git apply plan/sicherung/entwurf-aktuell.patch`.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 6, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 8, chrome.exe 20 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -37,6 +44,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 20:15 Codex, Auftrag „weiter“: Übergabe, Betreiberregeln, Lehren, Nachprüfungsauftrag und Kartenkonflikt-Belege gelesen; Minuten-Sicherung gestartet. Vier persistCardGrade-Aufrufer inventarisiert: Bewertung, Bewertungs-Undo, Gesehen, Gesehen-Undo. Gesehen-Undo prüft fremde Bewertung nicht. Akku 17 %, nur gezielte Prüfungen. Nächster Schritt: echter SDK gegen eigenen Demo-Emulator, Gesehen-Konflikt und fremde Löschung mit Offline-Nachholen.
 
 - 19:56 Fortsetzung „weiter?“: zwei Kartenkonflikte mit echtem SDK/Repo-Regeln auf eigenem Demo-Emulator 8082 bestätigt, dann an fester Quelle 7142b93 wiederholt. Altes Undo und Offline-Nachholen verlieren neuere fremde Bewertung ohne Fehlermeldung; andere Karte unverändert. Schutzprüfung Exit 1 für beide, vollständiges Log gelesen. A14/DATEN-9 und A15/DATEN-10 in Aufgaben/Befunde/ALLES aufgenommen, konkreter Lösungs-/Abnahmeentwurf gesichert. Firebase-Primärquellen belegen letzte Schreibübertragung und Offline-Grenze von Transaktionen. Kein App-Fix oder Gesamturteil; Akku 22 %, nur Einzelprüfung. Nächste Inventur: übrige Aufrufer und gelöschte Karte.
 
@@ -79,5 +88,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   jetzt `-Fortsetzen`; damit läuft der Stichwort-Ablauf am selben
   Quellstand weiter (155 bestandene bleiben, `t_serie_lang` neu, dann
   Affen, Regeln, Hosting). Gleiche Falle möglich in `t_gruss_datum` und
-  `t_paket_c_kalendertage` (nutzen denselben Versatz aus `lib.js`); `lib.js`
-  selbst erst nach dem Veröffentlichen berichtigen, weil es zum Quellstand

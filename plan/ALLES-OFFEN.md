@@ -57,6 +57,11 @@ abgehakt; hier wird das nicht doppelt geführt.
 
 ## 3. Offen, stand aber in keiner Bauliste
 
+**09.10.2026, Betreiber: „weiter“ mit Caveman-Skill.** Fortsetzung der
+begonnenen Zuverlässigkeitsprüfung: übrige Gesehen-/Rückgängig-Schreibwege
+und fremd gelöschte Karte beim Offline-Nachholen prüfen. Kurze Antworten;
+keine neue Lernregel aus dem Fortsetzungswort ableiten.
+
 ### 3.1 Reste aus Zyklus 2
 
 **09.10.2026, Fortsetzung auf „weiter?“:** Zwei neue hohe Datenfunde aus

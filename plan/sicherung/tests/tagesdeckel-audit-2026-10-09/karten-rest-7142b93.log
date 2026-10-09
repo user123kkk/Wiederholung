@@ -1,0 +1,27 @@
+Quelle 7142b93, app.js SHA256 297e398f177e960621d7fde0da83a55bebf251490d8756daca69098125453dd6
+firestore.rules SHA256 35e8dec0ca486cc27607994153fa21395bb9a27b78b847dd280431de944f75ae
+BEFUND Gesehen-Undo: {"initial":{"stufe":0,"nextReview":"2026-10-09","ersteBewertung":null,"rueckfaelle":0,"maxStufe":0},"newer":{"stufe":1,"nextReview":"2026-10-10","ersteBewertung":"2026-10-09","rueckfaelle":0,"maxStufe":1},"after":{"stufe":0,"nextReview":"2026-10-09","ersteBewertung":null,"rueckfaelle":0,"maxStufe":1}}
+KONTROLLE Gesehen-Undo: andere Karte k6 unveraendert; keine JavaScript-Fehler.
+BEFUND Offline-Gesehen: {"offline":{"stufe":0,"nextReview":"2026-10-09","ersteBewertung":"2026-10-09","rueckfaelle":0,"maxStufe":0},"newer":{"stufe":1,"nextReview":"2026-10-10","ersteBewertung":"2026-10-09","rueckfaelle":0,"maxStufe":1},"after":{"stufe":0,"nextReview":"2026-10-09","ersteBewertung":"2026-10-09","rueckfaelle":0,"maxStufe":0}}
+KONTROLLE Offline-Gesehen: andere Karte k6 unveraendert; keine JavaScript-Fehler.
+SCHUTZ Loeschung Bewertung: Server und lokaler Kartenstand fehlen; nach Nachholen weiterhin geloescht; Speicherfehler "permission-denied"; Tageszaehler {"w":1,"n":0,"u":0}
+KONTROLLE Loeschung/Bewertung: andere Karte k6 unveraendert; keine JavaScript-Fehler.
+SCHUTZ Loeschung Gesehen: Server und lokaler Kartenstand fehlen; nach Nachholen weiterhin geloescht; Speicherfehler "permission-denied"; Tageszaehler {"w":0,"n":1,"u":0}
+KONTROLLE Loeschung/Gesehen: andere Karte k6 unveraendert; keine JavaScript-Fehler.
+AssertionError [ERR_ASSERTION]: Schutzpruefung rot: Gesehen-Undo ersetzt fremde Bewertung; Offline-Gesehen ersetzt fremde Bewertung
++ actual - expected
+
++ [
++   'Gesehen-Undo ersetzt fremde Bewertung',
++   'Offline-Gesehen ersetzt fremde Bewertung'
++ ]
+- []
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_karten_konflikt.js:149:51 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
