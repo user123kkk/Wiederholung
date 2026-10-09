@@ -968,6 +968,22 @@
       "fehler": null,
       "sekunden": 34,
       "quelltext": "f38737c79a011c687070b86e9b3c31c43f9da2c914e5811f7d4a5852819de552"
+    },
+    "t_scrollen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 19,
+      "quelltext": "420d9b3ec9021fae063b5ce6cd599726014ec4ed0d011188f826ac7484a21412"
+    },
+    "t_serie.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 24,
+      "quelltext": "45c5995a002b1e7b023014e42ad40b7462695ef400d9b558ae2b764eedac1e7f"
     }
   }
 }
