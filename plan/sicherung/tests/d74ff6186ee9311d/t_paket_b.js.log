@@ -27,3 +27,120 @@ B2 gruen
 1180 7 380 420
 B3 gruen
 B4 gruen
+B5 gruen
+320 568 0 Unterkante 653.640625
+320 568 1 Unterkante 659.4375
+320 568 2 Unterkante 744.078125
+320 568 3 Unterkante 625.390625
+320 568 4 Unterkante 522.8125
+320 568 5 Unterkante 663.296875
+320 568 6 Unterkante 921.78125
+320 568 7 Unterkante 1189.734375
+360 740 0 Unterkante 628.9375
+360 740 1 Unterkante 680.671875
+360 740 2 Unterkante 744.078125
+360 740 3 Unterkante 680.671875
+360 740 4 Unterkante 680.671875
+360 740 5 Unterkante 680.671875
+360 740 6 Unterkante 909.90625
+360 740 7 Unterkante 1165.828125
+375 667 0 Unterkante 628.9375
+375 667 1 Unterkante 607.671875
+375 667 2 Unterkante 712.203125
+375 667 3 Unterkante 635.484375
+375 667 4 Unterkante 607.671875
+375 667 5 Unterkante 663.296875
+Fussmessung {
+  scrollHeight: 723,
+  innerHeight: 667,
+  media: true,
+  padding: '12px',
+  leerHoehe: 0,
+  leerRand: '16px',
+  fussHoehe: 115.328125,
+  leerHtml: '<div class="einstieg-neben-platz" aria-hidden="true"></div>'
+}
+375 667 6 Unterkante 878.03125
+375 667 7 Unterkante 1165.828125
+390 844 0 Unterkante 716.671875
+390 844 1 Unterkante 716.671875
+390 844 2 Unterkante 716.875
+Fussmessung {
+  scrollHeight: 844,
+  innerHeight: 844,
+  media: false,
+  padding: '16px',
+  leerHoehe: 44,
+  leerRand: '16px',
+  fussHoehe: 187.328125,
+  leerHtml: '<div class="einstieg-neben-platz" aria-hidden="true"></div>'
+}
+390 844 3 Unterkante 716.671875
+390 844 4 Unterkante 716.671875
+390 844 5 Unterkante 716.671875
+390 844 6 Unterkante 882.703125
+390 844 7 Unterkante 1125.3125
+820 1180 0 Unterkante 1052.671875
+820 1180 1 Unterkante 1052.671875
+820 1180 2 Unterkante 1052.671875
+820 1180 3 Unterkante 1052.671875
+820 1180 4 Unterkante 1052.671875
+820 1180 5 Unterkante 1052.671875
+820 1180 6 Unterkante 1052.671875
+820 1180 7 Unterkante 1052.671875
+B6 gruen
+[
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 },
+  { x: 12, opacity: 1 }, { x: 12, opacity: 1 }
+]
+B7 gruen
+[ 'boot boot--exit', 'einstieg' ]
+B8 gruen
+dran [
+  'Dein Ziel: Kurs und Buch',
+  'Eingerichtet: fester Zeitpunkt am Tag',
+  'Schrift: Normal',
+  'Runde: alle fälligen Karten',
+  'Wiederholungen: rechnet Adrabic'
+]
+zeit [
+  'Dein Ziel: Kurs und Buch',
+  'Eingerichtet: kurze Runden',
+  'Schrift: Normal',
+  'Zeitpunkt: wenn ich Test',
+  'Wiederholungen: rechnet Adrabic'
+]
+schrift [
+  'Dein Ziel: Kurs und Buch',
+  'Eingerichtet: große Schrift, Buchstaben als Karten',
+  'Runde: alle fälligen Karten',
+  'Zeitpunkt: wenn ich Test',
+  'Wiederholungen: rechnet Adrabic'
+]
+B9 gruen
+Formularrahmen 390 hell ruhig 12 28 12 28 inkl. Feldfehler gruen
+Formularrahmen 390 hell bewegt 12 28 12 28 inkl. Feldfehler gruen
+Formularrahmen 390 dunkel ruhig 12 28 12 28 inkl. Feldfehler gruen
+Formularrahmen 390 dunkel bewegt 12 28 12 28 inkl. Feldfehler gruen
+Formularrahmen 320 hell ruhig 12 28 12 28 inkl. Feldfehler gruen
+Formularrahmen 320 hell bewegt 12 28 12 28 inkl. Feldfehler gruen
+Formularrahmen 320 dunkel ruhig 12 28 12 28 inkl. Feldfehler gruen
+Formularrahmen 320 dunkel bewegt 12 28 12 28 inkl. Feldfehler gruen
+Formularrahmen 820 hell ruhig 70 28 70 28 inkl. Feldfehler gruen
+Formularrahmen 820 hell bewegt 70 28 70 28 inkl. Feldfehler gruen
+Formularrahmen 820 dunkel ruhig 70 28 70 28 inkl. Feldfehler gruen
+Formularrahmen 820 dunkel bewegt 70 28 70 28 inkl. Feldfehler gruen
+B10 gruen
+B11 gruen
+B12 gruen
+Dein Stand 390 hell ruhig ohne Zahl/neuen Speicher/Zielhaken, Kontrast gruen
+Dein Stand 390 hell bewegt ohne Zahl/neuen Speicher/Zielhaken, Kontrast gruen
+Dein Stand 390 dunkel ruhig ohne Zahl/neuen Speicher/Zielhaken, Kontrast gruen
