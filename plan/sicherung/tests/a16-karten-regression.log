@@ -9,3 +9,13 @@ GRUEN Antworten entfernen: Abbruch bewahrt Kopie; bestaetigt entfernt nur lokale
 GRUEN Offline-Bewertung bleibt nach Ablehnung und Neustart erhalten
 GRUEN Offline-Gesehen bleibt nach Ablehnung und Neustart erhalten
 GRUEN zwei Offline-Geraete: erste Antwort bleibt, zweite aufbewahrt
+GRUEN gleiche Endwerte mit fremder Kennung blockieren Undo
+GRUEN Offline eigenes Undo bleibt erlaubt
+GRUEN fremde Loeschung wird nicht wieder angelegt; Antwort bleibt
+GRUEN voller Geraetespeicher bucht keine Antwort
+GRUEN echte Regeln-Ablehnung nachholen ohne doppelte Tagesantwort
+GRUEN Bewertung: Speicherfehler erhaelt vorheriges Rueckgaengig
+GRUEN Gesehen: Speicherfehler erhaelt vorheriges Rueckgaengig
+GRUEN Neustart offline: ungepruefte Antwort nicht entfernbar
+GRUEN beschaedigte Kopie blockiert sicher; weitere Antwort bleibt exportierbar
+GRUEN alte Clients abgewiesen; Notiz weiterhin erlaubt

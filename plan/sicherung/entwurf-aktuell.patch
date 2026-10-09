@@ -299,7 +299,7 @@ index bc20801..28b32ea 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..110d85e 100644
+index 4b6221e..bc4205c 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -372,7 +372,7 @@ index 4b6221e..110d85e 100644
 +          !["vorbereitet", "bereit", "offen", "pruefen", "abgelehnt", "veraltet"].includes(x.status)) {
 +        verlaufDefekte.set(key, roh); verlaufSpeicherFehler = true; continue;
 +      }
-+      verlaufAktionen.set(x.id, { ...x, status: x.status === "offen" ? "pruefen" : x.status });
++      verlaufAktionen.set(x.id, { ...x, status: ["offen", "bereit"].includes(x.status) ? "pruefen" : x.status });
 +    }
 +  } catch (_) { verlaufSpeicherFehler = true; }
 +}
@@ -824,7 +824,7 @@ index 4b6221e..110d85e 100644
 +  render();
 +}
 +function bewertungsBanner() {
-+  const t = [...verlaufAktionen.values()].filter(x => x.status !== "offen");
++  const t = [...verlaufAktionen.values()].filter(x => ["pruefen", "abgelehnt", "veraltet", "vorbereitet"].includes(x.status));
 +  const n = [...bewertungsAktionen.values()].filter(x => x.status !== "offen").length + t.length;
 +  const konflikte = [...bewertungsAktionen.values()].filter(x => x.status === "konflikt" || x.status === "geloescht").length;
 +  const speicherFehler = bewertungsSpeicherFehler || verlaufSpeicherFehler;
@@ -1401,7 +1401,7 @@ index 0000000..ab96048
 +console.log(`3 Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
 diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
-index e9503f2..d2756f0 100644
+index e9503f2..4d0133a 100644
 --- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 +++ b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 @@ -9,7 +9,7 @@ const PROJECT='demo-adrabic-karten-audit';
@@ -1440,7 +1440,7 @@ index e9503f2..d2756f0 100644
      return r.fulfill({contentType:'text/javascript',body});
    });
    await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:APP_SOURCE+`
-@@ -54,6 +55,13 @@ async function seite(b,sources,ctx){
+@@ -54,6 +55,14 @@ async function seite(b,sources,ctx){
        nachholen:abgelehntesNachholen,verlauf:()=>JSON.parse(JSON.stringify(verlauf)),
        offen:()=>JSON.parse(JSON.stringify(typeof verlaufOffen==='undefined'?{}:verlaufOffen)),
        fehler:()=>schreibFehler,gesehen:lernAbhaken,gesehenZurueck:lernRueckgaengig,
@@ -1449,12 +1449,13 @@ index e9503f2..d2756f0 100644
 +      sicherung:()=>typeof bewertungsSicherung==='undefined'?{}:bewertungsSicherung(),
 +      banner:()=>typeof bewertungsBanner==='undefined'?'':bewertungsBanner(),
 +      tagSetzen:tag=>{todayStr=()=>tag;},
++      kontoLoeschen:()=>kontoDatenLoeschen(),
 +      aufbewahrt:()=>typeof bewertungsAktionen==='undefined'?[]:JSON.parse(JSON.stringify([...bewertungsAktionen.values()])),
 +      pruefen:()=>bewertungsAktionenPruefen(),
        undo:undoLastGrade,reset:verlaufZuruecksetzen,zeichnen:()=>startDrillWithCards(currentBereich().karten,'Pruefung',true)};`}));
    await p.route('**/verses.quran.foundation/**',r=>r.abort());
    await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
-@@ -72,7 +80,8 @@ async function cloud(tag){
+@@ -72,7 +81,8 @@ async function cloud(tag){
    const e=d.fields.verlauf?.mapValue.fields?.[tag]?.mapValue.fields||{};
    return Object.fromEntries(['w','n','u'].map(k=>[k,Number(e[k]?.integerValue||0)]));
  }
@@ -1720,10 +1721,10 @@ index 0000000..cb56164
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
-index 0000000..1b354cc
+index 0000000..cda60c4
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
-@@ -0,0 +1,162 @@
+@@ -0,0 +1,188 @@
 +/* A16: echter SDK 10.14.1, Repo-Regeln, Demo-Emulator 8082.
 +   Auth-Attrappe und blockierter Service Worker: kein PWA-Kaltstartbeleg.
 +   --gegenprobe stellt die feste Entwurfsquelle 591d03e samt Patch her. */
@@ -1736,7 +1737,7 @@ index 0000000..1b354cc
 +if (process.argv.includes('--gegenprobe')) {
 +  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'entwurf-a16-591d03e-'));
 +  fs.writeFileSync(path.join(dir, 'app.js'), cp.execFileSync('git', ['show', '591d03e:app.js']));
-+  cp.execFileSync('git', ['apply', '--include=app.js', '--unsafe-paths', '-'], {
++  cp.execFileSync('git', ['apply', '--include=app.js', '-'], {
 +    cwd: dir, input: cp.execFileSync('git', ['show', '591d03e:plan/sicherung/entwurf-aktuell.patch'])
 +  });
 +  const sha = crypto.createHash('sha256').update(fs.readFileSync(path.join(dir, 'app.js'), 'utf8').replace(/\r\n/g, '\n')).digest('hex');
@@ -1762,16 +1763,17 @@ index 0000000..1b354cc
 +  const b = await start();
 +  let passed = 0;
 +  const single = process.argv.find(x => x.startsWith('--fall='))?.slice(7);
-+  async function fall(name, test) {
++  async function fall(name, test, kontoGeloescht = false) {
 +    if (single && name !== single) return;
 +    await seed(); let p = await seite(b, sources); const ctx = p.context();
 +    const other = await (await rest(ROOT + '/users/u1/karten/k6')).json();
 +    const change = next => {p = next;};
 +    try {
 +      await test(p, ctx, change);
-+      assert.deepEqual((await (await rest(ROOT + '/users/u1/karten/k6')).json()).fields, other.fields);
++      if (kontoGeloescht) assert.equal((await rest(ROOT + '/users/u1/karten/k6')).status, 404);
++      else assert.deepEqual((await (await rest(ROOT + '/users/u1/karten/k6')).json()).fields, other.fields);
 +      assert.deepEqual(p.fehler, []);
-+      console.log('GRUEN ' + name + '; andere Karte k6 unveraendert'); passed++;
++      console.log('GRUEN ' + name + (kontoGeloescht ? '; Kontodaten geloescht' : '; andere Karte k6 unveraendert')); passed++;
 +    } finally { await ctx.close(); }
 +  }
 +  async function restart(p, ctx, change, uid) {
@@ -1883,6 +1885,31 @@ index 0000000..1b354cc
 +      const data = await (await rest(ROOT + '/users/u2')).json(); assert.deepEqual(data.fields.verlauf.mapValue.fields || {}, {});
 +      p = await restart(p, ctx, change, 'u1'); await retry(p); assert.equal((await cloud(day)).w, 1);
 +    });
++    await fall('vorbereiteter-Beitrag-ohne-Kartenkopie', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute());
++      await p.evaluate(tag => localStorage.setItem('adrabic-tagesantwort-u1/nicht-gebucht', JSON.stringify({id:'nicht-gebucht',uid:'u1',epoche:'',tag,art:'w',delta:1,status:'vorbereitet'})), day);
++      p = await restart(p, ctx, change); await retry(p);
++      assert.equal((await cloud(day)).w, 0);
++      assert.equal((await p.evaluate(() => window.__PRUEF.sicherung())).tagesantworten[0].status, 'vorbereitet');
++    });
++    await fall('beschaedigter-Tagesbeitrag', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute());
++      await p.evaluate(() => localStorage.setItem('adrabic-tagesantwort-u1/kaputt', '{ungueltig'));
++      p = await restart(p, ctx, change); await retry(p);
++      assert.match(await p.evaluate(() => window.__PRUEF.banner()), /Gerätespeicher/);
++      assert.equal((await p.evaluate(() => window.__PRUEF.sicherung())).beschaedigteKopien[0].inhalt, '{ungueltig');
++      await p.evaluate(() => {window.__PRUEF.starten();window.__PRUEF.bewerten('known');}); await fertig(p);
++      assert.equal((await cloud(day)).w, 0);
++    });
++    await fall('Kontoloeschung-entfernt-Cloudbelege', async p => {
++      await p.evaluate(() => {window.__PRUEF.zaehle('u');window.__PRUEF.flush();}); await fertig(p);
++      const prior = await (await rest(ROOT + '/users/u1/tagesantworten')).json();
++      assert.equal(prior.documents.length, 1);
++      await p.evaluate(() => window.__PRUEF.kontoLoeschen());
++      assert.equal((await rest(ROOT + '/users/u1')).status, 404);
++      const after = await (await rest(ROOT + '/users/u1/tagesantworten')).json();
++      assert.equal((after.documents || []).length, 0);
++    }, true);
 +    console.log(passed + ' A16 SDK-Faelle gruen. Keine Gesamtabnahme oder iPhone-Abnahme.');
 +  } finally {await b.close();}
 +})().catch(e => {console.error(e); process.exitCode = 1;});

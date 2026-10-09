@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:31 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 22:33 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `9222831 Sicherung 22:32 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `f5a34bf Sicherung 22:33 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -41,7 +41,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 12, chrome.exe 13 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 12, chrome.exe 8 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -62,6 +62,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 22:36 Codex Gegenprüfung A16: erster vollständiger A16-SDK-Lauf 12/12, feste Verlust-Gegenprobe erkennt weiterhin den Fehler, Windows-Regelprüfung 238/238. Git-Bash-Regelstart verwendete einen ungültigen /c/-Pfad; dessen Lauf nicht als Nachweis übernommen. A14/A15-Regressionslauf 16 Fälle samt Oberfläche/Download/Entfernen grün am Zwischenstand. Bestandstest t_sprung findet neuen kurzzeitigen Hinweis bei regulären noch gebündelten Tagesbeiträgen (90–114 px); Banner auf tatsächlich ungeprüfte/abgelehnte/veraltete Beiträge begrenzt, geladene bereit-Kopie wird ungeprüft. Frische SDK-/Bestandsläufe am korrigierten Stand gestartet. Drei A16-Randfälle ergänzt: ungebuchte Reservierung, beschädigte Tageskopie, wirkliche Kontodaten-/Beleglöschung. Große Gesamtabnahme bleibt später, keine Veröffentlichung oder neues Paket.
 
 - Codex A16 gebaut, erste gezielte SDK-Prüfung läuft: dauerhafte Einzelbeiträge mit atomarem unveränderlichem Cloud-Beleg; Nachholen prüft zuerst SDK-Abschluss, Beleg und Server-Epoche. Kartenversuche reservieren den Tagesbeitrag vor dem Buchen; Kartenkopie trägt ihn für einen Zwischenabsturz mit. Aufbewahrungs-Hinweis/Download erweitert, Datenschutz und Kontolöschung mitgezogen. Oberflächen-Skill wegen bestehendem Hinweis angewandt. Keine Text-Lernregel oder Paketwechsel; 3.18.30 bleibt Entwurf. Eigener Patch zunächst wegen rückwärts angeordneter Hunks abgewiesen, in Quellreihenfolge angewandt; keine Prüfgrenze geändert.
 
@@ -104,5 +106,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex Tagesdeckel-Rechnung: sechs synthetische Szenarien, vier Tagesmengen, drei Antwortmuster, je fünf Folgen über 180 Tage. Nur Analysewerkzeug; App unverändert. Originaler Lernlogik-Schnelltest 12/12 grün. Zwei eigene langsame Rechenstarts ohne Ergebnis beendet und Laufzeit verbessert (Kern einmal kompilieren, keine Funktionserzeugung je Kartenbewertung); keine Ergebnisse aus abgebrochenen Läufen übernommen. Modellgrenzen und falsche Annahme „w = verschiedene Karten“ im neuen Rechnungsbericht dokumentiert. Abschließender Lauf läuft.
 
 - Codex Fortsetzung: Betreiber möchte weiterarbeiten und „ladegerät“ für das größere gemeinsame Stück aufheben. Auftrag wörtlich in ALLES-OFFEN gespeichert. Tagesdeckel: tatsächliche Auswahl, Bewertungsregel, Wiederholungsqueue und Tageszähler gelesen. Wichtig: verlauf.w zählt Antworten, nicht verschiedene Karten; eine neue Karte kann beim zweiten Sicher bereits w erhöhen. Simulation nutzt den vorhandenen Lernlogik-Block und die tatsächliche Dringlichkeitssortierung, ohne Produktänderung und ohne erfundene Gedächtnisleistung.
-
-- Codex Abschluss: 3.18.29 als 2bdf83c auf main committet und gepusht. Fünf betroffene Testläufe grün (E4, Rechtsplan-Umfeld, Anmeldung-Enter, Einstellungen, Dialog-Timer); vollständige Logs gelesen und gesichert. Klein-Weg, kein Gesamtlauf, nicht veröffentlicht. Online bleibt laut letztem Veröffentlichungsbeleg 3.18.28. G7 am echten iPhone nach Veröffentlichung offen; nächste Arbeit Tagesdeckel-Rechnung. Details im Zyklus-Logbuch, Eintrag 3.18.29. Ein Plan-Schreibbefehl wurde wegen PowerShell-Quotierung vor Ausführung abgelehnt und korrigiert, ohne Dateiänderung aus dem Fehlversuch.

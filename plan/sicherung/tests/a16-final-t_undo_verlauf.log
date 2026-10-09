@@ -1,0 +1,5 @@
+vorher null 
+ {"n":1} -> Rueckgaengig {"n":0}
+ {"n":1,"w":1} -> Rueckgaengig {"n":1,"w":0}
+ {"n":1,"w":2} -> Rueckgaengig {"n":1,"w":1}
+ danach {"n":1,"w":2} | ok
