@@ -13,7 +13,7 @@ index bc20801..e698a62 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..056fcbd 100644
+index 4b6221e..275dce4 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -292,11 +292,12 @@ index 4b6221e..056fcbd 100644
    }
    if (!konto.abgebrochen && auth.currentUser === null) {
      if (currentUser === konto.user && verlaufGeneration === generation)
-@@ -6125,17 +6331,26 @@ function toggleLernNotiz(id) {
+@@ -6125,17 +6331,27 @@ function toggleLernNotiz(id) {
  function lernAbhaken(id) {
    const card = findCard(id);
    if (!card || !istNeueKarte(card)) return;
 +  if (!bewertungDarfBeginnen(id)) return;
++  const vorherLetzte = ui.lernLetzte;
    ui.lernLetzte = { cardId: card.id, prevStufe: card.stufe, prevNextReview: card.nextReview, prevErsteBewertung: card.ersteBewertung, verlaufTag: todayStr(), verlaufEpoche: verlaufEpoche };
    card.ersteBewertung = todayStr();
    card.stufe = 0;
@@ -313,7 +314,7 @@ index 4b6221e..056fcbd 100644
 +    card.stufe = ui.lernLetzte.prevStufe;
 +    card.nextReview = ui.lernLetzte.prevNextReview;
 +    card.ersteBewertung = ui.lernLetzte.prevErsteBewertung;
-+    ui.lernLetzte = null;
++    ui.lernLetzte = vorherLetzte;
 +    render();
 +    return;
 +  }
@@ -322,7 +323,7 @@ index 4b6221e..056fcbd 100644
    ui.lernFokusNach = card.id;
    /* 2.10.1: Auch das Durchgehen zaehlt fuer den Tag. Vorher sprang die
       Flamme nur am Ende einer Lernsession an - am ersten Tag mit einem neuen
-@@ -6150,15 +6365,20 @@ function lernRueckgaengig() {
+@@ -6150,15 +6366,20 @@ function lernRueckgaengig() {
    const l = ui.lernLetzte;
    if (!l) return;
    const card = findCard(l.cardId);
@@ -348,15 +349,16 @@ index 4b6221e..056fcbd 100644
    }
    /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
       das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
-@@ -6773,6 +6993,7 @@ function gradeCard(kind) {
+@@ -6773,6 +6994,8 @@ function gradeCard(kind) {
       waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
    const card = findCard(s.queue[0]);
    if (card && !s.isDrill) {
 +    if (!bewertungDarfBeginnen(card.id)) return;
++    const vorherLetzte = s.lastAction;
      /* E6: vor der Aenderung merken - direkt darunter wird ersteBewertung
         gesetzt, danach waere die Karte nicht mehr als "neu" erkennbar. */
      const warNeu = istNeueKarte(card);
-@@ -6829,6 +7050,22 @@ function gradeCard(kind) {
+@@ -6829,6 +7052,22 @@ function gradeCard(kind) {
      /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
         danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
         als neu erkennbar. */
@@ -371,7 +373,7 @@ index 4b6221e..056fcbd 100644
 +      card.rueckfaelle = s.lastAction.prevRueckfaelle;
 +      card.maxStufe = s.lastAction.prevMaxStufe;
 +      if (s.lastAction.prevRegler) reglerZurueck(s.lastAction.prevRegler);
-+      s.lastAction = null;
++      s.lastAction = vorherLetzte;
 +      s.nochmalNeu = false;
 +      render();
 +      return;
@@ -379,7 +381,7 @@ index 4b6221e..056fcbd 100644
      verlaufZaehle(warNeu ? "n" : "w");
      bereichHeuteZaehle(s.bereichId, 1);
    }
-@@ -6868,7 +7105,6 @@ function gradeCard(kind) {
+@@ -6868,7 +7107,6 @@ function gradeCard(kind) {
    s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
    hwStrokes = [];
    if (!s.isDrill) {
@@ -387,7 +389,7 @@ index 4b6221e..056fcbd 100644
      /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
         Karte), dann in den naechsten Bereich der Runde weiterschalten. */
      if (s.queue.length === 0) rundeNaechsterBereich(s);
-@@ -6959,6 +7195,22 @@ function gradeUnknown() { gradeCard("unknown"); }
+@@ -6959,6 +7197,22 @@ function gradeUnknown() { gradeCard("unknown"); }
  function undoLastGrade() {
    const s = ui.session;
    if (!s || !s.lastAction) return;
@@ -410,7 +412,7 @@ index 4b6221e..056fcbd 100644
    /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
       zurueck - findCard() sucht im offenen Bereich. */
    if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
-@@ -7006,7 +7258,6 @@ function undoLastGrade() {
+@@ -7006,7 +7260,6 @@ function undoLastGrade() {
       stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
       sie beim Bewerten offen war. */
    s.extraOpen = true;
@@ -418,7 +420,7 @@ index 4b6221e..056fcbd 100644
    render();
  }
  function endSession() {
-@@ -9520,6 +9771,7 @@ function renderMain() {
+@@ -9520,6 +9773,7 @@ function renderMain() {
  
    if (!imModus) {
      /* ---- Meldungen, die ueber allem stehen ---- */
@@ -426,7 +428,7 @@ index 4b6221e..056fcbd 100644
      if (schreibFehler) kopf += bannerSchreibfehler();
      if (syncError) {
        kopf += bannerFehler("Verbindung:", esc(syncError) +
-@@ -9551,8 +9803,9 @@ function renderMain() {
+@@ -9551,8 +9805,9 @@ function renderMain() {
                              : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
          ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
      }
@@ -438,7 +440,7 @@ index 4b6221e..056fcbd 100644
    }
  
    /* ---- Geruest ---- */
-@@ -16099,6 +16352,9 @@ document.body.addEventListener("click", e => {
+@@ -16099,6 +16354,9 @@ document.body.addEventListener("click", e => {
        if (dueCards().length > 0) startSession();
        else { window.scrollTo(0, 0); render(); }
        break;
