@@ -8,6 +8,20 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 09.10.2026
 
+- 04:30 „ladegerät“ an 3.18.28 endete 04:19 mit 155/156, nichts
+  veröffentlicht. Rot: `t_serie_lang` Fall 3 (47 statt 48), lief 04:01.
+  Einzeln 04:20 wieder rot. Ursache gerechnet und belegt: Der Test
+  verschiebt die Uhr der Seite um Vielfache von 24 h; über das Ende der
+  Sommerzeit (25.10.) zeigt sie dann 03:xx statt 04:xx und liegt vor der
+  4-Uhr-Grenze, die Seite lebt einen Lerntag zurück. Tritt nur zwischen
+  04:00 und 05:00 auf. Kein App-Fehler. Test auf Kalendertage umgestellt
+  (Erwartungen unverändert): 04:24 grün, 3/3 Fälle. `ladegeraet.ps1` hat
+  jetzt `-Fortsetzen`; damit läuft der Stichwort-Ablauf am selben
+  Quellstand weiter (155 bestandene bleiben, `t_serie_lang` neu, dann
+  Affen, Regeln, Hosting). Gleiche Falle möglich in `t_gruss_datum` und
+  `t_paket_c_kalendertage` (nutzen denselben Versatz aus `lib.js`); `lib.js`
+  selbst erst nach dem Veröffentlichen berichtigen, weil es zum Quellstand
+  gehört.
 - 02:07 Betreiber: Safari, Version .26. Ursache am Code gefunden: „← Zurück“
   auf den Rechtsseiten ist ein Link auf `./index.html` und lädt im neuen
   Reiter die App neu. In `ALLES-OFFEN.md` nachgetragen. Der Test zu E4

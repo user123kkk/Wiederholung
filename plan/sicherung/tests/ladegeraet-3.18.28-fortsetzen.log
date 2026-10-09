@@ -1,0 +1,15 @@
+﻿
+=== 1/6 Stand ===
+powershell.exe : From https://github.com/user123kkk/Wiederholung
+In Zeile:1 Zeichen:366
++ ... etzen.log'; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...kk/Wiederholung:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+Stand: 3.18.28 / 36a375b5
+
+=== 2/6 Strom ===
+Am Ladegeraet.

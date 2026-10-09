@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 04:25 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 04:27 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,14 +6,14 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `ac94738 Sicherung 04:24 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `36a375b Pruefstand: t_serie_lang verschiebt die Uhr um Kalendertage (rot zwischen 04 und 05 Uhr ueber das Ende`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
- M plan/werkzeuge/pruefstand/t_serie_lang.js
+ M plan/ARBEITSPROTOKOLL.md
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
@@ -21,7 +21,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 1, chrome.exe 19 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 1, chrome.exe 11 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -30,17 +30,28 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 EXIT 1 t_paket_e
 ```
 
-**ladegeraet-3.18.28.log**: 155 grün, 1 rot
+**ladegeraet-3.18.28-fortsetzen.log**: 0 grün, 0 rot
 ```
-ROT t_serie_lang.js (184s)
-155/156 Exit 0; 1 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\d74ff6186ee9311d
-ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlicht.
 ```
 
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
 
+- 04:30 „ladegerät“ an 3.18.28 endete 04:19 mit 155/156, nichts
+  veröffentlicht. Rot: `t_serie_lang` Fall 3 (47 statt 48), lief 04:01.
+  Einzeln 04:20 wieder rot. Ursache gerechnet und belegt: Der Test
+  verschiebt die Uhr der Seite um Vielfache von 24 h; über das Ende der
+  Sommerzeit (25.10.) zeigt sie dann 03:xx statt 04:xx und liegt vor der
+  4-Uhr-Grenze, die Seite lebt einen Lerntag zurück. Tritt nur zwischen
+  04:00 und 05:00 auf. Kein App-Fehler. Test auf Kalendertage umgestellt
+  (Erwartungen unverändert): 04:24 grün, 3/3 Fälle. `ladegeraet.ps1` hat
+  jetzt `-Fortsetzen`; damit läuft der Stichwort-Ablauf am selben
+  Quellstand weiter (155 bestandene bleiben, `t_serie_lang` neu, dann
+  Affen, Regeln, Hosting). Gleiche Falle möglich in `t_gruss_datum` und
+  `t_paket_c_kalendertage` (nutzen denselben Versatz aus `lib.js`); `lib.js`
+  selbst erst nach dem Veröffentlichen berichtigen, weil es zum Quellstand
+  gehört.
 - 02:07 Betreiber: Safari, Version .26. Ursache am Code gefunden: „← Zurück“
   auf den Rechtsseiten ist ein Link auf `./index.html` und lädt im neuen
   Reiter die App neu. In `ALLES-OFFEN.md` nachgetragen. Der Test zu E4
@@ -70,17 +81,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 18:56 Tests am Entwurf 3.18.28 fertig: 33 von 34 grün, `abnahme_runde.js`
   13/13. Rot: `t_paket_e` E6 („Zeile behauptet keinen eingerichteten
   Termin“). Echter Fehler im Entwurf, nicht im Test: „19:30 Uhr, im
-  Kalender“ behauptet einen Termin, den die App nicht kennt; „Vorlage für
-  19:30 Uhr“ war in Paket E bewusst so gewählt. Mein Vorschlag in der
-  Tabelle „Niedrig“ war nicht mit dem Repo abgeglichen (LEHREN § 1.7).
-  Zurückgenommen in `app.js` und CHANGELOG; `t_paket_e` läuft neu.
-- 17:58 Minuten-Sicherung sichert jetzt auch den laufenden Chat wörtlich
-  (jede Minute, nach `Desktop\Wiederholung-Belege\chats\`, außerhalb des
-  Repos, weil es öffentlich ist). Betreiber 17:57: „auch laufende
-  Aufgaben, ihren Stand, ihre Wege?“ Neu gestartet, läuft.
-- 17:55 Minuten-Sicherung erweitert und neu gestartet (Betreiber 17:52:
-  „wirklich alles … selbst Tests … ich will ein klares: ist eingebaut“):
-  sichert jetzt jede Minute auch alle Testausgaben (`plan/sicherung/tests/`,
-  26 Läufe der letzten zwei Tage) und schreibt
-  `plan/sicherung/UEBERGABE-AKTUELL.md`. Erster vollständiger Durchgang
-  17:54 committet und gepusht (4fefe03). Patch enthält jetzt auch die
