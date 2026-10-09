@@ -1,0 +1,12 @@
+OK   ohne Luecke, 10 Tage | erwartet 10 | gemessen 10
+OK   eine alte Luecke (Tag 7), danach 7 Tage gelernt - voll erholt | erwartet 14 | gemessen 14
+OK   zwei Luecken (Tag 7 und 15), je 7 Tage dazwischen - beide verziehen | erwartet 21 | gemessen 21
+OK   zweite Luecke zu frueh (nur 3 Tage seit der ersten) - bricht ab | erwartet 6 | gemessen 6
+OK   heute und gestern noch offen, Serie von davor bleibt stehen | erwartet 10 | gemessen 10
+OK   Sockel 0 von heute (neues Konto), heute gelernt - zaehlt | erwartet 1 | gemessen 1
+OK   Sockel 0 vor 3 Tagen gesetzt, seitdem jeden Tag - Tag des Sockels zaehlt mit | erwartet 4 | gemessen 4
+OK   Sockel (Alt-Konto vor 2.14.0) traegt weiter, unveraendert | erwartet 47 | gemessen 47
+OK   Alt-Konto, 30 Tage gelernt, sockel 100 ab Tag 30 - stoppt am sockelBis | erwartet 130 | gemessen 130
+Alle Faelle richtig.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":14,"quelltext":"966b8bc0298e224f0e66ed14df2eac6b3500db1b6c73f271937a33cf2305e05d"}

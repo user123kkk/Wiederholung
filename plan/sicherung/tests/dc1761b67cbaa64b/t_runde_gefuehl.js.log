@@ -1,0 +1,11 @@
+Fenster {"width":390,"height":844}
+VORN {"karte":{"y":169,"h":338,"x":12,"w":366},"knopf":{"y":764,"h":52,"x":12,"w":366},"scroll":0}
+ANIMATIONEN nach Aufdecken (40ms): ["fortschritt-waechst @modebar__fortschritt 520ms+0","karte-hebt @study-flaeche 540ms+0","karte-wende @karte-dreh 540ms+0","vorn-weg @karte-seite 540ms+0","karte-schatten @karte-seite 540ms+0","karte-schatten @karte-seite 540ms+0","bewertung-da @btn-unknown 200ms+140","bewertung-da @btn-almost 200ms+140","bewertung-da @btn-known 200ms+140"]
+HINTEN {"karte":{"y":169,"h":338,"x":12,"w":366},"reihe":{"y":764,"h":60,"x":12,"w":366},"neben":{"y":716,"h":36,"x":12,"w":366},"scroll":0,"unterDaumen":"Fast"}
+Karte verschoben um 0 px, Hoehe 338 -> 338 | Seite gescrollt um 0
+ANIMATIONEN nach Bewerten (40ms): ["fortschritt-waechst @modebar__fortschritt 520ms+0","stapel-rueckt @study-stapel 420ms+0","stapel-rueckt @study-stapel 420ms+0","karte-kommt @study-flaeche 420ms+0","enter-rise @study-answer 200ms+0","geist-rechts @study-flaeche 260ms+0","enter-rise @study-answer 200ms+0"]
+NAECHSTE {"karte":{"y":169,"h":338,"x":12,"w":366},"knopf":{"y":764,"h":52,"x":12,"w":366},"leiste":"Runde beenden | Letzte Bewertung rückgängig machen"}
+Karte naechste vs erste: 0 px
+keine Fehler
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":9,"quelltext":"b9257c12ffb87c932a0ffe195ed0cc8200be205bad53963b7ccfd23fe1a7d427"}

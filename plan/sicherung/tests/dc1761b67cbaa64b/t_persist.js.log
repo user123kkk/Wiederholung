@@ -1,0 +1,10 @@
+OK   (a) display-mode: standalone greift in dieser Seite | displayMode=true
+OK   (a) genau 1 Aufruf nach dem Start | Aufrufe=1
+OK   (a) weiterhin genau 1 Aufruf nach mehreren render() | Aufrufe=1
+OK   (a) keine Seitenfehler
+OK   (b) display-mode: standalone greift hier NICHT | displayMode=false
+OK   (b) 0 Aufrufe im normalen Tab | Aufrufe=0
+OK   (b) keine Seitenfehler
+Alle Faelle richtig.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":8,"quelltext":"8023bbb530db1faddfff033e68fbf80847e7e54df60e588638312c081080f279"}
