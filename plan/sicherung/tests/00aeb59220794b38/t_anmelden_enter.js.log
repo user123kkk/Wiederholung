@@ -1,0 +1,5 @@
+-- Enter im E-Mail-Feld meldet an --
+ok      signInWithEmailAndPassword genau einmal aufgerufen: 1
+-- Doppel-Enter sendet nur einmal --
+ok      trotz Doppel-Enter genau ein Aufruf: 1
+-- Passwort vergessen: Enter im E-Mail-Feld sendet ab --
