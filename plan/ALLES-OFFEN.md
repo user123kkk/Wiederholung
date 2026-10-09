@@ -2,6 +2,13 @@
 
 09.10.2026, Betreiber: „Weiter gemäß AGENTS.md und aktueller Übergabe. A14/A15-Entwurf 3.18.30 behalten. Zuerst offene Aufgabe A16/DATEN-11 bearbeiten. Danach die bereits entschiedenen offenen Punkte gemäß Repo-Reihenfolge; kein neues Paket über uncommitteter Arbeit beginnen. Große Gesamtabnahme später gesammelt, nicht veröffentlichen. Minuten-Sicherung prüfen und laufen lassen. Passende Projekt-Skills nutzen. Caveman, selbstständig weiterarbeiten.“ Fortsetzung im bestehenden Entwurf: A16 zuerst; gezielte Datenabnahme, große Abnahme später. Weitere Pakete bleiben bis zum Abschluss des uncommitteten Datenpakets gesperrt; ihre Vorbereitung darf weitergehen.
 
+Fortsetzung 09.10.2026: A16 im bestehenden Entwurf gebaut; dauerhafte
+Tagesbeiträge und atomare Belege erhalten Ursprungskonto/Tag/Epoche.
+238 Regelprüfungen grün, gezielte Abschlussprüfung läuft. A14/A15 bleiben
+erhalten, große Abnahme weiter später. Anschlussarbeit lesend vorbereitet:
+`zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md`. Kein neues Paket.
+Minuten-Sicherung auf eine vorhandene Schleife zusammengeführt und läuft.
+
 Angelegt 08.10.2026 auf Wunsch des Betreibers: „ich weiß nicht, was noch an
 der App gemacht werden muss … ich dachte, ich kann mich darauf verlassen,
 wenn ich eine Sache erwähne, dass das gespeichert wird“.

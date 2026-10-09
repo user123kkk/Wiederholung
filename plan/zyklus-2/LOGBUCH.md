@@ -2,6 +2,26 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — A16/DATEN-11 im Datenentwurf 3.18.30
+
+**Auftrag:** aktuelle Übergabe fortsetzen; A14/A15 erhalten, A16 zuerst,
+große Gesamtabnahme später gesammelt, nicht veröffentlichen.
+**Geändert:** Tagesantworten vor dem Buchen dauerhaft sichern; atomarer
+unveränderlicher Cloud-Beleg verhindert doppeltes Nachholen. Konto, Tag
+und Reset-Epoche bleiben beim ursprünglichen Beitrag. Bestehender
+Aufbewahrungs-Hinweis/Download, Datenschutz und Kontolöschung ergänzt.
+**Geprüft bisher:** zwölf SDK-Kernfälle am Abschlussstand grün; 238/238
+Regeln grün. Feste Gegenprobe 591d03e weiterhin rot auf Verlust. Eigene
+Gegenprüfung findet kurzzeitigen Banner-Sprung, Ursache behoben; frischer
+Bestandstest vier Breiten ohne Sprung, Kontrast/a11y-Grundchecks grün.
+Randfälle und A14/A15-Abschlussnachlauf noch unterwegs. Maßgebliche Belege,
+Quellhashes, Gegenargumente und Grenzen: VERLAUF-NEUSTART-2026-10-09.md.
+**Offen:** große Daten-/Rundenabnahme einschließlich ganzem Prüfstand und
+Affen später; echter iPhone-PWA-Nachweis fehlt. Zusätzlicher Cloud-Beleg
+je Antwort bis Kontolöschung. Regeln müssen vor späterem Hosting eingespielt
+werden. Kein App-Commit, Deploy oder Beginn eines neuen Pakets. Minuten-
+Sicherung läuft; nächste Lernrunden-Punkte nur lesend vorbereitet.
+
 ### 2026-10-09 — Entwurf 3.18.30: Kartenkonflikte A14/A15
 
 **Auftrag:** Betreiber „mach“, anschließend ununterbrochen weiterarbeiten.
