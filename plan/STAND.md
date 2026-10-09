@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026 – Betreiber verschiebt große Gesamtabnahme auf später/Ende:**
+Eigenen laufenden Gesamttest beendet, Ausgaben bewahrt. Keine Ladegerät-BAT,
+kein App-Commit oder Deploy. A14/A15 bleiben Entwurf 3.18.30 mit 16 echten
+SDK-Fällen und 222 Regeltests grün; vollständiger Abschluss bleibt offen.
+Weitere Zuverlässigkeitsprüfung erfolgt gezielt; kein neues Paket wird
+über dem uncommitteten Entwurf gebaut. Tagesziel E26 bleibt zurück:
+Empfehlung für einen neuen dauerhaften Deckel wurde nach Audit zurückgenommen.
+Die folgenden laufenden Gesamtabnahme-Einträge sind historischer Verlauf.
+
 **09.10.2026, 21:39 – endgültiger Entwurf A14/A15 / 3.18.30:**
 16 echte SDK-Fälle grün, einschließlich Erholung nach Speicherfehler
 ohne ungezählte Antwort und Erhalt des vorherigen Rückgängig. Drei feste

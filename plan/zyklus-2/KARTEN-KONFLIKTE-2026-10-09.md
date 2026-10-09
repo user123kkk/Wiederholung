@@ -262,3 +262,13 @@ Seit 21:26 frischer Gesamtlauf an `caf81d58f8c5f144` (157 Tests).
 Vorherige lange Läufe sind bewusst keine Abnahme des neuen Codes.
 Rundenabnahme und Affen folgen erst am endgültigen Stand. A14/A15 bleiben
 bis dieser Abnahme offen, keine Veröffentlichung.
+
+## Betreibersteuerung 09.10.2026: große Abnahme später
+
+Der Betreiber verschiebt Gesamtlauf/Affen/Veröffentlichung ausdrücklich auf
+später oder das Ende. Lauf an caf81d58f8c5f144 beendet, alle Ausgaben erhalten.
+16 SDK-Schutzfälle und 222 Regeln bleiben gezielte Belege des Entwurfs;
+die App-Version ist nicht vollständig abgenommen und wird nicht committet.
+A14/A15 bleiben offen. Weitere Nachprüfung ist erlaubt, kein neues Paket
+über dem bestehenden App-Entwurf. Das freiwillige Tagesziel ist E26 und
+bleibt nach Audit zurückgestellt; dies ist keine Tagesziel-Implementierung.
