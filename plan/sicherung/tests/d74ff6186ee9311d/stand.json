@@ -984,6 +984,30 @@
       "fehler": null,
       "sekunden": 24,
       "quelltext": "45c5995a002b1e7b023014e42ad40b7462695ef400d9b558ae2b764eedac1e7f"
+    },
+    "t_serie_lang.js": {
+      "code": 1,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 184,
+      "quelltext": "738dda0ba33f45d9c11414af1bea11268945b23e3cbc74d4360f50d80df3fc08"
+    },
+    "t_serie_warnung.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "f2899bfda3a9bcb8963df54c1463fe7ada0d872503e580f78dd10608f43269e5"
+    },
+    "t_settings_kontowechsel.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 1,
+      "quelltext": "14dc88ced3dd4da49038851104bf1b947f8ab363a65b139e162f33fb56e4ba42"
     }
   }
 }

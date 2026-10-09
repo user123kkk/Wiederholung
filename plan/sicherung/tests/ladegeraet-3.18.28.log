@@ -142,3 +142,9 @@ EXIT 0 t_schreiben.js (102s)
 EXIT 0 t_schreiben_vollbild.js (34s)
 EXIT 0 t_scrollen.js (19s)
 EXIT 0 t_serie.js (24s)
+ROT t_serie_lang.js (184s)
+FEHL 150 Tage, Tag 100 und 101 aus | erwartet 48 | gemessen 47 | Sockel 0 bis 2026-10-09 | Protokoll 120 Tage
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":184,"quelltext":"738dda0ba33f45d9c11414af1bea11268945b23e3cbc74d4360f50d80df3fc08"}
+EXIT 0 t_serie_warnung.js (8s)
+EXIT 0 t_settings_kontowechsel.js (1s)
+EXIT 0 t_settings_mehrgeraete.js (12s)
