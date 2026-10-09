@@ -1,2 +1,18 @@
 app.js SHA256 05269ebdb1d17a5a23e1ef8eeb048cc3745e866dbd8c4e94052e9789f1ccd0c8
 firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3
+GRUEN Ablehnung-Neustart-mehrfach; andere Karte k6 unveraendert
+GRUEN Neustart-vor-Bestaetigung-offline; andere Karte k6 unveraendert
+GRUEN Bestaetigung-verloren; andere Karte k6 unveraendert
+GRUEN urspruenglicher-Lerntag; andere Karte k6 unveraendert
+GRUEN fremder-Reset; andere Karte k6 unveraendert
+GRUEN Antwortart-n; andere Karte k6 unveraendert
+GRUEN Antwortart-u; andere Karte k6 unveraendert
+GRUEN Antwortart-t; andere Karte k6 unveraendert
+GRUEN Antwortart-r; andere Karte k6 unveraendert
+GRUEN Speicherfehler-keine-Bewertung; andere Karte k6 unveraendert
+GRUEN Undo-Neustart; andere Karte k6 unveraendert
+GRUEN Kontowechsel-Ursprung-erhalten; andere Karte k6 unveraendert
+TypeError: Cannot read properties of undefined (reading 'u')
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:167:76
+    at async fall (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:45:7)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:161:5

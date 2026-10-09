@@ -61,5 +61,66 @@ Dies ist technische Speicherung, keine neue Definition eines Lerntags.
 - Speicherfehler, Datenschutz, echte Regeln sowie andere Antwortarten
   prüfen. Keine ungezählte Bewertung durch einen abgebrochenen Versuch.
 
-Status: A16/DATEN-11 offen, mittel. Noch kein Produkt-Fix. A14/A15 bleiben
-separat gezielt geprüft; deren Gesamtabnahme ist vom Betreiber verschoben.
+## Behebung im Entwurf 3.18.30, 09.10.2026
+
+Jede Tagesantwort erhält eine eigene Kennung und wird vor dem Buchen lokal
+unter `adrabic-tagesantwort-<uid>/<id>` gespeichert. Konto, ursprünglicher
+Tag, Antwortart, Differenz und Reset-Epoche bleiben unverändert. Ein Batch
+schreibt das Increment und einen unveränderlichen Beleg unter
+`users/<uid>/tagesantworten/<id>`. Die Regel prüft beide Änderungen mit
+`getAfter`; ein zweites Set derselben Kennung wird zusammen mit seinem
+Increment abgewiesen. Nachholen wartet auf den SDK-Stapel und prüft den
+Serverbeleg: bestätigt bedeutet lokale Kopie entfernen, fremde Epoche
+bedeutet aufbewahren ohne Umbuchen. Abgelehnte Beiträge bleiben sichtbar
+und exportierbar. Normale noch gebündelte Beiträge zeigen keinen
+kurzzeitigen Fehlerhinweis; nach Neustart bleiben sie auch offline sichtbar.
+
+Eine Kartenaktion trägt ihre reservierte Tagesantwort im bestehenden
+Kartenjournal mit. Ein Speicherfehler vor erfolgreicher lokaler Sicherung
+bricht normale Kartenbewertung/Gesehen/Undo ab. Eine ungebuchte Reservierung
+ohne Kartenkopie wird nicht automatisch übertragen. Beschädigte Kopien
+bleiben exportierbar und sperren neue normale Bewertungen. Datenschutz und
+Kontolöschung berücksichtigen die neuen lokalen Kopien und Cloud-Belege.
+
+Quellstand des Abschlusslaufs (normalisiertes LF, SHA256):
+
+- App: `05269ebdb1d17a5a23e1ef8eeb048cc3745e866dbd8c4e94052e9789f1ccd0c8`.
+- Regeln: `6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3`.
+
+Gezielte Abschlussläufe laufen noch; maßgeblich werden deren vollständige
+Ausgaben unter `plan/sicherung/tests/a16-abschluss-*.log`. Erster A16-Lauf:
+12/12 SDK-Fälle grün. Regeln: 238/238 mit echten Repo-Regeln am Windows-
+Emulator, `a16-regeln-windows-1.log`. Der Regelprüfer nutzt Firestore 12.19.0,
+die App-Prüfung weiterhin den echten SDK 10.14.1; Auth ist dort eine
+Attrappe. Feste Quelle 591d03e bleibt als Verlust-Gegenprobe erhalten.
+
+Eigene Gegenprüfung fand im ersten Entwurf einen neuen Sprung von
+76–114 px: der bestehende Hinweis erschien bei jeder noch regulär
+gebündelten Antwort. `a16-t_sprung.log` bewahrt den roten Lauf. Ursache
+behoben, frische Prüfung auf vier Breiten läuft. Frühere Ergebnisse werden
+nicht als Abschluss des geänderten Quellstands übernommen.
+
+### Grenzen und spätere gesammelte Abnahme
+
+- Kein ganzer Prüfstand, keine neue Rundenabnahme/Affen und kein installierter
+  iPhone-PWA-Kaltstart. Browser-SDK-Prüfungen blockieren den Service Worker.
+- Ein zusätzlicher Cloud-Schreibvorgang und ein kleiner Beleg je Antwort;
+  Belege bleiben bis zur Kontolöschung. Eine spätere Löschstrategie darf
+  den Schutz gegen verlorene Bestätigungen nicht aushebeln.
+- Kartenaktion und Tagesbeitrag sind weiterhin getrennte Cloud-Schreibwege.
+  Das Journal erhält Fehler zum Nachholen; es macht daraus keine gemeinsame
+  Cloud-Transaktion und definiert keine neue Lern-/Serienregel.
+- Antwortarten n/u/t/r werden am gemeinsamen Zähler geprüft; das ist keine
+  vollständige Abnahme aller Text-/Ruhetag-/Üben-Oberflächen. Texte-Probelauf
+  bleibt unverändert. Ursprünglicher Tag wird kontrolliert verschoben;
+  kein echter nächtlicher Gerätetest.
+- Regeln müssen vor einem späteren Hosting-Deploy eingespielt werden.
+  Vorher darf dieser Entwurf nicht veröffentlicht werden.
+
+API-Grundlagen: [Firebase atomare Batches und getAfter](https://firebase.google.com/docs/firestore/manage-data/transactions),
+[waitForPendingWrites](https://firebase.google.com/docs/reference/js/firestore),
+[Unterkollektionen bei Kontodokument-Löschung](https://firebase.google.com/docs/firestore/manage-data/delete-data).
+
+Status: A16/DATEN-11 in Arbeit, gebaut im uncommitteten Entwurf 3.18.30.
+Gezielte Abschlussprüfung läuft; große Gesamtabnahme auf Betreiberwunsch
+später gesammelt. A14/A15 und vorhandene Skill-Dateien bleiben erhalten.

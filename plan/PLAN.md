@@ -7,6 +7,15 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**09.10.2026 – A16 im Datenentwurf gebaut:**
+Tagesantworten dauerhaft pro Konto/Tag/Epoche erhalten und anhand atomarer
+Cloud-Belege genau einmal nachholen. Erstlauf 12 SDK-Fälle, 238 Regeln grün;
+frische gezielte Abschlussläufe nach behobenem Hinweis-Sprung laufen.
+Keine neue Lernregel; 3.18.30 mit A14/A15 bleibt uncommittet. Große Abnahme
+später gesammelt, kein Deploy oder neuer Paketbau. Belege und Grenzen:
+zyklus-2/VERLAUF-NEUSTART-2026-10-09.md. Danach gemäß Mehrwert-Reihenfolge
+Karte in Abfrage bearbeiten und Runde fortsetzen; derzeit nur Vorbereitung.
+
 
 **09.10.2026 – große Abnahme auf Betreiberwunsch später:**
 A14/A15 als Entwurf 3.18.30 erhalten; 16 SDK-Fälle und 222 Regeln grün.
