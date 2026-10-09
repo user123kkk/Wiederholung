@@ -1,0 +1,177 @@
+/* Lastsimulation, keine Messung von Behalten oder Motivation.
+   Aufruf aus beliebigem Ordner: node plan/werkzeuge/tagesdeckel_simulation.cjs
+   Die Bewertungsregeln und die Sortierung werden aus app.js geladen.
+   Die Auswahlmodelle sind ausdrücklich Varianten eines Vorschlags,
+   keine vollständige Browser-Simulation (Bereichswechsel/Schlösser fehlen). */
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
+const root = path.resolve(__dirname, '../..');
+const source = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
+const start = source.indexOf('//LERNLOGIK-ANFANG');
+const end = source.indexOf('//LERNLOGIK-ENDE');
+assert.ok(start >= 0 && end > start);
+const sortStart = source.indexOf('function nachDringlichkeit(due) {');
+const sortEnd = source.indexOf('/* 3.18.23', sortStart);
+assert.ok(sortStart > 0 && sortEnd > sortStart);
+const code = source.slice(start, end) + '\n' +
+  source.match(/function istNeueKarte\(c\) \{[^\n]+/)[0] + '\n' + source.slice(sortStart, sortEnd);
+const createKernel = new Function('Date', 'Math', code + '\nreturn {bewertungAnwenden, nachDringlichkeit, intervalForStufe, todayStr, dateInDays};');
+const DAY = 86400000;
+function date(day) { return new Date(Date.UTC(2026, 9, 9 + day, 12)).toISOString().slice(0, 10); }
+function draw(seed, id, visit, channel) {
+  let n = (seed * 2654435761 + id * 2246822519 + visit * 3266489917 + channel * 668265263) >>> 0;
+  n ^= n >>> 16; n = Math.imul(n, 2246822507); n ^= n >>> 13;
+  n = Math.imul(n, 3266489909); n ^= n >>> 16;
+  return (n >>> 0) / 4294967296;
+}
+function kernel(day, random = () => 0.5) {
+  const now = new Date(date(day) + 'T12:00:00').getTime();
+  class Clock extends Date {
+    constructor(...args) { super(...(args.length ? args : [now])); }
+    static now() { return now; }
+  }
+  const math = Object.create(Math); math.random = random;
+  return createKernel(Clock, math);
+}
+function card(id, stufe, due, fresh = false) {
+  return {id, stufe, maxStufe: stufe, nextReview: date(due),
+    ersteBewertung: fresh ? '' : date(-100), rueckfaelle: 0, visits: 0};
+}
+const scenarios = [
+  {name: 'Alltag 300, keine neuen', count: 300, pause: 0, stages: [3,4,5,6,7,8], dailyNew: 0},
+  {name: 'Pause 20 Tage, 300', count: 300, pause: 20, stages: [3,4,5,6,7,8], dailyNew: 0},
+  {name: 'Pause 60 Tage, 1100', count: 1100, pause: 60, stages: [2,3,4,5,6,7,8,9], dailyNew: 0},
+  {name: '300 neue auf einmal', count: 300, fresh: true, dailyNew: 0},
+  {name: 'Pause 20 Tage, plus 5 neue/Tag', count: 300, pause: 20, stages: [3,4,5,6,7,8], dailyNew: 5},
+  {name: 'Pause 20 Tage, plus 15 neue/Tag', count: 300, pause: 20, stages: [3,4,5,6,7,8], dailyNew: 15}
+];
+const policies = [
+  {name: 'Alle', cap: Infinity},
+  {name: 'Deckel 20', cap: 20},
+  {name: 'Deckel 30', cap: 30},
+  {name: 'Deckel 60', cap: 60}
+];
+const ratingProfiles = [
+  {name: 'alle sicher', known: 1, almost: 0},
+  {name: '85/10/5', known: .85, almost: .10},
+  {name: '60/20/20', known: .60, almost: .20}
+];
+/* Erstantworten: feste Anteile. Nach Nicht wird dieselbe Karte einmal sicher
+   beantwortet. Das ist eine ausdrücklich günstige Vereinfachung. Zufall und
+   Intervallstreuung sind je Karte/Besuch gepaart, unabhängig von der Variante.
+   Der Tagesdeckel zählt verschiedene zugelassene Karten einschließlich neuer;
+   die Queue derselben Runde wird immer beendet. Die Fälligkeit wartender
+   Karten bleibt unverändert. Eine Runde je Tag; kein freiwilliges Weiterlernen. */
+function simulate(scenario, policy, profile, seed, owner = true) {
+  const k0 = kernel(0);
+  let id = 0;
+  const cards = Array.from({length: scenario.count}, (_, i) => {
+    const stage = scenario.fresh ? 0 : scenario.stages[i % scenario.stages.length];
+    const interval = k0.intervalForStufe(stage);
+    return card(++id, stage, scenario.fresh ? 0 : i % interval - (scenario.pause || 0), scenario.fresh);
+  });
+  const initialDue = new Set(cards.filter(c => c.nextReview <= date(0)).map(c => c.id));
+  const waitingInitial = new Set(initialDue);
+  let clearInitialDay = null, maxAnswers = 0, maxDue = 0, totalAnswers = 0, totalAdmitted = 0;
+  let waitingDays = 0, newIntroduced = 0;
+  const daily = [];
+  for (let day = 0; day < 180; day++) {
+    if (day > 0) for (let j = 0; j < scenario.dailyNew; j++) cards.push(card(++id, 0, day, true));
+    let jitter = 0.5;
+    const k = kernel(day, () => jitter);
+    const due = cards.filter(c => c.nextReview <= date(day));
+    const snapshot = new Map(due.map(c => [c.id, [c.stufe, c.nextReview, c.ersteBewertung]]));
+    // Absichtliche Vergleichsvariante, nicht die aktuelle Produktsortierung.
+    const ordered = policy.order === 'oldest'
+      ? due.slice().sort((a, b) => Number(!a.ersteBewertung) - Number(!b.ersteBewertung) ||
+        a.nextReview.localeCompare(b.nextReview) || a.id - b.id)
+      : k.nachDringlichkeit(due);
+    const chosen = ordered.slice(0, policy.cap);
+    const chosenIds = new Set(chosen.map(c => c.id));
+    let answers = 0;
+    for (const c of chosen) {
+      waitingInitial.delete(c.id);
+      const fresh = !c.ersteBewertung;
+      const visit = c.visits++;
+      const value = draw(seed, c.id, visit, 0);
+      const kind = value < profile.known ? 'known' : value < profile.known + profile.almost ? 'almost' : 'unknown';
+      jitter = draw(seed, c.id, visit, 1);
+      if (fresh) { c.ersteBewertung = date(day); newIntroduced++; }
+      k.bewertungAnwenden(c, kind, undefined, false, owner && fresh && kind === 'known');
+      answers++;
+      if (kind === 'unknown' || (owner && fresh && kind === 'known')) {
+        k.bewertungAnwenden(c, 'known', undefined, owner && kind === 'unknown', false);
+        answers++;
+      }
+    }
+    // Kein Deckel darf stillschweigend Termine oder Stufen wartender Karten verschieben.
+    for (const c of due) if (!chosenIds.has(c.id)) {
+      assert.deepEqual([c.stufe, c.nextReview, c.ersteBewertung], snapshot.get(c.id));
+    }
+    assert.ok(chosen.length <= policy.cap);
+    if (!waitingInitial.size && clearInitialDay === null) clearInitialDay = day + 1;
+    waitingDays += due.length - chosen.length;
+    maxAnswers = Math.max(maxAnswers, answers); maxDue = Math.max(maxDue, due.length);
+    totalAnswers += answers; totalAdmitted += chosen.length;
+    daily.push({day: day + 1, due: due.length, admitted: chosen.length, answers});
+  }
+  const dueEnd = cards.filter(c => c.nextReview <= date(180));
+  return {initialDue: initialDue.size, clearInitialDay, untouchedInitial: waitingInitial.size,
+    totalAnswers, totalAdmitted, maxAnswers, maxDue, waitingDays, newIntroduced,
+    dueEnd: dueEnd.length, oldestDueDays: Math.max(0, ...dueEnd.map(c => Math.round((Date.parse(date(180)) - Date.parse(c.nextReview)) / DAY))),
+    unintroduced: cards.filter(c => !c.ersteBewertung).length, firstDay: daily[0]};
+}
+function selfCheck() {
+  const k = kernel(0);
+  assert.equal(k.todayStr(), '2026-10-09');
+  assert.equal(kernel(17).dateInDays(1), '2026-10-27', 'Kalendertage über Winterzeitwechsel');
+  const c = card(1, 8, 0); k.bewertungAnwenden(c, 'unknown');
+  k.bewertungAnwenden(c, 'known', undefined, true);
+  assert.deepEqual([c.stufe, c.nextReview], [6, date(1)]);
+  const f = card(2, 0, 0, true); k.bewertungAnwenden(f, 'known', undefined, false, true);
+  assert.equal(f.stufe, 0); k.bewertungAnwenden(f, 'known'); assert.equal(f.stufe, 1);
+  const old = card(3, 2, -60), current = card(4, 8, 0), fresh = card(5, 0, 0, true);
+  assert.deepEqual(k.nachDringlichkeit([fresh, old, current]).map(c => c.id), [4,3,5]);
+  const all = simulate(scenarios[0], policies[0], ratingProfiles[0], 1);
+  const wide = simulate(scenarios[0], {cap: 100000}, ratingProfiles[0], 1);
+  assert.deepEqual(all, wide, 'Unwirksamer Deckel verändert kein Ergebnis');
+  const a = simulate(scenarios[1], policies[1], ratingProfiles[1], 2);
+  assert.deepEqual(a, simulate(scenarios[1], policies[1], ratingProfiles[1], 2), 'Reproduzierbarer Zufall');
+  const newRun = simulate(scenarios[3], policies[1], ratingProfiles[0], 1);
+  assert.equal(newRun.firstDay.admitted, 20); assert.equal(newRun.firstDay.answers, 40);
+  const normalRun = simulate(scenarios[3], policies[1], ratingProfiles[0], 1, false);
+  assert.equal(normalRun.firstDay.answers, 20, 'Betreiber-Vorabregel nicht für alle annehmen');
+}
+selfCheck();
+const output = path.join(root, 'plan/zyklus-2/mehrwert/tagesdeckel-ergebnis-2026-10-09.json');
+const sourceHash = crypto.createHash('sha256').update(source).digest('hex');
+const extraOrder = process.argv.includes('--reihenfolge');
+let rows = [];
+if (extraOrder) {
+  const prior = JSON.parse(fs.readFileSync(output, 'utf8'));
+  assert.equal(prior.sourceSha256, sourceHash, 'Vergleich braucht denselben Produktquellstand');
+  rows = prior.rows.filter(r => r.policy !== 'Älteste zuerst, 30');
+}
+const selectedPolicies = extraOrder ? [{name: 'Älteste zuerst, 30', cap: 30, order: 'oldest'}] : policies;
+for (const scenario of scenarios) for (const policy of selectedPolicies) for (const profile of ratingProfiles) {
+  const runs = Array.from({length: 5}, (_, i) => simulate(scenario, policy, profile, i + 1));
+  const mean = key => Math.round(runs.reduce((n, r) => n + r[key], 0) / runs.length * 10) / 10;
+  rows.push({scenario: scenario.name, policy: policy.name, ratings: profile.name,
+    initialDue: runs[0].initialDue,
+    initialClearDays: runs.map(r => r.clearInitialDay), untouchedInitial: mean('untouchedInitial'),
+    answersPerDay: Math.round(mean('totalAnswers') / 180 * 10) / 10,
+    maxAnswers: Math.max(...runs.map(r => r.maxAnswers)), dueEnd: mean('dueEnd'),
+    oldestDueDays: Math.max(...runs.map(r => r.oldestDueDays)),
+    waitingCardDays: mean('waitingDays'), newIntroduced: mean('newIntroduced'),
+    unintroduced: mean('unintroduced'), firstDay: runs[0].firstDay});
+}
+const result = {appVersion: source.match(/APP_VERSION\s*=\s*"([^"]+)"/)[1],
+  sourceSha256: sourceHash,
+  days: 180, seeds: [1,2,3,4,5], ownerRules: true, selfCheck: 'passed', rows};
+fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n');
+console.log('Selbstprüfung grün. ' + rows.length + ' Vergleiche, je 5 Durchläufe, 180 Tage.');
+for (const r of rows.filter(r => r.ratings === '85/10/5')) console.log(JSON.stringify(r));
+console.log('Ergebnis: ' + output);

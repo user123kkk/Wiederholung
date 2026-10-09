@@ -2,6 +2,46 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — Tagesdeckel gerechnet, keine Produktänderung
+
+**Auftrag:** Betreiber möchte weiterarbeiten und mehrere Änderungen für
+den gemeinsamen großen Lauf mit „ladegerät“ sammeln. Tagesdeckel zuerst
+rechnen, „60/30“ bleibt zurückgenommen.
+**Geändert:** eigenständiges Werkzeug `plan/werkzeuge/tagesdeckel_simulation.cjs`,
+Rechnungsbericht und vollständige JSON-Ergebnisse unter `mehrwert/`;
+aktuelle Zeiger in STAND/PLAN/ALLES-OFFEN/GESAMTLISTE/E26/ARBEITSSTAND.
+App, Daten, Rechtstexte und Version unverändert.
+**Was geprüft:** 90 Vergleiche (450 Durchläufe, je 180 Kalendertage),
+echte Bewertungsregeln und Dringlichkeitssortierung aus app.js 3.18.29,
+Quellhash im Ergebnis; Selbstprüfung grün, vorhandener Lernkern 12/12 grün,
+JS-Syntax grün. Modellannahmen und fehlende Gedächtnis-/Motivationsmessung
+ausdrücklich dokumentiert. Zwei langsame eigene Starts ohne Ergebnis
+beendet; Kern danach einmal kompilieren und nur je Tag instanziieren.
+Kein Ergebnis aus abgebrochenen Läufen übernommen. Nach den 72 grünen
+Vergleichen nur die 18 neuen Reihenfolge-Varianten ergänzt.
+**Ergebnis:** Bei 1100 Karten/60 Tagen Pause/85-10-5-Muster bleiben mit
+Deckel 20 nach 180 Tagen im Mittel 175,6 ursprüngliche Karten unbesucht.
+Deckel 30 braucht bis Tag 158–177 für den letzten ursprünglichen Erstbesuch.
+Älteste zuerst/30 erreicht Tag 35, verursacht aber mehr gesamte Wartezeit:
+60263,2 statt 41143,2 Kartentage. Somit weder aus Rückstandsabbau noch aus
+Tageszahl allein eine überlegene Lernregel ableiten.
+`verlauf.w` und `ui.heuteJeBereich` zählen Antworten, keine verschiedenen
+Karten; 20 neue Karten können im Betreiber-Probelauf 40 Antworten brauchen.
+Eine Tagesauswahl nur im geöffneten Bereich wäre zudem nicht global fair.
+**Gegenprüfung § 2a:** Quellen selbst gelesen; Zählersemantik gegen
+gradeCard geprüft; Auswahl über andere Bereiche und 14-Tage-Filter
+nachgelesen; ursprünglicher Erstbesuch und gesamte Wartezeit gemeinsam
+bewertet. Keine behauptete Produktabnahme aus einer Lastsimulation.
+**LEHREN § 14:** nur Analysewerkzeug und Repo-Dokumentation. Keine neue
+UI/Cloud-Felder/Lernregel, daher kein Versionswechsel, Runden- oder
+Gesamtlauf. Syntax, Rechnungs-Selbstprüfung und vorhandener Kern grün;
+Diff und aktuellen Planstand gelesen. Keine Veröffentlichung.
+**Offen:** Zielgröße, faire Auswahl und dauerhaftes Tageszählen vor einem
+Bau entscheiden. Vorschlag: freiwilliges Tagesziel mit erreichbarem
+Weiterlernen, echte Restzahl und unveränderte Fälligkeiten. Bericht
+`mehrwert/TAGESDECKEL-RECHNUNG-2026-10-09.md`. App bleibt 3.18.29 auf main,
+online laut letztem Veröffentlichungsbeleg 3.18.28.
+
 ### 2026-10-09 — 3.18.29: Plan nach Datenschutz/Impressum erhalten (E4)
 
 **Geändert:** `app.js` (`renderAuth`, `einstFuss`, `zeigeRecht`, bestehender
