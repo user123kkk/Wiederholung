@@ -6,15 +6,13 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `822efc5 Sicherung 20:09 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `782ccba Sicherung 20:11 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
- M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 ```
 
@@ -23,7 +21,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 8, chrome.exe 20 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 7, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
