@@ -17,3 +17,43 @@
     danach: Eingespielt 2 Bereiche mit insgesamt 40 Karten eingespielt. OK | Bereiche 5
   Kaputte Datei: Import nicht möglich Diese Datei ist keine gültige Sicherungsdatei (kein lesbares JSON). OK
   ok
+== klein
+  Seite Kartensaetze: Kartensatz übernehmen Hat dir jemand einen Code gegeben, gib ihn hier ein. Seine Lektionen stehen danach bei dir – alles auf Anfang, du fängst selbst an. Code einlösen „Medina Buch 1“ teilen Du bekommst einen Code. Wer ihn in der App eingibt, bekommt denselben
+    Kontrast 0
+  Erzeugen fragt: Code erzeugen 40 Karten, 3 Lektionen. Nur „Lektion 1“ ist offen, der Rest kommt gesperrt an. 1 eigene Sammlung bleibt zu Hause – weitergegeben werden nur Kategorien und Lektionen. Du schaltest die Lek
+  Code-Dialog: Code zum Teilen Gib diesen Code weiter. Wer ihn in der App eingibt, bekommt den Kartensatz. 6F7RD-KB8VP Fertig Kopieren | Code im Store 6F7RD-KB8VP
+    Schrift 25.5px | Kontrast 0
+    Kopieren: Knopf "✓ Kopiert!" | Zwischenablage "6F7RD-KB8VP"
+  Einloesen "6f7rd -kb8vp": Geteilte Lektion Mit diesem Code bekommst du neue Lektionen in dein Konto. Übernehmen? Die nächsten Lektionen schaltet dein:e Lehrer:in nach und nach frei. Abbrechen Übernehmen
+    Bereiche 2 -> 3 | danach: FREITAG, 9. OKTOBER Guten Abend, Test 12 FÄLLIG 8 Wiederholungen 4 neu Runde starten Du hast 36 Kart | Dialog: Eingespielt 1 Bereich mit 40 Karten eingespielt. OK
+  Falscher Code: Code ungültig Diesen Code gibt es nicht (mehr). Prüf die Schreibweise, oder frag noch einmal nach. OK
+  Offline: Code nicht geprüft Keine Verbindung – versuch es gleich noch einmal. OK
+  Zeile Sichern vorher: Sichern & einspielen vor 3 Tagen
+  Seite Daten: Sichern Eine Sicherung ist eine Datei auf deinem Gerät. Sie hängt an nichts – geht das Konto verloren, ist sie das Einzige, was bleibt. Zuletzt gesichert vor 3 Tagen. Alles sichern Nur „Medina Buch 1“ Einspielen Eine Sicherungsdatei oder einen Kartensatz laden. Gehört die Datei zu einem Kartensatz, 
+    Kontrast 0
+  Alles sichern: Download adrabic-sicherung-2026-10-09.json 34413 B | Banner: Zuletzt gesichert: heute.
+  Einspielen (eigenes Backup): Nichts zu tun Diese Ausgabe von „Medina Buch 1 (2)" hast du schon (Nr. 1). Am Inhalt ändert sich nichts. OK
+    danach: Eingespielt 2 Bereiche mit insgesamt 40 Karten eingespielt. OK | Bereiche 5
+  Kaputte Datei: Import nicht möglich Diese Datei ist keine gültige Sicherungsdatei (kein lesbares JSON). OK
+  ok
+== ipad
+  Seite Kartensaetze: Kartensatz übernehmen Hat dir jemand einen Code gegeben, gib ihn hier ein. Seine Lektionen stehen danach bei dir – alles auf Anfang, du fängst selbst an. Code einlösen „Medina Buch 1“ teilen Du bekommst einen Code. Wer ihn in der App eingibt, bekommt denselben
+    Kontrast 0
+  Erzeugen fragt: Code erzeugen 40 Karten, 3 Lektionen. Nur „Lektion 1“ ist offen, der Rest kommt gesperrt an. 1 eigene Sammlung bleibt zu Hause – weitergegeben werden nur Kategorien und Lektionen. Du schaltest die Lek
+  Code-Dialog: Code zum Teilen Gib diesen Code weiter. Wer ihn in der App eingibt, bekommt den Kartensatz. PRDSG-H43FY Fertig Kopieren | Code im Store PRDSG-H43FY
+    Schrift 25.5px | Kontrast 0
+    Kopieren: Knopf "✓ Kopiert!" | Zwischenablage "PRDSG-H43FY"
+  Einloesen "prdsg -h43fy": Geteilte Lektion Mit diesem Code bekommst du neue Lektionen in dein Konto. Übernehmen? Die nächsten Lektionen schaltet dein:e Lehrer:in nach und nach frei. Abbrechen Übernehmen
+    Bereiche 2 -> 3 | danach: FREITAG, 9. OKTOBER Guten Abend, Test 12 FÄLLIG 8 Wiederholungen 4 neu Runde starten Du hast 36 Kart | Dialog: Eingespielt 1 Bereich mit 40 Karten eingespielt. OK
+  Falscher Code: Code ungültig Diesen Code gibt es nicht (mehr). Prüf die Schreibweise, oder frag noch einmal nach. OK
+  Offline: Code nicht geprüft Keine Verbindung – versuch es gleich noch einmal. OK
+  Zeile Sichern vorher: Sichern & einspielen vor 3 Tagen
+  Seite Daten: Sichern Eine Sicherung ist eine Datei auf deinem Gerät. Sie hängt an nichts – geht das Konto verloren, ist sie das Einzige, was bleibt. Zuletzt gesichert vor 3 Tagen. Alles sichern Nur „Medina Buch 1“ Einspielen Eine Sicherungsdatei oder einen Kartensatz laden. Gehört die Datei zu einem Kartensatz, 
+    Kontrast 0
+  Alles sichern: Download adrabic-sicherung-2026-10-09.json 34413 B | Banner: Zuletzt gesichert: heute.
+  Einspielen (eigenes Backup): Nichts zu tun Diese Ausgabe von „Medina Buch 1 (2)" hast du schon (Nr. 1). Am Inhalt ändert sich nichts. OK
+    danach: Eingespielt 2 Bereiche mit insgesamt 40 Karten eingespielt. OK | Bereiche 5
+  Kaputte Datei: Import nicht möglich Diese Datei ist keine gültige Sicherungsdatei (kein lesbares JSON). OK
+  ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":67,"quelltext":"e0494d6e7c1873273864960d8b016471273de9a900a8f4e9dbabacc958cf9b6a"}

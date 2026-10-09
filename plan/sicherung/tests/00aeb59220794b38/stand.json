@@ -240,6 +240,22 @@
       "fehler": null,
       "sekunden": 5,
       "quelltext": "31f956b932beb693a0e8ee9cb07740e5782569e82f438651d46a96553465213e"
+    },
+    "t_daten.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 67,
+      "quelltext": "e0494d6e7c1873273864960d8b016471273de9a900a8f4e9dbabacc958cf9b6a"
+    },
+    "t_dialog_timer.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 1,
+      "quelltext": "8949f6d75b5b6b92e56c7e38dc3ff464c9ee7c8eac2446a5151e838f5d54018d"
     }
   }
 }
