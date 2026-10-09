@@ -1,0 +1,38 @@
+== handy
+  Start: {"wortOben":130,"flaeche":"236-436","leisteUnten":544,"fenster":844,"allesImBild":true,"scrollbar":false}
+  erster Strich: Tinte 0 -> 534 | Lage vorher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:156"}
+    nachher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:156"}
+  Vollbild: {"vollbild":true,"vorlage":"Nacht","leisteImBild":true} | Tinte erhalten: 534
+  Strich im Vollbild: Tinte 534 -> 1063
+  Strich zurueck: Tinte 534
+  Vollbild nach Aufdecken: "Nacht\n·\nلَيْلَةٌ"
+  Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"لَيْلَةٌ"}
+  Kontrast 0
+  Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1018 ms | Bilder > 34 ms: 0
+  ok
+== klein
+  Start: {"wortOben":121,"flaeche":"217-417","leisteUnten":525,"fenster":740,"allesImBild":true,"scrollbar":false}
+  erster Strich: Tinte 0 -> 536 | Lage vorher {"canvas":"217:12","loeschen":"429:201","vollbild":"481:66","fertig":"481:202","wort":"121:136"}
+    nachher {"canvas":"217:12","loeschen":"429:201","vollbild":"481:66","fertig":"481:202","wort":"121:136"}
+  Vollbild: {"vollbild":true,"vorlage":"Schule","leisteImBild":true} | Tinte erhalten: 536
+  Strich im Vollbild: Tinte 536 -> 1065
+  Strich zurueck: Tinte 536
+  Vollbild nach Aufdecken: "Schule\n·\nمَدْرَسَةٌ"
+  Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"مَدْرَسَةٌ"}
+  Kontrast 0
+  Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1043 ms | Bilder > 34 ms: 1 max 35
+  ok
+== ipad
+  Start: {"wortOben":139,"flaeche":"274-474","leisteUnten":530,"fenster":1180,"allesImBild":true,"scrollbar":false}
+  erster Strich: Tinte 0 -> 539 | Lage vorher {"canvas":"274:50","loeschen":"486:313","vollbild":"486:453","fertig":"486:589","wort":"139:366"}
+    nachher {"canvas":"274:50","loeschen":"486:313","vollbild":"486:453","fertig":"486:589","wort":"139:366"}
+  Vollbild: {"vollbild":true,"vorlage":"Stift","leisteImBild":true} | Tinte erhalten: 589
+  Strich im Vollbild: Tinte 589 -> 1119
+  Strich zurueck: Tinte 589
+  Vollbild nach Aufdecken: "Stift\n·\nقَلَمٌ"
+  Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"قَلَمٌ"}
+  Kontrast 0
+  Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1021 ms | Bilder > 34 ms: 1 max 34
+  ok
+
+Prozess: {"code":0,"abnahmeOk":true,"signal":null,"zeitlimit":false,"sekunden":84,"quelltext":"fae0a8f05d0769e2a19364f93e50002aad2ef328f6d40cd401cb96e2610aac97"}

@@ -96,6 +96,30 @@
       "zeitlimit": false,
       "sekunden": 47,
       "quelltext": "7bf90c4d5e1af879c34e3fa3daed50b8fcd98cb96cd07dd2ca5b452a2bd3addd"
+    },
+    "t_schreiben.js": {
+      "code": 0,
+      "abnahmeOk": true,
+      "signal": null,
+      "zeitlimit": false,
+      "sekunden": 84,
+      "quelltext": "fae0a8f05d0769e2a19364f93e50002aad2ef328f6d40cd401cb96e2610aac97"
+    },
+    "t_317.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 15,
+      "quelltext": "ba9ba2c8421f9974753bd48e9724d65c24cfc20eba4a1efc67ad86f09fdae06c"
+    },
+    "t_a11y.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 19,
+      "quelltext": "0042cc90dc3abd91196dd03cbba90388495f6cbe698026e6ca4a93fc5ddb07eb"
     }
   }
 }
