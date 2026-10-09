@@ -1,0 +1,7 @@
+ok     (a) Stimme nach Fehlschlag zurueckgedreht | 3 -> 3
+ok     (b) Toast mit Klartext nach dem Fehlschlag | "Das wurde abgelehnt. Melde dich einmal ab und wieder an und versuch es dann noch einmal."
+ok     (c) keine Seitenfehler | 
+ok     Gegenprobe c70729b: kein Toast nach dem Fehlschlag (muss ROT sein) | {"stimmen":"3","toast":null}
+Funde: 0
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":15,"quelltext":"4dcc7f38ee40a723b948bf7b533ea54fba99a5eb6908d87280a2f0ffb8f3a129"}

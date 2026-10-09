@@ -1,0 +1,37 @@
+{
+  "kennung": "caf81d58f8c5f144aa3907b29bd24ae895320a74c55b992cc09e41eec6f8f557",
+  "tests": {
+    "t_317.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 17,
+      "quelltext": "ba9ba2c8421f9974753bd48e9724d65c24cfc20eba4a1efc67ad86f09fdae06c"
+    },
+    "t_a11y.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 19,
+      "quelltext": "0042cc90dc3abd91196dd03cbba90388495f6cbe698026e6ca4a93fc5ddb07eb"
+    },
+    "t_abgelehnt.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "70c0e5e9d7770d9e011b649f1632c92ab04077f570a6ac60cb612f9becf881ed"
+    },
+    "t_abstimmen_fehler.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 15,
+      "quelltext": "4dcc7f38ee40a723b948bf7b533ea54fba99a5eb6908d87280a2f0ffb8f3a129"
+    }
+  }
+}

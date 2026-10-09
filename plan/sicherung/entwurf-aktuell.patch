@@ -662,10 +662,10 @@ index e9503f2..811bd13 100644
    }
 diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
 new file mode 100644
-index 0000000..8107abf
+index 0000000..cb56164
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
-@@ -0,0 +1,175 @@
+@@ -0,0 +1,186 @@
 +/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
 +   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
 +const assert=require('node:assert/strict');
@@ -813,6 +813,17 @@ index 0000000..8107abf
 +      assert.equal((await server()).bewertungsStand,saved.id);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
 +      await a.evaluate(()=>window.__PRUEF.pruefen());await fertig(a);assert.equal((await server()).bewertungsStand,saved.id);
 +      await a.evaluate(()=>window.__PRUEF.flush());await fertig(a);assert.deepEqual(await cloud(heute),cloudVor);
++    });
++    for(const gesehen of [false,true])await fall((gesehen?'Gesehen':'Bewertung')+': Speicherfehler erhaelt vorheriges Rueckgaengig',async(a)=>{
++      const id=gesehen?'k0':'k4',zweite=gesehen?'k1':'k5',before=await server(id),other=await server(zweite);
++      if(gesehen){await a.evaluate(()=>window.__PRUEF.gesehen('k0'));await fertig(a);}else await grade(a);
++      const counts=await a.evaluate(()=>window.__PRUEF.verlauf());
++      await a.evaluate(gesehen=>{const original=Storage.prototype.setItem;window.__PRUEF_STORAGE_ORIGINAL=original;Storage.prototype.setItem=function(k,v){if(k.startsWith('adrabic-bewertung-'))throw new DOMException('voll','QuotaExceededError');return original.call(this,k,v);};if(gesehen)window.__PRUEF.gesehen('k1');else window.__PRUEF.bewerten('known');},gesehen);
++      assert.deepEqual(await server(zweite),other);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
++      await a.evaluate(()=>{Storage.prototype.setItem=window.__PRUEF_STORAGE_ORIGINAL;return window.__PRUEF.pruefen();});await fertig(a);
++      await a.evaluate(gesehen=>gesehen?window.__PRUEF.gesehenZurueck():window.__PRUEF.undo(),gesehen);await fertig(a);
++      const after=await server(id);for(const k of ['stufe','nextReview','ersteBewertung','rueckfaelle','maxStufe'])assert.equal(after[k],before[k]);
++      assert.deepEqual(await server(zweite),other);
 +    });
 +    for(const defekt of [false,true])await fall(defekt?'beschaedigte Kopie blockiert sicher; weitere Antwort bleibt exportierbar':'Neustart offline: ungepruefte Antwort nicht entfernbar',async(a)=>{
 +      await fertig(a);const before=await server();
