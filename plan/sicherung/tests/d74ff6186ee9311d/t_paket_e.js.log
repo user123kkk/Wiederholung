@@ -21,3 +21,29 @@ E3 390/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E3 390/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E3 390/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E3 320/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E4 390: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E4 320: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E4 820: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten
+E5 320: Sicherungshinweis 18.97 Schriftbreiten, kein Überlauf
+E5 390: Sicherungshinweis 24.04 Schriftbreiten, kein Überlauf
+E5 820: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 1180: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 1440: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 Chromium: Datei angeboten, Blob 60 s erhalten, Prüfsatz sichtbar; iOS offen
+E6 heute/morgen, ICS angeboten, neutraler Status; iOS/Android-Geräte offen
+E7 LERN-1-Messung: drei Tage ohne Fällige, Serie 10 bleibt, je Tag ein Ruhetag; fälliger Tag ohne Marker
+E7 zwei Ruhetage halten: 10
+E7 Ruhetag heute zählt nicht hoch: 5
+E7 Ruhetag und ein ausgelassener Tag: verziehen: 10
+E7 Ruhetag, dann zwei Tage ohne Öffnen: reißt wie bisher: 0
+E7 Ruhetag verbraucht den verziehenen Tag nicht: 12
+E7 ohne Ruhetag unverändert: zwei Tage offen: 0
+E7 Marker nichts fällig, Serie 5: 1
+E7 Marker anderer Bereich hat Fälliges: 0
