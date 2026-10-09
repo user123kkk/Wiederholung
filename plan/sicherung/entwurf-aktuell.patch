@@ -616,9 +616,18 @@ index a5e2674..7979e42 100644
  /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
     unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
 diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
-index e9503f2..08a8640 100644
+index e9503f2..811bd13 100644
 --- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 +++ b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
+@@ -9,7 +9,7 @@ const PROJECT='demo-adrabic-karten-audit';
+ const ROOT=`http://127.0.0.1:8082/v1/projects/${PROJECT}/databases/(default)/documents`;
+ const SDK='https://www.gstatic.com/firebasejs/10.14.1/';
+ const SOURCE_COMMIT=process.argv.includes('--gegenprobe')?'7142b93':null;
+-const APP_SOURCE=SOURCE_COMMIT?require('node:child_process').execFileSync('git',['show',SOURCE_COMMIT+':app.js'],{encoding:'utf8',cwd:path.join(__dirname,'../../..')}):fs.readFileSync(path.join(__dirname,'../../../app.js'),'utf8');
++const APP_SOURCE=SOURCE_COMMIT?require('node:child_process').execFileSync('git',['show',SOURCE_COMMIT+':app.js'],{encoding:'utf8',cwd:path.join(__dirname,'../../..')}):fs.readFileSync(process.env.PRUEF_APP_FILE||path.join(__dirname,'../../../app.js'),'utf8');
+ function wert(v){
+   if(v===null)return{nullValue:null};
+   if(typeof v==='string')return{stringValue:v};
 @@ -41,8 +41,8 @@ async function seite(b,sources,ctx){
      const original=SDK+name+'?original=1';
      let body=`export * from ${JSON.stringify(original)}; import * as core from ${JSON.stringify(original)};`;
