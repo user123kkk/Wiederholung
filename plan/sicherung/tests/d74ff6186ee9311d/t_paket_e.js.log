@@ -81,3 +81,28 @@ E13 Messung 320 hell {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":551.5
 E13 320/hell: voller Wert, 44 px, Antwort sichtbar
 E13 Messung 320 dunkel {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":551.53125,"bild":568}
 E13 320/dunkel: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 390 hell {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":661.28125,"bild":844}
+E13 390/hell: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 390 dunkel {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":661.28125,"bild":844}
+E13 390/dunkel: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 820 hell {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":650.28125,"bild":1180}
+E13 820/hell: voller Wert, 44 px, Antwort sichtbar
+E13 Messung 820 dunkel {"wertPasst":true,"resetHoehe":44,"antwortUnterkante":650.28125,"bild":1180}
+E13 820/dunkel: voller Wert, 44 px, Antwort sichtbar
+E14 320/hell/bewegt: beide Anleitungen, Rückweg
+E14 320/hell/ruhig: beide Anleitungen, Rückweg
+E14 320/dunkel/bewegt: beide Anleitungen, Rückweg
+E14 320/dunkel/ruhig: beide Anleitungen, Rückweg
+E14 390/hell/bewegt: beide Anleitungen, Rückweg
+E14 390/hell/ruhig: beide Anleitungen, Rückweg
+E14 390/dunkel/bewegt: beide Anleitungen, Rückweg
+E14 390/dunkel/ruhig: beide Anleitungen, Rückweg
+E14 820/hell/bewegt: beide Anleitungen, Rückweg
+E14 820/hell/ruhig: beide Anleitungen, Rückweg
+E14 820/dunkel/bewegt: beide Anleitungen, Rückweg
+E14 820/dunkel/ruhig: beide Anleitungen, Rückweg
+E15 320/hell: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 320/dunkel: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 390/hell: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 390/dunkel: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 820/hell: Cloud und Profil, Abbruch, Leerfeld, offline
