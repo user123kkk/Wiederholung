@@ -24,6 +24,14 @@
       "fehler": null,
       "sekunden": 8,
       "quelltext": "70c0e5e9d7770d9e011b649f1632c92ab04077f570a6ac60cb612f9becf881ed"
+    },
+    "t_abstimmen_fehler.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 14,
+      "quelltext": "4dcc7f38ee40a723b948bf7b533ea54fba99a5eb6908d87280a2f0ffb8f3a129"
     }
   }
 }
