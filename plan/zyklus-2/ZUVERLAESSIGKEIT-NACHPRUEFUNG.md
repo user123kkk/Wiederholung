@@ -51,6 +51,17 @@ in `KARTEN-KONFLIKTE-2026-10-09.md`. Noch keine Behebung/volle Abnahme.
 Nächste Inventur: die übrigen Gesehen-/Rückgängig-Aufrufer und gelöschte
 Karte beim Offline-Nachholen; neue Konfliktregel nicht still erfinden.
 
+**Erledigte Inventur 09.10.2026 auf „weiter“:** Alle vier Aufrufer gelesen.
+Gesehen-Undo und Offline-Gesehen an fester Quelle 7142b93 ebenfalls
+stille fremde Bewertungsverluste; erweitert DATEN-9/10, kein Doppelfund.
+Fremde SDK-Löschung bleibt bei Offline-Bewertung und Offline-Gesehen
+auch nach ausdrücklichem Nachholen erhalten, lokale Karte verschwindet;
+Repo-Regeln lehnen ab, schreibFehler gesetzt. Tagesantwort w:1/n:1 bleibt;
+keine falsche Zählregel daraus behauptet. Vollständige Daten und Grenzen
+in KARTEN-KONFLIKTE-2026-10-09, Log karten-rest-7142b93.log. Schutzprüfung
+Exit 1 wegen beider Konflikte; kein Fix/volle Abnahme. Nächster Prüfpunkt:
+abgelehnte Aktionen über Neustart, gemeinsam mit ihren Tageszählern.
+
 **Voriger Prüfauftrag, jetzt durchgeführt:** Zwei Geräte bewerten dieselbe Karte
 mit unterschiedlichen Ständen, ein Gerät ist offline; außerdem ein altes
 Rückgängig. Der Kommentar vor persistCardGrade verspricht weitreichenden

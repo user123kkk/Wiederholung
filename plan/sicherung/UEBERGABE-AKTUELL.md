@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 20:10 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 20:12 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,14 +6,23 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `782ccba Sicherung 20:11 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9ebbad3 Sicherung 20:12 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
 ```
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/PLAN.md
+ M plan/STAND.md
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
+ M plan/zyklus-2/AUFGABEN.md
+ M plan/zyklus-2/KARTEN-KONFLIKTE-2026-10-09.md
+ M plan/zyklus-2/LOGBUCH.md
+ M plan/zyklus-2/ZUVERLAESSIGKEIT-NACHPRUEFUNG.md
+ M plan/zyklus-2/befunde/DATEN.md
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
@@ -42,6 +51,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 20:20 Codex: Restdiagnose an fester Quelle 7142b93 abgeschlossen, echter Firestore-SDK/Repo-Regeln im eigenen Demo-Emulator 8082. Gesehen-Undo und Offline-Gesehen überschreiben fremdes Sicher; beide ohne Speicherfehler. Fremde Löschung gewinnt bei Offline-Bewertung und Offline-Gesehen auch nach explizitem Nachholen, lokale Karte verschwindet, Ablehnung sichtbar im Fehlerzustand. Andere Karte und JavaScript-Fehler in allen vier Fällen kontrolliert. Vollständiges Log gelesen; Schutzprüfung Exit 1 benennt beide Konflikte. Kein App-Fix, keine neue Lernregel; Befunde A14/A15 erweitern statt doppelt zählen.
 
 - 20:15 Codex, Auftrag „weiter“: Übergabe, Betreiberregeln, Lehren, Nachprüfungsauftrag und Kartenkonflikt-Belege gelesen; Minuten-Sicherung gestartet. Vier persistCardGrade-Aufrufer inventarisiert: Bewertung, Bewertungs-Undo, Gesehen, Gesehen-Undo. Gesehen-Undo prüft fremde Bewertung nicht. Akku 17 %, nur gezielte Prüfungen. Nächster Schritt: echter SDK gegen eigenen Demo-Emulator, Gesehen-Konflikt und fremde Löschung mit Offline-Nachholen.
 
@@ -84,5 +95,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   04:00 und 05:00 auf. Kein App-Fehler. Test auf Kalendertage umgestellt
   (Erwartungen unverändert): 04:24 grün, 3/3 Fälle. `ladegeraet.ps1` hat
   jetzt `-Fortsetzen`; damit läuft der Stichwort-Ablauf am selben
-  Quellstand weiter (155 bestandene bleiben, `t_serie_lang` neu, dann
-  Affen, Regeln, Hosting). Gleiche Falle möglich in `t_gruss_datum` und

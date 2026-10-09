@@ -380,6 +380,11 @@ Keine Speicherfehlermeldung. Reproduktion, Quelle, Vorschlag und Abnahme:
 [`../KARTEN-KONFLIKTE-2026-10-09.md`](../KARTEN-KONFLIKTE-2026-10-09.md).
 Nicht behoben. Schutzprüfung an fester Quelle rot; Tageszähler separat.
 
+09.10.2026, ergänzend mit echtem SDK bestätigt: auch Gesehen-Rückgängig
+nach fremdem Sicher setzt Stufe/Termin/Erstbewertung zurück.
+maxStufe bleibt in diesem Unterfall erhalten. `lernRueckgaengig`
+app.js:6149/6157. Beleg karten-rest-7142b93.log, gleiche Aufgabe DATEN-9.
+
 #### DATEN-10: Früheres Offline-Bewerten überschreibt neuere Online-Bewertung
 
 **Schwere:** hoch. Bestätigt 09.10.2026 an 3.18.29 / 7142b93.
@@ -390,6 +395,12 @@ fremden Rückfall. Keine Speicherfehlermeldung; andere Karte unverändert.
 Reproduktion, Quelle, Lösungsmöglichkeiten und vollständige Abnahme:
 [`../KARTEN-KONFLIKTE-2026-10-09.md`](../KARTEN-KONFLIKTE-2026-10-09.md).
 Nicht behoben. Kein automatisches Stufen-Zusammenrechnen freigegeben.
+
+09.10.2026, ergänzend: Offline-Gesehen setzt fremdes Sicher auf Stufe 0
+und maxStufe 0 zurück (`lernAbhaken` app.js:6125/6134). Gleiche Aufgabe
+DATEN-10. Fremde Löschung bleibt dagegen bei beiden Offline-Handlungen
+auch nach Nachholen erhalten; kein wiederbelebtes Dokument. Vollständige
+Ergänzung und Grenzen in KARTEN-KONFLIKTE-2026-10-09.
 
 ## Nicht mehr geprüft
 

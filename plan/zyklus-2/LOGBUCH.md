@@ -2,6 +2,38 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — Restinventur: Gesehen-Konflikte und fremde Löschung
+
+**Auftrag:** „weiter“, Caveman-Skill für kurze Chatantworten.
+**Geändert:** nur Diagnosewerkzeug und Plandokumentation. Neuer Schalter
+`--rest` prüft vier Fälle mit frischem Demo-Bestand und getrennten
+Browser-Kontexten. Originaldiagnose und feste Quelle 7142b93 erhalten.
+**Geprüft:** Gesehen-Undo nach fremdem Sicher stellt Stufe 0 und
+ersteBewertung null wieder her; maxStufe 1 bleibt. Offline-Gesehen
+überschreibt fremdes Sicher mit Stufe 0/maxStufe 0. Beide ohne
+Speicherfehlermeldung. Das erweitert A14/A15, keine doppelten Aufgaben.
+Fremde echte SDK-Löschung bleibt dagegen bei Offline-Bewertung und
+Offline-Gesehen auch nach Nachholen erhalten; lokal verschwinden beide
+Karten, schreibFehler permission-denied. Tagesantwort w:1/n:1 bleibt,
+keine falsche Zählregel daraus behauptet. Andere Karte k6 in jedem Fall
+vollständig gleich zur Eingabe, JavaScript-Fehlerlisten leer.
+**Gegenprüfung:** alle vier persistCardGrade-Aufrufer, gemeinsamer
+Ablehnungs-/Nachholpfad, Diagnose-Diff und jede Erwartung gegen Befund
+gelesen. Neuer Restlauf Exit 1 nennt beide Konflikte; alle vier Fälle
+vorher durchlaufen. Ursprünglicher Lauf nach Helper-Erweiterung ebenfalls
+Exit 1 wegen derselben beiden ursprünglichen Konflikte. Logs vollständig
+gelesen, getrennt erhalten unter Tagesdeckel-Audit-Testbelegen:
+karten-rest-7142b93.log und karten-original-regression-7142b93.log.
+Server 8097 liefert exakt lokale app.js, feste App-/Regelhashes im Log;
+Firestore-SDK 10.14.1, Demo-Emulator 8082, Auth-Attrappe, kein iPhone.
+Syntax/Standprüfung grün. LEHREN §14: nur Diagnose und Plan geändert;
+kein neuer Produktzustand, Speicher, Datenfluss oder Cloud-Feld.
+Keine App-Version oder Gesamtabnahme nötig/behauptet. Akku 17 % am Start.
+**Offen:** A14/A15 bleiben unbehoben; sichtbarer Fehlerwortlaut,
+Ablehnung über Neustart, zwei Offline-Geräte und volle Nachprüfung fehlen.
+**Nächster Schritt:** abgelehnte Aktionen über Neustart, zusammen mit
+Tageszählern prüfen. Neue Zähl-/Konfliktregel nicht still erfinden.
+
 ### 2026-10-09 — Zwei hohe Kartenkonflikte mit echtem SDK bestätigt
 
 Auf „weiter?“ an tatsächlichen Speicherpfaden fortgesetzt. Eigener Demo-

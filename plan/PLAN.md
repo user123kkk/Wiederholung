@@ -7,6 +7,13 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**09.10.2026, Restinventur abgeschlossen:** Gesehen-Undo und Offline-Gesehen
+bestätigen dieselben offenen A14/A15; keine zusätzlichen Doppelfunde.
+Fremde Löschung bleibt bei Offline-Bewertung/Gesehen auch nach Nachholen
+erhalten. Feste SDK-/Emulatorbelege in KARTEN-KONFLIKTE-2026-10-09.
+Nächster Prüfpunkt: abgelehnte Aktionen über Neustart und Tageszähler.
+Keine Produktbehebung oder Veröffentlichung.
+
 **09.10.2026, neue bestätigte Datenfunde:** A14/DATEN-9 und A15/DATEN-10
 offen: altes Rückgängig und Offline-Nachholen überschreiben neuere fremde
 Bewertung derselben Karte. Echte SDK-/Emulator-Gegenprobe 7142b93 rot für

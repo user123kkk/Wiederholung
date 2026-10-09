@@ -54,6 +54,59 @@ Funktion gilt nur für getrennte Karten/Felder; er ist kein Konfliktbeleg.
 
 ## Quellen, Schlussfolgerung und Lösungsvorschlag
 
+### Ergänzung 09.10.2026: alle vier Aufrufer und fremde Löschung
+
+Fortsetzung auf „weiter“, feste App-Quelle und Regelhash wie oben.
+`diagnose_karten_konflikt.js --gegenprobe --rest --schutz` verwendet
+denselben echten SDK und eigenen Demo-Emulator. Jeder Fall beginnt mit
+frischem Demo-Bestand und zwei neuen getrennten Browser-Kontexten.
+Service Worker blockiert; keine Produktivdaten. Server 8097 liefert
+vor dem Lauf nach Zeilenendnormalisierung exakt die lokale app.js.
+
+Vollständiges Log:
+`plan/sicherung/tests/tagesdeckel-audit-2026-10-09/karten-rest-7142b93.log`.
+Exit 1 ausdrücklich wegen beider fehlenden Konfliktschutzprüfungen;
+die zwei Löschkontrollen liefen davor vollständig durch.
+
+- **Gesehen-Undo (DATEN-9):** neue k0 beginnt mit Stufe 0,
+  ersteBewertung null und maxStufe 0. A drückt Gesehen; B empfängt das
+  und bewertet Sicher: Stufe 1, Termin morgen, maxStufe 1. A empfängt
+  ausdrücklich den fremden Stand, dann Gesehen-Rückgängig: Stufe 0,
+  Termin heute, ersteBewertung null; maxStufe 1 bleibt diesmal erhalten.
+  Fremdes Sicher ist damit trotzdem zurückgesetzt. Kein Speicherfehler.
+- **Offline-Gesehen (DATEN-10):** A markiert neue k0 offline als Gesehen.
+  B bewertet online Sicher: Stufe 1, maxStufe 1. A verbindet sich:
+  Stufe 0, Termin heute, maxStufe 0. Kein Speicherfehler.
+- **Fremde Löschung, zwei Kontrollfälle:** A bewertet k4 offline Sicher
+  beziehungsweise markiert k0 offline Gesehen. B löscht diese Karte
+  mit dem echten SDK; Serverlöschung wird vor A-Wiederverbindung geprüft.
+  Nach Verbindung und ausdrücklich angestoßenem abgelehntesNachholen
+  bleibt das Dokument weg. Auch A hat die Karte danach nicht mehr.
+  Repo-Regeln liefern permission-denied; schreibFehler ist gesetzt.
+  Tagesantwort bleibt w:1 beziehungsweise n:1. Das ist eine Beobachtung,
+  kein Beleg für einen falschen Tageszähler: gezählt werden Antworten.
+
+In allen vier Fällen bleibt andere Karte k6 vollständig gleich zur
+Eingabe; beide JavaScript-Fehlerlisten leer. Die Löschprüfung beweist
+Erhalt der Löschung unter diesen Bedingungen, keine vollständige
+Konfliktlösung. Sichtbaren Wortlaut, Ablehnung über App-Neustart und
+zwei gleichzeitig offline befindliche Geräte deckt dieser Lauf nicht ab.
+
+Alle vier Aufrufer gelesen: `lernAbhaken` (6125/6134),
+`lernRueckgaengig` (6149/6157), `gradeCard` (6768/6871),
+`undoLastGrade` (6959/7009). Gesehen-Undo setzt nur drei alte Felder
+lokal zurück und schreibt die aktuell vorhandenen Rückfälle/maxStufe
+mit. Bewertungs-Undo setzt alle fünf alten Werte zurück. Beide prüfen
+keine fremde Aktion. Kein zusätzlicher Fund nur für dasselbe Muster:
+A14/A15 erhalten die erweiterten Abnahmen.
+
+Der oben historische Satz „noch nicht mit zwei Geräten reproduziert“
+ist durch diese Ergänzung für Gesehen/Gesehen-Undo erledigt.
+App, Regeln und Lernlogik unverändert. Akku zu Beginn 17 %;
+kein Gesamtlauf, keine Veröffentlichung. Nächster Prüfpunkt:
+abgelehnte Bewertung beim Neustart und Bindung der Tageszähler an
+verlorene/abgewiesene Kartenaktionen; keine neue Zählregel ableiten.
+
 Firebase dokumentiert die Synchronisierung nach Offline-Verbindung und
 die Regel, dass bei mehreren Änderungen desselben Dokuments der letzte
 Schreibvorgang gewinnt: [Offline-Dokumentation](https://firebase.google.com/docs/firestore/manage-data/enable-offline).

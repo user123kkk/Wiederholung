@@ -1,5 +1,16 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026, Fortsetzung „weiter“:** Restinventur der Karten-Schreibwege
+abgeschlossen. Gesehen-Undo und Offline-Gesehen reproduzieren ebenfalls
+DATEN-9/10 an fester Quelle 7142b93 mit echtem SDK und Repo-Regeln.
+Fremde Löschung bleibt in zwei Offline-/Nachholkontrollen erhalten;
+andere Karte jeweils unverändert. Erweiterte Schutzprüfung Exit 1 wegen
+beider stiller Konflikte, nicht behoben. Ursprüngliche Konfliktprüfung
+nach Diagnose-Erweiterung ebenfalls unverändert rot für dieselben Fehler.
+Belege in KARTEN-KONFLIKTE-2026-10-09. Nächster Prüfpunkt: abgelehnte
+Aktionen über Neustart zusammen mit Tageszählern. App/Regeln unverändert,
+kein Gesamtlauf oder Deploy; umfassende Nachprüfung weiter offen.
+
 **09.10.2026, weitere Zuverlässigkeitsprüfung:** Zwei hohe Funde an
 3.18.29 mit echtem Firestore-SDK und Repo-Regeln bestätigt: A14/DATEN-9
 altes Rückgängig und A15/DATEN-10 Offline-Nachholen überschreiben neuere

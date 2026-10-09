@@ -62,6 +62,12 @@ begonnenen Zuverlässigkeitsprüfung: übrige Gesehen-/Rückgängig-Schreibwege
 und fremd gelöschte Karte beim Offline-Nachholen prüfen. Kurze Antworten;
 keine neue Lernregel aus dem Fortsetzungswort ableiten.
 
+Prüfung erledigt: beide Gesehen-Schreibwege zeigen dasselbe Konfliktmuster
+wie A14/A15; Aufgaben bleiben offen. Zwei Löschkontrollen schützen das
+gelöschte Dokument auch nach Offline-Nachholen. Nächster Prüfpunkt:
+abgelehnte Aktionen über Neustart und ihre Tageszähler. Belege in
+KARTEN-KONFLIKTE-2026-10-09; keine App-Behebung/Veröffentlichung.
+
 ### 3.1 Reste aus Zyklus 2
 
 **09.10.2026, Fortsetzung auf „weiter?“:** Zwei neue hohe Datenfunde aus
