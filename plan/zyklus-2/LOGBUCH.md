@@ -10,11 +10,16 @@ große Gesamtabnahme später gesammelt, nicht veröffentlichen.
 unveränderlicher Cloud-Beleg verhindert doppeltes Nachholen. Konto, Tag
 und Reset-Epoche bleiben beim ursprünglichen Beitrag. Bestehender
 Aufbewahrungs-Hinweis/Download, Datenschutz und Kontolöschung ergänzt.
-**Geprüft bisher:** zwölf SDK-Kernfälle am Abschlussstand grün; 238/238
-Regeln grün. Feste Gegenprobe 591d03e weiterhin rot auf Verlust. Eigene
-Gegenprüfung findet kurzzeitigen Banner-Sprung, Ursache behoben; frischer
-Bestandstest vier Breiten ohne Sprung, Kontrast/a11y-Grundchecks grün.
-Randfälle und A14/A15-Abschlussnachlauf noch unterwegs. Maßgebliche Belege,
+**Geprüft:** 17/17 A16-SDK-Fälle, 16/16 A14/A15-Regressionsfälle und 238/238
+Regeln grün. Feste Gegenprobe 591d03e weiterhin rot auf Verlust, Wrapper
+erkennt den Befund. Eigene Gegenprüfung findet kurzzeitigen Banner-Sprung,
+Ursache behoben; vier Breiten ohne Sprung, Undo-Tageszähler, drei späte
+Kontorückmeldungen, Kontrast/a11y-Grundchecks grün. Tageshinweis/Download/
+lokales Entfernen und vertikale/horizontale Geometrie in vier Breiten und
+beiden Themen geprüft, Bildschirmbild angesehen. Vollständige Ausgaben
+gelesen. Überlasteter lokaler Emulator mit NETWORK_ERROR neu gestartet;
+rote Infrastruktur-Läufe und Ausschnitt behalten, Grenzen unverändert.
+Maßgebliche Belege,
 Quellhashes, Gegenargumente und Grenzen: VERLAUF-NEUSTART-2026-10-09.md.
 **Offen:** große Daten-/Rundenabnahme einschließlich ganzem Prüfstand und
 Affen später; echter iPhone-PWA-Nachweis fehlt. Zusätzlicher Cloud-Beleg

@@ -100,7 +100,10 @@ der ausdrücklich geprüften Kontolöschung; keine JavaScript-Fehler.
 Regeln: **238/238** mit echten Repo-Regeln am Windows-Emulator,
 `a16-regeln-windows-1.log`. Der Regelprüfer nutzt Firestore 12.19.0,
 die App-Prüfung weiterhin den echten SDK 10.14.1; Auth ist dort eine
-Attrappe. A14/A15-Nachlauf und feste Gegenprobe werden separat abgeschlossen.
+Attrappe. A14/A15-Nachlauf **16/16** plus Konflikthinweis/Download/Entfernen
+grün: `a16-frisch-karten.log`. Feste Quelle 591d03e weiterhin erwartungsgemäß
+rot auf den ursprünglichen Verlust; Wrapper erkennt genau diesen Befund
+und endet Exit 0: `a16-frisch-gegenprobe.log`. Vollständige Ausgaben gelesen.
 
 Eigene Gegenprüfung fand im ersten Entwurf einen neuen Sprung von
 76–114 px: der bestehende Hinweis erschien bei jeder noch regulär
@@ -109,8 +112,13 @@ behoben, frische Prüfung auf vier Breiten ohne Sprung:
 `a16-abschluss-t_sprung.log`. Kontrast, a11y-Grundchecks, Undo-Tageszähler
 und drei verspätete Konto-/Abmeldeantworten ebenfalls grün; vollständige
 Ausgaben `a16-final-t_*.log` gelesen. Tageshinweis in vier Breiten und zwei
-Themen ohne horizontalen Überlauf/Kontrastfund; `a16-tageshinweis.png`
-visuell geprüft. Frühe Ergebnisse werden nicht als Abschluss des
+Themen ohne horizontalen Überlauf/Kontrastfund; vertikale Nachprobe ebenfalls
+grün: `a16-tageshinweis-geometrie-3.log`, Seite und Bewertungszeile innerhalb
+der Bildschirmhöhe. Die erste Zusatzmessung traf noch nicht neu gezeichneten
+Fixture-Zustand, die zweite alte svh-Einheiten direkt nach Resize. Explizit
+neu zeichnen und 250 ms Resize-Beruhigung im Fixture ergänzt; Grenzen
+unverändert, beide frühen Logs behalten. `a16-tageshinweis.png`
+erneut visuell geprüft. Frühe Ergebnisse werden nicht als Abschluss des
 geänderten Quellstands übernommen.
 
 Ein späterer Nachlauf traf SDK-Zeitlimit und HTTP 500. Das tatsächliche
@@ -142,6 +150,8 @@ API-Grundlagen: [Firebase atomare Batches und getAfter](https://firebase.google.
 [waitForPendingWrites](https://firebase.google.com/docs/reference/js/firestore),
 [Unterkollektionen bei Kontodokument-Löschung](https://firebase.google.com/docs/firestore/manage-data/delete-data).
 
-Status: A16/DATEN-11 in Arbeit, gebaut im uncommitteten Entwurf 3.18.30.
-Gezielte Abschlussprüfung läuft; große Gesamtabnahme auf Betreiberwunsch
-später gesammelt. A14/A15 und vorhandene Skill-Dateien bleiben erhalten.
+Status: A16/DATEN-11 in Arbeit, gebaut und gezielt geprüft im uncommitteten
+Entwurf 3.18.30. Große Gesamtabnahme auf Betreiberwunsch später gesammelt.
+A14/A15 und vorhandene Skill-Dateien bleiben erhalten. Kein neues Paket
+begonnen; entschiedene Anschlussarbeit nur lesend vorbereitet unter
+mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md.

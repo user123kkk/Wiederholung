@@ -9,8 +9,9 @@ und [LEHREN.md](LEHREN.md).
 
 **09.10.2026 – A16 im Datenentwurf gebaut:**
 Tagesantworten dauerhaft pro Konto/Tag/Epoche erhalten und anhand atomarer
-Cloud-Belege genau einmal nachholen. Erstlauf 12 SDK-Fälle, 238 Regeln grün;
-frische gezielte Abschlussläufe nach behobenem Hinweis-Sprung laufen.
+Cloud-Belege genau einmal nachholen. Abschluss: 17 A16-SDK-Fälle, 16 A14/A15-
+Fälle und 238 Regeln grün; feste Verlust-Gegenprobe erhalten. Bestands-
+prüfungen und Hinweis-Geometrie/Kontrast grün, eigener Hinweis-Sprung behoben.
 Keine neue Lernregel; 3.18.30 mit A14/A15 bleibt uncommittet. Große Abnahme
 später gesammelt, kein Deploy oder neuer Paketbau. Belege und Grenzen:
 zyklus-2/VERLAUF-NEUSTART-2026-10-09.md. Danach gemäß Mehrwert-Reihenfolge

@@ -11,10 +11,11 @@ als gebaut geführt. Große Gesamtabnahme/Veröffentlichung später gesammelt.
 - Online laut letztem Veröffentlichungsbeleg: 3.18.28 mit 3.18.27.
 - Auf main: 3.18.29, Rechtsdialog erhält Plan und Eingaben.
 - Uncommittet: 3.18.30 für A14/A15 und den neu gebauten A16-Fix; große
-  Datenabnahme später gesammelt. A16: zwölf Kernfälle und vier ergänzte
-  Randfälle am endgültigen App-Stand grün, 238 Regeln grün. Frischer
-  gemeinsamer gezielter Abschlusslauf läuft nach Neustart des zuvor
-  überlasteten lokalen Demo-Emulators. Belege: VERLAUF-NEUSTART-2026-10-09.md.
+  Datenabnahme später gesammelt. Gezielt abgeschlossen: 17 A16-SDK-Fälle,
+  16 A14/A15-Regressionsfälle, 238 Regeln und betroffene Bestands-/Hinweis-
+  prüfungen grün. Feste Verlust-Gegenprobe erhalten. Überlasteten lokalen
+  Demo-Emulator neu gestartet, rote Ausgaben gesichert.
+  Belege: VERLAUF-NEUSTART-2026-10-09.md.
 - Historischer A14/A15-Zwischenstand: 16 echte SDK-Fälle und 222 Regeln grün,
   Gesamtabnahme ausstehend. Gestoppter großer Lauf: 29/157 abgeschlossen,
   alle Exit 0; keine vollständige Abnahme. Entwurf unbedingt behalten.

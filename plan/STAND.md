@@ -3,12 +3,17 @@
 **09.10.2026 – A16/DATEN-11 im bestehenden Entwurf 3.18.30 gebaut:**
 Dauerhafte Tagesbeiträge mit unveränderlichen atomaren Cloud-Belegen;
 Neustart und Nachholen erhalten Konto/Tag/Reset-Epoche. Erstlauf 12 SDK-
-Fälle und 238 Regeln grün. Eigene Gegenprüfung findet und behebt kurzzeitigen
-Hinweis/Sprung bei regulären Antworten; Abschlussläufe am korrigierten Stand
-laufen. Belege/Grenzen: zyklus-2/VERLAUF-NEUSTART-2026-10-09.md.
+Fälle und 238 Regeln grün. Abschließend 17/17 A16-SDK-Fälle, 16/16 A14/A15-
+Regressionsfälle, feste Verlust-Gegenprobe, Undo/Kontowechsel/Sprung/Kontrast/
+a11y-Grundchecks grün. Tageshinweis auf vier Breiten in beiden Themen
+horizontal/vertikal geprüft und als Bild angesehen. Eigener kurzzeitiger
+Hinweis/Sprung behoben. Überlasteten lokalen Demo-Emulator neu gestartet;
+rote Infrastruktur-Ausgaben behalten. Belege/Grenzen:
+zyklus-2/VERLAUF-NEUSTART-2026-10-09.md.
 A14/A15 bleiben erhalten; große Abnahme später, kein App-Commit/Deploy.
 Nächstes Paket bleibt gesperrt über uncommitteter Datenarbeit; offene
-Lernrunden-Punkte werden lesend vorbereitet. Minuten-Sicherung läuft.
+Lernrunden-Punkte sind lesend vorbereitet. Minuten-Sicherung läuft einzeln;
+Log-Kopien gebündelt, aktuelle Übergabe und Patch geprüft.
 
 **09.10.2026 – Skills-Auswahl vor Chatwechsel erledigt:**
 Bericht: `agenten/SKILLS-UND-PLUGINS.md`. Drei gezielte Repo-Skills für

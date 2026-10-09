@@ -14,8 +14,8 @@ als gebaut geführt. Große Gesamtabnahme/Veröffentlichung später gesammelt.
   Gesamtabnahme ausstehend. Gestoppter großer Lauf: 29/157 abgeschlossen,
   alle Exit 0; keine vollständige Abnahme. Entwurf unbedingt behalten.
 - A16 im Datenentwurf gebaut: dauerhafte Tagesbeiträge mit atomaren
-  Cloud-Belegen; 238 Regeln und bislang 16 gezielte SDK-Einzelfälle grün.
-  Frischer gemeinsamer Abschlusslauf läuft; große Abnahme später gesammelt.
+  Cloud-Belegen; 17 A16-SDK-Fälle, 16 A14/A15-Fälle, 238 Regeln und betroffene
+  Bestands-/Hinweisprüfungen grün; große Abnahme später gesammelt.
   Aktueller Nachweis: VERLAUF-NEUSTART-2026-10-09.md. Anschließende Lernrunde
   nur lesend vorbereitet: VORBEREITUNG-LERNRUNDE-2026-10-09.md.
 - Tagesziel/Frage 10: Audit fertig, Empfehlung eines neuen dauerhaften

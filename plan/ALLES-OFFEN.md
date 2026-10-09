@@ -4,7 +4,8 @@
 
 Fortsetzung 09.10.2026: A16 im bestehenden Entwurf gebaut; dauerhafte
 Tagesbeiträge und atomare Belege erhalten Ursprungskonto/Tag/Epoche.
-238 Regelprüfungen grün, gezielte Abschlussprüfung läuft. A14/A15 bleiben
+17 A16-SDK-Fälle, 16 A14/A15-Fälle, 238 Regelprüfungen und betroffene
+Bestands-/Hinweisprüfungen grün; feste Verlust-Gegenprobe erhalten. A14/A15 bleiben
 erhalten, große Abnahme weiter später. Anschlussarbeit lesend vorbereitet:
 `zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md`. Kein neues Paket.
 Minuten-Sicherung auf eine vorhandene Schleife zusammengeführt und läuft.

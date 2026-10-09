@@ -1740,10 +1740,10 @@ index 0000000..cb56164
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
-index 0000000..f4778dd
+index 0000000..7e889d9
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
-@@ -0,0 +1,230 @@
+@@ -0,0 +1,231 @@
 +/* A16: echter SDK 10.14.1, Repo-Regeln, Demo-Emulator 8082.
 +   Auth-Attrappe und blockierter Service Worker: kein PWA-Kaltstartbeleg.
 +   --gegenprobe stellt die feste Entwurfsquelle 591d03e samt Patch her. */
@@ -1944,6 +1944,7 @@ index 0000000..f4778dd
 +      await p.emulateMedia({reducedMotion:'reduce'});
 +      for(const size of [{width:390,height:844},{width:320,height:740},{width:768,height:1024},{width:1024,height:768}]) {
 +        await p.setViewportSize(size);
++        await p.waitForTimeout(250); // Viewport/CSS-Einheiten nach Resize gesetzt.
 +        for(const theme of ['hell','dunkel']) {
 +          await p.evaluate(t=>document.documentElement.setAttribute('data-thema',t),theme);
 +          const fits = await p.evaluate(() => {const r=document.querySelector('.banner-fehler').getBoundingClientRect(),knopf=document.querySelector('.btn-known').getBoundingClientRect();return {horizontal:r.left>=-1&&r.right<=innerWidth+1&&document.documentElement.scrollWidth<=innerWidth+1,seitenhoehe:document.documentElement.scrollHeight,hoehe:innerHeight,knopfUnten:knopf.bottom};});
