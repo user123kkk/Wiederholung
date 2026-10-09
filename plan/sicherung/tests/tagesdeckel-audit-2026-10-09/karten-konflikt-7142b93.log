@@ -1,26 +1,23 @@
+Quelle 7142b93, app.js SHA256 297e398f177e960621d7fde0da83a55bebf251490d8756daca69098125453dd6
+firestore.rules SHA256 35e8dec0ca486cc27607994153fa21395bb9a27b78b847dd280431de944f75ae
+KONTROLLE andere Karte k6 bleibt vollstaendig unveraendert.
 BEFUND altes Undo ersetzt neuere fremde Bewertung: {"first":{"stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"maxStufe":2},"newer":{"stufe":0,"nextReview":"2026-10-09","ersteBewertung":"2026-09-19","rueckfaelle":1,"maxStufe":2},"undo":{"stufe":1,"nextReview":"2026-10-09","ersteBewertung":"2026-09-19","rueckfaelle":0,"maxStufe":1}}
 BEFUND alte Offline-Bewertung ersetzt neuere Online-Bewertung: {"offline":{"stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"maxStufe":2},"online":{"stufe":0,"nextReview":"2026-10-09","ersteBewertung":"2026-09-19","rueckfaelle":1,"maxStufe":1},"after":{"stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"maxStufe":2}}
-AssertionError [ERR_ASSERTION]: Schutz fehlt: neuere Online-Bewertung muss erhalten bleiben
+BEFUND beide Konflikte ohne Speicherfehlermeldung.
+AssertionError [ERR_ASSERTION]: Schutzpruefung rot: Altes Undo ersetzt fremde Bewertung; Offline-Nachholen ersetzt neuere Online-Bewertung
 + actual - expected
 
-  {
-    ersteBewertung: '2026-09-19',
-+   maxStufe: 2,
-+   nextReview: '2026-10-11',
-+   rueckfaelle: 0,
-+   stufe: 2
--   maxStufe: 1,
--   nextReview: '2026-10-09',
--   rueckfaelle: 1,
--   stufe: 0
-  }
++ [
++   'Altes Undo ersetzt fremde Bewertung',
++   'Offline-Nachholen ersetzt neuere Online-Bewertung'
++ ]
+- []
 
-    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_karten_konflikt.js:116:50
-    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_karten_konflikt.js:127:14 {
   generatedMessage: false,
   code: 'ERR_ASSERTION',
-  actual: [Object],
-  expected: [Object],
+  actual: [Array],
+  expected: [],
   operator: 'deepStrictEqual',
   diff: 'simple'
 }
