@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 04:23 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 04:25 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,17 +6,22 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `6cacae0 Sicherung 04:22 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `ac94738 Sicherung 04:24 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.28"
 - Version im letzten Commit: const APP_VERSION = "3.18.28"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
-Keine. Alles ist committet.
+```
+ M plan/werkzeuge/pruefstand/t_serie_lang.js
+```
+
+Auf einem sauberen Stand desselben Commits wiederherstellen:
+`git apply --check plan/sicherung/entwurf-aktuell.patch`, dann `git apply plan/sicherung/entwurf-aktuell.patch`.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 0, chrome.exe 11 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 1, chrome.exe 19 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
