@@ -173,3 +173,13 @@ EXIT 0 t_verwalten.js (50s)
 EXIT 0 t_wisch_tempo.js (0s)
 EXIT 0 t_wischen.js (39s)
 EXIT 0 t_wischen_schraeg.js (51s)
+EXIT 0 t_wochen_kopf.js (15s)
+EXIT 0 t_x_mitten.js (30s)
+EXIT 0 t_zahlen.js (10s)
+EXIT 0 t_zeilenanfang.js (5s)
+
+155/156 Exit 0; 1 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\d74ff6186ee9311d
+
+ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlicht.
+
+Schritte: 1/6 Stand | 2/6 Strom | 3/6 Pruefstand (alle Tests, dauert)
