@@ -3,3 +3,9 @@ firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8
 GRUEN normale Bewertung und eigenes Undo
 GRUEN altes Undo schuetzt fremde Bewertung und Tageszaehler
 GRUEN Gesehen-Undo schuetzt fremde Bewertung
+MESSUNG Konflikthinweis in laufender Runde {"hoehe":896,"antwort":{"top":269.015625,"bottom":627.40625},"seitenhoehe":896}
+GRUEN Konflikthinweis: vier Breiten, hell/dunkel, reduzierte Bewegung; Download vollstaendig
+GRUEN Antworten entfernen: Abbruch bewahrt Kopie; bestaetigt entfernt nur lokale Antwort
+GRUEN Offline-Bewertung bleibt nach Ablehnung und Neustart erhalten
+GRUEN Offline-Gesehen bleibt nach Ablehnung und Neustart erhalten
+GRUEN zwei Offline-Geraete: erste Antwort bleibt, zweite aufbewahrt
