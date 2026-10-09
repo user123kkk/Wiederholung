@@ -57,6 +57,17 @@ abgehakt; hier wird das nicht doppelt geführt.
 
 ## 3. Offen, stand aber in keiner Bauliste
 
+**09.10.2026, Betreiber:** „ok also bin jetzt bisl verwirrt weis ned ob
+wir abgekommen sind. es gibt ja offene projekte für das tool, gehört das
+dazu? bust du grad was? fixt dU? mach“. Danach: „ich werde jetzt weggehen,
+arbeite ununterbrochen und spare tokens ohne qualität oder fehler zu
+erstellne. caveman still halt“.
+Einordnung: Zuverlässigkeit gehört zur offenen Nachprüfung, A14/A15
+sind konkrete neue Fehler innerhalb dieses Auftrags. Bis jetzt wurden
+sie nur belegt. Jetzt technischen Schutz bauen und gegenprüfen; keine
+neue Stufen-/Zählregel, Veröffentlichung weiter gesammelt mit Ladegerät.
+Andere offene Projekte bleiben erhalten, keine automatische Delegation.
+
 **09.10.2026, Betreiber: „weiter“ mit Caveman-Skill.** Fortsetzung der
 begonnenen Zuverlässigkeitsprüfung: übrige Gesehen-/Rückgängig-Schreibwege
 und fremd gelöschte Karte beim Offline-Nachholen prüfen. Kurze Antworten;

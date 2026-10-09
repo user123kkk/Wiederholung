@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 20:22 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 20:24 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,13 +6,19 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `9203b90 Sicherung 20:23 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `d8ee1fc Sicherung 20:24 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
-Keine. Alles ist committet.
+```
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+```
+
+Auf einem sauberen Stand desselben Commits wiederherstellen:
+`git apply --check plan/sicherung/entwurf-aktuell.patch`, dann `git apply plan/sicherung/entwurf-aktuell.patch`.
 
 ## Was gerade läuft
 
@@ -37,6 +43,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 20:24 Codex: Betreiber fragt nach Einordnung und fordert „mach“, danach ununterbrochen weiterarbeiten mit kurzen Antworten. Beide Wortlaute in ALLES-OFFEN gespeichert. Wechsel von Diagnose zu technischem Fix A14/A15: serverseitige Bindung an eindeutige letzte Kartenaktion, Offline-Schreiben bleibt möglich, Konflikte nicht zusammenrechnen. Ablehnungen müssen bis Bestätigung/ausdrücklicher Auflösung auf dem Gerät erhalten bleiben. Regel-/Import-/Undo-/Konto-Pfade gelesen. Akku 13 %, kein Gesamtlauf/Commit einer App-Version ohne Abnahme.
 
 - 20:14 Codex Abschluss: Diagnose-Erweiterung als 373c4da auf main gepusht; Belege/Plan durch Minuten-Sicherung ebenfalls auf origin/main. Arbeitsbaum sauber und HEAD=origin/main bestätigt. App-/Regeldateien unverändert. 43 lokale Chats extern gesichert; nur eigene Emulator-/HTTP-Prozesse beendet, Minuten-Sicherung läuft weiter. Akku 15 %. Nächster Prüfpunkt bleibt Neustart abgelehnter Aktionen/Tageszähler.
 
@@ -79,5 +87,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   Einzeln 04:20 wieder rot. Ursache gerechnet und belegt: Der Test
   verschiebt die Uhr der Seite um Vielfache von 24 h; über das Ende der
   Sommerzeit (25.10.) zeigt sie dann 03:xx statt 04:xx und liegt vor der
-  4-Uhr-Grenze, die Seite lebt einen Lerntag zurück. Tritt nur zwischen
-  04:00 und 05:00 auf. Kein App-Fehler. Test auf Kalendertage umgestellt
