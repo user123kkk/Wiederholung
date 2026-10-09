@@ -1,0 +1,16 @@
+app.js SHA256 3e99b1f349556983b9a67ce88f567ef71a9e5dda39b966f5a497d9ffbb116098
+KONTROLLE {"reject":false,"restart":true,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"575954c0-00a5-46b8-bf1a-bfc86ba04bb6"},"error":null},"after":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsStand":"575954c0-00a5-46b8-bf1a-bfc86ba04bb6","bewertungsBasis":null},"error":null},"server":{"w":1,"n":0,"u":0}}
+KONTROLLE {"reject":true,"restart":false,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{"2026-10-09":{"w":1}},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"de73888d-7345-47c7-86f6-ec3bfb408076"},"error":"permission-denied"},"after":{"local":{},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"de73888d-7345-47c7-86f6-ec3bfb408076"},"error":"permission-denied"},"server":{"w":0,"n":0,"u":0}}
+AssertionError [ERR_ASSERTION]: Tagesantwort im Kontrollfall erhalten
+
+0 !== 1
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_verlauf_neustart.js:50:41
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

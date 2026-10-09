@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:21 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 22:22 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `87329a3 Sicherung 22:21 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `a3d849c Sicherung 22:22 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  A plan/werkzeuge/projekt_skills.mjs
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
@@ -40,7 +41,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 10, chrome.exe 13 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 10, chrome.exe 12 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -61,6 +62,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- Codex A16 gebaut, erste gezielte SDK-Prüfung läuft: dauerhafte Einzelbeiträge mit atomarem unveränderlichem Cloud-Beleg; Nachholen prüft zuerst SDK-Abschluss, Beleg und Server-Epoche. Kartenversuche reservieren den Tagesbeitrag vor dem Buchen; Kartenkopie trägt ihn für einen Zwischenabsturz mit. Aufbewahrungs-Hinweis/Download erweitert, Datenschutz und Kontolöschung mitgezogen. Oberflächen-Skill wegen bestehendem Hinweis angewandt. Keine Text-Lernregel oder Paketwechsel; 3.18.30 bleibt Entwurf. Eigener Patch zunächst wegen rückwärts angeordneter Hunks abgewiesen, in Quellreihenfolge angewandt; keine Prüfgrenze geändert.
 
 - Codex Fortsetzung A16: Übergabe, Betreiberregeln, Lehren, Zyklus-Auftrag/Entscheidungen und DATEN-11-Beleg gelesen. A14/A15-Entwurf 3.18.30 erhalten. Minuten-Sicherung läuft bereits (zwei vorhandene Bash-Prozesspaare); keine zusätzliche Schleife gestartet. Syntax und Standprüfung grün. Daten-Skill angewandt; Ursache am tatsächlichen Verlauf-/Auth-/Undo-Pfad gelesen: nur flüchtige abgelehnte Differenzen. Entwurf für dauerhafte Beiträge mit unveränderlichen Serverbelegen und ursprünglichem Konto/Tag/Epoche; kein Gesamtlauf/Deploy.
 
@@ -103,5 +106,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex Fortsetzung: Betreiber möchte weiterarbeiten und „ladegerät“ für das größere gemeinsame Stück aufheben. Auftrag wörtlich in ALLES-OFFEN gespeichert. Tagesdeckel: tatsächliche Auswahl, Bewertungsregel, Wiederholungsqueue und Tageszähler gelesen. Wichtig: verlauf.w zählt Antworten, nicht verschiedene Karten; eine neue Karte kann beim zweiten Sicher bereits w erhöhen. Simulation nutzt den vorhandenen Lernlogik-Block und die tatsächliche Dringlichkeitssortierung, ohne Produktänderung und ohne erfundene Gedächtnisleistung.
 
 - Codex Abschluss: 3.18.29 als 2bdf83c auf main committet und gepusht. Fünf betroffene Testläufe grün (E4, Rechtsplan-Umfeld, Anmeldung-Enter, Einstellungen, Dialog-Timer); vollständige Logs gelesen und gesichert. Klein-Weg, kein Gesamtlauf, nicht veröffentlicht. Online bleibt laut letztem Veröffentlichungsbeleg 3.18.28. G7 am echten iPhone nach Veröffentlichung offen; nächste Arbeit Tagesdeckel-Rechnung. Details im Zyklus-Logbuch, Eintrag 3.18.29. Ein Plan-Schreibbefehl wurde wegen PowerShell-Quotierung vor Ausführung abgelehnt und korrigiert, ohne Dateiänderung aus dem Fehlversuch.
-
-- 15:50 Codex: E4 am festen d64380a rot (echter Zurück-Link, Formular fehlt). Neuer Weg: bestehender Dialog, unveränderte Rechtsseiten lokal laden, Rückweg bleibt sichtbar. E4 390/320/820 grün; Umfeld sechs Geräte-/Farbkombinationen grün, Fehler/Neuversuch und verspätete Antwort geprüft. iPad-Kontrastmeldung als Scroll-Clip belegt und alle sichtbaren Abschnitte durchgescrollt geprüft. 3.18.29 vorbereitet; Standprüfung grün. Betroffene Regressionen laufen; Akku BatteryStatus 1, Klein-Weg, kein Gesamtlauf/Deploy.
