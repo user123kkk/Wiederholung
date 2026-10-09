@@ -448,6 +448,30 @@
       "fehler": null,
       "sekunden": 44,
       "quelltext": "e21a23f8fc70590b438da01ea1b9659c1cd39d3432f0e114dee481fb884682c4"
+    },
+    "t_karten_blatt.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 63,
+      "quelltext": "eff1bd23396d24b6a23f8fdcba91dd7941988d2d85e42bac7f2f9d8762da899b"
+    },
+    "t_karten_snapshot.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 4,
+      "quelltext": "c8289163784fa5766d1ac8edb379d96e01f006b6ba7d1d079f91728a74bf6fcb"
+    },
+    "t_klein_boot.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 11,
+      "quelltext": "05abbc073dbb15ab5107024cea696ed5cb5b8c8b41c23b25f0093b93fa573a60"
     }
   }
 }
