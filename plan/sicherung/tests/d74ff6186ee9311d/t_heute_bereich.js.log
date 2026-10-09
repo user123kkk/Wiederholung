@@ -1,0 +1,12 @@
+OK   b1 zeigt "Heute schon 3 Antworten"
+OK   b1 zeigt "Weiterlernen"
+OK   b2 zeigt KEIN "Heute schon"
+OK   b2 zeigt "Runde starten"
+OK   b2 Ring leer (--ziel 1.000)
+   b1: 14 FÄLLIG Heute schon 3 Antworten 10 Wiederholungen 4 neu Weiterlernen
+   b2: 10 FÄLLIG 10 Wiederholungen Runde starten | ziel 1.000
+   Fehler: ok
+OK   nur ein Bereich: "Heute schon 5 Antworten" direkt nach dem Laden
+    12 FÄLLIG Heute schon 5 Antworten 8 Wiederholungen 4 neu Weiterlernen | ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":17,"quelltext":"525f3dbc297dcfdecdab4ed06665de508b5527fb71f82d5f41691fe9848d5dbe"}

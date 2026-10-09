@@ -344,6 +344,46 @@
       "fehler": null,
       "sekunden": 12,
       "quelltext": "d731816335065adc00a7db92e8c676a21a68c23ca0a65f594008dac64c7fd513"
+    },
+    "t_gross_alle.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 81,
+      "quelltext": "448dc581a1dc36830f82e1d17e479e4fe5826280a4db4b9ee64ac444cdfcc460"
+    },
+    "t_gruss_datum.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 5,
+      "quelltext": "965b314bbd29d5aadfe9dcc11ee891e08749d4fe34b37dee23a103d48092a702"
+    },
+    "t_hero_dreh.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "690d80e4078615eef549d8eb5c62a1de07fecb7e5c9eed08ee08c069f89e4209"
+    },
+    "t_heute_bereich.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 17,
+      "quelltext": "525f3dbc297dcfdecdab4ed06665de508b5527fb71f82d5f41691fe9848d5dbe"
+    },
+    "t_hick.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 43,
+      "quelltext": "0faede67e35a87dd53bd01e503ba0b4da7f0323f4f19a8609468bb16b0b9d9c8"
     }
   }
 }
