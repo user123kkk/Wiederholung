@@ -237,3 +237,28 @@ verbleiben. Ohne Bestätigung wird kein neuer Ausgangsstand erfunden.
 Alte Clients brauchen beim späteren Regelwechsel eine Aktualisierung;
 kein Nachweis, dass deren bereits abgelehnte alte Antworten erhalten bleiben.
 Regeln vor Hosting erforderlich; derzeit keine Veröffentlichung.
+
+## Speicher-Gegenprüfung und endgültiger Quellstand, 21:39
+
+App-SHA256 (normalisiert):
+`44c05375c7511ba420fbabe5b52cea6599ecf7c1ea3e67e77b52428aa30347d9`.
+Regeln unverändert gegenüber oben. `sdk-final.log` belegt 16 echte SDK-
+Fälle, zusätzlich zwei Erhaltungsfälle für vorheriges Rückgängig nach
+einem fehlgeschlagenen neuen Speicher-Versuch. Die Speicherprobe prüft
+auch die Erholung: kein nachträgliches Anwenden des abgebrochenen Versuchs,
+danach genau eine neue gewünschte Bewertung. Abgebrochene, ungebuchte
+Versuche dürfen nicht als nachholbare Antworten in der Map verbleiben.
+
+Feste Gegenproben aus automatisch gesicherten Entwürfen: 14517b3 enthält
+App-SHA256 7d0de10b... vor der Erholungs-Korrektur; dieselbe Schutzprobe
+findet den unerlaubten Map-Eintrag (1 statt 0). 7818a54 enthält den Entwurf
+vor dem Erhalt des vorherigen Undo. Beide Undo-Proben rot: Bewertung bleibt
+Stufe 2 statt Stufe 1, Gesehen bleibt eingeführt statt ersteBewertung null.
+Rekonstruktion jeweils aus app.js dieses Commits plus dessen gesichertem
+Entwurf-Patch, nur app.js in separatem TEMP-Ordner angewandt. Test und
+Regeln bleiben gleich; Ausgabe enthält jeweils den tatsächlichen App-Hash.
+
+Seit 21:26 frischer Gesamtlauf an `caf81d58f8c5f144` (157 Tests).
+Vorherige lange Läufe sind bewusst keine Abnahme des neuen Codes.
+Rundenabnahme und Affen folgen erst am endgültigen Stand. A14/A15 bleiben
+bis dieser Abnahme offen, keine Veröffentlichung.

@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 21:38 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 21:39 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `343fd50 Sicherung 21:38 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `3f83666 Sicherung 21:39 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -18,9 +18,12 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/KARTEN-KONFLIKTE-2026-10-09.md
  M sw.js
 ```
 
@@ -29,7 +32,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 9, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 9, chrome.exe 19 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -50,6 +53,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 21:39 Codex: weitere Speicher-Gegenprüfung korrigiert: vor dem Buchen abgebrochener Versuch wird aus Nachholmap entfernt, damit später keine ungezählte Bewertung entsteht. Prüfen erlaubt nach Erholung einen neuen Versuch; Hinweis ohne vorhandene Kopien zeigt nur Speicherprüfung. Fehlgeschlagene neue Gesehen-/Bewertungsversuche erhalten vorheriges Rückgängig. Feste Entwürfe 14517b3 (ungezählter Versuch bleibt) und 7818a54 (Undo verloren: 2 statt 1 bzw. Datum statt null) reproduzieren die Fehler; reparierter echter SDK-Lauf 16/16 plus UI/Download/Entfernen grün. Frühere lange Läufe wegen Quelländerungen bewahrt/beendet, keine Ergebnisse übernommen. Seit 21:26 frischer Gesamtlauf 157 an caf81d58f8c5f144; 25/157 bisher Exit 0. Danach Rundenabnahme, Affen, Abschlussdiff und Commit. Finaler normalisierter App-SHA256 44c05375c7511ba420fbabe5b52cea6599ecf7c1ea3e67e77b52428aa30347d9. Alle Gegenproben im Repo gesichert. Kein Deploy.
 
 - 21:09 Codex: finaler SDK-Lauf am unveränderten App-Stand 7d0de10b... komplett grün: 14 Fälle plus UI-/Download-/Entfernkontrollen; andere Karte k6 jeweils unverändert. Retry prüft nun zusätzlich tatsächlichen Cloud-Tageszähler w:1 und unveränderte Cloud-Zählung nach wiederholtem Prüfen/Flush. Rundenabnahme 13/13 grün an Quelle 00aeb59220794b38..., sämtliche 13 Einzel-Logs gelesen, einschließlich aller beschreibenden Rundenende-/Üben-/Schreiben-Ausgaben. Keine Sprünge, Scroll-/Kontrastfehler; CPU-4x-Zeichenprobe mit höchstens einem 35-ms-Bild. Gesamtlauf 157 Tests läuft am selben Stand mit den frischen gleichstandsgebundenen Runden-Ergebnissen. Regel-Nachlauf traf alte Daten des wiederverwendeten Testprojekts; Testaufbau leert jetzt ausschließlich wiederholung-test auf lokalem Emulator. M06-M11 haben gültige Ausgangskennungen, damit Wertfehler nicht durch fehlende Kennung verdeckt werden. Frischer Regeltest erneut 222/222; gesamte Ausgabe gelesen, identische Warnungen gefaltet. Direkt ausgelieferte App-/HTML-/SW-/Datenschutz-Quellen identisch zum Arbeitsbaum. Eigene Logdateien und Konfliktbild ins Repo gesichert. Kein App-Commit/Deploy.
 
@@ -92,5 +97,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex, Auftrag „weiter“: Desktop-Checkout sauber auf d64380a / 3.18.28 aktualisiert. Übergabe, Betreiber-Verstehen, offene Liste, Grundregeln und E4-Befund gelesen. Minuten-Sicherung gestartet (Git Bash). E4 wieder offen: tatsächlichen Zurück-Weg prüfen, vorhandenen Dialog für Rechtsinhalt verwenden. Nicht veröffentlichen.
 
 - 04:38 **3.18.28 ist online.** `ladegeraet.ps1 -Fortsetzen`: 155 bewahrt,
-  `t_serie_lang` Exit 0, zusammen 156/156; Affen Handy 200 und iPad 150 je
-  0 Befunde; Regeln eingespielt; Hosting veröffentlicht. Abgerufen:

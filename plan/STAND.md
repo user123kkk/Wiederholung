@@ -1,5 +1,13 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026, 21:39 – endgültiger Entwurf A14/A15 / 3.18.30:**
+16 echte SDK-Fälle grün, einschließlich Erholung nach Speicherfehler
+ohne ungezählte Antwort und Erhalt des vorherigen Rückgängig. Drei feste
+Entwurfs-Gegenproben erkennen die Speicher-Randfälle. Frischer Gesamtlauf
+157 läuft seit 21:26 an `caf81d58f8c5f144`; ältere Abnahmen gehören zu
+früheren Entwürfen. Danach Rundenabnahme, Affen und Abschluss-Gegenprüfung.
+Noch kein App-Commit oder Deploy. Minuten-Patch und Einzelbelege gesichert.
+
 **09.10.2026, 21:09 – A14/A15, finaler Entwurf 3.18.30:**
 14 echte SDK-Schutzfälle, 222/222 Regeln und frische Rundenabnahme 13/13
 grün; sämtliche Runden-Ausgaben gelesen. Download, Kontrast auf vier
