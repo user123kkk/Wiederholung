@@ -1008,6 +1008,30 @@
       "fehler": null,
       "sekunden": 1,
       "quelltext": "14dc88ced3dd4da49038851104bf1b947f8ab363a65b139e162f33fb56e4ba42"
+    },
+    "t_settings_mehrgeraete.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 12,
+      "quelltext": "497d57e015258b600eaef63fd6c882b13705eac4f82659a023cd6cdc0fcc7285"
+    },
+    "t_sicher.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 14,
+      "quelltext": "cad257c5610c9be255ab807bfb915f96716eb6f7adb15f1ba05ec31f8f62f6cb"
+    },
+    "t_sprung.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 83,
+      "quelltext": "fecd8b592b3769c3d85a2e32048e12a33c769b1d29674e806eb0481a610eb5c4"
     }
   }
 }

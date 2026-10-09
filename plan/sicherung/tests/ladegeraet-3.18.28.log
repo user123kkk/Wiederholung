@@ -148,3 +148,5 @@ Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":184,
 EXIT 0 t_serie_warnung.js (8s)
 EXIT 0 t_settings_kontowechsel.js (1s)
 EXIT 0 t_settings_mehrgeraete.js (12s)
+EXIT 0 t_sicher.js (14s)
+EXIT 0 t_sprung.js (83s)
