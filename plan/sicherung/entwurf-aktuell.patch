@@ -13,7 +13,7 @@ index bc20801..e698a62 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..6c3954a 100644
+index 4b6221e..353caed 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -161,7 +161,6 @@ index 4b6221e..6c3954a 100644
 +    const abgelehnt = abgelehnteBewertungen.get(x.cardId);
 +    if (abgelehnt?.aktion?.id === x.id) abgelehnteBewertungen.delete(x.cardId);
 +    schreibErfolg();
-+    render();
 +  }).catch(e => {
 +    if (!giltNoch()) return;
 +    x.status = "abgelehnt";
@@ -213,7 +212,8 @@ index 4b6221e..6c3954a 100644
 +  const konflikte = [...bewertungsAktionen.values()].filter(x => x.status === "konflikt" || x.status === "geloescht").length;
 +  if (!n && !bewertungsSpeicherFehler) return "";
 +  return bannerFehler("Antworten aufbewahrt:",
-+    esc(konflikte ? konflikte + " Antworten passen nicht mehr zum aktuellen Kartenstand. " : n + " Antworten sind noch nicht bestätigt. ") +
++    esc(konflikte ? (konflikte === 1 ? "Eine Antwort passt" : konflikte + " Antworten passen") + " nicht mehr zum aktuellen Kartenstand. " :
++      n ? (n === 1 ? "Eine Antwort ist" : n + " Antworten sind") + " noch nicht bestätigt. " : "") +
 +    '<button class="tiny-link" data-action="bewertung-pruefen">Prüfen</button> ' +
 +    '<button class="tiny-link" data-action="bewertung-sichern">Antworten sichern</button> ' +
 +    '<button class="tiny-link" data-action="bewertung-verwerfen">Vom Gerät entfernen</button>' +
@@ -612,6 +612,127 @@ index e9503f2..35f657d 100644
    const sources={};for(const name of ['firebase-app.js','firebase-firestore.js']){
      const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
    }
+diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
+new file mode 100644
+index 0000000..bef7e7f
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
+@@ -0,0 +1,115 @@
++/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
++   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
++const assert=require('node:assert/strict');
++const {start}=require('./lib');
++const {seite,seed,fertig,rest,ROOT,SDK,cloud}=require('./diagnose_karten_konflikt');
++async function server(id='k4') {
++  const r=await rest(ROOT+'/users/u1/karten/'+id),d=await r.json();
++  return Object.fromEntries(Object.entries(d.fields).map(([k,v])=>[k,v.stringValue??(v.integerValue!==undefined?Number(v.integerValue):null)]));
++}
++(async()=>{
++  const sources={};for(const name of ['firebase-app.js','firebase-firestore.js']){
++    const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
++  }
++  const b=await start();
++  async function fall(name,test){
++    await seed();const a=await seite(b,sources),c=await seite(b,sources);
++    try {await test(a,c);assert.deepEqual(a.fehler,[]);assert.deepEqual(c.fehler,[]);console.log('GRUEN '+name);}
++    finally{await a.context().close();await c.context().close();}
++  }
++  async function grade(p,id='k4',kind='known'){
++    await p.evaluate(([id,kind])=>{window.__PRUEF.starten(id);window.__PRUEF.bewerten(kind);},[id,kind]);await fertig(p);
++    await p.waitForFunction(()=>window.__PRUEF.aufbewahrt().length===0);
++  }
++  try{
++    await fall('normale Bewertung und eigenes Undo',async(a)=>{
++      const before=await server();await grade(a);const rated=await server();assert.notEqual(rated.bewertungsStand,undefined);
++      await a.evaluate(()=>window.__PRUEF.undo());await fertig(a);const after=await server();
++      for(const k of ['stufe','nextReview','ersteBewertung','rueckfaelle','maxStufe'])assert.equal(after[k],before[k]);
++      assert.notEqual(after.bewertungsStand,rated.bewertungsStand);
++    });
++    await fall('altes Undo schuetzt fremde Bewertung und Tageszaehler',async(a,c)=>{
++      await grade(a);await c.waitForFunction(()=>!!window.__PRUEF.karte().bewertungsStand);
++      await grade(c,'k4','unknown');const newer=await server();
++      await a.waitForFunction(id=>window.__PRUEF.karte().bewertungsStand===id,newer.bewertungsStand);
++      const counts=await a.evaluate(()=>window.__PRUEF.verlauf());await a.evaluate(()=>window.__PRUEF.undo());await fertig(a);
++      assert.deepEqual(await server(),newer);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
++      assert.match(await a.locator('.dlg').innerText(),/inzwischen geändert/);
++    });
++    await fall('Gesehen-Undo schuetzt fremde Bewertung',async(a,c)=>{
++      await a.evaluate(()=>window.__PRUEF.gesehen('k0'));await fertig(a);
++      await c.waitForFunction(()=>!!window.__PRUEF.karte('k0').bewertungsStand);await grade(c,'k0');const newer=await server('k0');
++      await a.waitForFunction(id=>window.__PRUEF.karte('k0').bewertungsStand===id,newer.bewertungsStand);
++      await a.evaluate(()=>window.__PRUEF.gesehenZurueck());await fertig(a);assert.deepEqual(await server('k0'),newer);
++    });
++    for(const gesehen of [false,true])await fall('Offline-'+(gesehen?'Gesehen':'Bewertung')+' bleibt nach Ablehnung und Neustart erhalten',async(a,c)=>{
++      const id=gesehen?'k0':'k4';await a.evaluate(()=>window.__PRUEF_SDK.disableNetwork(window.__PRUEF_DB));
++      await a.evaluate(([id,gesehen])=>{if(gesehen)window.__PRUEF.gesehen(id);else{window.__PRUEF.starten(id);window.__PRUEF.bewerten('unknown');}},[id,gesehen]);
++      const pending=await a.evaluate(()=>window.__PRUEF.aufbewahrt());assert.equal(pending.length,1);
++      await grade(c,id);const newer=await server(id);
++      await a.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(a);
++      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt()[0]?.status==='abgelehnt');assert.deepEqual(await server(id),newer);
++      assert.equal(await a.evaluate(()=>window.__PRUEF.aufbewahrt()[0].id),pending[0].id);
++      const ctx=a.context();await a.close();const reload=await seite(b,sources,ctx);
++      try{assert.equal(await reload.evaluate(()=>window.__PRUEF.aufbewahrt()[0].id),pending[0].id);
++        await reload.evaluate(()=>window.__PRUEF.pruefen());await fertig(reload);
++        assert.equal(await reload.evaluate(()=>window.__PRUEF.aufbewahrt()[0].status),'konflikt');assert.deepEqual(await server(id),newer);
++        assert.match(await reload.locator('[data-action="bewertung-sichern"]').innerText(),/sichern/);assert.deepEqual(reload.fehler,[]);
++      }finally{await reload.close();}
++    });
++    await fall('zwei Offline-Geraete: erste Antwort bleibt, zweite aufbewahrt',async(a,c)=>{
++      for(const p of [a,c])await p.evaluate(()=>window.__PRUEF_SDK.disableNetwork(window.__PRUEF_DB));
++      await a.evaluate(()=>{window.__PRUEF.starten();window.__PRUEF.bewerten('known');});
++      await c.evaluate(()=>{window.__PRUEF.starten();window.__PRUEF.bewerten('unknown');});
++      await c.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(c);const first=await server();
++      await a.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(a);
++      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt()[0]?.status==='abgelehnt');assert.deepEqual(await server(),first);
++    });
++    await fall('gleiche Endwerte mit fremder Kennung blockieren Undo',async(a,c)=>{
++      await grade(a);const rated=await server();await c.waitForFunction(id=>window.__PRUEF.karte().bewertungsStand===id,rated.bewertungsStand);
++      await c.evaluate(rated=>window.__PRUEF_SDK.updateDoc(window.__PRUEF_SDK.doc(window.__PRUEF_DB,'users/u1/karten/k4'),{bewertungsStand:'gleiche-werte-fremde-aktion',bewertungsBasis:rated.bewertungsStand}),rated);
++      const newer=await server();await a.waitForFunction(()=>window.__PRUEF.karte().bewertungsStand==='gleiche-werte-fremde-aktion');
++      await a.evaluate(()=>window.__PRUEF.undo());await fertig(a);assert.deepEqual(await server(),newer);
++    });
++    await fall('Offline eigenes Undo bleibt erlaubt',async(a)=>{
++      const before=await server();await a.evaluate(()=>window.__PRUEF_SDK.disableNetwork(window.__PRUEF_DB));
++      await a.evaluate(()=>{window.__PRUEF.starten();window.__PRUEF.bewerten('known');window.__PRUEF.undo();});
++      assert.equal(await a.evaluate(()=>window.__PRUEF.aufbewahrt().length),2);
++      await a.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(a);
++      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt().length===0);const after=await server();
++      for(const k of ['stufe','nextReview','ersteBewertung','rueckfaelle','maxStufe'])assert.equal(after[k],before[k]);
++    });
++    await fall('fremde Loeschung wird nicht wieder angelegt; Antwort bleibt',async(a,c)=>{
++      await a.evaluate(()=>window.__PRUEF_SDK.disableNetwork(window.__PRUEF_DB));await a.evaluate(()=>{window.__PRUEF.starten();window.__PRUEF.bewerten('known');});
++      await c.evaluate(()=>window.__PRUEF_SDK.deleteDoc(window.__PRUEF_SDK.doc(window.__PRUEF_DB,'users/u1/karten/k4')));
++      await a.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(a);
++      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt()[0]?.status==='abgelehnt');await a.evaluate(()=>window.__PRUEF.pruefen());
++      assert.equal(await a.evaluate(()=>window.__PRUEF.aufbewahrt()[0].status),'geloescht');
++      const response=await fetch(ROOT+'/users/u1/karten/k4',{headers:{Authorization:'Bearer owner'}});assert.equal(response.status,404);
++    });
++    await fall('voller Geraetespeicher bucht keine Antwort',async(a)=>{
++      await fertig(a);
++      const before=await server(),counts=await a.evaluate(()=>window.__PRUEF.verlauf());
++      await a.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k.startsWith('adrabic-bewertung-'))throw new DOMException('voll','QuotaExceededError');return original.call(this,k,v);};window.__PRUEF.starten();window.__PRUEF.bewerten('known');});
++      await fertig(a);assert.deepEqual(await server(),before);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
++      assert.equal(await a.evaluate(()=>window.__PRUEF.karte().stufe),before.stufe);
++      assert.match(await a.locator('.banner-fehler').innerText(),/Gerätespeicher/);
++    });
++    await fall('echte Regeln-Ablehnung nachholen ohne doppelte Tagesantwort',async(a)=>{
++      await a.evaluate(()=>{window.__PRUEF_KARTE_ABLEHNEN=true;window.__PRUEF.starten();window.__PRUEF.bewerten('known');});await fertig(a);
++      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt()[0]?.status==='abgelehnt');
++      const saved=await a.evaluate(()=>window.__PRUEF.aufbewahrt()[0]),counts=await a.evaluate(()=>window.__PRUEF.verlauf());
++      await a.evaluate(()=>{window.__PRUEF_KARTE_ABLEHNEN=false;return window.__PRUEF.pruefen();});await fertig(a);
++      await a.waitForFunction(()=>window.__PRUEF.aufbewahrt().length===0);
++      assert.equal((await server()).bewertungsStand,saved.id);assert.deepEqual(await a.evaluate(()=>window.__PRUEF.verlauf()),counts);
++      await a.evaluate(()=>window.__PRUEF.pruefen());await fertig(a);assert.equal((await server()).bewertungsStand,saved.id);
++    });
++    await fall('alte Clients abgewiesen; Notiz weiterhin erlaubt',async(a)=>{
++      const before=await server();
++      const code=await a.evaluate(async()=>{try{await window.__PRUEF_SDK.updateDoc(window.__PRUEF_SDK.doc(window.__PRUEF_DB,'users/u1/karten/k4'),{stufe:9});return null;}catch(e){return e.code;}});
++      assert.equal(code,'permission-denied');assert.deepEqual(await server(),before);
++      await a.evaluate(()=>window.__PRUEF_SDK.updateDoc(window.__PRUEF_SDK.doc(window.__PRUEF_DB,'users/u1/karten/k4'),{extra:'Notiz'}));
++      assert.equal((await server()).extra,'Notiz');
++    });
++  }finally{await b.close();}
++})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
 index 118e0da..39516cd 100644
 --- a/plan/werkzeuge/regeln/regeln-pruefung.mjs
