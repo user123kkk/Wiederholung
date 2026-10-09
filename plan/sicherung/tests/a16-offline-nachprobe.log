@@ -1,0 +1,15 @@
+app.js SHA256 05269ebdb1d17a5a23e1ef8eeb048cc3745e866dbd8c4e94052e9789f1ccd0c8
+firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3
+AssertionError [ERR_ASSERTION]: 500: {"error":{"code":500,"status":"UNKNOWN"}}
+    at rest (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_karten_konflikt.js:23:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async seed (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_karten_konflikt.js:29:3)
+    at async fall (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:42:5)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:83:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
