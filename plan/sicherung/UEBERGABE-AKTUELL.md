@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:59 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 23:00 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e003f77 Sicherung 22:58 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `6c74f80 Sicherung 22:59 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -35,7 +36,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/VERLAUF-NEUSTART-2026-10-09.md
  M sw.js
 ```
 
@@ -44,7 +44,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 9, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 9, chrome.exe 8 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -65,6 +65,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- Codex: Betreiber fragt nach Text für den nächsten Chat. Aktuelle automatische Übergabe erneut gelesen; Fortsetzungstext mit erhaltenem A14–A16-Entwurf, gezielten Belegen, Sicherungsprüfung und weiterhin verschobener großer Abnahme bereitgestellt. Keine App-Änderung.
 
 - 22:58 Codex Sicherungsabschluss: automatische Commits 22:55/22:56 und frische Übergabe 22:56 bestätigt; Minuten-Patch 22:57:45 enthält endgültige Testhooks, strenge Geometriegrenzen und gebündelten Kopieraufruf. App bleibt im Commit 3.18.29, Arbeitsbaum 3.18.30; kein App-Commit/Deploy. Prüfserver/Emulator-/Sicherungs-PIDs und Wiederholungswege im A16-Bericht für Anschlusschat festgehalten. Große Abnahme bleibt offen; kein neues Paket begonnen.
 
@@ -107,5 +109,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex Vorbeugung geprüft: 14 Eingangsfälle und neun Ergebnis-/Codeauditfälle grün. Absichtlich falsches echtes Rechenkommando in eigener Testkopie endet Exit 1 mit „Ungleichmäßige Terminphasen innerhalb Stufe 3“, keine Ergebnisdatei. Modellversion 3 nach Pflicht-Vorprüfungen neu gerechnet; Zahlen identisch mit Version 2, diese separat erhalten. Regeln dauerhaft in AGENTS/LEHREN/EMPFEHLUNGEN. Weiteren Betreiberauftrag wörtlich gesichert; fünf Durchgänge für unbekannte Codefehler/Nachprüfung konkret vorbereitet, sieben bisher ungeprüfte Befundabschnitte erfasst. Erste Originalstelle persistCardGrade gelesen (Kontoreferenz/späte Antwort/Nachholen); keine neue umfassende Abnahme behauptet. App unverändert, kein Gesamtlauf/Deploy.
 
 - Codex Auftrag „stelle sicher dass solche Fehler nicht wieder passieren“ wörtlich in ALLES-OFFEN gespeichert. Vorbeugung gebaut: unabhängige Eingangs-Sperre vor Tagesdeckel-Lauf, Tests mit ursprünglicher Index-Kopplung und weiteren absichtlichen Fehlern, Modellversion/Hash der Eingangsprüfung und ausdrückliche Erkenntnisgrenzen im Ergebnis. Allgemeine Regeln vor Empfehlungen in EMPFEHLUNGEN-PRUEFEN und AGENTS; Textempfehlungen bleiben menschlich/agentisch gegenzuprüfen, kein automatisches Wahrheitsversprechen. Einzeltests und neue Ergebnis-Provenienz noch zu prüfen.
-
-- Codex Audit abgeschlossen: alte Gegenprobe c78e986 rot, korrigierte 450 Modellläufe, neun Auditfälle einschließlich aller Ergebnis-Hashes/Einzelwerte grün. Browser t_runde_bereiche grün, vollständige Ausgaben gelesen (Rückgängig, Weiterlernen, persistierte Zuordnung, w=9 bei acht Karten). Standprüfung grün. Im korrigierten großen Modell bleiben bei Deckel 20 im Mittel 165,8 ursprüngliche Karten unbesucht; kein Lernwirkungsbeweis. Eigene Rundengröße-Tagesziel-Kopplung zurückgenommen; dauerhaften neuen Deckel vorerst nicht bauen, klar begrenzten Rückkehr-Probelauf mit Pensum/Zusatznutzen/Lernkriterium vorbereiten. Alle aktuellen Planzeiger korrigiert, Originalzahlen erhalten, Fehlerart in LEHREN aufgenommen. Keine App-/Versions-/Cloud-Änderung, kein Gesamtlauf oder Deploy.
