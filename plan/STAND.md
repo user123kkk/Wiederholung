@@ -1,5 +1,16 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026, 20:42 – technischer Fix A14/A15 gebaut, Entwurf 3.18.30:**
+Serverseitige Ausgangskennung verhindert veraltetes Überschreiben;
+alte Undo-Aktion wird blockiert. Abgelehnte Antworten bleiben über
+Neustart erhalten. 12 echte SDK-Schutzfälle, 222 Regeltests,
+Undo-Tageszähler und drei Kontowechsel-Kontrollen grün. Netzteil erkannt;
+frischer Gesamtlauf 157 Tests läuft, Quelle `526cb2e58f6b890b`.
+App/Regeln noch uncommittet; vollständige Abnahme und Gegenprüfung fehlen.
+Regeln müssen vor Hosting eingespielt werden; alte Clients benötigen
+danach Aktualisierung. Keine Veröffentlichung. Einzelheiten und Grenzen:
+`zyklus-2/KARTEN-KONFLIKTE-2026-10-09.md`.
+
 **09.10.2026, Fortsetzung „weiter“:** Restinventur der Karten-Schreibwege
 abgeschlossen. Gesehen-Undo und Offline-Gesehen reproduzieren ebenfalls
 DATEN-9/10 an fester Quelle 7142b93 mit echtem SDK und Repo-Regeln.

@@ -68,6 +68,12 @@ sie nur belegt. Jetzt technischen Schutz bauen und gegenprüfen; keine
 neue Stufen-/Zählregel, Veröffentlichung weiter gesammelt mit Ladegerät.
 Andere offene Projekte bleiben erhalten, keine automatische Delegation.
 
+20:42: Schutz als Entwurf 3.18.30 gebaut. Zwölf echte SDK-Schutzfälle und
+222 Regeltests grün, Neustart und Tageszähler im geprüften Ablauf erhalten.
+Netzteil erkannt, Gesamtlauf läuft. A14/A15 bleiben bis vollständiger
+Abnahme offen; keine Veröffentlichung. Regeln vor Hosting nötig, alte
+Clients müssen aktualisieren. Keine automatische Konflikt-Zusammenrechnung.
+
 **09.10.2026, Betreiber: „weiter“ mit Caveman-Skill.** Fortsetzung der
 begonnenen Zuverlässigkeitsprüfung: übrige Gesehen-/Rückgängig-Schreibwege
 und fremd gelöschte Karte beim Offline-Nachholen prüfen. Kurze Antworten;

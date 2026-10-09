@@ -1,0 +1,233 @@
+[2026-10-09T18:36:18.760Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24bd error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L164
+[2026-10-09T18:36:18.780Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24be error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, false for 'update' @ L282
+[2026-10-09T18:36:18.937Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c0 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L164
+[2026-10-09T18:36:18.953Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24b8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:18.971Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c1 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:18.995Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c2 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.022Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c3 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.059Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.079Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c5 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.097Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c6 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.120Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c7 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.142Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.162Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24c9 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.184Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24ca error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, evaluation error at L282:26 for 'update' @ L282, false for 'create' @ L276
+[2026-10-09T18:36:19.202Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24cb error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:19.219Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24cc error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:19.238Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24cd error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:19.260Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24ce error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:19.279Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24cf error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:19.298Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d0 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:19.317Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d1 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:19.336Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d2 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:19.357Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d3 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:19.379Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:19.393Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d5 error. Code: 7 Message: 7 PERMISSION_DENIED: No matching allow statements
+[2026-10-09T18:36:19.405Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d6 error. Code: 7 Message: 7 PERMISSION_DENIED: No matching allow statements
+[2026-10-09T18:36:19.417Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d7 error. Code: 7 Message: 7 PERMISSION_DENIED: No matching allow statements
+[2026-10-09T18:36:19.435Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:19.452Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24d9 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:19.512Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24da error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'create' @ L343
+[2026-10-09T18:36:19.532Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24db error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'create' @ L343
+[2026-10-09T18:36:19.551Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24dc error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'create' @ L343
+[2026-10-09T18:36:19.670Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24dd error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, false for 'update' @ L371
+[2026-10-09T18:36:19.701Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24de error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'create' @ L343
+[2026-10-09T18:36:19.721Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24df error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'create' @ L343
+[2026-10-09T18:36:19.739Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e0 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'create' @ L343
+[2026-10-09T18:36:19.758Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e1 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'create' @ L343
+[2026-10-09T18:36:19.778Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e2 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'create' @ L343
+[2026-10-09T18:36:19.791Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e3 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L365:24 for 'delete' @ L365, false for 'delete' @ L365
+[2026-10-09T18:36:19.821Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:19.892Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e5 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:19.907Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e6 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:19.930Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e7 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:19.944Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L371
+[2026-10-09T18:36:19.959Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24e9 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:19.975Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24ea error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:19.993Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24eb error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:20.014Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24ec error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:20.036Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24ed error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:20.059Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24ee error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, Property freigabe is undefined on object. for 'update' @ L371
+[2026-10-09T18:36:20.111Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24ef error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:20.127Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f0 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, false for 'update' @ L371
+[2026-10-09T18:36:20.143Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f1 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, false for 'update' @ L371
+[2026-10-09T18:36:20.157Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f2 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, false for 'update' @ L371
+[2026-10-09T18:36:20.259Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f3 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:20.283Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:20.299Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f5 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:20.319Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f6 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:20.334Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f7 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:20.452Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L458:24 for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:20.477Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24f9 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L458:24 for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:20.623Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24fa error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L458:24 for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:20.648Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24fb error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:20.670Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24fc error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L458:24 for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:20.699Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24fd error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L458:24 for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:20.725Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24fe error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L458:24 for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:20.750Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b24ff error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L458:24 for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:20.776Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2500 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L458, false for 'update' @ L471
+[2026-10-09T18:36:20.792Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2501 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L458, false for 'update' @ L471
+[2026-10-09T18:36:20.813Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2502 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:20.832Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2503 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:20.853Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2504 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:20.865Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2505 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L495
+[2026-10-09T18:36:20.970Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2506 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:21.000Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2507 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L504
+[2026-10-09T18:36:21.032Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2508 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L504
+[2026-10-09T18:36:21.084Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b250a error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:21.111Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b250b error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L458, evaluation error at L471:24 for 'update' @ L471, false for 'create' @ L458
+[2026-10-09T18:36:21.144Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b250c error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:21.210Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2509 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:21.228Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b250e error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:21.249Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b250f error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:21.440Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b250d error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L509:26 for 'delete' @ L509, false for 'delete' @ L509
+[2026-10-09T18:36:21.466Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2511 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L504:26 for 'create' @ L504, evaluation error at L471:24 for 'update' @ L471
+[2026-10-09T18:36:21.588Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2513 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L504:26 for 'create' @ L504, false for 'create' @ L504
+[2026-10-09T18:36:21.611Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2514 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L509:26 for 'delete' @ L509, evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:21.859Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2516 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, evaluation error at L282:26 for 'update' @ L282, false for 'create' @ L276
+[2026-10-09T18:36:22.013Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2518 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L343, evaluation error at L371:24 for 'update' @ L371, false for 'update' @ L371
+[2026-10-09T18:36:22.161Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b251a error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:22.216Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2517 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L504:26 for 'create' @ L504, evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:22.240Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b251b error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L504:26 for 'create' @ L504, false for 'create' @ L504
+[2026-10-09T18:36:22.301Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b251d error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:22.316Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b251e error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L471:24 for 'update' @ L471, false for 'update' @ L471
+[2026-10-09T18:36:22.371Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b251c error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:22.398Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b251f error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:22.465Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2520 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:22.493Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2521 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:22.565Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2522 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, evaluation error at L282:26 for 'update' @ L282, false for 'create' @ L276
+[2026-10-09T18:36:22.590Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2523 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, evaluation error at L282:26 for 'update' @ L282, false for 'create' @ L276
+[2026-10-09T18:36:22.608Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2524 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, false for 'update' @ L282
+[2026-10-09T18:36:22.695Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2525 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L164:24 for 'update' @ L164, false for 'update' @ L164
+[2026-10-09T18:36:22.707Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2526 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L164
+[2026-10-09T18:36:22.764Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2527 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:22.784Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2528 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:22.800Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2529 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:22.818Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b252a error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:22.840Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b252b error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L220:26 for 'update' @ L220, false for 'update' @ L220
+[2026-10-09T18:36:22.891Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b252c error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, evaluation error at L282:26 for 'update' @ L282, false for 'create' @ L276
+[2026-10-09T18:36:22.919Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b252d error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, evaluation error at L282:26 for 'update' @ L282, false for 'create' @ L276
+[2026-10-09T18:36:22.937Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b252e error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L276, evaluation error at L282:26 for 'update' @ L282, false for 'create' @ L276
+[2026-10-09T18:36:22.951Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b252f error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:22.992Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2530 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:23.041Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2531 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:23.059Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2532 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:23.088Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2533 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:23.108Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2534 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+[2026-10-09T18:36:23.127Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x600b2535 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L282:26 for 'update' @ L282, false for 'update' @ L282
+
+222 von 222 Pruefungen wie erwartet.

@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 20:41 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 20:42 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `7672b43 Sicherung 20:41 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `97b3f27 Sicherung 20:42 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -18,8 +18,13 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
+ A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/KARTEN-KONFLIKTE-2026-10-09.md
  M sw.js
 ```
 
@@ -28,7 +33,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 9, chrome.exe 19 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 9, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -49,6 +54,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 20:42 Codex: A14/A15 als Entwurf 3.18.30 gebaut: eindeutige Aktions-/Ausgangskennung, atomare Firestore-Regel, beide Undo-Wege prüfen die eigene Aktion; einzelne dauerhafte Antwortkopien pro Konto/Aktion mit Prüfen/Download/ausdrücklichem Entfernen. Speicherfehler bucht keine neue Antwort, erfolgreiche Kontolöschung entfernt lokale Antwortkopien. Datenschutz und Übergang alter Clients dokumentiert. Echter SDK: 12 Schutzfälle grün, einschließlich Neustart, zwei Offline-Geräte, gleiche Werte, Löschung und echte Regelablehnung ohne doppelte Zählung. 222/222 Regeltests grün, bestehender Undo-Zähler-Test und Kontowechsel 3/3 grün. Erstes pauschales Storage-Fehler-Fixture störte den SDK; korrigiertes Fixture betrifft ausschließlich Antwortschlüssel, alle Erwartungen erhalten. Netzteil seit 20:40 erkannt (BatteryStatus 2). Standprüfung grün; frischer Gesamtlauf 157 Tests an Quelle 526cb2e58f6b890b gestartet. Noch kein App-Commit oder Deploy. SDK-Probe separat, da sie den eigenen Demo-Emulator benötigt. Logs in sicherung/tests/karten-fix-2026-10-09.
 
 - 20:24 Codex: Betreiber fragt nach Einordnung und fordert „mach“, danach ununterbrochen weiterarbeiten mit kurzen Antworten. Beide Wortlaute in ALLES-OFFEN gespeichert. Wechsel von Diagnose zu technischem Fix A14/A15: serverseitige Bindung an eindeutige letzte Kartenaktion, Offline-Schreiben bleibt möglich, Konflikte nicht zusammenrechnen. Ablehnungen müssen bis Bestätigung/ausdrücklicher Auflösung auf dem Gerät erhalten bleiben. Regel-/Import-/Undo-/Konto-Pfade gelesen. Akku 13 %, kein Gesamtlauf/Commit einer App-Version ohne Abnahme.
 
@@ -91,5 +98,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 04:30 „ladegerät“ an 3.18.28 endete 04:19 mit 155/156, nichts
   veröffentlicht. Rot: `t_serie_lang` Fall 3 (47 statt 48), lief 04:01.
   Einzeln 04:20 wieder rot. Ursache gerechnet und belegt: Der Test
-  verschiebt die Uhr der Seite um Vielfache von 24 h; über das Ende der
-  Sommerzeit (25.10.) zeigt sie dann 03:xx statt 04:xx und liegt vor der

@@ -143,6 +143,52 @@ Konfliktlösung: das würde Nicht und gewolltes Rückgängig ignorieren.
 - Neue Felder und Übergang durch Regeln-/Emulatortests absichern; voller
   Lauf und Rundenabnahme später mit Netzteil, vor Veröffentlichung.
 
-Status: bestätigt, nicht behoben. Keine App-/Regeländerung oder
-Veröffentlichung. Beide Aufgaben in AUFGABEN und ALLES-OFFEN aufgenommen.
+Historischer Status vor dem Bau: bestätigt, nicht behoben. Beide Aufgaben
+in AUFGABEN und ALLES-OFFEN aufgenommen.
 Die übrige Nachprüfung läuft unabhängig weiter; kein Gesamturteil.
+
+## Schutzentwurf 3.18.30, 09.10.2026 20:42
+
+Der Betreiber hat den Bau ausdrücklich beauftragt. Normale Karten tragen
+`bewertungsStand` (eindeutige Aktion) und `bewertungsBasis` (ersetzter Stand).
+Die Regeln prüfen den Ausgangsstand atomar. Beide Undo-Wege prüfen schon
+vor lokalen Änderungen die eigene Aktionskennung. Textzeilen bleiben beim
+bisherigen Probelauf. Notiz/Wort/Reihenfolge benötigen keine neue Antwort.
+
+Noch nicht bestätigte Aktionen liegen zusätzlich einzeln unter
+`adrabic-bewertung-<uid>/<aktion>` in localStorage. Ablehnung entfernt
+sie nicht. Neustart zeigt sie wieder, Serverprüfung bestätigt oder
+kennzeichnet den Konflikt, ohne einen neuen Ausgangsstand zu erfinden.
+Download und ausdrückliches Entfernen sind möglich. Speicherfehler
+bucht keine neue Antwort. Datenschutz Punkt 7 ist ergänzt.
+
+Belege: `plan/sicherung/tests/karten-fix-2026-10-09/`:
+
+- `schutz-5.log`: 12 Fälle grün mit echtem Firestore-SDK und Repo-Regeln,
+  unabhängige Browserprofile. Eigenes Undo, fremdes Undo mit unveränderten
+  Tageszählern, Gesehen-Undo, Offline-Bewertung/Gesehen samt Neustart,
+  zwei Offline-Geräte, gleiche Werte bei fremder Kennung, eigenes Offline-
+  Undo, Löschung, Antwortspeicher voll, echte Regeln-Ablehnung mit Retry
+  ohne zusätzliche Tagesantwort, alter Client abgewiesen/Notiz erlaubt.
+- `regeln.log`: 222/222, einschließlich zwölf neuer positiver und negativer
+  Kennungsfälle. Bestehende Werte-Negativfälle erhalten gültige Kennungen,
+  damit die Werteprüfung weiterhin wirklich geprüft wird.
+- `undo-verlauf.log`: bestehende beschreibende Zählerausgabe gelesen;
+  n und w werden bei eigenem Undo jeweils genau einmal zurückgenommen.
+- `konto.log`: drei vorhandene Kontowechsel-/Abmeldefälle grün, Attrappe.
+
+Testaufbau: eigener Demo-Emulator 8082, eigener HTTP-Server 8097, Auth-
+Attrappe und echter Firestore-SDK. Die SDK-Probe heißt
+`plan/werkzeuge/pruefstand/karten_konflikte_sdk.js` und läuft separat vom
+normalen Attrappen-Prüfstand. Die historische Diagnose gegen 7142b93
+bleibt erhalten. Eine globale Storage-Fehler-Injektion störte auch den SDK;
+das korrigierte Fixture injiziert QuotaExceededError nur für Antwortkopien.
+Das belegt diesen App-Fehlerpfad, keinen vollständigen Browser-Speicherausfall.
+
+Grenzen/offen: Gesamtlauf an Quelle 526cb2e58f6b890b läuft (157 Tests),
+Rundenabnahme, Affen und Gegenprüfung noch nicht abgeschlossen. Tageszähler
+bleiben bei den bisherigen Regeln; die Proben belegen eigene Rücknahme,
+blockierte beobachtete fremde Aktion und Retry ohne Doppelzählung, keine
+neue Definition von Konfliktantworten. Regelwechsel lehnt geänderte
+Bewertungen alter Clients ab; diese brauchen eine Aktualisierung. Regeln
+müssen vor Hosting eingespielt werden. Noch kein App-Commit oder Deploy.
