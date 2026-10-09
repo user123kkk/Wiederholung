@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:25 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 22:27 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `8b66b38 Sicherung 22:26 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `efe4582 Sicherung 22:26 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -31,6 +31,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
+ A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
  M sw.js
 ```

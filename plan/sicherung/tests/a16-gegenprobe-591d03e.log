@@ -1,0 +1,21 @@
+app.js SHA256 44c05375c7511ba420fbabe5b52cea6599ecf7c1ea3e67e77b52428aa30347d9
+AssertionError [ERR_ASSERTION]: Schutzpruefung: abgelehnte Tagesantwort dauerhaft erhalten
+KONTROLLE {"reject":false,"restart":true,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"efe4c799-2f3f-49a5-8259-96402ab16868"},"error":null},"after":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsStand":"efe4c799-2f3f-49a5-8259-96402ab16868","bewertungsBasis":null},"error":null,"journal":[]},"server":{"w":1,"n":0,"u":0}}
++ actual - expected
+
++ [
++   'Bestaetigte Bewertung: abgelehnte Tagesantwort nach Neustart verloren'
++ ]
+- []
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_verlauf_neustart.js:53:51 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+KONTROLLE {"reject":true,"restart":false,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{"2026-10-09":{"w":1}},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"6116a337-c020-44a3-baf1-8d946d6a031c"},"error":"permission-denied"},"after":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"6116a337-c020-44a3-baf1-8d946d6a031c"},"error":null,"journal":[]},"server":{"w":1,"n":0,"u":0}}
+BEFUND {"reject":true,"restart":true,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{"2026-10-09":{"w":1}},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"2bbe51f6-e567-4122-83ee-e188a14cfa03"},"error":"permission-denied"},"after":{"local":{},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsStand":"2bbe51f6-e567-4122-83ee-e188a14cfa03","bewertungsBasis":null},"error":null,"journal":[]},"server":{"w":0,"n":0,"u":0}}
+GRUEN feste Gegenprobe erkennt den urspruenglichen Verlust.
