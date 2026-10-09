@@ -30,6 +30,28 @@ Die folgenden vorhandenen Tests werden nicht als erneut bestanden geführt.
 
 ## Wie ein Durchgang abgenommen wird
 
+**Begonnen, 09.10.2026 nach Abschluss der Eingangssperre:**
+persistCardGrade, karteRef, abgelehntesNachholen und Auth-Rücksetzung gelesen.
+Kontoreferenz bei Bewertung eingefroren, späte Antwort an dieses Konto
+gebunden; beim Kontowechsel wird die Liste abgelehnter Bewertungen geleert.
+`t_konto_schreibantwort.js` aktuell grün für Fehler vor dem Wechsel,
+nach dem Wechsel und nach Abmeldung. Feste Gegenprobe c3a6aec reproduziert
+den alten Fehler in allen drei Fällen; Prüfung kann den Fehler erkennen.
+Browser/Firebase-Attrappe, kein echter SDK-Offline-Nachweis.
+Logs unter `plan/sicherung/tests/tagesdeckel-audit-2026-10-09/`,
+`konto-schreibantwort-aktuell.log` und `konto-schreibantwort-gegenprobe.log`.
+
+**Nächster konkreter Prüfpunkt:** Zwei Geräte bewerten dieselbe Karte
+mit unterschiedlichen Ständen, ein Gerät ist offline; außerdem ein altes
+Rückgängig. Der Kommentar vor persistCardGrade verspricht weitreichenden
+Mehrgeräteschutz. Tatsächlich werden absolute Bewertungsfelder dieser
+Karte geschrieben, keine Transaktion in diesem Pfad. Der Schutz anderer
+Karten darf nicht als Beleg für Konfliktfreiheit derselben Karte gelten.
+Den wirklichen SDK-Ablauf, bestehende Entscheidung und Tests erst prüfen;
+hier noch keinen neuen Produktfehler oder passende Konfliktregel behaupten.
+G-075 betrifft atomare Tageszähler und ist kein automatischer Nachweis
+für konfliktfreie Bewertung derselben Karte.
+
 1. Original-Code lesen, Datenweg vom Auslöser bis zu Speicherung und
    Rückmeldung verfolgen. Invarianten und mögliche Unterbrechungen nennen.
 2. Vorhandene Tests lesen: prüfen sie genau diese Handlung, den richtigen

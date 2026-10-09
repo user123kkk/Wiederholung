@@ -2,6 +2,22 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — Weitere Zuverlässigkeitsprüfung begonnen: alte Kontoschreibantworten
+
+Vorbeugung als 1472584 auf main gepusht; danach gemäß weiterem Betreiberauftrag
+erste Kontoprüfung begonnen. Originalpfade persistCardGrade, karteRef,
+abgelehntesNachholen und Auth-Rücksetzung gelesen. Gegenprobe c3a6aec
+reproduziert den alten Fehler in drei Fällen, aktueller 3.18.29 besteht
+alle drei: Ablehnung vor/nach Kontowechsel und nach Abmeldung. Kein
+fremdes Nachholen, keine alte Fehleranzeige im neuen Zustand. Chrome /
+Firebase-Attrappe, vollständige Logs unter den Tagesdeckel-Audit-Testbelegen.
+Keine vollständige Abnahme des Datenwegs, keine echte SDK-Offline-Prüfung.
+Nächster Prüfpunkt gemäß ZUVERLAESSIGKEIT-NACHPRUEFUNG: dieselbe Karte
+auf zwei Geräten, Offline-Nachholen und altes Rückgängig. Schutz anderer
+Karten ist kein Beleg für diese Konfliktfälle. G-075 ist die Zählerprüfung,
+nicht automatisch eine Bewertungskonflikt-Prüfung. Keine Appänderung,
+keine neue Lernregel, kein Gesamtlauf oder Deploy.
+
 ### 2026-10-09 — Wiederholung der eigenen Modellfehler technisch verhindern
 
 **Auftrag:** „stelle sicher dass "solche Fehler" nicht wieder passieren“.
