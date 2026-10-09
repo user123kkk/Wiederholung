@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 4b6221e..afe65fd 100644
+index 4b6221e..cfdd66d 100644
 --- a/app.js
 +++ b/app.js
 @@ -331,7 +331,12 @@ function normCard(c) {
@@ -206,7 +206,7 @@ index 4b6221e..afe65fd 100644
 +    const x = { id: bewertungsKennung(), uid: currentUser.uid, bereichId, cardId,
 +      basis: basis === undefined ? (card.bewertungsStand || null) : basis,
 +      fields: daten, wort: card.wort, zeit: Date.now(), status: "offen" };
-+    if (!bewertungsAktionMerken(x)) { render(); return null; }
++    if (!bewertungsAktionMerken(x)) return null;
 +    card.bewertungsBasis = x.basis;
 +    card.bewertungsStand = x.id;
 +    bewertungsAktionSchreiben(x);
@@ -215,7 +215,23 @@ index 4b6221e..afe65fd 100644
    const kontoRef = userDocRef;
    const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
    fb.updateDoc(karteRef(cardId), {
-@@ -6125,13 +6284,14 @@ function toggleLernNotiz(id) {
+@@ -3927,6 +4086,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+   }
+   if (!konto.abgebrochen) {
+     try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
++    try {
++      const prefix = bewertungsPraefix(konto.user.uid);
++      const keys = [];
++      for (let i = 0; i < localStorage.length; i++) {
++        const key = localStorage.key(i);
++        if (key && key.startsWith(prefix)) keys.push(key);
++      }
++      keys.forEach(key => localStorage.removeItem(key));
++    } catch (e) {}
+   }
+   if (!konto.abgebrochen && auth.currentUser === null) {
+     if (currentUser === konto.user && verlaufGeneration === generation)
+@@ -6125,17 +6293,26 @@ function toggleLernNotiz(id) {
  function lernAbhaken(id) {
    const card = findCard(id);
    if (!card || !istNeueKarte(card)) return;
@@ -224,14 +240,28 @@ index 4b6221e..afe65fd 100644
    card.ersteBewertung = todayStr();
    card.stufe = 0;
    card.nextReview = todayStr();
-   verlaufZaehle("n");
-   bereichHeuteZaehle(currentBereich().id, 1);
+-  verlaufZaehle("n");
+-  bereichHeuteZaehle(currentBereich().id, 1);
 -  persistCardGrade(currentBereich().id, card.id, {
 +  ui.lernLetzte.bewertungsStand = persistCardGrade(currentBereich().id, card.id, {
      stufe: card.stufe, nextReview: card.nextReview,
      ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
      maxStufe: card.maxStufe
-@@ -6150,6 +6310,11 @@ function lernRueckgaengig() {
+   });
++  if (ui.lernLetzte.bewertungsStand === null) {
++    card.stufe = ui.lernLetzte.prevStufe;
++    card.nextReview = ui.lernLetzte.prevNextReview;
++    card.ersteBewertung = ui.lernLetzte.prevErsteBewertung;
++    ui.lernLetzte = null;
++    render();
++    return;
++  }
++  verlaufZaehle("n");
++  bereichHeuteZaehle(currentBereich().id, 1);
+   ui.lernFokusNach = card.id;
+   /* 2.10.1: Auch das Durchgehen zaehlt fuer den Tag. Vorher sprang die
+      Flamme nur am Ende einer Lernsession an - am ersten Tag mit einem neuen
+@@ -6150,15 +6327,20 @@ function lernRueckgaengig() {
    const l = ui.lernLetzte;
    if (!l) return;
    const card = findCard(l.cardId);
@@ -240,19 +270,24 @@ index 4b6221e..afe65fd 100644
 +    dlgAlert("Die Karte wurde inzwischen geändert. Rückgängig würde diese Änderung überschreiben.", "Karte inzwischen geändert");
 +    return;
 +  }
++  const undoStand = persistCardGrade(currentBereich().id, card.id, {
++    stufe: l.prevStufe, nextReview: l.prevNextReview, ersteBewertung: l.prevErsteBewertung,
++    rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0
++  }, l.bewertungsStand);
++  if (undoStand === null) { render(); return; }
    if (card) {
      card.stufe = l.prevStufe;
      card.nextReview = l.prevNextReview;
-@@ -6158,7 +6323,7 @@ function lernRueckgaengig() {
-       stufe: card.stufe, nextReview: card.nextReview,
-       ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
-       maxStufe: card.maxStufe || 0
+     card.ersteBewertung = l.prevErsteBewertung;
+-    persistCardGrade(currentBereich().id, card.id, {
+-      stufe: card.stufe, nextReview: card.nextReview,
+-      ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
+-      maxStufe: card.maxStufe || 0
 -    });
-+    }, l.bewertungsStand);
    }
    /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
       das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
-@@ -6773,6 +6938,7 @@ function gradeCard(kind) {
+@@ -6773,6 +6955,7 @@ function gradeCard(kind) {
       waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
    const card = findCard(s.queue[0]);
    if (card && !s.isDrill) {
@@ -260,16 +295,38 @@ index 4b6221e..afe65fd 100644
      /* E6: vor der Aenderung merken - direkt darunter wird ersteBewertung
         gesetzt, danach waere die Karte nicht mehr als "neu" erkennbar. */
      const warNeu = istNeueKarte(card);
-@@ -6868,7 +7034,7 @@ function gradeCard(kind) {
+@@ -6829,6 +7012,22 @@ function gradeCard(kind) {
+     /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
+        danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
+        als neu erkennbar. */
++    s.lastAction.bewertungsStand = persistCardGrade(s.bereichId, card.id, {
++      stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung,
++      rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0
++    });
++    if (s.lastAction.bewertungsStand === null) {
++      card.stufe = s.lastAction.prevStufe;
++      card.nextReview = s.lastAction.prevNextReview;
++      card.ersteBewertung = s.lastAction.prevErsteBewertung;
++      card.rueckfaelle = s.lastAction.prevRueckfaelle;
++      card.maxStufe = s.lastAction.prevMaxStufe;
++      if (s.lastAction.prevRegler) reglerZurueck(s.lastAction.prevRegler);
++      s.lastAction = null;
++      s.nochmalNeu = false;
++      render();
++      return;
++    }
+     verlaufZaehle(warNeu ? "n" : "w");
+     bereichHeuteZaehle(s.bereichId, 1);
+   }
+@@ -6868,7 +7067,6 @@ function gradeCard(kind) {
    s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
    hwStrokes = [];
    if (!s.isDrill) {
 -    if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
-+    if (card) s.lastAction.bewertungsStand = persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
      /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
         Karte), dann in den naechsten Bereich der Runde weiterschalten. */
      if (s.queue.length === 0) rundeNaechsterBereich(s);
-@@ -6959,6 +7125,14 @@ function gradeUnknown() { gradeCard("unknown"); }
+@@ -6959,6 +7157,22 @@ function gradeUnknown() { gradeCard("unknown"); }
  function undoLastGrade() {
    const s = ui.session;
    if (!s || !s.lastAction) return;
@@ -281,19 +338,26 @@ index 4b6221e..afe65fd 100644
 +    return;
 +  }
 +  const bewertungsBasis = s.lastAction.bewertungsStand;
++  if (!s.isDrill) {
++    const undoStand = persistCardGrade(undoBereich.id, undoKarte.id, {
++      stufe: s.lastAction.prevStufe, nextReview: s.lastAction.prevNextReview,
++      ersteBewertung: s.lastAction.prevErsteBewertung,
++      rueckfaelle: s.lastAction.prevRueckfaelle, maxStufe: s.lastAction.prevMaxStufe
++    }, bewertungsBasis);
++    if (undoStand === null) { render(); return; }
++  }
    /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
       zurueck - findCard() sucht im offenen Bereich. */
    if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
-@@ -7006,7 +7180,7 @@ function undoLastGrade() {
+@@ -7006,7 +7220,6 @@ function undoLastGrade() {
       stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
       sie beim Bewerten offen war. */
    s.extraOpen = true;
 -  if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
-+  if (card && !s.isDrill) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 }, bewertungsBasis);
    render();
  }
  function endSession() {
-@@ -9520,6 +9694,7 @@ function renderMain() {
+@@ -9520,6 +9733,7 @@ function renderMain() {
  
    if (!imModus) {
      /* ---- Meldungen, die ueber allem stehen ---- */
@@ -301,7 +365,7 @@ index 4b6221e..afe65fd 100644
      if (schreibFehler) kopf += bannerSchreibfehler();
      if (syncError) {
        kopf += bannerFehler("Verbindung:", esc(syncError) +
-@@ -9551,8 +9726,9 @@ function renderMain() {
+@@ -9551,8 +9765,9 @@ function renderMain() {
                              : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
          ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
      }
@@ -313,7 +377,7 @@ index 4b6221e..afe65fd 100644
    }
  
    /* ---- Geruest ---- */
-@@ -16099,6 +16275,9 @@ document.body.addEventListener("click", e => {
+@@ -16099,6 +16314,9 @@ document.body.addEventListener("click", e => {
        if (dueCards().length > 0) startSession();
        else { window.scrollTo(0, 0); render(); }
        break;
@@ -323,6 +387,23 @@ index 4b6221e..afe65fd 100644
      case "reveal": revealAnswer(); break;
      case "toggle-extra": toggleExtra(); break;
      case "grade-known": if (!bewertenZuFrueh()) gradeKnown(); break;
+diff --git a/datenschutzerklaerung.html b/datenschutzerklaerung.html
+index 515f172..e585f61 100644
+--- a/datenschutzerklaerung.html
++++ b/datenschutzerklaerung.html
+@@ -209,6 +209,12 @@
+         <li>die Kennung des zuletzt geöffneten Bereichs, getrennt für jedes angemeldete Konto,
+         damit du auf diesem Gerät dort weiterlernen kannst; im Merkzeichen steht nur die Bereichs-ID</li>
+         <li>das Datum deiner letzten Sicherung</li>
++        <li>eine lokale Kopie noch nicht bestätigter Kartenantworten: Konto- und Kartenkennung,
++        Wort, Zeitpunkt, gewünschter Lernstand und technische Kennungen des Ausgangsstands und
++        der Antwort. Nach der Bestätigung wird die Kopie entfernt. Abgelehnte Antworten bleiben
++        bis zur Klärung oder bis du sie ausdrücklich vom Gerät entfernst; du kannst sie vorher
++        herunterladen. Beim erfolgreichen Löschen des Kontos werden diese Kopien ebenfalls
++        entfernt. Die Antwort wird zur Speicherung an dein Konto in der Cloud übertragen.</li>
+         <li>welche Hinweise der App du schon gesehen oder weggetippt hast, damit derselbe Hinweis
+         nicht immer wieder erscheint, und – falls du eine eingerichtet hast – die Uhrzeit deiner
+         Kalender-Erinnerung</li>
 diff --git a/firestore.rules b/firestore.rules
 index fb68788..99c0eed 100644
 --- a/firestore.rules
@@ -371,10 +452,19 @@ index fb68788..99c0eed 100644
      }
  
 diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
-index e9503f2..9588b2b 100644
+index e9503f2..177c25f 100644
 --- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 +++ b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
-@@ -72,7 +72,8 @@ async function cloud(tag){
+@@ -54,6 +54,8 @@ async function seite(b,sources,ctx){
+       nachholen:abgelehntesNachholen,verlauf:()=>JSON.parse(JSON.stringify(verlauf)),
+       offen:()=>JSON.parse(JSON.stringify(typeof verlaufOffen==='undefined'?{}:verlaufOffen)),
+       fehler:()=>schreibFehler,gesehen:lernAbhaken,gesehenZurueck:lernRueckgaengig,
++      aufbewahrt:()=>typeof bewertungsAktionen==='undefined'?[]:JSON.parse(JSON.stringify([...bewertungsAktionen.values()])),
++      pruefen:()=>bewertungsAktionenPruefen(),
+       undo:undoLastGrade,reset:verlaufZuruecksetzen,zeichnen:()=>startDrillWithCards(currentBereich().karten,'Pruefung',true)};`}));
+   await p.route('**/verses.quran.foundation/**',r=>r.abort());
+   await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
+@@ -72,7 +74,8 @@ async function cloud(tag){
    const e=d.fields.verlauf?.mapValue.fields?.[tag]?.mapValue.fields||{};
    return Object.fromEntries(['w','n','u'].map(k=>[k,Number(e[k]?.integerValue||0)]));
  }
@@ -384,3 +474,41 @@ index e9503f2..9588b2b 100644
    const sources={};for(const name of ['firebase-app.js','firebase-firestore.js']){
      const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
    }
+diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
+index 118e0da..210f80e 100644
+--- a/plan/werkzeuge/regeln/regeln-pruefung.mjs
++++ b/plan/werkzeuge/regeln/regeln-pruefung.mjs
+@@ -133,13 +133,14 @@ await pruefe("N14 Speicherkarte loeschen", "ja", () => updateDoc(b("b1"), { "set
+ 
+ await pruefe("N15 Karte anlegen", "ja", () => setDoc(k("c1"), karte("b1")));
+ await pruefe("N16 Karte bewerten", "ja", () => updateDoc(k("c1"), {
+-  stufe: 1, nextReview: "2026-09-13", ersteBewertung: heute, rueckfaelle: 0, maxStufe: 1 }));
++  stufe: 1, nextReview: "2026-09-13", ersteBewertung: heute, rueckfaelle: 0, maxStufe: 1,
++  bewertungsStand: "N16", bewertungsBasis: null }));
+ await pruefe("N17 Karte bearbeiten", "ja", () => updateDoc(k("c1"), {
+   wort: "مَدْرَسَة", uebersetzung: "Schule", extra: "Beispielsatz" }));
+ await pruefe("N18 Karte verschieben", "ja", () => updateDoc(k("c1"), { bereichId: "b1", order: 5 }));
+ await pruefe("N19 Neue Karte ganz vorn (order = -Date.now())", "ja", () => setDoc(k("c2"), { ...karte("b1"), order: -Date.now() }));
+ await pruefe("N20 Rueckfallzaehler zuruecksetzen", "ja", () => updateDoc(k("c1"), { rueckfaelle: 0 }));
+-await pruefe("N21 Hoechststufe MAX_STUFE", "ja", () => updateDoc(k("c1"), { stufe: 12, maxStufe: 12 }));
++await pruefe("N21 Hoechststufe MAX_STUFE", "ja", () => updateDoc(k("c1"), { stufe: 12, maxStufe: 12, bewertungsStand: "N21", bewertungsBasis: "N16" }));
+ await pruefe("N22 Karte mit Bild-Link in extra", "ja", () => updateDoc(k("c1"), { extra: "https://example.org/bild.png" }));
+ 
+ await pruefe("N23 Import: Bereich und Karten in einem Stapel", "ja", async () => {
+@@ -179,11 +180,11 @@ await pruefe("M04 Ohne Anmeldung lesen", "nein", () => getDoc(doc(dbAnon, "users
+ await pruefe("M05 E-Mail nicht bestaetigt", "nein", () => updateDoc(doc(dbUnbes, "users", UID), { name: "X" }));
+ 
+ await pruefe("M06 Hoechststufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { maxStufe: 9999 }));
+-await pruefe("M07 Stufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { stufe: 99 }));
+-await pruefe("M08 Stufe negativ", "nein", () => updateDoc(k("c1"), { stufe: -1 }));
+-await pruefe("M09 Stufe als Text", "nein", () => updateDoc(k("c1"), { stufe: "12" }));
+-await pruefe("M10 Stufe als Kommazahl", "nein", () => updateDoc(k("c1"), { stufe: 1.5 }));
+-await pruefe("M11 Faelligkeit kein Datum", "nein", () => updateDoc(k("c1"), { nextReview: "morgen" }));
++await pruefe("M07 Stufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { stufe: 99, bewertungsStand: "M07", bewertungsBasis: "N21" }));
++await pruefe("M08 Stufe negativ", "nein", () => updateDoc(k("c1"), { stufe: -1, bewertungsStand: "M08", bewertungsBasis: "N21" }));
++await pruefe("M09 Stufe als Text", "nein", () => updateDoc(k("c1"), { stufe: "12", bewertungsStand: "M09", bewertungsBasis: "N21" }));
++await pruefe("M10 Stufe als Kommazahl", "nein", () => updateDoc(k("c1"), { stufe: 1.5, bewertungsStand: "M10", bewertungsBasis: "N21" }));
++await pruefe("M11 Faelligkeit kein Datum", "nein", () => updateDoc(k("c1"), { nextReview: "morgen", bewertungsStand: "M11", bewertungsBasis: "N21" }));
+ await pruefe("M12 Erfundenes Feld an der Karte", "nein", () => updateDoc(k("c1"), { freigeschaltet: true }));
+ await pruefe("M13 Wort ueberlang", "nein", () => updateDoc(k("c1"), { wort: "a".repeat(1001) }));
+ await pruefe("M14 Notiz ueberlang", "nein", () => updateDoc(k("c1"), { extra: "a".repeat(5001) }));
