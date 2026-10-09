@@ -1,0 +1,7 @@
+-- A) immer neu anmelden vor dem Loeschen --
+  Protokoll: reauth > commit > deleteDoc > deleteUser
+ok      reauth wurde aufgerufen
+ok      reauth kommt vor commit
+ok      reauth kommt vor deleteUser
+ok      Konto und Daten sind weg
+-- B) offline gesperrt --
