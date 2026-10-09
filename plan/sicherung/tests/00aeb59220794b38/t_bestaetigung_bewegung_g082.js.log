@@ -1,0 +1,25 @@
+-- aktueller Stand --
+ok      dunkel: brief-schweben laeuft nicht endlos (Wiederholungen <= 2): [{"name":"brief-schweben","iterations":2,"playState":"running"}]
+ok      dunkel: puls laeuft nicht endlos (Wiederholungen <= 6): [{"name":"puls","iterations":6,"playState":"running"}]
+dunkel | Fehler auf der Seite: ok
+ok      hell: brief-schweben laeuft nicht endlos (Wiederholungen <= 2): [{"name":"brief-schweben","iterations":2,"playState":"running"}]
+ok      hell: puls laeuft nicht endlos (Wiederholungen <= 6): [{"name":"puls","iterations":6,"playState":"running"}]
+hell | Fehler auf der Seite: ok
+
+-- prefers-reduced-motion: reduce --
+ok      reduzierte Bewegung: nichts laeuft mehr nach kurzer Wartezeit: {"brief":[],"punkt":[]}
+reduced-motion | Fehler auf der Seite: ok
+
+-- grep "infinite" in styles.css --
+  gefunden: 1159, 3099, 3157, 3198, 4157
+ok      nur Ladekreis/Skelett/Ladebildschirm/einstieg-atmen benutzen noch "infinite": ok
+
+0 Fehler insgesamt auf dem aktuellen Stand.
+
+-- Gegenprobe gegen 5ad0a11 (muss rot sein) --
+  ok (=Fehler im Altstand): brief-schweben laeuft im alten Stand endlos
+  ok (=Fehler im Altstand): puls laeuft im alten Stand endlos
+
+0 unerwartete "schon gut"-Treffer im Altstand (soll 0 sein).
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":11,"quelltext":"715826c925d607b180e6b89c4541ee6d3b36c4e85f4b277e0406bb6e1a86382f"}
