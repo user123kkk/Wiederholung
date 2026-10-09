@@ -1,0 +1,57 @@
+diff --git a/plan/werkzeuge/pruefstand/t_paket_e.js b/plan/werkzeuge/pruefstand/t_paket_e.js
+index 377447e..8d80b05 100644
+--- a/plan/werkzeuge/pruefstand/t_paket_e.js
++++ b/plan/werkzeuge/pruefstand/t_paket_e.js
+@@ -13,7 +13,8 @@ async function seite(b,vp,opt={}) {
+     await ctx.addInitScript(()=>{navigator.serviceWorker.register=()=>Promise.reject(new Error('Prüfung ohne Worker'));});
+     if(opt.zeit)await ctx.addInitScript(iso=>{const Echt=Date;window.__zeitE=new Echt(iso).getTime();window.Date=class extends Echt{constructor(...a){super(...(a.length?a:[window.__zeitE]));}static now(){return window.__zeitE;}};},opt.zeit);
+     for(const f of ['app.js','styles.css','index.html']) {
+-      let body=alt?execFileSync('git',['show','8762d38:'+f],{cwd:repo,encoding:'utf8',maxBuffer:4e6}):fs.readFileSync(path.join(repo,f),'utf8');
++      const commit = opt.rechtsAlt ? 'd64380a' : alt ? '8762d38' : null;
++      let body=commit?execFileSync('git',['show',commit+':'+f],{cwd:repo,encoding:'utf8',maxBuffer:4e6}):fs.readFileSync(path.join(repo,f),'utf8');
+       if(f==='app.js') body+='\nwindow.__E={render,verlaufZuruecksetzen,serieAktuell,kontoLoeschenAusfuehren,kontoDatenLoeschen,kontoAuthLoeschen,erinnerungIcs,erinnerungHerunterladen,dateiSpeichern,lernenHinweis,hinweisSpeicher,ruhetagPruefen:typeof ruhetagPruefen==="function"?ruhetagPruefen:null,get verlauf(){return verlauf;},get streak(){return streak;},get ui(){return ui;}};';
+       if(f==='app.js'&&opt.kandidat)body+='\nif(!ARAB_STUFEN.some(x=>x.id==="sehrgross"))ARAB_STUFEN.push({id:"sehrgross",label:"Sehr groß",faktor:1.6});';
+       await ctx.route(u=>u.hostname==='127.0.0.1'&&u.pathname.endsWith('/'+f),r=>r.fulfill({body,contentType:f.endsWith('.js')?'text/javascript':f.endsWith('.css')?'text/css':'text/html'}));
+@@ -41,20 +42,37 @@ async function e2(b) {
+ }
+ async function e4(b) {
+   for(const vp of [GERAETE.handy,{...GERAETE.handy,width:320,height:568},GERAETE.ipad]) {
+-    const {p,ctx}=await seite(b,vp,{user:null});
++    const {p,ctx}=await seite(b,vp,{user:null,rechtsAlt:process.argv.includes('--rechts-alt')});
+     try {
+       for(const [a,id] of [['einstieg-weiter'],['einstieg-ziel','kurs'],['einstieg-weiter'],['einstieg-huerde','keine'],['einstieg-weiter'],['einstieg-aufdecken'],['einstieg-bewerten','Sicher'],['einstieg-weiter'],['einstieg-weiter'],['einstieg-weiter'],['einstieg-anker','eigen']])await aktion(p,a,id);
+       await p.fill('#einstieg-frei','Testmoment');await aktion(p,'einstieg-weiter',null,8000);
+       await aktion(p,'einstieg-fertig');
+       await p.fill('#a-name','E4 Name');await p.fill('#a-email','e4@example.com');
++      await p.fill('#a-pass','E4-Passwort-bleibt');
++      const plan=await p.evaluate(()=>JSON.stringify(__E.ui.einstiegZurueck));
+       for(const file of ['datenschutzerklaerung.html','impressum.html']) {
+         const link=p.locator(`#app a[href="./${file}"]`);
+-        assert.equal(await link.getAttribute('target'),'_blank','E4 Rechtslink ersetzt App');
+-        const [popup]=await Promise.all([p.waitForEvent('popup'),link.click()]);
+-        await popup.waitForLoadState();assert.ok(await popup.locator('h1').isVisible());await popup.close();
++        if(await link.getAttribute('target')==='_blank') {
++          const [popup]=await Promise.all([p.waitForEvent('popup'),link.click()]);
++          await popup.waitForLoadState();
++          await popup.locator('.rechtsseite__zurueck a').click();
++          await popup.waitForLoadState();
++          assert.equal(await popup.locator('#a-name').count(),1,'E4 echter Zurück-Link verliert Plan und Formular');
++          await popup.close();
++        } else {
++          const url=p.url();await link.click();
++          await p.waitForFunction(()=>document.querySelector('#dlg-recht-inhalt .sektion'));
++          assert.equal(ctx.pages().length,1,'E4 öffnet keinen neuen Reiter');
++          assert.equal(p.url(),url,'E4 bleibt in der App');
++          assert.ok(await p.locator('[role="dialog"] .rechtsseite .sektion').count()>0);
++          await p.locator('[role="dialog"] [data-action="dlg-ok"]').click();
++          await p.waitForFunction(()=>!document.querySelector('[aria-labelledby="dlg-title"]'));
++        }
+         assert.equal(await p.inputValue('#a-name'),'E4 Name');assert.equal(await p.inputValue('#a-email'),'e4@example.com');
++        assert.equal(await p.inputValue('#a-pass'),'E4-Passwort-bleibt');
++        assert.equal(await p.evaluate(()=>JSON.stringify(__E.ui.einstiegZurueck)),plan,'E4 vollständiger Plan erhalten');
+       }
+-      assert.deepEqual(p.fehler,[]);console.log(`E4 ${vp.width}: ganzer Einstieg, beide Rechtsseiten, Name/Adresse erhalten`);
++      assert.deepEqual(p.fehler,[]);console.log(`E4 ${vp.width}: echter Zurück-Weg, beide Rechtsseiten, vollständiger Plan und Name/Adresse/Passwort erhalten`);
+     } finally {await ctx.close();}
+   }
+ }
