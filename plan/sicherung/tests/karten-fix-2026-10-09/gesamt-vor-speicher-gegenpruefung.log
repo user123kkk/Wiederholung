@@ -1,0 +1,31 @@
+Quellstand: 00aeb59220794b38a51d7fc98b090e3b78d4c0276fec1a96fb9985639711b2f8
+Logs: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\00aeb59220794b38
+Tests: 157
+EXIT 0 t_317.js (15s)
+EXIT 0 t_a11y.js (19s)
+BEWAHRT t_abgelehnt.js
+EXIT 0 t_abstimmen_fehler.js (15s)
+EXIT 0 t_anmelden.js (118s)
+EXIT 0 t_anmelden_enter.js (20s)
+EXIT 0 t_ansage.js (10s)
+EXIT 0 t_ansage2.js (22s)
+EXIT 0 t_bereiche.js (77s)
+EXIT 0 t_bestaetigung.js (44s)
+EXIT 0 t_bestaetigung_bewegung_g082.js (11s)
+EXIT 0 t_bestaetigung_neu.js (12s)
+ROT t_bestand_tempo.js (35s)
+AssertionError [ERR_ASSERTION]: G-037: 113 ms statt maximal 100 ms
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":35,"quelltext":"11c3dfa8f7a3637036446c18bcb807c97d5065d1e8eaaeb4d43d79afc5309fc0"}
+EXIT 0 t_bild.js (8s)
+EXIT 0 t_board_limit.js (21s)
+EXIT 0 t_board_moderation.js (23s)
+EXIT 0 t_boot_geometrie.js (12s)
+EXIT 0 t_csp.js (5s)
+EXIT 0 t_daten.js (67s)
+EXIT 0 t_dialog_timer.js (1s)
+BEWAHRT t_doppeltipp.js
+EXIT 0 t_dreh.js (11s)
+EXIT 0 t_dreh_lage.js (21s)
+EXIT 0 t_einst.js (9s)
+EXIT 0 t_einst_oben.js (8s)
+EXIT 0 t_einstellungen.js (89s)
