@@ -13,7 +13,7 @@ index bc20801..e698a62 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..54723ed 100644
+index 4b6221e..056fcbd 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -237,12 +237,12 @@ index 4b6221e..54723ed 100644
 +  const n = [...bewertungsAktionen.values()].filter(x => x.status !== "offen").length;
 +  const konflikte = [...bewertungsAktionen.values()].filter(x => x.status === "konflikt" || x.status === "geloescht").length;
 +  if (!n && !bewertungsSpeicherFehler) return "";
-+  return bannerFehler("Antworten aufbewahrt:",
++  return bannerFehler(!n && bewertungsSpeicherFehler ? "Gerätespeicher prüfen:" : "Antworten aufbewahrt:",
 +    esc(konflikte ? (konflikte === 1 ? "Eine Antwort passt" : konflikte + " Antworten passen") + " nicht mehr zum aktuellen Kartenstand. " :
 +      n ? (n === 1 ? "Eine Antwort ist" : n + " Antworten sind") + " noch nicht bestätigt. " : "") +
 +    '<button class="tiny-link" data-action="bewertung-pruefen">Prüfen</button> ' +
-+    '<button class="tiny-link" data-action="bewertung-sichern">Antworten sichern</button> ' +
-+    '<button class="tiny-link" data-action="bewertung-verwerfen">Vom Gerät entfernen</button>' +
++    (n || bewertungsDefekte.size ? '<button class="tiny-link" data-action="bewertung-sichern">Antworten sichern</button> ' +
++    '<button class="tiny-link" data-action="bewertung-verwerfen">Vom Gerät entfernen</button>' : '') +
 +    (bewertungsSpeicherFehler ? ' Der Gerätespeicher ist nicht verfügbar oder beschädigt; neue Bewertungen sind gesperrt.' : ''));
 +}
 +function bewertungsSicherung() {
