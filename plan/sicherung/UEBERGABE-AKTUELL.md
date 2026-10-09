@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 19:43 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 19:46 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `1472584 Fehlerhafte Simulationseingaben vor Ergebnissen blockieren`
+- Zweig und letzter Commit: `main`, `7142b93 Kontoschreibantworten gegen alten Fehler prüfen`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -37,6 +37,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- Codex Folgearbeit nach 1472584 (Vorbeugung auf main gepusht): Kontoschreibpfad einschließlich Karte-Referenz, Nachholqueue und Auth-Rücksetzung gelesen. t_konto_schreibantwort aktuell 3/3 Fälle grün; feste Gegenprobe c3a6aec erkennt den alten Fehler 3/3. Logs gelesen, Quelle und Testbedingungen in ZUVERLAESSIGKEIT-NACHPRUEFUNG ergänzt. Grenze Browser/Firestore-Attrappe genannt. Nächster tatsächlicher Prüfpunkt: zwei Geräte/dieselbe Karte/offline/altes Undo; absolut geschriebene Bewertungsfelder sind kein Konfliktfreiheitsnachweis. Noch kein unbewiesener neuer Produktfehler oder neue Lernregel daraus abgeleitet.
 
 - Codex Vorbeugung geprüft: 14 Eingangsfälle und neun Ergebnis-/Codeauditfälle grün. Absichtlich falsches echtes Rechenkommando in eigener Testkopie endet Exit 1 mit „Ungleichmäßige Terminphasen innerhalb Stufe 3“, keine Ergebnisdatei. Modellversion 3 nach Pflicht-Vorprüfungen neu gerechnet; Zahlen identisch mit Version 2, diese separat erhalten. Regeln dauerhaft in AGENTS/LEHREN/EMPFEHLUNGEN. Weiteren Betreiberauftrag wörtlich gesichert; fünf Durchgänge für unbekannte Codefehler/Nachprüfung konkret vorbereitet, sieben bisher ungeprüfte Befundabschnitte erfasst. Erste Originalstelle persistCardGrade gelesen (Kontoreferenz/späte Antwort/Nachholen); keine neue umfassende Abnahme behauptet. App unverändert, kein Gesamtlauf/Deploy.
 
@@ -79,5 +81,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
   selbst erst nach dem Veröffentlichen berichtigen, weil es zum Quellstand
   gehört.
 - 02:07 Betreiber: Safari, Version .26. Ursache am Code gefunden: „← Zurück“
-  auf den Rechtsseiten ist ein Link auf `./index.html` und lädt im neuen
-  Reiter die App neu. In `ALLES-OFFEN.md` nachgetragen. Der Test zu E4
