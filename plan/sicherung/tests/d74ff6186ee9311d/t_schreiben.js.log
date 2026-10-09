@@ -1,0 +1,12 @@
+== handy
+  Start: {"wortOben":130,"flaeche":"236-436","leisteUnten":544,"fenster":844,"allesImBild":true,"scrollbar":false}
+  erster Strich: Tinte 0 -> 534 | Lage vorher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:156"}
+    nachher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:156"}
+  Vollbild: {"vollbild":true,"vorlage":"Milch","leisteImBild":true} | Tinte erhalten: 534
+  Strich im Vollbild: Tinte 534 -> 1063
+  Strich zurueck: Tinte 534
+  Vollbild nach Aufdecken: "Milch\n·\nلَبَنٌ"
+  Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"لَبَنٌ"}
+  Kontrast 0
+  Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1270 ms | Bilder > 34 ms: 1 max 211
+  ok
