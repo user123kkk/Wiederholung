@@ -1,0 +1,16 @@
+app.js SHA256 afae7f0260d61433639e731da47c751cc4f68eec0d1434f5d0b32fab3ce0f7f9
+KONTROLLE {"reject":false,"restart":true,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"6587365b-ffa9-4e4e-a91f-8c2388be5f30"},"error":null},"after":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsStand":"6587365b-ffa9-4e4e-a91f-8c2388be5f30","bewertungsBasis":null},"error":null,"journal":[]},"server":{"w":1,"n":0,"u":0}}
+KONTROLLE {"reject":true,"restart":false,"day":"2026-10-09","before":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{"2026-10-09":{"w":1}},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"5802bcd2-9de2-427f-aa13-d6452d64c5ff"},"error":"permission-denied"},"after":{"local":{"2026-10-09":{"w":1,"n":0}},"pending":{},"card":{"id":"k4","wort":"مَدْرَسَةٌ","uebersetzung":"Schule","extra":"","stufe":2,"nextReview":"2026-10-11","ersteBewertung":"2026-09-19","rueckfaelle":0,"quelleId":null,"maxStufe":2,"textId":null,"bewertungsBasis":null,"bewertungsStand":"5802bcd2-9de2-427f-aa13-d6452d64c5ff"},"error":"permission-denied","journal":[{"id":"b0752588-8292-4f5c-924b-a6b0115ce3b5","uid":"u1","epoche":"","tag":"2026-10-09","art":"w","delta":1,"status":"offen"}]},"server":{"w":0,"n":0,"u":0}}
+AssertionError [ERR_ASSERTION]: Tagesantwort im Kontrollfall erhalten
+
+0 !== 1
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_verlauf_neustart.js:50:41
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
