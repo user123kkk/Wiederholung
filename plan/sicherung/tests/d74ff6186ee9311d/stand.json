@@ -1136,6 +1136,22 @@
       "fehler": null,
       "sekunden": 128,
       "quelltext": "a77738627dcec81b0612c8cccba83c223e00a2c1dca23e8a6ef9f931b6a88582"
+    },
+    "t_text_tempo.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 21,
+      "quelltext": "e8fb11926a430b29d3df6b2f88dc0eee3103424e4b3efcd3ade9f3e60cb2b915"
+    },
+    "t_text_zustaende.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 84,
+      "quelltext": "c9a47cb01bbb873f4c9ded33ec473f4d411aa7847019f13c99df243004553f94"
     }
   }
 }
