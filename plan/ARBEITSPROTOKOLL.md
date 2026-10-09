@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 09.10.2026
 
+- 20:14 Codex Abschluss: Diagnose-Erweiterung als 373c4da auf main gepusht; Belege/Plan durch Minuten-Sicherung ebenfalls auf origin/main. Arbeitsbaum sauber und HEAD=origin/main bestätigt. App-/Regeldateien unverändert. 43 lokale Chats extern gesichert; nur eigene Emulator-/HTTP-Prozesse beendet, Minuten-Sicherung läuft weiter. Akku 15 %. Nächster Prüfpunkt bleibt Neustart abgelehnter Aktionen/Tageszähler.
+
 - 20:13 Codex: Restdiagnose an fester Quelle 7142b93 abgeschlossen, echter Firestore-SDK/Repo-Regeln im eigenen Demo-Emulator 8082. Gesehen-Undo und Offline-Gesehen überschreiben fremdes Sicher; beide ohne Speicherfehler. Fremde Löschung gewinnt bei Offline-Bewertung und Offline-Gesehen auch nach explizitem Nachholen, lokale Karte verschwindet, Ablehnung sichtbar im Fehlerzustand. Andere Karte und JavaScript-Fehler in allen vier Fällen kontrolliert. Vollständiges Log gelesen; Schutzprüfung Exit 1 benennt beide Konflikte. Originaldiagnose nach Erweiterung ebenso erwartungsgemäß rot, vollständiges Log gelesen. Kein App-Fix, keine neue Lernregel; Befunde A14/A15 erweitert statt doppelt gezählt. Stand/Plan/Logbuch nachgezogen; Uhrzeit für diesen Protokolleintrag an Rechneruhr berichtigt.
 
 - 20:13 Codex, Einleseschritt nachgetragen zu Auftrag „weiter“: Übergabe, Betreiberregeln, Lehren, Nachprüfungsauftrag und Kartenkonflikt-Belege gelesen; Minuten-Sicherung gestartet. Vier persistCardGrade-Aufrufer inventarisiert: Bewertung, Bewertungs-Undo, Gesehen, Gesehen-Undo. Gesehen-Undo prüft fremde Bewertung nicht. Akku 17 %, nur gezielte Prüfungen. Danach echter SDK gegen eigenen Demo-Emulator, Gesehen-Konflikt und fremde Löschung mit Offline-Nachholen.
