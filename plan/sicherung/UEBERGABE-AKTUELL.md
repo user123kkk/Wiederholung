@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `c7b704c Sicherung 21:44 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `fdee7d6 Sicherung 21:46 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -18,13 +18,10 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/STAND.md
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/KARTEN-KONFLIKTE-2026-10-09.md
- M plan/zyklus-2/ZUVERLAESSIGKEIT-NACHPRUEFUNG.md
  M sw.js
 ```
 
@@ -33,7 +30,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 8, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 7, chrome.exe 14 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
