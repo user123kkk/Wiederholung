@@ -680,6 +680,22 @@
       "fehler": null,
       "sekunden": 8,
       "quelltext": "294d3603265a48fe2cec95032f49eff1ff767196c1e73fd335331bb8b9037549"
+    },
+    "t_nur_betreiber.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 127,
+      "quelltext": "2dba4ae190726fe3b4a6f4d90326135b93443440e03d7e56626f2a9a74f6dbcb"
+    },
+    "t_ordnung.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 9,
+      "quelltext": "9e8f207f4238b71a07a9f717ecf3a0ade51ae39da1b57e7e7889d9478c9192e9"
     }
   }
 }
