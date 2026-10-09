@@ -1,5 +1,13 @@
 # Hinweise für Codex und andere Agenten
 
+**Projekt-Skills gezielt verwenden (Betreiber 09.10.2026):** Daten/Auth,
+Offline, Import/Export oder Rules → `adrabic-daten`; UI/RTL/iPhone/PWA →
+`adrabic-oberflaeche`; Lernlogik, Simulation oder Lernempfehlung →
+`adrabic-lernbelege`. Nur passende Skills laden; mehrere bei echter Überschneidung.
+Codex findet sie unter `.agents/skills/`, Claude unter `.claude/skills/`.
+Fehlt die Skill-Funktion, die passende `SKILL.md` direkt lesen.
+Auswahlgründe und Pflege: `plan/agenten/SKILLS-UND-PLUGINS.md` (bei Bedarf).
+
 Dieselben Regeln wie für Claude. Diese Datei verweist nur, sie ersetzt nichts.
 
 **Seit 08.10.2026, vor allem anderen (Betreiber: „ohne mich erklären zu
