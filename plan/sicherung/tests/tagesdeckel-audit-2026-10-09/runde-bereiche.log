@@ -15,3 +15,10 @@ OK   7 Tagesprotokoll zaehlt 9 Antworten ueber alle drei Bereiche ({"w":9,"n":0}
 OK   8 Limit 10 bei 7 + 7: Runde 10, Rest b2:3
 OK   8 Rundenende nennt die offenen 4: "Geschafft 10 Karten in dieser Runde. 0 nicht 0 fast 10 sicher 1 Tag am Stück Heute sind no"
 OK   8 Weiterlernen: 4 Karten im zweiten Bereich (b2)
+OK   9 Ende im ersten Bereich, 4 im anderen offen
+OK   9 Weiterlernen wechselt in den Bereich mit den offenen Karten (b2, 4)
+OK   11 offener Bereich leer, anderer mit 4: Stapel zeigt 4, Startknopf true
+OK   11 Runde startet im Bereich mit den faelligen Karten (b2, 4)
+OK   12 nichts faellig: ruhiger Zustand, kein Startknopf
+OK   10 ein Bereich: 6 Karten (4 Wiederholungen + 2 neue), kein Rest
+ok

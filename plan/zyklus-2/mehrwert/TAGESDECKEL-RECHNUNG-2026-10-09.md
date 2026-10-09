@@ -1,5 +1,13 @@
 # Tagesdeckel: Rechnung und Entscheidungsvorlage, 09.10.2026
 
+**Korrektur nach Gegenprüfung desselben Tages:** Startphasen waren mit den
+Stufen gekoppelt; die behauptete gleichmäßige Verteilung stimmt nicht.
+Die unten stehenden Zahlen sind historische Ergebnisse dieses fehlerhaften
+Aufbaus, keine Baugrundlage. Meine Tagesziel-Kopplung an die Rundengröße
+ist zurückgenommen. Maßgeblich:
+[`TAGESDECKEL-AUDIT-2026-10-09.md`](TAGESDECKEL-AUDIT-2026-10-09.md).
+Alte Rechnung und JSON bleiben als Beleg erhalten.
+
 Auftrag: Tagesdeckel nach einer Pause, Fälligkeiten unverändert lassen;
 vor einer Empfehlung rechnen. Der ungeprüfte Vorschlag „ab 60, dann 30“
 vom 08.10. ist zurückgenommen. Betreiber 09.10.: weiterarbeiten und
