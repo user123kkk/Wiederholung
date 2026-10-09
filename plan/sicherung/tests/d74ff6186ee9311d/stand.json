@@ -560,6 +560,30 @@
       "fehler": null,
       "sekunden": 3,
       "quelltext": "16ea6b89a969d777d04d9ff289fc2140a57cebc074877f4a44e6d85ead780296"
+    },
+    "t_kontrast.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 89,
+      "quelltext": "86e1ef0157e2eb62e5734b927dbf4845b418162cc58b49f225e205c19a85aa0d"
+    },
+    "t_laden_parallel.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 7,
+      "quelltext": "d233c53893e705af967ec8873941d301ca70a8bfcccea02e487a556c9223726a"
+    },
+    "t_leiste.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 7,
+      "quelltext": "214530754a9905a16d89980f66f6dc25828615461350cef6d4680ea640fb25a5"
     }
   }
 }
