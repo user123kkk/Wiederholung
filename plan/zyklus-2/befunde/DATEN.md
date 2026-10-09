@@ -369,6 +369,28 @@ Gelesen: `git show 4462fac -- app.js sw.js`, `plan/grossplan/runde15-unfertig.pa
   Gerätespeicher fehlt in der Datenschutzerklärung), E-06 (offene App erfährt
   nichts von neuer Version), G-059 (COOP-Header).
 
+#### DATEN-9: Altes Rückgängig überschreibt eine neuere fremde Bewertung
+
+**Schwere:** hoch. Bestätigt 09.10.2026 an 3.18.29 / 7142b93.
+`app.js:6959` stellt alte vollständige Bewertungswerte zurück;
+`app.js:7009` speichert ohne Prüfung der fremden Änderung.
+Echter Firestore-SDK mit Repo-Regeln: A Sicher, B danach Nicht,
+A altes Rückgängig. Fremder Rückfall und Höchststand gehen verloren.
+Keine Speicherfehlermeldung. Reproduktion, Quelle, Vorschlag und Abnahme:
+[`../KARTEN-KONFLIKTE-2026-10-09.md`](../KARTEN-KONFLIKTE-2026-10-09.md).
+Nicht behoben. Schutzprüfung an fester Quelle rot; Tageszähler separat.
+
+#### DATEN-10: Früheres Offline-Bewerten überschreibt neuere Online-Bewertung
+
+**Schwere:** hoch. Bestätigt 09.10.2026 an 3.18.29 / 7142b93.
+`app.js:2995` / `6871` schreiben absolute Felder derselben Karte.
+Echter Firestore-SDK mit Repo-Regeln: A offline Sicher, B danach online
+Nicht, A verbindet sich. Server übernimmt alte A-Felder und verliert
+fremden Rückfall. Keine Speicherfehlermeldung; andere Karte unverändert.
+Reproduktion, Quelle, Lösungsmöglichkeiten und vollständige Abnahme:
+[`../KARTEN-KONFLIKTE-2026-10-09.md`](../KARTEN-KONFLIKTE-2026-10-09.md).
+Nicht behoben. Kein automatisches Stufen-Zusammenrechnen freigegeben.
+
 ## Nicht mehr geprüft
 
 - Voller Regeltest (`bash plan/werkzeuge/regeln_testen.sh`, 204 Fälle) – nur

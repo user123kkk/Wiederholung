@@ -59,6 +59,15 @@ abgehakt; hier wird das nicht doppelt geführt.
 
 ### 3.1 Reste aus Zyklus 2
 
+**09.10.2026, Fortsetzung auf „weiter?“:** Zwei neue hohe Datenfunde aus
+der gewünschten Zuverlässigkeitsprüfung: A14/DATEN-9 (altes Rückgängig)
+und A15/DATEN-10 (Offline-Nachholen) überschreiben eine neuere fremde
+Bewertung derselben Karte ohne Fehlermeldung. Echter Firestore-SDK,
+eigener Demo-Emulator, feste Gegenprobe 7142b93 rot für beide.
+Aufgaben offen, nicht behoben. Konkrete Belege, abgewogene technische
+Richtung und Abnahme in `zyklus-2/KARTEN-KONFLIKTE-2026-10-09.md`.
+Keine automatische Stufen-Zusammenführung oder neue Lernregel beschlossen.
+
 | Was | Woher | Stand |
 |---|---|---|
 | Fortschritt-Reiter umbauen zu „Was du schon kannst“ (C9, C10, C28; „Z1“) | `AUFGABEN.md`, entschieden 01.10. | bauen, im eigenen Durchgang, Aufbau vorher als Fotos zeigen |

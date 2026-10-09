@@ -7,6 +7,13 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**09.10.2026, neue bestätigte Datenfunde:** A14/DATEN-9 und A15/DATEN-10
+offen: altes Rückgängig und Offline-Nachholen überschreiben neuere fremde
+Bewertung derselben Karte. Echte SDK-/Emulator-Gegenprobe 7142b93 rot für
+beide; andere Karte unverändert. Belege, abgewogener Lösungsentwurf und
+Abnahme in `zyklus-2/KARTEN-KONFLIKTE-2026-10-09.md`. Kein gebauter Fix,
+keine erfundene Konflikt-Lernregel, keine App-/Regeländerung oder Deploy.
+
 **Weiterer Auftrag 09.10.2026:** Vorbeugung gegen die eigenen Modellfehler
 abgeschlossen: automatische Eingangssperre und Original-Codeaudit, 14
 Eingangsprüfungen/neun Auditfälle grün. Regeln vor jeder Empfehlung in

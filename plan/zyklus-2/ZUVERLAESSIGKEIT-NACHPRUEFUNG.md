@@ -41,7 +41,17 @@ Browser/Firebase-Attrappe, kein echter SDK-Offline-Nachweis.
 Logs unter `plan/sicherung/tests/tagesdeckel-audit-2026-10-09/`,
 `konto-schreibantwort-aktuell.log` und `konto-schreibantwort-gegenprobe.log`.
 
-**Nächster konkreter Prüfpunkt:** Zwei Geräte bewerten dieselbe Karte
+**09.10.2026, Prüfpunkt bestätigt:** Echter Firestore-SDK, eigener Demo-
+Emulator 8082, zwei getrennte Gerätecaches und Repo-Regeln. Altes Undo
+und früheres Offline-Sicher überschreiben jeweils fremdes späteres Nicht
+einschließlich Rückfall. Beide ohne Speicherfehlermeldung. Andere Karte
+unverändert. Feste Quelle 7142b93, Schutzprüfung Exit 1 für beide Fehler.
+Neue hohe Funde DATEN-9/10; Belege und konkreter Lösungs-/Abnahmeentwurf
+in `KARTEN-KONFLIKTE-2026-10-09.md`. Noch keine Behebung/volle Abnahme.
+Nächste Inventur: die übrigen Gesehen-/Rückgängig-Aufrufer und gelöschte
+Karte beim Offline-Nachholen; neue Konfliktregel nicht still erfinden.
+
+**Voriger Prüfauftrag, jetzt durchgeführt:** Zwei Geräte bewerten dieselbe Karte
 mit unterschiedlichen Ständen, ein Gerät ist offline; außerdem ein altes
 Rückgängig. Der Kommentar vor persistCardGrade verspricht weitreichenden
 Mehrgeräteschutz. Tatsächlich werden absolute Bewertungsfelder dieser

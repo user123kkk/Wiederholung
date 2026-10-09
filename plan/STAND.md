@@ -1,5 +1,16 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026, weitere Zuverlässigkeitsprüfung:** Zwei hohe Funde an
+3.18.29 mit echtem Firestore-SDK und Repo-Regeln bestätigt: A14/DATEN-9
+altes Rückgängig und A15/DATEN-10 Offline-Nachholen überschreiben neuere
+fremde Kartenbewertung. Feste Gegenprobe 7142b93, Schutzprüfung Exit 1 für
+beide, keine Speicherfehlermeldung; andere Karte unverändert. Offen,
+nicht behoben. Konkreter Lösungs-/Abnahmeentwurf
+`zyklus-2/KARTEN-KONFLIKTE-2026-10-09.md`; Offline-Erhalt und Konfliktregel
+gemeinsam lösen, keine neue Lernregel erfinden. Als Nächstes übrige
+Gesehen-/Rückgängig-Aufrufer und gelöschte Karte beim Nachholen prüfen.
+App unverändert, kein Gesamtlauf/Deploy. Nachprüfung insgesamt offen.
+
 **09.10.2026, Vorbeugung abgeschlossen:** Tagesdeckel-Modell blockiert falsche Eingangsverteilungen automatisch vor neuen Ergebnissen; Negativfälle und echte Codepfade sind Pflicht vor langem Lauf. 14 Eingangsprüfungen und neun Auditfälle grün, neuer Herkunftsnachweis/Erkenntnisgrenzen in Modellversion 3, alte Daten erhalten. Regeln in AGENTS/LEHREN/EMPFEHLUNGEN-PRUEFEN. Betreiber will danach auch unbekannte Fehler im übrigen Code suchen: konkrete risiko-orientierte Inventur `zyklus-2/ZUVERLAESSIGKEIT-NACHPRUEFUNG.md`, danach vollständige Nachprüfung gemäß § 3.6. Erste Lesestelle persistCardGrade, noch keine neue Abnahme des ganzen Datenwegs. App weiterhin 3.18.29, nichts veröffentlicht; großer Lauf gesammelt später.
 
 **09.10.2026, Korrektur nach Gegenprüfung:** Vorige Tagesdeckel-Vorlage hatte gekoppelte Starttermine und eine nicht geprüfte Tagesziel-Empfehlung. Maßgeblich jetzt `zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`: feste Gegenprobe rot, korrigierte 450 Modellläufe, neun Auditfälle, Browser-Bereichsrunde und Standprüfung grün. Empfehlung: vorerst keinen neuen dauerhaften Tagesdeckel bauen; Nutzen gegenüber vorhandenen Runden, gewünschtes Pensum und Lernkriterium fehlen. Rundengröße ist kein Tagesziel. Bereichsfolge aus 3.18.23 bleibt maßgeblich. Keine App-Änderung/Veröffentlichung; große App-Abnahme weiterhin gesammelt später. Folgender Fortsetzungsabsatz ist überholter Verlauf.

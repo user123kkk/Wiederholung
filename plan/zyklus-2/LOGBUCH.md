@@ -2,6 +2,22 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-09 — Zwei hohe Kartenkonflikte mit echtem SDK bestätigt
+
+Auf „weiter?“ an tatsächlichen Speicherpfaden fortgesetzt. Eigener Demo-
+Emulator 8082 mit Repo-Regeln, Firestore-SDK 10.14.1, getrennte Chromium-
+Kontexte; Anmeldung Attrappe. Erst Arbeitsbaum, dann feste Quelle 7142b93:
+altes Undo überschreibt fremdes Nicht (Rückfälle 1 auf 0, Höchststand 2
+auf 1); Offline-Sicher überschreibt späteres Online-Nicht ebenfalls ohne
+Speicherfehlermeldung. Andere Karte k6 unverändert, JavaScript-Fehler leer.
+Schutzprüfung erwartungsgemäß Exit 1 für beide. Logs vollständig gelesen.
+Neue A14/DATEN-9 und A15/DATEN-10 offen; Lösungs-/Abnahmeentwurf in
+KARTEN-KONFLIKTE-2026-10-09. Firebase-Primärdoku gegen die Messung geprüft:
+letzter Write gewinnt, Transaktionen scheitern offline. Keine fertige
+Konfliktlösung behauptet oder neue Stufenregel gebaut. Diagnose außerhalb
+des t_*-Gesamtlaufs, keine grüne Abnahme des Fehlers. App .29 unverändert,
+Akku 22 %, keine große Prüfung/Veröffentlichung. Übrige Nachprüfung offen.
+
 ### 2026-10-09 — Weitere Zuverlässigkeitsprüfung begonnen: alte Kontoschreibantworten
 
 Vorbeugung als 1472584 auf main gepusht; danach gemäß weiterem Betreiberauftrag
