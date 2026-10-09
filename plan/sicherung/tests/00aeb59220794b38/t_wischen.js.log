@@ -1,0 +1,10 @@
+OK   langsam weit rechts            -> Karte 2 (soll 2) | Karte folgt dem Finger: 63 px
+OK   langsam weit links             -> Karte 2 (soll 2) | Karte folgt dem Finger: -93 px
+OK   schnell kurz rechts (Fling)    -> Karte 2 (soll 2) | Karte folgt dem Finger: -
+OK   schnell kurz links (Fling)     -> Karte 2 (soll 2) | Karte folgt dem Finger: -
+OK   direkt nach Aufdecken (80 ms)  -> Karte 2 (soll 2) | Karte folgt dem Finger: 69 px
+OK   zu kurz und langsam            -> Karte 1 (soll 1) | Karte folgt dem Finger: 13 px
+OK   System bricht ab (touchCancel) -> Karte 1 (soll 1) | Karte folgt dem Finger: 63 px
+alles ok
+
+Prozess: {"code":0,"abnahmeOk":true,"signal":null,"zeitlimit":false,"sekunden":40,"quelltext":"cce5e8b4519173de5a94e1bb7d9f0c592819b61f5f65dcdb95204794dc7986a0"}

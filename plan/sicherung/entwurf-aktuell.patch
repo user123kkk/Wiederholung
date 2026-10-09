@@ -815,7 +815,7 @@ index 0000000..0c5faf2
 +  }finally{await b.close();}
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
-index 118e0da..39516cd 100644
+index 118e0da..923ba10 100644
 --- a/plan/werkzeuge/regeln/regeln-pruefung.mjs
 +++ b/plan/werkzeuge/regeln/regeln-pruefung.mjs
 @@ -40,7 +40,8 @@
@@ -854,15 +854,17 @@ index 118e0da..39516cd 100644
  await pruefe("N22 Karte mit Bild-Link in extra", "ja", () => updateDoc(k("c1"), { extra: "https://example.org/bild.png" }));
  
  await pruefe("N23 Import: Bereich und Karten in einem Stapel", "ja", async () => {
-@@ -179,11 +181,11 @@ await pruefe("M04 Ohne Anmeldung lesen", "nein", () => getDoc(doc(dbAnon, "users
+@@ -178,12 +180,12 @@ await pruefe("M03 Fremde Karte schreiben", "nein", () => setDoc(doc(dbFremd, "us
+ await pruefe("M04 Ohne Anmeldung lesen", "nein", () => getDoc(doc(dbAnon, "users", UID)));
  await pruefe("M05 E-Mail nicht bestaetigt", "nein", () => updateDoc(doc(dbUnbes, "users", UID), { name: "X" }));
  
- await pruefe("M06 Hoechststufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { maxStufe: 9999 }));
+-await pruefe("M06 Hoechststufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { maxStufe: 9999 }));
 -await pruefe("M07 Stufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { stufe: 99 }));
 -await pruefe("M08 Stufe negativ", "nein", () => updateDoc(k("c1"), { stufe: -1 }));
 -await pruefe("M09 Stufe als Text", "nein", () => updateDoc(k("c1"), { stufe: "12" }));
 -await pruefe("M10 Stufe als Kommazahl", "nein", () => updateDoc(k("c1"), { stufe: 1.5 }));
 -await pruefe("M11 Faelligkeit kein Datum", "nein", () => updateDoc(k("c1"), { nextReview: "morgen" }));
++await pruefe("M06 Hoechststufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { maxStufe: 9999, bewertungsStand: "M06", bewertungsBasis: "N21" }));
 +await pruefe("M07 Stufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { stufe: 99, bewertungsStand: "M07", bewertungsBasis: "N21" }));
 +await pruefe("M08 Stufe negativ", "nein", () => updateDoc(k("c1"), { stufe: -1, bewertungsStand: "M08", bewertungsBasis: "N21" }));
 +await pruefe("M09 Stufe als Text", "nein", () => updateDoc(k("c1"), { stufe: "12", bewertungsStand: "M09", bewertungsBasis: "N21" }));
