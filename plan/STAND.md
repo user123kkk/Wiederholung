@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026 – Skills-Auswahl vor Chatwechsel erledigt:**
+Bericht: `agenten/SKILLS-UND-PLUGINS.md`. Drei gezielte Repo-Skills für
+Codex und Claude eingerichtet: Daten/Offline, Oberfläche/Geräte, Lernbelege.
+Konfiguration und identische Spiegel geprüft; tatsächliche Modell-Auswahl
+und Tokengewinn noch nicht gemessen. Kein externes Plugin installiert.
+Neue Dateien lokal und im Minuten-Patch; bei Wiederherstellung mit übernehmen.
+Im neuen lokalen Chat denselben Repo-Ordner verwenden. Nächste Produktaufgabe
+weiterhin A16/DATEN-11, A14/A15-Entwurf erhalten, große Abnahme später.
+
 **09.10.2026 – Übergabe auf Wunsch des Betreibers:**
 Weiter im Ordner C:\Users\USER\Desktop\Wiederholung. Kein Stand verwerfen.
 A14/A15 liegen als gezielt geprüfter Entwurf 3.18.30 vor (16 SDK-Fälle,

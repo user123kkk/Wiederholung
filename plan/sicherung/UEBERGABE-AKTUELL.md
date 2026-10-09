@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:10 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 22:11 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `4abfdac Sicherung 22:10 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `0888970 Sicherung 22:11 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  A plan/werkzeuge/projekt_skills.mjs
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
@@ -61,6 +64,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 22:11 Codex: Skills-Auftrag abgeschlossen. Vollständige Git-Dateiliste mechanisch eingelesen (2171 Dateien/23,1 MB, keine Lesefehler), Hauptarchitektur, Arbeitsregeln und vorhandene Prüfwege inhaltlich abgeglichen; keine Behauptung, alle Logs semantisch auditiert zu haben. Offizielle Quellen zu Codex/Claude Skills, Firebase, Context7, Playwright, Superpowers, Anthropic, Serena, axe-core und Security verglichen. Drei kurze Projekt-Skills (Daten, Oberfläche, Lernbelege), gemeinsame Quelle .agents/skills und identische Claude-Spiegel eingerichtet; gezielte Auswahlregeln in AGENTS/CLAUDE. Projektprüfer fing falschen Gerätepfad ab, korrigiert; sechs offizielle YAML-Prüfungen, Pfad-/Spiegel-/Konfigurationsprüfung und Syntax/Diff grün. Beschreibungen insgesamt 635 Zeichen; keine gemessene Token-/Qualitätsersparnis oder Modell-Auswahlgarantie behauptet. Bericht plan/agenten/SKILLS-UND-PLUGINS.md enthält Empfehlungen, Gegenargumente und Grenzen. Keine externen Plugins installiert, keine App-Änderung oder Veröffentlichung. Neue Skill-/Werkzeugdateien per intent-to-add im Minuten-Patch; große App-Abnahme bleibt später, nächste App-Aufgabe A16.
 
 - 21:39 Codex: weitere Speicher-Gegenprüfung korrigiert: vor dem Buchen abgebrochener Versuch wird aus Nachholmap entfernt, damit später keine ungezählte Bewertung entsteht. Prüfen erlaubt nach Erholung einen neuen Versuch; Hinweis ohne vorhandene Kopien zeigt nur Speicherprüfung. Fehlgeschlagene neue Gesehen-/Bewertungsversuche erhalten vorheriges Rückgängig. Feste Entwürfe 14517b3 (ungezählter Versuch bleibt) und 7818a54 (Undo verloren: 2 statt 1 bzw. Datum statt null) reproduzieren die Fehler; reparierter echter SDK-Lauf 16/16 plus UI/Download/Entfernen grün. Frühere lange Läufe wegen Quelländerungen bewahrt/beendet, keine Ergebnisse übernommen. Seit 21:26 frischer Gesamtlauf 157 an caf81d58f8c5f144; 25/157 bisher Exit 0. Danach Rundenabnahme, Affen, Abschlussdiff und Commit. Finaler normalisierter App-SHA256 44c05375c7511ba420fbabe5b52cea6599ecf7c1ea3e67e77b52428aa30347d9. Alle Gegenproben im Repo gesichert. Kein Deploy.
 
@@ -103,5 +108,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 15:50 Codex: E4 am festen d64380a rot (echter Zurück-Link, Formular fehlt). Neuer Weg: bestehender Dialog, unveränderte Rechtsseiten lokal laden, Rückweg bleibt sichtbar. E4 390/320/820 grün; Umfeld sechs Geräte-/Farbkombinationen grün, Fehler/Neuversuch und verspätete Antwort geprüft. iPad-Kontrastmeldung als Scroll-Clip belegt und alle sichtbaren Abschnitte durchgescrollt geprüft. 3.18.29 vorbereitet; Standprüfung grün. Betroffene Regressionen laufen; Akku BatteryStatus 1, Klein-Weg, kein Gesamtlauf/Deploy.
 
 - Codex, Auftrag „weiter“: Desktop-Checkout sauber auf d64380a / 3.18.28 aktualisiert. Übergabe, Betreiber-Verstehen, offene Liste, Grundregeln und E4-Befund gelesen. Minuten-Sicherung gestartet (Git Bash). E4 wieder offen: tatsächlichen Zurück-Weg prüfen, vorhandenen Dialog für Rechtsinhalt verwenden. Nicht veröffentlichen.
-
-- 04:38 **3.18.28 ist online.** `ladegeraet.ps1 -Fortsetzen`: 155 bewahrt,
