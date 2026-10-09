@@ -1,5 +1,5 @@
 diff --git a/app.js b/app.js
-index 9f9de1f..1c1ab78 100644
+index 9f9de1f..6b1bbb5 100644
 --- a/app.js
 +++ b/app.js
 @@ -8824,6 +8824,8 @@ function authEingabenMerken() {
@@ -63,13 +63,13 @@ index 9f9de1f..1c1ab78 100644
 +  const seiten = { datenschutz: ["datenschutzerklaerung.html", "Datenschutz"], impressum: ["impressum.html", "Impressum"] };
 +  const seite = seiten[id];
 +  if (!seite) return;
-+  openDialog({ kind: "recht", title: seite[1], text: "Wird geladen…", okLabel: "Zurück", rechtId: id });
++  openDialog({ kind: "recht", title: seite[1], text: "Wird geladen…", okLabel: "Zurück" });
 +  const d = ui.dialog;
 +  try {
 +    const html = await mitZeitlimit(fetch("./" + seite[0]).then(r => {
 +      if (!r.ok) throw new Error("Rechtsseite nicht verfügbar");
 +      return r.text();
-+    }), 12000);
++    }));
 +    if (ui.dialog !== d) return;
 +    const doc = new DOMParser().parseFromString(html, "text/html");
 +    const inhalt = doc.querySelector(".rechtsseite");
@@ -207,10 +207,10 @@ index 377447e..8d80b05 100644
  }
 diff --git a/plan/werkzeuge/pruefstand/t_rechtsplan.js b/plan/werkzeuge/pruefstand/t_rechtsplan.js
 new file mode 100644
-index 0000000..d869ffa
+index 0000000..385081e
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/t_rechtsplan.js
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,112 @@
 +/* E4 Umfeld: vorhandener Dialog, unveränderter Rechtsinhalt und alle Rückwege.
 +   Die vollständige Einstiegs-Gegenprobe steht in t_paket_e.js E4 --rechts-alt
 +   gegen d64380a (3.18.28), nie HEAD. */
@@ -266,7 +266,25 @@ index 0000000..d869ffa
 +            return {quer:document.documentElement.scrollWidth>innerWidth+1,unten:r.bottom<=innerHeight+1,imBlatt:r.bottom<=d.bottom+1,gesperrt:document.documentElement.classList.contains('blatt-offen'),fokus:dlg.contains(document.activeElement)};
 +          });
 +          assert.deepEqual(lage,{quer:false,unten:true,imBlatt:true,gesperrt:true,fokus:true});
-+          assert.deepEqual(await pruefeKontrast(p,`Recht ${vp.width}/${thema}/${id}`),[]);
++          // Der allgemeine Leser kennt Scroll-Clips nicht: iPad meldete eine
++          // unsichtbare Überschrift bei y=1058, Inhalt endet bei y=905.
++          // Alle Textabschnitte durchscrollen und nur tatsächlich sichtbare
++          // Befunde übernehmen. Kontrastgrenze bleibt unverändert 4,5:1.
++          const scroll=p.locator('#dlg-recht-inhalt');
++          const masse=await scroll.evaluate(el=>({hoehe:el.clientHeight,gesamt:el.scrollHeight}));
++          for(let y=0;y<masse.gesamt;y+=Math.max(1,Math.floor(masse.hoehe*.7))) {
++            await scroll.evaluate((el,y)=>{el.scrollTop=y;},y);
++            const funde=await pruefeKontrast(p,`Recht ${vp.width}/${thema}/${id}/${y}`);
++            const sichtbar=await p.evaluate(funde=>{
++              const clip=document.querySelector('#dlg-recht-inhalt').getBoundingClientRect();
++              return funde.filter(f=>{
++                const el=[...document.querySelectorAll('#dlg-recht-inhalt *')].find(el=>el.className===f.klasse&&el.textContent.trim().startsWith(f.text));
++                if(!el) return true;
++                const r=el.getBoundingClientRect();return r.bottom>clip.top&&r.top<clip.bottom;
++              });
++            },funde);
++            assert.deepEqual(sichtbar,[]);
++          }
 +          await p.locator('#dlg-recht-inhalt').evaluate(el=>{el.scrollTop=el.scrollHeight;});
 +          assert.ok(await p.locator('#dlg-recht-inhalt .rechtsfuss').isVisible());
 +          await zu(p,id==='datenschutz'?'Zurück':'Escape');
