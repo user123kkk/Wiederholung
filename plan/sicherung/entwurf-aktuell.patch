@@ -13,7 +13,7 @@ index bc20801..e698a62 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..8b91531 100644
+index 4b6221e..e753fd6 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -81,7 +81,7 @@ index 4b6221e..8b91531 100644
    const liste = [...ops.values()];
    const stapelSchreiben = async (teil) => {
      const stapel = fb.writeBatch(db);
-@@ -2985,15 +3009,163 @@ let verlaufAbgelehnt = false;
+@@ -2985,15 +3009,179 @@ let verlaufAbgelehnt = false;
  function abgelehntesNachholen() {
    const liste = [...abgelehnteBewertungen.entries()];
    abgelehnteBewertungen.clear();
@@ -99,6 +99,7 @@ index 4b6221e..8b91531 100644
 -function persistCardGrade(bereichId, cardId, fields) {
 +const BEWERTUNGS_FELDER = ["stufe", "nextReview", "ersteBewertung", "rueckfaelle", "maxStufe"];
 +const bewertungsAktionen = new Map();
++const bewertungsDefekte = new Map();
 +const bewertungsLaeufe = new Set();
 +let bewertungsSpeicherFehler = false;
 +function bewertungsKennung() {
@@ -107,6 +108,7 @@ index 4b6221e..8b91531 100644
 +function bewertungsPraefix(uid) { return "adrabic-bewertung-" + uid + "/"; }
 +function bewertungsAktionenLaden(user) {
 +  bewertungsAktionen.clear();
++  bewertungsDefekte.clear();
 +  bewertungsLaeufe.clear();
 +  bewertungsSpeicherFehler = false;
 +  if (!user) return;
@@ -115,9 +117,19 @@ index 4b6221e..8b91531 100644
 +    for (let i = 0; i < localStorage.length; i++) {
 +      const key = localStorage.key(i);
 +      if (!key || !key.startsWith(prefix)) continue;
-+      const x = JSON.parse(localStorage.getItem(key));
++      const roh = localStorage.getItem(key);
++      let x;
++      try { x = JSON.parse(roh); }
++      catch (e) { bewertungsDefekte.set(key, roh); bewertungsSpeicherFehler = true; continue; }
 +      if (!x || x.uid !== user.uid || key !== prefix + x.id ||
-+          typeof x.cardId !== "string" || !x.fields || typeof x.fields !== "object") {
++          typeof x.id !== "string" || !x.id || x.id.length > 100 ||
++          typeof x.cardId !== "string" || typeof x.bereichId !== "string" ||
++          !(x.basis === null || typeof x.basis === "string") ||
++          !x.fields || typeof x.fields !== "object" || Array.isArray(x.fields) ||
++          !BEWERTUNGS_FELDER.every(f => Object.prototype.hasOwnProperty.call(x.fields, f)) ||
++          Object.keys(x.fields).some(f => !BEWERTUNGS_FELDER.includes(f)) ||
++          !["offen", "pruefen", "abgelehnt", "konflikt", "geloescht", "speicher"].includes(x.status)) {
++        bewertungsDefekte.set(key, roh);
 +        bewertungsSpeicherFehler = true;
 +        continue; // Beschaedigte Eintraege bleiben erhalten, nicht still loeschen.
 +      }
@@ -229,6 +241,10 @@ index 4b6221e..8b91531 100644
 +    '<button class="tiny-link" data-action="bewertung-verwerfen">Vom Gerät entfernen</button>' +
 +    (bewertungsSpeicherFehler ? ' Der Gerätespeicher ist nicht verfügbar oder beschädigt; neue Bewertungen sind gesperrt.' : ''));
 +}
++function bewertungsSicherung() {
++  return { version: 1, antworten: [...bewertungsAktionen.values()],
++    beschaedigteKopien: [...bewertungsDefekte.entries()].map(([schluessel, inhalt]) => ({ schluessel, inhalt })) };
++}
 +function persistCardGrade(bereichId, cardId, fields, basis) {
    if (!kartenColRef || kontoWirdGeloescht) return;
 +  const card = bereiche?.find(b => b.id === bereichId)?.karten.find(c => c.id === cardId);
@@ -251,7 +267,7 @@ index 4b6221e..8b91531 100644
    const kontoRef = userDocRef;
    const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
    fb.updateDoc(karteRef(cardId), {
-@@ -3927,6 +4099,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+@@ -3927,6 +4115,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
    }
    if (!konto.abgebrochen) {
      try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
@@ -267,7 +283,7 @@ index 4b6221e..8b91531 100644
    }
    if (!konto.abgebrochen && auth.currentUser === null) {
      if (currentUser === konto.user && verlaufGeneration === generation)
-@@ -6125,17 +6306,26 @@ function toggleLernNotiz(id) {
+@@ -6125,17 +6322,26 @@ function toggleLernNotiz(id) {
  function lernAbhaken(id) {
    const card = findCard(id);
    if (!card || !istNeueKarte(card)) return;
@@ -297,7 +313,7 @@ index 4b6221e..8b91531 100644
    ui.lernFokusNach = card.id;
    /* 2.10.1: Auch das Durchgehen zaehlt fuer den Tag. Vorher sprang die
       Flamme nur am Ende einer Lernsession an - am ersten Tag mit einem neuen
-@@ -6150,15 +6340,20 @@ function lernRueckgaengig() {
+@@ -6150,15 +6356,20 @@ function lernRueckgaengig() {
    const l = ui.lernLetzte;
    if (!l) return;
    const card = findCard(l.cardId);
@@ -323,7 +339,7 @@ index 4b6221e..8b91531 100644
    }
    /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
       das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
-@@ -6773,6 +6968,7 @@ function gradeCard(kind) {
+@@ -6773,6 +6984,7 @@ function gradeCard(kind) {
       waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
    const card = findCard(s.queue[0]);
    if (card && !s.isDrill) {
@@ -331,7 +347,7 @@ index 4b6221e..8b91531 100644
      /* E6: vor der Aenderung merken - direkt darunter wird ersteBewertung
         gesetzt, danach waere die Karte nicht mehr als "neu" erkennbar. */
      const warNeu = istNeueKarte(card);
-@@ -6829,6 +7025,22 @@ function gradeCard(kind) {
+@@ -6829,6 +7041,22 @@ function gradeCard(kind) {
      /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
         danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
         als neu erkennbar. */
@@ -354,7 +370,7 @@ index 4b6221e..8b91531 100644
      verlaufZaehle(warNeu ? "n" : "w");
      bereichHeuteZaehle(s.bereichId, 1);
    }
-@@ -6868,7 +7080,6 @@ function gradeCard(kind) {
+@@ -6868,7 +7096,6 @@ function gradeCard(kind) {
    s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
    hwStrokes = [];
    if (!s.isDrill) {
@@ -362,7 +378,7 @@ index 4b6221e..8b91531 100644
      /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
         Karte), dann in den naechsten Bereich der Runde weiterschalten. */
      if (s.queue.length === 0) rundeNaechsterBereich(s);
-@@ -6959,6 +7170,22 @@ function gradeUnknown() { gradeCard("unknown"); }
+@@ -6959,6 +7186,22 @@ function gradeUnknown() { gradeCard("unknown"); }
  function undoLastGrade() {
    const s = ui.session;
    if (!s || !s.lastAction) return;
@@ -385,7 +401,7 @@ index 4b6221e..8b91531 100644
    /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
       zurueck - findCard() sucht im offenen Bereich. */
    if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
-@@ -7006,7 +7233,6 @@ function undoLastGrade() {
+@@ -7006,7 +7249,6 @@ function undoLastGrade() {
       stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
       sie beim Bewerten offen war. */
    s.extraOpen = true;
@@ -393,7 +409,7 @@ index 4b6221e..8b91531 100644
    render();
  }
  function endSession() {
-@@ -9520,6 +9746,7 @@ function renderMain() {
+@@ -9520,6 +9762,7 @@ function renderMain() {
  
    if (!imModus) {
      /* ---- Meldungen, die ueber allem stehen ---- */
@@ -401,7 +417,7 @@ index 4b6221e..8b91531 100644
      if (schreibFehler) kopf += bannerSchreibfehler();
      if (syncError) {
        kopf += bannerFehler("Verbindung:", esc(syncError) +
-@@ -9551,8 +9778,9 @@ function renderMain() {
+@@ -9551,8 +9794,9 @@ function renderMain() {
                              : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
          ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
      }
@@ -413,12 +429,12 @@ index 4b6221e..8b91531 100644
    }
  
    /* ---- Geruest ---- */
-@@ -16099,6 +16327,9 @@ document.body.addEventListener("click", e => {
+@@ -16099,6 +16343,9 @@ document.body.addEventListener("click", e => {
        if (dueCards().length > 0) startSession();
        else { window.scrollTo(0, 0); render(); }
        break;
 +    case "bewertung-pruefen": bewertungsAktionenPruefen(); break;
-+    case "bewertung-sichern": dateiSpeichern({ version: 1, antworten: [...bewertungsAktionen.values()] }, "adrabic-aufbewahrte-antworten.json"); break;
++    case "bewertung-sichern": dateiSpeichern(bewertungsSicherung(), "adrabic-aufbewahrte-antworten.json"); break;
 +    case "bewertung-verwerfen": bewertungsAktionenVerwerfen(); break;
      case "reveal": revealAnswer(); break;
      case "toggle-extra": toggleExtra(); break;
