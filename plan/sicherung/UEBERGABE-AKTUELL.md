@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 19:41 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 19:43 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,28 +6,17 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `9c6d885 Sicherung 19:40 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `1472584 Fehlerhafte Simulationseingaben vor Ergebnissen blockieren`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.29"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
-```
- M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
- M plan/PLAN.md
- M plan/STAND.md
- M plan/werkzeuge/tagesdeckel_audit.cjs
- M plan/werkzeuge/tagesdeckel_simulation.cjs
- M plan/zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md
-```
-
-Auf einem sauberen Stand desselben Commits wiederherstellen:
-`git apply --check plan/sicherung/entwurf-aktuell.patch`, dann `git apply plan/sicherung/entwurf-aktuell.patch`.
+Keine. Alles ist committet.
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
