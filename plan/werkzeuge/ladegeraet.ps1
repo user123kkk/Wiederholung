@@ -1,6 +1,7 @@
 param(
     [string]$RepoPath = (Join-Path $PSScriptRoot '..\..'),
-    [switch]$NurPruefen
+    [switch]$NurPruefen,
+    [switch]$Fortsetzen
 )
 
 # Stichwort "ladegeraet" (CLAUDE.md): am Laptop, am Strom, alles in fester
@@ -12,6 +13,11 @@ param(
 #   5. firestore.rules einspielen (vor dem Hosting: neue Felder seit 3.18.0)
 #   6. Hosting ueber veroeffentlichen.ps1 (prueft den Stand selbst noch einmal)
 # -NurPruefen: 1-4, nichts veroeffentlichen.
+# -Fortsetzen: Schritt 3 uebernimmt bestandene Tests desselben Quellstands
+#   (alle_pruefen.js --fortsetzen) und faehrt nur rote und fehlende neu. Fuer
+#   den Fall, dass ein einzelner Test am Pruefaufbau scheiterte und nur die
+#   Testdatei berichtigt wurde. Aendert sich App, Regeln, lib.js oder
+#   stubs.js, gilt ein neuer Quellstand und es laeuft ohnehin alles neu.
 $ErrorActionPreference = 'Stop'
 $server = $null
 $emu = $null
@@ -90,7 +96,7 @@ try {
     Schritt '3/6 Pruefstand (alle Tests, dauert)'
     Push-Location -LiteralPath $pruef
     try {
-        & $node 'alle_pruefen.js'
+        if ($Fortsetzen) { & $node 'alle_pruefen.js' '--fortsetzen' } else { & $node 'alle_pruefen.js' }
         $gesamt = $LASTEXITCODE
     } finally { Pop-Location }
     if ($gesamt -ne 0) { throw 'Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlicht.' }
