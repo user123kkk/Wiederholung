@@ -642,10 +642,10 @@ index e9503f2..08a8640 100644
    }
 diff --git a/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
 new file mode 100644
-index 0000000..1deaa67
+index 0000000..b3125a2
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
-@@ -0,0 +1,160 @@
+@@ -0,0 +1,161 @@
 +/* Schutzabnahme mit echtem SDK, zwei getrennten Browserprofilen und Repo-Regeln.
 +   Die historische Diagnose bleibt unveraendert rot gegen 7142b93. */
 +const assert=require('node:assert/strict');
@@ -793,7 +793,8 @@ index 0000000..1deaa67
 +        assert.notEqual(await reload.evaluate(id=>localStorage.getItem('adrabic-bewertung-u1/'+id),saved.id),null);assert.deepEqual(await server(),before);
 +        if(defekt){const ready=reload.waitForEvent('download');await reload.locator('[data-action="bewertung-sichern"]').click();const d=await ready;
 +          const data=JSON.parse(fs.readFileSync(await d.path(),'utf8'));assert.equal(data.antworten[0].id,saved.id);assert.equal(data.beschaedigteKopien[0].inhalt,'{ungueltig');}
-+        await reload.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(reload);await reload.evaluate(()=>window.__PRUEF.pruefen());
++        await reload.evaluate(()=>window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await fertig(reload);await reload.evaluate(()=>window.__PRUEF.pruefen());await fertig(reload);
++        await reload.waitForFunction(()=>window.__PRUEF.aufbewahrt().length===0);
 +        assert.equal((await server()).bewertungsStand,saved.id);assert.equal(await reload.evaluate(()=>window.__PRUEF.aufbewahrt().length),0);assert.deepEqual(reload.fehler,[]);
 +      } finally {await reload.close();}
 +    });
