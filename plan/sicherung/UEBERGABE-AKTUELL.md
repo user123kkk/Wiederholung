@@ -1,4 +1,4 @@
-# Übergabe – Stand von 09.10.2026 22:57 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 09.10.2026 22:59 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `cb21868 Sicherung 22:56 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `e003f77 Sicherung 22:58 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,10 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
- M plan/PLAN.md
- M plan/STAND.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
@@ -38,11 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/AUFGABEN.md
- M plan/zyklus-2/LOGBUCH.md
  M plan/zyklus-2/VERLAUF-NEUSTART-2026-10-09.md
- M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
- M plan/zyklus-2/mehrwert/UEBERBLICK-OFFEN.md
  M sw.js
 ```
 
@@ -51,7 +44,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 9, chrome.exe 0 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 9, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -72,6 +65,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 09.10.2026
+
+- 22:58 Codex Sicherungsabschluss: automatische Commits 22:55/22:56 und frische Übergabe 22:56 bestätigt; Minuten-Patch 22:57:45 enthält endgültige Testhooks, strenge Geometriegrenzen und gebündelten Kopieraufruf. App bleibt im Commit 3.18.29, Arbeitsbaum 3.18.30; kein App-Commit/Deploy. Prüfserver/Emulator-/Sicherungs-PIDs und Wiederholungswege im A16-Bericht für Anschlusschat festgehalten. Große Abnahme bleibt offen; kein neues Paket begonnen.
 
 - 22:57 Codex gezielter Abschluss A16: 17/17 SDK-Fälle am unveränderten App-SHA 05269ebdb1d17a5a23e1ef8eeb048cc3745e866dbd8c4e94052e9789f1ccd0c8, 16/16 A14/A15-Nachlauf und feste Verlust-Gegenprobe grün; Regeln 238/238. Alle vollständigen finalen SDK-/Bestandsausgaben gelesen; Regelwarnungen vollständig mit identischen Meldungen gefaltet. Zusatzmessung Tageshinweis zunächst mit noch nicht gezeichnetem Fixture bzw. direkt nach Resize alten svh-Einheiten; explizites Fixture-Neuzeichnen und 250 ms Resize-Beruhigung ergänzt, Grenzen gleich. Vier Breiten/zwei Themen jetzt horizontal und vertikal innerhalb Bildschirm, Kontrast ohne Fund; finales Bild erneut angesehen. Undo/Kontowechsel/Sprung/Kontrast/a11y-Grundchecks, Syntax/Stand/Diff grün. Dokumente/Status A14–A16 bleiben „in Arbeit“, weil große Abnahme/Paketabschluss später; Anschlussarbeit nur vorbereitet. Keine Veröffentlichung, kein App-Commit, keine Text-Lernregel geändert. Eine Minuten-Sicherung läuft mit gebündelten Log-Kopien; Übergabe 22:55, Patch 22:54 zuletzt geprüft, Abschluss wird vom nächsten Durchgang erfasst.
 
@@ -114,5 +109,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex Auftrag „stelle sicher dass solche Fehler nicht wieder passieren“ wörtlich in ALLES-OFFEN gespeichert. Vorbeugung gebaut: unabhängige Eingangs-Sperre vor Tagesdeckel-Lauf, Tests mit ursprünglicher Index-Kopplung und weiteren absichtlichen Fehlern, Modellversion/Hash der Eingangsprüfung und ausdrückliche Erkenntnisgrenzen im Ergebnis. Allgemeine Regeln vor Empfehlungen in EMPFEHLUNGEN-PRUEFEN und AGENTS; Textempfehlungen bleiben menschlich/agentisch gegenzuprüfen, kein automatisches Wahrheitsversprechen. Einzeltests und neue Ergebnis-Provenienz noch zu prüfen.
 
 - Codex Audit abgeschlossen: alte Gegenprobe c78e986 rot, korrigierte 450 Modellläufe, neun Auditfälle einschließlich aller Ergebnis-Hashes/Einzelwerte grün. Browser t_runde_bereiche grün, vollständige Ausgaben gelesen (Rückgängig, Weiterlernen, persistierte Zuordnung, w=9 bei acht Karten). Standprüfung grün. Im korrigierten großen Modell bleiben bei Deckel 20 im Mittel 165,8 ursprüngliche Karten unbesucht; kein Lernwirkungsbeweis. Eigene Rundengröße-Tagesziel-Kopplung zurückgenommen; dauerhaften neuen Deckel vorerst nicht bauen, klar begrenzten Rückkehr-Probelauf mit Pensum/Zusatznutzen/Lernkriterium vorbereiten. Alle aktuellen Planzeiger korrigiert, Originalzahlen erhalten, Fehlerart in LEHREN aufgenommen. Keine App-/Versions-/Cloud-Änderung, kein Gesamtlauf oder Deploy.
-
-- Codex Audit auf ausdrücklichen Auftrag: Modell, Empfehlung, Originalcode und Betreiberentscheidungen kritisch gelesen. Fehler: i bestimmt zugleich Stufe und Terminphase; bei Stufe 3 sind alle ursprünglichen Termine auf derselben Phase statt gleichmäßig. Empfehlung „Tagesziel entlastet“ wurde nicht modelliert, Ziel an Rundengröße koppeln ist unbegründet, globale Mischung würde früherem Betreiberauftrag widersprechen. Historische Ergebnisse bleiben erhalten, korrigierter Lauf bekommt eigene Datei. Primärquellen Anki-Handbuch und Fachartikel geprüft; Quelle für konkrete optimale App-Zahl fehlt. Akku 34 %, nur Einzelprüfungen/Analyse, kein Gesamtlauf.

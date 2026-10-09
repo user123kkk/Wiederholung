@@ -150,6 +150,27 @@ API-Grundlagen: [Firebase atomare Batches und getAfter](https://firebase.google.
 [waitForPendingWrites](https://firebase.google.com/docs/reference/js/firestore),
 [Unterkollektionen bei Kontodokument-Löschung](https://firebase.google.com/docs/firestore/manage-data/delete-data).
 
+### Weiterprüfen im selben Windows-Ordner
+
+- HTTP-Server 8097 liefert app.js/index.html/styles.css identisch zum
+  Arbeitsbaum. `CHROMIUM=C:/Program Files/Google/Chrome/Application/chrome.exe`,
+  `PRUEF_PORT=8097`. SDK-Werkzeuge benutzen Demo-Projekt
+  `demo-adrabic-karten-audit` auf 8082; niemals parallel seeden.
+- Frischer Emulator läuft direkt als Java-Prozess 6828, Version 1.22.0,
+  INFO und aktuelle absolute Repo-Regelquelle. Vor einer Regeländerung
+  diesen Prüfemulator passend neu laden/starten; nicht annehmen, dass ein
+  Firebase-CLI-Dateiwächter läuft. Ausgaben im TEMP-Ordner
+  `adrabic-karten-audit-emu/a16-frisch.{out,err}.log`.
+- Regelnachweis 238 nutzt separat Windows-konfigurierten Emulator 8085
+  und `C:/Users/USER/.cache/adrabic-regeln-emu/firebase-a16.json`,
+  `regeln-pruefung-a16.mjs` mit absolutem RULES_FILE. Git-Bash-/c-Pfadlauf
+  war ungültig und wird nicht als grüner Regelnachweis verwendet.
+- Eine Minuten-Sicherung läuft verborgen: PID 12532 (Kind 16564),
+  `plan/werkzeuge/minuten_sicherung.sh`. Ausgabe/Fehler unter TEMP
+  `adrabic-minutensicherung-a16.{out,err}.log`. Gebündeltes Kopieren hält
+  gleiche Dateien/Filter. Übergabe 22:56, Patch 22:57:45 geprüft; Patch
+  enthält den endgültigen App-/Teststand und den Sicherungsaufruf.
+
 Status: A16/DATEN-11 in Arbeit, gebaut und gezielt geprüft im uncommitteten
 Entwurf 3.18.30. Große Gesamtabnahme auf Betreiberwunsch später gesammelt.
 A14/A15 und vorhandene Skill-Dateien bleiben erhalten. Kein neues Paket
