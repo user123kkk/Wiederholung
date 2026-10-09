@@ -1,0 +1,6 @@
+GRUEN normale Bewertung und eigenes Undo
+GRUEN altes Undo schuetzt fremde Bewertung und Tageszaehler
+GRUEN Gesehen-Undo schuetzt fremde Bewertung
+GRUEN Offline-Bewertung bleibt nach Ablehnung und Neustart erhalten
+GRUEN Offline-Gesehen bleibt nach Ablehnung und Neustart erhalten
+GRUEN alte Clients abgewiesen; Notiz weiterhin erlaubt

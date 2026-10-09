@@ -1,0 +1,17 @@
+GRUEN normale Bewertung und eigenes Undo
+GRUEN altes Undo schuetzt fremde Bewertung und Tageszaehler
+GRUEN Gesehen-Undo schuetzt fremde Bewertung
+GRUEN Offline-Bewertung bleibt nach Ablehnung und Neustart erhalten
+GRUEN Offline-Gesehen bleibt nach Ablehnung und Neustart erhalten
+GRUEN zwei Offline-Geraete: erste Antwort bleibt, zweite aufbewahrt
+GRUEN gleiche Endwerte mit fremder Kennung blockieren Undo
+GRUEN Offline eigenes Undo bleibt erlaubt
+GRUEN fremde Loeschung wird nicht wieder angelegt; Antwort bleibt
+page.evaluate: Error: SDK-Schreibvorgaenge nach 30s noch offen
+    at eval (eval at evaluate (:311:30), <anonymous>:1:120)
+    at fertig (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_karten_konflikt.js:70:11)
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_karten_konflikte.js:93:13
+    at async fall (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_karten_konflikte.js:17:10)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_karten_konflikte.js:90:5 {
+  log: []
+}

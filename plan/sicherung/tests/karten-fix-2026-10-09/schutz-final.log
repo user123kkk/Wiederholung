@@ -1,0 +1,15 @@
+app.js SHA256 810554ecdb4051df9b6cca7b80c5bcac5e1f2aeb65fa2a38775083c071245fba
+firestore.rules SHA256 216bdb9edf7a434e82c1c474749e17b9fbace0fbadf79bf79f6a850fc70ea825
+GRUEN normale Bewertung und eigenes Undo
+GRUEN altes Undo schuetzt fremde Bewertung und Tageszaehler
+GRUEN Gesehen-Undo schuetzt fremde Bewertung
+GRUEN Konflikthinweis: vier Breiten, hell/dunkel, reduzierte Bewegung; Download vollstaendig
+GRUEN Offline-Bewertung bleibt nach Ablehnung und Neustart erhalten
+GRUEN Offline-Gesehen bleibt nach Ablehnung und Neustart erhalten
+GRUEN zwei Offline-Geraete: erste Antwort bleibt, zweite aufbewahrt
+GRUEN gleiche Endwerte mit fremder Kennung blockieren Undo
+GRUEN Offline eigenes Undo bleibt erlaubt
+GRUEN fremde Loeschung wird nicht wieder angelegt; Antwort bleibt
+GRUEN voller Geraetespeicher bucht keine Antwort
+GRUEN echte Regeln-Ablehnung nachholen ohne doppelte Tagesantwort
+GRUEN alte Clients abgewiesen; Notiz weiterhin erlaubt

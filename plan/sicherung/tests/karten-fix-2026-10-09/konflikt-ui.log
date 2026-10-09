@@ -1,0 +1,6 @@
+app.js SHA256 7d0de10b37278842d43c9c5ca385b3309a9752487251f6f0c9694030fc659dd3
+firestore.rules SHA256 216bdb9edf7a434e82c1c474749e17b9fbace0fbadf79bf79f6a850fc70ea825
+MESSUNG Konflikthinweis in laufender Runde {"hoehe":896,"antwort":{"top":269.015625,"bottom":627.40625},"seitenhoehe":896}
+GRUEN Konflikthinweis: vier Breiten, hell/dunkel, reduzierte Bewegung; Download vollstaendig
+GRUEN Antworten entfernen: Abbruch bewahrt Kopie; bestaetigt entfernt nur lokale Antwort
+GRUEN Offline-Bewertung bleibt nach Ablehnung und Neustart erhalten

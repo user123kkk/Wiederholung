@@ -1,5 +1,13 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**09.10.2026, 21:09 – A14/A15, finaler Entwurf 3.18.30:**
+14 echte SDK-Schutzfälle, 222/222 Regeln und frische Rundenabnahme 13/13
+grün; sämtliche Runden-Ausgaben gelesen. Download, Kontrast auf vier
+Breiten in beiden Themen, ausdrückliche lokale Entfernung, Schutz noch
+laufender Antworten und beschädigte Kopien geprüft. Cloud-Tageszähler
+beim Retry unverändert. Gesamtlauf 157 Tests an `00aeb59220794b38` läuft;
+danach Affen und Abschluss-Gegenprüfung. Weiter uncommittet, kein Deploy.
+
 **09.10.2026, 20:56 – Gegenprüfung A14/A15:**
 Entfernen schützt jetzt auch noch laufende/ungeprüfte Antworten.
 Beschädigte Kopien blockieren sicher und bleiben exportierbar, weitere

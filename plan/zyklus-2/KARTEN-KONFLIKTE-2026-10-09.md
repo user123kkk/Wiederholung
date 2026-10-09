@@ -192,3 +192,48 @@ blockierte beobachtete fremde Aktion und Retry ohne Doppelzählung, keine
 neue Definition von Konfliktantworten. Regelwechsel lehnt geänderte
 Bewertungen alter Clients ab; diese brauchen eine Aktualisierung. Regeln
 müssen vor Hosting eingespielt werden. Noch kein App-Commit oder Deploy.
+
+## Gegenprüfung und finaler Einzelstand, 21:09
+
+Zwei frühe Gesamtläufe wurden nach Gegenprüfungsänderungen bewahrt und
+beendet; ihre Ergebnisse sind keine Abnahme des finalen Codes. Finaler
+App-SHA256 (CRLF normalisiert):
+`7d0de10b37278842d43c9c5ca385b3309a9752487251f6f0c9694030fc659dd3`.
+Regeln-SHA256: `216bdb9edf7a434e82c1c474749e17b9fbace0fbadf79bf79f6a850fc70ea825`.
+
+`sdk-gesamt-endstand.log` belegt 14 SDK-Fälle am finalen Code. Zusätzlich
+zu den ersten zwölf Fällen: Neustart noch offline lässt ungeprüfte Antwort
+nicht entfernen; beschädigtes JSON blockiert sicher, stoppt aber das Laden
+weiterer gültiger Antworten nicht und wird mit heruntergeladen. Nach
+Bestätigung oder Prüfen wird die gültige Kopie entfernt. Noch laufende/
+ungeprüfte Antworten werden auch nach einer Dialog-Wartezeit nicht gelöscht.
+Automatisches Retry markiert den Eintrag vorher dauerhaft als unterwegs.
+
+Vier Breiten (390, 320, 768, 1024), hell/dunkel und reduzierte Bewegung:
+kein horizontaler Überlauf, Kontrastprüfung ohne Funde. Vollständiger
+Download geprüft; Abbrechen erhält die Kopie, Bestätigen entfernt sie und
+ändert keinen Cloud-Lernstand. Laufende Runde bei 414x896 visuell angesehen,
+kein Scrollen oder abgeschnittener Antwortknopf (Bild gespeichert).
+Andere Karte k6 ist in allen 14 Fällen vollständig unverändert.
+
+Retry der echten Regelablehnung prüft auch die Cloud: w:1 vor Nachholen,
+derselbe Zähler nach Nachholen und erneutem Prüfen/Flush. Kein zusätzlicher
+Tagesantwort-Schreibvorgang durch den Retry. Das definiert weiterhin keine
+neue Lernregel für tatsächlich konkurrierende Antworten.
+
+Frische Rundenabnahme an Quellstand `00aeb59220794b38` 13/13 grün, alle
+Einzel-Ausgaben einschließlich der beschreibenden Werte gelesen. Neuer
+Regeln-Lauf `regeln-sauber.log` 222/222: der wiederverwendete Emulator-
+Testbestand wird vorher nur für wiederholung-test geleert; Demo-SDK-
+Projekt und andere Projekte bleiben erhalten. M06-M11 erhalten gültige
+Kennungen, alle bisherigen Wert-Erwartungen bleiben bestehen.
+
+Offen: laufender Gesamtlauf 157 am selben Stand, Affen und endgültige
+Gegenprüfung vor Commit. Konservative Grenze: beschädigte Kopien werden
+nicht automatisch repariert oder verworfen; sie blockieren neue Bewertungen.
+Ist eine Bestätigung vor einem Neustart verloren gegangen und die Karte
+danach weiter geändert worden, kann die Kopie als ungeklärter Konflikt
+verbleiben. Ohne Bestätigung wird kein neuer Ausgangsstand erfunden.
+Alte Clients brauchen beim späteren Regelwechsel eine Aktualisierung;
+kein Nachweis, dass deren bereits abgelehnte alte Antworten erhalten bleiben.
+Regeln vor Hosting erforderlich; derzeit keine Veröffentlichung.

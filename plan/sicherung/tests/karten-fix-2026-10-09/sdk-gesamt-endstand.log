@@ -1,0 +1,19 @@
+app.js SHA256 7d0de10b37278842d43c9c5ca385b3309a9752487251f6f0c9694030fc659dd3
+firestore.rules SHA256 216bdb9edf7a434e82c1c474749e17b9fbace0fbadf79bf79f6a850fc70ea825
+GRUEN normale Bewertung und eigenes Undo
+GRUEN altes Undo schuetzt fremde Bewertung und Tageszaehler
+GRUEN Gesehen-Undo schuetzt fremde Bewertung
+MESSUNG Konflikthinweis in laufender Runde {"hoehe":896,"antwort":{"top":269.015625,"bottom":627.40625},"seitenhoehe":896}
+GRUEN Konflikthinweis: vier Breiten, hell/dunkel, reduzierte Bewegung; Download vollstaendig
+GRUEN Antworten entfernen: Abbruch bewahrt Kopie; bestaetigt entfernt nur lokale Antwort
+GRUEN Offline-Bewertung bleibt nach Ablehnung und Neustart erhalten
+GRUEN Offline-Gesehen bleibt nach Ablehnung und Neustart erhalten
+GRUEN zwei Offline-Geraete: erste Antwort bleibt, zweite aufbewahrt
+GRUEN gleiche Endwerte mit fremder Kennung blockieren Undo
+GRUEN Offline eigenes Undo bleibt erlaubt
+GRUEN fremde Loeschung wird nicht wieder angelegt; Antwort bleibt
+GRUEN voller Geraetespeicher bucht keine Antwort
+GRUEN echte Regeln-Ablehnung nachholen ohne doppelte Tagesantwort
+GRUEN Neustart offline: ungepruefte Antwort nicht entfernbar
+GRUEN beschaedigte Kopie blockiert sicher; weitere Antwort bleibt exportierbar
+GRUEN alte Clients abgewiesen; Notiz weiterhin erlaubt

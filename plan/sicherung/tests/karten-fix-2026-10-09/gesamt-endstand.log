@@ -1,0 +1,11 @@
+Quellstand: 00aeb59220794b38a51d7fc98b090e3b78d4c0276fec1a96fb9985639711b2f8
+Logs: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\00aeb59220794b38
+Tests: 157
+EXIT 0 t_317.js (15s)
+EXIT 0 t_a11y.js (19s)
+BEWAHRT t_abgelehnt.js
+EXIT 0 t_abstimmen_fehler.js (15s)
+EXIT 0 t_anmelden.js (118s)
+EXIT 0 t_anmelden_enter.js (20s)
+EXIT 0 t_ansage.js (10s)
+EXIT 0 t_ansage2.js (22s)
