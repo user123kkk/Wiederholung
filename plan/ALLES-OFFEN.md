@@ -1,5 +1,14 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Datenanschluss 10.10.,16:09:** Betreiberauftrag im neuen Chat ausgeführt:
+vorhandene Traces zeitlich zerlegt und Kartenlayout gezielt isoliert.
+Schriften bereits geladen; Abschalten der verzögerten Kartenanzeige hilft
+nicht. Rechenarbeit ohne App schwankt ebenfalls unter CPU4x. Produkt und
+Originaltempo unverändert;157/158 bleibt, keine Abnahmefreigabe. Nächste
+kontrollierte Umgebungsänderung ist ein Betreiber-Neustart des seit07.10.
+laufenden Laptops; danach unabhängige Rechenprobe und Originaltest einmal.
+Kein pauschaler Gesamtlauf oder neues Paket. [Konkrete Belege](zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md).
+
 **Betreiberauftrag 10.10., neuer Anschluss:** „schau selbst nach was an der reihe ist ud lege in einem neuen chat los, halte nicht lang auf bei kleinigkeitn“. Aktuelle Übergabe/STAND und Tempo-Befund geprüft: zuerst die offene Datenabnahme 3.18.30 gezielt abschließen; 157/158 grün, Texttempo 226/254/252 ms bei unveränderter Grenze 200 ms offen. Neuen lokalen Chat im Desktop-Projekt starten, vorhandene Diagnosen und gültige Prüfungen verwenden; kein neues Paket/keine Veröffentlichung. Kleinigkeiten nach Klein-Weg, keine neue große Ideensammlung. Ältere Erledigungsprüfung bleibt dokumentiert, blockiert diesen technischen Anschluss nicht.
 
 **Neuer Chat gestartet:** Betreiberauftrag 10.10.: Reihenfolge passend halten, unnötige Dauer und Tokens vermeiden; neuen Chat mit zwingendem caveman gestartet: 01a12616-ac4c-7c31-b011-37917529c814. Frühere Wünsche auf Erledigung prüfen, vorhandene Belege wiederverwenden, keine neue große Ideensammlung. Produktreihenfolge und fremden Datenentwurf erhalten.

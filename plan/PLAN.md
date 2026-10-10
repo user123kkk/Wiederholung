@@ -7,6 +7,13 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.2026 16:09 – Tempo-Ursache weiter eingegrenzt:** Schriften geladen,
+große Layouts nach Klick; Abschalten von content-visibility hilft nicht.
+Unabhängige Rechenarbeit schwankt beiCPU4x, kein ausreichendes App-Tempo
+bewiesen. Entwurf/157 gültige grüne erhalten, kein Paketcommit/Deploy.
+Nächste kontrollierte Bedingung ist ein Betreiber-Neustart; danach gezielt
+Rechenprobe und unverändertes Originaltempo einmal. Belege/Grenzen in STAND.
+
 **10.10.2026 15:29 – alle Prüfungen beendet:**157/158 grün, Runde13/13,
 Regeln238; Handy200/iPad150 Seed7 mitTexten je0 Befunde. Alle Ausgaben
 gelesen. Tempo bleibt rote Abschluss-Sperre, Entwurf/Fremdarbeit erhalten,

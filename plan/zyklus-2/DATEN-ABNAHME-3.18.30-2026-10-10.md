@@ -1,5 +1,14 @@
 # Große Datenabnahme 3.18.30
 
+**Fortsetzung16:09:** Gezielte Layoutprobe und unabhängige Rechenprobe
+abgeschlossen; alle vollständigen Ausgaben gelesen. Kein notwendiger
+Produktfix belegt. Schriften bereits geladen; große Layouts nach Klick;
+content-visibility abzuschalten verschlechtert den Aufbau. CPU4x schwankt
+auch ohne App. [Einzelheiten und Anschluss](TEXT-TEMPO-BEFUND-2026-10-10.md).
+Quellee595b5b6312244cd und Originaltest unverändert.157/158 bleibt,
+kein Paketabschluss/Deploy. Nächste kontrollierte Umgebungsänderung:
+Betreiber-Neustart, danach nur Rechenprobe und Originaltempo einmal.
+
 **Endstand10.10.2026 15:29:** Prüfungen vollständig ausgeführt/gelesen,
 Paketabschluss wegen offenem Tempo-Rot gesperrt.157/158 grün,13/13 Runde,
 238/238 Regeln. AFFE_TEXTE=1: Handy200 Seed7 und iPad150 Seed7 jeweils0

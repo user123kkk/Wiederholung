@@ -3875,6 +3875,51 @@ index 00000000..a46d42fa
 +}
 +assert.equal(auszug('alle_pruefen.js').hash, plain.hash, 'Probe veraendert Quellen');
 +console.log('Hash-Gegenproben gruen: SDK-Helfer und Testtext erkannt; beide Runner gleicher Stand. ' + plain.hash);
+diff --git a/plan/werkzeuge/pruefstand/x_cpu_referenz.js b/plan/werkzeuge/pruefstand/x_cpu_referenz.js
+new file mode 100644
+index 00000000..4203f62a
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_cpu_referenz.js
+@@ -0,0 +1,39 @@
++/* Unabhängige Rechenprobe ohne App, DOM, Firebase oder arabische Schriften.
++   Kein Leistungsziel und keine Abnahme. Kontrolliert Schwankungen bei festem
++   Arbeitsumfang; ein Ergebnis darf keinen roten Produkttest ersetzen. */
++const assert = require('node:assert/strict');
++const { start } = require('./lib');
++(async () => {
++  const browser = await start();
++  try {
++    console.log('Browser ' + browser.version());
++    const ctx = await browser.newContext();
++    try {
++      const p = await ctx.newPage(), cdp = await ctx.newCDPSession(p);
++      await p.goto('about:blank');
++      const rechnen = () => p.evaluate(() => {
++        const t = performance.now();
++        let x = 123456789;
++        for (let i = 0; i < 4000000; i++) x = (Math.imul(x, 1664525) + 1013904223) | 0;
++        return { ms: performance.now() - t, checksum: x };
++      });
++      // Die gleiche Funktion vor allen Messgruppen für den JIT aufwärmen.
++      for (let i = 0; i < 5; i++) await rechnen();
++      let checksum;
++      for (const [gruppe, rate] of [['vor', 1], ['gedrosselt', 4], ['nach', 1]]) {
++        await cdp.send('Emulation.setCPUThrottlingRate', { rate });
++        const samples = [];
++        for (let i = 0; i < 12; i++) {
++          const r = await rechnen();
++          checksum ??= r.checksum;
++          assert.equal(r.checksum, checksum, 'Arbeitsumfang oder Rechenergebnis verändert');
++          samples.push(Math.round(r.ms * 100) / 100);
++          await p.waitForTimeout(50);
++        }
++        const sorted = [...samples].sort((a, b) => a - b);
++        console.log(JSON.stringify({ gruppe, rate, checksum, samples,
++          min: sorted[0], median: (sorted[5] + sorted[6]) / 2, max: sorted[11] }));
++      }
++    } finally { await ctx.close(); }
++  } finally { await browser.close(); }
++})().catch(e => { console.error(e); process.exitCode = 1; });
 diff --git a/plan/werkzeuge/pruefstand/x_nur_betreiber_aufbau.js b/plan/werkzeuge/pruefstand/x_nur_betreiber_aufbau.js
 new file mode 100644
 index 00000000..89325ebd
@@ -4093,6 +4138,81 @@ index 00000000..f88e13aa
 +  assert.equal(filtered[2].size, 0);
 +  console.log('OK geloeschte Batch-Dokumente gemeinsam entfernt');
 +})().catch(e => { console.error(e); process.exitCode = 1; });
+diff --git a/plan/werkzeuge/pruefstand/x_text_layout_auswerten.js b/plan/werkzeuge/pruefstand/x_text_layout_auswerten.js
+new file mode 100644
+index 00000000..a9d26b2b
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_text_layout_auswerten.js
+@@ -0,0 +1,32 @@
++/* Offline-Auswertung erhaltener Traces. Keine Browserprüfung, keine Freigabe.
++   Prüft große Layouts gegen die zeitlich enthaltenen click-Handler. */
++const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
++const root = path.resolve(__dirname, '../../sicherung/tests');
++const dateien = [
++  ['alter Originaltrace', 'trace-315bb0e-verwalten.json'],
++  ['neuer Originaltrace', 'trace-neu-verwalten.json'],
++  ...['original-1', 'sichtbar', 'original-2'].map(n => [n, 'text-layout-ursache/' + n + '.json'])
++];
++const rund = n => Math.round(n * 100) / 100;
++for (const [name, file] of dateien) {
++  const input = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
++  const events = Array.isArray(input) ? input : input.events;
++  assert(Array.isArray(events), 'Traceereignisse fehlen: ' + file);
++  const marken = events.filter(e => e.name === 'S:Verwalten' || e.name === 'S:Text oeffnen');
++  const anfang = marken.find(e => e.name === 'S:Verwalten')?.ts ?? -Infinity;
++  const ende = marken.find(e => e.name === 'S:Text oeffnen')?.ts ?? Infinity;
++  const layouts = events.filter(e => e.name === 'Layout' && e.ph === 'X' && e.ts >= anfang && e.ts < ende && e.dur >= 40000);
++  assert(layouts.length, 'Großer Layoutdurchlauf fehlt: ' + file);
++  const zeilen = layouts.map(e => {
++    const clicks = events.filter(c => c.name === 'EventDispatch' && c.ph === 'X' && c.args?.data?.type === 'click' && c.pid === e.pid && c.tid === e.tid);
++    const imKlick = clicks.some(c => e.ts >= c.ts && e.ts + e.dur <= c.ts + c.dur);
++    const vorher = clicks.filter(c => c.ts + c.dur <= e.ts).sort((a, b) => b.ts - a.ts)[0];
++    return { ms: rund(e.dur / 1000), dirty: e.args.beginData.dirtyObjects, total: e.args.beginData.totalObjects,
++      imKlick, nachKlickMs: vorher ? rund((e.ts - vorher.ts - vorher.dur) / 1000) : null };
++  });
++  console.log(name + ': ' + JSON.stringify(zeilen));
++  if (!Array.isArray(input)) {
++    assert.equal(input.identitaet, '2f26be5275dfc14100c34759681047246f942637093fa66e4699d481fb2c2c33', 'End-DOM verändert');
++    assert(input.vor.schriften.length === 2 && input.vor.schriften.every(f => f.status === 'loaded'), 'Schriften nicht geladen');
++  }
++}
+diff --git a/plan/werkzeuge/pruefstand/x_text_layout_ursache.js b/plan/werkzeuge/pruefstand/x_text_layout_ursache.js
+new file mode 100644
+index 00000000..a1abd6d6
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_text_layout_ursache.js
+@@ -0,0 +1,31 @@
++/* Gezielte Diagnose mit dem bestehenden x_tempo_spur.js, keine Abnahme.
++   Aufruf: node x_text_layout_ursache.js original-1|sichtbar|original-2
++   Nur "sichtbar" ersetzt im Browser content-visibility:auto der Kartenzeilen.
++   App, Daten, Aktionen und CPU4x bleiben gleich. Keine Produktkorrektur.
++   Original/Variante/Original trennt die Layoutfolge von einem Einzelwert. */
++const fs = require('node:fs'), path = require('node:path'), Module = require('node:module');
++const modus = process.argv[2];
++if (!['original-1', 'sichtbar', 'original-2'].includes(modus)) throw new Error('Diagnosemodus fehlt');
++const datei = path.join(__dirname, 'x_tempo_spur.js');
++const ausgabe = path.resolve(__dirname, '../../sicherung/tests/text-layout-ursache');
++fs.mkdirSync(ausgabe, { recursive: true });
++let quelle = fs.readFileSync(datei, 'utf8').replace(/\r\n/g, '\n');
++const anker = "const cdp = await ctx.newCDPSession(p);";
++const ende = "await cdp.send('Tracing.end'); await fertig;";
++if (!quelle.includes(anker) || !quelle.includes(ende)) throw new Error('Vorhandene Messanker fehlen');
++quelle = quelle.replace(anker, `
++    if (${JSON.stringify(modus)} === 'sichtbar') await p.addStyleTag({ content: '.card-row { content-visibility: visible !important; }' });
++    const schriftstand = () => p.evaluate(() => ({ status: document.fonts.status,
++      schriften: [...document.fonts].map(f => ({ familie: f.family, status: f.status })) }));
++    const vor = await schriftstand();
++    console.log('MODUS ' + ${JSON.stringify(modus)} + ' FONT-VOR ' + JSON.stringify(vor));
++    ${anker}`);
++quelle = quelle.replace(ende, `${ende}
++    const nach = await schriftstand();
++    const dom = await p.evaluate(() => document.querySelector('#app').innerHTML);
++    const identitaet = require('node:crypto').createHash('sha256').update(dom).digest('hex');
++    fs.writeFileSync(${JSON.stringify(ausgabe)} + '/' + ${JSON.stringify(modus)} + '.json', JSON.stringify({ modus: ${JSON.stringify(modus)}, vor, nach, identitaet, events }));
++    console.log('FONT-NACH ' + JSON.stringify(nach) + ' DOM ' + identitaet);`);
++const m = new Module(datei, module);
++m.filename = datei; m.paths = Module._nodeModulePaths(__dirname);
++m._compile(quelle, datei);
 diff --git a/plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js b/plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
 new file mode 100644
 index 00000000..ce1dcbe1

@@ -2,6 +2,22 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-10 16:09 — Tempo-Ursache gezielt eingegrenzt
+
+**Geändert:** Drei reine Diagnosehilfen unter plan/werkzeuge/pruefstand,
+Belege/Anschluss in Tempo-Befund, Datenabnahmebericht und zentralen Plänen.
+Produkt, Rules, Originaltest und Grenze200ms unverändert.
+**Gegenprüfung:** Große Layouts anhand der enthaltenen Ereignisintervalle
+außerhalb der click-Handler; Schriften vor Wechsel geladen, End-DOM in drei
+Varianten gleich. Abschalten von content-visibility setzt1021 Layoutobjekte
+statt159/532 und liefert keine Korrektur. Alle eigenen vollständigen Logs
+gelesen, Rohtraces erhalten. Unabhängige Rechenprobe zeigt CPU4x-Schwankung
+ohne App; kein Beweis eines Messfehlers oder ausreichender App-Leistung.
+**Offen:**157/158 bleibt. Laptop-Neustart als nächste kontrollierte
+Umgebungsänderung durch Betreiber, danach Rechenprobe/Originaltempo einmal.
+Quellee595b5b6312244cd bestätigt, gültige Abnahmen erhalten. Kein neues Paket,
+Paketcommit oder Deploy. Text-Probelauf unverändert.
+
 ### 2026-10-10 15:22 — Große Datenprüfung ausgeführt, Abschluss gesperrt
 
 **Geändert:** erhaltenen3.18.30-Entwurf unverändert geprüft; Abnahmeaufbau

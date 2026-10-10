@@ -1,5 +1,16 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 16:09 – Tempo gezielt eingegrenzt, Abschluss weiterhin gesperrt:**
+Große Layouts liegen nach dem Klick-Handler. Beide Schriften schon geladen.
+Browserprobe ohne verzögerte Kartenanzeige setzt sofort1021 statt159/532
+Layoutobjekte; keine Verbesserung, nicht ins Produkt übernommen. Unabhängige
+Rechenprobe ohne App schwankt unter CPU4x24,3–46,7ms. Kein Messfehler oder
+ausreichendes Tempo bewiesen. Quellee595b5b6312244cd/157 gültige grüne
+Abnahmen erhalten, Originaltempo unverändert rot. Kein Paketcommit/Deploy.
+Nächste kontrollierte Bedingung: Betreiber startet Laptop neu (läuft seit
+07.10.); danach Rechenprobe und Originaltempo einmal, keine komplette Serie.
+[Belege und Grenzen](zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md).
+
 **10.10.2026 15:29 – Prüfungen beendet, Datenpaket noch gesperrt:**
 157/158 grün, alle158 Abschlusslogs gelesen;13/13 Runden und238 Regeln
 grün. AFFE_TEXTE=1 Handy200/iPad150 Seed7 je0 Befunde, ganze Ausgaben
