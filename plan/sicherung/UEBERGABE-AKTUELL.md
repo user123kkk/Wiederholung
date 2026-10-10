@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 11:49 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 11:51 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `592fdc7 Sicherung 11:48 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `905ae5f Sicherung 11:50 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -47,7 +48,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md
  M sw.js
 ```
 
@@ -77,6 +77,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 11:50 Codex Gegenprüfung: DATEN-9 bis DATEN-12, vollständigen aktuellen App-/Rules-/Datenschutz-Diff sowie SDK-Helfer und 16-/22-/8-Fallquellen gegen fachliche Kriterien gelesen. Unveränderte A14/A15-/A17-Abschlusslogs erneut gelesen, keine Tests daraus wiederholt. Unberührte Karte, tatsächliche Serverbestätigung, Kontobindung, Herkunft von Tag/Epoche und explizite Formularänderung tragen die Belege; Auth bleibt Attrappe, Worker blockiert. Kein zusätzlicher Produktfehler belegt. Erste vier allgemeine Logs vollständig gelesen, darunter Abgelehnt-Nachholen/Barrierefreiheit/Gegenprobe. Besetzter Emulator-Port 8081 korrekt abgewiesen ohne neuen Prozess. Gesamtlauf weiter allein aktiv; kein weiterer Browserlauf parallel.
 
 - 11:48 Codex Abnahmeaufbau korrigiert: alle_pruefen/abnahme_runde nehmen SDK-Helfer in gemeinsamen Stand auf, A16-Testhash bindet Helfer zusätzlich. Virtuelle Helfer-/Teständerungen erkannt, Runnerstand identisch 3795bfc5fa122e28. Ladegerät-Startblock baut zwei getrennte Demo-Emulatoren samt Ports/Websocket/Hub/Logging, verwirft besetzte Ports und hält beide Prozessbäume für Cleanup. Genau diesen Block separat ohne Stand-/Deploy-Schritte ausgeführt: 8081/8082 beide gestartet, aktuelle Rules je per Emulator-API HTTP 200 geladen. Früheren eindeutig zugeordneten lokalen 8082-Java-Prozess ersetzt; keine laufenden Tests dort. Rules separat am 8085-Prüfemulator 238/238, ganze Ausgabe gelesen. Syntax/Version/Server-8097-Quellgleichheit grün. Frischer gesamter Browserlauf jetzt gestartet, Sitzung 15211, Log abnahme-gesamt-3.18.30.log, Quelle 3795bfc5fa122e28. App/Rules und 46 gezielte Vorbelege unverändert; keine Veröffentlichung.
 
@@ -119,5 +121,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 09:36 Codex Betreiber-Fortsetzung: ausdrücklichen Wunsch „weiter nach reihenfolge ... ktirgs fertig“ in ALLES-OFFEN eingetragen. Übergabe 09:35 und bisherigen Abnahmeplan gelesen. Begonnenen A17-Prüfschritt mit vollständigem gezieltem Achter-SDK-Lauf am erhaltenen Entwurf gestartet, weil seit letztem Fünferlauf drei konkrete Fälle ergänzt wurden. Keine neuen Prüfideen oder Produktfunktionen bauen. Große Gesamt-/Rundenabnahme und neuer Paketbau bleiben wie zuvor verschoben/gesperrt; kein App-Commit/Deploy. Daten-Skill-Prüfebene unverändert.
 
 - 09:33 Codex bisherigen Datenauftrag fortgesetzt: neue SDK-Einzelprobe Textkorrektur-nach-fremder-Bewertung grün, echte bestätigte Fremdstufe erhalten, korrigierter Text/Rückfallreset und passende Bewertungsbasis serverseitig geprüft, andere Karte/JS-Fehler kontrolliert. Feste A17-Ausgangsquelle 97cbdcc/05269ebd zeigt exakt 0 statt 3; Wrapper prüft Exit 1 und konkrete Stufenverlustmeldung. Ganze Ausgaben gelesen; App-SHA 4a8ca5a1/Rules 6a110898 unverändert, kein neuer Produktfix. A17-Bericht/Abnahmeplan/STAND aktualisiert, Katalog acht, nur neuer Einzelfall; keine Gesamt-/PWA-/Auth-/Lernwirkungsbehauptung. Keine neue Idee aus der Betreibernachricht gebaut. Daten-Skill weiter angewandt; Sicherung einzeln, Nacht-Automation pausiert, kein App-Commit/Deploy/neues Paket.
-
-- 09:30 Codex neuer Betreiberauftrag: Nachricht vollständig wortgetreu als Original.txt gesichert, inklusive Schreibfehlern; Verfasszeit laut Betreiber gegen 01:00, beobachtete Version 3.18.26, Empfang gegen 09:29 getrennt von aktuellem Entwurf 3.18.30. Bild Speicherkarte umbenennen bytegleich in plan/betreiber-nachrichten/belege kopiert und SHA geprüft. Vollständiger Themenindex mit Fragen/Beobachtungen/Zukunftsvorhaben erstellt, keine Sofortfixes/Modi oder religiösen/lernbezogenen Entscheidungen daraus abgeleitet. ALLES-OFFEN verlinkt Wortlaut und jeden Themenbereich; bestehende verwandte Einträge/Skills nicht als Erfüllung des umfassenderen Wunsches ausgegeben. Übergabe 09:28 und einzelner Sicherungsbaum 12532/16564 gelesen/geprüft. Neuer Weiter-Auftrag im Chat; Nacht-Automation bleibt pausiert, Abnahme/Paketgrenzen erhalten. Weiter im bisherigen Datenentwurf, keine der genannten Ideen bauen.
