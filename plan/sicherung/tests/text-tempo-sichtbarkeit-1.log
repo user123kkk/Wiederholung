@@ -1,0 +1,10 @@
+sicht-original DOM=a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6 DauerDOM=7add11a3a21cdc305ae6683c574c0be32ffe78b1bd64f45d9b66c62a0018015d Longtasks=172/134
+{"ms":118,"klick":false,"eingaben":[],"teile":[]}
+{"ms":52,"klick":false,"eingaben":["__playwright_reset_targets__","__playwright_mark_target__"],"teile":[["UpdateLayoutTree",2],["Layout",1]]}
+{"ms":173,"klick":true,"eingaben":["pointerover","mouseover","pointermove","mousemove","pointerdown","mousedown","focus","focusin","DOMFocusIn","pointerup","mouseup","click","blur","focusout","DOMFocusOut","DOMActivate","pointerover","mouseover"],"teile":[["UpdateLayoutTree",1],["UpdateLayoutTree",2],["Layout",1],["UpdateLayoutTree",1],["UpdateLayoutTree",2],["UpdateLayoutTree",19],["Layout",59]]}
+{"ms":135,"klick":false,"eingaben":["pointerout","pointerover","mouseout","mouseover"],"teile":[["UpdateLayoutTree",0],["UpdateLayoutTree",1],["FireAnimationFrame",0],["FireAnimationFrame",6],["UpdateLayoutTree",14],["Layout",2],["UpdateLayoutTree",33],["Layout",45]]}
+sicht-observer DOM=77baac41b5f007008b80a2a3cb23014100d2923f5c8ec2a7f547e2d4f799e8f8 DauerDOM=7add11a3a21cdc305ae6683c574c0be32ffe78b1bd64f45d9b66c62a0018015d Longtasks=261/95
+{"ms":82,"klick":false,"eingaben":[],"teile":[]}
+{"ms":263,"klick":true,"eingaben":["pointerover","mouseover","pointermove","mousemove","pointerdown","mousedown","focus","focusin","DOMFocusIn","pointerup","mouseup","click","blur","focusout","DOMFocusOut","DOMActivate","pointerover","mouseover"],"teile":[["UpdateLayoutTree",1],["UpdateLayoutTree",1],["Layout",1],["UpdateLayoutTree",1],["UpdateLayoutTree",2],["UpdateLayoutTree",29],["Layout",112]]}
+{"ms":98,"klick":false,"eingaben":["pointerout","pointerover","mouseout","mouseover"],"teile":[["UpdateLayoutTree",0],["UpdateLayoutTree",1],["FireAnimationFrame",0],["UpdateLayoutTree",33],["Layout",41]]}
+{"ms":57,"klick":false,"eingaben":[],"teile":[["UpdateLayoutTree",21],["Layout",5],["UpdateLayoutTree",3],["Layout",4]]}
