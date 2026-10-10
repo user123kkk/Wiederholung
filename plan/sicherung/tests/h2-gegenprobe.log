@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: Fortsetzen fehlt nach Unterbrechung
+
+0 !== 1
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_runde_fortsetzen.js:29:12 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
