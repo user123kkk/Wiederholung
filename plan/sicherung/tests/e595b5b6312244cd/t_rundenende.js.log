@@ -1,0 +1,16 @@
+== handy
+  normal: Geschafft Alle 12 Karten für heute durch. 0 nicht 0 fast 12 sicher 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+    Fertig-Knopf 475/519 von 844 | Kontrast 0 | quer false
+    Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+    Fertig -> Für heute durch
+  Limit 10: Geschafft 10 Karten in dieser Runde. 0 nicht 0 fast 10 sicher 4 Tage am Stück Heute sind noch 2 Karten fällig. Fertig Weiterlernen Letzte Bewertung rückgängig | noch faellig laut Lernen: Knopf "Weiterlernen"
+    X oben am Ende: false | Weiterlernen -> "Karte 1 von 2" -> Ende: Geschafft Alle 2 Karten für heute durch. 0 nicht 0 fast 2 sicher 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+  Ueben-Auswahl Aktionen: bereich-sheet-auf,einstellungen,karte-neu,open-drill,bereich-mehr-auf,stufe-chip,start-drill,close-drill,toggle-sets,search-clear,card-detail,select-bereich,add-bereich,tab-lernen,tab-fortschritt,tab-verwalten
+== klein
+  normal: Geschafft Alle 12 Karten für heute durch. 0 nicht 0 fast 12 sicher 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+    Fertig-Knopf 475/519 von 740 | Kontrast 0 | quer false
+    Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+    Fertig -> Für heute durch
+  Limit 10: Geschafft 10 Karten in dieser Runde. 0 nicht 0 fast 10 sicher 4 Tage am Stück Heute sind noch 2 Karten fällig. Fertig Weiterlernen Letzte Bewertung rückgängig | noch faellig laut Lernen: Knopf "Weiterlernen"
+    X oben am Ende: false | Weiterlernen -> "Karte 1 von 2" -> Ende: Geschafft Alle 2 Karten für heute durch. 0 nicht 0 fast 2 sicher 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+  Ueben-Auswahl Aktionen: bereich-sheet-auf,einstellungen,karte-neu,open-drill,bereich-mehr-auf,stufe-chip,start-drill,close-drill,toggle-sets,search-clear,card-detail,select-bereich,add-bereich,tab-lernen,tab-fortschritt,tab-verwalten
