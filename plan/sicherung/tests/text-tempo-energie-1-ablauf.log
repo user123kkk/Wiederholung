@@ -1,0 +1,9 @@
+Vorheriges AC-Minimum: 5; Vergleich: 100; CPU4x/Testgrenze unverändert.
+Browser 154.0.8037.98
+{"gruppe":"vor","rate":1,"checksum":-1157083627,"samples":[5.8,5.8,6.3,5.6,5.6,5.6,4.8,5.4,5.1,5.3,5.6,5.3],"min":4.8,"median":5.6,"max":6.3}
+{"gruppe":"gedrosselt","rate":4,"checksum":-1157083627,"samples":[33.3,24.3,26.3,26.3,34.2,29.1,40.9,29.4,37,50.5,42.4,45.9],"min":24.3,"median":33.75,"max":50.5}
+{"gruppe":"nach","rate":1,"checksum":-1157083627,"samples":[5.3,5.1,4.5,4.8,5.1,4.8,5.4,5.2,5.4,5.9,5.5,5],"min":4.5,"median":5.15,"max":5.9}
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 199/153 | Text oeffnen (286): 120/109/88/105/52 | scrollen: 56/50/51/71 | Wiederholen starten: 115 | Aufdecken: 102 | Fliessend: 141 | Beenden: 54/68/89 | Lernen-Tab: 102
+OK t_text_tempo: 286 Ayat, CPU 4x, keine Aufgabe > 200 ms
+Originaltest Exit: 0
+AC-Minimum wiederhergestellt: 5
