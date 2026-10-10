@@ -1072,6 +1072,30 @@
       "fehler": null,
       "sekunden": 19,
       "quelltext": "cd1d6a37c49ee7cfa06ca3969ca16f312bb27c15718f05eaebaf57d7ee82a05f"
+    },
+    "t_tagesantworten_sdk.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 81,
+      "quelltext": "7d1d2c586aef42bacec32e39597c43f663da9685a8a9550b1a04e09cd771af01"
+    },
+    "t_teilen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 24,
+      "quelltext": "157382c6d69277205f458932b7655d3e1658a9f417d7d624c65845bc504739f4"
+    },
+    "t_text_anlegen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 30,
+      "quelltext": "6ba6c764d00393189c2f16b3e4d984a134d5d8f0124d8797dd7c203922731b81"
     }
   }
 }
