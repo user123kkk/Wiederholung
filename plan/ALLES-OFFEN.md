@@ -1,5 +1,17 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Betreiber „weiter“ nach Grenzwertkritik, 10.10.: Entscheidung ausgearbeitet.**
+Keine weiteren Tempo-Messschleifen. Einmaliger Council mit fünf getrennten
+Beratern und fünf anonymisierten Gegenprüfungen abgeschlossen. Konkrete
+[Entscheidungsvorlage](council/TEMPO-ENTSCHEIDUNG-2026-10-10.md):
+empfohlen ist eine ausdrücklich begrenzte Abschlussausnahme für bereits
+geprüfte Datenkorrekturen A14–A17/3.18.30; Tempo bleibt offen und der Test
+unverändert rot. Keine Veröffentlichung oder Behauptung vollständiger
+Abnahme. Gleichwertigkeit, reale Bedienbarkeit und 50 ms je Bild weiterhin
+unbelegt. Diese Ausnahme ist noch nicht freigegeben; bisherige Sperre gilt.
+Erst nach konkreter Entscheidung Datenabschluss und bestehende Reihenfolge
+fortsetzen. Kein weiterer Council ohne veränderten Sachstand erforderlich.
+
 **Betreiber10.10.: Grundlage der Tempo-Grenze prüfen statt weitere
 kostspielige Fixversuche.** Er fragt ausdrücklich, ob die200ms-Grenze
 regulierbar oder ursprünglich nur angesetzt wurde, und kritisiert den

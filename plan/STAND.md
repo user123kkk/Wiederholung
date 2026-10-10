@@ -1,5 +1,13 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.: Grenzwertentscheidung konkret vorbereitet, noch nicht freigegeben.**
+[Vorlage](council/TEMPO-ENTSCHEIDUNG-2026-10-10.md) mit drei Optionen und
+begrenzter Ausnahme für den Datenabschluss; fünf Berater plus fünf
+Gegenprüfer, vollständiges Transkript unter plan/council. Tempo bleibt
+technisch rot, kein neuer Lauf oder Produktänderung. Nächster notwendiger
+Schritt: verständliche Entscheidung über die konkrete Abschlussausnahme;
+danach Datenabschluss und vorhandene Reihenfolge. Keine neue Millisekundenzahl.
+
 **Betreiber10.10.: zuerst Angemessenheit der Tempo-Grenze klären.**
 Weitere Mess- und Produktvarianten gestoppt.200ms wurde im Agententest
 vom30.09. als harte Longtask-Grenze gesetzt; in den geprüften Quellen

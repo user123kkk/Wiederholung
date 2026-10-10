@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 20:56 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 20:57 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `77d76731 Sicherung 20:55 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `92495081 Sicherung 20:56 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -95,6 +98,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- Codex nach Betreiber „weiter“: konkrete Grenzwert-/Abschlussentscheidung ausgearbeitet, keine neue Messung. llm-council gemäß Projektpflicht einmal durchgeführt: fünf getrennte Berater, zufällige A–E-Zuordnung, fünf frische anonymisierte Gegenprüfer; alle Antworten vollständig gesichert. Gegenprüfung ergänzt: gleiche alte Verzögerung kann trotzdem unzumutbar sein; 50 ms/Bild bleibt eigenständige offene Forderung. Vorlage trennt echte Tempo-Abnahme von ausdrücklicher Risikoausnahme allein für vorhandene Datenkorrekturen A14–A17/3.18.30. Originaltest/Cache und Produkt unverändert, Ausnahme noch nicht freigegeben. Volltext und HTML unter plan/council; Wünsche/Anschluss in ALLES-OFFEN und STAND eingetragen.
+
 - Betreiberkorrektur10.10.: Zu viele kostenpflichtige Tempo-Varianten ohne Fix; Codex räumt ein, die Herkunft/Angemessenheit der Grenzwahl zu spät geprüft zu haben. Weitere Messläufe gestoppt. git blame/log: Test und200ms aus Agentencommit7264af9a vom30.09.; KONZEPT§13 nennt50ms/Bild. In geprüften Quellen keine quantitative Herleitung für200ms/Longtask/CPU4x auf Windows. Offizielle web.dev-INP-Dokumentation gelesen:200ms ist INP-Empfehlung aus realen Interaktionslatenzen, nicht identische Longtask-Messgröße. Wunsch und Beleggrenze zentral eingetragen; keine Zahl erhöht oder rote Belege umgedeutet.
 
 - Vorheriger Diagnoseabschluss: Aufbau-Teilung316/219ms rot bei Originalen603/454 und459/509, gleiche End-DOMs; nicht übernommen. Einzel-CPU-Probe meldet zwei Grüns bei faktisch nur1,13-facher unabhängiger Verlangsamung; ausdrücklich ungültig, nicht akzeptiert. Gesamtrunner startete wegen falsch escaptem NODE_OPTIONS-Pfad nicht; Cache weiterhin echtes Rot(code1), Quellee595b5b6312244cd. Zwei-CPU-Rechenprobe ebenfalls unbrauchbar; keine App-Abnahme danach. Affinitätsvariante gesperrt, Eingangsprüfung vor allen künftigen Diagnose-Abnahmen ergänzt; Windows-Preloadpfad korrigiert. Eigener Drosselungsfaden bei zwei begrenzten Versuchen nicht identifizierbar; Abbruch vor gedrosselter Rechen-/App-Probe, Browser geschlossen. Kein Produktfix, keine fremden Prozesse geändert; Netzteilwerte restauriert.
@@ -136,5 +141,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 16:24 Codex Fortsetzungsauftrag: AGENTS, aktuelle Übergabe, Betreiberregeln, STAND, LEHREN, CODEX-START, zentrale Offenliste und Tempo-Befund gelesen; A14–A17 und Paketabschluss-Sperre abgeglichen. Minuten-Sicherung1792/5884 vorhanden, nicht erneut gestartet. Entwurf erhalten, keine Diagnose/Messung oder Produktänderung. Innerhalb der beauftragten Grenzen kein weiterer Produktabschluss möglich; offene Entscheidung zur ausdrücklichen Wiederaufnahme der Tempo-Klärung in ALLES-OFFEN und PLAN festgehalten. Keine Abnahme/Commit/Veröffentlichung.
 
 - 16:22 Codex Betreiberkorrektur „halt dich nicht so lang daran auf, du verschwendest tokens“ aufgenommen; weitere Tempo-Diagnose beendet. Nach Neustart Originaltest einmal219ms bei200ms rot, ganzen Log gelesen. Zwei gezielte Klicktraces am gleichen Stand gelesen: Original196ms/getrennte Eingabe170ms, gleiche Layoutfolge und End-DOM; Eingabezeit verändert, daher keine Testkorrektur/Freigabe. Lokale Playwright-Quelle zeigt zusätzlichen Hit-Target-Interceptor, dessen Anteil am ursprünglichen Rot nicht bewiesen ist; keine weitere Probe gestartet. Quellee595b5b6312244cd gleich,157 grüne erhalten. Keine Produktänderung, kein Paketcommit/Deploy. Dokumentation und Belege gesichert; Minuten-Sicherung1792/5884 läuft einzeln.
-
-- 16:14 Codex Betreiber „weiter“ nach Neustart: Boot10.10.16:11:51/Netzteil2 bestätigt, fehlende Minuten-Sicherung und Server8097 jeweils neu gestartet. Serverquelle und tatsächlicher Runnerhashe595b5b6312244cd gleich. Unabhängige Rechenprobe am selben Chrome154.0.8037.98 abgeschlossen und vollständigen Log gelesen: CPU4x36,2–54,3ms/Median41,9, ohne Drosselung Median8,2/8,55; kein Verbesserungsbeleg. Unveränderter Original-Tempotest einmal aktiv, eigene neue Lognamen erhalten alte Belege. Kein Gesamtlauf/Produktbau/Deploy.
