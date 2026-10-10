@@ -1,5 +1,12 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 16:53 – Tempo-Klärung erneut ausdrücklich beauftragt:**
+Betreiber verlangt die Sperre zu beheben und danach an vorgesehener Stelle
+fortzufahren. Diagnose darf wieder gezielt laufen; bisherige157/158-Belege
+erhalten, keine Grenzlockerung oder Wiederholung bis grün. Erst notwendige
+belegte Korrektur und Abnahme, dann Datenabschluss/weiterer Bereich.
+Kein neuer Funktionsbau oder Deploy aus diesem Auftrag.
+
 **10.10.2026 16:49 – historische Wunschquellen abgeglichen:**
 Alle39 lokal vorhandenen Exporte mit Beginn vor05.10. gelesen; konkrete
 Umsetzungen, noch fehlende Belege und Quellenlücken in ALLES-OFFEN.

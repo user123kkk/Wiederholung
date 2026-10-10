@@ -1,5 +1,14 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Betreiber10.10.,16:53:** „alos wenn dieses tempo lärung die eigentliche
+reihenfolge nicht zulässt dann fix das bitte und setz dann da an wo es muss“.
+Gezielte Tempo-Klärung und notwendige belegte Korrektur wieder ausdrücklich
+beauftragt. Bisheriger Diagnosestopp ist für diesen Anschluss aufgehoben;
+keine Testgrenzlockerung, Grün-Wiederholung oder Veröffentlichung daraus.
+Zuerst tatsächliche Sperre der Datenabnahme lösen, dann bestehende Reihenfolge.
+Originale/grüne Belege und Entwurf bleiben erhalten; Text-Probelauf nicht
+inhaltlich umbauen. Oberfläche-Skill für Darstellung/Tempo verwendet.
+
 **Betreiber 10.10.2026:** „arbeite ununterbrochen. ich habe genug skills zur
 verfügung gestellt, nutze vorallem caveman ständig.“ Caveman gelesen und
 für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
