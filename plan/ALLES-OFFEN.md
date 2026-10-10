@@ -1,5 +1,12 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Fortsetzung nach Neustart, 10.10.2026 16:14:** Betreiber „weiter“.
+Neustart am10.10.16:11:51 und Netzteilstatus2 geprüft; Minuten-Sicherung
+und Server8097 nach dem Neustart jeweils neu gestartet. Server/App und
+Runnerquellee595b5b6312244cd gleich. Unabhängige Rechenprobe abgeschlossen,
+Originaltempo läuft einmal; keine vollständige Serie oder Wiederholung bis
+grün. Alte Belege und157 gültige grüne erhalten, kein neues Paket/Deploy.
+
 **Datenanschluss 10.10.,16:09:** Betreiberauftrag im neuen Chat ausgeführt:
 vorhandene Traces zeitlich zerlegt und Kartenlayout gezielt isoliert.
 Schriften bereits geladen; Abschalten der verzögerten Kartenanzeige hilft
