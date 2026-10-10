@@ -242,6 +242,38 @@ Katalog enthält jetzt 21 Fälle; nur die zwei neuen Einzelproben liefen,
 kein vollständiger 21er-/Paketlauf. Frühere Nachweise behalten ihre Hashes.
 Syntax/Diff grün; große Abnahme und Veröffentlichung bleiben später.
 
+### Abweichende Cloud-Belegkopie, 10.10.2026 07:04
+
+Neue Einzelprobe `Cloudbeleg-Antwortart-weicht-ab` grün am App-SHA
+`4a8ca5a1` und unveränderten Rules `6a110898`. Ein normaler n-Beitrag wird
+per echtem SDK bestätigt (Server n=1). Nur die lokale Entfernung wird im
+Fixture verhindert, danach die Antwortart der erhaltenen Kopie kontrolliert
+von n auf u geändert. Eingangsprüfung verlangt genau eine Kopie, u1 und
+delta +1; Serverbeleg und Kopie haben ausdrücklich dieselbe Kennung,
+Epoche, Tag und Differenz, aber unterschiedliche Antwortart.
+
+Nach Neuladen und zweimaligem Nachholen bleibt die gleiche lokale Kopie
+als veraltet erhalten. Server n=1/u=0 und vollständiger Cloud-Beleg bleiben
+unverändert, andere Karte k6 und JS-Fehler geprüft. Vollständiger grüner Log
+`a16-cloudbeleg-art-abweichend.log` gelesen. Das ist eine kontrolliert
+abweichende lokale Eingabe, keine Behauptung einer spontan auftretenden
+Produktbeschädigung oder echten Kennungskollision.
+
+Gegenprobe in separater TEMP-App: nur im eindeutigen Nachholvergleich die
+Bedingung `d.art === x.art` entfernt. Derselbe Fall endet Exit 1 an
+„Abweichende Belegkopie darf nicht entfernt werden“, tatsächlich 0 statt
+erwartet 1 lokale Kopie. Wrapper verlangt Exit und konkrete Fehlermeldung;
+vollständiger Log `a16-cloudbeleg-art-mutant.log` gelesen. Normalisierter
+Mutanten-SHA256:
+`a019dd6952256021cff017f2f75221b8df0c0f713609d0d806323c1a73a3f22b`.
+Produktdatei unverändert; bestehender Vergleich ist wirksam, kein neuer Fix.
+
+Katalog jetzt 22, nur dieser neue Einzelfall ausgeführt, kein vollständiger
+22er-/Paketlauf. Daten-Skill-Prüfebene wie zuvor: echter SDK, Demo-Emulator,
+Auth-Attrappe, blockierter Worker; keine Auth-/PWA-/Lernwirkungsaussage.
+Große Abnahme/Veröffentlichung weiterhin später. Anschluss-Abnahmeplan
+auf aktuelle Fallzahl und diesen zusätzlichen Einzelbeleg aktualisiert.
+
 ### Weiterprüfen im selben Windows-Ordner
 
 - HTTP-Server 8097 liefert app.js/index.html/styles.css identisch zum

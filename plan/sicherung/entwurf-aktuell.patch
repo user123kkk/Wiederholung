@@ -1944,10 +1944,10 @@ index 0000000..cb56164
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
-index 0000000..129d180
+index 0000000..c2b8224
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
-@@ -0,0 +1,324 @@
+@@ -0,0 +1,352 @@
 +/* A16: echter SDK 10.14.1, Repo-Regeln, Demo-Emulator 8082.
 +   Auth-Attrappe und blockierter Service Worker: kein PWA-Kaltstartbeleg.
 +   --gegenprobe stellt die feste Entwurfsquelle 591d03e samt Patch her. */
@@ -1983,7 +1983,7 @@ index 0000000..129d180
 +  'Offline-Neustart-vor-zwei-Sekunden', 'Absturz-nach-Kartenkopie-vor-Aktivierung',
 +  'vorbereiteter-Beitrag-Kartenkopie-Epoche-falsch', 'vorbereiteter-Beitrag-ohne-Kartenkopie',
 +  'beschaedigter-Tagesbeitrag', 'Tageshinweis-Darstellung-und-Entfernen', 'Kontoloeschung-entfernt-Cloudbelege',
-+  'Nachholen-Altersgrenze-120', 'Nachholen-Altersgrenze-121'];
++  'Nachholen-Altersgrenze-120', 'Nachholen-Altersgrenze-121', 'Cloudbeleg-Antwortart-weicht-ab'];
 +(async () => {
 +  const single = process.argv.find(x => x.startsWith('--fall='))?.slice(7);
 +  assert.ok(single === undefined || FALL_NAMEN.includes(single), 'Unbekannter A16-Prueffall: ' + single);
@@ -2062,6 +2062,34 @@ index 0000000..129d180
 +      p = await restart(p, ctx, change); await retry(p); await retry(p);
 +      assert.equal((await cloud(day)).w, 1);
 +      assert.deepEqual(await p.evaluate(() => window.__PRUEF.tagesantworten()), []);
++    });
++    await fall('Cloudbeleg-Antwortart-weicht-ab', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute());
++      await p.evaluate(() => {
++        const remove = Storage.prototype.removeItem;
++        Storage.prototype.removeItem = function(key) {if (key.startsWith('adrabic-tagesantwort-')) throw new Error('Lokale Bestaetigung kontrolliert behalten'); return remove.call(this, key);};
++        window.__PRUEF.zaehle('n'); window.__PRUEF.flush();
++      });
++      await fertig(p); assert.equal((await cloud(day)).n, 1);
++      const saved = await p.evaluate(() => {
++        const entries = window.__PRUEF.tagesantworten();
++        if (entries.length !== 1) throw new Error('Genau eine lokale Kopie erforderlich');
++        const x = entries[0];
++        if (x.uid !== 'u1' || x.art !== 'n' || x.delta !== 1) throw new Error('Falsche Beleg-Eingabe');
++        x.art = 'u';
++        localStorage.setItem('adrabic-tagesantwort-u1/' + x.id, JSON.stringify(x));
++        return x;
++      });
++      const receiptBefore = (await (await rest(ROOT + '/users/u1/tagesantworten/' + saved.id)).json()).fields;
++      assert.equal(receiptBefore.art.stringValue, 'n'); assert.equal(saved.art, 'u');
++      assert.equal(receiptBefore.tag.stringValue, saved.tag); assert.equal(saved.tag, day);
++      assert.equal(receiptBefore.epoche.stringValue, saved.epoche); assert.equal(Number(receiptBefore.delta.integerValue), saved.delta);
++      p = await restart(p, ctx, change); await retry(p); await retry(p);
++      const copies = await p.evaluate(() => window.__PRUEF.tagesantworten());
++      assert.equal(copies.length, 1, 'Abweichende Belegkopie darf nicht entfernt werden');
++      assert.equal(copies[0].id, saved.id); assert.equal(copies[0].art, 'u'); assert.equal(copies[0].status, 'veraltet');
++      assert.equal((await cloud(day)).n, 1); assert.equal((await cloud(day)).u, 0);
++      assert.deepEqual((await (await rest(ROOT + '/users/u1/tagesantworten/' + saved.id)).json()).fields, receiptBefore);
 +    });
 +    await fall('urspruenglicher-Lerntag', async (p, ctx, change) => {
 +      const day = await p.evaluate(() => window.__PRUEF.heute()); await reject(p);

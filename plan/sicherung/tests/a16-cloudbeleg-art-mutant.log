@@ -1,0 +1,16 @@
+app.js SHA256 a019dd6952256021cff017f2f75221b8df0c0f713609d0d806323c1a73a3f22b
+firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3
+AssertionError [ERR_ASSERTION]: Abweichende Belegkopie darf nicht entfernt werden
+
+0 !== 1
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:139:14
+    at async fall (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:59:7)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:116:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

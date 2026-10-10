@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 07:04 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 07:05 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e73efe4 Sicherung 07:02 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `740086d Sicherung 07:04 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -35,6 +36,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md
+ M plan/zyklus-2/VERLAUF-NEUSTART-2026-10-09.md
  M sw.js
 ```
 
@@ -64,6 +67,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 07:04 Codex A16-Beleggegenprobe: Übergabe 07:02 und einzelner Sicherungsbaum 12532/16564 bestätigt. Noch fehlende Inhaltsabweichung zwischen Cloud-Beleg und gültig geformter lokaler Kopie geprüft: regulären n-Beitrag bestätigen, Entfernung nur im Fixture blockieren, lokale Antwortart kontrolliert u setzen. Kennung/Tag/Epoche/Differenz unabhängig gegen echten Serverbeleg geprüft; nach Neustart/zweifachem Nachholen gleiche Kopie veraltet erhalten, Server n=1/u=0 und Beleg unverändert, Fremdkarte/JS-Fehler grün. TEMP-Mutant ohne Antwortartvergleich verliert Kopie, exakt Exit 1/0 statt 1 erkannt. Vollständige Logs gelesen, Quellen/Fixture-Grenzen im A16-Bericht, Abnahmeplan auf 22 Fälle aktualisiert; nur neuer Einzelbeleg, kein ganzer Lauf oder spontan auftretender Produktfehler behauptet. App-SHA 4a8ca5a1/Rules 6a110898 unverändert, keine Lern-/Auth-/PWA-Aussage, kein neuer Paketbau/Commit/Deploy. Daten-Skill wie zuvor gezielt angewandt. Nacht-Fortsetzung bis 09:00 weiter aktiv.
 
 - 06:07 Codex konkrete Abnahmevorbereitung: Übergabe 06:05 und einzelner Sicherungsbaum 12532/16564 bestätigt. Belegstände A14–A17 gegen Testinventar/Runner/Ladegerät-Voraussetzungen abgeglichen, keine künstlichen Wiederholungen. Zwei Anschlusslücken festgehalten: Ladegerät stellt nur 8081 bereit, A16 benötigt zusätzlich 8082; Fortsetzungs-Hash berücksichtigt den direkt geladenen SDK-Helfer nicht. Tatsächliche Hashfunktion isoliert mit virtueller Helferänderung und positiver Testtextkontrolle geprüft, voller Log gelesen; keine Produkt-/Helferdatei für diese Gegenprobe verändert, kein Gesamt-/Ladegerät-Fehllauf behauptet. ABNAHME-VORBEREITUNG-3.18.30.md enthält Quellen, Hashgrenzen, SDK-Zusatzaufrufe und konkreten späteren Ablauf. Wrapper/App unverändert, große Abnahme/Ladegerät weiterhin verschoben; beide Anschlusslücken dafür offen. Daten-Skill-Prüfebenen beachtet, kein neuer H-Bau/App-Commit/Deploy. Nacht-Fortsetzung bis 09:00 aktiv.
 
@@ -106,5 +111,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex A16 gebaut, erste gezielte SDK-Prüfung läuft: dauerhafte Einzelbeiträge mit atomarem unveränderlichem Cloud-Beleg; Nachholen prüft zuerst SDK-Abschluss, Beleg und Server-Epoche. Kartenversuche reservieren den Tagesbeitrag vor dem Buchen; Kartenkopie trägt ihn für einen Zwischenabsturz mit. Aufbewahrungs-Hinweis/Download erweitert, Datenschutz und Kontolöschung mitgezogen. Oberflächen-Skill wegen bestehendem Hinweis angewandt. Keine Text-Lernregel oder Paketwechsel; 3.18.30 bleibt Entwurf. Eigener Patch zunächst wegen rückwärts angeordneter Hunks abgewiesen, in Quellreihenfolge angewandt; keine Prüfgrenze geändert.
 
 - Codex Fortsetzung A16: Übergabe, Betreiberregeln, Lehren, Zyklus-Auftrag/Entscheidungen und DATEN-11-Beleg gelesen. A14/A15-Entwurf 3.18.30 erhalten. Minuten-Sicherung läuft bereits (zwei vorhandene Bash-Prozesspaare); keine zusätzliche Schleife gestartet. Syntax und Standprüfung grün. Daten-Skill angewandt; Ursache am tatsächlichen Verlauf-/Auth-/Undo-Pfad gelesen: nur flüchtige abgelehnte Differenzen. Entwurf für dauerhafte Beiträge mit unveränderlichen Serverbelegen und ursprünglichem Konto/Tag/Epoche; kein Gesamtlauf/Deploy.
-
-- 22:11 Codex: Skills-Auftrag abgeschlossen. Vollständige Git-Dateiliste mechanisch eingelesen (2171 Dateien/23,1 MB, keine Lesefehler), Hauptarchitektur, Arbeitsregeln und vorhandene Prüfwege inhaltlich abgeglichen; keine Behauptung, alle Logs semantisch auditiert zu haben. Offizielle Quellen zu Codex/Claude Skills, Firebase, Context7, Playwright, Superpowers, Anthropic, Serena, axe-core und Security verglichen. Drei kurze Projekt-Skills (Daten, Oberfläche, Lernbelege), gemeinsame Quelle .agents/skills und identische Claude-Spiegel eingerichtet; gezielte Auswahlregeln in AGENTS/CLAUDE. Projektprüfer fing falschen Gerätepfad ab, korrigiert; sechs offizielle YAML-Prüfungen, Pfad-/Spiegel-/Konfigurationsprüfung und Syntax/Diff grün. Beschreibungen insgesamt 635 Zeichen; keine gemessene Token-/Qualitätsersparnis oder Modell-Auswahlgarantie behauptet. Bericht plan/agenten/SKILLS-UND-PLUGINS.md enthält Empfehlungen, Gegenargumente und Grenzen. Keine externen Plugins installiert, keine App-Änderung oder Veröffentlichung. Neue Skill-/Werkzeugdateien per intent-to-add im Minuten-Patch; große App-Abnahme bleibt später, nächste App-Aufgabe A16.
