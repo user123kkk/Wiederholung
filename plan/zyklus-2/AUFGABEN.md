@@ -38,6 +38,7 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 
 ## Paket B – Onboarding
 
+
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
 | B1 | EIN-1 | hoch | Der Nachklang („Dein Plan steht. Jetzt deine erste eigene Karte." + Wenn-dann-Satz) erscheint nach der Kontoerstellung nie | `befunde/EIN.md` | Astra mittel | erledigt (3.18.12) | Neu-/Bestandskonto und erste Karte grün; Paketabschluss grün |

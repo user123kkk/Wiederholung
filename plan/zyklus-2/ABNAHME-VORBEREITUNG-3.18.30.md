@@ -4,13 +4,21 @@
 Veröffentlichung. Diese Seite hält die tatsächlichen Anschlussbedingungen
 fest; keine Abnahmefreigabe, kein neuer Paketbau, kein App-Commit.
 
+Aktualisierung 09:42 nach Weiter-/Abschlussauftrag: aktuelle gezielte
+SDK-Abnahmen A14/A15 16, A16 22, A17 acht gemeinsam am App-SHA 4a8ca5a1
+und Rules 6a110898 grün, vollständige Logs gelesen. Begonnener gezielter
+Datenprüfschritt abgeschlossen; große Abnahme bleibt offen. Diese grünen
+SDK-Läufe am unveränderten Stand nicht künstlich wiederholen. Bei späterem
+Produkt-/Regel-/Helferwechsel neue Gültigkeit prüfen; Wrapper-Abhängigkeiten
+wie unten berücksichtigen.
+
 ## Belege auseinanderhalten
 
 | Aufgabe / Quellstand | Tatsächlich geprüft | Noch kein Nachweis |
 |---|---|---|
 | A14/A15, App 4a8ca5a1 | 16 SDK-Schutzfälle gemeinsam nach A17 grün, voller Log gelesen | Große Paket-/Browser-/Rundenabnahme |
-| A16, App 05269ebd | 17er-Lauf plus zwei spätere Kartenkopie-Einzelproben | Ganzer aktueller 22er-Lauf |
-| A16, App 4a8ca5a1 | Einzelne positive Fallauswahlkontrolle, Altersgrenze 120/121, abweichende Cloud-Belegkopie und gezielte Gegenproben | Alle 22 Produktfälle gemeinsam |
+| A16, App 05269ebd | Historisch 17er-Lauf plus zwei spätere Kartenkopie-Einzelproben | Kein aktueller Produktnachweis allein aus diesen älteren Belegen |
+| A16, App 4a8ca5a1 | Alle 22 SDK-Fälle gemeinsam grün nach Weiter-Auftrag, voller Log gelesen; gezielte Gegenproben erhalten | Große Paket-/Browser-/Rundenabnahme |
 | A17, App 4a8ca5a1 | Alle acht SDK-Fälle gemeinsam grün nach Weiter-Auftrag; fünf betroffene Browserprüfungen zuvor am selben App-Stand grün | Gesamtes Paket, Runden-/Zufallsabnahme und echter iPhone-PWA-Test |
 | Rules 6a110898 | 238 Fälle am festgehaltenen Regelnachweis; Regeldatei seitdem unverändert | Kein Nachweis einer veröffentlichten Regelversion |
 

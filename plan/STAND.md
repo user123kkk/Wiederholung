@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 09:42 – Begonnene gezielte Datenprüfung abgeschlossen:**
+A14/A15 16, A16 22, A17 acht SDK-Fälle gemeinsam am unveränderten aktuellen
+App-SHA 4a8ca5a1/Rules 6a110898 grün; vollständige Ausgaben gelesen.
+46 gezielte Fälle, keine große Gesamtabnahme. Keine weitere App-Änderung.
+Berichte und `ABNAHME-VORBEREITUNG-3.18.30.md` aktualisiert. Entwurf bleibt;
+Paketabschluss/neues Paket erst nach späterer großer Abnahme. Weitere
+Repo-Reihenfolge: entschiedene Mehrwert-Punkte, Anschlussvorbereitung liegt
+vor. Keine neuen Ideen aus der Nachricht zu 3.18.26 bauen.
+
 **10.10.2026 09:33 – Neuer Weiter-Auftrag des Betreibers:**
 Vollständige gegen 01:00 verfasste Nachricht zu beobachteter 3.18.26 samt
 Bild unter `betreiber-nachrichten/` gesichert; Themenindex in ALLES-OFFEN.

@@ -274,6 +274,22 @@ Auth-Attrappe, blockierter Worker; keine Auth-/PWA-/Lernwirkungsaussage.
 Große Abnahme/Veröffentlichung weiterhin später. Anschluss-Abnahmeplan
 auf aktuelle Fallzahl und diesen zusätzlichen Einzelbeleg aktualisiert.
 
+### Gezielter Abschluss am aktuellen Entwurf, 10.10.2026 09:42
+
+Nach ausdrücklichem Weiter-/Abschlussauftrag **alle 22 A16-SDK-Fälle
+gemeinsam grün**, unveränderter App-SHA 4a8ca5a1 und Rules-SHA 6a110898.
+Vollständige Ausgabe `a16-22-aktueller-entwurf-gezielter-abschluss.log`
+unter `plan/sicherung/tests/` gelesen. Fallkatalog und Erfolgszahl geprüft,
+einschließlich aller nächtlichen Ergänzungen und Tageshinweis/Entfernen/
+Kontodatenlöschung. Damit ist die offene Quellstand-/Kataloglücke der
+gezielten Prüfung geschlossen. Frühere Einzelbelege bleiben Verlauf.
+
+Am selben App-/Regelstand zusätzlich A14/A15 16 und A17 acht SDK-Fälle
+gemeinsam grün, vollständige Logs gelesen. Insgesamt 46 aktuelle gezielte
+SDK-Fälle; keine weitere App-Änderung. Große Paket-/Browser-/Runden-/
+Zufallsabnahme und echte Auth-/PWA-/Gerätebelege werden dadurch nicht
+ersetzt. Paketabschluss/App-Commit und neue Pakete bleiben später.
+
 ### Weiterprüfen im selben Windows-Ordner
 
 - HTTP-Server 8097 liefert app.js/index.html/styles.css identisch zum
