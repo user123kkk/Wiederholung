@@ -30,3 +30,43 @@ E3 820/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E3 820/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E4 390: echter Zurück-Weg, beide Rechtsseiten, vollständiger Plan und Name/Adresse/Passwort erhalten
 E4 320: echter Zurück-Weg, beide Rechtsseiten, vollständiger Plan und Name/Adresse/Passwort erhalten
+E4 820: echter Zurück-Weg, beide Rechtsseiten, vollständiger Plan und Name/Adresse/Passwort erhalten
+E5 320: Sicherungshinweis 18.97 Schriftbreiten, kein Überlauf
+E5 390: Sicherungshinweis 24.04 Schriftbreiten, kein Überlauf
+E5 820: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 1180: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 1440: Sicherungshinweis 48.00 Schriftbreiten, kein Überlauf
+E5 Chromium: Datei angeboten, Blob 60 s erhalten, Prüfsatz sichtbar; iOS offen
+E6 heute/morgen, ICS angeboten, neutraler Status; iOS/Android-Geräte offen
+E7 LERN-1-Messung: drei Tage ohne Fällige, Serie 10 bleibt, je Tag ein Ruhetag; fälliger Tag ohne Marker
+E7 zwei Ruhetage halten: 10
+E7 Ruhetag heute zählt nicht hoch: 5
+E7 Ruhetag und ein ausgelassener Tag: verziehen: 10
+E7 Ruhetag, dann zwei Tage ohne Öffnen: reißt wie bisher: 0
+E7 Ruhetag verbraucht den verziehenen Tag nicht: 12
+E7 ohne Ruhetag unverändert: zwei Tage offen: 0
+E7 Marker nichts fällig, Serie 5: 1
+E7 Marker anderer Bereich hat Fälliges: 0
+E7 Marker keine Serie: 0
+E7 Marker heute schon gelernt: 0
+E8 erster Tag gemerkt; gestriger Meilenstein läuft ab
+E8 320/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 320/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 390/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 390/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 820/hell: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E8 820/dunkel: Montag gezeigt, Dienstag/Mittwoch Rückblick
+E9 320/hell: Profil und Board lange Wörter passen
+E9 320/dunkel: Profil und Board lange Wörter passen
+E9 390/hell: Profil und Board lange Wörter passen
+E9 390/dunkel: Profil und Board lange Wörter passen
+E9 820/hell: Profil und Board lange Wörter passen
+E9 820/dunkel: Profil und Board lange Wörter passen
+E10 theme-color entspricht dunklem Seitenhintergrund
+E11 320/hell/Callback nach Promise: Toast und Ansage
+E11 320/dunkel/Callback nach Promise: Toast und Ansage
+E11 390/hell/Callback nach Promise: Toast und Ansage
+E11 390/dunkel/Callback nach Promise: Toast und Ansage
+E11 820/hell/Callback nach Promise: Toast und Ansage
+E11 820/dunkel/Callback nach Promise: Toast und Ansage
+E11 320/hell/Callback vor Promise: Toast und Ansage
