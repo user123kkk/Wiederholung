@@ -5,3 +5,7 @@ OK   Einstellungszeile zeigt Uhrzeit (nicht "aus") | Tägliche Erinnerung Vorlag
 OK   Blatt nennt den Ersetzt-Satz | Tägliche Erinnerung Ein Eintrag in deinem Kalender, jeden Tag zur selben Zeit – er erinnert dich auch, wenn die App zu ist. Wann passt es dir? Eine neue Zeit ersetzt die alte, wenn dein Kalender das ü
 OK   Knopf "Erinnerung als aus markieren" vorhanden
 OK   Einstellungszeile zeigt wieder "aus" | Tägliche Erinnerung aus
+OK   Gegenprobe (alter Code) ist ROT: UID unterscheidet sich | UID:adrabic-erinnerung-1791627852420@adrabic / UID:adrabic-erinnerung-1791627854061@adrabic
+ALLE OK
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":17,"quelltext":"e34b0650f7760501fcc831cb395a62f70d8f794b6c28ea60ce6a03439157b915"}

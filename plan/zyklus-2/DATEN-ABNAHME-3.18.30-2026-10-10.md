@@ -62,6 +62,13 @@ Frischer Gesamtlauf jetzt neu am gemeinsamen Stand
 TEMP `adrabic-pruefstand-gesamt/e595b5b6312244cd/`.
 Frühere rote Protokolle bleiben erhalten. Affe/Runden-Auswertung/Abschluss offen.
 
+Zwischenstand 12:24: 32/158 abgeschlossene Tests grün, alle32 vollständigen
+Logs gelesen (auch beschreibende Geometrie-/Lageausgaben). Kein weiterer
+Fehler belegt. Original-Tempotest im Gesamtlauf erneut grün, max61ms für
+die zehn 3000er-Bewertungen. Lauf87583/Node18936 bleibt aktiv; dies ist
+keine fertige Gesamtabnahme. Bereits gelesene Logs: t_317 bis
+t_erinnerung_zeit in der alphabetischen Runnerliste.
+
 Belege: `abnahme-bestand-ab-3.18.30.log`, `abnahme-bestand-spur-3.18.30.log`,
 `abnahme-stub-batch-2-3.18.30.log`,
 `abnahme-stub-batch-gegenprobe-2-3.18.30.log`,
