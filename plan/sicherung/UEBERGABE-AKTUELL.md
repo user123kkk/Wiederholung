@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:49 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:50 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `56e6c235 Sicherung 16:48 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `85a780a1 Sicherung 16:49 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -36,7 +36,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M firestore.rules
  M index.html
  M plan/ARBEITSPROTOKOLL.md
- M plan/STAND.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -67,8 +66,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/AUFGABEN.md
- M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
  M sw.js
 ```
 
@@ -98,6 +95,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 16:50 Codex Sperraudit2: aktuelle Übergabe/STAND und Einzelfreigabe-Status erneut geprüft; keine neue Freigabe oder Zustandsänderung. Datenentwurf3.18.30 weiter uncommittet,157/158; Tempo-Diagnose gestoppt, neue Paketarbeit laut AGENTS gesperrt. Quellenrest abgeschlossen, Vorbereitung schon vorhanden; keine wiederholte Prüfung/Messung als Fortschritt ausgegeben. Minuten-Sicherung1792/5884 live. Arbeitsziel noch aktiv, Blockiert-Schwelle noch nicht erreicht.
 
 - 16:49 Codex verbleibenden Anschluss geprüft: CODEX-START/ENTSCHEIDUNGEN-VERSTEHEN, STAND und aktuelles AUFGABEN gelesen; kein weiterer autonomer Paketbau über uncommittetem Datenentwurf. Veraltete A14–A17-Hinweise „große Abnahme später“ auf tatsächlich ausgeführte157/158-Abnahme samt offenem219ms-Tempo und Diagnosestopp berichtigt, Status in Arbeit erhalten. STAND/Mehrwert-ARBEITSSTAND auf abgeschlossene lokale Quellenprüfung nachgezogen, kein wiederholter Testauftrag. Dokumentations-Diffcheck grün; Produkt/Testquellen unverändert.
 
@@ -140,5 +139,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 16:00 Codex Erledigungsprüfung zentral ergänzt: neun zusätzliche Prüfpositionen aus 05.–07.10. (sechs umgesetzte Wunschgruppen, zwei teilweise erledigte Gesamtwünsche, ein offener Listen-Sprung-Prüfrest); die zwei N1-Stellen gemeinsam gezählt. Historische und aktuelle erhaltene Listen-/Einwilligungslogs vollständig gelesen, Code/CSS und damaligen Umfang gegengeprüft. Textarten-Erklärung und N1-CSS nicht als neue Verständlichkeits-/Fotoabnahme ausgegeben. Unklare Schreibkritik zusätzlich ausdrücklich erhalten. Fehlende Unterideen/Varianten/Gegenreden aus R1/R2 in die elf vorhandenen Ideenbereiche eingefügt; TikTok-Bezüge mit vorhandenen Bereichen verbunden, keine neue Liste/Funktionsfreigabe. Alle 259 alten Tabellenpositionen thematisch erhalten, sieben schon vorher umbasierte Verweise sind keine verlorenen Aufgaben; lokale Linkziele vollständig vorhanden und gezieltes diff --check grün. Rest: ältere Originalchatwünsche vor 05.10. einzeln belegen. Datenabnahme weiter 157/158 mit offenem t_text_tempo; keine Produkttests neu gestartet, kein Produktcommit/Deploy, fremder Entwurf erhalten.
 
 - Codex Fortsetzung der Erledigungsprüfung: aktuelle Übergabe, Betreiberregeln, zentrale Liste und Quellenabgleich gelesen; Minuten-Sicherung als bestehenden Prozessbaum 12532/16564 bestätigt, keine zweite gestartet. Originalchat a495c23a vom 05.–07.10. und damalige Wunschdateien mit Bauprotokollen zu 3.18.21/24/25 abgeglichen. Aktuellen Karten-Detailweg, Textarten-Erklärung, Widerruf-Erklärung und zwei CSS-Korrekturen gelesen; t_liste_zeigen und erhaltenen Klein-Log vollständig gelesen. Drei bereits zentral belegte Beispiele nicht neu abgenommen. Keine Produktänderung oder Datenabnahme; 3.18.30 und Fremdarbeit erhalten.
-
-- Codex: Betreiberauftrag 10.10.: Reihenfolge passend halten, unnötige Dauer und Tokens vermeiden; neuen Chat mit zwingendem caveman gestartet: 01a12616-ac4c-7c31-b011-37917529c814. Frühere Wünsche auf Erledigung prüfen, vorhandene Belege wiederverwenden, keine neue große Ideensammlung. Produktreihenfolge und fremden Datenentwurf erhalten.
