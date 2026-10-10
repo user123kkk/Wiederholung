@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 11:09 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 11:11 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `fa09d75 Sicherung 11:08 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `8776a1d Sicherung 11:10 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -35,6 +36,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md
  M sw.js
 ```
 
@@ -65,7 +67,7 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
-- 11:08 Codex Heartbeat begonnen: Übergabe 11:04 und einzelne Minuten-Sicherung 12532/16564 bestätigt, Entwurf 3.18.30 unverändert. Quellenabgleich erste Runde 09–12: vier vollständige Abschlussberichte, 50 Hauptpositionen einschließlich Gegenreden zugeordnet, neuer Einzelbericht. Jetzt 20/34 Berichte, 196 nummerierte Positionen plus Gegenprüfer; 14 Berichte und rückwärtige Katalogprüfung offen. Ungeprüfte Plattform-/Steuer-/Zahlungs-/Lizenz-/Lernwirkungsbehauptungen als Quelleninhalt erhalten; keine Recherche-/Geräte-/Produktprüfung daraus behauptet. Historische Import-/Wake-Lock-/Exportlücken nicht als heutige Bugs ausgegeben; dauerhafte Gratis-/Vergessensfreiheit nicht als Betreiberzusage übernommen. Keine Tests/App-/Rules-Änderungen oder neuen Pakete; Fortschritt sichtbar gemeldet.
+- 11:07 Codex Heartbeat begonnen: Übergabe 11:04 und einzelne Minuten-Sicherung 12532/16564 bestätigt, Entwurf 3.18.30 unverändert. Quellenabgleich erste Runde 09–12: vier vollständige Abschlussberichte, 50 Hauptpositionen einschließlich Gegenreden zugeordnet, neuer Einzelbericht. Jetzt 20/34 Berichte, 196 nummerierte Positionen plus Gegenprüfer; 14 Berichte und rückwärtige Katalogprüfung offen. Ungeprüfte Plattform-/Steuer-/Zahlungs-/Lizenz-/Lernwirkungsbehauptungen als Quelleninhalt erhalten; keine Recherche-/Geräte-/Produktprüfung daraus behauptet. Historische Import-/Wake-Lock-/Exportlücken nicht als heutige Bugs ausgegeben; dauerhafte Gratis-/Vergessensfreiheit nicht als Betreiberzusage übernommen. Keine Tests/App-/Rules-Änderungen oder neuen Pakete; Fortschritt sichtbar gemeldet.
 
 - 10:30 Codex sichtbare Fortschrittsmeldungen auf Betreiberwunsch in ALLES-OFFEN und vorhandener Automation verankert, ACTIVE bestätigt. Status zunächst ehrlich 14/34, keine Arbeit seit letzter Antwort; stündlichen Heartbeat von pausenloser Arbeit unterschieden. Danach erste Runde 07/08 vollständig ab Abschlussbericht gelesen, jeweils zwölf Hauptpositionen samt Nebenabschnitten zugeordnet. Jetzt 16/34 Berichte, 146 nummerierte Positionen plus Gegenprüfer; 18 Berichte und Rückwärtsprüfung offen. Auch Quelle 08 nennt anderen Repo-Pfad: nicht als bestätigten Desktop-Codebefund übernehmen. Kein Produktbau/keine Tests, neue Entscheidungsregel erhalten.
 
