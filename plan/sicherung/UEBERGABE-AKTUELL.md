@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 21:04 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 21:05 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `00c66031 3.18.30 Karten- und Tagesantworten gegen Verlust schuetzen; Tempo ausdruecklich offen`
+- Zweig und letzter Commit: `main`, `066b052d Datenabschluss 3.18.30 bestaetigt; Lernrunden-Entscheidung offen`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.30"
 
@@ -74,6 +74,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- 21:03 Codex: read-only-Abgleich bindet alle158 Testquellen/Abschlusslogs/Leseregister an e595b5b6312244cd,157 grün und ausschließlich Texttempo rot;13/13 Runden. Syntax/Versions-/CSP-/Cache-Prüfer grün, Ladegerät-PowerShell geparst. Gegenlesen der aktuellen Bewertungs-, Tagesbeitrags-, Formular-, Undo-/Löschpfade gegen DATEN9–12 und vorhandene feste SDK-Belege; keine neue Produktänderung. Checkliste mit ausdrücklich freigegebener Ausnahme für Tempo dokumentiert. Ausschließlich benannte Produkt-/Daten-/Prüfaufbaupfade committet:00c6603186aa68c5c30324a150e4e73b7427137a, Push auf main bestätigt. Fremde Skill-/Werkzeugentwürfe erhalten; Produktdateien sauber. Danach konkreten Bearbeiten-Vorschlag nach Aufdecken per einer kurzen Frage vorgelegt; Bau wartet auf Einzelfreigabe gemäß ENTSCHEIDUNGEN-VERSTEHEN. Kein Testcache verändert, keine Veröffentlichung.
+
 - 21:01 Codex: Betreiber „ok los“ nach konkreter Kurzvorlage als ausdrückliche Freigabe der begrenzten Datenabschlussausnahme dokumentiert. Aktuelle Übergabe, Betreiberverständnis, Abschlussbericht, Arbeitsregeln/Checkliste und Daten-Skill gelesen; Netzteilstatus2, laufende Sicherung1792/5884 bestätigt. Fremden Produktentwurf3.18.30 erhalten. Kein neuer Tempo-/Gesamtlauf; jetzt tatsächlichen Diff und gültige Quellbindungen gegen Abschlussbelege prüfen.
 
 - Codex nach Betreiber „weiter“: konkrete Grenzwert-/Abschlussentscheidung ausgearbeitet, keine neue Messung. llm-council gemäß Projektpflicht einmal durchgeführt: fünf getrennte Berater, zufällige A–E-Zuordnung, fünf frische anonymisierte Gegenprüfer; alle Antworten vollständig gesichert. Gegenprüfung ergänzt: gleiche alte Verzögerung kann trotzdem unzumutbar sein; 50 ms/Bild bleibt eigenständige offene Forderung. Vorlage trennt echte Tempo-Abnahme von ausdrücklicher Risikoausnahme allein für vorhandene Datenkorrekturen A14–A17/3.18.30. Originaltest/Cache und Produkt unverändert, Ausnahme noch nicht freigegeben. Volltext und HTML unter plan/council; Wünsche/Anschluss in ALLES-OFFEN und STAND eingetragen.
@@ -115,5 +117,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 16:31 Codex Betreiber „arbeite ununterbrochen … caveman ständig“ aufgenommen. Caveman-Skill vollständig gelesen, dauerhaft für Antworten aktiviert; passende Fach-Skills weiterhin gezielt. Bestehende Minuten-Sicherung1792/5884 bestätigt. Veralteten Einstieg in Mehrwert-ARBEITSSTAND sichtbar korrigiert: Gesamtabnahme ausgeführt,157/158/Tempo-Sperre. Vorhandene Lernrunden-Vorbereitung nicht wiederholt; ausführbaren Rest der historischen Wunschprüfung vor05.10. aufgenommen. Kein neuer Messlauf/Produktbau, Entwurf erhalten.
 
 - 16:28 Codex „weiter nach reihenfolger offener sacen“: aktuelle Übergabe/Reihenfolge und bestehende Sicherung1792/5884 bestätigt. Vorhandene Lernrunden-Vorbereitung vollständig gelesen; RUNDE-2/S1 und historischen Listenstatus gegen aktuelle Verständigungsregel geprüft. Nur Sammelfreigabe belegt, konkrete Einzelfreigabe unklar. Vorläufigen Stand und konkreten Vorschlag (Stift nach Aufdecken, vorhandenes Blatt, gleiche Karte/Runde) mit Nutzen/Nachteil dokumentiert. Keine neue Tempo-Diagnose, Tests, Produktänderung oder Paketfreigabe. Nächster Schritt konkrete Entscheidung, Bau weiter erst nach Datenabschluss.
-
-- 16:24 Codex Fortsetzungsauftrag: AGENTS, aktuelle Übergabe, Betreiberregeln, STAND, LEHREN, CODEX-START, zentrale Offenliste und Tempo-Befund gelesen; A14–A17 und Paketabschluss-Sperre abgeglichen. Minuten-Sicherung1792/5884 vorhanden, nicht erneut gestartet. Entwurf erhalten, keine Diagnose/Messung oder Produktänderung. Innerhalb der beauftragten Grenzen kein weiterer Produktabschluss möglich; offene Entscheidung zur ausdrücklichen Wiederaufnahme der Tempo-Klärung in ALLES-OFFEN und PLAN festgehalten. Keine Abnahme/Commit/Veröffentlichung.
