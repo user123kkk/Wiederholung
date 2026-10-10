@@ -109,3 +109,7 @@ EXIT 0 t_pruefdatum.js (0s)
 EXIT 0 t_querschnitt.js (24s)
 EXIT 0 t_quran_datei.js (15s)
 EXIT 0 t_quran_fehler.js (11s)
+EXIT 0 t_quran_schrift.js (78s)
+ROT t_rechtsplan.js (26s)
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":26,"quelltext":"e3b44c0a45ee1354bd1da23a96051ca72fe92b4ea659a909c4d6bf96634da737"}

@@ -1,0 +1,37 @@
+Recht 320/hell: Inhalt vollständig, Kontrast, Rückweg sichtbar, Zurück/Escape/daneben, Eingaben erhalten
+Recht 320/dunkel: Inhalt vollständig, Kontrast, Rückweg sichtbar, Zurück/Escape/daneben, Eingaben erhalten
+Recht 390/hell: Inhalt vollständig, Kontrast, Rückweg sichtbar, Zurück/Escape/daneben, Eingaben erhalten
+Recht 390/dunkel: Inhalt vollständig, Kontrast, Rückweg sichtbar, Zurück/Escape/daneben, Eingaben erhalten
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   {
++     bild: 'Recht 820/hell/datenschutz/8626',
++     disabled: false,
++     klasse: 'A',
++     kontrast: 1.89,
++     soll: 4.5,
++     text: 'Datenschutz'
++   },
++   {
++     bild: 'Recht 820/hell/datenschutz/8626',
++     disabled: false,
++     klasse: 'A',
++     kontrast: 1.89,
++     soll: 4.5,
++     text: 'Impressum'
++   }
++ ]
+- []
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_rechtsplan.js:73:20 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":26,"quelltext":"e3b44c0a45ee1354bd1da23a96051ca72fe92b4ea659a909c4d6bf96634da737"}
