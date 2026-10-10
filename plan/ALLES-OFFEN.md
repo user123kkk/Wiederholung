@@ -1,5 +1,15 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 TikTok-Sammlung und Betreiberkommentare vollständig als Eingang
+festgehalten: [Quelle und Zuordnung](ideen/TIKTOK-SAMMLUNG-2026-10-10.md).
+Offene Punkte in bestehende Themen zusammenführen: flexible Oberfläche,
+Auth-/Sicherheitsarchitektur, Status-/Fehlerrückmeldung, eigener Anmeldename,
+automatische Gerätetests, späterer Gesamtentwurf des Onboardings und bedingte
+Store-/Zahlungs-/Marketingideen. Arbeitsstatus steht in den verlinkten
+Themenplänen; keine doppelte Liste. Recherche vor Empfehlungen; momentan
+kein Store-Start. Alte Onboarding-Zahlen blockieren neue Wünsche nicht.
+3.18.30-Abnahme läuft bereits in diesem Chat, keinen zweiten Lauf starten.
+
 10.10.2026 13:42 „komm weiter“: bestehende große Datenabnahme samt
 Abschluss fortsetzen. Runner19768 aktiv; Tokenpräferenz bleibt, kein Deploy.
 
@@ -398,7 +408,13 @@ Keine automatische Stufen-Zusammenführung oder neue Lernregel beschlossen.
 | „während sie falsch wörtlich gespeichert sind? Einiges fehlt?“ | offen: siehe Zeile darüber; bis zum Abgleich gilt der Katalog als Zusammenfassung, die Berichte als Quelle |
 | „das Wichtigste ist, dass alles jede Minute gespeichert wird, wirklich alles … selbst Tests, alles, was eine KI auch nur anfasst … ich will ein klares: ist eingebaut“ (17:52) | fertig, eingebaut: `plan/werkzeuge/minuten_sicherung.sh` sichert jede Minute Entwurf, alle Testausgaben und die Übergabe-Seite nach `plan/sicherung/` und pusht. Grenze: läuft nur, solange der Laptop an ist und ein Chat sie gestartet hat |
 
-### 3.3 Gerätetests am iPhone (nur Du)
+### 3.3 Gerätetests: zuerst durch den Agenten
+
+Betreiberkorrektur 10.10.: möglichst keine Screenshot-/Screenrecording-Arbeit
+für den Betreiber. Vorhandene Browsertests zuerst selbst ausführen; fehlende
+Simulator-/Emulator-/Gerätezugänge untersuchen, einschließlich Start vom
+Homebildschirm. Nur tatsächlich nicht automatisierbare Restbelege offen
+lassen und begründen. Chrome mit Handygröße beweist kein echtes iPhone/PWA.
 
 Zettel: [`zyklus-2/GERAETETESTS-ZETTEL.md`](zyklus-2/GERAETETESTS-ZETTEL.md).
 G1 Feld „Wort“ scrollt nicht weg · G2 Quran-Schrift · G3 Tastatur über

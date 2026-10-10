@@ -1,5 +1,15 @@
 # Auftrag: Monetarisierung & Wachstum (GERÜST)
 
+Ergänzung 10.10.2026, [TikTok8/9/10](../TIKTOK-SAMMLUNG-2026-10-10.md):
+als spätere Ideen erhalten, geringe Priorität. Fairer, gut auffindbarer
+Ausstieg/Kündigung bei einem späteren Abo; native Store-Bewertungsaufforderung
+nur bei einem tatsächlichen Store-Angebot; klarer Kernnutzen und mögliche
+regelmäßige Social-Media-Videos. „20 Onboarding-Schritte“ oder tägliche
+Werbung sind keine beschlossenen Anforderungen. Aktuell kein App-/Play-Store-
+Start, keine Zahlungen und keine Veröffentlichung oder externe Nachricht
+beauftragt. Zahlungs-Webhooks bei späterer Einführung mit dem Sicherheits-
+Prüfumfang zusammenführen. Der vorhandene Strang bleibt zurückgestellt.
+
 **Status:** zurückgestellt — Gerüst steht, es wird **nichts gebaut**.
 **Angelegt:** 16. September 2026
 **Grundlage:** `KONZEPT.md` §2 („Abo/Bezahlfunktion — später, nicht verbauen") und

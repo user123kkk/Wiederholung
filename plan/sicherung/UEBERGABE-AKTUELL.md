@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 14:54 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 14:56 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `6d754aed Sicherung 14:53 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `f006766d Sicherung 14:55 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,13 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/BETREIBER-VERSTEHEN.md
+ M plan/STAND.md
+ M plan/grossplan/KONSOLE.md
+ M plan/ideen/monetarisierung/AUFTRAG.md
+ M plan/onboarding/AUFTRAG.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -58,6 +65,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_spur_rechtsplan.js
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/GERAETETESTS-ZETTEL.md
+ M plan/zyklus-2/mehrwert/GESAMTLISTE.md
  M sw.js
 ```
 
@@ -87,6 +96,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 14:55 Codex vollständige TikTok-Nachricht einschließlich Betreiberkommentaren als Quelle unter ideen/TIKTOK-SAMMLUNG-2026-10-10.md bewahrt. Wünsche in ALLES-OFFEN/BETREIBER-VERSTEHEN und vorhandene Onboarding-, Mehrwert-, Konsolen-, Geräte- und Monetarisierungspläne eingefügt; keine parallele Statusliste. Historische Onboarding-Zahlen nicht als Sperre; automatische Tests vor Betreiberaufwand. Primärrecherche/Architekturprüfung offen, Videoaussagen nicht als geprüfte Empfehlungen übernommen. Kein Produktbau/Deploy, bestehende3.18.30-Abnahme fortgesetzt.130/158 grün; alle130 Abschlusslogs vollständig gelesen, Sprung/Üben aktiv.
 
 - 14:44 Codex119/158 grün, alle119 vollständigen Logs gelesen; Rundenlage vier Chromium-Handygrößen, Geometrie0px/Scroll0, Bereichsrunde/Undo/Weiterlernen geprüft. Beschreibender t_runde_rest meldet links per Maus NICHTS; tatsächlichen Messpfad gelesen (Maus, Offen-Zustand statt Kartenstand). Daraus keine Wischfreigabe abgeleitet; vorgeschriebene Touch-/Schrägwisch-Abnahmen folgen im selben Gesamtlauf. Rundenende aktiv, Quellen unverändert.
 
@@ -129,5 +140,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 12:45 Codex75/158 grün, alle75 vollständigen Abschlusslogs gelesen. Kontrast0, paralleles SDK-Laden mit alter Wasserfall-Gegenprobe, Lernstart28 Zustände und zwölf bestehende Lernregelregressionen grün. Keine neue Lernregel/Empfehlung/Lernwirkungsbehauptung; keine zusätzlichen Simulationen. Eine Minuten-Sicherung12532/16564 weiterhin aktiv, Übergabe/automatische Sicherungen fortgeschritten. Report/STAND und Leserregister aktualisiert, Gesamtlauf87583 allein weiter.
 
 - 12:42 Codex70/158 grün, alle70 vollständigen Abschlusslogs gelesen. Kontofortsetzungen samt zahlreichen festen Gegenproben, Lösch-Zeitlimit/Offline-Sperre, Wechsel während Löschung und alte Speicher-/Stapelantworten isoliert. Aktuell Kontrastprüfung, einziger Browserlauf87583 bleibt aktiv. Keine Produktionsdaten/Authentifizierungsbelege, App/Regeln unverändert, kein Paketcommit/Deploy.
-
-- 12:38 Codex62/158 abgeschlossene Prüfungen grün, alle62 vollständigen Ausgaben gelesen und im Leserregister gesichert. Kartenblatt vier Konfigurationen, fremde Karten-/Feldechos, kleine Bootlage, Konto-Lösch-/Abbruch-/Google-Attrappenfälle und alter Dialog/Bestätigung nach Kontowechsel grün. Keine echte Google-/iPhone-Authentifizierung daraus behauptet. Gesamtlauf läuft jetzt Kontofortsetzungen allein; Produkt/Rules weiterhin gleicher Entwurf, keine Tests ausgelassen/Grenzen verändert.

@@ -1,5 +1,15 @@
 # Den Betreiber richtig verstehen
 
+**Ideen zusammenführen, 10.10.2026:** Die ganze TikTok-Nachricht, auch eigene
+Kommentare, zählt als offene Wünsche/Ideen/Planbedarf. Quelle vollständig
+bewahren, passende vorhandene Punkte ergänzen und bei Bearbeitung
+zusammenführen; keine konkurrierenden Statuslisten. Fehlende Recherche wird
+eingeplant. Alte Seitenzahlen oder verteilte Pläne dürfen neue Wünsche nicht
+blockieren. Onboarding am tatsächlichen fertigen Funktionsumfang ausrichten;
+umfangreicher Gesamtentwurf später. Möglichst selbst testen, statt vom
+Betreiber Bildschirmfotos oder Aufnahmen zu verlangen. Technisch fehlende
+Gerätebelege ehrlich benennen. Quelle: [TikTok-Sammlung](ideen/TIKTOK-SAMMLUNG-2026-10-10.md).
+
 **Tokenverbrauch 10.10.2026 (ausdrücklich festhalten):** „achte auf
 tokenverbrauch, dachte du würdest grad ladegeraet ausführen, könnte ich ja
 auch ohne tokens, wüsste nur nicht ob das gleich ist“; danach „so bitte

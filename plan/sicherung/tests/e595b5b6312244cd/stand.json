@@ -1048,6 +1048,30 @@
       "fehler": null,
       "sekunden": 48,
       "quelltext": "949645833d92fb63b3d0734827ec88a87364f54047033bed3b0ab181ced31059"
+    },
+    "t_start.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 24,
+      "quelltext": "df903a1e186d2a286ec26ccf6b4220dbd3a1e6dd506672e11c617d0e16cd283b"
+    },
+    "t_sw.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 35,
+      "quelltext": "3fe687941e78f2a7cfcb1a9cd75608ee6cef51a478841f789485c09a7c03cef3"
+    },
+    "t_sw_paket_a.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 19,
+      "quelltext": "cd1d6a37c49ee7cfa06ca3969ca16f312bb27c15718f05eaebaf57d7ee82a05f"
     }
   }
 }

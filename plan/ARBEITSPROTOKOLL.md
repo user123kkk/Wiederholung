@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 14:55 Codex vollständige TikTok-Nachricht einschließlich Betreiberkommentaren als Quelle unter ideen/TIKTOK-SAMMLUNG-2026-10-10.md bewahrt. Wünsche in ALLES-OFFEN/BETREIBER-VERSTEHEN und vorhandene Onboarding-, Mehrwert-, Konsolen-, Geräte- und Monetarisierungspläne eingefügt; keine parallele Statusliste. Historische Onboarding-Zahlen nicht als Sperre; automatische Tests vor Betreiberaufwand. Primärrecherche/Architekturprüfung offen, Videoaussagen nicht als geprüfte Empfehlungen übernommen. Kein Produktbau/Deploy, bestehende3.18.30-Abnahme fortgesetzt.130/158 grün; alle130 Abschlusslogs vollständig gelesen, Sprung/Üben aktiv.
+
 - 14:44 Codex119/158 grün, alle119 vollständigen Logs gelesen; Rundenlage vier Chromium-Handygrößen, Geometrie0px/Scroll0, Bereichsrunde/Undo/Weiterlernen geprüft. Beschreibender t_runde_rest meldet links per Maus NICHTS; tatsächlichen Messpfad gelesen (Maus, Offen-Zustand statt Kartenstand). Daraus keine Wischfreigabe abgeleitet; vorgeschriebene Touch-/Schrägwisch-Abnahmen folgen im selben Gesamtlauf. Rundenende aktiv, Quellen unverändert.
 
 - 14:40 Codex korrigierte Rechts-Abnahme komplett grün40s:320/390/820 hell/dunkel, vollständiger Inhalt, sichtbarer Kontrast, alle Rückwege/Eingabenerhalt und Fehler/Neuversuch/späte Antwort. Neue Testkennung292d3e77; ganze Ausgabe gelesen. Verzögerte Registrierung samt echter12/13s-Grenze/fester Gegenprobe und vorhandene Regler-Regressionsausgaben gelesen. Gesamt112/158 gültig grün, alle112 Abschlusslogs gelesen; Reihenfolge-Limit aktiv. Quellen unverändert, keine Lernempfehlung.

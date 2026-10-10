@@ -65,6 +65,15 @@ Die Nummern in Klammern sind die Fragen aus Runde 2.
 
 ## 4. Aussehen, Bewegung, Tippen
 
+Ergänzung 10.10., [TikTok-Quelle](../../ideen/TIKTOK-SAMMLUNG-2026-10-10.md)
+1/5/8: offen zur Bestandsprüfung, mit vorhandenen Punkten zusammenführen:
+flexible Größen, Drehung, kleine/große Fenster, Foldables und mehrere
+Fenster/Displays; sofortige Tipp-Rückmeldung, passende Ladeanzeige,
+Fortschritt langer Vorgänge, verlässliche Erfolgsbestätigung und Fehlerhilfe.
+Pixel-/Skeleton-/optimistische Anzeigeempfehlungen am konkreten Ablauf
+prüfen, nicht pauschal übernehmen. Daten dürfen erst als gesichert gelten,
+wenn der jeweilige Speicherzustand dies trägt.
+
 | Was | Stand |
 |---|---|
 | Blatt fährt mit der Tastatur hoch, statt danach zu springen | offen |
@@ -98,6 +107,10 @@ der Einstieg genau das erklären muss, was der Bericht als unklar findet.
 
 ## 5. Einstieg (Onboarding)
 
+Neue Wünsche 10.10. werden im [bestehenden Auftrag](../../onboarding/AUFTRAG.md)
+zusammengeführt. Gesamtüberarbeitung später anhand des fertigen Funktionsstands;
+historische Umfangsvorgaben blockieren keine neue Betreiberentscheidung.
+
 | Was | Stand |
 |---|---|
 | Weniger Bewegung je Tipp, Balken-Schimmer weg (E-13) | offen |
@@ -111,6 +124,13 @@ der Einstieg genau das erklären muss, was der Bericht als unklar findet.
 | „Weiter“ im iPhone-Browser oft unter dem Rand | offen, nach dem Kürzen neu messen |
 
 ## 6. Konto und Schutz
+
+Offener Prüfumfang 10.10., TikTok2/3/4/6: vollständige Auth-, Sitzungs- und
+Berechtigungsarchitektur anhand aktueller OWASP-/Firebase-Primärquellen
+prüfen. Vorhandene Passwort-, Verifizierungs-, App-Check- und Fehlerpunkte
+damit zusammenführen; [Konsolenplan](../../grossplan/KONSOLE.md) trägt
+Konsole/Branding und den übergreifenden Prüfumfang. Upload-, Foto- und
+Zahlungsfragen nur bei tatsächlichem Anwendungsfall, kein neuer Funktionsbau.
 
 | Was | Stand |
 |---|---|
@@ -151,6 +171,10 @@ der Einstieg genau das erklären muss, was der Bericht als unklar findet.
 | Hinweis auf ähnliche Ayat (37) | zurückgestellt |
 
 ## 8. Öffentlich und Lehrer – ganz am Schluss
+
+TikTok8/9/10 vom10.10. im [Monetarisierungsauftrag](../../ideen/monetarisierung/AUFTRAG.md)
+vorgemerkt: fairer Ausstieg, spätere Store-Reviews, klarer Kern und Marketing.
+Geringe Priorität, aktuell kein Store-Start und keine Veröffentlichung beauftragt.
 
 | Was | Stand |
 |---|---|

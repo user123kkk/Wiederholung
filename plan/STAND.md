@@ -1,5 +1,17 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 14:55 – Datenabnahme und neuer Ideeneingang:**
+132/158 gültige Tests grün, alle132 vollständigen Logs gelesen. Runner14916,
+Sitzung58908, Log abnahme-gesamt-5-3.18.30.log; gemeinsame Quelle
+e595b5b6312244cd. Vier Prüfaufbau-/Messfehler mit festen Gegenproben
+aufgeklärt; Produkt/Rules unverändert. Restlicher Gesamtlauf,13 Runden-
+Auswertung, zwei Affenläufe und Paketabschluss noch offen; kein Deploy.
+Neue gesamte TikTok-Nachricht unter ideen/TIKTOK-SAMMLUNG-2026-10-10.md
+bewahrt und in vorhandene Themenpläne zusammengeführt. Recherche/Audits
+offen; keine neuen Funktionen daraus gebaut. Geräteprüfung zuerst durch
+Agenten, Onboarding später am tatsächlichen Gesamtumfang ausrichten.
+Ältere Zwischenstände darunter sind Verlauf.
+
 **10.10.2026 13:37 – große Datenabnahme läuft weiter:**
 93/158 gültige Tests grün, alle93 vollständigen Logs gelesen. Drei
 Prüfaufbaufehler behoben/belegt (Batchmeldung, historischer Checkout,

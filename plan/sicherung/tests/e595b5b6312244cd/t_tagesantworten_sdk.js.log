@@ -1,0 +1,14 @@
+app.js SHA256 4a8ca5a1a73c7873275497c38f7368f542785a97f1712e21a20b60faed25fe97
+firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3
+GRUEN Ablehnung-Neustart-mehrfach; andere Karte k6 unveraendert
+GRUEN Neustart-vor-Bestaetigung-offline; andere Karte k6 unveraendert
+GRUEN Bestaetigung-verloren; andere Karte k6 unveraendert
+GRUEN Cloudbeleg-Antwortart-weicht-ab; andere Karte k6 unveraendert
+GRUEN urspruenglicher-Lerntag; andere Karte k6 unveraendert
+{"fall":"Nachholen-Altersgrenze-120","heute":"2026-10-10","ursprung":"2026-06-12","alter":120,"server":1}
+GRUEN Nachholen-Altersgrenze-120; andere Karte k6 unveraendert
+{"fall":"Nachholen-Altersgrenze-121","heute":"2026-10-10","ursprung":"2026-06-11","alter":121,"server":0}
+GRUEN Nachholen-Altersgrenze-121; andere Karte k6 unveraendert
+GRUEN fremder-Reset; andere Karte k6 unveraendert
+GRUEN Antwortart-n; andere Karte k6 unveraendert
+GRUEN Antwortart-u; andere Karte k6 unveraendert

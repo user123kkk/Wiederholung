@@ -1,5 +1,19 @@
 # Gerätetests am iPhone – Zettel zum Abhaken
 
+## Neue Testpräferenz 10.10.2026 – gilt vor dem alten Zettel
+
+Betreiber möchte möglichst keine Screenshots oder Screenrecordings liefern.
+Agent testet selbst im Browser und untersucht passende Simulator-/Emulator-
+oder echte Gerätezugänge, auch für Öffnen vom Homebildschirm und installierte
+PWA. Die [Quelle7](../ideen/TIKTOK-SAMMLUNG-2026-10-10.md) ist ein offener
+Prüfauftrag für diesen Testweg, kein Beleg, dass hier schon ein iPhone-
+Simulator verfügbar ist. Quelle1 ergänzt kleine/große Displays, Drehung,
+Foldables, mehrere Fenster und Displays. G1–G7 möglichst automatisieren;
+je Fall Testumgebung und verbleibenden echten Gerätebeleg dokumentieren.
+Chromium-Viewporttests ersetzen keinen Safari-/iOS-/PWA-Systembeleg.
+Den Betreiber erst mit dem begründeten, nicht automatisierbaren Rest belasten;
+keine Bildschirmfoto-Pflicht. Historische Anleitungen unten bleiben Verlauf.
+
 Stand 05.10.2026. Quelle: `ENTSCHEIDUNGEN.md`, Abschnitt „Was Du am Gerät
 prüfen musst“. Das kann kein Agent, der Prüfstand hat kein echtes iPhone.
 
