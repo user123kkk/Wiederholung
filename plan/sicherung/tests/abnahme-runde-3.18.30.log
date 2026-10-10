@@ -1,0 +1,53 @@
+Quellstand: e595b5b6312244cdc5ecc07ba0b0b7c287207a6f909bf2a41b4e61d1b00e1923
+BEWAHRT  t_runde_lage.js       Knopf immer im Bild, Seite scrollt nie (4 Handygroessen, lange Notiz/Antwort)  (0 s)
+BEWAHRT  t_sprung.js           Karte springt nicht: Aufdecken und Karte zu Karte, 4 Geraete  (0 s)
+BEWAHRT  t_sprung_ueben.js     dasselbe im Ueben  (0 s)
+BEWAHRT  t_wischen.js          Wischen: weit, schnell, direkt nach Aufdecken, zu kurz, Abbruch  (0 s)
+BEWAHRT  t_wischen_schraeg.js  Wischen schraeg / mit Daumen, Seite scrollt nicht mit  (0 s)
+BEWAHRT  t_doppeltipp.js       schneller Doppeltipp bewertet nicht blind  (0 s)
+BEWAHRT  t_x_mitten.js         X mitten in der Runde: nichts geht verloren, Serie +1  (0 s)
+BEWAHRT  t_abgelehnt.js        von der Cloud abgelehnte Bewertung wird nachgeschickt  (0 s)
+BEWAHRT  t_undo_verlauf.js     Rueckgaengig nimmt auch den Tageszaehler zurueck  (0 s)
+BEWAHRT  t_serie.js            Serie: Luecken, Joker, Sockel  (0 s)
+BEWAHRT  t_rundenende.js       Rundenende, Limit, Weiterlernen (lesen)  (0 s)
+        == handy
+          normal: Geschafft Alle 12 Karten für heute durch. 0 nicht 0 fast 12 sicher 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+            Fertig-Knopf 475/519 von 844 | Kontrast 0 | quer false
+            Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+            Fertig -> Für heute durch
+          Limit 10: Geschafft 10 Karten in dieser Runde. 0 nicht 0 fast 10 sicher 4 Tage am Stück Heute sind noch 2 Karten fällig. Fertig Weiterlernen Letzte Bewertung rückgängig | noch faellig laut Lernen: Knopf "Weiterlernen"
+            X oben am Ende: false | Weiterlernen -> "Karte 1 von 2" -> Ende: Geschafft Alle 2 Karten für heute durch. 0 nicht 0 fast 2 sicher 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+          Ueben-Auswahl Aktionen: bereich-sheet-auf,einstellungen,karte-neu,open-drill,bereich-mehr-auf,stufe-chip,start-drill,close-drill,toggle-sets,search-clear,card-detail,select-bereich,add-bereich,tab-lernen,tab-fortschritt,tab-verwalten
+        == klein
+          normal: Geschafft Alle 12 Karten für heute durch. 0 nicht 0 fast 12 sicher 4 Tage am Stück Morgen kommen 7 Karten wieder. Fertig Letzte Bewertung rückgängig
+            Fertig-Knopf 475/519 von 740 | Kontrast 0 | quer false
+            Rueckgaengig am Ende -> Karte offen: true | wieder am Ende: true | Vibration neu: 1
+BEWAHRT  t_ueben.js            Ueben bewertet und endet (lesen)  (0 s)
+        Start: neu & im Lernen* | frisch gelernt* | wird fester* | gefestigt* | dauerhaft* => 40 Karten
+        Nur gefestigt: neu & im Lernen | frisch gelernt | wird fester | gefestigt* | dauerhaft => 9 Karten
+        Modebar: Übung – zählt nicht als WiederholungKarte 1 von 9 | Hinweis: undefined
+        Bewertungen: 12 | Ende: Übung fertig
+        9 Karten geübt · gefestigt
+        3
+        nicht
+        0
+        fast
+        9
+        sicher
+        3 Karten noch nicht gewusst
+BEWAHRT  t_schreiben.js        Schreiben: Zeichenflaeche im Bild (lesen)  (0 s)
+        == handy
+          Start: {"wortOben":130,"flaeche":"236-436","leisteUnten":544,"fenster":844,"allesImBild":true,"scrollbar":false}
+          erster Strich: Tinte 0 -> 534 | Lage vorher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:151"}
+            nachher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:151"}
+          Vollbild: {"vollbild":true,"vorlage":"Kaffee","leisteImBild":true} | Tinte erhalten: 534
+          Strich im Vollbild: Tinte 534 -> 1063
+          Strich zurueck: Tinte 534
+          Vollbild nach Aufdecken: "Kaffee\n·\nقَهْوَةٌ"
+          Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"قَهْوَةٌ"}
+          Kontrast 0
+          Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1063 ms | Bilder > 34 ms: 0
+          ok
+
+Alle 13 Pruefungen gruen.
+Vollstaendige Einzeltest-Ausgaben: C:\Users\USER\AppData\Local\Temp\adrabic-rundenabnahme
