@@ -20,3 +20,18 @@ handy hell erledigt | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text"
 handy hell serie | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
 handy hell zweiBereiche | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":844} | ok
 klein dunkel leer | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":740} | ok
+klein dunkel eineKarte | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":740} | ok
+klein dunkel ersteRunde | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":740} | ok
+klein dunkel voll | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":740} | ok
+klein dunkel erledigt | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":740} | ok
+klein dunkel serie | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":740} | ok
+klein dunkel zweiBereiche | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":740} | ok
+ipad dunkel leer | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":1180} | ok
+ipad dunkel eineKarte | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":1180} | ok
+ipad dunkel ersteRunde | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Vokabeln","unten":50,"fenster":1180} | ok
+ipad dunkel voll | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":1180} | ok
+ipad dunkel erledigt | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":1180} | ok
+ipad dunkel serie | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":1180} | ok
+ipad dunkel zweiBereiche | CLS 0.0000  | Kontrast 0 | quer false | Hauptknopf {"text":"Medina Buch 1","unten":50,"fenster":1180} | ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":106,"quelltext":"1185cd3153f97d2d8417748af6789775159e13ac4e2a35ebd789f943ca630c38"}
