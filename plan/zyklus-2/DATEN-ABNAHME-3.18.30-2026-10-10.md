@@ -39,6 +39,23 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 
 ## Gesamtlauf, um 11:57 angehalten
 
+**12:50: zweiter Aufbaufehler behoben, gültige Tests fortgesetzt.**
+86 vollständig abgeschlossene Tests grün. t_nur_betreiber scheiterte vor
+Browserstart am unnötig verlangten historischen Worktree; normaler
+Vergleich verwendet seit PaketC nur aktuelle Quellen. Checkout/Server
+nur für bestehenden historischen Sonderlauf anfordern; alle sieben
+Bildschirme, HTML/Pixel und Gegenproben unverändert. VM-Aufbauprobe ohne
+Git-/Servermutation grün, feste315bb0e-Gegenprobe rot genau am unnötigen
+Checkout. Kein Worktree angelegt/keine Fremdordner bereinigt. Ursprünglichen
+roten Log und stand.json zusätzlich gesichert. Der allgemeine Runner
+bewahrt mit --fortsetzen86 grüne, unveränderte Tests; nur geänderter/roter
+und unvollständige Fälle neu. Produkt-/Stub-/SDK-Quellstand weiterhin
+e595b5b6312244cd. Fortsetzungslog `abnahme-gesamt-3-3.18.30.log`,
+Leseregister für geänderten Test entfernt; neuen Abschlusslog frisch lesen.
+Aufbaubelege: `abnahme-nur-betreiber-aufbau-3.18.30.log`,
+`abnahme-nur-betreiber-setup-3.18.30.log`,
+`abnahme-nur-betreiber-setup-gegenprobe-3.18.30.log`.
+
 **12:06: Ursache belegt und Prüfattrappe korrigiert.** Acht A/B-Paare:
 Vorstand 7/8 grün, einmal 138 ms; Entwurf 0/8, erste Bewertung 284–617 ms.
 Trace einer Bewertung: 252 ms vollständig im Stub-Timer; CPU-Profil

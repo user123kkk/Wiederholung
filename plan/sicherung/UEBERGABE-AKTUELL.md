@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 12:49 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 12:50 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `a0b6d4e Sicherung 12:48 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `59c48f2 Sicherung 12:49 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -50,9 +51,11 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  A plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
  A plan/werkzeuge/pruefstand/x_abnahme_hash.js
+ A plan/werkzeuge/pruefstand/x_nur_betreiber_aufbau.js
  A plan/werkzeuge/pruefstand/x_spur_bestand.js
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
  M sw.js
 ```
 
@@ -61,7 +64,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 14, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 16, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -82,6 +85,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 12:50 Codex zweite Aufbaulücke im Gesamtlauf:86 grün, t_nur_betreiber vor Browserstart rot bei unnötigem historischem Worktree-Aufbau. Eigenen Runnerbaum18936/gerade gestartetes PaketB beendet, alle87 fertigen Logs gelesen und roten Einzellog/stand.json zusätzlich gesichert. Normaler Vergleich arbeitet seit PaketC ausschließlich am aktuellen Stand; historischen Checkout/Server deshalb nur in bestehendem --historisch-Zweig anfordern, Browser-/HTML-/Pixel-/Gegenproben unverändert. Reine VM-Aufbauprobe ohne Git-/Servermutation grün, fester Vorstand315bb0e rot genau beim unnötigen Checkout (2 Aufrufe); ganze Ausgaben gelesen. Kein neuer Worktree angelegt, keine vorhandenen Ordner bereinigt; Produkt/Rules/Stubhash e595b5b6312244cd gleich. Fortsetzung mit tatsächlichen Quellen-/Testhashes bewahrt86 gültige Tests, nur geänderten/roten und unvollständige neu. Mainlog abnahme-gesamt-3-3.18.30.log; Leserregister für geänderten Test zurückgesetzt, alte rote Ausgabe erhalten.
 
 - 12:45 Codex75/158 grün, alle75 vollständigen Abschlusslogs gelesen. Kontrast0, paralleles SDK-Laden mit alter Wasserfall-Gegenprobe, Lernstart28 Zustände und zwölf bestehende Lernregelregressionen grün. Keine neue Lernregel/Empfehlung/Lernwirkungsbehauptung; keine zusätzlichen Simulationen. Eine Minuten-Sicherung12532/16564 weiterhin aktiv, Übergabe/automatische Sicherungen fortgeschritten. Report/STAND und Leserregister aktualisiert, Gesamtlauf87583 allein weiter.
 
@@ -124,5 +129,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 11:10 Codex Quellenabgleich 13/14 abgeschlossen: beide Vollberichte einschließlich zweiter Teile gelesen, 27 Abgleich-/Regelpositionen und 16 historische Fragen einzeln zugeordnet. Jetzt 22/34 Berichte, noch 12 (15–26) und Zusammenführung/Rückwärtsprüfung. Kategorien nicht als neue Funktionszahl addiert; alte Paket-/Parallelvorschläge, fehlende Freigaben und heutige Baugeschichte getrennt, kein neuer Fragenkatalog/Sammel-Ja. Zentrale Verständniskorrektur gilt weiter. Ein Patch mit unvollständiger Protokoll-Zeile wurde atomar abgewiesen, nach Prüfung ohne Änderungen korrekt neu angewandt; vorausgegangenen Uhrzeit-Tippfehler 11:08 zu tatsächlichem 11:07 berichtigt. Keine App-/Rules-/Test-/Originaländerung, abgeschlossene Tests nicht wiederholt. Stand und Anschluss aktualisiert, sichtbaren Fortschritt gemeldet.
 
 - 11:07 Codex Heartbeat begonnen: Übergabe 11:04 und einzelne Minuten-Sicherung 12532/16564 bestätigt, Entwurf 3.18.30 unverändert. Quellenabgleich erste Runde 09–12: vier vollständige Abschlussberichte, 50 Hauptpositionen einschließlich Gegenreden zugeordnet, neuer Einzelbericht. Jetzt 20/34 Berichte, 196 nummerierte Positionen plus Gegenprüfer; 14 Berichte und rückwärtige Katalogprüfung offen. Ungeprüfte Plattform-/Steuer-/Zahlungs-/Lizenz-/Lernwirkungsbehauptungen als Quelleninhalt erhalten; keine Recherche-/Geräte-/Produktprüfung daraus behauptet. Historische Import-/Wake-Lock-/Exportlücken nicht als heutige Bugs ausgegeben; dauerhafte Gratis-/Vergessensfreiheit nicht als Betreiberzusage übernommen. Keine Tests/App-/Rules-Änderungen oder neuen Pakete; Fortschritt sichtbar gemeldet.
-
-- 10:30 Codex sichtbare Fortschrittsmeldungen auf Betreiberwunsch in ALLES-OFFEN und vorhandener Automation verankert, ACTIVE bestätigt. Status zunächst ehrlich 14/34, keine Arbeit seit letzter Antwort; stündlichen Heartbeat von pausenloser Arbeit unterschieden. Danach erste Runde 07/08 vollständig ab Abschlussbericht gelesen, jeweils zwölf Hauptpositionen samt Nebenabschnitten zugeordnet. Jetzt 16/34 Berichte, 146 nummerierte Positionen plus Gegenprüfer; 18 Berichte und Rückwärtsprüfung offen. Auch Quelle 08 nennt anderen Repo-Pfad: nicht als bestätigten Desktop-Codebefund übernehmen. Kein Produktbau/keine Tests, neue Entscheidungsregel erhalten.

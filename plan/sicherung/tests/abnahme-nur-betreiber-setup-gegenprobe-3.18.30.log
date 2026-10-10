@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: Regulaerer Test verlangt historischen Checkout/Server
+
+2 !== 0
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_nur_betreiber_aufbau.js:25:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 2,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

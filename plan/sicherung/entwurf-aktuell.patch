@@ -3248,6 +3248,46 @@ index dd15a63..b12119c 100644
    } }; }
  export function runTransaction(db, fn){ return fn({ get: getDoc, set: (r,d,o)=>_set(r,d,o), update: (r,...a)=>_update(r,...a), delete: r=>S.store.delete(r.path) }).then(v => { melden(); return v; }); }
  export function onSnapshot(ref, optionsOrCb, cbOrErr, err){
+diff --git a/plan/werkzeuge/pruefstand/t_nur_betreiber.js b/plan/werkzeuge/pruefstand/t_nur_betreiber.js
+index 383f8f0..bee27b8 100644
+--- a/plan/werkzeuge/pruefstand/t_nur_betreiber.js
++++ b/plan/werkzeuge/pruefstand/t_nur_betreiber.js
+@@ -115,14 +115,19 @@ async function vergleich(browser, uid, viewport, baseNeu, ersetze) {
+ }
+ 
+ (async () => {
+-  const wt = path.join(os.tmpdir(), 'adrabic-veroeffentlicht-' + VEROEFFENTLICHT);
+-  if (!fs.existsSync(path.join(wt, 'index.html'))) {
+-    try { execFileSync('git', ['-C', repo, 'worktree', 'remove', '--force', wt], { stdio: 'ignore' }); } catch (_) {}
+-    execFileSync('git', ['-C', repo, 'worktree', 'add', '--detach', wt, VEROEFFENTLICHT], { stdio: 'ignore' });
++  let server = null;
++  // Die regulaere Abnahme vergleicht nur aktuelle Quellen. Ein historischer
++  // Checkout/Server wird ausschliesslich fuer --historisch benoetigt.
++  if (historisch) {
++    const wt = path.join(os.tmpdir(), 'adrabic-veroeffentlicht-' + VEROEFFENTLICHT);
++    if (!fs.existsSync(path.join(wt, 'index.html'))) {
++      try { execFileSync('git', ['-C', repo, 'worktree', 'remove', '--force', wt], { stdio: 'ignore' }); } catch (_) {}
++      execFileSync('git', ['-C', repo, 'worktree', 'add', '--detach', wt, VEROEFFENTLICHT], { stdio: 'ignore' });
++    }
++    const py = process.platform === 'win32' ? 'py' : 'python3';
++    server = spawn(py, (process.platform === 'win32' ? ['-3'] : []).concat(['-m', 'http.server', String(PORT_ALT), '--bind', '127.0.0.1']), { cwd: wt, stdio: 'ignore' });
++    await new Promise(r => setTimeout(r, 1500));
+   }
+-  const py = process.platform === 'win32' ? 'py' : 'python3';
+-  const server = spawn(py, (process.platform === 'win32' ? ['-3'] : []).concat(['-m', 'http.server', String(PORT_ALT), '--bind', '127.0.0.1']), { cwd: wt, stdio: 'ignore' });
+-  await new Promise(r => setTimeout(r, 1500));
+   const browser = await start();
+   const fehler = [];
+   try {
+@@ -145,7 +150,7 @@ async function vergleich(browser, uid, viewport, baseNeu, ersetze) {
+       console.log('Gegenprobe Textfreigabe fuer normales Konto: ' + offen.befunde.length + ' Unterschiede (erwartet > 0)');
+       if (!offen.befunde.length) fehler.push('Gegenprobe: Textfreigabe fuer alle bliebe unbemerkt');
+     }
+-  } catch (e) { fehler.push('Abbruch: ' + e.message.split('\n')[0]); } finally { await browser.close(); server.kill(); }
++  } catch (e) { fehler.push('Abbruch: ' + e.message.split('\n')[0]); } finally { await browser.close(); server?.kill(); }
+   if (fehler.length) { console.log('FEHLER:\n' + fehler.join('\n')); process.exitCode = 1; }
+   else console.log('OK t_nur_betreiber: ' + (historisch ? 'normales Konto sieht jeden Bildschirm wie in 3.17.56' : 'Textfreigabe aendert keinen der sieben Bildschirme normaler Konten; HTML und Pixel gleich'));
+ })();
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
 index 0000000..c2b8224
@@ -3682,6 +3722,40 @@ index 0000000..a46d42f
 +}
 +assert.equal(auszug('alle_pruefen.js').hash, plain.hash, 'Probe veraendert Quellen');
 +console.log('Hash-Gegenproben gruen: SDK-Helfer und Testtext erkannt; beide Runner gleicher Stand. ' + plain.hash);
+diff --git a/plan/werkzeuge/pruefstand/x_nur_betreiber_aufbau.js b/plan/werkzeuge/pruefstand/x_nur_betreiber_aufbau.js
+new file mode 100644
+index 0000000..89325eb
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_nur_betreiber_aufbau.js
+@@ -0,0 +1,28 @@
++/* Reine Aufbau-Gegenprobe: regulaerer echter Test darf ohne historischen
++   Checkout bis zum Browserstart gelangen. Keine Git-/Servermutation. */
++const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm');
++const assert = require('node:assert/strict');
++const { execFileSync } = require('node:child_process');
++const datei = path.join(__dirname, 't_nur_betreiber.js');
++const quelle = process.argv.includes('--gegenprobe')
++  ? execFileSync('git', ['show', '315bb0e:plan/werkzeuge/pruefstand/t_nur_betreiber.js'], { cwd: path.join(__dirname, '../../..') }).toString()
++  : fs.readFileSync(datei, 'utf8');
++const calls = [], browser = new Error('BROWSER-BEGIN');
++const fakeRequire = name => {
++  if (name === 'node:fs') return { ...fs, existsSync: () => false };
++  if (name === 'node:child_process') return {
++    execFileSync: (...args) => { calls.push(['git', ...args]); throw new Error('Historischer Checkout unzugaenglich'); },
++    spawn: (...args) => { calls.push(['server', ...args]); throw new Error('Unnoetiger historischer Server'); }
++  };
++  if (name === './lib') return { start: async () => { throw browser; } };
++  if (name === './text_lib') return { BETREIBER_UID: 'probe' };
++  return require(name);
++};
++(async () => {
++  let fehler;
++  try { await vm.runInNewContext(quelle, { require: fakeRequire, __dirname, console, process: { argv: [], platform: process.platform }, setTimeout }); }
++  catch (e) { fehler = e; }
++  assert.equal(calls.length, 0, 'Regulaerer Test verlangt historischen Checkout/Server');
++  assert.equal(fehler, browser, 'Regulaerer Test erreichte Browserstart nicht');
++  console.log('OK regulaerer Originaltest erreicht Browserstart ohne historischen Checkout/Server');
++})().catch(e => { console.error(e); process.exitCode = 1; });
 diff --git a/plan/werkzeuge/pruefstand/x_spur_bestand.js b/plan/werkzeuge/pruefstand/x_spur_bestand.js
 new file mode 100644
 index 0000000..5ce5c93
