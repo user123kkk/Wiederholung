@@ -10,3 +10,10 @@ EXIT 0 t_anmelden_enter.js (20s)
 EXIT 0 t_ansage.js (9s)
 EXIT 0 t_ansage2.js (20s)
 EXIT 0 t_bereiche.js (77s)
+EXIT 0 t_bestaetigung.js (43s)
+EXIT 0 t_bestaetigung_bewegung_g082.js (10s)
+EXIT 0 t_bestaetigung_neu.js (10s)
+ROT t_bestand_tempo.js (34s)
+AssertionError [ERR_ASSERTION]: G-037: 207 ms statt maximal 100 ms
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":34,"quelltext":"11c3dfa8f7a3637036446c18bcb807c97d5065d1e8eaaeb4d43d79afc5309fc0"}
+EXIT 0 t_bild.js (9s)
