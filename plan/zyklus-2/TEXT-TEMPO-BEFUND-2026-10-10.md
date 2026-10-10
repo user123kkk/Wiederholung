@@ -62,6 +62,15 @@ Fehler noch einen bloßen Messfehler ableiten. Die endgültige Ursache ist offen
 
 ### Erneut beauftragte Sperrenklärung, 10.10.2026 17:20
 
+Ergänzung17:23: Die beiden vorher festgelegten Energie-Stabilitätsläufe
+scheitern mit230/376ms. Der Ansatz ist verworfen; keine Gesamtabnahme
+gestartet, AC/DC-Minimum5 bestätigt. Direkt kombinierter Beobachter/
+Viewport-Abgleich231ms; flankierende Originale302/197ms. Kontinuierlich
+erhaltene Navigation290ms, Originale231/192ms, gleicher End-DOM. Auch
+weniger native Eingabeereignisse sind damit kein Tempo-Fix. Abschließende
+gezielte Umgebungsprobe: ausschließlich eigene Browser-CDP-Prozesse auf
+AboveNormal, keine fremden Anwendungen ändern.
+
 Der Betreiber hat um16:53 die gezielte Klärung und notwendige belegte
 Korrektur wieder beauftragt. Browservarianten mit verzögertem render(),
 getrennten Mausereignissen, Sichtbarkeitsbeobachter, bedingtem

@@ -1,5 +1,15 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Tempo10.10.,17:23:** Sperre weiterhin offen. Energievergleich vorab auf
+zwei Läufe begrenzt:230ms und376ms rot trotz AC-Prozessorminimum100;
+Einstellung auf5 restauriert, keine Gesamtabnahme daraus gestartet.
+Knapper Einzelwert199ms ist ausdrücklich kein Fix. Gezielt erhaltener
+Navigationsknopf und Sichtbarkeits-/Viewport-Varianten helfen nicht
+zuverlässig; Produkt und Originaltest unverändert. Letzte gezielte
+Umgebungsprobe gibt ausschließlich dem eigenen frischen Testbrowser
+AboveNormal-Priorität; fremde Programme werden nicht verändert. Bisherige
+157/158-Abnahme und Entwurf erhalten. Kein neues Paket oder roter Abschluss.
+
 **Betreiber10.10.,16:53:** „alos wenn dieses tempo lärung die eigentliche
 reihenfolge nicht zulässt dann fix das bitte und setz dann da an wo es muss“.
 Gezielte Tempo-Klärung und notwendige belegte Korrektur wieder ausdrücklich
@@ -9,7 +19,7 @@ Zuerst tatsächliche Sperre der Datenabnahme lösen, dann bestehende Reihenfolge
 Originale/grüne Belege und Entwurf bleiben erhalten; Text-Probelauf nicht
 inhaltlich umbauen. Oberfläche-Skill für Darstellung/Tempo verwendet.
 
-**Betreiber 10.10.2026:** „arbeite ununterbrochen. ich habe genug skills zur
+**Betreiber 10.10.2026, ursprünglicher Anschluss16:31:** „arbeite ununterbrochen. ich habe genug skills zur
 verfügung gestellt, nutze vorallem caveman ständig.“ Caveman gelesen und
 für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
 Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,

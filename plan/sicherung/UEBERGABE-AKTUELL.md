@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 17:22 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 17:23 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `b9b5fe04 Sicherung 17:21 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `60ea8bcd Sicherung 17:22 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -65,6 +68,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md
  M sw.js
 ```
 
@@ -94,6 +98,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 17:23 Codex Energie-Stabilitätsvergleich abgeschlossen:230/376ms rot, Ansatz verworfen, fortgesetzte Gesamtabnahme nicht gestartet. AC/DC-Minimum5 mit powercfg bestätigt; alle vollständigen Logs gelesen. Direkte Sichtbarkeits-/Viewport-Variante231ms, flankierende Originale302/197ms; nav-kontinuierlich290ms, Originale231/192ms, End-DOM identisch. Weniger Eingabeereignisse bei erhaltener Navigation beweisen keinen Tempo-Fix. Keine Variante übernommen. Abschließende gezielte Umgebungsprobe setzt nur vom eigenen Browser-CDP gelieferte Browser-/Renderer-PIDs auf AboveNormal; fremde Browser nicht verändert. Hilfsskript schließt Browser wie der Originaltest, Priorität endet mit diesen Prozessen.
 
 - 17:20 Codex gezielte Tempo-Proben abgeschlossen: rAF-Verschiebung, getrennte Mausereignisse, Sichtbarkeitsbeobachter, bedingter Viewport-Abgleich und erste14 sofort sichtbare Zeilen beseitigen die Sperre nicht zuverlässig. Native Layoutkosten bleiben; ein kleiner PerformanceObserver-Wert bei weiter243ms Renderaufgabe ist kein Fix. Alle neuen vollständigen Logs gelesen, Rohtraces erhalten; keine Produktänderung. Kontrollierte Energieprobe: AC-Prozessorminimum vorübergehend5 auf100, Originaltest199ms grün, Einstellung sicher auf5 zurückgestellt; Gegenprobe305ms rot. Das einzelne Grün erklärt alte rote Läufe nicht. Vorab begrenzter Stabilitätsvergleich: zwei Originale unter100 müssen beide grün sein, nur dann fortgesetzte Gesamtabnahme; jedes Rot verwirft diesen Ansatz. Grenze200ms und CPU4x unverändert, kein Wiederholen bis grün. Hilfsskript stellt Energieeinstellung im finally zurück.
 
@@ -136,5 +142,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex Anschluss der Datenabnahme: Übergabe, Tempo-Befund, Abnahmebericht und geltende Regeln gelesen; bestehende Minuten-Sicherung 12532/16564 bestätigt, keine zweite gestartet. Netzteilstatus 2. Vorhandene Rohtraces der beiden Quellen zeitlich zerlegt: erster Layoutdurchlauf liegt nach Ende des Klick-Handlers, zweiter nach dem Animationsbild; kein Beleg für einen erzwungenen großen Layoutdurchlauf innerhalb des Klick-Handlers. Aktuelle Kartenlisten-, Schriftvorlade- und content-visibility-Pfade gelesen. Produkt und ursprüngliche rote Belege unverändert; gezielte Zuordnung der beiden Layoutdurchläufe wird vorbereitet.
 
 - Neuer lokaler Chat „Datenabnahme 3.18.30: Tempo klären“ gestartet: 01a12620-409a-7e33-8945-dcc4837f7a96. Konkreter Anschluss samt vorhandenen Diagnosen, Erhalt gültiger Prüfungen, unveränderter 200-ms-Grenze und Verbot neuer Pakete/Veröffentlichung übergeben; keine Modelländerung/zweite Sicherung veranlasst.
-
-- Codex Anschluss auf Betreiberauftrag geprüft: aktuelle Übergabe, STAND-Einstieg und vollständigen TEXT-TEMPO-BEFUND gelesen; nächster Produktabschluss ist unverändert Datenabnahme 3.18.30, nicht neue Mehrwert-Funktion. Desktop-Projekt über App-Werkzeug identifiziert; neuer lokaler Chat wird mit gezielter Tempo-Klärung und Token-/Erhaltregeln gestartet. Kein Test/App-Code in diesem Chat geändert.

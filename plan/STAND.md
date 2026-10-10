@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 17:23 – Energieansatz verworfen, Tempo weiter offen:**
+Zwei vorher festgelegte Originale unter AC-Minimum100:230/376ms rot.
+AC-Minimum auf5 restauriert, keine Gesamtabnahme gestartet. Varianten mit
+erhaltenem Navigationsknopf oder Sichtbarkeits-/Viewport-Abgleich lösen
+die Sperre ebenfalls nicht. Produkt/Originaltest unverändert;157/158 bleibt.
+Letzte gezielte Umgebungsprobe ausschließlich am eigenen Testbrowser mit
+AboveNormal-Priorität. Danach nur belegte Korrektur, keine Grün-Auswahl.
+Kein Paketcommit/Deploy oder neuer Paketbau über fremdem Entwurf.
+
 **10.10.2026 16:53 – Tempo-Klärung erneut ausdrücklich beauftragt:**
 Betreiber verlangt die Sperre zu beheben und danach an vorgesehener Stelle
 fortzufahren. Diagnose darf wieder gezielt laufen; bisherige157/158-Belege
