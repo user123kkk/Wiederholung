@@ -1,5 +1,9 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 „so bitte festhalten oder so keine ahnung, ob das nötig ist im
+repo“: Token-/Skriptpräferenz dauerhaft in BETREIBER-VERSTEHEN festgehalten.
+Erledigt als Dokumentation; keine neue Produktfunktion/Veröffentlichung.
+
 10.10.2026 Betreiber: auf Tokenverbrauch achten; dachte, ladegeraet laufe,
 möchte verstehen, ob eigener tokenfreier Aufruf gleichwertig ist. Erklärt:
 derselbe Gesamttest, Wrapper -NurPruefen -Fortsetzen prüft zusätzlich sauberen

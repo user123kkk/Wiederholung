@@ -8,7 +8,9 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
-- 13:03 Codex Betreiberfrage zu Tokens/ladegeraet geklärt: tatsächlichen Wrapper gelesen, -NurPruefen -Fortsetzen gleicher Gesamtprüfer, aber sauberer Gitstand vorausgesetzt und iPad-Seed11 statt Paket-Seed7; ohne NurPruefen Veröffentlichung. Bestehenden Lauf weiterführen, knappe Auswertung. 90/158 grün, vollständige Logs bis PaketC/C-Fort gelesen, keine neue Quelle geändert. Wunsch in ALLES-OFFEN eingetragen.
+- 13:03 Codex ausdrücklichen Wunsch zum Festhalten der Tokenpräferenz umgesetzt: BETREIBER-VERSTEHEN mit Originalwortlaut, Skriptbetrieb/knapper KI-Auswertung und konkreten ladegeraet-Unterschieden ergänzt; Wunsch in ALLES-OFFEN erledigt dokumentiert. Reine Dokumentation, bestehender Prüflauf bleibt aktiv.
+
+- 13:01 Codex Betreiberfrage zu Tokens/ladegeraet geklärt: tatsächlichen Wrapper gelesen, -NurPruefen -Fortsetzen gleicher Gesamtprüfer, aber sauberer Gitstand vorausgesetzt und iPad-Seed11 statt Paket-Seed7; ohne NurPruefen Veröffentlichung. Bestehenden Lauf weiterführen, knappe Auswertung. 90/158 grün, vollständige Logs bis PaketC/C-Fort gelesen, keine neue Quelle geändert. Wunsch in ALLES-OFFEN eingetragen.
 
 - 12:52 Codex korrigierter t_nur_betreiber vollständig grün: sieben Bildschirme je Handy/Desktop HTML und Pixel identisch für normales Konto; drei Gegenproben erkennen Betreiberfreigabe, Schriftentsperrung und unzulässige Textfreigabe. Ganze Ausgabe gelesen, neuer Testhash d4acf692, kein historischer Checkout/Server benutzt. Fortgesetzter Gesamtstand87/158 grün, alle87 gültigen Abschlusslogs gelesen; Original-Aufbaufehler bleibt separat. Runner15139/Node19272 jetzt PaketB, Quellen e595b5b6312244cd unverändert. Keine Wiederholung86 gültiger Tests/kein Deploy.
 

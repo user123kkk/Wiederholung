@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 13:01 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 13:02 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `1278ad6 Sicherung 13:00 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `5bbc740 Sicherung 13:01 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -37,6 +37,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M index.html
  M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
+ M plan/BETREIBER-VERSTEHEN.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -64,7 +65,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 16, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -86,7 +87,9 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
-- 13:03 Codex Betreiberfrage zu Tokens/ladegeraet geklärt: tatsächlichen Wrapper gelesen, -NurPruefen -Fortsetzen gleicher Gesamtprüfer, aber sauberer Gitstand vorausgesetzt und iPad-Seed11 statt Paket-Seed7; ohne NurPruefen Veröffentlichung. Bestehenden Lauf weiterführen, knappe Auswertung. 90/158 grün, vollständige Logs bis PaketC/C-Fort gelesen, keine neue Quelle geändert. Wunsch in ALLES-OFFEN eingetragen.
+- 13:03 Codex ausdrücklichen Wunsch zum Festhalten der Tokenpräferenz umgesetzt: BETREIBER-VERSTEHEN mit Originalwortlaut, Skriptbetrieb/knapper KI-Auswertung und konkreten ladegeraet-Unterschieden ergänzt; Wunsch in ALLES-OFFEN erledigt dokumentiert. Reine Dokumentation, bestehender Prüflauf bleibt aktiv.
+
+- 13:01 Codex Betreiberfrage zu Tokens/ladegeraet geklärt: tatsächlichen Wrapper gelesen, -NurPruefen -Fortsetzen gleicher Gesamtprüfer, aber sauberer Gitstand vorausgesetzt und iPad-Seed11 statt Paket-Seed7; ohne NurPruefen Veröffentlichung. Bestehenden Lauf weiterführen, knappe Auswertung. 90/158 grün, vollständige Logs bis PaketC/C-Fort gelesen, keine neue Quelle geändert. Wunsch in ALLES-OFFEN eingetragen.
 
 - 12:52 Codex korrigierter t_nur_betreiber vollständig grün: sieben Bildschirme je Handy/Desktop HTML und Pixel identisch für normales Konto; drei Gegenproben erkennen Betreiberfreigabe, Schriftentsperrung und unzulässige Textfreigabe. Ganze Ausgabe gelesen, neuer Testhash d4acf692, kein historischer Checkout/Server benutzt. Fortgesetzter Gesamtstand87/158 grün, alle87 gültigen Abschlusslogs gelesen; Original-Aufbaufehler bleibt separat. Runner15139/Node19272 jetzt PaketB, Quellen e595b5b6312244cd unverändert. Keine Wiederholung86 gültiger Tests/kein Deploy.
 
@@ -127,5 +130,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 11:40 Codex nach abgeschlossenem Quellenabgleich den ausdrücklich gespeicherten Heartbeat-Abschlussauftrag angewandt: vorhandene Automation adrabic-nachtarbeit-fortsetzen über App-Werkzeug PAUSED bestätigt, volle übrige Felder erhalten; lokale Konfiguration ebenfalls PAUSED. Keine zweite Automation/Sicherung. Nicht pausenlos weiterarbeiten behaupten: aktuell nur verschobene große Datenabnahme/Paketabschluss, Gerätebelege und nötige verstandene Funktionsentscheidungen; kein neues Paket über Entwurf. Minuten-Sicherung weiter aktiv, Übergabe 11:39/automatischer Commit 11:38 gesehen. Konkreten Rest einmal gemeldet.
 
 - 11:38 Codex auf „weiter arbeiten ... kommen nicht voran“ Quellenabgleich tatsächlich abgeschlossen: zuerst 15–18 vier Vollberichte (49 Hauptpositionen/3 Konzepte/29 historische Fragen), danach 19–22 (39 nummerierte Positionen plus Lizenz-Dossier/29 Fragen), 23–26 (56 ursprüngliche Positionen, 24 bündelt 8/9; 33 Fragen). Zwölf restliche Vollberichte mit Gegenrede/Beleggrenzen gelesen; anfangs gekürzte Toolausgaben gezielt nachgelesen, keine ungelesenen Teile als vollständig behauptet. Nun 34/34 inhaltliche Berichte; zwei Limit-Abbrüche bleiben ohne erfundene Ergebnisse. Jede der 187 alten Katalogzeilen rückwärts mit konkreter Berichtsstelle oder gekennzeichnetem Betreiberverlauf versehen; 184 Berichtzuordnungen, Playlist/Tafsir/Abo drei Sekundärbelege, keine Originalchat-Vollständigkeit behauptet. Tabellenregister 402 Positionen mechanisch zusammengeführt, Dopplungen/Fragen/Methodik keine Funktionszahl; Nebenabschnitte über Teilabgleiche erhalten. Zählung/relative Quellenlinks geprüft. Originale und historische Status erhalten, keine alten Ja als heutige Freigabe. Keine neue rechtliche Beratung/Kosten-/Plattform-/Lernwirkungsprüfung; Simulation aus Bericht 24 nicht gerechnet oder Eingang bestätigt. App-/Rules-Hashes erneut unverändert 4a8ca5a1/6a110898, keine Tests gestartet. Minuten-Sicherung ein Baum. Abschluss und konkreten verschobenen Rest in ALLES-OFFEN/STAND/ARBEITSSTAND gesichert, Fortschritt nach abgeschlossenen Blöcken sichtbar gemeldet. Abnahmeaufbau ausdrücklich verschoben laut Vorbereitungsseite, nicht still repariert; große Abnahme/neues Paket/Commit/Deploy bleiben später. Ein rg-Aufruf mit Windows-Glob als Dateipfad scheiterte, korrekt mit -g wiederholt.
-
-- 11:28 Codex Betreiberauftrag Council-Skill umgesetzt: genaue GitHub-Quelle tenfoldmarc/llm-council-skill und komplette Originalanleitung gelesen; offizieller Installer, festgehaltener Commit 0dc03275b0ddf542545da3a9684510fff31df353, lokale Projektfassung mit unverändertem Original/README. Skill-Installer und Skill-Creator genutzt, Plugin-Management zunächst zur Einordnung gelesen; nach konkretem Skill-Link kein Plugin nötig. Codex-/Claude-Skill und AGENTS/CLAUDE-Zuordnung eingerichtet. Fünf echte getrennte Berater plus anonymisierte Gegenprüfung, Slotgrenzen, Beleggrenzen, kurze deutsche Erklärung und nötige verstandene Einzelfreigabe ausdrücklich; kein Parallel-/Laufzeit-/Wahrheitsversprechen. Pflegewerkzeug auf vier Skills samt Quellenspiegel erweitert. Erste Prüfung fing Ausgabe-Platzhalter als fehlenden Dateiverweis; Formulierung korrigiert, danach alle vier Skills einschließlich Metadaten/Verweisen/identischer Spiegel grün, Diff ohne Whitespace-Fehler. Offizieller Python-YAML-Prüfer nicht verfügbar wegen fehlendem PyYAML; keine Zusatzabhängigkeit installiert, stattdessen vorhandener Projektprüfer. Kein Council durchgeführt oder Qualitätsgewinn behauptet. Bestehender Sicherungsbaum 12532/16564 bestätigt; keine zweite Schleife. Neue Skilldateien für Entwurfspatch erfasst, keine App-/Rules-/Teständerung, kein App-Commit/Deploy oder Abnahme. Wunsch/Ergebnis in ALLES-OFFEN und Skills-Bericht gesichert; Fortschritt gemeldet.

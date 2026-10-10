@@ -91,3 +91,5 @@ BEWAHRT t_ordnung.js
 EXIT 0 t_paket_b.js (194s)
 EXIT 0 t_paket_c.js (211s)
 EXIT 0 t_paket_c_fort.js (32s)
+EXIT 0 t_paket_c_kalendertage.js (209s)
+EXIT 0 t_paket_c_suchpuffer.js (5s)

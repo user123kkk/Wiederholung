@@ -1,5 +1,19 @@
 # Den Betreiber richtig verstehen
 
+**Tokenverbrauch 10.10.2026 (ausdrücklich festhalten):** „achte auf
+tokenverbrauch, dachte du würdest grad ladegeraet ausführen, könnte ich ja
+auch ohne tokens, wüsste nur nicht ob das gleich ist“; danach „so bitte
+festhalten“. Lange Routineprüfungen durch vorhandene Skripte laufen lassen.
+KI-Arbeit auf notwendige Auswertung, Fehlerbehebung und Abschluss begrenzen;
+keine ständigen ausführlichen Zwischenkontrollen oder gültigen Wiederholungen.
+Klar sagen, welches Skript läuft und ob es nur prüft oder veröffentlicht.
+Selbststart erklären, wenn er Tokens spart, einschließlich tatsächlicher
+Voraussetzungen und Unterschiede; keine zusätzlichen Prüfpflichten daraus.
+Aktuell: ladegeraet.bat -NurPruefen -Fortsetzen nutzt denselben Gesamttest,
+verlangt aber saubere Quellen; der Paketlauf prüft den uncommitteten Entwurf.
+Der Wrapper verwendet iPad-Seed11, CODEX-START Seed7. Ohne -NurPruefen
+veröffentlicht der Wrapper nach grünen Tests Regeln und Hosting.
+
 **Korrektur 10.10.2026:** „selbst die "beschlossenen sachen" könnten
 eigentlich unbeschlossen sein, hab da mal einfach gesagt ja, beim lesen
 den meist nicht verstanden“. Frühere pauschale Zustimmung nicht als
