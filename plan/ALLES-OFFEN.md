@@ -1,5 +1,12 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 Betreiber: auf Tokenverbrauch achten; dachte, ladegeraet laufe,
+möchte verstehen, ob eigener tokenfreier Aufruf gleichwertig ist. Erklärt:
+derselbe Gesamttest, Wrapper -NurPruefen -Fortsetzen prüft zusätzlich sauberen
+Gitstand und verwendet iPad-Seed11 statt Paket-Seed7; aktueller Entwurf würde
+am Gitstand abbrechen. Lauf weiterführen, Auswertung/Meldungen knapp halten,
+keinen zweiten Browserlauf starten. Ohne -NurPruefen enthält Wrapper Deploy.
+
 10.10.2026 12:06: Tempo-Ursache per Trace in der Prüfattrappe belegt,
 Batchmeldungen korrigiert und funktional mit fester Gegenprobe geprüft.
 Original-Tempotest grün; frischer Gesamtlauf158 läuft, danach Affe/Runde
