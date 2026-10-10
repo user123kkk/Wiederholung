@@ -39,6 +39,11 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 
 ## Gesamtlauf, um 11:57 angehalten
 
+13:50: korrigierter kompletter C-Sammeltest grün (1223s),256 Varianten
+einschließlich C27/C22, vollständige Ausgabe gelesen. Neue Testkennung
+36200c315aa0.94/158 gültige Abschlüsse grün, alle94 Logs gelesen;
+Runner19768 nun PaketD. Gemeinsame Quelle unverändert, große Abnahme offen.
+
 **13:30: C27-Aufbau korrigiert, fortgesetzt.** 93 gültige Tests grün;
 Sammeltest C-Weiter scheiterte nach1046s in C27 bei Löschen20 aus200:
 20 statt180 übrig. Keine Rückgängig-Aktion betroffen (Zwischenmeldung

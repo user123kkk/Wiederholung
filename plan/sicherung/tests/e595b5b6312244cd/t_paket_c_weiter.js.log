@@ -261,3 +261,14 @@ C22 grün 390 dunkel true
 C22 grün 320 hell false
 C22 grün 320 hell true
 C22 grün 320 dunkel false
+C22 grün 320 dunkel true
+C22 grün 820 hell false
+C22 grün 820 hell true
+C22 grün 820 dunkel false
+C22 grün 820 dunkel true
+C22 grün 1440 hell false
+C22 grün 1440 hell true
+C22 grün 1440 dunkel false
+C22 grün 1440 dunkel true
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1223,"quelltext":"36200c315aa0296bea13e181cb319026cb853f2a8976b3df2350f598668ecfef"}
