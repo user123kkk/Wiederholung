@@ -1069,6 +1069,16 @@ zuerst: Sie sind am häufigsten aufgetreten.
 
 ### 6.3 Zustand gehört in `ui`, nie nur ins DOM
 
+- **10.10.2026, A17/DATEN-12:** Ein altes Formularfeld ist kein neuer
+  Auftrag. Bei fremden Snapshots bewusst bearbeitete Felder von unberührten
+  Feldern unterscheiden. Für die Standwahl gilt: unberührt dem aktuellen
+  Kartenstand folgen, nur ausdrückliche Auswahl als Stufenänderung schreiben.
+  Auch Optionswerte/ausgewählten Wert nach Neuzeichnen prüfen: fehlt die
+  alte Auswahl im neuen Optionssatz, nimmt der Browser still den ersten
+  Eintrag. Serverseitige Ausgangskennungen erkennen diese unbeabsichtigte
+  lokale Auswahl nicht. Prüfen: nur Notiz geändert + fremde Bewertung,
+  bewusste Stufe + Snapshot, unberührtes Blatt + Escape.
+
 - Ein globales Formular braucht seine Eingabe- und Entwurf-Handler in jeder
   Ansicht, die es öffnet. Wird ein Blatt aus Fortschritt geöffnet, dürfen
   diese Handler nicht nur an `ui.tab === "verwalten"` hängen. Abnahme auch
@@ -1811,6 +1821,24 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
   Stillhalten nach kurzem Wischen und Systemabbruch als Gegenfälle prüfen.
 
 ## 15. Vorfall-Liste
+
+10.10.2026, Nachtprüfung A17: Karte auf Stufe 1 im Formular, ausschließlich
+Notiz geändert; fremdes Sicher bestätigt Stufe 2. Snapshot behält alte
+Entwurfsstufe 1, deren Optionswert jetzt fehlt: Feld fällt auf 0, Speichern
+ersetzt Serverstufe 2 durch 0. Feste Gegenprobe 97cbdcc/05269ebd bestätigt.
+Bewusste Stufenwahl flüchtig kennzeichnen, unberührte aktuelle Auswahl
+erhalten und nicht als Bewertungsauftrag schreiben (§ 6.3). Fünf echte
+SDK-Kontrollen des Fixes grün; große Abnahme weiter offen.
+
+10.10.2026, eigener A16-Zusatzprüfaufbau: kontrollierter Speicherstand
+„Kartenkopie vorhanden, Tageskopie vorbereitet“ zunächst ohne gesicherten
+SDK-Cache-Abschluss und ohne vollständige Tages-Versandbarriere geprüft.
+Ein Lauf verlor vor dem Schließen die noch nicht dauerhaft nachgewiesene
+SDK-Kartenkennung; ein anderer versendete durch ein Snapshot-Echo trotzdem
+den Tagesbeitrag. Rote Originale erhalten, kein Produktfehler daraus
+abgeleitet. Cache-Kennung/hasPendingWrites ausdrücklich prüfen und im
+Fixture den Tagesversand selbst sperren; nach Neustart normaler Produktweg.
+Gegenprobe mit deaktivierter Aktivierung weiterhin 0 statt 1 rot (§ 5.3).
 
 09.10.2026, Tagesdeckel-Gegenprüfung auf Betreiberauftrag: Die eigene
 Simulation verwendete i zugleich für Stufe und Termin; Stufe 3 war dadurch

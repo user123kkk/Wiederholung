@@ -18,6 +18,13 @@ Bestehende Minuten-Sicherung läuft weiterhin als ein Prozessbaum.
 Große Abnahme/Paketabschluss bleiben offen; Anschlussarbeit darf vorbereitet,
 aber noch nicht als neues Paket gebaut werden.
 
+10.10.2026, Nachtfortsetzung: A17/DATEN-12 im bestehenden Datenpaket gefunden
+und als Entwurf korrigiert. Reines Notizspeichern nach fremder Bewertung
+setzt den Stand ungewollt 2 auf 0; feste Gegenprobe 97cbdcc bestätigt.
+Fünf echte SDK-Fälle des Fixes grün, betroffene Browserprüfung läuft.
+3.18.30 bleibt uncommittet; große Abnahme/Paketabschluss später. Belege:
+`zyklus-2/FORMULAR-KONFLIKT-2026-10-10.md`. Kein Paket H begonnen.
+
 09.10.2026, Betreiber: „für nächsten chat?“ Fortsetzungstext bereitstellen;
 A14/A15/A16-Entwurf 3.18.30 erhalten, aktuelle Übergabe und A16-Bericht als
 Einstieg verwenden. Große Abnahme später, kein neues Paket über dem Entwurf.

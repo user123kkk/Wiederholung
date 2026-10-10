@@ -35,7 +35,7 @@ entscheidende Server-Erhaltungserwartung blieb unverändert.
 
 ## Ursache und Korrektur
 
-`editCard` hält eine alte Stufe in `formDraft`. `renderCardForm` bestimmt
+`editCard` hält eine alte Stufe in `formDraft`. `karteSheet` bestimmt
 Optionswerte aus der aktuellen Karte, aber den ausgewählten Wert aus dem
 alten Entwurf. Kommt 2 statt 1 an, fehlt eine passende Option für 1; der
 Browser wählt den ersten Eintrag 0. `submitCardForm` deutet jeden Unterschied

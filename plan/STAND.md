@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 – Nachtarbeit im Datenentwurf 3.18.30:** A14–A16 erhalten.
+Zwei zusätzliche A16-Einzelfälle und gezielte Fehler-Gegenprobe am vorherigen
+Hash geprüft. Neuer A17/DATEN-12: reine Notizkorrektur im offenen Blatt
+setzt fremde Bewertung zurück; feste Quelle 97cbdcc rot. Im bestehenden
+Datenpaket korrigiert, fünf echte SDK-Fälle grün (App-SHA 4a8ca5a1).
+Betroffene Browserprüfungen laufen; Bericht FORMULAR-KONFLIKT-2026-10-10.md.
+Keine große Abnahme/Veröffentlichung. Nacht-Fortsetzung im selben Chat
+stündlich aktiv bis 10.10. 09:00; Minuten-Sicherung läuft als ein Baum.
+
 **09.10.2026 – A16/DATEN-11 im bestehenden Entwurf 3.18.30 gebaut:**
 Dauerhafte Tagesbeiträge mit unveränderlichen atomaren Cloud-Belegen;
 Neustart und Nachholen erhalten Konto/Tag/Reset-Epoche. Erstlauf 12 SDK-
