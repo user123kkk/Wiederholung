@@ -22,3 +22,17 @@
   Kontrast 0
   Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1262 ms | Bilder > 34 ms: 1 max 35
   ok
+== ipad
+  Start: {"wortOben":139,"flaeche":"274-474","leisteUnten":530,"fenster":1180,"allesImBild":true,"scrollbar":false}
+  erster Strich: Tinte 0 -> 539 | Lage vorher {"canvas":"274:50","loeschen":"486:313","vollbild":"486:453","fertig":"486:589","wort":"139:349"}
+    nachher {"canvas":"274:50","loeschen":"486:313","vollbild":"486:453","fertig":"486:589","wort":"139:349"}
+  Vollbild: {"vollbild":true,"vorlage":"Nacht","leisteImBild":true} | Tinte erhalten: 589
+  Strich im Vollbild: Tinte 589 -> 1119
+  Strich zurueck: Tinte 589
+  Vollbild nach Aufdecken: "Nacht\n·\nلَيْلَةٌ"
+  Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"لَيْلَةٌ"}
+  Kontrast 0
+  Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1056 ms | Bilder > 34 ms: 0
+  ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":84,"quelltext":"fae0a8f05d0769e2a19364f93e50002aad2ef328f6d40cd401cb96e2610aac97"}
