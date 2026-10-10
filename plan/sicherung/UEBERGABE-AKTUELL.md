@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:02 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:04 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `77d562d8 Sicherung 16:01 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `da0de5f9 Sicherung 16:03 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -70,7 +72,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 9, chrome.exe 15 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 12, chrome.exe 14 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -91,6 +93,10 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- Neuer lokaler Chat „Datenabnahme 3.18.30: Tempo klären“ gestartet: 01a12620-409a-7e33-8945-dcc4837f7a96. Konkreter Anschluss samt vorhandenen Diagnosen, Erhalt gültiger Prüfungen, unveränderter 200-ms-Grenze und Verbot neuer Pakete/Veröffentlichung übergeben; keine Modelländerung/zweite Sicherung veranlasst.
+
+- Codex Anschluss auf Betreiberauftrag geprüft: aktuelle Übergabe, STAND-Einstieg und vollständigen TEXT-TEMPO-BEFUND gelesen; nächster Produktabschluss ist unverändert Datenabnahme 3.18.30, nicht neue Mehrwert-Funktion. Desktop-Projekt über App-Werkzeug identifiziert; neuer lokaler Chat wird mit gezielter Tempo-Klärung und Token-/Erhaltregeln gestartet. Kein Test/App-Code in diesem Chat geändert.
 
 - 16:00 Codex Erledigungsprüfung zentral ergänzt: neun zusätzliche Prüfpositionen aus 05.–07.10. (sechs umgesetzte Wunschgruppen, zwei teilweise erledigte Gesamtwünsche, ein offener Listen-Sprung-Prüfrest); die zwei N1-Stellen gemeinsam gezählt. Historische und aktuelle erhaltene Listen-/Einwilligungslogs vollständig gelesen, Code/CSS und damaligen Umfang gegengeprüft. Textarten-Erklärung und N1-CSS nicht als neue Verständlichkeits-/Fotoabnahme ausgegeben. Unklare Schreibkritik zusätzlich ausdrücklich erhalten. Fehlende Unterideen/Varianten/Gegenreden aus R1/R2 in die elf vorhandenen Ideenbereiche eingefügt; TikTok-Bezüge mit vorhandenen Bereichen verbunden, keine neue Liste/Funktionsfreigabe. Alle 259 alten Tabellenpositionen thematisch erhalten, sieben schon vorher umbasierte Verweise sind keine verlorenen Aufgaben; lokale Linkziele vollständig vorhanden und gezieltes diff --check grün. Rest: ältere Originalchatwünsche vor 05.10. einzeln belegen. Datenabnahme weiter 157/158 mit offenem t_text_tempo; keine Produkttests neu gestartet, kein Produktcommit/Deploy, fremder Entwurf erhalten.
 
@@ -131,7 +137,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 14:38 Codex t_rechtsplan rot bei Tablet/hell: zwei A-Links1.89 statt4.5. Eigenen Runner19768/angefangene Registrierung beendet; vollständigen roten Log/stand.json gesichert,109 grüne und110 vollständige Logs gelesen. Unveränderten Test mit Messspur ausgeführt, Screenshot tatsächlich angesehen: Links bei y1057–1079 außerhalb Scrollclip256–905, unsichtbar. Kontrastleser benennt klassenlose Links als A, Sichtfilter suchte nur className und behielt sie als unbekannt. Testfilter verwendet nun denselben Klasse/Tag-Schlüssel und alle gleichnamigen Treffer; sichtbare/teilweise sichtbare/doppelte/unbekannte schlechte Kontraste bleiben erhalten. Originalfilter-VM-Proben grün, feste315bb0e-Gegenprobe rot genau beim abgeschnittenen Link; komplette Ausgaben gelesen. Nur Testzuordnung geändert, Grenze4.5/App/CSS/Rules gleich. Oberflächen-Skill geladen. Runner14916/Sitzung58908 fortgesetzt,109 gültige Ergebnisse bewahrt, Log abnahme-gesamt-5-3.18.30.log; aktiven Log nicht vorzeitig abhaken.
 
 - 14:30 Codex Gesamtstand102/158 grün, alle102 vollständigen Abschlusslogs gelesen: F-Bildvergleich zwölf Varianten0 Fehlerpixel, lebende CSS-Nachbarn/Ebenen, Netzwerkfehler0, Struktur und sichtbare Wörter/Sicherung geprüft. Textausgaben tatsächlich gelesen, keine pauschale Lernwirkungszusage. F-Umfeld aktiv; gemeinsamer Stand unverändert, Abschluss/Affe weiterhin offen.
-
-- 14:27 Codex PaketE-Prüfer komplett grün938s, ganze Ausgabe gelesen:30 vorhandene lokale Abnahmen, E17/E26 wie bisher ausdrücklich ausgenommen. Sicherungsdatei/ICS nur Chromium; iOS/Android-Geräte bleiben offen. Kontowechsel, Zeitlimit/Teilerfolg, Profil/Plan, Ruhetagsregressionen und Geometrie geprüft, keine Lernwirkungs-/Gerätezusage.96/158 grün, alle96 Abschlusslogs gelesen; F-Bilder aktiv.
-
-- 14:12 Codex PaketD-Prüfer vollständig grün1244s, ganze Ausgabe gelesen:32 Schließwegvarianten mit je vier Wegen, zwei Leerlauf-/Randfallprüfungen und weitere vorhandene Zustandsmatrizen. Bestehende Aufgaben-Auswahl unverändert, keine neue D-Aufgabe behauptet.95/158 gültige Abschlüsse grün, alle95 Logs gelesen; PaketE aktiv. Quelle e595b5b6312244cd gleich.
