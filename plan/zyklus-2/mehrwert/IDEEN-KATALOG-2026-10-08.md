@@ -1,5 +1,13 @@
 # Ideen-Katalog: alles aus beiden Mehrwert-Runden, mit Stand
 
+**Quellenkorrektur 10.10.2026:** Der folgende Text ist der historische
+Erinnerungskatalog. Seit 08.10. liegen 34 inhaltliche Originalberichte und
+zwei Limit-Abbrüche unter [agentenberichte/](agentenberichte/LIESMICH.md).
+Der [Quellenabgleich](QUELLENABGLEICH-2026-10-10.md) ist begonnen: zweite
+Runde vollständig zugeordnet, erste Runde und rückwärtige Prüfung offen.
+Konkrete Unterideen/Varianten fehlen; keine Vollständigkeit behaupten.
+Historische Paketstände unten sind keine aktuelle Bau-/Deploy-Freigabe.
+
 Stand 08.10.2026. Zweck: Keine Idee der 26 Agenten geht verloren. Ergänzt
 [`RUNDE-2-2026-10-08.md`](RUNDE-2-2026-10-08.md) (Fragen, Antworten, Pakete)
 und [`ERGEBNIS-2026-10-07.md`](ERGEBNIS-2026-10-07.md) (erster Chat).
