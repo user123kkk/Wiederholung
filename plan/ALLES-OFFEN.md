@@ -1,5 +1,17 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 09:53, neuer Chat: „Weiter in `C:\Users\USER\Desktop\Wiederholung`
+gemäß AGENTS.md und aktueller Übergabe. Entwurf 3.18.30 samt uncommitteter
+Arbeit erhalten.“ Dazu: „Keine unveränderten Tests wiederholen“,
+„Minuten-Sicherung prüfen, keine doppelte Schleife“, „Repo-Reihenfolge
+fortsetzen; kein neues Paket über uncommitteter Arbeit“, „Große Abnahme,
+ladegeraet und Veröffentlichung bleiben später“ und „Meine Zukunftsideen
+liegen vollständig unter `plan/betreiber-nachrichten/`; vorerst keine
+direkten Fixes daraus“. Projekt-Skills, Befundprotokoll, selbstständige
+Arbeit, Deutsch/Caveman gelten. Auslegung: abgeschlossene 46 gezielte
+SDK-Fälle erhalten; jetzt Gegenlesen/Anschlussvorbereitung innerhalb der
+Paketgrenze. Ein Sicherungsbaum 12532/16564 bestätigt, keine neue Schleife.
+
 10.10.2026 gegen 09:36, Betreiber: „ok weiter nach reihenfolge im epo oder
 bist du nicht fertig, ktirgs fertig was auch immer du machst“. Begonnenen
 Prüfschritt abschließen und vorhandene Repo-Reihenfolge fortsetzen.
