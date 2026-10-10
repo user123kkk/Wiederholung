@@ -1,0 +1,18 @@
+phase-original DOM=a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6 Longtasks=228/140
+{"ms":68,"klick":false,"teile":[]}
+{"ms":229,"klick":true,"teile":[["UpdateLayoutTree",1],["Layout",2],["UpdateLayoutTree",2],["UpdateLayoutTree",6],["Layout",1],["UpdateLayoutTree",1],["UpdateLayoutTree",2],["UpdateLayoutTree",26],["Layout",54]]}
+{"ms":141,"klick":false,"teile":[["UpdateLayoutTree",0],["UpdateLayoutTree",1],["FireAnimationFrame",0],["FireAnimationFrame",1],["UpdateLayoutTree",12],["Layout",1],["UpdateLayoutTree",45],["Layout",57]]}
+AssertionError [ERR_ASSERTION]: End-DOM verändert
++ actual - expected
+
++ '77baac41b5f007008b80a2a3cb23014100d2923f5c8ec2a7f547e2d4f799e8f8'
+- 'a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6'
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_text_tempo_phase.js:41:29 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '77baac41b5f007008b80a2a3cb23014100d2923f5c8ec2a7f547e2d4f799e8f8',
+  expected: 'a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
