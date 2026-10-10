@@ -1,0 +1,25 @@
+phase-original DOM=a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6 Longtasks=296/169
+{"ms":82,"klick":false,"teile":[]}
+{"ms":296,"klick":true,"teile":[["UpdateLayoutTree",1],["Layout",2],["UpdateLayoutTree",1],["UpdateLayoutTree",3],["Layout",1],["UpdateLayoutTree",1],["UpdateLayoutTree",2],["UpdateLayoutTree",60],["Layout",77]]}
+{"ms":171,"klick":false,"teile":[["UpdateLayoutTree",0],["UpdateLayoutTree",1],["FireAnimationFrame",2],["FireAnimationFrame",3],["UpdateLayoutTree",4],["Layout",1],["UpdateLayoutTree",39],["Layout",88]]}
+{"ms":63,"klick":false,"teile":[["UpdateLayoutTree",9],["Layout",23]]}
+phase-raf DOM=77baac41b5f007008b80a2a3cb23014100d2923f5c8ec2a7f547e2d4f799e8f8 Longtasks=88/368/76
+{"ms":132,"klick":false,"teile":[]}
+{"ms":59,"klick":false,"teile":[["UpdateLayoutTree",2],["Layout",2]]}
+{"ms":88,"klick":true,"teile":[["UpdateLayoutTree",2],["Layout",3],["UpdateLayoutTree",0],["UpdateLayoutTree",4],["Layout",2],["UpdateLayoutTree",1],["UpdateLayoutTree",2],["Layout",1]]}
+{"ms":369,"klick":false,"teile":[["UpdateLayoutTree",1],["Layout",1],["FireAnimationFrame",3],["FireAnimationFrame",65],["UpdateLayoutTree",2],["UpdateLayoutTree",45],["Layout",98],["UpdateLayoutTree",33],["Layout",73]]}
+{"ms":76,"klick":false,"teile":[["UpdateLayoutTree",1],["FireAnimationFrame",6],["FireAnimationFrame",17],["UpdateLayoutTree",13],["Layout",2],["UpdateLayoutTree",7],["Layout",19]]}
+AssertionError [ERR_ASSERTION]: End-DOM verändert
++ actual - expected
+
++ '77baac41b5f007008b80a2a3cb23014100d2923f5c8ec2a7f547e2d4f799e8f8'
+- 'a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6'
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_text_tempo_phase.js:56:29 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '77baac41b5f007008b80a2a3cb23014100d2923f5c8ec2a7f547e2d4f799e8f8',
+  expected: 'a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
