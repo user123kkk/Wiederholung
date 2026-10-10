@@ -97,3 +97,36 @@ Weiter mit Anschlussvorbereitung in Repo-Reihenfolge und gezielter
 risikobezogener Datenprüfung, ohne bereits grüne identische Tests zu
 wiederholen. Paket H bleibt bis zur großen Datenabnahme und dem Commit
 gesperrt. A17 bleibt wie A14–A16 „in Arbeit“, weil Paketabschluss offen ist.
+
+## Zwei weitere gezielte Datenproben, 10.10.2026 03:09
+
+App und Rules bleiben bei den oben genannten SHA256-Werten. Daten-Skill
+weiter angewandt; kein Produktbau. Zwei bisher fehlende Einzelproben in
+`diagnose_formular_konflikt.js` ergänzt und mit echtem SDK ausgeführt:
+
+- `Notiz-nach-fremder-Loeschung`: B löscht k4 tatsächlich per SDK, A erhält
+  den Snapshot bei offenem Notizentwurf. Speichern meldet „Karte gelöscht“;
+  vor und nach dem Versuch liefert der Server 404. Nach Bestätigung bleibt
+  der eingegebene Notiztext im Blatt. Keine gelöschte Karte wieder angelegt.
+- `Offline-Notiz-nach-fremder-Bewertung`: A speichert nur eine Notiz offline.
+  SDK-Cache bestätigt genau diesen Text mit `hasPendingWrites=true`, bevor B
+  dieselbe Karte bewertet. Nach Wiederverbindung bestätigt der Server die
+  Notiz und erhält sämtliche geprüften Bewertungsfelder samt fremder Kennung.
+
+Andere Karte k6 und JavaScript-Fehler werden in beiden Fällen geprüft.
+Vollständige grüne Logs gelesen:
+`a17-formular-fremde-loeschung-2.log`, `a17-formular-offline-notiz.log`.
+Es sind zwei zusätzliche Einzelbelege, kein vollständiger neuer 7er-Lauf.
+Kein Neustart/PWA, echter Auth-Wechsel oder Tageszähler-Nachweis in diesen
+beiden Proben. Die vorherigen fünf Fälle und große Abnahme bleiben wie oben.
+
+Der erste Löschlauf `a17-formular-fremde-loeschung.log` war wegen zweier
+`.dlg`-Elemente im Testselektor rot, bevor die Erhaltungsprüfung fertig war.
+Nur den Selektor auf den tatsächlichen Meldungsdialog eingeschränkt;
+404-/Entwurf-/Fremdkarten-Erwartungen unverändert. Roter Log erhalten.
+
+Fallauswahl abgesichert: unbekannter `--fall` wird vor SDK-Start abgewiesen,
+statt ohne ausgeführte Fälle Exit 0 zu melden. Negative Eingabe
+`unbekannte-negative-Probe` ergibt erwartetes Exit 1 und die genaue Meldung;
+Wrapper prüft beides. Vollständiger Log:
+`a17-formular-fallauswahl-negativ.log`. Keine Testgrenze gelockert.

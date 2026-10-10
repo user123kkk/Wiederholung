@@ -1478,7 +1478,7 @@ index 0000000..ab96048
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
 diff --git a/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
 new file mode 100644
-index 0000000..b37a2fa
+index 0000000..1cd6f03
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
 @@ -0,0 +1,138 @@
@@ -1534,8 +1534,8 @@ index 0000000..b37a2fa
 +          await readMissing();
 +          assert.equal(await a.locator('#f-extra').inputValue(), 'Entwurf nach fremder Loeschung');
 +          await a.locator('[data-action="submit-card"]').click();
-+          await a.locator('.dlg').waitFor();
-+          assert.match(await a.locator('.dlg').innerText(), /Karte.*gelöscht|Karte gibt es nicht mehr/s);
++          await a.locator('[aria-labelledby="dlg-title"]').waitFor();
++          assert.match(await a.locator('[aria-labelledby="dlg-title"]').innerText(), /Karte.*gelöscht|Karte gibt es nicht mehr/s);
 +          await a.locator('[data-action="dlg-ok"]').click();
 +          await fertig(a);
 +          await readMissing();
