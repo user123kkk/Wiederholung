@@ -1,5 +1,12 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 09:06 – Nachtauftrag beendet:**
+Frist 09:00 erreicht; beim ersten Heartbeat danach Nacht-Automation
+`adrabic-nachtarbeit-fortsetzen` über App-Werkzeug bestätigt PAUSED.
+Keine weitere Produktarbeit/Tests nach Frist. Minuten-Sicherung bleibt
+einzeln aktiv, 3.18.30/A14–A17 und fremde Arbeit erhalten. Ergebnis:
+`zyklus-2/NACHTSTAND-2026-10-10.md`. Große Abnahme/Ladegerät/Deploy offen.
+
 **10.10.2026 08:08 – Nachtstand gesichert:**
 `zyklus-2/NACHTSTAND-2026-10-10.md` enthält Ergebnis, Quellen und nächste
 Abnahme. Minuten-Patch in eigenem TEMP-Ordner tatsächlich wiederhergestellt:

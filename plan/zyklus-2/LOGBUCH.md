@@ -2,6 +2,15 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-10 09:06 — Befristeter Nachtauftrag beendet
+
+Frist 09:00 erreicht. Beim ersten folgenden Heartbeat Nacht-Automation
+über App-Werkzeug bestätigt PAUSED, kein neuer Auftrag und keine weitere
+Produktarbeit/Tests. Minuten-Sicherung läuft einzeln weiter. Entwurf
+3.18.30 und fremde Arbeit erhalten; App im Commit weiterhin 3.18.29.
+Ergebnis/Beleggrenzen: `NACHTSTAND-2026-10-10.md`. Große Datenabnahme,
+Ladegerät-Arbeit und Veröffentlichung bleiben offen. Kein App-Commit/Deploy.
+
 ### 2026-10-10 08:08 — Nachtstand und Wiederherstellungsnachweis
 
 Nachtstand: `NACHTSTAND-2026-10-10.md`. A17 gezielt korrigiert, zusätzliche

@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 09:06 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 09:07 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `3ff5b12 Sicherung 09:05 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `e411af4 Sicherung 09:06 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -35,6 +38,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/LOGBUCH.md
+ M plan/zyklus-2/NACHTSTAND-2026-10-10.md
  M sw.js
 ```
 
@@ -64,6 +69,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 09:06 Codex Nachtabschluss: reale Zeit 09:06 Europe/Berlin und Übergabe 09:06 bestätigt. Nachtfrist 09:00 erreicht; beim ersten nachfolgenden Heartbeat Automation adrabic-nachtarbeit-fortsetzen über App-Werkzeug mit unveränderten Feldern auf PAUSED gesetzt, ausdrückliche Werkzeugbestätigung erhalten. Keine Produktarbeit/Tests nach Frist, kein neuer Auftrag. Einzelner Minuten-Sicherungsbaum 12532/16564 samt transientem Kind weiter erhalten, keine zweite Schleife. App im Arbeitsbaum 3.18.30, im Commit 3.18.29; A14–A17/fremder Entwurf behalten. NACHTSTAND/STAND/ALLES-OFFEN/Logbuch um tatsächlichen Abschluss ergänzt; große Abnahme/Ladegerät/Veröffentlichung bleiben später. Keine App-Version committet, kein Deploy.
 
 - 08:08 Codex Sicherungs-Gegenprüfung/Nachtstand: Übergabe 08:07 und einzelner Sicherungsbaum 12532/16564 mit transientem Kind erhalten. Aktuellen Minuten-Patch auf festem Commit dfd44eb in eigenem leeren TEMP-Ordner erst geprüft, dann tatsächlich angewandt. Alle 23 enthaltenen Dateien gegen vorher erfassten Arbeitsbaum LF-normalisiert gleich; App-SHA 4a8ca5a1 sowie Syntax App/A16-/A17-Prüfer grün. Vollständiger Wiederherstellungslog mit Patchhash gelesen; keine App-/Repo-Datei durch Wiederherstellung verändert, kein Produkttest wiederholt. Grenzen ausdrücklich: dieser Patch-Snapshot, keine ignorierten Dateien/PWA-/Vollabnahme. NACHTSTAND-2026-10-10.md fasst Ergebnis und offene Abnahme samt Quellgrenzen zusammen; STAND/Logbuch verlinkt. Entwurf/Fremdarbeit erhalten, kein App-Commit/Deploy/neues Paket. Nacht-Heartbeat noch ACTIVE; um/nach 09:00 wie beauftragt pausieren, kein neuer Nachtauftrag. Minuten-Sicherung weiter laufen lassen.
 
@@ -106,5 +113,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 22:40 Codex: doppelte Minuten-Sicherung anhand vollständiger Prozessbäume erkannt; nur zweiten Baum 19952/17292 beendet, erster 13152/8128 läuft weiter. Zwölf A16-Kernfälle am finalen App-SHA 05269ebd erneut grün. Neue Vor-Versand-Probe war zuerst unpassend: reguläres Page.close löst visibilitychange/Flush aus und testet bereits die SDK-Übergabe. Fixture stellt jetzt ausdrücklich harte Beendigung ohne Timer/Flush nach; Assertions erhalten, vier Randfälle laufen separat. Kein Produktfehler aus dieser Fixture-Verwechslung behauptet. Sprungtest vier Breiten, Kontrast und a11y-Grundchecks grün. Nächste entschiedene Lernrunden-Punkte am tatsächlichen Code gelesen; Vorbereitung in mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md, kein neuer Paketbau.
 
 - 22:36 Codex Gegenprüfung A16: erster vollständiger A16-SDK-Lauf 12/12, feste Verlust-Gegenprobe erkennt weiterhin den Fehler, Windows-Regelprüfung 238/238. Git-Bash-Regelstart verwendete einen ungültigen /c/-Pfad; dessen Lauf nicht als Nachweis übernommen. A14/A15-Regressionslauf 16 Fälle samt Oberfläche/Download/Entfernen grün am Zwischenstand. Bestandstest t_sprung findet neuen kurzzeitigen Hinweis bei regulären noch gebündelten Tagesbeiträgen (90–114 px); Banner auf tatsächlich ungeprüfte/abgelehnte/veraltete Beiträge begrenzt, geladene bereit-Kopie wird ungeprüft. Frische SDK-/Bestandsläufe am korrigierten Stand gestartet. Drei A16-Randfälle ergänzt: ungebuchte Reservierung, beschädigte Tageskopie, wirkliche Kontodaten-/Beleglöschung. Große Gesamtabnahme bleibt später, keine Veröffentlichung oder neues Paket.
-
-- Codex A16 gebaut, erste gezielte SDK-Prüfung läuft: dauerhafte Einzelbeiträge mit atomarem unveränderlichem Cloud-Beleg; Nachholen prüft zuerst SDK-Abschluss, Beleg und Server-Epoche. Kartenversuche reservieren den Tagesbeitrag vor dem Buchen; Kartenkopie trägt ihn für einen Zwischenabsturz mit. Aufbewahrungs-Hinweis/Download erweitert, Datenschutz und Kontolöschung mitgezogen. Oberflächen-Skill wegen bestehendem Hinweis angewandt. Keine Text-Lernregel oder Paketwechsel; 3.18.30 bleibt Entwurf. Eigener Patch zunächst wegen rückwärts angeordneter Hunks abgewiesen, in Quellreihenfolge angewandt; keine Prüfgrenze geändert.

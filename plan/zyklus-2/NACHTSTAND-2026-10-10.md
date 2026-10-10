@@ -1,7 +1,9 @@
 # Nachtstand 10.10.2026, 08:08
 
-Nachtauftrag läuft noch bis 09:00 Europe/Berlin. Danach Nacht-Heartbeat
-pausieren; kein neuer Auftrag, kein Veröffentlichen. Große Abnahme und
+**Abschluss 09:06:** Nachtfrist 09:00 Europe/Berlin erreicht. Beim ersten
+Heartbeat danach Nacht-Automation über App-Werkzeug auf PAUSED gesetzt,
+Bestätigung erhalten. Nach der Frist keine Produktarbeit oder Tests
+fortgesetzt. Kein neuer Auftrag, kein Veröffentlichen. Große Abnahme und
 ladegeraet bleiben ausdrücklich später. Minuten-Sicherung bleibt erhalten.
 
 ## Ergebnis

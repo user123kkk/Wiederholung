@@ -1,5 +1,11 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 09:06: Befristeter Nachtauftrag beendet. Beim ersten Heartbeat
+nach 09:00 Nacht-Automation bestätigt PAUSED; danach keine Produktarbeit
+oder Tests. Minuten-Sicherung bleibt aktiv. Ergebnis und Restabnahme:
+`zyklus-2/NACHTSTAND-2026-10-10.md`. 3.18.30 bleibt Entwurf, große Abnahme,
+ladegeraet und Veröffentlichung weiterhin offen; kein neuer Auftrag.
+
 10.10.2026, 06:07: Gesammelte Datenabnahme konkret vorbereitet unter
 `zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md`, weiterhin nicht gestartet.
 Vor späterem Ladegerät-Abschluss offen: zusätzlicher Demo-Emulator 8082
