@@ -2472,6 +2472,74 @@ index a5e2674..7979e42 100644
  
  /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
     unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
+diff --git a/plan/werkzeuge/ladegeraet.ps1 b/plan/werkzeuge/ladegeraet.ps1
+index 9a337ae..497720b 100644
+--- a/plan/werkzeuge/ladegeraet.ps1
++++ b/plan/werkzeuge/ladegeraet.ps1
+@@ -20,7 +20,7 @@ param(
+ #   stubs.js, gilt ein neuer Quellstand und es laeuft ohnehin alles neu.
+ $ErrorActionPreference = 'Stop'
+ $server = $null
+-$emu = $null
++$emulatoren = New-Object System.Collections.Generic.List[object]
+ $ergebnis = 1
+ $bericht = New-Object System.Collections.Generic.List[string]
+ function Schritt([string]$t) { Write-Host ''; Write-Host ('=== ' + $t + ' ==='); $bericht.Add($t) }
+@@ -74,24 +74,36 @@ try {
+     $server = Start-Process -FilePath $py -ArgumentList '-3', '-m', 'http.server', '8199', '--bind', '127.0.0.1' -WorkingDirectory $repo -WindowStyle Hidden -PassThru
+     Start-Sleep -Seconds 2
+ 
+-    # t_verlauf_mehrgeraete.js braucht den Firestore-Emulator auf 127.0.0.1:8081
++    # Die SDK-Pruefungen brauchen zwei getrennte Demo-Projekte auf 8081/8082.
+     # (nur Demo-Projekt, keine Produktivdaten). Eigener Ordner mit eigener
+     # firebase.json, damit die Hosting-Einstellungen des Repos unberuehrt bleiben.
+     $null = Werkzeug 'java.exe' 'Java fehlt (Firestore-Emulator fuer t_verlauf_mehrgeraete).'
+     $fb = Werkzeug 'firebase.cmd' 'Firebase-Werkzeuge fehlen. Einmalig: npm install -g firebase-tools'
+-    $emuOrdner = Join-Path $env:TEMP 'adrabic-ladegeraet-emu'
++    foreach ($ziel in @(
++        @{ Projekt = 'demo-adrabic-pruefung'; Port = 8081; Hub = 4410; Logging = 4510 },
++        @{ Projekt = 'demo-adrabic-karten-audit'; Port = 8082; Hub = 4411; Logging = 4511 }
++    )) {
++    $portProbe = New-Object System.Net.Sockets.TcpClient
++    try {
++        try { $portProbe.Connect('127.0.0.1', $ziel.Port) } catch { }
++        if ($portProbe.Connected) { throw ('Emulator-Port bereits belegt: ' + $ziel.Port + '. Vorhandenen Prozess nicht als eigenen Pruefemulator uebernehmen.') }
++    } finally { $portProbe.Dispose() }
++    $emuOrdner = Join-Path $env:TEMP ('adrabic-ladegeraet-emu-' + $ziel.Port)
+     New-Item -ItemType Directory -Force -Path $emuOrdner | Out-Null
+     $regeln = (Join-Path $repo 'firestore.rules') -replace '\\', '/'
+-    $emuJson = '{ "firestore": { "rules": "' + $regeln + '" }, "emulators": { "firestore": { "host": "127.0.0.1", "port": 8081 }, "ui": { "enabled": false }, "hub": { "port": 4410 }, "logging": { "port": 4510 } } }'
++    $emuJson = @{ firestore = @{ rules = $regeln }; emulators = @{ singleProjectMode = $true; firestore = @{ host = '127.0.0.1'; port = $ziel.Port }; ui = @{ enabled = $false }; hub = @{ port = $ziel.Hub }; logging = @{ port = $ziel.Logging } } } | ConvertTo-Json -Depth 5
+     [System.IO.File]::WriteAllText((Join-Path $emuOrdner 'firebase.json'), $emuJson)
+-    $emu = Start-Process -FilePath $fb -ArgumentList 'emulators:start', '--only', 'firestore', '--project', 'demo-adrabic-pruefung' -WorkingDirectory $emuOrdner -WindowStyle Hidden -PassThru
++    $emu = Start-Process -FilePath $fb -ArgumentList 'emulators:start', '--only', 'firestore', '--project', $ziel.Projekt -WorkingDirectory $emuOrdner -WindowStyle Hidden -PassThru
++    $emulatoren.Add($emu)
+     $bereit = $false
+     for ($i = 0; $i -lt 60 -and -not $bereit; $i++) {
+         Start-Sleep -Seconds 1
+-        try { Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8081/' -TimeoutSec 2 | Out-Null; $bereit = $true } catch { }
++        if ($emu.HasExited) { throw ('Firestore-Emulator vorzeitig beendet (Port ' + $ziel.Port + ').') }
++        try { Invoke-WebRequest -UseBasicParsing -Uri ('http://127.0.0.1:' + $ziel.Port + '/') -TimeoutSec 2 | Out-Null; $bereit = $true } catch { }
++    }
++    if (-not $bereit) { throw ('Firestore-Emulator startet nicht (Port ' + $ziel.Port + ').') }
++    Write-Host ('Firestore-Emulator laeuft (' + $ziel.Port + ', ' + $ziel.Projekt + ').')
+     }
+-    if (-not $bereit) { throw 'Firestore-Emulator startet nicht (Port 8081).' }
+-    Write-Host 'Firestore-Emulator laeuft (8081).'
+ 
+     Schritt '3/6 Pruefstand (alle Tests, dauert)'
+     Push-Location -LiteralPath $pruef
+@@ -144,7 +156,9 @@ try {
+ } finally {
+     if ($server -and -not $server.HasExited) { Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue }
+     # firebase.cmd startet node und java als Kindprozesse: ganzen Baum beenden.
+-    if ($emu -and -not $emu.HasExited) { & taskkill.exe /PID $emu.Id /T /F 2>$null | Out-Null }
++    foreach ($emu in $emulatoren) {
++        if (-not $emu.HasExited) { & taskkill.exe /PID $emu.Id /T /F 2>$null | Out-Null }
++    }
+     Write-Host ''
+     Write-Host ('Schritte: ' + ($bericht -join ' | '))
+ }
 diff --git a/plan/werkzeuge/minuten_sicherung.sh b/plan/werkzeuge/minuten_sicherung.sh
 index 8784251..b0bc839 100644
 --- a/plan/werkzeuge/minuten_sicherung.sh
@@ -2556,6 +2624,42 @@ index 0000000..2ad2ff0
 +}
 +console.log(`${names.length} Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
+diff --git a/plan/werkzeuge/pruefstand/abnahme_runde.js b/plan/werkzeuge/pruefstand/abnahme_runde.js
+index c977d52..64d340c 100644
+--- a/plan/werkzeuge/pruefstand/abnahme_runde.js
++++ b/plan/werkzeuge/pruefstand/abnahme_runde.js
+@@ -19,7 +19,8 @@ const repo=path.join(__dirname,'../../..');
+ const sha=s=>createHash('sha256').update(s).digest('hex');
+ const stand=createHash('sha256');
+ for(const f of ['app.js','index.html','styles.css','sw.js','firestore.rules',
+- 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js']){
++ 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js',
++ 'plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js']){
+  stand.update(f).update(fs.readFileSync(path.join(repo,f)));
+ }
+ const kennung=stand.digest('hex');
+diff --git a/plan/werkzeuge/pruefstand/alle_pruefen.js b/plan/werkzeuge/pruefstand/alle_pruefen.js
+index 46cee1a..a26f0d4 100644
+--- a/plan/werkzeuge/pruefstand/alle_pruefen.js
++++ b/plan/werkzeuge/pruefstand/alle_pruefen.js
+@@ -13,7 +13,8 @@ if(runde.length!==13)throw new Error('Rundenliste nicht vollstaendig erkannt');
+ // verwenden. Dieser Lauf behauptet dann ausdruecklich keine Gesamtabnahme.
+ const dateien=process.argv.includes('--ohne-runde')?alle.filter(f=>!runde.includes(f)):alle;
+ const relevant=['app.js','index.html','styles.css','sw.js','firestore.rules',
+- 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js'];
++ 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js',
++ 'plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js'];
+ const stand=createHash('sha256');for(const f of relevant)stand.update(f).update(fs.readFileSync(path.join(repo,f)));
+ const kennung=stand.digest('hex');
+ const ordner=path.join(os.tmpdir(),'adrabic-pruefstand-gesamt',kennung.slice(0,16));
+@@ -26,6 +27,7 @@ let aktiv=null;
+ function quellHash(f){
+  const quelle=fs.readFileSync(path.join(__dirname,f));
+  const hash=createHash('sha256').update(quelle);
++ if(f==='t_tagesantworten_sdk.js')hash.update('diagnose_karten_konflikt.js').update(fs.readFileSync(path.join(__dirname,'diagnose_karten_konflikt.js')));
+  if(f==='t_paket_d.js')hash.update('css_struktur.mjs').update(fs.readFileSync(path.join(__dirname,'../css_struktur.mjs')));
+  if(f==='t_konto_fortsetzungen.js'){
+   const namen=[...new Set([...quelle.toString().matchAll(/\['(konto_[^']+\.js)'/g)].map(m=>m[1]))].sort();
 diff --git a/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
 new file mode 100644
 index 0000000..e2db0b9

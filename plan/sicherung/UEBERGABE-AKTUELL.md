@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 11:44 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 11:45 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `0ba3d5e Sicherung 11:42 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `857f570 Sicherung 11:44 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,8 +35,12 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
+ M plan/werkzeuge/pruefstand/abnahme_runde.js
+ M plan/werkzeuge/pruefstand/alle_pruefen.js
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
  A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
@@ -72,6 +76,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 11:44 Codex neuer ausdrücklich beauftragter Abnahmechat: Übergabe/AGENTS, Betreiberregeln, ALLES-OFFEN, STAND, CLAUDE, LEHREN, Zyklusregeln und Abnahmevorbereitung gelesen; Daten-Skill und kurze deutsche Meldungen angewandt. Ein Minuten-Sicherungsbaum bestätigt, BatteryStatus 2. Entwurf 3.18.30/Fremdarbeit erhalten, kein Pull/Reset/Worktree. Große Datenabnahme jetzt wieder aufgenommen; 46 unveränderte gezielte Fälle nicht erneut ausführen. Zwei konkrete Aufbauprobleme werden vor frischem Browserlauf behoben und getrennt geprüft; kein Deploy/neuer Funktionsbau.
 
 - 11:42 Codex Betreiber „ok los aber neuer chtat ja ... paket“: Paket als zusammengehörige Änderungen/Prüfung/Sicherung konkret erklärt. Expliziten neuen Chat für zuvor benannte große Datenabnahme/Paketabschluss vorbereiten. Aktuelle Übergabe 11:41, Desktop-Projekt-ID aus App-Liste gewählt (nicht gleichnamige Kopie unter USER). Kein Worktree, damit uncommitteter Stand 3.18.30 erhalten bleibt. Wunsch und Umfang in ALLES-OFFEN gesichert, keine Veröffentlichung/neue Funktionsfreigabe abgeleitet. Alter Chat führt keine parallele Produktarbeit aus.
 
@@ -114,5 +120,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 09:30 Codex neuer Betreiberauftrag: Nachricht vollständig wortgetreu als Original.txt gesichert, inklusive Schreibfehlern; Verfasszeit laut Betreiber gegen 01:00, beobachtete Version 3.18.26, Empfang gegen 09:29 getrennt von aktuellem Entwurf 3.18.30. Bild Speicherkarte umbenennen bytegleich in plan/betreiber-nachrichten/belege kopiert und SHA geprüft. Vollständiger Themenindex mit Fragen/Beobachtungen/Zukunftsvorhaben erstellt, keine Sofortfixes/Modi oder religiösen/lernbezogenen Entscheidungen daraus abgeleitet. ALLES-OFFEN verlinkt Wortlaut und jeden Themenbereich; bestehende verwandte Einträge/Skills nicht als Erfüllung des umfassenderen Wunsches ausgegeben. Übergabe 09:28 und einzelner Sicherungsbaum 12532/16564 gelesen/geprüft. Neuer Weiter-Auftrag im Chat; Nacht-Automation bleibt pausiert, Abnahme/Paketgrenzen erhalten. Weiter im bisherigen Datenentwurf, keine der genannten Ideen bauen.
 
 - 09:06 Codex Nachtabschluss: reale Zeit 09:06 Europe/Berlin und Übergabe 09:06 bestätigt. Nachtfrist 09:00 erreicht; beim ersten nachfolgenden Heartbeat Automation adrabic-nachtarbeit-fortsetzen über App-Werkzeug mit unveränderten Feldern auf PAUSED gesetzt, ausdrückliche Werkzeugbestätigung erhalten. Keine Produktarbeit/Tests nach Frist, kein neuer Auftrag. Einzelner Minuten-Sicherungsbaum 12532/16564 samt transientem Kind weiter erhalten, keine zweite Schleife. App im Arbeitsbaum 3.18.30, im Commit 3.18.29; A14–A17/fremder Entwurf behalten. NACHTSTAND/STAND/ALLES-OFFEN/Logbuch um tatsächlichen Abschluss ergänzt; große Abnahme/Ladegerät/Veröffentlichung bleiben später. Keine App-Version committet, kein Deploy.
-
-- 08:08 Codex Sicherungs-Gegenprüfung/Nachtstand: Übergabe 08:07 und einzelner Sicherungsbaum 12532/16564 mit transientem Kind erhalten. Aktuellen Minuten-Patch auf festem Commit dfd44eb in eigenem leeren TEMP-Ordner erst geprüft, dann tatsächlich angewandt. Alle 23 enthaltenen Dateien gegen vorher erfassten Arbeitsbaum LF-normalisiert gleich; App-SHA 4a8ca5a1 sowie Syntax App/A16-/A17-Prüfer grün. Vollständiger Wiederherstellungslog mit Patchhash gelesen; keine App-/Repo-Datei durch Wiederherstellung verändert, kein Produkttest wiederholt. Grenzen ausdrücklich: dieser Patch-Snapshot, keine ignorierten Dateien/PWA-/Vollabnahme. NACHTSTAND-2026-10-10.md fasst Ergebnis und offene Abnahme samt Quellgrenzen zusammen; STAND/Logbuch verlinkt. Entwurf/Fremdarbeit erhalten, kein App-Commit/Deploy/neues Paket. Nacht-Heartbeat noch ACTIVE; um/nach 09:00 wie beauftragt pausieren, kein neuer Nachtauftrag. Minuten-Sicherung weiter laufen lassen.
