@@ -1,5 +1,12 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 12:06 – korrigierter Prüfstand frisch gestartet:**
+Tempo-Ursache in Attrappe per Trace belegt, Batchmeldungen korrigiert,
+funktionale Gegenprobe grün/alter Stand erwartbar rot. Original-Tempotest
+grün (max71ms bei3000 Karten, Grenze100ms). Frischer Gesamtlauf158 am
+Stand e595b5b6312244cd läuft allein; App/Rules unverändert. Bericht:
+`zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md`.
+
 **10.10.2026 11:58 – Datenabnahme an Tempotest angehalten:**
 13 vollständige Tests grün, t_bestand_tempo rot (207 ms, Grenze 100 ms).
 Originalausgaben erhalten/gelesen. Acht abwechselnde Vergleichspaare mit

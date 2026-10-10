@@ -1,0 +1,20 @@
+== handy
+  lang="de"
+  lernen         ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Medina Buch 1 | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  runde          ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Runde | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  runde-offen    ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Runde | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  bewertet       ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Runde | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  fortschritt    ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Fortschritt | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  verwalten      ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Verwalten | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  aktiver Reiter ruhig: scrollY 900 -> 0 im ersten Bild
+  karte-blatt    ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Verwalten | Dialoge dialog/benannt | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  bereich-blatt  ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Verwalten | Dialoge dialog/benannt | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  einstellungen  ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Einstellungen | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  wahl-blatt     ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Einstellungen | Dialoge dialog/benannt | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  fehler-melden  ohne Namen [] | Felder ohne Label [] | img ohne alt 0 | h1 Einstellungen | Kontrast 0 | Bewegung trotz "ruhig": keine | Verzögert trotz "ruhig": keine
+  ok
+  einstieg ohne Namen [] | anmelden ohne Namen [] Felder ohne Label []
+
+Keine Funde - t_a11y.js gruen.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":18,"quelltext":"0042cc90dc3abd91196dd03cbba90388495f6cbe698026e6ca4a93fc5ddb07eb"}

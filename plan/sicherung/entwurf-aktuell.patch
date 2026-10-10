@@ -3596,6 +3596,170 @@ index 0000000..c2b8224
 +    console.log(passed + ' A16 SDK-Faelle gruen. Keine Gesamtabnahme oder iPhone-Abnahme.');
 +  } finally {await b.close();}
 +})().catch(e => {console.error(e); process.exitCode = 1;});
+diff --git a/plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js b/plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
+new file mode 100644
+index 0000000..515ad2e
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
+@@ -0,0 +1,26 @@
++/* Diagnose, keine Abnahme: acht abwechselnde Paare des unveraenderten
++   t_bestand_tempo.js (3000 Karten, CPU 4x) am festen Vorstand und Entwurf.
++   Assertions/Grenzen bleiben aktiv. Rot wird gezahlt, niemals umgedeutet. */
++const fs = require('node:fs'), path = require('node:path');
++const { spawnSync, execFileSync } = require('node:child_process');
++const alt = '315bb0e';
++const commit = execFileSync('git', ['rev-parse', alt], { cwd: path.join(__dirname, '../../..') }).toString().trim();
++const datei = path.join(__dirname, 't_bestand_tempo.js');
++const quelle = fs.readFileSync(datei, 'utf8');
++if (!quelle.includes("'637995c:app.js'")) throw new Error('Fester Altstand-Anker fehlt');
++const angepasst = quelle.replace("'637995c:app.js'", JSON.stringify(commit + ':app.js'));
++const modul = `const Module=require('node:module');const m=new Module(${JSON.stringify(datei)},module);m.filename=${JSON.stringify(datei)};m.paths=Module._nodeModulePaths(${JSON.stringify(__dirname)});m._compile(${JSON.stringify(angepasst)},${JSON.stringify(datei)});`;
++const ergebnisse = [];
++console.log('Diagnose: Vorstand ' + commit + '; acht Paare; Original-Assertions; 3000 Karten; CPU 4x');
++for (let i = 1; i <= 8; i++) for (const stand of ['alt', 'neu']) {
++  const env = { ...process.env, PRUEF_KARTEN: '3000' };
++  if (stand === 'alt') env.PRUEF_ALT = '1'; else delete env.PRUEF_ALT;
++  const r = spawnSync(process.execPath, ['--require', path.join(__dirname, 'pruef_cleanup.js'), '-e', modul], { cwd: __dirname, env, encoding: 'utf8', timeout: 600000, windowsHide: true });
++  console.log('\nPAAR ' + i + ' ' + stand + ' EXIT ' + r.status);
++  console.log((r.stdout || '') + (r.stderr || ''));
++  if (r.error || r.signal) throw new Error(r.error?.message || r.signal);
++  ergebnisse.push({ paar: i, stand, code: r.status });
++}
++console.log('Ergebnisse: ' + JSON.stringify(ergebnisse));
++console.log('Keine Abnahmefreigabe aus dieser Diagnose.');
++process.exitCode = ergebnisse.some(r => r.code !== 0) ? 1 : 0;
+diff --git a/plan/werkzeuge/pruefstand/x_abnahme_hash.js b/plan/werkzeuge/pruefstand/x_abnahme_hash.js
+new file mode 100644
+index 0000000..a46d42f
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_abnahme_hash.js
+@@ -0,0 +1,38 @@
++/* Virtuelle Helferaenderung: echte Hashfunktionen, keine Quellenmutation. */
++const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm');
++const assert = require('node:assert/strict');
++const {createHash} = require('node:crypto');
++const repo = path.resolve(__dirname, '../../..');
++const {execFileSync} = require('node:child_process');
++const baseline = process.argv.includes('--gegenprobe') ? '5afdb7cd70f8bc84e117a82fcf3b39838ff0398b' : null;
++function auszug(name, changed) {
++  const source = baseline ? execFileSync('git', ['show', baseline + ':plan/werkzeuge/pruefstand/' + name], {cwd: repo, encoding: 'utf8'}) : fs.readFileSync(path.join(__dirname, name), 'utf8');
++  const start = source.indexOf(name === 'alle_pruefen.js' ? 'const relevant=' : 'const stand=createHash');
++  const end = source.indexOf("const kennung=stand.digest('hex');", start);
++  assert(start >= 0 && end > start, 'Hashblock fehlt: ' + name);
++  const readFileSync = (file, ...args) => {
++    const value = fs.readFileSync(file, ...args);
++    if (!changed || path.basename(file) !== changed) return value;
++    return typeof value === 'string' ? value + '\n// Gegenprobe\n' : Buffer.concat([value, Buffer.from('\n// Gegenprobe\n')]);
++  };
++  const context = {fs: {readFileSync}, path, repo, createHash, __dirname};
++  const code = source.slice(start, end) + "const kennung=stand.digest('hex');";
++  const hash = vm.runInNewContext(code + '\nkennung;', context);
++  if (name !== 'alle_pruefen.js') return {hash};
++  const functionStart = source.indexOf('function quellHash(f){');
++  const functionEnd = source.indexOf('\nfunction stoppen(', functionStart);
++  assert(functionStart >= 0 && functionEnd > functionStart, 'Testhashblock fehlt');
++  return {hash, test: vm.runInNewContext(source.slice(functionStart, functionEnd) + "\nquellHash('t_tagesantworten_sdk.js');", context)};
++}
++const plain = auszug('alle_pruefen.js');
++assert.equal(plain.hash, auszug('abnahme_runde.js').hash, 'Runner muessen gleichen Stand benennen');
++for (const changed of ['diagnose_karten_konflikt.js', 't_tagesantworten_sdk.js']) {
++  const variant = auszug('alle_pruefen.js', changed);
++  assert.notEqual(variant.test, plain.test, 'A16-Testhash ignoriert ' + changed);
++  if (changed === 'diagnose_karten_konflikt.js') {
++    assert.notEqual(variant.hash, plain.hash, 'Quellstand ignoriert Helfer');
++    assert.equal(variant.hash, auszug('abnahme_runde.js', changed).hash);
++  }
++}
++assert.equal(auszug('alle_pruefen.js').hash, plain.hash, 'Probe veraendert Quellen');
++console.log('Hash-Gegenproben gruen: SDK-Helfer und Testtext erkannt; beide Runner gleicher Stand. ' + plain.hash);
+diff --git a/plan/werkzeuge/pruefstand/x_spur_bestand.js b/plan/werkzeuge/pruefstand/x_spur_bestand.js
+new file mode 100644
+index 0000000..5ce5c93
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_spur_bestand.js
+@@ -0,0 +1,33 @@
++/* Diagnose am Original-Tempotest: Chrome-Trace/CPU-Profil der ersten
++   Bewertung mit 3000 Karten. Originalassertion und CPU 4x bleiben aktiv. */
++const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
++const Module = require('node:module');
++const datei = path.join(__dirname, 't_bestand_tempo.js');
++const out = path.join(os.tmpdir(), 'adrabic-bestand-spur');
++fs.mkdirSync(out, { recursive: true });
++process.env.PRUEF_KARTEN = '3000';
++delete process.env.PRUEF_ALT;
++let quelle = fs.readFileSync(datei, 'utf8');
++const start = "await p.keyboard.press('3'); await p.waitForTimeout(1200);";
++const ende = "console.log('App-Zeiten', JSON.stringify(zeiten));";
++if (!quelle.includes(start) || !quelle.includes(ende)) throw new Error('Messanker fehlen');
++quelle = quelle.replace(start, `
++      const events = [];
++      cdp.on('Tracing.dataCollected', d => events.push(...d.value));
++      const fertig = new Promise(r => cdp.once('Tracing.tracingComplete', r));
++      await cdp.send('Profiler.enable'); await cdp.send('Profiler.start');
++      await cdp.send('Tracing.start', { categories: 'devtools.timeline,disabled-by-default-devtools.timeline', transferMode: 'ReportEvents' });
++      ${start}
++      await cdp.send('Tracing.end'); await fertig;
++      const profil = await cdp.send('Profiler.stop');
++      fs.writeFileSync(${JSON.stringify(out)} + '/trace-' + gef + '-' + i + '.json', JSON.stringify(events));
++      fs.writeFileSync(${JSON.stringify(out)} + '/cpu-' + gef + '-' + i + '.json', JSON.stringify(profil.profile));
++      for (const t of events.filter(e => e.name === 'RunTask' && e.ph === 'X' && e.dur > 50000)) {
++        const kids = events.filter(e => e.ph === 'X' && e.pid === t.pid && e.tid === t.tid && e.ts >= t.ts && e.ts + (e.dur || 0) <= t.ts + t.dur && e !== t && e.dur > 3000);
++        console.log('TRACE ' + Math.round(t.dur / 1000) + ' ms: ' + kids.filter(e => ['FunctionCall','TimerFire','Layout','UpdateLayoutTree','EventDispatch'].includes(e.name)).map(e => e.name + ' ' + Math.round(e.dur/1000) + ' ' + JSON.stringify(e.args)).join(' | '));
++      }
++      const counts = new Map(); for (const id of profil.profile.samples || []) counts.set(id, (counts.get(id) || 0) + 1);
++      console.log('CPU ' + JSON.stringify(profil.profile.nodes.map(n => ({ ...n.callFrame, samples: counts.get(n.id) || 0 })).sort((a,b) => b.samples-a.samples).slice(0,20)));
++`);
++const m = new Module(datei, module); m.filename = datei; m.paths = Module._nodeModulePaths(__dirname);
++m._compile(quelle, datei);
+diff --git a/plan/werkzeuge/pruefstand/x_stub_batch.js b/plan/werkzeuge/pruefstand/x_stub_batch.js
+new file mode 100644
+index 0000000..f88e13a
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_stub_batch.js
+@@ -0,0 +1,43 @@
++/* Attrappen-Abnahme: unberuehrte Karten nicht erneut lesen, echte Batch-
++   Aenderungen gemeinsam liefern. Feste Gegenprobe: 315bb0e. */
++const vm = require('node:vm'), assert = require('node:assert/strict');
++const { execFileSync } = require('node:child_process');
++const path = require('node:path');
++let source;
++if (process.argv.includes('--gegenprobe')) {
++  const m = { exports: {} };
++  vm.runInNewContext(execFileSync('git', ['show', '315bb0e:plan/werkzeuge/pruefstand/stubs.js'], { cwd: path.join(__dirname, '../../..') }).toString(), { module: m });
++  source = m.exports.FS;
++} else source = require('./stubs').FS;
++let reads = 0;
++const unbewegt = { get wort() { reads++; return 'unberuehrt'; }, wert: 1 };
++const timers = [];
++const window = { __FB: { protokoll: [] }, __START_STORE: { 'users/u/karten/a': unbewegt, 'users/u/karten/b': { wort: 'b', wert: 2 }, 'users/u': { n: 0 } } };
++const context = vm.createContext({ window, console, setTimeout: fn => timers.push(fn) });
++vm.runInContext(source.replace(/export /g, '') + '\nwindow.api={doc,collection,onSnapshot,writeBatch,query,where};', context);
++const f = window.api, db = {};
++const flush = () => { while (timers.length) timers.shift()(); };
++const snaps = [], filtered = [], user = [];
++f.onSnapshot(f.collection(db, 'users/u/karten'), s => snaps.push(s));
++f.onSnapshot(f.query(f.collection(db, 'users/u/karten'), f.where('wert', '==', 9)), s => filtered.push(s));
++f.onSnapshot(f.doc(db, 'users/u'), s => user.push(s));
++flush(); reads = 0;
++(async () => {
++  await f.writeBatch().update(f.doc(db, 'users/u'), { n: 1 }).set(f.doc(db, 'users/u/tagesantworten/x'), { delta: 1 }).commit(); flush();
++  assert.equal(reads, 0, 'Unberuehrte Karte beim Tagesantwort-Batch erneut gelesen');
++  assert.equal(snaps.length, 1); assert.equal(filtered.length, 1); assert.equal(user.length, 2);
++  console.log('OK Tagesantwort meldet nur betroffenes Konto; unberuehrte Karte nullmal gelesen');
++  await f.writeBatch().update(f.doc(db, 'users/u/karten/b'), { wert: 9 }).set(f.doc(db, 'users/u/karten/c'), { wert: 9 }).commit(); flush();
++  assert.equal(snaps.length, 2);
++  assert.equal(snaps[1].docChanges().length, 2);
++  assert.equal(snaps[1].docs.find(d => d.id === 'b').data().wert, 9);
++  assert.equal(snaps[1].docs.find(d => d.id === 'c').data().wert, 9);
++  assert.equal(filtered[1].size, 2);
++  console.log('OK zwei Batch-Aenderungen gemeinsam sichtbar, gefilterte Abfrage ebenfalls aktuell');
++  await f.writeBatch().delete(f.doc(db, 'users/u/karten/b')).delete(f.doc(db, 'users/u/karten/c')).commit(); flush();
++  assert.equal(snaps.length, 3); assert.equal(snaps[2].size, 1);
++  assert.equal(snaps[2].docChanges().length, 2);
++  assert.ok(snaps[2].docChanges().every(d => d.type === 'removed'));
++  assert.equal(filtered[2].size, 0);
++  console.log('OK geloeschte Batch-Dokumente gemeinsam entfernt');
++})().catch(e => { console.error(e); process.exitCode = 1; });
 diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
 index 118e0da..59d7082 100644
 --- a/plan/werkzeuge/regeln/regeln-pruefung.mjs

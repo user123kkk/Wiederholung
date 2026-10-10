@@ -1,5 +1,10 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 12:06: Tempo-Ursache per Trace in der Prüfattrappe belegt,
+Batchmeldungen korrigiert und funktional mit fester Gegenprobe geprüft.
+Original-Tempotest grün; frischer Gesamtlauf158 läuft, danach Affe/Runde
+und nötiger Paketabschluss. App/Rules unverändert, kein Deploy.
+
 10.10.2026 11:58: Große Abnahme wegen rotem Tempotest angehalten
 (207 ms bei Grenze 100 ms). Acht feste Vergleichspaare laufen zur
 Diagnose; keine Ursache behauptet. Entwurf/rote Ausgaben erhalten,

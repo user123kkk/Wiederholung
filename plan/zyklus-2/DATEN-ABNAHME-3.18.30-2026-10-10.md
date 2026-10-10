@@ -39,6 +39,32 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 
 ## Gesamtlauf, um 11:57 angehalten
 
+**12:06: Ursache belegt und Prüfattrappe korrigiert.** Acht A/B-Paare:
+Vorstand 7/8 grün, einmal 138 ms; Entwurf 0/8, erste Bewertung 284–617 ms.
+Trace einer Bewertung: 252 ms vollständig im Stub-Timer; CPU-Profil
+hauptsächlich clone/listenerMelden/dsnap. Neuer Tagesantwort-Batch löste
+globale Attrappenmeldung aus und las unberührte Karten erneut.
+Nur `stubs.js` korrigiert: konkrete Batchpfade, passende Listener und
+gemeinsame Meldung aller betroffenen Dokumente. `x_stub_batch.js` grün
+für unberührte Karte, gemeinsame Änderung/Löschung und gefilterte Abfrage;
+feste Gegenprobe 315bb0e rot genau beim unnötigen Lesen (2 statt 0).
+Erste reine Fixturefehler separat erhalten; erfolgreiche Proben tragen `-2`.
+Original-Tempotest vollständig unverändert frisch grün (alle fünf Größen,
+zehn 3000-Karten-Bewertungen höchstens 71 ms, Grenze 100 ms, CPU4x).
+Volle Ausgaben gelesen. Produkt, Rules und echte SDK-Quellen unverändert.
+
+Frischer Gesamtlauf jetzt neu am gemeinsamen Stand
+`e595b5b6312244cdc5ecc07ba0b0b7c287207a6f909bf2a41b4e61d1b00e1923`,
+158 Tests, ohne Fortsetzen. Log `abnahme-gesamt-2-3.18.30.log`,
+TEMP `adrabic-pruefstand-gesamt/e595b5b6312244cd/`.
+Frühere rote Protokolle bleiben erhalten. Affe/Runden-Auswertung/Abschluss offen.
+
+Belege: `abnahme-bestand-ab-3.18.30.log`, `abnahme-bestand-spur-3.18.30.log`,
+`abnahme-stub-batch-2-3.18.30.log`,
+`abnahme-stub-batch-gegenprobe-2-3.18.30.log`,
+`abnahme-bestand-nachlauf-3.18.30.log`; Trace/Profil TEMP
+`adrabic-bestand-spur/` (Diagnose, kein eigener App-Leistungsbeleg).
+
 13 abgeschlossene Prüfungen grün. `t_bestand_tempo.js` rot: beim ersten
 Bewerten mit 3000 Karten 207 ms lange Aufgaben, Grenze 100 ms (CPU 4x).
 App-Messung dabei gradeCard 24 ms; daraus allein folgt keine Ursache.

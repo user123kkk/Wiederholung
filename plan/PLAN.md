@@ -7,6 +7,11 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.2026 12:06 – Gesamtlauf frisch neu gestartet:**
+Attrappenfehler gemessen und korrigiert, Original-Tempotest grün.
+158 Tests am Stand e595b5b6312244cd; Produkt/Rules unverändert.
+Paketabschluss folgt erst nach vollständiger Abnahme. Bericht unten.
+
 **10.10.2026 11:58 – Abnahme angehalten, Diagnose läuft:**
 Tempotest rot; feste Vergleichspaare mit 3.18.29, aktive Originalgrenzen.
 Paketabschluss gesperrt, Entwurf erhalten. Bericht unter
