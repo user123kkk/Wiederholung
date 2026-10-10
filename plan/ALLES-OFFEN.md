@@ -1,5 +1,19 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Betreiber10.10.: Grundlage der Tempo-Grenze prüfen statt weitere
+kostspielige Fixversuche.** Er fragt ausdrücklich, ob die200ms-Grenze
+regulierbar oder ursprünglich nur angesetzt wurde, und kritisiert den
+verbrauchten Nutzungsrahmen ohne Fix. Weitere Messläufe gestoppt.
+Herkunft geprüft: t_text_tempo.js seit Agentencommit7264af9a am30.09.,
+200ms im Testkommentar als sichtbares Stocken bezeichnet; KONZEPT§13
+nennt dagegen50ms/Bild. In diesen Quellen keine Herleitung für genau
+200ms je Longtask mit CPU4x auf diesem Windows-Laptop. Offizielle200ms-
+INP-Empfehlung betrifft eine andere Messgröße und reale Nutzungsdaten.
+Die bisherige harte Sperre deshalb als begründungsbedürftige technische
+Festlegung behandeln, nicht als naturgegebenen Betreiberwunsch. Keine
+neue Zahl oder Freigabe aus der Frage ableiten; zuerst Messgröße und
+Abnahmezweck verständlich klären. Produkt/alte Belege bleiben erhalten.
+
 **Tempo10.10.,17:29:** Auch AboveNormal fällt in beiden vorab festgelegten
 Originalen215/277ms durch; keine Gesamtabnahme gestartet. Vorwärmen der
 ersten14 realen Kartenwörter315ms und flex-basis0%-Probe232ms ebenfalls

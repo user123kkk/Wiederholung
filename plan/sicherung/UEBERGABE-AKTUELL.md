@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 20:49 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 20:50 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `5b3f716e Sicherung 20:48 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `854c0a10 Sicherung 20:49 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/LEHREN.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -95,6 +98,10 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- Betreiberkorrektur10.10.: Zu viele kostenpflichtige Tempo-Varianten ohne Fix; Codex räumt ein, die Herkunft/Angemessenheit der Grenzwahl zu spät geprüft zu haben. Weitere Messläufe gestoppt. git blame/log: Test und200ms aus Agentencommit7264af9a vom30.09.; KONZEPT§13 nennt50ms/Bild. In geprüften Quellen keine quantitative Herleitung für200ms/Longtask/CPU4x auf Windows. Offizielle web.dev-INP-Dokumentation gelesen:200ms ist INP-Empfehlung aus realen Interaktionslatenzen, nicht identische Longtask-Messgröße. Wunsch und Beleggrenze zentral eingetragen; keine Zahl erhöht oder rote Belege umgedeutet.
+
+- Vorheriger Diagnoseabschluss: Aufbau-Teilung316/219ms rot bei Originalen603/454 und459/509, gleiche End-DOMs; nicht übernommen. Einzel-CPU-Probe meldet zwei Grüns bei faktisch nur1,13-facher unabhängiger Verlangsamung; ausdrücklich ungültig, nicht akzeptiert. Gesamtrunner startete wegen falsch escaptem NODE_OPTIONS-Pfad nicht; Cache weiterhin echtes Rot(code1), Quellee595b5b6312244cd. Zwei-CPU-Rechenprobe ebenfalls unbrauchbar; keine App-Abnahme danach. Affinitätsvariante gesperrt, Eingangsprüfung vor allen künftigen Diagnose-Abnahmen ergänzt; Windows-Preloadpfad korrigiert. Eigener Drosselungsfaden bei zwei begrenzten Versuchen nicht identifizierbar; Abbruch vor gedrosselter Rechen-/App-Probe, Browser geschlossen. Kein Produktfix, keine fremden Prozesse geändert; Netzteilwerte restauriert.
+
 - 17:29 Codex Prioritäts-Stabilitätsprobe215/277ms rot, keine Gesamtabnahme gestartet; eigene Browser geschlossen. Wort-Vorwärmen315ms bei Originalen222/234 und380/316; Flexbasis0%-Probe232/197 bei Originalen320/190 und291/217. Gleicher End-DOM, kein ausreichender Fix oder belastbare Ursache daraus. Alle neuen vollständigen Ausgaben gelesen, Diagnosehilfen syntaxgeprüft. Produkt und Originaltest unverändert; vorhandene157 grüne nicht wiederholt. Sicherung1792/5884 und Server6972 bestätigt. Anschluss zentral: keine gleichen Umgebungs-/Kleinstvarianten wiederholen, notwendige Änderung am gemeinsamen Renderablauf erst mit Ursachenbeleg übernehmen. Eigenen falschen Lesepfad DATEN-ABNAHME-2026-10-10.md mittels rg auf tatsächlichen DATEN-ABNAHME-3.18.30-2026-10-10.md korrigiert; keine Aussage aus Lesefehler.
 
 - 17:23 Codex Energie-Stabilitätsvergleich abgeschlossen:230/376ms rot, Ansatz verworfen, fortgesetzte Gesamtabnahme nicht gestartet. AC/DC-Minimum5 mit powercfg bestätigt; alle vollständigen Logs gelesen. Direkte Sichtbarkeits-/Viewport-Variante231ms, flankierende Originale302/197ms; nav-kontinuierlich290ms, Originale231/192ms, End-DOM identisch. Weniger Eingabeereignisse bei erhaltener Navigation beweisen keinen Tempo-Fix. Keine Variante übernommen. Abschließende gezielte Umgebungsprobe setzt nur vom eigenen Browser-CDP gelieferte Browser-/Renderer-PIDs auf AboveNormal; fremde Browser nicht verändert. Hilfsskript schließt Browser wie der Originaltest, Priorität endet mit diesen Prozessen.
@@ -134,7 +141,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 16:22 Codex Betreiberkorrektur „halt dich nicht so lang daran auf, du verschwendest tokens“ aufgenommen; weitere Tempo-Diagnose beendet. Nach Neustart Originaltest einmal219ms bei200ms rot, ganzen Log gelesen. Zwei gezielte Klicktraces am gleichen Stand gelesen: Original196ms/getrennte Eingabe170ms, gleiche Layoutfolge und End-DOM; Eingabezeit verändert, daher keine Testkorrektur/Freigabe. Lokale Playwright-Quelle zeigt zusätzlichen Hit-Target-Interceptor, dessen Anteil am ursprünglichen Rot nicht bewiesen ist; keine weitere Probe gestartet. Quellee595b5b6312244cd gleich,157 grüne erhalten. Keine Produktänderung, kein Paketcommit/Deploy. Dokumentation und Belege gesichert; Minuten-Sicherung1792/5884 läuft einzeln.
 
 - 16:14 Codex Betreiber „weiter“ nach Neustart: Boot10.10.16:11:51/Netzteil2 bestätigt, fehlende Minuten-Sicherung und Server8097 jeweils neu gestartet. Serverquelle und tatsächlicher Runnerhashe595b5b6312244cd gleich. Unabhängige Rechenprobe am selben Chrome154.0.8037.98 abgeschlossen und vollständigen Log gelesen: CPU4x36,2–54,3ms/Median41,9, ohne Drosselung Median8,2/8,55; kein Verbesserungsbeleg. Unveränderter Original-Tempotest einmal aktiv, eigene neue Lognamen erhalten alte Belege. Kein Gesamtlauf/Produktbau/Deploy.
-
-- 16:09 Codex gezielte Tempo-Diagnose abgeschlossen: Original/Browservariante/Original mit bestehender Messhilfe, alle Schriften vorher geladen und End-DOM identisch. content-visibility:visible setzt sofort1021 statt159/532 Layoutobjekte, keine Korrektur. Offline-Auswerter ordnet die großen Layouts in alten und neuen Traces nach dem Klick-Handler ein. Unabhängige feste Rechenprobe ohne App: CPU4x24,3–46,7ms bei identischer Prüfsumme, ohne Drosselung deutlich geringere Schwankung; keine Rot-Umdeutung. Alle vollständigen neuen Logs gelesen, Rohtraces gesichert. Hashquellee595b5b6312244cd und Originaltest unverändert;157 gültige grüne erhalten. Kein Produktfix/Commit/Deploy. Zentraler Anschluss: Betreiber-Neustart des seit07.10. laufenden Laptops, danach nur Rechenprobe und Originaltempo einmal; ursprüngliche Ursache weiterhin nicht vollständig belegt.
-
-- Codex Anschluss der Datenabnahme: Übergabe, Tempo-Befund, Abnahmebericht und geltende Regeln gelesen; bestehende Minuten-Sicherung 12532/16564 bestätigt, keine zweite gestartet. Netzteilstatus 2. Vorhandene Rohtraces der beiden Quellen zeitlich zerlegt: erster Layoutdurchlauf liegt nach Ende des Klick-Handlers, zweiter nach dem Animationsbild; kein Beleg für einen erzwungenen großen Layoutdurchlauf innerhalb des Klick-Handlers. Aktuelle Kartenlisten-, Schriftvorlade- und content-visibility-Pfade gelesen. Produkt und ursprüngliche rote Belege unverändert; gezielte Zuordnung der beiden Layoutdurchläufe wird vorbereitet.

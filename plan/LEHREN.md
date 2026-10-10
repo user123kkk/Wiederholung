@@ -1822,6 +1822,18 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 
 ## 15. Vorfall-Liste
 
+10.10.2026, eigene Tempo-Diagnose: Zu lange kleine Varianten geprüft,
+bevor die Herkunft und Angemessenheit der200ms-Abnahmegrenze geklärt war.
+Betreiber kritisiert verbrauchten Nutzungsrahmen ohne Fix. Die Grenze
+stammt aus einem Agententest, nicht aus einem in diesen Quellen belegten
+Geräte-/Nutzungsmaßstab. Bestehende §3.2/§5.3 gelten auch für Testregeln:
+erst Messgröße, Herkunft und Geltungsbereich lesen, dann Aufwand einsetzen.
+Eine unabhängige Rechenprobe war außerdem nur auf Exit0 statt auf wirksame
+CPU4x geprüft: Einzel-CPU-Affinität zeigte1,13-fache Verlangsamung trotz
+gesetztem Rate4. Zwei App-Grüns damit ungültig; keine Abnahme akzeptiert,
+Runnercache weiterhin rot. Affinität gesperrt und semantische Eingangs-
+prüfung vor weiteren App-Läufen ergänzt. Rohbelege bleiben erhalten.
+
 10.10.2026, historische Wunschprüfung: Alte Aufbauzeiten aus dem Changelog
 3.17.22 kurz als heutige Werte dokumentiert. Tatsächliche Deklarationen
 danach gelesen: Vorlauf700,Schritt820,Nachlauf1100ms, historische Werte
