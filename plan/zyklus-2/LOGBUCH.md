@@ -2,6 +2,31 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-10 — Nachtprüfung A17 im bestehenden Datenentwurf
+
+**Geändert:** bestehendes Kartenblatt/Standwahl in app.js; Diagnose
+`plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js`, A17/DATEN-12
+und `FORMULAR-KONFLIKT-2026-10-10.md`. Dazu zwei gezielte A16-Zusatzfälle,
+Anschlussvorbereitung mit tatsächlichen Formular-/Session-Pfaden.
+**Entscheidung:** technischer Fehler im laufenden Datenpaket, keine neue
+Lernregel oder Abfragefunktion. Nur bewusst geänderte Standwahl schreiben;
+unberührte Auswahl folgt dem aktuellen fremden Snapshot. Feste Quelle
+97cbdcc/05269ebd vorab rot: reine Notiz ersetzt Stufe 2 durch 0. Vorhandener
+patchDoc-Schutz reicht zur Erkennung dieser unbeabsichtigten Auswahl nicht.
+**Geprüft:** fünf echte SDK-Fälle am App-SHA 4a8ca5a1 grün; Kartenblatt
+Handy/klein/iPad grün, vollständige Logs gelesen. Gezielte Snapshot-/Sprung-/
+Kontrast-/a11y-Prüfungen laufen. Zwei A16-Zusatzfälle am unveränderten
+vorherigen Hash einzeln grün, Mutanten-Gegenprobe erkennt 0 statt 1.
+Keine pauschale 19er-/Gesamtabnahme. Rote Fixture-Ausgaben und der fehlende
+t_snapshot-Dateiaufruf erhalten; tatsächlicher t_karten_snapshot verwendet.
+Neue LEHREN-Regel § 6.3/§ 15; Syntax und eigener App-Diff gegen festen
+Ausgang gelesen. Quellen vom Prüfserver gleich dem Arbeitsbaum.
+**Offen:** große Abnahme/Paketabschluss/Regeln vor Hosting, echtes iPhone.
+3.18.30 bleibt Entwurf, A14–A16 erhalten, kein App-Commit oder Deploy.
+**Nächster Schritt:** laufende gezielte Prüfungen auswerten, dann weitere
+Anschlussvorbereitung ohne Paketwechsel. Nacht-Heartbeat im selben Chat
+stündlich bis 10.10. 09:00; vorhandene Minuten-Sicherung weiter einzeln.
+
 ### 2026-10-09 — A16/DATEN-11 im Datenentwurf 3.18.30
 
 **Auftrag:** aktuelle Übergabe fortsetzen; A14/A15 erhalten, A16 zuerst,

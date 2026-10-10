@@ -1476,6 +1476,107 @@ index 0000000..ab96048
 +}
 +console.log(`3 Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
+diff --git a/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
+new file mode 100644
+index 0000000..5f3167a
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
+@@ -0,0 +1,95 @@
++/* Vorhandenes Kartenformular, echter SDK/Repo-Regeln, zwei Profile.
++   Auth-Attrappe, Worker blockiert; keine neue Abfragefunktion. */
++const assert = require('node:assert/strict');
++const crypto = require('node:crypto');
++const fs = require('node:fs');
++const path = require('node:path');
++const {start} = require('./lib');
++const {seite, seed, fertig, rest, ROOT, SDK, APP_SOURCE} = require('./diagnose_karten_konflikt');
++const sha = s => crypto.createHash('sha256').update(s.replace(/\r\n/g, '\n')).digest('hex');
++async function server(id) {
++  const data = await (await rest(ROOT + '/users/u1/karten/' + id)).json();
++  return Object.fromEntries(Object.entries(data.fields).map(([k,v]) => [k, v.stringValue ?? (v.integerValue === undefined ? null : Number(v.integerValue))]));
++}
++async function edit(p, id) {
++  await p.locator('[data-action="tab-verwalten"]').click();
++  await p.locator('#karten-liste [data-action="card-detail"][data-id="' + id + '"]').click();
++  await p.locator('[data-action="card-detail-bearbeiten"]').click();
++  await p.locator('#f-stufe').waitFor();
++}
++(async () => {
++  console.log('app.js SHA256 ' + sha(APP_SOURCE));
++  console.log('firestore.rules SHA256 ' + sha(fs.readFileSync(path.join(__dirname, '../../../firestore.rules'), 'utf8')));
++  const sources = {};
++  for (const name of ['firebase-app.js', 'firebase-firestore.js']) {
++    const r = await fetch(SDK + name); assert.ok(r.ok); sources[name] = await r.text();
++  }
++  const b = await start();
++  try {
++    for (const kind of ['manuelle-Stufe', 'Textkorrektur-Rueckfaelle', 'Notiz-nach-fremder-Bewertung', 'manuelle-Stufe-nach-fremder-Bewertung', 'unberuehrtes-Blatt-nach-Snapshot']) {
++      const single = process.argv.find(x => x.startsWith('--fall='))?.slice(7);
++      if (single && single !== kind) continue;
++      await seed();
++      const a = await seite(b, sources), c = await seite(b, sources);
++      const id = kind === 'Textkorrektur-Rueckfaelle' ? 'k5' : 'k4';
++      const other = await server('k6');
++      try {
++        await edit(a, id);
++        const before = await server(id);
++        if (kind === 'manuelle-Stufe') {
++          const options = await a.locator('#f-stufe option').evaluateAll(xs => xs.map(x => x.value));
++          const chosen = options.find(x => Number(x) !== before.stufe);
++          assert.notEqual(chosen, undefined);
++          await a.selectOption('#f-stufe', chosen);
++          await a.locator('[data-action="submit-card"]').click(); await fertig(a);
++          const after = await server(id);
++          assert.equal(after.stufe, Number(chosen));
++          assert.ok(after.bewertungsStand);
++          console.log('GRUEN ' + kind + ': Serverstufe ' + after.stufe);
++        } else if (kind === 'Textkorrektur-Rueckfaelle') {
++          assert.ok(before.rueckfaelle > 0);
++          await a.fill('#f-ueb', before.uebersetzung + ' korrigiert');
++          await a.locator('[data-action="submit-card"]').click(); await fertig(a);
++          const after = await server(id);
++          assert.equal(after.uebersetzung, before.uebersetzung + ' korrigiert');
++          assert.equal(after.rueckfaelle, 0);
++          assert.equal(after.stufe, before.stufe);
++          console.log('GRUEN ' + kind + ': Text und Rueckfallreset bestaetigt');
++        } else {
++          const intentional = kind === 'manuelle-Stufe-nach-fremder-Bewertung';
++          const untouched = kind === 'unberuehrtes-Blatt-nach-Snapshot';
++          const initialChoice = await a.locator('#f-stufe').inputValue();
++          assert.equal(Number(initialChoice), before.stufe);
++          if (intentional) await a.selectOption('#f-stufe', '0');
++          if (!untouched) await a.fill('#f-extra', 'Nur Notiz geaendert');
++          await c.evaluate(id => {window.__PRUEF.starten(id); window.__PRUEF.bewerten('known'); window.__PRUEF.flush();}, id);
++          await fertig(c);
++          const newer = await server(id);
++          assert.notEqual(newer.stufe, before.stufe);
++          await a.waitForFunction(stand => window.__PRUEF.karte().bewertungsStand === stand, newer.bewertungsStand);
++          assert.equal(await a.locator('#f-extra').inputValue(), untouched ? before.extra : 'Nur Notiz geaendert');
++          const offeredChoice = await a.locator('#f-stufe').inputValue();
++          if (untouched) {
++            await a.keyboard.press('Escape');
++            await a.waitForFunction(() => !document.querySelector('#f-wort'));
++            assert.equal(await a.locator('[data-action="dlg-ok"]').count(), 0);
++          } else {
++            await a.locator('[data-action="submit-card"]').click(); await fertig(a);
++          }
++          const after = await server(id);
++          console.log(JSON.stringify({fall: kind, vor: before.stufe, fremd: newer.stufe, feldVor: initialChoice, feldNachSnapshot: offeredChoice, nach: after.stufe, notiz: after.extra}));
++          assert.equal(after.extra, untouched ? newer.extra : 'Nur Notiz geaendert');
++          if (intentional) {
++            assert.equal(Number(offeredChoice), 0);
++            assert.equal(after.stufe, 0);
++            assert.notEqual(after.bewertungsStand, newer.bewertungsStand);
++          } else for (const field of ['stufe', 'nextReview', 'ersteBewertung', 'rueckfaelle', 'maxStufe', 'bewertungsStand'])
++            assert.equal(after[field], newer[field], 'Unberuehrte Stufe darf fremde Bewertung nicht ersetzen: ' + field);
++          console.log('GRUEN ' + kind);
++        }
++        assert.deepEqual(await server('k6'), other);
++        assert.deepEqual(a.fehler, []); assert.deepEqual(c.fehler, []);
++      } finally {await a.context().close(); await c.context().close();}
++    }
++  } finally {await b.close();}
++})().catch(e => {console.error(e); process.exitCode = 1;});
 diff --git a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
 index e9503f2..35354cf 100644
 --- a/plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js

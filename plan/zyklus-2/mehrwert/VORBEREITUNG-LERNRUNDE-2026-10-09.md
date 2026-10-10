@@ -20,7 +20,7 @@ Escape/Wischen, unverändert/geändert, Snapshot während der Eingabe,
 gelöschte Karte und Kontowechsel, gemischter Text/Harakat, Fokus, schmale
 Breite und Rückkehr zur selben Karte. Stufe und bereits angebotene
 Rückgängig-Aktion bei gleichzeitiger fremder Bewertung mitprüfen.
-Vorhandene Tests: t_karten_blatt, t_snapshot, t_neben_tippen, t_sprung
+Vorhandene Tests: t_karten_blatt, t_karten_snapshot, t_neben_tippen, t_sprung
 und die echten SDK-Konfliktkontrollen. Kein neuer Formularweg nötig.
 
 ## 2. Am selben Tag Runde fortsetzen
@@ -118,3 +118,13 @@ Im bestehenden Datenpaket den vorhandenen Formular-Speicherweg mit echten
 Regeln auf Textkorrektur/manuelle Stufe/fremde Bewertung prüfen, ohne einen
 neuen Abfrageknopf zu bauen. Danach Anschluss-Abnahme konkretisieren.
 Keine Wiederholung bereits grüner unveränderter Gesamtprüfungen.
+
+Erledigte Vorbereitung in der Nacht: tatsächlicher Formular-Speicherweg
+mit SDK geprüft. `patchDoc` vergibt schon passende Bewertungskennungen;
+das Formular ist bei Textkorrektur/manueller Stufe nicht durch neue Regeln
+blockiert. Dabei A17/DATEN-12 gefunden: fremder Snapshot lässt unberührte
+Standwahl auf 0 fallen, Notizspeichern ersetzt fremde Bewertung. Im selben
+Datenpaket korrigiert; fünf SDK-Fälle grün, betroffene Browserprüfung läuft.
+Beleg: `../FORMULAR-KONFLIKT-2026-10-10.md`. Der oben genannte Testname
+`t_snapshot` war unzutreffend: tatsächliche Datei `t_karten_snapshot.js`.
+Kein Produktfehler aus dem abgewiesenen falschen Testaufruf abgeleitet.

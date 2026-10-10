@@ -60,11 +60,21 @@ App-SHA256 nach Korrektur:
 
 ## Abnahme und Grenzen
 
-Gezielte SDK-Abnahme: manuelle Stufe, Textkorrektur/Rückfallreset und Notiz
-nach fremder Bewertung grün (`a17-formular-sdk-fix-1.log`). Erweiterte
-Prüfung untersucht außerdem bewusste Stufenwahl über fremden Snapshot und
-unberührtes Blatt/Escape. Endstand und vollständige Ergebnisse werden unten
-nachgetragen. Alle Fälle kontrollieren fremde Karte k6 und JS-Fehler.
+Gezielte SDK-Abnahme: **fünf Fälle grün** im vollständigen finalen Lauf
+`a17-formular-sdk-fix-2.log`, Ausgabe vollständig gelesen. Manuelle Stufe,
+Textkorrektur/Rückfallreset, Notiz nach fremder Bewertung, bewusste Stufenwahl
+über fremden Snapshot und unberührtes Blatt/Escape. Bei Notiz bleibt Server-
+Stufe 2 und dieselbe fremde Bewertungskennung erhalten. Bewusste Auswahl 0
+bleibt auch nach Snapshot als ausdrücklicher Auftrag möglich. Alle Fälle
+kontrollieren andere Karte k6 und JS-Fehler. Produktdateien von Server 8097
+gegen Arbeitsbaum app.js/index.html/styles.css/sw.js gleich bestätigt.
+
+`t_karten_blatt` grün auf Handy 390/dunkel+hell, klein 360 und iPad 820;
+vollständige Ausgabe gelesen. Keine neuen Kontrastfunde oder Sprünge im
+Formular, Eingaben/Entwurfs-Abbruch/Speichern wie zuvor. Ein falsch aus der
+Vorbereitung übernommener Aufruf `t_snapshot.js` wurde mit MODULE_NOT_FOUND
+abgewiesen: kein Produktbefund, kein grüner Test. Tatsächliche Datei per
+Inventar gefunden: `t_karten_snapshot.js`, gezielter Nachlauf gestartet.
 
 Geplante betroffene Regression: Kartenblatt, Snapshot sowie Sprung/Kontrast/
 a11y-Grundchecks. Große Gesamtabnahme, Rundenabnahme/Affen und echter
