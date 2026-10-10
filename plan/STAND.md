@@ -1,5 +1,16 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 09:55 – Datenentwurf gegengelesen, Anschluss erhalten:**
+Befunde A14–A17 gegen vollständigen App-/Rules-/Datenschutz-Diff und die
+drei gezielten SDK-Testdateien gelesen; vorhandene Abschlusslogs vollständig
+gelesen, App-SHA 4a8ca5a1/Rules 6a110898 unverändert. Kein Test wiederholt,
+kein zusätzlicher Produktfehler belegt. Bericht:
+`zyklus-2/DATEN-GEGENLESEN-2026-10-10.md`. Veralteten aktuellen Einstieg
+in Mehrwert-ARBEITSSTAND sichtbar korrigiert; PLAN aktualisiert.
+Entwurf 3.18.30/Fremdarbeit erhalten, Sicherung ein Baum. Große Abnahme,
+ladegeraet/Deploy und neues Paket weiter später. Nächste entschiedene
+Mehrwert-Zeile bleibt Bearbeiten in der Abfrage; Vorbereitung vorhanden.
+
 **10.10.2026 09:42 – Begonnene gezielte Datenprüfung abgeschlossen:**
 A14/A15 16, A16 22, A17 acht SDK-Fälle gemeinsam am unveränderten aktuellen
 App-SHA 4a8ca5a1/Rules 6a110898 grün; vollständige Ausgaben gelesen.

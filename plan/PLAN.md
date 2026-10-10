@@ -7,6 +7,14 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.2026 09:55 – aktueller Datenentwurf und Anschluss:**
+3.18.30/A14–A17 samt Fremdarbeit erhalten; gezielt 16 + 22 + 8 SDK-Fälle
+am gleichen App-/Rules-Stand grün, keine Tests wiederholt. Gegenlesen:
+`zyklus-2/DATEN-GEGENLESEN-2026-10-10.md`. Nachtauftrag beendet, neuer
+Weiter-Auftrag im Chat; Minuten-Sicherung einzeln. Große Abnahme/ladegeraet/
+Veröffentlichung bleiben später. Danach entschiedene Lernrunden-Folge,
+vorbereitet; kein neues Paket über dem Entwurf. Frühere Absätze sind Verlauf.
+
 **09.10.2026 – A16 im Datenentwurf gebaut:**
 Tagesantworten dauerhaft pro Konto/Tag/Epoche erhalten und anhand atomarer
 Cloud-Belege genau einmal nachholen. Abschluss: 17 A16-SDK-Fälle, 16 A14/A15-

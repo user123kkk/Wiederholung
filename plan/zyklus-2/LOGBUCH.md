@@ -2,6 +2,26 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-10 09:55 — Gegenlesen ohne Testwiederholung
+
+**Geändert:** nur Planpflege: Bericht DATEN-GEGENLESEN-2026-10-10.md,
+sichtbare Korrektur in mehrwert/ARBEITSSTAND.md, PLAN/STAND/ALLES-OFFEN
+und Arbeitsprotokoll. App/Regeln/Tests unverändert, 3.18.30 erhalten.
+**Gegenprüfung:** vollständiger App-/Rules-/Datenschutz-Diff gegen
+315bb0e, Befunde DATEN-9 bis DATEN-12, alle drei SDK-Testdateien samt
+Erwartungen und drei vorhandene Abschlusslogs gelesen. Schutz und erlaubte
+Eigenaktionen passen zu den Befunden; kein zusätzlicher Produktfehler belegt.
+Aktueller App-SHA 4a8ca5a1/Rules 6a110898 entspricht den 46 gezielten Fällen.
+Keine neue Abnahme oder allgemeine Fehlerfreiheit behauptet.
+**Entscheidung:** keine künstlichen Prüfungen oder neue H-Variante;
+Anschlussvorbereitung nutzen. Veralteter Mehrwert-Einstieg mit aktiver
+Nachtarbeit/alten Fallzahlen sichtbar korrigiert, Verlauf behalten.
+**Offen:** große Paket-/Runden-/Zufallsabnahme, zwei Abnahmeaufbau-Lücken,
+Regeln vor Hosting und Gerätebelege. Kein App-Commit/Deploy/neues Paket.
+**Nächster Schritt:** nach Wiederaufnahme großer Datenabnahme deren
+vorbereiteten Ablauf erfüllen; erst nach Datenabschluss Bearbeiten in der
+Abfrage, danach taggleiche Fortsetzung. Zukunftsideen bleiben vorgemerkt.
+
 ### 2026-10-10 09:42 — Gezielte Datenprüfung am aktuellen Entwurf fertig
 
 Weiter-/Abschlussauftrag umgesetzt: A14/A15 16, A16 22, A17 acht SDK-Fälle

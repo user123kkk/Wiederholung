@@ -1,5 +1,20 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Korrektur 10.10.2026 09:55: aktueller Anschluss
+
+Nachtauftrag seit 09:06 beendet, Nacht-Automation PAUSED. Neuer Weiter-Auftrag
+gilt im Chat. 3.18.30 samt uncommitteter Fremdarbeit bleibt erhalten.
+A14/A15 16, A16 22, A17 acht SDK-Fälle gemeinsam am App-SHA 4a8ca5a1 und
+Rules 6a110898 grün; keine unveränderten Tests erneut starten.
+Gegenlesen von Befund/App-/Rules-/Datenschutz-Diff und den drei Testdateien:
+`../DATEN-GEGENLESEN-2026-10-10.md`, keine zusätzliche Produktänderung.
+Große Abnahme/ladegeraet/Veröffentlichung bleiben später; die zwei
+Abnahmeaufbau-Lücken stehen in `../ABNAHME-VORBEREITUNG-3.18.30.md`.
+Nächste entschiedene Mehrwert-Zeile: Bearbeiten in der Abfrage, danach
+taggleiche Fortsetzung. Beides bereits vorbereitet, neuer Paketbau bis
+Datenabschluss gesperrt. Zukunftsideen unter `../../betreiber-nachrichten/`
+weiter nur vorgemerkt. Die folgenden früheren Standangaben sind Verlauf.
+
 ## Aktuell 10.10.2026: ein Gesamtauftrag
 
 - Nachtauftrag im selben Chat nach Limit-Reset fortgesetzt; Heartbeat bis
