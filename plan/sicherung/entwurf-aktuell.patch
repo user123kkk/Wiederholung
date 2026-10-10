@@ -1478,10 +1478,10 @@ index 0000000..ab96048
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
 diff --git a/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
 new file mode 100644
-index 0000000..1cd6f03
+index 0000000..e2db0b9
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
-@@ -0,0 +1,138 @@
+@@ -0,0 +1,157 @@
 +/* Vorhandenes Kartenformular, echter SDK/Repo-Regeln, zwei Profile.
 +   Auth-Attrappe, Worker blockiert; keine neue Abfragefunktion. */
 +const assert = require('node:assert/strict');
@@ -1491,7 +1491,7 @@ index 0000000..1cd6f03
 +const {start} = require('./lib');
 +const {seite, seed, fertig, rest, ROOT, SDK, APP_SOURCE} = require('./diagnose_karten_konflikt');
 +const sha = s => crypto.createHash('sha256').update(s.replace(/\r\n/g, '\n')).digest('hex');
-+const cases = ['manuelle-Stufe', 'Textkorrektur-Rueckfaelle', 'Notiz-nach-fremder-Bewertung', 'manuelle-Stufe-nach-fremder-Bewertung', 'unberuehrtes-Blatt-nach-Snapshot', 'Notiz-nach-fremder-Loeschung', 'Offline-Notiz-nach-fremder-Bewertung'];
++const cases = ['manuelle-Stufe', 'Textkorrektur-Rueckfaelle', 'Notiz-nach-fremder-Bewertung', 'manuelle-Stufe-nach-fremder-Bewertung', 'unberuehrtes-Blatt-nach-Snapshot', 'Notiz-nach-fremder-Loeschung', 'Offline-Notiz-nach-fremder-Bewertung', 'Textkorrektur-nach-fremder-Bewertung'];
 +async function server(id) {
 +  const data = await (await rest(ROOT + '/users/u1/karten/' + id)).json();
 +  return Object.fromEntries(Object.entries(data.fields).map(([k,v]) => [k, v.stringValue ?? (v.integerValue === undefined ? null : Number(v.integerValue))]));
@@ -1517,7 +1517,7 @@ index 0000000..1cd6f03
 +      if (single && single !== kind) continue;
 +      await seed();
 +      const a = await seite(b, sources), c = await seite(b, sources);
-+      const id = kind === 'Textkorrektur-Rueckfaelle' ? 'k5' : 'k4';
++      const id = kind.startsWith('Textkorrektur') ? 'k5' : 'k4';
 +      const other = await server('k6');
 +      try {
 +        await edit(a, id);
@@ -1573,6 +1573,25 @@ index 0000000..1cd6f03
 +          assert.equal(after.stufe, Number(chosen));
 +          assert.ok(after.bewertungsStand);
 +          console.log('GRUEN ' + kind + ': Serverstufe ' + after.stufe);
++        } else if (kind === 'Textkorrektur-nach-fremder-Bewertung') {
++          assert.ok(before.rueckfaelle > 0);
++          const text = before.uebersetzung + ' gezielt korrigiert';
++          await a.fill('#f-ueb', text);
++          await c.evaluate(id => {window.__PRUEF.starten(id); window.__PRUEF.bewerten('known'); window.__PRUEF.flush();}, id);
++          await fertig(c);
++          const newer = await server(id);
++          assert.notEqual(newer.stufe, before.stufe);
++          assert.ok(newer.rueckfaelle > 0);
++          await a.waitForFunction(([id, stand]) => window.__PRUEF.karte(id)?.bewertungsStand === stand, [id, newer.bewertungsStand]);
++          assert.equal(await a.locator('#f-ueb').inputValue(), text);
++          await a.locator('[data-action="submit-card"]').click(); await fertig(a);
++          const after = await server(id);
++          assert.equal(after.uebersetzung, text); assert.equal(after.rueckfaelle, 0);
++          for (const field of ['stufe', 'nextReview', 'ersteBewertung', 'maxStufe'])
++            assert.equal(after[field], newer[field], 'Textkorrektur darf fremde Bewertung nicht ersetzen: ' + field);
++          assert.equal(after.bewertungsBasis, newer.bewertungsStand);
++          assert.notEqual(after.bewertungsStand, newer.bewertungsStand);
++          console.log('GRUEN ' + kind + ': Text/Rueckfallreset erlaubt, fremde Stufe und passende Bewertungsbasis erhalten');
 +        } else if (kind === 'Textkorrektur-Rueckfaelle') {
 +          assert.ok(before.rueckfaelle > 0);
 +          await a.fill('#f-ueb', before.uebersetzung + ' korrigiert');

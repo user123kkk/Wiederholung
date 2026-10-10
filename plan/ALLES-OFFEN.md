@@ -1,5 +1,22 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 gegen 09:29: Betreiber erteilt neuen Weiter-Auftrag im aktuellen
+Chat und übergibt gegen 01:00 verfasste Gedanken zum beobachteten Stand
+3.18.26. **Vollständiger Wortlaut, ohne Korrekturen:**
+[`betreiber-nachrichten/2026-10-10-gegen-0100-original.txt`](betreiber-nachrichten/2026-10-10-gegen-0100-original.txt).
+Bild dauerhaft bytegleich gesichert; Themenindex und klare Trennung zwischen
+Beobachtung, Frage, Zukunftswunsch und Bauauftrag:
+[`betreiber-nachrichten/2026-10-10-einordnung.md`](betreiber-nachrichten/2026-10-10-einordnung.md).
+Zentral: wiederkehrende umfassende Prüfroutinen fürs gesamte Tool, nicht nur
+zwei Sofortfixes und nicht vorschnell viele neue Modi. Vorgemerkt sind
+Dialoge/Neu-Karte-Zwischenscreen, UI/Recht/Animation/Sicherheit, Quran-Grenzen,
+Bearbeiten/Zeilen, Bismillah/Textgrundlage/Lernhilfe, Wortarten/Kontextlernen,
+Kartensatzprüfung/Einstufung/Ordnung, Speicherkarten-Kategorien und Audio/
+Rezitatoren; mögliche bessere Strukturierungs-/Promptmethode offen.
+**Jetzt keine dieser Ideen sofort bauen.** Bisherige Arbeit im erhaltenen
+Datenentwurf fortsetzen; neue Paket-/Abnahme-/Deploy-Freigabe nicht erteilt.
+Nacht-Automation bleibt pausiert, neuer Weiter-Auftrag gilt hier im Chat.
+
 10.10.2026 09:06: Befristeter Nachtauftrag beendet. Beim ersten Heartbeat
 nach 09:00 Nacht-Automation bestätigt PAUSED; danach keine Produktarbeit
 oder Tests. Minuten-Sicherung bleibt aktiv. Ergebnis und Restabnahme:
