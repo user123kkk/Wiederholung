@@ -415,8 +415,6 @@ Beleg, genaue Ablehnungsbedingung, Grenzen und Abnahme:
 Kein fremder Reset im Fall; keine Freigabe zum Umbuchen alter Epochen.
 Noch nicht behoben.
 
-## Nicht mehr geprüft
-
 #### DATEN-12: Unberührte Stufenwahl ersetzt fremde Bewertung beim Notizspeichern
 
 **Schwere:** hoch. 10.10.2026, echter SDK 10.14.1 mit Repo-Regeln,
@@ -437,6 +435,8 @@ ausdrückliche manuelle Stufe und Textkorrektur mit Rückfallreset bleiben
 mit echtem SDK erlaubt. Geänderter/ungeänderter Entwurf, Neuzeichnen,
 Abbruch und bestehende Kartenblatt-Regression prüfen. Bericht:
 `../FORMULAR-KONFLIKT-2026-10-10.md`. Große Paketabnahme bleibt später.
+
+## Nicht mehr geprüft
 
 - Voller Regeltest (`bash plan/werkzeuge/regeln_testen.sh`, 204 Fälle) – nur
   die eigene Stimmen-Probe lief; Java und Emulator sind auf dem Laptop

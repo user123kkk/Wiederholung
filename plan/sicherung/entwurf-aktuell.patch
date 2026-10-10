@@ -283,11 +283,13 @@ index 0000000..0b0fbb1
 +Neue Design- oder Browser-Plugins nur wählen, wenn eine benötigte Fähigkeit
 +in den vorhandenen Werkzeugen fehlt.
 diff --git a/CHANGELOG.md b/CHANGELOG.md
-index bc20801..28b32ea 100644
+index bc20801..e356ba2 100644
 --- a/CHANGELOG.md
 +++ b/CHANGELOG.md
-@@ -1,3 +1,11 @@
+@@ -1,3 +1,13 @@
 +## 3.18.30 – 9. Oktober 2026
++
++**Kartenbearbeiten erhält fremde Bewertungen (A17, Entwurf vom 10. Oktober).** Ein offenes Kartenblatt übernimmt neue Lernstände, solange „Stand“ nicht ausdrücklich geändert wurde. Eine reine Notizkorrektur setzt eine zwischenzeitliche Bewertung eines anderen Geräts dadurch nicht zurück. Bewusst gewählter Stand und die vorhandene Textkorrektur mit Rückfallreset bleiben erhalten. Große Abnahme weiterhin offen.
 +
 +**Tagesantworten bleiben nach Ablehnung und Neustart erhalten (A16, Entwurf).** Jeder Beitrag bleibt mit Ursprungskonto, Lerntag und Reset-Kennung lokal gespeichert. Ein unveränderlicher Cloud-Beleg wird atomar mit dem Tageszähler geschrieben; wiederholtes Nachholen kann denselben Beitrag nicht doppelt zählen. Alte Aufzeichnungen werden nicht in eine neue Reset-Epoche umgebucht. Prüfen und Download nutzen den vorhandenen Antwort-Hinweis. Große Gesamtabnahme weiterhin offen.
 +

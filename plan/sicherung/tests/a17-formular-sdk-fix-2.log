@@ -1,0 +1,10 @@
+app.js SHA256 4a8ca5a1a73c7873275497c38f7368f542785a97f1712e21a20b60faed25fe97
+firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3
+GRUEN manuelle-Stufe: Serverstufe 0
+GRUEN Textkorrektur-Rueckfaelle: Text und Rueckfallreset bestaetigt
+{"fall":"Notiz-nach-fremder-Bewertung","vor":1,"fremd":2,"feldVor":"1","feldNachSnapshot":"2","nach":2,"notiz":"Nur Notiz geaendert"}
+GRUEN Notiz-nach-fremder-Bewertung
+{"fall":"manuelle-Stufe-nach-fremder-Bewertung","vor":1,"fremd":2,"feldVor":"1","feldNachSnapshot":"0","nach":0,"notiz":"Nur Notiz geaendert"}
+GRUEN manuelle-Stufe-nach-fremder-Bewertung
+{"fall":"unberuehrtes-Blatt-nach-Snapshot","vor":1,"fremd":2,"feldVor":"1","feldNachSnapshot":"2","nach":2,"notiz":""}
+GRUEN unberuehrtes-Blatt-nach-Snapshot
