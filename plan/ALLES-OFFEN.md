@@ -1,5 +1,12 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 gegen 09:36, Betreiber: „ok weiter nach reihenfolge im epo oder
+bist du nicht fertig, ktirgs fertig was auch immer du machst“. Begonnenen
+Prüfschritt abschließen und vorhandene Repo-Reihenfolge fortsetzen.
+A17-Abschluss jetzt vollständiger gezielter Achter-SDK-Lauf nach ergänzten
+Fällen; keine neuen Ideen/Prüffälle erfinden. Frühere Verschiebung großer
+Abnahme und Paketgrenze bleiben erhalten; daraus keine Deploy-Freigabe.
+
 10.10.2026 gegen 09:29: Betreiber erteilt neuen Weiter-Auftrag im aktuellen
 Chat und übergibt gegen 01:00 verfasste Gedanken zum beobachteten Stand
 3.18.26. **Vollständiger Wortlaut, ohne Korrekturen:**

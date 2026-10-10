@@ -157,3 +157,12 @@ nötig; bestehender A17-Fix schützt auch diese Kombination.
 Katalog jetzt acht Fälle, nur neue Einzelprobe ausgeführt; kein vollständiger
 Achter-/Paketlauf. Echter SDK/Demo-Emulator, Auth-Attrappe, Worker blockiert;
 kein Geräte-/PWA-/Lernwirkungsnachweis. Große Abnahme bleibt später.
+
+## Gezielter Abschluss 10.10.2026, nach Weiter-Auftrag
+
+Alle **acht A17-SDK-Fälle gemeinsam grün** am unveränderten App-SHA
+4a8ca5a1 und Rules-SHA 6a110898. Vollständige Ausgabe gelesen:
+`a17-formular-acht-finale-gezielte-abnahme.log`. Damit ist der begonnene
+A17-Prüfschritt nach den drei Ergänzungen abgeschlossen; kein weiterer
+Fallbau aus diesem Abschluss abgeleitet. Große Paket-/Rundenabnahme bleibt
+wie beauftragt später, Status A17 deshalb weiterhin in Arbeit.
