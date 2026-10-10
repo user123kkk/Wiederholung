@@ -312,6 +312,14 @@
       "fehler": null,
       "sekunden": 7,
       "quelltext": "17e40f9c7c510d20b87077900964287ac0338d066114e223acaba4fb832d5e1e"
+    },
+    "t_fortschritt.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 76,
+      "quelltext": "ab8827d93ce15a9638b0913162f91a3edfc9953c27a1ab3fe22872e4151ba8b2"
     }
   }
 }
