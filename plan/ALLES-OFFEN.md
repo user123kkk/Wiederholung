@@ -1,5 +1,7 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Neuer Chat gestartet:** Betreiberauftrag 10.10.: Reihenfolge passend halten, unnötige Dauer und Tokens vermeiden; neuen Chat mit zwingendem caveman gestartet: 01a12616-ac4c-7c31-b011-37917529c814. Frühere Wünsche auf Erledigung prüfen, vorhandene Belege wiederverwenden, keine neue große Ideensammlung. Produktreihenfolge und fremden Datenentwurf erhalten.
+
 **Eine Aufgabenübersicht:** Hier stehen Mehrwert-Aufgaben, frühere Betreiberwünsche und neue Ideen. Berichte belegen Herkunft; Fachpläne enthalten Details. Beides ersetzt keinen Erledigungsbeleg.
 
 **Aktueller Wunsch 10.10.:** Die verstreute Ablage erschwert den Überblick. Kleine Wünsche vor den beiden Mehrwert-Runden auf tatsächliche Erledigung prüfen, nicht nur auf Erwähnung. Vorhandene Berichte und Gegenreden erhalten; keine neue Ideensammlung als Ersatz für verlorene Punkte. Der genannte „Korean-Ausrichtler“ ist nicht sicher identifiziert; vermutlich Texte/Quran, keine stillschweigende Festlegung. Die bereits erfasste Qualitätskritik bleibt offen.

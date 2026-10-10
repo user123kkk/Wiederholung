@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- Codex: Betreiberauftrag 10.10.: Reihenfolge passend halten, unnötige Dauer und Tokens vermeiden; neuen Chat mit zwingendem caveman gestartet: 01a12616-ac4c-7c31-b011-37917529c814. Frühere Wünsche auf Erledigung prüfen, vorhandene Belege wiederverwenden, keine neue große Ideensammlung. Produktreihenfolge und fremden Datenentwurf erhalten.
+
 - Codex erste Erledigungskontrolle früherer Kleinigkeiten: Betreiberquellen 05.–07.10., CHANGELOG und gezielte Logbuchstellen gelesen. Handschrift/Vollbild 3.18.19, Tippen daneben 3.18.19/24 und Griff-Auslaufen 3.18.20 zentral mit Bau-/Prüfbelegen geführt. Rest Hintergrundscrollen und separaten schwankenden Griff-Test ausdrücklich offen belassen. Keine komplette historische Wunsch-Abnahme oder frischen Gerätebelege behauptet.
 
 - 10.10. Codex: verstreute eigene TikTok-Ergänzungen bereinigt. Aktive Aufgabenbereiche der Mehrwert-GESAMTLISTE vollständig samt Status und umbasierter Verweise nach ALLES-OFFEN übernommen; ursprüngliche Tabellenzeilen maschinell auf Erhalt geprüft. Neue Ideen passenden Bereichen zugeordnet; alte Gesamtliste historisch, TikTok-Datei nur Originalquelle. Vier Fachpläne auf zentralen Eingang verwiesen, Betreiberpräferenz vereinheitlicht, alten Meldungsverlauf eingeklappt. Originalnachricht unverändert. Neuer Wunsch nach Erledigungsprüfung früherer Kleinigkeiten zentral offen erfasst; Herkunftsabgleich 34/34 Berichte ist kein Umsetzungsnachweis. Keine Produktänderung, kein neuer Agentenlauf, keine Datenprüfung/Veröffentlichung.
