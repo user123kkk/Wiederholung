@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 11:11 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 11:12 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `8776a1d Sicherung 11:10 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `1193f63 Sicherung 11:11 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,7 +27,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -36,7 +38,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md
+ M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
  M sw.js
 ```
 
@@ -66,6 +68,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 11:10 Codex Quellenabgleich 13/14 abgeschlossen: beide Vollberichte einschließlich zweiter Teile gelesen, 27 Abgleich-/Regelpositionen und 16 historische Fragen einzeln zugeordnet. Jetzt 22/34 Berichte, noch 12 (15–26) und Zusammenführung/Rückwärtsprüfung. Kategorien nicht als neue Funktionszahl addiert; alte Paket-/Parallelvorschläge, fehlende Freigaben und heutige Baugeschichte getrennt, kein neuer Fragenkatalog/Sammel-Ja. Zentrale Verständniskorrektur gilt weiter. Ein Patch mit unvollständiger Protokoll-Zeile wurde atomar abgewiesen, nach Prüfung ohne Änderungen korrekt neu angewandt; vorausgegangenen Uhrzeit-Tippfehler 11:08 zu tatsächlichem 11:07 berichtigt. Keine App-/Rules-/Test-/Originaländerung, abgeschlossene Tests nicht wiederholt. Stand und Anschluss aktualisiert, sichtbaren Fortschritt gemeldet.
 
 - 11:07 Codex Heartbeat begonnen: Übergabe 11:04 und einzelne Minuten-Sicherung 12532/16564 bestätigt, Entwurf 3.18.30 unverändert. Quellenabgleich erste Runde 09–12: vier vollständige Abschlussberichte, 50 Hauptpositionen einschließlich Gegenreden zugeordnet, neuer Einzelbericht. Jetzt 20/34 Berichte, 196 nummerierte Positionen plus Gegenprüfer; 14 Berichte und rückwärtige Katalogprüfung offen. Ungeprüfte Plattform-/Steuer-/Zahlungs-/Lizenz-/Lernwirkungsbehauptungen als Quelleninhalt erhalten; keine Recherche-/Geräte-/Produktprüfung daraus behauptet. Historische Import-/Wake-Lock-/Exportlücken nicht als heutige Bugs ausgegeben; dauerhafte Gratis-/Vergessensfreiheit nicht als Betreiberzusage übernommen. Keine Tests/App-/Rules-Änderungen oder neuen Pakete; Fortschritt sichtbar gemeldet.
 
@@ -108,5 +112,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 05:04 Codex A16-Altersgrenze: Übergabe 05:02 und einzelner Sicherungsbaum 12532/16564 bestätigt. Daten-Skill weiter angewandt, bestehende 120-Tage-Grenze im Nachholpfad gelesen. Zwei neue SDK-Einzelproben mit unabhängig berechneten/gegengeprüften Kalenderdaten und geprüfter Beitragsverteilung: 120 Tage einmal nachgeholt, 121 Tage unverändert als veraltet aufbewahrt, heute kein Zuschlag, andere Karte/JS-Fehler kontrolliert. Separater TEMP-Mutant mit <= statt < scheitert genau 0 statt 1 an Grenzerwartung; Wrapper prüft Exit 1/Meldung. Alle vollständigen Logs gelesen, Syntax/Diff grün. Kontrollierte lokale Datierung, keine echte Wartezeit/Auth-/PWA- oder Lernwirkungsaussage; Katalog 21, nur zwei neue Einzelfälle, kein ganzer 21er-Lauf. App-SHA 4a8ca5a1 und Rules 6a110898 unverändert, 3.18.30 samt fremdem Entwurf behalten. Bericht/Grenzen erweitert, keine App-Version committet, kein neuer Paketbau/Deploy. Nachtauftrag weiter bis 09:00.
 
 - 04:06 Codex A16-Prüfergegenprobe: Übergabe 04:04, Entwurf und einzelner Sicherungsbaum 12532/16564 erhalten. Konkrete Lücke nachgewiesen: unbekannter --fall liefert ohne Fallausführung Exit 0/0 grün. Vorbefundlog und feste Quelle 7828140 samt Werkzeug-Dateihash festgehalten. Nur Fallkatalog/Eingangs-/Eindeutigkeits-/Vollständigkeits-/Erfolgszahlprüfung im bestehenden A16-Prüfer ergänzt; unbekannte und leere Auswahl mit erwarteter genauer Exit-1-Ablehnung geprüft. Positive Auswahl Speicherfehler-keine-Bewertung einmal grün, alle 19 Definitionen kataloggebunden; komplette Logs gelesen. Keine fachliche Assertion, Zeitgrenze oder Produktdatei geändert, kein ganzer 19er-Lauf behauptet. Daten-Skill-Prüfebene wie zuvor echter SDK, Auth-Attrappe, Worker blockiert. Bericht erweitert, Syntax/Diff grün; App-SHA 4a8ca5a1, Regeln 6a110898, 3.18.30 weiter uncommittet. Große Abnahme/Veröffentlichung später, Nacht-Fortsetzung weiter aktiv bis 09:00.
-
-- 03:09 Codex A17-Datenränder: Übergabe 03:07 und einzelner Sicherungsbaum 12532/16564 bestätigt. Daten-/Oberflächenwege im bestehenden Formular nachgelesen; zwei fehlende SDK-Einzelproben ergänzt: Notiz nach fremder Löschung (Server 404, Hinweis und Eingabe erhalten) und Offline-Notiz nach fremder Bewertung (SDK-Cache mit ausstehenden Writes vor Fremdbewertung bestätigt, Servernotiz und fremde Bewertungsfelder erhalten). Beide grün, andere Karte/JS-Fehler geprüft, vollständige Logs gelesen. Erster Löschlauf rot wegen mehrdeutigem .dlg-Testselektor, nur Selektor konkretisiert; sämtliche fachlichen Erwartungen erhalten. Unbekannte --fall-Eingabe liefert geprüft Exit 1 statt leeren grünen Lauf. Bericht/Grenzen erweitert: fünf vorherige plus zwei neue Einzelbelege, kein ganzer 7er-/Paketlauf, kein Neustart/Auth-/Tageszähler-Nachweis daraus. App-SHA 4a8ca5a1/Regeln 6a110898 unverändert, 3.18.30 weiter Entwurf; kein neuer Paketbau/Commit/Deploy. Nacht-Fortsetzung aktiv bis 09:00.

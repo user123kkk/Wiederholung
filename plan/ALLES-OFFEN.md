@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 11:10, stündliche Fortsetzung: Quellenabgleich jetzt 22/34
+inhaltliche Berichte, erste Runde 01–14 und zweite Runde vollständig.
+Sechs weitere Berichte im Lauf abgeschlossen. Noch erste Runde 15–26,
+Zusammenführung und rückwärtige Prüfung der 187 Katalogzeilen. Alte
+Entscheidungsfragen/Methodik getrennt von Produktideen, keine neuen
+Freigaben oder Funktionen. Aktueller Bericht:
+[`zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md`](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
+
 10.10.2026 10:29, Betreiber: „wie weit, wenn ich nichts sehe denke ich
 immer du arbeitest ned weiter“. Fortschritt sichtbar melden: je tatsächlich
 abgeschlossenem Arbeitsschritt kurz was fertig, aktueller Stand, nächster
