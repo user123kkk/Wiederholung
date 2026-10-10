@@ -8,7 +8,8 @@ Lernregel, keine Änderung am Text-Probelauf, keine Abnahmefreigabe.
 Unveränderter `t_text_tempo.js`: Sure2 mit286 vorhandenen Ayat,390×844,
 CPU4×, Hauptthread-Aufgaben; Grenze200ms. Erster vollständiger Lauf226ms
 beim Wechsel nach Verwalten, einmalige Fortsetzung nach Diagnose254ms.
-Beide vollständigen Ausgaben sind gesichert. Der zweite Lauf ist kein Fix.
+Nach notwendiger Mehrgeräte-Testkorrektur erneut252ms im abschließenden
+Gesamtlauf. Alle vollständigen Ausgaben sind gesichert; keine davon ist ein Fix.
 Rot bleibt bis zur Klärung eine Paketabschluss-Sperre.
 
 ## Vergleich und Grenzen

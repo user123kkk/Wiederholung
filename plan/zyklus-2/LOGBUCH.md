@@ -2,6 +2,28 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-10 15:22 — Große Datenprüfung ausgeführt, Abschluss gesperrt
+
+**Geändert:** erhaltenen3.18.30-Entwurf unverändert geprüft; Abnahmeaufbau
+für getrennte Emulatoren/SDK-Hash, gezielte Batchmeldung der Attrappe,
+historischen Testcheckout, C27-Testkarten, abgeschnittene Kontrasttreffer
+und tatsächliche Mehrgeräte-Batchablehnung korrigiert. Feste Gegenproben
+und ursprüngliche Assertions erhalten; Einzelheiten im Datenabnahmebericht.
+**Geprüft:**238 Regeln,158 ganze Abschlusslogs gelesen (157 grün, ein
+Tempo-Rot),13 Runden grün und vollständige beschreibende Outputs gelesen.
+Aktuelle gezielte16+22+8 SDK-Vorbelege bei gleichem App-/Rules-Stand
+erhalten; A16 frisch22 grün, Mehrgeräte-Verlauf frisch komplett grün.
+**Gegenprüfung:** DATEN9–12 gegen tatsächlich gebaute Pfade/Datenschutz/
+Rules gelesen, kein neuer Produktumbau. Tempo-Vergleiche an festem315bb0e
+mit beider Reihenfolge und Traces zeigen schwankende Layoutkosten beider
+Quellen, keine sichere Datenänderungs-Ursache. Keine Rot-Umdeutung.
+**Offen:** Tempo226/254/252ms bei Grenze200ms klären; zwei Affenläufe
+noch auswerten. A14–A17 bleiben in Arbeit, kein Paketcommit oder Deploy.
+Regeln später vor Hosting; echte Gerätebelege bleiben begrenzt.
+**Betreiberwünsche:** gesamte neue TikTok-Nachricht als Quelle bewahrt und
+mit vorhandenen Themen zusammengeführt; Onboarding später am Gesamtstand,
+Agent prüft Geräte zuerst selbst. Keine neue Funktion aus Videos gebaut.
+
 ### 2026-10-10 09:55 — Gegenlesen ohne Testwiederholung
 
 **Geändert:** nur Planpflege: Bericht DATEN-GEGENLESEN-2026-10-10.md,

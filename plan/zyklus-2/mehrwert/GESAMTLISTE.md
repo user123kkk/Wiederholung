@@ -204,8 +204,10 @@ lange Ayat stückweise, größere deutsche Schrift (erst, wenn jemand fragt).
 1. Aktuell Schutz/Zuverlässigkeit: A14/A15 im erhaltenen Entwurf 3.18.30, A16 als neuer bestätigter Datenfund. 3.18.27/28 sind fertig und online laut letztem Veröffentlichungsbeleg. Große Abnahme/Veröffentlichung später gesammelt; siehe `../../STAND.md`.
 2. Anschließend Rest Lernrunde (Abschnitt 2, oberer Teil). Tagesziel-Empfehlung nach Audit zurückgenommen; wartende Lernregeln nicht ungefragt freigeben.
 3. Rest „Karten hinein und heraus“ (Abschnitt 3, was nicht wartet).
-4. Aussehen und Tippen (Abschnitt 4), dann der Durchlauf
-   „Verständlichkeit“ (4a), dann der Einstieg (5).
+4. Aussehen und Tippen (Abschnitt4), dann der Durchlauf
+   „Verständlichkeit“ (4a). Den umfangreichen Einstieg (5) nach der
+   Betreiberergänzung10.10. abschließend am weitgehend fertigen
+   Funktionsumfang abstimmen; neue Funktionen dabei berücksichtigen.
 5. Konto und Schutz (Abschnitt 6).
 6. Fremdentest.
 7. Ab 29.10. Texte (Abschnitt 7).

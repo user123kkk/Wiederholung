@@ -1,5 +1,61 @@
 # Große Datenabnahme 3.18.30
 
+## Vollständiger Prüfstand,10.10.2026 15:22
+
+Alle158 Testdateien abgeschlossen;157 grün, `t_text_tempo.js` rot.
+Alle158 vollständigen Abschlusslogs gelesen und im Leserregister
+`../sicherung/tests/abnahme-gelesen-3.18.30.json` festgehalten. Gemeinsame
+Quelle weiterhin e595b5b6312244cd, App4a8ca5a1/Rules6a110898 unverändert.
+Der letzte notwendige Runnerlauf nach Mehrgeräte-Testaufbaukorrektur
+ergab erneut Tempo252ms; erhaltene226/254ms bleiben Belege, kein Fix.
+Keine weitere Wiederholung zum Erzwingen eines grünen Ergebnisses.
+
+13/13 Rundenprüfungen am identischen Stand gültig bewahrt und ausgewertet,
+die vollständigen beschreibenden Einzeloutputs wurden zuvor gelesen.
+Echte CDP-Touch-/Schrägwisch-Proben grün, keine echte iPhone/PWA-Freigabe.
+Zwei vorgeschriebene Affenläufe mit AFFE_TEXTE=1 werden anschließend
+einmal ausgeführt. Stand-/Version-/CSP-/APP_SHELL-Prüfer und App-Syntax
+frisch grün, Netzteilstatus2 zuvor bestätigt.
+
+### Fünfte Prüfaufbaukorrektur: Mehrgeräte-Ablehnung
+
+Der eigenständige `t_verlauf_mehrgeraete.js` manipulierte für absichtliche
+Regelablehnung nur updateDoc. A16 schreibt per atomarem Batch; dadurch
+blieb die erwartete Ablehnung aus (Timeout171), nicht ein Reset-Fehler.
+Tatsächlich ausgesandten Batch-Wrapper wie im vorhandenen SDK-Helfer
+ergänzt. VM-Probe prüft den verbotenen FieldPath nur beim vorgesehenen
+Nutzerwrite, Karten/Maps/normale Writes/Commit bleiben erhalten. Fester
+315bb0e scheitert genau am fehlenden Batch-Wrapper.
+
+Erster korrigierter Lauf traf einen frühen Offline-Neustart: SDK hatte
+einen von zwei Beiträgen bestätigt, der zweite blieb als A16-Kopie lokal.
+Der ältere SDK-only-Fertighelfer wartete nicht auf die anschließende
+App-Belegprüfung. Der Test wartet jetzt zusätzlich auf eine bereits
+laufende Prüfung und verwendet nach Neustart den vorgesehenen ausdrücklichen
+Prüfweg; keine automatische Übertragung ohne diesen Weg behaupten.
+Erwartungen zu Gesamtzahl, genau einmal Nachholen, Originaltag, Undo,
+fremden Antworten und Reset bleiben erhalten. Gezielter kompletter Lauf
+und Gesamtlauf14s grün, Testhash6100003f; ganze Ausgaben gelesen.
+Produkt, Rules und gemeinsamer SDK-Helfer wurden dafür nicht geändert.
+
+### Checkliste LEHREN14 – Abschluss noch gesperrt
+
+1/2: Tatsächliche App-/Rules-/Datenschutzpfade gegen DATEN9–12 gelesen;
+gleiches Muster gesucht, Befundabgleich im Gegenlesebericht vorhanden.
+3: Produkttexte/Datenschutz beschreiben beide lokalen Kopien und Cloudbelege;
+Prüfaufbau/Offenstand hier und im Logbuch nachgezogen.
+4/5: Vorhandene zentrale Listen/Export/Kontolöschung berücksichtigen neue
+Speicher; Formularänderungsabsicht liegt im Entwurf, nicht nur im DOM.
+6: Breiten/Kontrast/Sprung/Touch-Abnahmen gelesen; CPU4×-Tempo **nicht erfüllt**.
+7: Sichtbare Hinweise gelesen; kein bloßer Systemcode als Produktergebnis.
+8/9: Rules238 grün, Datenschutz im erhaltenen Paket; Regeln müssen später
+vor Hosting veröffentlicht werden. Keine Live-Regeländerung durchgeführt.
+10/11: Syntax und gemeinsamer Standprüfer grün, Version3.18.30 konsistent.
+12: Gesamt157/158 und Runde13/13; Zufallsprüfungen folgen. Kein Gesamterfolg.
+13: Plan/Stand/Offenliste/Arbeitsprotokoll und Logbuch werden nachgezogen.
+14: Kein Betreiber-Gerätetest oder Deploy jetzt erforderlich; Tempo muss
+vor Paketcommit geklärt werden. Checkliste ist keine Freigabe bei rotem6/12.
+
 **Offene Abschluss-Sperre,10.10.15:12:** t_text_tempo zweimal rot226/254ms
 bei200ms. Zwei feste Vergleichsserien und Traces vollständig gelesen;
 keine gesicherte Datenänderungs-Ursache, beide Quellen schwanken/überschreiten.
