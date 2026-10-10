@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 12:40 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 12:41 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `28bff22 Sicherung 12:39 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `424beab Sicherung 12:40 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -60,7 +61,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 16, chrome.exe 16 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 16, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -81,6 +82,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 12:42 Codex70/158 grün, alle70 vollständigen Abschlusslogs gelesen. Kontofortsetzungen samt zahlreichen festen Gegenproben, Lösch-Zeitlimit/Offline-Sperre, Wechsel während Löschung und alte Speicher-/Stapelantworten isoliert. Aktuell Kontrastprüfung, einziger Browserlauf87583 bleibt aktiv. Keine Produktionsdaten/Authentifizierungsbelege, App/Regeln unverändert, kein Paketcommit/Deploy.
 
 - 12:38 Codex62/158 abgeschlossene Prüfungen grün, alle62 vollständigen Ausgaben gelesen und im Leserregister gesichert. Kartenblatt vier Konfigurationen, fremde Karten-/Feldechos, kleine Bootlage, Konto-Lösch-/Abbruch-/Google-Attrappenfälle und alter Dialog/Bestätigung nach Kontowechsel grün. Keine echte Google-/iPhone-Authentifizierung daraus behauptet. Gesamtlauf läuft jetzt Kontofortsetzungen allein; Produkt/Rules weiterhin gleicher Entwurf, keine Tests ausgelassen/Grenzen verändert.
 
@@ -123,5 +126,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 10:30 Codex sichtbare Fortschrittsmeldungen auf Betreiberwunsch in ALLES-OFFEN und vorhandener Automation verankert, ACTIVE bestätigt. Status zunächst ehrlich 14/34, keine Arbeit seit letzter Antwort; stündlichen Heartbeat von pausenloser Arbeit unterschieden. Danach erste Runde 07/08 vollständig ab Abschlussbericht gelesen, jeweils zwölf Hauptpositionen samt Nebenabschnitten zugeordnet. Jetzt 16/34 Berichte, 146 nummerierte Positionen plus Gegenprüfer; 18 Berichte und Rückwärtsprüfung offen. Auch Quelle 08 nennt anderen Repo-Pfad: nicht als bestätigten Desktop-Codebefund übernehmen. Kein Produktbau/keine Tests, neue Entscheidungsregel erhalten.
 
 - 10:23 Codex erste Runde 01–06 abgeschlossen: sechs vollständige Abschlussberichte, 70 Hauptpositionen einzeln mit Katalog zugeordnet; Nebenideen/Gegenrede/Beleggrenzen erhalten. Neuer Bericht QUELLENABGLEICH-RUNDE1-2026-10-10.md, Gesamtstand 14/34 Berichte, 122 nummerierte Positionen plus Gegenprüfer. Quelle 05 nennt anderen Repo-Pfad: Herkunft aktueller Codebefunde daher ungeklärt, nur Ideenwortlaut übernehmen. Kein wissenschaftlicher/rechtlicher Nachweis aus Suchtreffern, keine neue Funktion. Betreiberkorrektur auch in CLAUDE eingetragen; Automation per App-Werkzeug mit neuer Regel aktualisiert und ACTIVE bestätigt, keine zweite. Erster Versuch der Konfigurationsübernahme scheiterte vor Änderung an umgebrochener Select-String-Ausgabe; unveränderte Literalzeile anschließend korrekt gelesen. Zwei versehentliche Backslash-Anführungszeichen in Dokumentation korrigiert. Positionszählung 70 separat bestätigt; Quellenabgleich erste Runde 07–26 und Rückwärtsprüfung noch offen.
-
-- 10:19 Codex Betreiberkorrektur wortgetreu gesichert: frühere Ja/Beschlüsse können ohne Verständnis erfolgt sein. Zentrale Regel ENTSCHEIDUNGEN-VERSTEHEN.md erstellt und in AGENTS, BETREIBER-VERSTEHEN, CODEX-START, Zyklus-ENTSCHEIDUNGEN und Mehrwert-GESAMTLISTE sichtbar vor historische Freigaben gestellt. Noch unklare offene Funktionsentscheidungen vorläufig behandeln, konkret erklären statt alte Sammelzustimmung voraussetzen; keine massenhafte Umetikettierung oder Rücknahme bereits gebauter Arbeit. Aktueller technischer Datenauftrag/Entwurf, Paket-/Abnahme-/Deploy-Grenzen erhalten. Quellenabgleich weiter, keine Funktion daraus bauen.

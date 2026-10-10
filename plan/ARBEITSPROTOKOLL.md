@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 12:42 Codex70/158 grün, alle70 vollständigen Abschlusslogs gelesen. Kontofortsetzungen samt zahlreichen festen Gegenproben, Lösch-Zeitlimit/Offline-Sperre, Wechsel während Löschung und alte Speicher-/Stapelantworten isoliert. Aktuell Kontrastprüfung, einziger Browserlauf87583 bleibt aktiv. Keine Produktionsdaten/Authentifizierungsbelege, App/Regeln unverändert, kein Paketcommit/Deploy.
+
 - 12:38 Codex62/158 abgeschlossene Prüfungen grün, alle62 vollständigen Ausgaben gelesen und im Leserregister gesichert. Kartenblatt vier Konfigurationen, fremde Karten-/Feldechos, kleine Bootlage, Konto-Lösch-/Abbruch-/Google-Attrappenfälle und alter Dialog/Bestätigung nach Kontowechsel grün. Keine echte Google-/iPhone-Authentifizierung daraus behauptet. Gesamtlauf läuft jetzt Kontofortsetzungen allein; Produkt/Rules weiterhin gleicher Entwurf, keine Tests ausgelassen/Grenzen verändert.
 
 - 12:32 Codex50/158 grün, vollständige Abschlusslogs1–50 gelesen. Üben/Serie und echte Wiederholung getrennt erhalten, alte/neue Ideenzeitstempel richtig sortiert, Import gleichnamiger Bereiche erhält alle fünf Karten. Gelesene Testnamen samt Quellstand jetzt explizit abnahme-gelesen-3.18.30.json für nahtlosen Anschluss; keine automatisch ungelesene Ausgabe abhaken. Lauf87583 aktiv, Prüfgrenzen und Produkt unverändert.

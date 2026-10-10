@@ -544,6 +544,22 @@
       "fehler": null,
       "sekunden": 3,
       "quelltext": "e10da07de0cca06918bf67edaeb1c96341e393feb6babf72139bdd36bc6fc99a"
+    },
+    "t_konto_schreibantwort.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 16,
+      "quelltext": "afdf7a635fdacd956d73b4a4bb5881676b773cc7bc748b13fd2aca4a3f83df7e"
+    },
+    "t_konto_stapel.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 5,
+      "quelltext": "16ea6b89a969d777d04d9ff289fc2140a57cebc074877f4a44e6d85ead780296"
     }
   }
 }
