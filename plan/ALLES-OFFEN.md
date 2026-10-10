@@ -1,5 +1,20 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 11:27, Betreiber: „bro instalier den skill bzw du hastja im repo
+skills und so, kannst du die ehrlich nutzen? wie wärs wenn du "council of
+five" hinzufügst? LLM Counsil, weis nicht, könnte hilfreich sein bei
+bestimmung ob sachen sollen oder ned, deine empfehlung so isted immer
+korekt, ich verstehe oft nichts“. Anschließend genaue Quelle:
+https://github.com/tenfoldmarc/llm-council-skill.
+Auftrag umgesetzt: projektspezifischer llm-council für Codex und Claude,
+aus festgehaltener Originalversion angepasst; fünf echte Berater und
+anonymisierte Gegenprüfung nur bei wichtigen Abwägungen. Kurze deutsche
+Erklärung mit Beispiel, Nutzen/Nachteil, Unsicherheit und nächstem Schritt.
+Keine Empfehlung ist automatisch korrekt; keine Freigabe durch Mehrheit.
+Installation/Dateiprüfung ist kein durchgeführter Council oder gemessener
+Qualitätsnachweis. Technischer Entwurf 3.18.30 und spätere Abnahme bleiben.
+Details: [`agenten/SKILLS-UND-PLUGINS.md`](agenten/SKILLS-UND-PLUGINS.md).
+
 10.10.2026 11:10, stündliche Fortsetzung: Quellenabgleich jetzt 22/34
 inhaltliche Berichte, erste Runde 01–14 und zweite Runde vollständig.
 Sechs weitere Berichte im Lauf abgeschlossen. Noch erste Runde 15–26,

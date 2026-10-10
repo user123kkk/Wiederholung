@@ -1,5 +1,34 @@
 # Welche Agenten-Hilfen Adrabic wirklich braucht
 
+## Ergänzung 10.10.2026: LLM Council ausdrücklich beauftragt
+
+Jetzt vier Projekt-Skills: die drei Fachskills plus `llm-council`.
+Quelle vom Betreiber: [tenfoldmarc/llm-council-skill](https://github.com/tenfoldmarc/llm-council-skill),
+festgehaltener Commit `0dc03275b0ddf542545da3a9684510fff31df353`.
+Mit offiziellem Skill-Installer nach `.agents/skills/llm-council` geladen;
+lokal für Codex und Claude angepasst. Original bleibt unter
+`references/upstream-SKILL.md`, README mit MIT-Angabe erhalten. Kein externes
+Plugin, keine API-Schlüssel oder fremden Modellkonten eingerichtet.
+
+Wichtige strittige Entscheidungen: fünf getrennte Berater, danach fünf
+anonymisierte Gegenprüfungen und Synthese. Nicht für Routinefixes, Status,
+Fakten oder bloßes Installieren. Begrenzte Agentenslots erlauben gestaffelte
+Durchgänge mit getrennten Briefings; fünf verschiedene Modelle werden nicht
+behauptet. Zehn Agentenantworten kosten zusätzliche Zeit und Tokens.
+Einigkeit beweist nichts; Quellen, Gegenargumente und fehlende Belege zählen.
+Kein Qualitätsgewinn gemessen und noch kein Council im Rahmen der Installation
+durchgeführt. Laufzeitversprechen der Vorlage wird nicht übernommen.
+
+Ergebnis zuerst kurz auf Deutsch: konkretes Benutzungsbeispiel, dafür,
+dagegen, belegt/unklar, Empfehlung, nächster Schritt. Verständniskorrektur
+`plan/ENTSCHEIDUNGEN-VERSTEHEN.md` und Fachskills gelten weiter; ein Council
+erteilt keine Funktionsfreigabe. Volltext und aufklappbarer HTML-Bericht erst
+bei echter Sitzung unter plan/council. Implizite passende Auswahl erlaubt,
+aktuell auch direktes Lesen; Skill-Entdeckung kann ab dem nächsten Turn erfolgen.
+
+Pflegewerkzeug verwaltet jetzt alle vier SKILL.md-Spiegel und zusätzlich
+die Council-Quellennachweise. Frühere Drei-Skill-Angaben unten sind Verlauf.
+
 Stand: 09.10.2026. Auftrag des Betreibers: aus dem Repo auswählen, was Claude
 und Codex tatsächlich hilft, automatisch passend einsetzen und unnötige
 Tokenkosten vermeiden. Ergebnis: **drei kleine Projekt-Skills sind eingerichtet;

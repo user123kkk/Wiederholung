@@ -1421,7 +1421,7 @@ index 8784251..b0bc839 100644
      [ -f "$f" ] || continue
 diff --git a/plan/werkzeuge/projekt_skills.mjs b/plan/werkzeuge/projekt_skills.mjs
 new file mode 100644
-index 0000000..ab96048
+index 0000000..c66f6ba
 --- /dev/null
 +++ b/plan/werkzeuge/projekt_skills.mjs
 @@ -0,0 +1,51 @@
@@ -1432,7 +1432,7 @@ index 0000000..ab96048
 +import {fileURLToPath} from 'node:url';
 +
 +const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-+const names = ['adrabic-daten', 'adrabic-oberflaeche', 'adrabic-lernbelege'];
++const names = ['adrabic-daten', 'adrabic-oberflaeche', 'adrabic-lernbelege', 'llm-council'];
 +const args = process.argv.slice(2);
 +assert.ok(args.length <= 1 && (!args.length || ['--pruefen', '--schreiben'].includes(args[0])),
 +  'Aufruf: node plan/werkzeuge/projekt_skills.mjs [--pruefen|--schreiben]');
@@ -1464,7 +1464,7 @@ index 0000000..ab96048
 +  const mirror = path.join(root, '.claude/skills', name, 'SKILL.md');
 +  if (write) {
 +    fs.mkdirSync(path.dirname(mirror), {recursive: true});
-+    // Ausschließlich diese drei verwalteten Spiegel; keine fremden Skills ändern.
++    // Ausschließlich die oben genannten verwalteten Spiegel; keine fremden Skills ändern.
 +    fs.writeFileSync(mirror, bytes);
 +  }
 +  assert.ok(fs.existsSync(mirror), `${name}: Claude-Spiegel fehlt; --schreiben ausführen`);
@@ -1474,7 +1474,7 @@ index 0000000..ab96048
 +  bodyBytes += Buffer.byteLength(body, 'utf8');
 +  console.log(`OK ${name}: portable Metadaten, Repo-Verweise, automatische Auswahl erlaubt, Spiegel identisch`);
 +}
-+console.log(`3 Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
++console.log(`${names.length} Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
 diff --git a/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js b/plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
 new file mode 100644

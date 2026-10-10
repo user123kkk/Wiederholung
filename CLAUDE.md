@@ -14,6 +14,13 @@ Codex findet sie unter `.agents/skills/`, Claude unter `.claude/skills/`.
 Fehlt die Skill-Funktion, die passende `SKILL.md` direkt lesen.
 Auswahlgründe und Pflege: `plan/agenten/SKILLS-UND-PLUGINS.md` (bei Bedarf).
 
+**LLM Council (Betreiber 10.10.2026):** Bei wichtigen strittigen Entscheidungen
+`llm-council` nutzen: fünf getrennte Blickwinkel und anonymisierte Gegenprüfung,
+kurzes deutsches Ergebnis mit Beispiel, Nutzen, Nachteil und Beleggrenze.
+Nicht für Routinefixes/Status. Council-Empfehlung ist keine Betreiberfreigabe
+und kein Wahrheits- oder Lernwirkungsnachweis. Projektfassung unter
+`.agents/skills/llm-council/SKILL.md`, Claude-Spiegel entsprechend.
+
 ## Zuerst: [`plan/STAND.md`](plan/STAND.md) – aktueller Stand und Reihenfolge
 
 Eine Übersicht für Claude und Codex (`AGENTS.md` verweist genauso). Sie
