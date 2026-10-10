@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 21:02 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 21:04 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,9 +6,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `a3744c2f Sicherung 21:01 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `00c66031 3.18.30 Karten- und Tagesantworten gegen Verlust schuetzen; Tempo ausdruecklich offen`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
-- Version im letzten Commit: const APP_VERSION = "3.18.29"
+- Version im letzten Commit: const APP_VERSION = "3.18.30"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
@@ -30,27 +30,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A .claude/skills/llm-council/README.md
  A .claude/skills/llm-council/SKILL.md
  A .claude/skills/llm-council/references/upstream-SKILL.md
- M CHANGELOG.md
- M app.js
- M datenschutzerklaerung.html
- M firestore.rules
- M index.html
- M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
- M plan/werkzeuge/pruefstand/LIESMICH.md
- M plan/werkzeuge/pruefstand/abnahme_runde.js
- M plan/werkzeuge/pruefstand/alle_pruefen.js
- A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
- M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
- A plan/werkzeuge/pruefstand/diagnose_verlauf_neustart.js
- A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
- M plan/werkzeuge/pruefstand/stubs.js
- M plan/werkzeuge/pruefstand/t_nur_betreiber.js
- M plan/werkzeuge/pruefstand/t_paket_c_weiter.js
- M plan/werkzeuge/pruefstand/t_rechtsplan.js
- A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
- M plan/werkzeuge/pruefstand/t_verlauf_mehrgeraete.js
  A plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
  A plan/werkzeuge/pruefstand/x_ab_tempo_reihenfolge.js
  A plan/werkzeuge/pruefstand/x_abnahme_hash.js
@@ -64,8 +45,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_auswerten.js
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
- M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M sw.js
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
