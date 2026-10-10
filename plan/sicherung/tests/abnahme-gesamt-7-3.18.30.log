@@ -156,3 +156,10 @@ EXIT 0 t_verlauf_mehrgeraete.js (14s)
 EXIT 0 t_verwalten.js (51s)
 EXIT 0 t_wisch_tempo.js (0s)
 EXIT 0 t_wischen.js (39s)
+EXIT 0 t_wischen_schraeg.js (53s)
+EXIT 0 t_wochen_kopf.js (14s)
+EXIT 0 t_x_mitten.js (30s)
+EXIT 0 t_zahlen.js (10s)
+EXIT 0 t_zeilenanfang.js (5s)
+
+157/158 Exit 0; 1 rot. Ausgaben noch lesen: C:\Users\USER\AppData\Local\Temp\adrabic-pruefstand-gesamt\e595b5b6312244cd

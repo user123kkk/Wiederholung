@@ -1224,6 +1224,46 @@
       "fehler": null,
       "sekunden": 39,
       "quelltext": "cce5e8b4519173de5a94e1bb7d9f0c592819b61f5f65dcdb95204794dc7986a0"
+    },
+    "t_wischen_schraeg.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 53,
+      "quelltext": "ada2ba1f597ff996be979d8b845116f658305a78bfd0eb59da0ceb58a068936b"
+    },
+    "t_wochen_kopf.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 14,
+      "quelltext": "e448f959b874bf69734fca05046ae081f5d55d68ff57157317345fbb1fb5fe8c"
+    },
+    "t_x_mitten.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 30,
+      "quelltext": "eb6ca98f44d833bafc686c39207f74a269a32aed31eda7ee296018adf99e7127"
+    },
+    "t_zahlen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 10,
+      "quelltext": "905b2e88c393b3c8c61e15900e63c5c81a58cca0350365ef4386e0fa89eab985"
+    },
+    "t_zeilenanfang.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 5,
+      "quelltext": "b4c2a8e84e1279d2bab0c3f85c5a0cd4b3a817d972954e375d57a49bb600796b"
     }
   }
 }
