@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 10:29, Betreiber: „wie weit, wenn ich nichts sehe denke ich
+immer du arbeitest ned weiter“. Fortschritt sichtbar melden: je tatsächlich
+abgeschlossenem Arbeitsschritt kurz was fertig, aktueller Stand, nächster
+Schritt. Kein pausenloses Arbeiten zwischen Chatläufen behaupten; stündliche
+Automation ist geplante Fortsetzung. Prompt der vorhandenen Automation
+entsprechend aktualisiert, ACTIVE bestätigt. Beim Statusabruf war noch
+14/34 ohne Arbeit seit letzter Antwort; danach Berichte 07/08 weitergelesen.
+
 10.10.2026 10:23, Quellenabgleich fortgesetzt: 14 von 34 inhaltlichen
 Berichten zugeordnet (zweite Runde acht, erste Runde 01–06). 122 nummerierte
 Hauptpositionen plus Gegenprüfer, keine entsprechende Zahl neuer Funktionen.

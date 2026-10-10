@@ -1,9 +1,9 @@
 # Quellenabgleich: erste Agentenrunde
 
-10.10.2026: **01–06 von 26 Berichten vollständig ab Berichtsbeginn
-gelesen und zugeordnet; 07–26 noch offen.** 70 nummerierte Hauptpositionen,
+10.10.2026: **01–08 von 26 Berichten vollständig ab Berichtsbeginn
+gelesen und zugeordnet; 09–26 noch offen.** 94 nummerierte Hauptpositionen,
 einschließlich ausdrücklich zurückgestellter/abgelehnter Vorschläge.
-Keine 70 eigenständigen neuen Funktionen daraus ableiten.
+Keine 94 eigenständigen neuen Funktionen daraus ableiten.
 
 Verfahren und Gesamtstand: [Quellenabgleich](QUELLENABGLEICH-2026-10-10.md).
 Verglichen mit den 187 historischen Katalogzeilen. Die Wörter „gedeckt“,
@@ -164,7 +164,61 @@ nicht durch einen Suchtreffer zu anderem Kursmaterial ersetzt.
 
 ## Nächster Schritt
 
-07–26 ebenso lesen/zuordnen, danach Zusammenführung und Rückwärtsprüfung
-der 187 Katalogzeilen. Die 70 Zuordnungen wurden nicht aus ALLE-IDEEN
+09–26 ebenso lesen/zuordnen, danach Zusammenführung und Rückwärtsprüfung
+der 187 Katalogzeilen. Die 94 Zuordnungen wurden nicht aus ALLE-IDEEN
 kopiert, sondern aus vollständigen Abschlussberichten einschließlich
 Nebenabschnitten abgeleitet. Keine neue Produktfreigabe daraus.
+
+## 07: [Aktivierung und Gewohnheit](agentenberichte/981b69a1-07-aktivierung-bindung-gewohnheit.md)
+
+| Nr. | Originalkern | Katalogabgleich |
+|---|---|---|
+| 1 | Rückkehrzustand und tatsächliche Verteilung des Rückstands über Tage | Variante: Tagesdeckel/Zusatzknopf vorhanden; Fälligkeiten strecken ist andere Lernregel |
+| 2 | Anker am Lernbildschirm erhalten und Erinnerung direkt anbieten | gedeckt: Wenn-dann-Satz/Erinnerung; nur lokal und ungefähre selbstgewählte Uhrzeit als Bedingungen |
+| 3 | Stoff am ersten Tag aus freigegebenem Satz | gedeckt: Regal/Proberunde, Betreiberinhalt vorausgesetzt |
+| 4 | Ruhetag ohne fällige Karten | gedeckt: Ruhetag historisch gebaut; Bericht nennt ihn noch offen, veralteter Bauzustand |
+| 5 | Urlaubszeit mit ruhender Serie und gestreckten Fälligkeiten | gedeckt/Gegenposition: Urlaubsmodus historisch nein; keine neue Freigabe |
+| 6 | Fünfer-Runde als freiwillige Tagesrettung | gedeckt/Gegenposition: kleinste Runde fünf historisch nein |
+| 7 | Prognose aus eigenem Tempo, genügend Daten, als Spanne | gedeckt: ehrliche Prognose; Kalenderziel bei Texten gesonderte Idee |
+| 8 | Wochenrückblick mit gefestigten Wörtern und nächster Handlung | gedeckt: Können-Wochenrückblick; konkrete Wort-/Handlungsdarstellung als Unteridee |
+| 9 | Badge bei offener App und Installation nach zweiter Runde | Gegenposition/Variante: Badge historisch nein, Installationszeitpunkte abweichend |
+| 10 | Push erst nach bewusster Serverentscheidung neu prüfen | Gegenrede: Push/E-Mail historisch nein; technische Varianten keine heutige Empfehlung |
+| 11 | Lernpartner sehen nur heute gelernt, freiwillig per Code | Gegenposition: Lernpartner historisch nein; Datensparsamkeit hebt Konten-/Minderjährigengrenze nicht automatisch auf |
+| 12 | Erste Woche mit einem verständlichen Satz pro Tag | gedeckt: erste Woche als Weg |
+
+Nebenabschnitte: historische Aussagen zu Ruhetag, Hinweisen und
+Rundenlast nicht als heutige Funktionsprüfung übernehmen. Keine
+Gewohnheitswirkung aus sekundären Studienangaben hier bestätigt.
+Keine Verlustangst, gekauften Joker, Countdown, berechneten Gebetszeiten
+oder religiösen Praxisdaten. Vorschlag tatsächliche Fälligkeitsverteilung
+nicht mit bloßer Begrenzung der heutigen Runde verwechseln.
+
+## 08: [Lehrer und Gruppen](agentenberichte/981b69a1-08-lehrer-gruppen-moschee-ideen.md)
+
+| Nr. | Originalkern | Katalogabgleich |
+|---|---|---|
+| 1 | Neue Satzversion unter gleichem Code, Empfänger bestätigt Übernahme | gedeckt: Nachliefern unter gleichem Code; Version/Bestätigung konkrete Bedingungen |
+| 2 | Code im Fragment, Einlöseblatt nach Anmeldung, QR | gedeckt: Einladungslink/QR-Unterrichtsblatt |
+| 3 | Lektionen zeitgesteuert freigeben | gedeckt: Wochentakt später; konkrete Gerätedatums-/Regelgrenzen im Original |
+| 4 | Schüler-Vorschau und korrigierbare Warnung vor Teilen | teilweise: Schüler-Vorschau vorhanden, Qualitätswarnung mit Korrektursprung fehlt |
+| 5 | Mehrere Codes je Satz für Gruppen mit unterschiedlichem Takt | gedeckt: mehrere Codes später, realer Gruppenbedarf Voraussetzung |
+| 6 | Abhören durch zweite Person am selben Gerät | gedeckt: Abhör-Modus, keine Kontenverbindung |
+| 7 | Papierblatt mit Abschnitt/Datum/Hakstellen/Unterschrift, Lektion und Code | teilweise: Druckansicht/QR-Unterrichtsblatt vorhanden, Abhörbogen mit Hakstellen/Unterschrift fehlt |
+| 8 | Quran-Aufgabe per Code nur als Sure/Ayat-Verweis | gedeckt: Texte als Aufgabe per Code später; lokale Textquelle als Variante |
+| 9 | Lernender teilt selbst schwere Wörter über Share-Sheet | gedeckt: schwere Wörter selbst teilen |
+| 10 | Anonyme Klassenübersicht, nicht empfohlen | gedeckt/Gegenrede: Klassen-/Schülerfortschritt nein; Pseudonym nicht mit Anonymität gleichsetzen |
+| 11 | Kinder-/Familienprofile, nicht empfohlen | gedeckt/Gegenrede: Familien-/Kinderprofile nein |
+| 12 | Lernkreis als gemeinsamer Code/Takt ohne Datenverbindung | teilweise: Code/Wochentakt vorhanden; kombinierter Lernkreis ausdrücklich ohne Kontenverknüpfung fehlt |
+
+Quellgrenze wie Bericht 05: Relevante Dateien werden ausdrücklich unter
+`C:\Users\USER\Wiederholung\...` genannt. Ob die andere Kopie gelesen
+wurde, ist nicht belegt. Historische Code-/Regelbefunde nicht ungeprüft
+dem Desktop-Entwurf zuschreiben.
+
+Nebenabschnitte: vierwöchiger Versuch mit echtem Lehrer/Gruppe als
+Vorbedingung für Ausbau; bisherige Nutzung nicht bewiesen. Damaliger
+Hinweis auf fehlende Begrenzung/Ablauf geteilter Dokumente ist
+historischer Codebefund, kein erneut bestätigter heutiger Fehler.
+Aufräumregel ist im Katalog vorhanden, TTL-Eignung im Bericht ungeprüft.
+Keine Klassenübersicht als „anonym“ schönreden, keine Mitglieder-/Chat-
+oder Kinderkontenfunktion aus diesen Ideen freigeben.

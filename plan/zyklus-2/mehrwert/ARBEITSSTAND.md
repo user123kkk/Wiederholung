@@ -1,5 +1,13 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Aktueller Anschluss 10.10.2026 10:30
+
+Quellenabgleich jetzt 16/34 Berichte, erste Runde 01–08 zugeordnet.
+Als Nächstes 09–26, danach Zusammenführung/Rückwärtsprüfung. Neu: sichtbare
+kurze Meldung je abgeschlossenem Arbeitsschritt statt stiller Fortschritte,
+auch im vorhandenen stündlichen Heartbeat. Keine pausenlose Arbeit behaupten.
+Betreiberkorrektur zu unverständlichen früheren Ja bleibt vorrangig.
+
 ## Aktueller Anschluss 10.10.2026 10:23
 
 Betreiberkorrektur: Frühere Ja/Beschlüsse können ohne Verständnis
