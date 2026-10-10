@@ -124,7 +124,56 @@ mit SDK geprüft. `patchDoc` vergibt schon passende Bewertungskennungen;
 das Formular ist bei Textkorrektur/manueller Stufe nicht durch neue Regeln
 blockiert. Dabei A17/DATEN-12 gefunden: fremder Snapshot lässt unberührte
 Standwahl auf 0 fallen, Notizspeichern ersetzt fremde Bewertung. Im selben
-Datenpaket korrigiert; fünf SDK-Fälle grün, betroffene Browserprüfung läuft.
+Datenpaket korrigiert; fünf SDK-Fälle und Kartenblatt, Snapshot, Sprung,
+Kontrast sowie a11y-Grundchecks grün. Große Paketabnahme bleibt offen.
 Beleg: `../FORMULAR-KONFLIKT-2026-10-10.md`. Der oben genannte Testname
 `t_snapshot` war unzutreffend: tatsächliche Datei `t_karten_snapshot.js`.
 Kein Produktfehler aus dem abgewiesenen falschen Testaufruf abgeleitet.
+
+## Anschluss-Abnahme konkretisiert, 10.10.2026 02:21
+
+Vorbereitung für spätere H-Aufgaben, kein Funktionsbau und keine neue
+Freigabe. Quelle: GESAMTLISTE § 2 und RUNDE-2 Frage 22. Die dortige
+Entscheidung lautet nur „Am selben Tag Runde fortsetzen anbieten“;
+Modusumfang und Umgang mit historischem Rückgängig sind damit nicht entschieden.
+
+### Karte während der Abfrage bearbeiten
+
+| Ausgang / Aktion | Später nachzuweisendes Ergebnis | Prüfebene |
+|---|---|---|
+| Laufende Runde, Karte offen/verdeckt; Blatt öffnen, unverändert abbrechen | Session, Queue, Bereich, Rest und Aufdeckzustand erhalten; keine Bewertung/Tagesantwort | Browser mit Zustandsvergleich, nicht nur Bild |
+| Notiz ändern und speichern, fremde Bewertung trifft davor ein | Notiz gespeichert; fremder Bewertungsstand bleibt erhalten, keine zweite Tagesantwort | Echtes SDK mit zwei Profilen; A17-Fälle als Ausgang |
+| Wort/Harakat korrigieren | Textänderung und bestehender Rückfallreset korrekt; keine zusätzliche Antwort; Rückkehr zur selben Karte | Browser plus echtes SDK |
+| Escape/Wischen/Tippen daneben bei geändertem Entwurf | Verwerfen bestätigen/ablehnen; Ablehnen erhält Eingabe und Runde | Kartenblatt-/Neben-Tippen-Muster, schmale Breite |
+| Karte/Bereich inzwischen gelöscht, Konto A→B während Blatt/Dialog | Kein Wiederanlegen durch verspätetes Speichern; keine Daten von A in B | Echtes SDK und Auth-Wechsel-Probe |
+| Vorherige Antwort hat Rückgängig; Text-/Stufenänderung oder fremder Snapshot | Bestehenden Schutz anhand Bewertungskennung erhalten; fremde Bewertung wird nicht zurückgedreht | A14-Kontrollen plus Zustand der aktiven Runde |
+
+Vorhandene Tests sind Ausgangspunkte, kein Nachweis des noch fehlenden
+Abfrageknopfs: `t_karten_blatt.js`, `t_karten_snapshot.js`,
+`t_neben_tippen.js`, `t_runde_rest.js`, `t_runde_bereiche.js`,
+`t_undo_verlauf.js`. Nach späterem Bau passende Fälle ergänzen und die
+vorgeschriebene Rundenabnahme ausführen. Keine neuen Tests nur für diese
+Planpflege und keine vorhandenen Tests vorsorglich wiederholen.
+
+### Runde am selben Tag fortsetzen
+
+| Ausgang / Aktion | Später nachzuweisendes Ergebnis |
+|---|---|
+| Teilrunde beenden, App neu öffnen, fortsetzen | Restfolge/Kartenkennungen und Bereiche nachvollziehbar erhalten; bereits gespeicherte Antworten bleiben unverändert |
+| Noch laufender Wischzug beim Beenden | Vor Sicherung den bestehenden Abschluss nachholen; Wiederaufnahme bucht ihn nicht erneut |
+| „Nicht“ hat eine Karte wieder angehängt | Gewollte Wiederholung erhalten; keine neue Fälligkeitsrunde durch bloßes Filtern erzeugen |
+| Fremde Bewertung oder Löschung im gespeicherten Rest | Karte mit aktuellem Datenstand abgleichen; keine alte Bewertung zurückschreiben, keine gelöschte Karte anlegen |
+| Konto A→B→A; logischer Tageswechsel | Keine fremde Fortsetzung in B; Vortagsrunde nicht als heutige Fortsetzung anbieten |
+| Leere Restqueue oder vollständig beendete Runde | Kein leeres Fortsetzungsangebot; normaler neuer Start bleibt möglich |
+| Wiederholte Wiederaufnahme ohne neue Antwort | Tageswerte und Beitragskennungen identisch; kein Replay bereits bestätigter Beiträge |
+| Üben/Schreiben/Text-Probelauf | Getrennte Zustände; Fortsetzung nur für zuvor ausdrücklich festgelegte Modi, Texte-Probelauf nicht umbauen |
+
+Ausgangswege am aktuellen Code erneut gelesen: `startSession` stellt Queue
+und Rest neu zusammen; `startDrillWithCards` hat eigene Modusfelder;
+`endSession` holt Wischen/Tagesversand nach und entfernt die Session.
+`undoLastGrade` prüft die Kartenkennung vor negativen Tagesbeiträgen.
+Eine Fortsetzung darf weder `gradeCard` noch `undoLastGrade` zur
+Rekonstruktion vergangener Antworten ausführen. Neues Speicherformat,
+Zeit-/Kontobindung, beschädigte/alte Speicherstände und Datenschutz müssen
+in der späteren H-Aufgabe festgelegt und geprüft werden. Diese Tabelle
+belegt keinen bereits implementierten Fortsetzungsweg oder Lernnutzen.
