@@ -1136,6 +1136,14 @@
       "fehler": null,
       "sekunden": 8,
       "quelltext": "10685dc0738bb7b1e09de20d41571d43b36b68713d81bb2b78ba7cba3cfcd6c3"
+    },
+    "t_text_nachbarn.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 30,
+      "quelltext": "3ed1a671708006227818b397e8fb1d560f8cd4b99b3698d3437cf2f6c82685c1"
     }
   }
 }

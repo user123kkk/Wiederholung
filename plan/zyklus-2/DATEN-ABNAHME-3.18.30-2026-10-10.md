@@ -37,7 +37,15 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 `abnahme-emulator-besetzt-3.18.30.log`,
 `abnahme-emulator-regeln-3.18.30.log`, `abnahme-regeln-3.18.30.log`.
 
-## Gesamtlauf, um 11:57 angehalten
+## Gesamtlauf, erste Unterbrechung um 11:57
+
+15:01:143/158 gültig grün, alle143 vollständigen Abschlusslogs gelesen.
+A16 frisch22 echte SDK-Fälle grün am unveränderten App-/Rules-Stand;
+Service-Worker-Update inklusive Offline und festen Gegenproben grün.
+Runner14916/Sitzung58908 läuft allein weiter, Rest/Runde/Affe/Commit offen.
+Neue gesamte TikTok-Nachricht als Quelle bewahrt und in vorhandene
+Themenpläne zusammengeführt; keine Quellenänderung oder neue Bauaufgabe.
+
 
 14:40: korrigierte komplette Rechts-Abnahme grün (40s),320/390/820 in
 beiden Themen, alle Scrollabschnitte/Rückwege/Eingaben und verspätete

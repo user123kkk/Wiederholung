@@ -1,0 +1,4 @@
+Gegenprobe ohne Zusammenlegen: 2 Befunde (rot erwartet)
+OK t_text_nachbarn: Block 11-13, Hinweis 9-10, 14 unsichtbar, nur 12 bewertet, 12+14 ein Block
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":30,"quelltext":"3ed1a671708006227818b397e8fb1d560f8cd4b99b3698d3437cf2f6c82685c1"}

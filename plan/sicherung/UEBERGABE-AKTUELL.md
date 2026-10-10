@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 14:59 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 15:01 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `5a6fd512 Sicherung 14:58 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `2fe3ee15 Sicherung 15:00 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -58,6 +59,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_spur_rechtsplan.js
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
  M sw.js
 ```
 
@@ -66,7 +68,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -87,6 +89,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 15:01 Codex143/158 gültig grün; alle143 vollständigen Abschlusslogs gelesen. A16 frisch22 SDK-Fälle am unveränderten4a8ca5a1/6a110898, Service-Worker-Offline/Update samt festen Gegenproben grün. Text-Neu-Test aktiv, Probelauf unverändert. Stand/Ideenzuordnung samt lokalen Links geprüft; Abschlussbericht nachgezogen. Netzteil2 bestätigt, keine Veröffentlichung.
 
 - 14:55 Codex vollständige TikTok-Nachricht einschließlich Betreiberkommentaren als Quelle unter ideen/TIKTOK-SAMMLUNG-2026-10-10.md bewahrt. Wünsche in ALLES-OFFEN/BETREIBER-VERSTEHEN und vorhandene Onboarding-, Mehrwert-, Konsolen-, Geräte- und Monetarisierungspläne eingefügt; keine parallele Statusliste. Historische Onboarding-Zahlen nicht als Sperre; automatische Tests vor Betreiberaufwand. Primärrecherche/Architekturprüfung offen, Videoaussagen nicht als geprüfte Empfehlungen übernommen. Kein Produktbau/Deploy, bestehende3.18.30-Abnahme fortgesetzt.130/158 grün; alle130 Abschlusslogs vollständig gelesen, Sprung/Üben aktiv.
 
@@ -129,5 +133,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 12:50 Codex zweite Aufbaulücke im Gesamtlauf:86 grün, t_nur_betreiber vor Browserstart rot bei unnötigem historischem Worktree-Aufbau. Eigenen Runnerbaum18936/gerade gestartetes PaketB beendet, alle87 fertigen Logs gelesen und roten Einzellog/stand.json zusätzlich gesichert. Normaler Vergleich arbeitet seit PaketC ausschließlich am aktuellen Stand; historischen Checkout/Server deshalb nur in bestehendem --historisch-Zweig anfordern, Browser-/HTML-/Pixel-/Gegenproben unverändert. Reine VM-Aufbauprobe ohne Git-/Servermutation grün, fester Vorstand315bb0e rot genau beim unnötigen Checkout (2 Aufrufe); ganze Ausgaben gelesen. Kein neuer Worktree angelegt, keine vorhandenen Ordner bereinigt; Produkt/Rules/Stubhash e595b5b6312244cd gleich. Fortsetzung mit tatsächlichen Quellen-/Testhashes bewahrt86 gültige Tests, nur geänderten/roten und unvollständige neu. Mainlog abnahme-gesamt-3-3.18.30.log; Leserregister für geänderten Test zurückgesetzt, alte rote Ausgabe erhalten.
 
 - 12:45 Codex75/158 grün, alle75 vollständigen Abschlusslogs gelesen. Kontrast0, paralleles SDK-Laden mit alter Wasserfall-Gegenprobe, Lernstart28 Zustände und zwölf bestehende Lernregelregressionen grün. Keine neue Lernregel/Empfehlung/Lernwirkungsbehauptung; keine zusätzlichen Simulationen. Eine Minuten-Sicherung12532/16564 weiterhin aktiv, Übergabe/automatische Sicherungen fortgeschritten. Report/STAND und Leserregister aktualisiert, Gesamtlauf87583 allein weiter.
-
-- 12:42 Codex70/158 grün, alle70 vollständigen Abschlusslogs gelesen. Kontofortsetzungen samt zahlreichen festen Gegenproben, Lösch-Zeitlimit/Offline-Sperre, Wechsel während Löschung und alte Speicher-/Stapelantworten isoliert. Aktuell Kontrastprüfung, einziger Browserlauf87583 bleibt aktiv. Keine Produktionsdaten/Authentifizierungsbelege, App/Regeln unverändert, kein Paketcommit/Deploy.
