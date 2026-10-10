@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 21:18 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 21:19 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,9 +6,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `3b0e2320 Sicherung 21:17 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `cc16f0de 3.18.31: Eigene Karte direkt in der Runde bearbeiten`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.31"
-- Version im letzten Commit: const APP_VERSION = "3.18.30"
+- Version im letzten Commit: const APP_VERSION = "3.18.31"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
 
@@ -30,9 +30,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A .claude/skills/llm-council/README.md
  A .claude/skills/llm-council/SKILL.md
  A .claude/skills/llm-council/references/upstream-SKILL.md
- M CHANGELOG.md
- M app.js
- M index.html
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
@@ -48,8 +45,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_auswerten.js
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
- M styles.css
- M sw.js
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
@@ -76,6 +71,16 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ```
 
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
+
+## 10.10.2026 – H1 gezielt abgeschlossen
+
+Stift und Aktionsschutz gebaut; vorhandenen Editor ohne Sitzungswechsel
+wiederverwendet. Sechs Konfigurationen und acht echte SDK-Formularfälle
+grün. Blatt, Snapshot, Neben-Tippen und Sprung grün; Bilder geprüft.
+Gegenprüfung des vollständigen Produktdiffs und LEHREN §14 abgeschlossen.
+Version 3.18.31 konsistent; eigener Server liefert identische Quellen.
+Gezielter Commit/Push folgt, fremde gestagte Arbeit bleibt erhalten.
+Abnahme nach Klein-Weg, kein Gesamtlauf und kein Deploy. Tempo bleibt offen.
 
 ## 10.10.2026 – H1 konkret beauftragt
 
@@ -112,13 +117,3 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 - 16:53 Codex neuer konkreter Betreiberauftrag hebt Tempo-Diagnosestopp für Sperrenbehebung auf; Arbeitsziel nicht blockiert gesetzt. Vorhandenen Befund/Originaltest/UI-Skill, Renderer und Offline-Tracekosten gelesen. Layout/Stil dominieren, keine neue Produktursache allein aus Einzelzeiten behauptet. Server8097 und Minuten-Sicherung laufen; alte Quellen/Tests erhalten. Gezielte Klärung zuerst, danach Datenabschluss und vorhandene Reihenfolge, keine Grenze lockern/kein Deploy.
 
 - 16:50 Codex Sperraudit2: aktuelle Übergabe/STAND und Einzelfreigabe-Status erneut geprüft; keine neue Freigabe oder Zustandsänderung. Datenentwurf3.18.30 weiter uncommittet,157/158; Tempo-Diagnose gestoppt, neue Paketarbeit laut AGENTS gesperrt. Quellenrest abgeschlossen, Vorbereitung schon vorhanden; keine wiederholte Prüfung/Messung als Fortschritt ausgegeben. Minuten-Sicherung1792/5884 live. Arbeitsziel noch aktiv, Blockiert-Schwelle noch nicht erreicht.
-
-- 16:49 Codex verbleibenden Anschluss geprüft: CODEX-START/ENTSCHEIDUNGEN-VERSTEHEN, STAND und aktuelles AUFGABEN gelesen; kein weiterer autonomer Paketbau über uncommittetem Datenentwurf. Veraltete A14–A17-Hinweise „große Abnahme später“ auf tatsächlich ausgeführte157/158-Abnahme samt offenem219ms-Tempo und Diagnosestopp berichtigt, Status in Arbeit erhalten. STAND/Mehrwert-ARBEITSSTAND auf abgeschlossene lokale Quellenprüfung nachgezogen, kein wiederholter Testauftrag. Dokumentations-Diffcheck grün; Produkt/Testquellen unverändert.
-
-- 16:48 Codex historische Quellenprüfung abgeschlossen:39 lokale Exporte mit Beginn vor05.10.;30.09.-Betreiberblöcke ohne Kürzung gelesen, Duplikat erkannt. Fehlende Anfangsdatumsbereiche/älteste Quelle explizit dokumentiert, keine Vollständigkeit sämtlicher Gespräche behauptet. Heutige Hochzähl-Merkerfunktion mit historischem Wunsch abgeglichen, erhaltenen Fortschritt-/Startlog vollständig gelesen; kein falscher Testbeleg für Reiteranimation. Kartenformular-Wortfeldscrollen dem bestehenden Tastaturrest zugeordnet. Klein-Weg-Bericht/AUFGABEN geprüft: B-1/B-2/B-5 kein offener Zyklusauftrag; kein eigenmächtiger Paketbau. Nächster Produktabschluss bleibt157/158, Tempo-Diagnose ausdrücklich gestoppt.
-
-- 16:47 Codex17./11./12.09.: zehn lokale Originalchats gelesen, Überlappung der12.09.-Exporte und historische PR/Force-Push-Aufträge erkannt. Lokale Domain-/Manifest-/Metatag- und Reiteraktionsquellen geprüft. Markenidentität an allen Stellen und Migration alter Freundesinstallationen als unbelegte Reste zentral erhalten; breite Vorbild-/Lern-/Fortschrittswünsche nicht pauschal abgenommen. Älteste lokale Quelle11.09.; Rest vollständiger30.09.-Abgleich und abschließende Quellenlücken/Zuordnung. Dokumentations-Diffcheck grün, Produkt/Messläufe unverändert.
-
-- 16:45 Codex18.09.: sieben Originalchats gelesen, alle acht alten TikTok-Originale und Navigationskritik bestehenden Bereichen zugeordnet. Apple-Knopf verborgen belegt; aktuelle Bytegrenze, feste Navigation, Nutzerlistener und erhaltene Einstellungen-/Serienlogs geprüft. Historischer Cloud-Erfolg und reine Rechen-/Ansichtstests nicht als heutiger SDK-/iPhone-Nachweis ausgegeben. Zentralen historischen Abschnitt ehrlich auf Umsetzung/Beleggrenzen benannt; falsche pauschale Erledigung entfernt. Keine Produktänderung oder Messläufe. Nächste Quellen17.09.
-
-- 16:43 Codex19.09.: vier lokale Chats gelesen, automatische Zusammenfassungen/Modellwechsel nicht als neue Wünsche behandelt. Debugkasten, Teilen-Ende und Betreiber-/Lehrer-Unterscheidung am aktuellen Code und vorhandenen Teilentest abgeglichen; begrenzte Belege zentral ergänzt. Gesamt-Onboarding/ruhige Oberfläche/TikTok und Lehrerideen bestehenden Bereichen zugeordnet; historisches Repo-„getan“ kein aktueller Statusbeleg. Keine Produktänderung, Veröffentlichung oder Messung. Nächste Quellen18.09.
