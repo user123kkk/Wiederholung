@@ -8,10 +8,10 @@ fest; keine Abnahmefreigabe, kein neuer Paketbau, kein App-Commit.
 
 | Aufgabe / Quellstand | Tatsächlich geprüft | Noch kein Nachweis |
 |---|---|---|
-| A14/A15, App 05269ebd | 16 SDK-Regressionsfälle am früheren A16-Abschluss | Neuer vollständiger Nachlauf am A17-App-Stand |
+| A14/A15, App 4a8ca5a1 | 16 SDK-Schutzfälle gemeinsam nach A17 grün, voller Log gelesen | Große Paket-/Browser-/Rundenabnahme |
 | A16, App 05269ebd | 17er-Lauf plus zwei spätere Kartenkopie-Einzelproben | Ganzer aktueller 22er-Lauf |
 | A16, App 4a8ca5a1 | Einzelne positive Fallauswahlkontrolle, Altersgrenze 120/121, abweichende Cloud-Belegkopie und gezielte Gegenproben | Alle 22 Produktfälle gemeinsam |
-| A17, App 4a8ca5a1 | Fünfer-SDK-Lauf, drei spätere Einzelproben (einschließlich Textkorrektur 09:33) und fünf betroffene Browserprüfungen | Gesamtes Paket, Runden-/Zufallsabnahme und echter iPhone-PWA-Test |
+| A17, App 4a8ca5a1 | Alle acht SDK-Fälle gemeinsam grün nach Weiter-Auftrag; fünf betroffene Browserprüfungen zuvor am selben App-Stand grün | Gesamtes Paket, Runden-/Zufallsabnahme und echter iPhone-PWA-Test |
 | Rules 6a110898 | 238 Fälle am festgehaltenen Regelnachweis; Regeldatei seitdem unverändert | Kein Nachweis einer veröffentlichten Regelversion |
 
 Vollständige Hashes und Logs stehen in KARTEN-KONFLIKTE-2026-10-09.md,
