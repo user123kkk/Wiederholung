@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 11:05 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 11:07 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `5a96788 Sicherung 11:04 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `32b0c6c Sicherung 11:06 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -35,6 +36,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md
+ M plan/zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md
  M sw.js
 ```
 
@@ -64,6 +67,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 11:08 Codex Heartbeat begonnen: Übergabe 11:04 und einzelne Minuten-Sicherung 12532/16564 bestätigt, Entwurf 3.18.30 unverändert. Quellenabgleich erste Runde 09–12: vier vollständige Abschlussberichte, 50 Hauptpositionen einschließlich Gegenreden zugeordnet, neuer Einzelbericht. Jetzt 20/34 Berichte, 196 nummerierte Positionen plus Gegenprüfer; 14 Berichte und rückwärtige Katalogprüfung offen. Ungeprüfte Plattform-/Steuer-/Zahlungs-/Lizenz-/Lernwirkungsbehauptungen als Quelleninhalt erhalten; keine Recherche-/Geräte-/Produktprüfung daraus behauptet. Historische Import-/Wake-Lock-/Exportlücken nicht als heutige Bugs ausgegeben; dauerhafte Gratis-/Vergessensfreiheit nicht als Betreiberzusage übernommen. Keine Tests/App-/Rules-Änderungen oder neuen Pakete; Fortschritt sichtbar gemeldet.
 
 - 10:30 Codex sichtbare Fortschrittsmeldungen auf Betreiberwunsch in ALLES-OFFEN und vorhandener Automation verankert, ACTIVE bestätigt. Status zunächst ehrlich 14/34, keine Arbeit seit letzter Antwort; stündlichen Heartbeat von pausenloser Arbeit unterschieden. Danach erste Runde 07/08 vollständig ab Abschlussbericht gelesen, jeweils zwölf Hauptpositionen samt Nebenabschnitten zugeordnet. Jetzt 16/34 Berichte, 146 nummerierte Positionen plus Gegenprüfer; 18 Berichte und Rückwärtsprüfung offen. Auch Quelle 08 nennt anderen Repo-Pfad: nicht als bestätigten Desktop-Codebefund übernehmen. Kein Produktbau/keine Tests, neue Entscheidungsregel erhalten.
 
@@ -106,5 +111,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 04:06 Codex A16-Prüfergegenprobe: Übergabe 04:04, Entwurf und einzelner Sicherungsbaum 12532/16564 erhalten. Konkrete Lücke nachgewiesen: unbekannter --fall liefert ohne Fallausführung Exit 0/0 grün. Vorbefundlog und feste Quelle 7828140 samt Werkzeug-Dateihash festgehalten. Nur Fallkatalog/Eingangs-/Eindeutigkeits-/Vollständigkeits-/Erfolgszahlprüfung im bestehenden A16-Prüfer ergänzt; unbekannte und leere Auswahl mit erwarteter genauer Exit-1-Ablehnung geprüft. Positive Auswahl Speicherfehler-keine-Bewertung einmal grün, alle 19 Definitionen kataloggebunden; komplette Logs gelesen. Keine fachliche Assertion, Zeitgrenze oder Produktdatei geändert, kein ganzer 19er-Lauf behauptet. Daten-Skill-Prüfebene wie zuvor echter SDK, Auth-Attrappe, Worker blockiert. Bericht erweitert, Syntax/Diff grün; App-SHA 4a8ca5a1, Regeln 6a110898, 3.18.30 weiter uncommittet. Große Abnahme/Veröffentlichung später, Nacht-Fortsetzung weiter aktiv bis 09:00.
 
 - 03:09 Codex A17-Datenränder: Übergabe 03:07 und einzelner Sicherungsbaum 12532/16564 bestätigt. Daten-/Oberflächenwege im bestehenden Formular nachgelesen; zwei fehlende SDK-Einzelproben ergänzt: Notiz nach fremder Löschung (Server 404, Hinweis und Eingabe erhalten) und Offline-Notiz nach fremder Bewertung (SDK-Cache mit ausstehenden Writes vor Fremdbewertung bestätigt, Servernotiz und fremde Bewertungsfelder erhalten). Beide grün, andere Karte/JS-Fehler geprüft, vollständige Logs gelesen. Erster Löschlauf rot wegen mehrdeutigem .dlg-Testselektor, nur Selektor konkretisiert; sämtliche fachlichen Erwartungen erhalten. Unbekannte --fall-Eingabe liefert geprüft Exit 1 statt leeren grünen Lauf. Bericht/Grenzen erweitert: fünf vorherige plus zwei neue Einzelbelege, kein ganzer 7er-/Paketlauf, kein Neustart/Auth-/Tageszähler-Nachweis daraus. App-SHA 4a8ca5a1/Regeln 6a110898 unverändert, 3.18.30 weiter Entwurf; kein neuer Paketbau/Commit/Deploy. Nacht-Fortsetzung aktiv bis 09:00.
-
-- 02:21 Codex Anschlussvorbereitung: Entscheidungen in GESAMTLISTE § 2/RUNDE-2 Frage 22 und tatsächliche Start-/End-/Undo-/Blattwege erneut abgeglichen. Konkrete Abnahmematrix für Bearbeiten in der Abfrage und taggleiche Fortsetzung ergänzt, getrennte Browser-/SDK-Nachweise und noch unentschiedenen Modus-/Undo-Umfang festgehalten. Veraltete Laufmeldung in Vorbereitung auf fünf grüne betroffene Browserprüfungen korrigiert. Kein neuer H-Bau, keine Lernwirkungsbehauptung, keine künstlichen Testwiederholungen. Ein rg-Aufruf mit Windows-Dateiglobbing abgewiesen; tatsächliche Datei über Inventar gefunden, keine Prüfung daraus behauptet. Protokoll-Patch wegen unvollständiger Kontextzeile zunächst abgewiesen, danach am eindeutigen Tageskopf eingefügt. Sicherung 02:19 enthält A17-Abschluss, Übergabe erhalten; einzelner Sicherungsbaum 12532/16564 bestätigt. App weiter 3.18.30 uncommittet, Nacht-Heartbeat aktiv.

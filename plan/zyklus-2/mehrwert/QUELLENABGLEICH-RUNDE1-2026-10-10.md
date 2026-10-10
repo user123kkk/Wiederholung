@@ -164,7 +164,8 @@ nicht durch einen Suchtreffer zu anderem Kursmaterial ersetzt.
 
 ## Nächster Schritt
 
-09–26 ebenso lesen/zuordnen, danach Zusammenführung und Rückwärtsprüfung
+[09–12 inzwischen zugeordnet](QUELLENABGLEICH-RUNDE1-09-12-2026-10-10.md).
+13–26 ebenso lesen/zuordnen, danach Zusammenführung und Rückwärtsprüfung
 der 187 Katalogzeilen. Die 94 Zuordnungen wurden nicht aus ALLE-IDEEN
 kopiert, sondern aus vollständigen Abschlussberichten einschließlich
 Nebenabschnitten abgeleitet. Keine neue Produktfreigabe daraus.
