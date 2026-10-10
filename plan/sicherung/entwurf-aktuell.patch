@@ -4140,10 +4140,10 @@ index 00000000..f88e13aa
 +})().catch(e => { console.error(e); process.exitCode = 1; });
 diff --git a/plan/werkzeuge/pruefstand/x_text_layout_auswerten.js b/plan/werkzeuge/pruefstand/x_text_layout_auswerten.js
 new file mode 100644
-index 00000000..a9d26b2b
+index 00000000..658fa6a7
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/x_text_layout_auswerten.js
-@@ -0,0 +1,32 @@
+@@ -0,0 +1,39 @@
 +/* Offline-Auswertung erhaltener Traces. Keine Browserprüfung, keine Freigabe.
 +   Prüft große Layouts gegen die zeitlich enthaltenen click-Handler. */
 +const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
@@ -4151,7 +4151,7 @@ index 00000000..a9d26b2b
 +const dateien = [
 +  ['alter Originaltrace', 'trace-315bb0e-verwalten.json'],
 +  ['neuer Originaltrace', 'trace-neu-verwalten.json'],
-+  ...['original-1', 'sichtbar', 'original-2'].map(n => [n, 'text-layout-ursache/' + n + '.json'])
++  ...['original-1', 'sichtbar', 'original-2', 'neustart-original', 'neustart-getrennt'].map(n => [n, 'text-layout-ursache/' + n + '.json'])
 +];
 +const rund = n => Math.round(n * 100) / 100;
 +for (const [name, file] of dateien) {
@@ -4171,6 +4171,13 @@ index 00000000..a9d26b2b
 +      imKlick, nachKlickMs: vorher ? rund((e.ts - vorher.ts - vorher.dur) / 1000) : null };
 +  });
 +  console.log(name + ': ' + JSON.stringify(zeilen));
++  for (const c of events.filter(e => e.name === 'EventDispatch' && e.ph === 'X' && e.args?.data?.type === 'click' && e.ts >= anfang && e.ts < ende)) {
++    const task = events.find(t => t.name === 'RunTask' && t.ph === 'X' && t.pid === c.pid && t.tid === c.tid && t.ts <= c.ts && t.ts + t.dur >= c.ts + c.dur);
++    assert(task, 'Aufgabe des Klick-Handlers fehlt');
++    const eingaben = events.filter(e => e.name === 'EventDispatch' && e.ph === 'X' && e.pid === task.pid && e.tid === task.tid && e.ts >= task.ts && e.ts + e.dur <= task.ts + task.dur);
++    console.log('Klickaufgabe ' + JSON.stringify({ ms: rund(task.dur / 1000),
++      ereignisse: eingaben.map(e => ({ typ: e.args.data.type, ms: rund(e.dur / 1000) })) }));
++  }
 +  if (!Array.isArray(input)) {
 +    assert.equal(input.identitaet, '2f26be5275dfc14100c34759681047246f942637093fa66e4699d481fb2c2c33', 'End-DOM verändert');
 +    assert(input.vor.schriften.length === 2 && input.vor.schriften.every(f => f.status === 'loaded'), 'Schriften nicht geladen');
