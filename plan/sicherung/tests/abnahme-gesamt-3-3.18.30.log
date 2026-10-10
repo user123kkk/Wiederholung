@@ -94,3 +94,6 @@ EXIT 0 t_paket_c_fort.js (32s)
 EXIT 0 t_paket_c_kalendertage.js (209s)
 EXIT 0 t_paket_c_suchpuffer.js (5s)
 EXIT 0 t_paket_c_verw.js (273s)
+ROT t_paket_c_weiter.js (1046s)
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1046,"quelltext":"84de41dd4dd6e296530920648df38a80d3f03afcf01f1b6cba4032f7f44e4e13"}
