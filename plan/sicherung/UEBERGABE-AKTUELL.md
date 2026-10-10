@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 21:00 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 21:01 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `01348e98 Sicherung 20:59 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `f509327e Sicherung 21:00 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/council/TEMPO-ENTSCHEIDUNG-2026-10-10.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -95,6 +98,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- 21:01 Codex: Betreiber „ok los“ nach konkreter Kurzvorlage als ausdrückliche Freigabe der begrenzten Datenabschlussausnahme dokumentiert. Aktuelle Übergabe, Betreiberverständnis, Abschlussbericht, Arbeitsregeln/Checkliste und Daten-Skill gelesen; Netzteilstatus2, laufende Sicherung1792/5884 bestätigt. Fremden Produktentwurf3.18.30 erhalten. Kein neuer Tempo-/Gesamtlauf; jetzt tatsächlichen Diff und gültige Quellbindungen gegen Abschlussbelege prüfen.
+
 - Codex nach Betreiber „weiter“: konkrete Grenzwert-/Abschlussentscheidung ausgearbeitet, keine neue Messung. llm-council gemäß Projektpflicht einmal durchgeführt: fünf getrennte Berater, zufällige A–E-Zuordnung, fünf frische anonymisierte Gegenprüfer; alle Antworten vollständig gesichert. Gegenprüfung ergänzt: gleiche alte Verzögerung kann trotzdem unzumutbar sein; 50 ms/Bild bleibt eigenständige offene Forderung. Vorlage trennt echte Tempo-Abnahme von ausdrücklicher Risikoausnahme allein für vorhandene Datenkorrekturen A14–A17/3.18.30. Originaltest/Cache und Produkt unverändert, Ausnahme noch nicht freigegeben. Volltext und HTML unter plan/council; Wünsche/Anschluss in ALLES-OFFEN und STAND eingetragen.
 
 - Betreiberkorrektur10.10.: Zu viele kostenpflichtige Tempo-Varianten ohne Fix; Codex räumt ein, die Herkunft/Angemessenheit der Grenzwahl zu spät geprüft zu haben. Weitere Messläufe gestoppt. git blame/log: Test und200ms aus Agentencommit7264af9a vom30.09.; KONZEPT§13 nennt50ms/Bild. In geprüften Quellen keine quantitative Herleitung für200ms/Longtask/CPU4x auf Windows. Offizielle web.dev-INP-Dokumentation gelesen:200ms ist INP-Empfehlung aus realen Interaktionslatenzen, nicht identische Longtask-Messgröße. Wunsch und Beleggrenze zentral eingetragen; keine Zahl erhöht oder rote Belege umgedeutet.
@@ -136,5 +141,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 16:28 Codex „weiter nach reihenfolger offener sacen“: aktuelle Übergabe/Reihenfolge und bestehende Sicherung1792/5884 bestätigt. Vorhandene Lernrunden-Vorbereitung vollständig gelesen; RUNDE-2/S1 und historischen Listenstatus gegen aktuelle Verständigungsregel geprüft. Nur Sammelfreigabe belegt, konkrete Einzelfreigabe unklar. Vorläufigen Stand und konkreten Vorschlag (Stift nach Aufdecken, vorhandenes Blatt, gleiche Karte/Runde) mit Nutzen/Nachteil dokumentiert. Keine neue Tempo-Diagnose, Tests, Produktänderung oder Paketfreigabe. Nächster Schritt konkrete Entscheidung, Bau weiter erst nach Datenabschluss.
 
 - 16:24 Codex Fortsetzungsauftrag: AGENTS, aktuelle Übergabe, Betreiberregeln, STAND, LEHREN, CODEX-START, zentrale Offenliste und Tempo-Befund gelesen; A14–A17 und Paketabschluss-Sperre abgeglichen. Minuten-Sicherung1792/5884 vorhanden, nicht erneut gestartet. Entwurf erhalten, keine Diagnose/Messung oder Produktänderung. Innerhalb der beauftragten Grenzen kein weiterer Produktabschluss möglich; offene Entscheidung zur ausdrücklichen Wiederaufnahme der Tempo-Klärung in ALLES-OFFEN und PLAN festgehalten. Keine Abnahme/Commit/Veröffentlichung.
-
-- 16:22 Codex Betreiberkorrektur „halt dich nicht so lang daran auf, du verschwendest tokens“ aufgenommen; weitere Tempo-Diagnose beendet. Nach Neustart Originaltest einmal219ms bei200ms rot, ganzen Log gelesen. Zwei gezielte Klicktraces am gleichen Stand gelesen: Original196ms/getrennte Eingabe170ms, gleiche Layoutfolge und End-DOM; Eingabezeit verändert, daher keine Testkorrektur/Freigabe. Lokale Playwright-Quelle zeigt zusätzlichen Hit-Target-Interceptor, dessen Anteil am ursprünglichen Rot nicht bewiesen ist; keine weitere Probe gestartet. Quellee595b5b6312244cd gleich,157 grüne erhalten. Keine Produktänderung, kein Paketcommit/Deploy. Dokumentation und Belege gesichert; Minuten-Sicherung1792/5884 läuft einzeln.

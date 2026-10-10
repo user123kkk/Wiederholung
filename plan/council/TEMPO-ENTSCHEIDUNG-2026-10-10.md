@@ -1,6 +1,10 @@
 # Tempo-Abnahme: konkrete Entscheidungsvorlage vom 10.10.2026
 
-Status: ausgearbeitet, noch nicht freigegeben. Keine neuen Messläufe oder Produktänderungen.
+Status: begrenzte Ausnahme freigegeben am 10.10.2026 durch „ok los“.
+Unmittelbar vorher erklärte Kurzvorlage: „Datenkorrekturen abschließen,
+Tempo ausdrücklich offen lassen. Danach offene Reihenfolge fortsetzen;
+keine Veröffentlichung.“ Keine allgemeine Grenzwertänderung, keine
+neue Messung und keine Behauptung flüssiger Bedienung freigegeben.
 
 ## Was beim Benutzen gemeint ist
 

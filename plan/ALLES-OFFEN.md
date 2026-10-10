@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**10.10., konkrete Ausnahme freigegeben: „ok los“.** Unmittelbar zuvor
+verständlicher Vorschlag: Daten separat abschließen, Tempo offen lassen,
+danach Reihenfolge fortsetzen; keine Veröffentlichung. Zustimmung gilt
+für A14–A17/3.18.30 gemäß TEMPO-ENTSCHEIDUNG-2026-10-10.md, nicht für
+neue Lernregeln oder eine allgemeine Testlockerung. Abschluss jetzt
+ausführen: vorhandene Belege/Quellstand und Gegenprüfung abgleichen,
+gezielter Commit/Push auf main. Test bleibt rot und alle Belege erhalten.
+
 **Betreiber „weiter“ nach Grenzwertkritik, 10.10.: Entscheidung ausgearbeitet.**
 Keine weiteren Tempo-Messschleifen. Einmaliger Council mit fünf getrennten
 Beratern und fünf anonymisierten Gegenprüfungen abgeschlossen. Konkrete
