@@ -1,5 +1,15 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**10.10.21:03 erledigt: Datenabschluss A14–A17/3.18.30.**
+Commit00c66031 auf origin/main bestätigt; Produktdateien unverändert zum
+geprüften Stand und sauber.157/158 mit ausdrücklich freigegebener
+begrenzter Ausnahme; Texttempo weiter rot/offen, kein Deploy.
+Anschluss Lernrunde: konkreter Stift-Vorschlag nach Aufdecken erklärt,
+Einzelfreigabe angefragt. Eigene Karte korrigieren, dieselbe Karte/Runde
+erhalten, keine Lernantwort durch Bearbeiten; fremde geführte Karten
+geschützt. Alte S1-Sammelzustimmung allein genügt nicht. Alle übrigen
+Bereiche bleiben in der vorhandenen Reihenfolge.
+
 **10.10., konkrete Ausnahme freigegeben: „ok los“.** Unmittelbar zuvor
 verständlicher Vorschlag: Daten separat abschließen, Tempo offen lassen,
 danach Reihenfolge fortsetzen; keine Veröffentlichung. Zustimmung gilt

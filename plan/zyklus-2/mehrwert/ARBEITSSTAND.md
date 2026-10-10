@@ -1,5 +1,16 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Anschluss10.10.2026 21:03
+
+Daten A14–A17/3.18.30 abgeschlossen, Commit00c66031 auf main gepusht.
+157/158 mit konkret freigegebener begrenzter Tempo-Ausnahme; Test bleibt
+unverändert rot und Qualitätsbefund offen. Keine Veröffentlichung.
+Keine weiteren Messschleifen. Historische Wünsche bereits abgeglichen.
+Nächster Bereich Lernrunde: Stift nach Aufdecken einer eigenen Karte,
+vorhandenes Blatt und Rückkehr zur selben Karte/Runde. Vorschlag samt
+Nutzen/Nachteil erklärt, ausdrückliche Einzelfreigabe angefragt. Alte
+S1-Sammelfreigabe genügt nicht; kein Bau vor Antwort.
+
 ## Anschluss10.10.2026 17:29
 
 Tempo-Klärung seit16:53 wieder ausdrücklich beauftragt. Gezielte kleine

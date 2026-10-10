@@ -1,5 +1,10 @@
 # Nächste entschiedene Lernrunden-Punkte: Vorbereitung, kein Bau
 
+**Aktuell10.10.21:03:** Datenabschluss00c66031/3.18.30 auf main gepusht
+mit ausdrücklich begrenzter Tempo-Ausnahme; die frühere Datensperre unten
+ist Historie. Konkreten Vorschlag zu Bearbeiten nach Aufdecken erneut
+verständlich vorgelegt und Einzelfreigabe angefragt. Noch kein Bau.
+
 ## Quellenprüfung und konkreter Vorschlag, 10.10.2026 16:28
 
 Betreiber: „weiter nach reihenfolger offener sacen“. Die Datenabnahme

@@ -1,5 +1,11 @@
 # Zyklus 2 – Aufgaben
 
+**Aktueller Abschluss10.10.21:03:** A14–A17/3.18.30 im Commit00c66031
+auf main gepusht.157/158 mit ausdrücklich begrenzter Betreiber-Ausnahme;
+Tempo-Test weiterhin rot und separat offen. Keine Veröffentlichung.
+Ältere Sperr-/Vorabstände unten sind Verlauf, keine aktuelle Abschlusssperre
+für diese vier Datenkorrekturen.
+
 Erzeugt am 01.10.2026 (ab jetzt von Hand pflegen) aus `befunde/*.md` (acht Prüfer, Stand 3.18.10). **Die Einzelheiten jeder Aufgabe stehen im Befundblock** (`befunde/<Datei>`, Überschrift `#### <Kennung>`): Beleg mit Datei:Zeile, Vorschlag, Abnahme. Diese Liste legt nur Reihenfolge, Modell und Status fest.
 
 Wie gearbeitet wird: [`CODEX-START.md`](CODEX-START.md). Was der Betreiber entscheidet: [`ENTSCHEIDUNGEN.md`](ENTSCHEIDUNGEN.md).

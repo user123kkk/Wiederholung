@@ -7,6 +7,11 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.21:03 Abschluss bestätigt:**00c66031/3.18.30 auf main gepusht,
+Daten A14–A17 erledigt mit begrenzter Tempo-Ausnahme; Tempo bleibt offen,
+kein Deploy. Nächster Punkt Lernrunde: konkreter Bearbeiten-Vorschlag
+vorgelegt, Einzelfreigabe angefragt, Bau bis dahin offen.
+
 **10.10.21:02:** Datenabschluss3.18.30 mit konkreter Betreiberfreigabe
 „ok los“ trotz separat offenem Texttempo.157/158/13Runden/238Regeln und
 beide Zufallsläufe unverändert belegt; keine Veröffentlichung. Gezielter

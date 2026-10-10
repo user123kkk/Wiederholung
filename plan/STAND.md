@@ -1,5 +1,18 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.21:03 – Datenkorrekturen abgeschlossen und auf main gepusht.**
+Commit00c6603186aa68c5c30324a150e4e73b7427137a, Version3.18.30,
+A14–A17. Begrenzte Ausnahme ausdrücklich mit „ok los“ freigegeben.
+157/158,13Runden/238Regeln und beide Zufallsläufe gültig erhalten;
+Texttempo bleibt rot/offen, keine vollständige Tempo-/Geräteabnahme.
+Keine Veröffentlichung; neue Regeln später vor Hosting.
+Produktdateien sauber. Andere erhaltene Skill-/Werkzeugentwürfe sind
+keine offenen Datenproduktänderungen und wurden nicht pauschal mitcommittet.
+Nächster Punkt gemäß Reihenfolge: eigene Karte während der Abfrage
+bearbeiten. Konkreter Vorschlag nach Aufdecken/gleicher Karte erklärt;
+Einzelfreigabe angefragt, alte S1-Sammelfreigabe bleibt vorläufig.
+Keine weitere Tempo-Messschleife oder neuer Council.
+
 **10.10.: Grenzwertentscheidung konkret vorbereitet, noch nicht freigegeben.**
 [Vorlage](council/TEMPO-ENTSCHEIDUNG-2026-10-10.md) mit drei Optionen und
 begrenzter Ausnahme für den Datenabschluss; fünf Berater plus fünf

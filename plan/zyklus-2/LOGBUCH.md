@@ -2,6 +2,11 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+**Abschluss21:03 bestätigt:**00c6603186aa68c5c30324a150e4e73b7427137a
+auf origin/main gepusht; die unten angekündigten Commit-/Push-Schritte
+sind erledigt. Kein Deploy. Nächster konkreter Bearbeiten-Vorschlag erklärt
+und Einzelfreigabe angefragt; keine neue pauschale Funktionsfreigabe.
+
 ### 2026-10-10 21:02 — Datenabschluss mit ausdrücklich freigegebener Ausnahme
 
 **Geändert:** vorhandenen Entwurf A14–A17/3.18.30 samt Regeln, Datenschutz,
