@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 12:04 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 12:06 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `7b95d7e Sicherung 12:03 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `a3627e8 Sicherung 12:05 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -56,7 +57,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 15, chrome.exe 8 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 14, chrome.exe 0 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -77,6 +78,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 12:05 Codex Tempo-Ursache gemessen: acht A/B-Paare vollständig gelesen, Vorstand 7/8 grün (einmal138ms), Entwurf 0/8 (erste Bewertung284–617ms). Trace252ms vollständig im Firebase-Attrappen-Timer, CPU-Profil hauptsächlich clone/listenerMelden/dsnap. Batch meldete global, Einzelwrites schon gezielt; unberührte Karten wurden deshalb vollständig kopiert. Nur stubs.js korrigiert: Batchpfade sammeln, unberührte Listener auslassen, betroffene Änderungen eines Batches gemeinsam liefern. Neue funktionale x_stub_batch-Probe prüft null Zugriffe auf unberührte Karte, gemeinsame Änderungen/Entfernung und gefilterte Abfrage; grün. Fester Vorstand rot genau beim unnötigen Kartenlesen (2 statt0); volle Logs gelesen. Erste Fixture fehlte Auth-Protokollinitialisierung und scheiterte daran, korrigiert, Fehlversuche separat erhalten. Original-Tempotest unverändert läuft jetzt vollständig, App/Rules/echter SDK-Helfer unverändert. Neuer Attrappenhash verlangt danach frischen Gesamtlauf.
 
 - 12:02 Codex Diagnosewerkzeug für Chrome-Trace/CPU-Profil am Original-Tempotest vorbereitet, Grenzen/Assertions unverändert. Erste fünf abgeschlossene A/B-Paare: Vorstand jeweils grün, Entwurf jeweils rot (617/491/284/407/475 ms). Noch keine Ursache/Freigabe daraus. Attrappenquelle Batch-Meldung gegenüber gezielter Einzelmeldung gelesen; Messung folgt nach Vergleichslauf, kein Browser parallel. Voriger String-Einfügeversuch traf wegen CRLF keinen Anker, jetzt mit geprüftem Patch ergänzt; Produkt unberührt.
 
@@ -119,5 +122,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 09:53 Codex neuer Fortsetzungschat: aktuelle Übergabe, Betreiber-/Zyklusvorgaben und LEHREN gelesen, Caveman-/Daten-Skill angewandt. Ein Sicherungsbaum 12532/16564 bestätigt; keine zweite Schleife, kein Pull/Reset über fremdem Entwurf. Betreiberauftrag wortgetreu gekürzt in ALLES-OFFEN eingetragen. 46 gezielte Fälle bleiben abgeschlossen; keine Tests gestartet. Befunde A14–A17 und aktueller App-Diff begonnen zu lesen, Anschlussvorbereitung/Mehrwert-Reihenfolge gelesen. Nächster Baupunkt Bearbeiten in der Abfrage bleibt bis Datenpaketabschluss gesperrt; große Abnahme/ladegeraet/Deploy später, Zukunftsideen nur vorgemerkt.
 
 - 09:42 Codex Abschluss des begonnenen Datenprüfschritts: A14/A15 16, A16 22 und A17 acht SDK-Fälle gemeinsam am gleichen App-SHA 4a8ca5a1/Rules 6a110898 grün, alle vollständigen Ausgaben gelesen. Hinweise/Export/Entfernen/Offline-/Neustart-/Regelkonflikte und neue Fälle enthalten; Zusatzmeldungen nicht als zusätzliche Fälle gezählt. Bericht/Abnahmeplan/STAND/Logbuch abgeschlossen, insgesamt 46 gezielte Fälle. Keine weitere App-Änderung oder neue Testidee; Syntax/Standprüfung grün (Standausgabe wegen gemeinsamer Tool-Ausgabe nochmals separat als vollständiger Log gesichert). Ein leerer Dokumentationshunk zuvor abgewiesen, ohne Änderung; anschließend konkreten Berichtshunk angewandt. Große Paket-/Runden-/Zufallsabnahme bleibt verschoben, A14–A17 wegen Paketabschluss in Arbeit; kein App-Commit/Deploy/neues Paket. Repo-Folge und vorhandene Anschlussvorbereitung erhalten; neue Beobachtungen zu 3.18.26 weiter nur vorgemerkt.
-
-- 09:38 Codex gezielter Datenabschluss: A17 alle acht aktuellen SDK-Fälle gemeinsam grün, gesamte Ausgabe gelesen, Bericht ergänzt. A14/A15-Nachlauf am selben App-SHA 4a8ca5a1/Rules 6a110898 gestartet, danach A16-Kataloglauf; nach A17-Produktfix und neuen Fällen bestand noch Quellstandlücke, keine unveränderten abgeschlossenen Gesamtprüfungen wiederholt. BatteryStatus 2 bestätigt. Keine großen Browser-/Runden-/Affenläufe, keine neuen Prüfideen oder App-Änderung. Große Paketabnahme/Commit/Deploy weiter später, Quellen während Prüfung erhalten.
