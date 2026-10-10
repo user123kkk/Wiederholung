@@ -1,5 +1,12 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 10:18, Betreiber nach Übersicht: „na das sind mal viele punkte,
+wir sllten lieber anfangen, woauch imer du grad bist“. Begonnenen Auftrag
+weiterführen; jetzt Quellenabgleich der ersten Agentenrunde, anschließend
+zulässige offene Punkte nach Repo-Reihenfolge. Kein erneuter Plan statt
+Arbeit. Entwurf/Paketgrenze, verschobene Abnahme und Veröffentlichung
+bleiben erhalten; keine Umsetzung der unentschiedenen Ideen ableiten.
+
 10.10.2026, Betreiber zur Klärung: „ja aber woran arbeites du jetzt, es
 kann nicht sein das man sich nicht verstht“, danach: „nein ich muss es mir
 ansehen, sag mir jetzt hier was noch alles für ideen bzw punkte im tool
