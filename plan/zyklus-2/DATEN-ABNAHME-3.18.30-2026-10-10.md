@@ -1,5 +1,12 @@
 # Große Datenabnahme 3.18.30
 
+**Offene Abschluss-Sperre,10.10.15:12:** t_text_tempo zweimal rot226/254ms
+bei200ms. Zwei feste Vergleichsserien und Traces vollständig gelesen;
+keine gesicherte Datenänderungs-Ursache, beide Quellen schwanken/überschreiten.
+Details: [Tempo-Befund](TEXT-TEMPO-BEFUND-2026-10-10.md). Restlicher Lauf
+und Runde/Affe noch auswerten, kein Paketcommit/Deploy bei offenem Rot.
+
+
 Auftrag 10.10.2026 11:42: „ok los aber neuer chtat ja, und was versteht man
 unter paket“. Wiederaufnahme der zuvor konkret benannten Datenabnahme und
 des Paketabschlusses. Veröffentlichung und neue Funktionen bleiben getrennt.

@@ -148,3 +148,7 @@ BEWAHRT t_text_neu.js
 ROT t_text_tempo.js (22s)
 FEHLER:
 Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":22,"quelltext":"e8fb11926a430b29d3df6b2f88dc0eee3103424e4b3efcd3ade9f3e60cb2b915"}
+EXIT 0 t_text_zustaende.js (84s)
+EXIT 0 t_ueben.js (31s)
+EXIT 0 t_ueben_auswahl.js (22s)
+EXIT 0 t_undo_verlauf.js (25s)
