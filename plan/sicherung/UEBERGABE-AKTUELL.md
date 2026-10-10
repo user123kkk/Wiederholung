@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:28 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:29 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `6733cf48 Sicherung 16:27 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `adc0df17 Sicherung 16:28 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -65,6 +67,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md
  M sw.js
 ```
 
@@ -94,6 +97,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 16:28 Codex „weiter nach reihenfolger offener sacen“: aktuelle Übergabe/Reihenfolge und bestehende Sicherung1792/5884 bestätigt. Vorhandene Lernrunden-Vorbereitung vollständig gelesen; RUNDE-2/S1 und historischen Listenstatus gegen aktuelle Verständigungsregel geprüft. Nur Sammelfreigabe belegt, konkrete Einzelfreigabe unklar. Vorläufigen Stand und konkreten Vorschlag (Stift nach Aufdecken, vorhandenes Blatt, gleiche Karte/Runde) mit Nutzen/Nachteil dokumentiert. Keine neue Tempo-Diagnose, Tests, Produktänderung oder Paketfreigabe. Nächster Schritt konkrete Entscheidung, Bau weiter erst nach Datenabschluss.
 
 - 16:24 Codex Fortsetzungsauftrag: AGENTS, aktuelle Übergabe, Betreiberregeln, STAND, LEHREN, CODEX-START, zentrale Offenliste und Tempo-Befund gelesen; A14–A17 und Paketabschluss-Sperre abgeglichen. Minuten-Sicherung1792/5884 vorhanden, nicht erneut gestartet. Entwurf erhalten, keine Diagnose/Messung oder Produktänderung. Innerhalb der beauftragten Grenzen kein weiterer Produktabschluss möglich; offene Entscheidung zur ausdrücklichen Wiederaufnahme der Tempo-Klärung in ALLES-OFFEN und PLAN festgehalten. Keine Abnahme/Commit/Veröffentlichung.
 
@@ -136,5 +141,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 15:08 Codex acht vorgeschriebene A/B-Paare gelesen: Verwalten alter Median188ms/2 Überschreitungen, Entwurf279ms/6; Text144/148ms. Daraus zunächst Entwurf langsamer gemeldet. Traces am unveränderten Originaltest beider Quellen vollständig gelesen: gleiche Layoutobjektzahlen156/397, Hauptkosten Browserlayout/HTML-Aufbau; alter Trace373ms, neuer178ms für Verwalten, Trace kostet selbst Laufzeit. Noch keine abschließende Ursache. Ausgleich der A/B-Reihenfolge und DOM-Gleichheit mit tatsächlicher Messhilfe begonnen. Eigener Diagnoseanker scheiterte an CRLF vor Browserstart; Log erhalten, Quellnormalisierung korrigiert, zweiter Diagnoseaufruf aktiv. Produkt/Assertions gleich, Abnahme weiter gesperrt.
 
 - 15:04 Codex t_text_tempo rot226ms bei200ms/CPU4x; vollständigen Log gelesen, eigenen Runner14916 samt begonnenem Text-Zustandstest beendet.144 grüne/145 vollständige Abschlusslogs erhalten, rote Ausgabe/stand.json separat gesichert. Originaltest und vorgeschriebene x_ab_tempo-Messhilfe gelesen; acht feste Vergleichspaare mit315bb0e gestartet, kein weiterer Browserlauf. Keine Ursache vorweggenommen, keine Produkt-/Testgrenzenänderung; Paketabschluss gesperrt bis Klärung.
-
-- 15:01 Codex143/158 gültig grün; alle143 vollständigen Abschlusslogs gelesen. A16 frisch22 SDK-Fälle am unveränderten4a8ca5a1/6a110898, Service-Worker-Offline/Update samt festen Gegenproben grün. Text-Neu-Test aktiv, Probelauf unverändert. Stand/Ideenzuordnung samt lokalen Links geprüft; Abschlussbericht nachgezogen. Netzteil2 bestätigt, keine Veröffentlichung.

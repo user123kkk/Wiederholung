@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Betreiber 10.10.,16:28:** „weiter nach reihenfolger offener sacen“.
+Nächsten Bereich Lernrunde lesend vorbereitet, ohne neue Tempo-Suche oder
+Paketbau. Quelle für Bearbeiten in der Abfrage geprüft: nur alte S1-
+Sammelfreigabe belegt, deshalb vorläufig – Verständnis/Entscheidung prüfen.
+Konkreter Vorschlag samt Nutzen/Nachteil und bestehender Prüfmatrix in
+[Vorbereitung Lernrunde](zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md).
+Datenabschluss bleibt bei157/158 gesperrt; Entwurf/Sicherung erhalten.
+
 **Fortsetzungsauftrag 10.10., 16:24:** Gesicherten Stand verwenden, sehr
 knapp antworten, keine weitere Tempo-Suche oder zusätzlichen Messläufe.
 Anschluss geprüft: Datenpaket 3.18.30 bleibt bei157/158 gesperrt; innerhalb

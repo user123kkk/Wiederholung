@@ -1,5 +1,35 @@
 # Nächste entschiedene Lernrunden-Punkte: Vorbereitung, kein Bau
 
+## Quellenprüfung und konkreter Vorschlag, 10.10.2026 16:28
+
+Betreiber: „weiter nach reihenfolger offener sacen“. Die Datenabnahme
+bleibt gesperrt; weitere Tempo-Suche bleibt beendet. Nächster Bereich ist
+die Lernrunde. Vorhandene technische Vorbereitung/Prüfmatrix erhalten,
+keine neue Untersuchung oder Messung nötig.
+
+**Korrektur zur Bezeichnung „entschieden“:** Für Bearbeiten in der Abfrage
+belegt RUNDE-2 § 3 nur S1, die Sammelfreigabe „wie empfohlen“. Eine
+verständliche Einzelfreigabe ist in den geprüften Entscheidungsquellen
+nicht belegt. Deshalb aktuell vorläufig – Verständnis/Entscheidung prüfen,
+gemäß ENTSCHEIDUNGEN-VERSTEHEN; die alte Antwort bleibt historisch erhalten.
+
+Konkreter Vorschlag zur Entscheidung: Auf einer aufgedeckten eigenen
+Karte einen Stift anbieten. Er öffnet das vorhandene Kartenblatt.
+Beispiel: einen Tippfehler im Wort oder in der Übersetzung korrigieren,
+speichern und zur selben Karte in derselben Runde zurückkehren.
+Geführte fremde Karten bleiben schreibgeschützt. Bearbeiten selbst zählt
+keine Lernantwort; vorhandene Speicher-/Konfliktregeln gelten weiterhin.
+
+Nutzen: Korrektur direkt beim Entdecken, ohne die Runde verlassen zu
+müssen. Nachteil: ein weiterer Knopf auf der Karte; das vorhandene Blatt
+enthält auch eine Standwahl. Kein neuer Lernnutzen oder bereits
+funktionierender Rückweg belegt. Vorgeschlagener Einstieg nur nach dem
+Aufdecken, damit die verdeckte Antwort nicht durch Bearbeiten sichtbar wird.
+
+Bau erst nach Datenpaket-Abschluss und konkreter verständlicher Freigabe.
+Danach die vorhandene Abnahmematrix verwenden, H-Aufgabe zuordnen und
+Standwahl/Rückfallreset/aktuelle Runde ausdrücklich zusammen prüfen.
+
 09.10.2026. Maßgeblich ist die aktuelle Reihenfolge in GESAMTLISTE.md
 und ARBEITSSTAND.md. A14–A16 / 3.18.30 sind noch uncommittet; der Betreiber
 verschiebt die große Datenabnahme. Deshalb beginnt kein neues Paket.
