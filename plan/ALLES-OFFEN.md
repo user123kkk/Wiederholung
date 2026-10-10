@@ -6,6 +6,22 @@ für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
 Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,
 Messläufe oder stillschweigende Freigabe neuer Funktionen.
 
+**Originalprüfung18.09.,16:45:** Sieben lokale Chats hinsichtlich echter
+Betreiberblöcke gelesen (d9c64d17/cbf499e8/af9df362/993a3c34/5384835e/
+40b88af6/01e0ffb3). Acht TikTok-Originale plus Navigationsproblem stammen
+aus af9df362; vorhandene Ideenbereiche behalten sie, keine neue Liste.
+Lehrerraum/Rollen/Chat wurden später zum Codeweg eingegrenzt; Datenschutz
+nicht durch „rechtlich umgehen“ als bewiesen ansehen. Navigation18:07/PWA
+18:25 bleibt im offenen Gesamtbewegungs-/Gerätebereich: heutige feste Leiste,
+Viewport-Korrektur und erhaltene Hülle sind Codebelege, kein aktueller
+iPhone11-Test. Speichern/Farbwechsel: Betreiber10:06 meldete historischen
+Erfolg; heutiger Einstellungstest prüft Oberfläche, keine vollständige
+Cloudbestätigung. Großsatzwunsch600/3000/6000 Karten: heutiger Code prüft
+900000Bytes, keine feste garantierte Kartenzahl; Großsatz-Beleggrenze offen.
+Serie-Neustart historisch3.5.1 korrigiert (`hasPendingWrites` erst nach
+`cloudDocExists` ignorieren), heutiger Code bestätigt Bedingung; Serienlog
+prüft Rechenfälle, nicht diesen SDK-Neustart. Nächste Originalquellen17.09.
+
 **Originalprüfung19.09.,16:43:** Vier lokale Chats hinsichtlich echter
 Betreiberblöcke gelesen (fc33806f/f34641b4/d85a42b2/65211120).
 Automatische Gesprächszusammenfassungen sind Herkunftshinweise, keine neuen
@@ -418,10 +434,11 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 ---
 
-## 1. Erledigte Wünsche und veröffentlichter Stand
+## 1. Historische Wünsche: Umsetzung und Beleggrenzen
 
 | Was | Stand |
 |---|---|
+| Apple-Anmeldung „way later“, Knopf jetzt weg (18.09.,08:25/08:27) | umgesetzt: `APPLE_LOGIN_BEREIT = false`, Formular zeigt Apple nur bei dieser aktivierten Konstante. Keine neue Apple-Einrichtung beauftragt |
 | Grüner Debugkasten oben links entfernen (19.09.,07:56) | gebaut3.6.13; heutiger Start entfernt `debugNav`, alter Overlay-Aufbau fehlt. Codebeleg, keine neue Gerätesichtung. Der breite Wunsch nach ruckelfreier Gesamt-App bleibt offen |
 | „Teilen beenden“ funktioniert nicht (19.09.,10:13/10:18) | historischer Feld-/Regelfehler3.7.0 korrigiert, heutiger Weg wartet vor lokaler Entfernung auf Server-Löschung. [Erhaltener Teilentest](sicherung/tests/e595b5b6312244cd/t_teilen.js.log) bestätigt: bei Ablehnung Fehlermeldung, Code und Cloudsatz bleiben erhalten. Kein vollständiger aktueller Erfolg-/Neustartnachweis aus diesem Log |
 | Fortschrittsfreigabe nur Betreiber, gewöhnliches Teilen verständlich unterscheiden (19.09.,10:28) | heutiger Einstellungsweg zeigt „Code erzeugen“ allgemein, „Code – Fortschritt schaltet frei“ nur unter `istBetreiber()`. Früherer Datei-Knopf entfernt. Das ist Oberflächenbegrenzung, keine Sicherheitsrolle; Verständnis und Lehrerfreigabe über zwei echte Konten hier nicht frisch geprüft |
@@ -458,7 +475,7 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 | 3.18.27: 15 Punkte (Liste einfügen, Export, Druck, Löschen mit Rückgängig, Rundenende, Bildschirm wach, Blätter gleiten, zwei Lernregeln nur im Betreiber-Konto u. a.) | **online seit 09.10., 04:37** (mit 3.18.28) |
 | 3.18.28: klarere Wörter („Speicherkarte“ → „Sammlung“ u. a.) | **online seit 09.10., 04:37**; Gesamtlauf 156/156, Affen 0 |
 
-Online ist 3.18.28 (09.10.2026). Dieser Abschnitt ist damit erledigt; neu Fertiges kommt hier wieder hinein.
+Online ist 3.18.28 (09.10.2026). Die Einzelzeilen unterscheiden gebaute Änderungen und noch fehlende Belege; sie sind keine pauschale Abnahme.
 
 ## 2. Aufgaben nach Bereich – zentraler Arbeitsstand
 

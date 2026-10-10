@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 16:45 Codex18.09.: sieben Originalchats gelesen, alle acht alten TikTok-Originale und Navigationskritik bestehenden Bereichen zugeordnet. Apple-Knopf verborgen belegt; aktuelle Bytegrenze, feste Navigation, Nutzerlistener und erhaltene Einstellungen-/Serienlogs geprüft. Historischer Cloud-Erfolg und reine Rechen-/Ansichtstests nicht als heutiger SDK-/iPhone-Nachweis ausgegeben. Zentralen historischen Abschnitt ehrlich auf Umsetzung/Beleggrenzen benannt; falsche pauschale Erledigung entfernt. Keine Produktänderung oder Messläufe. Nächste Quellen17.09.
+
 - 16:43 Codex19.09.: vier lokale Chats gelesen, automatische Zusammenfassungen/Modellwechsel nicht als neue Wünsche behandelt. Debugkasten, Teilen-Ende und Betreiber-/Lehrer-Unterscheidung am aktuellen Code und vorhandenen Teilentest abgeglichen; begrenzte Belege zentral ergänzt. Gesamt-Onboarding/ruhige Oberfläche/TikTok und Lehrerideen bestehenden Bereichen zugeordnet; historisches Repo-„getan“ kein aktueller Statusbeleg. Keine Produktänderung, Veröffentlichung oder Messung. Nächste Quellen18.09.
 
 - 16:41 Codex22.09.: fünf Originalchats vollständig auf Betreiberblöcke geprüft; aktuelle Anmeldung, Feedbackloader/-zeile, leere Ansichten, Farben und Stoff-/Listenhinweise sowie erhaltene Anmelde-/Feedbacklogs abgeglichen. Acht konkrete Wunschgruppen zentral mit Beleggrenzen ergänzt, breite Wünsche bestehenden Bereichen belassen. B4 ergänzt tatsächlichen Formular-Rückkehrbeleg mit erhaltenem Ziel; B11 bleibt begrenzt. Keine neuen Tests/Produktänderung, Tempo bleibt gestoppt. Bestehende Minuten-Sicherung1792/5884 läuft. Nächste Quellen19.09.
