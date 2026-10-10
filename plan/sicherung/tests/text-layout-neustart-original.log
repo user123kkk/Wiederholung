@@ -1,0 +1,25 @@
+MODUS neustart-original FONT-VOR {"status":"loaded","schriften":[{"familie":"UthmanicHafs","status":"loaded"},{"familie":"AmiriQuranTanzil","status":"loaded"}]}
+FONT-NACH {"status":"loaded","schriften":[{"familie":"UthmanicHafs","status":"loaded"},{"familie":"AmiriQuranTanzil","status":"loaded"}]} DOM 2f26be5275dfc14100c34759681047246f942637093fa66e4699d481fb2c2c33
+Verwalten: Aufgabe 66 ms -> EvaluateScript 53
+Verwalten: Aufgabe 196 ms -> EventDispatch[pointermove] 10, EventDispatch[mousemove] 5, EventDispatch[pointerdown] 10, FunctionCall(listener) 6, EventDispatch[pointerup] 6, EventDispatch[click] 56, FunctionCall 54, ParseHTML 13, UpdateLayoutTree 24, Layout 64, PrePaint 4
+Verwalten: Aufgabe 169 ms -> FireAnimationFrame 3, FunctionCall 3, UpdateLayoutTree 10, UpdateLayoutTree 81, Layout 48, Paint 6, Paint 6
+Text oeffnen: Aufgabe 177 ms -> UpdateLayoutTree 8, EventDispatch[click] 75, FunctionCall 74, ParseHTML 4, UpdateLayoutTree 4, UpdateLayoutTree 16, Layout 54
+Text oeffnen: Aufgabe 112 ms -> UpdateLayoutTree 4, Layout 78, Paint 18, Paint 18
+Text oeffnen: Aufgabe 82 ms -> 
+Text oeffnen: Aufgabe 52 ms -> Layout 37
+Text oeffnen: Aufgabe 114 ms -> 
+Text oeffnen: Aufgabe 54 ms -> FireAnimationFrame 5, FunctionCall 4, UpdateLayoutTree 4, Layout 21, PrePaint 5, Paint 3
+
+Task at 34ms dur 66
+Task at 310ms dur 196
+Task at 507ms dur 169
+Task at 1629ms dur 177
+Task at 1806ms dur 112
+Task at 1948ms dur 82
+Task at 2036ms dur 52
+Task at 2093ms dur 114
+Task at 2251ms dur 54
+436ms 64 {"beginData":{"dirtyObjects":156,"frame":"9A07BCF2AED604FFCF0A7EA1A557EF7A","partialLayout":false,"totalObjects":159},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+611ms 48 {"beginData":{"dirtyObjects":397,"frame":"9A07BCF2AED604FFCF0A7EA1A557EF7A","partialLayout":false,"totalObjects":532},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+1748ms 54 {"beginData":{"dirtyObjects":91,"frame":"9A07BCF2AED604FFCF0A7EA1A557EF7A","partialLayout":false,"totalObjects":94},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+1815ms 78 {"beginData":{"dirtyObjects":34,"frame":"9A07BCF2AED604FFCF0A7EA1A557EF7A","partialLayout":false,"totalObjects":118},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}

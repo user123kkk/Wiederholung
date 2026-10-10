@@ -4178,18 +4178,19 @@ index 00000000..a9d26b2b
 +}
 diff --git a/plan/werkzeuge/pruefstand/x_text_layout_ursache.js b/plan/werkzeuge/pruefstand/x_text_layout_ursache.js
 new file mode 100644
-index 00000000..a1abd6d6
+index 00000000..3376c443
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/x_text_layout_ursache.js
-@@ -0,0 +1,31 @@
+@@ -0,0 +1,40 @@
 +/* Gezielte Diagnose mit dem bestehenden x_tempo_spur.js, keine Abnahme.
-+   Aufruf: node x_text_layout_ursache.js original-1|sichtbar|original-2
++   Aufruf: node x_text_layout_ursache.js original-1|sichtbar|original-2|
++   neustart-original|neustart-getrennt
 +   Nur "sichtbar" ersetzt im Browser content-visibility:auto der Kartenzeilen.
 +   App, Daten, Aktionen und CPU4x bleiben gleich. Keine Produktkorrektur.
 +   Original/Variante/Original trennt die Layoutfolge von einem Einzelwert. */
 +const fs = require('node:fs'), path = require('node:path'), Module = require('node:module');
 +const modus = process.argv[2];
-+if (!['original-1', 'sichtbar', 'original-2'].includes(modus)) throw new Error('Diagnosemodus fehlt');
++if (!['original-1', 'sichtbar', 'original-2', 'neustart-original', 'neustart-getrennt'].includes(modus)) throw new Error('Diagnosemodus fehlt');
 +const datei = path.join(__dirname, 'x_tempo_spur.js');
 +const ausgabe = path.resolve(__dirname, '../../sicherung/tests/text-layout-ursache');
 +fs.mkdirSync(ausgabe, { recursive: true });
@@ -4197,6 +4198,14 @@ index 00000000..a1abd6d6
 +const anker = "const cdp = await ctx.newCDPSession(p);";
 +const ende = "await cdp.send('Tracing.end'); await fertig;";
 +if (!quelle.includes(anker) || !quelle.includes(ende)) throw new Error('Vorhandene Messanker fehlen');
++if (modus === 'neustart-getrennt') {
++  const klick = `await p.click('[data-action="tab-verwalten"]');`;
++  if (!quelle.includes(klick)) throw new Error('Klickanker fehlt');
++  // Diagnose: dieselben Mausereignisse, aber 80 ms zwischen Drücken/Loslassen.
++  // Verändert Eingabezeitpunkt, daher niemals Ersatz für die Originalabnahme.
++  quelle = quelle.replace(klick, `await p.locator('[data-action="tab-verwalten"]').hover();
++    await p.mouse.down(); await p.waitForTimeout(80); await p.mouse.up();`);
++}
 +quelle = quelle.replace(anker, `
 +    if (${JSON.stringify(modus)} === 'sichtbar') await p.addStyleTag({ content: '.card-row { content-visibility: visible !important; }' });
 +    const schriftstand = () => p.evaluate(() => ({ status: document.fonts.status,

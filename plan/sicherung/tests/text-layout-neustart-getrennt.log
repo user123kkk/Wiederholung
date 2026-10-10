@@ -1,0 +1,32 @@
+MODUS neustart-getrennt FONT-VOR {"status":"loaded","schriften":[{"familie":"UthmanicHafs","status":"loaded"},{"familie":"AmiriQuranTanzil","status":"loaded"}]}
+FONT-NACH {"status":"loaded","schriften":[{"familie":"UthmanicHafs","status":"loaded"},{"familie":"AmiriQuranTanzil","status":"loaded"}]} DOM 2f26be5275dfc14100c34759681047246f942637093fa66e4699d481fb2c2c33
+Verwalten: Aufgabe 78 ms -> EvaluateScript 63
+Verwalten: Aufgabe 67 ms -> 
+Verwalten: Aufgabe 170 ms -> EventDispatch[pointerup] 3, EventDispatch[click] 65, FunctionCall 64, ParseHTML 14, UpdateLayoutTree 31, Layout 66
+Verwalten: Aufgabe 121 ms -> FireAnimationFrame 3, FireAnimationFrame 7, FunctionCall 7, UpdateLayoutTree 5, UpdateLayoutTree 29, Layout 58, Paint 8, Paint 7
+Text oeffnen: Aufgabe 131 ms -> EventDispatch[click] 41, FunctionCall 40, UpdateLayoutTree 13, Layout 52, PrePaint 4
+Text oeffnen: Aufgabe 121 ms -> UpdateLayoutTree 4, Layout 73, Paint 31, Paint 30
+Text oeffnen: Aufgabe 108 ms -> 
+Text oeffnen: Aufgabe 60 ms -> FireAnimationFrame 5, FunctionCall 5, Layout 41
+Text oeffnen: Aufgabe 100 ms -> 
+Text oeffnen: Aufgabe 50 ms -> FireAnimationFrame 13, FunctionCall 12, UpdateLayoutTree 7, Layout 5, Layout 28
+Text oeffnen: Aufgabe 60 ms -> FireAnimationFrame 6, FunctionCall 6, UpdateLayoutTree 3, Layout 3, Layout 31, PrePaint 4
+Text oeffnen: Aufgabe 68 ms -> FireAnimationFrame 9, FunctionCall 8, ParseHTML 6, UpdateLayoutTree 4, Layout 39, PrePaint 3
+
+Task at 33ms dur 78
+Task at 143ms dur 67
+Task at 492ms dur 170
+Task at 662ms dur 121
+Task at 1573ms dur 131
+Task at 1704ms dur 121
+Task at 1850ms dur 108
+Task at 1958ms dur 60
+Task at 2029ms dur 100
+Task at 2129ms dur 50
+Task at 2232ms dur 60
+Task at 2298ms dur 68
+593ms 66 {"beginData":{"dirtyObjects":156,"frame":"3B519B8006FDDED3AA89F2D5BD0C4FD1","partialLayout":false,"totalObjects":159},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+705ms 58 {"beginData":{"dirtyObjects":397,"frame":"3B519B8006FDDED3AA89F2D5BD0C4FD1","partialLayout":false,"totalObjects":532},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+1643ms 52 {"beginData":{"dirtyObjects":91,"frame":"3B519B8006FDDED3AA89F2D5BD0C4FD1","partialLayout":false,"totalObjects":94},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+1712ms 73 {"beginData":{"dirtyObjects":34,"frame":"3B519B8006FDDED3AA89F2D5BD0C4FD1","partialLayout":false,"totalObjects":118},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+1970ms 41 {"beginData":{"dirtyObjects":34,"frame":"3B519B8006FDDED3AA89F2D5BD0C4FD1","partialLayout":false,"totalObjects":145},"endData":{"layoutRoots":[{"depth":1,"nodeId":2,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
