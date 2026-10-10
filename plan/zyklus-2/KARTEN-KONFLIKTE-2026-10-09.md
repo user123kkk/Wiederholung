@@ -272,3 +272,20 @@ die App-Version ist nicht vollständig abgenommen und wird nicht committet.
 A14/A15 bleiben offen. Weitere Nachprüfung ist erlaubt, kein neues Paket
 über dem bestehenden App-Entwurf. Das freiwillige Tagesziel ist E26 und
 bleibt nach Audit zurückgestellt; dies ist keine Tagesziel-Implementierung.
+
+## Gezielter Nachlauf 10.10.2026 nach A17
+
+Alle 16 SDK-Schutzfälle gemeinsam grün am aktuellen unveränderten
+App-SHA `4a8ca5a1a73c7873275497c38f7368f542785a97f1712e21a20b60faed25fe97`
+und Rules-SHA `6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3`.
+Damit ist die Quellstandlücke nach dem A17-Formularfix geschlossen.
+Vollständiger Log `a14-a15-aktueller-entwurf-gezielter-abschluss.log`
+unter `plan/sicherung/tests/` gelesen. Zusätzliche grüne Meldungen für
+Hinweisgeometrie und Entfernen gehören zu bestehenden Fällen und werden
+nicht als weitere SDK-Fälle gezählt. Gemessene Antwortzeile liegt im
+Bildschirm; vier Breiten/Themen und Export/Abbruch bleiben geprüft.
+
+Kein weiterer App-Fix/Regelwechsel, kein neuer Paketbau. Grenzen bleiben:
+Demo-Emulator/echter SDK, Auth-Attrappe, Worker blockiert. Große Browser-/
+Runden-/Zufallsabnahme und App-Commit ausdrücklich später; A14/A15 weiterhin
+in Arbeit wegen Paketabschluss, keine vollständige Abnahme behauptet.
