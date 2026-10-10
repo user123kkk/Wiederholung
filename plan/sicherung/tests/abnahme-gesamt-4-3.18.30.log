@@ -97,3 +97,5 @@ BEWAHRT t_paket_c_verw.js
 EXIT 0 t_paket_c_weiter.js (1223s)
 EXIT 0 t_paket_d.js (1244s)
 EXIT 0 t_paket_e.js (938s)
+EXIT 0 t_paket_f_bilder.js (94s)
+EXIT 0 t_paket_f_css.js (1s)
