@@ -200,6 +200,14 @@
       "fehler": null,
       "sekunden": 9,
       "quelltext": "f535b127efed6950f6f826a2084c0738b3c84438dcbae96bf3995f502590fb64"
+    },
+    "t_einstellungen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 92,
+      "quelltext": "8090752cc7651f3fb0febf461526a5931bdf2cc3edc6a54ca7f91445cbdcfd36"
     }
   }
 }
