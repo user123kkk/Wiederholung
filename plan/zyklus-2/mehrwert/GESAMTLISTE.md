@@ -201,6 +201,32 @@ lange Ayat stückweise, größere deutsche Schrift (erst, wenn jemand fragt).
 
 ## Reihenfolge
 
+### So laufen die TikTok-Ideen mit (Betreiberklarstellung10.10.)
+
+Die TikTok-Ideen ergänzen diese Gesamtliste und andere vorhandene offene
+Punkte. Sie bilden keine zusätzliche Warteschlange, die der Betreiber
+selbst sortieren muss. Beim Aufnehmen eines Bereichs gehören seine alten
+Aufgaben und die zugeordneten neuen Ideen zusammen in denselben Arbeitsplan.
+
+| Wenn dieser Bereich bearbeitet wird | Zugehörige TikTok-Ideen |
+|---|---|
+| Schutz und Konto | Auth-/Sitzungs-/Berechtigungsprüfung; Verifizierung, Limits, eigene Anmeldemarke, Fehler/Überwachung und Rücknahme mit bestehenden Punkten zusammenführen |
+| Aussehen und Verständlichkeit | Flexible Bildschirmgrößen, unmittelbare Rückmeldung, Laden/Fortschritt, bestätigte Speicherung und hilfreiche Fehler in die vorhandenen Abläufe einarbeiten |
+| Prüfungen, bei jedem Bereich | Agent prüft selbst; zusätzliche Browser-/Simulator-/Gerätewege einschließlich PWA-Start untersuchen; verbleibende echte Gerätebelege benennen |
+| Einstieg, später am weitgehend fertigen Umfang | Vorhandene Onboarding-Punkte mit Nutzen vor Konto, konsistenter Navigation und passenden Antwortpfaden zu einem Gesamtentwurf verbinden |
+| Öffentlich, Store oder spätere Zahlungen | Marketing, Review-Aufforderungen, fairer Ausstieg, Upload-/Zahlungsschutz nur bei entsprechendem tatsächlichem Vorhaben aufnehmen |
+
+**Arbeitsweise pro Bereich:** vorhandenen Stand und zugeordnete Quelle
+lesen; doppelte Punkte zu einer Aufgabe zusammenführen; offene Recherche
+und Abhängigkeiten klären; daraus konkrete Schritte mit Prüfkriterien
+machen. Umsetzung nach den geltenden Einzelfreigaben. Ein vorhandener
+Plan wird dabei ergänzt, kein zweiter Plan daneben eröffnet. Nicht jetzt
+relevante Ideen behalten ihren späteren Anwendungsfall. Der Arbeitsstatus
+steht einmal im bearbeitenden Plan; diese Tabelle erklärt nur die Zuordnung.
+Quelle: [TikTok-Sammlung](../../ideen/TIKTOK-SAMMLUNG-2026-10-10.md).
+
+### Bestehende Arbeitsfolge
+
 1. Aktuell Schutz/Zuverlässigkeit: A14/A15 im erhaltenen Entwurf 3.18.30, A16 als neuer bestätigter Datenfund. 3.18.27/28 sind fertig und online laut letztem Veröffentlichungsbeleg. Große Abnahme/Veröffentlichung später gesammelt; siehe `../../STAND.md`.
 2. Anschließend Rest Lernrunde (Abschnitt 2, oberer Teil). Tagesziel-Empfehlung nach Audit zurückgenommen; wartende Lernregeln nicht ungefragt freigeben.
 3. Rest „Karten hinein und heraus“ (Abschnitt 3, was nicht wartet).

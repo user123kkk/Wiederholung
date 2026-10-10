@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 15:37 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 15:39 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `722d062e Sicherung 15:36 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9c02076f Sicherung 15:38 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,10 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/BETREIBER-VERSTEHEN.md
+ M plan/ideen/TIKTOK-SAMMLUNG-2026-10-10.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -62,6 +66,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/mehrwert/GESAMTLISTE.md
  M sw.js
 ```
 
@@ -70,7 +75,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 9, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 12, chrome.exe 13 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -91,6 +96,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 15:38 Codex Betreiberklarstellung aufgenommen: ausschließlich TikTok-Ideen passend mit Mehrwert/anderen offenen Punkten zusammenführen, Betreiber hat kein klares Gesamtbild. Aktuelle Übergabe/Arbeitsfolge/Quellenzuordnung gelesen, Minuten-Sicherung als ein Prozessbaum bestätigt. In GESAMTLISTE bei Reihenfolge sichtbare Zuordnung und Arbeitsweise je Bereich ergänzt: Bestand/neue Ideen zusammenführen, Recherche/Abhängigkeiten klären, konkreter gemeinsamer Arbeitsplan mit Prüfkriterien; keine zweite Warteschlange/Statusliste. ALLES-OFFEN/BETREIBER-VERSTEHEN/Quelle nachgezogen. Keine Produktänderung, keine Datenabnahme neu gestartet.
 
 - 15:29 Codex iPad-Zufallstest AFFE_TEXTE=1/150/Seed7 abgeschlossen,104 Textaktionen/0 Befunde; ganze Ausgabe gelesen. Damit alle158 Abschlusslogs/Runde13 und beide vorgeschriebenen Zufallstests gelesen, Regeln238 gültig grün. Gesamt157/158, Tempo als echte offene Sperre erhalten; kein Paketcommit/Produkt-Push/Deploy. Eigene Demo-Emulatorwurzeln21112/12120 anhand exakter Projekt-Kommandos geprüft und nach Testende beendet; Minuten-Sicherung12532 läuft weiter, Fremdprozesse/Entwurf/Fremdarbeit erhalten. Endstand/Plan/Offenliste/Logbuch/Bericht nachgezogen; nächste Arbeit ist gezielte Tempo-Klärung, kein neues Paket. Vollständige TikTok-Quelle und Zusammenführung in vorhandene Pläne gesichert.
 
@@ -133,5 +140,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 13:42 Betreiber „komm weiter“: Fortsetzung eingetragen, vorhandener Runner19768 bleibt allein aktiv. 93 gültige Tests bewahrt; geänderter C-Sammeltest noch nicht abgeschlossen. Keine zusätzliche Rückfrage/kein neuer Prüflauf gestartet.
 
 - 13:37 Codex STAND auf tatsächlichen Runner19768/93 gültige Ergebnisse und dritte Aufbaukorrektur aktualisiert. Minuten-Sicherung geprüft: ein Baum12532→16564 mit aktuellem Kind21856, kein Doppelstart. Fortsetzung/Leseregister/Rotbelege für Chatwechsel dokumentiert; keine fertige Abnahme behauptet.
-
-- 13:30 Codex C27 mit korrekt durch Batch/Listener angelegten Testkarten16/16 grün, ganze Ausgabe gelesen. Assertion200 minus20=180 und alle Auswahl-/Dialog-/Sperrfälle unverändert. App/Rules/Stub gleich, nur Testaufbau geändert. Gesamtfortsetzung35421/Node19768 bewahrt93 gültige Tests, kompletter C-Sammeltest neu; Log abnahme-gesamt-4-3.18.30.log. Reader prüft aktive Dateinamen und liest sie nicht anhand eines alten stand.json-Abschlusses vorzeitig. C27-Rotbeleg/alter Stand separat erhalten, Bericht ergänzt; großer Abschluss offen.

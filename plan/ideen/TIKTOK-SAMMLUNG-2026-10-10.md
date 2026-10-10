@@ -4,6 +4,15 @@ Quelle: Nachricht des Betreibers in der laufenden Datenabnahme. Die Videoaussage
 
 ## Pflege und Zuständigkeit
 
+**Spätere Betreiberklarstellung:** Gemeint ist die passende Einordnung
+dieser Ideen neben den Mehrwertpunkten und anderen offenen Punkten, nicht
+ein neuer Datenabnahme-Auftrag. Der Betreiber hat noch kein klares
+Gesamtbild. Agenten übernehmen die Sortierung: beim Bearbeiten des
+jeweiligen Bereichs alte und neue Punkte zusammenführen, Recherche und
+Abhängigkeiten klären und daraus einen konkreten gemeinsamen Arbeitsplan
+machen. Die Zuordnung ist in der [Gesamtliste bei der Reihenfolge](../zyklus-2/mehrwert/GESAMTLISTE.md#reihenfolge)
+sichtbar; diese Quellensammlung bleibt der Nachweis der Eingänge.
+
 Diese Seite bewahrt die Quelle. Der Arbeitsstatus steht jeweils im zuständigen vorhandenen Plan, nicht in einer zweiten parallelen Aufgabenliste. Bei Bearbeitung passende vorhandene Punkte ergänzen oder zusammenführen, nicht dieselbe Aufgabe mehrfach anlegen. Die gesamte Nachricht zählt als Eingang offener Wünsche, einschließlich der Kommentare. Fehlende Recherche oder ein Plan sind Arbeitsschritte, kein Grund, einen Wunsch verschwinden zu lassen.
 
 | Quelle | Bearbeitungsort | Umfang der Prüfung |

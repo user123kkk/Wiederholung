@@ -1,5 +1,14 @@
 # Den Betreiber richtig verstehen
 
+**Klarstellung zur Gesamtplanung10.10.:** Bei Fragen zum nächsten Chat
+oder zur Reihenfolge den angesprochenen Strang beachten. In diesem Fall
+meint der Betreiber ausschließlich die TikTok-Ideen neben Mehrwert und
+anderen offenen Punkten, nicht die Datenabnahme. Er hat kein klares
+Gesamtbild; Agenten übernehmen passende Einordnung und Zusammenführung.
+Beim Bearbeiten eines Bereichs entsteht aus vorhandenen Aufgaben, neuen
+Ideen und nötiger Recherche ein konkreter gemeinsamer Arbeitsplan. Der
+Betreiber muss weder Dateien vorsortieren noch Videoideen einzeln erinnern.
+
 **Ideen zusammenführen, 10.10.2026:** Die ganze TikTok-Nachricht, auch eigene
 Kommentare, zählt als offene Wünsche/Ideen/Planbedarf. Quelle vollständig
 bewahren, passende vorhandene Punkte ergänzen und bei Bearbeitung

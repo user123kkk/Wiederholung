@@ -1,5 +1,15 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 Betreiberklarstellung: Hier geht es nur um die TikTok-Ideen und
+ihre passende Einordnung neben Mehrwertpunkten und anderen offenen Punkten.
+Der Betreiber hat kein klares Gesamtbild und soll die Sortierung nicht
+selbst übernehmen müssen. Als Arbeitsweise in der Gesamtliste festgehalten:
+je Bereich vorhandene Aufgaben/neue Ideen zusammenführen, nötige Recherche
+und Abhängigkeiten klären, einen konkreten bearbeitbaren Plan daraus machen.
+[Zuordnung in der Arbeitsfolge](zyklus-2/mehrwert/GESAMTLISTE.md#reihenfolge).
+Dokumentierte Einordnung fertig; fachliche Prüfung/Umsetzung erfolgt beim
+jeweiligen Bereich. Diese Klarstellung ist kein Datenabnahme-Auftrag.
+
 10.10.2026 15:29 Abschluss der ausgeführten Prüfungen:157/158 grün,
 alle158 Abschlusslogs gelesen; Runde13/13, Regeln238, Handy200/iPad150
 Seed7 mitTexten je0 Befunde. **Datenpaket bleibt offen** wegen Tempo-
