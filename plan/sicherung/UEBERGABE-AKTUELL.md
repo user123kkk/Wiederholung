@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 02:07 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 02:08 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `5890df8 Sicherung 02:05 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `71d7af5 Sicherung 02:07 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
@@ -34,6 +35,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/VERLAUF-NEUSTART-2026-10-09.md
+ M plan/zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md
  M sw.js
 ```
 
@@ -63,6 +66,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 02:08 Codex Nachtprüfung A16: zwei neue Einzelfälle am unveränderten App-/Regelhash grün (Kartenkopie aktiviert passende Reservierung genau einmal; falsche Epoche bleibt ungebookt). Absichtlich deaktivierter Wiederherstellungszweig in separater TEMP-App zeigt exakt 0 statt 1, Gegenprobe greift. Frühe rote Fixture-Läufe erhalten: fehlender SDK-Cache-Abschluss bzw. noch möglicher Tagesversand beim Snapshot; Cache-Kennung/ausstehende Writes ausdrücklich geprüft und Tagesversand nur im Fixture gesperrt. Keine Assertion gelockert. Vollständige finale Logs gelesen, Syntax/Diff grün. Bericht erweitert: 17 ursprüngliche Fälle plus zwei neue Einzelfälle, kein vollständiger 19er-Lauf behauptet. Anschlussvorbereitung konkretisiert und falschen Funktionsnamen addOrSaveCard sichtbar zu submitCardForm korrigiert. Produktdateien unverändert; nächste tatsächliche Lücke: Formularpatch vs neue Bewertungsregel mit echtem SDK prüfen.
 
 - 02:04 Codex gezielte A16-Lücke: positiven Wiederherstellungszweig vorbereitet mit vorhandener echter Kartenkopie und noch vorbereiteter Tageskopie. Bestehende 17 Fälle und Grenzen unverändert. Neue Einzelprobe stellt kontrollierten früheren lokalen Speicherstand nach, keinen echten Prozesskill; SDK/Repo-Regeln, ursprünglicher Beitrag und andere Karte werden geprüft. App unverändert.
 
@@ -105,5 +110,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 20:13 Codex: Restdiagnose an fester Quelle 7142b93 abgeschlossen, echter Firestore-SDK/Repo-Regeln im eigenen Demo-Emulator 8082. Gesehen-Undo und Offline-Gesehen überschreiben fremdes Sicher; beide ohne Speicherfehler. Fremde Löschung gewinnt bei Offline-Bewertung und Offline-Gesehen auch nach explizitem Nachholen, lokale Karte verschwindet, Ablehnung sichtbar im Fehlerzustand. Andere Karte und JavaScript-Fehler in allen vier Fällen kontrolliert. Vollständiges Log gelesen; Schutzprüfung Exit 1 benennt beide Konflikte. Originaldiagnose nach Erweiterung ebenso erwartungsgemäß rot, vollständiges Log gelesen. Kein App-Fix, keine neue Lernregel; Befunde A14/A15 erweitert statt doppelt gezählt. Stand/Plan/Logbuch nachgezogen; Uhrzeit für diesen Protokolleintrag an Rechneruhr berichtigt.
 
 - 20:13 Codex, Einleseschritt nachgetragen zu Auftrag „weiter“: Übergabe, Betreiberregeln, Lehren, Nachprüfungsauftrag und Kartenkonflikt-Belege gelesen; Minuten-Sicherung gestartet. Vier persistCardGrade-Aufrufer inventarisiert: Bewertung, Bewertungs-Undo, Gesehen, Gesehen-Undo. Gesehen-Undo prüft fremde Bewertung nicht. Akku 17 %, nur gezielte Prüfungen. Danach echter SDK gegen eigenen Demo-Emulator, Gesehen-Konflikt und fremde Löschung mit Offline-Nachholen.
-
-- 19:56 Fortsetzung „weiter?“: zwei Kartenkonflikte mit echtem SDK/Repo-Regeln auf eigenem Demo-Emulator 8082 bestätigt, dann an fester Quelle 7142b93 wiederholt. Altes Undo und Offline-Nachholen verlieren neuere fremde Bewertung ohne Fehlermeldung; andere Karte unverändert. Schutzprüfung Exit 1 für beide, vollständiges Log gelesen. A14/DATEN-9 und A15/DATEN-10 in Aufgaben/Befunde/ALLES aufgenommen, konkreter Lösungs-/Abnahmeentwurf gesichert. Firebase-Primärquellen belegen letzte Schreibübertragung und Offline-Grenze von Transaktionen. Kein App-Fix oder Gesamturteil; Akku 22 %, nur Einzelprüfung. Nächste Inventur: übrige Aufrufer und gelöschte Karte.

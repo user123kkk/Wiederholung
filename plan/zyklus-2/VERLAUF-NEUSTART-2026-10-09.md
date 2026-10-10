@@ -131,6 +131,32 @@ FINE, anschließend vollständiger 17-Fälle-Lauf grün. Testzeitlimit bleibt
 
 ### Grenzen und spätere gesammelte Abnahme
 
+Zusatzprüfung in der Nacht 10.10.2026, **zwei neue einzelne SDK-Fälle grün**
+am unveränderten App-/Regelhash oben. Keine Behauptung eines vollständigen
+19-Fälle-Nachlaufs: Der ursprüngliche gezielte Abschluss bleibt 17/17.
+
+- Positive Wiederherstellung: echte gespeicherte Kartenaktion, passende
+  noch vorbereitete Tageskopie; nach Neustart/mehrfachem Prüfen Tageszähler
+  genau 1 und Cloud-Kartenkennung bestätigt. Andere Karte k6 unverändert.
+- Negative Eingangsprüfung: abweichende Reset-Epoche zwischen Kartenkopie
+  und Tageskopie; Beitrag bleibt vorbereitet, Tageszähler 0, keine Umbuchung.
+- Fixture stellt kontrolliert einen früheren lokalen Speicherstand nach.
+  SDK-Cache bestätigt die ausstehende Kartenkennung vor Neustart;
+  ausschließlich der Tagesversand wird im Testkontext gesperrt. Beim
+  Neustart ist der normale Produktpfad wieder aktiv. Kein echter Prozesskill
+  oder PWA-Kaltstart. Frühe Proben ohne diese vollständige Versandbarriere
+  bewahren ihre roten Logs; kein Produktfehler aus ihnen abgeleitet.
+- Absichtlich deaktivierte Wiederherstellung in separater TEMP-App erzeugt
+  exakt 0 statt 1; Gegenprobe Exit 1, Wrapper akzeptiert nur diesen Befund.
+  Mutantenhash `5f117d985fc83e47b95219edc5dbd980002854228cc3ecbdf80efd264f6fab78`;
+  eindeutiger Quellanker `beitrag.status = "bereit"; verlaufAktionSpeichern(beitrag);`
+  durch Kommentar ersetzt. Produktdatei bleibt unverändert.
+
+Finale vollständige Logs gelesen: `plan/sicherung/tests/a16-nacht-kartenkopie-aktivierung-4.log`,
+`a16-nacht-kartenkopie-epoche-3.log`, `a16-nacht-aktivierung-gegenprobe.log`.
+Testquelle `t_tagesantworten_sdk.js` enthält jetzt 19 Fälle; neue Prüfungen
+einzeln über `--fall=`. Große Abnahme bleibt verschoben.
+
 - Kein ganzer Prüfstand, keine neue Rundenabnahme/Affen und kein installierter
   iPhone-PWA-Kaltstart. Browser-SDK-Prüfungen blockieren den Service Worker.
 - Ein zusätzlicher Cloud-Schreibvorgang und ein kleiner Beleg je Antwort;
