@@ -2,6 +2,18 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-10 08:08 — Nachtstand und Wiederherstellungsnachweis
+
+Nachtstand: `NACHTSTAND-2026-10-10.md`. A17 gezielt korrigiert, zusätzliche
+Datengegenproben und Prüfer-Eingangsschutz belegt; kein Paketabschluss.
+Minuten-Patch auf fester Quelle dfd44eb in eigener TEMP-Kopie tatsächlich
+angewandt, alle 23 enthaltenen Dateien LF-normalisiert gleich dem zuvor
+erfassten Arbeitsbaum. App-SHA 4a8ca5a1; drei relevante Syntaxproben grün.
+Log vollständig gelesen. Kein App-Commit/Deploy, keine große Abnahme,
+keine wiederholten Produktläufe. Nachtauftrag bis 09:00, danach Automation
+pausieren; Minuten-Sicherung bleibt. Quellen/Beleggrenzen/Anschlusslücken
+in `ABNAHME-VORBEREITUNG-3.18.30.md`, nichts davon als abgeschlossen führen.
+
 ### 2026-10-10 — Nachtprüfung A17 im bestehenden Datenentwurf
 
 **Geändert:** bestehendes Kartenblatt/Standwahl in app.js; Diagnose

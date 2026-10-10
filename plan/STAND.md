@@ -1,5 +1,12 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 08:08 – Nachtstand gesichert:**
+`zyklus-2/NACHTSTAND-2026-10-10.md` enthält Ergebnis, Quellen und nächste
+Abnahme. Minuten-Patch in eigenem TEMP-Ordner tatsächlich wiederhergestellt:
+alle 23 enthaltenen Dateien entsprechen dem Arbeitsstand (LF-normalisiert),
+App-SHA 4a8ca5a1. 3.18.30/A14–A17 bleiben Entwurf, große Abnahme später.
+Nachtauftrag nur bis 09:00; danach Nacht-Heartbeat pausieren. Sicherung bleibt.
+
 **10.10.2026 06:07 – Gesammelte Abnahme nur vorbereitet:**
 `zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md` ordnet alle nächtlichen Belege
 ihren Quellständen zu und nennt den späteren Ablauf. Zwei Abnahmeaufbau-
