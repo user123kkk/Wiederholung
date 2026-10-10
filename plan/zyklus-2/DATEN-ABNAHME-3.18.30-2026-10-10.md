@@ -39,6 +39,23 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 
 ## Gesamtlauf, um 11:57 angehalten
 
+**13:30: C27-Aufbau korrigiert, fortgesetzt.** 93 gültige Tests grün;
+Sammeltest C-Weiter scheiterte nach1046s in C27 bei Löschen20 aus200:
+20 statt180 übrig. Keine Rückgängig-Aktion betroffen (Zwischenmeldung
+sofort korrigiert).160 Testkarten waren direkt in App/Map gesetzt, der
+Listener wusste weiterhin nur von ursprünglichen40; sein Snapshot nach
+Löschen zeigte40 minus20. Testkarten nun durch tatsächliche Firestore-
+Attrappen-API im Batch anlegen und Snapshot mit200 Karten abwarten.
+Alle bisherigen Auswahl-/Dialog-/Löschassertions unverändert. C27 gezielt
+vollständig16 Varianten grün, Ausgabe gelesen; App/Rules/Stub unverändert.
+Roter vollständiger Log und stand.json erhalten als abnahme-c27-rot und
+abnahme-stand-vor-c27; gezielter Beleg abnahme-c27-fixture-3.18.30.log.
+Alter Runner19272/angefangener D beendet. Runner19768/Sitzung35421
+fortgesetzt, Log abnahme-gesamt-4-3.18.30.log.93 gültige Tests bewahrt;
+geänderter C-Sammeltest muss komplett neu. Leser überspringt aktive Datei,
+damit alter stand.json-Abschluss nie einen halbfertigen neuen Log abhakt.
+Gemeinsame Kennung e595b5b6312244cd unverändert; Abschluss/Affe noch offen.
+
 **12:50: zweiter Aufbaufehler behoben, gültige Tests fortgesetzt.**
 86 vollständig abgeschlossene Tests grün. t_nur_betreiber scheiterte vor
 Browserstart am unnötig verlangten historischen Worktree; normaler

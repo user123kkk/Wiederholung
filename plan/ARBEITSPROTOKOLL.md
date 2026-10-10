@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 13:30 Codex C27 mit korrekt durch Batch/Listener angelegten Testkarten16/16 grün, ganze Ausgabe gelesen. Assertion200 minus20=180 und alle Auswahl-/Dialog-/Sperrfälle unverändert. App/Rules/Stub gleich, nur Testaufbau geändert. Gesamtfortsetzung35421/Node19768 bewahrt93 gültige Tests, kompletter C-Sammeltest neu; Log abnahme-gesamt-4-3.18.30.log. Reader prüft aktive Dateinamen und liest sie nicht anhand eines alten stand.json-Abschlusses vorzeitig. C27-Rotbeleg/alter Stand separat erhalten, Bericht ergänzt; großer Abschluss offen.
+
 - 13:27 Codex C27 im Sammeltest rot: nach Löschen20/200 nur20 statt180 Karten, nicht Rückgängig (Zwischenmeldung sofort korrigiert). Eigenen Runner19272 samt begonnenem D beendet; gesamten roten C-Log/stand.json zusätzlich erhalten. 93 grüne,94 vollständige Abschlusslogs gelesen. C27 fügte160 Testkarten direkt in App und Map ein, ohne Snapshotmeldung; beim strukturellen Neuaufbau liefert Listenercache nur ursprüngliche40 minus20. Testaufbau verwendet jetzt echten vorhandenen Stub-API-Batch und wartet auf200 Karten, alle Auswahl-/Löschassertions gleich. C27 gezielt allein aktiv; Produkt/Rules/Sharedhash unverändert.
 
 - 13:14 Codex Gesamtstand93/158 grün; alle93 vollständigen gültigen Abschlusslogs gelesen, einschließlich PaketB sowie C1/C2/C11–C14/C17 (Kalendertagversatz0–6). Weiterlernen-Test aktiv. Leseregister aktuell; Produkt/Rules/SDK-Quellstand unverändert. Tokenpräferenz dauerhaft dokumentiert, kompakte Kontrollroutine statt wiederholter ausführlicher Abfragen.
