@@ -1,5 +1,17 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Anschluss 10.10.2026 10:09: Dauerauftrag, Quellenabgleich
+
+Betreiber bittet offene Punkte ununterbrochen selbstständig abzuarbeiten.
+Bestehenden Heartbeat aktualisiert, ACTIVE, stündlich in diesem Chat;
+keine zweite Automation. Alte Nachtfrist ist dort ersetzt. Paketgrenzen
+aus dem Korrekturblock darunter gelten weiter, keine Produktfreigabe.
+Offene unabhängige Arbeit: [Quellenabgleich](QUELLENABGLEICH-2026-10-10.md).
+Zweite Runde acht Vollberichte/52 Hauptpositionen plus Gegenprüfer
+zugeordnet; zwei Abbrüche. Erste 26 Berichte und Rückwärtsprüfung der
+187 Katalogzeilen folgen. Keine neuen Funktionen aus Quellen bauen.
+Automation pausiert, wenn nur verschobene Schritte/Entscheidungen bleiben.
+
 ## Korrektur 10.10.2026 09:55: aktueller Anschluss
 
 Nachtauftrag seit 09:06 beendet, Nacht-Automation PAUSED. Neuer Weiter-Auftrag

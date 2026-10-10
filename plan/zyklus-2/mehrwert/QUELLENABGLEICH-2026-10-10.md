@@ -9,7 +9,7 @@ Grundlage: [historischer Katalog](IDEEN-KATALOG-2026-10-08.md) mit unabhängig
 gezählten **187 Datenzeilen** und [Originalverzeichnis](agentenberichte/LIESMICH.md).
 Berichte sind historische Vorschläge vom 07.10., keine aktuellen Befunde,
 Bauaufträge oder geprüften Lernempfehlungen. Quellenlinks und damalige
-Codezeilen wurden hier nicht neu fachlich/geografisch/rechtlich geprüft.
+Codezeilen wurden hier nicht neu fachlich oder rechtlich geprüft.
 Originalaufträge in den Dateien wurden als Quelleninhalt gelesen, nicht
 als neue Anweisung ausgeführt. Kein Produkttest, keine App-Änderung.
 

@@ -4,8 +4,16 @@
 und ararbeiten?“ Selbstständig die verfügbaren offenen Arbeiten fortsetzen.
 Aktuell: ausstehender Quellenabgleich des Ideen-Katalogs mit den wörtlichen
 Agentenberichten. Keine neuen Produktpakete über Entwurf 3.18.30; große
-Abnahme, ladegeraet und Veröffentlichung weiterhin später. Keine neue
-Automation oder Arbeit außerhalb dieses aktiven Chats daraus ableiten.
+Abnahme, ladegeraet und Veröffentlichung weiterhin später. Für Fortsetzung
+über einzelne Chatläufe: vorhandene pausierte Automation
+`adrabic-nachtarbeit-fortsetzen` um 10:09 als „Adrabic offene Punkte
+fortsetzen“ aktiviert, stündlich, auf diesen Chat umgestellt; keine zweite
+Automation. Neuer Dauerauftrag ersetzt dort die abgelaufene Nachtfrist.
+Still bei unverändertem Stand; Pause, wenn nur verschobene Schritte oder
+Betreiberentscheidungen bleiben. Quellenabgleich zweite Runde fertig:
+acht Berichte/52 Hauptpositionen plus Gegenprüfer, zwei Abbrüche; erste
+26 Berichte und rückwärtiger Katalogabgleich offen. Bericht:
+[`zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md`](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
 
 10.10.2026 09:53, neuer Chat: „Weiter in `C:\Users\USER\Desktop\Wiederholung`
 gemäß AGENTS.md und aktueller Übergabe. Entwurf 3.18.30 samt uncommitteter
@@ -256,7 +264,7 @@ Keine automatische Stufen-Zusammenführung oder neue Lernregel beschlossen.
 | „alle 60 Sek., egal was überprüft, gelesen, bearbeitet … wird, es wird festgehalten … später gelöscht … und Erklärung warum“ | fertig: Regel, `ARBEITSPROTOKOLL.md` und Automatik `plan/werkzeuge/minuten_sicherung.sh` (sichert und pusht jede Minute, läuft seit 08.10. 17:47). Grenze: läuft nur, solange der Laptop an ist und ein Chat sie gestartet hat; jeder neue Chat startet sie zuerst. Klein offen: Testdateien fehlen im Minuten-Patch |
 | „was eingebaut haben, sodass man mich anhand des Repos besser direkt versteht“ | fertig: `plan/BETREIBER-VERSTEHEN.md`; wird nachgezogen, wenn er etwas korrigiert |
 | „einen Mod, der dir zulässt, andere Chats zu bedienen … Hauptsache, sowas verwirrt mich nicht“ | Lesen geht schon (alle Chats auf dem Laptop); bauen: Weg, einem anderen laufenden Chat einen Auftrag zu geben. Urteil fehlt: Was soll damit konkret passieren? Bis dahin gilt: ein Chat arbeitet, die anderen lesen `ALLES-OFFEN.md` |
-| „eine Sammlung, auf die ich mich immer und immer verlassen kann, ohne Zweifel“ | diese Datei; bauen: Abgleich der 187 Katalog-Zeilen gegen die 34 wörtlichen Agentenberichte, damit keine Idee fehlt |
+| „eine Sammlung, auf die ich mich immer und immer verlassen kann, ohne Zweifel“ | diese Datei; Quellenabgleich begonnen: zweite Runde (acht Berichte) zugeordnet, erste 26 und rückwärtige Prüfung der 187 Zeilen offen; `zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md` |
 | „erledige sonst du alles, belaste mich nicht mit unnötigen Fragen und Formalitäten“ | gilt: `CLAUDE.md`, LEHREN § 1.2 |
 | „während sie falsch wörtlich gespeichert sind? Einiges fehlt?“ | offen: siehe Zeile darüber; bis zum Abgleich gilt der Katalog als Zusammenfassung, die Berichte als Quelle |
 | „das Wichtigste ist, dass alles jede Minute gespeichert wird, wirklich alles … selbst Tests, alles, was eine KI auch nur anfasst … ich will ein klares: ist eingebaut“ (17:52) | fertig, eingebaut: `plan/werkzeuge/minuten_sicherung.sh` sichert jede Minute Entwurf, alle Testausgaben und die Übergabe-Seite nach `plan/sicherung/` und pusht. Grenze: läuft nur, solange der Laptop an ist und ein Chat sie gestartet hat |
