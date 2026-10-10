@@ -1,0 +1,22 @@
+== handy dunkel
+  Blatt auf: Fokus f-wort | enterkeyhint next/
+  Kontrast Blatt 0
+  Leer: Fehler f-wort,f-ueb | Knopf 779 -> 779 (Sprung 0) | Fokus f-wort
+    nach Tippen: Knopf 779 | Wort-Feld 462 -> 462 | Abstand Label-Feld 8/8
+  Enter im Wort: Fokus f-ueb | Fehler f-ueb | Knopf 779
+  Hinzufuegen (Enter): Karten 40 -> 41 | Blatt offen true | Felder leer true | Fokus f-wort | Toast null
+  Duplikat: Wort gibt es schon „بَحْرٌ" gibt es in diesem Bereich schon. Übersetzung dort: „Meer" Abbrechen Trotzdem speichern
+  Vollstaendig + Fertig: kein Dialog | Karten 41 -> 42 | Blatt zu true
+  Halb + Escape: Angefangene Karte verwerfen? „جَبَلٌ“ ist noch nicht hinzugefügt. Verworfen ist es weg. Abbrechen Verwerfen
+    Abbrechen -> Blatt noch da true, Wort "جَبَلٌ"
+    Fertig (halb) -> Verwerfen -> Blatt zu true | Karten 42
+  Detail: قَلَمٌ Stift Neu Noch nie abgefragt Bearbeiten Schließen Karte löschen
+    Kontrast 0
+  Bearbeiten: قَلَمٌ / Stift /  / neu & im Lernen
+    gespeichert: Blatt zu true | Liste zeigt قَلَمٌ Moschee (Gebetshaus)
+  Loeschen fragt: NICHTS
+    Karten 42 -> 41
+  ok
+== handy hell
+  Blatt auf: Fokus f-wort | enterkeyhint next/
+  Kontrast Blatt 0
