@@ -1000,6 +1000,38 @@
       "fehler": null,
       "sekunden": 195,
       "quelltext": "a4bb20557b586d788dab4d4a1792b1afe83451cb20f726be5bb7b36540377d21"
+    },
+    "t_serie_warnung.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 9,
+      "quelltext": "f2899bfda3a9bcb8963df54c1463fe7ada0d872503e580f78dd10608f43269e5"
+    },
+    "t_settings_kontowechsel.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 1,
+      "quelltext": "8e2a3c39cf4a69bfd4ca2876be278cf4d68f6202e63a264efb603c6110faf89d"
+    },
+    "t_settings_mehrgeraete.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 12,
+      "quelltext": "d1ab743ac317536eb5be5a2f1a8b735bf69aea1bb36f22062af29193aa5b8dea"
+    },
+    "t_sicher.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 13,
+      "quelltext": "cad257c5610c9be255ab807bfb915f96716eb6f7adb15f1ba05ec31f8f62f6cb"
     }
   }
 }
