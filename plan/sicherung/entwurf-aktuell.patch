@@ -3323,6 +3323,26 @@ index 52f6ad2d..069cfaf2 100644
    assert.equal(await p.locator('#karten-liste > [data-action="toggle-card-select"]').count(),100);
    const lage=await p.locator('.select-actionbar').boundingBox();
    await alle.click();await p.waitForTimeout(300);
+diff --git a/plan/werkzeuge/pruefstand/t_rechtsplan.js b/plan/werkzeuge/pruefstand/t_rechtsplan.js
+index 385081e2..3203cac0 100644
+--- a/plan/werkzeuge/pruefstand/t_rechtsplan.js
++++ b/plan/werkzeuge/pruefstand/t_rechtsplan.js
+@@ -65,9 +65,12 @@ async function zu(p,art) {
+             const sichtbar=await p.evaluate(funde=>{
+               const clip=document.querySelector('#dlg-recht-inhalt').getBoundingClientRect();
+               return funde.filter(f=>{
+-                const el=[...document.querySelectorAll('#dlg-recht-inhalt *')].find(el=>el.className===f.klasse&&el.textContent.trim().startsWith(f.text));
+-                if(!el) return true;
+-                const r=el.getBoundingClientRect();return r.bottom>clip.top&&r.top<clip.bottom;
++                // Der Leser benutzt bei fehlender Klasse den Tag (z.B. A).
++                // Gleiche Texte koennen mehrfach vorkommen: jeder sichtbare
++                // Treffer muss weiter als Kontrastbefund erhalten bleiben.
++                const els=[...document.querySelectorAll('#dlg-recht-inhalt *')].filter(el=>((typeof el.className==='string'&&el.className)||el.tagName)===f.klasse&&el.textContent.trim().startsWith(f.text));
++                if(!els.length) return true;
++                return els.some(el=>{const r=el.getBoundingClientRect();return r.bottom>clip.top&&r.top<clip.bottom;});
+               });
+             },funde);
+             assert.deepEqual(sichtbar,[]);
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
 index 00000000..c2b8224a
