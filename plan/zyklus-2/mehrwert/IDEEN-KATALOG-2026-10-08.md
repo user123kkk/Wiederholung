@@ -3,9 +3,11 @@
 **Quellenkorrektur 10.10.2026:** Der folgende Text ist der historische
 Erinnerungskatalog. Seit 08.10. liegen 34 inhaltliche Originalberichte und
 zwei Limit-Abbrüche unter [agentenberichte/](agentenberichte/LIESMICH.md).
-Der [Quellenabgleich](QUELLENABGLEICH-2026-10-10.md) ist begonnen: zweite
-Runde vollständig zugeordnet, erste Runde und rückwärtige Prüfung offen.
-Konkrete Unterideen/Varianten fehlen; keine Vollständigkeit behaupten.
+Der [Quellenabgleich](QUELLENABGLEICH-2026-10-10.md) ist am 10.10. 11:38
+abgeschlossen: 34/34 Berichte und 187/187 historische Zeilen bearbeitet.
+Fehlende Unterideen/Varianten ergänzen das [Quellenregister](QUELLENREGISTER-2026-10-10.md)
+und seine Teilabgleiche. Drei Betreiberzusätze nur sekundär belegt.
+Keine Vollständigkeitsgarantie aller Wünsche oder heutiger Produktstände.
 Historische Paketstände unten sind keine aktuelle Bau-/Deploy-Freigabe.
 
 Stand 08.10.2026. Zweck: Keine Idee der 26 Agenten geht verloren. Ergänzt

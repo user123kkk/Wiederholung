@@ -1,16 +1,28 @@
 # Quellenabgleich des Ideen-Katalogs
 
-10.10.2026, begonnen nach ausdrücklichem Weiterauftrag. **Teilabgleich:**
-Zweite Runde `a495c23a` vollständig gelesen: acht inhaltliche Berichte,
-zwei Berichte mit ausschließlich Limit-Abbruch. Erste Runde: 01–14
-zugeordnet, 15–26 offen; Einzelzuordnung [01–08](QUELLENABGLEICH-RUNDE1-2026-10-10.md),
-[09–12](QUELLENABGLEICH-RUNDE1-09-12-2026-10-10.md) und
-[13–14](QUELLENABGLEICH-RUNDE1-13-14-2026-10-10.md).
-Insgesamt 22 von 34 inhaltlichen Berichten zugeordnet: 196 nummerierte
-Hauptideenpositionen, 27 gesonderte Abgleich-/Regelpositionen,
-16 historische Entscheidungsfragen plus narrativer Gegenprüfer.
-Diese Kategorien nicht als Zahl neuer Funktionen addieren.
-Gesamtauftrag nicht abgeschlossen.
+10.10.2026 11:38: **Abgleich des gesicherten Bestands abgeschlossen.**
+34/34 inhaltliche Berichte vollständig vorwärts zugeordnet; zwei weitere
+Dateien enthalten nur Limit-Abbruch. Alle 187 historischen Katalogzeilen
+rückwärts bearbeitet. 184 besitzen Berichtskerne/Varianten/Gegenreden,
+drei konkrete Betreiberzusätze sind mit Sekundärbeleg aus dem Betreiberverlauf
+gekennzeichnet (Playlist, Tafsir-Link, späteres Abo). Kein vollständiger
+Originalchat-Nachweis für diese drei behauptet.
+
+Einzelzuordnungen: [01–08](QUELLENABGLEICH-RUNDE1-2026-10-10.md),
+[09–12](QUELLENABGLEICH-RUNDE1-09-12-2026-10-10.md),
+[13–14](QUELLENABGLEICH-RUNDE1-13-14-2026-10-10.md),
+[15–18](QUELLENABGLEICH-RUNDE1-15-18-2026-10-10.md),
+[19–22](QUELLENABGLEICH-RUNDE1-19-22-2026-10-10.md),
+[23–26](QUELLENABGLEICH-RUNDE1-23-26-2026-10-10.md).
+[Zusammengeführtes Register](QUELLENREGISTER-2026-10-10.md): 402
+Tabellenpositionen einschließlich Dopplungen, Methodik, Quellenblöcken und
+historischer Fragen, **keine Zahl neuer Funktionen**. Nicht tabellarische
+Nebenideen/Gegenreden bleiben mit Herkunft in den verlinkten Teilabgleichen.
+[Rückwärtsprüfung](QUELLENABGLEICH-RUECKWAERTS-2026-10-10.md).
+
+Ergebnis ist die nachvollziehbare Quellenabdeckung dieses konkreten
+Bestands. Keine Vollständigkeitsgarantie aller jemals geäußerten Wünsche,
+keine Rechts-/Lernwirkungs-/Kostenprüfung, keine heutige Statusabnahme.
 
 **Betreiberkorrektur 10.10. während der Arbeit:** Frühere Ja können ohne
 Verständnis gegeben worden sein. Alte Beschlüsse nicht als automatische
@@ -203,18 +215,18 @@ Keine nummerierte Hauptideenliste. Vollständig gelesen, gesondert erhalten:
   ungeprüfte Inhalte, kompletten Algorithmuswechsel, Bewegung/Seriendruck.
   Viele Katalog-Nein-Zeilen decken Kerne; konkrete Gründe stehen im Original.
 
-## Noch offen
+## Abschluss und tatsächlicher Rest
 
-1. Erste Runde `981b69a1`: 15–26 vollständig lesen und ebenso zuordnen;
-   01–14 abgeschlossen, Quellen oben.
-2. Lücken/Varianten beider Runden zusammenführen, ohne Herkunft und Gegenrede
-   zu verlieren. Erst danach fehlende Katalogzeilen ergänzen; keine Status
-   aus Agentenvorschlägen erfinden.
-3. Vorhandene 187 Zeilen rückwärts auf Quellen prüfen: auch aus erstem
-   Betreiberchat stammende Zeilen als solche kennzeichnen. Keine Quelle
-   gefunden ist kein Beweis einer erfundenen Idee.
-4. Abschließende Vollständigkeitsbehauptung erst nach beiden Richtungen;
-   aktueller Katalog bleibt historische Zusammenfassung, Originale Quelle.
+Beide Abgleichrichtungen und Zusammenführung sind fertig. Fehlende
+Unterideen/Varianten stehen mit Quellen im Register und den Teilabgleichen;
+der historische Katalog bleibt erhalten, keine Status aus Agentenvorschlägen
+erfunden. Das Register ergänzt ihn, statt alte Herkunft/Wortlaut zu ersetzen.
 
-Die Teilzuordnung sichert jetzt bereits konkrete Lücken und Bedingungen.
-Keine Produktarbeit oder Bewertung des Lernnutzens daraus begonnen.
+Aktuell kein weiteres Produktpaket über Entwurf 3.18.30 beginnen.
+46 gezielte SDK-Fälle bleiben abgeschlossen. Nächster technischer Abschluss
+ist die ausdrücklich verschobene große Datenabnahme samt offenem
+Abnahmeaufbau; [Vorbereitung](../ABNAHME-VORBEREITUNG-3.18.30.md).
+Danach nächste tatsächliche Funktionsentscheidung, beginnend mit Bearbeiten
+in der Abfrage, verständlich klären, soweit Einzelfreigabe unklar ist.
+Keine Tests, App-Änderung, große Abnahme, Veröffentlichung oder neuen
+Lernbelege aus diesem Quellenabgleich abgeleitet.
