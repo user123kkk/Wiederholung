@@ -1,0 +1,22 @@
+node:assert:152
+  throw new AssertionError(obj);
+  ^
+
+AssertionError [ERR_ASSERTION]: A16-Testhash ignoriert diagnose_karten_konflikt.js
+    at Object.<anonymous> (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_abnahme_hash.js:31:10)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '91205fe517d65b75a772c0d864a93f718386fbd015ddbfbe9feeccaf0621a6f2',
+  expected: '91205fe517d65b75a772c0d864a93f718386fbd015ddbfbe9feeccaf0621a6f2',
+  operator: 'notStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

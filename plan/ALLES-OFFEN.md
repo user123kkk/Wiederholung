@@ -1,5 +1,12 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 11:48: Auftrag „ok los“ im neuen Chat ausgeführt. Große
+Datenabnahme 3.18.30 wieder aufgenommen: beide Abnahmeaufbau-Lücken
+korrigiert, getrennte Demo-Emulatoren gestartet, 238 Regeln frisch grün.
+Gesamter Browser-/Rundenlauf läuft am erhaltenen Entwurf. Unveränderte
+46 gezielte SDK-Vorbelege erhalten; kein neuer Funktionsbau/Deploy.
+Paketabschluss erst nach erfolgreicher erforderlicher Abnahme.
+
 10.10.2026 11:42, Betreiber: „ok los aber neuer chtat ja, und was versteht
 man unter paket“. Nach unmittelbar davor benanntem nächsten Schritt als
 Wiederaufnahme der großen Datenabnahme/Paketabschluss 3.18.30 verstanden,

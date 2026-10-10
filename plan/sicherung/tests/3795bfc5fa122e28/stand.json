@@ -1,0 +1,29 @@
+{
+  "kennung": "3795bfc5fa122e28403fa33a30eaf51ea82251725a0e891779211b4bf3fb8aeb",
+  "tests": {
+    "t_317.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 14,
+      "quelltext": "ba9ba2c8421f9974753bd48e9724d65c24cfc20eba4a1efc67ad86f09fdae06c"
+    },
+    "t_a11y.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 17,
+      "quelltext": "0042cc90dc3abd91196dd03cbba90388495f6cbe698026e6ca4a93fc5ddb07eb"
+    },
+    "t_abgelehnt.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 6,
+      "quelltext": "70c0e5e9d7770d9e011b649f1632c92ab04077f570a6ac60cb612f9becf881ed"
+    }
+  }
+}
