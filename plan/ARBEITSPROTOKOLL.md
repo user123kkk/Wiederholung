@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 14:30 Codex Gesamtstand102/158 grün, alle102 vollständigen Abschlusslogs gelesen: F-Bildvergleich zwölf Varianten0 Fehlerpixel, lebende CSS-Nachbarn/Ebenen, Netzwerkfehler0, Struktur und sichtbare Wörter/Sicherung geprüft. Textausgaben tatsächlich gelesen, keine pauschale Lernwirkungszusage. F-Umfeld aktiv; gemeinsamer Stand unverändert, Abschluss/Affe weiterhin offen.
+
 - 14:27 Codex PaketE-Prüfer komplett grün938s, ganze Ausgabe gelesen:30 vorhandene lokale Abnahmen, E17/E26 wie bisher ausdrücklich ausgenommen. Sicherungsdatei/ICS nur Chromium; iOS/Android-Geräte bleiben offen. Kontowechsel, Zeitlimit/Teilerfolg, Profil/Plan, Ruhetagsregressionen und Geometrie geprüft, keine Lernwirkungs-/Gerätezusage.96/158 grün, alle96 Abschlusslogs gelesen; F-Bilder aktiv.
 
 - 14:12 Codex PaketD-Prüfer vollständig grün1244s, ganze Ausgabe gelesen:32 Schließwegvarianten mit je vier Wegen, zwei Leerlauf-/Randfallprüfungen und weitere vorhandene Zustandsmatrizen. Bestehende Aufgaben-Auswahl unverändert, keine neue D-Aufgabe behauptet.95/158 gültige Abschlüsse grün, alle95 Logs gelesen; PaketE aktiv. Quelle e595b5b6312244cd gleich.

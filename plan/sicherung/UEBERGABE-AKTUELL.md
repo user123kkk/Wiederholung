@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 14:30 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 14:31 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `b988b5e Sicherung 14:29 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `a54f128 Sicherung 14:30 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -63,7 +64,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -84,6 +85,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 14:30 Codex Gesamtstand102/158 grün, alle102 vollständigen Abschlusslogs gelesen: F-Bildvergleich zwölf Varianten0 Fehlerpixel, lebende CSS-Nachbarn/Ebenen, Netzwerkfehler0, Struktur und sichtbare Wörter/Sicherung geprüft. Textausgaben tatsächlich gelesen, keine pauschale Lernwirkungszusage. F-Umfeld aktiv; gemeinsamer Stand unverändert, Abschluss/Affe weiterhin offen.
 
 - 14:27 Codex PaketE-Prüfer komplett grün938s, ganze Ausgabe gelesen:30 vorhandene lokale Abnahmen, E17/E26 wie bisher ausdrücklich ausgenommen. Sicherungsdatei/ICS nur Chromium; iOS/Android-Geräte bleiben offen. Kontowechsel, Zeitlimit/Teilerfolg, Profil/Plan, Ruhetagsregressionen und Geometrie geprüft, keine Lernwirkungs-/Gerätezusage.96/158 grün, alle96 Abschlusslogs gelesen; F-Bilder aktiv.
 
@@ -126,5 +129,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 12:31 Codex Gesamtlauf47/158 grün, alle47 vollständigen Logs gelesen. Rückmeldung24 Varianten, Fehlerfokus/-Entwurferhalt, Fortschritt12 Varianten, Scrollen im Gesamtlauf, große Ansichten28 Zustände, Datum/Bereichszähler grün. Vier aktuelle Rundenbilder tatsächlich angesehen und gesichert (plan/sicherung/tests/abnahme-rundenfotos-3.18.30), Knöpfe/Antwort im Bild; keine iPhone-Abnahme daraus. Beschreibende Tempoausgaben erhalten: Bewerten max53ms, Fortschrittwechsel209ms/max233ms Bildlücke; große Erstansicht445ms. Keine allgemeine Flüssigkeitszusage oder ungeprüfte Ursache. Zwischenmeldung zum aktiven Test war zu früh geraten (Verwalten statt Fotos); tatsächliche Prozesszeile gelesen, fortan im Standleser mitgeführt. Kein App-/Regelwechsel, Lauf87583 weiter allein aktiv.
 
 - 12:24 Codex frischer Gesamtlauf32/158 grün, alle32 Abschlusslogs vollständig gelesen: Einstellungs-/Einstiegsvarianten, Bestandskonto, Probekarte, Scroll-/Lagenmessung, Kalender-UID/Uhrzeit einschließlich Gegenproben. Beschreibende mobile Einstiegsverschiebung39px in älteren gesicherten Logs identisch; kein neuer Produktfehler daraus behauptet. Ein voriger Zwischenlog-Pfad t_einstieg war vor dessen Start angenommen, tatsächlichen Prozess/Dateien nachgelesen; keine Testquelle/Ergebnisse verändert. Lauf87583 weiter allein aktiv am e595b5b6312244cd. Rest Gesamtlauf/Affe/Runden-Auswertung/Abschluss bleibt.
-
-- 12:17 Codex Gesamtlauf25/158 grün, alle25 vollständigen Abschlusslogs gelesen. Bestands-Tempo erneut im Gesamtlauf grün,3000er-Bewertungen max61ms; Teilen/Import/Sicherung drei Breiten ohne Kontrast-/Seitenfehler, Timergegenprobe/Doppeltipp/Drehlage (vier Breiten0px) grün. Beschreibende Einstellungs-/Geometrieausgaben ebenfalls gelesen, keine neuen Produktbefunde daraus. Läuft allein weiter, keine Abnahme vor vollständigem Lauf/Affe/Runde.
