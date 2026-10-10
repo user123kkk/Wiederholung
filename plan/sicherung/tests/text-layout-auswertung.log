@@ -1,0 +1,5 @@
+alter Originaltrace: [{"ms":134.47,"dirty":156,"total":159,"imKlick":false,"nachKlickMs":56.27},{"ms":113.19,"dirty":397,"total":532,"imKlick":false,"nachKlickMs":284.53}]
+neuer Originaltrace: [{"ms":57.07,"dirty":156,"total":159,"imKlick":false,"nachKlickMs":24.76},{"ms":62.75,"dirty":397,"total":532,"imKlick":false,"nachKlickMs":152.61}]
+original-1: [{"ms":66.64,"dirty":156,"total":159,"imKlick":false,"nachKlickMs":44.2},{"ms":60.36,"dirty":397,"total":532,"imKlick":false,"nachKlickMs":205.35}]
+sichtbar: [{"ms":251.59,"dirty":1018,"total":1021,"imKlick":false,"nachKlickMs":169.69}]
+original-2: [{"ms":163.2,"dirty":156,"total":159,"imKlick":false,"nachKlickMs":64.06},{"ms":121.64,"dirty":397,"total":532,"imKlick":false,"nachKlickMs":378.02}]
