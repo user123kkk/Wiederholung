@@ -1,0 +1,8 @@
+Vorheriges AC-Minimum: 5; Vergleich: 100; CPU4x/Testgrenze unverÃ¤ndert.
+Browser 154.0.8037.98
+{"gruppe":"vor","rate":1,"checksum":-1157083627,"samples":[5.2,5.2,5.6,5,6.3,4.8,4.8,4.9,5.2,4.9,5.3,5.2],"min":4.8,"median":5.2,"max":6.3}
+{"gruppe":"gedrosselt","rate":4,"checksum":-1157083627,"samples":[46.8,26.4,22.2,38.7,39,10.9,29.1,39.6,40.3,36,33.7,44.9],"min":10.9,"median":37.35,"max":46.8}
+{"gruppe":"nach","rate":1,"checksum":-1157083627,"samples":[4.3,6,10.1,6.5,10.8,11.7,17.5,7.9,5.8,6.2,5.4,6.3],"min":4.3,"median":6.4,"max":17.5}
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 230/119 | Text oeffnen (286): 113/108/72/114 | scrollen: 78 | Wiederholen starten: 89 | Aufdecken: 77 | Fliessend: 66 | Beenden: 69/58/85 | Lernen-Tab: 99
+FEHLER:
+Aufgabe mit 230 ms (> 200 ms)

@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 17:17 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 17:18 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `00c6a13b Sicherung 17:16 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `bf12d514 Sicherung 17:17 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -65,6 +66,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md
  M sw.js
 ```
 
@@ -73,7 +75,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 6, chrome.exe 13 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 7, chrome.exe 22 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -94,6 +96,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 17:20 Codex gezielte Tempo-Proben abgeschlossen: rAF-Verschiebung, getrennte Mausereignisse, Sichtbarkeitsbeobachter, bedingter Viewport-Abgleich und erste14 sofort sichtbare Zeilen beseitigen die Sperre nicht zuverlässig. Native Layoutkosten bleiben; ein kleiner PerformanceObserver-Wert bei weiter243ms Renderaufgabe ist kein Fix. Alle neuen vollständigen Logs gelesen, Rohtraces erhalten; keine Produktänderung. Kontrollierte Energieprobe: AC-Prozessorminimum vorübergehend5 auf100, Originaltest199ms grün, Einstellung sicher auf5 zurückgestellt; Gegenprobe305ms rot. Das einzelne Grün erklärt alte rote Läufe nicht. Vorab begrenzter Stabilitätsvergleich: zwei Originale unter100 müssen beide grün sein, nur dann fortgesetzte Gesamtabnahme; jedes Rot verwirft diesen Ansatz. Grenze200ms und CPU4x unverändert, kein Wiederholen bis grün. Hilfsskript stellt Energieeinstellung im finally zurück.
 
 - 16:53 Codex neuer konkreter Betreiberauftrag hebt Tempo-Diagnosestopp für Sperrenbehebung auf; Arbeitsziel nicht blockiert gesetzt. Vorhandenen Befund/Originaltest/UI-Skill, Renderer und Offline-Tracekosten gelesen. Layout/Stil dominieren, keine neue Produktursache allein aus Einzelzeiten behauptet. Server8097 und Minuten-Sicherung laufen; alte Quellen/Tests erhalten. Gezielte Klärung zuerst, danach Datenabschluss und vorhandene Reihenfolge, keine Grenze lockern/kein Deploy.
 
@@ -136,5 +140,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Neuer lokaler Chat „Datenabnahme 3.18.30: Tempo klären“ gestartet: 01a12620-409a-7e33-8945-dcc4837f7a96. Konkreter Anschluss samt vorhandenen Diagnosen, Erhalt gültiger Prüfungen, unveränderter 200-ms-Grenze und Verbot neuer Pakete/Veröffentlichung übergeben; keine Modelländerung/zweite Sicherung veranlasst.
 
 - Codex Anschluss auf Betreiberauftrag geprüft: aktuelle Übergabe, STAND-Einstieg und vollständigen TEXT-TEMPO-BEFUND gelesen; nächster Produktabschluss ist unverändert Datenabnahme 3.18.30, nicht neue Mehrwert-Funktion. Desktop-Projekt über App-Werkzeug identifiziert; neuer lokaler Chat wird mit gezielter Tempo-Klärung und Token-/Erhaltregeln gestartet. Kein Test/App-Code in diesem Chat geändert.
-
-- 16:00 Codex Erledigungsprüfung zentral ergänzt: neun zusätzliche Prüfpositionen aus 05.–07.10. (sechs umgesetzte Wunschgruppen, zwei teilweise erledigte Gesamtwünsche, ein offener Listen-Sprung-Prüfrest); die zwei N1-Stellen gemeinsam gezählt. Historische und aktuelle erhaltene Listen-/Einwilligungslogs vollständig gelesen, Code/CSS und damaligen Umfang gegengeprüft. Textarten-Erklärung und N1-CSS nicht als neue Verständlichkeits-/Fotoabnahme ausgegeben. Unklare Schreibkritik zusätzlich ausdrücklich erhalten. Fehlende Unterideen/Varianten/Gegenreden aus R1/R2 in die elf vorhandenen Ideenbereiche eingefügt; TikTok-Bezüge mit vorhandenen Bereichen verbunden, keine neue Liste/Funktionsfreigabe. Alle 259 alten Tabellenpositionen thematisch erhalten, sieben schon vorher umbasierte Verweise sind keine verlorenen Aufgaben; lokale Linkziele vollständig vorhanden und gezieltes diff --check grün. Rest: ältere Originalchatwünsche vor 05.10. einzeln belegen. Datenabnahme weiter 157/158 mit offenem t_text_tempo; keine Produkttests neu gestartet, kein Produktcommit/Deploy, fremder Entwurf erhalten.

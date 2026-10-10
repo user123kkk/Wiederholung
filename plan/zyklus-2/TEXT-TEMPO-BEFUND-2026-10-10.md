@@ -60,6 +60,35 @@ Fehler noch einen bloßen Messfehler ableiten. Die endgültige Ursache ist offen
 
 ## Erhalt und nächster Schritt
 
+### Erneut beauftragte Sperrenklärung, 10.10.2026 17:20
+
+Der Betreiber hat um16:53 die gezielte Klärung und notwendige belegte
+Korrektur wieder beauftragt. Browservarianten mit verzögertem render(),
+getrennten Mausereignissen, Sichtbarkeitsbeobachter, bedingtem
+Viewport-Abgleich und sofort gesetzten ersten14 Karten lösen die Sperre
+nicht zuverlässig. Varianten bleiben ausschließlich in der Diagnosehilfe
+`x_text_tempo_phase.js`; Produktdateien und Originaltest sind unverändert.
+Eine Variante meldet kleine Longtasks, hat aber eine243ms Renderaufgabe im
+gleichen Renderer. Dieses Ergebnis wird ausdrücklich nicht als Fix gewertet.
+Rohtraces liegen mit eindeutigen Laufzeitnamen unter `text-layout-ursache/`.
+
+Eine kontrollierte Energieprobe am Netzteil verändert ausschließlich das
+AC-Prozessorminimum des bestehenden ausgeglichenen Schemas von5 auf100.
+CPU4x und200ms-Grenze bleiben unverändert. Originaltest199ms grün;
+unabhängige Rechenprobe weiterhin24,3–50,5ms unter CPU4x. Das Hilfsskript
+stellt die Einstellung im finally auf5 zurück. Anschließende Gegenprobe
+mit5: Original305ms rot. Das einzelne knappe Grün beweist weder eine
+zuverlässige Lösung noch die Ursache aller vorherigen roten Belege.
+
+Vorab begrenzte nächste Prüfung: zwei Originalläufe mit AC-Minimum100;
+beide müssen grün sein. Nur dann läuft die fortgesetzte Gesamtabnahme mit
+unveränderter Quelle und erhaltenen157 grünen Ergebnissen. Jedes Rot
+verwirft diesen Ansatz; keine Auswahl grüner Ergebnisse und kein
+Wiederholen bis grün. Auch danach wird die Energieeinstellung restauriert.
+Belege: `text-tempo-energie-1-{ablauf,referenz,original}.log`,
+`text-tempo-energie-gegenprobe-original.log`,
+`text-tempo-energie-stabilitaet-*` unter `../sicherung/tests/`.
+
 ### Gezielte Ursachenprüfung, 10.10.2026 16:09
 
 Die großen Layoutdurchläufe der erhaltenen Originaltraces liegen zeitlich
