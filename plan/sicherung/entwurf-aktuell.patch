@@ -3899,6 +3899,53 @@ index 00000000..d1f13b9d
 +            }
 +`+anchor);
 +const m=new Module(file,module);m.filename=file;m.paths=Module._nodeModulePaths(__dirname);m._compile(code,file);
+diff --git a/plan/werkzeuge/pruefstand/x_spur_text_tempo.js b/plan/werkzeuge/pruefstand/x_spur_text_tempo.js
+new file mode 100644
+index 00000000..fa8f0086
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_spur_text_tempo.js
+@@ -0,0 +1,41 @@
++/* Diagnose am unveränderten Text-Tempotest; Assertions und CPU 4x bleiben.
++   Optionaler fester App-Commit, sonst Arbeitsstand. Trace verändert Laufzeit;
++   Werte dienen der Ursachensuche, nicht einer Freigabe. */
++const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),Module=require('node:module');
++const datei=path.join(__dirname,'t_text_tempo.js');
++const commit=process.argv[2]||null;
++const stand=commit||'neu';
++const out=path.join(os.tmpdir(),'adrabic-text-spur');
++fs.mkdirSync(out,{recursive:true});
++let quelle=fs.readFileSync(datei,'utf8');
++const setup='await seiteMitApp(browser, store, { uid: BETREIBER_UID });';
++const anker="const schritt = async (name, fn, warte = 800) => { await p.evaluate(n => { window.__schritt = n; }, name); await fn(); await p.waitForTimeout(warte); };";
++if(!quelle.includes(setup)||!quelle.includes(anker))throw new Error('Messanker fehlen');
++quelle=quelle.replace(setup,`await seiteMitApp(browser, store, { uid: BETREIBER_UID, commit: ${JSON.stringify(commit)} });`);
++quelle=quelle.replace(anker,`const schritt = async (name, fn, warte = 800) => {
++  await p.evaluate(n => { window.__schritt = n; }, name);
++  const messen=name==='Verwalten'||name==='Text oeffnen (286)';
++  const events=[]; const sammeln=d=>events.push(...d.value);
++  let fertig;
++  if(messen){
++    cdp.on('Tracing.dataCollected',sammeln);
++    fertig=new Promise(r=>cdp.once('Tracing.tracingComplete',r));
++    await cdp.send('Profiler.enable'); await cdp.send('Profiler.start');
++    await cdp.send('Tracing.start',{categories:'devtools.timeline,disabled-by-default-devtools.timeline',transferMode:'ReportEvents'});
++  }
++  await fn(); await p.waitForTimeout(warte);
++  if(messen){
++    await cdp.send('Tracing.end'); await fertig; cdp.off('Tracing.dataCollected',sammeln);
++    const profil=(await cdp.send('Profiler.stop')).profile;
++    const label=${JSON.stringify(stand)}+'-'+(name==='Verwalten'?'verwalten':'text');
++    fs.writeFileSync(${JSON.stringify(out)}+'/trace-'+label+'.json',JSON.stringify(events));
++    fs.writeFileSync(${JSON.stringify(out)}+'/cpu-'+label+'.json',JSON.stringify(profil));
++    for(const t of events.filter(e=>e.name==='RunTask'&&e.ph==='X'&&e.dur>50000)){
++      const kids=events.filter(e=>e.ph==='X'&&e.pid===t.pid&&e.tid===t.tid&&e.ts>=t.ts&&e.ts+(e.dur||0)<=t.ts+t.dur&&e!==t&&e.dur>3000);
++      console.log('TRACE '+label+' '+Math.round(t.dur/1000)+'ms '+kids.filter(e=>['FunctionCall','TimerFire','Layout','UpdateLayoutTree','EventDispatch'].includes(e.name)).map(e=>e.name+' '+Math.round(e.dur/1000)+' '+JSON.stringify(e.args)).join(' | '));
++    }
++    const counts=new Map();for(const id of profil.samples||[])counts.set(id,(counts.get(id)||0)+1);
++    console.log('CPU '+label+' '+JSON.stringify(profil.nodes.map(n=>({...n.callFrame,samples:counts.get(n.id)||0})).sort((a,b)=>b.samples-a.samples).slice(0,20)));
++  }
++};`);
++const m=new Module(datei,module);m.filename=datei;m.paths=Module._nodeModulePaths(__dirname);m._compile(quelle,datei);
 diff --git a/plan/werkzeuge/pruefstand/x_stub_batch.js b/plan/werkzeuge/pruefstand/x_stub_batch.js
 new file mode 100644
 index 00000000..f88e13aa
