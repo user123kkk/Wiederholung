@@ -1,0 +1,5 @@
+nach 8,5 s Hinweis? false
+Zeichen/Name vorher 374/486 nachher 374/486
+nach 9,5 s Hinweis? true | Text: Das dauert gerade länger. | Knopf: Neu laden
+Neu laden laedt neu? true
+Uebergang: 150ms:boot | 450ms:boot | 700ms:boot geht | 850ms:boot geht | 1000ms:app | 1200ms:app | 1600ms:app
