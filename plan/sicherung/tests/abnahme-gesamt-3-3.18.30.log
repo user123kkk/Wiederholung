@@ -86,3 +86,5 @@ BEWAHRT t_meilenstein.js
 BEWAHRT t_merken_zwei.js
 BEWAHRT t_neben_tippen.js
 BEWAHRT t_notfound.js
+EXIT 0 t_nur_betreiber.js (108s)
+BEWAHRT t_ordnung.js

@@ -682,12 +682,12 @@
       "quelltext": "294d3603265a48fe2cec95032f49eff1ff767196c1e73fd335331bb8b9037549"
     },
     "t_nur_betreiber.js": {
-      "code": 1,
+      "code": 0,
       "signal": null,
       "zeitlimit": false,
       "fehler": null,
-      "sekunden": 1,
-      "quelltext": "2dba4ae190726fe3b4a6f4d90326135b93443440e03d7e56626f2a9a74f6dbcb"
+      "sekunden": 108,
+      "quelltext": "d4acf692dccd4d6b19c096da981577a678f9676f66215aa4d8e0b1e595f11365"
     },
     "t_ordnung.js": {
       "code": 0,
