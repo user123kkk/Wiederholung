@@ -96,6 +96,54 @@
       "fehler": null,
       "sekunden": 13,
       "quelltext": "6b8b480226e68101a0eee1d8d5462f9d50ba9bb38d86dca78240e933f85d47be"
+    },
+    "t_bestand_tempo.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 70,
+      "quelltext": "11c3dfa8f7a3637036446c18bcb807c97d5065d1e8eaaeb4d43d79afc5309fc0"
+    },
+    "t_bild.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 10,
+      "quelltext": "606aa62ebd6536920862b0eb430324343cf30dfcb577a15d601c0c828a085633"
+    },
+    "t_board_limit.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 22,
+      "quelltext": "77d77c333a8752d8ab271509612cd12db4fe17b2d45d05a24573f484b2fa4c2e"
+    },
+    "t_board_moderation.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 21,
+      "quelltext": "6c0f3f466d0d0b03993503fe0d23bc73c1e01c5ea85e985589416da6b1daf47c"
+    },
+    "t_boot_geometrie.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 7,
+      "quelltext": "f6b68a6fd7b425e3a50cf042913caafdb55a7bb916fba7faffd03ff6fd016899"
+    },
+    "t_csp.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 4,
+      "quelltext": "31f956b932beb693a0e8ee9cb07740e5782569e82f438651d46a96553465213e"
     }
   }
 }
