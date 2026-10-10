@@ -3733,6 +3733,32 @@ index 00000000..515ad2e5
 +console.log('Ergebnisse: ' + JSON.stringify(ergebnisse));
 +console.log('Keine Abnahmefreigabe aus dieser Diagnose.');
 +process.exitCode = ergebnisse.some(r => r.code !== 0) ? 1 : 0;
+diff --git a/plan/werkzeuge/pruefstand/x_ab_tempo_reihenfolge.js b/plan/werkzeuge/pruefstand/x_ab_tempo_reihenfolge.js
+new file mode 100644
+index 00000000..310762f7
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_ab_tempo_reihenfolge.js
+@@ -0,0 +1,20 @@
++/* Diagnose mit dem vorhandenen x_ab_tempo: feste Quelle, acht Paare,
++   abwechselnde Reihenfolge und DOM-Vergleich. Keine Abnahmefreigabe. */
++const fs=require('node:fs'),path=require('node:path'),Module=require('node:module');
++const datei=path.join(__dirname,'x_ab_tempo.js');
++process.argv[2]='8';process.argv[3]='315bb0e';
++let quelle=fs.readFileSync(datei,'utf8').replace(/\r\n/g,'\n');
++const anker='return [max(\'V\'), max(\'T\')];';
++// DOM erfassen, bevor der ursprüngliche Helfer den Kontext schließt.
++const ende='await ctx.close();';
++const loop=`erg.alt.push(await lauf(browser, ALT));
++      erg.neu.push(await lauf(browser, null));`;
++if(!quelle.includes(anker)||!quelle.includes(ende)||!quelle.includes(loop))throw new Error('Messanker fehlen');
++quelle=quelle.replace(ende,`const dom=await p.evaluate(()=>document.querySelector('#app').innerHTML);
++  const domHash=require('node:crypto').createHash('sha256').update(dom).digest('hex');
++  await ctx.close();`);
++quelle=quelle.replace(anker,`return [max('V'), max('T'), domHash];`);
++quelle=quelle.replace(loop,`if(i%2){erg.neu.push(await lauf(browser,null));erg.alt.push(await lauf(browser,ALT));}
++      else{erg.alt.push(await lauf(browser,ALT));erg.neu.push(await lauf(browser,null));}
++      console.log('PAAR '+(i+1)+' '+(i%2?'neu/alt':'alt/neu')+' '+JSON.stringify({alt:erg.alt[i],neu:erg.neu[i],domGleich:erg.alt[i][2]===erg.neu[i][2]}));`);
++const m=new Module(datei,module);m.filename=datei;m.paths=Module._nodeModulePaths(__dirname);m._compile(quelle,datei);
 diff --git a/plan/werkzeuge/pruefstand/x_abnahme_hash.js b/plan/werkzeuge/pruefstand/x_abnahme_hash.js
 new file mode 100644
 index 00000000..a46d42fa
