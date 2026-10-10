@@ -1,5 +1,15 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 11:42, Betreiber: „ok los aber neuer chtat ja, und was versteht
+man unter paket“. Nach unmittelbar davor benanntem nächsten Schritt als
+Wiederaufnahme der großen Datenabnahme/Paketabschluss 3.18.30 verstanden,
+ausdrücklich in neuem Chat im selben Desktop-Repo. Paket einfach erklärt:
+zusammengehörige Änderungen gemeinsam prüfen und geprüften Stand sichern.
+Neuer Chat mit aktueller Übergabe/Abnahmevorbereitung; fremder Entwurf und
+Minuten-Sicherung erhalten, keine zweite Schleife. Kein Veröffentlichen,
+kein automatischer Bau weiterer Funktionen aus diesem Ja. Stündliche alte
+Automation bleibt pausiert, Arbeit erfolgt im neuen beauftragten Chat.
+
 10.10.2026 11:40: Quellenabgleich fertig; stündliche Automation
 adrabic-nachtarbeit-fortsetzen gemäß gespeichertem Abschlussauftrag PAUSED
 bestätigt. Minuten-Sicherung weiter einzeln aktiv. Keine Arbeitsfortsetzung
