@@ -17,3 +17,7 @@ ROT t_bestand_tempo.js (34s)
 AssertionError [ERR_ASSERTION]: G-037: 207 ms statt maximal 100 ms
 Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":34,"quelltext":"11c3dfa8f7a3637036446c18bcb807c97d5065d1e8eaaeb4d43d79afc5309fc0"}
 EXIT 0 t_bild.js (9s)
+EXIT 0 t_board_limit.js (22s)
+EXIT 0 t_board_moderation.js (23s)
+EXIT 0 t_boot_geometrie.js (8s)
+EXIT 0 t_csp.js (4s)
