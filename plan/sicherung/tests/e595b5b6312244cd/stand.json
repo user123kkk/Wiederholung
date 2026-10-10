@@ -992,6 +992,14 @@
       "fehler": null,
       "sekunden": 26,
       "quelltext": "45c5995a002b1e7b023014e42ad40b7462695ef400d9b558ae2b764eedac1e7f"
+    },
+    "t_serie_lang.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 195,
+      "quelltext": "a4bb20557b586d788dab4d4a1792b1afe83451cb20f726be5bb7b36540377d21"
     }
   }
 }
