@@ -840,6 +840,30 @@
       "fehler": null,
       "sekunden": 0,
       "quelltext": "94a6c26e02463053ad3b402fe40d81f06806fdb49a6ef6e262bbac51cddee9f6"
+    },
+    "t_querschnitt.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 24,
+      "quelltext": "872c31d3c2c00b288dc63d19f20a0c3d96aec95a61e36f39e67fe1c23d82cdfe"
+    },
+    "t_quran_datei.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 15,
+      "quelltext": "a0cadec0fb7d702a70d14d9b0b52f978a6392d800609be9da30cbef069ceef1d"
+    },
+    "t_quran_fehler.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 11,
+      "quelltext": "9b654dca6cf4d959cdd8ea8bc5559d46758e21e2df3a1778395193dc54f5265a"
     }
   }
 }
