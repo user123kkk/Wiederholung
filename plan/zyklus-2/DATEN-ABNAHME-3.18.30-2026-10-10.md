@@ -77,6 +77,12 @@ Fortschritt209ms/max233ms Bildlücke, große Erstansicht445ms. Das sind keine
 automatisch durch Exit0 verschwundenen Messungen/keine Flüssigkeitszusage.
 Keine neue Ursache oder Produktregression daraus behauptet. Abnahme läuft.
 
+Zwischenstand12:38: 62/158 grün; alle62 vollständigen Ausgaben gelesen,
+auch Kartenblatt/-Snapshot und erste Kontowechsel-/Löschfälle. Exaktes
+Leseregister `../sicherung/tests/abnahme-gelesen-3.18.30.json` enthält
+Quellstand und bereits vollständig gelesene Testnamen; bei Anschluss
+gegen aktuelle stand.json prüfen, keine ungelesenen Logs übernehmen.
+
 Belege: `abnahme-bestand-ab-3.18.30.log`, `abnahme-bestand-spur-3.18.30.log`,
 `abnahme-stub-batch-2-3.18.30.log`,
 `abnahme-stub-batch-gegenprobe-2-3.18.30.log`,
