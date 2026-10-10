@@ -1,0 +1,5 @@
+gezielt-task-eager DOM=77baac41b5f007008b80a2a3cb23014100d2923f5c8ec2a7f547e2d4f799e8f8 DauerDOM=7add11a3a21cdc305ae6683c574c0be32ffe78b1bd64f45d9b66c62a0018015d Longtasks=88/50/268
+{"ms":68,"klick":false,"eingaben":[],"teile":[]}
+{"ms":89,"klick":true,"eingaben":["pointerover","mouseover","pointermove","mousemove","pointerdown","mousedown","focus","focusin","DOMFocusIn","pointerup","mouseup","click","DOMActivate"],"teile":[["UpdateLayoutTree",2],["UpdateLayoutTree",3],["Layout",1],["UpdateLayoutTree",4],["UpdateLayoutTree",2],["Layout",1]]}
+{"ms":50,"klick":false,"eingaben":["blur","focusout","DOMFocusOut"],"teile":[["UpdateLayoutTree",4]]}
+{"ms":269,"klick":false,"eingaben":[],"teile":[["FireAnimationFrame",204],["UpdateLayoutTree",58],["Layout",144],["UpdateLayoutTree",5],["Layout",1],["UpdateLayoutTree",6],["Layout",14]]}
