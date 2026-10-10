@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**Betreiber10.10.: zuerst Angemessenheit der Tempo-Grenze klären.**
+Weitere Mess- und Produktvarianten gestoppt.200ms wurde im Agententest
+vom30.09. als harte Longtask-Grenze gesetzt; in den geprüften Quellen
+keine Geräte-/Nutzungsherleitung für genau diese Grenze. KONZEPT nennt
+50ms/Bild, offizielles200ms-INP meint eine andere Messgröße. Datenentwurf
+und alte Belege erhalten; bisheriger Test bleibt technisch rot, daraus
+keine begründete neue Zahl oder automatische Produktfreigabe ableiten.
+Anschluss: Abnahmekriterium fachlich prüfen, nicht erneut blind optimieren.
+
 **10.10.2026 17:29 – bislang kein belegter Tempo-Fix:**
 AboveNormal-Stabilitätsprobe215/277ms rot; keine Gesamtabnahme. Wörter-
 Vorwärmen315ms und Flexbasis232ms lösen die Sperre ebenfalls nicht.

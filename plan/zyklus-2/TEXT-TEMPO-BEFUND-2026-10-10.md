@@ -60,6 +60,38 @@ Fehler noch einen bloßen Messfehler ableiten. Die endgültige Ursache ist offen
 
 ## Erhalt und nächster Schritt
 
+### Betreiberkorrektur: Grenze selbst prüfen,10.10.2026
+
+Weitere Messläufe gestoppt. Der Betreiber fragt, ob die vorgegebene Grenze
+regulierbar oder nur angesetzt wurde, und kritisiert den verbrauchten
+Nutzungsrahmen ohne Fix. Codex hat die Herkunft/Angemessenheit zu spät
+geprüft; keine weitere blinde Optimierung gegen die200ms-Zahl.
+
+git blame/log ordnen200ms/Longtask dem Agentencommit7264af9a vom30.09.
+zu. Der Testkommentar bezeichnet dies als sichtbares Stocken, liefert aber
+keine quantitative Geräte-/Nutzungsherleitung. KONZEPT§13 nennt hingegen
+50ms/Bild; Bilder und Longtasks sind unterschiedliche Messgrößen. Das
+ursprüngliche Logbuch dokumentiert im Cloud-Container maximal104ms und
+ein bereits verfehltes50ms-Bildziel. Kein damaliger Laptop-/iPhone-Nachweis.
+
+Die [offizielle INP-Empfehlung](https://web.dev/articles/inp) ordnet200ms
+als gute Reaktionszeit einer Interaktion ein und bewertet reale Besuche
+am75.Perzentil. Der aktuelle Test prüft stattdessen den maximalen einzelnen
+Longtask unter künstlicher CPU4x-Drosselung. Die gleiche Zahl ist damit
+keine fachliche Herleitung für diesen konkreten Test. Grenze regulierbar;
+erst Messgröße, Gerätebedingungen und Abnahmezweck festlegen. Keine neue
+Zahl oder Produktfreigabe aus der Betreiberfrage ableiten.
+
+Auch eigene Ein-/Zwei-CPU-Affinitätsproben bleiben verworfen: unabhängige
+Verlangsamung nur1,13 beziehungsweise etwa1,30 statt4. App-Grüns daraus
+ungültig. Gesamtrunner wegen NODE_OPTIONS-Quotierungsfehler nicht gestartet,
+Cachecode1 und Quellee595b5b6312244cd offline bestätigt. Vor Originaltests
+nun semantische Rechenprüfung, Affinität gesperrt; kein Produkt verändert.
+Gezielte Windows-Fadenprobe scheitert mangels lesbarem Fadennamen vor
+gedrosselter Probe/App-Abnahme. Alternativbrowser am geprüften Edge-Pfad
+und WSL nicht vorhanden. Keine Systeminstallation oder fremde Prozess-
+änderung vorgenommen. Keine weiteren Energie-/Prioritäts-/Renderproben.
+
 ### Erneut beauftragte Sperrenklärung, 10.10.2026 17:20
 
 Ergänzung17:29: AboveNormal-Stabilitätsprobe215/277ms rot, deshalb
