@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 12:00 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 12:01 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `36ee844 Sicherung 11:59 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `e460fae Sicherung 12:00 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -55,7 +55,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 16, chrome.exe 8 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 16, chrome.exe 6 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -76,6 +76,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 12:02 Codex Diagnosewerkzeug für Chrome-Trace/CPU-Profil am Original-Tempotest vorbereitet, Grenzen/Assertions unverändert. Erste fünf abgeschlossene A/B-Paare: Vorstand jeweils grün, Entwurf jeweils rot (617/491/284/407/475 ms). Noch keine Ursache/Freigabe daraus. Attrappenquelle Batch-Meldung gegenüber gezielter Einzelmeldung gelesen; Messung folgt nach Vergleichslauf, kein Browser parallel. Voriger String-Einfügeversuch traf wegen CRLF keinen Anker, jetzt mit geprüftem Patch ergänzt; Produkt unberührt.
 
 - 11:58 Codex große Abnahme angehalten: 13 vollständige Tests grün, t_bestand_tempo rot (3000 Karten, erste Bewertung 207 ms bei unveränderter 100-ms-Grenze, gradeCard 24 ms). Alle 14 Abschlusslogs vollständig gelesen; gerade laufenden Browser samt eigenem Runnerbaum 21508 beendet, rote Ausgabe erhalten. Keine Ursache behauptet/keine Produkt- oder Grenzänderung. Eigene Diagnose x_ab_bestand_tempo führt acht abwechselnde Paare desselben Originaltests am festen vorherigen Produktcommit 315bb0e9fb4ae9da74882fb35400ee90213437db (3.18.29) und Entwurf aus; nur Eingabe 3000 Karten und Altquelle gewählt, CPU4x/Assertions unverändert. Sitzung 37871, eigener Log abnahme-bestand-ab-3.18.30.log. Kein paralleler Browserlauf; Paketabschluss gesperrt.
 
@@ -118,5 +120,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 09:42 Codex Abschluss des begonnenen Datenprüfschritts: A14/A15 16, A16 22 und A17 acht SDK-Fälle gemeinsam am gleichen App-SHA 4a8ca5a1/Rules 6a110898 grün, alle vollständigen Ausgaben gelesen. Hinweise/Export/Entfernen/Offline-/Neustart-/Regelkonflikte und neue Fälle enthalten; Zusatzmeldungen nicht als zusätzliche Fälle gezählt. Bericht/Abnahmeplan/STAND/Logbuch abgeschlossen, insgesamt 46 gezielte Fälle. Keine weitere App-Änderung oder neue Testidee; Syntax/Standprüfung grün (Standausgabe wegen gemeinsamer Tool-Ausgabe nochmals separat als vollständiger Log gesichert). Ein leerer Dokumentationshunk zuvor abgewiesen, ohne Änderung; anschließend konkreten Berichtshunk angewandt. Große Paket-/Runden-/Zufallsabnahme bleibt verschoben, A14–A17 wegen Paketabschluss in Arbeit; kein App-Commit/Deploy/neues Paket. Repo-Folge und vorhandene Anschlussvorbereitung erhalten; neue Beobachtungen zu 3.18.26 weiter nur vorgemerkt.
 
 - 09:38 Codex gezielter Datenabschluss: A17 alle acht aktuellen SDK-Fälle gemeinsam grün, gesamte Ausgabe gelesen, Bericht ergänzt. A14/A15-Nachlauf am selben App-SHA 4a8ca5a1/Rules 6a110898 gestartet, danach A16-Kataloglauf; nach A17-Produktfix und neuen Fällen bestand noch Quellstandlücke, keine unveränderten abgeschlossenen Gesamtprüfungen wiederholt. BatteryStatus 2 bestätigt. Keine großen Browser-/Runden-/Affenläufe, keine neuen Prüfideen oder App-Änderung. Große Paketabnahme/Commit/Deploy weiter später, Quellen während Prüfung erhalten.
-
-- 09:36 Codex Betreiber-Fortsetzung: ausdrücklichen Wunsch „weiter nach reihenfolge ... ktirgs fertig“ in ALLES-OFFEN eingetragen. Übergabe 09:35 und bisherigen Abnahmeplan gelesen. Begonnenen A17-Prüfschritt mit vollständigem gezieltem Achter-SDK-Lauf am erhaltenen Entwurf gestartet, weil seit letztem Fünferlauf drei konkrete Fälle ergänzt wurden. Keine neuen Prüfideen oder Produktfunktionen bauen. Große Gesamt-/Rundenabnahme und neuer Paketbau bleiben wie zuvor verschoben/gesperrt; kein App-Commit/Deploy. Daten-Skill-Prüfebene unverändert.

@@ -83,3 +83,87 @@ AssertionError [ERR_ASSERTION]: G-037: 284 ms statt maximal 100 ms
   diff: 'simple'
 }
 
+
+PAAR 4 alt EXIT 0
+App-Zeiten [{"name":"render","ms":8.299999982118607},{"name":"gradeCard","ms":26.19999998807907},{"name":"render","ms":9.300000011920929}]
+App-Zeiten [{"name":"render","ms":13.300000011920929},{"name":"gradeCard","ms":17}]
+App-Zeiten [{"name":"render","ms":11.799999982118607},{"name":"gradeCard","ms":14.5}]
+App-Zeiten [{"name":"render","ms":9.100000023841858},{"name":"gradeCard","ms":12.700000017881393}]
+App-Zeiten [{"name":"render","ms":3.7999999821186066},{"name":"gradeCard","ms":6.0999999940395355}]
+3000 Karten, 150 Lektionen, gefuehrt | Runde starten: lange Aufgaben 247 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 53, 69, 54, 0, 0 ms
+App-Zeiten [{"name":"render","ms":5.699999988079071},{"name":"gradeCard","ms":23.099999994039536},{"name":"render","ms":7.800000011920929}]
+App-Zeiten [{"name":"render","ms":7.899999976158142},{"name":"gradeCard","ms":11.299999982118607}]
+App-Zeiten [{"name":"render","ms":6},{"name":"gradeCard","ms":9.300000011920929}]
+App-Zeiten [{"name":"render","ms":5.0999999940395355},{"name":"gradeCard","ms":7.799999982118607}]
+App-Zeiten [{"name":"render","ms":5.5},{"name":"gradeCard","ms":8.400000005960464}]
+3000 Karten, 150 Lektionen, eigen | Runde starten: lange Aufgaben 173 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 0, 0, 58, 0, 0 ms
+
+
+PAAR 4 neu EXIT 1
+App-Zeiten [{"name":"render","ms":13},{"name":"gradeCard","ms":30},{"name":"render","ms":5.9000000059604645}]
+AssertionError [ERR_ASSERTION]: G-037: 407 ms statt maximal 100 ms
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_bestand_tempo.js:62:27 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+
+PAAR 5 alt EXIT 0
+App-Zeiten [{"name":"render","ms":6.700000017881393},{"name":"gradeCard","ms":45.5},{"name":"render","ms":9}]
+App-Zeiten [{"name":"render","ms":7},{"name":"gradeCard","ms":17.900000005960464}]
+App-Zeiten [{"name":"render","ms":7.5},{"name":"gradeCard","ms":10.899999976158142}]
+App-Zeiten [{"name":"render","ms":5.9000000059604645},{"name":"gradeCard","ms":8.099999994039536}]
+App-Zeiten [{"name":"render","ms":6.4000000059604645},{"name":"gradeCard","ms":12.5}]
+3000 Karten, 150 Lektionen, gefuehrt | Runde starten: lange Aufgaben 137 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 81, 0, 0, 0, 53 ms
+App-Zeiten [{"name":"render","ms":11.900000005960464},{"name":"gradeCard","ms":42.400000005960464},{"name":"render","ms":6.9000000059604645}]
+App-Zeiten [{"name":"render","ms":2.5999999940395355},{"name":"gradeCard","ms":13}]
+App-Zeiten [{"name":"render","ms":7.799999982118607},{"name":"gradeCard","ms":16.80000001192093}]
+App-Zeiten [{"name":"render","ms":4.5},{"name":"gradeCard","ms":9.199999988079071}]
+App-Zeiten [{"name":"render","ms":7.0999999940395355},{"name":"gradeCard","ms":11.700000017881393}]
+3000 Karten, 150 Lektionen, eigen | Runde starten: lange Aufgaben 209 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 75, 0, 0, 0, 0 ms
+
+
+PAAR 5 neu EXIT 1
+App-Zeiten [{"name":"render","ms":5.4000000059604645},{"name":"gradeCard","ms":52.80000001192093},{"name":"render","ms":14.799999982118607}]
+AssertionError [ERR_ASSERTION]: G-037: 475 ms statt maximal 100 ms
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_bestand_tempo.js:62:27 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+
+PAAR 6 alt EXIT 0
+App-Zeiten [{"name":"render","ms":9.199999988079071},{"name":"gradeCard","ms":30.099999994039536},{"name":"render","ms":5}]
+App-Zeiten [{"name":"render","ms":2.800000011920929},{"name":"gradeCard","ms":5.0999999940395355}]
+App-Zeiten [{"name":"render","ms":2.5},{"name":"gradeCard","ms":5.300000011920929}]
+App-Zeiten [{"name":"render","ms":2.5},{"name":"gradeCard","ms":4.300000011920929}]
+App-Zeiten [{"name":"render","ms":7.199999988079071},{"name":"gradeCard","ms":11.699999988079071}]
+3000 Karten, 150 Lektionen, gefuehrt | Runde starten: lange Aufgaben 115 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 0, 0, 0, 0, 0 ms
+App-Zeiten [{"name":"render","ms":5.9000000059604645},{"name":"gradeCard","ms":27.400000005960464},{"name":"render","ms":8.700000017881393}]
+App-Zeiten [{"name":"render","ms":11.099999994039536},{"name":"gradeCard","ms":15.900000005960464}]
+App-Zeiten [{"name":"render","ms":10.400000005960464},{"name":"gradeCard","ms":19.099999994039536}]
+App-Zeiten [{"name":"render","ms":5},{"name":"gradeCard","ms":7.5}]
+App-Zeiten [{"name":"render","ms":7.9000000059604645},{"name":"gradeCard","ms":9.700000017881393}]
+3000 Karten, 150 Lektionen, eigen | Runde starten: lange Aufgaben 228 ms | je Bewertung (Summe lange Aufgaben, CPU 4x): 63, 58, 0, 55, 0 ms
+
+
+PAAR 6 neu EXIT 1
+App-Zeiten [{"name":"render","ms":8.699999988079071},{"name":"gradeCard","ms":53.79999998211861},{"name":"render","ms":8.900000005960464}]
+AssertionError [ERR_ASSERTION]: G-037: 425 ms statt maximal 100 ms
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_bestand_tempo.js:62:27 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
