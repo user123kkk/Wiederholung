@@ -640,6 +640,38 @@
       "fehler": null,
       "sekunden": 27,
       "quelltext": "b65a29e1a9181b99845b46f27f70b0b53d33c856a6c9510137307dc44cd1fe36"
+    },
+    "t_loeschen_teilen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 23,
+      "quelltext": "45ebf65fd71645a2ffe9894eeb08cf3df6ee1b83785f9398e30bd4e37203da9f"
+    },
+    "t_meilenstein.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "459e80a39816e16faa4a84203dabb6ca257e2a0a8854aefcc93a8bc7db84236b"
+    },
+    "t_merken_zwei.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 6,
+      "quelltext": "f2dcf8db73b72ebf0bd60fbcff569c678a09bf6d5fd846db3fd45fb873c195aa"
+    },
+    "t_neben_tippen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 46,
+      "quelltext": "eff4b1008fbb13e026be3fc9d44883539509d97f4135d6b38af8c6c5e1365ece"
     }
   }
 }

@@ -1,0 +1,8 @@
+     Rueckfrage bleibt false | noch angemeldet true | Hinweis zu true
+OK   handy: Karte leer schliesst true | mit Text Rueckfrage true, Text danach "Probe" | Code leer schliesst true | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt false
+     Rueckfrage bleibt false | noch angemeldet true | Hinweis zu true
+OK   klein: Karte leer schliesst true | mit Text Rueckfrage true, Text danach "Probe" | Code leer schliesst true | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt false
+     Rueckfrage bleibt false | noch angemeldet true | Hinweis zu true
+OK   ipad: Karte leer schliesst true | mit Text Rueckfrage true, Text danach "Probe" | Code leer schliesst true | Code mit Text bleibt "ABCDE" | Rueckfrage bleibt false
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":46,"quelltext":"eff4b1008fbb13e026be3fc9d44883539509d97f4135d6b38af8c6c5e1365ece"}

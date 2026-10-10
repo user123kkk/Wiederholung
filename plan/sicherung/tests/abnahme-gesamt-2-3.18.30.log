@@ -81,3 +81,13 @@ EXIT 0 t_liste_lang.js (9s)
 EXIT 0 t_liste_lesen.js (1s)
 EXIT 0 t_liste_zeigen.js (44s)
 EXIT 0 t_loeschen_rueckgaengig.js (27s)
+EXIT 0 t_loeschen_teilen.js (23s)
+EXIT 0 t_meilenstein.js (8s)
+EXIT 0 t_merken_zwei.js (6s)
+EXIT 0 t_neben_tippen.js (46s)
+EXIT 0 t_notfound.js (8s)
+ROT t_nur_betreiber.js (1s)
+Error: Command failed: git -C C:\Users\USER\Desktop\Wiederholung worktree add --detach C:\Users\USER\AppData\Local\Temp\adrabic-veroeffentlicht-a4b5677 a4b5677
+    at genericNodeError (node:internal/errors:986:15)
+    at checkExecSyncError (node:child_process:942:11)
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1,"quelltext":"2dba4ae190726fe3b4a6f4d90326135b93443440e03d7e56626f2a9a74f6dbcb"}
