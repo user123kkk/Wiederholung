@@ -94,3 +94,12 @@
 {"fall":"eigene-adressloeschung","quittung":25,"st":{"busy":false,"user":null,"modus":"register","gewaehlt":true}}
 
 == konto_authrest_app.js --gegenprobe
+{"fall":"token","alt":true,"reloads":1}
+{"fall":"registrierung","aba":false,"alt":true,"st":{"busy":false,"info":"Konto angelegt.","fehler":null,"mail":1,"dialog":false}}
+{"fall":"reset","aba":false,"alt":true,"st":{"busy":false,"info":"Wenn es zu dieser Adresse ein Konto gibt, ist eine E-Mail unterwegs. Schau auch im Spam nach.","fehler":null,"mail":0,"dialog":false}}
+{"fall":"adresse","aba":false,"alt":true,"st":{"busy":true,"info":"Neuer Auftrag wartet","fehler":null,"mail":0,"dialog":true}}
+{"fall":"login","aba":false,"alt":true,"st":{"busy":false,"info":"Neuer Auftrag wartet","fehler":"Keine Verbindung – bitte Internet prüfen.","mail":0,"dialog":false}}
+{"fall":"google","aba":false,"alt":true,"st":{"busy":false,"info":"Neuer Auftrag wartet","fehler":"Keine Verbindung – bitte Internet prüfen.","mail":0,"dialog":false}}
+{"fall":"apple","aba":false,"alt":true,"st":{"busy":false,"info":"Neuer Auftrag wartet","fehler":"Keine Verbindung – bitte Internet prüfen.","mail":0,"dialog":false}}
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":68,"quelltext":"c992e116345f9039c25d4ae5d2ae96d66ff9d2cadce1d3e39312f0d6650dcc13"}

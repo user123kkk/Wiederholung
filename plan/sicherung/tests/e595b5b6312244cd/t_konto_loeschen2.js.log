@@ -1,0 +1,25 @@
+-- A) immer neu anmelden vor dem Loeschen --
+  Protokoll: reauth > commit > deleteDoc > deleteUser
+ok      reauth wurde aufgerufen
+ok      reauth kommt vor commit
+ok      reauth kommt vor deleteUser
+ok      Konto und Daten sind weg
+-- B) offline gesperrt --
+ok      E-Mail-Feld ist disabled
+ok      Halteknopf ist disabled
+ok      Hinweis nennt die Verbindung: "Zum Löschen brauchst du eine Verbindung."
+ok      kein deleteDoc/commit im Protokoll
+-- C) haengendes commit() -> Zeitlimit --
+ok      waehrend des Loeschens dreht der Knopf (.busy)
+ok      nach dem Zeitlimit dreht der Knopf nicht mehr
+ok      Meldung in Worten: "Löschen fehlgeschlagen Nicht fertig gelöscht – bitte mit Verbindung noch einmal. OK"
+
+0 Fehler auf dem aktuellen Stand.
+
+-- Gegenprobe gegen 1c8aaa1 (muss rot sein) --
+  ok (=Fehler im Altstand) : reauth fehlt trotz frischer Anmeldung im Protokoll
+  ok (=Fehler im Altstand) : Halteknopf bleibt offline bedienbar
+  ok (=Fehler im Altstand) : keine Zeitlimit-Meldung, es wartet endlos
+3 von 3 erwarteten Gegenproben-Fehlern gefunden.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":79,"quelltext":"33618cb8ba82580c02fbf928a5727c4c32478265a1279cb865fdf40bc788e31d"}

@@ -1,0 +1,6 @@
+OK  Nutzer-Write am Ursprungskonto isoliert: not-found.
+OK  Nutzer-Write am Ursprungskonto isoliert: spaeter-fallback.
+OK  Nutzer-Write am Ursprungskonto isoliert: spaeter-erfolg.
+OK  Nutzer-Write am Ursprungskonto isoliert: spaeter-fehler.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1,"quelltext":"a6456a1f44a2c9bf630aaff33f76e6dd8120f20df5e5d05f8d0ccbdcfb534ac6"}
