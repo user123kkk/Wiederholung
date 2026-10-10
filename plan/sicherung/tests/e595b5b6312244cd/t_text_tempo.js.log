@@ -1,5 +1,5 @@
-(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 199/254 | Text oeffnen (286): 151/145/99/57/132/78/58 | scrollen: 58/54/117 | Wiederholen starten: 199 | Aufdecken: 128 | Fliessend: 101 | Beenden: 134/112/105 | Lernen-Tab: 100
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 252/139 | Text oeffnen (286): 150/147/80/70/143/61/59/68/67 | scrollen: 51/59/50/79 | Wiederholen starten: 116 | Aufdecken: 135 | Fliessend: 128 | Beenden: 80/89/119 | Lernen-Tab: 74
 FEHLER:
-Aufgabe mit 254 ms (> 200 ms)
+Aufgabe mit 252 ms (> 200 ms)
 
 Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":22,"quelltext":"e8fb11926a430b29d3df6b2f88dc0eee3103424e4b3efcd3ade9f3e60cb2b915"}

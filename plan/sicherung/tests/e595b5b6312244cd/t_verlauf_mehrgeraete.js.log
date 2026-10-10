@@ -3,10 +3,8 @@ OK  w/n/u werden getrennt und atomar addiert.
 OK  Offline-Neustart und wiederholtes Nachholen: keine verlorenen/doppelten Antworten.
 OK  Echte Bewertung/Rueckgaengig bewahrt fremde Antworten.
 OK  Beide Rueckgaengig-Wege korrigieren auch nach Tageswechsel den alten Tag.
-page.waitForFunction: Timeout 30000ms exceeded.
-    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_verlauf_mehrgeraete.js:171:13 {
-  log: [],
-  name: 'TimeoutError'
-}
+OK  Regeln-Ablehnung/SDK-Rollback/erneutes Senden: jede Antwort genau einmal.
+OK  Zaehler-Snapshots erhalten Karte und Zeichenflaeche in der laufenden Runde.
+OK  Reset: Ablehnung sichtbar, beide Geraete leer, anschliessend nur neue Antworten.
 
-Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":45,"quelltext":"7e468891aff7dec61f7234549d9bd83daa048580cedae65644ca6159f05e9ed4"}
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":14,"quelltext":"6100003fc82a7bb90bd356b22dd3fcf99b326e5dedb4ff48fa5d721e416e62ce"}
