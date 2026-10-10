@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 16:47 Codex17./11./12.09.: zehn lokale Originalchats gelesen, Überlappung der12.09.-Exporte und historische PR/Force-Push-Aufträge erkannt. Lokale Domain-/Manifest-/Metatag- und Reiteraktionsquellen geprüft. Markenidentität an allen Stellen und Migration alter Freundesinstallationen als unbelegte Reste zentral erhalten; breite Vorbild-/Lern-/Fortschrittswünsche nicht pauschal abgenommen. Älteste lokale Quelle11.09.; Rest vollständiger30.09.-Abgleich und abschließende Quellenlücken/Zuordnung. Dokumentations-Diffcheck grün, Produkt/Messläufe unverändert.
+
 - 16:45 Codex18.09.: sieben Originalchats gelesen, alle acht alten TikTok-Originale und Navigationskritik bestehenden Bereichen zugeordnet. Apple-Knopf verborgen belegt; aktuelle Bytegrenze, feste Navigation, Nutzerlistener und erhaltene Einstellungen-/Serienlogs geprüft. Historischer Cloud-Erfolg und reine Rechen-/Ansichtstests nicht als heutiger SDK-/iPhone-Nachweis ausgegeben. Zentralen historischen Abschnitt ehrlich auf Umsetzung/Beleggrenzen benannt; falsche pauschale Erledigung entfernt. Keine Produktänderung oder Messläufe. Nächste Quellen17.09.
 
 - 16:43 Codex19.09.: vier lokale Chats gelesen, automatische Zusammenfassungen/Modellwechsel nicht als neue Wünsche behandelt. Debugkasten, Teilen-Ende und Betreiber-/Lehrer-Unterscheidung am aktuellen Code und vorhandenen Teilentest abgeglichen; begrenzte Belege zentral ergänzt. Gesamt-Onboarding/ruhige Oberfläche/TikTok und Lehrerideen bestehenden Bereichen zugeordnet; historisches Repo-„getan“ kein aktueller Statusbeleg. Keine Produktänderung, Veröffentlichung oder Messung. Nächste Quellen18.09.

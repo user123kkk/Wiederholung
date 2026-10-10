@@ -6,6 +6,19 @@ für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
 Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,
 Messläufe oder stillschweigende Freigabe neuer Funktionen.
 
+**Originalprüfung17./11./12.09.,16:47:** Sechs Chats17.09. und vier
+Chats11./12.09. hinsichtlich echter Betreiberblöcke gelesen. Die zwei12.09.-
+Exporte überlappen; identische Wünsche nur einmal zuordnen. Kein heutiger
+Force-Push/PR aus archivierten Werkzeugaufträgen. Älteste lokale Exportquelle
+beginnt11.09. Umfassendes Redesign samt Funktionserhalt,108 Vorbildbilder,
+Fortschritt/Einstellungen, Arabily/Kitabi und Onboarding bleiben in bestehenden
+Bereichen; keine vollständige Design-/Lernwirkungsabnahme. Google heute gebaut,
+Apple später ausdrücklich zurückgestellt. Domainnamen lokal unten belegt,
+aktuelle externe Konsolen nicht geprüft. Markenidentität und alte installierte
+Verknüpfungen ausdrücklich offen ergänzt. Rest der Quellenprüfung: die zuvor
+teilweise gekürzte30.09.-Ausgabe vollständig abgleichen, Quellenlücken und
+noch nicht zugeordnete Teilwünsche abschließend kontrollieren.
+
 **Originalprüfung18.09.,16:45:** Sieben lokale Chats hinsichtlich echter
 Betreiberblöcke gelesen (d9c64d17/cbf499e8/af9df362/993a3c34/5384835e/
 40b88af6/01e0ffb3). Acht TikTok-Originale plus Navigationsproblem stammen
@@ -438,6 +451,8 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 | Was | Stand |
 |---|---|
+| Umbenennen zu Adrabic, Domainstellen aktualisieren (11./12./17.09., Fortsetzung18.09.) | heutiges Manifest heißt Adrabic; Sitemap/robots nennen `adrabic.web.app`, Search-Console-Metatag vorhanden. Firebase-Konfiguration behält zwei Hostingziele und ursprüngliche Authdomain. Lokale Belege, kein aktueller externer Konsolen-/Weiterleitungsnachweis |
+| Aus offenen Einstellungen direkt den Reiter wechseln (11.09.,23:59) | heutige drei Reiteraktionen rufen `ebenenSchliessen()` auf, das Einstellungen schließt; derselbe aktive Reiter wird bei offenen Einstellungen nicht übersprungen. Codebeleg, kein gesonderter aktueller Ablauftest |
 | Apple-Anmeldung „way later“, Knopf jetzt weg (18.09.,08:25/08:27) | umgesetzt: `APPLE_LOGIN_BEREIT = false`, Formular zeigt Apple nur bei dieser aktivierten Konstante. Keine neue Apple-Einrichtung beauftragt |
 | Grüner Debugkasten oben links entfernen (19.09.,07:56) | gebaut3.6.13; heutiger Start entfernt `debugNav`, alter Overlay-Aufbau fehlt. Codebeleg, keine neue Gerätesichtung. Der breite Wunsch nach ruckelfreier Gesamt-App bleibt offen |
 | „Teilen beenden“ funktioniert nicht (19.09.,10:13/10:18) | historischer Feld-/Regelfehler3.7.0 korrigiert, heutiger Weg wartet vor lokaler Entfernung auf Server-Löschung. [Erhaltener Teilentest](sicherung/tests/e595b5b6312244cd/t_teilen.js.log) bestätigt: bei Ablehnung Fehlermeldung, Code und Cloudsatz bleiben erhalten. Kein vollständiger aktueller Erfolg-/Neustartnachweis aus diesem Log |
@@ -529,6 +544,17 @@ Die bisherigen Mehrwert-Aufgaben stehen jetzt hier mit erhaltenem Stand. Früher
 | Feinheiten beim App-Start am iPhone (D13, D15) | zurückgestellt |
 
 ### 4a. Verständlichkeit des ganzen Tools (Betreiber 08.10.: „an sich ist das System ja nicht klar … ganzes Tool soll verständlich sein“)
+
+**Ältere Gestaltungsreste (11./12.09., abgeglichen10.10.):** Exakt dieselbe
+Marke wie im Betreiberbild „final glow“, keine bloße Ableitung, an allen
+Iconstellen einschließlich Ladebild und Homebildschirm gewünscht. Heute
+SVG-Marke im Ladebild/App und PNG-Dateien im Manifest/Apple-Link vorhanden;
+exakte Übereinstimmung aller Varianten mit dem Originalbild hier nicht
+nachgewiesen, offen für vorhandene Oberflächenrunde. Alte Homebildschirm-
+Verknüpfungen/Freundesinstallationen sollten direkt zur neuen App führen;
+ein neues Manifest beweist diese Migration nicht. Aktueller Nachweis fehlt,
+beim bestehenden Domain/PWA-Bereich mitführen, keine alte Vercel-Löschung
+oder neue Marke aus diesem Audit beauftragt.
 
 Bisher gab es Durchsichten zu Fehlern, Aussehen und Bewegung, aber keine
 mit der einen Frage: **Versteht ein Fremder ohne Erklärung, was das hier
