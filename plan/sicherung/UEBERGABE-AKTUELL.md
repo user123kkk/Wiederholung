@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 12:31 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 12:32 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `4f831e3 Sicherung 12:30 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9b2bc44 Sicherung 12:31 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -53,7 +53,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_spur_bestand.js
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
  M sw.js
 ```
 
@@ -62,7 +61,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 16, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 16, chrome.exe 11 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -83,6 +82,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 12:32 Codex50/158 grün, vollständige Abschlusslogs1–50 gelesen. Üben/Serie und echte Wiederholung getrennt erhalten, alte/neue Ideenzeitstempel richtig sortiert, Import gleichnamiger Bereiche erhält alle fünf Karten. Gelesene Testnamen samt Quellstand jetzt explizit abnahme-gelesen-3.18.30.json für nahtlosen Anschluss; keine automatisch ungelesene Ausgabe abhaken. Lauf87583 aktiv, Prüfgrenzen und Produkt unverändert.
 
 - 12:31 Codex Gesamtlauf47/158 grün, alle47 vollständigen Logs gelesen. Rückmeldung24 Varianten, Fehlerfokus/-Entwurferhalt, Fortschritt12 Varianten, Scrollen im Gesamtlauf, große Ansichten28 Zustände, Datum/Bereichszähler grün. Vier aktuelle Rundenbilder tatsächlich angesehen und gesichert (plan/sicherung/tests/abnahme-rundenfotos-3.18.30), Knöpfe/Antwort im Bild; keine iPhone-Abnahme daraus. Beschreibende Tempoausgaben erhalten: Bewerten max53ms, Fortschrittwechsel209ms/max233ms Bildlücke; große Erstansicht445ms. Keine allgemeine Flüssigkeitszusage oder ungeprüfte Ursache. Zwischenmeldung zum aktiven Test war zu früh geraten (Verwalten statt Fotos); tatsächliche Prozesszeile gelesen, fortan im Standleser mitgeführt. Kein App-/Regelwechsel, Lauf87583 weiter allein aktiv.
 
@@ -125,5 +126,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 10:19 Codex Betreiberkorrektur wortgetreu gesichert: frühere Ja/Beschlüsse können ohne Verständnis erfolgt sein. Zentrale Regel ENTSCHEIDUNGEN-VERSTEHEN.md erstellt und in AGENTS, BETREIBER-VERSTEHEN, CODEX-START, Zyklus-ENTSCHEIDUNGEN und Mehrwert-GESAMTLISTE sichtbar vor historische Freigaben gestellt. Noch unklare offene Funktionsentscheidungen vorläufig behandeln, konkret erklären statt alte Sammelzustimmung voraussetzen; keine massenhafte Umetikettierung oder Rücknahme bereits gebauter Arbeit. Aktueller technischer Datenauftrag/Entwurf, Paket-/Abnahme-/Deploy-Grenzen erhalten. Quellenabgleich weiter, keine Funktion daraus bauen.
 
 - 10:18 Codex auf „anfangen, woauch imer du grad bist“ begonnenen Quellenabgleich fortgesetzt. Aktuelle Übergabe 10:17, Entwurf 3.18.30 und einzelner Sicherungsbaum 12532/16564 bestätigt. Erste Runde Berichte 01–03 vollständig ab Berichtsbeginn gelesen, einschließlich Beleggrenzen/Gegenreden; Zuordnung begonnen. Keine wissenschaftliche Neubewertung oder Produktumsetzung, keine abgeschlossenen Tests wiederholt.
-
-- Codex Betreiberklärung aufgenommen: jetzt offene App-Punkte und Ideen direkt im Chat zeigen. ALLES-OFFEN, aktuelle Gesamtliste, STAND, Zyklus-Aufgaben und vollständigen Themenindex der Zukunftsnachricht gelesen; abgeschlossene Funktionen/Entwürfe, beschlossene Restarbeit, unentschiedene Vorschläge und echte Geräte-/Rechtsabnahmen unterscheiden. Historische 77/72-Zählungen nicht als aktuellen Gesamtstand verwenden; Quellenabgleich noch unvollständig. Keine neue Produktarbeit oder Testausführung durch Übersichtsauftrag.
