@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 10:14 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 10:15 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `b288141 Sicherung 10:13 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9d01300 Sicherung 10:14 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -64,6 +66,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- Codex Betreiberklärung aufgenommen: jetzt offene App-Punkte und Ideen direkt im Chat zeigen. ALLES-OFFEN, aktuelle Gesamtliste, STAND, Zyklus-Aufgaben und vollständigen Themenindex der Zukunftsnachricht gelesen; abgeschlossene Funktionen/Entwürfe, beschlossene Restarbeit, unentschiedene Vorschläge und echte Geräte-/Rechtsabnahmen unterscheiden. Historische 77/72-Zählungen nicht als aktuellen Gesamtstand verwenden; Quellenabgleich noch unvollständig. Keine neue Produktarbeit oder Testausführung durch Übersichtsauftrag.
 
 - 10:09 Codex Quellenabgleich zweite Runde abgeschlossen: acht Vollberichte einschließlich Nebenabschnitten/Gegenrede, zwei Limit-Abbrüche; 52 nummerierte Hauptpositionen und narrativer Gegenprüfer einzeln im QUELLENABGLEICH-2026-10-10.md zugeordnet. 187 Katalogdatenzeilen unabhängig gezählt, unvollständige Erinnerungseinleitung sichtbar korrigiert. Fehlende konkrete Unterideen/Varianten/Beleggrenzen gesichert, keine Produktentscheidungen daraus. Erste 26 Berichte und rückwärtige Prüfung offen. Auf Wunsch nach ununterbrochener Weiterarbeit vorhandene pausierte Heartbeat-Automation per App-Werkzeug aktualisiert, ACTIVE bestätigt und Konfigurationsdatei gegengelesen: stündlich im aktuellen Chat, keine doppelte Automation; stoppt bei nur verschobenen Schritten/Entscheidungen, meldet keine Routinezustände. OpenAI-Doku-Skill für Automation gelesen, lokale Werkzeugbeschreibung/Konfiguration benutzt. CODEX_HOME war leer; tatsächlicher Konfigurationspfad unter Benutzerprofil gefunden. Minuten-Sicherung weiterhin ein Prozessbaum 12532/16564. Keine App-/Test-/Originalbericht-Änderung, keine Tests wiederholt.
 
@@ -106,5 +110,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 02:13 Codex A17/DATEN-12: vorhandenes Kartenformular mit echtem SDK geprüft. Manuelle Stufe und Textkorrektur/Rückfallreset bereits erlaubt; reines Notizspeichern nach fremdem Snapshot ersetzt dagegen bestätigte Stufe 2 durch 0. Fester Entwurf 97cbdcc samt Patch reproduziert exakt denselben Serververlust. Neue offene A17-Zeile/Befund im bestehenden Datenpaket aufgenommen, dann flüchtiges Kennzeichen für bewusst geänderte Stufenwahl gebaut. Fünf SDK-Fälle am neuen App-SHA 4a8ca5a1 grün, einschließlich bewusster Auswahl über Snapshot und Escape ohne eigenen Entwurf; vollständige Logs gelesen. Regeln unverändert, 3.18.30 bleibt Entwurf. Betroffene Browserprüfungen laufen einzeln; kein Gesamtpaket/Deploy. Bericht FORMULAR-KONFLIKT-2026-10-10.md. Daten-/Oberflächen-Skill angewandt.
 
 - 02:08 Codex Nachtprüfung A16: zwei neue Einzelfälle am unveränderten App-/Regelhash grün (Kartenkopie aktiviert passende Reservierung genau einmal; falsche Epoche bleibt ungebookt). Absichtlich deaktivierter Wiederherstellungszweig in separater TEMP-App zeigt exakt 0 statt 1, Gegenprobe greift. Frühe rote Fixture-Läufe erhalten: fehlender SDK-Cache-Abschluss bzw. noch möglicher Tagesversand beim Snapshot; Cache-Kennung/ausstehende Writes ausdrücklich geprüft und Tagesversand nur im Fixture gesperrt. Keine Assertion gelockert. Vollständige finale Logs gelesen, Syntax/Diff grün. Bericht erweitert: 17 ursprüngliche Fälle plus zwei neue Einzelfälle, kein vollständiger 19er-Lauf behauptet. Anschlussvorbereitung konkretisiert und falschen Funktionsnamen addOrSaveCard sichtbar zu submitCardForm korrigiert. Produktdateien unverändert; nächste tatsächliche Lücke: Formularpatch vs neue Bewertungsregel mit echtem SDK prüfen.
-
-- 02:04 Codex gezielte A16-Lücke: positiven Wiederherstellungszweig vorbereitet mit vorhandener echter Kartenkopie und noch vorbereiteter Tageskopie. Bestehende 17 Fälle und Grenzen unverändert. Neue Einzelprobe stellt kontrollierten früheren lokalen Speicherstand nach, keinen echten Prozesskill; SDK/Repo-Regeln, ursprünglicher Beitrag und andere Karte werden geprüft. App unverändert.

@@ -1,5 +1,15 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026, Betreiber zur Klärung: „ja aber woran arbeites du jetzt, es
+kann nicht sein das man sich nicht verstht“, danach: „nein ich muss es mir
+ansehen, sag mir jetzt hier was noch alles für ideen bzw punkte im tool
+offen stehen“. Gewünscht ist jetzt eine direkt im Chat lesbare Übersicht
+der noch offenen App-Funktionen, unentschiedenen Ideen, Zukunftswünsche
+und ausstehenden Prüfungen; keine bloße Erklärung der Paketgrenze und
+kein Verweis auf Dateien als Ersatz. Bereits Gebautes von Restabnahme
+unterscheiden, alte Zählungen nicht als aktuelle Summe ausgeben. Keine
+neue Bau-/Abnahme-/Veröffentlichungsfreigabe durch diese Übersicht.
+
 10.10.2026 10:03, Betreiber: „kannst du ununterbrochen die offenen punkte
 und ararbeiten?“ Selbstständig die verfügbaren offenen Arbeiten fortsetzen.
 Aktuell: ausstehender Quellenabgleich des Ideen-Katalogs mit den wörtlichen
