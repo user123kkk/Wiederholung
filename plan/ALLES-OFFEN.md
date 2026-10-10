@@ -321,10 +321,13 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 ---
 
-## 1. Fertig, wartet nur auf „ladegerät“
+## 1. Erledigte Wünsche und veröffentlichter Stand
 
 | Was | Stand |
 |---|---|
+| Handschrift bleibt nach Verkleinern des Vollbilds sichtbar (Betreiber 06.10.) | behoben 3.18.19; Quelle: [Wunsch](zyklus-2/BETREIBER-2026-10-06.md), [Bau-/Prüfprotokoll](zyklus-2/LOGBUCH.md), Tests t_schreiben_vollbild / t_schreiben. Erste Bestandskontrolle, kein frischer Gerätetest |
+| Tippen neben „Karte anlegen“/„Code einlösen“ schließt; später allgemein für Dialoge gewünscht | umgesetzt 3.18.19/3.18.24; [Prüfprotokoll](zyklus-2/LOGBUCH.md), t_neben_tippen. Eingaben bleiben geschützt; Hintergrundscrollen am iPhone weiterhin offen in Abschnitt 2 |
+| Verschiebe-Griff: übermäßiges Auslaufen nach frühem Losziehen | behoben 3.18.20 laut [Prüfprotokoll](zyklus-2/LOGBUCH.md). Gesonderter schwankender Testbefund t_griff_scrollen bleibt offen in Abschnitt 3.1; nicht miteinander verwechseln |
 | 3.18.27: 15 Punkte (Liste einfügen, Export, Druck, Löschen mit Rückgängig, Rundenende, Bildschirm wach, Blätter gleiten, zwei Lernregeln nur im Betreiber-Konto u. a.) | **online seit 09.10., 04:37** (mit 3.18.28) |
 | 3.18.28: klarere Wörter („Speicherkarte“ → „Sammlung“ u. a.) | **online seit 09.10., 04:37**; Gesamtlauf 156/156, Affen 0 |
 
@@ -541,16 +544,16 @@ Keine automatische Stufen-Zusammenführung oder neue Lernregel beschlossen.
 | 06.10. | Karten-Blatt: „dachte daran, dass es ein Entwurf ist und bleibt“ | `BETREIBER-2026-10-06.md` | später (er stimmte dem einfachen Weg zu) |
 | 12.09. | Wortart an jeder Karte wie bei Arabily (Substantiv, Verb …) | `ideen/monetarisierung/GERUEST.md`; Wurzel-/Grammatik-Feld wurde in 3.9.8 entfernt (0 von 136 Karten nutzten es) | Urteil fehlt; spricht gegen eine frühere Entfernung |
 | 18.09. | Widget auf dem Home-Bildschirm als Erinnerung (TikTok-Idee) | `archiv/PLAN-verlauf.md` | nicht möglich, solange Adrabic eine Web-App ist |
-| 12.09. | „soll irgendwann auch eine App sein“ | Gesamtliste Abschnitt 9: Play Store vorerst nicht | später |
+| 12.09. | „soll irgendwann auch eine App sein“ | Abschnitt 5, historische Ablehnungen: Play Store vorerst nicht | später |
 | 22.09. | Farb-Editionen „wie in Minecraft bei der Netherite-Rüstung“ | `grossplan/FUNKTIONEN.md` F-8 | später, nur zusammen mit „Unterstützen“ |
-| 22.09., 08.10. | Premium und Abo; „ich hab recht, es für Geld anzubieten“ | `FUNKTIONEN.md` Korb 2, `ideen/monetarisierung/` | später; kein Knopf bis zur Volljährigkeit des Inhabers (Gesamtliste Abschnitt 8) |
+| 22.09., 08.10. | Premium und Abo; „ich hab recht, es für Geld anzubieten“ | `FUNKTIONEN.md` Korb 2, `ideen/monetarisierung/` | später; kein Knopf bis zur Volljährigkeit des Inhabers (Abschnitt 2, Öffentlich und Lehrer) |
 | 18./19.09. | Lehrer: Raum, Rollen, Fortschritt der Schüler, Chat | `ideen/lehrer-modus/GERUEST.md` | Code-Teilen und „Lehrer gibt frei“ gebaut; Klassenraum: nein (Daten über Konten hinweg); Wochentakt und mehrere Codes: später |
-| 22.09. | Startseite neu | `ideen/landing-page-strategie/`, Gesamtliste Abschnitt 8 | bauen, am Schluss |
-| 18.09. | Sicherheits-Liste aus einem Video (Kosten-Alarm, Bot-Schutz, Sicherungen) | `grossplan/KONSOLE.md`; App Check: Gesamtliste Abschnitt 6 | teils gebaut; Kosten-Alarm: Du, in der Konsole |
-| 08.10. | Medina-Kartensatz öffentlich ins Tool, Playlist verlinkt, neue Lektionen kommen automatisch nach | Gesamtliste Abschnitt 3, `verstaendlichkeit/BERICHT.md` § 7 | bauen; wartet auf Deine Freigabe des Satzes |
+| 22.09. | Startseite neu | `ideen/landing-page-strategie/`, Abschnitt 2, Öffentlich und Lehrer | bauen, am Schluss |
+| 18.09. | Sicherheits-Liste aus einem Video (Kosten-Alarm, Bot-Schutz, Sicherungen) | `grossplan/KONSOLE.md`; App Check: Abschnitt 2, Konto und Schutz | teils gebaut; Kosten-Alarm: Du, in der Konsole |
+| 08.10. | Medina-Kartensatz öffentlich ins Tool, Playlist verlinkt, neue Lektionen kommen automatisch nach | Abschnitt 2, Karten hinein und heraus, `verstaendlichkeit/BERICHT.md` § 7 | bauen; wartet auf Deine Freigabe des Satzes |
 | 08.10. | Tafsir as-Sa'di als Link an Quran-Zeilen (englisch, später deutsch) | Abschnitt 2, Texte auswendig lernen | bauen, nach dem 29.10. |
-| 07.10. | Name ändern: „sollte es so einfach sein?“ | Gesamtliste Abschnitt 6 | Urteil fehlt |
-| 07.10. | „überall geile bzw. cleane Animation“ | `schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md` | erster Teil in 3.18.27; Rest: Gesamtliste Abschnitt 4, D13 |
+| 07.10. | Name ändern: „sollte es so einfach sein?“ | Abschnitt 2, Konto und Schutz | Urteil fehlt |
+| 07.10. | „überall geile bzw. cleane Animation“ | `schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md` | erster Teil in 3.18.27; Rest: Abschnitt 2, Aussehen/Bewegung/Tippen, D13 |
 
 **Neu gemeldet, 09.10.2026, 02:00 (Fehler):**
 
@@ -587,7 +590,8 @@ Keine automatische Stufen-Zusammenführung oder neue Lernregel beschlossen.
 
 Betreiberkorrektur 10.10.: möglichst keine Screenshot-/Screenrecording-Arbeit
 für den Betreiber. Vorhandene Browsertests zuerst selbst ausführen; fehlende
-Simulator-/Emulator-/Gerätezugänge untersuchen, einschließlich Start vom
+Simulator-/Emulator-/Gerätezugänge untersuchen, einschließlich Foldables,
+mehrerer Fenster/Displays und Start vom
 Homebildschirm. Nur tatsächlich nicht automatisierbare Restbelege offen
 lassen und begründen. Chrome mit Handygröße beweist kein echtes iPhone/PWA.
 
