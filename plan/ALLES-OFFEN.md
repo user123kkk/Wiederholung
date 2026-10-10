@@ -6,6 +6,22 @@ für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
 Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,
 Messläufe oder stillschweigende Freigabe neuer Funktionen.
 
+**Quellenabschluss10.10.,16:48:** Alle39 lokal vorhandenen Chat-Exporte mit
+Beginn vor05.10. hinsichtlich Betreiberblöcken gelesen;30.09. jetzt ohne
+Ausgabekürzung nachgeholt (effd5a5f/7adc4240/6e73277e, letzterer doppelter
+Ladegerätauftrag). Beginn der ältesten Quelle11.09.; keine separaten Exporte
+13.–16.,20.–21.,25.–28.09. und01.–02.10. vorhanden. Manche Chats setzen sich
+an Folgetagen fort; fehlendes Anfangsdatum beweist keinen verlorenen Wunsch.
+Vollständigkeit aller jemals geäußerten Wünsche deshalb nicht behauptet.
+Konkrete Änderungen/Beleglücken stehen unten; Gesamtgestaltung, Lernwirkung,
+Geräte-, Cloud-, Marken- und Installationsnachweise bleiben offen.30.09.
+Gesamtprüfung/Onboarding/Verwalten/Fortschritt und Hilfeseitenfrage in den
+bestehenden Bereichen erhalten. Text-Probelauf unverändert; historische
+Veröffentlichungsaufträge erlauben keinen heutigen roten Abschluss.
+Nächster Produktabschluss bleibt Datenpaket157/158. Klein-Weg-Kandidaten
+B-1/B-2/B-5 sind im Bericht vorhanden, aber nicht als offene Aufgabe in
+AUFGABEN eingetragen; kein neues Paket über fremdem Entwurf begonnen.
+
 **Originalprüfung17./11./12.09.,16:47:** Sechs Chats17.09. und vier
 Chats11./12.09. hinsichtlich echter Betreiberblöcke gelesen. Die zwei12.09.-
 Exporte überlappen; identische Wünsche nur einmal zuordnen. Kein heutiger
@@ -451,6 +467,7 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 | Was | Stand |
 |---|---|
+| Fortschrittszahl zählt bei jedem Reiterwechsel erneut hoch (18.09.,19:33) | korrigiert3.6.8; heutiger `countupLetzterWert` überlebt Neuzeichnen, unverändertes Ziel erscheint sofort; reduzierte Bewegung zählt nicht hoch. Codebeleg. [Fortschrittlog](sicherung/tests/e595b5b6312244cd/t_fortschritt.js.log) prüft Ansichten/Details, nicht gesondert das erneute Hochzählen |
 | Umbenennen zu Adrabic, Domainstellen aktualisieren (11./12./17.09., Fortsetzung18.09.) | heutiges Manifest heißt Adrabic; Sitemap/robots nennen `adrabic.web.app`, Search-Console-Metatag vorhanden. Firebase-Konfiguration behält zwei Hostingziele und ursprüngliche Authdomain. Lokale Belege, kein aktueller externer Konsolen-/Weiterleitungsnachweis |
 | Aus offenen Einstellungen direkt den Reiter wechseln (11.09.,23:59) | heutige drei Reiteraktionen rufen `ebenenSchliessen()` auf, das Einstellungen schließt; derselbe aktive Reiter wird bei offenen Einstellungen nicht übersprungen. Codebeleg, kein gesonderter aktueller Ablauftest |
 | Apple-Anmeldung „way later“, Knopf jetzt weg (18.09.,08:25/08:27) | umgesetzt: `APPLE_LOGIN_BEREIT = false`, Formular zeigt Apple nur bei dieser aktivierten Konstante. Keine neue Apple-Einrichtung beauftragt |
@@ -531,7 +548,7 @@ Die bisherigen Mehrwert-Aufgaben stehen jetzt hier mit erhaltenem Stand. Früher
 |---|---|
 | Flexible Oberfläche: kleine/große Fenster, Drehung, Foldables und mehrere Fenster/Displays prüfen; Größen am Inhalt ausrichten | offen: Bestand und geeignete Testwege prüfen |
 | Sofortige Tipp-Rückmeldung, passende Ladeanzeige, Fortschritt, verlässliche Erfolgsbestätigung und hilfreiche Fehler | offen: mit vorhandenen Abläufen prüfen; Skeletons/optimistische Anzeige passend wählen, Speicherung nicht vorzeitig bestätigen |
-| Blatt fährt mit der Tastatur hoch, statt danach zu springen | offen |
+| Blatt fährt mit der Tastatur hoch, statt danach zu springen | offen; ältere Quelle30.09.,17:32: beim Antippen von „Wort“ im Kartenformular scrollt es nicht passend nach oben. Nicht durch Übersetzungsfeld- oder Handschriftprüfung als erledigt ersetzen |
 | Abgeschnittene Texte: Fortschritt „Genauer ansehen“, Lektionen bei kleinem Handy, Suchfeld | offen, klein |
 | Hinweis wegtippen blendet aus | offen, klein |
 | Karten mit gemischtem Text: richtige Richtung und Schrift | offen (Paket K) |
