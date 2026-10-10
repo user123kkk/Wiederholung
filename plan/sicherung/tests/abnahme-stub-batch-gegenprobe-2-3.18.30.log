@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: Unberuehrte Karte beim Tagesantwort-Batch erneut gelesen
+
+2 !== 0
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_stub_batch.js:27:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 2,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
