@@ -417,6 +417,27 @@ Noch nicht behoben.
 
 ## Nicht mehr geprüft
 
+#### DATEN-12: Unberührte Stufenwahl ersetzt fremde Bewertung beim Notizspeichern
+
+**Schwere:** hoch. 10.10.2026, echter SDK 10.14.1 mit Repo-Regeln,
+zwei Profile, Auth-Attrappe und blockierter Worker. Feste Quelle 97cbdcc
+samt gesichertem App-Patch, normalisierter Hash 05269ebd wie A16-Abschluss.
+Kartenblatt auf Stufe 1 öffnen, ausschließlich Notiz ändern; zweites
+Gerät bestätigt Stufe 2. Snapshot erhält die Notiz, aber das Standfeld
+hat keinen zur alten Entwurfsstufe passenden Optionswert und fällt auf 0.
+Speichern setzt Cloud-Stufe 0 statt 2. Der patchDoc-Schutz bindet dabei
+die neue Aktion an den bereits eingetroffenen fremden Snapshot; er kann
+die unbeabsichtigte lokale Auswahl nicht erkennen.
+
+Vorschlag: Unberührte Stufenwahl folgt dem aktuellen Kartensnapshot;
+nur eine ausdrückliche Änderung des Standfelds wird als manuelle
+Stufenänderung geschrieben. Keine neue Bewertung/Lernregel. Abnahme:
+Notizkorrektur erhält alle fremden Bewertungsfelder/deren Kennung;
+ausdrückliche manuelle Stufe und Textkorrektur mit Rückfallreset bleiben
+mit echtem SDK erlaubt. Geänderter/ungeänderter Entwurf, Neuzeichnen,
+Abbruch und bestehende Kartenblatt-Regression prüfen. Bericht:
+`../FORMULAR-KONFLIKT-2026-10-10.md`. Große Paketabnahme bleibt später.
+
 - Voller Regeltest (`bash plan/werkzeuge/regeln_testen.sh`, 204 Fälle) – nur
   die eigene Stimmen-Probe lief; Java und Emulator sind auf dem Laptop
   startbar.

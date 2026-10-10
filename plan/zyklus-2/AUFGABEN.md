@@ -35,6 +35,8 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | A15 | DATEN-10 | hoch | Offline-Nachholen überschreibt spätere Online-Bewertung derselben Karte | `befunde/DATEN.md`, `KARTEN-KONFLIKTE-2026-10-09.md` | Astra mittel | in Arbeit | Ausgangskennung/Konfliktkopien gebaut, Entwurf 3.18.30 erhalten; 16 SDK-Fälle grün. Fremde Löschung, Offline-/Neustart-Erhalt und alte Clients gezielt geprüft. Große Abnahme später gesammelt |
 | A16 | DATEN-11 | mittel | Abgelehnte Tagesantwort verschwindet nach Neustart trotz bestätigter Kartenbewertung | `befunde/DATEN.md`, `VERLAUF-NEUSTART-2026-10-09.md` | Astra mittel | in Arbeit | Gebaut und gezielt geprüft, Entwurf 3.18.30. 17 A16-SDK-Fälle, 16 A14/A15-Regressionsfälle, 238 Regeln und betroffene Bestands-/Hinweisprüfungen grün. Feste Gegenprobe 591d03e erhalten. Keine neue Lernregel; große Abnahme/Paketabschluss später gesammelt |
 
+| A17 | DATEN-12 | hoch | Speichern einer Notiz im offenen Kartenblatt setzt eine inzwischen fremd bewertete Karte ungewollt zurück | `befunde/DATEN.md`, `FORMULAR-KONFLIKT-2026-10-10.md` | Astra mittel | offen | Fester Entwurf 97cbdcc samt App-Patch: nur Notiz geändert, fremde Stufe 2 wird 0. Technischer Erhalt des bestehenden Formulars im laufenden Datenpaket; kein neuer Bildschirm oder neue Lernregel |
+
 ## Paket B – Onboarding
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |

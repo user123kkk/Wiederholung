@@ -299,7 +299,7 @@ index bc20801..28b32ea 100644
  
  **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.
 diff --git a/app.js b/app.js
-index 4b6221e..d49372f 100644
+index 4b6221e..3e724fe 100644
 --- a/app.js
 +++ b/app.js
 @@ -16,7 +16,7 @@ const firebaseConfig = {
@@ -987,6 +987,33 @@ index 4b6221e..d49372f 100644
      bereichHeuteZaehle(currentBereich().id, -1);
      persistVerlauf();
    }
+@@ -6410,7 +6792,7 @@ async function submitCardForm() {
+       patch[pfad + ".uebersetzung"] = ueb;
+       patch[pfad + ".extra"] = extra;
+       const stufeEl = document.getElementById("f-stufe");
+-      if (stufeEl) {
++      if (stufeEl && formDraft.stufeGeaendert) {
+         let newStufe = parseInt(stufeEl.value, 10);
+         if (!Number.isInteger(newStufe) || newStufe < 0) newStufe = 0;
+         if (newStufe > MAX_STUFE) newStufe = MAX_STUFE;
+@@ -6485,7 +6867,7 @@ function editCard(id) {
+   ui.karteSheet = true;
+   ui.karteFeldFehler = null;
+   const c = findCard(id);
+-  formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra, stufe: c.stufe } : { wort: "", ueb: "", extra: "", stufe: null };
++  formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra, stufe: c.stufe, stufeGeaendert: false } : { wort: "", ueb: "", extra: "", stufe: null };
+   render();
+   /* 3.3.1: Kein Sprung mehr nach oben. Das Formular kam bis dahin oben auf
+      der Seite - jetzt kommt es von unten, und die Liste bleibt genau dort
+@@ -6518,7 +6900,7 @@ function karteEntwurfOffen() {
+     return (formDraft.wort || "") !== (c.wort || "") ||
+       (formDraft.ueb || "") !== (c.uebersetzung || "") ||
+       (formDraft.extra || "") !== (c.extra || "") ||
+-      (formDraft.stufe ?? c.stufe) !== c.stufe;
++      (!!formDraft.stufeGeaendert && (formDraft.stufe ?? c.stufe) !== c.stufe);
+   }
+   return !!((formDraft.wort || "").trim() || (formDraft.ueb || "").trim() || (formDraft.extra || "").trim());
+ }
 @@ -6772,10 +7154,16 @@ function gradeCard(kind) {
    /* card kann fehlen, wenn die Karte auf einem anderen Geraet geloescht wurde,
       waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
@@ -1093,7 +1120,25 @@ index 4b6221e..d49372f 100644
    render();
  }
  function endSession() {
-@@ -9520,6 +9941,7 @@ function renderMain() {
+@@ -9350,10 +9771,14 @@ function karteSheet() {
+        Nur wer einen anderen Zustand waehlt, setzt die Karte auf dessen
+        Anfang, wie vorher beim Eintippen einer Zahl. */
+     html += '<div class="field"><label for="f-stufe">Stand</label>';
++    /* Ein fremder Snapshot darf eine unberuehrte Standwahl nicht in einen
++       alten manuellen Auftrag verwandeln. Bewusste Auswahl im Entwurf
++       erhalten, sonst den aktuellen Kartenstand anzeigen. */
++    const gewaehlt = formDraft.stufeGeaendert ? formDraft.stufe : editing.stufe;
+     html += '<select id="f-stufe">' + UEBEN_GRUPPEN.map(g => {
+-      const hier = editing.stufe >= g.von && editing.stufe <= g.bis;
+-      const wert = hier ? editing.stufe : g.von;
+-      return '<option value="' + wert + '"' + (wert === (formDraft.stufe ?? editing.stufe) ? ' selected' : '') + '>' + esc(g.label) + '</option>';
++      const hier = gewaehlt >= g.von && gewaehlt <= g.bis;
++      const wert = hier ? gewaehlt : g.von;
++      return '<option value="' + wert + '"' + (wert === gewaehlt ? ' selected' : '') + '>' + esc(g.label) + '</option>';
+     }).join("") + '</select><p class="hint" style="padding:6px 0 0">Nur ändern, wenn die Karte falsch eingestuft ist.</p></div>';
+   }
+   html += '<div class="dlg-actions">';
+@@ -9520,6 +9945,7 @@ function renderMain() {
  
    if (!imModus) {
      /* ---- Meldungen, die ueber allem stehen ---- */
@@ -1101,7 +1146,7 @@ index 4b6221e..d49372f 100644
      if (schreibFehler) kopf += bannerSchreibfehler();
      if (syncError) {
        kopf += bannerFehler("Verbindung:", esc(syncError) +
-@@ -9551,8 +9973,9 @@ function renderMain() {
+@@ -9551,8 +9977,9 @@ function renderMain() {
                              : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
          ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
      }
@@ -1113,7 +1158,19 @@ index 4b6221e..d49372f 100644
    }
  
    /* ---- Geruest ---- */
-@@ -16099,6 +16522,9 @@ document.body.addEventListener("click", e => {
+@@ -9884,7 +10311,10 @@ function renderMain() {
+       };
+     });
+     const stufeFeld = document.getElementById("f-stufe");
+-    if (stufeFeld) stufeFeld.addEventListener("change", e => { formDraft.stufe = Number(e.target.value); });
++    if (stufeFeld) stufeFeld.addEventListener("change", e => {
++      formDraft.stufe = Number(e.target.value);
++      formDraft.stufeGeaendert = true;
++    });
+     /* 2.21.0: ersetzt den alten Einzel-Listener auf <select id="drill-source">
+        - jetzt ein Radiopaar fuer den Modus plus beliebig viele Checkboxen
+        fuer die Speicherkarten-Mehrfachauswahl. */
+@@ -16099,6 +16529,9 @@ document.body.addEventListener("click", e => {
        if (dueCards().length > 0) startSession();
        else { window.scrollTo(0, 0); render(); }
        break;
