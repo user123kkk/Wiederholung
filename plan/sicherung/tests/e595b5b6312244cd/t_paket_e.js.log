@@ -95,3 +95,19 @@ E14 320/dunkel/bewegt: beide Anleitungen, Rückweg
 E14 320/dunkel/ruhig: beide Anleitungen, Rückweg
 E14 390/hell/bewegt: beide Anleitungen, Rückweg
 E14 390/hell/ruhig: beide Anleitungen, Rückweg
+E14 390/dunkel/bewegt: beide Anleitungen, Rückweg
+E14 390/dunkel/ruhig: beide Anleitungen, Rückweg
+E14 820/hell/bewegt: beide Anleitungen, Rückweg
+E14 820/hell/ruhig: beide Anleitungen, Rückweg
+E14 820/dunkel/bewegt: beide Anleitungen, Rückweg
+E14 820/dunkel/ruhig: beide Anleitungen, Rückweg
+E15 320/hell: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 320/dunkel: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 390/hell: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 390/dunkel: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 820/hell: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 820/dunkel: Cloud und Profil, Abbruch, Leerfeld, offline
+E15 Fehlergrenzen: Cloudfehler, Teilerfolg ehrlich, Wiederholung, spätes A ohne B-Fortsetzung
+E16 Aufräumen: Dateiname, Aliasse, ID und unveränderte Themenwahl
+E18 320/hell: Rückweg aus Lernen und Verwalten
+E18 320/dunkel: Rückweg aus Lernen und Verwalten
