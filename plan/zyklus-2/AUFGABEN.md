@@ -187,6 +187,7 @@ Arbeit, kein App-Commit oder neuer Paketbau.
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
 | H1 | RUNDE-BEARBEITEN | niedrig | Eigene aufgedeckte Karte im vorhandenen Blatt bearbeiten; gleiche Karte/Runde behalten | `befunde/RUNDE-BEARBEITEN.md` | bestehender Agent | erledigt (3.18.31) | Konkrete Antwort 10.10.; Klein-Weg, sechs Konfigurationen, acht SDK-Fälle und vier betroffene Tests grün; `H1-ABNAHME-2026-10-10.md` |
+| H2 | RUNDE-FORTSETZEN | mittel | Normale unterbrochene Abfrage am selben Lerntag auf diesem Gerät/Konto optional fortsetzen | `befunde/RUNDE-FORTSETZEN.md` | bestehender Agent | offen | Bedingtes konkretes Ja 10.10.; begrenzten Entwurf und Absturz-/Konto-/Speicher-/Konfliktfälle prüfen. Kein Klein-Weg, keine neue Tempo-Ausnahme |
 
 ## Doppelt gemeldet (einmal beheben)
 

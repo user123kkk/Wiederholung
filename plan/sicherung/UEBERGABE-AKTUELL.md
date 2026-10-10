@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 21:27 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 21:28 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `6908a2ef Sicherung 21:25 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `fbcb39dd Sicherung 21:27 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.31"
 - Version im letzten Commit: const APP_VERSION = "3.18.31"
 
@@ -45,6 +45,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_auswerten.js
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
+ M plan/zyklus-2/AUFGABEN.md
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
