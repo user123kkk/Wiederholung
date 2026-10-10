@@ -1,0 +1,41 @@
+-- G-039 + G-040: Probekarte --
+ok      Probekarte/handy: Karte vor dem Aufdecken ist ein <button>
+ok      Probekarte/handy: Vorderseite steckt schon in .karte-dreh (wie die Runde)
+ok      Probekarte/handy: .einstieg-probe Top vor/nach Aufdecken gleich (205 -> 205)
+ok      Probekarte/handy: karte-dreh--wende dreht wie in der Runde
+ok      Probekarte/handy: karte-seite--vorn UND --hinten beide da (Drehung im Gang)
+ok      Probekarte/handy: kein doppelter Hinweis auf der Karte (Untertitel sagt es)
+ok      Probekarte/handy: Wort vorn/hinten gleich hoch (0 px)
+ok      Probekarte/handy: Uebersetzung ("Buch") steht auf der Rueckseite, .study-answer: Buch
+ok      Probekarte/handy: keine alten Klassen (einstieg-aufklappen/-einladen/--wartet/__loesung) mehr im DOM
+Probekarte/handy | Fehler auf der Seite: ok
+ok      Probekarte/klein: Karte vor dem Aufdecken ist ein <button>
+ok      Probekarte/klein: Vorderseite steckt schon in .karte-dreh (wie die Runde)
+ok      Probekarte/klein: .einstieg-probe Top vor/nach Aufdecken gleich (205 -> 205)
+ok      Probekarte/klein: karte-dreh--wende dreht wie in der Runde
+ok      Probekarte/klein: karte-seite--vorn UND --hinten beide da (Drehung im Gang)
+ok      Probekarte/klein: kein doppelter Hinweis auf der Karte (Untertitel sagt es)
+ok      Probekarte/klein: Wort vorn/hinten gleich hoch (0 px)
+ok      Probekarte/klein: Uebersetzung ("Buch") steht auf der Rueckseite, .study-answer: Buch
+ok      Probekarte/klein: keine alten Klassen (einstieg-aufklappen/-einladen/--wartet/__loesung) mehr im DOM
+Probekarte/klein | Fehler auf der Seite: ok
+
+-- G-041: "Nichts davon" --
+ok      NichtsDavon/handy: Weiter-Bereich liegt hinter der letzten Auswahl: {"keineBottom":641,"aktionTop":657}
+ok      NichtsDavon/handy: letzte Auswahl ist nach Scrollen tatsaechlich antippbar
+NichtsDavon/handy | Fehler auf der Seite: ok
+ok      NichtsDavon/klein: Weiter-Bereich liegt hinter der letzten Auswahl: {"keineBottom":608,"aktionTop":624}
+ok      NichtsDavon/klein: letzte Auswahl ist nach Scrollen tatsaechlich antippbar
+NichtsDavon/klein | Fehler auf der Seite: ok
+
+-- G-044: Zeitpunkt nur einmal --
+ok      Anker-Text ("Fajr-Gebet") kommt auf dem Plan genau einmal vor: 1
+ok      Kachel "Zeitpunkt" gibt es auf dem Plan nicht mehr
+ok      Drei Kacheln auf dem Plan (Runde/Schrift/Ziel): 3
+G-044 | Fehler auf der Seite: ok
+
+-- G-083: Footer im Dokumentfluss --
+ok      KnopfHoehe/handy: Fuss ueberdeckt im Startbildschirm keinen Inhalt
+ok      KnopfHoehe/handy: langer Huerden-Screen scrollt und der Fuss ueberdeckt nichts: {"overlap":false,"scroll":218,"buttonVisible":false}
+ok      KnopfHoehe/handy: auch am Dokumentende kein Ueberdecken durch den Weiter-Bereich: {"overlap":false,"scroll":218,"buttonVisible":true}
+KnopfHoehe/handy | Fehler auf der Seite: ok
