@@ -1,5 +1,13 @@
 # Gesammelte Datenabnahme 3.18.30: vorbereitet, nicht ausgeführt
 
+**Fortsetzung 10.10.2026 12:06:** erster allgemeiner Lauf wegen rotem
+Tempotest angehalten. Ursache per Chrome-Trace in der Prüfattrappe belegt;
+Batchmeldungen gezielt korrigiert und mit fester Gegenprobe geprüft.
+Original-Tempotest frisch grün, jetzt frischer Gesamtlauf158 am Stand
+`e595b5b6312244cd`. Aktueller Verlauf/Belege:
+[`DATEN-ABNAHME-3.18.30-2026-10-10.md`](DATEN-ABNAHME-3.18.30-2026-10-10.md).
+Alte Quellenangaben darunter sind erhaltene Historie.
+
 **Aktueller Stand 10.10.2026 11:48:** Betreiber hat die große Datenabnahme
 und den Paketabschluss ausdrücklich im neuen Chat wieder aufgenommen.
 Die beiden unten historisch offenen Aufbau-Lücken sind jetzt korrigiert:

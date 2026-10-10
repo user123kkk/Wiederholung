@@ -52,6 +52,9 @@ Erste reine Fixturefehler separat erhalten; erfolgreiche Proben tragen `-2`.
 Original-Tempotest vollständig unverändert frisch grün (alle fünf Größen,
 zehn 3000-Karten-Bewertungen höchstens 71 ms, Grenze 100 ms, CPU4x).
 Volle Ausgaben gelesen. Produkt, Rules und echte SDK-Quellen unverändert.
+SDK-Helfer importiert aus stubs.js ausschließlich AUTH, dessen Quelltext
+unverändert ist; Firestore vollständig echtes SDK. Daher gelten die
+16 A14/A15- und acht A17-Fälle weiterhin, keine künstliche Wiederholung.
 
 Frischer Gesamtlauf jetzt neu am gemeinsamen Stand
 `e595b5b6312244cdc5ecc07ba0b0b7c287207a6f909bf2a41b4e61d1b00e1923`,
