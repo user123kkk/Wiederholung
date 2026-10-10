@@ -2473,7 +2473,7 @@ index a5e2674..7979e42 100644
  /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
     unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
 diff --git a/plan/werkzeuge/ladegeraet.ps1 b/plan/werkzeuge/ladegeraet.ps1
-index 9a337ae..497720b 100644
+index 9a337ae..82f7248 100644
 --- a/plan/werkzeuge/ladegeraet.ps1
 +++ b/plan/werkzeuge/ladegeraet.ps1
 @@ -20,7 +20,7 @@ param(
@@ -2497,8 +2497,8 @@ index 9a337ae..497720b 100644
      $fb = Werkzeug 'firebase.cmd' 'Firebase-Werkzeuge fehlen. Einmalig: npm install -g firebase-tools'
 -    $emuOrdner = Join-Path $env:TEMP 'adrabic-ladegeraet-emu'
 +    foreach ($ziel in @(
-+        @{ Projekt = 'demo-adrabic-pruefung'; Port = 8081; Hub = 4410; Logging = 4510 },
-+        @{ Projekt = 'demo-adrabic-karten-audit'; Port = 8082; Hub = 4411; Logging = 4511 }
++        @{ Projekt = 'demo-adrabic-pruefung'; Port = 8081; Websocket = 9150; Hub = 4410; Logging = 4510 },
++        @{ Projekt = 'demo-adrabic-karten-audit'; Port = 8082; Websocket = 9151; Hub = 4411; Logging = 4511 }
 +    )) {
 +    $portProbe = New-Object System.Net.Sockets.TcpClient
 +    try {
@@ -2509,7 +2509,7 @@ index 9a337ae..497720b 100644
      New-Item -ItemType Directory -Force -Path $emuOrdner | Out-Null
      $regeln = (Join-Path $repo 'firestore.rules') -replace '\\', '/'
 -    $emuJson = '{ "firestore": { "rules": "' + $regeln + '" }, "emulators": { "firestore": { "host": "127.0.0.1", "port": 8081 }, "ui": { "enabled": false }, "hub": { "port": 4410 }, "logging": { "port": 4510 } } }'
-+    $emuJson = @{ firestore = @{ rules = $regeln }; emulators = @{ singleProjectMode = $true; firestore = @{ host = '127.0.0.1'; port = $ziel.Port }; ui = @{ enabled = $false }; hub = @{ port = $ziel.Hub }; logging = @{ port = $ziel.Logging } } } | ConvertTo-Json -Depth 5
++    $emuJson = @{ firestore = @{ rules = $regeln }; emulators = @{ singleProjectMode = $true; firestore = @{ host = '127.0.0.1'; port = $ziel.Port; websocketPort = $ziel.Websocket }; ui = @{ enabled = $false }; hub = @{ port = $ziel.Hub }; logging = @{ port = $ziel.Logging } } } | ConvertTo-Json -Depth 5
      [System.IO.File]::WriteAllText((Join-Path $emuOrdner 'firebase.json'), $emuJson)
 -    $emu = Start-Process -FilePath $fb -ArgumentList 'emulators:start', '--only', 'firestore', '--project', 'demo-adrabic-pruefung' -WorkingDirectory $emuOrdner -WindowStyle Hidden -PassThru
 +    $emu = Start-Process -FilePath $fb -ArgumentList 'emulators:start', '--only', 'firestore', '--project', $ziel.Projekt -WorkingDirectory $emuOrdner -WindowStyle Hidden -PassThru
