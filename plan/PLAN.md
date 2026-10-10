@@ -7,6 +7,13 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.2026 11:51 – Datenabnahme läuft wieder:**
+Betreiber hat große Datenabnahme/Paketabschluss 3.18.30 im neuen Chat
+beauftragt. Abnahmeaufbau korrigiert/geprüft, 238 Regeln frisch grün;
+158 Browsertests inklusive Runde laufen. Vorbelege/Entwurf erhalten,
+kein neues Paket und keine Veröffentlichung. Aktueller Bericht:
+`zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md`.
+
 **10.10.2026 09:55 – aktueller Datenentwurf und Anschluss:**
 3.18.30/A14–A17 samt Fremdarbeit erhalten; gezielt 16 + 22 + 8 SDK-Fälle
 am gleichen App-/Rules-Stand grün, keine Tests wiederholt. Gegenlesen:

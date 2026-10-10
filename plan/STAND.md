@@ -1,5 +1,15 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 11:51 – große Datenabnahme wieder aufgenommen:**
+Konkreter Betreiberauftrag im neuen Chat, Entwurf 3.18.30 erhalten.
+Prüfaufbau korrigiert und abgenommen: zwei getrennte Demo-Emulatoren,
+SDK-Helfer im gemeinsamen Quellen-/A16-Testhash. 238 Regeln frisch grün.
+158 Browsertests inklusive 13 Rundentests laufen allein am Stand
+3795bfc5fa122e28; Auswertung und Zufallstests anschließend. Vorhandene
+46 gezielte SDK-Fälle bleiben gültig. Kein neuer Funktionsbau/Deploy;
+Paketabschluss erst nach vollständiger nötiger Abnahme. Bericht:
+`zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md`.
+
 **10.10.2026 11:38 – Quellenabgleich abgeschlossen:**
 Stündliche Fortsetzung um 11:40 gemäß Abschlussauftrag PAUSED bestätigt;
 Minuten-Sicherung läuft weiter. Kein neuer Produktbau vor Paketabschluss.
