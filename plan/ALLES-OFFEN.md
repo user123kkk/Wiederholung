@@ -1,5 +1,8 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 13:42 „komm weiter“: bestehende große Datenabnahme samt
+Abschluss fortsetzen. Runner19768 aktiv; Tokenpräferenz bleibt, kein Deploy.
+
 10.10.2026 „so bitte festhalten oder so keine ahnung, ob das nötig ist im
 repo“: Token-/Skriptpräferenz dauerhaft in BETREIBER-VERSTEHEN festgehalten.
 Erledigt als Dokumentation; keine neue Produktfunktion/Veröffentlichung.
