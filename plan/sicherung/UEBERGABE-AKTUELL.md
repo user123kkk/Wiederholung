@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 14:25 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 14:27 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `cccc08b Sicherung 14:24 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `5172c69 Sicherung 14:26 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -55,6 +56,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_spur_bestand.js
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
  M sw.js
 ```
 
@@ -84,6 +86,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 14:27 Codex PaketE-Prüfer komplett grün938s, ganze Ausgabe gelesen:30 vorhandene lokale Abnahmen, E17/E26 wie bisher ausdrücklich ausgenommen. Sicherungsdatei/ICS nur Chromium; iOS/Android-Geräte bleiben offen. Kontowechsel, Zeitlimit/Teilerfolg, Profil/Plan, Ruhetagsregressionen und Geometrie geprüft, keine Lernwirkungs-/Gerätezusage.96/158 grün, alle96 Abschlusslogs gelesen; F-Bilder aktiv.
 
 - 14:12 Codex PaketD-Prüfer vollständig grün1244s, ganze Ausgabe gelesen:32 Schließwegvarianten mit je vier Wegen, zwei Leerlauf-/Randfallprüfungen und weitere vorhandene Zustandsmatrizen. Bestehende Aufgaben-Auswahl unverändert, keine neue D-Aufgabe behauptet.95/158 gültige Abschlüsse grün, alle95 Logs gelesen; PaketE aktiv. Quelle e595b5b6312244cd gleich.
 
@@ -126,5 +130,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 12:24 Codex frischer Gesamtlauf32/158 grün, alle32 Abschlusslogs vollständig gelesen: Einstellungs-/Einstiegsvarianten, Bestandskonto, Probekarte, Scroll-/Lagenmessung, Kalender-UID/Uhrzeit einschließlich Gegenproben. Beschreibende mobile Einstiegsverschiebung39px in älteren gesicherten Logs identisch; kein neuer Produktfehler daraus behauptet. Ein voriger Zwischenlog-Pfad t_einstieg war vor dessen Start angenommen, tatsächlichen Prozess/Dateien nachgelesen; keine Testquelle/Ergebnisse verändert. Lauf87583 weiter allein aktiv am e595b5b6312244cd. Rest Gesamtlauf/Affe/Runden-Auswertung/Abschluss bleibt.
 
 - 12:17 Codex Gesamtlauf25/158 grün, alle25 vollständigen Abschlusslogs gelesen. Bestands-Tempo erneut im Gesamtlauf grün,3000er-Bewertungen max61ms; Teilen/Import/Sicherung drei Breiten ohne Kontrast-/Seitenfehler, Timergegenprobe/Doppeltipp/Drehlage (vier Breiten0px) grün. Beschreibende Einstellungs-/Geometrieausgaben ebenfalls gelesen, keine neuen Produktbefunde daraus. Läuft allein weiter, keine Abnahme vor vollständigem Lauf/Affe/Runde.
-
-- 12:12 Codex frische Abschlusslogs1–9 vollständig gelesen: Erinnerungs-/Ideenhinweise, a11y, abgelehnte Bewertung, Abstimmfehler, Anmeldung/Enter, Ansagen und Bereiche alle grün; historische Gegenproben erwartbar rot. Shared-Stub-Diff vollständig gegengelesen, Syntax grün; Diagnosewerkzeuge für Minutenpatch erfasst, Trace/CPU-Profil zusätzlich ins Repo kopiert. SDK-Gültigkeit anhand tatsächlicher Route geprüft: nur unverändertes AUTH aus stubs.js, echtes Firestore; 16/8-Fälle nicht wiederholt. Vorbereitungsseite um aktuellen Lauf berichtigt, frühere Historie erhalten. Gesamtlauf87583 weiterhin allein aktiv, kein neuer Produktbau/Deploy.

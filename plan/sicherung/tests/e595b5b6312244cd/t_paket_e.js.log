@@ -170,3 +170,16 @@ E30 späte A-Mailantwort: B ohne fremden Dialog/Busy
 E31 Neustart b2, entfernte ID b1, anderes Konto b1
 E32 320/hell: 40 Karten und Liste ohne Überlauf
 E32 320/hell: Einstieg-Auswahl passt
+E32 320/dunkel: 40 Karten und Liste ohne Überlauf
+E32 320/dunkel: Einstieg-Auswahl passt
+E32 390/hell/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/hell/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/dunkel/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 390/dunkel/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/hell/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/hell/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/dunkel/bewegt: Wahl gespeichert, Karte/Knöpfe passen
+E32 820/dunkel/ruhig: Wahl gespeichert, Karte/Knöpfe passen
+Paket E: 30 lokale Abnahmen; E17 wartet auf G4, E26 später Z7.
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":938,"quelltext":"56ed948a0912dad2c3a63612750796c664c81e163db0f37b20fa503e68506757"}

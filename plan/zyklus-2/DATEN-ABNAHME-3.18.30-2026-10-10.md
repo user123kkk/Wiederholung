@@ -39,6 +39,12 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 
 ## Gesamtlauf, um 11:57 angehalten
 
+14:27: PaketE vollständig grün (938s), ganze Ausgabe gelesen:30 vorhandene
+lokale Abnahmen; E17/E26 unverändert ausgenommen. Sicherungsdatei/ICS in
+Chromium geprüft, echte iOS-/Android-Geräte weiterhin offen. Keine neue
+Lernregel/keine Lernwirkungszusage.96/158 grün, alle96 Logs gelesen;
+F-Bilder aktiv. Großer Abschluss weiterhin offen.
+
 14:12: PaketD-Prüfer komplett grün (1244s), ganze Ausgabe gelesen.
 Bestehende Aufgaben-Auswahl unverändert;95/158 gültige Abschlüsse grün,
 alle95 Logs gelesen. PaketE aktiv, großer Abschluss weiterhin offen.
