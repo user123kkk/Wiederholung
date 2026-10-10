@@ -1,0 +1,13 @@
+nav-original DOM=a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6 DauerDOM=7add11a3a21cdc305ae6683c574c0be32ffe78b1bd64f45d9b66c62a0018015d Longtasks=231/135
+{"ms":79,"klick":false,"eingaben":[],"teile":[]}
+{"ms":232,"klick":true,"eingaben":["pointerover","mouseover","pointermove","mousemove","pointerdown","mousedown","focus","focusin","DOMFocusIn","pointerup","mouseup","click","blur","focusout","DOMFocusOut","DOMActivate","pointerover","mouseover"],"teile":[["UpdateLayoutTree",2],["UpdateLayoutTree",1],["UpdateLayoutTree",6],["Layout",1],["UpdateLayoutTree",1],["UpdateLayoutTree",3],["UpdateLayoutTree",66],["Layout",58]]}
+{"ms":136,"klick":false,"eingaben":["pointerout","pointerover","mouseout","mouseover"],"teile":[["UpdateLayoutTree",0],["UpdateLayoutTree",1],["FireAnimationFrame",1],["FireAnimationFrame",2],["UpdateLayoutTree",7],["Layout",1],["UpdateLayoutTree",41],["Layout",57]]}
+nav-erhalten DOM=a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6 DauerDOM=7add11a3a21cdc305ae6683c574c0be32ffe78b1bd64f45d9b66c62a0018015d Longtasks=290/150
+{"ms":65,"klick":false,"eingaben":[],"teile":[]}
+{"ms":291,"klick":true,"eingaben":["pointerup","mouseup","click","DOMActivate","pointerover","mouseover"],"teile":[["UpdateLayoutTree",2],["Layout",2],["UpdateLayoutTree",43],["Layout",79]]}
+{"ms":151,"klick":false,"eingaben":["pointerout","pointerover","mouseout","mouseover"],"teile":[["UpdateLayoutTree",0],["FireAnimationFrame",1],["FireAnimationFrame",4],["UpdateLayoutTree",9],["Layout",1],["UpdateLayoutTree",47],["Layout",56]]}
+nav-original-nach DOM=a4c5d219f31587663c9c95dc44e8e0d4dfd04ca5387a84b74e3f48bee83d83c6 DauerDOM=7add11a3a21cdc305ae6683c574c0be32ffe78b1bd64f45d9b66c62a0018015d Longtasks=192/119
+{"ms":82,"klick":false,"eingaben":[],"teile":[]}
+{"ms":193,"klick":true,"eingaben":["pointerover","mouseover","pointermove","mousemove","pointerdown","mousedown","focus","focusin","DOMFocusIn","pointerup","mouseup","click","blur","focusout","DOMFocusOut","DOMActivate","pointerover","mouseover"],"teile":[["UpdateLayoutTree",1],["UpdateLayoutTree",1],["Layout",1],["UpdateLayoutTree",1],["UpdateLayoutTree",2],["UpdateLayoutTree",30],["Layout",60]]}
+{"ms":120,"klick":false,"eingaben":["pointerout","pointerover","mouseout","mouseover"],"teile":[["UpdateLayoutTree",0],["UpdateLayoutTree",2],["FireAnimationFrame",1],["FireAnimationFrame",3],["UpdateLayoutTree",6],["Layout",1],["UpdateLayoutTree",37],["Layout",46]]}
+{"ms":50,"klick":false,"eingaben":[],"teile":[["UpdateLayoutTree",9],["Layout",18]]}
