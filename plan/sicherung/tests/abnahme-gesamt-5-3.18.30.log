@@ -110,3 +110,4 @@ BEWAHRT t_querschnitt.js
 BEWAHRT t_quran_datei.js
 BEWAHRT t_quran_fehler.js
 BEWAHRT t_quran_schrift.js
+EXIT 0 t_rechtsplan.js (40s)

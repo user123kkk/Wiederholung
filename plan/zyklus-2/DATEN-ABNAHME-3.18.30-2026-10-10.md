@@ -39,6 +39,20 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 
 ## Gesamtlauf, um 11:57 angehalten
 
+**14:38: Scrollclip-Zuordnung berichtigt.**109 gültige Tests grün;
+t_rechtsplan meldete zwei unsichtbare klassenlose Links(A) außerhalb des
+Scrollbereichs als1.89:1. Messspur/Screenshot angesehen: y1057–1079 bei
+Clipende905. Testfilter kannte Klasse/Tag-Fallback des Kontrastlesers nicht.
+Zuordnung nun identisch; alle gleichnamigen Treffer betrachten, damit
+unsichtbare Wiederholung sichtbaren schlechten Kontrast nicht versteckt.
+Originalfilter-Proben grün für unsichtbar/sichtbar/doppelt/teilweise
+sichtbar/unbekannt, feste315bb0e-Probe rot am ursprünglichen Fehler.
+Keine Grenze abgesenkt, keine App/CSS/Rules-Änderung. Roter Log/stand.json,
+Messspur, Screenshot und Gegenproben unter abnahme-rechtsplan/abnahme-rechts-clip
+erhalten. Runner14916/Sitzung58908, abnahme-gesamt-5-3.18.30.log,109 gültige
+Tests bewahrt; korrigierte vollständige Rechts-Abnahme erneut. Quelle
+e595b5b6312244cd gleich, Abschluss offen.
+
 14:27: PaketE vollständig grün (938s), ganze Ausgabe gelesen:30 vorhandene
 lokale Abnahmen; E17/E26 unverändert ausgenommen. Sicherungsdatei/ICS in
 Chromium geprüft, echte iOS-/Android-Geräte weiterhin offen. Keine neue

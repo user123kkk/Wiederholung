@@ -3811,6 +3811,31 @@ index 00000000..89325ebd
 +  assert.equal(fehler, browser, 'Regulaerer Test erreichte Browserstart nicht');
 +  console.log('OK regulaerer Originaltest erreicht Browserstart ohne historischen Checkout/Server');
 +})().catch(e => { console.error(e); process.exitCode = 1; });
+diff --git a/plan/werkzeuge/pruefstand/x_rechts_clip.js b/plan/werkzeuge/pruefstand/x_rechts_clip.js
+new file mode 100644
+index 00000000..ac2e0885
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_rechts_clip.js
+@@ -0,0 +1,19 @@
++/* Tatsaechlicher Sichtbarkeitsfilter: unsichtbare Links ausnehmen,
++   sichtbaren schlechten Kontrast und unbekannte Befunde erhalten. */
++const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
++const {execFileSync}=require('node:child_process');
++const source=process.argv.includes('--gegenprobe')?execFileSync('git',['show','315bb0e:plan/werkzeuge/pruefstand/t_rechtsplan.js'],{cwd:path.join(__dirname,'../../..'),encoding:'utf8'}):fs.readFileSync(path.join(__dirname,'t_rechtsplan.js'),'utf8');
++const start=source.indexOf('const sichtbar=await p.evaluate(funde=>{'),end=source.indexOf('},funde);',start);
++assert.ok(start>=0&&end>start,'Originalfilter fehlt');
++const body=source.slice(start+'const sichtbar=await p.evaluate(funde=>{'.length,end);
++let elements=[];
++const document={querySelector:()=>({getBoundingClientRect:()=>({top:250,bottom:905})}),querySelectorAll:()=>elements};
++const filter=vm.runInNewContext('(funde)=>{'+body+'}',{document});
++const el=(top,bottom)=>({className:'',tagName:'A',textContent:'Datenschutz',getBoundingClientRect:()=>({top,bottom})});
++const bad={klasse:'A',text:'Datenschutz',kontrast:1.89,soll:4.5};
++elements=[el(1057,1079)];assert.equal(filter([bad]).length,0,'Vollstaendig abgeschnittener Link wird als sichtbar gewertet');
++elements=[el(500,521)];assert.equal(filter([bad]).length,1,'Sichtbarer schlechter Kontrast verschwindet');
++elements=[el(1057,1079),el(500,521)];assert.equal(filter([bad]).length,1,'Gleicher unsichtbarer Text versteckt sichtbaren Befund');
++elements=[el(890,920)];assert.equal(filter([bad]).length,1,'Teilweise sichtbarer Link muss geprueft bleiben');
++elements=[];assert.equal(filter([bad]).length,1,'Unbekannter Befund wird still verworfen');
++console.log('OK Originalfilter: vollstaendig abgeschnitten ausgenommen; sichtbar, doppelt, teilweise sichtbar und unbekannt erhalten. Grenze unveraendert4.5.');
 diff --git a/plan/werkzeuge/pruefstand/x_spur_bestand.js b/plan/werkzeuge/pruefstand/x_spur_bestand.js
 new file mode 100644
 index 00000000..5ce5c932
@@ -3850,6 +3875,30 @@ index 00000000..5ce5c932
 +`);
 +const m = new Module(datei, module); m.filename = datei; m.paths = Module._nodeModulePaths(__dirname);
 +m._compile(quelle, datei);
+diff --git a/plan/werkzeuge/pruefstand/x_spur_rechtsplan.js b/plan/werkzeuge/pruefstand/x_spur_rechtsplan.js
+new file mode 100644
+index 00000000..d1f13b9d
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_spur_rechtsplan.js
+@@ -0,0 +1,18 @@
++/* Unveraenderte Rechts-Abnahme; rote Messstelle fotografieren/vermessen. */
++const fs=require('node:fs'),path=require('node:path'),Module=require('node:module');
++const file=path.join(__dirname,'t_rechtsplan.js');
++let code=fs.readFileSync(file,'utf8');
++const anchor='            assert.deepEqual(sichtbar,[]);';
++if(!code.includes(anchor))throw new Error('Messanker fehlt');
++code=code.replace(anchor,`            if(sichtbar.length){
++              await p.screenshot({path:path.join(repo,'plan/sicherung/tests/abnahme-rechtsplan-820-hell.png')});
++              console.log('MESSSTELLE',JSON.stringify(await p.evaluate(()=>{
++                return [...document.querySelectorAll('a,button')].filter(el=>['Datenschutz','Impressum'].includes(el.textContent.trim())).map(el=>{
++                  const r=el.getBoundingClientRect(),cs=getComputedStyle(el);
++                  return {text:el.textContent,klasse:el.className,imDialog:!!el.closest('#dlg-recht-inhalt'),rect:r.toJSON(),color:cs.color,
++                    schichten:(()=>{const a=[];for(let e=el;e;e=e.parentElement)a.push({tag:e.tagName,klasse:e.className,bg:getComputedStyle(e).backgroundColor,rect:e.getBoundingClientRect().toJSON()});return a;})()};
++                });
++              })));
++            }
++`+anchor);
++const m=new Module(file,module);m.filename=file;m.paths=Module._nodeModulePaths(__dirname);m._compile(code,file);
 diff --git a/plan/werkzeuge/pruefstand/x_stub_batch.js b/plan/werkzeuge/pruefstand/x_stub_batch.js
 new file mode 100644
 index 00000000..f88e13aa
