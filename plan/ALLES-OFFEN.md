@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 15:11 offener Abnahmebefund: t_text_tempo zweimal rot226/254ms
+bei200ms/CPU4x. Beide festen Vergleichsquellen schwanken, DOM identisch;
+Ursache nicht abschließend belegt. Keine Testgrenze lockern, nicht bis grün
+wiederholen, Text-Probelauf unverändert lassen. Restliche Prüfungen einmal
+beenden und vollständige Belege im Datenabnahmebericht sichern; Paketcommit
+bleibt bis zur fachlichen Klärung gesperrt.
+
+
 10.10.2026 TikTok-Sammlung und Betreiberkommentare vollständig als Eingang
 festgehalten: [Quelle und Zuordnung](ideen/TIKTOK-SAMMLUNG-2026-10-10.md).
 Offene Punkte in bestehende Themen zusammenführen: flexible Oberfläche,

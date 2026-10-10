@@ -1,5 +1,15 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 15:11 – Paketabschluss wegen Tempo gesperrt:**
+Original t_text_tempo zweimal rot (226/254ms, Grenze200ms, CPU4x).
+A/B am festen315bb0e und Entwurf zeigt starke Schwankungen beider Quellen,
+achtmal identisches DOM; kein sicherer Datenänderungs-Ursachennachweis.
+Keine Grenze geändert und keine Wiederholung bis grün. Restliche Tests
+laufen einmal zu Ende: Runner14360/Sitzung53308, Quellee595b5b6312244cd.
+Danach Runde/Affe auswerten; kein Paketcommit/Deploy bei offenem Rot.
+Text-Probelauf bleibt unverändert, Befund und vollständige Diagnosen erhalten.
+
+
 **10.10.2026 14:55 – Datenabnahme und neuer Ideeneingang:**
 132/158 gültige Tests grün, alle132 vollständigen Logs gelesen. Runner14916,
 Sitzung58908, Log abnahme-gesamt-5-3.18.30.log; gemeinsame Quelle
