@@ -56,6 +56,12 @@ Aufbaubelege: `abnahme-nur-betreiber-aufbau-3.18.30.log`,
 `abnahme-nur-betreiber-setup-3.18.30.log`,
 `abnahme-nur-betreiber-setup-gegenprobe-3.18.30.log`.
 
+12:52: korrigierter Test komplett grün (108s), sieben Bildschirme je390/
+1440px HTML und Pixel identisch; alle drei Gegenproben erkennen Unterschiede.
+Neue Testkennung d4acf692. Aktuell87/158 grün, alle87 gültigen Logs gelesen.
+Runner-Sitzung15139, Node19272; PaketB aktiv. Die früheren Sitzungen87583/
+15211 sind beendet. Keine ungelesene/unvollständige Gesamtfreigabe.
+
 **12:06: Ursache belegt und Prüfattrappe korrigiert.** Acht A/B-Paare:
 Vorstand 7/8 grün, einmal 138 ms; Entwurf 0/8, erste Bewertung 284–617 ms.
 Trace einer Bewertung: 252 ms vollständig im Stub-Timer; CPU-Profil
