@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 15:04 Codex t_text_tempo rot226ms bei200ms/CPU4x; vollständigen Log gelesen, eigenen Runner14916 samt begonnenem Text-Zustandstest beendet.144 grüne/145 vollständige Abschlusslogs erhalten, rote Ausgabe/stand.json separat gesichert. Originaltest und vorgeschriebene x_ab_tempo-Messhilfe gelesen; acht feste Vergleichspaare mit315bb0e gestartet, kein weiterer Browserlauf. Keine Ursache vorweggenommen, keine Produkt-/Testgrenzenänderung; Paketabschluss gesperrt bis Klärung.
+
 - 15:01 Codex143/158 gültig grün; alle143 vollständigen Abschlusslogs gelesen. A16 frisch22 SDK-Fälle am unveränderten4a8ca5a1/6a110898, Service-Worker-Offline/Update samt festen Gegenproben grün. Text-Neu-Test aktiv, Probelauf unverändert. Stand/Ideenzuordnung samt lokalen Links geprüft; Abschlussbericht nachgezogen. Netzteil2 bestätigt, keine Veröffentlichung.
 
 - 14:55 Codex vollständige TikTok-Nachricht einschließlich Betreiberkommentaren als Quelle unter ideen/TIKTOK-SAMMLUNG-2026-10-10.md bewahrt. Wünsche in ALLES-OFFEN/BETREIBER-VERSTEHEN und vorhandene Onboarding-, Mehrwert-, Konsolen-, Geräte- und Monetarisierungspläne eingefügt; keine parallele Statusliste. Historische Onboarding-Zahlen nicht als Sperre; automatische Tests vor Betreiberaufwand. Primärrecherche/Architekturprüfung offen, Videoaussagen nicht als geprüfte Empfehlungen übernommen. Kein Produktbau/Deploy, bestehende3.18.30-Abnahme fortgesetzt.130/158 grün; alle130 Abschlusslogs vollständig gelesen, Sprung/Üben aktiv.
