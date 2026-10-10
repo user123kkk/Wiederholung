@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 10:03 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 10:04 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `71d787b Sicherung 10:02 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `f38ad2c Sicherung 10:03 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -64,6 +66,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 10:03 Codex ausdrücklichen Weiterauftrag aufgenommen. Offenen Quellenabgleich Ideen-Katalog/34 vollständige Berichte begonnen: Katalog und Quellenverzeichnis gelesen, 36 Dateien davon zwei Abbrüche unterschieden. Historischer Katalog stammt aus Erinnerung; Originale inzwischen gesichert. Nur Dokumentationsprüfung, keine Umsetzung aus Ideen, kein neues Paket/Produkttest; Entwurf 3.18.30 und einzelne Minuten-Sicherung erhalten.
 
 - 09:55 Codex Gegenlesen abgeschlossen: vollständiger App-/Rules-/Datenschutz-Diff, Befunde DATEN-9 bis DATEN-12 und drei SDK-Testdateien mit bestehenden Abschlusslogs gelesen. Keine Testausführung/-änderung, App-SHA 4a8ca5a1/Rules 6a110898 unverändert. Keine zusätzliche Produktlücke belegt; technische Beitragsprüfung nicht als Text-Probelauf-/PWA-/Gesamtabnahme ausgegeben. Bericht DATEN-GEGENLESEN-2026-10-10.md erstellt; sichtbaren aktuellen Korrekturblock in Mehrwert-ARBEITSSTAND, PLAN/STAND/Logbuch nachgezogen. Nachtarbeit dort zuvor noch aktiv/alte Fallzahlen, historische Angaben erhalten. Nächste entschiedene Lernrundenfolge bereits vorbereitet, kein neuer Paketbau. Entwurf/Fremdarbeit erhalten; große Abnahme/ladegeraet/Deploy später.
 
@@ -106,5 +110,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 02:04 Codex gezielte A16-Lücke: positiven Wiederherstellungszweig vorbereitet mit vorhandener echter Kartenkopie und noch vorbereiteter Tageskopie. Bestehende 17 Fälle und Grenzen unverändert. Neue Einzelprobe stellt kontrollierten früheren lokalen Speicherstand nach, keinen echten Prozesskill; SDK/Repo-Regeln, ursprünglicher Beitrag und andere Karte werden geprüft. App unverändert.
 
 - 02:03 Codex Nacht-Fortsetzung nach Nutzungslimit: Heartbeat im selben Chat angelegt und ACTIVE in automation.toml bestätigt; regulärer Reset laut Kontoabfrage 01:37:19 Europe/Berlin, eingetroffene Heartbeats 00:02/01:01/02:03. Aktuelle Übergabe 02:02 und ein bestehender Sicherungsbaum 12532/16564 bestätigt, keine weitere Schleife. A14–A16-Entwurf unverändert erhalten. Vor Reset Betreiber-/Zyklusregeln, Daten-Skill und Anschlussvorbereitung gelesen, Syntax/Stand 3.18.30 grün. Kein App-Commit, keine große Abnahme, kein Deploy. Nächster Schritt: konkrete Rückweg-/Speicher-Inventur der beiden entschiedenen Lernrunden-Punkte und gezielte Lückenprüfung im bestehenden Datenpaket.
-
-## 09.10.2026

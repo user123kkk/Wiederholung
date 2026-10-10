@@ -1,5 +1,12 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 10:03, Betreiber: „kannst du ununterbrochen die offenen punkte
+und ararbeiten?“ Selbstständig die verfügbaren offenen Arbeiten fortsetzen.
+Aktuell: ausstehender Quellenabgleich des Ideen-Katalogs mit den wörtlichen
+Agentenberichten. Keine neuen Produktpakete über Entwurf 3.18.30; große
+Abnahme, ladegeraet und Veröffentlichung weiterhin später. Keine neue
+Automation oder Arbeit außerhalb dieses aktiven Chats daraus ableiten.
+
 10.10.2026 09:53, neuer Chat: „Weiter in `C:\Users\USER\Desktop\Wiederholung`
 gemäß AGENTS.md und aktueller Übergabe. Entwurf 3.18.30 samt uncommitteter
 Arbeit erhalten.“ Dazu: „Keine unveränderten Tests wiederholen“,
