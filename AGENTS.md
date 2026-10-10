@@ -1,5 +1,12 @@
 # Hinweise für Codex und andere Agenten
 
+**Betreiberkorrektur 10.10.2026: frühere „Ja“ können ohne Verständnis
+gegeben worden sein.** Vor neuen Funktionen
+[`plan/ENTSCHEIDUNGEN-VERSTEHEN.md`](plan/ENTSCHEIDUNGEN-VERSTEHEN.md)
+beachten. Alte Sammelfreigabe/Status „beschlossen“ allein genügt nicht;
+unklare Einzelfreigaben vorläufig behandeln und verständlich klären.
+Gebauten Entwurf erhalten, keine automatische Rücknahme oder neue Freigabe.
+
 **Projekt-Skills gezielt verwenden (Betreiber 09.10.2026):** Daten/Auth,
 Offline, Import/Export oder Rules → `adrabic-daten`; UI/RTL/iPhone/PWA →
 `adrabic-oberflaeche`; Lernlogik, Simulation oder Lernempfehlung →

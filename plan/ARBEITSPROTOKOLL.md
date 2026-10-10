@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 10:19 Codex Betreiberkorrektur wortgetreu gesichert: frühere Ja/Beschlüsse können ohne Verständnis erfolgt sein. Zentrale Regel ENTSCHEIDUNGEN-VERSTEHEN.md erstellt und in AGENTS, BETREIBER-VERSTEHEN, CODEX-START, Zyklus-ENTSCHEIDUNGEN und Mehrwert-GESAMTLISTE sichtbar vor historische Freigaben gestellt. Noch unklare offene Funktionsentscheidungen vorläufig behandeln, konkret erklären statt alte Sammelzustimmung voraussetzen; keine massenhafte Umetikettierung oder Rücknahme bereits gebauter Arbeit. Aktueller technischer Datenauftrag/Entwurf, Paket-/Abnahme-/Deploy-Grenzen erhalten. Quellenabgleich weiter, keine Funktion daraus bauen.
+
 - 10:18 Codex auf „anfangen, woauch imer du grad bist“ begonnenen Quellenabgleich fortgesetzt. Aktuelle Übergabe 10:17, Entwurf 3.18.30 und einzelner Sicherungsbaum 12532/16564 bestätigt. Erste Runde Berichte 01–03 vollständig ab Berichtsbeginn gelesen, einschließlich Beleggrenzen/Gegenreden; Zuordnung begonnen. Keine wissenschaftliche Neubewertung oder Produktumsetzung, keine abgeschlossenen Tests wiederholt.
 
 - Codex Betreiberklärung aufgenommen: jetzt offene App-Punkte und Ideen direkt im Chat zeigen. ALLES-OFFEN, aktuelle Gesamtliste, STAND, Zyklus-Aufgaben und vollständigen Themenindex der Zukunftsnachricht gelesen; abgeschlossene Funktionen/Entwürfe, beschlossene Restarbeit, unentschiedene Vorschläge und echte Geräte-/Rechtsabnahmen unterscheiden. Historische 77/72-Zählungen nicht als aktuellen Gesamtstand verwenden; Quellenabgleich noch unvollständig. Keine neue Produktarbeit oder Testausführung durch Übersichtsauftrag.

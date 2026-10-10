@@ -1,5 +1,12 @@
 # Den Betreiber richtig verstehen
 
+**Korrektur 10.10.2026:** „selbst die "beschlossenen sachen" könnten
+eigentlich unbeschlossen sein, hab da mal einfach gesagt ja, beim lesen
+den meist nicht verstanden“. Frühere pauschale Zustimmung nicht als
+nachgewiesenes Verständnis behandeln. Das präzisiert die Auslegung von
+„wie empfohlen“, „ja“ und „weiter“ unten. Aktuelle Regel:
+[`ENTSCHEIDUNGEN-VERSTEHEN.md`](ENTSCHEIDUNGEN-VERSTEHEN.md).
+
 Angelegt 08.10.2026 auf seinen Wunsch: „so wie du mich mittlerweile kennst,
 bin ich durcheinander, daher will ich von dir was eingebaut haben, sodass
 man mich anhand des Repos besser direkt versteht“.

@@ -1,5 +1,12 @@
 # Zyklus 2 – was nur der Betreiber entscheidet
 
+**10.10.2026, Korrektur zur Verbindlichkeit:** Der Betreiber erklärt,
+manche „Ja“ ohne Verständnis gegeben zu haben. Die Antworten unten sind
+historischer Wortlaut; keine automatische Freigabe noch ungeklärter
+Funktionen daraus ableiten. Es gilt
+[`../ENTSCHEIDUNGEN-VERSTEHEN.md`](../ENTSCHEIDUNGEN-VERSTEHEN.md).
+Bereits Gebautes bleibt erhalten, offene Einzelfreigabe vor Umsetzung prüfen.
+
 Stand 01.10.2026. **Der Betreiber hat am 01.10.2026 geantwortet: „alles, was du
 empfiehlst“** – mit zwei Anmerkungen (Z6, Z10). Die Spalte „Antwort“ gilt.
 Seit 04.10.2026 ist nichts mehr offen: **Z6b ja**, **V8 nein** (unten). Was offen ist, wird nicht

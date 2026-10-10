@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 10:20 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 10:21 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `1246e4c Sicherung 10:18 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `e047e88 Sicherung 10:20 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -22,11 +22,15 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A .claude/skills/adrabic-daten/SKILL.md
  A .claude/skills/adrabic-lernbelege/SKILL.md
  A .claude/skills/adrabic-oberflaeche/SKILL.md
+ M AGENTS.md
  M CHANGELOG.md
  M app.js
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/BETREIBER-VERSTEHEN.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -35,6 +39,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/CODEX-START.md
+ M plan/zyklus-2/ENTSCHEIDUNGEN.md
+ M plan/zyklus-2/mehrwert/GESAMTLISTE.md
  M sw.js
 ```
 
@@ -64,6 +71,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 10:19 Codex Betreiberkorrektur wortgetreu gesichert: frühere Ja/Beschlüsse können ohne Verständnis erfolgt sein. Zentrale Regel ENTSCHEIDUNGEN-VERSTEHEN.md erstellt und in AGENTS, BETREIBER-VERSTEHEN, CODEX-START, Zyklus-ENTSCHEIDUNGEN und Mehrwert-GESAMTLISTE sichtbar vor historische Freigaben gestellt. Noch unklare offene Funktionsentscheidungen vorläufig behandeln, konkret erklären statt alte Sammelzustimmung voraussetzen; keine massenhafte Umetikettierung oder Rücknahme bereits gebauter Arbeit. Aktueller technischer Datenauftrag/Entwurf, Paket-/Abnahme-/Deploy-Grenzen erhalten. Quellenabgleich weiter, keine Funktion daraus bauen.
 
 - 10:18 Codex auf „anfangen, woauch imer du grad bist“ begonnenen Quellenabgleich fortgesetzt. Aktuelle Übergabe 10:17, Entwurf 3.18.30 und einzelner Sicherungsbaum 12532/16564 bestätigt. Erste Runde Berichte 01–03 vollständig ab Berichtsbeginn gelesen, einschließlich Beleggrenzen/Gegenreden; Zuordnung begonnen. Keine wissenschaftliche Neubewertung oder Produktumsetzung, keine abgeschlossenen Tests wiederholt.
 
@@ -106,5 +115,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 02:18 Codex gezielter A17-Abschluss: fünf SDK-Fälle am App-SHA 4a8ca5a1 sowie t_karten_blatt, t_karten_snapshot, t_sprung (vier Breiten, kein Sprung), t_kontrast (0 Funde) und t_a11y-Grundchecks grün; sämtliche vollständigen Logs gelesen. Syntax/Stand/Diff und eigener App-Diff gegen festen Ausgang geprüft. A17 in Arbeit wegen großer Paketabnahme; 3.18.30-Entwurf samt A14–A16 behalten. Fester Verlustbeleg 97cbdcc und rote/ausgeschlossene Fixture-/Dateipfadlogs erhalten, Grenzen unverändert. Keine Tests mehr laufend, keine App-Version committet, kein neuer Paketbau/Deploy. Fortsetzung nach aktueller Anschlussvorbereitung: risikobezogene Datenprüfung oder konkrete Abnahmeplanung, keine künstlichen Testwiederholungen. Nacht-Heartbeat weiter aktiv bis 09:00, Minuten-Sicherung einzeln.
 
 - 02:16 Codex A17-Nachlauf: t_karten_blatt vollständig grün gelesen (390 dunkel/hell, 360, 820), t_karten_snapshot sechs Zustände und t_sprung vier Breiten grün. Früher falscher t_snapshot-Dateiname war MODULE_NOT_FOUND, keine Messung; tatsächliche Datei per rg-Inventar verwendet, Vorbereitung korrigiert. Kontrast/a11y laufen noch einzeln. Standprüfung 3.18.30/CSP/APP_SHELL und eigener App-Diff gegen 97cbdcc grün gelesen. Neue Diagnose per intent-to-add in Minuten-Patch aufgenommen; Patch enthält stufeGeaendert/Versandbarriere/Diagnose, Übergabe 02:15, Commit enthält weiterhin App 3.18.29. Neue LEHREN-Regel für unberührte Formularfelder plus Gegenproben-Grenzen nachgezogen. Keine weitere Sicherungsschleife, keine Veröffentlichung.
-
-- 02:13 Codex A17/DATEN-12: vorhandenes Kartenformular mit echtem SDK geprüft. Manuelle Stufe und Textkorrektur/Rückfallreset bereits erlaubt; reines Notizspeichern nach fremdem Snapshot ersetzt dagegen bestätigte Stufe 2 durch 0. Fester Entwurf 97cbdcc samt Patch reproduziert exakt denselben Serververlust. Neue offene A17-Zeile/Befund im bestehenden Datenpaket aufgenommen, dann flüchtiges Kennzeichen für bewusst geänderte Stufenwahl gebaut. Fünf SDK-Fälle am neuen App-SHA 4a8ca5a1 grün, einschließlich bewusster Auswahl über Snapshot und Escape ohne eigenen Entwurf; vollständige Logs gelesen. Regeln unverändert, 3.18.30 bleibt Entwurf. Betroffene Browserprüfungen laufen einzeln; kein Gesamtpaket/Deploy. Bericht FORMULAR-KONFLIKT-2026-10-10.md. Daten-/Oberflächen-Skill angewandt.

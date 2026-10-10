@@ -1,5 +1,12 @@
 # Zyklus 2 – so arbeitet Codex (und jeder andere Agent) die Pakete ab
 
+**Vorrangige Betreiberkorrektur 10.10.2026:** Frühere pauschale Ja können
+ohne Verständnis gegeben worden sein. Vor neuen Funktionen
+[`../ENTSCHEIDUNGEN-VERSTEHEN.md`](../ENTSCHEIDUNGEN-VERSTEHEN.md)
+anwenden; „offen“, „beschlossen“ oder alte Sammelfreigabe allein ist keine
+verstandene Einzelfreigabe. Noch unklare Funktionsentscheidung vorläufig,
+kurz erklären und klären; aktuelle technische Aufträge/Entwürfe erhalten.
+
 Angelegt am 01.10.2026. Betreiber: „stelle sicher, dass Codex 1 zu 1
 hinkriegt, was hingekriegt werden soll … nicht so, wie Codex es will“.
 Deshalb ist hier alles festgelegt. **Wo diese Datei etwas vorschreibt, wird

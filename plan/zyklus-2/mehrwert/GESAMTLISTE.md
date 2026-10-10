@@ -1,5 +1,11 @@
 # Gesamtliste: alles, was dazukommt, überarbeitet oder gebaut wird
 
+**Betreiberkorrektur 10.10.2026:** Frühere „beschlossene“ Funktionen können
+ohne Verständnis bejaht worden sein. Historische Zeilen/Antworten bleiben
+erhalten; eine offene Funktion mit unklarer verstandener Einzelfreigabe
+ist **vorläufig – Verständnis/Entscheidung prüfen**, kein automatischer
+Bauauftrag. Regel: [ENTSCHEIDUNGEN-VERSTEHEN](../../ENTSCHEIDUNGEN-VERSTEHEN.md).
+
 Stand abgeglichen am 09.10.2026; ursprüngliche Liste vom 08.10., 13:40 Uhr. Quelle der
 Punkte: `RUNDE-2-2026-10-08.md` (68 Fragen, Sammelfreigaben), die zwei
 Berichte in `schritt-2/`, `grossplan/ENTSCHEIDUNGEN.md` (E-01 bis E-18).

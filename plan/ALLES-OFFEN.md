@@ -1,5 +1,15 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 10:19, Betreiber: „ach und villeicht so einbauen im repo,
+selbst die "beschlossenen sachen" könnten eigentlich unbeschlossen sein,
+hab da mal einfach gesagt ja, beim lesen den meist nicht verstanden“.
+Zentrale Korrektur: [`ENTSCHEIDUNGEN-VERSTEHEN.md`](ENTSCHEIDUNGEN-VERSTEHEN.md).
+Historische Sammelfreigaben sind kein Nachweis verstandener Einzelfreigabe.
+Noch nicht gebaute Funktionen bei unklarem Verständnis vorläufig, vor Bau
+konkret/einfach erklären und nötige Entscheidung klären. Kein pauschaler
+Rückbau, Entwurf/Fremdarbeit erhalten. Die unten stehende ältere Gruppe
+„Entschieden, zu bauen“ ist damit kein uneingeschränkter Bauauftrag.
+
 10.10.2026 10:18, Betreiber nach Übersicht: „na das sind mal viele punkte,
 wir sllten lieber anfangen, woauch imer du grad bist“. Begonnenen Auftrag
 weiterführen; jetzt Quellenabgleich der ersten Agentenrunde, anschließend
