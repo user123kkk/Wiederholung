@@ -130,3 +130,30 @@ statt ohne ausgeführte Fälle Exit 0 zu melden. Negative Eingabe
 `unbekannte-negative-Probe` ergibt erwartetes Exit 1 und die genaue Meldung;
 Wrapper prüft beides. Vollständiger Log:
 `a17-formular-fallauswahl-negativ.log`. Keine Testgrenze gelockert.
+
+## Fortsetzung auf neuen Betreiberauftrag, 10.10.2026 09:33
+
+Nachricht mit Beobachtungen zu 3.18.26 und Wunsch nach umfassenden späteren
+Prüfroutinen zuerst wortgetreu samt Bild gesichert. Keine dieser neuen
+Ideen gebaut; bestehende Datenprüfung mit Daten-Skill fortgesetzt.
+
+Neue Einzelprobe `Textkorrektur-nach-fremder-Bewertung`: A bearbeitet die
+Übersetzung von k5 mit vorhandenem Rückfallzähler. B bewertet dieselbe
+Karte; A empfängt die bestätigte neuere Bewertung vor dem Speichern.
+Der Übersetzungsentwurf bleibt erhalten. Server übernimmt korrigierten
+Text und den bestehenden beabsichtigten Rückfallreset auf 0; Stufe,
+nextReview, ersteBewertung und maxStufe bleiben wie die fremde Bewertung.
+Die neue Bewertungsbasis entspricht exakt deren bestätigter Kennung;
+Rules akzeptieren den gezielten Reset. Andere Karte/JS-Fehler kontrolliert.
+Grüner Einzelbeleg am unveränderten App-SHA 4a8ca5a1/Rules 6a110898:
+`a17-textkorrektur-fremde-bewertung.log`, vollständige Ausgabe gelesen.
+
+Gleiche Probe gegen feste Ausgangsquelle 97cbdcc samt App-Patch, SHA
+05269ebd: tatsächlich Stufe 0 statt fremd bestätigter 3. Exit 1 und genaue
+Stufenverlustmeldung im Wrapper geprüft; vollständiger Log
+`a17-textkorrektur-gegenprobe-97cbdcc.log` gelesen. Kein erneuter Produktfix
+nötig; bestehender A17-Fix schützt auch diese Kombination.
+
+Katalog jetzt acht Fälle, nur neue Einzelprobe ausgeführt; kein vollständiger
+Achter-/Paketlauf. Echter SDK/Demo-Emulator, Auth-Attrappe, Worker blockiert;
+kein Geräte-/PWA-/Lernwirkungsnachweis. Große Abnahme bleibt später.

@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 09:33 – Neuer Weiter-Auftrag des Betreibers:**
+Vollständige gegen 01:00 verfasste Nachricht zu beobachteter 3.18.26 samt
+Bild unter `betreiber-nachrichten/` gesichert; Themenindex in ALLES-OFFEN.
+Umfassende zukünftige Prüfroutinen vormerken, keine Sofortfixes der Beispiele.
+Bestehende Datenprüfung fortgesetzt: Textkorrektur nach fremder Bewertung
+grün, feste Ausgangsquelle verliert Stufe 3 auf 0. App-SHA 4a8ca5a1
+unverändert, A17-Katalog acht mit nur neuer Einzelprobe, kein Gesamturteil.
+Nacht-Automation bleibt pausiert; große Abnahme/neues Paket/Deploy weiter später.
+
 **10.10.2026 09:06 – Nachtauftrag beendet:**
 Frist 09:00 erreicht; beim ersten Heartbeat danach Nacht-Automation
 `adrabic-nachtarbeit-fortsetzen` über App-Werkzeug bestätigt PAUSED.

@@ -11,7 +11,7 @@ fest; keine Abnahmefreigabe, kein neuer Paketbau, kein App-Commit.
 | A14/A15, App 05269ebd | 16 SDK-Regressionsfälle am früheren A16-Abschluss | Neuer vollständiger Nachlauf am A17-App-Stand |
 | A16, App 05269ebd | 17er-Lauf plus zwei spätere Kartenkopie-Einzelproben | Ganzer aktueller 22er-Lauf |
 | A16, App 4a8ca5a1 | Einzelne positive Fallauswahlkontrolle, Altersgrenze 120/121, abweichende Cloud-Belegkopie und gezielte Gegenproben | Alle 22 Produktfälle gemeinsam |
-| A17, App 4a8ca5a1 | Fünfer-SDK-Lauf, zwei spätere Einzelproben und fünf betroffene Browserprüfungen | Gesamtes Paket, Runden-/Zufallsabnahme und echter iPhone-PWA-Test |
+| A17, App 4a8ca5a1 | Fünfer-SDK-Lauf, drei spätere Einzelproben (einschließlich Textkorrektur 09:33) und fünf betroffene Browserprüfungen | Gesamtes Paket, Runden-/Zufallsabnahme und echter iPhone-PWA-Test |
 | Rules 6a110898 | 238 Fälle am festgehaltenen Regelnachweis; Regeldatei seitdem unverändert | Kein Nachweis einer veröffentlichten Regelversion |
 
 Vollständige Hashes und Logs stehen in KARTEN-KONFLIKTE-2026-10-09.md,
@@ -61,7 +61,7 @@ verschoben. Die Prüfer-Eingangsfixes von 04:06 lösen diese anderen Lücken nic
    Fallfilter. A16 wird im anschließenden allgemeinen Lauf bereits über
    `t_tagesantworten_sdk.js` ausgeführt; keinen unnötigen Doppellauf planen.
    Erforderlich: alle aktuellen Definitionen und fachlichen Kriterien;
-   bisherige Zielzahlen A14/A15 16, A16 22 (07:04), A17 7, nach späterer Änderung
+   bisherige Zielzahlen A14/A15 16, A16 22 (07:04), A17 8 (09:33), nach späterer Änderung
    neu zählen. Der allgemeine Runner führt `diagnose_formular_konflikt.js` und
    `karten_konflikte_sdk.js` wegen ihrer Namen nicht automatisch aus.
 4. Großen Browserlauf nach LIESMICH ausführen. `alle_pruefen.js` enthält die

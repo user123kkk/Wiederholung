@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 09:33 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 09:34 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `37ec01c Sicherung 09:31 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `40f53e3 Sicherung 09:33 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,8 +27,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -37,6 +37,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md
+ M plan/zyklus-2/FORMULAR-KONFLIKT-2026-10-10.md
  M sw.js
 ```
 
@@ -66,6 +68,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 09:33 Codex bisherigen Datenauftrag fortgesetzt: neue SDK-Einzelprobe Textkorrektur-nach-fremder-Bewertung grün, echte bestätigte Fremdstufe erhalten, korrigierter Text/Rückfallreset und passende Bewertungsbasis serverseitig geprüft, andere Karte/JS-Fehler kontrolliert. Feste A17-Ausgangsquelle 97cbdcc/05269ebd zeigt exakt 0 statt 3; Wrapper prüft Exit 1 und konkrete Stufenverlustmeldung. Ganze Ausgaben gelesen; App-SHA 4a8ca5a1/Rules 6a110898 unverändert, kein neuer Produktfix. A17-Bericht/Abnahmeplan/STAND aktualisiert, Katalog acht, nur neuer Einzelfall; keine Gesamt-/PWA-/Auth-/Lernwirkungsbehauptung. Keine neue Idee aus der Betreibernachricht gebaut. Daten-Skill weiter angewandt; Sicherung einzeln, Nacht-Automation pausiert, kein App-Commit/Deploy/neues Paket.
 
 - 09:30 Codex neuer Betreiberauftrag: Nachricht vollständig wortgetreu als Original.txt gesichert, inklusive Schreibfehlern; Verfasszeit laut Betreiber gegen 01:00, beobachtete Version 3.18.26, Empfang gegen 09:29 getrennt von aktuellem Entwurf 3.18.30. Bild Speicherkarte umbenennen bytegleich in plan/betreiber-nachrichten/belege kopiert und SHA geprüft. Vollständiger Themenindex mit Fragen/Beobachtungen/Zukunftsvorhaben erstellt, keine Sofortfixes/Modi oder religiösen/lernbezogenen Entscheidungen daraus abgeleitet. ALLES-OFFEN verlinkt Wortlaut und jeden Themenbereich; bestehende verwandte Einträge/Skills nicht als Erfüllung des umfassenderen Wunsches ausgegeben. Übergabe 09:28 und einzelner Sicherungsbaum 12532/16564 gelesen/geprüft. Neuer Weiter-Auftrag im Chat; Nacht-Automation bleibt pausiert, Abnahme/Paketgrenzen erhalten. Weiter im bisherigen Datenentwurf, keine der genannten Ideen bauen.
 
@@ -108,5 +112,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 22:52 Codex Prüfumgebung: gezielter Endstandlauf und Offline-Einzelprobe treffen SDK-Stapel-Zeitlimit 30 s. Tatsächliches Emulator-Rootlog (fast 800 MB) zeigt massenhaft „too many pending messagings in the back channel (10001)“, Kanalabbruch und NETWORK_ERROR; Ausschnitt in sicherung/tests/a16-emulator-netzfehler-ausschnitt.log gesichert, Ursprung nicht gelöscht. Nur lokalen Demo-Emulator 7936/10004 für demo-adrabic-karten-audit/8082 beendet und dieselbe Emulator-Version 1.22.0 mit INFO statt FINE neu gestartet; identische endgültige Repo-Regeln, keine Produktivdaten. Rote Läufe erhalten, keine Testgrenze gelockert. Frischer Nachlauf erforderlich; frühe grüne Fälle bleiben Einzelbelege, keine pauschale Gesamtaussage.
 
 - 22:47 Codex: alle vier ergänzten A16-Randfälle grün, einschließlich tatsächlicher Cloud-Beleglöschung. Unveränderter App-SHA 05269ebd; frischer vollständiger gezielter Lauf mit 17 SDK-Fällen (einschließlich Tageshinweis/Download/Entfernen), danach 16 A14/A15-Regressionsfälle und feste Gegenprobe gestartet. Vier Breiten im erneuten Sprungtest ohne Sprung. Minuten-Sicherung lief nachweislich, aber Log-Kopie mit einem cp-Prozess je Datei verzögerte Durchgänge mehrere Minuten. Nur Kopieraufruf auf find/-exec cp mit mehreren Dateien gebündelt, gleiche Filter/Ziele; bash -n grün. Alten einzelnen Sicherungsbaum außerhalb Git-Schreibschritt beendet, genau eine Schleife verborgen neu gestartet. Keine Sicherungsdateien gelöscht und kein neuer Paketbau.
-
-- 22:40 Codex: doppelte Minuten-Sicherung anhand vollständiger Prozessbäume erkannt; nur zweiten Baum 19952/17292 beendet, erster 13152/8128 läuft weiter. Zwölf A16-Kernfälle am finalen App-SHA 05269ebd erneut grün. Neue Vor-Versand-Probe war zuerst unpassend: reguläres Page.close löst visibilitychange/Flush aus und testet bereits die SDK-Übergabe. Fixture stellt jetzt ausdrücklich harte Beendigung ohne Timer/Flush nach; Assertions erhalten, vier Randfälle laufen separat. Kein Produktfehler aus dieser Fixture-Verwechslung behauptet. Sprungtest vier Breiten, Kontrast und a11y-Grundchecks grün. Nächste entschiedene Lernrunden-Punkte am tatsächlichen Code gelesen; Vorbereitung in mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md, kein neuer Paketbau.
