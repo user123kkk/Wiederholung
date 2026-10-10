@@ -176,6 +176,37 @@ API-Grundlagen: [Firebase atomare Batches und getAfter](https://firebase.google.
 [waitForPendingWrites](https://firebase.google.com/docs/reference/js/firestore),
 [Unterkollektionen bei Kontodokument-Löschung](https://firebase.google.com/docs/firestore/manage-data/delete-data).
 
+### Prüfer-Fallauswahl abgesichert, 10.10.2026 04:06
+
+Bei der gezielten Gegenprüfung fiel eine echte Prüferlücke auf:
+`t_tagesantworten_sdk.js --fall=ungueltige-a16-eingabe` führte keinen Fall
+aus und endete trotzdem mit Exit 0 / „0 A16 SDK-Faelle gruen“.
+Vollständiger Vorbefund: `a16-fallauswahl-vor-schutz.log`. Dieser Lauf ist
+ausdrücklich kein grüner Produktnachweis. Ausgangsdatei im Minuten-Patch
+des festen Commits `78281409af90473701956858c19b12b346a4cdb2`; vor Änderung
+direkt ausgeführt. SHA256 der damaligen Werkzeugdatei mit ihren tatsächlichen
+Dateibytes: `d7e64e0ae38f67679f8395b0e713d1c41f5032e12a8b79afa448de026bc61a0d`.
+
+Nur der Prüfer wurde geändert: Katalog der vorhandenen 19 Fälle,
+Eingangsprüfung unbekannter/leerer Auswahl vor SDK-Start, eindeutige und
+vollständige Fallnamen sowie zwingend ein erfolgreicher ausgewählter Fall
+bzw. alle Katalogfälle vor einem grünen Schluss. Keine Testfälle entfernt,
+keine fachliche Erwartung oder Zeitgrenze gelockert; App/Rules unverändert.
+
+Unbekannter und leerer `--fall` ergeben jeweils Exit 1 mit genauer
+Eingangsablehnung, durch Wrapper geprüft. Positive Auswahlkontrolle führt
+`Speicherfehler-keine-Bewertung` erfolgreich aus und meldet genau einen
+Fall; dabei wurden auch sämtliche 19 Definitionen gegen den Katalog
+abgeglichen. Nur dieser eine Produktfall lief erneut, gezielt wegen des
+geänderten Prüfers. Keine neue vollständige 19er-/Paketabnahme behauptet.
+
+Vollständige Logs gelesen: `a16-fallauswahl-negativ.log`,
+`a16-fallauswahl-leer-negativ.log`, `a16-fallauswahl-positive-kontrolle.log`.
+App-SHA im positiven Lauf `4a8ca5a1a73c7873275497c38f7368f542785a97f1712e21a20b60faed25fe97`,
+Rules-SHA weiterhin `6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3`.
+Syntax/Diff grün. Die älteren 17 plus zwei Einzelbelege behalten ihre
+jeweiligen Quellstände und Grenzen; neue Prüfung ersetzt sie nicht.
+
 ### Weiterprüfen im selben Windows-Ordner
 
 - HTTP-Server 8097 liefert app.js/index.html/styles.css identisch zum

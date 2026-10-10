@@ -1944,10 +1944,10 @@ index 0000000..cb56164
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
-index 0000000..dcfe9f2
+index 0000000..1635369
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
-@@ -0,0 +1,279 @@
+@@ -0,0 +1,293 @@
 +/* A16: echter SDK 10.14.1, Repo-Regeln, Demo-Emulator 8082.
 +   Auth-Attrappe und blockierter Service Worker: kein PWA-Kaltstartbeleg.
 +   --gegenprobe stellt die feste Entwurfsquelle 591d03e samt Patch her. */
@@ -1977,7 +1977,16 @@ index 0000000..dcfe9f2
 +}
 +const {seite, seed, fertig, rest, wert, ROOT, SDK, cloud, APP_SOURCE} = require('./diagnose_karten_konflikt');
 +const sha = s => crypto.createHash('sha256').update(s.replace(/\r\n/g, '\n')).digest('hex');
++const FALL_NAMEN = ['Ablehnung-Neustart-mehrfach', 'Neustart-vor-Bestaetigung-offline', 'Bestaetigung-verloren',
++  'urspruenglicher-Lerntag', 'fremder-Reset', ...['n', 'u', 't', 'r'].map(art => 'Antwortart-' + art),
++  'Speicherfehler-keine-Bewertung', 'Undo-Neustart', 'Kontowechsel-Ursprung-erhalten',
++  'Offline-Neustart-vor-zwei-Sekunden', 'Absturz-nach-Kartenkopie-vor-Aktivierung',
++  'vorbereiteter-Beitrag-Kartenkopie-Epoche-falsch', 'vorbereiteter-Beitrag-ohne-Kartenkopie',
++  'beschaedigter-Tagesbeitrag', 'Tageshinweis-Darstellung-und-Entfernen', 'Kontoloeschung-entfernt-Cloudbelege'];
 +(async () => {
++  const single = process.argv.find(x => x.startsWith('--fall='))?.slice(7);
++  assert.ok(single === undefined || FALL_NAMEN.includes(single), 'Unbekannter A16-Prueffall: ' + single);
++  assert.equal(new Set(FALL_NAMEN).size, FALL_NAMEN.length, 'Doppelte A16-Fallnamen');
 +  console.log('app.js SHA256 ' + sha(APP_SOURCE));
 +  console.log('firestore.rules SHA256 ' + sha(fs.readFileSync(path.join(__dirname, '../../../firestore.rules'), 'utf8')));
 +  const sources = {};
@@ -1986,8 +1995,11 @@ index 0000000..dcfe9f2
 +  }
 +  const b = await start();
 +  let passed = 0;
-+  const single = process.argv.find(x => x.startsWith('--fall='))?.slice(7);
++  const gesehen = new Set();
 +  async function fall(name, test, kontoGeloescht = false) {
++    assert.ok(FALL_NAMEN.includes(name), 'A16-Fall fehlt im Katalog: ' + name);
++    assert.ok(!gesehen.has(name), 'A16-Fall doppelt definiert: ' + name);
++    gesehen.add(name);
 +    if (single && name !== single) return;
 +    await seed(); let p = await seite(b, sources); const ctx = p.context();
 +    const other = await (await rest(ROOT + '/users/u1/karten/k6')).json();
@@ -2224,6 +2236,8 @@ index 0000000..dcfe9f2
 +      const after = await (await rest(ROOT + '/users/u1/tagesantworten')).json();
 +      assert.equal((after.documents || []).length, 0);
 +    }, true);
++    assert.equal(gesehen.size, FALL_NAMEN.length, 'A16-Fallkatalog nicht vollstaendig definiert');
++    assert.equal(passed, single === undefined ? FALL_NAMEN.length : 1, 'A16-Lauf hat nicht die geforderte Fallzahl');
 +    console.log(passed + ' A16 SDK-Faelle gruen. Keine Gesamtabnahme oder iPhone-Abnahme.');
 +  } finally {await b.close();}
 +})().catch(e => {console.error(e); process.exitCode = 1;});

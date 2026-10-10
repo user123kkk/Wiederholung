@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 04:06 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 04:07 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `7828140 Sicherung 04:05 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `4f8a66c Sicherung 04:06 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -35,6 +36,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/VERLAUF-NEUSTART-2026-10-09.md
  M sw.js
 ```
 
@@ -43,7 +45,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 4, chrome.exe 0 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 3, chrome.exe 0 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -64,6 +66,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 04:06 Codex A16-Prüfergegenprobe: Übergabe 04:04, Entwurf und einzelner Sicherungsbaum 12532/16564 erhalten. Konkrete Lücke nachgewiesen: unbekannter --fall liefert ohne Fallausführung Exit 0/0 grün. Vorbefundlog und feste Quelle 7828140 samt Werkzeug-Dateihash festgehalten. Nur Fallkatalog/Eingangs-/Eindeutigkeits-/Vollständigkeits-/Erfolgszahlprüfung im bestehenden A16-Prüfer ergänzt; unbekannte und leere Auswahl mit erwarteter genauer Exit-1-Ablehnung geprüft. Positive Auswahl Speicherfehler-keine-Bewertung einmal grün, alle 19 Definitionen kataloggebunden; komplette Logs gelesen. Keine fachliche Assertion, Zeitgrenze oder Produktdatei geändert, kein ganzer 19er-Lauf behauptet. Daten-Skill-Prüfebene wie zuvor echter SDK, Auth-Attrappe, Worker blockiert. Bericht erweitert, Syntax/Diff grün; App-SHA 4a8ca5a1, Regeln 6a110898, 3.18.30 weiter uncommittet. Große Abnahme/Veröffentlichung später, Nacht-Fortsetzung weiter aktiv bis 09:00.
 
 - 03:09 Codex A17-Datenränder: Übergabe 03:07 und einzelner Sicherungsbaum 12532/16564 bestätigt. Daten-/Oberflächenwege im bestehenden Formular nachgelesen; zwei fehlende SDK-Einzelproben ergänzt: Notiz nach fremder Löschung (Server 404, Hinweis und Eingabe erhalten) und Offline-Notiz nach fremder Bewertung (SDK-Cache mit ausstehenden Writes vor Fremdbewertung bestätigt, Servernotiz und fremde Bewertungsfelder erhalten). Beide grün, andere Karte/JS-Fehler geprüft, vollständige Logs gelesen. Erster Löschlauf rot wegen mehrdeutigem .dlg-Testselektor, nur Selektor konkretisiert; sämtliche fachlichen Erwartungen erhalten. Unbekannte --fall-Eingabe liefert geprüft Exit 1 statt leeren grünen Lauf. Bericht/Grenzen erweitert: fünf vorherige plus zwei neue Einzelbelege, kein ganzer 7er-/Paketlauf, kein Neustart/Auth-/Tageszähler-Nachweis daraus. App-SHA 4a8ca5a1/Regeln 6a110898 unverändert, 3.18.30 weiter Entwurf; kein neuer Paketbau/Commit/Deploy. Nacht-Fortsetzung aktiv bis 09:00.
 
@@ -106,5 +110,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 21:39 Codex: weitere Speicher-Gegenprüfung korrigiert: vor dem Buchen abgebrochener Versuch wird aus Nachholmap entfernt, damit später keine ungezählte Bewertung entsteht. Prüfen erlaubt nach Erholung einen neuen Versuch; Hinweis ohne vorhandene Kopien zeigt nur Speicherprüfung. Fehlgeschlagene neue Gesehen-/Bewertungsversuche erhalten vorheriges Rückgängig. Feste Entwürfe 14517b3 (ungezählter Versuch bleibt) und 7818a54 (Undo verloren: 2 statt 1 bzw. Datum statt null) reproduzieren die Fehler; reparierter echter SDK-Lauf 16/16 plus UI/Download/Entfernen grün. Frühere lange Läufe wegen Quelländerungen bewahrt/beendet, keine Ergebnisse übernommen. Seit 21:26 frischer Gesamtlauf 157 an caf81d58f8c5f144; 25/157 bisher Exit 0. Danach Rundenabnahme, Affen, Abschlussdiff und Commit. Finaler normalisierter App-SHA256 44c05375c7511ba420fbabe5b52cea6599ecf7c1ea3e67e77b52428aa30347d9. Alle Gegenproben im Repo gesichert. Kein Deploy.
 
 - 21:09 Codex: finaler SDK-Lauf am unveränderten App-Stand 7d0de10b... komplett grün: 14 Fälle plus UI-/Download-/Entfernkontrollen; andere Karte k6 jeweils unverändert. Retry prüft nun zusätzlich tatsächlichen Cloud-Tageszähler w:1 und unveränderte Cloud-Zählung nach wiederholtem Prüfen/Flush. Rundenabnahme 13/13 grün an Quelle 00aeb59220794b38..., sämtliche 13 Einzel-Logs gelesen, einschließlich aller beschreibenden Rundenende-/Üben-/Schreiben-Ausgaben. Keine Sprünge, Scroll-/Kontrastfehler; CPU-4x-Zeichenprobe mit höchstens einem 35-ms-Bild. Gesamtlauf 157 Tests läuft am selben Stand mit den frischen gleichstandsgebundenen Runden-Ergebnissen. Regel-Nachlauf traf alte Daten des wiederverwendeten Testprojekts; Testaufbau leert jetzt ausschließlich wiederholung-test auf lokalem Emulator. M06-M11 haben gültige Ausgangskennungen, damit Wertfehler nicht durch fehlende Kennung verdeckt werden. Frischer Regeltest erneut 222/222; gesamte Ausgabe gelesen, identische Warnungen gefaltet. Direkt ausgelieferte App-/HTML-/SW-/Datenschutz-Quellen identisch zum Arbeitsbaum. Eigene Logdateien und Konfliktbild ins Repo gesichert. Kein App-Commit/Deploy.
-
-- 20:56 Codex Gegenprüfung: normale Bestätigung zeichnet nicht zusätzlich neu. Automatisches Retry markiert die Antwort vor dem Schreiben wieder dauerhaft als unterwegs; Entfernen blockiert offene/ungeprüfte/laufende Antworten auch nach Dialog-Wartezeit. Beschädigte JSON-Kopie wird einzeln erhalten und exportiert, statt das Laden weiterer gültiger Antworten abzubrechen. Zwei neue echte SDK-Kontrollen grün: Offline-Neustart verhindert Entfernen ungeprüfter Antwort, spätere Bestätigung/Prüfung räumt sie auf; beschädigte Kopie bleibt zusammen mit weiterer gültiger Antwort downloadbar. Erste neue Neustart-Erwartung las Server vor Ende des expliziten Retry; WaitForPendingWrites nach dem Prüfen ergänzt, keine Assertion gelockert. Neuer Endstand app.js normalisiert SHA256 7d0de10b37278842d43c9c5ca385b3309a9752487251f6f0c9694030fc659dd3. Zwei frühe Gesamtläufe wegen dieser Gegenprüfungsänderungen bewahrt und beendet. Frische Rundenabnahme Quelle 00aeb59220794b38a läuft; danach Gesamtlauf mit ausschließlich gleichstandsgebundenen Runden-Ergebnissen. Konflikthinweis visuell auf laufender Runde angesehen, kein Scrollen/abgeschnittener Antwortknopf bei 414x896. Vier weitere Breiten, zwei Themen, reduziertes Bewegen, vollständiger Download sowie Abbrechen/Bestätigen lokaler Entfernung grün.
