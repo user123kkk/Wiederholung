@@ -6,6 +6,20 @@ für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
 Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,
 Messläufe oder stillschweigende Freigabe neuer Funktionen.
 
+**Fortsetzung16:33:** Dauerhaftes Arbeitsziel für die ausdrücklich gewünschte
+ununterbrochene Arbeit eingerichtet: zunächst offene historische Wunschprüfung,
+danach tatsächlich ausführbare autorisierte Arbeiten. Antworten mit Caveman;
+keine neue Tempo-Suche, Messläufe oder Produktfreigabe. Quellen vom03./04.10.
+und29./30.09. gelesen; automatische task-notification-Blöcke sind keine
+Betreiberwünsche. Ruhetag und abgelehnte5-Karten-Auswahl unten konkret belegt.
+Anmeldekritik29.09.17:07/17:13 vom Betreiber17:16 selbst korrigiert
+(„oh htte falsche addresse, egal“); kein Produktfix daraus. Start-Flickern,
+G1/G4–G7 und methodische Gesamtwünsche behalten ihre vorhandenen offenen
+Grenzen. Texte-Bauauftrag ist historisch, kein neuer Probelauf-Umbau.
+Nächste Quellen:24.09. und frühere lokale Chats; keine vollständige alte
+Wunsch-Abnahme behauptet. Mehrwert-ARBEITSSTAND auf tatsächliche157/158
+Abnahme korrigiert, alte Meldungen bleiben Verlauf.
+
 **Betreiber 10.10.,16:28:** „weiter nach reihenfolger offener sacen“.
 Nächsten Bereich Lernrunde lesend vorbereitet, ohne neue Tempo-Suche oder
 Paketbau. Quelle für Bearbeiten in der Abfrage geprüft: nur alte S1-
@@ -373,6 +387,8 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 | Was | Stand |
 |---|---|
+| „ruhetag ja“ (04.10.,21:05), Frage nach drei Tagen ohne Lernstoff (21:59) | gebaut und geprüft3.18.16, E7. Originalchat59b2ded3, aktueller `ruhetagPruefen` und erhaltener [E-Test](sicherung/tests/e595b5b6312244cd/t_paket_e.js.log) abgeglichen: drei Tage halten Serie10, ohne Hochzählen/Jokerverbrauch; App muss geöffnet werden. Keine neue Lernempfehlung oder frische Geräteabnahme |
+| Zusätzliche Auswahl „5 Karten“ (04.10.,21:09) | ausdrücklich „5 nein“, historisch nicht gebaut; aktuelles `SITZUNGS_LIMITS` enthält10/20/30/Alle. Quelle: Originalchat59b2ded3,21:06/21:09. Kein neuer Vorschlag oder Änderungsauftrag |
 | Handschrift bleibt nach Verkleinern des Vollbilds sichtbar (Betreiber 06.10.) | behoben 3.18.19; Quelle: [Wunsch](zyklus-2/BETREIBER-2026-10-06.md), [Bau-/Prüfprotokoll](zyklus-2/LOGBUCH.md), Tests t_schreiben_vollbild / t_schreiben. Erste Bestandskontrolle, kein frischer Gerätetest |
 | Tippen neben „Karte anlegen“/„Code einlösen“ schließt; später allgemein für Dialoge gewünscht | umgesetzt 3.18.19/3.18.24; [Prüfprotokoll](zyklus-2/LOGBUCH.md), t_neben_tippen. Eingaben bleiben geschützt; Hintergrundscrollen am iPhone weiterhin offen in Abschnitt 2 |
 | Verschiebe-Griff: übermäßiges Auslaufen nach frühem Losziehen | behoben 3.18.20 laut [Prüfprotokoll](zyklus-2/LOGBUCH.md). Gesonderter schwankender Testbefund t_griff_scrollen bleibt offen in Abschnitt 3.1; nicht miteinander verwechseln |
