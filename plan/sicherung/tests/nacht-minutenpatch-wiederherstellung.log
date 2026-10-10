@@ -1,0 +1,2 @@
+{"basis":"dfd44eb3f50d06190197a11a9c52a318dba5a300","patchSHA256":"e1be6af59602f60ce230fd9f0cfafa51a50ab67032102402849cf670cb7983c1","dateien":23,"temp":"C:\\Users\\USER\\AppData\\Local\\Temp\\adrabic-minutenpatch-restore-ELsgeZ","appSHA256":"4a8ca5a1a73c7873275497c38f7368f542785a97f1712e21a20b60faed25fe97"}
+GRUEN Minuten-Patch: --check und Anwendung im separaten TEMP-Ordner; alle enthaltenen Dateien gegen vorher erfassten Arbeitsbaum gleich (LF-normalisiert), drei JS-Syntaxpruefungen gruen. Keine produktiven Tests oder Aenderung am Arbeitsbaum.
