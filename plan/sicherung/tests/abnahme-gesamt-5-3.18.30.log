@@ -144,3 +144,7 @@ EXIT 0 t_text_felder.js (5s)
 EXIT 0 t_text_fortschritt.js (21s)
 EXIT 0 t_text_kreis.js (8s)
 EXIT 0 t_text_nachbarn.js (30s)
+EXIT 0 t_text_neu.js (130s)
+ROT t_text_tempo.js (21s)
+FEHLER:
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":21,"quelltext":"e8fb11926a430b29d3df6b2f88dc0eee3103424e4b3efcd3ade9f3e60cb2b915"}

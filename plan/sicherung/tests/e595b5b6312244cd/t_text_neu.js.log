@@ -1,0 +1,4 @@
+Gegenprobe ohne Protokoll "t": 3 Befunde (rot erwartet)
+OK t_text_neu: Schritte 1-8, Denkpause, Sperre, Lage 390/320, Abbruch
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":130,"quelltext":"a77738627dcec81b0612c8cccba83c223e00a2c1dca23e8a6ef9f931b6a88582"}
