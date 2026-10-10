@@ -1,5 +1,11 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Betreiber 10.10.2026:** „arbeite ununterbrochen. ich habe genug skills zur
+verfügung gestellt, nutze vorallem caveman ständig.“ Caveman gelesen und
+für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
+Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,
+Messläufe oder stillschweigende Freigabe neuer Funktionen.
+
 **Betreiber 10.10.,16:28:** „weiter nach reihenfolger offener sacen“.
 Nächsten Bereich Lernrunde lesend vorbereitet, ohne neue Tempo-Suche oder
 Paketbau. Quelle für Bearbeiten in der Abfrage geprüft: nur alte S1-
@@ -389,7 +395,7 @@ Die bisherigen Mehrwert-Aufgaben stehen jetzt hier mit erhaltenem Stand. Früher
 | Was | Stand |
 |---|---|
 | Tagesdeckel nach einer Pause, Fälligkeiten bleiben (10) | Audit fertig (09.10.): neun Auditfälle, korrigierte 450 Modellläufe, Browser-Bereichsrunde grün. Neuen dauerhaften Deckel derzeit nicht empfohlen; Rundengröße nicht als Tagesziel umdeuten. Rückkehr-Probelauf braucht Pensum/Zusatznutzen/Lernkriterium, siehe `zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`; „60/30“ bleibt zurückgenommen |
-| Karte direkt in der Abfrage bearbeiten | offen |
+| Karte direkt in der Abfrage bearbeiten | vorläufig – Verständnis/Entscheidung prüfen: nur historische S1-Sammelfreigabe belegt. Vorschlag: Stift nach Aufdecken, vorhandenes Kartenblatt, Rückkehr zur gleichen Karte/Runde; [Vorbereitung](zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md). Bau nach Datenabschluss |
 | Am selben Tag „Runde fortsetzen“ (22) | offen |
 | Einmalige Erklärung der drei Knöpfe (21) | wartet: Wortlaut von Dir |
 | Die zwei neuen Lernregeln für alle freigeben | wartet: Dein Ja nach eigenem Test |

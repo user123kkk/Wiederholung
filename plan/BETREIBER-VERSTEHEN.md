@@ -1,5 +1,12 @@
 # Den Betreiber richtig verstehen
 
+**Arbeitsweise 10.10.2026:** „arbeite ununterbrochen. ich habe genug skills
+zur verfügung gestellt, nutze vorallem caveman ständig.“ Selbstständig an
+ausführbaren offenen Arbeiten fortsetzen und passende Skills gezielt nutzen.
+Caveman gilt dauerhaft für Antworten, bis der Betreiber es ausschaltet;
+Dokumentation bleibt normale verständliche Prosa. Keine neue pauschale
+Funktionsfreigabe oder Aufhebung bestehender Testsperren daraus ableiten.
+
 **Eine zentrale Aufgabenliste, 10.10.2026:** Der Betreiber soll nicht zwischen TikTok-, Mehrwert- und offenen Listen sortieren. Aktuelle Aufgaben/Status in [ALLES-OFFEN](ALLES-OFFEN.md); Originalberichte und Fachpläne sind Belege/Details. Vor neuer Ideensammlung prüfen, welche früheren kleinen Wünsche tatsächlich umgesetzt und geprüft wurden. Erwähnung oder Quellenabgleich ist kein Erledigungsbeleg. Umfangreiches Onboarding später am weitgehend fertigen Funktionsumfang ausrichten; alte Seitenzahlen blockieren neue Wünsche nicht. Möglichst selbst testen; begründet fehlende echte Gerätebelege benennen.
 
 **Tokenverbrauch 10.10.2026 (ausdrücklich festhalten):** „achte auf

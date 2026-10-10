@@ -7,6 +7,13 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.2026 16:29 – Reihenfolge fortgesetzt, Vorbereitung:** Nächster
+Bereich Lernrunde, Karte während der Abfrage bearbeiten. Alte S1-
+Sammelfreigabe belegt kein gesichertes Verständnis; konkrete Entscheidung
+zum Stift nach Aufdecken/gleichen Rückweg offen. Vorschlag und Prüfmatrix
+in der Lernrunden-Vorbereitung, aktueller Status in ALLES-OFFEN.
+Bau erst nach Datenabschluss; keine neue Tempo-Suche oder Messläufe.
+
 **10.10.2026 16:24 – Anschluss geprüft:** Ohne weitere Tempo-Diagnose oder
 Messläufe kein Produktabschluss möglich. Offen ist, ob und wann die gezielte
 Tempo-Klärung wieder ausdrücklich beauftragt wird. Bis dahin gesperrten

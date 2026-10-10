@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:29 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:30 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `adc0df17 Sicherung 16:28 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `86151df5 Sicherung 16:29 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -36,7 +36,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M firestore.rules
  M index.html
  M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
+ M plan/BETREIBER-VERSTEHEN.md
+ M plan/PLAN.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -67,7 +68,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md
+ M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
  M sw.js
 ```
 
@@ -97,6 +98,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 16:31 Codex Betreiber „arbeite ununterbrochen … caveman ständig“ aufgenommen. Caveman-Skill vollständig gelesen, dauerhaft für Antworten aktiviert; passende Fach-Skills weiterhin gezielt. Bestehende Minuten-Sicherung1792/5884 bestätigt. Veralteten Einstieg in Mehrwert-ARBEITSSTAND sichtbar korrigiert: Gesamtabnahme ausgeführt,157/158/Tempo-Sperre. Vorhandene Lernrunden-Vorbereitung nicht wiederholt; ausführbaren Rest der historischen Wunschprüfung vor05.10. aufgenommen. Kein neuer Messlauf/Produktbau, Entwurf erhalten.
 
 - 16:28 Codex „weiter nach reihenfolger offener sacen“: aktuelle Übergabe/Reihenfolge und bestehende Sicherung1792/5884 bestätigt. Vorhandene Lernrunden-Vorbereitung vollständig gelesen; RUNDE-2/S1 und historischen Listenstatus gegen aktuelle Verständigungsregel geprüft. Nur Sammelfreigabe belegt, konkrete Einzelfreigabe unklar. Vorläufigen Stand und konkreten Vorschlag (Stift nach Aufdecken, vorhandenes Blatt, gleiche Karte/Runde) mit Nutzen/Nachteil dokumentiert. Keine neue Tempo-Diagnose, Tests, Produktänderung oder Paketfreigabe. Nächster Schritt konkrete Entscheidung, Bau weiter erst nach Datenabschluss.
 
@@ -139,5 +142,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 15:10 Codex zweiter A/B-Vergleich mit ausgeglichener Reihenfolge vollständig gelesen: achtmal identisches #app-DOM (Hash2f26be52), Verwalten alter Median286ms/6 rote Messungen, Entwurf212ms/4; Text162/150ms, keine Überschreitung. Erste pauschale Verlangsamungsdeutung dadurch nicht gehalten; Schwankung/Layoutkosten beider Quellen belegt, keine abschließende Ursache/Fehlerfreiheit. Rohtraces/CPU-Profile gesichert. Gesamtlauf einmal nach Diagnose am unveränderten Stand fortgesetzt (Runner14360/Sitzung53308),144 gültige grüne bewahrt, fehlende14 einschließlich Original-Tempo erneut; keine Wiederholungsschleife bis grün. Rest/Affe/Runde beenden, Tempo-Befund unabhängig vom nächsten Einzelwert offen behandeln.
 
 - 15:08 Codex acht vorgeschriebene A/B-Paare gelesen: Verwalten alter Median188ms/2 Überschreitungen, Entwurf279ms/6; Text144/148ms. Daraus zunächst Entwurf langsamer gemeldet. Traces am unveränderten Originaltest beider Quellen vollständig gelesen: gleiche Layoutobjektzahlen156/397, Hauptkosten Browserlayout/HTML-Aufbau; alter Trace373ms, neuer178ms für Verwalten, Trace kostet selbst Laufzeit. Noch keine abschließende Ursache. Ausgleich der A/B-Reihenfolge und DOM-Gleichheit mit tatsächlicher Messhilfe begonnen. Eigener Diagnoseanker scheiterte an CRLF vor Browserstart; Log erhalten, Quellnormalisierung korrigiert, zweiter Diagnoseaufruf aktiv. Produkt/Assertions gleich, Abnahme weiter gesperrt.
-
-- 15:04 Codex t_text_tempo rot226ms bei200ms/CPU4x; vollständigen Log gelesen, eigenen Runner14916 samt begonnenem Text-Zustandstest beendet.144 grüne/145 vollständige Abschlusslogs erhalten, rote Ausgabe/stand.json separat gesichert. Originaltest und vorgeschriebene x_ab_tempo-Messhilfe gelesen; acht feste Vergleichspaare mit315bb0e gestartet, kein weiterer Browserlauf. Keine Ursache vorweggenommen, keine Produkt-/Testgrenzenänderung; Paketabschluss gesperrt bis Klärung.

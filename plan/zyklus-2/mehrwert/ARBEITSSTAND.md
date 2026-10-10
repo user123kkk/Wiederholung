@@ -1,5 +1,21 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Aktueller Anschluss 10.10.2026 16:30
+
+Korrektur zu den älteren Einstiegen: Die große Datenabnahme ist ausgeführt,
+nicht mehr verschoben. 157/158 grün,13/13 Runden,238 Regeln und zwei
+Zufallsläufe grün; Tempo219ms bei200ms bleibt offen. Weitere Tempo-Suche
+beendet, keine neuen Messläufe. Entwurf3.18.30 erhalten, Paketbau/Abschluss
+und Veröffentlichung bleiben gesperrt.
+
+Lernrunden-Vorbereitung liegt vollständig vor. Bearbeiten in der Abfrage
+ist wegen nur historischer S1-Sammelfreigabe vorläufig; konkreter Vorschlag
+und Prüfmatrix in VORBEREITUNG-LERNRUNDE-2026-10-09.md. Keine bereits
+abgeschlossene Vorbereitung wiederholen. Ausführbarer Rest: ältere kleine
+Betreiberwünsche vor dem05.10. mit Original, Code und vorhandenen Belegen
+abgleichen. Aktuellen Status ausschließlich in ALLES-OFFEN führen.
+Betreiber wünscht selbstständige Fortsetzung und ständig Caveman.
+
 ## Aktueller Anschluss 10.10.2026 11:38
 
 11:40: Stündlicher Heartbeat nach Abschlussauftrag PAUSED bestätigt.
