@@ -6,3 +6,8 @@ Browser 154.0.8037.98
 (lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 230/119 | Text oeffnen (286): 113/108/72/114 | scrollen: 78 | Wiederholen starten: 89 | Aufdecken: 77 | Fliessend: 66 | Beenden: 69/58/85 | Lernen-Tab: 99
 FEHLER:
 Aufgabe mit 230 ms (> 200 ms)
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 351/376 | Text oeffnen (286): 332/78/96/57/162/77/72/71/85 | scrollen: 53/71/64/63/74/64/52/100/62 | Wiederholen starten: 171 | Aufdecken: 122 | Fliessend: 146 | Beenden: 164/122/81/151 | Lernen-Tab: 103
+FEHLER:
+Aufgabe mit 376 ms (> 200 ms)
+Originaltest Exit: 1
+AC-Minimum wiederhergestellt: 5
