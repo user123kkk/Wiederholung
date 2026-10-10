@@ -183,6 +183,12 @@ Arbeit, kein App-Commit oder neuer Paketbau.
 | F13 | CODE-13 | niedrig | Veraltete und doppelte Dateien im Repo – Vorschlag für eine aufgeräumte Struktur | `befunde/CODE.md` | Sol mittel | erledigt (3.18.17) | Z14: wie empfohlen |
 
 ## Doppelt gemeldet (einmal beheben)
+## Paket H – kleine Verbesserungen in der Lernrunde
+
+| Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
+|---|---|---|---|---|---|---|---|
+| H1 | RUNDE-BEARBEITEN | niedrig | Eigene aufgedeckte Karte im vorhandenen Blatt bearbeiten; gleiche Karte/Runde behalten | `befunde/RUNDE-BEARBEITEN.md` | bestehender Agent | offen | Konkrete Antwort 10.10. „ic glaub ja, was sagst du“, Empfehlung ja; keine Lernantwort durch Bearbeiten, geführte Karten geschützt |
+
 
 **A9-Sicherung:** Die 15 Restbefunde des Zweigs `4462fac` sind unter eindeutigen
 Kennungen R15-112, R15-116 und R15-118–R15-130 in

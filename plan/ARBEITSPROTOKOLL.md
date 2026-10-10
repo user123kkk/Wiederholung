@@ -1,5 +1,13 @@
 # Arbeitsprotokoll – was gerade getan wird
 
+## 10.10.2026 – H1 konkret beauftragt
+
+Betreiber: „ic glaub ja, was sagst du“ auf den erläuterten Stift-Vorschlag.
+Empfehlung ja. H1 als zusätzlicher Einstieg in das vorhandene Kartenblatt
+zugeordnet; Grenzen im Befund festgehalten. Caveman dauerhaft,
+Oberflächen-Skill angewandt. Klein-Weg: vorhandenes Muster, keine neue
+Lernregel oder neuer Bildschirm; Gegenprobe und betroffene Tests.
+
 Zwischenspeicher nach `LEHREN.md` § 1.9: spätestens nach jedem
 Arbeitsschritt eine Zeile mit Uhrzeit (was gelesen, geprüft, geändert,
 gemessen wurde), dann committen und pushen. Neueste Zeile oben. Ist der

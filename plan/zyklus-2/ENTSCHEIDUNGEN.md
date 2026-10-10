@@ -89,6 +89,13 @@ Geschmack des Betreibers.
 10 · 20 · 30 · Alle. Damit ist in dieser Datei keine Frage mehr offen.
 
 ## Was Du am Gerät prüfen musst (kann kein Agent)
+## Konkrete Lernrunden-Entscheidung vom 10.10.2026
+
+H1: „ic glaub ja, was sagst du“ auf den einzeln erklärten Stift-Vorschlag.
+Empfehlung ja: direkte Tippfehlerkorrektur spart den Ausstieg; zusätzlicher
+Knopf als Nachteil. Genau dieser Umfang, keine neuen Lernregeln oder
+Rundenpersistenz. Die alte S1-Sammelfreigabe ist nicht Grundlage.
+
 
 Jeweils erst, wenn die zugehörige Aufgabe gebaut und veröffentlicht ist. Ich
 sage dann Bescheid.

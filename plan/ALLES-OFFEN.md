@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**10.10., konkrete Antwort zum Stift: „ic glaub ja, was sagst du“.**
+Der Betreiber antwortet auf den verständlichen Einzelvorschlag und bittet
+zugleich um meine Einschätzung. Empfehlung: ja; direkt korrigieren spart
+den Ausstieg aus der Runde, kostet aber einen zusätzlichen Knopf.
+Dieses konkrete Ja gilt für H1: eigene aufgedeckte Karte im vorhandenen
+Blatt bearbeiten, dieselbe Runde behalten, keine Lernantwort durch Bearbeiten.
+Keine Freigabe für neue Lernregeln oder das Speichern ganzer Runden daraus.
+
 **10.10.21:03 erledigt: Datenabschluss A14–A17/3.18.30.**
 Commit00c66031 auf origin/main bestätigt; Produktdateien unverändert zum
 geprüften Stand und sauber.157/158 mit ausdrücklich freigegebener

@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: Stift nach Aufdecken fehlt
+
+0 !== 1
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_runde_bearbeiten.js:41:12 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
