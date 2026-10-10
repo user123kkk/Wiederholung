@@ -1,5 +1,23 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+09./10.10.2026, Betreiber: „Weiter gemäß AGENTS.md und aktueller Übergabe.
+A14/A15/A16-Entwurf 3.18.30 behalten“; „Große Gesamtabnahme später gesammelt,
+nicht veröffentlichen“; „Minuten-Sicherung prüfen, keine doppelte Schleife
+starten“. Dazu: „noch 4% verbleibend“, „wenn mein liit resetet wird, du
+weiter arbeitest“, „für diese nacht aber einfach arbeiten, deine arbeit
+überprüfen“, „ich nehme dann schon ab“, „adegeraet machen wir irgendwann
+als groses, ob hier oder claude“. Auslegung: selbstständig weiterarbeiten
+innerhalb der vorhandenen Paketgrenze; keine Freigabe für ladegeraet,
+Veröffentlichung oder ein neues Paket über dem uncommitteten Datenentwurf.
+Nacht-Fortsetzung im selben Chat als stündlicher Heartbeat aktiviert
+(`adrabic-nachtarbeit-fortsetzen`), mit Ende 10.10.2026 09:00 Europe/Berlin.
+Limit laut Kontoabfrage zurückgesetzt ab 10.10. 01:37:19; Heartbeats vor
+Reset kamen an, Fortsetzung nach Reset um 02:03 aufgenommen. Laptop und
+App müssen verfügbar bleiben; erfolgreiche weitere Läufe nicht garantiert.
+Bestehende Minuten-Sicherung läuft weiterhin als ein Prozessbaum.
+Große Abnahme/Paketabschluss bleiben offen; Anschlussarbeit darf vorbereitet,
+aber noch nicht als neues Paket gebaut werden.
+
 09.10.2026, Betreiber: „für nächsten chat?“ Fortsetzungstext bereitstellen;
 A14/A15/A16-Entwurf 3.18.30 erhalten, aktuelle Übergabe und A16-Bericht als
 Einstieg verwenden. Große Abnahme später, kein neues Paket über dem Entwurf.

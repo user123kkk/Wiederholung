@@ -6,6 +6,12 @@ gemessen wurde), dann committen und pushen. Neueste Zeile oben. Ist der
 Inhalt im Logbuch oder in `ALLES-OFFEN.md` angekommen, werden alte Zeilen
 gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
+## 10.10.2026
+
+- 02:04 Codex gezielte A16-Lücke: positiven Wiederherstellungszweig vorbereitet mit vorhandener echter Kartenkopie und noch vorbereiteter Tageskopie. Bestehende 17 Fälle und Grenzen unverändert. Neue Einzelprobe stellt kontrollierten früheren lokalen Speicherstand nach, keinen echten Prozesskill; SDK/Repo-Regeln, ursprünglicher Beitrag und andere Karte werden geprüft. App unverändert.
+
+- 02:03 Codex Nacht-Fortsetzung nach Nutzungslimit: Heartbeat im selben Chat angelegt und ACTIVE in automation.toml bestätigt; regulärer Reset laut Kontoabfrage 01:37:19 Europe/Berlin, eingetroffene Heartbeats 00:02/01:01/02:03. Aktuelle Übergabe 02:02 und ein bestehender Sicherungsbaum 12532/16564 bestätigt, keine weitere Schleife. A14–A16-Entwurf unverändert erhalten. Vor Reset Betreiber-/Zyklusregeln, Daten-Skill und Anschlussvorbereitung gelesen, Syntax/Stand 3.18.30 grün. Kein App-Commit, keine große Abnahme, kein Deploy. Nächster Schritt: konkrete Rückweg-/Speicher-Inventur der beiden entschiedenen Lernrunden-Punkte und gezielte Lückenprüfung im bestehenden Datenpaket.
+
 ## 09.10.2026
 
 - Codex: Betreiber fragt nach Text für den nächsten Chat. Aktuelle automatische Übergabe erneut gelesen; Fortsetzungstext mit erhaltenem A14–A16-Entwurf, gezielten Belegen, Sicherungsprüfung und weiterhin verschobener großer Abnahme bereitgestellt. Keine App-Änderung.

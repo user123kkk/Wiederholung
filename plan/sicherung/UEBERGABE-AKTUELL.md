@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 02:02 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 02:04 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `97cbdcc Sicherung 02:01 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `35f1f8e Sicherung 02:03 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -27,6 +27,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  M plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js
@@ -42,7 +44,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 6, chrome.exe 0 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 7, chrome.exe 2 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -61,6 +63,12 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ```
 
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
+
+## 10.10.2026
+
+- 02:04 Codex gezielte A16-Lücke: positiven Wiederherstellungszweig vorbereitet mit vorhandener echter Kartenkopie und noch vorbereiteter Tageskopie. Bestehende 17 Fälle und Grenzen unverändert. Neue Einzelprobe stellt kontrollierten früheren lokalen Speicherstand nach, keinen echten Prozesskill; SDK/Repo-Regeln, ursprünglicher Beitrag und andere Karte werden geprüft. App unverändert.
+
+- 02:03 Codex Nacht-Fortsetzung nach Nutzungslimit: Heartbeat im selben Chat angelegt und ACTIVE in automation.toml bestätigt; regulärer Reset laut Kontoabfrage 01:37:19 Europe/Berlin, eingetroffene Heartbeats 00:02/01:01/02:03. Aktuelle Übergabe 02:02 und ein bestehender Sicherungsbaum 12532/16564 bestätigt, keine weitere Schleife. A14–A16-Entwurf unverändert erhalten. Vor Reset Betreiber-/Zyklusregeln, Daten-Skill und Anschlussvorbereitung gelesen, Syntax/Stand 3.18.30 grün. Kein App-Commit, keine große Abnahme, kein Deploy. Nächster Schritt: konkrete Rückweg-/Speicher-Inventur der beiden entschiedenen Lernrunden-Punkte und gezielte Lückenprüfung im bestehenden Datenpaket.
 
 ## 09.10.2026
 
@@ -101,9 +109,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 20:13 Codex, Einleseschritt nachgetragen zu Auftrag „weiter“: Übergabe, Betreiberregeln, Lehren, Nachprüfungsauftrag und Kartenkonflikt-Belege gelesen; Minuten-Sicherung gestartet. Vier persistCardGrade-Aufrufer inventarisiert: Bewertung, Bewertungs-Undo, Gesehen, Gesehen-Undo. Gesehen-Undo prüft fremde Bewertung nicht. Akku 17 %, nur gezielte Prüfungen. Danach echter SDK gegen eigenen Demo-Emulator, Gesehen-Konflikt und fremde Löschung mit Offline-Nachholen.
 
 - 19:56 Fortsetzung „weiter?“: zwei Kartenkonflikte mit echtem SDK/Repo-Regeln auf eigenem Demo-Emulator 8082 bestätigt, dann an fester Quelle 7142b93 wiederholt. Altes Undo und Offline-Nachholen verlieren neuere fremde Bewertung ohne Fehlermeldung; andere Karte unverändert. Schutzprüfung Exit 1 für beide, vollständiges Log gelesen. A14/DATEN-9 und A15/DATEN-10 in Aufgaben/Befunde/ALLES aufgenommen, konkreter Lösungs-/Abnahmeentwurf gesichert. Firebase-Primärquellen belegen letzte Schreibübertragung und Offline-Grenze von Transaktionen. Kein App-Fix oder Gesamturteil; Akku 22 %, nur Einzelprüfung. Nächste Inventur: übrige Aufrufer und gelöschte Karte.
-
-- Codex Folgearbeit nach 1472584 (Vorbeugung auf main gepusht): Kontoschreibpfad einschließlich Karte-Referenz, Nachholqueue und Auth-Rücksetzung gelesen. t_konto_schreibantwort aktuell 3/3 Fälle grün; feste Gegenprobe c3a6aec erkennt den alten Fehler 3/3. Logs gelesen, Quelle und Testbedingungen in ZUVERLAESSIGKEIT-NACHPRUEFUNG ergänzt. Grenze Browser/Firestore-Attrappe genannt. Nächster tatsächlicher Prüfpunkt: zwei Geräte/dieselbe Karte/offline/altes Undo; absolut geschriebene Bewertungsfelder sind kein Konfliktfreiheitsnachweis. Noch kein unbewiesener neuer Produktfehler oder neue Lernregel daraus abgeleitet.
-
-- Codex Vorbeugung geprüft: 14 Eingangsfälle und neun Ergebnis-/Codeauditfälle grün. Absichtlich falsches echtes Rechenkommando in eigener Testkopie endet Exit 1 mit „Ungleichmäßige Terminphasen innerhalb Stufe 3“, keine Ergebnisdatei. Modellversion 3 nach Pflicht-Vorprüfungen neu gerechnet; Zahlen identisch mit Version 2, diese separat erhalten. Regeln dauerhaft in AGENTS/LEHREN/EMPFEHLUNGEN. Weiteren Betreiberauftrag wörtlich gesichert; fünf Durchgänge für unbekannte Codefehler/Nachprüfung konkret vorbereitet, sieben bisher ungeprüfte Befundabschnitte erfasst. Erste Originalstelle persistCardGrade gelesen (Kontoreferenz/späte Antwort/Nachholen); keine neue umfassende Abnahme behauptet. App unverändert, kein Gesamtlauf/Deploy.
-
-- Codex Auftrag „stelle sicher dass solche Fehler nicht wieder passieren“ wörtlich in ALLES-OFFEN gespeichert. Vorbeugung gebaut: unabhängige Eingangs-Sperre vor Tagesdeckel-Lauf, Tests mit ursprünglicher Index-Kopplung und weiteren absichtlichen Fehlern, Modellversion/Hash der Eingangsprüfung und ausdrückliche Erkenntnisgrenzen im Ergebnis. Allgemeine Regeln vor Empfehlungen in EMPFEHLUNGEN-PRUEFEN und AGENTS; Textempfehlungen bleiben menschlich/agentisch gegenzuprüfen, kein automatisches Wahrheitsversprechen. Einzeltests und neue Ergebnis-Provenienz noch zu prüfen.
