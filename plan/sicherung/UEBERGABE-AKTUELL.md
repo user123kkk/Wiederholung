@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:04 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:05 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `da0de5f9 Sicherung 16:03 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `b4851219 Sicherung 16:04 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,7 +35,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
@@ -72,7 +71,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 12, chrome.exe 14 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 12, chrome.exe 15 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -93,6 +92,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- Codex Anschluss der Datenabnahme: Übergabe, Tempo-Befund, Abnahmebericht und geltende Regeln gelesen; bestehende Minuten-Sicherung 12532/16564 bestätigt, keine zweite gestartet. Netzteilstatus 2. Vorhandene Rohtraces der beiden Quellen zeitlich zerlegt: erster Layoutdurchlauf liegt nach Ende des Klick-Handlers, zweiter nach dem Animationsbild; kein Beleg für einen erzwungenen großen Layoutdurchlauf innerhalb des Klick-Handlers. Aktuelle Kartenlisten-, Schriftvorlade- und content-visibility-Pfade gelesen. Produkt und ursprüngliche rote Belege unverändert; gezielte Zuordnung der beiden Layoutdurchläufe wird vorbereitet.
 
 - Neuer lokaler Chat „Datenabnahme 3.18.30: Tempo klären“ gestartet: 01a12620-409a-7e33-8945-dcc4837f7a96. Konkreter Anschluss samt vorhandenen Diagnosen, Erhalt gültiger Prüfungen, unveränderter 200-ms-Grenze und Verbot neuer Pakete/Veröffentlichung übergeben; keine Modelländerung/zweite Sicherung veranlasst.
 
@@ -135,5 +136,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 14:40 Codex korrigierte Rechts-Abnahme komplett grün40s:320/390/820 hell/dunkel, vollständiger Inhalt, sichtbarer Kontrast, alle Rückwege/Eingabenerhalt und Fehler/Neuversuch/späte Antwort. Neue Testkennung292d3e77; ganze Ausgabe gelesen. Verzögerte Registrierung samt echter12/13s-Grenze/fester Gegenprobe und vorhandene Regler-Regressionsausgaben gelesen. Gesamt112/158 gültig grün, alle112 Abschlusslogs gelesen; Reihenfolge-Limit aktiv. Quellen unverändert, keine Lernempfehlung.
 
 - 14:38 Codex t_rechtsplan rot bei Tablet/hell: zwei A-Links1.89 statt4.5. Eigenen Runner19768/angefangene Registrierung beendet; vollständigen roten Log/stand.json gesichert,109 grüne und110 vollständige Logs gelesen. Unveränderten Test mit Messspur ausgeführt, Screenshot tatsächlich angesehen: Links bei y1057–1079 außerhalb Scrollclip256–905, unsichtbar. Kontrastleser benennt klassenlose Links als A, Sichtfilter suchte nur className und behielt sie als unbekannt. Testfilter verwendet nun denselben Klasse/Tag-Schlüssel und alle gleichnamigen Treffer; sichtbare/teilweise sichtbare/doppelte/unbekannte schlechte Kontraste bleiben erhalten. Originalfilter-VM-Proben grün, feste315bb0e-Gegenprobe rot genau beim abgeschnittenen Link; komplette Ausgaben gelesen. Nur Testzuordnung geändert, Grenze4.5/App/CSS/Rules gleich. Oberflächen-Skill geladen. Runner14916/Sitzung58908 fortgesetzt,109 gültige Ergebnisse bewahrt, Log abnahme-gesamt-5-3.18.30.log; aktiven Log nicht vorzeitig abhaken.
-
-- 14:30 Codex Gesamtstand102/158 grün, alle102 vollständigen Abschlusslogs gelesen: F-Bildvergleich zwölf Varianten0 Fehlerpixel, lebende CSS-Nachbarn/Ebenen, Netzwerkfehler0, Struktur und sichtbare Wörter/Sicherung geprüft. Textausgaben tatsächlich gelesen, keine pauschale Lernwirkungszusage. F-Umfeld aktiv; gemeinsamer Stand unverändert, Abschluss/Affe weiterhin offen.
