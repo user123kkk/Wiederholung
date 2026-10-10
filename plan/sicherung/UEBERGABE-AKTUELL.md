@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:34 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:35 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `8528c196 Sicherung 16:33 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `105a349b Sicherung 16:34 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -95,6 +97,10 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- 16:35 Korrektur Codex: In der neuen Analysezeit-Zeile historische3.17.22-Konstanten als heutige Werte bezeichnet. Aktuelle Deklarationen ausdrücklich gelesen: Vorlauf700,Schritt820,Nachlauf1100ms; zentrale Zeile sichtbar berichtigt. Keine Produktänderung oder Messung, aus historischem Changelog keine aktuellen Werte mehr ableiten.
+
+- 16:34 Codex beide24.09.-Originalchats gelesen, identische Nachricht nicht doppelt gezählt. Fünf Teilwünsche mit3.17.22/aktuellen renderEinstieg-, Hero-Timer-, Aufbauzeit- und Leisten-CSS-Stellen abgeglichen. Vollständigen erhaltenen t_hero_dreh-Log und tatsächliche Assertions gelesen, allgemeinen Einstieglog nicht als Beleg für Pfeilgefühl/Werbesatz ausgegeben. Kartendrehung passend geprüft, übrige Umsetzung mit Beleggrenzen zentral eingetragen. adrabic-oberflaeche angewandt. Ein rg-Aufruf mit Windows-Wildcard scheiterte, mit Suchwurzel/-g korrigiert; kein Ergebnis daraus behauptet. Nächster Rest23.09.; keine Tests/Produktänderung.
+
 - 16:33 Codex historische Wunschprüfung fortgesetzt: Betreiberblöcke03./04.10. und29./30.09. gelesen, automatische task-notification nicht als Wunsch gezählt. Ruhetag-Speicherweg/SITZUNGS_LIMITS und erhaltenen E-Abnahmelog gelesen; E7 und ausdrückliches5-nein zentral belegt. Anmeldekritik29.09. durch eigene Betreiberkorrektur falsche Adresse eingeordnet, offene Geräte-/Start-/Methodikgrenzen erhalten. Caveman und adrabic-lernbelege genutzt. OpenAI Docs für dauerhafte Fortsetzung gelesen; ausdrücklich gewünschte ununterbrochene Arbeit als aktives Arbeitsziel eingerichtet. Fehlende CODEX_HOME-Variable bei optionaler Automationssuche führte vor jeder Änderung zu Lesefehler; keine Automation angelegt. Nächster Rest24.09. und ältere Chats; kein Produktbau/Testlauf/Deploy.
 
 - 16:31 Codex Betreiber „arbeite ununterbrochen … caveman ständig“ aufgenommen. Caveman-Skill vollständig gelesen, dauerhaft für Antworten aktiviert; passende Fach-Skills weiterhin gezielt. Bestehende Minuten-Sicherung1792/5884 bestätigt. Veralteten Einstieg in Mehrwert-ARBEITSSTAND sichtbar korrigiert: Gesamtabnahme ausgeführt,157/158/Tempo-Sperre. Vorhandene Lernrunden-Vorbereitung nicht wiederholt; ausführbaren Rest der historischen Wunschprüfung vor05.10. aufgenommen. Kein neuer Messlauf/Produktbau, Entwurf erhalten.
@@ -134,7 +140,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 15:24 Codex alle158 vollständigen Abschlusslogs gelesen:157 grün, Texttempo rot252ms; keine weitere Grün-Wiederholung. Rundenabnahme --fortsetzen13/13 am exakt gleichen Stand ausgewertet, beschreibende Einzeloutputs vollständig bekannt. Stand-/CSP-/APP_SHELL-/Syntaxprüfung frisch grün. Bericht/Logbuch und LEHREN14-Zeilen konkret nachgezogen,6/12 ausdrücklich nicht erfüllt; keine Freigabe/Commit. AFFE_TEXTE=1 handy200 Seed7 aktiv (keine Befunde bisher), danach iPad150 Seed7. Mehrwert-Reihenfolge mit neuer Onboarding-Präferenz angeglichen, Quellen/Diagnosen im Minuten-Patch erfasst.
 
 - 15:20 Codex korrigierter kompletter Mehrgeräte-Verlauf grün, erst gezielt und jetzt im Gesamtlauf14s (Hash6100003f); alle Ausgaben gelesen. Tatsächliche Regelablehnung/SDK-Rollback, genau einmal Nachholen, Offline-Neustart nach ausdrücklicher Kopienprüfung, beide Undo-/Tageswechselwege, Snapshot-Zeichenfläche und abgelehnter/erfolgreicher Reset erhalten. Testaufbau wartet auf bereits laufende App-Prüfung; Produkt unverändert. Gesamtlauf7 Runner8948/Sitzung23849:152 abgeschlossen,151 grün, ein Tempo-Rot252ms zusätzlich zu erhaltenen226/254ms; kein Grün-Wiederholungsziel. Verwalten-Ausgaben vollständig gelesen, echte Touch-Abnahme aktiv. Abschlusssperre Tempo bleibt.
-
-- 15:17 Codex Gesamt150 abgeschlossen, zwei rot (Tempo/Verlauf). Runner14360 nach zweitem Rot beendet, vollständige Logs/stand gesichert. Timeout an t_verlauf_mehrgeraete171 ist Ablehnungsprobe, nicht Reset (vorige Kurzmeldung korrigiert). Alter eigenständiger SDK-Wrapper manipulierte nur updateDoc; A16 schreibt atomare Batch-Updates. Vorhandenes Helfermuster übernommen, tatsächlichen ausgesandten Wrapper per VM geprüft; grün und feste315bb0e-Probe rot beim fehlenden Batch, andere Writes/Commit erhalten. Erster korrigierter Kompletttest meldet früheren Offline-Neustartserver9 statt10; voller Log gelesen. A16-Kopien werden ausdrücklich geprüft, ältere SDK-only-Fertigbedingung wartet nicht auf App-Belegprüfung. Test wartet jetzt auch auf bereits laufende App-Prüfung und prüft Wiederherstellung ausdrücklich; Erwartung10/keine Duplikate bleibt. Zweiter Komplettlauf aktiv. Produkt/Rules unverändert, ursprüngliche Tempo-Sperre bleibt.
-
-- 15:10 Codex zweiter A/B-Vergleich mit ausgeglichener Reihenfolge vollständig gelesen: achtmal identisches #app-DOM (Hash2f26be52), Verwalten alter Median286ms/6 rote Messungen, Entwurf212ms/4; Text162/150ms, keine Überschreitung. Erste pauschale Verlangsamungsdeutung dadurch nicht gehalten; Schwankung/Layoutkosten beider Quellen belegt, keine abschließende Ursache/Fehlerfreiheit. Rohtraces/CPU-Profile gesichert. Gesamtlauf einmal nach Diagnose am unveränderten Stand fortgesetzt (Runner14360/Sitzung53308),144 gültige grüne bewahrt, fehlende14 einschließlich Original-Tempo erneut; keine Wiederholungsschleife bis grün. Rest/Affe/Runde beenden, Tempo-Befund unabhängig vom nächsten Einzelwert offen behandeln.

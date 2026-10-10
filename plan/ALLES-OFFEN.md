@@ -20,6 +20,13 @@ Nächste Quellen:24.09. und frühere lokale Chats; keine vollständige alte
 Wunsch-Abnahme behauptet. Mehrwert-ARBEITSSTAND auf tatsächliche157/158
 Abnahme korrigiert, alte Meldungen bleiben Verlauf.
 
+**Bestandsprüfung24.09.,10.10.16:34:** Beide lokalen Originalchats
+f8c84628/884b09aa gelesen: dieselbe Nachricht18:39/18:56, keine zwei
+verschiedenen Wunschgruppen. Fünf Teilwünsche unten getrennt belegt.
+Nur Kartendrehung hat hier einen ausdrücklich passenden erhaltenen
+Verhaltenstest; restliche Aussagen sind am aktuellen Code/CSS belegt,
+keine neue Gefühl-/Geräteabnahme. Nächste Originalquellen23.09.
+
 **Betreiber 10.10.,16:28:** „weiter nach reihenfolger offener sacen“.
 Nächsten Bereich Lernrunde lesend vorbereitet, ohne neue Tempo-Suche oder
 Paketbau. Quelle für Bearbeiten in der Abfrage geprüft: nur alte S1-
@@ -387,6 +394,11 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 | Was | Stand |
 |---|---|
+| „entferne dieses kostenlos. keine werbun.. komplett“ (24.09.,18:39/18:56) | im Einstieg umgesetzt3.17.22: Schlussbild ohne Werbesatz, aktueller `renderEinstieg` gelesen. Historischer [Changelog](../CHANGELOG.md) bestätigt Entfernung; kein separater aktueller Wortlauttest oder allgemeines Werbefreiheitsversprechen daraus |
+| „lass diese analyse länger dauert“ (24.09.) | umgesetzt3.17.22, später verlängert; heutige Konstanten:700ms Vorlauf,820ms pro Punkt,1100ms Nachlauf. **Korrektur16:35:**620/700/900ms gehörten zu3.17.22, nicht zum aktuellen Code. Dauer hängt von Punktzahl ab; keine tatsächliche KI-Analyse oder nachgewiesene höhere Wertwahrnehmung |
+| Beispielkarte lange auf Arabisch, einmal ins Deutsche und dort bleiben (24.09.) | umgesetzt3.17.22: Haltezeit2400ms, einmaliger Timer, Antippen übernimmt Steuerung. Aktueller Code und [erhaltener Kartendreh-Test](sicherung/tests/e595b5b6312244cd/t_hero_dreh.js.log) bestätigen frühe Vorderseite, automatische Rückseite und zwei manuelle Drehungen. Kein neuer Gerätetest |
+| „pfeil sachen wie eine richtige ui“ (24.09.) | CSS umgesetzt3.17.22: Linie1,5px, getrennte Spitze, Abstand zum nächsten Punkt; `.einstieg-leiste__stueck` und aktuelle Regeln gelesen. Gestaltung umgesetzt, kein unabhängiger aktueller Foto-/Gefühlsnachweis |
+| Bewegung weniger langsam/energiegeladen (24.09.) | CSS umgesetzt3.17.22: ruhiges Keyframe,130ms Staffelung, einmaliges Aufleuchten, Leistenstart1150ms; heutige Regeln gelesen. Kein Nachweis, dass alle App-Bewegungen oder subjektives Tempo damit abgenommen sind; offene Gesamt-Bewegungswünsche bleiben |
 | „ruhetag ja“ (04.10.,21:05), Frage nach drei Tagen ohne Lernstoff (21:59) | gebaut und geprüft3.18.16, E7. Originalchat59b2ded3, aktueller `ruhetagPruefen` und erhaltener [E-Test](sicherung/tests/e595b5b6312244cd/t_paket_e.js.log) abgeglichen: drei Tage halten Serie10, ohne Hochzählen/Jokerverbrauch; App muss geöffnet werden. Keine neue Lernempfehlung oder frische Geräteabnahme |
 | Zusätzliche Auswahl „5 Karten“ (04.10.,21:09) | ausdrücklich „5 nein“, historisch nicht gebaut; aktuelles `SITZUNGS_LIMITS` enthält10/20/30/Alle. Quelle: Originalchat59b2ded3,21:06/21:09. Kein neuer Vorschlag oder Änderungsauftrag |
 | Handschrift bleibt nach Verkleinern des Vollbilds sichtbar (Betreiber 06.10.) | behoben 3.18.19; Quelle: [Wunsch](zyklus-2/BETREIBER-2026-10-06.md), [Bau-/Prüfprotokoll](zyklus-2/LOGBUCH.md), Tests t_schreiben_vollbild / t_schreiben. Erste Bestandskontrolle, kein frischer Gerätetest |
