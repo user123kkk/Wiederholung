@@ -1,0 +1,24 @@
+== handy
+  Start: {"wortOben":130,"flaeche":"236-436","leisteUnten":544,"fenster":844,"allesImBild":true,"scrollbar":false}
+  erster Strich: Tinte 0 -> 534 | Lage vorher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:151"}
+    nachher {"canvas":"236:12","loeschen":"448:216","vollbild":"500:81","fertig":"500:217","wort":"130:151"}
+  Vollbild: {"vollbild":true,"vorlage":"Kaffee","leisteImBild":true} | Tinte erhalten: 534
+  Strich im Vollbild: Tinte 534 -> 1063
+  Strich zurueck: Tinte 534
+  Vollbild nach Aufdecken: "Kaffee\n·\nقَهْوَةٌ"
+  Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"قَهْوَةٌ"}
+  Kontrast 0
+  Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1063 ms | Bilder > 34 ms: 0
+  ok
+== klein
+  Start: {"wortOben":121,"flaeche":"217-417","leisteUnten":525,"fenster":740,"allesImBild":true,"scrollbar":false}
+  erster Strich: Tinte 0 -> 536 | Lage vorher {"canvas":"217:12","loeschen":"429:201","vollbild":"481:66","fertig":"481:202","wort":"121:141"}
+    nachher {"canvas":"217:12","loeschen":"429:201","vollbild":"481:66","fertig":"481:202","wort":"121:141"}
+  Vollbild: {"vollbild":true,"vorlage":"Nacht","leisteImBild":true} | Tinte erhalten: 536
+  Strich im Vollbild: Tinte 536 -> 1065
+  Strich zurueck: Tinte 536
+  Vollbild nach Aufdecken: "Nacht\n·\nلَيْلَةٌ"
+  Fertig: {"vollbild":false,"knoepfeImBild":true,"antwort":"لَيْلَةٌ"}
+  Kontrast 0
+  Zeichnen (25 Striche da, CPU 4x): 60 Bewegungen in 1262 ms | Bilder > 34 ms: 1 max 35
+  ok
