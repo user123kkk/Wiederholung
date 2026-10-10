@@ -1,5 +1,16 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 15:28 – Prüfungen beendet, Datenpaket noch gesperrt:**
+157/158 grün, alle158 Abschlusslogs gelesen;13/13 Runden und238 Regeln
+grün. AFFE_TEXTE=1 Handy200/iPad150 Seed7 je0 Befunde, ganze Ausgaben
+gelesen. Tempo226/254/252ms bei200ms offen, Quellee595b5b6312244cd gleich.
+Kein Browser-/SDK-Abnahmelauf mehr aktiv; eigene Demo-Emulatoren beendet.
+Entwurf3.18.30/Fremdarbeit erhalten, A14–A17 weiterhin in Arbeit.
+Kein Paketcommit/Produkt-Push/Deploy. Nächster Schritt: Tempo-Ursache
+gezielt klären; [Befund](zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md).
+Minuten-Sicherung bleibt aktiv. Neue TikTok-Wünsche vollständig bewahrt
+und vorhandenen Plänen zugeordnet; noch keine Produktumsetzung/Recherche.
+
 **10.10.2026 15:11 – Paketabschluss wegen Tempo gesperrt:**
 Original t_text_tempo zweimal rot (226/254ms, Grenze200ms, CPU4x).
 A/B am festen315bb0e und Entwurf zeigt starke Schwankungen beider Quellen,

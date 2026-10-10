@@ -1,5 +1,15 @@
 # Große Datenabnahme 3.18.30
 
+**Endstand10.10.2026 15:28:** Prüfungen vollständig ausgeführt/gelesen,
+Paketabschluss wegen offenem Tempo-Rot gesperrt.157/158 grün,13/13 Runde,
+238/238 Regeln. AFFE_TEXTE=1: Handy200 Seed7 und iPad150 Seed7 jeweils0
+Befunde, jeweils104 Textaktionen; ganze Ausgaben gelesen. Das ist kein
+Geräte-/Lernwirkungsnachweis. Beide eigenen Demo-Emulatoren nach Abschluss
+beendet, Minuten-Sicherung läuft weiter. Entwurf/Fremdarbeit erhalten;
+kein Paketcommit, kein Push von Produktcode, keine Veröffentlichung.
+Nächster tatsächlicher Schritt: Tempo-Ursache gezielt klären, nicht ein
+neues Funktionspaket starten und nicht bis grün wiederholen.
+
 ## Vollständiger Prüfstand,10.10.2026 15:22
 
 Alle158 Testdateien abgeschlossen;157 grün, `t_text_tempo.js` rot.
@@ -13,8 +23,8 @@ Keine weitere Wiederholung zum Erzwingen eines grünen Ergebnisses.
 13/13 Rundenprüfungen am identischen Stand gültig bewahrt und ausgewertet,
 die vollständigen beschreibenden Einzeloutputs wurden zuvor gelesen.
 Echte CDP-Touch-/Schrägwisch-Proben grün, keine echte iPhone/PWA-Freigabe.
-Zwei vorgeschriebene Affenläufe mit AFFE_TEXTE=1 werden anschließend
-einmal ausgeführt. Stand-/Version-/CSP-/APP_SHELL-Prüfer und App-Syntax
+Zwei vorgeschriebene Affenläufe mit AFFE_TEXTE=1 wurden anschließend
+einmal ausgeführt, beide0 Befunde. Stand-/Version-/CSP-/APP_SHELL-Prüfer und App-Syntax
 frisch grün, Netzteilstatus2 zuvor bestätigt.
 
 ### Fünfte Prüfaufbaukorrektur: Mehrgeräte-Ablehnung
@@ -51,7 +61,7 @@ Speicher; Formularänderungsabsicht liegt im Entwurf, nicht nur im DOM.
 8/9: Rules238 grün, Datenschutz im erhaltenen Paket; Regeln müssen später
 vor Hosting veröffentlicht werden. Keine Live-Regeländerung durchgeführt.
 10/11: Syntax und gemeinsamer Standprüfer grün, Version3.18.30 konsistent.
-12: Gesamt157/158 und Runde13/13; Zufallsprüfungen folgen. Kein Gesamterfolg.
+12: Gesamt157/158, Runde13/13 und beide Zufallsprüfungen0 Befunde. Kein Gesamterfolg.
 13: Plan/Stand/Offenliste/Arbeitsprotokoll und Logbuch werden nachgezogen.
 14: Kein Betreiber-Gerätetest oder Deploy jetzt erforderlich; Tempo muss
 vor Paketcommit geklärt werden. Checkliste ist keine Freigabe bei rotem6/12.

@@ -17,8 +17,9 @@ erhalten; A16 frisch22 grün, Mehrgeräte-Verlauf frisch komplett grün.
 Rules gelesen, kein neuer Produktumbau. Tempo-Vergleiche an festem315bb0e
 mit beider Reihenfolge und Traces zeigen schwankende Layoutkosten beider
 Quellen, keine sichere Datenänderungs-Ursache. Keine Rot-Umdeutung.
-**Offen:** Tempo226/254/252ms bei Grenze200ms klären; zwei Affenläufe
-noch auswerten. A14–A17 bleiben in Arbeit, kein Paketcommit oder Deploy.
+**Offen:** Tempo226/254/252ms bei Grenze200ms klären. Beide Affenläufe
+anschließend vollständig gelesen: Handy200/iPad150, Seed7, AFFE_TEXTE=1,
+je0 Befunde und104 Textaktionen. A14–A17 bleiben in Arbeit, kein Paketcommit oder Deploy.
 Regeln später vor Hosting; echte Gerätebelege bleiben begrenzt.
 **Betreiberwünsche:** gesamte neue TikTok-Nachricht als Quelle bewahrt und
 mit vorhandenen Themen zusammengeführt; Onboarding später am Gesamtstand,

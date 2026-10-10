@@ -1,5 +1,12 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 15:28 Abschluss der ausgeführten Prüfungen:157/158 grün,
+alle158 Abschlusslogs gelesen; Runde13/13, Regeln238, Handy200/iPad150
+Seed7 mitTexten je0 Befunde. **Datenpaket bleibt offen** wegen Tempo-
+Rot226/254/252ms bei200ms. [Konkreter Befund](zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md),
+keine pauschale Messfehlerdeutung. Entwurf/Fremdarbeit erhalten, kein
+Paketcommit/Deploy. Keine laufende Browserprüfung, Minuten-Sicherung aktiv.
+
 10.10.2026 15:11 offener Abnahmebefund: t_text_tempo zweimal rot226/254ms
 bei200ms/CPU4x. Beide festen Vergleichsquellen schwanken, DOM identisch;
 Ursache nicht abschließend belegt. Keine Testgrenze lockern, nicht bis grün
