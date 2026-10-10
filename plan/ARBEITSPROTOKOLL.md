@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 16:37 Codex23.09.-Originalquellen d8804f6c/2172d51f/39dd51de samt Fortsetzung24.09.06:45 gelesen. Sieben kleine Wunschgruppen zentral zugeordnet: Grammatikfeld, versteckte Intervallzahlen, Überspringen, Pflichtauswahl, Wiederaufbau, Formular-Rückweg/Duplikat und Hürdenwortlaut. Aktuelle Formular-/Pflicht-/Zurück-/Textquellen und historische3.9.8/3.10.3-Berichte gelesen; B11-Assertions begrenzen Aussage auf Rahmen/Beschriftung, kein vollständiger Rückkehr-Beleg. Breite Onboarding-/Religions-/Monetarisierungswünsche in bestehenden Bereichen erhalten. Eigenen historischen Zahlenfehler in LEHREN§15 vermerkt, keine neue Doppelregel. Nächster Rest22.09.; Produkt unverändert, keine Tests.
+
 - 16:35 Korrektur Codex: In der neuen Analysezeit-Zeile historische3.17.22-Konstanten als heutige Werte bezeichnet. Aktuelle Deklarationen ausdrücklich gelesen: Vorlauf700,Schritt820,Nachlauf1100ms; zentrale Zeile sichtbar berichtigt. Keine Produktänderung oder Messung, aus historischem Changelog keine aktuellen Werte mehr ableiten.
 
 - 16:34 Codex beide24.09.-Originalchats gelesen, identische Nachricht nicht doppelt gezählt. Fünf Teilwünsche mit3.17.22/aktuellen renderEinstieg-, Hero-Timer-, Aufbauzeit- und Leisten-CSS-Stellen abgeglichen. Vollständigen erhaltenen t_hero_dreh-Log und tatsächliche Assertions gelesen, allgemeinen Einstieglog nicht als Beleg für Pfeilgefühl/Werbesatz ausgegeben. Kartendrehung passend geprüft, übrige Umsetzung mit Beleggrenzen zentral eingetragen. adrabic-oberflaeche angewandt. Ein rg-Aufruf mit Windows-Wildcard scheiterte, mit Suchwurzel/-g korrigiert; kein Ergebnis daraus behauptet. Nächster Rest23.09.; keine Tests/Produktänderung.

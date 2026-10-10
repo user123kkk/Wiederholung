@@ -6,6 +6,16 @@ für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
 Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,
 Messläufe oder stillschweigende Freigabe neuer Funktionen.
 
+**Originalprüfung23.09.,16:37:** Drei lokale Chats vollständig hinsichtlich
+Betreiberblöcken gelesen (d8804f6c/39dd51de/2172d51f, einschließlich der
+Fortsetzung24.09.06:45). Eingestellte Modellnamen/Toolmeldungen sind keine
+Produktwünsche. Konkrete kleine Änderungen unten mit aktuellem Code und
+passenden vorhandenen Belegen abgeglichen. Gesamt-Onboarding, Vorbilder,
+Lehrer/Monetarisierung, öffentliches Medina-Regal samt Playlist und Texte
+bleiben in ihren bestehenden Bereichen; alte Sammelfreigaben nicht neu
+bestätigt. Allgemeine Zufriedenheit/Wirksamkeit und alle Geräte unbelegt.
+Nächste Originalquellen22.09.; ältere Bestandsprüfung nicht vollständig.
+
 **Fortsetzung16:33:** Dauerhaftes Arbeitsziel für die ausdrücklich gewünschte
 ununterbrochene Arbeit eingerichtet: zunächst offene historische Wunschprüfung,
 danach tatsächlich ausführbare autorisierte Arbeiten. Antworten mit Caveman;
@@ -394,6 +404,13 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 | Was | Stand |
 |---|---|
+| Eigenes Grammatikfeld entfernen (23.09.,09:08) | umgesetzt3.9.8; heutiger Kartenformularweg hat Wort/Übersetzung/Notiz, Grammatik steht als Hinweis beim bestehenden Notizfeld. Aktuelle Quelle und Changelog gelesen; kein eigener neuer Datenlösch-/Migrationstest. Spätere Wortart-Idee bleibt separat offen |
+| Einstieg ohne verräterische Tageszahlen/Datumsreihe (23.09.,19:34) | historisch umgesetzt3.10.3; heutige Hürdenantworten nennen keine Intervallzahlen, Kartenleiste verwendet Punkte/Pfeile. Kein umfassender neuer Nachweis aller Texte in der App |
+| „überspringen knopf muss ganz schnell weg“ (23.09.,19:34) | gebaut3.10.3; heutiger Kontoweg bleibt auf Startseite, kein allgemeiner Überspringen-Zweig. Unbeantwortete Pflichtauswahl ist eigener Wunsch unten; hier Codeprüfung, kein neuer Klicktest |
+| „man kann alles skippen … ohne je was ausgewählt“ (24.09.,06:45 im23.09.-Chat) | gebaut3.11.0; heutige `EINSTIEG_PFLICHT` bindet Ziele/Hürden/Zeitpunkt an echte Auswahl, Hürden bieten „Nichts davon“. Schrift/Rundengröße haben sichtbar gesetzte Werte. Hier Codeprüfung, keine neue umfassende Ablaufabnahme |
+| Wieder zurückgehen, Antworten ändern, Aufbau soll erneut laufen (24.09.,06:45) | gebaut3.11.0; heutiger Zurück-Zweig löscht `planGebaut`/`planRueckkehr` beim Verlassen des Planbilds. Hier Codeprüfung; vorhandene allgemeine Onboarding-Tests ersetzen keinen gesonderten Wiederaufbau-Nachweis |
+| Aus Anmeldung zum Plan zurück; doppelten Wenn-dann-Satz unter Speichern entfernen (23.09.,19:34) | gebaut3.10.3; heutiger `einstiegWieder` erhält denselben Einstieg und Antworten. B11 im [erhaltenen B-Log](sicherung/tests/e595b5b6312244cd/t_paket_b.js.log) prüft Formularrahmen und Rückweg-Beschriftung, nicht die vollständige Antwort-Rückkehr. Duplikat historisch entfernt; keine zusätzliche Gefühlsabnahme |
+| „weiß nicht wann … rechnet das für dich aus“, keine lange Erklärung (24.09.,06:45) | aktueller Wortlaut umgesetzt: `EINSTIEG_HUERDEN`/wann sagt „Das rechnet Adrabic für dich aus.“ Bisherige Quellen gelesen, Verständnis nicht gemessen |
 | „entferne dieses kostenlos. keine werbun.. komplett“ (24.09.,18:39/18:56) | im Einstieg umgesetzt3.17.22: Schlussbild ohne Werbesatz, aktueller `renderEinstieg` gelesen. Historischer [Changelog](../CHANGELOG.md) bestätigt Entfernung; kein separater aktueller Wortlauttest oder allgemeines Werbefreiheitsversprechen daraus |
 | „lass diese analyse länger dauert“ (24.09.) | umgesetzt3.17.22, später verlängert; heutige Konstanten:700ms Vorlauf,820ms pro Punkt,1100ms Nachlauf. **Korrektur16:35:**620/700/900ms gehörten zu3.17.22, nicht zum aktuellen Code. Dauer hängt von Punktzahl ab; keine tatsächliche KI-Analyse oder nachgewiesene höhere Wertwahrnehmung |
 | Beispielkarte lange auf Arabisch, einmal ins Deutsche und dort bleiben (24.09.) | umgesetzt3.17.22: Haltezeit2400ms, einmaliger Timer, Antippen übernimmt Steuerung. Aktueller Code und [erhaltener Kartendreh-Test](sicherung/tests/e595b5b6312244cd/t_hero_dreh.js.log) bestätigen frühe Vorderseite, automatische Rückseite und zwei manuelle Drehungen. Kein neuer Gerätetest |

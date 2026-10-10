@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:37 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:38 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `f311fc63 Sicherung 16:35 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9aba6121 Sicherung 16:37 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/LEHREN.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -95,6 +98,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- 16:37 Codex23.09.-Originalquellen d8804f6c/2172d51f/39dd51de samt Fortsetzung24.09.06:45 gelesen. Sieben kleine Wunschgruppen zentral zugeordnet: Grammatikfeld, versteckte Intervallzahlen, Überspringen, Pflichtauswahl, Wiederaufbau, Formular-Rückweg/Duplikat und Hürdenwortlaut. Aktuelle Formular-/Pflicht-/Zurück-/Textquellen und historische3.9.8/3.10.3-Berichte gelesen; B11-Assertions begrenzen Aussage auf Rahmen/Beschriftung, kein vollständiger Rückkehr-Beleg. Breite Onboarding-/Religions-/Monetarisierungswünsche in bestehenden Bereichen erhalten. Eigenen historischen Zahlenfehler in LEHREN§15 vermerkt, keine neue Doppelregel. Nächster Rest22.09.; Produkt unverändert, keine Tests.
+
 - 16:35 Korrektur Codex: In der neuen Analysezeit-Zeile historische3.17.22-Konstanten als heutige Werte bezeichnet. Aktuelle Deklarationen ausdrücklich gelesen: Vorlauf700,Schritt820,Nachlauf1100ms; zentrale Zeile sichtbar berichtigt. Keine Produktänderung oder Messung, aus historischem Changelog keine aktuellen Werte mehr ableiten.
 
 - 16:34 Codex beide24.09.-Originalchats gelesen, identische Nachricht nicht doppelt gezählt. Fünf Teilwünsche mit3.17.22/aktuellen renderEinstieg-, Hero-Timer-, Aufbauzeit- und Leisten-CSS-Stellen abgeglichen. Vollständigen erhaltenen t_hero_dreh-Log und tatsächliche Assertions gelesen, allgemeinen Einstieglog nicht als Beleg für Pfeilgefühl/Werbesatz ausgegeben. Kartendrehung passend geprüft, übrige Umsetzung mit Beleggrenzen zentral eingetragen. adrabic-oberflaeche angewandt. Ein rg-Aufruf mit Windows-Wildcard scheiterte, mit Suchwurzel/-g korrigiert; kein Ergebnis daraus behauptet. Nächster Rest23.09.; keine Tests/Produktänderung.
@@ -136,5 +141,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 15:27 Codex Handy-Zufallstest AFFE_TEXTE=1/200/Seed7 abgeschlossen:104 Textaktionen,0 Befunde; vollständige Ausgabe gelesen. iPad AFFE_TEXTE=1/150/Seed7 läuft (100 Schritte). Gesamtlauf und Runde fertig, Tempo als echtes offenes Rot erhalten; Logbuch/Checkliste/Planstände aktualisiert. git diff --check korrekt mit Repo-Zeilenendkonfiguration grün (voriger temporärer core.autocrlf=false-Aufruf behandelte CRLF fälschlich als Leerraum, keine Dateien dafür geändert). Alle Diagnosen/Quellen bewahrt, kein Paketcommit/Deploy.
 
 - 15:24 Codex alle158 vollständigen Abschlusslogs gelesen:157 grün, Texttempo rot252ms; keine weitere Grün-Wiederholung. Rundenabnahme --fortsetzen13/13 am exakt gleichen Stand ausgewertet, beschreibende Einzeloutputs vollständig bekannt. Stand-/CSP-/APP_SHELL-/Syntaxprüfung frisch grün. Bericht/Logbuch und LEHREN14-Zeilen konkret nachgezogen,6/12 ausdrücklich nicht erfüllt; keine Freigabe/Commit. AFFE_TEXTE=1 handy200 Seed7 aktiv (keine Befunde bisher), danach iPad150 Seed7. Mehrwert-Reihenfolge mit neuer Onboarding-Präferenz angeglichen, Quellen/Diagnosen im Minuten-Patch erfasst.
-
-- 15:20 Codex korrigierter kompletter Mehrgeräte-Verlauf grün, erst gezielt und jetzt im Gesamtlauf14s (Hash6100003f); alle Ausgaben gelesen. Tatsächliche Regelablehnung/SDK-Rollback, genau einmal Nachholen, Offline-Neustart nach ausdrücklicher Kopienprüfung, beide Undo-/Tageswechselwege, Snapshot-Zeichenfläche und abgelehnter/erfolgreicher Reset erhalten. Testaufbau wartet auf bereits laufende App-Prüfung; Produkt unverändert. Gesamtlauf7 Runner8948/Sitzung23849:152 abgeschlossen,151 grün, ein Tempo-Rot252ms zusätzlich zu erhaltenen226/254ms; kein Grün-Wiederholungsziel. Verwalten-Ausgaben vollständig gelesen, echte Touch-Abnahme aktiv. Abschlusssperre Tempo bleibt.

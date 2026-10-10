@@ -1822,6 +1822,14 @@ Nicht als Ritual abhaken. Jede Zeile hat einen Vorfall (siehe oben).
 
 ## 15. Vorfall-Liste
 
+10.10.2026, historische Wunschprüfung: Alte Aufbauzeiten aus dem Changelog
+3.17.22 kurz als heutige Werte dokumentiert. Tatsächliche Deklarationen
+danach gelesen: Vorlauf700,Schritt820,Nachlauf1100ms, historische Werte
+620/700/900ms. Zentralen Eintrag sichtbar korrigiert. Bestehende §3.2-Regel
+gilt auch für reine Planpflege: aktuellen Wert vor der Änderung am Code
+lesen; parallel gelesene Quellen nicht vor ihrer Auswertung für einen
+abhängigen Dokumentationspatch verwenden. Kein Produkt-/Teständerung.
+
 10.10.2026, Nachtprüfung A17: Karte auf Stufe 1 im Formular, ausschließlich
 Notiz geändert; fremdes Sicher bestätigt Stufe 2. Snapshot behält alte
 Entwurfsstufe 1, deren Optionswert jetzt fehlt: Feld fällt auf 0, Speichern
