@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 21:01 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 21:02 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `f509327e Sicherung 21:00 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `a3744c2f Sicherung 21:01 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,9 +35,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
- M plan/council/TEMPO-ENTSCHEIDUNG-2026-10-10.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
