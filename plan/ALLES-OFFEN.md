@@ -6,6 +6,14 @@ für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
 Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,
 Messläufe oder stillschweigende Freigabe neuer Funktionen.
 
+**Originalprüfung22.09.,16:41:** Alle fünf lokalen Originalchats hinsichtlich
+Betreiberblöcken gelesen (e9223c8d/d295d2d7/ca027728/6820f0bd/53d4222f).
+Konkrete Teilwünsche unten mit aktuellem Code und erhaltenen Belegen
+abgeglichen. Gesamtgestaltung, Monetarisierung, Lehrer und Textideen bleiben
+in ihren bestehenden Bereichen offen; zurückgenommene Gestaltung und später
+ersetzte Ladebildschirmwünsche sind keine neuen Bauaufträge. Nächste Quellen
+19.09.; ältere Bestandsprüfung bleibt unvollständig. Keine Produkttests.
+
 **Originalprüfung23.09.,16:37:** Drei lokale Chats vollständig hinsichtlich
 Betreiberblöcken gelesen (d8804f6c/39dd51de/2172d51f, einschließlich der
 Fortsetzung24.09.06:45). Eingestellte Modellnamen/Toolmeldungen sind keine
@@ -409,7 +417,15 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 | „überspringen knopf muss ganz schnell weg“ (23.09.,19:34) | gebaut3.10.3; heutiger Kontoweg bleibt auf Startseite, kein allgemeiner Überspringen-Zweig. Unbeantwortete Pflichtauswahl ist eigener Wunsch unten; hier Codeprüfung, kein neuer Klicktest |
 | „man kann alles skippen … ohne je was ausgewählt“ (24.09.,06:45 im23.09.-Chat) | gebaut3.11.0; heutige `EINSTIEG_PFLICHT` bindet Ziele/Hürden/Zeitpunkt an echte Auswahl, Hürden bieten „Nichts davon“. Schrift/Rundengröße haben sichtbar gesetzte Werte. Hier Codeprüfung, keine neue umfassende Ablaufabnahme |
 | Wieder zurückgehen, Antworten ändern, Aufbau soll erneut laufen (24.09.,06:45) | gebaut3.11.0; heutiger Zurück-Zweig löscht `planGebaut`/`planRueckkehr` beim Verlassen des Planbilds. Hier Codeprüfung; vorhandene allgemeine Onboarding-Tests ersetzen keinen gesonderten Wiederaufbau-Nachweis |
-| Aus Anmeldung zum Plan zurück; doppelten Wenn-dann-Satz unter Speichern entfernen (23.09.,19:34) | gebaut3.10.3; heutiger `einstiegWieder` erhält denselben Einstieg und Antworten. B11 im [erhaltenen B-Log](sicherung/tests/e595b5b6312244cd/t_paket_b.js.log) prüft Formularrahmen und Rückweg-Beschriftung, nicht die vollständige Antwort-Rückkehr. Duplikat historisch entfernt; keine zusätzliche Gefühlsabnahme |
+| Aus Anmeldung zum Plan zurück; doppelten Wenn-dann-Satz unter Speichern entfernen (23.09.,19:34) | gebaut3.10.3; heutiger `einstiegWieder` erhält denselben Einstieg und Antworten. Ergänzung16:41: B4 im [erhaltenen B-Log](sicherung/tests/e595b5b6312244cd/t_paket_b.js.log) prüft tatsächliche Rückkehr zu „Dein Plan steht.“ und erhaltenes Ziel „kurs“; B11 prüft Rahmen/Beschriftung. Kein vollständiger Nachweis jeder Antwort. Duplikat historisch entfernt; keine zusätzliche Gefühlsabnahme |
+| Doppelte Wochenzählung unter „Dein Stoff“ entfernen (22.09.) | umgesetzt3.8.1; heutiger Renderweg enthält keine zusätzliche „Diese Woche N neue dazu.“-Zeile. Code/Changelog belegen Entfernung, kein Verständnisnachweis |
+| Abgeschnittener Hinweis „Am Griff …“ in Kartenliste (22.09.) | damals Abstand korrigiert; heutige `.liste-hinweis` hat seitlichen Abstand, ursprünglicher Griff-Hinweis später3.16.0 entfernt. Aktueller Code/CSS, keine neue Fotoabnahme |
+| Auch unter leeren Ansichten zwischen Reitern wischen (22.09.) | CSS umgesetzt3.8.3: `.view` mindestens100svh. Historische Fingerfolge3.8.2 dokumentiert; heutiger Karten-Wischtest belegt keinen Reiter-Wischweg. Aktueller vollständiger Touchbeleg hierfür fehlt |
+| Helles Farbschema weniger weiß, Navigation leer/voll gleich (22.09.) | historisch3.8.3/3.8.7 gebaut; heutige helle Flächen cremefarben und Navigationshintergrund95%. CSSbeleg, kein neuer subjektiver oder echter Gerätevergleich |
+| Google-Anmeldung nach abgebrochenem Fenster wieder bedienbar (22.09.) | heutiger `doGoogleLogin` beendet `authBusy` im selben Auftragskontext auch nach Abbruch. Codebeleg; vorhandener Konto-Löschtest mit Fensterabbruch ist ein anderer Vorgang. Gesonderter passender Ablaufbeleg fehlt |
+| Verständliche Anmeldefehler, Bestätigung/Spam (22.09.) | [erhaltener Anmeldetest](sicherung/tests/e595b5b6312244cd/t_anmelden.js.log) bestätigt konkrete Fehler, stabilen Formularaufbau und Spamhinweis. Tatsächliche Mailzustellung und Firebase-Absender/Betreff nicht damit geprüft; historische Betreiberänderung am Anzeigenamen ersetzt keinen aktuellen Konsolennachweis |
+| Feedback flackert, unbedienbar, dauerhaft „Lädt…“ (22./23.09.) | Fehler historisch3.9.1/3.9.2 korrigiert; heutiger Loader startet nach Fehler nicht automatisch erneut, bietet nach9s Wiederholung und verwirft veraltete Antworten. [Ansichtstest](sicherung/tests/e595b5b6312244cd/t_feedback_ansichten.js.log) grün, beweist keine reale Netzlatenz oder sämtliche Fehlerverläufe. Öffentliche Zeile zeigt keinen Autor; daraus allein kein vollständiger Datenschutzbeleg |
+| Alte separate `landing.html` löschen (22.09.,22:48) | umgesetzt3.9.0, Datei heute nicht vorhanden. Spätere neue Startseitenidee bleibt eigener offener Punkt |
 | „weiß nicht wann … rechnet das für dich aus“, keine lange Erklärung (24.09.,06:45) | aktueller Wortlaut umgesetzt: `EINSTIEG_HUERDEN`/wann sagt „Das rechnet Adrabic für dich aus.“ Bisherige Quellen gelesen, Verständnis nicht gemessen |
 | „entferne dieses kostenlos. keine werbun.. komplett“ (24.09.,18:39/18:56) | im Einstieg umgesetzt3.17.22: Schlussbild ohne Werbesatz, aktueller `renderEinstieg` gelesen. Historischer [Changelog](../CHANGELOG.md) bestätigt Entfernung; kein separater aktueller Wortlauttest oder allgemeines Werbefreiheitsversprechen daraus |
 | „lass diese analyse länger dauert“ (24.09.) | umgesetzt3.17.22, später verlängert; heutige Konstanten:700ms Vorlauf,820ms pro Punkt,1100ms Nachlauf. **Korrektur16:35:**620/700/900ms gehörten zu3.17.22, nicht zum aktuellen Code. Dauer hängt von Punktzahl ab; keine tatsächliche KI-Analyse oder nachgewiesene höhere Wertwahrnehmung |

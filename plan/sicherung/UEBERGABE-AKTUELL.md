@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:40 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:42 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `7e43a926 Sicherung 16:39 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `67c3c514 Sicherung 16:40 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -95,6 +97,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- 16:41 Codex22.09.: fünf Originalchats vollständig auf Betreiberblöcke geprüft; aktuelle Anmeldung, Feedbackloader/-zeile, leere Ansichten, Farben und Stoff-/Listenhinweise sowie erhaltene Anmelde-/Feedbacklogs abgeglichen. Acht konkrete Wunschgruppen zentral mit Beleggrenzen ergänzt, breite Wünsche bestehenden Bereichen belassen. B4 ergänzt tatsächlichen Formular-Rückkehrbeleg mit erhaltenem Ziel; B11 bleibt begrenzt. Keine neuen Tests/Produktänderung, Tempo bleibt gestoppt. Bestehende Minuten-Sicherung1792/5884 läuft. Nächste Quellen19.09.
+
 - 16:37 Codex23.09.-Originalquellen d8804f6c/2172d51f/39dd51de samt Fortsetzung24.09.06:45 gelesen. Sieben kleine Wunschgruppen zentral zugeordnet: Grammatikfeld, versteckte Intervallzahlen, Überspringen, Pflichtauswahl, Wiederaufbau, Formular-Rückweg/Duplikat und Hürdenwortlaut. Aktuelle Formular-/Pflicht-/Zurück-/Textquellen und historische3.9.8/3.10.3-Berichte gelesen; B11-Assertions begrenzen Aussage auf Rahmen/Beschriftung, kein vollständiger Rückkehr-Beleg. Breite Onboarding-/Religions-/Monetarisierungswünsche in bestehenden Bereichen erhalten. Eigenen historischen Zahlenfehler in LEHREN§15 vermerkt, keine neue Doppelregel. Nächster Rest22.09.; Produkt unverändert, keine Tests.
 
 - 16:35 Korrektur Codex: In der neuen Analysezeit-Zeile historische3.17.22-Konstanten als heutige Werte bezeichnet. Aktuelle Deklarationen ausdrücklich gelesen: Vorlauf700,Schritt820,Nachlauf1100ms; zentrale Zeile sichtbar berichtigt. Keine Produktänderung oder Messung, aus historischem Changelog keine aktuellen Werte mehr ableiten.
@@ -136,5 +140,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 15:29 Codex iPad-Zufallstest AFFE_TEXTE=1/150/Seed7 abgeschlossen,104 Textaktionen/0 Befunde; ganze Ausgabe gelesen. Damit alle158 Abschlusslogs/Runde13 und beide vorgeschriebenen Zufallstests gelesen, Regeln238 gültig grün. Gesamt157/158, Tempo als echte offene Sperre erhalten; kein Paketcommit/Produkt-Push/Deploy. Eigene Demo-Emulatorwurzeln21112/12120 anhand exakter Projekt-Kommandos geprüft und nach Testende beendet; Minuten-Sicherung12532 läuft weiter, Fremdprozesse/Entwurf/Fremdarbeit erhalten. Endstand/Plan/Offenliste/Logbuch/Bericht nachgezogen; nächste Arbeit ist gezielte Tempo-Klärung, kein neues Paket. Vollständige TikTok-Quelle und Zusammenführung in vorhandene Pläne gesichert.
 
 - 15:27 Codex Handy-Zufallstest AFFE_TEXTE=1/200/Seed7 abgeschlossen:104 Textaktionen,0 Befunde; vollständige Ausgabe gelesen. iPad AFFE_TEXTE=1/150/Seed7 läuft (100 Schritte). Gesamtlauf und Runde fertig, Tempo als echtes offenes Rot erhalten; Logbuch/Checkliste/Planstände aktualisiert. git diff --check korrekt mit Repo-Zeilenendkonfiguration grün (voriger temporärer core.autocrlf=false-Aufruf behandelte CRLF fälschlich als Leerraum, keine Dateien dafür geändert). Alle Diagnosen/Quellen bewahrt, kein Paketcommit/Deploy.
-
-- 15:24 Codex alle158 vollständigen Abschlusslogs gelesen:157 grün, Texttempo rot252ms; keine weitere Grün-Wiederholung. Rundenabnahme --fortsetzen13/13 am exakt gleichen Stand ausgewertet, beschreibende Einzeloutputs vollständig bekannt. Stand-/CSP-/APP_SHELL-/Syntaxprüfung frisch grün. Bericht/Logbuch und LEHREN14-Zeilen konkret nachgezogen,6/12 ausdrücklich nicht erfüllt; keine Freigabe/Commit. AFFE_TEXTE=1 handy200 Seed7 aktiv (keine Befunde bisher), danach iPad150 Seed7. Mehrwert-Reihenfolge mit neuer Onboarding-Präferenz angeglichen, Quellen/Diagnosen im Minuten-Patch erfasst.
