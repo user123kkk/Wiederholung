@@ -1,5 +1,15 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Anschluss10.10.2026 16:49
+
+Historische Wunschprüfung der39 lokalen Exporte vor05.10. abgeschlossen;
+Umsetzungen, Beleggrenzen und fehlende Anfangsdatumsbereiche zentral in
+ALLES-OFFEN. Nicht erneut dieselben Quellen/Tests bearbeiten.
+Nächster Produktabschluss bleibt Daten157/158, Tempo219ms bei200ms offen,
+Diagnose gestoppt. Lernrunden-Vorbereitung unverändert vorhanden;
+Einzelfreigabe fehlt. Kleine Platzierungsreste stehen im Bericht, noch kein
+offener AUFGABEN-Bauauftrag. Keine neue Paketarbeit über Entwurf3.18.30.
+
 ## Aktueller Anschluss 10.10.2026 16:30
 
 Korrektur zu den älteren Einstiegen: Die große Datenabnahme ist ausgeführt,

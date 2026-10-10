@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:48 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:49 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `8da9c282 Sicherung 16:47 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `56e6c235 Sicherung 16:48 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,8 +35,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -67,6 +67,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/AUFGABEN.md
+ M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
  M sw.js
 ```
 
@@ -96,6 +98,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 16:49 Codex verbleibenden Anschluss geprüft: CODEX-START/ENTSCHEIDUNGEN-VERSTEHEN, STAND und aktuelles AUFGABEN gelesen; kein weiterer autonomer Paketbau über uncommittetem Datenentwurf. Veraltete A14–A17-Hinweise „große Abnahme später“ auf tatsächlich ausgeführte157/158-Abnahme samt offenem219ms-Tempo und Diagnosestopp berichtigt, Status in Arbeit erhalten. STAND/Mehrwert-ARBEITSSTAND auf abgeschlossene lokale Quellenprüfung nachgezogen, kein wiederholter Testauftrag. Dokumentations-Diffcheck grün; Produkt/Testquellen unverändert.
 
 - 16:48 Codex historische Quellenprüfung abgeschlossen:39 lokale Exporte mit Beginn vor05.10.;30.09.-Betreiberblöcke ohne Kürzung gelesen, Duplikat erkannt. Fehlende Anfangsdatumsbereiche/älteste Quelle explizit dokumentiert, keine Vollständigkeit sämtlicher Gespräche behauptet. Heutige Hochzähl-Merkerfunktion mit historischem Wunsch abgeglichen, erhaltenen Fortschritt-/Startlog vollständig gelesen; kein falscher Testbeleg für Reiteranimation. Kartenformular-Wortfeldscrollen dem bestehenden Tastaturrest zugeordnet. Klein-Weg-Bericht/AUFGABEN geprüft: B-1/B-2/B-5 kein offener Zyklusauftrag; kein eigenmächtiger Paketbau. Nächster Produktabschluss bleibt157/158, Tempo-Diagnose ausdrücklich gestoppt.
 
@@ -138,5 +142,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - Codex Fortsetzung der Erledigungsprüfung: aktuelle Übergabe, Betreiberregeln, zentrale Liste und Quellenabgleich gelesen; Minuten-Sicherung als bestehenden Prozessbaum 12532/16564 bestätigt, keine zweite gestartet. Originalchat a495c23a vom 05.–07.10. und damalige Wunschdateien mit Bauprotokollen zu 3.18.21/24/25 abgeglichen. Aktuellen Karten-Detailweg, Textarten-Erklärung, Widerruf-Erklärung und zwei CSS-Korrekturen gelesen; t_liste_zeigen und erhaltenen Klein-Log vollständig gelesen. Drei bereits zentral belegte Beispiele nicht neu abgenommen. Keine Produktänderung oder Datenabnahme; 3.18.30 und Fremdarbeit erhalten.
 
 - Codex: Betreiberauftrag 10.10.: Reihenfolge passend halten, unnötige Dauer und Tokens vermeiden; neuen Chat mit zwingendem caveman gestartet: 01a12616-ac4c-7c31-b011-37917529c814. Frühere Wünsche auf Erledigung prüfen, vorhandene Belege wiederverwenden, keine neue große Ideensammlung. Produktreihenfolge und fremden Datenentwurf erhalten.
-
-- Codex erste Erledigungskontrolle früherer Kleinigkeiten: Betreiberquellen 05.–07.10., CHANGELOG und gezielte Logbuchstellen gelesen. Handschrift/Vollbild 3.18.19, Tippen daneben 3.18.19/24 und Griff-Auslaufen 3.18.20 zentral mit Bau-/Prüfbelegen geführt. Rest Hintergrundscrollen und separaten schwankenden Griff-Test ausdrücklich offen belassen. Keine komplette historische Wunsch-Abnahme oder frischen Gerätebelege behauptet.

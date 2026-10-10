@@ -1,5 +1,15 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 16:49 – historische Wunschquellen abgeglichen:**
+Alle39 lokal vorhandenen Exporte mit Beginn vor05.10. gelesen; konkrete
+Umsetzungen, noch fehlende Belege und Quellenlücken in ALLES-OFFEN.
+Keine vollständige Geräte-/Lernwirkungsabnahme. Nicht erneut dieselben
+Originale oder bereits grünen Läufe lesen/starten. A14–A17-Hinweise auf die
+ausgeführte157/158-Abnahme nachgezogen, weiterhin in Arbeit.
+Produktabschluss bleibt gesperrt, weitere Tempo-Diagnose gestoppt.
+Kein neues Paket über Entwurf3.18.30; Lernrunden-Vorschlag ist vorbereitet,
+Einzelfreigabe ungeklärt. Keine neue Produktarbeit aus historischen Ja/Push.
+
 **10.10.2026 16:22 – weitere Tempo-Suche auf Betreiberkorrektur beendet:**
 Neustart bestätigt, Originaltest einmal219ms bei200ms rot.157/158 bleibt.
 Klickdiagnose liefert keine Abnahme oder belegte Produktkorrektur.
