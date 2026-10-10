@@ -95,3 +95,4 @@ BEWAHRT t_paket_c_kalendertage.js
 BEWAHRT t_paket_c_suchpuffer.js
 BEWAHRT t_paket_c_verw.js
 EXIT 0 t_paket_c_weiter.js (1223s)
+EXIT 0 t_paket_d.js (1244s)

@@ -39,6 +39,10 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 
 ## Gesamtlauf, um 11:57 angehalten
 
+14:12: PaketD-Prüfer komplett grün (1244s), ganze Ausgabe gelesen.
+Bestehende Aufgaben-Auswahl unverändert;95/158 gültige Abschlüsse grün,
+alle95 Logs gelesen. PaketE aktiv, großer Abschluss weiterhin offen.
+
 13:50: korrigierter kompletter C-Sammeltest grün (1223s),256 Varianten
 einschließlich C27/C22, vollständige Ausgabe gelesen. Neue Testkennung
 36200c315aa0.94/158 gültige Abschlüsse grün, alle94 Logs gelesen;

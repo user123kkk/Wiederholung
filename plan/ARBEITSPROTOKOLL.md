@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 14:12 Codex PaketD-Prüfer vollständig grün1244s, ganze Ausgabe gelesen:32 Schließwegvarianten mit je vier Wegen, zwei Leerlauf-/Randfallprüfungen und weitere vorhandene Zustandsmatrizen. Bestehende Aufgaben-Auswahl unverändert, keine neue D-Aufgabe behauptet.95/158 gültige Abschlüsse grün, alle95 Logs gelesen; PaketE aktiv. Quelle e595b5b6312244cd gleich.
+
 - 14:02 Codex C27-Muster repoübergreifend gesucht: keine weiteren direkten __FB.store.set-Aufbauten, D/E auch keine direkten Map-Löschungen. Verbleibende gezielte Löschungen in Notfound/C26/Befundproben betreffen ausdrücklich verschwundene Daten, keine weiteren160 Testkarten; bestehende gültige Abnahmen erhalten. PaketD aktiv,94 grüne Abschlüsse unverändert.
 
 - 13:50 Codex kompletter C-Sammeltest grün1223s; alle256 Fall-/Breiten-/Themen-/Bewegungsvarianten einschließlich C27 und C22 samt Kontrastausgaben vollständig gelesen. Neue Testkennung36200c315aa0, gemeinsamer Quellstand unverändert. Jetzt94/158 gültige Abschlüsse grün und alle94 Logs gelesen; PaketD aktiv. C27-Rotbeleg bleibt erhalten, keine Testgrenze geändert.

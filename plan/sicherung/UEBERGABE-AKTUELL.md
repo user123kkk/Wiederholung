@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 14:10 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 14:12 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `c960c44 Sicherung 14:09 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `c468702 Sicherung 14:11 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -55,6 +56,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_spur_bestand.js
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
  M sw.js
 ```
 
@@ -63,7 +65,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 16 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -84,6 +86,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 14:12 Codex PaketD-Prüfer vollständig grün1244s, ganze Ausgabe gelesen:32 Schließwegvarianten mit je vier Wegen, zwei Leerlauf-/Randfallprüfungen und weitere vorhandene Zustandsmatrizen. Bestehende Aufgaben-Auswahl unverändert, keine neue D-Aufgabe behauptet.95/158 gültige Abschlüsse grün, alle95 Logs gelesen; PaketE aktiv. Quelle e595b5b6312244cd gleich.
 
 - 14:02 Codex C27-Muster repoübergreifend gesucht: keine weiteren direkten __FB.store.set-Aufbauten, D/E auch keine direkten Map-Löschungen. Verbleibende gezielte Löschungen in Notfound/C26/Befundproben betreffen ausdrücklich verschwundene Daten, keine weiteren160 Testkarten; bestehende gültige Abnahmen erhalten. PaketD aktiv,94 grüne Abschlüsse unverändert.
 
@@ -126,5 +130,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 12:17 Codex Gesamtlauf25/158 grün, alle25 vollständigen Abschlusslogs gelesen. Bestands-Tempo erneut im Gesamtlauf grün,3000er-Bewertungen max61ms; Teilen/Import/Sicherung drei Breiten ohne Kontrast-/Seitenfehler, Timergegenprobe/Doppeltipp/Drehlage (vier Breiten0px) grün. Beschreibende Einstellungs-/Geometrieausgaben ebenfalls gelesen, keine neuen Produktbefunde daraus. Läuft allein weiter, keine Abnahme vor vollständigem Lauf/Affe/Runde.
 
 - 12:12 Codex frische Abschlusslogs1–9 vollständig gelesen: Erinnerungs-/Ideenhinweise, a11y, abgelehnte Bewertung, Abstimmfehler, Anmeldung/Enter, Ansagen und Bereiche alle grün; historische Gegenproben erwartbar rot. Shared-Stub-Diff vollständig gegengelesen, Syntax grün; Diagnosewerkzeuge für Minutenpatch erfasst, Trace/CPU-Profil zusätzlich ins Repo kopiert. SDK-Gültigkeit anhand tatsächlicher Route geprüft: nur unverändertes AUTH aus stubs.js, echtes Firestore; 16/8-Fälle nicht wiederholt. Vorbereitungsseite um aktuellen Lauf berichtigt, frühere Historie erhalten. Gesamtlauf87583 weiterhin allein aktiv, kein neuer Produktbau/Deploy.
-
-- 12:06 Codex korrigierte Attrappe am unveränderten Original-Tempotest vollständig grün: fünf Bestandsgrößen, zehn Bewertungen bei3000 Karten max71ms (100ms-Grenze, CPU4x), komplette Ausgabe gelesen. Hashprobe beide Runner identisch e595b5b6312244cd; frischen Gesamtlauf158 ohne Fortsetzen begonnen, abnahme-gesamt-2-3.18.30.log. Rote Erstläufe erhalten. Produkt/Rules unverändert, erneute Daten-Einzeltests daraus nicht abgeleitet; Attrappenabhängigkeiten werden frisch insgesamt geprüft.
