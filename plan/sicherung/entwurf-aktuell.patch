@@ -1740,10 +1740,10 @@ index 0000000..cb56164
 +})().catch(e=>{console.error(e);process.exitCode=1;});
 diff --git a/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
 new file mode 100644
-index 0000000..7e889d9
+index 0000000..9039102
 --- /dev/null
 +++ b/plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
-@@ -0,0 +1,231 @@
+@@ -0,0 +1,278 @@
 +/* A16: echter SDK 10.14.1, Repo-Regeln, Demo-Emulator 8082.
 +   Auth-Attrappe und blockierter Service Worker: kein PWA-Kaltstartbeleg.
 +   --gegenprobe stellt die feste Entwurfsquelle 591d03e samt Patch her. */
@@ -1917,6 +1917,53 @@ index 0000000..7e889d9
 +      assert.match(await p.evaluate(() => window.__PRUEF.banner()), /Antworten aufbewahrt/);
 +      await p.evaluate(() => window.__PRUEF_SDK.enableNetwork(window.__PRUEF_DB));await retry(p);
 +      assert.equal((await cloud(day)).u, 1);
++    });
++    for (const mismatch of [false, true]) await fall(mismatch ? 'vorbereiteter-Beitrag-Kartenkopie-Epoche-falsch' : 'Absturz-nach-Kartenkopie-vor-Aktivierung', async (p, ctx, change) => {
++      const day = await p.evaluate(() => window.__PRUEF.heute());
++      await p.evaluate(async () => {
++        await window.__PRUEF_SDK.disableNetwork(window.__PRUEF_DB);
++        window.__PRUEF.starten(); window.__PRUEF.bewerten('known');
++        window.__PRUEF.vorVersandStoppen();
++      });
++      const staged = await p.evaluate(mismatch => {
++        const key = Object.keys(localStorage).find(k => k.startsWith('adrabic-bewertung-u1/'));
++        if (!key) throw new Error('Dauerhafte Kartenkopie fehlt');
++        const card = JSON.parse(localStorage.getItem(key));
++        const contributionKey = 'adrabic-tagesantwort-u1/' + card.tagesantwort.id;
++        const contribution = JSON.parse(localStorage.getItem(contributionKey));
++        // Kontrollierter frueherer Speicherstand: echte Kartenkopie bleibt,
++        // Tageskopie steht noch vor ihrer Aktivierung. Kein echter Prozesskill.
++        contribution.status = 'vorbereitet';
++        if (mismatch) contribution.epoche = 'abweichende-kopie';
++        localStorage.setItem(contributionKey, JSON.stringify(contribution));
++        return {card, contribution};
++      }, mismatch);
++      assert.equal(staged.card.status, 'offen');
++      assert.equal(staged.card.tagesantwort.status, 'vorbereitet');
++      for (const field of ['id', 'uid', 'tag', 'art', 'delta'])
++        assert.equal(staged.card.tagesantwort[field], staged.contribution[field]);
++      if (mismatch) assert.notEqual(staged.card.tagesantwort.epoche, staged.contribution.epoche);
++      else assert.equal(staged.card.tagesantwort.epoche, staged.contribution.epoche);
++      assert.equal(staged.contribution.tag, day);
++      assert.equal(staged.contribution.delta, 1);
++      assert.equal((await cloud(day)).w, 0);
++      const cached = await p.evaluate(async () => {
++        const sdk = window.__PRUEF_SDK;
++        const snap = await sdk.getDocFromCache(sdk.doc(window.__PRUEF_DB, 'users/u1/karten/k4'));
++        return {id: snap.data()?.bewertungsStand, pending: snap.metadata.hasPendingWrites};
++      });
++      assert.equal(cached.id, staged.card.id);
++      assert.equal(cached.pending, true);
++      p = await restart(p, ctx, change); await fertig(p); await retry(p); await retry(p);
++      assert.equal((await cloud(day)).w, mismatch ? 0 : 1);
++      if (mismatch) {
++        const copies = await p.evaluate(() => window.__PRUEF.tagesantworten());
++        assert.equal(copies.length, 1);
++        assert.equal(copies[0].status, 'vorbereitet');
++        assert.equal(copies[0].epoche, 'abweichende-kopie');
++      } else assert.deepEqual(await p.evaluate(() => window.__PRUEF.tagesantworten()), []);
++      const card = await (await rest(ROOT + '/users/u1/karten/k4')).json();
++      assert.equal(card.fields.bewertungsStand.stringValue, staged.card.id);
 +    });
 +    await fall('vorbereiteter-Beitrag-ohne-Kartenkopie', async (p, ctx, change) => {
 +      const day = await p.evaluate(() => window.__PRUEF.heute());
