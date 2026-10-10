@@ -1,0 +1,12 @@
+OK  Zwei Geraete: 5 offline + 3 online = 8, beide Anzeigen gleich.
+OK  w/n/u werden getrennt und atomar addiert.
+OK  Offline-Neustart und wiederholtes Nachholen: keine verlorenen/doppelten Antworten.
+OK  Echte Bewertung/Rueckgaengig bewahrt fremde Antworten.
+OK  Beide Rueckgaengig-Wege korrigieren auch nach Tageswechsel den alten Tag.
+page.waitForFunction: Timeout 30000ms exceeded.
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_verlauf_mehrgeraete.js:171:13 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":45,"quelltext":"7e468891aff7dec61f7234549d9bd83daa048580cedae65644ca6159f05e9ed4"}
