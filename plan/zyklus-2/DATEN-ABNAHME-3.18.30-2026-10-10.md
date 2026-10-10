@@ -69,6 +69,14 @@ die zehn 3000er-Bewertungen. Lauf87583/Node18936 bleibt aktiv; dies ist
 keine fertige Gesamtabnahme. Bereits gelesene Logs: t_317 bis
 t_erinnerung_zeit in der alphabetischen Runnerliste.
 
+Zwischenstand12:31: 47/158 grün, alle47 vollständigen Ausgaben gelesen.
+Auch Scrolltest im Gesamtlauf grün; vier aktuelle Rundenfotos tatsächlich
+angesehen und unter `../sicherung/tests/abnahme-rundenfotos-3.18.30/`
+gesichert. Beschreibende Tempoausgaben enthalten längere Tabwechsel:
+Fortschritt209ms/max233ms Bildlücke, große Erstansicht445ms. Das sind keine
+automatisch durch Exit0 verschwundenen Messungen/keine Flüssigkeitszusage.
+Keine neue Ursache oder Produktregression daraus behauptet. Abnahme läuft.
+
 Belege: `abnahme-bestand-ab-3.18.30.log`, `abnahme-bestand-spur-3.18.30.log`,
 `abnahme-stub-batch-2-3.18.30.log`,
 `abnahme-stub-batch-gegenprobe-2-3.18.30.log`,

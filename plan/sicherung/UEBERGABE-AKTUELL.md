@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 12:29 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 12:31 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `db33007 Sicherung 12:28 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `4f831e3 Sicherung 12:30 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -52,6 +53,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_spur_bestand.js
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
  M sw.js
 ```
 
@@ -60,7 +62,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 16, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 16, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -81,6 +83,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 12:31 Codex Gesamtlauf47/158 grün, alle47 vollständigen Logs gelesen. Rückmeldung24 Varianten, Fehlerfokus/-Entwurferhalt, Fortschritt12 Varianten, Scrollen im Gesamtlauf, große Ansichten28 Zustände, Datum/Bereichszähler grün. Vier aktuelle Rundenbilder tatsächlich angesehen und gesichert (plan/sicherung/tests/abnahme-rundenfotos-3.18.30), Knöpfe/Antwort im Bild; keine iPhone-Abnahme daraus. Beschreibende Tempoausgaben erhalten: Bewerten max53ms, Fortschrittwechsel209ms/max233ms Bildlücke; große Erstansicht445ms. Keine allgemeine Flüssigkeitszusage oder ungeprüfte Ursache. Zwischenmeldung zum aktiven Test war zu früh geraten (Verwalten statt Fotos); tatsächliche Prozesszeile gelesen, fortan im Standleser mitgeführt. Kein App-/Regelwechsel, Lauf87583 weiter allein aktiv.
 
 - 12:24 Codex frischer Gesamtlauf32/158 grün, alle32 Abschlusslogs vollständig gelesen: Einstellungs-/Einstiegsvarianten, Bestandskonto, Probekarte, Scroll-/Lagenmessung, Kalender-UID/Uhrzeit einschließlich Gegenproben. Beschreibende mobile Einstiegsverschiebung39px in älteren gesicherten Logs identisch; kein neuer Produktfehler daraus behauptet. Ein voriger Zwischenlog-Pfad t_einstieg war vor dessen Start angenommen, tatsächlichen Prozess/Dateien nachgelesen; keine Testquelle/Ergebnisse verändert. Lauf87583 weiter allein aktiv am e595b5b6312244cd. Rest Gesamtlauf/Affe/Runden-Auswertung/Abschluss bleibt.
 
@@ -123,5 +127,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 10:18 Codex auf „anfangen, woauch imer du grad bist“ begonnenen Quellenabgleich fortgesetzt. Aktuelle Übergabe 10:17, Entwurf 3.18.30 und einzelner Sicherungsbaum 12532/16564 bestätigt. Erste Runde Berichte 01–03 vollständig ab Berichtsbeginn gelesen, einschließlich Beleggrenzen/Gegenreden; Zuordnung begonnen. Keine wissenschaftliche Neubewertung oder Produktumsetzung, keine abgeschlossenen Tests wiederholt.
 
 - Codex Betreiberklärung aufgenommen: jetzt offene App-Punkte und Ideen direkt im Chat zeigen. ALLES-OFFEN, aktuelle Gesamtliste, STAND, Zyklus-Aufgaben und vollständigen Themenindex der Zukunftsnachricht gelesen; abgeschlossene Funktionen/Entwürfe, beschlossene Restarbeit, unentschiedene Vorschläge und echte Geräte-/Rechtsabnahmen unterscheiden. Historische 77/72-Zählungen nicht als aktuellen Gesamtstand verwenden; Quellenabgleich noch unvollständig. Keine neue Produktarbeit oder Testausführung durch Übersichtsauftrag.
-
-- 10:09 Codex Quellenabgleich zweite Runde abgeschlossen: acht Vollberichte einschließlich Nebenabschnitten/Gegenrede, zwei Limit-Abbrüche; 52 nummerierte Hauptpositionen und narrativer Gegenprüfer einzeln im QUELLENABGLEICH-2026-10-10.md zugeordnet. 187 Katalogdatenzeilen unabhängig gezählt, unvollständige Erinnerungseinleitung sichtbar korrigiert. Fehlende konkrete Unterideen/Varianten/Beleggrenzen gesichert, keine Produktentscheidungen daraus. Erste 26 Berichte und rückwärtige Prüfung offen. Auf Wunsch nach ununterbrochener Weiterarbeit vorhandene pausierte Heartbeat-Automation per App-Werkzeug aktualisiert, ACTIVE bestätigt und Konfigurationsdatei gegengelesen: stündlich im aktuellen Chat, keine doppelte Automation; stoppt bei nur verschobenen Schritten/Entscheidungen, meldet keine Routinezustände. OpenAI-Doku-Skill für Automation gelesen, lokale Werkzeugbeschreibung/Konfiguration benutzt. CODEX_HOME war leer; tatsächlicher Konfigurationspfad unter Benutzerprofil gefunden. Minuten-Sicherung weiterhin ein Prozessbaum 12532/16564. Keine App-/Test-/Originalbericht-Änderung, keine Tests wiederholt.
