@@ -6,7 +6,7 @@
 
 **Aktueller Wunsch 10.10.:** Die verstreute Ablage erschwert den Überblick. Kleine Wünsche vor den beiden Mehrwert-Runden auf tatsächliche Erledigung prüfen, nicht nur auf Erwähnung. Vorhandene Berichte und Gegenreden erhalten; keine neue Ideensammlung als Ersatz für verlorene Punkte. Der genannte „Korean-Ausrichtler“ ist nicht sicher identifiziert; vermutlich Texte/Quran, keine stillschweigende Festlegung. Die bereits erfasste Qualitätskritik bleibt offen.
 
-**Bestandsprüfung 10.10., fortgesetzt:** Zu den drei bereits belegten Kleinigkeiten neun weitere Wünsche aus dem Originalchat vom 05.–07.10. abgeglichen: sechs umgesetzt, zwei teilweise erledigt, einer offen. Belege und Grenzen stehen unmittelbar in den betreffenden Bereichen unten. Das ist ein abgegrenzter Fortschritt, keine vollständige Erledigungsprüfung aller alten Chats. Bekannte fehlende Unterideen und Gegenreden aus dem abgeschlossenen Herkunftsabgleich sind jetzt den bestehenden Ideenbereichen zugeordnet. 34/34 Mehrwert-Berichte und 187 historische Katalogzeilen belegen weiterhin Herkunft, nicht Umsetzung. Als Nächstes ältere Chatwünsche vor dem 05.10. mit Original, aktuellem Code und Prüfbeleg abgleichen; diese neun nicht erneut prüfen.
+**Bestandsprüfung 10.10., fortgesetzt:** Zu den drei bereits belegten Kleinigkeiten neun weitere Prüfpositionen anhand des Originalchats vom 05.–07.10. abgeglichen: sechs Wunschgruppen umgesetzt, zwei teilweise erledigt, ein zugehöriger Prüfrest offen. Belege und Grenzen stehen unmittelbar in den betreffenden Bereichen unten; die beiden N1-Stellen zählen gemeinsam. Das ist ein abgegrenzter Fortschritt, keine vollständige Erledigungsprüfung aller alten Chats. Bekannte fehlende Unterideen und Gegenreden aus dem abgeschlossenen Herkunftsabgleich sind jetzt den bestehenden Ideenbereichen zugeordnet. 34/34 Mehrwert-Berichte und 187 historische Katalogzeilen belegen weiterhin Herkunft, nicht Umsetzung. Als Nächstes ältere Chatwünsche vor dem 05.10. mit Original, aktuellem Code und Prüfbeleg abgleichen; diese neun nicht erneut prüfen.
 
 **Bestehende Arbeitsfolge:** Erst offenes Datenpaket abschließen; danach Lernrunde, Karten hinein/heraus, Oberfläche und Verständlichkeit, Konto/Schutz, Fremdentest. Gesamt-Onboarding am weitgehend fertigen Umfang; Texte nach dem 29.10.; Öffentlich/Lehrer zuletzt. Die Bestandsprüfung verändert diese Produktreihenfolge nicht. Je Bereich alte Wünsche und neue Ideen zusammenführen, Recherche/Abhängigkeiten klären und konkrete Schritte mit Prüfkriterien festlegen.
 
@@ -631,10 +631,10 @@ Hintergrund scrollt beim Herunterwischen. VoiceOver: zurückgestellt
 
 ## 4. Ideen der Mehrwert-Agenten, über die noch niemand entschieden hat
 
-72 Zeilen, maschinell aus
+Historisch 72 Zeilen, maschinell aus
 [`IDEEN-KATALOG-2026-10-08.md`](zyklus-2/mehrwert/IDEEN-KATALOG-2026-10-08.md)
 gezogen. Zu jeder fehlt noch Dafür, Dagegen und Urteil. Erst danach steht
-fest, wie viele davon gebaut werden.
+fest, wie viele davon gebaut werden. Die folgenden Ergänzungsabsätze ordnen die im Herkunftsabgleich gefundenen Unterideen und Gegenreden diesen bestehenden Bereichen zu. Sie sind keine neuen Bauaufträge oder heute bestätigten Fehler. Historische Zahlen und Lizenz-/Plattformbehauptungen bleiben ungeprüft; vor einer Empfehlung gelten die aktuellen Prüf- und Verständigungsregeln.
 
 
 **1. Lernen mit Karten**
@@ -654,6 +654,8 @@ fest, wie viele davon gebaut werden.
 | Üben hat kein Rückgängig | – |
 | Mehrstufiges Rückgängig | – |
 
+Erhaltene Varianten: Rückrichtung derselben Karte ab mittlerer Stufe versus eigener Lernstand je Richtung; keine gemeinsame Entscheidung daraus ableiten. Schreib-Üben am Rundenende anbieten ist etwas anderes als Handschrift in der bewerteten Runde. Weitere Unterideen: abschaltbare Grenze für neue Karten je Tag, Problemkarten bis zur eigenen Umformulierung pausieren, frühe Abstände gesondert prüfen, tolerantes Antworttippen mit Selbstkorrektur sowie eigener Beispielsatz ohne Harakat in der bewerteten Abfrage. Gegenreden: neue Grenze/Tippen betreffen früher entfernte Funktionen; Üben darf Stufe, Fälligkeit und Serie nicht verbessern. Handschriftstudien zu Buchstabenanfängern belegen kein Vokabellernen mit dem Finger auf Glas. [Quellenabgleich R1 01](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md), [R2 01–02](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
+
 **2. Die Lernrunde selbst**
 
 | Idee | Anmerkung im Katalog |
@@ -666,6 +668,8 @@ fest, wie viele davon gebaut werden.
 | Notizfeld auf kleinen iPhones zu niedrig | erst messen |
 | Tipp kurz nach dem Aufdecken wird verschluckt | nur mit Messung |
 | Zustandspunkte erst nach dem Aufdecken | – |
+
+Beim Üben die bisherige Auswahl „alle noch einmal“ erhalten, falsche Antworten als zusätzliche Auswahl prüfen; vor dem Üben auf heute fällige Karten hinweisen. Eigene Schrift und Lösung auch außerhalb Vollbild groß vergleichen. Beim Rundenende widersprechen sich „noch N offen“ und weniger Rückstandszahlen; beide Varianten erhalten, keine Fälligkeit verstecken. „Nicht“ einmal je Karte oder jeden Druck zählen ist ebenfalls ungeklärt. Bei verschluckten Tipps Sperrdauer und sichtbare Sperre gemeinsam prüfen, Schutz vor blinder Bewertung behalten. Historische Nebenbefunde zu Serienrekord nach Undo, Rundengesamtzahl nach fremder Löschung und falschen Kommentaren zuerst am heutigen Code nachstellen. [R1 26](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-23-26-2026-10-10.md), [R2 02/05](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
 
 **3. Fortschritt und Verwalten**
 
@@ -681,6 +685,8 @@ fest, wie viele davon gebaut werden.
 | Filter in Verwalten (neu, fällig, hängt fest) | – |
 | Massenbearbeitung (verschieben, Spalten tauschen) | – |
 
+Zum Fortschrittsumbau gehören die Varianten reife Erstantworten je Karte/Tag statt allgemeiner Quote, Mindestdaten vor einer Aussage, veränderbare Neumenge in der Lastvorschau und Monats-Hinweis aus dem ersten Lerntag statt zusätzlichem Block. Prozentquote bleibt historisch abgelehnt; Last ist kein Können. Ähnlichste Karten auch beim Anlegen zeigen, Filter „ohne Notiz“ sowie unverbindliche Zeit-Schätzung vor der Runde sind eigene Unterideen. Lernzeit/Karten pro Minute und Überwachung sind Gegenreden. [R1 10–12](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-09-12-2026-10-10.md), [R2 05](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
+
 **4. Karten hinein und heraus**
 
 | Idee | Anmerkung im Katalog |
@@ -690,12 +696,16 @@ fest, wie viele davon gebaut werden.
 | Kurzschreibweise für Plural/Verbform in der Notiz | – |
 | Frage-/Antwort-Karten, Satzkarten, Paar-Karten | braucht Paket K |
 
+Importvarianten: Trenner erkennen, Spalten zuordnen, leere/zu lange/vertauschte Felder und Duplikate vor Übernahme zeigen; vorhandenen Listenimport nicht erneut als fehlend zählen. Bei Export gerätespezifisch „Speichern unter“ oder Dateien-Teilen prüfen; Lernstand/Rückfälle/Datum als zusätzliche CSV-/Archivspalten unterscheiden. Satzkarten können manuelle Wortmarkierung für I'rab erhalten; keine automatisch erzeugte Analyse. Beim Buchstaben-Satz Formen allein/Anfang/Mitte/Ende getrennt prüfen, Inhalte/Umschrift nur vom Betreiber. [R1 06](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md), [R1 09/11](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-09-12-2026-10-10.md), [R1 21](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-19-22-2026-10-10.md), [R1 25](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-23-26-2026-10-10.md).
+
 **5. Arabisch und Quran-Bezug**
 
 | Idee | Anmerkung im Katalog |
 |---|---|
 | Übersicht „Wörter dieses Textes ohne Karte“ | mit Paket M |
 | „Wo steht dieses Wort im Quran?“ zur Karte | – |
+
+Unterideen: häufigkeitsgeordnete fehlende Wörter einer Sure selbst anlegen; Vokabeln vor dem Textlernen auswählen; Wurzel/Lemma/Wortart als lesende Datenansicht statt früher entferntem Eingabefeld. Vorhandene Suche/Notizkurzschrift für Wortfamilien ist eine kleinere Alternative; Formen gesondert abfragen eine größere. Echte Betreiber-Wortaufnahmen unterscheiden sich von abgelehnter Sprachsynthese und brauchen Dateien/Rechte. Harakat-Leiste ist umstritten; gespeicherten Originaltext erhalten. Corpus/QUL/MASAQ, Übersetzungen und Audio haben unterschiedliche ungeklärte Rechte; Code-Lizenz erlaubt nicht automatisch die Daten. Unveränderte Datei vor Anfrage versus erst nach Erlaubnis ist ein erhaltener Quellenkonflikt. [R1 02](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md), [R1 19/21](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-19-22-2026-10-10.md), [R2 09](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
 
 **6. Texte auswendig lernen (alles nach dem 29.10.)**
 
@@ -716,6 +726,10 @@ fest, wie viele davon gebaut werden.
 | Lernplan mit Zieldatum, nur als Rechnung | – |
 | Quran-Text für offline bereitlegen | – |
 
+Nach dem Probelauf zusammen prüfen: ganz oder von–bis zunächst ohne Wertung aufsagen; letzte Zeile von gestern verdeckt und unbewertet anschließen; Schwachstellen mit Nachbarzeilen üben; mehrere vorige Durchgänge vor dem Kreis ansehen. Kontrollfrage: dauerhafter Zähler versus Zufall, echte ähnliche Nachbaranfänge statt beliebiger Wörter. Kreis-Konzepte unterscheiden: vorhandener Text sofort fest mit erster Probe, Kreis je Bereich, Auswahl über Juz/Hizb/Seite mit Grenzmarken/Überlappungen; historische Mengen sind keine Lernempfehlung. Weitere Unterideen: Anlass-Sammlung kurzer Einheiten ohne Kreis, Randstichwort bei Einwortzeilen, bekanntes Wort im Nur-lesen-Text unterlegen, Überschriften/Halbverse/Vorspann, eigene Notiz erst nach Aufdecken versus erst auf Tipp. Ganz kurze Texte haben in den Quellen unterschiedliche Schwellen; Pause halbieren versus neu beginnen ist nicht entschieden. [R1 16](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-15-18-2026-10-10.md), [R1 21](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-19-22-2026-10-10.md), [R1 25](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-23-26-2026-10-10.md), [R2 03](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
+
+Zum Text-Umfeld gehören Druckvarianten mit Quelle, Anfangshilfe oder Lücken, lesbares Lernstandsarchiv und Hinweis auf menschliches Abhören nach „fest“. Aufnahme flüchtig versus dauerhafte lokale Speicherung hat verschiedene Verlust-/Datenschutzfolgen; Geräte- und Rechteprüfung bleibt nötig. Reale Rezitation mit Schleife ist eine eigene, bislang zurückgestellte Variante. Keine erzeugten religiösen Lückentexte/Übersetzungen, keine Spracherkennung aus den Berichten ableiten; OpenITI/Hadith-Dateien, QUL-Layouts/Ähnlichkeiten und Übersetzungsalternativen brauchen eigene Inhalts-/Rechteklärung. [R1 03](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md), [R1 19](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-19-22-2026-10-10.md), [R2 03](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
+
 **7. Dranbleiben**
 
 | Idee | Anmerkung im Katalog |
@@ -726,6 +740,8 @@ fest, wie viele davon gebaut werden.
 | Serien-Warnung ohne Verlustsprache | Wortlaut vom Betreiber |
 | Installationshinweis nach der ersten Runde | zu Z10 |
 | App-Kurzbefehle auf dem Startbildschirm (Android) | – |
+
+„Erst einmal 20“ als Zusatzknopf, freiwilliges Ziel, dauerhafter Deckel und Fälligkeiten über Tage verschieben sind verschiedene Regeln; der aktuelle Tagesdeckel-Audit hat Vorrang vor alten Zahlen. Installation nach erster Runde, zweiter Runde oder etwa drei Lerntagen sind konkurrierende Zeitpunkte. Wenn-dann-Satz am Stapel/Tag 2 oder im Erinnerungsblatt weiterverwenden, aber religiöse Angaben nicht in Kalender/Cloud übertragen. Keine Leistung zum Zurückkaufen der Serie, kein Countdown, kein stilles Verwerfen des Rückstands. Badge/Push/E-Mail bleiben historische Gegenentscheidungen; Store-Hülle und Widgets nur bei tatsächlichem Bedarf separat prüfen. [R1 07](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md), [R1 15](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-15-18-2026-10-10.md), [R2 05](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
 
 **8. Fremde gewinnen**
 
@@ -739,6 +755,8 @@ fest, wie viele davon gebaut werden.
 | Hinweis in den Browsern von Instagram/TikTok/WhatsApp | Gerätetest |
 | Installierte iPhone-App zeigt direkt die Anmeldung | Gerätetest |
 
+Bei der späten Startseitenarbeit mitführen: Textimport als Umzug aus Anki/Quizlet, drei Nutzungsbilder, öffentliche Lektion-/Buchübersicht mit Druck/Lernknopf, Sure-Übersicht statt einzelner Sure-Seiten, gegebenenfalls nur Startseite auf Englisch. Export-/Datenhoheit, Zeichenabdeckung und Quelle/Version/Prüfsumme nur versprechen, wenn geprüft; Laufzeit-Prüfsumme ist eine zusätzliche technische Variante. Dauerhaft gratis versus Unterstützung/Abo/Lehrer-Paket bleibt Quellenkonflikt, keine Preiszusage. Lokal gespeicherte Gastprobe und anonymes Firebase-Konto haben unterschiedliche Datenfolgen. Keine erfundenen Sterne oder Markteinzigartigkeit; Kennzahlen dürfen abgelehntes Tracking nicht wiederbringen. TikTok-Nutzenbotschaft und späterer Gesamt-Onboarding-Entwurf gehören hier zum selben Arbeitsgang; kein öffentlicher Start daraus. [R1 04](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md), [R1 12](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-09-12-2026-10-10.md), [R1 20/22](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-19-22-2026-10-10.md), [R2 07](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
+
 **9. Lehrer und Gruppen**
 
 | Idee | Anmerkung im Katalog |
@@ -750,6 +768,8 @@ fest, wie viele davon gebaut werden.
 | „Meine schweren Wörter“ selbst teilen | – |
 | Rückfall auf Lektion 1 bei neuem Code | möglicher Fehler, nicht nachgestellt |
 
+Code-Link: Fragment, Erhalt über Anmeldung/Bestätigung/iOS, Kopieren als Rückfall zum System-Teilen; keine Empfängerliste/Einlöseverfolgung. Nachliefern nur anhängen versus neuer Code und Regal als Code versus feste Datei getrennt behandeln. Vorschau kann korrigierbare Qualitätswarnungen bieten. Hausaufgabe nur Lektionsnummer/Datum, Abhörbogen mit Hakstellen/Unterschrift oder A4-Wochenplan mit Namen sind Varianten ohne Klassenkonto; Wochentakt/Lernkreis ohne Kontenverknüpfung. Lehrer-Code als Hauptweg ist Positionierung, keine weitere Fortschrittsfreigabe. Fremdentest: zunächst still beobachten, nach sieben Tagen nachfragen; Quellen nennen drei bis fünf beziehungsweise fünf bis zehn Personen, keine wissenschaftliche Fallzahl. Keine Kontaktaufnahme beauftragt. [R1 08](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md), [R1 14](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-13-14-2026-10-10.md), [R1 23/25](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-23-26-2026-10-10.md), [R2 06/10](zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md).
+
 **10. Betrieb und Sicherheit**
 
 | Idee | Anmerkung im Katalog |
@@ -758,11 +778,15 @@ fest, wie viele davon gebaut werden.
 | Tageszähler erst am Rundenende schreiben | – |
 | Aufräumregel für alte geteilte Sätze | – |
 
+Zum Betrieb zusätzlich Notfallzettel mit Abschalten/Nutzerinformation, neues Gerät/Kontotransfer und DB-Rückholung versus Nutzerbackup prüfen. Notfall-Datei schützt nur kooperierende Clients, ersetzt keine Rules. Differenzielles Laden mit Löschmarken und Dokumentaufteilung sind technische Varianten, keine belegte Kostenersparnis. Tageszähler erst am Rundenende steht im Konflikt zum Schutz sofortiger Beiträge/Neustart; aus der alten Sparidee keine Änderung am offenen Datenentwurf ableiten. App Check, Quoten und Alarme mit dem TikTok-Sicherheitsauftrag zusammenführen; aktuelle Architektur/Primärquellen prüfen, keine alten Tarif-/Preisannahmen übernehmen. [R1 18](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-15-18-2026-10-10.md), [R1 25](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-23-26-2026-10-10.md).
+
 **11. Zugänglichkeit**
 
 | Idee | Anmerkung im Katalog |
 |---|---|
 | Screenreader sagt die Antwort an | braucht VoiceOver-Test des Betreibers |
+
+Ansage von Antwort und nächster Karte, Sprachangabe und Fokus getrennt prüfen; zuerst selbst mögliche Geräte-/Browserwege untersuchen. Deutsche Großschrift betrifft alle Ansichten, nicht nur arabische Wörter. Schrift-Preload ist eine Alternative beim langsamen Start; WOFF2-Umwandlung steht im Konflikt mit ungeklärten Schriftrechten. Erweiterte Kürzel samt Übersicht, gerätespezifische Tastaturhilfe nur bei fehlendem arabischem Text und View Transitions als umstrittene API gehören zu vorhandener Bedienungs-/Bewegungsarbeit. Keine allgemeine alte-iPhone-Kompatibilität aus einzelnen CSS-Ersatzfarben behaupten. Foldables, mehrere Fenster/Displays und Homebildschirm-Start aus TikTok sind im bestehenden Gerätebereich 3.3 mitzuführen. [R1 09](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-09-12-2026-10-10.md), [R1 15](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-15-18-2026-10-10.md), [R1 22](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-19-22-2026-10-10.md).
 
 ## 5. Entschieden: wird nicht gebaut
 
