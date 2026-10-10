@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 14:01 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 14:03 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `a30602d Sicherung 14:00 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `a2107a8 Sicherung 14:02 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -63,7 +64,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -84,6 +85,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 14:02 Codex C27-Muster repoübergreifend gesucht: keine weiteren direkten __FB.store.set-Aufbauten, D/E auch keine direkten Map-Löschungen. Verbleibende gezielte Löschungen in Notfound/C26/Befundproben betreffen ausdrücklich verschwundene Daten, keine weiteren160 Testkarten; bestehende gültige Abnahmen erhalten. PaketD aktiv,94 grüne Abschlüsse unverändert.
 
 - 13:50 Codex kompletter C-Sammeltest grün1223s; alle256 Fall-/Breiten-/Themen-/Bewegungsvarianten einschließlich C27 und C22 samt Kontrastausgaben vollständig gelesen. Neue Testkennung36200c315aa0, gemeinsamer Quellstand unverändert. Jetzt94/158 gültige Abschlüsse grün und alle94 Logs gelesen; PaketD aktiv. C27-Rotbeleg bleibt erhalten, keine Testgrenze geändert.
 
@@ -126,5 +129,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 12:12 Codex frische Abschlusslogs1–9 vollständig gelesen: Erinnerungs-/Ideenhinweise, a11y, abgelehnte Bewertung, Abstimmfehler, Anmeldung/Enter, Ansagen und Bereiche alle grün; historische Gegenproben erwartbar rot. Shared-Stub-Diff vollständig gegengelesen, Syntax grün; Diagnosewerkzeuge für Minutenpatch erfasst, Trace/CPU-Profil zusätzlich ins Repo kopiert. SDK-Gültigkeit anhand tatsächlicher Route geprüft: nur unverändertes AUTH aus stubs.js, echtes Firestore; 16/8-Fälle nicht wiederholt. Vorbereitungsseite um aktuellen Lauf berichtigt, frühere Historie erhalten. Gesamtlauf87583 weiterhin allein aktiv, kein neuer Produktbau/Deploy.
 
 - 12:06 Codex korrigierte Attrappe am unveränderten Original-Tempotest vollständig grün: fünf Bestandsgrößen, zehn Bewertungen bei3000 Karten max71ms (100ms-Grenze, CPU4x), komplette Ausgabe gelesen. Hashprobe beide Runner identisch e595b5b6312244cd; frischen Gesamtlauf158 ohne Fortsetzen begonnen, abnahme-gesamt-2-3.18.30.log. Rote Erstläufe erhalten. Produkt/Rules unverändert, erneute Daten-Einzeltests daraus nicht abgeleitet; Attrappenabhängigkeiten werden frisch insgesamt geprüft.
-
-- 12:05 Codex Tempo-Ursache gemessen: acht A/B-Paare vollständig gelesen, Vorstand 7/8 grün (einmal138ms), Entwurf 0/8 (erste Bewertung284–617ms). Trace252ms vollständig im Firebase-Attrappen-Timer, CPU-Profil hauptsächlich clone/listenerMelden/dsnap. Batch meldete global, Einzelwrites schon gezielt; unberührte Karten wurden deshalb vollständig kopiert. Nur stubs.js korrigiert: Batchpfade sammeln, unberührte Listener auslassen, betroffene Änderungen eines Batches gemeinsam liefern. Neue funktionale x_stub_batch-Probe prüft null Zugriffe auf unberührte Karte, gemeinsame Änderungen/Entfernung und gefilterte Abfrage; grün. Fester Vorstand rot genau beim unnötigen Kartenlesen (2 statt0); volle Logs gelesen. Erste Fixture fehlte Auth-Protokollinitialisierung und scheiterte daran, korrigiert, Fehlversuche separat erhalten. Original-Tempotest unverändert läuft jetzt vollständig, App/Rules/echter SDK-Helfer unverändert. Neuer Attrappenhash verlangt danach frischen Gesamtlauf.
