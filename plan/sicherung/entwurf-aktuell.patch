@@ -1350,10 +1350,35 @@ index 00000000..d62e5363
 +---
 +
 +Methodology by [Andrej Karpathy](https://x.com/karpathy). Claude Code adaptation inspired by [@olelehmann](https://x.com/olelehmann). Published by [@tenfoldmarc](https://instagram.com/tenfoldmarc) — follow for daily AI automation builds.
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 0b71fca5..f3a66d08 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,3 +1,11 @@
++## 3.18.31 – 10. Oktober 2026
++
++**Karte direkt in der Runde korrigieren.** Nach dem Aufdecken öffnet der
++Stift bei eigenen Karten das vorhandene Kartenblatt. Speichern oder
++Abbrechen führt zur gleichen Karte in derselben Runde zurück; Bearbeiten
++zählt keine Lernantwort. Geführte Karten und der Textprobelauf bleiben
++geschützt. Gezielte Prüfung nach dem Klein-Weg; noch nicht veröffentlicht.
++
+ ## 3.18.30 – 10. Oktober 2026
+ 
+ **Datenabschluss mit ausdrücklich begrenzter Tempo-Ausnahme.** Betreiberfreigabe vom 10. Oktober: „ok los“, nach Erklärung „Daten separat abschließen, Tempo offen lassen, dann weiter“. 157 von 158 Prüfungen grün; der unveränderte Texttempo-Test bleibt rot und als eigener Qualitätsbefund offen. 13 Runden, 238 Regelprüfungen und beide Zufallsläufe grün. Keine vollständige Tempo-/Geräteabnahme und keine Veröffentlichung.
 diff --git a/app.js b/app.js
-index 3e724fe7..6dcc33f7 100644
+index 3e724fe7..2e694ca8 100644
 --- a/app.js
 +++ b/app.js
+@@ -16,7 +16,7 @@ const firebaseConfig = {
+ 
+ /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
+    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
+-const APP_VERSION = "3.18.30";
++const APP_VERSION = "3.18.31";
+ 
+ const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
+ /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
 @@ -6855,6 +6855,13 @@ async function submitCardForm() {
      editRueckkehrY = null;
    }
@@ -1398,6 +1423,96 @@ index 3e724fe7..6dcc33f7 100644
      case "card-detail-loeschen": ui.cardDetailId = null; render(); deleteCard(btn.dataset.id); break;
      case "nichts": break;
      case "seite-neu-laden": location.reload(); break;
+diff --git a/index.html b/index.html
+index 09472405..282eb590 100644
+--- a/index.html
++++ b/index.html
+@@ -61,37 +61,37 @@
+      aus manifest.json (background_color + Symbol).
+      Neu erzeugen, wenn sich .boot aendert: README.md, "Startbilder".
+      Nicht in APP_SHELL (sw.js): iOS laedt nur das eine passende Bild. -->
+-<link rel="apple-touch-startup-image" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1320x2868.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1206x2622.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1290x2796.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1179x2556.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1284x2778.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1170x2532.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1125x2436.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1080x2340.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2688.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-828x1792.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2208.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-750x1334.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-640x1136.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2064x2752.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2752x2064.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2048x2732.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2732x2048.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2420.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2420x1668.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2388.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2388x1668.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1640x2360.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2360x1640.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2224.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2224x1668.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1620x2160.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2160x1620.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1536x2048.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png?v=3.18.30">
+-<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png?v=3.18.30">
++<link rel="apple-touch-startup-image" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1320x2868.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1206x2622.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1290x2796.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1179x2556.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1284x2778.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1170x2532.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1125x2436.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1080x2340.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2688.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-828x1792.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./splash/splash-1242x2208.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-750x1334.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-640x1136.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2064x2752.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2752x2064.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-2048x2732.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2732x2048.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2420.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1210px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2420x1668.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2388.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2388x1668.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1640x2360.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2360x1640.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1668x2224.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2224x1668.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1620x2160.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2160x1620.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1536x2048.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2048x1536.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./splash/splash-1488x2266.png?v=3.18.31">
++<link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./splash/splash-2266x1488.png?v=3.18.31">
+ <!-- Kritischer First-Paint-Teil des Boot-Screens: dieselbe Geometrie wie
+      die .boot-Regeln in styles.css, damit das Icon nicht erst nach dem
+      Stylesheet-Laden aus dem Dokumentfluss in die Mitte springt. -->
+@@ -123,7 +123,7 @@
+   } catch (e) {}
+ })();
+ </script>
+-<link rel="stylesheet" href="./styles.css?v=3.18.30">
++<link rel="stylesheet" href="./styles.css?v=3.18.31">
+ <script>
+ /* 2.20.0: Läuft, BEVOR das erste Bild steht.
+ 
+@@ -222,6 +222,6 @@
+      dieser Wert auf APP_VERSION mitgezogen werden - sonst haengen Browser,
+      die die App innerhalb der letzten Stunde offen hatten, an der alten
+      app.js fest, auch nach einem Reload. -->
+-<script type="module" src="./app.js?v=3.18.30"></script>
++<script type="module" src="./app.js?v=3.18.31"></script>
+ </body>
+ </html>
 diff --git a/styles.css b/styles.css
 index 297c36ad..3cd79463 100644
 --- a/styles.css
@@ -1411,6 +1526,19 @@ index 297c36ad..3cd79463 100644
  button.lernen-bereich-link { min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
  @media (hover: hover) and (pointer: fine) {
    .study-aufdecken, .grade-row button { position: relative; }
+diff --git a/sw.js b/sw.js
+index 7979e423..264ecc0f 100644
+--- a/sw.js
++++ b/sw.js
+@@ -7,7 +7,7 @@
+    WICHTIG: Bei jeder neuen Version CACHE_NAME hochzählen (v2 → v3 → ...),
+    sonst behalten Nutzer:innen alte Dateien im Cache. */
+ 
+-const CACHE_NAME = "adrabic-3.18.30";
++const CACHE_NAME = "adrabic-3.18.31";
+ 
+ /* 3.11.0: die Versionsnummer EINMAL, abgeleitet aus CACHE_NAME. Sie wird
+    unten an styles.css und app.js gehaengt - siehe die Begruendung dort. */
 diff --git a/plan/werkzeuge/minuten_sicherung.sh b/plan/werkzeuge/minuten_sicherung.sh
 index 8784251f..b0bc8398 100644
 --- a/plan/werkzeuge/minuten_sicherung.sh

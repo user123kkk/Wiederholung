@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 21:12 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 21:13 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,8 +6,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `53f95c74 Sicherung 21:11 (automatisch, jede Minute)`
-- Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
+- Zweig und letzter Commit: `main`, `26ff4966 Sicherung 21:12 (automatisch, jede Minute)`
+- Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.31"
 - Version im letzten Commit: const APP_VERSION = "3.18.30"
 
 ## Uncommittete Dateien (stehen vollständig in `plan/sicherung/entwurf-aktuell.patch`)
@@ -30,7 +30,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A .claude/skills/llm-council/README.md
  A .claude/skills/llm-council/SKILL.md
  A .claude/skills/llm-council/references/upstream-SKILL.md
+ M CHANGELOG.md
  M app.js
+ M index.html
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
@@ -47,6 +49,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M styles.css
+ M sw.js
 ```
 
 Auf einem sauberen Stand desselben Commits wiederherstellen:
@@ -54,7 +57,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 3, chrome.exe 0 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 5, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 

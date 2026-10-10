@@ -1,7 +1,11 @@
-GRÜN lernen dunkel/320: Editor, Rückkehr, Fokus, Entwurf, Snapshot und Schutz
-GRÜN lernen hell/390/reduziert: Editor, Rückkehr, Fokus, Entwurf, Snapshot und Schutz
-GRÜN ueben dunkel/320: Editor, Rückkehr, Fokus, Entwurf, Snapshot und Schutz
-GRÜN ueben hell/390/reduziert: Editor, Rückkehr, Fokus, Entwurf, Snapshot und Schutz
-GRÜN schreiben dunkel/320: Editor, Rückkehr, Fokus, Entwurf, Snapshot und Schutz
-GRÜN schreiben hell/390/reduziert: Editor, Rückkehr, Fokus, Entwurf, Snapshot und Schutz
-6 Konfigurationen grün; Quelle Arbeitsbaum SHA256 578fe2c78ac28cb299021fabb26c50467101e4f591dd76a8f3c88992db6764b6
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-action="reveal"]').visible().first()
+
+    at click (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_runde_bearbeiten.js:22:86)
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_runde_bearbeiten.js:90:13 {
+  log: [
+    `  - waiting for locator('[data-action="reveal"]').visible().first()`
+  ],
+  name: 'TimeoutError'
+}
