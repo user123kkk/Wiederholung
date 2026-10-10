@@ -62,6 +62,17 @@ Fehler noch einen bloßen Messfehler ableiten. Die endgültige Ursache ist offen
 
 ### Erneut beauftragte Sperrenklärung, 10.10.2026 17:20
 
+Ergänzung17:29: AboveNormal-Stabilitätsprobe215/277ms rot, deshalb
+keine Gesamtabnahme. Vorwärmen der ersten14 tatsächlichen Kartenwörter
+liefert315ms; Originale davor222/234, danach380/316ms. Flexbasis0%
+liefert232/197ms; Originale320/190 und291/217ms. Gleicher End-DOM,
+keine Produktvariante übernommen. Diese kleinen Varianten lösen die
+Sperre nicht ausreichend. Alle eigenen Testbrowser beendet; weitere
+Arbeit muss eine notwendige Änderung am gemeinsamen Renderablauf
+begründen. Keine wiederholten Energie-/Prioritätsproben oder Auswahl
+grüner Einzelwerte. Originaltest, Grenze200ms, CPU4x und157 grüne
+Abnahmen bleiben unverändert erhalten.
+
 Ergänzung17:23: Die beiden vorher festgelegten Energie-Stabilitätsläufe
 scheitern mit230/376ms. Der Ansatz ist verworfen; keine Gesamtabnahme
 gestartet, AC/DC-Minimum5 bestätigt. Direkt kombinierter Beobachter/

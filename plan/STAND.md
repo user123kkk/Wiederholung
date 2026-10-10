@@ -1,5 +1,14 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 17:29 – bislang kein belegter Tempo-Fix:**
+AboveNormal-Stabilitätsprobe215/277ms rot; keine Gesamtabnahme. Wörter-
+Vorwärmen315ms und Flexbasis232ms lösen die Sperre ebenfalls nicht.
+Keine Produktänderung übernommen. Energieeinstellung normal, alle eigenen
+Testbrowser beendet; Sicherung1792/5884 und Server6972 bleiben aktiv.
+Weitere Arbeit gezielt am gemeinsamen Renderablauf begründen; keine
+wiederholten Energie-/Prioritätsproben oder Auswahl grüner Einzelwerte.
+Datenabschluss157/158 weiter offen, kein neuer Paketbau/Deploy.
+
 **10.10.2026 17:23 – Energieansatz verworfen, Tempo weiter offen:**
 Zwei vorher festgelegte Originale unter AC-Minimum100:230/376ms rot.
 AC-Minimum auf5 restauriert, keine Gesamtabnahme gestartet. Varianten mit

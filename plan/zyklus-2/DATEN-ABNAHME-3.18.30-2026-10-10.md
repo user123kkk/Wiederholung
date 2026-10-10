@@ -1,5 +1,12 @@
 # Große Datenabnahme 3.18.30
 
+**Fortsetzung17:29:** Tempo-Klärung seit ausdrücklichem Betreiberauftrag
+16:53 wieder beauftragt. Bisherige gezielte Render-/Layout-/Schrift- und
+Umgebungsvarianten liefern keinen ausreichenden Fix; knappe Einzelgrüns
+nicht ausgewählt. Energie- und Prioritäts-Stabilitätsproben beide rot,
+keine fortgesetzte Gesamtabnahme gestartet.157/158 bleibt, Produkt und
+Originaltest unverändert; Belege/Anschluss im Tempo-Befund.
+
 **Fortsetzung16:22:** Nach Neustart Originaltempo einmal219ms bei200ms rot.
 Alle neuen vollständigen Ausgaben gelesen, Klickdiagnose ist keine
 Ersatzabnahme. Weitere Tempo-Suche auf Betreiberkorrektur zum Tokenverbrauch

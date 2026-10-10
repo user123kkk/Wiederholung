@@ -1,5 +1,15 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Anschluss10.10.2026 17:29
+
+Tempo-Klärung seit16:53 wieder ausdrücklich beauftragt. Gezielte kleine
+Varianten und kontrollierte Energie-/Prioritätsproben lösen die Sperre
+bislang nicht; keine Produktänderung oder fortgesetzte Gesamtabnahme.
+Keine gleichen Proben wiederholen, keine grünen Einzelwerte auswählen.
+Gemeinsamen Renderablauf gezielt mit Ursachenbeleg korrigieren, dann
+Datenabschluss und ursprüngliche Reihenfolge.157/158 bleibt, Entwurf
+3.18.30 und Text-Probelauf erhalten. Historische Wunschquellen abgeschlossen.
+
 ## Anschluss10.10.2026 16:49
 
 Historische Wunschprüfung der39 lokalen Exporte vor05.10. abgeschlossen;

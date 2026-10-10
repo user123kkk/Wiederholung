@@ -1,5 +1,15 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Tempo10.10.,17:29:** Auch AboveNormal fällt in beiden vorab festgelegten
+Originalen215/277ms durch; keine Gesamtabnahme gestartet. Vorwärmen der
+ersten14 realen Kartenwörter315ms und flex-basis0%-Probe232ms ebenfalls
+kein Fix, flankierende Originale weiterhin rot. Kein Ansatz übernommen,
+Produkt/Testgrenze unverändert, Energieeinstellung restauriert. Gezielte
+kleine Varianten bislang ausgeschöpft; weiterer Anschluss braucht eine
+belegte Änderung am gemeinsamen Renderablauf, keine neue Energie-/
+Prioritätsprobe oder Wiederholung derselben Varianten. Daten157/158 bleibt
+gesperrt; ursprüngliche Reihenfolge nach erfolgreicher Behebung fortsetzen.
+
 **Tempo10.10.,17:23:** Sperre weiterhin offen. Energievergleich vorab auf
 zwei Läufe begrenzt:230ms und376ms rot trotz AC-Prozessorminimum100;
 Einstellung auf5 restauriert, keine Gesamtabnahme daraus gestartet.

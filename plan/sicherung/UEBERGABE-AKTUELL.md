@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 17:29 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 17:30 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e2b39202 Sicherung 17:28 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `1bbd5f3f Sicherung 17:29 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -65,6 +68,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
+ M plan/zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md
+ M plan/zyklus-2/mehrwert/ARBEITSSTAND.md
  M sw.js
 ```
 
@@ -73,7 +79,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 6, chrome.exe 12 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 6, chrome.exe 15 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -94,6 +100,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 17:29 Codex Prioritäts-Stabilitätsprobe215/277ms rot, keine Gesamtabnahme gestartet; eigene Browser geschlossen. Wort-Vorwärmen315ms bei Originalen222/234 und380/316; Flexbasis0%-Probe232/197 bei Originalen320/190 und291/217. Gleicher End-DOM, kein ausreichender Fix oder belastbare Ursache daraus. Alle neuen vollständigen Ausgaben gelesen, Diagnosehilfen syntaxgeprüft. Produkt und Originaltest unverändert; vorhandene157 grüne nicht wiederholt. Sicherung1792/5884 und Server6972 bestätigt. Anschluss zentral: keine gleichen Umgebungs-/Kleinstvarianten wiederholen, notwendige Änderung am gemeinsamen Renderablauf erst mit Ursachenbeleg übernehmen. Eigenen falschen Lesepfad DATEN-ABNAHME-2026-10-10.md mittels rg auf tatsächlichen DATEN-ABNAHME-3.18.30-2026-10-10.md korrigiert; keine Aussage aus Lesefehler.
 
 - 17:23 Codex Energie-Stabilitätsvergleich abgeschlossen:230/376ms rot, Ansatz verworfen, fortgesetzte Gesamtabnahme nicht gestartet. AC/DC-Minimum5 mit powercfg bestätigt; alle vollständigen Logs gelesen. Direkte Sichtbarkeits-/Viewport-Variante231ms, flankierende Originale302/197ms; nav-kontinuierlich290ms, Originale231/192ms, End-DOM identisch. Weniger Eingabeereignisse bei erhaltener Navigation beweisen keinen Tempo-Fix. Keine Variante übernommen. Abschließende gezielte Umgebungsprobe setzt nur vom eigenen Browser-CDP gelieferte Browser-/Renderer-PIDs auf AboveNormal; fremde Browser nicht verändert. Hilfsskript schließt Browser wie der Originaltest, Priorität endet mit diesen Prozessen.
 
@@ -136,5 +144,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 16:09 Codex gezielte Tempo-Diagnose abgeschlossen: Original/Browservariante/Original mit bestehender Messhilfe, alle Schriften vorher geladen und End-DOM identisch. content-visibility:visible setzt sofort1021 statt159/532 Layoutobjekte, keine Korrektur. Offline-Auswerter ordnet die großen Layouts in alten und neuen Traces nach dem Klick-Handler ein. Unabhängige feste Rechenprobe ohne App: CPU4x24,3–46,7ms bei identischer Prüfsumme, ohne Drosselung deutlich geringere Schwankung; keine Rot-Umdeutung. Alle vollständigen neuen Logs gelesen, Rohtraces gesichert. Hashquellee595b5b6312244cd und Originaltest unverändert;157 gültige grüne erhalten. Kein Produktfix/Commit/Deploy. Zentraler Anschluss: Betreiber-Neustart des seit07.10. laufenden Laptops, danach nur Rechenprobe und Originaltempo einmal; ursprüngliche Ursache weiterhin nicht vollständig belegt.
 
 - Codex Anschluss der Datenabnahme: Übergabe, Tempo-Befund, Abnahmebericht und geltende Regeln gelesen; bestehende Minuten-Sicherung 12532/16564 bestätigt, keine zweite gestartet. Netzteilstatus 2. Vorhandene Rohtraces der beiden Quellen zeitlich zerlegt: erster Layoutdurchlauf liegt nach Ende des Klick-Handlers, zweiter nach dem Animationsbild; kein Beleg für einen erzwungenen großen Layoutdurchlauf innerhalb des Klick-Handlers. Aktuelle Kartenlisten-, Schriftvorlade- und content-visibility-Pfade gelesen. Produkt und ursprüngliche rote Belege unverändert; gezielte Zuordnung der beiden Layoutdurchläufe wird vorbereitet.
-
-- Neuer lokaler Chat „Datenabnahme 3.18.30: Tempo klären“ gestartet: 01a12620-409a-7e33-8945-dcc4837f7a96. Konkreter Anschluss samt vorhandenen Diagnosen, Erhalt gültiger Prüfungen, unveränderter 200-ms-Grenze und Verbot neuer Pakete/Veröffentlichung übergeben; keine Modelländerung/zweite Sicherung veranlasst.
