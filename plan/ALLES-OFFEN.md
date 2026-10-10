@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Fortsetzungsauftrag 10.10., 16:24:** Gesicherten Stand verwenden, sehr
+knapp antworten, keine weitere Tempo-Suche oder zusätzlichen Messläufe.
+Anschluss geprüft: Datenpaket 3.18.30 bleibt bei157/158 gesperrt; innerhalb
+dieser Grenzen kein weiterer Produktabschluss möglich. Offene Entscheidung:
+ob und wann die gezielte Tempo-Klärung wieder ausdrücklich beauftragt wird.
+Bis dahin Entwurf erhalten; kein neues Paket, keine Grenzänderung/Abnahme.
+Bestehende Minuten-Sicherung1792/5884 bestätigt, keine zweite gestartet.
+
 **Betreiberkorrektur10.10.,16:22:** „halt dich nicht so lang daran auf, du
 verschwendest tokens“. Weitere Tempo-Diagnose jetzt beendet. Nach bestätigtem
 Neustart Originaltest einmal219ms bei200ms rot;157/158 bleibt. Keine neue

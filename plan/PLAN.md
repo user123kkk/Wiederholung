@@ -7,6 +7,12 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.2026 16:24 – Anschluss geprüft:** Ohne weitere Tempo-Diagnose oder
+Messläufe kein Produktabschluss möglich. Offen ist, ob und wann die gezielte
+Tempo-Klärung wieder ausdrücklich beauftragt wird. Bis dahin gesperrten
+Entwurf3.18.30 erhalten;157/158 unverändert, kein neues Paket/Deploy.
+Minuten-Sicherung1792/5884 bestätigt, keine zweite gestartet.
+
 **10.10.2026 16:22:** Weitere Tempo-Diagnose auf Betreiberkorrektur beendet.
 Neustart bestätigt, Originaltest219ms bei200ms rot.157/158 bleibt offen;
 keine weitere Messreihe, kein Paketabschluss oder Deploy. Belege in STAND.
