@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 13:14 Codex Gesamtstand93/158 grün; alle93 vollständigen gültigen Abschlusslogs gelesen, einschließlich PaketB sowie C1/C2/C11–C14/C17 (Kalendertagversatz0–6). Weiterlernen-Test aktiv. Leseregister aktuell; Produkt/Rules/SDK-Quellstand unverändert. Tokenpräferenz dauerhaft dokumentiert, kompakte Kontrollroutine statt wiederholter ausführlicher Abfragen.
+
 - 13:04 Codex Nachfrage zur Begrenzung beantwortet und Regel präzisiert: keine starre Tokenobergrenze; notwendige Auswertung/Fehlerklärung bleiben vollständig. Routine und Kommunikation sparsam, keine ungeprüften Freigaben.
 
 - 13:03 Codex ausdrücklichen Wunsch zum Festhalten der Tokenpräferenz umgesetzt: BETREIBER-VERSTEHEN mit Originalwortlaut, Skriptbetrieb/knapper KI-Auswertung und konkreten ladegeraet-Unterschieden ergänzt; Wunsch in ALLES-OFFEN erledigt dokumentiert. Reine Dokumentation, bestehender Prüflauf bleibt aktiv.

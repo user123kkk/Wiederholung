@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 13:13 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 13:14 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `ab50b99 Sicherung 13:12 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `17bcba8 Sicherung 13:13 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -62,7 +63,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -83,6 +84,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 13:14 Codex Gesamtstand93/158 grün; alle93 vollständigen gültigen Abschlusslogs gelesen, einschließlich PaketB sowie C1/C2/C11–C14/C17 (Kalendertagversatz0–6). Weiterlernen-Test aktiv. Leseregister aktuell; Produkt/Rules/SDK-Quellstand unverändert. Tokenpräferenz dauerhaft dokumentiert, kompakte Kontrollroutine statt wiederholter ausführlicher Abfragen.
 
 - 13:04 Codex Nachfrage zur Begrenzung beantwortet und Regel präzisiert: keine starre Tokenobergrenze; notwendige Auswertung/Fehlerklärung bleiben vollständig. Routine und Kommunikation sparsam, keine ungeprüften Freigaben.
 
@@ -125,5 +128,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 11:44 Codex neuer ausdrücklich beauftragter Abnahmechat: Übergabe/AGENTS, Betreiberregeln, ALLES-OFFEN, STAND, CLAUDE, LEHREN, Zyklusregeln und Abnahmevorbereitung gelesen; Daten-Skill und kurze deutsche Meldungen angewandt. Ein Minuten-Sicherungsbaum bestätigt, BatteryStatus 2. Entwurf 3.18.30/Fremdarbeit erhalten, kein Pull/Reset/Worktree. Große Datenabnahme jetzt wieder aufgenommen; 46 unveränderte gezielte Fälle nicht erneut ausführen. Zwei konkrete Aufbauprobleme werden vor frischem Browserlauf behoben und getrennt geprüft; kein Deploy/neuer Funktionsbau.
 
 - 11:42 Codex Betreiber „ok los aber neuer chtat ja ... paket“: Paket als zusammengehörige Änderungen/Prüfung/Sicherung konkret erklärt. Expliziten neuen Chat für zuvor benannte große Datenabnahme/Paketabschluss vorbereiten. Aktuelle Übergabe 11:41, Desktop-Projekt-ID aus App-Liste gewählt (nicht gleichnamige Kopie unter USER). Kein Worktree, damit uncommitteter Stand 3.18.30 erhalten bleibt. Wunsch und Umfang in ALLES-OFFEN gesichert, keine Veröffentlichung/neue Funktionsfreigabe abgeleitet. Alter Chat führt keine parallele Produktarbeit aus.
-
-- 11:40 Codex nach abgeschlossenem Quellenabgleich den ausdrücklich gespeicherten Heartbeat-Abschlussauftrag angewandt: vorhandene Automation adrabic-nachtarbeit-fortsetzen über App-Werkzeug PAUSED bestätigt, volle übrige Felder erhalten; lokale Konfiguration ebenfalls PAUSED. Keine zweite Automation/Sicherung. Nicht pausenlos weiterarbeiten behaupten: aktuell nur verschobene große Datenabnahme/Paketabschluss, Gerätebelege und nötige verstandene Funktionsentscheidungen; kein neues Paket über Entwurf. Minuten-Sicherung weiter aktiv, Übergabe 11:39/automatischer Commit 11:38 gesehen. Konkreten Rest einmal gemeldet.
