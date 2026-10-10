@@ -1,5 +1,12 @@
 # Gesammelte Datenabnahme 3.18.30: vorbereitet, nicht ausgeführt
 
+**Aktueller Endstand10.10.2026 15:29:** Die Vorbereitung wurde ausgeführt;
+Titel und ältere Absätze bleiben historische Quelle. Alle158 Abschlusslogs
+gelesen,157 grün;13 Runde/238 Regeln grün, beide vorgeschriebenen
+Zufallsläufe mitTexten0 Befunde. Paketabschluss bleibt wegen offenem
+Texttempo-Rot gesperrt. Kein Paketcommit/Deploy. Details und erhaltene
+Diagnosen im [Datenabnahmebericht](DATEN-ABNAHME-3.18.30-2026-10-10.md).
+
 **Fortsetzung 10.10.2026 12:06:** erster allgemeiner Lauf wegen rotem
 Tempotest angehalten. Ursache per Chrome-Trace in der Prüfattrappe belegt;
 Batchmeldungen gezielt korrigiert und mit fester Gegenprobe geprüft.

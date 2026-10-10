@@ -1,6 +1,6 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
-10.10.2026 15:28 Abschluss der ausgeführten Prüfungen:157/158 grün,
+10.10.2026 15:29 Abschluss der ausgeführten Prüfungen:157/158 grün,
 alle158 Abschlusslogs gelesen; Runde13/13, Regeln238, Handy200/iPad150
 Seed7 mitTexten je0 Befunde. **Datenpaket bleibt offen** wegen Tempo-
 Rot226/254/252ms bei200ms. [Konkreter Befund](zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md),

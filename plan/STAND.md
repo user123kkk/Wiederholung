@@ -1,6 +1,6 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
-**10.10.2026 15:28 – Prüfungen beendet, Datenpaket noch gesperrt:**
+**10.10.2026 15:29 – Prüfungen beendet, Datenpaket noch gesperrt:**
 157/158 grün, alle158 Abschlusslogs gelesen;13/13 Runden und238 Regeln
 grün. AFFE_TEXTE=1 Handy200/iPad150 Seed7 je0 Befunde, ganze Ausgaben
 gelesen. Tempo226/254/252ms bei200ms offen, Quellee595b5b6312244cd gleich.

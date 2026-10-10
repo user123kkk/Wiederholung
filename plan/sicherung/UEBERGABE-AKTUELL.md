@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 15:29 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 15:30 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `70676886 Sicherung 15:28 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `e4677dc0 Sicherung 15:29 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -66,8 +66,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md
+ M plan/zyklus-2/AUFGABEN.md
  M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
- M plan/zyklus-2/LOGBUCH.md
  M sw.js
 ```
 
@@ -98,7 +99,7 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
-- 15:28 Codex iPad-Zufallstest AFFE_TEXTE=1/150/Seed7 abgeschlossen,104 Textaktionen/0 Befunde; ganze Ausgabe gelesen. Damit alle158 Abschlusslogs/Runde13 und beide vorgeschriebenen Zufallstests gelesen, Regeln238 gültig grün. Gesamt157/158, Tempo als echte offene Sperre erhalten; kein Paketcommit/Produkt-Push/Deploy. Eigene Demo-Emulatorwurzeln21112/12120 anhand exakter Projekt-Kommandos geprüft und nach Testende beendet; Minuten-Sicherung12532 läuft weiter, Fremdprozesse/Entwurf/Fremdarbeit erhalten. Endstand/Plan/Offenliste/Logbuch/Bericht nachgezogen; nächste Arbeit ist gezielte Tempo-Klärung, kein neues Paket. Vollständige TikTok-Quelle und Zusammenführung in vorhandene Pläne gesichert.
+- 15:29 Codex iPad-Zufallstest AFFE_TEXTE=1/150/Seed7 abgeschlossen,104 Textaktionen/0 Befunde; ganze Ausgabe gelesen. Damit alle158 Abschlusslogs/Runde13 und beide vorgeschriebenen Zufallstests gelesen, Regeln238 gültig grün. Gesamt157/158, Tempo als echte offene Sperre erhalten; kein Paketcommit/Produkt-Push/Deploy. Eigene Demo-Emulatorwurzeln21112/12120 anhand exakter Projekt-Kommandos geprüft und nach Testende beendet; Minuten-Sicherung12532 läuft weiter, Fremdprozesse/Entwurf/Fremdarbeit erhalten. Endstand/Plan/Offenliste/Logbuch/Bericht nachgezogen; nächste Arbeit ist gezielte Tempo-Klärung, kein neues Paket. Vollständige TikTok-Quelle und Zusammenführung in vorhandene Pläne gesichert.
 
 - 15:27 Codex Handy-Zufallstest AFFE_TEXTE=1/200/Seed7 abgeschlossen:104 Textaktionen,0 Befunde; vollständige Ausgabe gelesen. iPad AFFE_TEXTE=1/150/Seed7 läuft (100 Schritte). Gesamtlauf und Runde fertig, Tempo als echtes offenes Rot erhalten; Logbuch/Checkliste/Planstände aktualisiert. git diff --check korrekt mit Repo-Zeilenendkonfiguration grün (voriger temporärer core.autocrlf=false-Aufruf behandelte CRLF fälschlich als Leerraum, keine Dateien dafür geändert). Alle Diagnosen/Quellen bewahrt, kein Paketcommit/Deploy.
 

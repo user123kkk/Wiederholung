@@ -36,6 +36,13 @@ Zuerst die fünf alten Befunde aus `grossplan/AUFGABEN.md`. Arbeitsstand: Zweig 
 | A16 | DATEN-11 | mittel | Abgelehnte Tagesantwort verschwindet nach Neustart trotz bestätigter Kartenbewertung | `befunde/DATEN.md`, `VERLAUF-NEUSTART-2026-10-09.md` | Astra mittel | in Arbeit | Gebaut und gezielt geprüft, Entwurf 3.18.30. 17 A16-SDK-Fälle, 16 A14/A15-Regressionsfälle, 238 Regeln und betroffene Bestands-/Hinweisprüfungen grün. Feste Gegenprobe 591d03e erhalten. Keine neue Lernregel; große Abnahme/Paketabschluss später gesammelt |
 | A17 | DATEN-12 | hoch | Speichern einer Notiz im offenen Kartenblatt setzt eine inzwischen fremd bewertete Karte ungewollt zurück | `befunde/DATEN.md`, `FORMULAR-KONFLIKT-2026-10-10.md` | Astra mittel | in Arbeit | Feste Gegenprobe 97cbdcc/05269ebd rot, Entwurf 3.18.30 korrigiert (4a8ca5a1). Fünf echte SDK-Fälle plus Kartenblatt/Snapshot/Sprung/Kontrast/a11y grün, vollständige Logs gelesen. Große Paketabnahme später; keine neue Lernregel/Veröffentlichung |
 
+**Große Abnahme10.10.2026 15:29:** A14–A17 bleiben in Arbeit, weil die
+Paketabnahme157/158 ein offenes Tempo-Rot enthält. Alle158 Ausgaben gelesen,
+13 Runde/238 Regeln grün, beide Zufallsläufe mitTexten0 Befunde. Produkt-
+Entwurf unverändert erhalten; kein Paketcommit/Deploy. Historische „später
+gesammelt“-Hinweise in den Zeilen oben sind durch den tatsächlichen
+[Abnahmebericht](DATEN-ABNAHME-3.18.30-2026-10-10.md) ergänzt.
+
 **Gezielter Stand 10.10.2026 09:42:** A14/A15 16, A16 22, A17 acht
 SDK-Fälle am selben aktuellen App-SHA 4a8ca5a1/Rules 6a110898 gemeinsam
 grün, alle vollständigen Ausgaben gelesen. Die früheren Fallzahlen in den
