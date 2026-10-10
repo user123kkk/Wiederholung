@@ -1350,6 +1350,67 @@ index 00000000..d62e5363
 +---
 +
 +Methodology by [Andrej Karpathy](https://x.com/karpathy). Claude Code adaptation inspired by [@olelehmann](https://x.com/olelehmann). Published by [@tenfoldmarc](https://instagram.com/tenfoldmarc) — follow for daily AI automation builds.
+diff --git a/app.js b/app.js
+index 3e724fe7..6dcc33f7 100644
+--- a/app.js
++++ b/app.js
+@@ -6855,6 +6855,13 @@ async function submitCardForm() {
+     editRueckkehrY = null;
+   }
+ }
++function karteInRundeBearbeiten(id) {
++  const s = ui.session;
++  const card = s && findCard(id);
++  // Nur die eigene, bereits aufgedeckte aktuelle Karte; der Textprobelauf bleibt separat.
++  if (!s || !s.revealed || s.queue[0] !== id || !card || card.textId || !kartenBearbeitbar()) return;
++  editCard(id);
++}
+ function editCard(id) {
+   /* hinweisGefuehrt zeichnet ueber den Dialog selbst neu - wichtig, weil der
+      Sprung aus dem Fortschritts-Tab schon den Bereich gewechselt hat. */
+@@ -12686,7 +12693,8 @@ function renderSession() {
+      sinnvoll: "die kann ich nie"). Der Notiz-Knopf gibt es erst mit der
+      Antwort - vorher haelt ein unsichtbarer Zwilling seinen Platz. */
+   if (s.revealed || !s.handwriting) {
+-    html += '<div class="study-nebenaktionen">';
++    const bearbeiten = kartenBearbeitbar() && !card.textId;
++    html += '<div class="study-nebenaktionen' + (bearbeiten ? ' study-nebenaktionen--bearbeiten' : '') + '">';
+     if (card.extra) {
+       html += s.revealed
+         ? '<button class="ghost" data-action="toggle-extra">' + (s.extraOpen ? "Notiz verbergen" : "Notiz anzeigen") + '</button>'
+@@ -12712,6 +12720,11 @@ function renderSession() {
+         '<span class="merk-btn__wort"><span' + (gemerkt ? ' class="aus" aria-hidden="true"' : '') + '>Merken</span>' +
+         '<span' + (gemerkt ? '' : ' class="aus" aria-hidden="true"') + '>Gemerkt</span></span></button>';
+     }
++    if (bearbeiten) {
++      html += s.revealed
++        ? '<button class="icon-btn" data-action="runde-karte-bearbeiten" data-id="' + esc(card.id) + '" aria-label="Karte bearbeiten" title="Karte bearbeiten">' + ikon("stift") + '</button>'
++        : '<span class="study-bearbeiten-platz" aria-hidden="true"></span>';
++    }
+     html += '</div>';
+   }
+ 
+@@ -16426,6 +16439,7 @@ document.body.addEventListener("click", e => {
+     }
+     case "card-detail-zu": schliesseObersteEbene(); break;
+     case "card-detail-bearbeiten": ui.cardDetailId = null; editCard(btn.dataset.id); break;
++    case "runde-karte-bearbeiten": karteInRundeBearbeiten(btn.dataset.id); break;
+     case "card-detail-loeschen": ui.cardDetailId = null; render(); deleteCard(btn.dataset.id); break;
+     case "nichts": break;
+     case "seite-neu-laden": location.reload(); break;
+diff --git a/styles.css b/styles.css
+index 297c36ad..3cd79463 100644
+--- a/styles.css
++++ b/styles.css
+@@ -1852,6 +1852,8 @@ button.startliste__schritt { cursor: pointer; }
+   gap: var(--space-2); width: 100%; max-width: 360px; margin-inline: auto;
+ }
+ .study-taste { display: none; }
++.study-nebenaktionen--bearbeiten { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--ctrl-md); }
++.study-bearbeiten-platz { width: var(--ctrl-md); height: var(--ctrl-md); }
+ button.lernen-bereich-link { min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
+ @media (hover: hover) and (pointer: fine) {
+   .study-aufdecken, .grade-row button { position: relative; }
 diff --git a/plan/werkzeuge/minuten_sicherung.sh b/plan/werkzeuge/minuten_sicherung.sh
 index 8784251f..b0bc8398 100644
 --- a/plan/werkzeuge/minuten_sicherung.sh
