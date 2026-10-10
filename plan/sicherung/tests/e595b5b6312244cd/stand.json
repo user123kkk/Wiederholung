@@ -1200,6 +1200,30 @@
       "fehler": null,
       "sekunden": 14,
       "quelltext": "6100003fc82a7bb90bd356b22dd3fcf99b326e5dedb4ff48fa5d721e416e62ce"
+    },
+    "t_verwalten.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 51,
+      "quelltext": "50de0604955173a73b4678863088ac3b64b2432818472e15479348ad55ca1852"
+    },
+    "t_wisch_tempo.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 0,
+      "quelltext": "cca4558e0413941ab329a8bb62fdb17ffdc0cfbd226e24201cfbe5ee9a78a454"
+    },
+    "t_wischen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 39,
+      "quelltext": "cce5e8b4519173de5a94e1bb7d9f0c592819b61f5f65dcdb95204794dc7986a0"
     }
   }
 }

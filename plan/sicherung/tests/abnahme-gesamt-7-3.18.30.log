@@ -153,3 +153,6 @@ BEWAHRT t_ueben.js
 BEWAHRT t_ueben_auswahl.js
 BEWAHRT t_undo_verlauf.js
 EXIT 0 t_verlauf_mehrgeraete.js (14s)
+EXIT 0 t_verwalten.js (51s)
+EXIT 0 t_wisch_tempo.js (0s)
+EXIT 0 t_wischen.js (39s)

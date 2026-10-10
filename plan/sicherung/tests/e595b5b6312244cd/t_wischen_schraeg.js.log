@@ -1,0 +1,4 @@
+OK   normal      waagerecht rechts                    bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   normal      schraeg nach unten rechts (Daumen)   bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   normal      schraeg nach oben links              bewertet: true (soll true) | Seite gescrollt: 0 px
+OK   normal      erst 10 px runter, dann seitlich     bewertet: true (soll true) | Seite gescrollt: 0 px

@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 15:18 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 15:20 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `44a54140 Sicherung 15:17 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `de811fd1 Sicherung 15:19 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -70,7 +71,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -91,6 +92,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 15:20 Codex korrigierter kompletter Mehrgeräte-Verlauf grün, erst gezielt und jetzt im Gesamtlauf14s (Hash6100003f); alle Ausgaben gelesen. Tatsächliche Regelablehnung/SDK-Rollback, genau einmal Nachholen, Offline-Neustart nach ausdrücklicher Kopienprüfung, beide Undo-/Tageswechselwege, Snapshot-Zeichenfläche und abgelehnter/erfolgreicher Reset erhalten. Testaufbau wartet auf bereits laufende App-Prüfung; Produkt unverändert. Gesamtlauf7 Runner8948/Sitzung23849:152 abgeschlossen,151 grün, ein Tempo-Rot252ms zusätzlich zu erhaltenen226/254ms; kein Grün-Wiederholungsziel. Verwalten-Ausgaben vollständig gelesen, echte Touch-Abnahme aktiv. Abschlusssperre Tempo bleibt.
 
 - 15:17 Codex Gesamt150 abgeschlossen, zwei rot (Tempo/Verlauf). Runner14360 nach zweitem Rot beendet, vollständige Logs/stand gesichert. Timeout an t_verlauf_mehrgeraete171 ist Ablehnungsprobe, nicht Reset (vorige Kurzmeldung korrigiert). Alter eigenständiger SDK-Wrapper manipulierte nur updateDoc; A16 schreibt atomare Batch-Updates. Vorhandenes Helfermuster übernommen, tatsächlichen ausgesandten Wrapper per VM geprüft; grün und feste315bb0e-Probe rot beim fehlenden Batch, andere Writes/Commit erhalten. Erster korrigierter Kompletttest meldet früheren Offline-Neustartserver9 statt10; voller Log gelesen. A16-Kopien werden ausdrücklich geprüft, ältere SDK-only-Fertigbedingung wartet nicht auf App-Belegprüfung. Test wartet jetzt auch auf bereits laufende App-Prüfung und prüft Wiederherstellung ausdrücklich; Erwartung10/keine Duplikate bleibt. Zweiter Komplettlauf aktiv. Produkt/Rules unverändert, ursprüngliche Tempo-Sperre bleibt.
 
@@ -133,5 +136,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 13:14 Codex Gesamtstand93/158 grün; alle93 vollständigen gültigen Abschlusslogs gelesen, einschließlich PaketB sowie C1/C2/C11–C14/C17 (Kalendertagversatz0–6). Weiterlernen-Test aktiv. Leseregister aktuell; Produkt/Rules/SDK-Quellstand unverändert. Tokenpräferenz dauerhaft dokumentiert, kompakte Kontrollroutine statt wiederholter ausführlicher Abfragen.
 
 - 13:04 Codex Nachfrage zur Begrenzung beantwortet und Regel präzisiert: keine starre Tokenobergrenze; notwendige Auswertung/Fehlerklärung bleiben vollständig. Routine und Kommunikation sparsam, keine ungeprüften Freigaben.
-
-- 13:03 Codex ausdrücklichen Wunsch zum Festhalten der Tokenpräferenz umgesetzt: BETREIBER-VERSTEHEN mit Originalwortlaut, Skriptbetrieb/knapper KI-Auswertung und konkreten ladegeraet-Unterschieden ergänzt; Wunsch in ALLES-OFFEN erledigt dokumentiert. Reine Dokumentation, bestehender Prüflauf bleibt aktiv.
