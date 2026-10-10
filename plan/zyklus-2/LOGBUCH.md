@@ -23,7 +23,12 @@ Neue LEHREN-Regel § 6.3/§ 15; Syntax und eigener App-Diff gegen festen
 Ausgang gelesen. Quellen vom Prüfserver gleich dem Arbeitsbaum.
 **Offen:** große Abnahme/Paketabschluss/Regeln vor Hosting, echtes iPhone.
 3.18.30 bleibt Entwurf, A14–A16 erhalten, kein App-Commit oder Deploy.
-**Nächster Schritt:** laufende gezielte Prüfungen auswerten, dann weitere
+**Abschluss 02:18:** alle fünf SDK-Fälle sowie Kartenblatt, Kartensnapshot,
+Sprung (vier Breiten), Kontrast (0) und a11y-Grundchecks grün. Vollständige
+Ausgaben gelesen; keine laufenden Tests mehr. A17 in Arbeit wegen noch
+offener großer Paketabnahme, kein neuer Paketbau. Früher genannte laufende
+Prüfungen sind damit abgeschlossen.
+**Nächster Schritt:** weitere
 Anschlussvorbereitung ohne Paketwechsel. Nacht-Heartbeat im selben Chat
 stündlich bis 10.10. 09:00; vorhandene Minuten-Sicherung weiter einzeln.
 

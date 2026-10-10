@@ -21,7 +21,8 @@ aber noch nicht als neues Paket gebaut werden.
 10.10.2026, Nachtfortsetzung: A17/DATEN-12 im bestehenden Datenpaket gefunden
 und als Entwurf korrigiert. Reines Notizspeichern nach fremder Bewertung
 setzt den Stand ungewollt 2 auf 0; feste Gegenprobe 97cbdcc bestätigt.
-Fünf echte SDK-Fälle des Fixes grün, betroffene Browserprüfung läuft.
+Fünf echte SDK-Fälle des Fixes und fünf betroffene Browserprüfungen grün,
+vollständige Ausgaben gelesen. Große Abnahme ist weiterhin offen.
 3.18.30 bleibt uncommittet; große Abnahme/Paketabschluss später. Belege:
 `zyklus-2/FORMULAR-KONFLIKT-2026-10-10.md`. Kein Paket H begonnen.
 

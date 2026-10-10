@@ -84,6 +84,16 @@ jeweiligen festgehaltenen Hash, nicht als neue Gesamtabnahme dieses App-Stands.
 
 ## Nächster Schritt
 
-Erweiterte SDK- und betroffene Browserprüfungen abschließen und vollständige
-Logs lesen. Danach weitere Anschlussvorbereitung in Repo-Reihenfolge;
-kein Paket H über dem uncommitteten Datenentwurf.
+Gezielter Abschluss 02:18: **fünf SDK-Fälle und fünf betroffene Browsertests
+grün**, vollständige Ausgaben gelesen. `t_karten_blatt`,
+`t_karten_snapshot`, `t_sprung` (vier Breiten ohne Sprung),
+`t_kontrast` (0 Funde auf Handy/Desktop/iPad quer, hell/dunkel),
+`t_a11y` (Handy/hell/ruhig, Namen/Labels/Verzögerungen ohne Fund).
+Logs `plan/sicherung/tests/a17-t_*.log`; `a17-t_snapshot.log` ist der
+ausdrücklich ausgeschlossene falsche Dateiaufruf. Syntax/Stand/Diff grün.
+Keine neue Vollabnahme oder vollständige WCAG-Abnahme behauptet.
+
+Weiter mit Anschlussvorbereitung in Repo-Reihenfolge und gezielter
+risikobezogener Datenprüfung, ohne bereits grüne identische Tests zu
+wiederholen. Paket H bleibt bis zur großen Datenabnahme und dem Commit
+gesperrt. A17 bleibt wie A14–A16 „in Arbeit“, weil Paketabschluss offen ist.

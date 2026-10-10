@@ -5,7 +5,9 @@ Zwei zusätzliche A16-Einzelfälle und gezielte Fehler-Gegenprobe am vorherigen
 Hash geprüft. Neuer A17/DATEN-12: reine Notizkorrektur im offenen Blatt
 setzt fremde Bewertung zurück; feste Quelle 97cbdcc rot. Im bestehenden
 Datenpaket korrigiert, fünf echte SDK-Fälle grün (App-SHA 4a8ca5a1).
-Betroffene Browserprüfungen laufen; Bericht FORMULAR-KONFLIKT-2026-10-10.md.
+Betroffene fünf Browserprüfungen ebenfalls grün; vollständige Logs gelesen.
+Bericht FORMULAR-KONFLIKT-2026-10-10.md. Keine Tests mehr offen in diesem
+gezielten Nachlauf; große Datenabnahme weiterhin ausstehend.
 Keine große Abnahme/Veröffentlichung. Nacht-Fortsetzung im selben Chat
 stündlich aktiv bis 10.10. 09:00; Minuten-Sicherung läuft als ein Baum.
 

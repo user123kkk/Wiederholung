@@ -7,7 +7,8 @@
   Datenpaket gefunden und korrigiert: nur Notiz geändert, fremde Bewertung
   fiel beim Formularspeichern auf 0. Feste Quelle 97cbdcc rot; fünf echte
   SDK-Fälle am App-SHA 4a8ca5a1 grün. Kartenblatt/Snapshot/Sprung grün,
-  Kontrast/a11y noch in Prüfung. Beleg FORMULAR-KONFLIKT-2026-10-10.md.
+  Kontrast/a11y ebenfalls grün; keine Tests mehr im gezielten Nachlauf offen.
+  Vollständige Logs gelesen. Beleg FORMULAR-KONFLIKT-2026-10-10.md.
   3.18.30 bleibt Entwurf, keine große Abnahme/Veröffentlichung. A14–A16
   erhalten; deren frühere Belege bleiben an ihren Quellhash gebunden.
 
