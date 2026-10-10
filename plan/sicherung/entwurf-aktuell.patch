@@ -3701,6 +3701,20 @@ index 00000000..c2b8224a
 +    console.log(passed + ' A16 SDK-Faelle gruen. Keine Gesamtabnahme oder iPhone-Abnahme.');
 +  } finally {await b.close();}
 +})().catch(e => {console.error(e); process.exitCode = 1;});
+diff --git a/plan/werkzeuge/pruefstand/t_verlauf_mehrgeraete.js b/plan/werkzeuge/pruefstand/t_verlauf_mehrgeraete.js
+index bb01ed4a..7f3a68d5 100644
+--- a/plan/werkzeuge/pruefstand/t_verlauf_mehrgeraete.js
++++ b/plan/werkzeuge/pruefstand/t_verlauf_mehrgeraete.js
+@@ -43,7 +43,8 @@ async function seite(b,sources,ctx){
+     let body=`export * from ${JSON.stringify(original)}; import * as core from ${JSON.stringify(original)};`;
+     if(name==='firebase-app.js')body+=`export function initializeApp(c){return core.initializeApp({...c,projectId:${JSON.stringify(PROJECT)}});}`;
+     if(name==='firebase-firestore.js')body+=`export function initializeFirestore(a,o){const db=core.initializeFirestore(a,o);core.connectFirestoreEmulator(db,'127.0.0.1',8081,{mockUserToken:{sub:'u1',email:'test@example.com',email_verified:true}});window.__PRUEF_DB=db;window.__PRUEF_SDK=core;return db;}
+-      export function updateDoc(ref,...args){if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}`;
++      export function updateDoc(ref,...args){if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}
++      export function writeBatch(db){const batch=core.writeBatch(db),update=batch.update.bind(batch);batch.update=(ref,...args)=>{if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);return update(ref,...args);};return batch;}`;
+     return r.fulfill({contentType:'text/javascript',body});
+   });
+   await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:APP_SOURCE+`
 diff --git a/plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js b/plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
 new file mode 100644
 index 00000000..515ad2e5
@@ -4021,6 +4035,32 @@ index 00000000..f88e13aa
 +  assert.equal(filtered[2].size, 0);
 +  console.log('OK geloeschte Batch-Dokumente gemeinsam entfernt');
 +})().catch(e => { console.error(e); process.exitCode = 1; });
+diff --git a/plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js b/plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
+new file mode 100644
+index 00000000..ce1dcbe1
+--- /dev/null
++++ b/plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
+@@ -0,0 +1,20 @@
++/* Tatsächlich ausgesandten SDK-Wrapper prüfen, keine App-Änderung.
++   Feste Gegenprobe: node x_verlauf_batch_ablehnung.js 315bb0e */
++const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict'),cp=require('node:child_process');
++const datei='plan/werkzeuge/pruefstand/t_verlauf_mehrgeraete.js';
++const quelle=process.argv[2]?cp.execFileSync('git',['show',process.argv[2]+':'+datei],{encoding:'utf8'}):fs.readFileSync(path.join(__dirname,'t_verlauf_mehrgeraete.js'),'utf8');
++const wrapper=quelle.match(/export function writeBatch\(db\)\{[^\n]+return batch;\}/)?.[0];
++assert.ok(wrapper,'Batch-Ablehnung fehlt im ausgesandten SDK-Wrapper');
++const calls=[];class FieldPath{constructor(name){this.name=name;}}
++const core={FieldPath,writeBatch:()=>({update(ref,...args){calls.push([ref,...args]);return this;},commit(){return 'commit-erhalten';}})};
++const context={core,window:{__PRUEF_ABLEHNEN:true}};vm.createContext(context);
++vm.runInContext(wrapper.replace('export ','')+';globalThis.probe=writeBatch;',context);
++const batch=context.probe({});
++batch.update({path:'users/u1'},new FieldPath('verlauf'),1);
++assert.equal(calls[0].length,5);assert.equal(calls[0][3].name,'__pruef_verboten');assert.equal(calls[0][4],true);
++batch.update({path:'users/u1/karten/k0'},new FieldPath('stufe'),2);assert.equal(calls[1].length,3);
++batch.update({path:'users/u1'},{verlauf:{}});assert.equal(calls[2].length,2);
++context.window.__PRUEF_ABLEHNEN=false;
++batch.update({path:'users/u1'},new FieldPath('verlauf'),1);assert.equal(calls[3].length,3);
++assert.equal(batch.commit(),'commit-erhalten');
++console.log('OK tatsächlicher Batch-Wrapper: verbotener FieldPath nur im Ablehnungsfall, Karten/Maps/normaler Write und Commit erhalten.');
 diff --git a/plan/werkzeuge/regeln/regeln-pruefung.mjs b/plan/werkzeuge/regeln/regeln-pruefung.mjs
 index 118e0da7..59d70825 100644
 --- a/plan/werkzeuge/regeln/regeln-pruefung.mjs

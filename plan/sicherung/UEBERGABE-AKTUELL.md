@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 15:14 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 15:16 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e8f6828c Sicherung 15:13 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `205ad9fd Sicherung 15:14 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -50,6 +50,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M plan/werkzeuge/pruefstand/t_paket_c_weiter.js
  M plan/werkzeuge/pruefstand/t_rechtsplan.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
+ M plan/werkzeuge/pruefstand/t_verlauf_mehrgeraete.js
  A plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
  A plan/werkzeuge/pruefstand/x_ab_tempo_reihenfolge.js
  A plan/werkzeuge/pruefstand/x_abnahme_hash.js
@@ -59,6 +60,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_spur_rechtsplan.js
  A plan/werkzeuge/pruefstand/x_spur_text_tempo.js
  A plan/werkzeuge/pruefstand/x_stub_batch.js
+ A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
  M sw.js
 ```
@@ -68,7 +70,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 11, chrome.exe 9 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 11, chrome.exe 10 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 

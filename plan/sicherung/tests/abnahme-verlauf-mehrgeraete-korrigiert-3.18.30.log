@@ -1,0 +1,21 @@
+OK  Zwei Geraete: 5 offline + 3 online = 8, beide Anzeigen gleich.
+OK  w/n/u werden getrennt und atomar addiert.
+AssertionError [ERR_ASSERTION]: Offline-Neustart verliert oder verdoppelt Antworten
++ actual - expected
+
+  {
+    n: 4,
+    u: 2,
++   w: 9
+-   w: 10
+  }
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_verlauf_mehrgeraete.js:100:12
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Object],
+  expected: [Object],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
