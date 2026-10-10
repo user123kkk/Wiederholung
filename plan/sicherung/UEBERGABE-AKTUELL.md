@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 21:20 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 21:22 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `275b7996 H1 Abschluss und konkrete Fortsetzungsfrage festhalten`
+- Zweig und letzter Commit: `main`, `b93b1cc2 Sicherung 21:20 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.31"
 - Version im letzten Commit: const APP_VERSION = "3.18.31"
 
@@ -30,6 +30,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A .claude/skills/llm-council/README.md
  A .claude/skills/llm-council/SKILL.md
  A .claude/skills/llm-council/references/upstream-SKILL.md
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
@@ -72,6 +74,13 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
+## 10.10.2026 – bedingtes Ja zu Runde fortsetzen prüfen
+
+Betreiber: „sei sicher es ist gut, wenn ja dann ja oder“. Bedingte Freigabe
+für den einzeln erläuterten Umfang, keine Gewissheitsbehauptung. Daten-
+und Lernbeleg-Skills angewandt. Wegen Speicher-/Doppelzählungsrisiken
+gezielte Abwägung mit Council und Quellenprüfung; kein neuer Tempo-Lauf.
+
 ## 10.10.2026 – nächster konkreter Vorschlag angefragt
 
 Nach H1-Abschluss „Runde fortsetzen“ einzeln erklärt: normale Abfrage,
@@ -110,10 +119,3 @@ Lernregel oder neuer Bildschirm; Gegenprobe und betroffene Tests.
 Zwischenspeicher nach `LEHREN.md` § 1.9: spätestens nach jedem
 Arbeitsschritt eine Zeile mit Uhrzeit (was gelesen, geprüft, geändert,
 gemessen wurde), dann committen und pushen. Neueste Zeile oben. Ist der
-Inhalt im Logbuch oder in `ALLES-OFFEN.md` angekommen, werden alte Zeilen
-gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
-
-## 10.10.2026
-
-- 21:03 Codex: read-only-Abgleich bindet alle158 Testquellen/Abschlusslogs/Leseregister an e595b5b6312244cd,157 grün und ausschließlich Texttempo rot;13/13 Runden. Syntax/Versions-/CSP-/Cache-Prüfer grün, Ladegerät-PowerShell geparst. Gegenlesen der aktuellen Bewertungs-, Tagesbeitrags-, Formular-, Undo-/Löschpfade gegen DATEN9–12 und vorhandene feste SDK-Belege; keine neue Produktänderung. Checkliste mit ausdrücklich freigegebener Ausnahme für Tempo dokumentiert. Ausschließlich benannte Produkt-/Daten-/Prüfaufbaupfade committet:00c6603186aa68c5c30324a150e4e73b7427137a, Push auf main bestätigt. Fremde Skill-/Werkzeugentwürfe erhalten; Produktdateien sauber. Danach konkreten Bearbeiten-Vorschlag nach Aufdecken per einer kurzen Frage vorgelegt; Bau wartet auf Einzelfreigabe gemäß ENTSCHEIDUNGEN-VERSTEHEN. Kein Testcache verändert, keine Veröffentlichung.
-

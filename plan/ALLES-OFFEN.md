@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**10.10., bedingtes Ja zu Runde fortsetzen:** „sei sicher es ist gut, wenn
+ja dann ja oder“. Nutzen, Nachteile und Risiken des konkret erklärten
+Umfangs zuerst prüfen; bei begründet positiver Bewertung gilt dieses Ja
+für normale Abfragerunden auf diesem Gerät/Konto am selben Lerntag.
+Keine Garantie oder Lernwirkungsbehauptung daraus ableiten. Unveränderte
+Antworten dürfen nicht erneut gezählt werden; Neustart bleibt möglich,
+Undo vor der Pause entfällt nach erneutem Öffnen wie im Vorschlag erklärt.
+
 **10.10., H1 gebaut und gezielt geprüft: 3.18.31.** Commit `cc16f0de`
 auf `origin/main` bestätigt; Produktdateien sauber. Stift nach Aufdecken,
 vorhandenes Blatt, gleiche Karte/Runde, keine Lernantwort durch Bearbeiten.
