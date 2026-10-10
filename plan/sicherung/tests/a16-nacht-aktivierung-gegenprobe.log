@@ -1,0 +1,17 @@
+app.js SHA256 5f117d985fc83e47b95219edc5dbd980002854228cc3ecbdf80efd264f6fab78
+firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 1
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:213:14
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async fall (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:46:7)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:175:43 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
