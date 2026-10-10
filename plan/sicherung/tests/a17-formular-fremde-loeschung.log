@@ -1,0 +1,12 @@
+app.js SHA256 4a8ca5a1a73c7873275497c38f7368f542785a97f1712e21a20b60faed25fe97
+firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3
+locator.waitFor: Error: strict mode violation: locator('.dlg') resolved to 2 elements:
+    1) <div class="dlg" role="dialog" tabindex="-1" aria-modal="true" data-action="nichts" aria-labelledby="karte-sheet-titel">…</div> aka getByRole('dialog', { name: 'Neue Karte' })
+    2) <div class="dlg" role="dialog" aria-modal="true" data-action="nichts" aria-labelledby="dlg-title">…</div> aka getByRole('dialog', { name: 'Karte gelöscht' })
+
+Call log:
+  - waiting for locator('.dlg') to be visible
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\diagnose_formular_konflikt.js:53:35 {
+  log: [ "  - waiting for locator('.dlg') to be visible" ]
+}
