@@ -784,6 +784,38 @@
       "fehler": null,
       "sekunden": 1,
       "quelltext": "da2e4f8a630b71edf854d1720eada020170fb24f24cc90d4004b5a833a8fc030"
+    },
+    "t_paket_f_ebenen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 63,
+      "quelltext": "c2df4165c3c79cbe91de3e3a36b45f0b61f54b8c4472979ff8414dea95b0becc"
+    },
+    "t_paket_f_netz.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 20,
+      "quelltext": "39b1c08baac5f227a66e2e1f667f11b2f127419d1a0adacbcd22638d7c4e4eb3"
+    },
+    "t_paket_f_struktur.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 0,
+      "quelltext": "a4f92fdf293710948679176c4c370a300e2164f0eecce733efde3af2fb56794c"
+    },
+    "t_paket_f_texte.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 4,
+      "quelltext": "e4d333f1b54f63df86fc430f0de33e9b4660ae0bdd7f1ccc9c89266e825031a2"
     }
   }
 }
