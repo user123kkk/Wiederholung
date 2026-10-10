@@ -83,6 +83,11 @@ Leseregister `../sicherung/tests/abnahme-gelesen-3.18.30.json` enthält
 Quellstand und bereits vollständig gelesene Testnamen; bei Anschluss
 gegen aktuelle stand.json prüfen, keine ungelesenen Logs übernehmen.
 
+Zwischenstand12:45: 75/158 grün, alle75 Abschlusslogs gelesen. Kontrast0,
+Lernstart28 Zustände, zwölf bestehende Lernregelregressionen grün. Kein
+Lernwirkungs-/Empfehlungsnachweis; keine neue Lernregel gebaut. Nächster
+Runnerfall t_liste_einfuegen, danach weitere Daten-/Paket-/Rundenprüfungen.
+
 Belege: `abnahme-bestand-ab-3.18.30.log`, `abnahme-bestand-spur-3.18.30.log`,
 `abnahme-stub-batch-2-3.18.30.log`,
 `abnahme-stub-batch-gegenprobe-2-3.18.30.log`,

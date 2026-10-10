@@ -1,5 +1,11 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 12:45 – frische Abnahme75/158 grün:**
+Alle75 Abschlussausgaben gelesen, exaktes Leserregister im Datenbericht.
+Lauf87583/Node18936 am Stand e595b5b6312244cd aktiv. Affe/Runden-Auswertung
+und vollständiger Abschluss stehen aus. App/Rules unverändert, Entwurf
+erhalten; kein neues Paket/Deploy. Ältere Zwischenstände darunter Verlauf.
+
 **10.10.2026 12:06 – korrigierter Prüfstand frisch gestartet:**
 Tempo-Ursache in Attrappe per Trace belegt, Batchmeldungen korrigiert,
 funktionale Gegenprobe grün/alter Stand erwartbar rot. Original-Tempotest

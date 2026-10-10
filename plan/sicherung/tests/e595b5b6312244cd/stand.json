@@ -600,6 +600,46 @@
       "fehler": null,
       "sekunden": 0,
       "quelltext": "e928974108c8a2e14c9902af02b4b2d070aeba7ed64a513d59621c9c32282638"
+    },
+    "t_liste_einfuegen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 54,
+      "quelltext": "87d758c2233fc362e646e5f3828ffce53879b32c3dadc2d2bdedcc636661bb92"
+    },
+    "t_liste_lang.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 9,
+      "quelltext": "d0b0d6ee3b414a53e4b6cd82fcce2e33fa0d8d49fcb9f4af4feaf6f88a8d2767"
+    },
+    "t_liste_lesen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 1,
+      "quelltext": "477f22432a0b8234687499951de24c8c2053fdd720d9db05dded3299a7e559e5"
+    },
+    "t_liste_zeigen.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 44,
+      "quelltext": "5ec68ecb5e654f0aa13d0f53f385a344cf29472ea62de5e303bdd58ca2e8ea9a"
+    },
+    "t_loeschen_rueckgaengig.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 27,
+      "quelltext": "b65a29e1a9181b99845b46f27f70b0b53d33c856a6c9510137307dc44cd1fe36"
     }
   }
 }
