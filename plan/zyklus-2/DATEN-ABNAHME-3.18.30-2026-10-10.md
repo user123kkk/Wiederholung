@@ -1,5 +1,37 @@
 # Große Datenabnahme 3.18.30
 
+## 10.10.2026 21:02 – Datenabschluss mit freigegebener Ausnahme
+
+Betreiber „ok los“ nach konkreter Erklärung: Daten separat abschließen,
+Tempo ausdrücklich offen lassen, danach Reihenfolge fortsetzen; keine
+Veröffentlichung. Begrenzung auf A14–A17/3.18.30 gemäß
+[Entscheidungsvorlage](../council/TEMPO-ENTSCHEIDUNG-2026-10-10.md).
+Die früheren Abschlusssperren unten bleiben historische Belege.
+
+Read-only-Abgleich mit x_daten_abschluss_belege.js: gemeinsamer Quellstand
+e595b5b6312244cdc5ecc07ba0b0b7c287207a6f909bf2a41b4e61d1b00e1923,
+alle158 Testquellen/Abschlusslogs/Leseregister aktuell identisch.
+157 grün, nur t_text_tempo.js rot;13/13 Runden grün. Rules238 und
+beide Zufallsläufe0 Befunde am erhaltenen Stand. Keine Testwiederholung,
+kein Cache-Ergebnis verändert. Syntax/Version/CSP/APP_SHELL frisch grün.
+
+Gegenprüfung §2a: aktueller Produkt-/Rules-/Datenschutz-Diff und die
+Bewertungs-, Nachhol-, Rückgängig-, Formular- und Kontolöschpfade gegen
+DATEN9–12 abgeglichen; vorhandene vollständige Gegenlese-/SDK-Belege
+am identischen Quellstand bewahrt. Keine neue Produktabweichung festgestellt.
+Die fünf Prüfaufbaukorrekturen darunter bleiben getrennt dokumentiert;
+keine ursprüngliche Assertion oder Tempo-Grenze gelockert.
+
+Checkliste LEHREN14: Punkte1–5/7–11 durch Gegenlesen und erhaltene
+Belege erfüllt; Punkt6 Tempo nicht erfüllt, bewusst begrenzte Ausnahme.
+Punkt12:157/158, kein vollständiges Grün; Runde/Affe erhalten. Punkt13:
+Abschluss/Plan/Logbuch nachgezogen. Punkt14: kein Deploy jetzt; neue
+Regeln später vor Hosting, echte Geräteabnahmen weiterhin offen.
+
+Nächster Schritt: gezielter Datencommit/Push; anschließend Lernrunde,
+zuerst vorläufige Entscheidung über Bearbeiten in der Abfrage verständlich
+klären. Die Ausnahme genehmigt keine neue Funktion oder Lernregel.
+
 **Fortsetzung17:29:** Tempo-Klärung seit ausdrücklichem Betreiberauftrag
 16:53 wieder beauftragt. Bisherige gezielte Render-/Layout-/Schrift- und
 Umgebungsvarianten liefern keinen ausreichenden Fix; knappe Einzelgrüns

@@ -131,7 +131,11 @@
       das Tagesprotokoll und deine Einstellungen werden in der Firestore-Datenbank (Google)
       gespeichert, damit sie über mehrere Geräte hinweg verfügbar sind. Zum Tagesprotokoll gehört
       eine zufällige Kennung, damit alte Offline-Übertragungen nach dem Zurücksetzen nicht wieder
-      in die Aufzeichnung gelangen. Öffnest du die App an einem Tag, an dem nichts fällig ist,
+      in die Aufzeichnung gelangen. Für jeden Tagesbeitrag wird außerdem ein Beleg mit einer
+      zufälligen Antwortkennung, dem Lerntag, der Antwortart, der Zähldifferenz und der
+      Reset-Kennung gespeichert. Er verhindert doppelte Zählung beim Nachholen. Die Belege
+      bleiben bis zum Löschen des Kontos erhalten; sie enthalten keine Wörter oder Notizen.
+      Öffnest du die App an einem Tag, an dem nichts fällig ist,
       vermerkt das Tagesprotokoll diesen Tag als Ruhetag, damit deine Serie dadurch nicht endet.
       Die Zugriffsregeln der
       Datenbank (<code>firestore.rules</code>) lassen jedes Konto ausschließlich an die eigenen
@@ -209,6 +213,17 @@
         <li>die Kennung des zuletzt geöffneten Bereichs, getrennt für jedes angemeldete Konto,
         damit du auf diesem Gerät dort weiterlernen kannst; im Merkzeichen steht nur die Bereichs-ID</li>
         <li>das Datum deiner letzten Sicherung</li>
+        <li>eine lokale Kopie noch nicht bestätigter Kartenantworten: Konto- und Kartenkennung,
+        Wort, Zeitpunkt, gewünschter Lernstand und technische Kennungen des Ausgangsstands und
+        der Antwort. Nach der Bestätigung wird die Kopie entfernt. Abgelehnte Antworten bleiben
+        bis zur Klärung oder bis du sie ausdrücklich vom Gerät entfernst; du kannst sie vorher
+        herunterladen. Beim erfolgreichen Löschen des Kontos werden diese Kopien ebenfalls
+        entfernt. Die Antwort wird zur Speicherung an dein Konto in der Cloud übertragen.</li>
+        <li>noch nicht bestätigte Tagesbeiträge mit Konto- und Antwortkennung, ursprünglichem
+        Lerntag, Antwortart, Zähldifferenz und Reset-Kennung. Bestätigte Kopien werden entfernt;
+        abgelehnte oder nach einem Reset ungültige Kopien bleiben prüfbar und herunterladbar,
+        bis du sie ausdrücklich entfernst. Beim erfolgreichen Löschen des Kontos werden sie
+        ebenfalls entfernt. Tagesbeitrag und Beleg werden an dein Cloud-Konto übertragen.</li>
         <li>welche Hinweise der App du schon gesehen oder weggetippt hast, damit derselbe Hinweis
         nicht immer wieder erscheint, und – falls du eine eingerichtet hast – die Uhrzeit deiner
         Kalender-Erinnerung</li>

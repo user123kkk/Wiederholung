@@ -19,7 +19,8 @@ const repo=path.join(__dirname,'../../..');
 const sha=s=>createHash('sha256').update(s).digest('hex');
 const stand=createHash('sha256');
 for(const f of ['app.js','index.html','styles.css','sw.js','firestore.rules',
- 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js']){
+ 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js',
+ 'plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js']){
  stand.update(f).update(fs.readFileSync(path.join(repo,f)));
 }
 const kennung=stand.digest('hex');

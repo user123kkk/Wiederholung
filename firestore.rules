@@ -154,6 +154,36 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
+      /* A16: Der Beleg wird atomar mit genau diesem Tagesbeitrag angelegt.
+         Eine vorhandene Kennung ist unveraenderlich: ein wiederholter Batch
+         darf deshalb auch sein Increment nicht ein zweites Mal buchen.
+         Loeschen nur zusammen mit Konto-Loeschung oder nach einem Reset. */
+      match /tagesantworten/{id} {
+        function beitragOk() {
+          let d = request.resource.data;
+          let vorher = get(/databases/$(database)/documents/users/$(uid)).data;
+          let nachher = getAfter(/databases/$(database)/documents/users/$(uid)).data;
+          let alt = vorher.get('verlauf', {}).get(d.tag, {});
+          let neu = nachher.get('verlauf', {}).get(d.tag, {});
+          return d.keys().hasOnly(['epoche', 'tag', 'art', 'delta'])
+            && d.keys().hasAll(['epoche', 'tag', 'art', 'delta'])
+            && id.matches('^[A-Za-z0-9-]{1,100}$')
+            && text(d.epoche, 80) && datum(d.tag)
+            && d.art in ['w', 'n', 'u', 't', 'r'] && d.delta in [-1, 1]
+            && d.epoche == vorher.get('verlaufEpoche', '')
+            && d.epoche == nachher.get('verlaufEpoche', '')
+            && nachher.diff(vorher).affectedKeys().hasOnly(['verlauf', 'verlaufEpoche'])
+            && nachher.verlauf.diff(vorher.get('verlauf', {})).affectedKeys().hasOnly([d.tag])
+            && neu.diff(alt).affectedKeys().hasOnly([d.art])
+            && neu.get(d.art, 0) == alt.get(d.art, 0) + d.delta;
+        }
+        allow read: if eigenesKonto(uid);
+        allow create: if eigenesKonto(uid) && beitragOk();
+        allow update: if false;
+        allow delete: if eigenesKonto(uid)
+          && (!existsAfter(/databases/$(database)/documents/users/$(uid))
+            || resource.data.epoche != getAfter(/databases/$(database)/documents/users/$(uid)).data.get('verlaufEpoche', ''));
+      }
       allow read, delete: if eigenesKonto(uid);
 
       allow create: if eigenesKonto(uid)
@@ -229,7 +259,7 @@ service cloud.firestore {
       function kartenFelder() {
         return ['wort', 'uebersetzung', 'extra', 'stufe', 'nextReview',
                 'ersteBewertung', 'rueckfaelle', 'quelleId', 'maxStufe',
-                'order', 'bereichId', 'textId'];
+                'order', 'bereichId', 'textId', 'bewertungsStand', 'bewertungsBasis'];
       }
 
       /* `order` ist absichtlich unbegrenzt: ordnungVorn() in app.js setzt
@@ -252,7 +282,22 @@ service cloud.firestore {
             && (!pruefen.hasAny(['bereichId'])      || text(d.bereichId, 200))
             /* 3.18.0: Verweis einer Textzeile auf ihren Text (Id im sets-Feld
                des Bereichs). Gewoehnliche Karten tragen das Feld nicht. */
-            && (!pruefen.hasAny(['textId'])         || !('textId' in d) || textOderNull(d.textId, 200));
+            && (!pruefen.hasAny(['textId'])         || !('textId' in d) || textOderNull(d.textId, 200))
+            && (!pruefen.hasAny(['bewertungsStand']) || (text(d.bewertungsStand, 100) && d.bewertungsStand.size() > 0))
+            && (!pruefen.hasAny(['bewertungsBasis']) || textOderNull(d.bewertungsBasis, 100));
+      }
+
+      /* Jede normale Kartenbewertung benennt den Stand, den sie ersetzt.
+         Auch ein altes Offline-Geraet kann dadurch keine spaetere Antwort
+         ueberschreiben. Textzeilen behalten ihre gesonderte Probelauf-Logik. */
+      function kartenBewertungsStandOk() {
+        let alt = resource.data.get('bewertungsStand', null);
+        let neu = request.resource.data.get('bewertungsStand', null);
+        let basis = request.resource.data.get('bewertungsBasis', null);
+        return resource.data.get('textId', null) != null
+            || !beruehrt().hasAny(['stufe', 'nextReview', 'ersteBewertung',
+                 'rueckfaelle', 'maxStufe', 'bewertungsStand', 'bewertungsBasis'])
+            || (neu != null && neu != alt && basis == alt);
       }
 
       match /karten/{cid} {
@@ -266,7 +311,8 @@ service cloud.firestore {
 
         allow update: if eigenesKonto(uid) && vorhanden()
                       && beruehrt().hasOnly(kartenFelder())
-                      && kartenWerte(request.resource.data, beruehrt());
+                      && kartenWerte(request.resource.data, beruehrt())
+                      && kartenBewertungsStandOk();
       }
     }
 

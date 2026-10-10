@@ -13,7 +13,8 @@ if(runde.length!==13)throw new Error('Rundenliste nicht vollstaendig erkannt');
 // verwenden. Dieser Lauf behauptet dann ausdruecklich keine Gesamtabnahme.
 const dateien=process.argv.includes('--ohne-runde')?alle.filter(f=>!runde.includes(f)):alle;
 const relevant=['app.js','index.html','styles.css','sw.js','firestore.rules',
- 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js'];
+ 'plan/werkzeuge/pruefstand/lib.js','plan/werkzeuge/pruefstand/stubs.js',
+ 'plan/werkzeuge/pruefstand/diagnose_karten_konflikt.js'];
 const stand=createHash('sha256');for(const f of relevant)stand.update(f).update(fs.readFileSync(path.join(repo,f)));
 const kennung=stand.digest('hex');
 const ordner=path.join(os.tmpdir(),'adrabic-pruefstand-gesamt',kennung.slice(0,16));
@@ -26,6 +27,7 @@ let aktiv=null;
 function quellHash(f){
  const quelle=fs.readFileSync(path.join(__dirname,f));
  const hash=createHash('sha256').update(quelle);
+ if(f==='t_tagesantworten_sdk.js')hash.update('diagnose_karten_konflikt.js').update(fs.readFileSync(path.join(__dirname,'diagnose_karten_konflikt.js')));
  if(f==='t_paket_d.js')hash.update('css_struktur.mjs').update(fs.readFileSync(path.join(__dirname,'../css_struktur.mjs')));
  if(f==='t_konto_fortsetzungen.js'){
   const namen=[...new Set([...quelle.toString().matchAll(/\['(konto_[^']+\.js)'/g)].map(m=>m[1]))].sort();

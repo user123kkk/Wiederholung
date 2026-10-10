@@ -1,3 +1,15 @@
+## 3.18.30 – 10. Oktober 2026
+
+**Datenabschluss mit ausdrücklich begrenzter Tempo-Ausnahme.** Betreiberfreigabe vom 10. Oktober: „ok los“, nach Erklärung „Daten separat abschließen, Tempo offen lassen, dann weiter“. 157 von 158 Prüfungen grün; der unveränderte Texttempo-Test bleibt rot und als eigener Qualitätsbefund offen. 13 Runden, 238 Regelprüfungen und beide Zufallsläufe grün. Keine vollständige Tempo-/Geräteabnahme und keine Veröffentlichung.
+
+**Kartenbearbeiten erhält fremde Bewertungen (A17).** Ein offenes Kartenblatt übernimmt neue Lernstände, solange „Stand“ nicht ausdrücklich geändert wurde. Eine reine Notizkorrektur setzt eine zwischenzeitliche Bewertung eines anderen Geräts dadurch nicht zurück. Bewusst gewählter Stand und die vorhandene Textkorrektur mit Rückfallreset bleiben erhalten.
+
+**Tagesantworten bleiben nach Ablehnung und Neustart erhalten (A16).** Jeder Beitrag bleibt mit Ursprungskonto, Lerntag und Reset-Kennung lokal gespeichert. Ein unveränderlicher Cloud-Beleg wird atomar mit dem Tageszähler geschrieben; wiederholtes Nachholen kann denselben Beitrag nicht doppelt zählen. Alte Aufzeichnungen werden nicht in eine neue Reset-Epoche umgebucht. Prüfen und Download nutzen den vorhandenen Antwort-Hinweis.
+
+**Kartenantworten auf mehreren Geräten geschützt.** Jede normale Kartenantwort benennt ihren Ausgangsstand. Eine veraltete Offline-Antwort oder ein altes Rückgängig kann eine fremde neuere Bewertung dadurch nicht überschreiben. Abgelehnte Antworten bleiben auf dem Gerät erhalten, auch nach einem Neustart. Der Hinweis bietet Prüfen, Herunterladen und ausdrückliches Entfernen an. Ein voller Antwortspeicher bucht keine neue Antwort. Die Lernregeln bleiben unverändert; Textzeilen behalten ihre bestehende Probelauf-Logik.
+
+Neue Firestore-Regeln sind vor dem Hosting erforderlich. Ältere App-Versionen können nach diesem Regelwechsel keine geänderte Kartenbewertung mehr speichern und müssen aktualisiert werden. Wort und Notiz können weiterhin geändert werden. Noch nicht veröffentlicht.
+
 ## 3.18.29 – 9. Oktober 2026
 
 **Plan bleibt nach Datenschutz und Impressum erhalten.** Die Rechtsseiten öffnen aus dem Kontoformular und den Einstellungen im vorhandenen Dialog. Zurück schließt ihn, ohne die App neu zu laden. Der vollständige Plan und Name, E-Mail und Passwort bleiben erhalten. Die Rechtsinhalte stammen unverändert aus den bestehenden Seiten. Bei einem Ladefehler bleibt der Rückweg offen; ein erneuter Versuch startet nur auf Knopfdruck.

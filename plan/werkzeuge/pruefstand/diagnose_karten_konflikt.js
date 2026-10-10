@@ -9,7 +9,7 @@ const PROJECT='demo-adrabic-karten-audit';
 const ROOT=`http://127.0.0.1:8082/v1/projects/${PROJECT}/databases/(default)/documents`;
 const SDK='https://www.gstatic.com/firebasejs/10.14.1/';
 const SOURCE_COMMIT=process.argv.includes('--gegenprobe')?'7142b93':null;
-const APP_SOURCE=SOURCE_COMMIT?require('node:child_process').execFileSync('git',['show',SOURCE_COMMIT+':app.js'],{encoding:'utf8',cwd:path.join(__dirname,'../../..')}):fs.readFileSync(path.join(__dirname,'../../../app.js'),'utf8');
+const APP_SOURCE=SOURCE_COMMIT?require('node:child_process').execFileSync('git',['show',SOURCE_COMMIT+':app.js'],{encoding:'utf8',cwd:path.join(__dirname,'../../..')}):fs.readFileSync(process.env.PRUEF_APP_FILE||path.join(__dirname,'../../../app.js'),'utf8');
 function wert(v){
   if(v===null)return{nullValue:null};
   if(typeof v==='string')return{stringValue:v};
@@ -28,12 +28,12 @@ async function seed(){
   const writes=Object.entries(store).map(([p,v])=>({update:{name:`projects/${PROJECT}/databases/(default)/documents/${p}`,fields:wert(v).mapValue.fields}}));
   await rest(ROOT+':commit',{method:'POST',body:JSON.stringify({writes})});
 }
-async function seite(b,sources,ctx){
+async function seite(b,sources,ctx,uid='u1'){
   // Der Service Worker ist Gegenstand eigener Tests. Er wuerde beim Neustart
   // die unveraenderte App statt unserer SDK-Emulator-Umleitung liefern.
   ctx=ctx||await b.newContext({viewport:{width:414,height:896},isMobile:true,hasTouch:true,serviceWorkers:'block'});
   const p=await ctx.newPage();p.fehler=[];p.on('pageerror',e=>p.fehler.push(e.message));
-  await p.addInitScript(()=>{window.__START_USER={uid:'u1',email:'test@example.com',emailVerified:true,displayName:'Test'};});
+  await p.addInitScript(uid=>{window.__START_USER={uid,email:'test@example.com',emailVerified:true,displayName:'Test'};},uid);
   await p.route('**/www.gstatic.com/firebasejs/10.14.1/*',r=>{
     const u=new URL(r.request().url()),name=u.pathname.split('/').pop();
     if(name==='firebase-auth.js')return r.fulfill({contentType:'text/javascript',body:AUTH});
@@ -41,8 +41,9 @@ async function seite(b,sources,ctx){
     const original=SDK+name+'?original=1';
     let body=`export * from ${JSON.stringify(original)}; import * as core from ${JSON.stringify(original)};`;
     if(name==='firebase-app.js')body+=`export function initializeApp(c){return core.initializeApp({...c,projectId:${JSON.stringify(PROJECT)}});}`;
-    if(name==='firebase-firestore.js')body+=`export function initializeFirestore(a,o){const db=core.initializeFirestore(a,o);core.connectFirestoreEmulator(db,'127.0.0.1',8082,{mockUserToken:{sub:'u1',email:'test@example.com',email_verified:true}});window.__PRUEF_DB=db;window.__PRUEF_SDK=core;return db;}
-      export function updateDoc(ref,...args){if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}`;
+    if(name==='firebase-firestore.js')body+=`export function initializeFirestore(a,o){const db=core.initializeFirestore(a,o);core.connectFirestoreEmulator(db,'127.0.0.1',8082,{mockUserToken:{sub:window.__START_USER.uid,email:'test@example.com',email_verified:true}});if(window.__PRUEF_START_OFFLINE)core.disableNetwork(db);window.__PRUEF_DB=db;window.__PRUEF_SDK=core;return db;}
+      export function updateDoc(ref,...args){if(window.__PRUEF_KARTE_ABLEHNEN&&ref.path.includes('/karten/'))args[0]={...args[0],__pruef_verboten:true};if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}
+      export function writeBatch(db){const batch=core.writeBatch(db),update=batch.update.bind(batch);batch.update=(ref,...args)=>{if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);return update(ref,...args);};return batch;}`;
     return r.fulfill({contentType:'text/javascript',body});
   });
   await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:APP_SOURCE+`
@@ -54,6 +55,17 @@ async function seite(b,sources,ctx){
       nachholen:abgelehntesNachholen,verlauf:()=>JSON.parse(JSON.stringify(verlauf)),
       offen:()=>JSON.parse(JSON.stringify(typeof verlaufOffen==='undefined'?{}:verlaufOffen)),
       fehler:()=>schreibFehler,gesehen:lernAbhaken,gesehenZurueck:lernRueckgaengig,
+      tagesantworten:()=>typeof verlaufAktionen==='undefined'?[]:JSON.parse(JSON.stringify([...verlaufAktionen.values()])),
+      tagespruefen:()=>typeof verlaufAktionenPruefen==='undefined'?Promise.resolve():verlaufAktionenPruefen(),
+      sicherung:()=>typeof bewertungsSicherung==='undefined'?{}:bewertungsSicherung(),
+      banner:()=>typeof bewertungsBanner==='undefined'?'':bewertungsBanner(),
+      neuZeichnen:render,
+      tagSetzen:tag=>{todayStr=()=>tag;},
+      kontoLoeschen:()=>kontoDatenLoeschen(),
+      vorVersandStoppen:()=>{clearTimeout(verlaufTimer);verlaufTimer=null;verlaufJetztSchreiben=()=>{};},
+      tagesversandSperren:()=>{verlaufAktionSchreiben=()=>{};},
+      aufbewahrt:()=>typeof bewertungsAktionen==='undefined'?[]:JSON.parse(JSON.stringify([...bewertungsAktionen.values()])),
+      pruefen:()=>bewertungsAktionenPruefen(),
       undo:undoLastGrade,reset:verlaufZuruecksetzen,zeichnen:()=>startDrillWithCards(currentBereich().karten,'Pruefung',true)};`}));
   await p.route('**/verses.quran.foundation/**',r=>r.abort());
   await p.goto('http://127.0.0.1:'+(process.env.PRUEF_PORT||8099)+'/index.html');
@@ -72,7 +84,8 @@ async function cloud(tag){
   const e=d.fields.verlauf?.mapValue.fields?.[tag]?.mapValue.fields||{};
   return Object.fromEntries(['w','n','u'].map(k=>[k,Number(e[k]?.integerValue||0)]));
 }
-(async()=>{
+module.exports={seite,seed,fertig,rest,wert,ROOT,SDK,cloud,APP_SOURCE};
+if(require.main===module)(async()=>{
   const sources={};for(const name of ['firebase-app.js','firebase-firestore.js']){
     const r=await fetch(SDK+name);assert.ok(r.ok);sources[name]=await r.text();
   }

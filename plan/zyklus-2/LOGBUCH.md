@@ -2,6 +2,27 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-10 21:02 — Datenabschluss mit ausdrücklich freigegebener Ausnahme
+
+**Geändert:** vorhandenen Entwurf A14–A17/3.18.30 samt Regeln, Datenschutz,
+Versionsdateien und geprüften SDK-/Prüfaufbaukorrekturen zum gezielten
+Commit vorbereitet. Keine neue Produktänderung. Read-only-Belegprüfer
+x_daten_abschluss_belege.js ergänzt; alle158 Quellen/Logs/Leseregister
+gebunden,157 grün und Texttempo unverändert rot.13 Runde/238 Regeln,
+Handy200/iPad150 Seed7 mit Texten jeweils0 Befunde bewahrt.
+**Gegenprüfung:** Produkt-/Rules-/Datenschutz-Diff gegen DATEN9–12 und
+aktuellen Gegenlesebericht abgeglichen: fremde Kennung/Offline/Neustart,
+ursprünglicher Tag/Epoche, ausdrückliche Standwahl, Entwurf und Kontowechsel
+beachtet; kein weiterer Fehler belegt. Frühere feste rote Gegenproben
+erhalten, keine grünen Läufe wiederholt. Syntax/Standprüfung frisch grün.
+**Entscheidung:** Betreiber „ok los“ genehmigt die konkret erklärte
+begrenzte Datenabschlussausnahme; die Testgrenze wird nicht verändert.
+**Offen:** Texttempo und tatsächliche Gerätebedienbarkeit; keine volle
+Tempo-Abnahme/Veröffentlichung. Neue Regeln später vor Hosting nötig.
+**Nächster Schritt:** Commit/Push auf main, dann Lernrunde gemäß Reihenfolge.
+Bearbeiten in der Abfrage hat bisher nur alte S1-Sammelfreigabe; konkrete
+Einzelfreigabe vor Bau nötig, vorbereiteter Vorschlag bleibt maßgeblich.
+
 ### 2026-10-10 16:22 — Tempo-Anschluss nach Neustart, Suche beendet
 
 **Geprüft:** Neustart16:11:51/Netzteil2, Serverquelle und Runnerhash gleich.

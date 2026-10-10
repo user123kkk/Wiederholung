@@ -40,7 +40,8 @@
    Erweiterung hier auch diese Zahl nachziehen, sonst wiederholt sich genau
    das.
 
-   Stand 29.09.2026: 179 Faelle. Der vorherige Code enthielt bereits 171
+   Stand 09.10.2026: 222 Faelle, zuletzt K01-K12 zum Kartenkonfliktschutz.
+   Historischer Stand 29.09.2026: 179 Faelle. Der vorherige Code enthielt bereits 171
    (18 weitere Board-/Teilen-/Audit-Faelle seit dem historischen Stand oben).
    Acht neue R01-R08 pruefen Reset-Kennung, alte Offline-Differenzen und
    normale Einstellungen. RULES_PORT kann den lokalen Emulator-Port setzen
@@ -50,7 +51,7 @@
    melden oft zusaetzlich "evaluation error". Das ist normal. Die Regelsprache
    wertet beide Seiten eines && aus und schluckt den Fehler, wenn die andere
    Seite ohnehin false ist - z.B. wenn stufe ein Text ist und deshalb die
-   Zahlenpruefung stolpert. Entscheidend ist allein, dass alle 179 Faelle so
+   Zahlenpruefung stolpert. Entscheidend ist allein, dass alle 222 Faelle so
    ausgehen wie erwartet.
    ============================================================ */
 
@@ -85,6 +86,9 @@ const env = await initializeTestEnvironment({
   projectId: "wiederholung-test",
   firestore: { host: "127.0.0.1", port: Number(process.env.RULES_PORT || 8085), rules: RULES_TEXT }
 });
+/* Auch ein erneut verwendeter lokaler Emulator braucht einen frischen
+   Testbestand. Nur dieses Testprojekt wird geleert, nicht andere Projekte. */
+await env.clearFirestore();
 
 const db      = env.authenticatedContext(UID, { email_verified: true }).firestore();
 const dbUnbes = env.authenticatedContext(UID, { email_verified: false }).firestore();
@@ -133,13 +137,14 @@ await pruefe("N14 Speicherkarte loeschen", "ja", () => updateDoc(b("b1"), { "set
 
 await pruefe("N15 Karte anlegen", "ja", () => setDoc(k("c1"), karte("b1")));
 await pruefe("N16 Karte bewerten", "ja", () => updateDoc(k("c1"), {
-  stufe: 1, nextReview: "2026-09-13", ersteBewertung: heute, rueckfaelle: 0, maxStufe: 1 }));
+  stufe: 1, nextReview: "2026-09-13", ersteBewertung: heute, rueckfaelle: 0, maxStufe: 1,
+  bewertungsStand: "N16", bewertungsBasis: null }));
 await pruefe("N17 Karte bearbeiten", "ja", () => updateDoc(k("c1"), {
   wort: "مَدْرَسَة", uebersetzung: "Schule", extra: "Beispielsatz" }));
 await pruefe("N18 Karte verschieben", "ja", () => updateDoc(k("c1"), { bereichId: "b1", order: 5 }));
 await pruefe("N19 Neue Karte ganz vorn (order = -Date.now())", "ja", () => setDoc(k("c2"), { ...karte("b1"), order: -Date.now() }));
 await pruefe("N20 Rueckfallzaehler zuruecksetzen", "ja", () => updateDoc(k("c1"), { rueckfaelle: 0 }));
-await pruefe("N21 Hoechststufe MAX_STUFE", "ja", () => updateDoc(k("c1"), { stufe: 12, maxStufe: 12 }));
+await pruefe("N21 Hoechststufe MAX_STUFE", "ja", () => updateDoc(k("c1"), { stufe: 12, maxStufe: 12, bewertungsStand: "N21", bewertungsBasis: "N16" }));
 await pruefe("N22 Karte mit Bild-Link in extra", "ja", () => updateDoc(k("c1"), { extra: "https://example.org/bild.png" }));
 
 await pruefe("N23 Import: Bereich und Karten in einem Stapel", "ja", async () => {
@@ -178,12 +183,12 @@ await pruefe("M03 Fremde Karte schreiben", "nein", () => setDoc(doc(dbFremd, "us
 await pruefe("M04 Ohne Anmeldung lesen", "nein", () => getDoc(doc(dbAnon, "users", UID)));
 await pruefe("M05 E-Mail nicht bestaetigt", "nein", () => updateDoc(doc(dbUnbes, "users", UID), { name: "X" }));
 
-await pruefe("M06 Hoechststufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { maxStufe: 9999 }));
-await pruefe("M07 Stufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { stufe: 99 }));
-await pruefe("M08 Stufe negativ", "nein", () => updateDoc(k("c1"), { stufe: -1 }));
-await pruefe("M09 Stufe als Text", "nein", () => updateDoc(k("c1"), { stufe: "12" }));
-await pruefe("M10 Stufe als Kommazahl", "nein", () => updateDoc(k("c1"), { stufe: 1.5 }));
-await pruefe("M11 Faelligkeit kein Datum", "nein", () => updateDoc(k("c1"), { nextReview: "morgen" }));
+await pruefe("M06 Hoechststufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { maxStufe: 9999, bewertungsStand: "M06", bewertungsBasis: "N21" }));
+await pruefe("M07 Stufe ueber MAX_STUFE", "nein", () => updateDoc(k("c1"), { stufe: 99, bewertungsStand: "M07", bewertungsBasis: "N21" }));
+await pruefe("M08 Stufe negativ", "nein", () => updateDoc(k("c1"), { stufe: -1, bewertungsStand: "M08", bewertungsBasis: "N21" }));
+await pruefe("M09 Stufe als Text", "nein", () => updateDoc(k("c1"), { stufe: "12", bewertungsStand: "M09", bewertungsBasis: "N21" }));
+await pruefe("M10 Stufe als Kommazahl", "nein", () => updateDoc(k("c1"), { stufe: 1.5, bewertungsStand: "M10", bewertungsBasis: "N21" }));
+await pruefe("M11 Faelligkeit kein Datum", "nein", () => updateDoc(k("c1"), { nextReview: "morgen", bewertungsStand: "M11", bewertungsBasis: "N21" }));
 await pruefe("M12 Erfundenes Feld an der Karte", "nein", () => updateDoc(k("c1"), { freigeschaltet: true }));
 await pruefe("M13 Wort ueberlang", "nein", () => updateDoc(k("c1"), { wort: "a".repeat(1001) }));
 await pruefe("M14 Notiz ueberlang", "nein", () => updateDoc(k("c1"), { extra: "a".repeat(5001) }));
@@ -566,6 +571,48 @@ await pruefe("T23 Karte ohne textId mit 1208 Zeichen", "nein", () => setDoc(k("z
 await pruefe("T24 Karte mit textId null und 1208 Zeichen", "nein", () => setDoc(k("z8"), { ...karte("b1"), textId: null, wort: "x".repeat(1208) }));
 await pruefe("T25 Lange Zeile: textId nachtraeglich entfernen", "nein", () => updateDoc(k("z5"), { textId: deleteField() }));
 
+/* Kartenkonflikte: veraltete Aktionen und alte Clients duerfen nicht
+   ueberschreiben. Positivfaelle verhindern eine pauschale Schreibsperre. */
+await pruefe("K01 Karte ohne Kennung anlegen", "ja", () => setDoc(k("cas"), karte("b1")));
+await pruefe("K02 erste geschuetzte Antwort", "ja", () => updateDoc(k("cas"), { stufe: 1, bewertungsStand: "eins", bewertungsBasis: null }));
+await pruefe("K03 alte Ausgangskennung abweisen", "nein", () => updateDoc(k("cas"), { stufe: 2, bewertungsStand: "alt", bewertungsBasis: null }));
+await pruefe("K04 richtige Ausgangskennung", "ja", () => updateDoc(k("cas"), { stufe: 2, bewertungsStand: "zwei", bewertungsBasis: "eins" }));
+await pruefe("K05 doppeltes Schreiben aendert nichts", "ja", () => updateDoc(k("cas"), { stufe: 2, bewertungsStand: "zwei", bewertungsBasis: "eins" }));
+await pruefe("K06 gleiche Kennung mit anderem Wert", "nein", () => updateDoc(k("cas"), { stufe: 3, bewertungsStand: "zwei", bewertungsBasis: "zwei" }));
+await pruefe("K07 alte App ohne Kennungen", "nein", () => updateDoc(k("cas"), { stufe: 4 }));
+await pruefe("K08 Notiz ohne Kennungen", "ja", () => updateDoc(k("cas"), { extra: "bleibt erlaubt" }));
+await pruefe("K09 Kennung entfernen", "nein", () => updateDoc(k("cas"), { bewertungsStand: deleteField() }));
+await pruefe("K10 leere Kennung", "nein", () => updateDoc(k("cas"), { stufe: 3, bewertungsStand: "", bewertungsBasis: "zwei" }));
+await pruefe("K11 ungeschuetzte Altkarte bewerten", "nein", () => updateDoc(k("c9"), { stufe: 4 }));
+await pruefe("K12 eigenes Undo mit neuer Kennung", "ja", () => updateDoc(k("cas"), { stufe: 1, bewertungsStand: "undo", bewertungsBasis: "zwei" }));
+/* A16: echter Increment plus unveraenderlicher Beleg, keine blosse Admin-Kopie. */
+await updateDoc(u(), {verlauf: {}, verlaufEpoche: "a16"});
+const tagesbeleg = id => doc(db, "users", UID, "tagesantworten", id);
+const beitrag = {epoche: "a16", tag: "2026-10-09", art: "w", delta: 1};
+function tagesbatch(id, d = beitrag, differenz = d.delta, konto = db) {
+  const batch = writeBatch(konto);
+  batch.update(doc(konto, "users", UID), {[`verlauf.${d.tag}.${d.art}`]: increment(differenz), verlaufEpoche: d.epoche});
+  batch.set(doc(konto, "users", UID, "tagesantworten", id), d);
+  return batch.commit();
+}
+await pruefe("V01 atomarer Tagesbeitrag", "ja", () => tagesbatch("eins"));
+await pruefe("V02 wiederholter Batch zaehlt nicht zweimal", "nein", () => tagesbatch("eins"));
+await pruefe("V03 Beleg unveraenderlich", "nein", () => updateDoc(tagesbeleg("eins"), {delta: -1}));
+await pruefe("V04 Beleg allein", "nein", () => setDoc(tagesbeleg("allein"), beitrag));
+await pruefe("V05 falsche Differenz", "nein", () => tagesbatch("falsch", beitrag, 2));
+await pruefe("V06 fremdes Konto", "nein", () => tagesbatch("fremd", beitrag, 1, dbFremd));
+await pruefe("V07 unbekannte Art", "nein", () => tagesbatch("art", {...beitrag, art: "x"}));
+await pruefe("V08 unbekanntes Feld", "nein", () => tagesbatch("feld", {...beitrag, extra: true}));
+await pruefe("V09 eigenes Undo", "ja", () => tagesbatch("undo", {...beitrag, delta: -1}));
+await pruefe("V10 aktiven Beleg nicht loeschen", "nein", () => deleteDoc(tagesbeleg("eins")));
+await updateDoc(u(), {verlauf: {}, verlaufEpoche: "a16-reset"});
+await pruefe("V11 alte Epoche nicht nachholen", "nein", () => tagesbatch("alt"));
+await pruefe("V12 alter Beleg nach Reset loeschbar", "ja", () => deleteDoc(tagesbeleg("eins")));
+await pruefe("V13 neue Epoche", "ja", () => tagesbatch("neu", {...beitrag, epoche: "a16-reset"}));
+await pruefe("V14 eigenes Lesen", "ja", () => getDoc(tagesbeleg("neu")));
+await pruefe("V15 fremdes Lesen", "nein", () => getDoc(doc(dbFremd, "users", UID, "tagesantworten", "neu")));
+await deleteDoc(u());
+await pruefe("V16 Beleg nach Kontoloeschung entfernen", "ja", () => deleteDoc(tagesbeleg("neu")));
 console.log("\n" + ok + " von " + (ok + fehl) + " Pruefungen wie erwartet.");
 if (fehler.length) { console.log("\nABWEICHUNGEN:"); fehler.forEach(f => console.log("  " + f)); }
 await env.cleanup();

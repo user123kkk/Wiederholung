@@ -43,8 +43,9 @@ vorherige echte Fehlerausgabe vor Wiederholung zusätzlich bewahren.
 Gesamtlauf: `node alle_pruefen.js`, oder die 13 Lernrunden-Tests separat mit
 `node abnahme_runde.js` und die übrigen mit `node alle_pruefen.js --ohne-runde`.
 Der zweite Befehl behauptet ausdrücklich keine vollständige Gesamtabnahme.
-`--fortsetzen` bewahrt nur Exit-0-Ergebnisse desselben Produkt-/Stub-/Lib-
-Quellstands mit identischem Testtext; rote/unvollständige Fälle laufen neu.
+`--fortsetzen` bewahrt nur Exit-0-Ergebnisse desselben Produkt-/Stub-/Lib-/
+SDK-Helfer-Quellstands mit identischem Testtext; A16 bindet zusätzlich
+`diagnose_karten_konflikt.js` in seinen Testhash. Rote/unvollständige Fälle laufen neu.
 Ausgaben unter `<tmp>/adrabic-pruefstand-gesamt/<Quellstand>` lesen.
 Exit 0 allein bewertet keine beschreibenden Messungen oder Gegenproben.
 Auch `abnahme_runde.js --fortsetzen` nutzt denselben Quellstand und Test-Hash;
@@ -54,7 +55,23 @@ werden nicht übernommen. Standby-Abbrüche sind keine bestandenen Tests.
 Ein Preload schließt nur die frisch vom fehlerhaften Test gestarteten Browser;
 der Fehler bleibt im Log und der Prozess endet mit Exit 1.
 
+Batchmeldungen der Firestore-Attrappe betreffen nur die geänderten Pfade;
+alle Änderungen eines Batches erscheinen gemeinsam. `node x_stub_batch.js`
+prüft unberührte Karten, mehrere Änderungen/Löschungen und gefilterte Abfragen.
+`--gegenprobe` erwartet am festen Vorstand 315bb0e einen Fehler beim erneuten
+Lesen einer unberührten Karte. `x_ab_bestand_tempo.js` und `x_spur_bestand.js`
+sind reine Diagnosehilfen am unveränderten Original-Tempotest (3000 Karten,
+CPU4x, aktive Assertions); sie ersetzen weder diesen Test noch die Abnahme.
+
 ## Mehrgeräte-Zähler und Kontowechsel (3.17.50)
+
+Der gesamte Prüfstand braucht zusätzlich für `t_tagesantworten_sdk.js`
+das getrennte Demo-Projekt `demo-adrabic-karten-audit` auf `127.0.0.1:8082`,
+ebenfalls mit aktuellen Repo-Regeln. Beide Projekte nie gleichzeitig durch
+mehrere Tests seeden. `ladegeraet.ps1` stellt beide Emulatoren mit getrennten
+Websocket-/Hub-/Logging-Ports bereit und bricht bei bereits belegtem
+Firestore-Port ab. Für den uncommitteten Entwurf die Prüfungen separat
+ausführen; der Ladegerät-Weg verlangt vorher gesicherte Quellen.
 
 `t_verlauf_mehrgeraete.js` verwendet das echte Firebase-JS-SDK 10.14.1
 gegen den lokalen Firestore-Emulator mit den Regeln dieses Repos. Nur Auth
@@ -91,3 +108,19 @@ Erwartet: Server null, nächste neue Antwort eins. Die Repo-Regeln müssen
 das neue Feld `verlaufEpoche` samt Reset-Grenze enthalten.
 `t_pruefdatum.js` prüft die Fixture-Lerntage vor/nach 04:00; `t_wisch_tempo.js`
 führt aufgezeichnete Zeiten im echten Wisch-Listener aus, mit Altstand als Gegenprobe.
+
+Testkarten nach dem Start durch die Firestore-API anlegen und den Snapshot
+abwarten. Direktes Schreiben in __FB.store plus App-Arrays umgeht den
+Listenercache; beim nächsten strukturellen Snapshot verschwinden solche
+nur im Test erfundenen Karten. C27 verwendet dafür einen echten Stub-Batch
+und wartet auf 200 Karten, bevor Auswahl/Löschen geprüft wird.
+
+
+Mehrgeräte-Tagesantworten (A16): Eine absichtliche SDK-Regelablehnung muss
+auch batch.update erfassen, nicht nur updateDoc. Der eigenständige
+t_verlauf_mehrgeraete prüft den tatsächlichen Batchpfad und wartet auf
+bereits laufende App-Belegprüfung zusätzlich zur SDK-Schreibwarteschlange.
+Nach frühem Neustart nutzt er den vorgesehenen ausdrücklichen Prüfweg für
+noch lokal erhaltene Kopien; keine automatische Startübertragung behaupten.
+x_verlauf_batch_ablehnung prüft den ausgesandten Wrapper und die feste
+315bb0e-Gegenprobe. Testgrenzen/erwartete Summen bleiben unverändert.

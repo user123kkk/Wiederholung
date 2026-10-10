@@ -43,13 +43,15 @@ async function seite(b,sources,ctx){
     let body=`export * from ${JSON.stringify(original)}; import * as core from ${JSON.stringify(original)};`;
     if(name==='firebase-app.js')body+=`export function initializeApp(c){return core.initializeApp({...c,projectId:${JSON.stringify(PROJECT)}});}`;
     if(name==='firebase-firestore.js')body+=`export function initializeFirestore(a,o){const db=core.initializeFirestore(a,o);core.connectFirestoreEmulator(db,'127.0.0.1',8081,{mockUserToken:{sub:'u1',email:'test@example.com',email_verified:true}});window.__PRUEF_DB=db;window.__PRUEF_SDK=core;return db;}
-      export function updateDoc(ref,...args){if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}`;
+      export function updateDoc(ref,...args){if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);if(window.__PRUEF_RESET_ABLEHNEN&&ref.path==='users/u1'&&args[0]?.verlauf)args[0]={...args[0],__pruef_verboten:true};return core.updateDoc(ref,...args);}
+      export function writeBatch(db){const batch=core.writeBatch(db),update=batch.update.bind(batch);batch.update=(ref,...args)=>{if(window.__PRUEF_ABLEHNEN&&ref.path==='users/u1'&&args[0] instanceof core.FieldPath)args.push(new core.FieldPath('__pruef_verboten'),true);return update(ref,...args);};return batch;}`;
     return r.fulfill({contentType:'text/javascript',body});
   });
   await p.route('**/app.js?*',r=>r.fulfill({contentType:'text/javascript',body:APP_SOURCE+`
     window.__PRUEF={bereit:()=>cloudDocExists&&bereiche!==null,heute:todayStr,
       zaehle:verlaufZaehle,flush:()=>{verlaufJetztSchreiben();persistVerlauf();},
       nachholen:abgelehntesNachholen,verlauf:()=>JSON.parse(JSON.stringify(verlauf)),
+      tagesfertig:()=>verlaufPruefung||Promise.resolve(),
       offen:()=>JSON.parse(JSON.stringify(typeof verlaufOffen==='undefined'?{}:verlaufOffen)),
       fehler:()=>schreibFehler,gesehen:lernAbhaken,gesehenZurueck:lernRueckgaengig,
       undo:undoLastGrade,reset:verlaufZuruecksetzen,zeichnen:()=>startDrillWithCards(currentBereich().karten,'Pruefung',true)};`}));
@@ -64,6 +66,9 @@ async function zaehle(p,n,art='w'){
 }
 async function fertig(p){
   await p.evaluate(()=>Promise.race([window.__PRUEF_SDK.waitForPendingWrites(window.__PRUEF_DB),new Promise((_,nein)=>setTimeout(()=>nein(new Error('SDK-Schreibvorgaenge nach 30s noch offen')),30000))]));
+  // A16 kann nach dem SDK noch Belege prüfen und einen lokalen Beitrag senden.
+  await p.evaluate(()=>window.__PRUEF.tagesfertig());
+  await p.evaluate(()=>window.__PRUEF_SDK.waitForPendingWrites(window.__PRUEF_DB));
 }
 async function cloud(tag){
   const d=await(await rest(ROOT+'/users/u1')).json();
@@ -96,8 +101,11 @@ async function cloud(tag){
     const ctx=a.context();await a.evaluate(()=>window.__PRUEF_SDK.disableNetwork(window.__PRUEF_DB));
     await zaehle(a,2);await a.waitForFunction(t=>window.__PRUEF.verlauf()[t]?.w===10,heute);
     await a.close();a=await seite(b,sources,ctx);await fertig(a);
+    // Vor dem Schließen noch nicht im SDK gespeicherte A16-Kopien werden
+    // wie im Produkt ausdrücklich geprüft, nicht blind beim Start umgebucht.
+    await a.evaluate(()=>window.__PRUEF.nachholen());await fertig(a);
     assert.deepEqual(await cloud(heute),{w:10,n:4,u:2},'Offline-Neustart verliert oder verdoppelt Antworten');
-    await a.evaluate(()=>{window.__PRUEF.flush();window.__PRUEF.nachholen();});await fertig(a);
+    await a.evaluate(()=>{window.__PRUEF.flush();return window.__PRUEF.nachholen();});await fertig(a);
     assert.deepEqual(await cloud(heute),{w:10,n:4,u:2},'Bereits uebertragene Differenzen erneut gesendet');
     console.log('OK  Offline-Neustart und wiederholtes Nachholen: keine verlorenen/doppelten Antworten.');
 
@@ -171,7 +179,7 @@ async function cloud(tag){
     await a.waitForFunction(t=>window.__PRUEF.fehler()==='permission-denied'&&window.__PRUEF.offen()[t]?.w===2,heute);
     assert.deepEqual(await cloud(heute),vorAblehnung,'Abgelehnte Differenz wurde trotzdem gespeichert');
     assert.equal(await a.evaluate(t=>window.__PRUEF.verlauf()[t].w,heute),vorAblehnung.w+2,'SDK-Rollback verliert lokale abgelehnte Antworten');
-    await a.evaluate(()=>{window.__PRUEF_ABLEHNEN=false;window.__PRUEF.nachholen();});await fertig(a);
+    await a.evaluate(()=>{window.__PRUEF_ABLEHNEN=false;return window.__PRUEF.nachholen();});await fertig(a);
     await a.waitForFunction(t=>window.__PRUEF.verlauf()[t]?.w===14,heute);
     assert.deepEqual(await cloud(heute),{...vorAblehnung,w:vorAblehnung.w+2},'Abgelehnte Differenz muss genau einmal nachgeschickt werden');
     await a.evaluate(()=>window.__PRUEF.nachholen());await fertig(a);
@@ -197,7 +205,7 @@ async function cloud(tag){
     await a.waitForSelector('[data-action="dlg-ok"]');await aktion(a,'dlg-ok',null,300);await fertig(a);
     assert.deepEqual(await cloud(heute),{w:0,n:0,u:0},'Bestaetigtes Zuruecksetzen muss wirklich leeren');
     await c.waitForFunction(()=>Object.keys(window.__PRUEF.verlauf()).length===0);
-    await a.evaluate(()=>{window.__PRUEF.flush();window.__PRUEF.nachholen();});await fertig(a);
+    await a.evaluate(()=>{window.__PRUEF.flush();return window.__PRUEF.nachholen();});await fertig(a);
     assert.deepEqual(await cloud(heute),{w:0,n:0,u:0},'Nachholen darf geloeschtes Protokoll nicht wiederherstellen');
     await Promise.all([zaehle(a,1,'n'),zaehle(c,2,'w')]);await fertig(a);await fertig(c);
     assert.deepEqual(await cloud(heute),{w:2,n:1,u:0},'Nach Zuruecksetzen duerfen nur neue Antworten zaehlen');

@@ -134,19 +134,28 @@ function qsnap(q){ let docs = kinder(q.path).map(([p]) => dsnap(p));
    gehoert zum jeweiligen Listener (der erste Stand besteht aus added).
    Vorher meldete jeder Tageszaehler auch alle unveraenderten Karten erneut. */
 function listenerMelden(l, changedPath){
+  const paths = changedPath ? (Array.isArray(changedPath) ? changedPath : [changedPath]) : null;
+  if (paths && l.ref.col) {
+    const pre = l.ref.path + '/';
+    if (!paths.some(p => p.startsWith(pre) && !p.slice(pre.length).includes('/'))) return;
+  }
   if (changedPath && l.ref.col && !l.ref.where && l.vorher) {
     const pre = l.ref.path + '/';
-    if (!changedPath.startsWith(pre) || changedPath.slice(pre.length).includes('/')) return;
-    const d = dsnap(changedPath), alt = l.vorher.get(d.id), text = JSON.stringify(d.data());
-    if (alt && alt.text === text) return;
-    const changes = [{ type: d.exists() ? (alt ? 'modified' : 'added') : 'removed', doc:d }];
-    if (d.exists()) l.vorher.set(d.id, {doc:d, text}); else l.vorher.delete(d.id);
+    const changes = [];
+    for (const p of paths) {
+      if (!p.startsWith(pre) || p.slice(pre.length).includes('/')) continue;
+      const d = dsnap(p), alt = l.vorher.get(d.id), text = JSON.stringify(d.data());
+      if ((!alt && !d.exists()) || (alt && alt.text === text)) continue;
+      changes.push({ type: d.exists() ? (alt ? 'modified' : 'added') : 'removed', doc:d });
+      if (d.exists()) l.vorher.set(d.id, {doc:d, text}); else l.vorher.delete(d.id);
+    }
+    if (!changes.length) return;
     const docs = [...l.vorher.values()].map(x => x.doc);
     l.cb({docs, size:docs.length, empty:!docs.length, forEach:f=>docs.forEach(f),
       docChanges:()=>changes, metadata:{hasPendingWrites:false}});
     return;
   }
-  if (changedPath && !l.ref.col && l.gemeldet && changedPath !== l.ref.path) return;
+  if (paths && !l.ref.col && l.gemeldet && !paths.includes(l.ref.path)) return;
   const snap = l.ref.col ? qsnap(l.ref) : dsnap(l.ref.path);
   if (l.ref.col) {
     const jetzt = new Map(snap.docs.map(d => [d.id, { doc:d, text:JSON.stringify(d.data()) }]));
@@ -210,17 +219,17 @@ export function getDocs(q){
   if (q.path === 'feedback') { const l = (q.where || []).find(w => w.__limit !== undefined);
     if (!l || l.__limit > 100) return Promise.reject(Object.assign(new Error('limit'), { code: 'permission-denied' })); }
   return Promise.resolve(qsnap(q)); }
-export function writeBatch(){ const ops = []; return {
-  set(r, d, o){ ops.push(() => _set(r, d, o)); return this; },
-  update(r, ...a){ ops.push(() => _update(r, ...a)); return this; },
-  delete(r){ ops.push(() => S.store.delete(r.path)); return this; },
+export function writeBatch(){ const ops = [], paths = new Set(); return {
+  set(r, d, o){ ops.push(() => _set(r, d, o)); paths.add(r.path); return this; },
+  update(r, ...a){ ops.push(() => _update(r, ...a)); paths.add(r.path); return this; },
+  delete(r){ ops.push(() => S.store.delete(r.path)); paths.add(r.path); return this; },
   commit(){
     S.protokoll.push('commit');
     // 3.17.38 (Abnahme G-011, KONTO-2): window.__COMMIT_HAENGT laesst commit()
     // nie aufloesen - simuliert das dokumentierte Firestore-Verhalten ohne
     // Verbindung (persistentLocalCache), gegen das mitLoeschenZeitlimit greift.
     if (window.__COMMIT_HAENGT) return new Promise(() => {});
-    try { ops.forEach(f => f()); } catch(e){ return Promise.reject(e); } melden(); return Promise.resolve();
+    try { ops.forEach(f => f()); } catch(e){ return Promise.reject(e); } melden([...paths]); return Promise.resolve();
   } }; }
 export function runTransaction(db, fn){ return fn({ get: getDoc, set: (r,d,o)=>_set(r,d,o), update: (r,...a)=>_update(r,...a), delete: r=>S.store.delete(r.path) }).then(v => { melden(); return v; }); }
 export function onSnapshot(ref, optionsOrCb, cbOrErr, err){

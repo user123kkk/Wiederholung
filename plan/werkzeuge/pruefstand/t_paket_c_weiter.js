@@ -13,6 +13,7 @@ window.__C = {
  get ui(){return ui;}, get bereiche(){return bereiche;}, get draft(){return formDraft;},
  render, selectBereich, editCard, cancelEdit, saveSelectedToSet, deleteSelectedCards,
  moveSelectedCardsTo, deleteCard, resetRueckfaelle,
+ async testKartenAnlegen(karten){const batch=fb.writeBatch(db);for(const k of karten)batch.set(karteRef(k.id),k);await batch.commit();},
  quelle(){return currentBereich();},
  setVerlauf(v){verlauf=v;render();},
  stoff(cards){return fortschrittStoff(cards);},
@@ -281,7 +282,11 @@ const faelle={
   assert.equal(await alle.innerText(),'Keine');
   await alle.click();await p.waitForTimeout(300);
   assert.equal(await p.evaluate(()=>__C.ui.selectedIds.size),0);
-  await p.evaluate(()=>{const q=__C.quelle();const vor=q.karten[0];for(let i=40;i<200;i++){const c={...vor,id:'extra'+i,order:i};q.karten.push(c);window.__FB.store.set('users/u1/karten/'+c.id,{...c,bereichId:q.id});}Object.assign(__C.ui,{searchQuery:'',searchAll:false,kartenSeite:0});__C.render();});
+  // Auch der Snapshot muss die Testkarten kennen; direktes Map.set umgeht
+  // Firestore und hinterlaesst einen unmoeglichen Listenerstand.
+  await p.evaluate(async()=>{const q=__C.quelle();const vor=q.karten[0],karten=[];for(let i=40;i<200;i++)karten.push({...vor,id:'extra'+i,order:i,bereichId:q.id});await __C.testKartenAnlegen(karten);});
+  await p.waitForFunction(()=>__C.quelle().karten.length===200);
+  await p.evaluate(()=>{Object.assign(__C.ui,{searchQuery:'',searchAll:false,kartenSeite:0});__C.render();});
   assert.equal(await p.locator('#karten-liste > [data-action="toggle-card-select"]').count(),100);
   const lage=await p.locator('.select-actionbar').boundingBox();
   await alle.click();await p.waitForTimeout(300);

@@ -115,14 +115,19 @@ async function vergleich(browser, uid, viewport, baseNeu, ersetze) {
 }
 
 (async () => {
-  const wt = path.join(os.tmpdir(), 'adrabic-veroeffentlicht-' + VEROEFFENTLICHT);
-  if (!fs.existsSync(path.join(wt, 'index.html'))) {
-    try { execFileSync('git', ['-C', repo, 'worktree', 'remove', '--force', wt], { stdio: 'ignore' }); } catch (_) {}
-    execFileSync('git', ['-C', repo, 'worktree', 'add', '--detach', wt, VEROEFFENTLICHT], { stdio: 'ignore' });
+  let server = null;
+  // Die regulaere Abnahme vergleicht nur aktuelle Quellen. Ein historischer
+  // Checkout/Server wird ausschliesslich fuer --historisch benoetigt.
+  if (historisch) {
+    const wt = path.join(os.tmpdir(), 'adrabic-veroeffentlicht-' + VEROEFFENTLICHT);
+    if (!fs.existsSync(path.join(wt, 'index.html'))) {
+      try { execFileSync('git', ['-C', repo, 'worktree', 'remove', '--force', wt], { stdio: 'ignore' }); } catch (_) {}
+      execFileSync('git', ['-C', repo, 'worktree', 'add', '--detach', wt, VEROEFFENTLICHT], { stdio: 'ignore' });
+    }
+    const py = process.platform === 'win32' ? 'py' : 'python3';
+    server = spawn(py, (process.platform === 'win32' ? ['-3'] : []).concat(['-m', 'http.server', String(PORT_ALT), '--bind', '127.0.0.1']), { cwd: wt, stdio: 'ignore' });
+    await new Promise(r => setTimeout(r, 1500));
   }
-  const py = process.platform === 'win32' ? 'py' : 'python3';
-  const server = spawn(py, (process.platform === 'win32' ? ['-3'] : []).concat(['-m', 'http.server', String(PORT_ALT), '--bind', '127.0.0.1']), { cwd: wt, stdio: 'ignore' });
-  await new Promise(r => setTimeout(r, 1500));
   const browser = await start();
   const fehler = [];
   try {
@@ -145,7 +150,7 @@ async function vergleich(browser, uid, viewport, baseNeu, ersetze) {
       console.log('Gegenprobe Textfreigabe fuer normales Konto: ' + offen.befunde.length + ' Unterschiede (erwartet > 0)');
       if (!offen.befunde.length) fehler.push('Gegenprobe: Textfreigabe fuer alle bliebe unbemerkt');
     }
-  } catch (e) { fehler.push('Abbruch: ' + e.message.split('\n')[0]); } finally { await browser.close(); server.kill(); }
+  } catch (e) { fehler.push('Abbruch: ' + e.message.split('\n')[0]); } finally { await browser.close(); server?.kill(); }
   if (fehler.length) { console.log('FEHLER:\n' + fehler.join('\n')); process.exitCode = 1; }
   else console.log('OK t_nur_betreiber: ' + (historisch ? 'normales Konto sieht jeden Bildschirm wie in 3.17.56' : 'Textfreigabe aendert keinen der sieben Bildschirme normaler Konten; HTML und Pixel gleich'));
 })();

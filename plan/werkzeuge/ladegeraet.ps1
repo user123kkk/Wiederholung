@@ -20,7 +20,7 @@ param(
 #   stubs.js, gilt ein neuer Quellstand und es laeuft ohnehin alles neu.
 $ErrorActionPreference = 'Stop'
 $server = $null
-$emu = $null
+$emulatoren = New-Object System.Collections.Generic.List[object]
 $ergebnis = 1
 $bericht = New-Object System.Collections.Generic.List[string]
 function Schritt([string]$t) { Write-Host ''; Write-Host ('=== ' + $t + ' ==='); $bericht.Add($t) }
@@ -74,24 +74,36 @@ try {
     $server = Start-Process -FilePath $py -ArgumentList '-3', '-m', 'http.server', '8199', '--bind', '127.0.0.1' -WorkingDirectory $repo -WindowStyle Hidden -PassThru
     Start-Sleep -Seconds 2
 
-    # t_verlauf_mehrgeraete.js braucht den Firestore-Emulator auf 127.0.0.1:8081
+    # Die SDK-Pruefungen brauchen zwei getrennte Demo-Projekte auf 8081/8082.
     # (nur Demo-Projekt, keine Produktivdaten). Eigener Ordner mit eigener
     # firebase.json, damit die Hosting-Einstellungen des Repos unberuehrt bleiben.
     $null = Werkzeug 'java.exe' 'Java fehlt (Firestore-Emulator fuer t_verlauf_mehrgeraete).'
     $fb = Werkzeug 'firebase.cmd' 'Firebase-Werkzeuge fehlen. Einmalig: npm install -g firebase-tools'
-    $emuOrdner = Join-Path $env:TEMP 'adrabic-ladegeraet-emu'
+    foreach ($ziel in @(
+        @{ Projekt = 'demo-adrabic-pruefung'; Port = 8081; Websocket = 9150; Hub = 4410; Logging = 4510 },
+        @{ Projekt = 'demo-adrabic-karten-audit'; Port = 8082; Websocket = 9151; Hub = 4411; Logging = 4511 }
+    )) {
+    $portProbe = New-Object System.Net.Sockets.TcpClient
+    try {
+        try { $portProbe.Connect('127.0.0.1', $ziel.Port) } catch { }
+        if ($portProbe.Connected) { throw ('Emulator-Port bereits belegt: ' + $ziel.Port + '. Vorhandenen Prozess nicht als eigenen Pruefemulator uebernehmen.') }
+    } finally { $portProbe.Dispose() }
+    $emuOrdner = Join-Path $env:TEMP ('adrabic-ladegeraet-emu-' + $ziel.Port)
     New-Item -ItemType Directory -Force -Path $emuOrdner | Out-Null
     $regeln = (Join-Path $repo 'firestore.rules') -replace '\\', '/'
-    $emuJson = '{ "firestore": { "rules": "' + $regeln + '" }, "emulators": { "firestore": { "host": "127.0.0.1", "port": 8081 }, "ui": { "enabled": false }, "hub": { "port": 4410 }, "logging": { "port": 4510 } } }'
+    $emuJson = @{ firestore = @{ rules = $regeln }; emulators = @{ singleProjectMode = $true; firestore = @{ host = '127.0.0.1'; port = $ziel.Port; websocketPort = $ziel.Websocket }; ui = @{ enabled = $false }; hub = @{ port = $ziel.Hub }; logging = @{ port = $ziel.Logging } } } | ConvertTo-Json -Depth 5
     [System.IO.File]::WriteAllText((Join-Path $emuOrdner 'firebase.json'), $emuJson)
-    $emu = Start-Process -FilePath $fb -ArgumentList 'emulators:start', '--only', 'firestore', '--project', 'demo-adrabic-pruefung' -WorkingDirectory $emuOrdner -WindowStyle Hidden -PassThru
+    $emu = Start-Process -FilePath $fb -ArgumentList 'emulators:start', '--only', 'firestore', '--project', $ziel.Projekt -WorkingDirectory $emuOrdner -WindowStyle Hidden -PassThru
+    $emulatoren.Add($emu)
     $bereit = $false
     for ($i = 0; $i -lt 60 -and -not $bereit; $i++) {
         Start-Sleep -Seconds 1
-        try { Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8081/' -TimeoutSec 2 | Out-Null; $bereit = $true } catch { }
+        if ($emu.HasExited) { throw ('Firestore-Emulator vorzeitig beendet (Port ' + $ziel.Port + ').') }
+        try { Invoke-WebRequest -UseBasicParsing -Uri ('http://127.0.0.1:' + $ziel.Port + '/') -TimeoutSec 2 | Out-Null; $bereit = $true } catch { }
     }
-    if (-not $bereit) { throw 'Firestore-Emulator startet nicht (Port 8081).' }
-    Write-Host 'Firestore-Emulator laeuft (8081).'
+    if (-not $bereit) { throw ('Firestore-Emulator startet nicht (Port ' + $ziel.Port + ').') }
+    Write-Host ('Firestore-Emulator laeuft (' + $ziel.Port + ', ' + $ziel.Projekt + ').')
+    }
 
     Schritt '3/6 Pruefstand (alle Tests, dauert)'
     Push-Location -LiteralPath $pruef
@@ -144,7 +156,9 @@ try {
 } finally {
     if ($server -and -not $server.HasExited) { Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue }
     # firebase.cmd startet node und java als Kindprozesse: ganzen Baum beenden.
-    if ($emu -and -not $emu.HasExited) { & taskkill.exe /PID $emu.Id /T /F 2>$null | Out-Null }
+    foreach ($emu in $emulatoren) {
+        if (-not $emu.HasExited) { & taskkill.exe /PID $emu.Id /T /F 2>$null | Out-Null }
+    }
     Write-Host ''
     Write-Host ('Schritte: ' + ($bericht -join ' | '))
 }

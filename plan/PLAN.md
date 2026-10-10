@@ -7,6 +7,12 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.21:02:** Datenabschluss3.18.30 mit konkreter Betreiberfreigabe
+„ok los“ trotz separat offenem Texttempo.157/158/13Runden/238Regeln und
+beide Zufallsläufe unverändert belegt; keine Veröffentlichung. Gezielter
+Commit/Push jetzt, anschließend Lernrunde: konkreter Bearbeiten-Vorschlag
+wartet auf Einzelfreigabe; alte Sammelfreigabe genügt nicht.
+
 **10.10.2026 16:29 – Reihenfolge fortgesetzt, Vorbereitung:** Nächster
 Bereich Lernrunde, Karte während der Abfrage bearbeiten. Alte S1-
 Sammelfreigabe belegt kein gesichertes Verständnis; konkrete Entscheidung

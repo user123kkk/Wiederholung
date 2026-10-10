@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.29";
+const APP_VERSION = "3.18.30";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -331,7 +331,12 @@ function normCard(c) {
     /* 3.18.0 (Texte auswendig lernen): Eine Textzeile ist ein Karten-Dokument
        mit dem Verweis auf ihren Text. Fehlte das Feld hier, verloere jede
        Zeile es beim naechsten Laden und wuerde zur gewoehnlichen Karte. */
-    textId: textIdVon(c)
+    textId: textIdVon(c),
+    /* Technische Aktionskennung, keine Lernregel. Alte Karten haben null. */
+    ...(!textIdVon(c) && typeof c.bewertungsStand === "string" ? {
+      bewertungsStand: c.bewertungsStand,
+      bewertungsBasis: typeof c.bewertungsBasis === "string" ? c.bewertungsBasis : null
+    } : {})
   };
   /* Textzeilen kennen nur frisch 0-6 und fest 7 (texte-lernen/WIEDERHOLEN.md
      § 1). Hat eine aeltere App-Version eine Zeile als Karte bewertet, steht
@@ -896,7 +901,10 @@ function kartenFelder(c, order) {
     /* 3.18.0: nur bei Textzeilen. Gewoehnliche Karten tragen das Feld nicht -
        so schreibt eine Karte auch dann noch, wenn die Regeln mit textId noch
        nicht veroeffentlicht sind (plan/LEHREN.md § 8.1). */
-    ...(c.textId ? { textId: c.textId } : {})
+    ...(c.textId ? { textId: c.textId } : {}),
+    ...(!c.textId && c.bewertungsStand ? {
+      bewertungsStand: c.bewertungsStand, bewertungsBasis: c.bewertungsBasis || null
+    } : {})
   };
 }
 /* Eine Speicherkarte in der Form, wie sie in der Cloud steht. Wie bei den
@@ -990,11 +998,159 @@ let verlaufOffen = {};
 let verlaufStand = {};
 let verlaufGeneration = 0;   // spaete Antworten nach Konto-Wechsel/Reset verwerfen
 let verlaufEpoche = "";     // serverseitige Grenze gegen Writes vor einem Reset
+/* A16: Jeder Beitrag bleibt vor dem Buchen dauerhaft auf diesem Geraet.
+   Ein unveraenderlicher Beleg wird zusammen mit dem Increment geschrieben.
+   Ein zweiter Versand derselben Kennung wird atomar abgelehnt. */
+const verlaufAktionen = new Map();
+const verlaufLaeufe = new Set();
+const verlaufDefekte = new Map();
+let verlaufSpeicherFehler = false;
+let verlaufPrueft = false;
+let verlaufPruefung = null;
+function verlaufPraefix(uid) { return "adrabic-tagesantwort-" + uid + "/"; }
+function verlaufAktionenLaden(user) {
+  verlaufAktionen.clear(); verlaufLaeufe.clear(); verlaufDefekte.clear();
+  verlaufSpeicherFehler = false; verlaufPrueft = false;
+  verlaufPruefung = null;
+  if (!user) return;
+  try {
+    const prefix = verlaufPraefix(user.uid);
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key?.startsWith(prefix)) continue;
+      const roh = localStorage.getItem(key);
+      let x;
+      try { x = JSON.parse(roh); } catch (_) {}
+      if (!x || x.uid !== user.uid || key !== prefix + x.id ||
+          typeof x.id !== "string" || !/^[A-Za-z0-9-]{1,100}$/.test(x.id) ||
+          typeof x.epoche !== "string" || x.epoche.length > 80 ||
+          !/^\d{4}-\d{2}-\d{2}$/.test(x.tag) || !VERLAUF_ARTEN.includes(x.art) ||
+          ![1, -1].includes(x.delta) ||
+          !["vorbereitet", "bereit", "offen", "pruefen", "abgelehnt", "veraltet"].includes(x.status)) {
+        verlaufDefekte.set(key, roh); verlaufSpeicherFehler = true; continue;
+      }
+      verlaufAktionen.set(x.id, { ...x, status: x.status === "offen" ? "pruefen" : x.status,
+        wiederhergestellt: x.status === "bereit" });
+    }
+  } catch (_) { verlaufSpeicherFehler = true; }
+}
+function verlaufAktionSpeichern(x) {
+  try { localStorage.setItem(verlaufPraefix(x.uid) + x.id, JSON.stringify(x)); return true; }
+  catch (_) { verlaufSpeicherFehler = true; return false; }
+}
+function verlaufAktionEntfernen(x) {
+  try { localStorage.removeItem(verlaufPraefix(x.uid) + x.id); verlaufAktionen.delete(x.id); }
+  catch (_) { x.status = "pruefen"; verlaufSpeicherFehler = true; }
+}
+function verlaufBeitragVorbereiten(tag, art, delta, karte = false) {
+  if (!currentUser || !userDocRef || kontoWirdGeloescht || verlaufSpeicherFehler) return null;
+  const x = { id: bewertungsKennung(), uid: currentUser.uid, epoche: verlaufEpoche,
+    tag, art, delta, status: karte ? "vorbereitet" : "bereit" };
+  if (!verlaufAktionSpeichern(x)) { render(); return null; }
+  // Erst der Aufrufer aktiviert den Beitrag nach erfolgreicher Kartenkopie.
+  return x;
+}
+function verlaufOffenAufbauen() {
+  verlaufOffen = {};
+  for (const x of verlaufAktionen.values()) {
+    if (x.epoche !== verlaufEpoche || !["bereit", "abgelehnt"].includes(x.status)) continue;
+    const e = verlaufOffen[x.tag] || (verlaufOffen[x.tag] = {});
+    e[x.art] = (e[x.art] || 0) + x.delta;
+  }
+}
+function verlaufBelegRef(ref, id) { return fb.doc(fb.collection(ref, "tagesantworten"), id); }
+function verlaufBelegDaten(x) { return { epoche: x.epoche, tag: x.tag, art: x.art, delta: x.delta }; }
+function verlaufAktionSchreiben(x) {
+  const ref = userDocRef, user = currentUser, generation = verlaufGeneration;
+  if (!ref || user?.uid !== x.uid || x.epoche !== verlaufEpoche ||
+      kontoWirdGeloescht || verlaufLaeufe.has(x.id) || x.status !== "bereit") return;
+  const gilt = () => userDocRef === ref && currentUser === user && verlaufGeneration === generation && !kontoWirdGeloescht;
+  x.status = "offen";
+  if (!verlaufAktionSpeichern(x)) { x.status = "bereit"; return; }
+  verlaufLaeufe.add(x.id);
+  const batch = fb.writeBatch(db);
+  batch.update(ref, new fb.FieldPath("verlauf", x.tag, x.art), fb.increment(x.delta),
+    new fb.FieldPath("verlaufEpoche"), x.epoche);
+  batch.set(verlaufBelegRef(ref, x.id), verlaufBelegDaten(x));
+  verlaufOffenAufbauen();
+  return batch.commit().then(() => {
+    if (!gilt()) return;
+    verlaufAktionEntfernen(x);
+    schreibErfolg();
+  }).catch(async e => {
+    if (!gilt()) return;
+    // Auch eine verlorene Bestätigung kann einen zweiten Batch ablehnen.
+    try {
+      const beleg = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(verlaufBelegRef(ref, x.id)));
+      if (!gilt()) return;
+      const d = beleg.exists() ? beleg.data() : null;
+      if (d && d.epoche === x.epoche && d.tag === x.tag && d.art === x.art && d.delta === x.delta) {
+        verlaufAktionEntfernen(x); return;
+      }
+      const snap = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(ref));
+      if (!gilt()) return;
+      if ((snap.data()?.verlaufEpoche || "") !== x.epoche) {
+        x.status = "veraltet"; verlaufAktionSpeichern(x); render(); return;
+      }
+    } catch (_) { /* Originalbeitrag bleibt mit sichtbarer Ablehnung erhalten. */ }
+    if (!gilt()) return;
+    x.status = "abgelehnt"; verlaufAktionSpeichern(x);
+    verlaufOffenAufbauen(); verlauf = verlaufZusammen(verlaufStand);
+    verlaufAbgelehnt = true; saveFehler(e); render();
+  }).finally(() => { if (gilt()) verlaufLaeufe.delete(x.id); });
+}
+function verlaufAktionenPruefen() {
+  const ref = userDocRef, user = currentUser;
+  if (!ref || !user || kontoWirdGeloescht) return Promise.resolve();
+  // Ein ausdruecklicher Neuversuch nach automatischem Token-Retry darf nicht
+  // still im bereits laufenden Versuch verschwinden.
+  if (verlaufPruefung) return verlaufPruefung.then(() => {
+    if (userDocRef === ref && currentUser === user) return verlaufAktionenPruefen();
+  });
+  const lauf = verlaufAktionenPruefenFuer(ref, user);
+  verlaufPruefung = lauf;
+  lauf.finally(() => { if (verlaufPruefung === lauf) verlaufPruefung = null; });
+  return lauf;
+}
+async function verlaufAktionenPruefenFuer(ref, user) {
+  const gilt = () => userDocRef === ref && currentUser === user && !kontoWirdGeloescht;
+  verlaufPrueft = true;
+  try {
+    // Verlorene Offline-Promises: erst den SDK-Stapel beenden lassen.
+    if (fb.waitForPendingWrites) await mitZeitlimit(fb.waitForPendingWrites(db));
+    const snap = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(ref));
+    if (!gilt() || snap.metadata?.fromCache || snap.metadata?.hasPendingWrites) return;
+    const epoche = snap.data()?.verlaufEpoche || "";
+    verlaufEpocheUebernehmen(snap.data());
+    verlaufSpeicherFehler = verlaufDefekte.size > 0;
+    for (const x of [...verlaufAktionen.values()]) {
+      if (!gilt()) return;
+      if (verlaufLaeufe.has(x.id) || x.status === "vorbereitet") continue;
+      const beleg = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(verlaufBelegRef(ref, x.id)));
+      if (!gilt()) return;
+      if (beleg.metadata?.fromCache || beleg.metadata?.hasPendingWrites) continue;
+      if (beleg.exists()) {
+        const d = beleg.data();
+        if (d.epoche === x.epoche && d.tag === x.tag && d.art === x.art && d.delta === x.delta)
+          verlaufAktionEntfernen(x);
+        else { x.status = "veraltet"; verlaufAktionSpeichern(x); }
+      } else if (x.epoche !== epoche || x.tag < dateInDays(-VERLAUF_TAGE)) {
+        x.status = "veraltet"; verlaufAktionSpeichern(x);
+      } else {
+        x.status = "bereit";
+        if (verlaufAktionSpeichern(x)) await mitZeitlimit(verlaufAktionSchreiben(x));
+      }
+    }
+    if (gilt()) { verlaufOffenAufbauen(); verlauf = verlaufZusammen(verlaufStand); }
+  } catch (e) { if (gilt()) saveFehler(e); }
+  finally { if (gilt()) { verlaufPrueft = false; render(); } }
+}
 function verlaufEpocheUebernehmen(data) {
   const epoche = data && typeof data.verlaufEpoche === "string" ? data.verlaufEpoche : "";
   if (epoche === verlaufEpoche) return;
   verlaufEpoche = epoche;
   verlaufGeneration++;
+  verlaufLaeufe.clear();
   verlaufOffen = {};
   verlaufAbgelehnt = false;
   if (verlaufTimer) clearTimeout(verlaufTimer);
@@ -1034,8 +1190,10 @@ const VERLAUF_ARTEN = ["w", "n", "u", "t", "r"];
 function tagGelernt(e) {
   return !!e && ((e.w || 0) + (e.n || 0) + (e.t || 0)) > 0;
 }
-function verlaufZaehle(art) {
+function verlaufZaehle(art, beitrag) {
   const t = todayStr();
+  beitrag = beitrag || verlaufBeitragVorbereiten(t, art, 1);
+  if (!beitrag) return false;
   /* 3.16.0: "erster" heisst jetzt: erste LERN-Antwort des Tages. Hat man
      vorher schon geuebt, gibt es den Eintrag bereits - der Tag zaehlt fuer
      die Serie aber erst mit der ersten Wiederholung, und genau die muss
@@ -1043,12 +1201,13 @@ function verlaufZaehle(art) {
   const ersterHeute = art !== "u" && !tagGelernt(verlauf[t]);
   if (!verlauf[t]) verlauf[t] = { w: 0, n: 0 };
   verlauf[t][art] = (verlauf[t][art] || 0) + 1;
-  verlaufDeltaMerken(t, art, 1);
+  verlaufDeltaMerken(t, art, 1, beitrag);
   /* Der ERSTE Eintrag eines Tages entscheidet, ob der Tag fuer die Serie
      zaehlt - der geht sofort raus. Alles Weitere aendert nur noch Balken und
      wird wie bisher gebuendelt geschrieben. */
   if (ersterHeute) { checkStreakOnSessionComplete(); persistVerlauf(); }
   else verlaufSpeichernBald();
+  return true;
 }
 /* 3.17.34 (REST-1): Gegenstueck zu verlaufZaehle, aber je Bereich und nur
    im Arbeitsspeicher (ui.heuteJeBereich) - siehe Kommentar dort und bei
@@ -1058,9 +1217,12 @@ function bereichHeuteZaehle(bid, delta) {
   const n = ui.heuteJeBereich.n;
   n[bid] = Math.max(0, (n[bid] || 0) + delta);
 }
-function verlaufDeltaMerken(tag, art, delta) {
-  const e = verlaufOffen[tag] || (verlaufOffen[tag] = {});
-  e[art] = (e[art] || 0) + delta;
+function verlaufDeltaMerken(tag, art, delta, beitrag) {
+  const x = beitrag || verlaufBeitragVorbereiten(tag, art, delta);
+  if (!x) return false;
+  verlaufAktionen.set(x.id, x);
+  verlaufOffenAufbauen();
+  return true;
 }
 /* SDK-Snapshot enthaelt gesendete lokale increments bereits. Nur noch
    nicht uebergebene/abgelehnte Differenzen kommen fuer die Anzeige dazu. */
@@ -1115,9 +1277,11 @@ function ruhetagPruefen() {
   if (texteFreigeschaltet() &&
       bereiche.some(b => (b.texte || []).some(x => textWdhPlan(b, x, t).length > 0))) return;
   if (serieAktuell() < 1) return;
+  const beitrag = verlaufBeitragVorbereiten(t, "r", 1);
+  if (!beitrag) return;
   if (!verlauf[t]) verlauf[t] = { w: 0, n: 0 };
   verlauf[t].r = 1;
-  verlaufDeltaMerken(t, "r", 1);
+  verlaufDeltaMerken(t, "r", 1, beitrag);
   persistVerlauf();
 }
 /* Atomare Differenzen je Tag/Antwortart, nie den gesamten Tagesstand.
@@ -1126,50 +1290,7 @@ function ruhetagPruefen() {
    darf nicht als Fehlschlag gelten oder einen zweiten Versand ausloesen. */
 function persistVerlauf() {
   if (!userDocRef || kontoWirdGeloescht) return;
-  const delta = verlaufOffen;
-  const args = [];
-  for (const [tag, e] of Object.entries(delta)) {
-    for (const art of VERLAUF_ARTEN) {
-      if (e[art]) args.push(new fb.FieldPath("verlauf", tag, art), fb.increment(e[art]));
-    }
-  }
-  if (args.length === 0) return;
-  args.push(new fb.FieldPath("verlaufEpoche"), verlaufEpoche);
-  verlaufOffen = {};
-  const ref = userDocRef, generation = verlaufGeneration, name = displayName;
-  const giltNoch = () => userDocRef === ref && verlaufGeneration === generation && !kontoWirdGeloescht;
-  fb.updateDoc(ref, ...args).catch(async e => {
-    if (e && e.code === "not-found" && giltNoch()) {
-      await fb.setDoc(ref, { name: name, schemaVersion: SCHEMA_VERSION }, { merge: true });
-      if (giltNoch()) return fb.updateDoc(ref, ...args);
-      return;
-    }
-    throw e;
-  }).then(() => { if (giltNoch()) schreibErfolg(); }).catch(async e => {
-    if (!giltNoch()) return;
-    // Ein fremder Reset macht alte Differenzen ungueltig. Nach echter
-    // Server-Ablehnung erst dessen Epoche lesen, bevor etwas nachgeholt wird.
-    if (e && e.code === "permission-denied") {
-      try {
-        const snap = await (fb.getDocFromServer || fb.getDoc)(ref);
-        if (!giltNoch()) return;
-        verlaufEpocheUebernehmen(snap.data());
-        if (!giltNoch()) {
-          verlaufStand = normVerlauf(snap.data() && snap.data().verlauf);
-          verlauf = verlaufZusammen(verlaufStand);
-          return;
-        }
-      } catch (_) { /* Andere Ablehnungen bleiben sichtbar und nachholbar. */ }
-      if (!giltNoch()) return;
-    }
-    // Nur eine vom Server ABGELEHNTE Differenz erneut merken, nicht offline.
-    for (const [tag, x] of Object.entries(delta)) {
-      for (const art of VERLAUF_ARTEN) if (x[art]) verlaufDeltaMerken(tag, art, x[art]);
-    }
-    verlauf = verlaufZusammen(verlaufStand);
-    if (e && e.code === "permission-denied") verlaufAbgelehnt = true;
-    saveFehler(e);
-  });
+  for (const x of verlaufAktionen.values()) if (x.status === "bereit") verlaufAktionSchreiben(x);
 }
 /* Alte Tage in der Cloud wegraeumen. Laeuft einmal beim Laden, weil der
    Speicher sie da ohnehin schon verworfen hat und sie sonst nie jemand
@@ -1200,6 +1321,7 @@ async function verlaufZuruecksetzen() {
   verlaufStand = {};
   verlaufGeneration++;
   verlaufEpoche = typeof crypto.randomUUID === "function" ? crypto.randomUUID() : genId() + genId();
+  verlaufLaeufe.clear();
   verlaufAbgelehnt = false;
   const ref = userDocRef, generation = verlaufGeneration;
   if (ref) fb.updateDoc(ref, { verlauf: {}, verlaufEpoche: verlaufEpoche })
@@ -2431,7 +2553,9 @@ async function initFirebase() {
     verlaufGeneration++;
     verlaufEpoche = "";
     verlaufAbgelehnt = false;
+    verlaufAktionenLaden(user);
     abgelehnteBewertungen.clear();
+    bewertungsAktionenLaden(user);
     if (verlaufTimer) { clearTimeout(verlaufTimer); verlaufTimer = null; }
     cloudDocExists = false;
     cloudKontoFrisch = false;
@@ -2528,6 +2652,7 @@ async function initFirebase() {
         if (kontoWirdGeloescht) return;
         const data = snap.data();
         verlaufEpocheUebernehmen(data);
+        verlaufOffenAufbauen();
         // Das SDK kennt auch offline bereits uebergebene increments. Deren
         // Echo fuer den Zaehler verarbeiten, ohne alle Screens neu aufzubauen.
         verlaufStand = normVerlauf(data && data.verlauf);
@@ -2840,6 +2965,21 @@ async function patchDoc(patch) {
     }
   }
 
+  /* Auch Bearbeiten/Zuruecksetzen/Verschieben darf den Kartenschutz nicht
+     entfernen oder einen inzwischen fremden Lernstand ersetzen. */
+  for (const [key, op] of ops) {
+    if (!key.startsWith("k/") || op.art === "delete") continue;
+    const alt = (rohKarten || []).find(c => c.id === key.slice(2));
+    if (!alt || alt.textId || op.daten.textId) continue;
+    const aendertBewertung = BEWERTUNGS_FELDER.some(f => f in op.daten && op.daten[f] !== alt[f]);
+    if (aendertBewertung) {
+      op.daten.bewertungsBasis = alt.bewertungsStand || null;
+      op.daten.bewertungsStand = bewertungsKennung();
+    } else if (op.art === "set" && alt.bewertungsStand) {
+      op.daten.bewertungsStand = alt.bewertungsStand;
+      op.daten.bewertungsBasis = alt.bewertungsBasis || null;
+    }
+  }
   const liste = [...ops.values()];
   const stapelSchreiben = async (teil) => {
     const stapel = fb.writeBatch(db);
@@ -2985,15 +3125,221 @@ let verlaufAbgelehnt = false;
 function abgelehntesNachholen() {
   const liste = [...abgelehnteBewertungen.entries()];
   abgelehnteBewertungen.clear();
-  for (const [cardId, x] of liste) persistCardGrade(x.bereichId, cardId, x.fields);
-  if (verlaufAbgelehnt) { verlaufAbgelehnt = false; persistVerlauf(); }
+  for (const [cardId, x] of liste) {
+    if (x.aktion) bewertungsAktionSchreiben(x.aktion);
+    else persistCardGrade(x.bereichId, cardId, x.fields);
+  }
+  verlaufAbgelehnt = false;
+  return verlaufAktionenPruefen();
 }
-/* Gezieltes Speichern fuers Lernen: aendert nur die Stufe und das
-   Faelligkeitsdatum dieser einen Karte. Dadurch kann ein Geraet nie den
-   Fortschritt eines anderen ausloeschen - auch nicht, wenn eine Karte offline
-   bewertet und die Aenderung erst spaeter hochgeladen wird. */
-function persistCardGrade(bereichId, cardId, fields) {
+const BEWERTUNGS_FELDER = ["stufe", "nextReview", "ersteBewertung", "rueckfaelle", "maxStufe"];
+const bewertungsAktionen = new Map();
+const bewertungsDefekte = new Map();
+const bewertungsLaeufe = new Set();
+let bewertungsSpeicherFehler = false;
+function bewertungsKennung() {
+  return typeof crypto.randomUUID === "function" ? crypto.randomUUID() : genId() + genId();
+}
+function bewertungsPraefix(uid) { return "adrabic-bewertung-" + uid + "/"; }
+function bewertungsAktionenLaden(user) {
+  bewertungsAktionen.clear();
+  bewertungsDefekte.clear();
+  bewertungsLaeufe.clear();
+  bewertungsSpeicherFehler = false;
+  if (!user) return;
+  try {
+    const prefix = bewertungsPraefix(user.uid);
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || !key.startsWith(prefix)) continue;
+      const roh = localStorage.getItem(key);
+      let x;
+      try { x = JSON.parse(roh); }
+      catch (e) { bewertungsDefekte.set(key, roh); bewertungsSpeicherFehler = true; continue; }
+      if (!x || x.uid !== user.uid || key !== prefix + x.id ||
+          typeof x.id !== "string" || !x.id || x.id.length > 100 ||
+          typeof x.cardId !== "string" || typeof x.bereichId !== "string" ||
+          !(x.basis === null || typeof x.basis === "string") ||
+          !x.fields || typeof x.fields !== "object" || Array.isArray(x.fields) ||
+          !BEWERTUNGS_FELDER.every(f => Object.prototype.hasOwnProperty.call(x.fields, f)) ||
+          Object.keys(x.fields).some(f => !BEWERTUNGS_FELDER.includes(f)) ||
+          !["offen", "pruefen", "abgelehnt", "konflikt", "geloescht", "speicher"].includes(x.status)) {
+        bewertungsDefekte.set(key, roh);
+        bewertungsSpeicherFehler = true;
+        continue; // Beschaedigte Eintraege bleiben erhalten, nicht still loeschen.
+      }
+      bewertungsAktionen.set(x.id, { ...x, status: x.status === "offen" ? "pruefen" : x.status });
+      // Absturz zwischen Kartenkopie und Aktivierung des Tagesbeitrags:
+      // nur eine wirklich dauerhaft gespeicherte Kartenaktion legitimiert ihn.
+      const v = x.tagesantwort;
+      if (v && v.uid === user.uid && verlaufAktionen.get(v.id)?.status === "vorbereitet") {
+        const beitrag = verlaufAktionen.get(v.id);
+        if (beitrag.tag === v.tag && beitrag.art === v.art && beitrag.delta === v.delta && beitrag.epoche === v.epoche) {
+          beitrag.status = "bereit"; verlaufAktionSpeichern(beitrag);
+        }
+      }
+    }
+  } catch (e) { bewertungsSpeicherFehler = true; }
+}
+function bewertungsAktionMerken(x) {
+  bewertungsAktionen.set(x.id, x);
+  try { localStorage.setItem(bewertungsPraefix(x.uid) + x.id, JSON.stringify(x)); return true; }
+  catch (e) { x.status = "speicher"; bewertungsSpeicherFehler = true; return false; }
+}
+function bewertungsAktionEntfernen(x) {
+  try {
+    localStorage.removeItem(bewertungsPraefix(x.uid) + x.id);
+    bewertungsAktionen.delete(x.id);
+  } catch (e) { x.status = "pruefen"; bewertungsSpeicherFehler = true; }
+}
+function bewertungsKarteBlockiert(id) {
+  return bewertungsSpeicherFehler || verlaufSpeicherFehler || [...bewertungsAktionen.values()].some(x =>
+    x.cardId === id && x.status !== "offen");
+}
+function bewertungDarfBeginnen(id) {
+  if (!bewertungsKarteBlockiert(id)) return true;
+  dlgAlert("Eine frühere Antwort ist noch nicht geklärt. Sichere oder prüfe sie zuerst über den Hinweis oben.", "Antwort aufbewahrt");
+  return false;
+}
+/* Die Regeln vergleichen die Ausgangskennung atomar am Server. Das SDK
+   darf weiter offline schreiben; alte Aktionen koennen neuere nicht ersetzen.
+   Jeder Write bleibt separat auf dem Geraet, bis er bestaetigt wurde. */
+function bewertungsAktionSchreiben(x) {
+  if (!currentUser || currentUser.uid !== x.uid || !kartenColRef || kontoWirdGeloescht || bewertungsLaeufe.has(x.id)) return;
+  if (x.status !== "offen") {
+    x.status = "offen";
+    if (!bewertungsAktionMerken(x)) { render(); return; }
+  }
+  const ref = userDocRef, sammlung = kartenColRef;
+  const giltNoch = () => userDocRef === ref && !kontoWirdGeloescht && currentUser?.uid === x.uid;
+  bewertungsLaeufe.add(x.id);
+  fb.updateDoc(fb.doc(sammlung, x.cardId), {
+    ...x.fields, bewertungsStand: x.id, bewertungsBasis: x.basis
+  }).then(() => {
+    if (!giltNoch()) return;
+    bewertungsAktionEntfernen(x);
+    const abgelehnt = abgelehnteBewertungen.get(x.cardId);
+    if (abgelehnt?.aktion?.id === x.id) abgelehnteBewertungen.delete(x.cardId);
+    schreibErfolg();
+  }).catch(e => {
+    if (!giltNoch()) return;
+    x.status = "abgelehnt";
+    bewertungsAktionMerken(x);
+    if (e?.code === "permission-denied") abgelehnteBewertungen.set(x.cardId, { aktion: x });
+    saveFehler(e);
+  }).finally(() => { if (giltNoch()) bewertungsLaeufe.delete(x.id); });
+}
+async function bewertungsAktionenPruefen() {
+  const ref = userDocRef, user = currentUser, sammlung = kartenColRef;
+  if (!ref || !user || !sammlung) return;
+  try {
+    localStorage.getItem(bewertungsPraefix(user.uid));
+    bewertungsSpeicherFehler = bewertungsDefekte.size > 0;
+  } catch (e) { bewertungsSpeicherFehler = true; render(); return; }
+  const giltNoch = () => userDocRef === ref && currentUser === user && !kontoWirdGeloescht;
+  const liste = [...bewertungsAktionen.values()].filter(x => x.status !== "offen");
+  for (const x of liste) {
+    if (!giltNoch()) return;
+    try {
+      const snap = await mitZeitlimit((fb.getDocFromServer || fb.getDoc)(fb.doc(sammlung, x.cardId)));
+      if (!giltNoch() || !bewertungsAktionen.has(x.id)) return;
+      if (snap.metadata?.hasPendingWrites || snap.metadata?.fromCache) continue;
+      const data = snap.exists() ? snap.data() : null;
+      if (data?.bewertungsStand === x.id) {
+        bewertungsAktionEntfernen(x); // Bestätigung vor einem Neustart verloren.
+      } else if (data && (data.bewertungsStand || null) === x.basis) {
+        x.status = "offen";
+        if (bewertungsAktionMerken(x)) bewertungsAktionSchreiben(x);
+      } else {
+        x.status = data ? "konflikt" : "geloescht";
+        bewertungsAktionMerken(x); // Kein neuer Ausgangsstand, kein blindes Retry.
+      }
+    } catch (e) { if (giltNoch()) { x.status = "abgelehnt"; bewertungsAktionMerken(x); } }
+  }
+  if (giltNoch()) render();
+}
+async function bewertungsAktionenVerwerfen() {
+  const ref = userDocRef, user = currentUser;
+  const entfernbar = x => x.status !== "offen" && x.status !== "pruefen" && !bewertungsLaeufe.has(x.id);
+  const liste = [...bewertungsAktionen.values()].filter(entfernbar);
+  const tagesEntfernbar = x => ["abgelehnt", "veraltet", "vorbereitet"].includes(x.status) && !verlaufLaeufe.has(x.id);
+  const tagesListe = [...verlaufAktionen.values()].filter(tagesEntfernbar);
+  if (!user) return;
+  if (!liste.length && !tagesListe.length) {
+    dlgAlert("Diese Antworten sind noch unterwegs oder noch nicht geprüft. Prüfe sie zuerst. Noch laufende Antworten bleiben auf dem Gerät erhalten.", "Antworten aufbewahrt");
+    return;
+  }
+  const ja = await dlgConfirm("Diese aufbewahrten Antworten vom Gerät entfernen? Der aktuelle Lernstand in der Cloud bleibt erhalten. Lade bei Bedarf vorher die Antworten herunter.", { title: "Aufbewahrte Antworten", okLabel: "Vom Gerät entfernen", danger: true });
+  if (!ja || userDocRef !== ref || currentUser !== user) return;
+  for (const x of liste) {
+    const aktuell = bewertungsAktionen.get(x.id);
+    if (!aktuell || !entfernbar(aktuell)) continue;
+    bewertungsAktionEntfernen(x);
+    if (abgelehnteBewertungen.get(x.cardId)?.aktion?.id === x.id) abgelehnteBewertungen.delete(x.cardId);
+  }
+  for (const x of tagesListe) {
+    const aktuell = verlaufAktionen.get(x.id);
+    if (aktuell && tagesEntfernbar(aktuell)) verlaufAktionEntfernen(aktuell);
+  }
+  verlaufOffenAufbauen(); verlauf = verlaufZusammen(verlaufStand);
+  render();
+}
+function bewertungsBanner() {
+  const t = [...verlaufAktionen.values()].filter(x => ["pruefen", "abgelehnt", "veraltet", "vorbereitet"].includes(x.status) ||
+    (x.status === "bereit" && x.wiederhergestellt));
+  const n = [...bewertungsAktionen.values()].filter(x => x.status !== "offen").length + t.length;
+  const konflikte = [...bewertungsAktionen.values()].filter(x => x.status === "konflikt" || x.status === "geloescht").length;
+  const speicherFehler = bewertungsSpeicherFehler || verlaufSpeicherFehler;
+  if (!n && !speicherFehler) return "";
+  return bannerFehler(!n && speicherFehler ? "Gerätespeicher prüfen:" : "Antworten aufbewahrt:",
+    esc(konflikte ? (konflikte === 1 ? "Eine Antwort passt" : konflikte + " Antworten passen") + " nicht mehr zum aktuellen Kartenstand. " :
+      n ? (n === 1 ? "Eine Antwort ist" : n + " Antworten sind") + " noch nicht bestätigt. " : "") +
+    (t.some(x => x.status === "veraltet") ? 'Eine Tagesantwort gehört zur früheren Aufzeichnung und wird nicht nachgetragen. ' : '') +
+    '<button class="tiny-link" data-action="bewertung-pruefen">Prüfen</button> ' +
+    (n || bewertungsDefekte.size || verlaufDefekte.size ? '<button class="tiny-link" data-action="bewertung-sichern">Antworten sichern</button> ' +
+    '<button class="tiny-link" data-action="bewertung-verwerfen">Vom Gerät entfernen</button>' : '') +
+    (speicherFehler ? ' Der Gerätespeicher ist nicht verfügbar oder beschädigt; neue Bewertungen sind gesperrt.' : ''));
+}
+function bewertungsSicherung() {
+  return { version: 1, antworten: [...bewertungsAktionen.values()],
+    tagesantworten: [...verlaufAktionen.values()],
+    beschaedigteKopien: [...bewertungsDefekte.entries(), ...verlaufDefekte.entries()].map(([schluessel, inhalt]) => ({ schluessel, inhalt })) };
+}
+function persistCardGrade(bereichId, cardId, fields, basis, tagesantwort) {
   if (!kartenColRef || kontoWirdGeloescht) return;
+  const card = bereiche?.find(b => b.id === bereichId)?.karten.find(c => c.id === cardId);
+  const daten = {
+    stufe: fields.stufe, nextReview: fields.nextReview,
+    ersteBewertung: fields.ersteBewertung === undefined ? null : fields.ersteBewertung,
+    rueckfaelle: Number.isInteger(fields.rueckfaelle) ? fields.rueckfaelle : 0,
+    maxStufe: Number.isInteger(fields.maxStufe) ? fields.maxStufe : 0
+  };
+  if (card && !card.textId && currentUser) {
+    const x = { id: bewertungsKennung(), uid: currentUser.uid, bereichId, cardId,
+      basis: basis === undefined ? (card.bewertungsStand || null) : basis,
+      fields: daten, wort: card.wort, zeit: Date.now(), status: "offen" };
+    if (tagesantwort) x.tagesantwort = { ...tagesantwort };
+    if (!bewertungsAktionMerken(x)) {
+      /* Noch keine Antwort gebucht oder geschrieben: dieser abgebrochene
+         Versuch darf spaeter nicht ohne Tagesantwort nachgeholt werden. */
+      bewertungsAktionen.delete(x.id);
+      if (tagesantwort) verlaufAktionEntfernen(tagesantwort);
+      return null;
+    }
+    if (tagesantwort) {
+      tagesantwort.status = "bereit";
+      if (!verlaufAktionSpeichern(tagesantwort)) {
+        bewertungsAktionEntfernen(x); verlaufAktionEntfernen(tagesantwort);
+        return null;
+      }
+      verlaufAktionen.set(tagesantwort.id, tagesantwort);
+      verlaufOffenAufbauen();
+    }
+    card.bewertungsBasis = x.basis;
+    card.bewertungsStand = x.id;
+    bewertungsAktionSchreiben(x);
+    return x.id;
+  }
   const kontoRef = userDocRef;
   const giltNoch = () => userDocRef === kontoRef && !kontoWirdGeloescht;
   fb.updateDoc(karteRef(cardId), {
@@ -3842,8 +4188,15 @@ async function kontoDatenLoeschen(konto = kontoLoeschKontext()) {
     await stapel.commit();
     konto.pruefen();
   }
+  const belege = await fb.getDocs(fb.collection(konto.ref, "tagesantworten"));
+  konto.pruefen();
   await fb.deleteDoc(konto.ref);
   konto.pruefen();
+  for (let i = 0; i < belege.docs.length; i += 400) {
+    const stapel = fb.writeBatch(db);
+    belege.docs.slice(i, i + 400).forEach(d => stapel.delete(d.ref));
+    await stapel.commit(); konto.pruefen();
+  }
 }
 /* 3.17.38 (G-011, KONTO-2): eigenes Zeitlimit fuer kontoDatenLoeschen() als
    Ganzes - deleteDoc()/writeBatch().commit() loesen laut Firestore-Doku erst
@@ -3927,6 +4280,15 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
   }
   if (!konto.abgebrochen) {
     try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
+    try {
+      const prefix = bewertungsPraefix(konto.user.uid);
+      const keys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith(prefix) || key.startsWith(verlaufPraefix(konto.user.uid)))) keys.push(key);
+      }
+      keys.forEach(key => localStorage.removeItem(key));
+    } catch (e) {}
   }
   if (!konto.abgebrochen && auth.currentUser === null) {
     if (currentUser === konto.user && verlaufGeneration === generation)
@@ -6125,17 +6487,29 @@ function toggleLernNotiz(id) {
 function lernAbhaken(id) {
   const card = findCard(id);
   if (!card || !istNeueKarte(card)) return;
+  if (!bewertungDarfBeginnen(id)) return;
+  const beitrag = verlaufBeitragVorbereiten(todayStr(), "n", 1, true);
+  if (!beitrag) return;
+  const vorherLetzte = ui.lernLetzte;
   ui.lernLetzte = { cardId: card.id, prevStufe: card.stufe, prevNextReview: card.nextReview, prevErsteBewertung: card.ersteBewertung, verlaufTag: todayStr(), verlaufEpoche: verlaufEpoche };
   card.ersteBewertung = todayStr();
   card.stufe = 0;
   card.nextReview = todayStr();
-  verlaufZaehle("n");
-  bereichHeuteZaehle(currentBereich().id, 1);
-  persistCardGrade(currentBereich().id, card.id, {
+  ui.lernLetzte.bewertungsStand = persistCardGrade(currentBereich().id, card.id, {
     stufe: card.stufe, nextReview: card.nextReview,
     ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
     maxStufe: card.maxStufe
-  });
+  }, undefined, beitrag);
+  if (ui.lernLetzte.bewertungsStand === null) {
+    card.stufe = ui.lernLetzte.prevStufe;
+    card.nextReview = ui.lernLetzte.prevNextReview;
+    card.ersteBewertung = ui.lernLetzte.prevErsteBewertung;
+    ui.lernLetzte = vorherLetzte;
+    render();
+    return;
+  }
+  verlaufZaehle("n", beitrag);
+  bereichHeuteZaehle(currentBereich().id, 1);
   ui.lernFokusNach = card.id;
   /* 2.10.1: Auch das Durchgehen zaehlt fuer den Tag. Vorher sprang die
      Flamme nur am Ende einer Lernsession an - am ersten Tag mit einem neuen
@@ -6150,22 +6524,30 @@ function lernRueckgaengig() {
   const l = ui.lernLetzte;
   if (!l) return;
   const card = findCard(l.cardId);
+  if (!card || !bewertungDarfBeginnen(l.cardId)) return;
+  if (l.bewertungsStand && card.bewertungsStand !== l.bewertungsStand) {
+    dlgAlert("Die Karte wurde inzwischen geändert. Rückgängig würde diese Änderung überschreiben.", "Karte inzwischen geändert");
+    return;
+  }
+  const vt = l.verlaufTag;
+  const korrigiert = vt && l.verlaufEpoche === verlaufEpoche && verlauf[vt]?.n > 0;
+  const beitrag = korrigiert ? verlaufBeitragVorbereiten(vt, "n", -1, true) : null;
+  if (korrigiert && !beitrag) return;
+  const undoStand = persistCardGrade(currentBereich().id, card.id, {
+    stufe: l.prevStufe, nextReview: l.prevNextReview, ersteBewertung: l.prevErsteBewertung,
+    rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0
+  }, l.bewertungsStand, beitrag);
+  if (undoStand === null) { render(); return; }
   if (card) {
     card.stufe = l.prevStufe;
     card.nextReview = l.prevNextReview;
     card.ersteBewertung = l.prevErsteBewertung;
-    persistCardGrade(currentBereich().id, card.id, {
-      stufe: card.stufe, nextReview: card.nextReview,
-      ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0,
-      maxStufe: card.maxStufe || 0
-    });
   }
   /* 3.17.32: wie undoLastGrade (3.17.6) - auch das Tagesprotokoll vergisst
      das "Gesehen", sonst hielte ein Fehltipp mit Rueckgaengig die Serie. */
-  const vt = l.verlaufTag;
   if (vt && l.verlaufEpoche === verlaufEpoche && verlauf[vt] && (verlauf[vt].n || 0) > 0) {
     verlauf[vt].n--;
-    verlaufDeltaMerken(vt, "n", -1);
+    verlaufDeltaMerken(vt, "n", -1, beitrag);
     bereichHeuteZaehle(currentBereich().id, -1);
     persistVerlauf();
   }
@@ -6410,7 +6792,7 @@ async function submitCardForm() {
       patch[pfad + ".uebersetzung"] = ueb;
       patch[pfad + ".extra"] = extra;
       const stufeEl = document.getElementById("f-stufe");
-      if (stufeEl) {
+      if (stufeEl && formDraft.stufeGeaendert) {
         let newStufe = parseInt(stufeEl.value, 10);
         if (!Number.isInteger(newStufe) || newStufe < 0) newStufe = 0;
         if (newStufe > MAX_STUFE) newStufe = MAX_STUFE;
@@ -6485,7 +6867,7 @@ function editCard(id) {
   ui.karteSheet = true;
   ui.karteFeldFehler = null;
   const c = findCard(id);
-  formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra, stufe: c.stufe } : { wort: "", ueb: "", extra: "", stufe: null };
+  formDraft = c ? { wort: c.wort, ueb: c.uebersetzung, extra: c.extra, stufe: c.stufe, stufeGeaendert: false } : { wort: "", ueb: "", extra: "", stufe: null };
   render();
   /* 3.3.1: Kein Sprung mehr nach oben. Das Formular kam bis dahin oben auf
      der Seite - jetzt kommt es von unten, und die Liste bleibt genau dort
@@ -6518,7 +6900,7 @@ function karteEntwurfOffen() {
     return (formDraft.wort || "") !== (c.wort || "") ||
       (formDraft.ueb || "") !== (c.uebersetzung || "") ||
       (formDraft.extra || "") !== (c.extra || "") ||
-      (formDraft.stufe ?? c.stufe) !== c.stufe;
+      (!!formDraft.stufeGeaendert && (formDraft.stufe ?? c.stufe) !== c.stufe);
   }
   return !!((formDraft.wort || "").trim() || (formDraft.ueb || "").trim() || (formDraft.extra || "").trim());
 }
@@ -6772,10 +7154,16 @@ function gradeCard(kind) {
   /* card kann fehlen, wenn die Karte auf einem anderen Geraet geloescht wurde,
      waehrend diese Session offen ist. Frueher stuerzte hier card.id ab. */
   const card = findCard(s.queue[0]);
+  const drillBeitrag = s.isDrill && card ? verlaufBeitragVorbereiten(todayStr(), "u", 1) : null;
+  if (s.isDrill && card && !drillBeitrag) return;
   if (card && !s.isDrill) {
+    if (!bewertungDarfBeginnen(card.id)) return;
+    const vorherLetzte = s.lastAction;
     /* E6: vor der Aenderung merken - direkt darunter wird ersteBewertung
        gesetzt, danach waere die Karte nicht mehr als "neu" erkennbar. */
     const warNeu = istNeueKarte(card);
+    const beitrag = verlaufBeitragVorbereiten(todayStr(), warNeu ? "n" : "w", 1, true);
+    if (!beitrag) return;
     s.lastAction = {
       cardId: card.id,
       prevStufe: card.stufe,
@@ -6829,7 +7217,23 @@ function gradeCard(kind) {
     /* 2.8.0: fuers Tagesprotokoll. warNeu steht vor der Bewertung fest -
        danach traegt die Karte ihr Erstbewertungsdatum und waere nicht mehr
        als neu erkennbar. */
-    verlaufZaehle(warNeu ? "n" : "w");
+    s.lastAction.bewertungsStand = persistCardGrade(s.bereichId, card.id, {
+      stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung,
+      rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0
+    }, undefined, beitrag);
+    if (s.lastAction.bewertungsStand === null) {
+      card.stufe = s.lastAction.prevStufe;
+      card.nextReview = s.lastAction.prevNextReview;
+      card.ersteBewertung = s.lastAction.prevErsteBewertung;
+      card.rueckfaelle = s.lastAction.prevRueckfaelle;
+      card.maxStufe = s.lastAction.prevMaxStufe;
+      if (s.lastAction.prevRegler) reglerZurueck(s.lastAction.prevRegler);
+      s.lastAction = vorherLetzte;
+      s.nochmalNeu = false;
+      render();
+      return;
+    }
+    verlaufZaehle(warNeu ? "n" : "w", beitrag);
     bereichHeuteZaehle(s.bereichId, 1);
   }
   /* 3.12.0: nur fuer die Anzeige - der Abschluss zeigt, wie die Runde lief,
@@ -6837,7 +7241,7 @@ function gradeCard(kind) {
      Beides beruehrt keine Stufe und keine Faelligkeit. */
   /* 3.16.0: Uebungsantworten ins Tagesprotokoll (u) - fuer die Anzeige im
      Fortschritt, nie fuer die Serie (tagGelernt). */
-  if (s.isDrill && card && (kind === "known" || kind === "almost" || kind === "unknown")) verlaufZaehle("u");
+  if (s.isDrill && card && (kind === "known" || kind === "almost" || kind === "unknown")) verlaufZaehle("u", drillBeitrag);
   if (card && (kind === "known" || kind === "almost" || kind === "unknown")) {   /* 3.15.0: auch im Ueben - fuer den Abschluss */
     s.zaehler = s.zaehler || { known: 0, almost: 0, unknown: 0 };
     s.zaehler[kind]++;
@@ -6868,7 +7272,6 @@ function gradeCard(kind) {
   s.extraOpen = true;      // 2.7.0: Notiz ist beim Aufdecken offen
   hwStrokes = [];
   if (!s.isDrill) {
-    if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
     /* 3.18.23: erst speichern (s.bereichId gehoert noch zur bewerteten
        Karte), dann in den naechsten Bereich der Runde weiterschalten. */
     if (s.queue.length === 0) rundeNaechsterBereich(s);
@@ -6959,6 +7362,26 @@ function gradeUnknown() { gradeCard("unknown"); }
 function undoLastGrade() {
   const s = ui.session;
   if (!s || !s.lastAction) return;
+  const undoBereich = bereiche.find(b => b.id === (s.lastAction.prevBereichId || s.bereichId));
+  const undoKarte = undoBereich && undoBereich.karten.find(c => c.id === s.lastAction.cardId);
+  if (!undoKarte || !bewertungDarfBeginnen(undoKarte.id)) return;
+  if (s.lastAction.bewertungsStand && undoKarte.bewertungsStand !== s.lastAction.bewertungsStand) {
+    dlgAlert("Die Karte wurde inzwischen geändert. Rückgängig würde diese Änderung überschreiben.", "Karte inzwischen geändert");
+    return;
+  }
+  const bewertungsBasis = s.lastAction.bewertungsStand;
+  const va = s.lastAction.verlaufArt, vt = s.lastAction.verlaufTag;
+  const korrigiert = va && vt && s.lastAction.verlaufEpoche === verlaufEpoche && verlauf[vt]?.[va] > 0;
+  const beitrag = korrigiert ? verlaufBeitragVorbereiten(vt, va, -1, true) : null;
+  if (korrigiert && !beitrag) return;
+  if (!s.isDrill) {
+    const undoStand = persistCardGrade(undoBereich.id, undoKarte.id, {
+      stufe: s.lastAction.prevStufe, nextReview: s.lastAction.prevNextReview,
+      ersteBewertung: s.lastAction.prevErsteBewertung,
+      rueckfaelle: s.lastAction.prevRueckfaelle, maxStufe: s.lastAction.prevMaxStufe
+    }, bewertungsBasis, beitrag);
+    if (undoStand === null) { render(); return; }
+  }
   /* 3.18.23: Lag die Karte im vorigen Bereich der Runde, zuerst dorthin
      zurueck - findCard() sucht im offenen Bereich. */
   if (s.lastAction.prevBereichId && s.lastAction.prevBereichId !== s.bereichId &&
@@ -6988,10 +7411,9 @@ function undoLastGrade() {
      viel, und ein versehentlich bewerteter erster Tag zaehlte fuer die Serie.
      Sofort als atomare negative Differenz geschrieben, auch wenn seit der
      Antwort ein neuer Lerntag begonnen hat. */
-  const va = s.lastAction.verlaufArt, vt = s.lastAction.verlaufTag;
   if (va && vt && s.lastAction.verlaufEpoche === verlaufEpoche && verlauf[vt] && (verlauf[vt][va] || 0) > 0) {
     verlauf[vt][va]--;
-    verlaufDeltaMerken(vt, va, -1);
+    verlaufDeltaMerken(vt, va, -1, beitrag);
     bereichHeuteZaehle(s.bereichId, -1);
     persistVerlauf();
   }
@@ -7006,7 +7428,6 @@ function undoLastGrade() {
      stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
      sie beim Bewerten offen war. */
   s.extraOpen = true;
-  if (card) persistCardGrade(s.bereichId, card.id, { stufe: card.stufe, nextReview: card.nextReview, ersteBewertung: card.ersteBewertung, rueckfaelle: card.rueckfaelle || 0, maxStufe: card.maxStufe || 0 });
   render();
 }
 function endSession() {
@@ -9350,10 +9771,14 @@ function karteSheet() {
        Nur wer einen anderen Zustand waehlt, setzt die Karte auf dessen
        Anfang, wie vorher beim Eintippen einer Zahl. */
     html += '<div class="field"><label for="f-stufe">Stand</label>';
+    /* Ein fremder Snapshot darf eine unberuehrte Standwahl nicht in einen
+       alten manuellen Auftrag verwandeln. Bewusste Auswahl im Entwurf
+       erhalten, sonst den aktuellen Kartenstand anzeigen. */
+    const gewaehlt = formDraft.stufeGeaendert ? formDraft.stufe : editing.stufe;
     html += '<select id="f-stufe">' + UEBEN_GRUPPEN.map(g => {
-      const hier = editing.stufe >= g.von && editing.stufe <= g.bis;
-      const wert = hier ? editing.stufe : g.von;
-      return '<option value="' + wert + '"' + (wert === (formDraft.stufe ?? editing.stufe) ? ' selected' : '') + '>' + esc(g.label) + '</option>';
+      const hier = gewaehlt >= g.von && gewaehlt <= g.bis;
+      const wert = hier ? gewaehlt : g.von;
+      return '<option value="' + wert + '"' + (wert === gewaehlt ? ' selected' : '') + '>' + esc(g.label) + '</option>';
     }).join("") + '</select><p class="hint" style="padding:6px 0 0">Nur ändern, wenn die Karte falsch eingestuft ist.</p></div>';
   }
   html += '<div class="dlg-actions">';
@@ -9520,6 +9945,7 @@ function renderMain() {
 
   if (!imModus) {
     /* ---- Meldungen, die ueber allem stehen ---- */
+    kopf += bewertungsBanner();
     if (schreibFehler) kopf += bannerSchreibfehler();
     if (syncError) {
       kopf += bannerFehler("Verbindung:", esc(syncError) +
@@ -9551,8 +9977,9 @@ function renderMain() {
                             : "Deine letzte Sicherung ist " + backupAge + " Tage her.") +
         ' <button class="tiny-link" data-action="export-backup">Jetzt sichern</button></div></div>';
     }
-  } else if (schreibFehler) {
-    kopf += bannerSchreibfehler();
+  } else {
+    kopf += bewertungsBanner();
+    if (schreibFehler) kopf += bannerSchreibfehler();
   }
 
   /* ---- Geruest ---- */
@@ -9884,7 +10311,10 @@ function renderMain() {
       };
     });
     const stufeFeld = document.getElementById("f-stufe");
-    if (stufeFeld) stufeFeld.addEventListener("change", e => { formDraft.stufe = Number(e.target.value); });
+    if (stufeFeld) stufeFeld.addEventListener("change", e => {
+      formDraft.stufe = Number(e.target.value);
+      formDraft.stufeGeaendert = true;
+    });
     /* 2.21.0: ersetzt den alten Einzel-Listener auf <select id="drill-source">
        - jetzt ein Radiopaar fuer den Modus plus beliebig viele Checkboxen
        fuer die Speicherkarten-Mehrfachauswahl. */
@@ -16099,6 +16529,9 @@ document.body.addEventListener("click", e => {
       if (dueCards().length > 0) startSession();
       else { window.scrollTo(0, 0); render(); }
       break;
+    case "bewertung-pruefen": bewertungsAktionenPruefen(); verlaufAktionenPruefen(); break;
+    case "bewertung-sichern": dateiSpeichern(bewertungsSicherung(), "adrabic-aufbewahrte-antworten.json"); break;
+    case "bewertung-verwerfen": bewertungsAktionenVerwerfen(); break;
     case "reveal": revealAnswer(); break;
     case "toggle-extra": toggleExtra(); break;
     case "grade-known": if (!bewertenZuFrueh()) gradeKnown(); break;

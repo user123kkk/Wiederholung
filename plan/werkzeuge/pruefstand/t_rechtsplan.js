@@ -65,9 +65,12 @@ async function zu(p,art) {
             const sichtbar=await p.evaluate(funde=>{
               const clip=document.querySelector('#dlg-recht-inhalt').getBoundingClientRect();
               return funde.filter(f=>{
-                const el=[...document.querySelectorAll('#dlg-recht-inhalt *')].find(el=>el.className===f.klasse&&el.textContent.trim().startsWith(f.text));
-                if(!el) return true;
-                const r=el.getBoundingClientRect();return r.bottom>clip.top&&r.top<clip.bottom;
+                // Der Leser benutzt bei fehlender Klasse den Tag (z.B. A).
+                // Gleiche Texte koennen mehrfach vorkommen: jeder sichtbare
+                // Treffer muss weiter als Kontrastbefund erhalten bleiben.
+                const els=[...document.querySelectorAll('#dlg-recht-inhalt *')].filter(el=>((typeof el.className==='string'&&el.className)||el.tagName)===f.klasse&&el.textContent.trim().startsWith(f.text));
+                if(!els.length) return true;
+                return els.some(el=>{const r=el.getBoundingClientRect();return r.bottom>clip.top&&r.top<clip.bottom;});
               });
             },funde);
             assert.deepEqual(sichtbar,[]);
