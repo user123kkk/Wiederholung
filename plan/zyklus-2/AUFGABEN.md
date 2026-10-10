@@ -182,12 +182,13 @@ Arbeit, kein App-Commit oder neuer Paketbau.
 | F12 | CODE-12 | niedrig | Rund 30 CSS-Klassen, die app.js und die HTML-Seiten nie erzeugen | `befunde/CODE.md` | Sol mittel | erledigt (3.18.17) | rote Vollseitenfotos als Messfehler belegt; Stile 36/36 gleich, Fotos 30/36 gleich mit Kontrolle, 6 Gast-Konfigurationen mit Bewegung nicht messbar; siehe Logbuch 06.10. |
 | F13 | CODE-13 | niedrig | Veraltete und doppelte Dateien im Repo – Vorschlag für eine aufgeräumte Struktur | `befunde/CODE.md` | Sol mittel | erledigt (3.18.17) | Z14: wie empfohlen |
 
-## Doppelt gemeldet (einmal beheben)
 ## Paket H – kleine Verbesserungen in der Lernrunde
 
 | Nr | Kennung | Schwere | Aufgabe | Befund | Modell | Status | Hinweis |
 |---|---|---|---|---|---|---|---|
-| H1 | RUNDE-BEARBEITEN | niedrig | Eigene aufgedeckte Karte im vorhandenen Blatt bearbeiten; gleiche Karte/Runde behalten | `befunde/RUNDE-BEARBEITEN.md` | bestehender Agent | offen | Konkrete Antwort 10.10. „ic glaub ja, was sagst du“, Empfehlung ja; keine Lernantwort durch Bearbeiten, geführte Karten geschützt |
+| H1 | RUNDE-BEARBEITEN | niedrig | Eigene aufgedeckte Karte im vorhandenen Blatt bearbeiten; gleiche Karte/Runde behalten | `befunde/RUNDE-BEARBEITEN.md` | bestehender Agent | erledigt (3.18.31) | Konkrete Antwort 10.10.; Klein-Weg, sechs Konfigurationen, acht SDK-Fälle und vier betroffene Tests grün; `H1-ABNAHME-2026-10-10.md` |
+
+## Doppelt gemeldet (einmal beheben)
 
 
 **A9-Sicherung:** Die 15 Restbefunde des Zweigs `4462fac` sind unter eindeutigen

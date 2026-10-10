@@ -1852,6 +1852,8 @@ button.startliste__schritt { cursor: pointer; }
   gap: var(--space-2); width: 100%; max-width: 360px; margin-inline: auto;
 }
 .study-taste { display: none; }
+.study-nebenaktionen--bearbeiten { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--ctrl-md); }
+.study-bearbeiten-platz { width: var(--ctrl-md); height: var(--ctrl-md); }
 button.lernen-bereich-link { min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
 @media (hover: hover) and (pointer: fine) {
   .study-aufdecken, .grade-row button { position: relative; }

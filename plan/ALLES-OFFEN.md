@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**10.10., H1 gebaut und gezielt geprüft: 3.18.31.** Stift nach Aufdecken,
+vorhandenes Blatt, gleiche Karte/Runde, keine Lernantwort durch Bearbeiten.
+Sechs UI-Konfigurationen und acht echte SDK-Formularfälle grün; vorhandene
+Blatt-, Snapshot-, Neben-Tippen- und Sprungtests ebenfalls grün. Klein-Weg,
+kein Gesamtlauf und kein Deploy; Tempo bleibt offen. Nach Abschluss folgt
+„Am selben Tag Runde fortsetzen“, dessen alte Freigabe erst konkret geprüft
+werden muss. Belege: [H1-Abnahme](zyklus-2/H1-ABNAHME-2026-10-10.md).
+
 **10.10., konkrete Antwort zum Stift: „ic glaub ja, was sagst du“.**
 Der Betreiber antwortet auf den verständlichen Einzelvorschlag und bittet
 zugleich um meine Einschätzung. Empfehlung: ja; direkt korrigieren spart
@@ -599,7 +607,7 @@ Die bisherigen Mehrwert-Aufgaben stehen jetzt hier mit erhaltenem Stand. Früher
 | Was | Stand |
 |---|---|
 | Tagesdeckel nach einer Pause, Fälligkeiten bleiben (10) | Audit fertig (09.10.): neun Auditfälle, korrigierte 450 Modellläufe, Browser-Bereichsrunde grün. Neuen dauerhaften Deckel derzeit nicht empfohlen; Rundengröße nicht als Tagesziel umdeuten. Rückkehr-Probelauf braucht Pensum/Zusatznutzen/Lernkriterium, siehe `zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`; „60/30“ bleibt zurückgenommen |
-| Karte direkt in der Abfrage bearbeiten | vorläufig – Verständnis/Entscheidung prüfen: nur historische S1-Sammelfreigabe belegt. Vorschlag: Stift nach Aufdecken, vorhandenes Kartenblatt, Rückkehr zur gleichen Karte/Runde; [Vorbereitung](zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md). Bau nach Datenabschluss |
+| Karte direkt in der Abfrage bearbeiten | erledigt im Entwurf 3.18.31: konkrete Antwort 10.10., vorhandenes Blatt und gleiche Runde; Klein-Weg gezielt grün, nicht veröffentlicht. [Abnahme](zyklus-2/H1-ABNAHME-2026-10-10.md) |
 | Am selben Tag „Runde fortsetzen“ (22) | offen |
 | Einmalige Erklärung der drei Knöpfe (21) | wartet: Wortlaut von Dir |
 | Die zwei neuen Lernregeln für alle freigeben | wartet: Dein Ja nach eigenem Test |

@@ -1,5 +1,15 @@
 # Arbeitsprotokoll – was gerade getan wird
 
+## 10.10.2026 – H1 gezielt abgeschlossen
+
+Stift und Aktionsschutz gebaut; vorhandenen Editor ohne Sitzungswechsel
+wiederverwendet. Sechs Konfigurationen und acht echte SDK-Formularfälle
+grün. Blatt, Snapshot, Neben-Tippen und Sprung grün; Bilder geprüft.
+Gegenprüfung des vollständigen Produktdiffs und LEHREN §14 abgeschlossen.
+Version 3.18.31 konsistent; eigener Server liefert identische Quellen.
+Gezielter Commit/Push folgt, fremde gestagte Arbeit bleibt erhalten.
+Abnahme nach Klein-Weg, kein Gesamtlauf und kein Deploy. Tempo bleibt offen.
+
 ## 10.10.2026 – H1 konkret beauftragt
 
 Betreiber: „ic glaub ja, was sagst du“ auf den erläuterten Stift-Vorschlag.

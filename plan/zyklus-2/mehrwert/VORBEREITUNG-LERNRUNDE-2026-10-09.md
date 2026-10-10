@@ -1,5 +1,11 @@
 # Nächste entschiedene Lernrunden-Punkte: Vorbereitung, kein Bau
 
+**Anschluss 10.10.: H1 inzwischen gebaut und gezielt geprüft (3.18.31).**
+Konkrete Antwort zum erläuterten Stift: „ic glaub ja, was sagst du“;
+Empfehlung ja. Die folgenden alten Hinweise zum fehlenden H-Auftrag und
+zur ungeklärten S1-Freigabe sind Verlauf. Aktuell: H1 in AUFGABEN erledigt,
+Belege unter `../H1-ABNAHME-2026-10-10.md`. Runde fortsetzen bleibt offen.
+
 **Aktuell10.10.21:03:** Datenabschluss00c66031/3.18.30 auf main gepusht
 mit ausdrücklich begrenzter Tempo-Ausnahme; die frühere Datensperre unten
 ist Historie. Konkreten Vorschlag zu Bearbeiten nach Aufdecken erneut

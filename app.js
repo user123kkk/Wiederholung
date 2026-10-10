@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 /* Versionsnummer: bei jeder Veroeffentlichung hochzaehlen und denselben Wert
    als CACHE_NAME in sw.js eintragen, damit alte Dateien verworfen werden. */
-const APP_VERSION = "3.18.30";
+const APP_VERSION = "3.18.31";
 
 const CONFIGURED = firebaseConfig.apiKey !== "HIER_EINFUEGEN";
 /* Apple-Anmeldung (offene Frage 13) braucht ausser dem Code noch ein
@@ -6855,6 +6855,13 @@ async function submitCardForm() {
     editRueckkehrY = null;
   }
 }
+function karteInRundeBearbeiten(id) {
+  const s = ui.session;
+  const card = s && findCard(id);
+  // Nur die eigene, bereits aufgedeckte aktuelle Karte; der Textprobelauf bleibt separat.
+  if (!s || !s.revealed || s.queue[0] !== id || !card || card.textId || !kartenBearbeitbar()) return;
+  editCard(id);
+}
 function editCard(id) {
   /* hinweisGefuehrt zeichnet ueber den Dialog selbst neu - wichtig, weil der
      Sprung aus dem Fortschritts-Tab schon den Bereich gewechselt hat. */
@@ -12686,7 +12693,8 @@ function renderSession() {
      sinnvoll: "die kann ich nie"). Der Notiz-Knopf gibt es erst mit der
      Antwort - vorher haelt ein unsichtbarer Zwilling seinen Platz. */
   if (s.revealed || !s.handwriting) {
-    html += '<div class="study-nebenaktionen">';
+    const bearbeiten = kartenBearbeitbar() && !card.textId;
+    html += '<div class="study-nebenaktionen' + (bearbeiten ? ' study-nebenaktionen--bearbeiten' : '') + '">';
     if (card.extra) {
       html += s.revealed
         ? '<button class="ghost" data-action="toggle-extra">' + (s.extraOpen ? "Notiz verbergen" : "Notiz anzeigen") + '</button>'
@@ -12711,6 +12719,11 @@ function renderSession() {
            der Nachbarknopf "Notiz" rueckte beim Tippen um 4 px. */
         '<span class="merk-btn__wort"><span' + (gemerkt ? ' class="aus" aria-hidden="true"' : '') + '>Merken</span>' +
         '<span' + (gemerkt ? '' : ' class="aus" aria-hidden="true"') + '>Gemerkt</span></span></button>';
+    }
+    if (bearbeiten) {
+      html += s.revealed
+        ? '<button class="icon-btn" data-action="runde-karte-bearbeiten" data-id="' + esc(card.id) + '" aria-label="Karte bearbeiten" title="Karte bearbeiten">' + ikon("stift") + '</button>'
+        : '<span class="study-bearbeiten-platz" aria-hidden="true"></span>';
     }
     html += '</div>';
   }
@@ -16426,6 +16439,7 @@ document.body.addEventListener("click", e => {
     }
     case "card-detail-zu": schliesseObersteEbene(); break;
     case "card-detail-bearbeiten": ui.cardDetailId = null; editCard(btn.dataset.id); break;
+    case "runde-karte-bearbeiten": karteInRundeBearbeiten(btn.dataset.id); break;
     case "card-detail-loeschen": ui.cardDetailId = null; render(); deleteCard(btn.dataset.id); break;
     case "nichts": break;
     case "seite-neu-laden": location.reload(); break;

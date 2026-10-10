@@ -1,5 +1,13 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Anschluss 10.10.2026 – H1 geprüft
+
+3.18.31: Stift nach Aufdecken der eigenen Karte, vorhandenes Blatt und
+gleiche Runde. Konkrete Antwort „ic glaub ja, was sagst du“, Empfehlung ja.
+Sechs UI-Konfigurationen, acht SDK-Fälle und vier betroffene Tests grün;
+Klein-Weg ohne Gesamtlauf oder Deploy. `../H1-ABNAHME-2026-10-10.md`.
+Anschluss: „Am selben Tag Runde fortsetzen“; alte Freigabe konkret prüfen.
+
 ## Anschluss10.10.2026 21:03
 
 Daten A14–A17/3.18.30 abgeschlossen, Commit00c66031 auf main gepusht.

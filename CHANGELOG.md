@@ -1,3 +1,11 @@
+## 3.18.31 – 10. Oktober 2026
+
+**Karte direkt in der Runde korrigieren.** Nach dem Aufdecken öffnet der
+Stift bei eigenen Karten das vorhandene Kartenblatt. Speichern oder
+Abbrechen führt zur gleichen Karte in derselben Runde zurück; Bearbeiten
+zählt keine Lernantwort. Geführte Karten und der Textprobelauf bleiben
+geschützt. Gezielte Prüfung nach dem Klein-Weg; noch nicht veröffentlicht.
+
 ## 3.18.30 – 10. Oktober 2026
 
 **Datenabschluss mit ausdrücklich begrenzter Tempo-Ausnahme.** Betreiberfreigabe vom 10. Oktober: „ok los“, nach Erklärung „Daten separat abschließen, Tempo offen lassen, dann weiter“. 157 von 158 Prüfungen grün; der unveränderte Texttempo-Test bleibt rot und als eigener Qualitätsbefund offen. 13 Runden, 238 Regelprüfungen und beide Zufallsläufe grün. Keine vollständige Tempo-/Geräteabnahme und keine Veröffentlichung.
