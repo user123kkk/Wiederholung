@@ -1,5 +1,12 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 16:22 – weitere Tempo-Suche auf Betreiberkorrektur beendet:**
+Neustart bestätigt, Originaltest einmal219ms bei200ms rot.157/158 bleibt.
+Klickdiagnose liefert keine Abnahme oder belegte Produktkorrektur.
+Alle neuen Ausgaben gelesen/gesichert; Entwurf/Quellee595b5b6312244cd gleich.
+Kein weiterer Messlauf, kein Paketcommit/Deploy oder neues Paket.
+Minuten-Sicherung1792/5884 einzeln aktiv; Tempo-Sperre bleibt zentral offen.
+
 **10.10.2026 16:09 – Tempo gezielt eingegrenzt, Abschluss weiterhin gesperrt:**
 Große Layouts liegen nach dem Klick-Handler. Beide Schriften schon geladen.
 Browserprobe ohne verzögerte Kartenanzeige setzt sofort1021 statt159/532

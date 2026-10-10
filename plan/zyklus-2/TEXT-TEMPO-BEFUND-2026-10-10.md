@@ -5,6 +5,30 @@ Lernregel, keine Änderung am Text-Probelauf, keine Abnahmefreigabe.
 
 ## Tatsächliche rote Abnahme
 
+**Fortsetzung nach Neustart,10.10.16:22:** Neustart16:11:51 und Netzteil2
+bestätigt. Unveränderter Originaltest einmal ausgeführt: Verwalten219/146ms,
+höchste Aufgabe219ms bei200ms, Exit1. Vollständiger Log
+`../sicherung/tests/text-tempo-original-neustart-1.log` gelesen. Unabhängige
+Rechenprobe am selben Chrome: CPU4x36,2–54,3ms, Median41,9; ohne Drosselung
+Median8,2/8,55ms. Neustart hat ausreichendes Tempo nicht nachgewiesen.
+
+Zwei gezielte Klicktraces: unveränderte Eingabe196,32ms; getrenntes Drücken
+und Loslassen mit80ms Pause170,32ms. Gleiche Schriften, Layoutfolge159/532
+und End-DOM. Die Eingabezeit ist verändert, daher keine Ersatzabnahme und
+kein Beweis, dass alle ursprünglichen roten Aufgaben Messfehler waren.
+Lokale Playwright-Quelle `node_modules/playwright-core/lib/coreBundle.js`
+enthält einen zusätzlichen Hit-Target-Interceptor während automatisierter
+Klicks. Sein Anteil am ursprünglichen Rot ist nicht abschließend belegt;
+keine force-Klick-Probe und keine Teständerung daraus vorgenommen.
+Rohtraces `text-layout-ursache/neustart-{original,getrennt}.json`, vollständige
+Logs `text-layout-neustart-{original,getrennt}.log` und Offline-Auswertung
+`text-layout-auswertung-neustart-1.log` erhalten und gelesen.
+
+Betreiber: „halt dich nicht so lang daran auf, du verschwendest tokens“.
+Weitere Tempo-Diagnose deshalb jetzt beendet; keine zusätzliche Messreihe
+oder Änderung ohne belegte Ursache. Paketabschluss bleibt gesperrt,
+157/158 und Quellee595b5b6312244cd erhalten. Kein Produktfix/Deploy.
+
 Unveränderter `t_text_tempo.js`: Sure2 mit286 vorhandenen Ayat,390×844,
 CPU4×, Hauptthread-Aufgaben; Grenze200ms. Erster vollständiger Lauf226ms
 beim Wechsel nach Verwalten, einmalige Fortsetzung nach Diagnose254ms.

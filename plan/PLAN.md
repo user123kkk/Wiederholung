@@ -7,6 +7,10 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.2026 16:22:** Weitere Tempo-Diagnose auf Betreiberkorrektur beendet.
+Neustart bestätigt, Originaltest219ms bei200ms rot.157/158 bleibt offen;
+keine weitere Messreihe, kein Paketabschluss oder Deploy. Belege in STAND.
+
 **10.10.2026 16:09 – Tempo-Ursache weiter eingegrenzt:** Schriften geladen,
 große Layouts nach Klick; Abschalten von content-visibility hilft nicht.
 Unabhängige Rechenarbeit schwankt beiCPU4x, kein ausreichendes App-Tempo

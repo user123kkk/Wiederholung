@@ -1,5 +1,11 @@
 # Große Datenabnahme 3.18.30
 
+**Fortsetzung16:22:** Nach Neustart Originaltempo einmal219ms bei200ms rot.
+Alle neuen vollständigen Ausgaben gelesen, Klickdiagnose ist keine
+Ersatzabnahme. Weitere Tempo-Suche auf Betreiberkorrektur zum Tokenverbrauch
+beendet;157/158 bleibt, Entwurf/Quelle gleich. Keine Produktkorrektur,
+kein Paketcommit/Deploy. [Befund](TEXT-TEMPO-BEFUND-2026-10-10.md).
+
 **Fortsetzung16:09:** Gezielte Layoutprobe und unabhängige Rechenprobe
 abgeschlossen; alle vollständigen Ausgaben gelesen. Kein notwendiger
 Produktfix belegt. Schriften bereits geladen; große Layouts nach Klick;

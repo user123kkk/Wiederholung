@@ -2,6 +2,18 @@
 
 Letzter Eintrag zuerst. Auftrag: [`AUFTRAG.md`](AUFTRAG.md).
 
+### 2026-10-10 16:22 — Tempo-Anschluss nach Neustart, Suche beendet
+
+**Geprüft:** Neustart16:11:51/Netzteil2, Serverquelle und Runnerhash gleich.
+Originaltest einmal219ms bei200ms rot; unabhängige Rechenprobe und zwei
+Klickdiagnosen vollständig gelesen. Gleicher End-DOM und Layoutfolge,
+veränderte Eingabezeit ist keine Ersatzabnahme. Lokalen Playwright-
+Interceptor gelesen; kein abschließender Ursachenbeleg, keine Teständerung.
+**Entscheidung:** Auf „halt dich nicht so lang daran auf, du verschwendest
+tokens“ weitere Tempo-Diagnose jetzt beendet. Alle Rohbelege erhalten.
+**Offen:**157/158, Tempo-Sperre und Paketabschluss. Produkt unverändert,
+kein neues Paket/Commit/Deploy; Minuten-Sicherung läuft wieder einzeln.
+
 ### 2026-10-10 16:09 — Tempo-Ursache gezielt eingegrenzt
 
 **Geändert:** Drei reine Diagnosehilfen unter plan/werkzeuge/pruefstand,

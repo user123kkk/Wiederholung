@@ -1,5 +1,11 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Betreiberkorrektur10.10.,16:22:** „halt dich nicht so lang daran auf, du
+verschwendest tokens“. Weitere Tempo-Diagnose jetzt beendet. Nach bestätigtem
+Neustart Originaltest einmal219ms bei200ms rot;157/158 bleibt. Keine neue
+Messreihe, kein Produktfix oder Paketabschluss aus unsicheren Befunden.
+Die technische Sperre bleibt zentral offen; Entwurf und alle Belege erhalten.
+
 **Fortsetzung nach Neustart, 10.10.2026 16:14:** Betreiber „weiter“.
 Neustart am10.10.16:11:51 und Netzteilstatus2 geprüft; Minuten-Sicherung
 und Server8097 nach dem Neustart jeweils neu gestartet. Server/App und

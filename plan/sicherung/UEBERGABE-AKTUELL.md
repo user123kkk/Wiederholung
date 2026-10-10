@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 16:20 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 16:22 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `ab9ff205 Sicherung 16:19 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `f0b43525 Sicherung 16:20 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,10 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/PLAN.md
+ M plan/STAND.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -65,6 +69,9 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_text_layout_ursache.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md
+ M plan/zyklus-2/LOGBUCH.md
+ M plan/zyklus-2/TEXT-TEMPO-BEFUND-2026-10-10.md
  M sw.js
 ```
 
@@ -94,6 +101,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 16:22 Codex Betreiberkorrektur „halt dich nicht so lang daran auf, du verschwendest tokens“ aufgenommen; weitere Tempo-Diagnose beendet. Nach Neustart Originaltest einmal219ms bei200ms rot, ganzen Log gelesen. Zwei gezielte Klicktraces am gleichen Stand gelesen: Original196ms/getrennte Eingabe170ms, gleiche Layoutfolge und End-DOM; Eingabezeit verändert, daher keine Testkorrektur/Freigabe. Lokale Playwright-Quelle zeigt zusätzlichen Hit-Target-Interceptor, dessen Anteil am ursprünglichen Rot nicht bewiesen ist; keine weitere Probe gestartet. Quellee595b5b6312244cd gleich,157 grüne erhalten. Keine Produktänderung, kein Paketcommit/Deploy. Dokumentation und Belege gesichert; Minuten-Sicherung1792/5884 läuft einzeln.
 
 - 16:14 Codex Betreiber „weiter“ nach Neustart: Boot10.10.16:11:51/Netzteil2 bestätigt, fehlende Minuten-Sicherung und Server8097 jeweils neu gestartet. Serverquelle und tatsächlicher Runnerhashe595b5b6312244cd gleich. Unabhängige Rechenprobe am selben Chrome154.0.8037.98 abgeschlossen und vollständigen Log gelesen: CPU4x36,2–54,3ms/Median41,9, ohne Drosselung Median8,2/8,55; kein Verbesserungsbeleg. Unveränderter Original-Tempotest einmal aktiv, eigene neue Lognamen erhalten alte Belege. Kein Gesamtlauf/Produktbau/Deploy.
 
@@ -136,5 +145,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 15:01 Codex143/158 gültig grün; alle143 vollständigen Abschlusslogs gelesen. A16 frisch22 SDK-Fälle am unveränderten4a8ca5a1/6a110898, Service-Worker-Offline/Update samt festen Gegenproben grün. Text-Neu-Test aktiv, Probelauf unverändert. Stand/Ideenzuordnung samt lokalen Links geprüft; Abschlussbericht nachgezogen. Netzteil2 bestätigt, keine Veröffentlichung.
 
 - 14:55 Codex vollständige TikTok-Nachricht einschließlich Betreiberkommentaren als Quelle unter ideen/TIKTOK-SAMMLUNG-2026-10-10.md bewahrt. Wünsche in ALLES-OFFEN/BETREIBER-VERSTEHEN und vorhandene Onboarding-, Mehrwert-, Konsolen-, Geräte- und Monetarisierungspläne eingefügt; keine parallele Statusliste. Historische Onboarding-Zahlen nicht als Sperre; automatische Tests vor Betreiberaufwand. Primärrecherche/Architekturprüfung offen, Videoaussagen nicht als geprüfte Empfehlungen übernommen. Kein Produktbau/Deploy, bestehende3.18.30-Abnahme fortgesetzt.130/158 grün; alle130 Abschlusslogs vollständig gelesen, Sprung/Üben aktiv.
-
-- 14:44 Codex119/158 grün, alle119 vollständigen Logs gelesen; Rundenlage vier Chromium-Handygrößen, Geometrie0px/Scroll0, Bereichsrunde/Undo/Weiterlernen geprüft. Beschreibender t_runde_rest meldet links per Maus NICHTS; tatsächlichen Messpfad gelesen (Maus, Offen-Zustand statt Kartenstand). Daraus keine Wischfreigabe abgeleitet; vorgeschriebene Touch-/Schrägwisch-Abnahmen folgen im selben Gesamtlauf. Rundenende aktiv, Quellen unverändert.
