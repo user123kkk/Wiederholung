@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 10:21 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 10:22 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `e047e88 Sicherung 10:20 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `b6e20ec Sicherung 10:21 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -22,15 +22,11 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A .claude/skills/adrabic-daten/SKILL.md
  A .claude/skills/adrabic-lernbelege/SKILL.md
  A .claude/skills/adrabic-oberflaeche/SKILL.md
- M AGENTS.md
  M CHANGELOG.md
  M app.js
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
- M plan/BETREIBER-VERSTEHEN.md
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -39,9 +35,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/CODEX-START.md
- M plan/zyklus-2/ENTSCHEIDUNGEN.md
- M plan/zyklus-2/mehrwert/GESAMTLISTE.md
  M sw.js
 ```
 
