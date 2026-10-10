@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 12:10 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 12:11 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `60a3f15 Sicherung 12:09 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `61bd033 Sicherung 12:10 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -82,6 +83,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- 12:12 Codex frische Abschlusslogs1–9 vollständig gelesen: Erinnerungs-/Ideenhinweise, a11y, abgelehnte Bewertung, Abstimmfehler, Anmeldung/Enter, Ansagen und Bereiche alle grün; historische Gegenproben erwartbar rot. Shared-Stub-Diff vollständig gegengelesen, Syntax grün; Diagnosewerkzeuge für Minutenpatch erfasst, Trace/CPU-Profil zusätzlich ins Repo kopiert. SDK-Gültigkeit anhand tatsächlicher Route geprüft: nur unverändertes AUTH aus stubs.js, echtes Firestore; 16/8-Fälle nicht wiederholt. Vorbereitungsseite um aktuellen Lauf berichtigt, frühere Historie erhalten. Gesamtlauf87583 weiterhin allein aktiv, kein neuer Produktbau/Deploy.
+
 - 12:06 Codex korrigierte Attrappe am unveränderten Original-Tempotest vollständig grün: fünf Bestandsgrößen, zehn Bewertungen bei3000 Karten max71ms (100ms-Grenze, CPU4x), komplette Ausgabe gelesen. Hashprobe beide Runner identisch e595b5b6312244cd; frischen Gesamtlauf158 ohne Fortsetzen begonnen, abnahme-gesamt-2-3.18.30.log. Rote Erstläufe erhalten. Produkt/Rules unverändert, erneute Daten-Einzeltests daraus nicht abgeleitet; Attrappenabhängigkeiten werden frisch insgesamt geprüft.
 
 - 12:05 Codex Tempo-Ursache gemessen: acht A/B-Paare vollständig gelesen, Vorstand 7/8 grün (einmal138ms), Entwurf 0/8 (erste Bewertung284–617ms). Trace252ms vollständig im Firebase-Attrappen-Timer, CPU-Profil hauptsächlich clone/listenerMelden/dsnap. Batch meldete global, Einzelwrites schon gezielt; unberührte Karten wurden deshalb vollständig kopiert. Nur stubs.js korrigiert: Batchpfade sammeln, unberührte Listener auslassen, betroffene Änderungen eines Batches gemeinsam liefern. Neue funktionale x_stub_batch-Probe prüft null Zugriffe auf unberührte Karte, gemeinsame Änderungen/Entfernung und gefilterte Abfrage; grün. Fester Vorstand rot genau beim unnötigen Kartenlesen (2 statt0); volle Logs gelesen. Erste Fixture fehlte Auth-Protokollinitialisierung und scheiterte daran, korrigiert, Fehlversuche separat erhalten. Original-Tempotest unverändert läuft jetzt vollständig, App/Rules/echter SDK-Helfer unverändert. Neuer Attrappenhash verlangt danach frischen Gesamtlauf.
@@ -123,5 +126,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 10:03 Codex ausdrücklichen Weiterauftrag aufgenommen. Offenen Quellenabgleich Ideen-Katalog/34 vollständige Berichte begonnen: Katalog und Quellenverzeichnis gelesen, 36 Dateien davon zwei Abbrüche unterschieden. Historischer Katalog stammt aus Erinnerung; Originale inzwischen gesichert. Nur Dokumentationsprüfung, keine Umsetzung aus Ideen, kein neues Paket/Produkttest; Entwurf 3.18.30 und einzelne Minuten-Sicherung erhalten.
 
 - 09:55 Codex Gegenlesen abgeschlossen: vollständiger App-/Rules-/Datenschutz-Diff, Befunde DATEN-9 bis DATEN-12 und drei SDK-Testdateien mit bestehenden Abschlusslogs gelesen. Keine Testausführung/-änderung, App-SHA 4a8ca5a1/Rules 6a110898 unverändert. Keine zusätzliche Produktlücke belegt; technische Beitragsprüfung nicht als Text-Probelauf-/PWA-/Gesamtabnahme ausgegeben. Bericht DATEN-GEGENLESEN-2026-10-10.md erstellt; sichtbaren aktuellen Korrekturblock in Mehrwert-ARBEITSSTAND, PLAN/STAND/Logbuch nachgezogen. Nachtarbeit dort zuvor noch aktiv/alte Fallzahlen, historische Angaben erhalten. Nächste entschiedene Lernrundenfolge bereits vorbereitet, kein neuer Paketbau. Entwurf/Fremdarbeit erhalten; große Abnahme/ladegeraet/Deploy später.
-
-- 09:53 Codex neuer Fortsetzungschat: aktuelle Übergabe, Betreiber-/Zyklusvorgaben und LEHREN gelesen, Caveman-/Daten-Skill angewandt. Ein Sicherungsbaum 12532/16564 bestätigt; keine zweite Schleife, kein Pull/Reset über fremdem Entwurf. Betreiberauftrag wortgetreu gekürzt in ALLES-OFFEN eingetragen. 46 gezielte Fälle bleiben abgeschlossen; keine Tests gestartet. Befunde A14–A17 und aktueller App-Diff begonnen zu lesen, Anschlussvorbereitung/Mehrwert-Reihenfolge gelesen. Nächster Baupunkt Bearbeiten in der Abfrage bleibt bis Datenpaketabschluss gesperrt; große Abnahme/ladegeraet/Deploy später, Zukunftsideen nur vorgemerkt.
