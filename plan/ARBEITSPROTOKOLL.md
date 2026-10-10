@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 13:45 Codex Commitumfang gelesen: erhaltene Datenentwürfe, Prüfhilfen und zuvor angelegte Skills unverändert vorhanden; nichts verworfen/gestaged. LIESMICH um C27-Lehre ergänzt: Testkarten über Firestore-API/Listener anlegen, nicht Map/App direkt verändern. Dokumentation beeinflusst Quellstand nicht; Sammeltest weiter aktiv.
+
 - 13:42 Betreiber „komm weiter“: Fortsetzung eingetragen, vorhandener Runner19768 bleibt allein aktiv. 93 gültige Tests bewahrt; geänderter C-Sammeltest noch nicht abgeschlossen. Keine zusätzliche Rückfrage/kein neuer Prüflauf gestartet.
 
 - 13:37 Codex STAND auf tatsächlichen Runner19768/93 gültige Ergebnisse und dritte Aufbaukorrektur aktualisiert. Minuten-Sicherung geprüft: ein Baum12532→16564 mit aktuellem Kind21856, kein Doppelstart. Fortsetzung/Leseregister/Rotbelege für Chatwechsel dokumentiert; keine fertige Abnahme behauptet.

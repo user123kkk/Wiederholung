@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 13:44 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 13:45 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `eaece2e Sicherung 13:42 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `d5f8d11 Sicherung 13:44 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -85,6 +86,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 
 ## 10.10.2026
 
+- 13:45 Codex Commitumfang gelesen: erhaltene Datenentwürfe, Prüfhilfen und zuvor angelegte Skills unverändert vorhanden; nichts verworfen/gestaged. LIESMICH um C27-Lehre ergänzt: Testkarten über Firestore-API/Listener anlegen, nicht Map/App direkt verändern. Dokumentation beeinflusst Quellstand nicht; Sammeltest weiter aktiv.
+
 - 13:42 Betreiber „komm weiter“: Fortsetzung eingetragen, vorhandener Runner19768 bleibt allein aktiv. 93 gültige Tests bewahrt; geänderter C-Sammeltest noch nicht abgeschlossen. Keine zusätzliche Rückfrage/kein neuer Prüflauf gestartet.
 
 - 13:37 Codex STAND auf tatsächlichen Runner19768/93 gültige Ergebnisse und dritte Aufbaukorrektur aktualisiert. Minuten-Sicherung geprüft: ein Baum12532→16564 mit aktuellem Kind21856, kein Doppelstart. Fortsetzung/Leseregister/Rotbelege für Chatwechsel dokumentiert; keine fertige Abnahme behauptet.
@@ -126,5 +129,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 12:05 Codex Tempo-Ursache gemessen: acht A/B-Paare vollständig gelesen, Vorstand 7/8 grün (einmal138ms), Entwurf 0/8 (erste Bewertung284–617ms). Trace252ms vollständig im Firebase-Attrappen-Timer, CPU-Profil hauptsächlich clone/listenerMelden/dsnap. Batch meldete global, Einzelwrites schon gezielt; unberührte Karten wurden deshalb vollständig kopiert. Nur stubs.js korrigiert: Batchpfade sammeln, unberührte Listener auslassen, betroffene Änderungen eines Batches gemeinsam liefern. Neue funktionale x_stub_batch-Probe prüft null Zugriffe auf unberührte Karte, gemeinsame Änderungen/Entfernung und gefilterte Abfrage; grün. Fester Vorstand rot genau beim unnötigen Kartenlesen (2 statt0); volle Logs gelesen. Erste Fixture fehlte Auth-Protokollinitialisierung und scheiterte daran, korrigiert, Fehlversuche separat erhalten. Original-Tempotest unverändert läuft jetzt vollständig, App/Rules/echter SDK-Helfer unverändert. Neuer Attrappenhash verlangt danach frischen Gesamtlauf.
 
 - 12:02 Codex Diagnosewerkzeug für Chrome-Trace/CPU-Profil am Original-Tempotest vorbereitet, Grenzen/Assertions unverändert. Erste fünf abgeschlossene A/B-Paare: Vorstand jeweils grün, Entwurf jeweils rot (617/491/284/407/475 ms). Noch keine Ursache/Freigabe daraus. Attrappenquelle Batch-Meldung gegenüber gezielter Einzelmeldung gelesen; Messung folgt nach Vergleichslauf, kein Browser parallel. Voriger String-Einfügeversuch traf wegen CRLF keinen Anker, jetzt mit geprüftem Patch ergänzt; Produkt unberührt.
-
-- 11:58 Codex große Abnahme angehalten: 13 vollständige Tests grün, t_bestand_tempo rot (3000 Karten, erste Bewertung 207 ms bei unveränderter 100-ms-Grenze, gradeCard 24 ms). Alle 14 Abschlusslogs vollständig gelesen; gerade laufenden Browser samt eigenem Runnerbaum 21508 beendet, rote Ausgabe erhalten. Keine Ursache behauptet/keine Produkt- oder Grenzänderung. Eigene Diagnose x_ab_bestand_tempo führt acht abwechselnde Paare desselben Originaltests am festen vorherigen Produktcommit 315bb0e9fb4ae9da74882fb35400ee90213437db (3.18.29) und Entwurf aus; nur Eingabe 3000 Karten und Altquelle gewählt, CPU4x/Assertions unverändert. Sitzung 37871, eigener Log abnahme-bestand-ab-3.18.30.log. Kein paralleler Browserlauf; Paketabschluss gesperrt.

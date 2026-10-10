@@ -2625,7 +2625,7 @@ index 0000000..2ad2ff0
 +console.log(`${names.length} Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
 diff --git a/plan/werkzeuge/pruefstand/LIESMICH.md b/plan/werkzeuge/pruefstand/LIESMICH.md
-index d3d208c..8cfe871 100644
+index d3d208c..6f57b4a 100644
 --- a/plan/werkzeuge/pruefstand/LIESMICH.md
 +++ b/plan/werkzeuge/pruefstand/LIESMICH.md
 @@ -43,8 +43,9 @@ vorherige echte Fehlerausgabe vor Wiederholung zusätzlich bewahren.
@@ -2665,6 +2665,16 @@ index d3d208c..8cfe871 100644
  `t_verlauf_mehrgeraete.js` verwendet das echte Firebase-JS-SDK 10.14.1
  gegen den lokalen Firestore-Emulator mit den Regeln dieses Repos. Nur Auth
  ist eine Attrappe. Zwei getrennte Browser-Kontexte haben getrennte echte
+@@ -91,3 +108,9 @@ Erwartet: Server null, nächste neue Antwort eins. Die Repo-Regeln müssen
+ das neue Feld `verlaufEpoche` samt Reset-Grenze enthalten.
+ `t_pruefdatum.js` prüft die Fixture-Lerntage vor/nach 04:00; `t_wisch_tempo.js`
+ führt aufgezeichnete Zeiten im echten Wisch-Listener aus, mit Altstand als Gegenprobe.
++
++Testkarten nach dem Start durch die Firestore-API anlegen und den Snapshot
++abwarten. Direktes Schreiben in __FB.store plus App-Arrays umgeht den
++Listenercache; beim nächsten strukturellen Snapshot verschwinden solche
++nur im Test erfundenen Karten. C27 verwendet dafür einen echten Stub-Batch
++und wartet auf 200 Karten, bevor Auswahl/Löschen geprüft wird.
 diff --git a/plan/werkzeuge/pruefstand/abnahme_runde.js b/plan/werkzeuge/pruefstand/abnahme_runde.js
 index c977d52..64d340c 100644
 --- a/plan/werkzeuge/pruefstand/abnahme_runde.js
