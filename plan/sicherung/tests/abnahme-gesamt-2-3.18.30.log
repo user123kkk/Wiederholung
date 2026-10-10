@@ -91,3 +91,4 @@ Error: Command failed: git -C C:\Users\USER\Desktop\Wiederholung worktree add --
     at genericNodeError (node:internal/errors:986:15)
     at checkExecSyncError (node:child_process:942:11)
 Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1,"quelltext":"2dba4ae190726fe3b4a6f4d90326135b93443440e03d7e56626f2a9a74f6dbcb"}
+EXIT 0 t_ordnung.js (9s)

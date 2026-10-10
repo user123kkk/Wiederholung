@@ -1,0 +1,20 @@
+Error: Command failed: git -C C:\Users\USER\Desktop\Wiederholung worktree add --detach C:\Users\USER\AppData\Local\Temp\adrabic-veroeffentlicht-a4b5677 a4b5677
+    at genericNodeError (node:internal/errors:986:15)
+    at wrappedFn (node:internal/errors:540:14)
+    at checkExecSyncError (node:child_process:942:11)
+    at execFileSync (node:child_process:978:15)
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_nur_betreiber.js:121:5
+    at Object.<anonymous> (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_nur_betreiber.js:151:3)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12) {
+  status: 128,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 7848,
+  stdout: null,
+  stderr: null
+}
+
+Prozess: {"code":1,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":1,"quelltext":"2dba4ae190726fe3b4a6f4d90326135b93443440e03d7e56626f2a9a74f6dbcb"}
