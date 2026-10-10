@@ -1,0 +1,44 @@
+
+Unabhängige Rechenprobe bei AboveNormal
+Browser 154.0.8037.98
+(Diagnose) Eigene Browserprozesse AboveNormal: 11968,12040,14012,15908
+(Diagnose) Nur eigene Renderer, CPU-Maske 8
+{"gruppe":"vor","rate":1,"checksum":-1157083627,"samples":[8.5,8.2,7.8,7.9,7.8,7.8,8.3,8.3,8.8,8.9,8.8,9.2],"min":7.8,"median":8.3,"max":9.2}
+{"gruppe":"gedrosselt","rate":4,"checksum":-1157083627,"samples":[9.3,9.2,9.2,9.4,9.1,9.7,9.2,8.8,8.6,8.7,8.8,9],"min":8.6,"median":9.149999999999999,"max":9.7}
+{"gruppe":"nach","rate":1,"checksum":-1157083627,"samples":[8.7,8.3,8.3,8.3,7.8,8,8.7,7.8,7.8,7.7,7.7,7.6],"min":7.6,"median":7.9,"max":8.7}
+
+Vorab festgelegter Originaltest 1/2
+(Diagnose) Eigene Browserprozesse AboveNormal: 15568,13528,12040,1636
+(Diagnose) Nur eigene Renderer, CPU-Maske 8
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): keine
+OK t_text_tempo: 286 Ayat, CPU 4x, keine Aufgabe > 200 ms
+
+Vorab festgelegter Originaltest 2/2
+(Diagnose) Eigene Browserprozesse AboveNormal: 7716,2936,11140,4268
+(Diagnose) Nur eigene Renderer, CPU-Maske 8
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 88
+OK t_text_tempo: 286 Ayat, CPU 4x, keine Aufgabe > 200 ms
+
+Fortgesetzte Gesamtabnahme, unveränderte Quelle
+node:internal/modules/cjs/loader:1568
+  throw err;
+  ^
+
+Error: Cannot find module 'C:UsersUSERDesktopWiederholungplanwerkzeugepruefstandx_text_tempo_prioritaet.js'
+Require stack:
+- internal/preload
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.require (node:internal/modules/cjs/loader:1674:12)
+    at node:internal/modules/cjs/loader:2221:12
+    at loadPreloadModules (node:internal/process/pre_execution:732:5)
+    at initializeModuleLoaders (node:internal/process/pre_execution:244:5) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'internal/preload' ]
+}
+
+Node.js v24.21.0
