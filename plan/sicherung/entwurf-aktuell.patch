@@ -2625,7 +2625,7 @@ index 0000000..2ad2ff0
 +console.log(`${names.length} Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
 diff --git a/plan/werkzeuge/pruefstand/LIESMICH.md b/plan/werkzeuge/pruefstand/LIESMICH.md
-index d3d208c..66a90fb 100644
+index d3d208c..8cfe871 100644
 --- a/plan/werkzeuge/pruefstand/LIESMICH.md
 +++ b/plan/werkzeuge/pruefstand/LIESMICH.md
 @@ -43,8 +43,9 @@ vorherige echte Fehlerausgabe vor Wiederholung zusätzlich bewahren.
@@ -2640,8 +2640,18 @@ index d3d208c..66a90fb 100644
  Ausgaben unter `<tmp>/adrabic-pruefstand-gesamt/<Quellstand>` lesen.
  Exit 0 allein bewertet keine beschreibenden Messungen oder Gegenproben.
  Auch `abnahme_runde.js --fortsetzen` nutzt denselben Quellstand und Test-Hash;
-@@ -56,6 +57,14 @@ der Fehler bleibt im Log und der Prozess endet mit Exit 1.
+@@ -54,8 +55,24 @@ werden nicht übernommen. Standby-Abbrüche sind keine bestandenen Tests.
+ Ein Preload schließt nur die frisch vom fehlerhaften Test gestarteten Browser;
+ der Fehler bleibt im Log und der Prozess endet mit Exit 1.
  
++Batchmeldungen der Firestore-Attrappe betreffen nur die geänderten Pfade;
++alle Änderungen eines Batches erscheinen gemeinsam. `node x_stub_batch.js`
++prüft unberührte Karten, mehrere Änderungen/Löschungen und gefilterte Abfragen.
++`--gegenprobe` erwartet am festen Vorstand 315bb0e einen Fehler beim erneuten
++Lesen einer unberührten Karte. `x_ab_bestand_tempo.js` und `x_spur_bestand.js`
++sind reine Diagnosehilfen am unveränderten Original-Tempotest (3000 Karten,
++CPU4x, aktive Assertions); sie ersetzen weder diesen Test noch die Abnahme.
++
  ## Mehrgeräte-Zähler und Kontowechsel (3.17.50)
  
 +Der gesamte Prüfstand braucht zusätzlich für `t_tagesantworten_sdk.js`
