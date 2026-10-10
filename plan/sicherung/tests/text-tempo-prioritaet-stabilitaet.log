@@ -1,2 +1,20 @@
 
 Unabhängige Rechenprobe bei AboveNormal
+Browser 154.0.8037.98
+(Diagnose) Eigene Browserprozesse AboveNormal: 10460,5580,10932,14996
+{"gruppe":"vor","rate":1,"checksum":-1157083627,"samples":[5.6,5.3,5.4,5.3,5.6,5.3,5.7,5.4,5.6,5.4,4.4,5.6],"min":4.4,"median":5.4,"max":5.7}
+{"gruppe":"gedrosselt","rate":4,"checksum":-1157083627,"samples":[37.9,24.8,32.1,56.5,33.3,34.8,27,26.4,22.2,38.6,23.6,32.9],"min":22.2,"median":32.5,"max":56.5}
+{"gruppe":"nach","rate":1,"checksum":-1157083627,"samples":[4.7,5.5,4.8,12.6,4.7,4.9,5.1,5.2,4.9,6.2,6,18.6],"min":4.7,"median":5.15,"max":18.6}
+
+Vorab festgelegter Originaltest 1/2
+(Diagnose) Eigene Browserprozesse AboveNormal: 14320,5644,10220,6224
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 215/141 | Text oeffnen (286): 111/111/73/60/102 | scrollen: 62 | Wiederholen starten: 112 | Aufdecken: 100 | Fliessend: 117 | Beenden: 79/86/79 | Lernen-Tab: 78
+FEHLER:
+Aufgabe mit 215 ms (> 200 ms)
+
+Vorab festgelegter Originaltest 2/2
+(Diagnose) Eigene Browserprozesse AboveNormal: 6216,10596,11772,11580
+(lesen) Aufgaben > 50 ms je Schritt (CPU 4x): Verwalten: 277/212 | Text oeffnen (286): 129/109/77/61/127 | scrollen: 70 | Wiederholen starten: 114 | Aufdecken: 98 | Fliessend: 138 | Beenden: 90/99/143 | Lernen-Tab: 171
+FEHLER:
+Aufgabe mit 277 ms (> 200 ms)
+Stabilitätsprobe rot; keine Gesamtabnahme.
