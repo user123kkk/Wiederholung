@@ -1,5 +1,22 @@
 # Arbeitsprotokoll – was gerade getan wird
 
+## 10.10.2026 – nächster konkreter Vorschlag angefragt
+
+Nach H1-Abschluss „Runde fortsetzen“ einzeln erklärt: normale Abfrage,
+dieses Gerät/Konto, gleicher Lerntag, Restfolge ohne erneutes Zählen alter
+Antworten, neuer Start alternativ möglich. Vorteil: Pause ohne Verlust
+der Restfolge. Nachteil: zusätzlicher Knopf und nach erneutem Öffnen kein
+Undo für die Antwort vor der Pause. Empfehlung so bauen; konkrete Antwort
+steht aus. ENTSCHEIDUNGEN-VERSTEHEN gilt; noch keine Produktänderung dafür.
+
+## 10.10.2026 – H1 Commit/Push bestätigt
+
+`cc16f0de` auf origin/main bestätigt; Produktdateien sauber. Fremde
+gestagte Skill-/Werkzeugarbeit erhalten, kein Deploy. Anschlussvorbereitung
+„Runde fortsetzen“ gelesen: alte Frage 22 deckt weder alle Modi noch einen
+konkreten Speicherweg ab. Nächster Einzelvorschlag begrenzt auf normale
+Abfragerunden, dieses Gerät/Konto und denselben logischen Lerntag.
+
 ## 10.10.2026 – H1 gezielt abgeschlossen
 
 Stift und Aktionsschutz gebaut; vorhandenen Editor ohne Sitzungswechsel

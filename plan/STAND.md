@@ -1,7 +1,8 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
 **10.10., Anschluss 3.18.31:** H1 Stift in der aufgedeckten eigenen Karte
-gebaut und nach dem Klein-Weg gezielt grün. Gleiche Sitzung, Entwurfschutz,
+gebaut und nach dem Klein-Weg gezielt grün. `cc16f0de` auf origin/main
+gepusht, Produktdateien sauber. Gleiche Sitzung, Entwurfschutz,
 Fokus, geführte Karten und Textprobelauf geprüft; reale SDK-Konflikte grün.
 Abnahme: `zyklus-2/H1-ABNAHME-2026-10-10.md`. Kein Gesamtlauf, kein Deploy;
 die Tempo-Ausnahme der 3.18.30 wird dadurch nicht erweitert. Nächster Punkt:

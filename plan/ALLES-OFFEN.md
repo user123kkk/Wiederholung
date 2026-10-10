@@ -1,6 +1,7 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
-**10.10., H1 gebaut und gezielt geprüft: 3.18.31.** Stift nach Aufdecken,
+**10.10., H1 gebaut und gezielt geprüft: 3.18.31.** Commit `cc16f0de`
+auf `origin/main` bestätigt; Produktdateien sauber. Stift nach Aufdecken,
 vorhandenes Blatt, gleiche Karte/Runde, keine Lernantwort durch Bearbeiten.
 Sechs UI-Konfigurationen und acht echte SDK-Formularfälle grün; vorhandene
 Blatt-, Snapshot-, Neben-Tippen- und Sprungtests ebenfalls grün. Klein-Weg,
@@ -607,8 +608,8 @@ Die bisherigen Mehrwert-Aufgaben stehen jetzt hier mit erhaltenem Stand. Früher
 | Was | Stand |
 |---|---|
 | Tagesdeckel nach einer Pause, Fälligkeiten bleiben (10) | Audit fertig (09.10.): neun Auditfälle, korrigierte 450 Modellläufe, Browser-Bereichsrunde grün. Neuen dauerhaften Deckel derzeit nicht empfohlen; Rundengröße nicht als Tagesziel umdeuten. Rückkehr-Probelauf braucht Pensum/Zusatznutzen/Lernkriterium, siehe `zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`; „60/30“ bleibt zurückgenommen |
-| Karte direkt in der Abfrage bearbeiten | erledigt im Entwurf 3.18.31: konkrete Antwort 10.10., vorhandenes Blatt und gleiche Runde; Klein-Weg gezielt grün, nicht veröffentlicht. [Abnahme](zyklus-2/H1-ABNAHME-2026-10-10.md) |
-| Am selben Tag „Runde fortsetzen“ (22) | offen |
+| Karte direkt in der Abfrage bearbeiten | erledigt (3.18.31, `cc16f0de` gepusht): konkrete Antwort 10.10., vorhandenes Blatt und gleiche Runde; Klein-Weg gezielt grün, nicht veröffentlicht. [Abnahme](zyklus-2/H1-ABNAHME-2026-10-10.md) |
+| Am selben Tag „Runde fortsetzen“ (22) | konkrete Entscheidung angefragt: normale Abfrage auf diesem Gerät/Konto am selben Lerntag fortsetzen, alternativ neu starten; kein erneutes Zählen alter Antworten. Nach Neustart kein Undo der Antwort vor der Pause. Alte Frage 22 bleibt Herkunftsbeleg, keine umfassende Freigabe aller Modi |
 | Einmalige Erklärung der drei Knöpfe (21) | wartet: Wortlaut von Dir |
 | Die zwei neuen Lernregeln für alle freigeben | wartet: Dein Ja nach eigenem Test |
 | Ohne Harakat abfragen, Schalter je Runde (14) | offen, nach dem Kern |
