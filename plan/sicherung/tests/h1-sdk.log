@@ -6,3 +6,8 @@ GRUEN Textkorrektur-Rueckfaelle: Text und Rueckfallreset bestaetigt
 GRUEN Notiz-nach-fremder-Bewertung
 {"fall":"manuelle-Stufe-nach-fremder-Bewertung","vor":1,"fremd":2,"feldVor":"1","feldNachSnapshot":"0","nach":0,"notiz":"Nur Notiz geaendert"}
 GRUEN manuelle-Stufe-nach-fremder-Bewertung
+{"fall":"unberuehrtes-Blatt-nach-Snapshot","vor":1,"fremd":2,"feldVor":"1","feldNachSnapshot":"2","nach":2,"notiz":""}
+GRUEN unberuehrtes-Blatt-nach-Snapshot
+GRUEN Notiz-nach-fremder-Loeschung: Server bleibt geloescht, Entwurf und Hinweis erhalten
+GRUEN Offline-Notiz-nach-fremder-Bewertung: SDK-Cache mit ausstehendem Write bestaetigt, fremde Bewertung erhalten
+GRUEN Textkorrektur-nach-fremder-Bewertung: Text/Rueckfallreset erlaubt, fremde Stufe und passende Bewertungsbasis erhalten
