@@ -2,8 +2,14 @@
 
 10.10.2026, begonnen nach ausdrücklichem Weiterauftrag. **Teilabgleich:**
 Zweite Runde `a495c23a` vollständig gelesen: acht inhaltliche Berichte,
-zwei Berichte mit ausschließlich Limit-Abbruch. Erste Runde mit 26
-inhaltlichen Berichten noch offen. Gesamtauftrag daher nicht abgeschlossen.
+zwei Berichte mit ausschließlich Limit-Abbruch. Erste Runde: 01–06
+zugeordnet, 07–26 offen; [Einzelzuordnung](QUELLENABGLEICH-RUNDE1-2026-10-10.md).
+Insgesamt 14 von 34 inhaltlichen Berichten zugeordnet, 122 nummerierte
+Hauptpositionen plus narrativer Gegenprüfer. Gesamtauftrag nicht abgeschlossen.
+
+**Betreiberkorrektur 10.10. während der Arbeit:** Frühere Ja können ohne
+Verständnis gegeben worden sein. Alte Beschlüsse nicht als automatische
+Einzelfreigabe behandeln; [Regel](../../ENTSCHEIDUNGEN-VERSTEHEN.md).
 
 Grundlage: [historischer Katalog](IDEEN-KATALOG-2026-10-08.md) mit unabhängig
 gezählten **187 Datenzeilen** und [Originalverzeichnis](agentenberichte/LIESMICH.md).
@@ -194,7 +200,8 @@ Keine nummerierte Hauptideenliste. Vollständig gelesen, gesondert erhalten:
 
 ## Noch offen
 
-1. Alle 26 Berichte `981b69a1` vollständig lesen und ebenso zuordnen.
+1. Erste Runde `981b69a1`: 07–26 vollständig lesen und ebenso zuordnen;
+   01–06 mit 70 Hauptpositionen abgeschlossen, Quelle oben.
 2. Lücken/Varianten beider Runden zusammenführen, ohne Herkunft und Gegenrede
    zu verlieren. Erst danach fehlende Katalogzeilen ergänzen; keine Status
    aus Agentenvorschlägen erfinden.

@@ -1,5 +1,11 @@
 # Hinweise für Claude Code und Codex
 
+**Betreiberkorrektur 10.10.2026:** Frühere Ja/Beschlüsse können ohne
+Verständnis erfolgt sein. Vor neuen Funktionen
+[`plan/ENTSCHEIDUNGEN-VERSTEHEN.md`](plan/ENTSCHEIDUNGEN-VERSTEHEN.md)
+anwenden: unklare Einzelfreigabe vorläufig, verständlich klären; kein
+automatischer Bau aus Sammelfreigaben, kein Rückbau des erhaltenen Entwurfs.
+
 **Projekt-Skills gezielt verwenden (Betreiber 09.10.2026):** Daten/Auth,
 Offline, Import/Export oder Rules → `adrabic-daten`; UI/RTL/iPhone/PWA →
 `adrabic-oberflaeche`; Lernlogik, Simulation oder Lernempfehlung →

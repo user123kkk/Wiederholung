@@ -1,5 +1,16 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
+## Aktueller Anschluss 10.10.2026 10:23
+
+Betreiberkorrektur: Frühere Ja/Beschlüsse können ohne Verständnis
+erfolgt sein. [Zentrale Regel](../../ENTSCHEIDUNGEN-VERSTEHEN.md) vor
+alten Sammelfreigaben anwenden, unklare offene Funktion vorläufig; keine
+automatische Umsetzung und kein Rückbau. Automation entsprechend ergänzt.
+Quellenabgleich weiter: 14/34 Berichte zugeordnet, erste Runde 01–06 mit
+70 Positionen im [Einzelbericht](QUELLENABGLEICH-RUNDE1-2026-10-10.md).
+Als Nächstes 07–26, danach Rückwärtsprüfung. Entwurf 3.18.30/46 gezielte
+Fälle erhalten, kein neues Paket, keine Tests wiederholt.
+
 ## Anschluss 10.10.2026 10:09: Dauerauftrag, Quellenabgleich
 
 Betreiber bittet offene Punkte ununterbrochen selbstständig abzuarbeiten.

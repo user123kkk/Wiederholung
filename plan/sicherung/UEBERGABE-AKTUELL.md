@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 10:22 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 10:24 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `b6e20ec Sicherung 10:21 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `9eda036 Sicherung 10:23 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md
  M sw.js
 ```
 
@@ -64,6 +65,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 10:23 Codex erste Runde 01–06 abgeschlossen: sechs vollständige Abschlussberichte, 70 Hauptpositionen einzeln mit Katalog zugeordnet; Nebenideen/Gegenrede/Beleggrenzen erhalten. Neuer Bericht QUELLENABGLEICH-RUNDE1-2026-10-10.md, Gesamtstand 14/34 Berichte, 122 nummerierte Positionen plus Gegenprüfer. Quelle 05 nennt anderen Repo-Pfad: Herkunft aktueller Codebefunde daher ungeklärt, nur Ideenwortlaut übernehmen. Kein wissenschaftlicher/rechtlicher Nachweis aus Suchtreffern, keine neue Funktion. Betreiberkorrektur auch in CLAUDE eingetragen; Automation per App-Werkzeug mit neuer Regel aktualisiert und ACTIVE bestätigt, keine zweite. Erster Versuch der Konfigurationsübernahme scheiterte vor Änderung an umgebrochener Select-String-Ausgabe; unveränderte Literalzeile anschließend korrekt gelesen. Zwei versehentliche Backslash-Anführungszeichen in Dokumentation korrigiert. Positionszählung 70 separat bestätigt; Quellenabgleich erste Runde 07–26 und Rückwärtsprüfung noch offen.
 
 - 10:19 Codex Betreiberkorrektur wortgetreu gesichert: frühere Ja/Beschlüsse können ohne Verständnis erfolgt sein. Zentrale Regel ENTSCHEIDUNGEN-VERSTEHEN.md erstellt und in AGENTS, BETREIBER-VERSTEHEN, CODEX-START, Zyklus-ENTSCHEIDUNGEN und Mehrwert-GESAMTLISTE sichtbar vor historische Freigaben gestellt. Noch unklare offene Funktionsentscheidungen vorläufig behandeln, konkret erklären statt alte Sammelzustimmung voraussetzen; keine massenhafte Umetikettierung oder Rücknahme bereits gebauter Arbeit. Aktueller technischer Datenauftrag/Entwurf, Paket-/Abnahme-/Deploy-Grenzen erhalten. Quellenabgleich weiter, keine Funktion daraus bauen.
 
@@ -106,5 +109,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 02:21 Codex Anschlussvorbereitung: Entscheidungen in GESAMTLISTE § 2/RUNDE-2 Frage 22 und tatsächliche Start-/End-/Undo-/Blattwege erneut abgeglichen. Konkrete Abnahmematrix für Bearbeiten in der Abfrage und taggleiche Fortsetzung ergänzt, getrennte Browser-/SDK-Nachweise und noch unentschiedenen Modus-/Undo-Umfang festgehalten. Veraltete Laufmeldung in Vorbereitung auf fünf grüne betroffene Browserprüfungen korrigiert. Kein neuer H-Bau, keine Lernwirkungsbehauptung, keine künstlichen Testwiederholungen. Ein rg-Aufruf mit Windows-Dateiglobbing abgewiesen; tatsächliche Datei über Inventar gefunden, keine Prüfung daraus behauptet. Protokoll-Patch wegen unvollständiger Kontextzeile zunächst abgewiesen, danach am eindeutigen Tageskopf eingefügt. Sicherung 02:19 enthält A17-Abschluss, Übergabe erhalten; einzelner Sicherungsbaum 12532/16564 bestätigt. App weiter 3.18.30 uncommittet, Nacht-Heartbeat aktiv.
 
 - 02:18 Codex gezielter A17-Abschluss: fünf SDK-Fälle am App-SHA 4a8ca5a1 sowie t_karten_blatt, t_karten_snapshot, t_sprung (vier Breiten, kein Sprung), t_kontrast (0 Funde) und t_a11y-Grundchecks grün; sämtliche vollständigen Logs gelesen. Syntax/Stand/Diff und eigener App-Diff gegen festen Ausgang geprüft. A17 in Arbeit wegen großer Paketabnahme; 3.18.30-Entwurf samt A14–A16 behalten. Fester Verlustbeleg 97cbdcc und rote/ausgeschlossene Fixture-/Dateipfadlogs erhalten, Grenzen unverändert. Keine Tests mehr laufend, keine App-Version committet, kein neuer Paketbau/Deploy. Fortsetzung nach aktueller Anschlussvorbereitung: risikobezogene Datenprüfung oder konkrete Abnahmeplanung, keine künstlichen Testwiederholungen. Nacht-Heartbeat weiter aktiv bis 09:00, Minuten-Sicherung einzeln.
-
-- 02:16 Codex A17-Nachlauf: t_karten_blatt vollständig grün gelesen (390 dunkel/hell, 360, 820), t_karten_snapshot sechs Zustände und t_sprung vier Breiten grün. Früher falscher t_snapshot-Dateiname war MODULE_NOT_FOUND, keine Messung; tatsächliche Datei per rg-Inventar verwendet, Vorbereitung korrigiert. Kontrast/a11y laufen noch einzeln. Standprüfung 3.18.30/CSP/APP_SHELL und eigener App-Diff gegen 97cbdcc grün gelesen. Neue Diagnose per intent-to-add in Minuten-Patch aufgenommen; Patch enthält stufeGeaendert/Versandbarriere/Diagnose, Übergabe 02:15, Commit enthält weiterhin App 3.18.29. Neue LEHREN-Regel für unberührte Formularfelder plus Gegenproben-Grenzen nachgezogen. Keine weitere Sicherungsschleife, keine Veröffentlichung.

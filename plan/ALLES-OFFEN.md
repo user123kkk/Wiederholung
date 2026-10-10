@@ -1,5 +1,14 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 10:23, Quellenabgleich fortgesetzt: 14 von 34 inhaltlichen
+Berichten zugeordnet (zweite Runde acht, erste Runde 01–06). 122 nummerierte
+Hauptpositionen plus Gegenprüfer, keine entsprechende Zahl neuer Funktionen.
+Rest: erste Runde 07–26, Zusammenführung, rückwärtige Quellenprüfung der
+187 historischen Katalogzeilen. Bericht:
+[`zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md`](zyklus-2/mehrwert/QUELLENABGLEICH-RUNDE1-2026-10-10.md).
+Frühere Beschlüsse bleiben nach Korrektur unten prüfbedürftig; keine
+Produktfreigabe aus Quellenabdeckung ableiten.
+
 10.10.2026 10:19, Betreiber: „ach und villeicht so einbauen im repo,
 selbst die "beschlossenen sachen" könnten eigentlich unbeschlossen sein,
 hab da mal einfach gesagt ja, beim lesen den meist nicht verstanden“.

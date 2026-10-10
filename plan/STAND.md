@@ -1,5 +1,16 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 10:23 – Verständniskorrektur und Quellenabgleich:**
+Betreiber erklärt, frühere Ja teilweise ohne Verständnis gegeben zu haben.
+`ENTSCHEIDUNGEN-VERSTEHEN.md` gilt vor historischen Sammelfreigaben; noch
+unklare offene Funktionen vorläufig behandeln, verständlich klären.
+Kein Rückbau, technischer Entwurf 3.18.30 erhalten. Quellenabgleich
+14/34 Vollberichte zugeordnet, 122 nummerierte Hauptpositionen plus
+Gegenprüfer; erste Runde 07–26 und Rückwärtsprüfung noch offen.
+Aktueller Anschluss: `zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md`.
+Stündliche Fortsetzung im aktuellen Chat aktiv, neue Entscheidungsregel
+im Prompt. Große Abnahme/ladegeraet/Veröffentlichung bleiben später.
+
 **10.10.2026 09:55 – Datenentwurf gegengelesen, Anschluss erhalten:**
 Befunde A14–A17 gegen vollständigen App-/Rules-/Datenschutz-Diff und die
 drei gezielten SDK-Testdateien gelesen; vorhandene Abschlusslogs vollständig
