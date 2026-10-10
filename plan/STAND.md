@@ -1,5 +1,11 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 11:58 – Datenabnahme an Tempotest angehalten:**
+13 vollständige Tests grün, t_bestand_tempo rot (207 ms, Grenze 100 ms).
+Originalausgaben erhalten/gelesen. Acht abwechselnde Vergleichspaare mit
+festem 3.18.29-Vorstand laufen allein; Ursache noch offen. Entwurf und
+gezielte Datenbelege erhalten, Paketabschluss gesperrt. Bericht unten.
+
 **10.10.2026 11:51 – große Datenabnahme wieder aufgenommen:**
 Konkreter Betreiberauftrag im neuen Chat, Entwurf 3.18.30 erhalten.
 Prüfaufbau korrigiert und abgenommen: zwei getrennte Demo-Emulatoren,

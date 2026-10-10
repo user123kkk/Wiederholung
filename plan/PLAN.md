@@ -7,6 +7,11 @@ und [LEHREN.md](LEHREN.md).
 
 ## Aktuelle Arbeit, 06.10.2026
 
+**10.10.2026 11:58 – Abnahme angehalten, Diagnose läuft:**
+Tempotest rot; feste Vergleichspaare mit 3.18.29, aktive Originalgrenzen.
+Paketabschluss gesperrt, Entwurf erhalten. Bericht unter
+`zyklus-2/DATEN-ABNAHME-3.18.30-2026-10-10.md`.
+
 **10.10.2026 11:51 – Datenabnahme läuft wieder:**
 Betreiber hat große Datenabnahme/Paketabschluss 3.18.30 im neuen Chat
 beauftragt. Abnahmeaufbau korrigiert/geprüft, 238 Regeln frisch grün;

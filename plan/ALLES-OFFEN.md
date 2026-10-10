@@ -1,5 +1,10 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026 11:58: Große Abnahme wegen rotem Tempotest angehalten
+(207 ms bei Grenze 100 ms). Acht feste Vergleichspaare laufen zur
+Diagnose; keine Ursache behauptet. Entwurf/rote Ausgaben erhalten,
+kein Paketcommit/Deploy. Details im Datenabnahmebericht.
+
 10.10.2026 11:48: Auftrag „ok los“ im neuen Chat ausgeführt. Große
 Datenabnahme 3.18.30 wieder aufgenommen: beide Abnahmeaufbau-Lücken
 korrigiert, getrennte Demo-Emulatoren gestartet, 238 Regeln frisch grün.

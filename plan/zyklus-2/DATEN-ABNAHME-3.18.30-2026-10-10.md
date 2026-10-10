@@ -37,7 +37,19 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 `abnahme-emulator-besetzt-3.18.30.log`,
 `abnahme-emulator-regeln-3.18.30.log`, `abnahme-regeln-3.18.30.log`.
 
-## Gesamtlauf, noch in Arbeit
+## Gesamtlauf, um 11:57 angehalten
+
+13 abgeschlossene Prüfungen grün. `t_bestand_tempo.js` rot: beim ersten
+Bewerten mit 3000 Karten 207 ms lange Aufgaben, Grenze 100 ms (CPU 4x).
+App-Messung dabei gradeCard 24 ms; daraus allein folgt keine Ursache.
+Alle 14 Abschlusslogs vollständig gelesen. Runner samt gerade laufendem
+Browser beendet, Originalprotokolle erhalten. Keine Abnahme/kein Commit.
+
+Diagnose ab 11:58: acht abwechselnde Paare des Originaltests (nur 3000
+Karten), gleicher Browser/CPU4x und aktive unveränderte Assertions.
+Vorstand fest `315bb0e9fb4ae9da74882fb35400ee90213437db` (3.18.29),
+gegen aktuellen Entwurf. Ausgabe `abnahme-bestand-ab-3.18.30.log`.
+`x_ab_bestand_tempo.js` ist Messhilfe, keine Abnahme; ein roter Lauf bleibt rot.
 
 Quelle `3795bfc5fa122e28403fa33a30eaf51ea82251725a0e891779211b4bf3fb8aeb`.
 158 Tests einschließlich 13 Rundentests. Start ohne `--fortsetzen`,
