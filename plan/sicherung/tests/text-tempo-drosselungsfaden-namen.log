@@ -1,0 +1,48 @@
+Browser 154.0.8037.98
+(Diagnose) Eigene Browserprozesse AboveNormal: 15468,6860,2968,14548
+{"gruppe":"vor","rate":1,"checksum":-1157083627,"samples":[8.9,10.1,9.5,9.3,9.4,8.7,9.2,9.2,8.3,8.3,8.4,8.6],"min":8.3,"median":9.05,"max":10.1}
+Genau ein eigener Drosselungsfaden erforderlich; gefunden:0. Gelesene eigene Namen: .
+In C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_cpu_thread_windows.ps1:41 Zeichen:24
++ ... en -ne 1) { throw "Genau ein eigener Drosselungsfaden erforderlich; g ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Genau ein eigen...eigene Namen: .:String) [], RuntimeException
+    + FullyQualifiedErrorId : Genau ein eigener Drosselungsfaden erforderlich; gefunden:0. Gelesene eigene Namen: .
+ 
+Error: Command failed: powershell.exe -NoProfile -Command & 'C:/Users/USER/Desktop/Wiederholung/plan/werkzeuge/pruefstand/x_cpu_thread_windows.ps1' -RendererIds @(6860,2968,14548)
+Genau ein eigener Drosselungsfaden erforderlich; gefunden:0. Gelesene eigene Namen: .
+In C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_cpu_thread_windows.ps1:41 Zeichen:24
++ ... en -ne 1) { throw "Genau ein eigener Drosselungsfaden erforderlich; g ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Genau ein eigen...eigene Namen: .:String) [], RuntimeException
+    + FullyQualifiedErrorId : Genau ein eigener Drosselungsfaden erforderlich; gefunden:0. Gelesene eigene Namen: .
+ 
+
+    at genericNodeError (node:internal/errors:986:15)
+    at wrappedFn (node:internal/errors:540:14)
+    at checkExecSyncError (node:child_process:942:11)
+    at execFileSync (node:child_process:978:15)
+    at session.send (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_text_tempo_prioritaet.js:29:27)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\x_cpu_referenz.js:24:9 {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '',
+    'Genau ein eigener Drosselungsfaden erforderlich; gefunden:0. Gelesene eigene Namen: .\r\n' +
+      'In C:\\Users\\USER\\Desktop\\Wiederholung\\plan\\werkzeuge\\pruefstand\\x_cpu_thread_windows.ps1:41 Zeichen:24\r\n' +
+      '+ ... en -ne 1) { throw "Genau ein eigener Drosselungsfaden erforderlich; g ...\r\n' +
+      '+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n' +
+      '    + CategoryInfo          : OperationStopped: (Genau ein eigen...eigene Namen: .:String) [], RuntimeException\r\n' +
+      '    + FullyQualifiedErrorId : Genau ein eigener Drosselungsfaden erforderlich; gefunden:0. Gelesene eigene Namen: .\r\n' +
+      ' \r\n'
+  ],
+  pid: 2504,
+  stdout: '',
+  stderr: 'Genau ein eigener Drosselungsfaden erforderlich; gefunden:0. Gelesene eigene Namen: .\r\n' +
+    'In C:\\Users\\USER\\Desktop\\Wiederholung\\plan\\werkzeuge\\pruefstand\\x_cpu_thread_windows.ps1:41 Zeichen:24\r\n' +
+    '+ ... en -ne 1) { throw "Genau ein eigener Drosselungsfaden erforderlich; g ...\r\n' +
+    '+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n' +
+    '    + CategoryInfo          : OperationStopped: (Genau ein eigen...eigene Namen: .:String) [], RuntimeException\r\n' +
+    '    + FullyQualifiedErrorId : Genau ein eigener Drosselungsfaden erforderlich; gefunden:0. Gelesene eigene Namen: .\r\n' +
+    ' \r\n'
+}
