@@ -1350,6 +1350,233 @@ index 00000000..d62e5363
 +---
 +
 +Methodology by [Andrej Karpathy](https://x.com/karpathy). Claude Code adaptation inspired by [@olelehmann](https://x.com/olelehmann). Published by [@tenfoldmarc](https://instagram.com/tenfoldmarc) — follow for daily AI automation builds.
+diff --git a/app.js b/app.js
+index 2e694ca8..32eec9cf 100644
+--- a/app.js
++++ b/app.js
+@@ -2571,6 +2571,7 @@ async function initFirebase() {
+     feedbackFormFehler = false;
+     ui.feedbackForm = false;
+     ui.session = null;
++    rundenFortsetzungBusy = null;
+     ui.editId = null;
+     ui.karteSheet = false;
+     ui.cardDetailId = null;
+@@ -4280,6 +4281,7 @@ async function kontoAuthLoeschen(konto = kontoLoeschKontext()) {
+   }
+   if (!konto.abgebrochen) {
+     try { localStorage.removeItem("adrabic-bereich-" + konto.user.uid); } catch (e) {}
++    rundenRestEntfernen(konto.user.uid);
+     try {
+       const prefix = bewertungsPraefix(konto.user.uid);
+       const keys = [];
+@@ -7048,7 +7050,132 @@ function rundeNaechsterBereich(s) {
+     ansagen("Weiter mit " + b.name);
+   }
+ }
++/* H2: Nur die Restfolge, niemals Bewertungen oder Tagesbeiträge rekonstruieren. */
++const RUNDEN_REST_PREFIX = "adrabic-rundenrest:";
++let rundenFortsetzungBusy = null;
++function rundenRestKey(uid) { return RUNDEN_REST_PREFIX + uid; }
++function rundenKartenStand(c) {
++  return JSON.stringify([c.stufe, c.nextReview, c.ersteBewertung, c.rueckfaelle || 0,
++    c.maxStufe || 0, c.bewertungsStand || null, c.bewertungsBasis || null]);
++}
++function rundenRestEntfernen(uid) {
++  try { localStorage.removeItem(rundenRestKey(uid)); } catch (e) {}
++}
++function rundenRestLesen() {
++  if (!currentUser || !bereiche || !cloudDocExists || kontoWirdGeloescht) return null;
++  const uid = currentUser.uid;
++  try {
++    const raw = localStorage.getItem(rundenRestKey(uid));
++    if (!raw) return null;
++    if (raw.length > 524288) throw new Error("Rundenrest zu groß");
++    const r = JSON.parse(raw);
++    const zahl = n => Number.isSafeInteger(n) && n >= 0 && n <= 1000000;
++    if (!r || r.v !== 1 || r.uid !== uid || r.tag !== todayStr() || r.epoche !== verlaufEpoche ||
++        typeof r.kennung !== "string" || !zahl(r.total) || !Array.isArray(r.gruppen) || !r.gruppen.length ||
++        !r.karten || typeof r.karten !== "object" || !r.zaehler || !r.nichtMal) throw new Error("Ungültiger Rundenrest");
++    const ids = new Set();
++    for (const g of r.gruppen) {
++      if (!g || typeof g.bereichId !== "string" || !Array.isArray(g.ids) || !g.ids.length ||
++          !bereiche.some(b => b.id === g.bereichId)) throw new Error("Bereich fehlt");
++      for (const id of g.ids) {
++        if (typeof id !== "string" || !id || ids.has(id) || typeof r.karten[id] !== "string") throw new Error("Kartenrest ungültig");
++        ids.add(id);
++      }
++    }
++    if (ids.size > r.total || !ids.size || Object.values(r.zaehler).some(n => !zahl(n)) ||
++        Object.values(r.nichtMal).some(n => !zahl(n))) throw new Error("Rundenzähler ungültig");
++    return r;
++  } catch (e) { rundenRestEntfernen(uid); return null; }
++}
++function rundenRestSichern() {
++  const s = ui.session;
++  if (!currentUser || !s || s.isDrill || kontoWirdGeloescht) return;
++  const uid = currentUser.uid;
++  if (s.lerntag !== todayStr() || !s.queue.length) { rundenRestEntfernen(uid); return; }
++  const gruppen = [{ bereichId: s.bereichId, ids: s.queue.slice() },
++    ...(s.rest || []).filter(g => g.ids.length).map(g => ({ bereichId: g.bereichId, ids: g.ids.slice() }))];
++  const alle = new Map();
++  for (const b of bereiche) for (const c of b.karten) alle.set(c.id, { b: b.id, c });
++  const karten = {};
++  for (const g of gruppen) for (const id of g.ids) {
++    const x = alle.get(id);
++    if (!x || x.b !== g.bereichId || x.c.textId) { rundenRestEntfernen(uid); return; }
++    karten[id] = rundenKartenStand(x.c);
++  }
++  const r = { v: 1, uid, tag: s.lerntag, epoche: verlaufEpoche, kennung: genId(),
++    total: s.total, gruppen, karten, zaehler: s.zaehler || { known: 0, almost: 0, unknown: 0 },
++    nichtMal: s.nichtMal || {} };
++  try { localStorage.setItem(rundenRestKey(uid), JSON.stringify(r)); }
++  catch (e) {
++    // Ein alter Rest ist nach der Antwort gefährlicher als keine Fortsetzung.
++    rundenRestEntfernen(uid);
++    zeigeToast("Runde konnte auf diesem Gerät nicht gemerkt werden.");
++  }
++}
++function rundenFortsetzungHtml() {
++  const r = rundenRestLesen();
++  if (!r) return "";
++  const n = r.gruppen.reduce((sum, g) => sum + g.ids.length, 0);
++  return '<div class="banner-info"><div class="banner__text"><strong>Begonnene Runde</strong><p>' +
++    n + (n === 1 ? ' Karte übrig.' : ' Karten übrig.') + '</p><div class="row wrap">' +
++    '<button data-action="runde-fortsetzen"' + (rundenFortsetzungBusy ? ' disabled' : '') + '>' +
++    (rundenFortsetzungBusy ? 'Prüfen …' : 'Runde fortsetzen') + '</button>' +
++    '<button class="secondary" data-action="start-session">Neu starten</button></div></div></div>';
++}
++async function rundeFortsetzen() {
++  if (rundenFortsetzungBusy || ui.session) return;
++  const r = rundenRestLesen();
++  if (!r) { render(); return; }
++  const konto = userDocRef, kartenRef = kartenColRef, bereicheRef = bereicheColRef;
++  const auftrag = {}; rundenFortsetzungBusy = auftrag; render();
++  let timer;
++  const nochAktuell = () => currentUser && currentUser.uid === r.uid && userDocRef === konto &&
++    !kontoWirdGeloescht && !ui.session && ui.tab === "lernen" && todayStr() === r.tag &&
++    rundenRestLesen()?.kennung === r.kennung;
++  try {
++    await Promise.race([(async () => {
++      await fb.waitForPendingWrites(db);
++      return Promise.all([fb.getDocsFromServer(kartenRef), fb.getDocsFromServer(bereicheRef), fb.getDocFromServer(konto)]);
++    })(), new Promise((_, reject) => { timer = setTimeout(() => reject(new Error("Keine bestätigte Verbindung")), 15000); })]).then(snaps => {
++      if (!nochAktuell()) return;
++      const [ks, bs, us] = snaps;
++      const epoche = us.data()?.verlaufEpoche || "";
++      const remote = new Map(ks.docs.map(d => [d.id, d.data()]));
++      const bIds = new Set(bs.docs.map(d => d.id));
++      const local = new Map();
++      for (const b of bereiche) for (const c of b.karten) local.set(c.id, { b: b.id, c });
++      const passt = us.exists() && epoche === r.epoche && r.gruppen.every(g => bIds.has(g.bereichId) && g.ids.every(id => {
++        const d = remote.get(id), l = local.get(id);
++        return d && !d.textId && d.bereichId === g.bereichId && l && l.b === g.bereichId &&
++          !bewertungsKarteBlockiert(id) && rundenKartenStand(normCard({ ...d, id })) === r.karten[id] &&
++          rundenKartenStand(l.c) === r.karten[id];
++      }));
++      if (!passt) {
++        rundenRestEntfernen(r.uid);
++        zeigeToast("Karten haben sich geändert. Starte eine neue Runde."); return;
++      }
++      const [erste, ...rest] = r.gruppen;
++      springeNachOben("sitzung");
++      ui.lernSetId = null; ui.lernLetzte = null; ui.gemerktRunde = new Set();
++      ui.bereichId = erste.bereichId;
++      ui.session = { queue: erste.ids.slice(), total: r.total, revealed: false, extraOpen: true,
++        lastAction: null, isDrill: false, lerntag: r.tag, bereichId: erste.bereichId,
++        rest: rest.map(g => ({ bereichId: g.bereichId, ids: g.ids.slice() })),
++        bereichIds: r.gruppen.map(g => g.bereichId), zaehler: { ...r.zaehler }, nichtMal: { ...r.nichtMal },
++        nichtKarten: Object.fromEntries(Object.keys(r.nichtMal).filter(id => local.has(id)).map(id => {
++          const c = local.get(id).c; return [id, { wort: c.wort, uebersetzung: c.uebersetzung }];
++        })) };
++      render();
++    });
++  } catch (e) {
++    if (nochAktuell()) zeigeToast("Zum Fortsetzen brauchst du kurz Verbindung. Neu starten geht auch ohne.");
++  } finally {
++    clearTimeout(timer);
++    if (rundenFortsetzungBusy === auftrag) { rundenFortsetzungBusy = null; if (userDocRef === konto) render(); }
++  }
++}
+ function startSession() {
++  if (currentUser) rundenRestEntfernen(currentUser.uid);
+   let due = dueCards();
+   /* Sitzungslimit: Passt nicht alles Faellige in die Runde, kommen die
+      dringendsten zuerst (nachDringlichkeit). Ohne Limit oder wenn alles
+@@ -7074,7 +7201,8 @@ function startSession() {
+   ui.lernLetzte = null;
+   ui.gemerktRunde = new Set();
+   ui.session = { queue: erste, total: erste.length + rest.reduce((n, a) => n + a.ids.length, 0), revealed: false, extraOpen: true, lastAction: null, isDrill: false,
+-    bereichId: currentBereich().id, rest: rest, bereichIds: [currentBereich().id] };
++    bereichId: currentBereich().id, rest: rest, bereichIds: [currentBereich().id], lerntag: todayStr() };
++  rundenRestSichern();
+   render();
+ }
+ /* E5 (1.8.0): Beim Aufdecken das Vollbild verlassen.
+@@ -7284,6 +7412,7 @@ function gradeCard(kind) {
+     if (s.queue.length === 0) rundeNaechsterBereich(s);
+     if (s.queue.length === 0) checkStreakOnSessionComplete();
+   }
++  rundenRestSichern();
+   render();
+ }
+ /* 3.14.0: Die bewertete Karte geht - in die Richtung ihrer Bewertung.
+@@ -7435,6 +7564,7 @@ function undoLastGrade() {
+      stand false - die zurueckgeholte Karte stand ohne ihre Notiz da, obwohl
+      sie beim Bewerten offen war. */
+   s.extraOpen = true;
++  rundenRestSichern();
+   render();
+ }
+ function endSession() {
+@@ -7444,8 +7574,13 @@ function endSession() {
+      dem X die App schliesst, verliert sonst die letzten Antworten. */
+   wischNachholen();
+   verlaufJetztSchreiben();
++  rundenRestSichern();
+   ui.session = null; hwStrokes = []; hwFullscreen = false; render();
+ }
++window.addEventListener("pagehide", () => { wischNachholen(); rundenRestSichern(); });
++document.addEventListener("visibilitychange", () => {
++  if (document.visibilityState === "hidden") { wischNachholen(); rundenRestSichern(); }
++});
+ 
+ /* ---------- Tastatur-Shortcuts während einer Session ---------- */
+ document.addEventListener("keydown", e => {
+@@ -11537,6 +11672,7 @@ function renderLernen() {
+   let html = "";
+ 
+   html += gemerktHinweis();
++  html += rundenFortsetzungHtml();
+ 
+   /* --- Noch gar keine Karten: der allererste Bildschirm nach der Anmeldung.
+      2.11.2: Hier stand einmal nur "leg welche unter Verwalten an" - wer
+@@ -16538,6 +16674,7 @@ document.body.addEventListener("click", e => {
+     case "lern-undo": lernRueckgaengig(); break;
+     case "lern-ende": endeLernen(); break;
+     case "start-session": startSession(); break;
++    case "runde-fortsetzen": rundeFortsetzen(); break;
+     case "fort-runde":
+       ui.tab = "lernen"; ui.seite = null;
+       if (dueCards().length > 0) startSession();
+diff --git a/datenschutzerklaerung.html b/datenschutzerklaerung.html
+index a83dbb40..f5c0023c 100644
+--- a/datenschutzerklaerung.html
++++ b/datenschutzerklaerung.html
+@@ -224,6 +224,13 @@
+         abgelehnte oder nach einem Reset ungültige Kopien bleiben prüfbar und herunterladbar,
+         bis du sie ausdrücklich entfernst. Beim erfolgreichen Löschen des Kontos werden sie
+         ebenfalls entfernt. Tagesbeitrag und Beleg werden an dein Cloud-Konto übertragen.</li>
++        <li>den Rest einer normalen Abfragerunde: Konto- und Kartenkennungen, Lerntag,
++        Bereiche, Kartenstände und reine Rundenzähler. Damit kannst du auf diesem Gerät
++        am selben Lerntag fortsetzen. Wort und Übersetzung, Handschrift sowie frühere
++        Rückgängig-Aktionen werden dafür nicht gespeichert. Fortsetzen prüft die aktuellen
++        Karten in deinem Cloud-Konto; ohne bestätigte Verbindung bleibt Neu starten möglich.
++        Beim Abschluss, Neustart, erkannten Tageswechsel oder erfolgreichen Kontolöschen
++        wird der Rest entfernt. Er wird nicht als eigener Datensatz an die Cloud übertragen.</li>
+         <li>welche Hinweise der App du schon gesehen oder weggetippt hast, damit derselbe Hinweis
+         nicht immer wieder erscheint, und – falls du eine eingerichtet hast – die Uhrzeit deiner
+         Kalender-Erinnerung</li>
 diff --git a/plan/werkzeuge/minuten_sicherung.sh b/plan/werkzeuge/minuten_sicherung.sh
 index 8784251f..b0bc8398 100644
 --- a/plan/werkzeuge/minuten_sicherung.sh
@@ -1434,6 +1661,21 @@ index 00000000..2ad2ff08
 +}
 +console.log(`${names.length} Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
+diff --git a/plan/werkzeuge/pruefstand/stubs.js b/plan/werkzeuge/pruefstand/stubs.js
+index b12119c6..8acd8bbc 100644
+--- a/plan/werkzeuge/pruefstand/stubs.js
++++ b/plan/werkzeuge/pruefstand/stubs.js
+@@ -219,6 +219,10 @@ export function getDocs(q){
+   if (q.path === 'feedback') { const l = (q.where || []).find(w => w.__limit !== undefined);
+     if (!l || l.__limit > 100) return Promise.reject(Object.assign(new Error('limit'), { code: 'permission-denied' })); }
+   return Promise.resolve(qsnap(q)); }
++// H2: Serverabgleich ist hier ausdrücklich eine steuerbare Attrappe.
++export function getDocsFromServer(q){if(S.failServer)return Promise.reject(new Error('offline'));return getDocs(q);}
++export function getDocFromServer(r){if(S.failServer)return Promise.reject(new Error('offline'));return getDoc(r);}
++export function waitForPendingWrites(){return Promise.resolve();}
+ export function writeBatch(){ const ops = [], paths = new Set(); return {
+   set(r, d, o){ ops.push(() => _set(r, d, o)); paths.add(r.path); return this; },
+   update(r, ...a){ ops.push(() => _update(r, ...a)); paths.add(r.path); return this; },
 diff --git a/plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js b/plan/werkzeuge/pruefstand/x_ab_bestand_tempo.js
 new file mode 100644
 index 00000000..515ad2e5
