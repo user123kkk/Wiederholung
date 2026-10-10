@@ -9,6 +9,9 @@ keine ständigen ausführlichen Zwischenkontrollen oder gültigen Wiederholungen
 Klar sagen, welches Skript läuft und ob es nur prüft oder veröffentlicht.
 Selbststart erklären, wenn er Tokens spart, einschließlich tatsächlicher
 Voraussetzungen und Unterschiede; keine zusätzlichen Prüfpflichten daraus.
+Das ist eine Arbeitsregel, kein starres Tokenlimit: vorgeschriebene
+Auswertung und Fehlerklärung bleiben vollständig; Sparen darf keine
+Fehler verdecken oder ungeprüfte Freigaben erzeugen.
 Aktuell: ladegeraet.bat -NurPruefen -Fortsetzen nutzt denselben Gesamttest,
 verlangt aber saubere Quellen; der Paketlauf prüft den uncommitteten Entwurf.
 Der Wrapper verwendet iPad-Seed11, CODEX-START Seed7. Ohne -NurPruefen

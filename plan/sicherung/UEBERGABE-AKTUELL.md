@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 13:02 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 13:04 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `5bbc740 Sicherung 13:01 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `43bc2a1 Sicherung 13:03 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,7 +35,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/ALLES-OFFEN.md
  M plan/ARBEITSPROTOKOLL.md
  M plan/BETREIBER-VERSTEHEN.md
  M plan/werkzeuge/ladegeraet.ps1
@@ -65,7 +64,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -86,6 +85,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 13:04 Codex Nachfrage zur Begrenzung beantwortet und Regel präzisiert: keine starre Tokenobergrenze; notwendige Auswertung/Fehlerklärung bleiben vollständig. Routine und Kommunikation sparsam, keine ungeprüften Freigaben.
 
 - 13:03 Codex ausdrücklichen Wunsch zum Festhalten der Tokenpräferenz umgesetzt: BETREIBER-VERSTEHEN mit Originalwortlaut, Skriptbetrieb/knapper KI-Auswertung und konkreten ladegeraet-Unterschieden ergänzt; Wunsch in ALLES-OFFEN erledigt dokumentiert. Reine Dokumentation, bestehender Prüflauf bleibt aktiv.
 
@@ -128,5 +129,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 11:42 Codex Betreiber „ok los aber neuer chtat ja ... paket“: Paket als zusammengehörige Änderungen/Prüfung/Sicherung konkret erklärt. Expliziten neuen Chat für zuvor benannte große Datenabnahme/Paketabschluss vorbereiten. Aktuelle Übergabe 11:41, Desktop-Projekt-ID aus App-Liste gewählt (nicht gleichnamige Kopie unter USER). Kein Worktree, damit uncommitteter Stand 3.18.30 erhalten bleibt. Wunsch und Umfang in ALLES-OFFEN gesichert, keine Veröffentlichung/neue Funktionsfreigabe abgeleitet. Alter Chat führt keine parallele Produktarbeit aus.
 
 - 11:40 Codex nach abgeschlossenem Quellenabgleich den ausdrücklich gespeicherten Heartbeat-Abschlussauftrag angewandt: vorhandene Automation adrabic-nachtarbeit-fortsetzen über App-Werkzeug PAUSED bestätigt, volle übrige Felder erhalten; lokale Konfiguration ebenfalls PAUSED. Keine zweite Automation/Sicherung. Nicht pausenlos weiterarbeiten behaupten: aktuell nur verschobene große Datenabnahme/Paketabschluss, Gerätebelege und nötige verstandene Funktionsentscheidungen; kein neues Paket über Entwurf. Minuten-Sicherung weiter aktiv, Übergabe 11:39/automatischer Commit 11:38 gesehen. Konkreten Rest einmal gemeldet.
-
-- 11:38 Codex auf „weiter arbeiten ... kommen nicht voran“ Quellenabgleich tatsächlich abgeschlossen: zuerst 15–18 vier Vollberichte (49 Hauptpositionen/3 Konzepte/29 historische Fragen), danach 19–22 (39 nummerierte Positionen plus Lizenz-Dossier/29 Fragen), 23–26 (56 ursprüngliche Positionen, 24 bündelt 8/9; 33 Fragen). Zwölf restliche Vollberichte mit Gegenrede/Beleggrenzen gelesen; anfangs gekürzte Toolausgaben gezielt nachgelesen, keine ungelesenen Teile als vollständig behauptet. Nun 34/34 inhaltliche Berichte; zwei Limit-Abbrüche bleiben ohne erfundene Ergebnisse. Jede der 187 alten Katalogzeilen rückwärts mit konkreter Berichtsstelle oder gekennzeichnetem Betreiberverlauf versehen; 184 Berichtzuordnungen, Playlist/Tafsir/Abo drei Sekundärbelege, keine Originalchat-Vollständigkeit behauptet. Tabellenregister 402 Positionen mechanisch zusammengeführt, Dopplungen/Fragen/Methodik keine Funktionszahl; Nebenabschnitte über Teilabgleiche erhalten. Zählung/relative Quellenlinks geprüft. Originale und historische Status erhalten, keine alten Ja als heutige Freigabe. Keine neue rechtliche Beratung/Kosten-/Plattform-/Lernwirkungsprüfung; Simulation aus Bericht 24 nicht gerechnet oder Eingang bestätigt. App-/Rules-Hashes erneut unverändert 4a8ca5a1/6a110898, keine Tests gestartet. Minuten-Sicherung ein Baum. Abschluss und konkreten verschobenen Rest in ALLES-OFFEN/STAND/ARBEITSSTAND gesichert, Fortschritt nach abgeschlossenen Blöcken sichtbar gemeldet. Abnahmeaufbau ausdrücklich verschoben laut Vorbereitungsseite, nicht still repariert; große Abnahme/neues Paket/Commit/Deploy bleiben später. Ein rg-Aufruf mit Windows-Glob als Dateipfad scheiterte, korrekt mit -g wiederholt.

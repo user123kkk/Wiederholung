@@ -720,6 +720,22 @@
       "fehler": null,
       "sekunden": 32,
       "quelltext": "497755fa343707b4f3c47f9903fb685ae93294bbcf8320d5e54ce6d7f937f91a"
+    },
+    "t_paket_c_kalendertage.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 209,
+      "quelltext": "32d002f0b84c3ff369bfe853187d0f10839ae5bd0b8a07ee1407f667c9106b72"
+    },
+    "t_paket_c_suchpuffer.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 5,
+      "quelltext": "762d48f1beefb949db87429be7a55192d4fd4907af8e3cb24b46f8d0b0dfe297"
     }
   }
 }

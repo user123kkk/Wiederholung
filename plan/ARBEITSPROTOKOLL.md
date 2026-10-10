@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 13:04 Codex Nachfrage zur Begrenzung beantwortet und Regel präzisiert: keine starre Tokenobergrenze; notwendige Auswertung/Fehlerklärung bleiben vollständig. Routine und Kommunikation sparsam, keine ungeprüften Freigaben.
+
 - 13:03 Codex ausdrücklichen Wunsch zum Festhalten der Tokenpräferenz umgesetzt: BETREIBER-VERSTEHEN mit Originalwortlaut, Skriptbetrieb/knapper KI-Auswertung und konkreten ladegeraet-Unterschieden ergänzt; Wunsch in ALLES-OFFEN erledigt dokumentiert. Reine Dokumentation, bestehender Prüflauf bleibt aktiv.
 
 - 13:01 Codex Betreiberfrage zu Tokens/ladegeraet geklärt: tatsächlichen Wrapper gelesen, -NurPruefen -Fortsetzen gleicher Gesamtprüfer, aber sauberer Gitstand vorausgesetzt und iPad-Seed11 statt Paket-Seed7; ohne NurPruefen Veröffentlichung. Bestehenden Lauf weiterführen, knappe Auswertung. 90/158 grün, vollständige Logs bis PaketC/C-Fort gelesen, keine neue Quelle geändert. Wunsch in ALLES-OFFEN eingetragen.
