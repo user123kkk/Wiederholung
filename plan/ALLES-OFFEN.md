@@ -1,5 +1,13 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+10.10.2026, 06:07: Gesammelte Datenabnahme konkret vorbereitet unter
+`zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md`, weiterhin nicht gestartet.
+Vor späterem Ladegerät-Abschluss offen: zusätzlicher Demo-Emulator 8082
+für A16 und SDK-Helfer im Fortsetzungs-Hash. Letzteres mit tatsächlicher
+Hashfunktion isoliert nachgewiesen; kein ausgeführter Gesamtfehllauf.
+Ladegerät-Arbeit bleibt wie vom Betreiber verlangt später, Wrapper und
+App heute unverändert. A14–A17 bleiben Entwurf/Paketabnahme offen.
+
 09./10.10.2026, Betreiber: „Weiter gemäß AGENTS.md und aktueller Übergabe.
 A14/A15/A16-Entwurf 3.18.30 behalten“; „Große Gesamtabnahme später gesammelt,
 nicht veröffentlichen“; „Minuten-Sicherung prüfen, keine doppelte Schleife

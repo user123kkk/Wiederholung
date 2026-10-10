@@ -1,5 +1,12 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 06:07 – Gesammelte Abnahme nur vorbereitet:**
+`zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md` ordnet alle nächtlichen Belege
+ihren Quellständen zu und nennt den späteren Ablauf. Zwei Abnahmeaufbau-
+Lücken offen: A16-Demo-Emulator 8082 im Ladegerät-Weg und SDK-Helfer im
+Fortsetzungs-Hash. Letzteren isoliert nachgewiesen; keine große Abnahme
+gestartet, Wrapper/App unverändert. Ladegerät/Veröffentlichung bleiben später.
+
 **10.10.2026 – Nachtarbeit im Datenentwurf 3.18.30:** A14–A16 erhalten.
 Zwei zusätzliche A16-Einzelfälle und gezielte Fehler-Gegenprobe am vorherigen
 Hash geprüft. Neuer A17/DATEN-12: reine Notizkorrektur im offenen Blatt
