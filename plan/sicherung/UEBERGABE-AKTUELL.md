@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 11:48 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 11:49 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `3f755ba Sicherung 11:47 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `592fdc7 Sicherung 11:48 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,11 +35,10 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
- M plan/ALLES-OFFEN.md
- M plan/ARBEITSPROTOKOLL.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
+ M plan/werkzeuge/pruefstand/LIESMICH.md
  M plan/werkzeuge/pruefstand/abnahme_runde.js
  M plan/werkzeuge/pruefstand/alle_pruefen.js
  A plan/werkzeuge/pruefstand/diagnose_formular_konflikt.js
@@ -48,6 +47,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/ABNAHME-VORBEREITUNG-3.18.30.md
  M sw.js
 ```
 

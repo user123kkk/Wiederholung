@@ -2624,6 +2624,37 @@ index 0000000..2ad2ff0
 +}
 +console.log(`${names.length} Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
+diff --git a/plan/werkzeuge/pruefstand/LIESMICH.md b/plan/werkzeuge/pruefstand/LIESMICH.md
+index d3d208c..66a90fb 100644
+--- a/plan/werkzeuge/pruefstand/LIESMICH.md
++++ b/plan/werkzeuge/pruefstand/LIESMICH.md
+@@ -43,8 +43,9 @@ vorherige echte Fehlerausgabe vor Wiederholung zusätzlich bewahren.
+ Gesamtlauf: `node alle_pruefen.js`, oder die 13 Lernrunden-Tests separat mit
+ `node abnahme_runde.js` und die übrigen mit `node alle_pruefen.js --ohne-runde`.
+ Der zweite Befehl behauptet ausdrücklich keine vollständige Gesamtabnahme.
+-`--fortsetzen` bewahrt nur Exit-0-Ergebnisse desselben Produkt-/Stub-/Lib-
+-Quellstands mit identischem Testtext; rote/unvollständige Fälle laufen neu.
++`--fortsetzen` bewahrt nur Exit-0-Ergebnisse desselben Produkt-/Stub-/Lib-/
++SDK-Helfer-Quellstands mit identischem Testtext; A16 bindet zusätzlich
++`diagnose_karten_konflikt.js` in seinen Testhash. Rote/unvollständige Fälle laufen neu.
+ Ausgaben unter `<tmp>/adrabic-pruefstand-gesamt/<Quellstand>` lesen.
+ Exit 0 allein bewertet keine beschreibenden Messungen oder Gegenproben.
+ Auch `abnahme_runde.js --fortsetzen` nutzt denselben Quellstand und Test-Hash;
+@@ -56,6 +57,14 @@ der Fehler bleibt im Log und der Prozess endet mit Exit 1.
+ 
+ ## Mehrgeräte-Zähler und Kontowechsel (3.17.50)
+ 
++Der gesamte Prüfstand braucht zusätzlich für `t_tagesantworten_sdk.js`
++das getrennte Demo-Projekt `demo-adrabic-karten-audit` auf `127.0.0.1:8082`,
++ebenfalls mit aktuellen Repo-Regeln. Beide Projekte nie gleichzeitig durch
++mehrere Tests seeden. `ladegeraet.ps1` stellt beide Emulatoren mit getrennten
++Websocket-/Hub-/Logging-Ports bereit und bricht bei bereits belegtem
++Firestore-Port ab. Für den uncommitteten Entwurf die Prüfungen separat
++ausführen; der Ladegerät-Weg verlangt vorher gesicherte Quellen.
++
+ `t_verlauf_mehrgeraete.js` verwendet das echte Firebase-JS-SDK 10.14.1
+ gegen den lokalen Firestore-Emulator mit den Regeln dieses Repos. Nur Auth
+ ist eine Attrappe. Zwei getrennte Browser-Kontexte haben getrennte echte
 diff --git a/plan/werkzeuge/pruefstand/abnahme_runde.js b/plan/werkzeuge/pruefstand/abnahme_runde.js
 index c977d52..64d340c 100644
 --- a/plan/werkzeuge/pruefstand/abnahme_runde.js

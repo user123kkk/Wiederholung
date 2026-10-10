@@ -1,5 +1,17 @@
 # Gesammelte Datenabnahme 3.18.30: vorbereitet, nicht ausgeführt
 
+**Aktueller Stand 10.10.2026 11:48:** Betreiber hat die große Datenabnahme
+und den Paketabschluss ausdrücklich im neuen Chat wieder aufgenommen.
+Die beiden unten historisch offenen Aufbau-Lücken sind jetzt korrigiert:
+zwei Demo-Emulatoren aus dem echten Ladegerät-Startblock separat gestartet,
+aktuelle Regeln jeweils geladen; SDK-Helfer in beiden Runnerständen und
+A16-Testhash. Virtuelle Quellenänderungen erkannt, feste alte Hashfunktion
+wie erwartet rot; besetzter Port wird ohne Prozessstart abgewiesen.
+238/238 Regeln frisch grün. Gesamter Browserlauf 158 inklusive 13
+Rundentests läuft an Quelle `3795bfc5fa122e28`. App/Rules unverändert,
+46 gezielte Vorbelege bleiben erhalten. Noch kein Paketabschluss/Deploy.
+Die folgenden Angaben von 06:07/09:42 bleiben als Verlauf stehen.
+
 10.10.2026, 06:07. Betreiber verschiebt große Gesamtabnahme/ladegeraet und
 Veröffentlichung. Diese Seite hält die tatsächlichen Anschlussbedingungen
 fest; keine Abnahmefreigabe, kein neuer Paketbau, kein App-Commit.
