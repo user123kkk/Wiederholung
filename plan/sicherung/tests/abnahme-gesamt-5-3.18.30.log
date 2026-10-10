@@ -111,3 +111,8 @@ BEWAHRT t_quran_datei.js
 BEWAHRT t_quran_fehler.js
 BEWAHRT t_quran_schrift.js
 EXIT 0 t_rechtsplan.js (40s)
+EXIT 0 t_registrieren_zeitlimit.js (72s)
+EXIT 0 t_regler_karten.js (9s)
+EXIT 0 t_reihenfolge_limit.js (16s)
+EXIT 0 t_reset_leerfeld.js (6s)
+EXIT 0 t_ring.js (10s)

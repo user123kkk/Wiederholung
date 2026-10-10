@@ -39,6 +39,12 @@ Belege unter `../sicherung/tests/`: `abnahme-hash-3.18.30.log`,
 
 ## Gesamtlauf, um 11:57 angehalten
 
+14:40: korrigierte komplette Rechts-Abnahme grün (40s),320/390/820 in
+beiden Themen, alle Scrollabschnitte/Rückwege/Eingaben und verspätete
+Antwort geprüft. Ganze Ausgabe gelesen, neue Testkennung292d3e77.
+112/158 gültige Abschlüsse grün, alle112 Logs gelesen. Registrierung/
+Regler-Regressionsausgaben gelesen; daraus keine Lernempfehlung abgeleitet.
+
 **14:38: Scrollclip-Zuordnung berichtigt.**109 gültige Tests grün;
 t_rechtsplan meldete zwei unsichtbare klassenlose Links(A) außerhalb des
 Scrollbereichs als1.89:1. Messspur/Screenshot angesehen: y1057–1079 bei

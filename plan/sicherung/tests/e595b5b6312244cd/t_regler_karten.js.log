@@ -1,0 +1,5 @@
+(lesen) {"nach20":{"f":0.9,"e":""},"undo20":{"f":1,"e":"1111111111111100000"},"store":[0.9,""],"tage":55,"ab1":{"f":0.9,"e":"1"},"undo":{"f":0.9,"e":""}}
+(lesen) Gegenprobe ohne Probelauf: {"nach20":{"e":""},"undo20":{"e":""},"store":[null,null],"tage":61,"ab1":{"e":""},"undo":{"e":""}}
+OK t_regler_karten: 70 % -> 0,9, Abstand verkuerzt, Rueckgaengig, ohne Probelauf unveraendert
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":9,"quelltext":"99fa9570eca3e9318669c6eb1a8d524fe51c6bf28c8d235ab0a6128523e35929"}

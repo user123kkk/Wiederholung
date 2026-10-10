@@ -880,6 +880,46 @@
       "fehler": null,
       "sekunden": 40,
       "quelltext": "292d3e77ae6d355a79fbad6be34e6ab93f3673fdc123eae9358ef270dc5c8ad2"
+    },
+    "t_registrieren_zeitlimit.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 72,
+      "quelltext": "40d0389787c2e23db49ae072a9e4cfe3cfa1cf9fedcb81339a9c2a7a270a619d"
+    },
+    "t_regler_karten.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 9,
+      "quelltext": "99fa9570eca3e9318669c6eb1a8d524fe51c6bf28c8d235ab0a6128523e35929"
+    },
+    "t_reihenfolge_limit.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 16,
+      "quelltext": "aa6fc8a64898817f8de494b120715be178c56ed8a2550ac220a96d73fc76f44a"
+    },
+    "t_reset_leerfeld.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 6,
+      "quelltext": "0560f8386ed9e875ea1c7a149cfd9d7b9265f7d8c5c35804fb18552133ed1ea1"
+    },
+    "t_ring.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 10,
+      "quelltext": "476b992a85572cfd5f96547b9bb8b485f1b376fdd94f6534b0251a68731e7917"
     }
   }
 }

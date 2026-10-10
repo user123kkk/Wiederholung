@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 14:39 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 14:40 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `2e7d2782 Sicherung 14:38 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `449ca90c Sicherung 14:39 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -68,7 +68,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -89,6 +89,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 14:40 Codex korrigierte Rechts-Abnahme komplett grün40s:320/390/820 hell/dunkel, vollständiger Inhalt, sichtbarer Kontrast, alle Rückwege/Eingabenerhalt und Fehler/Neuversuch/späte Antwort. Neue Testkennung292d3e77; ganze Ausgabe gelesen. Verzögerte Registrierung samt echter12/13s-Grenze/fester Gegenprobe und vorhandene Regler-Regressionsausgaben gelesen. Gesamt112/158 gültig grün, alle112 Abschlusslogs gelesen; Reihenfolge-Limit aktiv. Quellen unverändert, keine Lernempfehlung.
 
 - 14:38 Codex t_rechtsplan rot bei Tablet/hell: zwei A-Links1.89 statt4.5. Eigenen Runner19768/angefangene Registrierung beendet; vollständigen roten Log/stand.json gesichert,109 grüne und110 vollständige Logs gelesen. Unveränderten Test mit Messspur ausgeführt, Screenshot tatsächlich angesehen: Links bei y1057–1079 außerhalb Scrollclip256–905, unsichtbar. Kontrastleser benennt klassenlose Links als A, Sichtfilter suchte nur className und behielt sie als unbekannt. Testfilter verwendet nun denselben Klasse/Tag-Schlüssel und alle gleichnamigen Treffer; sichtbare/teilweise sichtbare/doppelte/unbekannte schlechte Kontraste bleiben erhalten. Originalfilter-VM-Proben grün, feste315bb0e-Gegenprobe rot genau beim abgeschnittenen Link; komplette Ausgaben gelesen. Nur Testzuordnung geändert, Grenze4.5/App/CSS/Rules gleich. Oberflächen-Skill geladen. Runner14916/Sitzung58908 fortgesetzt,109 gültige Ergebnisse bewahrt, Log abnahme-gesamt-5-3.18.30.log; aktiven Log nicht vorzeitig abhaken.
 
@@ -131,5 +133,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 12:38 Codex62/158 abgeschlossene Prüfungen grün, alle62 vollständigen Ausgaben gelesen und im Leserregister gesichert. Kartenblatt vier Konfigurationen, fremde Karten-/Feldechos, kleine Bootlage, Konto-Lösch-/Abbruch-/Google-Attrappenfälle und alter Dialog/Bestätigung nach Kontowechsel grün. Keine echte Google-/iPhone-Authentifizierung daraus behauptet. Gesamtlauf läuft jetzt Kontofortsetzungen allein; Produkt/Rules weiterhin gleicher Entwurf, keine Tests ausgelassen/Grenzen verändert.
 
 - 12:32 Codex50/158 grün, vollständige Abschlusslogs1–50 gelesen. Üben/Serie und echte Wiederholung getrennt erhalten, alte/neue Ideenzeitstempel richtig sortiert, Import gleichnamiger Bereiche erhält alle fünf Karten. Gelesene Testnamen samt Quellstand jetzt explizit abnahme-gelesen-3.18.30.json für nahtlosen Anschluss; keine automatisch ungelesene Ausgabe abhaken. Lauf87583 aktiv, Prüfgrenzen und Produkt unverändert.
-
-- 12:31 Codex Gesamtlauf47/158 grün, alle47 vollständigen Logs gelesen. Rückmeldung24 Varianten, Fehlerfokus/-Entwurferhalt, Fortschritt12 Varianten, Scrollen im Gesamtlauf, große Ansichten28 Zustände, Datum/Bereichszähler grün. Vier aktuelle Rundenbilder tatsächlich angesehen und gesichert (plan/sicherung/tests/abnahme-rundenfotos-3.18.30), Knöpfe/Antwort im Bild; keine iPhone-Abnahme daraus. Beschreibende Tempoausgaben erhalten: Bewerten max53ms, Fortschrittwechsel209ms/max233ms Bildlücke; große Erstansicht445ms. Keine allgemeine Flüssigkeitszusage oder ungeprüfte Ursache. Zwischenmeldung zum aktiven Test war zu früh geraten (Verwalten statt Fotos); tatsächliche Prozesszeile gelesen, fortan im Standleser mitgeführt. Kein App-/Regelwechsel, Lauf87583 weiter allein aktiv.
