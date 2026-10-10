@@ -88,3 +88,4 @@ BEWAHRT t_neben_tippen.js
 BEWAHRT t_notfound.js
 EXIT 0 t_nur_betreiber.js (108s)
 BEWAHRT t_ordnung.js
+EXIT 0 t_paket_b.js (194s)
