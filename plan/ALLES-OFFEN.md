@@ -6,6 +6,16 @@ für weitere Antworten aktiviert. Ausführbare offene Vorbereitungen und
 Bestandsprüfungen selbstständig fortsetzen; keine neue Tempo-Suche,
 Messläufe oder stillschweigende Freigabe neuer Funktionen.
 
+**Originalprüfung19.09.,16:43:** Vier lokale Chats hinsichtlich echter
+Betreiberblöcke gelesen (fc33806f/f34641b4/d85a42b2/65211120).
+Automatische Gesprächszusammenfassungen sind Herkunftshinweise, keine neuen
+Betreiberfreigaben. Drei konkrete Gruppen unten abgeglichen. Onboarding vor
+Anmeldung, vollständige TikTok-Prüfung und Lehrer/Verkaufsunterscheidung bleiben
+in bestehenden Bereichen; wissenschaftliche Passung nicht aus gebautem Einstieg
+ableiten. Repo privat: historisch „getan“07:09, aktueller GitHub-Status hier
+nicht geprüft. Historisches „push main“ erlaubt keinen heutigen roten Abschluss.
+Nächste Quellen18.09.; keine neuen Messläufe.
+
 **Originalprüfung22.09.,16:41:** Alle fünf lokalen Originalchats hinsichtlich
 Betreiberblöcken gelesen (e9223c8d/d295d2d7/ca027728/6820f0bd/53d4222f).
 Konkrete Teilwünsche unten mit aktuellem Code und erhaltenen Belegen
@@ -412,6 +422,9 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 | Was | Stand |
 |---|---|
+| Grüner Debugkasten oben links entfernen (19.09.,07:56) | gebaut3.6.13; heutiger Start entfernt `debugNav`, alter Overlay-Aufbau fehlt. Codebeleg, keine neue Gerätesichtung. Der breite Wunsch nach ruckelfreier Gesamt-App bleibt offen |
+| „Teilen beenden“ funktioniert nicht (19.09.,10:13/10:18) | historischer Feld-/Regelfehler3.7.0 korrigiert, heutiger Weg wartet vor lokaler Entfernung auf Server-Löschung. [Erhaltener Teilentest](sicherung/tests/e595b5b6312244cd/t_teilen.js.log) bestätigt: bei Ablehnung Fehlermeldung, Code und Cloudsatz bleiben erhalten. Kein vollständiger aktueller Erfolg-/Neustartnachweis aus diesem Log |
+| Fortschrittsfreigabe nur Betreiber, gewöhnliches Teilen verständlich unterscheiden (19.09.,10:28) | heutiger Einstellungsweg zeigt „Code erzeugen“ allgemein, „Code – Fortschritt schaltet frei“ nur unter `istBetreiber()`. Früherer Datei-Knopf entfernt. Das ist Oberflächenbegrenzung, keine Sicherheitsrolle; Verständnis und Lehrerfreigabe über zwei echte Konten hier nicht frisch geprüft |
 | Eigenes Grammatikfeld entfernen (23.09.,09:08) | umgesetzt3.9.8; heutiger Kartenformularweg hat Wort/Übersetzung/Notiz, Grammatik steht als Hinweis beim bestehenden Notizfeld. Aktuelle Quelle und Changelog gelesen; kein eigener neuer Datenlösch-/Migrationstest. Spätere Wortart-Idee bleibt separat offen |
 | Einstieg ohne verräterische Tageszahlen/Datumsreihe (23.09.,19:34) | historisch umgesetzt3.10.3; heutige Hürdenantworten nennen keine Intervallzahlen, Kartenleiste verwendet Punkte/Pfeile. Kein umfassender neuer Nachweis aller Texte in der App |
 | „überspringen knopf muss ganz schnell weg“ (23.09.,19:34) | gebaut3.10.3; heutiger Kontoweg bleibt auf Startseite, kein allgemeiner Überspringen-Zweig. Unbeantwortete Pflichtauswahl ist eigener Wunsch unten; hier Codeprüfung, kein neuer Klicktest |
