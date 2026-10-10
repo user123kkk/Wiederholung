@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 02:15 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 02:16 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `a4c931d Sicherung 02:14 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `31d050e Sicherung 02:15 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,9 +35,6 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/karten_konflikte_sdk.js
  A plan/werkzeuge/pruefstand/t_tagesantworten_sdk.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
- M plan/zyklus-2/FORMULAR-KONFLIKT-2026-10-10.md
- M plan/zyklus-2/LOGBUCH.md
- M plan/zyklus-2/mehrwert/VORBEREITUNG-LERNRUNDE-2026-10-09.md
  M sw.js
 ```
 
@@ -46,7 +43,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 4, chrome.exe 14 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 4, chrome.exe 8 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -67,6 +64,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 02:16 Codex A17-Nachlauf: t_karten_blatt vollständig grün gelesen (390 dunkel/hell, 360, 820), t_karten_snapshot sechs Zustände und t_sprung vier Breiten grün. Früher falscher t_snapshot-Dateiname war MODULE_NOT_FOUND, keine Messung; tatsächliche Datei per rg-Inventar verwendet, Vorbereitung korrigiert. Kontrast/a11y laufen noch einzeln. Standprüfung 3.18.30/CSP/APP_SHELL und eigener App-Diff gegen 97cbdcc grün gelesen. Neue Diagnose per intent-to-add in Minuten-Patch aufgenommen; Patch enthält stufeGeaendert/Versandbarriere/Diagnose, Übergabe 02:15, Commit enthält weiterhin App 3.18.29. Neue LEHREN-Regel für unberührte Formularfelder plus Gegenproben-Grenzen nachgezogen. Keine weitere Sicherungsschleife, keine Veröffentlichung.
 
 - 02:13 Codex A17/DATEN-12: vorhandenes Kartenformular mit echtem SDK geprüft. Manuelle Stufe und Textkorrektur/Rückfallreset bereits erlaubt; reines Notizspeichern nach fremdem Snapshot ersetzt dagegen bestätigte Stufe 2 durch 0. Fester Entwurf 97cbdcc samt Patch reproduziert exakt denselben Serververlust. Neue offene A17-Zeile/Befund im bestehenden Datenpaket aufgenommen, dann flüchtiges Kennzeichen für bewusst geänderte Stufenwahl gebaut. Fünf SDK-Fälle am neuen App-SHA 4a8ca5a1 grün, einschließlich bewusster Auswahl über Snapshot und Escape ohne eigenen Entwurf; vollständige Logs gelesen. Regeln unverändert, 3.18.30 bleibt Entwurf. Betroffene Browserprüfungen laufen einzeln; kein Gesamtpaket/Deploy. Bericht FORMULAR-KONFLIKT-2026-10-10.md. Daten-/Oberflächen-Skill angewandt.
 
@@ -109,5 +108,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 20:24 Codex: Betreiber fragt nach Einordnung und fordert „mach“, danach ununterbrochen weiterarbeiten mit kurzen Antworten. Beide Wortlaute in ALLES-OFFEN gespeichert. Wechsel von Diagnose zu technischem Fix A14/A15: serverseitige Bindung an eindeutige letzte Kartenaktion, Offline-Schreiben bleibt möglich, Konflikte nicht zusammenrechnen. Ablehnungen müssen bis Bestätigung/ausdrücklicher Auflösung auf dem Gerät erhalten bleiben. Regel-/Import-/Undo-/Konto-Pfade gelesen. Akku 13 %, kein Gesamtlauf/Commit einer App-Version ohne Abnahme.
 
 - 20:14 Codex Abschluss: Diagnose-Erweiterung als 373c4da auf main gepusht; Belege/Plan durch Minuten-Sicherung ebenfalls auf origin/main. Arbeitsbaum sauber und HEAD=origin/main bestätigt. App-/Regeldateien unverändert. 43 lokale Chats extern gesichert; nur eigene Emulator-/HTTP-Prozesse beendet, Minuten-Sicherung läuft weiter. Akku 15 %. Nächster Prüfpunkt bleibt Neustart abgelehnter Aktionen/Tageszähler.
-
-- 20:13 Codex: Restdiagnose an fester Quelle 7142b93 abgeschlossen, echter Firestore-SDK/Repo-Regeln im eigenen Demo-Emulator 8082. Gesehen-Undo und Offline-Gesehen überschreiben fremdes Sicher; beide ohne Speicherfehler. Fremde Löschung gewinnt bei Offline-Bewertung und Offline-Gesehen auch nach explizitem Nachholen, lokale Karte verschwindet, Ablehnung sichtbar im Fehlerzustand. Andere Karte und JavaScript-Fehler in allen vier Fällen kontrolliert. Vollständiges Log gelesen; Schutzprüfung Exit 1 benennt beide Konflikte. Originaldiagnose nach Erweiterung ebenso erwartungsgemäß rot, vollständiges Log gelesen. Kein App-Fix, keine neue Lernregel; Befunde A14/A15 erweitert statt doppelt gezählt. Stand/Plan/Logbuch nachgezogen; Uhrzeit für diesen Protokolleintrag an Rechneruhr berichtigt.

@@ -1,6 +1,15 @@
 # Arbeitsstand – hier weitermachen (wird laufend überschrieben)
 
-## Aktuell 09.10.2026: ein Gesamtauftrag
+## Aktuell 10.10.2026: ein Gesamtauftrag
+
+- Nachtauftrag im selben Chat nach Limit-Reset fortgesetzt; Heartbeat bis
+  10.10. 09:00 aktiv, Minuten-Sicherung einzeln. A17/DATEN-12 im bestehenden
+  Datenpaket gefunden und korrigiert: nur Notiz geändert, fremde Bewertung
+  fiel beim Formularspeichern auf 0. Feste Quelle 97cbdcc rot; fünf echte
+  SDK-Fälle am App-SHA 4a8ca5a1 grün. Kartenblatt/Snapshot/Sprung grün,
+  Kontrast/a11y noch in Prüfung. Beleg FORMULAR-KONFLIKT-2026-10-10.md.
+  3.18.30 bleibt Entwurf, keine große Abnahme/Veröffentlichung. A14–A16
+  erhalten; deren frühere Belege bleiben an ihren Quellhash gebunden.
 
 Der Betreiber bestätigt: weiterarbeiten an den offenen App-Punkten,
 Mehrwert-Ideen und Plänen; keine Pause. Aktuell bearbeitet wird deren
