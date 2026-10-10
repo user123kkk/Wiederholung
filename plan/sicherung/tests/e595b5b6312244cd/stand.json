@@ -1096,6 +1096,46 @@
       "fehler": null,
       "sekunden": 30,
       "quelltext": "6ba6c764d00393189c2f16b3e4d984a134d5d8f0124d8797dd7c203922731b81"
+    },
+    "t_text_ausschluss.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 15,
+      "quelltext": "142e13d00691ef4bc72b11b212c84753a906b39dd734c4699cf091ff7c151caf"
+    },
+    "t_text_einwilligung.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 29,
+      "quelltext": "13b1dd1e6a54187007d98eed83b90f16682b19f60d7dff3a27e3ff6db1d0a2f9"
+    },
+    "t_text_felder.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 5,
+      "quelltext": "ba406242adce5cd78cab0b2b520c1045899ce112972e4d063e37e6e7e480d93f"
+    },
+    "t_text_fortschritt.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 21,
+      "quelltext": "8fdf8487fd74033386567d7381f6dfdff4c45c3f3d5b511dfaab5159601b6d23"
+    },
+    "t_text_kreis.js": {
+      "code": 0,
+      "signal": null,
+      "zeitlimit": false,
+      "fehler": null,
+      "sekunden": 8,
+      "quelltext": "10685dc0738bb7b1e09de20d41571d43b36b68713d81bb2b78ba7cba3cfcd6c3"
     }
   }
 }
