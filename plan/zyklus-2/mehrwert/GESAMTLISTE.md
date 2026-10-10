@@ -1,3 +1,10 @@
+# Frühere Mehrwert-Gesamtliste – historisches Archiv
+
+**Aktuelle Aufgaben und Status: [ALLES-OFFEN](../../ALLES-OFFEN.md).** Die Aufgabenbereiche wurden am 10.10.2026 samt bisherigen Status dorthin übernommen. Diese Datei bewahrt den früheren Überblick als Herkunftsbeleg; unten keine aktuelle zweite Bauliste führen.
+
+<details>
+<summary>Historischer Stand vor der Zusammenführung am 10.10.2026</summary>
+
 # Gesamtliste: alles, was dazukommt, überarbeitet oder gebaut wird
 
 **Betreiberkorrektur 10.10.2026:** Frühere „beschlossene“ Funktionen können
@@ -238,3 +245,5 @@ Quelle: [TikTok-Sammlung](../../ideen/TIKTOK-SAMMLUNG-2026-10-10.md).
 6. Fremdentest.
 7. Ab 29.10. Texte (Abschnitt 7).
 8. Öffentlich und Lehrer (Abschnitt 8).
+
+</details>

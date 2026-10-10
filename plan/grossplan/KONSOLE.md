@@ -1,21 +1,6 @@
 # Was nur der Betreiber klicken kann – Schritt für Schritt
 
-## Ergänzung 10.10.2026: Architekturprüfung und Zusammenführung
-
-Offener Eingang aus [TikTok2/3/4/6](../ideen/TIKTOK-SAMMLUNG-2026-10-10.md):
-K1/K4/K13 mit eigener Anmeldemarke zusammenführen. Agent prüft zuerst
-Bestand und automatisierbare Schritte; nur notwendige persönliche
-Konsolenschritte bleiben beim Betreiber. Vor Umsetzung Architektur anhand
-aktueller OWASP-/Firebase-Quellen untersuchen: Verifizierung, Login-/Reset-
-Limits, serverseitige Passwortregeln, kompromittierte Passwörter, tatsächliche
-Reset-Gültigkeit, serverseitige Nutzer-/Adminrechte, Sitzungsspeicherung und
-XSS-Schutz; zusätzlich Fehlerbehandlung, benötigte Indizes, Protokollierung,
-Alarme und belegte Rücknahme. Bestehende Befunde berücksichtigen, nicht
-pauschal eine Sicherheitslücke behaupten. Herkunftsfilter, feste30-Minuten-
-Frist, Cookie-Wechsel oder Blue-Green nicht ungeprüft aus dem Video übernehmen.
-Datei-/Fotoauswahl, Upload-Typ/Größe/Ablage und signierte Zahlungs-Webhooks
-bleiben bedingte Prüfpunkte für entsprechende spätere Funktionen. Es wird
-jetzt nichts in der Live-Konsole geändert oder veröffentlicht.
+Aktuelle Aufgaben und Betreiberwünsche: [ALLES-OFFEN](../ALLES-OFFEN.md), Bereich „Konto und Schutz“. Diese Datei enthält fachliche Details bzw. historische Anleitungen. Ergänzungen vom 10.10. stehen zentral dort; keine zweite Statusliste daraus führen.
 
 Stand 25.09.2026. Quelle: `befunde/KONTO.md` (Abschnitt KONSOLE-ANLEITUNG),
 `befunde/REGELN.md`, `befunde/TECHNIK.md`. Jeder Schritt: **wo** klicken,

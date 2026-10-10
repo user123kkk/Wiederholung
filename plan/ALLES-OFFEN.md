@@ -1,5 +1,16 @@
 # Alles, was an der App noch offen ist – die eine Liste
 
+**Eine Aufgabenübersicht:** Hier stehen Mehrwert-Aufgaben, frühere Betreiberwünsche und neue Ideen. Berichte belegen Herkunft; Fachpläne enthalten Details. Beides ersetzt keinen Erledigungsbeleg.
+
+**Aktueller Wunsch 10.10.:** Die verstreute Ablage erschwert den Überblick. Kleine Wünsche vor den beiden Mehrwert-Runden auf tatsächliche Erledigung prüfen, nicht nur auf Erwähnung. Vorhandene Berichte und Gegenreden erhalten; keine neue Ideensammlung als Ersatz für verlorene Punkte. Der genannte „Korean-Ausrichtler“ ist nicht sicher identifiziert; vermutlich Texte/Quran, keine stillschweigende Festlegung. Die bereits erfasste Qualitätskritik bleibt offen.
+
+**Nächster Schritt dieser Bestandsprüfung:** Frühere Wünsche aus gesicherten Chats und Logbuch einzeln abgleichen: Originalwunsch, heutiger Stand, Umsetzungs-/Prüfbeleg oder konkrete Lücke. 34/34 erhaltene Mehrwert-Berichte und 187 historische Katalogzeilen sind bereits nach Herkunft abgeglichen. Das belegt weder Umsetzung noch vollständige Erfassung aller früheren Chats. Fehlende Nebenideen/Varianten aus dem vorhandenen Abgleich in passende Bereiche übernehmen. Keine neue pauschale Ideensammlung nötig.
+
+**Bestehende Arbeitsfolge:** Erst offenes Datenpaket abschließen; danach Lernrunde, Karten hinein/heraus, Oberfläche und Verständlichkeit, Konto/Schutz, Fremdentest. Gesamt-Onboarding am weitgehend fertigen Umfang; Texte nach dem 29.10.; Öffentlich/Lehrer zuletzt. Die Bestandsprüfung verändert diese Produktreihenfolge nicht. Je Bereich alte Wünsche und neue Ideen zusammenführen, Recherche/Abhängigkeiten klären und konkrete Schritte mit Prüfkriterien festlegen.
+
+<details>
+<summary>Bisheriger Verlauf – historische Meldungen, keine weitere aktuelle Aufgabenliste</summary>
+
 10.10.2026 Betreiberklarstellung: Hier geht es nur um die TikTok-Ideen und
 ihre passende Einordnung neben Mehrwertpunkten und anderen offenen Punkten.
 Der Betreiber hat kein klares Gesamtbild und soll die Sortierung nicht
@@ -278,6 +289,9 @@ Wunsch, jede Beschwerde und jede Idee des Betreibers kommt **in derselben
 Antwort** hier hinein, mit Datum und Wortlaut, auch wenn nichts gebaut
 wird. Erledigtes wird nicht gelöscht, sondern mit Version abgehakt.
 
+
+</details>
+
 ## 0. Wie diese Liste entstanden ist, und was sie nicht weiß
 
 - Gelesen: alle 450 Nachrichten des Betreibers aus den Chats, die auf dem
@@ -297,8 +311,8 @@ wird. Erledigtes wird nicht gelöscht, sondern mit Version abgehakt.
   - Korrektur 08.10., abends: Die Berichte der Mehrwert-Agenten waren doch
     noch da. 34 von 36 liegen jetzt wörtlich unter
     `zyklus-2/mehrwert/agentenberichte/`. Der Ideen-Katalog ist eine
-    Zusammenfassung aus dem Chat; der Abgleich Katalog gegen Berichte steht
-    noch aus (Abschnitt 3.2a).
+    Zusammenfassung aus dem Chat. Herkunftsabgleich am 10.10. abgeschlossen;
+    Umsetzung und ältere kleine Wünsche sind damit nicht vollständig geprüft.
   - Lange Sprachnachrichten wurden bis 6000 Zeichen gelesen.
 
 Zeichen: **fertig** = gebaut und geprüft · **bauen** = entschieden, noch zu
@@ -316,13 +330,149 @@ Betreiber · **später** = bewusst verschoben · **nein** = entschieden nicht.
 
 Online ist 3.18.28 (09.10.2026). Dieser Abschnitt ist damit erledigt; neu Fertiges kommt hier wieder hinein.
 
-## 2. Entschieden, zu bauen: 96 Punkte
+## 2. Aufgaben nach Bereich – zentraler Arbeitsstand
 
-Stehen einzeln mit Stand in
-[`zyklus-2/mehrwert/GESAMTLISTE.md`](zyklus-2/mehrwert/GESAMTLISTE.md)
-(Lernrunde, Karten hinein und heraus, Aussehen, Verständlichkeit, Einstieg,
-Konto und Schutz, Texte, Öffentlich und Lehrer). Dort wird gebaut und
-abgehakt; hier wird das nicht doppelt geführt.
+Die bisherigen Mehrwert-Aufgaben stehen jetzt hier mit erhaltenem Stand. Frühere Sammelfreigaben sind keine automatische verstandene Einzelfreigabe; vor neuem Funktionsbau gilt ENTSCHEIDUNGEN-VERSTEHEN.md. Neue Videoideen ergänzen die betreffenden Bereiche. Vollständige Originaltexte: [Quellenarchiv](ideen/TIKTOK-SAMMLUNG-2026-10-10.md). Behauptungen daraus sind noch nicht fachlich bestätigt.
+
+### 2. Lernen und Lernrunde
+
+| Was | Stand |
+|---|---|
+| Tagesdeckel nach einer Pause, Fälligkeiten bleiben (10) | Audit fertig (09.10.): neun Auditfälle, korrigierte 450 Modellläufe, Browser-Bereichsrunde grün. Neuen dauerhaften Deckel derzeit nicht empfohlen; Rundengröße nicht als Tagesziel umdeuten. Rückkehr-Probelauf braucht Pensum/Zusatznutzen/Lernkriterium, siehe `zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md`; „60/30“ bleibt zurückgenommen |
+| Karte direkt in der Abfrage bearbeiten | offen |
+| Am selben Tag „Runde fortsetzen“ (22) | offen |
+| Einmalige Erklärung der drei Knöpfe (21) | wartet: Wortlaut von Dir |
+| Die zwei neuen Lernregeln für alle freigeben | wartet: Dein Ja nach eigenem Test |
+| Ohne Harakat abfragen, Schalter je Runde (14) | offen, nach dem Kern |
+| Deutsch → Arabisch ab mittlerer Stufe, abschaltbar (13) | offen, nach dem Kern |
+| Abstands-Regler für alle (15) | wartet: Auswertung 29.10. |
+| Fortschritt: ein Satz in Worten, ohne Stufen und Tage (26) | offen |
+| Serien-Warnung ohne Verlustsprache | wartet: Wortlaut von Dir |
+
+### 3. Karten hinein und heraus
+
+| Was | Stand |
+|---|---|
+| Fotoauswahl und Datei-Uploads: bei tatsächlichem Bedarf native Auswahl, Typ/Größe und nicht ausführbare Ablage prüfen | bedingte Idee; keine neue Upload-Funktion beauftragt |
+| Lektionszeilen beim Einfügen werden gesperrte Lektionen (17) | offen |
+| Sicherung zurückspielen: Serie und Kalender in ein leeres Konto (20) | offen, braucht Mehrgeräte-Test |
+| Duplikatprüfung über alle Bereiche | offen |
+| Einladungslink mit Code | offen |
+| Satz unter demselben Code nachliefern (61) | wartet: ein echter Lehrer |
+| Regal mit Sätzen zum Starten (18) | wartet: Dein Satz |
+| Medina-Kartensatz ins Regal, Playlist verlinkt (Link da: `zyklus-2/mehrwert/verstaendlichkeit/BERICHT.md` § 7); Kartensatz bringt Video-Link mit, Lektion zeigt Knopf zum Video | wartet: Du gibst ihn frei |
+| Buchstaben-Satz zum Schreiben und Erkennen (19) | wartet: Umschrift von Dir |
+
+### 4. Aussehen, Bewegung, Tippen
+
+| Was | Stand |
+|---|---|
+| Flexible Oberfläche: kleine/große Fenster, Drehung, Foldables und mehrere Fenster/Displays prüfen; Größen am Inhalt ausrichten | offen: Bestand und geeignete Testwege prüfen |
+| Sofortige Tipp-Rückmeldung, passende Ladeanzeige, Fortschritt, verlässliche Erfolgsbestätigung und hilfreiche Fehler | offen: mit vorhandenen Abläufen prüfen; Skeletons/optimistische Anzeige passend wählen, Speicherung nicht vorzeitig bestätigen |
+| Blatt fährt mit der Tastatur hoch, statt danach zu springen | offen |
+| Abgeschnittene Texte: Fortschritt „Genauer ansehen“, Lektionen bei kleinem Handy, Suchfeld | offen, klein |
+| Hinweis wegtippen blendet aus | offen, klein |
+| Karten mit gemischtem Text: richtige Richtung und Schrift | offen (Paket K) |
+| Arabische Schrift in der Notiz | fertig, 3.18.26; Richtung je Textzeile |
+| Hilfszeile zur arabischen Tastatur | offen |
+| Wort auf der Karte normal statt halbfett (24) | entschieden: bleibt |
+| Hintergrund scrollt beim Herunterwischen (iPhone) | zurückgestellt |
+| Feinheiten beim App-Start am iPhone (D13, D15) | zurückgestellt |
+
+### 4a. Verständlichkeit des ganzen Tools (Betreiber 08.10.: „an sich ist das System ja nicht klar … ganzes Tool soll verständlich sein“)
+
+Bisher gab es Durchsichten zu Fehlern, Aussehen und Bewegung, aber keine
+mit der einen Frage: **Versteht ein Fremder ohne Erklärung, was das hier
+ist und was er als Nächstes tun soll?** Teile davon stehen schon in der
+Liste (Einstieg, Erklärung der drei Knöpfe, Auswahl „Neu anlegen“,
+Fremdentest), das Ganze nicht.
+
+| Was | Stand |
+|---|---|
+| Durchlauf „Verständlichkeit“ über jeden Bildschirm, nur lesen: Was ist das? Was soll ich tun? Welche Wörter versteht man nicht (Speicherkarte, Bereich, Lektion, Stufe-Wörter, Zeile/Aya, fällig, Üben gegen Lernen, Runde)? Ergebnis: Liste mit Vorschlag je Stelle | **Bericht fertig (08.10.), nur am Code gelesen:** `zyklus-2/mehrwert/verstaendlichkeit/BERICHT.md`, Funde VS-1 bis VS-10 |
+| Begriffe festlegen: ein Wort je Sache, überall gleich | fertig, 3.18.28 („Speicherkarte“ heißt „Sammlung“) |
+| Kurze Erklärung an der Stelle, an der man sie braucht (nicht als Hilfeseite) | teils fertig (3.18.28: Bereich, Sammlungen, Üben); offen: drei Knöpfe, antippbare Erklärungen, Verweis „Liste einfügen“ |
+| Durchsicht im geführten Satz sagt „x von y gelernt“, meint „gesehen“ (VS-5) | fertig, 3.18.28 |
+| Echte Probe: Fremdentest mit Freunden | wartet: nach Paket K |
+
+Reihenfolge: der Bericht kommt **vor** dem Einstieg (Abschnitt 5), weil
+der Einstieg genau das erklären muss, was der Bericht als unklar findet.
+
+### 5. Einstieg (Onboarding)
+
+| Was | Stand |
+|---|---|
+| Bestehenden Einstieg zu einem Gesamtentwurf zusammenführen: Nutzen vor Konto, Anmeldezeitpunkt, stabile Weiter-Position und passende Antwortpfade | offen, abschließend am weitgehend fertigen Funktionsumfang; neue Funktionen berücksichtigen. Alte Seitenzahlen blockieren neue Wünsche nicht; 20 Schritte und behauptete Retentionswirkung sind ungeprüfte Videoideen |
+| Weniger Bewegung je Tipp, Balken-Schimmer weg (E-13) | offen |
+| Wege zu den Karten vor die Leiter, nichts doppelt (E-11) | offen |
+| „Dein Stand“ doppelt mit der Leiter; Leiste mit fünf Punkten, vier Wörtern | entschieden 08.10.: streichen, zusammen mit E-11/E-13 |
+| Zurück-Taste und -Geste im Einstieg (E-12) | offen, mit Gerätetest |
+| Satz „fang bei den Buchstaben an“ | fertig, 3.18.28 neu gefasst |
+| Schriftgröße und Rundengröße raus aus dem Einstieg (47) | offen |
+| Proberunde direkt nach dem ersten Bildschirm (45) | wartet: Karten von Dir |
+| Google über dem E-Mail-Formular (49) | offen |
+| „Weiter“ im iPhone-Browser oft unter dem Rand | offen, nach dem Kürzen neu messen |
+
+### 6. Konto und Schutz
+
+| Was | Stand |
+|---|---|
+| Auth-, Sitzungs- und Berechtigungsarchitektur anhand aktueller OWASP-/Firebase-Primärquellen prüfen: Verifizierung, Login-/Reset-Limits, serverseitige Passwortregeln und kompromittierte Passwörter, Reset-Gültigkeit, Nutzer-/Adminrechte, Sitzungsspeicherung und XSS | offen: vorhandene Befunde zusammenführen; keine Lücke oder Cookie-Pflicht aus dem Video ableiten |
+| Betrieb prüfen: Fehlerbehandlung, benötigte Indizes, Protokollierung, Alarme und belegte Rücknahme | offen: Bestandsprüfung; Herkunftsfilter, feste 30-Minuten-Frist und Blue-Green nicht pauschal übernehmen |
+| Eigener App-Name in Anmeldung und Mails, passende Rücklinks | offen: vorhandene Konsolenschritte K1/K4/K13 zusammenführen; Agent erledigt mögliche Schritte, Betreiber nur notwendige persönliche Schritte |
+| E-Mail-Adresse ändern (54) | offen, braucht Firebase-Konsole |
+| Bestätigungslink führt zurück in die App | offen, braucht Firebase-Konsole |
+| Passwort mindestens 8 Zeichen (E-01) | offen |
+| Datenschutzerklärung an den Code angleichen (E-03) | offen |
+| Neue Version still beim Zurückkehren laden (E-06) | offen |
+| Import-Grenze 5 000, höchstens 20 Codes, 5 000 Karten je Satz | offen, Regeln spielst Du ein |
+| Meldung, wenn das Tageskontingent erschöpft ist | offen |
+| „Fehlerbericht kopieren“, „Inhalt melden“ | offen |
+| App Check, erst im Beobachtungsmodus (58) | offen, braucht Firebase-Konsole |
+| Name ändern: zu einfach? (Deine Frage vom 07.10.) | offen: Abwägung fehlt noch |
+| Elternteil als zweiter Eigentümer (57) | eingetragen 08.10. (Einladung angenommen). 2FA am Zweitkonto hat der Betreiber vorerst zurückgestellt („kannst löschen“); Google sperrt ein Konto ohne 2FA aus der Firebase-Konsole, der Ersatzzugang ist dann bis zum Einschalten wertlos. Nicht mehr erinnern. |
+
+### 7. Texte auswendig lernen – alles nach dem 29.10.
+
+| Was | Stand |
+|---|---|
+| Auswertung des Probelaufs, Startwerte, Freigabe-Frage | wartet: 29.10., Dein Foto |
+| Auswahl „Neu anlegen“ erklärt nicht, was Karte, Text und Sure unterscheidet; „Zeile“ und „Aya“ unklar (Betreiber 08.10.: „wird doch ned klar“). Vorschlag: je Eintrag eine Unterzeile | wartet: Wortlaut bestätigen; bauen nach dem 29.10. |
+| „Kann ich schon“ wird sofort fest, der Kreis prüft nach (28) | offen |
+| Ein Kreis je Bereich über alle Texte (29) | offen |
+| Kurze Texte immer ganz (30) | offen |
+| Frische Ayat in Stücken von höchstens 5 (32) | offen |
+| Tagesmenge über alle Texte, mit Gesamtzeit (33) | offen |
+| Pause: Zählung fällt um die Hälfte zurück (34) | offen |
+| Kontrollfrage reparieren (35) | offen |
+| Juz, Hizb, Seite als Auswahl und Anzeige (36) | offen |
+| Harakat ausblenden nur bei eigenen Texten (39) | offen |
+| Eigene Texte gliedern (41) | offen |
+| Wort antippen → Karte, Bedeutung tippt der Nutzer (42) | offen |
+| Abhör-Modus ohne Aufnahme (43) | offen |
+| Satz „Ich bin mindestens 16“ vor der Freigabe (44) | offen |
+| Notiz an Quran-Zeilen, nur auf Tipp sichtbar (38) | offen |
+| Link „Erklärung öffnen“ nach außen, englische Seite | offen |
+| Gehakte feste Aya (31) | wartet: Probelauf-Zahlen |
+| Hinweis auf ähnliche Ayat (37) | zurückgestellt |
+
+### 8. Öffentlich und Lehrer – ganz am Schluss
+
+| Was | Stand |
+|---|---|
+| Kernnutzen und mögliche Social-Media-Videos | spätere Idee, geringe Priorität; keine tägliche Werbung oder externe Nachricht beauftragt |
+| Fairer Ausstieg/Kündigung, native Store-Bewertungen und signierte Zahlungs-Webhooks | bedingt bei tatsächlichem Abo/Store/Zahlungsangebot; derzeit kein Store-Start. Mit Sicherheitsprüfung und Einstieg zusammenführen |
+| Fremdentest mit Freunden, eine Woche | wartet: nach Liste einfügen und Paket K |
+| Startseite, App zieht nach `/app` (51) | offen |
+| Vorschaubild und Einladungssatz, drei Fassungen zur Wahl (53) | offen |
+| Hilfeseiten: arabische Tastatur, Adrabic oder Anki (55) | offen |
+| Ein nüchterner Satz zu Kosten (52) | offen |
+| Domain, bezahlter Tarif (50, 56) | wartet: kurz vor dem Start |
+| Höchstens eine Version pro Woche, Schriften getrennt speichern (59) | ab öffentlichem Start |
+| Anwaltstermin, Rechtsprüfung der Datenschutzerklärung (67) | wartet: Du |
+| Lehrer: Wochentakt, mehrere Codes (62) | später |
+| Abo, Zahlungen (63) | offen gehalten, kein Knopf bis zur Volljährigkeit |
+
 
 ## 3. Offen, stand aber in keiner Bauliste
 
@@ -386,7 +536,7 @@ Keine automatische Stufen-Zusammenführung oder neue Lernregel beschlossen.
 | 07.10. | „dass das Lernen wirklich hilft, egal ob Methoden geändert werden müssen … auch der Übungsmodus“ | `BETREIBER-2026-10-07-NEU.md` N8 | Urteil fehlt: Vorlage „Was hilft beim Lernen am meisten“ nie geschrieben |
 | 06.10. | „ich denk an ein Wort und kann es nicht wiederfinden … ob die Wiederholungsstrategie bearbeitet werden sollte“ | `BETREIBER-2026-10-06.md` | Urteil fehlt: Recherche mit Quellen steht aus; Vermutung Abfragerichtung (Gesamtliste: Deutsch → Arabisch) |
 | 08.10. | „ich zweifle sehr immer wieder an der Methodik“; Tagesdeckel „absolut perfekt“ | Logbuch 08.10.; `zyklus-2/mehrwert/TAGESDECKEL-AUDIT-2026-10-09.md` | Gegenprüfung fertig 09.10.: Starttermine korrigiert, 450 neue Modellläufe, neun Auditfälle und Browser-Bereichsrunde grün. Empfehlung neues dauerhaftes Tagesziel an Rundengröße zurückgenommen; derzeit keinen neuen dauerhaften Deckel bauen. Gewünschtes Pensum, Zusatznutzen gegenüber vorhandenen Runden und Lernkriterium vor einem Rückkehr-Probelauf festlegen; keine optimale Tageszahl belegt |
-| 06.10. | „stelle sicher, dass dieses Quran-Dings bzw. Texte top 1 ist, perfekt“ | `BETREIBER-2026-10-06.md` | bauen: Gesamtdurchsicht Texte, nach dem 29.10. (Einzelpunkte: Gesamtliste Abschnitt 7) |
+| 06.10. | „stelle sicher, dass dieses Quran-Dings bzw. Texte top 1 ist, perfekt“ | `BETREIBER-2026-10-06.md` | bauen: Gesamtdurchsicht Texte, nach dem 29.10. (Einzelpunkte: Abschnitt 2, Texte auswendig lernen) |
 | 29.09. | „keine Lust, dass Leute einfach was drücken für die Streak und dabei nicht ehrlich sind, dasselbe bei Karten … Weg oder Hinweis“ | für Texte: `texte-lernen/WIEDERHOLEN.md`; für Karten nirgends | Urteil fehlt (Karten) |
 | 06.10. | Karten-Blatt: „dachte daran, dass es ein Entwurf ist und bleibt“ | `BETREIBER-2026-10-06.md` | später (er stimmte dem einfachen Weg zu) |
 | 12.09. | Wortart an jeder Karte wie bei Arabily (Substantiv, Verb …) | `ideen/monetarisierung/GERUEST.md`; Wurzel-/Grammatik-Feld wurde in 3.9.8 entfernt (0 von 136 Karten nutzten es) | Urteil fehlt; spricht gegen eine frühere Entfernung |
@@ -398,7 +548,7 @@ Keine automatische Stufen-Zusammenführung oder neue Lernregel beschlossen.
 | 22.09. | Startseite neu | `ideen/landing-page-strategie/`, Gesamtliste Abschnitt 8 | bauen, am Schluss |
 | 18.09. | Sicherheits-Liste aus einem Video (Kosten-Alarm, Bot-Schutz, Sicherungen) | `grossplan/KONSOLE.md`; App Check: Gesamtliste Abschnitt 6 | teils gebaut; Kosten-Alarm: Du, in der Konsole |
 | 08.10. | Medina-Kartensatz öffentlich ins Tool, Playlist verlinkt, neue Lektionen kommen automatisch nach | Gesamtliste Abschnitt 3, `verstaendlichkeit/BERICHT.md` § 7 | bauen; wartet auf Deine Freigabe des Satzes |
-| 08.10. | Tafsir as-Sa'di als Link an Quran-Zeilen (englisch, später deutsch) | Gesamtliste Abschnitt 7 | bauen, nach dem 29.10. |
+| 08.10. | Tafsir as-Sa'di als Link an Quran-Zeilen (englisch, später deutsch) | Abschnitt 2, Texte auswendig lernen | bauen, nach dem 29.10. |
 | 07.10. | Name ändern: „sollte es so einfach sein?“ | Gesamtliste Abschnitt 6 | Urteil fehlt |
 | 07.10. | „überall geile bzw. cleane Animation“ | `schritt-2/BERICHT-AUSSEHEN-BEWEGUNG.md` | erster Teil in 3.18.27; Rest: Gesamtliste Abschnitt 4, D13 |
 
@@ -428,7 +578,7 @@ Keine automatische Stufen-Zusammenführung oder neue Lernregel beschlossen.
 | „alle 60 Sek., egal was überprüft, gelesen, bearbeitet … wird, es wird festgehalten … später gelöscht … und Erklärung warum“ | fertig: Regel, `ARBEITSPROTOKOLL.md` und Automatik `plan/werkzeuge/minuten_sicherung.sh` (sichert und pusht jede Minute, läuft seit 08.10. 17:47). Grenze: läuft nur, solange der Laptop an ist und ein Chat sie gestartet hat; jeder neue Chat startet sie zuerst. Klein offen: Testdateien fehlen im Minuten-Patch |
 | „was eingebaut haben, sodass man mich anhand des Repos besser direkt versteht“ | fertig: `plan/BETREIBER-VERSTEHEN.md`; wird nachgezogen, wenn er etwas korrigiert |
 | „einen Mod, der dir zulässt, andere Chats zu bedienen … Hauptsache, sowas verwirrt mich nicht“ | Lesen geht schon (alle Chats auf dem Laptop); bauen: Weg, einem anderen laufenden Chat einen Auftrag zu geben. Urteil fehlt: Was soll damit konkret passieren? Bis dahin gilt: ein Chat arbeitet, die anderen lesen `ALLES-OFFEN.md` |
-| „eine Sammlung, auf die ich mich immer und immer verlassen kann, ohne Zweifel“ | diese Datei; Quellenabgleich begonnen: zweite Runde (acht Berichte) zugeordnet, erste 26 und rückwärtige Prüfung der 187 Zeilen offen; `zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md` |
+| „eine Sammlung, auf die ich mich immer und immer verlassen kann, ohne Zweifel“ | diese Datei; Quellenabgleich am 10.10. abgeschlossen: 34/34 erhaltene Berichte, 187/187 historische Katalogzeilen. Keine vollständige Umsetzungsprüfung aller Betreiberwünsche; `zyklus-2/mehrwert/QUELLENABGLEICH-2026-10-10.md` |
 | „erledige sonst du alles, belaste mich nicht mit unnötigen Fragen und Formalitäten“ | gilt: `CLAUDE.md`, LEHREN § 1.2 |
 | „während sie falsch wörtlich gespeichert sind? Einiges fehlt?“ | offen: siehe Zeile darüber; bis zum Abgleich gilt der Katalog als Zusammenfassung, die Berichte als Quelle |
 | „das Wichtigste ist, dass alles jede Minute gespeichert wird, wirklich alles … selbst Tests, alles, was eine KI auch nur anfasst … ich will ein klares: ist eingebaut“ (17:52) | fertig, eingebaut: `plan/werkzeuge/minuten_sicherung.sh` sichert jede Minute Entwurf, alle Testausgaben und die Übergabe-Seite nach `plan/sicherung/` und pusht. Grenze: läuft nur, solange der Laptop an ist und ein Chat sie gestartet hat |

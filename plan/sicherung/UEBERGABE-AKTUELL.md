@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 15:49 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 15:50 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `2fd9d3ca Sicherung 15:48 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `fb905a45 Sicherung 15:49 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,13 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ALLES-OFFEN.md
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/BETREIBER-VERSTEHEN.md
+ M plan/grossplan/KONSOLE.md
+ M plan/ideen/TIKTOK-SAMMLUNG-2026-10-10.md
+ M plan/ideen/monetarisierung/AUFTRAG.md
+ M plan/onboarding/AUFTRAG.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -62,6 +69,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  A plan/werkzeuge/pruefstand/x_stub_batch.js
  A plan/werkzeuge/pruefstand/x_verlauf_batch_ablehnung.js
  M plan/werkzeuge/regeln/regeln-pruefung.mjs
+ M plan/zyklus-2/GERAETETESTS-ZETTEL.md
+ M plan/zyklus-2/mehrwert/GESAMTLISTE.md
  M sw.js
 ```
 
@@ -70,7 +79,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 9, chrome.exe 16 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 9, chrome.exe 15 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -91,6 +100,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 10.10. Codex: verstreute eigene TikTok-Ergänzungen bereinigt. Aktive Aufgabenbereiche der Mehrwert-GESAMTLISTE vollständig samt Status und umbasierter Verweise nach ALLES-OFFEN übernommen; ursprüngliche Tabellenzeilen maschinell auf Erhalt geprüft. Neue Ideen passenden Bereichen zugeordnet; alte Gesamtliste historisch, TikTok-Datei nur Originalquelle. Vier Fachpläne auf zentralen Eingang verwiesen, Betreiberpräferenz vereinheitlicht, alten Meldungsverlauf eingeklappt. Originalnachricht unverändert. Neuer Wunsch nach Erledigungsprüfung früherer Kleinigkeiten zentral offen erfasst; Herkunftsabgleich 34/34 Berichte ist kein Umsetzungsnachweis. Keine Produktänderung, kein neuer Agentenlauf, keine Datenprüfung/Veröffentlichung.
 
 - 15:38 Codex Betreiberklarstellung aufgenommen: ausschließlich TikTok-Ideen passend mit Mehrwert/anderen offenen Punkten zusammenführen, Betreiber hat kein klares Gesamtbild. Aktuelle Übergabe/Arbeitsfolge/Quellenzuordnung gelesen, Minuten-Sicherung als ein Prozessbaum bestätigt. In GESAMTLISTE bei Reihenfolge sichtbare Zuordnung und Arbeitsweise je Bereich ergänzt: Bestand/neue Ideen zusammenführen, Recherche/Abhängigkeiten klären, konkreter gemeinsamer Arbeitsplan mit Prüfkriterien; keine zweite Warteschlange/Statusliste. ALLES-OFFEN/BETREIBER-VERSTEHEN/Quelle nachgezogen. Keine Produktänderung, keine Datenabnahme neu gestartet.
 
@@ -133,5 +144,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 13:45 Codex Commitumfang gelesen: erhaltene Datenentwürfe, Prüfhilfen und zuvor angelegte Skills unverändert vorhanden; nichts verworfen/gestaged. LIESMICH um C27-Lehre ergänzt: Testkarten über Firestore-API/Listener anlegen, nicht Map/App direkt verändern. Dokumentation beeinflusst Quellstand nicht; Sammeltest weiter aktiv.
 
 - 13:42 Betreiber „komm weiter“: Fortsetzung eingetragen, vorhandener Runner19768 bleibt allein aktiv. 93 gültige Tests bewahrt; geänderter C-Sammeltest noch nicht abgeschlossen. Keine zusätzliche Rückfrage/kein neuer Prüflauf gestartet.
-
-- 13:37 Codex STAND auf tatsächlichen Runner19768/93 gültige Ergebnisse und dritte Aufbaukorrektur aktualisiert. Minuten-Sicherung geprüft: ein Baum12532→16564 mit aktuellem Kind21856, kein Doppelstart. Fortsetzung/Leseregister/Rotbelege für Chatwechsel dokumentiert; keine fertige Abnahme behauptet.

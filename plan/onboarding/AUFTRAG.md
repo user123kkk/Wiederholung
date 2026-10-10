@@ -1,18 +1,6 @@
 # Auftrag: Einstieg vor der Anmeldung
 
-## Betreiberergänzung 10.10.2026 – maßgeblich für die nächste Überarbeitung
-
-Die [neue TikTok-Quelle](../ideen/TIKTOK-SAMMLUNG-2026-10-10.md), Videos
-2/8/9 und Kommentar11, wird mit dem vorhandenen Einstieg zusammengeführt.
-Offen: Nutzen vor Konto verständlich machen, passenden Zeitpunkt der
-Registrierung prüfen, Weiter-Knopf stabil positionieren, Antwortpfade am
-tatsächlichen Bedarf ausrichten. Der umfangreiche Gesamtentwurf soll anhand
-der weitgehend fertigen App erfolgen und neue Funktionen berücksichtigen.
-Historische Seitenzahlen sind keine Sperre für neue Wünsche. „20 Schritte“,
-Review-Seite und behauptete Retentionswirkung bleiben ungeprüfte
-Videoempfehlungen; keine automatische Umsetzung. Store-Review erst bei
-tatsächlichem Store-Angebot prüfen. Dies ergänzt die bestehenden Punkte,
-statt einen zweiten Onboarding-Plan zu eröffnen.
+Aktuelle Aufgaben und Betreiberwünsche: [ALLES-OFFEN](../ALLES-OFFEN.md), Bereich „Einstieg“. Diese Datei enthält fachliche Details bzw. historische Anleitungen. Ergänzungen vom 10.10. stehen zentral dort; keine zweite Statusliste daraus führen.
 
 Angelegt: 19. September 2026 · Status: `Konzept neu aufgesetzt (23.09.2026),
 Umfang entschieden — wartet auf F4 (Anker) und F5 (Rechtsprüfung)`

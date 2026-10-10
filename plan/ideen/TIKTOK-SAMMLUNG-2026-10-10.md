@@ -1,31 +1,6 @@
-# TikTok-Ideen und Betreiberwünsche vom 10.10.2026
+# Quellenarchiv: TikTok-Videos und Betreiberkommentare, 10.10.2026
 
-Quelle: Nachricht des Betreibers in der laufenden Datenabnahme. Die Videoaussagen sind übernommene Behauptungen, noch keine geprüften Empfehlungen. Aktuell ist keine Veröffentlichung im App Store oder Play Store beauftragt. Dieser Eingang erlaubt das Sammeln, Zusammenführen und Prüfen; er ist keine pauschale Freigabe für neue Funktionen.
-
-## Pflege und Zuständigkeit
-
-**Spätere Betreiberklarstellung:** Gemeint ist die passende Einordnung
-dieser Ideen neben den Mehrwertpunkten und anderen offenen Punkten, nicht
-ein neuer Datenabnahme-Auftrag. Der Betreiber hat noch kein klares
-Gesamtbild. Agenten übernehmen die Sortierung: beim Bearbeiten des
-jeweiligen Bereichs alte und neue Punkte zusammenführen, Recherche und
-Abhängigkeiten klären und daraus einen konkreten gemeinsamen Arbeitsplan
-machen. Die Zuordnung ist in der [Gesamtliste bei der Reihenfolge](../zyklus-2/mehrwert/GESAMTLISTE.md#reihenfolge)
-sichtbar; diese Quellensammlung bleibt der Nachweis der Eingänge.
-
-Diese Seite bewahrt die Quelle. Der Arbeitsstatus steht jeweils im zuständigen vorhandenen Plan, nicht in einer zweiten parallelen Aufgabenliste. Bei Bearbeitung passende vorhandene Punkte ergänzen oder zusammenführen, nicht dieselbe Aufgabe mehrfach anlegen. Die gesamte Nachricht zählt als Eingang offener Wünsche, einschließlich der Kommentare. Fehlende Recherche oder ein Plan sind Arbeitsschritte, kein Grund, einen Wunsch verschwinden zu lassen.
-
-| Quelle | Bearbeitungsort | Umfang der Prüfung |
-|---|---|---|
-| 1 | `../zyklus-2/mehrwert/GESAMTLISTE.md`, Aussehen; `../zyklus-2/GERAETETESTS-ZETTEL.md` | Anpassung an Fenster, kleine/große Displays, Drehung, Foldables, mehrere Fenster/Displays; feste Maße auf tatsächliche Probleme prüfen |
-| 2, 8, 9, 11 | `../onboarding/AUFTRAG.md` | Nutzen vor Konto, konsistente Navigation, passende Antwortpfade, späterer Gesamtentwurf anhand des fertigen Funktionsstands; keine automatische Vorgabe von 20 Schritten |
-| 2 | `../grossplan/KONSOLE.md`, K1/K4/K13 | Sichtbarer eigener Name bei Anmeldung; native Fotoauswahl nur bei einem tatsächlichen Foto-Anwendungsfall |
-| 3, 4, 6 | `../grossplan/KONSOLE.md` und Konto/Schutz in `../zyklus-2/mehrwert/GESAMTLISTE.md` | Architekturprüfung mit aktuellen Primärquellen: Authentifizierung, Sitzungen, serverseitige Berechtigungen, Reset, Limits, XSS, Überwachung, Rücknahme |
-| 5, 8 | Aussehen/Verständlichkeit in `../zyklus-2/mehrwert/GESAMTLISTE.md` | Sofortige Rückmeldung, Laden/Fortschritt, bestätigte Speicherung und verständliche Fehler; keine vorgetäuschte erfolgreiche Speicherung |
-| 7 | `../zyklus-2/GERAETETESTS-ZETTEL.md` | Agent testet selbst, bevor der Betreiber um Bilder gebeten wird; Browserprüfung, Simulator/Emulator und echte Gerätebelege unterscheiden |
-| 8, 9, 10 | `monetarisierung/AUFTRAG.md`, Einstieg und Öffentlich in der Gesamtliste | Faire Kündigung, spätere Store-Bewertung, Marketing und klarer Kern; vorerst geringe Priorität/bedingt durch spätere Angebote |
-
-Recherche muss insbesondere prüfen, welche Videoaussagen zu dieser Firebase-Web/PWA-Architektur passen. Nicht blind Cookies statt Firebase-Sitzungen einführen, Herkunftsfilter als Zugriffsschutz behandeln, feste Reset-Fristen übernehmen oder neue Upload-/Zahlungsfunktionen erfinden. Videoempfehlungen zu Skeletons, Pixeln, Schrittzahl und Reviews sind erst am konkreten Ablauf zu bewerten. Belege, Nutzen, Nachteile und verbleibende Grenzen gehören in den bearbeitenden Plan.
+Diese Datei bewahrt ausschließlich die vollständige Eingangsnachricht. Offene Aufgaben und Status stehen in [ALLES-OFFEN](../ALLES-OFFEN.md). Videoaussagen sind ungeprüfte Quellen, keine beschlossenen Anforderungen. Keine zusätzliche Aufgaben- oder Zuordnungsliste hier pflegen.
 
 ## Originalnachricht
 
