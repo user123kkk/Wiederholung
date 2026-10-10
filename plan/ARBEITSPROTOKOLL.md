@@ -8,6 +8,8 @@ gelöscht; die letzte Zeile sagt dann, wohin sie gewandert sind.
 
 ## 10.10.2026
 
+- 13:37 Codex STAND auf tatsächlichen Runner19768/93 gültige Ergebnisse und dritte Aufbaukorrektur aktualisiert. Minuten-Sicherung geprüft: ein Baum12532→16564 mit aktuellem Kind21856, kein Doppelstart. Fortsetzung/Leseregister/Rotbelege für Chatwechsel dokumentiert; keine fertige Abnahme behauptet.
+
 - 13:30 Codex C27 mit korrekt durch Batch/Listener angelegten Testkarten16/16 grün, ganze Ausgabe gelesen. Assertion200 minus20=180 und alle Auswahl-/Dialog-/Sperrfälle unverändert. App/Rules/Stub gleich, nur Testaufbau geändert. Gesamtfortsetzung35421/Node19768 bewahrt93 gültige Tests, kompletter C-Sammeltest neu; Log abnahme-gesamt-4-3.18.30.log. Reader prüft aktive Dateinamen und liest sie nicht anhand eines alten stand.json-Abschlusses vorzeitig. C27-Rotbeleg/alter Stand separat erhalten, Bericht ergänzt; großer Abschluss offen.
 
 - 13:27 Codex C27 im Sammeltest rot: nach Löschen20/200 nur20 statt180 Karten, nicht Rückgängig (Zwischenmeldung sofort korrigiert). Eigenen Runner19272 samt begonnenem D beendet; gesamten roten C-Log/stand.json zusätzlich erhalten. 93 grüne,94 vollständige Abschlusslogs gelesen. C27 fügte160 Testkarten direkt in App und Map ein, ohne Snapshotmeldung; beim strukturellen Neuaufbau liefert Listenercache nur ursprüngliche40 minus20. Testaufbau verwendet jetzt echten vorhandenen Stub-API-Batch und wartet auf200 Karten, alle Auswahl-/Löschassertions gleich. C27 gezielt allein aktiv; Produkt/Rules/Sharedhash unverändert.

@@ -1,5 +1,17 @@
 # Stand – was läuft, was offen ist, in welcher Reihenfolge
 
+**10.10.2026 13:37 – große Datenabnahme läuft weiter:**
+93/158 gültige Tests grün, alle93 vollständigen Logs gelesen. Drei
+Prüfaufbaufehler behoben/belegt (Batchmeldung, historischer Checkout,
+C27-Testkarten ohne Listener). Letzter C27-Fall gezielt16/16 grün;
+kompletter geänderter C-Sammeltest wird erneut geprüft. Aktiver Runner
+19768/Sitzung35421, Log abnahme-gesamt-4-3.18.30.log, gemeinsame Quelle
+e595b5b6312244cd. Alte rote Logs bleiben erhalten; aktive Ausgabe wird
+nicht anhand eines früheren stand.json-Ergebnisses als fertig gelesen.
+Danach restlicher Gesamtlauf,13 Runden-Auswertung, zwei Affenläufe,
+Abschlussprüfung/Commit/Push. Kein Deploy. Tokenpräferenz dauerhaft in
+BETREIBER-VERSTEHEN, Minuten-Sicherung weiterhin ein aktiver Prozessbaum.
+
 **10.10.2026 12:45 – frische Abnahme75/158 grün:**
 Alle75 Abschlussausgaben gelesen, exaktes Leserregister im Datenbericht.
 Lauf87583/Node18936 am Stand e595b5b6312244cd aktiv. Affe/Runden-Auswertung

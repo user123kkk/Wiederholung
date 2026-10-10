@@ -1,4 +1,4 @@
-# Übergabe – Stand von 10.10.2026 13:35 (wird jede Minute neu geschrieben)
+# Übergabe – Stand von 10.10.2026 13:36 (wird jede Minute neu geschrieben)
 
 Für Claude und Codex: Wer hier weitermacht, braucht keine Erklärung vom
 Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
@@ -6,7 +6,7 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
 
 ## Stand
 
-- Zweig und letzter Commit: `main`, `4699e9a Sicherung 13:34 (automatisch, jede Minute)`
+- Zweig und letzter Commit: `main`, `ae28c83 Sicherung 13:35 (automatisch, jede Minute)`
 - Version in `app.js` (Arbeitsordner): const APP_VERSION = "3.18.30"
 - Version im letzten Commit: const APP_VERSION = "3.18.29"
 
@@ -35,6 +35,8 @@ Betreiber. Erst diese Seite, dann `plan/BETREIBER-VERSTEHEN.md`,
  M datenschutzerklaerung.html
  M firestore.rules
  M index.html
+ M plan/ARBEITSPROTOKOLL.md
+ M plan/STAND.md
  M plan/werkzeuge/ladegeraet.ps1
  M plan/werkzeuge/minuten_sicherung.sh
  A plan/werkzeuge/projekt_skills.mjs
@@ -63,7 +65,7 @@ Auf einem sauberen Stand desselben Commits wiederherstellen:
 
 ## Was gerade läuft
 
-- Prozesse: node.exe 13, chrome.exe 17 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
+- Prozesse: node.exe 13, chrome.exe 18 (mehrere node.exe mit chrome.exe heißt meist: Tests laufen).
 
 ## Letzte Testergebnisse (vollständige Ausgaben: `plan/sicherung/tests/`)
 
@@ -84,6 +86,8 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 ## Zuletzt getan (aus `plan/ARBEITSPROTOKOLL.md`)
 
 ## 10.10.2026
+
+- 13:37 Codex STAND auf tatsächlichen Runner19768/93 gültige Ergebnisse und dritte Aufbaukorrektur aktualisiert. Minuten-Sicherung geprüft: ein Baum12532→16564 mit aktuellem Kind21856, kein Doppelstart. Fortsetzung/Leseregister/Rotbelege für Chatwechsel dokumentiert; keine fertige Abnahme behauptet.
 
 - 13:30 Codex C27 mit korrekt durch Batch/Listener angelegten Testkarten16/16 grün, ganze Ausgabe gelesen. Assertion200 minus20=180 und alle Auswahl-/Dialog-/Sperrfälle unverändert. App/Rules/Stub gleich, nur Testaufbau geändert. Gesamtfortsetzung35421/Node19768 bewahrt93 gültige Tests, kompletter C-Sammeltest neu; Log abnahme-gesamt-4-3.18.30.log. Reader prüft aktive Dateinamen und liest sie nicht anhand eines alten stand.json-Abschlusses vorzeitig. C27-Rotbeleg/alter Stand separat erhalten, Bericht ergänzt; großer Abschluss offen.
 
@@ -126,5 +130,3 @@ ABGEBROCHEN: Pruefstand nicht komplett gruen (Liste oben). Nichts veroeffentlich
 - 11:58 Codex große Abnahme angehalten: 13 vollständige Tests grün, t_bestand_tempo rot (3000 Karten, erste Bewertung 207 ms bei unveränderter 100-ms-Grenze, gradeCard 24 ms). Alle 14 Abschlusslogs vollständig gelesen; gerade laufenden Browser samt eigenem Runnerbaum 21508 beendet, rote Ausgabe erhalten. Keine Ursache behauptet/keine Produkt- oder Grenzänderung. Eigene Diagnose x_ab_bestand_tempo führt acht abwechselnde Paare desselben Originaltests am festen vorherigen Produktcommit 315bb0e9fb4ae9da74882fb35400ee90213437db (3.18.29) und Entwurf aus; nur Eingabe 3000 Karten und Altquelle gewählt, CPU4x/Assertions unverändert. Sitzung 37871, eigener Log abnahme-bestand-ab-3.18.30.log. Kein paralleler Browserlauf; Paketabschluss gesperrt.
 
 - 11:50 Codex Gegenprüfung: DATEN-9 bis DATEN-12, vollständigen aktuellen App-/Rules-/Datenschutz-Diff sowie SDK-Helfer und 16-/22-/8-Fallquellen gegen fachliche Kriterien gelesen. Unveränderte A14/A15-/A17-Abschlusslogs erneut gelesen, keine Tests daraus wiederholt. Unberührte Karte, tatsächliche Serverbestätigung, Kontobindung, Herkunft von Tag/Epoche und explizite Formularänderung tragen die Belege; Auth bleibt Attrappe, Worker blockiert. Kein zusätzlicher Produktfehler belegt. Erste vier allgemeine Logs vollständig gelesen, darunter Abgelehnt-Nachholen/Barrierefreiheit/Gegenprobe. Besetzter Emulator-Port 8081 korrekt abgewiesen ohne neuen Prozess. Gesamtlauf weiter allein aktiv; kein weiterer Browserlauf parallel.
-
-- 11:48 Codex Abnahmeaufbau korrigiert: alle_pruefen/abnahme_runde nehmen SDK-Helfer in gemeinsamen Stand auf, A16-Testhash bindet Helfer zusätzlich. Virtuelle Helfer-/Teständerungen erkannt, Runnerstand identisch 3795bfc5fa122e28. Ladegerät-Startblock baut zwei getrennte Demo-Emulatoren samt Ports/Websocket/Hub/Logging, verwirft besetzte Ports und hält beide Prozessbäume für Cleanup. Genau diesen Block separat ohne Stand-/Deploy-Schritte ausgeführt: 8081/8082 beide gestartet, aktuelle Rules je per Emulator-API HTTP 200 geladen. Früheren eindeutig zugeordneten lokalen 8082-Java-Prozess ersetzt; keine laufenden Tests dort. Rules separat am 8085-Prüfemulator 238/238, ganze Ausgabe gelesen. Syntax/Version/Server-8097-Quellgleichheit grün. Frischer gesamter Browserlauf jetzt gestartet, Sitzung 15211, Log abnahme-gesamt-3.18.30.log, Quelle 3795bfc5fa122e28. App/Rules und 46 gezielte Vorbelege unverändert; keine Veröffentlichung.
