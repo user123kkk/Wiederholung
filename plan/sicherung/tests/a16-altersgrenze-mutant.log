@@ -1,0 +1,17 @@
+app.js SHA256 7bd755535d58ca7ac780d31b60e81cd38c3680c0314e113dbea7cf31f2bd04bd
+firestore.rules SHA256 6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fdecfa3
+AssertionError [ERR_ASSERTION]: Altersgrenze muss exakt gelten
+
+0 !== 1
+
+    at C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:145:14
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async fall (C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:59:7)
+    at async C:\Users\USER\Desktop\Wiederholung\plan\werkzeuge\pruefstand\t_tagesantworten_sdk.js:124:35 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

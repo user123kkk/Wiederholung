@@ -207,6 +207,41 @@ Rules-SHA weiterhin `6a110898ab00f682a3c1fc026881c87ec63f339c5dee5ebc0b94f04a8fd
 Syntax/Diff grün. Die älteren 17 plus zwei Einzelbelege behalten ihre
 jeweiligen Quellstände und Grenzen; neue Prüfung ersetzt sie nicht.
 
+### Altersgrenze gezielt geprüft, 10.10.2026 05:04
+
+Zwei neue einzelne SDK-Fälle am unveränderten aktuellen App-SHA `4a8ca5a1`
+und Rules-SHA `6a110898`: `Nachholen-Altersgrenze-120` und
+`Nachholen-Altersgrenze-121`. Die vorhandene Grenze `VERLAUF_TAGE = 120`
+wurde nicht geändert. Ein regulär erzeugter und tatsächlich abgelehnter
+Beitrag der Antwortart n wird lokal kontrolliert auf den älteren Lerntag
+gesetzt, dann neu geladen. Eingangsprüfung verlangt genau einen Beitrag,
+Konto u1, n, delta +1 und Status abgelehnt. Datum separat über Kalender-
+Subtraktion berechnet und Differenz zusätzlich anhand UTC-Mittagsdaten
+geprüft; keine Produktfunktion dateInDays für diese Berechnung verwendet.
+
+Lerntag 2026-10-10: 2026-06-12 ist genau 120 Tage alt, zweimaliges Prüfen
+ergibt Serverwert n=1 und keine lokale Restkopie. 2026-06-11 ist 121 Tage
+alt, bleibt n=0 und als derselbe veraltete Beitrag aufbewahrt. Heutiger
+Serverwert n bleibt jeweils 0; keine Umbuchung. Andere Karte k6 unverändert,
+keine JavaScript-Fehler. Vollständige grüne Logs gelesen:
+`a16-altersgrenze-120.log`, `a16-altersgrenze-121.log`.
+
+Gegenprobe in separater TEMP-App: der eindeutige Vergleich
+`x.tag < dateInDays(-VERLAUF_TAGE)` absichtlich auf `<=` gesetzt. Die
+120-Tage-Probe scheitert Exit 1 an „Altersgrenze muss exakt gelten“,
+tatsächlich 0 statt erwartet 1; Wrapper verlangt Exit und diese Meldung.
+Normalisierter Mutanten-SHA256:
+`7bd755535d58ca7ac780d31b60e81cd38c3680c0314e113dbea7cf31f2bd04bd`.
+Vollständiger Log `a16-altersgrenze-mutant.log` gelesen, Produktquelle
+unberührt. Kein gelockerter Grenzwert oder entferntes Negativszenario.
+
+Grenzen: kontrollierte lokale Datierung, keine 120 Tage echte Wartezeit;
+echter SDK/Demo-Emulator mit Auth-Attrappe und blockiertem Worker. Kein
+PWA-Kaltstart, keine neue Lernwirkung oder Serienregel aus diesem Nachweis.
+Katalog enthält jetzt 21 Fälle; nur die zwei neuen Einzelproben liefen,
+kein vollständiger 21er-/Paketlauf. Frühere Nachweise behalten ihre Hashes.
+Syntax/Diff grün; große Abnahme und Veröffentlichung bleiben später.
+
 ### Weiterprüfen im selben Windows-Ordner
 
 - HTTP-Server 8097 liefert app.js/index.html/styles.css identisch zum
