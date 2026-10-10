@@ -1,0 +1,34 @@
+MODUS original-2 FONT-VOR {"status":"loaded","schriften":[{"familie":"UthmanicHafs","status":"loaded"},{"familie":"AmiriQuranTanzil","status":"loaded"}]}
+FONT-NACH {"status":"loaded","schriften":[{"familie":"UthmanicHafs","status":"loaded"},{"familie":"AmiriQuranTanzil","status":"loaded"}]} DOM 2f26be5275dfc14100c34759681047246f942637093fa66e4699d481fb2c2c33
+Verwalten: Aufgabe 152 ms -> EvaluateScript 136
+Verwalten: Aufgabe 52 ms -> Layout 4
+Verwalten: Aufgabe 423 ms -> EventDispatch[pointermove] 7, EventDispatch[mousemove] 4, EventDispatch[pointerdown] 12, FunctionCall(listener) 6, EventDispatch[pointerup] 5, EventDispatch[click] 148, FunctionCall 146, ParseHTML 56, UpdateLayoutTree 10, UpdateLayoutTree 63, Layout 163, PrePaint 3
+Verwalten: Aufgabe 319 ms -> FireAnimationFrame 5, FunctionCall 5, UpdateLayoutTree 23, PrePaint 4, UpdateLayoutTree 97, Layout 122, PrePaint 6, Paint 22, Paint 19, Layerize 13
+Verwalten: Aufgabe 52 ms -> UpdateLayoutTree 8, Layout 21, PrePaint 7, Paint 7, Paint 6, Layerize 3
+Text oeffnen: Aufgabe 140 ms -> UpdateLayoutTree 3, EventDispatch[pointerdown] 6, FunctionCall(listener) 5, UpdateLayoutTree 3, EventDispatch[click] 51, FunctionCall 51, ParseHTML 4, UpdateLayoutTree 6, UpdateLayoutTree 6, Layout 52, PrePaint 4
+Text oeffnen: Aufgabe 96 ms -> FireAnimationFrame 5, UpdateLayoutTree 6, Layout 48, Paint 28, Paint 28
+Text oeffnen: Aufgabe 83 ms -> 
+Text oeffnen: Aufgabe 69 ms -> FireAnimationFrame 7, FunctionCall 7, Layout 42, Paint 4, Paint 4, Layerize 3
+Text oeffnen: Aufgabe 99 ms -> ParseHTML 6
+Text oeffnen: Aufgabe 56 ms -> FireAnimationFrame 4, FunctionCall 4, Layout 29, Paint 3, Layerize 4
+Text oeffnen: Aufgabe 52 ms -> UpdateLayoutTree 3, Layout 33
+Text oeffnen: Aufgabe 68 ms -> FireAnimationFrame 6, FunctionCall 5, Layout 37, PrePaint 4, Paint 4
+
+Task at 40ms dur 152
+Task at 239ms dur 52
+Task at 398ms dur 423
+Task at 821ms dur 319
+Task at 1163ms dur 52
+Task at 2096ms dur 140
+Task at 2237ms dur 96
+Task at 2350ms dur 83
+Task at 2438ms dur 69
+Task at 2515ms dur 99
+Task at 2710ms dur 56
+Task at 2771ms dur 52
+Task at 2888ms dur 68
+652ms 163 {"beginData":{"dirtyObjects":156,"frame":"EBD6C8583C27CA87FB1FB179AF6FF269","partialLayout":false,"totalObjects":159},"endData":{"layoutRoots":[{"depth":1,"nodeId":1,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+966ms 122 {"beginData":{"dirtyObjects":397,"frame":"EBD6C8583C27CA87FB1FB179AF6FF269","partialLayout":false,"totalObjects":532},"endData":{"layoutRoots":[{"depth":1,"nodeId":1,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+2176ms 52 {"beginData":{"dirtyObjects":91,"frame":"EBD6C8583C27CA87FB1FB179AF6FF269","partialLayout":false,"totalObjects":94},"endData":{"layoutRoots":[{"depth":1,"nodeId":1,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+2251ms 48 {"beginData":{"dirtyObjects":34,"frame":"EBD6C8583C27CA87FB1FB179AF6FF269","partialLayout":false,"totalObjects":118},"endData":{"layoutRoots":[{"depth":1,"nodeId":1,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
+2451ms 42 {"beginData":{"dirtyObjects":34,"frame":"EBD6C8583C27CA87FB1FB179AF6FF269","partialLayout":false,"totalObjects":145},"endData":{"layoutRoots":[{"depth":1,"nodeId":1,"nodeName":"#document","quads":[[0,0,390,0,390,844,0,844]]}]}}
