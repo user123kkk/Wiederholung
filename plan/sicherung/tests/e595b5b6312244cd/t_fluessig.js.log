@@ -1,0 +1,15 @@
+Runde starten                | laengste Blockade 115 ms (1x) | Ruckler 1 Bilder, max 150 ms
+Umdrehen 1                   | laengste Blockade – | Ruckler 0
+Bewerten 1                   | laengste Blockade 53 ms (1x) | Ruckler 1 Bilder, max 67 ms
+Umdrehen 2                   | laengste Blockade – | Ruckler 0
+Bewerten 2                   | laengste Blockade – | Ruckler 0
+Umdrehen 3                   | laengste Blockade – | Ruckler 0
+Bewerten 3                   | laengste Blockade – | Ruckler 0
+Runde beenden                | laengste Blockade – | Ruckler 0
+Tab Fortschritt              | laengste Blockade 209 ms (1x) | Ruckler 2 Bilder, max 233 ms
+Tab Verwalten                | laengste Blockade 174 ms (1x) | Ruckler 2 Bilder, max 200 ms
+Tab Lernen                   | laengste Blockade – | Ruckler 0
+Einstellungen auf            | laengste Blockade 87 ms (1x) | Ruckler 1 Bilder, max 83 ms
+ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":16,"quelltext":"f1cca37ea61547bb04f0d28634dee820086c4c331f31b73d89d3e7415e44f796"}

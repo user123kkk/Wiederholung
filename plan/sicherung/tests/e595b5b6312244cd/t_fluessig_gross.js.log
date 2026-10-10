@@ -1,0 +1,11 @@
+tab-fortschritt  94 ms JS, erstes Bild nach 445 ms
+tab-verwalten    158 ms JS, erstes Bild nach 336 ms
+tab-lernen       38 ms JS, erstes Bild nach 102 ms
+tab-verwalten    98 ms JS, erstes Bild nach 144 ms
+tab-fortschritt  67 ms JS, erstes Bild nach 120 ms
+tab-lernen       24 ms JS, erstes Bild nach 57 ms
+Selbstzeit Verwalten (ms): (program) 534.9, hauptInhaltSetzen 83.8, (app.js?v=3.18.30) 41.4, tastaturHoeheSetzen 8.6, esc 3.3, (idle) 3.2, renderVerwaltenListe 2.8, renderExtra 1.8, huelleBehalten 1.7, evaluate 1.6, renderMain 1.6, syncViewportGap 1.1
+Selbstzeit Fortschritt (ms): (program) 199.6, tastaturHoeheSetzen 30.9, hauptInhaltSetzen 30.8, vorschau7 5.0, lektionOffeneKarten 3.3, (app.js?v=3.18.30) 3.3, statsCards 1.8, verbrannteKarten 1.7, querySelectorAll 1.7, scrollTo 1.7, offeneLektionIds 1.6, aktualisiereAuswahlLeiste 1.6
+ok
+
+Prozess: {"code":0,"signal":null,"zeitlimit":false,"fehler":null,"sekunden":7,"quelltext":"17e40f9c7c510d20b87077900964287ac0338d066114e223acaba4fb832d5e1e"}
