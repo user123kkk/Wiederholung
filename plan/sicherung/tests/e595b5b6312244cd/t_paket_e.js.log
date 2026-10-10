@@ -18,3 +18,15 @@ E2 820/hell: A gelöscht, B ohne alte Unterseite bedienbar
 E2 820/dunkel: A gelöscht, B ohne alte Unterseite bedienbar
 E3 390/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
 E3 390/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 390/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 390/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 320/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/hell/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/bewegt: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E3 820/dunkel/ruhig: offen, kein Sprung, Zwischenablage und manueller Ausweg
+E4 390: echter Zurück-Weg, beide Rechtsseiten, vollständiger Plan und Name/Adresse/Passwort erhalten
+E4 320: echter Zurück-Weg, beide Rechtsseiten, vollständiger Plan und Name/Adresse/Passwort erhalten
