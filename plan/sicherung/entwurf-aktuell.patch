@@ -2625,7 +2625,7 @@ index 00000000..2ad2ff08
 +console.log(`${names.length} Skills; Beschreibungen ${descChars} Zeichen; Inhalte ${bodyBytes} UTF-8-Bytes.`);
 +console.log('Dies prüft Dateien und Konfiguration, nicht die Auswahlentscheidung eines laufenden Modells.');
 diff --git a/plan/werkzeuge/pruefstand/LIESMICH.md b/plan/werkzeuge/pruefstand/LIESMICH.md
-index d3d208cf..6f57b4af 100644
+index d3d208cf..ac2766c6 100644
 --- a/plan/werkzeuge/pruefstand/LIESMICH.md
 +++ b/plan/werkzeuge/pruefstand/LIESMICH.md
 @@ -43,8 +43,9 @@ vorherige echte Fehlerausgabe vor Wiederholung zusätzlich bewahren.
@@ -2665,7 +2665,7 @@ index d3d208cf..6f57b4af 100644
  `t_verlauf_mehrgeraete.js` verwendet das echte Firebase-JS-SDK 10.14.1
  gegen den lokalen Firestore-Emulator mit den Regeln dieses Repos. Nur Auth
  ist eine Attrappe. Zwei getrennte Browser-Kontexte haben getrennte echte
-@@ -91,3 +108,9 @@ Erwartet: Server null, nächste neue Antwort eins. Die Repo-Regeln müssen
+@@ -91,3 +108,19 @@ Erwartet: Server null, nächste neue Antwort eins. Die Repo-Regeln müssen
  das neue Feld `verlaufEpoche` samt Reset-Grenze enthalten.
  `t_pruefdatum.js` prüft die Fixture-Lerntage vor/nach 04:00; `t_wisch_tempo.js`
  führt aufgezeichnete Zeiten im echten Wisch-Listener aus, mit Altstand als Gegenprobe.
@@ -2675,6 +2675,16 @@ index d3d208cf..6f57b4af 100644
 +Listenercache; beim nächsten strukturellen Snapshot verschwinden solche
 +nur im Test erfundenen Karten. C27 verwendet dafür einen echten Stub-Batch
 +und wartet auf 200 Karten, bevor Auswahl/Löschen geprüft wird.
++
++
++Mehrgeräte-Tagesantworten (A16): Eine absichtliche SDK-Regelablehnung muss
++auch batch.update erfassen, nicht nur updateDoc. Der eigenständige
++t_verlauf_mehrgeraete prüft den tatsächlichen Batchpfad und wartet auf
++bereits laufende App-Belegprüfung zusätzlich zur SDK-Schreibwarteschlange.
++Nach frühem Neustart nutzt er den vorgesehenen ausdrücklichen Prüfweg für
++noch lokal erhaltene Kopien; keine automatische Startübertragung behaupten.
++x_verlauf_batch_ablehnung prüft den ausgesandten Wrapper und die feste
++315bb0e-Gegenprobe. Testgrenzen/erwartete Summen bleiben unverändert.
 diff --git a/plan/werkzeuge/pruefstand/abnahme_runde.js b/plan/werkzeuge/pruefstand/abnahme_runde.js
 index c977d528..64d340ca 100644
 --- a/plan/werkzeuge/pruefstand/abnahme_runde.js
